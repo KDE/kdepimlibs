@@ -1,7 +1,7 @@
 /*
-    mapi.h
+    lzfu.h
 
-    Copyright (C) 2002 Michael Goffioul <kdeprint@swing.be>
+    Copyright (C) 2003 Michael Goffioul <kdeprint@swing.be>
 
     This file is part of KTNEF, the KDE TNEF support library/program.
 
@@ -15,12 +15,11 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-#ifndef MAPI_H
-#define MAPI_H
+#ifndef LZFU_H
+#define LZFU_H
 
-#include <qstring.h>
+class QIODevice;
 
-QString mapiTagString( int key );
-QString mapiNamedTagString( int key, int tag = -1 );
+int lzfu_decompress( QIODevice *input, QIODevice *output );
 
-#endif
+#endif /* LZFU_H */

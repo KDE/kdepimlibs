@@ -1,7 +1,7 @@
 /*
     ktnefattach.h
 
-    Copyright (C) 2002 Michael Goffioul <goffioul@imec.be>
+    Copyright (C) 2002 Michael Goffioul <kdeprint@swing.be>
 
     This file is part of KTNEF, the KDE TNEF support library/program.
 
@@ -12,7 +12,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 #ifndef KTNEFATTACH_H
@@ -22,10 +22,11 @@
 #include <qmap.h>
 #include <qvariant.h>
 #include <ktnef/ktnefpropertyset.h>
+#include <kdepimmacros.h>
 
 class KTNEFProperty;
 
-class KTNEFAttach : public KTNEFPropertySet
+class KDE_EXPORT KTNEFAttach : public KTNEFPropertySet
 {
 public:
 	enum ParseState { Unparsed = 0x0000, TitleParsed = 0x0001, DataParsed = 0x0002, InfoParsed = 0x0004};

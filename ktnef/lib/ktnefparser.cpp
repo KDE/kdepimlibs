@@ -1,7 +1,7 @@
 /*
     ktnefparser.cpp
 
-    Copyright (C) 2002 Michael Goffioul <goffioul@imec.be>
+    Copyright (C) 2002 Michael Goffioul <kdeprint@swing.be>
 
     This file is part of KTNEF, the KDE TNEF support library/program.
 
@@ -12,7 +12,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 #ifdef HAVE_CONFIG_H
@@ -29,6 +29,8 @@
 #include <qfile.h>
 #include <qvariant.h>
 #include <kdebug.h>
+#include <kmimetype.h>
+#include <ksavefile.h>
 
 #ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
@@ -254,6 +256,7 @@ bool KTNEFParser::decodeAttachment()
 	Q_UINT32	i;
 	Q_UINT16	tag, type, u;
 	QVariant value;
+	QString str;
 
 	d->stream_ >> i;		// i <- attribute type & name
 	tag = ( i & 0x0000FFFF );
@@ -280,11 +283,13 @@ bool KTNEFParser::decodeAttachment()
 		   d->device_->at( i );
 		   d->current_->setIndex( d->current_->property( MAPI_TAG_INDEX ).toUInt() );
 		   d->current_->setDisplaySize( d->current_->property( MAPI_TAG_SIZE ).toUInt() );
-		   if ( d->current_->displayName().isEmpty() )
-			   d->current_->setDisplayName( d->current_->property( MAPI_TAG_DISPLAYNAME ).toString() );
+		   str = d->current_->property( MAPI_TAG_DISPLAYNAME ).toString();
+		   if ( !str.isEmpty() )
+			   d->current_->setDisplayName( str );
 		   d->current_->setFileName( d->current_->property( MAPI_TAG_FILENAME ).toString() );
-		   if ( d->current_->mimeTag().isEmpty() )
-			   d->current_->setMimeTag( d->current_->property( MAPI_TAG_MIMETAG ).toString() );
+		   str = d->current_->property( MAPI_TAG_MIMETAG ).toString();
+		   if ( !str.isEmpty() )
+			   d->current_->setMimeTag( str );
 		   d->current_->setExtension( d->current_->property( MAPI_TAG_EXTENSION ).toString() );
 		   value = QString( "< %1 properties >" ).arg( d->current_->properties().count() );
 		   break;
@@ -292,10 +297,15 @@ bool KTNEFParser::decodeAttachment()
 		   value = readTNEFDate( d->stream_ );
 		   kdDebug() << "Attachment Modification Date: " << value.toString() << endl;
 		   break;
+	   case attATTACHCREATEDATE:
+		   value = readTNEFDate( d->stream_ );
+		   kdDebug() << "Attachment Creation Date: " << value.toString() << endl;
+		   break;
 	   case attATTACHMETAFILE:
-		   value = QString( "< size=%1 >" ).arg( i );
 		   kdDebug() << "Attachment Metafile: size=" << i << endl;
-		   d->device_->at( d->device_->at()+i );
+		   //value = QString( "< size=%1 >" ).arg( i );
+		   //d->device_->at( d->device_->at()+i );
+		   value = readTNEFData( d->stream_, i );
 		   break;
 	   default:
 		   value = readTNEFAttribute( d->stream_, type, i );
@@ -353,7 +363,7 @@ bool KTNEFParser::parseDevice()
 				if (!decodeAttachment()) goto end;
 				break;
 			   default:
-				kdDebug().form( "Unknown Level: %x, at offset %d\n", c, d->device_->at() );
+				kdDebug() << "Unknown Level: " << c << ", at offset " << d->device_->at() << endl;
 				goto end;
 			}
 		}
@@ -389,24 +399,30 @@ bool KTNEFParser::extractAttachmentTo(KTNEFAttach *att, const QString& dirname)
 		return false;
 	if (!d->device_->at(att->offset()))
 		return false;
-	QFile	outfile(filename);
-	if (!outfile.open(IO_WriteOnly)) return false;
+	KSaveFile saveFile( filename );
+	QFile *outfile = saveFile.file();
+	if ( !outfile )
+		return false;
 
 	Q_UINT32	len = att->size(), sz(16384);
 	int		n(0);
 	char		*buf = new char[sz];
-	bool		done(false);
-	while (len > 0)
+	bool		ok(true);
+	while (ok && len > 0)
 	{
 		n = d->device_->readBlock(buf,QMIN(sz,len));
-		if (n < 0) goto end;
-		len -= n;
-		if (outfile.writeBlock(buf,n) != n) goto end;
+		if (n < 0)
+			ok = false;
+		else
+		{
+			len -= n;
+			if (outfile->writeBlock(buf,n) != n)
+				ok = false;
+		}
 	}
-	done = true;
+	delete [] buf;
 
-end:	outfile.close();
-	return done;
+	return ok;
 }
 
 bool KTNEFParser::extractAll()
@@ -452,6 +468,26 @@ void KTNEFParser::checkCurrent( int key )
 			{
 				if (d->current_->name().isEmpty())
 					d->current_->setName("Unnamed");
+				if ( d->current_->mimeTag().isEmpty() )
+				{
+					// No mime type defined in the TNEF structure,
+					// try to find it from the attachment filename
+					// and/or content (using at most 32 bytes)
+					KMimeType::Ptr mimetype;
+					if ( !d->current_->fileName().isEmpty() )
+						mimetype = KMimeType::findByPath( d->current_->fileName(), 0, true );
+                                        if (!mimetype) return; // FIXME
+					if ( mimetype->name() == "application/octet-stream" && d->current_->size() > 0 )
+					{
+						int oldOffset = d->device_->at();
+						QByteArray buffer( QMIN( 32, d->current_->size() ) );
+						d->device_->at( d->current_->offset() );
+						d->device_->readBlock( buffer.data(), buffer.size() );
+						mimetype = KMimeType::findByContent( buffer );
+						d->device_->at( oldOffset );
+					}
+					d->current_->setMimeTag( mimetype->name() );
+				}
 				d->message_->addAttachment( d->current_ );
 				d->current_ = 0;
 			}
