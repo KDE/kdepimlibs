@@ -1,7 +1,7 @@
 /*
-    This file is part of libkcal.
+    This file is part of libkdepim.
 
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,42 +19,36 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kdebug.h>
-#include <klocale.h>
+#include <qapplication.h>
 
-#include "duration.h"
+#include "idmapper.h"
 
-using namespace KCal;
-
-Duration::Duration()
+int main( int argc, char **argv )
 {
-  mSeconds = 0;
-}
+  QApplication app( argc, argv );
 
-Duration::Duration( const QDateTime &start, const QDateTime &end )
-{
-  mSeconds = start.secsTo( end );
-}
+  KPIM::IdMapper mapper( "test.uidmap" ) ;
 
-Duration::Duration( int seconds )
-{
-  mSeconds = seconds;
-}
+  mapper.setRemoteId( "foo", "bar" );
+  mapper.setRemoteId( "yes", "klar" );
+  mapper.setRemoteId( "no", "nee" );
 
+  qDebug( "full:\n%s", mapper.asString().latin1() );
 
-bool KCal::operator==( const Duration& d1, const Duration& d2 )
-{
-    return ( d1.asSeconds() == d2.asSeconds() );
-}
+  mapper.save();
 
+  mapper.clear();
+  qDebug( "empty:\n%s", mapper.asString().latin1() );
 
+  mapper.load();
+  qDebug( "full again:\n%s", mapper.asString().latin1() );
 
-QDateTime Duration::end( const QDateTime &start ) const
-{
-  return start.addSecs( mSeconds );
-}
+  mapper.save();
 
-int Duration::asSeconds() const
-{
-  return mSeconds;
+  mapper.clear();
+  qDebug( "empty:\n%s", mapper.asString().latin1() );
+
+  mapper.load();
+  qDebug( "full again:\n%s", mapper.asString().latin1() );
+  return 0;
 }
