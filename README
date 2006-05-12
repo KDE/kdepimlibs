@@ -1,0 +1,111 @@
+In this file:
+
+* About kdepimlibs
+* What's included
+* Licensing
+* Reporting Bugs
+* Debugging
+* Mailing List, Getting involved
+* More Info
+
+
+About kdepimlibs
+----------------
+This module includes libraries that are central to the development and
+execution of a KDE-PIM application.
+
+The KDE-PIM project aims to bring together those who wish to help design,
+implement, test, etc. anything that's to do with personal information
+management.
+
+This rather broad scope encompasses mail clients, addressbooks, usenet news,
+scheduling and even sticky notes.
+
+
+What's Included
+---------------
+Here is an alphabetical list:
+
+* libkcal: C++ api for the iCalendar and vCalendar formats
+
+
+Licensing
+---------
+The libraries themselves are covered by the GNU Library General Public
+License (LGPL). Any other programs (such as the examples) are covered
+by the GNU General Public License (GPL). All the gory details for the
+LGPL reside in COPYING.LIB, and for the GPL reside in COPYING.
+
+Various parts are also covered under a BSD style license, detailed in
+COPYING.BSD. Currently, code covered under such license is copyrighted by
+Theo de Raadt.
+
+When in doubt, check the individual file, they should all have license
+headings and other identifying marks.
+
+
+Mailing List, getting involved
+------------------------------
+
+If you'd like to get involved with the project, subscribe to kde-pim@kde.org
+with an email to kde-pim-request@kde.org with the subject line:
+subscribe my@email.address
+
+If you have questions relating to development of this module please post them on
+the developers mailing list (kde-pim@kde.org).  If you have user questions,
+please use kdepim-users@kde.org
+
+If you are interested in kmail development use the mailing list
+kmail-devel@kde.org.
+
+
+Debugging
+---------
+You can use --enable-debug with the configure script, if you want to have
+debug code in your KDE libs. If you have the space and can stand code that's
+somewhat slower, this is worth it. The extra information really
+helps debugging and thus bugfixing.
+
+On the other hand, --disable-debug removes all debug messages, leading
+to a faster and cleaner desktop.
+
+See also the file DEBUG.
+
+
+Reporting Bugs
+--------------
+Reporting bugs is an art. Why?  Because bug reports can help and hinder.
+
+They hinder if the developers are just buried in an avalanche of bug reports.
+They spend hours figuring out which bug reports are valid and which aren't,
+which bug reports are due to bugs or due to installation problems.
+
+They can be of tremendous help to notify developers on problems in areas that
+they normally don't have access (e.g. KDE on AIX) to.
+
+So, here are some tips on bug reporting:
+
+* make sure your bug is due to KDE ... and not due to a packaging problem of
+  your Linux distributor. For example, most "I can not install the XYZ.rpm"
+  problem are due to packaging issues. Refer with such questions to your
+  Linux Distributor and his appropriate mailing list or bug reporting tool.
+
+* The chance is high that your bug has already been dealt with ... so look
+  if there is a newer version of kdepimlibs available. Reporting bugs for
+  older, deprecated versions usually don't get that much attention :-)
+
+* Also the chance is high that another one experienced your problem. The
+  bug report wizard at http://bugs.kde.org will help you to find out if your
+  problem has already been reported.
+
+* The best bug report for a project based on voluntary work is of course one
+  that comes with a patch that solves the problem. :-)
+
+
+More info
+---------
+http://www.kde.org is a good starting point for info on KDE. If you are a
+developer, you may also point your browser to http://developer.kde.org.
+There is a plethora of mailing lists available, you can gain an overview
+quickly by looking at http://lists.kde.org.
+

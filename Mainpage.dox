@@ -1,0 +1,21 @@
+/**
+        * @mainpage The KDE-PIM API Reference
+        *
+        * This section contains the KDE online class reference for the current
+        * development version of KDE-PIM. You can also
+        * download the complete API documentation from
+        * <a href="http://api.kde.org/">api.kde.org</a>.  Additionally, you
+        * can subscribe or read the mailing lists for any additions and/or
+        * modifications to the API.
+        *
+        * - <a href="libkcal/html/index.html"><b>libkcal</b></a>
+        *   (<a href="libkcal/html/classes.html">classes</a>)\n
+	*   <i>API for the iCalendar and vCalendar formats.</i>
+	*
+	* More information about the KDE-PIM architecture can be found at
+	* the <a href="http://pim.kde.org/index.php">KDE PIM Home Page</a>.
+	*/
+
+// DOXYGEN_VERSION=4.0
+// DOXYGEN_NAME=kdepimlibs
+// DOXYGEN_ENABLE=YES

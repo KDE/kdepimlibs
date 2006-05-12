@@ -1,0 +1,118 @@
+kdepimlibs POLICIES.
+
+A. Purpose
+
+   The kdepimlibs module exists to:
+
+   1. restrain the size of the kdepim module
+   2. co-locate code in kdelibs which is closely associated to kdepim
+      (i.e.,kresources and kabc).  That this code is in kdelibs, but
+      other similar code like libkcal is not, can only be understood by
+      historical  reasons.
+   3. provide access to the PIM libraries for code from other modules.
+
+   In summary, kdepimlibs is a controlled extension and modularization of
+   kdelibs to the PIM space.  The kdepimlibs module will adhere to the
+   KDE release schedules.
+
+
+B. Contents
+
+   The kdepimlibs will contain libraries only.  No applications will
+   be permitted, except for tools that are needed to build the libraries.
+   Typical PIM application source code must reside in the kdepim module.
+   Only libraries that would likely to be helpful to other KDE, or 3rd-party
+   applications should be included here, i.e., libraries that have no use
+   outside of KDE-PIM should be contained in the kdepim module.
+
+   As a general rule-of-thumb, at least 2 separate modules must depend
+   on a library before it can be included in kdepimlibs.  Effectively
+   this means: a PIM library can be included here if any non-kdepim module
+   has a dependency on that library.
+
+
+C. Licensing
+
+   All source files must follow the licensing policy described in
+   http://developer.kde.org/policies/licensepolicy.html, Section 3.
+   That is, all source files must licensed according to one of the following:
+
+   1. LGPL as listed in COPYING.LIB
+   2. BSD license as listed in COPYING.BSD and below
+      Note that the BSD license does not contain the so called 'advertisement
+      clause'.
+   3. X11 license as listed below
+
+
+D. Dependencies
+
+   kdepimlibs code will require a dependency on kdelibs, but no other
+   dependencies on KDE code are permitted.  kdepimlibs may depend on
+   3rd-party libraries and, of course, system libraries.  Dependencies
+   on all non-kdelibs code must be checked and handled by the buildsystem
+   appropriately.
+
+   We will attempt to be backwards compatible to the latest released
+   version of kdelibs (within the same major release only).  There is
+   no requirement for kdepimlibs to be backwards compatible to lesser
+   major releases, i.e. kdepimlibs 5.0 may not be compatible with kdelibs 4.0.
+
+
+E. Library Code
+
+   We will follow the recommendations in the "KDE Library Code Policy" at 
+   http://developer.kde.org/policies/librarypolicy.html, especially
+   with regard to binary compatibility.
+
+
+F. Coding Style
+
+   Please see http://korganizer.kde.org/develop/hacking.html
+
+
+BSD License
+===========
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+X11 license
+===========
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of the X Consortium shall not be
+used in advertising or otherwise to promote the sale, use or other dealings
+in this Software without prior written authorization from the X Consortium.
