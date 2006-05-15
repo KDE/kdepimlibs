@@ -1,0 +1,37 @@
+Libraries we want to move into the kdepimlibs module, and what needs to be done
+to make it happen.
+
+Minimum requirements for moving a library here:
+ 1. LGPL, BSD, or X11 license
+ 2. All dependencies must also meet minimum requirements
+
+BIC stuff (like d-pointers) and complete APIDOX may be completed after the move.
+
+Please drop the "lib" prefix part of the source directory name
+(i.e. libfoo -> foo): headers will be installed into include/foo,
+but the library name will still be libfoo.so.
+
+Each library foo will have its own foo_export.h that includes the
+all visibility macros  (no separate foo_export_win.h)
+
+
+gpgmepp
+indexlib
+kdgantt
+kode - ok to move.  kxforms should be in kdepim?  kwsdl??
+ktnef
+libakonadi - blocked by libkmime
+libemailfunctions - die.die.die
+libkcal - blocked by libemailfunctions (versit and libical subdirs licensed ok)
+libkdepim
+libkholidays
+libkholidays_ng
+libkleo
+libkmime
+libkpgp
+libkpimidentities
+libksieve
+libsyndication - ok to move
+mimelib
+networkstatus
+qgpgme
