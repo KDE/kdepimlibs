@@ -4,10 +4,10 @@
 #then enter bootstrap mode
 if(EXISTS ${CMAKE_SOURCE_DIR}/kdepimlibs.lsm)
 
-  set(KDE4_EMAILFUNCTIONS_LIBS emailfunctions)
-  set(KDE4_KCAL_LIBS kcal)
 
 else(EXISTS ${CMAKE_SOURCE_DIR}/kdepimlibs.lsm)
 
+  set(KDE4_EMAILFUNCTIONS_LIBS emailfunctions)
+  set(KDE4_KCAL_LIBS kcal)
   
 endif(EXISTS ${CMAKE_SOURCE_DIR}/kdepimlibs.lsm)
