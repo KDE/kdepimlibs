@@ -21,7 +21,7 @@ kdgantt
 kode - ok to move.  kxforms should be in kdepim?  kwsdl??
 ktnef
 libakonadi - blocked by libkmime
-libemailfunctions - die.die.die
+libemailfunctions - turned into a stand-alone shared lib. die.die.die eventually
 libkcal - blocked by libemailfunctions (versit and libical subdirs licensed ok)
 libkdepim
 libkholidays

@@ -1,13 +1,15 @@
 /**
-        * @mainpage The KDE-PIM API Reference
+        * @mainpage The KDE-PIM Libraries API Reference
         *
         * This section contains the KDE online class reference for the current
-        * development version of KDE-PIM. You can also
-        * download the complete API documentation from
-        * <a href="http://api.kde.org/">api.kde.org</a>.  Additionally, you
-        * can subscribe or read the mailing lists for any additions and/or
-        * modifications to the API.
+        * development version of KDE-PIM Libraries. You can also download
+        * the complete API documentation from
+        * <a href="http://api.kde.org/">api.kde.org</a>.
+        * Additionally, you can subscribe or read the mailing lists for any
+        * additions and/or modifications to the API.
         *
+        * - <a href="libemailfunctions/html/index.html"><b>libemailfunctions</b></a>\n
+        *   <i>A library for general purpose email handling.</i>
         * - <a href="libkcal/html/index.html"><b>libkcal</b></a>
         *   (<a href="libkcal/html/classes.html">classes</a>)\n
 	*   <i>API for the iCalendar and vCalendar formats.</i>
