@@ -25,7 +25,7 @@
 #include <QStringList>
 #include <QByteArray>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 /** @file */
 
