@@ -11,8 +11,8 @@ Please drop the "lib" prefix part of the source directory name
 (i.e. libfoo -> foo): headers will be installed into include/foo,
 but the library name will still be libfoo.so.
 
-Each library foo will have its own foo_export.h that includes the
-all visibility macros  (no separate foo_export_win.h)
+Each library foo will have its own foo.h that includes all the
+visibility macros  (no separate foo_export_win.h)
 
 
 gpgmepp
