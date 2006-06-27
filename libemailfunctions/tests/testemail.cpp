@@ -324,10 +324,10 @@ int main(int argc, char *argv[])
   checkIsValidEmailAddress( "\"testing, \\\"testing\\\" <matt@fruitsalad.org>", "UnbalancedQuote" );
 
   // escape a parens and thus make a comma appear
-  checkIsValidEmailAddress( "Matt (jongel, fibbel\\\) <matt@fruitsalad.org>", "UnbalancedParens" );
+  checkIsValidEmailAddress( "Matt (jongel, fibbel\\) <matt@fruitsalad.org>", "UnbalancedParens" );
 
   // several errors inside doublequotes
-  checkIsValidEmailAddress( "Matt \"(jongel,\\\" < fibbel\\\)\" <matt@fruitsalad.org>", "AddressOk" );
+  checkIsValidEmailAddress( "Matt \"(jongel,\\\" < fibbel\\)\" <matt@fruitsalad.org>", "AddressOk" );
 
   // BUG 105705
   checkIsValidEmailAddress( "matt-@fruitsalad.org", "AddressOk" );
