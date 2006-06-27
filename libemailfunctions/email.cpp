@@ -1,7 +1,7 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
 
-    This file is part of kdepim.
-    Copyright (c) 2004 KDEPIM developers
+    This file is part of kdepimlibs.
+    Copyright (c) 2004 Matt Douhan <matt@fruitsalad.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -26,7 +26,6 @@
 #include <kidna.h>
 
 #include <QRegExp>
-//Added by qt3to4:
 #include <QByteArray>
 
 //-----------------------------------------------------------------------------

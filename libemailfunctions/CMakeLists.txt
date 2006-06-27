@@ -17,4 +17,4 @@ install_targets(${LIB_INSTALL_DIR} emailfunctions )
 
 ########### install files ###############
 
-install_files( /include/libemailfunctions FILES email.h )
+install_files( /include/emailfunctions FILES emailfunctions.h email.h )
