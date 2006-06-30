@@ -8,11 +8,17 @@
         * Additionally, you can subscribe or read the mailing lists for any
         * additions and/or modifications to the API.
         *
-        * - <a href="libemailfunctions/html/index.html"><b>libemailfunctions</b></a>\n
+        * - <a href="libemailfunctions/html/index.html"><b>libemailfunctions</b></a>
+        *   (<a href="libemailfunctions/html/classes.html">classes</a>)\n
         *   <i>A library for general purpose email handling.</i>
+	*
         * - <a href="libkcal/html/index.html"><b>libkcal</b></a>
         *   (<a href="libkcal/html/classes.html">classes</a>)\n
 	*   <i>API for the iCalendar and vCalendar formats.</i>
+	*
+        * - <a href="libktnef/html/index.html"><b>libktnef</b></a>
+        *   (<a href="libktnef/html/classes.html">classes</a>)\n
+	*   <i>API for the handling of TNEF data.</i>
 	*
 	* More information about the KDE-PIM architecture can be found at
 	* the <a href="http://pim.kde.org/index.php">KDE PIM Home Page</a>.

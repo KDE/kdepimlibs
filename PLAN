@@ -18,8 +18,8 @@ visibility macros  (no separate foo_export_win.h)
 gpgmepp
 indexlib
 kdgantt
-kode - ok to move.  kxforms should be in kdepim?  kwsdl??
-ktnef
+kode - parts moving to kdelibs.  kxforms should be in kdepim?  kwsdl??
+ktnef - change license to LGPL, move here as libktnef
 libakonadi - blocked by libkmime
 libemailfunctions - turned into a stand-alone shared lib. die.die.die eventually
 libkcal - blocked by libemailfunctions (versit and libical subdirs licensed ok)
