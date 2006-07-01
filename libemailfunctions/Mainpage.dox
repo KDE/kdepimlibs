@@ -1,4 +1,4 @@
-/** @mainpage libemailfunctions
+/** @mainpage emailfunctions
 
 This library contains utility functions for dealing with email addresses.
 This includes parsing, splitting, and munging email addresses represented

@@ -16,7 +16,7 @@
    Boston, MA 02110-1301, USA.
 */
 
-// Test program for libemailfunctions/email.h
+// Test program for emailfunctions/email.h
 #include "email.h"
 
 #include <kcmdlineargs.h>

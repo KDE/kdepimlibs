@@ -14,9 +14,9 @@ include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
 
 
 include (ConfigureChecks.cmake)
-configure_file (config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h )
+configure_file (config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 
-add_subdirectory(libemailfunctions)
+add_subdirectory(emailfunctions)
 
 add_subdirectory(cmake)
