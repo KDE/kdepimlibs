@@ -12,12 +12,12 @@
         *   (<a href="emailfunctions/html/classes.html">classes</a>)\n
         *   <i>A library for general purpose email handling.</i>
 	*
-        * - <a href="libkcal/html/index.html"><b>libkcal</b></a>
-        *   (<a href="libkcal/html/classes.html">classes</a>)\n
+        * - <a href="kcal/html/index.html"><b>kcal</b></a>
+        *   (<a href="kcal/html/classes.html">classes</a>)\n
 	*   <i>API for the iCalendar and vCalendar formats.</i>
 	*
-        * - <a href="libktnef/html/index.html"><b>libktnef</b></a>
-        *   (<a href="libktnef/html/classes.html">classes</a>)\n
+        * - <a href="ktnef/html/index.html"><b>ktnef</b></a>
+        *   (<a href="ktnef/html/classes.html">classes</a>)\n
 	*   <i>API for the handling of TNEF data.</i>
 	*
 	* More information about the KDE-PIM architecture can be found at
