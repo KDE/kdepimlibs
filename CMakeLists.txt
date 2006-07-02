@@ -18,5 +18,7 @@ configure_file (config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 
 add_subdirectory(emailfunctions)
+add_subdirectory(kresources)
+add_subdirectory(kabc)
 
 add_subdirectory(cmake)
