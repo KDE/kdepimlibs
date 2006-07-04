@@ -21,7 +21,6 @@
     Boston, MA 02110-1301, USA.
  */
 
-#include <config-ktnef.h>
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
@@ -40,9 +39,9 @@
 #include <kmimetype.h>
 #include <ksavefile.h>
 
-#ifdef HAVE_INTTYPES_H
-#include <inttypes.h>
-#endif /* HAVE_INTTYPES_H */
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif /* HAVE_STDINT_H */
 
 #include "ktnef/ktnefdefs.h"
 
