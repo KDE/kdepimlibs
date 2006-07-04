@@ -26,7 +26,7 @@
 
 #include <QVariant>
 #include <QString>
-#include <kdepimmacros.h>
+#include <ktnef.h>
 
 class KDE_EXPORT KTNEFProperty
 {
