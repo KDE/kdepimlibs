@@ -12,6 +12,10 @@
         *   (<a href="emailfunctions/html/classes.html">classes</a>)\n
         *   <i>A library for general purpose email handling.</i>
 	*
+        * - <a href="kabc/html/index.html"><b>kabc</b></a>
+        *   (<a href="kabc/html/classes.html">classes</a>)\n
+	*   <i>Address book API.</i>
+	*
         * - <a href="kcal/html/index.html"><b>kcal</b></a>
         *   (<a href="kcal/html/classes.html">classes</a>)\n
 	*   <i>API for the iCalendar and vCalendar formats.</i>
@@ -19,6 +23,10 @@
         * - <a href="ktnef/html/index.html"><b>ktnef</b></a>
         *   (<a href="ktnef/html/classes.html">classes</a>)\n
 	*   <i>API for the handling of TNEF data.</i>
+	*
+        * - <a href="kresources/html/index.html"><b>kresources</b></a>
+        *   (<a href="kresources/html/classes.html">classes</a>)\n
+	*   <i>KDE Resource framework.</i>
 	*
 	* More information about the KDE-PIM architecture can be found at
 	* the <a href="http://pim.kde.org/index.php">KDE PIM Home Page</a>.
