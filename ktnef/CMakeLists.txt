@@ -1,6 +1,4 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/ktnef )
-
 ########### next target ###############
 
 set(ktnef_LIB_SRCS 
@@ -25,6 +23,7 @@ install(TARGETS ktnef DESTINATION ${LIB_INSTALL_DIR})
 
 ########### install files ###############
 
-
+install_files( /include/ktnef FILES ktnefparser.h ktnefattach.h ktnefproperty.h
+       ktnefpropertyset.h ktnefmessage.h ktnefwriter.h ktnefdefs.h )
 
 
