@@ -422,7 +422,7 @@ Resource *ManagerImpl::getResource( const QString &identifier )
 
 QString ManagerImpl::defaultConfigFile( const QString &family )
 {
-  return locateLocal( "config",
+  return KStandardDirs::locateLocal( "config",
                       QString( "kresources/%1/stdrc" ).arg( family ) );
 }
 

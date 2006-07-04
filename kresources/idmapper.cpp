@@ -84,7 +84,7 @@ QString IdMapper::filename()
   if ( !file.endsWith( "/" ) ) file += '/';
   file += d->identifier;
 
-  return locateLocal( "data", file );
+  return KStandardDirs::locateLocal( "data", file );
 }
 
 bool IdMapper::load()
