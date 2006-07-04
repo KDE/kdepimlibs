@@ -28,7 +28,7 @@
 #include <QString>
 #include "ktnef.h"
 
-class KDE_EXPORT KTNEFProperty
+class KTNEF_EXPORT KTNEFProperty
 {
 public:
 	enum MAPIType

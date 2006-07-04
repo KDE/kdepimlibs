@@ -30,7 +30,7 @@
 
 class KTNEFAttach;
 
-class KDE_EXPORT KTNEFMessage : public KTNEFPropertySet
+class KTNEF_EXPORT KTNEFMessage : public KTNEFPropertySet
 {
 public:
 	KTNEFMessage();

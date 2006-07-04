@@ -30,7 +30,7 @@
 
 class KTNEFProperty;
 
-class KDE_EXPORT KTNEFPropertySet
+class KTNEF_EXPORT KTNEFPropertySet
 {
 public:
 	KTNEFPropertySet();

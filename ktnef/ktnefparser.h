@@ -33,7 +33,7 @@ class KTNEFAttach;
 class KTNEFMessage;
 class KTNEFProperty;
 
-class KDE_EXPORT KTNEFParser
+class KTNEF_EXPORT KTNEFParser
 {
 public:
 	KTNEFParser();

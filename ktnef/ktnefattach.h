@@ -32,7 +32,7 @@
 
 class KTNEFProperty;
 
-class KDE_EXPORT KTNEFAttach : public KTNEFPropertySet
+class KTNEF_EXPORT KTNEFAttach : public KTNEFPropertySet
 {
 public:
 	enum ParseState { Unparsed = 0x0000, TitleParsed = 0x0001, DataParsed = 0x0002, InfoParsed = 0x0004};
