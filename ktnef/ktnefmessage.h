@@ -26,7 +26,7 @@
 
 #include <ktnef/ktnefpropertyset.h>
 #include <QList>
-#include <ktnef.h>
+#include "ktnef.h"
 
 class KTNEFAttach;
 

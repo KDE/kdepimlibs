@@ -26,7 +26,7 @@
 
 #include <QMap>
 #include <QVariant>
-#include <ktnef.h>
+#include "ktnef.h"
 
 class KTNEFProperty;
 

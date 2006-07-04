@@ -27,7 +27,7 @@
 #include <QString>
 #include <QMap>
 #include <QIODevice>
-#include <ktnef.h>
+#include "ktnef.h"
 
 class KTNEFAttach;
 class KTNEFMessage;
