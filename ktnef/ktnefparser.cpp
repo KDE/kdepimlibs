@@ -406,7 +406,7 @@ bool KTNEFParser::extractFile(const QString& filename)
 
 bool KTNEFParser::extractAttachmentTo(KTNEFAttach *att, const QString& dirname)
 {
-	QString	filename = dirname + "/" + att->name();
+	QString	filename = dirname + '/' + att->name();
 	if (!d->device_->isOpen())
 		return false;
 	if (!d->device_->seek(att->offset()))
@@ -580,9 +580,9 @@ QString formatRecipient( const QMap<int,KTNEFProperty*>& props )
 	if ( !t.isEmpty() )
 		s.append( t );
 	if ( !dn.isEmpty() )
-		s.append( " " + dn );
+		s.append( ' ' + dn );
 	if ( !addr.isEmpty() && addr != dn )
-		s.append( " <" + addr + ">" );
+		s.append( " <" + addr + '>' );
 
 	return s.trimmed();
 }

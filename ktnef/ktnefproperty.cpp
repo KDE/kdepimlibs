@@ -75,7 +75,7 @@ QString KTNEFProperty::formatValue( const QVariant& value, bool beautify )
 					s.append( " " );
 			}
 			if ( i < arr.size() )
-				s.append( "... (size=" + QString::number( arr.size() ) + ")" );
+				s.append( "... (size=" + QString::number( arr.size() ) + ')' );
 			return s;
 		}
 	}
