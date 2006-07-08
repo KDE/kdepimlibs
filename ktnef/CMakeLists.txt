@@ -17,7 +17,7 @@ kde4_add_library(ktnef SHARED ${ktnef_LIB_SRCS})
 
 target_link_libraries(ktnef  ${KDE4_KIO_LIBS})
 
-set_target_properties(ktnef PROPERTIES VERSION 1.0.0 SOVERSION 1)
+set_target_properties(ktnef PROPERTIES VERSION 2.0.0 SOVERSION 2)
 install(TARGETS ktnef DESTINATION ${LIB_INSTALL_DIR})
 
 
