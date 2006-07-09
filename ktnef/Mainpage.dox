@@ -1,0 +1,5 @@
+/** \mainpage ktnef - an API for handling TNEF data.
+
+This library contains an API for the handling of TNEF data.
+
+*/
