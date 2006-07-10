@@ -28,6 +28,8 @@
 #include <QString>
 #include "ktnef.h"
 
+namespace KTnef {
+
 class KTNEF_EXPORT KTNEFProperty
 {
 public:
@@ -66,4 +68,5 @@ private:
 	QVariant _name;
 };
 
+};
 #endif /* KTNEFPROPERTY_H */

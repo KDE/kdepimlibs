@@ -26,6 +26,8 @@
 #include <QDateTime>
 #include <ctype.h>
 
+using namespace KTnef;
+
 KTNEFProperty::KTNEFProperty()
 {
 }

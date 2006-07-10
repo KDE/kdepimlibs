@@ -24,6 +24,8 @@
 #include "ktnef/ktnefattach.h"
 #include "ktnef/ktnefproperty.h"
 
+using namespace KTnef;
+
 class KTNEFAttach::AttachPrivate
 {
 public:

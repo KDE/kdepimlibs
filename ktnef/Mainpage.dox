@@ -1,5 +1,14 @@
-/** \mainpage ktnef - an API for handling TNEF data.
+/**
+@mainpage KTNEF - an API for handling TNEF data.
+
+@section purpose Purpose
 
 This library contains an API for the handling of TNEF data.
 
+Everything lives in the KTnef namespace.
+
+@author Michael Goffioul \<kdeprint@swing.bei\>
+@author Bo Thorsen \<bo@sonofthor.dk\>
+
+<b>LICENSE: LGPL</b>
 */

@@ -27,10 +27,12 @@
 #include <QString>
 #include <QMap>
 #include <QVariant>
-#include <ktnef/ktnefpropertyset.h>
+#include "ktnef/ktnefpropertyset.h"
 #include "ktnef.h"
 
 class KTNEFProperty;
+
+namespace KTnef {
 
 class KTNEF_EXPORT KTNEFAttach : public KTNEFPropertySet
 {
@@ -73,4 +75,5 @@ private:
 	AttachPrivate *d;
 };
 
+};
 #endif

@@ -33,9 +33,11 @@ class QStringList;
 
 #include "ktnef.h"
 
+namespace KTnef {
+
 class KTNEF_EXPORT KTNEFWriter {
 public:
-  KTNEFWriter();
+    KTNEFWriter();
   ~KTNEFWriter();
 
   void addProperty( int tag, int type, const QVariant& value );
@@ -96,5 +98,6 @@ private:
   PrivateData *mData;
 };
 
+};
 
 #endif // KTNEFWRITER_H

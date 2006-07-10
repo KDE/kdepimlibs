@@ -28,7 +28,9 @@
 #include <QVariant>
 #include "ktnef.h"
 
-class KTNEFProperty;
+namespace KTnef { class KTNEFProperty; }
+
+namespace KTnef {
 
 class KTNEF_EXPORT KTNEFPropertySet
 {
@@ -40,21 +42,22 @@ public:
 	void addProperty( int key, int type, const QVariant& value, const QVariant& name = QVariant(), bool overwrite = false );
 	QString findProp(     int key,             const QString& fallback=QString(), bool convertToUpper=false);
 	QString findNamedProp(const QString& name, const QString& fallback=QString(), bool convertToUpper=false);
-	QMap<int,KTNEFProperty*>& properties();
-	const QMap<int,KTNEFProperty*>& properties() const;
+        QMap<int,KTNEFProperty*>& properties();
+        const QMap<int,KTNEFProperty*>& properties() const;
 	QVariant property( int key ) const;
 
 	/* TNEF attributes interface */
 	void addAttribute( int key, int type, const QVariant& value, bool overwrite = false );
-	QMap<int,KTNEFProperty*>& attributes();
-	const QMap<int,KTNEFProperty*>& attributes() const;
+        QMap<int,KTNEFProperty*>& attributes();
+        const QMap<int,KTNEFProperty*>& attributes() const;
 	QVariant attribute( int key ) const;
 
 	void clear( bool deleteAll = false );
 
 private:
-	QMap<int,KTNEFProperty*> properties_;  /* used to store MAPI properties */
-	QMap<int,KTNEFProperty*> attributes_;  /* used to store TNEF attributes */
+    QMap<int,KTNEFProperty*> properties_;  /* used to store MAPI properties */
+    QMap<int,KTNEFProperty*> attributes_;  /* used to store TNEF attributes */
 };
 
+};
 #endif /* KTNEFPROPERTYSET_H */

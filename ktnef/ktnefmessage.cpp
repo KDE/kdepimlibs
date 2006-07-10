@@ -28,6 +28,8 @@
 #include <QBuffer>
 #include <QList>
 
+using namespace KTnef;
+
 class KTNEFMessage::MessagePrivate
 {
 public:

@@ -29,9 +29,11 @@
 #include <QIODevice>
 #include "ktnef.h"
 
-class KTNEFAttach;
-class KTNEFMessage;
-class KTNEFProperty;
+namespace KTnef { class KTNEFAttach; }
+namespace KTnef { class KTNEFMessage; }
+namespace KTnef { class KTNEFProperty; }
+
+namespace KTnef {
 
 class KTNEF_EXPORT KTNEFParser
 {
@@ -61,4 +63,5 @@ private:
 	ParserPrivate *d;
 };
 
+};
 #endif

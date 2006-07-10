@@ -24,11 +24,14 @@
 #ifndef KTNEFMESSAGE_H
 #define KTNEFMESSAGE_H
 
-#include <ktnef/ktnefpropertyset.h>
 #include <QList>
+
+#include "ktnef/ktnefpropertyset.h"
 #include "ktnef.h"
 
-class KTNEFAttach;
+namespace KTnef { class KTNEFAttach; }
+
+namespace KTnef {
 
 class KTNEF_EXPORT KTNEFMessage : public KTNEFPropertySet
 {
@@ -47,4 +50,5 @@ private:
 	MessagePrivate *d;
 };
 
+};
 #endif /* KTNEFMESSAGE_H */

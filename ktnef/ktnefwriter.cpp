@@ -25,10 +25,6 @@
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
 
-#include "ktnef/ktnefwriter.h"
-#include "ktnef/ktnefproperty.h"
-#include "ktnef/ktnefpropertyset.h"
-
 #include <QFile>
 #include <QDateTime>
 #include <QDataStream>
@@ -38,8 +34,12 @@
 #include <kdebug.h>
 #include <assert.h>
 
+#include "ktnef/ktnefwriter.h"
+#include "ktnef/ktnefproperty.h"
+#include "ktnef/ktnefpropertyset.h"
 #include "ktnef/ktnefdefs.h"
 
+using namespace KTnef;
 
 class KTNEFWriter::PrivateData {
 public:

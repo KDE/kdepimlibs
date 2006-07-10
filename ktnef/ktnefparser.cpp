@@ -25,11 +25,6 @@
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
 
-#include "ktnef/ktnefparser.h"
-#include "ktnef/ktnefattach.h"
-#include "ktnef/ktnefproperty.h"
-#include "ktnef/ktnefmessage.h"
-
 #include <QDateTime>
 #include <QDataStream>
 #include <QFile>
@@ -43,8 +38,13 @@
 #include <stdint.h>
 #endif /* HAVE_STDINT_H */
 
+#include "ktnef/ktnefparser.h"
+#include "ktnef/ktnefattach.h"
+#include "ktnef/ktnefproperty.h"
+#include "ktnef/ktnefmessage.h"
 #include "ktnef/ktnefdefs.h"
 
+using namespace KTnef;
 
 typedef struct {
 	quint16 type;
@@ -58,16 +58,17 @@ typedef struct {
 
 void clearMAPIName( MAPI_value& mapi );
 void clearMAPIValue(MAPI_value& mapi, bool clearName = true);
-QString readMAPIString( QDataStream& stream, bool isUnicode = false, bool align = true, int len = -1 );
+QString readMAPIString( QDataStream& stream, bool isUnicode = false,
+                        bool align = true, int len = -1 );
 quint16 readMAPIValue(QDataStream& stream, MAPI_value& mapi);
 QDateTime readTNEFDate( QDataStream& stream );
 QString readTNEFAddress( QDataStream& stream );
 QByteArray readTNEFData( QDataStream& stream, quint32 len );
 QVariant readTNEFAttribute( QDataStream& stream, quint16 type, quint32 len );
 QDateTime formatTime( quint32 lowB, quint32 highB );
-QString formatRecipient( const QMap<int,KTNEFProperty*>& props );
+QString formatRecipient( const QMap<int,KTnef::KTNEFProperty*>& props );
 
-//------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 class KTNEFParser::ParserPrivate
 {
@@ -89,8 +90,8 @@ public:
 	QIODevice                *device_;
 	bool                     deleteDevice_;
 	QString                  defaultdir_;
-	KTNEFAttach              *current_;
-	KTNEFMessage             *message_;
+        KTNEFAttach              *current_;
+        KTNEFMessage             *message_;
 };
 
 KTNEFParser::KTNEFParser()
@@ -218,9 +219,9 @@ bool KTNEFParser::decodeMessage()
 				d->stream_ >> rows;
 				for ( uint i=0; i<rows; i++ )
 				{
-					QMap<int,KTNEFProperty*> props;
-					readMAPIProperties( props, 0 );
-					recipTable << formatRecipient( props );
+                                    QMap<int,KTNEFProperty*> props;
+                                    readMAPIProperties( props, 0 );
+                                    recipTable << formatRecipient( props );
 				}
 				d->message_->addProperty( 0x0E12, MAPI_TYPE_STRING8, recipTable );
 				d->device_->seek( d->device_->pos() - i2 );
@@ -560,10 +561,10 @@ QDateTime formatTime( quint32 lowB, quint32 highB )
 	return dt;
 }
 
-QString formatRecipient( const QMap<int,KTNEFProperty*>& props )
+QString formatRecipient( const QMap<int,KTnef::KTNEFProperty*>& props )
 {
 	QString s, dn, addr, t;
-	QMap<int,KTNEFProperty*>::ConstIterator it;
+	QMap<int,KTnef::KTNEFProperty*>::ConstIterator it;
 	if ( ( it = props.find( 0x3001 ) ) != props.end() )
 		dn = ( *it )->valueString();
 	if ( ( it = props.find( 0x3003 ) ) != props.end() )
@@ -780,7 +781,7 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 {
 	quint32	n;
 	MAPI_value	mapi;
-	KTNEFProperty *p;
+        KTNEFProperty *p;
 	QMap<int,KTNEFProperty*>::ConstIterator it;
 
 	// some initializations
@@ -871,8 +872,8 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 		// do not remove potential existing similar entry
 		if ( ( it = props.find( key ) ) == props.end() )
 		{
-			p = new KTNEFProperty( key, ( mapi.type & 0x0FFF ), mapi.value, mapi.name.value );
-			props[ p->key() ] = p;
+                    p = new KTNEFProperty( key, ( mapi.type & 0x0FFF ), mapi.value, mapi.name.value );
+                    props[ p->key() ] = p;
 		}
 		//kDebug() << "stream: " << d->device_->pos() << endl;
 	}

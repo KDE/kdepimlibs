@@ -24,6 +24,8 @@
 #include "ktnef/ktnefpropertyset.h"
 #include "ktnef/ktnefproperty.h"
 
+using namespace KTnef;
+
 #include <QList>
 
 #include <kdebug.h>
