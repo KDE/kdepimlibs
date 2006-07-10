@@ -31,7 +31,9 @@ class QDataStream;
 class QDateTime;
 class QStringList;
 
-class KTNEFWriter {
+#include "ktnef.h"
+
+class KTNEF_EXPORT KTNEFWriter {
 public:
   KTNEFWriter();
   ~KTNEFWriter();
