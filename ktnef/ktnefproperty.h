@@ -68,5 +68,5 @@ private:
 	QVariant _name;
 };
 
-};
+}
 #endif /* KTNEFPROPERTY_H */

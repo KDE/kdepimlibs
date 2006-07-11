@@ -50,5 +50,5 @@ private:
 	MessagePrivate *d;
 };
 
-};
+}
 #endif /* KTNEFMESSAGE_H */

@@ -63,5 +63,5 @@ private:
 	ParserPrivate *d;
 };
 
-};
+}
 #endif

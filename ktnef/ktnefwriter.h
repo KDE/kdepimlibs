@@ -98,6 +98,6 @@ private:
   PrivateData *mData;
 };
 
-};
+}
 
 #endif // KTNEFWRITER_H

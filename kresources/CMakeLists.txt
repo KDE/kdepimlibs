@@ -27,7 +27,7 @@ kde4_add_library(kresources SHARED ${kresources_LIB_SRCS})
 
 target_link_libraries(kresources  ${KDE4_KDECORE_LIBS} kdeui kio )
 
-set_target_properties(kresources PROPERTIES VERSION 2.0.0 SOVERSION 2 )
+set_target_properties(kresources PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kresources  DESTINATION ${LIB_INSTALL_DIR} )
 
 

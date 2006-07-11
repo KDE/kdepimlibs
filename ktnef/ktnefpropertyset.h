@@ -59,5 +59,5 @@ private:
     QMap<int,KTNEFProperty*> attributes_;  /* used to store TNEF attributes */
 };
 
-};
+}
 #endif /* KTNEFPROPERTYSET_H */

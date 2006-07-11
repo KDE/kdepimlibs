@@ -75,5 +75,5 @@ private:
 	AttachPrivate *d;
 };
 
-};
+}
 #endif
