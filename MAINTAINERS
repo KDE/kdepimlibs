@@ -1,6 +1,10 @@
 emailfunctions  Matt Douhan <matt@fruitsalad.org>
 kabc            Cornelius Schumacher <schumacher@kde.org>
 kcal            Cornelius Schumacher <schumacher@kde.org>
+                Reinhold Kainhofer <reinhold@kainhofer.com>
+kcal/libical    Allen Winter <winter@kde.org>
+                Cornelius Schumacher <schumacher@kde.org>
+                Reinhold Kainhofer <reinhold@kainhofer.com>
 kresources      Cornelius Schumacher <schumacher@kde.org>
                 Tobias Koenig <tokoe@kde.org>
 ktnef           Michael Goffioul <goffioul@imec.be>
