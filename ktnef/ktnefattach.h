@@ -30,7 +30,7 @@
 #include "ktnef/ktnefpropertyset.h"
 #include "ktnef.h"
 
-class KTNEFProperty;
+namespace KTnef { class KTNEFProperty; }
 
 namespace KTnef {
 
