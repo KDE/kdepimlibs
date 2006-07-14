@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
@@ -22,7 +22,7 @@
 #ifndef KCAL_EXCEPTIONS_H
 #define KCAL_EXCEPTIONS_H
 //
-// Exception classes of libkcal.
+// Exception classes for the kcal library.
 //
 // We don't use actual C++ exceptions right now. These classes are currently
 // returned by an error function, but we can build upon them, if we start
@@ -47,9 +47,9 @@ class Exception
 
     /**
       Return descriptive message of exception.
-    */    
+    */
     virtual QString message();
-    
+
   protected:
     QString mMessage;
 
@@ -70,12 +70,12 @@ class ErrorFormat : public Exception
                            CalVersion1,CalVersion2,
                            CalVersionUnknown,
                            Restriction };
-  
+
     /**
       Create format error exception.
     */
     ErrorFormat( ErrorCodeFormat code, const QString &message = QString() );
-    
+
     /**
       Return format error message.
     */
@@ -84,7 +84,7 @@ class ErrorFormat : public Exception
       Return format error code.
     */
     ErrorCodeFormat errorCode();
-    
+
   private:
     ErrorCodeFormat mCode;
 

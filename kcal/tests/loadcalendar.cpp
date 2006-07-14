@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
@@ -26,7 +26,7 @@
 #include <kcmdlineargs.h>
 #include <QByteArray>
 
-#include "calendarlocal.h"
+#include "kcal/calendarlocal.h"
 
 using namespace KCal;
 
@@ -50,7 +50,7 @@ int main(int argc,char **argv)
   Q_UNUSED( args );
 
   CalendarLocal cal( QLatin1String("UTC") );
-  
+
   cal.load("cal");
 
   KCal::Todo::List todoList;

@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
 
@@ -28,6 +28,7 @@
 
 using namespace KCal;
 
+//TODO: change strings to use "kcal" instead of "libkcal"?
 QString CalFormat::mApplication = QLatin1String("libkcal");
 QString CalFormat::mProductId = QLatin1String("-//K Desktop Environment//NONSGML libkcal 3.5//EN");
 

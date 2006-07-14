@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 1998 Preston Brown <pbrown@kde.org>
     Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
@@ -27,7 +27,7 @@
 #include <QDateTime>
 //Added by qt3to4:
 #include <QList>
-#include <libkcal/listbase.h>
+#include "kcal/listbase.h"
 
 #include "libkcal_export.h"
 

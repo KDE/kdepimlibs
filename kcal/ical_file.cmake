@@ -1,31 +1,31 @@
 # ORDERING OF HEADERS IS SIGNIFICANT. Don't change this ordering.
 # It is required to make the combined header ical.h properly.
 set(COMBINEDHEADERSICAL
-   ${TOPS}/libkcal/libical/src/libical/icalversion.h
-   ${TOPS}/libkcal/libical/src/libical/icaltime.h
-   ${TOPS}/libkcal/libical/src/libical/icalduration.h
-   ${TOPS}/libkcal/libical/src/libical/icalperiod.h
-   ${TOPS}/libkcal/libical/src/libical/icalenums.h
-   ${TOPS}/libkcal/libical/src/libical/icaltypes.h
-   ${TOPS}/libkcal/libical/src/libical/icalrecur.h
-   ${TOPS}/libkcal/libical/src/libical/icalattach.h
-   ${TOPB}/libkcal/libical/src/libical/icalderivedvalue.h
-   ${TOPB}/libkcal/libical/src/libical/icalderivedparameter.h
-   ${TOPS}/libkcal/libical/src/libical/icalvalue.h
-   ${TOPS}/libkcal/libical/src/libical/icalparameter.h
-   ${TOPB}/libkcal/libical/src/libical/icalderivedproperty.h
-   ${TOPS}/libkcal/libical/src/libical/icalproperty.h
-   ${TOPS}/libkcal/libical/src/libical/pvl.h
-   ${TOPS}/libkcal/libical/src/libical/icalarray.h
-   ${TOPS}/libkcal/libical/src/libical/icalcomponent.h
-   ${TOPS}/libkcal/libical/src/libical/icaltimezone.h
-   ${TOPS}/libkcal/libical/src/libical/icalparser.h
-   ${TOPS}/libkcal/libical/src/libical/icalmemory.h
-   ${TOPS}/libkcal/libical/src/libical/icalerror.h
-   ${TOPS}/libkcal/libical/src/libical/icalrestriction.h
-   ${TOPS}/libkcal/libical/src/libical/sspm.h
-   ${TOPS}/libkcal/libical/src/libical/icalmime.h
-   ${TOPS}/libkcal/libical/src/libical/icallangbind.h
+   ${TOPS}/kcal/libical/src/libical/icalversion.h
+   ${TOPS}/kcal/libical/src/libical/icaltime.h
+   ${TOPS}/kcal/libical/src/libical/icalduration.h
+   ${TOPS}/kcal/libical/src/libical/icalperiod.h
+   ${TOPS}/kcal/libical/src/libical/icalenums.h
+   ${TOPS}/kcal/libical/src/libical/icaltypes.h
+   ${TOPS}/kcal/libical/src/libical/icalrecur.h
+   ${TOPS}/kcal/libical/src/libical/icalattach.h
+   ${TOPB}/kcal/libical/src/libical/icalderivedvalue.h
+   ${TOPB}/kcal/libical/src/libical/icalderivedparameter.h
+   ${TOPS}/kcal/libical/src/libical/icalvalue.h
+   ${TOPS}/kcal/libical/src/libical/icalparameter.h
+   ${TOPB}/kcal/libical/src/libical/icalderivedproperty.h
+   ${TOPS}/kcal/libical/src/libical/icalproperty.h
+   ${TOPS}/kcal/libical/src/libical/pvl.h
+   ${TOPS}/kcal/libical/src/libical/icalarray.h
+   ${TOPS}/kcal/libical/src/libical/icalcomponent.h
+   ${TOPS}/kcal/libical/src/libical/icaltimezone.h
+   ${TOPS}/kcal/libical/src/libical/icalparser.h
+   ${TOPS}/kcal/libical/src/libical/icalmemory.h
+   ${TOPS}/kcal/libical/src/libical/icalerror.h
+   ${TOPS}/kcal/libical/src/libical/icalrestriction.h
+   ${TOPS}/kcal/libical/src/libical/sspm.h
+   ${TOPS}/kcal/libical/src/libical/icalmime.h
+   ${TOPS}/kcal/libical/src/libical/icallangbind.h
 )
 
 FILE(WRITE  ${KDE_FILE_H_FILE} "#ifdef __cplusplus\n")

@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2002 Michael Brade <brade@kde.org>
 
@@ -21,7 +21,7 @@
 #ifndef KCAL_ATTACHMENT_H
 #define KCAL_ATTACHMENT_H
 
-#include "listbase.h"
+#include "kcal/listbase.h"
 #include "libkcal_export.h"
 
 #include <QString>
@@ -35,22 +35,22 @@ namespace KCal {
 class KDE_EXPORT Attachment
 {
   public:
-    /** 
+    /**
       Type for a list of attachements, since most documents will
-      have one-or-more attachements. 
+      have one-or-more attachements.
     */
     typedef ListBase<Attachment> List;
 
     /**
       Create a Reference to some URI by copying an existing Attachment.
-      
+
       @param attachment the attachment to be duplicated
     */
     Attachment( const Attachment &attachment );
 
     /**
       Create a Reference to some URI.
-      
+
       @param uri the uri this attachment refers to
       @param mime the mime type of the resource being linked to
     */
@@ -58,7 +58,7 @@ class KDE_EXPORT Attachment
 
     /**
       Create a binary attachment.
-     
+
       @param base64 the attachment in base64 format
       @param mime the mime type of the attachment
     */
@@ -73,7 +73,7 @@ class KDE_EXPORT Attachment
         @param uri The URI to use for this attachment.
     */
     void setUri( const QString &uri );
-    
+
     /* Data attachments are currently not implemented in iCal. */
     bool isBinary() const;
     char *data() const;
@@ -86,15 +86,15 @@ class KDE_EXPORT Attachment
     /* The optional FMTTYPE parameter in iCal */
     QString mimeType() const;
     void setMimeType( const QString &mime );
-		
+
 		/* The custom X-CONTENT-DISPOSITION parameter, used by OGo etc. */
 		bool showInline() const;
 		void setShowInline( bool showinline );
-		
+
 		/* The custom X-LABEL parameter to show a human-readable title */
 		QString label() const;
 		void setLabel( const QString &label );
-		
+
 		/* The custom X-KONTACT-TYPE parameter, controls whether the attachment
 		   is 'local', e.g. with hidden path. */
 		bool isLocal() const;

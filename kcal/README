@@ -1,5 +1,5 @@
-libkcal
-=======
+kcal Library
+============
 
 This library contains the calendaring classes originally only used by
 KOrganizer. They provide a C++ API for handling the vCalendar and iCalendar

@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
@@ -26,10 +26,10 @@
 #include <QStringList>
 
 
-#include "customproperties.h"
-#include "duration.h"
-#include "person.h"
-#include "listbase.h"
+#include "kcal/customproperties.h"
+#include "kcal/duration.h"
+#include "kcal/person.h"
+#include "kcal/listbase.h"
 #include "libkcal_export.h"
 
 #include <kdepimmacros.h>
@@ -46,11 +46,11 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
 {
   public:
     /** Kinds of alarms that can be (user) defined. */
-    enum Type { 
-        Invalid    /**< Invalid, or no alarm */, 
-        Display    /**< Display a dialog box */, 
-        Procedure  /**< Call a script */, 
-        Email      /**< Send email */, 
+    enum Type {
+        Invalid    /**< Invalid, or no alarm */,
+        Display    /**< Display a dialog box */,
+        Procedure  /**< Call a script */,
+        Email      /**< Send email */,
         Audio      /**< Play an audio file */
     };
 
@@ -76,7 +76,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       Set the type of the alarm.
       If the specified type is different from the current type of the alarm,
       the alarm's type-specific properties are initialised to null.
-      
+
       @param type type of alarm.
     */
     void setType( Type type );
@@ -87,7 +87,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Set the alarm to be a display alarm.
-      
+
       @param text text to display when the alarm is triggered.
     */
     void setDisplayAlarm( const QString &text = QString() );
@@ -103,7 +103,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Set the alarm to be an audio alarm.
-      
+
       @param audioFile optional file to play when the alarm is triggered.
     */
     void setAudioAlarm( const QString &audioFile = QString() );
@@ -114,14 +114,14 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     void setAudioFile( const QString &audioFile );
     /**
       Return the name of the audio file for the alarm.
-      
+
       @return The audio file for the alarm, or QString() if not an audio alarm.
     */
     QString audioFile() const;
 
     /**
       Set the alarm to be a procedure alarm.
-      
+
       @param programFile program to execute when the alarm is triggered.
       @param arguments arguments to supply to programFile.
     */
@@ -134,7 +134,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     void setProgramFile( const QString &programFile );
     /**
       Return the name of the program file to execute when the alarm is triggered.
-      
+
       @return the program file name, or QString() if not a procedure alarm.
     */
     QString programFile() const;
@@ -145,14 +145,14 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     void setProgramArguments( const QString &arguments );
     /**
       Return the arguments to the program to run when the alarm is triggered.
-      
+
       @return the program arguments, or QString() if not a procedure alarm.
     */
     QString programArguments() const;
 
     /**
       Set the alarm to be an email alarm.
-      
+
       @param subject subject line of email.
       @param text body of email.
       @param addressees email addresses of recipient(s).
@@ -219,7 +219,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     void setMailText( const QString &text );
     /**
       Return the email body text.
-      
+
       @return the body text, or QString() if not an email alarm.
     */
     QString mailText() const;
@@ -276,14 +276,14 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Set the interval between snoozes for the alarm.
-      
+
       @param alarmSnoozeTime the time in minutes between snoozes.
     */
     void setSnoozeTime( int alarmSnoozeTime );
 
     /**
       Get how long the alarm snooze interval is.
-      
+
       @return the number of minutes between snoozes.
     */
     int snoozeTime() const;

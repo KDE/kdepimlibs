@@ -40,10 +40,10 @@
 #include <unistd.h>
 #include <assert.h>
 
-#include "calendarresources.h"
-#include "resourcecalendar.h"
-#include "icalformat.h"
-#include "event.h"
+#include "kcal/calendarresources.h"
+#include "kcal/resourcecalendar.h"
+#include "kcal/icalformat.h"
+#include "kcal/event.h"
 
 static const KCmdLineOptions options[] =
 {
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     // KApplication::disableAutoDcopRegistration();
     KCmdLineArgs::init(argc,argv,"testresource", 0, 0, 0, 0);
     KCmdLineArgs::addCmdLineOptions( options );
- 
+
     KApplication app;
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     QString type = QString();
@@ -85,7 +85,7 @@ namespace KCal {
 TestResource::TestResource( const QString &type, KConfig *config )
  :m_resource_type( type ), m_config( config ), m_res( 0 )
 {}
-  
+
 void TestResource::setup()
 {
   CalendarResourceManager *manager = new CalendarResourceManager( "calendar" );
@@ -96,7 +96,7 @@ void TestResource::setup()
   if ( m_resource_type.isNull() ) {
 
     const QString & chosen = KInputDialog::getItem( "Select Resource",
-        "Select the resource you wish to test. Test data will be used.", 
+        "Select the resource you wish to test. Test data will be used.",
         resources );
 
     kDebug() << "Selected Resource: " << chosen << endl;
@@ -159,14 +159,14 @@ void TestResource::testOpenAndClose()
 void TestResource::testResourceAttributes()
 {
   kDebug() << k_funcinfo << endl;
-  
+
   check( "type", m_res->type(), m_resource_type );
-  
+
   m_res->setReadOnly( true );
   assert( m_res->readOnly() );
   m_res->setReadOnly( false );
   assert( !m_res->readOnly() );
- 
+
   m_res->setResourceName( "Margarete" );
   check( "name", m_res->resourceName(), "Margarete" );
 
@@ -187,7 +187,7 @@ void TestResource::testEventAddRemove()
 {
   ICalFormat f;
   kDebug() << k_funcinfo << endl;
-  
+
   int oldcount = m_res->rawIncidences().count();
   Event *event = makeTestEvent();
   const QString origString = f.toString( event );
@@ -207,7 +207,7 @@ void TestResource::testTodoAddRemove()
 {
   ICalFormat f;
   kDebug() << k_funcinfo << endl;
-  
+
   int oldcount = m_res->rawIncidences().count();
   Todo *todo = makeTestTodo();
   const QString origString = f.toString( todo );
@@ -227,7 +227,7 @@ void TestResource::testJournalAddRemove()
 {
   ICalFormat f;
   kDebug() << k_funcinfo << endl;
-  
+
   int oldcount = m_res->rawIncidences().count();
   Journal *journal = makeTestJournal();
   const QString origString = f.toString( journal );

@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -21,9 +21,9 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "calendarlocal.h"
-#include "vcalformat.h"
-#include "filestorage.h"
+#include "kcal/calendarlocal.h"
+#include "kcal/vcalformat.h"
+#include "kcal/filestorage.h"
 
 #include <kaboutdata.h>
 #include <kapplication.h>

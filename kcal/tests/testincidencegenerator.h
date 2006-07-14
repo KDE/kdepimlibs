@@ -1,12 +1,12 @@
 #ifndef TESTINCIDENCEGENERATOR
 #define TESTINCIDENCEGENERATOR
 
-#include "event.h"
-#include "todo.h"
-#include "journal.h"
+#include "kcal/event.h"
+#include "kcal/todo.h"
+#include "kcal/journal.h"
 using namespace KCal;
 
-static Event* makeTestEvent() 
+static Event* makeTestEvent()
 {
   Event *event = new Event();
   event->setSummary("Test Event");
@@ -15,7 +15,7 @@ static Event* makeTestEvent()
   return event;
 }
 
-static Todo* makeTestTodo() 
+static Todo* makeTestTodo()
 {
   Todo *todo = new Todo();
   todo->setSummary("Test Todo");
@@ -23,7 +23,7 @@ static Todo* makeTestTodo()
   return todo;
 }
 
-static Journal* makeTestJournal() 
+static Journal* makeTestJournal()
 {
   Journal *journal = new Journal();
   journal->setSummary("Test Journal");

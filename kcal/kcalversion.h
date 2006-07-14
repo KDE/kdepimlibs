@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 

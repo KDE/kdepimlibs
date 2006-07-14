@@ -1,5 +1,5 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkcal/libical/src  )
+include_directories( ${CMAKE_SOURCE_DIR}/kcal/libical/src  )
 
 
 ########### next target ###############

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-#    This file is part of libkcal.
+#    This file is part of the kcal library.
 #
 #    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 #    Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>

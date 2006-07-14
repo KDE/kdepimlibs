@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
 
@@ -240,7 +240,7 @@ QString ICalFormat::toString( Calendar *cal )
   // events
   Event::List events = cal->rawEvents();
   Event::List::ConstIterator it2;
-  for( it2 = events.begin(); it2 != events.end(); ++it2 ) 
+  for( it2 = events.begin(); it2 != events.end(); ++it2 )
   {
     if (*it2)
     {
@@ -494,9 +494,9 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   }
 
   kDebug(5800) << "ICalFormat::parseScheduleMessage() restriction..." << endl;
-  
+
   if (!icalrestriction_check(message)) {
-    kWarning(5800) << k_funcinfo << endl << "libkcal reported a problem while parsing:" << endl;
+    kWarning(5800) << k_funcinfo << endl << "kcal library reported a problem while parsing:" << endl;
     kWarning(5800) << Scheduler::translatedMethodName(method) + ": " + mImpl->extractErrorProperty(c)<< endl;
     /*
     setException(new ErrorFormat(ErrorFormat::Restriction,

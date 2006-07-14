@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2000-2003 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -28,8 +28,8 @@
 //Added by qt3to4:
 #include <QTextStream>
 
-#include <libkcal/calendar.h>
-#include <libkcal/htmlexportsettings.h>
+#include "kcal/calendar.h"
+#include "kcal/htmlexportsettings.h"
 
 #include "libkcal_export.h"
 
@@ -71,7 +71,7 @@ class KDE_EXPORT HtmlExport
     void createFreeBusyView( QTextStream *ts );
 
     void createTodo( QTextStream *ts, Todo *todo);
-    void createEvent( QTextStream *ts, Event *event, QDate date, 
+    void createEvent( QTextStream *ts, Event *event, QDate date,
                       bool withDescription = true);
     void createFooter( QTextStream *ts );
 
@@ -80,9 +80,9 @@ class KDE_EXPORT HtmlExport
     void formatLocation( QTextStream *ts, Incidence *event );
     void formatCategories( QTextStream *ts, Incidence *event );
     void formatAttendees( QTextStream *ts, Incidence *event );
- 
+
     QString breakString( const QString &text );
-    
+
     QDate fromDate() const;
     QDate toDate() const;
     QString styleSheet() const;

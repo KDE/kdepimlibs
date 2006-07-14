@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
@@ -25,9 +25,9 @@
 #include <klocale.h>
 #include <kcmdlineargs.h>
 
-#include "icalformat.h"
-#include "event.h"
-#include "todo.h"
+#include "kcal/icalformat.h"
+#include "kcal/event.h"
+#include "kcal/todo.h"
 
 using namespace KCal;
 
@@ -79,7 +79,7 @@ int main(int argc,char **argv)
   QString todoString1 = f.toString( todo1 );
   if( verbose )
     kDebug(5800) << "todo1 START:" << todoString1 << "todo1 END" << endl;
-    
+
   Incidence *todo2 = todo1->clone();
   QString todoString2 = f.toString( todo2 );
   if( verbose )

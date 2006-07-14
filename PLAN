@@ -22,7 +22,7 @@ kode - parts moving to kdelibs.  kxforms should be in kdepim?  kwsdl??
 ktnef - change license to LGPL
 libakonadi - blocked by libkmime
 libemailfunctions - turned into a stand-alone shared lib. die.die.die eventually
-libkcal - blocked by libemailfunctions (versit and libical subdirs licensed ok)
+kcal - versit and libical subdirs licensed ok
 libkdepim
 libkholidays
 libkholidays_ng

@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
 
@@ -35,8 +35,8 @@ namespace KCal {
 /**
   This class represents custom calendar properties.
   It is used as a base class for classes which represent calendar components.
-  A custom property name written by libkcal has the form X-KDE-APP-KEY where
-  APP represents the application name, and KEY distinguishes individual
+  A custom property name written by the kcal library has the form X-KDE-APP-KEY
+  where APP represents the application name, and KEY distinguishes individual
   properties for the application.
   In keeping with RFC2445, property names must be composed only of the
   characters A-Z, a-z, 0-9 and '-'.
@@ -55,7 +55,7 @@ class LIBKCAL_EXPORT CustomProperties
 
     /**
       Create or modify a custom calendar property.
-      
+
       @param app   Application name as it appears in the custom property name.
       @param key   Property identifier specific to the application.
       @param value The property's value. A call with a value of QString()
@@ -65,14 +65,14 @@ class LIBKCAL_EXPORT CustomProperties
                             const QString &value );
     /**
       Delete a custom calendar property.
-      
+
       @param app Application name as it appears in the custom property name.
       @param key Property identifier specific to the application.
     */
     void removeCustomProperty( const QByteArray &app, const QByteArray &key );
     /**
       Return the value of a custom calendar property.
-      
+
       @param app Application name as it appears in the custom property name.
       @param key Property identifier specific to the application.
       @return Property value, or QString() if (and only if) the property
@@ -82,7 +82,7 @@ class LIBKCAL_EXPORT CustomProperties
 
     /**
       Create or modify a non-KDE or non-standard custom calendar property.
-      
+
       @param name Full property name
       @param value The property's value. A call with a value of QString()
                    will be ignored.
@@ -90,13 +90,13 @@ class LIBKCAL_EXPORT CustomProperties
     void setNonKDECustomProperty( const QByteArray &name, const QString &value );
     /**
       Delete a non-KDE or non-standard custom calendar property.
-      
+
       @param name Full property name
     */
     void removeNonKDECustomProperty( const QByteArray &name );
     /**
       Return the value of a non-KDE or non-standard custom calendar property.
-      
+
       @param name Full property name
       @return Property value, or QString() if (and only if) the property
               does not exist.

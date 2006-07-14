@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -31,9 +31,9 @@
 #include <kdebug.h>
 #include <kcalendarsystem.h>
 
-#include <libkcal/calendar.h>
-#include <libkcal/event.h>
-#include <libkcal/todo.h>
+#include "kcal/calendar.h"
+#include "kcal/event.h"
+#include "kcal/todo.h"
 
 #ifndef KORG_NOKABC
  #include <kabc/stdaddressbook.h>

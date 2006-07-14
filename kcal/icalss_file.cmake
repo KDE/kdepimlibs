@@ -1,15 +1,15 @@
 # ORDERING OF HEADERS IS SIGNIFICANT. Don't change this ordering.
 # It is required to make the combined header icalss.h properly.
 set(COMBINEDHEADERSICALSS
-   ${TOP}/libkcal/libical/src/libicalss/icalgauge.h
-   ${TOP}/libkcal/libical/src/libicalss/icalset.h
-   ${TOP}/libkcal/libical/src/libicalss/icalcluster.h
-   ${TOP}/libkcal/libical/src/libicalss/icalfileset.h
-   ${TOP}/libkcal/libical/src/libicalss/icaldirset.h
-   ${TOP}/libkcal/libical/src/libicalss/icalcalendar.h
-   ${TOP}/libkcal/libical/src/libicalss/icalclassify.h
-   ${TOP}/libkcal/libical/src/libicalss/icalspanlist.h
-   ${TOP}/libkcal/libical/src/libicalss/icalmessage.h
+   ${TOP}/kcal/libical/src/libicalss/icalgauge.h
+   ${TOP}/kcal/libical/src/libicalss/icalset.h
+   ${TOP}/kcal/libical/src/libicalss/icalcluster.h
+   ${TOP}/kcal/libical/src/libicalss/icalfileset.h
+   ${TOP}/kcal/libical/src/libicalss/icaldirset.h
+   ${TOP}/kcal/libical/src/libicalss/icalcalendar.h
+   ${TOP}/kcal/libical/src/libicalss/icalclassify.h
+   ${TOP}/kcal/libical/src/libicalss/icalspanlist.h
+   ${TOP}/kcal/libical/src/libicalss/icalmessage.h
 )
 
 FILE(WRITE  ${KDE_FILE_H_FILE} "#ifdef __cplusplus\n")

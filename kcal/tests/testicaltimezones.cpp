@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2005 David Jarvie <software@astrojar.org.uk>
 
@@ -32,9 +32,9 @@
 #include <ktempfile.h>
 
 extern "C" {
-  #include <libical/ical.h>
+  #include "kcal/libical/src/libical/ical.h"
 }
-#include "icaltimezones.h"
+#include "kcal/icaltimezones.h"
 #include "testicaltimezones.moc"
 
 using namespace KCal;
@@ -111,7 +111,7 @@ static const char *calendarFooter =
 "END:CALENDAR\n";
 
 
-int main(int argc, char *argv[]) 
+int main(int argc, char *argv[])
 {
     setenv("LC_ALL", "C", 1);
     KAboutData aboutData("qttest", "qttest", "version");

@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
@@ -22,8 +22,8 @@
 #include <iostream>
 #include <kdebug.h>
 
-#include "event.h"
-#include "icalformat.h"
+#include "kcal/event.h"
+#include "kcal/icalformat.h"
 
 using namespace KCal;
 
@@ -38,7 +38,7 @@ int main( int, char ** )
   kDebug(5800) << icalstr << endl;
   Incidence *ev2 = iformat.fromString(icalstr);
   kDebug(5800) << "Event reread!" << endl ;
-  
+
   if (ev2)
     kDebug(5800) << iformat.toICalString(ev2) << endl;
   else

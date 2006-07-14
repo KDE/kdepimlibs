@@ -1,10 +1,10 @@
-LIBKCAL
-=======
+kcal Library
+============
 
-libkcal provides the non-GUI part of calendaring. It is partly based
+kcal provides the non-GUI part of calendaring. It is partly based
 on libical, an implementation of the iCalendar format defined in
 rfc2445. libical is an object-oriented C library, which provides basic
-but complete handling of calendaring components. libkcal puts a C++
+but complete handling of calendaring components. kcal puts a C++
 face on it, which fully encapsulates the library.
 
 Calendaring data is handled by the Calendar class interface, which
@@ -53,7 +53,7 @@ IMAP or Kolab resources using shared folders - and both you and the
 other accept the same invitation, then you both have an event with the
 same SID. Had this been the UID (as was previously the case and as is
 done by other applications) then you would have two incidences with
-the same UID, and libkcal is designed with a very basic assumption
+the same UID, and kcal is designed with a very basic assumption
 that this must never happen. By storing the UID in SID and making a
 new and private UID, there is still the link to the invitation UID
 that is necessary for scheduling, and the UIDs of the two incidences

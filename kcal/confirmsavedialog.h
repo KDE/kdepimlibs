@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
@@ -23,7 +23,7 @@
 
 #include <QTreeWidget>
 
-#include <libkcal/incidence.h>
+#include "kcal/incidence.h"
 
 #include <kdialog.h>
 #include <kdepimmacros.h>

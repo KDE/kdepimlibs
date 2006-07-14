@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
@@ -34,7 +34,8 @@ class KConfig;
 
 /**
    @namespace KCal
-   Namespace KCal is for global classes, objects and/or functions in libkcal.
+   Namespace KCal is for global classes, objects and/or functions in the
+   kcal library.
 */
 namespace KCal {
 

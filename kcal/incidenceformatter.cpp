@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -21,16 +21,15 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "incidenceformatter.h"
-
-#include <libkcal/attachment.h>
-#include <libkcal/event.h>
-#include <libkcal/todo.h>
-#include <libkcal/journal.h>
-#include <libkcal/calendar.h>
-#include <libkcal/calendarlocal.h>
-#include <libkcal/icalformat.h>
-#include <libkcal/freebusy.h>
+#include "kcal/incidenceformatter.h"
+#include "kcal/attachment.h"
+#include "kcal/event.h"
+#include "kcal/todo.h"
+#include "kcal/journal.h"
+#include "kcal/calendar.h"
+#include "kcal/calendarlocal.h"
+#include "kcal/icalformat.h"
+#include "kcal/freebusy.h"
 
 #include <emailfunctions/email.h>
 
@@ -1392,7 +1391,7 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
         // Outlook - we ignore it for now.
         s = tnefMsg->findProp( 0x8202 ).replace( QChar( '-' ), QString() )
           .replace( QChar( ':' ), QString() );
-        // ### libkcal always uses currentDateTime()
+        // ### kcal always uses currentDateTime()
         // event->setDtStamp(QDateTime::fromString(s));
 
         s = tnefMsg->findNamedProp( "Keywords" );

@@ -1,5 +1,5 @@
 /*
-    This file is part of libkcal.
+    This file is part of the kcal library.
 
     Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -42,7 +42,8 @@ class QWidget;
 
 /**
    @namespace KCal
-   Namespace KCal is for global classes, objects and/or functions in libkcal.
+   Namespace KCal is for global classes, objects and/or functions for the
+   kcal library.
 */
 namespace KCal {
 
