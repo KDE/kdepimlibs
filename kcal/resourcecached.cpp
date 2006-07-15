@@ -279,6 +279,16 @@ QString ResourceCached::timeZoneId() const
   return mCalendar.timeZoneId();
 }
 
+void ResourceCached::setLocalTime()
+{
+  mCalendar.setLocalTime();
+}
+
+bool ResourceCached::isLocalTime() const
+{
+  return mCalendar.isLocalTime();
+}
+
 void ResourceCached::clearChanges()
 {
   mAddedIncidences.clear();

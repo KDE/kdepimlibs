@@ -288,6 +288,19 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     QString timeZoneId() const;
 
     /**
+      Set to store incidences without a time zone.
+    */
+    void setLocalTime();
+
+    /**
+      Set whether incidences are to be written without a time zone.
+
+      @return true if the resource is set to write incidences withoout
+      a time zone; false otherwise.
+    */
+    bool isLocalTime() const;
+
+    /**
       Return the owner of the calendar's full name.
     */
     const Person &getOwner() const;
