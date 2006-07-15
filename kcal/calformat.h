@@ -27,7 +27,7 @@
 
 #include "exceptions.h"
 #include "event.h"
-#include "libkcal_export.h"
+#include "kcal.h"
 
 namespace KCal {
 

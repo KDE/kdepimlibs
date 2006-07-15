@@ -34,7 +34,7 @@
 #include "calendar.h"
 #include "resourcecalendar.h"
 
-#include "libkcal_export.h"
+#include "kcal.h"
 
 #include <kresources/manager.h>
 

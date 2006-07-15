@@ -31,7 +31,7 @@
 #include "kcal/calendar.h"
 #include "kcal/htmlexportsettings.h"
 
-#include "libkcal_export.h"
+#include "kcal.h"
 
 class QFile;
 class QTextStream;

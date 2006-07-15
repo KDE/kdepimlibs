@@ -31,7 +31,7 @@
 class KConfig;
 
 #include "calendarlocal.h"
-#include "libkcal_export.h"
+#include "kcal.h"
 
 #include "resourcecached.h"
 

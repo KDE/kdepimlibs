@@ -29,7 +29,7 @@
 #include <QList>
 #include "kcal/listbase.h"
 
-#include "libkcal_export.h"
+#include "kcal.h"
 
 template <class T>
 /*Q_INLINE_TEMPLATES*/ void qSortUnique( QList<T> &lst )

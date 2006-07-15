@@ -25,7 +25,7 @@
 
 #include <q3dragobject.h>
 #include "calendar.h"
-#include "libkcal_export.h"
+#include "kcal.h"
 
 namespace KCal {
 

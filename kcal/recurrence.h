@@ -29,7 +29,7 @@
 //Added by qt3to4:
 #include <QList>
 
-#include "libkcal_export.h"
+#include "kcal.h"
 #include "recurrencerule.h"
 
 namespace KCal {

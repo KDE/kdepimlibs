@@ -24,7 +24,7 @@
 #ifndef KCAL_DNDFACTORY_H
 #define KCAL_DNDFACTORY_H
 
-#include "libkcal_export.h"
+#include "kcal.h"
 //Added by qt3to4:
 #include <QDropEvent>
 

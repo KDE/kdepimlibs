@@ -22,7 +22,7 @@
 #define KCAL_IMIPSCHEDULER_H
 
 #include <QList>
-#include "libkcal_export.h"
+#include "kcal.h"
 
 #include "scheduler.h"
 

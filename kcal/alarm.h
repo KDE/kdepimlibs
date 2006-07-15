@@ -30,7 +30,7 @@
 #include "kcal/duration.h"
 #include "kcal/person.h"
 #include "kcal/listbase.h"
-#include "libkcal_export.h"
+#include "kcal.h"
 
 #include <QList>
 

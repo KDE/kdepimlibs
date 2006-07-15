@@ -27,7 +27,7 @@
 
 #include "resourcecached.h"
 
-#include "libkcal_export.h"
+#include "kcal.h"
 
 class QString;
 class KConfig;

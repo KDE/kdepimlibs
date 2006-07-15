@@ -22,7 +22,7 @@
 #define KCAL_ATTACHMENT_H
 
 #include "kcal/listbase.h"
-#include "libkcal_export.h"
+#include "kcal.h"
 
 #include <QString>
 

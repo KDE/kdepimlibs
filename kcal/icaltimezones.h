@@ -24,7 +24,7 @@
 
 #include <ktimezones.h>
 
-#include "libkcal_export.h"
+#include "kcal.h"
 
 namespace KCal {
 

@@ -30,7 +30,7 @@
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
 
-#include "libkcal_export.h"
+#include "kcal.h"
 
 namespace KCal {
 

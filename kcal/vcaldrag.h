@@ -23,7 +23,7 @@
 #define KCAL_VCALDRAG_H
 
 #include <q3dragobject.h>
-#include "libkcal_export.h"
+#include "kcal.h"
 
 namespace KCal {
 

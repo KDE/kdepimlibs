@@ -24,7 +24,7 @@
 #include <QString>
 #include <QList>
 
-#include "libkcal_export.h"
+#include "kcal.h"
 
 namespace KCal {
 

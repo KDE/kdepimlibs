@@ -28,7 +28,7 @@
 #define KCAL_CALENDARNULL_H
 
 #include "calendar.h"
-#include "libkcal_export.h"
+#include "kcal.h"
 
 class KConfig;
 

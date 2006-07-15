@@ -27,7 +27,7 @@
 //Added by qt3to4:
 #include <QByteArray>
 
-#include "libkcal_export.h"
+#include "kcal.h"
 
 namespace KCal {
 

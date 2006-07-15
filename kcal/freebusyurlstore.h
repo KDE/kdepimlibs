@@ -23,7 +23,7 @@
 
 #include <QString>
 
-#include "libkcal_export.h"
+#include "kcal.h"
 
 class KConfig;
 

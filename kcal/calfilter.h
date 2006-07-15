@@ -27,7 +27,7 @@
 #include "event.h"
 #include "todo.h"
 #include "journal.h"
-#include "libkcal_export.h"
+#include "kcal.h"
 
 namespace KCal {
 

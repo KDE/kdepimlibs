@@ -29,7 +29,7 @@
 #include "recurrence.h"
 #include "alarm.h"
 #include "attachment.h"
-#include "libkcal_export.h"
+#include "kcal.h"
 
 #include "incidencebase.h"
 
