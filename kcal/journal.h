@@ -23,7 +23,7 @@
 #define KCAL_JOURNAL_H
 
 #include "incidence.h"
-#include <kdepimmacros.h>
+
 //Added by qt3to4:
 #include <QByteArray>
 

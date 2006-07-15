@@ -36,7 +36,7 @@
 #include <QDateTime>
 #include <QList>
 #include <QMultiHash>
-#include <kdepimmacros.h>
+
 
 #include "customproperties.h"
 #include "event.h"

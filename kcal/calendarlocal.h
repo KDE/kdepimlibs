@@ -24,7 +24,7 @@
 
 #include "calendar.h"
 #include <QHash>
-#include <kdepimmacros.h>
+
 
 namespace KCal {
 

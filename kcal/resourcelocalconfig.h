@@ -28,7 +28,7 @@
 
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
-#include <kdepimmacros.h>
+
 
 #include "libkcal_export.h"
 

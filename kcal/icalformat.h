@@ -28,7 +28,7 @@
 #include "scheduler.h"
 
 #include "calformat.h"
-#include <kdepimmacros.h>
+
 
 namespace KCal {
 

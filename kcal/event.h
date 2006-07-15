@@ -22,7 +22,7 @@
 #define KCAL_EVENT_H
 
 #include "incidence.h"
-#include <kdepimmacros.h>
+
 //Added by qt3to4:
 #include <QByteArray>
 

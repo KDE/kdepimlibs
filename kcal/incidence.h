@@ -32,7 +32,7 @@
 #include "libkcal_export.h"
 
 #include "incidencebase.h"
-#include <kdepimmacros.h>
+
 #include <QList>
 
 namespace KCal {

@@ -23,7 +23,7 @@
 
 #include <kurl.h>
 #include <kdirwatch.h>
-#include <kdepimmacros.h>
+
 
 #include "resourcecached.h"
 

@@ -23,7 +23,7 @@
 #define KCAL_ICALTIMEZONES_H
 
 #include <ktimezones.h>
-#include <kdepimmacros.h>
+
 #include "libkcal_export.h"
 
 namespace KCal {

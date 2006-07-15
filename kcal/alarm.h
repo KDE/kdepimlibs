@@ -32,7 +32,6 @@
 #include "kcal/listbase.h"
 #include "libkcal_export.h"
 
-#include <kdepimmacros.h>
 #include <QList>
 
 namespace KCal {

@@ -39,7 +39,7 @@
 #include <kresources/resource.h>
 #include <kresources/manager.h>
 #include <kabc/lock.h>
-#include <kdepimmacros.h>
+
 
 namespace KCal {
 

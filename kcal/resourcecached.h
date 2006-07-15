@@ -34,7 +34,7 @@
 #include <QDateTime>
 #include <QTimer>
 
-#include <kdepimmacros.h>
+
 
 namespace KCal {
 

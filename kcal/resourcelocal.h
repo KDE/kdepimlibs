@@ -27,7 +27,7 @@
 
 #include <kurl.h>
 #include <kdirwatch.h>
-#include <kdepimmacros.h>
+
 class KConfig;
 
 #include "calendarlocal.h"

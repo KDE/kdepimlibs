@@ -26,7 +26,7 @@
 #include "kcal/incidence.h"
 
 #include <kdialog.h>
-#include <kdepimmacros.h>
+
 
 namespace KCal {
 

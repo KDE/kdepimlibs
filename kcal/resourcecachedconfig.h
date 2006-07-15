@@ -22,7 +22,7 @@
 #define KCAL_RESOURCECACHEDCONFIG_H
 
 #include <QWidget>
-#include <kdepimmacros.h>
+
 
 class Q3ButtonGroup;
 class QSpinBox;

@@ -26,7 +26,6 @@
 #include <QMap>
 //Added by qt3to4:
 #include <QByteArray>
-#include <kdepimmacros.h>
 
 #include "libkcal_export.h"
 
