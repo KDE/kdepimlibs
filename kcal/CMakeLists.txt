@@ -315,6 +315,56 @@ add_subdirectory( tests )
 ########### install files ###############
 
 install( FILES local.desktop localdir.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
-install( FILES alarm.h attachment.h attendee.h calendar.h    calendarlocal.h calendarnull.h calendarresources.h calfilter.h calformat.h    calstorage.h confirmsavedialog.h customproperties.h dndfactory.h duration.h event.h    exceptions.h filestorage.h freebusy.h freebusyurlstore.h ${CMAKE_CURRENT_BINARY_DIR}/htmlexportsettings.h htmlexport.h icaldrag.h    icalformat.h icaltimezones.h incidencebase.h incidence.h incidenceformatter.h    journal.h kcalversion.h listbase.h period.h person.h    qtopiaformat.h recurrencerule.h recurrence.h resourcecached.h resourcecachedconfig.h resourcecalendar.h    resourcelocalconfig.h resourcelocaldirconfig.h resourcelocaldir.h    resourcelocal.h scheduler.h kcal.h    todo.h vcaldrag.h vcalformat.h  DESTINATION ${INCLUDE_INSTALL_DIR}/kcal)
+install( FILES
+	alarm.h
+	attachment.h
+	attendee.h
+	calendar.h
+	calendarlocal.h
+	calendarnull.h
+	calendarresources.h
+	calfilter.h
+	calformat.h
+	calstorage.h
+	confirmsavedialog.h
+	customproperties.h
+	dndfactory.h
+	duration.h
+	event.h
+	exceptions.h
+	filestorage.h
+	freebusy.h
+	freebusycache.h
+	freebusyurlstore.h
+	${CMAKE_CURRENT_BINARY_DIR}/htmlexportsettings.h
+	htmlexport.h
+	icaldrag.h
+	icalformat.h
+	icaltimezones.h
+	imipscheduler.h
+	incidencebase.h
+	incidence.h
+	incidenceformatter.h
+	journal.h
+	kcal.h
+	kcalversion.h
+	listbase.h
+	period.h
+	person.h
+	qtopiaformat.h
+	recurrencerule.h
+	recurrence.h
+	resourcecached.h
+	resourcecachedconfig.h
+	resourcecalendar.h
+	resourcelocalconfig.h
+	resourcelocaldirconfig.h
+	resourcelocaldir.h
+	resourcelocal.h
+	scheduler.h
+	todo.h
+	vcaldrag.h
+	vcalformat.h
+DESTINATION ${INCLUDE_INSTALL_DIR}/kcal)
 install( FILES kcal_manager.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources)
 install (FILES ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/ical.h ${CMAKE_BINARY_DIR}/kcal/libical/src/libicalss/icalss.h DESTINATION ${INCLUDE_INSTALL_DIR}/kcal/ical)
