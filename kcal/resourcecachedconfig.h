@@ -33,11 +33,11 @@ class ResourceCached;
 
 /**
   Configuration widget for reload policy
-  
+
   @see ResourceCached
 */
-class KDE_EXPORT ResourceCachedReloadConfig : public QWidget
-{ 
+class KCAL_EXPORT ResourceCachedReloadConfig : public QWidget
+{
     Q_OBJECT
   public:
     ResourceCachedReloadConfig( QWidget *parent = 0, const char *name = 0 );
@@ -59,11 +59,11 @@ class KDE_EXPORT ResourceCachedReloadConfig : public QWidget
 
 /**
   Configuration widget for save policy
-  
+
   @see ResourceCached
 */
-class KDE_EXPORT ResourceCachedSaveConfig : public QWidget
-{ 
+class KCAL_EXPORT ResourceCachedSaveConfig : public QWidget
+{
     Q_OBJECT
   public:
     ResourceCachedSaveConfig( QWidget *parent = 0, const char *name = 0 );

@@ -34,7 +34,7 @@ namespace KCal {
 /**
   Filter for calendar objects.
 */
-class LIBKCAL_EXPORT CalFilter
+class KCAL_EXPORT CalFilter
 {
   public:
     /** Construct filter. */

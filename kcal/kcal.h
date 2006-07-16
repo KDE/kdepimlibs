@@ -18,11 +18,19 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-#ifndef KCAL_KCALEXPORT_H
-#define KCAL_KCALEXPORT_H
+#ifndef KCAL_H
+#define KCAL_H
 
 #include <kdemacros.h>
 
-#define LIBKCAL_EXPORT KDE_EXPORT
+#if defined(_WIN32) || defined(_WIN64)
+#ifdef MAKE_KCAL_LIB
+#define KCAL_EXPORT KDE_EXPORT
+#else
+#define KCAL_EXPORT KDE_IMPORT
+#endif
+#else
+#define KCAL_EXPORT KDE_EXPORT
+#endif
 
 #endif

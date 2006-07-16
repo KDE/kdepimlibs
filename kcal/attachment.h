@@ -32,7 +32,7 @@ namespace KCal {
 /**
   This class represents information related to an attachment.
 */
-class KDE_EXPORT Attachment
+class KCAL_EXPORT Attachment
 {
   public:
     /**

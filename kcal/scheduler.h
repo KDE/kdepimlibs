@@ -94,7 +94,7 @@ class ScheduleMessage
   base class for inheritance by implementations of the iTIP scheme like iMIP or
   iRIP.
 */
-class LIBKCAL_EXPORT Scheduler
+class KCAL_EXPORT Scheduler
 {
   public:
     /**

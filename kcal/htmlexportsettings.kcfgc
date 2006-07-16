@@ -7,4 +7,4 @@ MemberVariables=public
 GlobalEnums=true
 ItemAccessors=true
 SetUserTexts=true
-Visibility=KDE_EXPORT
+Visibility=KCAL_EXPORT

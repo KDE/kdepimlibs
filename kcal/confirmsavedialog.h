@@ -30,7 +30,7 @@
 
 namespace KCal {
 
-class KDE_EXPORT ConfirmSaveDialog : public KDialog
+class KCAL_EXPORT ConfirmSaveDialog : public KDialog
 {
   public:
     ConfirmSaveDialog( const QString &destination, QWidget *parent );

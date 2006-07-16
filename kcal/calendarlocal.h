@@ -33,7 +33,7 @@ class CalFormat;
 /**
   This class provides a calendar stored as a local file.
 */
-class LIBKCAL_EXPORT CalendarLocal : public Calendar
+class KCAL_EXPORT CalendarLocal : public Calendar
 {
   public:
     /**

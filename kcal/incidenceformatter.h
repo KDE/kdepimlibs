@@ -31,7 +31,7 @@ class Calendar;
 class Incidence;
 class IncidenceBase;
 
-class LIBKCAL_EXPORT InvitationFormatterHelper
+class KCAL_EXPORT InvitationFormatterHelper
 {
   public:
 	virtual ~InvitationFormatterHelper(){}
@@ -46,7 +46,7 @@ class LIBKCAL_EXPORT InvitationFormatterHelper
 
   @short methods to format incidences into various formats for displaying them
 */
-class LIBKCAL_EXPORT IncidenceFormatter
+class KCAL_EXPORT IncidenceFormatter
 {
   public:
     static QString toolTipString( IncidenceBase *incidence, bool richText = true );

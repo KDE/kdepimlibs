@@ -41,7 +41,7 @@ namespace KCal {
 /**
   This class provides the functions to export a calendar as a HTML page.
 */
-class KDE_EXPORT HtmlExport
+class KCAL_EXPORT HtmlExport
 {
   public:
     /**

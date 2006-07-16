@@ -43,7 +43,7 @@ namespace KCal {
 
   @short vCalendar format implementation
 */
-class LIBKCAL_EXPORT VCalFormat : public CalFormat
+class KCAL_EXPORT VCalFormat : public CalFormat
 {
   public:
     VCalFormat();

@@ -42,7 +42,7 @@ class Incidence;
 
   This class provides a calendar stored as a file per incidence in a directory.
 */
-class LIBKCAL_EXPORT ResourceLocalDir : public ResourceCached
+class KCAL_EXPORT ResourceLocalDir : public ResourceCached
 {
     Q_OBJECT
 

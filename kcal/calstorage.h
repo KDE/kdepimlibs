@@ -30,7 +30,7 @@ class Calendar;
 /**
   This class provides the interface to the storage of a calendar.
 */
-class LIBKCAL_EXPORT CalStorage
+class KCAL_EXPORT CalStorage
 {
   public:
     CalStorage( Calendar *calendar )

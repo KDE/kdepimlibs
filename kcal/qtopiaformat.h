@@ -33,7 +33,7 @@ namespace KCal {
 /**
   This class implements the calendar format used by Qtopia.
 */
-class LIBKCAL_EXPORT QtopiaFormat : public CalFormat
+class KCAL_EXPORT QtopiaFormat : public CalFormat
 {
   public:
     QtopiaFormat();

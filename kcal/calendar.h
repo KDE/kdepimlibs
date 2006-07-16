@@ -165,7 +165,7 @@ enum JournalSortField
       - Depending on the LocalTime setting, all loaded Incidences are stored
         either in UTC or without a time zone (floating time zone).
 */
-class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
+class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
                                 public IncidenceBase::Observer
 {
     Q_OBJECT

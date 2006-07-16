@@ -31,7 +31,7 @@ namespace KCal {
 /**
   This class provides an Event in the sense of RFC2445.
 */
-class LIBKCAL_EXPORT Event : public Incidence
+class KCAL_EXPORT Event : public Incidence
 {
   public:
     /**

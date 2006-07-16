@@ -61,7 +61,7 @@ class CalFormat;
      - birthdays and anniversaries contained in an addressbook
 
 */
-class LIBKCAL_EXPORT CalendarResources :
+class KCAL_EXPORT CalendarResources :
       public Calendar,
       public KRES::ManagerObserver<ResourceCalendar>
 {

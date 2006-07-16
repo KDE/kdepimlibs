@@ -56,7 +56,7 @@ namespace KCal {
    and Incidence contains all additional properties that are common to
    Events, Todos and Journals, but are not allowed for FreeBusy entries.
 */
-class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
+class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
 {
   public:
     /**

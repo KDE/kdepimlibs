@@ -48,7 +48,7 @@ namespace KCal {
    design pattern.  Instead of passing a 0 pointer and checking for 0 with
    each access a CalendarNull object can be passed.
 */
-class LIBKCAL_EXPORT CalendarNull : public Calendar
+class KCAL_EXPORT CalendarNull : public Calendar
 {
   public:
     /**

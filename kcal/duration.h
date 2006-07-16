@@ -30,7 +30,7 @@ namespace KCal {
 /**
   This class represents a duration.
 */
-class LIBKCAL_EXPORT Duration
+class KCAL_EXPORT Duration
 {
   public:
     Duration();

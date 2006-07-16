@@ -42,7 +42,7 @@ class Calendar;
 
   @short vCalendar/iCalendar Drag-and-Drop object factory.
 */
-class LIBKCAL_EXPORT DndFactory
+class KCAL_EXPORT DndFactory
 {
   public:
     DndFactory( Calendar * );

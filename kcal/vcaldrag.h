@@ -32,7 +32,7 @@ class Calendar;
 /**
   vCalendar drag&drop class.
 */
-class KDE_EXPORT VCalDrag : public Q3StoredDrag
+class KCAL_EXPORT VCalDrag : public Q3StoredDrag
 {
   public:
     /**

@@ -42,7 +42,7 @@ class FreeBusy;
 
   @short iCalendar format implementation
 */
-class LIBKCAL_EXPORT ICalFormat : public CalFormat
+class KCAL_EXPORT ICalFormat : public CalFormat
 {
   public:
     ICalFormat();

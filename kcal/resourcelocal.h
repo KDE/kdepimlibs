@@ -42,7 +42,7 @@ class CalFormat;
 /**
   This class provides a calendar resource stored as a local file.
 */
-class LIBKCAL_EXPORT ResourceLocal : public ResourceCached
+class KCAL_EXPORT ResourceLocal : public ResourceCached
 {
     Q_OBJECT
 

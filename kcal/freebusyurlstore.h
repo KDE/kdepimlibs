@@ -29,7 +29,7 @@ class KConfig;
 
 namespace KCal {
 
-class LIBKCAL_EXPORT FreeBusyUrlStore
+class KCAL_EXPORT FreeBusyUrlStore
 {
   public:
     static FreeBusyUrlStore *self();

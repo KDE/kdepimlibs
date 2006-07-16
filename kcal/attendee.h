@@ -32,7 +32,7 @@ namespace KCal {
 /**
   This class represents information related to an attendee of an event.
 */
-class LIBKCAL_EXPORT Attendee : public Person
+class KCAL_EXPORT Attendee : public Person
 {
   public:
     enum PartStat { NeedsAction, Accepted, Declined, Tentative,

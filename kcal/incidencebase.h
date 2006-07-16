@@ -62,7 +62,7 @@ class FreeBusy;
    and Incidence contains all additional properties that are common to
    Events, Todos and Journals, but are not allowed for FreeBusy entries.
 */
-class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
+class KCAL_EXPORT IncidenceBase : public CustomProperties
 {
   public:
     /**

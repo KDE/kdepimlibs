@@ -42,8 +42,8 @@ namespace KCal {
   This class provides a calendar resource using a local CalendarLocal object to
   cache the calendar data.
 */
-class KDE_EXPORT ResourceCached : public ResourceCalendar,
-                       public KCal::Calendar::Observer
+class KCAL_EXPORT ResourceCached : public ResourceCalendar,
+                                   public KCal::Calendar::Observer
 {
     Q_OBJECT
   public:

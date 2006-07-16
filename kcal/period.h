@@ -32,7 +32,7 @@ namespace KCal {
   This class represents a period of time. The period can be defined by either a
   start time and an end time or by a start time and a duration.
 */
-class KDE_EXPORT Period
+class KCAL_EXPORT Period
 {
   public:
     Period();

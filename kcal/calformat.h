@@ -40,7 +40,7 @@ class Calendar;
 
   @short Class providing in interface to a calendar format
 */
-class LIBKCAL_EXPORT CalFormat
+class KCAL_EXPORT CalFormat
 {
   public:
     /** Constructs a new format. */

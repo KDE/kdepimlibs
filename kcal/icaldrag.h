@@ -32,7 +32,7 @@ namespace KCal {
 /**
   iCalendar drag&drop class.
 */
-class LIBKCAL_EXPORT ICalDrag : public Q3StoredDrag
+class KCAL_EXPORT ICalDrag : public Q3StoredDrag
 {
   public:
     /**

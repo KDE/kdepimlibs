@@ -38,7 +38,7 @@ namespace KCal {
 /**
   This class provides information about free/busy time of a calendar user.
 */
-class LIBKCAL_EXPORT FreeBusy : public IncidenceBase
+class KCAL_EXPORT FreeBusy : public IncidenceBase
 {
   public:
     FreeBusy();

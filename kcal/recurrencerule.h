@@ -67,7 +67,7 @@ typedef QList<QTime> TimeList;
 /**
   This class represents a recurrence rule for a calendar incidence.
 */
-class LIBKCAL_EXPORT RecurrenceRule
+class KCAL_EXPORT RecurrenceRule
 {
   public:
     class Observer {

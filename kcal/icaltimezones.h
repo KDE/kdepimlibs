@@ -45,7 +45,7 @@ class Recurrence;
  * @see ICalTimeZoneSource, ICalTimeZoneData
  * @author David Jarvie <software@astrojar.org.uk>.
  */
-class LIBKCAL_EXPORT ICalTimeZone : public KTimeZone
+class KCAL_EXPORT ICalTimeZone : public KTimeZone
 {
   public:
     /**
@@ -166,7 +166,7 @@ class LIBKCAL_EXPORT ICalTimeZone : public KTimeZone
  * @see ICalTimeZone, ICalTimeZoneData
  * @author David Jarvie <software@astrojar.org.uk>.
  */
-class LIBKCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
+class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
 {
   public:
     /**
@@ -232,7 +232,7 @@ class LIBKCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
  * @see ICalTimeZone, ICalTimeZoneSource
  * @author David Jarvie <software@astrojar.org.uk>.
  */
-class LIBKCAL_EXPORT ICalTimeZoneData : public KTimeZoneData
+class KCAL_EXPORT ICalTimeZoneData : public KTimeZoneData
 {
     friend class ICalTimeZoneSource;
 

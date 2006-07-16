@@ -41,7 +41,7 @@ class Incidence;
 /**
   This class represents an alarm notification.
 */
-class LIBKCAL_EXPORT Alarm : public CustomProperties
+class KCAL_EXPORT Alarm : public CustomProperties
 {
   public:
     /** Kinds of alarms that can be (user) defined. */

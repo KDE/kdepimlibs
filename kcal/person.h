@@ -31,7 +31,7 @@ namespace KCal {
 /**
   This class represents a person. A person has a name and an email address.
 */
-class LIBKCAL_EXPORT Person
+class KCAL_EXPORT Person
 {
   public:
     Person() {}

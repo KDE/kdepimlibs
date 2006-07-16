@@ -41,7 +41,7 @@ namespace KCal {
   
   @see ResourceLocalDir
 */
-class LIBKCAL_EXPORT ResourceLocalDirConfig : public KRES::ConfigWidget
+class KCAL_EXPORT ResourceLocalDirConfig : public KRES::ConfigWidget
 { 
     Q_OBJECT
   public:

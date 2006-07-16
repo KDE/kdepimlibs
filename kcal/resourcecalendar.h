@@ -52,7 +52,7 @@ class CalFormat;
   \warning This code is still under heavy development. Don't expect source or
   binary compatibility in future versions.
 */
-class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
+class KCAL_EXPORT ResourceCalendar : public KRES::Resource
 {
     Q_OBJECT
   public:
