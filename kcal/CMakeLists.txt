@@ -253,7 +253,7 @@ kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 
 target_link_libraries(kcal ${KDE4_KDE3SUPPORT_LIBS} ${QT_QTXML_LIBRARY} ktnef kresources kabc emailfunctions  )
 
-set_target_properties(kcal PROPERTIES VERSION 4.0.0 SOVERSION 4 )
+set_target_properties(kcal PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS kcal  DESTINATION ${LIB_INSTALL_DIR})
 
 # hack to force ical[ss].h creation
