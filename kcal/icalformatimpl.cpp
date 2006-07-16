@@ -625,7 +625,7 @@ icalproperty *ICalFormatImpl::writeAttachment(Attachment *att)
     icalparameter_set_xname( icalparameter_label, "X-LABEL" );
     icalproperty_add_parameter( p, icalparameter_label );
   }
-  
+
   if ( att->isLocal() ) {
     icalparameter* icalparameter_inline = icalparameter_new_x( "local" );
     icalparameter_set_xname( icalparameter_inline, "X-KONTACT-TYPE" );
@@ -1195,7 +1195,7 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   icalparameter *p = icalproperty_get_first_parameter(attach, ICAL_FMTTYPE_PARAMETER);
   if (p)
     attachment->setMimeType(QString(icalparameter_get_fmttype(p)));
-  
+
   p = icalproperty_get_first_parameter( attach, ICAL_X_PARAMETER );
   while (p) {
     QString xname = QString( icalparameter_get_xname( p ) ).toUpper();
@@ -1455,7 +1455,7 @@ void ICalFormatImpl::readCustomProperties(icalcomponent *parent,CustomProperties
       customProperties[name] = value;
       kDebug(5800) << "Set custom property [" << name << '=' << value << ']' << endl;
     }
-    else 
+    else
     {
       customProperties[name] = customProperties[name].append(",").append(value);
     }
@@ -1992,7 +1992,7 @@ QString ICalFormatImpl::extractErrorProperty(icalcomponent *c)
   error = icalcomponent_get_first_property(c,ICAL_XLICERROR_PROPERTY);
   while(error) {
     errorMessage += icalproperty_get_xlicerror(error);
-    errorMessage += "\n";
+    errorMessage += '\n';
     error = icalcomponent_get_next_property(c,ICAL_XLICERROR_PROPERTY);
   }
 

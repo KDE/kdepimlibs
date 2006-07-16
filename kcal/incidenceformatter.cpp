@@ -67,14 +67,14 @@ static QString eventViewerAddLink( const QString &ref, const QString &text,
                              bool newline = true )
 {
   QString tmpStr( "<a href=\"" + ref + "\">" + text + "</a>" );
-  if ( newline ) tmpStr += "\n";
+  if ( newline ) tmpStr += '\n';
   return tmpStr;
 }
 
 static QString eventViewerAddTag( const QString & tag, const QString & text )
 {
   int numLineBreaks = text.count( "\n" );
-  QString str = "<" + tag + '>';
+  QString str = '<' + tag + '>';
   QString tmpText = text;
   QString tmpStr = str;
   if( numLineBreaks >= 0 ) {

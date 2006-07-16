@@ -94,7 +94,7 @@ QList<ScheduleMessage*> DummyScheduler::retrieveTransactions()
     QString messageLine = t.readLine();
     while (!messageLine.isNull()) {
 //      kDebug(5800) << "++++++++" << messageLine << endl;
-      messageString += messageLine + "\n";
+      messageString += messageLine + '\n';
       if (messageLine.indexOf("END:VCALENDAR") >= 0) {
         kDebug(5800) << "---------------" << messageString << endl;
         ScheduleMessage *message = mFormat->parseScheduleMessage(mCalendar,

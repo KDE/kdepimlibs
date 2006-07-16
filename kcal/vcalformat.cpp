@@ -319,7 +319,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
     // this must be a ';' character as the vCalendar specification requires!
     // vcc.y has been hacked to translate the ';' to a ',' when the vcal is
     // read in.
-    tmpStr += ";";
+    tmpStr += ';';
   }
   if (!tmpStr.isEmpty()) {
     tmpStr.truncate(tmpStr.length()-1);
@@ -579,7 +579,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     // this must be a ';' character as the vCalendar specification requires!
     // vcc.y has been hacked to translate the ';' to a ',' when the vcal is
     // read in.
-    tmpStr += ";";
+    tmpStr += ';';
   }
   if (!tmpStr.isEmpty()) {
     tmpStr.truncate(tmpStr.length()-1);
@@ -1181,7 +1181,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   if ((vo = isAPropertyOf(vevent, VCDescriptionProp)) != 0) {
     s = fakeCString(vObjectUStringZValue(vo));
     if (!anEvent->description().isEmpty()) {
-      anEvent->setDescription(anEvent->description() + "\n" +
+      anEvent->setDescription(anEvent->description() + '\n' +
                               QString::fromLocal8Bit(s));
     } else {
       anEvent->setDescription(QString::fromLocal8Bit(s));
