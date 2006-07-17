@@ -180,3 +180,4 @@ service_DATA = resourceexample.desktop
 \endcode
 
 */
+// DOXYGEN_REFERENCES=kdecore kdeui

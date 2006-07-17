@@ -12,3 +12,4 @@ Everything lives in the KTnef namespace.
 
 <b>LICENSE: LGPL</b>
 */
+// DOXYGEN_REFERENCES=kdecore
