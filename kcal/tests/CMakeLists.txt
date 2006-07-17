@@ -11,11 +11,11 @@ include_directories(
 
 ########### next target ###############
 
+if(KDE4_BUILD_TESTS)
 set(loadcalendar_SRCS loadcalendar.cpp )
 
 kde4_automoc(${loadcalendar_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(loadcalendar ${loadcalendar_SRCS})
 
@@ -25,11 +25,11 @@ endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
 
+if(KDE4_BUILD_TESTS)
 set(testtostring_SRCS testtostring.cpp )
 
 kde4_automoc(${testtostring_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testtostring ${testtostring_SRCS})
 
@@ -38,12 +38,11 @@ target_link_libraries(testtostring  ${KDE4_KDECORE_LIBS} kcal )
 endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
-
+if(KDE4_BUILD_TESTS)
 set(testincidence_SRCS testincidence.cpp )
 
 kde4_automoc(${testincidence_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testincidence ${testincidence_SRCS})
 
@@ -52,12 +51,11 @@ target_link_libraries(testincidence  ${KDE4_KDECORE_LIBS} kcal )
 endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
-
+if(KDE4_BUILD_TESTS)
 set(testcalendar_SRCS testcalendar.cpp )
 
 kde4_automoc(${testcalendar_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testcalendar ${testcalendar_SRCS})
 
@@ -66,12 +64,11 @@ target_link_libraries(testcalendar  ${KDE4_KDECORE_LIBS} kcal )
 endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
-
+if(KDE4_BUILD_TESTS)
 set(readandwrite_SRCS readandwrite.cpp )
 
 kde4_automoc(${readandwrite_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(readandwrite ${readandwrite_SRCS})
 
@@ -80,12 +77,11 @@ target_link_libraries(readandwrite  ${KDE4_KDECORE_LIBS} kcal )
 endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
-
+if(KDE4_BUILD_TESTS)
 set(testresource_SRCS testresource.cpp )
 
 kde4_automoc(${testresource_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testresource ${testresource_SRCS})
 
@@ -94,13 +90,12 @@ target_link_libraries(testresource  ${KDE4_KDECORE_LIBS} kcal )
 endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
-
+if(KDE4_BUILD_TESTS)
 set(testfields_SRCS testfields.cpp )
 set_source_files_properties( ${testfields_SRCS} PROPERTIES 
 	COMPILE_FLAGS -DINPUT='"$(srcdir)/data/test_pilot.ics"' )
 kde4_automoc(${testfields_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testfields ${testfields_SRCS})
 
@@ -109,12 +104,11 @@ target_link_libraries(testfields  ${KDE4_KDECORE_LIBS} kcal )
 endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
-
+if(KDE4_BUILD_TESTS)
 set(testrecurrence_SRCS testrecurrence.cpp )
 
 kde4_automoc(${testrecurrence_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testrecurrence RUN_UNINSTALLED ${testrecurrence_SRCS})
 
@@ -123,12 +117,11 @@ target_link_libraries(testrecurrence  ${KDE4_KDECORE_LIBS} kcal )
 endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
-
+if(KDE4_BUILD_TESTS)
 set(testrecurprevious_SRCS testrecurprevious.cpp )
 
 kde4_automoc(${testrecurprevious_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testrecurprevious RUN_UNINSTALLED ${testrecurprevious_SRCS})
 
@@ -137,12 +130,11 @@ target_link_libraries(testrecurprevious  ${KDE4_KDECORE_LIBS} kcal )
 endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
-
+if(KDE4_BUILD_TESTS)
 set(testrecurson_SRCS testrecurson.cpp )
 
 kde4_automoc(${testrecurson_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testrecurson RUN_UNINSTALLED ${testrecurson_SRCS})
 
@@ -151,12 +143,11 @@ target_link_libraries(testrecurson  ${KDE4_KDECORE_LIBS} kcal )
 endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
-
+if(KDE4_BUILD_TESTS)
 set(testrecurrencetype_SRCS testrecurrencetype.cpp )
 
 kde4_automoc(${testrecurrencetype_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testrecurrencetype RUN_UNINSTALLED ${testrecurrencetype_SRCS})
 
@@ -165,12 +156,11 @@ target_link_libraries(testrecurrencetype  ${KDE4_KDECORE_LIBS} kcal )
 endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
-
+if(KDE4_BUILD_TESTS)
 set(testicaltimezones_SRCS testicaltimezones.cpp )
 
 kde4_automoc(${testicaltimezones_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testicaltimezones RUN_UNINSTALLED ${testicaltimezones_SRCS})
 
@@ -181,12 +171,11 @@ add_test(libkcal-testicaltimezones ${EXECUTABLE_OUTPUT_PATH}/testicaltimezones)
 endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
-
+if(KDE4_BUILD_TESTS)
 set(testvcalexport_SRCS testvcalexport.cpp )
 
 kde4_automoc(${testvcalexport_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testvcalexport RUN_UNINSTALLED ${testvcalexport_SRCS})
 
