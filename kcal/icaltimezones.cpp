@@ -42,9 +42,7 @@ using namespace KCal;
 // Convert an ical time to QDateTime, preserving the UTC indicator
 static QDateTime toQDateTime(const icaltimetype &t)
 {
-  // QDate can only handle Gregorian dates, which started to be introduced
-  // on 1752-09-14.
-  return QDateTime(QDate((t.year >= 1753 ? t.year : 1753), t.month, t.day),
+  return QDateTime(QDate(t.year, t.month, t.day),
                    QTime(t.hour, t.minute, t.second),
                    (t.is_utc ? Qt::UTC : Qt::LocalTime));
 }
