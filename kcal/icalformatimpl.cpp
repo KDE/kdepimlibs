@@ -23,7 +23,6 @@
 #include <QDateTime>
 #include <QString>
 #include <QFile>
-//Added by qt3to4:
 #include <QList>
 #include <QByteArray>
 #include <cstdlib>
@@ -51,10 +50,7 @@ using namespace KCal;
 /* Static helpers */
 static QDateTime ICalDate2QDate(const icaltimetype& t)
 {
-  // Outlook sends dates starting from 1601-01-01, but QDate()
-  // can only handle dates starting 1752-09-14.
-  const int year = (t.year>=1754) ? t.year : 1754;
-  return QDateTime(QDate(year,t.month,t.day), QTime(t.hour,t.minute,t.second));
+  return QDateTime(QDate(t.year,t.month,t.day), QTime(t.hour,t.minute,t.second));
 }
 
 /*static void _dumpIcaltime( const icaltimetype& t)
