@@ -1,4 +1,4 @@
-
+project(ktnef)
 ########### next target ###############
 
 set(ktnef_LIB_SRCS 
@@ -23,7 +23,7 @@ install(TARGETS ktnef DESTINATION ${LIB_INSTALL_DIR})
 
 ########### install files ###############
 
-install_files( /include/ktnef FILES ktnef.h ktnefparser.h ktnefattach.h ktnefproperty.h
-       ktnefpropertyset.h ktnefmessage.h ktnefwriter.h ktnefdefs.h )
+install( FILES ktnef.h ktnefparser.h ktnefattach.h ktnefproperty.h
+       ktnefpropertyset.h ktnefmessage.h ktnefwriter.h ktnefdefs.h DESTINATION ${INCLUDE_INSTALL_DIR}/ktnef)
 
 

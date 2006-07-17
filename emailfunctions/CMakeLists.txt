@@ -1,4 +1,4 @@
-
+project(emailfunctions)
 add_subdirectory( tests )
 
 ########### next target ###############
@@ -17,4 +17,4 @@ install(TARGETS emailfunctions  DESTINATION ${LIB_INSTALL_DIR} )
 
 ########### install files ###############
 
-install_files( /include/emailfunctions FILES emailfunctions.h email.h )
+install( FILES emailfunctions.h email.h DESTINATION ${INCLUDE_INSTALL_DIR}/emailfunctions  )
