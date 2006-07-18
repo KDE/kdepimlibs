@@ -1,14 +1,31 @@
 /**
 @mainpage KTNEF - an API for handling TNEF data.
 
-@section purpose Purpose
+@section desc Description
 
-This library contains an API for the handling of TNEF data.
+The ktnef library contains an API for the handling of TNEF data.
 
-Everything lives in the KTnef namespace.
+To quote <a href="http://en.wikipedia.org/wiki/TNEF">Wikipedia</a>:
 
-@author Michael Goffioul \<kdeprint@swing.bei\>
-@author Bo Thorsen \<bo@sonofthor.dk\>
+"<em><b>Transport Neutral Encapsulation Format</b> or <b>TNEF</b> is a
+proprietary format of e-mail attachment used by Microsoft Outlook and Microsoft
+Exchange Server.  An attached file with TNEF encoding is most usually called
+winmail.dat or win.dat.
+
+Within the Outlook email client TNEF encoding cannot be explicitly enabled or
+disabled.  Selecting RTF as the format for sending an e-mail implicitly enables
+TNEF encoding, using it in preference to the more common and widely compatible
+MIME standard.  When sending plain-text or HTML format messages, Outlook uses
+MIME.
+
+Some TNEF files only contain information used by Outlook to generate a richly
+formatted view of the message, embedded (OLE) documents or Outlook-specific
+features such as forms, voting buttons, and meeting requests.  Other TNEF files
+may contain files which have been attached to an e-mail message.</em>"
+
+@authors
+Michael Goffioul \<kdeprint@swing.bei\>,
+Bo Thorsen \<bo@sonofthor.dk\>
 
 <b>LICENSE: LGPL</b>
 */
