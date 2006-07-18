@@ -46,7 +46,7 @@ install(TARGETS kcm_kresources  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES kresources.desktop  DESTINATION  ${XDG_APPS_DIR} )
+install( FILES kresources.desktop  DESTINATION  ${SERVICES_INSTALL_DIR} )
 install( FILES kresources_plugin.desktop kresources_manager.desktop  DESTINATION  ${SERVICETYPES_INSTALL_DIR} )
 install( FILES resource.h    configwidget.h    factory.h     managerimpl.h    manager.h    selectdialog.h    configdialog.h    configpage.h idmapper.h DESTINATION ${INCLUDE_INSTALL_DIR}/kresources)
 

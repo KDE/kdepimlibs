@@ -2,13 +2,11 @@
 Encoding=UTF-8
 Exec=kcmshell kresources
 Icon=date
-Type=Application
-Terminal=false
+Type=Service
+ServiceTypes=KCModule
 
-X-KDE-ModuleType=Library
-X-KDE-Library=kresources
-X-KDE-FactoryName=kresources
-X-KDE-HasReadOnlyMode=false
+X-KDE-Library=kcm_kresources
+X-KDE-FactoryName=kcm_kresources
 
 Name=KDE Resources
 Name[fr]=Ressources de KDE
@@ -21,6 +19,3 @@ Comment[x-test]=xxConfigure KDE Resourcesxx
 Keywords=resources,konnector resource,contact resource,calendar resource,notes resource,imap
 Keywords[fr]=resources,konnector,contact,calendrier,notes,imap,agenda,rendez-vous
 Keywords[x-test]=xxresources,konnector resource,contact resource,calendar resource,notes resource,imapxx
-
-Categories=Qt;KDE;X-KDE-settings-components;
-
