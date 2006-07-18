@@ -1,7 +1,7 @@
 /*
     This file is part of the kcal library.
 
-    Copyright (c) 2005 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2005,2006 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -25,6 +25,11 @@
 #include <ktimezones.h>
 
 #include "kcal.h"
+
+#ifndef ICALTIMEZONE_DEFINED
+#define ICALTIMEZONE_DEFINED
+typedef struct _icaltimezone  icaltimezone;
+#endif
 
 namespace KCal {
 
@@ -216,6 +221,22 @@ class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
      * @return @c false if any error occurred, @c true otherwise
      */
     bool parse(const QString &fileName, KTimeZones &zones);
+
+    /**
+     * Creates an ICalTimeZone instance containing the detailed information
+     * contained in an icaltimezone structure.
+     *
+     * Note that an icaltimezone instance may internally refer to a built-in
+     * (i.e. system) time zone, in which case the data obtained from @p tz will
+     * actually be derived from the built-in time zone rather than from a
+     * VTIMEZONE component.
+     *
+     * @param tz the icaltimezone structure from which data is to be extracted
+     * @return a ICalTimeZone instance containing the time zone data.
+     *         The caller is responsible for deleting the ICalTimeZone instance.
+     *         Null is returned on error.
+     */
+    ICalTimeZone *parse(icaltimezone *tz);
 
   private:
     ICalTimeZoneSourcePrivate *d;

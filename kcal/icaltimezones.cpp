@@ -1,7 +1,7 @@
 /*
     This file is part of the kcal library.
 
-    Copyright (c) 2005 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2005,2006 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -29,6 +29,7 @@
 
 extern "C" {
   #include <ical.h>
+  #include <icaltimezone.h>
 }
 
 #include "icalformat.h"
@@ -466,6 +467,15 @@ ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
   return new ICalTimeZone(this, name, data);
 }
 
+ICalTimeZone *ICalTimeZoneSource::parse(icaltimezone *tz)
+{
+  /* Parse the VTIMEZONE component stored in the icaltimezone structure.
+   * This is both easier and provides more complete information than
+   * extracting already parsed data from icaltimezone.
+   */
+  return parse(icaltimezone_get_component(tz));
+}
+
 ICalTimeZoneData::Phase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, ICalTimeZoneData *data, bool daylight)
 {
   // Read the observance data for this standard/daylight savings phase.
@@ -606,5 +616,6 @@ ICalTimeZoneData::Phase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c,
 
   return phase;
 }
+
 
 }  // namespace KCal
