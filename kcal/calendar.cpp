@@ -32,6 +32,7 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <ktimezones.h>
 
 #include "exceptions.h"
 #include "calfilter.h"
@@ -41,23 +42,16 @@
 using namespace KCal;
 
 Calendar::Calendar( const QString &timeZoneId )
+  : mTimeZones( new KTimeZones ),
+    mTimeZoneId( timeZoneId ),
+    mLocalTime( false ),
+    mModified( false ),
+    mDefaultFilter( new CalFilter ),
+    mFilter( mDefaultFilter ),
+    mNewObserver( false ),
+    mObserversEnabled( true )
 {
-  mTimeZoneId = timeZoneId;
-  mLocalTime = false;
-
-  init();
-}
-
-void Calendar::init()
-{
-  mNewObserver = false;
-  mObserversEnabled = true;
-
-  mModified = false;
-
   // Setup default filter, which does nothing
-  mDefaultFilter = new CalFilter;
-  mFilter = mDefaultFilter;
   mFilter->setEnabled( false );
 
   // user information...
@@ -67,6 +61,7 @@ void Calendar::init()
 Calendar::~Calendar()
 {
   delete mDefaultFilter;
+  delete mTimeZones;
 }
 
 const Person &Calendar::getOwner() const
@@ -93,6 +88,11 @@ void Calendar::setTimeZoneId( const QString &timeZoneId )
 QString Calendar::timeZoneId() const
 {
   return mTimeZoneId;
+}
+
+KTimeZones *Calendar::timeZones() const
+{
+  return mTimeZones;
 }
 
 void Calendar::setLocalTime()

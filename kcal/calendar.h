@@ -37,6 +37,7 @@
 #include <QList>
 #include <QMultiHash>
 
+class KTimeZones;
 
 #include "customproperties.h"
 #include "event.h"
@@ -120,7 +121,7 @@ enum JournalSortField
    @class Calendar
 
    This is the main "calendar" object class.  It holds information like
-   Incidences(Events, To-dos, Journals), user information, etc. etc.
+   Incidences(Events, To-dos, Journals), time zones, user information, etc. etc.
 
    This is an abstract base class defining the interface to a calendar. It is
    implemented by subclasses like CalendarLocal, which use different
@@ -133,7 +134,7 @@ enum JournalSortField
    Calendar by an add...() method it is owned by the Calendar object.
    The Calendar takes care of deleting it.  All Incidences returned by the
    query functions are returned as pointers so that changes to the returned
-   Incidences are immediately visible in the Calendar.  Do <em>Not</em>
+   Incidences are immediately visible in the calendar.  Do <em>Not</em>
    delete any Incidence object you get from Calendar.
 
    <b>Time Zone Handling</b>:
@@ -184,7 +185,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @warning
        Do Not pass an empty timeZoneId string as this may cause unintended
-       consequences when storing Incidences into the Calendar.
+       consequences when storing Incidences into the calendar.
     */
     Calendar( const QString &timeZoneId );
 
@@ -194,28 +195,28 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     virtual ~Calendar();
 
     /**
-       Set the Calendar Product ID.
+       Set the calendar Product ID.
 
        @param productId is a QString containing the Product ID.
     */
     void setProductId( const QString &productId );
 
     /**
-       Get the Calendar's Product ID.
+       Get the calendar's Product ID.
 
        @return the string containing the Product ID
     */
     QString productId();
 
     /**
-       Set the owner of the Calendar.
+       Set the owner of the calendar.
 
        @param owner is a Person object.
     */
     void setOwner( const Person &owner );
 
     /**
-       Get the owner of the Calendar.
+       Get the owner of the calendar.
 
        @return the owner Person object.
     */
@@ -233,7 +234,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @warning
        Do Not pass an empty timeZoneId string as this may cause unintended
-       consequences when storing Incidences into the Calendar.
+       consequences when storing Incidences into the calendar.
     */
     void setTimeZoneId( const QString &timeZoneId );
 
@@ -246,11 +247,18 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     virtual void setTimeZoneIdViewOnly( const QString &timeZoneId ) = 0;
 
     /**
-       Get the Time Zone ID for the Calendar.
+       Get the viewing time zone ID for the calendar.
 
-       @return the string containing the Time Zone ID.
+       @return the string containing the time zone ID.
     */
     QString timeZoneId() const;
+
+    /**
+       Get the time zone collection used by the calendar.
+
+       @return the time zones collection.
+    */
+    KTimeZones *timeZones() const;
 
     /**
        Set to store calendar Incidences without a time zone.
@@ -258,49 +266,49 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     void setLocalTime();
 
     /**
-       Determine if Calendar Incidences are to be written without a time zone.
+       Determine if calendar Incidences are to be written without a time zone.
 
-       @return true if the Calendar is set to write Incidences withoout
+       @return true if the calendar is set to write Incidences withoout
        a time zone; false otherwise.
     */
     bool isLocalTime() const;
 
     /**
-       Set if the Calendar had been modified.
+       Set if the calendar has been modified.
 
-       @param modified is true if the Calendar has been modified since open
+       @param modified is true if the calendar has been modified since open
        or last save.
     */
     void setModified( bool modified );
 
     /**
-       Determine the Calendar's modification status.
+       Determine the calendar's modification status.
 
-       @return true if the Calendar has been modified since open or last save.
+       @return true if the calendar has been modified since open or last save.
     */
     bool isModified() const { return mModified; }
 
     /**
-       Clears out the current Calendar, freeing all used memory etc.
+       Clears out the current calendar, freeing all used memory etc.
     */
     virtual void close() = 0;
 
     /**
-       Sync changes in memory to persistant storage.
+       Sync changes in memory to persistent storage.
     */
     virtual void save() = 0;
 
     /**
      * Load the calendar contents from storage. This requires the calendar to have been loaded
      * once before, in other words initialized.
-     * @par tz The timezone to use for loading.
+     * @par tz The time zone to use for loading.
      */
     virtual bool reload( const QString &tz ) = 0;
 
     /**
-       Determine if the Calendar is currently being saved.
+       Determine if the calendar is currently being saved.
 
-       @return true if the Calendar is currently being saved; false otherwise.
+       @return true if the calendar is currently being saved; false otherwise.
     */
     virtual bool isSaving() { return false; }
 
@@ -314,7 +322,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 // Incidence Specific Methods //
 
     /**
-       Insert an Incidence into the Calendar.
+       Insert an Incidence into the calendar.
 
        @param incidence is a pointer to the Incidence to insert.
 
@@ -323,7 +331,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     virtual bool addIncidence( Incidence *incidence );
 
     /**
-       Remove an Incidence from the Calendar.
+       Remove an Incidence from the calendar.
 
        @param incidence is a pointer to the Incidence to remove.
 
@@ -423,7 +431,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 // Event Specific Methods //
 
     /**
-       Insert an Event into the Calendar.
+       Insert an Event into the calendar.
 
        @param event is a pointer to the Event to insert.
 
@@ -432,7 +440,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     virtual bool addEvent( Event *event ) = 0;
 
     /**
-       Remove an Event from the Calendar.
+       Remove an Event from the calendar.
 
        @param event is a pointer to the Event to remove.
 
@@ -569,7 +577,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 // Todo Specific Methods //
 
     /**
-       Insert a Todo into the Calendar.
+       Insert a Todo into the calendar.
 
        @param todo is a pointer to the Todo to insert.
 
@@ -578,7 +586,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     virtual bool addTodo( Todo *todo ) = 0;
 
     /**
-       Remove a Todo from the Calendar.
+       Remove a Todo from the calendar.
 
        @param todo is a pointer to the Todo to remove.
 
@@ -654,7 +662,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 // Journal Specific Methods //
 
     /**
-       Insert a Journal into the Calendar.
+       Insert a Journal into the calendar.
 
        @param journal is a pointer to the Journal to insert.
 
@@ -663,7 +671,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     virtual bool addJournal( Journal *journal ) = 0;
 
     /**
-       Remove a Journal from the Calendar.
+       Remove a Journal from the calendar.
 
        @param journal is a pointer to the Journal to remove.
 
@@ -756,7 +764,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 // Filter Specific Methods //
 
     /**
-       Set the Calendar filter.
+       Set the calendar filter.
 
        @param filter a pointer to a CalFilter object which will be
        used to filter Calendar Incidences.
@@ -764,9 +772,9 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     void setFilter( CalFilter *filter );
 
     /**
-       Return the Calendar filter.
+       Return the calendar filter.
 
-       @return a pointer to the Calendar CalFilter.
+       @return a pointer to the calendar CalFilter.
        A null pointer is returned if no such CalFilter exists.
     */
     CalFilter *filter();
@@ -798,7 +806,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
         /**
            Notify the Observer that a Calendar has been modified.
 
-           First parameter is true if the Calendar has been modified.\n
+           First parameter is true if the calendar has been modified.\n
            Second parameter is a pointer to the Calendar object that
            is being observed.
         */
@@ -845,17 +853,17 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
   signals:
     /**
-       Signal that the Calendar has been modified.
+       Signal that the calendar has been modified.
      */
     void calendarChanged();
 
     /**
-       Signal that the Calendar has been saved.
+       Signal that the calendar has been saved.
      */
     void calendarSaved();
 
     /**
-       Signal that the Calendar has been loaded into memory.
+       Signal that the calendar has been loaded into memory.
      */
     void calendarLoaded();
 
@@ -877,7 +885,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @warning
        Do Not pass an empty timeZoneId string as this may cause unintended
-       consequences when storing Incidences into the Calendar.
+       consequences when storing Incidences into the calendar.
     */
     virtual void doSetTimeZoneId( const QString &/*timeZoneId*/ ) {}
 
@@ -905,7 +913,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     /**
        Let Calendar subclasses notify that they enabled an Observer.
 
-       @param enabled if true tells the Calendar that a subclass has
+       @param enabled if true tells the calendar that a subclass has
        enabled an Observer.
     */
     void setObserversEnabled( bool enabled );
@@ -915,20 +923,16 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     //      returning static Alarm::List
 
   private:
-    /**
-       Initialize a Calendar object with starting values.
-    */
-    void init();
-
     QString mProductId;
     Person mOwner;
+    KTimeZones *mTimeZones;   // collection of time zones used in this calendar
     QString mTimeZoneId;
     bool mLocalTime;
 
     bool mModified;
 
-    CalFilter *mFilter;
     CalFilter *mDefaultFilter;
+    CalFilter *mFilter;
 
     QList<Observer*> mObservers;
     bool mNewObserver;
