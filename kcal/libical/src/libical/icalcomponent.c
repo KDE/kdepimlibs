@@ -2168,10 +2168,10 @@ icalcomponent_handle_conflicting_vtimezones (icalcomponent *comp,
 					     const char *tzid,
 					     icalarray *tzids_to_rename)
 {
-  (void)tzid_prop;
   int i, suffix, max_suffix = 0, num_elements;
   unsigned int tzid_len;
   char *tzid_copy, *new_tzid, suffix_buf[32];
+  (void)tzid_prop;
 
   /* Find the length of the TZID without any trailing digits. */
   tzid_len = icalcomponent_get_tzid_prefix_len (tzid);

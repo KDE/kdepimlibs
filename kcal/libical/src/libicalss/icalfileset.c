@@ -33,6 +33,8 @@
 
 #include "icalfileset.h"
 #include "icalgauge.h"
+#include "icalparser.h"
+
 #include <errno.h>
 #include <sys/stat.h> /* for stat */
 #ifndef WIN32
@@ -206,8 +208,8 @@ char* icalfileset_read_from_file(char *s, size_t size, void *d)
 
 icalerrorenum icalfileset_read_file(icalfileset* set,mode_t mode)
 {
-    (void)mode;
     icalparser *parser;
+    (void)mode;
   
     parser = icalparser_new();
 
@@ -897,13 +899,13 @@ icalcomponent* icalfileset_form_a_matched_recurrence_component(icalsetiter* itr)
 }
 icalcomponent* icalfilesetiter_to_next(icalset* set, icalsetiter* i)
 {
-    (void)set;
     icalcomponent* c = NULL;
     /*icalfileset *fset = (icalfileset*) set;*/
     struct icaltimetype start, next;
     icalproperty *dtstart, *rrule, *prop, *due;
     struct icalrecurrencetype recur;
     int g = 0;
+    (void)set;
 
 
     do {

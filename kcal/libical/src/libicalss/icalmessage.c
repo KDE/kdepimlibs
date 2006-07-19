@@ -28,6 +28,9 @@
 
 #include "icalmessage.h"
 #include "icalenums.h"
+#include "icalerror.h"
+#include "icalmemory.h"
+#include "icalversion.h"
 #include <ctype.h>  /* for tolower()*/
 #include <string.h> /* for strstr */
 #include <stdlib.h> /* for free(), malloc() */

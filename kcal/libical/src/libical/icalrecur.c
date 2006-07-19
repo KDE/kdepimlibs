@@ -257,11 +257,11 @@ void icalrecur_clause_name_and_value(struct icalrecur_parser *parser,
 void icalrecur_add_byrules(struct icalrecur_parser *parser, short *array,
 			   int size, char* vals)
 {
-    (void)parser;
     char *t, *n;
     int i=0;
     int sign = 1;
     int v;
+    (void)parser;
 
     n = vals;
 

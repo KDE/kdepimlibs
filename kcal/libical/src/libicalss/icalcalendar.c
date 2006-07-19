@@ -35,7 +35,7 @@
 #include <sys/types.h> /* For mkdir */
 #include <fcntl.h> /* For mkdir */
 
-#ifndef WIN32
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>  /* For mkdir, stat */    
 #endif
 

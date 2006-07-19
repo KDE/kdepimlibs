@@ -41,7 +41,6 @@
 
 #ifdef WIN32
 #define snprintf _snprintf
-#define PACKAGE_DATA_DIR "/Projects/libical"
 #endif
 
 /** This is the toplevel directory where the timezone data is installed in. */

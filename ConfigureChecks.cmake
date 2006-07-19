@@ -23,6 +23,10 @@ if (WIN32)
 endif (WIN32)
 check_include_files(stdint.h HAVE_STDINT_H)
 check_include_files(unistd.h HAVE_UNISTD_H)
+check_symbol_exists(snprintf "stdio.h" HAVE_SNPRINTF)   # vsnprintf.c
+check_symbol_exists(iswspace "wctype.h" HAVE_ISWSPACE)  # icalparser.c
+check_symbol_exists(S_ISDIR  "sys/stat.h" HAVE_S_ISDIR) # icaldirset.c
+check_symbol_exists(S_ISREG  "sys/stat.h" HAVE_S_ISREG) # icaldirset.c
 check_type_size("unsigned long" SIZEOF_UNSIGNED_LONG)
 check_type_size("uint64_t" SIZEOF_UINT64_T)
 check_type_size("unsigned long long" SIZEOF_UNSIGNED_LONG_LONG)

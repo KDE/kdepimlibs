@@ -79,9 +79,9 @@ static void icalspanlist_new_callback(icalcomponent *comp,
 					    struct icaltime_span *span,
 					    void *data)
 {
-  (void)comp;
   icaltime_span *s;
   icalspanlist *sl = (icalspanlist*) data;
+  (void)comp;
 
   if (span->is_busy == 0)
     return;

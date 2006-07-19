@@ -76,9 +76,9 @@ void icalmime_text_add_line(void *part,
 			    struct sspm_header *header, 
 			    const char* line, size_t size)
 {
+    struct text_part* impl = (struct text_part*) part;
     (void)header;
     (void)size;
-    struct text_part* impl = (struct text_part*) part;
 
     icalmemory_append_string(&(impl->buf),&(impl->buf_pos),
 			     &(impl->buf_size),line);

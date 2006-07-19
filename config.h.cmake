@@ -20,3 +20,8 @@
 
 /* The size of a `unsigned long long', as computed by sizeof. */
 #define SIZEOF_UNSIGNED_LONG_LONG ${SIZEOF_UNSIGNED_LONG_LONG}
+
+#cmakedefine    HAVE_SNPRINTF 1
+#cmakedefine    HAVE_ISWSPACE 1
+#cmakedefine    HAVE_S_ISDIR 1
+#cmakedefine    HAVE_S_ISREG 1

@@ -1031,11 +1031,11 @@ int sspm_parse_mime(struct sspm_part *parts,
 		    struct sspm_header *first_header
     )
 {
-    (void)first_header;
     struct mime_impl impl;
     struct sspm_header header;
     void *part;
     int i;
+    (void)first_header;
 
     /* Initialize all of the data */
     memset(&impl,0,sizeof(struct mime_impl));
@@ -1425,12 +1425,12 @@ void sspm_write_base64(struct sspm_buffer *buf, char* inbuf,int size )
              
 void sspm_encode_base64(struct sspm_buffer *buf, char* data, size_t size)
 {
-    (void)size;
     char *p;
     char inbuf[3];
     int i = 0;
     int first = 1;
     int lpos = 0;
+    (void)size;
 
     inbuf[0] = inbuf[1] = inbuf[2]  = 0;
 
@@ -1590,9 +1590,9 @@ void sspm_write_part(struct sspm_buffer *buf,struct sspm_part *part,int *part_nu
 int sspm_write_mime(struct sspm_part *parts,size_t num_parts,
 		    char **output_string, const char* header)
 {
-    (void)num_parts;
     struct sspm_buffer buf;
     int part_num =0;
+    (void)num_parts;
 
     buf.buffer = malloc(4096);
     buf.pos = buf.buffer;

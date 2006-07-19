@@ -86,13 +86,15 @@
 
 
 #ifdef WIN32
-#define snprintf	_snprintf
-#define strcasecmp	stricmp
-
-#define _S_ISTYPE(mode, mask)  (((mode) & _S_IFMT) == (mask))
-
-#define S_ISDIR(mode)    _S_ISTYPE((mode), _S_IFDIR)
-#define S_ISREG(mode)    _S_ISTYPE((mode), _S_IFREG)
+# define snprintf   _snprintf
+# define strcasecmp stricmp
+# define _S_ISTYPE(mode, mask)  (((mode) & _S_IFMT) == (mask))
+# ifndef HAVE_S_ISDIR
+#  define S_ISDIR(mode)    _S_ISTYPE((mode), _S_IFDIR)
+# endif
+# ifndef HAVE_S_ISREG
+#  define S_ISREG(mode)    _S_ISTYPE((mode), _S_IFREG)
+# endif
 #endif
 
 /** Default options used when NULL is passed to icalset_new() **/
