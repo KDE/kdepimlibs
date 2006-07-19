@@ -26,7 +26,6 @@
 
 #include <QString>
 #include <QBitArray>
-//Added by qt3to4:
 #include <QList>
 
 #include "kcal.h"
@@ -110,17 +109,17 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::Observer
     bool operator==( const Recurrence& ) const;
     bool operator!=( const Recurrence& r ) const  { return !operator==(r); }
 
-    /** Return the start date/time of the recurrence (Time for floating incidences will be 0:00).
+    /** Return the start date/time of the recurrence (Time for floating recurrences will be 0:00).
      @return the current start/time of the recurrence. */
     QDateTime startDateTime() const;
     /** Return the start date/time of the recurrence */
     QDate startDate() const   { return mStartDateTime.date(); }
-    /** Set start of recurrence, as a date and time. Also sets the incidence to non-floating.
-       @param start the new start date/time of the incidence.
+    /** Set start of recurrence, as a date and time. Also sets the recurrence to non-floating.
+       @param start the new start date/time of the recurrence.
     */
     void setStartDateTime( const QDateTime &start );
-    /** Set start of recurrence, as a date. Also sets the incidence to floating.
-       @param start The new start date of the incidence.
+    /** Set start of recurrence, as a date. Also sets the recurrence to floating.
+       @param start The new start date of the recurrence.
     */
     void setStartDate( const QDate &start );
 
@@ -209,7 +208,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::Observer
     QDate endDate() const;
     /** Sets the date of the last recurrence. The end time is set to the recurrence start time.
      * @param endDate the ending date after which to stop recurring. If the
-     *   incidence is not floating, the end time will be 23:59.*/
+     *   recurrence is not floating, the end time will be 23:59.*/
     void setEndDate( const QDate &endDate );
     /** Sets the date and time of the last recurrence.
      * @param endDateTime the ending date/time after which to stop recurring. */
