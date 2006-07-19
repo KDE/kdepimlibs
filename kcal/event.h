@@ -71,12 +71,12 @@ class KCAL_EXPORT Event : public Incidence
     */
     QDate dateEnd() const;
     /**
-      Return end time as string formatted according to the users locale
+      Return end time as string formatted according to the user's locale
       settings.
     */
     QString dtEndTimeStr() const;
     /**
-      Return end date as string formatted according to the users locale
+      Return end date as string formatted according to the user's locale
       settings.
 
       @param shortfmt if true return string in short format, if false return
@@ -84,7 +84,7 @@ class KCAL_EXPORT Event : public Incidence
     */
     QString dtEndDateStr( bool shortfmt = true ) const;
     /**
-      Return end date and time as string formatted according to the users locale
+      Return end date and time as string formatted according to the user's locale
       settings.
     */
     QString dtEndStr() const;

@@ -59,18 +59,18 @@ class KCAL_EXPORT Todo : public Incidence
       Returns due date and time.
 
       @param first If true and the todo recurs, the due date of the first
-      occurrence will be returned.If false and recurrent, the date of the
+      occurrence will be returned. If false and recurrent, the date of the
       current occurrence will be returned. If non-recurrent, the normal due date
       will be returned.
     */
     QDateTime dtDue( bool first = false ) const;
     /**
-      Returns due time as string formatted according to the users locale
+      Returns due time as string formatted according to the user's locale
       settings.
     */
     QString dtDueTimeStr() const;
     /**
-      Returns due date as string formatted according to the users locale
+      Returns due date as string formatted according to the user's locale
       settings.
 
       @param shortfmt If set to true, use short date format, if set to false use
@@ -78,7 +78,7 @@ class KCAL_EXPORT Todo : public Incidence
     */
     QString dtDueDateStr( bool shortfmt = true ) const;
     /**
-      Returns due date and time as string formatted according to the users locale
+      Returns due date and time as string formatted according to the user's locale
       settings.
     */
     QString dtDueStr() const;
@@ -106,42 +106,42 @@ class KCAL_EXPORT Todo : public Incidence
     void setHasStartDate( bool hasStartDate );
 
     /**
-      Returns the startdate of the todo.
-      @param first If true, the startdate of the todo will be returned. If the
-      todo recurs, the startdate of the first occurrence will be returned.
-      If false and the todo recurs, the relative startdate will be returned,
+      Returns the start date of the todo.
+      @param first If true, the start date of the todo will be returned. If the
+      todo recurs, the start date of the first occurrence will be returned.
+      If false and the todo recurs, the relative start date will be returned,
       based on the date returned by dtRecurrence().
     */
     QDateTime dtStart( bool first = false ) const;
 
     /**
-      Sets the startdate of the todo.
+      Sets the start date of the todo.
     */
     void setDtStart( const QDateTime &dtStart );
 
-    /** Returns an todo's starting time as a string formatted according to the
-     users locale settings.
-     @param first If true, the startdate of the todo will be returned. If the
-     todo recurs, the startdate of the first occurrence will be returned.
-     If false and the todo recurs, the relative startdate will be returned,
+    /** Returns a todo's starting time as a string formatted according to the
+     user's locale settings.
+     @param first If true, the start date of the todo will be returned. If the
+     todo recurs, the start date of the first occurrence will be returned.
+     If false and the todo recurs, the relative start date will be returned,
      based on the date returned by dtRecurrence().
     */
     QString dtStartTimeStr( bool first = false ) const;
-    /** Returns an todo's starting date as a string formatted according to the
-     users locale settings.
+    /** Returns a todo's starting date as a string formatted according to the
+     user's locale settings.
      @param shortfmt If true, use short date format, if set to false use
      long format.
-     @param first If true, the startdate of the todo will be returned. If the
-     todo recurs, the startdate of the first occurrence will be returned.
-     If false and the todo recurs, the relative startdate will be returned,
+     @param first If true, the start date of the todo will be returned. If the
+     todo recurs, the start date of the first occurrence will be returned.
+     If false and the todo recurs, the relative start date will be returned,
      based on the date returned by dtRecurrence().
     */
     QString dtStartDateStr( bool shortfmt = true, bool first = false ) const;
-    /** Returns an todo's starting date and time as a string formatted according
-     to the users locale settings.
-     @param first If true, the startdate of the todo will be returned. If the
-     todo recurs, the startdate of the first occurrence will be returned.
-     If false and the todo recurs, the relative startdate will be returned,
+    /** Returns a todo's starting date and time as a string formatted according
+     to the user's locale settings.
+     @param first If true, the start date of the todo will be returned. If the
+     todo recurs, the start date of the first occurrence will be returned.
+     If false and the todo recurs, the relative start date will be returned,
      based on the date returned by dtRecurrence().
     */
     QString dtStartStr( bool first = false ) const;
@@ -159,12 +159,12 @@ class KCAL_EXPORT Todo : public Incidence
     void setCompleted( bool completed );
 
     /**
-      Returns how many percent of the task are completed. Returns a value
+      Returns what percentage of the task is completed. Returns a value
       between 0 and 100.
     */
     int percentComplete() const;
     /**
-      Set how many percent of the task are completed. Valid values are in the
+      Set what percentage of the task is completed. Valid values are in the
       range from 0 to 100.
     */
     void setPercentComplete( int );
@@ -175,7 +175,7 @@ class KCAL_EXPORT Todo : public Incidence
     QDateTime completed() const;
     /**
       Returns string contaiting date and time when the todo was completed
-      formatted according to the users locale settings.
+      formatted according to the user's locale settings.
     */
     QString completedStr() const;
     /**
@@ -201,9 +201,9 @@ class KCAL_EXPORT Todo : public Incidence
 
     /**
       Returns true if the date specified is one on which the todo will
-      recur. Todo's are a special case, hence the overload. It adds an extra
+      recur. Todos are a special case, hence the overload. It adds an extra
       check, which make it return false if there's an occurrence between
-      the recurstart and today.
+      the recur start and today.
     */
     virtual bool recursOn( const QDate &date ) const;
 
