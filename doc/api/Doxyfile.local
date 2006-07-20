@@ -1,0 +1,14 @@
+## In kdepimlibs, everything is supposed to be documented.
+WARN_IF_UNDOCUMENTED = YES
+
+## Predefined macros, to remove all the _EXPORT things
+## from function definitions.
+PREDEFINED = KCAL_EXPORT="" \
+	KTNEF_EXPORT="" \
+	KABC_EXPORT="" \
+	KRESOURCES_EXPORT="" \
+	KDE_DEPRECATED="" \
+	Q_OS_UNIX="" \
+	Q_SLOTS="slots" \
+	Q_SIGNALS="signals"
+
