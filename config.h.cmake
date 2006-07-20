@@ -9,6 +9,9 @@
 /* Define to 1 if you have the <stdint.h> header file. */
 #cmakedefine HAVE_STDINT_H 1
 
+/* Define to 1 if you have the <wctype.h> header file. */
+#cmakedefine HAVE_WCTYPE_H 1
+
 /* Version number of package */
 #define VERSION "3.9.02"
 
@@ -21,7 +24,14 @@
 /* The size of a `unsigned long long', as computed by sizeof. */
 #define SIZEOF_UNSIGNED_LONG_LONG ${SIZEOF_UNSIGNED_LONG_LONG}
 
+/* Define to 1 if you have the `snprintf' function. */
 #cmakedefine    HAVE_SNPRINTF 1
+
+/* Define to 1 if you have the `iswspace' function. */
 #cmakedefine    HAVE_ISWSPACE 1
+
+/* Define to 1 if you have the `S_ISDIR()' macro. */
 #cmakedefine    HAVE_S_ISDIR 1
+
+/* Define to 1 if you have the `S_ISREG()' macro. */
 #cmakedefine    HAVE_S_ISREG 1
