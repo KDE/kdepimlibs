@@ -1,37 +1,36 @@
-/**
-        * @mainpage The KDE-PIM Libraries API Reference
-        *
-        * This section contains the KDE online class reference for the current
-        * development version of KDE-PIM Libraries. You can also download
-        * the complete API documentation from
-        * <a href="http://api.kde.org/">api.kde.org</a>.
-        * Additionally, you can subscribe or read the mailing lists for any
-        * additions and/or modifications to the API.
-        *
-        * - <a href="emailfunctions/html/index.html"><b>emailfunctions</b></a>
-        *   (<a href="emailfunctions/html/classes.html">classes</a>)\n
-        *   <i>A library for general purpose email handling.</i>
-	*
-        * - <a href="kabc/html/index.html"><b>kabc</b></a>
-        *   (<a href="kabc/html/classes.html">classes</a>)\n
-	*   <i>Address book API.</i>
-	*
-        * - <a href="kcal/html/index.html"><b>kcal</b></a>
-        *   (<a href="kcal/html/classes.html">classes</a>)\n
-	*   <i>API for the iCalendar and vCalendar formats.</i>
-	*
-        * - <a href="ktnef/html/index.html"><b>ktnef</b></a>
-        *   (<a href="ktnef/html/classes.html">classes</a>)\n
-	*   <i>API for the handling of TNEF data.</i>
-	*
-        * - <a href="kresources/html/index.html"><b>kresources</b></a>
-        *   (<a href="kresources/html/classes.html">classes</a>)\n
-	*   <i>KDE Resource framework.</i>
-	*
-	* More information about the KDE-PIM architecture can be found at
-	* the <a href="http://pim.kde.org/index.php">KDE PIM Home Page</a>.
-	*/
+/*!
+ * @mainpage The KDE-PIM Libraries API Reference
+ *
+ *
+ * <b>The KDE online class reference for the current development version of
+ * the KDE-PIM Libraries.</b>
+ *
+ * The libraries available in this KDE module are:
+ *
+ * - <a href="emailfunctions/html/index.html"><b>emailfunctions</b></a>.
+ *   <i>A library for general purpose email handling.</i>
+ *
+ * - <a href="kabc/html/index.html"><b>kabc</b></a>.
+ *   <i>An API for the KDE Addressbook.</i>
+ *
+ * - <a href="kcal/html/index.html"><b>kcal</b></a>.
+ *   <i>An API for the iCalendar and vCalendar formats.</i>
+ *
+ * - <a href="ktnef/html/index.html"><b>ktnef</b></a>.
+ *   <i>An API for the handling of TNEF data.</i>
+ *
+ * - <a href="kresources/html/index.html"><b>kresources</b></a>.
+ *   <i>The KDE Resource framework.</i>
+ *
+ * @b Download the complete API documentation from
+ * <a href="http://api.kde.org/">api.kde.org</a>.
+ *
+ * @b Read about the KDE-PIM architecture by visiting
+ * the <a href="http://pim.kde.org/index.php">KDE PIM Home Page</a>.
+ *
+ * @b Follow the development of these libraries. Please consider joining the
+ * <a href="http://mail.kde.org/mailman/listinfo/kde-pim">KDE PIM Mailing List</a> (<a href="http://lists.kde.org/?l=kde-pim">archives</a>).
+ */
 
-// DOXYGEN_VERSION=4.0
-// DOXYGEN_NAME=kdepimlibs
+// DOXYGEN_NAME="KDE-PIM Libraries"
 // DOXYGEN_ENABLE=YES
