@@ -21,6 +21,14 @@
     Boston, MA 02110-1301, USA.
  */
 
+/**
+ * @file
+ * This file is part of the API for handling TNEF data and
+ * defines the KTNEFMessage class.
+ *
+ * @author Michael Goffioul
+ */
+
 #ifndef KTNEFMESSAGE_H
 #define KTNEFMESSAGE_H
 
@@ -33,21 +41,57 @@ namespace KTnef { class KTNEFAttach; }
 
 namespace KTnef {
 
+/**
+ * A class to represent a TNEF message.
+ */
 class KTNEF_EXPORT KTNEFMessage : public KTNEFPropertySet
 {
 public:
-	KTNEFMessage();
-	~KTNEFMessage();
+  /**
+   * Creates a KTNEFMessage message object.
+   */
+  KTNEFMessage();
 
-	const QList<KTNEFAttach*>& attachmentList() const;
-	KTNEFAttach* attachment( const QString& filename ) const;
-	void addAttachment( KTNEFAttach* attach );
-	void clearAttachments();
-	QString rtfString();
+  /**
+   * Destroys a KTNEFMessage message object.
+   */
+  ~KTNEFMessage();
+
+  /**
+   * Return a QList containing all the message's attachments.
+   */
+  const QList<KTNEFAttach *> &attachmentList() const;
+
+  /**
+   * Find the attachment associated to the specified file name.
+   *
+   * @param filename is a QString containing the file to search for in the
+   * list of message attachments.
+   *
+   * @return A pointer to KTNEFAttach object, or 0 if the search fails.
+   */
+  KTNEFAttach *attachment( const QString &filename ) const;
+
+  /**
+   * Append an attachment to the message.
+   * @param attach is a pointer to a KTNEFAttach object to be attached.
+   */
+  void addAttachment( KTNEFAttach *attach );
+
+  /**
+   * Clear the attachments list.
+   */
+  void clearAttachments();
+
+  /**
+   * Returns the Rich Text Format (@acronym RTF) data contained in the message.
+   * @return A QString containing the @acronym RTF data.
+   */
+  QString rtfString();
 
 private:
-	class MessagePrivate;
-	MessagePrivate *d;
+  class MessagePrivate;
+  MessagePrivate *d;
 };
 
 }
