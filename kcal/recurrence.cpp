@@ -47,7 +47,7 @@ Recurrence::Recurrence()
 }
 
 Recurrence::Recurrence( const Recurrence &r )
-: RecurrenceRule::Observer(),
+: RecurrenceRule::RuleObserver(),
   mRDateTimes( r.mRDateTimes ), mRDates( r.mRDates ),
   mExDateTimes( r.mExDateTimes ), mExDates( r.mExDates ),
   mStartDateTime( r.mStartDateTime ),

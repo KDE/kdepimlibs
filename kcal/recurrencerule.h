@@ -25,10 +25,9 @@
 #define KCAL_RECURRENCERULE_H
 
 #include <QDateTime>
-//Added by qt3to4:
 #include <QList>
-#include "kcal/listbase.h"
 
+#include "listbase.h"
 #include "kcal.h"
 
 template <class T>
@@ -70,9 +69,9 @@ typedef QList<QTime> TimeList;
 class KCAL_EXPORT RecurrenceRule
 {
   public:
-    class Observer {
+    class RuleObserver {
       public:
-        virtual ~Observer() {}
+        virtual ~RuleObserver() {}
         /** This method will be called on each change of the recurrence object */
         virtual void recurrenceChanged( RecurrenceRule * ) = 0;
     };
@@ -243,14 +242,14 @@ class KCAL_EXPORT RecurrenceRule
       @param observer the Recurrence::Observer-derived object, which
       will be installed as an observer of this object.
     */
-    void addObserver( Observer *observer );
+    void addObserver( RuleObserver *observer );
     /**
       Removes an observer that was added with addObserver. If the
       given object was not an observer, it does nothing.
       @param observer the Recurrence::Observer-derived object to
       be removed from the list of observers of this object.
     */
-    void removeObserver( Observer *observer );
+    void removeObserver( RuleObserver *observer );
 
     /**
       Debug output.
@@ -331,7 +330,7 @@ class KCAL_EXPORT RecurrenceRule
     Constraint::List mConstraints;
     void buildConstraints();
     bool mDirty;
-    QList<Observer*> mObservers;
+    QList<RuleObserver*> mObservers;
 
     // Cache for duration
     mutable DateTimeList mCachedDates;

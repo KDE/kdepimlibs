@@ -539,13 +539,13 @@ bool RecurrenceRule::operator==( const RecurrenceRule& r ) const
   return true;
 }
 
-void RecurrenceRule::addObserver( Observer *observer )
+void RecurrenceRule::addObserver( RuleObserver *observer )
 {
   if ( !mObservers.contains( observer ) )
     mObservers.append( observer );
 }
 
-void RecurrenceRule::removeObserver( Observer *observer )
+void RecurrenceRule::removeObserver( RuleObserver *observer )
 {
   if ( mObservers.contains( observer ) )
     mObservers.removeAll( observer );
@@ -631,7 +631,7 @@ void RecurrenceRule::setDirty()
   mDirty = true;
   mCached = false;
   mCachedDates.clear();
-  for ( QList<Observer*>::ConstIterator it = mObservers.begin();
+  for ( QList<RuleObserver*>::ConstIterator it = mObservers.begin();
         it != mObservers.end(); ++it ) {
     if ( (*it) ) (*it)->recurrenceChanged( this );
   }
