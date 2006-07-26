@@ -24,6 +24,7 @@
 
 #include <QString>
 #include <QDateTime>
+#include "kcal.h"
 
 namespace KCal {
 

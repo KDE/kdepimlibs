@@ -29,6 +29,7 @@
 // to use C++ exceptions.
 
 #include <QString>
+#include "kcal.h"
 
 namespace KCal {
 

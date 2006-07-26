@@ -37,14 +37,14 @@ class DummyScheduler : public Scheduler
   public:
     DummyScheduler(Calendar *);
     virtual ~DummyScheduler();
-    
+
     bool publish (IncidenceBase *incidence,const QString &recipients);
     bool performTransaction(IncidenceBase *incidence,Method method);
     bool performTransaction(IncidenceBase *incidence,Method method,const QString &recipients);
     QList<ScheduleMessage*> retrieveTransactions();
 
     virtual QString freeBusyDir();
-  
+
   protected:
     bool saveMessage(const QString &);
 

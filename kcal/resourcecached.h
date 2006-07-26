@@ -24,7 +24,7 @@
 
 #include "resourcecalendar.h"
 
-#include <kresources/idmapper.h>
+#include "kresources/idmapper.h"
 #include "incidence.h"
 #include "calendarlocal.h"
 

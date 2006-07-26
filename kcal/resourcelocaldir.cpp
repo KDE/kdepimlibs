@@ -42,7 +42,7 @@
 #include "journal.h"
 #include "filestorage.h"
 
-#include <kresources/configwidget.h>
+#include "kresources/configwidget.h"
 
 #include "resourcelocaldirconfig.h"
 

@@ -25,7 +25,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <emailfunctions/email.h>
+#include "emailfunctions/email.h"
 
 #include <QRegExp>
 

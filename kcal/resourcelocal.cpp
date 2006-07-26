@@ -41,7 +41,7 @@
 #include "journal.h"
 #include "filestorage.h"
 
-#include <kresources/configwidget.h>
+#include "kresources/configwidget.h"
 
 #include "resourcelocalconfig.h"
 
@@ -216,7 +216,7 @@ bool ResourceLocal::setFileName( const QString &fileName )
   return true;
 }
 
-bool ResourceLocal::setValue( const QString &key, const QString &value ) 
+bool ResourceLocal::setValue( const QString &key, const QString &value )
 {
   if ( key == "File" ) {
     return setFileName( value );

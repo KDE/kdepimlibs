@@ -36,9 +36,9 @@
 #include "journal.h"
 #include "calendar.h"
 
-#include <kresources/resource.h>
-#include <kresources/manager.h>
-#include <kabc/lock.h>
+#include "kresources/resource.h"
+#include "kresources/manager.h"
+#include "kabc/lock.h"
 
 
 namespace KCal {
@@ -193,7 +193,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       keys are resource specific.
 
       This method is provided to make it possible
-      to set resource-type specific settings without actually linking to 
+      to set resource-type specific settings without actually linking to
       the resource's library. Its use is discouraged, but in
       some situations the only possibility to avoid unwanted compiling and
       linking dependencies. E.g. if you don't want to link to the remote
@@ -345,7 +345,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
 
       @return the identifier of the subresource or an empty string.
     */
-    virtual QString subresourceIdentifier( Incidence *incidence ) 
+    virtual QString subresourceIdentifier( Incidence *incidence )
     { Q_UNUSED( incidence ); return QString(); }
 
   public slots:

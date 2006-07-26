@@ -21,24 +21,24 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "kcal/incidenceformatter.h"
-#include "kcal/attachment.h"
-#include "kcal/event.h"
-#include "kcal/todo.h"
-#include "kcal/journal.h"
-#include "kcal/calendar.h"
-#include "kcal/calendarlocal.h"
-#include "kcal/icalformat.h"
-#include "kcal/freebusy.h"
+#include "incidenceformatter.h"
+#include "attachment.h"
+#include "event.h"
+#include "todo.h"
+#include "journal.h"
+#include "calendar.h"
+#include "calendarlocal.h"
+#include "icalformat.h"
+#include "freebusy.h"
 
-#include <emailfunctions/email.h>
+#include "emailfunctions/email.h"
 
-#include <ktnef/ktnefparser.h>
-#include <ktnef/ktnefmessage.h>
-#include <ktnef/ktnefdefs.h>
-#include <kabc/phonenumber.h>
-#include <kabc/vcardconverter.h>
-#include <kabc/stdaddressbook.h>
+#include "ktnef/ktnefparser.h"
+#include "ktnef/ktnefmessage.h"
+#include "ktnef/ktnefdefs.h"
+#include "kabc/phonenumber.h"
+#include "kabc/vcardconverter.h"
+#include "kabc/stdaddressbook.h"
 
 #include <kapplication.h>
 // #include <kdebug.h>

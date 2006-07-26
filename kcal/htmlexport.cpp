@@ -36,7 +36,7 @@
 #include "kcal/todo.h"
 
 #ifndef KORG_NOKABC
- #include <kabc/stdaddressbook.h>
+ #include "kabc/stdaddressbook.h"
 #endif
 #include "htmlexport.h"
 #include "htmlexportsettings.h"

@@ -45,9 +45,9 @@
 #include "journal.h"
 #include "filestorage.h"
 
-#include <kresources/manager.h>
-#include <kresources/selectdialog.h>
-#include <kabc/lock.h>
+#include "kresources/manager.h"
+#include "kresources/selectdialog.h"
+#include "kabc/lock.h"
 
 #include "resourcecalendar.h"
 #include "resourcelocal.h"

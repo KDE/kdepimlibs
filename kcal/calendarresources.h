@@ -36,7 +36,7 @@
 
 #include "kcal.h"
 
-#include <kresources/manager.h>
+#include "kresources/manager.h"
 
 class QWidget;
 

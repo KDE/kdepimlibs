@@ -1,6 +1,6 @@
 /*
     This file is part of the kcal library.
-    
+
     Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
     Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
 
@@ -26,8 +26,8 @@
 #include <q3buttongroup.h>
 #include <kurlrequester.h>
 
-#include <kresources/resource.h>
-#include <kresources/configwidget.h>
+#include "kresources/resource.h"
+#include "kresources/configwidget.h"
 
 
 #include "kcal.h"
@@ -36,11 +36,11 @@ namespace KCal {
 
 /**
   Configuration widget for local file resource.
-  
+
   @see ResourceLocal
 */
 class KCAL_EXPORT ResourceLocalConfig : public KRES::ConfigWidget
-{ 
+{
     Q_OBJECT
   public:
     ResourceLocalConfig( QWidget* parent = 0, const char* name = 0 );

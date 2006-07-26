@@ -21,8 +21,9 @@
 #ifndef KCAL_LISTBASE_H
 #define KCAL_LISTBASE_H
 
-
 #include <QList>
+#include "kcal.h"
+
 namespace KCal {
 
 /**
