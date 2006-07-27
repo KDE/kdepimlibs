@@ -11,6 +11,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/
 	${CMAKE_SOURCE_DIR}/ktnef
 	${CMAKE_SOURCE_DIR}/kabc
+	${CMAKE_BINARY_DIR}/kabc
         ${KDE4_INCLUDE_DIR}
 )
 
