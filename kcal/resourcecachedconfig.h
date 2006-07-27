@@ -22,7 +22,7 @@
 #define KCAL_RESOURCECACHEDCONFIG_H
 
 #include <QWidget>
-#include "kcal/kcal.h"
+#include "kcal.h"
 
 class Q3ButtonGroup;
 class QSpinBox;

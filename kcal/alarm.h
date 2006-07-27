@@ -26,10 +26,10 @@
 #include <QStringList>
 
 
-#include "kcal/customproperties.h"
-#include "kcal/duration.h"
-#include "kcal/person.h"
-#include "kcal/listbase.h"
+#include "customproperties.h"
+#include "duration.h"
+#include "person.h"
+#include "listbase.h"
 #include "kcal.h"
 
 #include <QList>

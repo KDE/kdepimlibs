@@ -24,8 +24,8 @@
 
 #include <QString>
 
-#include "kcal/listbase.h"
-#include "kcal/person.h"
+#include "listbase.h"
+#include "person.h"
 
 namespace KCal {
 

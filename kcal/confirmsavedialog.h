@@ -23,7 +23,7 @@
 
 #include <QTreeWidget>
 
-#include "kcal/incidence.h"
+#include "incidence.h"
 
 #include <kdialog.h>
 

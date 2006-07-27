@@ -21,7 +21,15 @@
 
 #include <config.h>
 
-#include <kabc/stdaddressbook.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <assert.h>
+
+#include <QDir>
+#include <QFileInfo>
+#include <QStringList>
+
 #include <kurl.h>
 #include <kapplication.h>
 #include <kio/netaccess.h>
@@ -29,16 +37,9 @@
 #include <kdebug.h>
 #include <kcmdlineargs.h>
 #include <kinputdialog.h>
-#include <kresources/factory.h>
 
-#include <QDir>
-#include <QFileInfo>
-#include <QStringList>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <assert.h>
+#include "kabc/stdaddressbook.h"
+#include "kresources/factory.h"
 
 #include "kcal/calendarresources.h"
 #include "kcal/resourcecalendar.h"

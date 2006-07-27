@@ -27,8 +27,8 @@
 #include <QString>
 #include <QTextStream>
 
-#include "kcal/calendar.h"
-#include "kcal/htmlexportsettings.h"
+#include "calendar.h"
+#include "htmlexportsettings.h"
 #include "kcal.h"
 
 class QFile;

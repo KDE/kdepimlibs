@@ -20,14 +20,14 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "kcal/person.h"
+#include <QRegExp>
 
 #include <kdebug.h>
 #include <klocale.h>
 
 #include "emailfunctions/email.h"
+#include "person.h"
 
-#include <QRegExp>
 
 using namespace KCal;
 

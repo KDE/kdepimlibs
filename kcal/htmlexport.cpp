@@ -31,9 +31,9 @@
 #include <kdebug.h>
 #include <kcalendarsystem.h>
 
-#include "kcal/calendar.h"
-#include "kcal/event.h"
-#include "kcal/todo.h"
+#include "calendar.h"
+#include "event.h"
+#include "todo.h"
 
 #ifndef KORG_NOKABC
  #include "kabc/stdaddressbook.h"

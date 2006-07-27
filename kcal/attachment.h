@@ -21,7 +21,7 @@
 #ifndef KCAL_ATTACHMENT_H
 #define KCAL_ATTACHMENT_H
 
-#include "kcal/listbase.h"
+#include "listbase.h"
 #include "kcal.h"
 
 #include <QString>
