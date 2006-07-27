@@ -25,14 +25,15 @@
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
 
+#include <assert.h>
+
 #include <QFile>
 #include <QDateTime>
 #include <QDataStream>
-//Added by qt3to4:
 #include <QList>
 #include <QByteArray>
+
 #include <kdebug.h>
-#include <assert.h>
 
 #include "ktnef/ktnefwriter.h"
 #include "ktnef/ktnefproperty.h"
