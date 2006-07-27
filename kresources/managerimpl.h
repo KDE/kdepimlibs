@@ -25,7 +25,7 @@
 
 #include <qstring.h>
 
-#include <kresources/resource.h>
+#include "kresources/resource.h"
 
 class KConfig;
 

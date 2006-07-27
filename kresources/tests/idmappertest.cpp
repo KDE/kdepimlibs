@@ -20,10 +20,11 @@
 */
 
 
+#include <qtest_kde.h>
+#include "kresources/idmapper.h"
+
 #include "idmappertest.h"
 #include "idmappertest.moc"
-#include "idmapper.h"
-#include <qtest_kde.h>
 
 QTEST_KDEMAIN( IdMapperTest, NoGUI )
 

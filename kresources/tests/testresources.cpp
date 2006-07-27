@@ -3,8 +3,8 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
-#include "resource.h"
-#include "manager.h"
+#include "kresources/resource.h"
+#include "kresources/manager.h"
 
 using namespace KRES;
 
@@ -19,7 +19,7 @@ class TestSubResource : public TestResource
 {
   public:
     TestSubResource() : TestResource() {}
-    
+
     void dump() const
     {
       kDebug() << "TestSubResource" << endl;
@@ -35,16 +35,16 @@ int main( int argc, char **argv )
   KApplication app;
 
   Manager<TestResource> manager( "test" );
-  
-  TestResource *resource1 = new TestResource;  
+
+  TestResource *resource1 = new TestResource;
   resource1->setResourceName( "One" );
   manager.add( resource1 );
 
-  TestResource *resource2 = new TestSubResource;  
+  TestResource *resource2 = new TestSubResource;
   resource2->setResourceName( "Two" );
   manager.add( resource2 );
 
-  TestResource *resource3 = new TestSubResource;  
+  TestResource *resource3 = new TestSubResource;
   resource3->setResourceName( "Three" );
   manager.add( resource3 );
 
@@ -56,7 +56,7 @@ int main( int argc, char **argv )
 
   resource2->setActive( false );
   resource3->setActive( true );
-  
+
   kDebug() << "LIST ACTIVE" << endl;
   Manager<TestResource>::ActiveIterator it2;
   for( it2 = manager.activeBegin(); it2 != manager.activeEnd(); ++it2 ) {
@@ -66,7 +66,7 @@ int main( int argc, char **argv )
   resource1->setActive( false );
   resource2->setActive( true );
   resource3->setActive( true );
-  
+
   kDebug() << "LIST ACTIVE" << endl;
   for( it2 = manager.activeBegin(); it2 != manager.activeEnd(); ++it2 ) {
     (*it2)->dump();

@@ -25,7 +25,7 @@
 #include <QMap>
 #include <QString>
 
-#include <kdelibs_export.h>
+#include "kresources.h"
 
 namespace KRES {
 
