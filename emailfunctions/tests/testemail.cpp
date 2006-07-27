@@ -17,7 +17,7 @@
 */
 
 // Test program for emailfunctions/email.h
-#include "email.h"
+#include "emailfunctions/email.h"
 
 #include <kcmdlineargs.h>
 #include <kapplication.h>
