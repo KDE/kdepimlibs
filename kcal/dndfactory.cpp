@@ -24,7 +24,6 @@
 
 #include <QApplication>
 #include <QClipboard>
-//Added by qt3to4:
 #include <QDropEvent>
 #include <QPixmap>
 
@@ -41,7 +40,6 @@
 #include "vcalformat.h"
 #include "icalformat.h"
 #include "calendarlocal.h"
-
 #include "dndfactory.h"
 
 using namespace KCal;
@@ -62,7 +60,7 @@ K3MultipleDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
   QMap<QString, QString> metadata;
   metadata["labels"] = KUrl::toPercentEncoding( i->summary() );
   kmd->addDragObject( new K3URLDrag( i->uri(), metadata, 0 ) );
-  
+
   if ( i->type() == "Event" )
     kmd->setPixmap( BarIcon( "appointment" ) );
   else if ( i->type() == "Todo" )

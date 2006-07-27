@@ -21,9 +21,9 @@
 #ifndef KCAL_TODO_H
 #define KCAL_TODO_H
 
-#include "incidence.h"
-//Added by qt3to4:
 #include <QByteArray>
+
+#include "incidence.h"
 
 namespace KCal {
 

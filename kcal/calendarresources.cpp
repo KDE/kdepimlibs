@@ -31,11 +31,14 @@
 #include <QDateTime>
 #include <QString>
 #include <QList>
-//Added by qt3to4:
 
 #include <kdebug.h>
 #include <kstandarddirs.h>
 #include <klocale.h>
+
+#include "kresources/manager.h"
+#include "kresources/selectdialog.h"
+#include "kabc/lock.h"
 
 #include "vcaldrag.h"
 #include "vcalformat.h"
@@ -44,14 +47,8 @@
 #include "incidence.h"
 #include "journal.h"
 #include "filestorage.h"
-
-#include "kresources/manager.h"
-#include "kresources/selectdialog.h"
-#include "kabc/lock.h"
-
 #include "resourcecalendar.h"
 #include "resourcelocal.h"
-
 #include "calendarresources.h"
 
 using namespace KCal;

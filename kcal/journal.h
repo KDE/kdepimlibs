@@ -22,10 +22,9 @@
 #ifndef KCAL_JOURNAL_H
 #define KCAL_JOURNAL_H
 
-#include "incidence.h"
-
-//Added by qt3to4:
 #include <QByteArray>
+
+#include "incidence.h"
 
 namespace KCal {
 
@@ -36,14 +35,14 @@ class KCAL_EXPORT Journal : public Incidence
 {
   public:
     typedef ListBase<Journal> List;
-  
+
     Journal();
     ~Journal();
     bool accept( Visitor &v ) { return v.visit(this); }
     bool operator==( const Journal& ) const;
 
     QByteArray type() const { return "Journal"; }
-    
+
     /**
       Return copy of this Journal. The caller owns the returned object.
     */

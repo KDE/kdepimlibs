@@ -28,7 +28,6 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <QBitArray>
-//Added by qt3to4:
 #include <QList>
 
 #include "recurrence.h"

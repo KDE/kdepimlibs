@@ -20,11 +20,11 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include <QList>
+
 #include <kdebug.h>
 
 #include "freebusy.h"
-//Added by qt3to4:
-#include <QList>
 
 using namespace KCal;
 

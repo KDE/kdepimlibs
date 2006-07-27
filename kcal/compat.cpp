@@ -25,7 +25,6 @@
 #include <kdebug.h>
 
 #include <QRegExp>
-//Added by qt3to4:
 #include <QList>
 
 #include "incidence.h"
@@ -163,8 +162,8 @@ void CompatPre32::fixRecurrence( Incidence *incidence )
     Update: We misunderstood rfc 2445 in this regard. For all-day events, the
     DTEND is the last day of the event. See a mail from the Author or rfc 2445:
          http://www.imc.org/ietf-calendar/archive1/msg03648.html
-    However, as all other applications also got this wrong, we'll just leave it 
-    as it is and use the wrong interpretation (was also discussed on 
+    However, as all other applications also got this wrong, we'll just leave it
+    as it is and use the wrong interpretation (was also discussed on
     ietf-calsify)*/
 void CompatPre31::fixFloatingEnd( QDate &endDate )
 {
@@ -220,9 +219,9 @@ void CompatPre31::fixRecurrence( Incidence *incidence )
 		for (int i = 0; i < months.size(); ++i) {
 				int newmonth = QDate( r->startDt().date().year(), 1, 1).addDays( months.at(i) - 1 ).month();
        			if ( !months.contains( newmonth ) )
-          			months.append( newmonth );	
+          			months.append( newmonth );
 		}
-	  
+
       r->setByMonths( months );
       days.clear();
       r->setByYearDays( days );

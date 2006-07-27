@@ -20,15 +20,14 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include <QList>
+
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
 
 #include "calformat.h"
-
 #include "incidence.h"
-//Added by qt3to4:
-#include <QList>
 
 using namespace KCal;
 

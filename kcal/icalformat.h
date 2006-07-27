@@ -22,13 +22,10 @@
 #define KCAL_ICALFORMAT_H
 
 #include <QString>
-//Added by qt3to4:
 #include <QByteArray>
 
 #include "scheduler.h"
-
 #include "calformat.h"
-
 
 namespace KCal {
 
@@ -60,7 +57,7 @@ class KCAL_EXPORT ICalFormat : public CalFormat
     /**
       Writes out the calendar to disk in iCalendar format. Returns true if
       successful and false on error.
-     
+
       @param calendar The Calendar object to be written.
       @param fileName The name of the calendar file on disk.
     */
@@ -97,7 +94,7 @@ class KCAL_EXPORT ICalFormat : public CalFormat
       that information
     */
     bool fromString ( RecurrenceRule *, const QString& );
-  
+
     /**
       Create a scheduling message for event @p e using method @p m.
     */
@@ -127,7 +124,7 @@ class KCAL_EXPORT ICalFormat : public CalFormat
 
   protected:
     /**
-      Parse string and return first ical component of a raw byte array of 
+      Parse string and return first ical component of a raw byte array of
       a utf8 encoded string. This is an overload used for efficiency reading
       to avoid utf8 conversions, which are expensive, when reading from disk.
     */

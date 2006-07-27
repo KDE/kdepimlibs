@@ -22,13 +22,12 @@
 #ifndef KCAL_VCALFORMAT_H
 #define KCAL_VCALFORMAT_H
 
-#include "calformat.h"
+#include <QByteArray>
 
+#include "calformat.h"
 #include "todo.h"
 #include "event.h"
 #include "kcal.h"
-//Added by qt3to4:
-#include <QByteArray>
 
 #define _VCAL_VERSION "1.0"
 

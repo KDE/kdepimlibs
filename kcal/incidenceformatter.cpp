@@ -21,6 +21,26 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include <time.h>
+
+#include <QBuffer>
+#include <QDateTime>
+#include <QList>
+#include <QTextDocument>
+
+#include <kapplication.h>
+#include <kglobal.h>
+#include <kiconloader.h>
+#include <klocale.h>
+
+#include "emailfunctions/email.h"
+#include "ktnef/ktnefparser.h"
+#include "ktnef/ktnefmessage.h"
+#include "ktnef/ktnefdefs.h"
+#include "kabc/phonenumber.h"
+#include "kabc/vcardconverter.h"
+#include "kabc/stdaddressbook.h"
+
 #include "incidenceformatter.h"
 #include "attachment.h"
 #include "event.h"
@@ -30,31 +50,6 @@
 #include "calendarlocal.h"
 #include "icalformat.h"
 #include "freebusy.h"
-
-#include "emailfunctions/email.h"
-
-#include "ktnef/ktnefparser.h"
-#include "ktnef/ktnefmessage.h"
-#include "ktnef/ktnefdefs.h"
-#include "kabc/phonenumber.h"
-#include "kabc/vcardconverter.h"
-#include "kabc/stdaddressbook.h"
-
-#include <kapplication.h>
-// #include <kdebug.h>
-
-#include <klocale.h>
-#include <kglobal.h>
-#include <kiconloader.h>
-
-#include <QBuffer>
-#include <QDateTime>
-//Added by qt3to4:
-#include <QList>
-
-#include <time.h>
-#include <QTextDocument>
-
 
 using namespace KCal;
 using namespace KTnef;

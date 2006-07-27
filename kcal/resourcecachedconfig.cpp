@@ -23,18 +23,16 @@
 #include <QLayout>
 #include <QRadioButton>
 #include <QSpinBox>
-#include <khbox.h>
 #include <QLabel>
-//Added by qt3to4:
 #include <QVBoxLayout>
 #include <QBoxLayout>
 #include <QCheckBox>
 
+#include <khbox.h>
 #include <klocale.h>
 #include <kdebug.h>
 
 #include "resourcecached.h"
-
 #include "resourcecachedconfig.h"
 
 using namespace KCal;

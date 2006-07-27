@@ -20,14 +20,13 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include <QList>
+
 #include <kdebug.h>
 
 #include "incidence.h"
 #include "todo.h"
-
 #include "alarm.h"
-//Added by qt3to4:
-#include <QList>
 
 using namespace KCal;
 
@@ -308,7 +307,7 @@ QDateTime Alarm::time() const
 {
   if ( hasTime() )
     return mAlarmTime;
-  else if ( mParent ) 
+  else if ( mParent )
   {
     if (mParent->type()=="Todo") {
       Todo *t = static_cast<Todo*>(mParent);

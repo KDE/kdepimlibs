@@ -22,15 +22,13 @@
 #ifndef KCAL_HTMLEXPORT_H
 #define KCAL_HTMLEXPORT_H
 
-#include <QString>
 #include <QDateTime>
 #include <QMap>
-//Added by qt3to4:
+#include <QString>
 #include <QTextStream>
 
 #include "kcal/calendar.h"
 #include "kcal/htmlexportsettings.h"
-
 #include "kcal.h"
 
 class QFile;

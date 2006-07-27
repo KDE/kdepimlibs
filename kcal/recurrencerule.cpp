@@ -20,17 +20,17 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "recurrencerule.h"
+#include <limits.h>
+#include <math.h>
+
+#include <QDateTime>
+#include <QList>
+#include <QStringList>
 
 #include <kdebug.h>
 #include <kglobal.h>
-#include <QDateTime>
-#include <QStringList>
-//Added by qt3to4:
-#include <QList>
 
-#include <limits.h>
-#include <math.h>
+#include "recurrencerule.h"
 
 using namespace KCal;
 

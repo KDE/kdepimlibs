@@ -23,7 +23,6 @@
 
 #include <QLabel>
 #include <QLayout>
-//Added by qt3to4:
 #include <QGridLayout>
 
 #include <klocale.h>
@@ -33,9 +32,7 @@
 #include "vcaldrag.h"
 #include "vcalformat.h"
 #include "icalformat.h"
-
 #include "resourcelocaldir.h"
-
 #include "resourcelocaldirconfig.h"
 
 using namespace KCal;
@@ -44,7 +41,7 @@ ResourceLocalDirConfig::ResourceLocalDirConfig( QWidget* parent,  const char* na
     : KRES::ConfigWidget( parent )
 {
   setObjectName(name);
-  resize( 245, 115 ); 
+  resize( 245, 115 );
   QGridLayout *mainLayout = new QGridLayout( this );
 
   QLabel *label = new QLabel( i18n( "Location:" ), this );

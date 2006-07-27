@@ -27,7 +27,6 @@
 #include <QClipboard>
 #include <QDialog>
 #include <QFile>
-//Added by qt3to4:
 #include <QByteArray>
 
 #include <kdebug.h>

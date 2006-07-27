@@ -24,9 +24,9 @@
 #ifndef KCAL_DNDFACTORY_H
 #define KCAL_DNDFACTORY_H
 
-#include "kcal.h"
-//Added by qt3to4:
 #include <QDropEvent>
+
+#include "kcal.h"
 
 class K3MultipleDrag;
 
