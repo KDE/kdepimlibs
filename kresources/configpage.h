@@ -23,10 +23,11 @@
 #ifndef KRESOURCES_CONFIGPAGE_H
 #define KRESOURCES_CONFIGPAGE_H
 
-#include <ksharedptr.h>
-#include <qstringlist.h>
-#include <qwidget.h>
+#include <QStringList>
+#include <QWidget>
 #include <QList>
+
+#include <ksharedptr.h>
 
 #include "manager.h"
 

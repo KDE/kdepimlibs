@@ -22,11 +22,12 @@
 #ifndef KRESOURCES_CONFIGWIDGET_H
 #define KRESOURCES_CONFIGWIDGET_H
 
-#include "resource.h"
+#include <QWidget>
 
 #include <kconfig.h>
 
-#include <qwidget.h>
+#include "resource.h"
+
 
 namespace KRES {
 

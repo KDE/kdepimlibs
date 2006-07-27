@@ -25,7 +25,7 @@
 #define KRESOURCES_MANAGER_H
 
 #include <QList>
-#include <qstringlist.h>
+#include <QStringList>
 
 #include <kdebug.h>
 

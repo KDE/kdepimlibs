@@ -19,7 +19,7 @@
 #ifndef MANAGERADAPTOR_H
 #define MANAGERADAPTOR_H
 
-#include <qstring.h>
+#include <QString>
 #include <QtDBus/QtDBus>
 
 namespace KRES

@@ -1,4 +1,4 @@
-/*  
+/*
     Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
 
     This library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #ifndef IDMAPPERTEST_H
 #define IDMAPPERTEST_H
 
-#include <qobject.h>
+#include <QObject>
 
 class IdMapperTest : public QObject
 {

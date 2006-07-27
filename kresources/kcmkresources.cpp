@@ -19,14 +19,13 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qlayout.h>
+#include <QLayout>
 
 #include <kaboutdata.h>
 #include <kgenericfactory.h>
 #include <klocale.h>
 
 #include "configpage.h"
-
 #include "kcmkresources.h"
 
 typedef KGenericFactory<KCMKResources, QWidget> ResourcesFactory;

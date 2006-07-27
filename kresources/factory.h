@@ -25,7 +25,7 @@
 #define KRESOURCES_FACTORY_H
 
 #include <QMap>
-#include <qstring.h>
+#include <QString>
 
 #include <kconfig.h>
 #include <kservice.h>
