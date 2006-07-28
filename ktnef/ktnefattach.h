@@ -21,58 +21,190 @@
     Boston, MA 02110-1301, USA.
  */
 
+/**
+ * @file
+ * This file is part of the API for handling TNEF data and
+ * defines the KTNEFAttach class.
+ *
+ * @author Michael Goffioul
+ */
+
 #ifndef KTNEFATTACH_H
 #define	KTNEFATTACH_H
 
 #include <QString>
 #include <QMap>
 #include <QVariant>
-#include "ktnef/ktnefpropertyset.h"
+
+#include "ktnefpropertyset.h"
 #include "ktnef.h"
 
 namespace KTnef { class KTNEFProperty; }
 
 namespace KTnef {
 
+/**
+ * A class to represent a @acronym TNEF attachment.
+ */
 class KTNEF_EXPORT KTNEFAttach : public KTNEFPropertySet
 {
 public:
-	enum ParseState { Unparsed = 0x0000, TitleParsed = 0x0001, DataParsed = 0x0002, InfoParsed = 0x0004};
+  /**
+   * The different attachment parsed states.
+   */
+  enum ParseState {
+    Unparsed = 0x0000,    /**< Unparsed */
+    TitleParsed = 0x0001, /**< The title is parsed */
+    DataParsed = 0x0002,  /**< The data is parsed */
+    InfoParsed = 0x0004   /**< The info is parsed */
+  };
 
-	KTNEFAttach();
-	~KTNEFAttach();
+  /**
+   * Constructs a @acronym TNEF attachment.
+   */
+  KTNEFAttach();
 
-	void setTitleParsed();
-	void setDataParsed();
-	void unsetDataParser();
-	void setInfoParsed();
-	bool titleParsed() const;
-	bool dataParsed() const;
-	bool infoParsed() const;
-	bool checkState(int state) const;
+  /**
+   * Destroys the @acronym TNEF attachment.
+   */
+  ~KTNEFAttach();
 
-	int offset() const;
-	void setOffset(int n);
-	int size() const;
-	void setSize(int s);
-	int displaySize() const;
-	void setDisplaySize(int s);
-	QString name() const;
-	void setName(const QString& str);
-	int index() const;
-	void setIndex(int i);
-	QString fileName() const;
-	void setFileName(const QString& str);
-	QString displayName() const;
-	void setDisplayName(const QString& str);
-	QString mimeTag() const;
-	void setMimeTag(const QString& str);
-	QString extension() const;
-	void setExtension(const QString& str);
+  /**
+   * Sets the #TitleParsed flag for this attachment.
+   */
+  void setTitleParsed();
+
+  /**
+   * Sets the #DataParsed flag for this attachment.
+   */
+  void setDataParsed();
+
+  /**
+   * Unsets the #DataParsed flag for this attachment.
+   */
+  void unsetDataParser();
+
+  /**
+   * Sets the #InfoParsed flag for this attachment.
+   */
+  void setInfoParsed();
+
+  /**
+   * Returns true if the #TitleParsed flag is set; else returns false.
+   */
+  bool titleParsed() const;
+
+  /**
+   * Returns true if the ParseState::DataParsed flag is set; else returns false.
+   */
+  bool dataParsed() const;
+
+  /**
+   * Returns true if the #InfoParsed flag is set; else returns false.
+   */
+  bool infoParsed() const;
+
+  /**
+   * Sets/Unsets the attachment state according to the @p state flag
+   * must be a #ParseState type.
+   *
+   * Returns true if the state is turned-on; else returns false.
+   */
+  bool checkState( int state ) const;
+
+  /**
+   * Sets the offset value of this attachment to @p offset.
+   */
+  void setOffset( int offset );
+
+  /**
+   * Returns the offset value of the attachment.
+   */
+  int offset() const;
+
+  /**
+   * Sets the size of the attachment to @p size.
+   */
+  void setSize( int size );
+
+  /**
+   * Returns the size of the attachment.
+   */
+  int size() const;
+
+  /**
+   * Sets the display size of the attachment to @p size.
+   */
+  void setDisplaySize( int size );
+
+  /**
+   * Returns the display size of the attachment.
+   */
+  int displaySize() const;
+
+  /**
+   * Sets the name of this attachment to @p str.
+   */
+  void setName( const QString& str );
+
+  /**
+   * Returns the name of the attachment.
+   */
+  QString name() const;
+
+  /**
+   * Sets the index of this attachment to @p indx.
+   */
+  void setIndex( int indx );
+
+  /**
+   * Returns the index of the attachment.
+   */
+  int index() const;
+
+  /**
+   * Sets the filename of this attachment to @p str.
+   */
+  void setFileName( const QString& str );
+
+  /**
+   * Returns the filename of the attachment.
+   */
+  QString fileName() const;
+
+  /**
+   * Sets the display name of this attachment to @p str.
+   */
+  void setDisplayName( const QString& str );
+
+  /**
+   * Returns the display name of the attachment.
+   */
+  QString displayName() const;
+
+  /**
+   * Sets the @acronym MIME tag of this attachment to @p str.
+   */
+  void setMimeTag( const QString& str );
+
+  /**
+   * Returns the @acronym MIME tag of the attachment.
+   */
+  QString mimeTag() const;
+
+  /**
+   * Sets the filename extension of this attachment to @p str.
+   */
+  void setExtension( const QString& str );
+
+  /**
+   * Returns the filename extension of the attachment.
+   */
+  QString extension() const;
 
 private:
-	class AttachPrivate;
-	AttachPrivate *d;
+  class AttachPrivate;
+  AttachPrivate *d;
 };
 
 }
