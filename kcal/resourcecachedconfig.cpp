@@ -54,7 +54,7 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent,
            SLOT( slotIntervalStateChanged( int ) ) );
   KHBox *intervalBox = new KHBox( mGroup );
   new QLabel( i18n("Interval in minutes"), intervalBox );
-  mIntervalSpin = new QSpinBox( intervalBox );
+  mIntervalSpin = new QSpinBox( 1,900, 1,intervalBox );
   mIntervalSpin->setEnabled( false );
 }
 
@@ -93,7 +93,7 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent, const char*
            SLOT( slotIntervalStateChanged( int ) ) );
   KHBox *intervalBox = new KHBox( mGroup );
   new QLabel( i18n("Interval in minutes"), intervalBox );
-  mIntervalSpin = new QSpinBox( intervalBox );
+  mIntervalSpin = new QSpinBox( 1,900, 1,intervalBox );
   mIntervalSpin->setEnabled( false );
 
   new QRadioButton( i18n("Delayed after changes"), mGroup );
