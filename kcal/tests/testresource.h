@@ -40,13 +40,13 @@ public:
     void testOpenAndClose();
     void testResourceAttributes();
     void testResourceCalendarAttributes();
-    
+
     void testEventAddRemove();
     void testTodoAddRemove();
     void testJournalAddRemove();
 
 private:
-    bool check(const QString& txt, QString a, QString b);
+    bool check(const QString& txt, const QString &a, const QString &b);
     QString m_resource_type;
     KConfig *m_config;
     ResourceCalendar *m_res;

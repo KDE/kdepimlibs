@@ -16,10 +16,9 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include "testresource.h"
-#include "testincidencegenerator.h"
-
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,6 +45,9 @@
 #include "kcal/icalformat.h"
 #include "kcal/event.h"
 
+#include "testresource.h"
+#include "testincidencegenerator.h"
+
 static const KCmdLineOptions options[] =
 {
   { "resource <type>", "The resource to test", 0 },
@@ -55,30 +57,30 @@ static const KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
-    // Use another directory than the real one, just to keep things clean
-    // KDEHOME needs to be writable though, for a ksycoca database
-    setenv( "KDEHOME", QFile::encodeName( QDir::homePath() + "/.kde-testresource" ), true );
-    setenv( "KDE_FORK_SLAVES", "yes", true ); // simpler, for the final cleanup
+  // Use another directory than the real one, just to keep things clean
+  // KDEHOME needs to be writable though, for a ksycoca database
+  setenv( "KDEHOME", QFile::encodeName( QDir::homePath() + "/.kde-testresource" ), true );
+  setenv( "KDE_FORK_SLAVES", "yes", true ); // simpler, for the final cleanup
 
-    // KApplication::disableAutoDcopRegistration();
-    KCmdLineArgs::init(argc,argv,"testresource", 0, 0, 0, 0);
-    KCmdLineArgs::addCmdLineOptions( options );
+  // KApplication::disableAutoDcopRegistration();
+  KCmdLineArgs::init(argc,argv,"testresource", 0, 0, 0, 0);
+  KCmdLineArgs::addCmdLineOptions( options );
 
-    KApplication app;
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    QString type = QString();
-    if ( !args->getOption( "resource" ).isEmpty() )
-      type = QString::fromLocal8Bit( args->getOption( "resource" ) );
-    KConfig *config = 0;
-    if ( !args->getOption( "configfile" ).isEmpty() )
-      config = new KConfig( KUrl( args->getOption( "configfile" ) ).url() );
-    kDebug() << KUrl( args->getOption( "configfile" ) ).url() << endl;
-    KCal::TestResource test( type, config );
-    test.setup();
-    test.runAll();
-    test.cleanup();
-    kDebug() << "All tests OK." << endl;
-    return 0;
+  KApplication app;
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  QString type = QString();
+  if ( !args->getOption( "resource" ).isEmpty() )
+    type = QString::fromLocal8Bit( args->getOption( "resource" ) );
+  KConfig *config = 0;
+  if ( !args->getOption( "configfile" ).isEmpty() )
+    config = new KConfig( KUrl( args->getOption( "configfile" ) ).url() );
+  kDebug() << KUrl( args->getOption( "configfile" ) ).url() << endl;
+  KCal::TestResource test( type, config );
+  test.setup();
+  test.runAll();
+  test.cleanup();
+  kDebug() << "All tests OK." << endl;
+  return 0;
 }
 
 namespace KCal {
@@ -96,7 +98,9 @@ void TestResource::setup()
 
   if ( m_resource_type.isNull() ) {
 
-    const QString & chosen = KInputDialog::getItem( "Select Resource",
+    const QString & chosen =
+      KInputDialog::getItem(
+        "Select Resource",
         "Select the resource you wish to test. Test data will be used.",
         resources );
 
@@ -117,7 +121,6 @@ void TestResource::setup()
   assert( m_res );
 }
 
-
 void TestResource::runAll()
 {
   testOpenAndClose();
@@ -131,21 +134,28 @@ void TestResource::runAll()
   m_res->close();
 }
 
-bool TestResource::check(const QString& txt, QString a, QString b)
+bool TestResource::check(const QString& txt, const QString &a, const QString &b)
 {
-    if (a.isEmpty())
-        a.clear();
-    if (b.isEmpty())
-        b.clear();
-    if (a == b) {
-        kDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "ok" << endl;
-    }
-    else {
-        kDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "KO !" << endl;
-        cleanup();
-        exit(1);
-    }
-    return true;
+  QString ta = a; QString tb = b;
+  if (ta.isEmpty())
+    ta.clear();
+  if (tb.isEmpty())
+    tb.clear();
+  if (ta == tb) {
+    kDebug() << txt
+             << " : checking '" << ta
+             << "' against expected value '" << tb
+             << "'... " << "ok" << endl;
+  }
+  else {
+    kDebug() << txt
+             << " : checking '" << ta
+             << "' against expected value '" << tb
+             << "'... " << "KO !" << endl;
+    cleanup();
+    exit(1);
+  }
+  return true;
 }
 
 void TestResource::testOpenAndClose()

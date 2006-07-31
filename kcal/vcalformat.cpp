@@ -34,15 +34,14 @@
 #include <kiconloader.h>
 #include <klocale.h>
 
-#include "vcc.h"
-#include "vobject.h"
+#include "versit/vcc.h"
+#include "versit/vobject.h"
 extern "C" {
-#include "icaltime.h"
-#include "icaltimezone.h"
+#include "libical/src/libical/icaltime.h"
+#include "libical/src/libical/icaltimezone.h"
 }
 #include "vcaldrag.h"
 #include "calendar.h"
-
 #include "vcalformat.h"
 
 using namespace KCal;
@@ -1335,7 +1334,7 @@ QString VCalFormat::qDateToISO(const QDate &qd)
 
 /* Return the offset of the named zone as seconds. tt is a time
    indicating the date for which you want the offset */
-int vcaltime_utc_offset( QDateTime ictt, QString tzid )
+int vcaltime_utc_offset( const QDateTime &ictt, const QString &tzid )
 {
   // libical-0.23 stuff:
   //  struct icaltimetype tt = icaltime_from_timet( ictt.toTime_t(), false );
