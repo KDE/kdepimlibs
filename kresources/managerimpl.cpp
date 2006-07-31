@@ -1,6 +1,6 @@
 /*
     This file is part of libkresources.
-    
+
     Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
     Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
     Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
@@ -139,7 +139,7 @@ void ManagerImpl::writeConfig( KConfig *cfg )
   mConfig->setGroup( "General" );
   mConfig->writeEntry( "ResourceKeys", activeKeys );
   mConfig->writeEntry( "PassiveResourceKeys", passiveKeys );
-  if ( mStandard ) 
+  if ( mStandard )
     mConfig->writeEntry( "Standard", mStandard->identifier() );
   else
     mConfig->writeEntry( "Standard", "" );
@@ -192,19 +192,20 @@ void ManagerImpl::setActive( Resource *resource, bool active )
   }
 }
 
-Resource *ManagerImpl::standardResource() 
+Resource *ManagerImpl::standardResource()
 {
   return mStandard;
 }
 
-void ManagerImpl::setStandardResource( Resource *resource ) 
+void ManagerImpl::setStandardResource( Resource *resource )
 {
   mStandard = resource;
 }
 
 // DCOP asynchronous functions
 
-void ManagerImpl::dcopKResourceAdded( QString managerId, QString resourceId )
+void ManagerImpl::dcopKResourceAdded( const QString& managerId,
+                                      const QString& resourceId )
 {
   if ( managerId == mId ) {
     kDebug(5650) << "Ignore DCOP notification to myself" << endl;
@@ -223,12 +224,13 @@ void ManagerImpl::dcopKResourceAdded( QString managerId, QString resourceId )
 
   if ( resource ) {
     mNotifier->notifyResourceAdded( resource );
-  } else 
+  } else
     kError() << "Received DCOP: resource added for unknown resource "
               << resourceId << endl;
 }
 
-void ManagerImpl::dcopKResourceModified( QString managerId, QString resourceId )
+void ManagerImpl::dcopKResourceModified( const QString& managerId,
+                                         const QString& resourceId )
 {
   if ( managerId == mId ) {
     kDebug(5650) << "Ignore DCOP notification to myself" << endl;
@@ -239,12 +241,13 @@ void ManagerImpl::dcopKResourceModified( QString managerId, QString resourceId )
   Resource *resource = getResource( resourceId );
   if ( resource ) {
     mNotifier->notifyResourceModified( resource );
-  } else 
+  } else
     kError() << "Received DCOP: resource modified for unknown resource "
               << resourceId << endl;
 }
 
-void ManagerImpl::dcopKResourceDeleted( QString managerId, QString resourceId )
+void ManagerImpl::dcopKResourceDeleted( const QString& managerId,
+                                        const QString& resourceId )
 {
   if ( managerId == mId ) {
     kDebug(5650) << "Ignore DCOP notification to myself" << endl;
@@ -295,7 +298,7 @@ QList<Resource *> ManagerImpl::resources( bool active )
     if( mResources.at(i)->isActive() == active) {
       result.append( mResources.at(i) );
     }
-  }  
+  }
   return result;
 }
 
@@ -356,7 +359,7 @@ void ManagerImpl::writeResourceConfig( Resource *resource, bool checkActive )
     mConfig->writeEntry( "Standard", resource->identifier() );
   else if ( resource != mStandard && standardKey == key )
     mConfig->writeEntry( "Standard", "" );
-  
+
   if ( checkActive ) {
     QStringList activeKeys = mConfig->readEntry( "ResourceKeys", QStringList() );
     QStringList passiveKeys = mConfig->readEntry( "PassiveResourceKeys", QStringList() );
@@ -389,7 +392,7 @@ void ManagerImpl::removeResource( Resource *resource )
   QString key = resource->identifier();
 
   if ( !mConfig ) createStandardConfig();
-  
+
   mConfig->setGroup( "General" );
   QStringList activeKeys = mConfig->readEntry( "ResourceKeys", QStringList() );
   if ( activeKeys.contains( key ) ) {

@@ -25,7 +25,7 @@
 
 #include <QString>
 
-#include "kresources/resource.h"
+#include "resource.h"
 
 class KConfig;
 
@@ -71,15 +71,18 @@ class KRESOURCES_EXPORT ManagerImpl : public QObject
     static QString defaultConfigFile( const QString &family );
 
   Q_SIGNALS:
-    void signalKResourceAdded(QString managerId, QString resourceId);
-    void signalKResourceModified(QString managerId, QString resourceId);
-    void signalKResourceDeleted(QString managerId, QString resourceId);
+    void signalKResourceAdded( QString managerId, QString resourceId );
+    void signalKResourceModified( QString managerId, QString resourceId );
+    void signalKResourceDeleted( QString managerId, QString resourceId );
 
   private Q_SLOTS:
     // dcop calls
-    void dcopKResourceAdded( QString managerId, QString resourceId );
-    void dcopKResourceModified( QString managerId, QString resourceId );
-    void dcopKResourceDeleted( QString managerId, QString resourceId );
+    void dcopKResourceAdded( const QString& managerId,
+                             const QString& resourceId );
+    void dcopKResourceModified( const QString& managerId,
+                                const QString& resourceId );
+    void dcopKResourceDeleted( const QString& managerId,
+                               const QString& resourceId );
 
   private:
     void createStandardConfig();
