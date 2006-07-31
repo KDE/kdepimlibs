@@ -94,19 +94,19 @@ void TestResource::setup()
   CalendarResourceManager *manager = new CalendarResourceManager( "calendar" );
   manager->readConfig();
 
-  QStringList resources = manager->resourceTypeNames();
-
   if ( m_resource_type.isNull() ) {
+    QStringList types = manager->resourceTypeNames();
+    QStringList descs = manager->resourceTypeDescriptions();
 
-    const QString & chosen =
+    QString desc =
       KInputDialog::getItem(
         "Select Resource",
         "Select the resource you wish to test. Test data will be used.",
-        resources );
+        descs );
 
-    kDebug() << "Selected Resource: " << chosen << endl;
-    if ( !chosen.isNull() )
-      m_resource_type = chosen;
+    kDebug() << "Selected Resource: " << desc << endl;
+    if ( !desc.isNull() )
+      m_resource_type = types[ descs.indexOf( desc ) ];
   }
   assert( !m_resource_type.isNull() );
   /* Either read one from the config file, or create a default one. */
