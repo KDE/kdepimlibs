@@ -21,6 +21,7 @@ if(NOT MSVC)
 add_subdirectory(kcal)
 endif(NOT MSVC)
 add_subdirectory(ktnef)
+add_subdirectory(kldap)
 add_subdirectory(kresources)
 add_subdirectory(kabc)
 
