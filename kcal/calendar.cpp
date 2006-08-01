@@ -301,7 +301,8 @@ bool Calendar::deleteIncidence( Incidence *incidence )
 /** Dissociate a single occurrence or all future occurrences from a recurring sequence.
     The new incidence is returned, but not automatically inserted into the calendar,
     which is left to the calling application */
-Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
+Incidence *Calendar::dissociateOccurrence( Incidence *incidence,
+                                           const QDate &date,
                                            bool single )
 {
   if ( !incidence || !incidence->doesRecur() )

@@ -425,7 +425,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return a pointer to a new recurring Incidence if @a single is false.
     */
-    Incidence *dissociateOccurrence( Incidence *incidence, QDate date,
+    Incidence *dissociateOccurrence( Incidence *incidence, const QDate &date,
                                      bool single = true );
 
 // Event Specific Methods //
