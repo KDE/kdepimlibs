@@ -566,10 +566,13 @@ void RecurrenceRule::setRecurrenceType( PeriodType period )
 
 QDateTime RecurrenceRule::endDt( bool *result ) const
 {
-  if ( result ) *result = false;
-  if ( mPeriod == rNone ) return QDateTime();
+  if ( mPeriod == rNone ) {
+    if ( result ) *result = false;
+    return QDateTime();
+  }
   if ( result ) *result = true;
   if ( mDuration < 0 ) {
+    if ( result ) *result = false;
     return QDateTime();
   } else if ( mDuration == 0 ) {
     return mDateEnd;
@@ -578,12 +581,12 @@ QDateTime RecurrenceRule::endDt( bool *result ) const
     if ( ! mCached ) {
       // If not enough occurrences can be found (i.e. inconsistent constraints)
       if ( !buildCache() ) {
+        if ( result ) *result = false;
         return QDateTime();
       }
     }
     return mCachedDateEnd;
   }
-  return QDateTime();
 }
 
 void RecurrenceRule::setEndDt( const QDateTime &dateTime )

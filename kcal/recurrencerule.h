@@ -146,7 +146,7 @@ class KCAL_EXPORT RecurrenceRule
     /** Returns the date and time of the last recurrence.
      * An invalid date is returned if the recurrence has no end.
      * @param result if non-null, *result is updated to true if successful,
-     * or false if there is no recurrence.
+     * or false if there is no recurrence or its end date cannot be determined.
      */
     QDateTime endDt( bool* result = 0 ) const;
     /** Sets the date and time of the last recurrence.
