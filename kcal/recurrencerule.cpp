@@ -250,6 +250,8 @@ bool RecurrenceRule::Constraint::isConsistent( PeriodType /*period*/) const
   return true;
 }
 
+// Return a date/time set to the constraint values, but with those parts less
+// significant than the given period type set to 1.
 QDateTime RecurrenceRule::Constraint::intervalDateTime( RecurrenceRule::PeriodType type ) const
 {
   QDateTime dt;
@@ -447,6 +449,7 @@ bool RecurrenceRule::Constraint::increase( RecurrenceRule::PeriodType type, int 
   return true;
 }
 
+// Set the constraint's value appropriate to 'type', to the value contained in a date/time.
 bool RecurrenceRule::Constraint::readDateTime( const QDateTime &preDate, PeriodType type )
 {
   clear();
@@ -565,8 +568,8 @@ QDateTime RecurrenceRule::endDt( bool *result ) const
 {
   if ( result ) *result = false;
   if ( mPeriod == rNone ) return QDateTime();
+  if ( result ) *result = true;
   if ( mDuration < 0 ) {
-    if ( result ) result = false;
     return QDateTime();
   } else if ( mDuration == 0 ) {
     return mDateEnd;
@@ -575,7 +578,6 @@ QDateTime RecurrenceRule::endDt( bool *result ) const
     if ( ! mCached ) {
       // If not enough occurrences can be found (i.e. inconsistent constraints)
       if ( !buildCache() ) {
-        if ( result ) result = false;
         return QDateTime();
       }
     }
@@ -884,6 +886,8 @@ void RecurrenceRule::buildConstraints()
   }
 }
 
+// Build and cache a list of all occurrences.
+// Only call buildCache() if mDuration > 0.
 bool RecurrenceRule::buildCache() const
 {
 kDebug(5800) << "         RecurrenceRule::buildCache: " << endl;
@@ -906,7 +910,7 @@ kDebug(5800) << "         RecurrenceRule::buildCache: " << endl;
   int loopnr = 0;
   int dtnr = dts.count();
   // some validity checks to avoid infinite loops (i.e. if we have
-  // done this loop already 10000 times and found no occurrence, bail out )
+  // done this loop already 10000 times, bail out )
   while ( loopnr < 10000 && dtnr < mDuration ) {
     interval.increase( recurrenceType(), frequency() );
     // The returned date list is already sorted!
