@@ -191,6 +191,18 @@ class KCAL_EXPORT RecurrenceRule
      */
     TimeList recurTimesOn( const QDate &date ) const;
 
+    /** Returns a list of all the times at which the recurrence will occur
+     * between two specified times.
+     *
+     * There is a (large) maximum limit to the number of times returned. If due to
+     * this limit the list is incomplete, this is indicated by the last entry being
+     * set to an invalid QDateTime value. If you need further values, call the
+     * method again with a start time set to just after the last valid time returned.
+     * @param start inclusive start of interval
+     * @param end inclusive end of interval
+     * @return list of date/time values
+     */
+    DateTimeList datesInInterval( const QDateTime &start, const QDateTime &end ) const;
 
     /** Returns the date and time of the next recurrence, after the specified date/time.
      * If the recurrence has no time, the next date after the specified date is returned.
@@ -336,6 +348,7 @@ class KCAL_EXPORT RecurrenceRule
     mutable DateTimeList mCachedDates;
     mutable bool mCached;
     mutable QDateTime mCachedDateEnd;
+    mutable QDateTime mCachedLastDate;   // when mCachedDateEnd invalid, last date checked
 
     class Private;
     Private *d;

@@ -42,7 +42,7 @@ using namespace KCal;
 static icalcomponent *loadCALENDAR(const char *vcal);
 static icalcomponent *loadVTIMEZONE(const char *vtz);
 
-static QDateTime start        (QDate(1967,10,29), QTime(7,0,0), Qt::UTC);
+static QDateTime start        (QDate(1967,10,29), QTime(6,0,0), Qt::UTC);
 static QDateTime daylight87   (QDate(1987,4,5),   QTime(7,0,0), Qt::UTC);
 static QDateTime standardOct87(QDate(1987,10,25), QTime(6,0,0), Qt::UTC);
 static QDateTime daylight88   (QDate(1988,4,3),   QTime(7,0,0), Qt::UTC);
@@ -50,7 +50,7 @@ static QDateTime daylight97   (QDate(1997,4,6),   QTime(7,0,0), Qt::UTC);
 static QDateTime standardOct97(QDate(1997,10,26), QTime(6,0,0), Qt::UTC);
 static QDateTime spring98     (QDate(1998,5,5),   QTime(7,0,0), Qt::UTC);
 static QDateTime standardOct98(QDate(1998,10,25), QTime(6,0,0), Qt::UTC);
-static QDateTime daylight99   (QDate(1998,4,25),  QTime(7,0,0), Qt::UTC);
+static QDateTime daylight99   (QDate(1999,4,25),  QTime(7,0,0), Qt::UTC);
 static QDateTime standardOct99(QDate(1999,10,31), QTime(6,0,0), Qt::UTC);
 static QDateTime daylight00   (QDate(2000,4,30),  QTime(7,0,0), Qt::UTC);
 static QDateTime spring01     (QDate(2001,5,1),   QTime(7,0,0), Qt::UTC);
@@ -73,7 +73,7 @@ static const char *VTZ_Western =
   "END:STANDARD\n"
   "BEGIN:DAYLIGHT\n"
   "DTSTART:19870405T020000\n"
-  "RRULE:FREQ=YEARLY;BYDAY=1SU;BYMONTH=4;UNTIL=19970405T070000Z\n"
+  "RRULE:FREQ=YEARLY;BYDAY=1SU;BYMONTH=4;UNTIL=19970406T070000Z\n"
   "TZOFFSETFROM:-0500\n"
   "TZOFFSETTO:-0400\n"
   "TZNAME:WDT1\n"
@@ -335,36 +335,46 @@ void ICalTimeZonesTest::offsetAtZoneTime()
     icalcomponent_free(vtimezone);
 
     // Standard time: start of definitions
-    QCOMPARE(tz->offsetAtZoneTime(l_start.addSecs(-1), &offset2), 0);
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1967,10,29), QTime(1,59,59), Qt::LocalTime), &offset2), 0);
     QCOMPARE(offset2, 0);
-    QCOMPARE(tz->offsetAtZoneTime(l_start, &offset2), -5*3600);
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1967,10,29), QTime(2,0,0), Qt::LocalTime), &offset2), -5*3600);
     QCOMPARE(offset2, -5*3600);
-    QCOMPARE(tz->offsetAtZoneTime(l_start.addSecs(3599), &offset2), -5*3600);
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1967,10,29), QTime(2,59,59), Qt::LocalTime), &offset2), -5*3600);
     QCOMPARE(offset2, -5*3600);
-    QCOMPARE(tz->offsetAtZoneTime(l_start.addSecs(3600), &offset2), -5*3600);
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1967,10,29), QTime(3,0,0), Qt::LocalTime), &offset2), -5*3600);
     QCOMPARE(offset2, -5*3600);
+
     // Change to daylight savings time
-    QCOMPARE(tz->offsetAtZoneTime(l_daylight87.addSecs(-1), &offset2), -5*3600);
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1987,4,5), QTime(1,59,59), Qt::LocalTime), &offset2), -5*3600);
     QCOMPARE(offset2, -5*3600);
-    QCOMPARE(tz->offsetAtZoneTime(l_daylight87, &offset2), -4*3600);
+// error at next line: get -18000
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1987,4,5), QTime(2,0,0), Qt::LocalTime), &offset2), -4*3600);
     QCOMPARE(offset2, -4*3600);
-    QCOMPARE(tz->offsetAtZoneTime(l_daylight87.addSecs(3599), &offset2), -4*3600);
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1987,4,5), QTime(2,59,59), Qt::LocalTime), &offset2), -4*3600);
     QCOMPARE(offset2, -4*3600);
-    QCOMPARE(tz->offsetAtZoneTime(l_daylight87.addSecs(3600), &offset2), -4*3600);
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1987,4,5), QTime(3,0,0), Qt::LocalTime), &offset2), -4*3600);
     QCOMPARE(offset2, -4*3600);
+
     // Change to standard time
-    QCOMPARE(tz->offsetAtZoneTime(l_standardOct87.addSecs(-3601), &offset2), -4*3600);
+    // // ... 1:00:01 before change
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1987,10,25), QTime(0,59,59), Qt::LocalTime), &offset2), -4*3600);
     QCOMPARE(offset2, -4*3600);
-    QCOMPARE(tz->offsetAtZoneTime(l_standardOct87.addSecs(-3600), &offset2), -4*3600);
+    // ... 1:00:00 before change
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1987,10,25), QTime(1,0,0), Qt::LocalTime), &offset2), -4*3600);
     QCOMPARE(offset2, -5*3600);
-    QCOMPARE(tz->offsetAtZoneTime(l_standardOct87.addSecs(-1), &offset2), -4*3600);
+    // ... 0:00:01 before change
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1987,10,25), QTime(1,59,59), Qt::LocalTime), &offset2), -4*3600);
     QCOMPARE(offset2, -5*3600);
-    QCOMPARE(tz->offsetAtZoneTime(l_standardOct87, &offset2), -5*3600);
+    // ... at change
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1987,10,25), QTime(2,0,0), Qt::LocalTime), &offset2), -5*3600);
     QCOMPARE(offset2, -5*3600);
-    QCOMPARE(tz->offsetAtZoneTime(l_standardOct87.addSecs(3599), &offset2), -5*3600);
+    // ... 0:59:59 after change
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1987,10,25), QTime(2,59,59), Qt::LocalTime), &offset2), -5*3600);
     QCOMPARE(offset2, -5*3600);
-    QCOMPARE(tz->offsetAtZoneTime(l_standardOct87.addSecs(3600), &offset2), -5*3600);
+    // ... 1:00:00 after change
+    QCOMPARE(tz->offsetAtZoneTime(QDateTime(QDate(1987,10,25), QTime(3,0,0), Qt::LocalTime), &offset2), -5*3600);
     QCOMPARE(offset2, -5*3600);
+
     // Change to daylight savings time
     QCOMPARE(tz->offsetAtZoneTime(l_daylight88.addSecs(-1), &offset2), -5*3600);
     QCOMPARE(offset2, -5*3600);

@@ -938,7 +938,10 @@ kDebug(5800) << "    Finished Building Cache, cache has " << dts.count() << " en
     mCachedDateEnd = dts.last();
     return true;
   } else {
-    mCachedDateEnd = QDateTime();
+    mCachedDateEnd = QDateTime();    // cache is incomplete
+    mCachedLastDate = interval.intervalDateTime( recurrenceType() );
+    if ( !mCachedDates.isEmpty() && mCachedDates.last() > mCachedLastDate )
+      mCachedLastDate = mCachedDates.last();
     return false;
   }
 }
@@ -1154,6 +1157,72 @@ QDateTime RecurrenceRule::getNextDate( const QDateTime &preDate ) const
     ++loopnr;
   }
   return QDateTime();
+}
+
+DateTimeList RecurrenceRule::datesInInterval( const QDateTime &start, const QDateTime &end ) const
+{
+// kDebug(5800) << "         RecurrenceRule::datesInInterval: " << start << " - " << end << endl;
+  DateTimeList result;
+  if ( end < startDt() )
+    return result;    // before start of recurrence
+  QDateTime endRecur = endDt();
+  if ( mDuration >= 0 && endRecur.isValid() && start >= endRecur )
+    return result;    // beyond end of recurrence
+
+  QDateTime st = start;
+  bool done = false;
+  DateTimeList::ConstIterator it;
+  if ( mDuration > 0 ) {
+    if ( !mCached ) buildCache();
+    if ( mCachedDateEnd.isValid() && start >= mCachedDateEnd )
+      return result;    // beyond end of recurrence
+    it = mCachedDates.begin();
+    while ( it != mCachedDates.end() && *it < start ) ++it;
+    while ( it != mCachedDates.end() ) {
+      if ( *it > end ) {
+        done = true;
+        break;
+      }
+//  kDebug(5800) << "    cached date: " << *it << endl;
+      result += *it;
+      ++it;
+    }
+    if ( mCachedDateEnd.isValid() )
+      done = true;
+    else if ( !result.isEmpty() ) {
+      result += QDateTime();    // indicate that the returned list is incomplete
+      done = true;
+    }
+    if (done)
+      return result;
+    // We don't have any result yet, but we reached the end of the incomplete cache
+    st = mCachedLastDate.addSecs(1);
+  }
+
+// kDebug(5800) << "    getNext date after " << st << endl;
+  Constraint interval( getNextValidDateInterval( st, recurrenceType() ) );
+  DateTimeList dts = datesForInterval( interval, recurrenceType() );
+  for ( it = dts.begin();  it != dts.end() && *it < st;  ++it) ;
+  for ( ;  it != dts.end() && *it <= end;  ++it ) {
+    if ( mDuration >= 0 && *it > endRecur )
+      break;
+    result += *it;
+  }
+
+  // Increase the interval.
+// TODO: some validity checks to avoid infinite loops for contradictory constraints
+  int loopnr = 0;
+  while ( loopnr < 10000 ) {
+    interval.increase( recurrenceType(), frequency() );
+    DateTimeList dts = datesForInterval( interval, recurrenceType() );
+    for ( it = dts.begin();  it != dts.end() && *it <= end;  ++it) {
+      if ( mDuration >= 0 && *it > endRecur )
+        break;
+      result += *it;
+    }
+    ++loopnr;
+  }
+  return result;
 }
 
 RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const QDateTime &preDate, PeriodType type ) const

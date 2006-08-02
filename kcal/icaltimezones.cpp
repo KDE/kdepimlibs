@@ -48,6 +48,17 @@ static QDateTime toQDateTime(const icaltimetype &t)
                    (t.is_utc ? Qt::UTC : Qt::LocalTime));
 }
 
+// Maximum date for time zone data.
+// It's not sensible to try to predict them very far in advance, because
+// they can easily change. Plus, it limits the processing required.
+static QDateTime MAX_DATE()
+{
+  static QDateTime dt;
+  if ( !dt.isValid() )
+    dt = QDateTime( QDate::currentDate().addYears(20), QTime(0,0,0) );
+  return dt;
+}
+
 
 namespace KCal {
 
@@ -78,80 +89,31 @@ ICalTimeZone &ICalTimeZone::operator=(const ICalTimeZone &tz)
 QString ICalTimeZone::city() const
 {
   const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
-  return dat ? dat->location : QString();
+  return dat ? dat->city() : QString();
 }
 
 QByteArray ICalTimeZone::url() const
 {
   const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
-  return dat ? dat->url : QByteArray();
+  return dat ? dat->url() : QByteArray();
 }
 
 QDateTime ICalTimeZone::lastModified() const
 {
   const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
-  return dat ? dat->lastModified : QDateTime();
+  return dat ? dat->lastModified() : QDateTime();
 }
 
-int ICalTimeZone::offsetAtZoneTime(const QDateTime &zoneDateTime, int *secondOffset) const
-{
-  if (secondOffset)
-    *secondOffset = 0;
-  const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
-  if (!zoneDateTime.isValid()  ||  zoneDateTime.timeSpec() != Qt::LocalTime  ||  !dat)
-    return 0;
-  QDateTime start;
-  const ICalTimeZoneData::Phase *phase = dat->phase(zoneDateTime, &start);
-  if (!phase)
-    return 0;
-  if (secondOffset) {
-    // Need to check whether the specified local time occurs twice
-    // (if it's around the time of a clock shift).
-    *secondOffset = phase->offset;
-    if (start != dat->phases[0]->start) {   // no information before start of first phase
-      int offsetDiff = phase->prevOffset - phase->offset;
-      if (offsetDiff > 0) {
-        // The last clock change was backwards, so the local time could occur twice
-        QDateTime utc = zoneDateTime;   // convert local time to UTC
-        utc.setTimeSpec(Qt::UTC);
-        utc = utc.addSecs(-phase->offset);
-        int sinceStart = start.secsTo(utc);    // how long since start of phase?
-        if (sinceStart < offsetDiff)
-          return phase->prevOffset;
-      }
-    }
-  }
-  return phase->offset;
-}
-
-int ICalTimeZone::offsetAtUtc(const QDateTime &utcDateTime) const
+QByteArray ICalTimeZone::vtimezone() const
 {
   const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
-  if (!utcDateTime.isValid()  ||  utcDateTime.timeSpec() != Qt::UTC  ||  !dat)
-    return 0;
-  const ICalTimeZoneData::Phase *phase = dat->phase(utcDateTime);
-  if (!phase)
-    return 0;
-  return phase->offset;
+  return dat ? dat->vtimezone() : QByteArray();
 }
 
-int ICalTimeZone::offset(time_t t) const
-{
-  return offsetAtUtc(fromTime_t(t));
-}
-
-bool ICalTimeZone::isDstAtUtc(const QDateTime &utcDateTime) const
+icaltimezone *ICalTimeZone::icalTimezone() const
 {
   const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
-  if (!utcDateTime.isValid()  ||  utcDateTime.timeSpec() != Qt::UTC  ||  !dat)
-    return false;
-  const ICalTimeZoneData::Phase *phase = dat->phase(utcDateTime);
-  return phase ? phase->isDst : false;
-}
-
-bool ICalTimeZone::isDst(time_t t) const
-{
-  return isDstAtUtc(fromTime_t(t));
+  return dat ? dat->icalTimezone() : 0;
 }
 
 
@@ -160,7 +122,22 @@ bool ICalTimeZone::isDst(time_t t) const
 class ICalTimeZoneDataPrivate
 {
 public:
-    QList<int> utcOffsets;
+    ICalTimeZoneDataPrivate() : icalComponent(0) {}
+    ~ICalTimeZoneDataPrivate()
+    {
+      if (icalComponent)
+        icalcomponent_free(icalComponent);
+    }
+    void setComponent(icalcomponent *c)
+    {
+      if (icalComponent)
+        icalcomponent_free(icalComponent);
+      icalComponent = c;
+    }
+    QString       location;       // name of city for this time zone
+    QByteArray    url;            // URL of published VTIMEZONE definition (optional)
+    QDateTime     lastModified;   // time of last modification of the VTIMEZONE component (optional)
+    icalcomponent *icalComponent; // ical component representing this time zone
 };
 
 
@@ -169,149 +146,67 @@ ICalTimeZoneData::ICalTimeZoneData()
 {
 }
 
+ICalTimeZoneData::ICalTimeZoneData(const ICalTimeZoneData &rhs)
+  : KTimeZoneData(rhs),
+    d(new ICalTimeZoneDataPrivate())
+{
+  d->location      = rhs.d->location;
+  d->url           = rhs.d->url;
+  d->lastModified  = rhs.d->lastModified;
+  d->icalComponent = icalcomponent_new_clone(rhs.d->icalComponent);
+}
+
 ICalTimeZoneData::~ICalTimeZoneData()
 {
-  for (int i = 0, end = phases.count();  i < end;  ++i)
-    delete phases[i];
   delete d;
 }
 
-ICalTimeZoneData::Phase::Phase(const ICalTimeZoneData::Phase &p)
-  : tznameIndex(p.tznameIndex),
-    start(p.start),
-    offset(p.offset),
-    prevOffset(p.prevOffset),
-    comment(p.comment),
-    recur(p.recur ? new Recurrence(*p.recur) : 0),
-    isDst(p.isDst)
+ICalTimeZoneData &ICalTimeZoneData::operator=(const ICalTimeZoneData &rhs)
 {
-}
-
-ICalTimeZoneData::Phase::~Phase()
-{
-  delete recur;
+  KTimeZoneData::operator=(rhs);
+  d->location      = rhs.d->location;
+  d->url           = rhs.d->url;
+  d->lastModified  = rhs.d->lastModified;
+  d->setComponent( icalcomponent_new_clone(rhs.d->icalComponent) );
+  return *this;
 }
 
 KTimeZoneData *ICalTimeZoneData::clone()
 {
-  ICalTimeZoneData *newData = new ICalTimeZoneData();
-  newData->location     = location;
-  newData->url          = url;
-  newData->lastModified = lastModified;
-  newData->tznames      = tznames;
-  for (int i = 0, end = phases.count();  i < end;  ++i)
-    newData->phases.append(new Phase(*phases[i]));
-  newData->d->utcOffsets = d->utcOffsets;
-  return newData;
+  return new ICalTimeZoneData(*this);
 }
 
-QList<QByteArray> ICalTimeZoneData::abbreviations() const
+QString ICalTimeZoneData::city() const
 {
-  return tznames;
+  return d->location;
 }
 
-QByteArray ICalTimeZoneData::abbreviation(const QDateTime &utcDateTime) const
+QByteArray ICalTimeZoneData::url() const
 {
-  if (!utcDateTime.isValid()  ||  utcDateTime.timeSpec() != Qt::UTC)
-    return QByteArray();
-  const Phase *ph = phase(utcDateTime);
-  return ph ? tznames[ph->tznameIndex[0]] : QByteArray();  // return the first abbreviation
+  return d->url;
 }
 
-QList<int> ICalTimeZoneData::utcOffsets() const
+QDateTime ICalTimeZoneData::lastModified() const
 {
-  if (d->utcOffsets.isEmpty()) {
-    for (int i = 0, end = phases.count();  i < end;  ++i) {
-      int offset = phases[i]->offset;
-      if (d->utcOffsets.indexOf(offset) < 0)
-          d->utcOffsets.append(offset);
-    }
-    qSort(d->utcOffsets);
+  return d->lastModified;
+}
+
+QByteArray ICalTimeZoneData::vtimezone() const
+{
+  return icalcomponent_as_ical_string( d->icalComponent );
+}
+
+icaltimezone *ICalTimeZoneData::icalTimezone() const
+{
+  icaltimezone *icaltz = icaltimezone_new();
+  if ( !icaltz )
+    return 0;
+  if ( !icaltimezone_set_component(icaltz, d->icalComponent) )
+  {
+    icaltimezone_free(icaltz, 1);
+    return 0;
   }
-  return d->utcOffsets;
-}
-
-const ICalTimeZoneData::Phase *ICalTimeZoneData::phase(const QDateTime &dt, QDateTime *start) const
-{
-  int result = -1;
-  QDateTime latest, previous;
-
-  /* Find the phase with the latest start date at or before dt,
-   * and the previous latest start date in any other phase.
-   */
-  for (int i = 0, end = phases.count();  i < end;  ++i) {
-    QDateTime t = phases[i]->previousStart(dt);
-    if (!t.isNull()) {
-      if (latest.isNull() || t > latest) {
-        previous = latest;
-        latest = t;
-        result = i;
-      }
-      else if (previous.isNull() || t > previous)
-        previous = t;
-    }
-  }
-
-  if (start) {
-    /*
-     * Find the actual start of the phase with the latest start date.
-     * If other phase(s) didn't occur in the year beforehand, the phase
-     * could in effect have started at a previous recurrence.
-     *
-     * For example, if the RRULEs and RDATEs expanded to the following:
-     *    1 October 1969   Standard
-     *    1 April 1970     Daylight
-     *    1 October 1970   Standard
-     *    1 October 1971   Standard
-     *    1 April 1972     Daylight
-     * Here, there was no daylight savings time in 1971. So the start of
-     * the phase in operation on 1 January 1972 would actually be
-     * 1 October 1970, not 1 October 1971.
-     */
-    if (!previous.isNull())
-      latest = phases[result]->nextStart(previous);
-    else if (!latest.isNull())
-      latest = phases[result]->start;
-    *start = latest;
-  }
-
-  return (result >= 0) ? phases[result] : 0;
-}
-
-/**
- * Find the nearest UTC start time of this phase strictly after a given UTC or local time.
- */
-QDateTime ICalTimeZoneData::Phase::nextStart(const QDateTime &dt) const
-{
-  QDateTime utc = dt;
-  if (dt.timeSpec() == Qt::LocalTime) {
-    // Find the equivalent UTC time in this time zone phase
-    utc.setTimeSpec(Qt::UTC);
-    utc = utc.addSecs(-offset);
-  }
-
-  if (!recur  ||  utc < start)
-    return (utc < start) ? start : QDateTime();
-
-  return recur->getNextDateTime(utc);
-}
-
-/**
- * Find the nearest UTC start time of this phase at or before a given UTC or local time.
- */
-QDateTime ICalTimeZoneData::Phase::previousStart(const QDateTime &dt) const
-{
-  QDateTime utc = dt;
-  if (dt.timeSpec() == Qt::LocalTime) {
-    // Find the equivalent UTC time in this time zone phase
-    utc.setTimeSpec(Qt::UTC);
-    utc = utc.addSecs(-offset);
-  }
-
-  if (!recur  ||  utc <= start)
-    return (utc >= start) ? start : QDateTime();
-
-  return recur->getPreviousDateTime(utc.addSecs(1));
+  return icaltz;
 }
 
 
@@ -320,7 +215,7 @@ QDateTime ICalTimeZoneData::Phase::previousStart(const QDateTime &dt) const
 class ICalTimeZoneSourcePrivate
 {
   public:
-    static ICalTimeZoneData::Phase *parsePhase(icalcomponent*, ICalTimeZoneData*, bool daylight);
+    static KTimeZonePhase *parsePhase(icalcomponent*, bool daylight);
 };
 
 
@@ -385,12 +280,12 @@ ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
         break;
 
       case ICAL_TZURL_PROPERTY:
-        data->url = icalproperty_get_tzurl(p);
+        data->d->url = icalproperty_get_tzurl(p);
         break;
 
       case ICAL_LOCATION_PROPERTY:
         // This isn't mentioned in RFC2445, but libical reads it ...
-        data->location = QString::fromUtf8(icalproperty_get_location(p));
+        data->d->location = QString::fromUtf8(icalproperty_get_location(p));
         break;
 
       case ICAL_X_PROPERTY: {   // use X-LIC-LOCATION if LOCATION is missing
@@ -402,7 +297,7 @@ ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
       case ICAL_LASTMODIFIED_PROPERTY: {
         icaltimetype t = icalproperty_get_lastmodified(p);
         if (t.is_utc) {
-          data->lastModified = toQDateTime(t);
+          data->d->lastModified = toQDateTime(t);
         } else {
           kDebug(5800) << "ICalTimeZoneSource::parse(): LAST-MODIFIED not UTC" << endl;
         }
@@ -419,51 +314,43 @@ ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
     delete data;
     return 0;
   }
-  if (data->location.isEmpty()  &&  !xlocation.isEmpty())
-    data->location = xlocation;
+  if (data->d->location.isEmpty()  &&  !xlocation.isEmpty())
+    data->d->location = xlocation;
   kDebug(5800) << "---zoneId: \"" << name << '"' << endl;
 
   /*
    * Iterate through all time zone rules for this VTIMEZONE,
    * and create a Phase object containing details for each one.
    */
+  QList<KTimeZonePhase> phases;
   for (icalcomponent *c = icalcomponent_get_first_component(vtimezone, ICAL_ANY_COMPONENT);
        c;  c = icalcomponent_get_next_component(vtimezone, ICAL_ANY_COMPONENT))
   {
-    ICalTimeZoneData::Phase *phase = 0;
+    KTimeZonePhase *phase = 0;
     icalcomponent_kind kind = icalcomponent_isa(c);
     switch (kind) {
 
       case ICAL_XSTANDARD_COMPONENT:
         kDebug(5800) << "---standard phase: found" << endl;
-        phase = ICalTimeZoneSourcePrivate::parsePhase(c, data, false);
+        phase = ICalTimeZoneSourcePrivate::parsePhase(c, false);
         break;
 
       case ICAL_XDAYLIGHT_COMPONENT:
         kDebug(5800) << "---daylight phase: found" << endl;
-        phase = ICalTimeZoneSourcePrivate::parsePhase(c, data, true);
+        phase = ICalTimeZoneSourcePrivate::parsePhase(c, true);
         break;
 
       default:
         kDebug(5800) << "ICalTimeZoneSource::parse(): Unknown component: " << kind << endl;
         break;
     }
-    if (phase)
-      data->phases.append(phase);
+    if (phase  &&  phase->isValid())
+      phases += *phase;
+    delete phase;
   }
+  data->setPhases(phases);
 
-  if (!data->phases.isEmpty()) {
-    // Sort the phases by start date
-    qSort(data->phases);
-
-    /* Adjust the start time of the earliest phase to use the
-     * phase's UTC offset instead of the previous phase's (since
-     * we don't have any information about the previous phase)
-     */
-    ICalTimeZoneData::Phase *phase = data->phases[0];
-    phase->start = phase->start.addSecs(phase->prevOffset - phase->offset);
-  }
-
+  data->d->setComponent( icalcomponent_new_clone(vtimezone) );
   return new ICalTimeZone(this, name, data);
 }
 
@@ -476,12 +363,13 @@ ICalTimeZone *ICalTimeZoneSource::parse(icaltimezone *tz)
   return parse(icaltimezone_get_component(tz));
 }
 
-ICalTimeZoneData::Phase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, ICalTimeZoneData *data, bool daylight)
+KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool daylight)
 {
-  // Read the observance data for this standard/daylight savings phase.
-  ICalTimeZoneData::Phase *phase = new ICalTimeZoneData::Phase;
-  phase->isDst = daylight;
-
+  // Read the observance data for this standard/daylight savings phase
+  QList<QByteArray> abbrevs;
+  QString   comment;
+  int       utcOffset = 0;
+  int       prevOffset = 0;
   bool recurs             = false;
   bool found_dtstart      = false;
   bool found_tzoffsetfrom = false;
@@ -505,12 +393,8 @@ ICalTimeZoneData::Phase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c,
         if (!daylight  &&  tzname == "Standard Time"
         ||  daylight  &&  tzname == "Daylight Time")
           break;
-        int i = data->tznames.indexOf(tzname);
-        if (i < 0) {
-          data->tznames.append(tzname);
-          i = data->tznames.count() - 1;
-        } 
-        phase->tznameIndex.append(i);
+        if (abbrevs.indexOf(tzname))
+          abbrevs += tzname;
         break;
       }
       case ICAL_DTSTART_PROPERTY:      // local time at which phase starts
@@ -519,17 +403,17 @@ ICalTimeZoneData::Phase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c,
         break;
 
       case ICAL_TZOFFSETFROM_PROPERTY:    // UTC offset immediately before start of phase
-        phase->prevOffset = icalproperty_get_tzoffsetfrom(p);
+        prevOffset = icalproperty_get_tzoffsetfrom(p);
         found_tzoffsetfrom = true;
         break;
 
       case ICAL_TZOFFSETTO_PROPERTY:
-        phase->offset = icalproperty_get_tzoffsetto(p);
+        utcOffset = icalproperty_get_tzoffsetto(p);
         found_tzoffsetto = true;
         break;
 
       case ICAL_COMMENT_PROPERTY:
-        phase->comment = QString::fromUtf8(icalproperty_get_comment(p));
+        comment = QString::fromUtf8(icalproperty_get_comment(p));
         break;
 
       case ICAL_RDATE_PROPERTY:
@@ -547,16 +431,25 @@ ICalTimeZoneData::Phase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c,
   // Validate the phase data
   if (!found_dtstart || !found_tzoffsetfrom || !found_tzoffsetto) {
     kDebug(5800) << "ICalTimeZoneSource::readPhase(): DTSTART/TZOFFSETFROM/TZOFFSETTO missing" << endl;
-    delete phase;
     return 0;
   }
 
+  // Convert DTSTART to QDateTime, and from local time to UTC
+  QDateTime localStart = toQDateTime(dtstart);   // local time
+  dtstart.second -= prevOffset;
+  dtstart.is_utc = 1;
+  QDateTime utcStart = toQDateTime(icaltime_normalize(dtstart));   // UTC
+
+  QList<QDateTime> times;
+  times += utcStart;
+kDebug()<<" .. DTSTART: "<<utcStart<<(utcStart.timeSpec()==Qt::UTC?" UTC":" Local")<<endl;
   if (recurs) {
     /* RDATE or RRULE is specified. There should only be one or the other, but
      * it doesn't really matter - the code can cope with both.
      * Note that we had to get DTSTART, TZOFFSETFROM, TZOFFSETTO before reading
      * recurrences.
      */
+    Recurrence recur;
     icalproperty *p = icalcomponent_get_first_property(c, ICAL_ANY_PROPERTY);
     while (p) {
       icalproperty_kind kind = icalproperty_isa(p);
@@ -573,29 +466,31 @@ ICalTimeZoneData::Phase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c,
             t.is_date = 0;
             t.is_utc  = 0;    // dtstart is in local time
           }
-          // RFC2445 is a bit vague about whether RDATE is in local time or UTC,
-          // so we support both to be safe.
+          // RFC2445 states that RDATE must be in local time,
+          // but we support UTC as well to be safe.
           if (!t.is_utc) {
-            t.second -= phase->prevOffset;    // convert to UTC
+            t.second -= prevOffset;    // convert to UTC
             t.is_utc = 1;
-            icaltime_normalize(t);
+            t = icaltime_normalize(t);
           }
-          QDateTime dt = toQDateTime(t);
-          if (!phase->recur)
-            phase->recur = new Recurrence();
-          phase->recur->addRDateTime(dt);
+          times += toQDateTime(t);
+kDebug()<<" .. RDATE: "<<times.last()<<(times.last().timeSpec()==Qt::UTC?" UTC":" Local")<<endl;
           break;
         }
         case ICAL_RRULE_PROPERTY:
         {
-          RecurrenceRule *r = new RecurrenceRule();
-	  ICalFormat icf;
-	  ICalFormatImpl impl(&icf);
-#warning Check that icalproperty_get_rrule(p).until.zone is 0 (otherwise it will not work)
-          impl.readRecurrence(icalproperty_get_rrule(p), r);
-          if (!phase->recur)
-            phase->recur = new Recurrence();
-          phase->recur->addRRule(r);
+          RecurrenceRule r;
+          ICalFormat icf;
+          ICalFormatImpl impl(&icf);
+          impl.readRecurrence(icalproperty_get_rrule(p), &r);
+          r.setStartDt(localStart);
+          DateTimeList dts = r.datesInInterval(utcStart, MAX_DATE());
+          for ( int i = 0, end = dts.count();  i < end;  ++i) {
+            QDateTime utc = dts[i];
+	    utc.setTimeSpec(Qt::UTC);
+	    times += utc.addSecs(-prevOffset);
+kDebug()<<" .. RRULE: "<<times.last()<<endl;
+          }
           break;
         }
         default:
@@ -603,18 +498,10 @@ ICalTimeZoneData::Phase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c,
       }
       p = icalcomponent_get_next_property(c, ICAL_ANY_PROPERTY);
     }
+    qSortUnique(times);
   }
 
-  // Convert DTSTART from local time to UTC
-  dtstart.second -= phase->prevOffset;
-  dtstart.is_utc = 1;
-  phase->start = toQDateTime(icaltime_normalize(dtstart));
-
-  // Set the UTC start time for the recurrence
-  if (phase->recur)
-    phase->recur->setStartDateTime(phase->start);
-
-  return phase;
+  return new KTimeZonePhase(times, utcOffset, abbrevs, daylight, comment);
 }
 
 
