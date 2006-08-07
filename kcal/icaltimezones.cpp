@@ -215,7 +215,7 @@ icaltimezone *ICalTimeZoneData::icalTimezone() const
 class ICalTimeZoneSourcePrivate
 {
   public:
-    static KTimeZonePhase *parsePhase(icalcomponent*, bool daylight);
+    static KTimeZonePhase *parsePhase(icalcomponent*, bool daylight, int &prevOffset);
 };
 
 
@@ -316,39 +316,47 @@ ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
   }
   if (data->d->location.isEmpty()  &&  !xlocation.isEmpty())
     data->d->location = xlocation;
-  kDebug(5800) << "---zoneId: \"" << name << '"' << endl;
+  //kDebug(5800) << "---zoneId: \"" << name << '"' << endl;
 
   /*
    * Iterate through all time zone rules for this VTIMEZONE,
    * and create a Phase object containing details for each one.
    */
+  int prevOffset = 0;
+  QDateTime earliest;
   QList<KTimeZonePhase> phases;
   for (icalcomponent *c = icalcomponent_get_first_component(vtimezone, ICAL_ANY_COMPONENT);
        c;  c = icalcomponent_get_next_component(vtimezone, ICAL_ANY_COMPONENT))
   {
+    int prevoff;
     KTimeZonePhase *phase = 0;
     icalcomponent_kind kind = icalcomponent_isa(c);
     switch (kind) {
 
       case ICAL_XSTANDARD_COMPONENT:
-        kDebug(5800) << "---standard phase: found" << endl;
-        phase = ICalTimeZoneSourcePrivate::parsePhase(c, false);
+        //kDebug(5800) << "---standard phase: found" << endl;
+        phase = ICalTimeZoneSourcePrivate::parsePhase(c, false, prevoff);
         break;
 
       case ICAL_XDAYLIGHT_COMPONENT:
-        kDebug(5800) << "---daylight phase: found" << endl;
-        phase = ICalTimeZoneSourcePrivate::parsePhase(c, true);
+        //kDebug(5800) << "---daylight phase: found" << endl;
+        phase = ICalTimeZoneSourcePrivate::parsePhase(c, true, prevoff);
         break;
 
       default:
         kDebug(5800) << "ICalTimeZoneSource::parse(): Unknown component: " << kind << endl;
         break;
     }
-    if (phase  &&  phase->isValid())
+    if (phase  &&  phase->isValid()) {
       phases += *phase;
+      if (!earliest.isValid()  ||  phase->start(0) < earliest) {
+        prevOffset = prevoff;
+        earliest = phase->start(0);
+      }
+    }
     delete phase;
   }
-  data->setPhases(phases);
+  data->setPhases(phases, prevOffset);
 
   data->d->setComponent( icalcomponent_new_clone(vtimezone) );
   return new ICalTimeZone(this, name, data);
@@ -363,13 +371,13 @@ ICalTimeZone *ICalTimeZoneSource::parse(icaltimezone *tz)
   return parse(icaltimezone_get_component(tz));
 }
 
-KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool daylight)
+KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool daylight, int &prevOffset)
 {
   // Read the observance data for this standard/daylight savings phase
   QList<QByteArray> abbrevs;
-  QString   comment;
-  int       utcOffset = 0;
-  int       prevOffset = 0;
+  QString comment;
+  prevOffset = 0;
+  int  utcOffset = 0;
   bool recurs             = false;
   bool found_dtstart      = false;
   bool found_tzoffsetfrom = false;
@@ -442,7 +450,6 @@ KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool day
 
   QList<QDateTime> times;
   times += utcStart;
-kDebug()<<" .. DTSTART: "<<utcStart<<(utcStart.timeSpec()==Qt::UTC?" UTC":" Local")<<endl;
   if (recurs) {
     /* RDATE or RRULE is specified. There should only be one or the other, but
      * it doesn't really matter - the code can cope with both.
@@ -474,7 +481,6 @@ kDebug()<<" .. DTSTART: "<<utcStart<<(utcStart.timeSpec()==Qt::UTC?" UTC":" Loca
             t = icaltime_normalize(t);
           }
           times += toQDateTime(t);
-kDebug()<<" .. RDATE: "<<times.last()<<(times.last().timeSpec()==Qt::UTC?" UTC":" Local")<<endl;
           break;
         }
         case ICAL_RRULE_PROPERTY:
@@ -489,7 +495,6 @@ kDebug()<<" .. RDATE: "<<times.last()<<(times.last().timeSpec()==Qt::UTC?" UTC":
             QDateTime utc = dts[i];
 	    utc.setTimeSpec(Qt::UTC);
 	    times += utc.addSecs(-prevOffset);
-kDebug()<<" .. RRULE: "<<times.last()<<endl;
           }
           break;
         }
