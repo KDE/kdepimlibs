@@ -25,7 +25,7 @@
 
 #include <libsyndication/specificdocument.h>
 
-#include <kdepim_export.h>
+#include "syndication.h"
 
 class QString;
 
@@ -43,7 +43,7 @@ class SYNDICATION_EXPORT AbstractParser
 {
     public:
 
-        /** 
+        /**
          * virtual destructor
          */
         virtual ~AbstractParser();
