@@ -34,6 +34,6 @@ endif(HAVE_LDAP AND HAVE_SASL2)
 
 add_subdirectory(kresources)
 add_subdirectory(kabc)
-add_subdirectory(libsyndication)
+add_subdirectory(syndication)
 
 add_subdirectory(cmake)

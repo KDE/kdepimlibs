@@ -28,6 +28,9 @@
  * - <a href="kxmlrpcclient/html/index.html"><b>kxmlrpcclient</b></a>.
  *   <i>An XML-RPC client library.</i>
  *
+ * - <a href="syndication/html/index.html"><b>syndication</b></a>.
+ *   <i>An RSS feed handling library.</i>
+ *
  * @b Download the complete API documentation from
  * <a href="http://api.kde.org/">api.kde.org</a>.
  *
