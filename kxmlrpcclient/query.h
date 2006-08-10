@@ -31,38 +31,12 @@ namespace KXmlRpc {
  */
 
 /**
-  Result is an internal class that represents a response from the XML-RPC 
-  server. This is an internal class and is only used by Query
- */
-class Result
-{
-  friend class Query;
-
-  public:
-    Result();
-    Result( const Result &other );
-    Result& operator=( const Result &other );
-    virtual ~Result();
-
-    bool success() const;
-
-    int errorCode() const;
-
-    QString errorString() const;
-
-    QList<QVariant> data() const;
-
-  private:
-    class Private;
-    Private* const d;
-};
-
-/**
   Query is a class that represents an individual XML-RPC call.
   This is an internal class and is only used by the Server class.
  */
 class Query : public QObject
 {
+  friend class Result;
   Q_OBJECT
 
   public:
@@ -87,6 +61,35 @@ class Query : public QObject
 
     Q_PRIVATE_SLOT( d, void slotData( KIO::Job*, const QByteArray& ) )
     Q_PRIVATE_SLOT( d, void slotResult( KIO::Job* ) )
+};
+
+
+/**
+  Result is an internal class that represents a response from the XML-RPC 
+  server. This is an internal class and is only used by Query
+ */
+class Result
+{
+  friend class Query;
+  friend class Query::Private;
+
+  public:
+    Result();
+    Result( const Result &other );
+    Result& operator=( const Result &other );
+    virtual ~Result();
+
+    bool success() const;
+
+    int errorCode() const;
+
+    QString errorString() const;
+
+    QList<QVariant> data() const;
+
+  private:
+    class Private;
+    Private* const d;
 };
 
 } // namespace XmlRpc
