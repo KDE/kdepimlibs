@@ -310,7 +310,6 @@ endif(KDE4_BUILD_TESTS)
 
 
 add_subdirectory( libical )
-add_subdirectory( versit )
 add_subdirectory( tests )
 
 ########### install files ###############
