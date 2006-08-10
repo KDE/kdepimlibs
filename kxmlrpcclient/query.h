@@ -9,123 +9,84 @@
 *   (at your option) any later version.                                   *
 ***************************************************************************/
 
-#ifndef _KXML_RPC_QUERY_H_
-#define _KXML_RPC_QUERY_H_
+#ifndef KXML_RPC_QUERY_H
+#define KXML_RPC_QUERY_H
+
+#include <QtCore/QList>
+#include <QtCore/QObject>
+#include <QtCore/QVariant>
 
 #include <kio/job.h>
 
-#include <QList>
-#include <QObject>
-#include <QVariant>
-
-
-//pre-decls
 class QString;
 class QDomDocument;
 class QDomElement;
 
-namespace XmlRpc {
-	
-/**
-
-	@file
-
-	This file defines KXmlRpcResult and Query, our internal classes
-
-**/
-
+namespace KXmlRpc {
 
 /**
-	KXmlRpcResult is an internal class that represents a response from the XML-RPC 
-	server. This is an internal class and is only used by Query
+  @file
 
-**/
+  This file defines Result and Query, our internal classes
+ */
 
-class KXmlRpcResult {
+/**
+  Result is an internal class that represents a response from the XML-RPC 
+  server. This is an internal class and is only used by Query
+ */
+class Result
+{
+  friend class Query;
 
-	friend class Query;
+  public:
+    Result();
+    Result( const Result &other );
+    Result& operator=( const Result &other );
+    virtual ~Result();
 
-	public:
-		
-		KXmlRpcResult() {}
+    bool success() const;
 
-		bool success() const {
-			return m_success;
-		}
+    int errorCode() const;
 
+    QString errorString() const;
 
-		int errorCode() const {
-			return m_errorCode;
-		}
+    QList<QVariant> data() const;
 
-		QString errorString() const {
-			return m_errorString;
-		}
-
-		QList<QVariant> data() const {
-			return m_data;
-		}
-
-	private:
-
-		bool m_success;
-		int m_errorCode;
-		QString m_errorString;
-		QList<QVariant> m_data;
+  private:
+    class Private;
+    Private* const d;
 };
 
-/** 
-			Query is a class that represents an individual XML-RPC call.
-			This is an internal class and is only used by the Server class.
- 
-**/
+/**
+  Query is a class that represents an individual XML-RPC call.
+  This is an internal class and is only used by the Server class.
+ */
+class Query : public QObject
+{
+  Q_OBJECT
 
-class Query : public QObject {
+  public:
+    static Query *create( const QVariant &id = QVariant(), QObject *parent = 0 );
 
-	Q_OBJECT
+  public slots:
+    void call( const QString &server, const QString &method,
+               const QList<QVariant> &args = QList<QVariant>(),
+               const QString &userAgent = "KDE-XMLRPC" );
 
-	public:
+  Q_SIGNALS:
+    void message( const QList<QVariant> &result, const QVariant &id );
+    void fault( int, const QString&, const QVariant &id );
+    void finished( Query* );
 
-		static Query *create( const QVariant &id = QVariant(),
-							QObject *parent = 0, const char *name = 0 );
+  private:
+    Query( const QVariant &id, QObject *parent = 0 );
+    virtual ~Query();
 
-	public slots:
+    class Private;
+    Private* const d;
 
-		void call( const QString &server, const QString &method,
-				const QList<QVariant> &args = QList<QVariant>(),
-				const QString &userAgent = "KDE-XMLRPC" );
-
-	signals:
-
-		void message( const QList<QVariant> &result, const QVariant &id );
-		void fault( int, const QString&, const QVariant &id );
-		void finished( Query* );
-
-	private slots:
-		
-		void slotData( KIO::Job *job, const QByteArray &data );
-		void slotResult( KIO::Job *job );
-
-	private:
-	
-		bool isMessageResponse( const QDomDocument &doc ) const;
-		bool isFaultResponse( const QDomDocument &doc ) const;
-
-		KXmlRpcResult parseMessageResponse( const QDomDocument &doc ) const;
-		KXmlRpcResult parseFaultResponse( const QDomDocument &doc ) const;
-
-		QString markupCall( const QString &method,
-							const QList<QVariant> &args ) const;
-		QString marshal( const QVariant &v ) const;
-		QVariant demarshal( const QDomElement &e ) const;
-
-		Query( const QVariant &id, QObject *parent = 0, const char *name = 0 );
-		~Query();
-
-		QByteArray m_buffer;
-		QVariant m_id;
-
-		QList<KIO::Job*> m_pendingJobs;
+    Q_PRIVATE_SLOT( d, void slotData( KIO::Job*, const QByteArray& ) )
+    Q_PRIVATE_SLOT( d, void slotResult( KIO::Job* ) )
 };
 
 } // namespace XmlRpc

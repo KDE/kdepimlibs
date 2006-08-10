@@ -20,142 +20,166 @@
 #include "query.h"
 
 /**
+  @file
 
-	@file
-
-	The implementation of Server
-
+  The implementation of Server
 **/
 
-namespace XmlRpc {
+using namespace KXmlRpc;
 
-Server::Server( const KUrl &url, QObject *parent, const char *name ) : QObject( parent, name ) {
+class Server::Private
+{
+  public:
+    KUrl mUrl;
+    QString mUserAgent;
 
-	if ( url.isValid() )
-		m_url = url;
+    QList<Query*> mPendingQueries;
 
-	m_userAgent = "KDE XMLRPC resources";
+    void queryFinished( Query* );
+};
+
+void Server::Private::queryFinished( Query *query )
+{
+  mPendingQueries.removeAll( query );
+  query->deleteLater();
 }
 
-Server::~Server() {
+Server::Server( const KUrl &url, QObject *parent )
+  : QObject( parent ), d( new Private )
+{
+  if ( url.isValid() )
+    d->mUrl = url;
 
-	QList<Query*>::Iterator it;
-	for ( it = mPendingQueries.begin(); it !=mPendingQueries.end(); ++it )
-		(*it)->deleteLater();
-
-	mPendingQueries.clear();
+  d->mUserAgent = "KDE XMLRPC resources";
 }
 
-void Server::queryFinished( Query *query ) {
+Server::~Server()
+{
+  QList<Query*>::Iterator it;
+  for ( it = d->mPendingQueries.begin(); it != d->mPendingQueries.end(); ++it )
+    (*it)->deleteLater();
 
-	mPendingQueries.remove( query );
-	query->deleteLater();
+  d->mPendingQueries.clear();
+
+  delete d;
 }
 
-void Server::setUrl( const KUrl &url ) {
+void Server::setUrl( const KUrl &url )
+{
+  d->mUrl = url.isValid() ? url : KUrl();
+}
 
-	m_url = url.isValid() ? url : KUrl();
+KUrl Server::url() const
+{
+  return d->mUrl;
+}
+
+QString Server::userAgent() const
+{
+  return d->mUserAgent;
+}
+
+void Server::setUserAgent( const QString &userAgent )
+{
+  d->mUserAgent = userAgent;
 }
 
 void Server::call( const QString &method, const QList<QVariant> &args,
                    QObject* msgObj, const char* messageSlot,
-                   QObject* faultObj, const char* faultSlot, const QVariant &id ) {
+                   QObject* faultObj, const char* faultSlot, const QVariant &id )
+{
+  if ( d->mUrl.isEmpty() )
+    kWarning() << "Cannot execute call to " << method << ": empty server URL" << endl;
 
-	if ( m_url.isEmpty() )
-		kWarning() << "Cannot execute call to " << method << ": empty server URL" << endl;
+  Query *query = Query::create( id, this );
+  connect( query, SIGNAL( message( const QList<QVariant> &, const QVariant& ) ), msgObj, messageSlot );
+  connect( query, SIGNAL( fault( int, const QString&, const QVariant& ) ), faultObj, faultSlot );
+  connect( query, SIGNAL( finished( Query* ) ), this, SLOT( queryFinished( Query* ) ) );
+  d->mPendingQueries.append( query );
 
-	Query *query = Query::create( id, this );
-	connect( query, SIGNAL( message( const QList<QVariant> &, const QVariant& ) ), msgObj, messageSlot );
-	connect( query, SIGNAL( fault( int, const QString&, const QVariant& ) ), faultObj, faultSlot );
-	connect( query, SIGNAL( finished( Query* ) ), this, SLOT( queryFinished( Query* ) ) );
-	mPendingQueries.append( query );
-
-	query->call( m_url.url(), method, args, m_userAgent );
+  query->call( d->mUrl.url(), method, args, d->mUserAgent );
 }
 
 void Server::call( const QString &method, const QVariant &arg,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
-                   const QVariant &id ) {
-
-	QList<QVariant> args;
-	args << arg ;
-	call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
+                   const QVariant &id )
+{
+  QList<QVariant> args;
+  args << arg ;
+  call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
 void Server::call( const QString &method, int arg,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
-                   const QVariant &id ) {
-
-	QList<QVariant> args;
-	args << QVariant( arg );
-	call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
+                   const QVariant &id )
+{
+  QList<QVariant> args;
+  args << QVariant( arg );
+  call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
 void Server::call( const QString &method, bool arg,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
-                   const QVariant &id ) {
-
-	QList<QVariant> args;
-	args << QVariant( arg );
-	call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
+                   const QVariant &id )
+{
+  QList<QVariant> args;
+  args << QVariant( arg );
+  call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
 void Server::call( const QString &method, double arg ,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
-                   const QVariant &id ) {
-
-	QList<QVariant> args;
-	args << QVariant( arg );
-	call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
+                   const QVariant &id )
+{
+  QList<QVariant> args;
+  args << QVariant( arg );
+  call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
 void Server::call( const QString &method, const QString &arg ,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
-                   const QVariant &id ) {
-
-	QList<QVariant> args;
-	args << QVariant( arg );
-	call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
+                   const QVariant &id )
+{
+  QList<QVariant> args;
+  args << QVariant( arg );
+  call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
 void Server::call( const QString &method, const QByteArray &arg ,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
-                   const QVariant &id ) {
-
-	QList<QVariant> args;
-	args << QVariant( arg );
-	call( method, args, faultObj, faultSlot, msgObj, messageSlot, id );
+                   const QVariant &id )
+{
+  QList<QVariant> args;
+  args << QVariant( arg );
+  call( method, args, faultObj, faultSlot, msgObj, messageSlot, id );
 }
 
 void Server::call( const QString &method, const QDateTime &arg,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
-                   const QVariant &id ) {
-
-	QList<QVariant> args;
-	args << QVariant( arg );
-	call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
+                   const QVariant &id )
+{
+  QList<QVariant> args;
+  args << QVariant( arg );
+  call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
 void Server::call( const QString &method, const QStringList &arg,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
-                   const QVariant &id ) {
+                   const QVariant &id )
+{
+  QList<QVariant> args;
+  for ( int i = 0; i < arg.count(); ++i )
+    args << QVariant( arg[ i ] );
 
-	QList<QVariant> args;
-	QStringList::ConstIterator it = arg.begin();
-	QStringList::ConstIterator end = arg.end();
-	for ( ; it != end; ++it )
-		args << QVariant( *it );
-	call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
+  call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
-
-} // namespace XmlRpc
 
 #include "server.moc"
