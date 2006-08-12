@@ -1,0 +1,34 @@
+In this file:
+
+* About kxmlrpcclient
+* Licensing
+
+
+About kxmlrpcclient
+----------------
+This library contains simple XML-RPC Client support. It is used mainly
+by the egroupware module of kdepim, but is a complete client and is
+quite easy to use. Only one interface is exposed to the world, 
+kxmlrpcclient/client.h and of that interface, you only need to 
+use 3 methods: setUrl, setUserAgent and call. 
+
+A small note on authentication. If you will be accessing an XML-RPC server
+which uses HTTP-AUTH, simply set the user and pass in the KURL. Digest
+authentication is more complicated and not supported at this time.
+
+Licensing
+---------
+The libraries themselves are covered by the GNU Library General Public
+License (LGPL). Any other programs (such as the examples) are covered
+by the GNU General Public License (GPL). All the gory details for the
+LGPL reside in COPYING.LIB, and for the GPL reside in COPYING.
+
+Various parts are also covered under a BSD style license, detailed in
+COPYING.BSD. Currently, code covered under such license is copyrighted by
+Theo de Raadt.
+
+When in doubt, check the individual file, they should all have license
+headings and other identifying marks.
+
+
+

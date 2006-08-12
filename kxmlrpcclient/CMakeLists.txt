@@ -4,7 +4,7 @@ project(kxmlrpcclient)
 ########### next target ###############
 
 set(kxmlrpcclient_LIB_SRCS
-   server.cpp
+   client.cpp
    query.cpp)
 
 kde4_automoc(${kxmlrpcclient_LIB_SRCS})
@@ -18,4 +18,4 @@ install(TARGETS kxmlrpcclient  DESTINATION ${LIB_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES kxmlrpcclient.h server.h query.h DESTINATION ${INCLUDE_INSTALL_DIR}/kxmlrpcclient  )
+install( FILES kxmlrpcclient.h client.h query.h DESTINATION ${INCLUDE_INSTALL_DIR}/kxmlrpcclient  )

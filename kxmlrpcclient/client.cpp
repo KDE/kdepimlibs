@@ -16,7 +16,7 @@
 
 #include <QVariant>
 
-#include "server.h"
+#include "client.h"
 #include "query.h"
 
 /**
@@ -182,4 +182,4 @@ void Client::call( const QString &method, const QStringList &arg,
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
-#include "server.moc"
+#include "client.moc"
