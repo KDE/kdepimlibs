@@ -18,4 +18,4 @@ install(TARGETS kxmlrpcclient  DESTINATION ${LIB_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES server.h query.h DESTINATION ${INCLUDE_INSTALL_DIR}/kxmlrpcclient  )
+install( FILES kxmlrpcclient.h server.h query.h DESTINATION ${INCLUDE_INSTALL_DIR}/kxmlrpcclient  )

@@ -9,14 +9,15 @@
 *   (at your option) any later version.                                   *
 ***************************************************************************/
 
-#ifndef KXML_RPC_SERVER_H
-#define KXML_RPC_SERVER_H
+#ifndef KXML_RPC_CLIENT_H
+#define KXML_RPC_CLIENT_H
 
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 
 #include <kurl.h>
+#include "kxmlrpcclient.h"
 
 namespace KXmlRpc
 {
@@ -24,8 +25,8 @@ namespace KXmlRpc
 /**
   @file
 
-  This file defines Server, our main class.
-  It is the primary method of interaction with the library and is the object which represents the xml-rpc server.
+  This file defines KXmlRpc::Client, our main class.
+  It is the primary method of interaction with the library and is the object which represents our connection to the XML-RPC server.
 
   @author Narayan Newton <narayannewton@gmail.com>
   @author Frerich Raabe <raabe@kde.org>
@@ -33,13 +34,13 @@ namespace KXmlRpc
  */
 
 /**
-  Server is a class that represents an xml-rpc server
+  KXmlRpc::Client is a class that represents our connection to a XML-RPC server
   This is the main (only) class you need to worry about for building an 
-  xml-rpc client. This class has one main method, "call", which is overloaded 
+  XML-RPC client. This class has one main method, "call", which is overloaded 
   extensively to handle different arguments.
 
   @code
-    Server *server = new Server( KUrl( "http://localhost" ), this );
+    KXmlRpc::Client *serv = new Client( KUrl( "http://localhost" ), this );
     server->setUserAgent( "Test/1.0" );
     server->call( "xmlrpc.command1", "Hi!", 
        this, SLOT( gotData( const QList<QVariant>&, const QVariant ) ),
@@ -48,7 +49,7 @@ namespace KXmlRpc
 
   @author Narayan Newton <narayannewton@gmail.com>
  */
-class Server : public QObject
+class KXMLRPCCLIENT_EXPORT Client : public QObject
 {
   Q_OBJECT
 
@@ -59,7 +60,7 @@ class Server : public QObject
       @param parent the parent of this object, defaults to NULL.
       @param name the name of the object, defaults to NULL.
      */
-    Server( QObject *parent = 0 );
+    Client( QObject *parent = 0 );
 
     /**
       The not so standard init function that takes a server url
@@ -68,12 +69,12 @@ class Server : public QObject
       @param url the url for the xml-rpc server we will be connecting to
       @param parent the parent of this object, defaults to NULL.
      */
-    Server( const KUrl &url, QObject *parent = 0 );
+    Client( const KUrl &url, QObject *parent = 0 );
 
     /**
       Standard destructor.
      */
-    virtual ~Server();
+    virtual ~Client();
 
     /**
       Returns the current url of the xml-rpc server.
@@ -123,7 +124,7 @@ class Server : public QObject
         double
 
       @code
-         server->call( "xmlrpc.command1", "Hi!", 
+         serv->call( "xmlrpc.command1", "Hi!", 
            this, SLOT( gotData( const QList<QVariant>&, const QVariant ) ),
            this, SLOT( gotError( const QString&, const QVariant& ) ) );
       @endcode
@@ -134,7 +135,7 @@ class Server : public QObject
       @param faultSlot the error slot itself
       @param obj the QObject of the data slot
       @param messageSlot the data slot itself
-      @param id the id for our Server object, defaults to empty
+      @param id the id for our Client object, defaults to empty
      */
 
     template <typename T>
@@ -198,7 +199,7 @@ class Server : public QObject
 };
 
 template <typename T>
-void Server::call( const QString &method, const QList<T> &arg,
+void Client::call( const QString &method, const QList<T> &arg,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )

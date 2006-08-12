@@ -22,12 +22,12 @@
 /**
   @file
 
-  The implementation of Server
+  The implementation of KXmlRpc::Client 
 **/
 
 using namespace KXmlRpc;
 
-class Server::Private
+class Client::Private
 {
   public:
     KUrl mUrl;
@@ -38,13 +38,13 @@ class Server::Private
     void queryFinished( Query* );
 };
 
-void Server::Private::queryFinished( Query *query )
+void Client::Private::queryFinished( Query *query )
 {
   mPendingQueries.removeAll( query );
   query->deleteLater();
 }
 
-Server::Server( const KUrl &url, QObject *parent )
+Client::Client( const KUrl &url, QObject *parent )
   : QObject( parent ), d( new Private )
 {
   if ( url.isValid() )
@@ -53,7 +53,7 @@ Server::Server( const KUrl &url, QObject *parent )
   d->mUserAgent = "KDE XMLRPC resources";
 }
 
-Server::~Server()
+Client::~Client()
 {
   QList<Query*>::Iterator it;
   for ( it = d->mPendingQueries.begin(); it != d->mPendingQueries.end(); ++it )
@@ -64,27 +64,27 @@ Server::~Server()
   delete d;
 }
 
-void Server::setUrl( const KUrl &url )
+void Client::setUrl( const KUrl &url )
 {
   d->mUrl = url.isValid() ? url : KUrl();
 }
 
-KUrl Server::url() const
+KUrl Client::url() const
 {
   return d->mUrl;
 }
 
-QString Server::userAgent() const
+QString Client::userAgent() const
 {
   return d->mUserAgent;
 }
 
-void Server::setUserAgent( const QString &userAgent )
+void Client::setUserAgent( const QString &userAgent )
 {
   d->mUserAgent = userAgent;
 }
 
-void Server::call( const QString &method, const QList<QVariant> &args,
+void Client::call( const QString &method, const QList<QVariant> &args,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot, const QVariant &id )
 {
@@ -100,7 +100,7 @@ void Server::call( const QString &method, const QList<QVariant> &args,
   query->call( d->mUrl.url(), method, args, d->mUserAgent );
 }
 
-void Server::call( const QString &method, const QVariant &arg,
+void Client::call( const QString &method, const QVariant &arg,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
@@ -110,7 +110,7 @@ void Server::call( const QString &method, const QVariant &arg,
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
-void Server::call( const QString &method, int arg,
+void Client::call( const QString &method, int arg,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
@@ -120,7 +120,7 @@ void Server::call( const QString &method, int arg,
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
-void Server::call( const QString &method, bool arg,
+void Client::call( const QString &method, bool arg,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
@@ -130,7 +130,7 @@ void Server::call( const QString &method, bool arg,
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
-void Server::call( const QString &method, double arg ,
+void Client::call( const QString &method, double arg ,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
@@ -140,7 +140,7 @@ void Server::call( const QString &method, double arg ,
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
-void Server::call( const QString &method, const QString &arg ,
+void Client::call( const QString &method, const QString &arg ,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
@@ -150,7 +150,7 @@ void Server::call( const QString &method, const QString &arg ,
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
-void Server::call( const QString &method, const QByteArray &arg ,
+void Client::call( const QString &method, const QByteArray &arg ,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
@@ -160,7 +160,7 @@ void Server::call( const QString &method, const QByteArray &arg ,
   call( method, args, faultObj, faultSlot, msgObj, messageSlot, id );
 }
 
-void Server::call( const QString &method, const QDateTime &arg,
+void Client::call( const QString &method, const QDateTime &arg,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
@@ -170,7 +170,7 @@ void Server::call( const QString &method, const QDateTime &arg,
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
-void Server::call( const QString &method, const QStringList &arg,
+void Client::call( const QString &method, const QStringList &arg,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
