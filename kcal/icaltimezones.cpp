@@ -22,6 +22,7 @@
 #include <QDateTime>
 #include <QString>
 #include <QList>
+#include <QSet>
 #include <QFile>
 #include <QTextStream>
 
@@ -59,8 +60,145 @@ static QDateTime MAX_DATE()
   return dt;
 }
 
+static icaltimetype writeLocalICalDateTime( const QDateTime &utc, int offset )
+{
+  QDateTime local = utc.addSecs(offset);
+  icaltimetype t = icaltime_null_time();
+  t.year    = local.date().year();
+  t.month   = local.date().month();
+  t.day     = local.date().day();
+  t.hour    = local.time().hour();
+  t.minute  = local.time().minute();
+  t.second  = local.time().second();
+  t.is_date = 0;
+  t.zone    = 0;
+  t.is_utc  = 0;
+  return t;
+}
+
 
 namespace KCal {
+
+
+/******************************************************************************/
+
+class ICalTimeZonesPrivate
+{
+public:
+  ICalTimeZonesPrivate() : zones(new ICalTimeZones::ZoneMap())  {}
+  ~ICalTimeZonesPrivate()  { clear();  delete zones; }
+  void clear();
+  static ICalTimeZone *utc();
+
+  ICalTimeZones::ZoneMap *zones;
+  QSet<ICalTimeZone*> nonconstZones;   // member zones owned by ICalTimeZones
+};
+
+void ICalTimeZonesPrivate::clear()
+{
+  // Delete all zones actually owned by this collection.
+  for (ICalTimeZones::ZoneMap::ConstIterator it = zones->begin(), end = zones->end();  it != end;  ++it) {
+    if (nonconstZones.contains(const_cast<ICalTimeZone*>(it.value())))   // only delete zones actually owned
+      delete it.value();
+  }
+  zones->clear();
+  nonconstZones.clear();
+}
+
+ICalTimeZone *ICalTimeZonesPrivate::utc()
+{
+  static ICalTimeZone *utcZone = 0;
+  if ( !utcZone ) {
+    ICalTimeZoneSource tzs;
+    utcZone = tzs.parse( icaltimezone_get_utc_timezone() );
+  }
+  return utcZone;
+}
+
+
+ICalTimeZones::ICalTimeZones()
+  : d(new ICalTimeZonesPrivate)
+{
+}
+
+ICalTimeZones::~ICalTimeZones()
+{
+  delete d;
+}
+
+const ICalTimeZones::ZoneMap ICalTimeZones::zones() const
+{
+  return *d->zones;
+}
+
+bool ICalTimeZones::add(ICalTimeZone *zone)
+{
+  if (!zone)
+    return false;
+  if (d->zones->find(zone->name()) != d->zones->end())
+    return false;    // name already exists
+  d->zones->insert(zone->name(), zone);
+  d->nonconstZones.insert(zone);
+  return true;
+}
+
+bool ICalTimeZones::addConst(const ICalTimeZone *zone)
+{
+  if (!zone)
+    return false;
+  if (d->zones->find(zone->name()) != d->zones->end())
+    return false;    // name already exists
+  d->zones->insert(zone->name(), zone);
+  return true;
+}
+
+const ICalTimeZone *ICalTimeZones::detach(const ICalTimeZone *zone)
+{
+  if (zone) {
+    for (ZoneMap::Iterator it = d->zones->begin(), end = d->zones->end();  it != end;  ++it) {
+      if (it.value() == zone) {
+        d->zones->erase(it);
+        d->nonconstZones.remove(const_cast<ICalTimeZone*>(zone));
+        return (zone == utc()) ? 0 : zone;
+      }
+    }
+  }
+  return 0;
+}
+
+const ICalTimeZone *ICalTimeZones::detach(const QString &name)
+{
+  if (!name.isEmpty()) {
+    ZoneMap::Iterator it = d->zones->find(name);
+    if (it != d->zones->end()) {
+      const ICalTimeZone *zone = it.value();
+      d->zones->erase(it);
+      d->nonconstZones.remove(const_cast<ICalTimeZone*>(zone));
+      return (zone == utc()) ? 0 : zone;
+    }
+  }
+  return 0;
+}
+
+void ICalTimeZones::clear()
+{
+  d->clear();
+}
+
+const ICalTimeZone *ICalTimeZones::zone(const QString &name) const
+{
+  if (!name.isEmpty()) {
+    ZoneMap::ConstIterator it = d->zones->find(name);
+    if (it != d->zones->end())
+      return it.value();
+  }
+  return 0;    // error
+}
+
+const ICalTimeZone *ICalTimeZones::utc()
+{
+  return ICalTimeZonesPrivate::utc();
+}
 
 
 /******************************************************************************/
@@ -69,6 +207,13 @@ ICalTimeZone::ICalTimeZone(ICalTimeZoneSource *source, const QString &name, ICal
   : KTimeZone(source, name)
 {
   setData(data);
+}
+
+ICalTimeZone::ICalTimeZone(const KTimeZone &tz)
+  : KTimeZone(0, tz.name(), tz.countryCode(), tz.latitude(), tz.longitude(), tz.comment())
+{
+  if (tz.data(true))
+    setData( new ICalTimeZoneData(*tz.data(), tz) );
 }
 
 ICalTimeZone::ICalTimeZone(const ICalTimeZone &tz)
@@ -153,7 +298,91 @@ ICalTimeZoneData::ICalTimeZoneData(const ICalTimeZoneData &rhs)
   d->location      = rhs.d->location;
   d->url           = rhs.d->url;
   d->lastModified  = rhs.d->lastModified;
-  d->icalComponent = icalcomponent_new_clone(rhs.d->icalComponent);
+  d->icalComponent = icalcomponent_new_clone( rhs.d->icalComponent );
+}
+
+struct Transition {
+  QDateTime start;
+  int phase;
+  bool done;
+  bool operator<(const Transition &rhs) const { return start < rhs.start; }   // for qSort()
+};
+
+ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz)
+  : KTimeZoneData(rhs),
+    d(new ICalTimeZoneDataPrivate())
+{
+  if (dynamic_cast<const KSystemTimeZone*>(&tz)) {
+    icaltimezone *itz = icaltimezone_get_builtin_timezone( tz.name().toUtf8() );
+    d->icalComponent = icalcomponent_new_clone( icaltimezone_get_component( itz ) );
+  }
+  else {
+    // Write the time zone data into an iCal component
+    icalcomponent *comp = icalcomponent_new(ICAL_VTIMEZONE_COMPONENT);
+#warning tzid or location?
+    icalcomponent_add_property(comp, icalproperty_new_tzid( tz.name().toUtf8() ));
+//    icalcomponent_add_property(comp, icalproperty_new_tzurl( ??.toUtf8() ));
+//    icalcomponent_add_property(comp, icalproperty_new_location( ??.toUtf8() ));
+
+    // Compile an ordered list of transitions so that we can know the phases
+    // which occur before and after each transition.
+    Transition transition;
+    transition.done = false;
+    QList<Transition> transitions;
+    QList<KTimeZonePhase> tzphases = rhs.phases();
+    for (int p = 0, pend = tzphases.count();  p < pend;  ++p) {
+      transition.phase = p;
+      QList<QDateTime> starts = tzphases[p].starts();
+      for (int t = 0, tend = starts.count();  t < tend;  ++t) {
+        transition.start = starts[t];
+        transitions += transition;
+      }
+    }
+    qSort(transitions);
+
+    // Go through the list of transitions and create an iCal component for
+    // each distinct combination of phases before and after the transition.
+    bool found;
+    icaldatetimeperiodtype dtperiod;
+    dtperiod.period = icalperiodtype_null_period();
+    do {
+      found = false;
+      for (int i = 0, end = transitions.count();  i < end;  ++i) {
+        if ( transitions[i].done )
+          continue;
+        found = true;
+        int preOffset = (i > 0) ? tzphases[ transitions[i-1].phase ].utcOffset() : rhs.previousUtcOffset();
+        int postPhase = transitions[i].phase;
+        KTimeZonePhase &phase = tzphases[postPhase];
+        icalcomponent *phcomp = icalcomponent_new( phase.isDst() ?
+                                   ICAL_XDAYLIGHT_COMPONENT : ICAL_XSTANDARD_COMPONENT );
+        QList<QByteArray> abbrevs = phase.abbreviations();
+        for (int a = 0, aend = abbrevs.count();  a < aend;  ++a) {
+          icalcomponent_add_property(phcomp, icalproperty_new_tzname( static_cast<const char*>(abbrevs[a]) ));
+        }
+        if ( !phase.comment().isEmpty() )
+          icalcomponent_add_property(phcomp, icalproperty_new_comment( phase.comment().toUtf8() ));
+        icalcomponent_add_property(phcomp, icalproperty_new_tzoffsetfrom( preOffset ));
+        icalcomponent_add_property(phcomp, icalproperty_new_tzoffsetto( phase.utcOffset() ));
+        icalcomponent_add_property(phcomp, icalproperty_new_dtstart(
+                          writeLocalICalDateTime( transitions[i].start, preOffset ) ));
+        transitions[i].done = true;
+
+        while (++i < end) {
+          if (!transitions[i].done 
+          &&  transitions[i].phase == postPhase
+          &&  tzphases[ transitions[i-1].phase ].utcOffset() == preOffset) {
+            dtperiod.time = writeLocalICalDateTime( transitions[i].start, preOffset );
+            icalcomponent_add_property(phcomp, icalproperty_new_rdate( dtperiod ));
+            transitions[i].done = true;
+          }
+        }
+        icalcomponent_add_component(comp, phcomp);
+      }
+    } while (found);
+
+    d->icalComponent = comp;
+  }
 }
 
 ICalTimeZoneData::~ICalTimeZoneData()
@@ -227,7 +456,7 @@ ICalTimeZoneSource::~ICalTimeZoneSource()
 {
 }
 
-bool ICalTimeZoneSource::parse(const QString &fileName, KTimeZones &zones)
+bool ICalTimeZoneSource::parse(const QString &fileName, ICalTimeZones &zones)
 {
   QFile file(fileName);
   if (!file.open(QIODevice::ReadOnly))
@@ -247,7 +476,7 @@ bool ICalTimeZoneSource::parse(const QString &fileName, KTimeZones &zones)
   return result;
 }
 
-bool ICalTimeZoneSource::parse(icalcomponent *calendar, KTimeZones &zones)
+bool ICalTimeZoneSource::parse(icalcomponent *calendar, ICalTimeZones &zones)
 {
   for (icalcomponent *c = icalcomponent_get_first_component(calendar, ICAL_VTIMEZONE_COMPONENT);
        c;  c = icalcomponent_get_next_component(calendar, ICAL_VTIMEZONE_COMPONENT))
@@ -276,6 +505,7 @@ ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
     switch (kind) {
 
       case ICAL_TZID_PROPERTY:
+#warning Should location be used for name rather than tzid?
         name = QString::fromUtf8(icalproperty_get_tzid(p));
         break;
 
@@ -302,7 +532,7 @@ ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
           kDebug(5800) << "ICalTimeZoneSource::parse(): LAST-MODIFIED not UTC" << endl;
         }
         break;
-		}
+      }
       default:
         break;
     }
@@ -456,6 +686,8 @@ KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool day
      * Note that we had to get DTSTART, TZOFFSETFROM, TZOFFSETTO before reading
      * recurrences.
      */
+    KDateTime klocalStart(localStart, KDateTime::Spec::ClockTime);
+    KDateTime maxTime(MAX_DATE(), KDateTime::Spec::ClockTime);
     Recurrence recur;
     icalproperty *p = icalcomponent_get_first_property(c, ICAL_ANY_PROPERTY);
     while (p) {
@@ -489,12 +721,21 @@ KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool day
           ICalFormat icf;
           ICalFormatImpl impl(&icf);
           impl.readRecurrence(icalproperty_get_rrule(p), &r);
-          r.setStartDt(localStart);
-          DateTimeList dts = r.datesInInterval(utcStart, MAX_DATE());
+          r.setStartDt(klocalStart);
+          // The end date time specified in an RRULE should be in UTC.
+          // Convert to local time to avoid datesInInterval() getting things wrong.
+          if (r.duration() == 0) {
+            KDateTime end = r.endDt();
+            if (end.timeSpec() == KDateTime::Spec::UTC) {
+              end.setTimeSpec(KDateTime::Spec::ClockTime);
+              r.setEndDt( end.addSecs(prevOffset) );
+            }
+          }
+          DateTimeList dts = r.datesInInterval(klocalStart, maxTime);
           for ( int i = 0, end = dts.count();  i < end;  ++i) {
-            QDateTime utc = dts[i];
-	    utc.setTimeSpec(Qt::UTC);
-	    times += utc.addSecs(-prevOffset);
+            QDateTime utc = dts[i].dateTime();
+            utc.setTimeSpec(Qt::UTC);
+            times += utc.addSecs(-prevOffset);
           }
           break;
         }
