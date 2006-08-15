@@ -40,7 +40,7 @@ namespace KXmlRpc
   This is the main interface to the XML-RPC client library.
 
   @code
-    KXmlRpc::Client *c = new Client( KUrl( "http://localhost" ), this );
+    KXmlRpc::Client *c = new Client(KUrl( "http://localhost" ), this);
     c->setUserAgent( "Test/1.0" );
     c->call( "xmlrpc.command1", "Hi!", 
        this, SLOT( gotData( const QList<QVariant>&, const QVariant ) ),
