@@ -27,6 +27,7 @@
 #include <QTextStream>
 
 #include <kdebug.h>
+#include <kdatetime.h>
 
 extern "C" {
   #include <ical.h>
@@ -721,19 +722,24 @@ KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool day
           ICalFormat icf;
           ICalFormatImpl impl(&icf);
           impl.readRecurrence(icalproperty_get_rrule(p), &r);
-          r.setStartDt(klocalStart);
+#warning temporary build hack
+          r.setStartDt(klocalStart.dateTime());
           // The end date time specified in an RRULE should be in UTC.
           // Convert to local time to avoid datesInInterval() getting things wrong.
           if (r.duration() == 0) {
             KDateTime end = r.endDt();
             if (end.timeSpec() == KDateTime::Spec::UTC) {
               end.setTimeSpec(KDateTime::Spec::ClockTime);
-              r.setEndDt( end.addSecs(prevOffset) );
+#warning temporary build hack
+              r.setEndDt( end.addSecs(prevOffset).dateTime() );
             }
           }
-          DateTimeList dts = r.datesInInterval(klocalStart, maxTime);
+#warning temporary build hack
+          DateTimeList dts = r.datesInInterval(klocalStart.dateTime(), maxTime.dateTime());
           for ( int i = 0, end = dts.count();  i < end;  ++i) {
-            QDateTime utc = dts[i].dateTime();
+#warning temporary build hack
+            // QDateTime utc = dts[i].dateTime();
+	    QDateTime utc = dts[i];
             utc.setTimeSpec(Qt::UTC);
             times += utc.addSecs(-prevOffset);
           }
