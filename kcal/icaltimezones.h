@@ -59,7 +59,7 @@ class Recurrence;
  * to avoid conflicting definitions, each calendar should normally have its own
  * ICalTimeZones collection.
  *
- * This class is analagous to KTimeZones, but holds ICalTimeZone instances rather
+ * This class is analogous to KTimeZones, but holds ICalTimeZone instances rather
  * than generic KTimeZone instances.
  *
  * @short Represents a collection of iCalendar time zones
