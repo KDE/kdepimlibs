@@ -34,7 +34,7 @@
 
 #include <QList>
 
-#include "ktnef/ktnefpropertyset.h"
+#include "ktnefpropertyset.h"
 #include "ktnef.h"
 
 namespace KTnef { class KTNEFAttach; }
@@ -42,7 +42,8 @@ namespace KTnef { class KTNEFAttach; }
 namespace KTnef {
 
 /**
- * A class to represent a TNEF message.
+ * @brief
+ * Represents a @acronym TNEF message.
  */
 class KTNEF_EXPORT KTNEFMessage : public KTNEFPropertySet
 {
@@ -90,8 +91,10 @@ public:
   QString rtfString();
 
 private:
+  //@cond PRIVATE
   class MessagePrivate;
   MessagePrivate *d;
+  //@endcond
 };
 
 }

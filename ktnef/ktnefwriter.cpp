@@ -22,8 +22,8 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif /* HAVE_CONFIG_H */
+#include "config.h"
+#endif
 
 #include <assert.h>
 
@@ -35,21 +35,26 @@
 
 #include <kdebug.h>
 
-#include "ktnef/ktnefwriter.h"
-#include "ktnef/ktnefproperty.h"
-#include "ktnef/ktnefpropertyset.h"
-#include "ktnef/ktnefdefs.h"
+#include "ktnefwriter.h"
+#include "ktnefproperty.h"
+#include "ktnefpropertyset.h"
+#include "ktnefdefs.h"
 
 using namespace KTnef;
 
-class KTNEFWriter::PrivateData {
+/**
+ * Private class that helps to provide binary compatibility between releases.
+ * @internal
+ */
+//@cond PRIVATE
+class KTnef::KTNEFWriter::PrivateData {
 public:
   PrivateData() { mFirstAttachNum = QDateTime::currentDateTime().toTime_t(); }
 
   KTNEFPropertySet properties;
   quint16 mFirstAttachNum;
 };
-
+//@endcond
 
 KTNEFWriter::KTNEFWriter() {
   mData = new PrivateData;

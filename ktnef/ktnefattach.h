@@ -44,7 +44,8 @@ namespace KTnef { class KTNEFProperty; }
 namespace KTnef {
 
 /**
- * A class to represent a @acronym TNEF attachment.
+ * @brief
+ * Represents a @acronym TNEF attachment.
  */
 class KTNEF_EXPORT KTNEFAttach : public KTNEFPropertySet
 {
@@ -108,12 +109,15 @@ public:
    * Sets/Unsets the attachment state according to the @p state flag
    * must be a #ParseState type.
    *
-   * Returns true if the state is turned-on; else returns false.
+   * @param state a #ParseState type.
+   * @return true if the state is turned-on; else returns false.
    */
   bool checkState( int state ) const;
 
   /**
    * Sets the offset value of this attachment to @p offset.
+   *
+   * @param offset is the attachment offset to set.
    */
   void setOffset( int offset );
 
@@ -124,6 +128,8 @@ public:
 
   /**
    * Sets the size of the attachment to @p size.
+   *
+   * @param size is the attachment size to set.
    */
   void setSize( int size );
 
@@ -134,6 +140,8 @@ public:
 
   /**
    * Sets the display size of the attachment to @p size.
+   *
+   * @param size is the attachment display size to set.
    */
   void setDisplaySize( int size );
 
@@ -144,6 +152,8 @@ public:
 
   /**
    * Sets the name of this attachment to @p str.
+   *
+   * @param str is attachment name to set.
    */
   void setName( const QString& str );
 
@@ -154,6 +164,8 @@ public:
 
   /**
    * Sets the index of this attachment to @p indx.
+   *
+   * @param indx is the attachment index to set.
    */
   void setIndex( int indx );
 
@@ -164,6 +176,8 @@ public:
 
   /**
    * Sets the filename of this attachment to @p str.
+   *
+   * @param str is the attachment filename to set.
    */
   void setFileName( const QString& str );
 
@@ -174,6 +188,8 @@ public:
 
   /**
    * Sets the display name of this attachment to @p str.
+   *
+   * @param str is the attachment display name to set.
    */
   void setDisplayName( const QString& str );
 
@@ -184,6 +200,8 @@ public:
 
   /**
    * Sets the @acronym MIME tag of this attachment to @p str.
+   *
+   * @param str is the attachment @acronym MIME tag to set.
    */
   void setMimeTag( const QString& str );
 
@@ -194,6 +212,8 @@ public:
 
   /**
    * Sets the filename extension of this attachment to @p str.
+   *
+   * @param str is the attachment filename extension to set.
    */
   void setExtension( const QString& str );
 
@@ -203,8 +223,10 @@ public:
   QString extension() const;
 
 private:
+  //@cond PRIVATE
   class AttachPrivate;
   AttachPrivate *d;
+  //@endcond
 };
 
 }

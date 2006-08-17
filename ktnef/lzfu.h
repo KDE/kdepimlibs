@@ -21,11 +21,24 @@
     Boston, MA 02110-1301, USA.
  */
 
+/**
+ * @file
+ * This file is part of the API for handling TNEF data and
+ * provides the @acronym LZFU decompression functionality.
+ *
+ * @author Michael Goffioul
+ */
+
 #ifndef LZFU_H
 #define LZFU_H
 
 class QIODevice;
 
+/**
+ * @acronym LZFU decompress data in compressed Rich Text Format (@acronym RTF).
+ * @param input compressed input data.
+ * @param output decompressed output data.
+ */
 int lzfu_decompress( QIODevice *input, QIODevice *output );
 
 #endif /* LZFU_H */

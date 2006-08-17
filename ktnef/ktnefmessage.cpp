@@ -21,18 +21,20 @@
     Boston, MA 02110-1301, USA.
  */
 
-#include "ktnef/ktnefmessage.h"
-#include "ktnef/ktnefattach.h"
-
-#include "lzfu.h"
 #include <QBuffer>
 #include <QList>
+
+#include "ktnefmessage.h"
+#include "ktnefattach.h"
+#include "lzfu.h"
 
 using namespace KTnef;
 
 /**
  * Private class that helps to provide binary compatibility between releases.
+ * @internal
  */
+//@cond PRIVATE
 class KTnef::KTNEFMessage::MessagePrivate
 {
 public:
@@ -55,6 +57,7 @@ void KTNEFMessage::MessagePrivate::clearAttachments()
     delete attachments_.takeFirst();
   }
 }
+//@endcond
 
 KTNEFMessage::KTNEFMessage()
 {

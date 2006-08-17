@@ -21,6 +21,14 @@
     Boston, MA 02110-1301, USA.
  */
 
+/**
+ * @file
+ * This file is part of the API for handling TNEF data and
+ * defines the KTNEFParser class.
+ *
+ * @author Michael Goffioul
+ */
+
 #ifndef KTNEFPARSER_H
 #define	KTNEFPARSER_H
 
@@ -35,32 +43,141 @@ namespace KTnef { class KTNEFProperty; }
 
 namespace KTnef {
 
+/**
+ * @brief
+ * Provides an @acronym TNEF parser.
+ */
 class KTNEF_EXPORT KTNEFParser
 {
 public:
-	KTNEFParser();
-	~KTNEFParser();
+  /**
+   * Constructs a @acronym TNEF parser object.
+   */
+  KTNEFParser();
 
-	bool openFile(const QString& filename);
-	bool openDevice( QIODevice *device );
-	bool extractFile(const QString& filename);
-	bool extractFileTo(const QString& filename, const QString& dirname);
-	bool extractAll();
-	void setDefaultExtractDir(const QString& dirname);
-	KTNEFMessage* message() const;
+  /**
+   * Destroys the @acronym TNEF parser object.
+   */
+  ~KTNEFParser();
+
+  /**
+   * Opens the @p filename for parsing.
+   *
+   * @param filename is the name of the file to open.
+   * @return true if the open succeeded; otherwise false;
+   */
+  bool openFile( const QString& filename );
+
+  /**
+   * Opens the #QIODevice @p device for parsing.
+   *
+   * @param device is the #QIODevice to open.
+   * @return true if the open succeeded; otherwise false;
+   */
+  bool openDevice( QIODevice *device );
+
+  /**
+   * Extracts a @acronym TNEF attachment having filename @p filename
+   * into the default directory.
+   *
+   * @param filename is the name of the file to extract the attachment into.
+   * @return true if the extraction succeeds; otherwise false.
+   */
+  bool extractFile( const QString& filename );
+
+  /**
+   * Extracts a @acronym TNEF attachment having filename @p filename
+   * into the directory @p dirname.
+   *
+   * @param filename is the name of the file to extract the attachment into.
+   * @param dirname is the name of the directory where the @p filename
+   * should be written.
+   *
+   * @return true if the extraction succeeds; otherwise false.
+   */
+  bool extractFileTo( const QString& filename, const QString& dirname );
+
+  /**
+   * Extracts all @acronym TNEF attachments into the default directory.
+   *
+   * @return true if the extraction succeeds; otherwise false.
+   */
+  bool extractAll();
+
+  /**
+   * Sets the default extraction directory to @p dirname.
+   *
+   * @param dirname is the name of the default extraction directory.
+   */
+  void setDefaultExtractDir( const QString& dirname );
+
+  /**
+   * Returns the #KTNEFMessage used in the parsing process.
+   *
+   * @return a pointer to a #KTNEFMessage object.
+   */
+  KTNEFMessage *message() const;
 
 private:
-	bool decodeAttachment();
-	bool decodeMessage();
-	bool extractAttachmentTo(KTNEFAttach *att, const QString& dirname);
-	bool parseDevice();
-	void checkCurrent(int state);
-	bool readMAPIProperties(QMap<int,KTNEFProperty*>& pros, KTNEFAttach *attach = 0);
-	void deleteDevice();
+  /**
+   * Decodes the attachment.
+   *
+   * @return true if the decoding succeeds; otherwise false.
+   */
+  bool decodeAttachment();
+
+  /**
+   * Decodes the message.
+   *
+   * @return true if the decoding succeeds; otherwise false.
+   */
+  bool decodeMessage();
+
+  /**
+   * Extracts the #KTNEFAttach @p att into the directory @p dirname.
+   *
+   * @param att is a pointer to the attachment.
+   * @param dirname is the name of the extraction directory.
+   *
+   * @return true if the extraction succeeds; otherwise false.
+   */
+  bool extractAttachmentTo( KTNEFAttach *att, const QString& dirname );
+
+  /**
+   * Initialize current attachment settings.
+   *
+   * @param key is the @acronym TNEF tag.
+   */
+  void checkCurrent( int key );
+
+  /**
+   * Reads the @acronym MAPI properties.
+   *
+   * @param props is the @acronym MAPI property map.
+   * @param attach is a pointer to a  #KTNEFAttach object.
+   *
+   * @return true if the read succeeded; otherwise false.
+   */
+  bool readMAPIProperties( QMap<int,KTNEFProperty*>& props,
+                           KTNEFAttach *attach = 0 );
+
+  /**
+   * Parses the attachment read from the #QIODevice set in #openDevice.
+   *
+   * @return true if the parsing succeeds; otherwise false.
+   */
+  bool parseDevice();
+
+  /**
+   * Removes the #QIODevice from the parser object.
+   */
+  void deleteDevice();
 
 private:
-	class ParserPrivate;
-	ParserPrivate *d;
+  //@cond PRIVATE
+  class ParserPrivate;
+  ParserPrivate *d;
+  //@endcond
 };
 
 }

@@ -33,4 +33,10 @@
 #define KTNEF_EXPORT KDE_EXPORT
 #endif
 
+/**
+ * @namespace KTnef
+ *
+ * This is the namespace containing all the KTNEF library symbols.
+ */
+
 #endif

@@ -28,7 +28,9 @@ using namespace KTnef;
 
 /**
  * Private class that helps to provide binary compatibility between releases.
+ * @internal
  */
+//@cond PRIVATE
 class KTnef::KTNEFAttach::AttachPrivate
 {
 public:
@@ -43,6 +45,7 @@ public:
   QString mimetag_;
   QString extension_;
 };
+//@endcond
 
 KTNEFAttach::KTNEFAttach()
 {
