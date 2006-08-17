@@ -99,25 +99,6 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
      */
     void setUserAgent( const QString &userAgent );
 
-    /**
-      Calls the given method on a XML-RPC server, with the given 
-      argument list. 
-
-      @param method the method on the server we are going to be calling
-      @param arg the argument list to pass to the server 
-      @param obj the object containing the error slot
-      @param faultSlot the error slot itself
-      @param obj the object containing the data slot 
-      @param messageSlot the data slot itself
-      @param id the id for our Client object, defaults to empty
-     */
-    template <typename T>
-    void call( const QString &method, const QList<T> &arg,
-        QObject* obj, const char* messageSlot,
-        QObject* obj, const char* faultSlot,
-        const QVariant &id = QVariant() );
-
-
   public slots:
     /**
       Calls the given method on a XML-RPC server, with the given 
@@ -275,6 +256,12 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
   private:
     class Private;
     Private* const d;
+
+    template <typename T>
+    void call( const QString &method, const QList<T> &arg,
+        QObject* obj, const char* messageSlot,
+        QObject* obj, const char* faultSlot,
+        const QVariant &id = QVariant() );
 
     Q_PRIVATE_SLOT( d, void queryFinished( Query* ) )
 };
