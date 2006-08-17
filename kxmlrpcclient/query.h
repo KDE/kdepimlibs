@@ -27,12 +27,19 @@ namespace KXmlRpc {
 /**
   @file
 
-  This file defines Result and Query, our internal classes
+  This file is part of KXmlRpc and defines our internal classes.
+
+  \par Maintainer: Narayan Newton <narayannewton@gmail.com>
+
+  @author Narayan Newton <narayannewton@gmail.com>
+  @author Frerich Raabe <raabe@kde.org>
+  @author Tobias Koenig <tokoe@kde.org>
  */
 
 /**
   Query is a class that represents an individual XML-RPC call.
-  This is an internal class and is only used by the Server class.
+
+  This is an internal class and is only used by the KXmlRpc::Server class.
  */
 class Query : public QObject
 {
@@ -40,16 +47,42 @@ class Query : public QObject
   Q_OBJECT
 
   public:
+    /**
+      Constructs a query
+
+      @param id an optional id for the query
+      @param parent an optional parent for the query
+     */
     static Query *create( const QVariant &id = QVariant(), QObject *parent = 0 );
 
   public slots:
+    /**
+      Calls the specified method on the specified server with 
+      the given argument list.
+
+      @param server the server to contact
+      @param method the method to call
+      @param args an argument list to pass to said method
+      @param userAgent the string to identify as to the server
+     */
     void call( const QString &server, const QString &method,
                const QList<QVariant> &args = QList<QVariant>(),
                const QString &userAgent = "KDE-XMLRPC" );
 
   Q_SIGNALS:
+    /**
+      A signal sent when we recieve a result from the server
+     */
     void message( const QList<QVariant> &result, const QVariant &id );
+
+    /**
+      A signal sent when we recieve an error from the server
+     */
     void fault( int, const QString&, const QVariant &id );
+
+    /**
+      A signal sent when a query finishes
+     */
     void finished( Query* );
 
   private:
@@ -65,8 +98,10 @@ class Query : public QObject
 
 
 /**
-  Result is an internal class that represents a response from the XML-RPC 
-  server. This is an internal class and is only used by Query
+  Result is an internal class that represents a response 
+  from a XML-RPC server.
+
+  This is an internal class and is only used by Query
  */
 class Result
 {
@@ -74,17 +109,45 @@ class Result
   friend class Query::Private;
 
   public:
+    /**
+      Constructs a result
+     */
     Result();
+
+    /**
+      Constructs a result based on another result
+     */
     Result( const Result &other );
-    Result& operator=( const Result &other );
+
+    /**
+      Destroys a result
+     */
     virtual ~Result();
 
+    /**
+      Assigns the values of one result to this one
+     */
+    Result& operator=( const Result &other );
+
+    /**
+      @return whether the method call succeeded, 
+      basically whether or not there was an XML-RPC fault
+     */
     bool success() const;
 
+    /**
+      @return the error code of the fault 
+     */
     int errorCode() const;
 
+    /**
+      @return the error string that describes the fault
+     */
     QString errorString() const;
 
+    /**
+      @return the data returned by the method call
+     */
     QList<QVariant> data() const;
 
   private:
