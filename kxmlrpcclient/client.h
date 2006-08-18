@@ -36,6 +36,7 @@ namespace KXmlRpc
  */
 
 /**
+  @brief
   A class that represents a connection to a XML-RPC server. 
   This is the main interface to the XML-RPC client library.
 

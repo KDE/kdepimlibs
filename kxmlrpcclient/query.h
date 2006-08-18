@@ -37,9 +37,11 @@ namespace KXmlRpc {
  */
 
 /**
+  @brief
   Query is a class that represents an individual XML-RPC call.
 
   This is an internal class and is only used by the KXmlRpc::Server class.
+  @internal
  */
 class Query : public QObject
 {
@@ -71,12 +73,12 @@ class Query : public QObject
 
   Q_SIGNALS:
     /**
-      A signal sent when we recieve a result from the server
+      A signal sent when we receive a result from the server
      */
     void message( const QList<QVariant> &result, const QVariant &id );
 
     /**
-      A signal sent when we recieve an error from the server
+      A signal sent when we receive an error from the server
      */
     void fault( int, const QString&, const QVariant &id );
 
@@ -98,10 +100,12 @@ class Query : public QObject
 
 
 /**
+  @brief
   Result is an internal class that represents a response 
   from a XML-RPC server.
 
   This is an internal class and is only used by Query
+  @internal
  */
 class Result
 {
