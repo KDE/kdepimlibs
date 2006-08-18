@@ -69,6 +69,11 @@ F. Coding Style
 
    Please see http://korganizer.kde.org/develop/hacking.html
 
+   Don't use dynamic_cast.  In most cases, the use of dynamic_cast
+   is an indication of design problems. In addition, it isn't always
+   available, e.g. when compiling without run-time type information
+   for KOrganizer/Embedded.
+
 
 BSD License
 ===========
