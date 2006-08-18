@@ -25,7 +25,7 @@
 
 using namespace KCal;
 
-class Attachment::Private
+class KCal::Attachment::Private
 {
 public:
   mutable QByteArray mDataCache;
@@ -106,7 +106,7 @@ QByteArray &Attachment::decodedData() const
   if ( d->mDataCache.isNull() ) {
     d->mDataCache = QByteArray::fromBase64( mData.toUtf8() );
   }
-  
+
   return d->mDataCache;
 }
 
@@ -130,7 +130,7 @@ uint Attachment::size() const
     return 0;
   if ( !d->mSize )
     d->mSize = decodedData().size();
-  
+
   return d->mSize;
 }
 

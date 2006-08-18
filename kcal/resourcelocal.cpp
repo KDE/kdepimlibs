@@ -49,7 +49,7 @@
 
 using namespace KCal;
 
-class ResourceLocal::Private
+class KCal::ResourceLocal::Private
 {
   public:
     QDateTime mLastModified;

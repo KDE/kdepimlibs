@@ -41,13 +41,10 @@ Duration::Duration( int seconds )
   mSeconds = seconds;
 }
 
-
 bool KCal::operator==( const Duration& d1, const Duration& d2 )
 {
-    return ( d1.asSeconds() == d2.asSeconds() );
+  return ( d1.asSeconds() == d2.asSeconds() );
 }
-
-
 
 QDateTime Duration::end( const QDateTime &start ) const
 {

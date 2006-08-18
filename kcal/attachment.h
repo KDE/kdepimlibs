@@ -26,7 +26,6 @@
 
 #include <QString>
 
-
 namespace KCal {
 
 /**
@@ -87,29 +86,31 @@ class KCAL_EXPORT Attachment
     QString mimeType() const;
     void setMimeType( const QString &mime );
 
-		/* The custom X-CONTENT-DISPOSITION parameter, used by OGo etc. */
-		bool showInline() const;
-		void setShowInline( bool showinline );
+    /* The custom X-CONTENT-DISPOSITION parameter, used by OGo etc. */
+    bool showInline() const;
+    void setShowInline( bool showinline );
 
-		/* The custom X-LABEL parameter to show a human-readable title */
-		QString label() const;
-		void setLabel( const QString &label );
+    /* The custom X-LABEL parameter to show a human-readable title */
+    QString label() const;
+    void setLabel( const QString &label );
 
-		/* The custom X-KONTACT-TYPE parameter, controls whether the attachment
-		   is 'local', e.g. with hidden path. */
-		bool isLocal() const;
-		void setLocal( bool local );
+    /* The custom X-KONTACT-TYPE parameter, controls whether the attachment
+       is 'local', e.g. with hidden path. */
+    bool isLocal() const;
+    void setLocal( bool local );
 
   private:
+    //@cond PRIVATE
     QString mMimeType;
     QString mData;
     bool mBinary;
-		bool mShowInline;
-		bool mLocal;
-		QString mLabel;
+    bool mShowInline;
+    bool mLocal;
+    QString mLabel;
 
     class Private;
     Private *d;
+    //@endcond
 };
 
 }

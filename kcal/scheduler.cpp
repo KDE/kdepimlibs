@@ -60,7 +60,7 @@ QString ScheduleMessage::statusName(ScheduleMessage::Status status)
   }
 }
 
-struct Scheduler::Private
+struct KCal::Scheduler::Private
 {
   Private() : mFreeBusyCache( 0 ) {}
 
@@ -322,7 +322,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
         to->updated();
     }
     if ( to ) {
-      // for VTODO a REPLY can be used to update the completion status of 
+      // for VTODO a REPLY can be used to update the completion status of
       // a task. see RFC2446 3.4.3
       Todo *update = dynamic_cast<Todo*> ( incidence );
       Q_ASSERT( update );

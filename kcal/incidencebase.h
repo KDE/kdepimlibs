@@ -130,7 +130,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     void setUid( const QString & );
     /** Return the unique id for the incidence */
     QString uid() const;
-    /** Return the uri for the incidence, of form urn:x-ical:<uid> */
+    /** Return the uri for the incidence, of form urn:x-ical:\<uid\> */
     KUrl uri() const;
 
     /** Sets the time the incidence was last modified. */

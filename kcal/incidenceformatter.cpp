@@ -469,7 +469,7 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
   return tmpStr;
 }
 
-class IncidenceFormatter::EventViewerVisitor : public IncidenceBase::Visitor
+class KCal::IncidenceFormatter::EventViewerVisitor : public IncidenceBase::Visitor
 {
   public:
     EventViewerVisitor() { mResult = ""; }
@@ -899,7 +899,7 @@ static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
   }
 }
 
-class IncidenceFormatter::ScheduleMessageVisitor : public IncidenceBase::Visitor
+class KCal::IncidenceFormatter::ScheduleMessageVisitor : public IncidenceBase::Visitor
 {
   public:
     ScheduleMessageVisitor() : mMessage(0) { mResult = ""; }
@@ -911,7 +911,7 @@ class IncidenceFormatter::ScheduleMessageVisitor : public IncidenceBase::Visitor
     ScheduleMessage *mMessage;
 };
 
-class IncidenceFormatter::InvitationHeaderVisitor :
+class KCal::IncidenceFormatter::InvitationHeaderVisitor :
       public IncidenceFormatter::ScheduleMessageVisitor
 {
   protected:
@@ -937,7 +937,7 @@ class IncidenceFormatter::InvitationHeaderVisitor :
     }
 };
 
-class IncidenceFormatter::InvitationBodyVisitor :
+class KCal::IncidenceFormatter::InvitationBodyVisitor :
       public IncidenceFormatter::ScheduleMessageVisitor
 {
   protected:
@@ -1551,7 +1551,7 @@ QString IncidenceFormatter::formatTNEFInvitation( const QByteArray& tnef,
  *  Helper functions for the Incidence tooltips
  *******************************************************************/
 
-class IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
+class KCal::IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
 {
   public:
     ToolTipVisitor() : mRichText( true ), mResult( "" ) {}
@@ -1730,7 +1730,7 @@ QString IncidenceFormatter::toolTipString( IncidenceBase *incidence, bool richTe
  *  Helper functions for the Incidence tooltips
  *******************************************************************/
 
-class IncidenceFormatter::MailBodyVisitor : public IncidenceBase::Visitor
+class KCal::IncidenceFormatter::MailBodyVisitor : public IncidenceBase::Visitor
 {
   public:
     MailBodyVisitor() : mResult( "" ) {}
@@ -1769,10 +1769,18 @@ static QString mailBodyIncidence( Incidence *incidence )
 
 bool IncidenceFormatter::MailBodyVisitor::visit( Event *event )
 {
-  QString recurrence[]= {i18nc("no recurrence", "None"),
-    i18n("Minutely"), i18n("Hourly"), i18n("Daily"),
-    i18n("Weekly"), i18n("Monthly Same Day"), i18n("Monthly Same Position"),
-    i18n("Yearly"), i18n("Yearly"), i18n("Yearly")};
+  QString recurrence[]= {
+    i18nc("no recurrence", "None"),
+    i18n("Minutely"),
+    i18n("Hourly"),
+    i18n("Daily"),
+    i18n("Weekly"),
+    i18n("Monthly Same Day"),
+    i18n("Monthly Same Position"),
+    i18n("Yearly"),
+    i18n("Yearly"),
+    i18n("Yearly")
+  };
 
   mResult = mailBodyIncidence( event );
   mResult += i18n("Start Date: %1\n", event->dtStartDateStr() );

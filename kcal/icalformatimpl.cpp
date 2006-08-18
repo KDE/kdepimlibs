@@ -78,7 +78,7 @@ ICalFormatImpl::~ICalFormatImpl()
   delete mCompat;
 }
 
-class ICalFormatImpl::ToComponentVisitor : public IncidenceBase::Visitor
+class KCal::ICalFormatImpl::ToComponentVisitor : public IncidenceBase::Visitor
 {
   public:
     ToComponentVisitor( ICalFormatImpl *impl, Scheduler::Method m ) : mImpl( impl ), mComponent( 0 ), mMethod( m ) {}

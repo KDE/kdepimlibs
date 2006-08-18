@@ -125,6 +125,7 @@ class KCAL_EXPORT Attendee : public Person
     bool RSVP() const { return mRSVP; }
 
   private:
+    //@cond PRIVATE
     bool mRSVP;
     Role mRole;
     PartStat mStatus;
@@ -132,6 +133,7 @@ class KCAL_EXPORT Attendee : public Person
 
     class Private;
     Private *d;
+    //@endcond
 };
 
 /** Comparison operator (for QMap and the like).
