@@ -30,17 +30,17 @@
 
 using namespace KCal;
 
-Alarm::Alarm(Incidence *parent)
- : mParent(parent),
-   mType(Invalid),
-   mDescription(""),    // to make operator==() not fail
-   mFile(""),           // to make operator==() not fail
-   mMailSubject(""),    // to make operator==() not fail
-   mAlarmSnoozeTime(5),
-   mAlarmRepeatCount(0),
-   mEndOffset(false),
-   mHasTime(false),
-   mAlarmEnabled(false)
+Alarm::Alarm( Incidence *parent )
+  : mParent( parent ),
+    mType( Invalid ),
+    mDescription( "" ),    // to make operator==() not fail
+    mFile( "" ),           // to make operator==() not fail
+    mMailSubject( "" ),    // to make operator==() not fail
+    mAlarmSnoozeTime( 5 ),
+    mAlarmRepeatCount( 0 ),
+    mEndOffset( false ),
+    mHasTime( false ),
+    mAlarmEnabled( false )
 {
 }
 
@@ -48,25 +48,27 @@ Alarm::~Alarm()
 {
 }
 
-bool Alarm::operator==( const Alarm& rhs ) const
+bool Alarm::operator==( const Alarm &rhs ) const
 {
   if ( mType != rhs.mType ||
        mAlarmSnoozeTime != rhs.mAlarmSnoozeTime ||
        mAlarmRepeatCount != rhs.mAlarmRepeatCount ||
        mAlarmEnabled != rhs.mAlarmEnabled ||
-       mHasTime != rhs.mHasTime)
+       mHasTime != rhs.mHasTime ) {
     return false;
-
-  if (mHasTime) {
-    if (mAlarmTime != rhs.mAlarmTime)
-      return false;
-  } else {
-    if (mOffset != rhs.mOffset ||
-        mEndOffset != rhs.mEndOffset)
-      return false;
   }
 
-  switch (mType) {
+  if ( mHasTime ) {
+    if ( mAlarmTime != rhs.mAlarmTime ) {
+      return false;
+    }
+  } else {
+    if ( mOffset != rhs.mOffset || mEndOffset != rhs.mEndOffset ) {
+      return false;
+    }
+  }
+
+  switch ( mType ) {
     case Display:
       return mDescription == rhs.mDescription;
 
@@ -89,12 +91,12 @@ bool Alarm::operator==( const Alarm& rhs ) const
   return false;
 }
 
-void Alarm::setType(Alarm::Type type)
+void Alarm::setType( Alarm::Type type )
 {
-  if (type == mType)
+  if ( type == mType )
     return;
 
-  switch (type) {
+  switch ( type ) {
     case Display:
       mDescription = "";
       break;
@@ -123,16 +125,16 @@ Alarm::Type Alarm::type() const
   return mType;
 }
 
-void Alarm::setAudioAlarm(const QString &audioFile)
+void Alarm::setAudioAlarm( const QString &audioFile )
 {
   mType = Audio;
   mFile = audioFile;
   if ( mParent ) mParent->updated();
 }
 
-void Alarm::setAudioFile(const QString &audioFile)
+void Alarm::setAudioFile( const QString &audioFile )
 {
-  if (mType == Audio) {
+  if ( mType == Audio ) {
     mFile = audioFile;
     if ( mParent ) mParent->updated();
   }
@@ -140,10 +142,11 @@ void Alarm::setAudioFile(const QString &audioFile)
 
 QString Alarm::audioFile() const
 {
-  return (mType == Audio) ? mFile : QString();
+  return ( mType == Audio ) ? mFile : QString();
 }
 
-void Alarm::setProcedureAlarm(const QString &programFile, const QString &arguments)
+void Alarm::setProcedureAlarm( const QString &programFile,
+                               const QString &arguments )
 {
   mType = Procedure;
   mFile = programFile;
@@ -151,9 +154,9 @@ void Alarm::setProcedureAlarm(const QString &programFile, const QString &argumen
   if ( mParent ) mParent->updated();
 }
 
-void Alarm::setProgramFile(const QString &programFile)
+void Alarm::setProgramFile( const QString &programFile )
 {
-  if (mType == Procedure) {
+  if ( mType == Procedure ) {
     mFile = programFile;
     if ( mParent ) mParent->updated();
   }
@@ -161,12 +164,12 @@ void Alarm::setProgramFile(const QString &programFile)
 
 QString Alarm::programFile() const
 {
-  return (mType == Procedure) ? mFile : QString();
+  return ( mType == Procedure ) ? mFile : QString();
 }
 
-void Alarm::setProgramArguments(const QString &arguments)
+void Alarm::setProgramArguments( const QString &arguments )
 {
-  if (mType == Procedure) {
+  if ( mType == Procedure ) {
     mDescription = arguments;
     if ( mParent ) mParent->updated();
   }
@@ -174,11 +177,12 @@ void Alarm::setProgramArguments(const QString &arguments)
 
 QString Alarm::programArguments() const
 {
-  return (mType == Procedure) ? mDescription : QString();
+  return ( mType == Procedure ) ? mDescription : QString();
 }
 
-void Alarm::setEmailAlarm(const QString &subject, const QString &text,
-                          const QList<Person> &addressees, const QStringList &attachments)
+void Alarm::setEmailAlarm( const QString &subject, const QString &text,
+                           const QList<Person> &addressees,
+                           const QStringList &attachments )
 {
   mType = Email;
   mMailSubject = subject;
@@ -188,26 +192,26 @@ void Alarm::setEmailAlarm(const QString &subject, const QString &text,
   if ( mParent ) mParent->updated();
 }
 
-void Alarm::setMailAddress(const Person &mailAddress)
+void Alarm::setMailAddress( const Person &mailAddress )
 {
-  if (mType == Email) {
+  if ( mType == Email ) {
     mMailAddresses.clear();
     mMailAddresses += mailAddress;
     if ( mParent ) mParent->updated();
   }
 }
 
-void Alarm::setMailAddresses(const QList<Person> &mailAddresses)
+void Alarm::setMailAddresses( const QList<Person> &mailAddresses )
 {
-  if (mType == Email) {
+  if ( mType == Email ) {
     mMailAddresses = mailAddresses;
     if ( mParent ) mParent->updated();
   }
 }
 
-void Alarm::addMailAddress(const Person &mailAddress)
+void Alarm::addMailAddress( const Person &mailAddress )
 {
-  if (mType == Email) {
+  if ( mType == Email ) {
     mMailAddresses += mailAddress;
     if ( mParent ) mParent->updated();
   }
@@ -215,12 +219,12 @@ void Alarm::addMailAddress(const Person &mailAddress)
 
 QList<Person> Alarm::mailAddresses() const
 {
-  return (mType == Email) ? mMailAddresses : QList<Person>();
+  return ( mType == Email ) ? mMailAddresses : QList<Person>();
 }
 
-void Alarm::setMailSubject(const QString &mailAlarmSubject)
+void Alarm::setMailSubject( const QString &mailAlarmSubject )
 {
-  if (mType == Email) {
+  if ( mType == Email ) {
     mMailSubject = mailAlarmSubject;
     if ( mParent ) mParent->updated();
   }
@@ -228,29 +232,29 @@ void Alarm::setMailSubject(const QString &mailAlarmSubject)
 
 QString Alarm::mailSubject() const
 {
-  return (mType == Email) ? mMailSubject : QString();
+  return ( mType == Email ) ? mMailSubject : QString();
 }
 
-void Alarm::setMailAttachment(const QString &mailAttachFile)
+void Alarm::setMailAttachment( const QString &mailAttachFile )
 {
-  if (mType == Email) {
+  if ( mType == Email ) {
     mMailAttachFiles.clear();
     mMailAttachFiles += mailAttachFile;
     if ( mParent ) mParent->updated();
   }
 }
 
-void Alarm::setMailAttachments(const QStringList &mailAttachFiles)
+void Alarm::setMailAttachments( const QStringList &mailAttachFiles )
 {
-  if (mType == Email) {
+  if ( mType == Email ) {
     mMailAttachFiles = mailAttachFiles;
     if ( mParent ) mParent->updated();
   }
 }
 
-void Alarm::addMailAttachment(const QString &mailAttachFile)
+void Alarm::addMailAttachment( const QString &mailAttachFile )
 {
-  if (mType == Email) {
+  if ( mType == Email ) {
     mMailAttachFiles += mailAttachFile;
     if ( mParent ) mParent->updated();
   }
@@ -258,12 +262,12 @@ void Alarm::addMailAttachment(const QString &mailAttachFile)
 
 QStringList Alarm::mailAttachments() const
 {
-  return (mType == Email) ? mMailAttachFiles : QStringList();
+  return ( mType == Email ) ? mMailAttachFiles : QStringList();
 }
 
-void Alarm::setMailText(const QString &text)
+void Alarm::setMailText( const QString &text )
 {
-  if (mType == Email) {
+  if ( mType == Email ) {
     mDescription = text;
     if ( mParent ) mParent->updated();
   }
@@ -271,20 +275,21 @@ void Alarm::setMailText(const QString &text)
 
 QString Alarm::mailText() const
 {
-  return (mType == Email) ? mDescription : QString();
+  return ( mType == Email ) ? mDescription : QString();
 }
 
-void Alarm::setDisplayAlarm(const QString &text)
+void Alarm::setDisplayAlarm( const QString &text )
 {
   mType = Display;
-  if ( !text.isNull() )
+  if ( !text.isNull() ) {
     mDescription = text;
+  }
   if ( mParent ) mParent->updated();
 }
 
-void Alarm::setText(const QString &text)
+void Alarm::setText( const QString &text )
 {
-  if (mType == Display) {
+  if ( mType == Display ) {
     mDescription = text;
     if ( mParent ) mParent->updated();
   }
@@ -292,10 +297,10 @@ void Alarm::setText(const QString &text)
 
 QString Alarm::text() const
 {
-  return (mType == Display) ? mDescription : QString();
+  return ( mType == Display ) ? mDescription : QString();
 }
 
-void Alarm::setTime(const QDateTime &alarmTime)
+void Alarm::setTime( const QDateTime &alarmTime )
 {
   mAlarmTime = alarmTime;
   mHasTime = true;
@@ -305,19 +310,20 @@ void Alarm::setTime(const QDateTime &alarmTime)
 
 QDateTime Alarm::time() const
 {
-  if ( hasTime() )
+  if ( hasTime() ) {
     return mAlarmTime;
-  else if ( mParent )
-  {
-    if (mParent->type()=="Todo") {
-      Todo *t = static_cast<Todo*>(mParent);
+  } else if ( mParent ) {
+    if ( mParent->type() == "Todo" ) {
+      Todo *t = static_cast<Todo*>( mParent );
       return mOffset.end( t->dtDue() );
-    } else if (mEndOffset) {
+    } else if ( mEndOffset ) {
       return mOffset.end( mParent->dtEnd() );
     } else {
       return mOffset.end( mParent->dtStart() );
     }
-  } else return QDateTime();
+  } else {
+    return QDateTime();
+  }
 }
 
 bool Alarm::hasTime() const
@@ -325,9 +331,9 @@ bool Alarm::hasTime() const
   return mHasTime;
 }
 
-void Alarm::setSnoozeTime(int alarmSnoozeTime)
+void Alarm::setSnoozeTime( int alarmSnoozeTime )
 {
-  if (alarmSnoozeTime > 0) {
+  if ( alarmSnoozeTime > 0 ) {
     mAlarmSnoozeTime = alarmSnoozeTime;
     if ( mParent ) mParent->updated();
   }
@@ -338,7 +344,7 @@ int Alarm::snoozeTime() const
   return mAlarmSnoozeTime;
 }
 
-void Alarm::setRepeatCount(int alarmRepeatCount)
+void Alarm::setRepeatCount( int alarmRepeatCount )
 {
   mAlarmRepeatCount = alarmRepeatCount;
   if ( mParent ) mParent->updated();
@@ -354,46 +360,57 @@ int Alarm::duration() const
   return mAlarmRepeatCount * mAlarmSnoozeTime * 60;
 }
 
-QDateTime Alarm::nextRepetition(const QDateTime& preTime) const
+QDateTime Alarm::nextRepetition( const QDateTime &preTime ) const
 {
   // This method is coded to avoid 32-bit integer overflow using
   // QDateTime::secsTo(), which occurs with time spans > 68 years.
   QDateTime at = time();
-  if (at > preTime)
+  if ( at > preTime ) {
     return at;
-  if (!mAlarmRepeatCount)
-    return QDateTime();   // there isn't an occurrence after the specified time
+  }
+  if ( !mAlarmRepeatCount ) {
+    // there isn't an occurrence after the specified time
+    return QDateTime();
+  }
   int snoozeSecs = mAlarmSnoozeTime * 60;
-  QDateTime lastRepetition = at.addSecs(mAlarmRepeatCount * snoozeSecs);
-  if (lastRepetition <= preTime)
-    return QDateTime();    // all repetitions have finished before the specified time
-  int repetition = (at.secsTo(preTime) + snoozeSecs) / snoozeSecs;
-  return at.addSecs(repetition * snoozeSecs);
+  QDateTime lastRepetition = at.addSecs( mAlarmRepeatCount * snoozeSecs );
+  if ( lastRepetition <= preTime ) {
+    // all repetitions have finished before the specified time
+    return QDateTime();
+  }
+  int repetition = ( at.secsTo( preTime ) + snoozeSecs ) / snoozeSecs;
+  return at.addSecs( repetition * snoozeSecs );
 }
 
-QDateTime Alarm::previousRepetition(const QDateTime& afterTime) const
+QDateTime Alarm::previousRepetition( const QDateTime &afterTime ) const
 {
   // This method is coded to avoid 32-bit integer overflow using
   // QDateTime::secsTo(), which occurs with time spans > 68 years.
   QDateTime at = time();
-  if (at >= afterTime)
-    return QDateTime();    // alarm's first/only time is at/after the specified time
-  if (!mAlarmRepeatCount)
+  if ( at >= afterTime ) {
+    // alarm's first/only time is at/after the specified time
+    return QDateTime();
+  }
+  if ( !mAlarmRepeatCount ) {
     return at;
+  }
   int snoozeSecs = mAlarmSnoozeTime * 60;
-  QDateTime lastRepetition = at.addSecs(mAlarmRepeatCount * snoozeSecs);
-  if (lastRepetition < afterTime)
-    return lastRepetition;   // all repetitions have finished before the specified time
-  int repetition = (at.secsTo(afterTime) - 1) / snoozeSecs;
-  return at.addSecs(repetition * snoozeSecs);
+  QDateTime lastRepetition = at.addSecs( mAlarmRepeatCount * snoozeSecs );
+  if ( lastRepetition < afterTime ) {
+   // all repetitions have finished before the specified time
+    return lastRepetition;
+  }
+  int repetition = ( at.secsTo( afterTime ) - 1 ) / snoozeSecs;
+  return at.addSecs( repetition * snoozeSecs );
 }
 
 QDateTime Alarm::endTime() const
 {
-  if (mAlarmRepeatCount)
-    return time().addSecs(mAlarmRepeatCount * mAlarmSnoozeTime * 60);
-  else
+  if ( mAlarmRepeatCount ) {
+    return time().addSecs( mAlarmRepeatCount * mAlarmSnoozeTime * 60 );
+  } else {
     return time();
+  }
 }
 
 void Alarm::toggleAlarm()
@@ -402,7 +419,7 @@ void Alarm::toggleAlarm()
   if ( mParent ) mParent->updated();
 }
 
-void Alarm::setEnabled(bool enable)
+void Alarm::setEnabled( bool enable )
 {
   mAlarmEnabled = enable;
   if ( mParent ) mParent->updated();
@@ -423,7 +440,7 @@ void Alarm::setStartOffset( const Duration &offset )
 
 Duration Alarm::startOffset() const
 {
-  return (mHasTime || mEndOffset) ? 0 : mOffset;
+  return ( mHasTime || mEndOffset ) ? 0 : mOffset;
 }
 
 bool Alarm::hasStartOffset() const
@@ -446,7 +463,7 @@ void Alarm::setEndOffset( const Duration &offset )
 
 Duration Alarm::endOffset() const
 {
-  return (mHasTime || !mEndOffset) ? 0 : mOffset;
+  return ( mHasTime || !mEndOffset ) ? 0 : mOffset;
 }
 
 void Alarm::setParent( Incidence *parent )

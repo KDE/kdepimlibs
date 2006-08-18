@@ -18,13 +18,20 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Alarm class.
+
+  @author Cornelius Schumacher
+*/
 
 #ifndef KCAL_ALARM_H
 #define KCAL_ALARM_H
 
 #include <QString>
 #include <QStringList>
-
+#include <QList>
 
 #include "customproperties.h"
 #include "duration.h"
@@ -32,25 +39,26 @@
 #include "listbase.h"
 #include "kcal.h"
 
-#include <QList>
-
 namespace KCal {
 
 class Incidence;
 
 /**
-  This class represents an alarm notification.
+  @brief
+  Represents an alarm notification.
 */
 class KCAL_EXPORT Alarm : public CustomProperties
 {
   public:
-    /** Kinds of alarms that can be (user) defined. */
+    /**
+      The different types of alarms.
+    */
     enum Type {
-        Invalid    /**< Invalid, or no alarm */,
-        Display    /**< Display a dialog box */,
-        Procedure  /**< Call a script */,
-        Email      /**< Send email */,
-        Audio      /**< Play an audio file */
+      Invalid,   /**< Invalid, or no alarm */
+      Display,   /**< Display a dialog box */
+      Procedure, /**< Call a script */
+      Email,     /**< Send email */
+      Audio      /**< Play an audio file */
     };
 
     /** List of alarms */
@@ -60,6 +68,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
       Construct a new alarm with variables initialized to "sane" values.
     */
     explicit Alarm( Incidence *parent );
+
     /**
       Destruct Alarm object.
     */
@@ -68,7 +77,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
     /**
       Compare this alarm with another one.
     */
-    bool operator==( const Alarm & ) const;
+    bool operator==( const Alarm &a ) const;
     bool operator!=( const Alarm &a ) const { return !operator==( a ); }
 
     /**
@@ -79,6 +88,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
       @param type type of alarm.
     */
     void setType( Type type );
+
     /**
       Return the type of the alarm.
     */
@@ -90,11 +100,13 @@ class KCAL_EXPORT Alarm : public CustomProperties
       @param text text to display when the alarm is triggered.
     */
     void setDisplayAlarm( const QString &text = QString() );
+
     /**
       Set the text to be displayed when the alarm is triggered.
       Ignored if the alarm is not a display alarm.
     */
     void setText( const QString &text );
+
     /**
       Return the text string that displays when the alarm is triggered.
     */
@@ -106,11 +118,13 @@ class KCAL_EXPORT Alarm : public CustomProperties
       @param audioFile optional file to play when the alarm is triggered.
     */
     void setAudioAlarm( const QString &audioFile = QString() );
+
     /**
       Set the file to play when the audio alarm is triggered.
       Ignored if the alarm is not an audio alarm.
     */
     void setAudioFile( const QString &audioFile );
+
     /**
       Return the name of the audio file for the alarm.
 
@@ -126,22 +140,26 @@ class KCAL_EXPORT Alarm : public CustomProperties
     */
     void setProcedureAlarm( const QString &programFile,
                             const QString &arguments = QString() );
+
     /**
       Set the program file to execute when the alarm is triggered.
       Ignored if the alarm is not a procedure alarm.
     */
     void setProgramFile( const QString &programFile );
+
     /**
       Return the name of the program file to execute when the alarm is triggered.
 
       @return the program file name, or QString() if not a procedure alarm.
     */
     QString programFile() const;
+
     /**
       Set the arguments to the program to execute when the alarm is triggered.
       Ignored if the alarm is not a procedure alarm.
     */
     void setProgramArguments( const QString &arguments );
+
     /**
       Return the arguments to the program to run when the alarm is triggered.
 
@@ -166,16 +184,19 @@ class KCAL_EXPORT Alarm : public CustomProperties
       Ignored if the alarm is not an email alarm.
     */
     void setMailAddress( const Person &mailAlarmAddress );
+
     /**
       Send mail to these addresses when the alarm is triggered.
       Ignored if the alarm is not an email alarm.
     */
     void setMailAddresses( const QList<Person> &mailAlarmAddresses );
+
     /**
-      Add this address to the list of addresses to send mail to when the alarm is triggered.
-      Ignored if the alarm is not an email alarm.
+      Add this address to the list of addresses to send mail to when the
+      alarm is triggered. Ignored if the alarm is not an email alarm.
     */
     void addMailAddress( const Person &mailAlarmAddress );
+
     /**
       Return the addresses to send mail to when an alarm goes off.
     */
@@ -186,6 +207,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
       Ignored if the alarm is not an email alarm.
     */
     void setMailSubject( const QString &mailAlarmSubject );
+
     /**
       Return the subject line of the mail.
     */
@@ -196,16 +218,19 @@ class KCAL_EXPORT Alarm : public CustomProperties
       Ignored if the alarm is not an email alarm.
     */
     void setMailAttachment( const QString &mailAttachFile );
+
     /**
       Attach these filenames to the email.
       Ignored if the alarm is not an email alarm.
     */
     void setMailAttachments( const QStringList &mailAttachFiles );
+
     /**
       Add this filename to the list of files to attach to the email.
       Ignored if the alarm is not an email alarm.
     */
     void addMailAttachment( const QString &mailAttachFile );
+
     /**
       Return the filenames to attach to the email.
     */
@@ -216,6 +241,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
       Ignored if the alarm is not an email alarm.
     */
     void setMailText( const QString &text );
+
     /**
       Return the email body text.
 
@@ -227,15 +253,18 @@ class KCAL_EXPORT Alarm : public CustomProperties
       Set the time to trigger an alarm.
     */
     void setTime( const QDateTime &alarmTime );
+
     /**
       Return the date/time when an alarm goes off.
     */
     QDateTime time() const;
+
     /**
       Return the date/time when the last repetition of the alarm goes off.
-	  If the alarm does not repeat, this is equivalent to calling time().
+      If the alarm does not repeat, this is equivalent to calling time().
     */
     QDateTime endTime() const;
+
     /**
       Return true, if the alarm has an explicit date/time.
     */
@@ -244,13 +273,15 @@ class KCAL_EXPORT Alarm : public CustomProperties
     /**
       Set offset of alarm in time relative to the start of the event.
     */
-    void setStartOffset( const Duration & );
+    void setStartOffset( const Duration &duration );
+
     /**
       Return offset of alarm in time relative to the start of the event.
       If the alarm's time is not defined in terms of an offset relative
       to the start of the event, returns zero.
     */
     Duration startOffset() const;
+
     /**
       Return whether the alarm is defined in terms of an offset relative
       to the start of the event.
@@ -260,13 +291,15 @@ class KCAL_EXPORT Alarm : public CustomProperties
     /**
       Set offset of alarm in time relative to the end of the event.
     */
-    void setEndOffset( const Duration & );
+    void setEndOffset( const Duration &offset );
+
     /**
       Return offset of alarm in time relative to the end of the event.
       If the alarm's time is not defined in terms of an offset relative
       to the end of the event, returns zero.
     */
     Duration endOffset() const;
+
     /**
       Return whether the alarm is defined in terms of an offset relative
       to the end of the event.
@@ -292,29 +325,37 @@ class KCAL_EXPORT Alarm : public CustomProperties
       occurrence (w/snoozes).
     */
     void setRepeatCount( int alarmRepeatCount );
+
     /**
       Get how many times an alarm repeats, after its initial occurrence.
     */
     int repeatCount() const;
+
     /**
       Get the time of the alarm's initial occurrence or its next repetition,
       after a given time.
       @param preTime the date and time after which to find the next repetition.
-      @return the date and time of the next repetition, or an invalid date/time if
-      the specified time is at or after the alarm's last repetition.
+      @return the date and time of the next repetition, or an invalid date/time
+      if the specified time is at or after the alarm's last repetition.
     */
-    QDateTime nextRepetition(const QDateTime& preTime) const;
+    QDateTime nextRepetition( const QDateTime &preTime ) const;
+
     /**
-      Get the time of the alarm's latest repetition, or its initial occurrence if
-      none, before a given time.
-      @param afterTime the date and time before which to find the latest repetition.
-      @return the date and time of the latest repetition, or an invalid date/time if
-      the specified time is at or before the alarm's initial occurrence.
+      Get the time of the alarm's latest repetition, or its initial occurrence
+      if none, before a given time.
+      @param afterTime the date and time before which to find the latest
+      repetition.
+      @return the date and time of the latest repetition, or an invalid
+      date/time if the specified time is at or before the alarm's initial
+      occurrence.
     */
-    QDateTime previousRepetition(const QDateTime& afterTime) const;
+    QDateTime previousRepetition( const QDateTime &afterTime ) const;
+
     /**
-      Get how long between the alarm's initial occurrence and its final repetition.
-      @return the number of seconds between the initial occurrence and final repetition.
+      Return the number of seconds between the alarm's initial occurrence and
+      its final repetition.
+      @return the number of seconds between the initial occurrence and final
+      repetition.
     */
     int duration() const;
 
@@ -327,7 +368,8 @@ class KCAL_EXPORT Alarm : public CustomProperties
     /**
       Set the alarm enabled status.
     */
-    void setEnabled(bool enable);
+    void setEnabled( bool enable );
+
     /**
       Get the alarm enabled status.
     */
@@ -336,34 +378,38 @@ class KCAL_EXPORT Alarm : public CustomProperties
     /**
       Set the alarm's parent incidence.
     */
-    void setParent( Incidence * );
+    void setParent( Incidence *parent );
+
     /**
       Get the alarm's parent incidence.
     */
     Incidence *parent() const  { return mParent; }
 
   private:
-    Incidence *mParent;          // the incidence which this alarm belongs to
-    Type mType;                  // type of alarm
-    QString mDescription;        // text to display/email body/procedure arguments
-    QString mFile;               // procedure program to run/optional audio file to play
-    QStringList mMailAttachFiles;      // filenames to attach to email
+    //@cond PRIVATE
+    Incidence *mParent;           // the incidence which this alarm belongs to
+    Type mType;                   // type of alarm
+
+    QString mDescription;         // text to display/email body/procedure arguments
+    QString mFile;                // procedure program to run/optional audio file to play
+    QStringList mMailAttachFiles; // filenames to attach to email
     QList<Person> mMailAddresses; // who to mail for reminder
-    QString mMailSubject;        // subject of email
+    QString mMailSubject;         // subject of email
 
-    int mAlarmSnoozeTime;        // number of minutes after alarm to
-                                 // snooze before ringing again
-    int mAlarmRepeatCount;       // number of times for alarm to repeat
-                                 // after the initial time
+    int mAlarmSnoozeTime;         // number of minutes after alarm to
+                                  // snooze before ringing again
+    int mAlarmRepeatCount;        // number of times for alarm to repeat
+                                  // after the initial time
 
-    QDateTime mAlarmTime;        // time at which to trigger the alarm
-    Duration mOffset;            // time relative to incidence DTSTART to trigger the alarm
-    bool mEndOffset;             // if true, mOffset relates to DTEND, not DTSTART
-    bool mHasTime;               // use mAlarmTime, not mOffset
+    QDateTime mAlarmTime;         // time at which to trigger the alarm
+    Duration mOffset;             // time relative to incidence DTSTART to trigger the alarm
+    bool mEndOffset;              // if true, mOffset relates to DTEND, not DTSTART
+    bool mHasTime;                // use mAlarmTime, not mOffset
     bool mAlarmEnabled;
 
     class Private;
     Private *d;
+    //@endcond
 };
 
 }
