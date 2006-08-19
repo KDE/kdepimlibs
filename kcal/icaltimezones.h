@@ -182,7 +182,7 @@ class KCAL_EXPORT ICalTimeZone : public KTimeZone
     /**
      * Constructor which converts a KTimeZone to an ICalTimeZone instance.
      */
-    ICalTimeZone(const KTimeZone &);
+    explicit ICalTimeZone(const KTimeZone &);
 
     /**
      * Copy constructor.
