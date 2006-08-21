@@ -45,19 +45,19 @@ ManagerImpl::ManagerImpl( ManagerNotifier *notifier, const QString &family )
 {
   new ManagerAdaptor(this);
   const QString dBusPath = QLatin1String("/ManagerIface_") + family;
-  QDBus::sessionBus().registerObject(dBusPath, this);
+  QDBusConnection::sessionBus().registerObject(dBusPath, this);
   kDebug(5650) << "ManagerImpl::ManagerImpl()" << endl;
 
   mId = KRandom::randomString( 8 );
 
   // Register with DCOP
-  QDBus::sessionBus().registerService("org.kde.KResourcesManager");
+  QDBusConnection::sessionBus().registerService("org.kde.KResourcesManager");
 
-  QDBus::sessionBus().connect("", dBusPath, "org.kde.KResourcesManager", "signalKResourceAdded",
+  QDBusConnection::sessionBus().connect("", dBusPath, "org.kde.KResourcesManager", "signalKResourceAdded",
       this, SLOT(dcopKResourceAdded(QString,QString)));
-  QDBus::sessionBus().connect("", dBusPath, "org.kde.KResourcesManager", "signalKResourceModified",
+  QDBusConnection::sessionBus().connect("", dBusPath, "org.kde.KResourcesManager", "signalKResourceModified",
       this, SLOT(dcopKResourceModified(QString,QString)));
-  QDBus::sessionBus().connect("", dBusPath, "org.kde.KResourcesManager", "signalKResourceDeleted",
+  QDBusConnection::sessionBus().connect("", dBusPath, "org.kde.KResourcesManager", "signalKResourceDeleted",
       this, SLOT(dcopKResourceDeleted(QString,QString)));
 }
 
