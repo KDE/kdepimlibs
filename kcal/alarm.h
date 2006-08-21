@@ -46,6 +46,12 @@ class Incidence;
 /**
   @brief
   Represents an alarm notification.
+
+  Alarms are user notifications that occur at specified times.
+  Notifications can be on-screen pop-up dialogs, email messages,
+  the playing of audio files, or the running of another program.
+
+  Alarms always belong to a parent #Incidence.
 */
 class KCAL_EXPORT Alarm : public CustomProperties
 {
@@ -61,352 +67,512 @@ class KCAL_EXPORT Alarm : public CustomProperties
       Audio      /**< Play an audio file */
     };
 
-    /** List of alarms */
+    /**
+      List of alarms.
+    */
     typedef ListBase<Alarm> List;
 
     /**
-      Construct a new alarm with variables initialized to "sane" values.
+      Constructs an alarm belonging to the @p parent #Incidence.
+
+      @param parent is the #Incidence this alarm will belong to.
     */
     explicit Alarm( Incidence *parent );
 
     /**
-      Destruct Alarm object.
+      Destroys the alarm.
     */
     ~Alarm();
 
     /**
-      Compare this alarm with another one.
+      Compares two alarms for equality.
+
+      @param a is the comparison alarm.
     */
     bool operator==( const Alarm &a ) const;
+
+    /**
+      Compares two alarms for inequality.
+
+      @param a is the comparison alarm.
+    */
     bool operator!=( const Alarm &a ) const { return !operator==( a ); }
 
     /**
-      Set the type of the alarm.
-      If the specified type is different from the current type of the alarm,
-      the alarm's type-specific properties are initialised to null.
+      Sets the @p parent #Incidence of the alarm.
 
-      @param type type of alarm.
+      @param parent is alarm parent #Incidence to set.
+
+      @see parent()
+    */
+    void setParent( Incidence *parent );
+
+    /**
+      Returns a pointer to the parent incidence of the alarm.
+
+      @see setParent()
+    */
+    Incidence *parent() const;
+
+    /**
+      Sets the #Type for this alarm to @p type.
+      If the specified type is different from the current type of the alarm,
+      then the alarm's type-specific properties are re-initialized.
+
+      @param type is the alarm #Type to set.
+
+      @see type()
     */
     void setType( Type type );
 
     /**
-      Return the type of the alarm.
+      Returns the #Type of the alarm.
+
+      @see setType()
     */
     Type type() const;
 
     /**
-      Set the alarm to be a display alarm.
+      Sets the #Display type for this alarm.
+      If @p text is specified non-empty, then it is used as the description
+      text to display when the alarm is triggered.
 
-      @param text text to display when the alarm is triggered.
+      @param text is the description to display when the alarm is triggered.
+
+      @see setText(), text()
     */
     void setDisplayAlarm( const QString &text = QString() );
 
     /**
-      Set the text to be displayed when the alarm is triggered.
+      Sets the description @p text to be displayed when the alarm is triggered.
       Ignored if the alarm is not a display alarm.
+
+      @param text is the description to display when the alarm is triggered.
+
+      @see setDisplayAlarm(), text()
     */
     void setText( const QString &text );
 
     /**
-      Return the text string that displays when the alarm is triggered.
+      Returns the display text string for a #Display alarm type.
+      Returns an empty string if the alarm is not a #Display type.
+
+      @see setDisplayAlarm(), setText()
     */
     QString text() const;
 
     /**
-      Set the alarm to be an audio alarm.
+      Sets the #Audio type for this alarm and the name of the audio file
+      to play when the alarm is triggered.
 
-      @param audioFile optional file to play when the alarm is triggered.
+      @param audioFile is the name of the audio file to play when the alarm
+      is triggered.
+
+      @see setAudioFile(), audioFile()
     */
     void setAudioAlarm( const QString &audioFile = QString() );
 
     /**
-      Set the file to play when the audio alarm is triggered.
-      Ignored if the alarm is not an audio alarm.
+      Sets the name of the audio file to play when the audio alarm is triggered.
+      Ignored if the alarm is not an #Audio type.
+
+      @param audioFile is the name of the audio file to play when the alarm
+      is triggered.
+
+      @see setAudioAlarm(), audioFile()
     */
     void setAudioFile( const QString &audioFile );
 
     /**
-      Return the name of the audio file for the alarm.
+      Returns the audio file name for an #Audio alarm type.
+      Returns an empty string if the alarm is not an #Audio type.
 
-      @return The audio file for the alarm, or QString() if not an audio alarm.
+      @see setAudioAlarm(), setAudioFile()
     */
     QString audioFile() const;
 
     /**
-      Set the alarm to be a procedure alarm.
+      Sets the #Procedure type for this alarm and the program (with arguments)
+      to execute when the alarm is triggered.
 
-      @param programFile program to execute when the alarm is triggered.
-      @param arguments arguments to supply to programFile.
+      @param programFile is the name of the program file to execute when
+      the alarm is triggered.
+      @param arguments is a string of arguments to supply to @p programFile.
+
+      @see setProgramFile(), programFile(),
+      setProgramArguments(), programArguments()
     */
     void setProcedureAlarm( const QString &programFile,
                             const QString &arguments = QString() );
 
     /**
-      Set the program file to execute when the alarm is triggered.
-      Ignored if the alarm is not a procedure alarm.
+      Sets the program file to execute when the alarm is triggered.
+      Ignored if the alarm is not a #Procedure type.
+
+      @param programFile is the name of the program file to execute when
+      the alarm is triggered.
+
+      @see setProcedureAlarm(), programFile(),
+      setProgramArguments(), programArguments()
     */
     void setProgramFile( const QString &programFile );
 
     /**
-      Return the name of the program file to execute when the alarm is triggered.
+      Returns the program file name for a #Procedure alarm type.
+      Returns an empty string if the alarm is not a #Procedure type.
 
-      @return the program file name, or QString() if not a procedure alarm.
+      @see setProcedureAlarm(), setProgramFile(),
+      setProgramArguments(), programArguments()
     */
     QString programFile() const;
 
     /**
-      Set the arguments to the program to execute when the alarm is triggered.
-      Ignored if the alarm is not a procedure alarm.
+      Sets the program arguments string when the alarm is triggered.
+      Ignored if the alarm is not a #Procedure type.
+
+      @param arguments is a string of arguments to supply to the program.
+
+      @see setProcedureAlarm(), setProgramFile(), programFile(),
+      programArguments()
     */
     void setProgramArguments( const QString &arguments );
 
     /**
-      Return the arguments to the program to run when the alarm is triggered.
+      Returns the program arguments string for a #Procedure alarm type.
+      Returns an empty string if the alarm is not a #Procedure type.
 
-      @return the program arguments, or QString() if not a procedure alarm.
+      @see setProcedureAlarm(), setProgramFile(), programFile(),
+      setProgramArguments()
     */
     QString programArguments() const;
 
     /**
-      Set the alarm to be an email alarm.
+      Sets the #Email type for this alarm and the email @p subject, @p text,
+      @p addresses, and @p attachments that make up an email message to be
+      sent when the alarm is triggered.
 
-      @param subject subject line of email.
-      @param text body of email.
-      @param addressees email addresses of recipient(s).
-      @param attachments optional names of files to attach to the email.
+      @param subject is the email subject.
+      @param text is a string containing the body of the email message.
+      @param addressees is #Person list of email addresses.
+      @param attachments is a a #QStringList of optional file names
+      of email attachments.
+
+      @see setMailSubject(), setMailText(), setMailAddresses(),
+      setMailAttachments()
     */
     void setEmailAlarm( const QString &subject, const QString &text,
                         const QList<Person> &addressees,
                         const QStringList &attachments = QStringList() );
 
     /**
-      Send mail to this address when the alarm is triggered.
-      Ignored if the alarm is not an email alarm.
+      Sets the email address of an #Email type alarm.
+      Ignored if the alarm is not an #Email type.
+
+      @param mailAlarmAddress is a #Person to receive a mail message when
+      an #Email type alarm is triggered.
+
+      @see setMailSubject(), setMailText(), setMailAddresses(),
+      setMailAttachment(), setMailAttachments(), mailAddresses()
     */
     void setMailAddress( const Person &mailAlarmAddress );
 
     /**
-      Send mail to these addresses when the alarm is triggered.
-      Ignored if the alarm is not an email alarm.
+      Sets a list of email addresses of an #Email type alarm.
+      Ignored if the alarm is not an #Email type.
+
+      @param mailAlarmAddresses is a #Person list to receive a mail message
+      when an #Email type alarm is triggered.
+
+      @see setMailSubject(), setMailText(), setMailAddress(),
+      setMailAttachments(), setMailAttachment(), mailAddresses()
     */
     void setMailAddresses( const QList<Person> &mailAlarmAddresses );
 
     /**
-      Add this address to the list of addresses to send mail to when the
-      alarm is triggered. Ignored if the alarm is not an email alarm.
+      Adds an address to the list of email addresses to send mail to when the
+      alarm is triggered.
+      Ignored if the alarm is not an #Email type.
+
+      @param mailAlarmAddress is a #Person to add to the list of addresses to
+      receive a mail message when an #Email type alarm is triggered.
+
+      @see setMailAddress(), setMailAddresses(), mailAddresses()
     */
     void addMailAddress( const Person &mailAlarmAddress );
 
     /**
-      Return the addresses to send mail to when an alarm goes off.
+      Returns the list of addresses for an #Email alarm type.
+      Returns an empty list if the alarm is not an #Email type.
+
+      @see addMailAddress(), setMailAddress(), setMailAddresses()
     */
     QList<Person> mailAddresses() const;
 
     /**
-      Set the subject line of the mail.
-      Ignored if the alarm is not an email alarm.
+      Sets the subject line of a mail message for an #Email alarm type.
+      Ignored if the alarm is not an #Email type.
+
+      @param mailAlarmSubject is a string to be used as a subject line
+      of an email message to send when the #Email type alarm is triggered.
+
+      @see setMailText(), setMailAddress(), setMailAddresses(),
+      setMailAttachment(), setMailAttachments(), mailSubject()
     */
     void setMailSubject( const QString &mailAlarmSubject );
 
     /**
-      Return the subject line of the mail.
+      Returns the subject line string for an #Email alarm type.
+      Returns an empty string if the alarm is not an #Email type.
+
+      @see setMailSubject()
     */
     QString mailSubject() const;
 
     /**
-      Attach this filename to the email.
-      Ignored if the alarm is not an email alarm.
+      Sets the filename to attach to a mail message for an #Email alarm type.
+      Ignored if the alarm is not an #Email type.
+
+      @param mailAttachFile is a string containing a filename to be attached
+      to an email message to send when the #Email type alarm is triggered.
+
+      @see setMailSubject(), setMailText(), setMailAddress(),
+      setMailAddresses(), setMailAttachments(), mailAttachments()
     */
     void setMailAttachment( const QString &mailAttachFile );
 
     /**
-      Attach these filenames to the email.
-      Ignored if the alarm is not an email alarm.
+      Sets a list of filenames to attach to a mail message for an #Email
+      alarm type.
+      Ignored if the alarm is not an #Email type.
+
+      @param mailAttachFiles is a #QString list of filenames to attach to
+      a mail message when an #Email type alarm is triggered.
+
+      @see setMailSubject(), setMailText(), setMailAttachment(),
+      setMailAddress(), setMailAddresses()
     */
     void setMailAttachments( const QStringList &mailAttachFiles );
 
     /**
-      Add this filename to the list of files to attach to the email.
-      Ignored if the alarm is not an email alarm.
+      Adds a filename to the list of files to attach to a mail message for
+      an #Email alarm type.
+      Ignored if the alarm is not an #Email type.
+
+      @param mailAttachFile is a string containing a filename to be attached
+      to an email message to send when the #Email type alarm is triggered.
+
+      @see setMailAttachment(), setMailAttachments(), mailAttachments()
     */
     void addMailAttachment( const QString &mailAttachFile );
 
     /**
-      Return the filenames to attach to the email.
+      Returns the list of attachment filenames for an #Email alarm type.
+      Returns an empty list if the alarm is not an #Email type.
+
+      @see addMailAttachment(), setMailAttachment(), setMailAttachments()
     */
     QStringList mailAttachments() const;
 
     /**
-      Set the email body text.
-      Ignored if the alarm is not an email alarm.
+      Sets the body text for an #Email alarm type.
+      Ignored if the alarm is not an #Email type.
+
+      @param text is a string containing the body text of a mail message
+      when an #Email type alarm is triggered.
+
+      @see setMailSubject(), setMailAddress(), setMailAddresses(),
+      setMailAttachment(), setMailAttachments()
     */
     void setMailText( const QString &text );
 
     /**
-      Return the email body text.
+      Returns the body text for an #Email alarm type.
+      Returns an empty string if the alarm is not an #Email type.
 
-      @return the body text, or QString() if not an email alarm.
+      @see setMailText()
     */
     QString mailText() const;
 
     /**
-      Set the time to trigger an alarm.
+      Sets the trigger time of the alarm.
+
+      @param alarmTime is the #QDateTime alarm trigger.
+
+      @see time()
     */
     void setTime( const QDateTime &alarmTime );
 
     /**
-      Return the date/time when an alarm goes off.
+      Returns the alarm trigger date/time.
+
+      @see setTime()
     */
     QDateTime time() const;
 
     /**
-      Return the date/time when the last repetition of the alarm goes off.
-      If the alarm does not repeat, this is equivalent to calling time().
+      Returns the date/time when the last repetition of the alarm goes off.
+      If the alarm does not repeat this is equivalent to calling time().
+
+      @see setTime()
     */
     QDateTime endTime() const;
 
     /**
-      Return true, if the alarm has an explicit date/time.
+      Returns true if the alarm has a trigger date/time.
     */
     bool hasTime() const;
 
     /**
-      Set offset of alarm in time relative to the start of the event.
+      Sets the alarm offset relative to the start of the parent #Incidence.
+
+      @param offset is a #Duration to be used as a time relative to the
+      start of the parent #Incidence to be used as the alarm trigger.
+
+      @see setEndOffset(), startOffset(), endOffset()
     */
-    void setStartOffset( const Duration &duration );
+    void setStartOffset( const Duration &offset );
 
     /**
-      Return offset of alarm in time relative to the start of the event.
-      If the alarm's time is not defined in terms of an offset relative
-      to the start of the event, returns zero.
+      Returns offset of alarm in time relative to the start of the parent
+      #Incidence.  If the alarm's time is not defined in terms of an offset
+      relative  to the start of the event, returns zero.
+
+      @see setStartOffset(), hasStartOffset()
     */
     Duration startOffset() const;
 
     /**
-      Return whether the alarm is defined in terms of an offset relative
-      to the start of the event.
+      Returns whether the alarm is defined in terms of an offset relative
+      to the start of the parent #Incidence.
+
+      @see startOffset(), setStartOffset()
     */
     bool hasStartOffset() const;
 
     /**
-      Set offset of alarm in time relative to the end of the event.
+      Sets the alarm offset relative to the end of the parent #Incidence.
+
+      @param offset is a #Duration to be used as a time relative to the
+      end of the parent #Incidence to be used as the alarm trigger.
+
+      @see setStartOffset(), startOffset(), endOffset()
     */
     void setEndOffset( const Duration &offset );
 
     /**
-      Return offset of alarm in time relative to the end of the event.
+      Returns offset of alarm in time relative to the end of the event.
       If the alarm's time is not defined in terms of an offset relative
       to the end of the event, returns zero.
+
+      @see setEndOffset(), hasEndOffset()
     */
     Duration endOffset() const;
 
     /**
-      Return whether the alarm is defined in terms of an offset relative
+      Returns whether the alarm is defined in terms of an offset relative
       to the end of the event.
+
+      @see endOffset(), setEndOffset()
     */
     bool hasEndOffset() const;
 
     /**
-      Set the interval between snoozes for the alarm.
+      Sets the snooze time interval for the alarm.
 
       @param alarmSnoozeTime the time in minutes between snoozes.
+
+      @see snoozeTime()
     */
     void setSnoozeTime( int alarmSnoozeTime );
 
     /**
-      Get how long the alarm snooze interval is.
+      Returns the snooze time interval, in minutes.
 
-      @return the number of minutes between snoozes.
+      @see setSnoozeTime()
     */
     int snoozeTime() const;
 
     /**
-      Set how many times an alarm is to repeat itself after its initial
+      Sets how many times an alarm is to repeat itself after its initial
       occurrence (w/snoozes).
+
+      @param alarmRepeatCount is the number of times an alarm may repeat,
+      excluding the initial occurrence.
+
+      @see repeatCount()
     */
     void setRepeatCount( int alarmRepeatCount );
 
     /**
-      Get how many times an alarm repeats, after its initial occurrence.
+      Returns how many times an alarm may repeats after its initial occurrence.
+
+      @see setRepeatCount()
     */
     int repeatCount() const;
 
     /**
-      Get the time of the alarm's initial occurrence or its next repetition,
-      after a given time.
-      @param preTime the date and time after which to find the next repetition.
-      @return the date and time of the next repetition, or an invalid date/time
+      Returns the date/time of the alarm's initial occurrence or its next
+      repetition after a given time.
+
+      @param preTime the date/time after which to find the next repetition.
+
+      @return the date/time of the next repetition, or an invalid date/time
       if the specified time is at or after the alarm's last repetition.
+
+      @see previousRepetition()
     */
     QDateTime nextRepetition( const QDateTime &preTime ) const;
 
     /**
-      Get the time of the alarm's latest repetition, or its initial occurrence
-      if none, before a given time.
-      @param afterTime the date and time before which to find the latest
+      Returns the date/time of the alarm's latest repetition or, if none,
+      its initial occurrence before a given time.
+
+      @param afterTime is the date/time before which to find the latest
       repetition.
+
       @return the date and time of the latest repetition, or an invalid
       date/time if the specified time is at or before the alarm's initial
       occurrence.
+
+      @see nextRepetition()
     */
     QDateTime previousRepetition( const QDateTime &afterTime ) const;
 
     /**
-      Return the number of seconds between the alarm's initial occurrence and
+      Returns the number of seconds between the alarm's initial occurrence and
       its final repetition.
+
       @return the number of seconds between the initial occurrence and final
       repetition.
     */
     int duration() const;
 
     /**
-      Toggles the value of alarm to be either on or off.
-      Set's the alarm time to be x minutes before dtStart time.
+      Toggles the alarm status, i.e, an enable alarm becomes disabled
+      and a disabled alarm becomes enabled.
+
+      @see enabled(), setEnabled()
     */
     void toggleAlarm();
 
     /**
-      Set the alarm enabled status.
+      Sets the enabled status of the alarm.
+
+      @param enable if true, then enable the alarm; else disable the alarm.
+
+      @see enabled(), toggleAlarm()
     */
     void setEnabled( bool enable );
 
     /**
-      Get the alarm enabled status.
+      Returns the alarm enabled status: true (enabled) or false (disabled).
+
+      @see setEnabled(), toggleAlarm()
     */
     bool enabled() const;
 
-    /**
-      Set the alarm's parent incidence.
-    */
-    void setParent( Incidence *parent );
-
-    /**
-      Get the alarm's parent incidence.
-    */
-    Incidence *parent() const  { return mParent; }
-
   private:
     //@cond PRIVATE
-    Incidence *mParent;           // the incidence which this alarm belongs to
-    Type mType;                   // type of alarm
-
-    QString mDescription;         // text to display/email body/procedure arguments
-    QString mFile;                // procedure program to run/optional audio file to play
-    QStringList mMailAttachFiles; // filenames to attach to email
-    QList<Person> mMailAddresses; // who to mail for reminder
-    QString mMailSubject;         // subject of email
-
-    int mAlarmSnoozeTime;         // number of minutes after alarm to
-                                  // snooze before ringing again
-    int mAlarmRepeatCount;        // number of times for alarm to repeat
-                                  // after the initial time
-
-    QDateTime mAlarmTime;         // time at which to trigger the alarm
-    Duration mOffset;             // time relative to incidence DTSTART to trigger the alarm
-    bool mEndOffset;              // if true, mOffset relates to DTEND, not DTSTART
-    bool mHasTime;                // use mAlarmTime, not mOffset
-    bool mAlarmEnabled;
-
     class Private;
     Private *d;
     //@endcond
