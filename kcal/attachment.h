@@ -179,18 +179,18 @@ class KCAL_EXPORT Attachment
     QString mimeType() const;
 
     /**
-      Sets the attachment @em show in-line option, which is derived from
+      Sets the attachment "show in-line" option, which is derived from
       the Calendar Incidence @b X-CONTENT-DISPOSITION parameter.
 
       @param showinline is the flag to set (true) or unset (false)
-      for the attachment @em show in-line option.
+      for the attachment "show in-line" option.
 
       @see showInline()
     */
     void setShowInline( bool showinline );
 
     /**
-      Returns the attachment @em show in-line flag.
+      Returns the attachment "show in-line" flag.
 
       @see setShowInline()
     */
@@ -198,7 +198,7 @@ class KCAL_EXPORT Attachment
 
     /**
       Sets the attachment label to @p label, which is derived from
-      the Calendar Incidence @b X-LABEL" parameter.
+      the Calendar Incidence @b X-LABEL parameter.
 
       @param label is the string to use for the attachment label.
 
@@ -212,18 +212,18 @@ class KCAL_EXPORT Attachment
     QString label() const;
 
     /**
-      Sets the attachment @em local option, which is derived from the
+      Sets the attachment "local" option, which is derived from the
       Calendar Incidence @b X-KONTACT-TYPE parameter.
 
       @param local is the flag to set (true) or unset (false) for the
-      attachment @em local option.
+      attachment "local" option.
 
       @see local()
     */
     void setLocal( bool local );
 
     /**
-      Returns the attachment @em local flag.
+      Returns the attachment "local" flag.
     */
     bool isLocal() const;
 
