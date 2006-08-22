@@ -187,6 +187,21 @@ endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
 if(KDE4_BUILD_TESTS)
+set(testattachment_SRCS testattachment.cpp )
+
+kde4_automoc(${testattachment_SRCS})
+
+
+kde4_add_executable(testattachment RUN_UNINSTALLED ${testattachment_SRCS})
+
+target_link_libraries(testattachment  ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
+
+add_test(libkcal-testattachment ${EXECUTABLE_OUTPUT_PATH}/testattachment)
+
+endif(KDE4_BUILD_TESTS)
+
+########### next target ###############
+if(KDE4_BUILD_TESTS)
 set(testvcalexport_SRCS testvcalexport.cpp )
 
 kde4_automoc(${testvcalexport_SRCS})

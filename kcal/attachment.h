@@ -18,6 +18,14 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Attachment class.
+
+  @author Michael Brade
+*/
+
 #ifndef KCAL_ATTACHMENT_H
 #define KCAL_ATTACHMENT_H
 
@@ -29,85 +37,198 @@
 namespace KCal {
 
 /**
-  This class represents information related to an attachment.
+  @brief
+  Represents information related to an attachment for a Calendar Incidence.
+
+  This is not an email message attachment.
+
+  Calendar Incidence attachments consist of:
+  - A <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">
+    Uniform Resource Identifier (URI)</a>
+    or a
+    <a href="http://en.wikipedia.org/wiki/Base64#MIME">base64 encoded</a>
+    binary blob.
+  - A <a href="http://en.wikipedia.org/wiki/MIME">
+    Multipurpose Internet Mail Extensions (MIME)</a> type.
+
+  This class is used to associate files (local or remote) or other resources
+  with a Calendar Incidence.
 */
 class KCAL_EXPORT Attachment
 {
   public:
     /**
-      Type for a list of attachements, since most documents will
-      have one-or-more attachements.
+      List of attachments.
     */
     typedef ListBase<Attachment> List;
 
     /**
-      Create a Reference to some URI by copying an existing Attachment.
+      Constructs an attachment consisting of a @p uri and a @p mime type.
 
-      @param attachment the attachment to be duplicated
-    */
-    Attachment( const Attachment &attachment );
-
-    /**
-      Create a Reference to some URI.
-
-      @param uri the uri this attachment refers to
-      @param mime the mime type of the resource being linked to
+      @param uri is the @acronym URI referred to by this attachment.
+      @param mime is the (optional) @acronym MIME type of the @p uri
     */
     Attachment( const QString &uri, const QString &mime = QString() );
 
     /**
-      Create a binary attachment.
+      Constructs an attachment consisting of a binary blob of data
+      and a @p mime type.
 
-      @param base64 the attachment in base64 format
-      @param mime the mime type of the attachment
+      @param base64 is the binary data in base64 format for the attachment.
+      @param mime is the (optional) @acronym MIME type of the attachment
     */
     Attachment( const char *base64, const QString &mime = QString() );
+
+    /**
+      Constructs an attachment by copying another attachment.
+
+      @param attachment is the attachment to be copied.
+    */
+    Attachment( const Attachment &attachment );
+
+    /**
+      Destroys the attachment.
+    */
     ~Attachment();
 
-    /** The VALUE parameter in iCal may represent a URI for the attachment. */
-    QString uri() const;
-    /** Is the VALUE parameter one that represents a URI? */
-    bool isUri() const;
-    /** Sets the VALUE parameter for the attachment to the given URI.
-        @param uri The URI to use for this attachment.
+    /**
+      Sets the @acronym URI for this attachment to @p uri.
+
+      @param uri is the @acronym URI to use for the attachment.
+
+      @see uri(), isUri()
     */
     void setUri( const QString &uri );
 
-    /* Data attachments are currently not implemented in iCal. */
+    /**
+      Returns the @acronym URI of the attachment.
+
+      @see setUri(), isUri()
+    */
+    QString uri() const;
+
+    /**
+      Returns true if the attachment has a @acronym URI; false otherwise.
+
+      @see uri(), setUri(I), isBinary()
+    */
+    bool isUri() const;
+
+    /**
+      Returns true if the attachment has a binary blob; false otherwise.
+
+      @see isUri()
+    */
     bool isBinary() const;
-    char *data() const;
-    QByteArray &decodedData() const;
+
+    /**
+      Sets the base64 encoded binary blob data of the attachment.
+
+      @param base64 is a character string containing base64 encoded binary data.
+
+      @see data(), decodedData()
+    */
     void setData( const char *base64 );
+
+    /**
+      Returns a pointer to a character string containing the base64 encoded
+      binary data of the attachment.
+
+      @see setData(), setDecodedData()
+    */
+    char *data() const;
+
+    /**
+      Sets the decoded attachment data.
+
+      @param data is the decoded base64 binary data.
+
+      @see decodedData(), data()
+    */
     void setDecodedData( const QByteArray &data );
-    /* size only for binary attachments */
+
+    /**
+      Returns a #QByteArray containing the decoded base64 binary data of the
+      attachment.
+
+      @see setDecodedData(), setData()
+    */
+    QByteArray &decodedData() const;
+
+    /**
+      Returns the size of the attachment, in bytes.
+      If the attachment is binary (i.e, there is no @acronym URI associated
+      with the attachment) then a value of 0 is returned.
+    */
     uint size() const;
 
-    /* The optional FMTTYPE parameter in iCal */
-    QString mimeType() const;
+    /**
+      Sets the @acronym MIME-type of the attachment to @p mime.
+
+      @param mime is the string to use for the attachment @acronym MIME-type.
+
+      @see mimeType()
+    */
     void setMimeType( const QString &mime );
 
-    /* The custom X-CONTENT-DISPOSITION parameter, used by OGo etc. */
-    bool showInline() const;
+    /**
+      Returns the @acronym MIME-type of the attachment.
+
+      @see setMimeType()
+    */
+    QString mimeType() const;
+
+    /**
+      Sets the attachment @em show in-line option, which is derived from
+      the Calendar Incidence @b X-CONTENT-DISPOSITION parameter.
+
+      @param showinline is the flag to set (true) or unset (false)
+      for the attachment @em show in-line option.
+
+      @see showInline()
+    */
     void setShowInline( bool showinline );
 
-    /* The custom X-LABEL parameter to show a human-readable title */
-    QString label() const;
+    /**
+      Returns the attachment @em show in-line flag.
+
+      @see setShowInline()
+    */
+    bool showInline() const;
+
+    /**
+      Sets the attachment label to @p label, which is derived from
+      the Calendar Incidence @b X-LABEL" parameter.
+
+      @param label is the string to use for the attachment label.
+
+      @see label()
+    */
     void setLabel( const QString &label );
 
-    /* The custom X-KONTACT-TYPE parameter, controls whether the attachment
-       is 'local', e.g. with hidden path. */
-    bool isLocal() const;
+    /**
+      Returns the attachment label string.
+    */
+    QString label() const;
+
+    /**
+      Sets the attachment @em local option, which is derived from the
+      Calendar Incidence @b X-KONTACT-TYPE parameter.
+
+      @param local is the flag to set (true) or unset (false) for the
+      attachment @em local option.
+
+      @see local()
+    */
     void setLocal( bool local );
+
+    /**
+      Returns the attachment @em local flag.
+    */
+    bool isLocal() const;
 
   private:
     //@cond PRIVATE
-    QString mMimeType;
-    QString mData;
-    bool mBinary;
-    bool mShowInline;
-    bool mLocal;
-    QString mLabel;
-
     class Private;
     Private *d;
     //@endcond

@@ -18,6 +18,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Attachment class.
+
+  @author Michael Brade
+*/
 
 #include "attachment.h"
 
@@ -25,43 +32,55 @@
 
 using namespace KCal;
 
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
+//@cond PRIVATE
 class KCal::Attachment::Private
 {
-public:
-  mutable QByteArray mDataCache;
-  mutable uint mSize;
+  public:
+    mutable QByteArray mDataCache;
+    mutable uint mSize;
+    QString mMimeType;
+    QString mData;
+    bool mBinary;
+    bool mShowInline;
+    bool mLocal;
+    QString mLabel;
 };
+//@endcond
 
-Attachment::Attachment( const Attachment &attachment)
+Attachment::Attachment( const Attachment &attachment )
   : d( new Attachment::Private )
 {
-  mMimeType = attachment.mMimeType;
-  mData = attachment.mData;
-  mBinary = attachment.mBinary;
-	mShowInline = attachment.mShowInline;
-	mLabel = attachment.mLabel;
-	mLocal = attachment.mLocal;
+  d->mMimeType = attachment.d->mMimeType;
+  d->mData = attachment.d->mData;
+  d->mBinary = attachment.d->mBinary;
+  d->mShowInline = attachment.d->mShowInline;
+  d->mLabel = attachment.d->mLabel;
+  d->mLocal = attachment.d->mLocal;
 }
 
-Attachment::Attachment(const QString& uri, const QString& mime)
+Attachment::Attachment( const QString &uri, const QString &mime )
   : d( new Attachment::Private )
 {
-  mMimeType = mime;
-  mData = uri;
-  mBinary = false;
-	mShowInline = false;
-	mLocal = false;
-	mLabel.clear();
+  d->mMimeType = mime;
+  d->mData = uri;
+  d->mBinary = false;
+  d->mShowInline = false;
+  d->mLocal = false;
+  d->mLabel.clear();
 }
 
-Attachment::Attachment(const char *base64, const QString& mime)
+Attachment::Attachment( const char *base64, const QString &mime )
   : d( new Attachment::Private )
 {
-  mMimeType = mime;
-  mData = QString::fromUtf8(base64);
-  mBinary = true;
-	mShowInline = false;
-	mLabel.clear();
+  d->mMimeType = mime;
+  d->mData = QString::fromUtf8( base64 );
+  d->mBinary = true;
+  d->mShowInline = false;
+  d->mLabel.clear();
 }
 
 Attachment::~Attachment()
@@ -71,40 +90,42 @@ Attachment::~Attachment()
 
 bool Attachment::isUri() const
 {
-  return !mBinary;
+  return !d->mBinary;
 }
 
 QString Attachment::uri() const
 {
-  if (!mBinary)
-    return mData;
-  else
+  if ( !d->mBinary ) {
+    return d->mData;
+  } else {
     return QString();
+  }
 }
 
-void Attachment::setUri(const QString& uri)
+void Attachment::setUri( const QString &uri )
 {
-  mData = uri;
-  mBinary = false;
+  d->mData = uri;
+  d->mBinary = false;
 }
 
 bool Attachment::isBinary() const
 {
-  return mBinary;
+  return d->mBinary;
 }
 
 char *Attachment::data() const
 {
-  if (mBinary)
-    return mData.toUtf8().data();
-  else
+  if ( d->mBinary ) {
+    return d->mData.toUtf8().data();
+  } else {
     return 0;
+  }
 }
 
 QByteArray &Attachment::decodedData() const
 {
   if ( d->mDataCache.isNull() ) {
-    d->mDataCache = QByteArray::fromBase64( mData.toUtf8() );
+    d->mDataCache = QByteArray::fromBase64( d->mData.toUtf8() );
   }
 
   return d->mDataCache;
@@ -116,60 +137,62 @@ void Attachment::setDecodedData( const QByteArray &data )
   d->mDataCache = data;
 }
 
-void Attachment::setData(const char *base64)
+void Attachment::setData( const char *base64 )
 {
-  mData = QString::fromUtf8(base64);
-  mBinary = true;
+  d->mData = QString::fromUtf8( base64 );
+  d->mBinary = true;
   d->mDataCache = QByteArray();
   d->mSize = 0;
 }
 
 uint Attachment::size() const
 {
-  if ( isUri() )
+  if ( isUri() ) {
     return 0;
-  if ( !d->mSize )
+  }
+  if ( !d->mSize ) {
     d->mSize = decodedData().size();
+  }
 
   return d->mSize;
 }
 
 QString Attachment::mimeType() const
 {
-  return mMimeType;
+  return d->mMimeType;
 }
 
-void Attachment::setMimeType(const QString& mime)
+void Attachment::setMimeType( const QString &mime )
 {
-  mMimeType = mime;
+  d->mMimeType = mime;
 }
 
 bool Attachment::showInline() const
 {
-  return mShowInline;
+  return d->mShowInline;
 }
 
 void Attachment::setShowInline( bool showinline )
 {
-  mShowInline = showinline;
+  d->mShowInline = showinline;
 }
 
 QString Attachment::label() const
 {
-  return mLabel;
+  return d->mLabel;
 }
 
-void Attachment::setLabel( const QString& label )
+void Attachment::setLabel( const QString &label )
 {
-  mLabel = label;
+  d->mLabel = label;
 }
 
 bool Attachment::isLocal() const
 {
-  return mLocal;
+  return d->mLocal;
 }
 
 void Attachment::setLocal( bool local )
 {
-  mLocal = local;
+  d->mLocal = local;
 }
