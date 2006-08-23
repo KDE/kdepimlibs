@@ -18,6 +18,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Attendee class.
+
+  @author Cornelius Schumacher
+*/
 
 #ifndef KCAL_ATTENDEE_H
 #define KCAL_ATTENDEE_H
@@ -30,121 +37,197 @@
 namespace KCal {
 
 /**
-  This class represents information related to an attendee of an event.
+  @brief
+  Represents information related to an attendee of an Calendar Incidence,
+  typically a meeting or task (to-do).
+
+  Attendees are people with a name and (optional) email address who are
+  invited to participate in some way in a meeting or task.  This class
+  also tracks that status of the invitation: accepted; tentatively accepted;
+  declined; delegated to another person; in-progress; completed.
+
+  Attendees may optionally be asked to @acronym RSVP ("Respond Please") to
+  the invitation.
+
+  Note that each attendee be can optionally associated with a @acronym UID
+  (unique identifier) derived from a Calendar Incidence, Email Message,
+  or any other thing you want.
 */
 class KCAL_EXPORT Attendee : public Person
 {
   public:
-    enum PartStat { NeedsAction, Accepted, Declined, Tentative,
-                    Delegated, Completed, InProcess };
-    enum Role { ReqParticipant, OptParticipant, NonParticipant, Chair };
 
+    /**
+      The different types of participant statuses.
+    */
+    enum PartStat {
+      NeedsAction,     /**< No information about the task/invitation received */
+      Accepted,        /**< Accepted the task/invitation */
+      Declined,        /**< Declined the task/invitation */
+      Tentative,       /**< Tentatively accepted the task/invitation */
+      Delegated,       /**< Delegated the task to another */
+      Completed,       /**< Completed the task */
+      InProcess        /**< Work on the task is in-progress */
+    };
+
+    /**
+      The different types of meeting roles.
+    */
+    enum Role {
+      ReqParticipant,  /**< Required participant */
+      OptParticipant,  /**< Optional participant */
+      NonParticipant,  /**< Non-participant */
+      Chair            /**< Meeting chairperson */
+    };
+
+    /**
+      List of attendees.
+    */
     typedef ListBase<Attendee> List;
 
     /**
-      Create Attendee.
+      Constructs an attendee consisting of a #Person name (@p name) and
+      email address (@p email); invitation #Status and #Role;
+      an optional @acronym RSVP flag and @acronym UID.
 
-      @param name Name
-      @param email Email address
-      @param rsvp Request for reply
-      @param status Status (see enum for list)
-      @param role Role
-      @param u the uid for the attendee
+      @param name is person name of the attendee.
+      @param email is person email address of the attendee.
+      @param rsvp if set (true), the attendee is requested to reply to
+      invitations.
+      @param status is the #Status of the attendee.
+      @param role is the #Role of the attendee.
+      @param uid is the @acronym UID of the attendee.
     */
     Attendee( const QString &name, const QString &email,
               bool rsvp = false, PartStat status = NeedsAction,
-              Role role = ReqParticipant, const QString &u = QString() );
+              Role role = ReqParticipant, const QString &uid = QString() );
+
     /**
-      Destruct Attendee.
+      Destroys the attendee.
     */
     virtual ~Attendee();
 
     /**
-      Set role of Attendee.
+      Sets the #Role of the attendee to @p role.
+
+      @param role is the #Role to use for the attendee.
+
+      @see role()
     */
-    // FIXME: List of roles still has to be documented.
-    void setRole( Role );
+    void setRole( Role role );
 
     /**
-      Return role of Attendee.
+      Returns the #Role of the attendee.
+
+      @see setRole()
     */
     Role role() const;
 
     /**
-      Return role as clear text string.
+      Returns the attendee #Role as a text string.
+
+      @see role(), roleName()
     */
     QString roleStr() const;
+
     /**
-      Return string represenation of role.
+      Returns the specified #Role @p role as a text string.
+
+      @param role is a #Role value.
+
+      @see role(), roleStr()
     */
-    static QString roleName( Role );
+    static QString roleName( Role role );
+
     /**
-      Return string representations of all available roles.
+      Returns a list of strings representing each #Role.
     */
     static QStringList roleList();
 
     /**
-      Return unique id of the attendee.
+      Sets the @acronym UID of the attendee to @p uid.
+
+      @param uid is the @acronym UID to use for the attendee.
+
+      @see uid()
+    */
+    void setUid ( const QString &uid );
+
+    /**
+      Returns the @acronym UID of the attendee.
+
+      @see setUid()
     */
     QString uid() const;
-    /**
-      Set unique id of attendee.
-    */
-    void setUid ( const QString & );
 
     /**
-      Set status. See enum for definitions of possible values.
+      Sets the #PartStat of the attendee to @p status.
+
+      @param status is the #PartStat to use for the attendee.
+
+      @see status()
     */
-    void setStatus( PartStat s );
+    void setStatus( PartStat status );
 
     /**
-      Return status.
+      Returns the #PartStat of the attendee.
+
+      @see setStatus()
     */
     PartStat status() const;
 
     /**
-      Return status as human-readable string.
+      Returns the attendee #PartStat as a text string.
+
+      @see status(), statusName()
     */
     QString statusStr() const;
+
     /**
-      Return string representation of attendee status.
+      Returns the specified #PartStat @p status  as a text string.
+
+      @param status is a #PartStat value.
+
+      @see status(), statusStr()
     */
-    static QString statusName( PartStat );
+    static QString statusName( PartStat status );
+
     /**
-      Return string representations of all available attendee status values.
+      Returns a list of strings representing each #PartStat.
     */
     static QStringList statusList();
 
     /**
-      Set if Attendee is asked to reply.
+      Sets the @acronym RSVP flag of the attendee to @p rsvp.
+
+      @param rsvp if set (true), the attendee is requested to reply to
+      invitations.
+
+      @see RSVP()
     */
-    void setRSVP( bool r ) { mRSVP = r; }
+    void setRSVP( bool rsvp );
+
     /**
-      Return, if Attendee is asked to reply.
+      Returns the attendee @acronym RSVP flag.
+
+      @see setRSVP()
     */
-    bool RSVP() const { return mRSVP; }
+    bool RSVP() const;
 
   private:
     //@cond PRIVATE
-    bool mRSVP;
-    Role mRole;
-    PartStat mStatus;
-    QString mUid;
-
     class Private;
     Private *d;
     //@endcond
 };
 
-/** Comparison operator (for QMap and the like).
-    @param a1 Attendee
-    @param a2 Other Attendee
-    @return @c true if the attendees @p a1 and @p a2 are exactly
-            the same; this means they are the same person ( see
-            Person::operator== ) and the role, status, UID and
-            RSVP values are the same as well.
+/**
+  Compares two attendees for equality.
+
+  @param a1 is the first comparison attendee.
+  @param a2 is the second comparison attendee.
 */
-bool operator==( const Attendee& a1, const Attendee& a2 );
+bool operator==( const Attendee &a1, const Attendee &a2 );
 
 }
 

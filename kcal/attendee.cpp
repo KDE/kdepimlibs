@@ -18,6 +18,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Attendee class.
+
+  @author Cornelius Schumacher
+*/
 
 #include <QStringList>
 
@@ -28,69 +35,99 @@
 
 using namespace KCal;
 
-Attendee::Attendee( const QString &name, const QString &email, bool _rsvp,
-                    Attendee::PartStat s, Attendee::Role r, const QString &u)
-  : Person( name, email )
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
+//@cond PRIVATE
+class KCal::Attendee::Private
 {
-  mRSVP = _rsvp;
-  mStatus = s;
-  mRole = r;
-  mUid = u;
+  public:
+    bool mRSVP;
+    Role mRole;
+    PartStat mStatus;
+    QString mUid;
+};
+//@endcond
+
+Attendee::Attendee( const QString &name, const QString &email, bool rsvp,
+                    Attendee::PartStat s, Attendee::Role r, const QString &u )
+  : d( new KCal::Attendee::Private )
+{
+  setName( name );
+  setEmail( email );
+  d->mRSVP = rsvp;
+  d->mStatus = s;
+  d->mRole = r;
+  d->mUid = u;
 }
 
 Attendee::~Attendee()
 {
+  delete d;
 }
 
-bool KCal::operator==( const Attendee& a1, const Attendee& a2 )
+bool KCal::operator==( const Attendee &a1, const Attendee &a2 )
 {
-    return ( operator==( (const Person&)a1, (const Person&) a2 ) &&
-             a1.RSVP() == a2.RSVP() &&
-             a1.role() == a2.role() &&
-             a1.status() == a2.status() &&
-             a1.uid() == a2.uid() );
+  return (
+    operator==( (const Person &)a1, (const Person &) a2 ) &&
+    a1.RSVP() == a2.RSVP() &&
+    a1.role() == a2.role() &&
+    a1.status() == a2.status() &&
+    a1.uid() == a2.uid()
+    );
+}
+
+void Attendee::setRSVP( bool r )
+{
+  d->mRSVP = r;
+}
+
+bool Attendee::RSVP() const
+{
+  return d->mRSVP;
 }
 
 void Attendee::setStatus( Attendee::PartStat s )
 {
-  mStatus = s;
+  d->mStatus = s;
 }
 
 Attendee::PartStat Attendee::status() const
 {
-  return mStatus;
+  return d->mStatus;
 }
 
 QString Attendee::statusStr() const
 {
-  return statusName( mStatus );
+  return statusName( d->mStatus );
 }
 
 QString Attendee::statusName( Attendee::PartStat s )
 {
   switch ( s ) {
-    default:
-    case NeedsAction:
-      return i18n("Needs Action");
-      break;
-    case Accepted:
-      return i18n("Accepted");
-      break;
-    case Declined:
-      return i18n("Declined");
-      break;
-    case Tentative:
-      return i18nc("attendee status", "Tentative");
-      break;
-    case Delegated:
-      return i18n("Delegated");
-      break;
-    case Completed:
-      return i18n("Completed");
-      break;
-    case InProcess:
-      return i18n("In Process");
-      break;
+  default:
+  case NeedsAction:
+    return i18n( "Needs Action" );
+    break;
+  case Accepted:
+    return i18n( "Accepted" );
+    break;
+  case Declined:
+    return i18n( "Declined" );
+    break;
+  case Tentative:
+    return i18nc( "attendee status", "Tentative" );
+    break;
+  case Delegated:
+    return i18n( "Delegated" );
+    break;
+  case Completed:
+    return i18n( "Completed" );
+    break;
+  case InProcess:
+    return i18n( "In Process" );
+    break;
   }
 }
 
@@ -111,45 +148,45 @@ QStringList Attendee::statusList()
 
 void Attendee::setRole( Attendee::Role r )
 {
-  mRole = r;
+  d->mRole = r;
 }
 
 Attendee::Role Attendee::role() const
 {
-  return mRole;
+  return d->mRole;
 }
 
 QString Attendee::roleStr() const
 {
-  return roleName( mRole );
+  return roleName( d->mRole );
 }
 
 void Attendee::setUid( const QString &uid )
 {
-  mUid = uid;
+  d->mUid = uid;
 }
 
 QString Attendee::uid() const
 {
-  return mUid;
+  return d->mUid;
 }
 
 QString Attendee::roleName( Attendee::Role r )
 {
   switch ( r ) {
-    case Chair:
-      return i18n("Chair");
-      break;
-    default:
-    case ReqParticipant:
-      return i18n("Participant");
-      break;
-    case OptParticipant:
-      return i18n("Optional Participant");
-      break;
-    case NonParticipant:
-      return i18n("Observer");
-      break;
+  case Chair:
+    return i18n( "Chair" );
+    break;
+  default:
+  case ReqParticipant:
+    return i18n( "Participant" );
+    break;
+  case OptParticipant:
+    return i18n( "Optional Participant" );
+    break;
+  case NonParticipant:
+    return i18n( "Observer" );
+    break;
   }
 }
 
