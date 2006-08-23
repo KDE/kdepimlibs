@@ -55,7 +55,7 @@ class ScheduleMessage
       and a status.
     */
     ScheduleMessage( IncidenceBase *, int method, Status status );
-    ~ScheduleMessage() {};
+    ~ScheduleMessage() {}
 
     /**
       Return event associated with this message.

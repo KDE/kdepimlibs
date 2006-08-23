@@ -39,7 +39,7 @@ class KCAL_EXPORT ICalDrag : public Q3StoredDrag
       Create a drag&drop object for iCalendar component \a ical.
     */
     ICalDrag( Calendar *cal, QWidget *parent = 0, const char *name = 0 );
-    ~ICalDrag() {};
+    ~ICalDrag() {}
 
     /**
       Return, if drag&drop object can be decode to iCalendar.

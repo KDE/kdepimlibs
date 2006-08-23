@@ -47,8 +47,8 @@ class CompatFactory
 class Compat
 {
   public:
-    Compat() {};
-    virtual ~Compat() {};
+    Compat() {}
+    virtual ~Compat() {}
 
     virtual void fixRecurrence( Incidence * );
     virtual void fixEmptySummary( Incidence * );

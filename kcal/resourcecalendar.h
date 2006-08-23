@@ -378,7 +378,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Add info text for concrete resources. Called by infoText().
     */
-    virtual void addInfoText( QString & ) const {};
+    virtual void addInfoText( QString & ) const {}
 
     /**
       A resource should call this function if a load error happens.
