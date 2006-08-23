@@ -36,7 +36,8 @@
 /**
  * @namespace KTnef
  *
- * This is the namespace containing all the KTNEF library symbols.
+ * @brief
+ * Contains all the KTNEF library global classes, objects, and functions.
  */
 
 #endif
