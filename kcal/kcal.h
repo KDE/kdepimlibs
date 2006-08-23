@@ -33,4 +33,11 @@
 #define KCAL_EXPORT KDE_EXPORT
 #endif
 
+/**
+  @namespace KCal
+
+  @brief
+  Contains all the KCal library global classes, objects, and functions.
+*/
+
 #endif

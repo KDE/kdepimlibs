@@ -32,11 +32,6 @@
 
 class KConfig;
 
-/**
-   @namespace KCal
-   Namespace KCal is for global classes, objects and/or functions in the
-   kcal library.
-*/
 namespace KCal {
 
 /**

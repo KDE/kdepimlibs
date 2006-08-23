@@ -21,12 +21,12 @@
     Boston, MA 02110-1301, USA.
 */
 /**
-   @file calendar.h
-   Provides the main "calendar" object class.
+  @file calendar.h
+  Provides the main "calendar" object class.
 
-   @author Preston Brown
-   @author Cornelius Schumacher
-   @author Reinhold Kainhofer
+  @author Preston Brown
+  @author Cornelius Schumacher
+  @author Reinhold Kainhofer
  */
 #ifndef KCAL_CALENDAR_H
 #define KCAL_CALENDAR_H
@@ -46,11 +46,6 @@ class KTimeZones;
 #include "kcalversion.h"
 #include "person.h"
 
-/**
-   @namespace KCal
-   Namespace KCal is for global classes, objects and/or functions for the
-   kcal library.
-*/
 namespace KCal {
 
 class CalFilter;
@@ -118,8 +113,7 @@ enum JournalSortField
 };
 
 /**
-   @class Calendar
-
+   @brief
    This is the main "calendar" object class.  It holds information like
    Incidences(Events, To-dos, Journals), time zones, user information, etc. etc.
 
@@ -493,7 +487,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
        date range.
     */
     Event::List events( const QDate &start, const QDate &end,
-                        bool inclusive = false);
+                        bool inclusive = false );
 
     /**
        Return a sorted, filtered list of all Events which occur on the given

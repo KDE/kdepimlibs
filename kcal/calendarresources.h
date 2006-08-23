@@ -40,11 +40,6 @@
 
 class QWidget;
 
-/**
-   @namespace KCal
-   Namespace KCal is for global classes, objects and/or functions for the
-   kcal library.
-*/
 namespace KCal {
 
 class CalFormat;
