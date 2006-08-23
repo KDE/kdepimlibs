@@ -40,8 +40,8 @@ using namespace KCal;
 class KCal::Attachment::Private
 {
   public:
-    mutable QByteArray mDataCache;
-    mutable uint mSize;
+    QByteArray mDataCache;
+    uint mSize;
     QString mMimeType;
     QString mData;
     bool mBinary;
