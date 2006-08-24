@@ -31,8 +31,21 @@
 
 using namespace KCal;
 
+class KCal::Person::Private 
+{
+  public:
+    QString mName;
+    QString mEmail;
+};
+
+Person::Person() 
+{
+  d = new Private();
+}
+
 Person::Person( const QString &fullName )
 {
+  d = new Private();
   QString name, email;
   EmailAddressTools::extractEmailAddressAndName( fullName, email, name );
   setName( name );
@@ -41,6 +54,7 @@ Person::Person( const QString &fullName )
 
 Person::Person( const QString &name, const QString &email )
 {
+  d = new Private();
   setName( name );
   setEmail( email );
 }
@@ -55,14 +69,14 @@ bool KCal::operator==( const Person& p1, const Person& p2 )
 
 QString Person::fullName() const
 {
-  if( mName.isEmpty() ) {
-    return mEmail;
+  if( d->mName.isEmpty() ) {
+    return d->mEmail;
   } else {
-    if( mEmail.isEmpty() )
-      return mName;
+    if( d->mEmail.isEmpty() )
+      return d->mName;
     else {
       // Taken from KABC::Addressee::fullEmail
-      QString name = mName;
+      QString name = d->mName;
       QRegExp needQuotes( "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
       bool weNeedToQuote = name.indexOf( needQuotes ) != -1;
       if ( weNeedToQuote ) {
@@ -71,26 +85,36 @@ QString Person::fullName() const
           if ( name[ name.length()-1 ] != '"' )
               name.append( '"' );
       }
-      return name + " <" + mEmail + '>';
+      return name + " <" + d->mEmail + '>';
     }
   }
 }
 
+QString Person::name() const
+{
+  return d->mName;
+}
+
+QString Person::email() const
+{
+  return d->mEmail;
+}
+
 bool Person::isEmpty() const
 {
-  return mEmail.isEmpty() && mName.isEmpty();
+  return d->mEmail.isEmpty() && d->mName.isEmpty();
 }
 
 void Person::setName(const QString &name)
 {
-  mName = name;
+  d->mName = name;
 }
 
 void Person::setEmail(const QString &email)
 {
   if ( email.startsWith( "mailto:", Qt::CaseInsensitive ) ) {
-    mEmail = email.mid(7);
+    d->mEmail = email.mid(7);
   } else {
-    mEmail = email;
+    d->mEmail = email;
   }
 }
