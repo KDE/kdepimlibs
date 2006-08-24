@@ -25,6 +25,7 @@
   defines the Person class.
 
   @author Cornelius Schumacher
+  @author Reinhold Kainhofer
 */
 
 #ifndef KCAL_PERSON_H
@@ -47,82 +48,82 @@ class KCAL_EXPORT Person
 {
   public:
     /**
-      Constructs a person
+      Constructs a person.
     */
     Person();
 
     /**
-      Constructs a person with name and email taken 
-      from @p fullName. 
+      Constructs a person with name and email address taken from @p fullName.
 
-      @param fullName the name and email of this #Person in
-      the form FirstName LastName <email>
+      @param fullName is the name and email of the person in
+      the form FirstName LastName \<email\>.
     */
     Person( const QString &fullName );
 
     /**
-      Constructs a person with the name @p name and 
-      the email @p email
+      Constructs a person with the name @p name and email address @p email.
 
-      @param name the name of this #Person
-      @param email the email of this #Person
+      @param name is the name of this person.
+      @param email is the email address of this person.
     */
     Person( const QString &name, const QString &email );
 
     /**
-      Returns true if the name and email is empty
+      Returns true if the person name and email address are empty.
     */
     bool isEmpty() const;
 
     /**
-      Returns the full name of this #Person
+      Returns the full name of this person.
     */
     QString fullName( ) const;
 
     /**
-      Sets the name of this #Person to @p name
+      Sets the name of the person to @p name.
 
-      @param name the name for this #Person
+      @param name is the name of this person.
 
       @see name()
     */
-    void setName(const QString &name);
+    void setName( const QString &name );
 
     /**
-      Returns the name of this #Person
+      Returns the person name string.
 
       @see setName()
     */
     QString name() const;
 
     /**
-      Sets the email address for this #Person to @p email
+      Sets the email address for this person to @p email.
 
-      @param email the email for this #Person
+      @param email is the email address for this person.
 
       @see email()
-    */   
-    void setEmail(const QString &email);
+    */
+    void setEmail( const QString &email );
 
     /**
-      Returns the email for this #Person
+      Returns the email address for this person.
 
       @see setEmail()
     */
     QString email() const;
 
   private:
+    //@cond PRIVATE
     class Private;
     Private *d;
+   //@endcond
 };
 
 /**
   Compares @p p1 and @p p2 for equality
-  
-  @param p1 the first person to compare
-  @param p2 the second person to compare
+
+  @param p1 the first person to compare.
+  @param p2 the second person to compare.
 */
-bool operator==( const Person& p1, const Person& p2 );
+bool operator==( const Person &p1, const Person &p2 );
 
 }
 

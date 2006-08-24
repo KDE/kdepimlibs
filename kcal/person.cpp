@@ -19,6 +19,14 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Person class.
+
+  @author Cornelius Schumacher
+  @author Reinhold Kainhofer
+*/
 
 #include <QRegExp>
 
@@ -28,17 +36,22 @@
 #include "emailfunctions/email.h"
 #include "person.h"
 
-
 using namespace KCal;
 
-class KCal::Person::Private 
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
+//@cond PRIVATE
+class KCal::Person::Private
 {
   public:
     QString mName;
     QString mEmail;
 };
+//@endcond
 
-Person::Person() 
+Person::Person()
 {
   d = new Private();
 }
@@ -59,31 +72,31 @@ Person::Person( const QString &name, const QString &email )
   setEmail( email );
 }
 
-
-bool KCal::operator==( const Person& p1, const Person& p2 )
+bool KCal::operator==( const Person &p1, const Person &p2 )
 {
-    return ( p1.name() == p2.name() &&
-             p1.email() == p2.email() );
+  return ( p1.name() == p2.name() &&
+           p1.email() == p2.email() );
 }
-
 
 QString Person::fullName() const
 {
-  if( d->mName.isEmpty() ) {
+  if ( d->mName.isEmpty() ) {
     return d->mEmail;
   } else {
-    if( d->mEmail.isEmpty() )
+    if ( d->mEmail.isEmpty() ) {
       return d->mName;
-    else {
+    } else {
       // Taken from KABC::Addressee::fullEmail
       QString name = d->mName;
       QRegExp needQuotes( "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
       bool weNeedToQuote = name.indexOf( needQuotes ) != -1;
       if ( weNeedToQuote ) {
-          if ( name[0] != '"' )
-              name.prepend( '"' );
-          if ( name[ name.length()-1 ] != '"' )
-              name.append( '"' );
+        if ( name[0] != '"' ) {
+          name.prepend( '"' );
+        }
+        if ( name[ name.length()-1 ] != '"' ) {
+          name.append( '"' );
+        }
       }
       return name + " <" + d->mEmail + '>';
     }
@@ -105,15 +118,15 @@ bool Person::isEmpty() const
   return d->mEmail.isEmpty() && d->mName.isEmpty();
 }
 
-void Person::setName(const QString &name)
+void Person::setName( const QString &name )
 {
   d->mName = name;
 }
 
-void Person::setEmail(const QString &email)
+void Person::setEmail( const QString &email )
 {
   if ( email.startsWith( "mailto:", Qt::CaseInsensitive ) ) {
-    d->mEmail = email.mid(7);
+    d->mEmail = email.mid( 7 );
   } else {
     d->mEmail = email;
   }
