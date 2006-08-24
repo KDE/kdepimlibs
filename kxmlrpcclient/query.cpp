@@ -320,11 +320,13 @@ Query *Query::create( const QVariant &id, QObject *parent )
   return new Query( id, parent );
 }
 
-void Query::call( const QString &server, const QString &method,
-                  const QList<QVariant> &args, const QString &userAgent )
+void Query::call( const QString &server, 
+                  const QString &method,
+                  const QList<QVariant> &args,
+                  const QMap<QString, QString> &jobMetaData )
 {
   const QString xmlMarkup = d->markupCall( method, args );
-
+  QMap<QString, QString>::const_iterator mapIter;
   QByteArray postData;
   QDataStream stream( &postData, IO_WriteOnly );
   stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
@@ -337,9 +339,13 @@ void Query::call( const QString &server, const QString &method,
     return;
   }
 
-  job->addMetaData( "UserAgent", userAgent );
   job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
   job->addMetaData( "ConnectTimeout", "50" );
+
+  for (mapIter = jobMetaData.begin(); mapIter != jobMetaData.end(); mapIter++) 
+  {
+    job->addMetaData( mapIter.key(), mapIter.value() );
+  }
 
   connect( job, SIGNAL( data( KIO::Job*, const QByteArray& ) ),
            this, SLOT( slotData( KIO::Job*, const QByteArray& ) ) );

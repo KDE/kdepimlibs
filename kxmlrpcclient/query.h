@@ -15,6 +15,7 @@
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
+#include <QtCore/QMap>
 
 #include <kio/job.h>
 
@@ -66,10 +67,11 @@ class Query : public QObject
       @param method the method to call
       @param args an argument list to pass to said method
       @param userAgent the string to identify as to the server
+      @param jobMetaData additional arguments to pass to the KIO::Job
      */
     void call( const QString &server, const QString &method,
                const QList<QVariant> &args = QList<QVariant>(),
-               const QString &userAgent = "KDE-XMLRPC" );
+               const QMap<QString, QString> &jobMetaData = ( QMap<QString, QString>() ) );
 
   Q_SIGNALS:
     /**
@@ -141,11 +143,15 @@ class Result
 
     /**
       @return the error code of the fault 
+
+      @see errorString()
      */
     int errorCode() const;
 
     /**
       @return the error string that describes the fault
+
+      @see errorCode()
      */
     QString errorString() const;
 

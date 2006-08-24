@@ -32,6 +32,7 @@ class Client::Private
   public:
     KUrl mUrl;
     QString mUserAgent;
+    bool mDigestAuth;
 
     QList<Query*> mPendingQueries;
 
@@ -51,6 +52,7 @@ Client::Client( const KUrl &url, QObject *parent )
     d->mUrl = url;
 
   d->mUserAgent = "KDE XMLRPC resources";
+  d->mDigestAuth = false;
 }
 
 Client::~Client()
@@ -84,12 +86,39 @@ void Client::setUserAgent( const QString &userAgent )
   d->mUserAgent = userAgent;
 }
 
+bool Client::digestAuth() const
+{
+  return d->mDigestAuth;
+}
+
+void Client::enableDigestAuth()
+{
+  d->mDigestAuth = true;
+}
+
+void Client::disableDigestAuth()
+{
+  d->mDigestAuth = false;
+}
+
 void Client::call( const QString &method, const QList<QVariant> &args,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot, const QVariant &id )
 {
+
+  QMap<QString, QString> metaData;
+
   if ( d->mUrl.isEmpty() )
     kWarning() << "Cannot execute call to " << method << ": empty server URL" << endl;
+
+  //Fill metadata, with userAgent and possible digest auth
+  if ( d->mUserAgent.isEmpty() )
+    metaData["UserAgent"] = "KDE-XMLRPC";
+  else
+    metaData["UserAgent"] = d->mUserAgent;
+
+  if ( d->mDigestAuth )
+    metaData["WWW-Authenticate:"] = "Digest";
 
   Query *query = Query::create( id, this );
   connect( query, SIGNAL( message( const QList<QVariant> &, const QVariant& ) ), msgObj, messageSlot );
@@ -97,7 +126,7 @@ void Client::call( const QString &method, const QList<QVariant> &args,
   connect( query, SIGNAL( finished( Query* ) ), this, SLOT( queryFinished( Query* ) ) );
   d->mPendingQueries.append( query );
 
-  query->call( d->mUrl.url(), method, args, d->mUserAgent );
+  query->call( d->mUrl.url(), method, args, metaData );
 }
 
 void Client::call( const QString &method, const QVariant &arg,
