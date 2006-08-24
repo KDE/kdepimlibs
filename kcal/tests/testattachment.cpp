@@ -18,25 +18,15 @@
   Boston, MA 02110-1301, USA.
 */
 #include <qtest_kde.h>
-#include <QtTest/QtTest>
 
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
+#include "testattachment.h"
+#include "testattachment.moc"
+
+QTEST_KDEMAIN( AttachmentTest, NoGUI )
 
 #include "kcal/event.h"
 #include "kcal/attachment.h"
-#include "testattachment.moc"
-
 using namespace KCal;
-
-int main( int argc, char *argv[] )
-{
-  KAboutData aboutData( "qttest", "qttest", "version" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  AttachmentTest t;
-  return QTest::qExec( &t, argc, argv );
-}
-
 
 void AttachmentTest::testValidity() {
   Attachment attachment( QString( "http://www.kde.org" ) );

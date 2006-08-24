@@ -18,25 +18,15 @@
   Boston, MA 02110-1301, USA.
 */
 #include <qtest_kde.h>
-#include <QtTest/QtTest>
 
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
+#include "testalarm.h"
+#include "testalarm.moc"
+
+QTEST_KDEMAIN( AlarmTest, NoGUI )
 
 #include "kcal/event.h"
 #include "kcal/alarm.h"
-#include "testalarm.moc"
-
 using namespace KCal;
-
-int main( int argc, char *argv[] )
-{
-  KAboutData aboutData( "qttest", "qttest", "version" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  AlarmTest t;
-  return QTest::qExec( &t, argc, argv );
-}
-
 
 void AlarmTest::testValidity() {
   Event inc;

@@ -18,24 +18,14 @@
   Boston, MA 02110-1301, USA.
 */
 #include <qtest_kde.h>
-#include <QtTest/QtTest>
 
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-
-#include "kcal/attendee.h"
+#include "testattendee.h"
 #include "testattendee.moc"
 
+QTEST_KDEMAIN( AttendeeTest, NoGUI )
+
+#include "kcal/attendee.h"
 using namespace KCal;
-
-int main( int argc, char *argv[] )
-{
-  KAboutData aboutData( "qttest", "qttest", "version" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  AttendeeTest t;
-  return QTest::qExec( &t, argc, argv );
-}
-
 
 void AttendeeTest::testValidity() {
   Attendee attendee( "fred", "fred@flintstone.com" );

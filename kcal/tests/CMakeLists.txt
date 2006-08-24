@@ -52,19 +52,6 @@ endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
 if(KDE4_BUILD_TESTS)
-set(testcalendar_SRCS testcalendar.cpp )
-
-kde4_automoc(${testcalendar_SRCS})
-
-
-kde4_add_executable(testcalendar ${testcalendar_SRCS})
-
-target_link_libraries(testcalendar  ${KDE4_KDECORE_LIBS} kcal )
-
-endif(KDE4_BUILD_TESTS)
-
-########### next target ###############
-if(KDE4_BUILD_TESTS)
 set(readandwrite_SRCS readandwrite.cpp )
 
 kde4_automoc(${readandwrite_SRCS})
@@ -166,7 +153,7 @@ kde4_add_executable(testicaltimezones RUN_UNINSTALLED ${testicaltimezones_SRCS})
 
 target_link_libraries(testicaltimezones  ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
 
-add_test(libkcal-testicaltimezones ${EXECUTABLE_OUTPUT_PATH}/testicaltimezones)
+add_test(kcal-testicaltimezones ${EXECUTABLE_OUTPUT_PATH}/testicaltimezones)
 
 endif(KDE4_BUILD_TESTS)
 
@@ -176,12 +163,11 @@ set(testalarm_SRCS testalarm.cpp )
 
 kde4_automoc(${testalarm_SRCS})
 
+kde4_add_executable(testalarm NOGUI RUN_UNINSTALLED ${testalarm_SRCS})
 
-kde4_add_executable(testalarm RUN_UNINSTALLED ${testalarm_SRCS})
+target_link_libraries(testalarm ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
 
-target_link_libraries(testalarm  ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
-
-add_test(libkcal-testalarm ${EXECUTABLE_OUTPUT_PATH}/testalarm)
+add_test(kcal-testalarm ${EXECUTABLE_OUTPUT_PATH}/testalarm)
 
 endif(KDE4_BUILD_TESTS)
 
@@ -191,12 +177,11 @@ set(testattachment_SRCS testattachment.cpp )
 
 kde4_automoc(${testattachment_SRCS})
 
+kde4_add_executable(testattachment NOGUI RUN_UNINSTALLED ${testattachment_SRCS})
 
-kde4_add_executable(testattachment RUN_UNINSTALLED ${testattachment_SRCS})
+target_link_libraries(testattachment ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
 
-target_link_libraries(testattachment  ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
-
-add_test(libkcal-testattachment ${EXECUTABLE_OUTPUT_PATH}/testattachment)
+add_test(kcal-testattachment ${EXECUTABLE_OUTPUT_PATH}/testattachment)
 
 endif(KDE4_BUILD_TESTS)
 
@@ -206,12 +191,25 @@ set(testattendee_SRCS testattendee.cpp )
 
 kde4_automoc(${testattendee_SRCS})
 
+kde4_add_executable(testattendee NOGUI RUN_UNINSTALLED ${testattendee_SRCS})
 
-kde4_add_executable(testattendee RUN_UNINSTALLED ${testattendee_SRCS})
+target_link_libraries(testattendee ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
 
-target_link_libraries(testattendee  ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
+add_test(kcal-testattendee ${EXECUTABLE_OUTPUT_PATH}/testattendee)
 
-add_test(libkcal-testattendee ${EXECUTABLE_OUTPUT_PATH}/testattendee)
+endif(KDE4_BUILD_TESTS)
+
+########### next target ###############
+if(KDE4_BUILD_TESTS)
+set(testcalendar_SRCS testcalendar.cpp )
+
+kde4_automoc(${testcalendar_SRCS})
+
+kde4_add_executable(testcalendar NOGUI RUN_UNINSTALLED ${testcalendar_SRCS})
+
+target_link_libraries(testcalendar ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
+
+add_test(kcal-testcalendar ${EXECUTABLE_OUTPUT_PATH}/testcalendar)
 
 endif(KDE4_BUILD_TESTS)
 
@@ -221,10 +219,9 @@ set(testvcalexport_SRCS testvcalexport.cpp )
 
 kde4_automoc(${testvcalexport_SRCS})
 
-
 kde4_add_executable(testvcalexport RUN_UNINSTALLED ${testvcalexport_SRCS})
 
-target_link_libraries(testvcalexport  ${KDE4_KDECORE_LIBS} kcal )
+target_link_libraries(testvcalexport ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 
