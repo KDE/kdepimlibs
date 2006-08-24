@@ -67,14 +67,14 @@ Attendee::~Attendee()
   delete d;
 }
 
-bool KCal::operator==( const Attendee &a1, const Attendee &a2 )
+bool KCal::Attendee::operator==( const Attendee &attendee )
 {
   return (
-    operator==( (const Person &)a1, (const Person &) a2 ) &&
-    a1.RSVP() == a2.RSVP() &&
-    a1.role() == a2.role() &&
-    a1.status() == a2.status() &&
-    a1.uid() == a2.uid()
+    (Person &)*this == (const Person &)attendee &&
+    this->RSVP() == attendee.RSVP() &&
+    this->role() == attendee.role() &&
+    this->status() == attendee.status() &&
+    this->uid() == attendee.uid()
     );
 }
 

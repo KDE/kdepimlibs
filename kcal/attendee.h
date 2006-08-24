@@ -214,20 +214,19 @@ class KCAL_EXPORT Attendee : public Person
     */
     bool RSVP() const;
 
+    /**
+      Compares this with @p attendee for equality. 
+
+      @param attendee the attendee to compare.
+    */
+    bool operator==( const Attendee &attendee );
+
   private:
     //@cond PRIVATE
     class Private;
     Private *d;
     //@endcond
 };
-
-/**
-  Compares two attendees for equality.
-
-  @param a1 is the first comparison attendee.
-  @param a2 is the second comparison attendee.
-*/
-bool operator==( const Attendee &a1, const Attendee &a2 );
 
 }
 

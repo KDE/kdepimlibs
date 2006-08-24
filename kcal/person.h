@@ -110,20 +110,19 @@ class KCAL_EXPORT Person
     */
     QString email() const;
 
+    /**
+      Compares this with @p person for equality.
+
+      @param person the person to compare.
+    */
+    bool operator==( const Person &person );
+
   private:
     //@cond PRIVATE
     class Private;
     Private *d;
    //@endcond
 };
-
-/**
-  Compares @p p1 and @p p2 for equality
-
-  @param p1 the first person to compare.
-  @param p2 the second person to compare.
-*/
-bool operator==( const Person &p1, const Person &p2 );
 
 }
 
