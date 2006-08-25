@@ -82,7 +82,7 @@ QList<QVariant> Result::data() const
 }
 
 //small macro taken from HTTP IOSlave
-#define KIO_ARGS QByteArray packedArgs; QDataStream kioArgsStream( &packedArgs, IO_WriteOnly ); kioArgsStream
+#define KIO_ARGS QByteArray packedArgs; QDataStream kioArgsStream( &packedArgs, QIODevice::WriteOnly ); kioArgsStream
 
 class Query::Private
 {
@@ -328,7 +328,7 @@ void Query::call( const QString &server,
   const QString xmlMarkup = d->markupCall( method, args );
   QMap<QString, QString>::const_iterator mapIter;
   QByteArray postData;
-  QDataStream stream( &postData, IO_WriteOnly );
+  QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
 
   KIO_ARGS << (int)1 << KUrl(server);
