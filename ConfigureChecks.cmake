@@ -22,6 +22,7 @@ if (WIN32)
    set(CMAKE_REQUIRED_INCLUDES  ${KDEWIN32_INCLUDES} )
 endif (WIN32)
 check_include_files(stdint.h HAVE_STDINT_H)
+check_include_files(stdlib.h HAVE_STDLIB_H)
 check_include_files(unistd.h HAVE_UNISTD_H)
 check_include_files(wctype.h HAVE_WCTYPE_H)
 check_symbol_exists(snprintf "stdio.h" HAVE_SNPRINTF)   # vsnprintf.c
