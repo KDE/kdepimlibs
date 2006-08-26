@@ -51,8 +51,8 @@ namespace KCal {
 class CalFilter;
 
 /**
-   @enum SortDirection
-   Sort direction.
+  @enum SortDirection
+  Sort direction.
 */
 enum SortDirection
 {
@@ -63,8 +63,8 @@ enum SortDirection
 };
 
 /**
-   @enum EventSortField
-   How Events are to be sorted.
+  @enum EventSortField
+  How Events are to be sorted.
 */
 enum EventSortField
 {
@@ -79,8 +79,8 @@ enum EventSortField
 };
 
 /**
-   @enum TodoSortField
-   How Todos are to be sorted.
+  @enum TodoSortField
+  How Todos are to be sorted.
 */
 enum TodoSortField
 {
@@ -99,8 +99,8 @@ enum TodoSortField
 };
 
 /**
-   @enum JournalSortField
-   How Journals are to be sorted.
+  @enum JournalSortField
+  How Journals are to be sorted.
 */
 enum JournalSortField
 {
@@ -113,52 +113,52 @@ enum JournalSortField
 };
 
 /**
-   @brief
-   This is the main "calendar" object class.  It holds information like
-   Incidences(Events, To-dos, Journals), time zones, user information, etc. etc.
+  @brief
+  This is the main "calendar" object class.  It holds information like
+  Incidences(Events, To-dos, Journals), time zones, user information, etc. etc.
 
-   This is an abstract base class defining the interface to a calendar. It is
-   implemented by subclasses like CalendarLocal, which use different
-   methods to store and access the data.
+  This is an abstract base class defining the interface to a calendar. It is
+  implemented by subclasses like CalendarLocal, which use different
+  methods to store and access the data.
 
-   <b>Ownership of Incidences</b>:
+  <b>Ownership of Incidences</b>:
 
-   Incidence ownership is handled by the following policy: As soon as an
-   Incidence (or any other subclass of IncidenceBase) object is added to the
-   Calendar by an add...() method it is owned by the Calendar object.
-   The Calendar takes care of deleting it.  All Incidences returned by the
-   query functions are returned as pointers so that changes to the returned
-   Incidences are immediately visible in the calendar.  Do <em>Not</em>
-   delete any Incidence object you get from Calendar.
+  Incidence ownership is handled by the following policy: As soon as an
+  Incidence (or any other subclass of IncidenceBase) object is added to the
+  Calendar by an add...() method it is owned by the Calendar object.
+  The Calendar takes care of deleting it.  All Incidences returned by the
+  query functions are returned as pointers so that changes to the returned
+  Incidences are immediately visible in the calendar.  Do <em>Not</em>
+  delete any Incidence object you get from Calendar.
 
-   <b>Time Zone Handling</b>:
+  <b>Time Zone Handling</b>:
 
-   - Incidence Storing:
-      - By default, (when LocalTime is unset) Incidence dates will have the
-        "UTC" time zone when stored into a calendar file.
-      - To store Incidence dates without a time zone (i.e, "floating time
-        zone") LocalTime must be set using the setLocalTime() method.
+  - Incidence Storing:
+     - By default, (when LocalTime is unset) Incidence dates will have the
+       "UTC" time zone when stored into a calendar file.
+     - To store Incidence dates without a time zone (i.e, "floating time
+       zone") LocalTime must be set using the setLocalTime() method.
 
-   - Incidence Viewing:
-      - By default, Incidence dates will have the "UTC" time zone when
-        read from a calendar.
-      - To view Incidence dates using another time zone TimeZoneId must
-        be set using the setTimeZoneId() method, or the TimeZoneId can
-        be passed to the Calendar constructor.
-      - It is permitted to switch viewing time zones using setTimeZoneId()
-        as desired after the Calendar object has been constructed.
+  - Incidence Viewing:
+     - By default, Incidence dates will have the "UTC" time zone when
+       read from a calendar.
+     - To view Incidence dates using another time zone TimeZoneId must
+       be set using the setTimeZoneId() method, or the TimeZoneId can
+       be passed to the Calendar constructor.
+     - It is permitted to switch viewing time zones using setTimeZoneId()
+       as desired after the Calendar object has been constructed.
 
-   - Note that:
-      - The Calendar class doesn't do anything with TimeZoneId: it simply
-        saves it for later use by the ICalFormat class.
-      - The ICalFormat class takes TimeZoneId and applies it to loaded
-        Incidences before returning them in ICalFormat::load().
-      - Each Incidence can have its own time zone (or have a floating
-        time zone).
-      - Once an Incidence is loaded it is adjusted to use the viewing
-        time zone, TimeZoneId.
-      - Depending on the LocalTime setting, all loaded Incidences are stored
-        either in UTC or without a time zone (floating time zone).
+  - Note that:
+     - The Calendar class doesn't do anything with TimeZoneId: it simply
+       saves it for later use by the ICalFormat class.
+     - The ICalFormat class takes TimeZoneId and applies it to loaded
+       Incidences before returning them in ICalFormat::load().
+     - Each Incidence can have its own time zone (or have a floating
+       time zone).
+     - Once an Incidence is loaded it is adjusted to use the viewing
+       time zone, TimeZoneId.
+     - Depending on the LocalTime setting, all loaded Incidences are stored
+       either in UTC or without a time zone (floating time zone).
 */
 class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
                                 public IncidenceBase::Observer
@@ -168,256 +168,259 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
   public:
 
     /**
-       Construct Calendar object using a Time Zone.
+      Construct Calendar object using a Time Zone.
 
-       @param timeZoneId is a string containing a Time Zone ID, which is
-       assumed to be valid. The Time Zone Id is used to set the time zone
-       for viewing Incidence dates.\n
-       On some systems, /usr/share/zoneinfo/zone.tab may be available for
-       reference.\n
-       @e Example: "Europe/Berlin"
+      @param timeZoneId is a string containing a Time Zone ID, which is
+      assumed to be valid. The Time Zone Id is used to set the time zone
+      for viewing Incidence dates.\n
+      On some systems, /usr/share/zoneinfo/zone.tab may be available for
+      reference.\n
+      @e Example: "Europe/Berlin"
 
-       @warning
-       Do Not pass an empty timeZoneId string as this may cause unintended
-       consequences when storing Incidences into the calendar.
+      @warning
+      Do Not pass an empty timeZoneId string as this may cause unintended
+      consequences when storing Incidences into the calendar.
     */
     Calendar( const QString &timeZoneId );
 
     /**
-       Destructor
+      Destructor
     */
     virtual ~Calendar();
 
     /**
-       Set the calendar Product ID.
+      Sets the calendar Product ID.
 
-       @param productId is a QString containing the Product ID.
+      @param productId is a QString containing the Product ID.
     */
     void setProductId( const QString &productId );
 
     /**
-       Get the calendar's Product ID.
+      Returns the calendar's Product ID.
 
-       @return the string containing the Product ID
+      @return the string containing the Product ID
     */
-    QString productId();
+    QString productId() const;
 
     /**
-       Set the owner of the calendar.
+      Sets the owner of the calendar.
 
-       @param owner is a Person object.
+      @param owner is a Person object.
     */
     void setOwner( const Person &owner );
 
     /**
-       Get the owner of the calendar.
+      Returns the owner of the calendar.
 
-       @return the owner Person object.
+      @return the owner Person object.
     */
-    const Person &getOwner() const;
+    const Person &owner() const;
 
     /**
-       Set the Time Zone Id for the Calendar.
+      Sets the Time Zone Id for the Calendar.
 
-       @param timeZoneId is a string containing a Time Zone ID, which is
-       assumed to be valid. The Time Zone Id is used to set the time zone
-       for viewing Incidence dates.\n
-       On some systems, /usr/share/zoneinfo/zone.tab may be available for
-       reference.\n
-       @e Example: "Europe/Berlin"
+      @param timeZoneId is a string containing a Time Zone ID, which is
+      assumed to be valid. The Time Zone Id is used to set the time zone
+      for viewing Incidence dates.\n
+      On some systems, /usr/share/zoneinfo/zone.tab may be available for
+      reference.\n
+      @e Example: "Europe/Berlin"
 
-       @warning
-       Do Not pass an empty timeZoneId string as this may cause unintended
-       consequences when storing Incidences into the calendar.
+      @warning
+      Do Not pass an empty timeZoneId string as this may cause unintended
+      consequences when storing Incidences into the calendar.
     */
     void setTimeZoneId( const QString &timeZoneId );
 
     /**
-     * Set the timezone used for viewing the incidences in this calendar. In
-     * case it differs from the current timezone, shift the events such that they
-     * retain their absolute time (in UTC).
-     * @ref setTimeZoneId
-     */
+      Sets the timezone used for viewing the incidences in this calendar. In
+      case it differs from the current timezone, shift the events such that they
+      retain their absolute time (in UTC).
+      @ref setTimeZoneId
+    */
     virtual void setTimeZoneIdViewOnly( const QString &timeZoneId ) = 0;
 
     /**
-       Get the viewing time zone ID for the calendar.
+      Returns the viewing time zone ID for the calendar.
 
-       @return the string containing the time zone ID.
+      @return the string containing the time zone ID.
     */
     QString timeZoneId() const;
 
     /**
-       Get the time zone collection used by the calendar.
+      Returns the time zone collection used by the calendar.
 
-       @return the time zones collection.
+      @return the time zones collection.
     */
     KTimeZones *timeZones() const;
 
     /**
-       Set to store calendar Incidences without a time zone.
+      Sets to store calendar Incidences without a time zone.
     */
     void setLocalTime();
 
     /**
-       Determine if calendar Incidences are to be written without a time zone.
+      Determine if calendar Incidences are to be written without a time zone.
 
-       @return true if the calendar is set to write Incidences withoout
-       a time zone; false otherwise.
+      @return true if the calendar is set to write Incidences withoout
+      a time zone; false otherwise.
     */
     bool isLocalTime() const;
 
     /**
-       Set if the calendar has been modified.
+      Sets if the calendar has been modified.
 
-       @param modified is true if the calendar has been modified since open
-       or last save.
+      @param modified is true if the calendar has been modified since open
+      or last save.
     */
     void setModified( bool modified );
 
     /**
-       Determine the calendar's modification status.
+      Determine the calendar's modification status.
 
-       @return true if the calendar has been modified since open or last save.
+      @return true if the calendar has been modified since open or last save.
     */
-    bool isModified() const { return mModified; }
+    bool isModified() const;
 
     /**
-       Clears out the current calendar, freeing all used memory etc.
+      Clears out the current calendar, freeing all used memory etc.
     */
     virtual void close() = 0;
 
     /**
-       Sync changes in memory to persistent storage.
+      Sync changes in memory to persistent storage.
     */
     virtual void save() = 0;
 
     /**
-     * Load the calendar contents from storage. This requires the calendar to have been loaded
-     * once before, in other words initialized.
-     * @par tz The time zone to use for loading.
-     */
+      Load the calendar contents from storage. This requires the calendar
+      to have been loaded once before, in other words initialized.
+      @par tz The time zone to use for loading.
+    */
     virtual bool reload( const QString &tz ) = 0;
 
     /**
-       Determine if the calendar is currently being saved.
+      Determine if the calendar is currently being saved.
 
-       @return true if the calendar is currently being saved; false otherwise.
+      @return true if the calendar is currently being saved; false otherwise.
     */
     virtual bool isSaving() { return false; }
 
     /**
-       Return a list of all categories used by Incidences in this Calendar.
+      Return a list of all categories used by Incidences in this Calendar.
 
-       @return a QStringList containing all the categories.
+      @return a QStringList containing all the categories.
     */
     QStringList categories();
 
 // Incidence Specific Methods //
 
     /**
-       Insert an Incidence into the calendar.
+      Insert an Incidence into the calendar.
 
-       @param incidence is a pointer to the Incidence to insert.
+      @param incidence is a pointer to the Incidence to insert.
 
-       @return true if the Incidence was successfully inserted; false otherwise.
+      @return true if the Incidence was successfully inserted; false otherwise.
     */
     virtual bool addIncidence( Incidence *incidence );
 
     /**
-       Remove an Incidence from the calendar.
+      Remove an Incidence from the calendar.
 
-       @param incidence is a pointer to the Incidence to remove.
+      @param incidence is a pointer to the Incidence to remove.
 
-       @return true if the Incidence was successfully removed; false otherwise.
+      @return true if the Incidence was successfully removed; false otherwise.
     */
     virtual bool deleteIncidence( Incidence *incidence );
 
     /**
-       Return a filtered list of all Incidences for this Calendar.
+      Return a filtered list of all Incidences for this Calendar.
 
-       @return the list of all filtered Incidences.
+      @return the list of all filtered Incidences.
     */
     virtual Incidence::List incidences();
 
     /**
-       Return a filtered list of all Incidences which occur on the given date.
+      Return a filtered list of all Incidences which occur on the given date.
 
-       @param date request filtered Incidence list for this QDate only.
+      @param date request filtered Incidence list for this QDate only.
 
-       @return the list of filtered Incidences occurring on the specified date.
+      @return the list of filtered Incidences occurring on the specified date.
     */
     virtual Incidence::List incidences( const QDate &date );
 
     /**
-       Return an unfiltered list of all Incidences for this Calendar.
+      Return an unfiltered list of all Incidences for this Calendar.
 
-       @return the list of all unfiltered Incidences.
+      @return the list of all unfiltered Incidences.
     */
     virtual Incidence::List rawIncidences();
 
     /**
-       Returns the Incidence associated with the given unique identifier.
+      Returns the Incidence associated with the given unique identifier.
 
-       @param uid is a unique identifier string.
+      @param uid is a unique identifier string.
 
-       @return a pointer to the Incidence.
-       A null pointer is returned if no such Incidence exists.
+      @return a pointer to the Incidence.
+      A null pointer is returned if no such Incidence exists.
     */
     Incidence *incidence( const QString &uid );
 
     /**
-       Returns the Incidence associated with the given scheduling identifier.
+      Returns the Incidence associated with the given scheduling identifier.
 
-       @param sid is a unique scheduling identifier string.
+      @param sid is a unique scheduling identifier string.
 
-       @return a pointer to the Incidence.
-       A null pointer is returned if no such Incidence exists.
+      @return a pointer to the Incidence.
+      A null pointer is returned if no such Incidence exists.
     */
     Incidence *incidenceFromSchedulingID( const QString &sid );
 
     /**
-       Create a merged list of Events, Todos, and Journals.
+      Create a merged list of Events, Todos, and Journals.
 
-       @param events is an Event list to merge.
-       @param todos is a Todo list to merge.
-       @param journals is a Journal list to merge.
+      @param events is an Event list to merge.
+      @param todos is a Todo list to merge.
+      @param journals is a Journal list to merge.
 
-       @return a list of merged Incidences.
+      @return a list of merged Incidences.
     */
     static Incidence::List mergeIncidenceList( const Event::List &events,
                                                const Todo::List &todos,
                                                const Journal::List &journals );
 
     /**
-       Flag that a change to a Calendar Incidence is starting.
+      Flag that a change to a Calendar Incidence is starting.
 
-       @param incidence is a pointer to the Incidence that will be changing.
+      @param incidence is a pointer to the Incidence that will be changing.
     */
     virtual bool beginChange( Incidence *incidence );
 
     /**
-       Flag that a change to a Calendar Incidence has completed.
+      Flag that a change to a Calendar Incidence has completed.
 
-       @param incidence is a pointer to the Incidence that was changed.
+      @param incidence is a pointer to the Incidence that was changed.
     */
     virtual bool endChange( Incidence *incidence );
 
+// Dissociate a single occurrence or all future occurrences from a recurring
+// sequence. The new incidence is returned, but not automatically inserted
+// into the calendar, which is left to the calling application.
     /**
-       Dissociate an Incidence from a recurring Incidence.
-       By default, only one single Incidence for the specified @a date
-       will be dissociated and returned.  If @a single is false, then
-       the recurrence will be split at @a date, the old Incidence will
-       have its recurrence ending at @a date and the new Incidence
-       will have all recurrences past the @a date.
+      Dissociate an Incidence from a recurring Incidence.
+      By default, only one single Incidence for the specified @a date
+      will be dissociated and returned.  If @a single is false, then
+      the recurrence will be split at @a date, the old Incidence will
+      have its recurrence ending at @a date and the new Incidence
+      will have all recurrences past the @a date.
 
-       @param incidence is a pointer to a recurring Incidence.
-       @param date is the QDate within the recurring Incidence on which
-       the dissociation will be performed.
-       @param single is a flag meaning that a new Incidence should be created
-       from the recurring Incidences after @a date.
+      @param incidence is a pointer to a recurring Incidence.
+      @param date is the QDate within the recurring Incidence on which
+      the dissociation will be performed.
+      @param single is a flag meaning that a new Incidence should be created
+      from the recurring Incidences after @a date.
 
-       @return a pointer to a new recurring Incidence if @a single is false.
+      @return a pointer to a new recurring Incidence if @a single is false.
     */
     Incidence *dissociateOccurrence( Incidence *incidence, const QDate &date,
                                      bool single = true );
@@ -425,80 +428,80 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 // Event Specific Methods //
 
     /**
-       Insert an Event into the calendar.
+      Insert an Event into the calendar.
 
-       @param event is a pointer to the Event to insert.
+      @param event is a pointer to the Event to insert.
 
-       @return true if the Event was successfully inserted; false otherwise.
+      @return true if the Event was successfully inserted; false otherwise.
     */
     virtual bool addEvent( Event *event ) = 0;
 
     /**
-       Remove an Event from the calendar.
+      Remove an Event from the calendar.
 
-       @param event is a pointer to the Event to remove.
+      @param event is a pointer to the Event to remove.
 
-       @return true if the Event was successfully remove; false otherwise.
+      @return true if the Event was successfully remove; false otherwise.
     */
     virtual bool deleteEvent( Event *event ) = 0;
 
     /**
-       Sort a list of Events.
+      Sort a list of Events.
 
-       @param eventList is a pointer to a list of Events.
-       @param sortField specifies the EventSortField.
-       @param sortDirection specifies the SortDirection.
+      @param eventList is a pointer to a list of Events.
+      @param sortField specifies the EventSortField.
+      @param sortDirection specifies the SortDirection.
 
-       @return a list of Events sorted as specified.
+      @return a list of Events sorted as specified.
     */
     static Event::List sortEvents( Event::List *eventList,
                                    EventSortField sortField,
                                    SortDirection sortDirection );
     /**
-       Return a sorted, filtered list of all Events for this Calendar.
+      Return a sorted, filtered list of all Events for this Calendar.
 
-       @param sortField specifies the EventSortField.
-       @param sortDirection specifies the SortDirection.
+      @param sortField specifies the EventSortField.
+      @param sortDirection specifies the SortDirection.
 
-       @return the list of all filtered Events sorted as specified.
+      @return the list of all filtered Events sorted as specified.
     */
     virtual Event::List events(
       EventSortField sortField = EventSortUnsorted,
       SortDirection sortDirection = SortDirectionAscending );
 
     /**
-       Return a filtered list of all Events which occur on the given timestamp.
+      Return a filtered list of all Events which occur on the given timestamp.
 
-       @param qdt request filtered Event list for this QDateTime only.
+      @param qdt request filtered Event list for this QDateTime only.
 
-       @return the list of filtered Events occurring on the specified timestamp.
+      @return the list of filtered Events occurring on the specified timestamp.
     */
     Event::List events( const QDateTime &qdt );
 
     /**
-       Return a filtered list of all Events occurring within a date range.
+      Return a filtered list of all Events occurring within a date range.
 
-       @param start is the starting date.
-       @param end is the ending date.
-       @param inclusive if true only Events which are completely included
-       within the date range are returned.
+      @param start is the starting date.
+      @param end is the ending date.
+      @param inclusive if true only Events which are completely included
+      within the date range are returned.
 
-       @return the list of filtered Events occurring within the specified
-       date range.
+      @return the list of filtered Events occurring within the specified
+      date range.
     */
     Event::List events( const QDate &start, const QDate &end,
                         bool inclusive = false );
 
     /**
-       Return a sorted, filtered list of all Events which occur on the given
-       date.  The Events are sorted according to @a sortField and
-       @a sortDirection.
+      Return a sorted, filtered list of all Events which occur on the given
+      date.  The Events are sorted according to @a sortField and
+      @a sortDirection.
 
-       @param date request filtered Event list for this QDate only.
-       @param sortField specifies the EventSortField.
-       @param sortDirection specifies the SortDirection.
+      @param date request filtered Event list for this QDate only.
+      @param sortField specifies the EventSortField.
+      @param sortDirection specifies the SortDirection.
 
-       @return the list of sorted, filtered Events occurring on @a date.
+      @return the list of sorted, filtered Events occurring on @a date.
     */
     Event::List events(
       const QDate &date,
@@ -506,52 +509,52 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       SortDirection sortDirection = SortDirectionAscending );
 
     /**
-       Return a sorted, unfiltered list of all Events for this Calendar.
+      Return a sorted, unfiltered list of all Events for this Calendar.
 
-       @param sortField specifies the EventSortField.
-       @param sortDirection specifies the SortDirection.
+      @param sortField specifies the EventSortField.
+      @param sortDirection specifies the SortDirection.
 
-       @return the list of all unfiltered Events sorted as specified.
+      @return the list of all unfiltered Events sorted as specified.
     */
     virtual Event::List rawEvents(
       EventSortField sortField = EventSortUnsorted,
       SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
-       Return an unfiltered list of all Events which occur on the given
-       timestamp.
+      Return an unfiltered list of all Events which occur on the given
+      timestamp.
 
-       @param qdt request unfiltered Event list for this QDateTime only.
+      @param qdt request unfiltered Event list for this QDateTime only.
 
-       @return the list of unfiltered Events occurring on the specified
-       timestamp.
+      @return the list of unfiltered Events occurring on the specified
+      timestamp.
     */
     virtual Event::List rawEventsForDate( const QDateTime &qdt ) = 0;
 
     /**
-       Return an unfiltered list of all Events occurring within a date range.
+      Return an unfiltered list of all Events occurring within a date range.
 
-       @param start is the starting date.
-       @param end is the ending date.
-       @param inclusive if true only Events which are completely included
-       within the date range are returned.
+      @param start is the starting date.
+      @param end is the ending date.
+      @param inclusive if true only Events which are completely included
+      within the date range are returned.
 
-       @return the list of unfiltered Events occurring within the specified
-       date range.
+      @return the list of unfiltered Events occurring within the specified
+      date range.
     */
     virtual Event::List rawEvents( const QDate &start, const QDate &end,
                                    bool inclusive = false ) = 0;
 
     /**
-       Return a sorted, unfiltered list of all Events which occur on the given
-       date.  The Events are sorted according to @a sortField and
-       @a sortDirection.
+      Return a sorted, unfiltered list of all Events which occur on the given
+      date.  The Events are sorted according to @a sortField and
+      @a sortDirection.
 
-       @param date request unfiltered Event list for this QDate only.
-       @param sortField specifies the EventSortField.
-       @param sortDirection specifies the SortDirection.
+      @param date request unfiltered Event list for this QDate only.
+      @param sortField specifies the EventSortField.
+      @param sortDirection specifies the SortDirection.
 
-       @return the list of sorted, unfiltered Events occurring on @a date.
+      @return the list of sorted, unfiltered Events occurring on @a date.
     */
     virtual Event::List rawEventsForDate(
       const QDate &date,
@@ -559,229 +562,229 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
-       Returns the Event associated with the given unique identifier.
+      Returns the Event associated with the given unique identifier.
 
-       @param uid is a unique identifier string.
+      @param uid is a unique identifier string.
 
-       @return a pointer to the Event.
-       A null pointer is returned if no such Event exists.
+      @return a pointer to the Event.
+      A null pointer is returned if no such Event exists.
     */
     virtual Event *event( const QString &uid ) = 0;
 
 // Todo Specific Methods //
 
     /**
-       Insert a Todo into the calendar.
+      Insert a Todo into the calendar.
 
-       @param todo is a pointer to the Todo to insert.
+      @param todo is a pointer to the Todo to insert.
 
-       @return true if the Todo was successfully inserted; false otherwise.
+      @return true if the Todo was successfully inserted; false otherwise.
     */
     virtual bool addTodo( Todo *todo ) = 0;
 
     /**
-       Remove a Todo from the calendar.
+      Remove a Todo from the calendar.
 
-       @param todo is a pointer to the Todo to remove.
+      @param todo is a pointer to the Todo to remove.
 
-       @return true if the Todo was successfully removed; false otherwise.
+      @return true if the Todo was successfully removed; false otherwise.
     */
     virtual bool deleteTodo( Todo *todo ) = 0;
 
     /**
-       Sort a list of Todos.
+      Sort a list of Todos.
 
-       @param todoList is a pointer to a list of Todos.
-       @param sortField specifies the TodoSortField.
-       @param sortDirection specifies the SortDirection.
+      @param todoList is a pointer to a list of Todos.
+      @param sortField specifies the TodoSortField.
+      @param sortDirection specifies the SortDirection.
 
-       @return a list of Todos sorted as specified.
+      @return a list of Todos sorted as specified.
     */
     static Todo::List sortTodos( Todo::List *todoList,
                                  TodoSortField sortField,
                                  SortDirection sortDirection );
 
     /**
-       Return a sorted, filtered list of all Todos for this Calendar.
+      Return a sorted, filtered list of all Todos for this Calendar.
 
-       @param sortField specifies the TodoSortField.
-       @param sortDirection specifies the SortDirection.
+      @param sortField specifies the TodoSortField.
+      @param sortDirection specifies the SortDirection.
 
-       @return the list of all filtered Todos sorted as specified.
+      @return the list of all filtered Todos sorted as specified.
     */
     virtual Todo::List todos(
       TodoSortField sortField = TodoSortUnsorted,
       SortDirection sortDirection = SortDirectionAscending );
 
     /**
-       Return a filtered list of all Todos which are due on the specified date.
+      Return a filtered list of all Todos which are due on the specified date.
 
-       @param date request filtered Todos due on this QDate.
+      @param date request filtered Todos due on this QDate.
 
-       @return the list of filtered Todos due on the specified date.
+      @return the list of filtered Todos due on the specified date.
     */
     virtual Todo::List todos( const QDate &date );
 
     /**
-       Return a sorted, unfiltered list of all Todos for this Calendar.
+      Return a sorted, unfiltered list of all Todos for this Calendar.
 
-       @param sortField specifies the TodoSortField.
-       @param sortDirection specifies the SortDirection.
+      @param sortField specifies the TodoSortField.
+      @param sortDirection specifies the SortDirection.
 
-       @return the list of all unfiltered Todos sorted as specified.
+      @return the list of all unfiltered Todos sorted as specified.
     */
     virtual Todo::List rawTodos(
       TodoSortField sortField = TodoSortUnsorted,
       SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
-       Return an unfiltered list of all Todos which due on the specified date.
+      Return an unfiltered list of all Todos which due on the specified date.
 
-       @param date request unfiltered Todos due on this QDate.
+      @param date request unfiltered Todos due on this QDate.
 
-       @return the list of unfiltered Todos due on the specified date.
+      @return the list of unfiltered Todos due on the specified date.
     */
     virtual Todo::List rawTodosForDate( const QDate &date ) = 0;
 
     /**
-       Returns the Todo associated with the given unique identifier.
+      Returns the Todo associated with the given unique identifier.
 
-       @param uid is a unique identifier string.
+      @param uid is a unique identifier string.
 
-       @return a pointer to the Todo.
-       A null pointer is returned if no such Todo exists.
+      @return a pointer to the Todo.
+      A null pointer is returned if no such Todo exists.
     */
     virtual Todo *todo( const QString &uid ) = 0;
 
 // Journal Specific Methods //
 
     /**
-       Insert a Journal into the calendar.
+      Insert a Journal into the calendar.
 
-       @param journal is a pointer to the Journal to insert.
+      @param journal is a pointer to the Journal to insert.
 
-       @return true if the Journal was successfully inserted; false otherwise.
+      @return true if the Journal was successfully inserted; false otherwise.
     */
     virtual bool addJournal( Journal *journal ) = 0;
 
     /**
-       Remove a Journal from the calendar.
+      Remove a Journal from the calendar.
 
-       @param journal is a pointer to the Journal to remove.
+      @param journal is a pointer to the Journal to remove.
 
-       @return true if the Journal was successfully removed; false otherwise.
+      @return true if the Journal was successfully removed; false otherwise.
     */
     virtual bool deleteJournal( Journal *journal ) = 0;
 
     /**
-       Sort a list of Journals.
+      Sort a list of Journals.
 
-       @param journalList is a pointer to a list of Journals.
-       @param sortField specifies the JournalSortField.
-       @param sortDirection specifies the SortDirection.
+      @param journalList is a pointer to a list of Journals.
+      @param sortField specifies the JournalSortField.
+      @param sortDirection specifies the SortDirection.
 
-       @return a list of Journals sorted as specified.
+      @return a list of Journals sorted as specified.
     */
     static Journal::List sortJournals( Journal::List *journalList,
                                        JournalSortField sortField,
                                        SortDirection sortDirection );
     /**
-       Return a sorted, filtered list of all Journals for this Calendar.
+      Return a sorted, filtered list of all Journals for this Calendar.
 
-       @param sortField specifies the JournalSortField.
-       @param sortDirection specifies the SortDirection.
+      @param sortField specifies the JournalSortField.
+      @param sortDirection specifies the SortDirection.
 
-       @return the list of all filtered Journals sorted as specified.
+      @return the list of all filtered Journals sorted as specified.
     */
     virtual Journal::List journals(
       JournalSortField sortField = JournalSortUnsorted,
       SortDirection sortDirection = SortDirectionAscending );
 
     /**
-       Return a filtered list of all Journals for on the specified date.
+      Return a filtered list of all Journals for on the specified date.
 
-       @param date request filtered Journals for this QDate only.
+      @param date request filtered Journals for this QDate only.
 
-       @return the list of filtered Journals for the specified date.
+      @return the list of filtered Journals for the specified date.
     */
     virtual Journal::List journals( const QDate &date );
 
     /**
-       Return a sorted, unfiltered list of all Journals for this Calendar.
+      Return a sorted, unfiltered list of all Journals for this Calendar.
 
-       @param sortField specifies the JournalSortField.
-       @param sortDirection specifies the SortDirection.
+      @param sortField specifies the JournalSortField.
+      @param sortDirection specifies the SortDirection.
 
-       @return the list of all unfiltered Journals sorted as specified.
+      @return the list of all unfiltered Journals sorted as specified.
     */
     virtual Journal::List rawJournals(
       JournalSortField sortField = JournalSortUnsorted,
       SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
-       Return an unfiltered list of all Journals for on the specified date.
+      Return an unfiltered list of all Journals for on the specified date.
 
-       @param date request unfiltered Journals for this QDate only.
+      @param date request unfiltered Journals for this QDate only.
 
-       @return the list of unfiltered Journals for the specified date.
+      @return the list of unfiltered Journals for the specified date.
     */
     virtual Journal::List rawJournalsForDate( const QDate &date ) = 0;
 
     /**
-       Returns the Journal associated with the given unique identifier.
+      Returns the Journal associated with the given unique identifier.
 
-       @param uid is a unique identifier string.
+      @param uid is a unique identifier string.
 
-       @return a pointer to the Journal.
-       A null pointer is returned if no such Journal exists.
+      @return a pointer to the Journal.
+      A null pointer is returned if no such Journal exists.
     */
     virtual Journal *journal( const QString &uid ) = 0;
 
 // Relations Specific Methods //
 
     /**
-       Setup Relations for an Incidence.
+      Setup Relations for an Incidence.
 
-       @param incidence is a pointer to the Incidence to have a
-       Relation setup.
+      @param incidence is a pointer to the Incidence to have a
+      Relation setup.
     */
     virtual void setupRelations( Incidence *incidence );
 
     /**
-       Remove all Relations from an Incidence.
+      Remove all Relations from an Incidence.
 
-       @param incidence is a pointer to the Incidence to have a
-       Relation removed.
+      @param incidence is a pointer to the Incidence to have a
+      Relation removed.
     */
     virtual void removeRelations( Incidence *incidence );
 
 // Filter Specific Methods //
 
     /**
-       Set the calendar filter.
+      Sets the calendar filter.
 
-       @param filter a pointer to a CalFilter object which will be
-       used to filter Calendar Incidences.
+      @param filter a pointer to a CalFilter object which will be
+      used to filter Calendar Incidences.
     */
     void setFilter( CalFilter *filter );
 
     /**
-       Return the calendar filter.
+      Return the calendar filter.
 
-       @return a pointer to the calendar CalFilter.
-       A null pointer is returned if no such CalFilter exists.
+      @return a pointer to the calendar CalFilter.
+      A null pointer is returned if no such CalFilter exists.
     */
     CalFilter *filter();
 
 // Alarm Specific Methods //
 
     /**
-       Return a list of Alarms within a time range for this Calendar.
+      Return a list of Alarms within a time range for this Calendar.
 
-       @param from is the starting timestamp.
-       @param to is the ending timestamp.
+      @param from is the starting timestamp.
+      @param to is the ending timestamp.
 
-       @return the list of Alarms for the for the specified time range.
+      @return the list of Alarms for the for the specified time range.
     */
     virtual Alarm::List alarms( const QDateTime &from,
                                 const QDateTime &to ) = 0;
@@ -789,126 +792,126 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 // Observer Specific Methods //
 
     /**
-       @class Observer
+      @class Observer
 
-       The Observer class.
+      The Observer class.
     */
     class Observer
     {
       public:
         virtual ~Observer() {}
         /**
-           Notify the Observer that a Calendar has been modified.
+          Notify the Observer that a Calendar has been modified.
 
-           First parameter is true if the calendar has been modified.\n
-           Second parameter is a pointer to the Calendar object that
-           is being observed.
+          First parameter is true if the calendar has been modified.\n
+          Second parameter is a pointer to the Calendar object that
+          is being observed.
         */
         virtual void calendarModified( bool /*modified*/,
-                                       Calendar * /*calendar*/ ) {};
+                                       Calendar * /*calendar*/ ) {}
 
         /**
-           Notify the Observer that an Incidence has been inserted.
+          Notify the Observer that an Incidence has been inserted.
 
-           First parameter is a pointer to the Incidence that was inserted.
+          First parameter is a pointer to the Incidence that was inserted.
         */
         virtual void calendarIncidenceAdded( Incidence * /*incidence*/ ) {}
 
         /**
-           Notify the Observer that an Incidence has been modified.
+          Notify the Observer that an Incidence has been modified.
 
-           First parameter is a pointer to the Incidence that was modified.
+          First parameter is a pointer to the Incidence that was modified.
         */
         virtual void calendarIncidenceChanged( Incidence * /*incidence*/ ) {}
 
         /**
-           Notify the Observer that an Incidence has been removed.
+          Notify the Observer that an Incidence has been removed.
 
-           First parameter is a pointer to the Incidence that was removed.
+          First parameter is a pointer to the Incidence that was removed.
         */
           virtual void calendarIncidenceDeleted( Incidence * /*incidence*/ ) {}
     };
 
     /**
-       Register an Observer for this Calendar.
+      Register an Observer for this Calendar.
 
-       @param observer is a pointer to an Observer object that will be
-       watching this Calendar.
+      @param observer is a pointer to an Observer object that will be
+      watching this Calendar.
      */
     void registerObserver( Observer *observer );
 
     /**
-       Unregister an Observer for this Calendar.
+      Unregister an Observer for this Calendar.
 
-       @param observer is a pointer to an Observer object that has been
-       watching this Calendar.
+      @param observer is a pointer to an Observer object that has been
+      watching this Calendar.
      */
     void unregisterObserver( Observer *observer );
 
   signals:
     /**
-       Signal that the calendar has been modified.
+      Signal that the calendar has been modified.
      */
     void calendarChanged();
 
     /**
-       Signal that the calendar has been saved.
+      Signal that the calendar has been saved.
      */
     void calendarSaved();
 
     /**
-       Signal that the calendar has been loaded into memory.
+      Signal that the calendar has been loaded into memory.
      */
     void calendarLoaded();
 
   protected:
     /**
-       The Observer interface. So far not implemented.
+      The Observer interface. So far not implemented.
 
-       @param incidenceBase is a pointer an IncidenceBase object.
+      @param incidenceBase is a pointer an IncidenceBase object.
     */
     void incidenceUpdated( IncidenceBase *incidenceBase );
 
     /**
-       Let Calendar subclasses set the Time Zone ID.
+      Let Calendar subclasses set the Time Zone ID.
 
-       First parameter is a string containing a Time Zone ID, which is
-       assumed to be valid. On some systems, /usr/share/zoneinfo/zone.tab
-       may be available for reference.\n
-       @e Example: "Europe/Berlin"
+      First parameter is a string containing a Time Zone ID, which is
+      assumed to be valid. On some systems, /usr/share/zoneinfo/zone.tab
+      may be available for reference.\n
+      @e Example: "Europe/Berlin"
 
-       @warning
-       Do Not pass an empty timeZoneId string as this may cause unintended
-       consequences when storing Incidences into the calendar.
+      @warning
+      Do Not pass an empty timeZoneId string as this may cause unintended
+      consequences when storing Incidences into the calendar.
     */
     virtual void doSetTimeZoneId( const QString &/*timeZoneId*/ ) {}
 
     /**
-       Let Calendar subclasses notify that they inserted an Incidence.
+      Let Calendar subclasses notify that they inserted an Incidence.
 
-       @param incidence is a pointer to the Incidence object that was inserted.
+      @param incidence is a pointer to the Incidence object that was inserted.
     */
     void notifyIncidenceAdded( Incidence *incidence );
 
     /**
-       Let Calendar subclasses notify that they modified an Incidence.
+      Let Calendar subclasses notify that they modified an Incidence.
 
-       @param incidence is a pointer to the Incidence object that was modified.
+      @param incidence is a pointer to the Incidence object that was modified.
     */
     void notifyIncidenceChanged( Incidence *incidence );
 
     /**
-       Let Calendar subclasses notify that they removed an Incidence.
+      Let Calendar subclasses notify that they removed an Incidence.
 
-       @param incidence is a pointer to the Incidence object that was removed.
+      @param incidence is a pointer to the Incidence object that was removed.
     */
     void notifyIncidenceDeleted( Incidence *incidence );
 
     /**
-       Let Calendar subclasses notify that they enabled an Observer.
+      Let Calendar subclasses notify that they enabled an Observer.
 
-       @param enabled if true tells the calendar that a subclass has
-       enabled an Observer.
+      @param enabled if true tells the calendar that a subclass has
+      enabled an Observer.
     */
     void setObserversEnabled( bool enabled );
 
@@ -917,27 +920,10 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     //      returning static Alarm::List
 
   private:
-    QString mProductId;
-    Person mOwner;
-    KTimeZones *mTimeZones;   // collection of time zones used in this calendar
-    QString mTimeZoneId;
-    bool mLocalTime;
-
-    bool mModified;
-
-    CalFilter *mDefaultFilter;
-    CalFilter *mFilter;
-
-    QList<Observer*> mObservers;
-    bool mNewObserver;
-    bool mObserversEnabled;
-
-    // This list is used to put together related Todos
-    QMultiHash<QString, Incidence*> mOrphans;
-    QMultiHash<QString, Incidence*> mOrphanUids;
-
+    //@cond PRIVATE
     class Private;
     Private *d;
+    //@endcond
   };
 
 }

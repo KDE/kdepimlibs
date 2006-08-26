@@ -303,7 +303,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Return the owner of the calendar's full name.
     */
-    const Person &getOwner() const;
+    const Person &owner() const;
     /**
       Set the owner of the calendar. Should be owner's full name.
     */

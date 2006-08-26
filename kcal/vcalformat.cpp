@@ -685,7 +685,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
     anEvent->setOrganizer( s = fakeCString(vObjectUStringZValue(vo) ) );
     deleteStr(s);
   } else {
-    anEvent->setOrganizer( mCalendar->getOwner() );
+    anEvent->setOrganizer( mCalendar->owner() );
   }
 
   // attendees.
@@ -901,7 +901,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     anEvent->setOrganizer( s = fakeCString(vObjectUStringZValue(vo) ) );
     deleteStr(s);
   } else {
-    anEvent->setOrganizer( mCalendar->getOwner() );
+    anEvent->setOrganizer( mCalendar->owner() );
   }
 
   // deal with attendees.
