@@ -18,6 +18,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Period class.
+
+  @author Cornelius Schumacher
+*/
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -46,7 +53,8 @@ Period::Period( const QDateTime &start, const Duration &duration )
 }
 
 
-bool Period::operator<( const Period& other ) const
+
+bool Period::operator<( const Period &other ) const
 {
   return start() < other.start();
 }
@@ -56,17 +64,17 @@ QDateTime Period::start() const
   return mStart;
 }
 
-QDateTime Period::end()const
+QDateTime Period::end() const
 {
   return mEnd;
 }
 
-Duration Period::duration()
+Duration Period::duration() const
 {
   return Duration( mStart, mEnd );
 }
 
-bool Period::hasDuration()const
+bool Period::hasDuration() const
 {
   return mHasDuration;
 }

@@ -18,6 +18,14 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Period class.
+
+  @author Cornelius Schumacher
+*/
+
 #ifndef KCAL_PERIOD_H
 #define KCAL_PERIOD_H
 
@@ -29,8 +37,11 @@
 namespace KCal {
 
 /**
-  This class represents a period of time. The period can be defined by either a
-  start time and an end time or by a start time and a duration.
+  @brief
+  Represents a period of time.
+
+  The period can be defined by either a start time and an end time or
+  by a start time and a duration.
 */
 class KCAL_EXPORT Period
 {
@@ -40,13 +51,13 @@ class KCAL_EXPORT Period
     Period( const QDateTime &start, const Duration &duration );
 
     /** Returns true if this element is smaller than the @param other one */
-    bool operator<( const Period& other ) const;
+    bool operator<( const Period &other ) const;
 
     QDateTime start() const;
     QDateTime end() const;
-    Duration duration();
+    Duration duration() const;
 
-    bool hasDuration()const;
+    bool hasDuration() const;
 
   private:
     QDateTime mStart;
