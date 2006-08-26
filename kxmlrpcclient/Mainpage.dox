@@ -1,0 +1,26 @@
+/** 
+@mainpage kxmlrpcclient - An XML-RPC client library for KDE
+
+@section purpose Purpose
+
+kxmlrpclient provides client-side support for the XML-RPC protocol.
+
+@section desc Description
+
+This library contains simple XML-RPC Client support. It is used mainly
+by the egroupware module of kdepim, but is a complete client and is
+quite easy to use. Only one interface is exposed to the world,
+kxmlrpcclient/client.h and of that interface, you only need to
+use 3 methods: setUrl, setUserAgent and call.
+
+A small note on authentication. If you will be accessing an XML-RPC server
+which uses HTTP-AUTH, simply set the user and pass in the KURL. Digest
+authentication is more complicated and not supported at this time.
+
+@author Narayan Newton  \<narayannewton@gmail.com\>
+
+<b>License: LGPL</b>
+
+kxmlrpcclient development is discussed on the 
+<a href="mailto:kde-pim@kde.org">kde-pim@kde.org</a> mailing list.
+*/
