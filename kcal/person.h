@@ -68,6 +68,8 @@ class KCAL_EXPORT Person
     */
     Person( const QString &name, const QString &email );
 
+    ~Person();
+
     /**
       Returns true if the person name and email address are empty.
     */

@@ -72,6 +72,11 @@ Person::Person( const QString &name, const QString &email )
   setEmail( email );
 }
 
+Person::~Person()
+{
+  delete d;
+}
+
 bool KCal::Person::operator==( const Person &person )
 {
   return ( this->name() == person.name() &&
