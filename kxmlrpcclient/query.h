@@ -70,8 +70,8 @@ class Query : public QObject
       @param jobMetaData additional arguments to pass to the KIO::Job
      */
     void call( const QString &server, const QString &method,
-               const QList<QVariant> &args = QList<QVariant>(),
-               const QMap<QString, QString> &jobMetaData = ( QMap<QString, QString>() ) );
+               const QList<QVariant> &args /* = QList<QVariant>() */ ,
+               const QMap<QString, QString> &jobMetaData /* = QMap<QString, QString>() */ );
 
   Q_SIGNALS:
     /**
