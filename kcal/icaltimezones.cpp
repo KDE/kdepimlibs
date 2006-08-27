@@ -727,7 +727,7 @@ KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool day
           // The end date time specified in an RRULE should be in UTC.
           // Convert to local time to avoid datesInInterval() getting things wrong.
           if (r.duration() == 0) {
-            KDateTime end = r.endDt();
+              KDateTime end(r.endDt());
             if (end.timeSpec() == KDateTime::Spec::UTC) {
               end.setTimeSpec(KDateTime::Spec::ClockTime);
 #warning temporary build hack
