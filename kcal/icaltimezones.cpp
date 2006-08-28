@@ -22,12 +22,13 @@
 #include <QDateTime>
 #include <QString>
 #include <QList>
+#include <QVector>
 #include <QSet>
 #include <QFile>
 #include <QTextStream>
 
-#include <kdebug.h>
 #include <kdatetime.h>
+#include <kdebug.h>
 
 extern "C" {
   #include <ical.h>
@@ -262,6 +263,11 @@ icaltimezone *ICalTimeZone::icalTimezone() const
   return dat ? dat->icalTimezone() : 0;
 }
 
+bool ICalTimeZone::hasTransitions() const
+{
+    return true;
+}
+
 
 /******************************************************************************/
 
@@ -302,13 +308,6 @@ ICalTimeZoneData::ICalTimeZoneData(const ICalTimeZoneData &rhs)
   d->icalComponent = icalcomponent_new_clone( rhs.d->icalComponent );
 }
 
-struct Transition {
-  QDateTime start;
-  int phase;
-  bool done;
-  bool operator<(const Transition &rhs) const { return start < rhs.start; }   // for qSort()
-};
-
 ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz)
   : KTimeZoneData(rhs),
     d(new ICalTimeZoneDataPrivate())
@@ -327,34 +326,23 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
 
     // Compile an ordered list of transitions so that we can know the phases
     // which occur before and after each transition.
-    Transition transition;
-    transition.done = false;
-    QList<Transition> transitions;
-    QList<KTimeZonePhase> tzphases = rhs.phases();
-    for (int p = 0, pend = tzphases.count();  p < pend;  ++p) {
-      transition.phase = p;
-      QList<QDateTime> starts = tzphases[p].starts();
-      for (int t = 0, tend = starts.count();  t < tend;  ++t) {
-        transition.start = starts[t];
-        transitions += transition;
-      }
-    }
-    qSort(transitions);
+    const QList<KTimeZone::Transition> transits = transitions();
+    QVector<bool> transitionsDone(transits.count());
+    transitionsDone.fill(false);
 
-    // Go through the list of transitions and create an iCal component for
-    // each distinct combination of phases before and after the transition.
+    // Go through the list of transitions and create an iCal component for each
+    // distinct combination of phase after and UTC offset before the transition.
     bool found;
     icaldatetimeperiodtype dtperiod;
     dtperiod.period = icalperiodtype_null_period();
     do {
       found = false;
-      for (int i = 0, end = transitions.count();  i < end;  ++i) {
-        if ( transitions[i].done )
+      for (int i = 0, end = transits.count();  i < end;  ++i) {
+        if ( transitionsDone[i] )
           continue;
         found = true;
-        int preOffset = (i > 0) ? tzphases[ transitions[i-1].phase ].utcOffset() : rhs.previousUtcOffset();
-        int postPhase = transitions[i].phase;
-        KTimeZonePhase &phase = tzphases[postPhase];
+        int preOffset = (i > 0) ? transits[i-1].phase().utcOffset() : rhs.previousUtcOffset();
+        KTimeZone::Phase phase = transits[i].phase();
         icalcomponent *phcomp = icalcomponent_new( phase.isDst() ?
                                    ICAL_XDAYLIGHT_COMPONENT : ICAL_XSTANDARD_COMPONENT );
         QList<QByteArray> abbrevs = phase.abbreviations();
@@ -366,16 +354,16 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
         icalcomponent_add_property(phcomp, icalproperty_new_tzoffsetfrom( preOffset ));
         icalcomponent_add_property(phcomp, icalproperty_new_tzoffsetto( phase.utcOffset() ));
         icalcomponent_add_property(phcomp, icalproperty_new_dtstart(
-                          writeLocalICalDateTime( transitions[i].start, preOffset ) ));
-        transitions[i].done = true;
+                          writeLocalICalDateTime( transits[i].time(), preOffset ) ));
+        transitionsDone[i] = true;
 
         while (++i < end) {
-          if (!transitions[i].done 
-          &&  transitions[i].phase == postPhase
-          &&  tzphases[ transitions[i-1].phase ].utcOffset() == preOffset) {
-            dtperiod.time = writeLocalICalDateTime( transitions[i].start, preOffset );
+          if (!transitionsDone[i] 
+          &&  transits[i].phase() == phase
+          &&  transits[i-1].phase().utcOffset() == preOffset) {
+            dtperiod.time = writeLocalICalDateTime( transits[i].time(), preOffset );
             icalcomponent_add_property(phcomp, icalproperty_new_rdate( dtperiod ));
-            transitions[i].done = true;
+            transitionsDone[i] = true;
           }
         }
         icalcomponent_add_component(comp, phcomp);
@@ -439,13 +427,18 @@ icaltimezone *ICalTimeZoneData::icalTimezone() const
   return icaltz;
 }
 
+bool ICalTimeZoneData::hasTransitions() const
+{
+    return true;
+}
+
 
 /******************************************************************************/
 
 class ICalTimeZoneSourcePrivate
 {
   public:
-    static KTimeZonePhase *parsePhase(icalcomponent*, bool daylight, int &prevOffset);
+    static QList<QDateTime> parsePhase(icalcomponent*, bool daylight, int &prevOffset, KTimeZone::Phase&);
 };
 
 
@@ -554,42 +547,49 @@ ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
    * and create a Phase object containing details for each one.
    */
   int prevOffset = 0;
+  QList<KTimeZone::Transition> transitions;
   QDateTime earliest;
-  QList<KTimeZonePhase> phases;
+  QList<KTimeZone::Phase> phases;
   for (icalcomponent *c = icalcomponent_get_first_component(vtimezone, ICAL_ANY_COMPONENT);
        c;  c = icalcomponent_get_next_component(vtimezone, ICAL_ANY_COMPONENT))
   {
     int prevoff;
-    KTimeZonePhase *phase = 0;
+    KTimeZone::Phase phase;
+    QList<QDateTime> times;
     icalcomponent_kind kind = icalcomponent_isa(c);
     switch (kind) {
 
       case ICAL_XSTANDARD_COMPONENT:
         //kDebug(5800) << "---standard phase: found" << endl;
-        phase = ICalTimeZoneSourcePrivate::parsePhase(c, false, prevoff);
+        times = ICalTimeZoneSourcePrivate::parsePhase(c, false, prevoff, phase);
         break;
 
       case ICAL_XDAYLIGHT_COMPONENT:
         //kDebug(5800) << "---daylight phase: found" << endl;
-        phase = ICalTimeZoneSourcePrivate::parsePhase(c, true, prevoff);
+        times = ICalTimeZoneSourcePrivate::parsePhase(c, true, prevoff, phase);
         break;
 
       default:
         kDebug(5800) << "ICalTimeZoneSource::parse(): Unknown component: " << kind << endl;
         break;
     }
-    if (phase  &&  phase->isValid()) {
-      phases += *phase;
-      if (!earliest.isValid()  ||  phase->start(0) < earliest) {
+    int tcount = times.count();
+    if (tcount) {
+      phases += phase;
+      for (int t = 0;  t < tcount;  ++t)
+        transitions += KTimeZone::Transition(times[t], phase);
+      if (!earliest.isValid()  ||  times[0] < earliest) {
         prevOffset = prevoff;
-        earliest = phase->start(0);
+        earliest = times[0];
       }
     }
-    delete phase;
   }
   data->setPhases(phases, prevOffset);
+  qSort(transitions);
+  data->setTransitions(transitions);
 
   data->d->setComponent( icalcomponent_new_clone(vtimezone) );
+  kDebug(5800) << "ICalTimeZoneSource::parse(): VTIMEZONE " << name << endl;
   return new ICalTimeZone(this, name, data);
 }
 
@@ -602,8 +602,11 @@ ICalTimeZone *ICalTimeZoneSource::parse(icaltimezone *tz)
   return parse(icaltimezone_get_component(tz));
 }
 
-KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool daylight, int &prevOffset)
+QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool daylight, int &prevOffset,
+                                      KTimeZone::Phase &phase)
 {
+  QList<QDateTime> transitions;
+
   // Read the observance data for this standard/daylight savings phase
   QList<QByteArray> abbrevs;
   QString comment;
@@ -670,7 +673,7 @@ KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool day
   // Validate the phase data
   if (!found_dtstart || !found_tzoffsetfrom || !found_tzoffsetto) {
     kDebug(5800) << "ICalTimeZoneSource::readPhase(): DTSTART/TZOFFSETFROM/TZOFFSETTO missing" << endl;
-    return 0;
+    return transitions;
   }
 
   // Convert DTSTART to QDateTime, and from local time to UTC
@@ -679,8 +682,7 @@ KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool day
   dtstart.is_utc = 1;
   QDateTime utcStart = toQDateTime(icaltime_normalize(dtstart));   // UTC
 
-  QList<QDateTime> times;
-  times += utcStart;
+  transitions += utcStart;
   if (recurs) {
     /* RDATE or RRULE is specified. There should only be one or the other, but
      * it doesn't really matter - the code can cope with both.
@@ -713,7 +715,7 @@ KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool day
             t.is_utc = 1;
             t = icaltime_normalize(t);
           }
-          times += toQDateTime(t);
+          transitions += toQDateTime(t);
           break;
         }
         case ICAL_RRULE_PROPERTY:
@@ -722,26 +724,25 @@ KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool day
           ICalFormat icf;
           ICalFormatImpl impl(&icf);
           impl.readRecurrence(icalproperty_get_rrule(p), &r);
-#warning temporary build hack
+//          r.setStartDt(klocalStart);
           r.setStartDt(klocalStart.dateTime());
           // The end date time specified in an RRULE should be in UTC.
           // Convert to local time to avoid datesInInterval() getting things wrong.
           if (r.duration() == 0) {
-              KDateTime end(r.endDt());
+            KDateTime end(r.endDt());
             if (end.timeSpec() == KDateTime::Spec::UTC) {
               end.setTimeSpec(KDateTime::Spec::ClockTime);
-#warning temporary build hack
+//              r.setEndDt( end.addSecs(prevOffset) );
               r.setEndDt( end.addSecs(prevOffset).dateTime() );
             }
           }
-#warning temporary build hack
+//          DateTimeList dts = r.datesInInterval(klocalStart, maxTime);
           DateTimeList dts = r.datesInInterval(klocalStart.dateTime(), maxTime.dateTime());
           for ( int i = 0, end = dts.count();  i < end;  ++i) {
-#warning temporary build hack
-            // QDateTime utc = dts[i].dateTime();
-	    QDateTime utc = dts[i];
+//            QDateTime utc = dts[i].dateTime();
+            QDateTime utc = dts[i];
             utc.setTimeSpec(Qt::UTC);
-            times += utc.addSecs(-prevOffset);
+            transitions += utc.addSecs(-prevOffset);
           }
           break;
         }
@@ -750,10 +751,11 @@ KTimeZonePhase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool day
       }
       p = icalcomponent_get_next_property(c, ICAL_ANY_PROPERTY);
     }
-    qSortUnique(times);
+    qSortUnique(transitions);
   }
 
-  return new KTimeZonePhase(times, utcOffset, abbrevs, daylight, comment);
+  phase = KTimeZone::Phase(utcOffset, abbrevs, daylight, comment);
+  return transitions;
 }
 
 

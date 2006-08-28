@@ -197,12 +197,14 @@ void ICalTimeZonesTest::general()
     QCOMPARE(tz->url(), QByteArray("http://tz.reference.net/dummies/western"));
     QCOMPARE(tz->city(), QString::fromLatin1("Zedland/Tryburgh"));
     QCOMPARE(tz->lastModified(), QDateTime(QDate(1987,1,1), QTime(0,0,0), Qt::UTC));
+    QCOMPARE(tz->vtimezone(), QByteArray(VTZ_Western));
 
     ICalTimeZone tz1(*tz);
     QCOMPARE(tz1.name(), tz->name());
     QCOMPARE(tz1.url(), tz->url());
     QCOMPARE(tz1.city(), tz->city());
     QCOMPARE(tz1.lastModified(), tz->lastModified());
+    QCOMPARE(tz1.vtimezone(), tz->vtimezone());
 
     QCOMPARE(itz->name(), tz->name());
     QCOMPARE(itz->url(), tz->url());
@@ -222,12 +224,14 @@ void ICalTimeZonesTest::general()
     QCOMPARE(tz2->url(), QByteArray("http://tz.reference.net/dummies/other"));
     QCOMPARE(tz2->city(), QString::fromLatin1("Wyland/Tryburgh"));
     QVERIFY(tz2->lastModified().isNull());
+    QCOMPARE(tz2->vtimezone(), QByteArray(VTZ_other));
 
     tz1 = *tz2;
     QCOMPARE(tz1.name(), tz2->name());
     QCOMPARE(tz1.url(), tz2->url());
     QCOMPARE(tz1.city(), tz2->city());
     QCOMPARE(tz1.lastModified(), tz2->lastModified());
+    QCOMPARE(tz1.vtimezone(), tz2->vtimezone());
 
     QCOMPARE(tz1.name(), itz2->name());
     QCOMPARE(tz1.url(), itz2->url());

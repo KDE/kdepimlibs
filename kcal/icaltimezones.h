@@ -230,6 +230,13 @@ class KCAL_EXPORT ICalTimeZone : public KTimeZone
      */
     icaltimezone *icalTimezone() const;
 
+    /**
+     * Return whether daylight saving transitions are available for the time zone.
+     *
+     * @return @c true
+     */
+    virtual bool hasTransitions() const;
+
   private:
     ICalTimeZonePrivate *d;
 };
@@ -383,6 +390,13 @@ class KCAL_EXPORT ICalTimeZoneData : public KTimeZoneData
      * @return icaltimezone structure
      */
     icaltimezone *icalTimezone() const;
+
+    /**
+     * Return whether daylight saving transitions are available for the time zone.
+     *
+     * @return @c true
+     */
+    virtual bool hasTransitions() const;
 
 private:
     ICalTimeZoneDataPrivate *d;
