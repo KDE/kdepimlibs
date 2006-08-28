@@ -20,6 +20,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
  */
+/**
+ * @file
+ * This file is part of the API for handling TNEF data and
+ * provides some basic definitions for general use.
+ *
+ * @author Michael Goffioul
+ */
 
 #ifndef KTNEFDEFS_H
 #define KTNEFDEFS_H

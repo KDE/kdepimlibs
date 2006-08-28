@@ -20,7 +20,6 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
  */
-
 /**
  * @file
  * This file is part of the API for handling TNEF data and
@@ -88,7 +87,7 @@ public:
    * Returns the Rich Text Format (@acronym RTF) data contained in the message.
    * @return A QString containing the @acronym RTF data.
    */
-  QString rtfString();
+  QString rtfString() const;
 
 private:
   //@cond PRIVATE
@@ -98,4 +97,4 @@ private:
 };
 
 }
-#endif /* KTNEFMESSAGE_H */
+#endif

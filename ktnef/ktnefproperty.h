@@ -20,7 +20,6 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
  */
-
 /**
  * @file
  * This file is part of the API for handling TNEF data and
@@ -75,29 +74,29 @@ public:
    * @param value_ is the property value.
    * @param name_ is the property name.
    */
-  KTNEFProperty( int key_, int type_, const QVariant& value_,
-                 const QVariant& name_ = QVariant() );
+  KTNEFProperty( int key_, int type_, const QVariant &value_,
+                 const QVariant &name_ = QVariant() );
 
   /**
    * Constructs a @acronym TNEF property with settings from another property.
    *
    * @param p is a #KTNEFProperty.
    */
-  KTNEFProperty( const KTNEFProperty& p );
+  KTNEFProperty( const KTNEFProperty &p );
 
   /**
    * Returns the key string of the property.
    *
    * @return the key string.
    */
-  QString keyString();
+  QString keyString() const;
 
   /**
    * Returns the value string of the property.
    *
    * @return the value string.
    */
-  QString valueString();
+  QString valueString() const;
 
   /**
    * Creates a formatted string from the value of the property.
@@ -107,7 +106,7 @@ public:
    *
    * @return the formatted value string.
    */
-  static QString formatValue( const QVariant& v, bool beautify=true );
+  static QString formatValue( const QVariant &v, bool beautify=true );
 
   /**
    * Returns the integer key of the property.
@@ -154,4 +153,4 @@ private:
 };
 
 }
-#endif /* KTNEFPROPERTY_H */
+#endif

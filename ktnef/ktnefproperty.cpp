@@ -20,6 +20,14 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
  */
+/**
+ * @file
+ * This file is part of the API for handling TNEF data and
+ * defines the KTNEFProperty class.
+ *
+ * @author Michael Goffioul
+ */
+
 #include <ctype.h>
 
 #include <QDateTime>
@@ -33,18 +41,18 @@ KTNEFProperty::KTNEFProperty()
 {
 }
 
-KTNEFProperty::KTNEFProperty( int key_, int type_, const QVariant& value_,
-                              const QVariant& name_ )
+KTNEFProperty::KTNEFProperty( int key_, int type_, const QVariant &value_,
+                              const QVariant &name_ )
   : _key( key_ ), _type( type_ ), _value( value_ ), _name( name_ )
 {
 }
 
-KTNEFProperty::KTNEFProperty( const KTNEFProperty& p )
+KTNEFProperty::KTNEFProperty( const KTNEFProperty &p )
   : _key( p._key ), _type( p._type ), _value( p._value ), _name( p._name )
 {
 }
 
-QString KTNEFProperty::keyString()
+QString KTNEFProperty::keyString() const
 {
   if ( _name.isValid() ) {
     if ( _name.type() == QVariant::String ) {
@@ -57,26 +65,29 @@ QString KTNEFProperty::keyString()
   }
 }
 
-QString KTNEFProperty::formatValue( const QVariant& value, bool beautify )
+QString KTNEFProperty::formatValue( const QVariant &value, bool beautify )
 {
   if ( value.type() == QVariant::ByteArray ) {
     // check the first bytes (up to 8) if they are
     // printable characters
     QByteArray arr = value.toByteArray();
     bool printable = true;
-    for ( int i=qMin( arr.size(), 8 )-1; i>=0 && printable; i-- )
+    for ( int i=qMin( arr.size(), 8 )-1; i>=0 && printable; i-- ) {
       printable = ( isprint( arr[ i ] ) != 0 );
+    }
     if ( !printable ) {
       QString s;
       int i;
       int txtCount = beautify ? qMin( arr.size(), 32 ) : arr.size();
       for ( i=0; i < txtCount; ++i ) {
         s.append( QString().sprintf( "%02X", ( uchar )arr[ i ] ) );
-        if( beautify )
+        if ( beautify ) {
           s.append( " " );
+        }
       }
-      if ( i < arr.size() )
+      if ( i < arr.size() ) {
         s.append( "... (size=" + QString::number( arr.size() ) + ')' );
+      }
       return s;
     }
   }
@@ -85,7 +96,7 @@ QString KTNEFProperty::formatValue( const QVariant& value, bool beautify )
   return value.toString();
 }
 
-QString KTNEFProperty::valueString()
+QString KTNEFProperty::valueString() const
 {
   return formatValue( _value );
 }

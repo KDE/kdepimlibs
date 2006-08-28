@@ -20,6 +20,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
  */
+/**
+ * @file
+ * This file is part of the API for handling TNEF data and
+ * defines the KTNEFMessage class.
+ *
+ * @author Michael Goffioul
+ */
 
 #include <QBuffer>
 #include <QList>
@@ -95,10 +102,10 @@ void KTNEFMessage::clearAttachments()
   d->clearAttachments();
 }
 
-QString KTNEFMessage::rtfString()
+QString KTNEFMessage::rtfString() const
 {
   QVariant prop = property( 0x1009 );
-  if ( prop.isNull() || prop.type() != QVariant::ByteArray) {
+  if ( prop.isNull() || prop.type() != QVariant::ByteArray ) {
     return QString();
   } else {
     QByteArray rtf;

@@ -20,7 +20,6 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
  */
-
 /**
  * @file
  * This file is part of the API for handling TNEF data and
@@ -66,8 +65,8 @@ public:
    * @param name is the property name.
    * @param overwrite if true, then remove the property if it already exists.
    */
-  void addProperty( int key, int type, const QVariant& value,
-                    const QVariant& name=QVariant(), bool overwrite=false );
+  void addProperty( int key, int type, const QVariant &value,
+                    const QVariant &name=QVariant(), bool overwrite=false );
 
   /**
    * Finds a property by @p key, returning a formatted value.
@@ -80,7 +79,7 @@ public:
    *
    * @return a formatted value string.
    */
-  QString findProp( int key, const QString& fallback=QString(),
+  QString findProp( int key, const QString &fallback=QString(),
                     bool convertToUpper=false );
 
   /**
@@ -94,7 +93,7 @@ public:
    *
    * @return a formatted value string.
    */
-  QString findNamedProp( const QString& name, const QString& fallback=QString(),
+  QString findNamedProp( const QString &name, const QString &fallback=QString(),
                          bool convertToUpper=false );
 
   /**
@@ -124,7 +123,7 @@ public:
    * @param value is the attribute value.
    * @param overwrite if true, then remove the attribute if it already exists.
    */
-  void addAttribute( int key, int type, const QVariant& value,
+  void addAttribute( int key, int type, const QVariant &value,
                      bool overwrite=false );
 
   /**
@@ -155,10 +154,10 @@ public:
 
 private:
   //@cond PRIVATE
-  QMap<int,KTNEFProperty*> properties_;  /* used to store MAPI properties */
-  QMap<int,KTNEFProperty*> attributes_;  /* used to store TNEF attributes */
+  QMap<int,KTNEFProperty*> properties_;  // used to store MAPI properties
+  QMap<int,KTNEFProperty*> attributes_;  // used to store TNEF attributes
   //@endcond
 };
 
 }
-#endif /* KTNEFPROPERTYSET_H */
+#endif

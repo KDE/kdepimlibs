@@ -20,6 +20,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
  */
+/**
+ * @file
+ * This file is part of the API for handling TNEF data and
+ * provides functions that convert MAPI keycodes to/from tag strings.
+ *
+ * @author Michael Goffioul
+ */
 
 #include "mapi.h"
 #include <QMap>
@@ -198,31 +205,36 @@ static QMap<int,QString> MAPI_NamedTagMap;
 
 QString mapiTagString( int key )
 {
-	if ( MAPI_TagMap.count() == 0 )
-	{
-		for ( int i=0; MAPI_TagStrings[ i ].str; i++ )
-			MAPI_TagMap[ MAPI_TagStrings[ i ].tag ] = i18n(MAPI_TagStrings[ i ].str);
-	}
-	QMap<int,QString>::ConstIterator it = MAPI_TagMap.find( key );
-	if ( it == MAPI_TagMap.end() )
-		return QString().sprintf( "0x%04X", key );
-	else
-		return QString().sprintf( "0x%04X ________: ", key ) + *it;
+  if ( MAPI_TagMap.count() == 0 ) {
+    for ( int i=0; MAPI_TagStrings[ i ].str; i++ ) {
+      MAPI_TagMap[ MAPI_TagStrings[ i ].tag ] =
+        i18n( MAPI_TagStrings[ i ].str );
+    }
+  }
+  QMap<int,QString>::ConstIterator it = MAPI_TagMap.find( key );
+  if ( it == MAPI_TagMap.end() ) {
+    return QString().sprintf( "0x%04X", key );
+  } else {
+    return QString().sprintf( "0x%04X ________: ", key ) + *it;
+  }
 }
 
 QString mapiNamedTagString( int key, int tag )
 {
-	if ( MAPI_NamedTagMap.count() == 0 )
-	{
-		for ( int i=0; MAPI_NamedTagStrings[ i ].str; i++ )
-			MAPI_NamedTagMap[ MAPI_NamedTagStrings[ i ].tag ] = i18n(MAPI_NamedTagStrings[ i ].str);
-	}
-	QMap<int,QString>::ConstIterator it = MAPI_NamedTagMap.find( key );
-	if ( it == MAPI_NamedTagMap.end() )
-		if ( tag >= 0 )
-			return QString().sprintf( "0x%04X [0x%04X]: ", tag, key ) + *it;
-		else
-			return QString().sprintf( "0x%04X ________:", key ) + *it;
-	else
-		return *it;
+  if ( MAPI_NamedTagMap.count() == 0 ) {
+    for ( int i=0; MAPI_NamedTagStrings[ i ].str; i++ ) {
+      MAPI_NamedTagMap[ MAPI_NamedTagStrings[ i ].tag ] =
+        i18n( MAPI_NamedTagStrings[ i ].str );
+    }
+  }
+  QMap<int,QString>::ConstIterator it = MAPI_NamedTagMap.find( key );
+  if ( it == MAPI_NamedTagMap.end() ) {
+    if ( tag >= 0 ) {
+      return QString().sprintf( "0x%04X [0x%04X]: ", tag, key ) + *it;
+    } else {
+      return QString().sprintf( "0x%04X ________:", key ) + *it;
+    }
+  } else {
+    return *it;
+  }
 }

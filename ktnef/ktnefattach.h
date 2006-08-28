@@ -20,7 +20,6 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
  */
-
 /**
  * @file
  * This file is part of the API for handling TNEF data and
@@ -30,7 +29,7 @@
  */
 
 #ifndef KTNEFATTACH_H
-#define	KTNEFATTACH_H
+#define KTNEFATTACH_H
 
 #include <QString>
 #include <QMap>
@@ -155,7 +154,7 @@ public:
    *
    * @param str is attachment name to set.
    */
-  void setName( const QString& str );
+  void setName( const QString &str );
 
   /**
    * Returns the name of the attachment.
@@ -179,7 +178,7 @@ public:
    *
    * @param str is the attachment filename to set.
    */
-  void setFileName( const QString& str );
+  void setFileName( const QString &str );
 
   /**
    * Returns the filename of the attachment.
@@ -191,7 +190,7 @@ public:
    *
    * @param str is the attachment display name to set.
    */
-  void setDisplayName( const QString& str );
+  void setDisplayName( const QString &str );
 
   /**
    * Returns the display name of the attachment.
@@ -203,7 +202,7 @@ public:
    *
    * @param str is the attachment @acronym MIME tag to set.
    */
-  void setMimeTag( const QString& str );
+  void setMimeTag( const QString &str );
 
   /**
    * Returns the @acronym MIME tag of the attachment.
@@ -215,7 +214,7 @@ public:
    *
    * @param str is the attachment filename extension to set.
    */
-  void setExtension( const QString& str );
+  void setExtension( const QString &str );
 
   /**
    * Returns the filename extension of the attachment.

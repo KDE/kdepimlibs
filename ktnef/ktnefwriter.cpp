@@ -20,6 +20,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
  */
+/**
+ * @file
+ * This file is part of the API for handling TNEF data and
+ * defines the KTNEFWriter class.
+ *
+ * @author Bo Thorsen
+ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -47,16 +54,17 @@ using namespace KTnef;
  * @internal
  */
 //@cond PRIVATE
-class KTnef::KTNEFWriter::PrivateData {
-public:
-  PrivateData() { mFirstAttachNum = QDateTime::currentDateTime().toTime_t(); }
-
-  KTNEFPropertySet properties;
-  quint16 mFirstAttachNum;
+class KTnef::KTNEFWriter::PrivateData
+{
+  public:
+    PrivateData() { mFirstAttachNum = QDateTime::currentDateTime().toTime_t(); }
+    KTNEFPropertySet properties;
+    quint16 mFirstAttachNum;
 };
 //@endcond
 
-KTNEFWriter::KTNEFWriter() {
+KTNEFWriter::KTNEFWriter()
+{
   mData = new PrivateData;
 
   // This is not something the user should fiddle with
@@ -74,35 +82,42 @@ KTNEFWriter::KTNEFWriter() {
   addProperty( attOEMCODEPAGE, atpBYTE, list );
 }
 
-KTNEFWriter::~KTNEFWriter() {
+KTNEFWriter::~KTNEFWriter()
+{
   delete mData;
 }
 
 
-void KTNEFWriter::addProperty( int tag, int type, const QVariant& value ) {
+void KTNEFWriter::addProperty( int tag, int type, const QVariant &value )
+{
   mData->properties.addProperty( tag, type, value );
 }
 
 
-void addToChecksum( quint32 i, quint16 &checksum ) {
+void addToChecksum( quint32 i, quint16 &checksum )
+{
   checksum += i & 0xff;
   checksum += (i >> 8) & 0xff;
   checksum += (i >> 16) & 0xff;
   checksum += (i >> 24) & 0xff;
 }
 
-void addToChecksum( QByteArray &cs, quint16 &checksum ) {
+void addToChecksum( QByteArray &cs, quint16 &checksum )
+{
   int len = cs.length();
-  for (int i=0; i<len; i++)
+  for ( int i=0; i<len; i++ ) {
     checksum += (quint8)cs[i];
+  }
 }
 
-void writeCString( QDataStream &stream, QByteArray &str ) {
+void writeCString( QDataStream &stream, QByteArray &str )
+{
   stream.writeRawData( str.data(), str.length() );
   stream << (quint8)0;
 }
 
-quint32 mergeTagAndType( quint32 tag, quint32 type ) {
+quint32 mergeTagAndType( quint32 tag, quint32 type )
+{
   return ( ( type & 0xffff ) << 16 ) | ( tag & 0xffff );
 }
 
@@ -113,12 +128,14 @@ quint32 mergeTagAndType( quint32 tag, quint32 type ) {
  *
  * The checksum is a 16 byte int with all bytes in the data added.
  */
-bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
+bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag ) const
+{
   QMap<int,KTNEFProperty*>& properties = mData->properties.properties();
   QMap<int,KTNEFProperty*>::Iterator it = properties.find( tag );
 
-  if ( it == properties.end() )
+  if ( it == properties.end() ) {
     return false;
+  }
 
   KTNEFProperty *property = *it;
 
@@ -315,17 +332,18 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
   return true;
 }
 
-
-bool KTNEFWriter::writeFile( QIODevice &file ) {
-  if ( !file.open( QIODevice::WriteOnly ) )
+bool KTNEFWriter::writeFile( QIODevice &file ) const
+{
+  if ( !file.open( QIODevice::WriteOnly ) ) {
     return false;
+  }
 
   QDataStream stream( &file );
   return writeFile( stream );
 }
 
-
-bool KTNEFWriter::writeFile( QDataStream &stream ) {
+bool KTNEFWriter::writeFile( QDataStream &stream ) const
+{
   stream.setByteOrder( QDataStream::LittleEndian );
 
   // Start by writing the opening TNEF stuff
@@ -356,7 +374,8 @@ bool KTNEFWriter::writeFile( QDataStream &stream ) {
 }
 
 
-void KTNEFWriter::setSender(const QString &name, const QString &email) {
+void KTNEFWriter::setSender( const QString &name, const QString &email )
+{
   assert( !name.isEmpty() );
   assert( !email.isEmpty() );
 
@@ -371,7 +390,8 @@ void KTNEFWriter::setSender(const QString &name, const QString &email) {
   addProperty( attFROM, 0, list ); // What's up with the 0 here ??
 }
 
-void KTNEFWriter::setMessageType(MessageType m) {
+void KTNEFWriter::setMessageType( MessageType m )
+{
   // Note that the MessageType list here is probably not long enough,
   // more entries are most likely needed later
 
@@ -422,8 +442,9 @@ void KTNEFWriter::clearAttendees()
 }
 
 
-void KTNEFWriter::addAttendee( const QString& /*cn*/, Role /*r*/, PartStat /*p*/,
-			       bool /*rsvp*/, const QString& /*mailto*/ )
+void KTNEFWriter::addAttendee( const QString &/*cn*/, Role /*r*/,
+                               PartStat /*p*/, bool /*rsvp*/,
+                               const QString &/*mailto*/ )
 {
 
 }
@@ -431,11 +452,13 @@ void KTNEFWriter::addAttendee( const QString& /*cn*/, Role /*r*/, PartStat /*p*/
 
 // I assume this is the same as the sender?
 // U also assume that this is like "Name <address>"
-void KTNEFWriter::setOrganizer( const QString& organizer ) {
+void KTNEFWriter::setOrganizer( const QString &organizer )
+{
   int i = organizer.indexOf( '<' );
 
-  if ( i == -1 )
+  if ( i == -1 ) {
     return;
+  }
 
   QString name = organizer.left( i );
   name.trimmed();
@@ -447,66 +470,64 @@ void KTNEFWriter::setOrganizer( const QString& organizer ) {
   setSender( name, email );
 }
 
-
-void KTNEFWriter::setDtStart( const QDateTime& dtStart ) {
+void KTNEFWriter::setDtStart( const QDateTime &dtStart )
+{
   QVariant v( dtStart );
   addProperty( attDATESTART, atpDATE, v );
 }
 
-
-void KTNEFWriter::setDtEnd( const QDateTime& dtEnd ) {
+void KTNEFWriter::setDtEnd( const QDateTime &dtEnd )
+{
   QVariant v( dtEnd );
   addProperty( attDATEEND, atpDATE, v );
 }
 
-
-void KTNEFWriter::setLocation( const QString& /*location*/ )
+void KTNEFWriter::setLocation( const QString &/*location*/ )
 {
 
 }
 
-
-void KTNEFWriter::setUID( const QString& uid ) {
+void KTNEFWriter::setUID( const QString &uid )
+{
   QVariant v( uid );
   addProperty( attMSGID, atpSTRING, v );
 }
 
-
 // Date sent
-void KTNEFWriter::setDtStamp( const QDateTime& dtStamp ) {
+void KTNEFWriter::setDtStamp( const QDateTime &dtStamp )
+{
   QVariant v( dtStamp );
   addProperty( attDATESENT, atpDATE, v );
 }
 
-
-void KTNEFWriter::setCategories( const QStringList& )
+void KTNEFWriter::setCategories( const QStringList &)
 {
 
 }
 
-
 // I hope this is the body
-void KTNEFWriter::setDescription( const QString &body ) {
+void KTNEFWriter::setDescription( const QString &body )
+{
   QVariant v( body );
   addProperty( attBODY, atpTEXT, v );
 }
 
-
-void KTNEFWriter::setSummary( const QString &s ) {
+void KTNEFWriter::setSummary( const QString &s )
+{
   QVariant v( s );
   addProperty( attSUBJECT, atpSTRING, v );
 }
 
 // TNEF encoding: Normal =  3, high = 2, low = 1
 // MAPI encoding: Normal = -1, high = 0, low = 1
-void KTNEFWriter::setPriority( Priority p ) {
+void KTNEFWriter::setPriority( Priority p )
+{
   QVariant v( (quint32)p );
   addProperty( attMSGPRIORITY, atpSHORT, v );
 }
 
-
-void KTNEFWriter::setAlarm( const QString& /*description*/, AlarmAction /*action*/,
-                            const QDateTime& /*wakeBefore*/ )
+void KTNEFWriter::setAlarm( const QString &/*description*/,
+                            AlarmAction /*action*/,
+                            const QDateTime &/*wakeBefore*/ )
 {
-
 }

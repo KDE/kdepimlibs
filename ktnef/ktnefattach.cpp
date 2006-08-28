@@ -20,6 +20,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
  */
+/**
+ * @file
+ * This file is part of the API for handling TNEF data and
+ * defines the KTNEFAttach class.
+ *
+ * @author Michael Goffioul
+ */
 
 #include "ktnefattach.h"
 #include "ktnefproperty.h"
@@ -138,7 +145,7 @@ QString KTNEFAttach::name() const
   return d->name_;
 }
 
-void KTNEFAttach::setName( const QString& str )
+void KTNEFAttach::setName( const QString &str )
 {
   setTitleParsed();
   d->name_ = str;
@@ -160,7 +167,7 @@ QString KTNEFAttach::fileName() const
   return d->filename_;
 }
 
-void KTNEFAttach::setFileName( const QString& str )
+void KTNEFAttach::setFileName( const QString &str )
 {
   d->filename_ = str;
 }
@@ -170,7 +177,7 @@ QString KTNEFAttach::displayName() const
   return d->displayname_;
 }
 
-void KTNEFAttach::setDisplayName( const QString& str )
+void KTNEFAttach::setDisplayName( const QString &str )
 {
   d->displayname_ = str;
 }
@@ -180,7 +187,7 @@ QString KTNEFAttach::mimeTag() const
   return d->mimetag_;
 }
 
-void KTNEFAttach::setMimeTag( const QString& str )
+void KTNEFAttach::setMimeTag( const QString &str )
 {
   d->mimetag_ = str;
 }
@@ -190,7 +197,7 @@ QString KTNEFAttach::extension() const
   return d->extension_;
 }
 
-void KTNEFAttach::setExtension( const QString& str )
+void KTNEFAttach::setExtension( const QString &str )
 {
   d->extension_ = str;
 }

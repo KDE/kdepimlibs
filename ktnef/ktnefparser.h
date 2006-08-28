@@ -20,7 +20,6 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
  */
-
 /**
  * @file
  * This file is part of the API for handling TNEF data and
@@ -30,7 +29,7 @@
  */
 
 #ifndef KTNEFPARSER_H
-#define	KTNEFPARSER_H
+#define KTNEFPARSER_H
 
 #include <QString>
 #include <QMap>
@@ -66,7 +65,7 @@ public:
    * @param filename is the name of the file to open.
    * @return true if the open succeeded; otherwise false;
    */
-  bool openFile( const QString& filename );
+  bool openFile( const QString &filename );
 
   /**
    * Opens the #QIODevice @p device for parsing.
@@ -83,7 +82,7 @@ public:
    * @param filename is the name of the file to extract the attachment into.
    * @return true if the extraction succeeds; otherwise false.
    */
-  bool extractFile( const QString& filename );
+  bool extractFile( const QString &filename );
 
   /**
    * Extracts a @acronym TNEF attachment having filename @p filename
@@ -95,7 +94,7 @@ public:
    *
    * @return true if the extraction succeeds; otherwise false.
    */
-  bool extractFileTo( const QString& filename, const QString& dirname );
+  bool extractFileTo( const QString &filename, const QString &dirname );
 
   /**
    * Extracts all @acronym TNEF attachments into the default directory.
@@ -109,7 +108,7 @@ public:
    *
    * @param dirname is the name of the default extraction directory.
    */
-  void setDefaultExtractDir( const QString& dirname );
+  void setDefaultExtractDir( const QString &dirname );
 
   /**
    * Returns the #KTNEFMessage used in the parsing process.
@@ -141,7 +140,7 @@ private:
    *
    * @return true if the extraction succeeds; otherwise false.
    */
-  bool extractAttachmentTo( KTNEFAttach *att, const QString& dirname );
+  bool extractAttachmentTo( KTNEFAttach *att, const QString &dirname );
 
   /**
    * Initialize current attachment settings.
