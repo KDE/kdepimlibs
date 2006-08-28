@@ -51,25 +51,23 @@ class KCal::Person::Private
 };
 //@endcond
 
-Person::Person()
+Person::Person() : d( new KCal::Person::Private )
 {
-  d = new Private();
 }
 
-Person::Person( const QString &fullName )
+Person::Person( const QString &fullName ) : d ( new KCal::Person::Private )
 {
-  d = new Private();
   QString name, email;
   EmailAddressTools::extractEmailAddressAndName( fullName, email, name );
-  setName( name );
-  setEmail( email );
+  d->mName = name;
+  d->mEmail = email;
 }
 
 Person::Person( const QString &name, const QString &email )
+  : d( new KCal::Person::Private )
 {
-  d = new Private();
-  setName( name );
-  setEmail( email );
+  d->mName = name;
+  d->mEmail = email;
 }
 
 Person::~Person()
@@ -79,8 +77,8 @@ Person::~Person()
 
 bool KCal::Person::operator==( const Person &person )
 {
-  return ( this->name() == person.name() &&
-           this->email() == person.email() );
+  return ( d->mName == person.d->mName &&
+           d->mEmail == person.d->mEmail );
 }
 
 QString Person::fullName() const
