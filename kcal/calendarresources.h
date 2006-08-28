@@ -365,12 +365,12 @@ class KCAL_EXPORT CalendarResources :
        Return an unfiltered list of all Events which occur on the given
        timestamp.
 
-       @param qdt request unfiltered Event list for this QDateTime only.
+       @param dt request unfiltered Event list for this QDateTime only.
 
        @return the list of unfiltered Events occurring on the specified
        timestamp.
     */
-    Event::List rawEventsForDate( const QDateTime &qdt );
+    Event::List rawEventsForDate( const QDateTime &dt );
 
     /**
        Return an unfiltered list of all Events occurring within a date range.

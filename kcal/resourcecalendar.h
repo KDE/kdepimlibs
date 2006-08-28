@@ -177,9 +177,9 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
-      Get unfiltered events for date \a qdt.
+      Get unfiltered events for date \a dt.
     */
-    virtual Event::List rawEventsForDate( const QDateTime &qdt ) = 0;
+    virtual Event::List rawEventsForDate( const QDateTime &dt ) = 0;
 
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,

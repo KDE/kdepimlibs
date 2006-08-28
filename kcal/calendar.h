@@ -472,11 +472,11 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     /**
       Return a filtered list of all Events which occur on the given timestamp.
 
-      @param qdt request filtered Event list for this QDateTime only.
+      @param dt request filtered Event list for this QDateTime only.
 
       @return the list of filtered Events occurring on the specified timestamp.
     */
-    Event::List events( const QDateTime &qdt );
+    Event::List events( const QDateTime &dt );
 
     /**
       Return a filtered list of all Events occurring within a date range.
@@ -524,12 +524,12 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       Return an unfiltered list of all Events which occur on the given
       timestamp.
 
-      @param qdt request unfiltered Event list for this QDateTime only.
+      @param dt request unfiltered Event list for this QDateTime only.
 
       @return the list of unfiltered Events occurring on the specified
       timestamp.
     */
-    virtual Event::List rawEventsForDate( const QDateTime &qdt ) = 0;
+    virtual Event::List rawEventsForDate( const QDateTime &dt ) = 0;
 
     /**
       Return an unfiltered list of all Events occurring within a date range.

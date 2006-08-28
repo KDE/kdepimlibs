@@ -130,7 +130,7 @@ class KCAL_EXPORT CalendarNull : public Calendar
 
        Returns an empty Event List.
     */
-    Event::List rawEventsForDate( const QDateTime & /*qdt*/ )
+    Event::List rawEventsForDate( const QDateTime & /*dt*/ )
       { return Event::List(); }
 
     /**

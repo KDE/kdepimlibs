@@ -261,7 +261,7 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
       Returns true if the date/time specified is one on which the incidence will
       recur.
     */
-    bool recursAt( const QDateTime &qdt ) const;
+    bool recursAt( const QDateTime &dt ) const;
 
     /**
       Calculates the start date/time for all recurrences that happen at some time
