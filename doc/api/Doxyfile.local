@@ -1,4 +1,6 @@
 ## In kdepimlibs, everything is supposed to be documented.
+EXTRACT_ALL = NO
+WARN_NO_PARAMDOC = YES
 WARN_IF_UNDOCUMENTED = YES
 
 ## Predefined macros, to remove all the _EXPORT things
@@ -7,6 +9,7 @@ PREDEFINED = KCAL_EXPORT="" \
 	KTNEF_EXPORT="" \
 	KABC_EXPORT="" \
 	KRESOURCES_EXPORT="" \
+	SYNDICATION_EXPORT="" \
 	KDE_DEPRECATED="" \
 	Q_OS_UNIX="" \
 	Q_SLOTS="slots" \
