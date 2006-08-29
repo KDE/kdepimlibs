@@ -215,7 +215,7 @@ class KCAL_EXPORT Attendee : public Person
     bool RSVP() const;
 
     /**
-      Compares this with @p attendee for equality. 
+      Compares this with @p attendee for equality.
 
       @param attendee the attendee to compare.
     */

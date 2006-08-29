@@ -145,7 +145,6 @@ QStringList Attendee::statusList()
   return list;
 }
 
-
 void Attendee::setRole( Attendee::Role r )
 {
   d->mRole = r;
