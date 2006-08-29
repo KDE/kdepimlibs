@@ -9,7 +9,6 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/
 	${CMAKE_BINARY_DIR}/kcal/libical/src/libical/
 	${CMAKE_SOURCE_DIR}/
-	${CMAKE_SOURCE_DIR}/ktnef
 	${CMAKE_SOURCE_DIR}/kabc
 	${CMAKE_BINARY_DIR}/kabc
         ${KDE4_INCLUDE_DIR}
@@ -252,7 +251,7 @@ kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
 kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 
-target_link_libraries(kcal ${KDE4_KDE3SUPPORT_LIBS} ${QT_QTXML_LIBRARY} ktnef kresources kabc emailfunctions )
+target_link_libraries(kcal ${KDE4_KDE3SUPPORT_LIBS} ${QT_QTXML_LIBRARY} kresources kabc emailfunctions )
 
 set_target_properties(kcal PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS kcal DESTINATION ${LIB_INSTALL_DIR})
