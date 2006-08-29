@@ -63,9 +63,9 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
     Client( QObject *parent = 0 );
 
     /**
-      Constructs a XML-RPC #Client, which will connect to @p url
+      Constructs a XML-RPC #Client, which will connect to @p url.
 
-      @param url the url of the xml-rpc server 
+      @param url the url of the xml-rpc server.
       @param parent the parent of this object, defaults to NULL.
      */
     Client( const KUrl &url, QObject *parent = 0 );
@@ -76,7 +76,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
     virtual ~Client();
 
     /**
-      @return the current url the XML-RPC #Client will connect to.
+      Returns the current url the XML-RPC #Client will connect to.
 
       @see setUrl()
      */
@@ -85,14 +85,14 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
     /**
       Sets the url the #Client will connect to. 
 
-      @param url the url for the xml-rpc server we will be connecting to
+      @param url the url for the xml-rpc server we will be connecting to.
 
       @see url()
      */
     void setUrl( const KUrl &url );
 
     /**
-      @return the user agent string currently used by the #Client
+      Returns the user agent string currently used by the #Client.
 
       @see setUserAgent()
      */
@@ -101,28 +101,29 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
     /**
       Sets the userAgent string the #Client will use to identify itself.
 
-      @param userAgent the user agent string to use 
+      @param userAgent the user agent string to use. 
 
       @see userAgent()
      */
     void setUserAgent( const QString &userAgent );
 
     /**
-      @return whether HTTP-Digest authentication is enabled
+      Returns true if HTTP-Digest authentication is enabled, false
+      if not.
 
       @see enableDigestAuth(), disableDigestAuth()
      */
     bool digestAuth() const;
 
     /**
-      Sets HTTP-Digest authentication on 
+      Sets HTTP-Digest authentication on. 
 
       @see digestAuth(), disableDigestAuth()
      */
     void enableDigestAuth();
 
     /**
-      Sets HTTP-Digest authentication off
+      Sets HTTP-Digest authentication off.
 
       @see enableDigestAuth(), digestAuth()
      */

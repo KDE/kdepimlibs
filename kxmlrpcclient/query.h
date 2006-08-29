@@ -51,10 +51,10 @@ class Query : public QObject
 
   public:
     /**
-      Constructs a query
+      Constructs a query.
 
-      @param id an optional id for the query
-      @param parent an optional parent for the query
+      @param id an optional id for the query.
+      @param parent an optional parent for the query.
      */
     static Query *create( const QVariant &id = QVariant(), QObject *parent = 0 );
 
@@ -63,29 +63,29 @@ class Query : public QObject
       Calls the specified method on the specified server with 
       the given argument list.
 
-      @param server the server to contact
-      @param method the method to call
-      @param args an argument list to pass to said method
-      @param userAgent the string to identify as to the server
-      @param jobMetaData additional arguments to pass to the KIO::Job
+      @param server the server to contact.
+      @param method the method to call.
+      @param args an argument list to pass to said method.
+      @param userAgent the string to identify as to the server.
+      @param jobMetaData additional arguments to pass to the KIO::Job.
      */
     void call( const QString &server, const QString &method,
-               const QList<QVariant> &args /* = QList<QVariant>() */ ,
-               const QMap<QString, QString> &jobMetaData /* = QMap<QString, QString>() */ );
+               const QList<QVariant> &args,
+               const QMap<QString, QString> &jobMetaData );
 
   Q_SIGNALS:
     /**
-      A signal sent when we receive a result from the server
+      A signal sent when we receive a result from the server.
      */
     void message( const QList<QVariant> &result, const QVariant &id );
 
     /**
-      A signal sent when we receive an error from the server
+      A signal sent when we receive an error from the server.
      */
     void fault( int, const QString&, const QVariant &id );
 
     /**
-      A signal sent when a query finishes
+      A signal sent when a query finishes.
      */
     void finished( Query* );
 
@@ -106,7 +106,7 @@ class Query : public QObject
   Result is an internal class that represents a response 
   from a XML-RPC server.
 
-  This is an internal class and is only used by Query
+  This is an internal class and is only used by Query.
   @internal
  */
 class Result
@@ -116,47 +116,49 @@ class Result
 
   public:
     /**
-      Constructs a result
+      Constructs a result.
      */
     Result();
 
     /**
-      Constructs a result based on another result
+      Constructs a result based on another result.
      */
     Result( const Result &other );
 
     /**
-      Destroys a result
+      Destroys a result.
      */
     virtual ~Result();
 
     /**
-      Assigns the values of one result to this one
+      Assigns the values of one result to this one.
      */
     Result& operator=( const Result &other );
 
     /**
-      @return whether the method call succeeded, 
-      basically whether or not there was an XML-RPC fault
+      Returns true if the method call succeeded, false
+      if there was an XML-RPC fault.
+
+      @see errorCode(), errorString()
      */
     bool success() const;
 
     /**
-      @return the error code of the fault 
+      Returns the error code of the fault. 
 
-      @see errorString()
+      @see success(), errorString()
      */
     int errorCode() const;
 
     /**
-      @return the error string that describes the fault
+      Returns the error string that describes the fault.
 
-      @see errorCode()
+      @see success, errorCode()
      */
     QString errorString() const;
 
     /**
-      @return the data returned by the method call
+      Returns the data sent to us from the server. 
      */
     QList<QVariant> data() const;
 
