@@ -32,6 +32,7 @@
 #include <QMap>
 #include <klocale.h>
 
+//@cond IGNORE
 static struct
 {
 	int tag;
@@ -202,6 +203,7 @@ MAPI_NamedTagStrings[] =
 };
 static QMap<int,QString> MAPI_TagMap;
 static QMap<int,QString> MAPI_NamedTagMap;
+//@endcond
 
 QString mapiTagString( int key )
 {

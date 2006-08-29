@@ -17,6 +17,15 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling TNEF data and provides the
+  Formatter helper class.
+
+  @author Cornelius Schumacher
+  @author Reinhold Kainhofer
+*/
+
 #ifndef KTNEF_FORMATTER_H
 #define KTNEF_FORMATTER_H
 
@@ -32,18 +41,32 @@ class InvitationFormatterHelper;
 namespace KTnef {
 
 /**
-  A helper class containing static methods to format TNEF attachments into diffrent formats
-  like eg. a HTML representation.
+  @brief
+  A helper class containing static methods to format @acronym TNEF attachments
+  into different formats like eg. a HTML representation.
 */
 class KTNEF_EXPORT Formatter
 {
   public:
-    /// Format a TNEF attachment to an HTML mail
-    static QString formatTNEFInvitation( const QByteArray& tnef,
-                                         KCal::Calendar *mCalendar,
-                                         KCal::InvitationFormatterHelper *helper );
-    /// Transform a TNEF attachment to an iCal or vCard
-    static QString msTNEFToVPart( const QByteArray& tnef );
+    /**
+      Format a @acronym TNEF attachment to an HTML mail.
+
+      @param tnef is the #QByteArray contain the @acronym TNEF data.
+      @param cal is a pointer to a #Calendar object.
+      @param h is a poitner to a #InvitationFormatterHelp object.
+    */
+    static QString formatTNEFInvitation( const QByteArray &tnef,
+                                         KCal::Calendar *cal,
+                                         KCal::InvitationFormatterHelper *h );
+
+    /**
+      Transform a @acronym TNEF attachment to an iCal or vCard.
+
+      @param tnef is the #QByteArray containing the @acronym TNEF data.
+
+      @return a string containing the transformed attachment.
+    */
+    static QString msTNEFToVPart( const QByteArray &tnef );
 };
 
 }

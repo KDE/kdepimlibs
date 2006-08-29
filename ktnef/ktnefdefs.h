@@ -30,7 +30,7 @@
 
 #ifndef KTNEFDEFS_H
 #define KTNEFDEFS_H
-
+//@cond IGNORE
 #define TNEF_SIGNATURE   0x223e9f78
 #define LVL_MESSAGE      0x01
 #define LVL_ATTACHMENT   0x02
@@ -282,5 +282,6 @@
 #define MAPI_TAG_PR_LOCATION                        0x3A0D001E // OfficeLocation
 #define MAPI_TAG_PR_ORGANIZATIONAL_ID_NUMBER        0x3A10001E // OrganizationalIDNumber
 #define MAPI_TAG_PR_REFERRED_BY_NAME                0X3A47001E // ReferredBy
+//@endcond
 
 #endif /* KTNEFDEFS_H */

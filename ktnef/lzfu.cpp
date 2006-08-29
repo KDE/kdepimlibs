@@ -45,6 +45,7 @@
 
 //#define DO_DEBUG
 
+//@cond IGNORE
 #define LZFU_COMPRESSED    0x75465a4c
 #define LZFU_UNCOMPRESSED  0x414c454d
 
@@ -55,6 +56,7 @@
 			"\r\n\\par \\pard\\plain\\f0\\fs20\\b\\i\\u\\tab" \
 			"\\tx"
 #define LZFU_INITLENGTH 207
+//@endcond
 
 //@cond PRIVATE
 typedef struct _lzfuheader
@@ -66,6 +68,7 @@ typedef struct _lzfuheader
 } lzfuheader;
 //@endcond
 
+//@cond IGNORE
 #define FLAG(f,n) (f>>n)&0x1
 
 /*typedef struct _blockheader {
@@ -75,6 +78,7 @@ typedef struct _lzfuheader
 
 #define OFFSET(b) (b>>4)&0xFFF
 #define LENGTH(b) ((b&0xF)+2)
+//@endcond
 
 int lzfu_decompress( QIODevice *input, QIODevice *output )
 {

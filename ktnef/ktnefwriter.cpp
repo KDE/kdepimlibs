@@ -93,7 +93,7 @@ void KTNEFWriter::addProperty( int tag, int type, const QVariant &value )
   mData->properties.addProperty( tag, type, value );
 }
 
-
+//@cond IGNORE
 void addToChecksum( quint32 i, quint16 &checksum )
 {
   checksum += i & 0xff;
@@ -120,6 +120,7 @@ quint32 mergeTagAndType( quint32 tag, quint32 type )
 {
   return ( ( type & 0xffff ) << 16 ) | ( tag & 0xffff );
 }
+//@endcond
 
 /* This writes a TNEF property to the file.
  *

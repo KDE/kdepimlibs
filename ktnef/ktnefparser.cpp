@@ -65,6 +65,7 @@ typedef struct {
 } MAPI_value;
 //@endcond
 
+//@cond IGNORE
 void clearMAPIName( MAPI_value &mapi );
 void clearMAPIValue( MAPI_value &mapi, bool clearName = true );
 QString readMAPIString( QDataStream &stream, bool isUnicode = false,
@@ -76,6 +77,7 @@ QByteArray readTNEFData( QDataStream &stream, quint32 len );
 QVariant readTNEFAttribute( QDataStream &stream, quint16 type, quint32 len );
 QDateTime formatTime( quint32 lowB, quint32 highB );
 QString formatRecipient( const QMap<int,KTnef::KTNEFProperty*> &props );
+//@endcond
 
 //------------------------------------------------------------------------------
 
@@ -548,6 +550,7 @@ void KTNEFParser::checkCurrent( int key )
 
 //------------------------------------------------------------------------------
 
+//@cond IGNORE
 #define ALIGN( n, b ) if ( n & ( b-1 ) ) { n = ( n + b ) & ~( b-1 ); }
 #define ISVECTOR( m ) ( ( ( m ).type & 0xF000 ) == MAPI_TYPE_VECTOR )
 
@@ -817,6 +820,7 @@ quint16 readMAPIValue( QDataStream &stream, MAPI_value &mapi )
   }
   return mapi.tag;
 }
+//@endcond
 
 bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*> & props,
                                       KTNEFAttach *attach )
