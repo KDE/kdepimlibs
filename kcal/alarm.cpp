@@ -479,7 +479,7 @@ void Alarm::setStartOffset( const Duration &offset )
 
 Duration Alarm::startOffset() const
 {
-  return ( d->mHasTime || d->mEndOffset ) ? 0 : d->mOffset;
+  return ( d->mHasTime || d->mEndOffset ) ? Duration( 0 ) : d->mOffset;
 }
 
 bool Alarm::hasStartOffset() const
@@ -502,7 +502,7 @@ void Alarm::setEndOffset( const Duration &offset )
 
 Duration Alarm::endOffset() const
 {
-  return ( d->mHasTime || !d->mEndOffset ) ? 0 : d->mOffset;
+  return ( d->mHasTime || !d->mEndOffset ) ? Duration( 0 ) : d->mOffset;
 }
 
 void Alarm::setParent( Incidence *parent )

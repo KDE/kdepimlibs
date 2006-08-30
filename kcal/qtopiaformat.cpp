@@ -41,8 +41,8 @@ class QtopiaParser : public QXmlDefaultHandler
 {
   public:
     QtopiaParser( Calendar *calendar ) : mCalendar( calendar ) {}
-  
-    bool startElement( const QString &, const QString &, const QString & qName, 
+
+    bool startElement( const QString &, const QString &, const QString & qName,
                        const QXmlAttributes &attributes )
     {
       if ( qName == "event" ) {
@@ -65,7 +65,7 @@ class QtopiaParser : public QXmlDefaultHandler
         QString rtype = attributes.value( "rtype" );
         if ( !rtype.isEmpty() ) {
           QDate startDate = event->dtStart().date();
-        
+
           QString freqStr = attributes.value( "rfreq" );
           int freq = freqStr.toInt();
 
@@ -80,7 +80,7 @@ class QtopiaParser : public QXmlDefaultHandler
           QBitArray weekDays( 7 );
           int i;
           for( i = 1; i <= 7; ++i ) {
-            weekDays.setBit( i - 1, ( 2 << i ) & weekDaysNum ); 
+            weekDays.setBit( i - 1, ( 2 << i ) & weekDaysNum );
           }
 
           QString posStr = attributes.value( "rposition" );
@@ -124,7 +124,7 @@ class QtopiaParser : public QXmlDefaultHandler
           alarm->setType( Alarm::Display );
           alarm->setEnabled( true );
           int alarmOffset = alarmStr.toInt();
-          alarm->setStartOffset( alarmOffset * -60 );
+          alarm->setStartOffset( Duration( alarmOffset * -60 ) );
           event->addAlarm( alarm );
         }
 
@@ -137,7 +137,7 @@ class QtopiaParser : public QXmlDefaultHandler
 
         QString uid = "Qtopia" + attributes.value( "Uid" );
         todo->setUid( uid );
-        
+
         QString description = attributes.value( "Description" );
         int pos = description.indexOf( '\n' );
         if ( pos > 0 ) {
@@ -147,27 +147,27 @@ class QtopiaParser : public QXmlDefaultHandler
         } else {
           todo->setSummary( description );
         }
-        
+
         int priority = attributes.value( "Priority" ).toInt();
 //        if ( priority == 0 ) priority = 3;
         todo->setPriority( priority );
-        
+
         QString categoryList = attributes.value( "Categories" );
         todo->setCategories( lookupCategories( categoryList ) );
-        
+
         QString completedStr = attributes.value( "Completed" );
         if ( completedStr == "1" ) todo->setCompleted( true );
-        
+
         QString hasDateStr = attributes.value( "HasDate" );
         if ( hasDateStr == "1" ) {
           int year = attributes.value( "DateYear" ).toInt();
           int month = attributes.value( "DateMonth" ).toInt();
           int day = attributes.value( "DateDay" ).toInt();
-          
+
           todo->setDtDue( QDateTime( QDate( year, month, day ) ) );
           todo->setHasDueDate( true );
         }
-        
+
         Todo *oldTodo = mCalendar->todo( uid );
         if ( oldTodo ) mCalendar->deleteTodo( oldTodo );
 
@@ -177,7 +177,7 @@ class QtopiaParser : public QXmlDefaultHandler
         QString name = attributes.value( "name" );
         setCategory( id, name );
       }
-      
+
       return true;
     }
 
@@ -187,21 +187,21 @@ class QtopiaParser : public QXmlDefaultHandler
       printException( exception );
       return true;
     }
- 
+
     bool error ( const QXmlParseException &exception )
     {
       kDebug(5800) << "ERROR" << endl;
       printException( exception );
       return false;
     }
- 
+
     bool fatalError ( const QXmlParseException &exception )
     {
       kDebug(5800) << "FATALERROR" << endl;
       printException( exception );
       return false;
     }
- 
+
     QString errorString () const
     {
       return "QtopiaParser: Error!";
@@ -221,7 +221,7 @@ class QtopiaParser : public QXmlDefaultHandler
     {
       QDateTime dt;
       dt.setTime_t( value.toUInt() );
-      
+
       return dt;
     }
 

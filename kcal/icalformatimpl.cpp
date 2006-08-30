@@ -1045,7 +1045,7 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
           QDateTime period_end = readICalDateTime(icalperiod.end);
           periods.append( Period( period_start, period_end ) );
         } else {
-          Duration duration = readICalDuration( icalperiod.duration );
+          Duration duration ( readICalDuration( icalperiod.duration ) );
           periods.append( Period( period_start, duration ) );
         }
         break;}
@@ -1619,7 +1619,7 @@ kDebug(5800) << " alarm type =" << type << endl;
           if (icaldurationtype_is_null_duration(trigger.duration)) {
             kDebug(5800) << "ICalFormatImpl::readAlarm(): Trigger has no time and no duration." << endl;
           } else {
-            Duration duration = icaldurationtype_as_int( trigger.duration );
+            Duration duration ( icaldurationtype_as_int( trigger.duration ) );
             icalparameter *param = icalproperty_get_first_parameter(p,ICAL_RELATED_PARAMETER);
             if (param && icalparameter_get_related(param) == ICAL_RELATED_END)
               ialarm->setEndOffset(duration);
