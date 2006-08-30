@@ -45,6 +45,13 @@ void Client::Private::queryFinished( Query *query )
   query->deleteLater();
 }
 
+Client::Client( QObject *parent )
+  : QObject( parent ), d( new Private )
+{
+  d->mUserAgent = "KDE XMLRPC resources";
+  d->mDigestAuth = false;
+}
+
 Client::Client( const KUrl &url, QObject *parent )
   : QObject( parent ), d( new Private )
 {

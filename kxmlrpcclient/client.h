@@ -289,8 +289,8 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
 
     template <typename T>
     void call( const QString &method, const QList<T> &arg,
-        QObject* obj, const char* messageSlot,
-        QObject* obj, const char* faultSlot,
+        QObject* obj1, const char* messageSlot,
+        QObject* obj2, const char* faultSlot,
         const QVariant &id = QVariant() );
 
     Q_PRIVATE_SLOT( d, void queryFinished( Query* ) )
