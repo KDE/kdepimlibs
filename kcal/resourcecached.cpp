@@ -274,7 +274,7 @@ void ResourceCached::setTimeZoneId( const QString& tzid )
   mCalendar.setTimeZoneId( tzid );
 }
 
-QString ResourceCached::timeZoneId() const
+QString ResourceCached::timeZoneId()
 {
   return mCalendar.timeZoneId();
 }

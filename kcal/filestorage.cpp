@@ -35,7 +35,7 @@
 using namespace KCal;
 
 FileStorage::FileStorage( Calendar *cal, const QString &fileName,
-                            CalFormat *format )
+                          CalFormat *format )
   : CalStorage( cal ),
     mFileName( fileName ),
     mSaveFormat( format )

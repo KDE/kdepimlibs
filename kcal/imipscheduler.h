@@ -37,7 +37,7 @@ namespace KCal {
 class KCAL_EXPORT IMIPScheduler : public Scheduler
 {
   public:
-    IMIPScheduler( Calendar * );
+    explicit IMIPScheduler( Calendar * );
     virtual ~IMIPScheduler();
 
     bool publish (IncidenceBase *incidence,const QString &recipients);

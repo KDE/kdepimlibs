@@ -46,7 +46,7 @@ class ICalFormatImpl
 {
   public:
     /** Create new iCal format for calendar object */
-    ICalFormatImpl( ICalFormat *parent );
+    explicit ICalFormatImpl( ICalFormat *parent );
     virtual ~ICalFormatImpl();
 
     bool populate( Calendar *, icalcomponent *fs);

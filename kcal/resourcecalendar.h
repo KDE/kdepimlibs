@@ -56,7 +56,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
 {
     Q_OBJECT
   public:
-    ResourceCalendar( const KConfig * );
+    explicit ResourceCalendar( const KConfig * );
     virtual ~ResourceCalendar();
 
     void setResolveConflict( bool b);

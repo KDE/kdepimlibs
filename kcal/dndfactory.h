@@ -45,7 +45,7 @@ class Calendar;
 class KCAL_EXPORT DndFactory
 {
   public:
-    DndFactory( Calendar * );
+    explicit DndFactory( Calendar * );
 
     /**
       Create a drag object.

@@ -33,14 +33,14 @@ class Calendar;
 class KCAL_EXPORT CalStorage
 {
   public:
-    CalStorage( Calendar *calendar )
+    explicit CalStorage( Calendar *calendar )
     {
       mCalendar = calendar;
     }
     virtual ~CalStorage() {}
 
     Calendar *calendar() const { return mCalendar; }
-  
+
     virtual bool open() = 0;
     virtual bool load() = 0;
     virtual bool save() = 0;

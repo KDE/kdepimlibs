@@ -35,7 +35,7 @@ namespace KCal {
 class DummyScheduler : public Scheduler
 {
   public:
-    DummyScheduler(Calendar *);
+    explicit DummyScheduler( Calendar * );
     virtual ~DummyScheduler();
 
     bool publish (IncidenceBase *incidence,const QString &recipients);

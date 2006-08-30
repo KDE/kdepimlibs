@@ -71,7 +71,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
         SyncCache        // update the cache file before loading, or upload cache after saving
     };
 
-    ResourceCached( const KConfig * );
+    explicit ResourceCached( const KConfig * );
     virtual ~ResourceCached();
 
     void readConfig( const KConfig *config );
@@ -285,7 +285,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     */
     void setTimeZoneId( const QString &timeZoneId );
 
-    QString timeZoneId() const;
+    QString timeZoneId();
 
     /**
       Set to store incidences without a time zone.

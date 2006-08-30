@@ -75,7 +75,8 @@ class ErrorFormat : public Exception
     /**
       Create format error exception.
     */
-    ErrorFormat( ErrorCodeFormat code, const QString &message = QString() );
+    explicit ErrorFormat( ErrorCodeFormat code,
+                          const QString &message = QString() );
 
     /**
       Return format error message.

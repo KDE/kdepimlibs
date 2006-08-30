@@ -49,7 +49,7 @@ class KCAL_EXPORT CalendarNull : public Calendar
     /**
        Constructor.
     */
-    CalendarNull( const QString &timeZoneId );
+    explicit CalendarNull( const QString &timeZoneId );
 
     /**
        Destructor.

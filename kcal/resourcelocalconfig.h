@@ -43,7 +43,7 @@ class KCAL_EXPORT ResourceLocalConfig : public KRES::ConfigWidget
 {
     Q_OBJECT
   public:
-    ResourceLocalConfig( QWidget* parent = 0, const char* name = 0 );
+    explicit ResourceLocalConfig( QWidget* parent = 0, const char* name = 0 );
 
   public slots:
     virtual void loadSettings( KRES::Resource *resource);

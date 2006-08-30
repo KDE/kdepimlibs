@@ -106,7 +106,7 @@ class KCAL_EXPORT Scheduler
     /**
       Create scheduler for calendar specified as argument.
     */
-    Scheduler( Calendar *calendar );
+    explicit Scheduler( Calendar *calendar );
     virtual ~Scheduler();
 
     /**

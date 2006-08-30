@@ -32,8 +32,8 @@ class CalFormat;
 class KCAL_EXPORT FileStorage : public CalStorage
 {
   public:
-    FileStorage( Calendar *, const QString &fileName = QString(),
-                  CalFormat *format = 0 );
+    explicit FileStorage( Calendar *, const QString &fileName = QString(),
+                          CalFormat *format = 0 );
     virtual ~FileStorage();
 
     void setFileName( const QString &mFileName );

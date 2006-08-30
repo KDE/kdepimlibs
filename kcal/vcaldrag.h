@@ -38,7 +38,8 @@ class KCAL_EXPORT VCalDrag : public Q3StoredDrag
     /**
       Create a drag&drop object for vCalendar component \a vcal.
     */
-    VCalDrag( Calendar *vcal, QWidget *parent = 0, const char *name = 0 );
+    explicit VCalDrag( Calendar *vcal, QWidget *parent = 0,
+                       const char *name = 0 );
     ~VCalDrag() {}
 
     /**
