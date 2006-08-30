@@ -82,7 +82,7 @@ public:
    *
    * @param p is a #KTNEFProperty.
    */
-  explicit KTNEFProperty( const KTNEFProperty &p );
+  KTNEFProperty( const KTNEFProperty &p );
 
   /**
    * Returns the key string of the property.
