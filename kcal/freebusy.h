@@ -45,10 +45,10 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
     FreeBusy( const QDateTime &start, const QDateTime &end );
     FreeBusy( Calendar *calendar, const QDateTime &start,
               const QDateTime &end );
-    FreeBusy( const PeriodList & busyPeriods );
+    explicit FreeBusy( const PeriodList & busyPeriods );
 
     ~FreeBusy();
-    
+
     QByteArray type() const { return "FreeBusy"; }
 
     virtual QDateTime dtEnd() const;
@@ -66,7 +66,7 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
     void sortList();
 
     void merge( FreeBusy *freebusy );
-    
+
   private:
     bool accept( Visitor &v ) { return v.visit( this ); }
     //This is used for creating a freebusy object for the current user

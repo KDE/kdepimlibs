@@ -68,7 +68,7 @@ class KCAL_EXPORT Attachment
       @param uri is the @acronym URI referred to by this attachment.
       @param mime is the (optional) @acronym MIME type of the @p uri
     */
-    Attachment( const QString &uri, const QString &mime = QString() );
+    explicit Attachment( const QString &uri, const QString &mime = QString() );
 
     /**
       Constructs an attachment consisting of a binary blob of data
@@ -77,14 +77,14 @@ class KCAL_EXPORT Attachment
       @param base64 is the binary data in base64 format for the attachment.
       @param mime is the (optional) @acronym MIME type of the attachment
     */
-    Attachment( const char *base64, const QString &mime = QString() );
+    explicit Attachment( const char *base64, const QString &mime = QString() );
 
     /**
       Constructs an attachment by copying another attachment.
 
       @param attachment is the attachment to be copied.
     */
-    Attachment( const Attachment &attachment );
+    explicit Attachment( const Attachment &attachment );
 
     /**
       Destroys the attachment.

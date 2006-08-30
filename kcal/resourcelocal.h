@@ -52,11 +52,11 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     /**
       Create resource from configuration information stored in a KConfig object.
     */
-    ResourceLocal( const KConfig * );
+    explicit ResourceLocal( const KConfig * );
     /**
       Create resource for file named @a fileName.
     */
-    ResourceLocal( const QString& fileName );
+    explicit ResourceLocal( const QString& fileName );
     virtual ~ResourceLocal();
 
     virtual void writeConfig( KConfig* config );

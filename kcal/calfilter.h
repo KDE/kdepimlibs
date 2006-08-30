@@ -40,7 +40,7 @@ class KCAL_EXPORT CalFilter
     /** Construct filter. */
     CalFilter();
     /** Construct filter with name */
-    CalFilter( const QString &name );
+    explicit CalFilter( const QString &name );
     /** Destruct filter. */
     ~CalFilter();
 

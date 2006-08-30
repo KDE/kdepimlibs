@@ -49,8 +49,8 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
     friend class ResourceLocalDirConfig;
 
   public:
-    ResourceLocalDir( const KConfig * );
-    ResourceLocalDir( const QString& fileName );
+    explicit ResourceLocalDir( const KConfig * );
+    explicit ResourceLocalDir( const QString& fileName );
     virtual ~ResourceLocalDir();
 
     void readConfig( const KConfig *config );

@@ -87,9 +87,9 @@ class KCAL_EXPORT CalendarResources :
     class StandardDestinationPolicy : public DestinationPolicy
     {
       public:
-        StandardDestinationPolicy( CalendarResourceManager *manager ) :
+        explicit StandardDestinationPolicy( CalendarResourceManager *manager ) :
           DestinationPolicy( manager ) {}
-		virtual ~StandardDestinationPolicy(){}
+        virtual ~StandardDestinationPolicy(){}
         ResourceCalendar *destination( Incidence *incidence );
 
       private:
