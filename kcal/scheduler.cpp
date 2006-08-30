@@ -367,7 +367,8 @@ bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
   }
   if((method == Scheduler::Reply) && (freebusy->attendeeCount() == 1)) {
     Attendee *attendee = freebusy->attendees().first();
-    from = attendee->email();
+    from.setName( attendee->name() );
+    from.setEmail( attendee->email() );
   }
 
   if ( !d->mFreeBusyCache->saveFreeBusy( freebusy, from ) ) return false;
