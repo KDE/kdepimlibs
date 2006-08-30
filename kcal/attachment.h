@@ -84,7 +84,7 @@ class KCAL_EXPORT Attachment
 
       @param attachment is the attachment to be copied.
     */
-    explicit Attachment( const Attachment &attachment );
+    Attachment( const Attachment &attachment );
 
     /**
       Destroys the attachment.
