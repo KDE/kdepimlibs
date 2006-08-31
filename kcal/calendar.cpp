@@ -82,7 +82,8 @@ Calendar::Calendar( const QString &timeZoneId )
   d->mFilter->setEnabled( false );
 
   // user information...
-  setOwner( Person( i18n( "Unknown Name" ), i18n( "unknown@nowhere" ) ) );
+  d->mOwner.setName( i18n( "Unknown Name" ) );
+  d->mOwner.setEmail( i18n( "unknown@nowhere" ) );
 }
 
 Calendar::~Calendar()
@@ -285,9 +286,9 @@ Event::List Calendar::events( const QDate &date,
   return el;
 }
 
-Event::List Calendar::events( const QDateTime &qdt )
+Event::List Calendar::events( const QDateTime &dt )
 {
-  Event::List el = rawEventsForDate( qdt );
+  Event::List el = rawEventsForDate( dt );
   d->mFilter->apply( &el );
   return el;
 }
