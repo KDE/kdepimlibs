@@ -33,48 +33,58 @@
 
 using namespace KCal;
 
+class KCal::Period::Private 
+{
+  public:
+    QDateTime mStart;
+    QDateTime mEnd;
+
+    bool mHasDuration;
+};
+
 Period::Period()
 {
-  mHasDuration = false;
+  d->mHasDuration = false;
 }
 
 Period::Period( const QDateTime &start, const QDateTime &end )
 {
-  mStart = start;
-  mEnd = end;
-  mHasDuration = false;
+  d->mStart = start;
+  d->mEnd = end;
+  d->mHasDuration = false;
 }
 
 Period::Period( const QDateTime &start, const Duration &duration )
 {
-  mStart = start;
-  mEnd = duration.end( start );
-  mHasDuration = true;
+  d->mStart = start;
+  d->mEnd = duration.end( start );
+  d->mHasDuration = true;
 }
 
 
 
 bool Period::operator<( const Period &other ) const
 {
-  return start() < other.start();
+  return d->mStart < other.d->mStart;
 }
 
 QDateTime Period::start() const
 {
-  return mStart;
+  return d->mStart;
 }
 
 QDateTime Period::end() const
 {
-  return mEnd;
+  return d->mEnd;
 }
 
 Duration Period::duration() const
 {
-  return Duration( mStart, mEnd );
+  return Duration( d->mStart, d->mEnd );
 }
 
 bool Period::hasDuration() const
 {
-  return mHasDuration;
+  return d->mHasDuration;
 }
+

@@ -229,6 +229,20 @@ endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
 if(KDE4_BUILD_TESTS)
+set(testperiod_SRCS testperiod.cpp )
+
+kde4_automoc(${testperiod_SRCS})
+
+kde4_add_executable(testperiod NOGUI RUN_UNINSTALLED ${testperiod_SRCS})
+
+target_link_libraries(testperiod ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
+
+add_test(kcal-testperiod ${EXECUTABLE_OUTPUT_PATH}/testperiod)
+
+endif(KDE4_BUILD_TESTS)
+
+########### next target ###############
+if(KDE4_BUILD_TESTS)
 set(testvcalexport_SRCS testvcalexport.cpp )
 
 kde4_automoc(${testvcalexport_SRCS})

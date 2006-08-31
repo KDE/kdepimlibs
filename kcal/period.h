@@ -46,27 +46,53 @@ namespace KCal {
 class KCAL_EXPORT Period
 {
   public:
+    /**
+      Constructs a period.
+    */
     Period();
+    /**
+      Constructs a period from @p start to @p end.
+
+      @param start the time the period begins.
+      @param end the time the period ends.
+    */
     Period( const QDateTime &start, const QDateTime &end );
+    /**
+      Constructs a period from @p start and lasting @p duration.
+
+      @param start the time when the period starts.
+      @param duration how long the period lasts.
+    */
     Period( const QDateTime &start, const Duration &duration );
 
-    /** Returns true if this element is smaller than the @param other one */
+    /**
+      Returns true if this element is smaller than the @param other one 
+    */
     bool operator<( const Period &other ) const;
 
+    /**
+      Returns when this period starts.
+    */
     QDateTime start() const;
+    /**
+      Returns when this period ends.
+    */
     QDateTime end() const;
+    /**
+      Returns the duration of the period.
+    */
     Duration duration() const;
-
+    /**
+      Returns true if this period has a set duration, false
+      if it just has a start and an end.
+    */
     bool hasDuration() const;
 
   private:
-    QDateTime mStart;
-    QDateTime mEnd;
-
-    bool mHasDuration;
-
+    //@cond PRIVATE
     class Private;
     Private *d;
+    //@endcond
 };
 
 }
