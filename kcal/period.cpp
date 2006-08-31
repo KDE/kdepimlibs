@@ -43,23 +43,22 @@ class KCal::Period::Private
 };
 //@endcond
 
-Period::Period()
+Period::Period() : d( new KCal::Period::Private )
 {
-  d = new Private();
   d->mHasDuration = false;
 }
 
-Period::Period( const QDateTime &start, const QDateTime &end )
+Period::Period( const QDateTime &start, const QDateTime &end ) 
+  : d( new KCal::Period::Private )
 {
-  d = new Private();
   d->mStart = start;
   d->mEnd = end;
   d->mHasDuration = false;
 }
 
-Period::Period( const QDateTime &start, const Duration &duration )
+Period::Period( const QDateTime &start, const Duration &duration ) 
+  : d( new KCal::Period::Private ) 
 {
-  d = new Private();
   d->mStart = start;
   d->mEnd = duration.end( start );
   d->mHasDuration = true;
