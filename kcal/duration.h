@@ -35,7 +35,7 @@ class KCAL_EXPORT Duration
   public:
     Duration();
     Duration( const QDateTime &start, const QDateTime &end );
-    explicit Duration( int seconds );
+    Duration( int seconds ); //not explicit
 
     QDateTime end( const QDateTime &start ) const;
 
