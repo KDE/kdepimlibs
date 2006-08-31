@@ -44,11 +44,13 @@ class KCal::Period::Private
 
 Period::Period()
 {
+  d = new Private();
   d->mHasDuration = false;
 }
 
 Period::Period( const QDateTime &start, const QDateTime &end )
 {
+  d = new Private();
   d->mStart = start;
   d->mEnd = end;
   d->mHasDuration = false;
@@ -56,12 +58,16 @@ Period::Period( const QDateTime &start, const QDateTime &end )
 
 Period::Period( const QDateTime &start, const Duration &duration )
 {
+  d = new Private();
   d->mStart = start;
   d->mEnd = duration.end( start );
   d->mHasDuration = true;
 }
 
-
+Period::~Period()
+{
+  delete d;
+}
 
 bool Period::operator<( const Period &other ) const
 {

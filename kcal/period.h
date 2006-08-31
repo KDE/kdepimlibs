@@ -64,7 +64,10 @@ class KCAL_EXPORT Period
       @param duration how long the period lasts.
     */
     Period( const QDateTime &start, const Duration &duration );
-
+    /**
+      Destroys a period.
+    */
+    ~Period();
     /**
       Returns true if this element is smaller than the @param other one 
     */
