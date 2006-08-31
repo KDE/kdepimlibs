@@ -48,7 +48,7 @@ Period::Period() : d( new KCal::Period::Private )
   d->mHasDuration = false;
 }
 
-Period::Period( const QDateTime &start, const QDateTime &end ) 
+Period::Period( const QDateTime &start, const QDateTime &end )
   : d( new KCal::Period::Private )
 {
   d->mStart = start;
@@ -56,8 +56,8 @@ Period::Period( const QDateTime &start, const QDateTime &end )
   d->mHasDuration = false;
 }
 
-Period::Period( const QDateTime &start, const Duration &duration ) 
-  : d( new KCal::Period::Private ) 
+Period::Period( const QDateTime &start, const Duration &duration )
+  : d( new KCal::Period::Private )
 {
   d->mStart = start;
   d->mEnd = duration.end( start );
@@ -74,14 +74,14 @@ bool Period::operator<( const Period &other ) const
   return d->mStart < other.d->mStart;
 }
 
-bool Period::operator==( const Period &other ) const 
+bool Period::operator==( const Period &other ) const
 {
   return ( d->mStart == other.d->mStart &&
            d->mEnd == other.d->mEnd &&
            d->mHasDuration == other.d->mHasDuration );
 }
 
-Period& Period::operator=( const Period &other )
+Period &Period::operator=( const Period &other )
 {
   d->mStart = other.d->mStart;
   d->mEnd = other.d->mEnd;
