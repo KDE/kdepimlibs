@@ -81,6 +81,13 @@ bool KCal::Person::operator==( const Person &person )
            d->mEmail == person.d->mEmail );
 }
 
+Person &KCal::Person::operator=( const Person &person )
+{
+  d->mName = person.d->mName;
+  d->mEmail = person.d->mEmail;
+  return *this;
+}
+
 QString Person::fullName() const
 {
   if ( d->mName.isEmpty() ) {

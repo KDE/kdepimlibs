@@ -68,6 +68,9 @@ class KCAL_EXPORT Person
     */
     Person( const QString &name, const QString &email );
 
+    /**
+      Destroys a person.
+    */
     ~Person();
 
     /**
@@ -118,6 +121,13 @@ class KCAL_EXPORT Person
       @param person the person to compare.
     */
     bool operator==( const Person &person );
+
+    /**
+      Sets this person equal to @p person.
+
+      @param person the person to copy.
+    */
+    Person& operator=( const Person &person );
 
   private:
     //@cond PRIVATE
