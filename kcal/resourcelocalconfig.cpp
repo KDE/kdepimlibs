@@ -79,7 +79,7 @@ void ResourceLocalConfig::loadSettings( KRES::Resource *resource )
 
 void ResourceLocalConfig::saveSettings( KRES::Resource *resource )
 {
-  QString url = mURL->url().toString();
+  KUrl url = mURL->url();
 
   if( url.isEmpty() ) {
     KStandardDirs dirs;
@@ -92,7 +92,7 @@ void ResourceLocalConfig::saveSettings( KRES::Resource *resource )
 
     KMessageBox::information( this, i18n( "You did not specify a URL for this resource. Therefore, the resource will be saved in %1. It is still possible to change this location by editing the resource properties.", file.fileName() ) );
 
-    url = file.fileName();
+    url = KUrl::fromPath( file.fileName() );
   }
 
   ResourceLocal* res = static_cast<ResourceLocal*>( resource );
