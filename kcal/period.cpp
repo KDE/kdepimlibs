@@ -75,6 +75,21 @@ bool Period::operator<( const Period &other ) const
   return d->mStart < other.d->mStart;
 }
 
+bool Period::operator==( const Period &other ) const 
+{
+  return ( d->mStart == other.d->mStart &&
+           d->mEnd == other.d->mEnd &&
+           d->mHasDuration == other.d->mHasDuration );
+}
+
+Period& Period::operator=( const Period &other )
+{
+  d->mStart = other.d->mStart;
+  d->mEnd = other.d->mEnd;
+  d->mHasDuration = other.d->mHasDuration;
+  return *this;
+}
+
 QDateTime Period::start() const
 {
   return d->mStart;

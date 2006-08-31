@@ -73,9 +73,19 @@ class KCAL_EXPORT Period
     ~Period();
 
     /**
-      Returns true if this element is smaller than the @param other one.
+      Returns true if this period is smaller than the @p other one.
     */
     bool operator<( const Period &other ) const;
+
+    /**
+      Returns true if this period is equal to the @p other one. 
+    */
+    bool operator==( const Period &other ) const; 
+
+    /**
+      Sets this period equal to the @p other one.
+    */
+    Period& operator=( const Period &other );
 
     /**
       Returns when this period starts.
