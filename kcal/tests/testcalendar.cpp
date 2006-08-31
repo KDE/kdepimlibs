@@ -34,12 +34,14 @@ void CalendarTest::testValidity() {
   cal.setProductId( QLatin1String( "fredware calendar" ) );
   QVERIFY( cal.productId() == QLatin1String( "fredware calendar" ) );
   QVERIFY( cal.timeZoneId() == QLatin1String( "UTC" ) );
+  cal.close();
 }
 
 void CalendarTest::testSave() {
   CalendarLocal cal( QLatin1String("UTC") );
   cal.setProductId( QLatin1String( "fredware calendar" ) );
   QVERIFY( cal.save( "foo.ics" ) );
+  cal.close();
   unlink( "foo.ics" );
 }
 
