@@ -127,7 +127,7 @@ class KCAL_EXPORT Person
 
       @param person the person to copy.
     */
-    Person& operator=( const Person &person );
+    Person &operator=( const Person &person );
 
   private:
     //@cond PRIVATE
