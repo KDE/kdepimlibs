@@ -33,14 +33,15 @@
 
 using namespace KCal;
 
-class KCal::Period::Private 
+//@cond PRIVATE
+class KCal::Period::Private
 {
   public:
-    QDateTime mStart;
-    QDateTime mEnd;
-
-    bool mHasDuration;
+    QDateTime mStart;  // period starting date/time
+    QDateTime mEnd;    // period ending date/time
+    bool mHasDuration; // does period have a duration?
 };
+//@endcond
 
 Period::Period()
 {

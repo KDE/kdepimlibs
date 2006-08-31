@@ -50,6 +50,7 @@ class KCAL_EXPORT Period
       Constructs a period.
     */
     Period();
+
     /**
       Constructs a period from @p start to @p end.
 
@@ -57,6 +58,7 @@ class KCAL_EXPORT Period
       @param end the time the period ends.
     */
     Period( const QDateTime &start, const QDateTime &end );
+
     /**
       Constructs a period from @p start and lasting @p duration.
 
@@ -64,12 +66,14 @@ class KCAL_EXPORT Period
       @param duration how long the period lasts.
     */
     Period( const QDateTime &start, const Duration &duration );
+
     /**
       Destroys a period.
     */
     ~Period();
+
     /**
-      Returns true if this element is smaller than the @param other one 
+      Returns true if this element is smaller than the @param other one.
     */
     bool operator<( const Period &other ) const;
 
@@ -77,14 +81,17 @@ class KCAL_EXPORT Period
       Returns when this period starts.
     */
     QDateTime start() const;
+
     /**
       Returns when this period ends.
     */
     QDateTime end() const;
+
     /**
       Returns the duration of the period.
     */
     Duration duration() const;
+
     /**
       Returns true if this period has a set duration, false
       if it just has a start and an end.
