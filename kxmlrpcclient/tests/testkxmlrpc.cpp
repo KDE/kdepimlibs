@@ -1,0 +1,44 @@
+/*
+    This file is part of the kxmlrpc library.
+
+    Copyright (c) 2006 Narayan Newton <narayannewton@gmail.com> 
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
+*/
+
+#include <qtest_kde.h>
+
+#include "testkxmlrpc.h"
+#include "testkxmlrpc.moc"
+
+QTEST_KDEMAIN( KXmlRpcTest, NoGUI )
+
+#include <kxmlrpcclient/client.h>
+using namespace KXmlRpc; 
+
+void KXmlRpcTest::testValidity() 
+{
+  Client *c = new Client();
+  c->setUrl( KUrl( "http://test:pass@fake.com/rpc2" ) );
+  c->setUserAgent( "Fake/1.0/MozillaCompat" );
+  c->enableDigestAuth();
+  QVERIFY( c->url() == KUrl( "http://test:pass@fake.com/rpc2" ) );
+  QVERIFY( c->userAgent() == "Fake/1.0/MozillaCompat" );
+  QVERIFY( c->digestAuth() == true );
+
+  Client *other = new Client( KUrl( "http://test:pass@fake.com/rpc2" ) );
+  QVERIFY( c->url() == other->url() );
+}

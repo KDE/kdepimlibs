@@ -1,5 +1,5 @@
 project(kxmlrpcclient)
-#add_subdirectory( tests )
+add_subdirectory( tests )
 
 ########### next target ###############
 
