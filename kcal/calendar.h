@@ -37,8 +37,6 @@
 #include <QList>
 #include <QMultiHash>
 
-class KTimeZones;
-
 #include "customproperties.h"
 #include "event.h"
 #include "todo.h"
@@ -48,6 +46,7 @@ class KTimeZones;
 
 namespace KCal {
 
+class ICalTimeZones;
 class CalFilter;
 
 /**
@@ -252,7 +251,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @return the time zones collection.
     */
-    KTimeZones *timeZones() const;
+    ICalTimeZones *timeZones() const;
 
     /**
       Sets to store calendar Incidences without a time zone.

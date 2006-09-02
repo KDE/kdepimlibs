@@ -31,10 +31,10 @@
 */
 #include <kdebug.h>
 #include <klocale.h>
-#include <ktimezones.h>
 
 #include "exceptions.h"
 #include "calfilter.h"
+#include "icaltimezones.h"
 #include "calendar.h"
 
 using namespace KCal;
@@ -47,8 +47,26 @@ using namespace KCal;
 class KCal::Calendar::Private
 {
   public:
+    Private()
+      : mTimeZones( new ICalTimeZones ),
+	mLocalTime( false ),
+	mModified( false ),
+	mNewObserver( false ),
+	mObserversEnabled( true ),
+	mDefaultFilter( new CalFilter ),
+	mFilter( mDefaultFilter )
+    {
+        // Setup default filter, which does nothing
+        mFilter->setEnabled( false );
+
+        // user information...
+        mOwner.setName( i18n( "Unknown Name" ) );
+        mOwner.setEmail( i18n( "unknown@nowhere" ) );
+    }
+
     QString mProductId;
     Person mOwner;
+    ICalTimeZones *mTimeZones;   // collection of time zones used in this calendar
     QString mTimeZoneId;
     bool mLocalTime;
     bool mModified;
@@ -56,7 +74,6 @@ class KCal::Calendar::Private
     bool mObserversEnabled;
     QList<Observer*> mObservers;
 
-    KTimeZones *mTimeZones;   // collection of time zones used in this calendar
     CalFilter *mDefaultFilter;
     CalFilter *mFilter;
 
@@ -69,21 +86,7 @@ class KCal::Calendar::Private
 Calendar::Calendar( const QString &timeZoneId )
   : d( new KCal::Calendar::Private )
 {
-  d->mTimeZones = new KTimeZones;
   d->mTimeZoneId = timeZoneId;
-  d->mLocalTime = false;
-  d->mModified = false;
-  d->mDefaultFilter = new CalFilter;
-  d->mFilter = d->mDefaultFilter;
-  d->mNewObserver = false;
-  d->mObserversEnabled = true;
-
-  // Setup default filter, which does nothing
-  d->mFilter->setEnabled( false );
-
-  // user information...
-  d->mOwner.setName( i18n( "Unknown Name" ) );
-  d->mOwner.setEmail( i18n( "unknown@nowhere" ) );
 }
 
 Calendar::~Calendar()
@@ -119,7 +122,7 @@ QString Calendar::timeZoneId() const
   return d->mTimeZoneId;
 }
 
-KTimeZones *Calendar::timeZones() const
+ICalTimeZones *Calendar::timeZones() const
 {
   return d->mTimeZones;
 }
