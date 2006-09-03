@@ -27,6 +27,11 @@
   @author Preston Brown
   @author Cornelius Schumacher
   @author Reinhold Kainhofer
+
+  @port4 getOwner() method renamed to owner().
+  @port4 appendAlarms() and appendRecurringAlarms() methods which have
+  been moved into this class from CalendarLocal and now return static
+  Alarm:List instead of void.
  */
 #ifndef KCAL_CALENDAR_H
 #define KCAL_CALENDAR_H
@@ -50,70 +55,47 @@ class ICalTimeZones;
 class CalFilter;
 
 /**
-  @enum SortDirection
-  Sort direction.
+  Calendar Incidence sort directions.
 */
-enum SortDirection
-{
-  /** Sort in ascending order (first to last) */
-  SortDirectionAscending,
-  /** Sort in descending order (last to first) */
-  SortDirectionDescending
+enum SortDirection {
+  SortDirectionAscending,  /**< Sort in ascending order (first to last) */
+  SortDirectionDescending  /**< Sort in descending order (last to first) */
 };
 
 /**
-  @enum EventSortField
-  How Events are to be sorted.
+  Calendar Event sort keys.
 */
-enum EventSortField
-{
-  /** Events are to be unsorted */
-  EventSortUnsorted,
-  /** Sort Events chronologically, by start date */
-  EventSortStartDate,
-  /** Sort Events chronologically, by end date */
-  EventSortEndDate,
-  /** Sort Events alphabetically, by summary */
-  EventSortSummary
+enum EventSortField {
+  EventSortUnsorted,       /**< Events are to be unsorted */
+  EventSortStartDate,      /**< Sort Events chronologically, by start date */
+  EventSortEndDate,        /**< Sort Events chronologically, by end date */
+  EventSortSummary         /**< Sort Events alphabetically, by summary */
 };
 
 /**
-  @enum TodoSortField
-  How Todos are to be sorted.
+  Calendar Todo sort keys.
 */
-enum TodoSortField
-{
-  /** Todos are to be unsorted */
-  TodoSortUnsorted,
-  /** Sort Todos chronologically, by start date */
-  TodoSortStartDate,
-  /** Sort Todos chronologically, by due date */
-  TodoSortDueDate,
-  /** Sort Todos by priority */
-  TodoSortPriority,
-  /** Sort Todos by percentage completed */
-  TodoSortPercentComplete,
-  /** Sort Todos alphabetically, by summary */
-  TodoSortSummary
+enum TodoSortField {
+  TodoSortUnsorted,        /**< Todos are to be unsorted */
+  TodoSortStartDate,       /**< Sort Todos chronologically, by start date */
+  TodoSortDueDate,         /**< Sort Todos chronologically, by due date */
+  TodoSortPriority,        /**< Sort Todos by priority */
+  TodoSortPercentComplete, /**< Sort Todos by percentage completed */
+  TodoSortSummary          /**< Sort Todos alphabetically, by summary */
 };
 
 /**
-  @enum JournalSortField
-  How Journals are to be sorted.
+  Calendar Journal sort keys.
 */
-enum JournalSortField
-{
-  /** Journals are to be unsorted */
-  JournalSortUnsorted,
-  /** Sort Journals chronologically by date */
-  JournalSortDate,
-  /** Sort Journals alphabetically, by summary */
-  JournalSortSummary
+enum JournalSortField {
+  JournalSortUnsorted,     /**< Journals are to be unsorted */
+  JournalSortDate,         /**< Sort Journals chronologically by date */
+  JournalSortSummary       /**< Sort Journals alphabetically, by summary */
 };
 
 /**
   @brief
-  This is the main "calendar" object class.  It holds information like
+  >This is the main "calendar" object class.  It holds information like
   Incidences(Events, To-dos, Journals), time zones, user information, etc. etc.
 
   This is an abstract base class defining the interface to a calendar. It is
@@ -162,12 +144,12 @@ enum JournalSortField
 class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
                                 public IncidenceBase::Observer
 {
-    Q_OBJECT
+  Q_OBJECT
 
   public:
 
     /**
-      Construct Calendar object using a Time Zone.
+      >Construct Calendar object using a Time Zone.
 
       @param timeZoneId is a string containing a Time Zone ID, which is
       assumed to be valid. The Time Zone Id is used to set the time zone
@@ -180,31 +162,37 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       Do Not pass an empty timeZoneId string as this may cause unintended
       consequences when storing Incidences into the calendar.
     */
-    Calendar( const QString &timeZoneId );
+    explicit Calendar( const QString &timeZoneId );
 
     /**
-      Destructor
+      >Destructor
     */
     virtual ~Calendar();
 
     /**
-      Sets the calendar Product ID.
+      Sets the calendar Product ID to @p productId.
 
-      @param productId is a QString containing the Product ID.
+      @param productId is a string containing the Product ID.
+
+      @see productId() const
     */
     void setProductId( const QString &productId );
 
     /**
       Returns the calendar's Product ID.
 
-      @return the string containing the Product ID
+      @return the string containing the Product ID.
+
+      @see setProductId()
     */
     QString productId() const;
 
     /**
-      Sets the owner of the calendar.
+      Sets the owner of the calendar to @p owner.
 
-      @param owner is a Person object.
+      @param owner is a #Person object.
+
+      @see owner()
     */
     void setOwner( const Person &owner );
 
@@ -212,6 +200,8 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       Returns the owner of the calendar.
 
       @return the owner Person object.
+
+      @see setOwner()
     */
     const Person &owner() const;
 
@@ -235,7 +225,15 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       Sets the timezone used for viewing the incidences in this calendar. In
       case it differs from the current timezone, shift the events such that they
       retain their absolute time (in UTC).
-      @ref setTimeZoneId
+
+      @param timeZoneId is a string containing a Time Zone ID, which is
+      assumed to be valid. The Time Zone Id is used to set the time zone
+      for viewing Incidence dates.\n
+      On some systems, /usr/share/zoneinfo/zone.tab may be available for
+      reference.\n
+      @e Example: "Europe/Berlin"
+
+      @see setTimeZoneId()
     */
     virtual void setTimeZoneIdViewOnly( const QString &timeZoneId ) = 0;
 
@@ -294,7 +292,8 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     /**
       Load the calendar contents from storage. This requires the calendar
       to have been loaded once before, in other words initialized.
-      @par tz The time zone to use for loading.
+
+      @param tz The time zone to use for loading.
     */
     virtual bool reload( const QString &tz ) = 0;
 
@@ -798,37 +797,45 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     class Observer
     {
       public:
+        /**
+          Destructor.
+        */
         virtual ~Observer() {}
+
         /**
           Notify the Observer that a Calendar has been modified.
 
-          First parameter is true if the calendar has been modified.\n
-          Second parameter is a pointer to the Calendar object that
+          @param modified set if the calendar has been modified.
+          @param calendar is a pointer to the Calendar object that
           is being observed.
         */
-        virtual void calendarModified( bool /*modified*/,
-                                       Calendar * /*calendar*/ ) {}
+        virtual void calendarModified( bool modified,
+                                       Calendar *calendar )
+        { Q_UNUSED( modified ); Q_UNUSED( calendar ); }
 
         /**
           Notify the Observer that an Incidence has been inserted.
 
-          First parameter is a pointer to the Incidence that was inserted.
+          @param incidence is a pointer to the Incidence that was inserted.
         */
-        virtual void calendarIncidenceAdded( Incidence * /*incidence*/ ) {}
+        virtual void calendarIncidenceAdded( Incidence *incidence )
+        { Q_UNUSED( incidence );}
 
         /**
           Notify the Observer that an Incidence has been modified.
 
-          First parameter is a pointer to the Incidence that was modified.
+          @param incidence is a pointer to the Incidence that was modified.
         */
-        virtual void calendarIncidenceChanged( Incidence * /*incidence*/ ) {}
+        virtual void calendarIncidenceChanged( Incidence *incidence )
+        { Q_UNUSED( incidence ); }
 
         /**
           Notify the Observer that an Incidence has been removed.
 
-          First parameter is a pointer to the Incidence that was removed.
+          @param incidence is a pointer to the Incidence that was removed.
         */
-          virtual void calendarIncidenceDeleted( Incidence * /*incidence*/ ) {}
+        virtual void calendarIncidenceDeleted( Incidence *incidence )
+        { Q_UNUSED( incidence ); }
     };
 
     /**
@@ -917,6 +924,14 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     //TODO: Move appendAlarms() and appendRecurringAlarms() from
     //      calendarlocal here, as protected static methods
     //      returning static Alarm::List
+
+    /** Append alarms of incidence in interval to list of alarms. */
+    void appendAlarms( Alarm::List &alarms, Incidence *incidence,
+                       const QDateTime &from, const QDateTime &to );
+
+    /** Append alarms of recurring events in interval to list of alarms. */
+    void appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
+                       const QDateTime &from, const QDateTime &to );
 
   private:
     //@cond PRIVATE

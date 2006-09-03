@@ -19,18 +19,26 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file calendar.h
+  Provides a Calendar stored as a local file.
+
+  @author Preston Brown
+  @author Cornelius Schumacher
+
+  @port4 the protected method insertEvent() is now private to this class.
+ */
 #ifndef KCAL_CALENDARLOCAL_H
 #define KCAL_CALENDARLOCAL_H
 
 #include "calendar.h"
-#include <QHash>
-
 
 namespace KCal {
 
 class CalFormat;
 
 /**
+  @brief
   This class provides a calendar stored as a local file.
 */
 class KCAL_EXPORT CalendarLocal : public Calendar
@@ -39,7 +47,11 @@ class KCAL_EXPORT CalendarLocal : public Calendar
     /**
       Constructs a new calendar, with variables initialized to sane values.
     */
-    CalendarLocal( const QString &timeZoneId );
+    explicit CalendarLocal( const QString &timeZoneId );
+
+    /**
+      Destructor.
+    */
     ~CalendarLocal();
 
     /**
@@ -80,142 +92,167 @@ class KCAL_EXPORT CalendarLocal : public Calendar
 
     void save() {}
 
+  // Event Specific Methods //
+
     /**
-      Add Event to calendar.
+      @copydoc
+      Calendar::addEvent()
     */
     bool addEvent( Event *event );
+
     /**
-      Deletes an event from this calendar.
+      @copydoc
+      Calendar::deleteEvent()
     */
     bool deleteEvent( Event *event );
+
     /**
-      Deletes all events from this calendar.
+      >Deletes all events from this calendar.
     */
     void deleteAllEvents();
 
     /**
-      Retrieves an event on the basis of the unique string ID.
+      @copydoc
+      Calendar::rawEvents(EventSortField, SortDirection)
     */
-    Event *event( const QString &uid );
-    /**
-      Return unfiltered list of all events in calendar.
-    */
-    Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    Event::List rawEvents(
+      EventSortField sortField = EventSortUnsorted,
+      SortDirection sortDirection = SortDirectionAscending );
 
     /**
-      Add a todo to the todolist.
+      @copydoc
+      Calendar::rawEvents(const QDate &, const QDate &, bool)
+    */
+    Event::List rawEvents( const QDate &start, const QDate &end,
+                           bool inclusive = false );
+
+    /**
+      @copydoc
+      Calendar::rawEventsForDate(const QDateTime &)
+    */
+    Event::List rawEventsForDate( const QDateTime &dt );
+
+    /**
+      @copydoc
+      Calendar::rawEventsForDate(const QDate &, EventSortField, SortDirection)
+    */
+    Event::List rawEventsForDate(
+      const QDate &date, EventSortField sortField = EventSortUnsorted,
+      SortDirection sortDirection = SortDirectionAscending );
+
+    /**
+      @copydoc
+      Calendar::event(const QString &)
+    */
+    Event *event( const QString &uid );
+
+  // To-do Specific Methods //
+
+    /**
+      @copydoc
+      Calendar::addTodo()
     */
     bool addTodo( Todo *todo );
+
     /**
-      Remove a todo from the todolist.
+      @copydoc
+      Calendar::deleteTodo(Todo *)
     */
     bool deleteTodo( Todo * );
+
     /**
-      Deletes all todos from this calendar.
+      Deletes all to-dos from this calendar.
     */
     void deleteAllTodos();
+
     /**
-      Searches todolist for an event with this unique string identifier,
-      returns a pointer or null.
+      @copydoc
+      Calendar::rawTodos(TodoSortField, SortDirection)
     */
-    Todo *todo( const QString &uid );
+    Todo::List rawTodos(
+      TodoSortField sortField = TodoSortUnsorted,
+      SortDirection sortDirection = SortDirectionAscending );
+
     /**
-      Return list of all todos.
-    */
-    Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
-    /**
-      Returns list of todos due on the specified date.
+      @copydoc
+      Calendar::rawTodosForDate(const QDate &)
     */
     Todo::List rawTodosForDate( const QDate &date );
 
     /**
-      Add a Journal entry to calendar.
+      @copydoc
+      Calendar::todo(const QString &)
+    */
+    Todo *todo( const QString &uid );
+
+  // Journal Specific Methods //
+
+    /**
+      @copydoc
+      Calendar::addJournal(Journal *)
     */
     bool addJournal( Journal * );
+
     /**
-      Remove a Journal from the calendar.
+      @copydoc
+      Calendar::deleteJournal(Journal *)
     */
     bool deleteJournal( Journal * );
+
     /**
-      Deletes all journals from this calendar.
+      >Deletes all journals from this calendar.
     */
     void deleteAllJournals();
+
     /**
-      Return Journal with given UID.
+       @copydoc
+       Calendar::rawJournals(JournalSortField, SortDirection)
     */
-    Journal *journal( const QString &uid );
+    Journal::List rawJournals(
+      JournalSortField sortField = JournalSortUnsorted,
+      SortDirection sortDirection = SortDirectionAscending );
+
     /**
-       Return list of all journals.
-    */
-    Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
-    /**
-       Get unfiltered journals for a given date.
+      @copydoc
+      Calendar::rawJournalsForDate(const QDate &)
     */
     Journal::List rawJournalsForDate( const QDate &date );
 
     /**
-      Return all alarms, which occur in the given time interval.
+      @copydoc
+      Calendar::journal(const QString &)
+    */
+    Journal *journal( const QString &uid );
+
+  // Alarm Specific Methods //
+
+    /**
+      @copydoc
+      Calendar::alarms(const QDateTime &, const QDateTime &)
     */
     Alarm::List alarms( const QDateTime &from, const QDateTime &to );
 
     /**
-      Return all alarms, which occur before given date.
+      >Return all alarms, which occur before given date.
     */
     Alarm::List alarmsTo( const QDateTime &to );
-
-    /**
-      Builds and then returns a list of all events that match for the
-      date specified. useful for dayView, etc. etc.
-    */
-    Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
-    /**
-      Get unfiltered events for date \a dt.
-    */
-    Event::List rawEventsForDate( const QDateTime &dt );
-    /**
-      Get unfiltered events in a range of dates. If inclusive is set to true,
-      only events are returned, which are completely included in the range.
-      If inclusive is set to false, all events which overlap the range are
-      returned. An event's entire time span is considered in evaluating
-      whether it should be returned. For a non-recurring event, its span is
-      from its start to its end date. For a recurring event, its time span is
-      from its first to its last recurrence.
-    */
-    Event::List rawEvents( const QDate &start, const QDate &end,
-                               bool inclusive = false );
 
     /**
      * Set the timezone of the calendar to be used for interpreting the events
      * in the calendar. This requires that the calendar is saved first, so the
      * user is asked whether he wants to do that, or keep the timezone as is.
      */
-    void setTimeZoneIdViewOnly( const QString& tz );
-
-  protected:
-
-    /** inserts an event into its "proper place" in the calendar. */
-    void insertEvent( Event *event );
-
-    /** Append alarms of incidence in interval to list of alarms. */
-    void appendAlarms( Alarm::List &alarms, Incidence *incidence,
-                       const QDateTime &from, const QDateTime &to );
-
-    /** Append alarms of recurring events in interval to list of alarms. */
-    void appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
-                       const QDateTime &from, const QDateTime &to );
+    void setTimeZoneIdViewOnly( const QString &tz );
 
   private:
-    void init();
+    /** inserts an event into its "proper place" in the calendar. */
+    void insertEvent( Event *event );
+    // @TODO why no insertTodo() and insertJournal()?
 
-    QHash<QString, Event*> mEvents;
-    Todo::List mTodoList;
-    Journal::List mJournalList;
-
-    Incidence::List mDeletedIncidences;
-    QString mFileName;
-
+    //@cond PRIVATE
     class Private;
     Private *d;
+    //@endcond
 };
 
 }

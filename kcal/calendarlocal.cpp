@@ -22,17 +22,16 @@
 */
 
 #include <QDateTime>
+#include <QHash>
 #include <QString>
 
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include "vcaldrag.h"
-#include "vcalformat.h"
-#include "icalformat.h"
-#include "exceptions.h"
 #include "incidence.h"
+#include "event.h"
+#include "todo.h"
 #include "journal.h"
 #include "filestorage.h"
 
@@ -40,39 +39,51 @@
 
 using namespace KCal;
 
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
+//@cond PRIVATE
+class KCal::CalendarLocal::Private
+{
+  public:
+    QString         mFileName;         // filename where the calendar is stored
+    QHash<QString, Event*> mEvents;
+    //@TODO should there be a hash of to-dos and journals as well?
+    Todo::List      mTodoList;         // a list of all to-dos in the calendar
+    Journal::List   mJournalList;      // a list of all journals in the calendar
+    Incidence::List mDeletedIncidences;// a list of all deleted incidences
+};
+//@endcond
+
 CalendarLocal::CalendarLocal( const QString &timeZoneId )
-  : Calendar( timeZoneId )
+  : Calendar( timeZoneId ), d( new KCal::CalendarLocal::Private )
 {
-  init();
+  d->mDeletedIncidences.setAutoDelete( true );
+  d->mFileName.clear();
 }
-
-void CalendarLocal::init()
-{
-  mDeletedIncidences.setAutoDelete( true );
-  mFileName.clear();
-}
-
 
 CalendarLocal::~CalendarLocal()
 {
   close();
+  delete d;
 }
 
 bool CalendarLocal::load( const QString &fileName, CalFormat *format )
 {
-  mFileName = fileName;
+  d->mFileName = fileName;
   FileStorage storage( this, fileName, format );
   return storage.load();
 }
 
 bool CalendarLocal::reload( const QString &tz )
 {
-  const QString filename = mFileName;
+  const QString filename = d->mFileName;
   save();
   close();
-  mFileName = filename;
+  d->mFileName = filename;
   setTimeZoneId( tz );
-  FileStorage storage( this, mFileName );
+  FileStorage storage( this, d->mFileName );
   return storage.load();
 }
 
@@ -80,7 +91,7 @@ bool CalendarLocal::save( const QString &fileName, CalFormat *format )
 {
   // Save only if the calendar is either modified, or saved to a
   // different file than it was loaded from
-  if ( mFileName != fileName || isModified() ) {
+  if ( d->mFileName != fileName || isModified() ) {
     FileStorage storage( this, fileName, format );
     return storage.save();
   } else {
@@ -91,18 +102,17 @@ bool CalendarLocal::save( const QString &fileName, CalFormat *format )
 void CalendarLocal::close()
 {
   setObserversEnabled( false );
-  mFileName.clear();
+  d->mFileName.clear();
 
   deleteAllEvents();
   deleteAllTodos();
   deleteAllJournals();
 
-  mDeletedIncidences.clear();
+  d->mDeletedIncidences.clear();
   setModified( false );
 
   setObserversEnabled( true );
 }
-
 
 bool CalendarLocal::addEvent( Event *event )
 {
@@ -119,12 +129,10 @@ bool CalendarLocal::addEvent( Event *event )
 
 bool CalendarLocal::deleteEvent( Event *event )
 {
-//  kDebug(5800) << "CalendarLocal::deleteEvent" << endl;
-
-  if ( mEvents.remove( event->uid() ) ) {
+  if ( d->mEvents.remove( event->uid() ) ) {
     setModified( true );
     notifyIncidenceDeleted( event );
-    mDeletedIncidences.append( event );
+    d->mDeletedIncidences.append( event );
     return true;
   } else {
     kWarning() << "CalendarLocal::deleteEvent(): Event not found." << endl;
@@ -134,23 +142,22 @@ bool CalendarLocal::deleteEvent( Event *event )
 
 void CalendarLocal::deleteAllEvents()
 {
-  // kDebug(5800) << "CalendarLocal::deleteAllEvents" << endl;
-  foreach ( Event *e, mEvents )
+  foreach ( Event *e, d->mEvents ) {
     notifyIncidenceDeleted( e );
+  }
 
-  qDeleteAll( mEvents );
-  mEvents.clear();
+  qDeleteAll( d->mEvents );
+  d->mEvents.clear();
 }
 
 Event *CalendarLocal::event( const QString &uid )
 {
-//  kDebug(5800) << "CalendarLocal::event(): " << uid << endl;
-  return mEvents.value( uid );
+  return d->mEvents.value( uid );
 }
 
 bool CalendarLocal::addTodo( Todo *todo )
 {
-  mTodoList.append( todo );
+  d->mTodoList.append( todo );
 
   todo->registerObserver( this );
 
@@ -169,10 +176,10 @@ bool CalendarLocal::deleteTodo( Todo *todo )
   // Handle orphaned children
   removeRelations( todo );
 
-  if ( mTodoList.removeRef( todo ) ) {
+  if ( d->mTodoList.removeRef( todo ) ) {
     setModified( true );
     notifyIncidenceDeleted( todo );
-    mDeletedIncidences.append( todo );
+    d->mDeletedIncidences.append( todo );
     return true;
   } else {
     kWarning() << "CalendarLocal::deleteTodo(): Todo not found." << endl;
@@ -182,45 +189,38 @@ bool CalendarLocal::deleteTodo( Todo *todo )
 
 void CalendarLocal::deleteAllTodos()
 {
-  // kDebug(5800) << "CalendarLocal::deleteAllTodos()\n";
-  Todo::List::ConstIterator it;
-  for( it = mTodoList.begin(); it != mTodoList.end(); ++it ) {
-    notifyIncidenceDeleted( *it );
+  foreach ( Todo *t, d->mTodoList ) {
+    notifyIncidenceDeleted( t );
   }
-
-  mTodoList.setAutoDelete( true );
-  mTodoList.clear();
-  mTodoList.setAutoDelete( false );
+  d->mTodoList.setAutoDelete( true );
+  d->mTodoList.clear();
+  d->mTodoList.setAutoDelete( false );
 }
 
 Todo::List CalendarLocal::rawTodos( TodoSortField sortField,
                                     SortDirection sortDirection )
 {
-  return sortTodos( &mTodoList, sortField, sortDirection );
+  return sortTodos( &d->mTodoList, sortField, sortDirection );
 }
 
 Todo *CalendarLocal::todo( const QString &uid )
 {
-  Todo::List::ConstIterator it;
-  for ( it = mTodoList.begin(); it != mTodoList.end(); ++it ) {
-    if ( (*it)->uid() == uid ) return *it;
+  foreach ( Todo *t, d->mTodoList ) {
+    if ( t->uid() == uid ) {
+      return t;
+    }
   }
-
   return 0;
 }
 
 Todo::List CalendarLocal::rawTodosForDate( const QDate &date )
 {
   Todo::List todos;
-
-  Todo::List::ConstIterator it;
-  for ( it = mTodoList.begin(); it != mTodoList.end(); ++it ) {
-    Todo *todo = *it;
-    if ( todo->hasDueDate() && todo->dtDue().date() == date ) {
-      todos.append( todo );
+  foreach ( Todo *t, d->mTodoList ) {
+    if ( t->hasDueDate() && t->dtDue().date() == date ) {
+      todos.append( t );
     }
   }
-
   return todos;
 }
 
@@ -231,134 +231,36 @@ Alarm::List CalendarLocal::alarmsTo( const QDateTime &to )
 
 Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
 {
-//  kDebug(5800) << "CalendarLocal::alarms(" << from.toString() << " - "
-//                << to.toString() << ")" << endl;
-
   Alarm::List alarms;
-
-  foreach ( Event *e, mEvents ) {
-    if ( e->doesRecur() ) appendRecurringAlarms( alarms, e, from, to );
-    else appendAlarms( alarms, e, from, to );
+  foreach ( Event *e, d->mEvents ) {
+    if ( e->doesRecur() ) {
+      appendRecurringAlarms( alarms, e, from, to );
+    } else {
+      appendAlarms( alarms, e, from, to );
+    }
   }
 
-  Todo::List::ConstIterator it2;
-  for( it2 = mTodoList.begin(); it2 != mTodoList.end(); ++it2 ) {
-    if (! (*it2)->isCompleted() ) appendAlarms( alarms, *it2, from, to );
+  foreach ( Todo *t, d->mTodoList ) {
+    if (! t->isCompleted() ) {
+      appendAlarms( alarms, t, from, to );
+    }
   }
 
   return alarms;
 }
 
-void CalendarLocal::appendAlarms( Alarm::List &alarms, Incidence *incidence,
-                                  const QDateTime &from, const QDateTime &to )
-{
-  QDateTime preTime = from.addSecs(-1);
-  Alarm::List::ConstIterator it;
-  for( it = incidence->alarms().begin(); it != incidence->alarms().end();
-       ++it ) {
-    if ( (*it)->enabled() ) {
-      QDateTime dt = (*it)->nextRepetition(preTime);
-      if ( dt.isValid() && dt <= to ) {
-        kDebug(5800) << "CalendarLocal::appendAlarms() '"
-                      << incidence->summary() << "': "
-                      << dt.toString() << endl;
-        alarms.append( *it );
-      }
-    }
-  }
-}
-
-void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
-                                           Incidence *incidence,
-                                           const QDateTime &from,
-                                           const QDateTime &to )
-{
-  QDateTime qdt;
-  int  endOffset = 0;
-  bool endOffsetValid = false;
-  int  period = from.secsTo(to);
-  Alarm::List::ConstIterator it;
-  for( it = incidence->alarms().begin(); it != incidence->alarms().end();
-       ++it ) {
-    Alarm *alarm = *it;
-    if ( alarm->enabled() ) {
-      if ( alarm->hasTime() ) {
-        // The alarm time is defined as an absolute date/time
-        qdt = alarm->nextRepetition( from.addSecs(-1) );
-        if ( !qdt.isValid() || qdt > to )
-          continue;
-      } else {
-        // The alarm time is defined by an offset from the event start or end time.
-        // Find the offset from the event start time, which is also used as the
-        // offset from the recurrence time.
-        int offset = 0;
-        if ( alarm->hasStartOffset() ) {
-          offset = alarm->startOffset().asSeconds();
-        } else if ( alarm->hasEndOffset() ) {
-          if ( !endOffsetValid ) {
-            endOffset = incidence->dtStart().secsTo( incidence->dtEnd() );
-            endOffsetValid = true;
-          }
-          offset = alarm->endOffset().asSeconds() + endOffset;
-        }
-
-        // Find the incidence's earliest alarm
-        QDateTime fromStart = incidence->dtStart().addSecs( offset );
-        if ( fromStart > to )
-          continue;
-        if ( from > fromStart )
-          fromStart = from;   // don't look earlier than the earliest alarm
-        // Adjust the 'fromStart' date/time and find the next recurrence at or after it
-        qdt = incidence->recurrence()->getNextDateTime( fromStart.addSecs(-offset - 1) );
-        if ( !qdt.isValid()
-        ||   (qdt = qdt.addSecs( offset )) > to )    // remove the adjustment to get the alarm time
-        {
-          // The next recurrence is too late.
-          if ( !alarm->repeatCount() )
-            continue;
-          // The alarm has repetitions, so check whether repetitions of previous
-          // recurrences fall within the time period.
-          bool found = false;
-          qdt = fromStart.addSecs( -offset );
-          while ( (qdt = incidence->recurrence()->getPreviousDateTime( qdt )).isValid() ) {
-            int toFrom = qdt.secsTo( fromStart ) - offset;
-            if ( toFrom > alarm->duration() )
-              break;     // this recurrence's last repetition is too early, so give up
-            // The last repetition of this recurrence is at or after 'fromStart' time.
-            // Check if a repetition occurs between 'fromStart' and 'to'.
-            int snooze = alarm->snoozeTime() * 60;   // in seconds
-            if ( period >= snooze
-            ||   toFrom % snooze == 0
-            ||   (toFrom / snooze + 1) * snooze <= toFrom + period ) {
-              found = true;
-#ifndef NDEBUG
-              qdt = qdt.addSecs( offset + ((toFrom-1) / snooze + 1) * snooze );   // for debug output
-#endif
-              break;
-            }
-          }
-          if ( !found )
-            continue;
-        }
-      }
-      kDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
-                    << "': " << qdt.toString() << endl;
-      alarms.append( alarm );
-    }
-  }
-}
-
-
 void CalendarLocal::insertEvent( Event *event )
 {
   QString uid = event->uid();
-  if ( mEvents.value( uid ) == 0 ) {
-    mEvents.insert( uid, event );
+  if ( d->mEvents.value( uid ) == 0 ) {
+    d->mEvents.insert( uid, event );
   }
 #ifndef NDEBUG
-  else // if we already have an event with this UID, it has to be the same event,
-      // otherwise something's really broken
-      Q_ASSERT( mEvents.value( uid ) == event );
+  else {
+    // if we already have an event with this UID, it has to be the same event,
+    // otherwise something's really broken
+    Q_ASSERT( d->mEvents.value( uid ) == event );
+  }
 #endif
 }
 
@@ -368,7 +270,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
 {
   Event::List eventList;
 
-  foreach ( Event *event, mEvents ) {
+  foreach ( Event *event, d->mEvents ) {
 
     if ( event->doesRecur() ) {
       if ( event->isMultiDay() ) {
@@ -381,8 +283,9 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
           }
         }
       } else {
-        if ( event->recursOn( qd ) )
+        if ( event->recursOn( qd ) ) {
           eventList.append( event );
+        }
       }
     } else {
       if ( event->dtStart().date() <= qd && event->dateEnd() >= qd ) {
@@ -400,7 +303,7 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
   Event::List eventList;
 
   // Get non-recurring events
-  foreach ( Event *event, mEvents ) {
+  foreach ( Event *event, d->mEvents ) {
     if ( event->doesRecur() ) {
       QDate rStart = event->dtStart().date();
       bool found = false;
@@ -437,7 +340,10 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
         }
       }
 
-      if ( found ) eventList.append( event );
+      if ( found ) {
+        eventList.append( event );
+      }
+
     } else {
       QDate s = event->dtStart().date();
       QDate e = event->dtEnd().date();
@@ -465,19 +371,22 @@ Event::List CalendarLocal::rawEventsForDate( const QDateTime &qdt )
 Event::List CalendarLocal::rawEvents( EventSortField sortField, SortDirection sortDirection )
 {
   Event::List eventList;
-  foreach ( Event *e, mEvents )
+  foreach ( Event *e, d->mEvents ) {
     eventList.append( e );
+  }
   return sortEvents( &eventList, sortField, sortDirection );
 }
 
-bool CalendarLocal::addJournal(Journal *journal)
+bool CalendarLocal::addJournal( Journal *journal )
 {
-  if (journal->dtStart().isValid())
-    kDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
-  else
+  if ( journal->dtStart().isValid() ) {
+    kDebug(5800) << "Adding Journal on "
+                 << journal->dtStart().toString() << endl;
+  } else {
     kDebug(5800) << "Adding Journal without a DTSTART" << endl;
+  }
 
-  mJournalList.append(journal);
+  d->mJournalList.append( journal );
 
   journal->registerObserver( this );
 
@@ -490,10 +399,10 @@ bool CalendarLocal::addJournal(Journal *journal)
 
 bool CalendarLocal::deleteJournal( Journal *journal )
 {
-  if ( mJournalList.removeRef( journal ) ) {
+  if ( d->mJournalList.removeRef( journal ) ) {
     setModified( true );
     notifyIncidenceDeleted( journal );
-    mDeletedIncidences.append( journal );
+    d->mDeletedIncidences.append( journal );
     return true;
   } else {
     kWarning() << "CalendarLocal::deleteJournal(): Journal not found." << endl;
@@ -503,58 +412,55 @@ bool CalendarLocal::deleteJournal( Journal *journal )
 
 void CalendarLocal::deleteAllJournals()
 {
-  Journal::List::ConstIterator it;
-  for( it = mJournalList.begin(); it != mJournalList.end(); ++it ) {
-    notifyIncidenceDeleted( *it );
+  foreach ( Journal *j, d->mJournalList ) {
+    notifyIncidenceDeleted( j );
   }
-
-  mJournalList.setAutoDelete( true );
-  mJournalList.clear();
-  mJournalList.setAutoDelete( false );
+  d->mJournalList.setAutoDelete( true );
+  d->mJournalList.clear();
+  d->mJournalList.setAutoDelete( false );
 }
 
 Journal *CalendarLocal::journal( const QString &uid )
 {
-  Journal::List::ConstIterator it;
-  for ( it = mJournalList.begin(); it != mJournalList.end(); ++it )
-    if ( (*it)->uid() == uid )
-      return *it;
-
+  foreach ( Journal *j, d->mJournalList ) {
+    if ( j->uid() == uid ) {
+      return j;
+    }
+  }
   return 0;
 }
 
-Journal::List CalendarLocal::rawJournals( JournalSortField sortField, SortDirection sortDirection )
+Journal::List CalendarLocal::rawJournals( JournalSortField sortField,
+                                          SortDirection sortDirection )
 {
-  return sortJournals( &mJournalList, sortField, sortDirection );
+  return sortJournals( &d->mJournalList, sortField, sortDirection );
 }
 
 Journal::List CalendarLocal::rawJournalsForDate( const QDate &date )
 {
   Journal::List journals;
-
-  Journal::List::ConstIterator it;
-  for ( it = mJournalList.begin(); it != mJournalList.end(); ++it ) {
-    Journal *journal = *it;
-    if ( journal->dtStart().date() == date ) {
-      journals.append( journal );
+  foreach ( Journal *j, d->mJournalList ) {
+    if ( j->dtStart().date() == date ) {
+      journals.append( j );
     }
   }
-
   return journals;
 }
 
-void CalendarLocal::setTimeZoneIdViewOnly( const QString& tz )
+void CalendarLocal::setTimeZoneIdViewOnly( const QString &tz )
 {
-  const QString question( i18n("The time zone setting was changed. In order to display the calendar "
-      "you are looking at in the new time zone, it needs to be saved. Do you want to save the pending "
-      "changes or rather wait and apply the new time zone on the next reload?" ) );
+  const QString question( i18n("The time zone setting was changed. "
+                               "To display the current calendar in the new "
+                               "time zone it must first be saved. Do you want "
+                               "to save the pending changes now or wait and "
+                               "apply the new time zone on the next reload?" ) );
   int rc = KMessageBox::Yes;
   if ( isModified() ) {
     rc = KMessageBox::questionYesNo( 0, question,
-                                       i18n("Save before applying time zones?"),
-                                       KStdGuiItem::save(),
-                                       KGuiItem(i18n("Apply Time Zone Change on Next Reload")),
-                                       "calendarLocalSaveBeforeTimeZoneShift");
+                                     i18n("Save before applying time zones?"),
+                                     KStdGuiItem::save(),
+                                     KGuiItem(i18n("Apply Time Zone Change on Next Reload")),
+                                     "calendarLocalSaveBeforeTimeZoneShift");
   }
   if ( rc == KMessageBox::Yes ) {
     reload( tz );

@@ -896,4 +896,112 @@ void Calendar::setObserversEnabled( bool enabled )
   d->mObserversEnabled = enabled;
 }
 
+void Calendar::appendAlarms( Alarm::List &alarms, Incidence *incidence,
+                                  const QDateTime &from, const QDateTime &to )
+{
+  QDateTime preTime = from.addSecs(-1);
+
+  foreach ( Alarm *a, incidence->alarms() ) {
+    if ( a->enabled() ) {
+      QDateTime dt = a->nextRepetition( preTime );
+      if ( dt.isValid() && dt <= to ) {
+        kDebug(5800) << "Calendar::appendAlarms() '"
+                     << incidence->summary() << "': "
+                     << dt.toString() << endl;
+        alarms.append( a );
+      }
+    }
+  }
+}
+
+void Calendar::appendRecurringAlarms( Alarm::List &alarms,
+                                      Incidence *incidence,
+                                      const QDateTime &from,
+                                      const QDateTime &to )
+{
+  QDateTime qdt;
+  int  endOffset = 0;
+  bool endOffsetValid = false;
+  int  period = from.secsTo( to );
+
+  foreach ( Alarm *a, incidence->alarms() ) {
+    if ( a->enabled() ) {
+      if ( a->hasTime() ) {
+        // The alarm time is defined as an absolute date/time
+        qdt = a->nextRepetition( from.addSecs(-1) );
+        if ( !qdt.isValid() || qdt > to ) {
+          continue;
+        }
+      } else {
+        // Alarm time is defined by an offset from the event start or end time.
+        // Find the offset from the event start time, which is also used as the
+        // offset from the recurrence time.
+        int offset = 0;
+        if ( a->hasStartOffset() ) {
+          offset = a->startOffset().asSeconds();
+        } else if ( a->hasEndOffset() ) {
+          if ( !endOffsetValid ) {
+            endOffset = incidence->dtStart().secsTo( incidence->dtEnd() );
+            endOffsetValid = true;
+          }
+          offset = a->endOffset().asSeconds() + endOffset;
+        }
+
+        // Find the incidence's earliest alarm
+        QDateTime fromStart = incidence->dtStart().addSecs( offset );
+        if ( fromStart > to ) {
+          continue;
+        }
+        if ( from > fromStart ) {
+          fromStart = from;   // don't look earlier than the earliest alarm
+        }
+
+        // Adjust the 'fromStart' date/time and find the next recurrence at or after it
+        qdt = incidence->recurrence()->getNextDateTime( fromStart.addSecs(-offset - 1) );
+        if ( !qdt.isValid() ||
+             ( qdt = qdt.addSecs( offset ) ) > to ) {
+          // remove the adjustment to get the alarm time
+
+          // The next recurrence is too late.
+          if ( !a->repeatCount() ) {
+            continue;
+          }
+
+          // The alarm has repetitions, so check whether repetitions of previous
+          // recurrences fall within the time period.
+          bool found = false;
+          qdt = fromStart.addSecs( offset );
+          while ( (qdt = incidence->recurrence()->getPreviousDateTime( qdt )).isValid() ) {
+            int toFrom = qdt.secsTo( fromStart ) - offset;
+            if ( toFrom > a->duration() ) {
+              break;  // this recurrence's last repetition is too early, so give up
+            }
+
+            // The last repetition of this recurrence is at or after 'fromStart' time.
+            // Check if a repetition occurs between 'fromStart' and 'to'.
+            int snooze = a->snoozeTime() * 60;   // in seconds
+            if ( period >= snooze ||
+                 toFrom % snooze == 0 ||
+                 ( toFrom / snooze + 1 ) * snooze <= toFrom + period ) {
+              found = true;
+#ifndef NDEBUG
+              // for debug output
+              qdt =
+                qdt.addSecs( offset + ( ( toFrom - 1 ) / snooze + 1 ) * snooze );
+#endif
+              break;
+            }
+          }
+          if ( !found ) {
+            continue;
+          }
+        }
+      }
+      kDebug(5800) << "Calendar::appendAlarms() '" << incidence->summary()
+                   << "': " << qdt.toString() << endl;
+      alarms.append( a );
+    }
+  }
+}
+
 #include "calendar.moc"
