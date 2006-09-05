@@ -200,19 +200,19 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
 
     /**
       Returns an incidence's starting time as a string formatted according
-      to the users locale settings.
+      to the user's locale settings.
     */
     virtual QString dtStartTimeStr() const;
 
     /**
       Returns an incidence's starting date as a string formatted according
-      to the users locale settings.
+      to the user's locale settings.
     */
     virtual QString dtStartDateStr( bool shortfmt = true ) const;
 
     /**
       Returns an incidence's starting date and time as a string formatted
-      according to the users locale settings.
+      according to the user's locale settings.
     */
     virtual QString dtStartStr() const;
 
