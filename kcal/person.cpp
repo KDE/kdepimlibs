@@ -46,8 +46,8 @@ using namespace KCal;
 class KCal::Person::Private
 {
   public:
-    QString mName;
-    QString mEmail;
+    QString mName;   // person name
+    QString mEmail;  // person email address
 };
 //@endcond
 
@@ -55,12 +55,10 @@ Person::Person() : d( new KCal::Person::Private )
 {
 }
 
-Person::Person( const QString &fullName ) : d ( new KCal::Person::Private )
+Person::Person( const QString &fullName ) : d( new KCal::Person::Private )
 {
-  QString name, email;
-  EmailAddressTools::extractEmailAddressAndName( fullName, email, name );
-  d->mName = name;
-  d->mEmail = email;
+  EmailAddressTools::extractEmailAddressAndName( fullName,
+                                                 d->mEmail, d->mName );
 }
 
 Person::Person( const QString &name, const QString &email )

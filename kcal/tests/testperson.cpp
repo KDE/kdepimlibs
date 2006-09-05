@@ -40,4 +40,6 @@ void PersonTest::testCompare() {
   QVERIFY( person1 == person3 );
   QVERIFY( person1.name() == "fred" );
   QVERIFY( person2.email() == "wilma@flintstone.com" );
+  QVERIFY( person3.name() == "fred" );
+  QVERIFY( person3.email() == "fred@flintstone.com" );
 }
