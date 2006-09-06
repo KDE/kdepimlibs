@@ -59,3 +59,20 @@ void EventTest::testCompare() {
   QVERIFY( event1.dtEnd() == event2.dtStart() );
   QVERIFY( event2.summary() == "Event2 Summary" );
 }
+
+void EventTest::testClone() {
+  QDate dt = QDate::currentDate();
+  Event event1;
+  event1.setDtStart( QDateTime( dt ) );
+  event1.setDtEnd( QDateTime( dt ).addDays( 1 ) );
+  event1.setSummary( "Event1 Summary" );
+  event1.setDescription( "This is a description of the first event" );
+  event1.setLocation( "the place" );
+
+  Event *event2 = event1.clone();
+  QVERIFY( event1.summary() == event2->summary() );
+  QVERIFY( event1.dtStart() == event2->dtStart() );
+  QVERIFY( event1.dtEnd() == event2->dtEnd() );
+  QVERIFY( event1.description() == event2->description() );
+  QVERIFY( event1.location( ) == event2->location() );
+}

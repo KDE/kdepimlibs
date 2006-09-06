@@ -30,6 +30,7 @@ class EventTest : public QObject
 private slots:
   void testValidity();
   void testCompare();
+  void testClone();
 };
 
 #endif
