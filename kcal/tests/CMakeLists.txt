@@ -39,14 +39,14 @@ endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
 if(KDE4_BUILD_TESTS)
-set(testincidence_SRCS testincidence.cpp )
+set(incidencestest_SRCS incidencestest.cpp )
 
-kde4_automoc(${testincidence_SRCS})
+kde4_automoc(${incidencestest_SRCS})
 
 
-kde4_add_executable(testincidence ${testincidence_SRCS})
+kde4_add_executable(incidencestest ${incidencestest_SRCS})
 
-target_link_libraries(testincidence  ${KDE4_KDECORE_LIBS} kcal )
+target_link_libraries(incidencestest  ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 
