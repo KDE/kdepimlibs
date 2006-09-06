@@ -36,8 +36,13 @@ void PersonTest::testCompare() {
   Person person1( "fred", "fred@flintstone.com" );
   Person person2( "wilma", "wilma@flintstone.com" );
   Person person3( "fred <fred@flintstone.com>" );
+  Person person1copy( person1 ); // test copy constructor
+  Person person1assign = person1; // test operator=
+  
   QVERIFY( !( person1 == person2 ) );
   QVERIFY( person1 == person3 );
+  QVERIFY( person1 == person1copy );
+  QVERIFY( person1 == person1assign );
   QVERIFY( person1.name() == "fred" );
   QVERIFY( person2.email() == "wilma@flintstone.com" );
   QVERIFY( person3.name() == "fred" );
