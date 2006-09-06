@@ -68,6 +68,14 @@ class KCAL_EXPORT Period
     Period( const QDateTime &start, const Duration &duration );
 
     /**
+      Constructs a period by copying another period object
+
+      @param period the period to copy
+     */
+
+    Period( const Period &period );
+
+    /**
       Destroys a period.
     */
     ~Period();
