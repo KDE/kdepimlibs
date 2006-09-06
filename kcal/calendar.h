@@ -29,9 +29,8 @@
   @author Reinhold Kainhofer
 
   @port4 getOwner() method renamed to owner().
-  @port4 appendAlarms() and appendRecurringAlarms() methods which have
-  been moved into this class from CalendarLocal and now return static
-  Alarm:List instead of void.
+  @port4 appendAlarms() and appendRecurringAlarms() methods have
+  been moved into this class from CalendarLocal.
  */
 #ifndef KCAL_CALENDAR_H
 #define KCAL_CALENDAR_H
@@ -142,7 +141,7 @@ enum JournalSortField {
        either in UTC or without a time zone (floating time zone).
 */
 class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
-                                public IncidenceBase::Observer
+                             public IncidenceBase::Observer
 {
   Q_OBJECT
 
@@ -920,10 +919,6 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       enabled an Observer.
     */
     void setObserversEnabled( bool enabled );
-
-    //TODO: Move appendAlarms() and appendRecurringAlarms() from
-    //      calendarlocal here, as protected static methods
-    //      returning static Alarm::List
 
     /** Append alarms of incidence in interval to list of alarms. */
     void appendAlarms( Alarm::List &alarms, Incidence *incidence,

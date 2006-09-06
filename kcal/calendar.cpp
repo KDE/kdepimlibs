@@ -66,7 +66,7 @@ class KCal::Calendar::Private
 
     QString mProductId;
     Person mOwner;
-    ICalTimeZones *mTimeZones;   // collection of time zones used in this calendar
+    ICalTimeZones *mTimeZones; // collection of time zones used in this calendar
     QString mTimeZoneId;
     bool mLocalTime;
     bool mModified;
@@ -709,11 +709,7 @@ void Calendar::removeRelations( Incidence *incidence )
   }
 
   QString uid = incidence->uid();
-
-  Incidence::List relations = incidence->relations();
-  Incidence::List::ConstIterator it;
-  for ( it = relations.begin(); it != relations.end(); ++it ) {
-    Incidence *i = *it;
+  foreach ( Incidence *i, incidence->relations() ) {
     if ( !d->mOrphanUids.contains( i->uid() ) ) {
       d->mOrphans.insert( uid, i );
       d->mOrphanUids.insert( i->uid(), i );
@@ -863,19 +859,16 @@ Incidence::List Calendar::mergeIncidenceList( const Event::List &events,
 {
   Incidence::List incidences;
 
-  Event::List::ConstIterator it1;
-  for ( it1 = events.begin(); it1 != events.end(); ++it1 ) {
-    incidences.append( *it1 );
+  foreach ( Event *e, events ) {
+    incidences.append( e );
   }
 
-  Todo::List::ConstIterator it2;
-  for ( it2 = todos.begin(); it2 != todos.end(); ++it2 ) {
-    incidences.append( *it2 );
+  foreach ( Todo *t, todos ) {
+    incidences.append( t );
   }
 
-  Journal::List::ConstIterator it3;
-  for ( it3 = journals.begin(); it3 != journals.end(); ++it3 ) {
-    incidences.append( *it3 );
+  foreach ( Journal *j, journals ) {
+    incidences.append( j );
   }
 
   return incidences;
@@ -897,7 +890,7 @@ void Calendar::setObserversEnabled( bool enabled )
 }
 
 void Calendar::appendAlarms( Alarm::List &alarms, Incidence *incidence,
-                                  const QDateTime &from, const QDateTime &to )
+                             const QDateTime &from, const QDateTime &to )
 {
   QDateTime preTime = from.addSecs(-1);
 
