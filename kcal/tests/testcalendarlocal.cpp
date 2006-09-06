@@ -49,22 +49,25 @@ void CalendarLocalTest::testEvents() {
   CalendarLocal cal( QLatin1String("UTC") );
   cal.setProductId( QLatin1String( "fredware calendar" ) );
   QDate dt = QDate::currentDate();
-  Event event1;
-  event1.setDtStart( QDateTime( dt ) );
-  event1.setDtEnd( QDateTime( dt ).addDays( 1 ) );
-  event1.setSummary( "Event1 Summary" );
-  event1.setDescription( "This is a description of the first event" );
-  event1.setLocation( "the place" );
 
-  Event event2;
-  event2.setDtStart( QDateTime( dt ).addDays( 1 ) );
-  event2.setDtEnd( QDateTime( dt ).addDays( 2 ) );
-  event2.setSummary( "Event2 Summary" );
-  event2.setDescription( "This is a description of the second event" );
-  event2.setLocation( "the other place" );
+  Event *event1 = new Event();
+  event1->setUid( "1" );
+  event1->setDtStart( QDateTime( dt ) );
+  event1->setDtEnd( QDateTime( dt ).addDays( 1 ) );
+  event1->setSummary( "Event1 Summary" );
+  event1->setDescription( "This is a description of the first event" );
+  event1->setLocation( "the place" );
 
-  QVERIFY( cal.addEvent( &event1 ) );
-  QVERIFY( cal.addEvent( &event2 ) );
+  Event *event2 = new Event();
+  event1->setUid( "2" );
+  event2->setDtStart( QDateTime( dt ).addDays( 1 ) );
+  event2->setDtEnd( QDateTime( dt ).addDays( 2 ) );
+  event2->setSummary( "Event2 Summary" );
+  event2->setDescription( "This is a description of the second event" );
+  event2->setLocation( "the other place" );
+
+  QVERIFY( cal.addEvent( event1 ) );
+  QVERIFY( cal.addEvent( event2 ) );
 
   QVERIFY( cal.save( "foo.ics" ) );
   cal.close();
