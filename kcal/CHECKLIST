@@ -1,0 +1,63 @@
+File                  | Krazy | Doxygen | D-Ptr | UnitTst | Qt4Port | Who
+===============================================================================
+alarm                 |   D   |    D    |   D   |    D    |    D    | Allen
+attachment            |   D   |    D    |   D   |    D    |    D    | Allen
+attendee              |   D   |    D    |   D   |    D    |    D    | Allen
+calendar              |   D   |         |   D   |   n/a   |         | Allen
+calendarlocal         |       |         |       |    D    |    D    | Allen
+calendarnull          |       |         |       |         |         |
+calendarresources     |       |         |       |         |         |
+calfilter             |       |         |       |         |         |
+calformat             |       |         |       |         |         |
+calstorage            |       |         |       |         |         |
+compat                |       |         |       |         |         |
+confirmsavedialog     |       |         |       |         |         |
+customproperties      |       |         |       |         |         |
+dndfactory            |       |         |       |         |         |
+dummyscheduler        |       |         |       |         |         |
+duration              |       |         |       |         |         |
+event                 |       |         |       |    D    |         |
+exceptions            |       |         |       |         |         |
+filestorage           |       |         |       |         |         |
+freebusycache         |       |         |       |         |         |
+freebusy              |       |         |       |         |         |
+freebusyurlstore      |       |         |       |         |         |
+htmlexport            |       |         |       |         |         |
+icaldrag              |       |         |       |         |         |
+icalformat            |       |         |       |         |         |
+icalformatimpl        |       |         |       |         |         |
+icaltimezones         |       |         |       |         |         |
+imipscheduler         |       |         |       |         |         |
+incidencebase         |   D   |         |       |   n/a   |         |
+incidenceformatter    |       |         |       |         |         |
+incidence             |       |         |       |   n/a   |         |
+journal               |       |         |       |         |         |
+listbase              |       |         |       |         |         |
+period                |   D   |    D    |   D   |    D    |         | Narayan
+person                |   D   |    D    |   D   |    D    |         | Narayan
+qtopiaformat          |       |         |       |         |         |
+recurrence            |       |         |       |         |         |
+recurrencerule        |       |         |       |         |         |
+resourcecachedconfig  |       |         |       |         |         |
+resourcecached        |       |         |       |         |         |
+resourcecalendar      |       |         |       |         |         |
+resourcelocalconfig   |       |         |       |         |         |
+resourcelocaldirconfig|       |         |       |         |         |
+resourcelocaldir      |       |         |       |         |         |
+resourcelocal         |       |         |       |         |         |
+scheduler             |       |         |       |         |         |
+todo                  |       |         |       |         |         |
+vcaldrag              |       |         |       |         |         |
+vcalformat            |       |         |       |         |         |
+
+Qt4Port -> no deprecated warnings; thiago says do NO replace const iterator
+          loops with 'foreach()'
+
+thiago: rule of thumb: ConstIterators, constBegin, constEnd, all of the time
+if it doesn't compile (i.e., you're doing a non-const operation), then use
+the non-const version
+dfaure: better than ConstIterator, const_iterator. This one will always remain
+since it's the STL name for it ;)
+dfaure: foreach is convenient when writing throwable code, unit tests,
+or code where performance doesn't matter, but better leave existing
+iterator-using code unchanged.
