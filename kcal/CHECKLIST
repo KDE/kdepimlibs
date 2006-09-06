@@ -5,8 +5,8 @@ attachment            |   D   |    D    |   D   |    D    |    D    | Allen
 attendee              |   D   |    D    |   D   |    D    |    D    | Allen
 calendar              |   D   |         |   D   |   n/a   |         | Allen
 calendarlocal         |       |         |       |    D    |    D    | Allen
-calendarnull          |       |         |       |         |         |
-calendarresources     |       |         |       |         |         |
+calendarnull          |       |         |       |         |         | Allen
+calendarresources     |       |         |       |         |         | Allen
 calfilter             |       |         |       |         |         |
 calformat             |       |         |       |         |         |
 calstorage            |       |         |       |         |         |
@@ -16,7 +16,7 @@ customproperties      |       |         |       |         |         |
 dndfactory            |       |         |       |         |         |
 dummyscheduler        |       |         |       |         |         |
 duration              |       |         |       |         |         |
-event                 |       |         |       |    D    |         |
+event                 |       |         |       |    D    |         | Allen
 exceptions            |       |         |       |         |         |
 filestorage           |       |         |       |         |         |
 freebusycache         |       |         |       |         |         |
@@ -28,10 +28,10 @@ icalformat            |       |         |       |         |         |
 icalformatimpl        |       |         |       |         |         |
 icaltimezones         |       |         |       |         |         |
 imipscheduler         |       |         |       |         |         |
-incidencebase         |   D   |         |       |   n/a   |         |
-incidenceformatter    |       |         |       |         |         |
-incidence             |       |         |       |   n/a   |         |
-journal               |       |         |       |         |         |
+incidencebase         |   D   |         |       |   n/a   |         | Allen
+incidenceformatter    |       |         |       |         |         | Allen
+incidence             |       |         |       |   n/a   |         | Allen
+journal               |       |         |       |         |         | Allen
 listbase              |       |         |       |         |         |
 period                |   D   |    D    |   D   |    D    |         | Narayan
 person                |   D   |    D    |   D   |    D    |         | Narayan
@@ -46,7 +46,7 @@ resourcelocaldirconfig|       |         |       |         |         |
 resourcelocaldir      |       |         |       |         |         |
 resourcelocal         |       |         |       |         |         |
 scheduler             |       |         |       |         |         |
-todo                  |       |         |       |         |         |
+todo                  |       |         |       |         |         | Allen
 vcaldrag              |       |         |       |         |         |
 vcalformat            |       |         |       |         |         |
 
