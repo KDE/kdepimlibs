@@ -20,7 +20,7 @@
     Boston, MA 02110-1301, USA.
 */
 /**
-  @file calendar.h
+  @file calendarlocal.h
   Provides a Calendar stored as a local file.
 
   @author Preston Brown
@@ -128,17 +128,17 @@ class KCAL_EXPORT CalendarLocal : public Calendar
 
     /**
       @copydoc
-      Calendar::rawEventsForDate(const QDateTime &)
-    */
-    Event::List rawEventsForDate( const QDateTime &dt );
-
-    /**
-      @copydoc
       Calendar::rawEventsForDate(const QDate &, EventSortField, SortDirection)
     */
     Event::List rawEventsForDate(
       const QDate &date, EventSortField sortField = EventSortUnsorted,
       SortDirection sortDirection = SortDirectionAscending );
+
+    /**
+      @copydoc
+      Calendar::rawEventsForDate(const QDateTime &)
+    */
+    Event::List rawEventsForDate( const QDateTime &dt );
 
     /**
       @copydoc
@@ -247,7 +247,8 @@ class KCAL_EXPORT CalendarLocal : public Calendar
   private:
     /** inserts an event into its "proper place" in the calendar. */
     void insertEvent( Event *event );
-    // @TODO why no insertTodo() and insertJournal()?
+    void insertTodo( Todo *todo );
+    void insertJournal( Journal *journal );
 
     //@cond PRIVATE
     class Private;

@@ -20,7 +20,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file calendarlocal.h
+  Provides a Calendar stored as a local file.
 
+  @author Preston Brown
+  @author Cornelius Schumacher
+ */
 #include <QDateTime>
 #include <QHash>
 #include <QString>
@@ -47,12 +53,11 @@ using namespace KCal;
 class KCal::CalendarLocal::Private
 {
   public:
-    QString         mFileName;         // filename where the calendar is stored
-    QHash<QString, Event*> mEvents;
-    //@TODO should there be a hash of to-dos and journals as well?
-    Todo::List      mTodoList;         // a list of all to-dos in the calendar
-    Journal::List   mJournalList;      // a list of all journals in the calendar
-    Incidence::List mDeletedIncidences;// a list of all deleted incidences
+    QString mFileName;                  // filename where the calendar is stored
+    QHash<QString, Event *> mEvents;    // hash on uids of all calendar events
+    QHash<QString, Todo *> mTodos;      // hash on uids of all calendar to-dos
+    QHash<QString, Journal *> mJournals;// hash on uids of all calendar journals
+    Incidence::List mDeletedIncidences; // list of all deleted incidences
 };
 //@endcond
 
@@ -145,7 +150,6 @@ void CalendarLocal::deleteAllEvents()
   foreach ( Event *e, d->mEvents ) {
     notifyIncidenceDeleted( e );
   }
-
   qDeleteAll( d->mEvents );
   d->mEvents.clear();
 }
@@ -157,7 +161,7 @@ Event *CalendarLocal::event( const QString &uid )
 
 bool CalendarLocal::addTodo( Todo *todo )
 {
-  d->mTodoList.append( todo );
+  insertTodo( todo );
 
   todo->registerObserver( this );
 
@@ -171,12 +175,27 @@ bool CalendarLocal::addTodo( Todo *todo )
   return true;
 }
 
+void CalendarLocal::insertTodo( Todo *todo )
+{
+  QString uid = todo->uid();
+  if ( d->mTodos.value( uid ) == 0 ) {
+    d->mTodos.insert( uid, todo );
+  }
+#ifndef NDEBUG
+  else {
+    // if we already have an to-do with this UID, it must be the same to-do,
+    // otherwise something's really broken
+    Q_ASSERT( d->mTodos.value( uid ) == todo );
+  }
+#endif
+}
+
 bool CalendarLocal::deleteTodo( Todo *todo )
 {
   // Handle orphaned children
   removeRelations( todo );
 
-  if ( d->mTodoList.removeRef( todo ) ) {
+  if ( d->mTodos.remove( todo->uid() ) ) {
     setModified( true );
     notifyIncidenceDeleted( todo );
     d->mDeletedIncidences.append( todo );
@@ -189,39 +208,37 @@ bool CalendarLocal::deleteTodo( Todo *todo )
 
 void CalendarLocal::deleteAllTodos()
 {
-  foreach ( Todo *t, d->mTodoList ) {
+  foreach ( Todo *t, d->mTodos ) {
     notifyIncidenceDeleted( t );
   }
-  d->mTodoList.setAutoDelete( true );
-  d->mTodoList.clear();
-  d->mTodoList.setAutoDelete( false );
+  qDeleteAll( d->mTodos );
+  d->mTodos.clear();
+}
+
+Todo *CalendarLocal::todo( const QString &uid )
+{
+  return d->mTodos.value( uid );
 }
 
 Todo::List CalendarLocal::rawTodos( TodoSortField sortField,
                                     SortDirection sortDirection )
 {
-  return sortTodos( &d->mTodoList, sortField, sortDirection );
-}
-
-Todo *CalendarLocal::todo( const QString &uid )
-{
-  foreach ( Todo *t, d->mTodoList ) {
-    if ( t->uid() == uid ) {
-      return t;
-    }
+  Todo::List todoList;
+  foreach ( Todo *t, d->mTodos ) {
+    todoList.append( t );
   }
-  return 0;
+  return sortTodos( &todoList, sortField, sortDirection );
 }
 
 Todo::List CalendarLocal::rawTodosForDate( const QDate &date )
 {
-  Todo::List todos;
-  foreach ( Todo *t, d->mTodoList ) {
+  Todo::List todoList;
+  foreach ( Todo *t, d->mTodos ) {
     if ( t->hasDueDate() && t->dtDue().date() == date ) {
-      todos.append( t );
+      todoList.append( t );
     }
   }
-  return todos;
+  return todoList;
 }
 
 Alarm::List CalendarLocal::alarmsTo( const QDateTime &to )
@@ -240,7 +257,7 @@ Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
     }
   }
 
-  foreach ( Todo *t, d->mTodoList ) {
+  foreach ( Todo *t, d->mTodos ) {
     if (! t->isCompleted() ) {
       appendAlarms( alarms, t, from, to );
     }
@@ -257,7 +274,7 @@ void CalendarLocal::insertEvent( Event *event )
   }
 #ifndef NDEBUG
   else {
-    // if we already have an event with this UID, it has to be the same event,
+    // if we already have an event with this UID, it must be the same event,
     // otherwise something's really broken
     Q_ASSERT( d->mEvents.value( uid ) == event );
   }
@@ -325,9 +342,9 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
         if ( rStart <= end ) {  // Start date not after range
           if ( rStart >= start ) {  // Start date within range
             found = true;
-          } else if ( event->recurrence()->duration() == -1 ) {  // Recurs forever
+          } else if ( event->recurrence()->duration() == -1 ) {// Recurs forever
             found = true;
-          } else if ( event->recurrence()->duration() == 0 ) {  // End date set
+          } else if ( event->recurrence()->duration() == 0 ) { // End date set
             QDate rEnd = event->recurrence()->endDate();
             if ( rEnd >= start && rEnd <= end ) {  // End date within range
               found = true;
@@ -368,7 +385,8 @@ Event::List CalendarLocal::rawEventsForDate( const QDateTime &qdt )
   return rawEventsForDate( qdt.date() );
 }
 
-Event::List CalendarLocal::rawEvents( EventSortField sortField, SortDirection sortDirection )
+Event::List CalendarLocal::rawEvents( EventSortField sortField,
+                                      SortDirection sortDirection )
 {
   Event::List eventList;
   foreach ( Event *e, d->mEvents ) {
@@ -379,14 +397,7 @@ Event::List CalendarLocal::rawEvents( EventSortField sortField, SortDirection so
 
 bool CalendarLocal::addJournal( Journal *journal )
 {
-  if ( journal->dtStart().isValid() ) {
-    kDebug(5800) << "Adding Journal on "
-                 << journal->dtStart().toString() << endl;
-  } else {
-    kDebug(5800) << "Adding Journal without a DTSTART" << endl;
-  }
-
-  d->mJournalList.append( journal );
+  insertJournal( journal );
 
   journal->registerObserver( this );
 
@@ -397,9 +408,24 @@ bool CalendarLocal::addJournal( Journal *journal )
   return true;
 }
 
+void CalendarLocal::insertJournal( Journal *journal )
+{
+  QString uid = journal->uid();
+  if ( d->mJournals.value( uid ) == 0 ) {
+    d->mJournals.insert( uid, journal );
+  }
+#ifndef NDEBUG
+  else {
+    // if we already have an journal with this UID, it must be the same journal,
+    // otherwise something's really broken
+    Q_ASSERT( d->mJournals.value( uid ) == journal );
+  }
+#endif
+}
+
 bool CalendarLocal::deleteJournal( Journal *journal )
 {
-  if ( d->mJournalList.removeRef( journal ) ) {
+  if ( d->mJournals.remove( journal->uid() ) ) {
     setModified( true );
     notifyIncidenceDeleted( journal );
     d->mDeletedIncidences.append( journal );
@@ -412,39 +438,37 @@ bool CalendarLocal::deleteJournal( Journal *journal )
 
 void CalendarLocal::deleteAllJournals()
 {
-  foreach ( Journal *j, d->mJournalList ) {
+  foreach ( Journal *j, d->mJournals ) {
     notifyIncidenceDeleted( j );
   }
-  d->mJournalList.setAutoDelete( true );
-  d->mJournalList.clear();
-  d->mJournalList.setAutoDelete( false );
+  qDeleteAll( d->mJournals );
+  d->mJournals.clear();
 }
 
 Journal *CalendarLocal::journal( const QString &uid )
 {
-  foreach ( Journal *j, d->mJournalList ) {
-    if ( j->uid() == uid ) {
-      return j;
-    }
-  }
-  return 0;
+  return d->mJournals.value( uid );
 }
 
 Journal::List CalendarLocal::rawJournals( JournalSortField sortField,
                                           SortDirection sortDirection )
 {
-  return sortJournals( &d->mJournalList, sortField, sortDirection );
+  Journal::List journalList;
+  foreach ( Journal *j, d->mJournals ) {
+    journalList.append( j );
+  }
+  return sortJournals( &journalList, sortField, sortDirection );
 }
 
 Journal::List CalendarLocal::rawJournalsForDate( const QDate &date )
 {
-  Journal::List journals;
-  foreach ( Journal *j, d->mJournalList ) {
+  Journal::List journalList;
+  foreach ( Journal *j, d->mJournals ) {
     if ( j->dtStart().date() == date ) {
-      journals.append( j );
+      journalList.append( j );
     }
   }
-  return journals;
+  return journalList;
 }
 
 void CalendarLocal::setTimeZoneIdViewOnly( const QString &tz )
@@ -453,14 +477,14 @@ void CalendarLocal::setTimeZoneIdViewOnly( const QString &tz )
                                "To display the current calendar in the new "
                                "time zone it must first be saved. Do you want "
                                "to save the pending changes now or wait and "
-                               "apply the new time zone on the next reload?" ) );
+                               "apply the new time zone on the next reload?") );
   int rc = KMessageBox::Yes;
   if ( isModified() ) {
     rc = KMessageBox::questionYesNo( 0, question,
                                      i18n("Save before applying time zones?"),
                                      KStdGuiItem::save(),
-                                     KGuiItem(i18n("Apply Time Zone Change on Next Reload")),
-                                     "calendarLocalSaveBeforeTimeZoneShift");
+                                     KGuiItem( i18n("Apply Time Zone Change on Next Reload") ),
+                                     "calendarLocalSaveBeforeTimeZoneShift" );
   }
   if ( rc == KMessageBox::Yes ) {
     reload( tz );
