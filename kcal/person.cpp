@@ -68,6 +68,12 @@ Person::Person( const QString &name, const QString &email )
   d->mEmail = email;
 }
 
+Person::Person( const Person &person ) : d( new KCal::Person::Private )
+{
+    d->mName = person.d->mName;
+    d->mEmail = person.d->mEmail;
+}
+
 Person::~Person()
 {
   delete d;

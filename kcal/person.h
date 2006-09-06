@@ -69,6 +69,13 @@ class KCAL_EXPORT Person
     Person( const QString &name, const QString &email );
 
     /**
+       Constructs a person as a copy of another person object.
+
+       @param person the person to copy.
+     */
+    Person( const Person &person );
+
+    /**
       Destroys a person.
     */
     ~Person();
