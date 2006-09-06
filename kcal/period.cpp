@@ -66,9 +66,9 @@ Period::Period( const QDateTime &start, const Duration &duration )
 
 Period::Period( const Period &period ) : d( new KCal::Period::Private )
 {
-    d->mStart = other.d->mStart;
-    d->mEnd = other.d->mEnd;
-    d->mHasDuration = other.d->mHasDuration;
+    d->mStart = period.d->mStart;
+    d->mEnd = period.d->mEnd;
+    d->mHasDuration = period.d->mHasDuration;
 }
 
 Period::~Period()
