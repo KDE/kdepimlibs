@@ -1,3 +1,5 @@
+Legend:  D=Done, X=Keep Off!, n/a=Not Applicable
+
 File                  | Krazy | Doxygen | D-Ptr | UnitTst | Qt4Port | Who
 ===============================================================================
 alarm                 |   D   |    D    |   D   |    D    |    D    | Allen
@@ -52,6 +54,8 @@ vcalformat            |       |         |       |         |         |
 
 Qt4Port -> no deprecated warnings; thiago says do NO replace const iterator
           loops with 'foreach()'
+
+TODO: revert foreach() loops?
 
 thiago: rule of thumb: ConstIterators, constBegin, constEnd, all of the time
 if it doesn't compile (i.e., you're doing a non-const operation), then use
