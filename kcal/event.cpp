@@ -18,7 +18,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Event class.
 
+  @author Cornelius Schumacher
+*/
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -32,7 +38,7 @@ Event::Event() :
 {
 }
 
-Event::Event(const Event &e) : Incidence(e)
+Event::Event( const Event &e ) : Incidence( e )
 {
   mDtEnd = e.mDtEnd;
   mHasEndDate = e.mHasEndDate;
@@ -41,70 +47,69 @@ Event::Event(const Event &e) : Incidence(e)
 
 Event::~Event()
 {
-//  kDebug(5800) << "~Event() " << int( this ) << endl;
 }
 
 Event *Event::clone()
 {
-//  kDebug(5800) << "Event::clone()" << endl;
-  return new Event(*this);
+  return new Event( *this );
 }
 
-bool Event::operator==( const Event& e2 ) const
+bool Event::operator==( const Event &e2 ) const
 {
-    return
-        static_cast<const Incidence&>(*this) == static_cast<const Incidence&>(e2) &&
-        dtEnd() == e2.dtEnd() &&
-        hasEndDate() == e2.hasEndDate() &&
-        transparency() == e2.transparency();
+  return
+    static_cast<const Incidence&>(*this) == static_cast<const Incidence&>(e2) &&
+    dtEnd() == e2.dtEnd() &&
+    hasEndDate() == e2.hasEndDate() &&
+    transparency() == e2.transparency();
 }
 
-
-
-void Event::setDtEnd(const QDateTime &dtEnd)
+void Event::setDtEnd( const QDateTime &dtEnd )
 {
-  if (mReadOnly) return;
+  if ( mReadOnly ) return;
 
   mDtEnd = dtEnd;
 
-  setHasEndDate(true);
-  setHasDuration(false);
+  setHasEndDate( true );
+  setHasDuration( false );
 
   updated();
 }
 
 QDateTime Event::dtEnd() const
 {
-  if (hasEndDate()) return mDtEnd;
-  if (hasDuration()) return dtStart().addSecs(duration());
+  if ( hasEndDate() ) return mDtEnd;
+  if ( hasDuration() ) return dtStart().addSecs( duration() );
 
   kDebug(5800) << "Warning! Event '" << summary()
-            << "' has neither end date nor duration." << endl;
+               << "' has neither end date nor duration." << endl;
   return dtStart();
 }
 
 QDate Event::dateEnd() const
 {
-  if ( doesFloat() ) return dtEnd().date();
-  else return dtEnd().addSecs(-1).date();
+  if ( doesFloat() ) {
+    return dtEnd().date();
+  } else {
+    return dtEnd().addSecs( -1 ).date();
+  }
 }
 
 QString Event::dtEndTimeStr() const
 {
-  return KGlobal::locale()->formatTime(dtEnd().time());
+  return KGlobal::locale()->formatTime( dtEnd().time() );
 }
 
-QString Event::dtEndDateStr(bool shortfmt) const
+QString Event::dtEndDateStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDate(dtEnd().date(),shortfmt);
+  return KGlobal::locale()->formatDate( dtEnd().date(), shortfmt );
 }
 
 QString Event::dtEndStr() const
 {
-  return KGlobal::locale()->formatDateTime(dtEnd());
+  return KGlobal::locale()->formatDateTime( dtEnd() );
 }
 
-void Event::setHasEndDate(bool b)
+void Event::setHasEndDate( bool b )
 {
   mHasEndDate = b;
 }
@@ -120,15 +125,15 @@ bool Event::isMultiDay() const
   QDateTime start( dtStart() );
   QDateTime end( dtEnd() );
   if ( ! doesFloat() ) {
-    end = end.addSecs(-1);
+    end = end.addSecs( -1 );
   }
   bool multi = ( start.date() != end.date() && start <= end );
   return multi;
 }
 
-void Event::setTransparency(Event::Transparency transparency)
+void Event::setTransparency( Event::Transparency transparency )
 {
-  if (mReadOnly) return;
+  if ( mReadOnly ) return;
   mTransparency = transparency;
   updated();
 }
@@ -138,8 +143,8 @@ Event::Transparency Event::transparency() const
   return mTransparency;
 }
 
-void Event::setDuration(int seconds)
+void Event::setDuration( int seconds )
 {
-  setHasEndDate(false);
-  Incidence::setDuration(seconds);
+  setHasEndDate( false );
+  Incidence::setDuration( seconds );
 }
