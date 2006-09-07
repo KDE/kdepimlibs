@@ -19,8 +19,9 @@
     Boston, MA 02110-1301, USA.
 */
 /*
-  @file calendarnull.h
-  A null calendar class with does nothing.
+  @file
+  This file is part of the API for handling calendar data and
+  defines the CalendarNull class.
 
   @author Cornelius Schumacher
 */
@@ -35,269 +36,220 @@ class KConfig;
 namespace KCal {
 
 /**
-   @class CalendarNull
+   @brief
+   Represents an null calendar class; that is, a calendar which contains
+   no information and provides no capabilities.
 
-   This is a null calendar class which does nothing.  It can be passed to
-   functions which need a calendar object when there actually isn't a real
-   calendar yet.  CalendarNull can be used to implement the null object
-   design pattern.  Instead of passing a 0 pointer and checking for 0 with
-   each access a CalendarNull object can be passed.
+   The null calendar can be passed to functions which need a calendar object
+   when there is no real calendar available yet.
+
+   CalendarNull can be used to implement the null object design pattern:
+   pass a CalendarNull object instead of passing a 0 pointer and checking
+   for 0 with each access.
 */
 class KCAL_EXPORT CalendarNull : public Calendar
 {
   public:
     /**
-       Constructor.
+      Constructs a null calendar with a specified time zone @p timeZoneId.
+
+      @param timeZoneId is a string containing a Time Zone ID, which is
+      assumed to be valid.
+      On some systems, /usr/share/zoneinfo/zone.tab may be available for
+      reference.\n
+      @e Example: "Europe/Berlin"
     */
     explicit CalendarNull( const QString &timeZoneId );
 
     /**
-       Destructor.
+      Destroys the null calendar.
     */
-    ~CalendarNull() {}
+    ~CalendarNull();
 
     /**
-       Returns a pointer to a CalendarNull object, which is constructed
-       if necessary.
+      Returns a pointer to the CalendarNull object, of which there can
+      be only one.  The object is constructed if necessary.
     */
     static CalendarNull *self();
 
     /**
-       Clears out the current Calendar, freeing all used memory etc.
+      @copydoc
+      Calendar::close()
     */
     void close() {}
 
     /**
-       Sync changes in memory to persistant storage.
+      @copydoc
+      Calendar::save()
     */
     void save() {}
 
-    bool reload( const QString & ) { return true;}
-
-// Event Specific Methods //
-
     /**
-       Insert an Evenet into the Calendar.
-
-       First parameter is a pointer to the Event to insert.
-
-       Returns false.
+      @copydoc
+      Calendar::reload(const QString &)
     */
-    bool addEvent( Event * /*event*/ )
-      { return false; }
+    bool reload( const QString &timeZoneId )
+      { Q_UNUSED( timeZoneId ); return true; }
+
+  // Event Specific Methods //
 
     /**
-       Remove an Event from the Calendar.
-
-       First parameter is a pointer to the Event to remove.
-
-       Returns false.
+      @copydoc
+      Calendar::addEvent()
     */
-    bool deleteEvent( Event * /*event*/ )
-      { return false; }
+    bool addEvent( Event *event ) { Q_UNUSED ( event ); return false; }
 
     /**
-       Return a sorted, unfiltered list of all Events for this Calendar.
-
-       First parameter specifies the EventSortField.\n
-       Second parameter specifies the SortDirection.
-
-       Returns an empty Event List.
+      @copydoc
+      Calendar::deleteEvent()
     */
-    Event::List rawEvents( EventSortField /*sortField*/,
-                           SortDirection /*sortDirection*/ )
-      { return Event::List(); }
+    bool deleteEvent( Event *event ) { Q_UNUSED( event ); return false; }
 
     /**
-       Return an unfiltered list of all Events occurring within a date range.
-
-       First parameter is the starting date.\n
-       Second parameter is the ending date.\n
-       Third parameter, if true, specifies that only Events which are
-       completely included within the date range are returned.
-
-       Returns an empty Event List.
+      @copydoc
+      Calendar::rawEvents(EventSortField, SortDirection)
     */
-    Event::List rawEvents( const QDate & /*start*/, const QDate & /*end*/,
-                           bool /*inclusive*/ )
-      { return Event::List(); }
+    Event::List rawEvents( EventSortField sortField,
+                           SortDirection sortDirection )
+      { Q_UNUSED( sortField ); Q_UNUSED( sortDirection );
+        return Event::List(); }
 
     /**
-       Return an unfiltered list of all Events which occur on the given
-       timestamp.
-
-       First parameter is a QDateTime to return unfiltered events for.
-
-       Returns an empty Event List.
+      @copydoc
+      Calendar::rawEvents(const QDate &, const QDate &, bool)
     */
-    Event::List rawEventsForDate( const QDateTime & /*dt*/ )
-      { return Event::List(); }
+    Event::List rawEvents( const QDate &start, const QDate &end,
+                           bool inclusive )
+      { Q_UNUSED( start ); Q_UNUSED( end ); Q_UNUSED( inclusive );
+        return Event::List(); }
 
     /**
-       Return a sorted, unfiltered list of all Events which occur on the given
-       date.  The Events are sorted according to @a sortField and
-       @a sortDirection.
-
-       First parameter is a QDate to return unfiltered Events for.\n
-       Second parameter specifies the EventSortField.\n
-       Third parameter specifies the SortDirection.
-
-       Returns an empty Event List.
+      @copydoc
+      Calendar::rawEventsForDate(const QDate &, EventSortField, SortDirection)
     */
     Event::List rawEventsForDate(
-      const QDate & /*date*/,
-      EventSortField /*sortField=EventSortUnsorted*/,
-      SortDirection /*sortDirection=SortDirectionAscending*/ )
-      { return Event::List(); }
+      const QDate &date,
+      EventSortField sortField=EventSortUnsorted,
+      SortDirection sortDirection=SortDirectionAscending )
+      { Q_UNUSED( date ); Q_UNUSED( sortField ); Q_UNUSED( sortDirection );
+        return Event::List(); }
 
     /**
-       Returns the Event associated with the given unique identifier.
-
-       First parameter is a unique identifier string.
-
-       Return a null Event pointer.
+      @copydoc
+      Calendar::rawEventsForDate(const QDateTime &)
     */
-    Event *event( const QString & /*uid*/ )
-      { return 0; }
-
-// Todo Specific Methods //
+    Event::List rawEventsForDate( const QDateTime &dt )
+      { Q_UNUSED( dt ); return Event::List(); }
 
     /**
-       Insert a Todo into the Calendar.
-
-       First parameter is a pointer to the Todo to insert.
-
-       Returns false.
+      @copydoc
+      Calendar::event(const QString &)
     */
-    bool addTodo( Todo * /*todo*/ )
-      { return false; }
+    Event *event( const QString &uid ) { Q_UNUSED( uid ); return 0; }
+
+  // Todo Specific Methods //
 
     /**
-       Remove a Todo from the Calendar.
-
-       First parameter is a pointer to the Todo to remove.
-
-       Returns false.
+      @copydoc
+      Calendar::addTodo(Todo *)
     */
-    bool deleteTodo( Todo * /*todo*/ )
-      { return false; }
+    bool addTodo( Todo *todo ) { Q_UNUSED( todo ); return false; }
 
     /**
-       Return a sorted, unfiltered list of all Todos for this Calendar.
-
-       First parameter specifies the TodoSortField.\n
-       Second parameter specifies the SortDirection.
-
-       Returns an empty Todo List.
+      @copydoc
+      Calendar::deleteTodo(Todo *)
     */
-    Todo::List rawTodos( TodoSortField /*sortField*/,
-                         SortDirection /*sortDirection*/ )
-      { return Todo::List(); }
+    bool deleteTodo( Todo *todo ) { Q_UNUSED( todo ); return false; }
 
     /**
-       Return an unfiltered list of all Todos for this Calendar which
-       are due on the specified date.
-
-       First parameter is the due date to return unfiltered Todos for.
-
-       Returns an empty Todo List.
+      @copydoc
+      Calendar::rawTodos(TodoSortField, SortDirection)
     */
-    Todo::List rawTodosForDate( const QDate & /*date*/ )
-      { return Todo::List(); }
+    Todo::List rawTodos( TodoSortField sortField,
+                         SortDirection sortDirection )
+      { Q_UNUSED( sortField ); Q_UNUSED( sortDirection ); return Todo::List(); }
 
     /**
-       Returns the Todo associated with the given unique identifier.
-
-       First parameter is a unique identifier string.
-
-       Returns a null Todo pointer.
+      @copydoc
+      Calendar::rawTodosForDate(const QDate &)
     */
-    Todo *todo( const QString & /*uid*/ )
-      { return 0; }
-
-// Journal Specific Methods //
+    Todo::List rawTodosForDate( const QDate &date )
+      { Q_UNUSED ( date ); return Todo::List(); }
 
     /**
-       Insert a Journal into the Calendar.
-
-       First parameter is a pointer to the Journal to insert.
-
-       Returns false.
+      @copydoc
+      Calendar::todo(const QString &)
     */
-    bool addJournal( Journal * /*journal*/ )
-      { return false; }
+    Todo *todo( const QString &uid ) { Q_UNUSED( uid ); return 0; }
+
+  // Journal Specific Methods //
 
     /**
-       Remove a Journal from the Calendar.
-
-       First parameter is a pointer to the Journal to remove.
-
-       Returns false.
+      @copydoc
+      Calendar::addJournal(Journal *)
     */
-    bool deleteJournal( Journal * /*journal*/ )
-      { return false; }
+    bool addJournal( Journal *journal ) { Q_UNUSED( journal ); return false; }
 
     /**
-       Return a sorted, filtered list of all Journals for this Calendar.
-
-       First parameter specifies the JournalSortField.\n
-       Second parameterd specifies the SortDirection.
-
-       Returns an empty Journal List.
+      @copydoc
+      Calendar::deleteJournal(Journal *)
     */
-    Journal::List rawJournals( JournalSortField /*sortField*/,
-                               SortDirection /*sortDirection*/ )
-      { return Journal::List(); }
+    bool deleteJournal( Journal *journal )
+      { Q_UNUSED( journal ); return false; }
 
     /**
-       Return an unfiltered list of all Journals for on the specified date.
-
-       First parameter specifies the data to return the unfiltered Journals for.
-
-       Returns an empty Journal List.
+      @copydoc
+      Calendar::rawJournals(JournalSortField, SortDirection)
     */
-    Journal::List rawJournalsForDate( const QDate & /*date*/ )
-      { return Journal::List(); }
+    Journal::List rawJournals( JournalSortField sortField,
+                               SortDirection sortDirection )
+      { Q_UNUSED( sortField ); Q_UNUSED( sortDirection );
+        return Journal::List(); }
 
     /**
-       Returns the Journal associated with the given unique identifier.
-
-       First parameter is a unique identifier string.
-
-       Returns an null Journal pointer.
+      @copydoc
+      Calendar::rawJournalsForDate(const QDate &)
     */
-    Journal *journal( const QString & /*uid*/ )
-      { return 0; }
-
-// Alarm Specific Methods //
+    Journal::List rawJournalsForDate( const QDate &date )
+      { Q_UNUSED( date ); return Journal::List(); }
 
     /**
-       Return a list of Alarms within a time range for this Calendar.
-
-       First parameter is the starting timestamp.\n
-       Second parameter is the ending timestamp.
-
-       Returns an empty Alarm List.
+      @copydoc
+      Calendar::journal(const QString &)
     */
+    Journal *journal( const QString &uid ) { Q_UNUSED( uid ); return 0; }
 
-    Alarm::List alarms( const QDateTime & /*from*/, const QDateTime & /*to*/ )
-      { return Alarm::List(); }
-
-// Observer Specific Methods //
+  // Alarm Specific Methods //
 
     /**
-       The Observer interface. So far not implemented.
-       First parameter is a pointer an IncidenceBase object.
+      @copydoc
+      Calendar::alarms(const QDateTime &, const QDateTime &)
     */
-    void incidenceUpdated( IncidenceBase * /*incidenceBase*/ ) {}
 
-    void setTimeZoneIdViewOnly( const QString& ) {};
+    Alarm::List alarms( const QDateTime &from, const QDateTime &to )
+      { Q_UNUSED( from ); Q_UNUSED( to ); return Alarm::List(); }
+
+  // Observer Specific Methods //
+
+    /**
+      @copydoc
+      Calendar::incidenceUpdated(IncidenceBase *)
+    */
+    void incidenceUpdated( IncidenceBase *incidenceBase )
+      { Q_UNUSED( incidenceBase ); }
+
+    /**
+      @copydoc
+      Calendar::setTimeZoneIdViewOnly(const QString &)
+    */
+    void setTimeZoneIdViewOnly( const QString &timeZoneId )
+      { Q_UNUSED( timeZoneId ); }
 
   private:
-    static CalendarNull *mSelf;
-
+    //@cond PRIVATE
     class Private;
     Private *d;
+    //@endcond
 };
 
 }

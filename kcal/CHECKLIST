@@ -5,7 +5,7 @@ attachment            |   D   |    D    |   D   |    D    |    D    | Allen
 attendee              |   D   |    D    |   D   |    D    |    D    | Allen
 calendar              |   D   |         |   D   |   n/a   |         | Allen
 calendarlocal         |       |         |       |    D    |    D    | Allen
-calendarnull          |       |         |       |         |         | Allen
+calendarnull          |   D   |    D    |   D   |    D    |    D    | Allen
 calendarresources     |       |         |       |         |         | Allen
 calfilter             |       |         |       |         |         |
 calformat             |       |         |       |         |         |

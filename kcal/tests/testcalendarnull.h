@@ -1,7 +1,7 @@
 /*
     This file is part of the kcal library.
 
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2006 Allen Winter <winter@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,42 +18,17 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-/**
-  @file
-  This file is part of the API for handling calendar data and
-  defines the CalendarNull class.
 
-  @author Cornelius Schumacher
-*/
-#include "calendarnull.h"
+#ifndef CALENDARTEST_H
+#define CALENDARTEST_H
 
-using namespace KCal;
+#include <QObject>
 
-/**
-  Private class that helps to provide binary compatibility between releases.
-  @internal
-*/
-//@cond PRIVATE
-class KCal::CalendarNull::Private
+class CalendarNullTest : public QObject
 {
+  Q_OBJECT
+private slots:
+  void testValidity();
 };
-static CalendarNull *mSelf = 0;
-//@endcond
 
-CalendarNull::CalendarNull( const QString &timeZoneId )
-  : Calendar( timeZoneId ), d( new KCal::CalendarNull::Private )
-{}
-
-CalendarNull::~CalendarNull()
-{
-  delete d;
-}
-
-CalendarNull *CalendarNull::self()
-{
-  if ( !mSelf ) {
-    mSelf = new CalendarNull( QLatin1String( "UTC" ) );
-  }
-
-  return mSelf;
-}
+#endif
