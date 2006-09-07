@@ -674,10 +674,10 @@ void Calendar::setupRelations( Incidence *forincidence )
   // First, go over the list of orphans and see if this is their parent
   QList<Incidence*> l = d->mOrphans.values( uid );
   d->mOrphans.remove( uid );
-  foreach ( Incidence *i, l ) {
-    i->setRelatedTo( forincidence );
-    forincidence->addRelation( i );
-    d->mOrphanUids.remove( i->uid() );
+  for ( int i = 0, end = l.count();  i < end;  ++i ) {
+    l[i]->setRelatedTo( forincidence );
+    forincidence->addRelation( l[i] );
+    d->mOrphanUids.remove( l[i]->uid() );
   }
 
   // Now see about this incidences parent
@@ -859,16 +859,17 @@ Incidence::List Calendar::mergeIncidenceList( const Event::List &events,
 {
   Incidence::List incidences;
 
-  foreach ( Event *e, events ) {
-    incidences.append( e );
+  int i, end;
+  for ( i = 0, end = events.count();  i < end;  ++i ) {
+    incidences.append( events[i] );
   }
 
-  foreach ( Todo *t, todos ) {
-    incidences.append( t );
+  for ( i = 0, end = todos.count();  i < end;  ++i ) {
+    incidences.append( todos[i] );
   }
 
-  foreach ( Journal *j, journals ) {
-    incidences.append( j );
+  for ( i = 0, end = journals.count();  i < end;  ++i ) {
+    incidences.append( journals[i] );
   }
 
   return incidences;
