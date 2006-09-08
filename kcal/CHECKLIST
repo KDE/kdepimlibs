@@ -8,7 +8,7 @@ attendee              |   D   |    D    |   D   |    D    |    D    | Allen
 calendar              |   D   |         |   D   |   n/a   |         | Allen
 calendarlocal         |       |         |       |    D    |    D    | Allen
 calendarnull          |   D   |    D    |   D   |    D    |    D    | Allen
-calendarresources     |       |         |       |         |         | Allen
+calendarresources     |   D   |         |       |         |         | Allen
 calfilter             |       |         |       |         |         |
 calformat             |       |         |       |         |         |
 calstorage            |       |         |       |         |         |
@@ -18,7 +18,7 @@ customproperties      |       |         |       |         |         |
 dndfactory            |       |         |       |         |         |
 dummyscheduler        |       |         |       |         |         |
 duration              |       |         |       |         |         |
-event                 |       |         |       |    D    |         | Allen
+event                 |   D   |         |       |    D    |         | Allen
 exceptions            |       |         |       |         |         |
 filestorage           |       |         |       |         |         |
 freebusycache         |       |         |       |         |         |
@@ -56,6 +56,8 @@ Qt4Port -> no deprecated warnings; thiago says do NO replace const iterator
           loops with 'foreach()'
 
 TODO: revert foreach() loops?
+TODO: change "todo" to "to-do" in comments
+TODO: put KDE_VERSION stuff into kcal.h and remove kde_version.h??
 
 thiago: rule of thumb: ConstIterators, constBegin, constEnd, all of the time
 if it doesn't compile (i.e., you're doing a non-const operation), then use

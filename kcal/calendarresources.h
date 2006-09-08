@@ -20,11 +20,12 @@
     Boston, MA 02110-1301, USA.
 */
 /**
-   @file calendarresources.h
-   Provides a Calendar composed of several Calendar Resources.
+  @file
+  This file is part of the API for handling calendar data and
+  defines the CalendarResources class.
 
-   @author Cornelius Schumacher
-   @author Reinhold Kainhofer
+  @author Cornelius Schumacher
+  @author Reinhold Kainhofer
  */
 #ifndef KCAL_CALENDARRESOURCES_H
 #define KCAL_CALENDARRESOURCES_H
@@ -45,8 +46,7 @@ namespace KCal {
 class CalFormat;
 
 /**
-   @class CalendarResources
-
+   @brief
    This class provides a Calendar which is composed of other Calendars
    known as "Resources".
 
@@ -580,7 +580,7 @@ class KCAL_EXPORT CalendarResources :
      * If you want to change the times of the contents of the resources, use
      * setTimeZoneId
      */
-    void setTimeZoneIdViewOnly( const QString& tz );
+    void setTimeZoneIdViewOnly( const QString &tz );
 
   signals:
     /**
@@ -650,7 +650,8 @@ class KCAL_EXPORT CalendarResources :
     */
     void init( const QString &family );
     template< class IncidenceList >
-    void appendIncidences(IncidenceList &result, const IncidenceList &extra, ResourceCalendar *);
+    void appendIncidences( IncidenceList &result, const IncidenceList &extra,
+                           ResourceCalendar * );
 
     bool mOpen;
 
