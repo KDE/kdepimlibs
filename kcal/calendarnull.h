@@ -37,7 +37,7 @@ namespace KCal {
 
 /**
    @brief
-   Represents an null calendar class; that is, a calendar which contains
+   Represents a null calendar class; that is, a calendar which contains
    no information and provides no capabilities.
 
    The null calendar can be passed to functions which need a calendar object
@@ -147,7 +147,7 @@ class KCAL_EXPORT CalendarNull : public Calendar
     */
     Event *event( const QString &uid ) { Q_UNUSED( uid ); return 0; }
 
-  // Todo Specific Methods //
+  // To-do Specific Methods //
 
     /**
       @copydoc
