@@ -64,6 +64,12 @@ class KCal::Calendar::Private
         mOwner.setEmail( i18n( "unknown@nowhere" ) );
     }
 
+    ~Private()
+    {
+        delete mTimeZones;
+        delete mDefaultFilter;
+    }
+
     QString mProductId;
     Person mOwner;
     ICalTimeZones *mTimeZones; // collection of time zones used in this calendar
