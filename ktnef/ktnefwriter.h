@@ -151,7 +151,7 @@ public:
    * Writes the attachment to the #QIODevice specified by @p file.
    *
    * @param file is the #QIODevice to write.
-   * @return true if the write was successful; otherwise false;
+   * @return true if the write was successful; otherwise false.
    */
   bool writeFile( QIODevice &file ) const;
 
@@ -159,7 +159,7 @@ public:
    * Writes the attachment to the #QDataStream specified by @p stream.
    *
    * @param stream is the #QDataStream to write.
-   * @return true if the write was successful; otherwise false;
+   * @return true if the write was successful; otherwise false.
    */
   bool writeFile( QDataStream &stream ) const;
 

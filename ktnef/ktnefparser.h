@@ -63,7 +63,7 @@ public:
    * Opens the @p filename for parsing.
    *
    * @param filename is the name of the file to open.
-   * @return true if the open succeeded; otherwise false;
+   * @return true if the open succeeded; otherwise false.
    */
   bool openFile( const QString &filename );
 
@@ -71,7 +71,7 @@ public:
    * Opens the #QIODevice @p device for parsing.
    *
    * @param device is the #QIODevice to open.
-   * @return true if the open succeeded; otherwise false;
+   * @return true if the open succeeded; otherwise false.
    */
   bool openDevice( QIODevice *device );
 
