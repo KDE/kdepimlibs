@@ -46,7 +46,7 @@ resourcecalendar      |       |         |       |         |         |
 resourcelocalconfig   |       |         |       |         |         |
 resourcelocaldirconfig|       |         |       |         |         |
 resourcelocaldir      |       |         |       |         |         |
-resourcelocal         |       |         |       |         |         |
+resourcelocal         |   X   |    X    |   X   |    X    |    X    | Narayan
 scheduler             |       |         |       |         |         |
 todo                  |       |         |       |         |         | Allen
 vcaldrag              |       |         |       |         |         |
