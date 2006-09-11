@@ -141,7 +141,6 @@ class KCAL_EXPORT RecurrenceRule
      *  Note that setting the start date/time does not make the recurrence occur on
      *  that date/time, it simply sets a lower limit to when the recurrences take place. */
     void setStartDt(const KDateTime &start);
-    KDE_DEPRECATED void setStartDt(const QDateTime &start)  { setStartDt(KDateTime(start)); }  // use local time zone
 
     /** Returns whether the start date has no time associated. Floating
         means -- according to rfc2445 -- that the event has no time associate. */
@@ -159,7 +158,6 @@ class KCAL_EXPORT RecurrenceRule
     /** Sets the date and time of the last recurrence.
      * @param endDateTime the ending date/time after which to stop recurring. */
     void setEndDt(const KDateTime &endDateTime);
-    KDE_DEPRECATED void setEndDt(const QDateTime &endDateTime);
 
 
     /**
@@ -209,7 +207,6 @@ class KCAL_EXPORT RecurrenceRule
         not check if the date is after the end date, or if the frequency interval
         matches */
     bool dateMatchesRules( const KDateTime &dt ) const;
-    KDE_DEPRECATED bool dateMatchesRules( const QDateTime &qdt ) const;
 
 
     /** Returns a list of the times on the specified date at which the
@@ -237,7 +234,6 @@ class KCAL_EXPORT RecurrenceRule
      * @return date/time of next recurrence, or invalid date if none.
      */
     KDateTime getNextDate( const KDateTime& preDateTime ) const;
-    KDE_DEPRECATED QDateTime getNextDate( const QDateTime& preDateTime ) const;
     /** Returns the date and time of the last previous recurrence, before the specified date/time.
      * If a time later than 00:00:00 is specified and the recurrence has no time, 00:00:00 on
      * the specified date is returned if that date recurs.
@@ -245,7 +241,6 @@ class KCAL_EXPORT RecurrenceRule
      * @return date/time of previous recurrence, or invalid date if none.
      */
     KDateTime getPreviousDate( const KDateTime& afterDateTime ) const;
-    KDE_DEPRECATED QDateTime getPreviousDate( const QDateTime& afterDateTime ) const;
 
 
 

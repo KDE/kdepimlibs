@@ -120,7 +120,6 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
        @param start the new start date/time of the recurrence.
     */
     void setStartDateTime( const KDateTime &start );
-    KDE_DEPRECATED void setStartDateTime( const QDateTime &start )  { setStartDateTime(KDateTime(start)); }  // use local time zone
     /** Set start of recurrence, as a date. Also sets the recurrence to floating.
        @param start The new start date of the recurrence.
     */
@@ -236,7 +235,6 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     /** Sets the date and time of the last recurrence.
      * @param endDateTime the ending date/time after which to stop recurring. */
     void setEndDateTime( const KDateTime &endDateTime );
-    KDE_DEPRECATED void setEndDateTime( const QDateTime &endDateTime );
 
     /**
       Shift the times of the recurrence so that they appear at the same clock
@@ -491,7 +489,6 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     void setRDateTimes( const DateTimeList &rdates);
     void setRDates( const DateList &rdates);
     void addRDateTime( const KDateTime &rdate );
-    KDE_DEPRECATED void addRDateTime( const QDateTime &rdate );
     void addRDate( const QDate &rdate );
 
     // ExDATE
@@ -500,7 +497,6 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     void setExDateTimes( const DateTimeList &exdates);
     void setExDates( const DateList &exdates);
     void addExDateTime( const KDateTime &exdate );
-    KDE_DEPRECATED void addExDateTime( const QDateTime &exdate );
     void addExDate( const QDate &exdate );
 
     RecurrenceRule *defaultRRule( bool create = false ) const;

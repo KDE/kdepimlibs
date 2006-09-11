@@ -958,6 +958,7 @@ bool RecurrenceRule::dateMatchesRules( const KDateTime &kdt ) const
 
 bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec ) const
 {
+#warning Use timeSpec parameter
 //  kDebug(5800) << "         RecurrenceRule::recursOn: " << qd << endl;
   if ( qd < startDt().date() ) return false;
   // Start date is only included if it really matches
@@ -1528,10 +1529,6 @@ QString dumpTime( const KDateTime &dt )
 }
 
 // DEPRECATED methods
-void RecurrenceRule::setEndDt(const QDateTime &endDateTime)
-{
-  setEndDt(KDateTime(endDateTime, startDt().timeSpec()));
-}
 int RecurrenceRule::durationTo(const QDateTime &dt) const
 {
   return durationTo(KDateTime(dt, startDt().timeSpec()));
@@ -1539,16 +1536,4 @@ int RecurrenceRule::durationTo(const QDateTime &dt) const
 bool RecurrenceRule::recursAt( const QDateTime &dt ) const
 {
   return recursAt(KDateTime(dt, startDt().timeSpec()));
-}
-bool RecurrenceRule::dateMatchesRules( const QDateTime &qdt ) const
-{
-  return dateMatchesRules(KDateTime(qdt, startDt().timeSpec()));
-}
-QDateTime RecurrenceRule::getNextDate( const QDateTime& preDateTime ) const
-{
-  return getNextDate(KDateTime(preDateTime, startDt().timeSpec())).dateTime();
-}
-QDateTime RecurrenceRule::getPreviousDate( const QDateTime& afterDateTime ) const
-{
-  return getPreviousDate(KDateTime(afterDateTime, startDt().timeSpec())).dateTime();
 }

@@ -1185,24 +1185,3 @@ int Recurrence::durationTo(const QDateTime &dt) const
   else
     return durationTo(KDateTime(dt));  // use local time zone
 }
-void Recurrence::setEndDateTime( const QDateTime &endDateTime )
-{
-  if (mStartDateTime.isValid())
-    setEndDateTime(KDateTime(endDateTime, mStartDateTime.timeSpec()));
-  else
-    setEndDateTime(KDateTime(endDateTime));  // use local time zone
-}
-void Recurrence::addRDateTime( const QDateTime &rdate )
-{
-  if (mStartDateTime.isValid())
-    addRDateTime(KDateTime(rdate, mStartDateTime.timeSpec()));
-  else
-    addRDateTime(KDateTime(rdate));  // use local time zone
-}
-void Recurrence::addExDateTime( const QDateTime &exdate )
-{
-  if (mStartDateTime.isValid())
-    addExDateTime(KDateTime(exdate, mStartDateTime.timeSpec()));
-  else
-    addExDateTime(KDateTime(exdate));  // use local time zone
-}
