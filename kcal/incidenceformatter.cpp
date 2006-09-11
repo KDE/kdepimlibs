@@ -1231,6 +1231,9 @@ bool IncidenceFormatter::ToolTipVisitor::visit( FreeBusy *fb )
 
 QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence* incidence, QString dtRangeText )
 {
+  if ( !incidence )
+    return QString();
+
   QString tmp = "<qt><b>"+ incidence->summary().replace("\n", "<br>")+"</b>";
 
   tmp += dtRangeText;
