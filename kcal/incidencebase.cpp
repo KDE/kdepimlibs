@@ -122,13 +122,13 @@ QString IncidenceBase::uid() const
   return mUid;
 }
 
-void IncidenceBase::setLastModified( const QDateTime &lm )
+void IncidenceBase::setLastModified( const KDateTime &lm )
 {
   // DON'T! updated() because we call this from
   // Calendar::updateEvent().
 
-  // Remove milliseconds part.
-  QDateTime current = lm;
+  // Convert to UTC and remove milliseconds part.
+  KDateTime current = lm.toUtc();
   QTime t = current.time();
   t.setHMS( t.hour(), t.minute(), t.second(), 0 );
   current.setTime( t );
@@ -136,7 +136,7 @@ void IncidenceBase::setLastModified( const QDateTime &lm )
   mLastModified = current;
 }
 
-QDateTime IncidenceBase::lastModified() const
+KDateTime IncidenceBase::lastModified() const
 {
   return mLastModified;
 }
@@ -173,14 +173,15 @@ void IncidenceBase::setReadOnly( bool readOnly )
   mReadOnly = readOnly;
 }
 
-void IncidenceBase::setDtStart( const QDateTime &dtStart )
+void IncidenceBase::setDtStart( const KDateTime &dtStart )
 {
 //  if ( mReadOnly ) return;
   mDtStart = dtStart;
+  mFloats = dtStart.isDateOnly();
   updated();
 }
 
-QDateTime IncidenceBase::dtStart() const
+KDateTime IncidenceBase::dtStart() const
 {
   return mDtStart;
 }
@@ -197,7 +198,7 @@ QString IncidenceBase::dtStartDateStr( bool shortfmt ) const
 
 QString IncidenceBase::dtStartStr() const
 {
-  return KGlobal::locale()->formatDateTime( dtStart() );
+  return KGlobal::locale()->formatDateTime( dtStart().dateTime() );
 }
 
 bool IncidenceBase::doesFloat() const
@@ -207,9 +208,15 @@ bool IncidenceBase::doesFloat() const
 
 void IncidenceBase::setFloats( bool f )
 {
-  if ( mReadOnly ) return;
+  if ( mReadOnly || f == mFloats ) return;
   mFloats = f;
   updated();
+}
+
+void IncidenceBase::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
+{
+  mDtStart = mDtStart.toTimeSpec( oldSpec );
+  mDtStart.setTimeSpec( newSpec );
 }
 
 void IncidenceBase::addComment( const QString &comment )

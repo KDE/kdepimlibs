@@ -32,6 +32,10 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+extern "C" {
+  #include <icaltimezone.h>
+}
+
 #include "exceptions.h"
 #include "calfilter.h"
 #include "icaltimezones.h"
@@ -49,7 +53,7 @@ class KCal::Calendar::Private
   public:
     Private()
       : mTimeZones( new ICalTimeZones ),
-	mLocalTime( false ),
+        mBuiltInTimeZone( 0 ),
 	mModified( false ),
 	mNewObserver( false ),
 	mObserversEnabled( true ),
@@ -73,8 +77,9 @@ class KCal::Calendar::Private
     QString mProductId;
     Person mOwner;
     ICalTimeZones *mTimeZones; // collection of time zones used in this calendar
-    QString mTimeZoneId;
-    bool mLocalTime;
+    const ICalTimeZone *mBuiltInTimeZone;   // cached time zone lookup
+    KDateTime::Spec mTimeSpec;
+    mutable KDateTime::Spec mViewTimeSpec;
     bool mModified;
     bool mNewObserver;
     bool mObserversEnabled;
@@ -89,15 +94,22 @@ class KCal::Calendar::Private
 };
 //@endcond
 
+Calendar::Calendar( const KDateTime::Spec &timeSpec )
+  : d( new KCal::Calendar::Private )
+{
+  d->mTimeSpec = timeSpec;
+}
+
 Calendar::Calendar( const QString &timeZoneId )
   : d( new KCal::Calendar::Private )
 {
-  d->mTimeZoneId = timeZoneId;
+  setTimeZoneId( timeZoneId );
 }
 
 Calendar::~Calendar()
 {
   delete d->mDefaultFilter;
+  delete d->mBuiltInTimeZone;
   delete d->mTimeZones;
   delete d;
 }
@@ -114,18 +126,64 @@ void Calendar::setOwner( const Person &owner )
   setModified( true );
 }
 
+void Calendar::setTimeSpec( const KDateTime::Spec &timeSpec )
+{
+  d->mTimeSpec = timeSpec;
+  d->mViewTimeSpec = timeSpec;
+  delete d->mBuiltInTimeZone;
+  d->mBuiltInTimeZone = 0;
+}
+
+KDateTime::Spec Calendar::timeSpec() const
+{
+  return d->mTimeSpec;
+}
+
 void Calendar::setTimeZoneId( const QString &timeZoneId )
 {
-  d->mTimeZoneId = timeZoneId;
-  d->mLocalTime = false;
+  delete d->mBuiltInTimeZone;
+  d->mBuiltInTimeZone = 0;
+  const ICalTimeZone *tz = d->mTimeZones->zone(timeZoneId);
+  if (!tz) {
+    ICalTimeZoneSource tzsrc;
+    tz = tzsrc.parse(icaltimezone_get_builtin_timezone(timeZoneId.toLatin1()));
+    d->mBuiltInTimeZone = tz;
+  }
+  if (tz)
+    d->mTimeSpec = tz;
+  else
+    d->mTimeSpec = KDateTime::ClockTime;
+  d->mViewTimeSpec = d->mTimeSpec;
 
   setModified( true );
-  doSetTimeZoneId( timeZoneId );
+  doSetTimeSpec( d->mTimeSpec );
 }
 
 QString Calendar::timeZoneId() const
 {
-  return d->mTimeZoneId;
+  const KTimeZone *tz = d->mTimeSpec.timeZone();
+  return tz ? tz->name() : QString();
+}
+
+void Calendar::setViewTimeSpec( const KDateTime::Spec &spec ) const
+{
+  d->mViewTimeSpec = spec;
+}
+
+void Calendar::setViewTimeZoneId( const QString &timeZoneId ) const
+{
+#warning How should this be handled?
+}
+
+KDateTime::Spec Calendar::viewTimeSpec() const
+{
+  return d->mViewTimeSpec;
+}
+
+QString Calendar::viewTimeZoneId() const
+{
+  const KTimeZone *tz = d->mViewTimeSpec.timeZone();
+  return tz ? tz->name() : QString();
 }
 
 ICalTimeZones *Calendar::timeZones() const
@@ -133,17 +191,22 @@ ICalTimeZones *Calendar::timeZones() const
   return d->mTimeZones;
 }
 
-void Calendar::setLocalTime()
+void Calendar::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
 {
-  d->mLocalTime = true;
-  d->mTimeZoneId = "";
+  setTimeSpec( newSpec );
 
-  setModified( true );
-}
+  int i, end;
+  Event::List ev = events();
+  for ( i = 0, end = ev.count();  i < end;  ++i )
+    ev[i]->shiftTimes( oldSpec, newSpec );
 
-bool Calendar::isLocalTime() const
-{
-  return d->mLocalTime;
+  Todo::List to = todos();
+  for ( i = 0, end = to.count();  i < end;  ++i )
+    to[i]->shiftTimes( oldSpec, newSpec );
+
+  Journal::List jo = journals();
+  for ( i = 0, end = jo.count();  i < end;  ++i )
+    jo[i]->shiftTimes( oldSpec, newSpec );
 }
 
 void Calendar::setFilter( CalFilter *filter )
@@ -295,7 +358,7 @@ Event::List Calendar::events( const QDate &date,
   return el;
 }
 
-Event::List Calendar::events( const QDateTime &dt )
+Event::List Calendar::events( const KDateTime &dt )
 {
   Event::List el = rawEventsForDate( dt );
   d->mFilter->apply( &el );
@@ -373,7 +436,7 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence,
   // Adjust the date of the incidence
   if ( incidence->type() == "Event" ) {
     Event *ev = static_cast<Event *>( newInc );
-    QDateTime start( ev->dtStart() );
+    KDateTime start( ev->dtStart() );
     int daysTo = start.date().daysTo( date );
     ev->setDtStart( start.addDays( daysTo ) );
     ev->setDtEnd( ev->dtEnd().addDays( daysTo ) );
@@ -382,13 +445,13 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence,
     bool haveOffset = false;
     int daysTo = 0;
     if ( td->hasDueDate() ) {
-      QDateTime due( td->dtDue() );
+      KDateTime due( td->dtDue() );
       daysTo = due.date().daysTo( date );
       td->setDtDue( due.addDays( daysTo ), true );
       haveOffset = true;
     }
     if ( td->hasStartDate() ) {
-      QDateTime start( td->dtStart() );
+      KDateTime start( td->dtStart() );
       if ( !haveOffset ) {
         daysTo = start.date().daysTo( date );
       }
@@ -805,7 +868,7 @@ bool Calendar::isModified() const
 void Calendar::incidenceUpdated( IncidenceBase *incidence )
 {
   incidence->setSyncStatus( Event::SYNCMOD );
-  incidence->setLastModified( QDateTime::currentDateTime() );
+  incidence->setLastModified( KDateTime::currentUtcDateTime() );
   // we should probably update the revision number here,
   // or internally in the Event itself when certain things change.
   // need to verify with ical documentation.
@@ -897,13 +960,13 @@ void Calendar::setObserversEnabled( bool enabled )
 }
 
 void Calendar::appendAlarms( Alarm::List &alarms, Incidence *incidence,
-                             const QDateTime &from, const QDateTime &to )
+                             const KDateTime &from, const KDateTime &to )
 {
-  QDateTime preTime = from.addSecs(-1);
+  KDateTime preTime = from.addSecs(-1);
 
   foreach ( Alarm *a, incidence->alarms() ) {
     if ( a->enabled() ) {
-      QDateTime dt = a->nextRepetition( preTime );
+      KDateTime dt = a->nextRepetition( preTime );
       if ( dt.isValid() && dt <= to ) {
         kDebug(5800) << "Calendar::appendAlarms() '"
                      << incidence->summary() << "': "
@@ -916,10 +979,10 @@ void Calendar::appendAlarms( Alarm::List &alarms, Incidence *incidence,
 
 void Calendar::appendRecurringAlarms( Alarm::List &alarms,
                                       Incidence *incidence,
-                                      const QDateTime &from,
-                                      const QDateTime &to )
+                                      const KDateTime &from,
+                                      const KDateTime &to )
 {
-  QDateTime qdt;
+  KDateTime qdt;
   int  endOffset = 0;
   bool endOffsetValid = false;
   int  period = from.secsTo( to );
@@ -948,7 +1011,7 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
         }
 
         // Find the incidence's earliest alarm
-        QDateTime fromStart = incidence->dtStart().addSecs( offset );
+        KDateTime fromStart = incidence->dtStart().addSecs( offset );
         if ( fromStart > to ) {
           continue;
         }
@@ -986,8 +1049,7 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
               found = true;
 #ifndef NDEBUG
               // for debug output
-              qdt =
-                qdt.addSecs( offset + ( ( toFrom - 1 ) / snooze + 1 ) * snooze );
+              qdt = qdt.addSecs( offset + ( ( toFrom - 1 ) / snooze + 1 ) * snooze );
 #endif
               break;
             }
@@ -1005,3 +1067,21 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
 }
 
 #include "calendar.moc"
+
+// DEPRECATED methods
+Event::List Calendar::events( const QDateTime &qdt )
+{ return events(KDateTime(qdt, timeSpec())); }
+
+Event::List Calendar::rawEventsForDate( const QDateTime &qdt )
+{ return rawEventsForDate(KDateTime(qdt, timeSpec())); }
+
+Alarm::List Calendar::alarms( const QDateTime &from, const QDateTime &to )
+{ return alarms(KDateTime(from, timeSpec()), KDateTime(to, timeSpec())); }
+
+void Calendar::appendAlarms( Alarm::List &alarms, Incidence *incidence,
+                       const QDateTime &from, const QDateTime &to )
+{ return appendAlarms(alarms, incidence, KDateTime(from, timeSpec()), KDateTime(to, timeSpec())); }
+
+void Calendar::appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
+                       const QDateTime &from, const QDateTime &to )
+{ return appendRecurringAlarms(alarms, incidence, KDateTime(from, timeSpec()), KDateTime(to, timeSpec())); }

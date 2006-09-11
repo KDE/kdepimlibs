@@ -66,12 +66,13 @@ class KCAL_EXPORT Event : public Incidence
     /**
       Set end date and time.
     */
-    void setDtEnd( const QDateTime &dtEnd );
+    void setDtEnd( const KDateTime &dtEnd );
+    KDE_DEPRECATED void setDtEnd( const QDateTime &dtEnd );
 
     /**
       Return end date and time.
     */
-    virtual QDateTime dtEnd() const;
+    virtual KDateTime dtEnd() const;
 
     /**
       Returns the day when the event ends. This might be different from
@@ -117,6 +118,12 @@ class KCAL_EXPORT Event : public Incidence
     bool isMultiDay() const;
 
     /**
+      @copydoc
+      IncidenceBase::shiftTimes()
+    */
+    virtual void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
+
+    /**
       Set the event's time transparency level.
     */
     void setTransparency( Transparency transparency );
@@ -136,12 +143,12 @@ class KCAL_EXPORT Event : public Incidence
     /**
       Returns the end date/time of the base incidence.
     */
-    virtual QDateTime endDateRecurrenceBase() const { return dtEnd(); }
+    virtual KDateTime endDateRecurrenceBase() const { return dtEnd(); }
 
   private:
     bool accept( Visitor &v ) { return v.visit( this ); }
 
-    QDateTime mDtEnd;
+    KDateTime mDtEnd;
     bool mHasEndDate;
     Transparency mTransparency;
 

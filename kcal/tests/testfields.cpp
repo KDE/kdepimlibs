@@ -72,7 +72,7 @@ int main(int argc,char **argv)
   kDebug() << "Event description " << e->summary() << endl;
 
   if (e->hasEndDate()) {
-    QDateTime d = e->dtEnd();
+    QDateTime d = e->dtEnd().dateTime();
     kDebug() << "Event ends " << d << endl;
   }
 

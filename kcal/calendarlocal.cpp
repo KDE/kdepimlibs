@@ -27,11 +27,11 @@
   @author Preston Brown
   @author Cornelius Schumacher
  */
-#include <QDateTime>
 #include <QHash>
 #include <QString>
 
 #include <kdebug.h>
+#include <kdatetime.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 
@@ -53,6 +53,10 @@ using namespace KCal;
 class KCal::CalendarLocal::Private
 {
   public:
+    Private()
+    {
+        mDeletedIncidences.setAutoDelete( true );
+    }
     QString mFileName;                  // filename where the calendar is stored
     QHash<QString, Event *> mEvents;    // hash on uids of all calendar events
     QHash<QString, Todo *> mTodos;      // hash on uids of all calendar to-dos
@@ -61,11 +65,17 @@ class KCal::CalendarLocal::Private
 };
 //@endcond
 
-CalendarLocal::CalendarLocal( const QString &timeZoneId )
-  : Calendar( timeZoneId ), d( new KCal::CalendarLocal::Private )
+
+CalendarLocal::CalendarLocal( const KDateTime::Spec &timeSpec )
+  : Calendar( timeSpec ),
+    d( new KCal::CalendarLocal::Private )
 {
-  d->mDeletedIncidences.setAutoDelete( true );
-  d->mFileName.clear();
+}
+
+CalendarLocal::CalendarLocal( const QString &timeZoneId )
+  : Calendar( timeZoneId ),
+    d( new KCal::CalendarLocal::Private )
+{
 }
 
 CalendarLocal::~CalendarLocal()
@@ -81,13 +91,12 @@ bool CalendarLocal::load( const QString &fileName, CalFormat *format )
   return storage.load();
 }
 
-bool CalendarLocal::reload( const QString &tz )
+bool CalendarLocal::reload()
 {
   const QString filename = d->mFileName;
   save();
   close();
   d->mFileName = filename;
-  setTimeZoneId( tz );
   FileStorage storage( this, d->mFileName );
   return storage.load();
 }
@@ -241,12 +250,12 @@ Todo::List CalendarLocal::rawTodosForDate( const QDate &date )
   return todoList;
 }
 
-Alarm::List CalendarLocal::alarmsTo( const QDateTime &to )
+Alarm::List CalendarLocal::alarmsTo( const KDateTime &to )
 {
-  return alarms( QDateTime( QDate( 1900, 1, 1 ) ), to );
+  return alarms( KDateTime( QDate( 1900, 1, 1 ) ), to );
 }
 
-Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
+Alarm::List CalendarLocal::alarms( const KDateTime &from, const KDateTime &to )
 {
   Alarm::List alarms;
   foreach ( Event *e, d->mEvents ) {
@@ -285,6 +294,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
                                              EventSortField sortField,
                                              SortDirection sortDirection )
 {
+//TODO: add KDateTime::Spec parameter?
   Event::List eventList;
 
   foreach ( Event *event, d->mEvents ) {
@@ -294,13 +304,13 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
         int extraDays = event->dtStart().date().daysTo( event->dtEnd().date() );
         int i;
         for ( i = 0; i <= extraDays; i++ ) {
-          if ( event->recursOn( qd.addDays( -i ) ) ) {
+          if ( event->recursOn( qd.addDays( -i ), timeSpec() ) ) {
             eventList.append( event );
             break;
           }
         }
       } else {
-        if ( event->recursOn( qd ) ) {
+        if ( event->recursOn( qd, timeSpec() ) ) {
           eventList.append( event );
         }
       }
@@ -317,6 +327,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
 Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
                                           bool inclusive )
 {
+//TODO: add KDateTime::Spec parameter?
   Event::List eventList;
 
   // Get non-recurring events
@@ -380,7 +391,7 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
   return eventList;
 }
 
-Event::List CalendarLocal::rawEventsForDate( const QDateTime &qdt )
+Event::List CalendarLocal::rawEventsForDate( const KDateTime &qdt )
 {
   return rawEventsForDate( qdt.date() );
 }
@@ -471,22 +482,18 @@ Journal::List CalendarLocal::rawJournalsForDate( const QDate &date )
   return journalList;
 }
 
-void CalendarLocal::setTimeZoneIdViewOnly( const QString &tz )
+// DEPRECATED methods
+#include "icaltimezones.h"
+Alarm::List CalendarLocal::alarmsTo( const QDateTime &to )
+{ return alarmsTo(KDateTime(to, timeSpec())); }
+
+bool CalendarLocal::reload( const QString &tz )
 {
-  const QString question( i18n("The time zone setting was changed. "
-                               "To display the current calendar in the new "
-                               "time zone it must first be saved. Do you want "
-                               "to save the pending changes now or wait and "
-                               "apply the new time zone on the next reload?") );
-  int rc = KMessageBox::Yes;
-  if ( isModified() ) {
-    rc = KMessageBox::questionYesNo( 0, question,
-                                     i18n("Save before applying time zones?"),
-                                     KStdGuiItem::save(),
-                                     KGuiItem( i18n("Apply Time Zone Change on Next Reload") ),
-                                     "calendarLocalSaveBeforeTimeZoneShift" );
-  }
-  if ( rc == KMessageBox::Yes ) {
-    reload( tz );
-  }
+  const QString filename = d->mFileName;
+  save();
+  close();
+  d->mFileName = filename;
+  setTimeZoneId( tz );
+  FileStorage storage( this, d->mFileName );
+  return storage.load();
 }

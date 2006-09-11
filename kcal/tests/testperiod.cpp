@@ -36,13 +36,13 @@ void PeriodTest::testValidity()
 
   QVERIFY( p1.hasDuration() );
   QVERIFY( p1.duration() == 60 );
-  QVERIFY( p1.start() == QDateTime(QDate(2006, 8, 30)) );
+  QVERIFY( p1.start() == KDateTime(QDate(2006, 8, 30)) );
 
   p2 = p1;
 
   QVERIFY( p2.hasDuration() );
   QVERIFY( p2.duration() == 60 );
-  QVERIFY( p2.start() == QDateTime( QDate(2006, 8, 30) ) );
+  QVERIFY( p2.start() == KDateTime( QDate(2006, 8, 30) ) );
 }
 
 void PeriodTest::testCompare() 

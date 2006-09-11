@@ -108,14 +108,14 @@ bool CalFilter::filterIncidence(Incidence *incidence) const
     if ( (mCriteria & HideCompleted) && todo->isCompleted() ) {
       // Check if completion date is suffently long ago:
       if ( todo->completed().addDays( mCompletedTimeSpan ) <
-           QDateTime::currentDateTime() ) {
+           KDateTime::currentUtcDateTime() ) {
         return false;
       }
     }
 
     if( ( mCriteria & HideInactiveTodos ) &&
         ( todo->hasStartDate() &&
-          QDateTime::currentDateTime() < todo->dtStart() ||
+          KDateTime::currentUtcDateTime() < todo->dtStart() ||
           todo->isCompleted() ) )
       return false;
 

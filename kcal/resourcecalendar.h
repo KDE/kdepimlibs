@@ -26,8 +26,8 @@
 #define KCAL_RESOURCECALENDAR_H
 
 #include <QString>
-#include <QDateTime>
 
+#include <kdatetime.h>
 #include <kconfig.h>
 
 #include "alarm.h"
@@ -179,7 +179,8 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Get unfiltered events for date \a dt.
     */
-    virtual Event::List rawEventsForDate( const QDateTime &dt ) = 0;
+    virtual Event::List rawEventsForDate( const KDateTime &dt ) = 0;
+    KDE_DEPRECATED Event::List rawEventsForDate( const QDateTime &qdt );
 
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
@@ -301,22 +302,71 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Return all alarms which occur in the given time interval.
     */
-    virtual Alarm::List alarms( const QDateTime &from,
-                                const QDateTime &to ) = 0;
+    virtual Alarm::List alarms( const KDateTime &from,
+                                const KDateTime &to ) = 0;
+    KDE_DEPRECATED Alarm::List alarms( const QDateTime &from,
+                                const QDateTime &to );
 
     /**
       Return all alarms which occur before given date.
     */
-    virtual Alarm::List alarmsTo( const QDateTime &to ) = 0;
+    virtual Alarm::List alarmsTo( const KDateTime &to ) = 0;
+    KDE_DEPRECATED Alarm::List alarmsTo( const QDateTime &to );
 
 
     /** Returns a list of all incideces */
     Incidence::List rawIncidences();
 
     /**
-      Set time zone id used by this resource, e.g. "Europe/Berlin".
+      Sets the default and viewing time specification for the calendar.
+
+      @param timeSpec is the time specification (time zone, etc.) for
+                      viewing Incidence dates.\n
+    */
+    virtual void setTimeSpec( const KDateTime::Spec &timeSpec ) = 0;
+
+    /**
+       Get the viewing time specification (time zone etc.) for the calendar.
+
+       @return time specification
+    */
+    virtual KDateTime::Spec timeSpec() const = 0;
+
+    /**
+      Sets the time zone ID for the Calendar.
+
+      @param timeZoneId is a string containing a time zone ID, which is
+      assumed to be valid. The time zone ID is used to set the time zone
+      for viewing Incidence date/times. If no time zone is found, the
+      viewing time specification is set to local clock time.
+      @e Example: "Europe/Berlin"
     */
     virtual void setTimeZoneId( const QString &timeZoneId ) = 0;
+
+    /**
+      Returns the time zone ID used for creating or modifying incidences in
+      the calendar.
+
+      @return the string containing the time zone ID, or empty string if the
+              creation/modification time specification is not a time zone.
+    */
+    virtual QString timeZoneId() const = 0;
+
+    /**
+      Shifts the times of all incidences so that they appear at the same clock
+      time as before but in a new time zone. The shift is done from a viewing
+      time zone rather than from the actual incidence time zone.
+
+      For example, shifting an incidence whose start time is 09:00 America/New York,
+      using an old viewing time zone (@p oldSpec) of Europe/London, to a new time
+      zone (@p newSpec) of Europe/Paris, will result in the time being shifted
+      from 14:00 (which is the London time of the incidence start) to 14:00 Paris
+      time.
+
+      @param oldSpec the time specification which provides the clock times
+      @param newSpec the new time specification
+    */
+    virtual void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec) = 0;
 
     /**
       If this resource has subresources, return a QStringList of them.

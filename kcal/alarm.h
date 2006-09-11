@@ -33,6 +33,8 @@
 #include <QStringList>
 #include <QList>
 
+#include <kdatetime.h>
+
 #include "customproperties.h"
 #include "duration.h"
 #include "person.h"
@@ -396,18 +398,21 @@ class KCAL_EXPORT Alarm : public CustomProperties
     /**
       Sets the trigger time of the alarm.
 
-      @param alarmTime is the #QDateTime alarm trigger.
+      @param alarmTime is the #KDateTime alarm trigger.
 
       @see time()
     */
-    void setTime( const QDateTime &alarmTime );
+    void setTime( const KDateTime &alarmTime );
+    KDE_DEPRECATED void setTime( const QDateTime &alarmTime );
+
 
     /**
       Returns the alarm trigger date/time.
 
       @see setTime()
     */
-    QDateTime time() const;
+    KDateTime time() const;
+
 
     /**
       Returns the date/time when the last repetition of the alarm goes off.
@@ -415,7 +420,8 @@ class KCAL_EXPORT Alarm : public CustomProperties
 
       @see setTime()
     */
-    QDateTime endTime() const;
+    KDateTime endTime() const;
+
 
     /**
       Returns true if the alarm has a trigger date/time.
@@ -477,6 +483,22 @@ class KCAL_EXPORT Alarm : public CustomProperties
     bool hasEndOffset() const;
 
     /**
+      Shift the times of the alarm so that they appear at the same clock
+      time as before but in a new time zone. The shift is done from a viewing
+      time zone rather than from the actual alarm time zone.
+
+      For example, shifting an alarm whose start time is 09:00 America/New York,
+      using an old viewing time zone (@p oldSpec) of Europe/London, to a new time
+      zone (@p newSpec) of Europe/Paris, will result in the time being shifted
+      from 14:00 (which is the London time of the alarm start) to 14:00 Paris
+      time.
+
+      @param oldSpec the time specification which provides the clock times
+      @param newSpec the new time specification
+    */
+    void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
+
+    /**
       Sets the snooze time interval for the alarm.
 
       @param alarmSnoozeTime the time in minutes between snoozes.
@@ -521,7 +543,8 @@ class KCAL_EXPORT Alarm : public CustomProperties
 
       @see previousRepetition()
     */
-    QDateTime nextRepetition( const QDateTime &preTime ) const;
+    KDateTime nextRepetition( const KDateTime &preTime ) const;
+    KDE_DEPRECATED QDateTime nextRepetition( const QDateTime &preTime ) const;
 
     /**
       Returns the date/time of the alarm's latest repetition or, if none,
@@ -536,7 +559,8 @@ class KCAL_EXPORT Alarm : public CustomProperties
 
       @see nextRepetition()
     */
-    QDateTime previousRepetition( const QDateTime &afterTime ) const;
+    KDateTime previousRepetition( const KDateTime &afterTime ) const;
+    KDE_DEPRECATED QDateTime previousRepetition( const QDateTime &afterTime ) const;
 
     /**
       Returns the number of seconds between the alarm's initial occurrence and

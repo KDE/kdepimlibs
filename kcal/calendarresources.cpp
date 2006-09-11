@@ -29,11 +29,11 @@
 */
 #include <stdlib.h>
 
-#include <QDateTime>
 #include <QString>
 #include <QList>
 
 #include <kdebug.h>
+#include <kdatetime.h>
 #include <kstandarddirs.h>
 #include <klocale.h>
 
@@ -85,6 +85,13 @@ ResourceCalendar
   return static_cast<ResourceCalendar *>( r );
 }
 
+CalendarResources::CalendarResources( const KDateTime::Spec &timeSpec,
+                                      const QString &family )
+  : Calendar( timeSpec )
+{
+  init( family );
+}
+
 CalendarResources::CalendarResources( const QString &timeZoneId,
                                       const QString &family )
   : Calendar( timeZoneId )
@@ -132,7 +139,7 @@ void CalendarResources::load()
   // troubles ;-((
   CalendarResourceManager::Iterator i1;
   for ( i1 = mManager->begin(); i1 != mManager->end(); ++i1 ) {
-    (*i1)->setTimeZoneId( timeZoneId() );
+    (*i1)->setTimeSpec( timeSpec() );
   }
 
   QList<ResourceCalendar *> failed;
@@ -160,11 +167,10 @@ void CalendarResources::load()
   mOpen = true;
 }
 
-bool CalendarResources::reload( const QString &tz )
+bool CalendarResources::reload()
 {
   save();
   close();
-  setTimeZoneId( tz );
   load();
   return true;
 }
@@ -403,7 +409,7 @@ Todo::List CalendarResources::rawTodosForDate( const QDate &date )
   return result;
 }
 
-Alarm::List CalendarResources::alarmsTo( const QDateTime &to )
+Alarm::List CalendarResources::alarmsTo( const KDateTime &to )
 {
   kDebug(5800) << "CalendarResources::alarmsTo" << endl;
 
@@ -415,8 +421,8 @@ Alarm::List CalendarResources::alarmsTo( const QDateTime &to )
   return result;
 }
 
-Alarm::List CalendarResources::alarms( const QDateTime &from,
-                                       const QDateTime &to )
+Alarm::List CalendarResources::alarms( const KDateTime &from,
+                                       const KDateTime &to )
 {
   Alarm::List result;
   CalendarResourceManager::ActiveIterator it;
@@ -455,7 +461,7 @@ Event::List CalendarResources::rawEvents( const QDate &start, const QDate &end,
   return result;
 }
 
-Event::List CalendarResources::rawEventsForDate( const QDateTime &qdt )
+Event::List CalendarResources::rawEventsForDate( const KDateTime &qdt )
 {
   kDebug(5800) << "CalendarResources::rawEventsForDate(qdt)" << endl;
 
@@ -628,19 +634,14 @@ void CalendarResources::resourceDeleted( ResourceCalendar *resource )
   emit signalResourceDeleted( resource );
 }
 
-void CalendarResources::doSetTimeZoneId( const QString &timeZoneId )
+void CalendarResources::doSetTimeSpec( const KDateTime::Spec &timeSpec )
 {
   // set the timezone for all resources. Otherwise we'll have those terrible
   // tz troubles ;-((
   CalendarResourceManager::Iterator i1;
   for ( i1 = mManager->begin(); i1 != mManager->end(); ++i1 ) {
-    (*i1)->setTimeZoneId( timeZoneId );
+    (*i1)->setTimeSpec( timeSpec );
   }
-}
-
-void CalendarResources::setTimeZoneIdViewOnly( const QString &timeZoneId )
-{
-  reload( timeZoneId );
 }
 
 CalendarResources::Ticket
@@ -781,3 +782,16 @@ void CalendarResources::slotSaveError( ResourceCalendar *r, const QString &err )
 }
 
 #include "calendarresources.moc"
+
+// DEPRECATED methods
+Alarm::List CalendarResources::alarmsTo( const QDateTime &to )
+{ return alarmsTo(KDateTime(to, timeSpec())); }
+
+bool CalendarResources::reload( const QString &tz )
+{
+  save();
+  close();
+  setTimeZoneId( tz );
+  load();
+  return true;
+}

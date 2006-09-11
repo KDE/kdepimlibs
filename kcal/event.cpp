@@ -63,7 +63,7 @@ bool Event::operator==( const Event &e2 ) const
     transparency() == e2.transparency();
 }
 
-void Event::setDtEnd( const QDateTime &dtEnd )
+void Event::setDtEnd( const KDateTime &dtEnd )
 {
   if ( mReadOnly ) return;
 
@@ -75,7 +75,7 @@ void Event::setDtEnd( const QDateTime &dtEnd )
   updated();
 }
 
-QDateTime Event::dtEnd() const
+KDateTime Event::dtEnd() const
 {
   if ( hasEndDate() ) return mDtEnd;
   if ( hasDuration() ) return dtStart().addSecs( duration() );
@@ -87,10 +87,11 @@ QDateTime Event::dtEnd() const
 
 QDate Event::dateEnd() const
 {
+  KDateTime end = dtEnd().toTimeSpec( dtStart() );
   if ( doesFloat() ) {
-    return dtEnd().date();
+    return end.date();
   } else {
-    return dtEnd().addSecs( -1 ).date();
+    return end.addSecs(-1).date();
   }
 }
 
@@ -106,7 +107,7 @@ QString Event::dtEndDateStr( bool shortfmt ) const
 
 QString Event::dtEndStr() const
 {
-  return KGlobal::locale()->formatDateTime( dtEnd() );
+  return KGlobal::locale()->formatDateTime( dtEnd().dateTime() );
 }
 
 void Event::setHasEndDate( bool b )
@@ -122,13 +123,22 @@ bool Event::hasEndDate() const
 bool Event::isMultiDay() const
 {
   // End date is non inclusive, so subtract 1 second...
-  QDateTime start( dtStart() );
-  QDateTime end( dtEnd() );
+  KDateTime start( dtStart() );
+  KDateTime end( dtEnd() );
   if ( ! doesFloat() ) {
     end = end.addSecs( -1 );
   }
   bool multi = ( start.date() != end.date() && start <= end );
   return multi;
+}
+
+void Event::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
+{
+  Incidence::shiftTimes( oldSpec, newSpec );
+  if ( hasEndDate() ) {
+    mDtEnd = mDtEnd.toTimeSpec( oldSpec );
+    mDtEnd.setTimeSpec( newSpec );
+  }
 }
 
 void Event::setTransparency( Event::Transparency transparency )
@@ -147,4 +157,13 @@ void Event::setDuration( int seconds )
 {
   setHasEndDate( false );
   Incidence::setDuration( seconds );
+}
+
+// DEPRECATED methods
+void Event::setDtEnd(const QDateTime &dtEnd)
+{
+  if (dtStart().isValid())
+    setDtEnd(KDateTime(dtEnd, dtStart().timeSpec()));  // use start as best guess for time zone
+  else
+    setDtEnd(KDateTime(dtEnd));  // use local time zone
 }

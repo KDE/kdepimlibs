@@ -3,6 +3,7 @@
 
     Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+    Copyright (c) 2006 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -23,6 +24,9 @@
 #define KCAL_ICALFORMATIMPL_H
 
 #include <QString>
+#include <QList>
+
+#include <kdatetime.h>
 
 #include "scheduler.h"
 #include "freebusy.h"
@@ -36,6 +40,7 @@ extern "C" {
 namespace KCal {
 
 class Compat;
+class ICalTimeZones;
 
 /**
   @internal
@@ -51,13 +56,13 @@ class ICalFormatImpl
 
     bool populate( Calendar *, icalcomponent *fs);
 
-    icalcomponent *writeIncidence(IncidenceBase *incidence, Scheduler::Method method = Scheduler::Request );
-    icalcomponent *writeTodo(Todo *todo);
-    icalcomponent *writeEvent(Event *event);
+    icalcomponent *writeIncidence(IncidenceBase *incidence, Scheduler::Method method = Scheduler::Request);
+    icalcomponent *writeTodo(Todo *todo, ICalTimeZones *tzlist = 0);
+    icalcomponent *writeEvent(Event *event, ICalTimeZones *tzlist = 0);
     icalcomponent *writeFreeBusy(FreeBusy *freebusy,
                                  Scheduler::Method method = Scheduler::Publish );
-    icalcomponent *writeJournal(Journal *journal);
-    void writeIncidence(icalcomponent *parent,Incidence *incidence);
+    icalcomponent *writeJournal(Journal *journal, ICalTimeZones *tzlist = 0);
+    void writeIncidence(icalcomponent *parent, Incidence *incidence, ICalTimeZones *tzlist = 0);
     icalproperty *writeAttendee(Attendee *attendee);
     icalproperty *writeOrganizer( const Person &organizer );
     icalproperty *writeAttachment(Attachment *attach);
@@ -66,14 +71,18 @@ class ICalFormatImpl
     icalcomponent *writeAlarm(Alarm *alarm);
 
     QString extractErrorProperty(icalcomponent *);
-    Todo *readTodo(icalcomponent *vtodo);
-    Event *readEvent(icalcomponent *vevent, icalcomponent *vtimezone);
+    Todo *readTodo(icalcomponent *vtodo, ICalTimeZones *tzlist);
+    KDE_DEPRECATED Todo *readTodo(icalcomponent *vtodo);
+    Event *readEvent(icalcomponent *vevent, ICalTimeZones *tzlist);
+    KDE_DEPRECATED Event *readEvent(icalcomponent *vevent, icalcomponent *vtimezone);
     FreeBusy *readFreeBusy(icalcomponent *vfreebusy);
-    Journal *readJournal(icalcomponent *vjournal);
+    Journal *readJournal(icalcomponent *vjournal, ICalTimeZones *tzlist);
+    KDE_DEPRECATED Journal *readJournal(icalcomponent *vjournal);
     Attendee *readAttendee(icalproperty *attendee);
     Person readOrganizer( icalproperty *organizer );
     Attachment *readAttachment(icalproperty *attach);
-    void readIncidence(icalcomponent *parent, icaltimezone *timezone, Incidence *incidence);
+    void readIncidence(icalcomponent *parent, Incidence *incidence, ICalTimeZones *tzlist);
+    KDE_DEPRECATED void readIncidence(icalcomponent *parent, icaltimezone *timezone, Incidence *incidence);
     void readRecurrenceRule(icalproperty *rrule,Incidence *event );
     void readExceptionRule( icalproperty *rrule, Incidence *incidence );
     void readRecurrence( const struct icalrecurrencetype &r, RecurrenceRule* recur );
@@ -83,12 +92,31 @@ class ICalFormatImpl
 
     static icaltimetype writeICalDate(const QDate &);
     static QDate readICalDate(icaltimetype);
-    icaltimetype writeICalDateTime(const QDateTime &);
-    QDateTime readICalDateTime( icaltimetype&, icaltimezone* tz = 0 );
+    static icaltimetype writeICalDateTime(const KDateTime &, ICalTimeZones *tzlist = 0);
+    static icaltimetype writeICalUtcDateTime(const KDateTime & );
+
+    /** Convert a date/time from ICal format.
+     *  If the property @p p specifies a time zone using the TZID parameter, a match is
+     *  searched for in @p tzs. If no match is found, the time zone is added to @p tzs.
+     *
+     *  @param p   property from which @p t has been obtained
+     *  @param t   ICal format date/time
+     *  @param tzs time zones collection
+     *  @return date/time, or invalid if @p t is not UTC
+     */
+    static KDateTime readICalDateTime(icalproperty *p, const icaltimetype &t, ICalTimeZones *tzlist);
+
+    /** Convert a UTC date/time from ICal format.
+     *  If @p t is not a UTC date/time, it is treated as invalid.
+     *
+     *  @param t ICal format date/time
+     *  @return date/time, or invalid if @p t is not UTC
+     */
+    static KDateTime readICalUtcDateTime( icaltimetype &t );
     static icaldurationtype writeICalDuration(int seconds);
     static int readICalDuration(icaldurationtype);
     static icaldatetimeperiodtype writeICalDatePeriod( const QDate &date );
-    icaldatetimeperiodtype writeICalDateTimePeriod( const QDateTime &date );
+    static icaldatetimeperiodtype writeICalDateTimePeriod( const KDateTime &date, ICalTimeZones *tzlist = 0 );
 
     icalcomponent *createCalendarComponent(Calendar * = 0);
     icalcomponent *createScheduleComponent(IncidenceBase *,Scheduler::Method);

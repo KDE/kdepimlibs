@@ -23,7 +23,6 @@
 #include <typeinfo>
 #include <stdlib.h>
 
-#include <QDateTime>
 #include <QString>
 
 #include <kdebug.h>
@@ -52,7 +51,7 @@ using namespace KCal;
 class KCal::ResourceLocal::Private
 {
   public:
-    QDateTime mLastModified;
+    KDateTime mLastModified;
 };
 
 ResourceLocal::ResourceLocal( const KConfig* config )
@@ -133,10 +132,10 @@ ResourceLocal::~ResourceLocal()
   delete d;
 }
 
-QDateTime ResourceLocal::readLastModified()
+KDateTime ResourceLocal::readLastModified()
 {
   QFileInfo fi( mURL.path() );
-  return fi.lastModified();
+  return KDateTime( fi.lastModified() );  // use local time zone
 }
 
 bool ResourceLocal::doLoad( bool )

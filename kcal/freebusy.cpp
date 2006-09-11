@@ -20,11 +20,11 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QList>
-
 #include <kdebug.h>
 
 #include "freebusy.h"
+//Added by qt3to4:
+#include <QList>
 
 using namespace KCal;
 
@@ -32,13 +32,13 @@ FreeBusy::FreeBusy()
 {
 }
 
-FreeBusy::FreeBusy(const QDateTime &start, const QDateTime &end)
+FreeBusy::FreeBusy(const KDateTime &start, const KDateTime &end)
 {
   setDtStart(start);
   setDtEnd(end);
 }
 
-FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime &end )
+FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start, const KDateTime &end )
 {
   kDebug(5800) << "FreeBusy::FreeBusy" << endl;
   mCalendar = calendar;
@@ -52,8 +52,8 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
   int extraDays, i, x, duration;
   duration = start.daysTo(end);
   QDate day;
-  QDateTime tmpStart;
-  QDateTime tmpEnd;
+  KDateTime tmpStart;
+  KDateTime tmpEnd;
   // Loops through every event in the calendar
   Event::List::ConstIterator it;
   for( it = eventList.begin(); it != eventList.end(); ++it ) {
@@ -70,13 +70,15 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
       floatingEvent = new Event( *event );
 
       // Set the start and end times to be on midnight
-      QDateTime start( floatingEvent->dtStart().date(), QTime( 0, 0 ) );
-      QDateTime end( floatingEvent->dtEnd().date(), QTime( 23, 59, 59, 999 ) );
+      KDateTime st = floatingEvent->dtStart();
+      st.setTime( QTime( 0, 0 ) );
+      KDateTime nd = floatingEvent->dtEnd();
+      nd.setTime( QTime( 23, 59, 59, 999 ) );
       floatingEvent->setFloats( false );
-      floatingEvent->setDtStart( start );
-      floatingEvent->setDtEnd( end );
+      floatingEvent->setDtStart( st );
+      floatingEvent->setDtEnd( nd );
 
-      kDebug(5800) << "Use: " << start.toString() << " to " << end.toString()
+      kDebug(5800) << "Use: " << st.toString() << " to " << nd.toString()
                     << endl;
       // Finally, use this event for the setting below
       event = floatingEvent;
@@ -92,7 +94,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
       continue;
 
     for( i = 0; i <= duration; ++i ) {
-      day=(start.addDays(i).date());
+      day=start.addDays(i).date();
       tmpStart.setDate(day);
       tmpEnd.setDate(day);
 
@@ -100,9 +102,9 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
         if ( event->isMultiDay() ) {
 // FIXME: This doesn't work for sub-daily recurrences or recurrences with
 //        a different time than the original event.
-          extraDays = event->dtStart().date().daysTo(event->dtEnd().date());
+          extraDays = event->dtStart().daysTo(event->dtEnd());
           for ( x = 0; x <= extraDays; ++x ) {
-            if ( event->recursOn(day.addDays(-x))) {
+            if ( event->recursOn(day.addDays(-x), start.timeSpec()) ) {
               tmpStart.setDate(day.addDays(-x));
               tmpStart.setTime(event->dtStart().time());
               tmpEnd=tmpStart.addSecs( (event->duration()) );
@@ -112,7 +114,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
             }
           }
         } else {
-          if (event->recursOn(day)) {
+          if (event->recursOn(day, start.timeSpec())) {
             tmpStart.setTime(event->dtStart().time());
             tmpEnd.setTime(event->dtEnd().time());
 
@@ -136,13 +138,19 @@ FreeBusy::~FreeBusy()
 {
 }
 
-bool FreeBusy::setDtEnd( const QDateTime &end )
+void FreeBusy::setDtStart(const KDateTime &dtStart)
+{
+  IncidenceBase::setDtStart( dtStart.toUtc() );
+  updated();
+}
+
+bool FreeBusy::setDtEnd( const KDateTime &end )
 {
   mDtEnd = end;
   return true;
 }
 
-QDateTime FreeBusy::dtEnd() const
+KDateTime FreeBusy::dtEnd() const
 {
   return mDtEnd;
 }
@@ -152,9 +160,9 @@ PeriodList FreeBusy::busyPeriods() const
   return mBusyPeriods;
 }
 
-bool FreeBusy::addLocalPeriod(const QDateTime &eventStart, const QDateTime &eventEnd ) {
-  QDateTime tmpStart;
-  QDateTime tmpEnd;
+bool FreeBusy::addLocalPeriod(const KDateTime &eventStart, const KDateTime &eventEnd ) {
+  KDateTime tmpStart;
+  KDateTime tmpEnd;
 
   //Check to see if the start *or* end of the event is
   //between the start and end of the freebusy dates.
@@ -199,13 +207,13 @@ void FreeBusy::addPeriods(const PeriodList &list )
   sortList();
 }
 
-void FreeBusy::addPeriod(const QDateTime &start, const QDateTime &end)
+void FreeBusy::addPeriod(const KDateTime &start, const KDateTime &end)
 {
   mBusyPeriods.append( Period(start, end) );
   sortList();
 }
 
-void FreeBusy::addPeriod( const QDateTime &start, const Duration &dur )
+void FreeBusy::addPeriod( const KDateTime &start, const Duration &dur )
 {
   mBusyPeriods.append( Period(start, dur) );
   sortList();
@@ -223,4 +231,162 @@ void FreeBusy::merge( FreeBusy *freeBusy )
   QList<Period>::ConstIterator it;
   for ( it = periods.begin(); it != periods.end(); ++it )
     addPeriod( (*it).start(), (*it).end() );
+}
+
+// DEPRECATED methods
+#include "icaltimezones.h"
+FreeBusy::FreeBusy(const QDateTime &start, const QDateTime &end)
+{
+  setDtStart(KDateTime(start));  // use local time zone
+  setDtEnd(KDateTime(end));
+}
+
+FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime &end )
+{
+  kDebug(5800) << "FreeBusy::FreeBusy" << endl;
+  mCalendar = calendar;
+
+  setDtStart(KDateTime(start, mCalendar->timeSpec()));
+  setDtEnd(KDateTime(end, mCalendar->timeSpec()));
+
+  // Get all the events in the calendar
+  Event::List eventList = mCalendar->rawEvents( start.date(), end.date() );
+
+  int extraDays, i, x, duration;
+  duration = start.daysTo(end);
+  QDate day;
+  KDateTime tmpStart;
+  KDateTime tmpEnd;
+  // Loops through every event in the calendar
+  Event::List::ConstIterator it;
+  for( it = eventList.begin(); it != eventList.end(); ++it ) {
+    Event *event = *it;
+
+    // The code below can not handle floating events. Fixing this resulted
+    // in a lot of duplicated code. Instead, make a copy of the event and
+    // set the period to the full day(s). This trick works for recurring,
+    // multiday, and single day floating events.
+    Event *floatingEvent = 0;
+    if ( event->doesFloat() ) {
+      // Floating event. Do the hack
+      kDebug(5800) << "Floating event\n";
+      floatingEvent = new Event( *event );
+
+      // Set the start and end times to be on midnight
+      KDateTime st = floatingEvent->dtStart();
+      st.setTime( QTime( 0, 0 ) );
+      KDateTime nd = floatingEvent->dtEnd();
+      nd.setTime( QTime( 23, 59, 59, 999 ) );
+      floatingEvent->setFloats( false );
+      floatingEvent->setDtStart( st );
+      floatingEvent->setDtEnd( nd );
+
+      kDebug(5800) << "Use: " << st.toString() << " to " << nd.toString()
+                    << endl;
+      // Finally, use this event for the setting below
+      event = floatingEvent;
+    }
+
+    // This whole for loop is for recurring events, it loops through
+    // each of the days of the freebusy request
+
+    // First check if this is transparent. If it is, it shouldn't be in the
+    // freebusy list
+    if ( event->transparency() == Event::Transparent )
+      // Transparent
+      continue;
+
+    for( i = 0; i <= duration; ++i ) {
+      day=start.addDays(i).date();
+      tmpStart.setDate(day);
+      tmpEnd.setDate(day);
+
+      if( event->doesRecur() ) {
+        if ( event->isMultiDay() ) {
+// FIXME: This doesn't work for sub-daily recurrences or recurrences with
+//        a different time than the original event.
+          extraDays = event->dtStart().daysTo(event->dtEnd());
+          for ( x = 0; x <= extraDays; ++x ) {
+            if ( event->recursOn(day.addDays(-x), mCalendar->timeSpec())) {
+              tmpStart.setDate(day.addDays(-x));
+              tmpStart.setTime(event->dtStart().time());
+              tmpEnd=tmpStart.addSecs( (event->duration()) );
+
+              addLocalPeriod( tmpStart, tmpEnd );
+              break;
+            }
+          }
+        } else {
+          if (event->recursOn(day, mCalendar->timeSpec())) {
+            tmpStart.setTime(event->dtStart().time());
+            tmpEnd.setTime(event->dtEnd().time());
+
+            addLocalPeriod (tmpStart, tmpEnd);
+          }
+        }
+      }
+
+    }
+    // Non-recurring events
+    addLocalPeriod(event->dtStart(), event->dtEnd());
+
+    // Clean up
+    delete floatingEvent;
+  }
+
+  sortList();
+}
+
+void FreeBusy::setDtStart( const QDateTime &dtStart )
+{
+  if (mCalendar)
+    setDtStart(KDateTime(dtStart, mCalendar->timeSpec()));
+  else
+    setDtStart(KDateTime(dtStart));  // use local time zone
+}
+bool FreeBusy::setDtEnd( const QDateTime &end )
+{
+  if (dtStart().isValid())
+    return setDtEnd(KDateTime(end, dtStart().timeSpec()));
+  else if (mCalendar)
+    return setDtEnd(KDateTime(end, mCalendar->timeSpec()));
+  else
+    return setDtEnd(KDateTime(end));  // use local time zone
+}
+
+void FreeBusy::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
+{
+  IncidenceBase::shiftTimes( oldSpec, newSpec );
+  mDtEnd = mDtEnd.toTimeSpec( oldSpec );
+  mDtEnd.setTimeSpec( newSpec );
+  for ( int i = 0, end = mBusyPeriods.count();  i < end;  ++end)
+    mBusyPeriods[i].shiftTimes( oldSpec, newSpec );
+}
+
+void FreeBusy::addPeriod( const QDateTime &start, const QDateTime &end )
+{
+  if (dtStart().isValid())
+    addPeriod(KDateTime(start, dtStart().timeSpec()), KDateTime(end, dtStart().timeSpec()));
+  else if (mCalendar)
+    addPeriod(KDateTime(start, mCalendar->timeSpec()), KDateTime(end, mCalendar->timeSpec()));
+  else
+    addPeriod(KDateTime(start), KDateTime(end));  // use local time zone
+}
+void FreeBusy::addPeriod( const QDateTime &start, const Duration &dur )
+{
+  if (dtStart().isValid())
+    addPeriod(KDateTime(start, dtStart().timeSpec()), dur);
+  else if (mCalendar)
+    addPeriod(KDateTime(start, mCalendar->timeSpec()), dur);
+  else
+    addPeriod(KDateTime(start), dur);  // use local time zone
+}
+bool FreeBusy::addLocalPeriod( const QDateTime &start, const QDateTime &end )
+{
+  if (dtStart().isValid())
+    return addLocalPeriod(KDateTime(start, dtStart().timeSpec()), KDateTime(end, dtStart().timeSpec()));
+  else if (mCalendar)
+    return addLocalPeriod(KDateTime(start, mCalendar->timeSpec()), KDateTime(end, mCalendar->timeSpec()));
+  else
+    return addLocalPeriod(KDateTime(start), KDateTime(end));
 }

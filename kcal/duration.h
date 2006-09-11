@@ -21,9 +21,11 @@
 #ifndef KCAL_DURATION_H
 #define KCAL_DURATION_H
 
-#include <QDateTime>
-
 #include "kcal.h"
+
+class KDateTime;
+//TODO: remove following declaration
+class QDateTime;
 
 namespace KCal {
 
@@ -34,10 +36,12 @@ class KCAL_EXPORT Duration
 {
   public:
     Duration();
-    Duration( const QDateTime &start, const QDateTime &end );
+    Duration( const KDateTime &start, const KDateTime &end );
+    KDE_DEPRECATED Duration( const QDateTime &start, const QDateTime &end );
     Duration( int seconds ); //not explicit
 
-    QDateTime end( const QDateTime &start ) const;
+    KDateTime end( const KDateTime &start ) const;
+    KDE_DEPRECATED QDateTime end( const QDateTime &start ) const;
 
     int asSeconds() const;
 

@@ -37,8 +37,8 @@ using namespace KCal;
 class KCal::Period::Private
 {
   public:
-    QDateTime mStart;  // period starting date/time
-    QDateTime mEnd;    // period ending date/time
+    KDateTime mStart;  // period starting date/time
+    KDateTime mEnd;    // period ending date/time
     bool mHasDuration; // does period have a duration?
 };
 //@endcond
@@ -48,7 +48,7 @@ Period::Period() : d( new KCal::Period::Private )
   d->mHasDuration = false;
 }
 
-Period::Period( const QDateTime &start, const QDateTime &end )
+Period::Period( const KDateTime &start, const KDateTime &end )
   : d( new KCal::Period::Private )
 {
   d->mStart = start;
@@ -56,7 +56,7 @@ Period::Period( const QDateTime &start, const QDateTime &end )
   d->mHasDuration = false;
 }
 
-Period::Period( const QDateTime &start, const Duration &duration )
+Period::Period( const KDateTime &start, const Duration &duration )
   : d( new KCal::Period::Private )
 {
   d->mStart = start;
@@ -96,12 +96,12 @@ Period &Period::operator=( const Period &other )
   return *this;
 }
 
-QDateTime Period::start() const
+KDateTime Period::start() const
 {
   return d->mStart;
 }
 
-QDateTime Period::end() const
+KDateTime Period::end() const
 {
   return d->mEnd;
 }
@@ -116,3 +116,29 @@ bool Period::hasDuration() const
   return d->mHasDuration;
 }
 
+void Period::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
+{
+  d->mStart = d->mStart.toTimeSpec( oldSpec );
+  d->mStart.setTimeSpec( newSpec );
+  d->mEnd = d->mEnd.toTimeSpec( oldSpec );
+  d->mEnd.setTimeSpec( newSpec );
+}
+
+// DEPRECATED methods
+Period::Period( const QDateTime &start, const QDateTime &end )
+  : d( new KCal::Period::Private )
+{
+  // Use local time zone
+  d->mStart = KDateTime(start);
+  d->mEnd = KDateTime(end);
+  d->mHasDuration = false;
+}
+
+Period::Period( const QDateTime &start, const Duration &duration )
+  : d( new KCal::Period::Private )
+{
+  // Use local time zone
+  d->mStart = KDateTime(start);
+  d->mEnd = KDateTime(duration.end( start ));
+  d->mHasDuration = true;
+}

@@ -71,7 +71,7 @@ Scheduler::Scheduler(Calendar *calendar)
 {
   mCalendar = calendar;
   mFormat = new ICalFormat();
-  mFormat->setTimeZone( calendar->timeZoneId(), !calendar->isLocalTime() );
+  mFormat->setTimeSpec( calendar->timeSpec() );
 
   d = new Private;
 }

@@ -22,8 +22,6 @@
 #ifndef KCAL_FREEBUSY_H
 #define KCAL_FREEBUSY_H
 
-#include <QDateTime>
-
 #include <QByteArray>
 #include <QList>
 
@@ -42,8 +40,11 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
 {
   public:
     FreeBusy();
-    FreeBusy( const QDateTime &start, const QDateTime &end );
-    FreeBusy( Calendar *calendar, const QDateTime &start,
+    FreeBusy( const KDateTime &start, const KDateTime &end );
+    KDE_DEPRECATED FreeBusy( const QDateTime &start, const QDateTime &end );
+    FreeBusy( Calendar *calendar, const KDateTime &start,
+              const KDateTime &end );
+    KDE_DEPRECATED FreeBusy( Calendar *calendar, const QDateTime &start,
               const QDateTime &end );
     explicit FreeBusy( const PeriodList & busyPeriods );
 
@@ -51,14 +52,25 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
 
     QByteArray type() const { return "FreeBusy"; }
 
-    virtual QDateTime dtEnd() const;
-    bool setDtEnd( const QDateTime &end );
+    virtual void setDtStart( const KDateTime &dtStart );
+    virtual KDE_DEPRECATED void setDtStart( const QDateTime &dtStart );
+    virtual KDateTime dtEnd() const;
+    bool setDtEnd( const KDateTime &end );
+    KDE_DEPRECATED bool setDtEnd( const QDateTime &end );
+
+    /**
+      @copydoc
+      IncidenceBase::shiftTimes()
+    */
+    virtual void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
 
     PeriodList busyPeriods() const;
 
     /** Adds a period to the freebusy list and sorts the list.  */
-    void addPeriod( const QDateTime &start, const QDateTime &end );
-    void addPeriod( const QDateTime &start, const Duration &dur );
+    void addPeriod( const KDateTime &start, const KDateTime &end );
+    KDE_DEPRECATED void addPeriod( const QDateTime &start, const QDateTime &end );
+    void addPeriod( const KDateTime &start, const Duration &dur );
+    KDE_DEPRECATED void addPeriod( const QDateTime &start, const Duration &dur );
     /** Adds a list of periods to the freebusy object and then sorts
      * that list. Use this if you are adding many items, instead of the
      * addPeriod method, to avoid sorting repeatedly.  */
@@ -70,9 +82,10 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
   private:
     bool accept( Visitor &v ) { return v.visit( this ); }
     //This is used for creating a freebusy object for the current user
-    bool addLocalPeriod( const QDateTime &start, const QDateTime &end );
+    bool addLocalPeriod( const KDateTime &start, const KDateTime &end );
+    KDE_DEPRECATED bool addLocalPeriod( const QDateTime &start, const QDateTime &end );
 
-    QDateTime mDtEnd;
+    KDateTime mDtEnd;
     PeriodList mBusyPeriods;
     Calendar *mCalendar;
 

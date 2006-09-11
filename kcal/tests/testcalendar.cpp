@@ -33,7 +33,8 @@ void CalendarTest::testValidity() {
   CalendarLocal cal( QLatin1String("UTC") );
   cal.setProductId( QLatin1String( "fredware calendar" ) );
   QVERIFY( cal.productId() == QLatin1String( "fredware calendar" ) );
-  QVERIFY( cal.timeZoneId() == QLatin1String( "UTC" ) );
+  QVERIFY( cal.timeSpec().type() == KDateTime::UTC );
+  QVERIFY( cal.timeSpec().timeZone()->name() == QLatin1String( "UTC" ) );
   cal.close();
 }
 

@@ -40,6 +40,7 @@ extern "C" {
 #include "calendar.h"
 #include "calendarlocal.h"
 #include "journal.h"
+#include "icaltimezones.h"
 
 #include "icalformat.h"
 #include "icalformatimpl.h"
@@ -55,8 +56,7 @@ ICalFormat::ICalFormat() : mImpl(0)
 {
   setImplementation( new ICalFormatImpl( this ) );
 
-  mTimeZoneId = "UTC";
-  mUtc = true;
+  mTimeSpec = KDateTime::UTC;
 }
 
 ICalFormat::~ICalFormat()
@@ -140,8 +140,6 @@ bool ICalFormat::fromString( Calendar *cal, const QString &text )
 
 bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &text )
 {
-  setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
-
   // Get first VCALENDAR component.
   // TODO: Handle more than one VCALENDAR or non-VCALENDAR top components
   icalcomponent *calendar;
@@ -160,7 +158,7 @@ bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &text )
   if (icalcomponent_isa(calendar) == ICAL_XROOT_COMPONENT) {
     icalcomponent *comp;
     for ( comp = icalcomponent_get_first_component(calendar, ICAL_VCALENDAR_COMPONENT);
-          comp != 0; comp = icalcomponent_get_next_component(calendar, ICAL_VCALENDAR_COMPONENT) ) {
+          comp; comp = icalcomponent_get_next_component(calendar, ICAL_VCALENDAR_COMPONENT) ) {
       // put all objects into their proper places
       if ( !mImpl->populate( cal, comp ) ) {
         kDebug(5800) << "ICalFormat::load(): Could not populate calendar" << endl;
@@ -195,7 +193,7 @@ bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &text )
 
 Incidence *ICalFormat::fromString( const QString &text )
 {
-  CalendarLocal cal( mTimeZoneId );
+  CalendarLocal cal( mTimeSpec );
   fromString(&cal, text);
 
   Incidence *ical = 0;
@@ -219,11 +217,11 @@ Incidence *ICalFormat::fromString( const QString &text )
 
 QString ICalFormat::toString( Calendar *cal )
 {
-  setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
-
   icalcomponent *calendar = mImpl->createCalendarComponent(cal);
 
   icalcomponent *component;
+
+  ICalTimeZones *tzlist = cal->timeZones();
 
   // todos
   Todo::List todoList = cal->rawTodos();
@@ -231,7 +229,7 @@ QString ICalFormat::toString( Calendar *cal )
   for( it = todoList.begin(); it != todoList.end(); ++it ) {
 //    kDebug(5800) << "ICalFormat::toString() write todo "
 //                  << (*it)->uid() << endl;
-    component = mImpl->writeTodo( *it );
+    component = mImpl->writeTodo( *it, tzlist );
     icalcomponent_add_component( calendar, component );
   }
 
@@ -244,7 +242,7 @@ QString ICalFormat::toString( Calendar *cal )
     {
       // kDebug(5800) << "ICalFormat::toString() write event "
       //             << (*it2)->uid() << endl;
-      component = mImpl->writeEvent( *it2 );
+      component = mImpl->writeEvent( *it2, tzlist );
       icalcomponent_add_component( calendar, component );
     }
   }
@@ -255,7 +253,14 @@ QString ICalFormat::toString( Calendar *cal )
   for( it3 = journals.begin(); it3 != journals.end(); ++it3 ) {
     kDebug(5800) << "ICalFormat::toString() write journal "
                   << (*it3)->uid() << endl;
-    component = mImpl->writeJournal( *it3 );
+    component = mImpl->writeJournal( *it3, tzlist );
+    icalcomponent_add_component( calendar, component );
+  }
+
+  // time zones
+  const ICalTimeZones::ZoneMap zones = tzlist->zones();
+  for ( ICalTimeZones::ZoneMap::ConstIterator it = zones.begin();  it != zones.end();  ++it) {
+    component = icaltimezone_get_component( (*it)->icalTimezone() );
     icalcomponent_add_component( calendar, component );
   }
 
@@ -275,7 +280,7 @@ QString ICalFormat::toString( Calendar *cal )
 
 QString ICalFormat::toICalString( Incidence *incidence )
 {
-  CalendarLocal cal( mTimeZoneId );
+  CalendarLocal cal( mTimeSpec );
   cal.addIncidence( incidence->clone() );
   return toString( &cal );
 }
@@ -391,7 +396,7 @@ FreeBusy *ICalFormat::parseFreeBusy( const QString &str )
 ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
                                                    const QString &messageText )
 {
-  setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
+  setTimeSpec( cal->timeSpec() );
   clearException();
 
   if (messageText.isEmpty())
@@ -417,26 +422,30 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
     return 0;
   }
 
+  // Populate the message's time zone collection with all VTIMEZONE components
+  ICalTimeZones tzlist;
+  ICalTimeZoneSource tzs;
+  tzs.parse(message, tzlist);
+
   icalcomponent *c;
 
   IncidenceBase *incidence = 0;
   c = icalcomponent_get_first_component(message,ICAL_VEVENT_COMPONENT);
   if (c) {
-    icalcomponent *ctz = icalcomponent_get_first_component(message,ICAL_VTIMEZONE_COMPONENT);
-    incidence = mImpl->readEvent(c, ctz);
+    incidence = mImpl->readEvent(c, &tzlist);
   }
 
   if (!incidence) {
     c = icalcomponent_get_first_component(message,ICAL_VTODO_COMPONENT);
     if (c) {
-      incidence = mImpl->readTodo(c);
+      incidence = mImpl->readTodo(c, &tzlist);
     }
   }
 
   if (!incidence) {
     c = icalcomponent_get_first_component(message,ICAL_VJOURNAL_COMPONENT);
     if (c) {
-      incidence = mImpl->readJournal(c);
+      incidence = mImpl->readJournal(c, &tzlist);
     }
   }
 
@@ -563,18 +572,18 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   return new ScheduleMessage(incidence,method,status);
 }
 
-void ICalFormat::setTimeZone( const QString &id, bool utc )
+void ICalFormat::setTimeSpec( const KDateTime::Spec &timeSpec )
 {
-  mTimeZoneId = id;
-  mUtc = utc;
+  mTimeSpec = timeSpec;
+}
+
+KDateTime::Spec ICalFormat::timeSpec() const
+{
+  return mTimeSpec;
 }
 
 QString ICalFormat::timeZoneId() const
 {
-  return mTimeZoneId;
-}
-
-bool ICalFormat::utc() const
-{
-  return mUtc;
+  const KTimeZone *tz = mTimeSpec.timeZone();
+  return tz ? tz->name() : QString();
 }

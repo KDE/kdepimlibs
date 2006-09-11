@@ -3,7 +3,7 @@
 
     Copyright (c) 1998 Preston Brown <pbrown@kde.org>
     Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2002,2006 David Jarvie <software@astrojar.org.uk>
     Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
@@ -27,6 +27,8 @@
 #include <QString>
 #include <QBitArray>
 #include <QList>
+
+#include <kdatetime.h>
 
 #include "kcal.h"
 #include "recurrencerule.h"
@@ -111,17 +113,18 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
 
     /** Return the start date/time of the recurrence (Time for floating recurrences will be 0:00).
      @return the current start/time of the recurrence. */
-    QDateTime startDateTime() const;
+    KDateTime startDateTime() const;
     /** Return the start date/time of the recurrence */
     QDate startDate() const   { return mStartDateTime.date(); }
     /** Set start of recurrence, as a date and time. Also sets the recurrence to non-floating.
        @param start the new start date/time of the recurrence.
     */
-    void setStartDateTime( const QDateTime &start );
+    void setStartDateTime( const KDateTime &start );
+    KDE_DEPRECATED void setStartDateTime( const QDateTime &start )  { setStartDateTime(KDateTime(start)); }  // use local time zone
     /** Set start of recurrence, as a date. Also sets the recurrence to floating.
        @param start The new start date of the recurrence.
     */
-    void setStartDate( const QDate &start );
+    KDE_DEPRECATED void setStartDate( const QDate &start );
 
     /** Set whether the recurrence has no time, just a date.
      * Floating means -- according to rfc2445 -- that the event has no time
@@ -150,10 +153,11 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     static ushort recurrenceType( const RecurrenceRule *rrule );
     /** Returns true if the date specified is one on which the event will
      * recur. */
-    bool recursOn( const QDate &qd ) const;
+    bool recursOn( const QDate &qd, const KDateTime::Spec &timeSpec = KDateTime::LocalZone ) const;
     /** Returns true if the date/time specified is one at which the event will
      * recur. Times are rounded down to the nearest minute to determine the result. */
-    bool recursAt( const QDateTime & ) const;
+    bool recursAt( const KDateTime & ) const;
+    KDE_DEPRECATED bool recursAt( const QDateTime &dt ) const;
     /** Removes all recurrence rules. Recurrence dates and exceptions are
         not removed. */
     void unsetRecurs();
@@ -164,21 +168,39 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * recurrence will occur.
      * @param date the date for which to find the recurrence times.
      */
-    TimeList recurTimesOn(const QDate &date) const;
+    TimeList recurTimesOn(const QDate &date, const KDateTime::Spec &timeSpec = KDateTime::LocalZone) const;
+
+    /** Returns a list of all the times at which the recurrence will occur
+     * between two specified times.
+     *
+     * There is a (large) maximum limit to the number of times returned. If due to
+     * this limit the list is incomplete, this is indicated by the last entry being
+     * set to an invalid KDateTime value. If you need further values, call the
+     * method again with a start time set to just after the last valid time returned.
+     *
+     * @param start inclusive start of interval
+     * @param end inclusive end of interval
+     * @return list of date/time values
+     */
+    DateTimeList timesInInterval( const KDateTime &start, const KDateTime &end ) const;
 
     /** Returns the date and time of the next recurrence, after the specified date/time.
      * If the recurrence has no time, the next date after the specified date is returned.
      * @param preDateTime the date/time after which to find the recurrence.
-     * @return date/time of next recurrence (strictly later than the given QDateTiem), or invalid date if none.
+     * @return date/time of next recurrence (strictly later than the given KDateTime), or invalid date if none.
      */
-    QDateTime getNextDateTime( const QDateTime& preDateTime ) const;
+    KDateTime getNextDateTime( const KDateTime& preDateTime ) const;
+    KDE_DEPRECATED QDateTime getNextDateTime( const QDateTime& preDateTime ) const;
+
     /** Returns the date and time of the last previous recurrence, before the specified date/time.
      * If a time later than 00:00:00 is specified and the recurrence has no time, 00:00:00 on
      * the specified date is returned if that date recurs.
+     *
      * @param afterDateTime the date/time before which to find the recurrence.
-     * @return date/time of previous recurrence (strictly earlier than the given QDateTime), or invalid date if none.
+     * @return date/time of previous recurrence (strictly earlier than the given KDateTime), or invalid date if none.
      */
-    QDateTime getPreviousDateTime( const QDateTime& afterDateTime ) const;
+    KDateTime getPreviousDateTime( const KDateTime& afterDateTime ) const;
+    KDE_DEPRECATED QDateTime getPreviousDateTime( const QDateTime& afterDateTime ) const;
 
     /** Returns frequency of recurrence, in terms of the recurrence time period type. */
     int frequency() const;
@@ -194,14 +216,15 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * first and last. */
     void setDuration(int duration);
     /** Returns the number of recurrences up to and including the date/time specified. */
-    int durationTo(const QDateTime &) const;
+    int durationTo(const KDateTime &dt) const;
+    KDE_DEPRECATED int durationTo(const QDateTime &dt) const;
     /** Returns the number of recurrences up to and including the date specified. */
-    int durationTo( const QDate &date ) const { return durationTo( QDateTime( date, QTime( 23, 59, 59 ) ) ); }
+    int durationTo( const QDate &date ) const;
 
     /** Returns the date/time of the last recurrence.
      * An invalid date is returned if the recurrence has no end.
      */
-    QDateTime endDateTime() const;
+    KDateTime endDateTime() const;
     /** Returns the date of the last recurrence.
      * An invalid date is returned if the recurrence has no end.
      */
@@ -212,8 +235,24 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     void setEndDate( const QDate &endDate );
     /** Sets the date and time of the last recurrence.
      * @param endDateTime the ending date/time after which to stop recurring. */
-    void setEndDateTime( const QDateTime &endDateTime );
+    void setEndDateTime( const KDateTime &endDateTime );
+    KDE_DEPRECATED void setEndDateTime( const QDateTime &endDateTime );
 
+    /**
+      Shift the times of the recurrence so that they appear at the same clock
+      time as before but in a new time zone. The shift is done from a viewing
+      time zone rather than from the actual recurrence time zone.
+
+      For example, shifting a recurrence whose start time is 09:00 America/New York,
+      using an old viewing time zone (@p oldSpec) of Europe/London, to a new time
+      zone (@p newSpec) of Europe/Paris, will result in the time being shifted
+      from 14:00 (which is the London time of the recurrence start) to 14:00 Paris
+      time.
+
+      @param oldSpec the time specification which provides the clock times
+      @param newSpec the new time specification
+    */
+    void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
 
 
     /** Sets an event to recur minutely. By default infinite recurrence is used.
@@ -451,7 +490,8 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     DateList rDates() const;
     void setRDateTimes( const DateTimeList &rdates);
     void setRDates( const DateList &rdates);
-    void addRDateTime( const QDateTime &rdate );
+    void addRDateTime( const KDateTime &rdate );
+    KDE_DEPRECATED void addRDateTime( const QDateTime &rdate );
     void addRDate( const QDate &rdate );
 
     // ExDATE
@@ -459,7 +499,8 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     DateList exDates() const;
     void setExDateTimes( const DateTimeList &exdates);
     void setExDates( const DateList &exdates);
-    void addExDateTime( const QDateTime &exdate );
+    void addExDateTime( const KDateTime &exdate );
+    KDE_DEPRECATED void addExDateTime( const QDateTime &exdate );
     void addExDate( const QDate &exdate );
 
     RecurrenceRule *defaultRRule( bool create = false ) const;
@@ -491,12 +532,12 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     RecurrenceRule::List mExRules;
     RecurrenceRule::List mRRules;
     DateTimeList mRDateTimes;
-    DateList mRDates;
+    DateList     mRDates;
     DateTimeList mExDateTimes;
-    DateList mExDates;
+    DateList     mExDates;
 
-    QDateTime mStartDateTime;            // date/time of first recurrence
-    bool mFloating;                      // the recurrence has no time, just a date
+    KDateTime mStartDateTime;    // date/time of first recurrence
+    bool mFloating;              // the recurrence has no time, just a date
     bool mRecurReadOnly;
 
     // Cache the type of the recurrence with the old system (e.g. MonthlyPos)

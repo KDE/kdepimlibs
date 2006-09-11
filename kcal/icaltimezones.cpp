@@ -724,23 +724,19 @@ QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool da
           ICalFormat icf;
           ICalFormatImpl impl(&icf);
           impl.readRecurrence(icalproperty_get_rrule(p), &r);
-//          r.setStartDt(klocalStart);
-          r.setStartDt(klocalStart.dateTime());
+          r.setStartDt(klocalStart);
           // The end date time specified in an RRULE should be in UTC.
-          // Convert to local time to avoid datesInInterval() getting things wrong.
+          // Convert to local time to avoid timesInInterval() getting things wrong.
           if (r.duration() == 0) {
             KDateTime end(r.endDt());
             if (end.timeSpec() == KDateTime::Spec::UTC) {
               end.setTimeSpec(KDateTime::Spec::ClockTime);
-//              r.setEndDt( end.addSecs(prevOffset) );
-              r.setEndDt( end.addSecs(prevOffset).dateTime() );
+              r.setEndDt( end.addSecs(prevOffset) );
             }
           }
-//          DateTimeList dts = r.datesInInterval(klocalStart, maxTime);
-          DateTimeList dts = r.datesInInterval(klocalStart.dateTime(), maxTime.dateTime());
+          DateTimeList dts = r.timesInInterval(klocalStart, maxTime);
           for ( int i = 0, end = dts.count();  i < end;  ++i) {
-//            QDateTime utc = dts[i].dateTime();
-            QDateTime utc = dts[i];
+            QDateTime utc = dts[i].dateTime();
             utc.setTimeSpec(Qt::UTC);
             transitions += utc.addSecs(-prevOffset);
           }

@@ -54,7 +54,8 @@ class KCAL_EXPORT Todo : public Incidence
       @param dtDue The due date/time.
       @param first Set the date of the first occurrence (if the todo is recurrent).
     */
-    void setDtDue(const QDateTime &dtDue, bool first = false);
+    void setDtDue(const KDateTime &dtDue, bool first = false);
+    KDE_DEPRECATED void setDtDue(const QDateTime &dtDue, bool first = false);
     /**
       Returns due date and time.
 
@@ -63,7 +64,7 @@ class KCAL_EXPORT Todo : public Incidence
       current occurrence will be returned. If non-recurrent, the normal due date
       will be returned.
     */
-    QDateTime dtDue( bool first = false ) const;
+    KDateTime dtDue( bool first = false ) const;
     /**
       Returns due time as string formatted according to the user's locale
       settings.
@@ -112,12 +113,13 @@ class KCAL_EXPORT Todo : public Incidence
       If false and the todo recurs, the relative start date will be returned,
       based on the date returned by dtRecurrence().
     */
-    QDateTime dtStart( bool first = false ) const;
+    KDateTime dtStart( bool first = false ) const;
 
     /**
       Sets the start date of the todo.
     */
-    void setDtStart( const QDateTime &dtStart );
+    void setDtStart( const KDateTime &dtStart );
+    KDE_DEPRECATED void setDtStart( const QDateTime &dtStart )  { setDtStart(KDateTime(dtStart)); }  // use local time zone
 
     /** Returns a todo's starting time as a string formatted according to the
      user's locale settings.
@@ -172,7 +174,7 @@ class KCAL_EXPORT Todo : public Incidence
     /**
       Returns date and time when todo was completed.
     */
-    QDateTime completed() const;
+    KDateTime completed() const;
     /**
       Returns string contaiting date and time when the todo was completed
       formatted according to the user's locale settings.
@@ -181,7 +183,8 @@ class KCAL_EXPORT Todo : public Incidence
     /**
       Set date and time of completion.
     */
-    void setCompleted( const QDateTime &completed );
+    void setCompleted( const KDateTime &completed );
+    KDE_DEPRECATED void setCompleted( const QDateTime &completed );
 
     /**
       Returns true, if todo has a date associated with completion, otherwise
@@ -190,14 +193,21 @@ class KCAL_EXPORT Todo : public Incidence
     bool hasCompletedDate() const;
 
     /**
+      @copydoc
+      IncidenceBase::shiftTimes()
+    */
+    virtual void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
+
+    /**
       Sets the due date/time of the current occurrence if recurrent.
     */
-    void setDtRecurrence( const QDateTime &dt );
+    void setDtRecurrence( const KDateTime &dt );
+    KDE_DEPRECATED void setDtRecurrence( const QDateTime &dt );
 
     /**
       Returns the due date/time of the current occurrence if recurrent.
     */
-    QDateTime dtRecurrence() const;
+    KDateTime dtRecurrence() const;
 
     /**
       Returns true if the date specified is one on which the todo will
@@ -205,7 +215,7 @@ class KCAL_EXPORT Todo : public Incidence
       check, which make it return false if there's an occurrence between
       the recur start and today.
     */
-    virtual bool recursOn( const QDate &date ) const;
+    virtual bool recursOn( const QDate &date, const KDateTime::Spec &timeSpec = KDateTime::LocalZone ) const;
 
     /**
       Returns true if this todo is overdue (e.g. due date is lower than today
@@ -215,21 +225,21 @@ class KCAL_EXPORT Todo : public Incidence
 
   protected:
     /** Return the end date/time of the base incidence. */
-    virtual QDateTime endDateRecurrenceBase() const { return dtDue(); }
+    virtual KDateTime endDateRecurrenceBase() const { return dtDue(); }
 
   private:
     bool accept(Visitor &v) { return v.visit( this ); }
     /** Returns true if the todo got a new date, else false will be returned. */
     bool recurTodo();
 
-    QDateTime mDtDue;                    // due date of todo
+    KDateTime mDtDue;                    // due date of todo
                                          // (first occurrence if recurrent)
-    QDateTime mDtRecurrence;             // due date of recurrence
+    KDateTime mDtRecurrence;             // due date of recurrence
 
     bool mHasDueDate;                    // if todo has associated due date
     bool mHasStartDate;                  // if todo has associated start date
 
-    QDateTime mCompleted;
+    KDateTime mCompleted;
     bool mHasCompletedDate;
 
     int mPercentComplete;

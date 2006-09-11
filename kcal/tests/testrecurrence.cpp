@@ -26,6 +26,7 @@
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kcmdlineargs.h>
+#include <kdatetime.h>
 
 #include <QFile>
 #include <QTextStream>
@@ -34,6 +35,7 @@
 
 using namespace KCal;
 
+static QString dumpTime( const KDateTime &dt );
 
 static const KCmdLineOptions options[] =
 {
@@ -91,15 +93,19 @@ int main( int argc, char **argv )
 
     incidence->recurrence()->dump();
 
-    QDateTime dt( incidence->dtStart().addSecs(-2) );
+    KDateTime dt;
+    if ( incidence->doesFloat() )
+      dt = incidence->dtStart().addDays(-1);
+    else
+      dt = incidence->dtStart().addSecs(-1);
     int i=0;
     if ( outstream ) {
       // Output to file for testing purposes
       while (dt.isValid() && i<500 ) {
         ++i;
-        dt = dt.addSecs( 1 );
         dt = incidence->recurrence()->getNextDateTime( dt );
-        (*outstream) << dt.toString( Qt::ISODate ) << endl;
+        if ( dt.isValid() )
+          (*outstream) << dumpTime(dt) << endl;
       }
     } else {
       incidence->recurrence()->dump();
@@ -108,8 +114,8 @@ int main( int argc, char **argv )
         ++i;
         kDebug(5800) << "-------------------------------------------" << endl;
         dt = incidence->recurrence()->getNextDateTime( dt );
-        kDebug(5800) << " *~*~*~*~ Next date is: " << dt << endl;
-        dt = dt.addSecs( 1 );
+        if ( dt.isValid() )
+          kDebug(5800) << " *~*~*~*~ Next date is: " << dumpTime(dt) << endl;
       }
     }
   }
@@ -117,4 +123,23 @@ int main( int argc, char **argv )
   delete outstream;
   outfile.close();
   return 0;
+}
+
+
+QString dumpTime( const KDateTime &dt )
+{
+  if ( !dt.isValid() )
+    return QString();
+  QString format;
+#ifdef FLOAT_IS_DATE_ONLY
+  if ( dt.isDateOnly() )
+    format = QLatin1String( "%Y-%m-%d" );
+  else
+#endif
+    format = QLatin1String( "%Y-%m-%dT%H:%M:%S" );
+  if ( dt.isSecondOccurrence() )
+    format += QLatin1String( " %Z" );
+  if ( dt.timeSpec() != KDateTime::ClockTime)
+    format += QLatin1String( " %:Z" );
+  return dt.toString( format );
 }

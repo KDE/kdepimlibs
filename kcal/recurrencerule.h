@@ -3,7 +3,7 @@
 
     Copyright (c) 1998 Preston Brown <pbrown@kde.org>
     Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2002,2006 David Jarvie <software@astrojar.org.uk>
     Copyright (c) 2005, Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
@@ -24,10 +24,10 @@
 #ifndef KCAL_RECURRENCERULE_H
 #define KCAL_RECURRENCERULE_H
 
-#include <QDateTime>
 #include <QList>
+#include <kdatetime.h>
 
-#include "listbase.h"
+#include "kcal/listbase.h"
 #include "kcal.h"
 
 template <class T>
@@ -54,8 +54,10 @@ template <class T>
 
 namespace KCal {
 
+//TODO: DEPRECATED: remove this declaration
+typedef QList<QDateTime> QDateTimeList;
 // These two are duplicates wrt. incidencebase.h
-typedef QList<QDateTime> DateTimeList;
+typedef QList<KDateTime> DateTimeList;
 typedef QList<QDate> DateList;
 /* List of times */
 typedef QList<QTime> TimeList;
@@ -131,10 +133,15 @@ class KCAL_EXPORT RecurrenceRule
     void setFrequency( int freq );
 
 
-    /** Return the start of the recurrence */
-    QDateTime startDt() const   { return mDateStart; }
-    /** Set start of recurrence, as a date and time. */
-    void setStartDt(const QDateTime &start);
+    /** Return the start of the recurrence.
+     *  Note that the recurrence does not necessarily occur on the start date/time. For
+     *  this to happen, it must actually match the rule. */
+    KDateTime startDt() const   { return mDateStart; }
+    /** Set start of recurrence, as a date and time.
+     *  Note that setting the start date/time does not make the recurrence occur on
+     *  that date/time, it simply sets a lower limit to when the recurrences take place. */
+    void setStartDt(const KDateTime &start);
+    KDE_DEPRECATED void setStartDt(const QDateTime &start)  { setStartDt(KDateTime(start)); }  // use local time zone
 
     /** Returns whether the start date has no time associated. Floating
         means -- according to rfc2445 -- that the event has no time associate. */
@@ -148,10 +155,11 @@ class KCAL_EXPORT RecurrenceRule
      * @param result if non-null, *result is updated to true if successful,
      * or false if there is no recurrence or its end date cannot be determined.
      */
-    QDateTime endDt( bool* result = 0 ) const;
+    KDateTime endDt( bool* result = 0 ) const;
     /** Sets the date and time of the last recurrence.
      * @param endDateTime the ending date/time after which to stop recurring. */
-    void setEndDt(const QDateTime &endDateTime);
+    void setEndDt(const KDateTime &endDateTime);
+    KDE_DEPRECATED void setEndDt(const QDateTime &endDateTime);
 
 
     /**
@@ -165,58 +173,79 @@ class KCAL_EXPORT RecurrenceRule
 //     /** Returns the number of recurrences up to and including the date specified. */
 //     int durationTo(const QDate &) const;
     /** Returns the number of recurrences up to and including the date/time specified. */
-    int durationTo(const QDateTime &) const;
+    int durationTo(const KDateTime &dt) const;
+    KDE_DEPRECATED int durationTo(const QDateTime &dt) const;
     /** Returns the number of recurrences up to and including the date specified. */
-    int durationTo( const QDate &date ) const { return durationTo( QDateTime( date, QTime( 23, 59, 59 ) ) ); }
+    int durationTo( const QDate &date ) const;
 
+
+    /**
+      Shift the times of the rule so that they appear at the same clock
+      time as before but in a new time zone. The shift is done from a viewing
+      time zone rather than from the actual rule time zone.
+
+      For example, shifting a rule whose start time is 09:00 America/New York,
+      using an old viewing time zone (@p oldSpec) of Europe/London, to a new time
+      zone (@p newSpec) of Europe/Paris, will result in the time being shifted
+      from 14:00 (which is the London time of the rule start) to 14:00 Paris
+      time.
+
+      @param oldSpec the time specification which provides the clock times
+      @param newSpec the new time specification
+    */
+    void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
 
 
     /** Returns true if the date specified is one on which the event will
      * recur. The start date returns true only if it actually matches the rule. */
-    bool recursOn( const QDate &qd ) const;
+    bool recursOn( const QDate &date, const KDateTime::Spec &timeSpec = KDateTime::LocalZone ) const;
     /** Returns true if the date/time specified is one at which the event will
      * recur. Times are rounded down to the nearest minute to determine the result.
      * The start date/time returns true only if it actually matches the rule. */
-    bool recursAt( const QDateTime & ) const;
+    bool recursAt( const KDateTime &dt ) const;
+    KDE_DEPRECATED bool recursAt( const QDateTime &dt ) const;
     /** Returns true if the date matches the rules. It does not necessarily
         mean that this is an actual occurrence. In particular, the method does
         not check if the date is after the end date, or if the frequency interval
         matches */
-    bool dateMatchesRules( const QDateTime &qdt ) const;
+    bool dateMatchesRules( const KDateTime &dt ) const;
+    KDE_DEPRECATED bool dateMatchesRules( const QDateTime &qdt ) const;
 
 
     /** Returns a list of the times on the specified date at which the
      * recurrence will occur.
      * @param date the date for which to find the recurrence times.
      */
-    TimeList recurTimesOn( const QDate &date ) const;
+    TimeList recurTimesOn( const QDate &date, const KDateTime::Spec &timeSpec = KDateTime::LocalZone ) const;
 
     /** Returns a list of all the times at which the recurrence will occur
      * between two specified times.
      *
      * There is a (large) maximum limit to the number of times returned. If due to
      * this limit the list is incomplete, this is indicated by the last entry being
-     * set to an invalid QDateTime value. If you need further values, call the
+     * set to an invalid KDateTime value. If you need further values, call the
      * method again with a start time set to just after the last valid time returned.
      * @param start inclusive start of interval
      * @param end inclusive end of interval
      * @return list of date/time values
      */
-    DateTimeList datesInInterval( const QDateTime &start, const QDateTime &end ) const;
+    DateTimeList timesInInterval( const KDateTime &start, const KDateTime &end ) const;
 
     /** Returns the date and time of the next recurrence, after the specified date/time.
      * If the recurrence has no time, the next date after the specified date is returned.
      * @param preDateTime the date/time after which to find the recurrence.
      * @return date/time of next recurrence, or invalid date if none.
      */
-    QDateTime getNextDate( const QDateTime& preDateTime ) const;
+    KDateTime getNextDate( const KDateTime& preDateTime ) const;
+    KDE_DEPRECATED QDateTime getNextDate( const QDateTime& preDateTime ) const;
     /** Returns the date and time of the last previous recurrence, before the specified date/time.
      * If a time later than 00:00:00 is specified and the recurrence has no time, 00:00:00 on
      * the specified date is returned if that date recurs.
      * @param afterDateTime the date/time before which to find the recurrence.
      * @return date/time of previous recurrence, or invalid date if none.
      */
-    QDateTime getPreviousDate( const QDateTime& afterDateTime ) const;
+    KDateTime getPreviousDate( const KDateTime& afterDateTime ) const;
+    KDE_DEPRECATED QDateTime getPreviousDate( const QDateTime& afterDateTime ) const;
 
 
 
@@ -274,13 +303,13 @@ class KCAL_EXPORT RecurrenceRule
       public:
         typedef QList<Constraint> List;
 
-        Constraint( int wkst = 1 );
+        explicit Constraint( KDateTime::Spec, int wkst = 1 );
 /*         Constraint( const Constraint &con ) :
                      year(con.year), month(con.month), day(con.day),
                      hour(con.hour), minute(con.minute), second(con.second),
                      weekday(con.weekday), weeknumber(con.weeknumber),
                      yearday(con.yearday), weekstart(con.weekstart) {}*/
-        Constraint( const QDateTime &preDate, PeriodType type, int wkst );
+        Constraint( const KDateTime &dt, PeriodType type, int wkst );
         void clear();
 
         int year;       // 0 means unspecified
@@ -294,20 +323,23 @@ class KCAL_EXPORT RecurrenceRule
         int weeknumber; //  0 means unspecified
         int yearday;    //  0 means unspecified
         int weekstart;  //  first day of week (1=monday, 7=sunday, 0=unspec.)
+        KDateTime::Spec timespec;   // time zone etc. to use
+        bool secondOccurrence;  // the time is the second occurrence during daylight savings shift
 
-        bool readDateTime( const QDateTime &preDate, PeriodType type );
+        bool readDateTime( const KDateTime &dt, PeriodType type );
         bool matches( const QDate &dt, RecurrenceRule::PeriodType type ) const;
-        bool matches( const QDateTime &dt, RecurrenceRule::PeriodType type ) const;
+        bool matches( const KDateTime &dt, RecurrenceRule::PeriodType type ) const;
         bool isConsistent() const;
         bool isConsistent( PeriodType period ) const;
         bool increase( PeriodType type, int freq );
-        QDateTime intervalDateTime( PeriodType type ) const;
+        KDateTime intervalDateTime( PeriodType type ) const;
         DateTimeList dateTimes( PeriodType type ) const;
+        void appendDateTime( const QDate &date, const QTime &time, DateTimeList &list ) const;
         void dump() const;
     };
 
-    Constraint getNextValidDateInterval( const QDateTime &preDate, PeriodType type ) const;
-    Constraint getPreviousValidDateInterval( const QDateTime &preDate, PeriodType type ) const;
+    Constraint getNextValidDateInterval( const KDateTime &preDate, PeriodType type ) const;
+    Constraint getPreviousValidDateInterval( const KDateTime &afterDate, PeriodType type ) const;
     DateTimeList datesForInterval( const Constraint &interval, PeriodType type ) const;
     bool mergeIntervalConstraint( Constraint *merged, const Constraint &conit,
                                   const Constraint &interval ) const;
@@ -315,13 +347,14 @@ class KCAL_EXPORT RecurrenceRule
 
 
     PeriodType mPeriod;
-    QDateTime mDateStart;
-    /** how often it recurs (including dtstart):
+    KDateTime mDateStart;      // start of recurrence (but mDateStart is not an occurrence
+                               // unless it matches the rule)
+    /** how often it recurs:
           -1 means infinitely,
            0 means an explicit end date,
            positive values give the number of occurrences */
     int mDuration;
-    QDateTime mDateEnd;
+    KDateTime mDateEnd;
     uint mFrequency;
 
     bool mIsReadOnly;
@@ -347,8 +380,8 @@ class KCAL_EXPORT RecurrenceRule
     // Cache for duration
     mutable DateTimeList mCachedDates;
     mutable bool mCached;
-    mutable QDateTime mCachedDateEnd;
-    mutable QDateTime mCachedLastDate;   // when mCachedDateEnd invalid, last date checked
+    mutable KDateTime mCachedDateEnd;
+    mutable KDateTime mCachedLastDate;   // when mCachedDateEnd invalid, last date checked
 
     class Private;
     Private *d;

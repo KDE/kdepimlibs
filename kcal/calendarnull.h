@@ -86,6 +86,12 @@ class KCAL_EXPORT CalendarNull : public Calendar
 
     /**
       @copydoc
+      Calendar::reload()
+    */
+    bool reload() { return true; }
+
+    /**
+      @copydoc
       Calendar::reload(const QString &)
     */
     bool reload( const QString &timeZoneId )
@@ -127,18 +133,17 @@ class KCAL_EXPORT CalendarNull : public Calendar
       @copydoc
       Calendar::rawEventsForDate(const QDate &, EventSortField, SortDirection)
     */
-    Event::List rawEventsForDate(
-      const QDate &date,
-      EventSortField sortField=EventSortUnsorted,
-      SortDirection sortDirection=SortDirectionAscending )
+    Event::List rawEventsForDate( const QDate &date,
+                                  EventSortField sortField=EventSortUnsorted,
+                                  SortDirection sortDirection=SortDirectionAscending )
       { Q_UNUSED( date ); Q_UNUSED( sortField ); Q_UNUSED( sortDirection );
         return Event::List(); }
 
     /**
       @copydoc
-      Calendar::rawEventsForDate(const QDateTime &)
+      Calendar::rawEventsForDate(const KDateTime &)
     */
-    Event::List rawEventsForDate( const QDateTime &dt )
+    Event::List rawEventsForDate( const KDateTime &dt )
       { Q_UNUSED( dt ); return Event::List(); }
 
     /**
@@ -223,10 +228,9 @@ class KCAL_EXPORT CalendarNull : public Calendar
 
     /**
       @copydoc
-      Calendar::alarms(const QDateTime &, const QDateTime &)
+      Calendar::alarms(const KDateTime &, const KDateTime &)
     */
-
-    Alarm::List alarms( const QDateTime &from, const QDateTime &to )
+    Alarm::List alarms( const KDateTime &from, const KDateTime &to )
       { Q_UNUSED( from ); Q_UNUSED( to ); return Alarm::List(); }
 
   // Observer Specific Methods //

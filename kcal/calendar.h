@@ -37,9 +37,10 @@
 
 #include <QObject>
 #include <QString>
-#include <QDateTime>
 #include <QList>
 #include <QMultiHash>
+
+#include <kdatetime.h>
 
 #include "customproperties.h"
 #include "event.h"
@@ -50,6 +51,7 @@
 
 namespace KCal {
 
+class ICalTimeZone;
 class ICalTimeZones;
 class CalFilter;
 
@@ -148,18 +150,26 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
   public:
 
     /**
-      >Construct Calendar object using a Time Zone.
+      Construct Calendar object using a time specification (time zone, etc.).
+      The time specification is used for creating or modifying incidences
+      in the Calendar. It is also used for viewing incidences (see
+      setViewTimeSpec()). The time specification does not alter existing
+      incidences.
 
-      @param timeZoneId is a string containing a Time Zone ID, which is
-      assumed to be valid. The Time Zone Id is used to set the time zone
-      for viewing Incidence dates.\n
-      On some systems, /usr/share/zoneinfo/zone.tab may be available for
-      reference.\n
+      @param timeSpec time specification
+    */
+    Calendar( const KDateTime::Spec &timeSpec );
+
+    /**
+      Construct Calendar object using a time zone ID.
+      The time zone ID is used for creating or modifying incidences in the
+      Calendar. It is also used for viewing incidences. The time zone does
+      not alter existing incidences.
+
+      @param timeZoneId is a string containing a time zone ID, which is
+      assumed to be valid.  If no time zone is found, the viewing time
+      specification is set to local clock time.
       @e Example: "Europe/Berlin"
-
-      @warning
-      Do Not pass an empty timeZoneId string as this may cause unintended
-      consequences when storing Incidences into the calendar.
     */
     explicit Calendar( const QString &timeZoneId );
 
@@ -205,43 +215,79 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     const Person &owner() const;
 
     /**
-      Sets the Time Zone Id for the Calendar.
+      Sets the default time specification (time zone, etc.) used for creating
+      or modifying incidences in the Calendar. It also sets the time
+      specification for viewing incidences (see setViewTimeSpec()).
 
-      @param timeZoneId is a string containing a Time Zone ID, which is
-      assumed to be valid. The Time Zone Id is used to set the time zone
-      for viewing Incidence dates.\n
-      On some systems, /usr/share/zoneinfo/zone.tab may be available for
-      reference.\n
+      @param timeSpec time specification
+    */
+    void setTimeSpec( const KDateTime::Spec &timeSpec );
+
+    /**
+       Get the time specification (time zone etc.) used for creating or
+       modifying incidences in the Calendar.
+
+       @return time specification
+    */
+    KDateTime::Spec timeSpec() const;
+
+    /**
+      Sets the time zone ID used for creating or modifying incidences in the
+      Calendar. Also sets the time zone for viewing incidences. This method
+      has no effect on existing incidences.
+
+      @param timeZoneId is a string containing a time zone ID, which is
+      assumed to be valid. The time zone ID is used to set the time zone
+      for viewing Incidence date/times. If no time zone is found, the
+      viewing time specification is set to local clock time.
       @e Example: "Europe/Berlin"
-
-      @warning
-      Do Not pass an empty timeZoneId string as this may cause unintended
-      consequences when storing Incidences into the calendar.
+      @see setTimeSpec()
     */
     void setTimeZoneId( const QString &timeZoneId );
 
     /**
-      Sets the timezone used for viewing the incidences in this calendar. In
-      case it differs from the current timezone, shift the events such that they
-      retain their absolute time (in UTC).
+      Returns the time zone ID used for creating or modifying incidences in
+      the calendar.
 
-      @param timeZoneId is a string containing a Time Zone ID, which is
-      assumed to be valid. The Time Zone Id is used to set the time zone
-      for viewing Incidence dates.\n
-      On some systems, /usr/share/zoneinfo/zone.tab may be available for
-      reference.\n
-      @e Example: "Europe/Berlin"
-
-      @see setTimeZoneId()
-    */
-    virtual void setTimeZoneIdViewOnly( const QString &timeZoneId ) = 0;
-
-    /**
-      Returns the viewing time zone ID for the calendar.
-
-      @return the string containing the time zone ID.
+      @return the string containing the time zone ID, or empty string if the
+              creation/modification time specification is not a time zone.
     */
     QString timeZoneId() const;
+
+    /**
+      Sets the time zone used for viewing the incidences in this calendar. This
+      is simply a convenience method which makes a note of the new time zone so
+      that it can be read back by viewTimeSpec(). It has no effect on the
+      calendar data or on the the creation or modification of incidences.
+      @ref viewTimeSpec()
+    */
+    void setViewTimeSpec( const KDateTime::Spec &spec ) const;
+    void setViewTimeZoneId( const QString &timeZoneId ) const;
+    virtual KDE_DEPRECATED void setTimeZoneIdViewOnly( const QString &timeZoneId ) { setViewTimeZoneId(timeZoneId); };
+
+    /**
+      Returns the time specification (time zone, etc.) used for viewing the
+      incidences in this calendar. This simply returns the time specification
+      last set by setViewTimeSpec().
+    */
+    KDateTime::Spec viewTimeSpec() const;
+    QString viewTimeZoneId() const;
+
+    /**
+      Shifts the times of all incidences so that they appear at the same clock
+      time as before but in a new time zone. The shift is done from a viewing
+      time zone rather than from the actual incidence time zone.
+
+      For example, shifting an incidence whose start time is 09:00 America/New York,
+      using an old viewing time zone (@p oldSpec) of Europe/London, to a new time
+      zone (@p newSpec) of Europe/Paris, will result in the time being shifted
+      from 14:00 (which is the London time of the incidence start) to 14:00 Paris
+      time.
+
+      @param oldSpec the time specification which provides the clock times
+      @param newSpec the new time specification
+    */
+    void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
 
     /**
       Returns the time zone collection used by the calendar.
@@ -251,17 +297,12 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     ICalTimeZones *timeZones() const;
 
     /**
-      Sets to store calendar Incidences without a time zone.
-    */
-    void setLocalTime();
+       Set the time zone collection used by the calendar.
 
-    /**
-      Determine if calendar Incidences are to be written without a time zone.
-
-      @return true if the calendar is set to write Incidences withoout
-      a time zone; false otherwise.
-    */
-    bool isLocalTime() const;
+       @param zones time zones collection. Important: all time zones references
+                    in the calendar must be included in the collection.
+     */
+    void setTimeZones( const ICalTimeZones &zones );
 
     /**
       Sets if the calendar has been modified.
@@ -291,10 +332,10 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     /**
       Load the calendar contents from storage. This requires the calendar
       to have been loaded once before, in other words initialized.
-
-      @param tz The time zone to use for loading.
     */
-    virtual bool reload( const QString &tz ) = 0;
+    virtual bool reload() = 0;
+    /** Use reload() plus setTimeZoneId() instead. */
+    KDE_DEPRECATED virtual bool reload( const QString &tz ) = 0;
 
     /**
       Determine if the calendar is currently being saved.
@@ -469,11 +510,12 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     /**
       Return a filtered list of all Events which occur on the given timestamp.
 
-      @param dt request filtered Event list for this QDateTime only.
+      @param dt request filtered Event list for this KDateTime only.
 
       @return the list of filtered Events occurring on the specified timestamp.
     */
-    Event::List events( const QDateTime &dt );
+    Event::List events( const KDateTime &dt );
+    KDE_DEPRECATED Event::List events( const QDateTime &qdt );
 
     /**
       Return a filtered list of all Events occurring within a date range.
@@ -521,12 +563,13 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       Return an unfiltered list of all Events which occur on the given
       timestamp.
 
-      @param dt request unfiltered Event list for this QDateTime only.
+      @param dt request unfiltered Event list for this KDateTime only.
 
       @return the list of unfiltered Events occurring on the specified
       timestamp.
     */
-    virtual Event::List rawEventsForDate( const QDateTime &dt ) = 0;
+    virtual Event::List rawEventsForDate( const KDateTime &dt ) = 0;
+    KDE_DEPRECATED Event::List rawEventsForDate( const QDateTime &qdt );
 
     /**
       Return an unfiltered list of all Events occurring within a date range.
@@ -783,8 +826,10 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @return the list of Alarms for the for the specified time range.
     */
-    virtual Alarm::List alarms( const QDateTime &from,
-                                const QDateTime &to ) = 0;
+    virtual Alarm::List alarms( const KDateTime &from,
+                                const KDateTime &to ) = 0;
+    KDE_DEPRECATED Alarm::List alarms( const QDateTime &from,
+                                const QDateTime &to );
 
 // Observer Specific Methods //
 
@@ -878,18 +923,12 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     void incidenceUpdated( IncidenceBase *incidenceBase );
 
     /**
-      Let Calendar subclasses set the Time Zone ID.
+      Let Calendar subclasses set the time specification.
 
-      First parameter is a string containing a Time Zone ID, which is
-      assumed to be valid. On some systems, /usr/share/zoneinfo/zone.tab
-      may be available for reference.\n
-      @e Example: "Europe/Berlin"
-
-      @warning
-      Do Not pass an empty timeZoneId string as this may cause unintended
-      consequences when storing Incidences into the calendar.
+      @param timeSpec is the time specification (time zone, etc.) for
+                      viewing Incidence dates.\n
     */
-    virtual void doSetTimeZoneId( const QString &/*timeZoneId*/ ) {}
+    virtual void doSetTimeSpec( const KDateTime::Spec &/*timeSpec*/ ) {}
 
     /**
       Let Calendar subclasses notify that they inserted an Incidence.
@@ -922,10 +961,14 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
     /** Append alarms of incidence in interval to list of alarms. */
     void appendAlarms( Alarm::List &alarms, Incidence *incidence,
+                       const KDateTime &from, const KDateTime &to );
+    KDE_DEPRECATED void appendAlarms( Alarm::List &alarms, Incidence *incidence,
                        const QDateTime &from, const QDateTime &to );
 
     /** Append alarms of recurring events in interval to list of alarms. */
     void appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
+                       const KDateTime &from, const KDateTime &to );
+    KDE_DEPRECATED void appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
                        const QDateTime &from, const QDateTime &to );
 
   private:

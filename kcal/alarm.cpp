@@ -27,8 +27,6 @@
   @author Cornelius Schumacher
 */
 
-#include <QList>
-
 #include <kdebug.h>
 
 #include "incidence.h"
@@ -55,7 +53,7 @@ class KCal::Alarm::Private
     QList<Person> mMailAddresses; // who to mail for reminder
 
     bool mAlarmEnabled;
-    QDateTime mAlarmTime;// time at which to trigger the alarm
+    KDateTime mAlarmTime;// time at which to trigger the alarm
     int mAlarmSnoozeTime;// number of minutes after alarm to
                          // snooze before ringing again
     int mAlarmRepeatCount;// number of times for alarm to repeat
@@ -339,7 +337,7 @@ QString Alarm::text() const
   return ( d->mType == Display ) ? d->mDescription : QString();
 }
 
-void Alarm::setTime( const QDateTime &alarmTime )
+void Alarm::setTime( const KDateTime &alarmTime )
 {
   d->mAlarmTime = alarmTime;
   d->mHasTime = true;
@@ -347,7 +345,7 @@ void Alarm::setTime( const QDateTime &alarmTime )
   if ( d->mParent ) d->mParent->updated();
 }
 
-QDateTime Alarm::time() const
+KDateTime Alarm::time() const
 {
   if ( hasTime() ) {
     return d->mAlarmTime;
@@ -361,13 +359,19 @@ QDateTime Alarm::time() const
       return d->mOffset.end( d->mParent->dtStart() );
     }
   } else {
-    return QDateTime();
+    return KDateTime();
   }
 }
 
 bool Alarm::hasTime() const
 {
   return d->mHasTime;
+}
+
+void Alarm::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
+{
+  d->mAlarmTime = d->mAlarmTime.toTimeSpec( oldSpec );
+  d->mAlarmTime.setTimeSpec( newSpec );
 }
 
 void Alarm::setSnoozeTime( int alarmSnoozeTime )
@@ -399,42 +403,42 @@ int Alarm::duration() const
   return d->mAlarmRepeatCount * d->mAlarmSnoozeTime * 60;
 }
 
-QDateTime Alarm::nextRepetition( const QDateTime &preTime ) const
+KDateTime Alarm::nextRepetition( const KDateTime &preTime ) const
 {
   // This method is coded to avoid 32-bit integer overflow using
   // QDateTime::secsTo(), which occurs with time spans > 68 years.
-  QDateTime at = time();
+  KDateTime at = time();
   if ( at > preTime ) {
     return at;
   }
   if ( !d->mAlarmRepeatCount ) {
     // there isn't an occurrence after the specified time
-    return QDateTime();
+    return KDateTime();
   }
   int snoozeSecs = d->mAlarmSnoozeTime * 60;
-  QDateTime lastRepetition = at.addSecs( d->mAlarmRepeatCount * snoozeSecs );
+  KDateTime lastRepetition = at.addSecs( d->mAlarmRepeatCount * snoozeSecs );
   if ( lastRepetition <= preTime ) {
     // all repetitions have finished before the specified time
-    return QDateTime();
+    return KDateTime();
   }
   int repetition = ( at.secsTo( preTime ) + snoozeSecs ) / snoozeSecs;
   return at.addSecs( repetition * snoozeSecs );
 }
 
-QDateTime Alarm::previousRepetition( const QDateTime &afterTime ) const
+KDateTime Alarm::previousRepetition( const KDateTime &afterTime ) const
 {
   // This method is coded to avoid 32-bit integer overflow using
   // QDateTime::secsTo(), which occurs with time spans > 68 years.
-  QDateTime at = time();
+  KDateTime at = time();
   if ( at >= afterTime ) {
     // alarm's first/only time is at/after the specified time
-    return QDateTime();
+    return KDateTime();
   }
   if ( !d->mAlarmRepeatCount ) {
     return at;
   }
   int snoozeSecs = d->mAlarmSnoozeTime * 60;
-  QDateTime lastRepetition = at.addSecs( d->mAlarmRepeatCount * snoozeSecs );
+  KDateTime lastRepetition = at.addSecs( d->mAlarmRepeatCount * snoozeSecs );
   if ( lastRepetition < afterTime ) {
    // all repetitions have finished before the specified time
     return lastRepetition;
@@ -443,7 +447,7 @@ QDateTime Alarm::previousRepetition( const QDateTime &afterTime ) const
   return at.addSecs( repetition * snoozeSecs );
 }
 
-QDateTime Alarm::endTime() const
+KDateTime Alarm::endTime() const
 {
   if ( d->mAlarmRepeatCount ) {
     return time().addSecs( d->mAlarmRepeatCount * d->mAlarmSnoozeTime * 60 );
@@ -513,4 +517,27 @@ void Alarm::setParent( Incidence *parent )
 Incidence *Alarm::parent() const
 {
   return d->mParent;
+}
+
+// DEPRECATED methods
+void Alarm::setTime( const QDateTime &alarmTime )
+{
+  if (d->mParent && d->mParent->dtStart().isValid())   // use start as best guess for time zone
+    setTime(KDateTime(alarmTime, d->mParent->dtStart().timeSpec()));
+  else
+    setTime(KDateTime(alarmTime));  // use local time zone
+}
+QDateTime Alarm::nextRepetition( const QDateTime &preTime ) const
+{
+  if (d->mParent && d->mParent->dtStart().isValid())   // use start as best guess for time zone
+    return nextRepetition(KDateTime(preTime, d->mParent->dtStart().timeSpec())).dateTime();
+  else
+    return nextRepetition(KDateTime(preTime)).dateTime();  // use local time zone
+}
+QDateTime Alarm::previousRepetition( const QDateTime &afterTime ) const
+{
+  if (d->mParent && d->mParent->dtStart().isValid())   // use start as best guess for time zone
+    return previousRepetition(KDateTime(afterTime, d->mParent->dtStart().timeSpec())).dateTime();
+  else
+    return previousRepetition(KDateTime(afterTime)).dateTime();  // use local time zone
 }

@@ -23,8 +23,8 @@
 #define KCAL_RESOURCELOCAL_H
 
 #include <QString>
-#include <QDateTime>
 
+#include <kdatetime.h>
 #include <kurl.h>
 #include <kdirwatch.h>
 
@@ -83,7 +83,7 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     */
     virtual bool doReload();
 
-    QDateTime readLastModified();
+    KDateTime readLastModified();
 
   private:
     void init();

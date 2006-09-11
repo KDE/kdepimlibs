@@ -21,7 +21,6 @@
 */
 
 #include <QDataStream>
-#include <QDateTime>
 #include <QFile>
 #include <QString>
 
@@ -116,8 +115,10 @@ void ResourceCached::readConfig( const KConfig *config )
   mSaveInterval = config->readEntry( "SaveInterval", 10 );
   mSavePolicy = config->readEntry( "SavePolicy", int(SaveNever) );
 
-  mLastLoad = config->readEntry( "LastLoad", QDateTime() );
-  mLastSave = config->readEntry( "LastSave", QDateTime() );
+  QDateTime dt = config->readEntry( "LastLoad", QDateTime() );
+  mLastLoad = KDateTime( dt, KDateTime::UTC );
+  dt = config->readEntry( "LastSave", QDateTime() );
+  mLastSave = KDateTime( dt, KDateTime::UTC );
 
   setupSaveTimer();
   setupReloadTimer();
@@ -153,8 +154,8 @@ void ResourceCached::writeConfig( KConfig *config )
   config->writeEntry( "SavePolicy", mSavePolicy );
   config->writeEntry( "SaveInterval", mSaveInterval );
 
-  config->writeEntry( "LastLoad", mLastLoad );
-  config->writeEntry( "LastSave", mLastSave );
+  config->writeEntry( "LastLoad", mLastLoad.toUtc().dateTime() );
+  config->writeEntry( "LastSave", mLastSave.toUtc().dateTime() );
 }
 
 bool ResourceCached::addEvent(Event *event)
@@ -191,7 +192,7 @@ Event::List ResourceCached::rawEvents( const QDate &start, const QDate &end,
   return mCalendar.rawEvents( start, end, inclusive );
 }
 
-Event::List ResourceCached::rawEventsForDate( const QDateTime &qdt )
+Event::List ResourceCached::rawEventsForDate( const KDateTime &qdt )
 {
   return mCalendar.rawEventsForDate( qdt.date() );
 }
@@ -256,37 +257,41 @@ Journal::List ResourceCached::rawJournalsForDate( const QDate &date )
 }
 
 
-Alarm::List ResourceCached::alarmsTo( const QDateTime &to )
+Alarm::List ResourceCached::alarmsTo( const KDateTime &to )
 {
   return mCalendar.alarmsTo( to );
 }
 
-Alarm::List ResourceCached::alarms( const QDateTime &from, const QDateTime &to )
+Alarm::List ResourceCached::alarms( const KDateTime &from, const KDateTime &to )
 {
 //  kDebug(5800) << "ResourceCached::alarms(" << from.toString() << " - " << to.toString() << ")\n";
 
   return mCalendar.alarms( from, to );
 }
 
+void ResourceCached::setTimeSpec( const KDateTime::Spec &timeSpec )
+{
+  mCalendar.setTimeSpec( timeSpec );
+}
+
+KDateTime::Spec ResourceCached::timeSpec() const
+{
+  return mCalendar.timeSpec();
+}
 
 void ResourceCached::setTimeZoneId( const QString& tzid )
 {
   mCalendar.setTimeZoneId( tzid );
 }
 
-QString ResourceCached::timeZoneId()
+QString ResourceCached::timeZoneId() const
 {
   return mCalendar.timeZoneId();
 }
 
-void ResourceCached::setLocalTime()
+void ResourceCached::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
 {
-  mCalendar.setLocalTime();
-}
-
-bool ResourceCached::isLocalTime() const
-{
-  return mCalendar.isLocalTime();
+  mCalendar.shiftTimes( oldSpec, newSpec );
 }
 
 void ResourceCached::clearChanges()
@@ -732,12 +737,12 @@ void ResourceCached::addInfoText( QString &txt ) const
   if ( mLastLoad.isValid() ) {
     txt += "<br>";
     txt += i18n("Last loaded: %1",
-             KGlobal::locale()->formatDateTime( mLastLoad ) );
+             KGlobal::locale()->formatDateTime( mLastLoad.toUtc().dateTime() ) );
   }
   if ( mLastSave.isValid() ) {
     txt += "<br>";
     txt += i18n("Last saved: %1",
-             KGlobal::locale()->formatDateTime( mLastSave ) );
+             KGlobal::locale()->formatDateTime( mLastSave.toUtc().dateTime() ) );
   }
 }
 

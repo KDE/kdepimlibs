@@ -24,6 +24,8 @@
 #include <QString>
 #include <QByteArray>
 
+#include <kdatetime.h>
+
 #include "scheduler.h"
 #include "calformat.h"
 
@@ -110,17 +112,17 @@ class KCAL_EXPORT ICalFormat : public CalFormat
     FreeBusy *parseFreeBusy( const QString & );
 
     /**
-      Set id of used time zone and whether this time zone is UTC or not.
+      Set time specification (time zone, etc.) used.
     */
-    void setTimeZone( const QString &id, bool utc );
+    void setTimeSpec( const KDateTime::Spec & timeSpec );
     /**
-      Return id string of timezone used.
+      Return time specification used.
+    */
+    KDateTime::Spec timeSpec() const;
+    /**
+      Return id string of timezone used (if any).
     */
     QString timeZoneId() const;
-    /**
-      Return true if timezone used is UTC, otherwise return false.
-    */
-    bool utc() const;
 
   protected:
     /**
@@ -134,8 +136,7 @@ class KCAL_EXPORT ICalFormat : public CalFormat
   private:
     ICalFormatImpl *mImpl;
 
-    QString mTimeZoneId;
-    bool mUtc;
+    KDateTime::Spec mTimeSpec;
 
     class Private;
     Private *d;

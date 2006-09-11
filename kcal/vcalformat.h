@@ -24,6 +24,8 @@
 
 #include <QByteArray>
 
+#include <kdatetime.h>
+
 #include "calformat.h"
 #include "todo.h"
 #include "event.h"
@@ -87,10 +89,10 @@ class KCAL_EXPORT VCalFormat : public CalFormat
     /** takes a QDate and returns a string in the format YYYYMMDDTHHMMSS */
     QString qDateToISO(const QDate &);
     /** takes a QDateTime and returns a string in format YYYYMMDDTHHMMSS */
-    QString qDateTimeToISO(const QDateTime &, bool zulu=true);
+    QString kDateTimeToISO(const KDateTime &, bool zulu=true);
     /** takes a string in the format YYYYMMDDTHHMMSS and returns a
      * valid QDateTime. */
-    QDateTime ISOToQDateTime(const QString & dtStr);
+    KDateTime ISOToKDateTime(const QString & dtStr);
     /** takes a string in the format YYYYMMDD and returns a
      * valid QDate. */
     QDate ISOToQDate(const QString & dtStr);

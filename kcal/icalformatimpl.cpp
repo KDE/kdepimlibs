@@ -3,6 +3,7 @@
 
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+    Copyright (c) 2006 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -20,7 +21,6 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QDateTime>
 #include <QString>
 #include <QFile>
 #include <QList>
@@ -28,6 +28,8 @@
 #include <cstdlib>
 
 #include <kdebug.h>
+#include <kdatetime.h>
+#include <ktzfiletimezone.h>
 #include <klocale.h>
 
 extern "C" {
@@ -41,6 +43,7 @@ extern "C" {
 #include "journal.h"
 #include "icalformat.h"
 #include "icalformatimpl.h"
+#include "icaltimezones.h"
 #include "compat.h"
 
 #define _ICAL_VERSION "2.0"
@@ -48,11 +51,6 @@ extern "C" {
 using namespace KCal;
 
 /* Static helpers */
-static QDateTime ICalDate2QDate(const icaltimetype& t)
-{
-  return QDateTime(QDate(t.year,t.month,t.day), QTime(t.hour,t.minute,t.second));
-}
-
 /*static void _dumpIcaltime( const icaltimetype& t)
 {
   kDebug(5800) << "--- Y: " << t.year << " M: " << t.month << " D: " << t.day
@@ -67,6 +65,12 @@ const int gSecondsPerMinute = 60;
 const int gSecondsPerHour   = gSecondsPerMinute * 60;
 const int gSecondsPerDay    = gSecondsPerHour   * 24;
 const int gSecondsPerWeek   = gSecondsPerDay    * 7;
+
+
+inline icaltimetype ICalFormatImpl::writeICalUtcDateTime(const KDateTime &dt )
+{
+  return writeICalDateTime( dt.toUtc() );
+}
 
 ICalFormatImpl::ICalFormatImpl( ICalFormat *parent ) :
   mParent( parent ), mCompat( new Compat )
@@ -104,14 +108,14 @@ icalcomponent *ICalFormatImpl::writeIncidence( IncidenceBase *incidence, Schedul
   else return 0;
 }
 
-icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
+icalcomponent *ICalFormatImpl::writeTodo(Todo *todo, ICalTimeZones *tzlist)
 {
   QString tmpStr;
   QStringList tmpStrList;
 
   icalcomponent *vtodo = icalcomponent_new(ICAL_VTODO_COMPONENT);
 
-  writeIncidence(vtodo,todo);
+  writeIncidence(vtodo, todo, tzlist);
 
   // due date
   if (todo->hasDueDate()) {
@@ -119,9 +123,9 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
     if (todo->doesFloat()) {
       due = writeICalDate(todo->dtDue(true).date());
     } else {
-      due = writeICalDateTime(todo->dtDue(true));
+      due = writeICalDateTime(todo->dtDue(true), tzlist);
     }
-    icalcomponent_add_property(vtodo,icalproperty_new_due(due));
+    icalcomponent_add_property(vtodo, icalproperty_new_due(due));
   }
 
   // start time
@@ -132,20 +136,20 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
       start = writeICalDate(todo->dtStart(true).date());
     } else {
 //      kDebug(5800) << " incidence " << todo->summary() << " has time." << endl;
-      start = writeICalDateTime(todo->dtStart(true));
+      start = writeICalDateTime(todo->dtStart(true), tzlist);
     }
-    icalcomponent_add_property(vtodo,icalproperty_new_dtstart(start));
+    icalcomponent_add_property(vtodo, icalproperty_new_dtstart(start));
   }
 
-  // completion date
+  // completion date (UTC)
   if (todo->isCompleted()) {
     if (!todo->hasCompletedDate()) {
       // If todo was created by KOrganizer <2.2 it has no correct completion
       // date. Set it to now.
-      todo->setCompleted(QDateTime::currentDateTime());
+      todo->setCompleted(KDateTime::currentUtcDateTime());
     }
-    icaltimetype completed = writeICalDateTime(todo->completed());
-    icalcomponent_add_property(vtodo,icalproperty_new_completed(completed));
+    icaltimetype completed = writeICalUtcDateTime(todo->completed());
+    icalcomponent_add_property(vtodo, icalproperty_new_completed(completed));
   }
 
   icalcomponent_add_property(vtodo,
@@ -153,25 +157,22 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
 
   if( todo->doesRecur() ) {
     icalcomponent_add_property(vtodo,
-        icalproperty_new_recurrenceid( writeICalDateTime( todo->dtDue())));
+        icalproperty_new_recurrenceid( writeICalDateTime( todo->dtDue(), tzlist)));
   }
 
   return vtodo;
 }
 
-icalcomponent *ICalFormatImpl::writeEvent(Event *event)
+icalcomponent *ICalFormatImpl::writeEvent(Event *event, ICalTimeZones *tzlist)
 {
 #if 0
   kDebug(5800) << "Write Event '" << event->summary() << "' (" << event->uid()
                 << ")" << endl;
 #endif
 
-  QString tmpStr;
-  QStringList tmpStrList;
-
   icalcomponent *vevent = icalcomponent_new(ICAL_VEVENT_COMPONENT);
 
-  writeIncidence(vevent,event);
+  writeIncidence(vevent, event, tzlist);
 
   // start time
   icaltimetype start;
@@ -180,34 +181,35 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
     start = writeICalDate(event->dtStart().date());
   } else {
 //    kDebug(5800) << " incidence " << event->summary() << " has time." << endl;
-    start = writeICalDateTime(event->dtStart());
+    start = writeICalDateTime(event->dtStart(), tzlist);
   }
-  icalcomponent_add_property(vevent,icalproperty_new_dtstart(start));
+  icalcomponent_add_property(vevent, icalproperty_new_dtstart(start));
 
   if (event->hasEndDate()) {
     // End time.
     // RFC2445 says that if DTEND is present, it has to be greater than DTSTART.
     icaltimetype end;
+    KDateTime dt = event->dtEnd();
     if (event->doesFloat()) {
 //      kDebug(5800) << " Event " << event->summary() << " floats." << endl;
-//      if (event->dtEnd().date() != event->dtStart().date()) {
+//      if (dt.date() != event->dtStart().date()) {
         // +1 day because end date is non-inclusive.
-        end = writeICalDate( event->dtEnd().date().addDays( 1 ) );
+        end = writeICalDate( dt.date().addDays( 1 ) );
 //      }
     } else {
 //      kDebug(5800) << " Event " << event->summary() << " has time." << endl;
-      if (event->dtEnd() != event->dtStart()) {
-        end = writeICalDateTime(event->dtEnd());
+      if (dt != event->dtStart()) {
+        end = writeICalDateTime(dt, tzlist);
       }
     }
-    icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
+    icalcomponent_add_property(vevent, icalproperty_new_dtend(end));
   }
 
 // TODO: resources
 #if 0
   // resources
-  tmpStrList = anEvent->resources();
-  tmpStr = tmpStrList.join(";");
+  QStringList tmpStrList = anEvent->resources();
+  QString tmpStr = tmpStrList.join(";");
   if (!tmpStr.isEmpty())
     addPropValue(vevent, VCResourcesProp, tmpStr.toUtf8());
 
@@ -244,10 +246,10 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
   writeIncidenceBase(vfreebusy,freebusy);
 
   icalcomponent_add_property(vfreebusy, icalproperty_new_dtstart(
-      writeICalDateTime(freebusy->dtStart())));
+      writeICalUtcDateTime(freebusy->dtStart())));
 
   icalcomponent_add_property(vfreebusy, icalproperty_new_dtend(
-      writeICalDateTime(freebusy->dtEnd())));
+      writeICalUtcDateTime(freebusy->dtEnd())));
 
   if (method == Scheduler::Request) {
     icalcomponent_add_property(vfreebusy,icalproperty_new_uid(
@@ -259,11 +261,11 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
   QList<Period>::Iterator it;
   icalperiodtype period;
   for (it = list.begin(); it!= list.end(); ++it) {
-    period.start = writeICalDateTime((*it).start());
+    period.start = writeICalUtcDateTime((*it).start());
     if ( (*it).hasDuration() ) {
       period.duration = writeICalDuration( (*it).duration().asSeconds() );
     } else {
-      period.end = writeICalDateTime((*it).end());
+      period.end = writeICalUtcDateTime((*it).end());
     }
     icalcomponent_add_property(vfreebusy, icalproperty_new_freebusy(period) );
   }
@@ -271,29 +273,30 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
   return vfreebusy;
 }
 
-icalcomponent *ICalFormatImpl::writeJournal(Journal *journal)
+icalcomponent *ICalFormatImpl::writeJournal(Journal *journal, ICalTimeZones *tzlist)
 {
   icalcomponent *vjournal = icalcomponent_new(ICAL_VJOURNAL_COMPONENT);
 
-  writeIncidence(vjournal,journal);
+  writeIncidence(vjournal, journal, tzlist);
 
   // start time
-  if (journal->dtStart().isValid()) {
+  KDateTime dt = journal->dtStart();
+  if (dt.isValid()) {
     icaltimetype start;
     if (journal->doesFloat()) {
 //      kDebug(5800) << " Incidence " << event->summary() << " floats." << endl;
-      start = writeICalDate(journal->dtStart().date());
+      start = writeICalDate(dt.date());
     } else {
 //      kDebug(5800) << " incidence " << event->summary() << " has time." << endl;
-      start = writeICalDateTime(journal->dtStart());
+      start = writeICalDateTime(dt, tzlist);
     }
-    icalcomponent_add_property(vjournal,icalproperty_new_dtstart(start));
+    icalcomponent_add_property(vjournal, icalproperty_new_dtstart(start));
   }
 
   return vjournal;
 }
 
-void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
+void ICalFormatImpl::writeIncidence(icalcomponent *parent, Incidence *incidence, ICalTimeZones *tzlist)
 {
   if ( incidence->schedulingID() != incidence->uid() )
     // We need to store the UID in here. The rawSchedulingID will
@@ -309,41 +312,41 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
     incidence->setNonKDECustomProperty("X-PILOTSTAT", QString::number(incidence->syncStatus()));
   }
 
-  writeIncidenceBase(parent,incidence);
+  writeIncidenceBase(parent, incidence);
 
   // creation date
-  icalcomponent_add_property(parent,icalproperty_new_created(
-      writeICalDateTime(incidence->created())));
+  icalcomponent_add_property(parent, icalproperty_new_created(
+      writeICalUtcDateTime(incidence->created())));
 
   // unique id
   // If the scheduling ID is different from the real UID, the real
   // one is stored on X-REALID above
-  icalcomponent_add_property(parent,icalproperty_new_uid(
+  icalcomponent_add_property(parent, icalproperty_new_uid(
       incidence->schedulingID().toUtf8()));
 
   // revision
-  icalcomponent_add_property(parent,icalproperty_new_sequence(
+  icalcomponent_add_property(parent, icalproperty_new_sequence(
       incidence->revision()));
 
   // last modification date
-  icalcomponent_add_property(parent,icalproperty_new_lastmodified(
-      writeICalDateTime(incidence->lastModified())));
+  icalcomponent_add_property(parent, icalproperty_new_lastmodified(
+      writeICalUtcDateTime(incidence->lastModified())));
 
   // description
   if (!incidence->description().isEmpty()) {
-    icalcomponent_add_property(parent,icalproperty_new_description(
+    icalcomponent_add_property(parent, icalproperty_new_description(
         incidence->description().toUtf8()));
   }
 
   // summary
   if (!incidence->summary().isEmpty()) {
-    icalcomponent_add_property(parent,icalproperty_new_summary(
+    icalcomponent_add_property(parent, icalproperty_new_summary(
         incidence->summary().toUtf8()));
   }
 
   // location
   if (!incidence->location().isEmpty()) {
-    icalcomponent_add_property(parent,icalproperty_new_location(
+    icalcomponent_add_property(parent, icalproperty_new_location(
         incidence->location().toUtf8()));
   }
 
@@ -385,22 +388,22 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
       secClass = ICAL_CLASS_PRIVATE;
       break;
   }
-  icalcomponent_add_property(parent,icalproperty_new_class(secClass));
+  icalcomponent_add_property(parent, icalproperty_new_class(secClass));
 
   // priority
-  icalcomponent_add_property(parent,icalproperty_new_priority(
+  icalcomponent_add_property(parent, icalproperty_new_priority(
       incidence->priority()));
 
   // categories
   QStringList categories = incidence->categories();
   QStringList::Iterator it;
   for(it = categories.begin(); it != categories.end(); ++it ) {
-    icalcomponent_add_property(parent,icalproperty_new_categories((*it).toUtf8()));
+    icalcomponent_add_property(parent, icalproperty_new_categories((*it).toUtf8()));
   }
 
   // related event
   if ( !incidence->relatedToUid().isEmpty() ) {
-    icalcomponent_add_property(parent,icalproperty_new_relatedto(
+    icalcomponent_add_property(parent, icalproperty_new_relatedto(
         incidence->relatedToUid().toUtf8()));
   }
 
@@ -424,14 +427,14 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   DateList dateList = incidence->recurrence()->exDates();
   DateList::ConstIterator exIt;
   for(exIt = dateList.begin(); exIt != dateList.end(); ++exIt) {
-    icalcomponent_add_property(parent,icalproperty_new_exdate(
+    icalcomponent_add_property(parent, icalproperty_new_exdate(
         writeICalDate(*exIt)));
   }
   DateTimeList dateTimeList = incidence->recurrence()->exDateTimes();
   DateTimeList::ConstIterator extIt;
   for(extIt = dateTimeList.begin(); extIt != dateTimeList.end(); ++extIt) {
-    icalcomponent_add_property(parent,icalproperty_new_exdate(
-        writeICalDateTime(*extIt)));
+    icalcomponent_add_property(parent, icalproperty_new_exdate(
+        writeICalDateTime(*extIt, tzlist)));
   }
 
 
@@ -445,7 +448,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   DateTimeList::ConstIterator rdtIt;
   for( rdtIt = dateTimeList.begin(); rdtIt != dateTimeList.end(); ++rdtIt) {
      icalcomponent_add_property( parent, icalproperty_new_rdate(
-         writeICalDateTimePeriod(*rdtIt) ) );
+         writeICalDateTimePeriod(*rdtIt, tzlist) ) );
   }
 
   // attachments
@@ -468,7 +471,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   if (incidence->hasDuration()) {
     icaldurationtype duration;
     duration = writeICalDuration( incidence->duration() );
-    icalcomponent_add_property(parent,icalproperty_new_duration(duration));
+    icalcomponent_add_property(parent, icalproperty_new_duration(duration));
   }
 }
 
@@ -476,7 +479,7 @@ void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
                                          IncidenceBase * incidenceBase )
 {
   icalcomponent_add_property( parent, icalproperty_new_dtstamp(
-      writeICalDateTime( QDateTime::currentDateTime() ) ) );
+      writeICalUtcDateTime( KDateTime::currentUtcDateTime() ) ) );
 
   // organizer stuff
   icalcomponent_add_property( parent, writeOrganizer( incidenceBase->organizer() ) );
@@ -528,7 +531,7 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
   icalproperty *p = icalproperty_new_attendee("mailto:" + attendee->email().toUtf8());
 
   if (!attendee->name().isEmpty()) {
-    icalproperty_add_parameter(p,icalparameter_new_cn(attendee->name().toUtf8()));
+    icalproperty_add_parameter(p, icalparameter_new_cn(attendee->name().toUtf8()));
   }
 
 
@@ -560,7 +563,7 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
       status = ICAL_PARTSTAT_INPROCESS;
       break;
   }
-  icalproperty_add_parameter(p,icalparameter_new_partstat(status));
+  icalproperty_add_parameter(p, icalparameter_new_partstat(status));
 
   icalparameter_role role = ICAL_ROLE_REQPARTICIPANT;
   switch (attendee->role()) {
@@ -578,12 +581,12 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
       role = ICAL_ROLE_NONPARTICIPANT;
       break;
   }
-  icalproperty_add_parameter(p,icalparameter_new_role(role));
+  icalproperty_add_parameter(p, icalparameter_new_role(role));
 
   if (!attendee->uid().isEmpty()) {
     icalparameter* icalparameter_uid = icalparameter_new_x(attendee->uid().toUtf8());
     icalparameter_set_xname(icalparameter_uid,"X-UID");
-    icalproperty_add_parameter(p,icalparameter_uid);
+    icalproperty_add_parameter(p, icalparameter_uid);
   }
 
   return p;
@@ -751,7 +754,7 @@ icalrecurrencetype ICalFormatImpl::writeRecurrenceRule( RecurrenceRule *recur )
     if ( recur->doesFloat() )
       r.until = writeICalDate(recur->endDt().date());
     else
-      r.until = writeICalDateTime(recur->endDt());
+      r.until = writeICalUtcDateTime(recur->endDt());
   }
 
 // Debug output
@@ -780,9 +783,9 @@ kDebug(5800) << " ICalFormatImpl::writeAlarm" << endl;
     case Alarm::Procedure:
       action = ICAL_ACTION_PROCEDURE;
       attach = icalattach_new_from_url(QFile::encodeName(alarm->programFile()).data());
-      icalcomponent_add_property(a,icalproperty_new_attach(attach));
+      icalcomponent_add_property(a, icalproperty_new_attach(attach));
       if (!alarm->programArguments().isEmpty()) {
-        icalcomponent_add_property(a,icalproperty_new_description(alarm->programArguments().toUtf8()));
+        icalcomponent_add_property(a, icalproperty_new_description(alarm->programArguments().toUtf8()));
       }
       break;
     case Alarm::Audio:
@@ -790,7 +793,7 @@ kDebug(5800) << " ICalFormatImpl::writeAlarm" << endl;
 kDebug(5800) << " It's an audio action, file: " << alarm->audioFile() << endl;
       if (!alarm->audioFile().isEmpty()) {
         attach = icalattach_new_from_url(QFile::encodeName( alarm->audioFile() ).data());
-        icalcomponent_add_property(a,icalproperty_new_attach(attach));
+        icalcomponent_add_property(a, icalproperty_new_attach(attach));
       }
       break;
     case Alarm::Email: {
@@ -799,24 +802,24 @@ kDebug(5800) << " It's an audio action, file: " << alarm->audioFile() << endl;
       for (QList<Person>::Iterator ad = addresses.begin();  ad != addresses.end();  ++ad) {
         icalproperty *p = icalproperty_new_attendee("MAILTO:" + (*ad).email().toUtf8());
         if (!(*ad).name().isEmpty()) {
-          icalproperty_add_parameter(p,icalparameter_new_cn((*ad).name().toUtf8()));
+          icalproperty_add_parameter(p, icalparameter_new_cn((*ad).name().toUtf8()));
         }
-        icalcomponent_add_property(a,p);
+        icalcomponent_add_property(a, p);
       }
-      icalcomponent_add_property(a,icalproperty_new_summary(alarm->mailSubject().toUtf8()));
-      icalcomponent_add_property(a,icalproperty_new_description(alarm->mailText().toUtf8()));
+      icalcomponent_add_property(a, icalproperty_new_summary(alarm->mailSubject().toUtf8()));
+      icalcomponent_add_property(a, icalproperty_new_description(alarm->mailText().toUtf8()));
       QStringList attachments = alarm->mailAttachments();
       if (attachments.count() > 0) {
         for (QStringList::Iterator at = attachments.begin();  at != attachments.end();  ++at) {
           attach = icalattach_new_from_url(QFile::encodeName( *at ).data());
-          icalcomponent_add_property(a,icalproperty_new_attach(attach));
+          icalcomponent_add_property(a, icalproperty_new_attach(attach));
         }
       }
       break;
     }
     case Alarm::Display:
       action = ICAL_ACTION_DISPLAY;
-      icalcomponent_add_property(a,icalproperty_new_description(alarm->text().toUtf8()));
+      icalcomponent_add_property(a, icalproperty_new_description(alarm->text().toUtf8()));
       break;
     case Alarm::Invalid:
     default:
@@ -824,12 +827,12 @@ kDebug(5800) << " It's an audio action, file: " << alarm->audioFile() << endl;
       action = ICAL_ACTION_NONE;
       break;
   }
-  icalcomponent_add_property(a,icalproperty_new_action(action));
+  icalcomponent_add_property(a, icalproperty_new_action(action));
 
   // Trigger time
   icaltriggertype trigger;
   if ( alarm->hasTime() ) {
-    trigger.time = writeICalDateTime(alarm->time());
+    trigger.time = writeICalUtcDateTime(alarm->time());
     trigger.duration = icaldurationtype_null_duration();
   } else {
     trigger.time = icaltime_null_time();
@@ -842,13 +845,13 @@ kDebug(5800) << " It's an audio action, file: " << alarm->audioFile() << endl;
   }
   icalproperty *p = icalproperty_new_trigger(trigger);
   if ( alarm->hasEndOffset() )
-    icalproperty_add_parameter(p,icalparameter_new_related(ICAL_RELATED_END));
-  icalcomponent_add_property(a,p);
+    icalproperty_add_parameter(p, icalparameter_new_related(ICAL_RELATED_END));
+  icalcomponent_add_property(a, p);
 
   // Repeat count and duration
   if (alarm->repeatCount()) {
-    icalcomponent_add_property(a,icalproperty_new_repeat(alarm->repeatCount()));
-    icalcomponent_add_property(a,icalproperty_new_duration(
+    icalcomponent_add_property(a, icalproperty_new_repeat(alarm->repeatCount()));
+    icalcomponent_add_property(a, icalproperty_new_duration(
                              icaldurationtype_from_int(alarm->snoozeTime()*60)));
   }
 
@@ -863,11 +866,11 @@ kDebug(5800) << " It's an audio action, file: " << alarm->audioFile() << endl;
   return a;
 }
 
-Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
+Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo, ICalTimeZones *tzlist)
 {
   Todo *todo = new Todo;
 
-  readIncidence(vtodo, 0, todo); // FIXME timezone
+  readIncidence(vtodo, todo, tzlist);
 
   icalproperty *p = icalcomponent_get_first_property(vtodo,ICAL_ANY_PROPERTY);
 
@@ -880,20 +883,20 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
     icalproperty_kind kind = icalproperty_isa(p);
     switch (kind) {
 
-      case ICAL_DUE_PROPERTY:  // due date
+      case ICAL_DUE_PROPERTY:  // due date/time
         icaltime = icalproperty_get_due(p);
         if (icaltime.is_date) {
-          todo->setDtDue(QDateTime(readICalDate(icaltime),QTime(0,0,0)),true);
+          todo->setDtDue(KDateTime(readICalDate(icaltime), todo->dtStart().timeSpec()), true);
         } else {
-          todo->setDtDue(readICalDateTime(icaltime),true);
+          todo->setDtDue(readICalDateTime(p, icaltime, tzlist), true);
           todo->setFloats(false);
         }
         todo->setHasDueDate(true);
         break;
 
-      case ICAL_COMPLETED_PROPERTY:  // completion date
+      case ICAL_COMPLETED_PROPERTY:  // completion date/time (UTC)
         icaltime = icalproperty_get_completed(p);
-        todo->setCompleted(readICalDateTime(icaltime));
+        todo->setCompleted(readICalUtcDateTime(icaltime));
         break;
 
       case ICAL_PERCENTCOMPLETE_PROPERTY:  // Percent completed
@@ -916,7 +919,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 
       case ICAL_RECURRENCEID_PROPERTY:
         icaltime = icalproperty_get_recurrenceid(p);
-        todo->setDtRecurrence( readICalDateTime(icaltime) );
+        todo->setDtRecurrence( readICalDateTime(p, icaltime, tzlist) );
         break;
 
       default:
@@ -933,18 +936,11 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
   return todo;
 }
 
-Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezone )
+Event *ICalFormatImpl::readEvent( icalcomponent *vevent, ICalTimeZones *tzlist)
 {
   Event *event = new Event;
 
-  // FIXME where is this freed?
-  icaltimezone *tz = icaltimezone_new();
-  if ( !icaltimezone_set_component( tz, vtimezone ) ) {
-    icaltimezone_free( tz, 1 );
-    tz = 0;
-  }
-
-  readIncidence( vevent, tz, event);
+  readIncidence( vevent, event, tzlist);
 
   icalproperty *p = icalcomponent_get_first_property(vevent,ICAL_ANY_PROPERTY);
 
@@ -967,9 +963,9 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
           if ( endDate < event->dtStart().date() ) {
             endDate = event->dtStart().date();
           }
-          event->setDtEnd( QDateTime( endDate, QTime( 0, 0, 0 ) ) );
+          event->setDtEnd( KDateTime( endDate, event->dtStart().timeSpec() ) );
         } else {
-          event->setDtEnd(readICalDateTime(icaltime, tz));
+          event->setDtEnd( readICalDateTime(p, icaltime, tzlist) );
           event->setFloats( false );
         }
         break;
@@ -1003,7 +999,7 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
 //    kDebug(5800) << "ICALFormat::readEvent(): all day event: " << floats << endl;
     event->setFloats(floats);
     if (floats) {
-      QDateTime endDate = event->dtEnd();
+      KDateTime endDate = event->dtEnd();
       event->setDtEnd(endDate.addDays(-1));
     }
   }
@@ -1019,7 +1015,7 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
 
   readIncidenceBase(vfreebusy, freebusy);
 
-  icalproperty *p = icalcomponent_get_first_property(vfreebusy,ICAL_ANY_PROPERTY);
+  icalproperty *p = icalcomponent_get_first_property(vfreebusy, ICAL_ANY_PROPERTY);
 
   icaltimetype icaltime;
   PeriodList periods;
@@ -1028,21 +1024,21 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
     icalproperty_kind kind = icalproperty_isa(p);
     switch (kind) {
 
-      case ICAL_DTSTART_PROPERTY:  // start date and time
+      case ICAL_DTSTART_PROPERTY:  // start date and time (UTC)
         icaltime = icalproperty_get_dtstart(p);
-        freebusy->setDtStart(readICalDateTime(icaltime));
+        freebusy->setDtStart(readICalUtcDateTime(icaltime));
         break;
 
-      case ICAL_DTEND_PROPERTY:  // end Date and Time
+      case ICAL_DTEND_PROPERTY:  // end Date and Time (UTC)
         icaltime = icalproperty_get_dtend(p);
-        freebusy->setDtEnd(readICalDateTime(icaltime));
+        freebusy->setDtEnd(readICalUtcDateTime(icaltime));
         break;
 
-      case ICAL_FREEBUSY_PROPERTY: { //Any FreeBusy Times
+      case ICAL_FREEBUSY_PROPERTY: { //Any FreeBusy Times (UTC)
         icalperiodtype icalperiod = icalproperty_get_freebusy(p);
-        QDateTime period_start = readICalDateTime(icalperiod.start);
+        KDateTime period_start = readICalUtcDateTime(icalperiod.start);
         if ( !icaltime_is_null_time(icalperiod.end) ) {
-          QDateTime period_end = readICalDateTime(icalperiod.end);
+          KDateTime period_end = readICalUtcDateTime(icalperiod.end);
           periods.append( Period( period_start, period_end ) );
         } else {
           Duration duration ( readICalDuration( icalperiod.duration ) );
@@ -1055,18 +1051,18 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
 //                      << kind << endl;
       break;
     }
-    p = icalcomponent_get_next_property(vfreebusy,ICAL_ANY_PROPERTY);
+    p = icalcomponent_get_next_property(vfreebusy, ICAL_ANY_PROPERTY);
   }
   freebusy->addPeriods( periods );
 
   return freebusy;
 }
 
-Journal *ICalFormatImpl::readJournal(icalcomponent *vjournal)
+Journal *ICalFormatImpl::readJournal(icalcomponent *vjournal, ICalTimeZones *tzlist)
 {
   Journal *journal = new Journal;
 
-  readIncidence(vjournal, 0, journal); // FIXME tz?
+  readIncidence(vjournal, journal, tzlist);
 
   return journal;
 }
@@ -1079,14 +1075,14 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
 
   QString name;
   QString uid = QString();
-  p = icalproperty_get_first_parameter(attendee,ICAL_CN_PARAMETER);
+  p = icalproperty_get_first_parameter(attendee, ICAL_CN_PARAMETER);
   if (p) {
     name = QString::fromUtf8(icalparameter_get_cn(p));
   } else {
   }
 
   bool rsvp=false;
-  p = icalproperty_get_first_parameter(attendee,ICAL_RSVP_PARAMETER);
+  p = icalproperty_get_first_parameter(attendee, ICAL_RSVP_PARAMETER);
   if (p) {
     icalparameter_rsvp rsvpParameter = icalparameter_get_rsvp(p);
     if (rsvpParameter == ICAL_RSVP_TRUE) rsvp = true;
@@ -1123,7 +1119,7 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
   }
 
   Attendee::Role role = Attendee::ReqParticipant;
-  p = icalproperty_get_first_parameter(attendee,ICAL_ROLE_PARAMETER);
+  p = icalproperty_get_first_parameter(attendee, ICAL_ROLE_PARAMETER);
   if (p) {
     icalparameter_role roleParameter = icalparameter_get_role(p);
     switch(roleParameter) {
@@ -1143,14 +1139,14 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
     }
   }
 
-  p = icalproperty_get_first_parameter(attendee,ICAL_X_PARAMETER);
+  p = icalproperty_get_first_parameter(attendee, ICAL_X_PARAMETER);
   uid = icalparameter_get_xvalue(p);
   // This should be added, but there seems to be a libical bug here.
   // TODO: does this work now in libical-0.24 or greater?
   /*while (p) {
    // if (icalparameter_get_xname(p) == "X-UID") {
     uid = icalparameter_get_xvalue(p);
-    p = icalproperty_get_next_parameter(attendee,ICAL_X_PARAMETER);
+    p = icalproperty_get_next_parameter(attendee, ICAL_X_PARAMETER);
   } */
 
   return new Attendee( name, email, rsvp, status, role, uid );
@@ -1208,11 +1204,11 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   return attachment;
 }
 
-void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Incidence *incidence)
+void ICalFormatImpl::readIncidence(icalcomponent *parent, Incidence *incidence, ICalTimeZones *tzlist)
 {
   readIncidenceBase(parent,incidence);
 
-  icalproperty *p = icalcomponent_get_first_property(parent,ICAL_ANY_PROPERTY);
+  icalproperty *p = icalcomponent_get_first_property(parent, ICAL_ANY_PROPERTY);
 
   const char *text;
   int intvalue, inttext;
@@ -1225,9 +1221,9 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
     icalproperty_kind kind = icalproperty_isa(p);
     switch (kind) {
 
-      case ICAL_CREATED_PROPERTY:
+      case ICAL_CREATED_PROPERTY:   // UTC date/time
         icaltime = icalproperty_get_created(p);
-        incidence->setCreated(readICalDateTime(icaltime, tz));
+        incidence->setCreated(readICalUtcDateTime(icaltime));
         break;
 
       case ICAL_SEQUENCE_PROPERTY:  // sequence
@@ -1235,18 +1231,18 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
         incidence->setRevision(intvalue);
         break;
 
-      case ICAL_LASTMODIFIED_PROPERTY:  // last modification date
+      case ICAL_LASTMODIFIED_PROPERTY:  // last modification UTC date/time
         icaltime = icalproperty_get_lastmodified(p);
-        incidence->setLastModified(readICalDateTime(icaltime, tz));
+        incidence->setLastModified(readICalUtcDateTime(icaltime));
         break;
 
       case ICAL_DTSTART_PROPERTY:  // start date and time
         icaltime = icalproperty_get_dtstart(p);
         if (icaltime.is_date) {
-          incidence->setDtStart(QDateTime(readICalDate(icaltime),QTime(0,0,0)));
+          incidence->setDtStart(KDateTime(readICalDate(icaltime), KDateTime::Spec::ClockTime));
           incidence->setFloats( true );
         } else {
-          incidence->setDtStart(readICalDateTime(icaltime, tz));
+          incidence->setDtStart(readICalDateTime(p, icaltime, tzlist));
           incidence->setFloats( false );
         }
         break;
@@ -1316,7 +1312,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
           if ( icaltime_is_date( rd.time ) ) {
             incidence->recurrence()->addRDate( readICalDate( rd.time ) );
           } else {
-            incidence->recurrence()->addRDateTime( readICalDateTime(rd.time ) );
+            incidence->recurrence()->addRDateTime( readICalDateTime(p, rd.time, tzlist) );
           }
         } else {
           // TODO: RDates as period are not yet implemented!
@@ -1332,7 +1328,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
         if ( icaltime_is_date(icaltime) ) {
           incidence->recurrence()->addExDate( readICalDate(icaltime) );
         } else {
-          incidence->recurrence()->addExDateTime( readICalDateTime(icaltime, tz) );
+          incidence->recurrence()->addExDateTime( readICalDateTime(p, icaltime, tzlist) );
         }
         break;
 
@@ -1390,18 +1386,18 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *tz, Inci
   incidence->setCategories(categories);
 
   // iterate through all alarms
-  for (icalcomponent *alarm = icalcomponent_get_first_component(parent,ICAL_VALARM_COMPONENT);
+  for (icalcomponent *alarm = icalcomponent_get_first_component(parent, ICAL_VALARM_COMPONENT);
        alarm;
-       alarm = icalcomponent_get_next_component(parent,ICAL_VALARM_COMPONENT)) {
+       alarm = icalcomponent_get_next_component(parent, ICAL_VALARM_COMPONENT)) {
     readAlarm(alarm,incidence);
   }
   // Fix incorrect alarm settings by other applications (like outloook 9)
   if ( mCompat ) mCompat->fixAlarms( incidence );
 }
 
-void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *incidenceBase)
+void ICalFormatImpl::readIncidenceBase(icalcomponent *parent, IncidenceBase *incidenceBase)
 {
-  icalproperty *p = icalcomponent_get_first_property(parent,ICAL_ANY_PROPERTY);
+  icalproperty *p = icalcomponent_get_first_property(parent, ICAL_ANY_PROPERTY);
 
   while (p) {
     icalproperty_kind kind = icalproperty_isa(p);
@@ -1428,19 +1424,19 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
         break;
     }
 
-    p = icalcomponent_get_next_property(parent,ICAL_ANY_PROPERTY);
+    p = icalcomponent_get_next_property(parent, ICAL_ANY_PROPERTY);
   }
 
   // custom properties
   readCustomProperties(parent, incidenceBase);
 }
 
-void ICalFormatImpl::readCustomProperties(icalcomponent *parent,CustomProperties *properties)
+void ICalFormatImpl::readCustomProperties(icalcomponent *parent, CustomProperties *properties)
 {
   QMap<QByteArray, QString> customProperties;
   QString lastProperty=QString();
 
-  icalproperty *p = icalcomponent_get_first_property(parent,ICAL_X_PROPERTY);
+  icalproperty *p = icalcomponent_get_first_property(parent, ICAL_X_PROPERTY);
 
   while (p) {
 
@@ -1464,7 +1460,7 @@ void ICalFormatImpl::readCustomProperties(icalcomponent *parent,CustomProperties
 
 
 
-void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence )
+void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule, Incidence *incidence )
 {
 //  kDebug(5800) << "Read recurrence for " << incidence->summary() << endl;
 
@@ -1516,11 +1512,8 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
 
   // Duration & End Date
   if ( !icaltime_is_null_time( r.until ) ) {
-    icaltimetype t;
-    t = r.until;
-    // Convert to the correct time zone! it's in UTC by specification.
-    QDateTime endDate( readICalDateTime(t) );
-    recur->setEndDt( endDate );
+    icaltimetype t = r.until;
+    recur->setEndDt( readICalUtcDateTime(t) );
   } else {
     if (r.count == 0)
       recur->setDuration( -1 );
@@ -1576,7 +1569,7 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
 }
 
 
-void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
+void ICalFormatImpl::readAlarm(icalcomponent *alarm, Incidence *incidence)
 {
   kDebug(5800) << "Read alarm for " << incidence->summary() << endl;
 
@@ -1620,14 +1613,14 @@ kDebug(5800) << " alarm type =" << type << endl;
             kDebug(5800) << "ICalFormatImpl::readAlarm(): Trigger has no time and no duration." << endl;
           } else {
             Duration duration ( icaldurationtype_as_int( trigger.duration ) );
-            icalparameter *param = icalproperty_get_first_parameter(p,ICAL_RELATED_PARAMETER);
+            icalparameter *param = icalproperty_get_first_parameter(p, ICAL_RELATED_PARAMETER);
             if (param && icalparameter_get_related(param) == ICAL_RELATED_END)
               ialarm->setEndOffset(duration);
             else
               ialarm->setStartOffset(duration);
           }
         } else {
-          ialarm->setTime(readICalDateTime(trigger.time));
+          ialarm->setTime(readICalUtcDateTime(trigger.time));
         }
         break;
       }
@@ -1667,7 +1660,7 @@ kDebug(5800) << " alarm type =" << type << endl;
       case ICAL_ATTENDEE_PROPERTY: {
         QString email = QString::fromUtf8(icalproperty_get_attendee(p));
         QString name;
-        icalparameter *param = icalproperty_get_first_parameter(p,ICAL_CN_PARAMETER);
+        icalparameter *param = icalproperty_get_first_parameter(p, ICAL_CN_PARAMETER);
         if (param) {
           name = QString::fromUtf8(icalparameter_get_cn(param));
         }
@@ -1702,7 +1695,7 @@ kDebug(5800) << " alarm type =" << type << endl;
         break;
     }
 
-    p = icalcomponent_get_next_property(alarm,ICAL_ANY_PROPERTY);
+    p = icalcomponent_get_next_property(alarm, ICAL_ANY_PROPERTY);
   }
 
   // custom properties
@@ -1719,10 +1712,10 @@ icaldatetimeperiodtype ICalFormatImpl::writeICalDatePeriod( const QDate &date )
   return t;
 }
 
-icaldatetimeperiodtype ICalFormatImpl::writeICalDateTimePeriod( const QDateTime &date )
+icaldatetimeperiodtype ICalFormatImpl::writeICalDateTimePeriod( const KDateTime &datetime, ICalTimeZones *tzlist )
 {
   icaldatetimeperiodtype t;
-  t.time = writeICalDateTime( date );
+  t.time = writeICalDateTime( datetime, tzlist );
   t.period = icalperiodtype_null_period();
   return t;
 }
@@ -1748,7 +1741,7 @@ icaltimetype ICalFormatImpl::writeICalDate(const QDate &date)
   return t;
 }
 
-icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
+icaltimetype ICalFormatImpl::writeICalDateTime( const KDateTime &datetime, ICalTimeZones *tzlist )
 {
   icaltimetype t = icaltime_null_time();
 
@@ -1761,54 +1754,92 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
   t.second = datetime.time().second();
 
   t.is_date = 0;
-  t.zone = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().toLatin1() );
+  ICalTimeZone *tz = new ICalTimeZone( *datetime.timeZone() );
+  t.zone = tz->icalTimezone();
   t.is_utc = 0;
 
+  if ( tzlist )
+    tzlist->add( tz );
+  else
+    delete tz;
+
  // _dumpIcaltime( t );
-  /* The QDateTime we get passed in is to be considered in the timezone of
-   * the current calendar (mParent's), or, if there is none, to be floating.
-   * In the later case store a floating time, in the former normalize to utc. */
-  if (mParent->timeZoneId().isEmpty())
-    t = icaltime_convert_to_zone( t, 0 ); //make floating timezone
-  else {
-    icaltimezone* tz = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().toLatin1() );
-    icaltimezone* utc = icaltimezone_get_utc_timezone();
-    if ( tz != utc ) {
-      t.zone = tz;
-      t = icaltime_convert_to_zone( t, utc );
-    } else {
-      t.is_utc = 1;
-      t.zone = utc;
-    }
-  }
-//  _dumpIcaltime( t );
 
   return t;
 }
 
-QDateTime ICalFormatImpl::readICalDateTime( icaltimetype& t, icaltimezone* tz )
+KDateTime ICalFormatImpl::readICalDateTime( icalproperty *p, const icaltimetype& t, ICalTimeZones *tzlist)
 {
-//   kDebug(5800) << "ICalFormatImpl::readICalDateTime()" << endl;
-  if ( tz ) {
-    t.zone = tz;
-    t.is_utc = (tz == icaltimezone_get_utc_timezone())?1:0;
+//  kDebug(5800) << "ICalFormatImpl::readICalDateTime()" << endl;
+//  _dumpIcaltime( t );
+  KDateTime::Spec timeSpec;
+  if ( t.zone == icaltimezone_get_utc_timezone() ) {
+    timeSpec = KDateTime::Spec::UTC;   // The time zone is UTC
   }
-  //_dumpIcaltime( t );
-
-  // Convert to view time
-  if ( !mParent->timeZoneId().isEmpty() && t.zone ) {
-//    kDebug(5800) << "--- Converting time from: " << icaltimezone_get_tzid( const_cast<icaltimezone*>( t.zone ) ) << " (" << ICalDate2QDate(t) << ")." << endl;
-    icaltimezone* viewTimeZone = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().toLatin1() );
-    icaltimezone_convert_time(  &t, const_cast<icaltimezone*>( t.zone ), viewTimeZone );
-//    kDebug(5800) << "--- Converted to zone " << mParent->timeZoneId() << " (" << ICalDate2QDate(t) << ")." << endl;
+  else if ( !tzlist ) {
+    return KDateTime();   // must be UTC, but it isn't
+  } else {
+    icalparameter *param = icalproperty_get_first_parameter(p, ICAL_TZID_PARAMETER);
+    const char *tzid = param ? icalparameter_get_tzid(param) : 0;
+    if ( !tzid )
+      timeSpec = KDateTime::Spec::ClockTime;
+    else {
+kDebug(5800)<<" readICalDateTime(): tzid="<<tzid<<endl;
+      const ICalTimeZone *tz = tzlist->zone( QString::fromUtf8(tzid) );
+      if ( !tz ) {
+        // The time zone is not in the existing list for the calendar.
+        // Try to read it from libical's built-in time zones.
+        ICalTimeZone *tznew = 0;
+#warning Fix reading libical builtin time zones
+// TODO: Check for built in time zones? Also see icalcomponent_get_datetime().
+        icaltimezone* icaltz = icaltimezone_get_builtin_timezone_from_tzid( tzid );
+kDebug(5800)<<" ---icaltz(tzid)="<<(bool)icaltz<<endl;
+        if ( !icaltz )
+{
+          icaltz = icaltimezone_get_builtin_timezone( tzid );
+kDebug(5800)<<" ---icaltz(location)="<<(bool)icaltz<<endl;}
+        if ( icaltz ) {
+          kDebug(5800) << "ICalFormatImpl::readICalDateTime(): time zone '" << tzid << "' read from libical database" << endl;
+          ICalTimeZoneSource tzsource;
+          ICalTimeZone *tznew = tzsource.parse( icaltz );
+          if ( !tznew ) {
+            kDebug(5800) << "ICalFormatImpl::readICalDateTime(): can't parse built in time zone '" << tzid << "'" << endl;
+            return KDateTime();
+          }
+        } else {
+          // Can't read it from libical's database, so try the system database
+          KTzfileTimeZoneSource tzsrc( KSystemTimeZones::zoneinfoDir() );
+          KTzfileTimeZone tztz( &tzsrc, tzid );
+          if ( !tztz.data(true) ) {
+            kDebug(5800) << "ICalFormatImpl::readICalDateTime(): time zone '" << tzid << "' not recognised" << endl;
+            return KDateTime();    // error (time zone not found, etc.)
+          }
+          tznew = new ICalTimeZone( tztz );
+          kDebug(5800) << "ICalFormatImpl::readICalDateTime(): time zone '" << tzid << "' read from system database" << endl;
+        }
+        tzlist->add( tznew );
+        tz = tznew;
+      }
+      timeSpec = KDateTime::Spec( tz );
+//      kDebug(5800) << "--- Time zone: " << timeSpec.timeZone()->name() << endl;
+    }
   }
+  return KDateTime( QDate(t.year,t.month,t.day), QTime(t.hour,t.minute,t.second), timeSpec );
+}
 
-  return ICalDate2QDate(t);
+KDateTime ICalFormatImpl::readICalUtcDateTime( icaltimetype& t )
+{
+//  kDebug(5800) << "ICalFormatImpl::readICalUtcDateTime()" << endl;
+//  _dumpIcaltime( t );
+  if ( t.zone != icaltimezone_get_utc_timezone() )
+    return KDateTime();   // must be UTC, but it isn't
+kDebug(5800)<<" readICalDateTime(): UTC"<<endl;
+  return KDateTime( QDate(t.year,t.month,t.day), QTime(t.hour,t.minute,t.second), KDateTime::UTC );
 }
 
 QDate ICalFormatImpl::readICalDate(icaltimetype t)
 {
-  return ICalDate2QDate(t).date();
+  return QDate(t.year,t.month,t.day);
 }
 
 icaldurationtype ICalFormatImpl::writeICalDuration(int seconds)
@@ -1921,14 +1952,15 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     }
   }
 
+  // Populate the calendar's time zone collection with all VTIMEZONE components
+  ICalTimeZones *tzlist = cal->timeZones();
+  tzlist->clear();
+  ICalTimeZoneSource tzs;
+  tzs.parse(calendar, *tzlist);
+kDebug(5800)<<"populate(): count="<<tzlist->zones().count()<<endl;
+
   // custom properties
   readCustomProperties(calendar, cal);
-
-// TODO: set time zone
-
-  // read a VTIMEZONE if there is one
-  icalcomponent *ctz =
-    icalcomponent_get_first_component( calendar, ICAL_VTIMEZONE_COMPONENT );
 
   // Store all events with a relatedTo property in a list for post-processing
   mEventsRelate.clear();
@@ -1941,7 +1973,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   c = icalcomponent_get_first_component(calendar,ICAL_VTODO_COMPONENT);
   while (c) {
 //    kDebug(5800) << "----Todo found" << endl;
-    Todo *todo = readTodo(c);
+    Todo *todo = readTodo(c, tzlist);
     if (todo && !cal->todo(todo->uid())) cal->addTodo(todo);
     c = icalcomponent_get_next_component(calendar,ICAL_VTODO_COMPONENT);
   }
@@ -1950,7 +1982,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   c = icalcomponent_get_first_component(calendar,ICAL_VEVENT_COMPONENT);
   while (c) {
 //    kDebug(5800) << "----Event found" << endl;
-    Event *event = readEvent(c, ctz);
+    Event *event = readEvent(c, tzlist);
     if (event && !cal->event(event->uid())) cal->addEvent(event);
     c = icalcomponent_get_next_component(calendar,ICAL_VEVENT_COMPONENT);
   }
@@ -1959,7 +1991,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   c = icalcomponent_get_first_component(calendar,ICAL_VJOURNAL_COMPONENT);
   while (c) {
 //    kDebug(5800) << "----Journal found" << endl;
-    Journal *journal = readJournal(c);
+    Journal *journal = readJournal(c, tzlist);
     if (journal && !cal->journal(journal->uid())) cal->addJournal(journal);
     c = icalcomponent_get_next_component(calendar,ICAL_VJOURNAL_COMPONENT);
   }
@@ -2105,4 +2137,26 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
   icalcomponent_add_component( message, inc );
 
   return message;
+}
+
+// DEPRECATED methods
+Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
+{
+    ICalTimeZones tzlist;
+    return readTodo(vtodo, &tzlist);
+}
+Event *ICalFormatImpl::readEvent(icalcomponent *vevent, icalcomponent *vtimezone)
+{
+    ICalTimeZones tzlist;
+    return readEvent(vevent, &tzlist);
+}
+Journal *ICalFormatImpl::readJournal(icalcomponent *vjournal)
+{
+    ICalTimeZones tzlist;
+    return readJournal(vjournal, &tzlist);
+}
+void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *timezone, Incidence *incidence)
+{
+    ICalTimeZones tzlist;
+    readIncidence(parent, incidence, &tzlist);
 }

@@ -31,11 +31,11 @@
 #ifndef KCAL_INCIDENCEBASE_H
 #define KCAL_INCIDENCEBASE_H
 
-#include <QDateTime>
 #include <QStringList>
-
 #include <QByteArray>
 #include <QList>
+
+#include <kdatetime.h>
 
 #include "customproperties.h"
 #include "attendee.h"
@@ -47,7 +47,7 @@ namespace KCal {
 /** List of dates */
 typedef QList<QDate> DateList;
 /** List of times */
-typedef QList<QDateTime> DateTimeList;
+typedef QList<KDateTime> DateTimeList;
 class Event;
 class Todo;
 class Journal;
@@ -162,15 +162,17 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     */
     KUrl uri() const;
 
+    /** Sets the time the incidence was last modified. It is stored as a UTC date/time. */
     /**
       Sets the time the incidence was last modified.
     */
-    void setLastModified( const QDateTime &lm );
+    void setLastModified( const KDateTime &lm );
+    KDE_DEPRECATED void setLastModified( const QDateTime &lm )  { setLastModified(KDateTime(lm)); }  // use local time zone
 
     /**
       Return the time the incidence was last modified.
     */
-    QDateTime lastModified() const;
+    KDateTime lastModified() const;
 
     /**
       Sets the organizer for the incidence.
@@ -190,13 +192,18 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     */
     bool isReadOnly() const { return mReadOnly; }
 
-    /** for setting the incidence's starting date/time with a QDateTime. */
-    virtual void setDtStart( const QDateTime &dtStart );
+    /**
+      Sets the incidence's starting date/time with a KDateTime.
+      The incidence's floating status is set according to whether @p dtStart
+      is a date/time (not floating) or date-only (floating).
+    */
+    virtual void setDtStart( const KDateTime &dtStart );
+    virtual KDE_DEPRECATED void setDtStart( const QDateTime &dtStart )  { setDtStart(KDateTime(dtStart)); }  // use local time zone
 
     /**
-      Returns an incidence's starting date/time as a QDateTime.
+      Returns an incidence's starting date/time as a KDateTime.
     */
-    virtual QDateTime dtStart() const;
+    virtual KDateTime dtStart() const;
 
     /**
       Returns an incidence's starting time as a string formatted according
@@ -230,6 +237,22 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       to it.
     */
     void setFloats( bool f );
+
+    /**
+      Shift the times of the incidence so that they appear at the same clock
+      time as before but in a new time zone. The shift is done from a viewing
+      time zone rather than from the actual incidence time zone.
+
+      For example, shifting an incidence whose start time is 09:00 America/New York,
+      using an old viewing time zone (@p oldSpec) of Europe/London, to a new time
+      zone (@p newSpec) of Europe/Paris, will result in the time being shifted
+      from 14:00 (which is the London time of the incidence start) to 14:00 Paris
+      time.
+
+      @param oldSpec the time specification which provides the clock times
+      @param newSpec the new time specification
+    */
+    virtual void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
 
     //
     // Comments
@@ -351,10 +374,10 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
 
   private:
     // base components
-    QDateTime mDtStart;
+    KDateTime mDtStart;
     Person mOrganizer;
     QString mUid;
-    QDateTime mLastModified;
+    KDateTime mLastModified;
     Attendee::List mAttendees;
     QStringList mComments;
 

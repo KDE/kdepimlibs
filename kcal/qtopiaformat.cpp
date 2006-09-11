@@ -29,6 +29,7 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <kdatetime.h>
 
 #include "calendar.h"
 #include "calendarlocal.h"
@@ -164,7 +165,7 @@ class QtopiaParser : public QXmlDefaultHandler
           int month = attributes.value( "DateMonth" ).toInt();
           int day = attributes.value( "DateDay" ).toInt();
 
-          todo->setDtDue( QDateTime( QDate( year, month, day ) ) );
+          todo->setDtDue( KDateTime( QDate( year, month, day ), KDateTime::UTC ) );
           todo->setHasDueDate( true );
         }
 
@@ -217,9 +218,9 @@ class QtopiaParser : public QXmlDefaultHandler
                 << exception.systemId() << "')" << endl;
     }
 
-    QDateTime toDateTime( const QString &value )
+    KDateTime toDateTime( const QString &value )
     {
-      QDateTime dt;
+      KDateTime dt;
       dt.setTime_t( value.toUInt() );
 
       return dt;

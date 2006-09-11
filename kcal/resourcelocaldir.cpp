@@ -22,7 +22,6 @@
 #include <typeinfo>
 #include <stdlib.h>
 
-#include <QDateTime>
 #include <QString>
 
 #include <kdebug.h>
@@ -138,7 +137,7 @@ bool ResourceLocalDir::doLoad( bool )
 
       QString fileName = dirName + '/' + *it;
       kDebug(5800) << " read '" << fileName << "'" << endl;
-      CalendarLocal cal( mCalendar.timeZoneId() );
+      CalendarLocal cal( mCalendar.timeSpec() );
       if ( !doFileLoad( cal, fileName ) ) {
         success = false;
       }
@@ -180,7 +179,7 @@ bool ResourceLocalDir::doSave( bool, Incidence *incidence )
   QString fileName = mURL.path() + '/' + incidence->uid();
   kDebug(5800) << "writing '" << fileName << "'" << endl;
 
-  CalendarLocal cal( mCalendar.timeZoneId() );
+  CalendarLocal cal( mCalendar.timeSpec() );
   cal.addIncidence( incidence->clone() );
   cal.save( fileName );
 

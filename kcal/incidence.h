@@ -22,10 +22,6 @@
 #ifndef INCIDENCE_H
 #define INCIDENCE_H
 
-#include <QDateTime>
-#include <QStringList>
-
-
 #include "recurrence.h"
 #include "alarm.h"
 #include "attachment.h"
@@ -138,13 +134,14 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
     void recreate();
 
     /**
-      Set creation date.
+      Set creation date. It is stored as a UTC date/time.
     */
-    void setCreated( const QDateTime & );
+    void setCreated( const KDateTime & );
+    KDE_DEPRECATED void setCreated( const QDateTime &dt )  { setCreated(KDateTime(dt)); }  // use local time zone
     /**
       Return time and date of creation.
     */
-    QDateTime created() const;
+    KDateTime created() const;
 
     /**
       Set the number of revisions this incidence has seen.
@@ -158,11 +155,18 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
     /**
       Set starting date/time.
     */
-    virtual void setDtStart( const QDateTime &dtStart );
+    virtual void setDtStart( const KDateTime &dtStart );
+    virtual KDE_DEPRECATED void setDtStart( const QDateTime &dtStart )  { setDtStart(KDateTime(dtStart)); }  // use local time zone
     /**
-      Return the incidence's ending date/time as a QDateTime.
+      Return the incidence's ending date/time as a KDateTime.
     */
-    virtual QDateTime dtEnd() const  { return QDateTime(); }
+    virtual KDateTime dtEnd() const  { return KDateTime(); }
+
+    /**
+      @copydoc
+      IncidenceBase::shiftTimes()
+    */
+    virtual void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
 
     /**
       Set the long description.
@@ -256,35 +260,39 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
       Returns true if the date specified is one on which the incidence will
       recur.
     */
-    virtual bool recursOn( const QDate &qd ) const;
+    virtual bool recursOn( const QDate &qd, const KDateTime::Spec &timeSpec = KDateTime::LocalZone ) const;
+
     /**
       Returns true if the date/time specified is one on which the incidence will
       recur.
     */
-    bool recursAt( const QDateTime &dt ) const;
+    bool recursAt( const KDateTime &dt ) const;
+    KDE_DEPRECATED bool recursAt( const QDateTime &qdt ) const;
 
     /**
       Calculates the start date/time for all recurrences that happen at some time
       on the given date (might start before that date, but end on or after the
       given date).
-      @param date the date where the incidence should occur
+      @param date the date when the incidence should occur
       @return the start date/time of all occurrences that overlap with the given
           date. Empty list if the incidence does not overlap with the date at all
     */
-    virtual QList<QDateTime> startDateTimesForDate( const QDate &date ) const;
+    virtual QList<KDateTime> startDateTimesForDate( const QDate &date, const KDateTime::Spec &timeSpec = KDateTime::LocalZone ) const;
 
     /**
       Calculates the start date/time for all recurrences that happen at the given
       time.
-      @param datetime the date/time where the incidence should occur
+      @param datetime the date/time when the incidence should occur
       @return the start date/time of all occurrences that overlap with the given
           date/time. Empty list if the incidence does not happen at the given
           time at all.
     */
-    virtual QList<QDateTime> startDateTimesForDateTime( const QDateTime &datetime ) const;
+    virtual QList<KDateTime> startDateTimesForDateTime( const KDateTime &datetime ) const;
+    virtual KDE_DEPRECATED QList<QDateTime> startDateTimesForDateTime( const QDateTime &datetime ) const;
 
     /** Return the end time of the occurrence if it starts at the given date/time */
-    virtual QDateTime endDateForStart( const QDateTime &startDt ) const;
+    virtual KDateTime endDateForStart( const KDateTime &startDt ) const;
+    virtual KDE_DEPRECATED QDateTime endDateForStart( const QDateTime &startDt ) const;
 
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -463,13 +471,13 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
     /** Return the end date/time of the base incidence (e.g. due date/time for
        to-dos, end date/time for events).
        This method needs to be reimplemented by derived classes. */
-    virtual QDateTime endDateRecurrenceBase() const { return dtStart(); }
+    virtual KDateTime endDateRecurrenceBase() const { return dtStart(); }
 
   private:
     int mRevision;
 
     // base components of jounal, event and todo
-    QDateTime mCreated;
+    KDateTime mCreated;
     QString mDescription;
     QString mSummary;
     QStringList mCategories;

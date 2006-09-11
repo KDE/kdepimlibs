@@ -146,15 +146,13 @@ void ICalTimeZonesTest::parse()
     // Parse the file, the CALENDAR text string and the individual VTIMEZONE strings,
     // and check that ICalTimeZone instances with the same names are created in each case.
     ICalTimeZoneSource src;
-    KTimeZones timezones1;
-#warning Temporary build hack
-    //    QVERIFY(src.parse(path, timezones1));
+    ICalTimeZones timezones1;
+    QVERIFY(src.parse(path, timezones1));
 
     icalcomponent *calendar = loadCALENDAR(text);
     QVERIFY(calendar);
-    KTimeZones timezones2;
-#warning Temporary build hack
-    // QVERIFY(src.parse(calendar, timezones2));
+    ICalTimeZones timezones2;
+    QVERIFY(src.parse(calendar, timezones2));
 
     icaltimezone *icaltz = icaltimezone_new();
     for (icalcomponent *ctz = icalcomponent_get_first_component(calendar, ICAL_VTIMEZONE_COMPONENT);
@@ -254,6 +252,8 @@ void ICalTimeZonesTest::offsetAtUtc()
     QVERIFY(tz);
     icalcomponent_free(vtimezone);
 
+    QCOMPARE(tz->data(true)->previousUtcOffset(), -4*3600);
+    QCOMPARE(tz->transitions()[0].time(), start);
     QCOMPARE(tz->offsetAtUtc(start.addSecs(-1)), -4*3600);
     QCOMPARE(tz->offsetAtUtc(start), -5*3600);
     QCOMPARE(tz->offsetAtUtc(daylight87.addSecs(-1)), -5*3600);

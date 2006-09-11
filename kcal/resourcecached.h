@@ -28,15 +28,17 @@
 #include "incidence.h"
 #include "calendarlocal.h"
 
+#include <kdatetime.h>
 #include <kconfig.h>
 
 #include <QString>
-#include <QDateTime>
 #include <QTimer>
 
 
 
 namespace KCal {
+
+class ICalTimeZone;
 
 /**
   This class provides a calendar resource using a local CalendarLocal object to
@@ -150,20 +152,22 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Set time of last load.
     */
-    void setLastLoad( const QDateTime & );
+    void setLastLoad( const KDateTime & );
+    KDE_DEPRECATED void setLastLoad( const QDateTime &dt )  { setLastLoad(KDateTime(dt)); }  // use local time zone
     /**
       Return time of last load.
     */
-    QDateTime lastLoad() const;
+    KDateTime lastLoad() const;
 
     /**
       Set time of last save.
     */
-    void setLastSave( const QDateTime & );
+    void setLastSave( const KDateTime & );
+    KDE_DEPRECATED void setLastSave( const QDateTime &dt )  { setLastSave(KDateTime(dt)); }  // use local time zone
     /**
       Return time of last save.
     */
-    QDateTime lastSave() const;
+    KDateTime lastSave() const;
 
     /**
       Load resource data, specifying whether to refresh the cache file first.
@@ -220,7 +224,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Get unfiltered events for date \a dt.
     */
-    Event::List rawEventsForDate( const QDateTime &dt );
+    Event::List rawEventsForDate( const KDateTime &dt );
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events are returned, which are completely included in the range.
@@ -273,32 +277,43 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Return all alarms, which occur in the given time interval.
     */
-    Alarm::List alarms( const QDateTime &from, const QDateTime &to );
+    Alarm::List alarms( const KDateTime &from, const KDateTime &to );
 
     /**
       Return all alarms, which occur before given date.
     */
-    Alarm::List alarmsTo( const QDateTime &to );
+    Alarm::List alarmsTo( const KDateTime &to );
+
+    /**
+      Set the time specification (time zone, etc.).
+    */
+    void setTimeSpec( const KDateTime::Spec &timeSpec );
+
+    /**
+       Get the viewing time specification (time zone etc.) for the calendar.
+
+       @return time specification
+    */
+    KDateTime::Spec timeSpec() const;
 
     /**
       Set id of timezone, e.g. "Europe/Berlin"
     */
     void setTimeZoneId( const QString &timeZoneId );
 
-    QString timeZoneId();
+    /**
+      Returns the viewing time zone ID for the resource.
+
+      @return the string containing the time zone ID, or empty string if the
+              viewing time specification is not a time zone.
+    */
+    QString timeZoneId() const;
 
     /**
-      Set to store incidences without a time zone.
+      @copydoc
+      ResourceCalendar::shiftTimes()
     */
-    void setLocalTime();
-
-    /**
-      Set whether incidences are to be written without a time zone.
-
-      @return true if the resource is set to write incidences withoout
-      a time zone; false otherwise.
-    */
-    bool isLocalTime() const;
+    virtual void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
 
     /**
       Return the owner of the calendar's full name.
@@ -444,8 +459,8 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     int mSaveInterval;
     QTimer mSaveTimer;
 
-    QDateTime mLastLoad;
-    QDateTime mLastSave;
+    KDateTime mLastLoad;
+    KDateTime mLastSave;
 
     QMap<KCal::Incidence *,bool> mAddedIncidences;
     QMap<KCal::Incidence *,bool> mChangedIncidences;

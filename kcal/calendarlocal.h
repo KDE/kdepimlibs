@@ -47,6 +47,10 @@ class KCAL_EXPORT CalendarLocal : public Calendar
     /**
       Constructs a new calendar, with variables initialized to sane values.
     */
+    explicit CalendarLocal( const KDateTime::Spec &timeSpec );
+    /**
+      Constructs a new calendar, with variables initialized to sane values.
+    */
     explicit CalendarLocal( const QString &timeZoneId );
 
     /**
@@ -74,7 +78,9 @@ class KCAL_EXPORT CalendarLocal : public Calendar
      * must be known, in other words a previous load() must have been executed.
      * @return success or failure
     */
-    bool reload( const QString &tz );
+    bool reload();
+    /** Use reload() plus setTimeZoneId() instead. */
+    KDE_DEPRECATED bool reload( const QString &tz );
 
     /**
       Writes out the calendar to disk in the specified \a format.
@@ -136,9 +142,10 @@ class KCAL_EXPORT CalendarLocal : public Calendar
 
     /**
       @copydoc
-      Calendar::rawEventsForDate(const QDateTime &)
+      Calendar::rawEventsForDate(const KDateTime &)
     */
-    Event::List rawEventsForDate( const QDateTime &dt );
+    Event::List rawEventsForDate( const KDateTime &dt );
+    KDE_DEPRECATED Event::List rawEventsForDate( const QDateTime &dt );
 
     /**
       @copydoc
@@ -228,21 +235,15 @@ class KCAL_EXPORT CalendarLocal : public Calendar
 
     /**
       @copydoc
-      Calendar::alarms(const QDateTime &, const QDateTime &)
+      Calendar::alarms(const KDateTime &, const KDateTime &)
     */
-    Alarm::List alarms( const QDateTime &from, const QDateTime &to );
+    Alarm::List alarms( const KDateTime &from, const KDateTime &to );
 
     /**
       >Return all alarms, which occur before given date.
     */
-    Alarm::List alarmsTo( const QDateTime &to );
-
-    /**
-     * Set the timezone of the calendar to be used for interpreting the events
-     * in the calendar. This requires that the calendar is saved first, so the
-     * user is asked whether he wants to do that, or keep the timezone as is.
-     */
-    void setTimeZoneIdViewOnly( const QString &tz );
+    Alarm::List alarmsTo( const KDateTime &to );
+    KDE_DEPRECATED Alarm::List alarmsTo( const QDateTime &to );
 
   private:
     /** inserts an event into its "proper place" in the calendar. */

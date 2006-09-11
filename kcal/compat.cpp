@@ -22,6 +22,7 @@
 
 #include "compat.h"
 
+#include <kdatetime.h>
 #include <kdebug.h>
 
 #include <QRegExp>
@@ -120,7 +121,7 @@ void CompatPre35::fixRecurrence( Incidence *incidence )
 {
   Recurrence* recurrence = incidence->recurrence();
   if (recurrence ) {
-    QDateTime start( incidence->dtStart() );
+    KDateTime start( incidence->dtStart() );
     // kde < 3.5 only had one rrule, so no need to loop over all RRULEs.
     RecurrenceRule *r = recurrence->defaultRRule();
     if ( r && !r->dateMatchesRules( start )  ) {
@@ -205,7 +206,7 @@ void CompatPre31::fixRecurrence( Incidence *incidence )
           break;
       }
       if ( !doNothing ) {
-        duration = r->durationTo( QDateTime( end, QTime( 0, 0, 0 ) ) );
+        duration = r->durationTo( KDateTime( end, QTime( 0, 0, 0 ), incidence->dtStart().timeSpec() ) );
         r->setDuration( duration );
       }
     }
