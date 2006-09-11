@@ -27,7 +27,7 @@ freebusyurlstore      |       |         |       |         |         |
 htmlexport            |       |         |       |         |         |
 icaldrag              |       |         |       |         |         |
 icalformat            |       |         |       |         |         |
-icalformatimpl        |   X   |    X    |   X   |    X    |    X    | David
+icalformatimpl        |       |         |       |         |         |
 icaltimezones         |       |         |       |         |         |
 imipscheduler         |       |         |       |         |         |
 incidencebase         |   D   |         |       |   n/a   |         | Allen
@@ -38,8 +38,8 @@ listbase              |       |         |       |         |         |
 period                |   D   |    D    |   D   |    D    |         | Narayan
 person                |   D   |    D    |   D   |    D    |         | Narayan
 qtopiaformat          |       |         |       |         |         |
-recurrence            |   X   |    X    |   X   |    X    |    X    | David
-recurrencerule        |   X   |    X    |   X   |    X    |    X    | David
+recurrence            |       |         |       |         |         |
+recurrencerule        |       |         |       |         |         |
 resourcecachedconfig  |       |         |       |         |         |
 resourcecached        |       |         |       |         |         |
 resourcecalendar      |       |         |       |         |         |
