@@ -19,12 +19,12 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef _KXMLRPC_TEST_H_
-#define _KXMLRPC_TEST_H_
+#ifndef _KXMLRPC_TEST_QUERY_H_
+#define _KXMLRPC_TEST_QUERY_H_
 
 #include <QObject>
 
-class KXmlRpcTest : public QObject 
+class TestQuery : public QObject 
 {
   Q_OBJECT
 private slots:

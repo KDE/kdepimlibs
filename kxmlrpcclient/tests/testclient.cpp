@@ -21,15 +21,15 @@
 
 #include <qtest_kde.h>
 
-#include "testkxmlrpc.h"
-#include "testkxmlrpc.moc"
+#include "testclient.h"
+#include "testclient.moc"
 
-QTEST_KDEMAIN( KXmlRpcTest, NoGUI )
+QTEST_KDEMAIN( TestClient, NoGUI )
 
 #include <kxmlrpcclient/client.h>
 using namespace KXmlRpc; 
 
-void KXmlRpcTest::testValidity() 
+void TestClient::testValidity() 
 {
   Client *c = new Client();
   c->setUrl( KUrl( "http://test:pass@fake.com/rpc2" ) );
@@ -41,4 +41,7 @@ void KXmlRpcTest::testValidity()
 
   Client *other = new Client( KUrl( "http://test:pass@fake.com/rpc2" ) );
   QVERIFY( c->url() == other->url() );
+
+  delete c;
+  delete other;
 }
