@@ -21,8 +21,9 @@
     Boston, MA 02110-1301, USA.
 */
 /**
-  @file calendar.h
-  Provides the main "calendar" object class.
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Calendar class.
 
   @author Preston Brown
   @author Cornelius Schumacher
@@ -67,7 +68,7 @@ enum SortDirection {
   Calendar Event sort keys.
 */
 enum EventSortField {
-  EventSortUnsorted,       /**< Events are to be unsorted */
+  EventSortUnsorted,       /**< Do not sort Events */
   EventSortStartDate,      /**< Sort Events chronologically, by start date */
   EventSortEndDate,        /**< Sort Events chronologically, by end date */
   EventSortSummary         /**< Sort Events alphabetically, by summary */
@@ -77,7 +78,7 @@ enum EventSortField {
   Calendar Todo sort keys.
 */
 enum TodoSortField {
-  TodoSortUnsorted,        /**< Todos are to be unsorted */
+  TodoSortUnsorted,        /**< Do not sort Todos */
   TodoSortStartDate,       /**< Sort Todos chronologically, by start date */
   TodoSortDueDate,         /**< Sort Todos chronologically, by due date */
   TodoSortPriority,        /**< Sort Todos by priority */
@@ -89,29 +90,32 @@ enum TodoSortField {
   Calendar Journal sort keys.
 */
 enum JournalSortField {
-  JournalSortUnsorted,     /**< Journals are to be unsorted */
+  JournalSortUnsorted,     /**< Do not sort Journals */
   JournalSortDate,         /**< Sort Journals chronologically by date */
   JournalSortSummary       /**< Sort Journals alphabetically, by summary */
 };
 
 /**
   @brief
-  >This is the main "calendar" object class.  It holds information like
-  Incidences(Events, To-dos, Journals), time zones, user information, etc. etc.
+  Represents the main calendar class.
 
-  This is an abstract base class defining the interface to a calendar. It is
-  implemented by subclasses like CalendarLocal, which use different
+  A calendar contains information like incidences (events, to-dos, journals),
+  alarms, time zones, and other useful information.
+
+  This is an abstract base class defining the interface to a calendar.
+  It is implemented by subclasses like CalendarLocal, which use different
   methods to store and access the data.
 
   <b>Ownership of Incidences</b>:
 
-  Incidence ownership is handled by the following policy: As soon as an
-  Incidence (or any other subclass of IncidenceBase) object is added to the
+  Incidence ownership is handled by the following policy: as soon as an
+  incidence (or any other subclass of IncidenceBase) is added to the
   Calendar by an add...() method it is owned by the Calendar object.
-  The Calendar takes care of deleting it.  All Incidences returned by the
-  query functions are returned as pointers so that changes to the returned
-  Incidences are immediately visible in the calendar.  Do <em>Not</em>
-  delete any Incidence object you get from Calendar.
+  The Calendar takes care of deleting the incidence using the delete...()
+  methods. All Incidences returned by the query functions are returned
+  as pointers so that changes to the returned Incidences are immediately
+  visible in the Calendar.  Do <em>Not</em> attempt to 'delete' any Incidence
+  object you get from Calendar -- use the delete...() methods.
 
   <b>Time Zone Handling</b>:
 
@@ -150,7 +154,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
   public:
 
     /**
-      Construct Calendar object using a time specification (time zone, etc.).
+      Constructs a calendar with a specified time zone @p timeZoneid.
       The time specification is used for creating or modifying incidences
       in the Calendar. It is also used for viewing incidences (see
       setViewTimeSpec()). The time specification does not alter existing
@@ -174,9 +178,11 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     explicit Calendar( const QString &timeZoneId );
 
     /**
-      >Destructor
+      Destroys the calendar.
     */
     virtual ~Calendar();
+
+  // DONE ABOVE
 
     /**
       Sets the calendar Product ID to @p productId.
@@ -285,6 +291,8 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @param oldSpec the time specification which provides the clock times
       @param newSpec the new time specification
+
+      @see isLocalTime()
     */
     void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
 
@@ -292,6 +300,8 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       Returns the time zone collection used by the calendar.
 
       @return the time zones collection.
+
+      @see setLocalTime()
     */
     ICalTimeZones *timeZones() const;
 
@@ -308,6 +318,8 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @param modified is true if the calendar has been modified since open
       or last save.
+
+      @see isModified()
     */
     void setModified( bool modified );
 
@@ -315,6 +327,8 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       Determine the calendar's modification status.
 
       @return true if the calendar has been modified since open or last save.
+
+      @see setModified()
     */
     bool isModified() const;
 
@@ -324,17 +338,20 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     virtual void close() = 0;
 
     /**
-      Sync changes in memory to persistent storage.
+      Syncs changes in memory to persistent storage.
     */
     virtual void save() = 0;
 
     /**
-      Load the calendar contents from storage. This requires the calendar
-      to have been loaded once before, in other words initialized.
+      Loads the calendar contents from storage. This requires that the
+      calendar has been previously loaded (initialized).
+
+      @return true if the reload was successful; otherwise false.
     */
     virtual bool reload() = 0;
     /** Use reload() plus setTimeZoneId() instead. */
-    KDE_DEPRECATED virtual bool reload( const QString &tz ) = 0;
+    KDE_DEPRECATED
+    virtual bool reload( const QString &tz ) = 0;
 
     /**
       Determine if the calendar is currently being saved.
@@ -344,41 +361,45 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     virtual bool isSaving() { return false; }
 
     /**
-      Return a list of all categories used by Incidences in this Calendar.
+      Returns a list of all categories used by Incidences in this Calendar.
 
       @return a QStringList containing all the categories.
     */
     QStringList categories();
 
-// Incidence Specific Methods //
+  // Incidence Specific Methods //
 
     /**
-      Insert an Incidence into the calendar.
+      Inserts an Incidence into the calendar.
 
       @param incidence is a pointer to the Incidence to insert.
 
       @return true if the Incidence was successfully inserted; false otherwise.
+
+      @see deleteIncidence()
     */
     virtual bool addIncidence( Incidence *incidence );
 
     /**
-      Remove an Incidence from the calendar.
+      Removes an Incidence from the calendar.
 
       @param incidence is a pointer to the Incidence to remove.
 
       @return true if the Incidence was successfully removed; false otherwise.
+
+      @see addIncidence()
     */
     virtual bool deleteIncidence( Incidence *incidence );
 
     /**
-      Return a filtered list of all Incidences for this Calendar.
+      Returns a filtered list of all Incidences for this Calendar.
 
       @return the list of all filtered Incidences.
     */
     virtual Incidence::List incidences();
 
     /**
-      Return a filtered list of all Incidences which occur on the given date.
+      Returns a filtered list of all Incidences which occur on the given date.
 
       @param date request filtered Incidence list for this QDate only.
 
@@ -387,7 +408,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     virtual Incidence::List incidences( const QDate &date );
 
     /**
-      Return an unfiltered list of all Incidences for this Calendar.
+      Returns an unfiltered list of all Incidences for this Calendar.
 
       @return the list of all unfiltered Incidences.
     */
@@ -462,23 +483,27 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     Incidence *dissociateOccurrence( Incidence *incidence, const QDate &date,
                                      bool single = true );
 
-// Event Specific Methods //
+  // Event Specific Methods //
 
     /**
-      Insert an Event into the calendar.
+      Inserts an Event into the calendar.
 
       @param event is a pointer to the Event to insert.
 
       @return true if the Event was successfully inserted; false otherwise.
+
+      @see deleteEvent()
     */
     virtual bool addEvent( Event *event ) = 0;
 
     /**
-      Remove an Event from the calendar.
+      Removes an Event from the calendar.
 
       @param event is a pointer to the Event to remove.
 
       @return true if the Event was successfully remove; false otherwise.
+
+      @see addEvent()
     */
     virtual bool deleteEvent( Event *event ) = 0;
 
@@ -495,7 +520,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
                                    EventSortField sortField,
                                    SortDirection sortDirection );
     /**
-      Return a sorted, filtered list of all Events for this Calendar.
+      Returns a sorted, filtered list of all Events for this Calendar.
 
       @param sortField specifies the EventSortField.
       @param sortDirection specifies the SortDirection.
@@ -507,7 +532,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       SortDirection sortDirection = SortDirectionAscending );
 
     /**
-      Return a filtered list of all Events which occur on the given timestamp.
+      Returns a filtered list of all Events which occur on the given timestamp.
 
       @param dt request filtered Event list for this KDateTime only.
 
@@ -517,7 +542,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     KDE_DEPRECATED Event::List events( const QDateTime &qdt );
 
     /**
-      Return a filtered list of all Events occurring within a date range.
+      Returns a filtered list of all Events occurring within a date range.
 
       @param start is the starting date.
       @param end is the ending date.
@@ -531,7 +556,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
                         bool inclusive = false );
 
     /**
-      Return a sorted, filtered list of all Events which occur on the given
+      Returns a sorted, filtered list of all Events which occur on the given
       date.  The Events are sorted according to @a sortField and
       @a sortDirection.
 
@@ -547,7 +572,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       SortDirection sortDirection = SortDirectionAscending );
 
     /**
-      Return a sorted, unfiltered list of all Events for this Calendar.
+      Returns a sorted, unfiltered list of all Events for this Calendar.
 
       @param sortField specifies the EventSortField.
       @param sortDirection specifies the SortDirection.
@@ -559,7 +584,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
-      Return an unfiltered list of all Events which occur on the given
+      Returns an unfiltered list of all Events which occur on the given
       timestamp.
 
       @param dt request unfiltered Event list for this KDateTime only.
@@ -571,7 +596,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     KDE_DEPRECATED Event::List rawEventsForDate( const QDateTime &qdt );
 
     /**
-      Return an unfiltered list of all Events occurring within a date range.
+      Returns an unfiltered list of all Events occurring within a date range.
 
       @param start is the starting date.
       @param end is the ending date.
@@ -585,7 +610,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
                                    bool inclusive = false ) = 0;
 
     /**
-      Return a sorted, unfiltered list of all Events which occur on the given
+      Returns a sorted, unfiltered list of all Events which occur on the given
       date.  The Events are sorted according to @a sortField and
       @a sortDirection.
 
@@ -610,23 +635,27 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     virtual Event *event( const QString &uid ) = 0;
 
-// Todo Specific Methods //
+  // Todo Specific Methods //
 
     /**
-      Insert a Todo into the calendar.
+      Inserts a Todo into the calendar.
 
       @param todo is a pointer to the Todo to insert.
 
       @return true if the Todo was successfully inserted; false otherwise.
+
+      @see deleteTodo()
     */
     virtual bool addTodo( Todo *todo ) = 0;
 
     /**
-      Remove a Todo from the calendar.
+      Removes a Todo from the calendar.
 
       @param todo is a pointer to the Todo to remove.
 
       @return true if the Todo was successfully removed; false otherwise.
+
+      @see addTodo()
     */
     virtual bool deleteTodo( Todo *todo ) = 0;
 
@@ -644,7 +673,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
                                  SortDirection sortDirection );
 
     /**
-      Return a sorted, filtered list of all Todos for this Calendar.
+      Returns a sorted, filtered list of all Todos for this Calendar.
 
       @param sortField specifies the TodoSortField.
       @param sortDirection specifies the SortDirection.
@@ -656,7 +685,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       SortDirection sortDirection = SortDirectionAscending );
 
     /**
-      Return a filtered list of all Todos which are due on the specified date.
+      Returns a filtered list of all Todos which are due on the specified date.
 
       @param date request filtered Todos due on this QDate.
 
@@ -665,7 +694,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     virtual Todo::List todos( const QDate &date );
 
     /**
-      Return a sorted, unfiltered list of all Todos for this Calendar.
+      Returns a sorted, unfiltered list of all Todos for this Calendar.
 
       @param sortField specifies the TodoSortField.
       @param sortDirection specifies the SortDirection.
@@ -677,7 +706,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
-      Return an unfiltered list of all Todos which due on the specified date.
+      Returns an unfiltered list of all Todos which due on the specified date.
 
       @param date request unfiltered Todos due on this QDate.
 
@@ -695,23 +724,27 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     virtual Todo *todo( const QString &uid ) = 0;
 
-// Journal Specific Methods //
+  // Journal Specific Methods //
 
     /**
-      Insert a Journal into the calendar.
+      Inserts a Journal into the calendar.
 
       @param journal is a pointer to the Journal to insert.
 
       @return true if the Journal was successfully inserted; false otherwise.
+
+      @see deleteJournal()
     */
     virtual bool addJournal( Journal *journal ) = 0;
 
     /**
-      Remove a Journal from the calendar.
+      Removes a Journal from the calendar.
 
       @param journal is a pointer to the Journal to remove.
 
       @return true if the Journal was successfully removed; false otherwise.
+
+      @see addJournal()
     */
     virtual bool deleteJournal( Journal *journal ) = 0;
 
@@ -728,7 +761,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
                                        JournalSortField sortField,
                                        SortDirection sortDirection );
     /**
-      Return a sorted, filtered list of all Journals for this Calendar.
+      Returns a sorted, filtered list of all Journals for this Calendar.
 
       @param sortField specifies the JournalSortField.
       @param sortDirection specifies the SortDirection.
@@ -740,7 +773,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       SortDirection sortDirection = SortDirectionAscending );
 
     /**
-      Return a filtered list of all Journals for on the specified date.
+      Returns a filtered list of all Journals for on the specified date.
 
       @param date request filtered Journals for this QDate only.
 
@@ -749,7 +782,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     virtual Journal::List journals( const QDate &date );
 
     /**
-      Return a sorted, unfiltered list of all Journals for this Calendar.
+      Returns a sorted, unfiltered list of all Journals for this Calendar.
 
       @param sortField specifies the JournalSortField.
       @param sortDirection specifies the SortDirection.
@@ -761,7 +794,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
-      Return an unfiltered list of all Journals for on the specified date.
+      Returns an unfiltered list of all Journals for on the specified date.
 
       @param date request unfiltered Journals for this QDate only.
 
@@ -779,7 +812,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     virtual Journal *journal( const QString &uid ) = 0;
 
-// Relations Specific Methods //
+  // Relations Specific Methods //
 
     /**
       Setup Relations for an Incidence.
@@ -790,35 +823,39 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     virtual void setupRelations( Incidence *incidence );
 
     /**
-      Remove all Relations from an Incidence.
+      Removes all Relations from an Incidence.
 
       @param incidence is a pointer to the Incidence to have a
       Relation removed.
     */
     virtual void removeRelations( Incidence *incidence );
 
-// Filter Specific Methods //
+  // Filter Specific Methods //
 
     /**
       Sets the calendar filter.
 
       @param filter a pointer to a CalFilter object which will be
       used to filter Calendar Incidences.
+
+      @see filter()
     */
     void setFilter( CalFilter *filter );
 
     /**
-      Return the calendar filter.
+      Returns the calendar filter.
 
       @return a pointer to the calendar CalFilter.
       A null pointer is returned if no such CalFilter exists.
+
+      @see setFilter()
     */
     CalFilter *filter();
 
-// Alarm Specific Methods //
+  // Alarm Specific Methods //
 
     /**
-      Return a list of Alarms within a time range for this Calendar.
+      Returns a list of Alarms within a time range for this Calendar.
 
       @param from is the starting timestamp.
       @param to is the ending timestamp.
@@ -827,10 +864,11 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     virtual Alarm::List alarms( const KDateTime &from,
                                 const KDateTime &to ) = 0;
-    KDE_DEPRECATED Alarm::List alarms( const QDateTime &from,
+    KDE_DEPRECATED
+    virtual Alarm::List alarms( const QDateTime &from,
                                 const QDateTime &to );
 
-// Observer Specific Methods //
+  // Observer Specific Methods //
 
     /**
       @class Observer
@@ -852,9 +890,8 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
           @param calendar is a pointer to the Calendar object that
           is being observed.
         */
-        virtual void calendarModified( bool modified,
-                                       Calendar *calendar )
-        { Q_UNUSED( modified ); Q_UNUSED( calendar ); }
+        virtual void calendarModified( bool modified, Calendar *calendar )
+          { Q_UNUSED( modified ); Q_UNUSED( calendar ); }
 
         /**
           Notify the Observer that an Incidence has been inserted.
@@ -862,7 +899,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
           @param incidence is a pointer to the Incidence that was inserted.
         */
         virtual void calendarIncidenceAdded( Incidence *incidence )
-        { Q_UNUSED( incidence );}
+          { Q_UNUSED( incidence );}
 
         /**
           Notify the Observer that an Incidence has been modified.
@@ -870,7 +907,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
           @param incidence is a pointer to the Incidence that was modified.
         */
         virtual void calendarIncidenceChanged( Incidence *incidence )
-        { Q_UNUSED( incidence ); }
+          { Q_UNUSED( incidence ); }
 
         /**
           Notify the Observer that an Incidence has been removed.
@@ -878,38 +915,42 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
           @param incidence is a pointer to the Incidence that was removed.
         */
         virtual void calendarIncidenceDeleted( Incidence *incidence )
-        { Q_UNUSED( incidence ); }
+          { Q_UNUSED( incidence ); }
     };
 
     /**
-      Register an Observer for this Calendar.
+      Registers an Observer for this Calendar.
 
       @param observer is a pointer to an Observer object that will be
       watching this Calendar.
+
+      @see unregisterObserver()
      */
     void registerObserver( Observer *observer );
 
     /**
-      Unregister an Observer for this Calendar.
+      Unregisters an Observer for this Calendar.
 
       @param observer is a pointer to an Observer object that has been
       watching this Calendar.
+
+      @see registerObserver()
      */
     void unregisterObserver( Observer *observer );
 
   signals:
     /**
-      Signal that the calendar has been modified.
+      Signals that the calendar has been modified.
      */
     void calendarChanged();
 
     /**
-      Signal that the calendar has been saved.
+      Signals that the calendar has been saved.
      */
     void calendarSaved();
 
     /**
-      Signal that the calendar has been loaded into memory.
+      Signals that the calendar has been loaded into memory.
      */
     void calendarLoaded();
 
@@ -927,7 +968,8 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       @param timeSpec is the time specification (time zone, etc.) for
                       viewing Incidence dates.\n
     */
-    virtual void doSetTimeSpec( const KDateTime::Spec &/*timeSpec*/ ) {}
+    virtual void doSetTimeSpec( const KDateTime::Spec &timeSpec )
+      { Q_UNUSED( timeSpec ); }
 
     /**
       Let Calendar subclasses notify that they inserted an Incidence.
@@ -958,13 +1000,13 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     void setObserversEnabled( bool enabled );
 
-    /** Append alarms of incidence in interval to list of alarms. */
+    /** Appends alarms of incidence in interval to list of alarms. */
     void appendAlarms( Alarm::List &alarms, Incidence *incidence,
                        const KDateTime &from, const KDateTime &to );
 
-    /** Append alarms of recurring events in interval to list of alarms. */
+    /** Appends alarms of recurring events in interval to list of alarms. */
     void appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
-                       const KDateTime &from, const KDateTime &to );
+                                const KDateTime &from, const KDateTime &to );
 
   private:
     //@cond PRIVATE
