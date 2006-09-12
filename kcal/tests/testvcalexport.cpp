@@ -68,12 +68,12 @@ int main( int argc, char **argv )
   kDebug(5800) << "Output file: " << output << endl;
 
 
-  CalendarLocal cal( QLatin1String("UTC") );
+  CalendarLocal cal( KDateTime::UTC );
 
   if ( !cal.load( input ) ) return 1;
 	QString tz = cal.nonKDECustomProperty( "X-LibKCal-Testsuite-OutTZ" );
 	if ( !tz.isEmpty() ) {
-	  cal.setTimeZoneIdViewOnly( tz );
+	  cal.setViewTimeZoneId( tz );
 	}
   FileStorage storage( &cal, output, new VCalFormat );
   if ( !storage.save() ) return 1;

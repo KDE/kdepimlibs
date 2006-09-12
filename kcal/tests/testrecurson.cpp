@@ -74,12 +74,12 @@ int main( int argc, char **argv )
     outstream = new QTextStream( &outfile );
   }
 
-  CalendarLocal cal( QLatin1String("UTC") );
+  CalendarLocal cal( KDateTime::UTC );
 
   if ( !cal.load( input ) ) return 1;
 	QString tz = cal.nonKDECustomProperty( "X-LibKCal-Testsuite-OutTZ" );
 	if ( !tz.isEmpty() ) {
-	  cal.setTimeZoneIdViewOnly( tz );
+	  cal.setViewTimeZoneId( tz );
 	}
 
   Incidence::List inc = cal.incidences();

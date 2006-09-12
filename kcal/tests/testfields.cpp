@@ -64,7 +64,7 @@ int main(int argc,char **argv)
   }
 
 /*  if (e->hasStartDate()) {
-    QDateTime d = e->dtStart();
+    KDateTime d = e->dtStart();
     kDebug() << "Event starts " << d << endl;
   }
 */
@@ -72,7 +72,7 @@ int main(int argc,char **argv)
   kDebug() << "Event description " << e->summary() << endl;
 
   if (e->hasEndDate()) {
-    QDateTime d = e->dtEnd().dateTime();
+    KDateTime d = e->dtEnd();
     kDebug() << "Event ends " << d << endl;
   }
 

@@ -31,28 +31,28 @@ using namespace KCal;
 
 void PeriodTest::testValidity() 
 {
-  Period p1(QDateTime(QDate(2006, 8, 30)), Duration(60));
+  Period p1( KDateTime( QDate(2006, 8, 30), QTime(7, 0, 0), KDateTime::UTC ), Duration(60));
   Period p2;
 
   QVERIFY( p1.hasDuration() );
-  QVERIFY( p1.duration() == 60 );
-  QVERIFY( p1.start() == KDateTime(QDate(2006, 8, 30)) );
+  QCOMPARE( p1.duration().asSeconds(), 60 );
+  QVERIFY( p1.start() == KDateTime( QDate(2006, 8, 30), QTime(7, 0, 0), KDateTime::UTC ) );
 
   p2 = p1;
 
   QVERIFY( p2.hasDuration() );
   QVERIFY( p2.duration() == 60 );
-  QVERIFY( p2.start() == KDateTime( QDate(2006, 8, 30) ) );
+  QVERIFY( p2.start() == KDateTime( QDate(2006, 8, 30), QTime(7, 0, 0), KDateTime::UTC ) );
 }
 
 void PeriodTest::testCompare() 
 {
-  Period p1(QDateTime(QDate(2006, 8, 30)), Duration(24*60*60));
-  Period p2(QDateTime(QDate(2006, 8, 29)), Duration(23*60*60));
+  Period p1(KDateTime(QDate(2006, 8, 30)), Duration(24*60*60));
+  Period p2(KDateTime(QDate(2006, 8, 29)), Duration(23*60*60));
   Period p1copy( p1 ); // test copy constructor
   Period p1assign = p1; // test operator=
   
-  QVERIFY( (p2 < p1) ? true : false );
+  QVERIFY( p2 < p1 );
   QVERIFY( !( p1 == p2 ) );
   QVERIFY( p1copy == p1 );
   QVERIFY( p1assign == p1 );

@@ -34,7 +34,7 @@
 
 using namespace KCal;
 
-static QString dumpTime( const KDateTime &dt );
+static QString dumpTime( const KDateTime &dt, const KDateTime::Spec &viewSpec );
 
 static const KCmdLineOptions options[] =
 {
@@ -75,12 +75,13 @@ int main( int argc, char **argv )
     outstream = new QTextStream( &outfile );
   }
 
-  CalendarLocal cal( QLatin1String("UTC") );
+  CalendarLocal cal( KDateTime::UTC );
 
+  KDateTime::Spec viewSpec;
   if ( !cal.load( input ) ) return 1;
 	QString tz = cal.nonKDECustomProperty( "X-LibKCal-Testsuite-OutTZ" );
 	if ( !tz.isEmpty() ) {
-	  cal.setTimeZoneIdViewOnly( tz );
+          viewSpec = KDateTime::Spec( KSystemTimeZones::zone( tz ) );
 	}
 
   Incidence::List inc = cal.incidences();
@@ -98,27 +99,27 @@ int main( int argc, char **argv )
       if ( !dt.isValid() ) dt = KDateTime( QDate( 2011, 1, 1 ), QTime( 0, 0, 1 ), KDateTime::Spec::UTC );
       else dt = dt.addYears( 2 );
       kDebug(5800) << "-------------------------------------------" << endl;
-      kDebug(5800) << " *~*~*~*~ Starting with date: " << dumpTime(dt) << endl;
+      kDebug(5800) << " *~*~*~*~ Starting with date: " << dumpTime(dt, viewSpec) << endl;
       // Output to file for testing purposes
       while (dt.isValid() && i<500 ) {
         ++i;
         dt = incidence->recurrence()->getPreviousDateTime( dt );
         if ( dt.isValid() )
-          (*outstream) << dumpTime(dt) << endl;
+          (*outstream) << dumpTime(dt, viewSpec) << endl;
       }
     } else {
       if ( !dt.isValid() ) dt = KDateTime( QDate( 2005, 7, 31 ), QTime( 23, 59, 59 ), KDateTime::Spec::UTC );
       else dt = dt.addYears( 2 );
       incidence->recurrence()->dump();
       kDebug(5800) << "-------------------------------------------" << endl;
-      kDebug(5800) << " *~*~*~*~ Starting with date: " << dumpTime(dt) << endl;
+      kDebug(5800) << " *~*~*~*~ Starting with date: " << dumpTime(dt, viewSpec) << endl;
       // Output to konsole
       while ( dt.isValid() && i<50 ) {
         ++i;
         kDebug(5800) << "-------------------------------------------" << endl;
         dt = incidence->recurrence()->getPreviousDateTime( dt );
         if ( dt.isValid() )
-          kDebug(5800) << " *~*~*~*~ Previous date is: " << dumpTime(dt) << endl;
+          kDebug(5800) << " *~*~*~*~ Previous date is: " << dumpTime(dt, viewSpec) << endl;
       }
     }
   }
@@ -129,20 +130,21 @@ int main( int argc, char **argv )
 }
 
 
-QString dumpTime( const KDateTime &dt )
+QString dumpTime( const KDateTime &dt, const KDateTime::Spec &viewSpec )
 {
   if ( !dt.isValid() )
     return QString();
+  KDateTime vdt = viewSpec.isValid() ? dt.toTimeSpec( viewSpec ) : dt;
   QString format;
 #ifdef FLOAT_IS_DATE_ONLY
-  if ( dt.isDateOnly() )
+  if ( vdt.isDateOnly() )
     format = QLatin1String( "%Y-%m-%d" );
   else
 #endif
     format = QLatin1String( "%Y-%m-%dT%H:%M:%S" );
-  if ( dt.isSecondOccurrence() )
+  if ( vdt.isSecondOccurrence() )
     format += QLatin1String( " %Z" );
-  if ( dt.timeSpec() != KDateTime::ClockTime)
+  if ( vdt.timeSpec() != KDateTime::ClockTime)
     format += QLatin1String( " %:Z" );
-  return dt.toString( format );
+  return vdt.toString( format );
 }

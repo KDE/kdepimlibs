@@ -49,7 +49,7 @@ int main(int argc,char **argv)
 
   Q_UNUSED( args );
 
-  CalendarLocal cal( QLatin1String("UTC") );
+  CalendarLocal cal( KDateTime::UTC );
 
   cal.load("cal");
 

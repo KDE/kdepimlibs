@@ -35,7 +35,7 @@
 
 using namespace KCal;
 
-static QString dumpTime( const KDateTime &dt );
+static QString dumpTime( const KDateTime &dt, const KDateTime::Spec &viewSpec );
 
 static const KCmdLineOptions options[] =
 {
@@ -76,12 +76,13 @@ int main( int argc, char **argv )
     outstream = new QTextStream( &outfile );
   }
 
-  CalendarLocal cal( QLatin1String("UTC") );
+  CalendarLocal cal( KDateTime::UTC );
 
+  KDateTime::Spec viewSpec;
   if ( !cal.load( input ) ) return 1;
 	QString tz = cal.nonKDECustomProperty( "X-LibKCal-Testsuite-OutTZ" );
 	if ( !tz.isEmpty() ) {
-	  cal.setTimeZoneIdViewOnly( tz );
+          viewSpec = KDateTime::Spec( KSystemTimeZones::zone( tz ) );
 	}
 
   Incidence::List inc = cal.incidences();
@@ -105,7 +106,7 @@ int main( int argc, char **argv )
         ++i;
         dt = incidence->recurrence()->getNextDateTime( dt );
         if ( dt.isValid() )
-          (*outstream) << dumpTime(dt) << endl;
+          (*outstream) << dumpTime(dt, viewSpec) << endl;
       }
     } else {
       incidence->recurrence()->dump();
@@ -115,7 +116,7 @@ int main( int argc, char **argv )
         kDebug(5800) << "-------------------------------------------" << endl;
         dt = incidence->recurrence()->getNextDateTime( dt );
         if ( dt.isValid() )
-          kDebug(5800) << " *~*~*~*~ Next date is: " << dumpTime(dt) << endl;
+          kDebug(5800) << " *~*~*~*~ Next date is: " << dumpTime(dt, viewSpec) << endl;
       }
     }
   }
@@ -126,20 +127,21 @@ int main( int argc, char **argv )
 }
 
 
-QString dumpTime( const KDateTime &dt )
+QString dumpTime( const KDateTime &dt, const KDateTime::Spec &viewSpec )
 {
   if ( !dt.isValid() )
     return QString();
+  KDateTime vdt = viewSpec.isValid() ? dt.toTimeSpec( viewSpec ) : dt;
   QString format;
 #ifdef FLOAT_IS_DATE_ONLY
-  if ( dt.isDateOnly() )
+  if ( vdt.isDateOnly() )
     format = QLatin1String( "%Y-%m-%d" );
   else
 #endif
     format = QLatin1String( "%Y-%m-%dT%H:%M:%S" );
-  if ( dt.isSecondOccurrence() )
+  if ( vdt.isSecondOccurrence() )
     format += QLatin1String( " %Z" );
-  if ( dt.timeSpec() != KDateTime::ClockTime)
+  if ( vdt.timeSpec() != KDateTime::ClockTime)
     format += QLatin1String( " %:Z" );
-  return dt.toString( format );
+  return vdt.toString( format );
 }
