@@ -327,10 +327,3 @@ void Todo::setCompleted( const QDateTime &completed )
   else
     setCompleted(KDateTime(completed));  // use local time zone
 }
-void Todo::setDtRecurrence( const QDateTime &dt )
-{
-  if (dtStart().isValid())
-    setDtRecurrence(KDateTime(dt, dtStart().timeSpec()));
-  else
-    setDtRecurrence(KDateTime(dt));  // use local time zone
-}

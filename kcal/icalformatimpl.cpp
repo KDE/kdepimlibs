@@ -2138,25 +2138,3 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
 
   return message;
 }
-
-// DEPRECATED methods
-Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
-{
-    ICalTimeZones tzlist;
-    return readTodo(vtodo, &tzlist);
-}
-Event *ICalFormatImpl::readEvent(icalcomponent *vevent, icalcomponent *vtimezone)
-{
-    ICalTimeZones tzlist;
-    return readEvent(vevent, &tzlist);
-}
-Journal *ICalFormatImpl::readJournal(icalcomponent *vjournal)
-{
-    ICalTimeZones tzlist;
-    return readJournal(vjournal, &tzlist);
-}
-void ICalFormatImpl::readIncidence(icalcomponent *parent, icaltimezone *timezone, Incidence *incidence)
-{
-    ICalTimeZones tzlist;
-    readIncidence(parent, incidence, &tzlist);
-}

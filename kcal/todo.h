@@ -202,7 +202,6 @@ class KCAL_EXPORT Todo : public Incidence
       Sets the due date/time of the current occurrence if recurrent.
     */
     void setDtRecurrence( const KDateTime &dt );
-    KDE_DEPRECATED void setDtRecurrence( const QDateTime &dt );
 
     /**
       Returns the due date/time of the current occurrence if recurrent.

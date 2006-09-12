@@ -153,7 +153,6 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       Set time of last load.
     */
     void setLastLoad( const KDateTime & );
-    KDE_DEPRECATED void setLastLoad( const QDateTime &dt )  { setLastLoad(KDateTime(dt)); }  // use local time zone
     /**
       Return time of last load.
     */
@@ -163,7 +162,6 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       Set time of last save.
     */
     void setLastSave( const KDateTime & );
-    KDE_DEPRECATED void setLastSave( const QDateTime &dt )  { setLastSave(KDateTime(dt)); }  // use local time zone
     /**
       Return time of last save.
     */

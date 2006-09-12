@@ -72,17 +72,13 @@ class ICalFormatImpl
 
     QString extractErrorProperty(icalcomponent *);
     Todo *readTodo(icalcomponent *vtodo, ICalTimeZones *tzlist);
-    KDE_DEPRECATED Todo *readTodo(icalcomponent *vtodo);
     Event *readEvent(icalcomponent *vevent, ICalTimeZones *tzlist);
-    KDE_DEPRECATED Event *readEvent(icalcomponent *vevent, icalcomponent *vtimezone);
     FreeBusy *readFreeBusy(icalcomponent *vfreebusy);
     Journal *readJournal(icalcomponent *vjournal, ICalTimeZones *tzlist);
-    KDE_DEPRECATED Journal *readJournal(icalcomponent *vjournal);
     Attendee *readAttendee(icalproperty *attendee);
     Person readOrganizer( icalproperty *organizer );
     Attachment *readAttachment(icalproperty *attach);
     void readIncidence(icalcomponent *parent, Incidence *incidence, ICalTimeZones *tzlist);
-    KDE_DEPRECATED void readIncidence(icalcomponent *parent, icaltimezone *timezone, Incidence *incidence);
     void readRecurrenceRule(icalproperty *rrule,Incidence *event );
     void readExceptionRule( icalproperty *rrule, Incidence *incidence );
     void readRecurrence( const struct icalrecurrencetype &r, RecurrenceRule* recur );
