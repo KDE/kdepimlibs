@@ -40,8 +40,14 @@ class KCal::CalendarNull::Private
 static CalendarNull *mSelf = 0;
 //@endcond
 
+CalendarNull::CalendarNull( const KDateTime::Spec &timeSpec )
+  : Calendar( timeSpec ),
+    d( new KCal::CalendarNull::Private )
+{}
+
 CalendarNull::CalendarNull( const QString &timeZoneId )
-  : Calendar( timeZoneId ), d( new KCal::CalendarNull::Private )
+  : Calendar( timeZoneId ),
+    d( new KCal::CalendarNull::Private )
 {}
 
 CalendarNull::~CalendarNull()
@@ -52,7 +58,7 @@ CalendarNull::~CalendarNull()
 CalendarNull *CalendarNull::self()
 {
   if ( !mSelf ) {
-    mSelf = new CalendarNull( QLatin1String( "UTC" ) );
+    mSelf = new CalendarNull( KDateTime::UTC );
   }
 
   return mSelf;

@@ -51,12 +51,22 @@ class KCAL_EXPORT CalendarNull : public Calendar
 {
   public:
     /**
+      Construct Calendar object using a time specification (time zone, etc.).
+      The time specification is used for creating or modifying incidences
+      in the Calendar. It is also used for viewing incidences (see
+      setViewTimeSpec()). The time specification does not alter existing
+      incidences.
+
+      @param timeSpec time specification
+    */
+    explicit CalendarNull( const KDateTime::Spec &timeSpec );
+
+    /**
       Constructs a null calendar with a specified time zone @p timeZoneId.
 
-      @param timeZoneId is a string containing a Time Zone ID, which is
-      assumed to be valid.
-      On some systems, /usr/share/zoneinfo/zone.tab may be available for
-      reference.\n
+      @param timeZoneId is a string containing a time zone ID, which is
+      assumed to be valid.  If no time zone is found, the viewing time
+      specification is set to local clock time.
       @e Example: "Europe/Berlin"
     */
     explicit CalendarNull( const QString &timeZoneId );
