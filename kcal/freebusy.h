@@ -83,7 +83,6 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
     bool accept( Visitor &v ) { return v.visit( this ); }
     //This is used for creating a freebusy object for the current user
     bool addLocalPeriod( const KDateTime &start, const KDateTime &end );
-    KDE_DEPRECATED bool addLocalPeriod( const QDateTime &start, const QDateTime &end );
 
     KDateTime mDtEnd;
     PeriodList mBusyPeriods;

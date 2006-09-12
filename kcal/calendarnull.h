@@ -252,13 +252,6 @@ class KCAL_EXPORT CalendarNull : public Calendar
     void incidenceUpdated( IncidenceBase *incidenceBase )
       { Q_UNUSED( incidenceBase ); }
 
-    /**
-      @copydoc
-      Calendar::setTimeZoneIdViewOnly(const QString &)
-    */
-    void setTimeZoneIdViewOnly( const QString &timeZoneId )
-      { Q_UNUSED( timeZoneId ); }
-
   private:
     //@cond PRIVATE
     class Private;

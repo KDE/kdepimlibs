@@ -167,7 +167,6 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       Sets the time the incidence was last modified.
     */
     void setLastModified( const KDateTime &lm );
-    KDE_DEPRECATED void setLastModified( const QDateTime &lm )  { setLastModified(KDateTime(lm)); }  // use local time zone
 
     /**
       Return the time the incidence was last modified.

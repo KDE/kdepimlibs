@@ -263,7 +263,6 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     void setViewTimeSpec( const KDateTime::Spec &spec ) const;
     void setViewTimeZoneId( const QString &timeZoneId ) const;
-    virtual KDE_DEPRECATED void setTimeZoneIdViewOnly( const QString &timeZoneId ) { setViewTimeZoneId(timeZoneId); };
 
     /**
       Returns the time specification (time zone, etc.) used for viewing the
@@ -962,14 +961,10 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     /** Append alarms of incidence in interval to list of alarms. */
     void appendAlarms( Alarm::List &alarms, Incidence *incidence,
                        const KDateTime &from, const KDateTime &to );
-    KDE_DEPRECATED void appendAlarms( Alarm::List &alarms, Incidence *incidence,
-                       const QDateTime &from, const QDateTime &to );
 
     /** Append alarms of recurring events in interval to list of alarms. */
     void appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
                        const KDateTime &from, const KDateTime &to );
-    KDE_DEPRECATED void appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
-                       const QDateTime &from, const QDateTime &to );
 
   private:
     //@cond PRIVATE

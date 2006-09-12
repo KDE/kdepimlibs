@@ -381,12 +381,3 @@ void FreeBusy::addPeriod( const QDateTime &start, const Duration &dur )
   else
     addPeriod(KDateTime(start), dur);  // use local time zone
 }
-bool FreeBusy::addLocalPeriod( const QDateTime &start, const QDateTime &end )
-{
-  if (dtStart().isValid())
-    return addLocalPeriod(KDateTime(start, dtStart().timeSpec()), KDateTime(end, dtStart().timeSpec()));
-  else if (mCalendar)
-    return addLocalPeriod(KDateTime(start, mCalendar->timeSpec()), KDateTime(end, mCalendar->timeSpec()));
-  else
-    return addLocalPeriod(KDateTime(start), KDateTime(end));
-}
