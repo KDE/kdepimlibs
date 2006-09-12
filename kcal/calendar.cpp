@@ -139,6 +139,10 @@ KDateTime::Spec Calendar::timeSpec() const
 
 void Calendar::setTimeZoneId( const QString &timeZoneId )
 {
+  if ( timeZoneId == QLatin1String("UTC") ) {
+    setTimeSpec( KDateTime::UTC );
+    return;
+  }
   delete d->mBuiltInTimeZone;
   d->mBuiltInTimeZone = 0;
   const ICalTimeZone *tz = d->mTimeZones->zone(timeZoneId);
@@ -1075,11 +1079,3 @@ Event::List Calendar::rawEventsForDate( const QDateTime &qdt )
 
 Alarm::List Calendar::alarms( const QDateTime &from, const QDateTime &to )
 { return alarms(KDateTime(from, timeSpec()), KDateTime(to, timeSpec())); }
-
-void Calendar::appendAlarms( Alarm::List &alarms, Incidence *incidence,
-                       const QDateTime &from, const QDateTime &to )
-{ return appendAlarms(alarms, incidence, KDateTime(from, timeSpec()), KDateTime(to, timeSpec())); }
-
-void Calendar::appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
-                       const QDateTime &from, const QDateTime &to )
-{ return appendRecurringAlarms(alarms, incidence, KDateTime(from, timeSpec()), KDateTime(to, timeSpec())); }
