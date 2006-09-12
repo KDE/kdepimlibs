@@ -201,20 +201,6 @@ endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
 if(KDE4_BUILD_TESTS)
-set(testcalendar_SRCS testcalendar.cpp )
-
-kde4_automoc(${testcalendar_SRCS})
-
-kde4_add_executable(testcalendar NOGUI RUN_UNINSTALLED ${testcalendar_SRCS})
-
-target_link_libraries(testcalendar ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
-
-add_test(kcal-testcalendar ${EXECUTABLE_OUTPUT_PATH}/testcalendar)
-
-endif(KDE4_BUILD_TESTS)
-
-########### next target ###############
-if(KDE4_BUILD_TESTS)
 set(testcalendarlocal_SRCS testcalendarlocal.cpp )
 
 kde4_automoc(${testcalendarlocal_SRCS})
