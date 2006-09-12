@@ -30,38 +30,41 @@ QTEST_KDEMAIN( CalendarLocalTest, NoGUI )
 using namespace KCal;
 
 void CalendarLocalTest::testValidity() {
-  CalendarLocal cal( QLatin1String("UTC") );
+  CalendarLocal cal( KDateTime::UTC );
   cal.setProductId( QLatin1String( "fredware calendar" ) );
   QVERIFY( cal.productId() == QLatin1String( "fredware calendar" ) );
   QVERIFY( cal.timeZoneId() == QLatin1String( "UTC" ) );
+  QVERIFY( cal.timeSpec() == KDateTime::UTC );
   cal.close();
 }
 
 void CalendarLocalTest::testSave() {
-  CalendarLocal cal( QLatin1String("UTC") );
+  CalendarLocal cal( QLatin1String( "UTC" ) );
   cal.setProductId( QLatin1String( "fredware calendar" ) );
+  QVERIFY( cal.timeZoneId() == QLatin1String( "UTC" ) );
+  QVERIFY( cal.timeSpec() == KDateTime::UTC );
   QVERIFY( cal.save( "foo.ics" ) );
   cal.close();
   unlink( "foo.ics" );
 }
 
 void CalendarLocalTest::testEvents() {
-  CalendarLocal cal( QLatin1String("UTC") );
+  CalendarLocal cal( KDateTime::UTC );
   cal.setProductId( QLatin1String( "fredware calendar" ) );
   QDate dt = QDate::currentDate();
 
   Event *event1 = new Event();
   event1->setUid( "1" );
-  event1->setDtStart( QDateTime( dt ) );
-  event1->setDtEnd( QDateTime( dt ).addDays( 1 ) );
+  event1->setDtStart( KDateTime( dt ) );
+  event1->setDtEnd( KDateTime( dt ).addDays( 1 ) );
   event1->setSummary( "Event1 Summary" );
   event1->setDescription( "This is a description of the first event" );
   event1->setLocation( "the place" );
 
   Event *event2 = new Event();
   event1->setUid( "2" );
-  event2->setDtStart( QDateTime( dt ).addDays( 1 ) );
-  event2->setDtEnd( QDateTime( dt ).addDays( 2 ) );
+  event2->setDtStart( KDateTime( dt ).addDays( 1 ) );
+  event2->setDtEnd( KDateTime( dt ).addDays( 2 ) );
   event2->setSummary( "Event2 Summary" );
   event2->setDescription( "This is a description of the second event" );
   event2->setLocation( "the other place" );

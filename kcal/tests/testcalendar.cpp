@@ -30,7 +30,7 @@ QTEST_KDEMAIN( CalendarTest, NoGUI )
 using namespace KCal;
 
 void CalendarTest::testValidity() {
-  CalendarLocal cal( QLatin1String("UTC") );
+  CalendarLocal cal( KDateTime::UTC );
   cal.setProductId( QLatin1String( "fredware calendar" ) );
   QVERIFY( cal.productId() == QLatin1String( "fredware calendar" ) );
   QVERIFY( cal.timeSpec().type() == KDateTime::UTC );
@@ -41,6 +41,8 @@ void CalendarTest::testValidity() {
 void CalendarTest::testSave() {
   CalendarLocal cal( QLatin1String("UTC") );
   cal.setProductId( QLatin1String( "fredware calendar" ) );
+  QVERIFY( cal.timeSpec().type() == KDateTime::UTC );
+  QVERIFY( cal.timeSpec().timeZone()->name() == QLatin1String( "UTC" ) );
   QVERIFY( cal.save( "foo.ics" ) );
   cal.close();
   unlink( "foo.ics" );

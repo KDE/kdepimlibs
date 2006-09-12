@@ -30,7 +30,7 @@ QTEST_KDEMAIN( CalendarNullTest, NoGUI )
 using namespace KCal;
 
 void CalendarNullTest::testValidity() {
-  CalendarNull cal( QLatin1String( "UTC" ) );
+  CalendarNull cal( KDateTime::UTC );
   CalendarNull *s1 = cal.self();
   QVERIFY( cal.reload( QLatin1String( "America/New_York" ) ) );
   CalendarNull *s2 = cal.self();
