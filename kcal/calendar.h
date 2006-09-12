@@ -158,7 +158,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @param timeSpec time specification
     */
-    Calendar( const KDateTime::Spec &timeSpec );
+    explicit Calendar( const KDateTime::Spec &timeSpec );
 
     /**
       Construct Calendar object using a time zone ID.
