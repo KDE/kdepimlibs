@@ -71,6 +71,7 @@ class KCal::Calendar::Private
     ~Private()
     {
         delete mTimeZones;
+        delete mBuiltInTimeZone;
         delete mDefaultFilter;
     }
 
@@ -108,9 +109,6 @@ Calendar::Calendar( const QString &timeZoneId )
 
 Calendar::~Calendar()
 {
-  delete d->mDefaultFilter;
-  delete d->mBuiltInTimeZone;
-  delete d->mTimeZones;
   delete d;
 }
 
@@ -172,7 +170,7 @@ void Calendar::setViewTimeSpec( const KDateTime::Spec &spec ) const
 
 void Calendar::setViewTimeZoneId( const QString &timeZoneId ) const
 {
-#warning How should this be handled?
+#warning TZ: How should this be handled?
 }
 
 KDateTime::Spec Calendar::viewTimeSpec() const
