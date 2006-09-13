@@ -116,35 +116,6 @@ enum JournalSortField {
   as pointers so that changes to the returned Incidences are immediately
   visible in the Calendar.  Do <em>Not</em> attempt to 'delete' any Incidence
   object you get from Calendar -- use the delete...() methods.
-
-  <b>Time Zone Handling</b>:
-
-  - Incidence Storing:
-     - By default, (when LocalTime is unset) Incidence dates will have the
-       "UTC" time zone when stored into a calendar file.
-     - To store Incidence dates without a time zone (i.e, "floating time
-       zone") LocalTime must be set using the setLocalTime() method.
-
-  - Incidence Viewing:
-     - By default, Incidence dates will have the "UTC" time zone when
-       read from a calendar.
-     - To view Incidence dates using another time zone TimeZoneId must
-       be set using the setTimeZoneId() method, or the TimeZoneId can
-       be passed to the Calendar constructor.
-     - It is permitted to switch viewing time zones using setTimeZoneId()
-       as desired after the Calendar object has been constructed.
-
-  - Note that:
-     - The Calendar class doesn't do anything with TimeZoneId: it simply
-       saves it for later use by the ICalFormat class.
-     - The ICalFormat class takes TimeZoneId and applies it to loaded
-       Incidences before returning them in ICalFormat::load().
-     - Each Incidence can have its own time zone (or have a floating
-       time zone).
-     - Once an Incidence is loaded it is adjusted to use the viewing
-       time zone, TimeZoneId.
-     - Depending on the LocalTime setting, all loaded Incidences are stored
-       either in UTC or without a time zone (floating time zone).
 */
 class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
                              public IncidenceBase::Observer
@@ -155,10 +126,11 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
     /**
       Constructs a calendar with a specified time zone @p timeZoneid.
-      The time specification is used for creating or modifying incidences
-      in the Calendar. It is also used for viewing incidences (see
-      setViewTimeSpec()). The time specification does not alter existing
-      incidences.
+      The time specification is used as the default for creating or
+      modifying incidences in the Calendar. The time specification does
+      not alter existing incidences.
+      
+      The constructor also calls setViewTimeSpec(@p timeSpec).
 
       @param timeSpec time specification
     */
@@ -166,9 +138,11 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
     /**
       Construct Calendar object using a time zone ID.
-      The time zone ID is used for creating or modifying incidences in the
-      Calendar. It is also used for viewing incidences. The time zone does
-      not alter existing incidences.
+      The time zone ID is used as the default for creating or modifying
+      incidences in the Calendar. The time zone does not alter existing
+      incidences.
+      
+      The constructor also calls setViewTimeZoneId(@p timeZoneId).
 
       @param timeZoneId is a string containing a time zone ID, which is
       assumed to be valid.  If no time zone is found, the viewing time
@@ -222,8 +196,9 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
     /**
       Sets the default time specification (time zone, etc.) used for creating
-      or modifying incidences in the Calendar. It also sets the time
-      specification for viewing incidences (see setViewTimeSpec()).
+      or modifying incidences in the Calendar.
+      
+      The method also calls setViewTimeSpec(@p timeSpec).
 
       @param timeSpec time specification
     */
@@ -239,8 +214,9 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
     /**
       Sets the time zone ID used for creating or modifying incidences in the
-      Calendar. Also sets the time zone for viewing incidences. This method
-      has no effect on existing incidences.
+      Calendar. This method has no effect on existing incidences.
+      
+      The method also calls setViewTimeZoneId(@p timeZoneId).
 
       @param timeZoneId is a string containing a time zone ID, which is
       assumed to be valid. The time zone ID is used to set the time zone
@@ -261,10 +237,14 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     QString timeZoneId() const;
 
     /**
-      Sets the time zone used for viewing the incidences in this calendar. This
-      is simply a convenience method which makes a note of the new time zone so
-      that it can be read back by viewTimeSpec(). It has no effect on the
-      calendar data or on the the creation or modification of incidences.
+      Notes the time zone which the client application intends to use for viewing
+      the incidences in this calendar. This is simply a convenience method which
+      makes a note of the new time zone so that it can be read back by
+      viewTimeSpec(). The client application must convert date/time values to
+      the desired time zone itself.
+      
+      The time zone is not used in any way by the Calendar or its incidences. It
+      is solely for use by the client application.
       @ref viewTimeSpec()
     */
     void setViewTimeSpec( const KDateTime::Spec &spec ) const;

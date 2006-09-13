@@ -1,3 +1,6 @@
+extern "C" {
+#include <icalarray.h>
+}
 /*
     This file is part of the kcal library.
 
@@ -1796,6 +1799,15 @@ kDebug(5800)<<" readICalDateTime(): tzid="<<tzid<<endl;
 kDebug(5800)<<" ---icaltz(tzid)="<<(bool)icaltz<<endl;
         if ( !icaltz )
 {
+icalarray* a=icaltimezone_get_builtin_timezones();
+kDebug(5800)<<"Builtin count="<<a->num_elements<<endl;
+for(unsigned xx=0;xx<a->num_elements;++xx){
+ icaltimezone* z=(icaltimezone*)icalarray_element_at(a,xx);
+ const char* loc=icaltimezone_get_location(z);
+ const char* id=icaltimezone_get_tzid(z);
+ kDebug(5800)<<"Builtin: "<<id<<", loc="<<loc<<endl;
+}
+icaltimezone_array_free(a);
           icaltz = icaltimezone_get_builtin_timezone( tzid );
 kDebug(5800)<<" ---icaltz(location)="<<(bool)icaltz<<endl;}
         if ( icaltz ) {

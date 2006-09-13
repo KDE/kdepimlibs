@@ -99,6 +99,7 @@ Calendar::Calendar( const KDateTime::Spec &timeSpec )
   : d( new KCal::Calendar::Private )
 {
   d->mTimeSpec = timeSpec;
+  d->mViewTimeSpec = timeSpec;
 }
 
 Calendar::Calendar( const QString &timeZoneId )
@@ -130,6 +131,8 @@ void Calendar::setTimeSpec( const KDateTime::Spec &timeSpec )
   d->mViewTimeSpec = timeSpec;
   delete d->mBuiltInTimeZone;
   d->mBuiltInTimeZone = 0;
+
+  doSetTimeSpec( d->mTimeSpec );
 }
 
 KDateTime::Spec Calendar::timeSpec() const
@@ -157,7 +160,6 @@ void Calendar::setTimeZoneId( const QString &timeZoneId )
     d->mTimeSpec = KDateTime::ClockTime;
   d->mViewTimeSpec = d->mTimeSpec;
 
-  setModified( true );
   doSetTimeSpec( d->mTimeSpec );
 }
 
@@ -984,7 +986,7 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
                                       const KDateTime &from,
                                       const KDateTime &to )
 {
-  KDateTime qdt;
+  KDateTime dt;
   int  endOffset = 0;
   bool endOffsetValid = false;
   int  period = from.secsTo( to );
@@ -993,8 +995,8 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
     if ( a->enabled() ) {
       if ( a->hasTime() ) {
         // The alarm time is defined as an absolute date/time
-        qdt = a->nextRepetition( from.addSecs(-1) );
-        if ( !qdt.isValid() || qdt > to ) {
+        dt = a->nextRepetition( from.addSecs(-1) );
+        if ( !dt.isValid() || dt > to ) {
           continue;
         }
       } else {
@@ -1022,9 +1024,9 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
         }
 
         // Adjust the 'fromStart' date/time and find the next recurrence at or after it
-        qdt = incidence->recurrence()->getNextDateTime( fromStart.addSecs(-offset - 1) );
-        if ( !qdt.isValid() ||
-             ( qdt = qdt.addSecs( offset ) ) > to ) {
+        dt = incidence->recurrence()->getNextDateTime( fromStart.addSecs(-offset - 1) );
+        if ( !dt.isValid() ||
+             ( dt = dt.addSecs( offset ) ) > to ) {
           // remove the adjustment to get the alarm time
 
           // The next recurrence is too late.
@@ -1035,9 +1037,9 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
           // The alarm has repetitions, so check whether repetitions of previous
           // recurrences fall within the time period.
           bool found = false;
-          qdt = fromStart.addSecs( offset );
-          while ( (qdt = incidence->recurrence()->getPreviousDateTime( qdt )).isValid() ) {
-            int toFrom = qdt.secsTo( fromStart ) - offset;
+          dt = fromStart.addSecs( offset );
+          while ( (dt = incidence->recurrence()->getPreviousDateTime( dt )).isValid() ) {
+            int toFrom = dt.secsTo( fromStart ) - offset;
             if ( toFrom > a->duration() ) {
               break;  // this recurrence's last repetition is too early, so give up
             }
@@ -1051,7 +1053,7 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
               found = true;
 #ifndef NDEBUG
               // for debug output
-              qdt = qdt.addSecs( offset + ( ( toFrom - 1 ) / snooze + 1 ) * snooze );
+              dt = dt.addSecs( offset + ( ( toFrom - 1 ) / snooze + 1 ) * snooze );
 #endif
               break;
             }
@@ -1062,7 +1064,7 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
         }
       }
       kDebug(5800) << "Calendar::appendAlarms() '" << incidence->summary()
-                   << "': " << qdt.toString() << endl;
+                   << "': " << dt.toString() << endl;
       alarms.append( a );
     }
   }

@@ -816,15 +816,3 @@ bool Incidence::recursAt( const QDateTime &qdt ) const
 {
   return recursAt(KDateTime(qdt, dtStart().timeSpec()));
 }
-QList<QDateTime> Incidence::startDateTimesForDateTime( const QDateTime &datetime ) const
-{
-  QList<KDateTime> klist = startDateTimesForDateTime(KDateTime(datetime, dtStart().timeSpec()));
-  QList<QDateTime> qlist;
-  for (int i = 0, end = klist.count();  i < end;  ++i)
-    qlist += klist[i].dateTime();
-  return qlist;
-}
-QDateTime Incidence::endDateForStart( const QDateTime &startDt ) const
-{
-  return endDateForStart(KDateTime(startDt, dtStart().timeSpec())).dateTime();
-}

@@ -116,20 +116,18 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     KDateTime startDateTime() const;
     /** Return the start date/time of the recurrence */
     QDate startDate() const   { return mStartDateTime.date(); }
-    /** Set start of recurrence, as a date and time. Also sets the recurrence to non-floating.
-       @param start the new start date/time of the recurrence.
+    /** Set start of recurrence.
+       If @p start is date-only, the recurrence is set to floating. Otherwise, the
+       start is set to a date and time, and the recurrence is set to non-floating.
+       @param start the new start date or date/time of the recurrence.
     */
     void setStartDateTime( const KDateTime &start );
-    /** Set start of recurrence, as a date. Also sets the recurrence to floating.
-       @param start The new start date of the recurrence.
-    */
-    KDE_DEPRECATED void setStartDate( const QDate &start );
 
     /** Set whether the recurrence has no time, just a date.
      * Floating means -- according to rfc2445 -- that the event has no time
      * associated.
-     * N.B. This property is derived by default from whether setStartDateTime() or
-     * setStartDate() is called.
+     * N.B. This property is derived by default from whether setStartDateTime() is
+     * called with a date-only or date/time parameter.
      * @return whether the recurrence has a time (false) or it is just a date (true). */
     bool doesFloat() const { return mFloating; }
     /** Sets whether the dtstart is a floating time (i.e. has no time attached)

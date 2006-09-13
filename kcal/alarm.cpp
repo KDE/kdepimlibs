@@ -527,17 +527,3 @@ void Alarm::setTime( const QDateTime &alarmTime )
   else
     setTime(KDateTime(alarmTime));  // use local time zone
 }
-QDateTime Alarm::nextRepetition( const QDateTime &preTime ) const
-{
-  if (d->mParent && d->mParent->dtStart().isValid())   // use start as best guess for time zone
-    return nextRepetition(KDateTime(preTime, d->mParent->dtStart().timeSpec())).dateTime();
-  else
-    return nextRepetition(KDateTime(preTime)).dateTime();  // use local time zone
-}
-QDateTime Alarm::previousRepetition( const QDateTime &afterTime ) const
-{
-  if (d->mParent && d->mParent->dtStart().isValid())   // use start as best guess for time zone
-    return previousRepetition(KDateTime(afterTime, d->mParent->dtStart().timeSpec())).dateTime();
-  else
-    return previousRepetition(KDateTime(afterTime)).dateTime();  // use local time zone
-}

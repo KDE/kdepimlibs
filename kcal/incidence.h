@@ -137,7 +137,6 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
       Set creation date. It is stored as a UTC date/time.
     */
     void setCreated( const KDateTime & );
-    KDE_DEPRECATED void setCreated( const QDateTime &dt )  { setCreated(KDateTime(dt)); }  // use local time zone
     /**
       Return time and date of creation.
     */
@@ -288,11 +287,9 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
           time at all.
     */
     virtual QList<KDateTime> startDateTimesForDateTime( const KDateTime &datetime ) const;
-    virtual KDE_DEPRECATED QList<QDateTime> startDateTimesForDateTime( const QDateTime &datetime ) const;
 
     /** Return the end time of the occurrence if it starts at the given date/time */
     virtual KDateTime endDateForStart( const KDateTime &startDt ) const;
-    virtual KDE_DEPRECATED QDateTime endDateForStart( const QDateTime &startDt ) const;
 
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

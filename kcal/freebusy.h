@@ -68,9 +68,7 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
 
     /** Adds a period to the freebusy list and sorts the list.  */
     void addPeriod( const KDateTime &start, const KDateTime &end );
-    KDE_DEPRECATED void addPeriod( const QDateTime &start, const QDateTime &end );
     void addPeriod( const KDateTime &start, const Duration &dur );
-    KDE_DEPRECATED void addPeriod( const QDateTime &start, const Duration &dur );
     /** Adds a list of periods to the freebusy object and then sorts
      * that list. Use this if you are adding many items, instead of the
      * addPeriod method, to avoid sorting repeatedly.  */

@@ -544,7 +544,6 @@ class KCAL_EXPORT Alarm : public CustomProperties
       @see previousRepetition()
     */
     KDateTime nextRepetition( const KDateTime &preTime ) const;
-    KDE_DEPRECATED QDateTime nextRepetition( const QDateTime &preTime ) const;
 
     /**
       Returns the date/time of the alarm's latest repetition or, if none,
@@ -560,7 +559,6 @@ class KCAL_EXPORT Alarm : public CustomProperties
       @see nextRepetition()
     */
     KDateTime previousRepetition( const KDateTime &afterTime ) const;
-    KDE_DEPRECATED QDateTime previousRepetition( const QDateTime &afterTime ) const;
 
     /**
       Returns the number of seconds between the alarm's initial occurrence and

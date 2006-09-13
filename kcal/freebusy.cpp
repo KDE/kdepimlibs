@@ -363,21 +363,3 @@ void FreeBusy::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec 
     mBusyPeriods[i].shiftTimes( oldSpec, newSpec );
 }
 
-void FreeBusy::addPeriod( const QDateTime &start, const QDateTime &end )
-{
-  if (dtStart().isValid())
-    addPeriod(KDateTime(start, dtStart().timeSpec()), KDateTime(end, dtStart().timeSpec()));
-  else if (mCalendar)
-    addPeriod(KDateTime(start, mCalendar->timeSpec()), KDateTime(end, mCalendar->timeSpec()));
-  else
-    addPeriod(KDateTime(start), KDateTime(end));  // use local time zone
-}
-void FreeBusy::addPeriod( const QDateTime &start, const Duration &dur )
-{
-  if (dtStart().isValid())
-    addPeriod(KDateTime(start, dtStart().timeSpec()), dur);
-  else if (mCalendar)
-    addPeriod(KDateTime(start, mCalendar->timeSpec()), dur);
-  else
-    addPeriod(KDateTime(start), dur);  // use local time zone
-}

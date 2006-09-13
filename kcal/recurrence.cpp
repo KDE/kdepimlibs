@@ -1152,11 +1152,6 @@ void Recurrence::dump() const
 }
 
 // DEPRECATED methods
-void Recurrence::setStartDate( const QDate &start )
-{
-  setStartDateTime( KDateTime( start ) );  // use local time zone
-  setFloats( true );
-}
 bool Recurrence::recursAt( const QDateTime &dt ) const
 {
   if (mStartDateTime.isValid())
