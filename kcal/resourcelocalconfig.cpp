@@ -65,11 +65,11 @@ void ResourceLocalConfig::loadSettings( KRES::Resource *resource )
 {
   ResourceLocal* res = static_cast<ResourceLocal*>( resource );
   if ( res ) {
-    mURL->setUrl( res->mURL.prettyUrl() );
-    kDebug(5800) << "Format typeid().name(): " << typeid( res->mFormat ).name() << endl;
-    if ( typeid( *(res->mFormat) ) == typeid( ICalFormat ) )
+    mURL->setUrl( res->d->mURL.prettyUrl() );
+    kDebug(5800) << "Format typeid().name(): " << typeid( res->d->mFormat ).name() << endl;
+    if ( typeid( *(res->d->mFormat) ) == typeid( ICalFormat ) )
       formatGroup->setButton( 0 );
-    else if ( typeid( *(res->mFormat) ) == typeid( VCalFormat ) )
+    else if ( typeid( *(res->d->mFormat) ) == typeid( VCalFormat ) )
       formatGroup->setButton( 1 );
     else
       kDebug(5800) << "ERROR: ResourceLocalConfig::loadSettings(): Unknown format type" << endl;
@@ -97,13 +97,13 @@ void ResourceLocalConfig::saveSettings( KRES::Resource *resource )
 
   ResourceLocal* res = static_cast<ResourceLocal*>( resource );
   if (res) {
-    res->mURL = url;
+    res->d->mURL = url;
 
-    delete res->mFormat;
+    delete res->d->mFormat;
     if ( icalButton->isDown() ) {
-      res->mFormat = new ICalFormat();
+      res->d->mFormat = new ICalFormat();
     } else {
-      res->mFormat = new VCalFormat();
+      res->d->mFormat = new VCalFormat();
     }
   } else
     kDebug(5700) << "ERROR: ResourceLocalConfig::saveSettings(): no ResourceLocal, cast failed" << endl;

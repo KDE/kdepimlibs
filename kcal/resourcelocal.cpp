@@ -48,39 +48,34 @@
 
 using namespace KCal;
 
-class KCal::ResourceLocal::Private
-{
-  public:
-    KDateTime mLastModified;
-};
-
 ResourceLocal::ResourceLocal( const KConfig* config )
-  : ResourceCached( config ), mLock( 0 )
+  : ResourceCached( config ), d( new ResourceLocal::Private() )
 {
+  d->mLock = 0;
   if ( config ) {
     QString url = config->readPathEntry( "CalendarURL" );
-    mURL = KUrl( url );
+    d->mURL = KUrl( url );
 
     QString format = config->readEntry( "Format" );
     if ( format == "ical" )
-      mFormat = new ICalFormat();
+      d->mFormat = new ICalFormat();
     else if ( format == "vcal" )
-      mFormat = new VCalFormat();
+      d->mFormat = new VCalFormat();
     else {
-      mFormat = new ICalFormat();
+      d->mFormat = new ICalFormat();
     }
   } else {
-    mURL = KUrl();
-    mFormat = new ICalFormat();
+    d->mURL = KUrl();
+    d->mFormat = new ICalFormat();
   }
   init();
 }
 
 ResourceLocal::ResourceLocal( const QString& fileName )
-  : ResourceCached( 0 )
+  : ResourceCached( 0 ), d( new ResourceLocal::Private )
 {
-  mURL = KUrl::fromPath( fileName );
-  mFormat = new ICalFormat();
+  d->mURL = KUrl::fromPath( fileName );
+  d->mFormat = new ICalFormat();
   init();
 }
 
@@ -90,12 +85,12 @@ void ResourceLocal::writeConfig( KConfig* config )
   kDebug(5800) << "ResourceLocal::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
-  config->writePathEntry( "CalendarURL", mURL.prettyUrl() );
-  QString typeID = typeid( *mFormat ).name();
+  config->writePathEntry( "CalendarURL", d->mURL.prettyUrl() );
+  QString typeID = typeid( *d->mFormat ).name();
 
-  if ( typeid( *mFormat ) == typeid( ICalFormat ) )
+  if ( typeid( *d->mFormat ) == typeid( ICalFormat ) )
     config->writeEntry( "Format", "ical" );
-  else if ( typeid( *mFormat ) == typeid( VCalFormat ) ) // if ( typeID == "ICalFormat" )
+  else if ( typeid( *d->mFormat ) == typeid( VCalFormat ) ) // if ( typeID == "ICalFormat" )
     config->writeEntry( "Format", "vcal" );
   else
     kDebug(5800) << "ERROR: Unknown format type" << endl;
@@ -103,38 +98,37 @@ void ResourceLocal::writeConfig( KConfig* config )
 
 void ResourceLocal::init()
 {
-  d = new ResourceLocal::Private;
 
   setType( "file" );
 
-  connect( &mDirWatch, SIGNAL( dirty( const QString & ) ),
+  connect( &d->mDirWatch, SIGNAL( dirty( const QString & ) ),
            SLOT( reload() ) );
-  connect( &mDirWatch, SIGNAL( created( const QString & ) ),
+  connect( &d->mDirWatch, SIGNAL( created( const QString & ) ),
            SLOT( reload() ) );
-  connect( &mDirWatch, SIGNAL( deleted( const QString & ) ),
+  connect( &d->mDirWatch, SIGNAL( deleted( const QString & ) ),
            SLOT( reload() ) );
 
-  mLock = new KABC::Lock( mURL.path() );
+  d->mLock = new KABC::Lock( d->mURL.path() );
 
-  mDirWatch.addFile( mURL.path() );
-  mDirWatch.startScan();
+  d->mDirWatch.addFile( d->mURL.path() );
+  d->mDirWatch.startScan();
 }
 
 
 ResourceLocal::~ResourceLocal()
 {
-  mDirWatch.stopScan();
+  d->mDirWatch.stopScan();
 
   close();
 
-  delete mLock;
+  delete d->mLock;
 
   delete d;
 }
 
 KDateTime ResourceLocal::readLastModified()
 {
-  QFileInfo fi( mURL.path() );
+  QFileInfo fi( d->mURL.path() );
   return KDateTime( fi.lastModified() );  // use local time zone
 }
 
@@ -142,12 +136,12 @@ bool ResourceLocal::doLoad( bool )
 {
   bool success;
 
-  if ( !KStandardDirs::exists( mURL.path() ) ) {
+  if ( !KStandardDirs::exists( d->mURL.path() ) ) {
     kDebug(5800) << "ResourceLocal::load(): File doesn't exist yet." << endl;
     // Save the empty calendar, so the calendar file will be created.
     success = doSave( true );
   } else {
-    success = mCalendar.load( mURL.path() );
+    success = mCalendar.load( d->mURL.path() );
     if ( success ) d->mLastModified = readLastModified();
   }
 
@@ -156,7 +150,7 @@ bool ResourceLocal::doLoad( bool )
 
 bool ResourceLocal::doSave( bool )
 {
-  bool success = mCalendar.save( mURL.path() );
+  bool success = mCalendar.save( d->mURL.path() );
   d->mLastModified = readLastModified();
 
   return success;
@@ -164,7 +158,7 @@ bool ResourceLocal::doSave( bool )
 
 KABC::Lock *ResourceLocal::lock()
 {
-  return mLock;
+  return d->mLock;
 }
 
 bool ResourceLocal::doReload()
@@ -180,7 +174,7 @@ bool ResourceLocal::doReload()
   }
 
   mCalendar.close();
-  mCalendar.load( mURL.path() );
+  mCalendar.load( d->mURL.path() );
   return true;
 }
 
@@ -193,25 +187,25 @@ void ResourceLocal::reload()
 void ResourceLocal::dump() const
 {
   ResourceCalendar::dump();
-  kDebug(5800) << "  Url: " << mURL.url() << endl;
+  kDebug(5800) << "  Url: " << d->mURL.url() << endl;
 }
 
 QString ResourceLocal::fileName() const
 {
-  return mURL.path();
+  return d->mURL.path();
 }
 
 bool ResourceLocal::setFileName( const QString &fileName )
 {
   bool open = isOpen();
   if ( open ) close();
-  delete mLock;
-  mDirWatch.stopScan();
-  mDirWatch.removeFile( mURL.path() );
-  mURL = KUrl::fromPath( fileName );
-  mLock = new KABC::Lock( mURL.path() );
-  mDirWatch.addFile( mURL.path() );
-  mDirWatch.startScan();
+  delete d->mLock;
+  d->mDirWatch.stopScan();
+  d->mDirWatch.removeFile( d->mURL.path() );
+  d->mURL = KUrl::fromPath( fileName );
+  d->mLock = new KABC::Lock( d->mURL.path() );
+  d->mDirWatch.addFile( d->mURL.path() );
+  d->mDirWatch.startScan();
   return true;
 }
 
@@ -222,6 +216,17 @@ bool ResourceLocal::setValue( const QString &key, const QString &value )
   } else return false;
 }
 
+bool ResourceLocal::operator==( const ResourceLocal &other ) 
+{
+  return ( d->mURL == other.d->mURL &&
+           d->mLastModified == other.d->mLastModified );
+}
 
+ResourceLocal &ResourceLocal::operator=( const ResourceLocal &other )
+{
+  d->mURL = other.d->mURL;
+  d->mLastModified = other.d->mLastModified;
+  return *this;
+}
 
 #include "resourcelocal.moc"
