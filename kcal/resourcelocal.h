@@ -139,6 +139,8 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
       Called by reload() to reload the resource, if it is already open.
       @return true if successful, else false. If true is returned,
               reload() will emit a resourceChanged() signal.
+
+      @see doLoad(), doSave()
     */
     virtual bool doReload();
 
