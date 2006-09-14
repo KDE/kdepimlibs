@@ -59,7 +59,7 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
   public:
 
     /**
-      Constructs a resource from configuration information 
+      Constructs a resource from configuration information
       stored in a #KConfig object.
 
       @param config the #KConfig object to store as a resource.
@@ -69,9 +69,9 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     /**
       Constructs a resource for file named @p fileName.
 
-      @param fileName the file to link to the resource. 
+      @param fileName the file to link to the resource.
     */
-    explicit ResourceLocal( const QString& fileName );
+    explicit ResourceLocal( const QString &fileName );
 
     /**
       Destroys the resource.
@@ -81,7 +81,7 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     /**
       Writes #KConfig @p config to a local file.
     **/
-    virtual void writeConfig( KConfig* config );
+    virtual void writeConfig( KConfig *config );
 
     /**
       Returns the lock.
@@ -96,9 +96,9 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     QString fileName() const;
 
     /**
-      Sets the fileName for this resource. This will be the local 
+      Sets the fileName for this resource. This will be the local
       file where the resource data will be stored.
-  
+
       @see fileName()
     **/
     bool setFileName( const QString &fileName );
@@ -112,7 +112,7 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     bool setValue( const QString &key, const QString &value );
 
     /**
-      Dumps the resource. 
+      Dumps the resource.
     **/
     void dump() const;
 
@@ -145,7 +145,7 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     virtual bool doReload();
 
     /**
-      Returns the date/time the local file was last modified. 
+      Returns the date/time the local file was last modified.
 
       @see doSave()
     **/
@@ -156,7 +156,7 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
       Returns true if they are equal.
     **/
     bool operator==( const ResourceLocal &other );
-    
+
     /**
       Sets this #ResourceLocal equal to @param other.
     **/

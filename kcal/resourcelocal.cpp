@@ -19,6 +19,14 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the ResourceLocal class.
+
+  @author Preston Brown <pbrown@kde.org>
+  @author Cornelius Schumacher <schumacher@kde.org>
+*/
 
 #include <typeinfo>
 #include <stdlib.h>
@@ -48,7 +56,7 @@
 
 using namespace KCal;
 
-ResourceLocal::ResourceLocal( const KConfig* config )
+ResourceLocal::ResourceLocal( const KConfig *config )
   : ResourceCached( config ), d( new ResourceLocal::Private() )
 {
   d->mLock = 0;
@@ -57,11 +65,11 @@ ResourceLocal::ResourceLocal( const KConfig* config )
     d->mURL = KUrl( url );
 
     QString format = config->readEntry( "Format" );
-    if ( format == "ical" )
+    if ( format == "ical" ) {
       d->mFormat = new ICalFormat();
-    else if ( format == "vcal" )
+    } else if ( format == "vcal" ) {
       d->mFormat = new VCalFormat();
-    else {
+    } else {
       d->mFormat = new ICalFormat();
     }
   } else {
@@ -71,7 +79,7 @@ ResourceLocal::ResourceLocal( const KConfig* config )
   init();
 }
 
-ResourceLocal::ResourceLocal( const QString& fileName )
+ResourceLocal::ResourceLocal( const QString &fileName )
   : ResourceCached( 0 ), d( new ResourceLocal::Private )
 {
   d->mURL = KUrl::fromPath( fileName );
@@ -79,21 +87,20 @@ ResourceLocal::ResourceLocal( const QString& fileName )
   init();
 }
 
-
-void ResourceLocal::writeConfig( KConfig* config )
+void ResourceLocal::writeConfig( KConfig *config )
 {
   kDebug(5800) << "ResourceLocal::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
   config->writePathEntry( "CalendarURL", d->mURL.prettyUrl() );
-  QString typeID = typeid( *d->mFormat ).name();
 
-  if ( typeid( *d->mFormat ) == typeid( ICalFormat ) )
+  if ( typeid( *d->mFormat ) == typeid( ICalFormat ) ) {
     config->writeEntry( "Format", "ical" );
-  else if ( typeid( *d->mFormat ) == typeid( VCalFormat ) ) // if ( typeID == "ICalFormat" )
+  } else if ( typeid( *d->mFormat ) == typeid( VCalFormat ) ) {
     config->writeEntry( "Format", "vcal" );
-  else
+  } else {
     kDebug(5800) << "ERROR: Unknown format type" << endl;
+  }
 }
 
 void ResourceLocal::init()
@@ -113,7 +120,6 @@ void ResourceLocal::init()
   d->mDirWatch.addFile( d->mURL.path() );
   d->mDirWatch.startScan();
 }
-
 
 ResourceLocal::~ResourceLocal()
 {
@@ -213,10 +219,12 @@ bool ResourceLocal::setValue( const QString &key, const QString &value )
 {
   if ( key == "File" ) {
     return setFileName( value );
-  } else return false;
+  } else {
+    return false;
+  }
 }
 
-bool ResourceLocal::operator==( const ResourceLocal &other ) 
+bool ResourceLocal::operator==( const ResourceLocal &other )
 {
   return ( d->mURL == other.d->mURL &&
            d->mLastModified == other.d->mLastModified );
