@@ -259,7 +259,7 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
       Returns true if the date specified is one on which the incidence will
       recur.
     */
-    virtual bool recursOn( const QDate &qd, const KDateTime::Spec &timeSpec = KDateTime::LocalZone ) const;
+    virtual bool recursOn( const QDate &qd, const KDateTime::Spec &timeSpec ) const;
 
     /**
       Returns true if the date/time specified is one on which the incidence will

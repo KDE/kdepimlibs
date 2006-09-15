@@ -259,7 +259,8 @@ bool Recurrence::recursOn(const QDate &qd, const KDateTime::Spec &timeSpec) cons
   int i, end;
   TimeList tms;
   // First handle dates. Exrules override
-  if ( mExDates.contains( qd ) ) return false;
+  if ( mExDates.contains( qd ) )
+    return false;
   // For all-day events a matching exrule excludes the whole day
   // since exclusions take precedence over inclusions, we know it can't occur on that day.
   if ( doesFloat() ) {
@@ -269,37 +270,29 @@ bool Recurrence::recursOn(const QDate &qd, const KDateTime::Spec &timeSpec) cons
     }
   }
 
-  if ( mRDates.contains( qd ) ) return true;
+  if ( mRDates.contains( qd ) )
+    return true;
 
   // Check if it might recur today at all.
-  bool recurs = false;
-  if ( startDate() == qd ) recurs = true;
-  for ( i = 0, end = mRRules.count();  i < end;  ++i ) {
-    recurs = recurs || mRRules[i]->recursOn( qd, timeSpec );
+  bool recurs = ( startDate() == qd );
+  for ( i = 0, end = mRDateTimes.count();  i < end && !recurs;  ++i ) {
+    recurs = ( mRDateTimes[i].toTimeSpec( timeSpec ).date() == qd );
   }
-  // If we already know it recurs, no need to check the rdate list too.
-  if ( !recurs ) {
-    for ( i = 0, end = mRDateTimes.count();  i < end;  ++i ) {
-      if ( mRDateTimes[i].date() == qd ) {
-        recurs = true;
-        break;
-      }
-    }
+  for ( i = 0, end = mRRules.count();  i < end && !recurs;  ++i ) {
+    recurs = mRRules[i]->recursOn( qd, timeSpec );
   }
   // If the event wouldn't recur at all, simply return false, don't check ex*
-  if ( !recurs ) return false;
+  if ( !recurs )
+    return false;
 
   // Check if there are any times for this day excluded, either by exdate or exrule:
   bool exon = false;
-  for ( i = 0, end = mExDateTimes.count();  i < end;  ++i ) {
-    if ( mExDateTimes[i].date() == qd ) {
-      exon = true;
-      break;
-    }
+  for ( i = 0, end = mExDateTimes.count();  i < end && !exon;  ++i ) {
+    exon = ( mExDateTimes[i].toTimeSpec( timeSpec ).date() == qd );
   }
   if ( !doesFloat() ) {     // we have already checked floating times above
-    for ( i = 0, end = mExRules.count();  i < end;  ++i ) {
-      exon = exon || mExRules[i]->recursOn( qd, timeSpec );
+    for ( i = 0, end = mExRules.count();  i < end && !exon;  ++i ) {
+      exon = mExRules[i]->recursOn( qd, timeSpec );
     }
   }
 
@@ -309,6 +302,9 @@ bool Recurrence::recursOn(const QDate &qd, const KDateTime::Spec &timeSpec) cons
   } else {
     // Harder part: I don't think there is any way other than to calculate the
     // whole list of items for that day.
+//TODO: consider whether it would be more efficient to call
+//      Rule::recurTimesOn() instead of Rule::recursOn() from the start
+kDebug(5800)<<"recursOn(): calling timesForDay()"<<endl;
     TimeList timesForDay( recurTimesOn( qd, timeSpec ) );
     return !timesForDay.isEmpty();
   }

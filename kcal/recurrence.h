@@ -150,7 +150,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     static ushort recurrenceType( const RecurrenceRule *rrule );
     /** Returns true if the date specified is one on which the event will
      * recur. */
-    bool recursOn( const QDate &qd, const KDateTime::Spec &timeSpec = KDateTime::LocalZone ) const;
+    bool recursOn( const QDate &qd, const KDateTime::Spec &timeSpec ) const;
     /** Returns true if the date/time specified is one at which the event will
      * recur. Times are rounded down to the nearest minute to determine the result. */
     bool recursAt( const KDateTime & ) const;

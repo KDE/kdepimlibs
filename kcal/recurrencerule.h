@@ -195,8 +195,20 @@ class KCAL_EXPORT RecurrenceRule
 
 
     /** Returns true if the date specified is one on which the event will
-     * recur. The start date returns true only if it actually matches the rule. */
-    bool recursOn( const QDate &date, const KDateTime::Spec &timeSpec = KDateTime::LocalZone ) const;
+     * recur. The start date returns true only if it actually matches the rule.
+     *
+     * @param date date to check
+     * @param timeSpec time specification for @p date
+     */
+    bool recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const;
+    /** Returns true if the date specified is one on which the event will
+     * recur. The start date returns true only if it actually matches the rule.
+     *
+     * @param date date to check. The time specification used for interpreting
+     *             @p date is the "natural" time specification for the rule,
+     *             i.e. that of the rule's start time.
+     */
+    bool recursOn( const QDate &date ) const;
     /** Returns true if the date/time specified is one at which the event will
      * recur. Times are rounded down to the nearest minute to determine the result.
      * The start date/time returns true only if it actually matches the rule. */
@@ -210,10 +222,12 @@ class KCAL_EXPORT RecurrenceRule
 
 
     /** Returns a list of the times on the specified date at which the
-     * recurrence will occur.
-     * @param date the date for which to find the recurrence times.
+     * recurrence will occur. The returned times should be interpreted in the
+     * context of @p timeSpec.
+     * @param date the date for which to find the recurrence times
+     * @param timeSpec time specification for @p date
      */
-    TimeList recurTimesOn( const QDate &date, const KDateTime::Spec &timeSpec = KDateTime::LocalZone ) const;
+    TimeList recurTimesOn( const QDate &date, const KDateTime::Spec &timeSpec ) const;
 
     /** Returns a list of all the times at which the recurrence will occur
      * between two specified times.
@@ -241,8 +255,6 @@ class KCAL_EXPORT RecurrenceRule
      * @return date/time of previous recurrence, or invalid date if none.
      */
     KDateTime getPreviousDate( const KDateTime& afterDateTime ) const;
-
-
 
 
     void setBySeconds( const QList<int> bySeconds );
@@ -299,11 +311,6 @@ class KCAL_EXPORT RecurrenceRule
         typedef QList<Constraint> List;
 
         explicit Constraint( KDateTime::Spec, int wkst = 1 );
-/*         Constraint( const Constraint &con ) :
-                     year(con.year), month(con.month), day(con.day),
-                     hour(con.hour), minute(con.minute), second(con.second),
-                     weekday(con.weekday), weeknumber(con.weeknumber),
-                     yearday(con.yearday), weekstart(con.weekstart) {}*/
         Constraint( const KDateTime &dt, PeriodType type, int wkst );
         void clear();
 

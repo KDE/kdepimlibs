@@ -214,7 +214,7 @@ class KCAL_EXPORT Todo : public Incidence
       check, which make it return false if there's an occurrence between
       the recur start and today.
     */
-    virtual bool recursOn( const QDate &date, const KDateTime::Spec &timeSpec = KDateTime::LocalZone ) const;
+    virtual bool recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const;
 
     /**
       Returns true if this todo is overdue (e.g. due date is lower than today

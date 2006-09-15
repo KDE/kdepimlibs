@@ -95,14 +95,14 @@ int main( int argc, char **argv )
     if ( outstream ) {
       // Output to file for testing purposes
       while ( dt.year() <= 2010 ) {
-        if ( incidence->recursOn( dt ) )
+        if ( incidence->recursOn( dt, cal.timeSpec() ) )
           (*outstream) << dt.toString( Qt::ISODate ) << endl;
         dt = dt.addDays( 1 );
       }
     } else {
       dt = QDate( 2005, 1, 1 );
       while ( dt.year() < 2007 ) {
-        if ( incidence->recursOn( dt ) )
+        if ( incidence->recursOn( dt, cal.timeSpec() ) )
           kDebug(5800) << dt.toString( Qt::ISODate ) << endl;
         dt = dt.addDays( 1 );
       }

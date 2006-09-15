@@ -469,7 +469,7 @@ QList<KDateTime> Incidence::startDateTimesForDateTime( const KDateTime &datetime
   while ( tmpday <= datetime.date() ) {
     if ( recurrence()->recursOn( tmpday, datetime.timeSpec() ) ) {
       // Get the times during the day (in start date's time zone) when recurrences happen
-      QList<QTime> times = recurrence()->recurTimesOn( tmpday );
+      QList<QTime> times = recurrence()->recurTimesOn( tmpday, start.timeSpec() );
       for ( QList<QTime>::ConstIterator it = times.begin(); it != times.end(); ++it ) {
         tmp = KDateTime( tmpday, *it, start.timeSpec() );
         if ( !(tmp > datetime || endDateForStart( tmp ) < datetime ) )
