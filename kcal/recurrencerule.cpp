@@ -1005,7 +1005,6 @@ bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec 
         }
       }
       interval.increase( recurrenceType(), frequency() );
-kDebug(5800)<<"recursOn(): times interval: "<<interval.intervalDateTime( recurrenceType() ).dateTime()<<endl;
     } while ( interval.intervalDateTime( recurrenceType() ) < end );
     return false;
   }
@@ -1031,7 +1030,9 @@ kDebug(5800)<<"recursOn(): times interval: "<<interval.intervalDateTime( recurre
   QDate startDay = start.toTimeSpec( mDateStart.timeSpec() ).date();
   QDate endDay = end.toTimeSpec( mDateStart.timeSpec() ).addSecs( -1 ).date();
   int dayCount = startDay.daysTo( endDay ) + 1;
-kDebug(5800)<<"recursOn(): dayCount="<<dayCount<<endl;
+if (timeSpec.timeZone()) kDebug(5800)<<"recursOn("<<timeSpec.timeZone()->name()<<")"<<endl;
+if (mDateStart.timeSpec().timeZone()) kDebug(5800)<<"recursOn(): recur tz="<<mDateStart.timeSpec().timeZone()->name()<<endl;
+kDebug(5800)<<"recursOn(): startDay="<<startDay<<", endDay="<<endDay<<", dayCount="<<dayCount<<endl;
 
   // The date must be in an appropriate interval (getNextValidDateInterval),
   // Plus it must match at least one of the constraints
@@ -1150,9 +1151,7 @@ KDateTime RecurrenceRule::getPreviousDate( const KDateTime& afterDate ) const
 {
   // Convert to the time spec used by this recurrence rule
   KDateTime toDate( afterDate.toTimeSpec( mDateStart.timeSpec() ) );
-///kDebug(5800)<<"    mDateStart: "<<dumpTime(mDateStart)<<endl;
 // kDebug(5800) << "         RecurrenceRule::getPreviousDate: " << dumpTime(afterDate) << " = " << dumpTime(toDate) << endl;
-///if(mDuration >= 0 && endDt().isValid()) kDebug(5800)<<"    end date="<<dumpTime(endDt())<<endl;
   // Invalid starting point, or beyond end of recurrence
   if ( !toDate.isValid() || toDate < startDt() )
     return KDateTime();
@@ -1165,7 +1164,6 @@ KDateTime RecurrenceRule::getPreviousDate( const KDateTime& afterDate ) const
     for ( int i = 0, iend = mCachedDates.count();  i < iend && mCachedDates[i] < toDate;  ++i ) {
       prev = mCachedDates[i];
     }
-///if ( prev.isValid() && prev < toDate ) kDebug(5800) << "    cache -> "<<dumpTime(prev)<<endl;
     if ( prev.isValid() && prev < toDate ) return prev;
     else return KDateTime();
   }
@@ -1181,7 +1179,6 @@ KDateTime RecurrenceRule::getPreviousDate( const KDateTime& afterDate ) const
   DateTimeList dts = datesForInterval( interval, recurrenceType() );
   for ( int i = dts.count();  --i >= 0; ) {
     if ( dts[i] < prev ) {
-///kDebug(5800) << "    interval 1 -> "<<dumpTime(dts[i])<<endl;
       return ( dts[i] >= startDt() ) ? dts[i] : KDateTime();
     }
   }
@@ -1196,7 +1193,6 @@ KDateTime RecurrenceRule::getPreviousDate( const KDateTime& afterDate ) const
     // The list is sorted, so take the last one.
     if ( !dts.isEmpty() ) {
       prev = dts.last();
-///if ( prev.isValid() && prev >= startDt() ) kDebug(5800) << "    interval 2 -> "<<dumpTime(prev)<<endl;
       if ( prev.isValid() && prev >= startDt() ) return prev;
       else return KDateTime();
     }
