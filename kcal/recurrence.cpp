@@ -748,11 +748,14 @@ TimeList Recurrence::recurTimesOn( const QDate &date, const KDateTime::Spec &tim
     }
   }
 
-  if ( startDate() == date ) times << startDateTime().time();
+  KDateTime dt = startDateTime().toTimeSpec( timeSpec );
+  if ( dt.date() == date )
+    times << dt.time();
   bool foundDate = false;
   for ( i = 0, end = mRDateTimes.count();  i < end;  ++i ) {
-    if ( mRDateTimes[i].date() == date ) {
-      times << mRDateTimes[i].time();
+    dt = mRDateTimes[i].toTimeSpec( timeSpec );
+    if ( dt.date() == date ) {
+      times << dt.time();
       foundDate = true;
     } else if (foundDate) break; // <= Assume that the rdatetime list is sorted
   }
@@ -764,8 +767,9 @@ TimeList Recurrence::recurTimesOn( const QDate &date, const KDateTime::Spec &tim
   foundDate = false;
   TimeList extimes;
   for ( i = 0, end = mExDateTimes.count();  i < end;  ++i ) {
-    if ( mExDateTimes[i].date() == date ) {
-      extimes << mExDateTimes[i].time();
+    dt = mExDateTimes[i].toTimeSpec( timeSpec );
+    if ( dt.date() == date ) {
+      extimes << dt.time();
       foundDate = true;
     } else if (foundDate) break;
   }
