@@ -148,9 +148,12 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     /** Returns the recurrence status for a recurrence rule.
      * See the enumeration at the top of this file for possible values. */
     static ushort recurrenceType( const RecurrenceRule *rrule );
-    /** Returns true if the date specified is one on which the event will
-     * recur. */
-    bool recursOn( const QDate &qd, const KDateTime::Spec &timeSpec ) const;
+    /** Returns true if the date specified is one on which the event will recur.
+     *
+     * @param date date to check
+     * @param timeSpec time specification for @p date
+     */
+    bool recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const;
     /** Returns true if the date/time specified is one at which the event will
      * recur. Times are rounded down to the nearest minute to determine the result. */
     bool recursAt( const KDateTime & ) const;
@@ -162,10 +165,12 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     void clear();
 
     /** Returns a list of the times on the specified date at which the
-     * recurrence will occur.
-     * @param date the date for which to find the recurrence times.
+     * recurrence will occur. The returned times should be interpreted in the
+     * context of @p timeSpec.
+     * @param date the date for which to find the recurrence times
+     * @param timeSpec time specification for @p date
      */
-    TimeList recurTimesOn(const QDate &date, const KDateTime::Spec &timeSpec = KDateTime::LocalZone) const;
+    TimeList recurTimesOn( const QDate &date, const KDateTime::Spec &timeSpec ) const;
 
     /** Returns a list of all the times at which the recurrence will occur
      * between two specified times.
