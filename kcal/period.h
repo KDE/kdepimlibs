@@ -58,7 +58,7 @@ class KCAL_EXPORT Period
       @param end the time the period ends.
     */
     Period( const KDateTime &start, const KDateTime &end );
-    KDE_DEPRECATED Period( const QDateTime &start, const QDateTime &end );
+    KDE_CONSTRUCTOR_DEPRECATED Period( const QDateTime &start, const QDateTime &end );
 
     /**
       Constructs a period from @p start and lasting @p duration.
@@ -67,7 +67,7 @@ class KCAL_EXPORT Period
       @param duration how long the period lasts.
     */
     Period( const KDateTime &start, const Duration &duration );
-    KDE_DEPRECATED Period( const QDateTime &start, const Duration &duration );
+    KDE_CONSTRUCTOR_DEPRECATED Period( const QDateTime &start, const Duration &duration );
 
     /**
       Constructs a period by copying another period object

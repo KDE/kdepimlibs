@@ -37,7 +37,7 @@ class KCAL_EXPORT Duration
   public:
     Duration();
     Duration( const KDateTime &start, const KDateTime &end );
-    KDE_DEPRECATED Duration( const QDateTime &start, const QDateTime &end );
+    KDE_CONSTRUCTOR_DEPRECATED Duration( const QDateTime &start, const QDateTime &end );
     Duration( int seconds ); //not explicit
 
     KDateTime end( const KDateTime &start ) const;

@@ -41,10 +41,10 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
   public:
     FreeBusy();
     FreeBusy( const KDateTime &start, const KDateTime &end );
-    KDE_DEPRECATED FreeBusy( const QDateTime &start, const QDateTime &end );
+    KDE_CONSTRUCTOR_DEPRECATED FreeBusy( const QDateTime &start, const QDateTime &end );
     FreeBusy( Calendar *calendar, const KDateTime &start,
               const KDateTime &end );
-    KDE_DEPRECATED FreeBusy( Calendar *calendar, const QDateTime &start,
+    KDE_CONSTRUCTOR_DEPRECATED FreeBusy( Calendar *calendar, const QDateTime &start,
               const QDateTime &end );
     explicit FreeBusy( const PeriodList & busyPeriods );
 
