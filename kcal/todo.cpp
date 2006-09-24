@@ -307,8 +307,8 @@ bool Todo::recurTodo()
 
 bool Todo::isOverdue() const
 {
-  bool inPast = doesFloat() ? mDtDue.date() < QDate::currentDate()
-                            : mDtDue < KDateTime::currentUtcDateTime();
+  bool inPast = doesFloat() ? dtDue().date() < QDate::currentDate()
+                            : dtDue() < KDateTime::currentUtcDateTime();
   return ( inPast && !isCompleted() );
 }
 
