@@ -18,18 +18,24 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Duration class.
+
+  @author Cornelius Schumacher
+*/
 #ifndef KCAL_DURATION_H
 #define KCAL_DURATION_H
 
 #include "kcal.h"
 
 class KDateTime;
-//TODO: remove following declaration
-class QDateTime;
 
 namespace KCal {
 
 /**
+  @brief
   This class represents a duration.
 */
 class KCAL_EXPORT Duration
@@ -37,11 +43,9 @@ class KCAL_EXPORT Duration
   public:
     Duration();
     Duration( const KDateTime &start, const KDateTime &end );
-    KDE_CONSTRUCTOR_DEPRECATED Duration( const QDateTime &start, const QDateTime &end );
     Duration( int seconds ); //not explicit
 
     KDateTime end( const KDateTime &start ) const;
-    KDE_DEPRECATED QDateTime end( const QDateTime &start ) const;
 
     int asSeconds() const;
 
@@ -52,7 +56,7 @@ class KCAL_EXPORT Duration
     Private *d;
 };
 
-bool operator==( const Duration&, const Duration& );
+bool operator==( const Duration &d1, const Duration &d2 );
 inline bool operator!=( const Duration &d1, const Duration &d2 )
 {
   return !operator==( d1, d2 );

@@ -18,6 +18,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Duration class.
+
+  @author Cornelius Schumacher
+*/
 
 #include <kdatetime.h>
 
@@ -40,7 +47,7 @@ Duration::Duration( int seconds )
   mSeconds = seconds;
 }
 
-bool KCal::operator==( const Duration& d1, const Duration& d2 )
+bool KCal::operator==( const Duration &d1, const Duration &d2 )
 {
   return ( d1.asSeconds() == d2.asSeconds() );
 }
@@ -53,16 +60,5 @@ KDateTime Duration::end( const KDateTime &start ) const
 int Duration::asSeconds() const
 {
   return mSeconds;
-}
-
-// DEPRECATED methods
-Duration::Duration( const QDateTime &start, const QDateTime &end )
-{
-  mSeconds = start.secsTo( end );
-}
-
-QDateTime Duration::end( const QDateTime &start ) const
-{
-  return start.addSecs( mSeconds );
 }
 

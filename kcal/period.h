@@ -58,7 +58,6 @@ class KCAL_EXPORT Period
       @param end the time the period ends.
     */
     Period( const KDateTime &start, const KDateTime &end );
-    KDE_CONSTRUCTOR_DEPRECATED Period( const QDateTime &start, const QDateTime &end );
 
     /**
       Constructs a period from @p start and lasting @p duration.
@@ -67,7 +66,6 @@ class KCAL_EXPORT Period
       @param duration how long the period lasts.
     */
     Period( const KDateTime &start, const Duration &duration );
-    KDE_CONSTRUCTOR_DEPRECATED Period( const QDateTime &start, const Duration &duration );
 
     /**
       Constructs a period by copying another period object
@@ -130,15 +128,16 @@ class KCAL_EXPORT Period
       time zone rather than from the actual period time zone.
 
       For example, shifting a period whose start time is 09:00 America/New York,
-      using an old viewing time zone (@p oldSpec) of Europe/London, to a new time
-      zone (@p newSpec) of Europe/Paris, will result in the time being shifted
-      from 14:00 (which is the London time of the period start) to 14:00 Paris
-      time.
+      using an old viewing time zone (@p oldSpec) of Europe/London, to a new
+      time zone (@p newSpec) of Europe/Paris, will result in the time being
+      shifted from 14:00 (which is the London time of the period start) to
+      14:00 Paris time.
 
       @param oldSpec the time specification which provides the clock times
       @param newSpec the new time specification
     */
-    void shiftTimes( const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec );
+    void shiftTimes( const KDateTime::Spec &oldSpec,
+                     const KDateTime::Spec &newSpec );
 
   private:
     //@cond PRIVATE

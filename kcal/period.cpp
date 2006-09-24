@@ -116,29 +116,11 @@ bool Period::hasDuration() const
   return d->mHasDuration;
 }
 
-void Period::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
+void Period::shiftTimes( const KDateTime::Spec &oldSpec,
+                         const KDateTime::Spec &newSpec )
 {
   d->mStart = d->mStart.toTimeSpec( oldSpec );
   d->mStart.setTimeSpec( newSpec );
   d->mEnd = d->mEnd.toTimeSpec( oldSpec );
   d->mEnd.setTimeSpec( newSpec );
-}
-
-// DEPRECATED methods
-Period::Period( const QDateTime &start, const QDateTime &end )
-  : d( new KCal::Period::Private )
-{
-  // Use local time zone
-  d->mStart = KDateTime(start);
-  d->mEnd = KDateTime(end);
-  d->mHasDuration = false;
-}
-
-Period::Period( const QDateTime &start, const Duration &duration )
-  : d( new KCal::Period::Private )
-{
-  // Use local time zone
-  d->mStart = KDateTime(start);
-  d->mEnd = KDateTime(duration.end( start ));
-  d->mHasDuration = true;
 }
