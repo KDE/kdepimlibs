@@ -21,8 +21,9 @@
     Boston, MA 02110-1301, USA.
 */
 /**
-  @file calendarlocal.h
-  Provides a Calendar stored as a local file.
+  @file
+  This file is part of the API for handling calendar data and
+  defines the CalendarLocal class.
 
   @author Preston Brown
   @author Cornelius Schumacher
