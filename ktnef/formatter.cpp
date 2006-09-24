@@ -32,6 +32,7 @@
 
 #include <QBuffer>
 #include <klocale.h>
+#include <kdatetime.h>
 
 #include "emailfunctions/email.h"
 #include "kabc/phonenumber.h"
@@ -129,7 +130,7 @@ static void unset_tz( struct save_tz old_tz )
   }
 }
 
-static QDateTime utc2Local( const QDateTime &utcdt )
+static KDateTime utc2Local( const KDateTime &utcdt )
 {
   struct tm tmL;
 
@@ -138,11 +139,11 @@ static QDateTime utc2Local( const QDateTime &utcdt )
   unset_tz( tmp_tz );
 
   localtime_r( &utc, &tmL );
-  return QDateTime( QDate( tmL.tm_year+1900, tmL.tm_mon+1, tmL.tm_mday ),
+  return KDateTime( QDate( tmL.tm_year+1900, tmL.tm_mon+1, tmL.tm_mday ),
                     QTime( tmL.tm_hour, tmL.tm_min, tmL.tm_sec ) );
 }
 
-static QDateTime pureISOToLocalQDateTime( const QString &dtStr,
+static KDateTime pureISOToLocalQDateTime( const QString &dtStr,
                                           bool bDateOnly = false )
 {
   QDate tmpDate;
@@ -168,7 +169,7 @@ static QDateTime pureISOToLocalQDateTime( const QString &dtStr,
   tmpTime.setHMS( hour, minute, second );
 
   if ( tmpDate.isValid() && tmpTime.isValid() ) {
-    QDateTime dT = QDateTime( tmpDate, tmpTime );
+    KDateTime dT = KDateTime( tmpDate, tmpTime );
 
     if ( !bDateOnly ) {
       // correct for GMT ( == Zulu time == UTC )
@@ -180,7 +181,7 @@ static QDateTime pureISOToLocalQDateTime( const QString &dtStr,
     }
     return dT;
   } else {
-    return QDateTime();
+    return KDateTime();
   }
 }
 //@endcond
@@ -371,11 +372,11 @@ QString KTnef::Formatter::msTNEFToVPart( const QByteArray &tnef )
         // is reminder flag set ?
         if (!tnefMsg->findProp(0x8503).isEmpty()) {
           Alarm *alarm = new Alarm( event );
-          QDateTime highNoonTime =
+          KDateTime highNoonTime =
             pureISOToLocalQDateTime( tnefMsg->findProp( 0x8502 )
                                      .replace( QChar( '-' ), "" )
                                      .replace( QChar( ':' ), "" ) );
-          QDateTime wakeMeUpTime =
+          KDateTime wakeMeUpTime =
             pureISOToLocalQDateTime( tnefMsg->findProp( 0x8560, "" )
                                      .replace( QChar( '-' ), "" )
                                      .replace( QChar( ':' ), "" ) );
