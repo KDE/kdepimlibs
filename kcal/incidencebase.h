@@ -27,6 +27,8 @@
 
   @author Cornelius Schumacher
   @author Reinhold Kainhofer
+
+  @port4 rename doesFloat() to floats()
 */
 
 #ifndef KCAL_INCIDENCEBASE_H
@@ -133,11 +135,30 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
         virtual void incidenceUpdated( IncidenceBase * ) = 0;
     };
 
+    /**
+      Constructs an incidencebase (invalid).
+    */
     IncidenceBase();
-    IncidenceBase( const IncidenceBase & );
+
+    /**
+      Constructs an incidencebase as a copy of another incidencebase object.
+
+      @param ib is the incidencebase to copy.
+    */
+
+    IncidenceBase( const IncidenceBase &ib );
+
+    /**
+      Destroys the incidencebase.
+    */
     virtual ~IncidenceBase();
 
-    bool operator==( const IncidenceBase & ) const;
+    /**
+      Compares this with incidencebase @p ib for equality.
+
+      @p ib is the incidencebase to compare.
+    */
+    bool operator==( const IncidenceBase &ib ) const;
 
     /**
       Accept IncidenceVisitor. A class taking part in the visitor mechanism
@@ -153,27 +174,35 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
 
     /**
       Sets the unique id for the incidence to @p uid.
+
+      @see uid()
     */
     void setUid( const QString &uid );
 
     /**
-      Returns the unique id for the incidence
+      Returns the unique id for the incidence.
+
+      @see setUid()
     */
     QString uid() const;
 
     /**
-      Returns the uri for the incidence, of form urn:x-ical:\<uid\>
+      >Returns the uri for the incidence, of form urn:x-ical:\<uid\>
     */
     KUrl uri() const;
 
-    /** Sets the time the incidence was last modified. It is stored as a UTC date/time. */
     /**
       Sets the time the incidence was last modified to @p lm.
+      It is stored as a UTC date/time.
+
+      @see lastModified()
     */
     void setLastModified( const KDateTime &lm );
 
     /**
       Returns the time the incidence was last modified.
+
+      @see setLastModified()
     */
     KDateTime lastModified() const;
 
@@ -240,18 +269,26 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
 
     virtual void setDuration( int seconds );
     int duration() const;
-    void setHasDuration( bool );
+    void setHasDuration( bool hasDuration );
     bool hasDuration() const;
 
-    /** Returns true or false depending on whether the incidence "floats,"
-     * i.e. has a date but no time attached to it. */
-    bool doesFloat() const;
+    /**
+      Returns true or false depending on whether the incidence "floats,"
+      i.e. has a date but no time attached to it.
+
+      @see setFloats()
+    */
+    bool floats() const;
 
     /**
       Sets whether the incidence floats, i.e. has a date but no time attached
       to it.
+
+      @param floats sets (true) or unsets (false) whether the incidence floats.
+
+      @see floats()
     */
-    void setFloats( bool f );
+    void setFloats( bool floats );
 
     /**
       Shift the times of the incidence so that they appear at the same clock
@@ -275,28 +312,32 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     //
 
     /**
-     * Add a comment to this incidence.
-     *
-     * Does not add a linefeed character.  Just appends the text as passed in.
-     *
-     * @param comment  The comment to add.
-     */
+      Add a comment to this incidence.
+
+      Does not add a linefeed character.  Just appends the text as passed in.
+
+      @param comment  The comment to add.
+    */
     void addComment( const QString &comment );
 
     /**
-     * Remove a comment from the incidence.
-     *
-     * Removes first comment whose string is an exact match for the string
-     * passed in.
-     *
-     * @return true if match found, false otherwise.
+      Remove a comment from the incidence.
+
+      Removes first comment whose string is an exact match for the string
+      passed in.
+
+      @return true if match found, false otherwise.
      */
     bool removeComment( const QString &comment );
 
-    /** Delete all comments associated with this incidence. */
+    /**
+      Deletes all comments associated with this incidence.
+    */
     void clearComments();
 
-    /** Returns all comments associated with this incidence.  */
+    /**
+      Returns all comments associated with this incidence.
+    */
     QStringList comments() const;
 
     /**
@@ -389,8 +430,10 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     bool mReadOnly;
 
   private:
+    //@cond PRIVATE
     class Private;
     Private *d;
+    //@endcond
 };
 
 }

@@ -142,7 +142,7 @@ bool IncidenceBase::operator==( const IncidenceBase &i2 ) const
            uid() == i2.uid() &&
            // Don't compare lastModified, otherwise the operator is not
            // of much use. We are not comparing for identity, after all.
-           doesFloat() == i2.doesFloat() &&
+           floats() == i2.floats() &&
            duration() == i2.duration() &&
            hasDuration() == i2.hasDuration() &&
            pilotId() == i2.pilotId() &&
@@ -240,7 +240,7 @@ QString IncidenceBase::dtStartStr() const
   return KGlobal::locale()->formatDateTime( dtStart().dateTime() );
 }
 
-bool IncidenceBase::doesFloat() const
+bool IncidenceBase::floats() const
 {
   return d->mFloats;
 }
