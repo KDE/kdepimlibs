@@ -17,7 +17,7 @@ confirmsavedialog     |       |         |       |         |         |
 customproperties      |       |         |       |         |         |
 dndfactory            |       |         |       |         |         |
 dummyscheduler        |       |         |       |         |         |
-duration              |   D   |         |   D   |    D    |    D    | Allen
+duration              |   D   |    D    |   D   |    D    |    D    | Allen
 event                 |   D   |         |       |    D    |         | Allen
 exceptions            |       |         |       |         |         |
 filestorage           |       |         |       |         |         |

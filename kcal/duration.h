@@ -36,13 +36,33 @@ namespace KCal {
 
 /**
   @brief
-  This class represents a duration.
+  Represents a span of time measured in seconds.
+
+  A duration is a span of time measured in seconds.  Construction
+  can be done by specifying a stop and end time, or simply by
+  specifying the number of seconds.
 */
 class KCAL_EXPORT Duration
 {
   public:
+    /**
+      Constructs a duration of 0 seconds (invalid).
+    */
     Duration();
+
+    /**
+      Constructs a duration from @p start to @p end.
+
+      @param start is the time the duration begins.
+      @param end is the time the duration ends.
+    */
     Duration( const KDateTime &start, const KDateTime &end );
+
+    /**
+      Constructs a duration with a number of @p seconds.
+
+      @param seconds is the number of seconds in the duration.
+    */
     Duration( int seconds ); //not explicit
 
     /**
@@ -71,9 +91,18 @@ class KCAL_EXPORT Duration
     */
     Duration &operator=( const Duration &duration );
 
+    /**
+      Computes a duration end time by adding the number of seconds
+      in the duration to the specified @p start time.
 
-  KDateTime end( const KDateTime &start ) const;
+      @param start is a start time.
+      @return a new #KDateTime representing an end time.
+    */
+    KDateTime end( const KDateTime &start ) const;
 
+    /**
+      Returns the length of the duration in seconds.
+    */
     int asSeconds() const;
 
   private:
