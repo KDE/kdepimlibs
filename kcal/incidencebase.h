@@ -21,8 +21,9 @@
     Boston, MA 02110-1301, USA.
 */
 /**
-  @file incidencebase.h
-  Provides the base class common to all calendar components.
+  @file
+  This file is part of the API for handling calendar data and
+  defines the IncidenceBase class.
 
   @author Cornelius Schumacher
   @author Reinhold Kainhofer
@@ -37,8 +38,8 @@
 
 #include <kdatetime.h>
 
-#include "customproperties.h"
 #include "attendee.h"
+#include "customproperties.h"
 
 class KUrl;
 
@@ -56,6 +57,9 @@ class FreeBusy;
 /**
   @brief
   This class provides the base class common to all calendar components.
+
+  define: floats
+  define: organizer (person)
 
   Several properties are not allowed for VFREEBUSY objects (see rfc:2445),
   so they are not in IncidenceBase. The hierarchy is:
@@ -148,37 +152,48 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     virtual QByteArray type() const = 0;
 
     /**
-      Set the unique id for the incidence
+      Sets the unique id for the incidence to @p uid.
     */
-    void setUid( const QString & );
+    void setUid( const QString &uid );
 
     /**
-      Return the unique id for the incidence
+      Returns the unique id for the incidence
     */
     QString uid() const;
 
     /**
-      Return the uri for the incidence, of form urn:x-ical:\<uid\>
+      Returns the uri for the incidence, of form urn:x-ical:\<uid\>
     */
     KUrl uri() const;
 
     /** Sets the time the incidence was last modified. It is stored as a UTC date/time. */
     /**
-      Sets the time the incidence was last modified.
+      Sets the time the incidence was last modified to @p lm.
     */
     void setLastModified( const KDateTime &lm );
 
     /**
-      Return the time the incidence was last modified.
+      Returns the time the incidence was last modified.
     */
     KDateTime lastModified() const;
 
     /**
       Sets the organizer for the incidence.
     */
-    void setOrganizer( const Person &o );
+    void setOrganizer( const Person &organizer );
 
-    void setOrganizer( const QString &o );
+    /**
+      Sets the incidence organizer to any string @p organizer.
+
+      @param organizer is any string to set the incidence organizer.
+    */
+    void setOrganizer( const QString &organizer );
+
+    /**
+      Returns the #Person associated with this incidence.
+
+      @see setOrganizer()
+    */
     Person organizer() const;
 
     /**
@@ -187,7 +202,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     virtual void setReadOnly( bool );
 
     /**
-      Return if the object is read-only.
+      Returns if the object is read-only.
     */
     bool isReadOnly() const { return mReadOnly; }
 
@@ -197,7 +212,8 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       is a date/time (not floating) or date-only (floating).
     */
     virtual void setDtStart( const KDateTime &dtStart );
-    virtual KDE_DEPRECATED void setDtStart( const QDateTime &dtStart )  { setDtStart(KDateTime(dtStart)); }  // use local time zone
+    virtual KDE_DEPRECATED void setDtStart( const QDateTime &dtStart )
+    { setDtStart( KDateTime( dtStart ) ); }  // use local time zone
 
     /**
       Returns an incidence's starting date/time as a KDateTime.
@@ -227,7 +243,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     void setHasDuration( bool );
     bool hasDuration() const;
 
-    /** Return true or false depending on whether the incidence "floats,"
+    /** Returns true or false depending on whether the incidence "floats,"
      * i.e. has a date but no time attached to it. */
     bool doesFloat() const;
 
@@ -242,16 +258,17 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       time as before but in a new time zone. The shift is done from a viewing
       time zone rather than from the actual incidence time zone.
 
-      For example, shifting an incidence whose start time is 09:00 America/New York,
-      using an old viewing time zone (@p oldSpec) of Europe/London, to a new time
-      zone (@p newSpec) of Europe/Paris, will result in the time being shifted
-      from 14:00 (which is the London time of the incidence start) to 14:00 Paris
-      time.
+      For example, shifting an incidence whose start time is 09:00
+      America/New York, using an old viewing time zone (@p oldSpec)
+      of Europe/London, to a new time zone (@p newSpec) of Europe/Paris,
+      will result in the time being shifted from 14:00 (which is the London
+      time of the incidence start) to 14:00 Paris time.
 
       @param oldSpec the time specification which provides the clock times
       @param newSpec the new time specification
     */
-    virtual void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
+    virtual void shiftTimes( const KDateTime::Spec &oldSpec,
+                             const KDateTime::Spec &newSpec );
 
     //
     // Comments
@@ -279,7 +296,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     /** Delete all comments associated with this incidence. */
     void clearComments();
 
-    /** Return all comments associated with this incidence.  */
+    /** Returns all comments associated with this incidence.  */
     QStringList comments() const;
 
     /**
@@ -297,28 +314,28 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     void clearAttendees();
 
     /**
-      Return list of attendees.
+      Returns list of attendees.
     */
-    const Attendee::List &attendees() const { return mAttendees; }
+    const Attendee::List &attendees() const;
 
     /**
-      Return number of attendees.
+      Returns number of attendees.
     */
-    int attendeeCount() const { return mAttendees.count(); }
+    int attendeeCount() const;
 
     /**
-      Return the Attendee with this email address.
+      Returns the Attendee with this email address.
     */
     Attendee *attendeeByMail( const QString &email ) const;
 
     /**
-      Return first Attendee with one of the given email addresses.
+      Returns first Attendee with one of the given email addresses.
     */
     Attendee *attendeeByMails( const QStringList &,
                                const QString &email = QString() ) const;
 
     /**
-      Return attendee with given uid.
+      Returns attendee with given uid.
     */
     Attendee *attendeeByUid( const QString &uid ) const;
 
@@ -332,22 +349,22 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     };
 
     /**
-      Set synchronization satus.
+      Sets synchronization satus.
     */
     void setSyncStatus( int status );
 
     /**
-      Return synchronization status.
+      Returns synchronization status.
     */
     int syncStatus() const;
 
     /**
-      Set Pilot Id.
+      Sets Pilot Id.
     */
     void setPilotId( unsigned long id );
 
     /**
-      Return Pilot Id.
+      Returns Pilot Id.
     */
     unsigned long pilotId() const;
 
@@ -372,25 +389,6 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     bool mReadOnly;
 
   private:
-    // base components
-    KDateTime mDtStart;
-    Person mOrganizer;
-    QString mUid;
-    KDateTime mLastModified;
-    Attendee::List mAttendees;
-    QStringList mComments;
-
-    bool mFloats;
-
-    int mDuration;
-    bool mHasDuration;
-
-    // PILOT SYNCHRONIZATION STUFF
-    unsigned long mPilotId;      // unique id for pilot sync
-    int mSyncStatus;             // status (for sync)
-
-    QList<Observer*> mObservers;
-
     class Private;
     Private *d;
 };
