@@ -32,6 +32,10 @@
 
 using namespace KCal;
 
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
 //@cond PRIVATE
 class KCal::Duration::Private
 {
