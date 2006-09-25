@@ -50,7 +50,7 @@ void DurationTest::testCompare()
   Duration d1assign = d1; // test operator=
 
   QVERIFY( d1 < d2 );
-  QVERIFY( !( d1 == d2 ) );
+  QVERIFY( d1 != d2 );
   QVERIFY( d1copy == d1 );
   QVERIFY( d1assign == d1 );
 }

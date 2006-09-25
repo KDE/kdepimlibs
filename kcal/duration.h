@@ -92,6 +92,20 @@ class KCAL_EXPORT Duration
     Duration &operator=( const Duration &duration );
 
     /**
+      Returns true if this duration is equal to the @p other one.
+
+      @param other is the other duration to compare.
+    */
+    bool operator==( const Duration &other ) const;
+
+    /**
+      Returns true if this duration is not equal to the @p other one.
+
+      @param other is the other duration to compare.
+    */
+    bool operator!=( const Duration &other ) const;
+
+    /**
       Computes a duration end time by adding the number of seconds
       in the duration to the specified @p start time.
 
@@ -111,12 +125,6 @@ class KCAL_EXPORT Duration
     Private *d;
     //@endcond
 };
-
-bool operator==( const Duration &d1, const Duration &d2 );
-inline bool operator!=( const Duration &d1, const Duration &d2 )
-{
-  return !operator==( d1, d2 );
-}
 
 }
 

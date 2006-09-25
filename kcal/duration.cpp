@@ -78,9 +78,14 @@ Duration &Duration::operator=( const Duration &duration )
   return *this;
 }
 
-bool KCal::operator==( const Duration &d1, const Duration &d2 )
+bool Duration::operator==( const Duration &other ) const
 {
-  return ( d1.asSeconds() == d2.asSeconds() );
+  return ( d->mSeconds == other.d->mSeconds );
+}
+
+bool Duration::operator!=( const Duration &other ) const
+{
+  return ( d->mSeconds != other.d->mSeconds );
 }
 
 KDateTime Duration::end( const KDateTime &start ) const
@@ -92,4 +97,3 @@ int Duration::asSeconds() const
 {
   return d->mSeconds;
 }
-
