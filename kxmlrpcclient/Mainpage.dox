@@ -19,11 +19,12 @@
  * methods: enableDigestAuth, disableDigestAuth and digestAuth.
  *
  * @authors
+ * The major authors of this library are:\n
  * Narayan Newton  \<narayannewton@gmail.com\>,
  * Frerich Raabe \<raabe@kde.org\>,
  * Tobias Koenig \<tokoe@kde.org\>
  *
- * @maintainer Narayan Newton  \<narayannewton@gmail.com\>
+ * @maintainers Narayan Newton  \<narayannewton@gmail.com\>
  *
  * @licenses
  * @lgpl
