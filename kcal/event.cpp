@@ -88,7 +88,7 @@ KDateTime Event::dtEnd() const
 QDate Event::dateEnd() const
 {
   KDateTime end = dtEnd().toTimeSpec( dtStart() );
-  if ( doesFloat() ) {
+  if ( floats() ) {
     return end.date();
   } else {
     return end.addSecs(-1).date();
@@ -125,7 +125,7 @@ bool Event::isMultiDay() const
   // End date is non inclusive, so subtract 1 second...
   KDateTime start( dtStart() );
   KDateTime end( dtEnd() );
-  if ( ! doesFloat() ) {
+  if ( ! floats() ) {
     end = end.addSecs( -1 );
   }
   bool multi = ( start.date() != end.date() && start <= end );

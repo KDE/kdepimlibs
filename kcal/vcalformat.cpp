@@ -210,14 +210,14 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   // due date
   if (anEvent->hasDueDate()) {
     tmpStr = kDateTimeToISO(anEvent->dtDue(),
-                            !anEvent->doesFloat());
+                            !anEvent->floats());
     addPropValue(vtodo, VCDueProp, tmpStr.toLocal8Bit());
   }
 
   // start date
   if (anEvent->hasStartDate()) {
     tmpStr = kDateTimeToISO(anEvent->dtStart(),
-                            !anEvent->doesFloat());
+                            !anEvent->floats());
     addPropValue(vtodo, VCDTstartProp, tmpStr.toLocal8Bit());
   }
 
@@ -371,14 +371,14 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 
   // start and end time
   tmpStr = kDateTimeToISO(anEvent->dtStart(),
-                          !anEvent->doesFloat());
+                          !anEvent->floats());
   addPropValue(vevent, VCDTstartProp, tmpStr.toLocal8Bit());
 
   // events that have time associated but take up no time should
   // not have both DTSTART and DTEND.
   if (anEvent->dtStart() != anEvent->dtEnd()) {
     tmpStr = kDateTimeToISO(anEvent->dtEnd(),
-                            !anEvent->doesFloat());
+                            !anEvent->floats());
     addPropValue(vevent, VCDTendProp, tmpStr.toLocal8Bit());
   }
 

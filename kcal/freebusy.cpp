@@ -64,7 +64,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start, const KDateTime 
     // set the period to the full day(s). This trick works for recurring,
     // multiday, and single day floating events.
     Event *floatingEvent = 0;
-    if ( event->doesFloat() ) {
+    if ( event->floats() ) {
       // Floating event. Do the hack
       kDebug(5800) << "Floating event\n";
       floatingEvent = new Event( *event );
@@ -267,7 +267,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
     // set the period to the full day(s). This trick works for recurring,
     // multiday, and single day floating events.
     Event *floatingEvent = 0;
-    if ( event->doesFloat() ) {
+    if ( event->floats() ) {
       // Floating event. Do the hack
       kDebug(5800) << "Floating event\n";
       floatingEvent = new Event( *event );

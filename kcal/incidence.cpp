@@ -216,7 +216,7 @@ void Incidence::setDtStart(const KDateTime &dtStart)
 {
   if ( mRecurrence ) {
     mRecurrence->setStartDateTime( dtStart );
-    mRecurrence->setFloats( doesFloat() );
+    mRecurrence->setFloats( floats() );
   }
   IncidenceBase::setDtStart( dtStart );
 }
@@ -349,7 +349,7 @@ Recurrence *Incidence::recurrence() const
   {
     mRecurrence = new Recurrence();
     mRecurrence->setStartDateTime( IncidenceBase::dtStart() );
-    mRecurrence->setFloats( doesFloat() );
+    mRecurrence->setFloats( floats() );
     mRecurrence->setRecurReadOnly( mReadOnly );
     mRecurrence->addObserver( const_cast<KCal::Incidence*>(this) );
   }

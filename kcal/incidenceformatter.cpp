@@ -280,7 +280,7 @@ static QString eventViewerFormatEvent( Event *event )
   }
 
   tmpStr += "<tr>";
-  if ( event->doesFloat() ) {
+  if ( event->floats() ) {
     if ( event->isMultiDay() ) {
       tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
       tmpStr += "<td>" + i18nc("<beginTime> - <endTime>","%1 - %2",
@@ -553,7 +553,7 @@ static QString invitationDetailsEvent( Event* event )
   html += invitationRow( i18n( "Where:" ), sLocation );
 
   // Meeting Start Time Row
-  if ( ! event->doesFloat() ) {
+  if ( ! event->floats() ) {
     tmp =  i18nc("%1: Start Date, %2: Start Time", "%1 %2",
                  event->dtStartDateStr(), event->dtStartTimeStr() );
   } else {
@@ -564,7 +564,7 @@ static QString invitationDetailsEvent( Event* event )
 
   // Meeting End Time Row
   if ( event->hasEndDate() ) {
-    if ( ! event->doesFloat() ) {
+    if ( ! event->floats() ) {
       tmp =  i18nc("%1: End Date, %2: End Time", "%1 %2",
                    event->dtEndDateStr(), event->dtEndTimeStr() );
     } else {
@@ -577,7 +577,7 @@ static QString invitationDetailsEvent( Event* event )
   html += invitationRow( i18n( "End Time:" ), tmp );
 
   // Meeting Duration Row
-  if ( !event->doesFloat() && event->hasEndDate() ) {
+  if ( !event->floats() && event->hasEndDate() ) {
     tmp.clear();
     QTime sDuration(0,0,0), t;
     int secs = event->dtStart().secsTo( event->dtEnd() );
@@ -1125,13 +1125,13 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event*event )
   QString tmp;
   if ( event->isMultiDay() ) {
 
-    if (event->doesFloat())
+    if (event->floats())
       tmp = event->dtStartDateStr().replace(" ", "&nbsp;");
     else
       tmp = event->dtStartStr().replace(" ", "&nbsp;");
     ret += "<br>" + i18nc("Event start", "<i>From:</i>&nbsp;%1", tmp);
 
-    if (event->doesFloat())
+    if (event->floats())
       tmp = event->dtEndDateStr().replace(" ", "&nbsp;");
     else
       tmp = event->dtEndStr().replace(" ", "&nbsp;");
@@ -1141,7 +1141,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event*event )
 
     ret += "<br>"+i18n("<i>Date:</i>&nbsp;%1",
          event->dtStartDateStr().replace(" ", "&nbsp;") );
-    if ( !event->doesFloat() ) {
+    if ( !event->floats() ) {
       if ( event->dtStartTimeStr() == event->dtEndTimeStr() ) { // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" + i18nc("time for event, &nbsp; to prevent ugly line breaks",
         "<i>Time:</i>&nbsp;%1",
@@ -1162,7 +1162,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event*event )
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo*todo )
 {
   QString ret;
-  bool floats( todo->doesFloat() );
+  bool floats( todo->floats() );
   if (todo->hasStartDate())
     // No need to add <i> here. This is separated issue and each line
     // is very visible on its own. On the other hand... Yes, I like it
@@ -1324,13 +1324,13 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Event *event )
 
   mResult = mailBodyIncidence( event );
   mResult += i18n("Start Date: %1\n", event->dtStartDateStr() );
-  if ( !event->doesFloat() ) {
+  if ( !event->floats() ) {
     mResult += i18n("Start Time: %1\n", event->dtStartTimeStr() );
   }
   if ( event->dtStart() != event->dtEnd() ) {
     mResult += i18n("End Date: %1\n", event->dtEndDateStr() );
   }
-  if ( !event->doesFloat() ) {
+  if ( !event->floats() ) {
     mResult += i18n("End Time: %1\n", event->dtEndTimeStr() );
   }
   if ( event->doesRecur() ) {
@@ -1348,7 +1348,7 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Event *event )
       if ( recur->duration() != -1 ) {
 // TODO_Recurrence: What to do with floating
         QString endstr;
-        if ( event->doesFloat() ) {
+        if ( event->floats() ) {
           endstr = KGlobal::locale()->formatDate( recur->endDate() );
         } else {
           endstr = KGlobal::locale()->formatDateTime( recur->endDateTime().dateTime() );
@@ -1372,13 +1372,13 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Todo *todo )
 
   if ( todo->hasStartDate() ) {
     mResult += i18n("Start Date: %1\n", todo->dtStartDateStr() );
-    if ( !todo->doesFloat() ) {
+    if ( !todo->floats() ) {
       mResult += i18n("Start Time: %1\n", todo->dtStartTimeStr() );
     }
   }
   if ( todo->hasDueDate() ) {
     mResult += i18n("Due Date: %1\n", todo->dtDueDateStr() );
-    if ( !todo->doesFloat() ) {
+    if ( !todo->floats() ) {
       mResult += i18n("Due Time: %1\n", todo->dtDueTimeStr() );
     }
   }
@@ -1393,7 +1393,7 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Journal *journal )
 {
   mResult = mailBodyIncidence( journal );
   mResult += i18n("Date: %1\n", journal->dtStartDateStr() );
-  if ( !journal->doesFloat() ) {
+  if ( !journal->floats() ) {
     mResult += i18n("Time: %1\n", journal->dtStartTimeStr() );
   }
   if ( !journal->description().isEmpty() )

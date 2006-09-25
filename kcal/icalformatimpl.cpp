@@ -120,7 +120,7 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo, ICalTimeZones *tzlist)
   // due date
   if (todo->hasDueDate()) {
     icaltimetype due;
-    if (todo->doesFloat()) {
+    if (todo->floats()) {
       due = writeICalDate(todo->dtDue(true).date());
     } else {
       due = writeICalDateTime(todo->dtDue(true), tzlist);
@@ -131,7 +131,7 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo, ICalTimeZones *tzlist)
   // start time
   if ( todo->hasStartDate() || todo->doesRecur() ) {
     icaltimetype start;
-    if (todo->doesFloat()) {
+    if (todo->floats()) {
 //      kDebug(5800) << " Incidence " << todo->summary() << " floats." << endl;
       start = writeICalDate(todo->dtStart(true).date());
     } else {
@@ -176,7 +176,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event, ICalTimeZones *tzlist)
 
   // start time
   icaltimetype start;
-  if (event->doesFloat()) {
+  if (event->floats()) {
 //    kDebug(5800) << " Incidence " << event->summary() << " floats." << endl;
     start = writeICalDate(event->dtStart().date());
   } else {
@@ -190,7 +190,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event, ICalTimeZones *tzlist)
     // RFC2445 says that if DTEND is present, it has to be greater than DTSTART.
     icaltimetype end;
     KDateTime dt = event->dtEnd();
-    if (event->doesFloat()) {
+    if (event->floats()) {
 //      kDebug(5800) << " Event " << event->summary() << " floats." << endl;
 //      if (dt.date() != event->dtStart().date()) {
         // +1 day because end date is non-inclusive.
@@ -283,7 +283,7 @@ icalcomponent *ICalFormatImpl::writeJournal(Journal *journal, ICalTimeZones *tzl
   KDateTime dt = journal->dtStart();
   if (dt.isValid()) {
     icaltimetype start;
-    if (journal->doesFloat()) {
+    if (journal->floats()) {
 //      kDebug(5800) << " Incidence " << event->summary() << " floats." << endl;
       start = writeICalDate(dt.date());
     } else {

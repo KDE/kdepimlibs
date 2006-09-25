@@ -267,7 +267,7 @@ void HtmlExport::createEvent (QTextStream *ts, Event *event,
   kDebug(5850) << "HtmlExport::createEvent(): " << event->summary() << endl;
   *ts << "  <tr>\n";
 
-  if (!event->doesFloat()) {
+  if (!event->floats()) {
     if (event->isMultiDay() && (event->dtStart().date() != date)) {
       *ts << "    <td>&nbsp;</td>\n";
     } else {
