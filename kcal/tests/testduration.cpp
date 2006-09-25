@@ -49,7 +49,7 @@ void DurationTest::testCompare()
   Duration d1copy( d1 ); // test copy constructor
   Duration d1assign = d1; // test operator=
 
-  QVERIFY( d1.asSeconds() < d2.asSeconds() );
+  QVERIFY( d1 < d2 );
   QVERIFY( !( d1 == d2 ) );
   QVERIFY( d1copy == d1 );
   QVERIFY( d1assign == d1 );

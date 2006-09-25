@@ -45,15 +45,42 @@ class KCAL_EXPORT Duration
     Duration( const KDateTime &start, const KDateTime &end );
     Duration( int seconds ); //not explicit
 
-    KDateTime end( const KDateTime &start ) const;
+    /**
+      Constructs a duration by copying another duration object.
+
+      @param duration is the duration to copy.
+    */
+    Duration( const Duration &duration );
+
+    /**
+      Destroys a duration.
+    */
+    ~Duration();
+
+    /**
+      Returns true if this duration is smaller than the @p other one.
+
+      @param other is the other duration to compare.
+    */
+    bool operator<( const Duration &other ) const;
+
+    /**
+      Sets this duration equal to @p duration.
+
+      @param duration is the duration to copy.
+    */
+    Duration &operator=( const Duration &duration );
+
+
+  KDateTime end( const KDateTime &start ) const;
 
     int asSeconds() const;
 
   private:
-    int mSeconds;
-
+    //@cond PRIVATE
     class Private;
     Private *d;
+    //@endcond
 };
 
 bool operator==( const Duration &d1, const Duration &d2 );

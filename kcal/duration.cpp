@@ -32,19 +32,50 @@
 
 using namespace KCal;
 
-Duration::Duration()
+//@cond PRIVATE
+class KCal::Duration::Private
 {
-  mSeconds = 0;
+  public:
+    int mSeconds; // number of seconds in the duration
+};
+//@endcond
+
+Duration::Duration() : d( new KCal::Duration::Private )
+{
+  d->mSeconds = 0;
 }
 
 Duration::Duration( const KDateTime &start, const KDateTime &end )
+  : d( new KCal::Duration::Private )
 {
-  mSeconds = start.secsTo( end );
+  d->mSeconds = start.secsTo( end );
 }
 
-Duration::Duration( int seconds )
+Duration::Duration( int seconds ) : d( new KCal::Duration::Private )
 {
-  mSeconds = seconds;
+  d->mSeconds = seconds;
+}
+
+Duration::Duration( const Duration &duration )
+  : d( new KCal::Duration::Private )
+{
+  d->mSeconds = duration.d->mSeconds;
+}
+
+Duration::~Duration()
+{
+  delete d;
+}
+
+bool Duration::operator<( const Duration &other ) const
+{
+  return d->mSeconds < other.d->mSeconds;
+}
+
+Duration &Duration::operator=( const Duration &duration )
+{
+  d->mSeconds = duration.d->mSeconds;
+  return *this;
 }
 
 bool KCal::operator==( const Duration &d1, const Duration &d2 )
@@ -54,11 +85,11 @@ bool KCal::operator==( const Duration &d1, const Duration &d2 )
 
 KDateTime Duration::end( const KDateTime &start ) const
 {
-  return start.addSecs( mSeconds );
+  return start.addSecs( d->mSeconds );
 }
 
 int Duration::asSeconds() const
 {
-  return mSeconds;
+  return d->mSeconds;
 }
 
