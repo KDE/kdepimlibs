@@ -12,3 +12,5 @@ Everything lives in the KEmailAddressTools namespace.
   - @ref emailidn
 
 */
+
+// DOXYGEN_TOOLTIP = "A library for general purpose email handling."
