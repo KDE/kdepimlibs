@@ -810,9 +810,3 @@ void Incidence::recurrenceUpdated( Recurrence *recurrence )
   if ( recurrence == mRecurrence )
     updated();
 }
-
-// DEPRECATED methods
-bool Incidence::recursAt( const QDateTime &qdt ) const
-{
-  return recursAt(KDateTime(qdt, dtStart().timeSpec()));
-}

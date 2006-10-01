@@ -266,7 +266,6 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
       recur.
     */
     bool recursAt( const KDateTime &dt ) const;
-    KDE_DEPRECATED bool recursAt( const QDateTime &qdt ) const;
 
     /**
       Calculates the start date/time for all recurrences that happen at some time
