@@ -42,15 +42,16 @@
 
 #include "attendee.h"
 #include "customproperties.h"
+#include "sortablelist.h"
 
 class KUrl;
 
 namespace KCal {
 
 /** List of dates */
-typedef QList<QDate> DateList;
+typedef SortableList<QDate> DateList;
 /** List of times */
-typedef QList<KDateTime> DateTimeList;
+typedef SortableList<KDateTime> DateTimeList;
 class Event;
 class Todo;
 class Journal;

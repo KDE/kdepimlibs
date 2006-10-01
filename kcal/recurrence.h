@@ -157,7 +157,6 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     /** Returns true if the date/time specified is one at which the event will
      * recur. Times are rounded down to the nearest minute to determine the result. */
     bool recursAt( const KDateTime & ) const;
-    KDE_DEPRECATED bool recursAt( const QDateTime &dt ) const;
     /** Removes all recurrence rules. Recurrence dates and exceptions are
         not removed. */
     void unsetRecurs();
@@ -192,7 +191,6 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * @return date/time of next recurrence (strictly later than the given KDateTime), or invalid date if none.
      */
     KDateTime getNextDateTime( const KDateTime& preDateTime ) const;
-    KDE_DEPRECATED QDateTime getNextDateTime( const QDateTime& preDateTime ) const;
 
     /** Returns the date and time of the last previous recurrence, before the specified date/time.
      * If a time later than 00:00:00 is specified and the recurrence has no time, 00:00:00 on
@@ -202,7 +200,6 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * @return date/time of previous recurrence (strictly earlier than the given KDateTime), or invalid date if none.
      */
     KDateTime getPreviousDateTime( const KDateTime& afterDateTime ) const;
-    KDE_DEPRECATED QDateTime getPreviousDateTime( const QDateTime& afterDateTime ) const;
 
     /** Returns frequency of recurrence, in terms of the recurrence time period type. */
     int frequency() const;
@@ -219,7 +216,6 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     void setDuration(int duration);
     /** Returns the number of recurrences up to and including the date/time specified. */
     int durationTo(const KDateTime &dt) const;
-    KDE_DEPRECATED int durationTo(const QDateTime &dt) const;
     /** Returns the number of recurrences up to and including the date specified. */
     int durationTo( const QDate &date ) const;
 

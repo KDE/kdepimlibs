@@ -361,6 +361,7 @@ install( FILES
 	resourcelocaldir.h
 	resourcelocal.h
 	scheduler.h
+	sortablelist.h
 	todo.h
 	vcaldrag.h
 	vcalformat.h

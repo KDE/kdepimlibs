@@ -28,39 +28,17 @@
 #include <kdatetime.h>
 
 #include "kcal/listbase.h"
+#include "kcal/sortablelist.h"
 #include "kcal.h"
-
-template <class T>
-/*Q_INLINE_TEMPLATES*/ void qSortUnique( QList<T> &lst )
-{
-  qSort( lst );
-  if ( lst.isEmpty() ) return;
-  // Remove all duplicates from the times list
-  // TODO: Make this more efficient!
-  typename QList<T>::Iterator it = lst.begin();
-  T last = *it;
-  ++it;
-  T newlast;
-  while ( it != lst.end() ) {
-    newlast = (*it);
-    if ( newlast == last ) it = lst.erase( it );
-    else {
-      last = newlast;
-      ++it;
-    }
-  }
-}
 
 
 namespace KCal {
 
-//TODO: DEPRECATED: remove this declaration
-typedef QList<QDateTime> QDateTimeList;
 // These two are duplicates wrt. incidencebase.h
-typedef QList<KDateTime> DateTimeList;
-typedef QList<QDate> DateList;
+typedef SortableList<KDateTime> DateTimeList;
+typedef SortableList<QDate> DateList;
 /* List of times */
-typedef QList<QTime> TimeList;
+typedef SortableList<QTime> TimeList;
 
 
 
@@ -168,11 +146,8 @@ class KCAL_EXPORT RecurrenceRule
     /** Sets the total number of times the event is to occur, including both the
      * first and last. */
     void setDuration(int duration);
-//     /** Returns the number of recurrences up to and including the date specified. */
-//     int durationTo(const QDate &) const;
     /** Returns the number of recurrences up to and including the date/time specified. */
     int durationTo(const KDateTime &dt) const;
-    KDE_DEPRECATED int durationTo(const QDateTime &dt) const;
     /** Returns the number of recurrences up to and including the date specified. */
     int durationTo( const QDate &date ) const;
 
@@ -213,7 +188,6 @@ class KCAL_EXPORT RecurrenceRule
      * recur. Times are rounded down to the nearest minute to determine the result.
      * The start date/time returns true only if it actually matches the rule. */
     bool recursAt( const KDateTime &dt ) const;
-    KDE_DEPRECATED bool recursAt( const QDateTime &dt ) const;
     /** Returns true if the date matches the rules. It does not necessarily
         mean that this is an actual occurrence. In particular, the method does
         not check if the date is after the end date, or if the frequency interval
@@ -335,8 +309,8 @@ class KCAL_EXPORT RecurrenceRule
         bool isConsistent( PeriodType period ) const;
         bool increase( PeriodType type, int freq );
         KDateTime intervalDateTime( PeriodType type ) const;
-        DateTimeList dateTimes( PeriodType type ) const;
-        void appendDateTime( const QDate &date, const QTime &time, DateTimeList &list ) const;
+        QList<KDateTime> dateTimes( PeriodType type ) const;
+        void appendDateTime( const QDate &date, const QTime &time, QList<KDateTime> &list ) const;
         void dump() const;
     };
 
