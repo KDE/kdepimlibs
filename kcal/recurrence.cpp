@@ -256,6 +256,10 @@ ushort Recurrence::recurrenceType( const RecurrenceRule *rrule )
 
 bool Recurrence::recursOn(const QDate &qd, const KDateTime::Spec &timeSpec) const
 {
+  // Don't waste time if date is before the start of the recurrence
+  if ( KDateTime( qd, QTime(23,59,59), timeSpec ) < mStartDateTime )
+    return false;
+
   int i, end;
   TimeList tms;
   // First handle dates. Exrules override
@@ -304,7 +308,6 @@ bool Recurrence::recursOn(const QDate &qd, const KDateTime::Spec &timeSpec) cons
     // whole list of items for that day.
 //TODO: consider whether it would be more efficient to call
 //      Rule::recurTimesOn() instead of Rule::recursOn() from the start
-kDebug(5800)<<"recursOn(): calling timesForDay()"<<endl;
     TimeList timesForDay( recurTimesOn( qd, timeSpec ) );
     return !timesForDay.isEmpty();
   }
@@ -730,6 +733,7 @@ void Recurrence::addYearlyMonth( short month )
 
 TimeList Recurrence::recurTimesOn( const QDate &date, const KDateTime::Spec &timeSpec ) const
 {
+// kDebug(5800) << "recurTimesOn(" << date << ")" << endl;
   int i, end;
   TimeList times;
   // The whole day is excepted

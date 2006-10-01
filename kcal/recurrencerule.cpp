@@ -895,7 +895,7 @@ void RecurrenceRule::buildConstraints()
 // Only call buildCache() if mDuration > 0.
 bool RecurrenceRule::buildCache() const
 {
-kDebug(5800) << "         RecurrenceRule::buildCache: " << endl;
+// kDebug(5800) << "         RecurrenceRule::buildCache: " << endl;
   // Build the list of all occurrences of this event (we need that to determine
   // the end date!)
   Constraint interval( getNextValidDateInterval( startDt(), recurrenceType() ) );
@@ -1028,9 +1028,6 @@ bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec 
   QDate startDay = start.toTimeSpec( mDateStart.timeSpec() ).date();
   QDate endDay = end.toTimeSpec( mDateStart.timeSpec() ).addSecs( -1 ).date();
   int dayCount = startDay.daysTo( endDay ) + 1;
-if (timeSpec.timeZone()) kDebug(5800)<<"recursOn("<<timeSpec.timeZone()->name()<<")"<<endl;
-if (mDateStart.timeSpec().timeZone()) kDebug(5800)<<"recursOn(): recur tz="<<mDateStart.timeSpec().timeZone()->name()<<endl;
-kDebug(5800)<<"recursOn(): startDay="<<startDay<<", endDay="<<endDay<<", dayCount="<<dayCount<<endl;
 
   // The date must be in an appropriate interval (getNextValidDateInterval),
   // Plus it must match at least one of the constraints
@@ -1057,7 +1054,7 @@ kDebug(5800)<<"recursOn(): startDay="<<startDay<<", endDay="<<endDay<<", dayCoun
     if ( match )
       break;
     intervalm.increase( recurrenceType(), frequency() );
-kDebug(5800)<<"recursOn(): match interval: "<<intervalm.intervalDateTime( recurrenceType() ).dateTime()<<endl;
+//kDebug(5800)<<"recursOn(): match interval: "<<intervalm.intervalDateTime( recurrenceType() ).dateTime()<<endl;
   } while ( intervalm.intervalDateTime( recurrenceType() ) < end );
   if ( !match )
     return false;
@@ -1072,7 +1069,7 @@ kDebug(5800)<<"recursOn(): match interval: "<<intervalm.intervalDateTime( recurr
       return ( dts[i] < end );
     }
     interval.increase( recurrenceType(), frequency() );
-kDebug(5800)<<"recursOn(): times interval: "<<interval.intervalDateTime( recurrenceType() ).dateTime()<<endl;
+//kDebug(5800)<<"recursOn(): times interval: "<<interval.intervalDateTime( recurrenceType() ).dateTime()<<endl;
   } while ( interval.intervalDateTime( recurrenceType() ) < end );
   return false;
 }
@@ -1217,27 +1214,32 @@ KDateTime RecurrenceRule::getNextDate( const KDateTime &preDate ) const
   }
 
 // kDebug(5800) << "    getNext date after " << dumpTime(fromDate) << endl;
+  KDateTime end = endDt();
   Constraint interval( getNextValidDateInterval( fromDate, recurrenceType() ) );
   DateTimeList dts = datesForInterval( interval, recurrenceType() );
   int i = dts.findGT( fromDate );
   if ( i >= 0 ) {
-    return ( mDuration < 0 || dts[i] <= endDt() ) ? dts[i] : KDateTime();
+    return ( mDuration < 0 || dts[i] <= end ) ? dts[i] : KDateTime();
+  }
+  interval.increase( recurrenceType(), frequency() );
+  if ( mDuration >= 0 && interval.intervalDateTime( recurrenceType() ) > end ) {
+    return KDateTime();
   }
 
   // Increase the interval. The first occurrence that we find is the result (if
   // if's before the end date).
     // TODO: some validity checks to avoid infinite loops for contradictory constraints
-  int loopnr = 0;
-  while ( loopnr < LOOP_LIMIT ) {
-    interval.increase( recurrenceType(), frequency() );
+  int loop = 0;
+  do {
     DateTimeList dts = datesForInterval( interval, recurrenceType() );
     if ( dts.count() > 0 ) {
       KDateTime ret( dts[0] );
-      if ( mDuration >= 0 && ret > endDt() ) return KDateTime();
+      if ( mDuration >= 0 && ret > end ) return KDateTime();
       else return ret;
     }
-    ++loopnr;
-  }
+    interval.increase( recurrenceType(), frequency() );
+  } while ( ++loop < LOOP_LIMIT
+        &&  ( mDuration < 0 || interval.intervalDateTime( recurrenceType() ) < end ));
   return KDateTime();
 }
 
@@ -1291,7 +1293,8 @@ DateTimeList RecurrenceRule::timesInInterval( const KDateTime &start, const KDat
 
 // kDebug(5800) << "    getNext date after " << dumpTime(st) << endl;
   Constraint interval( getNextValidDateInterval( st, recurrenceType() ) );
-  for ( int loop = 0;  loop < LOOP_LIMIT;  ++loop ) {
+  int loop = 0;
+  do {
     DateTimeList dts = datesForInterval( interval, recurrenceType() );
     int i = 0;
     int iend = dts.count();
@@ -1309,9 +1312,9 @@ DateTimeList RecurrenceRule::timesInInterval( const KDateTime &start, const KDat
       result += dts[i++];
     }
     // Increase the interval.
-// TODO: some validity checks to avoid infinite loops for contradictory constraints
     interval.increase( recurrenceType(), frequency() );
-  }
+  } while ( ++loop < LOOP_LIMIT
+        &&  interval.intervalDateTime( recurrenceType() ) < end );
   return result;
 }
 
