@@ -902,13 +902,10 @@ kDebug(5800) << "         RecurrenceRule::buildCache: " << endl;
   QDateTime next;
 
   DateTimeList dts = datesForInterval( interval, recurrenceType() );
-kDebug()<<" dts="<<endl;
-for(int x=0,xend=dts.count(); x<xend; ++x) { kDebug()<<"-- "<<x<<": "<<dts[x]<<endl; }
   // Only use dates after the event has started (start date is only included
   // if it matches)
   int i = dts.findLT( startDt() );
   if ( i >= 0 ) {
-kDebug()<<"erasing to "<<i<<endl;
     dts.erase( dts.begin(), dts.begin() + i + 1 );
   }
 
@@ -921,14 +918,11 @@ kDebug()<<"erasing to "<<i<<endl;
     interval.increase( recurrenceType(), frequency() );
     // The returned date list is already sorted!
     dts += datesForInterval( interval, recurrenceType() );
-kDebug()<<" dts="<<endl;
-for(int x=0,xend=dts.count(); x<xend; ++x) { kDebug()<<"-- "<<x<<": "<<dts[x]<<endl; }
     dtnr = dts.count();
     ++loopnr;
   }
   if ( dts.count() > mDuration ) {
     // we have picked up more occurrences than necessary, remove them
-kDebug()<<"erasing from "<<mDuration<<endl;
     dts.erase( dts.begin() + mDuration, dts.end() );
   }
   mCached = true;
