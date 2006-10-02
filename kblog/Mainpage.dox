@@ -1,0 +1,25 @@
+/*!
+ * @mainpage kblog - an blog library for KDE.
+ *
+ * @section purpose Purpose
+ *
+ * kblog provides client-side support for weblogs.
+ *
+ * @section desc Description
+ *
+ * KBlog is a small library for access to Blogger 1, MetaWeblog and
+ * Blogger 2 compatible blogs. It makes heavy use of the KXmlRpc client
+ * library of kdepimlibs and supports asynchronous sending and fetching of
+ * posts and, if supported on the server, multimedia files. Almost every modern
+ * blog software supports one of the APIs mentioned above. 
+ *
+ * @maintainer Christian Weilbach  \<christian_weilbach@web.de\>
+ *
+ * @licenses
+ * @lgpl
+ *
+ * kblog development is discussed on the
+ * <a href="mailto:kde-pim@kde.org">kde-pim@kde.org</a> mailing list.
+ */
+
+// DOXYGEN_PROJECTNAME=KBlog Client Library
