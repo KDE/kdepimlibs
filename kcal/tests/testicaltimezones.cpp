@@ -29,7 +29,7 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kapplication.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 
 extern "C" {
   #include "kcal/libical/src/libical/ical.h"
@@ -137,11 +137,12 @@ void ICalTimeZonesTest::parse()
     text += VTZ_Western;
     text += VTZ_other;
     text += calendarFooter;
-    KTempFile tmpFile;
-    tmpFile.setAutoDelete(true);
-    QString path = tmpFile.name();
-    *tmpFile.textStream() << text.data();
-    tmpFile.close();
+    KTemporaryFile tmpFile;
+    tmpFile.open();
+    QString path = tmpFile.fileName();
+    QTextStream ts (&tmpFile);
+    ts << text.data();
+    ts.flush();
 
     // Parse the file, the CALENDAR text string and the individual VTIMEZONE strings,
     // and check that ICalTimeZone instances with the same names are created in each case.
