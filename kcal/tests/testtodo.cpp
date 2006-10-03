@@ -35,8 +35,10 @@ void TodoTest::testValidity() {
   todo->setSummary( "To-do1 Summary" );
   todo->setDescription( "This is a description of the first to-do" );
   todo->setLocation( "the place" );
+  todo->setPercentComplete( 5 );
   QVERIFY( todo->summary() == "To-do1 Summary" );
   QVERIFY( todo->location() == "the place" );
+  QVERIFY( todo->percentComplete() == 5 );
 }
 
 void TodoTest::testCompare() {
@@ -47,6 +49,7 @@ void TodoTest::testCompare() {
   todo1.setSummary( "To-do1 Summary" );
   todo1.setDescription( "This is a description of the first to-do" );
   todo1.setLocation( "the place" );
+  todo1.setCompleted( true );
 
   Todo todo2;
   todo2.setDtStart( KDateTime( dt ).addDays( 1 ) );
@@ -54,10 +57,12 @@ void TodoTest::testCompare() {
   todo2.setSummary( "To-do2 Summary" );
   todo2.setDescription( "This is a description of the second to-do" );
   todo2.setLocation( "the other place" );
+  todo2.setCompleted( false );
 
   QVERIFY( !( todo1 == todo2 ) );
   QVERIFY( todo1.dtDue() == todo2.dtStart() );
   QVERIFY( todo2.summary() == "To-do2 Summary" );
+  QVERIFY( !( todo1.isCompleted() == todo2.isCompleted() ) );
 }
 
 void TodoTest::testClone() {
@@ -75,4 +80,5 @@ void TodoTest::testClone() {
   QVERIFY( todo1.dtDue() == todo2->dtDue() );
   QVERIFY( todo1.description() == todo2->description() );
   QVERIFY( todo1.location( ) == todo2->location() );
+  QVERIFY( todo1.isCompleted() == todo2->isCompleted() );
 }
