@@ -71,7 +71,7 @@ class KCAL_EXPORT Person
     /**
        Constructs a person as a copy of another person object.
 
-       @param person the person to copy.
+       @param person is the person to copy.
      */
     Person( const Person &person );
 
@@ -125,14 +125,14 @@ class KCAL_EXPORT Person
     /**
       Compares this with @p person for equality.
 
-      @param person the person to compare.
+      @param person is the person to compare.
     */
     bool operator==( const Person &person );
 
     /**
       Sets this person equal to @p person.
 
-      @param person the person to copy.
+      @param person is the person to copy.
     */
     Person &operator=( const Person &person );
 
