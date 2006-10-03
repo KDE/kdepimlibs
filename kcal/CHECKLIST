@@ -49,7 +49,7 @@ resourcelocaldir      |       |         |       |         |         |
 resourcelocal         |   D   |    D    |   D   |    X    |    X    | Narayan
 scheduler             |       |         |       |         |         |
 sortablelist.h        |   D   |    D    |  n/a  |    D    |    D    |
-todo                  |   D   |         |       |         |         | Allen
+todo                  |   D   |         |   D   |    D    |    D    | Allen
 vcaldrag              |       |         |       |         |         |
 vcalformat            |       |         |       |         |         |
 
