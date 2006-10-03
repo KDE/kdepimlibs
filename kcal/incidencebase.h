@@ -2,7 +2,7 @@
     This file is part of the kcal library.
 
     Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+    Copyright (c) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
     Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
     This library is free software; you can redistribute it and/or
@@ -25,10 +25,33 @@
   This file is part of the API for handling calendar data and
   defines the IncidenceBase class.
 
-  @author Cornelius Schumacher
-  @author Reinhold Kainhofer
+  @authors
+  Cornelius Schumacher \<schumacher@kde.org\>,
+  Reinhold Kainhofer \<reinhold@kainhofer.com\>,
+  Rafal Rzepecki \<divide@users.sourceforge.net\>
 
-  @port4 rename doesFloat() to floats()
+  @port4 doesFloat() method renamed to floats().
+
+  @glossary @anchor incidence @b incidence:
+  General term for a calendar component.
+  Examples are events, to-dos, and journals.
+
+  @glossary @anchor event @b event:
+  An @ref incidence that has a start and end time, typically representing some
+  occurrence of social or personal importance. May be recurring.
+  Examples are appointments, meetings, or holidays.
+
+  @glossary @anchor to-do @b to-do:
+  An @ref incidence that has an optional start time and an optional due time
+  typically representing some undertaking to be performed. May be recurring.
+  Examples are "fix the bug" or "pay the bills".
+
+  @glossary @anchor todo @b todo:
+  See @ref to-do.
+
+  @glossary @anchor journal @b journal:
+  An @ref incidence with a start date that represents a diary or daily record
+  of one's activities. May @b not be recurring.
 */
 
 #ifndef KCAL_INCIDENCEBASE_H
@@ -59,10 +82,12 @@ class FreeBusy;
 
 /**
   @brief
-  This class provides the base class common to all calendar components.
+  An abstract class that provides a common base for all calendar @ref incidence
+  classes.
 
   define: floats
   define: organizer (person)
+  define: uid (same as the attendee uid?)
 
   Several properties are not allowed for VFREEBUSY objects (see rfc:2445),
   so they are not in IncidenceBase. The hierarchy is:
@@ -130,34 +155,47 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
         Visitor() {}
     };
 
+    /**
+      The Observer class.
+    */
     class Observer {
       public:
+
+        /**
+          Destroys the Observer.
+        */
         virtual ~Observer() {}
-        virtual void incidenceUpdated( IncidenceBase * ) = 0;
+
+        /**
+          The Observer interface.
+
+          @param incidenceBase is a pointer to an IncidenceBase object.
+        */
+        virtual void incidenceUpdated( IncidenceBase *incidenceBase ) = 0;
     };
 
     /**
-      Constructs an incidencebase (invalid).
+      Constructs an empty IncidenceBase.
     */
     IncidenceBase();
 
     /**
-      Constructs an incidencebase as a copy of another incidencebase object.
+      Constructs an IncidenceBase as a copy of another IncidenceBase object.
 
-      @param ib is the incidencebase to copy.
+      @param ib is the IncidenceBase to copy.
     */
 
     IncidenceBase( const IncidenceBase &ib );
 
     /**
-      Destroys the incidencebase.
+      Destroys the IncidenceBase.
     */
     virtual ~IncidenceBase();
 
     /**
-      Compares this with incidencebase @p ib for equality.
+      Compares this with IncidenceBase @p ib for equality.
 
-      @p ib is the incidencebase to compare.
+      @p ib is the IncidenceBase to compare.
     */
     bool operator==( const IncidenceBase &ib ) const;
 
@@ -176,12 +214,14 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     /**
       Sets the unique id for the incidence to @p uid.
 
+      @param uid is the string containing the incidence @ref uid.
+
       @see uid()
     */
     void setUid( const QString &uid );
 
     /**
-      Returns the unique id for the incidence.
+      Returns the unique id (@ref uid) for the incidence.
 
       @see setUid()
     */
@@ -196,6 +236,8 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       Sets the time the incidence was last modified to @p lm.
       It is stored as a UTC date/time.
 
+      @param lm is the #KDateTime when the incidence was last modified.
+
       @see lastModified()
     */
     void setLastModified( const KDateTime &lm );
@@ -209,27 +251,33 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
 
     /**
       Sets the organizer for the incidence.
+
+      @param organizer is a #Person to use as the incidence @ref organizer.
+
+      @see organizer(), setOrganizer(const QString &)
     */
     void setOrganizer( const Person &organizer );
 
     /**
       Sets the incidence organizer to any string @p organizer.
 
-      @param organizer is any string to set the incidence organizer.
+      @param organizer is a string to use as the incidence @ref organizer.
+
+      @see organizer(), setOrganizer(const Person &)
     */
     void setOrganizer( const QString &organizer );
 
     /**
       Returns the #Person associated with this incidence.
 
-      @see setOrganizer()
+      @see setOrganizer(const QString &), setOrganizer(const Person &)
     */
     Person organizer() const;
 
     /**
       Sets readonly status.
     */
-    virtual void setReadOnly( bool );
+    virtual void setReadOnly( bool readOnly );
 
     /**
       Returns if the object is read-only.
@@ -243,7 +291,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     */
     virtual void setDtStart( const KDateTime &dtStart );
     virtual KDE_DEPRECATED void setDtStart( const QDateTime &dtStart )
-    { setDtStart( KDateTime( dtStart ) ); }  // use local time zone
+      { setDtStart( KDateTime( dtStart ) ); }  // use local time zone
 
     /**
       Returns an incidence's starting date/time as a KDateTime.
@@ -268,9 +316,36 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     */
     virtual QString dtStartStr() const;
 
+    /**
+      Sets the incidence duration to @p seconds seconds.
+
+      @param seconds is the length of the incidence duration in seconds.
+
+      @see duration()
+    */
     virtual void setDuration( int seconds );
+
+    /**
+      Returns the length of the incidence duration in seconds.
+
+      @see setDuration()
+    */
     int duration() const;
+
+    /**
+      Sets if the incidence has a duration.
+
+      @param hasDuration true if the incidence has a duration; false otherwise.
+
+      @see hasDuration()
+    */
     void setHasDuration( bool hasDuration );
+
+    /**
+      Returns true if the incidence has a duration; false otherwise.
+
+      @see setHasDuration()
+    */
     bool hasDuration() const;
 
     /**
@@ -307,10 +382,6 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     */
     virtual void shiftTimes( const KDateTime::Spec &oldSpec,
                              const KDateTime::Spec &newSpec );
-
-    //
-    // Comments
-    //
 
     /**
       Add a comment to this incidence.
@@ -373,7 +444,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     /**
       Returns first Attendee with one of the given email addresses.
     */
-    Attendee *attendeeByMails( const QStringList &,
+    Attendee *attendeeByMails( const QStringList &emails,
                                const QString &email = QString() ) const;
 
     /**
@@ -414,15 +485,15 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       Register observer. The observer is notified when the observed object
       changes.
     */
-    void registerObserver( Observer * );
+    void registerObserver( Observer *observer );
 
     /**
       Unregister observer. It isn't notified anymore about changes.
     */
-    void unRegisterObserver( Observer * );
+    void unRegisterObserver( Observer *observer );
 
     /**
-      Call this to notify the observers after the IncidenceBas object has
+      Call this to notify the observers after the IncidenceBase object has
       changed.
     */
     void updated();
