@@ -22,29 +22,14 @@
 #include <stdlib.h>
 
 #include <qtest_kde.h>
-#include <QtTest/QtTest>
 
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <kapplication.h>
-
-#include "kcal/sortablelist.h"
+#include "testsortablelist.h"
 #include "testsortablelist.moc"
 
+QTEST_KDEMAIN( SortableListTest, NoGUI )
+
+#include "kcal/sortablelist.h"
 using namespace KCal;
-
-
-int main(int argc, char *argv[])
-{
-    setenv("LC_ALL", "C", 1);
-    KAboutData aboutData("qttest", "qttest", "version");
-    KCmdLineArgs::init(argc, argv, &aboutData);
-    // KApplication::disableAutoDcopRegistration();
-    KApplication app(false);
-    SortableListTest tc;
-    return QTest::qExec(&tc, argc, argv);
-}
-
 
 void SortableListTest::general()
 {

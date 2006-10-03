@@ -8,22 +8,6 @@ include_directories(
 	
 )
 
-
-########### next target ###############
-
-if(KDE4_BUILD_TESTS)
-set(testsortablelist_SRCS testsortablelist.cpp )
-
-kde4_automoc(${testsortablelist_SRCS})
-
-kde4_add_executable(testsortablelist RUN_UNINSTALLED ${testsortablelist_SRCS})
-
-target_link_libraries(testsortablelist  ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
-
-add_test(kcal-testsortablelist ${EXECUTABLE_OUTPUT_PATH}/testsortablelist)
-
-endif(KDE4_BUILD_TESTS)
-
 ########### next target ###############
 
 if(KDE4_BUILD_TESTS)
@@ -295,6 +279,21 @@ kde4_add_executable(testperiod NOGUI RUN_UNINSTALLED ${testperiod_SRCS})
 target_link_libraries(testperiod ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
 
 add_test(kcal-testperiod ${EXECUTABLE_OUTPUT_PATH}/testperiod)
+
+endif(KDE4_BUILD_TESTS)
+
+########### next target ###############
+
+if(KDE4_BUILD_TESTS)
+set(testsortablelist_SRCS testsortablelist.cpp )
+
+kde4_automoc(${testsortablelist_SRCS})
+
+kde4_add_executable(testsortablelist NOGUI RUN_UNINSTALLED ${testsortablelist_SRCS})
+
+target_link_libraries(testsortablelist  ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
+
+add_test(kcal-testsortablelist ${EXECUTABLE_OUTPUT_PATH}/testsortablelist)
 
 endif(KDE4_BUILD_TESTS)
 
