@@ -18,6 +18,14 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Todo class.
+
+  @authors Cornelius Schumacher \<schumacher@kde.org\>
+*/
+
 #ifndef KCAL_TODO_H
 #define KCAL_TODO_H
 
@@ -28,7 +36,8 @@
 namespace KCal {
 
 /**
-  This class provides a Todo in the sense of RFC2445.
+  @brief
+  Provides a @ref to-do in the sense of RFC2445.
 */
 class KCAL_EXPORT Todo : public Incidence
 {
@@ -38,7 +47,7 @@ class KCAL_EXPORT Todo : public Incidence
     Todo();
     Todo( const Todo & );
     ~Todo();
-    bool operator==( const Todo& ) const;
+    bool operator==( const Todo & ) const;
 
     QByteArray type() const { return "Todo"; }
 
@@ -54,8 +63,9 @@ class KCAL_EXPORT Todo : public Incidence
       @param dtDue The due date/time.
       @param first Set the date of the first occurrence (if the todo is recurrent).
     */
-    void setDtDue(const KDateTime &dtDue, bool first = false);
-    KDE_DEPRECATED void setDtDue(const QDateTime &dtDue, bool first = false);
+    void setDtDue( const KDateTime &dtDue, bool first = false );
+    KDE_DEPRECATED void setDtDue( const QDateTime &dtDue, bool first = false );
+
     /**
       Returns due date and time.
 
@@ -65,11 +75,13 @@ class KCAL_EXPORT Todo : public Incidence
       will be returned.
     */
     KDateTime dtDue( bool first = false ) const;
+
     /**
       Returns due time as string formatted according to the user's locale
       settings.
     */
     QString dtDueTimeStr() const;
+
     /**
       Returns due date as string formatted according to the user's locale
       settings.
@@ -78,9 +90,10 @@ class KCAL_EXPORT Todo : public Incidence
                       long format.
     */
     QString dtDueDateStr( bool shortfmt = true ) const;
+
     /**
-      Returns due date and time as string formatted according to the user's locale
-      settings.
+      Returns due date and time as string formatted according to the user's
+      locale settings.
     */
     QString dtDueStr() const;
 
@@ -88,6 +101,7 @@ class KCAL_EXPORT Todo : public Incidence
       Returns true if the todo has a due date, otherwise return false.
     */
     bool hasDueDate() const;
+
     /**
       Set if the todo has a due date.
 
@@ -99,6 +113,7 @@ class KCAL_EXPORT Todo : public Incidence
       Returns true if the todo has a start date, otherwise return false.
     */
     bool hasStartDate() const;
+
     /**
       Set if the todo has a start date.
 
@@ -119,7 +134,8 @@ class KCAL_EXPORT Todo : public Incidence
       Sets the start date of the todo.
     */
     void setDtStart( const KDateTime &dtStart );
-    KDE_DEPRECATED void setDtStart( const QDateTime &dtStart )  { setDtStart(KDateTime(dtStart)); }  // use local time zone
+    KDE_DEPRECATED void setDtStart( const QDateTime &dtStart )
+      { setDtStart( KDateTime ( dtStart ) ); }  // use local time zone
 
     /** Returns a todo's starting time as a string formatted according to the
      user's locale settings.
@@ -129,6 +145,7 @@ class KCAL_EXPORT Todo : public Incidence
      based on the date returned by dtRecurrence().
     */
     QString dtStartTimeStr( bool first = false ) const;
+
     /** Returns a todo's starting date as a string formatted according to the
      user's locale settings.
      @param shortfmt If true, use short date format, if set to false use
@@ -139,6 +156,7 @@ class KCAL_EXPORT Todo : public Incidence
      based on the date returned by dtRecurrence().
     */
     QString dtStartDateStr( bool shortfmt = true, bool first = false ) const;
+
     /** Returns a todo's starting date and time as a string formatted according
      to the user's locale settings.
      @param first If true, the start date of the todo will be returned. If the
@@ -152,6 +170,7 @@ class KCAL_EXPORT Todo : public Incidence
       Returns true if the todo is 100% completed, otherwise return false.
     */
     bool isCompleted() const;
+
     /**
       Set completed state.
 
@@ -165,6 +184,7 @@ class KCAL_EXPORT Todo : public Incidence
       between 0 and 100.
     */
     int percentComplete() const;
+
     /**
       Set what percentage of the task is completed. Valid values are in the
       range from 0 to 100.
@@ -196,7 +216,8 @@ class KCAL_EXPORT Todo : public Incidence
       @copydoc
       IncidenceBase::shiftTimes()
     */
-    virtual void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
+    virtual void shiftTimes( const KDateTime::Spec &oldSpec,
+                             const KDateTime::Spec &newSpec );
 
     /**
       Sets the due date/time of the current occurrence if recurrent.
@@ -214,7 +235,8 @@ class KCAL_EXPORT Todo : public Incidence
       check, which make it return false if there's an occurrence between
       the recur start and today.
     */
-    virtual bool recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const;
+    virtual bool recursOn( const QDate &date,
+                           const KDateTime::Spec &timeSpec ) const;
 
     /**
       Returns true if this todo is overdue (e.g. due date is lower than today
@@ -227,8 +249,9 @@ class KCAL_EXPORT Todo : public Incidence
     virtual KDateTime endDateRecurrenceBase() const { return dtDue(); }
 
   private:
-    bool accept(Visitor &v) { return v.visit( this ); }
+    bool accept( Visitor &v ) { return v.visit( this ); }
     /** Returns true if the todo got a new date, else false will be returned. */
+
     bool recurTodo();
 
     KDateTime mDtDue;                    // due date of todo

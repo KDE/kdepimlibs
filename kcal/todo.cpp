@@ -18,6 +18,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Todo class.
+
+  @authors Cornelius Schumacher \<schumacher@kde.org\>
+*/
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -31,12 +38,11 @@ Todo::Todo()
 {
   mHasDueDate = false;
   mHasStartDate = false;
-
   mHasCompletedDate = false;
   mPercentComplete = 0;
 }
 
-Todo::Todo(const Todo &t) : Incidence(t)
+Todo::Todo( const Todo &t ) : Incidence( t )
 {
   mDtDue = t.mDtDue;
   mHasDueDate = t.mHasDueDate;
@@ -56,20 +62,19 @@ Todo *Todo::clone()
   return new Todo( *this );
 }
 
-
-bool Todo::operator==( const Todo& t2 ) const
+bool Todo::operator==( const Todo &t2 ) const
 {
-    return
-        static_cast<const Incidence&>(*this) == static_cast<const Incidence&>(t2) &&
-        dtDue() == t2.dtDue() &&
-        hasDueDate() == t2.hasDueDate() &&
-        hasStartDate() == t2.hasStartDate() &&
-        completed() == t2.completed() &&
-        hasCompletedDate() == t2.hasCompletedDate() &&
-        percentComplete() == t2.percentComplete();
+  return
+    static_cast<const Incidence&>(*this) == static_cast<const Incidence&>(t2) &&
+    dtDue() == t2.dtDue() &&
+    hasDueDate() == t2.hasDueDate() &&
+    hasStartDate() == t2.hasStartDate() &&
+    completed() == t2.completed() &&
+    hasCompletedDate() == t2.hasCompletedDate() &&
+    percentComplete() == t2.percentComplete();
 }
 
-void Todo::setDtDue(const KDateTime &dtDue, bool first )
+void Todo::setDtDue( const KDateTime &dtDue, bool first )
 {
   //int diffsecs = mDtDue.secsTo(dtDue);
 
@@ -80,7 +85,7 @@ void Todo::setDtDue(const KDateTime &dtDue, bool first )
       alarm->setTime(alarm->time().addSecs(diffsecs));
     }
   }*/
-  if( doesRecur() && !first ) {
+  if ( doesRecur() && !first ) {
     mDtRecurrence = dtDue;
   } else {
     mDtDue = dtDue;
@@ -89,8 +94,9 @@ void Todo::setDtDue(const KDateTime &dtDue, bool first )
     recurrence()->setFloats( floats() );
   }
 
-  if ( doesRecur() && dtDue < recurrence()->startDateTime() )
+  if ( doesRecur() && dtDue < recurrence()->startDateTime() ) {
     setDtStart( dtDue );
+  }
 
   //kDebug(5800) << "setDtDue says date is " << mDtDue.toString() << endl;
 
@@ -103,20 +109,21 @@ void Todo::setDtDue(const KDateTime &dtDue, bool first )
 
 KDateTime Todo::dtDue( bool first ) const
 {
-  if ( doesRecur() && !first && mDtRecurrence.isValid() )
+  if ( doesRecur() && !first && mDtRecurrence.isValid() ) {
     return mDtRecurrence;
+  }
 
   return mDtDue;
 }
 
 QString Todo::dtDueTimeStr() const
 {
-  return KGlobal::locale()->formatTime( dtDue(!doesRecur()).time() );
+  return KGlobal::locale()->formatTime( dtDue( !doesRecur() ).time() );
 }
 
-QString Todo::dtDueDateStr(bool shortfmt) const
+QString Todo::dtDueDateStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDate(dtDue( !doesRecur() ).date(),shortfmt);
+  return KGlobal::locale()->formatDate(dtDue( !doesRecur() ).date(), shortfmt);
 }
 
 QString Todo::dtDueStr() const
@@ -129,29 +136,29 @@ bool Todo::hasDueDate() const
   return mHasDueDate;
 }
 
-void Todo::setHasDueDate(bool f)
+void Todo::setHasDueDate( bool f )
 {
-  if (mReadOnly) return;
+  if ( mReadOnly ) return;
   mHasDueDate = f;
   updated();
 }
-
 
 bool Todo::hasStartDate() const
 {
   return mHasStartDate;
 }
 
-void Todo::setHasStartDate(bool f)
+void Todo::setHasStartDate( bool f )
 {
-  if (mReadOnly) return;
+  if ( mReadOnly ) return;
 
   if ( doesRecur() && !f ) {
-    if ( !comments().filter("NoStartDate").count() )
-      addComment("NoStartDate"); //TODO: --> custom flag?
+    if ( !comments().filter( "NoStartDate" ).count() ) {
+      addComment( "NoStartDate" ); //TODO: --> custom flag?
+    }
   } else {
-    QString s("NoStartDate");
-    removeComment(s);
+    QString s( "NoStartDate" );
+    removeComment( s );
   }
   mHasStartDate = f;
   updated();
@@ -159,10 +166,11 @@ void Todo::setHasStartDate(bool f)
 
 KDateTime Todo::dtStart( bool first ) const
 {
-  if ( doesRecur() && !first )
+  if ( doesRecur() && !first ) {
     return mDtRecurrence.addDays( dtDue( true ).daysTo( IncidenceBase::dtStart() ) );
-  else
+  } else {
     return IncidenceBase::dtStart();
+  }
 }
 
 void Todo::setDtStart( const KDateTime &dtStart )
@@ -177,30 +185,33 @@ void Todo::setDtStart( const KDateTime &dtStart )
 
 QString Todo::dtStartTimeStr( bool first ) const
 {
-  return KGlobal::locale()->formatTime(dtStart(first).time());
+  return KGlobal::locale()->formatTime( dtStart( first ).time() );
 }
 
-QString Todo::dtStartDateStr(bool shortfmt, bool first) const
+QString Todo::dtStartDateStr( bool shortfmt, bool first ) const
 {
-  return KGlobal::locale()->formatDate(dtStart(first).date(),shortfmt);
+  return KGlobal::locale()->formatDate( dtStart( first ).date(), shortfmt );
 }
 
-QString Todo::dtStartStr(bool first) const
+QString Todo::dtStartStr( bool first ) const
 {
-  return KGlobal::locale()->formatDateTime(dtStart(first).dateTime());
+  return KGlobal::locale()->formatDateTime( dtStart( first ).dateTime() );
 }
 
 bool Todo::isCompleted() const
 {
-  if (mPercentComplete == 100) return true;
-  else return false;
+  if ( mPercentComplete == 100 ) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
-void Todo::setCompleted(bool completed)
+void Todo::setCompleted( bool completed )
 {
-  if (completed)
+  if ( completed ) {
     mPercentComplete = 100;
-  else {
+  } else {
     mPercentComplete = 0;
     mHasCompletedDate = false;
     mCompleted = KDateTime();
@@ -210,20 +221,21 @@ void Todo::setCompleted(bool completed)
 
 KDateTime Todo::completed() const
 {
-  if ( hasCompletedDate() )
+  if ( hasCompletedDate() ) {
     return mCompleted;
-  else
+  } else {
     return KDateTime();
+  }
 }
 
 QString Todo::completedStr() const
 {
-  return KGlobal::locale()->formatDateTime(mCompleted.dateTime());
+  return KGlobal::locale()->formatDateTime( mCompleted.dateTime() );
 }
 
-void Todo::setCompleted(const KDateTime &completed)
+void Todo::setCompleted( const KDateTime &completed )
 {
-  if( !recurTodo() ) {
+  if ( !recurTodo() ) {
     mHasCompletedDate = true;
     mPercentComplete = 100;
     mCompleted = completed.toUtc();
@@ -241,14 +253,17 @@ int Todo::percentComplete() const
   return mPercentComplete;
 }
 
-void Todo::setPercentComplete(int v)
+void Todo::setPercentComplete( int v )
 {
   mPercentComplete = v;
-  if ( v != 100 ) mHasCompletedDate = false;
+  if ( v != 100 ) {
+    mHasCompletedDate = false;
+  }
   updated();
 }
 
-void Todo::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
+void Todo::shiftTimes( const KDateTime::Spec &oldSpec,
+                       const KDateTime::Spec &newSpec )
 {
   Incidence::shiftTimes( oldSpec, newSpec );
   mDtDue = mDtDue.toTimeSpec( oldSpec );
@@ -276,7 +291,7 @@ KDateTime Todo::dtRecurrence() const
 bool Todo::recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const
 {
   QDate today = QDate::currentDate();
-  return ( Incidence::recursOn(date, timeSpec) &&
+  return ( Incidence::recursOn( date, timeSpec ) &&
            !( date < today && mDtRecurrence.date() < today &&
               mDtRecurrence > recurrence()->startDateTime() ) );
 }
@@ -288,8 +303,9 @@ bool Todo::recurTodo()
     KDateTime endDateTime = r->endDateTime();
     KDateTime nextDate = r->getNextDateTime( dtDue() );
 
-    if ( ( r->duration() == -1 || ( nextDate.isValid() && endDateTime.isValid()
-           && nextDate <= endDateTime ) ) ) {
+    if ( ( r->duration() == -1 ||
+           ( nextDate.isValid() && endDateTime.isValid() &&
+             nextDate <= endDateTime ) ) ) {
       setDtDue( nextDate );
       while ( !recursAt( dtDue() ) || dtDue() <= KDateTime::currentUtcDateTime() ) {
         setDtDue( r->getNextDateTime( dtDue() ) );
@@ -314,17 +330,19 @@ bool Todo::isOverdue() const
 }
 
 // DEPRECATED methods
-void Todo::setDtDue(const QDateTime &dtDue, bool first)
+void Todo::setDtDue( const QDateTime &dtDue, bool first )
 {
-  if (dtStart().isValid())
-    setDtDue(KDateTime(dtDue, dtStart().timeSpec()), first);
-  else
-    setDtDue(KDateTime(dtDue), first);  // use local time zone
+  if ( dtStart().isValid() ) {
+    setDtDue( KDateTime( dtDue, dtStart().timeSpec() ), first );
+  } else {
+    setDtDue( KDateTime( dtDue ), first );  // use local time zone
+  }
 }
 void Todo::setCompleted( const QDateTime &completed )
 {
-  if (dtStart().isValid())
-    setCompleted(KDateTime(completed, dtStart().timeSpec()));
-  else
-    setCompleted(KDateTime(completed));  // use local time zone
+  if ( dtStart().isValid() ) {
+    setCompleted( KDateTime( completed, dtStart().timeSpec() ) );
+  } else {
+    setCompleted( KDateTime( completed ) );  // use local time zone
+  }
 }
