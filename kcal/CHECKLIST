@@ -30,7 +30,7 @@ icalformat            |       |         |       |         |         |
 icalformatimpl        |       |         |       |         |         |
 icaltimezones         |       |         |       |         |         |
 imipscheduler         |       |         |       |         |         |
-incidencebase         |   D   |         |       |   n/a   |         | Allen
+incidencebase         |   D   |         |   D   |   n/a   |         | Allen
 incidenceformatter    |       |         |       |         |         | Allen
 incidence             |       |         |       |   n/a   |         | Allen
 journal               |       |         |       |         |         | Allen
@@ -48,6 +48,7 @@ resourcelocaldirconfig|       |         |       |         |         |
 resourcelocaldir      |       |         |       |         |         |
 resourcelocal         |   D   |    D    |   D   |    X    |    X    | Narayan
 scheduler             |       |         |       |         |         |
+sortablelist.h        |   D   |    D    |  n/a  |    D    |    D    |
 todo                  |       |         |       |         |         | Allen
 vcaldrag              |       |         |       |         |         |
 vcalformat            |       |         |       |         |         |
