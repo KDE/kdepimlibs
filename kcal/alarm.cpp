@@ -405,8 +405,6 @@ int Alarm::duration() const
 
 KDateTime Alarm::nextRepetition( const KDateTime &preTime ) const
 {
-  // This method is coded to avoid 32-bit integer overflow using
-  // QDateTime::secsTo(), which occurs with time spans > 68 years.
   KDateTime at = time();
   if ( at > preTime ) {
     return at;
@@ -416,19 +414,16 @@ KDateTime Alarm::nextRepetition( const KDateTime &preTime ) const
     return KDateTime();
   }
   int snoozeSecs = d->mAlarmSnoozeTime * 60;
-  KDateTime lastRepetition = at.addSecs( d->mAlarmRepeatCount * snoozeSecs );
-  if ( lastRepetition <= preTime ) {
+  int repetition = at.secsTo_long( preTime ) / snoozeSecs + 1;
+  if ( repetition > d->mAlarmRepeatCount ) {
     // all repetitions have finished before the specified time
     return KDateTime();
   }
-  int repetition = ( at.secsTo( preTime ) + snoozeSecs ) / snoozeSecs;
   return at.addSecs( repetition * snoozeSecs );
 }
 
 KDateTime Alarm::previousRepetition( const KDateTime &afterTime ) const
 {
-  // This method is coded to avoid 32-bit integer overflow using
-  // QDateTime::secsTo(), which occurs with time spans > 68 years.
   KDateTime at = time();
   if ( at >= afterTime ) {
     // alarm's first/only time is at/after the specified time
@@ -438,12 +433,10 @@ KDateTime Alarm::previousRepetition( const KDateTime &afterTime ) const
     return at;
   }
   int snoozeSecs = d->mAlarmSnoozeTime * 60;
-  KDateTime lastRepetition = at.addSecs( d->mAlarmRepeatCount * snoozeSecs );
-  if ( lastRepetition < afterTime ) {
-   // all repetitions have finished before the specified time
-    return lastRepetition;
+  int repetition = ( at.secsTo_long( afterTime ) - 1 ) / snoozeSecs;
+  if ( repetition > d->mAlarmRepeatCount ) {
+    repetition = d->mAlarmRepeatCount;
   }
-  int repetition = ( at.secsTo( afterTime ) - 1 ) / snoozeSecs;
   return at.addSecs( repetition * snoozeSecs );
 }
 
