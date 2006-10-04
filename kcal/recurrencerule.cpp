@@ -955,11 +955,6 @@ bool RecurrenceRule::dateMatchesRules( const KDateTime &kdt ) const
   return false;
 }
 
-bool RecurrenceRule::recursOn( const QDate &qd ) const
-{
-  return recursOn( qd, mDateStart.timeSpec() );
-}
-
 bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec ) const
 {
   int i, iend;
@@ -1304,10 +1299,10 @@ DateTimeList RecurrenceRule::timesInInterval( const KDateTime &start, const KDat
         i = iend;
     }
     int j = dts.findGT( enddt, i );
-    if ( j < 0 )
-      j = iend;
-    else
+    if ( j >= 0 ) {
+      iend = j;
       loop = LOOP_LIMIT;
+    }
     while ( i < iend ) {
       result += dts[i++];
     }
