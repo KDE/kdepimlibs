@@ -994,14 +994,15 @@ void Calendar::appendAlarms( Alarm::List &alarms, Incidence *incidence,
 {
   KDateTime preTime = from.addSecs(-1);
 
-  foreach ( Alarm *a, incidence->alarms() ) {
-    if ( a->enabled() ) {
-      KDateTime dt = a->nextRepetition( preTime );
+  Alarm::List alarmlist = incidence->alarms();
+  for ( int i = 0, iend = alarmlist.count();  i < iend;  ++i ) {
+    if ( alarmlist[i]->enabled() ) {
+      KDateTime dt = alarmlist[i]->nextRepetition( preTime );
       if ( dt.isValid() && dt <= to ) {
         kDebug(5800) << "Calendar::appendAlarms() '"
                      << incidence->summary() << "': "
                      << dt.toString() << endl;
-        alarms.append( a );
+        alarms.append( alarms[i] );
       }
     }
   }
@@ -1017,7 +1018,9 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
   bool endOffsetValid = false;
   int  period = from.secsTo( to );
 
-  foreach ( Alarm *a, incidence->alarms() ) {
+  Alarm::List alarmlist = incidence->alarms();
+  for ( int i = 0, iend = alarmlist.count();  i < iend;  ++i ) {
+    Alarm *a = alarmlist[i];
     if ( a->enabled() ) {
       if ( a->hasTime() ) {
         // The alarm time is defined as an absolute date/time
@@ -1052,9 +1055,8 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
         // Adjust the 'fromStart' date/time and find the next recurrence at or after it
         dt = incidence->recurrence()->getNextDateTime( fromStart.addSecs(-offset - 1) );
         if ( !dt.isValid() ||
-             ( dt = dt.addSecs( offset ) ) > to ) {
-          // remove the adjustment to get the alarm time
-
+             ( dt = dt.addSecs( offset ) ) > to ) // adjust 'dt' to get the alarm time
+        {
           // The next recurrence is too late.
           if ( !a->repeatCount() ) {
             continue;
@@ -1063,7 +1065,7 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
           // The alarm has repetitions, so check whether repetitions of previous
           // recurrences fall within the time period.
           bool found = false;
-          dt = fromStart.addSecs( offset );
+          dt = fromStart.addSecs( -offset );
           while ( (dt = incidence->recurrence()->getPreviousDateTime( dt )).isValid() ) {
             int toFrom = dt.secsTo( fromStart ) - offset;
             if ( toFrom > a->duration() ) {
