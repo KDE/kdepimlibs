@@ -573,9 +573,6 @@ ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
         kDebug(5800) << "ICalTimeZoneSource::parse(): Unknown component: " << kind << endl;
         break;
     }
-//QList<QByteArray> a=phase.abbreviations();
-//kDebug()<<"Phase: abbrev count="<<a.count()<<endl;
-//for(int x=0; x<a.count(); ++x) kDebug()<<"-- "<<a[x].data()<<endl; 
     int tcount = times.count();
     if (tcount) {
       phases += phase;
@@ -648,7 +645,6 @@ QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool da
         if (!daylight  &&  tzname == "Standard Time"
         ||  daylight  &&  tzname == "Daylight Time")
           break;
-//kDebug()<<"TZNAME="<<tzname<<", length="<<tzname.length()<<", last="<<(int)tzname[tzname.length()-1]<<endl;
         if (!abbrevs.contains(tzname))
           abbrevs += tzname;
         break;
