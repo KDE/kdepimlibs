@@ -150,18 +150,10 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     int saveInterval() const;
 
     /**
-      Set time of last load.
-    */
-    void setLastLoad( const KDateTime & );
-    /**
       Return time of last load.
     */
     KDateTime lastLoad() const;
 
-    /**
-      Set time of last save.
-    */
-    void setLastSave( const KDateTime & );
     /**
       Return time of last save.
     */
