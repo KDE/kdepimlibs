@@ -1790,7 +1790,9 @@ kDebug(5800)<<" readICalDateTime(): tzid="<<tzid<<endl;
         // The time zone is not in the existing list for the calendar.
         // Try to read it from libical's built-in time zones.
         ICalTimeZone *tznew = 0;
+#ifdef __GNUC__
 #warning Fix reading libical builtin time zones
+#endif
 // TODO: Check for built in time zones? Also see icalcomponent_get_datetime().
         icaltimezone* icaltz = icaltimezone_get_builtin_timezone_from_tzid( tzid );
 kDebug(5800)<<" ---icaltz(tzid)="<<(bool)icaltz<<endl;

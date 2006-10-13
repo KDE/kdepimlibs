@@ -121,10 +121,10 @@ const char* icalrestriction_may_be_draft_final_canceled(
     icalcomponent* comp,
     icalproperty* prop)
 {
+    icalproperty_status stat = icalproperty_get_status(prop);
+
     (void)rec;
     (void)comp;
-
-    icalproperty_status stat = icalproperty_get_status(prop);
 
     if( !( stat == ICAL_STATUS_DRAFT ||
 	   stat == ICAL_STATUS_FINAL ||
@@ -142,11 +142,11 @@ const char* icalrestriction_may_be_comp_need_process(
     icalcomponent* comp,
     icalproperty* prop)
 {
+    icalproperty_status stat = icalproperty_get_status(prop);
+
     (void)rec;
     (void)comp;
     
-    icalproperty_status stat = icalproperty_get_status(prop);
-
     if( !( stat == ICAL_STATUS_COMPLETED ||
 	   stat == ICAL_STATUS_NEEDSACTION ||
 	   stat == ICAL_STATUS_INPROCESS )){
@@ -159,11 +159,12 @@ const char* icalrestriction_may_be_comp_need_process(
 }
 const char* icalrestriction_may_be_tent_conf(icalrestriction_property_record *rec,
 				       icalcomponent* comp,
-				       icalproperty* prop){
+				       icalproperty* prop)
+{
+    icalproperty_status stat = icalproperty_get_status(prop);
+
     (void)rec;
     (void)comp;
-
-    icalproperty_status stat = icalproperty_get_status(prop);
 
     if( !( stat == ICAL_STATUS_TENTATIVE ||
 	   stat == ICAL_STATUS_CONFIRMED )){
@@ -179,10 +180,10 @@ const char* icalrestriction_may_be_tent_conf_cancel(
     icalcomponent* comp,
     icalproperty* prop)
 {
+    icalproperty_status stat = icalproperty_get_status(prop);
+
     (void)rec;
     (void)comp;
-
-    icalproperty_status stat = icalproperty_get_status(prop);
 
     if( !( stat == ICAL_STATUS_TENTATIVE ||
 	   stat == ICAL_STATUS_CONFIRMED ||
@@ -200,11 +201,11 @@ const char* icalrestriction_must_be_cancel_if_present(
     icalcomponent* comp,
     icalproperty* prop)
 {
-    (void)rec;
-    (void)comp;
-
     /* This routine will not be called if prop == 0 */
     icalproperty_status stat = icalproperty_get_status(prop);
+
+    (void)rec;
+    (void)comp;
 
     if( stat != ICAL_STATUS_CANCELLED)
     {
@@ -306,10 +307,10 @@ const char* icalrestriction_must_be_email(
     icalcomponent* comp,
     icalproperty* prop)
 {
+    icalproperty_status stat = icalproperty_get_action(prop);
+
     (void)rec;
     (void)comp;
-
-    icalproperty_status stat = icalproperty_get_action(prop);
 
     if( !( stat == ICAL_ACTION_EMAIL)){
 
