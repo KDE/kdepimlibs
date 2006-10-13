@@ -10,7 +10,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${KDE4_KIO_INCLUDES} )
 
 set(testblogger_SRCS testblogger.cpp )
 
-kde4_automoc(${testblogger_SRCS})
+kde4_automoc(testblogger ${testblogger_SRCS})
 
 kde4_add_executable(testblogger RUN_UNINSTALLED ${testblogger_SRCS})
 

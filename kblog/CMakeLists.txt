@@ -31,7 +31,7 @@ blogger.cpp
 metaweblog.cpp
 )
 
-kde4_automoc(${kblog_LIB_SRCS})
+kde4_automoc(kblog ${kblog_LIB_SRCS})
 
 kde4_add_library(kblog SHARED ${kblog_LIB_SRCS})
 
