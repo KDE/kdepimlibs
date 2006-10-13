@@ -247,7 +247,7 @@ set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS} ${libicalss_SRCS}
 
 kde4_automoc(kcal ${kcal_LIB_SRCS})
 
-kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
+kde4_add_kcfg_files(kcal kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
 kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 
