@@ -10,7 +10,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${KDE4_KIO_INCLUDES} )
 
 set(testresources_SRCS testresources.cpp )
 
-kde4_automoc(${testresources_SRCS})
+kde4_automoc(testresources ${testresources_SRCS})
 
 kde4_add_executable(testresources RUN_UNINSTALLED ${testresources_SRCS})
 
@@ -20,7 +20,7 @@ target_link_libraries(testresources  ${KDE4_KDECORE_LIBS} kresources)
 
 set(idmappertest_SRCS idmappertest.cpp )
 
-kde4_automoc(${idmappertest_SRCS})
+kde4_automoc(idmappertest ${idmappertest_SRCS})
 
 kde4_add_executable(idmappertest RUN_UNINSTALLED ${idmappertest_SRCS})
 
