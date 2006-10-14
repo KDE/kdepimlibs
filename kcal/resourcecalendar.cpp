@@ -213,8 +213,5 @@ bool ResourceCalendar::noReadOnlyOnLoad() const
 Event::List ResourceCalendar::rawEventsForDate( const QDateTime &qdt )
 { return rawEventsForDate(KDateTime(qdt, timeSpec())); }
 
-Alarm::List ResourceCalendar::alarms( const QDateTime &from, const QDateTime &to )
-{ return alarms(KDateTime(from, timeSpec()), KDateTime(to, timeSpec())); }
-
 Alarm::List ResourceCalendar::alarmsTo( const QDateTime &to )
 { return alarmsTo(KDateTime(to, timeSpec())); }

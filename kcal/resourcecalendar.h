@@ -304,8 +304,6 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     */
     virtual Alarm::List alarms( const KDateTime &from,
                                 const KDateTime &to ) = 0;
-    KDE_DEPRECATED Alarm::List alarms( const QDateTime &from,
-                                const QDateTime &to );
 
     /**
       Return all alarms which occur before given date.

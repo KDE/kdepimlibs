@@ -1106,6 +1106,3 @@ Event::List Calendar::events( const QDateTime &qdt )
 
 Event::List Calendar::rawEventsForDate( const QDateTime &qdt )
 { return rawEventsForDate(KDateTime(qdt, timeSpec())); }
-
-Alarm::List Calendar::alarms( const QDateTime &from, const QDateTime &to )
-{ return alarms(KDateTime(from, timeSpec()), KDateTime(to, timeSpec())); }

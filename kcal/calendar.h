@@ -844,9 +844,6 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     virtual Alarm::List alarms( const KDateTime &from,
                                 const KDateTime &to ) = 0;
-    KDE_DEPRECATED
-    virtual Alarm::List alarms( const QDateTime &from,
-                                const QDateTime &to );
 
   // Observer Specific Methods //
 
