@@ -82,7 +82,7 @@ class ICalFormatImpl
     void readRecurrenceRule(icalproperty *rrule,Incidence *event );
     void readExceptionRule( icalproperty *rrule, Incidence *incidence );
     void readRecurrence( const struct icalrecurrencetype &r, RecurrenceRule* recur );
-    void readAlarm(icalcomponent *alarm,Incidence *incidence);
+    void readAlarm(icalcomponent *alarm, Incidence *incidence, ICalTimeZones *tzlist);
     /** Return the PRODID string loaded from calendar file */
     const QString &loadedProductId()  { return mLoadedProductId; }
 
@@ -98,9 +98,10 @@ class ICalFormatImpl
      *  @param p   property from which @p t has been obtained
      *  @param t   ICal format date/time
      *  @param tzs time zones collection
-     *  @return date/time, or invalid if @p t is not UTC
+     *  @param utc UTC date/time is expected
+     *  @return date/time, converted to UTC if @p utc is @c true
      */
-    static KDateTime readICalDateTime(icalproperty *p, const icaltimetype &t, ICalTimeZones *tzlist);
+    static KDateTime readICalDateTime(icalproperty *p, const icaltimetype &t, ICalTimeZones *tzlist, bool utc = false);
 
     /** Convert a UTC date/time from ICal format.
      *  If @p t is not a UTC date/time, it is treated as invalid.
@@ -108,7 +109,8 @@ class ICalFormatImpl
      *  @param t ICal format date/time
      *  @return date/time, or invalid if @p t is not UTC
      */
-    static KDateTime readICalUtcDateTime( icaltimetype &t );
+    static KDateTime readICalUtcDateTime( icalproperty *p, icaltimetype &t, ICalTimeZones *tzlist = 0 )
+                   { return readICalDateTime( p, t, tzlist, true ); }
     static icaldurationtype writeICalDuration(int seconds);
     static int readICalDuration(icaldurationtype);
     static icaldatetimeperiodtype writeICalDatePeriod( const QDate &date );

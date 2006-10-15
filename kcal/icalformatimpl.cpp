@@ -896,7 +896,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo, ICalTimeZones *tzlist)
 
       case ICAL_COMPLETED_PROPERTY:  // completion date/time (UTC)
         icaltime = icalproperty_get_completed(p);
-        todo->setCompleted(readICalUtcDateTime(icaltime));
+        todo->setCompleted(readICalUtcDateTime(p, icaltime, tzlist));
         break;
 
       case ICAL_PERCENTCOMPLETE_PROPERTY:  // Percent completed
@@ -1026,19 +1026,19 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
 
       case ICAL_DTSTART_PROPERTY:  // start date and time (UTC)
         icaltime = icalproperty_get_dtstart(p);
-        freebusy->setDtStart(readICalUtcDateTime(icaltime));
+        freebusy->setDtStart(readICalUtcDateTime(p, icaltime));
         break;
 
       case ICAL_DTEND_PROPERTY:  // end Date and Time (UTC)
         icaltime = icalproperty_get_dtend(p);
-        freebusy->setDtEnd(readICalUtcDateTime(icaltime));
+        freebusy->setDtEnd(readICalUtcDateTime(p, icaltime));
         break;
 
       case ICAL_FREEBUSY_PROPERTY: { //Any FreeBusy Times (UTC)
         icalperiodtype icalperiod = icalproperty_get_freebusy(p);
-        KDateTime period_start = readICalUtcDateTime(icalperiod.start);
+        KDateTime period_start = readICalUtcDateTime(p, icalperiod.start);
         if ( !icaltime_is_null_time(icalperiod.end) ) {
-          KDateTime period_end = readICalUtcDateTime(icalperiod.end);
+          KDateTime period_end = readICalUtcDateTime(p, icalperiod.end);
           periods.append( Period( period_start, period_end ) );
         } else {
           Duration duration ( readICalDuration( icalperiod.duration ) );
@@ -1223,7 +1223,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, Incidence *incidence, 
 
       case ICAL_CREATED_PROPERTY:   // UTC date/time
         icaltime = icalproperty_get_created(p);
-        incidence->setCreated(readICalUtcDateTime(icaltime));
+        incidence->setCreated(readICalUtcDateTime(p, icaltime, tzlist));
         break;
 
       case ICAL_SEQUENCE_PROPERTY:  // sequence
@@ -1233,7 +1233,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, Incidence *incidence, 
 
       case ICAL_LASTMODIFIED_PROPERTY:  // last modification UTC date/time
         icaltime = icalproperty_get_lastmodified(p);
-        incidence->setLastModified(readICalUtcDateTime(icaltime));
+        incidence->setLastModified(readICalUtcDateTime(p, icaltime, tzlist));
         break;
 
       case ICAL_DTSTART_PROPERTY:  // start date and time
@@ -1389,7 +1389,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, Incidence *incidence, 
   for (icalcomponent *alarm = icalcomponent_get_first_component(parent, ICAL_VALARM_COMPONENT);
        alarm;
        alarm = icalcomponent_get_next_component(parent, ICAL_VALARM_COMPONENT)) {
-    readAlarm(alarm,incidence);
+    readAlarm(alarm, incidence, tzlist);
   }
   // Fix incorrect alarm settings by other applications (like outloook 9)
   if ( mCompat ) mCompat->fixAlarms( incidence );
@@ -1513,7 +1513,7 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
   // Duration & End Date
   if ( !icaltime_is_null_time( r.until ) ) {
     icaltimetype t = r.until;
-    recur->setEndDt( readICalUtcDateTime(t) );
+    recur->setEndDt( readICalUtcDateTime(0, t) );
   } else {
     if (r.count == 0)
       recur->setDuration( -1 );
@@ -1569,7 +1569,7 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
 }
 
 
-void ICalFormatImpl::readAlarm(icalcomponent *alarm, Incidence *incidence)
+void ICalFormatImpl::readAlarm(icalcomponent *alarm, Incidence *incidence, ICalTimeZones *tzlist)
 {
   kDebug(5800) << "Read alarm for " << incidence->summary() << endl;
 
@@ -1620,7 +1620,7 @@ kDebug(5800) << " alarm type =" << type << endl;
               ialarm->setStartOffset(duration);
           }
         } else {
-          ialarm->setTime(readICalUtcDateTime(trigger.time));
+          ialarm->setTime(readICalUtcDateTime(p, trigger.time, tzlist));
         }
         break;
       }
@@ -1768,24 +1768,26 @@ icaltimetype ICalFormatImpl::writeICalDateTime( const KDateTime &datetime, ICalT
   return t;
 }
 
-KDateTime ICalFormatImpl::readICalDateTime( icalproperty *p, const icaltimetype& t, ICalTimeZones *tzlist)
+KDateTime ICalFormatImpl::readICalDateTime( icalproperty *p, const icaltimetype& t, ICalTimeZones *tzlist, bool utc)
 {
 //  kDebug(5800) << "ICalFormatImpl::readICalDateTime()" << endl;
 //  _dumpIcaltime( t );
   KDateTime::Spec timeSpec;
   if ( t.zone == icaltimezone_get_utc_timezone() ) {
-    timeSpec = KDateTime::Spec::UTC;   // The time zone is UTC
+    timeSpec = KDateTime::UTC;   // the time zone is UTC
+    utc = false;    // no need to convert to UTC
   }
-  else if ( !tzlist ) {
-    return KDateTime();   // must be UTC, but it isn't
-  } else {
-    icalparameter *param = icalproperty_get_first_parameter(p, ICAL_TZID_PARAMETER);
+  else {
+    if ( !tzlist ) {
+      utc = true;   // should be UTC, but it isn't
+    }
+    icalparameter *param = p ? icalproperty_get_first_parameter(p, ICAL_TZID_PARAMETER) : 0;
     const char *tzid = param ? icalparameter_get_tzid(param) : 0;
     if ( !tzid )
-      timeSpec = KDateTime::Spec::ClockTime;
+      timeSpec = KDateTime::ClockTime;
     else {
 kDebug(5800)<<" readICalDateTime(): tzid="<<tzid<<endl;
-      const ICalTimeZone *tz = tzlist->zone( QString::fromUtf8(tzid) );
+      const ICalTimeZone *tz = tzlist ? tzlist->zone( QString::fromUtf8(tzid) ) : 0;
       if ( !tz ) {
         // The time zone is not in the existing list for the calendar.
         // Try to read it from libical's built-in time zones.
@@ -1805,38 +1807,29 @@ kDebug(5800)<<" ---icaltz(location)="<<(bool)icaltz<<endl;}
           ICalTimeZoneSource tzsource;
           ICalTimeZone *tznew = tzsource.parse( icaltz );
           if ( !tznew ) {
-            kDebug(5800) << "ICalFormatImpl::readICalDateTime(): can't parse built in time zone '" << tzid << "'" << endl;
-            return KDateTime();
+            kWarning(5800) << "ICalFormatImpl::readICalDateTime(): can't parse built in time zone '" << tzid << "'" << endl;
           }
         } else {
           // Can't read it from libical's database, so try the system database
           KTzfileTimeZoneSource tzsrc( KSystemTimeZones::zoneinfoDir() );
           KTzfileTimeZone tztz( &tzsrc, tzid );
           if ( !tztz.data(true) ) {
-            kDebug(5800) << "ICalFormatImpl::readICalDateTime(): time zone '" << tzid << "' not recognised" << endl;
-            return KDateTime();    // error (time zone not found, etc.)
+            kWarning(5800) << "ICalFormatImpl::readICalDateTime(): time zone '" << tzid << "' not recognised" << endl;
+          } else {
+            tznew = new ICalTimeZone( tztz );
+            kDebug(5800) << "ICalFormatImpl::readICalDateTime(): time zone '" << tzid << "' read from system database" << endl;
           }
-          tznew = new ICalTimeZone( tztz );
-          kDebug(5800) << "ICalFormatImpl::readICalDateTime(): time zone '" << tzid << "' read from system database" << endl;
         }
-        tzlist->add( tznew );
+        if ( tzlist && tznew )
+          tzlist->add( tznew );
         tz = tznew;
       }
-      timeSpec = KDateTime::Spec( tz );
-//      kDebug(5800) << "--- Time zone: " << timeSpec.timeZone()->name() << endl;
+      timeSpec = tz ? KDateTime::Spec( tz ) : KDateTime::LocalZone;
+//      kDebug(5800) << "--- Time zone: " << (tz ? timeSpec.timeZone()->name() : QString()) << endl;
     }
   }
-  return KDateTime( QDate(t.year,t.month,t.day), QTime(t.hour,t.minute,t.second), timeSpec );
-}
-
-KDateTime ICalFormatImpl::readICalUtcDateTime( icaltimetype& t )
-{
-//  kDebug(5800) << "ICalFormatImpl::readICalUtcDateTime()" << endl;
-//  _dumpIcaltime( t );
-  if ( t.zone != icaltimezone_get_utc_timezone() )
-    return KDateTime();   // must be UTC, but it isn't
-kDebug(5800)<<" readICalDateTime(): UTC"<<endl;
-  return KDateTime( QDate(t.year,t.month,t.day), QTime(t.hour,t.minute,t.second), KDateTime::UTC );
+  KDateTime result( QDate(t.year,t.month,t.day), QTime(t.hour,t.minute,t.second), timeSpec );
+  return utc ? result.toUtc() : result;
 }
 
 QDate ICalFormatImpl::readICalDate(icaltimetype t)
