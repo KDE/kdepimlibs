@@ -330,8 +330,9 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     virtual bool reload() = 0;
     /** Use reload() plus setTimeZoneId() instead. */
-    KDE_DEPRECATED
-    virtual bool reload( const QString &tz ) = 0;
+    
+    virtual KDE_DEPRECATED 
+    bool reload( const QString &tz ) = 0;
 
     /**
       Determine if the calendar is currently being saved.
