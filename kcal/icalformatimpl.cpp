@@ -1754,14 +1754,18 @@ icaltimetype ICalFormatImpl::writeICalDateTime( const KDateTime &datetime, ICalT
   t.second = datetime.time().second();
 
   t.is_date = 0;
-  ICalTimeZone *tz = new ICalTimeZone( *datetime.timeZone() );
-  t.zone = tz->icalTimezone();
+  const KTimeZone *ktz = datetime.timeZone();
+  if ( ktz ) {
+    ICalTimeZone *tz = new ICalTimeZone( *ktz );
+    t.zone = tz->icalTimezone();
+    if ( tzlist )
+      tzlist->add( tz );
+    else
+      delete tz;
+  } else {
+    t.zone = 0;
+  }
   t.is_utc = 0;
-
-  if ( tzlist )
-    tzlist->add( tz );
-  else
-    delete tz;
 
  // _dumpIcaltime( t );
 
