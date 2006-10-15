@@ -176,14 +176,6 @@ class KCAL_EXPORT RecurrenceRule
      * @param timeSpec time specification for @p date
      */
     bool recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const;
-    /** Returns true if the date specified is one on which the event will
-     * recur. The start date returns true only if it actually matches the rule.
-     *
-     * @param date date to check. The time specification used for interpreting
-     *             @p date is the "natural" time specification for the rule,
-     *             i.e. that of the rule's start time.
-     */
-    bool recursOn( const QDate &date ) const;
     /** Returns true if the date/time specified is one at which the event will
      * recur. Times are rounded down to the nearest minute to determine the result.
      * The start date/time returns true only if it actually matches the rule. */
