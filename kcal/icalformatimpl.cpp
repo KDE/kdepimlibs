@@ -1754,18 +1754,19 @@ icaltimetype ICalFormatImpl::writeICalDateTime( const KDateTime &datetime, ICalT
   t.second = datetime.time().second();
 
   t.is_date = 0;
-  const KTimeZone *ktz = datetime.timeZone();
-  if ( ktz ) {
-    ICalTimeZone *tz = new ICalTimeZone( *ktz );
-    t.zone = tz->icalTimezone();
-    if ( tzlist )
-      tzlist->add( tz );
-    else
-      delete tz;
-  } else {
-    t.zone = 0;
+  t.zone = 0;
+  t.is_utc = datetime.isUtc() ? 1 : 0;
+  if ( !t.is_utc ) {
+    const KTimeZone *ktz = datetime.timeZone();
+    if ( ktz ) {
+      ICalTimeZone *tz = new ICalTimeZone( *ktz );
+      t.zone = tz->icalTimezone();
+      if ( tzlist )
+        tzlist->add( tz );
+      else
+        delete tz;
+    }
   }
-  t.is_utc = 0;
 
  // _dumpIcaltime( t );
 
@@ -1777,7 +1778,7 @@ KDateTime ICalFormatImpl::readICalDateTime( icalproperty *p, const icaltimetype&
 //  kDebug(5800) << "ICalFormatImpl::readICalDateTime()" << endl;
 //  _dumpIcaltime( t );
   KDateTime::Spec timeSpec;
-  if ( t.zone == icaltimezone_get_utc_timezone() ) {
+  if ( t.is_utc  ||  t.zone == icaltimezone_get_utc_timezone() ) {
     timeSpec = KDateTime::UTC;   // the time zone is UTC
     utc = false;    // no need to convert to UTC
   }
