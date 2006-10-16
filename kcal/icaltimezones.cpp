@@ -419,9 +419,10 @@ icaltimezone *ICalTimeZoneData::icalTimezone() const
   icaltimezone *icaltz = icaltimezone_new();
   if ( !icaltz )
     return 0;
-  if ( !icaltimezone_set_component(icaltz, d->icalComponent) )
-  {
-    icaltimezone_free(icaltz, 1);
+  icalcomponent *c = icalcomponent_new_clone( d->icalComponent );
+  if ( !icaltimezone_set_component( icaltz, c ) ) {
+    icalcomponent_free( c );
+    icaltimezone_free( icaltz, 1 );
     return 0;
   }
   return icaltz;
