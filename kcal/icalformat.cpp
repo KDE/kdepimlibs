@@ -112,9 +112,8 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   KSaveFile::backupFile( fileName );
 
   KSaveFile file( fileName );
-  if ( file.status() != 0 ) {
-    kDebug(5800) << "ICalFormat::save() errno: " << strerror( file.status() )
-              << endl;
+  if ( !file.open() ) {
+    kDebug(5800) << "ICalFormat::save() err: " << file.errorString() << endl;
     setException( new ErrorFormat( ErrorFormat::SaveError,
                   i18n( "Error saving to '%1'.", fileName ) ) );
     return false;
@@ -122,9 +121,9 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
 
   // Convert to UTF8 and save
   QByteArray textUtf8 = text.toUtf8();
-  file.file()->write( textUtf8.data(), textUtf8.size() - 1 );
+  file.write( textUtf8.data(), textUtf8.size() - 1 );
 
-  if ( !file.close() ) {
+  if ( !file.finalize() ) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
                  i18n("Could not save '%1'", fileName)));
     return false;

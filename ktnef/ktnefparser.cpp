@@ -441,9 +441,8 @@ bool KTNEFParser::extractAttachmentTo( KTNEFAttach *att,
   if ( !d->device_->seek( att->offset() ) ) {
     return false;
   }
-  KSaveFile saveFile( filename );
-  QFile *outfile = saveFile.file();
-  if ( !outfile ) {
+  KSaveFile outfile( filename );
+  if ( !outfile.open() ) {
     return false;
   }
 
@@ -457,7 +456,7 @@ bool KTNEFParser::extractAttachmentTo( KTNEFAttach *att,
       ok = false;
     } else {
       len -= n;
-      if ( outfile->write( buf, n ) != n ) {
+      if ( outfile.write( buf, n ) != n ) {
         ok = false;
       }
     }
