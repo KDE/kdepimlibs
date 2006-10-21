@@ -88,8 +88,9 @@ class ICalFormatImpl
 
     static icaltimetype writeICalDate(const QDate &);
     static QDate readICalDate(icaltimetype);
-    static icaltimetype writeICalDateTime(const KDateTime &, ICalTimeZones *tzlist = 0);
+    static icaltimetype writeICalDateTime( const KDateTime & );
     static icaltimetype writeICalUtcDateTime(const KDateTime & );
+    static icalproperty *writeICalDateTimeProperty( const icalproperty_kind, const KDateTime &datetime, ICalTimeZones *tzlist );
 
     /** Convert a date/time from ICal format.
      *  If the property @p p specifies a time zone using the TZID parameter, a match is
@@ -114,7 +115,6 @@ class ICalFormatImpl
     static icaldurationtype writeICalDuration(int seconds);
     static int readICalDuration(icaldurationtype);
     static icaldatetimeperiodtype writeICalDatePeriod( const QDate &date );
-    static icaldatetimeperiodtype writeICalDateTimePeriod( const KDateTime &date, ICalTimeZones *tzlist = 0 );
 
     icalcomponent *createCalendarComponent(Calendar * = 0);
     icalcomponent *createScheduleComponent(IncidenceBase *,Scheduler::Method);
