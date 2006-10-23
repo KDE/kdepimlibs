@@ -6,7 +6,7 @@ add_subdirectory( tests )
 set(emailfunctions_LIB_SRCS
    email.cpp)
 
-kde4_automoc(emailfunctions ${emailfunctions_LIB_SRCS})
+kde4_automoc(${emailfunctions_LIB_SRCS})
 
 kde4_add_library(emailfunctions SHARED ${emailfunctions_LIB_SRCS})
 

@@ -245,9 +245,9 @@ set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS} ${libicalss_SRCS}
    confirmsavedialog.cpp 
    icaltimezones.cpp )
 
-kde4_automoc(kcal ${kcal_LIB_SRCS})
+kde4_automoc(${kcal_LIB_SRCS})
 
-kde4_add_kcfg_files(kcal kcal_LIB_SRCS htmlexportsettings.kcfgc )
+kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
 kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 
@@ -267,7 +267,7 @@ add_dependencies(kcal ical-headers)
 
 set(kcal_local_PART_SRCS resourcelocal_plugin.cpp )
 
-kde4_automoc(kcal_local ${kcal_local_PART_SRCS})
+kde4_automoc(${kcal_local_PART_SRCS})
 
 kde4_add_plugin(kcal_local ${kcal_local_PART_SRCS})
 
@@ -282,7 +282,7 @@ install(TARGETS kcal_local  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kcal_localdir_PART_SRCS resourcelocaldir_plugin.cpp )
 
-kde4_automoc(kcal_localdir ${kcal_localdir_PART_SRCS})
+kde4_automoc(${kcal_localdir_PART_SRCS})
 
 kde4_add_plugin(kcal_localdir ${kcal_localdir_PART_SRCS})
 
@@ -297,7 +297,7 @@ install(TARGETS kcal_localdir  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(convertqtopia_SRCS convertqtopia.cpp )
 
-kde4_automoc(convertqtopia ${convertqtopia_SRCS})
+kde4_automoc(${convertqtopia_SRCS})
 
 if(KDE4_BUILD_TESTS)
 

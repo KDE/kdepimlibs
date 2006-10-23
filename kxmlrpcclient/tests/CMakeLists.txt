@@ -10,7 +10,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${KDE4_KIO_INCLUDES} )
 
 set(testclient_SRCS testclient.cpp )
 
-kde4_automoc(testclient ${testclient_SRCS})
+kde4_automoc(${testclient_SRCS})
 
 kde4_add_executable(testclient RUN_UNINSTALLED ${testclient_SRCS})
 
@@ -22,7 +22,7 @@ add_test(kxmlrpc-testclient ${EXECUTABLE_OUTPUT_PATH}/testclient)
 
 set(testquery_SRCS testquery.cpp )
 
-kde4_automoc(testquery ${testquery_SRCS})
+kde4_automoc(${testquery_SRCS})
 
 kde4_add_executable(testquery RUN_UNINSTALLED ${testquery_SRCS})
 

@@ -7,7 +7,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/..   )
 
 set(testemail_SRCS ${emailfunctions_SRCS} testemail.cpp )
 
-kde4_automoc(testemail ${testemail_SRCS})
+kde4_automoc(${testemail_SRCS})
 
 kde4_add_executable(testemail ${testemail_SRCS})
 

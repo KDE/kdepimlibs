@@ -6,7 +6,7 @@
 
 set(copycluster_SRCS copycluster.c )
 
-kde4_automoc(copycluster ${copycluster_SRCS})
+kde4_automoc(${copycluster_SRCS})
 
 kde4_add_executable(copycluster ${copycluster_SRCS})
 
@@ -24,7 +24,7 @@ set(regression_SRCS
    regression-recur.c 
    regression-storage.c )
 
-kde4_automoc(regression ${regression_SRCS})
+kde4_automoc(${regression_SRCS})
 
 kde4_add_executable(regression ${regression_SRCS})
 
@@ -35,7 +35,7 @@ target_link_libraries(regression  ${KDE4_KDECORE_LIBS} )
 
 set(parser_SRCS icaltestparser.c )
 
-kde4_automoc(parser ${parser_SRCS})
+kde4_automoc(${parser_SRCS})
 
 kde4_add_executable(parser ${parser_SRCS})
 
@@ -46,7 +46,7 @@ target_link_libraries(parser  ${KDE4_KDECORE_LIBS} )
 
 set(stow_SRCS stow.c )
 
-kde4_automoc(stow ${stow_SRCS})
+kde4_automoc(${stow_SRCS})
 
 kde4_add_executable(stow ${stow_SRCS})
 
@@ -57,7 +57,7 @@ target_link_libraries(stow  ${KDE4_KDECORE_LIBS} )
 
 set(recur_SRCS recur.c )
 
-kde4_automoc(recur ${recur_SRCS})
+kde4_automoc(${recur_SRCS})
 
 kde4_add_executable(recur ${recur_SRCS})
 
@@ -68,7 +68,7 @@ target_link_libraries(recur  ${KDE4_KDECORE_LIBS} )
 
 set(testmime_SRCS testmime.c )
 
-kde4_automoc(testmime ${testmime_SRCS})
+kde4_automoc(${testmime_SRCS})
 
 kde4_add_executable(testmime ${testmime_SRCS})
 
@@ -79,7 +79,7 @@ target_link_libraries(testmime  ${KDE4_KDECORE_LIBS} )
 
 set(testvcal_SRCS testvcal.c )
 
-kde4_automoc(testvcal ${testvcal_SRCS})
+kde4_automoc(${testvcal_SRCS})
 
 kde4_add_executable(testvcal ${testvcal_SRCS})
 
@@ -90,7 +90,7 @@ target_link_libraries(testvcal  ${KDE4_KDECORE_LIBS} )
 
 set(process_SRCS process.c )
 
-kde4_automoc(process ${process_SRCS})
+kde4_automoc(${process_SRCS})
 
 kde4_add_executable(process ${process_SRCS})
 

@@ -11,7 +11,7 @@ set(doesnothing_SRCS
    main.c 
    parse_text.c )
 
-kde4_automoc(doesnothing ${doesnothing_SRCS})
+kde4_automoc(${doesnothing_SRCS})
 
 kde4_add_executable(doesnothing ${doesnothing_SRCS})
 
