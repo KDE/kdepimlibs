@@ -90,7 +90,7 @@ class ICalFormatImpl
     static QDate readICalDate(icaltimetype);
     static icaltimetype writeICalDateTime( const KDateTime & );
     static icaltimetype writeICalUtcDateTime(const KDateTime & );
-    static icalproperty *writeICalDateTimeProperty( const icalproperty_kind, const KDateTime &datetime, ICalTimeZones *tzlist );
+    static icalproperty *writeICalDateTimeProperty( const icalproperty_kind, const KDateTime &datetime, ICalTimeZones *tzlist = 0 );
 
     /** Convert a date/time from ICal format.
      *  If the property @p p specifies a time zone using the TZID parameter, a match is
@@ -112,6 +112,17 @@ class ICalFormatImpl
      */
     static KDateTime readICalUtcDateTime( icalproperty *p, icaltimetype &t, ICalTimeZones *tzlist = 0 )
                    { return readICalDateTime( p, t, tzlist, true ); }
+    /** Read a date or date/time value from a property.
+     *
+     *  @param p      ical parameter to read from
+     *  @param tzlist time zones collection
+     *  @param utc    true to read a UTC value, false to allow time zone to be specified
+     *  @return date or date/time, or invalid if property doesn't contain a time value
+     */
+    static KDateTime readICalDateTimeProperty( icalproperty *p, ICalTimeZones *tzlist, bool utc = false );
+    /** Read a UTC date/time value from a property. */
+    static KDateTime readICalUtcDateTimeProperty( icalproperty *p )
+                   { return readICalDateTimeProperty( p, 0, true ); }
     static icaldurationtype writeICalDuration(int seconds);
     static int readICalDuration(icaldurationtype);
     static icaldatetimeperiodtype writeICalDatePeriod( const QDate &date );
