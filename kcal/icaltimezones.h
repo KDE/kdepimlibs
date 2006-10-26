@@ -319,6 +319,16 @@ class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
      */
     ICalTimeZone *parse(icaltimezone *tz);
 
+    /**
+     * Returns the prefix string used in the TZID field in built-in libical
+     * time zones. The prefix string starts and ends with '/'. The name
+     * normally used for the time zone is obtained by stripping the prefix and
+     * the following characters up to the next '/', inclusive.
+     *
+     * @return prefix string
+     */
+    static QByteArray icalTzidPrefix();
+
   private:
     ICalTimeZoneSourcePrivate *d;
 };

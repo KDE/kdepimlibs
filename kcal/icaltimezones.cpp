@@ -321,8 +321,7 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
     icalcomponent *comp = icalcomponent_new(ICAL_VTIMEZONE_COMPONENT);
 #warning tzid or location?
     icalcomponent_add_property(comp, icalproperty_new_tzid( tz.name().toUtf8() ));
-//    icalcomponent_add_property(comp, icalproperty_new_tzurl( ??.toUtf8() ));
-//    icalcomponent_add_property(comp, icalproperty_new_location( ??.toUtf8() ));
+//    icalcomponent_add_property(comp, icalproperty_new_location( tz.name().toUtf8() ));
 
     // Compile an ordered list of transitions so that we can know the phases
     // which occur before and after each transition.
@@ -440,7 +439,9 @@ class ICalTimeZoneSourcePrivate
 {
   public:
     static QList<QDateTime> parsePhase(icalcomponent*, bool daylight, int &prevOffset, KTimeZone::Phase&);
+    static QByteArray icalTzidPrefix;
 };
+QByteArray ICalTimeZoneSourcePrivate::icalTzidPrefix;
 
 
 ICalTimeZoneSource::ICalTimeZoneSource()
@@ -500,7 +501,6 @@ ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
     switch (kind) {
 
       case ICAL_TZID_PROPERTY:
-#warning Should location be used for name rather than tzid?
         name = QString::fromUtf8(icalproperty_get_tzid(p));
         break;
 
@@ -541,6 +541,13 @@ ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
   }
   if (data->d->location.isEmpty()  &&  !xlocation.isEmpty())
     data->d->location = xlocation;
+  QString prefix = QString::fromUtf8(icalTzidPrefix());
+  if (name.startsWith(prefix)) {
+    // Remove the prefix from libical built in time zone TZID
+    int i = name.indexOf('/', prefix.length());
+    if (i > 0)
+      name = name.mid(i + 1);
+  }
   //kDebug(5800) << "---zoneId: \"" << name << '"' << endl;
 
   /*
@@ -765,5 +772,21 @@ QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool da
   return transitions;
 }
 
+QByteArray ICalTimeZoneSource::icalTzidPrefix()
+{
+  if (ICalTimeZoneSourcePrivate::icalTzidPrefix.isEmpty()) {
+    icaltimezone *icaltz = icaltimezone_get_builtin_timezone("Europe/London");
+    QByteArray tzid = icaltimezone_get_tzid( icaltz );
+    if (tzid.right(13) == "Europe/London") {
+      int i = tzid.indexOf('/', 1);
+      if (i > 0) {
+        ICalTimeZoneSourcePrivate::icalTzidPrefix = tzid.left(i + 1);
+        return ICalTimeZoneSourcePrivate::icalTzidPrefix;
+      }
+    }
+    kError(5800) << "ICalTimeZoneSource: failed to get libical TZID prefix" << endl;
+  }
+  return ICalTimeZoneSourcePrivate::icalTzidPrefix;
+}
 
 }  // namespace KCal

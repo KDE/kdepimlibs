@@ -1835,10 +1835,14 @@ KDateTime ICalFormatImpl::readICalDateTime( icalproperty *p, const icaltimetype&
         // The time zone is not in the existing list for the calendar.
         // Try to read it from libical's built-in time zones.
         ICalTimeZone *tznew = 0;
-// TODO: Check for built in time zones? Also see icalcomponent_get_datetime().
-        icaltimezone* icaltz = icaltimezone_get_builtin_timezone_from_tzid( tzid );
-        if ( !icaltz )
+        icaltimezone* icaltz;
+        if ( QByteArray(tzid).startsWith( ICalTimeZoneSource::icalTzidPrefix() ) ) {
+          // Try to match the ID with the libical time zone's TZID property
+          icaltz = icaltimezone_get_builtin_timezone_from_tzid( tzid );
+        } else {
+          // Try to match the ID with the libical time zone's location property
           icaltz = icaltimezone_get_builtin_timezone( tzid );
+        }
         if ( icaltz ) {
           kDebug(5800) << "ICalFormatImpl::readICalDateTime(): time zone '" << tzid << "' read from libical database" << endl;
           ICalTimeZoneSource tzsource;
