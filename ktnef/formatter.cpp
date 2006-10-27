@@ -193,7 +193,7 @@ QString KTnef::Formatter::msTNEFToVPart( const QByteArray &tnef )
   KTNEFParser parser;
   QByteArray b( tnef );
   QBuffer buf( &b );
-  CalendarLocal cal ( QLatin1String( "UTC" ) );
+  CalendarLocal cal ( KDateTime::UTC );
   KABC::Addressee addressee;
   ICalFormat calFormat;
   Event *event = new Event();
