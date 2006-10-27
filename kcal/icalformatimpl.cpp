@@ -108,14 +108,14 @@ icalcomponent *ICalFormatImpl::writeIncidence( IncidenceBase *incidence, Schedul
   else return 0;
 }
 
-icalcomponent *ICalFormatImpl::writeTodo(Todo *todo, ICalTimeZones *tzlist)
+icalcomponent *ICalFormatImpl::writeTodo(Todo *todo, ICalTimeZones *tzlist, ICalTimeZones *tzUsedList)
 {
   QString tmpStr;
   QStringList tmpStrList;
 
   icalcomponent *vtodo = icalcomponent_new(ICAL_VTODO_COMPONENT);
 
-  writeIncidence(vtodo, todo, tzlist);
+  writeIncidence(vtodo, todo, tzlist, tzUsedList);
 
   // due date
   icalproperty *prop;
@@ -125,7 +125,7 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo, ICalTimeZones *tzlist)
       due = writeICalDate(todo->dtDue(true).date());
       prop = icalproperty_new_due(due);
     } else {
-      prop = writeICalDateTimeProperty( ICAL_DUE_PROPERTY, todo->dtDue(true), tzlist );
+      prop = writeICalDateTimeProperty( ICAL_DUE_PROPERTY, todo->dtDue(true), tzlist, tzUsedList );
     }
     icalcomponent_add_property(vtodo, prop);
   }
@@ -139,7 +139,7 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo, ICalTimeZones *tzlist)
       prop = icalproperty_new_dtstart(start);
     } else {
 //      kDebug(5800) << " incidence " << todo->summary() << " has time." << endl;
-      prop = writeICalDateTimeProperty( ICAL_DTSTART_PROPERTY, todo->dtStart(true), tzlist );
+      prop = writeICalDateTimeProperty( ICAL_DTSTART_PROPERTY, todo->dtStart(true), tzlist, tzUsedList );
     }
     icalcomponent_add_property(vtodo, prop);
   }
@@ -160,13 +160,13 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo, ICalTimeZones *tzlist)
 
   if( todo->doesRecur() ) {
     icalcomponent_add_property(vtodo,
-        writeICalDateTimeProperty( ICAL_RECURRENCEID_PROPERTY, todo->dtDue(), tzlist ));
+        writeICalDateTimeProperty( ICAL_RECURRENCEID_PROPERTY, todo->dtDue(), tzlist, tzUsedList ));
   }
 
   return vtodo;
 }
 
-icalcomponent *ICalFormatImpl::writeEvent(Event *event, ICalTimeZones *tzlist)
+icalcomponent *ICalFormatImpl::writeEvent(Event *event, ICalTimeZones *tzlist, ICalTimeZones *tzUsedList)
 {
 #if 0
   kDebug(5800) << "Write Event '" << event->summary() << "' (" << event->uid()
@@ -175,7 +175,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event, ICalTimeZones *tzlist)
 
   icalcomponent *vevent = icalcomponent_new(ICAL_VEVENT_COMPONENT);
 
-  writeIncidence(vevent, event, tzlist);
+  writeIncidence(vevent, event, tzlist, tzUsedList);
 
   // start time
   icalproperty *prop;
@@ -186,7 +186,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event, ICalTimeZones *tzlist)
     prop = icalproperty_new_dtstart(start);
   } else {
 //    kDebug(5800) << " incidence " << event->summary() << " has time." << endl;
-    prop = writeICalDateTimeProperty( ICAL_DTSTART_PROPERTY, event->dtStart(), tzlist );
+    prop = writeICalDateTimeProperty( ICAL_DTSTART_PROPERTY, event->dtStart(), tzlist, tzUsedList );
   }
   icalcomponent_add_property(vevent, prop);
 
@@ -205,7 +205,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event, ICalTimeZones *tzlist)
     } else {
 //      kDebug(5800) << " Event " << event->summary() << " has time." << endl;
       if (dt != event->dtStart()) {
-        prop = writeICalDateTimeProperty( ICAL_DTEND_PROPERTY, dt, tzlist );
+        prop = writeICalDateTimeProperty( ICAL_DTEND_PROPERTY, dt, tzlist, tzUsedList );
       } else {
         prop = 0;
       }
@@ -283,11 +283,11 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
   return vfreebusy;
 }
 
-icalcomponent *ICalFormatImpl::writeJournal(Journal *journal, ICalTimeZones *tzlist)
+icalcomponent *ICalFormatImpl::writeJournal(Journal *journal, ICalTimeZones *tzlist, ICalTimeZones *tzUsedList)
 {
   icalcomponent *vjournal = icalcomponent_new(ICAL_VJOURNAL_COMPONENT);
 
-  writeIncidence(vjournal, journal, tzlist);
+  writeIncidence(vjournal, journal, tzlist, tzUsedList);
 
   // start time
   icalproperty *prop;
@@ -300,7 +300,7 @@ icalcomponent *ICalFormatImpl::writeJournal(Journal *journal, ICalTimeZones *tzl
       prop = icalproperty_new_dtstart(start);
     } else {
 //      kDebug(5800) << " incidence " << event->summary() << " has time." << endl;
-      prop = writeICalDateTimeProperty( ICAL_DTSTART_PROPERTY, dt, tzlist );
+      prop = writeICalDateTimeProperty( ICAL_DTSTART_PROPERTY, dt, tzlist, tzUsedList );
     }
     icalcomponent_add_property(vjournal, prop);
   }
@@ -308,7 +308,7 @@ icalcomponent *ICalFormatImpl::writeJournal(Journal *journal, ICalTimeZones *tzl
   return vjournal;
 }
 
-void ICalFormatImpl::writeIncidence(icalcomponent *parent, Incidence *incidence, ICalTimeZones *tzlist)
+void ICalFormatImpl::writeIncidence(icalcomponent *parent, Incidence *incidence, ICalTimeZones *tzlist, ICalTimeZones *tzUsedList)
 {
   if ( incidence->schedulingID() != incidence->uid() )
     // We need to store the UID in here. The rawSchedulingID will
@@ -446,7 +446,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent, Incidence *incidence,
   DateTimeList::ConstIterator extIt;
   for(extIt = dateTimeList.begin(); extIt != dateTimeList.end(); ++extIt) {
     icalcomponent_add_property(parent,
-        writeICalDateTimeProperty( ICAL_EXDATE_PROPERTY, *extIt, tzlist ));
+        writeICalDateTimeProperty( ICAL_EXDATE_PROPERTY, *extIt, tzlist, tzUsedList ));
   }
 
 
@@ -460,7 +460,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent, Incidence *incidence,
   DateTimeList::ConstIterator rdtIt;
   for( rdtIt = dateTimeList.begin(); rdtIt != dateTimeList.end(); ++rdtIt) {
     icalcomponent_add_property( parent,
-         writeICalDateTimeProperty( ICAL_RDATE_PROPERTY, *rdtIt, tzlist ));
+         writeICalDateTimeProperty( ICAL_RDATE_PROPERTY, *rdtIt, tzlist, tzUsedList ));
   }
 
   // attachments
@@ -1748,7 +1748,7 @@ icaltimetype ICalFormatImpl::writeICalDateTime( const KDateTime &datetime )
 }
 
 icalproperty *ICalFormatImpl::writeICalDateTimeProperty(const icalproperty_kind type,
-                                                        const KDateTime &dt, ICalTimeZones *tzlist)
+                     const KDateTime &dt, ICalTimeZones *tzlist, ICalTimeZones *tzUsedList)
 {
   icaltimetype t;
   switch ( type ) {
@@ -1802,10 +1802,17 @@ icalproperty *ICalFormatImpl::writeICalDateTimeProperty(const icalproperty_kind 
   }
   const KTimeZone *ktz = t.is_utc ? 0 : dt.timeZone();
   if ( ktz ) {
-    if ( tzlist && !tzlist->zone( ktz->name() ) ) {
-      // The time zone isn't in the list of known zones for the calendar
-      // - add it to the calendar's zone list
-      tzlist->add( new ICalTimeZone( *ktz ) );
+    if ( tzlist ) {
+      const ICalTimeZone *tz = tzlist->zone( ktz->name() );
+      if ( !tz ) {
+        // The time zone isn't in the list of known zones for the calendar
+        // - add it to the calendar's zone list
+        ICalTimeZone *tznew = new ICalTimeZone( *ktz );
+        tzlist->add( tznew );
+	tz = tznew;
+      }
+      if ( tzUsedList )
+        tzUsedList->addConst( tz );   // 'tz' belongs to tzlist
     }
     icalproperty_add_parameter(p, icalparameter_new_tzid( ktz->name().toUtf8() ));
   }

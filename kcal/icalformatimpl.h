@@ -57,12 +57,12 @@ class ICalFormatImpl
     bool populate( Calendar *, icalcomponent *fs);
 
     icalcomponent *writeIncidence(IncidenceBase *incidence, Scheduler::Method method = Scheduler::Request);
-    icalcomponent *writeTodo(Todo *todo, ICalTimeZones *tzlist = 0);
-    icalcomponent *writeEvent(Event *event, ICalTimeZones *tzlist = 0);
+    icalcomponent *writeTodo(Todo *todo, ICalTimeZones *tzlist = 0, ICalTimeZones *tzUsedList = 0);
+    icalcomponent *writeEvent(Event *event, ICalTimeZones *tzlist = 0, ICalTimeZones *tzUsedList = 0);
     icalcomponent *writeFreeBusy(FreeBusy *freebusy,
                                  Scheduler::Method method = Scheduler::Publish );
-    icalcomponent *writeJournal(Journal *journal, ICalTimeZones *tzlist = 0);
-    void writeIncidence(icalcomponent *parent, Incidence *incidence, ICalTimeZones *tzlist = 0);
+    icalcomponent *writeJournal(Journal *journal, ICalTimeZones *tzlist = 0, ICalTimeZones *tzUsedList = 0);
+    void writeIncidence(icalcomponent *parent, Incidence *incidence, ICalTimeZones *tzlist = 0, ICalTimeZones *tzUsedList = 0);
     icalproperty *writeAttendee(Attendee *attendee);
     icalproperty *writeOrganizer( const Person &organizer );
     icalproperty *writeAttachment(Attachment *attach);
@@ -91,14 +91,18 @@ class ICalFormatImpl
     static icaltimetype writeICalDateTime( const KDateTime & );
     static icaltimetype writeICalUtcDateTime(const KDateTime & );
     /** Create an ical property from a date/time value.
-     *  A TZID parameter is included if appropriate.
+     *  If a time zone is specified for the value, a TZID parameter is inserted into
+     *  the ical property, @p tzlist and @p tzUsedList are updated to include the time
+     *  zone. Note that while @p tzlist owns any time zone instances in its collection,
+     *  @p tzUsedList does not.
      *
      *  @param kind   kind of property
      *  @param dt     date/time value
      *  @param tzlist time zones collection
+     *  @param tzUsedList time zones collection, only updated if @p tzlist is also specified
      *  @return property, or null if error. It is the caller's responsibility to free the returned property.
      */
-    static icalproperty *writeICalDateTimeProperty( const icalproperty_kind kind, const KDateTime &dt, ICalTimeZones *tzlist = 0 );
+    static icalproperty *writeICalDateTimeProperty( const icalproperty_kind kind, const KDateTime &dt, ICalTimeZones *tzlist = 0, ICalTimeZones *tzUsedList = 0 );
 
     /** Convert a date/time from ICal format.
      *  If the property @p p specifies a time zone using the TZID parameter, a match is

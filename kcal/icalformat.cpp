@@ -220,7 +220,8 @@ QString ICalFormat::toString( Calendar *cal )
 
   icalcomponent *component;
 
-  ICalTimeZones *tzlist = cal->timeZones();
+  ICalTimeZones *tzlist = cal->timeZones();   // time zones possibly used in the calendar
+  ICalTimeZones tzUsedList;                   // time zones actually used in the calendar
 
   // todos
   Todo::List todoList = cal->rawTodos();
@@ -228,7 +229,7 @@ QString ICalFormat::toString( Calendar *cal )
   for( it = todoList.begin(); it != todoList.end(); ++it ) {
 //    kDebug(5800) << "ICalFormat::toString() write todo "
 //                  << (*it)->uid() << endl;
-    component = mImpl->writeTodo( *it, tzlist );
+    component = mImpl->writeTodo( *it, tzlist, &tzUsedList );
     icalcomponent_add_component( calendar, component );
   }
 
@@ -241,7 +242,7 @@ QString ICalFormat::toString( Calendar *cal )
     {
       // kDebug(5800) << "ICalFormat::toString() write event "
       //             << (*it2)->uid() << endl;
-      component = mImpl->writeEvent( *it2, tzlist );
+      component = mImpl->writeEvent( *it2, tzlist, &tzUsedList );
       icalcomponent_add_component( calendar, component );
     }
   }
@@ -252,12 +253,12 @@ QString ICalFormat::toString( Calendar *cal )
   for( it3 = journals.begin(); it3 != journals.end(); ++it3 ) {
     kDebug(5800) << "ICalFormat::toString() write journal "
                   << (*it3)->uid() << endl;
-    component = mImpl->writeJournal( *it3, tzlist );
+    component = mImpl->writeJournal( *it3, tzlist, &tzUsedList );
     icalcomponent_add_component( calendar, component );
   }
 
   // time zones
-  const ICalTimeZones::ZoneMap zones = tzlist->zones();
+  const ICalTimeZones::ZoneMap zones = tzUsedList.zones();
   for ( ICalTimeZones::ZoneMap::ConstIterator it = zones.begin();  it != zones.end();  ++it) {
     icaltimezone *tz = (*it)->icalTimezone();
     component = icalcomponent_new_clone( icaltimezone_get_component( tz ) );
