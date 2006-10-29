@@ -328,11 +328,18 @@ bool Todo::recurTodo()
     if ( ( r->duration() == -1 ||
            ( nextDate.isValid() && endDateTime.isValid() &&
              nextDate <= endDateTime ) ) ) {
-      setDtDue( nextDate );
-      while ( !recursAt( dtDue() ) || dtDue() <= KDateTime::currentUtcDateTime() ) {
-        setDtDue( r->getNextDateTime( dtDue() ) );
+
+      while ( !recursAt( nextDate ) ||
+              nextDate <= KDateTime::currentUtcDateTime() ) {
+
+        if ( !nextDate.isValid() || nextDate > endDateTime ) {
+          return false;
+        }
+
+        nextDate = r->getNextDateTime( nextDate );
       }
 
+      setDtDue( nextDate );
       setCompleted( false );
       setRevision( revision() + 1 );
 
