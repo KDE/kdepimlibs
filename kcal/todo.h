@@ -54,7 +54,7 @@ class KCAL_EXPORT Todo : public Incidence
 
       @param todo is the to-do to copy.
     */
-    Todo( const Todo & );
+    Todo( const Todo &todo );
 
     /**
       Destroys a to-do.
@@ -144,6 +144,8 @@ class KCAL_EXPORT Todo : public Incidence
 
     /**
       Sets the start date of the todo.
+
+      @param dtStart is the to-do start date.
     */
     void setDtStart( const KDateTime &dtStart );
     KDE_DEPRECATED void setDtStart( const QDateTime &dtStart )
@@ -186,6 +188,8 @@ class KCAL_EXPORT Todo : public Incidence
 
     /**
       Returns true if the todo is 100% completed, otherwise return false.
+
+      @see setCompleted(), percentComplete()
     */
     bool isCompleted() const;
 
@@ -194,35 +198,46 @@ class KCAL_EXPORT Todo : public Incidence
 
       @param completed If true set completed state to 100%, if false set
       completed state to 0%.
+
+      @see isCompleted(), percentComplete()
     */
     void setCompleted( bool completed );
 
     /**
-      Returns what percentage of the task is completed. Returns a value
+      Returns what percentage of the to-do is completed. Returns a value
       between 0 and 100.
     */
     int percentComplete() const;
 
     /**
-      Sets what percentage of the task is completed. Valid values are in the
+      Sets what percentage of the to-do is completed. Valid values are in the
       range from 0 to 100.
+
+      @param percent is the completion percentage, which as integer value
+      between 0 and 100, inclusive.
+
+      @see isCompleted(), setCompleted()
     */
-    void setPercentComplete( int );
+    void setPercentComplete( int percent );
 
     /**
       Returns date and time when todo was completed.
     */
     KDateTime completed() const;
+
     /**
       Returns string contaiting date and time when the todo was completed
       formatted according to the user's locale settings.
     */
     QString completedStr() const;
+
     /**
       Sets date and time of completion.
+
+      @param completeDate is the to-do completion date.
     */
-    void setCompleted( const KDateTime &completed );
-    KDE_DEPRECATED void setCompleted( const QDateTime &completed );
+    void setCompleted( const KDateTime &completeDate );
+    KDE_DEPRECATED void setCompleted( const QDateTime &completeDate );
 
     /**
       Returns true, if todo has a date associated with completion, otherwise
@@ -239,6 +254,8 @@ class KCAL_EXPORT Todo : public Incidence
 
     /**
       Sets the due date/time of the current occurrence if recurrent.
+
+      @param dt is the
     */
     void setDtRecurrence( const KDateTime &dt );
 
@@ -248,10 +265,13 @@ class KCAL_EXPORT Todo : public Incidence
     KDateTime dtRecurrence() const;
 
     /**
-      Returns true if the date specified is one on which the todo will
+      Returns true if the @p date specified is one on which the to-do will
       recur. Todos are a special case, hence the overload. It adds an extra
       check, which make it return false if there's an occurrence between
       the recur start and today.
+
+      @param date is the date to check.
+      @param timeSpec is the
     */
     virtual bool recursOn( const QDate &date,
                            const KDateTime::Spec &timeSpec ) const;
@@ -262,8 +282,12 @@ class KCAL_EXPORT Todo : public Incidence
      */
     bool isOverdue() const;
 
-    bool operator==( const Todo & ) const;
+    /**
+      Compare this with @p to-do for equality.
 
+      @param todo is the to-do to compare.
+    */
+    bool operator==( const Todo &todo ) const;
 
   protected:
     /**
@@ -279,8 +303,10 @@ class KCAL_EXPORT Todo : public Incidence
     */
     bool recurTodo();
 
+    //@cond PRIVATE
     class Private;
     Private *d;
+    //@endcond
 };
 
 }
