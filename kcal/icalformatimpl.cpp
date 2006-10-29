@@ -197,7 +197,6 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event, ICalTimeZones *tzlist, I
     KDateTime dt = event->dtEnd();
     if (event->floats()) {
 //      kDebug(5800) << " Event " << event->summary() << " floats." << endl;
-//      if (dt.date() != event->dtStart().date()) {
         // +1 day because end date is non-inclusive.
         end = writeICalDate( dt.date().addDays( 1 ) );
         prop = icalproperty_new_dtend(end);
