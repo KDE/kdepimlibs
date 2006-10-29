@@ -115,6 +115,8 @@ CalendarResources::~CalendarResources()
 {
   close();
   delete mManager;
+  delete mStandardPolicy;
+  delete mAskPolicy;
 }
 
 void CalendarResources::readConfig( KConfig *config )
