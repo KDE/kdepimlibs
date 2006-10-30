@@ -1179,25 +1179,33 @@ Person ICalFormatImpl::readOrganizer( icalproperty *organizer )
   return org;
 }
 
-Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
+Attachment *ICalFormatImpl::readAttachment( icalproperty *attach )
 {
-  icalattach *a = icalproperty_get_attach(attach);
-
   Attachment *attachment = 0;
 
-  int isurl = icalattach_get_is_url (a);
-  if (isurl == 0)
-    attachment = new Attachment((const char*)icalattach_get_data(a));
-  else {
-    attachment = new Attachment(QString(icalattach_get_url(a)));
+  icalvalue_kind value_kind = icalvalue_isa( icalproperty_get_value( attach ) );
+
+  if ( value_kind == ICAL_ATTACH_VALUE ) {
+    icalattach *a = icalproperty_get_attach( attach );
+
+    int isurl = icalattach_get_is_url( a );
+    if ( isurl == 0 )
+      attachment = new Attachment( (const char* )icalattach_get_data( a ) );
+    else {
+      attachment = new Attachment( QString( icalattach_get_url( a ) ) );
+    }
+  } else if ( value_kind == ICAL_URI_VALUE ) {
+    attachment =
+      new Attachment( QString( icalvalue_get_uri( icalproperty_get_value( attach ) ) ) );
   }
 
-  icalparameter *p = icalproperty_get_first_parameter(attach, ICAL_FMTTYPE_PARAMETER);
-  if (p)
-    attachment->setMimeType(QString(icalparameter_get_fmttype(p)));
+  icalparameter *p =
+    icalproperty_get_first_parameter( attach, ICAL_FMTTYPE_PARAMETER );
+  if ( p && attachment )
+    attachment->setMimeType( QString( icalparameter_get_fmttype( p ) ) );
 
   p = icalproperty_get_first_parameter( attach, ICAL_X_PARAMETER );
-  while (p) {
+  while ( p ) {
     QString xname = QString( icalparameter_get_xname( p ) ).toUpper();
     QString xvalue = QString::fromUtf8( icalparameter_get_xvalue( p ) );
     if ( xname == "X-CONTENT-DISPOSITION" )
