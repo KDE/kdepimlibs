@@ -952,6 +952,8 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, ICalTimeZones *tzlist)
   QStringList categories;
   icalproperty_transp transparency;
 
+  bool dtEndProcessed = false;
+
   while (p) {
     icalproperty_kind kind = icalproperty_isa(p);
     switch (kind) {
@@ -970,6 +972,7 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, ICalTimeZones *tzlist)
           event->setDtEnd( kdt );
           event->setFloats( false );
         }
+        dtEndProcessed = true;
         break;
       }
       case ICAL_RELATEDTO_PROPERTY:  // related event (parent)
@@ -993,6 +996,12 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, ICalTimeZones *tzlist)
     }
 
     p = icalcomponent_get_next_property(vevent,ICAL_ANY_PROPERTY);
+  }
+
+  // according to rfc2445 the dtend shouldn't be written when it equals
+  // start date. so assign one equal to start date.
+  if ( !dtEndProcessed && !event->hasDuration() ) {
+    event->setDtEnd( event->dtStart() );
   }
 
   QString msade = event->nonKDECustomProperty("X-MICROSOFT-CDO-ALLDAYEVENT");
