@@ -197,20 +197,15 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event, ICalTimeZones *tzlist, I
     KDateTime dt = event->dtEnd();
     if (event->floats()) {
 //      kDebug(5800) << " Event " << event->summary() << " floats." << endl;
-        // +1 day because end date is non-inclusive.
-        end = writeICalDate( dt.date().addDays( 1 ) );
-        prop = icalproperty_new_dtend(end);
-//      }
+      // +1 day because end date is non-inclusive.
+      end = writeICalDate( dt.date().addDays( 1 ) );
+      icalcomponent_add_property( vevent, icalproperty_new_dtend(end) );
     } else {
 //      kDebug(5800) << " Event " << event->summary() << " has time." << endl;
       if (dt != event->dtStart()) {
-        prop = writeICalDateTimeProperty( ICAL_DTEND_PROPERTY, dt, tzlist, tzUsedList );
-      } else {
-        prop = 0;
+        icalcomponent_add_property( vevent,
+                writeICalDateTimeProperty( ICAL_DTEND_PROPERTY, dt, tzlist, tzUsedList ) );
       }
-    }
-    if ( prop ) {
-      icalcomponent_add_property(vevent, prop);
     }
   }
 
