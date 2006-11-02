@@ -1,3 +1,4 @@
+/*  -*- c++ -*-
     kmime_mdn.h
 
     This file is part of KMime, the KDE internet mail/usenet news message library.
