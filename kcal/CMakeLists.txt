@@ -1,5 +1,7 @@
 project(kcal)
 
+configure_file(config-kcal.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kcal.h )
+
 ADD_DEFINITIONS(-DPACKAGE_DATA_DIR=\\""${CMAKE_INSTALL_PREFIX}${DATA_INSTALL_DIR}/libical"\\" ) # added manually
 
 include_directories(
