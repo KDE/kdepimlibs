@@ -6,9 +6,9 @@
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2.0 as
+    it under the terms of the GNU Library General Public License version 2.0 as
     published by the Free Software Foundation.
-    You should have received a copy of the GNU General Public License
+    You should have received a copy of the GNU Library General Public License
     along with this program; if not, write to the Free Software Foundation,
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
