@@ -1,1 +1,45 @@
+/*!
+ * @mainpage KMIME - an API for MIME handling.
+ *
+ * @section purpose Purpose
+ *
+ * The kmime library contains an API for the handling of MIME data.
+ *
+ * @section desc Description
+ *
+ * Quoting <a href="http://en.wikipedia.org/wiki/MIME">Wikipedia</a>:
+ *
+ * "<em><b>Multipurpose Internet Mail Extensions</b> or @acronym MIME is an
+ * Internet Standard that extends the format of e-mail to support text in
+ * character sets other than US-ASCII, non-text attachments, multi-part message
+ * bodies, and header information in non-ASCII character sets. Virtually all
+ * human-written Internet e-mail and a fairly large proportion of automated
+ * e-mail is transmitted via @acronym SMTP in MIME format. Internet e-mail is
+ * so closely associated with the SMTP and MIME standards that it is sometimes
+ * called SMTP/MIME e-mail. The content types defined by MIME standards are
+ * also of growing importance outside of e-mail, such as in communication
+ * protocols like @acronym HTTP for the World Wide Web. MIME is also a
+ * fundamental component of communication protocols such as  HTTP, which
+ * requires that data be transmitted in the context of e-mail-like messages,
+ * even though the data may not actually be e-mail.</em>"
+ *
+ * MIME is specified in five RFCs starting with
+ * <a href="http://tools.ietf.org/html/rfc2045">RFC 2045</a>,
+ * <a href="http://tools.ietf.org/html/rfc2046">RFC 2046</a>, and
+ * <a href="http://tools.ietf.org/html/rfc2047">RFC 2047</a>.
+ *
+ * @authors
+ * The major authors of this library are:\n
+ * Christian Gebauer,
+ * Marc Mutz \<mutz@kde.org\>,
+ * Christian Thurner \<cthurner@freepage.de\>
+ *
+ * @maintainers
+ * Marc Mutz \<mutz@kde.org\>
+ *
+ * @licenses
+ * @lgpl
+ */
+
+// DOXYGEN_PROJECTNAME=KMIME Library
 // DOXYGEN_EXCLUDE =  kmime_headers_obs.h
