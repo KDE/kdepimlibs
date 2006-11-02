@@ -30,43 +30,87 @@
 
 namespace KMime {
 
-class KMIME_EXPORT Message : public Content {
+class KMIME_EXPORT Message : public Content
+{
+  public:
+    typedef QList<KMime::Message*> List;
 
-public:
-  typedef QList<KMime::Message*> List;
+    /** Constructor. Creates an empty message. */
+    Message();
+    ~Message();
 
-  /** Constructor. Creates an empty message. */
-  Message();
-  ~Message();
+    //content handling
+    virtual void parse();
+    virtual void assemble();
+    virtual void clear();
 
-  //content handling
-  virtual void parse();
-  virtual void assemble();
-  virtual void clear();
+    //header access
+    virtual KMime::Headers::Base *getHeaderByType( const char *type );
+    virtual void setHeader( KMime::Headers::Base *h );
+    virtual bool removeHeader( const char *type );
 
-  //header access
-  virtual KMime::Headers::Base* getHeaderByType(const char *type);
-  virtual void setHeader(KMime::Headers::Base *h);
-  virtual bool removeHeader(const char *type);
+    virtual KMime::Headers::MessageID *messageID( bool create=true )
+      { KMime::Headers::MessageID *p=0;
+        return getHeaderInstance( p, create );
+      }
 
-  virtual KMime::Headers::MessageID* messageID(bool create=true)        { KMime::Headers::MessageID *p=0; return getHeaderInstance(p, create); }
-  virtual KMime::Headers::Subject* subject(bool create=true)            { if(!create && s_ubject.isEmpty()) return 0; return &s_ubject; }
-  virtual KMime::Headers::Date* date(bool create=true)                  { if(!create && d_ate.isEmpty()) return 0;return &d_ate; }
-  virtual KMime::Headers::From* from(bool create=true)                  { KMime::Headers::From *p=0; return getHeaderInstance(p, create); }
-  virtual KMime::Headers::Organization* organization(bool create=true)  { KMime::Headers::Organization *p=0; return getHeaderInstance(p, create); }
-  virtual KMime::Headers::ReplyTo* replyTo(bool create=true)            { KMime::Headers::ReplyTo *p=0; return getHeaderInstance(p, create); }
-  virtual KMime::Headers::To* to(bool create=true)                      { KMime::Headers::To *p=0; return getHeaderInstance(p, create); }
-  virtual KMime::Headers::CC* cc(bool create=true)                      { KMime::Headers::CC *p=0; return getHeaderInstance(p, create); }
-  virtual KMime::Headers::BCC* bcc(bool create=true)                    { KMime::Headers::BCC *p=0; return getHeaderInstance(p, create); }
-  virtual KMime::Headers::References* references(bool create=true)      { KMime::Headers::References *p=0; return getHeaderInstance(p, create); }
-  virtual KMime::Headers::UserAgent* userAgent(bool create=true)        { KMime::Headers::UserAgent *p=0; return getHeaderInstance(p, create); }
+    virtual KMime::Headers::Subject *subject( bool create=true )
+      { if ( !create && s_ubject.isEmpty() )
+          return 0;
+        return &s_ubject;
+      }
 
-protected:
-  //hardcoded headers
-  KMime::Headers::Subject s_ubject;
-  KMime::Headers::Date d_ate;
-  BoolFlags f_lags; // some status info
+    virtual KMime::Headers::Date *date( bool create=true )
+      { if ( !create && d_ate.isEmpty() )
+          return 0;
+        return &d_ate;
+      }
 
+    virtual KMime::Headers::From *from( bool create=true )
+      { KMime::Headers::From *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+    virtual KMime::Headers::Organization *organization( bool create=true )
+      { KMime::Headers::Organization *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+    virtual KMime::Headers::ReplyTo *replyTo( bool create=true )
+      { KMime::Headers::ReplyTo *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+    virtual KMime::Headers::To *to( bool create=true )
+      { KMime::Headers::To *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+    virtual KMime::Headers::CC *cc( bool create=true )
+      { KMime::Headers::CC *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+    virtual KMime::Headers::BCC *bcc( bool create=true )
+      { KMime::Headers::BCC *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+    virtual KMime::Headers::References *references( bool create=true )
+      { KMime::Headers::References *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+    virtual KMime::Headers::UserAgent *userAgent( bool create=true )
+      { KMime::Headers::UserAgent *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+  protected:
+    //hardcoded headers
+    KMime::Headers::Subject s_ubject;
+    KMime::Headers::Date d_ate;
+    BoolFlags f_lags; // some status info
 
 }; // class Message
 
