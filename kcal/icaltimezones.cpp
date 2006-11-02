@@ -214,8 +214,14 @@ ICalTimeZone::ICalTimeZone(ICalTimeZoneSource *source, const QString &name, ICal
 ICalTimeZone::ICalTimeZone(const KTimeZone &tz)
   : KTimeZone(0, tz.name(), tz.countryCode(), tz.latitude(), tz.longitude(), tz.comment())
 {
-  if (tz.data(true))
-    setData( new ICalTimeZoneData(*tz.data(), tz) );
+  const KTimeZoneData *data = tz.data(true);
+  if (data) {
+    const ICalTimeZoneData *icaldata = dynamic_cast<const ICalTimeZoneData*>(data);
+    if ( icaldata )
+      setData( new ICalTimeZoneData(*icaldata) );
+    else
+      setData( new ICalTimeZoneData(*tz.data(), tz) );
+  }
 }
 
 ICalTimeZone::ICalTimeZone(const ICalTimeZone &tz)
