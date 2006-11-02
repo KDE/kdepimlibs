@@ -86,6 +86,6 @@ class KMIME_EXPORT ContentIndex
 
 };
 
-}
+}  //namespace KMime
 
 #endif

@@ -25,6 +25,9 @@
     We use it to store the flags of an article
     @internal
 */
+
+namespace KMime {
+
 class KMIME_EXPORT BoolFlags {
 
 public:
@@ -53,5 +56,7 @@ protected:
   /** Two bytes (at least) of storage for the bits. */
   unsigned char bits[2];  //space for 16 flags
 };
+
+}  //namespace KMime
 
 #endif // __KMIME_BOOLFLAGS_H__

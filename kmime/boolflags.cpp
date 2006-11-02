@@ -16,6 +16,8 @@
 
 #include "boolflags.h"
 
+using namespace KMime;
+
 void BoolFlags::set(unsigned int i, bool b)
 {
   if(i>15) return;
