@@ -32,93 +32,94 @@ void NewsArticle::parse()
 
   QByteArray raw;
 
-  if( !(raw=rawHeader(l_ines.type())).isEmpty() )
-    l_ines.from7BitString(raw);
+  if ( !( raw = rawHeader( l_ines.type() ) ).isEmpty() )
+    l_ines.from7BitString( raw );
 }
 
 void NewsArticle::assemble()
 {
   Headers::Base *h;
-  QByteArray newHead="";
+  QByteArray newHead = "";
 
   //Message-ID
-  if( (h=messageID(false))!=0 )
-    newHead+=h->as7BitString()+'\n';
+  if ( ( h = messageID( false ) ) != 0 )
+    newHead += h->as7BitString() + '\n';
 
   //Control
-  if( (h=control(false))!=0 )
-    newHead+=h->as7BitString()+'\n';
+  if ( ( h = control( false ) ) != 0 )
+    newHead += h->as7BitString() + '\n';
 
   //Supersedes
-  if( (h=supersedes(false))!=0 )
-    newHead+=h->as7BitString()+'\n';
+  if ( ( h = supersedes( false ) ) != 0 )
+    newHead += h->as7BitString() + '\n';
 
   //From
-  h=from(); // "From" is mandatory
-  newHead+=h->as7BitString()+'\n';
+  h = from(); // "From" is mandatory
+  newHead += h->as7BitString() + '\n';
 
   //Subject
-  h=subject(); // "Subject" is mandatory
-  newHead+=h->as7BitString()+'\n';
+  h = subject(); // "Subject" is mandatory
+  newHead += h->as7BitString() + '\n';
 
   //To
-  if( (h=to(false))!=0 )
-    newHead+=h->as7BitString()+'\n';
+  if ( ( h = to( false ) ) != 0 )
+    newHead += h->as7BitString() + '\n';
 
   //Newsgroups
-  if( (h=newsgroups(false))!=0 )
-    newHead+=h->as7BitString()+'\n';
+  if ( ( h = newsgroups( false ) ) != 0 )
+    newHead += h->as7BitString() + '\n';
 
   //Followup-To
-  if( (h=followUpTo(false))!=0 )
-    newHead+=h->as7BitString()+'\n';
+  if ( ( h = followUpTo( false ) ) != 0 )
+    newHead+=h->as7BitString() + '\n';
 
   //Reply-To
-  if( (h=replyTo(false))!=0 )
-    newHead+=h->as7BitString()+'\n';
+  if ( ( h = replyTo( false ) ) != 0 )
+    newHead += h->as7BitString() + '\n';
 
   //Mail-Copies-To
-  if( (h=mailCopiesTo(false))!=0 )
-    newHead+=h->as7BitString()+'\n';
+  if ( ( h = mailCopiesTo( false ) ) != 0 )
+    newHead += h->as7BitString() + '\n';
 
   //Date
-  h=date(); // "Date" is mandatory
-  newHead+=h->as7BitString()+'\n';
+  h = date(); // "Date" is mandatory
+  newHead += h->as7BitString() + '\n';
 
   //References
-  if( (h=references(false))!=0 )
-    newHead+=h->as7BitString()+'\n';
+  if ( ( h = references( false ) ) != 0 )
+    newHead += h->as7BitString() + '\n';
 
   //Lines
-  h=lines(); // "Lines" is mandatory
-  newHead+=h->as7BitString()+'\n';
+  h = lines(); // "Lines" is mandatory
+  newHead += h->as7BitString() + '\n';
 
   //Organization
-  if( (h=organization(false))!=0 )
-    newHead+=h->as7BitString()+'\n';
+  if ( ( h = organization( false ) ) != 0 )
+    newHead += h->as7BitString() + '\n';
 
   //User-Agent
-  if( (h=userAgent(false))!=0 )
-    newHead+=h->as7BitString()+'\n';
+  if ( ( h = userAgent( false ) ) != 0 )
+    newHead += h->as7BitString() + '\n';
 
   //Mime-Version
-  newHead+="MIME-Version: 1.0\n";
+  newHead += "MIME-Version: 1.0\n";
 
   //Content-Type
-  newHead+=contentType()->as7BitString()+'\n';
+  newHead += contentType()->as7BitString() + '\n';
 
   //Content-Transfer-Encoding
-  newHead+=contentTransferEncoding()->as7BitString()+'\n';
+  newHead += contentTransferEncoding()->as7BitString() + '\n';
 
   //X-Headers
   int pos = head().indexOf( "\nX-" );
-  if(pos>-1) //we already have some x-headers => "recycle" them
+  if ( pos > -1 ) { //we already have some x-headers => "recycle" them
     newHead += head().mid( pos + 1, head().length() - pos );
-  else
-    foreach( Headers::Base *h, h_eaders )
+  } else {
+    foreach ( Headers::Base *h, h_eaders ) {
       if ( h->isXHeader() && ( strncasecmp( h->type(), "X-KNode", 7 ) != 0 ) )
         newHead += h->as7BitString() + '\n';
-
+    }
+  }
   setHead( newHead );
 }
 
@@ -128,38 +129,41 @@ void NewsArticle::clear()
   Message::clear();
 }
 
-Headers::Base * NewsArticle::getHeaderByType(const char * type)
+Headers::Base * NewsArticle::getHeaderByType( const char *type )
 {
-  if(strcasecmp("Lines", type)==0) {
-    if(l_ines.isEmpty()) return 0;
-    else return &l_ines;
-  } else
-    return Message::getHeaderByType(type);
+  if ( strcasecmp( "Lines", type ) == 0 ) {
+    if ( l_ines.isEmpty() ) {
+      return 0;
+    } else {
+      return &l_ines;
+    }
+  } else {
+    return Message::getHeaderByType( type );
+  }
 }
 
-void NewsArticle::setHeader(Headers::Base *h)
+void NewsArticle::setHeader( Headers::Base *h )
 {
-  bool del=true;
-  if(h->is("Lines"))
+  bool del = true;
+  if ( h->is( "Lines" ) ) {
     l_ines.setNumberOfLines( (static_cast<Headers::Lines*>(h))->numberOfLines() );
-  else {
-    del=false;
-    Message::setHeader(h);
+  } else {
+    del = false;
+    Message::setHeader( h );
   }
 
-  if(del) delete h;
+  if ( del ) delete h;
 }
 
-
-bool NewsArticle::removeHeader(const char *type)
+bool NewsArticle::removeHeader( const char *type )
 {
-  if(strcasecmp("Lines", type)==0)
+  if ( strcasecmp( "Lines", type ) == 0 ) {
     l_ines.clear();
-  else
-    return Message::removeHeader(type);
+  } else {
+    return Message::removeHeader( type );
+  }
 
   return true;
 }
-
 
 } // namespace KMime

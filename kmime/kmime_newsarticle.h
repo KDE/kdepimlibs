@@ -28,30 +28,51 @@
 
 namespace KMime {
 
-class KMIME_EXPORT NewsArticle : public Message {
+class KMIME_EXPORT NewsArticle : public Message
+{
+  public:
 
-public:
+    NewsArticle() : Message() { l_ines.setParent(this); }
+    ~NewsArticle() {}
 
-  NewsArticle() : Message() { l_ines.setParent(this); }
-  ~NewsArticle() {};
+    virtual void parse();
+    virtual void assemble();
+    virtual void clear();
 
-  virtual void parse();
-  virtual void assemble();
-  virtual void clear();
+    virtual KMime::Headers::Base * getHeaderByType( const char *type );
+    virtual void setHeader( KMime::Headers::Base *h );
+    virtual bool removeHeader( const char *type );
 
-  virtual KMime::Headers::Base * getHeaderByType(const char* type);
-  virtual void setHeader(KMime::Headers::Base *h);
-  virtual bool removeHeader(const char * type);
+    virtual KMime::Headers::Control *control( bool create=true )
+      { KMime::Headers::Control *p=0;
+        return getHeaderInstance( p, create );
+      }
 
-  virtual KMime::Headers::Control* control(bool create=true)            { KMime::Headers::Control *p=0; return getHeaderInstance(p, create); }
-  virtual KMime::Headers::Supersedes* supersedes(bool create=true)      { KMime::Headers::Supersedes *p=0; return getHeaderInstance(p, create); }
-  virtual KMime::Headers::MailCopiesTo* mailCopiesTo(bool create=true)  { KMime::Headers::MailCopiesTo *p=0; return getHeaderInstance(p, create); }
-  virtual KMime::Headers::Newsgroups* newsgroups(bool create=true)      { KMime::Headers::Newsgroups *p=0; return getHeaderInstance(p, create); }
-  virtual KMime::Headers::FollowUpTo* followUpTo(bool create=true)      { KMime::Headers::FollowUpTo *p=0; return getHeaderInstance(p, create); }
-  virtual KMime::Headers::Lines* lines(bool create=true)                { if(!create && l_ines.isEmpty()) return 0; return &l_ines; }
+    virtual KMime::Headers::Supersedes *supersedes( bool create=true )
+      { KMime::Headers::Supersedes *p=0;
+        return getHeaderInstance( p, create );
+      }
 
-protected:
-  KMime::Headers::Lines l_ines;
+    virtual KMime::Headers::MailCopiesTo *mailCopiesTo( bool create=true )
+      { KMime::Headers::MailCopiesTo *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+    virtual KMime::Headers::Newsgroups *newsgroups( bool create=true )
+      { KMime::Headers::Newsgroups *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+    virtual KMime::Headers::FollowUpTo *followUpTo( bool create=true )
+      { KMime::Headers::FollowUpTo *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+    virtual KMime::Headers::Lines *lines( bool create=true )
+      { if ( !create && l_ines.isEmpty() ) return 0; return &l_ines; }
+
+  protected:
+    KMime::Headers::Lines l_ines;
 
 }; // class NewsArticle
 
