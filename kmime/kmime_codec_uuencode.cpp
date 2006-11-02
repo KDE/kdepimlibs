@@ -4,29 +4,20 @@
     This file is part of KMime, the KDE internet mail/usenet news message library.
     Copyright (c) 2002 Marc Mutz <mutz@kde.org>
 
-    KMime is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License, version 2, as
-    published by the Free Software Foundation.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
 
-    KMime is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
+    Library General Public License for more details.
 
     You should have received a copy of the GNU Library General Public License
-    along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-    In addition, as a special exception, the copyright holders give
-    permission to link the code of this library with any edition of
-    the Qt library by Trolltech AS, Norway (or with modified versions
-    of Qt that use the same license as Qt), and distribute linked
-    combinations including the two.  You must obey the GNU General
-    Public License in all respects for all of the code used other than
-    Qt.  If you modify this file, you may extend this exception to
-    your version of the file, but you are not obligated to do so.  If
-    you do not wish to do so, delete this exception statement from
-    your version.
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
 */
 
 #include "kmime_codec_uuencode.h"
@@ -197,7 +188,7 @@ bool UUDecoder::decode( const char* & scursor, const char * const send,
     } else
       continue;
 
-    // add the new bits to the output stream and flush full octets:    
+    // add the new bits to the output stream and flush full octets:
     switch ( mStepNo ) {
     case 0:
       mOutbits = value << 2;
@@ -226,7 +217,7 @@ bool UUDecoder::decode( const char* & scursor, const char * const send,
     mStepNo = (mStepNo + 1) % 4;
 
     // check whether we ran over the announced octet count for this line:
-    kWarning( mCurrentOctetCount == mAnnouncedOctetCount + 1 ) 
+    kWarning( mCurrentOctetCount == mAnnouncedOctetCount + 1 )
       << "UUDecoder: mismatch between announced ("
       << mAnnouncedOctetCount << ") and actual line octet count!" << endl;
 

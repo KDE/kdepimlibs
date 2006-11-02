@@ -5,13 +5,20 @@
     Copyright (c) 2001 the KMime authors.
     See file AUTHORS for details
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
     You should have received a copy of the GNU Library General Public License
-    along with this program; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
 */
 #ifndef __KMIME_PARSERS__
 #define __KMIME_PARSERS__
@@ -28,16 +35,16 @@ namespace Parser {
     @internal
 */
 class MultiPart {
-  
+
 public:
   MultiPart(const QByteArray &src, const QByteArray &boundary);
   ~MultiPart() {};
-  
+
   bool parse();
   QList<QByteArray> parts()    { return p_arts; }
   QByteArray preamble()     { return p_reamble; }
   QByteArray epilouge()     { return e_pilouge; }
-  
+
 protected:
   QByteArray s_rc, b_oundary, p_reamble, e_pilouge;
   QList<QByteArray> p_arts;
@@ -79,12 +86,12 @@ protected:
 class UUEncoded : public NonMimeParser {
 
 public:
-  UUEncoded(const QByteArray &src, const QByteArray &subject);  
+  UUEncoded(const QByteArray &src, const QByteArray &subject);
 
   virtual bool parse();
 
 protected:
-  QByteArray s_ubject;  
+  QByteArray s_ubject;
 };
 
 
@@ -96,11 +103,11 @@ protected:
 class YENCEncoded : public NonMimeParser {
 
 public:
-  YENCEncoded(const QByteArray &src);  
+  YENCEncoded(const QByteArray &src);
 
-  virtual bool parse();      
+  virtual bool parse();
   QList<QByteArray> binaryParts()       { return b_ins; }
-    
+
 protected:
   QList<QByteArray> b_ins;
   static bool yencMeta( QByteArray& src, const QByteArray& name, int* value);
