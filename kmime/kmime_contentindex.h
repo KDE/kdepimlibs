@@ -45,7 +45,7 @@ class KMIME_EXPORT ContentIndex
       @param index A string representation of a message part index according
       to RFC 3501 section 6.4.5.
     */
-    ContentIndex( const QString &index );
+    explicit ContentIndex( const QString &index );
 
     /**
       Returns true if this index is non-empty (valid).

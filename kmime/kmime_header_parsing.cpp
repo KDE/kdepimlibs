@@ -20,7 +20,6 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <config.h>
 #include "kmime_header_parsing.h"
 
 #include "kmime_codecs.h"

@@ -21,10 +21,6 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "kmime_util.h"
 
 #include <kcodecs.h> // for KCodec::{quotedPrintableDe,base64{En,De}}code
@@ -379,7 +375,7 @@ QByteArray unfoldHeader( const QByteArray &header )
       ++foldEnd;
     }
     result += header.mid( pos, foldBegin - pos );
-    result += " ";
+    result += ' ';
     pos = foldEnd;
   }
   result += header.mid( pos, header.length() - pos );

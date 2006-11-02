@@ -28,7 +28,7 @@
 namespace KMime {
 
 
-class QuotedPrintableCodec : public Codec {
+class KMIME_EXPORT QuotedPrintableCodec : public Codec {
 protected:
   friend class Codec;
   QuotedPrintableCodec() : Codec() {}
@@ -56,7 +56,7 @@ public:
 };
 
 
-class Rfc2047QEncodingCodec : public Codec {
+class KMIME_EXPORT Rfc2047QEncodingCodec : public Codec {
 protected:
   friend class Codec;
   Rfc2047QEncodingCodec() : Codec() {}
@@ -82,7 +82,7 @@ public:
 };
 
 
-class Rfc2231EncodingCodec : public Codec {
+class KMIME_EXPORT Rfc2231EncodingCodec : public Codec {
 protected:
   friend class Codec;
   Rfc2231EncodingCodec() : Codec() {}

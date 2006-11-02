@@ -31,7 +31,7 @@ class QByteArray;
 
 namespace KMime {
 
-class IdentityCodec : public Codec {
+class KMIME_EXPORT IdentityCodec : public Codec {
 protected:
   friend class Codec;
   IdentityCodec() : Codec() {}
@@ -60,7 +60,7 @@ public:
   Decoder * makeDecoder( bool withCRLF=false ) const;
 };
 
-class SevenBitCodec : public IdentityCodec {
+class KMIME_EXPORT SevenBitCodec : public IdentityCodec {
 protected:
   friend class Codec;
   SevenBitCodec() : IdentityCodec() {}
@@ -71,7 +71,7 @@ public:
   const char * name() const { return "7bit"; }
 };
 
-class EightBitCodec : public IdentityCodec {
+class KMIME_EXPORT EightBitCodec : public IdentityCodec {
 protected:
   friend class Codec;
   EightBitCodec() : IdentityCodec() {}
@@ -82,7 +82,7 @@ public:
   const char * name() const { return "8bit"; }
 };
 
-class BinaryCodec : public IdentityCodec {
+class KMIME_EXPORT BinaryCodec : public IdentityCodec {
 protected:
   friend class Codec;
   BinaryCodec() : IdentityCodec() {}

@@ -27,7 +27,7 @@
 
 namespace KMime {
 
-class UUCodec : public Codec {
+class KMIME_EXPORT UUCodec : public Codec {
 protected:
   friend class Codec;
   UUCodec() : Codec() {}

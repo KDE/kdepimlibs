@@ -30,7 +30,7 @@ namespace KMime {
 
 class KMIME_EXPORT CharFreq {
 public:
-  CharFreq( const QByteArray & buf );
+  explicit CharFreq( const QByteArray & buf );
   CharFreq( const char * buf, size_t len );
 
   enum Type { None = 0,

@@ -1132,7 +1132,7 @@ QByteArray References::at(unsigned int i)
 void References::append(const QByteArray &s)
 {
   QString temp=r_ef.data();
-  temp += " ";
+  temp += ' ';
   temp += s.data();
   QStringList lst = temp.split(' ');
   QRegExp exp("^<.+@.+>$");

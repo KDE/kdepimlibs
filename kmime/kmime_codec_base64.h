@@ -27,7 +27,7 @@
 
 namespace KMime {
 
-class Base64Codec : public Codec {
+class KMIME_EXPORT Base64Codec : public Codec {
 protected:
   friend class Codec;
   Base64Codec() : Codec() {}
@@ -70,7 +70,7 @@ public:
 
 
 
-class Rfc2047BEncodingCodec : public Base64Codec {
+class KMIME_EXPORT Rfc2047BEncodingCodec : public Base64Codec {
 protected:
   friend class Codec;
   Rfc2047BEncodingCodec()

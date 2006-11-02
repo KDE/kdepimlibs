@@ -154,7 +154,7 @@ namespace MDN {
     // mandatory parts: Disposition: foo/baz; bar
     QByteArray result = "Disposition: ";
     result += stringFor( a );
-    result += "/";
+    result += '/';
     result += stringFor( s );
     result += "; ";
     result += stringFor( d );
@@ -164,14 +164,14 @@ namespace MDN {
     for ( QList<DispositionModifier>::const_iterator mt = m.begin() ;
 	  mt != m.end() ; ++mt ) {
       if ( first ) {
-	result += "/";
+	result += '/';
 	first = false;
       } else {
-	result += ",";
+	result += ',';
       }
       result += stringFor( *mt );
     }
-    return result + "\n";
+    return result + '\n';
   }
 
   static QByteArray finalRecipient( const QString & recipient ) {
@@ -179,21 +179,21 @@ namespace MDN {
       return QByteArray();
     else
       return "Final-Recipient: rfc822; "
-	+ encodeRFC2047String( recipient, "utf-8" ) + "\n";
+	+ encodeRFC2047String( recipient, "utf-8" ) + '\n';
   }
 
   static QByteArray orginalRecipient( const QByteArray & recipient ) {
     if ( recipient.isEmpty() )
       return QByteArray();
     else
-      return "Original-Recipient: " + recipient + "\n";
+      return "Original-Recipient: " + recipient + '\n';
   }
 
   static QByteArray originalMessageID( const QByteArray & msgid ) {
     if ( msgid.isEmpty() )
       return QByteArray();
     else
-      return "Original-Message-ID: " + msgid + "\n";
+      return "Original-Message-ID: " + msgid + '\n';
   }
 
   static QByteArray reportingUAField() {
@@ -231,11 +231,11 @@ namespace MDN {
 
     // headers that are only present for certain disposition {types,modifiers}:
     if ( d == Failed )
-      result += "Failure: " + encodeRFC2047String( spec, "utf-8" ) + "\n";
+      result += "Failure: " + encodeRFC2047String( spec, "utf-8" ) + '\n';
     else if ( m.contains( Error ) )
-      result += "Error: " + encodeRFC2047String( spec, "utf-8" ) + "\n";
+      result += "Error: " + encodeRFC2047String( spec, "utf-8" ) + '\n';
     else if ( m.contains( Warning ) )
-      result += "Warning: " + encodeRFC2047String( spec, "utf-8" ) + "\n";
+      result += "Warning: " + encodeRFC2047String( spec, "utf-8" ) + '\n';
 
     return result;
   }

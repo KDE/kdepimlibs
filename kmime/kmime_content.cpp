@@ -315,12 +315,12 @@ void Content::assemble()
   //Content-Description
   Headers::Base *h=contentDescription(false);
   if(h)
-    newHead+=h->as7BitString()+"\n";
+    newHead+=h->as7BitString()+'\n';
 
   //Content-Disposition
   h=contentDisposition(false);
   if(h)
-    newHead+=h->as7BitString()+"\n";
+    newHead+=h->as7BitString()+'\n';
 
   d->head = newHead;
 }
@@ -373,7 +373,7 @@ QByteArray Content::encodedContent( bool useCrLf )
       if ( beg >= 0 && end > beg ) d->head.remove( beg, end - beg );
 
       d->head += "MIME-Version: 1.0\n";
-      d->head += contentType( true )->as7BitString() + "\n";
+      d->head += contentType( true )->as7BitString() + '\n';
       d->head += contentTransferEncoding( true )->as7BitString() + '\n';
     }
   }
@@ -403,7 +403,7 @@ QByteArray Content::encodedContent( bool useCrLf )
 
     //add all (encoded) contents separated by boundaries
     foreach ( Content *c, d->contents ) {
-      e+=boundary+"\n";
+      e+=boundary+'\n';
       e+=c->encodedContent(false);  // don't convert LFs here, we do that later!!!!!
     }
     //finally append the closing boundary
