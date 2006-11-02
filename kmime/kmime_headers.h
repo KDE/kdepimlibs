@@ -1,4 +1,4 @@
-/*  -*- c++ -*
+/*  -*- c++ -*-
     kmime_headers.h
 
     KMime, the KDE internet mail/usenet news message library.
@@ -22,6 +22,7 @@
 // - incompatible, GStructured-based field classes
 // - compatible, GUnstructured-based field classes
 
+#include "kmime.h"
 #include "kmime_header_parsing.h"
 
 #include <QString>
@@ -33,8 +34,6 @@
 #include <QByteArray>
 
 #include <time.h>
-
-#include <kdepimmacros.h>
 
 namespace KMime {
 
@@ -107,7 +106,7 @@ mk_parsing_subclass_with_name( subclass, subclass, baseclass )
 
 /** Baseclass of all header-classes. It represents a
     header-field as described in RFC-822.  */
-class KDE_EXPORT Base {
+class KMIME_EXPORT Base {
 
   public:
     typedef QList<KMime::Headers::Base*> List;
@@ -212,7 +211,7 @@ namespace Generics {
   // known issues:
   // - uses old decodeRFC2047String function, instead of our own...
 
-class KDE_EXPORT GUnstructured : public Base {
+class KMIME_EXPORT GUnstructured : public Base {
 
 public:
   GUnstructured() : Base()  {}
@@ -265,7 +264,7 @@ private:
     @author Marc Mutz <mutz@kde.org>
 */
 
-class KDE_EXPORT GStructured : public Base {
+class KMIME_EXPORT GStructured : public Base {
 public:
   GStructured() : Base()  {}
   GStructured( Content * p ) : Base( p ) {}
@@ -299,7 +298,7 @@ protected:
 };
 
 
-class KDE_EXPORT GAddress : public GStructured {
+class KMIME_EXPORT GAddress : public GStructured {
 public:
   GAddress() : GStructured()  {}
   GAddress( Content * p ) : GStructured( p ) {}
@@ -315,7 +314,7 @@ protected:
 
 /** Base class for headers that deal with (possibly multiple)
     addresses, but don't allow groups: */
-class KDE_EXPORT MailboxList : public GAddress {
+class KMIME_EXPORT MailboxList : public GAddress {
 public:
   MailboxList() : GAddress()  {}
   MailboxList( Content * p ) : GAddress( p ) {}
@@ -339,7 +338,7 @@ mk_parsing_subclass(SingleMailbox,MailboxList);
 
 /** Base class for headers that deal with (possibly multiple)
     addresses, allowing groups. */
-class KDE_EXPORT AddressList : public GAddress {
+class KMIME_EXPORT AddressList : public GAddress {
 public:
   AddressList() : GAddress()  {}
   AddressList( Content * p ) : GAddress( p ) {}
@@ -357,7 +356,7 @@ protected:
 };
 
 /** Base class for headers which deal with a list of msg-id's */
-class KDE_EXPORT GIdent : public GAddress {
+class KMIME_EXPORT GIdent : public GAddress {
 public:
   GIdent() : GAddress()  {}
   GIdent( Content * p ) : GAddress( p ) {}
@@ -378,7 +377,7 @@ protected:
 mk_parsing_subclass(GSingleIdent,GIdent);
 
 /** Base class for headers which deal with a single atom. */
-class KDE_EXPORT GToken : public GStructured {
+class KMIME_EXPORT GToken : public GStructured {
 public:
   GToken() : GStructured()  {}
   GToken( Content * p ) : GStructured( p ) {}
@@ -395,7 +394,7 @@ protected:
 };
 
 
-class KDE_EXPORT GPhraseList : public GStructured {
+class KMIME_EXPORT GPhraseList : public GStructured {
 public:
   GPhraseList() : GStructured()  {}
   GPhraseList( Content * p ) : GStructured( p ) {}
@@ -411,7 +410,7 @@ protected:
   QStringList mPhraseList;
 };
 
-class KDE_EXPORT GDotAtom : public GStructured {
+class KMIME_EXPORT GDotAtom : public GStructured {
 public:
   GDotAtom() : GStructured()  {}
   GDotAtom( Content * p ) : GStructured( p ) {}
@@ -427,7 +426,7 @@ protected:
   QString mDotAtom;
 };
 
-class KDE_EXPORT GParametrized : public GStructured {
+class KMIME_EXPORT GParametrized : public GStructured {
 public:
   GParametrized() : GStructured()  {}
   GParametrized( Content * p ) : GStructured( p ) {}
@@ -443,7 +442,7 @@ protected:
 private:
 };
 
-class KDE_EXPORT GContentType : public GParametrized {
+class KMIME_EXPORT GContentType : public GParametrized {
 public:
   GContentType() : GParametrized()  {}
   GContentType( Content * p ) : GParametrized( p ) {}
@@ -461,7 +460,7 @@ protected:
 };
 
 
-class KDE_EXPORT GCISTokenWithParameterList : public GParametrized {
+class KMIME_EXPORT GCISTokenWithParameterList : public GParametrized {
 public:
   GCISTokenWithParameterList() : GParametrized()  {}
   GCISTokenWithParameterList( Content * p ) : GParametrized( p ) {}
@@ -488,7 +487,7 @@ protected:
 
 
 /** Represents the Return-Path header field. */
-class KDE_EXPORT ReturnPath : public Generics::GAddress {
+class KMIME_EXPORT ReturnPath : public Generics::GAddress {
 public:
   ReturnPath() : Generics::GAddress()  {}
   ReturnPath( Content * p ) : Generics::GAddress( p ) {}
@@ -564,7 +563,7 @@ mk_trivial_subclass_with_name(ContentDisposition,Content-Disposition,
     Adds a type over GUnstructured.
     @see GUnstructured
 */
-class KDE_EXPORT Generic : public Generics::GUnstructured {
+class KMIME_EXPORT Generic : public Generics::GUnstructured {
 
   public:
     Generic() : Generics::GUnstructured(), t_ype(0) {}
@@ -590,7 +589,7 @@ class KDE_EXPORT Generic : public Generics::GUnstructured {
 
 
 /** Represents a "Subject" header */
-class KDE_EXPORT Subject : public Generics::GUnstructured {
+class KMIME_EXPORT Subject : public Generics::GUnstructured {
 
   public:
     Subject() : Generics::GUnstructured()  {}
@@ -609,7 +608,7 @@ class KDE_EXPORT Subject : public Generics::GUnstructured {
 };
 
 /** Represents a "Organization" header */
-class KDE_EXPORT Organization : public Generics::GUnstructured {
+class KMIME_EXPORT Organization : public Generics::GUnstructured {
 
   public:
     Organization() : Generics::GUnstructured() {}
@@ -633,7 +632,7 @@ class KDE_EXPORT Organization : public Generics::GUnstructured {
 
 
 /** Represents a "Control" header */
-class KDE_EXPORT Control : public Base {
+class KMIME_EXPORT Control : public Base {
 
   public:
     Control() : Base()  {}
@@ -658,7 +657,7 @@ class KDE_EXPORT Control : public Base {
 };
 
 /** Represents a "Date" header */
-class KDE_EXPORT Date : public Base {
+class KMIME_EXPORT Date : public Base {
 
   public:
     Date() : Base(), t_ime(0)  {}
@@ -689,7 +688,7 @@ class KDE_EXPORT Date : public Base {
 
 
 /** Represents a "Newsgroups" header */
-class KDE_EXPORT Newsgroups : public Base {
+class KMIME_EXPORT Newsgroups : public Base {
 
   public:
     Newsgroups() : Base()  {}
@@ -717,7 +716,7 @@ class KDE_EXPORT Newsgroups : public Base {
 
 
 /** Represents a "Followup-To" header */
-class KDE_EXPORT FollowUpTo : public Newsgroups {
+class KMIME_EXPORT FollowUpTo : public Newsgroups {
 
   public:
     FollowUpTo() : Newsgroups()  {}
@@ -732,7 +731,7 @@ class KDE_EXPORT FollowUpTo : public Newsgroups {
 
 
 /** Represents a "Lines" header */
-class KDE_EXPORT Lines : public Base {
+class KMIME_EXPORT Lines : public Base {
 
   public:
     Lines() : Base(),l_ines(-1)  {}
@@ -761,7 +760,7 @@ class KDE_EXPORT Lines : public Base {
 
 
 /** Represents a "User-Agent" header */
-class KDE_EXPORT UserAgent : public Base {
+class KMIME_EXPORT UserAgent : public Base {
 
   public:
     UserAgent() : Base()  {}

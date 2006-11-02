@@ -20,7 +20,7 @@
 #ifndef KMIME_CONTENTINDEX_H
 #define KMIME_CONTENTINDEX_H
 
-#include <kdepim_export.h>
+#include "kmime.h"
 
 #include <QtCore/QList>
 #include <QtCore/QString>
@@ -32,7 +32,7 @@ namespace KMime {
   hierarchy. Basically a stack of integer indices.
   Based on RFC 3501 section 6.4.5 and thus compatible with IMAP.
 */
-class KDE_EXPORT ContentIndex
+class KMIME_EXPORT ContentIndex
 {
   public:
     /**

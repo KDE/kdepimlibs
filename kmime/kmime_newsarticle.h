@@ -16,13 +16,12 @@
 #ifndef __KMIME_NEWSARTICLE_H__
 #define __KMIME_NEWSARTICLE_H__
 
+#include "kmime.h"
 #include "kmime_message.h"
-
-#include <kdepimmacros.h>
 
 namespace KMime {
 
-class KDE_EXPORT NewsArticle : public Message {
+class KMIME_EXPORT NewsArticle : public Message {
 
 public:
 

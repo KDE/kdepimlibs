@@ -32,10 +32,9 @@
 #ifndef __KMIME_MDN_H__
 #define __KMIME_MDN_H__
 
+#include "kmime.h"
 #include <QString>
-//#include <QByteArray>
 #include <QList>
-#include <kdepimmacros.h>
 
 class QByteArray;
 
@@ -178,7 +177,7 @@ namespace KMime {
 
     /** Main function. Generates the content of the
         message/disposition-notification body part. */
-    KDE_EXPORT extern QByteArray dispositionNotificationBodyContent( const QString & finalRecipient,
+    KMIME_EXPORT extern QByteArray dispositionNotificationBodyContent( const QString & finalRecipient,
 	       const QByteArray & originalRecipient,
 	       const QByteArray & originalMsgID,
 	       DispositionType disposition,
@@ -188,7 +187,7 @@ namespace KMime {
 				   =QList<DispositionModifier>(),
 	       const QString & special=QString() );
 
-    KDE_EXPORT extern QString descriptionFor( DispositionType d,
+    KMIME_EXPORT extern QString descriptionFor( DispositionType d,
 				   const QList<DispositionModifier> & m
 				   =QList<DispositionModifier>() );
 

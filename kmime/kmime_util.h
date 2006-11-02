@@ -16,10 +16,10 @@
 #ifndef __KMIME_UTIL_H__
 #define __KMIME_UTIL_H__
 
-#include "qdatetime.h"
-#include "qstring.h"
-#include "time.h"
-#include <kdepimmacros.h>
+#include <time.h>
+#include <qdatetime.h>
+#include <qstring.h>
+#include "kmime.h"
 
 namespace KMime {
 
@@ -28,20 +28,20 @@ namespace KMime {
    *  keeping strings in a common repository.
    *  @param name
    */
-  extern QByteArray cachedCharset( const QByteArray &name ) KDE_EXPORT;
+  extern QByteArray cachedCharset( const QByteArray &name ) KMIME_EXPORT;
 
   /**
    * Consult the language cache. Only used for reducing mem usage by
    * keeping strings in a common repository.
    * @param name
    */
-  extern QByteArray cachedLanguage( const QByteArray &name ) KDE_EXPORT;
+  extern QByteArray cachedLanguage( const QByteArray &name ) KMIME_EXPORT;
 
   /**
    * Checks whether @p s contains any non-us-ascii characters.
    * @param s
    */
-  extern bool isUsAscii( const QString &s ) KDE_EXPORT;
+  extern bool isUsAscii( const QString &s ) KMIME_EXPORT;
 
   inline bool isOfSet( const uchar map[16], unsigned char ch ) {
     Q_ASSERT( ch < 128 );
@@ -84,7 +84,7 @@ namespace KMime {
    */
   extern QString decodeRFC2047String(
     const QByteArray &src, QByteArray &usedCS, const QByteArray &defaultCS,
-    bool forceCS ) KDE_EXPORT;
+    bool forceCS ) KMIME_EXPORT;
 
   /**
    * Encode string @p src according to RFC2047 using charset @p charset.
@@ -99,7 +99,7 @@ namespace KMime {
    */
   extern QByteArray encodeRFC2047String(
     const QString &src, const QByteArray &charset, bool addressHeader=false,
-    bool allow8bitHeaders=false ) KDE_EXPORT;
+    bool allow8bitHeaders=false ) KMIME_EXPORT;
 
   /**
    * Uses current time, pid and random numbers to construct a string
@@ -109,7 +109,7 @@ namespace KMime {
    * @return the unique string.
    * @see multiPartBoundary
    */
-  extern QByteArray uniqueString() KDE_EXPORT;
+  extern QByteArray uniqueString() KMIME_EXPORT;
 
   /**
    * Constructs a random string (sans leading/trailing "--") that can
@@ -119,13 +119,13 @@ namespace KMime {
    * @return the randomized string.
    * @see uniqueString
    */
-  extern QByteArray multiPartBoundary() KDE_EXPORT;
+  extern QByteArray multiPartBoundary() KMIME_EXPORT;
 
   /**
    * Unfolds the given header if necessary.
    * @param header The header to unfold.
    */
-  extern QByteArray unfoldHeader( const QByteArray &header ) KDE_EXPORT;
+  extern QByteArray unfoldHeader( const QByteArray &header ) KMIME_EXPORT;
 
   /**
    * Tries to extract the header with name @p name from the string
@@ -138,7 +138,7 @@ namespace KMime {
    *         or a null QCString if no such header was found.
    */
   extern QByteArray extractHeader(
-    const QByteArray &src, const QByteArray &name ) KDE_EXPORT;
+    const QByteArray &src, const QByteArray &name ) KMIME_EXPORT;
 
   /**
    * Converts all occurrences of "\r\n" (CRLF) in @p s to "\n" (LF).
@@ -152,7 +152,7 @@ namespace KMime {
    * @return the string with CRLF's substitued for LF's
    * @see CRLFtoLF(const char*) LFtoCRLF
    */
-  extern QByteArray CRLFtoLF( const QByteArray &s ) KDE_EXPORT;
+  extern QByteArray CRLFtoLF( const QByteArray &s ) KMIME_EXPORT;
 
   /**
    * Converts all occurrences of "\r\n" (CRLF) in @p s to "\n" (LF).
@@ -166,7 +166,7 @@ namespace KMime {
    * @return the string with CRLF's substitued for LF's
    * @see CRLFtoLF(const QCString&) LFtoCRLF
    */
-  extern QByteArray CRLFtoLF( const char *s ) KDE_EXPORT;
+  extern QByteArray CRLFtoLF( const char *s ) KMIME_EXPORT;
 
   /**
    * Converts all occurrences of "\n" (LF) in @p s to "\r\n" (CRLF).
@@ -181,7 +181,7 @@ namespace KMime {
    * @return the string with CRLF's substitued for LF's
    * @see CRLFtoLF(const QCString&) LFtoCRLF
    */
-  extern QByteArray LFtoCRLF( const QByteArray &s ) KDE_EXPORT;
+  extern QByteArray LFtoCRLF( const QByteArray &s ) KMIME_EXPORT;
 
   /**
    * Removes quote (DQUOTE) characters and decodes "quoted-pairs"
@@ -190,7 +190,7 @@ namespace KMime {
    * @param str the string to work on.
    * @see addQuotes
    */
-  KDE_EXPORT extern void removeQuots( QByteArray &str );
+  KMIME_EXPORT extern void removeQuots( QByteArray &str );
 
   /**
    * Removes quote (DQUOTE) characters and decodes "quoted-pairs"
@@ -199,7 +199,7 @@ namespace KMime {
    * @param str the string to work on.
    * @see addQuotes
    */
-  KDE_EXPORT extern void removeQuots( QString &str );
+  KMIME_EXPORT extern void removeQuots( QString &str );
 
   /**
    * Converts the given string into a quoted-string if the string contains
@@ -208,7 +208,7 @@ namespace KMime {
    * @param str us-ascii string to work on.
    * @param forceQuotes if @p true, always add quote characters.
    */
-  KDE_EXPORT extern void addQuotes( QByteArray &str, bool forceQuotes );
+  KMIME_EXPORT extern void addQuotes( QByteArray &str, bool forceQuotes );
 
   /**
    * @short class abstracting date formatting
@@ -225,7 +225,7 @@ namespace KMime {
    * </ul>
    *
    */
-  class KDE_EXPORT DateFormatter {
+  class KMIME_EXPORT DateFormatter {
   public:
     enum FormatType {
       CTime,      //< ctime "Sun Mar 31 02:08:35 2002"

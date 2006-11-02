@@ -40,7 +40,8 @@
 #include <QByteArray>
 
 #include <kdebug.h> // for kFatal()
-#include <kdepimmacros.h>
+
+#include "kmime.h"
 
 namespace KPIM {
   template <class Key, class T> class KAutoDeleteHash;
@@ -59,7 +60,7 @@ class Decoder;
     @short Codecs for common mail transfer encodings.
     @author Marc Mutz <mutz@kde.org>
 */
-class KDE_EXPORT Codec {
+class KMIME_EXPORT Codec {
 protected:
 
   static KAutoDeleteHash<QByteArray, Codec> * all;

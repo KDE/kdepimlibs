@@ -16,13 +16,14 @@
 #ifndef __KMIME_MESSAGE_H__
 #define __KMIME_MESSAGE_H__
 
+#include "kmime.h"
 #include "kmime_content.h"
 #include "kmime_headers.h"
 #include "boolflags.h"
 
 namespace KMime {
 
-class KDE_EXPORT Message : public Content {
+class KMIME_EXPORT Message : public Content {
 
 public:
   typedef QList<KMime::Message*> List;
@@ -52,7 +53,7 @@ public:
   virtual KMime::Headers::BCC* bcc(bool create=true)                    { KMime::Headers::BCC *p=0; return getHeaderInstance(p, create); }
   virtual KMime::Headers::References* references(bool create=true)      { KMime::Headers::References *p=0; return getHeaderInstance(p, create); }
   virtual KMime::Headers::UserAgent* userAgent(bool create=true)        { KMime::Headers::UserAgent *p=0; return getHeaderInstance(p, create); }
-  
+
 protected:
   //hardcoded headers
   KMime::Headers::Subject s_ubject;

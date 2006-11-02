@@ -27,13 +27,14 @@ class KMime::Headers::CDisposition;
 class KMime::Headers::List;
 #endif
 
-#include <kmime_contentindex.h>
-#include "kmime_util.h"
-#include "kmime_headers.h"
-
 #include <QTextStream>
 #include <QByteArray>
 #include <QList>
+
+#include "kmime.h"
+#include "kmime_contentindex.h"
+#include "kmime_util.h"
+#include "kmime_headers.h"
 
 namespace KMime {
 
@@ -61,7 +62,7 @@ class ContentPrivate;
     structure, that represents the structure of the
     message */
 
-class KDE_EXPORT Content : public Base {
+class KMIME_EXPORT Content : public Base {
 
   public:
     typedef QList<KMime::Content*> List;

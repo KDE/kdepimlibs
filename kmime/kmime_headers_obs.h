@@ -20,11 +20,11 @@
 #error You cannot use this file with the new header classes!
 #endif
 
-#include <kdepimmacros.h>
+#include "kmime.h"
 #include <QByteArray>
 
 /** Represents a "Message-Id" header */
-class KDE_EXPORT MessageID : public Base {
+class KMIME_EXPORT MessageID : public Base {
 
   public:
     MessageID() : Base()  {}
@@ -49,7 +49,7 @@ class KDE_EXPORT MessageID : public Base {
 };
 
 /** Represents a "Supersedes" header */
-class KDE_EXPORT Supersedes : public MessageID {
+class KMIME_EXPORT Supersedes : public MessageID {
 
   public:
     Supersedes() : MessageID()  {}
@@ -64,7 +64,7 @@ class KDE_EXPORT Supersedes : public MessageID {
 
 /** This class encapsulates an address-field, containing
     an email-address and a real name */
-class KDE_EXPORT AddressField : public Base {
+class KMIME_EXPORT AddressField : public Base {
 
   public:
     AddressField() : Base()  {}
@@ -99,7 +99,7 @@ class KDE_EXPORT AddressField : public Base {
 typedef QList<AddressField*> ObsAddressList;
 
 /** Represent a "From" header */
-class KDE_EXPORT From : public AddressField {
+class KMIME_EXPORT From : public AddressField {
 
   public:
     From() : AddressField()  {}
@@ -113,7 +113,7 @@ class KDE_EXPORT From : public AddressField {
 
 
 /** Represents a "Reply-To" header */
-class KDE_EXPORT ReplyTo : public AddressField {
+class KMIME_EXPORT ReplyTo : public AddressField {
 
   public:
     ReplyTo() : AddressField()  {}
@@ -129,7 +129,7 @@ class KDE_EXPORT ReplyTo : public AddressField {
 
 /** Represents a "Mail-Copies-To" header
     http://www.newsreaders.com/misc/mail-copies-to.html */
-class KDE_EXPORT MailCopiesTo : public AddressField {
+class KMIME_EXPORT MailCopiesTo : public AddressField {
 
   public:
     MailCopiesTo() : AddressField()  {}
@@ -147,7 +147,7 @@ class KDE_EXPORT MailCopiesTo : public AddressField {
 };
 
 /** Represents a "To" header */
-class KDE_EXPORT To : public Base {
+class KMIME_EXPORT To : public Base {
 
   public:
     To() : Base()  {}
@@ -176,7 +176,7 @@ class KDE_EXPORT To : public Base {
 
 
 /** Represents a "CC" header */
-class KDE_EXPORT CC : public To {
+class KMIME_EXPORT CC : public To {
 
   public:
     CC() : To()  {}
@@ -191,7 +191,7 @@ class KDE_EXPORT CC : public To {
 
 
 /** Represents a "BCC" header */
-class KDE_EXPORT BCC : public To {
+class KMIME_EXPORT BCC : public To {
 
   public:
     BCC() : To()  {}
@@ -205,7 +205,7 @@ class KDE_EXPORT BCC : public To {
 };
 
 /** Represents a "References" header */
-class KDE_EXPORT References : public Base {
+class KMIME_EXPORT References : public Base {
 
   public:
     References() : Base(),p_os(-1)  {}
@@ -235,7 +235,7 @@ class KDE_EXPORT References : public Base {
 };
 
 /** Represents a "Content-Type" header */
-class KDE_EXPORT ContentType : public Base {
+class KMIME_EXPORT ContentType : public Base {
 
   public:
     ContentType() : Base(),m_imeType("invalid/invalid"),c_ategory(CCsingle)  {}
@@ -294,7 +294,7 @@ class KDE_EXPORT ContentType : public Base {
 
 
 /** Represents a "Content-Transfer-Encoding" header */
-class KDE_EXPORT CTEncoding : public Base {
+class KMIME_EXPORT CTEncoding : public Base {
 
   public:
     CTEncoding() : Base(),c_te(CE7Bit),d_ecoded(true)  {}
@@ -324,7 +324,7 @@ class KDE_EXPORT CTEncoding : public Base {
 
 
 /** Represents a "Content-Disposition" header */
-class KDE_EXPORT CDisposition : public Base {
+class KMIME_EXPORT CDisposition : public Base {
 
   public:
     CDisposition() : Base(),d_isp(CDinline)  {}
@@ -355,7 +355,7 @@ class KDE_EXPORT CDisposition : public Base {
 
 
 /** Represents a "Content-Description" header */
-class KDE_EXPORT CDescription : public Generics::GUnstructured {
+class KMIME_EXPORT CDescription : public Generics::GUnstructured {
 
   public:
     CDescription() : Generics::GUnstructured()  {}

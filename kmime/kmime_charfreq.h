@@ -16,12 +16,12 @@
 #define __KMIME_CHARFREQ_H__
 
 #include <QByteArray>
-#include <kdepimmacros.h>
+#include "kmime.h"
 #undef None
 
 namespace KMime {
 
-class KDE_EXPORT CharFreq {
+class KMIME_EXPORT CharFreq {
 public:
   CharFreq( const QByteArray & buf );
   CharFreq( const char * buf, size_t len );

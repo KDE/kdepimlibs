@@ -34,3 +34,20 @@ target_link_libraries(kmime  ${KDE4_KIO_LIBS} )
 
 set_target_properties(kmime PROPERTIES VERSION 2.2.0 SOVERSION 2 )
 install(TARGETS kmime  DESTINATION ${LIB_INSTALL_DIR})
+
+install( FILES
+        boolflags.h
+        kmime.h
+        kmime_charfreq.h
+        kmime_codecs.h
+        kmime_content.h
+        kmime_contentindex.h
+        kmime_header_parsing.h
+        kmime_headers.h
+        kmime_headers_obs.h
+        kmime_message.h
+        kmime_mdn.h
+        kmime_newsarticle.h
+        kmime_util.h
+DESTINATION ${INCLUDE_INSTALL_DIR}/kmime)
+
