@@ -7,7 +7,7 @@
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
+    License assert published by the Free Software Foundation; either
     version 2 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
@@ -39,7 +39,6 @@
 
 #include <assert.h>
 
-
 using namespace KMime;
 using namespace KMime::Headers;
 using namespace KMime::Types;
@@ -51,30 +50,27 @@ namespace Headers {
 
 QByteArray Base::rfc2047Charset()
 {
-  if ( e_ncCS.isEmpty() || forceCS() )
+  if ( e_ncCS.isEmpty() || forceCS() ) {
     return defaultCS();
-  else
+  } else {
     return e_ncCS;
+  }
 }
-
 
 void Base::setRFC2047Charset( const QByteArray &cs )
 {
-  e_ncCS=cachedCharset(cs);
+  e_ncCS=cachedCharset( cs );
 }
-
 
 bool Base::forceCS()
 {
   return ( p_arent != 0 ? p_arent->forceDefaultCharset() : false );
 }
 
-
 QByteArray Base::defaultCS()
 {
-  return ( p_arent!=0 ? p_arent->defaultCharset() : Latin1 );
+  return ( p_arent != 0 ? p_arent->defaultCharset() : Latin1 );
 }
-
 
 //-----</Base>---------------------------------
 
@@ -82,7 +78,7 @@ namespace Generics {
 
 //-----<GUnstructured>-------------------------
 
-void GUnstructured::from7BitString( const QByteArray & str )
+void GUnstructured::from7BitString( const QByteArray &str )
 {
   d_ecoded = decodeRFC2047String( str, e_ncCS, defaultCS(), forceCS() );
 }
@@ -90,15 +86,16 @@ void GUnstructured::from7BitString( const QByteArray & str )
 QByteArray GUnstructured::as7BitString( bool withHeaderType )
 {
   QByteArray result;
-  if ( withHeaderType )
+  if ( withHeaderType ) {
     result = typeIntro();
+  }
   result += encodeRFC2047String( d_ecoded, e_ncCS ) ;
 
   return result;
 }
 
-void GUnstructured::fromUnicodeString( const QString & str,
-				       const QByteArray & suggestedCharset )
+void GUnstructured::fromUnicodeString( const QString &str,
+				       const QByteArray &suggestedCharset )
 {
   d_ecoded = str;
   e_ncCS = cachedCharset( suggestedCharset );
@@ -111,26 +108,19 @@ QString GUnstructured::asUnicodeString()
 
 //-----</GUnstructured>-------------------------
 
-
-
 //-----<GStructured>-------------------------
 
 //-----</GStructured>-------------------------
 
-
-
-
 //-----<GAddress>-------------------------
-
 
 //-----</GAddress>-------------------------
 
-
-
 //-----<MailboxList>-------------------------
 
-bool MailboxList::parse( const char* & scursor, const char * const send,
-			 bool isCRLF ) {
+bool MailboxList::parse( const char* &scursor, const char *const send,
+                         bool isCRLF )
+{
   // examples:
   // from := "From:" mailbox-list CRLF
   // sender := "Sender:" mailbox CRLF
@@ -156,12 +146,11 @@ bool MailboxList::parse( const char* & scursor, const char * const send,
 
 //-----</MailboxList>-------------------------
 
-
-
 //-----<SingleMailbox>-------------------------
 
-bool SingleMailbox::parse( const char* & scursor, const char * const send,
-			   bool isCRLF ) {
+bool SingleMailbox::parse( const char* &scursor, const char *const send,
+			   bool isCRLF )
+{
   if ( !MailboxList::parse( scursor, send, isCRLF ) ) return false;
 
   if ( mMailboxList.count() > 1 ) {
@@ -173,13 +162,11 @@ bool SingleMailbox::parse( const char* & scursor, const char * const send,
 
 //-----</SingleMailbox>-------------------------
 
-
-
 //-----<AddressList>-------------------------
 
-bool AddressList::parse( const char* & scursor, const char * const send,
-			 bool isCRLF ) {
-
+bool AddressList::parse( const char* &scursor, const char *const send,
+			 bool isCRLF )
+{
   QList<Address> maybeAddressList;
   if ( !parseAddressList( scursor, send, maybeAddressList, isCRLF ) )
     return false;
@@ -190,12 +177,11 @@ bool AddressList::parse( const char* & scursor, const char * const send,
 
 //-----</AddressList>-------------------------
 
-
-
 //-----<GToken>-------------------------
 
-bool GToken::parse( const char* & scursor, const char * const send,
-		    bool isCRLF ) {
+bool GToken::parse( const char* &scursor, const char *const send,
+		    bool isCRLF )
+{
 
   eatCFWS( scursor, send, isCRLF );
   // must not be empty:
@@ -217,13 +203,11 @@ bool GToken::parse( const char* & scursor, const char * const send,
 
 //-----</GToken>-------------------------
 
-
-
 //-----<GPhraseList>-------------------------
 
-bool GPhraseList::parse( const char* & scursor, const char * const send,
-			 bool isCRLF ) {
-
+bool GPhraseList::parse( const char* &scursor, const char *const send,
+			 bool isCRLF )
+{
   mPhraseList.clear();
 
   while ( scursor != send ) {
@@ -249,13 +233,11 @@ bool GPhraseList::parse( const char* & scursor, const char * const send,
 
 //-----</GPhraseList>-------------------------
 
-
-
 //-----<GDotAtom>-------------------------
 
-bool GDotAtom::parse( const char* & scursor, const char * const send,
-		      bool isCRLF ) {
-
+bool GDotAtom::parse( const char* &scursor, const char *const send,
+		      bool isCRLF )
+{
   QString maybeDotAtom;
   if ( !parseDotAtom( scursor, send, maybeDotAtom, isCRLF ) )
     return false;
@@ -272,18 +254,13 @@ bool GDotAtom::parse( const char* & scursor, const char * const send,
 
 //-----</GDotAtom>-------------------------
 
-
-
 //-----<GParametrized>-------------------------
 
 //-----</GParametrized>-------------------------
 
-
-
-
 //-----</GContentType>-------------------------
 
-bool GContentType::parse( const char* & scursor, const char * const send,
+bool GContentType::parse( const char* &scursor, const char * const send,
 			  bool isCRLF ) {
 
   // content-type: type "/" subtype *(";" parameter)
@@ -342,11 +319,9 @@ bool GContentType::parse( const char* & scursor, const char * const send,
 
 //-----</GContentType>-------------------------
 
-
-
 //-----<GTokenWithParameterList>-------------------------
 
-bool GCISTokenWithParameterList::parse( const char* & scursor,
+bool GCISTokenWithParameterList::parse( const char* &scursor,
 					const char * const send, bool isCRLF ) {
 
   mToken = 0;
@@ -383,12 +358,10 @@ bool GCISTokenWithParameterList::parse( const char* & scursor,
 
 //-----</GTokenWithParameterList>-------------------------
 
-
-
 //-----<GIdent>-------------------------
 
-bool GIdent::parse( const char* & scursor, const char * const send, bool isCRLF ) {
-
+bool GIdent::parse( const char* &scursor, const char * const send, bool isCRLF )
+{
   // msg-id   := "<" id-left "@" id-right ">"
   // id-left  := dot-atom-text / no-fold-quote / local-part
   // id-right := dot-atom-text / no-fold-literal / domain
@@ -421,13 +394,12 @@ bool GIdent::parse( const char* & scursor, const char * const send, bool isCRLF 
 
 //-----</GIdent>-------------------------
 
-
-
 //-----<GSingleIdent>-------------------------
 
-bool GSingleIdent::parse( const char* & scursor, const char * const send, bool isCRLF ) {
-
-  if ( !GIdent::parse( scursor, send, isCRLF ) ) return false;
+bool GSingleIdent::parse( const char* &scursor, const char * const send, bool isCRLF )
+{
+  if ( !GIdent::parse( scursor, send, isCRLF ) )
+    return false;
 
   if ( mMsgIdList.count() > 1 ) {
     KMIME_WARN << "more than one msg-id in header "
@@ -438,16 +410,12 @@ bool GSingleIdent::parse( const char* & scursor, const char * const send, bool i
 
 //-----</GSingleIdent>-------------------------
 
-
-
-
 } // namespace Generics
-
 
 //-----<ReturnPath>-------------------------
 
-bool ReturnPath::parse( const char* & scursor, const char * const send, bool isCRLF ) {
-
+bool ReturnPath::parse( const char* &scursor, const char * const send, bool isCRLF )
+{
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) return false;
 
@@ -467,11 +435,12 @@ bool ReturnPath::parse( const char* & scursor, const char * const send, bool isC
     AddrSpec emptyAddrSpec;
     maybeMailbox.displayName.clear();
     maybeMailbox.addrSpec = emptyAddrSpec;
-  } else
+  } else {
     // check that there was no display-name:
     if ( !maybeMailbox.displayName.isEmpty() ) {
-    KMIME_WARN << "display-name \"" << maybeMailbox.displayName
-	       << "\" in Return-Path!" << endl;
+      KMIME_WARN << "display-name \"" << maybeMailbox.displayName
+                 << "\" in Return-Path!" << endl;
+    }
   }
 
   // see if that was all:
@@ -485,57 +454,50 @@ bool ReturnPath::parse( const char* & scursor, const char * const send, bool isC
 
 //-----</ReturnPath>-------------------------
 
-
-
-
 //-----<Generic>-------------------------------
 
-void Generic::setType(const char *type)
+void Generic::setType( const char *type )
 {
-  if(t_ype)
+  if ( t_ype )
     delete[] t_ype;
-  if(type) {
-    t_ype=new char[strlen(type)+1];
-    strcpy(t_ype, type);
+  if ( type ) {
+    t_ype = new char[strlen( type )+1];
+    strcpy( t_ype, type );
+  } else {
+    t_ype = 0;
   }
-  else
-    t_ype=0;
 }
 
 //-----<Generic>-------------------------------
-
 
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<MessageID>-----------------------------
 
-void MessageID::from7BitString(const QByteArray &s)
+void MessageID::from7BitString( const QByteArray &s )
 {
-  m_id=s;
+  m_id = s;
 }
 
-
-QByteArray MessageID::as7BitString(bool incType)
+QByteArray MessageID::as7BitString( bool incType )
 {
-  if(incType)
-    return ( typeIntro()+m_id );
-  else
+  if ( incType ) {
+    return ( typeIntro() + m_id );
+  } else {
     return m_id;
+  }
 }
 
-
-void MessageID::fromUnicodeString(const QString &s, const QByteArray&)
+void MessageID::fromUnicodeString( const QString &s, const QByteArray& )
 {
   m_id=s.toLatin1(); //Message-Ids can only contain us-ascii chars
 }
 
-
 QString MessageID::asUnicodeString()
 {
-  return QString::fromLatin1(m_id);
+  return QString::fromLatin1( m_id );
 }
 
-
-void MessageID::generate(const QByteArray &fqdn)
+void MessageID::generate( const QByteArray &fqdn )
 {
   m_id = '<' + uniqueString() + '@' + fqdn + '>';
 }
@@ -543,338 +505,327 @@ void MessageID::generate(const QByteArray &fqdn)
 //-----</MessageID>----------------------------
 #endif
 
-
 //-----<Control>-------------------------------
 
-void Control::from7BitString(const QByteArray &s)
+void Control::from7BitString( const QByteArray &s )
 {
-  c_trlMsg=s;
+  c_trlMsg = s;
 }
 
-
-QByteArray Control::as7BitString(bool incType)
+QByteArray Control::as7BitString( bool incType )
 {
-  if(incType)
-    return ( typeIntro()+c_trlMsg );
-  else
+  if ( incType ) {
+    return ( typeIntro() + c_trlMsg );
+  } else {
     return c_trlMsg;
+  }
 }
 
-
-void Control::fromUnicodeString(const QString &s, const QByteArray&)
+void Control::fromUnicodeString( const QString &s, const QByteArray& )
 {
-  c_trlMsg=s.toLatin1();
+  c_trlMsg = s.toLatin1();
 }
-
 
 QString Control::asUnicodeString()
 {
-  return QString::fromLatin1(c_trlMsg);
+  return QString::fromLatin1( c_trlMsg );
 }
 
 //-----</Control>------------------------------
 
-
-
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<AddressField>--------------------------
-void AddressField::from7BitString(const QByteArray &s)
+void AddressField::from7BitString( const QByteArray &s )
 {
   int pos1=0, pos2=0, type=0;
   QByteArray n;
 
   //so what do we have here ?
-  if(QString(s).contains( QRegExp("*@*(*)", Qt::CaseInsensitive, QRegExp::Wildcard) ))
-    type=2;       // From: foo@bar.com (John Doe)
-  else if(QString(s).contains( QRegExp("*<*@*>", Qt::CaseInsensitive, QRegExp::Wildcard) ))
-    type=1;  // From: John Doe <foo@bar.com>
-  else if(QString(s).contains( QRegExp("*@*", Qt::CaseInsensitive, QRegExp::Wildcard) ))
-    type=0;     // From: foo@bar.com
-  else { //broken From header => just decode it
-    n_ame=decodeRFC2047String(s, e_ncCS, defaultCS(), forceCS());
+  if ( QString( s ).contains(
+       QRegExp( "*@*(*)", Qt::CaseInsensitive, QRegExp::Wildcard ) ) ) {
+    type = 2;       // From: foo@bar.com (John Doe)
+  } else if ( QString( s ).contains(
+              QRegExp( "*<*@*>", Qt::CaseInsensitive, QRegExp::Wildcard ) ) ) {
+    type = 1;  // From: John Doe <foo@bar.com>
+  } else if ( QString( s ).contains(
+              QRegExp( "*@*", Qt::CaseInsensitive, QRegExp::Wildcard ) ) ) {
+    type = 0;     // From: foo@bar.com
+  } else { //broken From header => just decode it
+    n_ame = decodeRFC2047String( s, e_ncCS, defaultCS(), forceCS() );
     return;
   }
 
-  switch(type) {
-
-    case 0:
-      e_mail=s;
+  switch( type )
+  {
+  case 0:
+    e_mail = s;
     break;
 
-    case 1:
-      pos1=0;
-      pos2=s.indexOf('<');
-      if(pos2!=-1) {
-        n=s.mid(pos1, pos2-pos1).trimmed();
-        pos1=pos2+1;
-        pos2=s.indexOf('>', pos1);
-        if(pos2!=-1)
-          e_mail=s.mid(pos1, pos2-pos1).trimmed();
-      }
-      else return;
+  case 1:
+    pos1 = 0;
+    pos2 = s.indexOf( '<' );
+    if ( pos2 != -1 ) {
+      n = s.mid(pos1, pos2 - pos1).trimmed();
+      pos1 = pos2 + 1;
+      pos2 = s.indexOf( '>', pos1 );
+      if ( pos2 != -1 )
+        e_mail = s.mid( pos1, pos2 - pos1 ).trimmed();
+    } else {
+      return;
+    }
     break;
 
-    case 2:
-      pos1=0;
-      pos2=s.indexOf('(');
-      if(pos2!=-1) {
-        e_mail=s.mid(pos1, pos2-pos1).trimmed();
-        pos1=pos2+1;
-        pos2=s.indexOf(')', pos1);
-        if(pos2!=-1)
-          n=s.mid(pos1, pos2-pos1).trimmed();
-      }
+  case 2:
+    pos1 = 0;
+    pos2 = s.indexOf( '(' );
+    if ( pos2 != -1 ) {
+      e_mail = s.mid( pos1, pos2 - pos1 ).trimmed();
+      pos1 = pos2 + 1;
+      pos2 = s.indexOf( ')', pos1 );
+      if ( pos2 != -1 )
+        n = s.mid( pos1, pos2 - pos1 ).trimmed();
+    }
     break;
 
-    default: break;
+  default: break;
   }
 
-  if(!n.isEmpty()) {
-    removeQuots(n);
-    n_ame=decodeRFC2047String(n, e_ncCS, defaultCS(), forceCS());
+  if ( !n.isEmpty() ) {
+    removeQuots( n );
+    n_ame = decodeRFC2047String( n, e_ncCS, defaultCS(), forceCS() );
   }
 }
 
-
-QByteArray AddressField::as7BitString(bool incType)
+QByteArray AddressField::as7BitString( bool incType )
 {
   QByteArray ret;
 
-  if(incType && type()[0]!='\0')
-    ret=typeIntro();
+  if ( incType && type()[0] != '\0' )
+    ret = typeIntro();
 
-  if(n_ame.isEmpty())
-    ret+=e_mail;
-  else {
-    if (isUsAscii(n_ame)) {
+  if ( n_ame.isEmpty() ) {
+    ret += e_mail;
+  } else {
+    if ( isUsAscii( n_ame ) ) {
       QByteArray tmp = n_ame.toLatin1();
-      addQuotes(tmp, false);
-      ret+=tmp;
+      addQuotes( tmp, false );
+      ret += tmp;
     } else {
-      ret+=encodeRFC2047String(n_ame, e_ncCS, true);
+      ret += encodeRFC2047String( n_ame, e_ncCS, true );
     }
-    if (!e_mail.isEmpty())
+    if ( !e_mail.isEmpty() )
       ret += " <" + e_mail + '>';
   }
 
   return ret;
 }
 
-
-void AddressField::fromUnicodeString(const QString &s, const QByteArray &cs)
+void AddressField::fromUnicodeString( const QString &s, const QByteArray &cs )
 {
   int pos1=0, pos2=0, type=0;
   QByteArray n;
 
-  e_ncCS=cachedCharset(cs);
+  e_ncCS=cachedCharset( cs );
 
   //so what do we have here ?
-  if(s.contains( QRegExp("*@*(*)", Qt::CaseInsensitive, QRegExp::Wildcard) ) )
-    type=2;       // From: foo@bar.com (John Doe)
-  else if(s.contains( QRegExp("*<*@*>", Qt::CaseInsensitive, QRegExp::Wildcard) ) )
-    type=1;  // From: John Doe <foo@bar.com>
-  else if(s.contains( QRegExp("*@*", Qt::CaseInsensitive, QRegExp::Wildcard) ) )
-    type=0;     // From: foo@bar.com
-  else { //broken From header => just copy it
-    n_ame=s;
+  if ( s.contains(
+       QRegExp( "*@*(*)", Qt::CaseInsensitive, QRegExp::Wildcard ) ) ) {
+    type = 2;       // From: foo@bar.com (John Doe)
+  } else if ( s.contains(
+              QRegExp( "*<*@*>", Qt::CaseInsensitive, QRegExp::Wildcard ) ) ) {
+    type = 1;  // From: John Doe <foo@bar.com>
+  } else if ( s.contains(
+              QRegExp( "*@*", Qt::CaseInsensitive, QRegExp::Wildcard ) ) ) {
+    type = 0;     // From: foo@bar.com
+  } else { //broken From header => just copy it
+    n_ame = s;
     return;
   }
 
-  switch(type) {
-
-    case 0:
-      e_mail=s.toLatin1();
+  switch( type )
+  {
+  case 0:
+    e_mail = s.toLatin1();
     break;
 
-    case 1:
-      pos1=0;
-      pos2=s.indexOf('<');
-      if(pos2!=-1) {
-        n_ame=s.mid(pos1, pos2-pos1).trimmed();
-        pos1=pos2+1;
-        pos2=s.indexOf('>', pos1);
-        if(pos2!=-1)
-          e_mail=s.mid(pos1, pos2-pos1).toLatin1();
-      }
-      else return;
+  case 1:
+    pos1 = 0;
+    pos2 = s.indexOf( '<' );
+    if ( pos2 != -1 ) {
+      n_ame = s.mid( pos1, pos2 - pos1).trimmed();
+      pos1 = pos2 + 1;
+      pos2 = s.indexOf( '>', pos1 );
+      if ( pos2 != -1 )
+        e_mail = s.mid( pos1, pos2 - pos1 ).toLatin1();
+    } else {
+      return;
+    }
     break;
 
-    case 2:
-      pos1=0;
-      pos2=s.indexOf('(');
-      if(pos2!=-1) {
-        e_mail=s.mid(pos1, pos2-pos1).trimmed().toLatin1();
-        pos1=pos2+1;
-        pos2=s.indexOf(')', pos1);
-        if(pos2!=-1)
-          n_ame=s.mid(pos1, pos2-pos1).trimmed();
-      }
+  case 2:
+    pos1 = 0;
+    pos2 = s.indexOf( '(' );
+    if ( pos2 != -1 ) {
+      e_mail = s.mid( pos1, pos2 - pos1 ).trimmed().toLatin1();
+      pos1 = pos2 + 1;
+      pos2 = s.indexOf( ')', pos1 );
+      if ( pos2 != -1 )
+        n_ame = s.mid( pos1, pos2 - pos1 ).trimmed();
+    }
     break;
 
-    default: break;
+  default: break;
   }
 
-  if(!n_ame.isEmpty())
-    removeQuots(n_ame);
+  if ( !n_ame.isEmpty() )
+    removeQuots( n_ame );
 }
-
 
 QString AddressField::asUnicodeString()
 {
-  if(n_ame.isEmpty())
-    return QString(e_mail);
-  else {
+  if ( n_ame.isEmpty() ) {
+    return QString( e_mail );
+  } else {
     QString s = n_ame;
-    if (!e_mail.isEmpty())
+    if ( !e_mail.isEmpty( ))
       s += " <" + e_mail + '>';
     return s;
   }
 }
 
-
 QByteArray AddressField::nameAs7Bit()
 {
-  return encodeRFC2047String(n_ame, e_ncCS);
+  return encodeRFC2047String( n_ame, e_ncCS );
 }
 
-
-void AddressField::setNameFrom7Bit(const QByteArray &s)
+void AddressField::setNameFrom7Bit( const QByteArray &s )
 {
-  n_ame=decodeRFC2047String(s, e_ncCS, defaultCS(), forceCS());
+  n_ame = decodeRFC2047String( s, e_ncCS, defaultCS(), forceCS() );
 }
 
 //-----</AddressField>-------------------------
 #endif
 
-
 //-----<MailCopiesTo>--------------------------
 
 bool MailCopiesTo::isValid()
 {
-  if (hasEmail())
+  if ( hasEmail() )
     return true;
 
-  if ((n_ame == "nobody") ||
-      (n_ame == "never") ||
-      (n_ame == "poster") ||
-      (n_ame == "always"))
+  if ( ( n_ame == "nobody" ) ||
+       ( n_ame == "never" ) ||
+       ( n_ame == "poster" ) ||
+       ( n_ame == "always" ) ) {
     return true;
-  else
+  } else {
     return false;
+  }
 }
-
 
 bool MailCopiesTo::alwaysCopy()
 {
-  return (hasEmail() || (n_ame == "poster") || (n_ame == "always"));
+  return ( hasEmail() || ( n_ame == "poster" ) || ( n_ame == "always" ) );
 }
-
 
 bool MailCopiesTo::neverCopy()
 {
-  return ((n_ame == "nobody") || (n_ame == "never"));
+  return ( ( n_ame == "nobody" ) || ( n_ame == "never" ) );
 }
 
 //-----</MailCopiesTo>-------------------------
 
-
-
-
 //-----<Date>----------------------------------
 
-void Date::from7BitString(const QByteArray &s)
+void Date::from7BitString( const QByteArray &s )
 {
-  t_ime=KRFCDate::parseDate(s);
+  t_ime=KRFCDate::parseDate( s );
 }
 
-
-QByteArray Date::as7BitString(bool incType)
+QByteArray Date::as7BitString( bool incType )
 {
-  if(incType)
-    return ( typeIntro()+KRFCDate::rfc2822DateString(t_ime) );
-  else
-    return KRFCDate::rfc2822DateString(t_ime);
+  if ( incType ) {
+    return ( typeIntro() + KRFCDate::rfc2822DateString( t_ime ) );
+  } else {
+    return KRFCDate::rfc2822DateString( t_ime );
+  }
 }
 
-
-void Date::fromUnicodeString(const QString &s, const QByteArray&)
+void Date::fromUnicodeString( const QString &s, const QByteArray &barr )
 {
+  Q_UNUSED( barr );
   from7BitString( s.toLatin1() );
 }
 
-
 QString Date::asUnicodeString()
 {
-  return QString::fromLatin1(as7BitString(false));
+  return QString::fromLatin1( as7BitString( false ) );
 }
-
 
 QDateTime Date::qdt()
 {
   QDateTime dt;
-  dt.setTime_t(t_ime);
+  dt.setTime_t( t_ime );
   return dt;
 }
 
-
 int Date::ageInDays()
 {
-  QDate today=QDate::currentDate();
+  QDate today = QDate::currentDate();
   return ( qdt().date().daysTo(today) );
 }
 
 //-----</Date>---------------------------------
 
-
-
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<To>------------------------------------
 
-void To::from7BitString(const QByteArray &s)
+void To::from7BitString( const QByteArray &s )
 {
   qDeleteAll( a_ddrList );
   a_ddrList.clear();
 
   QList<QByteArray> split = s.split( ',' );
-  foreach ( QByteArray s, split )
+  foreach ( QByteArray s, split ) {
     a_ddrList.append( new AddressField( p_arent, s ) );
+  }
 
   e_ncCS = cachedCharset( a_ddrList.first()->rfc2047Charset() );
 }
 
-
-QByteArray To::as7BitString(bool incType)
+QByteArray To::as7BitString( bool incType )
 {
   QByteArray ret;
 
-  if(incType)
-    ret+=typeIntro();
+  if ( incType )
+    ret += typeIntro();
 
   if ( !a_ddrList.isEmpty() ) {
     ObsAddressList::Iterator it = a_ddrList.begin();
-    if ( *it )
+    if ( *it ) {
       ret += (*it)->as7BitString( false );
-    for ( ++it; it != a_ddrList.end(); ++it )
+    }
+    for ( ++it; it != a_ddrList.end(); ++it ) {
       ret += ',' + (*it)->as7BitString( false );
+    }
   }
 
   return ret;
 }
 
-
-void To::fromUnicodeString(const QString &s, const QByteArray &cs)
+void To::fromUnicodeString( const QString &s, const QByteArray &cs )
 {
   qDeleteAll( a_ddrList );
   a_ddrList.clear();
 
   QStringList l = s.split( ',' );
 
-  for ( QStringList::Iterator it=l.begin(); it != l.end(); ++it )
+  for ( QStringList::Iterator it=l.begin(); it != l.end(); ++it ) {
     a_ddrList.append( new AddressField( p_arent, (*it), cs ) );
+  }
 
-  e_ncCS=cachedCharset(cs);
+  e_ncCS=cachedCharset( cs );
 }
-
 
 QString To::asUnicodeString()
 {
@@ -886,99 +837,100 @@ QString To::asUnicodeString()
 
   if ( *it )
     ret += (*it)->asUnicodeString();
-  for ( ++it; it != a_ddrList.end(); ++it )
+  for ( ++it; it != a_ddrList.end(); ++it ) {
     ret += ',' + (*it)->asUnicodeString();
+  }
+
   return ret;
 }
 
-
-void To::addAddress(const AddressField &a)
+void To::addAddress( const AddressField &a )
 {
-  AddressField *add=new AddressField(a);
-  add->setParent(p_arent);
+  AddressField *add = new AddressField( a );
+  add->setParent( p_arent );
   a_ddrList.append( add );
 }
-
 
 QList<QByteArray> To::emails() const
 {
   QList<QByteArray> l;
-  for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it )
+  for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it ) {
     if ( (*it)->hasEmail() )
       l.append( (*it)->email() );
+  }
   return l;
 }
 
 QStringList To::names() const
 {
   QStringList l;
-  for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it )
+  for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it ) {
     if ( (*it)->hasName() )
       l.append( (*it)->name() );
+  }
   return l;
 }
 
 QStringList To::displayNames() const
 {
   QStringList l;
-  for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it )
-      l.append( (*it)->asUnicodeString() );
+  for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it ) {
+    l.append( (*it)->asUnicodeString() );
+  }
   return l;
 }
 
 //-----</To>-----------------------------------
 #endif
 
-
 //-----<Newsgroups>----------------------------
 
-void Newsgroups::from7BitString(const QByteArray &s)
+void Newsgroups::from7BitString( const QByteArray &s )
 {
-  g_roups=s;
-  e_ncCS=cachedCharset("UTF-8");
+  g_roups = s;
+  e_ncCS=cachedCharset( "UTF-8" );
 }
 
-
-QByteArray Newsgroups::as7BitString(bool incType)
+QByteArray Newsgroups::as7BitString( bool incType )
 {
-  if(incType)
-    return (typeIntro()+g_roups);
-  else
+  if ( incType ) {
+    return ( typeIntro() + g_roups );
+  } else {
     return g_roups;
+  }
 }
 
-
-void Newsgroups::fromUnicodeString(const QString &s, const QByteArray&)
+void Newsgroups::fromUnicodeString( const QString &s, const QByteArray &barr )
 {
-  g_roups=s.toUtf8();
-  e_ncCS=cachedCharset("UTF-8");
-}
+  Q_UNUSED( barr );
 
+  g_roups = s.toUtf8();
+  e_ncCS = cachedCharset( "UTF-8" );
+}
 
 QString Newsgroups::asUnicodeString()
 {
-  return QString::fromUtf8(g_roups);
+  return QString::fromUtf8( g_roups );
 }
-
 
 QByteArray Newsgroups::firstGroup()
 {
-  int pos=0;
-  if(!g_roups.isEmpty()) {
-    pos=g_roups.indexOf(',');
-    if(pos==-1)
+  int pos = 0;
+  if ( !g_roups.isEmpty() ) {
+    pos = g_roups.indexOf( ',' );
+    if ( pos == -1 ) {
       return g_roups;
-    else
-      return g_roups.left(pos);
-  }
-  else
+    } else {
+      return g_roups.left( pos );
+    }
+  } else {
     return QByteArray();
+  }
 }
-
 
 QStringList Newsgroups::getGroups()
 {
-  QList<QByteArray> temp = g_roups.split(',');
+  QList<QByteArray> temp = g_roups.split( ',' );
   QStringList ret;
   QString s;
 
@@ -991,624 +943,609 @@ QStringList Newsgroups::getGroups()
 
 //-----</Newsgroups>---------------------------
 
-
-
 //-----<Lines>---------------------------------
 
-void Lines::from7BitString(const QByteArray &s)
+void Lines::from7BitString( const QByteArray &s )
 {
-  l_ines=s.toInt();
-  e_ncCS=cachedCharset(Latin1);
+  l_ines = s.toInt();
+  e_ncCS = cachedCharset( Latin1 );
 }
 
-
-QByteArray Lines::as7BitString(bool incType)
+QByteArray Lines::as7BitString( bool incType )
 {
   QByteArray num;
-  num.setNum(l_ines);
+  num.setNum( l_ines );
 
-  if(incType)
-    return ( typeIntro()+num );
-  else
+  if ( incType ) {
+    return ( typeIntro() + num );
+  } else {
     return num;
+  }
 }
 
-
-void Lines::fromUnicodeString(const QString &s, const QByteArray&)
+void Lines::fromUnicodeString( const QString &s, const QByteArray &barr )
 {
-  l_ines=s.toInt();
-  e_ncCS=cachedCharset(Latin1);
-}
+  Q_UNUSED( barr );
 
+  l_ines = s.toInt();
+  e_ncCS = cachedCharset( Latin1 );
+}
 
 QString Lines::asUnicodeString()
 {
   QString num;
-  num.setNum(l_ines);
+  num.setNum( l_ines );
 
   return num;
 }
 
 //-----</Lines>--------------------------------
 
-
-
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<References>----------------------------
 
-void References::from7BitString(const QByteArray &s)
+void References::from7BitString( const QByteArray &s )
 {
-  r_ef=s;
-  e_ncCS=cachedCharset(Latin1);
+  r_ef = s;
+  e_ncCS = cachedCharset( Latin1 );
 }
 
-
-QByteArray References::as7BitString(bool incType)
+QByteArray References::as7BitString( bool incType )
 {
-  if(incType)
-    return ( typeIntro()+r_ef );
-  else
+  if ( incType ) {
+    return ( typeIntro() + r_ef );
+  } else {
     return r_ef;
+  }
 }
 
-
-void References::fromUnicodeString(const QString &s, const QByteArray&)
+void References::fromUnicodeString( const QString &s, const QByteArray &barr )
 {
-  r_ef=s.toLatin1();
-  e_ncCS=cachedCharset(Latin1);
-}
+  Q_UNUSED( barr );
 
+  r_ef = s.toLatin1();
+  e_ncCS = cachedCharset( Latin1 );
+}
 
 QString References::asUnicodeString()
 {
-  return QString::fromLatin1(r_ef);
+  return QString::fromLatin1( r_ef );
 }
-
 
 int References::count()
 {
   int cnt1=0, cnt2=0;
-  unsigned int r_efLen=r_ef.length();
-  char *dataPtr=r_ef.data();
-  for(unsigned int i=0; i<r_efLen; i++) {
-    if(dataPtr[i]=='<') cnt1++;
-    else if(dataPtr[i]=='>') cnt2++;
+  unsigned int r_efLen = r_ef.length();
+  char *dataPtr = r_ef.data();
+  for ( unsigned int i=0; i<r_efLen; i++ ) {
+    if ( dataPtr[i] == '<' ) cnt1++;
+    else if ( dataPtr[i] == '>' ) cnt2++;
   }
 
-  if(cnt1<cnt2) return cnt1;
-  else return cnt2;
+  if ( cnt1 < cnt2 ) {
+    return cnt1;
+  } else {
+    return cnt2;
+  }
 }
-
 
 QByteArray References::first()
 {
-  p_os=-1;
+  p_os = -1;
   return next();
 }
-
 
 QByteArray References::next()
 {
   int pos1=0, pos2=0;
   QByteArray ret;
 
-  if(p_os!=0) {
-    pos2=r_ef.lastIndexOf('>', p_os);
-    p_os=0;
-    if(pos2!=-1) {
-      pos1=r_ef.lastIndexOf('<', pos2);
-      if(pos1!=-1) {
-        ret=r_ef.mid(pos1, pos2-pos1+1);
-        p_os=pos1;
+  if ( p_os != 0 ) {
+    pos2 = r_ef.lastIndexOf( '>', p_os );
+    p_os = 0;
+    if ( pos2 != -1 ) {
+      pos1 = r_ef.lastIndexOf( '<', pos2 );
+      if ( pos1 != -1 ) {
+        ret = r_ef.mid( pos1, pos2 - pos1 + 1 );
+        p_os = pos1;
       }
     }
   }
   return ret;
 }
 
-
-QByteArray References::at(unsigned int i)
+QByteArray References::at( unsigned int i )
 {
   QByteArray ret;
   int pos1=0, pos2=0;
   unsigned int cnt=0;
 
-  while(pos1!=-1 && cnt < i+1) {
-    pos2=pos1-1;
-    pos1=r_ef.lastIndexOf('<', pos2);
+  while ( pos1 != -1 && cnt < i+1 ) {
+    pos2 = pos1 - 1;
+    pos1 = r_ef.lastIndexOf( '<', pos2 );
     cnt++;
   }
 
-  if(pos1!=-1) {
-    pos2=r_ef.indexOf('>', pos1);
-    if(pos2!=-1)
-      ret=r_ef.mid(pos1, pos2-pos1+1);
+  if ( pos1 != -1 ) {
+    pos2 = r_ef.indexOf( '>', pos1 );
+    if ( pos2 != -1 )
+      ret = r_ef.mid( pos1, pos2 - pos1 + 1 );
   }
 
- return ret;
+  return ret;
 }
 
-
-void References::append(const QByteArray &s)
+void References::append( const QByteArray &s )
 {
-  QString temp=r_ef.data();
+  QString temp = r_ef.data();
   temp += ' ';
   temp += s.data();
   QStringList lst = temp.split(' ');
-  QRegExp exp("^<.+@.+>$");
+  QRegExp exp( "^<.+@.+>$" );
 
   // remove bogus references
   QStringList::Iterator it = lst.begin();
-  while (it != lst.end()) {
-    if (-1==(*it).indexOf(exp))
-      it = lst.erase(it);
-    else
+  while ( it != lst.end() ) {
+    if ( -1 == (*it).indexOf( exp ) ) {
+      it = lst.erase( it );
+    } else {
       it++;
+    }
   }
 
-  if (lst.isEmpty()) {
+  if ( lst.isEmpty() ) {
     r_ef = s;    // shouldn't happen...
     return;
-  } else
+  } else {
     r_ef = "";
+  }
 
   temp = lst.first();    // include the first id
   r_ef = temp.toLatin1();
-  lst.removeAll(temp);         // avoids duplicates
+  lst.removeAll( temp );         // avoids duplicates
   int insPos = r_ef.length();
 
-  for (int i=1;i<=3;i++) {    // include the last three ids
-    if (!lst.isEmpty()) {
+  for ( int i=1; i<=3; i++ ) {    // include the last three ids
+    if ( !lst.isEmpty() ) {
       temp = lst.last();
-      r_ef.insert(insPos,(QString(" %1").arg(temp)).toLatin1());
-      lst.removeAll(temp);
-    } else
+      r_ef.insert( insPos, ( QString(" %1").arg( temp ) ).toLatin1() );
+      lst.removeAll( temp );
+    } else {
       break;
+    }
   }
 
-  while (!lst.isEmpty()) {   // now insert the rest, up to 1000 characters
+  while ( !lst.isEmpty() ) {   // now insert the rest, up to 1000 characters
     temp = lst.last();
-    if ((15+r_ef.length()+temp.length())<1000) {
-      r_ef.insert(insPos,(QString(" %1").arg(temp)).toLatin1());
-      lst.removeAll(temp);
-    } else
+    if ( (15 + r_ef.length() + temp.length() ) < 1000 ) {
+      r_ef.insert( insPos,( QString( " %1" ).arg( temp ) ).toLatin1() );
+      lst.removeAll( temp );
+    } else {
       return;
+    }
   }
 }
 
 //-----</References>---------------------------
 #endif
 
-
 //-----<UserAgent>-----------------------------
 
-void UserAgent::from7BitString(const QByteArray &s)
+void UserAgent::from7BitString( const QByteArray &s )
 {
-  u_agent=s;
-  e_ncCS=cachedCharset(Latin1);
+  u_agent = s;
+  e_ncCS = cachedCharset( Latin1 );
 }
 
-
-QByteArray UserAgent::as7BitString(bool incType)
+QByteArray UserAgent::as7BitString( bool incType )
 {
-  if(incType)
-    return ( typeIntro()+u_agent );
-  else
+  if ( incType ) {
+    return ( typeIntro() + u_agent );
+  } else {
     return u_agent;
+  }
 }
 
-
-void UserAgent::fromUnicodeString(const QString &s, const QByteArray&)
+void UserAgent::fromUnicodeString( const QString &s, const QByteArray &barr )
 {
-  u_agent=s.toLatin1();
-  e_ncCS=cachedCharset(Latin1);
-}
+  Q_UNUSED( barr );
 
+  u_agent = s.toLatin1();
+  e_ncCS = cachedCharset( Latin1 );
+}
 
 QString UserAgent::asUnicodeString()
 {
-  return QString::fromLatin1(u_agent);
+  return QString::fromLatin1( u_agent );
 }
 
 //-----</UserAgent>----------------------------
 
-
-
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<Content-Type>--------------------------
 
-void ContentType::from7BitString(const QByteArray &s)
+void ContentType::from7BitString( const QByteArray &s )
 {
-  int pos=s.indexOf(';');
+  int pos = s.indexOf( ';' );
 
-  if(pos==-1)
-    m_imeType=s.simplified();
-  else {
-    m_imeType=s.left(pos).simplified();
-    p_arams=s.mid(pos, s.length()-pos).simplified();
+  if ( pos == -1 ) {
+    m_imeType = s.simplified();
+  } else {
+    m_imeType = s.left( pos ).simplified();
+    p_arams = s.mid( pos, s.length() - pos ).simplified();
   }
 
-  if(isMultipart())
-    c_ategory=CCcontainer;
-  else
-    c_ategory=CCsingle;
+  if ( isMultipart() ) {
+    c_ategory = CCcontainer;
+  } else {
+    c_ategory = CCsingle;
+  }
 
-  e_ncCS=cachedCharset(Latin1);
+  e_ncCS = cachedCharset( Latin1 );
 }
 
-
-QByteArray ContentType::as7BitString(bool incType)
+QByteArray ContentType::as7BitString( bool incType )
 {
-  if(incType)
-    return (typeIntro()+m_imeType+p_arams);
-  else
-    return (m_imeType+p_arams);
+  if ( incType ) {
+    return ( typeIntro() + m_imeType + p_arams );
+  } else {
+    return ( m_imeType + p_arams );
+  }
 }
 
-
-void ContentType::fromUnicodeString(const QString &s, const QByteArray&)
+void ContentType::fromUnicodeString( const QString &s, const QByteArray &barr )
 {
+  Q_UNUSED( barr );
   from7BitString( s.toLatin1() );
 }
 
-
 QString ContentType::asUnicodeString()
 {
-  return QString::fromLatin1(as7BitString(false));
+  return QString::fromLatin1( as7BitString( false ) );
 }
-
 
 QByteArray ContentType::mediaType()
 {
-  int pos=m_imeType.indexOf('/');
-  if(pos==-1)
+  int pos = m_imeType.indexOf( '/' );
+  if ( pos == -1 ) {
     return m_imeType;
-  else
-    return m_imeType.left(pos);
+  } else {
+    return m_imeType.left( pos );
+  }
 }
-
 
 QByteArray ContentType::subType()
 {
-  int pos=m_imeType.indexOf('/');
-  if(pos==-1)
+  int pos = m_imeType.indexOf( '/' );
+  if ( pos == -1 ) {
     return QByteArray();
-  else
-    return m_imeType.mid(pos, m_imeType.length()-pos);
+  } else {
+    return m_imeType.mid( pos, m_imeType.length() - pos );
+  }
 }
 
-
-void ContentType::setMimeType(const QByteArray &s)
+void ContentType::setMimeType( const QByteArray &s )
 {
-  p_arams.resize(0);
-  m_imeType=s;
+  p_arams.resize( 0 );
+  m_imeType = s;
 
-  if(isMultipart())
-    c_ategory=CCcontainer;
-  else
-    c_ategory=CCsingle;
+  if ( isMultipart() ) {
+    c_ategory = CCcontainer;
+  } else {
+    c_ategory = CCsingle;
+  }
 }
 
-
-bool ContentType::isMediatype(const char *s)
+bool ContentType::isMediatype( const char *s )
 {
-  return ( strncasecmp(m_imeType.data(), s, strlen(s)) );
+  return ( strncasecmp( m_imeType.data(), s, strlen( s ) ) );
 }
 
-
-bool ContentType::isSubtype(const char *s)
+bool ContentType::isSubtype( const char *s )
 {
-  char *c=strchr(m_imeType.data(), '/');
+  char *c = strchr( m_imeType.data(), '/' );
 
-  if( (c==0) || (*(c+1)=='\0') )
+  if ( ( c == 0 ) || ( *(c+1) == '\0' ) ) {
     return false;
-  else
-    return ( strcasecmp(c+1, s)==0 );
+  } else {
+    return ( strcasecmp( c+1, s ) == 0 );
+  }
 }
-
 
 bool ContentType::isText()
 {
-  return (strncasecmp(m_imeType.data(), "text", 4)==0);
+  return ( strncasecmp( m_imeType.data(), "text", 4 ) == 0 );
 }
-
 
 bool ContentType::isPlainText()
 {
-  return (strcasecmp(m_imeType.data(), "text/plain")==0);
+  return ( strcasecmp( m_imeType.data(), "text/plain" ) == 0 );
 }
-
 
 bool ContentType::isHTMLText()
 {
-  return (strcasecmp(m_imeType.data(), "text/html")==0);
+  return ( strcasecmp( m_imeType.data(), "text/html" ) == 0 );
 }
-
 
 bool ContentType::isImage()
 {
-  return (strncasecmp(m_imeType.data(), "image", 5)==0);
+  return ( strncasecmp( m_imeType.data(), "image", 5 ) == 0 );
 }
-
 
 bool ContentType::isMultipart()
 {
-  return (strncasecmp(m_imeType.data(), "multipart", 9)==0);
+  return ( strncasecmp( m_imeType.data(), "multipart", 9 ) == 0 );
 }
-
 
 bool ContentType::isPartial()
 {
-  return (strcasecmp(m_imeType.data(), "message/partial")==0);
+  return ( strcasecmp( m_imeType.data(), "message/partial" ) == 0 );
 }
-
 
 QByteArray ContentType::charset()
 {
-  QByteArray ret=getParameter("charset");
-  if( ret.isEmpty() || forceCS() ) { //we return the default-charset if necessary
-    ret=defaultCS();
+  QByteArray ret = getParameter( "charset" );
+  if ( ret.isEmpty() || forceCS() ) { //we return the default-charset if necessary
+    ret = defaultCS();
   }
   return ret;
 }
 
-
-void ContentType::setCharset(const QByteArray &s)
+void ContentType::setCharset( const QByteArray &s )
 {
-  setParameter("charset", s);
+  setParameter( "charset", s );
 }
-
 
 QByteArray ContentType::boundary()
 {
-  return getParameter("boundary");
+  return getParameter( "boundary" );
 }
 
-
-void ContentType::setBoundary(const QByteArray &s)
+void ContentType::setBoundary( const QByteArray &s )
 {
-  setParameter("boundary", s, true);
+  setParameter( "boundary", s, true );
 }
-
 
 QString ContentType::name()
 {
   QByteArray dummy;
-  return ( decodeRFC2047String(getParameter("name"), dummy, defaultCS(), forceCS()) );
+  return ( decodeRFC2047String(getParameter("name"), dummy, defaultCS(),
+                               forceCS()) );
 }
 
-
-void ContentType::setName(const QString &s, const QByteArray &cs)
+void ContentType::setName( const QString &s, const QByteArray &cs )
 {
-  e_ncCS=cs;
+  e_ncCS = cs;
 
-  if (isUsAscii(s)) {
+  if ( isUsAscii( s ) ) {
     QByteArray tmp = s.toLatin1();
-    addQuotes(tmp, true);
-    setParameter("name", tmp, false);
+    addQuotes( tmp, true );
+    setParameter( "name", tmp, false );
   } else {
     // FIXME: encoded words can't be enclosed in quotes!!
-    setParameter("name", encodeRFC2047String(s, cs), true);
+    setParameter( "name", encodeRFC2047String( s, cs ), true );
   }
 }
 
-
 QByteArray ContentType::id()
 {
-  return (getParameter("id"));
+  return ( getParameter( "id" ) );
 }
 
-
-void ContentType::setId(const QByteArray &s)
+void ContentType::setId( const QByteArray &s )
 {
-  setParameter("id", s, true);
+  setParameter( "id", s, true );
 }
-
 
 int ContentType::partialNumber()
 {
-  QByteArray p=getParameter("number");
-  if(!p.isEmpty())
+  QByteArray p = getParameter( "number" );
+  if ( !p.isEmpty() ) {
     return p.toInt();
-  else
+  } else {
     return -1;
+  }
 }
-
 
 int ContentType::partialCount()
 {
-  QByteArray p=getParameter("total");
-  if(!p.isEmpty())
+  QByteArray p = getParameter( "total" );
+  if ( !p.isEmpty() ) {
     return p.toInt();
-  else
+  } else {
     return -1;
+  }
 }
 
-
-void ContentType::setPartialParams(int total, int number)
+void ContentType::setPartialParams( int total, int number )
 {
   QByteArray num;
-  num.setNum(number);
-  setParameter("number", num);
-  num.setNum(total);
-  setParameter("total", num);
+  num.setNum( number );
+  setParameter( "number", num );
+  num.setNum( total );
+  setParameter( "total", num );
 }
 
-
-QByteArray ContentType::getParameter(const char *name)
+QByteArray ContentType::getParameter( const char *name )
 {
   QByteArray ret;
   int pos1=0, pos2=0;
-  pos1=QString(p_arams).indexOf(name, 0, Qt::CaseInsensitive);
-  if(pos1!=-1) {
-    if( (pos2=p_arams.indexOf(';', pos1))==-1 )
-      pos2=p_arams.length();
-    pos1+=strlen(name)+1;
-    ret=p_arams.mid(pos1, pos2-pos1);
-    removeQuots(ret);
+
+  pos1 = QString( p_arams ).indexOf( name, 0, Qt::CaseInsensitive );
+  if ( pos1 != -1 ) {
+    if ( ( pos2 = p_arams.indexOf( ';', pos1 ) ) == -1 ) {
+      pos2 = p_arams.length();
+    }
+    pos1 += strlen( name ) + 1;
+    ret = p_arams.mid( pos1, pos2 - pos1 );
+    removeQuots( ret );
   }
   return ret;
 }
 
-
-void ContentType::setParameter(const QByteArray &name, const QByteArray &value, bool doubleQuotes)
+void ContentType::setParameter( const QByteArray &name,
+                                const QByteArray &value, bool doubleQuotes )
 {
   int pos1=0, pos2=0;
   QByteArray param;
 
-  if(doubleQuotes)
+  if ( doubleQuotes ) {
     param = name + "=\"" + value + '\"';
-  else
+  } else {
     param = name + '=' + value;
-
-  pos1=QString(p_arams).indexOf(name, 0, Qt::CaseInsensitive);
-  if(pos1==-1) {
-    p_arams+="; "+param;
   }
-  else {
-    pos2=p_arams.indexOf(';', pos1);
-    if(pos2==-1)
-      pos2=p_arams.length();
-    p_arams.remove(pos1, pos2-pos1);
-    p_arams.insert(pos1, param);
+
+  pos1 = QString( p_arams ).indexOf( name, 0, Qt::CaseInsensitive );
+  if ( pos1 == -1 ) {
+    p_arams += "; " + param;
+  } else {
+    pos2 = p_arams.indexOf( ';', pos1 );
+    if ( pos2 == -1 )
+      pos2 = p_arams.length();
+    p_arams.remove( pos1, pos2 - pos1 );
+    p_arams.insert( pos1, param );
   }
 }
 
 //-----</Content-Type>-------------------------
 
-
-
 //-----<CTEncoding>----------------------------
 
 typedef struct { const char *s; int e; } encTableType;
 
-static const encTableType encTable[] = {  { "7Bit", CE7Bit },
-                                          { "8Bit", CE8Bit },
-                                          { "quoted-printable", CEquPr },
-                                          { "base64", CEbase64 },
-                                          { "x-uuencode", CEuuenc },
-                                          { "binary", CEbinary },
-                                          { 0, 0} };
+static const encTableType encTable[] =
+{
+  { "7Bit", CE7Bit },
+  { "8Bit", CE8Bit },
+  { "quoted-printable", CEquPr },
+  { "base64", CEbase64 },
+  { "x-uuencode", CEuuenc },
+  { "binary", CEbinary },
+  { 0, 0}
+};
 
-
-void CTEncoding::from7BitString(const QByteArray &s)
+void CTEncoding::from7BitString( const QByteArray &s )
 {
   QByteArray stripped = s.simplified();
-  c_te=CE7Bit;
-  for(int i=0; encTable[i].s!=0; i++)
-    if(strcasecmp(stripped.data(), encTable[i].s)==0) {
-      c_te=(contentEncoding)encTable[i].e;
+  c_te = CE7Bit;
+  for ( int i=0; encTable[i].s!=0; i++ ) {
+    if ( strcasecmp( stripped.data(), encTable[i].s ) == 0 ) {
+      c_te = (contentEncoding)encTable[i].e;
       break;
     }
-  d_ecoded=( c_te==CE7Bit || c_te==CE8Bit );
+  }
+  d_ecoded = ( c_te == CE7Bit || c_te == CE8Bit );
 
-  e_ncCS=cachedCharset(Latin1);
+  e_ncCS = cachedCharset( Latin1 );
 }
 
-
-QByteArray CTEncoding::as7BitString(bool incType)
+QByteArray CTEncoding::as7BitString( bool incType )
 {
   QByteArray str;
-  for(int i=0; encTable[i].s!=0; i++)
-    if(c_te==encTable[i].e) {
-      str=encTable[i].s;
+  for ( int i=0; encTable[i].s!=0; i++ ) {
+    if ( c_te == encTable[i].e ) {
+      str = encTable[i].s;
       break;
     }
+  }
 
-  if(incType)
-    return ( typeIntro()+str );
-  else
+  if ( incType ) {
+    return ( typeIntro() + str );
+  } else {
     return str;
+  }
 }
 
-
-void CTEncoding::fromUnicodeString(const QString &s, const QByteArray&)
+void CTEncoding::fromUnicodeString( const QString &s, const QByteArray &barr )
 {
+  Q_UNUSED( barr );
   from7BitString( s.toLatin1() );
 }
 
-
 QString CTEncoding::asUnicodeString()
 {
-  return QString::fromLatin1(as7BitString(false));
+  return QString::fromLatin1( as7BitString( false ) );
 }
 
 //-----</CTEncoding>---------------------------
 
-
-
 //-----<CDisposition>--------------------------
 
-void CDisposition::from7BitString(const QByteArray &s)
+void CDisposition::from7BitString( const QByteArray &s )
 {
-  if(strncasecmp(s.data(), "attachment", 10)==0)
-    d_isp=CDattachment;
-  else d_isp=CDinline;
+  if ( strncasecmp( s.data(), "attachment", 10 ) == 0 ) {
+    d_isp = CDattachment;
+  } else {
+    d_isp = CDinline;
+  }
 
-  int pos=QString(s).indexOf("filename=", 0, Qt::CaseInsensitive);
+  int pos = QString( s ).indexOf( "filename=", 0, Qt::CaseInsensitive );
   QByteArray fn;
-  if(pos>-1) {
-    pos+=9;
-    fn=s.mid(pos, s.length()-pos);
-    removeQuots(fn);
-    f_ilename=decodeRFC2047String(fn, e_ncCS, defaultCS(), forceCS());
+  if ( pos > -1 ) {
+    pos += 9;
+    fn = s.mid( pos, s.length() - pos );
+    removeQuots( fn );
+    f_ilename = decodeRFC2047String( fn, e_ncCS, defaultCS(), forceCS() );
   }
 }
 
-
-QByteArray CDisposition::as7BitString(bool incType)
+QByteArray CDisposition::as7BitString( bool incType )
 {
   QByteArray ret;
-  if(d_isp==CDattachment)
-    ret="attachment";
-  else
-    ret="inline";
+  if ( d_isp == CDattachment ) {
+    ret = "attachment";
+  } else {
+    ret = "inline";
+  }
 
-  if(!f_ilename.isEmpty()) {
-    if (isUsAscii(f_ilename)) {
+  if ( !f_ilename.isEmpty() ) {
+    if ( isUsAscii( f_ilename ) ) {
       QByteArray tmp = f_ilename.toLatin1();
-      addQuotes(tmp, true);
-      ret+="; filename="+tmp;
+      addQuotes( tmp, true );
+      ret += "; filename=" + tmp;
     } else {
       // FIXME: encoded words can't be enclosed in quotes!!
       ret += "; filename=\"" + encodeRFC2047String(f_ilename, e_ncCS) + '\"';
     }
   }
 
-  if(incType)
-    return ( typeIntro()+ret );
-  else
+  if ( incType ) {
+    return ( typeIntro() + ret );
+  } else {
     return ret;
+  }
 }
 
-
-void CDisposition::fromUnicodeString(const QString &s, const QByteArray &cs)
+void CDisposition::fromUnicodeString( const QString &s, const QByteArray &cs )
 {
-  if(strncasecmp(s.toLatin1(), "attachment", 10)==0)
-    d_isp=CDattachment;
-  else d_isp=CDinline;
-
-  int pos=s.indexOf("filename=", 0, Qt::CaseInsensitive);
-  if(pos>-1) {
-    pos+=9;
-    f_ilename=s.mid(pos, s.length()-pos);
-    removeQuots(f_ilename);
+  if ( strncasecmp( s.toLatin1(), "attachment", 10 ) == 0 ) {
+    d_isp = CDattachment;
+  } else {
+    d_isp = CDinline;
   }
 
-  e_ncCS=cachedCharset(cs);
-}
+  int pos = s.indexOf( "filename=", 0, Qt::CaseInsensitive );
+  if ( pos > -1 ) {
+    pos += 9;
+    f_ilename = s.mid( pos, s.length() - pos );
+    removeQuots( f_ilename );
+  }
 
+  e_ncCS=cachedCharset( cs );
+}
 
 QString CDisposition::asUnicodeString()
 {
   QString ret;
-  if(d_isp==CDattachment)
-    ret="attachment";
-  else
-    ret="inline";
+  if ( d_isp == CDattachment ) {
+    ret = "attachment";
+  } else {
+    ret = "inline";
+  }
 
-  if(!f_ilename.isEmpty())
+  if ( !f_ilename.isEmpty() ) {
     ret += "; filename=\"" + f_ilename + '\"';
+  }
 
   return ret;
 }

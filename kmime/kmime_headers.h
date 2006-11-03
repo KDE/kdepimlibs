@@ -50,61 +50,66 @@ class Content;
 
 namespace Headers {
 
+enum contentCategory {
+  CCsingle,
+  CCcontainer,
+  CCmixedPart,
+  CCalternativePart
+};
 
-enum contentCategory    { CCsingle,
-                          CCcontainer,
-                          CCmixedPart,
-                          CCalternativePart };
+enum contentEncoding {
+  CE7Bit,
+  CE8Bit,
+  CEquPr,
+  CEbase64,
+  CEuuenc,
+  CEbinary
+};
 
-enum contentEncoding    { CE7Bit,
-                          CE8Bit,
-                          CEquPr,
-                          CEbase64,
-                          CEuuenc,
-                          CEbinary };
-
-enum contentDisposition { CDinline,
-                          CDattachment,
-                          CDparallel };
+enum contentDisposition {
+  CDinline,
+  CDattachment,
+  CDparallel
+};
 
 //often used charset
-static const QByteArray Latin1("ISO-8859-1");
+static const QByteArray Latin1( "ISO-8859-1" );
 
 #define mk_trivial_subclass_with_name( subclass, subclassName, baseclass ) \
-class subclass : public Generics::baseclass { \
-public: \
-  subclass() : Generics::baseclass() {} \
-  subclass( Content * p ) : Generics::baseclass( p ) {} \
-  subclass( Content * p, const QByteArray & s ) \
-    : Generics::baseclass( p ) { from7BitString( s ); } \
-  subclass( Content * p, const QString & s, const QByteArray & cs ) \
-    : Generics::baseclass( p ) { fromUnicodeString( s, cs ); } \
-  ~subclass() {} \
-  \
-  const char * type() const { return #subclassName; } \
-}
+  class subclass : public Generics::baseclass {                         \
+    public:                                                             \
+    subclass() : Generics::baseclass() {}                               \
+    subclass( Content *p ) : Generics::baseclass( p ) {}                \
+    subclass( Content *p, const QByteArray &s )                         \
+      : Generics::baseclass( p ) { from7BitString( s ); }               \
+    subclass( Content *p, const QString &s, const QByteArray &cs )      \
+      : Generics::baseclass( p ) { fromUnicodeString( s, cs ); }        \
+    ~subclass() {}                                                      \
+                                                                        \
+    const char *type() const { return #subclassName; }                  \
+  }
 
-#define mk_trivial_subclass( subclass, baseclass ) \
-mk_trivial_subclass_with_name( subclass, subclass, baseclass )
+#define mk_trivial_subclass( subclass, baseclass )                      \
+  mk_trivial_subclass_with_name( subclass, subclass, baseclass )
 
 #define mk_parsing_subclass_with_name( subclass, subclassName, baseclass ) \
-class subclass : public Generics::baseclass { \
-public: \
-  subclass() : Generics::baseclass() {} \
-  subclass( Content * p ) : Generics::baseclass( p ) {} \
-  subclass( Content * p, const QByteArray & s ) \
-    : Generics::baseclass( p ) { from7BitString( s ); } \
-  subclass( Content * p, const QString & s, const QByteArray & cs ) \
-    : Generics::baseclass( p ) { fromUnicodeString( s, cs ); } \
-  ~subclass() {} \
-  \
-  const char * type() const { return #subclassName; } \
-protected: \
-  bool parse( const char* & scursor, const char * const send, bool isCRLF=false ); \
-}
+  class subclass : public Generics::baseclass {                         \
+    public:                                                             \
+    subclass() : Generics::baseclass() {}                               \
+    subclass( Content *p ) : Generics::baseclass( p ) {}                \
+    subclass( Content *p, const QByteArray &s )                         \
+      : Generics::baseclass( p ) { from7BitString( s ); }               \
+    subclass( Content *p, const QString &s, const QByteArray &cs )      \
+      : Generics::baseclass( p ) { fromUnicodeString( s, cs ); }        \
+    ~subclass() {}                                                      \
+                                                                        \
+    const char *type() const { return #subclassName; }                  \
+    protected:                                                          \
+    bool parse( const char* &scursor, const char *const send, bool isCRLF=false ); \
+  }
 
-#define mk_parsing_subclass( subclass, baseclass ) \
-mk_parsing_subclass_with_name( subclass, subclass, baseclass )
+#define mk_parsing_subclass( subclass, baseclass )                      \
+  mk_parsing_subclass_with_name( subclass, subclass, baseclass )
 
 //
 //
@@ -114,80 +119,104 @@ mk_parsing_subclass_with_name( subclass, subclass, baseclass )
 
 /** Baseclass of all header-classes. It represents a
     header-field as described in RFC-822.  */
-class KMIME_EXPORT Base {
-
+class KMIME_EXPORT Base
+{
   public:
     typedef QList<KMime::Headers::Base*> List;
 
     /** Create an empty header. */
-    Base() : e_ncCS(""), p_arent(0) {}
+    Base() : e_ncCS( "" ), p_arent(0) {}
 
     /** Create an empty header with a parent-content. */
-    Base(KMime::Content *parent) : e_ncCS(""), p_arent(parent) {}
+    Base( KMime::Content *parent ) : e_ncCS( "" ), p_arent( parent ) {}
 
     /** Destructor */
-    virtual ~Base()  {}
+    virtual ~Base() {}
 
     /** Return the parent of this header. */
-    KMime::Content* parent()  { return p_arent; }
+    KMime::Content *parent() { return p_arent; }
 
     /** Set the parent for this header. */
-    void setParent(KMime::Content *p)  { p_arent=p; }
+    void setParent( KMime::Content *p ) { p_arent = p; }
 
-    /** Parse the given string. Take care of RFC2047-encoded
-	strings. A default charset is given. If the last parameter
-	is true the default charset is used in any case */
-    virtual void from7BitString(const QByteArray&)  {}
+    /**
+      Parses the given string. Take care of RFC2047-encoded strings.
+      A default charset is given. If the last parameter is true the
+      default charset is used in any case
+    */
+    virtual void from7BitString( const QByteArray &s ) { Q_UNUSED( s ); }
 
-    /** Return the encoded header. The parameter specifies
-	whether the header-type should be included. */
-    virtual QByteArray as7BitString(bool=true)  { return QByteArray(); }
+    /**
+      Returns the encoded header. The parameter specifies whether the
+      header-type should be included.
+    */
+    virtual QByteArray as7BitString( bool=true ) { return QByteArray(); }
 
-    /** Return the charset that is used for RFC2047-encoding */
+    /**
+      Returns the charset that is used for RFC2047-encoding.
+    */
     QByteArray rfc2047Charset();
 
-    /** Set the charset for RFC2047-encoding */
-    void setRFC2047Charset(const QByteArray &cs);
+    /**
+      Sets the charset for RFC2047-encoding.
+    */
+    void setRFC2047Charset( const QByteArray &cs );
 
-    /** Return the default charset */
+    /**
+      Returns the default charset.
+    */
     QByteArray defaultCS();
 
-    /** Return if the default charset is mandatory */
+    /**
+      Returns if the default charset is mandatory.
+    */
     bool forceCS();
 
-    /** Parse the given string and set the charset. */
-    virtual void fromUnicodeString(const QString&, const QByteArray&)  {}
+    /**
+      Parses the given string and set the charset.
+    */
+    virtual void fromUnicodeString( const QString &s, const QByteArray &b )
+      { Q_UNUSED( s ); Q_UNUSED( b ); }
 
-    /** Return the decoded content of the header without
-       the header-type. */
-    virtual QString asUnicodeString()  { return QString(); }
+    /**
+      Returns the decoded content of the header without the header-type.
+    */
+    virtual QString asUnicodeString() { return QString(); }
 
-    /** Delete */
-    virtual void clear()  {}
+    /**
+      Deletes.
+    */
+    virtual void clear() {}
 
     /** Do we have data? */
     virtual bool isEmpty() const { return false; }
 
-    /** Return the type of this header (e.g. "From") */
-    virtual const char* type() const { return ""; }
+    /**
+      Returns the type of this header (e.g. "From").
+    */
+    virtual const char *type() const { return ""; }
 
-    /** Check if this header is of type t. */
-    bool is(const char* t)  { return (strcasecmp(t, type())==0); }
+    /**
+      Checks if this header is of type @p t.
+    */
+    bool is( const char *t ) { return (strcasecmp( t, type() ) == 0 ); }
 
-    /** Check if this header is a MIME header */
-    bool isMimeHeader()  { return (strncasecmp(type(), "Content-", 8)==0); }
+    /**
+      Checks if this header is a MIME header.
+    */
+    bool isMimeHeader() { return (strncasecmp( type(), "Content-", 8 ) == 0); }
 
-    /** Check if this header is a X-Header */
-    bool isXHeader()  { return (strncmp(type(), "X-", 2)==0); }
+    /**
+      Checks if this header is a X-Header.
+    */
+    bool isXHeader() { return (strncmp( type(), "X-", 2 ) == 0 ); }
 
   protected:
-    QByteArray typeIntro()  { return (QByteArray(type())+": "); }
+    QByteArray typeIntro() { return (QByteArray( type() ) + ": " ); }
 
     QByteArray e_ncCS;
     Content *p_arent;
-
 };
-
 
 //
 //
@@ -206,42 +235,42 @@ namespace Generics {
     Subclasses need only re-implement @p const @p char* @p type().
 
     A macro to automate this is named
-\code
+    \code
     MK_TRIVIAL_GUnstructured_SUBCLASS(classname,headername);
-\endcode
+    \endcode
 
     The ContentDescription class then reads:
-\code
+    \code
     MK_TRIVIAL_GUnstructured_SUBCLASS(ContentDescription,Content-Description);
-\endcode
+    \endcode
 */
 
-  // known issues:
-  // - uses old decodeRFC2047String function, instead of our own...
+// known issues:
+// - uses old decodeRFC2047String function, instead of our own...
 
-class KMIME_EXPORT GUnstructured : public Base {
+class KMIME_EXPORT GUnstructured : public Base
+{
+  public:
+    GUnstructured() : Base() {}
+    GUnstructured( Content *p ) : Base( p ) {}
+    GUnstructured( Content *p, const QByteArray &s ) : Base( p )
+      { from7BitString( s ); }
+    GUnstructured( Content *p, const QString &s, const QByteArray &cs ) : Base( p )
+      { fromUnicodeString( s, cs ); }
+    ~GUnstructured() {}
 
-public:
-  GUnstructured() : Base()  {}
-  GUnstructured( Content * p ) : Base( p ) {}
-  GUnstructured( Content * p, const QByteArray & s )
-    : Base( p ) { from7BitString(s); }
-  GUnstructured( Content * p, const QString & s, const QByteArray & cs )
-    : Base( p )  { fromUnicodeString( s, cs ); }
-  ~GUnstructured()  {}
+    virtual void from7BitString( const QByteArray &str );
+    virtual QByteArray as7BitString( bool withHeaderType=true );
 
-  virtual void from7BitString( const QByteArray& str );
-  virtual QByteArray as7BitString( bool withHeaderType=true );
+    virtual void fromUnicodeString( const QString &str,
+                                    const QByteArray &suggestedCharset );
+    virtual QString asUnicodeString();
 
-  virtual void fromUnicodeString( const QString & str,
-				  const QByteArray & suggestedCharset);
-  virtual QString asUnicodeString();
+    virtual void clear() { d_ecoded.truncate( 0 ); }
+    virtual bool isEmpty() const { return ( d_ecoded.isEmpty() ); }
 
-  virtual void clear()            { d_ecoded.truncate(0); }
-  virtual bool isEmpty()   const  { return (d_ecoded.isEmpty()); }
-
-private:
-  QString d_ecoded;
+  private:
+    QString d_ecoded;
 };
 
 /** This is the base class for all structured header fields. It
@@ -272,218 +301,204 @@ private:
     @author Marc Mutz <mutz@kde.org>
 */
 
-class KMIME_EXPORT GStructured : public Base {
-public:
-  GStructured() : Base()  {}
-  GStructured( Content * p ) : Base( p ) {}
-  GStructured( Content * p, const QByteArray & s )
-    : Base( p ) { from7BitString(s); }
-  GStructured( Content * p, const QString & s, const QByteArray & cs )
-    : Base( p )  { fromUnicodeString( s, cs ); }
-  ~GStructured()  {}
+class KMIME_EXPORT GStructured : public Base
+{
+  public:
+    GStructured() : Base() {}
+    GStructured( Content *p ) : Base( p ) {}
+    GStructured( Content *p, const QByteArray &s ) : Base( p )
+      { from7BitString( s ); }
+    GStructured( Content *p, const QString &s, const QByteArray &cs ) : Base( p )
+      { fromUnicodeString( s, cs ); }
+    ~GStructured() {}
 
-
-protected:
-#if 0
-  // the assembly squad:
-
-  bool writeAtom( char* & dcursor, const char * const dend, const QString & input );
-  bool writeAtom( char* & dcursor, const char * const dend,
-		  const QPair<const char*,int> & input );
-  bool writeToken( char* & dcursor, const char * const dend, const QString & input );
-  bool writeToken( char* & dcursor, const char * const dend,
-		   const QPair<const char*int> & input );
-
-  bool writeGenericQuotedString( char* & dcursor, const char * const dend,
-				 const QString & input, bool withCRLF=false );
-  bool writeComment( char* & dcursor, const char * const dend,
-		     const QString & input, bool withCRLF=false );
-  bool writePhrase( char* & dcursor, const char * const dend,
-		    const QString & input, bool withCRLF=false );
-  bool writeDotAtom( char* & dcursor, const char * const dend,
-		     const QString & input, bool withCRLF=false );
-#endif
+  protected:
 };
 
+class KMIME_EXPORT GAddress : public GStructured
+{
+  public:
+    GAddress() : GStructured() {}
+    GAddress( Content *p ) : GStructured( p ) {}
+    GAddress( Content *p, const QByteArray &s )
+      : GStructured( p ) { from7BitString( s ); }
+    GAddress( Content *p, const QString &s, const QByteArray &cs )
+      : GStructured( p ) { fromUnicodeString( s, cs ); }
+    ~GAddress() {}
 
-class KMIME_EXPORT GAddress : public GStructured {
-public:
-  GAddress() : GStructured()  {}
-  GAddress( Content * p ) : GStructured( p ) {}
-  GAddress( Content * p, const QByteArray & s )
-    : GStructured( p ) { from7BitString(s); }
-  GAddress( Content * p, const QString & s, const QByteArray & cs )
-    : GStructured( p )  { fromUnicodeString( s, cs ); }
-  ~GAddress()  {}
-
-protected:
+  protected:
 };
-
 
 /** Base class for headers that deal with (possibly multiple)
     addresses, but don't allow groups: */
-class KMIME_EXPORT MailboxList : public GAddress {
-public:
-  MailboxList() : GAddress()  {}
-  MailboxList( Content * p ) : GAddress( p ) {}
-  MailboxList( Content * p, const QByteArray & s )
-    : GAddress( p ) { from7BitString(s); }
-  MailboxList( Content * p, const QString & s, const QByteArray & cs )
-    : GAddress( p )  { fromUnicodeString( s, cs ); }
-  ~MailboxList()  {}
+class KMIME_EXPORT MailboxList : public GAddress
+{
+  public:
+    MailboxList() : GAddress() {}
+    MailboxList( Content *p ) : GAddress( p ) {}
+    MailboxList( Content *p, const QByteArray &s ) : GAddress( p )
+      { from7BitString( s ); }
+    MailboxList( Content *p, const QString &s, const QByteArray &cs ) : GAddress( p )
+      { fromUnicodeString( s, cs ); }
+    ~MailboxList() {}
 
-protected:
-  bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+  protected:
+    bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
 
-  /** The list of mailboxes */
-  QList<Types::Mailbox> mMailboxList;
+    /** The list of mailboxes */
+    QList<Types::Mailbox> mMailboxList;
 };
-
 
 /** Base class for headers that deal with exactly one mailbox
     (e.g. Sender) */
-mk_parsing_subclass(SingleMailbox,MailboxList);
+mk_parsing_subclass( SingleMailbox, MailboxList );
 
 /** Base class for headers that deal with (possibly multiple)
     addresses, allowing groups. */
-class KMIME_EXPORT AddressList : public GAddress {
-public:
-  AddressList() : GAddress()  {}
-  AddressList( Content * p ) : GAddress( p ) {}
-  AddressList( Content * p, const QByteArray & s )
-    : GAddress( p ) { from7BitString(s); }
-  AddressList( Content * p, const QString & s, const QByteArray & cs )
-    : GAddress( p )  { fromUnicodeString( s, cs ); }
-  ~AddressList()  {}
+class KMIME_EXPORT AddressList : public GAddress
+{
+  public:
+    AddressList() : GAddress() {}
+    AddressList( Content * p ) : GAddress( p ) {}
+    AddressList( Content * p, const QByteArray & s )
+      : GAddress( p ) { from7BitString( s ); }
+    AddressList( Content * p, const QString & s, const QByteArray & cs )
+      : GAddress( p ) { fromUnicodeString( s, cs ); }
+    ~AddressList() {}
 
-protected:
-  bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+  protected:
+    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
-  /** The list of addresses */
-  QList<Types::Address> mAddressList;
+    /** The list of addresses */
+    QList<Types::Address> mAddressList;
 };
 
 /** Base class for headers which deal with a list of msg-id's */
-class KMIME_EXPORT GIdent : public GAddress {
-public:
-  GIdent() : GAddress()  {}
-  GIdent( Content * p ) : GAddress( p ) {}
-  GIdent( Content * p, const QByteArray & s )
-    : GAddress( p ) { from7BitString(s); }
-  GIdent( Content * p, const QString & s, const QByteArray & cs )
-    : GAddress( p )  { fromUnicodeString( s, cs ); }
-  ~GIdent()  {}
+class KMIME_EXPORT GIdent : public GAddress
+{
+  public:
+    GIdent() : GAddress() {}
+    GIdent( Content * p ) : GAddress( p ) {}
+    GIdent( Content * p, const QByteArray & s )
+      : GAddress( p ) { from7BitString( s ); }
+    GIdent( Content * p, const QString & s, const QByteArray & cs )
+      : GAddress( p ) { fromUnicodeString( s, cs ); }
+    ~GIdent() {}
 
-protected:
-  bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+  protected:
+    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
-  /** The list of msg-id's */
-  QList<Types::AddrSpec> mMsgIdList;
+    /** The list of msg-id's */
+    QList<Types::AddrSpec> mMsgIdList;
 };
 
 /** Base class for headers which deal with a list of msg-id's */
-mk_parsing_subclass(GSingleIdent,GIdent);
+mk_parsing_subclass( GSingleIdent, GIdent );
 
 /** Base class for headers which deal with a single atom. */
-class KMIME_EXPORT GToken : public GStructured {
-public:
-  GToken() : GStructured()  {}
-  GToken( Content * p ) : GStructured( p ) {}
-  GToken( Content * p, const QByteArray & s )
-    : GStructured( p ) { from7BitString(s); }
-  GToken( Content * p, const QString & s, const QByteArray & cs )
-    : GStructured( p )  { fromUnicodeString( s, cs ); }
-  ~GToken()  {}
+class KMIME_EXPORT GToken : public GStructured
+{
+  public:
+    GToken() : GStructured() {}
+    GToken( Content *p ) : GStructured( p ) {}
+    GToken( Content *p, const QByteArray &s )
+      : GStructured( p ) { from7BitString( s ); }
+    GToken( Content *p, const QString &s, const QByteArray &cs )
+      : GStructured( p ) { fromUnicodeString( s, cs ); }
+    ~GToken() {}
 
-protected:
-  bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+  protected:
+    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
-  QByteArray mToken;
+    QByteArray mToken;
 };
 
+class KMIME_EXPORT GPhraseList : public GStructured
+{
+  public:
+    GPhraseList() : GStructured() {}
+    GPhraseList( Content * p ) : GStructured( p ) {}
+    GPhraseList( Content * p, const QByteArray & s ) : GStructured( p )
+      { from7BitString( s ); }
+    GPhraseList( Content * p, const QString & s, const QByteArray & cs ) : GStructured( p )
+      { fromUnicodeString( s, cs ); }
+    ~GPhraseList() {}
 
-class KMIME_EXPORT GPhraseList : public GStructured {
-public:
-  GPhraseList() : GStructured()  {}
-  GPhraseList( Content * p ) : GStructured( p ) {}
-  GPhraseList( Content * p, const QByteArray & s )
-    : GStructured( p ) { from7BitString(s); }
-  GPhraseList( Content * p, const QString & s, const QByteArray & cs )
-    : GStructured( p )  { fromUnicodeString( s, cs ); }
-  ~GPhraseList()  {}
+  protected:
+    bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
 
-protected:
-  bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
-
-  QStringList mPhraseList;
+    QStringList mPhraseList;
 };
 
-class KMIME_EXPORT GDotAtom : public GStructured {
-public:
-  GDotAtom() : GStructured()  {}
-  GDotAtom( Content * p ) : GStructured( p ) {}
-  GDotAtom( Content * p, const QByteArray & s )
-    : GStructured( p ) { from7BitString(s); }
-  GDotAtom( Content * p, const QString & s, const QByteArray & cs )
-    : GStructured( p )  { fromUnicodeString( s, cs ); }
-  ~GDotAtom()  {}
+class KMIME_EXPORT GDotAtom : public GStructured
+{
+  public:
+    GDotAtom() : GStructured() {}
+    GDotAtom( Content *p ) : GStructured( p ) {}
+    GDotAtom( Content *p, const QByteArray &s ) : GStructured( p )
+      { from7BitString( s ); }
+    GDotAtom( Content *p, const QString &s, const QByteArray &cs ) : GStructured( p )
+      { fromUnicodeString( s, cs ); }
+    ~GDotAtom() {}
 
-protected:
-  bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+  protected:
+    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
-  QString mDotAtom;
+    QString mDotAtom;
 };
 
-class KMIME_EXPORT GParametrized : public GStructured {
-public:
-  GParametrized() : GStructured()  {}
-  GParametrized( Content * p ) : GStructured( p ) {}
-  GParametrized( Content * p, const QByteArray & s )
-    : GStructured( p ) { from7BitString(s); }
-  GParametrized( Content * p, const QString & s, const QByteArray & cs )
-    : GStructured( p )  { fromUnicodeString( s, cs ); }
-  ~GParametrized()  {}
+class KMIME_EXPORT GParametrized : public GStructured
+{
+  public:
+    GParametrized() : GStructured() {}
+    GParametrized( Content *p ) : GStructured( p ) {}
+    GParametrized( Content *p, const QByteArray &s ) : GStructured( p )
+      { from7BitString( s ); }
+    GParametrized( Content *p, const QString & s, const QByteArray &cs ) : GStructured( p )
+      { fromUnicodeString( s, cs ); }
+    ~GParametrized() {}
 
-protected:
-  QMap<QString,QString> mParameterHash;
+  protected:
+    QMap<QString,QString> mParameterHash;
 
-private:
+  private:
 };
 
-class KMIME_EXPORT GContentType : public GParametrized {
-public:
-  GContentType() : GParametrized()  {}
-  GContentType( Content * p ) : GParametrized( p ) {}
-  GContentType( Content * p, const QByteArray & s )
-    : GParametrized( p ) { from7BitString(s); }
-  GContentType( Content * p, const QString & s, const QByteArray & cs )
-    : GParametrized( p )  { fromUnicodeString( s, cs ); }
-  ~GContentType()  {}
+class KMIME_EXPORT GContentType : public GParametrized
+{
+  public:
+    GContentType() : GParametrized() {}
+    GContentType( Content *p ) : GParametrized( p ) {}
+    GContentType( Content *p, const QByteArray &s ) : GParametrized( p )
+      { from7BitString( s ); }
+    GContentType( Content *p, const QString &s, const QByteArray &cs ) : GParametrized( p )
+      { fromUnicodeString( s, cs ); }
+    ~GContentType() {}
 
-protected:
-  bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+  protected:
+    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
-  QByteArray mMimeType;
-  QByteArray mMimeSubType;
+    QByteArray mMimeType;
+    QByteArray mMimeSubType;
 };
 
+class KMIME_EXPORT GCISTokenWithParameterList : public GParametrized
+{
+  public:
+    GCISTokenWithParameterList() : GParametrized() {}
+    GCISTokenWithParameterList( Content *p ) : GParametrized( p ) {}
+    GCISTokenWithParameterList( Content *p, const QByteArray &s ) : GParametrized( p )
+      { from7BitString( s ); }
+    GCISTokenWithParameterList( Content *p, const QString &s, const QByteArray &cs )
+      : GParametrized( p )
+      { fromUnicodeString( s, cs ); }
+    ~GCISTokenWithParameterList() {}
 
-class KMIME_EXPORT GCISTokenWithParameterList : public GParametrized {
-public:
-  GCISTokenWithParameterList() : GParametrized()  {}
-  GCISTokenWithParameterList( Content * p ) : GParametrized( p ) {}
-  GCISTokenWithParameterList( Content * p, const QByteArray & s )
-    : GParametrized( p ) { from7BitString(s); }
-  GCISTokenWithParameterList( Content * p, const QString & s, const QByteArray & cs )
-    : GParametrized( p )  { fromUnicodeString( s, cs ); }
-  ~GCISTokenWithParameterList()  {}
+  protected:
+    bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
 
-protected:
-  bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
-
-  QByteArray mToken;
+    QByteArray mToken;
 };
-
 
 } // namespace Generics
 
@@ -493,22 +508,22 @@ protected:
 //
 //
 
-
 /** Represents the Return-Path header field. */
-class KMIME_EXPORT ReturnPath : public Generics::GAddress {
-public:
-  ReturnPath() : Generics::GAddress()  {}
-  ReturnPath( Content * p ) : Generics::GAddress( p ) {}
-  ReturnPath( Content * p, const QByteArray & s )
-    : Generics::GAddress( p ) { from7BitString(s); }
-  ReturnPath( Content * p, const QString & s, const QByteArray & cs )
-    : Generics::GAddress( p )  { fromUnicodeString( s, cs ); }
-  ~ReturnPath()  {}
+class KMIME_EXPORT ReturnPath : public Generics::GAddress
+{
+  public:
+    ReturnPath() : Generics::GAddress() {}
+    ReturnPath( Content *p ) : Generics::GAddress( p ) {}
+    ReturnPath( Content *p, const QByteArray &s ) : Generics::GAddress( p )
+      { from7BitString( s ); }
+    ReturnPath( Content *p, const QString &s, const QByteArray &cs ) : Generics::GAddress( p )
+      { fromUnicodeString( s, cs ); }
+    ~ReturnPath() {}
 
-  const char * type() const { return "Return-Path"; }
+    const char * type() const { return "Return-Path"; }
 
-protected:
-  bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+  protected:
+    bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
 };
 
 #if defined(KMIME_NEW_STYLE_CLASSTREE)
@@ -517,47 +532,45 @@ protected:
 // GAddress et al.:
 
 // rfc(2)822 headers:
-mk_trivial_subclass(From,MailboxList);
-mk_trivial_subclass(Sender,SingleMailbox);
-mk_trivial_subclass_with_name(ReplyTo,Reply-To,AddressList);
-mk_trivial_subclass(Cc,AddressList);
-mk_trivial_subclass(Bcc,AddressList);
+mk_trivial_subclass( From, MailboxList );
+mk_trivial_subclass( Sender, SingleMailbox );
+mk_trivial_subclass_with_name( ReplyTo, Reply-To, AddressList );
+mk_trivial_subclass( Cc, AddressList );
+mk_trivial_subclass( Bcc, AddressList );
 // usefor headers:
-mk_trivial_subclass_with_name(MailCopiesTo,Mail-Copies-To,AddressList);
+mk_trivial_subclass_with_name( MailCopiesTo, Mail-Copies-To, AddressList );
 
 // GToken:
 
-mk_trivial_subclass_with_name(ContentTransferEncoding,
-			      Content-Transfer-Encoding,GToken);
+mk_trivial_subclass_with_name( ContentTransferEncoding,
+                               Content-Transfer-Encoding, GToken );
 
 // GPhraseList:
 
-mk_trivial_subclass(Keywords,GPhraseList);
+mk_trivial_subclass( Keywords, GPhraseList );
 
 // GDotAtom:
 
-mk_trivial_subclass_with_name(MIMEVersion,MIME-Version,GDotAtom);
+mk_trivial_subclass_with_name( MIMEVersion, MIME-Version, GDotAtom );
 
 // GIdent:
 
-mk_trivial_subclass_with_name(MessageID,Message-ID,GSingleIdent);
-mk_trivial_subclass_with_name(ContentID,Content-ID,GSingleIdent);
-mk_trivial_subclass(Supersedes,GSingleIdent);
-mk_trivial_subclass_with_name(InReplyTo,In-Reply-To,GIdent);
-mk_trivial_subclass(References,GIdent);
+mk_trivial_subclass_with_name( MessageID, Message-ID, GSingleIdent );
+mk_trivial_subclass_with_name( ContentID, Content-ID, GSingleIdent );
+mk_trivial_subclass( Supersedes, GSingleIdent );
+mk_trivial_subclass_with_name( InReplyTo, In-Reply-To, GIdent );
+mk_trivial_subclass( References, GIdent );
 
 // GContentType:
 
-mk_trivial_subclass_with_name(ContentType,ContentType,GContentType);
+mk_trivial_subclass_with_name( ContentType, ContentType, GContentType );
 
 // GCISTokenWithParameterList:
 
-mk_trivial_subclass_with_name(ContentDisposition,Content-Disposition,
-			      GCISTokenWithParameterList);
-
+mk_trivial_subclass_with_name( ContentDisposition, Content-Disposition,
+			       GCISTokenWithParameterList );
 
 #endif
-
 
 //
 //
@@ -565,50 +578,52 @@ mk_trivial_subclass_with_name(ContentDisposition,Content-Disposition,
 //
 //
 
-
 /** Represents an arbitrary header, that can contain
     any header-field.
     Adds a type over GUnstructured.
     @see GUnstructured
 */
-class KMIME_EXPORT Generic : public Generics::GUnstructured {
-
+class KMIME_EXPORT Generic : public Generics::GUnstructured
+{
   public:
-    Generic() : Generics::GUnstructured(), t_ype(0) {}
-    Generic(const char *t)
-      : Generics::GUnstructured(), t_ype(0) { setType(t); }
-    Generic(const char *t, Content *p)
-      : Generics::GUnstructured( p ), t_ype(0) { setType(t); }
-    Generic(const char *t, Content *p, const QByteArray &s)
-      : Generics::GUnstructured( p, s ), t_ype(0) { setType(t); }
-    Generic(const char *t, Content *p, const QString &s, const QByteArray &cs)
-      : Generics::GUnstructured( p, s, cs ), t_ype(0) { setType(t); }
+    Generic() : Generics::GUnstructured(), t_ype( 0 ) {}
+    Generic( const char *t ) : Generics::GUnstructured(), t_ype( 0 )
+      { setType( t ); }
+    Generic( const char *t, Content *p )
+      : Generics::GUnstructured( p ), t_ype( 0 )
+      { setType( t ); }
+    Generic( const char *t, Content *p, const QByteArray &s )
+      : Generics::GUnstructured( p, s ), t_ype( 0 )
+      { setType( t ); }
+    Generic( const char *t, Content *p, const QString &s, const QByteArray &cs )
+      : Generics::GUnstructured( p, s, cs ), t_ype( 0 )
+      { setType( t ); }
     ~Generic() { delete[] t_ype; }
 
-    virtual void clear()            { delete[] t_ype; GUnstructured::clear(); }
-    virtual bool isEmpty() const    { return (t_ype==0 || GUnstructured::isEmpty()); }
-    virtual const char* type() const { return t_ype; }
-    void setType(const char *type);
+    virtual void clear() { delete[] t_ype; GUnstructured::clear(); }
+    virtual bool isEmpty() const
+      { return ( t_ype == 0 || GUnstructured::isEmpty() ); }
+    virtual const char *type() const
+      { return t_ype; }
+    void setType( const char *type );
 
   protected:
     char *t_ype;
-
 };
 
-
 /** Represents a "Subject" header */
-class KMIME_EXPORT Subject : public Generics::GUnstructured {
-
+class KMIME_EXPORT Subject : public Generics::GUnstructured
+{
   public:
-    Subject() : Generics::GUnstructured()  {}
-    Subject( Content * p ) : Generics::GUnstructured( p )  {}
-    Subject( Content * p, const QByteArray & s )
+    Subject() : Generics::GUnstructured() {}
+    Subject( Content *p ) : Generics::GUnstructured( p ) {}
+    Subject( Content *p, const QByteArray &s )
       : Generics::GUnstructured( p, s ) {}
-    Subject( Content * p, const QString & s, const QByteArray & cs )
+    Subject( Content *p, const QString &s, const QByteArray &cs )
       : Generics::GUnstructured( p, s, cs ) {}
-    ~Subject()  {}
+    ~Subject() {}
 
-    virtual const char* type() const { return "Subject"; }
+    virtual const char *type() const { return "Subject"; }
 
     bool isReply() {
       return ( asUnicodeString().indexOf( QLatin1String( "Re:" ), 0, Qt::CaseInsensitive ) == 0 );
@@ -616,19 +631,18 @@ class KMIME_EXPORT Subject : public Generics::GUnstructured {
 };
 
 /** Represents a "Organization" header */
-class KMIME_EXPORT Organization : public Generics::GUnstructured {
-
+class KMIME_EXPORT Organization : public Generics::GUnstructured
+{
   public:
     Organization() : Generics::GUnstructured() {}
-    Organization( Content * p ) : Generics::GUnstructured( p ) {}
-    Organization( Content * p, const QByteArray & s )
-      : Generics::GUnstructured( p, s ) {};
-    Organization( Content * p, const QString & s, const QByteArray & cs)
+    Organization( Content *p ) : Generics::GUnstructured( p ) {}
+    Organization( Content *p, const QByteArray &s )
+      : Generics::GUnstructured( p, s ) {}
+    Organization( Content *p, const QString &s, const QByteArray &cs )
       : Generics::GUnstructured( p, s, cs ) {}
-    ~Organization()  {}
+    ~Organization() {}
 
-    virtual const char* type() const { return "Organization"; }
-
+    virtual const char *type() const { return "Organization"; }
 };
 
 //
@@ -637,231 +651,163 @@ class KMIME_EXPORT Organization : public Generics::GUnstructured {
 //
 //
 
-
-
 /** Represents a "Control" header */
-class KMIME_EXPORT Control : public Base {
-
+class KMIME_EXPORT Control : public Base
+{
   public:
-    Control() : Base()  {}
-    Control(Content *p) : Base(p)  {}
-    Control(Content *p, const QByteArray &s) : Base(p) { from7BitString(s); }
-    Control(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
-    ~Control()  {}
+    Control() : Base() {}
+    Control( Content *p ) : Base( p ) {}
+    Control( Content *p, const QByteArray &s ) : Base( p )
+      { from7BitString( s ); }
+    Control( Content *p, const QString &s ) : Base( p )
+      { fromUnicodeString( s, Latin1 ); }
+    ~Control() {}
 
-    virtual void from7BitString(const QByteArray &s);
-    virtual QByteArray as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QByteArray&);
+    virtual void from7BitString( const QByteArray &s );
+    virtual QByteArray as7BitString( bool incType=true );
+    virtual void fromUnicodeString( const QString &s, const QByteArray &b );
     virtual QString asUnicodeString();
-    virtual void clear()            { c_trlMsg.truncate(0); }
-    virtual bool isEmpty() const    { return (c_trlMsg.isEmpty()); }
-    virtual const char* type() const { return "Control"; }
+    virtual void clear() { c_trlMsg.truncate( 0 ); }
+    virtual bool isEmpty() const { return ( c_trlMsg.isEmpty() ); }
+    virtual const char *type() const { return "Control"; }
 
-    bool isCancel()                 { return QString::fromLatin1(c_trlMsg).contains(QLatin1String( "cancel" ), Qt::CaseInsensitive); }
+    bool isCancel()
+      { return QString::fromLatin1( c_trlMsg ).contains(
+        QLatin1String( "cancel" ), Qt::CaseInsensitive ); }
 
   protected:
     QByteArray c_trlMsg;
-
 };
 
 /** Represents a "Date" header */
-class KMIME_EXPORT Date : public Base {
-
+class KMIME_EXPORT Date : public Base
+{
   public:
-    Date() : Base(), t_ime(0)  {}
-    Date(Content *p) : Base(p), t_ime(0)  {}
-    Date(Content *p, time_t t) : Base(p), t_ime(t)  {}
-    Date(Content *p, const QByteArray &s) : Base(p)  { from7BitString(s); }
-    Date(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
-    ~Date()  {}
+    Date() : Base(), t_ime( 0 ) {}
+    Date( Content *p ) : Base( p ), t_ime( 0 ) {}
+    Date( Content *p, time_t t ) : Base( p ), t_ime( t ) {}
+    Date( Content *p, const QByteArray &s ) : Base( p )
+      { from7BitString( s ); }
+    Date( Content *p, const QString &s ) : Base( p )
+      { fromUnicodeString( s, Latin1 ); }
+    ~Date() {}
 
-    virtual void from7BitString(const QByteArray &s);
-    virtual QByteArray as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QByteArray&);
+    virtual void from7BitString( const QByteArray &s );
+    virtual QByteArray as7BitString( bool incType=true );
+    virtual void fromUnicodeString( const QString &s, const QByteArray &b );
     virtual QString asUnicodeString();
-    virtual void clear()            { t_ime=0; }
-    virtual bool isEmpty() const    { return (t_ime==0); }
-    virtual const char* type() const { return "Date"; }
+    virtual void clear() { t_ime=0; }
+    virtual bool isEmpty() const { return (t_ime == 0); }
+    virtual const char *type() const { return "Date"; }
 
-    time_t unixTime()               { return t_ime; }
-    void setUnixTime(time_t t)      { t_ime=t; }
-    void setUnixTime()              { t_ime=time(0); }
+    time_t unixTime() { return t_ime; }
+    void setUnixTime( time_t t ) { t_ime=t; }
+    void setUnixTime() { t_ime=time( 0 ); }
     QDateTime qdt();
     int ageInDays();
 
   protected:
     time_t t_ime;
-
 };
 
-
 /** Represents a "Newsgroups" header */
-class KMIME_EXPORT Newsgroups : public Base {
-
+class KMIME_EXPORT Newsgroups : public Base
+{
   public:
-    Newsgroups() : Base()  {}
-    Newsgroups(Content *p) : Base(p)  {}
-    Newsgroups(Content *p, const QByteArray &s) : Base(p)  { from7BitString(s); }
-    Newsgroups(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
-    ~Newsgroups()  {}
+    Newsgroups() : Base() {}
+    Newsgroups( Content *p ) : Base( p ) {}
+    Newsgroups( Content *p, const QByteArray &s ) : Base( p )
+      { from7BitString( s ); }
+    Newsgroups( Content *p, const QString &s ) : Base( p )
+      { fromUnicodeString( s, Latin1 ); }
+    ~Newsgroups() {}
 
-    virtual void from7BitString(const QByteArray &s);
-    virtual QByteArray as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QByteArray&);
+    virtual void from7BitString( const QByteArray &s );
+    virtual QByteArray as7BitString( bool incType=true );
+    virtual void fromUnicodeString( const QString &s, const QByteArray &b );
     virtual QString asUnicodeString();
-    virtual void clear()            { g_roups.clear(); }
-    virtual bool isEmpty() const    { return g_roups.isEmpty(); }
-    virtual const char* type() const { return "Newsgroups"; }
+    virtual void clear() { g_roups.clear(); }
+    virtual bool isEmpty() const { return g_roups.isEmpty(); }
+    virtual const char *type() const { return "Newsgroups"; }
 
     QByteArray firstGroup();
-    bool isCrossposted()            { return g_roups.contains(','); }
+    bool isCrossposted() { return g_roups.contains( ',' ); }
     QStringList getGroups();
 
   protected:
     QByteArray g_roups;
-
 };
-
 
 /** Represents a "Followup-To" header */
-class KMIME_EXPORT FollowUpTo : public Newsgroups {
-
+class KMIME_EXPORT FollowUpTo : public Newsgroups
+{
   public:
-    FollowUpTo() : Newsgroups()  {}
-    FollowUpTo(Content *p) : Newsgroups(p)  {}
-    FollowUpTo(Content *p, const QByteArray &s) : Newsgroups(p,s)  {}
-    FollowUpTo(Content *p, const QString &s) : Newsgroups(p,s)  {}
-    ~FollowUpTo()  {}
+    FollowUpTo() : Newsgroups() {}
+    FollowUpTo( Content *p ) : Newsgroups( p ) {}
+    FollowUpTo( Content *p, const QByteArray &s ) : Newsgroups( p, s ) {}
+    FollowUpTo( Content *p, const QString &s ) : Newsgroups( p, s ) {}
+    ~FollowUpTo() {}
 
-    virtual const char* type() const { return "Followup-To"; }
-
+    virtual const char *type() const { return "Followup-To"; }
 };
 
-
 /** Represents a "Lines" header */
-class KMIME_EXPORT Lines : public Base {
-
+class KMIME_EXPORT Lines : public Base
+{
   public:
-    Lines() : Base(),l_ines(-1)  {}
-    Lines(Content *p) : Base(p),l_ines(-1)  {}
-    Lines(Content *p, unsigned int i) : Base(p),l_ines(i)  {}
-    Lines(Content *p, const QByteArray &s) : Base(p)  { from7BitString(s); }
-    Lines(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
-    ~Lines()                 {}
+    Lines() : Base(), l_ines( -1 ) {}
+    Lines( Content *p ) : Base( p ), l_ines( -1 ) {}
+    Lines( Content *p, unsigned int i ) : Base( p ), l_ines( i ) {}
+    Lines( Content *p, const QByteArray &s ) : Base( p )
+      { from7BitString( s ); }
+    Lines( Content *p, const QString &s ) : Base( p )
+      { fromUnicodeString( s, Latin1 ); }
+    ~Lines() {}
 
-    virtual void from7BitString(const QByteArray &s);
-    virtual QByteArray as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QByteArray&);
+    virtual void from7BitString( const QByteArray &s );
+    virtual QByteArray as7BitString( bool incType=true );
+    virtual void fromUnicodeString( const QString &s, const QByteArray &b );
     virtual QString asUnicodeString();
-    virtual void clear()            { l_ines=-1; }
-    virtual bool isEmpty() const    { return (l_ines==-1); }
-    virtual const char* type() const { return "Lines"; }
+    virtual void clear() { l_ines=-1; }
+    virtual bool isEmpty() const { return( l_ines == -1 ); }
+    virtual const char *type() const { return "Lines"; }
 
-    int numberOfLines()             { return l_ines; }
-    void setNumberOfLines(int i)    { l_ines=i; }
+    int numberOfLines() { return l_ines; }
+    void setNumberOfLines( int i ) { l_ines = i; }
 
   protected:
     int l_ines;
-
 };
 
-
-
 /** Represents a "User-Agent" header */
-class KMIME_EXPORT UserAgent : public Base {
-
+class KMIME_EXPORT UserAgent : public Base
+{
   public:
-    UserAgent() : Base()  {}
-    UserAgent(Content *p) : Base(p)  {}
-    UserAgent(Content *p, const QByteArray &s) : Base(p)  { from7BitString(s); }
-    UserAgent(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
-    ~UserAgent()  {}
+    UserAgent() : Base() {}
+    UserAgent( Content *p ) : Base( p ) {}
+    UserAgent( Content *p, const QByteArray &s ) : Base( p )
+      { from7BitString( s ); }
+    UserAgent( Content *p, const QString &s ) : Base( p )
+      { fromUnicodeString( s, Latin1 ); }
+    ~UserAgent() {}
 
-    virtual void from7BitString(const QByteArray &s);
-    virtual QByteArray as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QByteArray&);
+    virtual void from7BitString( const QByteArray &s );
+    virtual QByteArray as7BitString( bool incType=true );
+    virtual void fromUnicodeString( const QString &s, const QByteArray &b );
     virtual QString asUnicodeString();
-    virtual void clear()            { u_agent.resize(0); }
-    virtual bool isEmpty() const     { return (u_agent.isEmpty()); }
-    virtual const char* type() const { return "User-Agent"; }
+    virtual void clear() { u_agent.resize( 0 ); }
+    virtual bool isEmpty() const { return (u_agent.isEmpty()); }
+    virtual const char *type() const { return "User-Agent"; }
 
   protected:
     QByteArray u_agent;
-
 };
-
 
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 #include "kmime_headers_obs.h"
 #endif
 }  //namespace Headers
 
-#if 0
-typedef Headers::Base* (*headerCreator)(void);
-
-/** This is a factory for KMime::Headers. You can create new header
-    objects by type with @ref create and @ref upgrade an existing
-    @ref Headers::Generic to a specialized header object.
-
-    If you are a header class author, you can register your class
-    (let's call it Foo) so:
-    <pre>
-
-    </pre>
-
-    @short Factory for KMime::Headers
-    @author Marc Mutz <mutz@kde.org>
-    @see KMime::Headers::Base KMime::Headers::Generic
-*/
-
-class HeaderFactory : public Q3AsciiDict<headerCreator>
-{
-private:
-  HeaderFactory();
-  ~HeaderFactory() {}
-  static Q3AsciiDict
-
-public:
-  /** Create a new header object of type @p aType, or a fitting
-      generic substitute, if available and known
-  */
-  static Headers::Base* create( const char* aType )
-  {
-    if (!s_elf)
-      s_elf = new HeaderFactory;
-    headerCreator * hc = (*s_elf)[aType];
-    if ( !hc )
-      return 0;
-    else
-      return (*hc)();
-  }
-
-  /** This is a wrapper around the above function, provided for
-      convenience. It differs from the above only in what arguments it
-      takes.
-  */
-  static Headers::Base* create( const QByteArray& aType )
-  {
-    return create( aType.data() );
-  }
-
-  /** Consume @p aType and build a header object that corresponds to
-      the type that @p aType->type() returns.
-      @param  aType    generic header to upgrade. This will be deleted
-                       if necessary, so don't use references to it after
-                       calling this function.
-      @return A corresponding header object (if available), or a generic
-      object for this kind of header (if known), or @p aType (else).
-      @see Headers::Generic create
-  */
-  static Headers::Base* upgrade( Headers::Generic* aType ) { (void)aType; return new Headers::Base; }
-
-};
-
-#endif
-
 }  //namespace KMime
 
-
 #endif // __KMIME_HEADERS_H__
-
