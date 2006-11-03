@@ -32,3 +32,5 @@ check_symbol_exists(S_ISREG  "sys/stat.h" HAVE_S_ISREG) # icaldirset.c
 check_type_size("unsigned long" SIZEOF_UNSIGNED_LONG)
 check_type_size("uint64_t" SIZEOF_UINT64_T)
 check_type_size("unsigned long long" SIZEOF_UNSIGNED_LONG_LONG)
+
+include(CheckTimezone)
