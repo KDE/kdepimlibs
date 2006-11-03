@@ -1,8 +1,5 @@
 /*
-    boolflags.h
-
-    KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2001 the KMime authors.
     See file AUTHORS for details
 
     This library is free software; you can redistribute it and/or
