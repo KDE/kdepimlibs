@@ -28,15 +28,15 @@
 namespace KMime {
 
 /**
-  Index to uniquely identify message parts (Content object) in a part
-  hierarchy. Basically a stack of integer indices.
-  Based on RFC 3501 section 6.4.5 and thus compatible with IMAP.
+   Index to uniquely identify message parts (Content object) in a part
+   hierarchy. Basically a stack of integer indices.
+   Based on RFC 3501 section 6.4.5 and thus compatible with IMAP.
 */
 class KMIME_EXPORT ContentIndex
 {
   public:
     /**
-      Create an empty (invalid) ContentIndex object.
+      Creates an empty (invalid) ContentIndex object.
     */
     ContentIndex();
 
@@ -74,7 +74,7 @@ class KMIME_EXPORT ContentIndex
     /**
       Compares two content indices.
     */
-    bool operator==( const ContentIndex& index ) const;
+    bool operator==( const ContentIndex &index ) const;
 
     /**
       Checks whether two content indices are not equal.

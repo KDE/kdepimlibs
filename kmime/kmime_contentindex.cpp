@@ -25,7 +25,7 @@ KMime::ContentIndex::ContentIndex()
 {
 }
 
-KMime::ContentIndex::ContentIndex( const QString & index )
+KMime::ContentIndex::ContentIndex( const QString &index )
 {
   QStringList l = index.split( '.' );
   foreach ( QString s, l ) {
@@ -57,17 +57,18 @@ void KMime::ContentIndex::push( unsigned int index )
 QString KMime::ContentIndex::toString() const
 {
   QStringList l;
-  foreach ( unsigned int i, mIndex )
+  foreach ( unsigned int i, mIndex ) {
     l.append( QString::number( i ) );
+  }
   return l.join( "." );
 }
 
-bool KMime::ContentIndex::operator ==( const ContentIndex & index ) const
+bool KMime::ContentIndex::operator ==( const ContentIndex &index ) const
 {
   return mIndex == index.mIndex;
 }
 
-bool KMime::ContentIndex::operator !=( const ContentIndex & index ) const
+bool KMime::ContentIndex::operator !=( const ContentIndex &index ) const
 {
   return mIndex != index.mIndex;
 }
