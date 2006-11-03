@@ -24,16 +24,6 @@
 #ifndef __KMIME_CONTENT_H__
 #define __KMIME_CONTENT_H__
 
-//forward declarations
-#if 0
-class KMime::Headers::Base;
-class KMime::Headers::Generic;
-class KMime::Headers::ContentType;
-class KMime::Headers::CTEncoding;
-class KMime::Headers::CDisposition;
-class KMime::Headers::List;
-#endif
-
 #include <QTextStream>
 #include <QByteArray>
 #include <QList>
@@ -45,21 +35,21 @@ class KMime::Headers::List;
 
 namespace KMime {
 
-
 /** Base class for messages in mime format
     It contains all the enums, static functions
     and parser-classes, that are needed for
     mime handling */
 
-class Base {
-
+class Base
+{
   public:
 
     //enums
-    enum articleType    { ATmimeContent,
-                          ATremote,
-                          ATlocal };
-
+    enum articleType {
+      ATmimeContent,
+      ATremote,
+      ATlocal
+    };
 };
 
 class ContentPrivate;
@@ -69,8 +59,8 @@ class ContentPrivate;
     structure, that represents the structure of the
     message */
 
-class KMIME_EXPORT Content : public Base {
-
+class KMIME_EXPORT Content : public Base
+{
   public:
     typedef QList<KMime::Content*> List;
 
@@ -78,12 +68,14 @@ class KMIME_EXPORT Content : public Base {
       Creates an empty Content object.
     */
     Content();
+
     /**
       Creates a Content object containing the given raw data.
       @param h The header data.
       @param b The body data.
     */
     Content( const QByteArray &h, const QByteArray &b );
+
     /**
       Destroys this Content object.
     */
@@ -96,20 +88,24 @@ class KMIME_EXPORT Content : public Base {
       Returns true if this Content object is not empty.
     */
     bool hasContent() const;
+
     /**
       Sets the content to the given raw data, containing the content head and
       body separated by two linefeeds.
       @param l a line-splitted list of the raw content data.
     */
     void setContent( const QList<QByteArray> & l );
+
     /**
       Sets the content to the given raw data, containing the content head and
       body separated by two linefeeds.
       @param s a QByteArray containing the raw content data.
     */
     void setContent( const QByteArray &s );
+
     virtual void parse();
     virtual void assemble();
+
     /**
       Clears the complete message and deletes all sub-contents.
     */
@@ -119,6 +115,7 @@ class KMIME_EXPORT Content : public Base {
       Returns the content header raw data.
     */
     QByteArray head() const;
+
     /**
       Sets the content header raw data.
     */
@@ -128,19 +125,28 @@ class KMIME_EXPORT Content : public Base {
       Extracts and removes the next header from head.
       The caller has to delete the returned header.
     */
-    Headers::Generic*  getNextHeader(QByteArray &head);
-    virtual Headers::Base* getHeaderByType(const char *type);
-    virtual void setHeader(Headers::Base *h);
-    virtual bool removeHeader(const char *type);
-    bool hasHeader(const char *type)                                  { return (getHeaderByType(type)!=0); }
+    Headers::Generic *getNextHeader( QByteArray &head );
+
+    virtual Headers::Base *getHeaderByType( const char *type );
+    virtual void setHeader( Headers::Base *h );
+    virtual bool removeHeader( const char *type );
+    bool hasHeader( const char *type )
+      { return ( getHeaderByType( type ) != 0 ); }
+
     /**
       Returns the content type header.
       @param create Create the header if it doesn't exist yet.
     */
-    Headers::ContentType* contentType(bool create=true)             { Headers::ContentType *p=0; return getHeaderInstance(p, create); }
-    Headers::CTEncoding* contentTransferEncoding(bool create=true)  { Headers::CTEncoding *p=0; return getHeaderInstance(p, create); }
-    Headers::CDisposition* contentDisposition(bool create=true)     { Headers::CDisposition *p=0; return getHeaderInstance(p, create); }
-    Headers::CDescription* contentDescription(bool create=true)     { Headers::CDescription *p=0; return getHeaderInstance(p, create); }
+    Headers::ContentType *contentType( bool create=true )
+      { Headers::ContentType *p=0; return getHeaderInstance( p, create ); }
+
+    Headers::CTEncoding *contentTransferEncoding( bool create=true )
+      { Headers::CTEncoding *p=0; return getHeaderInstance( p, create ); }
+
+    Headers::CDisposition *contentDisposition( bool create=true )
+      { Headers::CDisposition *p=0; return getHeaderInstance( p, create ); }
+    Headers::CDescription *contentDescription( bool create=true )
+      { Headers::CDescription *p=0; return getHeaderInstance( p, create ); }
 
     /**
       Returns the size of the content body after encoding.
@@ -177,17 +183,18 @@ class KMIME_EXPORT Content : public Base {
       applies charset decoding. If this is not a text content, decodedText()
       returns an empty QString.
     */
-    QString decodedText( bool trimText = false, bool removeTrailingNewlines = false );
+    QString decodedText( bool trimText = false,
+                         bool removeTrailingNewlines = false );
     /**
       Sets the content body to the given string using the current charset.
       @param s Unicode-encoded string.
     */
-    void fromUnicodeString(const QString &s);
+    void fromUnicodeString( const QString &s );
 
     /**
       Returns the first content with mimetype text/.
     */
-    Content* textContent();
+    Content *textContent();
     /**
       Returns a list of attachments.
       @param incAlternatives include multipart/alternative parts.
@@ -211,7 +218,7 @@ class KMIME_EXPORT Content : public Base {
       @param del Delete the removed content object.
     */
     void removeContent( Content *c, bool del = false );
-    void changeEncoding(Headers::contentEncoding e);
+    void changeEncoding( Headers::contentEncoding e );
 
     /**
       Saves the encoded content to the given textstream
@@ -252,7 +259,7 @@ class KMIME_EXPORT Content : public Base {
       is invalid (empty), this content is returned.
       @param index the content index
     */
-    Content* content( const ContentIndex &index ) const;
+    Content *content( const ContentIndex &index ) const;
 
     /**
       Returns the ContentIndex for the given content, an invalid index
@@ -261,35 +268,32 @@ class KMIME_EXPORT Content : public Base {
     */
     ContentIndex indexForContent( Content *content ) const;
 
-
   protected:
-    QByteArray rawHeader(const char *name);
+    QByteArray rawHeader( const char *name );
     bool decodeText();
-    template <class T> T* getHeaderInstance(T *ptr, bool create);
+    template <class T> T *getHeaderInstance( T *ptr, bool create );
 
     Headers::Base::List h_eaders;
 
   private:
-    ContentPrivate* const d;
+    ContentPrivate *const d;
 };
 
 // some compilers (for instance Compaq C++) need template inline functions
 // here rather than in the *.cpp file
 
-template <class T> T* Content::getHeaderInstance(T *ptr, bool create)
+template <class T> T *Content::getHeaderInstance( T *ptr, bool create )
 {
   T dummy; //needed to access virtual member T::type()
 
-  ptr=static_cast <T*> (getHeaderByType(dummy.type()));
-  if(!ptr && create) { //no such header found, but we need one => create it
-    ptr=new T(this);
+  ptr=static_cast <T*> ( getHeaderByType( dummy.type() ) );
+  if ( !ptr && create ) { //no such header found, but we need one => create it
+    ptr = new T( this );
     h_eaders.append( ptr );
   }
 
   return ptr;
 }
-
-
 
 } // namespace KMime
 
