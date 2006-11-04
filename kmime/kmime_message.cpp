@@ -102,7 +102,7 @@ QByteArray Message::assembleHeaders()
     newHead += head().mid( pos + 1, head().length() - pos );
   } else {
     foreach ( Headers::Base *h, h_eaders ) {
-      if ( h->isXHeader() && ( strncasecmp( h->type(), "X-KNode", 7 ) != 0 ) ) {
+      if ( h->isXHeader() ) {
         newHead += h->as7BitString() + '\n';
       }
     }

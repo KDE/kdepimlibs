@@ -572,7 +572,7 @@ void Content::addContent( Content *c, bool prepend )
         // append to new content
         main->h_eaders.append( *it );
         // and remove from this content
-        h_eaders.erase( it );
+        it = h_eaders.erase( it );
       } else {
         ++it;
       }
@@ -631,7 +631,7 @@ void Content::removeContent( Content *c, bool del )
         // then append to new content
         h_eaders.append( *it );
         // and finally remove from this content
-        main->h_eaders.erase( it );
+        it = main->h_eaders.erase( it );
       } else {
         ++it;
       }

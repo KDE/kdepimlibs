@@ -108,7 +108,7 @@ class KMIME_EXPORT Content : public Base
     /**
       Call to generate the MIME structure of the message.
     */
-    void assemble();
+    virtual void assemble();
 
     /**
       Clears the complete message and deletes all sub-contents.
