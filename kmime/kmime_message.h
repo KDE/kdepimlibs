@@ -41,7 +41,6 @@ class KMIME_EXPORT Message : public Content
 
     //content handling
     virtual void parse();
-    virtual void assemble();
     virtual void clear();
 
     //header access
@@ -107,6 +106,8 @@ class KMIME_EXPORT Message : public Content
       }
 
   protected:
+    virtual QByteArray assembleHeaders();
+
     //hardcoded headers
     KMime::Headers::Subject s_ubject;
     KMime::Headers::Date d_ate;

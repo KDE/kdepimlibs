@@ -36,14 +36,10 @@ void NewsArticle::parse()
     l_ines.from7BitString( raw );
 }
 
-void NewsArticle::assemble()
+QByteArray NewsArticle::assembleHeaders()
 {
   Headers::Base *h;
-  QByteArray newHead = "";
-
-  //Message-ID
-  if ( ( h = messageID( false ) ) != 0 )
-    newHead += h->as7BitString() + '\n';
+  QByteArray newHead;
 
   //Control
   if ( ( h = control( false ) ) != 0 )
@@ -51,18 +47,6 @@ void NewsArticle::assemble()
 
   //Supersedes
   if ( ( h = supersedes( false ) ) != 0 )
-    newHead += h->as7BitString() + '\n';
-
-  //From
-  h = from(); // "From" is mandatory
-  newHead += h->as7BitString() + '\n';
-
-  //Subject
-  h = subject(); // "Subject" is mandatory
-  newHead += h->as7BitString() + '\n';
-
-  //To
-  if ( ( h = to( false ) ) != 0 )
     newHead += h->as7BitString() + '\n';
 
   //Newsgroups
@@ -73,54 +57,16 @@ void NewsArticle::assemble()
   if ( ( h = followUpTo( false ) ) != 0 )
     newHead+=h->as7BitString() + '\n';
 
-  //Reply-To
-  if ( ( h = replyTo( false ) ) != 0 )
-    newHead += h->as7BitString() + '\n';
-
   //Mail-Copies-To
   if ( ( h = mailCopiesTo( false ) ) != 0 )
-    newHead += h->as7BitString() + '\n';
-
-  //Date
-  h = date(); // "Date" is mandatory
-  newHead += h->as7BitString() + '\n';
-
-  //References
-  if ( ( h = references( false ) ) != 0 )
     newHead += h->as7BitString() + '\n';
 
   //Lines
   h = lines(); // "Lines" is mandatory
   newHead += h->as7BitString() + '\n';
 
-  //Organization
-  if ( ( h = organization( false ) ) != 0 )
-    newHead += h->as7BitString() + '\n';
-
-  //User-Agent
-  if ( ( h = userAgent( false ) ) != 0 )
-    newHead += h->as7BitString() + '\n';
-
-  //Mime-Version
-  newHead += "MIME-Version: 1.0\n";
-
-  //Content-Type
-  newHead += contentType()->as7BitString() + '\n';
-
-  //Content-Transfer-Encoding
-  newHead += contentTransferEncoding()->as7BitString() + '\n';
-
-  //X-Headers
-  int pos = head().indexOf( "\nX-" );
-  if ( pos > -1 ) { //we already have some x-headers => "recycle" them
-    newHead += head().mid( pos + 1, head().length() - pos );
-  } else {
-    foreach ( Headers::Base *h, h_eaders ) {
-      if ( h->isXHeader() && ( strncasecmp( h->type(), "X-KNode", 7 ) != 0 ) )
-        newHead += h->as7BitString() + '\n';
-    }
-  }
-  setHead( newHead );
+  newHead += Message::assembleHeaders();
+  return newHead;
 }
 
 void NewsArticle::clear()

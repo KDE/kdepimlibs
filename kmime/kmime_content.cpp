@@ -301,6 +301,11 @@ void Content::parse()
 
 void Content::assemble()
 {
+  d->head = assembleHeaders();
+}
+
+QByteArray Content::assembleHeaders()
+{
   QByteArray newHead = "";
 
   //Content-Type
@@ -321,7 +326,7 @@ void Content::assemble()
     newHead += h->as7BitString() + '\n';
   }
 
-  d->head = newHead;
+  return newHead;
 }
 
 void Content::clear()

@@ -48,10 +48,10 @@ void Message::parse()
     d_ate.from7BitString( raw );
 }
 
-void Message::assemble()
+QByteArray Message::assembleHeaders()
 {
   Headers::Base *h;
-  QByteArray newHead = "";
+  QByteArray newHead = Content::assembleHeaders();
 
   //Message-ID
   if ( ( h = messageID( false ) ) != 0 )
@@ -96,16 +96,10 @@ void Message::assemble()
   //Mime-Version
   newHead += "MIME-Version: 1.0\n";
 
-  //Content-Type
-  newHead += contentType()->as7BitString() + '\n';
-
-  //Content-Transfer-Encoding
-  newHead += contentTransferEncoding()->as7BitString() + '\n';
-
   //X-Headers
   int pos = head().indexOf( "\nX-" );
   if ( pos > -1 ) { //we already have some x-headers => "recycle" them
-    newHead  +=  head().mid( pos + 1, head().length() - pos - 1 );
+    newHead += head().mid( pos + 1, head().length() - pos );
   } else {
     foreach ( Headers::Base *h, h_eaders ) {
       if ( h->isXHeader() && ( strncasecmp( h->type(), "X-KNode", 7 ) != 0 ) ) {
@@ -113,7 +107,8 @@ void Message::assemble()
       }
     }
   }
-  setHead( newHead );
+
+  return newHead;
 }
 
 void Message::clear()

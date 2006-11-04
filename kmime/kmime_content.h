@@ -104,7 +104,11 @@ class KMIME_EXPORT Content : public Base
     void setContent( const QByteArray &s );
 
     virtual void parse();
-    virtual void assemble();
+
+    /**
+      Call to generate the MIME structure of the message.
+    */
+    void assemble();
 
     /**
       Clears the complete message and deletes all sub-contents.
@@ -269,6 +273,13 @@ class KMIME_EXPORT Content : public Base
     ContentIndex indexForContent( Content *content ) const;
 
   protected:
+    /**
+      Reimplement this method if you need to assemble additional headers in a
+      derived class. Don't forget to call the implementation of the base class.
+      @return The raw, assembled headers.
+    */
+    virtual QByteArray assembleHeaders();
+
     QByteArray rawHeader( const char *name );
     bool decodeText();
     template <class T> T *getHeaderInstance( T *ptr, bool create );

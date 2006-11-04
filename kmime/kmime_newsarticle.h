@@ -36,7 +36,6 @@ class KMIME_EXPORT NewsArticle : public Message
     ~NewsArticle() {}
 
     virtual void parse();
-    virtual void assemble();
     virtual void clear();
 
     virtual KMime::Headers::Base * getHeaderByType( const char *type );
@@ -72,6 +71,8 @@ class KMIME_EXPORT NewsArticle : public Message
       { if ( !create && l_ines.isEmpty() ) return 0; return &l_ines; }
 
   protected:
+    virtual QByteArray assembleHeaders();
+
     KMime::Headers::Lines l_ines;
 
 }; // class NewsArticle
