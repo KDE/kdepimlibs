@@ -32,7 +32,7 @@
 
 namespace KMime {
 
-class BoolFlags {
+class KMIME_EXPORT BoolFlags {
 
   public:
     BoolFlags() { clear(); }
