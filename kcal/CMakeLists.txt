@@ -273,7 +273,6 @@ kde4_automoc(${kcal_local_PART_SRCS})
 
 kde4_add_plugin(kcal_local ${kcal_local_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_local )
 
 target_link_libraries(kcal_local  ${KDE4_KDECORE_LIBS} kcal )
 
@@ -288,7 +287,6 @@ kde4_automoc(${kcal_localdir_PART_SRCS})
 
 kde4_add_plugin(kcal_localdir ${kcal_localdir_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_localdir )
 
 target_link_libraries(kcal_localdir  ${KDE4_KDECORE_LIBS} kcal )
 

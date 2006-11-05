@@ -41,7 +41,6 @@ kde4_add_plugin(kcm_kresources ${kcm_kresources_PART_SRCS})
 
 target_link_libraries(kcm_kresources  ${KDE4_KDECORE_LIBS} kresources )
 
-kde4_install_libtool_file(${PLUGIN_INSTALL_DIR} kcm_kresources )
 install(TARGETS kcm_kresources  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 ########### install files ###############
