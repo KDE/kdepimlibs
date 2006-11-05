@@ -105,6 +105,8 @@ class KMIME_EXPORT Message : public Content
         return getHeaderInstance( p, create );
       }
 
+    virtual KMime::Headers::InReplyTo *inReplyTo( bool create = true );
+
   protected:
     virtual QByteArray assembleHeaders();
 

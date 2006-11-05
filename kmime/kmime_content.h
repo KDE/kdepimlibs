@@ -149,8 +149,8 @@ class KMIME_EXPORT Content : public Base
 
     Headers::CDisposition *contentDisposition( bool create=true )
       { Headers::CDisposition *p=0; return getHeaderInstance( p, create ); }
-    Headers::CDescription *contentDescription( bool create=true )
-      { Headers::CDescription *p=0; return getHeaderInstance( p, create ); }
+    Headers::ContentDescription *contentDescription( bool create=true )
+      { Headers::ContentDescription *p=0; return getHeaderInstance( p, create ); }
 
     /**
       Returns the size of the content body after encoding.

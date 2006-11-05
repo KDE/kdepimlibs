@@ -27,8 +27,8 @@
 //
 // - header's base class defining the common interface
 // - generic base classes for different types of fields
-// - incompatible, GStructured-based field classes
-// - compatible, GUnstructured-based field classes
+// - incompatible, Structured-based field classes
+// - compatible, Unstructured-based field classes
 
 #include "kmime.h"
 #include "kmime_header_parsing.h"
@@ -76,7 +76,7 @@ enum contentDisposition {
 static const QByteArray Latin1( "ISO-8859-1" );
 
 #define mk_trivial_subclass_with_name( subclass, subclassName, baseclass ) \
-  class subclass : public Generics::baseclass {                         \
+  class KMIME_EXPORT subclass : public Generics::baseclass {                         \
     public:                                                             \
     subclass() : Generics::baseclass() {}                               \
     subclass( Content *p ) : Generics::baseclass( p ) {}                \
@@ -93,7 +93,7 @@ static const QByteArray Latin1( "ISO-8859-1" );
   mk_trivial_subclass_with_name( subclass, subclass, baseclass )
 
 #define mk_parsing_subclass_with_name( subclass, subclassName, baseclass ) \
-  class subclass : public Generics::baseclass {                         \
+  class KMIME_EXPORT subclass : public Generics::baseclass {                         \
     public:                                                             \
     subclass() : Generics::baseclass() {}                               \
     subclass( Content *p ) : Generics::baseclass( p ) {}                \
@@ -236,28 +236,28 @@ namespace Generics {
 
     A macro to automate this is named
     \code
-    MK_TRIVIAL_GUnstructured_SUBCLASS(classname,headername);
+    MK_TRIVIAL_Unstructured_SUBCLASS(classname,headername);
     \endcode
 
     The ContentDescription class then reads:
     \code
-    MK_TRIVIAL_GUnstructured_SUBCLASS(ContentDescription,Content-Description);
+    MK_TRIVIAL_Unstructured_SUBCLASS(ContentDescription,Content-Description);
     \endcode
 */
 
 // known issues:
 // - uses old decodeRFC2047String function, instead of our own...
 
-class KMIME_EXPORT GUnstructured : public Base
+class KMIME_EXPORT Unstructured : public Base
 {
   public:
-    GUnstructured() : Base() {}
-    GUnstructured( Content *p ) : Base( p ) {}
-    GUnstructured( Content *p, const QByteArray &s ) : Base( p )
+    Unstructured() : Base() {}
+    Unstructured( Content *p ) : Base( p ) {}
+    Unstructured( Content *p, const QByteArray &s ) : Base( p )
       { from7BitString( s ); }
-    GUnstructured( Content *p, const QString &s, const QByteArray &cs ) : Base( p )
+    Unstructured( Content *p, const QString &s, const QByteArray &cs ) : Base( p )
       { fromUnicodeString( s, cs ); }
-    ~GUnstructured() {}
+    ~Unstructured() {}
 
     virtual void from7BitString( const QByteArray &str );
     virtual QByteArray as7BitString( bool withHeaderType=true );
@@ -301,44 +301,42 @@ class KMIME_EXPORT GUnstructured : public Base
     @author Marc Mutz <mutz@kde.org>
 */
 
-class KMIME_EXPORT GStructured : public Base
+class KMIME_EXPORT Structured : public Base
 {
   public:
-    GStructured() : Base() {}
-    GStructured( Content *p ) : Base( p ) {}
-    GStructured( Content *p, const QByteArray &s ) : Base( p )
+    Structured() : Base() {}
+    Structured( Content *p ) : Base( p ) {}
+    Structured( Content *p, const QByteArray &s ) : Base( p )
       { from7BitString( s ); }
-    GStructured( Content *p, const QString &s, const QByteArray &cs ) : Base( p )
+    Structured( Content *p, const QString &s, const QByteArray &cs ) : Base( p )
       { fromUnicodeString( s, cs ); }
-    ~GStructured() {}
-
-  protected:
+    ~Structured() {}
 };
 
-class KMIME_EXPORT GAddress : public GStructured
+class KMIME_EXPORT Address : public Structured
 {
   public:
-    GAddress() : GStructured() {}
-    GAddress( Content *p ) : GStructured( p ) {}
-    GAddress( Content *p, const QByteArray &s )
-      : GStructured( p ) { from7BitString( s ); }
-    GAddress( Content *p, const QString &s, const QByteArray &cs )
-      : GStructured( p ) { fromUnicodeString( s, cs ); }
-    ~GAddress() {}
+    Address() : Structured() {}
+    Address( Content *p ) : Structured( p ) {}
+    Address( Content *p, const QByteArray &s )
+      : Structured( p ) { from7BitString( s ); }
+    Address( Content *p, const QString &s, const QByteArray &cs )
+      : Structured( p ) { fromUnicodeString( s, cs ); }
+    ~Address() {}
 
   protected:
 };
 
 /** Base class for headers that deal with (possibly multiple)
     addresses, but don't allow groups: */
-class KMIME_EXPORT MailboxList : public GAddress
+class KMIME_EXPORT MailboxList : public Address
 {
   public:
-    MailboxList() : GAddress() {}
-    MailboxList( Content *p ) : GAddress( p ) {}
-    MailboxList( Content *p, const QByteArray &s ) : GAddress( p )
+    MailboxList() : Address() {}
+    MailboxList( Content *p ) : Address( p ) {}
+    MailboxList( Content *p, const QByteArray &s ) : Address( p )
       { from7BitString( s ); }
-    MailboxList( Content *p, const QString &s, const QByteArray &cs ) : GAddress( p )
+    MailboxList( Content *p, const QString &s, const QByteArray &cs ) : Address( p )
       { fromUnicodeString( s, cs ); }
     ~MailboxList() {}
 
@@ -355,15 +353,15 @@ mk_parsing_subclass( SingleMailbox, MailboxList );
 
 /** Base class for headers that deal with (possibly multiple)
     addresses, allowing groups. */
-class KMIME_EXPORT AddressList : public GAddress
+class KMIME_EXPORT AddressList : public Address
 {
   public:
-    AddressList() : GAddress() {}
-    AddressList( Content * p ) : GAddress( p ) {}
+    AddressList() : Address() {}
+    AddressList( Content * p ) : Address( p ) {}
     AddressList( Content * p, const QByteArray & s )
-      : GAddress( p ) { from7BitString( s ); }
+      : Address( p ) { from7BitString( s ); }
     AddressList( Content * p, const QString & s, const QByteArray & cs )
-      : GAddress( p ) { fromUnicodeString( s, cs ); }
+      : Address( p ) { fromUnicodeString( s, cs ); }
     ~AddressList() {}
 
   protected:
@@ -374,16 +372,16 @@ class KMIME_EXPORT AddressList : public GAddress
 };
 
 /** Base class for headers which deal with a list of msg-id's */
-class KMIME_EXPORT GIdent : public GAddress
+class KMIME_EXPORT Ident : public Address
 {
   public:
-    GIdent() : GAddress() {}
-    GIdent( Content * p ) : GAddress( p ) {}
-    GIdent( Content * p, const QByteArray & s )
-      : GAddress( p ) { from7BitString( s ); }
-    GIdent( Content * p, const QString & s, const QByteArray & cs )
-      : GAddress( p ) { fromUnicodeString( s, cs ); }
-    ~GIdent() {}
+    Ident() : Address() {}
+    Ident( Content * p ) : Address( p ) {}
+    Ident( Content * p, const QByteArray & s )
+      : Address( p ) { from7BitString( s ); }
+    Ident( Content * p, const QString & s, const QByteArray & cs )
+      : Address( p ) { fromUnicodeString( s, cs ); }
+    ~Ident() {}
 
   protected:
     bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
@@ -393,18 +391,18 @@ class KMIME_EXPORT GIdent : public GAddress
 };
 
 /** Base class for headers which deal with a list of msg-id's */
-mk_parsing_subclass( GSingleIdent, GIdent );
+mk_parsing_subclass( SingleIdent, Ident );
 
 /** Base class for headers which deal with a single atom. */
-class KMIME_EXPORT GToken : public GStructured
+class KMIME_EXPORT GToken : public Structured
 {
   public:
-    GToken() : GStructured() {}
-    GToken( Content *p ) : GStructured( p ) {}
+    GToken() : Structured() {}
+    GToken( Content *p ) : Structured( p ) {}
     GToken( Content *p, const QByteArray &s )
-      : GStructured( p ) { from7BitString( s ); }
+      : Structured( p ) { from7BitString( s ); }
     GToken( Content *p, const QString &s, const QByteArray &cs )
-      : GStructured( p ) { fromUnicodeString( s, cs ); }
+      : Structured( p ) { fromUnicodeString( s, cs ); }
     ~GToken() {}
 
   protected:
@@ -413,14 +411,14 @@ class KMIME_EXPORT GToken : public GStructured
     QByteArray mToken;
 };
 
-class KMIME_EXPORT GPhraseList : public GStructured
+class KMIME_EXPORT GPhraseList : public Structured
 {
   public:
-    GPhraseList() : GStructured() {}
-    GPhraseList( Content * p ) : GStructured( p ) {}
-    GPhraseList( Content * p, const QByteArray & s ) : GStructured( p )
+    GPhraseList() : Structured() {}
+    GPhraseList( Content * p ) : Structured( p ) {}
+    GPhraseList( Content * p, const QByteArray & s ) : Structured( p )
       { from7BitString( s ); }
-    GPhraseList( Content * p, const QString & s, const QByteArray & cs ) : GStructured( p )
+    GPhraseList( Content * p, const QString & s, const QByteArray & cs ) : Structured( p )
       { fromUnicodeString( s, cs ); }
     ~GPhraseList() {}
 
@@ -430,14 +428,14 @@ class KMIME_EXPORT GPhraseList : public GStructured
     QStringList mPhraseList;
 };
 
-class KMIME_EXPORT GDotAtom : public GStructured
+class KMIME_EXPORT GDotAtom : public Structured
 {
   public:
-    GDotAtom() : GStructured() {}
-    GDotAtom( Content *p ) : GStructured( p ) {}
-    GDotAtom( Content *p, const QByteArray &s ) : GStructured( p )
+    GDotAtom() : Structured() {}
+    GDotAtom( Content *p ) : Structured( p ) {}
+    GDotAtom( Content *p, const QByteArray &s ) : Structured( p )
       { from7BitString( s ); }
-    GDotAtom( Content *p, const QString &s, const QByteArray &cs ) : GStructured( p )
+    GDotAtom( Content *p, const QString &s, const QByteArray &cs ) : Structured( p )
       { fromUnicodeString( s, cs ); }
     ~GDotAtom() {}
 
@@ -447,14 +445,14 @@ class KMIME_EXPORT GDotAtom : public GStructured
     QString mDotAtom;
 };
 
-class KMIME_EXPORT GParametrized : public GStructured
+class KMIME_EXPORT GParametrized : public Structured
 {
   public:
-    GParametrized() : GStructured() {}
-    GParametrized( Content *p ) : GStructured( p ) {}
-    GParametrized( Content *p, const QByteArray &s ) : GStructured( p )
+    GParametrized() : Structured() {}
+    GParametrized( Content *p ) : Structured( p ) {}
+    GParametrized( Content *p, const QByteArray &s ) : Structured( p )
       { from7BitString( s ); }
-    GParametrized( Content *p, const QString & s, const QByteArray &cs ) : GStructured( p )
+    GParametrized( Content *p, const QString & s, const QByteArray &cs ) : Structured( p )
       { fromUnicodeString( s, cs ); }
     ~GParametrized() {}
 
@@ -509,14 +507,14 @@ class KMIME_EXPORT GCISTokenWithParameterList : public GParametrized
 //
 
 /** Represents the Return-Path header field. */
-class KMIME_EXPORT ReturnPath : public Generics::GAddress
+class KMIME_EXPORT ReturnPath : public Generics::Address
 {
   public:
-    ReturnPath() : Generics::GAddress() {}
-    ReturnPath( Content *p ) : Generics::GAddress( p ) {}
-    ReturnPath( Content *p, const QByteArray &s ) : Generics::GAddress( p )
+    ReturnPath() : Generics::Address() {}
+    ReturnPath( Content *p ) : Generics::Address( p ) {}
+    ReturnPath( Content *p, const QByteArray &s ) : Generics::Address( p )
       { from7BitString( s ); }
-    ReturnPath( Content *p, const QString &s, const QByteArray &cs ) : Generics::GAddress( p )
+    ReturnPath( Content *p, const QString &s, const QByteArray &cs ) : Generics::Address( p )
       { fromUnicodeString( s, cs ); }
     ~ReturnPath() {}
 
@@ -526,10 +524,12 @@ class KMIME_EXPORT ReturnPath : public Generics::GAddress
     bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
 };
 
+
+mk_trivial_subclass_with_name( ContentDescription, Content-Description, Unstructured );
 #if defined(KMIME_NEW_STYLE_CLASSTREE)
 // classes whose names collide with earlier ones:
 
-// GAddress et al.:
+// Address et al.:
 
 // rfc(2)822 headers:
 mk_trivial_subclass( From, MailboxList );
@@ -553,13 +553,15 @@ mk_trivial_subclass( Keywords, GPhraseList );
 
 mk_trivial_subclass_with_name( MIMEVersion, MIME-Version, GDotAtom );
 
-// GIdent:
+// Ident:
 
-mk_trivial_subclass_with_name( MessageID, Message-ID, GSingleIdent );
-mk_trivial_subclass_with_name( ContentID, Content-ID, GSingleIdent );
-mk_trivial_subclass( Supersedes, GSingleIdent );
-mk_trivial_subclass_with_name( InReplyTo, In-Reply-To, GIdent );
-mk_trivial_subclass( References, GIdent );
+mk_trivial_subclass_with_name( MessageID, Message-ID, SingleIdent );
+mk_trivial_subclass_with_name( ContentID, Content-ID, SingleIdent );
+mk_trivial_subclass( Supersedes, SingleIdent );
+#endif
+mk_trivial_subclass_with_name( InReplyTo, In-Reply-To, Ident );
+#if defined(KMIME_NEW_STYLE_CLASSTREE)
+mk_trivial_subclass( References, Ident );
 
 // GContentType:
 
@@ -580,29 +582,29 @@ mk_trivial_subclass_with_name( ContentDisposition, Content-Disposition,
 
 /** Represents an arbitrary header, that can contain
     any header-field.
-    Adds a type over GUnstructured.
-    @see GUnstructured
+    Adds a type over Unstructured.
+    @see Unstructured
 */
-class KMIME_EXPORT Generic : public Generics::GUnstructured
+class KMIME_EXPORT Generic : public Generics::Unstructured
 {
   public:
-    Generic() : Generics::GUnstructured(), t_ype( 0 ) {}
-    Generic( const char *t ) : Generics::GUnstructured(), t_ype( 0 )
+    Generic() : Generics::Unstructured(), t_ype( 0 ) {}
+    Generic( const char *t ) : Generics::Unstructured(), t_ype( 0 )
       { setType( t ); }
     Generic( const char *t, Content *p )
-      : Generics::GUnstructured( p ), t_ype( 0 )
+      : Generics::Unstructured( p ), t_ype( 0 )
       { setType( t ); }
     Generic( const char *t, Content *p, const QByteArray &s )
-      : Generics::GUnstructured( p, s ), t_ype( 0 )
+      : Generics::Unstructured( p, s ), t_ype( 0 )
       { setType( t ); }
     Generic( const char *t, Content *p, const QString &s, const QByteArray &cs )
-      : Generics::GUnstructured( p, s, cs ), t_ype( 0 )
+      : Generics::Unstructured( p, s, cs ), t_ype( 0 )
       { setType( t ); }
     ~Generic() { delete[] t_ype; }
 
-    virtual void clear() { delete[] t_ype; GUnstructured::clear(); }
+    virtual void clear() { delete[] t_ype; Unstructured::clear(); }
     virtual bool isEmpty() const
-      { return ( t_ype == 0 || GUnstructured::isEmpty() ); }
+      { return ( t_ype == 0 || Unstructured::isEmpty() ); }
     virtual const char *type() const
       { return t_ype; }
     void setType( const char *type );
@@ -612,15 +614,15 @@ class KMIME_EXPORT Generic : public Generics::GUnstructured
 };
 
 /** Represents a "Subject" header */
-class KMIME_EXPORT Subject : public Generics::GUnstructured
+class KMIME_EXPORT Subject : public Generics::Unstructured
 {
   public:
-    Subject() : Generics::GUnstructured() {}
-    Subject( Content *p ) : Generics::GUnstructured( p ) {}
+    Subject() : Generics::Unstructured() {}
+    Subject( Content *p ) : Generics::Unstructured( p ) {}
     Subject( Content *p, const QByteArray &s )
-      : Generics::GUnstructured( p, s ) {}
+      : Generics::Unstructured( p, s ) {}
     Subject( Content *p, const QString &s, const QByteArray &cs )
-      : Generics::GUnstructured( p, s, cs ) {}
+      : Generics::Unstructured( p, s, cs ) {}
     ~Subject() {}
 
     virtual const char *type() const { return "Subject"; }
@@ -631,15 +633,15 @@ class KMIME_EXPORT Subject : public Generics::GUnstructured
 };
 
 /** Represents a "Organization" header */
-class KMIME_EXPORT Organization : public Generics::GUnstructured
+class KMIME_EXPORT Organization : public Generics::Unstructured
 {
   public:
-    Organization() : Generics::GUnstructured() {}
-    Organization( Content *p ) : Generics::GUnstructured( p ) {}
+    Organization() : Generics::Unstructured() {}
+    Organization( Content *p ) : Generics::Unstructured( p ) {}
     Organization( Content *p, const QByteArray &s )
-      : Generics::GUnstructured( p, s ) {}
+      : Generics::Unstructured( p, s ) {}
     Organization( Content *p, const QString &s, const QByteArray &cs )
-      : Generics::GUnstructured( p, s, cs ) {}
+      : Generics::Unstructured( p, s, cs ) {}
     ~Organization() {}
 
     virtual const char *type() const { return "Organization"; }

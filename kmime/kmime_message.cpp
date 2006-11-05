@@ -93,6 +93,10 @@ QByteArray Message::assembleHeaders()
   if ( ( h = userAgent( false )) != 0 )
     newHead += h->as7BitString() + '\n';
 
+  // In-Reply-To
+  if ( ( h = inReplyTo( false ) ) != 0 )
+    newHead += h->as7BitString() + '\n';
+
   //Mime-Version
   newHead += "MIME-Version: 1.0\n";
 
@@ -167,4 +171,11 @@ bool Message::removeHeader( const char *type )
   return true;
 }
 
-} // namespace KMime
+KMime::Headers::InReplyTo* Message::inReplyTo(bool create)
+{
+  KMime::Headers::InReplyTo *p = 0;
+  return getHeaderInstance( p, create );
+}
+
+}
+

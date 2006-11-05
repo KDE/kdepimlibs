@@ -76,14 +76,14 @@ QByteArray Base::defaultCS()
 
 namespace Generics {
 
-//-----<GUnstructured>-------------------------
+//-----<Unstructured>-------------------------
 
-void GUnstructured::from7BitString( const QByteArray &str )
+void Unstructured::from7BitString( const QByteArray &str )
 {
   d_ecoded = decodeRFC2047String( str, e_ncCS, defaultCS(), forceCS() );
 }
 
-QByteArray GUnstructured::as7BitString( bool withHeaderType )
+QByteArray Unstructured::as7BitString( bool withHeaderType )
 {
   QByteArray result;
   if ( withHeaderType ) {
@@ -94,27 +94,27 @@ QByteArray GUnstructured::as7BitString( bool withHeaderType )
   return result;
 }
 
-void GUnstructured::fromUnicodeString( const QString &str,
+void Unstructured::fromUnicodeString( const QString &str,
 				       const QByteArray &suggestedCharset )
 {
   d_ecoded = str;
   e_ncCS = cachedCharset( suggestedCharset );
 }
 
-QString GUnstructured::asUnicodeString()
+QString Unstructured::asUnicodeString()
 {
   return d_ecoded;
 }
 
-//-----</GUnstructured>-------------------------
+//-----</Unstructured>-------------------------
 
-//-----<GStructured>-------------------------
+//-----<Structured>-------------------------
 
-//-----</GStructured>-------------------------
+//-----</Structured>-------------------------
 
-//-----<GAddress>-------------------------
+//-----<Address>-------------------------
 
-//-----</GAddress>-------------------------
+//-----</Address>-------------------------
 
 //-----<MailboxList>-------------------------
 
@@ -126,14 +126,14 @@ bool MailboxList::parse( const char* &scursor, const char *const send,
   // sender := "Sender:" mailbox CRLF
 
   // parse an address-list:
-  QList<Address> maybeAddressList;
+  QList<Types::Address> maybeAddressList;
   if ( !parseAddressList( scursor, send, maybeAddressList, isCRLF ) )
     return false;
 
   mMailboxList.clear();
 
   // extract the mailboxes and complain if there are groups:
-  QList<Address>::Iterator it;
+  QList<Types::Address>::Iterator it;
   for ( it = maybeAddressList.begin(); it != maybeAddressList.end() ; ++it ) {
     if ( !(*it).displayName.isEmpty() ) {
       KMIME_WARN << "mailbox groups in header disallowing them! Name: \""
@@ -167,7 +167,7 @@ bool SingleMailbox::parse( const char* &scursor, const char *const send,
 bool AddressList::parse( const char* &scursor, const char *const send,
 			 bool isCRLF )
 {
-  QList<Address> maybeAddressList;
+  QList<Types::Address> maybeAddressList;
   if ( !parseAddressList( scursor, send, maybeAddressList, isCRLF ) )
     return false;
 
@@ -358,9 +358,9 @@ bool GCISTokenWithParameterList::parse( const char* &scursor,
 
 //-----</GTokenWithParameterList>-------------------------
 
-//-----<GIdent>-------------------------
+//-----<Ident>-------------------------
 
-bool GIdent::parse( const char* &scursor, const char * const send, bool isCRLF )
+bool Ident::parse( const char* &scursor, const char * const send, bool isCRLF )
 {
   // msg-id   := "<" id-left "@" id-right ">"
   // id-left  := dot-atom-text / no-fold-quote / local-part
@@ -392,13 +392,13 @@ bool GIdent::parse( const char* &scursor, const char * const send, bool isCRLF )
   return true;
 }
 
-//-----</GIdent>-------------------------
+//-----</Ident>-------------------------
 
-//-----<GSingleIdent>-------------------------
+//-----<SingleIdent>-------------------------
 
-bool GSingleIdent::parse( const char* &scursor, const char * const send, bool isCRLF )
+bool SingleIdent::parse( const char* &scursor, const char * const send, bool isCRLF )
 {
-  if ( !GIdent::parse( scursor, send, isCRLF ) )
+  if ( !Ident::parse( scursor, send, isCRLF ) )
     return false;
 
   if ( mMsgIdList.count() > 1 ) {
@@ -408,7 +408,7 @@ bool GSingleIdent::parse( const char* &scursor, const char * const send, bool is
   return true;
 }
 
-//-----</GSingleIdent>-------------------------
+//-----</SingleIdent>-------------------------
 
 } // namespace Generics
 

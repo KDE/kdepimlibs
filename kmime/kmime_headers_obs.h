@@ -360,20 +360,4 @@ class KMIME_EXPORT CDisposition : public Base {
 
 };
 
-
-/** Represents a "Content-Description" header */
-class KMIME_EXPORT CDescription : public Generics::GUnstructured {
-
-  public:
-    CDescription() : Generics::GUnstructured()  {}
-    CDescription( Content * p ) : Generics::GUnstructured( p )  {}
-    CDescription( Content * p, const QByteArray & s )
-      : Generics::GUnstructured( p, s ) {};
-    CDescription( Content * p, const QString & s, const QByteArray & cs )
-      : Generics::GUnstructured( p, s, cs ) {}
-    ~CDescription()  {}
-
-    virtual const char* type() const { return "Content-Description"; }
-};
-
 #endif  // __KMIME_HEADERS_OBS_H__

@@ -7,28 +7,28 @@ m indicates rfc2045/et al. proposed standard headers
 u indicates usefor headers
 
 + Base*                 // defines common interface
-  + GUnstructured*      // Base Class for unstructured header fields
+  + Unstructured*       // Base Class for unstructured header fields
     + Generic+          // can hold any header field
 r   + Subject
 r   + Comment
 m   + ContentDescription
     + Organization     // must also be registered as "Organisation"
     + UserAgent
-  + GStructured*       // Base Class for structured header fields
-    + GAddress*        // Base Class for address-type header fields
+  + Structured*       // Base Class for structured header fields
+    + Address*        // Base Class for address-type header fields
       + MailboxList*   // doesn't allow groups: From
 r       + From
-	+ SingleMailbox* // only allows a single mailbox: Sender
+        + SingleMailbox* // only allows a single mailbox: Sender
 r         + Sender
       + AddressList*   // allows groups: ReplyTo, To, Cc, Bcc
 r       + ReplyTo
 r       + To
 r       + Cc
 r       + Bcc
-	+ MailCopiesTo // ??? listed in usefor ???
+        + MailCopiesTo // ??? listed in usefor ???
 r     + ReturnPath+    // allows only a single angle-addr
-      + GIdent*        // Base Class for "Identification Fields"
-	+ GSingleIdent* // allows only a single msg-id
+      + Ident*        // Base Class for "Identification Fields"
+        + GSingleIdent* // allows only a single msg-id
 r         + MessageID
 m         + ContentID
 u?        + Supersedes
