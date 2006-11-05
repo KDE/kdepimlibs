@@ -110,6 +110,12 @@ QString Unstructured::asUnicodeString()
 
 //-----<Structured>-------------------------
 
+void Structured::from7BitString(const QByteArray & str)
+{
+  const char *cursor = str.constData();
+  parse( cursor, cursor + str.length() );
+}
+
 //-----</Structured>-------------------------
 
 //-----<Address>-------------------------
@@ -390,6 +396,14 @@ bool Ident::parse( const char* &scursor, const char * const send, bool isCRLF )
     if ( *scursor == ',' ) scursor++;
   }
   return true;
+}
+
+QStringList Ident::identifiers() const
+{
+  QStringList rv;
+  foreach ( Types::AddrSpec addr, mMsgIdList )
+    rv.append( addr.asString() );
+  return rv;
 }
 
 //-----</Ident>-------------------------

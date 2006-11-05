@@ -311,6 +311,11 @@ class KMIME_EXPORT Structured : public Base
     Structured( Content *p, const QString &s, const QByteArray &cs ) : Base( p )
       { fromUnicodeString( s, cs ); }
     ~Structured() {}
+
+    virtual void from7BitString( const QByteArray &str );
+
+  protected:
+    virtual bool parse( const char* &scursor, const char* const send, bool isCRLF = false ) = 0;
 };
 
 class KMIME_EXPORT Address : public Structured
@@ -382,6 +387,8 @@ class KMIME_EXPORT Ident : public Address
     Ident( Content * p, const QString & s, const QByteArray & cs )
       : Address( p ) { fromUnicodeString( s, cs ); }
     ~Ident() {}
+
+    QStringList identifiers() const;
 
   protected:
     bool parse( const char* & scursor, const char * const send, bool isCRLF=false );

@@ -6,6 +6,16 @@ include_directories(
 
 )
 
+# convenience macro to add libkmime qtestlib unit-tests
+macro(add_kmime_test _source)
+  set(_test ${_source})
+  get_filename_component(_name ${_source} NAME_WE)
+  kde4_automoc(${_test})
+  kde4_add_executable(${_name} RUN_UNINSTALLED ${_test})
+  target_link_libraries(${_name} kmime ${QT_QTTEST_LIBRARY})
+  add_test( kmime-${_name} ${EXECUTABLE_OUTPUT_PATH}/${_name})
+endmacro(add_kmime_test)
+
 
 ########### next target ###############
 
@@ -57,55 +67,13 @@ kde4_add_executable(test_kmime_codec ${test_kmime_codec_SRCS})
 
 target_link_libraries(test_kmime_codec  kmime ${KDE4_KDECORE_LIBS} )
 
-########### next target ###############
 
-set(rfc2047test_SRCS rfc2047test.cpp )
-
-kde4_automoc(${rfc2047test_SRCS})
-
-kde4_add_executable(rfc2047test RUN_UNINSTALLED ${rfc2047test_SRCS})
-
-target_link_libraries(rfc2047test kmime ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
-
-add_test(libkmime-rfc2047test ${EXECUTABLE_OUTPUT_PATH}/rfc2047test)
-
-########### next target ###############
-
-set(kmime_util_test_SRCS kmime_util_test.cpp )
-
-kde4_automoc(${kmime_util_test_SRCS})
-
-kde4_add_executable(kmime_util_test RUN_UNINSTALLED ${kmime_util_test_SRCS})
-
-target_link_libraries(kmime_util_test  kmime ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
-
-add_test(libkmime-kmime_util_test ${EXECUTABLE_OUPUT_PATH}/kmime_util_test)
-
-########### next target ###############
-
-set(contentindextest_SRCS contentindextest.cpp )
-
-kde4_automoc(${contentindextest_SRCS})
-
-kde4_add_executable(contentindextest RUN_UNINSTALLED ${contentindextest_SRCS})
-
-target_link_libraries(contentindextest  kmime ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
-
-add_test(libkmime-contentindextest ${EXECUTABLE_OUPUT_PATH}/contentindextest)
-
-########### next target ###############
-
-set(kmime_content_test_SRCS kmime_content_test.cpp )
-
-kde4_automoc(${kmime_content_test_SRCS})
-
-kde4_add_executable(kmime_content_test RUN_UNINSTALLED ${kmime_content_test_SRCS})
-
-target_link_libraries(kmime_content_test  kmime ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
-
-add_test(libkmime-contenttest ${EXECUTABLE_OUPUT_PATH}/kmime_content_test)
-
-########### install files ###############
+# qtestlib unit tests
+add_kmime_test(rfc2047test.cpp)
+add_kmime_test(kmime_util_test.cpp)
+add_kmime_test(contentindextest.cpp)
+add_kmime_test(kmime_content_test.cpp)
+add_kmime_test(headertest.cpp)
 
 endif(KDE4_BUILD_TESTS)
 
