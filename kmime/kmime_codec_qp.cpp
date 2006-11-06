@@ -1,7 +1,7 @@
 /*  -*- c++ -*-
     kmime_codec_qp.cpp
 
-    This file is part of KMime, the KDE internet mail/usenet news message library.
+    KMime, the KDE internet mail/usenet news message library.
     Copyright (c) 2002 Marc Mutz <mutz@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -21,7 +21,6 @@
 */
 
 #include "kmime_codec_qp.h"
-
 #include "kmime_util.h"
 
 #include <kdebug.h>
@@ -34,22 +33,27 @@ namespace KMime {
 
 // some helpful functions:
 
-static inline char binToHex( uchar value ) {
-  if ( value > 9 )
+static inline char binToHex( uchar value )
+{
+  if ( value > 9 ) {
     return value + 'A' - 10;
-  else
+  } else {
     return value + '0';
+  }
 }
 
-static inline uchar highNibble( uchar ch ) {
+static inline uchar highNibble( uchar ch )
+{
   return ch >> 4;
 }
 
-static inline uchar lowNibble( uchar ch ) {
+static inline uchar lowNibble( uchar ch )
+{
   return ch & 0xF;
 }
 
-static inline bool keep( uchar ch ) {
+static inline bool keep( uchar ch )
+{
   // no CTLs, except HT and not '?'
   return !( ch < ' ' && ch != '\t' || ch == '?' );
 }
@@ -58,7 +62,8 @@ static inline bool keep( uchar ch ) {
 // QuotedPrintableCodec
 //
 
-class QuotedPrintableEncoder : public Encoder {
+class QuotedPrintableEncoder : public Encoder
+{
   char mInputBuffer[16];
   uchar mCurrentLineLength; // 0..76
   uchar mAccu;
@@ -71,38 +76,35 @@ class QuotedPrintableEncoder : public Encoder {
   bool mSawCR             : 1;
   bool mFinishing         : 1;
   bool mFinished          : 1;
-protected:
+  protected:
   friend class QuotedPrintableCodec;
   QuotedPrintableEncoder( bool withCRLF=false )
-    : Encoder( withCRLF ), mCurrentLineLength(0), mAccu(0),
-      mInputBufferReadCursor(0), mInputBufferWriteCursor(0),
-      mAccuNeedsEncoding(Never),
-      mSawLineEnd(false), mSawCR(false), mFinishing(false),
-      mFinished(false) {}
+    : Encoder( withCRLF ), mCurrentLineLength( 0 ), mAccu( 0 ),
+      mInputBufferReadCursor( 0 ), mInputBufferWriteCursor( 0 ),
+      mAccuNeedsEncoding( Never ),
+      mSawLineEnd( false ), mSawCR( false ), mFinishing( false ),
+      mFinished( false ) {}
 
-  bool needsEncoding( uchar ch ) {
-    return ( ch > '~' || ch < ' ' && ch != '\t' || ch == '=' );
-  }
-  bool needsEncodingAtEOL( uchar ch ) {
-    return ( ch == ' ' || ch == '\t' );
-  }
-  bool needsEncodingAtBOL( uchar ch ) {
-    return ( ch == 'F' || ch == '.' || ch == '-' );
-  }
-  bool fillInputBuffer( const char* & scursor, const char * const send );
+  bool needsEncoding( uchar ch )
+    { return ( ch > '~' || ch < ' ' && ch != '\t' || ch == '=' ); }
+  bool needsEncodingAtEOL( uchar ch )
+    { return ( ch == ' ' || ch == '\t' ); }
+  bool needsEncodingAtBOL( uchar ch )
+    { return ( ch == 'F' || ch == '.' || ch == '-' ); }
+  bool fillInputBuffer( const char* &scursor, const char * const send );
   bool processNextChar();
-  void createOutputBuffer( char* & dcursor, const char * const dend );
-public:
-  virtual ~QuotedPrintableEncoder() {}
+  void createOutputBuffer( char* &dcursor, const char * const dend );
+  public:
+    virtual ~QuotedPrintableEncoder() {}
 
-  bool encode( const char* & scursor, const char * const send,
-	       char* & dcursor, const char * const dend );
+    bool encode( const char* &scursor, const char * const send,
+                 char* &dcursor, const char * const dend );
 
-  bool finish( char* & dcursor, const char * const dend );
+    bool finish( char* &dcursor, const char * const dend );
 };
 
-
-class QuotedPrintableDecoder : public Decoder {
+class QuotedPrintableDecoder : public Decoder
+{
   const char mEscapeChar;
   char mBadChar;
   /** @p accu holds the msb nibble of the hexchar or zero. */
@@ -110,12 +112,12 @@ class QuotedPrintableDecoder : public Decoder {
   /** @p insideHexChar is true iff we're inside an hexchar (=XY).
       Together with @ref mAccu, we can build this states:
       @li @p insideHexChar == @p false:
-          normal text
+      normal text
       @li @p insideHexChar == @p true, @p mAccu == 0:
-          saw the leading '='
+      saw the leading '='
       @li @p insideHexChar == @p true, @p mAccu != 0:
-          saw the first nibble '=X'
-   */
+      saw the first nibble '=X'
+  */
   const bool mQEncoding;
   bool mInsideHexChar;
   bool mFlushing;
@@ -124,62 +126,66 @@ class QuotedPrintableDecoder : public Decoder {
   /** @p mLastChar holds the first char of an encoded char, so that
       we are able to keep the first char if the second char is invalid. */
   char mLastChar;
-protected:
+  protected:
   friend class QuotedPrintableCodec;
   friend class Rfc2047QEncodingCodec;
   friend class Rfc2231EncodingCodec;
   QuotedPrintableDecoder( bool withCRLF=false,
-			  bool aQEncoding=false, char aEscapeChar='=' )
+                          bool aQEncoding=false, char aEscapeChar='=' )
     : Decoder( withCRLF ),
-      mEscapeChar(aEscapeChar),
-      mBadChar(0),
-      mAccu(0),
-      mQEncoding(aQEncoding),
-      mInsideHexChar(false),
-      mFlushing(false),
-      mExpectLF(false),
-      mHaveAccu(false),
-      mLastChar(0) {}
-public:
-  virtual ~QuotedPrintableDecoder() {}
+      mEscapeChar( aEscapeChar ),
+      mBadChar( 0 ),
+      mAccu( 0 ),
+      mQEncoding( aQEncoding ),
+      mInsideHexChar( false ),
+      mFlushing( false ),
+      mExpectLF( false ),
+      mHaveAccu( false ),
+      mLastChar( 0 ) {}
+  public:
+    virtual ~QuotedPrintableDecoder() {}
 
-  bool decode( const char* & scursor, const char * const send,
-	       char* & dcursor, const char * const dend );
-  bool finish( char* &, const char * const );
+    bool decode( const char* &scursor, const char * const send,
+                 char* &dcursor, const char * const dend );
+    bool finish( char* &, const char * const );
 };
-
 
 class Rfc2047QEncodingEncoder : public Encoder {
   uchar      mAccu;
   uchar      mStepNo;
   const char mEscapeChar;
   bool       mInsideFinishing : 1;
-protected:
+  protected:
   friend class Rfc2047QEncodingCodec;
   friend class Rfc2231EncodingCodec;
   Rfc2047QEncodingEncoder( bool withCRLF=false, char aEscapeChar='=' )
     : Encoder( withCRLF ),
-      mAccu(0), mStepNo(0), mEscapeChar( aEscapeChar ),
+      mAccu( 0 ), mStepNo( 0 ), mEscapeChar( aEscapeChar ),
       mInsideFinishing( false )
-  {
-    // else an optimization in ::encode might break.
-    assert( aEscapeChar == '=' || aEscapeChar == '%' );
-  }
+    {
+      // else an optimization in ::encode might break.
+      assert( aEscapeChar == '=' || aEscapeChar == '%' );
+    }
 
   // this code assumes that isEText( mEscapeChar ) == false!
   bool needsEncoding( uchar ch ) {
-    if ( ch > 'z' ) return true; // {|}~ DEL and 8bit chars need
-    if ( !isEText( ch ) ) return true; // all but a-zA-Z0-9!/*+- need, too
-    if ( mEscapeChar == '%' && ( ch == '*' || ch == '/' ) )
+    if ( ch > 'z' ) {
+      return true; // {|}~ DEL and 8bit chars need
+    }
+    if ( !isEText( ch ) ) {
+      return true; // all but a-zA-Z0-9!/*+- need, too
+    }
+    if ( mEscapeChar == '%' && ( ch == '*' || ch == '/' ) ) {
       return true; // not allowed in rfc2231 encoding
+    }
     return false;
   }
 
-public:
+  public:
   virtual ~Rfc2047QEncodingEncoder() {}
 
   bool encode( const char* & scursor, const char * const send,
-	       char* & dcursor, const char * const dend );
+               char* & dcursor, const char * const dend );
   bool finish( char* & dcursor, const char * const dend );
 };
 
@@ -207,7 +213,7 @@ Decoder * QuotedPrintableCodec::makeDecoder( bool withCRLF ) const {
 }
 
 int QuotedPrintableCodec::maxDecodedSizeFor( int insize, bool withCRLF ) const {
-    return QuotedPrintableDecoder_maxDecodedSizeFor(insize, withCRLF);
+  return QuotedPrintableDecoder_maxDecodedSizeFor(insize, withCRLF);
 }
 
 Encoder * Rfc2047QEncodingCodec::makeEncoder( bool withCRLF ) const {
@@ -219,7 +225,7 @@ Decoder * Rfc2047QEncodingCodec::makeDecoder( bool withCRLF ) const {
 }
 
 int Rfc2047QEncodingCodec::maxDecodedSizeFor( int insize, bool withCRLF ) const {
-    return QuotedPrintableDecoder_maxDecodedSizeFor(insize, withCRLF);
+  return QuotedPrintableDecoder_maxDecodedSizeFor(insize, withCRLF);
 }
 
 Encoder * Rfc2231EncodingCodec::makeEncoder( bool withCRLF ) const {
@@ -231,17 +237,20 @@ Decoder * Rfc2231EncodingCodec::makeDecoder( bool withCRLF ) const {
 }
 
 int Rfc2231EncodingCodec::maxDecodedSizeFor( int insize, bool withCRLF ) const {
-    return QuotedPrintableDecoder_maxDecodedSizeFor(insize, withCRLF);
+  return QuotedPrintableDecoder_maxDecodedSizeFor(insize, withCRLF);
 }
 
-  /********************************************************/
-  /********************************************************/
-  /********************************************************/
+/********************************************************/
+/********************************************************/
+/********************************************************/
 
-bool QuotedPrintableDecoder::decode( const char* & scursor, const char * const send,
-				     char* & dcursor, const char * const dend ) {
-  if ( mWithCRLF )
+bool QuotedPrintableDecoder::decode( const char* &scursor,
+                                     const char * const send,
+                                     char* &dcursor, const char * const dend )
+{
+  if ( mWithCRLF ) {
     kWarning() << "CRLF output for decoders isn't yet supported!" << endl;
+  }
 
   while ( scursor != send && dcursor != dend ) {
     if ( mFlushing ) {
@@ -255,25 +264,26 @@ bool QuotedPrintableDecoder::decode( const char* & scursor, const char * const s
       // quoted-printable (e.g. CTLs, 8Bits).
       // A fast way to suppress mBadChar output is to set it to NUL.
       if ( mInsideHexChar ) {
-	// output '='
-	*dcursor++ = mEscapeChar;
-	mInsideHexChar = false;
+        // output '='
+        *dcursor++ = mEscapeChar;
+        mInsideHexChar = false;
       } else if ( mHaveAccu ) {
-	// output the high nibble of the accumulator:
-	*dcursor++ = mLastChar;
-	mHaveAccu = false;
-	mAccu = 0;
+        // output the high nibble of the accumulator:
+        *dcursor++ = mLastChar;
+        mHaveAccu = false;
+        mAccu = 0;
       } else {
-	// output mBadChar
-	assert( mAccu == 0 );
-	if ( mBadChar ) {
-	  if ( mBadChar == '=' )
+        // output mBadChar
+        assert( mAccu == 0 );
+        if ( mBadChar ) {
+          if ( mBadChar == '=' ) {
             mInsideHexChar = true;
-          else
-	    *dcursor++ = mBadChar;
-	  mBadChar = 0;
-	}
-	mFlushing = false;
+          } else {
+            *dcursor++ = mBadChar;
+          }
+          mBadChar = 0;
+        }
+        mFlushing = false;
       }
       continue;
     }
@@ -284,7 +294,7 @@ bool QuotedPrintableDecoder::decode( const char* & scursor, const char * const s
 
     if ( mExpectLF && ch != '\n' ) {
       kWarning() << "QuotedPrintableDecoder: "
-	"illegally formed soft linebreak or lonely CR!" << endl;
+        "illegally formed soft linebreak or lonely CR!" << endl;
       mInsideHexChar = false;
       mExpectLF = false;
       assert( mAccu == 0 );
@@ -293,47 +303,47 @@ bool QuotedPrintableDecoder::decode( const char* & scursor, const char * const s
     if ( mInsideHexChar ) {
       // next char(s) represent nibble instead of itself:
       if ( ch <= '9' ) {
-	if ( ch >= '0' ) {
-	  value = ch - '0';
-	} else {
-	  switch ( ch ) {
-	  case '\r':
-	    mExpectLF = true;
-	    break;
-	  case '\n':
-	    // soft line break, but only if mAccu is NUL.
-	    if ( !mHaveAccu ) {
-	      mExpectLF = false;
-	      mInsideHexChar = false;
-	      break;
-	    }
-	    // else fall through
-	  default:
-	    kWarning() << "QuotedPrintableDecoder: "
-	      "illegally formed hex char! Outputting verbatim." << endl;
-	    mBadChar = ch;
-	    mFlushing = true;
-	  }
-	  continue;
-	}
+        if ( ch >= '0' ) {
+          value = ch - '0';
+        } else {
+          switch ( ch ) {
+          case '\r':
+            mExpectLF = true;
+            break;
+          case '\n':
+            // soft line break, but only if mAccu is NUL.
+            if ( !mHaveAccu ) {
+              mExpectLF = false;
+              mInsideHexChar = false;
+              break;
+            }
+            // else fall through
+          default:
+            kWarning() << "QuotedPrintableDecoder: "
+              "illegally formed hex char! Outputting verbatim." << endl;
+            mBadChar = ch;
+            mFlushing = true;
+          }
+          continue;
+        }
       } else { // ch > '9'
-	if ( ch <= 'F' ) {
-	  if ( ch >= 'A' ) {
-	    value = 10 + ch - 'A';
-	  } else { // [:-@]
-	    mBadChar = ch;
-	    mFlushing = true;
-	    continue;
-	  }
-	} else { // ch > 'F'
-	  if ( ch <= 'f' && ch >= 'a' ) {
-	    value = 10 + ch - 'a';
-	  } else {
-	    mBadChar = ch;
-	    mFlushing = true;
-	    continue;
-	  }
-	}
+        if ( ch <= 'F' ) {
+          if ( ch >= 'A' ) {
+            value = 10 + ch - 'A';
+          } else { // [:-@]
+            mBadChar = ch;
+            mFlushing = true;
+            continue;
+          }
+        } else { // ch > 'F'
+          if ( ch <= 'f' && ch >= 'a' ) {
+            value = 10 + ch - 'a';
+          } else {
+            mBadChar = ch;
+            mFlushing = true;
+            continue;
+          }
+        }
       }
 
       assert( value < 16 );
@@ -341,40 +351,41 @@ bool QuotedPrintableDecoder::decode( const char* & scursor, const char * const s
       assert( !mExpectLF );
 
       if ( mHaveAccu ) {
-	*dcursor++ = char( mAccu | value );
-	mAccu = 0;
-	mHaveAccu = false;
-	mInsideHexChar = false;
+        *dcursor++ = char( mAccu | value );
+        mAccu = 0;
+        mHaveAccu = false;
+        mInsideHexChar = false;
       } else {
-	mHaveAccu = true;
-	mAccu = value << 4;
+        mHaveAccu = true;
+        mAccu = value << 4;
         mLastChar = ch;
       }
     } else { // not mInsideHexChar
       if ( ch <= '~' && ch >= ' ' || ch == '\t' ) {
-	if ( ch == mEscapeChar ) {
-	  mInsideHexChar = true;
-	} else if ( mQEncoding && ch == '_' ) {
-	  *dcursor++ = char(0x20);
-	} else {
-	  *dcursor++ = char(ch);
-	}
+        if ( ch == mEscapeChar ) {
+          mInsideHexChar = true;
+        } else if ( mQEncoding && ch == '_' ) {
+          *dcursor++ = char( 0x20 );
+        } else {
+          *dcursor++ = char( ch );
+        }
       } else if ( ch == '\n' ) {
-	*dcursor++ = '\n';
-	mExpectLF = false;
+        *dcursor++ = '\n';
+        mExpectLF = false;
       } else if ( ch == '\r' ) {
-	mExpectLF = true;
+        mExpectLF = true;
       } else {
-	kWarning() << "QuotedPrintableDecoder: " << ch <<
-	  " illegal character in input stream! Ignoring." << endl;
+        kWarning() << "QuotedPrintableDecoder: " << ch <<
+          " illegal character in input stream! Ignoring." << endl;
       }
     }
   }
 
-  return (scursor == send);
+  return ( scursor == send );
 }
 
-bool QuotedPrintableDecoder::finish( char* & dcursor, const char * const dend ) {
+bool QuotedPrintableDecoder::finish( char* &dcursor, const char * const dend )
+{
   while ( ( mInsideHexChar || mHaveAccu || mFlushing ) && dcursor != dend ) {
     // we have to flush chars
     if ( mInsideHexChar ) {
@@ -387,8 +398,7 @@ bool QuotedPrintableDecoder::finish( char* & dcursor, const char * const dend ) 
       *dcursor++ = mLastChar;
       mHaveAccu = false;
       mAccu = 0;
-    }
-    else {
+    } else {
       // output mBadChar
       assert( mAccu == 0 );
       if ( mBadChar ) {
@@ -403,16 +413,17 @@ bool QuotedPrintableDecoder::finish( char* & dcursor, const char * const dend ) 
   return !( mHaveAccu || mFlushing );
 }
 
-bool QuotedPrintableEncoder::fillInputBuffer( const char* & scursor,
-					      const char * const send ) {
+bool QuotedPrintableEncoder::fillInputBuffer( const char* &scursor,
+                                              const char * const send ) {
   // Don't read more if there's still a tail of a line in the buffer:
-  if ( mSawLineEnd )
+  if ( mSawLineEnd ) {
     return true;
+  }
 
   // Read until the buffer is full or we have found CRLF or LF (which
   // don't end up in the input buffer):
   for ( ; ( mInputBufferWriteCursor + 1 ) % 16 != mInputBufferReadCursor
-	  && scursor != send ; mInputBufferWriteCursor++ ) {
+          && scursor != send ; mInputBufferWriteCursor++ ) {
     char ch = *scursor++;
     if ( ch == '\r' ) {
       mSawCR = true;
@@ -420,9 +431,9 @@ bool QuotedPrintableEncoder::fillInputBuffer( const char* & scursor,
       // remove the CR from the input buffer (if any) and return that
       // we found a line ending:
       if ( mSawCR ) {
-	mSawCR = false;
-	assert( mInputBufferWriteCursor != mInputBufferReadCursor );
-	mInputBufferWriteCursor--;
+        mSawCR = false;
+        assert( mInputBufferWriteCursor != mInputBufferReadCursor );
+        mInputBufferWriteCursor--;
       }
       mSawLineEnd = true;
       return true; // saw CRLF or LF
@@ -435,7 +446,8 @@ bool QuotedPrintableEncoder::fillInputBuffer( const char* & scursor,
   return false; // didn't see a line ending...
 }
 
-bool QuotedPrintableEncoder::processNextChar() {
+bool QuotedPrintableEncoder::processNextChar()
+{
 
   // If we process a buffer which doesn't end in a line break, we
   // can't process all of it, since the next chars that will be read
@@ -446,33 +458,38 @@ bool QuotedPrintableEncoder::processNextChar() {
 
   assert( mOutputBufferCursor == 0 );
 
-  int bufferFill = int(mInputBufferWriteCursor) - int(mInputBufferReadCursor) ;
-  if ( bufferFill < 0 )
+  int bufferFill =
+    int( mInputBufferWriteCursor ) - int( mInputBufferReadCursor ) ;
+  if ( bufferFill < 0 ) {
     bufferFill += 16;
+  }
 
   assert( bufferFill >=0 && bufferFill <= 15 );
 
   if ( !mFinishing && !mSawLineEnd &&
-       bufferFill < minBufferFillWithoutLineEnd )
+       bufferFill < minBufferFillWithoutLineEnd ) {
     return false;
+  }
 
   // buffer is empty, return false:
-  if ( mInputBufferReadCursor == mInputBufferWriteCursor )
+  if ( mInputBufferReadCursor == mInputBufferWriteCursor ) {
     return false;
+  }
 
   // Real processing goes here:
   mAccu = mInputBuffer[ mInputBufferReadCursor++ ];
-  if ( needsEncoding( mAccu ) ) // always needs encoding or
+  if ( needsEncoding( mAccu ) ) { // always needs encoding or
     mAccuNeedsEncoding = Definitely;
-  else if ( ( mSawLineEnd || mFinishing )  // needs encoding at end of line
-	    && bufferFill == 1             // or end of buffer
-	    && needsEncodingAtEOL( mAccu ) )
+  } else if ( ( mSawLineEnd || mFinishing )  // needs encoding at end of line
+              && bufferFill == 1             // or end of buffer
+              && needsEncodingAtEOL( mAccu ) ) {
     mAccuNeedsEncoding = Definitely;
-  else if ( needsEncodingAtBOL( mAccu ) )
+  } else if ( needsEncodingAtBOL( mAccu ) ) {
     mAccuNeedsEncoding = AtBOL;
-  else
+  } else {
     // never needs encoding
     mAccuNeedsEncoding = Never;
+  }
 
   return true;
 }
@@ -481,23 +498,25 @@ bool QuotedPrintableEncoder::processNextChar() {
 // line breaks as necessary. Depends on processNextChar's directions
 // on whether or not to encode the current char, and whether or not
 // the current char is the last one in it's input line:
-void QuotedPrintableEncoder::createOutputBuffer( char* & dcursor,
-						 const char * const dend )
+void QuotedPrintableEncoder::createOutputBuffer( char* &dcursor,
+                                                 const char * const dend )
 {
   const int maxLineLength = 76; // rfc 2045
 
   assert( mOutputBufferCursor == 0 );
 
   bool lastOneOnThisLine = mSawLineEnd
-    && mInputBufferReadCursor == mInputBufferWriteCursor;
+                           && mInputBufferReadCursor == mInputBufferWriteCursor;
 
   int neededSpace = 1;
-  if ( mAccuNeedsEncoding == Definitely)
+  if ( mAccuNeedsEncoding == Definitely ) {
     neededSpace = 3;
+  }
 
   // reserve space for the soft hyphen (=)
-  if ( !lastOneOnThisLine )
+  if ( !lastOneOnThisLine ) {
     neededSpace++;
+  }
 
   if ( mCurrentLineLength > maxLineLength - neededSpace ) {
     // current line too short, insert soft line break:
@@ -518,16 +537,19 @@ void QuotedPrintableEncoder::createOutputBuffer( char* & dcursor,
   }
 }
 
-
-bool QuotedPrintableEncoder::encode( const char* & scursor, const char * const send,
-				     char* & dcursor, const char * const dend )
+bool QuotedPrintableEncoder::encode( const char* &scursor,
+                                     const char * const send,
+                                     char* &dcursor, const char * const dend )
 {
   // support probing by the caller:
-  if ( mFinishing ) return true;
+  if ( mFinishing ) {
+    return true;
+  }
 
   while ( scursor != send && dcursor != dend ) {
-    if ( mOutputBufferCursor && !flushOutputBuffer( dcursor, dend ) )
-      return (scursor == send);
+    if ( mOutputBufferCursor && !flushOutputBuffer( dcursor, dend ) ) {
+      return ( scursor == send );
+    }
 
     assert( mOutputBufferCursor == 0 );
 
@@ -535,47 +557,52 @@ bool QuotedPrintableEncoder::encode( const char* & scursor, const char * const s
     // buffer is full, whatever comes first:
     fillInputBuffer( scursor, send );
 
-    if ( processNextChar() )
+    if ( processNextChar() ) {
       // there was one...
       createOutputBuffer( dcursor, dend );
-    else if ( mSawLineEnd &&
-	      mInputBufferWriteCursor == mInputBufferReadCursor ) {
+    } else if ( mSawLineEnd &&
+                mInputBufferWriteCursor == mInputBufferReadCursor ) {
       // load a hard line break into output buffer:
       writeCRLF( dcursor, dend );
       // signal fillInputBuffer() we are ready for the next line:
       mSawLineEnd = false;
       mCurrentLineLength = 0;
-    } else
+    } else {
       // we are supposedly finished with this input block:
       break;
+    }
   }
 
   // make sure we write as much as possible and don't stop _writing_
   // just because we have no more _input_:
-  if ( mOutputBufferCursor ) flushOutputBuffer( dcursor, dend );
+  if ( mOutputBufferCursor ) {
+    flushOutputBuffer( dcursor, dend );
+  }
 
-  return (scursor == send);
+  return ( scursor == send );
 
 } // encode
 
-bool QuotedPrintableEncoder::finish( char* & dcursor,
-				     const char * const dend ) {
+bool QuotedPrintableEncoder::finish( char* &dcursor, const char * const dend )
+{
   mFinishing = true;
 
-  if ( mFinished )
+  if ( mFinished ) {
     return flushOutputBuffer( dcursor, dend );
+  }
 
   while ( dcursor != dend ) {
-    if ( mOutputBufferCursor && !flushOutputBuffer( dcursor, dend ) )
+    if ( mOutputBufferCursor && !flushOutputBuffer( dcursor, dend ) ) {
       return false;
+    }
 
     assert( mOutputBufferCursor == 0 );
 
-    if ( processNextChar() )
+    if ( processNextChar() ) {
       // there was one...
       createOutputBuffer( dcursor, dend );
-    else if ( mSawLineEnd &&
-	      mInputBufferWriteCursor == mInputBufferReadCursor ) {
+    } else if ( mSawLineEnd &&
+                mInputBufferWriteCursor == mInputBufferReadCursor ) {
       // load a hard line break into output buffer:
       writeCRLF( dcursor, dend );
       mSawLineEnd = false;
@@ -590,11 +617,13 @@ bool QuotedPrintableEncoder::finish( char* & dcursor,
 
 } // finish
 
-
-bool Rfc2047QEncodingEncoder::encode( const char* & scursor, const char * const send,
-				      char* & dcursor, const char * const dend )
+bool Rfc2047QEncodingEncoder::encode( const char* &scursor,
+                                      const char * const send,
+                                      char* &dcursor, const char * const dend )
 {
-  if ( mInsideFinishing ) return true;
+  if ( mInsideFinishing ) {
+    return true;
+  }
 
   while ( scursor != send && dcursor != dend ) {
     uchar value;
@@ -603,25 +632,25 @@ bool Rfc2047QEncodingEncoder::encode( const char* & scursor, const char * const 
       // read the next char and decide if and how do encode:
       mAccu = *scursor++;
       if ( !needsEncoding( mAccu ) ) {
-	*dcursor++ = char(mAccu);
+        *dcursor++ = char( mAccu );
       } else if ( mEscapeChar == '=' && mAccu == 0x20 ) {
-	// shortcut encoding for 0x20 (latin-1/us-ascii SPACE)
-	// (not for rfc2231 encoding)
-	*dcursor++ = '_';
+        // shortcut encoding for 0x20 (latin-1/us-ascii SPACE)
+        // (not for rfc2231 encoding)
+        *dcursor++ = '_';
       } else {
-	// needs =XY encoding - write escape char:
-	*dcursor++ = mEscapeChar;
-	mStepNo = 1;
+        // needs =XY encoding - write escape char:
+        *dcursor++ = mEscapeChar;
+        mStepNo = 1;
       }
       continue;
     case 1:
       // extract hi-nibble:
-      value = highNibble(mAccu);
+      value = highNibble( mAccu );
       mStepNo = 2;
       break;
     case 2:
       // extract lo-nibble:
-      value = lowNibble(mAccu);
+      value = lowNibble( mAccu );
       mStepNo = 0;
       break;
     default: assert( 0 );
@@ -631,12 +660,13 @@ bool Rfc2047QEncodingEncoder::encode( const char* & scursor, const char * const 
     *dcursor++ = binToHex( value );
   }
 
-  return (scursor == send);
+  return ( scursor == send );
 } // encode
 
 #include <QString>
 
-bool Rfc2047QEncodingEncoder::finish( char* & dcursor, const char * const dend ) {
+bool Rfc2047QEncodingEncoder::finish( char* &dcursor, const char * const dend )
+{
   mInsideFinishing = true;
 
   // write the last bits of mAccu, if any:
@@ -645,12 +675,12 @@ bool Rfc2047QEncodingEncoder::finish( char* & dcursor, const char * const dend )
     switch ( mStepNo ) {
     case 1:
       // extract hi-nibble:
-      value = highNibble(mAccu);
+      value = highNibble( mAccu );
       mStepNo = 2;
       break;
     case 2:
       // extract lo-nibble:
-      value = lowNibble(mAccu);
+      value = lowNibble( mAccu );
       mStepNo = 0;
       break;
     default: assert( 0 );
@@ -662,8 +692,5 @@ bool Rfc2047QEncodingEncoder::finish( char* & dcursor, const char * const dend )
 
   return mStepNo == 0;
 }
-
-
-
 
 } // namespace KMime
