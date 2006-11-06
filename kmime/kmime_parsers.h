@@ -34,85 +34,94 @@ namespace Parser {
     parts as described in RFC 2046
     @internal
 */
-class MultiPart {
+class MultiPart
+{
+  public:
+    MultiPart( const QByteArray &src, const QByteArray &boundary );
+    ~MultiPart() {}
 
-public:
-  MultiPart(const QByteArray &src, const QByteArray &boundary);
-  ~MultiPart() {};
+    bool parse();
+    QList<QByteArray> parts()
+      { return p_arts; }
+    QByteArray preamble()
+      { return p_reamble; }
+    QByteArray epilouge()
+      { return e_pilouge; }
 
-  bool parse();
-  QList<QByteArray> parts()    { return p_arts; }
-  QByteArray preamble()     { return p_reamble; }
-  QByteArray epilouge()     { return e_pilouge; }
-
-protected:
-  QByteArray s_rc, b_oundary, p_reamble, e_pilouge;
-  QList<QByteArray> p_arts;
+  protected:
+    QByteArray s_rc, b_oundary, p_reamble, e_pilouge;
+    QList<QByteArray> p_arts;
 };
-
 
 /** Helper-class: abstract base class of all parsers for
     non-mime binary data (uuencoded, yenc)
     @internal
 */
-class NonMimeParser {
+class NonMimeParser
+{
+  public:
+    NonMimeParser( const QByteArray &src );
+    virtual ~NonMimeParser() {}
+    virtual bool parse() = 0;
+    bool isPartial()
+    {
+      return ( p_artNr > -1 && t_otalNr > -1 && t_otalNr != 1 );
+    }
+    int partialNumber()
+      { return p_artNr; }
+    int partialCount()
+      { return t_otalNr; }
+    bool hasTextPart()
+      { return ( t_ext.length() > 1 ); }
+    QByteArray textPart()
+      { return t_ext; }
+    QList<QByteArray> binaryParts()
+      { return b_ins; }
+    QList<QByteArray> filenames()
+      { return f_ilenames; }
+    QList<QByteArray> mimeTypes()
+      { return m_imeTypes; }
 
-public:
-  NonMimeParser(const QByteArray &src);
-  virtual ~NonMimeParser() {};
-  virtual bool parse() = 0;
-  bool isPartial()            { return (p_artNr>-1 && t_otalNr>-1 && t_otalNr!=1); }
-  int partialNumber()         { return p_artNr; }
-  int partialCount()          { return t_otalNr; }
-  bool hasTextPart()          { return (t_ext.length()>1); }
-  QByteArray textPart()         { return t_ext; }
-  QList<QByteArray> binaryParts()       { return b_ins; }
-  QList<QByteArray> filenames()         { return f_ilenames; }
-  QList<QByteArray> mimeTypes()         { return m_imeTypes; }
+  protected:
+    static QByteArray guessMimeType( const QByteArray &fileName );
 
-protected:
-  static QByteArray guessMimeType(const QByteArray& fileName);
-
-  QByteArray s_rc, t_ext;
-  QList<QByteArray> b_ins, f_ilenames, m_imeTypes;
-  int p_artNr, t_otalNr;
+    QByteArray s_rc, t_ext;
+    QList<QByteArray> b_ins, f_ilenames, m_imeTypes;
+    int p_artNr, t_otalNr;
 };
-
 
 /** Helper-class: tries to extract the data from a possibly
     uuencoded message
     @internal
 */
-class UUEncoded : public NonMimeParser {
+class UUEncoded : public NonMimeParser
+{
+  public:
+    UUEncoded( const QByteArray &src, const QByteArray &subject );
 
-public:
-  UUEncoded(const QByteArray &src, const QByteArray &subject);
+    virtual bool parse();
 
-  virtual bool parse();
-
-protected:
-  QByteArray s_ubject;
+  protected:
+    QByteArray s_ubject;
 };
-
-
 
 /** Helper-class: tries to extract the data from a possibly
     yenc encoded message
     @internal
 */
-class YENCEncoded : public NonMimeParser {
+class YENCEncoded : public NonMimeParser
+{
+  public:
+    YENCEncoded( const QByteArray &src );
 
-public:
-  YENCEncoded(const QByteArray &src);
+    virtual bool parse();
+    QList<QByteArray> binaryParts()
+      { return b_ins; }
 
-  virtual bool parse();
-  QList<QByteArray> binaryParts()       { return b_ins; }
-
-protected:
-  QList<QByteArray> b_ins;
-  static bool yencMeta( QByteArray& src, const QByteArray& name, int* value);
+  protected:
+    QList<QByteArray> b_ins;
+    static bool yencMeta( QByteArray &src, const QByteArray &name, int *value );
 };
-
 
 } // namespace Parser
 
