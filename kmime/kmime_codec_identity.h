@@ -1,7 +1,7 @@
 /*  -*- c++ -*-
     kmime_codec_identity.h
 
-    This file is part of KMime, the KDE internet mail/usenet news message library.
+    KMime, the KDE internet mail/usenet news message library.
     Copyright (c) 2004 Marc Mutz <mutz@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -25,79 +25,85 @@
 
 #include "kmime_codecs.h"
 
-//#include <QByteArray>
-
 class QByteArray;
 
 namespace KMime {
 
-class KMIME_EXPORT IdentityCodec : public Codec {
-protected:
-  friend class Codec;
-  IdentityCodec() : Codec() {}
+class KMIME_EXPORT IdentityCodec : public Codec
+{
+  protected:
+    friend class Codec;
+    IdentityCodec() : Codec() {}
 
-public:
-  ~IdentityCodec() {}
+  public:
+    ~IdentityCodec() {}
 
-  QByteArray encode( const QByteArray & src, bool withCRLF ) const;
-  QByteArray decode( const QByteArray & src, bool withCRLF ) const;
+    QByteArray encode( const QByteArray & src, bool withCRLF ) const;
+    QByteArray decode( const QByteArray & src, bool withCRLF ) const;
 
-  int maxEncodedSizeFor( int insize, bool withCRLF ) const {
-    if ( withCRLF )
-      return 2 * insize;
-    else
-      return insize;
-  }
+    int maxEncodedSizeFor( int insize, bool withCRLF ) const
+      {
+        if ( withCRLF ) {
+          return 2 * insize;
+        } else {
+          return insize;
+        }
+      }
 
-  int maxDecodedSizeFor( int insize, bool withCRLF ) const {
-    if ( withCRLF )
-      return 2 * insize;
-    else
-      return insize;
-  }
+    int maxDecodedSizeFor( int insize, bool withCRLF ) const
+      {
+        if ( withCRLF ) {
+          return 2 * insize;
+        } else {
+          return insize;
+        }
+      }
 
-  Encoder * makeEncoder( bool withCRLF=false ) const;
-  Decoder * makeDecoder( bool withCRLF=false ) const;
+    Encoder * makeEncoder( bool withCRLF=false ) const;
+    Decoder * makeDecoder( bool withCRLF=false ) const;
 };
 
-class KMIME_EXPORT SevenBitCodec : public IdentityCodec {
-protected:
-  friend class Codec;
-  SevenBitCodec() : IdentityCodec() {}
+class KMIME_EXPORT SevenBitCodec : public IdentityCodec
+{
+  protected:
+    friend class Codec;
+    SevenBitCodec() : IdentityCodec() {}
 
-public:
-  ~SevenBitCodec() {}
+  public:
+    ~SevenBitCodec() {}
 
-  const char * name() const { return "7bit"; }
+    const char *name() const
+      { return "7bit"; }
 };
 
-class KMIME_EXPORT EightBitCodec : public IdentityCodec {
-protected:
-  friend class Codec;
-  EightBitCodec() : IdentityCodec() {}
+class KMIME_EXPORT EightBitCodec : public IdentityCodec
+{
+  protected:
+    friend class Codec;
+    EightBitCodec() : IdentityCodec() {}
 
-public:
-  ~EightBitCodec() {}
+  public:
+    ~EightBitCodec() {}
 
-  const char * name() const { return "8bit"; }
+    const char *name() const
+      { return "8bit"; }
 };
 
-class KMIME_EXPORT BinaryCodec : public IdentityCodec {
-protected:
-  friend class Codec;
-  BinaryCodec() : IdentityCodec() {}
+class KMIME_EXPORT BinaryCodec : public IdentityCodec
+{
+  protected:
+    friend class Codec;
+    BinaryCodec() : IdentityCodec() {}
 
-public:
-  ~BinaryCodec() {}
+  public:
+    ~BinaryCodec() {}
 
-  const char * name() const { return "binary"; }
+    const char *name() const { return "binary"; }
 
-  int maxEncodedSizeFor( int insize, bool ) const {
-    return insize;
-  }
-  int maxDecodedSizeFor( int insize, bool ) const {
-    return insize;
-  }
+    int maxEncodedSizeFor( int insize, bool ) const
+      { return insize; }
+    int maxDecodedSizeFor( int insize, bool ) const
+      { return insize; }
 };
 
 } // namespace KMime
