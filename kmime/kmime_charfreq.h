@@ -88,20 +88,20 @@ class KMIME_EXPORT CharFreq
     */
     float controlCodesRatio() const;
 
-  protected:
-    uint NUL;       // count of NUL chars
-    uint CTL;       // count of CTLs (incl. DEL, excl. CR, LF, HT)
-    uint CR, LF;    // count of CRs and LFs
-    uint CRLF;      // count of LFs, preceded by CRs
-    uint printable; // count of printable US-ASCII chars (SPC..~)
-    uint eightBit;  // count of other latin1 chars (those with 8th bit set)
-    uint total;     // count of all chars
-    uint lineMin;   // minimum line length
-    uint lineMax;   // maximum line length
+  private:
+    uint mNUL;         // count of NUL chars
+    uint mCTL;         // count of CTLs (incl. DEL, excl. CR, LF, HT)
+    uint mCR;          // count of CR chars
+    uint mLF;          // count of LF chars
+    uint mCRLF;        // count of LFs, preceded by CRs
+    uint mPrintable;   // count of printable US-ASCII chars (SPC..~)
+    uint mEightBit;    // count of other latin1 chars (those with 8th bit set)
+    uint mTotal;       // count of all chars
+    uint mLineMin;     // minimum line length
+    uint mLineMax;     // maximum line length
     bool mTrailingWS;  // does the buffer contain trailing whitespace?
     bool mLeadingFrom; // does the buffer contain lines starting with "From "?
 
-  private:
     void count( const char *buf, size_t len );
 };
 

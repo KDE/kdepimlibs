@@ -25,15 +25,15 @@
 namespace KMime {
 
 CharFreq::CharFreq( const QByteArray &buf )
-  : NUL( 0 ),
-    CTL( 0 ),
-    CR( 0 ), LF( 0 ),
-    CRLF( 0 ),
-    printable( 0 ),
-    eightBit( 0 ),
-    total( 0 ),
-    lineMin( 0xffffffff ),
-    lineMax( 0 ),
+  : mNUL( 0 ),
+    mCTL( 0 ),
+    mCR( 0 ), mLF( 0 ),
+    mCRLF( 0 ),
+    mPrintable( 0 ),
+    mEightBit( 0 ),
+    mTotal( 0 ),
+    mLineMin( 0xffffffff ),
+    mLineMax( 0 ),
     mTrailingWS( false ),
     mLeadingFrom( false )
 {
@@ -43,15 +43,15 @@ CharFreq::CharFreq( const QByteArray &buf )
 }
 
 CharFreq::CharFreq( const char *buf, size_t len )
-  : NUL( 0 ),
-    CTL( 0 ),
-    CR( 0 ), LF( 0 ),
-    CRLF( 0 ),
-    printable( 0 ),
-    eightBit( 0 ),
-    total( 0 ),
-    lineMin( 0xffffffff ),
-    lineMax( 0 ),
+  : mNUL( 0 ),
+    mCTL( 0 ),
+    mCR( 0 ), mLF( 0 ),
+    mCRLF( 0 ),
+    mPrintable( 0 ),
+    mEightBit( 0 ),
+    mTotal( 0 ),
+    mLineMin( 0xffffffff ),
+    mLineMax( 0 ),
     mTrailingWS( false ),
     mLeadingFrom( false )
 {
@@ -79,17 +79,17 @@ void CharFreq::count( const char *it, size_t len )
   for ( ; it != end ; ++it ) {
     ++currentLineLength;
     switch ( *it ) {
-    case '\0': ++NUL; break;
-    case '\r': ++CR;  break;
-    case '\n': ++LF;
+    case '\0': ++mNUL; break;
+    case '\r': ++mCR;  break;
+    case '\n': ++mLF;
       if ( prevChar == '\r' ) {
-        --currentLineLength; ++CRLF;
+        --currentLineLength; ++mCRLF;
       }
-      if ( currentLineLength >= lineMax ) {
-        lineMax = currentLineLength-1;
+      if ( currentLineLength >= mLineMax ) {
+        mLineMax = currentLineLength-1;
       }
-      if ( currentLineLength <= lineMin ) {
-        lineMin = currentLineLength-1;
+      if ( currentLineLength <= mLineMin ) {
+        mLineMin = currentLineLength-1;
       }
       if ( !mTrailingWS ) {
         if ( isWS( prevChar ) ||
@@ -106,17 +106,17 @@ void CharFreq::count( const char *it, size_t len )
           mLeadingFrom = true;
         }
       }
-      ++printable;
+      ++mPrintable;
       break;
     default:
     {
       uchar c = *it;
       if ( c == '\t' || c >= ' ' && c <= '~' ) {
-        ++printable;
+        ++mPrintable;
       } else if ( c == 127 || c < ' ' ) {
-        ++CTL;
+        ++mCTL;
       } else {
-        ++eightBit;
+        ++mEightBit;
       }
     }
     }
@@ -125,11 +125,11 @@ void CharFreq::count( const char *it, size_t len )
   }
 
   // consider the length of the last line
-  if ( currentLineLength >= lineMax ) {
-    lineMax = currentLineLength;
+  if ( currentLineLength >= mLineMax ) {
+    mLineMax = currentLineLength;
   }
-  if ( currentLineLength <= lineMin ) {
-    lineMin = currentLineLength;
+  if ( currentLineLength <= mLineMin ) {
+    mLineMin = currentLineLength;
   }
 
   // check whether the last character is tab or space
@@ -137,7 +137,7 @@ void CharFreq::count( const char *it, size_t len )
     mTrailingWS = true;
   }
 
-  total = len;
+  mTotal = len;
 }
 
 bool CharFreq::isEightBitData() const
@@ -183,26 +183,26 @@ CharFreq::Type CharFreq::type() const
           printable, eightBit,
           mTrailingWS ? "yes" : "no" , mLeadingFrom ? "yes" : "no" );
 #endif
-  if ( NUL ) { // must be binary
+  if ( mNUL ) { // must be binary
     return Binary;
   }
 
   // doesn't contain NUL's:
-  if ( eightBit ) {
-    if ( lineMax > 988 ) {
+  if ( mEightBit ) {
+    if ( mLineMax > 988 ) {
       return EightBitData; // not allowed in 8bit
     }
-    if ( CR != CRLF || controlCodesRatio() > 0.2 ) {
+    if ( mCR != mCRLF || controlCodesRatio() > 0.2 ) {
       return EightBitData;
     }
     return EightBitText;
   }
 
   // doesn't contain NUL's, nor 8bit chars:
-  if ( lineMax > 988 ) {
+  if ( mLineMax > 988 ) {
     return SevenBitData;
   }
-  if ( CR != CRLF || controlCodesRatio() > 0.2 ) {
+  if ( mCR != mCRLF || controlCodesRatio() > 0.2 ) {
     return SevenBitData;
   }
 
@@ -212,8 +212,8 @@ CharFreq::Type CharFreq::type() const
 
 float CharFreq::printableRatio() const
 {
-  if ( total ) {
-    return float(printable) / float(total);
+  if ( mTotal ) {
+    return float(mPrintable) / float(mTotal);
   } else {
     return 0;
   }
@@ -221,8 +221,8 @@ float CharFreq::printableRatio() const
 
 float CharFreq::controlCodesRatio() const
 {
-  if ( total ) {
-    return float(CTL) / float(total);
+  if ( mTotal ) {
+    return float(mCTL) / float(mTotal);
   } else {
     return 0;
   }
