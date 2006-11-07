@@ -41,7 +41,7 @@ class FreeBusyCache;
 
   @short A Scheduling message
 */
-class ScheduleMessage
+class KCAL_EXPORT ScheduleMessage
 {
   public:
     /**
