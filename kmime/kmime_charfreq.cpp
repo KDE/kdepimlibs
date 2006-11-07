@@ -60,10 +60,12 @@ CharFreq::CharFreq( const char *buf, size_t len )
   }
 }
 
+//@cond PRIVATE
 static inline bool isWS( char ch )
 {
   return ( ch == '\t' || ch == ' ' );
 }
+//@endcond
 
 void CharFreq::count( const char *it, size_t len )
 {

@@ -31,8 +31,8 @@ namespace KMime {
 class KMIME_EXPORT CharFreq
 {
   public:
-    explicit CharFreq( const QByteArray & buf );
-    CharFreq( const char * buf, size_t len );
+    explicit CharFreq( const QByteArray &buf );
+    CharFreq( const char *buf, size_t len );
 
     enum Type {
       None = 0,
@@ -44,32 +44,48 @@ class KMIME_EXPORT CharFreq
     };
 
     Type type() const;
+
+    /**
+      Returns true if the data Type is EightBitData; false otherwise.
+    */
     bool isEightBitData() const;
+
+    /**
+      Returns true if the data Type is EightBitText; false otherwise.
+    */
     bool isEightBitText() const;
+
+    /**
+      Returns true if the data Type is SevenBitData; false otherwise.
+    */
     bool isSevenBitData() const;
+
+    /**
+      Returns true if the data Type is SevenBitText; false otherwise.
+    */
     bool isSevenBitText() const;
 
     /**
-     * Returns true if buf has trailing whitespace, i.e. if any line ends
-     * with space (' ') or tab ('\t').
-     */
+      Returns true if buf has trailing whitespace, i.e. if any line ends
+      with space (' ') or tab ('\t').
+    */
     bool hasTrailingWhitespace() const;
 
     /**
-     * Returns true if buf contains a line that starts with "From ".
-     */
+      Returns true if buf contains a line that starts with "From ".
+    */
     bool hasLeadingFrom() const;
 
     /**
-     * Returns the percentage of printable characters: printable/total.
-     * If total == 0, the result is undefined.
-     */
+      Returns the percentage of printable characters: printable/total.
+      If total == 0, the result is undefined.
+    */
     float printableRatio() const;
 
     /**
-     * Returns the percentage of control code (CTLs): CTL/total.
-     * If total == 0, the result is undefined.
-     */
+      Returns the percentage of control code (CTLs): CTL/total.
+      If total == 0, the result is undefined.
+    */
     float controlCodesRatio() const;
 
   protected:
@@ -79,9 +95,9 @@ class KMIME_EXPORT CharFreq
     uint CRLF;      // count of LFs, preceded by CRs
     uint printable; // count of printable US-ASCII chars (SPC..~)
     uint eightBit;  // count of other latin1 chars (those with 8th bit set)
-    uint total;
-    uint lineMin;
-    uint lineMax;
+    uint total;     // count of all chars
+    uint lineMin;   // minimum line length
+    uint lineMax;   // maximum line length
     bool mTrailingWS;  // does the buffer contain trailing whitespace?
     bool mLeadingFrom; // does the buffer contain lines starting with "From "?
 
