@@ -1,6 +1,6 @@
 /*  -*- c++ -*-
 
-    This file is part of KMime, the KDE internet mail/usenet news message library.
+    KMime, the KDE internet mail/usenet news message library.
 
     Copyright (c) 2001-2002 Marc Mutz <mutz@kde.org>
 
@@ -22,7 +22,6 @@
 
 #include "kmime_codecs.h"
 #include "kmime_util.h"
-
 #include "kmime_codec_base64.h"
 #include "kmime_codec_qp.h"
 #include "kmime_codec_uuencode.h"
@@ -47,11 +46,12 @@ namespace KMime {
 KAutoDeleteHash<QByteArray, Codec> * Codec::all = 0;
 static KStaticDeleter< KAutoDeleteHash<QByteArray, Codec> > sdAll;
 #if defined(QT_THREAD_SUPPORT)
-QMutex* Codec::dictLock = 0;
+QMutex *Codec::dictLock = 0;
 static KStaticDeleter<QMutex> sdDictLock;
 #endif
 
-void Codec::fillDictionary() {
+void Codec::fillDictionary()
+{
   //all->insert( "7bit", new SevenBitCodec() );
   //all->insert( "8bit", new EightBitCodec() );
   all->insert( "base64", new Base64Codec() );
@@ -61,18 +61,20 @@ void Codec::fillDictionary() {
   all->insert( "x-kmime-rfc2231", new Rfc2231EncodingCodec() );
   all->insert( "x-uuencode", new UUCodec() );
   //all->insert( "binary", new BinaryCodec() );
-
 }
 
-Codec * Codec::codecForName( const char * name ) {
+Codec *Codec::codecForName( const char *name )
+{
   const QByteArray ba( name );
   return codecForName( ba );
 }
 
-Codec * Codec::codecForName( const QByteArray & name ) {
+Codec *Codec::codecForName( const QByteArray &name )
+{
 #if defined(QT_THREAD_SUPPORT)
-  if ( !dictLock )
+  if ( !dictLock ) {
     sdDictLock.setObject( dictLock, new QMutex );
+  }
   dictLock->lock(); // protect "all"
 #endif
   if ( !all ) {
@@ -81,45 +83,48 @@ Codec * Codec::codecForName( const QByteArray & name ) {
   }
   QByteArray lowerName = name;
   kAsciiToLower( lowerName.data() );
-  Codec * codec = (*all)[ lowerName ];
+  Codec *codec = (*all)[ lowerName ];
 #if defined(QT_THREAD_SUPPORT)
   dictLock->unlock();
 #endif
 
-  if ( !codec )
+  if ( !codec ) {
     kDebug() << "Unknown codec \"" << name << "\" requested!" << endl;
+  }
 
   return codec;
 }
 
-bool Codec::encode( const char* & scursor, const char * const send,
-                    char* & dcursor, const char * const dend,
+bool Codec::encode( const char* &scursor, const char * const send,
+                    char* &dcursor, const char * const dend,
                     bool withCRLF ) const
 {
   // get an encoder:
-  Encoder * enc = makeEncoder( withCRLF );
+  Encoder *enc = makeEncoder( withCRLF );
   assert( enc );
 
   // encode and check for output buffer overflow:
-  while ( !enc->encode( scursor, send, dcursor, dend ) )
+  while ( !enc->encode( scursor, send, dcursor, dend ) ) {
     if ( dcursor == dend ) {
       delete enc;
       return false; // not enough space in output buffer
     }
+  }
 
   // finish and check for output buffer overflow:
-  while ( !enc->finish( dcursor, dend ) )
+  while ( !enc->finish( dcursor, dend ) ) {
     if ( dcursor == dend ) {
       delete enc;
       return false; // not enough space in output buffer
     }
+  }
 
   // cleanup and return:
   delete enc;
   return true; // successfully encoded.
 }
 
-QByteArray Codec::encode( const QByteArray & src, bool withCRLF ) const
+QByteArray Codec::encode( const QByteArray &src, bool withCRLF ) const
 {
   // allocate buffer for the worst case:
   QByteArray result;
@@ -132,9 +137,10 @@ QByteArray Codec::encode( const QByteArray & src, bool withCRLF ) const
   QByteArray::ConstIterator oend = result.end();
 
   // encode
-  if ( !encode( iit, iend, oit, oend, withCRLF ) )
+  if ( !encode( iit, iend, oit, oend, withCRLF ) ) {
     kFatal() << name() << " codec lies about it's mEncodedSizeFor()"
-              << endl;
+             << endl;
+  }
 
   // shrink result to actual size:
   result.truncate( oit - result.begin() );
@@ -142,7 +148,7 @@ QByteArray Codec::encode( const QByteArray & src, bool withCRLF ) const
   return result;
 }
 
-QByteArray Codec::decode( const QByteArray & src, bool withCRLF ) const
+QByteArray Codec::decode( const QByteArray &src, bool withCRLF ) const
 {
   // allocate buffer for the worst case:
   QByteArray result;
@@ -155,9 +161,10 @@ QByteArray Codec::decode( const QByteArray & src, bool withCRLF ) const
   QByteArray::ConstIterator oend = result.end();
 
   // decode
-  if ( !decode( iit, iend, oit, oend, withCRLF ) )
+  if ( !decode( iit, iend, oit, oend, withCRLF ) ) {
     kFatal() << name() << " codec lies about it's maxDecodedSizeFor()"
-              << endl;
+             << endl;
+  }
 
   // shrink result to actual size:
   result.truncate( oit - result.begin() );
@@ -165,27 +172,29 @@ QByteArray Codec::decode( const QByteArray & src, bool withCRLF ) const
   return result;
 }
 
-bool Codec::decode( const char* & scursor, const char * const send,
-                    char* & dcursor, const char * const dend,
+bool Codec::decode( const char* &scursor, const char * const send,
+                    char* &dcursor, const char * const dend,
                     bool withCRLF ) const
 {
   // get a decoder:
-  Decoder * dec = makeDecoder( withCRLF );
+  Decoder *dec = makeDecoder( withCRLF );
   assert( dec );
 
   // decode and check for output buffer overflow:
-  while ( !dec->decode( scursor, send, dcursor, dend ) )
+  while ( !dec->decode( scursor, send, dcursor, dend ) ) {
     if ( dcursor == dend ) {
       delete dec;
       return false; // not enough space in output buffer
     }
+  }
 
   // finish and check for output buffer overflow:
-  while ( !dec->finish( dcursor, dend ) )
+  while ( !dec->finish( dcursor, dend ) ) {
     if ( dcursor == dend ) {
       delete dec;
       return false; // not enough space in output buffer
     }
+  }
 
   // cleanup and return:
   delete dec;
@@ -194,22 +203,24 @@ bool Codec::decode( const char* & scursor, const char * const send,
 
 // write as much as possible off the output buffer. Return true if
 // flushing was complete, false if some chars could not be flushed.
-bool Encoder::flushOutputBuffer( char* & dcursor, const char * const dend ) {
+bool Encoder::flushOutputBuffer( char* &dcursor, const char * const dend )
+{
   int i;
   // copy output buffer to output stream:
-  for ( i = 0 ; dcursor != dend && i < mOutputBufferCursor ; ++i )
+  for ( i = 0 ; dcursor != dend && i < mOutputBufferCursor ; ++i ) {
     *dcursor++ = mOutputBuffer[i];
+  }
 
   // calculate the number of missing chars:
   int numCharsLeft = mOutputBufferCursor - i;
   // push the remaining chars to the begin of the buffer:
-  if ( numCharsLeft )
+  if ( numCharsLeft ) {
     ::memmove( mOutputBuffer, mOutputBuffer + i, numCharsLeft );
+  }
   // adjust cursor:
   mOutputBufferCursor = numCharsLeft;
 
   return !numCharsLeft;
 }
-
 
 } // namespace KMime

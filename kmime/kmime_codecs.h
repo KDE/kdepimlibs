@@ -1,23 +1,23 @@
 /*  -*- c++ -*-
 
-    This file is part of KMime, the KDE internet mail/usenet news message library.
+KMime, the KDE internet mail/usenet news message library.
 
-    Copyright (c) 2001-2002 Marc Mutz <mutz@kde.org>
+Copyright (c) 2001-2002 Marc Mutz <mutz@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+You should have received a copy of the GNU Library General Public License
+along with this library; see the file COPYING.LIB.  If not, write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA 02110-1301, USA.
 */
 
 #ifndef __KMIME_CODECS__
@@ -27,7 +27,6 @@
 #  include <qmutex.h>
 #endif
 
-//#include <QHash>
 #include <QByteArray>
 
 #include <kdebug.h> // for kFatal()
@@ -35,7 +34,7 @@
 #include "kmime.h"
 
 namespace KPIM {
-  template <class Key, class T> class KAutoDeleteHash;
+template <class Key, class T> class KAutoDeleteHash;
 }
 using namespace KPIM;
 
@@ -51,122 +50,123 @@ class Decoder;
     @short Codecs for common mail transfer encodings.
     @author Marc Mutz <mutz@kde.org>
 */
-class KMIME_EXPORT Codec {
-protected:
+class KMIME_EXPORT Codec
+{
+  protected:
 
-  static KAutoDeleteHash<QByteArray, Codec> * all;
+    static KAutoDeleteHash<QByteArray, Codec> * all;
 #if defined(QT_THREAD_SUPPORT)
-  static QMutex* dictLock;
+    static QMutex* dictLock;
 #endif
 
-  Codec() {}
-private:
-  static void fillDictionary();
+    Codec() {}
+  private:
+    static void fillDictionary();
 
-public:
-  static Codec * codecForName( const char * name );
-  static Codec * codecForName( const QByteArray & name );
+  public:
+    static Codec * codecForName( const char *name );
+    static Codec * codecForName( const QByteArray &name );
 
-  virtual int maxEncodedSizeFor( int insize, bool withCRLF=false ) const = 0;
-  virtual int maxDecodedSizeFor( int insize, bool withCRLF=false ) const = 0;
+    virtual int maxEncodedSizeFor( int insize, bool withCRLF=false ) const = 0;
+    virtual int maxDecodedSizeFor( int insize, bool withCRLF=false ) const = 0;
 
-  virtual Encoder * makeEncoder( bool withCRLF=false ) const = 0;
-  virtual Decoder * makeDecoder( bool withCRLF=false ) const = 0;
+    virtual Encoder * makeEncoder( bool withCRLF=false ) const = 0;
+    virtual Decoder * makeDecoder( bool withCRLF=false ) const = 0;
 
-  /**
-   * Convenience wrapper that can be used for small chunks of data
-   * when you can provide a large enough buffer. The default
-   * implementation creates an Encoder and uses it.
-   *
-   * Encodes a chunk of bytes starting at @p scursor and extending to
-   * @p send into the buffer described by @p dcursor and @p dend.
-   *
-   * This function doesn't support chaining of blocks. The returned
-   * block cannot be added to, but you don't need to finalize it, too.
-   *
-   * Example usage (@p in contains the input data):
-   * <pre>
-   * KMime::Codec * codec = KMime::Codec::codecForName( "base64" );
-   * kFatal( !codec ) << "no base64 codec found!?" << endl;
-   * QByteArray out( in.size()*1.4 ); // crude maximal size of b64 encoding
-   * QByteArray::Iterator iit = in.begin();
-   * QByteArray::Iterator oit = out.begin();
-   * if ( !codec->encode( iit, in.end(), oit, out.end() ) ) {
-   *   kDebug() << "output buffer too small" << endl;
-   *   return;
-   * }
-   * kDebug() << "Size of encoded data: " << oit - out.begin() << endl;
-   * </pre>
-   *
-   * @param scursor/send begin and end of input buffer
-   * @param dcursor/dend begin and end of output buffer
-   * @param withCRLF If true, make the lineends CRLF, else make them LF only.
-   *
-   * @return false if the encoded data didn't fit into the output buffer.
-   */
-  virtual bool encode( const char* & scursor, const char * const send,
-                       char* & dcursor, const char * const dend,
-                       bool withCRLF=false ) const;
+    /**
+     * Convenience wrapper that can be used for small chunks of data
+     * when you can provide a large enough buffer. The default
+     * implementation creates an Encoder and uses it.
+     *
+     * Encodes a chunk of bytes starting at @p scursor and extending to
+     * @p send into the buffer described by @p dcursor and @p dend.
+     *
+     * This function doesn't support chaining of blocks. The returned
+     * block cannot be added to, but you don't need to finalize it, too.
+     *
+     * Example usage (@p in contains the input data):
+     * <pre>
+     * KMime::Codec * codec = KMime::Codec::codecForName( "base64" );
+     * kFatal( !codec ) << "no base64 codec found!?" << endl;
+     * QByteArray out( in.size()*1.4 ); // crude maximal size of b64 encoding
+     * QByteArray::Iterator iit = in.begin();
+     * QByteArray::Iterator oit = out.begin();
+     * if ( !codec->encode( iit, in.end(), oit, out.end() ) ) {
+     *   kDebug() << "output buffer too small" << endl;
+     *   return;
+     * }
+     * kDebug() << "Size of encoded data: " << oit - out.begin() << endl;
+     * </pre>
+     *
+     * @param scursor/send begin and end of input buffer
+     * @param dcursor/dend begin and end of output buffer
+     * @param withCRLF If true, make the lineends CRLF, else make them LF only.
+     *
+     * @return false if the encoded data didn't fit into the output buffer.
+     */
+    virtual bool encode( const char* &scursor, const char * const send,
+                         char* &dcursor, const char * const dend,
+                         bool withCRLF=false ) const;
 
-  /**
-   * Convenience wrapper that can be used for small chunks of data
-   * when you can provide a large enough buffer. The default
-   * implementation creates a Decoder and uses it.
-   *
-   * Decodes a chunk of bytes starting at @p scursor and extending to
-   * @p send into the buffer described by @p dcursor and @p dend.
-   *
-   * This function doesn't support chaining of blocks. The returned
-   * block cannot be added to, but you don't need to finalize it, too.
-   *
-   * Example usage (@p in contains the input data):
-   * <pre>
-   * KMime::Codec * codec = KMime::Codec::codecForName( "base64" );
-   * kFatal( !codec ) << "no base64 codec found!?" << endl;
-   * QByteArray out( in.size() ); // good guess for any encoding...
-   * QByteArray::Iterator iit = in.begin();
-   * QByteArray::Iterator oit = out.begin();
-   * if ( !codec->decode( iit, in.end(), oit, out.end() ) ) {
-   *   kDebug() << "output buffer too small" << endl;
-   *   return;
-   * }
-   * kDebug() << "Size of decoded data: " << oit - out.begin() << endl;
-   * </pre>
-   *
-   * @param scursor/send begin and end of input buffer
-   * @param dcursor/dend begin and end of output buffer
-   * @param withCRLF If true, make the lineends CRLF, else make them LF only.
-   *
-   * @return false if the decoded data didn't fit into the output buffer.
-   */
-  virtual bool decode( const char* & scursor, const char * const send,
-                       char* & dcursor, const char * const dend,
-                       bool withCRLF=false ) const;
+    /**
+     * Convenience wrapper that can be used for small chunks of data
+     * when you can provide a large enough buffer. The default
+     * implementation creates a Decoder and uses it.
+     *
+     * Decodes a chunk of bytes starting at @p scursor and extending to
+     * @p send into the buffer described by @p dcursor and @p dend.
+     *
+     * This function doesn't support chaining of blocks. The returned
+     * block cannot be added to, but you don't need to finalize it, too.
+     *
+     * Example usage (@p in contains the input data):
+     * <pre>
+     * KMime::Codec * codec = KMime::Codec::codecForName( "base64" );
+     * kFatal( !codec ) << "no base64 codec found!?" << endl;
+     * QByteArray out( in.size() ); // good guess for any encoding...
+     * QByteArray::Iterator iit = in.begin();
+     * QByteArray::Iterator oit = out.begin();
+     * if ( !codec->decode( iit, in.end(), oit, out.end() ) ) {
+     *   kDebug() << "output buffer too small" << endl;
+     *   return;
+     * }
+     * kDebug() << "Size of decoded data: " << oit - out.begin() << endl;
+     * </pre>
+     *
+     * @param scursor/send begin and end of input buffer
+     * @param dcursor/dend begin and end of output buffer
+     * @param withCRLF If true, make the lineends CRLF, else make them LF only.
+     *
+     * @return false if the decoded data didn't fit into the output buffer.
+     */
+    virtual bool decode( const char* &scursor, const char * const send,
+                         char* &dcursor, const char * const dend,
+                         bool withCRLF=false ) const;
 
-  /**
-   * Even more convenient, but also a bit slower and more memory
-   * intensive, since it allocates storage for the worst case and then
-   * shrinks the result QByteArray to the actual size again.
-   *
-   * For use with small @p src.
-   */
-  virtual QByteArray encode( const QByteArray & src, bool withCRLF=false ) const;
+    /**
+     * Even more convenient, but also a bit slower and more memory
+     * intensive, since it allocates storage for the worst case and then
+     * shrinks the result QByteArray to the actual size again.
+     *
+     * For use with small @p src.
+     */
+    virtual QByteArray encode( const QByteArray &src, bool withCRLF=false ) const;
 
-  /**
-   * Even more convenient, but also a bit slower and more memory
-   * intensive, since it allocates storage for the worst case and then
-   * shrinks the result QByteArray to the actual size again.
-   *
-   * For use with small @p src.
-   */
-  virtual QByteArray decode( const QByteArray & src, bool withCRLF=false ) const;
+    /**
+     * Even more convenient, but also a bit slower and more memory
+     * intensive, since it allocates storage for the worst case and then
+     * shrinks the result QByteArray to the actual size again.
+     *
+     * For use with small @p src.
+     */
+    virtual QByteArray decode( const QByteArray &src, bool withCRLF=false ) const;
 
-  /**
-   * @return the name of the encoding. Guaranteed to be lowercase.
-   */
-  virtual const char * name() const = 0;
+    /**
+     * @return the name of the encoding. Guaranteed to be lowercase.
+     */
+    virtual const char *name() const = 0;
 
-  virtual ~Codec() {}
+    virtual ~Codec() {}
 
 };
 
@@ -247,113 +247,122 @@ public:
  * @short Stateful CTE decoder class
  * @author Marc Mutz <mutz@kde.org>
  */
-class Decoder {
-protected:
-  friend class Codec;
-  /**
-   * Protected constructor. Use KMime::Codec::makeDecoder to
-   * create an instance. The bool parameter determines whether lines
-   * end with CRLF (true) or LF (false, default).
-   */
-  Decoder( bool withCRLF=false )
-    : mWithCRLF( withCRLF ) {}
-public:
-  virtual ~Decoder() {}
+class Decoder
+{
+  protected:
+    friend class Codec;
+    /**
+     * Protected constructor. Use KMime::Codec::makeDecoder to
+     * create an instance. The bool parameter determines whether lines
+     * end with CRLF (true) or LF (false, default).
+     */
+    Decoder( bool withCRLF=false )
+      : mWithCRLF( withCRLF ) {}
+  public:
+    virtual ~Decoder() {}
 
-  /** Decode a chunk of data, maintaining state information between
-   *  calls. See class decumentation for calling conventions.
-   */
-  virtual bool decode( const char* & scursor, const char * const send,
-                       char* & dcursor, const char * const dend ) = 0;
-  /** Call this method to finalize the output stream. Writes all
-   *  remaining data and resets the decoder. See KMime::Codec for
-   *  calling conventions.
-   */
-  virtual bool finish( char* & dcursor, const char * const dend ) = 0;
+    /** Decode a chunk of data, maintaining state information between
+     *  calls. See class decumentation for calling conventions.
+     */
+    virtual bool decode( const char* &scursor, const char * const send,
+                         char* &dcursor, const char * const dend ) = 0;
+    /** Call this method to finalize the output stream. Writes all
+     *  remaining data and resets the decoder. See KMime::Codec for
+     *  calling conventions.
+     */
+    virtual bool finish( char* &dcursor, const char * const dend ) = 0;
 
-protected:
-  const bool mWithCRLF;
+  protected:
+    const bool mWithCRLF;
 };
 
 /** Stateful encoder class, modelled after QTextEncoder.
     @short Stateful encoder class
     @author Marc Mutz <mutz@kde.org>
 */
-class Encoder {
-protected:
-  friend class Codec;
-  /** Protected constructor. Use KMime::Codec::makeEncoder if you
-      want one. The bool parameter determines whether lines end with
-      CRLF (true) or LF (false, default). */
-  Encoder( bool withCRLF=false )
-    : mOutputBufferCursor( 0 ), mWithCRLF( withCRLF ) {}
-public:
-  virtual ~Encoder() {}
+class Encoder
+{
+  protected:
+    friend class Codec;
+    /** Protected constructor. Use KMime::Codec::makeEncoder if you
+        want one. The bool parameter determines whether lines end with
+        CRLF (true) or LF (false, default). */
+    Encoder( bool withCRLF=false )
+      : mOutputBufferCursor( 0 ), mWithCRLF( withCRLF ) {}
 
-  /**
-   * Encode a chunk of data, maintaining state information between
-   * calls. See KMime::Codec for calling conventions.
-   */
-  virtual bool encode( const char* & scursor, const char * const send,
-                       char* & dcursor, const char * const dend ) = 0;
+  public:
+    virtual ~Encoder() {}
 
-  /**
-   * Call this method to finalize the output stream. Writes all remaining
-   * data and resets the encoder. See KMime::Codec for calling conventions.
-   */
-  virtual bool finish( char* & dcursor, const char * const dend ) = 0;
+    /**
+     * Encode a chunk of data, maintaining state information between
+     * calls. See KMime::Codec for calling conventions.
+     */
+    virtual bool encode( const char* &scursor, const char * const send,
+                         char* &dcursor, const char * const dend ) = 0;
 
-protected:
-  /** Space in the output buffer */
-  enum { maxBufferedChars = 8 };
+    /**
+     * Call this method to finalize the output stream. Writes all remaining
+     * data and resets the encoder. See KMime::Codec for calling conventions.
+     */
+    virtual bool finish( char* &dcursor, const char * const dend ) = 0;
 
-  /**
-   * Writes @p ch to the output stream or the output buffer, depending on
-   * whether or not the output stream has space left.
-   *
-   * @return true if written to the output stream, false if buffered.
-   */
-  bool write( char ch, char* & dcursor, const char * const dend ) {
-    if ( dcursor != dend ) {
-      // if there's space in the output stream, write there:
-      *dcursor++ = ch;
-      return true;
-    } else {
-      // else buffer the output:
-      kFatal( mOutputBufferCursor >= maxBufferedChars )
-        << "KMime::Encoder: internal buffer overflow!" << endl;
-      mOutputBuffer[ mOutputBufferCursor++ ] = ch;
-      return false;
-    }
-  }
+  protected:
+    /** Space in the output buffer */
+    enum {
+      maxBufferedChars = 8
+    };
 
-  /**
-   * Writes characters from the output buffer to the output stream.
-   * Implementations of encode and finish should call this
-   * at the very beginning and for each iteration of the while loop.
-   *
-   * @return true if all chars could be written, false otherwise
-   */
-  bool flushOutputBuffer( char* & dcursor, const char * const dend );
+    /**
+     * Writes @p ch to the output stream or the output buffer, depending on
+     * whether or not the output stream has space left.
+     *
+     * @return true if written to the output stream, false if buffered.
+     */
+    bool write( char ch, char* &dcursor, const char * const dend )
+      {
+        if ( dcursor != dend ) {
+          // if there's space in the output stream, write there:
+          *dcursor++ = ch;
+          return true;
+        } else {
+          // else buffer the output:
+          kFatal( mOutputBufferCursor >= maxBufferedChars )
+            << "KMime::Encoder: internal buffer overflow!" << endl;
+          mOutputBuffer[ mOutputBufferCursor++ ] = ch;
+          return false;
+        }
+      }
 
-  /**
-   * Convenience function. Outputs LF or CRLF, based on the state of mWithCRLF
-   */
-  bool writeCRLF( char* & dcursor, const char * const dend ) {
-    if ( mWithCRLF )
-      write( '\r', dcursor, dend );
-    return write( '\n', dcursor, dend );
-  }
+    /**
+     * Writes characters from the output buffer to the output stream.
+     * Implementations of encode and finish should call this
+     * at the very beginning and for each iteration of the while loop.
+     *
+     * @return true if all chars could be written, false otherwise
+     */
+    bool flushOutputBuffer( char* &dcursor, const char * const dend );
 
-private:
-  /**
-   * An output buffer to simplyfy some codecs.  Use with write and
-   * flushOutputBuffer.
-   */
-  char mOutputBuffer[ maxBufferedChars ];
-protected:
-  uchar mOutputBufferCursor;
-  const bool mWithCRLF;
+    /**
+     * Convenience function. Outputs LF or CRLF, based on the state of mWithCRLF
+     */
+    bool writeCRLF( char* &dcursor, const char * const dend )
+      {
+        if ( mWithCRLF ) {
+          write( '\r', dcursor, dend );
+        }
+        return write( '\n', dcursor, dend );
+      }
+
+  private:
+    /**
+     * An output buffer to simplyfy some codecs.  Use with write and
+     * flushOutputBuffer.
+     */
+    char mOutputBuffer[ maxBufferedChars ];
+
+  protected:
+    uchar mOutputBufferCursor;
+    const bool mWithCRLF;
 };
 
 } // namespace KMime
