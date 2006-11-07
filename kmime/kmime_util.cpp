@@ -1,25 +1,29 @@
 /*
-    kmime_util.cpp
+  kmime_util.cpp
 
-    KMime, the KDE internet mail/usenet news message library.
-    Copyright (c) 2001 the KMime authors.
-    See file AUTHORS for details
+  KMime, the KDE internet mail/usenet news message library.
+  Copyright (c) 2001 the KMime authors.
+  See file AUTHORS for details
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include "kmime_util.h"
 
@@ -48,9 +52,11 @@ QList<QByteArray> l_anguageCache;
 
 QByteArray cachedCharset( const QByteArray &name )
 {
-  foreach ( QByteArray charset, c_harsetCache )
-    if ( qstricmp( name.data(), charset.data() ) == 0 )
+  foreach ( QByteArray charset, c_harsetCache ) {
+    if ( qstricmp( name.data(), charset.data() ) == 0 ) {
       return charset;
+    }
+  }
 
   c_harsetCache.append( name.toUpper() );
   //kDebug() << "KNMimeBase::cachedCharset() number of cs " << c_harsetCache.count() << endl;
@@ -59,22 +65,25 @@ QByteArray cachedCharset( const QByteArray &name )
 
 QByteArray cachedLanguage( const QByteArray &name )
 {
-  foreach ( QByteArray language, l_anguageCache )
-    if ( qstricmp( name.data(), language.data() ) == 0 )
+  foreach ( QByteArray language, l_anguageCache ) {
+    if ( qstricmp( name.data(), language.data() ) == 0 ) {
       return language;
+    }
+  }
 
   l_anguageCache.append( name.toUpper() );
   //kDebug() << "KNMimeBase::cachedCharset() number of cs " << c_harsetCache.count() << endl;
   return l_anguageCache.last();
 }
 
-bool isUsAscii(const QString &s)
+bool isUsAscii( const QString &s )
 {
   uint sLength = s.length();
-  for (uint i=0; i<sLength; i++)
-    if (s.at(i).toLatin1()<=0)    // c==0: non-latin1, c<0: non-us-ascii
+  for ( uint i=0; i<sLength; i++ ) {
+    if ( s.at( i ).toLatin1() <= 0 ) { // c==0: non-latin1, c<0: non-us-ascii
       return false;
-
+    }
+  }
   return true;
 }
 
@@ -133,16 +142,15 @@ QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
   const int maxLen=400;
   int i;
 
-  if ( !src.contains( "=?" ) )
+  if ( !src.contains( "=?" ) ) {
     result = src;
-  else {
-    for (pos = 0; pos < src.length(); pos++)
-    {
-      if ( src[pos] != '=' || src[pos + 1] != '?' )
-      {
+  } else {
+    for (pos = 0; pos < src.length(); pos++) {
+      if ( src[pos] != '=' || src[pos + 1] != '?' ) {
         result += src[pos];
-        if (onlySpacesSinceLastWord)
-          onlySpacesSinceLastWord = (src[pos]==' ' || src[pos]=='\t');
+        if ( onlySpacesSinceLastWord ) {
+          onlySpacesSinceLastWord = ( src[pos] == ' ' || src[pos] == '\t' );
+        }
         continue;
       }
       beg = pos+2;
@@ -150,63 +158,64 @@ QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
       valid = true;
       // parse charset name
       declaredCS.clear();
-      for ( i = 2, pos += 2; i < maxLen && (src[pos] != '?' && (ispunct(src[pos]) || isalnum(src[pos]))); i++ ) {
+      for ( i = 2, pos += 2;
+            i < maxLen && ( src[pos] != '?' &&
+                            ( ispunct( src[pos] ) || isalnum( src[pos] ) ) );
+            i++ ) {
         declaredCS += src[pos];
         pos++;
       }
-      if ( src[pos] != '?' || i < 4 || i >= maxLen)
+      if ( src[pos] != '?' || i < 4 || i >= maxLen ) {
         valid = false;
-      else
-      {
+      } else {
         // get encoding and check delimiting question marks
-        encoding = toupper(src[pos+1]);
-        if ( src[pos+2] != '?' || (encoding != 'Q' && encoding != 'B'))
+        encoding = toupper( src[pos+1] );
+        if ( src[pos+2] != '?' || ( encoding != 'Q' && encoding != 'B' ) ) {
           valid = false;
+        }
         pos += 3;
-        i+=3;
+        i += 3;
       }
-      if (valid)
-      {
+      if ( valid ) {
         mid = pos;
         // search for end of encoded part
-        while ( i < maxLen && pos < src.length() && ! ( src[pos] == '?' && src[pos + 1] == '=' ) )
-        {
+        while ( i < maxLen && pos < src.length() && ! ( src[pos] == '?' && src[pos + 1] == '=' ) ) {
           i++;
           pos++;
         }
-        end = pos+2;//end now points to the first char after the encoded string
-        if ( i >= maxLen || src.length() <= pos )
+        end = pos + 2;//end now points to the first char after the encoded string
+        if ( i >= maxLen || src.length() <= pos ) {
           valid = false;
+        }
       }
 
-      if (valid) {
+      if ( valid ) {
         // cut all linear-white space between two encoded words
-        if (onlySpacesSinceLastWord)
+        if ( onlySpacesSinceLastWord ) {
           result = result.left( endOfLastEncWord );
+        }
 
-        if (mid < pos) {
+        if ( mid < pos ) {
           str = src.mid( mid, pos - mid );
-          if (encoding == 'Q')
-          {
+          if ( encoding == 'Q' ) {
             // decode quoted printable text
-            for (i=str.length()-1; i>=0; i--)
-              if (str[i]=='_') str[i]=' ';
-            str = KCodecs::quotedPrintableDecode(str);
-          }
-          else
-          {
-            str = KCodecs::base64Decode(str);
+            for ( i=str.length()-1 ; i>=0; i-- ) {
+              if ( str[i] == '_') {
+                str[i] = ' ';
+              }
+            }
+            str = KCodecs::quotedPrintableDecode( str );
+          } else {
+            str = KCodecs::base64Decode( str );
           }
           result += str;
         }
 
         endOfLastEncWord = result.length();
-        onlySpacesSinceLastWord=true;
+        onlySpacesSinceLastWord = true;
 
-        pos = end -1;
-      }
-      else
-      {
+        pos = end - 1;
+      } else {
         pos = beg - 2;
         result += src[pos++];
         result += src[pos];
@@ -217,110 +226,124 @@ QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
   //find suitable QTextCodec
   QTextCodec *codec=0;
   bool ok=true;
-  if (forceCS || declaredCS.isEmpty()) {
-    codec=KGlobal::charsets()->codecForName(defaultCS);
-    usedCS=cachedCharset(defaultCS);
-  }
-  else {
-    codec=KGlobal::charsets()->codecForName(declaredCS, ok);
-    if(!ok) {     //no suitable codec found => use default charset
-      codec=KGlobal::charsets()->codecForName(defaultCS);
-      usedCS=cachedCharset(defaultCS);
+
+  if ( forceCS || declaredCS.isEmpty() ) {
+    codec = KGlobal::charsets()->codecForName( defaultCS );
+    usedCS = cachedCharset( defaultCS );
+  } else {
+    codec = KGlobal::charsets()->codecForName( declaredCS, ok );
+    if ( !ok ) {  //no suitable codec found => use default charset
+      codec = KGlobal::charsets()->codecForName( defaultCS );
+      usedCS = cachedCharset( defaultCS );
+    } else {
+      usedCS = cachedCharset( declaredCS );
     }
-    else
-      usedCS=cachedCharset(declaredCS);
   }
 
   return codec->toUnicode( result.data(), result.length() );
 }
 
-
 QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
                                 bool addressHeader, bool allow8BitHeaders )
 {
   QByteArray encoded8Bit, result, usedCS;
-  int start=0,end=0;
+  int start=0, end=0;
   bool nonAscii=false, ok=true, useQEncoding=false;
   QTextCodec *codec=0;
 
-  usedCS=charset;
-  codec=KGlobal::charsets()->codecForName(usedCS, ok);
+  usedCS = charset;
+  codec = KGlobal::charsets()->codecForName( usedCS, ok );
 
-  if(!ok) {
+  if ( !ok ) {
     //no codec available => try local8Bit and hope the best ;-)
-    usedCS=KGlobal::locale()->encoding();
-    codec=KGlobal::charsets()->codecForName(usedCS, ok);
+    usedCS = KGlobal::locale()->encoding();
+    codec = KGlobal::charsets()->codecForName( usedCS, ok );
   }
 
-  if ( usedCS.contains("8859-") )  // use "B"-Encoding for non iso-8859-x charsets
-    useQEncoding=true;
+  if ( usedCS.contains( "8859-" ) ) { // use "B"-Encoding for non iso-8859-x charsets
+    useQEncoding = true;
+  }
 
-  encoded8Bit=codec->fromUnicode(src);
+  encoded8Bit = codec->fromUnicode( src );
 
-  if(allow8BitHeaders)
+  if ( allow8BitHeaders ) {
     return encoded8Bit;
+  }
 
   uint encoded8BitLength = encoded8Bit.length();
-  for (unsigned int i=0; i<encoded8BitLength; i++) {
-    if (encoded8Bit[i]==' ')    // encoding starts at word boundaries
-      start = i+1;
+  for ( unsigned int i=0; i<encoded8BitLength; i++ ) {
+    if ( encoded8Bit[i] == ' ' ) { // encoding starts at word boundaries
+      start = i + 1;
+    }
 
     // encode escape character, for japanese encodings...
-    if (((signed char)encoded8Bit[i]<0) || (encoded8Bit[i] == '\033') ||
-        (addressHeader && (strchr("\"()<>@,.;:\\[]=",encoded8Bit[i])!=0))) {
+    if ( ( (signed char)encoded8Bit[i] < 0 ) || ( encoded8Bit[i] == '\033' ) ||
+         ( addressHeader && ( strchr( "\"()<>@,.;:\\[]=", encoded8Bit[i] ) != 0 ) ) ) {
       end = start;   // non us-ascii char found, now we determine where to stop encoding
-      nonAscii=true;
+      nonAscii = true;
       break;
     }
   }
 
-  if (nonAscii) {
-    while ((end<encoded8Bit.length())&&(encoded8Bit[end]!=' '))  // we encode complete words
+  if ( nonAscii ) {
+    while ( ( end < encoded8Bit.length() ) && ( encoded8Bit[end] != ' ' ) ) {
+      // we encode complete words
       end++;
-
-    for (int x=end;x<encoded8Bit.length();x++)
-      if (((signed char)encoded8Bit[x]<0) || (encoded8Bit[x] == '\033') ||
-          (addressHeader && (strchr("\"()<>@,.;:\\[]=",encoded8Bit[x])!=0))) {
-        end = encoded8Bit.length();     // we found another non-ascii word
-
-      while ((end<encoded8Bit.length())&&(encoded8Bit[end]!=' '))  // we encode complete words
-        end++;
     }
 
-    result = encoded8Bit.left(start)+"=?"+usedCS;
+    for ( int x=end; x<encoded8Bit.length(); x++ ) {
+      if ( ( (signed char)encoded8Bit[x]<0) || ( encoded8Bit[x] == '\033' ) ||
+           ( addressHeader && ( strchr("\"()<>@,.;:\\[]=",encoded8Bit[x]) != 0 ) ) ) {
+        end = encoded8Bit.length();     // we found another non-ascii word
 
-    if (useQEncoding) {
+        while ( ( end < encoded8Bit.length() ) && ( encoded8Bit[end] != ' ' ) ) {
+          // we encode complete words
+          end++;
+        }
+      }
+    }
+
+    result = encoded8Bit.left( start ) + "=?" + usedCS;
+
+    if ( useQEncoding ) {
       result += "?Q?";
 
-      char c,hexcode;                       // implementation of the "Q"-encoding described in RFC 2047
-      for (int i=start;i<end;i++) {
+      char c, hexcode;// "Q"-encoding implementation described in RFC 2047
+      for ( int i=start; i<end; i++ ) {
         c = encoded8Bit[i];
-        if (c == ' ')       // make the result readable with not MIME-capable readers
-          result+='_';
-        else
-          if (((c>='a')&&(c<='z'))||      // paranoid mode, we encode *all* special characters to avoid problems
-              ((c>='A')&&(c<='Z'))||      // with "From" & "To" headers
-              ((c>='0')&&(c<='9')))
-            result+=c;
-          else {
+        if ( c == ' ' ) { // make the result readable with not MIME-capable readers
+          result += '_';
+        } else {
+          if ( ( ( c >= 'a' ) && ( c <= 'z' ) ) || // paranoid mode, encode *all* special characters to avoid problems
+              ( ( c >= 'A' ) && ( c <= 'Z' ) ) ||  // with "From" & "To" headers
+              ( ( c >= '0' ) && ( c <= '9' ) ) ) {
+            result += c;
+          } else {
             result += '=';                 // "stolen" from KMail ;-)
             hexcode = ((c & 0xF0) >> 4) + 48;
-            if (hexcode >= 58) hexcode += 7;
+            if ( hexcode >= 58 ) {
+              hexcode += 7;
+            }
             result += hexcode;
             hexcode = (c & 0x0F) + 48;
-            if (hexcode >= 58) hexcode += 7;
+            if ( hexcode >= 58 ) {
+              hexcode += 7;
+            }
             result += hexcode;
           }
+        }
       }
     } else {
-      result += "?B?"+KCodecs::base64Encode(encoded8Bit.mid(start,end-start), false);
+      result += "?B?" +
+                KCodecs::base64Encode( encoded8Bit.mid( start, end - start ),
+                                       false );
     }
 
     result +="?=";
-    result += encoded8Bit.right(encoded8Bit.length()-end);
-  }
-  else
+    result += encoded8Bit.right( encoded8Bit.length() - end );
+  } else {
     result = encoded8Bit;
+  }
 
   return result;
 }
@@ -333,15 +356,15 @@ QByteArray uniqueString()
   int pos, ran;
   unsigned int timeval;
 
-  p[10]='\0';
-  now=time(0);
-  ran=1+(int) (1000.0*rand()/(RAND_MAX+1.0));
-  timeval=(now/ran)+getpid();
+  p[10] = '\0';
+  now = time( 0 );
+  ran = 1 + (int)(1000.0*rand() / (RAND_MAX + 1.0));
+  timeval = (now / ran) + getpid();
 
-  for(int i=0; i<10; i++){
-    pos=(int) (61.0*rand()/(RAND_MAX+1.0));
+  for ( int i=0; i<10; i++ ) {
+    pos = (int) (61.0*rand() / (RAND_MAX + 1.0));
     //kDebug(5003) << pos << endl;
-    p[i]=chars[pos];
+    p[i] = chars[pos];
   }
 
   QByteArray ret;
@@ -351,7 +374,6 @@ QByteArray uniqueString()
 
   return ret;
 }
-
 
 QByteArray multiPartBoundary()
 {
@@ -366,12 +388,16 @@ QByteArray unfoldHeader( const QByteArray &header )
     foldBegin = foldEnd = foldMid;
     // find the first space before the line-break
     while ( foldBegin > 0 ) {
-      if ( !QChar( header[foldBegin - 1] ).isSpace() ) break;
+      if ( !QChar( header[foldBegin - 1] ).isSpace() ) {
+        break;
+      }
       --foldBegin;
     }
     // find the first non-space after the line-break
     while ( foldEnd < header.length() - 1 ) {
-      if ( !QChar( header[foldEnd] ).isSpace() ) break;
+      if ( !QChar( header[foldEnd] ).isSpace() ) {
+        break;
+      }
       ++foldEnd;
     }
     result += header.mid( pos, foldBegin - pos );
@@ -392,39 +418,42 @@ QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
   } else {
     n.prepend('\n');
     // TODO Possible optimization: Avoid using QString
-    pos1 = QString(src).indexOf(n,0,Qt::CaseInsensitive);
+    pos1 = QString( src ).indexOf( n, 0, Qt::CaseInsensitive );
   }
 
-  if (pos1>-1) {    //there is a header with the given name
-    pos1+=n.length(); //skip the name
-    int pos2=pos1;
-    int len=src.length()-1;
+  if ( pos1 > -1) {     //there is a header with the given name
+    pos1 += n.length(); //skip the name
+    int pos2 = pos1;
+    int len = src.length() - 1;
     bool folded = false;
 
-    if (src[pos2]!='\n') {  // check if the header is not empty
+    if ( src[pos2] != '\n' ) {  // check if the header is not empty
       while ( true ) {
-        pos2=src.indexOf('\n', pos2+1);
-        if(pos2==-1 || pos2==len || ( src[pos2+1]!=' ' && src[pos2+1]!='\t') ) //break if we reach the end of the string, honor folded lines
+        pos2 = src.indexOf( '\n', pos2 + 1 );
+        if ( pos2 == -1 || pos2 == len ||
+             ( src[pos2+1] != ' ' && src[pos2+1] != '\t' ) ) {
+          //break if we reach the end of the string, honor folded lines
           break;
-        else
+        } else {
           folded = true;
+        }
       }
     }
 
-    if(pos2<0) pos2=len+1; //take the rest of the string
+    if ( pos2 < 0 ) {
+      pos2 = len + 1; //take the rest of the string
+    }
 
-    if (!folded)
-      return src.mid(pos1, pos2-pos1);
-    else {
+    if ( !folded ) {
+      return src.mid( pos1, pos2 - pos1 );
+    } else {
       QByteArray hdrValue = src.mid( pos1, pos2 - pos1 );
       return unfoldHeader( hdrValue );
     }
-  }
-  else {
+  } else {
     return QByteArray(); //header not found
   }
 }
-
 
 QByteArray CRLFtoLF( const QByteArray &s )
 {
@@ -433,7 +462,6 @@ QByteArray CRLFtoLF( const QByteArray &s )
   return ret;
 }
 
-
 QByteArray LFtoCRLF( const QByteArray &s )
 {
   QByteArray ret = s;
@@ -441,22 +469,22 @@ QByteArray LFtoCRLF( const QByteArray &s )
   return ret;
 }
 
-
 namespace {
-  template < typename T > void removeQuotesGeneric( T & str )
-  {
-    bool inQuote = false;
-    for ( int i = 0; i < str.length(); ++i ) {
-      if ( str[i] == '"' ) {
+template < typename T > void removeQuotesGeneric( T & str )
+{
+  bool inQuote = false;
+  for ( int i = 0; i < str.length(); ++i ) {
+    if ( str[i] == '"' ) {
+      str.remove( i, 1 );
+      i--;
+      inQuote = !inQuote;
+    } else {
+      if ( inQuote && ( str[i] == '\\' ) ) {
         str.remove( i, 1 );
-        i--;
-        inQuote = !inQuote;
-      } else {
-        if ( inQuote && ( str[i] == '\\' ) )
-          str.remove( i, 1 );
       }
     }
   }
+}
 }
 
 void removeQuots( QByteArray &str )
@@ -464,36 +492,34 @@ void removeQuots( QByteArray &str )
   removeQuotesGeneric( str );
 }
 
-
 void removeQuots( QString &str )
 {
   removeQuotesGeneric( str );
 }
 
-
-void addQuotes(QByteArray &str, bool forceQuotes)
+void addQuotes( QByteArray &str, bool forceQuotes )
 {
   bool needsQuotes=false;
-  for (int i=0; i < str.length(); i++) {
-    if (strchr("()<>@,.;:[]=\\\"",str[i])!=0)
+  for ( int i=0; i < str.length(); i++ ) {
+    if ( strchr("()<>@,.;:[]=\\\"", str[i] ) != 0 ) {
       needsQuotes = true;
-    if (str[i]=='\\' || str[i]=='\"') {
-      str.insert(i, '\\');
+    }
+    if ( str[i] == '\\' || str[i] == '\"' ) {
+      str.insert( i, '\\' );
       i++;
     }
   }
 
-  if (needsQuotes || forceQuotes) {
-    str.insert(0,'\"');
-    str.append("\"");
+  if ( needsQuotes || forceQuotes ) {
+    str.insert( 0, '\"' );
+    str.append( "\"" );
   }
 }
 
 int DateFormatter::mDaylight = -1;
-DateFormatter::DateFormatter(FormatType fType)
+DateFormatter::DateFormatter( FormatType fType )
   : mFormat( fType ), mCurrentTime( 0 )
 {
-
 }
 
 DateFormatter::~DateFormatter()
@@ -505,15 +531,13 @@ DateFormatter::getFormat() const
   return mFormat;
 }
 
-void
-DateFormatter::setFormat( FormatType t )
+void DateFormatter::setFormat( FormatType t )
 {
   mFormat = t;
 }
 
-QString
-DateFormatter::dateString( time_t otime , const QString& lang ,
-		       bool shortFormat, bool includeSecs ) const
+QString DateFormatter::dateString( time_t otime , const QString &lang ,
+                                   bool shortFormat, bool includeSecs ) const
 {
   switch ( mFormat ) {
   case Fancy:
@@ -535,63 +559,58 @@ DateFormatter::dateString( time_t otime , const QString& lang ,
   return QString();
 }
 
-QString
-DateFormatter::dateString(const QDateTime& dtime, const QString& lang,
-		       bool shortFormat, bool includeSecs ) const
+QString DateFormatter::dateString( const QDateTime &dtime, const QString &lang,
+                                  bool shortFormat, bool includeSecs ) const
 {
-  return DateFormatter::dateString( qdateToTimeT(dtime), lang, shortFormat, includeSecs );
+  return DateFormatter::dateString( qdateToTimeT( dtime ),
+                                    lang, shortFormat, includeSecs );
 }
 
-QByteArray
-DateFormatter::rfc2822(time_t otime) const
+QByteArray DateFormatter::rfc2822( time_t otime ) const
 {
   QDateTime tmp;
-  QByteArray  ret;
+  QByteArray ret;
 
-  tmp.setTime_t(otime);
+  tmp.setTime_t( otime );
 
-  ret = tmp.toString("ddd, dd MMM yyyy hh:mm:ss ").toLatin1();
-  ret += zone(otime);
+  ret = tmp.toString( "ddd, dd MMM yyyy hh:mm:ss " ).toLatin1();
+  ret += zone( otime );
 
   return ret;
 }
 
-QString
-DateFormatter::custom(time_t t) const
+QString DateFormatter::custom( time_t t ) const
 {
-  if ( mCustomFormat.isEmpty() )
+  if ( mCustomFormat.isEmpty() ) {
     return QString();
+  }
 
-  int z = mCustomFormat.indexOf('Z');
+  int z = mCustomFormat.indexOf( 'Z' );
   QDateTime d;
   QString ret = mCustomFormat;
 
-  d.setTime_t(t);
+  d.setTime_t( t );
   if ( z != -1 ) {
-    ret.replace(z,1,zone(t));
+    ret.replace( z, 1, zone( t ) );
   }
 
-  ret = d.toString(ret);
+  ret = d.toString( ret );
 
   return ret;
 }
 
-void
-DateFormatter::setCustomFormat(const QString& format)
+void DateFormatter::setCustomFormat( const QString &format )
 {
   mCustomFormat = format;
   mFormat = Custom;
 }
 
-QString
-DateFormatter::getCustomFormat() const
+QString DateFormatter::getCustomFormat() const
 {
   return mCustomFormat;
 }
 
-
-QByteArray
-DateFormatter::zone(time_t otime) const
+QByteArray DateFormatter::zone( time_t otime ) const
 {
 #if defined(HAVE_TIMEZONE) || defined(HAVE_TM_GMTOFF)
   struct tm *local = localtime( &otime );
@@ -600,42 +619,45 @@ DateFormatter::zone(time_t otime) const
 #if defined(HAVE_TIMEZONE)
 
   //hmm, could make hours & mins static
-  int secs = abs(timezone);
-  int neg  = (timezone>0)?1:0;
-  int hours = secs/3600;
-  int mins  = (secs - hours*3600)/60;
+  int secs = abs( timezone );
+  int neg  = (timezone > 0) ? 1 : 0;
+  int hours = secs / 3600;
+  int mins  = (secs - hours*3600) / 60;
 
   // adjust to daylight
   if ( local->tm_isdst > 0 ) {
-      mDaylight = 1;
-      if ( neg )
-        --hours;
-      else
-        ++hours;
-  } else
-      mDaylight = 0;
+    mDaylight = 1;
+    if ( neg ) {
+      --hours;
+    } else {
+      ++hours;
+    }
+  } else {
+    mDaylight = 0;
+  }
 
 #elif defined(HAVE_TM_GMTOFF)
 
   int secs = abs( local->tm_gmtoff );
-  int neg  = (local->tm_gmtoff<0)?1:0; //no, I don't know why it's backwards :o
-  int hours = secs/3600;
-  int mins  = (secs - hours*3600)/60;
+  int neg  = (local->tm_gmtoff < 0) ? 1 : 0; //no, I don't know why it's backwards :o
+  int hours = secs / 3600;
+  int mins  = (secs - hours * 3600) / 60;
 
-  if ( local->tm_isdst > 0 )
-      mDaylight = 1;
-  else
-      mDaylight = 0;
+  if ( local->tm_isdst > 0 ) {
+    mDaylight = 1;
+  } else {
+    mDaylight = 0;
+  }
 
 #else
 
-  QDateTime d1 = QDateTime::fromString( asctime(gmtime(&otime)) );
-  QDateTime d2 = QDateTime::fromString( asctime(localtime(&otime)) );
-  int secs = d1.secsTo(d2);
-  int neg = (secs<0)?1:0;
-  secs = abs(secs);
-  int hours = secs/3600;
-  int mins  = (secs - hours*3600)/60;
+  QDateTime d1 = QDateTime::fromString( asctime( gmtime( &otime ) ) );
+  QDateTime d2 = QDateTime::fromString( asctime( localtime( &otime ) ) );
+  int secs = d1.secsTo( d2 );
+  int neg = ( secs < 0 ) ? 1 : 0;
+  secs = abs( secs );
+  int hours = secs / 3600;
+  int mins  = (secs - hours * 3600) / 60;
   // daylight should be already taken care of here
 
 #endif /* HAVE_TIMEZONE */
@@ -643,33 +665,32 @@ DateFormatter::zone(time_t otime) const
   QByteArray ret;
   QTextStream s( &ret, QIODevice::WriteOnly );
   s << ( neg ? '-' : '+' )
-    << qSetFieldWidth(2) << qSetPadChar('0') << right << hours << mins;
-  //old code: ret.sprintf("%c%.2d%.2d",(neg)?'-':'+', hours, mins);
+    << qSetFieldWidth( 2 ) << qSetPadChar( '0' ) << right << hours << mins;
+  //old code: ret.sprintf( "%c%.2d%.2d", (neg) ? '-' : '+', hours, mins );
 
   return ret;
 }
 
-time_t
-DateFormatter::qdateToTimeT(const QDateTime& dt) const
+time_t DateFormatter::qdateToTimeT( const QDateTime &dt ) const
 {
-  QDateTime epoch( QDate(1970, 1,1), QTime(00,00,00) );
+  QDateTime epoch( QDate( 1970, 1, 1 ), QTime( 00, 00, 00 ) );
   time_t otime;
   time( &otime );
 
-  QDateTime d1 = QDateTime::fromString( asctime(gmtime(&otime)) );
-  QDateTime d2 = QDateTime::fromString( asctime(localtime(&otime)) );
+  QDateTime d1 = QDateTime::fromString( asctime( gmtime( &otime ) ) );
+  QDateTime d2 = QDateTime::fromString( asctime( localtime( &otime ) ) );
   time_t drf = epoch.secsTo( dt ) - d1.secsTo( d2 );
 
   return drf;
 }
 
-QString
-DateFormatter::fancy(time_t otime) const
+QString DateFormatter::fancy( time_t otime ) const
 {
   KLocale *locale = KGlobal::locale();
 
-  if ( otime <= 0 )
+  if ( otime <= 0 ) {
     return i18n( "unknown" );
+  }
 
   if ( !mCurrentTime ) {
     time( &mCurrentTime );
@@ -685,35 +706,36 @@ DateFormatter::fancy(time_t otime) const
 
     if ( diff < 24 * 60 * 60 ) {
       if ( old.date().year() == mDate.date().year() &&
-	   old.date().dayOfYear() == mDate.date().dayOfYear() )
-	return i18n( "Today %1", locale->
-				       formatTime( old.time(), true ) );
+           old.date().dayOfYear() == mDate.date().dayOfYear() )
+        return i18n( "Today %1", locale->
+                     formatTime( old.time(), true ) );
     }
     if ( diff < 2 * 24 * 60 * 60 ) {
       QDateTime yesterday( mDate.addDays( -1 ) );
       if ( old.date().year() == yesterday.date().year() &&
-	   old.date().dayOfYear() == yesterday.date().dayOfYear() )
-	return i18n( "Yesterday %1", locale->
-					   formatTime( old.time(), true) );
+           old.date().dayOfYear() == yesterday.date().dayOfYear() )
+        return i18n( "Yesterday %1", locale->
+                     formatTime( old.time(), true) );
     }
-    for ( int i = 3; i < 7; i++ )
+    for ( int i = 3; i < 7; i++ ) {
       if ( diff < i * 24 * 60 * 60 ) {
-	QDateTime weekday( mDate.addDays( -i + 1 ) );
-	if ( old.date().year() == weekday.date().year() &&
-	     old.date().dayOfYear() == weekday.date().dayOfYear() )
-	  return i18nc( "1. weekday, 2. time", "%1 %2" ,
-	     locale->calendar()->weekDayName( old.date() ) ,
-	     locale->formatTime( old.time(), true) );
+        QDateTime weekday( mDate.addDays( -i + 1 ) );
+        if ( old.date().year() == weekday.date().year() &&
+             old.date().dayOfYear() == weekday.date().dayOfYear() )
+          return i18nc( "1. weekday, 2. time", "%1 %2" ,
+                        locale->calendar()->weekDayName( old.date() ) ,
+                        locale->formatTime( old.time(), true) );
       }
+    }
   }
 
   return locale->formatDateTime( old );
 
 }
 
-QString
-DateFormatter::localized(time_t otime, bool shortFormat, bool includeSecs,
-			 const QString& localeLanguage ) const
+QString DateFormatter::localized( time_t otime, bool shortFormat,
+                                  bool includeSecs,
+                                  const QString &localeLanguage ) const
 {
   QDateTime tmp;
   QString ret;
@@ -721,11 +743,10 @@ DateFormatter::localized(time_t otime, bool shortFormat, bool includeSecs,
 
   tmp.setTime_t( otime );
 
-
   if ( !localeLanguage.isEmpty() ) {
-    locale=new KLocale(localeLanguage);
-    locale->setLanguage(localeLanguage);
-    locale->setCountry(localeLanguage);
+    locale=new KLocale( localeLanguage );
+    locale->setLanguage( localeLanguage );
+    locale->setCountry( localeLanguage );
     ret = locale->formatDateTime( tmp, shortFormat, includeSecs );
     delete locale;
   } else {
@@ -735,30 +756,26 @@ DateFormatter::localized(time_t otime, bool shortFormat, bool includeSecs,
   return ret;
 }
 
-QString
-DateFormatter::cTime(time_t otime) const
+QString DateFormatter::cTime( time_t otime ) const
 {
   return QString::fromLatin1( ctime(  &otime ) ).trimmed();
 }
 
-QString
-DateFormatter::isoDate(time_t otime) const
+QString DateFormatter::isoDate( time_t otime ) const
 {
   char cstr[64];
-  strftime( cstr, 63, "%Y-%m-%d %H:%M:%S", localtime(&otime) );
+  strftime( cstr, 63, "%Y-%m-%d %H:%M:%S", localtime( &otime ) );
   return QString( cstr );
 }
 
-
-void
-DateFormatter::reset()
+void DateFormatter::reset()
 {
   mCurrentTime = 0;
 }
 
-QString
-DateFormatter::formatDate(DateFormatter::FormatType t, time_t otime,
-			  const QString& data, bool shortFormat, bool includeSecs )
+QString DateFormatter::formatDate( DateFormatter::FormatType t, time_t otime,
+                                   const QString &data, bool shortFormat,
+                                   bool includeSecs )
 {
   DateFormatter f( t );
   if ( t == DateFormatter::Custom ) {
@@ -767,26 +784,24 @@ DateFormatter::formatDate(DateFormatter::FormatType t, time_t otime,
   return f.dateString( otime, data, shortFormat, includeSecs );
 }
 
-QString
-DateFormatter::formatCurrentDate( DateFormatter::FormatType t, const QString& data,
-				  bool shortFormat, bool includeSecs )
+QString DateFormatter::formatCurrentDate( DateFormatter::FormatType t,
+                                          const QString &data,
+                                          bool shortFormat, bool includeSecs )
 {
   DateFormatter f( t );
   if ( t == DateFormatter::Custom ) {
     f.setCustomFormat( data );
   }
-  return f.dateString( time(0), data, shortFormat, includeSecs );
+  return f.dateString( time( 0 ), data, shortFormat, includeSecs );
 }
 
-QByteArray
-DateFormatter::rfc2822FormatDate( time_t t )
+QByteArray DateFormatter::rfc2822FormatDate( time_t t )
 {
   DateFormatter f;
   return f.rfc2822( t );
 }
 
-bool
-DateFormatter::isDaylight()
+bool DateFormatter::isDaylight()
 {
   if ( mDaylight == -1 ) {
     time_t ntime = time( 0 );
@@ -798,10 +813,11 @@ DateFormatter::isDaylight()
       mDaylight = 0;
       return false;
     }
-  } else if ( mDaylight != 0 )
+  } else if ( mDaylight != 0 ) {
     return true;
-  else
+  } else {
     return false;
+  }
 }
 
 } // namespace KMime
