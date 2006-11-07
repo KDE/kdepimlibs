@@ -376,7 +376,11 @@ class KMIME_EXPORT AddressList : public Address
     QList<Types::Address> mAddressList;
 };
 
-/** Base class for headers which deal with a list of msg-id's */
+/**
+  Base class for headers which deal with a list of msg-id's
+
+  @see RFC 2822, section 3.6.4
+*/
 class KMIME_EXPORT Ident : public Address
 {
   public:
@@ -388,7 +392,21 @@ class KMIME_EXPORT Ident : public Address
       : Address( p ) { fromUnicodeString( s, cs ); }
     ~Ident() {}
 
-    QStringList identifiers() const;
+    virtual QByteArray as7BitString( bool withHeaderType = true );
+
+    /**
+      Returns the list of identifiers contained in this header.
+      Note:
+      - Identifiers are not enclosed in angle-brackets.
+      - Identifiers are listed in the same order as in the header.
+    */
+    QList<QByteArray> identifiers() const;
+
+    /**
+      Appends a new identifier to this header.
+      @param id The identifier to append, with or without angle-brackets.
+    */
+    void appendIdentifier( const QByteArray &id );
 
   protected:
     bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
@@ -566,9 +584,14 @@ mk_trivial_subclass_with_name( MessageID, Message-ID, SingleIdent );
 mk_trivial_subclass_with_name( ContentID, Content-ID, SingleIdent );
 mk_trivial_subclass( Supersedes, SingleIdent );
 #endif
+
+/** Represents a "In-Reply-To" header. */
 mk_trivial_subclass_with_name( InReplyTo, In-Reply-To, Ident );
-#if defined(KMIME_NEW_STYLE_CLASSTREE)
+
+/** Represents a "References" header. */
 mk_trivial_subclass( References, Ident );
+
+#if defined(KMIME_NEW_STYLE_CLASSTREE)
 
 // GContentType:
 

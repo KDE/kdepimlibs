@@ -211,36 +211,6 @@ class KMIME_EXPORT BCC : public To {
 
 };
 
-/** Represents a "References" header */
-class KMIME_EXPORT References : public Base {
-
-  public:
-    References() : Base(),p_os(-1)  {}
-    References(Content *p) : Base(p),p_os(-1)  {}
-    References(Content *p, const QByteArray &s) : Base(p),p_os(-1)  { from7BitString(s); }
-    References(Content *p, const QString &s) : Base(p),p_os(-1)  { fromUnicodeString(s, Latin1); }
-    ~References()                 {}
-
-    virtual void from7BitString(const QByteArray &s);
-    virtual QByteArray as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QByteArray&);
-    virtual QString asUnicodeString();
-    virtual void clear()            { r_ef.resize(0); p_os=0; }
-    virtual bool isEmpty() const { return (r_ef.isEmpty()); }
-    virtual const char* type() const { return "References"; }
-
-    int count();
-    QByteArray first();
-    QByteArray next();
-    QByteArray at(unsigned int i);
-    void append(const QByteArray &s);
-
-  protected:
-    QByteArray r_ef;
-    int p_os;
-
-};
-
 /** Represents a "Content-Type" header */
 class KMIME_EXPORT ContentType : public Base {
 

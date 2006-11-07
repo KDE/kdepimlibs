@@ -366,6 +366,23 @@ bool GCISTokenWithParameterList::parse( const char* &scursor,
 
 //-----<Ident>-------------------------
 
+QByteArray Ident::as7BitString(bool withHeaderType)
+{
+  if ( mMsgIdList.isEmpty() )
+    return QByteArray();
+
+  QByteArray rv;
+  if ( withHeaderType )
+    rv = typeIntro();
+  foreach ( Types::AddrSpec addr, mMsgIdList ) {
+    rv += '<';
+    rv += addr.asString().toLatin1(); // FIXME: change parsing to use QByteArrays
+    rv += "> ";
+  }
+  rv.resize( rv.length() - 1 );
+  return rv;
+}
+
 bool Ident::parse( const char* &scursor, const char * const send, bool isCRLF )
 {
   // msg-id   := "<" id-left "@" id-right ">"
@@ -398,13 +415,29 @@ bool Ident::parse( const char* &scursor, const char * const send, bool isCRLF )
   return true;
 }
 
-QStringList Ident::identifiers() const
+QList<QByteArray> Ident::identifiers() const
 {
-  QStringList rv;
+  QList<QByteArray> rv;
   foreach ( Types::AddrSpec addr, mMsgIdList )
-    rv.append( addr.asString() );
+    rv.append( addr.asString().toLatin1() ); // FIXME change parsing to create QByteArrays
   return rv;
 }
+
+void Ident::appendIdentifier(const QByteArray & id)
+{
+  QByteArray tmp = id;
+  if ( !tmp.startsWith( '<' ) )
+    tmp.prepend( '<' );
+  if ( !tmp.endsWith( '>' ) )
+    tmp.append( '>' );
+  AddrSpec msgId;
+  const char* cursor = tmp.constData();
+  if ( parseAngleAddr( cursor, cursor + tmp.length(), msgId ) )
+    mMsgIdList.append( msgId );
+  else
+    kWarning() << k_funcinfo << "Unable to parse address spec!" << endl;
+}
+
 
 //-----</Ident>-------------------------
 
@@ -995,154 +1028,6 @@ QString Lines::asUnicodeString()
 
 //-----</Lines>--------------------------------
 
-#if !defined(KMIME_NEW_STYLE_CLASSTREE)
-//-----<References>----------------------------
-
-void References::from7BitString( const QByteArray &s )
-{
-  r_ef = s;
-  e_ncCS = cachedCharset( Latin1 );
-}
-
-QByteArray References::as7BitString( bool incType )
-{
-  if ( incType ) {
-    return ( typeIntro() + r_ef );
-  } else {
-    return r_ef;
-  }
-}
-
-void References::fromUnicodeString( const QString &s, const QByteArray &barr )
-{
-  Q_UNUSED( barr );
-
-  r_ef = s.toLatin1();
-  e_ncCS = cachedCharset( Latin1 );
-}
-
-QString References::asUnicodeString()
-{
-  return QString::fromLatin1( r_ef );
-}
-
-int References::count()
-{
-  int cnt1=0, cnt2=0;
-  unsigned int r_efLen = r_ef.length();
-  char *dataPtr = r_ef.data();
-  for ( unsigned int i=0; i<r_efLen; i++ ) {
-    if ( dataPtr[i] == '<' ) cnt1++;
-    else if ( dataPtr[i] == '>' ) cnt2++;
-  }
-
-  if ( cnt1 < cnt2 ) {
-    return cnt1;
-  } else {
-    return cnt2;
-  }
-}
-
-QByteArray References::first()
-{
-  p_os = -1;
-  return next();
-}
-
-QByteArray References::next()
-{
-  int pos1=0, pos2=0;
-  QByteArray ret;
-
-  if ( p_os != 0 ) {
-    pos2 = r_ef.lastIndexOf( '>', p_os );
-    p_os = 0;
-    if ( pos2 != -1 ) {
-      pos1 = r_ef.lastIndexOf( '<', pos2 );
-      if ( pos1 != -1 ) {
-        ret = r_ef.mid( pos1, pos2 - pos1 + 1 );
-        p_os = pos1;
-      }
-    }
-  }
-  return ret;
-}
-
-QByteArray References::at( unsigned int i )
-{
-  QByteArray ret;
-  int pos1=0, pos2=0;
-  unsigned int cnt=0;
-
-  while ( pos1 != -1 && cnt < i+1 ) {
-    pos2 = pos1 - 1;
-    pos1 = r_ef.lastIndexOf( '<', pos2 );
-    cnt++;
-  }
-
-  if ( pos1 != -1 ) {
-    pos2 = r_ef.indexOf( '>', pos1 );
-    if ( pos2 != -1 )
-      ret = r_ef.mid( pos1, pos2 - pos1 + 1 );
-  }
-
-  return ret;
-}
-
-void References::append( const QByteArray &s )
-{
-  QString temp = r_ef.data();
-  temp += ' ';
-  temp += s.data();
-  QStringList lst = temp.split(' ');
-  QRegExp exp( "^<.+@.+>$" );
-
-  // remove bogus references
-  QStringList::Iterator it = lst.begin();
-  while ( it != lst.end() ) {
-    if ( -1 == (*it).indexOf( exp ) ) {
-      it = lst.erase( it );
-    } else {
-      it++;
-    }
-  }
-
-  if ( lst.isEmpty() ) {
-    r_ef = s;    // shouldn't happen...
-    return;
-  } else {
-    r_ef = "";
-  }
-
-  temp = lst.first();    // include the first id
-  r_ef = temp.toLatin1();
-  lst.removeAll( temp );         // avoids duplicates
-  int insPos = r_ef.length();
-
-  for ( int i=1; i<=3; i++ ) {    // include the last three ids
-    if ( !lst.isEmpty() ) {
-      temp = lst.last();
-      r_ef.insert( insPos, ( QString(" %1").arg( temp ) ).toLatin1() );
-      lst.removeAll( temp );
-    } else {
-      break;
-    }
-  }
-
-  while ( !lst.isEmpty() ) {   // now insert the rest, up to 1000 characters
-    temp = lst.last();
-    if ( (15 + r_ef.length() + temp.length() ) < 1000 ) {
-      r_ef.insert( insPos,( QString( " %1" ).arg( temp ) ).toLatin1() );
-      lst.removeAll( temp );
-    } else {
-      return;
-    }
-  }
-}
-
-//-----</References>---------------------------
-#endif
-
 //-----<UserAgent>-----------------------------
 
 void UserAgent::from7BitString( const QByteArray &s )
@@ -1569,3 +1454,4 @@ QString CDisposition::asUnicodeString()
 } // namespace Headers
 
 } // namespace KMime
+

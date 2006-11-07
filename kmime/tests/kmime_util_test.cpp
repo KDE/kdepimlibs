@@ -23,6 +23,8 @@
 
 #include <kmime_util.h>
 
+using namespace KMime;
+
 QTEST_KDEMAIN( KMimeUtilTest, NoGUI )
 
 void KMimeUtilTest::testUnfoldHeader()
@@ -38,4 +40,11 @@ void KMimeUtilTest::testUnfoldHeader()
   // multiple folding
   QCOMPARE( KMime::unfoldHeader( "bla\nbla\nblub" ), QByteArray( "bla bla blub" ) );
   QCOMPARE( KMime::unfoldHeader( "bla  \r\n   bla  \r\n  blub" ), QByteArray( "bla bla blub" ) );
+}
+
+void KMimeUtilTest::testExtractHeader()
+{
+  // extraction of multi-line headers
+  QCOMPARE( extractHeader( "To: <foo@bla.org>\nSubject: =?UTF-8?Q?_Notification_for_appointment:?=\n =?UTF-8?Q?_Test?=\nMIME-Version: 1.0", "Subject" ),
+            QByteArray("=?UTF-8?Q?_Notification_for_appointment:?= =?UTF-8?Q?_Test?=") );
 }

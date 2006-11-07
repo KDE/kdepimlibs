@@ -28,10 +28,37 @@ QTEST_KDEMAIN( HeaderTest, NoGUI )
 
 void HeaderTest::testIdentHeader()
 {
+  // parse single identifier
   Headers::Generics::Ident* h = new Headers::Generics::Ident();
   h->from7BitString( QByteArray( "<1162746587.784559.5038.nullmailer@svn.kde.org>" ) );
   QCOMPARE( h->identifiers().count(), 1 );
-  QCOMPARE( h->identifiers().first(), QString( "1162746587.784559.5038.nullmailer@svn.kde.org" ) );
+  QCOMPARE( h->identifiers().first(), QByteArray( "1162746587.784559.5038.nullmailer@svn.kde.org" ) );
+  delete h;
+
+  // parse multiple identifiers
+  h = new Headers::Generics::Ident();
+  h->from7BitString( QByteArray( "<1234@local.machine.example> <3456@example.net>" ) );
+  QCOMPARE( h->identifiers().count(), 2 );
+  QList<QByteArray> ids = h->identifiers();
+  QCOMPARE( ids.takeFirst(), QByteArray( "1234@local.machine.example" ) );
+  QCOMPARE( ids.first(), QByteArray( "3456@example.net" ) );
+  delete h;
+
+  // parse multiple identifiers with folded headers
+  h = new Headers::Generics::Ident();
+  h->from7BitString( QByteArray( "<1234@local.machine.example>\n  <3456@example.net>" ) );
+  QCOMPARE( h->identifiers().count(), 2 );
+  ids = h->identifiers();
+  QCOMPARE( ids.takeFirst(), QByteArray( "1234@local.machine.example" ) );
+  QCOMPARE( ids.first(), QByteArray( "3456@example.net" ) );
+
+  // appending of new identifiers (with and without angle-brackets)
+  h->appendIdentifier( "<abcd.1234@local.machine.tld>" );
+  h->appendIdentifier( "78910@example.net" );
+  QCOMPARE( h->identifiers().count(), 4 );
+
+  // assemble the final header
+  QCOMPARE( h->as7BitString( false ), QByteArray("<1234@local.machine.example> <3456@example.net> <abcd.1234@local.machine.tld> <78910@example.net>") );
 }
 
 #include "headertest.moc"
