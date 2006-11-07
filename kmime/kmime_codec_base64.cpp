@@ -1,7 +1,7 @@
 /*  -*- c++ -*-
     kmime_codec_base64.cpp
 
-    This file is part of KMime, the KDE internet mail/usenet news message library.
+    KMime, the KDE internet mail/usenet news message library.
     Copyright (c) 2001 Marc Mutz <mutz@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -31,15 +31,14 @@ using namespace KMime;
 namespace KMime {
 
 // codec for base64 as specified in RFC 2045
-  //class Base64Codec;
-  //class Base64Decoder;
-  //class Base64Encoder;
+//class Base64Codec;
+//class Base64Decoder;
+//class Base64Encoder;
 
 // codec for the B encoding as specified in RFC 2047
-  //class Rfc2047BEncodingCodec;
-  //class Rfc2047BEncodingEncoder;
-  //class Rfc2047BEncodingDecoder;
-
+//class Rfc2047BEncodingCodec;
+//class Rfc2047BEncodingEncoder;
+//class Rfc2047BEncodingDecoder;
 
 static const uchar base64DecodeMap[128] = {
   64, 64, 64, 64, 64, 64, 64, 64,  64, 64, 64, 64, 64, 64, 64, 64,
@@ -66,136 +65,137 @@ static const char base64EncodeMap[64] = {
   '4', '5', '6', '7', '8', '9', '+', '/'
 };
 
-
-class Base64Decoder : public Decoder {
+class Base64Decoder : public Decoder
+{
   uint mStepNo;
   uchar mOutbits;
   bool mSawPadding : 1;
 
-protected:
-  friend class Base64Codec;
-  Base64Decoder( bool withCRLF=false )
-    : Decoder( withCRLF ), mStepNo(0), mOutbits(0),
-      mSawPadding(false) {}
+  protected:
+    friend class Base64Codec;
+    Base64Decoder( bool withCRLF=false )
+      : Decoder( withCRLF ), mStepNo( 0 ), mOutbits( 0 ),
+        mSawPadding( false ) {}
 
-public:
-  virtual ~Base64Decoder() {}
+  public:
+    virtual ~Base64Decoder() {}
 
-  bool decode( const char* & scursor, const char * const send,
-	       char* & dcursor, const char * const dend );
-  // ### really needs no finishing???
-  bool finish( char* & /*dcursor*/, const char * const /*dend*/ ) { return true; }
+    bool decode( const char* &scursor, const char * const send,
+                 char* &dcursor, const char * const dend );
+    // ### really needs no finishing???
+    bool finish( char* &dcursor, const char * const dend )
+      { Q_UNUSED( dcursor ); Q_UNUSED( dend ); return true; }
 };
 
-
-
-class Base64Encoder : public Encoder {
+class Base64Encoder : public Encoder
+{
   uint mStepNo;
   /** number of already written base64-quartets on current line */
   uint mWrittenPacketsOnThisLine;
   uchar mNextbits;
   bool mInsideFinishing : 1;
 
-protected:
-  friend class Rfc2047BEncodingCodec;
-  friend class Rfc2047BEncodingEncoder;
-  friend class Base64Codec;
-  Base64Encoder( bool withCRLF=false )
-    : Encoder( withCRLF ), mStepNo(0), mWrittenPacketsOnThisLine(0),
-      mNextbits(0), mInsideFinishing(false) {}
+  protected:
+    friend class Rfc2047BEncodingCodec;
+    friend class Rfc2047BEncodingEncoder;
+    friend class Base64Codec;
+    Base64Encoder( bool withCRLF=false )
+      : Encoder( withCRLF ), mStepNo( 0 ), mWrittenPacketsOnThisLine( 0 ),
+        mNextbits( 0 ), mInsideFinishing( false ) {}
 
-  bool generic_finish( char* & dcursor, const char * const dend,
-		       bool withLFatEnd );
+    bool generic_finish( char* &dcursor, const char * const dend,
+                         bool withLFatEnd );
 
-public:
-  virtual ~Base64Encoder() {}
+  public:
+    virtual ~Base64Encoder() {}
 
-  bool encode( const char* & scursor, const char * const send,
-	       char* & dcursor, const char * const dend );
+    bool encode( const char* &scursor, const char * const send,
+                 char* &dcursor, const char * const dend );
 
-  bool finish( char* & dcursor, const char * const dend );
+    bool finish( char* &dcursor, const char * const dend );
 
-protected:
-  bool writeBase64( uchar ch, char* & dcursor, const char * const dend ) {
-    return write( base64EncodeMap[ ch ], dcursor, dend );
-  }
+  protected:
+    bool writeBase64( uchar ch, char* &dcursor, const char * const dend )
+    { return write( base64EncodeMap[ ch ], dcursor, dend ); }
 };
 
+class Rfc2047BEncodingEncoder : public Base64Encoder
+{
+  protected:
+    friend class Rfc2047BEncodingCodec;
+    Rfc2047BEncodingEncoder( bool withCRLF=false )
+      : Base64Encoder( withCRLF ) {}
 
-
-class Rfc2047BEncodingEncoder : public Base64Encoder {
-protected:
-  friend class Rfc2047BEncodingCodec;
-  Rfc2047BEncodingEncoder( bool withCRLF=false )
-    : Base64Encoder( withCRLF ) {};
-public:
-  bool encode( const char* & scursor, const char * const send,
-	       char* & dcursor, const char * const dend );
-  bool finish( char* & dcursor, const char * const dend );
+  public:
+    bool encode( const char* &scursor, const char * const send,
+                 char* &dcursor, const char * const dend );
+    bool finish( char* &dcursor, const char * const dend );
 };
 
-
-Encoder * Base64Codec::makeEncoder( bool withCRLF ) const {
+Encoder * Base64Codec::makeEncoder( bool withCRLF ) const
+{
   return new Base64Encoder( withCRLF );
 }
 
-Decoder * Base64Codec::makeDecoder( bool withCRLF ) const {
+Decoder * Base64Codec::makeDecoder( bool withCRLF ) const
+{
   return new Base64Decoder( withCRLF );
 }
 
-Encoder * Rfc2047BEncodingCodec::makeEncoder( bool withCRLF ) const {
+Encoder * Rfc2047BEncodingCodec::makeEncoder( bool withCRLF ) const
+{
   return new Rfc2047BEncodingEncoder( withCRLF );
 }
 
-  /********************************************************/
-  /********************************************************/
-  /********************************************************/
+/********************************************************/
+/********************************************************/
+/********************************************************/
 
-
-bool Base64Decoder::decode( const char* & scursor, const char * const send,
-			    char* & dcursor, const char * const dend )
+bool Base64Decoder::decode( const char* &scursor, const char * const send,
+                            char* &dcursor, const char * const dend )
 {
   while ( dcursor != dend && scursor != send ) {
     uchar ch = *scursor++;
     uchar value;
 
     // try converting ch to a 6-bit value:
-    if ( ch < 128 )
+    if ( ch < 128 ) {
       value = base64DecodeMap[ ch ];
-    else
+    } else {
       value = 64;
+    }
 
     // ch isn't of the base64 alphabet, check for other significant chars:
     if ( value >= 64 ) {
       if ( ch == '=' ) {
-	// padding:
-	if ( mStepNo == 0 || mStepNo == 1) {
-	  if (!mSawPadding) {
-	    // malformed
-	    kWarning() << "Base64Decoder: unexpected padding "
-	      "character in input stream" << endl;
-	  }
-	  mSawPadding = true;
-	  break;
-	} else if ( mStepNo == 2 ) {
-	  // ok, there should be another one
-	} else if ( mStepNo == 3 ) {
-	  // ok, end of encoded stream
-	  mSawPadding = true;
-	  break;
-	}
-	mSawPadding = true;
-	mStepNo = (mStepNo + 1) % 4;
-	continue;
+        // padding:
+        if ( mStepNo == 0 || mStepNo == 1 ) {
+          if ( !mSawPadding ) {
+            // malformed
+            kWarning() << "Base64Decoder: unexpected padding "
+              "character in input stream" << endl;
+          }
+          mSawPadding = true;
+          break;
+        } else if ( mStepNo == 2 ) {
+          // ok, there should be another one
+        } else if ( mStepNo == 3 ) {
+          // ok, end of encoded stream
+          mSawPadding = true;
+          break;
+        }
+        mSawPadding = true;
+        mStepNo = (mStepNo + 1) % 4;
+        continue;
       } else {
-	// non-base64 alphabet
-	continue;
+        // non-base64 alphabet
+        continue;
       }
     }
 
     if ( mSawPadding ) {
       kWarning() << "Base64Decoder: Embedded padding character "
-	"encountered!" << endl;
+        "encountered!" << endl;
       return true;
     }
 
@@ -223,24 +223,26 @@ bool Base64Decoder::decode( const char* & scursor, const char * const send,
   }
 
   // return false when caller should call us again:
-  return (scursor == send);
+  return ( scursor == send );
 } // Base64Decoder::decode()
 
-
-
-bool Base64Encoder::encode( const char* & scursor, const char * const send,
-			    char* & dcursor, const char * const dend ) {
+bool Base64Encoder::encode( const char* &scursor, const char * const send,
+                            char* &dcursor, const char * const dend )
+{
   const uint maxPacketsPerLine = 76 / 4;
 
   // detect when the caller doesn't adhere to our rules:
-  if ( mInsideFinishing ) return true;
+  if ( mInsideFinishing ) {
+    return true;
+  }
 
   while ( scursor != send && dcursor != dend ) {
     // properly empty the output buffer before starting something new:
     // ### fixme: we can optimize this away, since the buffer isn't
     // written to anyway (most of the time)
-    if ( mOutputBufferCursor && !flushOutputBuffer( dcursor, dend ) )
-      return (scursor == send);
+    if ( mOutputBufferCursor && !flushOutputBuffer( dcursor, dend ) ) {
+      return ( scursor == send );
+    }
 
     uchar ch = *scursor++;
     // mNextbits   // (part of) value of next sextet
@@ -277,26 +279,30 @@ bool Base64Encoder::encode( const char* & scursor, const char * const send,
     mStepNo = ( mStepNo + 1 ) % 3;
   }
 
-  if ( mOutputBufferCursor ) flushOutputBuffer( dcursor, dend );
+  if ( mOutputBufferCursor ) {
+    flushOutputBuffer( dcursor, dend );
+  }
 
-  return (scursor == send);
+  return ( scursor == send );
 }
 
-
-bool Rfc2047BEncodingEncoder::encode( const char* & scursor,
-				      const char * const send,
-				      char* & dcursor,
-				      const char * const dend )
+bool Rfc2047BEncodingEncoder::encode( const char* &scursor,
+                                      const char * const send,
+                                      char* &dcursor,
+                                      const char * const dend )
 {
   // detect when the caller doesn't adhere to our rules:
-  if ( mInsideFinishing ) return true;
+  if ( mInsideFinishing ) {
+    return true;
+  }
 
   while ( scursor != send && dcursor != dend ) {
     // properly empty the output buffer before starting something new:
     // ### fixme: we can optimize this away, since the buffer isn't
     // written to anyway (most of the time)
-    if ( mOutputBufferCursor && !flushOutputBuffer( dcursor, dend ) )
-      return (scursor == send);
+    if ( mOutputBufferCursor && !flushOutputBuffer( dcursor, dend ) ) {
+      return ( scursor == send );
+    }
 
     uchar ch = *scursor++;
     // mNextbits   // (part of) value of next sextet
@@ -326,29 +332,34 @@ bool Rfc2047BEncodingEncoder::encode( const char* & scursor,
     mStepNo = ( mStepNo + 1 ) % 3;
   }
 
-  if ( mOutputBufferCursor ) flushOutputBuffer( dcursor, dend );
+  if ( mOutputBufferCursor ) {
+    flushOutputBuffer( dcursor, dend );
+  }
 
-  return (scursor == send);
+  return ( scursor == send );
 }
 
-
-bool Base64Encoder::finish( char* & dcursor, const char * const dend ) {
+bool Base64Encoder::finish( char* &dcursor, const char * const dend )
+{
   return generic_finish( dcursor, dend, true );
 }
 
 bool Rfc2047BEncodingEncoder::finish( char* & dcursor,
-				      const char * const dend ) {
+                                      const char * const dend )
+{
   return generic_finish( dcursor, dend, false );
 }
 
-bool Base64Encoder::generic_finish( char* & dcursor, const char * const dend,
-				    bool withLFatEnd )
+bool Base64Encoder::generic_finish( char* &dcursor, const char * const dend,
+                                    bool withLFatEnd )
 {
-  if ( mInsideFinishing )
+  if ( mInsideFinishing ) {
     return flushOutputBuffer( dcursor, dend );
+  }
 
-  if ( mOutputBufferCursor && !flushOutputBuffer( dcursor, dend ) )
+  if ( mOutputBufferCursor && !flushOutputBuffer( dcursor, dend ) ) {
     return false;
+  }
 
   mInsideFinishing = true;
 
@@ -379,18 +390,14 @@ bool Base64Encoder::generic_finish( char* & dcursor, const char * const dend,
     write( '=', dcursor, dend );
     // fall through:
   case 0: // completed an quartet - add CRLF
-    if ( withLFatEnd )
+    if ( withLFatEnd ) {
       writeCRLF( dcursor, dend );
+    }
     return flushOutputBuffer( dcursor, dend );
   default:
     assert( 0 );
   }
-return true; // asserts get compiled out
+  return true; // asserts get compiled out
 }
-
-
-
-
-
 
 } // namespace KMime
