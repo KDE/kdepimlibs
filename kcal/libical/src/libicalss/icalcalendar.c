@@ -92,8 +92,11 @@ icalerrorenum icalcalendar_create(struct icalcalendar_impl* impl)
     r = stat(path,&sbuf);
 
     if( r != 0 && errno == ENOENT){
-
-	if(mkdir(path,0777)!=0){
+#ifdef Q_WS_WIN
+	if(mkdir(path)!=0){
+#else
+        if(mkdir(path,0777)!=0){
+#endif		
 	    icalerror_set_errno(ICAL_FILE_ERROR);
 	    return ICAL_FILE_ERROR;
 	}
