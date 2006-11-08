@@ -17,6 +17,13 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling MIME data and
+  defines the BoolFlags class.
+
+  @author see AUTHORS file.
+*/
 
 #include "boolflags.h"
 
@@ -24,7 +31,9 @@ using namespace KMime;
 
 void BoolFlags::set( unsigned int i, bool b )
 {
-  if ( i > 15 ) return;
+  if ( i > 15 ) {
+    return;
+  }
 
   unsigned char p; //bitmask
   int n;
@@ -38,15 +47,17 @@ void BoolFlags::set( unsigned int i, bool b )
   }
 
   if ( b ) {
-    bits[n] = bits[n] | p;
+    mBits[n] = mBits[n] | p;
   } else {
-    bits[n] = bits[n] & (255 - p);
+    mBits[n] = mBits[n] & (255 - p);
   }
 }
 
 bool BoolFlags::get( unsigned int i )
 {
-  if ( i > 15 ) return false;
+  if ( i > 15 ) {
+    return false;
+  }
 
   unsigned char p; //bitmask
   int n;
@@ -59,5 +70,5 @@ bool BoolFlags::get( unsigned int i )
     n = 1;
   }
 
-  return ( (bits[n] & p)>0 );
+  return ( ( mBits[n] & p ) > 0 );
 }

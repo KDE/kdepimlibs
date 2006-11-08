@@ -23,12 +23,14 @@
   defines the BoolFlags class.
 
   @author see AUTHORS file.
- */
+*/
 
 #ifndef __KMIME_BOOLFLAGS_H__
 #define __KMIME_BOOLFLAGS_H__
 
 #include "kmime.h"
+
+namespace KMime {
 
 /**
   @brief
@@ -37,9 +39,6 @@
   This class provides functionality similar to QBitArray but requires
   much less memory.  Only 16-bits (or 2-bytes) can be stored.
 */
-
-namespace KMime {
-
 class KMIME_EXPORT BoolFlags {
 
   public:
@@ -75,18 +74,18 @@ class KMIME_EXPORT BoolFlags {
     /**
        Sets all bits to false.
     */
-    void clear() { bits[0]=0; bits[1]=0; }
+    void clear() { mBits[0]=0; mBits[1]=0; }
 
     /**
       Returns a pointer to the data structure used to store the bits.
     */
-    unsigned char *data() { return bits; }
+    unsigned char *data() { return mBits; }
 
-  protected:
+  private:
     /**
       Two bytes (at least) of storage for the bits.
     */
-    unsigned char bits[2];  //space for 16 flags
+    unsigned char mBits[2];  //space for 16 flags
 };
 
 }  //namespace KMime
