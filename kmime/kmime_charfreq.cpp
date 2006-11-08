@@ -20,9 +20,28 @@
   Boston, MA 02110-1301, USA.
 */
 
+/**
+  @file
+  This file is part of the API for handling MIME data and
+  defines the CharFreq class.
+
+  @authors Marc Mutz \<mutz@kde.org\>
+*/
+
 #include "kmime_charfreq.h"
 
-namespace KMime {
+using namespace KMime;
+
+/**
+ * Private class that helps to provide binary compatibility between releases.
+ * @internal
+ */
+//@cond PRIVATE
+//class KMime::CharFreq::Private
+//{
+//  public:
+//};
+//@endcond
 
 CharFreq::CharFreq( const QByteArray &buf )
   : mNUL( 0 ),
@@ -227,6 +246,4 @@ float CharFreq::controlCodesRatio() const
     return 0;
   }
 }
-
-} // namespace KMime
 

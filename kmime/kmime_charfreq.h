@@ -19,6 +19,32 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling MIME data and
+  defines the CharFreq class.
+
+  @authors Marc Mutz \<mutz@kde.org\>
+
+  @glossary @anchor Eight-Bit @b Eight-Bit:
+  Data that contains bytes with at least one value greater then 127.
+
+  @glossary @anchor Eight-Bit-Binary @b Eight-Bit-Binary:
+  Eight-bit data that contains a high percentage of non-ascii values.
+
+  @glossary @anchor Eight-Bit-Text @b Eight-Bit-Text:
+  Eight-bit data that contains a high percentage of non-ascii values.
+
+  @glossary @anchor Seven-Bit @b Seven-Bit:
+  Data that contains bytes with all values less then 128.
+
+  @glossary @anchor Seven-Bit-Binary @b Seven-Bit-Binary:
+  Seven-bit data that contains a high percentage of non-ascii values.
+
+  @glossary @anchor Seven-Bit-Text @b Seven-Bit-Text:
+  Seven-bit data that contains a high percentage of ascii values.
+*/
+
 #ifndef __KMIME_CHARFREQ_H__
 #define __KMIME_CHARFREQ_H__
 
@@ -28,67 +54,100 @@
 
 namespace KMime {
 
+/**
+  @brief
+  A class for performing basic data typing using frequency count heuristics.
+
+  This class performs character frequency counts on the provided data which
+  are used in heuristics to determine a basic data type.  The data types are:
+
+  - @ref Eight-Bit-Binary
+  - @ref Eight-Bit-Text
+  - @ref Seven-Bit-Binary
+  - @ref Seven-Bit-Text
+*/
 class KMIME_EXPORT CharFreq
 {
   public:
+    /**
+      Constructs a Character Frequency instance for a buffer @p buf of
+      QByteArray data.
+
+      @param buf is a QByteArray containing the data.
+    */
     explicit CharFreq( const QByteArray &buf );
+
+    /**
+      Constructs a Character Frequency instance for a buffer @p buf of
+      chars of length @p len.
+
+      @param buf is a pointer to a character string containing the data.
+      @param len is the length of @p buf, in characters.
+    */
     CharFreq( const char *buf, size_t len );
 
+    /**
+      The different types of data.
+    */
     enum Type {
-      None = 0,
-      EightBitData,
-      Binary = EightBitData,
-      SevenBitData,
-      EightBitText,
-      SevenBitText
+      None = 0,              /**< Unknown */
+      EightBitData,          /**< 8bit binary */
+      Binary = EightBitData, /**< 8bit binary */
+      SevenBitData,          /**< 7bit binary */
+      EightBitText,          /**< 8bit text */
+      SevenBitText           /**< 7bit text */
     };
 
+    /**
+      Returns the data #Type as derived from the class heuristics.
+    */
     Type type() const;
 
     /**
-      Returns true if the data Type is EightBitData; false otherwise.
+      Returns true if the data #Type is EightBitData; false otherwise.
     */
     bool isEightBitData() const;
 
     /**
-      Returns true if the data Type is EightBitText; false otherwise.
+      Returns true if the data #Type is EightBitText; false otherwise.
     */
     bool isEightBitText() const;
 
     /**
-      Returns true if the data Type is SevenBitData; false otherwise.
+      Returns true if the data #Type is SevenBitData; false otherwise.
     */
     bool isSevenBitData() const;
 
     /**
-      Returns true if the data Type is SevenBitText; false otherwise.
+      Returns true if the data #Type is SevenBitText; false otherwise.
     */
     bool isSevenBitText() const;
 
     /**
-      Returns true if buf has trailing whitespace, i.e. if any line ends
-      with space (' ') or tab ('\t').
+      Returns true if the data contains trailing whitespace. i.e.,
+      if any line ends with space (' ') or tab ('\\t').
     */
     bool hasTrailingWhitespace() const;
 
     /**
-      Returns true if buf contains a line that starts with "From ".
+      Returns true if the data contains a line that starts with "From ".
     */
     bool hasLeadingFrom() const;
 
     /**
-      Returns the percentage of printable characters: printable/total.
-      If total == 0, the result is undefined.
+      Returns the percentage of printable characters in the data.
+      The result is undefined if the number of data characters is zero.
     */
     float printableRatio() const;
 
     /**
-      Returns the percentage of control code (CTLs): CTL/total.
-      If total == 0, the result is undefined.
+      Returns the percentage of control code characters (CTLs) in the data.
+      The result is undefined if the number of data characters is zero.
     */
     float controlCodesRatio() const;
 
   private:
+    //@cond PRIVATE
     uint mNUL;         // count of NUL chars
     uint mCTL;         // count of CTLs (incl. DEL, excl. CR, LF, HT)
     uint mCR;          // count of CR chars
@@ -101,7 +160,14 @@ class KMIME_EXPORT CharFreq
     uint mLineMax;     // maximum line length
     bool mTrailingWS;  // does the buffer contain trailing whitespace?
     bool mLeadingFrom; // does the buffer contain lines starting with "From "?
+    //@endcond
 
+    /**
+      Performs the character frequency counts on the data.
+
+      @param buf is a pointer to a character string containing the data.
+      @param len is the length of @p buf, in characters.
+    */
     void count( const char *buf, size_t len );
 };
 
