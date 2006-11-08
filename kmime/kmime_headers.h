@@ -313,6 +313,7 @@ class KMIME_EXPORT Structured : public Base
     ~Structured() {}
 
     virtual void from7BitString( const QByteArray &str );
+    virtual void fromUnicodeString( const QString &s, const QByteArray &b );
 
   protected:
     virtual bool parse( const char* &scursor, const char* const send, bool isCRLF = false ) = 0;
@@ -394,6 +395,9 @@ class KMIME_EXPORT Ident : public Address
 
     virtual QByteArray as7BitString( bool withHeaderType = true );
 
+    virtual void clear();
+    virtual bool isEmpty() const;
+
     /**
       Returns the list of identifiers contained in this header.
       Note:
@@ -415,8 +419,37 @@ class KMIME_EXPORT Ident : public Address
     QList<Types::AddrSpec> mMsgIdList;
 };
 
-/** Base class for headers which deal with a list of msg-id's */
-mk_parsing_subclass( SingleIdent, Ident );
+/**
+  Base class for headers which deal with a single msg-id.
+
+  @see RFC 2822, section 3.6.4
+*/
+class KMIME_EXPORT SingleIdent : public Ident
+{
+  public:
+    SingleIdent() : Ident() {}
+    SingleIdent( Content * p ) : Ident( p ) {}
+    SingleIdent( Content * p, const QByteArray & s )
+      : Ident( p ) { from7BitString( s ); }
+    SingleIdent( Content * p, const QString & s, const QByteArray & cs )
+      : Ident( p ) { fromUnicodeString( s, cs ); }
+    ~SingleIdent() {}
+
+    /**
+      Return the identifier contained in this header.
+      Note: The identifiers is not enclosed in angle-brackets.
+    */
+    QByteArray identifier() const;
+
+    /**
+      Sets the identifier.
+      @param id The new identifier with or without angle-brackets.
+    */
+    void setIdentifier( const QByteArray &id );
+
+  protected:
+    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+};
 
 /** Base class for headers which deal with a single atom. */
 class KMIME_EXPORT GToken : public Structured
@@ -577,13 +610,34 @@ mk_trivial_subclass( Keywords, GPhraseList );
 // GDotAtom:
 
 mk_trivial_subclass_with_name( MIMEVersion, MIME-Version, GDotAtom );
+#endif
 
 // Ident:
 
-mk_trivial_subclass_with_name( MessageID, Message-ID, SingleIdent );
+/** Represents a "Message-Id" header */
+class KMIME_EXPORT MessageID : public Generics::SingleIdent {
+
+  public:
+    MessageID() : Generics::SingleIdent()  {}
+    MessageID(Content *p) : Generics::SingleIdent(p) {}
+    MessageID(Content *p, const QByteArray &s) : Generics::SingleIdent(p) { from7BitString(s); }
+    MessageID(Content *p, const QString &s) : Generics::SingleIdent(p)  { fromUnicodeString(s, Latin1); }
+    ~MessageID()  {}
+
+    virtual const char* type() const { return "Message-Id"; }
+
+    /**
+      Generate a message identifer.
+      @param fqdn A fully qualified domain name.
+    */
+    void generate(const QByteArray &fqdn);
+};
+
+/** Represents a "Content-ID" header. */
 mk_trivial_subclass_with_name( ContentID, Content-ID, SingleIdent );
+
+/** Represents a "Supersedes" header. */
 mk_trivial_subclass( Supersedes, SingleIdent );
-#endif
 
 /** Represents a "In-Reply-To" header. */
 mk_trivial_subclass_with_name( InReplyTo, In-Reply-To, Ident );

@@ -28,11 +28,20 @@ QTEST_KDEMAIN( HeaderTest, NoGUI )
 
 void HeaderTest::testIdentHeader()
 {
-  // parse single identifier
+  // empty header
   Headers::Generics::Ident* h = new Headers::Generics::Ident();
+  QVERIFY( h->isEmpty() );
+
+  // parse single identifier
   h->from7BitString( QByteArray( "<1162746587.784559.5038.nullmailer@svn.kde.org>" ) );
   QCOMPARE( h->identifiers().count(), 1 );
   QCOMPARE( h->identifiers().first(), QByteArray( "1162746587.784559.5038.nullmailer@svn.kde.org" ) );
+  QVERIFY( !h->isEmpty() );
+
+  // clearing a header
+  h->clear();
+  QVERIFY( h->isEmpty() );
+  QVERIFY( h->identifiers().isEmpty() );
   delete h;
 
   // parse multiple identifiers

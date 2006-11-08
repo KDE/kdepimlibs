@@ -116,6 +116,13 @@ void Structured::from7BitString(const QByteArray & str)
   parse( cursor, cursor + str.length() );
 }
 
+void Structured::fromUnicodeString(const QString & s, const QByteArray & b)
+{
+  // stuctured headers are always 7bit
+  Q_UNUSED( b );
+  from7BitString( s.toLatin1() );
+}
+
 //-----</Structured>-------------------------
 
 //-----<Address>-------------------------
@@ -383,6 +390,16 @@ QByteArray Ident::as7BitString(bool withHeaderType)
   return rv;
 }
 
+void Ident::clear()
+{
+  mMsgIdList.clear();
+}
+
+bool Ident::isEmpty() const
+{
+  return mMsgIdList.isEmpty();
+}
+
 bool Ident::parse( const char* &scursor, const char * const send, bool isCRLF )
 {
   // msg-id   := "<" id-left "@" id-right ">"
@@ -442,6 +459,19 @@ void Ident::appendIdentifier(const QByteArray & id)
 //-----</Ident>-------------------------
 
 //-----<SingleIdent>-------------------------
+
+QByteArray SingleIdent::identifier() const
+{
+  if ( mMsgIdList.isEmpty() )
+    return QByteArray();
+  return identifiers().first();
+}
+
+void SingleIdent::setIdentifier(const QByteArray & id)
+{
+  mMsgIdList.clear();
+  appendIdentifier( id );
+}
 
 bool SingleIdent::parse( const char* &scursor, const char * const send, bool isCRLF )
 {
@@ -520,33 +550,9 @@ void Generic::setType( const char *type )
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<MessageID>-----------------------------
 
-void MessageID::from7BitString( const QByteArray &s )
-{
-  m_id = s;
-}
-
-QByteArray MessageID::as7BitString( bool incType )
-{
-  if ( incType ) {
-    return ( typeIntro() + m_id );
-  } else {
-    return m_id;
-  }
-}
-
-void MessageID::fromUnicodeString( const QString &s, const QByteArray& )
-{
-  m_id=s.toLatin1(); //Message-Ids can only contain us-ascii chars
-}
-
-QString MessageID::asUnicodeString()
-{
-  return QString::fromLatin1( m_id );
-}
-
 void MessageID::generate( const QByteArray &fqdn )
 {
-  m_id = '<' + uniqueString() + '@' + fqdn + '>';
+  setIdentifier( uniqueString() + '@' + fqdn + '>' );
 }
 
 //-----</MessageID>----------------------------
@@ -1454,4 +1460,3 @@ QString CDisposition::asUnicodeString()
 } // namespace Headers
 
 } // namespace KMime
-

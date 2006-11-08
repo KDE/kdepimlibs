@@ -30,44 +30,6 @@
 #include "kmime.h"
 #include <QByteArray>
 
-/** Represents a "Message-Id" header */
-class KMIME_EXPORT MessageID : public Base {
-
-  public:
-    MessageID() : Base()  {}
-    MessageID(Content *p) : Base(p) {}
-    MessageID(Content *p, const QByteArray &s) : Base(p) { from7BitString(s); }
-    MessageID(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
-    ~MessageID()  {}
-
-    virtual void from7BitString(const QByteArray &s);
-    virtual QByteArray as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QByteArray&);
-    virtual QString asUnicodeString();
-    virtual void clear()            { m_id.resize(0); }
-    virtual bool isEmpty() const { return (m_id.isEmpty()); }
-    virtual const char* type() const { return "Message-Id"; }
-
-    void generate(const QByteArray &fqdn);
-
-  protected:
-    QByteArray m_id;
-
-};
-
-/** Represents a "Supersedes" header */
-class KMIME_EXPORT Supersedes : public MessageID {
-
-  public:
-    Supersedes() : MessageID()  {}
-    Supersedes(Content *p) : MessageID(p)  {}
-    Supersedes(Content *p, const QByteArray &s) : MessageID(p,s)  {}
-    Supersedes(Content *p, const QString &s)  : MessageID(p,s)  {}
-    ~Supersedes()                   {}
-
-    virtual const char* type() const { return "Supersedes"; }
-
-};
 
 /** This class encapsulates an address-field, containing
     an email-address and a real name */
