@@ -29,8 +29,8 @@ namespace KMime {
 
 Message::Message()
 {
-  s_ubject.setParent( this );
-  d_ate.setParent( this );
+  mSubject.setParent( this );
+  mDate.setParent( this );
 }
 
 Message::~Message()
@@ -41,11 +41,11 @@ void Message::parse()
   Content::parse();
 
   QByteArray raw;
-  if ( !( raw = rawHeader( s_ubject.type() ) ).isEmpty() )
-    s_ubject.from7BitString( raw );
+  if ( !( raw = rawHeader( mSubject.type() ) ).isEmpty() )
+    mSubject.from7BitString( raw );
 
-  if ( !( raw = rawHeader( d_ate.type() ) ).isEmpty() )
-    d_ate.from7BitString( raw );
+  if ( !( raw = rawHeader( mDate.type() ) ).isEmpty() )
+    mDate.from7BitString( raw );
 }
 
 QByteArray Message::assembleHeaders()
@@ -117,26 +117,25 @@ QByteArray Message::assembleHeaders()
 
 void Message::clear()
 {
-  s_ubject.clear();
-  d_ate.clear();
-  f_lags.clear();
+  mSubject.clear();
+  mDate.clear();
   Content::clear();
 }
 
 Headers::Base *Message::getHeaderByType( const char *type )
 {
   if ( strcasecmp( "Subject", type ) == 0 ) {
-    if ( s_ubject.isEmpty() ) {
+    if ( mSubject.isEmpty() ) {
       return 0;
     } else {
-      return &s_ubject;
+      return &mSubject;
     }
   }
   else if ( strcasecmp("Date", type ) == 0 ){
-    if ( d_ate.isEmpty() ) {
+    if ( mDate.isEmpty() ) {
       return 0;
     } else {
-      return &d_ate;
+      return &mDate;
     }
   } else {
     return Content::getHeaderByType( type );
@@ -147,9 +146,9 @@ void Message::setHeader( Headers::Base *h )
 {
   bool del = true;
   if ( h->is( "Subject" ) ) {
-    s_ubject.fromUnicodeString( h->asUnicodeString(), h->rfc2047Charset() );
+    mSubject.fromUnicodeString( h->asUnicodeString(), h->rfc2047Charset() );
   } else if ( h->is( "Date" ) ) {
-    d_ate.setUnixTime( (static_cast<Headers::Date*>( h))->unixTime() );
+    mDate.setUnixTime( (static_cast<Headers::Date*>( h))->unixTime() );
   } else {
     del = false;
     Content::setHeader( h );
@@ -161,9 +160,9 @@ void Message::setHeader( Headers::Base *h )
 bool Message::removeHeader( const char *type )
 {
   if ( strcasecmp( "Subject", type ) == 0 ) {
-    s_ubject.clear();
+    mSubject.clear();
   } else if ( strcasecmp( "Date", type ) == 0 ) {
-    d_ate.clear();
+    mDate.clear();
   } else {
     return Content::removeHeader( type );
   }

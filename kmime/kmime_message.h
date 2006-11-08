@@ -54,15 +54,15 @@ class KMIME_EXPORT Message : public Content
       }
 
     virtual KMime::Headers::Subject *subject( bool create=true )
-      { if ( !create && s_ubject.isEmpty() )
+      { if ( !create && mSubject.isEmpty() )
           return 0;
-        return &s_ubject;
+        return &mSubject;
       }
 
     virtual KMime::Headers::Date *date( bool create=true )
-      { if ( !create && d_ate.isEmpty() )
+      { if ( !create && mDate.isEmpty() )
           return 0;
-        return &d_ate;
+        return &mDate;
       }
 
     virtual KMime::Headers::From *from( bool create=true )
@@ -110,10 +110,11 @@ class KMIME_EXPORT Message : public Content
   protected:
     virtual QByteArray assembleHeaders();
 
-    //hardcoded headers
-    KMime::Headers::Subject s_ubject;
-    KMime::Headers::Date d_ate;
-    BoolFlags f_lags; // some status info
+  private:
+    //@cond PRIVATE
+    KMime::Headers::Subject mSubject;
+    KMime::Headers::Date mDate;
+    //@endcond
 
 }; // class Message
 
