@@ -357,8 +357,17 @@ class KMIME_EXPORT MailboxList : public Address
     (e.g. Sender) */
 mk_parsing_subclass( SingleMailbox, MailboxList );
 
-/** Base class for headers that deal with (possibly multiple)
-    addresses, allowing groups. */
+/**
+  Base class for headers that deal with (possibly multiple)
+  addresses, allowing groups.
+
+  Note: Groups are parsed but not represented in the API yet. All addresses in
+  groups are listed as if they would not be part of a group.
+
+  @todo Add API for groups?
+
+  @see RFC 2822, section 3.4
+*/
 class KMIME_EXPORT AddressList : public Address
 {
   public:
@@ -370,6 +379,38 @@ class KMIME_EXPORT AddressList : public Address
       : Address( p ) { fromUnicodeString( s, cs ); }
     ~AddressList() {}
 
+    virtual QByteArray as7BitString( bool withHeaderType = true );
+    virtual void fromUnicodeString( const QString &s, const QByteArray &b );
+    virtual QString asUnicodeString();
+
+    virtual void clear();
+    virtual bool isEmpty() const;
+
+    /**
+      Add an address to this header.
+      @param address The actual email address, with or without angle brackets.
+      @param displayName An optional name associated with the address.
+    */
+    void addAddress(const QByteArray &address, const QString &displayName = QString() );
+
+    /**
+      Retruns a list of all addresses listed in this header, regardless of groups.
+    */
+    QList<QByteArray> addresses() const;
+
+    /**
+      Retruns a list of all display names associated with the addresses in this header.
+      An empty entry is added for addresses that don't have a display name.
+    */
+    QStringList displayNames() const;
+
+    /**
+      Retruns a list of assembled display name / address strings of the following form:
+      "Display Name &lt;address&gt;". These are unicode strings without any transport
+      encoding, ie. they are only suitable for displaying.
+    */
+    QStringList prettyAddresses() const;
+
   protected:
     bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
@@ -378,7 +419,7 @@ class KMIME_EXPORT AddressList : public Address
 };
 
 /**
-  Base class for headers which deal with a list of msg-id's
+  Base class for headers which deal with a list of msg-id's.
 
   @see RFC 2822, section 3.6.4
 */

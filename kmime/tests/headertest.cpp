@@ -24,6 +24,7 @@
 
 using namespace KMime;
 
+// the following test cases are taken from KDE mailinglists and RFC 2822, Appendix A
 QTEST_KDEMAIN( HeaderTest, NoGUI )
 
 void HeaderTest::testIdentHeader()
@@ -68,6 +69,125 @@ void HeaderTest::testIdentHeader()
 
   // assemble the final header
   QCOMPARE( h->as7BitString( false ), QByteArray("<1234@local.machine.example> <3456@example.net> <abcd.1234@local.machine.tld> <78910@example.net>") );
+}
+
+void HeaderTest::testAddressListHeader()
+{
+  // empty header
+  Headers::Generics::AddressList *h = new Headers::Generics::AddressList();
+  QVERIFY( h->isEmpty() );
+
+  // parse single simple address
+  h->from7BitString( "joe@where.test" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first(), QByteArray("joe@where.test") );
+  QCOMPARE( h->displayNames().count(), 1 );
+  QCOMPARE( h->displayNames().first(), QString() );
+  QCOMPARE( h->prettyAddresses().count(), 1 );
+  QCOMPARE( h->prettyAddresses().first(), QString("joe@where.test") );
+
+  // clearing a header
+  h->clear();
+  QVERIFY( h->isEmpty() );
+  delete h;
+
+  // parsing and re-assembling a single address with display name
+  h = new Headers::Generics::AddressList();
+  h->from7BitString( "Pete <pete@silly.example>" );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first(), QByteArray( "pete@silly.example" ) );
+  QCOMPARE( h->displayNames().first(), QString("Pete") );
+  QCOMPARE( h->prettyAddresses().first(), QString("Pete <pete@silly.example>") );
+  QCOMPARE( h->as7BitString( false ), QByteArray("Pete <pete@silly.example>") );
+  delete h;
+
+  // parsing a single address with legacy comment style display name
+  h = new Headers::Generics::AddressList();
+  h->from7BitString( "jdoe@machine.example (John Doe)" );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first(), QByteArray( "jdoe@machine.example" ) );
+  QEXPECT_FAIL("", "legacy style display names not yet supported", Continue);
+  QCOMPARE( h->displayNames().first(), QString("John Doe") );
+  QEXPECT_FAIL("", "legacy style display names not yet supported", Continue);
+  QCOMPARE( h->prettyAddresses().first(), QString("Jon Doe <jdoe@machine.example>") );
+  delete h;
+
+  // parsing and re-assembling list of diffrent addresses
+  h = new Headers::Generics::AddressList();
+  h->from7BitString( "Mary Smith <mary@x.test>, jdoe@example.org, Who? <one@y.test>" );
+  QCOMPARE( h->addresses().count(), 3 );
+  QStringList names = h->displayNames();
+  QCOMPARE( names.takeFirst(), QString("Mary Smith") );
+  QCOMPARE( names.takeFirst(), QString() );
+  QCOMPARE( names.takeFirst(), QString("Who?") );
+  QCOMPARE( h->as7BitString( false ), QByteArray("Mary Smith <mary@x.test>, jdoe@example.org, Who? <one@y.test>") );
+  delete h;
+
+  // same again with some interessting quoting
+  h = new Headers::Generics::AddressList();
+  h->from7BitString( "\"Joe Q. Public\" <john.q.public@example.com>, <boss@nil.test>, \"Giant; \\\"Big\\\" Box\" <sysservices@example.net>" );
+  QCOMPARE( h->addresses().count(), 3 );
+  names = h->displayNames();
+  QCOMPARE( names.takeFirst(), QString("Joe Q. Public") );
+  QCOMPARE( names.takeFirst(), QString() );
+  QCOMPARE( names.takeFirst(), QString("Giant; \"Big\" Box") );
+  QCOMPARE( h->as7BitString( false ), QByteArray("\"Joe Q. Public\" <john.q.public@example.com>, boss@nil.test, \"Giant; \\\"Big\\\" Box\" <sysservices@example.net>") );
+  delete h;
+
+  // a display name with non-latin1 content
+  h = new Headers::Generics::AddressList();
+  h->from7BitString( "Ingo =?iso-8859-15?q?Kl=F6cker?= <kloecker@kde.org>" );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first(), QByteArray( "kloecker@kde.org" ) );
+  QCOMPARE( h->displayNames().first(), QString::fromUtf8("Ingo Klöcker") );
+  QCOMPARE( h->asUnicodeString(), QString::fromUtf8("Ingo Klöcker <kloecker@kde.org>") );
+  QCOMPARE( h->as7BitString( false ), QByteArray("Ingo =?ISO-8859-1?Q?Kl=F6cker?= <kloecker@kde.org>") );
+  delete h;
+
+  // again, this time legacy style
+  h = new Headers::Generics::AddressList();
+  h->from7BitString( "kloecker@kde.org (Ingo =?iso-8859-15?q?Kl=F6cker?=)" );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first(), QByteArray( "kloecker@kde.org" ) );
+  QEXPECT_FAIL( "", "legacy style display names not yet supported", Continue );
+  QCOMPARE( h->displayNames().first(), QString::fromUtf8("Ingo Klöcker") );
+  delete h;
+
+  // parsing a empty group
+  h = new Headers::Generics::AddressList();
+  h->from7BitString( "Undisclosed recipients:;" );
+  QCOMPARE( h->addresses().count(), 0 );
+  delete h;
+
+  // parsing and re-assembling a address list with a group
+  h = new Headers::Generics::AddressList();
+  h->from7BitString( "A Group:Chris Jones <c@a.test>,joe@where.test,John <jdoe@one.test>;" );
+  QCOMPARE( h->addresses().count(), 3 );
+  names = h->displayNames();
+  QCOMPARE( names.takeFirst(), QString("Chris Jones") );
+  QCOMPARE( names.takeFirst(), QString() );
+  QCOMPARE( names.takeFirst(), QString("John") );
+  QCOMPARE( h->as7BitString( false ), QByteArray("Chris Jones <c@a.test>, joe@where.test, John <jdoe@one.test>") );
+  delete h;
+
+  // modifying a header
+  h = new Headers::Generics::AddressList();
+  h->from7BitString( "John <jdoe@one.test>" );
+  h->addAddress( "<kloecker@kde.org>", QString::fromUtf8("Ingo Klöcker") );
+  h->addAddress( "c@a.test" );
+  QCOMPARE( h->addresses().count(), 3 );
+  QCOMPARE( h->asUnicodeString(), QString::fromUtf8("John <jdoe@one.test>, Ingo Klöcker <kloecker@kde.org>, c@a.test") );
+  QCOMPARE( h->as7BitString( false ), QByteArray("John <jdoe@one.test>, Ingo =?ISO-8859-1?Q?Kl=F6cker?= <kloecker@kde.org>, c@a.test") );
+  delete h;
+
+  // parsing from utf-8
+  h = new Headers::Generics::AddressList();
+  h->fromUnicodeString( QString::fromUtf8("Ingo Klöcker <kloecker@kde.org>"), "utf-8" );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first(), QByteArray( "kloecker@kde.org" ) );
+  QCOMPARE( h->displayNames().first(), QString::fromUtf8("Ingo Klöcker") );
+  delete h;
 }
 
 #include "headertest.moc"

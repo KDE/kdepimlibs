@@ -28,7 +28,7 @@ r       + Bcc
         + MailCopiesTo // ??? listed in usefor ???
 r     + ReturnPath+    // allows only a single angle-addr
       + Ident*        // Base Class for "Identification Fields"
-        + GSingleIdent* // allows only a single msg-id
+        + SingleIdent* // allows only a single msg-id
 r         + MessageID
 m         + ContentID
 u?        + Supersedes

@@ -112,14 +112,15 @@ QString Unstructured::asUnicodeString()
 
 void Structured::from7BitString(const QByteArray & str)
 {
+  if ( e_ncCS.isEmpty() )
+    e_ncCS = defaultCS();
   const char *cursor = str.constData();
   parse( cursor, cursor + str.length() );
 }
 
 void Structured::fromUnicodeString(const QString & s, const QByteArray & b)
 {
-  // stuctured headers are always 7bit
-  Q_UNUSED( b );
+  e_ncCS = cachedCharset( b );
   from7BitString( s.toLatin1() );
 }
 
@@ -177,8 +178,114 @@ bool SingleMailbox::parse( const char* &scursor, const char *const send,
 
 //-----<AddressList>-------------------------
 
-bool AddressList::parse( const char* &scursor, const char *const send,
-			 bool isCRLF )
+QByteArray AddressList::as7BitString(bool withHeaderType)
+{
+  if ( mAddressList.isEmpty() )
+    return QByteArray();
+
+  QByteArray rv;
+  if ( withHeaderType )
+    rv = typeIntro();
+  foreach ( Types::Address addr, mAddressList ) {
+    foreach ( Types::Mailbox mbox, addr.mailboxList ) {
+      if ( mbox.displayName.isEmpty() ) {
+        rv += mbox.addrSpec.asString().toLatin1();
+      } else {
+        if ( isUsAscii( mbox.displayName ) ) {
+          QByteArray tmp = mbox.displayName.toLatin1();
+          addQuotes( tmp, false );
+          rv += tmp;
+        } else {
+          rv += encodeRFC2047String( mbox.displayName, e_ncCS, true );
+        }
+        if ( !mbox.addrSpec.asString().isEmpty() )
+          rv += " <" + mbox.addrSpec.asString().toLatin1() + '>';
+      }
+      rv += ", ";
+    }
+  }
+  rv.resize( rv.length() - 2 );
+  return rv;
+}
+
+void AddressList::fromUnicodeString(const QString & s, const QByteArray & b)
+{
+  e_ncCS = cachedCharset( b );
+  from7BitString( encodeRFC2047String( s, b, false ) );
+}
+
+QString AddressList::asUnicodeString()
+{
+  return prettyAddresses().join( QLatin1String( ", " ) );
+}
+
+void AddressList::clear()
+{
+  mAddressList.clear();
+}
+
+bool AddressList::isEmpty() const
+{
+  return mAddressList.isEmpty();
+}
+
+void AddressList::addAddress(const QByteArray & address, const QString & displayName)
+{
+  Types::Address addr;
+  Types::Mailbox mbox;
+  mbox.displayName = displayName;
+  const char* cursor = address.constData();
+  if ( !parseAngleAddr( cursor, cursor + address.length(), mbox.addrSpec ) ) {
+    if ( !parseAddrSpec( cursor, cursor + address.length(), mbox.addrSpec ) ) {
+      kWarning() << k_funcinfo << "Invalid address" << endl;
+      return;
+    }
+  }
+  addr.mailboxList.append( mbox );
+  mAddressList.append( addr );
+}
+
+QList< QByteArray > KMime::Headers::Generics::AddressList::addresses() const
+{
+  QList<QByteArray> rv;
+  foreach ( Types::Address addr, mAddressList ) {
+    foreach ( Types::Mailbox mbox, addr.mailboxList ) {
+      rv.append( mbox.addrSpec.asString().toLatin1() );
+    }
+  }
+  return rv;
+}
+
+QStringList KMime::Headers::Generics::AddressList::displayNames() const
+{
+  QStringList rv;
+  foreach ( Types::Address addr, mAddressList ) {
+    foreach ( Types::Mailbox mbox, addr.mailboxList ) {
+      rv.append( mbox.displayName );
+    }
+  }
+  return rv;
+}
+
+QStringList KMime::Headers::Generics::AddressList::prettyAddresses() const
+{
+  QStringList rv;
+  foreach ( Types::Address addr, mAddressList ) {
+    foreach ( Types::Mailbox mbox, addr.mailboxList ) {
+      if ( mbox.displayName.isEmpty() ) {
+        rv.append( mbox.addrSpec.asString() );
+      } else {
+        QString s = mbox.displayName;
+        if ( !mbox.addrSpec.asString().isEmpty() )
+          s += QLatin1String(" <") + mbox.addrSpec.asString() + QLatin1Char('>');
+        rv.append( s );
+      }
+    }
+  }
+  return rv;
+}
+
+bool AddressList::parse( const char* &scursor, const char *const send, bool isCRLF )
 {
   QList<Types::Address> maybeAddressList;
   if ( !parseAddressList( scursor, send, maybeAddressList, isCRLF ) )
@@ -547,7 +654,6 @@ void Generic::setType( const char *type )
 
 //-----<Generic>-------------------------------
 
-#if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<MessageID>-----------------------------
 
 void MessageID::generate( const QByteArray &fqdn )
@@ -556,7 +662,6 @@ void MessageID::generate( const QByteArray &fqdn )
 }
 
 //-----</MessageID>----------------------------
-#endif
 
 //-----<Control>-------------------------------
 

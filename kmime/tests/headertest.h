@@ -27,6 +27,7 @@ class HeaderTest : public QObject
   Q_OBJECT
   private slots:
     void testIdentHeader();
+    void testAddressListHeader();
 };
 
 
