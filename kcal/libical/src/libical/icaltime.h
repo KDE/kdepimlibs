@@ -95,7 +95,7 @@
 #define ICALTIME_H
 
 #include <time.h>
-
+#include <kcal.h>
 /* An opaque struct representing a timezone. We declare this here to avoid
    a circular dependancy. */
 #ifndef ICALTIMEZONE_DEFINED
@@ -152,10 +152,10 @@ struct icaltimetype icaltime_current_time_with_zone(icaltimezone *zone);
 struct icaltimetype icaltime_today(void);
 
 /** Convert seconds past UNIX epoch to a timetype*/
-struct icaltimetype icaltime_from_timet(const time_t v, const int is_date);
+KCAL_EXPORT struct icaltimetype icaltime_from_timet(const time_t v, const int is_date);
 
 /** Convert seconds past UNIX epoch to a timetype, using timezones. */
-struct icaltimetype icaltime_from_timet_with_zone(const time_t tm,
+KCAL_EXPORT struct icaltimetype icaltime_from_timet_with_zone(const time_t tm,
 	const int is_date, icaltimezone *zone);
 
 /** create a time from an ISO format string */
