@@ -1,23 +1,37 @@
 /*  -*- c++ -*-
 
-KMime, the KDE internet mail/usenet news message library.
+    KMime, the KDE internet mail/usenet news message library.
+    Copyright (c) 2001-2002 Marc Mutz <mutz@kde.org>
 
-Copyright (c) 2001-2002 Marc Mutz <mutz@kde.org>
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public
-License as published by the Free Software Foundation; either
-version 2 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
+*/
+/**
+  @file
+  This file is part of the API for handling MIME data and
+  defines the Codec class.
 
-You should have received a copy of the GNU Library General Public License
-along with this library; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA 02110-1301, USA.
+  @authors Marc Mutz \<mutz@kde.org\>
+
+  @glossary @anchor CRLF @b CRLF: a "Carriage Return (0x0D)" followed by a
+  "Line Feed (0x0A)", two ASCII control characters used to represent a
+  newline on some operating systems, notably DOS and Microsoft Windows.
+
+  @glossary @anchor LF @b LF: a "Line Feed (0x0A)" ASCII control character used
+  to represent a newline on some operating systems, notably Unix, Unix-like,
+  and Linux.
 */
 
 #ifndef __KMIME_CODECS__
@@ -40,284 +54,387 @@ using namespace KPIM;
 
 namespace KMime {
 
-// forward declarations:
 class Encoder;
 class Decoder;
 
-/** Abstract base class of codecs like base64 and
-    quoted-printable. It's a singleton.
+/**
+  @brief
+  An abstract base class of Codecs for common mail transfer encodings.
 
-    @short Codecs for common mail transfer encodings.
-    @author Marc Mutz <mutz@kde.org>
+  Provides an abstract base class of Codecs like base64 and quoted-printable.
+  Implemented as a singleton.
 */
 class KMIME_EXPORT Codec
 {
   protected:
-
-    static KAutoDeleteHash<QByteArray, Codec> * all;
+    //@cond PRIVATE
+    static KAutoDeleteHash<QByteArray, Codec> *all;
 #if defined(QT_THREAD_SUPPORT)
-    static QMutex* dictLock;
+    static QMutex *dictLock;
 #endif
-
-    Codec() {}
-  private:
-    static void fillDictionary();
-
-  public:
-    static Codec * codecForName( const char *name );
-    static Codec * codecForName( const QByteArray &name );
-
-    virtual int maxEncodedSizeFor( int insize, bool withCRLF=false ) const = 0;
-    virtual int maxDecodedSizeFor( int insize, bool withCRLF=false ) const = 0;
-
-    virtual Encoder * makeEncoder( bool withCRLF=false ) const = 0;
-    virtual Decoder * makeDecoder( bool withCRLF=false ) const = 0;
+    //@endcond
 
     /**
-     * Convenience wrapper that can be used for small chunks of data
-     * when you can provide a large enough buffer. The default
-     * implementation creates an Encoder and uses it.
-     *
-     * Encodes a chunk of bytes starting at @p scursor and extending to
-     * @p send into the buffer described by @p dcursor and @p dend.
-     *
-     * This function doesn't support chaining of blocks. The returned
-     * block cannot be added to, but you don't need to finalize it, too.
-     *
-     * Example usage (@p in contains the input data):
-     * <pre>
-     * KMime::Codec * codec = KMime::Codec::codecForName( "base64" );
-     * kFatal( !codec ) << "no base64 codec found!?" << endl;
-     * QByteArray out( in.size()*1.4 ); // crude maximal size of b64 encoding
-     * QByteArray::Iterator iit = in.begin();
-     * QByteArray::Iterator oit = out.begin();
-     * if ( !codec->encode( iit, in.end(), oit, out.end() ) ) {
-     *   kDebug() << "output buffer too small" << endl;
-     *   return;
-     * }
-     * kDebug() << "Size of encoded data: " << oit - out.begin() << endl;
-     * </pre>
-     *
-     * @param scursor/send begin and end of input buffer
-     * @param dcursor/dend begin and end of output buffer
-     * @param withCRLF If true, make the lineends CRLF, else make them LF only.
-     *
-     * @return false if the encoded data didn't fit into the output buffer.
-     */
+      Contructs the codec.
+    */
+    Codec() {}
+
+  public:
+    /**
+      Returns a codec associated with the specified @p name.
+
+      @param name points to a character string containing a valid codec name.
+    */
+    static Codec *codecForName( const char *name );
+
+    /**
+      Returns a codec associated with the specified @p name.
+
+      @param name is a QByteArray containing a valid codec name.
+    */
+    static Codec *codecForName( const QByteArray &name );
+
+    /**
+      Computes the maximum size, in characters, needed for the encoding.
+
+      @param insize is the number of input characters to be encoded.
+      @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
+
+      @return the maximum number of characters in the encoding.
+    */
+    virtual int maxEncodedSizeFor( int insize, bool withCRLF=false ) const = 0;
+
+    /**
+      Computes the maximum size, in characters, needed for the deccoding.
+
+      @param insize is the number of input characters to be decoded.
+      @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
+
+      @return the maximum number of characters in the decoding.
+    */
+    virtual int maxDecodedSizeFor( int insize, bool withCRLF=false ) const = 0;
+
+    /**
+      Creates the encoder for the codec.
+
+      @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
+
+      @return a pointer to an instance of the codec's encoder.
+    */
+    virtual Encoder *makeEncoder( bool withCRLF=false ) const = 0;
+
+    /**
+      Creates the decoder for the codec.
+
+      @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
+
+      @return a pointer to an instance of the codec's decoder.
+    */
+    virtual Decoder *makeDecoder( bool withCRLF=false ) const = 0;
+
+    /**
+      Convenience wrapper that can be used for small chunks of data
+      when you can provide a large enough buffer. The default
+      implementation creates an Encoder and uses it.
+
+      Encodes a chunk of bytes starting at @p scursor and extending to
+      @p send into the buffer described by @p dcursor and @p dend.
+
+      This function doesn't support chaining of blocks. The returned
+      block cannot be added to, but you don't need to finalize it, too.
+
+      Example usage (@p in contains the input data):
+      <pre>
+      KMime::Codec *codec = KMime::Codec::codecForName( "base64" );
+      kFatal( !codec ) << "no base64 codec found!?" << endl;
+      QByteArray out( in.size()*1.4 ); // crude maximal size of b64 encoding
+      QByteArray::Iterator iit = in.begin();
+      QByteArray::Iterator oit = out.begin();
+      if ( !codec->encode( iit, in.end(), oit, out.end() ) ) {
+        kDebug() << "output buffer too small" << endl;
+        return;
+      }
+      kDebug() << "Size of encoded data: " << oit - out.begin() << endl;
+      </pre>
+
+      @param scursor is a pointer to the start of the input buffer.
+      @param send is a pointer to the end of the input buffer.
+      @param dcursor is a pointer to the start of the output buffer.
+      @param dend is a pointer to the end of the output buffer.
+      @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
+
+      @return false if the encoded data didn't fit into the output buffer;
+      true otherwise.
+    */
     virtual bool encode( const char* &scursor, const char * const send,
                          char* &dcursor, const char * const dend,
                          bool withCRLF=false ) const;
 
     /**
-     * Convenience wrapper that can be used for small chunks of data
-     * when you can provide a large enough buffer. The default
-     * implementation creates a Decoder and uses it.
-     *
-     * Decodes a chunk of bytes starting at @p scursor and extending to
-     * @p send into the buffer described by @p dcursor and @p dend.
-     *
-     * This function doesn't support chaining of blocks. The returned
-     * block cannot be added to, but you don't need to finalize it, too.
-     *
-     * Example usage (@p in contains the input data):
-     * <pre>
-     * KMime::Codec * codec = KMime::Codec::codecForName( "base64" );
-     * kFatal( !codec ) << "no base64 codec found!?" << endl;
-     * QByteArray out( in.size() ); // good guess for any encoding...
-     * QByteArray::Iterator iit = in.begin();
-     * QByteArray::Iterator oit = out.begin();
-     * if ( !codec->decode( iit, in.end(), oit, out.end() ) ) {
-     *   kDebug() << "output buffer too small" << endl;
-     *   return;
-     * }
-     * kDebug() << "Size of decoded data: " << oit - out.begin() << endl;
-     * </pre>
-     *
-     * @param scursor/send begin and end of input buffer
-     * @param dcursor/dend begin and end of output buffer
-     * @param withCRLF If true, make the lineends CRLF, else make them LF only.
-     *
-     * @return false if the decoded data didn't fit into the output buffer.
-     */
+      Convenience wrapper that can be used for small chunks of data
+      when you can provide a large enough buffer. The default
+      implementation creates a Decoder and uses it.
+
+      Decodes a chunk of bytes starting at @p scursor and extending to
+      @p send into the buffer described by @p dcursor and @p dend.
+
+      This function doesn't support chaining of blocks. The returned
+      block cannot be added to, but you don't need to finalize it, too.
+
+      Example usage (@p in contains the input data):
+      <pre>
+      KMime::Codec *codec = KMime::Codec::codecForName( "base64" );
+      kFatal( !codec ) << "no base64 codec found!?" << endl;
+      QByteArray out( in.size() ); // good guess for any encoding...
+      QByteArray::Iterator iit = in.begin();
+      QByteArray::Iterator oit = out.begin();
+      if ( !codec->decode( iit, in.end(), oit, out.end() ) ) {
+        kDebug() << "output buffer too small" << endl;
+        return;
+      }
+      kDebug() << "Size of decoded data: " << oit - out.begin() << endl;
+      </pre>
+
+      @param scursor is a pointer to the start of the input buffer.
+      @param send is a pointer to the end of the input buffer.
+      @param dcursor is a pointer to the start of the output buffer.
+      @param dend is a pointer to the end of the output buffer.
+      @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
+
+      @return false if the decoded data didn't fit into the output buffer;
+      true otherwise.
+    */
     virtual bool decode( const char* &scursor, const char * const send,
                          char* &dcursor, const char * const dend,
                          bool withCRLF=false ) const;
 
     /**
-     * Even more convenient, but also a bit slower and more memory
-     * intensive, since it allocates storage for the worst case and then
-     * shrinks the result QByteArray to the actual size again.
-     *
-     * For use with small @p src.
-     */
+      Even more convenient, but also a bit slower and more memory
+      intensive, since it allocates storage for the worst case and then
+      shrinks the result QByteArray to the actual size again.
+
+      For use with small @p src.
+
+      @param src is a QByteArray containing the data to encode.
+      @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
+    */
     virtual QByteArray encode( const QByteArray &src, bool withCRLF=false ) const;
 
     /**
-     * Even more convenient, but also a bit slower and more memory
-     * intensive, since it allocates storage for the worst case and then
-     * shrinks the result QByteArray to the actual size again.
-     *
-     * For use with small @p src.
-     */
+      Even more convenient, but also a bit slower and more memory
+      intensive, since it allocates storage for the worst case and then
+      shrinks the result QByteArray to the actual size again.
+
+      For use with small @p src.
+
+      @param src is a QByteArray containing the data to decode.
+      @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
+    */
     virtual QByteArray decode( const QByteArray &src, bool withCRLF=false ) const;
 
     /**
-     * @return the name of the encoding. Guaranteed to be lowercase.
-     */
+      Returns the name of the encoding. Guaranteed to be lowercase.
+    */
     virtual const char *name() const = 0;
 
+    /**
+      Destroys the codec.
+    */
     virtual ~Codec() {}
 
+  private:
+    /**
+      Fills the KAutoDeleteHash with all the supported codecs.
+    */
+    static void fillDictionary();
 };
 
 /**
- * Stateful decoder class, modelled after QTextDecoder.
- *
- * @section Overview
- *
- * KMime decoders are designed to be able to process encoded data in
- * chunks of arbitrary size and to work with output buffers of also
- * arbitrary size. They maintain any state necessary to go on where
- * the previous call left off.
- *
- * The class consists of only two methods of interest: see decode,
- * which decodes an input block and finalize, which flushes any
- * remaining data to the output stream.
- *
- * Typically, you will create a decoder instance, call decode as
- * often as necessary, then call finalize (most often a single
- * call suffices, but it might be that during that call the output
- * buffer is filled, so you should be prepared to call finalize
- * as often as necessary, ie. until it returns @p true).
- *
- * @section Return Values
- *
- * Both methods return @p true to indicate that they've finished their
- * job. For decode, a return value of @p true means that the
- * current input block has been finished (@p false most often means
- * that the output buffer is full, but that isn't required
- * behavior. The decode call is free to return at arbitrary
- * times during processing).
- *
- * For finalize, a return value of @p true means that all data
- * implicitly or explicitly stored in the decoder instance has been
- * flushed to the output buffer. A @p false return value should be
- * interpreted as "check if the output buffer is full and call me
- * again", just as with decode.
- *
- * @section Usage Pattern
- *
- * Since the decoder maintains state, you can only use it once. After
- * a sequence of input blocks has been processed, you finalize
- * the output and then delete the decoder instance. If you want to
- * process another input block sequence, you create a new instance.
- *
- * Typical usage (@p in contains the (base64-encoded) input data),
- * taking into account all the conventions detailed above:
- *
- * <pre>
- * KMime::Codec * codec = KMime::Codec::codecForName( "base64" );
- * kFatal( !codec ) << "No codec found for base64!" << endl;
- * KMime::Decoder * dec = codec->makeDecoder();
- * assert( dec ); // should not happen
- * QByteArray out( 256 ); // small buffer is enough ;-)
- * QByteArray::Iterator iit = in.begin();
- * QByteArray::Iterator oit = out.begin();
- * // decode the chunk
- * while ( !dec->decode( iit, in.end(), oit, out.end() ) )
- *   if ( oit == out.end() ) { // output buffer full, process contents
- *     do_something_with( out );
- *     oit = out.begin();
- *   }
- * // repeat while loop for each input block
- * // ...
- * // finish (flush remaining data from decoder):
- * while ( !dec->finish( oit, out.end() ) )
- *   if ( oit == out.end() ) { // output buffer full, process contents
- *     do_something_with( out );
- *     oit = out.begin();
- *   }
- * // now process last chunk:
- * out.resize( oit - out.begin() );
- * do_something_with( out );
- * // _delete_ the decoder, but not the codec:
- * delete dec;
- * </pre>
- *
- * @short Stateful CTE decoder class
- * @author Marc Mutz <mutz@kde.org>
- */
+  @brief Stateful CTE decoder class
+
+  Stateful decoder class, modelled after QTextDecoder.
+
+  @section Overview
+
+  KMime decoders are designed to be able to process encoded data in
+  chunks of arbitrary size and to work with output buffers of also
+  arbitrary size. They maintain any state necessary to go on where
+  the previous call left off.
+
+  The class consists of only two methods of interest: see decode,
+  which decodes an input block and finalize, which flushes any
+  remaining data to the output stream.
+
+  Typically, you will create a decoder instance, call decode as
+  often as necessary, then call finalize (most often a single
+  call suffices, but it might be that during that call the output
+  buffer is filled, so you should be prepared to call finalize
+  as often as necessary, ie. until it returns @p true).
+
+  @section Return Values
+
+  Both methods return @p true to indicate that they've finished their
+  job. For decode, a return value of @p true means that the
+  current input block has been finished (@p false most often means
+  that the output buffer is full, but that isn't required
+  behavior. The decode call is free to return at arbitrary
+  times during processing).
+
+  For finalize, a return value of @p true means that all data
+  implicitly or explicitly stored in the decoder instance has been
+  flushed to the output buffer. A @p false return value should be
+  interpreted as "check if the output buffer is full and call me
+  again", just as with decode.
+
+  @section Usage Pattern
+
+  Since the decoder maintains state, you can only use it once. After
+  a sequence of input blocks has been processed, you finalize
+  the output and then delete the decoder instance. If you want to
+  process another input block sequence, you create a new instance.
+
+  Typical usage (@p in contains the (base64-encoded) input data),
+  taking into account all the conventions detailed above:
+
+  <pre>
+  KMime::Codec *codec = KMime::Codec::codecForName( "base64" );
+  kFatal( !codec ) << "No codec found for base64!" << endl;
+  KMime::Decoder *dec = codec->makeDecoder();
+  assert( dec ); // should not happen
+  QByteArray out( 256 ); // small buffer is enough ;-)
+  QByteArray::Iterator iit = in.begin();
+  QByteArray::Iterator oit = out.begin();
+  // decode the chunk
+  while ( !dec->decode( iit, in.end(), oit, out.end() ) )
+    if ( oit == out.end() ) { // output buffer full, process contents
+      do_something_with( out );
+      oit = out.begin();
+    }
+  // repeat while loop for each input block
+  // ...
+  // finish (flush remaining data from decoder):
+  while ( !dec->finish( oit, out.end() ) )
+    if ( oit == out.end() ) { // output buffer full, process contents
+      do_something_with( out );
+      oit = out.begin();
+    }
+  // now process last chunk:
+  out.resize( oit - out.begin() );
+  do_something_with( out );
+  // _delete_ the decoder, but not the codec:
+  delete dec;
+  </pre>
+*/
 class Decoder
 {
   protected:
     friend class Codec;
     /**
-     * Protected constructor. Use KMime::Codec::makeDecoder to
-     * create an instance. The bool parameter determines whether lines
-     * end with CRLF (true) or LF (false, default).
-     */
+      Protected constructor. Use KMime::Codec::makeDecoder to create an
+      instance.
+
+      @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
+    */
     Decoder( bool withCRLF=false )
       : mWithCRLF( withCRLF ) {}
+
   public:
+    /**
+      Destroys the decoder.
+    */
     virtual ~Decoder() {}
 
-    /** Decode a chunk of data, maintaining state information between
-     *  calls. See class decumentation for calling conventions.
-     */
+    /**
+      Decodes a chunk of data, maintaining state information between
+      calls. See class decumentation for calling conventions.
+
+      @param scursor is a pointer to the start of the input buffer.
+      @param send is a pointer to the end of the input buffer.
+      @param dcursor is a pointer to the start of the output buffer.
+      @param dend is a pointer to the end of the output buffer.
+    */
     virtual bool decode( const char* &scursor, const char * const send,
                          char* &dcursor, const char * const dend ) = 0;
-    /** Call this method to finalize the output stream. Writes all
-     *  remaining data and resets the decoder. See KMime::Codec for
-     *  calling conventions.
-     */
+
+    /**
+      Call this method to finalize the output stream. Writes all
+      remaining data and resets the decoder. See KMime::Codec for
+      calling conventions.
+
+      @param dcursor is a pointer to the start of the output buffer.
+      @param dend is a pointer to the end of the output buffer.
+    */
     virtual bool finish( char* &dcursor, const char * const dend ) = 0;
 
   protected:
+    //@cond PRIVATE
     const bool mWithCRLF;
+    //@endcond
 };
 
-/** Stateful encoder class, modelled after QTextEncoder.
-    @short Stateful encoder class
-    @author Marc Mutz <mutz@kde.org>
+/**
+  @brief
+  Stateful encoder class.
+
+  Stateful encoder class, modeled after QTextEncoder.
 */
 class Encoder
 {
   protected:
     friend class Codec;
-    /** Protected constructor. Use KMime::Codec::makeEncoder if you
-        want one. The bool parameter determines whether lines end with
-        CRLF (true) or LF (false, default). */
+    /**
+      Protected constructor. Use KMime::Codec::makeEncoder if you want one.
+
+      @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
+    */
     Encoder( bool withCRLF=false )
       : mOutputBufferCursor( 0 ), mWithCRLF( withCRLF ) {}
 
   public:
+    /**
+      Destroys the encoder.
+    */
     virtual ~Encoder() {}
 
     /**
-     * Encode a chunk of data, maintaining state information between
-     * calls. See KMime::Codec for calling conventions.
-     */
+      Encodes a chunk of data, maintaining state information between
+      calls. See KMime::Codec for calling conventions.
+
+      @param scursor is a pointer to the start of the input buffer.
+      @param send is a pointer to the end of the input buffer.
+      @param dcursor is a pointer to the start of the output buffer.
+      @param dend is a pointer to the end of the output buffer.
+    */
     virtual bool encode( const char* &scursor, const char * const send,
                          char* &dcursor, const char * const dend ) = 0;
 
     /**
-     * Call this method to finalize the output stream. Writes all remaining
-     * data and resets the encoder. See KMime::Codec for calling conventions.
-     */
+      Call this method to finalize the output stream. Writes all remaining
+      data and resets the encoder. See KMime::Codec for calling conventions.
+
+      @param dcursor is a pointer to the start of the output buffer.
+      @param dend is a pointer to the end of the output buffer.
+    */
     virtual bool finish( char* &dcursor, const char * const dend ) = 0;
 
   protected:
-    /** Space in the output buffer */
+    /**
+      The maximum number of characters permitted in the output buffer.
+    */
     enum {
-      maxBufferedChars = 8
+      maxBufferedChars = 8  /**< Eight */
     };
 
     /**
-     * Writes @p ch to the output stream or the output buffer, depending on
-     * whether or not the output stream has space left.
-     *
-     * @return true if written to the output stream, false if buffered.
-     */
+      Writes character @p ch to the output stream or the output buffer,
+      depending on whether or not the output stream has space left.
+
+      @param ch is the character to write.
+      @param dcursor is a pointer to the start of the output buffer.
+      @param dend is a pointer to the end of the output buffer.
+
+      @return true if written to the output stream; else false if buffered.
+    */
     bool write( char ch, char* &dcursor, const char * const dend )
       {
         if ( dcursor != dend ) {
@@ -334,17 +451,24 @@ class Encoder
       }
 
     /**
-     * Writes characters from the output buffer to the output stream.
-     * Implementations of encode and finish should call this
-     * at the very beginning and for each iteration of the while loop.
-     *
-     * @return true if all chars could be written, false otherwise
-     */
+      Writes characters from the output buffer to the output stream.
+      Implementations of encode and finish should call this
+      at the very beginning and for each iteration of the while loop.
+
+      @param dcursor is a pointer to the start of the output buffer.
+      @param dend is a pointer to the end of the output buffer.
+
+      @return true if all chars could be written, false otherwise
+    */
     bool flushOutputBuffer( char* &dcursor, const char * const dend );
 
     /**
-     * Convenience function. Outputs LF or CRLF, based on the state of mWithCRLF
-     */
+      Convenience function. Outputs @ref LF or @ref CRLF, based on the
+      state of mWithCRLF.
+
+      @param dcursor is a pointer to the start of the output buffer.
+      @param dend is a pointer to the end of the output buffer.
+    */
     bool writeCRLF( char* &dcursor, const char * const dend )
       {
         if ( mWithCRLF ) {
@@ -355,14 +479,18 @@ class Encoder
 
   private:
     /**
-     * An output buffer to simplyfy some codecs.  Use with write and
-     * flushOutputBuffer.
-     */
+      An output buffer to simplify some codecs.
+      Used with write() and flushOutputBuffer().
+    */
+    //@cond PRIVATE
     char mOutputBuffer[ maxBufferedChars ];
+    //@endcond
 
   protected:
+    //@cond PRIVATE
     uchar mOutputBufferCursor;
     const bool mWithCRLF;
+    //@endcond
 };
 
 } // namespace KMime

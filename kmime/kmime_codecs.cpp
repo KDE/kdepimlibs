@@ -19,6 +19,13 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling MIME data and
+  defines the Codec class.
+
+  @authors Marc Mutz \<mutz@kde.org\>
+*/
 
 #include "kmime_codecs.h"
 #include "kmime_util.h"
@@ -43,12 +50,14 @@ using namespace KPIM;
 namespace KMime {
 
 // global list of KMime::Codec's
+//@cond PRIVATE
 KAutoDeleteHash<QByteArray, Codec> * Codec::all = 0;
 static KStaticDeleter< KAutoDeleteHash<QByteArray, Codec> > sdAll;
 #if defined(QT_THREAD_SUPPORT)
 QMutex *Codec::dictLock = 0;
 static KStaticDeleter<QMutex> sdDictLock;
 #endif
+//@endcond
 
 void Codec::fillDictionary()
 {
