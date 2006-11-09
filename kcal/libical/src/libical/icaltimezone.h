@@ -30,6 +30,9 @@
 #ifndef ICALTIMEZONE_H
 #define ICALTIMEZONE_H
 
+/* for the KDE visibility stuff */
+#include "libical_export.h"
+
 #include <stdio.h> /* For FILE* */
 #include "icaltime.h"
 #include "icalarray.h"
@@ -68,7 +71,7 @@ void icaltimezone_free_builtin_timezones(void);
 icalarray* icaltimezone_get_builtin_timezones	(void);
 
 /** Returns a single builtin timezone, given its Olson city name. */
-KCAL_EXPORT icaltimezone* icaltimezone_get_builtin_timezone	(const char *location);
+LIBICAL_EXPORT icaltimezone* icaltimezone_get_builtin_timezone (const char *location);
 
 /** Returns a single builtin timezone, given its TZID. */
 icaltimezone* icaltimezone_get_builtin_timezone_from_tzid (const char *tzid);
@@ -120,7 +123,7 @@ void	icaltimezone_convert_time		(struct icaltimetype *tt,
    timezone.  It is the number of seconds to add to UTC to get local
    time.  The is_daylight flag is set to 1 if the time is in
    daylight-savings time. */
-KCAL_EXPORT int	icaltimezone_get_utc_offset		(icaltimezone *zone,
+LIBICAL_EXPORT int icaltimezone_get_utc_offset	(icaltimezone *zone,
 						 struct icaltimetype *tt,
 						 int		*is_daylight);
 
