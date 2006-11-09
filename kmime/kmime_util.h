@@ -35,20 +35,20 @@ namespace KMime {
   keeping strings in a common repository.
   @param name
 */
-extern QByteArray cachedCharset( const QByteArray &name ) KMIME_EXPORT;
+KMIME_EXPORT extern QByteArray cachedCharset( const QByteArray &name );
 
 /**
   Consult the language cache. Only used for reducing mem usage by
   keeping strings in a common repository.
   @param name
 */
-extern QByteArray cachedLanguage( const QByteArray &name ) KMIME_EXPORT;
+KMIME_EXPORT extern QByteArray cachedLanguage( const QByteArray &name );
 
 /**
   Checks whether @p s contains any non-us-ascii characters.
   @param s
 */
-extern bool isUsAscii( const QString &s ) KMIME_EXPORT;
+KMIME_EXPORT extern bool isUsAscii( const QString &s );
 
 inline bool isOfSet( const uchar map[16], unsigned char ch )
 {
@@ -95,9 +95,9 @@ inline bool isEText( char ch )
 
   @return the decoded string.
 */
-extern QString decodeRFC2047String(
+KMIME_EXPORT extern QString decodeRFC2047String(
   const QByteArray &src, QByteArray &usedCS, const QByteArray &defaultCS,
-  bool forceCS ) KMIME_EXPORT;
+  bool forceCS );
 
 /**
   Encodes string @p src according to RFC2047 using charset @p charset.
@@ -110,9 +110,9 @@ extern QString decodeRFC2047String(
 
   @return the encoded string.
 */
-extern QByteArray encodeRFC2047String(
+KMIME_EXPORT extern QByteArray encodeRFC2047String(
   const QString &src, const QByteArray &charset, bool addressHeader=false,
-  bool allow8bitHeaders=false ) KMIME_EXPORT;
+  bool allow8bitHeaders=false );
 
 /**
   Uses current time, pid and random numbers to construct a string
@@ -122,7 +122,7 @@ extern QByteArray encodeRFC2047String(
   @return the unique string.
   @see multiPartBoundary
 */
-extern QByteArray uniqueString() KMIME_EXPORT;
+KMIME_EXPORT extern QByteArray uniqueString();
 
 /**
   Constructs a random string (sans leading/trailing "--") that can
@@ -132,13 +132,13 @@ extern QByteArray uniqueString() KMIME_EXPORT;
   @return the randomized string.
   @see uniqueString
 */
-extern QByteArray multiPartBoundary() KMIME_EXPORT;
+KMIME_EXPORT extern QByteArray multiPartBoundary();
 
 /**
   Unfolds the given header if necessary.
   @param header The header to unfold.
 */
-extern QByteArray unfoldHeader( const QByteArray &header ) KMIME_EXPORT;
+KMIME_EXPORT extern QByteArray unfoldHeader( const QByteArray &header );
 
 /**
   Tries to extract the header with name @p name from the string
@@ -150,8 +150,8 @@ extern QByteArray unfoldHeader( const QByteArray &header ) KMIME_EXPORT;
   @return the first instance of the header @p name in @p src
           or a null QCString if no such header was found.
 */
-extern QByteArray extractHeader( const QByteArray &src,
-                                 const QByteArray &name ) KMIME_EXPORT;
+KMIME_EXPORT extern QByteArray extractHeader( const QByteArray &src,
+                                 const QByteArray &name );
 
 /**
   Converts all occurrences of "\r\n" (CRLF) in @p s to "\n" (LF).
@@ -165,7 +165,7 @@ extern QByteArray extractHeader( const QByteArray &src,
   @return the string with CRLF's substitued for LF's
   @see CRLFtoLF(const char*) LFtoCRLF
 */
-extern QByteArray CRLFtoLF( const QByteArray &s ) KMIME_EXPORT;
+KMIME_EXPORT extern QByteArray CRLFtoLF( const QByteArray &s );
 
 /**
   Converts all occurrences of "\r\n" (CRLF) in @p s to "\n" (LF).
@@ -179,7 +179,7 @@ extern QByteArray CRLFtoLF( const QByteArray &s ) KMIME_EXPORT;
   @return the string with CRLF's substitued for LF's
   @see CRLFtoLF(const QCString&) LFtoCRLF
 */
-extern QByteArray CRLFtoLF( const char *s ) KMIME_EXPORT;
+KMIME_EXPORT extern QByteArray CRLFtoLF( const char *s );
 
 /**
   Converts all occurrences of "\n" (LF) in @p s to "\r\n" (CRLF).
@@ -194,7 +194,7 @@ extern QByteArray CRLFtoLF( const char *s ) KMIME_EXPORT;
   @return the string with CRLF's substitued for LF's
   @see CRLFtoLF(const QCString&) LFtoCRLF
 */
-extern QByteArray LFtoCRLF( const QByteArray &s ) KMIME_EXPORT;
+KMIME_EXPORT extern QByteArray LFtoCRLF( const QByteArray &s );
 
 /**
   Removes quote (DQUOTE) characters and decodes "quoted-pairs"

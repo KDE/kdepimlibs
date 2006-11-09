@@ -23,12 +23,12 @@ add_subdirectory(kxmlrpcclient)
 if(NOT MSVC)
 add_subdirectory(kcal)
 add_subdirectory(ktnef)
+add_subdirectory(syndication)
 endif(NOT MSVC)
 add_subdirectory(kldap)
 add_subdirectory(kmime)
 add_subdirectory(kresources)
 add_subdirectory(kabc)
-add_subdirectory(syndication)
 
 add_subdirectory(cmake)
 
