@@ -98,7 +98,6 @@
 #include "libical_export.h"
 
 #include <time.h>
-#include <kcal.h>
 /* An opaque struct representing a timezone. We declare this here to avoid
    a circular dependancy. */
 #ifndef ICALTIMEZONE_DEFINED

@@ -37,7 +37,6 @@
 #include "icaltime.h"
 #include "icalarray.h"
 #include "icalcomponent.h"
-#include <kcal.h>
 
 #ifndef ICALTIMEZONE_DEFINED
 #define ICALTIMEZONE_DEFINED
