@@ -1060,6 +1060,8 @@ bool parseAddressList( const char* &scursor, const char * const send,
     if ( scursor == send ) return true;
     // empty entry: ignore:
     if ( *scursor == ',' ) { scursor++; continue; }
+    // broken clients might use ';' as list delimiter, accept that as well
+    if ( *scursor == ';' ) { scursor++; continue; }
 
     // parse one entry
     Address maybeAddress;

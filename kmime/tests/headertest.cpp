@@ -188,6 +188,23 @@ void HeaderTest::testAddressListHeader()
   QCOMPARE( h->addresses().first(), QByteArray( "kloecker@kde.org" ) );
   QCOMPARE( h->displayNames().first(), QString::fromUtf8("Ingo Klöcker") );
   delete h;
+
+  // based on bug #137033, a header broken in various ways: ';' as list separator,
+  // unquoted '.' in display name
+  h = new Headers::Generics::AddressList();
+  h->from7BitString( "Vice@censored.serverkompetenz.net,\n    President@mail2.censored.net;\"Int\\\\\\\\\\\\\\\\\\\\'l\" Lotto Commission. <censored@yahoo.fr>" );
+  QCOMPARE( h->addresses().count(), 3 );
+  names = h->displayNames();
+  QCOMPARE( names.takeFirst(), QString() );
+  QCOMPARE( names.takeFirst(), QString() );
+  // there is an wrong ' ' after the name, but since the header is completely
+  // broken we can be happy it parses at all...
+  QCOMPARE( names.takeFirst(), QString("Int\\\\\\\\\\'l Lotto Commission. ") );
+  QList<QByteArray> addrs = h->addresses();
+  QCOMPARE( addrs.takeFirst(), QByteArray("Vice@censored.serverkompetenz.net") );
+  QCOMPARE( addrs.takeFirst(), QByteArray("President@mail2.censored.net") );
+  QCOMPARE( addrs.takeFirst(), QByteArray("censored@yahoo.fr") );
+  delete h;
 }
 
 #include "headertest.moc"
