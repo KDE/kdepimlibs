@@ -183,6 +183,22 @@ KMIME_EXPORT bool parseAddrSpec( const char* &scursor, const char * const send,
 KMIME_EXPORT bool parseAngleAddr( const char* &scursor, const char * const send,
                      Types::AddrSpec &result, bool isCRLF=false );
 
+/**
+  Parses a single mailbox.
+
+  RFC 2822, section 3.4 defines a mailbox as follows:
+  <pre>mailbox := addr-spec / ([ display-name ] angle-addr)</pre>
+
+  KMime also accepts the legacy format of specifying display names:
+  <pre>mailbox := (addr-spec [ "(" display-name ")" ])
+                / ([ display-name ] angle-addr)
+                / (angle-addr "(" display-name ")")</pre>
+
+  @param scursor pointer to the first character of the input string
+  @param send pointer to end of input buffer
+  @param result the parsing result
+  @param isCRLF true if input string is terminated with a CRLF.
+*/
 KMIME_EXPORT bool parseMailbox( const char* &scursor, const char * const send,
                    Types::Mailbox &result, bool isCRLF=false );
 

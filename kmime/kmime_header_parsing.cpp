@@ -648,6 +648,8 @@ bool parsePhrase( const char* &scursor, const char * const send,
 bool parseDotAtom( const char* &scursor, const char * const send,
                    QString &result, bool isCRLF )
 {
+  eatCFWS( scursor, send, isCRLF );
+
   // always points to just after the last atom parsed:
   const char *successfullyParsed;
 
@@ -658,13 +660,10 @@ bool parseDotAtom( const char* &scursor, const char * const send,
   successfullyParsed = scursor;
 
   while ( scursor != send ) {
-    eatCFWS( scursor, send, isCRLF );
 
     // end of header or no '.' -> return
     if ( scursor == send || *scursor != '.' ) return true;
     scursor++; // eat '.'
-
-    eatCFWS( scursor, send, isCRLF );
 
     if ( scursor == send || !isAText( *scursor ) ) {
       // end of header or no AText, but this time following a '.'!:
@@ -921,28 +920,30 @@ bool parseAngleAddr( const char* &scursor, const char * const send,
 bool parseMailbox( const char* &scursor, const char * const send,
                    Mailbox &result, bool isCRLF )
 {
-  // rfc:
-  // mailbox := addr-spec / ([ display-name ] angle-addr)
-  // us:
-  // mailbox := addr-spec / ([ display-name ] angle-addr)
-  //                      / (angle-addr "(" display-name ")")
-
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) return false;
 
   AddrSpec maybeAddrSpec;
+  QString maybeDisplayName;
 
   // first, try if it's a vanilla addr-spec:
   const char * oldscursor = scursor;
   if ( parseAddrSpec( scursor, send, maybeAddrSpec, isCRLF ) ) {
-    result.displayName.clear();
     result.addrSpec = maybeAddrSpec;
+    // check for the obsolete form of display-name (as comment):
+    eatWhiteSpace( scursor, send );
+    if ( scursor != send && *scursor == '(' ) {
+      scursor++;
+      if ( !parseComment( scursor, send, maybeDisplayName, isCRLF, true /*keep*/ ) )
+        return false;
+    }
+    QByteArray cs;
+    result.displayName = decodeRFC2047String( maybeDisplayName.toLatin1(), cs, QByteArray(), false );
     return true;
   }
   scursor = oldscursor;
 
   // second, see if there's a display-name:
-  QString maybeDisplayName;
   if ( !parsePhrase( scursor, send, maybeDisplayName, isCRLF ) ) {
     // failed: reset cursor, note absent display-name
     maybeDisplayName.clear();

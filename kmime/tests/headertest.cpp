@@ -24,7 +24,9 @@
 
 using namespace KMime;
 
-// the following test cases are taken from KDE mailinglists and RFC 2822, Appendix A
+// the following test cases are taken from KDE mailinglists, bug reports and
+// RFC 2822, Appendix A
+
 QTEST_KDEMAIN( HeaderTest, NoGUI )
 
 void HeaderTest::testIdentHeader()
@@ -107,10 +109,8 @@ void HeaderTest::testAddressListHeader()
   h->from7BitString( "jdoe@machine.example (John Doe)" );
   QCOMPARE( h->addresses().count(), 1 );
   QCOMPARE( h->addresses().first(), QByteArray( "jdoe@machine.example" ) );
-  QEXPECT_FAIL("", "legacy style display names not yet supported", Continue);
   QCOMPARE( h->displayNames().first(), QString("John Doe") );
-  QEXPECT_FAIL("", "legacy style display names not yet supported", Continue);
-  QCOMPARE( h->prettyAddresses().first(), QString("Jon Doe <jdoe@machine.example>") );
+  QCOMPARE( h->prettyAddresses().first(), QString("John Doe <jdoe@machine.example>") );
   delete h;
 
   // parsing and re-assembling list of diffrent addresses
@@ -150,7 +150,6 @@ void HeaderTest::testAddressListHeader()
   h->from7BitString( "kloecker@kde.org (Ingo =?iso-8859-15?q?Kl=F6cker?=)" );
   QCOMPARE( h->addresses().count(), 1 );
   QCOMPARE( h->addresses().first(), QByteArray( "kloecker@kde.org" ) );
-  QEXPECT_FAIL( "", "legacy style display names not yet supported", Continue );
   QCOMPARE( h->displayNames().first(), QString::fromUtf8("Ingo Klöcker") );
   delete h;
 
@@ -205,6 +204,13 @@ void HeaderTest::testAddressListHeader()
   QCOMPARE( addrs.takeFirst(), QByteArray("President@mail2.censored.net") );
   QCOMPARE( addrs.takeFirst(), QByteArray("censored@yahoo.fr") );
   delete h;
+
+  // based on bug #102010, a display name containing '<'
+  h = new Headers::Generics::AddressList( 0, QByteArray("\"|<onrad\" <censored@censored.dy>") );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first(), QByteArray("censored@censored.dy") );
+  QCOMPARE( h->displayNames().first(), QString("|<onrad") );
+  QCOMPARE( h->as7BitString( false ), QByteArray("\"|<onrad\" <censored@censored.dy>") );
 }
 
 #include "headertest.moc"
