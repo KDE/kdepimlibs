@@ -211,6 +211,12 @@ void HeaderTest::testAddressListHeader()
   QCOMPARE( h->addresses().first(), QByteArray("censored@censored.dy") );
   QCOMPARE( h->displayNames().first(), QString("|<onrad") );
   QCOMPARE( h->as7BitString( false ), QByteArray("\"|<onrad\" <censored@censored.dy>") );
+
+  // based on bug #93790 (legacy display name with nested comments)
+  h = new Headers::Generics::AddressList( 0, QByteArray("first.name@domain.tld (first name (nickname))") );
+  QCOMPARE( h->displayNames().count(), 1 );
+  QCOMPARE( h->displayNames().first(), QString("first name (nickname)") );
+  QCOMPARE( h->as7BitString( false ), QByteArray("\"first name (nickname)\" <first.name@domain.tld>") );
 }
 
 #include "headertest.moc"
