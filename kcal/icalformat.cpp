@@ -124,6 +124,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   file.write( textUtf8.data(), textUtf8.size() - 1 );
 
   if ( !file.finalize() ) {
+    kDebug(5800) << "ICalFormat::save() err: " << file.errorString() << endl;
     setException(new ErrorFormat(ErrorFormat::SaveError,
                  i18n("Could not save '%1'", fileName)));
     return false;
