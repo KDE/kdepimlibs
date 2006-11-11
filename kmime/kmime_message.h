@@ -48,60 +48,74 @@ class KMIME_EXPORT Message : public Content
     virtual void setHeader( KMime::Headers::Base *h );
     virtual bool removeHeader( const char *type );
 
+    /**
+      Returns the message MessageID
+    */
     virtual KMime::Headers::MessageID *messageID( bool create=true )
-      { KMime::Headers::MessageID *p=0;
+      {
+        KMime::Headers::MessageID *p=0;
         return getHeaderInstance( p, create );
       }
 
     virtual KMime::Headers::Subject *subject( bool create=true )
-      { if ( !create && mSubject.isEmpty() )
+      {
+        if ( !create && mSubject.isEmpty() )
           return 0;
         return &mSubject;
       }
 
     virtual KMime::Headers::Date *date( bool create=true )
-      { if ( !create && mDate.isEmpty() )
+      {
+        if ( !create && mDate.isEmpty() )
           return 0;
         return &mDate;
       }
 
     virtual KMime::Headers::From *from( bool create=true )
-      { KMime::Headers::From *p=0;
+      {
+        KMime::Headers::From *p=0;
         return getHeaderInstance( p, create );
       }
 
     virtual KMime::Headers::Organization *organization( bool create=true )
-      { KMime::Headers::Organization *p=0;
+      {
+        KMime::Headers::Organization *p=0;
         return getHeaderInstance( p, create );
       }
 
     virtual KMime::Headers::ReplyTo *replyTo( bool create=true )
-      { KMime::Headers::ReplyTo *p=0;
+      {
+        KMime::Headers::ReplyTo *p=0;
         return getHeaderInstance( p, create );
       }
 
     virtual KMime::Headers::To *to( bool create=true )
-      { KMime::Headers::To *p=0;
+      {
+        KMime::Headers::To *p=0;
         return getHeaderInstance( p, create );
       }
 
     virtual KMime::Headers::CC *cc( bool create=true )
-      { KMime::Headers::CC *p=0;
+      {
+        KMime::Headers::CC *p=0;
         return getHeaderInstance( p, create );
       }
 
     virtual KMime::Headers::BCC *bcc( bool create=true )
-      { KMime::Headers::BCC *p=0;
+      {
+        KMime::Headers::BCC *p=0;
         return getHeaderInstance( p, create );
       }
 
     virtual KMime::Headers::References *references( bool create=true )
-      { KMime::Headers::References *p=0;
+      {
+        KMime::Headers::References *p=0;
         return getHeaderInstance( p, create );
       }
 
     virtual KMime::Headers::UserAgent *userAgent( bool create=true )
-      { KMime::Headers::UserAgent *p=0;
+      {
+        KMime::Headers::UserAgent *p=0;
         return getHeaderInstance( p, create );
       }
 

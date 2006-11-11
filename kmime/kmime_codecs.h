@@ -25,6 +25,11 @@
 
   @authors Marc Mutz \<mutz@kde.org\>
 
+  @glossary @anchor codec @anchor codecs @anchor Codec @anchor Codecs @b codec:
+  a program capable of performing encoding and decoding on a digital data
+  stream. Codecs encode data for storage or encryption and decode it for
+  viewing or editing.
+
   @glossary @anchor CRLF @b CRLF: a "Carriage Return (0x0D)" followed by a
   "Line Feed (0x0A)", two ASCII control characters used to represent a
   newline on some operating systems, notably DOS and Microsoft Windows.
@@ -59,9 +64,9 @@ class Decoder;
 
 /**
   @brief
-  An abstract base class of Codecs for common mail transfer encodings.
+  An abstract base class of @ref codecs for common mail transfer encodings.
 
-  Provides an abstract base class of Codecs like base64 and quoted-printable.
+  Provides an abstract base class of @ref codecs like base64 and quoted-printable.
   Implemented as a singleton.
 */
 class KMIME_EXPORT Codec
