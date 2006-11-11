@@ -68,7 +68,7 @@ class KMIME_EXPORT Rfc2047QEncodingCodec : public Codec
 
     int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
       {
-        (void)withCRLF; // keep compiler happy
+        Q_UNUSED( withCRLF );
         // this one is simple: We don't do linebreaking, so all that can
         // happen is that every char needs encoding, so:
         return 3 * insize;
@@ -94,7 +94,7 @@ class KMIME_EXPORT Rfc2231EncodingCodec : public Codec
 
     int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
       {
-        (void)withCRLF; // keep compiler happy
+        Q_UNUSED( withCRLF );
         // same as for "q" encoding:
         return 3 * insize;
       }

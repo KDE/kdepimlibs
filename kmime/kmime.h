@@ -34,10 +34,10 @@
 #endif
 
 /**
- * @namespace KMime
- *
- * @brief
- * Contains all the KMIME library global classes, objects, and functions.
- */
+  @namespace KMime
+
+  @brief
+  Contains all the KMIME library global classes, objects, and functions.
+*/
 
 #endif

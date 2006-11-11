@@ -19,7 +19,7 @@
 */
 /**
   @file
-  This file is part of the API for handling MIME data and
+  This file is part of the API for handling @ref MIME data and
   defines the BoolFlags class.
 
   @author see AUTHORS file.

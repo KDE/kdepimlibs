@@ -40,6 +40,7 @@ namespace KMime {
 //class Rfc2047BEncodingEncoder;
 //class Rfc2047BEncodingDecoder;
 
+//@cond PRIVATE
 static const uchar base64DecodeMap[128] = {
   64, 64, 64, 64, 64, 64, 64, 64,  64, 64, 64, 64, 64, 64, 64, 64,
   64, 64, 64, 64, 64, 64, 64, 64,  64, 64, 64, 64, 64, 64, 64, 64,
@@ -64,6 +65,7 @@ static const char base64EncodeMap[64] = {
   'w', 'x', 'y', 'z', '0', '1', '2', '3',
   '4', '5', '6', '7', '8', '9', '+', '/'
 };
+//@endcond
 
 class Base64Decoder : public Decoder
 {

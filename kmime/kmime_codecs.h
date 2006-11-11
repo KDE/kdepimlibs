@@ -20,10 +20,25 @@
 */
 /**
   @file
-  This file is part of the API for handling MIME data and
+  This file is part of the API for handling @ref MIME data and
   defines the Codec class.
 
   @authors Marc Mutz \<mutz@kde.org\>
+
+  @glossary @anchor MIME @anchor mime @b MIME:
+  <b>Multipurpose Internet Mail Extensions</b> or @acronym MIME is an
+  Internet Standard that extends the format of e-mail to support text in
+  character sets other than US-ASCII, non-text attachments, multi-part message
+  bodies, and header information in non-ASCII character sets. Virtually all
+  human-written Internet e-mail and a fairly large proportion of automated
+  e-mail is transmitted via @acronym SMTP in MIME format. Internet e-mail is
+  so closely associated with the SMTP and MIME standards that it is sometimes
+  called SMTP/MIME e-mail. The content types defined by MIME standards are
+  also of growing importance outside of e-mail, such as in communication
+  protocols like @acronym HTTP for the World Wide Web. MIME is also a
+  fundamental component of communication protocols such as  HTTP, which
+  requires that data be transmitted in the context of e-mail-like messages,
+  even though the data may not actually be e-mail.
 
   @glossary @anchor codec @anchor codecs @anchor Codec @anchor Codecs @b codec:
   a program capable of performing encoding and decoding on a digital data

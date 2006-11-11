@@ -19,6 +19,24 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines the Base64 and Rfc2047B Codec classes.
+
+  @authors Marc Mutz \<mutz@kde.org\>
+
+  @glossary @anchor Base64 @anchor base64 @b base64:
+  a binary to text encoding scheme based on RFC 1421.
+
+  @glossary @anchor RFC2045 @anchor rfc2045 @b RFC @b 2045:
+  RFC that defines the <a href="http://tools.ietf.org/html/rfc2045">
+  @ref MIME Part One: Format of Internet Message Bodies</a>.
+
+  @glossary @anchor RFC2047 @anchor rfc2047 @b RFC @b 2047:
+  RFC that defines the <a href="http://tools.ietf.org/html/rfc2047">
+  @ref MIME Part Three: Message Header Extensions for Non-ASCII Text</a>.
+*/
 
 #ifndef __KMIME_CODEC_BASE64__
 #define __KMIME_CODEC_BASE64__
@@ -27,18 +45,37 @@
 
 namespace KMime {
 
+/**
+  @brief
+  A class representing the @ref codec for @ref Base64 as specified in
+  @ref RFC2045
+*/
 class KMIME_EXPORT Base64Codec : public Codec
 {
   protected:
     friend class Codec;
+    /**
+      Constructs a Base64 codec.
+    */
     Base64Codec() : Codec() {}
 
   public:
+    /**
+      Destroys the codec.
+    */
     virtual ~Base64Codec() {}
 
-    const char * name() const
+    /**
+      @copydoc
+      Codec::name()
+    */
+    const char *name() const
       { return "base64"; }
 
+    /**
+      @copydoc
+      Codec::maxEncodedSizeFor()
+    */
     int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
       {
         // first, the total number of 4-char packets will be:
@@ -51,6 +88,10 @@ class KMIME_EXPORT Base64Codec : public Codec
         return 4 * totalNumPackets + ( withCRLF ? 2 : 1 ) * numLineBreaks;
       }
 
+    /**
+      @copydoc
+      Codec::maxDecodedSizeFor()
+    */
     int maxDecodedSizeFor( int insize, bool withCRLF=false ) const
       {
         // assuming all characters are part of the base64 stream (which
@@ -67,38 +108,73 @@ class KMIME_EXPORT Base64Codec : public Codec
         return result;
       }
 
+    /**
+      @copydoc
+      Codec::makeEncoder()
+    */
     Encoder *makeEncoder( bool withCRLF=false ) const;
+
+    /**
+      @copydoc
+      Codec::makeDecoder()
+    */
     Decoder *makeDecoder( bool withCRLF=false ) const;
 };
 
+/**
+  @brief
+  A class representing the @ref codec for the B encoding as specified
+  in @ref RFC2047.
+*/
 class KMIME_EXPORT Rfc2047BEncodingCodec : public Base64Codec
 {
   protected:
     friend class Codec;
-    Rfc2047BEncodingCodec()
-      : Base64Codec() {}
+    /**
+      Constructs a RFC2047B codec.
+    */
+    Rfc2047BEncodingCodec() : Base64Codec() {}
 
   public:
+    /**
+      Destroys the codec.
+    */
     virtual ~Rfc2047BEncodingCodec() {}
 
+    /**
+      @copydoc
+      Codec::name()
+    */
     const char *name() const
       { return "b"; }
 
+    /**
+      @copydoc
+      Codec::maxEncodedSizeFor()
+    */
     int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
       {
-        (void)withCRLF; // keep compiler happy
+        Q_UNUSED( withCRLF );
         // Each (begun) 3-octet triple becomes a 4 char quartet, so:
         return ( ( insize + 2 ) / 3 ) * 4;
       }
 
+    /**
+      @copydoc
+      Codec::maxDecodedSizeFor()
+    */
     int maxDecodedSizeFor( int insize, bool withCRLF=false ) const
       {
-        (void)withCRLF; // keep compiler happy
+        Q_UNUSED( withCRLF );
         // Each 4-char quartet becomes a 3-octet triple, the last one
         // possibly even less. So:
         return ( ( insize + 3 ) / 4 ) * 3;
       }
 
+    /**
+      @copydoc
+      Codec::makeEncoder()
+    */
     Encoder *makeEncoder( bool withCRLF=false ) const;
 };
 
