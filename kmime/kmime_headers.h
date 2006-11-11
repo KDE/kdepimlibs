@@ -418,6 +418,11 @@ class KMIME_EXPORT AddressList : public Address
     */
     QStringList prettyAddresses() const;
 
+    /**
+      Returns a list of mailboxes listed in this header.
+    */
+    Types::Mailbox::List mailboxes() const;
+
   protected:
     bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
@@ -647,8 +652,9 @@ mk_trivial_subclass( To, AddressList );
 mk_trivial_subclass( Cc, AddressList );
 /** Represents a "Bcc" header. */
 mk_trivial_subclass( Bcc, AddressList );
-#if defined(KMIME_NEW_STYLE_CLASSTREE)
+/** Represents a "ReplyTo" header. */
 mk_trivial_subclass_with_name( ReplyTo, Reply-To, AddressList );
+#if defined(KMIME_NEW_STYLE_CLASSTREE)
 // usefor headers:
 mk_trivial_subclass_with_name( MailCopiesTo, Mail-Copies-To, AddressList );
 

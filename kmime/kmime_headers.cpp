@@ -287,6 +287,17 @@ QStringList AddressList::prettyAddresses() const
   return rv;
 }
 
+Types::Mailbox::List AddressList::mailboxes() const
+{
+  Types::Mailbox::List rv;
+  foreach ( Types::Address addr, mAddressList ) {
+    foreach ( Types::Mailbox mbox, addr.mailboxList ) {
+      rv.append( mbox );
+    }
+  }
+  return rv;
+}
+
 bool AddressList::parse( const char* &scursor, const char *const send, bool isCRLF )
 {
   QList<Types::Address> maybeAddressList;

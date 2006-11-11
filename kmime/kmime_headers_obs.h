@@ -81,21 +81,6 @@ class KMIME_EXPORT From : public AddressField {
 };
 
 
-/** Represents a "Reply-To" header */
-class KMIME_EXPORT ReplyTo : public AddressField {
-
-  public:
-    ReplyTo() : AddressField()  {}
-    ReplyTo(Content *p) : AddressField(p)  {}
-    ReplyTo(Content *p, const QByteArray &s) : AddressField(p,s)  {}
-    ReplyTo(Content *p, const QString &s, const QByteArray &cs) : AddressField(p,s,cs)  {}
-    ~ReplyTo()  {}
-
-    virtual const char* type() const { return "Reply-To"; }
-
-};
-
-
 /** Represents a "Mail-Copies-To" header
     http://www.newsreaders.com/misc/mail-copies-to.html */
 class KMIME_EXPORT MailCopiesTo : public AddressField {

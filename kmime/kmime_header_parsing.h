@@ -58,6 +58,8 @@ typedef QList<AddrSpec> AddrSpecList;
 class KMIME_EXPORT Mailbox
 {
   public:
+    typedef QList<Mailbox> List;
+
     /**
       Returns a string representation of the email address, without angle brackets.
     */
