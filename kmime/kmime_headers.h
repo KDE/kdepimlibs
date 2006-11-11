@@ -388,10 +388,17 @@ class KMIME_EXPORT AddressList : public Address
 
     /**
       Add an address to this header.
+
+      @param mbox A Mailbox object specifying the address.
+    */
+    void addAddress( const Types::Mailbox &mbox );
+
+    /**
+      Add an address to this header.
       @param address The actual email address, with or without angle brackets.
       @param displayName An optional name associated with the address.
     */
-    void addAddress(const QByteArray &address, const QString &displayName = QString() );
+    void addAddress( const QByteArray &address, const QString &displayName = QString() );
 
     /**
       Retruns a list of all addresses listed in this header, regardless of groups.
@@ -633,14 +640,19 @@ mk_trivial_subclass_with_name( ContentDescription, Content-Description, Unstruct
 // rfc(2)822 headers:
 mk_trivial_subclass( From, MailboxList );
 mk_trivial_subclass( Sender, SingleMailbox );
-mk_trivial_subclass_with_name( ReplyTo, Reply-To, AddressList );
+#endif
+/** Represents a "To" header. */
+mk_trivial_subclass( To, AddressList );
+/** Represents a "Cc" header. */
 mk_trivial_subclass( Cc, AddressList );
+/** Represents a "Bcc" header. */
 mk_trivial_subclass( Bcc, AddressList );
+#if defined(KMIME_NEW_STYLE_CLASSTREE)
+mk_trivial_subclass_with_name( ReplyTo, Reply-To, AddressList );
 // usefor headers:
 mk_trivial_subclass_with_name( MailCopiesTo, Mail-Copies-To, AddressList );
 
 // GToken:
-
 mk_trivial_subclass_with_name( ContentTransferEncoding,
                                Content-Transfer-Encoding, GToken );
 

@@ -760,9 +760,9 @@ Headers::Base *Content::getHeaderByType( const char *type )
     } else if ( strcasecmp( "To", type ) == 0 ) {
       h = new Headers::To( this, raw );
     } else if ( strcasecmp( "CC", type ) == 0 ) {
-      h = new Headers::CC( this, raw );
+      h = new Headers::Cc( this, raw );
     } else if ( strcasecmp( "BCC", type ) == 0 ) {
-      h = new Headers::BCC( this, raw );
+      h = new Headers::Bcc( this, raw );
     } else if ( strcasecmp( "Newsgroups", type ) == 0 ) {
       h = new Headers::Newsgroups( this, raw );
     } else if ( strcasecmp( "Followup-To", type ) == 0 ) {

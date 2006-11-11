@@ -70,7 +70,83 @@ QString AddrSpec::asString() const
   }
 }
 
+
+QByteArray Mailbox::address() const
+{
+  return mAddrSpec.asString().toLatin1();
 }
+
+AddrSpec Mailbox::addrSpec() const
+{
+  return mAddrSpec;
+}
+
+QString Mailbox::name() const
+{
+  return mDisplayName;
+}
+
+void Mailbox::setAddress(const AddrSpec &addr)
+{
+  mAddrSpec = addr;
+}
+
+void Mailbox::setAddress(const QByteArray & addr)
+{
+  const char* cursor = addr.constData();
+  if ( !HeaderParsing::parseAngleAddr( cursor, cursor + addr.length(), mAddrSpec ) ) {
+    if ( !HeaderParsing::parseAddrSpec( cursor, cursor + addr.length(), mAddrSpec ) ) {
+      kWarning() << k_funcinfo << "Invalid address" << endl;
+      return;
+    }
+  }
+}
+
+void Mailbox::setName(const QString & name)
+{
+  mDisplayName = name;
+}
+
+void Mailbox::setNameFrom7Bit(const QByteArray & name, const QByteArray &defaultCharset )
+{
+  QByteArray cs;
+  mDisplayName = decodeRFC2047String( name, cs, defaultCharset, false );
+}
+
+bool Mailbox::hasAddress() const
+{
+  return !mAddrSpec.asString().isEmpty();
+}
+
+bool Mailbox::hasName() const
+{
+  return !mDisplayName.isEmpty();
+}
+
+QString Mailbox::prettyAddress() const
+{
+  if ( !hasName() )
+    return address();
+  QString s = name();
+  if ( hasAddress() )
+    s += QLatin1String(" <") + address() + QLatin1Char('>');
+  return s;
+}
+
+void Mailbox::fromUnicodeString( const QString &s )
+{
+  from7BitString( encodeRFC2047String( s, "utf-8", false ) );
+}
+
+void Mailbox::from7BitString( const QByteArray &s )
+{
+  const char *cursor = s.constData();
+  HeaderParsing::parseMailbox( cursor, cursor + s.length(), *this );
+}
+
+
+
+} // namespace Types
 
 namespace HeaderParsing {
 
@@ -929,7 +1005,7 @@ bool parseMailbox( const char* &scursor, const char * const send,
   // first, try if it's a vanilla addr-spec:
   const char * oldscursor = scursor;
   if ( parseAddrSpec( scursor, send, maybeAddrSpec, isCRLF ) ) {
-    result.addrSpec = maybeAddrSpec;
+    result.setAddress( maybeAddrSpec );
     // check for the obsolete form of display-name (as comment):
     eatWhiteSpace( scursor, send );
     if ( scursor != send && *scursor == '(' ) {
@@ -937,8 +1013,7 @@ bool parseMailbox( const char* &scursor, const char * const send,
       if ( !parseComment( scursor, send, maybeDisplayName, isCRLF, true /*keep*/ ) )
         return false;
     }
-    QByteArray cs;
-    result.displayName = decodeRFC2047String( maybeDisplayName.toLatin1(), cs, QByteArray(), false );
+    result.setNameFrom7Bit( maybeDisplayName.toLatin1() );
     return true;
   }
   scursor = oldscursor;
@@ -968,8 +1043,8 @@ bool parseMailbox( const char* &scursor, const char * const send,
     }
   }
 
-  result.displayName = maybeDisplayName;
-  result.addrSpec = maybeAddrSpec;
+  result.setName( maybeDisplayName );
+  result.setAddress( maybeAddrSpec );
   return true;
 }
 

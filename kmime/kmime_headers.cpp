@@ -188,18 +188,18 @@ QByteArray AddressList::as7BitString(bool withHeaderType)
     rv = typeIntro();
   foreach ( Types::Address addr, mAddressList ) {
     foreach ( Types::Mailbox mbox, addr.mailboxList ) {
-      if ( mbox.displayName.isEmpty() ) {
-        rv += mbox.addrSpec.asString().toLatin1();
+      if ( !mbox.hasName() ) {
+        rv += mbox.address();
       } else {
-        if ( isUsAscii( mbox.displayName ) ) {
-          QByteArray tmp = mbox.displayName.toLatin1();
+        if ( isUsAscii( mbox.name() ) ) {
+          QByteArray tmp = mbox.name().toLatin1();
           addQuotes( tmp, false );
           rv += tmp;
         } else {
-          rv += encodeRFC2047String( mbox.displayName, e_ncCS, true );
+          rv += encodeRFC2047String( mbox.name(), e_ncCS, true );
         }
-        if ( !mbox.addrSpec.asString().isEmpty() )
-          rv += " <" + mbox.addrSpec.asString().toLatin1() + '>';
+        if ( mbox.hasAddress() )
+          rv += " <" + mbox.address() + '>';
       }
       rv += ", ";
     }
@@ -229,57 +229,59 @@ bool AddressList::isEmpty() const
   return mAddressList.isEmpty();
 }
 
-void AddressList::addAddress(const QByteArray & address, const QString & displayName)
+void AddressList::addAddress( const Types::Mailbox &mbox )
 {
   Types::Address addr;
-  Types::Mailbox mbox;
-  mbox.displayName = displayName;
-  const char* cursor = address.constData();
-  if ( !parseAngleAddr( cursor, cursor + address.length(), mbox.addrSpec ) ) {
-    if ( !parseAddrSpec( cursor, cursor + address.length(), mbox.addrSpec ) ) {
-      kWarning() << k_funcinfo << "Invalid address" << endl;
-      return;
-    }
-  }
   addr.mailboxList.append( mbox );
   mAddressList.append( addr );
 }
 
-QList< QByteArray > KMime::Headers::Generics::AddressList::addresses() const
+void AddressList::addAddress(const QByteArray & address, const QString & displayName)
+{
+  Types::Address addr;
+  Types::Mailbox mbox;
+  Types::AddrSpec addrSpec;
+  mbox.setName( displayName );
+  const char* cursor = address.constData();
+  if ( !parseAngleAddr( cursor, cursor + address.length(), addrSpec ) ) {
+    if ( !parseAddrSpec( cursor, cursor + address.length(), addrSpec ) ) {
+      kWarning() << k_funcinfo << "Invalid address" << endl;
+      return;
+    }
+  }
+  mbox.setAddress( addrSpec );
+  addr.mailboxList.append( mbox );
+  mAddressList.append( addr );
+}
+
+QList< QByteArray > AddressList::addresses() const
 {
   QList<QByteArray> rv;
   foreach ( Types::Address addr, mAddressList ) {
     foreach ( Types::Mailbox mbox, addr.mailboxList ) {
-      rv.append( mbox.addrSpec.asString().toLatin1() );
+      rv.append( mbox.address() );
     }
   }
   return rv;
 }
 
-QStringList KMime::Headers::Generics::AddressList::displayNames() const
+QStringList AddressList::displayNames() const
 {
   QStringList rv;
   foreach ( Types::Address addr, mAddressList ) {
     foreach ( Types::Mailbox mbox, addr.mailboxList ) {
-      rv.append( mbox.displayName );
+      rv.append( mbox.name() );
     }
   }
   return rv;
 }
 
-QStringList KMime::Headers::Generics::AddressList::prettyAddresses() const
+QStringList AddressList::prettyAddresses() const
 {
   QStringList rv;
   foreach ( Types::Address addr, mAddressList ) {
     foreach ( Types::Mailbox mbox, addr.mailboxList ) {
-      if ( mbox.displayName.isEmpty() ) {
-        rv.append( mbox.addrSpec.asString() );
-      } else {
-        QString s = mbox.displayName;
-        if ( !mbox.addrSpec.asString().isEmpty() )
-          s += QLatin1String(" <") + mbox.addrSpec.asString() + QLatin1Char('>');
-        rv.append( s );
-      }
+      rv.append( mbox.prettyAddress() );
     }
   }
   return rv;
@@ -617,12 +619,12 @@ bool ReturnPath::parse( const char* &scursor, const char * const send, bool isCR
 
     // prepare a Null mailbox:
     AddrSpec emptyAddrSpec;
-    maybeMailbox.displayName.clear();
-    maybeMailbox.addrSpec = emptyAddrSpec;
+    maybeMailbox.setName( QString() );
+    maybeMailbox.setAddress( emptyAddrSpec );
   } else {
     // check that there was no display-name:
-    if ( !maybeMailbox.displayName.isEmpty() ) {
-      KMIME_WARN << "display-name \"" << maybeMailbox.displayName
+    if ( maybeMailbox.hasName() ) {
+      KMIME_WARN << "display-name \"" << maybeMailbox.name()
                  << "\" in Return-Path!" << endl;
     }
   }
@@ -934,112 +936,6 @@ int Date::ageInDays()
 }
 
 //-----</Date>---------------------------------
-
-#if !defined(KMIME_NEW_STYLE_CLASSTREE)
-//-----<To>------------------------------------
-
-void To::from7BitString( const QByteArray &s )
-{
-  qDeleteAll( a_ddrList );
-  a_ddrList.clear();
-
-  QList<QByteArray> split = s.split( ',' );
-  foreach ( QByteArray s, split ) {
-    a_ddrList.append( new AddressField( p_arent, s ) );
-  }
-
-  e_ncCS = cachedCharset( a_ddrList.first()->rfc2047Charset() );
-}
-
-QByteArray To::as7BitString( bool incType )
-{
-  QByteArray ret;
-
-  if ( incType )
-    ret += typeIntro();
-
-  if ( !a_ddrList.isEmpty() ) {
-    ObsAddressList::Iterator it = a_ddrList.begin();
-    if ( *it ) {
-      ret += (*it)->as7BitString( false );
-    }
-    for ( ++it; it != a_ddrList.end(); ++it ) {
-      ret += ',' + (*it)->as7BitString( false );
-    }
-  }
-
-  return ret;
-}
-
-void To::fromUnicodeString( const QString &s, const QByteArray &cs )
-{
-  qDeleteAll( a_ddrList );
-  a_ddrList.clear();
-
-  QStringList l = s.split( ',' );
-
-  for ( QStringList::Iterator it=l.begin(); it != l.end(); ++it ) {
-    a_ddrList.append( new AddressField( p_arent, (*it), cs ) );
-  }
-
-  e_ncCS=cachedCharset( cs );
-}
-
-QString To::asUnicodeString()
-{
-  if ( a_ddrList.isEmpty() )
-    return QString();
-
-  QString ret;
-  ObsAddressList::Iterator it = a_ddrList.begin();
-
-  if ( *it )
-    ret += (*it)->asUnicodeString();
-  for ( ++it; it != a_ddrList.end(); ++it ) {
-    ret += ',' + (*it)->asUnicodeString();
-  }
-
-  return ret;
-}
-
-void To::addAddress( const AddressField &a )
-{
-  AddressField *add = new AddressField( a );
-  add->setParent( p_arent );
-  a_ddrList.append( add );
-}
-
-QList<QByteArray> To::emails() const
-{
-  QList<QByteArray> l;
-  for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it ) {
-    if ( (*it)->hasEmail() )
-      l.append( (*it)->email() );
-  }
-  return l;
-}
-
-QStringList To::names() const
-{
-  QStringList l;
-  for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it ) {
-    if ( (*it)->hasName() )
-      l.append( (*it)->name() );
-  }
-  return l;
-}
-
-QStringList To::displayNames() const
-{
-  QStringList l;
-  for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it ) {
-    l.append( (*it)->asUnicodeString() );
-  }
-  return l;
-}
-
-//-----</To>-----------------------------------
-#endif
 
 //-----<Newsgroups>----------------------------
 

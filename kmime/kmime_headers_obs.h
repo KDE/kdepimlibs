@@ -115,64 +115,6 @@ class KMIME_EXPORT MailCopiesTo : public AddressField {
 
 };
 
-/** Represents a "To" header */
-class KMIME_EXPORT To : public Base {
-
-  public:
-    To() : Base()  {}
-    To(Content *p) : Base(p)  {}
-    To(Content *p, const QByteArray &s) : Base(p) { from7BitString(s); }
-    To(Content *p, const QString &s, const QByteArray &cs) : Base(p)  { fromUnicodeString(s,cs); }
-    ~To()  { qDeleteAll( a_ddrList ); a_ddrList.clear(); }
-
-    virtual void from7BitString(const QByteArray &s);
-    virtual QByteArray as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QByteArray &cs);
-    virtual QString asUnicodeString();
-    virtual void clear()            { qDeleteAll( a_ddrList ); a_ddrList.clear(); }
-    virtual bool isEmpty() const { return a_ddrList.isEmpty() || a_ddrList.first()->isEmpty(); }
-    virtual const char* type() const { return "To"; }
-
-    void addAddress(const AddressField &a);
-    QList<QByteArray> emails() const;
-    QStringList names() const;
-    QStringList displayNames() const;
-
-  protected:
-    ObsAddressList a_ddrList;
-
-};
-
-
-/** Represents a "CC" header */
-class KMIME_EXPORT CC : public To {
-
-  public:
-    CC() : To()  {}
-    CC(Content *p) : To(p)  {}
-    CC(Content *p, const QByteArray &s) : To(p,s)  {}
-    CC(Content *p, const QString &s, const QByteArray &cs) : To(p,s,cs)  {}
-    ~CC()  {}
-
-    virtual const char* type() const { return "CC"; }
-
-};
-
-
-/** Represents a "BCC" header */
-class KMIME_EXPORT BCC : public To {
-
-  public:
-    BCC() : To()  {}
-    BCC(Content *p) : To(p)  {}
-    BCC(Content *p, const QByteArray &s) : To(p,s)  {}
-    BCC(Content *p, const QString &s, const QByteArray &cs) : To(p,s,cs)  {}
-    ~BCC()  {}
-
-    virtual const char* type() const { return "BCC"; }
-
-};
-
 /** Represents a "Content-Type" header */
 class KMIME_EXPORT ContentType : public Base {
 

@@ -51,11 +51,79 @@ struct KMIME_EXPORT AddrSpec {
 };
 typedef QList<AddrSpec> AddrSpecList;
 
-struct KMIME_EXPORT Mailbox {
-  QString displayName;
-  AddrSpec addrSpec;
+
+/**
+  Represents a email address / diplay name pair according RFC 2822, section 3.4.
+*/
+class KMIME_EXPORT Mailbox
+{
+  public:
+    /**
+      Returns a string representation of the email address, without angle brackets.
+    */
+    QByteArray address() const;
+
+    AddrSpec addrSpec() const;
+
+    /**
+      Returns the display name.
+    */
+    QString name() const;
+
+    /**
+      Sets the email address.
+    */
+    void setAddress( const AddrSpec &addr );
+
+    /**
+      Sets the email address.
+    */
+    void setAddress( const QByteArray &addr );
+
+    /**
+      Sets the name.
+    */
+    void setName( const QString &name );
+
+    /**
+      Sets the name based on a 7bit encoded string.
+    */
+    void setNameFrom7Bit( const QByteArray &name, const QByteArray &defaultCharset = QByteArray() );
+
+    /**
+      Retruns true if this mailbox has an address.
+    */
+    bool hasAddress() const;
+
+    /**
+      Returns true if this mailbox has a display name.
+    */
+    bool hasName() const;
+
+    /**
+      Retruns a assembled display name / address string of the following form:
+      "Display Name &lt;address&gt;". These are unicode strings without any transport
+      encoding, ie. they are only suitable for displaying.
+    */
+    QString prettyAddress() const;
+
+    /**
+      Parse the given unicode string.
+    */
+    void fromUnicodeString( const QString &s );
+
+    /**
+      Parse the given 7bit encoded string.
+    */
+    void from7BitString( const QByteArray &s );
+
+  private:
+    QString mDisplayName;
+    AddrSpec mAddrSpec;
 };
+
 typedef QList<Mailbox> MailboxList;
+
 
 struct KMIME_EXPORT Address {
   QString displayName;

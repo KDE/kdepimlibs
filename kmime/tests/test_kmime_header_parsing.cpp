@@ -14,7 +14,6 @@
 #include <cstdlib>
 #include <cassert>
 
-#define _GNU_SOURCE
 #include <getopt.h>
 
 using namespace KMime::HeaderParsing;
@@ -132,7 +131,7 @@ int main( int argc, char * argv[] ) {
 
   switch ( index ) {
   case 0:
-    { // encoded-word 
+    { // encoded-word
       QString result;
       QByteArray language;
       // must have checked for initial '=' already:
@@ -148,7 +147,7 @@ int main( int argc, char * argv[] ) {
     { // atom
       QString result = "with 8bit: ";
       bool ok = parseAtom( iit, iend, result, true );
-      
+
       cout << ( ok ? "OK" : "BAD" ) << endl
 	   << "result:\n" << result << endl;
 
@@ -282,16 +281,16 @@ int main( int argc, char * argv[] ) {
       bool ok = parseMailbox( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result.displayName:\n" << result.displayName << endl
-	   << "result.addrSpec.localPart:\n" << result.addrSpec.localPart << endl
-	   << "result.addrSpec.domain:\n" << result.addrSpec.domain << endl;
+	   << "result.displayName:\n" << result.name() << endl
+	   << "result.addrSpec.localPart:\n" << result.addrSpec().localPart << endl
+	   << "result.addrSpec.domain:\n" << result.addrSpec().domain << endl;
     }
     break;
   case 13:
     { // group
       KMime::Types::Address result;
       bool ok = parseGroup( iit, iend, result, withCRLF );
-      
+
       cout << ( ok ? "OK" : "BAD" ) << endl
 	   << "result.displayName:\n" << result.displayName << endl;
       int i = 0;
@@ -299,18 +298,18 @@ int main( int argc, char * argv[] ) {
 	      it = result.mailboxList.begin();
 	    it != result.mailboxList.end() ; ++it, ++i )
 	cout << "result.mailboxList[" << i << "].displayName:\n"
-	     << (*it).displayName << endl
+	     << (*it).name() << endl
 	     << "result.mailboxList[" << i << "].addrSpec.localPart:\n"
-	     << (*it).addrSpec.localPart << endl
+	     << (*it).addrSpec().localPart << endl
 	     << "result.mailboxList[" << i << "].addrSpec.domain:\n"
-	     << (*it).addrSpec.domain << endl;
+	     << (*it).addrSpec().domain << endl;
     }
     break;
   case 14:
     { // address
       KMime::Types::Address result;
       bool ok = parseAddress( iit, iend, result, withCRLF );
-      
+
       cout << ( ok ? "OK" : "BAD" ) << endl
 	   << "result.displayName:\n" << endl;
       int i = 0;
@@ -318,11 +317,11 @@ int main( int argc, char * argv[] ) {
 	      it = result.mailboxList.begin();
 	    it != result.mailboxList.end() ; ++it, ++i )
 	cout << "result.mailboxList[" << i << "].displayName:\n"
-	     << (*it).displayName << endl
+	     << (*it).name() << endl
 	     << "result.mailboxList[" << i << "].addrSpec.localPart:\n"
-	     << (*it).addrSpec.localPart << endl
+	     << (*it).addrSpec().localPart << endl
 	     << "result.mailboxList[" << i << "].addrSpec.domain:\n"
-	     << (*it).addrSpec.domain << endl;
+	     << (*it).addrSpec().domain << endl;
     }
     break;
   case 15:
@@ -341,11 +340,11 @@ int main( int argc, char * argv[] ) {
 		it = (*jt).mailboxList.begin();
 	      it != (*jt).mailboxList.end() ; ++it, ++i )
 	  cout << "result[" << j << "].mailboxList[" << i << "].displayName:\n"
-	       << (*it).displayName << endl
+	       << (*it).name() << endl
 	       << "result[" << j << "].mailboxList[" << i << "].addrSpec.localPart:\n"
-	       << (*it).addrSpec.localPart << endl
+	       << (*it).addrSpec().localPart << endl
 	       << "result[" << j << "].mailboxList[" << i << "].addrSpec.domain:\n"
-	       << (*it).addrSpec.domain << endl;
+	       << (*it).addrSpec().domain << endl;
       }
     }
     break;

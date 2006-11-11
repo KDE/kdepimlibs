@@ -95,15 +95,15 @@ class KMIME_EXPORT Message : public Content
         return getHeaderInstance( p, create );
       }
 
-    virtual KMime::Headers::CC *cc( bool create=true )
+    virtual KMime::Headers::Cc *cc( bool create=true )
       {
-        KMime::Headers::CC *p=0;
+        KMime::Headers::Cc *p=0;
         return getHeaderInstance( p, create );
       }
 
-    virtual KMime::Headers::BCC *bcc( bool create=true )
+    virtual KMime::Headers::Bcc *bcc( bool create=true )
       {
-        KMime::Headers::BCC *p=0;
+        KMime::Headers::Bcc *p=0;
         return getHeaderInstance( p, create );
       }
 
