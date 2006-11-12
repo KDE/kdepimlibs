@@ -320,12 +320,37 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
 {
   if (dynamic_cast<const KSystemTimeZone*>(&tz)) {
     icaltimezone *itz = icaltimezone_get_builtin_timezone( tz.name().toUtf8() );
-    d->icalComponent = icalcomponent_new_clone( icaltimezone_get_component( itz ) );
+    icalcomponent *c = icalcomponent_new_clone( icaltimezone_get_component( itz ) );
+    if ( c ) {
+      // TZID in built-in libical time zones has a standard prefix.
+      // To make the VTIMEZONE TZID match TZID references in incidences
+      // (as required by RFC2445), strip off the prefix.
+      icalproperty *prop = icalcomponent_get_first_property( c, ICAL_TZID_PROPERTY );
+      if ( prop ) {
+        icalvalue* value = icalproperty_get_value( prop );
+        const char *tzid = icalvalue_get_text( value );
+        QByteArray icalprefix = ICalTimeZoneSource::icalTzidPrefix();
+        int len = icalprefix.size();
+        if ( !strncmp( icalprefix, tzid, len ) ) {
+          char *s = strchr( tzid + len, '/' );    // find third '/'
+          if ( s ) {
+            QByteArray tzidShort( s + 1 );    // deep copy of string (needed by icalvalue_set_text())
+            icalvalue_set_text( value, tzidShort );
+
+            // Remove the X-LIC-LOCATION property, which is only used by libical
+            prop = icalcomponent_get_first_property( c, ICAL_X_PROPERTY );
+            const char *xname = icalproperty_get_x_name( prop );
+            if ( xname  &&  !strcmp(xname, "X-LIC-LOCATION") )
+              icalcomponent_remove_property( c, prop );
+          }
+        }
+      }
+    }
+    d->icalComponent = c;
   }
   else {
     // Write the time zone data into an iCal component
     icalcomponent *comp = icalcomponent_new(ICAL_VTIMEZONE_COMPONENT);
-#warning tzid or location?
     icalcomponent_add_property(comp, icalproperty_new_tzid( tz.name().toUtf8() ));
 //    icalcomponent_add_property(comp, icalproperty_new_location( tz.name().toUtf8() ));
 
