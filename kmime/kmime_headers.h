@@ -76,7 +76,8 @@ enum contentDisposition {
 static const QByteArray Latin1( "ISO-8859-1" );
 
 #define mk_trivial_subclass_with_name( subclass, subclassName, baseclass ) \
-  class KMIME_EXPORT subclass : public Generics::baseclass {                         \
+  class KMIME_EXPORT subclass : public Generics::baseclass              \
+  {                                                                     \
     public:                                                             \
     subclass() : Generics::baseclass() {}                               \
     subclass( Content *p ) : Generics::baseclass( p ) {}                \
@@ -93,7 +94,8 @@ static const QByteArray Latin1( "ISO-8859-1" );
   mk_trivial_subclass_with_name( subclass, subclass, baseclass )
 
 #define mk_parsing_subclass_with_name( subclass, subclassName, baseclass ) \
-  class KMIME_EXPORT subclass : public Generics::baseclass {                         \
+  class KMIME_EXPORT subclass : public Generics::baseclass              \
+  {                                                                     \
     public:                                                             \
     subclass() : Generics::baseclass() {}                               \
     subclass( Content *p ) : Generics::baseclass( p ) {}                \

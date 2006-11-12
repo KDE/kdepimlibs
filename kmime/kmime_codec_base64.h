@@ -22,7 +22,7 @@
 /**
   @file
   This file is part of the API for handling @ref MIME data and
-  defines the Base64 and Rfc2047B @ref Codec classes.
+  defines the @ref Base64 and @ref RFC2047B @ref Codec classes.
 
   @brief
   Defines the Base64Codec and Rfc2047BEncodingCodec classes.
@@ -30,7 +30,12 @@
   @authors Marc Mutz \<mutz@kde.org\>
 
   @glossary @anchor Base64 @anchor base64 @b base64:
-  a binary to text encoding scheme based on RFC 1421.
+  a binary to text encoding scheme based on @ref RFC1421.
+
+  @glossary @anchor RFC1421 @anchor rfc1421 @b RFC @b 1421:
+  RFC that defines the <a href="http://tools.ietf.org/html/rfc1421">
+  Privacy Enhancement for Internet Electronic Mail:  Part I:
+  Message Encryption and Authentication Procedures</a>.
 
   @glossary @anchor RFC2045 @anchor rfc2045 @b RFC @b 2045:
   RFC that defines the <a href="http://tools.ietf.org/html/rfc2045">
@@ -39,6 +44,9 @@
   @glossary @anchor RFC2047 @anchor rfc2047 @b RFC @b 2047:
   RFC that defines the <a href="http://tools.ietf.org/html/rfc2047">
   MIME Part Three: Message Header Extensions for Non-ASCII Text</a>.
+
+  @glossary @anchor RFC2047B @anchor rfc2047b @b RFC @b 2047B:
+  Section 4.1 of @ref RFC2047.
 */
 
 #ifndef __KMIME_CODEC_BASE64__
@@ -127,7 +135,7 @@ class KMIME_EXPORT Base64Codec : public Codec
 /**
   @brief
   A class representing the @ref codec for the B encoding as specified
-  in @ref RFC2047.
+  in @ref RFC2047B.
 */
 class KMIME_EXPORT Rfc2047BEncodingCodec : public Base64Codec
 {

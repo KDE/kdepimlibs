@@ -22,7 +22,7 @@
 /**
   @file
   This file is part of the API for handling @ref MIME data and
-  defines the Base64 and Rfc2047B @ref Codec classes.
+  defines the @ref Base64 and @ref RFC2047B @ref Codec classes.
 
   @brief
   Defines the Base64Codec and Rfc2047BEncodingCodec classes.

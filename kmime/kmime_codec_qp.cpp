@@ -19,6 +19,18 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines the @ref QuotedPrintable, @ref  RFC2047Q, and
+  @ref RFC2231 @ref Codec classes.
+
+  @brief
+  Defines the classes QuotedPrintableCodec, Rfc2047QEncodingCodec, and
+  Rfc2231EncodingCodec.
+
+  @authors Marc Mutz \<mutz@kde.org\>
+*/
 
 #include "kmime_codec_qp.h"
 #include "kmime_util.h"
@@ -86,11 +98,11 @@ class QuotedPrintableEncoder : public Encoder
       mFinished( false ) {}
 
   bool needsEncoding( uchar ch )
-    { return ( ch > '~' || ch < ' ' && ch != '\t' || ch == '=' ); }
+    { return ch > '~' || ch < ' ' && ch != '\t' || ch == '='; }
   bool needsEncodingAtEOL( uchar ch )
-    { return ( ch == ' ' || ch == '\t' ); }
+    { return ch == ' ' || ch == '\t'; }
   bool needsEncodingAtBOL( uchar ch )
-    { return ( ch == 'F' || ch == '.' || ch == '-' ); }
+    { return ch == 'F' || ch == '.' || ch == '-'; }
   bool fillInputBuffer( const char* &scursor, const char * const send );
   bool processNextChar();
   void createOutputBuffer( char* &dcursor, const char * const dend );
@@ -147,10 +159,11 @@ class QuotedPrintableDecoder : public Decoder
 
     bool decode( const char* &scursor, const char * const send,
                  char* &dcursor, const char * const dend );
-    bool finish( char* &, const char * const );
+    bool finish( char* & dcursor, const char * const dend );
 };
 
-class Rfc2047QEncodingEncoder : public Encoder {
+class Rfc2047QEncodingEncoder : public Encoder
+{
   uchar      mAccu;
   uchar      mStepNo;
   const char mEscapeChar;
@@ -168,25 +181,26 @@ class Rfc2047QEncodingEncoder : public Encoder {
     }
 
   // this code assumes that isEText( mEscapeChar ) == false!
-  bool needsEncoding( uchar ch ) {
-    if ( ch > 'z' ) {
-      return true; // {|}~ DEL and 8bit chars need
+  bool needsEncoding( uchar ch )
+    {
+      if ( ch > 'z' ) {
+        return true; // {|}~ DEL and 8bit chars need
+      }
+      if ( !isEText( ch ) ) {
+        return true; // all but a-zA-Z0-9!/*+- need, too
+      }
+      if ( mEscapeChar == '%' && ( ch == '*' || ch == '/' ) ) {
+        return true; // not allowed in rfc2231 encoding
+      }
+      return false;
     }
-    if ( !isEText( ch ) ) {
-      return true; // all but a-zA-Z0-9!/*+- need, too
-    }
-    if ( mEscapeChar == '%' && ( ch == '*' || ch == '/' ) ) {
-      return true; // not allowed in rfc2231 encoding
-    }
-    return false;
-  }
 
   public:
-  virtual ~Rfc2047QEncodingEncoder() {}
+    virtual ~Rfc2047QEncodingEncoder() {}
 
-  bool encode( const char* & scursor, const char * const send,
-               char* & dcursor, const char * const dend );
-  bool finish( char* & dcursor, const char * const dend );
+    bool encode( const char* & scursor, const char * const send,
+                 char* & dcursor, const char * const dend );
+    bool finish( char* & dcursor, const char * const dend );
 };
 
 // this doesn't access any member variables, so it can be defined static
@@ -381,7 +395,7 @@ bool QuotedPrintableDecoder::decode( const char* &scursor,
     }
   }
 
-  return ( scursor == send );
+  return scursor == send;
 }
 
 bool QuotedPrintableDecoder::finish( char* &dcursor, const char * const dend )
@@ -548,7 +562,7 @@ bool QuotedPrintableEncoder::encode( const char* &scursor,
 
   while ( scursor != send && dcursor != dend ) {
     if ( mOutputBufferCursor && !flushOutputBuffer( dcursor, dend ) ) {
-      return ( scursor == send );
+      return scursor == send;
     }
 
     assert( mOutputBufferCursor == 0 );
@@ -579,7 +593,7 @@ bool QuotedPrintableEncoder::encode( const char* &scursor,
     flushOutputBuffer( dcursor, dend );
   }
 
-  return ( scursor == send );
+  return scursor == send;
 
 } // encode
 
@@ -660,7 +674,7 @@ bool Rfc2047QEncodingEncoder::encode( const char* &scursor,
     *dcursor++ = binToHex( value );
   }
 
-  return ( scursor == send );
+  return scursor == send;
 } // encode
 
 #include <QString>
