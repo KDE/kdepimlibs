@@ -128,9 +128,106 @@ void Structured::fromUnicodeString(const QString & s, const QByteArray & b)
 
 //-----<Address>-------------------------
 
+// helper method used in AddressList and MailboxList
+static bool stringToMailbox( const QByteArray &address, const QString &displayName, Types::Mailbox &mbox )
+{
+  Types::AddrSpec addrSpec;
+  mbox.setName( displayName );
+  const char* cursor = address.constData();
+  if ( !parseAngleAddr( cursor, cursor + address.length(), addrSpec ) ) {
+    if ( !parseAddrSpec( cursor, cursor + address.length(), addrSpec ) ) {
+      kWarning() << k_funcinfo << "Invalid address" << endl;
+      return false;
+    }
+  }
+  mbox.setAddress( addrSpec );
+  return true;
+}
+
 //-----</Address>-------------------------
 
 //-----<MailboxList>-------------------------
+
+QByteArray MailboxList::as7BitString(bool withHeaderType)
+{
+  if ( isEmpty() )
+    return QByteArray();
+
+  QByteArray rv;
+  if ( withHeaderType )
+    rv = typeIntro();
+  foreach ( Types::Mailbox mbox, mMailboxList ) {
+    rv += mbox.as7BitString( e_ncCS );
+    rv += ", ";
+  }
+  rv.resize( rv.length() - 2 );
+  return rv;
+}
+
+void MailboxList::fromUnicodeString(const QString & s, const QByteArray & b)
+{
+  e_ncCS = cachedCharset( b );
+  from7BitString( encodeRFC2047String( s, b, false ) );
+}
+
+QString MailboxList::asUnicodeString()
+{
+  return prettyAddresses().join( QLatin1String( ", " ) );
+}
+
+void MailboxList::clear()
+{
+  mMailboxList.clear();
+}
+
+bool MailboxList::isEmpty() const
+{
+  return mMailboxList.isEmpty();
+}
+
+void MailboxList::addAddress(const Types::Mailbox & mbox)
+{
+  mMailboxList.append( mbox );
+}
+
+void MailboxList::addAddress(const QByteArray & address, const QString & displayName)
+{
+  Types::Mailbox mbox;
+  if ( stringToMailbox( address, displayName, mbox ) )
+    mMailboxList.append( mbox );
+}
+
+QList< QByteArray > MailboxList::addresses() const
+{
+  QList<QByteArray> rv;
+  foreach ( Types::Mailbox mbox, mMailboxList ) {
+    rv.append( mbox.address() );
+  }
+  return rv;
+}
+
+QStringList MailboxList::displayNames() const
+{
+  QStringList rv;
+  foreach ( Types::Mailbox mbox, mMailboxList ) {
+    rv.append( mbox.name() );
+  }
+  return rv;
+}
+
+QStringList MailboxList::prettyAddresses() const
+{
+  QStringList rv;
+  foreach ( Types::Mailbox mbox, mMailboxList ) {
+    rv.append( mbox.prettyAddress() );
+  }
+  return rv;
+}
+
+Types::Mailbox::List MailboxList::mailboxes() const
+{
+  return mMailboxList;
+}
 
 bool MailboxList::parse( const char* &scursor, const char *const send,
                          bool isCRLF )
@@ -188,19 +285,7 @@ QByteArray AddressList::as7BitString(bool withHeaderType)
     rv = typeIntro();
   foreach ( Types::Address addr, mAddressList ) {
     foreach ( Types::Mailbox mbox, addr.mailboxList ) {
-      if ( !mbox.hasName() ) {
-        rv += mbox.address();
-      } else {
-        if ( isUsAscii( mbox.name() ) ) {
-          QByteArray tmp = mbox.name().toLatin1();
-          addQuotes( tmp, false );
-          rv += tmp;
-        } else {
-          rv += encodeRFC2047String( mbox.name(), e_ncCS, true );
-        }
-        if ( mbox.hasAddress() )
-          rv += " <" + mbox.address() + '>';
-      }
+      rv += mbox.as7BitString( e_ncCS );
       rv += ", ";
     }
   }
@@ -240,18 +325,10 @@ void AddressList::addAddress(const QByteArray & address, const QString & display
 {
   Types::Address addr;
   Types::Mailbox mbox;
-  Types::AddrSpec addrSpec;
-  mbox.setName( displayName );
-  const char* cursor = address.constData();
-  if ( !parseAngleAddr( cursor, cursor + address.length(), addrSpec ) ) {
-    if ( !parseAddrSpec( cursor, cursor + address.length(), addrSpec ) ) {
-      kWarning() << k_funcinfo << "Invalid address" << endl;
-      return;
-    }
+  if ( stringToMailbox( address, displayName, mbox ) ) {
+    addr.mailboxList.append( mbox );
+    mAddressList.append( addr );
   }
-  mbox.setAddress( addrSpec );
-  addr.mailboxList.append( mbox );
-  mAddressList.append( addr );
 }
 
 QList< QByteArray > AddressList::addresses() const

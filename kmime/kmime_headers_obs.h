@@ -67,20 +67,6 @@ class KMIME_EXPORT AddressField : public Base {
 };
 typedef QList<AddressField*> ObsAddressList;
 
-/** Represent a "From" header */
-class KMIME_EXPORT From : public AddressField {
-
-  public:
-    From() : AddressField()  {}
-    From(Content *p) : AddressField(p)  {}
-    From(Content *p, const QByteArray &s) : AddressField(p,s)  {}
-    From(Content *p, const QString &s, const QByteArray &cs) : AddressField(p,s,cs)  {}
-    ~From()  {}
-
-    virtual const char* type() const { return "From"; }
-};
-
-
 /** Represents a "Mail-Copies-To" header
     http://www.newsreaders.com/misc/mail-copies-to.html */
 class KMIME_EXPORT MailCopiesTo : public AddressField {

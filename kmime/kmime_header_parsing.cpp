@@ -144,6 +144,22 @@ void Mailbox::from7BitString( const QByteArray &s )
   HeaderParsing::parseMailbox( cursor, cursor + s.length(), *this );
 }
 
+QByteArray KMime::Types::Mailbox::as7BitString( const QByteArray &encCharset ) const
+{
+  if ( !hasName() )
+    return address();
+  QByteArray rv;
+  if ( isUsAscii( name() ) ) {
+    QByteArray tmp = name().toLatin1();
+    addQuotes( tmp, false );
+    rv += tmp;
+  } else {
+    rv += encodeRFC2047String( name(), encCharset, true );
+  }
+  if ( hasAddress() )
+    rv += " <" + address() + '>';
+  return rv;
+}
 
 
 } // namespace Types

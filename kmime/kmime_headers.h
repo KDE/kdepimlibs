@@ -333,8 +333,12 @@ class KMIME_EXPORT Address : public Structured
   protected:
 };
 
-/** Base class for headers that deal with (possibly multiple)
-    addresses, but don't allow groups: */
+/**
+  Base class for headers that deal with (possibly multiple)
+  addresses, but don't allow groups.
+
+  @see RFC 2822, section 3.4
+*/
 class KMIME_EXPORT MailboxList : public Address
 {
   public:
@@ -345,6 +349,50 @@ class KMIME_EXPORT MailboxList : public Address
     MailboxList( Content *p, const QString &s, const QByteArray &cs ) : Address( p )
       { fromUnicodeString( s, cs ); }
     ~MailboxList() {}
+
+    virtual QByteArray as7BitString( bool withHeaderType = true );
+    virtual void fromUnicodeString( const QString &s, const QByteArray &b );
+    virtual QString asUnicodeString();
+
+    virtual void clear();
+    virtual bool isEmpty() const;
+
+    /**
+      Add an address to this header.
+
+      @param mbox A Mailbox object specifying the address.
+    */
+    void addAddress( const Types::Mailbox &mbox );
+
+    /**
+      Add an address to this header.
+      @param address The actual email address, with or without angle brackets.
+      @param displayName An optional name associated with the address.
+    */
+    void addAddress( const QByteArray &address, const QString &displayName = QString() );
+
+    /**
+      Retruns a list of all addresses listed in this header, regardless of groups.
+    */
+    QList<QByteArray> addresses() const;
+
+    /**
+      Retruns a list of all display names associated with the addresses in this header.
+      An empty entry is added for addresses that don't have a display name.
+    */
+    QStringList displayNames() const;
+
+    /**
+      Retruns a list of assembled display name / address strings of the following form:
+      "Display Name &lt;address&gt;". These are unicode strings without any transport
+      encoding, ie. they are only suitable for displaying.
+    */
+    QStringList prettyAddresses() const;
+
+    /**
+      Returns a list of mailboxes listed in this header.
+    */
+    Types::Mailbox::List mailboxes() const;
 
   protected:
     bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
@@ -637,13 +685,13 @@ class KMIME_EXPORT ReturnPath : public Generics::Address
 
 
 mk_trivial_subclass_with_name( ContentDescription, Content-Description, Unstructured );
-#if defined(KMIME_NEW_STYLE_CLASSTREE)
-// classes whose names collide with earlier ones:
 
 // Address et al.:
 
 // rfc(2)822 headers:
+/** Represent a "From" header */
 mk_trivial_subclass( From, MailboxList );
+#if defined(KMIME_NEW_STYLE_CLASSTREE)
 mk_trivial_subclass( Sender, SingleMailbox );
 #endif
 /** Represents a "To" header. */

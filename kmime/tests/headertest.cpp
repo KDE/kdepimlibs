@@ -217,6 +217,14 @@ void HeaderTest::testAddressListHeader()
   QCOMPARE( h->displayNames().count(), 1 );
   QCOMPARE( h->displayNames().first(), QString("first name (nickname)") );
   QCOMPARE( h->as7BitString( false ), QByteArray("\"first name (nickname)\" <first.name@domain.tld>") );
+  delete h;
+
+  // rfc 2047 encoding in quoted name (which is not allowed there)
+  h = new Headers::Generics::AddressList();
+  h->from7BitString( QByteArray( "\"Ingo =?iso-8859-15?q?Kl=F6cker?=\" <kloecker@kde.org>" ) );
+  QCOMPARE( h->mailboxes().count(), 1 );
+  QCOMPARE( h->asUnicodeString(), QString::fromUtf8( "Ingo =?iso-8859-15?q?Kl=F6cker?= <kloecker@kde.org>" ) );
+  delete h;
 }
 
 #include "headertest.moc"

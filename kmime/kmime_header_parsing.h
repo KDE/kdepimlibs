@@ -119,6 +119,13 @@ class KMIME_EXPORT Mailbox
     */
     void from7BitString( const QByteArray &s );
 
+    /**
+      Returns a 7bit transport encoded representation of this mailbox.
+
+      @param encCharset The charset used for encoding.
+    */
+    QByteArray as7BitString( const QByteArray &encCharset ) const;
+
   private:
     QString mDisplayName;
     AddrSpec mAddrSpec;
