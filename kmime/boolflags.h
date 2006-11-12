@@ -22,6 +22,9 @@
   This file is part of the API for handling @ref MIME data and
   defines the BoolFlags class.
 
+  @brief
+  Defines the BoolFlags class.
+
   @author see AUTHORS file.
 */
 

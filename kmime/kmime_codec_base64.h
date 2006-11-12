@@ -22,7 +22,10 @@
 /**
   @file
   This file is part of the API for handling @ref MIME data and
-  defines the Base64 and Rfc2047B Codec classes.
+  defines the Base64 and Rfc2047B @ref Codec classes.
+
+  @brief
+  Defines the Base64Codec and Rfc2047BEncodingCodec classes.
 
   @authors Marc Mutz \<mutz@kde.org\>
 
@@ -31,11 +34,11 @@
 
   @glossary @anchor RFC2045 @anchor rfc2045 @b RFC @b 2045:
   RFC that defines the <a href="http://tools.ietf.org/html/rfc2045">
-  @ref MIME Part One: Format of Internet Message Bodies</a>.
+  MIME Part One: Format of Internet Message Bodies</a>.
 
   @glossary @anchor RFC2047 @anchor rfc2047 @b RFC @b 2047:
   RFC that defines the <a href="http://tools.ietf.org/html/rfc2047">
-  @ref MIME Part Three: Message Header Extensions for Non-ASCII Text</a>.
+  MIME Part Three: Message Header Extensions for Non-ASCII Text</a>.
 */
 
 #ifndef __KMIME_CODEC_BASE64__

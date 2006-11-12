@@ -24,6 +24,9 @@
   This file is part of the API for handling @ref MIME data and
   defines the CharFreq class.
 
+  @brief
+  Defines the CharFreq class.
+
   @authors Marc Mutz \<mutz@kde.org\>
 
   @glossary @anchor Eight-Bit @anchor eight-bit @b 8-bit:

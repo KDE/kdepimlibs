@@ -23,6 +23,9 @@
   This file is part of the API for handling @ref MIME data and
   defines the Codec class.
 
+  @brief
+  Defines the classes Codec class.
+
   @authors Marc Mutz \<mutz@kde.org\>
 
   @glossary @anchor MIME @anchor mime @b MIME:

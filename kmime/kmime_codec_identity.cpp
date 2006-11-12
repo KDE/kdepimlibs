@@ -19,6 +19,18 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines the Identity, @ref seven-bit-text, @ref eight-bit-text,
+  and @ref eight-bit-binary @ref Codec classes.
+
+  @brief
+  Defines the classes IdentityCodec, SevenBitCodec, EightBitCodec,
+  and BinaryCodec.
+
+  @authors Marc Mutz \<mutz@kde.org\>
+*/
 
 #include "kmime_codec_identity.h"
 

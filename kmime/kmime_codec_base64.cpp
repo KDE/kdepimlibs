@@ -19,6 +19,16 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines the Base64 and Rfc2047B @ref Codec classes.
+
+  @brief
+  Defines the Base64Codec and Rfc2047BEncodingCodec classes.
+
+  @authors Marc Mutz \<mutz@kde.org\>
+*/
 
 #include "kmime_codec_base64.h"
 

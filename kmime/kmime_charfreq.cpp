@@ -25,6 +25,9 @@
   This file is part of the API for handling MIME data and
   defines the CharFreq class.
 
+  @brief
+  Defines the CharFreq class.
+
   @authors Marc Mutz \<mutz@kde.org\>
 */
 

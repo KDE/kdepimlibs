@@ -22,6 +22,9 @@
   This file is part of the API for handling MIME data and
   defines the BoolFlags class.
 
+  @brief
+  Defines the BoolFlags class.
+
   @author see AUTHORS file.
 */
 

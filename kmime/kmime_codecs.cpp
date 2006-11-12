@@ -24,6 +24,9 @@
   This file is part of the API for handling MIME data and
   defines the Codec class.
 
+  @brief
+  Defines the Codec class.
+
   @authors Marc Mutz \<mutz@kde.org\>
 */
 

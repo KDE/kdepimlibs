@@ -19,6 +19,18 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines the Identity, @ref seven-bit-text, @ref eight-bit-text,
+  and @ref eight-bit-binary @ref Codec classes.
+
+  @brief
+  Defines the classes IdentityCodec, SevenBitCodec, EightBitCodec,
+  and BinaryCodec.
+
+  @authors Marc Mutz \<mutz@kde.org\>
+*/
 
 #ifndef __KMIME_CODEC_IDENTITY_H__
 #define __KMIME_CODEC_IDENTITY_H__
@@ -29,18 +41,41 @@ class QByteArray;
 
 namespace KMime {
 
+/**
+  @brief
+  A class representing the Identify @ref codec.
+*/
 class KMIME_EXPORT IdentityCodec : public Codec
 {
   protected:
     friend class Codec;
+    /**
+      Constructs the Identity codec.
+    */
     IdentityCodec() : Codec() {}
 
   public:
+    /**
+      Destroys the codec.
+    */
     ~IdentityCodec() {}
 
-    QByteArray encode( const QByteArray & src, bool withCRLF ) const;
-    QByteArray decode( const QByteArray & src, bool withCRLF ) const;
+    /**
+      @copydoc
+      QByteArray Codec::encode()
+    */
+    QByteArray encode( const QByteArray &src, bool withCRLF=false ) const;
 
+    /**
+      @copydoc
+      QByteArray Codec::decode()
+    */
+    QByteArray decode( const QByteArray &src, bool withCRLF=false ) const;
+
+    /**
+      @copydoc
+      Codec::maxEncodedSizeFor()
+    */
     int maxEncodedSizeFor( int insize, bool withCRLF ) const
       {
         if ( withCRLF ) {
@@ -50,6 +85,10 @@ class KMIME_EXPORT IdentityCodec : public Codec
         }
       }
 
+    /**
+      @copydoc
+      Codec::maxDecodedSizeFor()
+    */
     int maxDecodedSizeFor( int insize, bool withCRLF ) const
       {
         if ( withCRLF ) {
@@ -59,51 +98,112 @@ class KMIME_EXPORT IdentityCodec : public Codec
         }
       }
 
-    Encoder * makeEncoder( bool withCRLF=false ) const;
-    Decoder * makeDecoder( bool withCRLF=false ) const;
+    /**
+      @copydoc
+      Codec::makeEncoder()
+    */
+    Encoder *makeEncoder( bool withCRLF=false ) const;
+
+    /**
+      @copydoc
+      Codec::makeDecoder()
+    */
+    Decoder *makeDecoder( bool withCRLF=false ) const;
 };
 
+/**
+  @brief
+  A class representing the @ref codec for @ref seven-bit-text.
+*/
 class KMIME_EXPORT SevenBitCodec : public IdentityCodec
 {
   protected:
     friend class Codec;
+    /**
+      Constructs the 7-bit codec.
+    */
     SevenBitCodec() : IdentityCodec() {}
 
   public:
+    /**
+      Destroys the codec.
+    */
     ~SevenBitCodec() {}
 
+    /**
+      @copydoc
+      Codec::name()
+    */
     const char *name() const
       { return "7bit"; }
 };
 
+/**
+  @brief
+  A class representing the @ref codec for @ref eight-bit-text.
+*/
 class KMIME_EXPORT EightBitCodec : public IdentityCodec
 {
   protected:
     friend class Codec;
+    /**
+      Constructs the 8-bit codec.
+    */
     EightBitCodec() : IdentityCodec() {}
 
   public:
+    /**
+      Destroys the codec.
+    */
     ~EightBitCodec() {}
 
+    /**
+      @copydoc
+      Codec::name()
+    */
     const char *name() const
       { return "8bit"; }
 };
 
+/**
+  @brief
+  A class representing the @ref codec for @ref eight-bit-binary.
+*/
 class KMIME_EXPORT BinaryCodec : public IdentityCodec
 {
   protected:
     friend class Codec;
+    /**
+      Constructs the 8-bit-binary codec.
+    */
     BinaryCodec() : IdentityCodec() {}
 
   public:
+    /**
+      Destroys the codec.
+    */
     ~BinaryCodec() {}
 
-    const char *name() const { return "binary"; }
+    /**
+      @copydoc
+      Codec::name()
+    */
+    const char *name() const
+      { return "binary"; }
 
-    int maxEncodedSizeFor( int insize, bool ) const
-      { return insize; }
-    int maxDecodedSizeFor( int insize, bool ) const
-      { return insize; }
+    /**
+      @copydoc
+      Codec::maxEncodedSizeFor()
+    */
+    int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
+      { Q_UNUSED( withCRLF ); return insize; }
+
+    /**
+      @copydoc
+      Codec::maxDecodedSizeFor()
+    */
+    int maxDecodedSizeFor( int insize, bool withCRLF=false ) const
+      { Q_UNUSED( withCRLF ); return insize; }
 };
 
 } // namespace KMime
