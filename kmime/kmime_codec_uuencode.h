@@ -19,6 +19,20 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines a @ref uuencode @ref Codec class.
+
+  @brief
+  Defines the UUCodec class.
+
+  @authors Marc Mutz \<mutz@kde.org\>
+
+  @glossary @anchor UUEncode @anchor uuencode @b uuencode:
+  a binary to text encoding scheme. For more information, see the
+  <a href="http://en.wikipedia.org/wiki/Uuencode"> Wikipedia Uuencode page</a>.
+*/
 
 #ifndef __KMIME_CODEC_UUENCODE_H__
 #define __KMIME_CODEC_UUENCODE_H__
@@ -27,24 +41,46 @@
 
 namespace KMime {
 
+/**
+  @brief
+  A class representing the @ref UUEncode @ref codec.
+*/
 class KMIME_EXPORT UUCodec : public Codec
 {
   protected:
     friend class Codec;
+    /**
+      Constructs a UUEncode codec.
+    */
     UUCodec() : Codec() {}
 
   public:
+    /**
+      Destroys the codec.
+    */
     virtual ~UUCodec() {}
 
+    /**
+      @copydoc
+      Codec::name()
+    */
     const char *name() const
-    { return "x-uuencode"; }
+      { return "x-uuencode"; }
 
+    /**
+      @copydoc
+      Codec::maxEncodedSizeFor()
+    */
     int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
       {
         (void)withCRLF;
         return insize; // we have no encoder!
       }
 
+    /**
+      @copydoc
+      Codec::maxDecodedSizeFor()
+    */
     int maxDecodedSizeFor( int insize, bool withCRLF=false ) const
       {
         // assuming all characters are part of the uuencode stream (which
@@ -60,7 +96,16 @@ class KMIME_EXPORT UUCodec : public Codec
         return result;
       }
 
+    /**
+      @copydoc
+      Codec::makeEncoder()
+    */
     Encoder *makeEncoder( bool withCRLF=false ) const;
+
+    /**
+      @copydoc
+      Codec::makeEncoder()
+    */
     Decoder *makeDecoder( bool withCRLF=false ) const;
 };
 

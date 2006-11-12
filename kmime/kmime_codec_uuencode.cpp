@@ -19,6 +19,16 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines a @ref uuencode @ref Codec class.
+
+  @brief
+  Defines the UUCodec class.
+
+  @authors Marc Mutz \<mutz@kde.org\>
+*/
 
 #include "kmime_codec_uuencode.h"
 
@@ -229,7 +239,7 @@ bool UUDecoder::decode( const char* &scursor, const char * const send,
   }
 
   // return false when caller should call us again:
-  return ( scursor == send );
+  return scursor == send;
 } // UUDecoder::decode()
 
 } // namespace KMime
