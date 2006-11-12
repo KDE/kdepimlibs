@@ -21,6 +21,27 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines the Content class.
+
+  @brief
+  Defines the Content class.
+
+  @authors the KMime authors (see AUTHORS file),
+  Volker Krause <volker.krause@rwth-aachen.de>
+
+TODO: possible glossary terms:
+ content
+   encoding, transfer type, disposition, description
+ header
+ body
+ attachment
+ charset
+ article
+*/
+
 #ifndef __KMIME_CONTENT_H__
 #define __KMIME_CONTENT_H__
 
@@ -35,33 +56,28 @@
 
 namespace KMime {
 
-/** Base class for messages in mime format
-    It contains all the enums, static functions
-    and parser-classes, that are needed for
-    mime handling */
-
-class Base
-{
-  public:
-
-    //enums
-    enum articleType {
-      ATmimeContent,
-      ATremote,
-      ATlocal
-    };
-};
-
 class ContentPrivate;
 
-/** This class encapsulates a mime-encoded content.
-    It parses the given data and creates a tree-like
-    structure, that represents the structure of the
-    message */
+/**
+  @brief
+  A class that encapsulates @ref MIME encoded Content.
 
-class KMIME_EXPORT Content : public Base
+  It parses the given data and creates a tree-like structure that
+  represents the structure of the message.
+*/
+class KMIME_EXPORT Content
 {
   public:
+
+    /**
+      The different types of article content (What is this doing here?)
+    */
+    enum articleType {
+      ATmimeContent, /**< @ref MIME */
+      ATremote,      /**< remote */
+      ATlocal        /**< local */
+    };
+
     typedef QList<KMime::Content*> List;
 
     /**
@@ -71,18 +87,22 @@ class KMIME_EXPORT Content : public Base
 
     /**
       Creates a Content object containing the given raw data.
-      @param h The header data.
-      @param b The body data.
+
+      @param head is a QByteArray containing the header data.
+      @param body is a QByteArray containing the body data.
     */
-    Content( const QByteArray &h, const QByteArray &b );
+    Content( const QByteArray &head, const QByteArray &body );
 
     /**
       Destroys this Content object.
     */
     virtual ~Content();
 
-    //type
-    virtual articleType type() const { return ATmimeContent; }
+    /**
+      Returns the article Content type.
+    */
+    virtual articleType type() const
+      { return ATmimeContent; }
 
     /**
       Returns true if this Content object is not empty.
@@ -90,19 +110,24 @@ class KMIME_EXPORT Content : public Base
     bool hasContent() const;
 
     /**
-      Sets the content to the given raw data, containing the content head and
+      Sets the Content to the given raw data, containing the Content head and
       body separated by two linefeeds.
-      @param l a line-splitted list of the raw content data.
+
+      @param l is a line-splitted list of the raw Content data.
     */
-    void setContent( const QList<QByteArray> & l );
+    void setContent( const QList<QByteArray> &l );
 
     /**
-      Sets the content to the given raw data, containing the content head and
+      Sets the Content to the given raw data, containing the Content head and
       body separated by two linefeeds.
-      @param s a QByteArray containing the raw content data.
+
+      @param s is a QByteArray containing the raw Content data.
     */
     void setContent( const QByteArray &s );
 
+    /**
+      Parses the Contents, splitting into multiple sub-Contents.
+    */
     virtual void parse();
 
     /**
@@ -111,141 +136,219 @@ class KMIME_EXPORT Content : public Base
     virtual void assemble();
 
     /**
-      Clears the complete message and deletes all sub-contents.
+      Clears the complete message and deletes all sub-Contents.
     */
     virtual void clear();
 
     /**
-      Returns the content header raw data.
+      Returns the Content header raw data.
+
+      @see setHead().
     */
     QByteArray head() const;
 
     /**
-      Sets the content header raw data.
+      Sets the Content header raw data.
+
+      @param head is a QByteArray containing the header data.
+
+      @see head().
     */
     void setHead( const QByteArray &head );
 
     /**
-      Extracts and removes the next header from head.
-      The caller has to delete the returned header.
+      Extracts and removes the next header from @p head.
+      The caller is responsible for deleting the returned header.
+
+      @param head is a QByteArray containing the header data.
     */
     Headers::Generic *getNextHeader( QByteArray &head );
 
     virtual Headers::Base *getHeaderByType( const char *type );
+
     virtual void setHeader( Headers::Base *h );
+
     virtual bool removeHeader( const char *type );
+
     bool hasHeader( const char *type )
-      { return ( getHeaderByType( type ) != 0 ); }
+      { return getHeaderByType( type ) != 0; }
 
     /**
-      Returns the content type header.
-      @param create Create the header if it doesn't exist yet.
+      Returns the Content type header.
+
+      @param create if true, create the header if it doesn't exist yet.
     */
     Headers::ContentType *contentType( bool create=true )
-      { Headers::ContentType *p=0; return getHeaderInstance( p, create ); }
-
-    Headers::CTEncoding *contentTransferEncoding( bool create=true )
-      { Headers::CTEncoding *p=0; return getHeaderInstance( p, create ); }
-
-    Headers::CDisposition *contentDisposition( bool create=true )
-      { Headers::CDisposition *p=0; return getHeaderInstance( p, create ); }
-    Headers::ContentDescription *contentDescription( bool create=true )
-      { Headers::ContentDescription *p=0; return getHeaderInstance( p, create ); }
+      {
+        Headers::ContentType *p=0;
+        return getHeaderInstance( p, create );
+      }
 
     /**
-      Returns the size of the content body after encoding.
+      Returns the Content transfer encoding.
+
+      @param create if true, create the header if it doesn't exist yet.
+    */
+    Headers::CTEncoding *contentTransferEncoding( bool create=true )
+      {
+        Headers::CTEncoding *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+    /**
+      Returns the Content disposition.
+
+      @param create if true, create the header if it doesn't exist yet.
+    */
+    Headers::CDisposition *contentDisposition( bool create=true )
+      {
+        Headers::CDisposition *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+    /**
+      Returns the Content description.
+
+      @param create if true, create the header if it doesn't exist yet.
+    */
+    Headers::ContentDescription *contentDescription( bool create=true )
+      {
+        Headers::ContentDescription *p=0;
+        return getHeaderInstance( p, create );
+      }
+
+    /**
+      Returns the size of the Content body after encoding.
     */
     int size();
+
     /**
-      Returns the size of this content and all sub-contents.
+      Returns the size of this Content and all sub-Contents.
     */
     int storageSize() const;
+
     /**
-      Line count of this content and all sub-contents.
+      Line count of this Content and all sub-Contents.
     */
     int lineCount() const;
+
     /**
-      Returns the content body raw data.
+      Returns the Content body raw data.
+
+      @see setBody().
     */
     QByteArray body() const;
+
     /**
-      Sets the content body raw data.
+      Sets the Content body raw data.
+
+      @param body is a QByteArray containing the body data.
+
+      @see body().
     */
     void setBody( const QByteArray &body );
+
     /**
-      Returns a QByteArray containing the encoded content, including the
-      content header and all sub-contents.
-      @param useCrLf Use CRLF instead of LF for linefeeds.
+      Returns a QByteArray containing the encoded Content, including the
+      Content header and all sub-Contents.
+
+      @param useCrLf if true, use @ref CRLF instead of @ref LF for linefeeds.
     */
     QByteArray encodedContent( bool useCrLf = false );
+
     /**
-      Returns the decoded content body.
+      Returns the decoded Content body.
     */
     QByteArray decodedContent();
+
     /**
       Returns the decoded text. Additional to decodedContent(), this also
-      applies charset decoding. If this is not a text content, decodedText()
+      applies charset decoding. If this is not a text Content, decodedText()
       returns an empty QString.
     */
     QString decodedText( bool trimText = false,
                          bool removeTrailingNewlines = false );
+
     /**
-      Sets the content body to the given string using the current charset.
+      Sets the Content body to the given string using the current charset.
+
       @param s Unicode-encoded string.
     */
     void fromUnicodeString( const QString &s );
 
     /**
-      Returns the first content with mimetype text/.
+      Returns the first Content with mimetype text/.
     */
     Content *textContent();
+
     /**
       Returns a list of attachments.
-      @param incAlternatives include multipart/alternative parts.
+
+      @param incAlternatives if true, include multipart/alternative parts.
     */
     List attachments( bool incAlternatives = false );
+
     /**
-      Returns a list of sub-contents.
+      Returns a list of sub-Contents.
     */
     List contents() const;
+
     /**
-      Adds a new sub-content, the current Content object is converted into a
-      multipart/mixed content node if it has been a single-part content.
-      @param c The new sub-content.
-      @param prepend Prepend to content list instead of append.
+      Adds a new sub-Content, the current Content object is converted into a
+      multipart/mixed Content node if it has been a single-part Content.
+
+      @param c The new sub-Content.
+      @param prepend if true, prepend to the Content list; else append
+      to the Content list.
+
+      @see removeContent().
     */
     void addContent( Content *c, bool prepend = false );
+
     /**
-      Removes the given sub-content, the current Content object is converted
-      into a single-port content if only one sub-content is left.
-      @param c The content to remove.
-      @param del Delete the removed content object.
+      Removes the given sub-Content, the current Content object is converted
+      into a single-port Content if only one sub-Content is left.
+
+      @param c The Content to remove.
+      @param del if true, delete the removed Content object.
+
+      @see addContent().
     */
     void removeContent( Content *c, bool del = false );
+
     void changeEncoding( Headers::contentEncoding e );
 
     /**
-      Saves the encoded content to the given textstream
-      @param ts The stream where the content should be written to.
-      @param scrambleFromLines: replace "\nFrom " with "\n>From ", this is
-      needed to avoid problem with mbox-files
+      Saves the encoded Content to the given textstream
+
+      @param ts is the stream where the Content should be written to.
+      @param scrambleFromLines: if true, replace "\nFrom " with "\n>From "
+      in the stream. This is needed to avoid problem with mbox-files
     */
     void toStream( QTextStream &ts, bool scrambleFromLines = false );
 
     /**
-      This charset is used for all headers and the body
+      Returns the charset that is used for all headers and the body
       if the charset is not declared explictly.
+
+      @see setDefaultCharset()
     */
     QByteArray defaultCharset() const;
+
     /**
       Sets the default charset.
-      @param cs The new default charset.
+
+      @param cs is a QByteArray containing the new default charset.
+
+      @see defaultCharset().
     */
     void setDefaultCharset( const QByteArray &cs );
 
     /**
       Use the default charset even if a different charset is
       declared in the article.
+
+      @see setForceDefaultCharset().
     */
     bool forceDefaultCharset() const;
 
@@ -253,21 +356,25 @@ class KMIME_EXPORT Content : public Base
       Enables/disables the force mode, housekeeping.
       works correctly only when the article is completely empty or
       completely loaded.
-      @param b True to force usage of the default charset.
+
+      @param b if true, force the default charset to be used.
+
+      @see forceDefaultCharset().
     */
     virtual void setForceDefaultCharset( bool b );
 
     /**
-      Returns the content specified by the given index.
-      If the index doesn't point to an content, 0 is returned, if the index
-      is invalid (empty), this content is returned.
-      @param index the content index
+      Returns the Content specified by the given index.
+      If the index doesn't point to an Content, 0 is returned, if the index
+      is invalid (empty), this Content is returned.
+
+      @param index the Content index
     */
     Content *content( const ContentIndex &index ) const;
 
     /**
-      Returns the ContentIndex for the given content, an invalid index
-      if the content is not found withing the hierarchy.
+      Returns the ContentIndex for the given Content, an invalid index
+      if the Content is not found withing the hierarchy.
       @param content the Content object to search.
     */
     ContentIndex indexForContent( Content *content ) const;

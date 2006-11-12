@@ -21,6 +21,18 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines the Content class.
+
+  @brief
+  Defines the Content class.
+
+  @authors the KMime authors (see AUTHORS file),
+  Volker Krause <volker.krause@rwth-aachen.de>
+*/
+
 #include "kmime_content.h"
 #include "kmime_parsers.h"
 
@@ -75,12 +87,12 @@ Content::~Content()
 
 bool Content::hasContent() const
 {
-  return ( !d->head.isEmpty() && (!d->body.isEmpty() || !d->contents.isEmpty()) );
+  return !d->head.isEmpty() && ( !d->body.isEmpty() || !d->contents.isEmpty() );
 }
 
 void Content::setContent( const QList<QByteArray> &l )
 {
-  //qDebug("Content::setContent( const QList<QByteArray> & l ) : start");
+  //qDebug("Content::setContent( const QList<QByteArray> &l ) : start");
   d->head.clear();
   d->body.clear();
 
@@ -365,14 +377,26 @@ QByteArray Content::encodedContent( bool useCrLf )
     if ( convertNonMimeBinaries ) {
       int beg = 0, end = 0;
       beg = d->head.indexOf( "MIME-Version: " );
-      if ( beg >= 0 ) end = d->head.indexOf( '\n', beg );
-      if ( beg >= 0 && end > beg ) d->head.remove( beg, end - beg );
+      if ( beg >= 0 ) {
+        end = d->head.indexOf( '\n', beg );
+      }
+      if ( beg >= 0 && end > beg ) {
+        d->head.remove( beg, end - beg );
+      }
       beg = d->head.indexOf( "Content-Type: " );
-      if ( beg >= 0 ) end = d->head.indexOf( '\n', beg );
-      if ( beg >= 0 && end > beg ) d->head.remove( beg, end - beg );
+      if ( beg >= 0 ) {
+        end = d->head.indexOf( '\n', beg );
+      }
+      if ( beg >= 0 && end > beg ) {
+        d->head.remove( beg, end - beg );
+      }
       beg = d->head.indexOf( "Content-Transfer-Encoding: " );
-      if ( beg >= 0 ) end = d->head.indexOf( '\n', beg );
-      if ( beg >= 0 && end > beg ) d->head.remove( beg, end - beg );
+      if ( beg >= 0 ) {
+        end = d->head.indexOf( '\n', beg );
+      }
+      if ( beg >= 0 && end > beg ) {
+        d->head.remove( beg, end - beg );
+      }
 
       d->head += "MIME-Version: 1.0\n";
       d->head += contentType( true )->as7BitString() + '\n';
@@ -535,8 +559,8 @@ Content::List Content::attachments( bool incAlternatives )
     attachments.append( this );
   } else {
     foreach ( Content *c, d->contents ) {
-      if ( !incAlternatives && c->contentType()->category() ==
-           Headers::CCalternativePart ) {
+      if ( !incAlternatives &&
+           c->contentType()->category() == Headers::CCalternativePart ) {
         continue;
       } else {
         attachments += c->attachments( incAlternatives );
@@ -708,7 +732,9 @@ Headers::Generic *Content::getNextHeader( QByteArray &head )
       }
     }
 
-    if ( pos2 < 0 ) pos2 = len + 1; //take the rest of the string
+    if ( pos2 < 0 ) {
+      pos2 = len + 1; //take the rest of the string
+    }
 
     if ( !folded ) {
       header = new Headers::Generic(head.left(pos1-2), this, head.mid(pos1, pos2-pos1));
@@ -791,7 +817,9 @@ Headers::Base *Content::getHeaderByType( const char *type )
 
 void Content::setHeader( Headers::Base *h )
 {
-  if ( !h ) return;
+  if ( !h ) {
+    return;
+  }
   removeHeader( h->type() );
   h_eaders.append( h );
 }
