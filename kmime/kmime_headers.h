@@ -4,6 +4,7 @@
     KMime, the KDE internet mail/usenet news message library.
     Copyright (c) 2001-2002 the KMime authors.
     See file AUTHORS for details
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -704,10 +705,60 @@ mk_trivial_subclass( Cc, AddressList );
 mk_trivial_subclass( Bcc, AddressList );
 /** Represents a "ReplyTo" header. */
 mk_trivial_subclass_with_name( ReplyTo, Reply-To, AddressList );
-#if defined(KMIME_NEW_STYLE_CLASSTREE)
-// usefor headers:
-mk_trivial_subclass_with_name( MailCopiesTo, Mail-Copies-To, AddressList );
 
+/**
+  Represents a "Mail-Copies-To" header.
+
+  @see http://www.newsreaders.com/misc/mail-copies-to.html
+*/
+class KMIME_EXPORT MailCopiesTo : public Generics::AddressList
+{
+  public:
+    MailCopiesTo() : AddressList(), mAlwaysCopy( false ), mNeverCopy( false ) {}
+    MailCopiesTo(Content *p) : AddressList(p), mAlwaysCopy( false ), mNeverCopy( false )  {}
+    MailCopiesTo(Content *p, const QByteArray &s) :
+        AddressList(p,s),mAlwaysCopy( false ), mNeverCopy( false ) { from7BitString( s ); }
+    MailCopiesTo(Content *p, const QString &s, const QByteArray &cs) :
+        AddressList(p,s,cs), mAlwaysCopy( false ), mNeverCopy( false ) { fromUnicodeString( s, cs ); }
+    ~MailCopiesTo()  {}
+
+    virtual const char* type() const { return "Mail-Copies-To"; }
+
+    virtual QByteArray as7BitString( bool withHeaderType = true );
+    virtual QString asUnicodeString();
+
+    virtual void clear();
+    virtual bool isEmpty() const;
+
+    /**
+      Returns true if a mail copy was explicitly requested.
+    */
+    bool alwaysCopy() const;
+
+    /**
+      Sets the header to "poster".
+    */
+    void setAlwaysCopy();
+
+    /**
+      Retruns true if a mail copy was explicitly denied.
+    */
+    bool neverCopy() const;
+
+    /**
+      Sets the header to "never".
+    */
+    void setNeverCopy();
+
+  protected:
+    virtual bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
+
+  private:
+    bool mAlwaysCopy;
+    bool mNeverCopy;
+};
+
+#if defined(KMIME_NEW_STYLE_CLASSTREE)
 // GToken:
 mk_trivial_subclass_with_name( ContentTransferEncoding,
                                Content-Transfer-Encoding, GToken );

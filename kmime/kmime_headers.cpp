@@ -4,6 +4,7 @@
     KMime, the KDE internet mail/usenet news message library.
     Copyright (c) 2001-2002 the KMime authors.
     See file AUTHORS for details
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -781,204 +782,89 @@ QString Control::asUnicodeString()
 
 //-----</Control>------------------------------
 
-#if !defined(KMIME_NEW_STYLE_CLASSTREE)
-//-----<AddressField>--------------------------
-void AddressField::from7BitString( const QByteArray &s )
-{
-  int pos1=0, pos2=0, type=0;
-  QByteArray n;
-
-  //so what do we have here ?
-  if ( QString( s ).contains(
-       QRegExp( "*@*(*)", Qt::CaseInsensitive, QRegExp::Wildcard ) ) ) {
-    type = 2;       // From: foo@bar.com (John Doe)
-  } else if ( QString( s ).contains(
-              QRegExp( "*<*@*>", Qt::CaseInsensitive, QRegExp::Wildcard ) ) ) {
-    type = 1;  // From: John Doe <foo@bar.com>
-  } else if ( QString( s ).contains(
-              QRegExp( "*@*", Qt::CaseInsensitive, QRegExp::Wildcard ) ) ) {
-    type = 0;     // From: foo@bar.com
-  } else { //broken From header => just decode it
-    n_ame = decodeRFC2047String( s, e_ncCS, defaultCS(), forceCS() );
-    return;
-  }
-
-  switch( type )
-  {
-  case 0:
-    e_mail = s;
-    break;
-
-  case 1:
-    pos1 = 0;
-    pos2 = s.indexOf( '<' );
-    if ( pos2 != -1 ) {
-      n = s.mid(pos1, pos2 - pos1).trimmed();
-      pos1 = pos2 + 1;
-      pos2 = s.indexOf( '>', pos1 );
-      if ( pos2 != -1 )
-        e_mail = s.mid( pos1, pos2 - pos1 ).trimmed();
-    } else {
-      return;
-    }
-    break;
-
-  case 2:
-    pos1 = 0;
-    pos2 = s.indexOf( '(' );
-    if ( pos2 != -1 ) {
-      e_mail = s.mid( pos1, pos2 - pos1 ).trimmed();
-      pos1 = pos2 + 1;
-      pos2 = s.indexOf( ')', pos1 );
-      if ( pos2 != -1 )
-        n = s.mid( pos1, pos2 - pos1 ).trimmed();
-    }
-    break;
-
-  default: break;
-  }
-
-  if ( !n.isEmpty() ) {
-    removeQuots( n );
-    n_ame = decodeRFC2047String( n, e_ncCS, defaultCS(), forceCS() );
-  }
-}
-
-QByteArray AddressField::as7BitString( bool incType )
-{
-  QByteArray ret;
-
-  if ( incType && type()[0] != '\0' )
-    ret = typeIntro();
-
-  if ( n_ame.isEmpty() ) {
-    ret += e_mail;
-  } else {
-    if ( isUsAscii( n_ame ) ) {
-      QByteArray tmp = n_ame.toLatin1();
-      addQuotes( tmp, false );
-      ret += tmp;
-    } else {
-      ret += encodeRFC2047String( n_ame, e_ncCS, true );
-    }
-    if ( !e_mail.isEmpty() )
-      ret += " <" + e_mail + '>';
-  }
-
-  return ret;
-}
-
-void AddressField::fromUnicodeString( const QString &s, const QByteArray &cs )
-{
-  int pos1=0, pos2=0, type=0;
-  QByteArray n;
-
-  e_ncCS=cachedCharset( cs );
-
-  //so what do we have here ?
-  if ( s.contains(
-       QRegExp( "*@*(*)", Qt::CaseInsensitive, QRegExp::Wildcard ) ) ) {
-    type = 2;       // From: foo@bar.com (John Doe)
-  } else if ( s.contains(
-              QRegExp( "*<*@*>", Qt::CaseInsensitive, QRegExp::Wildcard ) ) ) {
-    type = 1;  // From: John Doe <foo@bar.com>
-  } else if ( s.contains(
-              QRegExp( "*@*", Qt::CaseInsensitive, QRegExp::Wildcard ) ) ) {
-    type = 0;     // From: foo@bar.com
-  } else { //broken From header => just copy it
-    n_ame = s;
-    return;
-  }
-
-  switch( type )
-  {
-  case 0:
-    e_mail = s.toLatin1();
-    break;
-
-  case 1:
-    pos1 = 0;
-    pos2 = s.indexOf( '<' );
-    if ( pos2 != -1 ) {
-      n_ame = s.mid( pos1, pos2 - pos1).trimmed();
-      pos1 = pos2 + 1;
-      pos2 = s.indexOf( '>', pos1 );
-      if ( pos2 != -1 )
-        e_mail = s.mid( pos1, pos2 - pos1 ).toLatin1();
-    } else {
-      return;
-    }
-    break;
-
-  case 2:
-    pos1 = 0;
-    pos2 = s.indexOf( '(' );
-    if ( pos2 != -1 ) {
-      e_mail = s.mid( pos1, pos2 - pos1 ).trimmed().toLatin1();
-      pos1 = pos2 + 1;
-      pos2 = s.indexOf( ')', pos1 );
-      if ( pos2 != -1 )
-        n_ame = s.mid( pos1, pos2 - pos1 ).trimmed();
-    }
-    break;
-
-  default: break;
-  }
-
-  if ( !n_ame.isEmpty() )
-    removeQuots( n_ame );
-}
-
-QString AddressField::asUnicodeString()
-{
-  if ( n_ame.isEmpty() ) {
-    return QString( e_mail );
-  } else {
-    QString s = n_ame;
-    if ( !e_mail.isEmpty( ))
-      s += " <" + e_mail + '>';
-    return s;
-  }
-}
-
-QByteArray AddressField::nameAs7Bit()
-{
-  return encodeRFC2047String( n_ame, e_ncCS );
-}
-
-void AddressField::setNameFrom7Bit( const QByteArray &s )
-{
-  n_ame = decodeRFC2047String( s, e_ncCS, defaultCS(), forceCS() );
-}
-
-//-----</AddressField>-------------------------
-#endif
-
 //-----<MailCopiesTo>--------------------------
 
-bool MailCopiesTo::isValid()
+QByteArray MailCopiesTo::as7BitString(bool withHeaderType)
 {
-  if ( hasEmail() )
-    return true;
-
-  if ( ( n_ame == "nobody" ) ||
-       ( n_ame == "never" ) ||
-       ( n_ame == "poster" ) ||
-       ( n_ame == "always" ) ) {
-    return true;
-  } else {
-    return false;
+  QByteArray rv;
+  if ( withHeaderType )
+    rv += typeIntro();
+  if ( !AddressList::isEmpty() )
+    rv += AddressList::as7BitString( false );
+  else {
+    if ( mAlwaysCopy )
+      rv += "poster";
+    else if ( mNeverCopy )
+      rv += "nobody";
   }
+  return rv;
 }
 
-bool MailCopiesTo::alwaysCopy()
+QString MailCopiesTo::asUnicodeString()
 {
-  return ( hasEmail() || ( n_ame == "poster" ) || ( n_ame == "always" ) );
+  if ( !AddressList::isEmpty() )
+    return AddressList::asUnicodeString();
+  if ( mAlwaysCopy )
+    return QLatin1String( "poster" );
+  if ( mNeverCopy )
+    return QLatin1String( "nobody" );
+  return QString();
 }
 
-bool MailCopiesTo::neverCopy()
+void MailCopiesTo::clear()
 {
-  return ( ( n_ame == "nobody" ) || ( n_ame == "never" ) );
+  AddressList::clear();
+  mAlwaysCopy = false;
+  mNeverCopy = false;
+}
+
+bool MailCopiesTo::isEmpty() const
+{
+  return AddressList::isEmpty() && !(mAlwaysCopy || mNeverCopy);
+}
+
+bool MailCopiesTo::alwaysCopy() const
+{
+  return !AddressList::isEmpty() || mAlwaysCopy;
+}
+
+void MailCopiesTo::setAlwaysCopy()
+{
+  clear();
+  mAlwaysCopy = true;
+}
+
+bool MailCopiesTo::neverCopy() const
+{
+  return mNeverCopy;
+}
+
+void MailCopiesTo::setNeverCopy()
+{
+  clear();
+  mNeverCopy = true;
+}
+
+bool MailCopiesTo::parse(const char *& scursor, const char * const send, bool isCRLF)
+{
+  clear();
+  if ( send - scursor == 5 ) {
+    if ( qstrnicmp( "never", scursor, 5 ) == 0 ) {
+      mNeverCopy = true;
+      return true;
+    }
+  }
+  if ( send - scursor == 6 ) {
+    if ( qstrnicmp( "always", scursor, 6 ) == 0 || qstrnicmp( "poster", scursor, 6 ) == 0 ) {
+      mAlwaysCopy = true;
+      return true;
+    }
+    if ( qstrnicmp( "nobody", scursor, 6 ) == 0 ) {
+      mAlwaysCopy = true;
+      return true;
+    }
+  }
+  return AddressList::parse( scursor, send, isCRLF );
 }
 
 //-----</MailCopiesTo>-------------------------

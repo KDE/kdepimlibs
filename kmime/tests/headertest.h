@@ -28,6 +28,7 @@ class HeaderTest : public QObject
   private slots:
     void testIdentHeader();
     void testAddressListHeader();
+    void testMailCopiesToHeader();
 };
 
 

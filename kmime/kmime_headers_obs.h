@@ -31,61 +31,6 @@
 #include <QByteArray>
 
 
-/** This class encapsulates an address-field, containing
-    an email-address and a real name */
-class KMIME_EXPORT AddressField : public Base {
-
-  public:
-    AddressField() : Base()  {}
-    AddressField(Content *p) : Base(p)  {}
-    AddressField(Content *p, const QByteArray &s) : Base(p)  { from7BitString(s); }
-    AddressField(Content *p, const QString &s, const QByteArray &cs) : Base(p)  { fromUnicodeString(s, cs); }
-    AddressField(const AddressField &a):  Base(a.p_arent)  { n_ame=a.n_ame; e_mail=a.e_mail; e_ncCS=a.e_ncCS; }
-    ~AddressField()  {}
-
-    AddressField& operator=(const AddressField &a)  { n_ame=a.n_ame; e_mail=a.e_mail; e_ncCS=a.e_ncCS; return (*this); }
-
-    virtual void from7BitString(const QByteArray &s);
-    virtual QByteArray as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QByteArray &cs);
-    virtual QString asUnicodeString();
-    virtual void clear()              { n_ame.truncate(0); e_mail.resize(0); }
-    virtual bool isEmpty() const      { return (e_mail.isEmpty() && n_ame.isEmpty()); }
-
-    bool hasName()                    { return ( !n_ame.isEmpty() ); }
-    bool hasEmail()                   { return ( !e_mail.isEmpty() ); }
-    QString name()                    { return n_ame; }
-    QByteArray nameAs7Bit();
-    QByteArray email()                  { return e_mail; }
-    void setName(const QString &s)    { n_ame=s; }
-    void setNameFrom7Bit(const QByteArray &s);
-    void setEmail(const QByteArray &s)  { e_mail=s; }
-
-  protected:
-    QString n_ame;
-    QByteArray e_mail;
-};
-typedef QList<AddressField*> ObsAddressList;
-
-/** Represents a "Mail-Copies-To" header
-    http://www.newsreaders.com/misc/mail-copies-to.html */
-class KMIME_EXPORT MailCopiesTo : public AddressField {
-
-  public:
-    MailCopiesTo() : AddressField()  {}
-    MailCopiesTo(Content *p) : AddressField(p)  {}
-    MailCopiesTo(Content *p, const QByteArray &s) : AddressField(p,s)  {}
-    MailCopiesTo(Content *p, const QString &s, const QByteArray &cs) : AddressField(p,s,cs)  {}
-    ~MailCopiesTo()  {}
-
-    bool isValid();
-    bool alwaysCopy();
-    bool neverCopy();
-
-    virtual const char* type() const { return "Mail-Copies-To"; }
-
-};
-
 /** Represents a "Content-Type" header */
 class KMIME_EXPORT ContentType : public Base {
 

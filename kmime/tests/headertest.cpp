@@ -23,6 +23,7 @@
 #include <kmime_headers.h>
 
 using namespace KMime;
+using namespace KMime::Headers;
 
 // the following test cases are taken from KDE mailinglists, bug reports and
 // RFC 2822, Appendix A
@@ -224,6 +225,58 @@ void HeaderTest::testAddressListHeader()
   h->from7BitString( QByteArray( "\"Ingo =?iso-8859-15?q?Kl=F6cker?=\" <kloecker@kde.org>" ) );
   QCOMPARE( h->mailboxes().count(), 1 );
   QCOMPARE( h->asUnicodeString(), QString::fromUtf8( "Ingo =?iso-8859-15?q?Kl=F6cker?= <kloecker@kde.org>" ) );
+  delete h;
+}
+
+void HeaderTest::testMailCopiesToHeader()
+{
+  Headers::MailCopiesTo *h;
+
+  // empty header
+  h = new Headers::MailCopiesTo();
+  QVERIFY( h->isEmpty() );
+  QVERIFY( !h->alwaysCopy() );
+  QVERIFY( !h->neverCopy() );
+
+  // set to always copy to poster
+  h->setAlwaysCopy();
+  QVERIFY( !h->isEmpty() );
+  QVERIFY( h->alwaysCopy() );
+  QVERIFY( !h->neverCopy() );
+  QCOMPARE( h->as7BitString(), QByteArray( "Mail-Copies-To: poster" ) );
+
+  // set to never copy
+  h->setNeverCopy();
+  QVERIFY( !h->isEmpty() );
+  QVERIFY( !h->alwaysCopy() );
+  QVERIFY( h->neverCopy() );
+  QCOMPARE( h->as7BitString(), QByteArray( "Mail-Copies-To: nobody" ) );
+
+  // clear header
+  h->clear();
+  QVERIFY( h->isEmpty() );
+  delete h;
+
+  // parse copy to poster
+  h = new MailCopiesTo( 0, "always" );
+  QVERIFY( h->addresses().isEmpty() );
+  QVERIFY( !h->isEmpty() );
+  QVERIFY( h->alwaysCopy() );
+  delete h;
+
+  // parse never copy
+  h = new MailCopiesTo( 0, "never" );
+  QVERIFY( h->addresses().isEmpty() );
+  QVERIFY( !h->isEmpty() );
+  QVERIFY( h->neverCopy() );
+  delete h;
+
+  // parse address
+  h = new MailCopiesTo( 0, "vkrause@kde.org" );
+  QVERIFY( !h->addresses().isEmpty() );
+  QVERIFY( h->alwaysCopy() );
+  QVERIFY( !h->neverCopy() );
+  QCOMPARE( h->as7BitString(), QByteArray( "Mail-Copies-To: vkrause@kde.org" ) );
   delete h;
 }
 
