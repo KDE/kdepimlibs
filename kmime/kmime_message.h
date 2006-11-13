@@ -121,6 +121,8 @@ class KMIME_EXPORT Message : public Content
 
     virtual KMime::Headers::InReplyTo *inReplyTo( bool create = true );
 
+    virtual bool isTopLevel() const;
+
   protected:
     virtual QByteArray assembleHeaders();
 

@@ -69,15 +69,6 @@ class KMIME_EXPORT Content
 {
   public:
 
-    /**
-      The different types of article content (What is this doing here?)
-    */
-    enum articleType {
-      ATmimeContent, /**< @ref MIME */
-      ATremote,      /**< remote */
-      ATlocal        /**< local */
-    };
-
     typedef QList<KMime::Content*> List;
 
     /**
@@ -97,12 +88,6 @@ class KMIME_EXPORT Content
       Destroys this Content object.
     */
     virtual ~Content();
-
-    /**
-      Returns the article Content type.
-    */
-    virtual articleType type() const
-      { return ATmimeContent; }
 
     /**
       Returns true if this Content object is not empty.
@@ -378,6 +363,12 @@ class KMIME_EXPORT Content
       @param content the Content object to search.
     */
     ContentIndex indexForContent( Content *content ) const;
+
+    /**
+      Returns true if this is the top-level node in the MIME tree, ie. if this
+      is actually a message or news article.
+    */
+    virtual bool isTopLevel() const;
 
   protected:
     /**

@@ -176,5 +176,9 @@ KMime::Headers::InReplyTo* Message::inReplyTo(bool create)
   return getHeaderInstance( p, create );
 }
 
+bool Message::isTopLevel() const
+{
+  return true;
 }
 
+}

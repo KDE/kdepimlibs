@@ -568,7 +568,7 @@ Content::List Content::attachments( bool incAlternatives )
     }
   }
 
-  if ( type() != ATmimeContent ) { // this is the toplevel article
+  if ( isTopLevel() ) {
     Content *text = textContent();
     if ( text ) {
       attachments.removeAll( text );
@@ -866,7 +866,7 @@ int Content::storageSize() const
 int Content::lineCount() const
 {
   int ret = 0;
-  if ( type() == ATmimeContent) {
+  if ( !isTopLevel() ) {
     ret += d->head.count( '\n' );
   }
   ret += d->body.count( '\n' );
@@ -986,6 +986,11 @@ ContentIndex KMime::Content::indexForContent( Content * content ) const
     }
   }
   return ContentIndex(); // not found
+}
+
+bool Content::isTopLevel() const
+{
+  return false;
 }
 
 } // namespace KMime
