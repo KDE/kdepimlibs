@@ -1,4 +1,4 @@
-#include <kmime_util.h>
+#include <kmime_dateformatter.h>
 #include <kmime_header_parsing.h>
 #include <kdebug.h>
 #include <kinstance.h>

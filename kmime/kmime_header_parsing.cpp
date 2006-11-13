@@ -28,6 +28,7 @@
 
 #include "kmime_codecs.h"
 #include "kmime_util.h"
+#include "kmime_dateformatter.h"
 #include "kmime_warning.h"
 
 #include <kglobal.h>

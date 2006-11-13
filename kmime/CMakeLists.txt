@@ -23,6 +23,7 @@ set(kmime_LIB_SRCS
    kmime_headers.cpp 
    kmime_message.cpp 
    kmime_newsarticle.cpp 
+   kmime_dateformatter.cpp
    boolflags.cpp 
    kautodeletehash.cpp )
 
@@ -48,6 +49,7 @@ install( FILES
         kmime_message.h
         kmime_mdn.h
         kmime_newsarticle.h
+        kmime_dateformatter.h
         kmime_util.h
 DESTINATION ${INCLUDE_INSTALL_DIR}/kmime)
 
