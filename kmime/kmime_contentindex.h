@@ -16,6 +16,20 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines the ContentIndex class.
+
+  @brief
+  Defines the ContentIndex class.
+
+  @authors Volker Krause \<volker.krause@rwth-aachen.de\>
+
+  @glossary @anchor RFC3501 @anchor rfc3501 @b RFC @b 3501:
+  RFC that defines the <a href="http://tools.ietf.org/html/rfc3501">
+  Internet Message Access Protocol (IMAP)</a>.
+*/
 
 #ifndef KMIME_CONTENTINDEX_H
 #define KMIME_CONTENTINDEX_H
@@ -28,22 +42,24 @@
 namespace KMime {
 
 /**
-   Index to uniquely identify message parts (Content object) in a part
-   hierarchy. Basically a stack of integer indices.
-   Based on RFC 3501 section 6.4.5 and thus compatible with IMAP.
+  @brief
+  A class to uniquely identify message parts (Content) in a hierarchy.
+
+  Based on @ref RFC3501 section 6.4.5 and thus compatible with @acronym IMAP.
 */
 class KMIME_EXPORT ContentIndex
 {
   public:
     /**
-      Creates an empty (invalid) ContentIndex object.
+      Creates an empty content index.
     */
     ContentIndex();
 
     /**
-      Create a ContentIndex object based on the given string representation.
-      @param index A string representation of a message part index according
-      to RFC 3501 section 6.4.5.
+      Creates a content index based on the specified string representation.
+
+      @param index is a string representation of a message part index according
+      to @ref RFC3501 section 6.4.5.
     */
     explicit ContentIndex( const QString &index );
 
@@ -53,37 +69,45 @@ class KMIME_EXPORT ContentIndex
     bool isValid() const;
 
     /**
-      Removes and returns the top-most index. Usable to recursively
+      Removes and returns the top-most index. Used to recursively
       descend into the message part hierarchy.
+
+      @see push().
     */
     unsigned int pop();
 
     /**
-      Adds an index to the ContentIndex. Usable when ascending the message
+      Adds @p index to the content index. Used when ascending the message
       part hierarchy.
-      @param index Top-most part index.
+
+      @param index is the top-most content index part.
+
+      @see pop().
     */
     void push( unsigned int index );
 
     /**
       Returns a string representation of this content index according
-      to RFC 3501 section 6.4.5.
+      to @ref RFC3501 section 6.4.5.
     */
     QString toString() const;
 
     /**
-      Compares two content indices.
+      Compares this with @p index for equality.
+
+      @param index is the content index to compare.
     */
     bool operator==( const ContentIndex &index ) const;
 
     /**
-      Checks whether two content indices are not equal.
+      Compares this with @p index for inequality.
+
+      @param index is the content index to compare.
     */
     bool operator!=( const ContentIndex &index ) const;
 
   private:
     QList<unsigned int> mIndex;
-
 };
 
 }  //namespace KMime

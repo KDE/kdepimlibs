@@ -30,7 +30,7 @@
   Defines the Content class.
 
   @authors the KMime authors (see AUTHORS file),
-  Volker Krause <volker.krause@rwth-aachen.de>
+  Volker Krause \<volker.krause@rwth-aachen.de\>
 
 TODO: possible glossary terms:
  content

@@ -16,6 +16,16 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines the ContentIndex class.
+
+  @brief
+  Defines the ContentIndex class.
+
+  @authors Volker Krause \<volker.krause@rwth-aachen.de\>
+*/
 
 #include "kmime_contentindex.h"
 
