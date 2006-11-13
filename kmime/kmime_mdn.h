@@ -19,6 +19,29 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  provides functions for supporting Message Disposition Notifications (MDNs),
+  also known as email return receipts.
+
+  @brief
+  Provides support for Message Disposition Notifications.
+
+  @authors Marc Mutz \<mutz@kde.org\>
+
+  @glossary @anchor MDN @b MDN:
+  see @ref Message_Disposition_Notification
+
+  @glossary @anchor Message_Disposition_Notification
+  @b Message @b Disposition @b Notification:
+  Return receipts for email are called message disposition notifications.
+  Their format and usage is outlined in @ref RFC2298.
+
+  @glossary @anchor RFC2298 @anchor rfc2298 @b RFC @b 2298:
+  RFC that defines the <a href="http://tools.ietf.org/html/rfc2298">
+  An Extensible Message Format for Message Disposition Notifications</a>.
+*/
 
 #ifndef __KMIME_MDN_H__
 #define __KMIME_MDN_H__
@@ -170,23 +193,23 @@ enum SendingMode {
 };
 
 /**
-  Main function. Generates the content of the
-  message/disposition-notification body part. */
-KMIME_EXPORT extern
-QByteArray dispositionNotificationBodyContent( const QString &finalRecipient,
-                                               const QByteArray &originalRecipient,
-                                               const QByteArray &originalMsgID,
-                                               DispositionType disposition,
-                                               ActionMode actionMode,
-                                               SendingMode sendingMode,
-                                               const QList<DispositionModifier> &dispositionModifers
-                                               =QList<DispositionModifier>(),
-                                               const QString & special=QString() );
+  Generates the content of the message/disposition-notification body part.
+*/
+KMIME_EXPORT extern QByteArray dispositionNotificationBodyContent(
+  const QString &finalRecipient,
+  const QByteArray &originalRecipient,
+  const QByteArray &originalMsgID,
+  DispositionType disposition,
+  ActionMode actionMode,
+  SendingMode sendingMode,
+  const QList<DispositionModifier> &dispositionModifers
+  =QList<DispositionModifier>(),
+  const QString & special=QString() );
 
-KMIME_EXPORT extern
-QString descriptionFor( DispositionType d,
-                        const QList<DispositionModifier> &m
-                        =QList<DispositionModifier>() );
+KMIME_EXPORT extern QString descriptionFor(
+  DispositionType d,
+  const QList<DispositionModifier> &m
+  =QList<DispositionModifier>() );
 
 enum ReturnContent {
   Nothing,

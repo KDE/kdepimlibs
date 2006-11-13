@@ -19,13 +19,12 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef __KPIM_KAUTODELETEHASH__
-#define __KPIM_KAUTODELETEHASH__
+#ifndef __KMIME_KAUTODELETEHASH__
+#define __KMIME_KAUTODELETEHASH__
 
 #include <QHash>
 
-/** \brief KPIM holds all kinds of functions specific to KDE PIM. */
-namespace KPIM {
+namespace KMime {
 
 /**
  * The KAutoDeleteHash class is a convenience QHash subclass that provides
@@ -44,7 +43,7 @@ namespace KPIM {
  *   delete hash.take( key );
  * @endcode
  *
- * @author Ingo Kl&ouml;cker <kloecker@kde.org>
+ * @author Ingo Kl&ouml;cker \<kloecker@kde.org\>
  */
 template <class Key, class T>
 class KAutoDeleteHash : public QHash<Key, T *>
@@ -71,6 +70,6 @@ public:
                      }
 };
 
-} // namespace KPIM
+} // namespace KMime
 
-#endif /* __KPIM_KAUTODELETEHASH__ */
+#endif /* __KMIME_KAUTODELETEHASH__ */

@@ -48,7 +48,6 @@
 #include <string.h>
 
 using namespace KMime;
-using namespace KPIM;
 
 namespace KMime {
 

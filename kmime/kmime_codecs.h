@@ -70,12 +70,9 @@
 
 #include "kmime.h"
 
-namespace KPIM {
-template <class Key, class T> class KAutoDeleteHash;
-}
-using namespace KPIM;
-
 namespace KMime {
+
+template <class Key, class T> class KAutoDeleteHash;
 
 class Encoder;
 class Decoder;

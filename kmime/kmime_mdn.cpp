@@ -19,6 +19,17 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  provides functions for supporting Message Disposition Notifications (MDNs),
+  also known as email return receipts.
+
+  @brief
+  Provides support for Message Disposition Notifications.
+
+  @authors Marc Mutz \<mutz@kde.org\>
+*/
 
 #include "kmime_version.h"
 #include "kmime_mdn.h"
