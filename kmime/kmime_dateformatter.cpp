@@ -20,6 +20,16 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines the DateFormatter class.
+
+  @brief
+  Defines the DateFormatter class.
+
+  @authors the KMime authors (see AUTHORS file)
+*/
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -37,9 +47,11 @@
 
 using namespace KMime;
 
+//@cond PRIVATE
 int DateFormatter::mDaylight = -1;
-DateFormatter::DateFormatter( FormatType fType )
-  : mFormat( fType ), mCurrentTime( 0 )
+//@endcond
+DateFormatter::DateFormatter( FormatType ftype )
+  : mFormat( ftype ), mCurrentTime( 0 )
 {
 }
 
@@ -47,55 +59,57 @@ DateFormatter::~DateFormatter()
 {
 }
 
-DateFormatter::FormatType DateFormatter::getFormat() const
+DateFormatter::FormatType DateFormatter::format() const
 {
   return mFormat;
 }
 
-void DateFormatter::setFormat( FormatType t )
+void DateFormatter::setFormat( FormatType ftype )
 {
-  mFormat = t;
+  mFormat = ftype;
 }
 
-QString DateFormatter::dateString( time_t otime , const QString &lang ,
+QString DateFormatter::dateString( time_t t , const QString &lang ,
                                    bool shortFormat, bool includeSecs ) const
 {
   switch ( mFormat ) {
   case Fancy:
-    return fancy( otime );
+    return fancy( t );
     break;
   case Localized:
-    return localized( otime, shortFormat, includeSecs, lang );
+    return localized( t, shortFormat, includeSecs, lang );
     break;
   case CTime:
-    return cTime( otime );
+    return cTime( t );
     break;
   case Iso:
-    return isoDate( otime );
+    return isoDate( t );
+    break;
+  case Rfc:
+    return rfc2822( t );
     break;
   case Custom:
-    return custom( otime );
+    return custom( t );
     break;
   }
   return QString();
 }
 
-QString DateFormatter::dateString( const QDateTime &dtime, const QString &lang,
-                                  bool shortFormat, bool includeSecs ) const
+QString DateFormatter::dateString( const QDateTime &dt, const QString &lang,
+                                   bool shortFormat, bool includeSecs ) const
 {
-  return DateFormatter::dateString( qdateToTimeT( dtime ),
-                                    lang, shortFormat, includeSecs );
+  return dateString( qdateToTimeT( dt ), lang, shortFormat, includeSecs );
 }
 
-QByteArray DateFormatter::rfc2822( time_t otime ) const
+QString DateFormatter::rfc2822( time_t t ) const
 {
   QDateTime tmp;
-  QByteArray ret;
+  QString ret;
 
-  tmp.setTime_t( otime );
+  tmp.setTime_t( t );
 
   ret = tmp.toString( "ddd, dd MMM yyyy hh:mm:ss " ).toLatin1();
-  ret += zone( otime );
+  ret += zone( t );
 
   return ret;
 }
@@ -126,15 +140,15 @@ void DateFormatter::setCustomFormat( const QString &format )
   mFormat = Custom;
 }
 
-QString DateFormatter::getCustomFormat() const
+QString DateFormatter::customFormat() const
 {
   return mCustomFormat;
 }
 
-QByteArray DateFormatter::zone( time_t otime ) const
+QByteArray DateFormatter::zone( time_t t ) const
 {
 #if defined(HAVE_TIMEZONE) || defined(HAVE_TM_GMTOFF)
-  struct tm *local = localtime( &otime );
+  struct tm *local = localtime( &t );
 #endif
 
 #if defined(HAVE_TIMEZONE)
@@ -172,8 +186,8 @@ QByteArray DateFormatter::zone( time_t otime ) const
 
 #else
 
-  QDateTime d1 = QDateTime::fromString( asctime( gmtime( &otime ) ) );
-  QDateTime d2 = QDateTime::fromString( asctime( localtime( &otime ) ) );
+  QDateTime d1 = QDateTime::fromString( asctime( gmtime( &t ) ) );
+  QDateTime d2 = QDateTime::fromString( asctime( localtime( &t ) ) );
   int secs = d1.secsTo( d2 );
   int neg = ( secs < 0 ) ? 1 : 0;
   secs = abs( secs );
@@ -195,21 +209,21 @@ QByteArray DateFormatter::zone( time_t otime ) const
 time_t DateFormatter::qdateToTimeT( const QDateTime &dt ) const
 {
   QDateTime epoch( QDate( 1970, 1, 1 ), QTime( 00, 00, 00 ) );
-  time_t otime;
-  time( &otime );
+  time_t t;
+  time( &t );
 
-  QDateTime d1 = QDateTime::fromString( asctime( gmtime( &otime ) ) );
-  QDateTime d2 = QDateTime::fromString( asctime( localtime( &otime ) ) );
+  QDateTime d1 = QDateTime::fromString( asctime( gmtime( &t ) ) );
+  QDateTime d2 = QDateTime::fromString( asctime( localtime( &t ) ) );
   time_t drf = epoch.secsTo( dt ) - d1.secsTo( d2 );
 
   return drf;
 }
 
-QString DateFormatter::fancy( time_t otime ) const
+QString DateFormatter::fancy( time_t t ) const
 {
   KLocale *locale = KGlobal::locale();
 
-  if ( otime <= 0 ) {
+  if ( t <= 0 ) {
     return i18n( "unknown" );
   }
 
@@ -219,11 +233,11 @@ QString DateFormatter::fancy( time_t otime ) const
   }
 
   QDateTime old;
-  old.setTime_t( otime );
+  old.setTime_t( t );
 
   // not more than an hour in the future
-  if ( mCurrentTime + 60 * 60 >= otime ) {
-    time_t diff = mCurrentTime - otime;
+  if ( mCurrentTime + 60 * 60 >= t ) {
+    time_t diff = mCurrentTime - t;
 
     if ( diff < 24 * 60 * 60 ) {
       if ( old.date().year() == mDate.date().year() &&
@@ -254,20 +268,19 @@ QString DateFormatter::fancy( time_t otime ) const
 
 }
 
-QString DateFormatter::localized( time_t otime, bool shortFormat,
-                                  bool includeSecs,
-                                  const QString &localeLanguage ) const
+QString DateFormatter::localized( time_t t, bool shortFormat, bool includeSecs,
+                                  const QString &lang ) const
 {
   QDateTime tmp;
   QString ret;
   KLocale *locale = KGlobal::locale();
 
-  tmp.setTime_t( otime );
+  tmp.setTime_t( t );
 
-  if ( !localeLanguage.isEmpty() ) {
-    locale = new KLocale( localeLanguage );
-    locale->setLanguage( localeLanguage );
-    locale->setCountry( localeLanguage );
+  if ( !lang.isEmpty() ) {
+    locale = new KLocale( lang );
+    locale->setLanguage( lang );
+    locale->setCountry( lang );
     ret = locale->formatDateTime( tmp, shortFormat, includeSecs );
     delete locale;
   } else {
@@ -277,15 +290,15 @@ QString DateFormatter::localized( time_t otime, bool shortFormat,
   return ret;
 }
 
-QString DateFormatter::cTime( time_t otime ) const
+QString DateFormatter::cTime( time_t t ) const
 {
-  return QString::fromLatin1( ctime(  &otime ) ).trimmed();
+  return QString::fromLatin1( ctime(  &t ) ).trimmed();
 }
 
-QString DateFormatter::isoDate( time_t otime ) const
+QString DateFormatter::isoDate( time_t t ) const
 {
   char cstr[64];
-  strftime( cstr, 63, "%Y-%m-%d %H:%M:%S", localtime( &otime ) );
+  strftime( cstr, 63, "%Y-%m-%d %H:%M:%S", localtime( &t ) );
   return QString( cstr );
 }
 
@@ -294,32 +307,25 @@ void DateFormatter::reset()
   mCurrentTime = 0;
 }
 
-QString DateFormatter::formatDate( DateFormatter::FormatType t, time_t otime,
+QString DateFormatter::formatDate( FormatType ftype, time_t t,
                                    const QString &data, bool shortFormat,
                                    bool includeSecs )
 {
-  DateFormatter f( t );
-  if ( t == DateFormatter::Custom ) {
+  DateFormatter f( ftype );
+  if ( ftype == Custom ) {
     f.setCustomFormat( data );
   }
-  return f.dateString( otime, data, shortFormat, includeSecs );
+  return f.dateString( t, data, shortFormat, includeSecs );
 }
 
-QString DateFormatter::formatCurrentDate( DateFormatter::FormatType t,
-                                          const QString &data,
+QString DateFormatter::formatCurrentDate( FormatType ftype, const QString &data,
                                           bool shortFormat, bool includeSecs )
 {
-  DateFormatter f( t );
-  if ( t == DateFormatter::Custom ) {
+  DateFormatter f( ftype );
+  if ( ftype == Custom ) {
     f.setCustomFormat( data );
   }
   return f.dateString( time( 0 ), data, shortFormat, includeSecs );
-}
-
-QByteArray DateFormatter::rfc2822FormatDate( time_t t )
-{
-  DateFormatter f;
-  return f.rfc2822( t );
 }
 
 bool DateFormatter::isDaylight()

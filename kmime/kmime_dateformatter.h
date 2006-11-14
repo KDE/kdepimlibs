@@ -20,6 +20,30 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines the DateFormatter class.
+
+  @brief
+  Defines the DateFormatter class.
+
+  @authors the KMime authors (see AUTHORS file)
+
+  @glossary @anchor RFC2822 @anchor rfc2822 @b RFC @b 2822:
+  RFC that defines the <a href="http://tools.ietf.org/html/rfc2822">
+  Internet Message Format</a>.
+
+  @glossary @anchor ISO8601 @anchor iso8601 @b ISO @b 8601:
+  International Standards Organization (ISO) standard that defines the
+  <a href="http://http://en.wikipedia.org/wiki/ISO_8601">
+  international standard for date and time representations</a>.
+
+  @glossary @anchor ctime @b ctime:
+  a Unix library call which returns the local time as a human readable
+  ASCII string of the form "Sun Mar 31 02:08:35 2002".
+*/
+
 #ifndef __KMIME_DATEFORMATTER_H__
 #define __KMIME_DATEFORMATTER_H__
 
@@ -34,17 +58,14 @@ namespace KMime {
   @brief
   A class for abstracting date formatting.
 
-  DateFormatter deals with different kinds of date display formats.
-  The formats supported by the class include:
-  <ul>
-      <li> fancy "Today 02:08:35"
-      <li> ctime "Sun Mar 31 02:08:35 2002"
-      <li> localized "2002-03-31 02:08"
-      <li> iso  "2002-03-31 02:08:35"
-      <li> rfc2822 "Sun, 31 Mar 2002 02:08:35 -0500"
-      <li> custom "whatever you like"
-  </ul>
-
+  This class deals with different kinds of date display formats.
+  The formats supported include:
+  - @b fancy "Today 02:08:35"
+  - @b ctime as with the @ref ctime function, eg. "Sun Mar 31 02:08:35 2002"
+  - @b localized according to the control center setting, eg. "2002-03-31 02:08"
+  - @b iso  according to the @ref ISO8601 standard, eg. "2002-03-31 02:08:35"
+  - @b rfc according to @ref RFC2822 (Section 3.3), eg. "Sun, 31 Mar 2002 02:08:35 -0500"
+  - @b custom "whatever you like"
 */
 class KMIME_EXPORT DateFormatter
 {
@@ -57,15 +78,16 @@ class KMIME_EXPORT DateFormatter
       Localized,  /**< localized "2002-03-31 02:08" */
       Fancy,      /**< fancy "Today 02:08:35" */
       Iso,        /**< iso  "2002-03-31 02:08:35" */
+      Rfc,        /**< rfc  "Sun, 31 Mar 2002 02:08:35 -0500" */
       Custom      /**< custom "whatever you like" */
     };
 
     /**
-      Constructs a date formatter.
+      Constructs a date formatter with a default #FormatType.
 
-      @param fType default format used by the class
+      @param ftype is the default #FormatType to use.
     */
-    DateFormatter( FormatType fType=DateFormatter::Fancy );
+    DateFormatter( FormatType ftype=DateFormatter::Fancy );
 
     /**
       Destroys the date formatter.
@@ -73,115 +95,113 @@ class KMIME_EXPORT DateFormatter
     ~DateFormatter();
 
     /**
-      Returns the currently set format
+      Returns the #FormatType currently set.
+
+      @see setFormat().
     */
-    FormatType getFormat() const;
+    FormatType format() const;
 
     /**
-      Sets the currently used format
+      Sets the date format to @p ftype.
 
-      @param t is the FormatType to set.
+      @param ftype is the #FormatType.
+
+      @see format().
     */
-    void setFormat( FormatType t );
+    void setFormat( FormatType ftype );
 
     /**
-      Constructs a formatted date string from @p otime.
+      Constructs a formatted date string from time_t @p t.
 
-      @param otime time to format
-      @param lang used <em>only</em> by the Localized format,
-      sets the used language
-      @param shortFormat used <em>only</em> by the Localized format,
-      is passed to KLocale::formatDateTime
-      @param includeSecs used <em>only</em> by the Localized format,
-      is passed to KLocale::formatDateTime
+      @param t is the time_t to use for formatting.
+      @param lang is the language, only used if #FormatType is #Localized.
+      @param shortFormat if true, create the short version of the date string,
+      only used if #FormatType is #Localized.
+      @param includeSecs if true, include the seconds field in the date string,
+      only used if #FormatType is #Localized.
 
-      @return A QString containing the formatted date.
+      @return a QString containing the formatted date.
     */
-    QString dateString( time_t otime, const QString &lang=QString(),
+    QString dateString( time_t t, const QString &lang=QString(),
                         bool shortFormat=true, bool includeSecs=false ) const;
 
     /**
-      Overloaded, does exactly what #dateString does (it's slower)
+      Constructs a formatted date string from QDateTime @p dtime.
 
-      @param dtime time to format
-      @param lang used <em>only</em> by the Localized format,
-      sets the used language
-      @param shortFormat used <em>only</em> by the Localized format,
-      is passed to KLocale::formatDateTime
-      @param includeSecs used <em>only</em> by the Localized format,
-      is passed to KLocale::formatDateTime
+      @param dtime is the QDateTime to use for formatting.
+      @param lang is the language, only used if #FormatType is #Localized.
+      @param shortFormat if true, create the short version of the date string,
+      only used if #FormatType is #Localized.
+      @param includeSecs if true, include the seconds field in the date string,
+      only used if #FormatType is #Localized.
 
-      @return A QString containing the formatted date.
+      @return a QString containing the formatted date.
     */
     QString dateString( const QDateTime &dtime, const QString &lang=QString(),
                         bool shortFormat=true, bool includeSecs=false ) const;
 
     /**
-      Makes the class use the custom format for date to string conversions.
-      Method accepts the same arguments as QDateTime::toString method and adds
-      "Z" expression which is substituted with the RFC-822 style numeric
-      timezone (-0500).
+      Sets the custom format for date to string conversions to @p format.
+      This method accepts the same arguments as QDateTime::toString(), but
+      also supports the "Z" expression which is substituted with the
+      @ref RFC2822 (Section 3.3) style numeric timezone (-0500).
 
-      @param format the custom format
+      @param format is a QString containing the custom format.
+
+      @see QDateTime::toString(), customFormat().
     */
     void setCustomFormat( const QString &format );
 
     /**
       Returns the custom format string.
-    */
-    QString getCustomFormat() const;
 
-    /**
-      Returns an rfc2822 formatted string for the specified @p time.
-
-      @param otime time to use for formatting
+      @see setCustomFormat().
     */
-    QByteArray rfc2822( time_t otime ) const;
+    QString customFormat() const;
 
     /**
       Resets the internal clock.
     */
     void reset();
 
-    //statics
+    //static methods
     /**
       Convenience function dateString
 
-      @param t specifies the FormatType to use
-      @param time time to format
-      @param data is either the format when FormatType is Custom,
-      or language when FormatType is Localized
-      @param shortFormat used <em>only</em> by the Localized format,
-      is passed to KLocale::formatDateTime
-      @param includeSecs used <em>only</em> by the Localized format,
-      is passed to KLocale::formatDateTime
+      @param ftype is the #FormatType to use.
+      @param t is the time_t to use for formatting.
+      @param data is either the format when #FormatType is Custom,
+      or language when #FormatType is #Localized.
+      @param shortFormat if true, create the short version of the date string,
+      only used if #FormatType is #Localized.
+      @param includeSecs if true, include the seconds field in the date string,
+      only used if #FormatType is #Localized.
+
+      @return a QString containing the formatted date.
     */
-    static QString  formatDate( DateFormatter::FormatType t, time_t time,
-                                const QString &data=QString(),
-                                bool shortFormat=true,
-                                bool includeSecs=false );
+    static QString formatDate( DateFormatter::FormatType ftype, time_t t,
+                               const QString &data=QString(),
+                               bool shortFormat=true,
+                               bool includeSecs=false );
 
     /**
-      Convenience function, same as #formatDate but returns the current time
+      Convenience function, same as formatDate() but returns the current time
       formatted.
 
-      @param t specifies the FormatType to use
-      @param data is either the format when FormatType is Custom,
-      or language when FormatType is Localized
-      @param shortFormat used <em>only</em> by the Localized format,
-      is passed to KLocale::formatDateTime
-      @param includeSecs used <em>only</em> by the Localized format,
-      is passed to KLocale::formatDateTime
-    */
-    static QString  formatCurrentDate( DateFormatter::FormatType t,
-                                       const QString &data=QString(),
-                                       bool shortFormat=true,
-                                       bool includeSecs=false );
+      @param ftype is the #FormatType to use.
+      @param data is either the format when #FormatType is Custom,
+      or language when #FormatType is #Localized.
+      @param shortFormat if true, create the short version of the date string,
+      only used if #FormatType is #Localized.
+      @param includeSecs if true, include the seconds field in the date string,
+      only used if #FormatType is #Localized.
 
-    /**
-      Convenience function, same as #rfc2822
+      @return a QString containing the formatted date.
     */
-    static QByteArray rfc2822FormatDate( time_t time );
+    static QString formatCurrentDate( DateFormatter::FormatType ftype,
+                                      const QString &data=QString(),
+                                      bool shortFormat=true,
+                                      bool includeSecs=false );
 
     /**
       Returns true if the current time is on daylight savings time; else false.
@@ -190,58 +210,72 @@ class KMIME_EXPORT DateFormatter
 
   protected:
     /**
-      Returns fancy formatted date string.
+      Returns a QString containing the specified time_t @p t formatted
+      using the #Fancy #FormatType.
 
-      @param otime time to format
-      @internal
+      @param t is the time_t to use for formatting.
     */
-    QString fancy( time_t otime ) const ;
+    QString fancy( time_t t ) const ;
 
     /**
-      Returns localized formatted date string.
+      Returns a QString containing the specified time_t @p t formatted
+      using the #Localized #FormatType.
 
-      @param otime time to format
-      @param shortFormat
-      @param includeSecs
-      @param localeLanguage language used for formatting
-      @internal
+      @param t is the time_t to use for formatting.
+      @param shortFormat if true, create the short version of the date string.
+      @param includeSecs if true, include the seconds field in the date string.
+      @param lang is a QString containing the language to use.
     */
-    QString localized( time_t otime, bool shortFormat=true,
+    QString localized( time_t t, bool shortFormat=true,
                        bool includeSecs=false,
-                       const QString &localeLanguage=QString() ) const;
+                       const QString &lang=QString() ) const;
 
     /**
-      Returns string as formatted with ctime function.
+      Returns a QString containing the specified time_t @p t formatted
+      with the ctime() function.
 
-      @param otime time to format
-      @internal
+      @param t is the time_t to use for formatting.
     */
-    QString cTime( time_t otime ) const;
+    QString cTime( time_t t ) const;
 
     /**
-      Returns a string in the "%Y-%m-%d %H:%M:%S" format.
+      Returns a QString containing the specified time_t @p t in the
+      "%Y-%m-%d %H:%M:%S" #Iso #FormatType.
 
-      @param otime time to format
-      @internal
+      @param t is the time_t to use for formatting.
     */
-    QString isoDate( time_t otime ) const;
+    QString isoDate( time_t t ) const;
 
     /**
-      Returns date formatted with the earlier given custom format.
+      Returns a QString containg the specified time_t @p t in the
+      #Rfc #FormatType.
+
+      @param t is the time_t to use for formatting.
+    */
+    QString rfc2822( time_t t ) const;
+
+    /**
+      Returns a QString containing the specified time_t @p t formatted
+      with a previously specified custom format.
 
       @param t time used for formatting
-      @internal
     */
     QString custom( time_t t ) const;
 
     /**
-      Returns a string identifying the timezone (eg."-0500")
+      Returns a QString that identifies the timezone (eg."-0500")
+      of the specified time_t @p t.
 
-      @param otime time to compute timezone from.
-      @internal
+      @param t time to compute timezone from.
     */
-    QByteArray zone( time_t otime ) const;
+    QByteArray zone( time_t t ) const;
 
+    /**
+      Converts QDateTime @p dt to a time_t value.
+
+      @param dt is the QDateTime to be converted.
+      @return the time_t equivalent of the specified QDateTime.
+    */
     time_t qdateToTimeT( const QDateTime &dt ) const;
 
   private:
