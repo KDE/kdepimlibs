@@ -76,40 +76,36 @@ enum contentDisposition {
 //often used charset
 static const QByteArray Latin1( "ISO-8859-1" );
 
-#define mk_trivial_subclass_with_name( subclass, subclassName, baseclass ) \
-  class KMIME_EXPORT subclass : public Generics::baseclass              \
-  {                                                                     \
-    public:                                                             \
+#define mk_trivial_constructor( subclass, baseclass ) \
+  public:                                                               \
     subclass() : Generics::baseclass() {}                               \
     subclass( Content *p ) : Generics::baseclass( p ) {}                \
     subclass( Content *p, const QByteArray &s )                         \
       : Generics::baseclass( p ) { from7BitString( s ); }               \
     subclass( Content *p, const QString &s, const QByteArray &cs )      \
       : Generics::baseclass( p ) { fromUnicodeString( s, cs ); }        \
-    ~subclass() {}                                                      \
-                                                                        \
-    const char *type() const { return #subclassName; }                  \
-  }
+    ~subclass() {}
+
+#define mk_trivial_constructor_with_name( subclass, subclassName, baseclass ) \
+  mk_trivial_constructor( subclass, baseclass ) \
+  const char *type() const { return #subclassName; }
+
+#define mk_trivial_subclass_with_name( subclass, subclassName, baseclass ) \
+class KMIME_EXPORT subclass : public Generics::baseclass                \
+{                                                                       \
+  mk_trivial_constructor_with_name( subclass, subclassName, baseclass ) \
+}
 
 #define mk_trivial_subclass( subclass, baseclass )                      \
   mk_trivial_subclass_with_name( subclass, subclass, baseclass )
 
 #define mk_parsing_subclass_with_name( subclass, subclassName, baseclass ) \
-  class KMIME_EXPORT subclass : public Generics::baseclass              \
-  {                                                                     \
-    public:                                                             \
-    subclass() : Generics::baseclass() {}                               \
-    subclass( Content *p ) : Generics::baseclass( p ) {}                \
-    subclass( Content *p, const QByteArray &s )                         \
-      : Generics::baseclass( p ) { from7BitString( s ); }               \
-    subclass( Content *p, const QString &s, const QByteArray &cs )      \
-      : Generics::baseclass( p ) { fromUnicodeString( s, cs ); }        \
-    ~subclass() {}                                                      \
-                                                                        \
-    const char *type() const { return #subclassName; }                  \
-    protected:                                                          \
+class KMIME_EXPORT subclass : public Generics::baseclass                \
+{                                                                       \
+  mk_trivial_constructor_with_name( subclass, subclassName, baseclass ) \
+  protected:                                                            \
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false ); \
-  }
+}
 
 #define mk_parsing_subclass( subclass, baseclass )                      \
   mk_parsing_subclass_with_name( subclass, subclass, baseclass )
@@ -1025,28 +1021,12 @@ class KMIME_EXPORT Lines : public Base
     int l_ines;
 };
 
-/** Represents a "User-Agent" header */
-class KMIME_EXPORT UserAgent : public Base
+/**
+  Represents a "User-Agent" header.
+*/
+class KMIME_EXPORT UserAgent : public Generics::Unstructured
 {
-  public:
-    UserAgent() : Base() {}
-    UserAgent( Content *p ) : Base( p ) {}
-    UserAgent( Content *p, const QByteArray &s ) : Base( p )
-      { from7BitString( s ); }
-    UserAgent( Content *p, const QString &s ) : Base( p )
-      { fromUnicodeString( s, Latin1 ); }
-    ~UserAgent() {}
-
-    virtual void from7BitString( const QByteArray &s );
-    virtual QByteArray as7BitString( bool incType=true );
-    virtual void fromUnicodeString( const QString &s, const QByteArray &b );
-    virtual QString asUnicodeString();
-    virtual void clear() { u_agent.resize( 0 ); }
-    virtual bool isEmpty() const { return (u_agent.isEmpty()); }
-    virtual const char *type() const { return "User-Agent"; }
-
-  protected:
-    QByteArray u_agent;
+  mk_trivial_constructor_with_name( UserAgent, User-Agent, Unstructured )
 };
 
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
@@ -1055,5 +1035,13 @@ class KMIME_EXPORT UserAgent : public Base
 }  //namespace Headers
 
 }  //namespace KMime
+
+// undefine code generation macros again
+#undef mk_trivial_constructor
+#undef mk_trivial_constructor_with_name
+#undef mk_trivial_subclass_with_name
+#undef mk_trivial_subclass
+#undef mk_parsing_subclass_with_name
+#undef mk_parsing_subclass
 
 #endif // __KMIME_HEADERS_H__

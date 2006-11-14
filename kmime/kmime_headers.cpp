@@ -1009,38 +1009,6 @@ QString Lines::asUnicodeString()
 
 //-----</Lines>--------------------------------
 
-//-----<UserAgent>-----------------------------
-
-void UserAgent::from7BitString( const QByteArray &s )
-{
-  u_agent = s;
-  e_ncCS = cachedCharset( Latin1 );
-}
-
-QByteArray UserAgent::as7BitString( bool incType )
-{
-  if ( incType ) {
-    return ( typeIntro() + u_agent );
-  } else {
-    return u_agent;
-  }
-}
-
-void UserAgent::fromUnicodeString( const QString &s, const QByteArray &barr )
-{
-  Q_UNUSED( barr );
-
-  u_agent = s.toLatin1();
-  e_ncCS = cachedCharset( Latin1 );
-}
-
-QString UserAgent::asUnicodeString()
-{
-  return QString::fromLatin1( u_agent );
-}
-
-//-----</UserAgent>----------------------------
-
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<Content-Type>--------------------------
 
