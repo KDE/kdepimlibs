@@ -247,7 +247,7 @@ class KMIME_EXPORT DateFormatter
     QString isoDate( time_t t ) const;
 
     /**
-      Returns a QString containg the specified time_t @p t in the
+      Returns a QString containing the specified time_t @p t in the
       #Rfc #FormatType.
 
       @param t is the time_t to use for formatting.

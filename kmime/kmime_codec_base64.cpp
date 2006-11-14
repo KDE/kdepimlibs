@@ -96,7 +96,10 @@ class Base64Decoder : public Decoder
                  char* &dcursor, const char * const dend );
     // ### really needs no finishing???
     bool finish( char* &dcursor, const char * const dend )
-      { Q_UNUSED( dcursor ); Q_UNUSED( dend ); return true; }
+      {
+        Q_UNUSED( dcursor ); Q_UNUSED( dend );
+        return true;
+      }
 };
 
 class Base64Encoder : public Encoder
@@ -128,7 +131,7 @@ class Base64Encoder : public Encoder
 
   protected:
     bool writeBase64( uchar ch, char* &dcursor, const char * const dend )
-    { return write( base64EncodeMap[ ch ], dcursor, dend ); }
+      { return write( base64EncodeMap[ ch ], dcursor, dend ); }
 };
 
 class Rfc2047BEncodingEncoder : public Base64Encoder
@@ -144,17 +147,17 @@ class Rfc2047BEncodingEncoder : public Base64Encoder
     bool finish( char* &dcursor, const char * const dend );
 };
 
-Encoder * Base64Codec::makeEncoder( bool withCRLF ) const
+Encoder *Base64Codec::makeEncoder( bool withCRLF ) const
 {
   return new Base64Encoder( withCRLF );
 }
 
-Decoder * Base64Codec::makeDecoder( bool withCRLF ) const
+Decoder *Base64Codec::makeDecoder( bool withCRLF ) const
 {
   return new Base64Decoder( withCRLF );
 }
 
-Encoder * Rfc2047BEncodingCodec::makeEncoder( bool withCRLF ) const
+Encoder *Rfc2047BEncodingCodec::makeEncoder( bool withCRLF ) const
 {
   return new Rfc2047BEncodingEncoder( withCRLF );
 }
@@ -235,7 +238,7 @@ bool Base64Decoder::decode( const char* &scursor, const char * const send,
   }
 
   // return false when caller should call us again:
-  return ( scursor == send );
+  return scursor == send;
 } // Base64Decoder::decode()
 
 bool Base64Encoder::encode( const char* &scursor, const char * const send,
@@ -253,7 +256,7 @@ bool Base64Encoder::encode( const char* &scursor, const char * const send,
     // ### fixme: we can optimize this away, since the buffer isn't
     // written to anyway (most of the time)
     if ( mOutputBufferCursor && !flushOutputBuffer( dcursor, dend ) ) {
-      return ( scursor == send );
+      return scursor == send;
     }
 
     uchar ch = *scursor++;
@@ -295,7 +298,7 @@ bool Base64Encoder::encode( const char* &scursor, const char * const send,
     flushOutputBuffer( dcursor, dend );
   }
 
-  return ( scursor == send );
+  return scursor == send;
 }
 
 bool Rfc2047BEncodingEncoder::encode( const char* &scursor,
@@ -313,7 +316,7 @@ bool Rfc2047BEncodingEncoder::encode( const char* &scursor,
     // ### fixme: we can optimize this away, since the buffer isn't
     // written to anyway (most of the time)
     if ( mOutputBufferCursor && !flushOutputBuffer( dcursor, dend ) ) {
-      return ( scursor == send );
+      return scursor == send;
     }
 
     uchar ch = *scursor++;
@@ -348,7 +351,7 @@ bool Rfc2047BEncodingEncoder::encode( const char* &scursor,
     flushOutputBuffer( dcursor, dend );
   }
 
-  return ( scursor == send );
+  return scursor == send;
 }
 
 bool Base64Encoder::finish( char* &dcursor, const char * const dend )
