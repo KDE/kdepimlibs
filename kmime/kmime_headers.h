@@ -603,31 +603,46 @@ class KMIME_EXPORT GDotAtom : public Structured
     QString mDotAtom;
 };
 
-class KMIME_EXPORT GParametrized : public Structured
+/**
+  Base class for headers containing a parameter list such as "Content-Type".
+*/
+class KMIME_EXPORT Parametrized : public Structured
 {
+  mk_trivial_constructor( Parametrized, Structured );
   public:
-    GParametrized() : Structured() {}
-    GParametrized( Content *p ) : Structured( p ) {}
-    GParametrized( Content *p, const QByteArray &s ) : Structured( p )
-      { from7BitString( s ); }
-    GParametrized( Content *p, const QString & s, const QByteArray &cs ) : Structured( p )
-      { fromUnicodeString( s, cs ); }
-    ~GParametrized() {}
+    virtual QByteArray as7BitString( bool withHeaderType = true );
+
+    virtual bool isEmpty() const;
+    virtual void clear();
+
+    /**
+      Returns the value of the specified parameter.
+      @param key The parameter name.
+    */
+    QString parameter( const QString &key ) const;
+
+    /**
+      Sets the parameter @p key to @p value.
+      @param key The parameter name.
+      @param value The new value for @p key.
+    */
+    void setParameter( const QString &key, const QString &value );
 
   protected:
-    QMap<QString,QString> mParameterHash;
+    virtual bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
   private:
+    QMap<QString,QString> mParameterHash;
 };
 
-class KMIME_EXPORT GContentType : public GParametrized
+class KMIME_EXPORT GContentType : public Parametrized
 {
   public:
-    GContentType() : GParametrized() {}
-    GContentType( Content *p ) : GParametrized( p ) {}
-    GContentType( Content *p, const QByteArray &s ) : GParametrized( p )
+    GContentType() : Parametrized() {}
+    GContentType( Content *p ) : Parametrized( p ) {}
+    GContentType( Content *p, const QByteArray &s ) : Parametrized( p )
       { from7BitString( s ); }
-    GContentType( Content *p, const QString &s, const QByteArray &cs ) : GParametrized( p )
+    GContentType( Content *p, const QString &s, const QByteArray &cs ) : Parametrized( p )
       { fromUnicodeString( s, cs ); }
     ~GContentType() {}
 
@@ -638,15 +653,15 @@ class KMIME_EXPORT GContentType : public GParametrized
     QByteArray mMimeSubType;
 };
 
-class KMIME_EXPORT GCISTokenWithParameterList : public GParametrized
+class KMIME_EXPORT GCISTokenWithParameterList : public Parametrized
 {
   public:
-    GCISTokenWithParameterList() : GParametrized() {}
-    GCISTokenWithParameterList( Content *p ) : GParametrized( p ) {}
-    GCISTokenWithParameterList( Content *p, const QByteArray &s ) : GParametrized( p )
+    GCISTokenWithParameterList() : Parametrized() {}
+    GCISTokenWithParameterList( Content *p ) : Parametrized( p ) {}
+    GCISTokenWithParameterList( Content *p, const QByteArray &s ) : Parametrized( p )
       { from7BitString( s ); }
     GCISTokenWithParameterList( Content *p, const QString &s, const QByteArray &cs )
-      : GParametrized( p )
+      : Parametrized( p )
       { fromUnicodeString( s, cs ); }
     ~GCISTokenWithParameterList() {}
 

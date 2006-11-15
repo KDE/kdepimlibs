@@ -24,9 +24,10 @@
 
 using namespace KMime;
 using namespace KMime::Headers;
+using namespace KMime::Headers::Generics;
 
-// the following test cases are taken from KDE mailinglists, bug reports and
-// RFC 2822, Appendix A
+// the following test cases are taken from KDE mailinglists, bug reports, RFC 2183
+// and RFC 2822, Appendix A
 
 QTEST_KDEMAIN( HeaderTest, NoGUI )
 
@@ -278,6 +279,35 @@ void HeaderTest::testMailCopiesToHeader()
   QVERIFY( !h->neverCopy() );
   QCOMPARE( h->as7BitString(), QByteArray( "Mail-Copies-To: vkrause@kde.org" ) );
   delete h;
+}
+
+void HeaderTest::testParametrizedHeader()
+{
+  Parametrized *h;
+
+  // empty header
+  h = new Parametrized();
+  QVERIFY( h->isEmpty() );
+
+  // add a parameter
+  h->setParameter( "filename", "bla.jpg" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->parameter( "filename" ), QString( "bla.jpg" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "filename=\"bla.jpg\"" ) );
+
+  // clear again
+  h->clear();
+  QVERIFY( h->isEmpty() );
+  delete h;
+
+  // parse a parameter list
+  h = new Parametrized( 0, "filename=genome.jpeg;\n modification-date=\"Wed, 12 Feb 1997 16:29:51 -0500\"" );
+  QCOMPARE( h->parameter( "filename" ), QString( "genome.jpeg" ) );
+  QCOMPARE( h->parameter( "modification-date" ), QString( "Wed, 12 Feb 1997 16:29:51 -0500" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "filename=\"genome.jpeg\"; modification-date=\"Wed, 12 Feb 1997 16:29:51 -0500\"" ) );
+  delete h;
+
+  // TODO: RFC 2047 encoded values
 }
 
 #include "headertest.moc"

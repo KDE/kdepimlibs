@@ -29,6 +29,7 @@ class HeaderTest : public QObject
     void testIdentHeader();
     void testAddressListHeader();
     void testMailCopiesToHeader();
+    void testParametrizedHeader();
 };
 
 

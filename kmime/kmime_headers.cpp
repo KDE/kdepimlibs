@@ -465,9 +465,68 @@ bool GDotAtom::parse( const char* &scursor, const char *const send,
 
 //-----</GDotAtom>-------------------------
 
-//-----<GParametrized>-------------------------
+//-----<Parametrized>-------------------------
 
-//-----</GParametrized>-------------------------
+QByteArray Parametrized::as7BitString( bool withHeaderType )
+{
+  if ( isEmpty() )
+    return QByteArray();
+
+  QByteArray rv;
+  if ( withHeaderType )
+    rv += typeIntro();
+
+  bool first = true;
+  for ( QMap<QString,QString>::ConstIterator it = mParameterHash.constBegin();
+        it != mParameterHash.constEnd(); ++it )
+  {
+    if ( !first )
+      rv += "; ";
+    else
+      first = false;
+    rv += it.key().toLatin1() + "=";
+    if ( isUsAscii( it.value() ) ) {
+      QByteArray tmp = it.value().toLatin1();
+      addQuotes( tmp, true );
+      rv += tmp;
+    } else {
+      // FIXME: encoded strings are not allowed inside quotes, OTOH we need to quote whitespaces...
+      rv += "\"" + encodeRFC2047String( it.value(), e_ncCS ) + "\"";
+    }
+  }
+
+  return rv;
+}
+
+QString Parametrized::parameter(const QString & key) const
+{
+  return mParameterHash.value( key );
+}
+
+void Parametrized::setParameter(const QString & key, const QString & value)
+{
+  mParameterHash.insert( key, value );
+}
+
+bool Parametrized::isEmpty() const
+{
+  return mParameterHash.isEmpty();
+}
+
+void Parametrized::clear()
+{
+  mParameterHash.clear();
+}
+
+bool Parametrized::parse(const char *& scursor, const char * const send, bool isCRLF)
+{
+  mParameterHash.clear();
+  if ( !parseParameterList( scursor, send, mParameterHash, isCRLF ) )
+    return false;
+  return true;
+}
+
+//-----</Parametrized>-------------------------
 
 //-----</GContentType>-------------------------
 
@@ -478,7 +537,6 @@ bool GContentType::parse( const char* &scursor, const char * const send,
 
   mMimeType = 0;
   mMimeSubType = 0;
-  mParameterHash.clear();
 
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) {
@@ -522,10 +580,7 @@ bool GContentType::parse( const char* &scursor, const char * const send,
   if ( *scursor != ';' ) return false;
   scursor++;
 
-  if ( !parseParameterList( scursor, send, mParameterHash, isCRLF ) )
-    return false;
-
-  return true;
+  return Parametrized::parse( scursor, send, isCRLF );
 }
 
 //-----</GContentType>-------------------------
@@ -536,7 +591,6 @@ bool GCISTokenWithParameterList::parse( const char* &scursor,
 					const char * const send, bool isCRLF ) {
 
   mToken = 0;
-  mParameterHash.clear();
 
   //
   // token
@@ -561,10 +615,7 @@ bool GCISTokenWithParameterList::parse( const char* &scursor,
   if ( *scursor != ';' ) return false;
   scursor++;
 
-  if ( !parseParameterList( scursor, send, mParameterHash, isCRLF ) )
-    return false;
-
-  return true;
+  return Parametrized::parse( scursor, send, isCRLF );
 }
 
 //-----</GTokenWithParameterList>-------------------------
