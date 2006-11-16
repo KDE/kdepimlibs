@@ -310,4 +310,35 @@ void HeaderTest::testParametrizedHeader()
   // TODO: RFC 2047 encoded values
 }
 
+void HeaderTest::testContentDispositionHeader()
+{
+  ContentDisposition *h;
+
+  // empty header
+  h = new ContentDisposition();
+  QVERIFY( h->isEmpty() );
+
+  // set some values
+  h->setFilename( "test.jpg" );
+  QVERIFY( h->isEmpty() );
+  QVERIFY( h->as7BitString( false ).isEmpty() );
+  h->setDisposition( CDattachment );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "attachment; filename=\"test.jpg\"" ) );
+  delete h;
+
+  // parse parameter-less header
+  h = new ContentDisposition( 0, "inline" );
+  QCOMPARE( h->disposition(), CDinline );
+  QVERIFY( h->filename().isEmpty() );
+  QCOMPARE( h->as7BitString( true ), QByteArray( "Content-Disposition: inline" ) );
+  delete h;
+
+  // parse header with parameter
+  h = new ContentDisposition( 0, "attachment; filename=genome.jpeg;\n modification-date=\"Wed, 12 Feb 1997 16:29:51 -0500\";");
+  QCOMPARE( h->disposition(), CDattachment );
+  QCOMPARE( h->filename(), QString( "genome.jpeg" ) );
+  delete h;
+}
+
 #include "headertest.moc"

@@ -802,7 +802,7 @@ Headers::Base *Content::getHeaderByType( const char *type )
     } else if ( strcasecmp( "Content-Transfer-Encoding", type ) == 0 ) {
       h = new Headers::CTEncoding( this, raw );
     } else if ( strcasecmp( "Content-Disposition", type ) == 0 ) {
-      h = new Headers::CDisposition( this, raw );
+      h = new Headers::ContentDisposition( this, raw );
     } else if ( strcasecmp( "Content-Description", type ) == 0 ) {
       h = new Headers::ContentDescription( this, raw );
     } else {

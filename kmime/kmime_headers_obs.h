@@ -119,35 +119,4 @@ class KMIME_EXPORT CTEncoding : public Base {
 
 };
 
-
-/** Represents a "Content-Disposition" header */
-class KMIME_EXPORT CDisposition : public Base {
-
-  public:
-    CDisposition() : Base(),d_isp(CDinline)  {}
-    CDisposition(Content *p) : Base(p),d_isp(CDinline)  {}
-    CDisposition(Content *p, const QByteArray &s) : Base(p)  { from7BitString(s); }
-    CDisposition(Content *p, const QString &s, const QByteArray &cs) : Base(p)  { fromUnicodeString(s, cs); }
-    ~CDisposition()  {}
-
-    virtual void from7BitString(const QByteArray &s);
-    virtual QByteArray as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QByteArray &cs);
-    virtual QString asUnicodeString();
-    virtual void clear()            { f_ilename.truncate(0); d_isp=CDinline; }
-    virtual const char* type() const { return "Content-Disposition"; }
-
-    contentDisposition disposition()          { return d_isp; }
-    void setDisposition(contentDisposition d) { d_isp=d; }
-    bool isAttachment()                       { return (d_isp==CDattachment); }
-
-    QString filename()                        { return f_ilename; }
-    void setFilename(const QString &s)        { f_ilename=s; }
-
-  protected:
-    contentDisposition d_isp;
-    QString f_ilename;
-
-};
-
 #endif  // __KMIME_HEADERS_OBS_H__

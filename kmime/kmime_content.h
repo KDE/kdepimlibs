@@ -185,9 +185,9 @@ class KMIME_EXPORT Content
 
       @param create if true, create the header if it doesn't exist yet.
     */
-    Headers::CDisposition *contentDisposition( bool create=true )
+    Headers::ContentDisposition *contentDisposition( bool create=true )
       {
-        Headers::CDisposition *p=0;
+        Headers::ContentDisposition *p=0;
         return getHeaderInstance( p, create );
       }
 

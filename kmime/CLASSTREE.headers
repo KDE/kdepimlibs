@@ -40,11 +40,10 @@ m     + ContentTransferEncoding
 m     + MIMEVersion
     + GPhraseList*     // Base Class for phrase list headers: Keywords
 r     + Keywords
-    + GParametrized*   // Base Class for parametrizable headers: Content-type
+    + Parametrized*   // Base Class for parametrizable headers: Content-type
       + GContentType*
 m       + ContentType
-      + GTokenWithParameterList*
-m       + ContentDisposition
+m     + ContentDisposition
 
     + GDate*           // Base class for date headers: Date
 r     + Date

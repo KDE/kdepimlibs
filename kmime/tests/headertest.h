@@ -30,6 +30,7 @@ class HeaderTest : public QObject
     void testAddressListHeader();
     void testMailCopiesToHeader();
     void testParametrizedHeader();
+    void testContentDispositionHeader();
 };
 
 

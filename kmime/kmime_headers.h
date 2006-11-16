@@ -68,6 +68,7 @@ enum contentEncoding {
 };
 
 enum contentDisposition {
+  CDInvalid,
   CDinline,
   CDattachment,
   CDparallel
@@ -78,8 +79,8 @@ static const QByteArray Latin1( "ISO-8859-1" );
 
 #define mk_trivial_constructor( subclass, baseclass ) \
   public:                                                               \
-    subclass() : Generics::baseclass() {}                               \
-    subclass( Content *p ) : Generics::baseclass( p ) {}                \
+    subclass() : Generics::baseclass() { clear(); }                     \
+    subclass( Content *p ) : Generics::baseclass( p ) { clear(); }      \
     subclass( Content *p, const QByteArray &s )                         \
       : Generics::baseclass( p ) { from7BitString( s ); }               \
     subclass( Content *p, const QString &s, const QByteArray &cs )      \
@@ -653,24 +654,6 @@ class KMIME_EXPORT GContentType : public Parametrized
     QByteArray mMimeSubType;
 };
 
-class KMIME_EXPORT GCISTokenWithParameterList : public Parametrized
-{
-  public:
-    GCISTokenWithParameterList() : Parametrized() {}
-    GCISTokenWithParameterList( Content *p ) : Parametrized( p ) {}
-    GCISTokenWithParameterList( Content *p, const QByteArray &s ) : Parametrized( p )
-      { from7BitString( s ); }
-    GCISTokenWithParameterList( Content *p, const QString &s, const QByteArray &cs )
-      : Parametrized( p )
-      { fromUnicodeString( s, cs ); }
-    ~GCISTokenWithParameterList() {}
-
-  protected:
-    bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
-
-    QByteArray mToken;
-};
-
 } // namespace Generics
 
 //
@@ -821,13 +804,53 @@ mk_trivial_subclass( References, Ident );
 // GContentType:
 
 mk_trivial_subclass_with_name( ContentType, ContentType, GContentType );
-
-// GCISTokenWithParameterList:
-
-mk_trivial_subclass_with_name( ContentDisposition, Content-Disposition,
-			       GCISTokenWithParameterList );
-
 #endif
+
+/**
+  Represents a "Content-Disposition" header.
+
+  @see RFC 2183
+*/
+class ContentDisposition : public Generics::Parametrized
+{
+  mk_trivial_constructor_with_name( ContentDisposition, Content-Disposition, Parametrized )
+  public:
+    virtual QByteArray as7BitString( bool withHeaderType = true );
+    virtual bool isEmpty() const;
+    virtual void clear();
+
+    /**
+      Returns the content disposition.
+    */
+    contentDisposition disposition() const;
+
+    /**
+      Sets the content disposition.
+      @param d The new content disposition.
+    */
+    void setDisposition(contentDisposition d);
+
+    /**
+      Returns the suggested filename for the associated MIME part.
+      This is just a convenience function, it is equivalent to calling
+      parameter( "filename" );
+    */
+    QString filename() const;
+
+    /**
+      Sets the suggested filename for the associated MIME part.
+      This is just a convenience function, it is equivalent to calling
+      setParameter( "filename", filename );
+      @param filename The filename.
+    */
+    void setFilename(const QString &filename);
+
+  protected:
+    bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
+
+  private:
+    contentDisposition mDisposition;
+};
 
 //
 //

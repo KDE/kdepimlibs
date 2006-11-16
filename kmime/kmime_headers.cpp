@@ -487,7 +487,7 @@ QByteArray Parametrized::as7BitString( bool withHeaderType )
     rv += it.key().toLatin1() + "=";
     if ( isUsAscii( it.value() ) ) {
       QByteArray tmp = it.value().toLatin1();
-      addQuotes( tmp, true );
+      addQuotes( tmp, false );
       rv += tmp;
     } else {
       // FIXME: encoded strings are not allowed inside quotes, OTOH we need to quote whitespaces...
@@ -584,41 +584,6 @@ bool GContentType::parse( const char* &scursor, const char * const send,
 }
 
 //-----</GContentType>-------------------------
-
-//-----<GTokenWithParameterList>-------------------------
-
-bool GCISTokenWithParameterList::parse( const char* &scursor,
-					const char * const send, bool isCRLF ) {
-
-  mToken = 0;
-
-  //
-  // token
-  //
-
-  eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
-
-  QPair<const char*,int> maybeToken;
-  if ( !parseToken( scursor, send, maybeToken, false /* no 8Bit */ ) )
-    return false;
-
-  mToken = QByteArray( maybeToken.first, maybeToken.second ).toLower();
-
-  //
-  // parameter list
-  //
-
-  eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return true; // no parameters
-
-  if ( *scursor != ';' ) return false;
-  scursor++;
-
-  return Parametrized::parse( scursor, send, isCRLF );
-}
-
-//-----</GTokenWithParameterList>-------------------------
 
 //-----<Ident>-------------------------
 
@@ -1365,92 +1330,98 @@ QString CTEncoding::asUnicodeString()
 {
   return QString::fromLatin1( as7BitString( false ) );
 }
+#endif
 
 //-----</CTEncoding>---------------------------
 
-//-----<CDisposition>--------------------------
+//-----<ContentDisposition>--------------------------
 
-void CDisposition::from7BitString( const QByteArray &s )
+QByteArray ContentDisposition::as7BitString( bool incType )
 {
-  if ( strncasecmp( s.data(), "attachment", 10 ) == 0 ) {
-    d_isp = CDattachment;
-  } else {
-    d_isp = CDinline;
-  }
+  if ( isEmpty() )
+    return QByteArray();
 
-  int pos = QString( s ).indexOf( "filename=", 0, Qt::CaseInsensitive );
-  QByteArray fn;
-  if ( pos > -1 ) {
-    pos += 9;
-    fn = s.mid( pos, s.length() - pos );
-    removeQuots( fn );
-    f_ilename = decodeRFC2047String( fn, e_ncCS, defaultCS(), forceCS() );
-  }
+  QByteArray rv;
+  if ( incType )
+    rv += typeIntro();
+
+  if ( mDisposition == CDattachment )
+    rv += "attachment";
+  else if ( mDisposition == CDinline )
+    rv += "inline";
+  else
+    return QByteArray();
+
+  if ( !Parametrized::isEmpty() )
+    rv += "; " + Parametrized::as7BitString( false );
+
+  return rv;
 }
 
-QByteArray CDisposition::as7BitString( bool incType )
+bool ContentDisposition::isEmpty() const
 {
-  QByteArray ret;
-  if ( d_isp == CDattachment ) {
-    ret = "attachment";
-  } else {
-    ret = "inline";
-  }
-
-  if ( !f_ilename.isEmpty() ) {
-    if ( isUsAscii( f_ilename ) ) {
-      QByteArray tmp = f_ilename.toLatin1();
-      addQuotes( tmp, true );
-      ret += "; filename=" + tmp;
-    } else {
-      // FIXME: encoded words can't be enclosed in quotes!!
-      ret += "; filename=\"" + encodeRFC2047String(f_ilename, e_ncCS) + '\"';
-    }
-  }
-
-  if ( incType ) {
-    return ( typeIntro() + ret );
-  } else {
-    return ret;
-  }
+  return mDisposition == CDInvalid;
 }
 
-void CDisposition::fromUnicodeString( const QString &s, const QByteArray &cs )
+void ContentDisposition::clear()
 {
-  if ( strncasecmp( s.toLatin1(), "attachment", 10 ) == 0 ) {
-    d_isp = CDattachment;
-  } else {
-    d_isp = CDinline;
-  }
-
-  int pos = s.indexOf( "filename=", 0, Qt::CaseInsensitive );
-  if ( pos > -1 ) {
-    pos += 9;
-    f_ilename = s.mid( pos, s.length() - pos );
-    removeQuots( f_ilename );
-  }
-
-  e_ncCS=cachedCharset( cs );
+  mDisposition = CDInvalid;
+  Parametrized::clear();
 }
 
-QString CDisposition::asUnicodeString()
+contentDisposition ContentDisposition::disposition() const
 {
-  QString ret;
-  if ( d_isp == CDattachment ) {
-    ret = "attachment";
-  } else {
-    ret = "inline";
-  }
-
-  if ( !f_ilename.isEmpty() ) {
-    ret += "; filename=\"" + f_ilename + '\"';
-  }
-
-  return ret;
+  return mDisposition;
 }
 
-//-----</CDisposition>-------------------------
-#endif
+void ContentDisposition::setDisposition(contentDisposition d)
+{
+  mDisposition = d;
+}
+
+QString KMime::Headers::ContentDisposition::filename() const
+{
+  return parameter( "filename" );
+}
+
+void ContentDisposition::setFilename( const QString &filename )
+{
+  setParameter( "filename", filename );
+}
+
+bool ContentDisposition::parse(const char *& scursor, const char * const send, bool isCRLF)
+{
+  clear();
+
+  // token
+  QByteArray token;
+  eatCFWS( scursor, send, isCRLF );
+  if ( scursor == send ) return false;
+
+  QPair<const char*,int> maybeToken;
+  if ( !parseToken( scursor, send, maybeToken, false /* no 8Bit */ ) )
+    return false;
+
+  token = QByteArray( maybeToken.first, maybeToken.second ).toLower();
+  if ( token == "inline" )
+    mDisposition = CDinline;
+  else if ( token == "attachment" )
+    mDisposition = CDattachment;
+  else
+    return false;
+
+  // parameter list
+  eatCFWS( scursor, send, isCRLF );
+  if ( scursor == send ) return true; // no parameters
+
+  if ( *scursor != ';' ) return false;
+  scursor++;
+
+  return Parametrized::parse( scursor, send, isCRLF );
+}
+
+//-----</ContentDisposition>-------------------------
+
 } // namespace Headers
 
 } // namespace KMime
