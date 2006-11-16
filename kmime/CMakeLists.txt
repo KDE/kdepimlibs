@@ -45,7 +45,6 @@ install( FILES
         kmime_contentindex.h
         kmime_header_parsing.h
         kmime_headers.h
-        kmime_headers_obs.h
         kmime_message.h
         kmime_mdn.h
         kmime_newsarticle.h
