@@ -388,12 +388,41 @@ bool AddressList::parse( const char* &scursor, const char *const send, bool isCR
 
 //-----</AddressList>-------------------------
 
-//-----<GToken>-------------------------
+//-----<Token>-------------------------
 
-bool GToken::parse( const char* &scursor, const char *const send,
-		    bool isCRLF )
+QByteArray Token::as7BitString(bool withHeaderType)
 {
+  if ( isEmpty() )
+    return QByteArray();
+  if ( withHeaderType )
+    return typeIntro() + mToken;
+  return mToken;
+}
 
+void Token::clear()
+{
+  mToken.clear();
+  Structured::clear();
+}
+
+bool Token::isEmpty() const
+{
+  return mToken.isEmpty();
+}
+
+QByteArray Token::token() const
+{
+  return mToken;
+}
+
+void Token::setToken( const QByteArray &t )
+{
+  mToken = t;
+}
+
+bool Token::parse( const char* &scursor, const char *const send, bool isCRLF )
+{
+  clear();
   eatCFWS( scursor, send, isCRLF );
   // must not be empty:
   if ( scursor == send ) return false;
@@ -412,7 +441,7 @@ bool GToken::parse( const char* &scursor, const char *const send,
   return true;
 }
 
-//-----</GToken>-------------------------
+//-----</Token>-------------------------
 
 //-----<GPhraseList>-------------------------
 

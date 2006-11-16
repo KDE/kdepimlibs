@@ -32,6 +32,7 @@ class HeaderTest : public QObject
     void testParametrizedHeader();
     void testContentDispositionHeader();
     void testContentTypeHeader();
+    void testTokenHeader();
 };
 
 

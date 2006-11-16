@@ -34,7 +34,7 @@ m         + ContentID
 u?        + Supersedes
 r       + InReplyTo
 r       + References
-    + GToken*          // Base Class for single-token headers: CTE
+    + Token*          // Base Class for single-token headers: CTE
 m     + ContentTransferEncoding
     + GDotAtom*        // Base Class for single-dot-atom headers: MIME-Version
 m     + MIMEVersion

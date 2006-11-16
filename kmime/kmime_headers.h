@@ -560,21 +560,32 @@ class KMIME_EXPORT SingleIdent : public Ident
     bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 };
 
-/** Base class for headers which deal with a single atom. */
-class KMIME_EXPORT GToken : public Structured
+/**
+  Base class for headers which deal with a single atom.
+*/
+class KMIME_EXPORT Token : public Structured
 {
+  mk_trivial_constructor( Token, Structured )
   public:
-    GToken() : Structured() {}
-    GToken( Content *p ) : Structured( p ) {}
-    GToken( Content *p, const QByteArray &s )
-      : Structured( p ) { from7BitString( s ); }
-    GToken( Content *p, const QString &s, const QByteArray &cs )
-      : Structured( p ) { fromUnicodeString( s, cs ); }
-    ~GToken() {}
+    virtual QByteArray as7BitString( bool withHeaderType = true );
+
+    virtual void clear();
+    virtual bool isEmpty() const;
+
+    /**
+      Returns the token.
+    */
+    QByteArray token() const;
+
+    /**
+      Sets the token to @p t,
+    */
+    void setToken( const QByteArray &t );
 
   protected:
     bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
+  private:
     QByteArray mToken;
 };
 
@@ -743,9 +754,9 @@ class KMIME_EXPORT MailCopiesTo : public Generics::AddressList
 };
 
 #if defined(KMIME_NEW_STYLE_CLASSTREE)
-// GToken:
+// Token:
 mk_trivial_subclass_with_name( ContentTransferEncoding,
-                               Content-Transfer-Encoding, GToken );
+                               Content-Transfer-Encoding, Token );
 
 // GPhraseList:
 

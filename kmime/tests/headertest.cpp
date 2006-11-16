@@ -380,4 +380,29 @@ void HeaderTest::testContentTypeHeader()
   delete h;
 }
 
+void HeaderTest::testTokenHeader()
+{
+  Token *h;
+
+  // empty header
+  h = new Token();
+  QVERIFY( h->isEmpty() );
+
+  // set a token
+  h->setToken( "bla" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "bla" ) );
+
+  // clear it again
+  h->clear();
+  QVERIFY( h->isEmpty() );
+  delete h;
+
+  // parse a header
+  h = new Token( 0, "value (comment)" );
+  QCOMPARE( h->token(), QByteArray("value") );
+  QCOMPARE( h->as7BitString( false ), QByteArray("value") );
+  delete h;
+}
+
 #include "headertest.moc"
