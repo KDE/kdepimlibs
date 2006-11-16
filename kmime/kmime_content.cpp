@@ -233,7 +233,7 @@ void Content::parse()
         ct->setMimeType( "message/partial" );
         //ct->setId( uniqueString() ); not needed yet
         ct->setPartialParams( uup.partialCount(), uup.partialNumber() );
-        contentTransferEncoding()->setCte( Headers::CE7Bit );
+        contentTransferEncoding()->setEncoding( Headers::CE7Bit );
       } else { //it's a complete message => treat as "multipart/mixed"
         //the whole content is now split into single parts, so it's safe
         //to delete the message-body
@@ -271,7 +271,7 @@ void Content::parse()
           ct->setMimeType( "message/partial" );
           //ct->setId( uniqueString() ); not needed yet
           ct->setPartialParams( yenc.partialCount(), yenc.partialNumber() );
-          contentTransferEncoding()->setCte( Headers::CEbinary );
+          contentTransferEncoding()->setEncoding( Headers::CEbinary );
         } else { //it's a complete message => treat as "multipart/mixed"
           //the whole content is now split into single parts, so it's safe
           //to delete the message-body
@@ -362,11 +362,11 @@ QByteArray Content::encodedContent( bool useCrLf )
 
     // reencode non-mime binaries...
     foreach ( Content *c, d->contents ) {
-      if ( ( c->contentTransferEncoding( true )->cte() == Headers::CEuuenc ) ||
-           ( c->contentTransferEncoding( true )->cte() == Headers::CEbinary ) ) {
+      if ( ( c->contentTransferEncoding( true )->encoding() == Headers::CEuuenc ) ||
+           ( c->contentTransferEncoding( true )->encoding() == Headers::CEbinary ) ) {
         convertNonMimeBinaries = true;
         c->setBody( KCodecs::base64Encode( c->decodedContent(), true ) + '\n' );
-        c->contentTransferEncoding( true )->setCte(Headers::CEbase64);
+        c->contentTransferEncoding( true )->setEncoding(Headers::CEbase64);
         c->contentTransferEncoding( true )->setDecoded( false );
         c->removeHeader("Content-Description");
         c->assemble();
@@ -410,10 +410,10 @@ QByteArray Content::encodedContent( bool useCrLf )
 
   //body
   if ( !d->body.isEmpty() ) { //this message contains only one part
-    Headers::CTEncoding *enc=contentTransferEncoding();
+    Headers::ContentTransferEncoding *enc=contentTransferEncoding();
 
     if (enc->needToEncode()) {
-      if ( enc->cte() == Headers::CEquPr ) {
+      if ( enc->encoding() == Headers::CEquPr ) {
         e += KCodecs::quotedPrintableEncode( d->body, false );
       } else {
         e += KCodecs::base64Encode( d->body, true );
@@ -446,7 +446,7 @@ QByteArray Content::encodedContent( bool useCrLf )
 QByteArray Content::decodedContent()
 {
   QByteArray temp, ret;
-  Headers::CTEncoding *ec=contentTransferEncoding();
+  Headers::ContentTransferEncoding *ec=contentTransferEncoding();
   bool removeTrailingNewline=false;
   int size = d->body.length();
 
@@ -461,7 +461,7 @@ QByteArray Content::decodedContent()
     ret = temp;
     removeTrailingNewline = true;
   } else {
-    switch( ec->cte() ) {
+    switch( ec->encoding() ) {
     case Headers::CEbase64 :
       KCodecs::base64Decode( temp, ret );
       break;
@@ -672,13 +672,13 @@ void Content::removeContent( Content *c, bool del )
 
 void Content::changeEncoding( Headers::contentEncoding e )
 {
-  Headers::CTEncoding *enc = contentTransferEncoding();
-  if ( enc->cte() == e ) { //nothing to do
+  Headers::ContentTransferEncoding *enc = contentTransferEncoding();
+  if ( enc->encoding() == e ) { //nothing to do
     return;
   }
 
   if ( decodeText() ) {
-    enc->setCte( e ); // text is not encoded until it's sent or saved so we just set the new encoding
+    enc->setEncoding( e ); // text is not encoded until it's sent or saved so we just set the new encoding
   } else { // this content contains non textual data, that has to be re-encoded
 
     if ( e != Headers::CEbase64 ) {
@@ -686,10 +686,10 @@ void Content::changeEncoding( Headers::contentEncoding e )
       e = Headers::CEbase64;
     }
 
-    if ( enc->cte() != e ) { // ok, we reencode the content using base64
+    if ( enc->encoding() != e ) { // ok, we reencode the content using base64
       d->body = KCodecs::base64Encode( decodedContent(), true );
       d->body.append( "\n" );
-      enc->setCte( e ); //set encoding
+      enc->setEncoding( e ); //set encoding
       enc->setDecoded( false );
     }
   }
@@ -800,7 +800,7 @@ Headers::Base *Content::getHeaderByType( const char *type )
     } else if ( strcasecmp( "Content-Type", type ) == 0 ) {
       h = new Headers::ContentType( this, raw );
     } else if ( strcasecmp( "Content-Transfer-Encoding", type ) == 0 ) {
-      h = new Headers::CTEncoding( this, raw );
+      h = new Headers::ContentTransferEncoding( this, raw );
     } else if ( strcasecmp( "Content-Disposition", type ) == 0 ) {
       h = new Headers::ContentDisposition( this, raw );
     } else if ( strcasecmp( "Content-Description", type ) == 0 ) {
@@ -841,7 +841,7 @@ int Content::size()
 {
   int ret = d->body.length();
 
-  if ( contentTransferEncoding()->cte() == Headers::CEbase64 ) {
+  if ( contentTransferEncoding()->encoding() == Headers::CEbase64 ) {
     return ( ret * 3 / 4 ); //base64 => 6 bit per byte
   }
 
@@ -885,7 +885,7 @@ QByteArray Content::rawHeader( const char *name )
 
 bool Content::decodeText()
 {
-  Headers::CTEncoding *enc = contentTransferEncoding();
+  Headers::ContentTransferEncoding *enc = contentTransferEncoding();
 
   if ( !contentType()->isText() ) {
     return false; //non textual data cannot be decoded here => use decodedContent() instead
@@ -894,7 +894,7 @@ bool Content::decodeText()
     return true; //nothing to do
   }
 
-  switch( enc->cte() )
+  switch( enc->encoding() )
   {
   case Headers::CEbase64 :
     d->body = KCodecs::base64Decode( d->body );

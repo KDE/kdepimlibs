@@ -174,9 +174,9 @@ class KMIME_EXPORT Content
 
       @param create if true, create the header if it doesn't exist yet.
     */
-    Headers::CTEncoding *contentTransferEncoding( bool create=true )
+    Headers::ContentTransferEncoding *contentTransferEncoding( bool create=true )
       {
-        Headers::CTEncoding *p=0;
+        Headers::ContentTransferEncoding *p=0;
         return getHeaderInstance( p, create );
       }
 

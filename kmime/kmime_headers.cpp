@@ -1224,8 +1224,7 @@ bool ContentType::parse( const char* &scursor, const char * const send, bool isC
 
 //-----</Content-Type>-------------------------
 
-#if !defined(KMIME_NEW_STYLE_CLASSTREE)
-//-----<CTEncoding>----------------------------
+//-----<ContentTransferEncoding>----------------------------
 
 typedef struct { const char *s; int e; } encTableType;
 
@@ -1240,51 +1239,48 @@ static const encTableType encTable[] =
   { 0, 0}
 };
 
-void CTEncoding::from7BitString( const QByteArray &s )
+void ContentTransferEncoding::clear()
 {
-  QByteArray stripped = s.simplified();
+  d_ecoded = true;
   c_te = CE7Bit;
-  for ( int i=0; encTable[i].s!=0; i++ ) {
-    if ( strcasecmp( stripped.data(), encTable[i].s ) == 0 ) {
+  Token::clear();
+}
+
+contentEncoding ContentTransferEncoding::encoding() const
+{
+  return c_te;
+}
+
+void ContentTransferEncoding::setEncoding( contentEncoding e )
+{
+  c_te = e;
+
+  for ( int i = 0; encTable[i].s != 0; ++i ) {
+    if ( c_te == encTable[i].e ) {
+      setToken( encTable[i].s );
+      break;
+    }
+  }
+}
+
+bool ContentTransferEncoding::parse(const char *& scursor, const char * const send, bool isCRLF)
+{
+  clear();
+  if ( !Token::parse( scursor, send, isCRLF ) )
+    return false;
+
+  // TODO: error handling in case of an unknown encoding?
+  for ( int i = 0; encTable[i].s != 0; ++i ) {
+    if ( strcasecmp( token().constData(), encTable[i].s ) == 0 ) {
       c_te = (contentEncoding)encTable[i].e;
       break;
     }
   }
   d_ecoded = ( c_te == CE7Bit || c_te == CE8Bit );
-
-  e_ncCS = cachedCharset( Latin1 );
+  return true;
 }
 
-QByteArray CTEncoding::as7BitString( bool incType )
-{
-  QByteArray str;
-  for ( int i=0; encTable[i].s!=0; i++ ) {
-    if ( c_te == encTable[i].e ) {
-      str = encTable[i].s;
-      break;
-    }
-  }
-
-  if ( incType ) {
-    return ( typeIntro() + str );
-  } else {
-    return str;
-  }
-}
-
-void CTEncoding::fromUnicodeString( const QString &s, const QByteArray &barr )
-{
-  Q_UNUSED( barr );
-  from7BitString( s.toLatin1() );
-}
-
-QString CTEncoding::asUnicodeString()
-{
-  return QString::fromLatin1( as7BitString( false ) );
-}
-#endif
-
-//-----</CTEncoding>---------------------------
+//-----</ContentTransferEncoding>---------------------------
 
 //-----<ContentDisposition>--------------------------
 

@@ -689,9 +689,7 @@ mk_trivial_subclass_with_name( ContentDescription, Content-Description, Unstruct
 // rfc(2)822 headers:
 /** Represent a "From" header */
 mk_trivial_subclass( From, MailboxList );
-#if defined(KMIME_NEW_STYLE_CLASSTREE)
 mk_trivial_subclass( Sender, SingleMailbox );
-#endif
 /** Represents a "To" header. */
 mk_trivial_subclass( To, AddressList );
 /** Represents a "Cc" header. */
@@ -753,19 +751,47 @@ class KMIME_EXPORT MailCopiesTo : public Generics::AddressList
     bool mNeverCopy;
 };
 
-#if defined(KMIME_NEW_STYLE_CLASSTREE)
-// Token:
-mk_trivial_subclass_with_name( ContentTransferEncoding,
-                               Content-Transfer-Encoding, Token );
+/**
+  Represents a "Content-Transfer-Encoding" header.
+
+  @see RFC 2045, section 6.
+*/
+class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
+{
+  mk_trivial_constructor_with_name( ContentTransferEncoding, Content-Transfer-Encoding, Token )
+  public:
+    virtual void clear();
+
+    /**
+      Returns the encoding specified in this header.
+    */
+    contentEncoding encoding() const;
+
+    /**
+      Sets the encoding to @p e.
+    */
+    void setEncoding(contentEncoding e);
+
+    // TODO: de-inline, constify and document
+    bool decoded()                          { return d_ecoded; }
+    void setDecoded(bool d=true)            { d_ecoded=d; }
+    bool needToEncode()                     { return (d_ecoded && (c_te==CEquPr || c_te==CEbase64)); }
+
+  protected:
+    virtual bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
+
+  private:
+    contentEncoding c_te;
+    bool d_ecoded;
+
+};
 
 // GPhraseList:
-
 mk_trivial_subclass( Keywords, GPhraseList );
 
 // GDotAtom:
 
 mk_trivial_subclass_with_name( MIMEVersion, MIME-Version, GDotAtom );
-#endif
 
 // Ident:
 
@@ -1214,9 +1240,6 @@ class KMIME_EXPORT UserAgent : public Generics::Unstructured
   mk_trivial_constructor_with_name( UserAgent, User-Agent, Unstructured )
 };
 
-#if !defined(KMIME_NEW_STYLE_CLASSTREE)
-#include "kmime_headers_obs.h"
-#endif
 }  //namespace Headers
 
 }  //namespace KMime

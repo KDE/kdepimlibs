@@ -33,6 +33,7 @@ class HeaderTest : public QObject
     void testContentDispositionHeader();
     void testContentTypeHeader();
     void testTokenHeader();
+    void testContentTransferEncoding();
 };
 
 

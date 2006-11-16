@@ -26,8 +26,8 @@ using namespace KMime;
 using namespace KMime::Headers;
 using namespace KMime::Headers::Generics;
 
-// the following test cases are taken from KDE mailinglists, bug reports, RFC 2183
-// and RFC 2822, Appendix A
+// the following test cases are taken from KDE mailinglists, bug reports, RFC 2045,
+// RFC 2183 and RFC 2822, Appendix A
 
 QTEST_KDEMAIN( HeaderTest, NoGUI )
 
@@ -307,7 +307,8 @@ void HeaderTest::testParametrizedHeader()
   QCOMPARE( h->as7BitString( false ), QByteArray( "filename=\"genome.jpeg\"; modification-date=\"Wed, 12 Feb 1997 16:29:51 -0500\"" ) );
   delete h;
 
-  // TODO: RFC 2047 encoded values
+  // TODO: test RFC 2047 encoded values
+  // TODO: test case-insensitive key-names
 }
 
 void HeaderTest::testContentDispositionHeader()
@@ -339,6 +340,8 @@ void HeaderTest::testContentDispositionHeader()
   QCOMPARE( h->disposition(), CDattachment );
   QCOMPARE( h->filename(), QString( "genome.jpeg" ) );
   delete h;
+
+  // TODO: test for case-insensitive disposition value
 }
 
 void HeaderTest::testContentTypeHeader()
@@ -402,6 +405,31 @@ void HeaderTest::testTokenHeader()
   h = new Token( 0, "value (comment)" );
   QCOMPARE( h->token(), QByteArray("value") );
   QCOMPARE( h->as7BitString( false ), QByteArray("value") );
+  delete h;
+}
+
+void HeaderTest::testContentTransferEncoding()
+{
+  ContentTransferEncoding *h;
+
+  // empty header
+  h = new ContentTransferEncoding();
+  QVERIFY( h->isEmpty() );
+
+  // set an encoding
+  h->setEncoding( CEbinary );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->as7BitString( true ), QByteArray("Content-Transfer-Encoding: binary") );
+
+  // clear again
+  h->clear();
+  QVERIFY( h->isEmpty() );
+  delete h;
+
+  // parse a header
+  h = new ContentTransferEncoding( 0, "(comment) base64" );
+  QCOMPARE( h->encoding(), CEbase64 );
+  QCOMPARE( h->as7BitString( false ), QByteArray("base64") );
   delete h;
 }
 
