@@ -367,4 +367,3 @@ install( FILES
 	vcalformat.h
 DESTINATION ${INCLUDE_INSTALL_DIR}/kcal)
 install( FILES kcal_manager.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources)
-install (FILES ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/ical.h ${CMAKE_BINARY_DIR}/kcal/libical/src/libicalss/icalss.h DESTINATION ${INCLUDE_INSTALL_DIR}/kcal/ical)
