@@ -30,66 +30,6 @@
 #include "kmime.h"
 #include <QByteArray>
 
-
-/** Represents a "Content-Type" header */
-class KMIME_EXPORT ContentType : public Base {
-
-  public:
-    ContentType() : Base(),m_imeType("invalid/invalid"),c_ategory(CCsingle)  {}
-    ContentType(Content *p) : Base(p),m_imeType("invalid/invalid"),c_ategory(CCsingle)  {}
-    ContentType(Content *p, const QByteArray &s) : Base(p)  { from7BitString(s); }
-    ContentType(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
-    ~ContentType()  {}
-
-    virtual void from7BitString(const QByteArray &s);
-    virtual QByteArray as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const QByteArray&);
-    virtual QString asUnicodeString();
-    virtual void clear()            { m_imeType.resize(0); p_arams.resize(0); }
-    virtual bool isEmpty() const { return (m_imeType.isEmpty()); }
-    virtual const char* type() const { return "Content-Type"; }
-
-
-    //mime-type handling
-    QByteArray mimeType()                     { return m_imeType; }
-    QByteArray mediaType();
-    QByteArray subType();
-    void setMimeType(const QByteArray &s);
-    bool isMediatype(const char *s);
-    bool isSubtype(const char *s);
-    bool isText();
-    bool isPlainText();
-    bool isHTMLText();
-    bool isImage();
-    bool isMultipart();
-    bool isPartial();
-
-    //parameter handling
-    QByteArray charset();
-    void setCharset(const QByteArray &s);
-    QByteArray boundary();
-    void setBoundary(const QByteArray &s);
-    QString name();
-    void setName(const QString &s, const QByteArray &cs);
-    QByteArray id();
-    void setId(const QByteArray &s);
-    int partialNumber();
-    int partialCount();
-    void setPartialParams(int total, int number);
-
-    //category
-    contentCategory category()            { return c_ategory; }
-    void setCategory(contentCategory c)   { c_ategory=c; }
-
-  protected:
-    QByteArray getParameter(const char *name);
-    void setParameter(const QByteArray &name, const QByteArray &value, bool doubleQuotes=false);
-    QByteArray m_imeType, p_arams;
-    contentCategory c_ategory;
-
-};
-
-
 /** Represents a "Content-Transfer-Encoding" header */
 class KMIME_EXPORT CTEncoding : public Base {
 

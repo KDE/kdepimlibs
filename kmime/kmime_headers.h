@@ -316,6 +316,14 @@ class KMIME_EXPORT Structured : public Base
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
 
   protected:
+    /**
+      This method parses the raw header and needs to be implemented in
+      every sub-class.
+
+      @param scursor Pointer to the start of the data still to parse.
+      @param send Pointer to the end of the data.
+      @param isCRLF true if input string is terminated with a CRLF.
+    */
     virtual bool parse( const char* &scursor, const char* const send, bool isCRLF = false ) = 0;
 };
 
@@ -636,24 +644,6 @@ class KMIME_EXPORT Parametrized : public Structured
     QMap<QString,QString> mParameterHash;
 };
 
-class KMIME_EXPORT GContentType : public Parametrized
-{
-  public:
-    GContentType() : Parametrized() {}
-    GContentType( Content *p ) : Parametrized( p ) {}
-    GContentType( Content *p, const QByteArray &s ) : Parametrized( p )
-      { from7BitString( s ); }
-    GContentType( Content *p, const QString &s, const QByteArray &cs ) : Parametrized( p )
-      { fromUnicodeString( s, cs ); }
-    ~GContentType() {}
-
-  protected:
-    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
-
-    QByteArray mMimeType;
-    QByteArray mMimeSubType;
-};
-
 } // namespace Generics
 
 //
@@ -799,12 +789,158 @@ mk_trivial_subclass_with_name( InReplyTo, In-Reply-To, Ident );
 /** Represents a "References" header. */
 mk_trivial_subclass( References, Ident );
 
-#if defined(KMIME_NEW_STYLE_CLASSTREE)
 
-// GContentType:
+/**
+  Represents a "Content-Type" header.
 
-mk_trivial_subclass_with_name( ContentType, ContentType, GContentType );
-#endif
+  @see RFC 2045, section 5.
+*/
+class KMIME_EXPORT ContentType : public Generics::Parametrized
+{
+  mk_trivial_constructor_with_name( ContentType, Content-Type, Parametrized )
+  public:
+    virtual QByteArray as7BitString(bool incType=true);
+    virtual void clear();
+    virtual bool isEmpty() const;
+
+    /**
+      Returns the mimetype.
+    */
+    QByteArray mimeType() const;
+
+    /**
+      Returns the media type (first part of the mimetype).
+    */
+
+    QByteArray mediaType() const;
+
+    /**
+      Returns the mime sub-type (second part of the mimetype).
+    */
+    QByteArray subType() const;
+
+    /**
+      Sets the mimetype and clears already existing parameters.
+      @param mimeType The new mimetype.
+    */
+    void setMimeType(const QByteArray &mimeType);
+
+    /**
+      Tests if the media type equals @p mediatype.
+    */
+    bool isMediatype(const char *mediatype) const;
+
+    /**
+      Tests if the mime sub-type equals @p subtype.
+    */
+    bool isSubtype(const char *subtype) const;
+
+    /**
+      Returns true if the associated MIME entity is a text.
+    */
+    bool isText() const;
+
+    /**
+      Returns true if the associated MIME entity is a plain text.
+    */
+    bool isPlainText() const;
+
+    /**
+      Returns true if the associated MIME entity is a HTML file.
+    */
+    bool isHTMLText() const;
+
+    /**
+      Returns true if the associated MIME entity is an image.
+    */
+    bool isImage() const;
+
+    /**
+      Returns true if the associated MIME entity is a mulitpart container.
+    */
+    bool isMultipart() const;
+
+    /**
+      Returns true if the associated MIME entity contains partial data.
+      @see partialNumber(), partialCount()
+    */
+    bool isPartial() const;
+
+
+    /**
+      Returns the charset for the associated MIME entity.
+      @todo make const
+    */
+    QByteArray charset();
+
+    /**
+      Sets the charset.
+    */
+    void setCharset(const QByteArray &s);
+
+    /**
+      Returns the boundary (for mulitpart containers).
+    */
+    QByteArray boundary() const;
+
+    /**
+      Sets the mulitpart container boundary.
+    */
+    void setBoundary(const QByteArray &s);
+
+    /**
+      Returns the name of the associated MIME entity.
+    */
+    QString name() const;
+
+    /**
+      Sets the name to @p s using charset @p cs.
+    */
+    void setName(const QString &s, const QByteArray &cs);
+
+    /**
+      Returns the identifier of the associated MIME entity.
+    */
+    QByteArray id() const;
+
+    /**
+      Sets the identifier.
+    */
+    void setId(const QByteArray &s);
+
+    /**
+      Returns the position of this part in a multi-part set.
+      @see isPartial(), partialCount()
+    */
+    int partialNumber() const;
+
+    /**
+      Returns the total number of parts in a multi-part set.
+      @see isPartial(), partialNumber()
+    */
+    int partialCount() const;
+
+    /**
+      Sets parameters of a partial MIME entity.
+      @param total The total number of entities in the multi-part set.
+      @param number The number of this entity in a multi-part set.
+    */
+    void setPartialParams(int total, int number);
+
+    //category
+    // TODO: document & de-inline
+    contentCategory category()            { return c_ategory; }
+    void setCategory(contentCategory c)   { c_ategory=c; }
+
+  protected:
+    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+
+  private:
+    contentCategory c_ategory;
+    QByteArray mMimeType;
+    QByteArray mMimeSubType;
+};
+
 
 /**
   Represents a "Content-Disposition" header.

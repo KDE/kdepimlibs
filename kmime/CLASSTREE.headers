@@ -41,8 +41,7 @@ m     + MIMEVersion
     + GPhraseList*     // Base Class for phrase list headers: Keywords
 r     + Keywords
     + Parametrized*   // Base Class for parametrizable headers: Content-type
-      + GContentType*
-m       + ContentType
+m     + ContentType
 m     + ContentDisposition
 
     + GDate*           // Base class for date headers: Date

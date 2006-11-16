@@ -528,63 +528,6 @@ bool Parametrized::parse(const char *& scursor, const char * const send, bool is
 
 //-----</Parametrized>-------------------------
 
-//-----</GContentType>-------------------------
-
-bool GContentType::parse( const char* &scursor, const char * const send,
-			  bool isCRLF ) {
-
-  // content-type: type "/" subtype *(";" parameter)
-
-  mMimeType = 0;
-  mMimeSubType = 0;
-
-  eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) {
-    // empty header
-    return false;
-  }
-
-  //
-  // type
-  //
-
-  QPair<const char*,int> maybeMimeType;
-  if ( !parseToken( scursor, send, maybeMimeType, false /* no 8Bit */ ) )
-    return false;
-
-  mMimeType = QByteArray( maybeMimeType.first, maybeMimeType.second ).toLower();
-
-  //
-  // subtype
-  //
-
-  eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send || *scursor != '/' ) return false;
-  scursor++;
-  eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
-
-  QPair<const char*,int> maybeSubType;
-  if ( !parseToken( scursor, send, maybeSubType, false /* no 8bit */ ) )
-    return false;
-
-  mMimeSubType = QByteArray( maybeSubType.first, maybeSubType.second ).toLower();
-
-  //
-  // parameter list
-  //
-
-  eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return true; // no parameters
-
-  if ( *scursor != ';' ) return false;
-  scursor++;
-
-  return Parametrized::parse( scursor, send, isCRLF );
-}
-
-//-----</GContentType>-------------------------
-
 //-----<Ident>-------------------------
 
 QByteArray Ident::as7BitString(bool withHeaderType)
@@ -1025,73 +968,63 @@ QString Lines::asUnicodeString()
 
 //-----</Lines>--------------------------------
 
-#if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<Content-Type>--------------------------
 
-void ContentType::from7BitString( const QByteArray &s )
+bool ContentType::isEmpty() const
 {
-  int pos = s.indexOf( ';' );
+  return mMimeType.isEmpty();
+}
 
-  if ( pos == -1 ) {
-    m_imeType = s.simplified();
-  } else {
-    m_imeType = s.left( pos ).simplified();
-    p_arams = s.mid( pos, s.length() - pos ).simplified();
-  }
-
-  if ( isMultipart() ) {
-    c_ategory = CCcontainer;
-  } else {
-    c_ategory = CCsingle;
-  }
-
-  e_ncCS = cachedCharset( Latin1 );
+void ContentType::clear()
+{
+  c_ategory = CCsingle;
+  mMimeType.clear();
+  mMimeSubType.clear();
+  Parametrized::clear();
 }
 
 QByteArray ContentType::as7BitString( bool incType )
 {
-  if ( incType ) {
-    return ( typeIntro() + m_imeType + p_arams );
-  } else {
-    return ( m_imeType + p_arams );
-  }
-}
-
-void ContentType::fromUnicodeString( const QString &s, const QByteArray &barr )
-{
-  Q_UNUSED( barr );
-  from7BitString( s.toLatin1() );
-}
-
-QString ContentType::asUnicodeString()
-{
-  return QString::fromLatin1( as7BitString( false ) );
-}
-
-QByteArray ContentType::mediaType()
-{
-  int pos = m_imeType.indexOf( '/' );
-  if ( pos == -1 ) {
-    return m_imeType;
-  } else {
-    return m_imeType.left( pos );
-  }
-}
-
-QByteArray ContentType::subType()
-{
-  int pos = m_imeType.indexOf( '/' );
-  if ( pos == -1 ) {
+  if ( isEmpty() )
     return QByteArray();
-  } else {
-    return m_imeType.mid( pos, m_imeType.length() - pos );
-  }
+
+  QByteArray rv;
+  if ( incType )
+    rv += typeIntro();
+
+  rv += mimeType();
+  if ( !Parametrized::isEmpty() )
+    rv += "; " + Parametrized::as7BitString( false );
+
+  return rv;
 }
 
-void ContentType::setMimeType( const QByteArray &s )
+QByteArray ContentType::mimeType() const
 {
-  p_arams.resize( 0 );
-  m_imeType = s;
+  return mMimeType + '/' + mMimeSubType;
+}
+
+QByteArray ContentType::mediaType() const
+{
+  return mMimeType;
+}
+
+QByteArray ContentType::subType() const
+{
+  return mMimeSubType;
+}
+
+void ContentType::setMimeType( const QByteArray &mimeType )
+{
+  int pos = mimeType.indexOf( '/' );
+  if ( pos < 0 ) {
+    mMimeType = mimeType;
+    mMimeSubType.clear();
+  } else {
+    mMimeType = mimeType.left( pos );
+    mMimeSubType = mimeType.mid( pos + 1 );
+  }
+  Parametrized::clear();
 
   if ( isMultipart() ) {
     c_ategory = CCcontainer;
@@ -1100,110 +1033,93 @@ void ContentType::setMimeType( const QByteArray &s )
   }
 }
 
-bool ContentType::isMediatype( const char *s )
+bool ContentType::isMediatype( const char *mediatype ) const
 {
-  return ( strncasecmp( m_imeType.data(), s, strlen( s ) ) );
+  return ( strncasecmp( mediaType().constData(), mediatype, strlen( mediatype ) ) == 0 );
 }
 
-bool ContentType::isSubtype( const char *s )
+bool ContentType::isSubtype( const char *subtype ) const
 {
-  char *c = strchr( m_imeType.data(), '/' );
-
-  if ( ( c == 0 ) || ( *(c+1) == '\0' ) ) {
-    return false;
-  } else {
-    return ( strcasecmp( c+1, s ) == 0 );
-  }
+  return ( strncasecmp( subType().constData(), subtype, strlen( subtype ) ) == 0 );
 }
 
-bool ContentType::isText()
+bool ContentType::isText() const
 {
-  return ( strncasecmp( m_imeType.data(), "text", 4 ) == 0 );
+  return ( strncasecmp( mediaType().constData(), "text", 4 ) == 0 );
 }
 
-bool ContentType::isPlainText()
+bool ContentType::isPlainText() const
 {
-  return ( strcasecmp( m_imeType.data(), "text/plain" ) == 0 );
+  return ( strcasecmp( mimeType().constData(), "text/plain" ) == 0 );
 }
 
-bool ContentType::isHTMLText()
+bool ContentType::isHTMLText() const
 {
-  return ( strcasecmp( m_imeType.data(), "text/html" ) == 0 );
+  return ( strcasecmp( mimeType().constData(), "text/html" ) == 0 );
 }
 
-bool ContentType::isImage()
+bool ContentType::isImage() const
 {
-  return ( strncasecmp( m_imeType.data(), "image", 5 ) == 0 );
+  return ( strncasecmp( mediaType().constData(), "image", 5 ) == 0 );
 }
 
-bool ContentType::isMultipart()
+bool ContentType::isMultipart() const
 {
-  return ( strncasecmp( m_imeType.data(), "multipart", 9 ) == 0 );
+  return ( strncasecmp( mediaType().constData(), "multipart", 9 ) == 0 );
 }
 
-bool ContentType::isPartial()
+bool ContentType::isPartial() const
 {
-  return ( strcasecmp( m_imeType.data(), "message/partial" ) == 0 );
+  return ( strcasecmp( mimeType().constData(), "message/partial" ) == 0 );
 }
 
 QByteArray ContentType::charset()
 {
-  QByteArray ret = getParameter( "charset" );
-  if ( ret.isEmpty() || forceCS() ) { //we return the default-charset if necessary
+  QByteArray ret = parameter( "charset" ).toLatin1();
+  if ( ret.isEmpty() || forceCS() ) //we return the default-charset if necessary
     ret = defaultCS();
-  }
   return ret;
 }
 
 void ContentType::setCharset( const QByteArray &s )
 {
-  setParameter( "charset", s );
+  setParameter( "charset", QString::fromLatin1( s ) );
 }
 
-QByteArray ContentType::boundary()
+QByteArray ContentType::boundary() const
 {
-  return getParameter( "boundary" );
+  return parameter( "boundary" ).toLatin1();
 }
 
 void ContentType::setBoundary( const QByteArray &s )
 {
-  setParameter( "boundary", s, true );
+  setParameter( "boundary", QString::fromLatin1( s ) );
 }
 
-QString ContentType::name()
+QString ContentType::name() const
 {
-  QByteArray dummy;
-  return ( decodeRFC2047String(getParameter("name"), dummy, defaultCS(),
-                               forceCS()) );
+  return parameter( "name" );
 }
 
 void ContentType::setName( const QString &s, const QByteArray &cs )
 {
   e_ncCS = cs;
-
-  if ( isUsAscii( s ) ) {
-    QByteArray tmp = s.toLatin1();
-    addQuotes( tmp, true );
-    setParameter( "name", tmp, false );
-  } else {
-    // FIXME: encoded words can't be enclosed in quotes!!
-    setParameter( "name", encodeRFC2047String( s, cs ), true );
-  }
+  setParameter( "name", s );
 }
 
-QByteArray ContentType::id()
+QByteArray ContentType::id() const
 {
-  return ( getParameter( "id" ) );
+  return parameter( "id" ).toLatin1();
 }
 
 void ContentType::setId( const QByteArray &s )
 {
-  setParameter( "id", s, true );
+  setParameter( "id", s );
 }
 
-int ContentType::partialNumber()
+int ContentType::partialNumber() const
 {
-  QByteArray p = getParameter( "number" );
+  QByteArray p = parameter( "number" ).toLatin1();
   if ( !p.isEmpty() ) {
     return p.toInt();
   } else {
@@ -1211,9 +1127,9 @@ int ContentType::partialNumber()
   }
 }
 
-int ContentType::partialCount()
+int ContentType::partialCount() const
 {
-  QByteArray p = getParameter( "total" );
+  QByteArray p = parameter( "total" ).toLatin1();
   if ( !p.isEmpty() ) {
     return p.toInt();
   } else {
@@ -1223,56 +1139,63 @@ int ContentType::partialCount()
 
 void ContentType::setPartialParams( int total, int number )
 {
-  QByteArray num;
-  num.setNum( number );
-  setParameter( "number", num );
-  num.setNum( total );
-  setParameter( "total", num );
+  setParameter( "number", QString::number( number ) );
+  setParameter( "total", QString::number( total ) );
 }
 
-QByteArray ContentType::getParameter( const char *name )
+bool ContentType::parse( const char* &scursor, const char * const send, bool isCRLF )
 {
-  QByteArray ret;
-  int pos1=0, pos2=0;
+  // content-type: type "/" subtype *(";" parameter)
 
-  pos1 = QString( p_arams ).indexOf( name, 0, Qt::CaseInsensitive );
-  if ( pos1 != -1 ) {
-    if ( ( pos2 = p_arams.indexOf( ';', pos1 ) ) == -1 ) {
-      pos2 = p_arams.length();
-    }
-    pos1 += strlen( name ) + 1;
-    ret = p_arams.mid( pos1, pos2 - pos1 );
-    removeQuots( ret );
-  }
-  return ret;
-}
+  clear();
+  eatCFWS( scursor, send, isCRLF );
+  if ( scursor == send )
+    return false; // empty header
 
-void ContentType::setParameter( const QByteArray &name,
-                                const QByteArray &value, bool doubleQuotes )
-{
-  int pos1=0, pos2=0;
-  QByteArray param;
+  // type
+  QPair<const char*,int> maybeMimeType;
+  if ( !parseToken( scursor, send, maybeMimeType, false /* no 8Bit */ ) )
+    return false;
+  mMimeType = QByteArray( maybeMimeType.first, maybeMimeType.second ).toLower();
 
-  if ( doubleQuotes ) {
-    param = name + "=\"" + value + '\"';
-  } else {
-    param = name + '=' + value;
-  }
+  // subtype
+  eatCFWS( scursor, send, isCRLF );
+  if ( scursor == send || *scursor != '/' )
+    return false;
+  scursor++;
+  eatCFWS( scursor, send, isCRLF );
+  if ( scursor == send )
+    return false;
 
-  pos1 = QString( p_arams ).indexOf( name, 0, Qt::CaseInsensitive );
-  if ( pos1 == -1 ) {
-    p_arams += "; " + param;
-  } else {
-    pos2 = p_arams.indexOf( ';', pos1 );
-    if ( pos2 == -1 )
-      pos2 = p_arams.length();
-    p_arams.remove( pos1, pos2 - pos1 );
-    p_arams.insert( pos1, param );
-  }
+  QPair<const char*,int> maybeSubType;
+  if ( !parseToken( scursor, send, maybeSubType, false /* no 8bit */ ) )
+    return false;
+  mMimeSubType = QByteArray( maybeSubType.first, maybeSubType.second ).toLower();
+
+  // parameter list
+  eatCFWS( scursor, send, isCRLF );
+  if ( scursor == send )
+    goto success; // no parameters
+
+  if ( *scursor != ';' )
+    return false;
+  scursor++;
+
+  if ( !Parametrized::parse( scursor, send, isCRLF ) )
+    return false;
+
+  // adjust category
+  success:
+  if ( isMultipart() )
+    c_ategory = CCcontainer;
+  else
+    c_ategory = CCsingle;
+  return true;
 }
 
 //-----</Content-Type>-------------------------
 
+#if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<CTEncoding>----------------------------
 
 typedef struct { const char *s; int e; } encTableType;

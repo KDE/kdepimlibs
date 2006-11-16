@@ -341,4 +341,43 @@ void HeaderTest::testContentDispositionHeader()
   delete h;
 }
 
+void HeaderTest::testContentTypeHeader()
+{
+  ContentType* h;
+
+  // empty header
+  h = new ContentType();
+  QVERIFY( h->isEmpty() );
+
+  // set a mimetype
+  h->setMimeType( "text/plain" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->mimeType(), QByteArray( "text/plain" ) );
+  QCOMPARE( h->mediaType(), QByteArray("text") );
+  QCOMPARE( h->subType(), QByteArray("plain") );
+  QVERIFY( h->isText() );
+  QVERIFY( h->isPlainText() );
+  QVERIFY( !h->isMultipart() );
+  QVERIFY( !h->isPartial() );
+  QVERIFY( h->isMediatype( "text" ) );
+  QVERIFY( h->isSubtype( "plain" ) );
+  QCOMPARE( h->as7BitString( true ), QByteArray( "Content-Type: text/plain" ) );
+
+  // add some parameters
+  h->setId( "bla" );
+  h->setCharset( "us-ascii" );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "text/plain; charset=us-ascii; id=bla" ) );
+
+  // clear header
+  h->clear();
+  QVERIFY( h->isEmpty() );
+  delete h;
+
+  // parse a complete header
+  h = new ContentType( 0, "text/plain; charset=us-ascii (Plain text)" );
+  QVERIFY( h->isPlainText() );
+  QCOMPARE( h->charset(), QByteArray( "us-ascii" ) );
+  delete h;
+}
+
 #include "headertest.moc"
