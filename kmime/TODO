@@ -6,6 +6,10 @@ Things we still need to work on in the library
 
 + D-pointers
 
++ Use KDateTime::toString() as much as possible in DateFormatter class.
+  If KDateTime ever supports fancy format, we should be able to replace
+  DateFormatter completely with KDateTime::toString().
+
 + do we still need our own KAutoDeleteHash in Qt4/KDE4?
 
 + Lots of methods we might want to de-inline
