@@ -260,11 +260,12 @@ QString ICalFormat::toString( Calendar *cal )
 
   // time zones
   const ICalTimeZones::ZoneMap zones = tzUsedList.zones();
-  for ( ICalTimeZones::ZoneMap::ConstIterator it = zones.begin();  it != zones.end();  ++it) {
+  for ( ICalTimeZones::ZoneMap::ConstIterator it = zones.begin();  it != zones.end();  ++it) 
+  {
     icaltimezone *tz = (*it)->icalTimezone();
     component = icalcomponent_new_clone( icaltimezone_get_component( tz ) );
     icalcomponent_add_component( calendar, component );
-    icaltimezone_free( tz, true );
+    if (tz != 0) icaltimezone_free( tz, true );
   }
 
   QString text = QString::fromUtf8( icalcomponent_as_ical_string( calendar ) );
