@@ -30,6 +30,7 @@
 #include <kdebug.h>
 #include <kdatetime.h>
 #include <ktzfiletimezone.h>
+#include <ksystemtimezone.h>
 #include <klocale.h>
 
 extern "C" {
