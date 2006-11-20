@@ -243,7 +243,8 @@ class KCAL_EXPORT ICalTimeZone : public KTimeZone
 
 
 /**
- * A class which reads and parses iCalendar VTIMEZONE components.
+ * A class which reads and parses iCalendar VTIMEZONE components, and accesses
+ * libical time zone data.
  *
  * ICalTimeZoneSource is used to parse VTIMEZONE components and create
  * ICalTimeZone instances to represent them.
@@ -318,6 +319,17 @@ class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
      *         Null is returned on error.
      */
     ICalTimeZone *parse(icaltimezone *tz);
+
+    /**
+     * Creates an ICalTimeZone instance for a built-in libical time zone.
+     *
+     * @param zone time zone name, which may optionally include the libical
+     *             prefix string
+     * @return a ICalTimeZone instance containing the time zone data.
+     *         The caller is responsible for deleting the ICalTimeZone instance.
+     *         Null is returned on error.
+     */
+    ICalTimeZone *icalBuiltInZone(const QString &zone);
 
     /**
      * Returns the prefix string used in the TZID field in built-in libical

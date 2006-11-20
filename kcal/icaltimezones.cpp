@@ -27,6 +27,7 @@
 #include <QFile>
 #include <QTextStream>
 
+#include <ksystemtimezone.h>
 #include <kdatetime.h>
 #include <kdebug.h>
 
@@ -801,6 +802,20 @@ QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool da
 
   phase = KTimeZone::Phase(utcOffset, abbrevs, daylight, comment);
   return transitions;
+}
+
+ICalTimeZone *ICalTimeZoneSource::icalBuiltInZone(const QString &zone)
+{
+  // Try to look it up as a geographical location (e.g. Europe/London)
+  QByteArray zoneName = zone.toUtf8();
+  icaltimezone *icaltz = icaltimezone_get_builtin_timezone( zoneName );
+  if ( !icaltz ) {
+    // This will find it if it includes the libical prefix
+    icaltz = icaltimezone_get_builtin_timezone_from_tzid( zoneName );
+    if ( !icaltz )
+      return 0;
+  }
+  return parse( icaltz );
 }
 
 QByteArray ICalTimeZoneSource::icalTzidPrefix()
