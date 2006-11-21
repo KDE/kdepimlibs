@@ -18,5 +18,7 @@ PREDEFINED = KCAL_EXPORT="" \
 	Q_SLOTS="slots" \
 	Q_SIGNALS="signals" \
 	EMAILFUNCTIONS_EXPORT="" \
-	KMIME_EXPORT=""
+	KMIME_EXPORT="" \
+	kmime_mk_trivial_ctor="" \
+	kmime_mk_trivial_ctor_with_name=""
 

@@ -40,6 +40,40 @@
 
 #include <assert.h>
 
+// macro to generate a default constructor implementation
+#define kmime_mk_trivial_ctor( subclass, baseclass ) \
+subclass::subclass() : baseclass() \
+{ \
+  clear(); \
+} \
+\
+subclass::subclass( Content *parent ) : baseclass( parent ) \
+{ \
+  clear(); \
+} \
+\
+subclass::subclass( Content *parent, const QByteArray &s ) : baseclass( parent ) \
+{ \
+  from7BitString( s ); \
+} \
+\
+subclass::subclass( Content *parent, const QString &s, const QByteArray &charset ) : \
+  baseclass( parent ) \
+{ \
+  fromUnicodeString( s, charset ); \
+} \
+\
+subclass::~subclass() {}
+
+#define kmime_mk_trivial_ctor_with_name( subclass, baseclass, name ) \
+kmime_mk_trivial_ctor( subclass, baseclass ) \
+\
+const char* subclass::type() const \
+{ \
+  return #name; \
+}
+
+
 using namespace KMime;
 using namespace KMime::Headers;
 using namespace KMime::Types;
@@ -260,6 +294,8 @@ bool MailboxList::parse( const char* &scursor, const char *const send,
 
 //-----<SingleMailbox>-------------------------
 
+kmime_mk_trivial_ctor( SingleMailbox, MailboxList )
+
 bool SingleMailbox::parse( const char* &scursor, const char *const send,
 			   bool isCRLF )
 {
@@ -390,6 +426,8 @@ bool AddressList::parse( const char* &scursor, const char *const send, bool isCR
 
 //-----<Token>-------------------------
 
+kmime_mk_trivial_ctor( Token, Structured )
+
 QByteArray Token::as7BitString(bool withHeaderType)
 {
   if ( isEmpty() )
@@ -495,6 +533,8 @@ bool GDotAtom::parse( const char* &scursor, const char *const send,
 //-----</GDotAtom>-------------------------
 
 //-----<Parametrized>-------------------------
+
+kmime_mk_trivial_ctor( Parametrized, Structured )
 
 QByteArray Parametrized::as7BitString( bool withHeaderType )
 {
@@ -735,6 +775,8 @@ void Generic::setType( const char *type )
 
 //-----<MessageID>-----------------------------
 
+kmime_mk_trivial_ctor_with_name( MessageID, Generics::SingleIdent, Message-Id )
+
 void MessageID::generate( const QByteArray &fqdn )
 {
   setIdentifier( uniqueString() + '@' + fqdn + '>' );
@@ -771,6 +813,8 @@ QString Control::asUnicodeString()
 //-----</Control>------------------------------
 
 //-----<MailCopiesTo>--------------------------
+
+kmime_mk_trivial_ctor_with_name( MailCopiesTo, Generics::AddressList, Mail-Copies-To )
 
 QByteArray MailCopiesTo::as7BitString(bool withHeaderType)
 {
@@ -999,6 +1043,8 @@ QString Lines::asUnicodeString()
 
 //-----<Content-Type>--------------------------
 
+kmime_mk_trivial_ctor_with_name( ContentType, Generics::Parametrized, Content-Type )
+
 bool ContentType::isEmpty() const
 {
   return mMimeType.isEmpty();
@@ -1226,6 +1272,8 @@ bool ContentType::parse( const char* &scursor, const char * const send, bool isC
 
 //-----<ContentTransferEncoding>----------------------------
 
+kmime_mk_trivial_ctor_with_name( ContentTransferEncoding, Generics::Token, Content-Transfer-Encoding )
+
 typedef struct { const char *s; int e; } encTableType;
 
 static const encTableType encTable[] =
@@ -1283,6 +1331,8 @@ bool ContentTransferEncoding::parse(const char *& scursor, const char * const se
 //-----</ContentTransferEncoding>---------------------------
 
 //-----<ContentDisposition>--------------------------
+
+kmime_mk_trivial_ctor_with_name( ContentDisposition, Generics::Parametrized, Content-Disposition )
 
 QByteArray ContentDisposition::as7BitString( bool incType )
 {
@@ -1369,6 +1419,28 @@ bool ContentDisposition::parse(const char *& scursor, const char * const send, b
 }
 
 //-----</ContentDisposition>-------------------------
+
+kmime_mk_trivial_ctor_with_name( Subject, Generics::Unstructured, Subject )
+
+bool Subject::isReply()
+{
+  return ( asUnicodeString().indexOf( QLatin1String( "Re:" ), 0, Qt::CaseInsensitive ) == 0 );
+}
+
+kmime_mk_trivial_ctor_with_name( ContentDescription, Generics::Unstructured, Content-Description )
+kmime_mk_trivial_ctor_with_name( From, Generics::MailboxList, From )
+kmime_mk_trivial_ctor_with_name( Sender, Generics::SingleMailbox, Sender )
+kmime_mk_trivial_ctor_with_name( To, Generics::AddressList, To )
+kmime_mk_trivial_ctor_with_name( Cc, Generics::AddressList, Cc )
+kmime_mk_trivial_ctor_with_name( Bcc, Generics::AddressList, Bcc )
+kmime_mk_trivial_ctor_with_name( ReplyTo, Generics::AddressList, Reply-To )
+kmime_mk_trivial_ctor_with_name( Keywords, Generics::GPhraseList, Keywords )
+kmime_mk_trivial_ctor_with_name( MIMEVersion, Generics::GDotAtom, MIME-Version )
+kmime_mk_trivial_ctor_with_name( ContentID, Generics::SingleIdent, Content-ID )
+kmime_mk_trivial_ctor_with_name( Supersedes, Generics::SingleIdent, Supersedes )
+kmime_mk_trivial_ctor_with_name( InReplyTo, Generics::Ident, In-Reply-To )
+kmime_mk_trivial_ctor_with_name( References, Generics::Ident, References )
+kmime_mk_trivial_ctor_with_name( UserAgent, Generics::Unstructured, User-Agent )
 
 } // namespace Headers
 

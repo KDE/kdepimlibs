@@ -77,39 +77,18 @@ enum contentDisposition {
 //often used charset
 static const QByteArray Latin1( "ISO-8859-1" );
 
-#define mk_trivial_constructor( subclass, baseclass ) \
-  public:                                                               \
-    subclass() : Generics::baseclass() { clear(); }                     \
-    subclass( Content *p ) : Generics::baseclass( p ) { clear(); }      \
-    subclass( Content *p, const QByteArray &s )                         \
-      : Generics::baseclass( p ) { from7BitString( s ); }               \
-    subclass( Content *p, const QString &s, const QByteArray &cs )      \
-      : Generics::baseclass( p ) { fromUnicodeString( s, cs ); }        \
-    ~subclass() {}
+// internal macro to generate default constructors
+#define kmime_mk_trivial_ctor( subclass ) \
+  public: \
+    subclass(); \
+    subclass( Content *parent ); \
+    subclass( Content *parent, const QByteArray &s ); \
+    subclass( Content *parent, const QString &s, const QByteArray &charset ); \
+    ~subclass();
 
-#define mk_trivial_constructor_with_name( subclass, subclassName, baseclass ) \
-  mk_trivial_constructor( subclass, baseclass ) \
-  const char *type() const { return #subclassName; }
-
-#define mk_trivial_subclass_with_name( subclass, subclassName, baseclass ) \
-class KMIME_EXPORT subclass : public Generics::baseclass                \
-{                                                                       \
-  mk_trivial_constructor_with_name( subclass, subclassName, baseclass ) \
-}
-
-#define mk_trivial_subclass( subclass, baseclass )                      \
-  mk_trivial_subclass_with_name( subclass, subclass, baseclass )
-
-#define mk_parsing_subclass_with_name( subclass, subclassName, baseclass ) \
-class KMIME_EXPORT subclass : public Generics::baseclass                \
-{                                                                       \
-  mk_trivial_constructor_with_name( subclass, subclassName, baseclass ) \
-  protected:                                                            \
-    bool parse( const char* &scursor, const char *const send, bool isCRLF=false ); \
-}
-
-#define mk_parsing_subclass( subclass, baseclass )                      \
-  mk_parsing_subclass_with_name( subclass, subclass, baseclass )
+#define kmime_mk_trivial_ctor_with_name( subclass ) \
+  kmime_mk_trivial_ctor( subclass ) \
+  const char *type() const;
 
 //
 //
@@ -233,16 +212,6 @@ namespace Generics {
     extensions to encoded-words.
 
     Subclasses need only re-implement @p const @p char* @p type().
-
-    A macro to automate this is named
-    \code
-    MK_TRIVIAL_Unstructured_SUBCLASS(classname,headername);
-    \endcode
-
-    The ContentDescription class then reads:
-    \code
-    MK_TRIVIAL_Unstructured_SUBCLASS(ContentDescription,Content-Description);
-    \endcode
 */
 
 // known issues:
@@ -409,9 +378,16 @@ class KMIME_EXPORT MailboxList : public Address
     QList<Types::Mailbox> mMailboxList;
 };
 
-/** Base class for headers that deal with exactly one mailbox
-    (e.g. Sender) */
-mk_parsing_subclass( SingleMailbox, MailboxList );
+/**
+  Base class for headers that deal with exactly one mailbox
+  (e.g. Sender).
+*/
+class KMIME_EXPORT SingleMailbox : public MailboxList
+{
+  kmime_mk_trivial_ctor( SingleMailbox )
+  protected:
+    bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
+};
 
 /**
   Base class for headers that deal with (possibly multiple)
@@ -565,7 +541,7 @@ class KMIME_EXPORT SingleIdent : public Ident
 */
 class KMIME_EXPORT Token : public Structured
 {
-  mk_trivial_constructor( Token, Structured )
+  kmime_mk_trivial_ctor( Token )
   public:
     virtual QByteArray as7BitString( bool withHeaderType = true );
 
@@ -628,7 +604,7 @@ class KMIME_EXPORT GDotAtom : public Structured
 */
 class KMIME_EXPORT Parametrized : public Structured
 {
-  mk_trivial_constructor( Parametrized, Structured );
+  kmime_mk_trivial_ctor( Parametrized )
   public:
     virtual QByteArray as7BitString( bool withHeaderType = true );
 
@@ -682,22 +658,68 @@ class KMIME_EXPORT ReturnPath : public Generics::Address
 };
 
 
-mk_trivial_subclass_with_name( ContentDescription, Content-Description, Unstructured );
-
 // Address et al.:
 
 // rfc(2)822 headers:
-/** Represent a "From" header */
-mk_trivial_subclass( From, MailboxList );
-mk_trivial_subclass( Sender, SingleMailbox );
-/** Represents a "To" header. */
-mk_trivial_subclass( To, AddressList );
-/** Represents a "Cc" header. */
-mk_trivial_subclass( Cc, AddressList );
-/** Represents a "Bcc" header. */
-mk_trivial_subclass( Bcc, AddressList );
-/** Represents a "ReplyTo" header. */
-mk_trivial_subclass_with_name( ReplyTo, Reply-To, AddressList );
+/**
+  Represent a "From" header.
+
+  @see RFC 2822, section 3.6.2.
+*/
+class KMIME_EXPORT From : public Generics::MailboxList
+{
+  kmime_mk_trivial_ctor_with_name( From )
+};
+
+/**
+  Represents a "Sender" header.
+
+  @see RFC 2822, section 3.6.2.
+*/
+class KMIME_EXPORT Sender : public Generics::SingleMailbox
+{
+  kmime_mk_trivial_ctor_with_name( Sender )
+};
+
+/**
+  Represents a "To" header.
+
+  @see RFC 2822, section 3.6.3.
+*/
+class KMIME_EXPORT To : public Generics::AddressList
+{
+  kmime_mk_trivial_ctor_with_name( To )
+};
+
+/**
+  Represents a "Cc" header.
+
+  @see RFC 2822, section 3.6.3.
+*/
+class KMIME_EXPORT Cc : public Generics::AddressList
+{
+  kmime_mk_trivial_ctor_with_name( Cc )
+};
+
+/**
+  Represents a "Bcc" header.
+
+  @see RFC 2822, section 3.6.3.
+*/
+class KMIME_EXPORT Bcc : public Generics::AddressList
+{
+  kmime_mk_trivial_ctor_with_name( Bcc )
+};
+
+/**
+  Represents a "ReplyTo" header.
+
+  @see RFC 2822, section 3.6.2.
+*/
+class KMIME_EXPORT ReplyTo : public Generics::AddressList
+{
+  kmime_mk_trivial_ctor_with_name( ReplyTo )
+};
 
 /**
   Represents a "Mail-Copies-To" header.
@@ -706,17 +728,8 @@ mk_trivial_subclass_with_name( ReplyTo, Reply-To, AddressList );
 */
 class KMIME_EXPORT MailCopiesTo : public Generics::AddressList
 {
+  kmime_mk_trivial_ctor_with_name( MailCopiesTo )
   public:
-    MailCopiesTo() : AddressList(), mAlwaysCopy( false ), mNeverCopy( false ) {}
-    MailCopiesTo(Content *p) : AddressList(p), mAlwaysCopy( false ), mNeverCopy( false )  {}
-    MailCopiesTo(Content *p, const QByteArray &s) :
-        AddressList(p,s),mAlwaysCopy( false ), mNeverCopy( false ) { from7BitString( s ); }
-    MailCopiesTo(Content *p, const QString &s, const QByteArray &cs) :
-        AddressList(p,s,cs), mAlwaysCopy( false ), mNeverCopy( false ) { fromUnicodeString( s, cs ); }
-    ~MailCopiesTo()  {}
-
-    virtual const char* type() const { return "Mail-Copies-To"; }
-
     virtual QByteArray as7BitString( bool withHeaderType = true );
     virtual QString asUnicodeString();
 
@@ -758,7 +771,7 @@ class KMIME_EXPORT MailCopiesTo : public Generics::AddressList
 */
 class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
 {
-  mk_trivial_constructor_with_name( ContentTransferEncoding, Content-Transfer-Encoding, Token )
+  kmime_mk_trivial_ctor_with_name( ContentTransferEncoding )
   public:
     virtual void clear();
 
@@ -786,27 +799,39 @@ class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
 
 };
 
-// GPhraseList:
-mk_trivial_subclass( Keywords, GPhraseList );
+/**
+  Represents a "Keywords" header.
+
+  @see RFC 2822, section 3.6.5.
+*/
+class Keywords : public Generics::GPhraseList
+{
+  kmime_mk_trivial_ctor_with_name( Keywords )
+};
 
 // GDotAtom:
 
-mk_trivial_subclass_with_name( MIMEVersion, MIME-Version, GDotAtom );
+/**
+  Represents a "MIME-Version" header.
+
+  @see RFC 2045, section 4.
+*/
+class MIMEVersion : public Generics::GDotAtom
+{
+  kmime_mk_trivial_ctor_with_name( MIMEVersion )
+};
 
 // Ident:
 
-/** Represents a "Message-Id" header */
-class KMIME_EXPORT MessageID : public Generics::SingleIdent {
+/**
+  Represents a "Message-ID" header.
 
+  @see RFC 2822, section 3.6.4.
+*/
+class KMIME_EXPORT MessageID : public Generics::SingleIdent
+{
+  kmime_mk_trivial_ctor_with_name( MessageID )
   public:
-    MessageID() : Generics::SingleIdent()  {}
-    MessageID(Content *p) : Generics::SingleIdent(p) {}
-    MessageID(Content *p, const QByteArray &s) : Generics::SingleIdent(p) { from7BitString(s); }
-    MessageID(Content *p, const QString &s) : Generics::SingleIdent(p)  { fromUnicodeString(s, Latin1); }
-    ~MessageID()  {}
-
-    virtual const char* type() const { return "Message-Id"; }
-
     /**
       Generate a message identifer.
       @param fqdn A fully qualified domain name.
@@ -814,17 +839,41 @@ class KMIME_EXPORT MessageID : public Generics::SingleIdent {
     void generate(const QByteArray &fqdn);
 };
 
-/** Represents a "Content-ID" header. */
-mk_trivial_subclass_with_name( ContentID, Content-ID, SingleIdent );
+/**
+  Represents a "Content-ID" header.
+*/
+class ContentID : public Generics::SingleIdent
+{
+  kmime_mk_trivial_ctor_with_name( ContentID )
+};
 
-/** Represents a "Supersedes" header. */
-mk_trivial_subclass( Supersedes, SingleIdent );
+/**
+  Represents a "Supersedes" header.
+*/
+class Supersedes : public Generics::SingleIdent
+{
+  kmime_mk_trivial_ctor_with_name( Supersedes )
+};
 
-/** Represents a "In-Reply-To" header. */
-mk_trivial_subclass_with_name( InReplyTo, In-Reply-To, Ident );
+/**
+  Represents a "In-Reply-To" header.
 
-/** Represents a "References" header. */
-mk_trivial_subclass( References, Ident );
+  @see RFC 2822, section 3.6.4.
+*/
+class InReplyTo: public Generics::Ident
+{
+  kmime_mk_trivial_ctor_with_name( InReplyTo )
+};
+
+/**
+  Represents a "References" header.
+
+  @see RFC 2822, section 3.6.4.
+*/
+class References: public Generics::Ident
+{
+  kmime_mk_trivial_ctor_with_name( References )
+};
 
 
 /**
@@ -834,7 +883,7 @@ mk_trivial_subclass( References, Ident );
 */
 class KMIME_EXPORT ContentType : public Generics::Parametrized
 {
-  mk_trivial_constructor_with_name( ContentType, Content-Type, Parametrized )
+  kmime_mk_trivial_ctor_with_name( ContentType )
   public:
     virtual QByteArray as7BitString(bool incType=true);
     virtual void clear();
@@ -986,7 +1035,7 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
 */
 class ContentDisposition : public Generics::Parametrized
 {
-  mk_trivial_constructor_with_name( ContentDisposition, Content-Disposition, Parametrized )
+  kmime_mk_trivial_ctor_with_name( ContentDisposition )
   public:
     virtual QByteArray as7BitString( bool withHeaderType = true );
     virtual bool isEmpty() const;
@@ -1064,23 +1113,19 @@ class KMIME_EXPORT Generic : public Generics::Unstructured
     char *t_ype;
 };
 
-/** Represents a "Subject" header */
+/**
+  Represents a "Subject" header.
+
+  @see RFC 2822, section 3.6.5.
+*/
 class KMIME_EXPORT Subject : public Generics::Unstructured
 {
+  kmime_mk_trivial_ctor_with_name( Subject )
   public:
-    Subject() : Generics::Unstructured() {}
-    Subject( Content *p ) : Generics::Unstructured( p ) {}
-    Subject( Content *p, const QByteArray &s )
-      : Generics::Unstructured( p, s ) {}
-    Subject( Content *p, const QString &s, const QByteArray &cs )
-      : Generics::Unstructured( p, s, cs ) {}
-    ~Subject() {}
-
-    virtual const char *type() const { return "Subject"; }
-
-    bool isReply() {
-      return ( asUnicodeString().indexOf( QLatin1String( "Re:" ), 0, Qt::CaseInsensitive ) == 0 );
-    }
+    /**
+      @todo make const
+    */
+    bool isReply();
 };
 
 /** Represents a "Organization" header */
@@ -1097,6 +1142,15 @@ class KMIME_EXPORT Organization : public Generics::Unstructured
 
     virtual const char *type() const { return "Organization"; }
 };
+
+/**
+  Represents a "Content-Description" header.
+*/
+class KMIME_EXPORT ContentDescription : public Generics::Unstructured
+{
+  kmime_mk_trivial_ctor_with_name( ContentDescription )
+};
+
 
 //
 //
@@ -1237,7 +1291,7 @@ class KMIME_EXPORT Lines : public Base
 */
 class KMIME_EXPORT UserAgent : public Generics::Unstructured
 {
-  mk_trivial_constructor_with_name( UserAgent, User-Agent, Unstructured )
+  kmime_mk_trivial_ctor_with_name( UserAgent )
 };
 
 }  //namespace Headers
@@ -1245,11 +1299,7 @@ class KMIME_EXPORT UserAgent : public Generics::Unstructured
 }  //namespace KMime
 
 // undefine code generation macros again
-#undef mk_trivial_constructor
-#undef mk_trivial_constructor_with_name
-#undef mk_trivial_subclass_with_name
-#undef mk_trivial_subclass
-#undef mk_parsing_subclass_with_name
-#undef mk_parsing_subclass
+#undef kmime_mk_trivial_ctor
+#undef kmime_mk_trivial_ctor_with_name
 
 #endif // __KMIME_HEADERS_H__
