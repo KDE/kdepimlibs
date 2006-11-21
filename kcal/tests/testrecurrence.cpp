@@ -27,6 +27,7 @@
 #include <kdebug.h>
 #include <kcmdlineargs.h>
 #include <kdatetime.h>
+#include <ksystemtimezone.h>
 
 #include <QFile>
 #include <QTextStream>
