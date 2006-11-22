@@ -29,16 +29,12 @@
 
 #include <kiconloader.h>
 #include <kdebug.h>
-#include <kmessagebox.h>
-#include <k3multipledrag.h>
 #include <klocale.h>
-#include <k3urldrag.h>
+#include <kurl.h>
 
 #include "vcaldrag.h"
 #include "icaldrag.h"
 #include "calendar.h"
-#include "vcalformat.h"
-#include "icalformat.h"
 #include "calendarlocal.h"
 #include "dndfactory.h"
 
@@ -49,62 +45,98 @@ DndFactory::DndFactory( Calendar *cal ) :
 {
 }
 
-K3MultipleDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
+QDrag *DndFactory::createDrag( QWidget *owner )
+{
+  QDrag *drag = new QDrag( owner );
+  QMimeData *mimeData = new QMimeData;
+  drag->setMimeData( mimeData );
+
+  ICalDrag::populateMimeData( mimeData, mCalendar );
+  VCalDrag::populateMimeData( mimeData, mCalendar );
+
+  return drag;
+}
+
+QDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
 {
   CalendarLocal cal( mCalendar->timeSpec() );
   Incidence *i = incidence->clone();
   cal.addIncidence( i );
 
-  K3MultipleDrag *kmd = new K3MultipleDrag( owner );
-  kmd->addDragObject( new ICalDrag( &cal, 0 ) );
+  QDrag *drag = new QDrag( owner );
+  QMimeData *mimeData = new QMimeData;
+  drag->setMimeData( mimeData );
+  
+  ICalDrag::populateMimeData( mimeData, &cal );
+  VCalDrag::populateMimeData( mimeData, &cal );
+  
+  KUrl uri = i->uri();
+  if ( uri.isValid() ) {
   QMap<QString, QString> metadata;
-  metadata["labels"] = KUrl::toPercentEncoding( i->summary() );
-  kmd->addDragObject( new K3URLDrag( i->uri(), metadata, 0 ) );
-
-  if ( i->type() == "Event" )
-    kmd->setPixmap( BarIcon( "appointment" ) );
-  else if ( i->type() == "Todo" )
-    kmd->setPixmap( BarIcon( "todo" ) );
-
-  return kmd;
-}
-
-Event *DndFactory::createDrop(QDropEvent *de)
-{
-  kDebug(5800) << "DndFactory::createDrop()" << endl;
-
-  CalendarLocal cal( mCalendar->timeSpec() );
-
-  if ( ICalDrag::decode( de, &cal ) || VCalDrag::decode( de, &cal ) ) {
-    de->accept();
-
-    Event::List events = cal.events();
-    if ( !events.isEmpty() ) {
-      Event *event = new Event( *events.first() );
-      return event;
-    }
+    metadata["labels"] = KUrl::toPercentEncoding( i->summary() );
+    uri.populateMimeData( mimeData, metadata );
   }
 
+  if ( i->type() == "Event" )
+    drag->setPixmap( BarIcon( "appointment" ) );
+  else if ( i->type() == "Todo" )
+    drag->setPixmap( BarIcon( "todo" ) );
+
+  return drag;
+}
+
+Calendar *DndFactory::createDropCalendar( const QMimeData *md )
+{
+  Calendar *cal = new CalendarLocal( mCalendar->timeSpec() );
+
+  if ( ICalDrag::fromMimeData( md, cal ) ||
+       VCalDrag::fromMimeData( md, cal ) ){
+    return cal;
+  }
   return 0;
+}
+
+Calendar *DndFactory::createDropCalendar( QDropEvent *de )
+{
+  Calendar *cal = createDropCalendar( de->mimeData() );
+  if ( cal ) {
+    de->accept();
+    return cal;
+  }
+  return 0;
+}
+
+Event *DndFactory::createDropEvent(QDropEvent *de)
+{
+  kDebug(5800) << "DndFactory::createDrop()" << endl;
+  Event *ev = 0;
+  Calendar *cal = createDropCalendar( de );
+  
+  if ( cal ) {
+    Event::List events = cal->events();
+    if ( !events.isEmpty() ) {
+      ev = new Event( *events.first() );
+    }
+    delete cal;
+  }
+  return ev;
 }
 
 Todo *DndFactory::createDropTodo(QDropEvent *de)
 {
-  kDebug(5800) << "VCalFormat::createDropTodo()" << endl;
-
-  CalendarLocal cal( mCalendar->timeSpec() );
-
-  if ( ICalDrag::decode( de, &cal ) || VCalDrag::decode( de, &cal ) ) {
-    de->accept();
-
-    Todo::List todos = cal.todos();
+  kDebug(5800) << "DndFactory::createDropTodo()" << endl;
+  Todo *todo = 0;
+  Calendar *cal = createDropCalendar( de );
+  
+  if ( cal ) {
+    Todo::List todos = cal->todos();
     if ( !todos.isEmpty() ) {
-      Todo *todo = new Todo( *todos.first() );
-      return todo;
+      todo = new Todo( *todos.first() );
     }
+    delete cal;
   }
 
-  return 0;
+  return todo;
 }
 
 
@@ -124,7 +156,12 @@ bool DndFactory::copyIncidence( Incidence *selectedInc )
   CalendarLocal cal( mCalendar->timeSpec() );
   Incidence *inc = selectedInc->clone();
   cal.addIncidence( inc );
-  cb->setData( new ICalDrag( &cal ) );
+  
+  QMimeData *mimeData = new QMimeData;
+  cb->setMimeData( mimeData );
+  
+  ICalDrag::populateMimeData( mimeData, &cal );
+  VCalDrag::populateMimeData( mimeData, &cal );
 
   return true;
 }
@@ -132,18 +169,17 @@ bool DndFactory::copyIncidence( Incidence *selectedInc )
 Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime)
 {
 //  kDebug(5800) << "DnDFactory::pasteEvent()" << endl;
-
-  CalendarLocal cal( mCalendar->timeSpec() );
-
   QClipboard *cb = QApplication::clipboard();
-
-  if ( !ICalDrag::decode( cb->data(), &cal ) &&
-       !VCalDrag::decode( cb->data(), &cal ) ) {
+  
+  Calendar *cal = createDropCalendar( cb->mimeData() );
+  
+  if ( !cal ) {
     kDebug(5800) << "Can't parse clipboard" << endl;
     return 0;
   }
+  Incidence *ret = 0;
 
-  Incidence::List incList = cal.incidences();
+  Incidence::List incList = cal->incidences();
   Incidence *inc = incList.first();
 
   if ( !incList.isEmpty() && inc ) {
@@ -194,9 +230,8 @@ Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime
       kDebug(5850) << "Trying to paste unknown incidence of type " << inc->type() << endl;
     }
 
-    return inc;
-
+    ret = inc;
   }
-
-  return 0;
+  delete cal;
+  return ret;
 }

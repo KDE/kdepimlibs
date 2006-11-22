@@ -24,16 +24,16 @@
 #ifndef KCAL_DNDFACTORY_H
 #define KCAL_DNDFACTORY_H
 
-#include <QDropEvent>
-
 #include "kcal.h"
 
-class K3MultipleDrag;
+class QDrag;
+class QDropEvent;
 
 namespace KCal {
 
 class Event;
 class Todo;
+class Incidence;
 class Calendar;
 
 /**
@@ -47,15 +47,28 @@ class KCAL_EXPORT DndFactory
   public:
     explicit DndFactory( Calendar * );
 
+    /** 
+      Create the calendar that is contained in the drop event's data.
+     */
+    Calendar *createDropCalendar( QDropEvent *de );
+    /** 
+      Create the calendar that is contained in the mime data.
+     */
+    Calendar *createDropCalendar( const QMimeData *md );
     /**
-      Create a drag object.
+      Create a drag object for the whole calendar.
     */
-    K3MultipleDrag *createDrag( Incidence *incidence, QWidget *owner );
+    QDrag *createDrag( QWidget *owner );
+
+    /**
+      Create a drag object for a single incidence.
+    */
+    QDrag *createDrag( Incidence *incidence, QWidget *owner );
 
     /** Create Todo object from drop event */
     Todo *createDropTodo(QDropEvent *de);
     /** Create Event object from drop event */
-    Event *createDrop(QDropEvent *de);
+    Event *createDropEvent(QDropEvent *de);
 
     /** cut incidence to clipboard */
     void cutIncidence( Incidence * );

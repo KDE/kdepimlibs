@@ -23,26 +23,35 @@
 #include "vcaldrag.h"
 
 #include "vcalformat.h"
+#include <qmimedata.h>
 
 using namespace KCal;
 
-VCalDrag::VCalDrag( Calendar *cal, QWidget *parent, const char *name )
-  : Q3StoredDrag( "text/x-vCalendar", parent, name )
+QString VCalDrag::mimeType()
+{
+  return "text/x-vCalendar";
+}
+
+bool VCalDrag::populateMimeData( QMimeData *e, Calendar *cal )
 {
   VCalFormat format;
-  setEncodedData( format.toString( cal ).toUtf8() );
+  QString calstr( format.toString( cal ) );
+  if ( calstr.length()>0 ) 
+    e->setData( mimeType(), calstr.toUtf8() );
+  return canDecode( e );
 }
 
-bool VCalDrag::canDecode( QMimeSource *me )
+bool VCalDrag::canDecode( const QMimeData *me )
 {
-  return me->provides( "text/x-vCalendar" );
+  return me->hasFormat( mimeType() );
 }
 
-bool VCalDrag::decode( QMimeSource *de, Calendar *cal )
+bool VCalDrag::fromMimeData( const QMimeData *de, Calendar *cal )
 {
+  if (!canDecode( de ) ) return false;
   bool success = false;
 
-  QByteArray payload = de->encodedData( "text/x-vCalendar" );
+  QByteArray payload = de->data( mimeType() );
   if ( payload.size() ) {
     QString txt = QString::fromUtf8( payload.data() );
 

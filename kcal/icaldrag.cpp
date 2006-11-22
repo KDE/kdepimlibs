@@ -24,29 +24,41 @@
 
 #include "icalformat.h"
 
+#include <qmimedata.h>
+#include "calendar.h"
+#include "kcal.h"
+
 #include <kdebug.h>
 
 using namespace KCal;
 
-ICalDrag::ICalDrag( Calendar *cal, QWidget *parent, const char *name )
-  : Q3StoredDrag( "text/calendar", parent, name )
+QString ICalDrag::mimeType()
+{
+  return "text/calendar";
+}
+
+bool ICalDrag::populateMimeData( QMimeData *me, Calendar *cal )
 {
   ICalFormat icf;
   QString scal = icf.toString( cal );
 
-  setEncodedData( scal.toUtf8() );
+  if ( scal.length()>0 ){
+    me->setData( mimeType(), scal.toUtf8() );
+  }
+  return canDecode( me );
 }
 
-bool ICalDrag::canDecode( QMimeSource *me )
+bool ICalDrag::canDecode( const QMimeData *me )
 {
-  return me->provides( "text/calendar" );
+  return me->hasFormat( mimeType() );
 }
 
-bool ICalDrag::decode( QMimeSource *de, Calendar *cal )
+bool ICalDrag::fromMimeData( const QMimeData *de, Calendar *cal )
 {
+  if (!canDecode( de ) ) return false;
   bool success = false;
 
-  QByteArray payload = de->encodedData( "text/calendar" );
+  QByteArray payload = de->data( mimeType() );
   if ( payload.size() ) {
     QString txt = QString::fromUtf8( payload.data() );
 

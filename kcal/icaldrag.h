@@ -23,34 +23,39 @@
 #ifndef KCAL_ICALDRAG_H
 #define KCAL_ICALDRAG_H
 
-#include <q3dragobject.h>
-#include "calendar.h"
 #include "kcal.h"
+#include <QString>
+
+class QMimeData;
 
 namespace KCal {
+
+class Calendar;
 
 /**
   iCalendar drag&drop class.
 */
-class KCAL_EXPORT ICalDrag : public Q3StoredDrag
+class KCAL_EXPORT ICalDrag
 {
   public:
-    /**
-      Create a drag&drop object for iCalendar component \a ical.
-    */
-    explicit ICalDrag( Calendar *cal, QWidget *parent = 0,
-                       const char *name = 0 );
-    ~ICalDrag() {}
 
+    /**
+      Mime-type of iCalendar
+    */
+    static QString mimeType();
+    /**
+      Sets the iCalendar representation as data of the drag object
+    */
+    static bool populateMimeData( QMimeData *e, Calendar *cal );
     /**
       Return, if drag&drop object can be decode to iCalendar.
     */
-    static bool canDecode( QMimeSource * );
+    static bool canDecode( const QMimeData * );
     /**
       Decode drag&drop object to iCalendar component \a cal.
     */
-    static bool decode( QMimeSource *e, Calendar *cal );
-
+    static bool fromMimeData( const QMimeData *e, Calendar *cal );
+    
   private:
     class Private;
     Private *d;
