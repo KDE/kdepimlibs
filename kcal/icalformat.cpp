@@ -262,9 +262,13 @@ QString ICalFormat::toString( Calendar *cal )
   const ICalTimeZones::ZoneMap zones = tzUsedList.zones();
   for ( ICalTimeZones::ZoneMap::ConstIterator it = zones.begin();  it != zones.end();  ++it) {
     icaltimezone *tz = (*it)->icalTimezone();
-    component = icalcomponent_new_clone( icaltimezone_get_component( tz ) );
-    icalcomponent_add_component( calendar, component );
-    if (tz != 0) icaltimezone_free( tz, true );
+    if ( !tz ) {
+      kError(5800) << "ICalFormat::toString(): bad time zone" << endl;
+    } else {
+      component = icalcomponent_new_clone( icaltimezone_get_component( tz ) );
+      icalcomponent_add_component( calendar, component );
+      icaltimezone_free( tz, 1 );
+    }
   }
 
   QString text = QString::fromUtf8( icalcomponent_as_ical_string( calendar ) );
