@@ -287,6 +287,7 @@ public:
       if (icalComponent)
         icalcomponent_free(icalComponent);
     }
+    icalcomponent *component() const  { return icalComponent; }
     void setComponent(icalcomponent *c)
     {
       if (icalComponent)
@@ -296,6 +297,7 @@ public:
     QString       location;       // name of city for this time zone
     QByteArray    url;            // URL of published VTIMEZONE definition (optional)
     QDateTime     lastModified;   // time of last modification of the VTIMEZONE component (optional)
+private:
     icalcomponent *icalComponent; // ical component representing this time zone
 };
 
@@ -312,7 +314,7 @@ ICalTimeZoneData::ICalTimeZoneData(const ICalTimeZoneData &rhs)
   d->location      = rhs.d->location;
   d->url           = rhs.d->url;
   d->lastModified  = rhs.d->lastModified;
-  d->icalComponent = icalcomponent_new_clone( rhs.d->icalComponent );
+  d->setComponent( icalcomponent_new_clone( rhs.d->component() ) );
 }
 
 ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz)
@@ -347,7 +349,7 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
         }
       }
     }
-    d->icalComponent = c;
+    d->setComponent( c );
   }
   else {
     // Write the time zone data into an iCal component
@@ -401,7 +403,7 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
       }
     } while (found);
 
-    d->icalComponent = comp;
+    d->setComponent( comp );
   }
 }
 
@@ -416,7 +418,7 @@ ICalTimeZoneData &ICalTimeZoneData::operator=(const ICalTimeZoneData &rhs)
   d->location      = rhs.d->location;
   d->url           = rhs.d->url;
   d->lastModified  = rhs.d->lastModified;
-  d->setComponent( icalcomponent_new_clone(rhs.d->icalComponent) );
+  d->setComponent( icalcomponent_new_clone(rhs.d->component()) );
   return *this;
 }
 
@@ -442,7 +444,7 @@ QDateTime ICalTimeZoneData::lastModified() const
 
 QByteArray ICalTimeZoneData::vtimezone() const
 {
-  return icalcomponent_as_ical_string( d->icalComponent );
+  return icalcomponent_as_ical_string( d->component() );
 }
 
 icaltimezone *ICalTimeZoneData::icalTimezone() const
@@ -450,7 +452,7 @@ icaltimezone *ICalTimeZoneData::icalTimezone() const
   icaltimezone *icaltz = icaltimezone_new();
   if ( !icaltz )
     return 0;
-  icalcomponent *c = icalcomponent_new_clone( d->icalComponent );
+  icalcomponent *c = icalcomponent_new_clone( d->component() );
   if ( !icaltimezone_set_component( icaltz, c ) ) {
     icalcomponent_free( c );
     icaltimezone_free( icaltz, 1 );
