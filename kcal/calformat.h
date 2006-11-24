@@ -31,7 +31,6 @@
 
 namespace KCal {
 
-class VCalDrag;
 class Calendar;
 
 /**

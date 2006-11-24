@@ -20,29 +20,18 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QApplication>
 #include <QString>
 #include <QRegExp>
-#include <QClipboard>
-#include <QDialog>
 #include <QFile>
 #include <QByteArray>
 
 #include <kdebug.h>
 #include <kdatetime.h>
-#include <kmessagebox.h>
-#include <kiconloader.h>
 #include <klocale.h>
 
 #include "versit/vcc.h"
 #include "versit/vobject.h"
-extern "C" {
-#include "libical/src/libical/icaltime.h"
-#include "libical/src/libical/icaltimezone.h"
-}
-#include "vcaldrag.h"
 #include "calendar.h"
-#include "icaltimezones.h"
 #include "vcalformat.h"
 
 using namespace KCal;

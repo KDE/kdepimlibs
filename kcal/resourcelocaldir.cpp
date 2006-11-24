@@ -30,16 +30,11 @@
 #include <kconfig.h>
 #include <kstandarddirs.h>
 
-#include "vcaldrag.h"
-#include "vcalformat.h"
-#include "icalformat.h"
-#include "exceptions.h"
 #include "calendarlocal.h"
 #include "incidence.h"
 #include "event.h"
 #include "todo.h"
 #include "journal.h"
-#include "filestorage.h"
 
 #include "kresources/configwidget.h"
 

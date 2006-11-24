@@ -26,7 +26,6 @@
 #include <kdebug.h>
 
 #include "calendar.h"
-#include "vcaldrag.h"
 #include "vcalformat.h"
 #include "icalformat.h"
 

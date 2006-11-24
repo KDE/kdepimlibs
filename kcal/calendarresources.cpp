@@ -41,15 +41,9 @@
 #include "kresources/selectdialog.h"
 #include "kabc/lock.h"
 
-#include "vcaldrag.h"
-#include "vcalformat.h"
-#include "icalformat.h"
-#include "exceptions.h"
 #include "incidence.h"
 #include "journal.h"
-#include "filestorage.h"
 #include "resourcecalendar.h"
-#include "resourcelocal.h"
 #include "calendarresources.h"
 
 using namespace KCal;
