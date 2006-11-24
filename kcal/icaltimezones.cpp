@@ -360,48 +360,47 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
     // Compile an ordered list of transitions so that we can know the phases
     // which occur before and after each transition.
     const QList<KTimeZone::Transition> transits = transitions();
-    QVector<bool> transitionsDone(transits.count());
+    int count = transits.count();
+    QVector<bool> transitionsDone(count);
     transitionsDone.fill(false);
 
     // Go through the list of transitions and create an iCal component for each
     // distinct combination of phase after and UTC offset before the transition.
-    bool found;
     icaldatetimeperiodtype dtperiod;
     dtperiod.period = icalperiodtype_null_period();
-    do {
-      found = false;
-      for (int i = 0, end = transits.count();  i < end;  ++i) {
-        if ( transitionsDone[i] )
-          continue;
-        found = true;
-        int preOffset = (i > 0) ? transits[i-1].phase().utcOffset() : rhs.previousUtcOffset();
-        KTimeZone::Phase phase = transits[i].phase();
-        icalcomponent *phcomp = icalcomponent_new( phase.isDst() ?
-                                   ICAL_XDAYLIGHT_COMPONENT : ICAL_XSTANDARD_COMPONENT );
-        QList<QByteArray> abbrevs = phase.abbreviations();
-        for (int a = 0, aend = abbrevs.count();  a < aend;  ++a) {
-          icalcomponent_add_property(phcomp, icalproperty_new_tzname( static_cast<const char*>(abbrevs[a]) ));
-        }
-        if ( !phase.comment().isEmpty() )
-          icalcomponent_add_property(phcomp, icalproperty_new_comment( phase.comment().toUtf8() ));
-        icalcomponent_add_property(phcomp, icalproperty_new_tzoffsetfrom( preOffset ));
-        icalcomponent_add_property(phcomp, icalproperty_new_tzoffsetto( phase.utcOffset() ));
-        icalcomponent_add_property(phcomp, icalproperty_new_dtstart(
-                          writeLocalICalDateTime( transits[i].time(), preOffset ) ));
-        transitionsDone[i] = true;
-
-        while (++i < end) {
-          if (!transitionsDone[i] 
-          &&  transits[i].phase() == phase
-          &&  transits[i-1].phase().utcOffset() == preOffset) {
-            dtperiod.time = writeLocalICalDateTime( transits[i].time(), preOffset );
-            icalcomponent_add_property(phcomp, icalproperty_new_rdate( dtperiod ));
-            transitionsDone[i] = true;
-          }
-        }
-        icalcomponent_add_component(comp, phcomp);
+    for ( ; ; ) {
+      int i = 0;
+      for ( ;  i < count && transitionsDone[i];  ++i) ;
+      if ( i >= count )
+        break;
+      // Found a phase combination which hasn't yet been processed
+      int preOffset = (i > 0) ? transits[i-1].phase().utcOffset() : rhs.previousUtcOffset();
+      KTimeZone::Phase phase = transits[i].phase();
+      icalcomponent *phcomp = icalcomponent_new( phase.isDst() ?
+                                 ICAL_XDAYLIGHT_COMPONENT : ICAL_XSTANDARD_COMPONENT );
+      QList<QByteArray> abbrevs = phase.abbreviations();
+      for (int a = 0, aend = abbrevs.count();  a < aend;  ++a) {
+        icalcomponent_add_property(phcomp, icalproperty_new_tzname( static_cast<const char*>(abbrevs[a]) ));
       }
-    } while (found);
+      if ( !phase.comment().isEmpty() )
+        icalcomponent_add_property(phcomp, icalproperty_new_comment( phase.comment().toUtf8() ));
+      icalcomponent_add_property(phcomp, icalproperty_new_tzoffsetfrom( preOffset ));
+      icalcomponent_add_property(phcomp, icalproperty_new_tzoffsetto( phase.utcOffset() ));
+      icalcomponent_add_property(phcomp, icalproperty_new_dtstart(
+                        writeLocalICalDateTime( transits[i].time(), preOffset ) ));
+      transitionsDone[i] = true;
+
+      while (++i < count) {
+        if (!transitionsDone[i] 
+        &&  transits[i].phase() == phase
+        &&  transits[i-1].phase().utcOffset() == preOffset) {
+          dtperiod.time = writeLocalICalDateTime( transits[i].time(), preOffset );
+          icalcomponent_add_property(phcomp, icalproperty_new_rdate( dtperiod ));
+          transitionsDone[i] = true;
+        }
+      }
+      icalcomponent_add_component(comp, phcomp);
+    }
 
     d->setComponent( comp );
   }
