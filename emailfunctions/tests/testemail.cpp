@@ -365,6 +365,7 @@ int main(int argc, char *argv[])
   checkIsValidEmailAddress( "|matt@fruitsalad.org", "AddressOk" );
   checkIsValidEmailAddress( "}matt@fruitsalad.org", "AddressOk" );
   checkIsValidEmailAddress( "~matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "matt%matt@fruitsalad.org", "AddressOk" );
 
   //bug 105405
   checkIsValidEmailAddress( "[foobar] <matt@fruitsalad.org>", "InvalidDisplayName" );
