@@ -553,7 +553,7 @@ QByteArray Parametrized::as7BitString( bool withHeaderType )
       rv += "; ";
     else
       first = false;
-    rv += it.key().toLatin1() + "=";
+    rv += it.key().toLatin1() + '=';
     if ( isUsAscii( it.value() ) ) {
       QByteArray tmp = it.value().toLatin1();
       addQuotes( tmp, false );
