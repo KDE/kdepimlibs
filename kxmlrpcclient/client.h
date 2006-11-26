@@ -37,13 +37,13 @@ namespace KXmlRpc
 
 /**
   @brief
-  A class that represents a connection to a XML-RPC server. 
+  A class that represents a connection to a XML-RPC server.
   This is the main interface to the XML-RPC client library.
 
   @code
     KXmlRpc::Client *c = new Client(KUrl( "http://localhost" ), this);
     c->setUserAgent( "Test/1.0" );
-    c->call( "xmlrpc.command1", "Hi!", 
+    c->call( "xmlrpc.command1", "Hi!",
        this, SLOT( gotData( const QList<QVariant>&, const QVariant ) ),
        this, SLOT( gotError( const QString&, const QVariant& ) ) );
   @endcode
@@ -68,7 +68,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param url the url of the xml-rpc server.
       @param parent the parent of this object, defaults to NULL.
      */
-    Client( const KUrl &url, QObject *parent = 0 );
+    explicit Client( const KUrl &url, QObject *parent = 0 );
 
     /**
       Destroys the XML-RPC #Client.
@@ -83,7 +83,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
     KUrl url() const;
 
     /**
-      Sets the url the #Client will connect to. 
+      Sets the url the #Client will connect to.
 
       @param url the url for the xml-rpc server we will be connecting to.
 
@@ -101,7 +101,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
     /**
       Sets the userAgent string the #Client will use to identify itself.
 
-      @param userAgent the user agent string to use. 
+      @param userAgent the user agent string to use.
 
       @see userAgent()
      */
@@ -116,7 +116,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
     bool digestAuth() const;
 
     /**
-      Sets HTTP-Digest authentication on. 
+      Sets HTTP-Digest authentication on.
 
       @see digestAuth(), disableDigestAuth()
      */
@@ -131,14 +131,14 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
 
   public slots:
     /**
-      Calls the given method on a XML-RPC server, with the given 
-      argument list. 
+      Calls the given method on a XML-RPC server, with the given
+      argument list.
 
       @param method the method on the server we are going to be calling
-      @param arg the argument list to pass to the server 
+      @param arg the argument list to pass to the server
       @param obj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot 
+      @param obj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -148,14 +148,14 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
         const QVariant &id = QVariant() );
 
     /**
-      Calls the given method on a XML-RPC server, with the given 
+      Calls the given method on a XML-RPC server, with the given
       argument.
 
       @param method the method on the server we are going to be calling
-      @param arg the argument to pass to the server 
+      @param arg the argument to pass to the server
       @param obj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot 
+      @param obj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -165,14 +165,14 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
         const QVariant &id = QVariant() );
 
     /**
-      Calls the given method on a XML-RPC server, with the given 
-      int as the argument. 
+      Calls the given method on a XML-RPC server, with the given
+      int as the argument.
 
       @param method the method on the server we are going to be calling
-      @param arg the int to pass to the server 
+      @param arg the int to pass to the server
       @param obj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot 
+      @param obj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -182,14 +182,14 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
         const QVariant &id = QVariant() );
 
     /**
-      Calls the given method on a XML-RPC server, with the given 
-      bool as the argument. 
+      Calls the given method on a XML-RPC server, with the given
+      bool as the argument.
 
       @param method the method on the server we are going to be calling
-      @param arg the bool to pass to the server 
+      @param arg the bool to pass to the server
       @param obj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot 
+      @param obj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -199,14 +199,14 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
         const QVariant &id = QVariant() );
 
     /**
-      Calls the given method on a XML-RPC server, with the given 
-      double as the argument. 
+      Calls the given method on a XML-RPC server, with the given
+      double as the argument.
 
       @param method the method on the server we are going to be calling
-      @param arg the double to pass to the server 
+      @param arg the double to pass to the server
       @param obj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot 
+      @param obj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -216,14 +216,14 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
         const QVariant &id = QVariant() );
 
     /**
-      Calls the given method on a XML-RPC server, with the given 
-      string as the argument. 
+      Calls the given method on a XML-RPC server, with the given
+      string as the argument.
 
       @param method the method on the server we are going to be calling
-      @param arg the string to pass to the server 
+      @param arg the string to pass to the server
       @param obj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot 
+      @param obj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -233,14 +233,14 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
         const QVariant &id = QVariant() );
 
     /**
-      Calls the given method on a XML-RPC server, with the given 
-      byte array as the argument. 
+      Calls the given method on a XML-RPC server, with the given
+      byte array as the argument.
 
       @param method the method on the server we are going to be calling
-      @param arg the array to pass to the server 
+      @param arg the array to pass to the server
       @param obj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot 
+      @param obj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -250,14 +250,14 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
         const QVariant &id = QVariant() );
 
     /**
-      Calls the given method on a XML-RPC server, with the given 
-      date as the argument 
+      Calls the given method on a XML-RPC server, with the given
+      date as the argument
 
       @param method the method on the server we are going to be calling
-      @param arg the date and/or time to pass to the server 
+      @param arg the date and/or time to pass to the server
       @param obj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot 
+      @param obj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -267,14 +267,14 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
         const QVariant &id = QVariant() );
 
     /**
-      Calls the given method on a XML-RPC server, with the given 
-      string list as the argument 
+      Calls the given method on a XML-RPC server, with the given
+      string list as the argument
 
       @param method the method on the server we are going to be calling
-      @param arg the list of strings to pass to the server 
+      @param arg the list of strings to pass to the server
       @param obj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot 
+      @param obj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
