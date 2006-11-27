@@ -212,7 +212,7 @@ ICalTimeZone::ICalTimeZone(ICalTimeZoneSource *source, const QString &name, ICal
   setData(data);
 }
 
-ICalTimeZone::ICalTimeZone(const KTimeZone &tz)
+ICalTimeZone::ICalTimeZone(const KTimeZone &tz, const QDate &earliest)
   : KTimeZone(0, tz.name(), tz.countryCode(), tz.latitude(), tz.longitude(), tz.comment())
 {
   const KTimeZoneData *data = tz.data(true);
@@ -221,7 +221,7 @@ ICalTimeZone::ICalTimeZone(const KTimeZone &tz)
     if ( icaldata )
       setData( new ICalTimeZoneData(*icaldata) );
     else
-      setData( new ICalTimeZoneData(*tz.data(), tz) );
+      setData( new ICalTimeZoneData(*tz.data(), tz, earliest) );
   }
 }
 
@@ -317,7 +317,7 @@ ICalTimeZoneData::ICalTimeZoneData(const ICalTimeZoneData &rhs)
   d->setComponent( icalcomponent_new_clone( rhs.d->component() ) );
 }
 
-ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz)
+ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz, const QDate &earliest)
   : KTimeZoneData(rhs),
     d(new ICalTimeZoneDataPrivate())
 {

@@ -181,8 +181,11 @@ class KCAL_EXPORT ICalTimeZone : public KTimeZone
 
     /**
      * Constructor which converts a KTimeZone to an ICalTimeZone instance.
+     *
+     * @param tz KTimeZone instance
+     * @param earliest earliest date for which time zone data should be stored
      */
-    explicit ICalTimeZone(const KTimeZone &);
+    explicit ICalTimeZone(const KTimeZone &tz, const QDate &earliest = QDate());
 
     /**
      * Copy constructor.
@@ -363,7 +366,18 @@ class KCAL_EXPORT ICalTimeZoneData : public KTimeZoneData
   public:
     ICalTimeZoneData();
     ICalTimeZoneData(const ICalTimeZoneData &rhs);
-    ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz);
+    /**
+     * Constructor which converts a KTimeZoneData to an ICalTimeZoneData instance.
+     * If @p data is for a system time zone (i.e. @p tz is a KSystemTimeZone
+     * instance), the full time zone data is read from the system time zone
+     * database if possible; otherwise, the built-in libical time zone's data
+     * is used.
+     *
+     * @param rhs KTimeZoneData instance
+     * @param tz  time zone which @p rhs belongs to
+     * @param earliest earliest date for which time zone data should be stored
+     */
+    ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz, const QDate &earliest);
     virtual ~ICalTimeZoneData();
     ICalTimeZoneData &operator=(const ICalTimeZoneData &rhs);
 
