@@ -78,17 +78,17 @@ enum contentDisposition {
 static const QByteArray Latin1( "ISO-8859-1" );
 
 // internal macro to generate default constructors
-#define kmime_mk_trivial_ctor( subclass ) \
-  public: \
-    subclass(); \
-    subclass( Content *parent ); \
-    subclass( Content *parent, const QByteArray &s ); \
-    subclass( Content *parent, const QString &s, const QByteArray &charset ); \
-    ~subclass();
+#define kmime_mk_trivial_ctor( subclass )                               \
+  public:                                                               \
+  subclass();                                                           \
+  subclass( Content *parent );                                          \
+  subclass( Content *parent, const QByteArray &s );                     \
+  subclass( Content *parent, const QString &s, const QByteArray &charset ); \
+  ~subclass();
 
-#define kmime_mk_trivial_ctor_with_name( subclass ) \
-  kmime_mk_trivial_ctor( subclass ) \
-  const char *type() const;
+#define kmime_mk_trivial_ctor_with_name( subclass )     \
+  kmime_mk_trivial_ctor( subclass )                     \
+    const char *type() const;
 
 //
 //
@@ -103,33 +103,47 @@ class KMIME_EXPORT Base
   public:
     typedef QList<KMime::Headers::Base*> List;
 
-    /** Create an empty header. */
+    /**
+      Creates an empty header.
+    */
     Base() : e_ncCS( "" ), p_arent(0) {}
 
-    /** Create an empty header with a parent-content. */
+    /**
+      Creates an empty header with a parent-content.
+    */
     Base( KMime::Content *parent ) : e_ncCS( "" ), p_arent( parent ) {}
 
-    /** Destructor */
+    /**
+      Destructor.
+    */
     virtual ~Base() {}
 
-    /** Return the parent of this header. */
-    KMime::Content *parent() { return p_arent; }
+    /**
+      Returns the parent of this header.
+    */
+    KMime::Content *parent()
+      { return p_arent; }
 
-    /** Set the parent for this header. */
-    void setParent( KMime::Content *p ) { p_arent = p; }
+    /**
+      Sets the parent for this header.
+    */
+    void setParent( KMime::Content *p )
+      { p_arent = p; }
 
     /**
       Parses the given string. Take care of RFC2047-encoded strings.
       A default charset is given. If the last parameter is true the
       default charset is used in any case
     */
-    virtual void from7BitString( const QByteArray &s ) { Q_UNUSED( s ); }
+    virtual void from7BitString( const QByteArray &s )
+      { Q_UNUSED( s ); }
 
     /**
       Returns the encoded header. The parameter specifies whether the
       header-type should be included.
     */
-    virtual QByteArray as7BitString( bool=true ) { return QByteArray(); }
+    virtual QByteArray as7BitString( bool=true )
+      { return QByteArray(); }
 
     /**
       Returns the charset that is used for RFC2047-encoding.
@@ -144,12 +158,12 @@ class KMIME_EXPORT Base
     /**
       Returns the default charset.
     */
-    QByteArray defaultCS();
+    QByteArray defaultCS() const;
 
     /**
       Returns if the default charset is mandatory.
     */
-    bool forceCS();
+    bool forceCS() const;
 
     /**
       Parses the given string and set the charset.
@@ -167,31 +181,39 @@ class KMIME_EXPORT Base
     */
     virtual void clear() {}
 
-    /** Do we have data? */
-    virtual bool isEmpty() const { return false; }
+    /**
+      Checks if this header contains any data.
+    */
+    virtual bool isEmpty() const
+      { return false; }
 
     /**
       Returns the type of this header (e.g. "From").
     */
-    virtual const char *type() const { return ""; }
+    virtual const char *type() const
+      { return ""; }
 
     /**
       Checks if this header is of type @p t.
     */
-    bool is( const char *t ) { return (strcasecmp( t, type() ) == 0 ); }
+    bool is( const char *t )
+      { return strcasecmp( t, type() ) == 0; }
 
     /**
       Checks if this header is a MIME header.
     */
-    bool isMimeHeader() { return (strncasecmp( type(), "Content-", 8 ) == 0); }
+    bool isMimeHeader()
+      { return strncasecmp( type(), "Content-", 8 ) == 0; }
 
     /**
       Checks if this header is a X-Header.
     */
-    bool isXHeader() { return (strncmp( type(), "X-", 2 ) == 0 ); }
+    bool isXHeader()
+      { return strncmp( type(), "X-", 2 ) == 0; }
 
   protected:
-    QByteArray typeIntro() { return (QByteArray( type() ) + ": " ); }
+    QByteArray typeIntro()
+      { return QByteArray( type() ) + ": "; }
 
     QByteArray e_ncCS;
     Content *p_arent;
@@ -205,13 +227,14 @@ class KMIME_EXPORT Base
 
 namespace Generics {
 
-/** Abstract base class for unstructured header fields
-    (e.g. "Subject", "Comment", "Content-description").
+/**
+  Abstract base class for unstructured header fields
+  (e.g. "Subject", "Comment", "Content-description").
 
-    Features: Decodes the header according to RFC2047, incl. RFC2231
-    extensions to encoded-words.
+  Features: Decodes the header according to RFC2047, incl. RFC2231
+  extensions to encoded-words.
 
-    Subclasses need only re-implement @p const @p char* @p type().
+  Subclasses need only re-implement @p const @p char* @p type().
 */
 
 // known issues:
@@ -220,54 +243,57 @@ namespace Generics {
 class KMIME_EXPORT Unstructured : public Base
 {
   public:
-    Unstructured() : Base() {}
-    Unstructured( Content *p ) : Base( p ) {}
-    Unstructured( Content *p, const QByteArray &s ) : Base( p )
-      { from7BitString( s ); }
-    Unstructured( Content *p, const QString &s, const QByteArray &cs ) : Base( p )
-      { fromUnicodeString( s, cs ); }
-    ~Unstructured() {}
+  Unstructured() : Base() {}
+  Unstructured( Content *p ) : Base( p ) {}
+  Unstructured( Content *p, const QByteArray &s ) : Base( p )
+    { from7BitString( s ); }
+  Unstructured( Content *p, const QString &s, const QByteArray &cs ) : Base( p )
+    { fromUnicodeString( s, cs ); }
+  ~Unstructured() {}
 
-    virtual void from7BitString( const QByteArray &str );
-    virtual QByteArray as7BitString( bool withHeaderType=true );
+  virtual void from7BitString( const QByteArray &str );
+  virtual QByteArray as7BitString( bool withHeaderType=true );
 
-    virtual void fromUnicodeString( const QString &str,
-                                    const QByteArray &suggestedCharset );
-    virtual QString asUnicodeString();
+  virtual void fromUnicodeString( const QString &str,
+                                  const QByteArray &suggestedCharset );
+  virtual QString asUnicodeString();
 
-    virtual void clear() { d_ecoded.truncate( 0 ); }
-    virtual bool isEmpty() const { return ( d_ecoded.isEmpty() ); }
+  virtual void clear()
+      { d_ecoded.truncate( 0 ); }
+
+  virtual bool isEmpty() const
+    { return d_ecoded.isEmpty(); }
 
   private:
-    QString d_ecoded;
+  QString d_ecoded;
 };
 
-/** This is the base class for all structured header fields. It
-    contains parsing methods for all basic token types found in
-    rfc2822.
+/**
+  This is the base class for all structured header fields.
+  It contains parsing methods for all basic token types found in rfc2822.
 
-    @section Parsing
+  @section Parsing
 
-    At the basic level, there are tokens & tspecials (rfc2045),
-    atoms & specials, quoted-strings, domain-literals (all rfc822) and
-    encoded-words (rfc2047).
+  At the basic level, there are tokens & tspecials (rfc2045),
+  atoms & specials, quoted-strings, domain-literals (all rfc822) and
+  encoded-words (rfc2047).
 
-    As a special token, we have the comment. It is one of the basic
-    tokens defined in rfc822, but it's parsing relies in part on the
-    basic token parsers (e.g. comments may contain encoded-words).
-    Also, most upper-level parsers (notably those for phrase and
-    dot-atom) choose to ignore any comment when parsing.
+  As a special token, we have the comment. It is one of the basic
+  tokens defined in rfc822, but it's parsing relies in part on the
+  basic token parsers (e.g. comments may contain encoded-words).
+  Also, most upper-level parsers (notably those for phrase and
+  dot-atom) choose to ignore any comment when parsing.
 
-    Then there are the real composite tokens, which are made up of one
-    or more of the basic tokens (and semantically invisible comments):
-    phrases (rfc822 with rfc2047) and dot-atoms (rfc2822).
+  Then there are the real composite tokens, which are made up of one
+  or more of the basic tokens (and semantically invisible comments):
+  phrases (rfc822 with rfc2047) and dot-atoms (rfc2822).
 
-    This finishes the list of supported token types. Subclasses will
-    provide support for more higher-level tokens, where necessary,
-    using these parsers.
+  This finishes the list of supported token types. Subclasses will
+  provide support for more higher-level tokens, where necessary,
+  using these parsers.
 
-    @short Base class for structured header fields.
-    @author Marc Mutz <mutz@kde.org>
+  @short Base class for structured header fields.
+  @author Marc Mutz <mutz@kde.org>
 */
 
 class KMIME_EXPORT Structured : public Base
@@ -301,8 +327,8 @@ class KMIME_EXPORT Address : public Structured
   public:
     Address() : Structured() {}
     Address( Content *p ) : Structured( p ) {}
-    Address( Content *p, const QByteArray &s )
-      : Structured( p ) { from7BitString( s ); }
+    Address( Content *p, const QByteArray &s ) : Structured( p )
+      { from7BitString( s ); }
     Address( Content *p, const QString &s, const QByteArray &cs )
       : Structured( p ) { fromUnicodeString( s, cs ); }
     ~Address() {}
@@ -335,32 +361,32 @@ class KMIME_EXPORT MailboxList : public Address
     virtual bool isEmpty() const;
 
     /**
-      Add an address to this header.
+      Adds an address to this header.
 
       @param mbox A Mailbox object specifying the address.
     */
     void addAddress( const Types::Mailbox &mbox );
 
     /**
-      Add an address to this header.
+      Adds an address to this header.
       @param address The actual email address, with or without angle brackets.
       @param displayName An optional name associated with the address.
     */
     void addAddress( const QByteArray &address, const QString &displayName = QString() );
 
     /**
-      Retruns a list of all addresses listed in this header, regardless of groups.
+      Returns a list of all addresses listed in this header, regardless of groups.
     */
     QList<QByteArray> addresses() const;
 
     /**
-      Retruns a list of all display names associated with the addresses in this header.
+      Returns a list of all display names associated with the addresses in this header.
       An empty entry is added for addresses that don't have a display name.
     */
     QStringList displayNames() const;
 
     /**
-      Retruns a list of assembled display name / address strings of the following form:
+      Returns a list of assembled display name / address strings of the following form:
       "Display Name &lt;address&gt;". These are unicode strings without any transport
       encoding, ie. they are only suitable for displaying.
     */
@@ -379,8 +405,8 @@ class KMIME_EXPORT MailboxList : public Address
 };
 
 /**
-  Base class for headers that deal with exactly one mailbox
-  (e.g. Sender).
+   Base class for headers that deal with exactly one mailbox
+   (e.g. Sender).
 */
 class KMIME_EXPORT SingleMailbox : public MailboxList
 {
@@ -405,8 +431,8 @@ class KMIME_EXPORT AddressList : public Address
   public:
     AddressList() : Address() {}
     AddressList( Content * p ) : Address( p ) {}
-    AddressList( Content * p, const QByteArray & s )
-      : Address( p ) { from7BitString( s ); }
+    AddressList( Content * p, const QByteArray & s ) : Address( p )
+      { from7BitString( s ); }
     AddressList( Content * p, const QString & s, const QByteArray & cs )
       : Address( p ) { fromUnicodeString( s, cs ); }
     ~AddressList() {}
@@ -419,32 +445,32 @@ class KMIME_EXPORT AddressList : public Address
     virtual bool isEmpty() const;
 
     /**
-      Add an address to this header.
+      Adds an address to this header.
 
       @param mbox A Mailbox object specifying the address.
     */
     void addAddress( const Types::Mailbox &mbox );
 
     /**
-      Add an address to this header.
+      Adds an address to this header.
       @param address The actual email address, with or without angle brackets.
       @param displayName An optional name associated with the address.
     */
     void addAddress( const QByteArray &address, const QString &displayName = QString() );
 
     /**
-      Retruns a list of all addresses listed in this header, regardless of groups.
+      Returns a list of all addresses listed in this header, regardless of groups.
     */
     QList<QByteArray> addresses() const;
 
     /**
-      Retruns a list of all display names associated with the addresses in this header.
+      Returns a list of all display names associated with the addresses in this header.
       An empty entry is added for addresses that don't have a display name.
     */
     QStringList displayNames() const;
 
     /**
-      Retruns a list of assembled display name / address strings of the following form:
+      Returns a list of assembled display name / address strings of the following form:
       "Display Name &lt;address&gt;". These are unicode strings without any transport
       encoding, ie. they are only suitable for displaying.
     */
@@ -472,8 +498,8 @@ class KMIME_EXPORT Ident : public Address
   public:
     Ident() : Address() {}
     Ident( Content * p ) : Address( p ) {}
-    Ident( Content * p, const QByteArray & s )
-      : Address( p ) { from7BitString( s ); }
+    Ident( Content * p, const QByteArray & s ) : Address( p )
+      { from7BitString( s ); }
     Ident( Content * p, const QString & s, const QByteArray & cs )
       : Address( p ) { fromUnicodeString( s, cs ); }
     ~Ident() {}
@@ -514,14 +540,14 @@ class KMIME_EXPORT SingleIdent : public Ident
   public:
     SingleIdent() : Ident() {}
     SingleIdent( Content * p ) : Ident( p ) {}
-    SingleIdent( Content * p, const QByteArray & s )
-      : Ident( p ) { from7BitString( s ); }
+    SingleIdent( Content * p, const QByteArray & s ) : Ident( p )
+      { from7BitString( s ); }
     SingleIdent( Content * p, const QString & s, const QByteArray & cs )
       : Ident( p ) { fromUnicodeString( s, cs ); }
     ~SingleIdent() {}
 
     /**
-      Return the identifier contained in this header.
+      Returns the identifier contained in this header.
       Note: The identifiers is not enclosed in angle-brackets.
     */
     QByteArray identifier() const;
@@ -651,20 +677,20 @@ class KMIME_EXPORT ReturnPath : public Generics::Address
       { fromUnicodeString( s, cs ); }
     ~ReturnPath() {}
 
-    const char * type() const { return "Return-Path"; }
+    const char *type() const
+      { return "Return-Path"; }
 
   protected:
     bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
 };
 
-
 // Address et al.:
 
 // rfc(2)822 headers:
 /**
-  Represent a "From" header.
+   Represent a "From" header.
 
-  @see RFC 2822, section 3.6.2.
+   @see RFC 2822, section 3.6.2.
 */
 class KMIME_EXPORT From : public Generics::MailboxList
 {
@@ -747,7 +773,7 @@ class KMIME_EXPORT MailCopiesTo : public Generics::AddressList
     void setAlwaysCopy();
 
     /**
-      Retruns true if a mail copy was explicitly denied.
+      Returns true if a mail copy was explicitly denied.
     */
     bool neverCopy() const;
 
@@ -783,12 +809,17 @@ class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
     /**
       Sets the encoding to @p e.
     */
-    void setEncoding(contentEncoding e);
+    void setEncoding( contentEncoding e );
 
     // TODO: de-inline, constify and document
-    bool decoded()                          { return d_ecoded; }
-    void setDecoded(bool d=true)            { d_ecoded=d; }
-    bool needToEncode()                     { return (d_ecoded && (c_te==CEquPr || c_te==CEbase64)); }
+    bool decoded()
+      { return d_ecoded; }
+
+    void setDecoded( bool d=true )
+      { d_ecoded = d; }
+
+    bool needToEncode()
+      { return d_ecoded && (c_te == CEquPr || c_te == CEbase64); }
 
   protected:
     virtual bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
@@ -796,7 +827,6 @@ class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
   private:
     contentEncoding c_te;
     bool d_ecoded;
-
 };
 
 /**
@@ -836,7 +866,7 @@ class KMIME_EXPORT MessageID : public Generics::SingleIdent
       Generate a message identifer.
       @param fqdn A fully qualified domain name.
     */
-    void generate(const QByteArray &fqdn);
+    void generate( const QByteArray &fqdn );
 };
 
 /**
@@ -875,7 +905,6 @@ class References: public Generics::Ident
   kmime_mk_trivial_ctor_with_name( References )
 };
 
-
 /**
   Represents a "Content-Type" header.
 
@@ -885,7 +914,7 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
 {
   kmime_mk_trivial_ctor_with_name( ContentType )
   public:
-    virtual QByteArray as7BitString(bool incType=true);
+    virtual QByteArray as7BitString( bool incType=true );
     virtual void clear();
     virtual bool isEmpty() const;
 
@@ -909,17 +938,17 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
       Sets the mimetype and clears already existing parameters.
       @param mimeType The new mimetype.
     */
-    void setMimeType(const QByteArray &mimeType);
+    void setMimeType( const QByteArray &mimeType );
 
     /**
       Tests if the media type equals @p mediatype.
     */
-    bool isMediatype(const char *mediatype) const;
+    bool isMediatype( const char *mediatype ) const;
 
     /**
       Tests if the mime sub-type equals @p subtype.
     */
-    bool isSubtype(const char *subtype) const;
+    bool isSubtype( const char *subtype ) const;
 
     /**
       Returns true if the associated MIME entity is a text.
@@ -952,17 +981,15 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
     */
     bool isPartial() const;
 
-
     /**
       Returns the charset for the associated MIME entity.
-      @todo make const
     */
-    QByteArray charset();
+    QByteArray charset() const;
 
     /**
       Sets the charset.
     */
-    void setCharset(const QByteArray &s);
+    void setCharset( const QByteArray &s );
 
     /**
       Returns the boundary (for mulitpart containers).
@@ -972,7 +999,7 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
     /**
       Sets the mulitpart container boundary.
     */
-    void setBoundary(const QByteArray &s);
+    void setBoundary( const QByteArray &s );
 
     /**
       Returns the name of the associated MIME entity.
@@ -982,7 +1009,7 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
     /**
       Sets the name to @p s using charset @p cs.
     */
-    void setName(const QString &s, const QByteArray &cs);
+    void setName( const QString &s, const QByteArray &cs );
 
     /**
       Returns the identifier of the associated MIME entity.
@@ -992,7 +1019,7 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
     /**
       Sets the identifier.
     */
-    void setId(const QByteArray &s);
+    void setId( const QByteArray &s );
 
     /**
       Returns the position of this part in a multi-part set.
@@ -1011,12 +1038,14 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
       @param total The total number of entities in the multi-part set.
       @param number The number of this entity in a multi-part set.
     */
-    void setPartialParams(int total, int number);
+    void setPartialParams( int total, int number );
 
     //category
     // TODO: document & de-inline
-    contentCategory category()            { return c_ategory; }
-    void setCategory(contentCategory c)   { c_ategory=c; }
+    contentCategory category()
+      { return c_ategory; }
+    void setCategory( contentCategory c )
+      { c_ategory=c; }
 
   protected:
     bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
@@ -1026,7 +1055,6 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
     QByteArray mMimeType;
     QByteArray mMimeSubType;
 };
-
 
 /**
   Represents a "Content-Disposition" header.
@@ -1050,7 +1078,7 @@ class ContentDisposition : public Generics::Parametrized
       Sets the content disposition.
       @param d The new content disposition.
     */
-    void setDisposition(contentDisposition d);
+    void setDisposition( contentDisposition d );
 
     /**
       Returns the suggested filename for the associated MIME part.
@@ -1065,7 +1093,7 @@ class ContentDisposition : public Generics::Parametrized
       setParameter( "filename", filename );
       @param filename The filename.
     */
-    void setFilename(const QString &filename);
+    void setFilename( const QString &filename );
 
   protected:
     bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
@@ -1080,33 +1108,42 @@ class ContentDisposition : public Generics::Parametrized
 //
 //
 
-/** Represents an arbitrary header, that can contain
-    any header-field.
-    Adds a type over Unstructured.
-    @see Unstructured
+/**
+  Represents an arbitrary header, that can contain any header-field.
+  Adds a type over Unstructured.
+  @see Unstructured
 */
 class KMIME_EXPORT Generic : public Generics::Unstructured
 {
   public:
     Generic() : Generics::Unstructured(), t_ype( 0 ) {}
+
     Generic( const char *t ) : Generics::Unstructured(), t_ype( 0 )
       { setType( t ); }
+
     Generic( const char *t, Content *p )
       : Generics::Unstructured( p ), t_ype( 0 )
       { setType( t ); }
+
     Generic( const char *t, Content *p, const QByteArray &s )
       : Generics::Unstructured( p, s ), t_ype( 0 )
       { setType( t ); }
+
     Generic( const char *t, Content *p, const QString &s, const QByteArray &cs )
       : Generics::Unstructured( p, s, cs ), t_ype( 0 )
       { setType( t ); }
+
     ~Generic() { delete[] t_ype; }
 
-    virtual void clear() { delete[] t_ype; Unstructured::clear(); }
+    virtual void clear()
+      { delete[] t_ype; Unstructured::clear(); }
+
     virtual bool isEmpty() const
-      { return ( t_ype == 0 || Unstructured::isEmpty() ); }
+      { return t_ype == 0 || Unstructured::isEmpty(); }
+
     virtual const char *type() const
       { return t_ype; }
+
     void setType( const char *type );
 
   protected:
@@ -1123,12 +1160,14 @@ class KMIME_EXPORT Subject : public Generics::Unstructured
   kmime_mk_trivial_ctor_with_name( Subject )
   public:
     /**
-      @todo make const
+      TODO: make const
     */
     bool isReply();
 };
 
-/** Represents a "Organization" header */
+/**
+  Represents a "Organization" header.
+*/
 class KMIME_EXPORT Organization : public Generics::Unstructured
 {
   public:
@@ -1140,7 +1179,8 @@ class KMIME_EXPORT Organization : public Generics::Unstructured
       : Generics::Unstructured( p, s, cs ) {}
     ~Organization() {}
 
-    virtual const char *type() const { return "Organization"; }
+    virtual const char *type() const
+      { return "Organization"; }
 };
 
 /**
@@ -1151,14 +1191,15 @@ class KMIME_EXPORT ContentDescription : public Generics::Unstructured
   kmime_mk_trivial_ctor_with_name( ContentDescription )
 };
 
-
 //
 //
 // NOT YET CONVERTED STUFF BELOW:
 //
 //
 
-/** Represents a "Control" header */
+/**
+  Represents a "Control" header.
+*/
 class KMIME_EXPORT Control : public Base
 {
   public:
@@ -1174,9 +1215,14 @@ class KMIME_EXPORT Control : public Base
     virtual QByteArray as7BitString( bool incType=true );
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
     virtual QString asUnicodeString();
-    virtual void clear() { c_trlMsg.truncate( 0 ); }
-    virtual bool isEmpty() const { return ( c_trlMsg.isEmpty() ); }
-    virtual const char *type() const { return "Control"; }
+    virtual void clear()
+      { c_trlMsg.truncate( 0 ); }
+
+    virtual bool isEmpty() const
+      { return c_trlMsg.isEmpty(); }
+
+    virtual const char *type() const
+      { return "Control"; }
 
     bool isCancel()
       { return QString::fromLatin1( c_trlMsg ).contains(
@@ -1186,7 +1232,9 @@ class KMIME_EXPORT Control : public Base
     QByteArray c_trlMsg;
 };
 
-/** Represents a "Date" header */
+/**
+  Represents a "Date" header.
+*/
 class KMIME_EXPORT Date : public Base
 {
   public:
@@ -1203,13 +1251,25 @@ class KMIME_EXPORT Date : public Base
     virtual QByteArray as7BitString( bool incType=true );
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
     virtual QString asUnicodeString();
-    virtual void clear() { t_ime=0; }
-    virtual bool isEmpty() const { return (t_ime == 0); }
-    virtual const char *type() const { return "Date"; }
 
-    time_t unixTime() { return t_ime; }
-    void setUnixTime( time_t t ) { t_ime=t; }
-    void setUnixTime() { t_ime=time( 0 ); }
+    virtual void clear()
+      { t_ime=0; }
+
+    virtual bool isEmpty() const
+      { return t_ime == 0; }
+
+    virtual const char *type() const
+      { return "Date"; }
+
+    time_t unixTime()
+      { return t_ime; }
+
+    void setUnixTime( time_t t )
+      { t_ime=t; }
+
+    void setUnixTime()
+      { t_ime=time( 0 ); }
+
     QDateTime qdt();
     int ageInDays();
 
@@ -1217,7 +1277,9 @@ class KMIME_EXPORT Date : public Base
     time_t t_ime;
 };
 
-/** Represents a "Newsgroups" header */
+/**
+  Represents a "Newsgroups" header.
+*/
 class KMIME_EXPORT Newsgroups : public Base
 {
   public:
@@ -1245,7 +1307,9 @@ class KMIME_EXPORT Newsgroups : public Base
     QByteArray g_roups;
 };
 
-/** Represents a "Followup-To" header */
+/**
+  Represents a "Followup-To" header.
+*/
 class KMIME_EXPORT FollowUpTo : public Newsgroups
 {
   public:
@@ -1258,7 +1322,9 @@ class KMIME_EXPORT FollowUpTo : public Newsgroups
     virtual const char *type() const { return "Followup-To"; }
 };
 
-/** Represents a "Lines" header */
+/**
+  Represents a "Lines" header.
+*/
 class KMIME_EXPORT Lines : public Base
 {
   public:

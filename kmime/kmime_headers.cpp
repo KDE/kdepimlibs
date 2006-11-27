@@ -97,12 +97,12 @@ void Base::setRFC2047Charset( const QByteArray &cs )
   e_ncCS=cachedCharset( cs );
 }
 
-bool Base::forceCS()
+bool Base::forceCS() const
 {
   return ( p_arent != 0 ? p_arent->forceDefaultCharset() : false );
 }
 
-QByteArray Base::defaultCS()
+QByteArray Base::defaultCS() const
 {
   return ( p_arent != 0 ? p_arent->defaultCharset() : Latin1 );
 }
@@ -1148,11 +1148,13 @@ bool ContentType::isPartial() const
   return ( strcasecmp( mimeType().constData(), "message/partial" ) == 0 );
 }
 
-QByteArray ContentType::charset()
+QByteArray ContentType::charset() const
 {
   QByteArray ret = parameter( "charset" ).toLatin1();
-  if ( ret.isEmpty() || forceCS() ) //we return the default-charset if necessary
+  if ( ret.isEmpty() || forceCS() ) {
+    //return the default-charset if necessary
     ret = defaultCS();
+  }
   return ret;
 }
 
