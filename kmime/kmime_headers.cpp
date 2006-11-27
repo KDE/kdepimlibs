@@ -985,9 +985,9 @@ QByteArray Date::as7BitString( bool incType )
   }
 }
 
-void Date::fromUnicodeString( const QString &s, const QByteArray &barr )
+void Date::fromUnicodeString( const QString &s, const QByteArray &b )
 {
-  Q_UNUSED( barr );
+  Q_UNUSED( b );
   from7BitString( s.toLatin1() );
 }
 
@@ -1028,9 +1028,9 @@ QByteArray Newsgroups::as7BitString( bool incType )
   }
 }
 
-void Newsgroups::fromUnicodeString( const QString &s, const QByteArray &barr )
+void Newsgroups::fromUnicodeString( const QString &s, const QByteArray &b )
 {
-  Q_UNUSED( barr );
+  Q_UNUSED( b );
 
   g_roups = s.toUtf8();
   e_ncCS = cachedCharset( "UTF-8" );
@@ -1091,9 +1091,9 @@ QByteArray Lines::as7BitString( bool incType )
   }
 }
 
-void Lines::fromUnicodeString( const QString &s, const QByteArray &barr )
+void Lines::fromUnicodeString( const QString &s, const QByteArray &b )
 {
-  Q_UNUSED( barr );
+  Q_UNUSED( b );
 
   l_ines = s.toInt();
   e_ncCS = cachedCharset( Latin1 );
