@@ -122,10 +122,9 @@ set(testicaltimezones_SRCS testicaltimezones.cpp )
 
 kde4_automoc(${testicaltimezones_SRCS})
 
+kde4_add_executable(testicaltimezones NOGUI RUN_UNINSTALLED ${testicaltimezones_SRCS})
 
-kde4_add_executable(testicaltimezones RUN_UNINSTALLED ${testicaltimezones_SRCS})
-
-target_link_libraries(testicaltimezones  ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
+target_link_libraries(testicaltimezones ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
 
 add_test(kcal-testicaltimezones ${EXECUTABLE_OUTPUT_PATH}/testicaltimezones)
 
