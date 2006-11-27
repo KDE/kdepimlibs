@@ -11,7 +11,7 @@ kde4_automoc(${testemail_SRCS})
 
 kde4_add_executable(testemail ${testemail_SRCS})
 
-target_link_libraries(testemail  ${KDE4_KDECORE_LIBS} emailfunctions )
+target_link_libraries(testemail  ${KDE4_KDEUI_LIBS} emailfunctions )
 
 ########### install files ###############
 
