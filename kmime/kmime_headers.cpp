@@ -1,4 +1,4 @@
-/*
+/*  -*- c++ -*-
     kmime_headers.cpp
 
     KMime, the KDE internet mail/usenet news message library.
@@ -41,38 +41,37 @@
 #include <assert.h>
 
 // macro to generate a default constructor implementation
-#define kmime_mk_trivial_ctor( subclass, baseclass ) \
-subclass::subclass() : baseclass() \
-{ \
-  clear(); \
-} \
-\
-subclass::subclass( Content *parent ) : baseclass( parent ) \
-{ \
-  clear(); \
-} \
-\
+#define kmime_mk_trivial_ctor( subclass, baseclass )                  \
+subclass::subclass() : baseclass()                                    \
+{                                                                     \
+  clear();                                                            \
+}                                                                     \
+                                                                      \
+subclass::subclass( Content *parent ) : baseclass( parent )           \
+{                                                                     \
+  clear();                                                            \
+}                                                                     \
+                                                                      \
 subclass::subclass( Content *parent, const QByteArray &s ) : baseclass( parent ) \
-{ \
-  from7BitString( s ); \
-} \
-\
+{                                                                     \
+  from7BitString( s );                                                \
+}                                                                     \
+                                                                      \
 subclass::subclass( Content *parent, const QString &s, const QByteArray &charset ) : \
-  baseclass( parent ) \
-{ \
-  fromUnicodeString( s, charset ); \
-} \
-\
+  baseclass( parent )                                                 \
+{                                                                     \
+  fromUnicodeString( s, charset );                                    \
+}                                                                     \
+                                                                      \
 subclass::~subclass() {}
 
-#define kmime_mk_trivial_ctor_with_name( subclass, baseclass, name ) \
-kmime_mk_trivial_ctor( subclass, baseclass ) \
-\
-const char* subclass::type() const \
-{ \
-  return #name; \
+#define kmime_mk_trivial_ctor_with_name( subclass, baseclass, name )  \
+kmime_mk_trivial_ctor( subclass, baseclass )                          \
+                                                                      \
+const char* subclass::type() const                                    \
+{                                                                     \
+  return #name;                                                       \
 }
-
 
 using namespace KMime;
 using namespace KMime::Headers;
@@ -130,7 +129,7 @@ QByteArray Unstructured::as7BitString( bool withHeaderType )
 }
 
 void Unstructured::fromUnicodeString( const QString &str,
-				       const QByteArray &suggestedCharset )
+                                      const QByteArray &suggestedCharset )
 {
   d_ecoded = str;
   e_ncCS = cachedCharset( suggestedCharset );
@@ -145,15 +144,16 @@ QString Unstructured::asUnicodeString()
 
 //-----<Structured>-------------------------
 
-void Structured::from7BitString(const QByteArray & str)
+void Structured::from7BitString( const QByteArray &str )
 {
-  if ( e_ncCS.isEmpty() )
+  if ( e_ncCS.isEmpty() ) {
     e_ncCS = defaultCS();
+  }
   const char *cursor = str.constData();
   parse( cursor, cursor + str.length() );
 }
 
-void Structured::fromUnicodeString(const QString & s, const QByteArray & b)
+void Structured::fromUnicodeString( const QString &s, const QByteArray &b )
 {
   e_ncCS = cachedCharset( b );
   from7BitString( s.toLatin1() );
@@ -164,11 +164,12 @@ void Structured::fromUnicodeString(const QString & s, const QByteArray & b)
 //-----<Address>-------------------------
 
 // helper method used in AddressList and MailboxList
-static bool stringToMailbox( const QByteArray &address, const QString &displayName, Types::Mailbox &mbox )
+static bool stringToMailbox( const QByteArray &address,
+                             const QString &displayName, Types::Mailbox &mbox )
 {
   Types::AddrSpec addrSpec;
   mbox.setName( displayName );
-  const char* cursor = address.constData();
+  const char *cursor = address.constData();
   if ( !parseAngleAddr( cursor, cursor + address.length(), addrSpec ) ) {
     if ( !parseAddrSpec( cursor, cursor + address.length(), addrSpec ) ) {
       kWarning() << k_funcinfo << "Invalid address" << endl;
@@ -183,14 +184,16 @@ static bool stringToMailbox( const QByteArray &address, const QString &displayNa
 
 //-----<MailboxList>-------------------------
 
-QByteArray MailboxList::as7BitString(bool withHeaderType)
+QByteArray MailboxList::as7BitString( bool withHeaderType )
 {
-  if ( isEmpty() )
+  if ( isEmpty() ) {
     return QByteArray();
+  }
 
   QByteArray rv;
-  if ( withHeaderType )
+  if ( withHeaderType ) {
     rv = typeIntro();
+  }
   foreach ( Types::Mailbox mbox, mMailboxList ) {
     rv += mbox.as7BitString( e_ncCS );
     rv += ", ";
@@ -199,7 +202,7 @@ QByteArray MailboxList::as7BitString(bool withHeaderType)
   return rv;
 }
 
-void MailboxList::fromUnicodeString(const QString & s, const QByteArray & b)
+void MailboxList::fromUnicodeString( const QString &s, const QByteArray &b )
 {
   e_ncCS = cachedCharset( b );
   from7BitString( encodeRFC2047String( s, b, false ) );
@@ -220,16 +223,18 @@ bool MailboxList::isEmpty() const
   return mMailboxList.isEmpty();
 }
 
-void MailboxList::addAddress(const Types::Mailbox & mbox)
+void MailboxList::addAddress( const Types::Mailbox &mbox )
 {
   mMailboxList.append( mbox );
 }
 
-void MailboxList::addAddress(const QByteArray & address, const QString & displayName)
+void MailboxList::addAddress( const QByteArray &address,
+                              const QString &displayName )
 {
   Types::Mailbox mbox;
-  if ( stringToMailbox( address, displayName, mbox ) )
+  if ( stringToMailbox( address, displayName, mbox ) ) {
     mMailboxList.append( mbox );
+  }
 }
 
 QList< QByteArray > MailboxList::addresses() const
@@ -273,8 +278,9 @@ bool MailboxList::parse( const char* &scursor, const char *const send,
 
   // parse an address-list:
   QList<Types::Address> maybeAddressList;
-  if ( !parseAddressList( scursor, send, maybeAddressList, isCRLF ) )
+  if ( !parseAddressList( scursor, send, maybeAddressList, isCRLF ) ) {
     return false;
+  }
 
   mMailboxList.clear();
 
@@ -283,7 +289,7 @@ bool MailboxList::parse( const char* &scursor, const char *const send,
   for ( it = maybeAddressList.begin(); it != maybeAddressList.end() ; ++it ) {
     if ( !(*it).displayName.isEmpty() ) {
       KMIME_WARN << "mailbox groups in header disallowing them! Name: \""
-		 << (*it).displayName << "\"" << endl;
+                 << (*it).displayName << "\"" << endl;
     }
     mMailboxList += (*it).mailboxList;
   }
@@ -296,14 +302,16 @@ bool MailboxList::parse( const char* &scursor, const char *const send,
 
 kmime_mk_trivial_ctor( SingleMailbox, MailboxList )
 
-bool SingleMailbox::parse( const char* &scursor, const char *const send,
-			   bool isCRLF )
+  bool SingleMailbox::parse( const char* &scursor, const char *const send,
+                             bool isCRLF )
 {
-  if ( !MailboxList::parse( scursor, send, isCRLF ) ) return false;
+  if ( !MailboxList::parse( scursor, send, isCRLF ) ) {
+    return false;
+  }
 
   if ( mMailboxList.count() > 1 ) {
     KMIME_WARN << "multiple mailboxes in header allowing only a single one!"
-	       << endl;
+               << endl;
   }
   return true;
 }
@@ -312,14 +320,16 @@ bool SingleMailbox::parse( const char* &scursor, const char *const send,
 
 //-----<AddressList>-------------------------
 
-QByteArray AddressList::as7BitString(bool withHeaderType)
+QByteArray AddressList::as7BitString( bool withHeaderType )
 {
-  if ( mAddressList.isEmpty() )
+  if ( mAddressList.isEmpty() ) {
     return QByteArray();
+  }
 
   QByteArray rv;
-  if ( withHeaderType )
+  if ( withHeaderType ) {
     rv = typeIntro();
+  }
   foreach ( Types::Address addr, mAddressList ) {
     foreach ( Types::Mailbox mbox, addr.mailboxList ) {
       rv += mbox.as7BitString( e_ncCS );
@@ -330,7 +340,7 @@ QByteArray AddressList::as7BitString(bool withHeaderType)
   return rv;
 }
 
-void AddressList::fromUnicodeString(const QString & s, const QByteArray & b)
+void AddressList::fromUnicodeString( const QString &s, const QByteArray &b )
 {
   e_ncCS = cachedCharset( b );
   from7BitString( encodeRFC2047String( s, b, false ) );
@@ -358,7 +368,8 @@ void AddressList::addAddress( const Types::Mailbox &mbox )
   mAddressList.append( addr );
 }
 
-void AddressList::addAddress(const QByteArray & address, const QString & displayName)
+void AddressList::addAddress( const QByteArray &address,
+                              const QString &displayName )
 {
   Types::Address addr;
   Types::Mailbox mbox;
@@ -412,11 +423,13 @@ Types::Mailbox::List AddressList::mailboxes() const
   return rv;
 }
 
-bool AddressList::parse( const char* &scursor, const char *const send, bool isCRLF )
+bool AddressList::parse( const char* &scursor, const char *const send,
+                         bool isCRLF )
 {
   QList<Types::Address> maybeAddressList;
-  if ( !parseAddressList( scursor, send, maybeAddressList, isCRLF ) )
+  if ( !parseAddressList( scursor, send, maybeAddressList, isCRLF ) ) {
     return false;
+  }
 
   mAddressList = maybeAddressList;
   return true;
@@ -428,12 +441,14 @@ bool AddressList::parse( const char* &scursor, const char *const send, bool isCR
 
 kmime_mk_trivial_ctor( Token, Structured )
 
-QByteArray Token::as7BitString(bool withHeaderType)
+  QByteArray Token::as7BitString( bool withHeaderType )
 {
-  if ( isEmpty() )
+  if ( isEmpty() ) {
     return QByteArray();
-  if ( withHeaderType )
+  }
+  if ( withHeaderType ) {
     return typeIntro() + mToken;
+  }
   return mToken;
 }
 
@@ -463,11 +478,14 @@ bool Token::parse( const char* &scursor, const char *const send, bool isCRLF )
   clear();
   eatCFWS( scursor, send, isCRLF );
   // must not be empty:
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   QPair<const char*,int> maybeToken;
-  if ( !parseToken( scursor, send, maybeToken, false /* no 8bit chars */ ) )
+  if ( !parseToken( scursor, send, maybeToken, false /* no 8bit chars */ ) ) {
     return false;
+  }
   mToken = QByteArray( maybeToken.first, maybeToken.second );
 
   // complain if trailing garbage is found:
@@ -484,27 +502,37 @@ bool Token::parse( const char* &scursor, const char *const send, bool isCRLF )
 //-----<GPhraseList>-------------------------
 
 bool GPhraseList::parse( const char* &scursor, const char *const send,
-			 bool isCRLF )
+                         bool isCRLF )
 {
   mPhraseList.clear();
 
   while ( scursor != send ) {
     eatCFWS( scursor, send, isCRLF );
     // empty entry ending the list: OK.
-    if ( scursor == send ) return true;
+    if ( scursor == send ) {
+      return true;
+    }
     // empty entry: ignore.
-    if ( *scursor != ',' ) { scursor++; continue; }
+    if ( *scursor != ',' ) {
+      scursor++;
+      continue;
+    }
 
     QString maybePhrase;
-    if ( !parsePhrase( scursor, send, maybePhrase, isCRLF ) )
+    if ( !parsePhrase( scursor, send, maybePhrase, isCRLF ) ) {
       return false;
+    }
     mPhraseList.append( maybePhrase );
 
     eatCFWS( scursor, send, isCRLF );
     // non-empty entry ending the list: OK.
-    if ( scursor == send ) return true;
+    if ( scursor == send ) {
+      return true;
+    }
     // comma separating the phrases: eat.
-    if ( *scursor != ',' ) scursor++;
+    if ( *scursor != ',' ) {
+      scursor++;
+    }
   }
   return true;
 }
@@ -514,11 +542,12 @@ bool GPhraseList::parse( const char* &scursor, const char *const send,
 //-----<GDotAtom>-------------------------
 
 bool GDotAtom::parse( const char* &scursor, const char *const send,
-		      bool isCRLF )
+                      bool isCRLF )
 {
   QString maybeDotAtom;
-  if ( !parseDotAtom( scursor, send, maybeDotAtom, isCRLF ) )
+  if ( !parseDotAtom( scursor, send, maybeDotAtom, isCRLF ) ) {
     return false;
+  }
 
   mDotAtom = maybeDotAtom;
 
@@ -536,23 +565,26 @@ bool GDotAtom::parse( const char* &scursor, const char *const send,
 
 kmime_mk_trivial_ctor( Parametrized, Structured )
 
-QByteArray Parametrized::as7BitString( bool withHeaderType )
+  QByteArray Parametrized::as7BitString( bool withHeaderType )
 {
-  if ( isEmpty() )
+  if ( isEmpty() ) {
     return QByteArray();
+  }
 
   QByteArray rv;
-  if ( withHeaderType )
+  if ( withHeaderType ) {
     rv += typeIntro();
+  }
 
   bool first = true;
   for ( QMap<QString,QString>::ConstIterator it = mParameterHash.constBegin();
         it != mParameterHash.constEnd(); ++it )
   {
-    if ( !first )
+    if ( !first ) {
       rv += "; ";
-    else
+    } else {
       first = false;
+    }
     rv += it.key().toLatin1() + '=';
     if ( isUsAscii( it.value() ) ) {
       QByteArray tmp = it.value().toLatin1();
@@ -567,12 +599,12 @@ QByteArray Parametrized::as7BitString( bool withHeaderType )
   return rv;
 }
 
-QString Parametrized::parameter(const QString & key) const
+QString Parametrized::parameter( const QString &key ) const
 {
   return mParameterHash.value( key );
 }
 
-void Parametrized::setParameter(const QString & key, const QString & value)
+void Parametrized::setParameter( const QString &key, const QString &value )
 {
   mParameterHash.insert( key, value );
 }
@@ -587,11 +619,13 @@ void Parametrized::clear()
   mParameterHash.clear();
 }
 
-bool Parametrized::parse(const char *& scursor, const char * const send, bool isCRLF)
+bool Parametrized::parse( const char *& scursor, const char * const send,
+                          bool isCRLF )
 {
   mParameterHash.clear();
-  if ( !parseParameterList( scursor, send, mParameterHash, isCRLF ) )
+  if ( !parseParameterList( scursor, send, mParameterHash, isCRLF ) ) {
     return false;
+  }
   return true;
 }
 
@@ -599,14 +633,16 @@ bool Parametrized::parse(const char *& scursor, const char * const send, bool is
 
 //-----<Ident>-------------------------
 
-QByteArray Ident::as7BitString(bool withHeaderType)
+QByteArray Ident::as7BitString( bool withHeaderType )
 {
-  if ( mMsgIdList.isEmpty() )
+  if ( mMsgIdList.isEmpty() ) {
     return QByteArray();
+  }
 
   QByteArray rv;
-  if ( withHeaderType )
+  if ( withHeaderType ) {
     rv = typeIntro();
+  }
   foreach ( Types::AddrSpec addr, mMsgIdList ) {
     rv += '<';
     rv += addr.asString().toLatin1(); // FIXME: change parsing to use QByteArrays
@@ -640,20 +676,30 @@ bool Ident::parse( const char* &scursor, const char * const send, bool isCRLF )
   while ( scursor != send ) {
     eatCFWS( scursor, send, isCRLF );
     // empty entry ending the list: OK.
-    if ( scursor == send ) return true;
+    if ( scursor == send ) {
+      return true;
+    }
     // empty entry: ignore.
-    if ( *scursor == ',' ) { scursor++; continue; }
+    if ( *scursor == ',' ) {
+      scursor++;
+      continue;
+    }
 
     AddrSpec maybeMsgId;
-    if ( !parseAngleAddr( scursor, send, maybeMsgId, isCRLF ) )
+    if ( !parseAngleAddr( scursor, send, maybeMsgId, isCRLF ) ) {
       return false;
+    }
     mMsgIdList.append( maybeMsgId );
 
     eatCFWS( scursor, send, isCRLF );
     // header end ending the list: OK.
-    if ( scursor == send ) return true;
+    if ( scursor == send ) {
+      return true;
+    }
     // regular item separator: eat it.
-    if ( *scursor == ',' ) scursor++;
+    if ( *scursor == ',' ) {
+      scursor++;
+    }
   }
   return true;
 }
@@ -661,26 +707,29 @@ bool Ident::parse( const char* &scursor, const char * const send, bool isCRLF )
 QList<QByteArray> Ident::identifiers() const
 {
   QList<QByteArray> rv;
-  foreach ( Types::AddrSpec addr, mMsgIdList )
+  foreach ( Types::AddrSpec addr, mMsgIdList ) {
     rv.append( addr.asString().toLatin1() ); // FIXME change parsing to create QByteArrays
+  }
   return rv;
 }
 
-void Ident::appendIdentifier(const QByteArray & id)
+void Ident::appendIdentifier( const QByteArray &id )
 {
   QByteArray tmp = id;
-  if ( !tmp.startsWith( '<' ) )
+  if ( !tmp.startsWith( '<' ) ) {
     tmp.prepend( '<' );
-  if ( !tmp.endsWith( '>' ) )
+  }
+  if ( !tmp.endsWith( '>' ) ) {
     tmp.append( '>' );
+  }
   AddrSpec msgId;
-  const char* cursor = tmp.constData();
-  if ( parseAngleAddr( cursor, cursor + tmp.length(), msgId ) )
+  const char *cursor = tmp.constData();
+  if ( parseAngleAddr( cursor, cursor + tmp.length(), msgId ) ) {
     mMsgIdList.append( msgId );
-  else
+  } else {
     kWarning() << k_funcinfo << "Unable to parse address spec!" << endl;
+  }
 }
-
 
 //-----</Ident>-------------------------
 
@@ -688,25 +737,28 @@ void Ident::appendIdentifier(const QByteArray & id)
 
 QByteArray SingleIdent::identifier() const
 {
-  if ( mMsgIdList.isEmpty() )
+  if ( mMsgIdList.isEmpty() ) {
     return QByteArray();
+  }
   return identifiers().first();
 }
 
-void SingleIdent::setIdentifier(const QByteArray & id)
+void SingleIdent::setIdentifier( const QByteArray &id )
 {
   mMsgIdList.clear();
   appendIdentifier( id );
 }
 
-bool SingleIdent::parse( const char* &scursor, const char * const send, bool isCRLF )
+bool SingleIdent::parse( const char* &scursor, const char * const send,
+                         bool isCRLF )
 {
-  if ( !Ident::parse( scursor, send, isCRLF ) )
+  if ( !Ident::parse( scursor, send, isCRLF ) ) {
     return false;
+  }
 
   if ( mMsgIdList.count() > 1 ) {
     KMIME_WARN << "more than one msg-id in header "
-      "allowing only a single one!" << endl;
+               << "allowing only a single one!" << endl;
   }
   return true;
 }
@@ -717,10 +769,13 @@ bool SingleIdent::parse( const char* &scursor, const char * const send, bool isC
 
 //-----<ReturnPath>-------------------------
 
-bool ReturnPath::parse( const char* &scursor, const char * const send, bool isCRLF )
+bool ReturnPath::parse( const char* &scursor, const char * const send,
+                        bool isCRLF )
 {
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   const char * oldscursor = scursor;
 
@@ -728,10 +783,14 @@ bool ReturnPath::parse( const char* &scursor, const char * const send, bool isCR
   if ( !parseMailbox( scursor, send, maybeMailbox, isCRLF ) ) {
     // mailbox parsing failed, but check for empty brackets:
     scursor = oldscursor;
-    if ( *scursor != '<' ) return false;
+    if ( *scursor != '<' ) {
+      return false;
+    }
     scursor++;
     eatCFWS( scursor, send, isCRLF );
-    if ( scursor == send || *scursor != '>' ) return false;
+    if ( scursor == send || *scursor != '>' ) {
+      return false;
+    }
     scursor++;
 
     // prepare a Null mailbox:
@@ -761,8 +820,9 @@ bool ReturnPath::parse( const char* &scursor, const char * const send, bool isCR
 
 void Generic::setType( const char *type )
 {
-  if ( t_ype )
+  if ( t_ype ) {
     delete[] t_ype;
+  }
   if ( type ) {
     t_ype = new char[strlen( type )+1];
     strcpy( t_ype, type );
@@ -794,14 +854,15 @@ void Control::from7BitString( const QByteArray &s )
 QByteArray Control::as7BitString( bool incType )
 {
   if ( incType ) {
-    return ( typeIntro() + c_trlMsg );
+    return typeIntro() + c_trlMsg;
   } else {
     return c_trlMsg;
   }
 }
 
-void Control::fromUnicodeString( const QString &s, const QByteArray& )
+void Control::fromUnicodeString( const QString &s, const QByteArray &b )
 {
+  Q_UNUSED( b );
   c_trlMsg = s.toLatin1();
 }
 
@@ -814,32 +875,38 @@ QString Control::asUnicodeString()
 
 //-----<MailCopiesTo>--------------------------
 
-kmime_mk_trivial_ctor_with_name( MailCopiesTo, Generics::AddressList, Mail-Copies-To )
+kmime_mk_trivial_ctor_with_name( MailCopiesTo,
+                                 Generics::AddressList, Mail-Copies-To )
 
-QByteArray MailCopiesTo::as7BitString(bool withHeaderType)
+QByteArray MailCopiesTo::as7BitString( bool withHeaderType )
 {
   QByteArray rv;
-  if ( withHeaderType )
+  if ( withHeaderType ) {
     rv += typeIntro();
-  if ( !AddressList::isEmpty() )
+  }
+  if ( !AddressList::isEmpty() ) {
     rv += AddressList::as7BitString( false );
-  else {
-    if ( mAlwaysCopy )
+  } else {
+    if ( mAlwaysCopy ) {
       rv += "poster";
-    else if ( mNeverCopy )
+    } else if ( mNeverCopy ) {
       rv += "nobody";
+    }
   }
   return rv;
 }
 
 QString MailCopiesTo::asUnicodeString()
 {
-  if ( !AddressList::isEmpty() )
+  if ( !AddressList::isEmpty() ) {
     return AddressList::asUnicodeString();
-  if ( mAlwaysCopy )
+  }
+  if ( mAlwaysCopy ) {
     return QLatin1String( "poster" );
-  if ( mNeverCopy )
+  }
+  if ( mNeverCopy ) {
     return QLatin1String( "nobody" );
+  }
   return QString();
 }
 
@@ -877,7 +944,8 @@ void MailCopiesTo::setNeverCopy()
   mNeverCopy = true;
 }
 
-bool MailCopiesTo::parse(const char *& scursor, const char * const send, bool isCRLF)
+bool MailCopiesTo::parse( const char *& scursor, const char * const send,
+                          bool isCRLF )
 {
   clear();
   if ( send - scursor == 5 ) {
@@ -911,7 +979,7 @@ void Date::from7BitString( const QByteArray &s )
 QByteArray Date::as7BitString( bool incType )
 {
   if ( incType ) {
-    return ( typeIntro() + KRFCDate::rfc2822DateString( t_ime ) );
+    return typeIntro() + KRFCDate::rfc2822DateString( t_ime );
   } else {
     return KRFCDate::rfc2822DateString( t_ime );
   }
@@ -938,7 +1006,7 @@ QDateTime Date::qdt()
 int Date::ageInDays()
 {
   QDate today = QDate::currentDate();
-  return ( qdt().date().daysTo(today) );
+  return qdt().date().daysTo(today);
 }
 
 //-----</Date>---------------------------------
@@ -954,7 +1022,7 @@ void Newsgroups::from7BitString( const QByteArray &s )
 QByteArray Newsgroups::as7BitString( bool incType )
 {
   if ( incType ) {
-    return ( typeIntro() + g_roups );
+    return typeIntro() + g_roups;
   } else {
     return g_roups;
   }
@@ -1017,7 +1085,7 @@ QByteArray Lines::as7BitString( bool incType )
   num.setNum( l_ines );
 
   if ( incType ) {
-    return ( typeIntro() + num );
+    return typeIntro() + num;
   } else {
     return num;
   }
@@ -1043,7 +1111,8 @@ QString Lines::asUnicodeString()
 
 //-----<Content-Type>--------------------------
 
-kmime_mk_trivial_ctor_with_name( ContentType, Generics::Parametrized, Content-Type )
+kmime_mk_trivial_ctor_with_name( ContentType, Generics::Parametrized,
+                                 Content-Type )
 
 bool ContentType::isEmpty() const
 {
@@ -1060,16 +1129,19 @@ void ContentType::clear()
 
 QByteArray ContentType::as7BitString( bool incType )
 {
-  if ( isEmpty() )
+  if ( isEmpty() ) {
     return QByteArray();
+  }
 
   QByteArray rv;
-  if ( incType )
+  if ( incType ) {
     rv += typeIntro();
+  }
 
   rv += mimeType();
-  if ( !Parametrized::isEmpty() )
+  if ( !Parametrized::isEmpty() ) {
     rv += "; " + Parametrized::as7BitString( false );
+  }
 
   return rv;
 }
@@ -1110,42 +1182,42 @@ void ContentType::setMimeType( const QByteArray &mimeType )
 
 bool ContentType::isMediatype( const char *mediatype ) const
 {
-  return ( strncasecmp( mediaType().constData(), mediatype, strlen( mediatype ) ) == 0 );
+  return strncasecmp( mediaType().constData(), mediatype, strlen( mediatype ) ) == 0;
 }
 
 bool ContentType::isSubtype( const char *subtype ) const
 {
-  return ( strncasecmp( subType().constData(), subtype, strlen( subtype ) ) == 0 );
+  return strncasecmp( subType().constData(), subtype, strlen( subtype ) ) == 0;
 }
 
 bool ContentType::isText() const
 {
-  return ( strncasecmp( mediaType().constData(), "text", 4 ) == 0 );
+  return strncasecmp( mediaType().constData(), "text", 4 ) == 0;
 }
 
 bool ContentType::isPlainText() const
 {
-  return ( strcasecmp( mimeType().constData(), "text/plain" ) == 0 );
+  return strcasecmp( mimeType().constData(), "text/plain" ) == 0;
 }
 
 bool ContentType::isHTMLText() const
 {
-  return ( strcasecmp( mimeType().constData(), "text/html" ) == 0 );
+  return strcasecmp( mimeType().constData(), "text/html" ) == 0;
 }
 
 bool ContentType::isImage() const
 {
-  return ( strncasecmp( mediaType().constData(), "image", 5 ) == 0 );
+  return strncasecmp( mediaType().constData(), "image", 5 ) == 0;
 }
 
 bool ContentType::isMultipart() const
 {
-  return ( strncasecmp( mediaType().constData(), "multipart", 9 ) == 0 );
+  return strncasecmp( mediaType().constData(), "multipart", 9 ) == 0;
 }
 
 bool ContentType::isPartial() const
 {
-  return ( strcasecmp( mimeType().constData(), "message/partial" ) == 0 );
+  return strcasecmp( mimeType().constData(), "message/partial" ) == 0;
 }
 
 QByteArray ContentType::charset() const
@@ -1220,53 +1292,63 @@ void ContentType::setPartialParams( int total, int number )
   setParameter( "total", QString::number( total ) );
 }
 
-bool ContentType::parse( const char* &scursor, const char * const send, bool isCRLF )
+bool ContentType::parse( const char* &scursor, const char * const send,
+                         bool isCRLF )
 {
   // content-type: type "/" subtype *(";" parameter)
 
   clear();
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send )
+  if ( scursor == send ) {
     return false; // empty header
+  }
 
   // type
   QPair<const char*,int> maybeMimeType;
-  if ( !parseToken( scursor, send, maybeMimeType, false /* no 8Bit */ ) )
+  if ( !parseToken( scursor, send, maybeMimeType, false /* no 8Bit */ ) ) {
     return false;
+  }
   mMimeType = QByteArray( maybeMimeType.first, maybeMimeType.second ).toLower();
 
   // subtype
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send || *scursor != '/' )
+  if ( scursor == send || *scursor != '/' ) {
     return false;
+  }
   scursor++;
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send )
+  if ( scursor == send ) {
     return false;
+  }
 
   QPair<const char*,int> maybeSubType;
-  if ( !parseToken( scursor, send, maybeSubType, false /* no 8bit */ ) )
+  if ( !parseToken( scursor, send, maybeSubType, false /* no 8bit */ ) ) {
     return false;
+  }
   mMimeSubType = QByteArray( maybeSubType.first, maybeSubType.second ).toLower();
 
   // parameter list
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send )
+  if ( scursor == send ) {
     goto success; // no parameters
+  }
 
-  if ( *scursor != ';' )
+  if ( *scursor != ';' ) {
     return false;
+  }
   scursor++;
 
-  if ( !Parametrized::parse( scursor, send, isCRLF ) )
+  if ( !Parametrized::parse( scursor, send, isCRLF ) ) {
     return false;
+  }
 
   // adjust category
-  success:
-  if ( isMultipart() )
+success:
+  if ( isMultipart() ) {
     c_ategory = CCcontainer;
-  else
+  } else {
     c_ategory = CCsingle;
+  }
   return true;
 }
 
@@ -1274,7 +1356,8 @@ bool ContentType::parse( const char* &scursor, const char * const send, bool isC
 
 //-----<ContentTransferEncoding>----------------------------
 
-kmime_mk_trivial_ctor_with_name( ContentTransferEncoding, Generics::Token, Content-Transfer-Encoding )
+kmime_mk_trivial_ctor_with_name( ContentTransferEncoding,
+                                 Generics::Token, Content-Transfer-Encoding )
 
 typedef struct { const char *s; int e; } encTableType;
 
@@ -1313,11 +1396,13 @@ void ContentTransferEncoding::setEncoding( contentEncoding e )
   }
 }
 
-bool ContentTransferEncoding::parse(const char *& scursor, const char * const send, bool isCRLF)
+bool ContentTransferEncoding::parse( const char *& scursor,
+                                     const char * const send, bool isCRLF )
 {
   clear();
-  if ( !Token::parse( scursor, send, isCRLF ) )
+  if ( !Token::parse( scursor, send, isCRLF ) ) {
     return false;
+  }
 
   // TODO: error handling in case of an unknown encoding?
   for ( int i = 0; encTable[i].s != 0; ++i ) {
@@ -1334,26 +1419,31 @@ bool ContentTransferEncoding::parse(const char *& scursor, const char * const se
 
 //-----<ContentDisposition>--------------------------
 
-kmime_mk_trivial_ctor_with_name( ContentDisposition, Generics::Parametrized, Content-Disposition )
+kmime_mk_trivial_ctor_with_name( ContentDisposition,
+                                 Generics::Parametrized, Content-Disposition )
 
 QByteArray ContentDisposition::as7BitString( bool incType )
 {
-  if ( isEmpty() )
+  if ( isEmpty() ) {
     return QByteArray();
+  }
 
   QByteArray rv;
-  if ( incType )
+  if ( incType ) {
     rv += typeIntro();
+  }
 
-  if ( mDisposition == CDattachment )
+  if ( mDisposition == CDattachment ) {
     rv += "attachment";
-  else if ( mDisposition == CDinline )
+  } else if ( mDisposition == CDinline ) {
     rv += "inline";
-  else
+  } else {
     return QByteArray();
+  }
 
-  if ( !Parametrized::isEmpty() )
+  if ( !Parametrized::isEmpty() ) {
     rv += "; " + Parametrized::as7BitString( false );
+  }
 
   return rv;
 }
@@ -1374,7 +1464,7 @@ contentDisposition ContentDisposition::disposition() const
   return mDisposition;
 }
 
-void ContentDisposition::setDisposition(contentDisposition d)
+void ContentDisposition::setDisposition( contentDisposition d )
 {
   mDisposition = d;
 }
@@ -1389,32 +1479,41 @@ void ContentDisposition::setFilename( const QString &filename )
   setParameter( "filename", filename );
 }
 
-bool ContentDisposition::parse(const char *& scursor, const char * const send, bool isCRLF)
+bool ContentDisposition::parse( const char *& scursor, const char * const send,
+                                bool isCRLF )
 {
   clear();
 
   // token
   QByteArray token;
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   QPair<const char*,int> maybeToken;
-  if ( !parseToken( scursor, send, maybeToken, false /* no 8Bit */ ) )
+  if ( !parseToken( scursor, send, maybeToken, false /* no 8Bit */ ) ) {
     return false;
+  }
 
   token = QByteArray( maybeToken.first, maybeToken.second ).toLower();
-  if ( token == "inline" )
+  if ( token == "inline" ) {
     mDisposition = CDinline;
-  else if ( token == "attachment" )
+  } else if ( token == "attachment" ) {
     mDisposition = CDattachment;
-  else
+  } else {
     return false;
+  }
 
   // parameter list
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return true; // no parameters
+  if ( scursor == send ) {
+    return true; // no parameters
+  }
 
-  if ( *scursor != ';' ) return false;
+  if ( *scursor != ';' ) {
+    return false;
+  }
   scursor++;
 
   return Parametrized::parse( scursor, send, isCRLF );
@@ -1426,10 +1525,11 @@ kmime_mk_trivial_ctor_with_name( Subject, Generics::Unstructured, Subject )
 
 bool Subject::isReply()
 {
-  return ( asUnicodeString().indexOf( QLatin1String( "Re:" ), 0, Qt::CaseInsensitive ) == 0 );
+  return asUnicodeString().indexOf( QLatin1String( "Re:" ), 0, Qt::CaseInsensitive ) == 0;
 }
 
-kmime_mk_trivial_ctor_with_name( ContentDescription, Generics::Unstructured, Content-Description )
+kmime_mk_trivial_ctor_with_name( ContentDescription,
+                                 Generics::Unstructured, Content-Description )
 kmime_mk_trivial_ctor_with_name( From, Generics::MailboxList, From )
 kmime_mk_trivial_ctor_with_name( Sender, Generics::SingleMailbox, Sender )
 kmime_mk_trivial_ctor_with_name( To, Generics::AddressList, To )
