@@ -22,21 +22,20 @@
 #include <stdlib.h>
 
 #include <qtest_kde.h>
-#include <QtTest/QtTest>
 #include <QDateTime>
 #include <QTextStream>
 
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <kapplication.h>
 #include <ktemporaryfile.h>
+
+#include "testicaltimezones.h"
+#include "testicaltimezones.moc"
+
+QTEST_KDEMAIN( ICalTimeZonesTest, NoGUI )
 
 extern "C" {
   #include "kcal/libical/src/libical/ical.h"
 }
 #include "kcal/icaltimezones.h"
-#include "testicaltimezones.moc"
-
 using namespace KCal;
 
 static icalcomponent *loadCALENDAR(const char *vcal);
@@ -112,19 +111,6 @@ static const char *calendarHeader =
 "VERSION:2.0\n";
 static const char *calendarFooter =
 "END:CALENDAR\n";
-
-
-int main(int argc, char *argv[])
-{
-    setenv("LC_ALL", "C", 1);
-    KAboutData aboutData("qttest", "qttest", "version");
-    KCmdLineArgs::init(argc, argv, &aboutData);
-    // KApplication::disableAutoDcopRegistration();
-    KApplication app(false);
-    ICalTimeZonesTest tc;
-    return QTest::qExec(&tc, argc, argv);
-}
-
 
 ///////////////////////////
 // ICalTimeZoneSource tests
