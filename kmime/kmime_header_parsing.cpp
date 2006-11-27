@@ -71,7 +71,6 @@ QString AddrSpec::asString() const
   }
 }
 
-
 QByteArray Mailbox::address() const
 {
   return mAddrSpec.asString().toLatin1();
@@ -87,28 +86,31 @@ QString Mailbox::name() const
   return mDisplayName;
 }
 
-void Mailbox::setAddress(const AddrSpec &addr)
+void Mailbox::setAddress( const AddrSpec &addr )
 {
   mAddrSpec = addr;
 }
 
-void Mailbox::setAddress(const QByteArray & addr)
+void Mailbox::setAddress( const QByteArray &addr )
 {
-  const char* cursor = addr.constData();
-  if ( !HeaderParsing::parseAngleAddr( cursor, cursor + addr.length(), mAddrSpec ) ) {
-    if ( !HeaderParsing::parseAddrSpec( cursor, cursor + addr.length(), mAddrSpec ) ) {
+  const char *cursor = addr.constData();
+  if ( !HeaderParsing::parseAngleAddr( cursor,
+                                       cursor + addr.length(), mAddrSpec ) ) {
+    if ( !HeaderParsing::parseAddrSpec( cursor, cursor + addr.length(),
+                                        mAddrSpec ) ) {
       kWarning() << k_funcinfo << "Invalid address" << endl;
       return;
     }
   }
 }
 
-void Mailbox::setName(const QString & name)
+void Mailbox::setName( const QString &name )
 {
   mDisplayName = name;
 }
 
-void Mailbox::setNameFrom7Bit(const QByteArray & name, const QByteArray &defaultCharset )
+void Mailbox::setNameFrom7Bit( const QByteArray &name,
+                               const QByteArray &defaultCharset )
 {
   QByteArray cs;
   mDisplayName = decodeRFC2047String( name, cs, defaultCharset, false );
@@ -126,11 +128,13 @@ bool Mailbox::hasName() const
 
 QString Mailbox::prettyAddress() const
 {
-  if ( !hasName() )
+  if ( !hasName() ) {
     return address();
+  }
   QString s = name();
-  if ( hasAddress() )
+  if ( hasAddress() ) {
     s += QLatin1String(" <") + address() + QLatin1Char('>');
+  }
   return s;
 }
 
@@ -147,8 +151,9 @@ void Mailbox::from7BitString( const QByteArray &s )
 
 QByteArray KMime::Types::Mailbox::as7BitString( const QByteArray &encCharset ) const
 {
-  if ( !hasName() )
+  if ( !hasName() ) {
     return address();
+  }
   QByteArray rv;
   if ( isUsAscii( name() ) ) {
     QByteArray tmp = name().toLatin1();
@@ -157,11 +162,11 @@ QByteArray KMime::Types::Mailbox::as7BitString( const QByteArray &encCharset ) c
   } else {
     rv += encodeRFC2047String( name(), encCharset, true );
   }
-  if ( hasAddress() )
+  if ( hasAddress() ) {
     rv += " <" + address() + '>';
+  }
   return rv;
 }
-
 
 } // namespace Types
 
@@ -228,7 +233,9 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
 
   // find next '?' (ending the encoding tag):
   for ( ; scursor != send ; scursor++ ) {
-    if ( *scursor == '?' ) break;
+    if ( *scursor == '?' ) {
+      break;
+    }
   }
 
   // not found? Can't be an encoded-word!
@@ -256,7 +263,9 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
 
   // find next '?' (ending the encoded-text):
   for ( ; scursor != send ; scursor++ ) {
-    if ( *scursor == '?' ) break;
+    if ( *scursor == '?' ) {
+      break;
+    }
   }
 
   // not found? Can't be an encoded-word!
@@ -557,8 +566,10 @@ bool parseComment( const char* &scursor, const char * const send,
           // add the chunk that's now surely inside the comment.
           result += maybeCmnt;
           result += cmntPart;
-          if ( commentNestingDepth > 1 ) // don't add the outermost ')'...
+          if ( commentNestingDepth > 1 ) {
+            // don't add the outermost ')'...
             result += QChar(')');
+          }
           maybeCmnt.clear();
         }
         afterLastClosingParenPos = scursor;
@@ -687,8 +698,9 @@ bool parsePhrase( const char* &scursor, const char * const send,
         case EncodedWord:
         case Atom:
         case QuotedString:
-          if ( !lastWasEncodedWord )
+          if ( !lastWasEncodedWord ) {
             result += QChar(' '); // rfc822, 3.4.4
+          }
           found = Phrase;
           break;
         default: assert( 0 );
@@ -735,7 +747,7 @@ bool parsePhrase( const char* &scursor, const char * const send,
     eatWhiteSpace( scursor, send );
   }
 
-  return ( found != None );
+  return found != None;
 }
 
 bool parseDotAtom( const char* &scursor, const char * const send,
@@ -747,15 +759,18 @@ bool parseDotAtom( const char* &scursor, const char * const send,
   const char *successfullyParsed;
 
   QString tmp;
-  if ( !parseAtom( scursor, send, tmp, false /* no 8bit */ ) )
+  if ( !parseAtom( scursor, send, tmp, false /* no 8bit */ ) ) {
     return false;
+  }
   result += tmp;
   successfullyParsed = scursor;
 
   while ( scursor != send ) {
 
     // end of header or no '.' -> return
-    if ( scursor == send || *scursor != '.' ) return true;
+    if ( scursor == send || *scursor != '.' ) {
+      return true;
+    }
     scursor++; // eat '.'
 
     if ( scursor == send || !isAText( *scursor ) ) {
@@ -799,8 +814,9 @@ void eatCFWS( const char* &scursor, const char * const send, bool isCRLF )
       continue;
 
     case '(': // comment
-      if ( parseComment( scursor, send, dummy, isCRLF, false /*don't save*/ ) )
+      if ( parseComment( scursor, send, dummy, isCRLF, false /*don't save*/ ) ) {
         continue;
+      }
       scursor = oldscursor;
       return;
 
@@ -808,7 +824,6 @@ void eatCFWS( const char* &scursor, const char * const send, bool isCRLF )
       scursor = oldscursor;
       return;
     }
-
   }
 }
 
@@ -816,7 +831,9 @@ bool parseDomain( const char* &scursor, const char * const send,
                   QString &result, bool isCRLF )
 {
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   // domain := dot-atom / domain-literal / atom *("." atom)
   //
@@ -868,19 +885,25 @@ bool parseObsRoute( const char* &scursor, const char* const send,
 {
   while ( scursor != send ) {
     eatCFWS( scursor, send, isCRLF );
-    if ( scursor == send ) return false;
+    if ( scursor == send ) {
+      return false;
+    }
 
     // empty entry:
     if ( *scursor == ',' ) {
       scursor++;
-      if ( save ) result.append( QString() );
+      if ( save ) {
+        result.append( QString() );
+      }
       continue;
     }
 
     // empty entry ending the list:
     if ( *scursor == ':' ) {
       scursor++;
-      if ( save ) result.append( QString() );
+      if ( save ) {
+        result.append( QString() );
+      }
       return true;
     }
 
@@ -892,15 +915,25 @@ bool parseObsRoute( const char* &scursor, const char* const send,
     }
 
     QString maybeDomain;
-    if ( !parseDomain( scursor, send, maybeDomain, isCRLF ) ) return false;
-    if ( save ) result.append( maybeDomain );
+    if ( !parseDomain( scursor, send, maybeDomain, isCRLF ) ) {
+      return false;
+    }
+    if ( save ) {
+      result.append( maybeDomain );
+    }
 
     // eat the following (optional) comma:
     eatCFWS( scursor, send, isCRLF );
-    if ( scursor == send ) return false;
-    if ( *scursor == ':' ) { scursor++; return true; }
-    if ( *scursor == ',' ) scursor++;
-
+    if ( scursor == send ) {
+      return false;
+    }
+    if ( *scursor == ':' ) {
+      scursor++;
+      return true;
+    }
+    if ( *scursor == ',' ) {
+      scursor++;
+    }
   }
 
   return false;
@@ -966,8 +999,9 @@ SAW_AT_SIGN:
   assert( *(scursor-1) == '@' );
 
   QString maybeDomain;
-  if ( !parseDomain( scursor, send, maybeDomain, isCRLF ) )
+  if ( !parseDomain( scursor, send, maybeDomain, isCRLF ) ) {
     return false;
+  }
 
   result.localPart = maybeLocalPart;
   result.domain = maybeDomain;
@@ -980,29 +1014,40 @@ bool parseAngleAddr( const char* &scursor, const char * const send,
 {
   // first, we need an opening angle bracket:
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send || *scursor != '<' ) return false;
+  if ( scursor == send || *scursor != '<' ) {
+    return false;
+  }
   scursor++; // eat '<'
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   if ( *scursor == '@' || *scursor == ',' ) {
     // obs-route: parse, but ignore:
     KMIME_WARN << "obsolete source route found! ignoring." << endl;
     QStringList dummy;
     if ( !parseObsRoute( scursor, send, dummy,
-                         isCRLF, false /* don't save */ ) )
+                         isCRLF, false /* don't save */ ) ) {
       return false;
+    }
     // angle-addr isn't complete until after the '>':
-    if ( scursor == send ) return false;
+    if ( scursor == send ) {
+      return false;
+    }
   }
 
   // parse addr-spec:
   AddrSpec maybeAddrSpec;
-  if ( !parseAddrSpec( scursor, send, maybeAddrSpec, isCRLF ) ) return false;
+  if ( !parseAddrSpec( scursor, send, maybeAddrSpec, isCRLF ) ) {
+    return false;
+  }
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send || *scursor != '>' ) return false;
+  if ( scursor == send || *scursor != '>' ) {
+    return false;
+  }
   scursor++;
 
   result = maybeAddrSpec;
@@ -1014,7 +1059,9 @@ bool parseMailbox( const char* &scursor, const char * const send,
                    Mailbox &result, bool isCRLF )
 {
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   AddrSpec maybeAddrSpec;
   QString maybeDisplayName;
@@ -1027,8 +1074,9 @@ bool parseMailbox( const char* &scursor, const char * const send,
     eatWhiteSpace( scursor, send );
     if ( scursor != send && *scursor == '(' ) {
       scursor++;
-      if ( !parseComment( scursor, send, maybeDisplayName, isCRLF, true /*keep*/ ) )
+      if ( !parseComment( scursor, send, maybeDisplayName, isCRLF, true /*keep*/ ) ) {
         return false;
+      }
     }
     result.setNameFrom7Bit( maybeDisplayName.toLatin1() );
     return true;
@@ -1043,20 +1091,24 @@ bool parseMailbox( const char* &scursor, const char * const send,
   } else {
     // succeeded: eat CFWS
     eatCFWS( scursor, send, isCRLF );
-    if ( scursor == send ) return false;
+    if ( scursor == send ) {
+      return false;
+    }
   }
 
   // third, parse the angle-addr:
-  if ( !parseAngleAddr( scursor, send, maybeAddrSpec, isCRLF ) )
+  if ( !parseAngleAddr( scursor, send, maybeAddrSpec, isCRLF ) ) {
     return false;
+  }
 
   if ( maybeDisplayName.isNull() ) {
     // check for the obsolete form of display-name (as comment):
     eatWhiteSpace( scursor, send );
     if ( scursor != send && *scursor == '(' ) {
       scursor++;
-      if ( !parseComment( scursor, send, maybeDisplayName, isCRLF, true /*keep*/ ) )
+      if ( !parseComment( scursor, send, maybeDisplayName, isCRLF, true /*keep*/ ) ) {
         return false;
+      }
     }
   }
 
@@ -1074,16 +1126,21 @@ bool parseGroup( const char* &scursor, const char * const send,
   // group   := display-name ":" [ obs-mbox-list ] ";"
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   // get display-name:
   QString maybeDisplayName;
-  if ( !parsePhrase( scursor, send, maybeDisplayName, isCRLF ) )
+  if ( !parsePhrase( scursor, send, maybeDisplayName, isCRLF ) ) {
     return false;
+  }
 
   // get ":":
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send || *scursor != ':' ) return false;
+  if ( scursor == send || *scursor != ':' ) {
+    return false;
+  }
 
   result.displayName = maybeDisplayName;
 
@@ -1091,26 +1148,42 @@ bool parseGroup( const char* &scursor, const char * const send,
   scursor++;
   while ( scursor != send ) {
     eatCFWS( scursor, send, isCRLF );
-    if ( scursor == send ) return false;
+    if ( scursor == send ) {
+      return false;
+    }
 
     // empty entry:
-    if ( *scursor == ',' ) { scursor++; continue; }
+    if ( *scursor == ',' ) {
+      scursor++;
+      continue;
+    }
 
     // empty entry ending the list:
-    if ( *scursor == ';' ) { scursor++; return true; }
+    if ( *scursor == ';' ) {
+      scursor++;
+      return true;
+    }
 
     Mailbox maybeMailbox;
-    if ( !parseMailbox( scursor, send, maybeMailbox, isCRLF ) )
+    if ( !parseMailbox( scursor, send, maybeMailbox, isCRLF ) ) {
       return false;
+    }
     result.mailboxList.append( maybeMailbox );
 
     eatCFWS( scursor, send, isCRLF );
     // premature end:
-    if ( scursor == send ) return false;
+    if ( scursor == send ) {
+      return false;
+    }
     // regular end of the list:
-    if ( *scursor == ';' ) { scursor++; return true; }
+    if ( *scursor == ';' ) {
+      scursor++;
+      return true;
+    }
     // eat regular list entry separator:
-    if ( *scursor == ',' ) scursor++;
+    if ( *scursor == ',' ) {
+      scursor++;
+    }
   }
   return false;
 }
@@ -1121,7 +1194,9 @@ bool parseAddress( const char* &scursor, const char * const send,
   // address       := mailbox / group
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   // first try if it's a single mailbox:
   Mailbox maybeMailbox;
@@ -1137,8 +1212,9 @@ bool parseAddress( const char* &scursor, const char * const send,
   Address maybeAddress;
 
   // no, it's not a single mailbox. Try if it's a group:
-  if ( !parseGroup( scursor, send, maybeAddress, isCRLF ) )
+  if ( !parseGroup( scursor, send, maybeAddress, isCRLF ) ) {
     return false;
+  }
 
   result = maybeAddress;
   return true;
@@ -1150,22 +1226,36 @@ bool parseAddressList( const char* &scursor, const char * const send,
   while ( scursor != send ) {
     eatCFWS( scursor, send, isCRLF );
     // end of header: this is OK.
-    if ( scursor == send ) return true;
+    if ( scursor == send ) {
+      return true;
+    }
     // empty entry: ignore:
-    if ( *scursor == ',' ) { scursor++; continue; }
+    if ( *scursor == ',' ) {
+      scursor++;
+      continue;
+    }
     // broken clients might use ';' as list delimiter, accept that as well
-    if ( *scursor == ';' ) { scursor++; continue; }
+    if ( *scursor == ';' ) {
+      scursor++;
+      continue;
+    }
 
     // parse one entry
     Address maybeAddress;
-    if ( !parseAddress( scursor, send, maybeAddress, isCRLF ) ) return false;
+    if ( !parseAddress( scursor, send, maybeAddress, isCRLF ) ) {
+      return false;
+    }
     result.append( maybeAddress );
 
     eatCFWS( scursor, send, isCRLF );
     // end of header: this is OK.
-    if ( scursor == send ) return true;
+    if ( scursor == send ) {
+      return true;
+    }
     // comma separating entries: eat it.
-    if ( *scursor == ',' ) scursor++;
+    if ( *scursor == ',' ) {
+      scursor++;
+    }
   }
   return true;
 }
@@ -1188,18 +1278,23 @@ bool parseParameter( const char* &scursor, const char * const send,
   // (trailing asterisk), for parseParameterList to decode...
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   //
   // parse the parameter name:
   //
   QString maybeAttribute;
-  if ( !parseToken( scursor, send, maybeAttribute, false /* no 8bit */ ) )
+  if ( !parseToken( scursor, send, maybeAttribute, false /* no 8bit */ ) ) {
     return false;
+  }
 
   eatCFWS( scursor, send, isCRLF );
   // premature end: not OK (haven't seen '=' yet).
-  if ( scursor == send || *scursor != '=' ) return false;
+  if ( scursor == send || *scursor != '=' ) {
+    return false;
+  }
   scursor++; // eat '='
 
   eatCFWS( scursor, send, isCRLF );
@@ -1267,9 +1362,14 @@ bool parseRawParameterList( const char* &scursor, const char * const send,
   while ( scursor != send ) {
     eatCFWS( scursor, send, isCRLF );
     // empty entry ending the list: OK.
-    if ( scursor == send ) return true;
+    if ( scursor == send ) {
+      return true;
+    }
     // empty list entry: ignore.
-    if ( *scursor == ';' ) { scursor++; continue; }
+    if ( *scursor == ';' ) {
+      scursor++;
+      continue;
+    }
 
     QPair<QString,QStringOrQPair> maybeParameter;
     if ( !parseParameter( scursor, send, maybeParameter, isCRLF ) ) {
@@ -1280,9 +1380,13 @@ bool parseRawParameterList( const char* &scursor, const char * const send,
       // failed. We take the easy way out and simply search for the
       // next ';' to start parsing again. (Another option would be to
       // take the text between '=' and ';' as value)
-      if ( maybeParameter.first.isNull() ) return false;
+      if ( maybeParameter.first.isNull() ) {
+        return false;
+      }
       while ( scursor != send ) {
-        if ( *scursor++ == ';' ) goto IS_SEMICOLON;
+        if ( *scursor++ == ';' ) {
+          goto IS_SEMICOLON;
+        }
       }
       // scursor == send case: end of list.
       return true;
@@ -1295,9 +1399,13 @@ bool parseRawParameterList( const char* &scursor, const char * const send,
 
     eatCFWS( scursor, send, isCRLF );
     // end of header: ends list.
-    if ( scursor == send ) return true;
+    if ( scursor == send ) {
+      return true;
+    }
     // regular separator: eat it.
-    if ( *scursor == ';' ) scursor++;
+    if ( *scursor == ';' ) {
+      scursor++;
+    }
   }
   return true;
 }
@@ -1390,10 +1498,11 @@ static void decodeRFC2231Value( Codec* &rfc2231Codec,
   QByteArray::Iterator bit = buffer.begin();
   QByteArray::ConstIterator bend = buffer.end();
 
-  if ( !dec->decode( decCursor, decEnd, bit, bend ) )
+  if ( !dec->decode( decCursor, decEnd, bit, bend ) ) {
     KMIME_WARN << rfc2231Codec->name()
                << " codec lies about it's maxDecodedSizeFor()\n"
-      "result may be truncated" << endl;
+               << "result may be truncated" << endl;
+  }
 
   value += textcodec->toUnicode( buffer.begin(), bit - buffer.begin() );
 
@@ -1411,10 +1520,13 @@ bool parseParameterList( const char* &scursor, const char * const send,
 {
   // parse the list into raw attribute-value pairs:
   QMap<QString,QStringOrQPair> rawParameterList;
-  if (!parseRawParameterList( scursor, send, rawParameterList, isCRLF ) )
+  if (!parseRawParameterList( scursor, send, rawParameterList, isCRLF ) ) {
     return false;
+  }
 
-  if ( rawParameterList.isEmpty() ) return true;
+  if ( rawParameterList.isEmpty() ) {
+    return true;
+  }
 
   // decode rfc 2231 continuations and alternate charset encoding:
 
@@ -1438,7 +1550,9 @@ bool parseParameterList( const char* &scursor, const char * const send,
       //
 
       // store the last attribute/value pair in the result map now:
-      if ( !attribute.isNull() ) result.insert( attribute, value );
+      if ( !attribute.isNull() ) {
+        result.insert( attribute, value );
+      }
       // and extract the information from the new raw attribute:
       value.clear();
       attribute = it.key();
@@ -1502,8 +1616,9 @@ bool parseParameterList( const char* &scursor, const char * const send,
   }
 
   // write last attr/value pair:
-  if ( !attribute.isNull() )
+  if ( !attribute.isNull() ) {
     result.insert( attribute, value );
+  }
 
   return true;
 }
@@ -1516,7 +1631,9 @@ static const int stdDayNamesLen = sizeof stdDayNames / sizeof *stdDayNames;
 static bool parseDayName( const char* &scursor, const char * const send )
 {
   // check bounds:
-  if ( send - scursor < 3 ) return false;
+  if ( send - scursor < 3 ) {
+    return false;
+  }
 
   for ( int i = 0 ; i < stdDayNamesLen ; ++i ) {
     if ( qstrnicmp( scursor, stdDayNames[i], 3 ) == 0 ) {
@@ -1540,7 +1657,9 @@ static bool parseMonthName( const char* &scursor, const char * const send,
                             int &result )
 {
   // check bounds:
-  if ( send - scursor < 3 ) return false;
+  if ( send - scursor < 3 ) {
+    return false;
+  }
 
   for ( result = 0 ; result < stdMonthNamesLen ; ++result ) {
     if ( qstrnicmp( scursor, stdMonthNames[result], 3 ) == 0 ) {
@@ -1652,22 +1771,32 @@ static bool parseTimeOfDay( const char* &scursor, const char * const send,
   //
   // 2DIGIT representing "hour":
   //
-  if ( !parseDigits( scursor, send, hour ) ) return false;
+  if ( !parseDigits( scursor, send, hour ) ) {
+    return false;
+  }
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send || *scursor != ':' ) return false;
+  if ( scursor == send || *scursor != ':' ) {
+    return false;
+  }
   scursor++; // eat ':'
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   //
   // 2DIGIT representing "minute":
   //
-  if ( !parseDigits( scursor, send, min ) ) return false;
+  if ( !parseDigits( scursor, send, min ) ) {
+    return false;
+  }
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return true; // seconds are optional
+  if ( scursor == send ) {
+    return true; // seconds are optional
+  }
 
   //
   // let's see if we have a 2DIGIT representing "second":
@@ -1676,9 +1805,13 @@ static bool parseTimeOfDay( const char* &scursor, const char * const send,
     // yepp, there are seconds:
     scursor++; // eat ':'
     eatCFWS( scursor, send, isCRLF );
-    if ( scursor == send ) return false;
+    if ( scursor == send ) {
+      return false;
+    }
 
-    if ( !parseDigits( scursor, send, sec ) ) return false;
+    if ( !parseDigits( scursor, send, sec ) ) {
+      return false;
+    }
   } else {
     sec = 0;
   }
@@ -1701,10 +1834,13 @@ bool parseTime( const char* &scursor, const char * send,
   //                "K"-"Z" / "k"-"z"
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
-
-  if ( !parseTimeOfDay( scursor, send, hour, min, sec, isCRLF ) )
+  if ( scursor == send ) {
     return false;
+  }
+
+  if ( !parseTimeOfDay( scursor, send, hour, min, sec, isCRLF ) ) {
+    return false;
+  }
 
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) {
@@ -1719,17 +1855,21 @@ bool parseTime( const char* &scursor, const char * send,
     const char sign = *scursor++;
     // numerical timezone:
     int maybeTimeZone;
-    if ( parseDigits( scursor, send, maybeTimeZone ) != 4 ) return false;
+    if ( parseDigits( scursor, send, maybeTimeZone ) != 4 ) {
+      return false;
+    }
     secsEastOfGMT = 60 * ( maybeTimeZone / 100 * 60 + maybeTimeZone % 100 );
     if ( sign == '-' ) {
       secsEastOfGMT *= -1;
-      if ( secsEastOfGMT == 0 )
+      if ( secsEastOfGMT == 0 ) {
         timeZoneKnown = false; // -0000 means indetermined tz
+      }
     }
   } else {
     // maybe alphanumeric timezone:
-    if ( !parseAlphaNumericTimeZone( scursor, send, secsEastOfGMT, timeZoneKnown ) )
+    if ( !parseAlphaNumericTimeZone( scursor, send, secsEastOfGMT, timeZoneKnown ) ) {
       return false;
+    }
   }
   return true;
 }
@@ -1755,14 +1895,18 @@ bool parseDateTime( const char* &scursor, const char * const send,
   };
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   //
   // let's see if there's a day-of-week:
   //
   if ( parseDayName( scursor, send ) ) {
     eatCFWS( scursor, send, isCRLF );
-    if ( scursor == send ) return false;
+    if ( scursor == send ) {
+      return false;
+    }
     // day-name should be followed by ',' but we treat it as optional:
     if ( *scursor == ',' ) {
       scursor++; // eat ','
@@ -1774,10 +1918,14 @@ bool parseDateTime( const char* &scursor, const char * const send,
   // 1*2DIGIT representing "day" (of month):
   //
   int maybeDay;
-  if ( !parseDigits( scursor, send, maybeDay ) ) return false;
+  if ( !parseDigits( scursor, send, maybeDay ) ) {
+    return false;
+  }
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   // success: store maybeDay in maybeDateTime:
   maybeDateTime.tm_mday = maybeDay;
@@ -1786,12 +1934,18 @@ bool parseDateTime( const char* &scursor, const char * const send,
   // month-name:
   //
   int maybeMonth = 0;
-  if ( !parseMonthName( scursor, send, maybeMonth ) ) return false;
-  if ( scursor == send ) return false;
+  if ( !parseMonthName( scursor, send, maybeMonth ) ) {
+    return false;
+  }
+  if ( scursor == send ) {
+    return false;
+  }
   assert( maybeMonth >= 0 ); assert( maybeMonth <= 11 );
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   // success: store maybeMonth in maybeDateTime:
   maybeDateTime.tm_mon = maybeMonth;
@@ -1800,17 +1954,24 @@ bool parseDateTime( const char* &scursor, const char * const send,
   // 2*DIGIT representing "year":
   //
   int maybeYear;
-  if ( !parseDigits( scursor, send, maybeYear ) ) return false;
+  if ( !parseDigits( scursor, send, maybeYear ) ) {
+    return false;
+  }
   // RFC 2822 4.3 processing:
-  if ( maybeYear < 50 )
+  if ( maybeYear < 50 ) {
     maybeYear += 2000;
-  else if ( maybeYear < 1000 )
+  } else if ( maybeYear < 1000 ) {
     maybeYear += 1900;
+  }
   // else keep as is
-  if ( maybeYear < 1900 ) return false; // rfc2822, 3.3
+  if ( maybeYear < 1900 ) {
+    return false; // rfc2822, 3.3
+  }
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) return false;
+  if ( scursor == send ) {
+    return false;
+  }
 
   // success: store maybeYear in maybeDateTime:
   maybeDateTime.tm_year = maybeYear - 1900;
@@ -1824,8 +1985,9 @@ bool parseDateTime( const char* &scursor, const char * const send,
 
   if ( !parseTime( scursor, send,
                    maybeHour, maybeMinute, maybeSecond,
-                   secsEastOfGMT, timeZoneKnown, isCRLF ) )
+                   secsEastOfGMT, timeZoneKnown, isCRLF ) ) {
     return false;
+  }
 
   // success: store everything in maybeDateTime:
   maybeDateTime.tm_hour = maybeHour;
@@ -1834,7 +1996,9 @@ bool parseDateTime( const char* &scursor, const char * const send,
   maybeDateTime.tm_isdst = DateFormatter::isDaylight();
   // now put everything together and check if mktime(3) likes it:
   result.time = mktime( &maybeDateTime );
-  if ( result.time == (time_t)(-1) ) return false;
+  if ( result.time == (time_t)(-1) ) {
+    return false;
+  }
 
   // adjust to UTC/GMT:
   //result.time -= secsEastOfGMT;
