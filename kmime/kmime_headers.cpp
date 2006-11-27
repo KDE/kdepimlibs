@@ -1528,6 +1528,7 @@ bool Subject::isReply()
   return asUnicodeString().indexOf( QLatin1String( "Re:" ), 0, Qt::CaseInsensitive ) == 0;
 }
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor_with_name( ContentDescription,
                                  Generics::Unstructured, Content-Description )
 kmime_mk_trivial_ctor_with_name( From, Generics::MailboxList, From )
@@ -1543,6 +1544,7 @@ kmime_mk_trivial_ctor_with_name( Supersedes, Generics::SingleIdent, Supersedes )
 kmime_mk_trivial_ctor_with_name( InReplyTo, Generics::Ident, In-Reply-To )
 kmime_mk_trivial_ctor_with_name( References, Generics::Ident, References )
 kmime_mk_trivial_ctor_with_name( UserAgent, Generics::Unstructured, User-Agent )
+//@endcond
 
 } // namespace Headers
 

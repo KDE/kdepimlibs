@@ -77,6 +77,7 @@ enum contentDisposition {
 //often used charset
 static const QByteArray Latin1( "ISO-8859-1" );
 
+//@cond PRIVATE
 // internal macro to generate default constructors
 #define kmime_mk_trivial_ctor( subclass )                               \
   public:                                                               \
@@ -89,6 +90,7 @@ static const QByteArray Latin1( "ISO-8859-1" );
 #define kmime_mk_trivial_ctor_with_name( subclass )     \
   kmime_mk_trivial_ctor( subclass )                     \
     const char *type() const;
+//@endcond
 
 //
 //
@@ -265,10 +267,13 @@ class KMIME_EXPORT Unstructured : public Base
     { return d_ecoded.isEmpty(); }
 
   private:
-  QString d_ecoded;
+    QString d_ecoded;
 };
 
 /**
+  @brief
+  Base class for structured header fields.
+
   This is the base class for all structured header fields.
   It contains parsing methods for all basic token types found in rfc2822.
 
@@ -292,7 +297,6 @@ class KMIME_EXPORT Unstructured : public Base
   provide support for more higher-level tokens, where necessary,
   using these parsers.
 
-  @short Base class for structured header fields.
   @author Marc Mutz <mutz@kde.org>
 */
 
@@ -319,7 +323,8 @@ class KMIME_EXPORT Structured : public Base
       @param send Pointer to the end of the data.
       @param isCRLF true if input string is terminated with a CRLF.
     */
-    virtual bool parse( const char* &scursor, const char* const send, bool isCRLF = false ) = 0;
+    virtual bool parse( const char* &scursor, const char* const send,
+                        bool isCRLF = false ) = 0;
 };
 
 class KMIME_EXPORT Address : public Structured
@@ -372,16 +377,18 @@ class KMIME_EXPORT MailboxList : public Address
       @param address The actual email address, with or without angle brackets.
       @param displayName An optional name associated with the address.
     */
-    void addAddress( const QByteArray &address, const QString &displayName = QString() );
+    void addAddress( const QByteArray &address,
+                     const QString &displayName = QString() );
 
     /**
-      Returns a list of all addresses listed in this header, regardless of groups.
+      Returns a list of all addresses in this header, regardless of groups.
     */
     QList<QByteArray> addresses() const;
 
     /**
-      Returns a list of all display names associated with the addresses in this header.
-      An empty entry is added for addresses that don't have a display name.
+      Returns a list of all display names associated with the addresses in
+      this header. An empty entry is added for addresses that do not have
+      a display name.
     */
     QStringList displayNames() const;
 
@@ -410,7 +417,9 @@ class KMIME_EXPORT MailboxList : public Address
 */
 class KMIME_EXPORT SingleMailbox : public MailboxList
 {
+  //@cond PRIVATE
   kmime_mk_trivial_ctor( SingleMailbox )
+  //@endcond
   protected:
     bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
 };
@@ -459,7 +468,7 @@ class KMIME_EXPORT AddressList : public Address
     void addAddress( const QByteArray &address, const QString &displayName = QString() );
 
     /**
-      Returns a list of all addresses listed in this header, regardless of groups.
+      Returns a list of all addresses in this header, regardless of groups.
     */
     QList<QByteArray> addresses() const;
 
@@ -567,10 +576,11 @@ class KMIME_EXPORT SingleIdent : public Ident
 */
 class KMIME_EXPORT Token : public Structured
 {
+  //@cond PRIVATE
   kmime_mk_trivial_ctor( Token )
+  //@endcond
   public:
     virtual QByteArray as7BitString( bool withHeaderType = true );
-
     virtual void clear();
     virtual bool isEmpty() const;
 
@@ -630,7 +640,9 @@ class KMIME_EXPORT GDotAtom : public Structured
 */
 class KMIME_EXPORT Parametrized : public Structured
 {
+  //@cond PRIVATE
   kmime_mk_trivial_ctor( Parametrized )
+  //@endcond
   public:
     virtual QByteArray as7BitString( bool withHeaderType = true );
 
@@ -754,7 +766,9 @@ class KMIME_EXPORT ReplyTo : public Generics::AddressList
 */
 class KMIME_EXPORT MailCopiesTo : public Generics::AddressList
 {
+  //@cond PRIVATE
   kmime_mk_trivial_ctor_with_name( MailCopiesTo )
+  //@endcond
   public:
     virtual QByteArray as7BitString( bool withHeaderType = true );
     virtual QString asUnicodeString();
@@ -797,7 +811,9 @@ class KMIME_EXPORT MailCopiesTo : public Generics::AddressList
 */
 class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
 {
+  //@cond PRIVATE
   kmime_mk_trivial_ctor_with_name( ContentTransferEncoding )
+  //@endcond
   public:
     virtual void clear();
 
@@ -860,7 +876,9 @@ class MIMEVersion : public Generics::GDotAtom
 */
 class KMIME_EXPORT MessageID : public Generics::SingleIdent
 {
+  //@cond PRIVATE
   kmime_mk_trivial_ctor_with_name( MessageID )
+  //@endcond
   public:
     /**
       Generate a message identifer.
@@ -912,7 +930,9 @@ class References: public Generics::Ident
 */
 class KMIME_EXPORT ContentType : public Generics::Parametrized
 {
+  //@cond PRIVATE
   kmime_mk_trivial_ctor_with_name( ContentType )
+  //@endcond
   public:
     virtual QByteArray as7BitString( bool incType=true );
     virtual void clear();
@@ -1063,7 +1083,9 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
 */
 class ContentDisposition : public Generics::Parametrized
 {
+  //@cond PRIVATE
   kmime_mk_trivial_ctor_with_name( ContentDisposition )
+  //@endcond
   public:
     virtual QByteArray as7BitString( bool withHeaderType = true );
     virtual bool isEmpty() const;
@@ -1157,11 +1179,10 @@ class KMIME_EXPORT Generic : public Generics::Unstructured
 */
 class KMIME_EXPORT Subject : public Generics::Unstructured
 {
+  //@cond PRIVATE
   kmime_mk_trivial_ctor_with_name( Subject )
+  //@endcond
   public:
-    /**
-      TODO: make const
-    */
     bool isReply();
 };
 
