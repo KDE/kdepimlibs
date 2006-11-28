@@ -1081,7 +1081,7 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
 
   @see RFC 2183
 */
-class ContentDisposition : public Generics::Parametrized
+class KMIME_EXPORT ContentDisposition : public Generics::Parametrized
 {
   //@cond PRIVATE
   kmime_mk_trivial_ctor_with_name( ContentDisposition )

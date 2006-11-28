@@ -16,7 +16,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 #include <QtCore/QMap>
-
+#include <kxmlrpcclient.h>
 #include <kio/job.h>
 
 class QString;
@@ -44,7 +44,7 @@ namespace KXmlRpc {
   This is an internal class and is only used by the KXmlRpc::Server class.
   @internal
  */
-class Query : public QObject
+class KXMLRPCCLIENT_EXPORT Query : public QObject
 {
   friend class Result;
   Q_OBJECT
