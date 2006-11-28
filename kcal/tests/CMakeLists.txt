@@ -292,7 +292,7 @@ ENDFOREACH(file)
 
 FOREACH( file ${vCalFilesAsIcal} )
   GET_FILENAME_COMPONENT( fn ${file} NAME)
-  ADD_TEST( VCalOut-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/textvcalexport "vcal" ${file} )
+  ADD_TEST( VCalOut-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/testvcalexport "vcal" ${file} )
 ENDFOREACH(file)
 
 FOREACH( file ${vCalFiles} )
