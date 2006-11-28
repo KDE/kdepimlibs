@@ -45,6 +45,12 @@ namespace KMime {
 
 // some helpful functions:
 
+/**
+  Converts a 4-bit @p value into its hexadecimal characater representation.
+  So input of value [0,15] returns ['0','1',... 'F'].  Input values
+  greater than 15 will produce undesired results.
+  @param value is an unsigned character containing the 4-bit input value.
+*/
 static inline char binToHex( uchar value )
 {
   if ( value > 9 ) {
@@ -54,16 +60,29 @@ static inline char binToHex( uchar value )
   }
 }
 
+/**
+  Returns the high-order 4 bits of an 8-bit value in another 8-bit value.
+  @param ch is an unsigned character containing the 8-bit input value.
+*/
 static inline uchar highNibble( uchar ch )
 {
   return ch >> 4;
 }
 
+/**
+  Returns the low-order 4 bits of an 8-bit value in another 8-bit value.
+  @param ch is an unsigned character containing the 8-bit input value.
+*/
 static inline uchar lowNibble( uchar ch )
 {
   return ch & 0xF;
 }
 
+/**
+  Returns true if the specified value is a not Control character or
+  question mark; else true.
+  @param ch is an unsigned character containing the 8-bit input value.
+*/
 static inline bool keep( uchar ch )
 {
   // no CTLs, except HT and not '?'
@@ -205,7 +224,8 @@ class Rfc2047QEncodingEncoder : public Encoder
 
 // this doesn't access any member variables, so it can be defined static
 // but then we can't call it from virtual functions
-static int QuotedPrintableDecoder_maxDecodedSizeFor( int insize, bool withCRLF ) {
+static int QuotedPrintableDecoder_maxDecodedSizeFor( int insize, bool withCRLF )
+{
   // all chars unencoded:
   int result = insize;
   // but maybe all of them are \n and we need to make them \r\n :-o
@@ -218,39 +238,48 @@ static int QuotedPrintableDecoder_maxDecodedSizeFor( int insize, bool withCRLF )
   return result;
 }
 
-Encoder * QuotedPrintableCodec::makeEncoder( bool withCRLF ) const {
+Encoder *QuotedPrintableCodec::makeEncoder( bool withCRLF ) const
+{
   return new QuotedPrintableEncoder( withCRLF );
 }
 
-Decoder * QuotedPrintableCodec::makeDecoder( bool withCRLF ) const {
+Decoder *QuotedPrintableCodec::makeDecoder( bool withCRLF ) const
+{
   return new QuotedPrintableDecoder( withCRLF );
 }
 
-int QuotedPrintableCodec::maxDecodedSizeFor( int insize, bool withCRLF ) const {
+int QuotedPrintableCodec::maxDecodedSizeFor( int insize, bool withCRLF ) const
+{
   return QuotedPrintableDecoder_maxDecodedSizeFor(insize, withCRLF);
 }
 
-Encoder * Rfc2047QEncodingCodec::makeEncoder( bool withCRLF ) const {
+Encoder *Rfc2047QEncodingCodec::makeEncoder( bool withCRLF ) const
+{
   return new Rfc2047QEncodingEncoder( withCRLF );
 }
 
-Decoder * Rfc2047QEncodingCodec::makeDecoder( bool withCRLF ) const {
+Decoder *Rfc2047QEncodingCodec::makeDecoder( bool withCRLF ) const
+{
   return new QuotedPrintableDecoder( withCRLF, true );
 }
 
-int Rfc2047QEncodingCodec::maxDecodedSizeFor( int insize, bool withCRLF ) const {
+int Rfc2047QEncodingCodec::maxDecodedSizeFor( int insize, bool withCRLF ) const
+{
   return QuotedPrintableDecoder_maxDecodedSizeFor(insize, withCRLF);
 }
 
-Encoder * Rfc2231EncodingCodec::makeEncoder( bool withCRLF ) const {
+Encoder *Rfc2231EncodingCodec::makeEncoder( bool withCRLF ) const
+{
   return new Rfc2047QEncodingEncoder( withCRLF, '%' );
 }
 
-Decoder * Rfc2231EncodingCodec::makeDecoder( bool withCRLF ) const {
+Decoder *Rfc2231EncodingCodec::makeDecoder( bool withCRLF ) const
+{
   return new QuotedPrintableDecoder( withCRLF, true, '%' );
 }
 
-int Rfc2231EncodingCodec::maxDecodedSizeFor( int insize, bool withCRLF ) const {
+int Rfc2231EncodingCodec::maxDecodedSizeFor( int insize, bool withCRLF ) const
+{
   return QuotedPrintableDecoder_maxDecodedSizeFor(insize, withCRLF);
 }
 

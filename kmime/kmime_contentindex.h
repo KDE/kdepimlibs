@@ -107,7 +107,9 @@ class KMIME_EXPORT ContentIndex
     bool operator!=( const ContentIndex &index ) const;
 
   private:
+    //@cond PRIVATE
     QList<unsigned int> mIndex;
+    //@endcond
 };
 
 }  //namespace KMime
