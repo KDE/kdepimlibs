@@ -191,12 +191,6 @@ KMIME_EXPORT extern QString descriptionFor(
   const QList<DispositionModifier> &m
   =QList<DispositionModifier>() );
 
-enum ReturnContent {
-  Nothing,
-  All,
-  HeadersOnly
-};
-
 } // namespace MDN
 
 } // namespace KMime
