@@ -30,7 +30,8 @@
 #include <QStringList>
 
 #include <kurl.h>
-#include <kapplication.h>
+#include <kinstance.h>
+#include <kaboutdata.h>
 #include <kio/netaccess.h>
 #include <kio/job.h>
 #include <kdebug.h>
@@ -62,11 +63,13 @@ int main(int argc, char *argv[])
   setenv( "KDEHOME", QFile::encodeName( QDir::homePath() + "/.kde-testresource" ), true );
   setenv( "KDE_FORK_SLAVES", "yes", true ); // simpler, for the final cleanup
 
-  // KApplication::disableAutoDcopRegistration();
-  KCmdLineArgs::init(argc,argv,"testresource", 0, 0, 0, 0);
+  KAboutData aboutData("testresource", "Part of LibKCal's test suite.", "0.1");
+  KCmdLineArgs::init(argc, argv, &aboutData);
   KCmdLineArgs::addCmdLineOptions( options );
 
-  KApplication app;
+  KInstance instance( &aboutData );
+  //QCoreApplication app( *KCmdLineArgs::qt_argc(), *KCmdLineArgs::qt_argv() );
+
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   QString type = QString();
   if ( !args->getOption( "resource" ).isEmpty() )
