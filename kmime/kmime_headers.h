@@ -898,7 +898,7 @@ class ContentID : public Generics::SingleIdent
 /**
   Represents a "Supersedes" header.
 */
-class Supersedes : public Generics::SingleIdent
+class KMIME_EXPORT Supersedes : public Generics::SingleIdent
 {
   kmime_mk_trivial_ctor_with_name( Supersedes )
 };
@@ -918,7 +918,7 @@ class InReplyTo: public Generics::Ident
 
   @see RFC 2822, section 3.6.4.
 */
-class References: public Generics::Ident
+class KMIME_EXPORT References: public Generics::Ident
 {
   kmime_mk_trivial_ctor_with_name( References )
 };
