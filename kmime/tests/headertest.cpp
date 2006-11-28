@@ -381,6 +381,12 @@ void HeaderTest::testContentTypeHeader()
   QVERIFY( h->isPlainText() );
   QCOMPARE( h->charset(), QByteArray( "us-ascii" ) );
   delete h;
+
+  // bug #136631 (name with rfc 2231 style parameter wrapping)
+  h = new ContentType( 0, "text/plain;\n name*0=\"PIN_Brief_box1@xx.xxx.censored_Konfigkarte.confi\";\n name*1=\"guration.txt\"" );
+  QVERIFY( h->isPlainText() );
+  QCOMPARE( h->name(), QString( "PIN_Brief_box1@xx.xxx.censored_Konfigkarte.configuration.txt" ) );
+  delete h;
 }
 
 void HeaderTest::testTokenHeader()
