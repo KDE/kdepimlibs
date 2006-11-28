@@ -65,7 +65,7 @@ int main(int argc,char **argv)
   if (result != QString("a,b"))
   {
     kDebug() << "The string a,b was expected, but given was " << result << endl;
-    exit(1);
+    return 1;
   }
   else
   {
