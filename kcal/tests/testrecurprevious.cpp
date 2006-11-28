@@ -98,7 +98,7 @@ int main( int argc, char **argv )
     KDateTime dt( incidence->recurrence()->endDateTime() );
     int i=0;
     if ( outstream ) {
-      if ( !dt.isValid() ) dt = KDateTime( QDate( 2011, 1, 1 ), QTime( 0, 0, 1 ), KDateTime::Spec::UTC );
+      if ( !dt.isValid() ) dt = KDateTime( QDate( 2011, 1, 1 ), QTime( 0, 0, 1 ), viewSpec );
       else dt = dt.addYears( 2 );
       kDebug(5800) << "-------------------------------------------" << endl;
       kDebug(5800) << " *~*~*~*~ Starting with date: " << dumpTime(dt, viewSpec) << endl;
