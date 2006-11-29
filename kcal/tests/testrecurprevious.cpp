@@ -81,10 +81,10 @@ int main( int argc, char **argv )
 
   KDateTime::Spec viewSpec;
   if ( !cal.load( input ) ) return 1;
-	QString tz = cal.nonKDECustomProperty( "X-LibKCal-Testsuite-OutTZ" );
-	if ( !tz.isEmpty() ) {
-          viewSpec = KDateTime::Spec( KSystemTimeZones::zone( tz ) );
-	}
+  QString tz = cal.nonKDECustomProperty( "X-LibKCal-Testsuite-OutTZ" );
+  if ( !tz.isEmpty() ) {
+    viewSpec = KDateTime::Spec( KSystemTimeZones::zone( tz ) );
+  }
 
   Incidence::List inc = cal.incidences();
 
@@ -98,7 +98,13 @@ int main( int argc, char **argv )
     KDateTime dt( incidence->recurrence()->endDateTime() );
     int i=0;
     if ( outstream ) {
-      if ( !dt.isValid() ) dt = KDateTime( QDate( 2011, 1, 1 ), QTime( 0, 0, 1 ), viewSpec );
+      if ( !dt.isValid() ) {
+        if ( viewSpec.isValid() ) {
+          dt = KDateTime( QDate( 2011, 1, 1 ), QTime( 0, 0, 1 ), viewSpec );
+	} else {
+          dt = KDateTime( QDate( 2011, 1, 1 ), QTime( 0, 0, 1 ) );
+	}
+      }
       else dt = dt.addYears( 2 );
       kDebug(5800) << "-------------------------------------------" << endl;
       kDebug(5800) << " *~*~*~*~ Starting with date: " << dumpTime(dt, viewSpec) << endl;

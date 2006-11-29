@@ -95,9 +95,12 @@ int main( int argc, char **argv )
     QDate dt( 1996, 7, 1 );
     if ( outstream ) {
       // Output to file for testing purposes
-      while ( dt.year() <= 2010 ) {
-        if ( incidence->recursOn( dt, cal.viewTimeSpec() ) )
+      int nr = 0;
+      while ( dt.year() <= 2020 && nr<=500 ) {
+        if ( incidence->recursOn( dt, cal.viewTimeSpec() ) ) {
           (*outstream) << dt.toString( Qt::ISODate ) << endl;
+          nr++;
+        }
         dt = dt.addDays( 1 );
       }
     } else {
