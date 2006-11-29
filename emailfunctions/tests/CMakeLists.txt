@@ -13,6 +13,8 @@ kde4_add_executable(testemail ${testemail_SRCS})
 
 target_link_libraries(testemail  ${KDE4_KDECORE_LIBS} emailfunctions )
 
+add_test(emailfunctions-testemail ${EXECUTABLE_OUTPUT_PATH}/testemail)
+
 ########### install files ###############
 
 endif(KDE4_BUILD_TESTS)
