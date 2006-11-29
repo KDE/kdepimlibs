@@ -66,69 +66,39 @@ sub checkfile()
   my $file = shift;
   my $outfile = shift;
 
-  my $logentry = "Checking '$outfile':\n";
-
-  my @ref;
-  if ( !open( REF, "$file.$id.ref" ) ) {
-    print STDERR "Unable to open $file.$id.ref\n";
-    exit 1;
-  }
-  while( <REF> ) {
-    push @ref, $_;
-  }
-  close REF;
-
-  if ( !open( READ, $outfile ) ) {
-    print STDERR "Unable to open $outfile\n";
+  
+  $cmd = 'diff -u -B -I "^DTSTAMP:[0-9ZT]*$" -I "^LAST-MODIFIED:[0-9ZT]*$" -I "^CREATED:[0-9ZT]*$" '."$file.$id.ref $outfile";
+print "cmd: \"$cmd\"\n";
+  if ( !open( DIFF, "$cmd|" ) ) {
+    print STDERR "Unable to run diff command on the files $file.$id.ref and $outfile\n";
     exit 1;
   }
 
-  $error = 0;
-  $i = 0;
-  $line = 1;
-  if ( !open( ERRLOG, ">>FAILED.log" ) ) {
-    print "Unable to open FAILED.log";
-  };
-	my $errorlines = 0;
-  while( <READ> ) {
-    $out = $_;
-    $ref = @ref[$i++];
-    
-
-    # DTSTAMP, LAST-MODIFIED and CREATED might be different to the reference...
-    if ( $out =~ /^DTSTAMP:[0-9ZT]+$/ && $ref =~ /^DTSTAMP:[0-9ZT]+$/ ) {
-      next;
+  $errors = 0;
+  $errorstr = "";
+  while ( <DIFF> ) {
+    $line = $_;
+    if ( $line =~ /^[+-][^+-]/ ) {
+      # it's an added/deleted/modified line. Register it as an error
+      $errors++;
     }
-
-    if ( $out =~ /^LAST-MODIFIED:[0-9ZT]+$/ && $ref =~ /^LAST-MODIFIED:[0-9ZT]+$/ ) {
-      next;
-    }
-
-    if ( $out =~ /^CREATED:[0-9ZT]+$/ && $ref =~ /^CREATED:[0-9ZT]+$/ ) {
-      next;
-    }
-
-    if ( $out ne $ref ) {
-      # don't are about a failed errorlog open
-      if ( $errorlines == 0 ) {
-        print ERRLOG $logentry;
-      }
-      $errorlines++;
-      $error++;
-      if ( $errorlines < $MAXERRLINES ) {
-        print ERRLOG "  Line $line: Expected      : $ref";
-        print ERRLOG "  Line $line: Actual output : $out";
-      } elsif ( $errorlines == $MAXERRLINES ) {
-        print ERRLOG "  <Remaining error suppressed>\n";
-      }
-    }
-    
-    $line++;
+    $errorstr .= $line;
   }
 
-  close READ;
-
-  if ( $error > 0 ) {
+  if ( $errors > 0 ) {
+    print "~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=\n";
+    print "Checking '$outfile':\n";
+    print $errorstr;
+    print "Encountered $errors errors\n";
+    
+    
+    if ( !open( ERRLOG, ">>FAILED.log" ) ) {
+      print "Unable to open FAILED.log";
+    };
+    print ERRLOG "~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=\n";
+    print ERRLOG "Checking '$outfile':\n";
+    print ERRLOG $errorstr;
+    
     if ( -e "$file.$id.fixme" ) {
       if ( !open( FIXME, "$file.$id.fixme" ) ) {
         print STDERR "Unable to open $file.fixme\n";
@@ -137,27 +107,23 @@ sub checkfile()
       my $firstline = <FIXME>;
       $firstline =~ /^(\d+) known errors/;
       my $expected = $1;
-      if ( $expected == $error ) {
-        print ERRLOG "\n  EXPECTED FAIL: $error errors found.\n";
+      if ( $expected == $errors ) {
+        print ERRLOG "\n  EXPECTED FAIL: $errors errors found.\n";
         print ERRLOG "    Fixme:\n";
         while( <FIXME> ) {
           print ERRLOG "      ";
           print ERRLOG;
         }
       } else {
-        print ERRLOG "\n  UNEXPECTED FAIL: $error errors found, $expected expected.\n";
+        print ERRLOG "\n  UNEXPECTED FAIL: $errors errors found, $expected expected.\n";
         exit 1;
       }
     } else {
-      print ERRLOG "\n  FAILED: $error errors found.\n";
-      if ( $error > 5 ) {
-        print ERRLOG system( "diff -u $file.$id.ref $outfile" );
-      }
+      print ERRLOG "\n  FAILED: $errors errors found.\n";
 #       system( "touch FAILED" );
       exit 1;
     }
   } else {
      unlink($outfile);
-#    print "  OK\n";
   }
 }
