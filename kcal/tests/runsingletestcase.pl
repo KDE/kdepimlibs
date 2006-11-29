@@ -48,11 +48,11 @@ my $outfile = $file;
 $outfile =~ /\/([^\/]*)$/;
 $outfile = "$file.$id.out";
 
-$cmd = "$app $file $outfile 2> /dev/null";
+$testcmd = "$app $file $outfile 2> /dev/null";
 
-print "CMD $cmd\n";
+#print "CMD $testcmd\n";
 
-if ( system( $cmd ) != 0 ) {
+if ( system( $testcmd ) != 0 ) {
   print STDERR "Error running $app\n";
   exit 1;
 }
@@ -68,7 +68,6 @@ sub checkfile()
 
   
   $cmd = 'diff -u -B -I "^DTSTAMP:[0-9ZT]*$" -I "^LAST-MODIFIED:[0-9ZT]*$" -I "^CREATED:[0-9ZT]*$" '."$file.$id.ref $outfile";
-print "cmd: \"$cmd\"\n";
   if ( !open( DIFF, "$cmd|" ) ) {
     print STDERR "Unable to run diff command on the files $file.$id.ref and $outfile\n";
     exit 1;
@@ -88,6 +87,7 @@ print "cmd: \"$cmd\"\n";
   if ( $errors > 0 ) {
     print "~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=\n";
     print "Checking '$outfile':\n";
+    print "Command: $testcmd\n";
     print $errorstr;
     print "Encountered $errors errors\n";
     
@@ -95,7 +95,7 @@ print "cmd: \"$cmd\"\n";
     if ( !open( ERRLOG, ">>FAILED.log" ) ) {
       print "Unable to open FAILED.log";
     };
-    print ERRLOG "~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=\n";
+    print ERRLOG "\n\n\n~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=\n\n\n";
     print ERRLOG "Checking '$outfile':\n";
     print ERRLOG $errorstr;
     
