@@ -220,7 +220,7 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
   // extract charset information (keep in mind: the size given to the
   // ctor is one off due to the \0 terminator):
   QByteArray maybeCharset( charsetStart,
-                           ( languageStart > 0 ? languageStart - 1 : scursor ) - charsetStart );
+                           ( languageStart ? languageStart - 1 : scursor ) - charsetStart );
 
   //
   // STEP 2:
