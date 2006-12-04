@@ -82,7 +82,29 @@ namespace KMime {
 namespace Headers {
 //-----<Base>----------------------------------
 
-QByteArray Base::rfc2047Charset()
+Base::Base() :
+    mParent( 0 )
+{
+}
+
+Base::Base( KMime::Content *parent ) :
+    mParent ( parent )
+{
+}
+
+Base::~Base() {}
+
+KMime::Content* Base::parent() const
+{
+  return mParent;
+}
+
+void Base::setParent( KMime::Content *parent )
+{
+  mParent = parent;
+}
+
+QByteArray Base::rfc2047Charset() const
 {
   if ( e_ncCS.isEmpty() || forceCS() ) {
     return defaultCS();
@@ -98,12 +120,32 @@ void Base::setRFC2047Charset( const QByteArray &cs )
 
 bool Base::forceCS() const
 {
-  return ( p_arent != 0 ? p_arent->forceDefaultCharset() : false );
+  return ( parent() != 0 ? parent()->forceDefaultCharset() : false );
 }
 
 QByteArray Base::defaultCS() const
 {
-  return ( p_arent != 0 ? p_arent->defaultCharset() : Latin1 );
+  return ( parent() != 0 ? parent()->defaultCharset() : Latin1 );
+}
+
+bool Base::is( const char* t ) const
+{
+  return strcasecmp( t, type() ) == 0;
+}
+
+bool Base::isMimeHeader() const
+{
+  return strncasecmp( type(), "Content-", 8 ) == 0;
+}
+
+bool Base::isXHeader() const
+{
+  return strncmp( type(), "X-", 2 ) == 0;
+}
+
+QByteArray Base::typeIntro() const
+{
+  return QByteArray( type() ) + ": ";
 }
 
 //-----</Base>---------------------------------
@@ -583,12 +625,30 @@ bool PhraseList::parse( const char* &scursor, const char *const send,
 
 kmime_mk_trivial_ctor( DotAtom, Structured )
 
-void KMime::Headers::Generics::DotAtom::clear()
+QByteArray DotAtom::as7BitString( bool withHeaderType )
+{
+  if ( isEmpty() )
+    return QByteArray();
+
+  QByteArray rv;
+  if ( withHeaderType )
+    rv += typeIntro();
+
+  rv += mDotAtom.toLatin1(); // FIXME: encoding?
+  return rv;
+}
+
+QString DotAtom::asUnicodeString()
+{
+  return mDotAtom;
+}
+
+void DotAtom::clear()
 {
   mDotAtom.clear();
 }
 
-bool KMime::Headers::Generics::DotAtom::isEmpty() const
+bool DotAtom::isEmpty() const
 {
   return mDotAtom.isEmpty();
 }
@@ -822,6 +882,18 @@ bool SingleIdent::parse( const char* &scursor, const char * const send,
 //-----<ReturnPath>-------------------------
 
 kmime_mk_trivial_ctor_with_name( ReturnPath, Generics::Address, Return-Path )
+
+QByteArray ReturnPath::as7BitString( bool withHeaderType )
+{
+  if ( isEmpty() )
+    return QByteArray();
+
+  QByteArray rv;
+  if ( withHeaderType )
+    rv += typeIntro();
+  rv += mMailbox.as7BitString( e_ncCS );
+  return rv;
+}
 
 void ReturnPath::clear()
 {

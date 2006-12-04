@@ -461,6 +461,29 @@ void HeaderTest::testPhraseListHeader()
   h->clear();
   QVERIFY( h->isEmpty() );
   delete h;
+
+  // TODO: encoded/quoted phrases
+}
+
+void HeaderTest::testDotAtomHeader()
+{
+  DotAtom *h;
+
+  // empty header
+  h = new DotAtom;
+  QVERIFY( h->isEmpty() );
+
+  // parse a simple dot atom
+  h->from7BitString( "1.0 (mime version)" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->asUnicodeString(), QString( "1.0" ) );
+
+  // clear again
+  h->clear();
+  QVERIFY( h->isEmpty() );
+  delete h;
+
+  // TODO: more complex atoms
 }
 
 void HeaderTest::noAbstractHeaders()

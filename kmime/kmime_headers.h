@@ -103,54 +103,53 @@ static const QByteArray Latin1( "ISO-8859-1" );
 class KMIME_EXPORT Base
 {
   public:
+    /**
+      A list of headers.
+    */
     typedef QList<KMime::Headers::Base*> List;
 
     /**
       Creates an empty header.
     */
-    Base() : e_ncCS( "" ), p_arent(0) {}
+    Base();
 
     /**
       Creates an empty header with a parent-content.
     */
-    Base( KMime::Content *parent ) : e_ncCS( "" ), p_arent( parent ) {}
+    Base( KMime::Content *parent );
 
     /**
       Destructor.
     */
-    virtual ~Base() {}
+    virtual ~Base();
 
     /**
       Returns the parent of this header.
     */
-    KMime::Content *parent()
-      { return p_arent; }
+    KMime::Content *parent() const;
 
     /**
-      Sets the parent for this header.
+      Sets the parent for this header to @p parent.
     */
-    void setParent( KMime::Content *p )
-      { p_arent = p; }
+    void setParent( KMime::Content *parent );
 
     /**
       Parses the given string. Take care of RFC2047-encoded strings.
       A default charset is given. If the last parameter is true the
       default charset is used in any case
     */
-    virtual void from7BitString( const QByteArray &s )
-      { Q_UNUSED( s ); }
+    virtual void from7BitString( const QByteArray &s ) = 0;
 
     /**
-      Returns the encoded header. The parameter specifies whether the
-      header-type should be included.
+      Returns the encoded header.
+      @param withHeaderType Specifies whether the header-type should be included.
     */
-    virtual QByteArray as7BitString( bool=true )
-      { return QByteArray(); }
+    virtual QByteArray as7BitString( bool withHeaderType = true ) = 0;
 
     /**
       Returns the charset that is used for RFC2047-encoding.
     */
-    QByteArray rfc2047Charset();
+    QByteArray rfc2047Charset() const;
 
     /**
       Sets the charset for RFC2047-encoding.
@@ -197,27 +196,29 @@ class KMIME_EXPORT Base
     /**
       Checks if this header is of type @p t.
     */
-    bool is( const char *t )
-      { return strcasecmp( t, type() ) == 0; }
+    bool is( const char *t ) const;
 
     /**
       Checks if this header is a MIME header.
     */
-    bool isMimeHeader()
-      { return strncasecmp( type(), "Content-", 8 ) == 0; }
+    bool isMimeHeader() const;
 
     /**
       Checks if this header is a X-Header.
     */
-    bool isXHeader()
-      { return strncmp( type(), "X-", 2 ) == 0; }
+    bool isXHeader() const;
 
   protected:
-    QByteArray typeIntro()
-      { return QByteArray( type() ) + ": "; }
+    /**
+      Helper method, returns the header prefix including ":".
+    */
+    QByteArray typeIntro() const;
 
+    // TODO: rename and preferably make it private somehow
     QByteArray e_ncCS;
-    Content *p_arent;
+
+  private:
+    KMime::Content *mParent;
 };
 
 //
@@ -635,6 +636,8 @@ class KMIME_EXPORT DotAtom : public Structured
   kmime_mk_trivial_ctor( DotAtom )
   //@endcond
   public:
+    virtual QByteArray as7BitString( bool withHeaderType = true );
+    virtual QString asUnicodeString();
     virtual void clear();
     virtual bool isEmpty() const;
 
@@ -698,6 +701,7 @@ class KMIME_EXPORT ReturnPath : public Generics::Address
   kmime_mk_trivial_ctor_with_name( ReturnPath )
   //@endcond
   public:
+    virtual QByteArray as7BitString( bool withHeaderType = true );
     virtual void clear();
     virtual bool isEmpty() const;
 
