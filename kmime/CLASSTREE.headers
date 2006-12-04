@@ -36,9 +36,9 @@ r       + InReplyTo
 r       + References
     + Token*          // Base Class for single-token headers: CTE
 m     + ContentTransferEncoding
-    + GDotAtom*        // Base Class for single-dot-atom headers: MIME-Version
+    + DotAtom*        // Base Class for single-dot-atom headers: MIME-Version
 m     + MIMEVersion
-    + GPhraseList*     // Base Class for phrase list headers: Keywords
+    + PhraseList*     // Base Class for phrase list headers: Keywords
 r     + Keywords
     + Parametrized*   // Base Class for parametrizable headers: Content-type
 m     + ContentType

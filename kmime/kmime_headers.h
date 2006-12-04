@@ -181,13 +181,12 @@ class KMIME_EXPORT Base
     /**
       Deletes.
     */
-    virtual void clear() {}
+    virtual void clear() = 0;
 
     /**
       Checks if this header contains any data.
     */
-    virtual bool isEmpty() const
-      { return false; }
+    virtual bool isEmpty() const = 0;
 
     /**
       Returns the type of this header (e.g. "From").
@@ -601,37 +600,48 @@ class KMIME_EXPORT Token : public Structured
     QByteArray mToken;
 };
 
-class KMIME_EXPORT GPhraseList : public Structured
+/**
+  Base class for headers containing a list of phrases.
+*/
+class KMIME_EXPORT PhraseList : public Structured
 {
+  //@cond PRIVATE
+  kmime_mk_trivial_ctor( PhraseList )
+  //@endcond
   public:
-    GPhraseList() : Structured() {}
-    GPhraseList( Content * p ) : Structured( p ) {}
-    GPhraseList( Content * p, const QByteArray & s ) : Structured( p )
-      { from7BitString( s ); }
-    GPhraseList( Content * p, const QString & s, const QByteArray & cs ) : Structured( p )
-      { fromUnicodeString( s, cs ); }
-    ~GPhraseList() {}
+    virtual QByteArray as7BitString( bool withHeaderType = true );
+    virtual QString asUnicodeString();
+    virtual void clear();
+    virtual bool isEmpty() const;
+
+    /**
+      Returns the list of phrases contained in this header.
+    */
+    QStringList phrases() const;
 
   protected:
     bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
 
+  private:
     QStringList mPhraseList;
 };
 
-class KMIME_EXPORT GDotAtom : public Structured
+/**
+  Base class for headers containing a dot atom.
+*/
+class KMIME_EXPORT DotAtom : public Structured
 {
+  //@cond PRIVATE
+  kmime_mk_trivial_ctor( DotAtom )
+  //@endcond
   public:
-    GDotAtom() : Structured() {}
-    GDotAtom( Content *p ) : Structured( p ) {}
-    GDotAtom( Content *p, const QByteArray &s ) : Structured( p )
-      { from7BitString( s ); }
-    GDotAtom( Content *p, const QString &s, const QByteArray &cs ) : Structured( p )
-      { fromUnicodeString( s, cs ); }
-    ~GDotAtom() {}
+    virtual void clear();
+    virtual bool isEmpty() const;
 
   protected:
     bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
+  private:
     QString mDotAtom;
 };
 
@@ -677,23 +687,25 @@ class KMIME_EXPORT Parametrized : public Structured
 //
 //
 
-/** Represents the Return-Path header field. */
+/**
+  Represents the Return-Path header field.
+
+  @see RFC 2822, section 3.6.7
+*/
 class KMIME_EXPORT ReturnPath : public Generics::Address
 {
+  //@cond PRIVATE
+  kmime_mk_trivial_ctor_with_name( ReturnPath )
+  //@endcond
   public:
-    ReturnPath() : Generics::Address() {}
-    ReturnPath( Content *p ) : Generics::Address( p ) {}
-    ReturnPath( Content *p, const QByteArray &s ) : Generics::Address( p )
-      { from7BitString( s ); }
-    ReturnPath( Content *p, const QString &s, const QByteArray &cs ) : Generics::Address( p )
-      { fromUnicodeString( s, cs ); }
-    ~ReturnPath() {}
-
-    const char *type() const
-      { return "Return-Path"; }
+    virtual void clear();
+    virtual bool isEmpty() const;
 
   protected:
     bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
+
+  private:
+    Types::Mailbox mMailbox;
 };
 
 // Address et al.:
@@ -850,19 +862,19 @@ class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
 
   @see RFC 2822, section 3.6.5.
 */
-class Keywords : public Generics::GPhraseList
+class KMIME_EXPORT Keywords : public Generics::PhraseList
 {
   kmime_mk_trivial_ctor_with_name( Keywords )
 };
 
-// GDotAtom:
+// DotAtom:
 
 /**
   Represents a "MIME-Version" header.
 
   @see RFC 2045, section 4.
 */
-class MIMEVersion : public Generics::GDotAtom
+class KMIME_EXPORT MIMEVersion : public Generics::DotAtom
 {
   kmime_mk_trivial_ctor_with_name( MIMEVersion )
 };
@@ -890,7 +902,7 @@ class KMIME_EXPORT MessageID : public Generics::SingleIdent
 /**
   Represents a "Content-ID" header.
 */
-class ContentID : public Generics::SingleIdent
+class KMIME_EXPORT ContentID : public Generics::SingleIdent
 {
   kmime_mk_trivial_ctor_with_name( ContentID )
 };
@@ -908,7 +920,7 @@ class KMIME_EXPORT Supersedes : public Generics::SingleIdent
 
   @see RFC 2822, section 3.6.4.
 */
-class InReplyTo: public Generics::Ident
+class KMIME_EXPORT InReplyTo : public Generics::Ident
 {
   kmime_mk_trivial_ctor_with_name( InReplyTo )
 };
@@ -918,7 +930,7 @@ class InReplyTo: public Generics::Ident
 
   @see RFC 2822, section 3.6.4.
 */
-class KMIME_EXPORT References: public Generics::Ident
+class KMIME_EXPORT References : public Generics::Ident
 {
   kmime_mk_trivial_ctor_with_name( References )
 };

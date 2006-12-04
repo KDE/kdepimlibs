@@ -439,4 +439,56 @@ void HeaderTest::testContentTransferEncoding()
   delete h;
 }
 
+void HeaderTest::testPhraseListHeader()
+{
+  PhraseList *h;
+
+  // empty header
+  h = new PhraseList();
+  QVERIFY( h->isEmpty() );
+  delete h;
+
+  // parse a simple phrase list
+  h = new PhraseList( 0, "foo,\n bar" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->phrases().count(), 2 );
+  QStringList phrases = h->phrases();
+  QCOMPARE( phrases.takeFirst(), QString( "foo" ) );
+  QCOMPARE( phrases.takeFirst(), QString( "bar" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray("foo, bar") );
+
+  // clear header
+  h->clear();
+  QVERIFY( h->isEmpty() );
+  delete h;
+}
+
+void HeaderTest::noAbstractHeaders()
+{
+  ReturnPath* h1 = new ReturnPath(); delete h1;
+  From* h2 = new From(); delete h2;
+  Sender* h3 = new Sender(); delete h3;
+  To* h4 = new To(); delete h4;
+  Cc* h5 = new Cc(); delete h5;
+  Bcc* h6 = new Bcc(); delete h6;
+  ReplyTo* h7 = new ReplyTo(); delete h7;
+  Keywords* h8 = new Keywords(); delete h8;
+  MIMEVersion* h9 = new MIMEVersion(); delete h9;
+  MessageID* h10 = new MessageID(); delete h10;
+  ContentID* h11 = new ContentID(); delete h11;
+  Supersedes* h12 = new Supersedes(); delete h12;
+  InReplyTo* h13 = new InReplyTo(); delete h13;
+  References* h14 = new References(); delete h14;
+  Generic* h15 = new Generic(); delete h15;
+  Subject* h16 = new Subject(); delete h16;
+  Organization* h17 = new Organization(); delete h17;
+  ContentDescription* h18 = new ContentDescription(); delete h18;
+  Control* h19 = new Control(); delete h19;
+  Date* h20 = new Date(); delete h20;
+  Newsgroups* h21 = new Newsgroups(); delete h21;
+  FollowUpTo* h22 = new FollowUpTo(); delete h22;
+  Lines* h23 = new Lines(); delete h23;
+  UserAgent* h24 = new UserAgent(); delete h24;
+}
+
 #include "headertest.moc"

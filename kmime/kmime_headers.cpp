@@ -441,7 +441,7 @@ bool AddressList::parse( const char* &scursor, const char *const send,
 
 kmime_mk_trivial_ctor( Token, Structured )
 
-  QByteArray Token::as7BitString( bool withHeaderType )
+QByteArray Token::as7BitString( bool withHeaderType )
 {
   if ( isEmpty() ) {
     return QByteArray();
@@ -455,7 +455,6 @@ kmime_mk_trivial_ctor( Token, Structured )
 void Token::clear()
 {
   mToken.clear();
-  Structured::clear();
 }
 
 bool Token::isEmpty() const
@@ -499,9 +498,50 @@ bool Token::parse( const char* &scursor, const char *const send, bool isCRLF )
 
 //-----</Token>-------------------------
 
-//-----<GPhraseList>-------------------------
+//-----<PhraseList>-------------------------
 
-bool GPhraseList::parse( const char* &scursor, const char *const send,
+kmime_mk_trivial_ctor( PhraseList, Structured )
+
+QByteArray PhraseList::as7BitString(bool withHeaderType)
+{
+  if ( isEmpty() )
+    return QByteArray();
+
+  QByteArray rv;
+  if ( withHeaderType )
+    rv = typeIntro();
+
+  for ( int i = 0; i < mPhraseList.count(); ++i ) {
+    // FIXME: only encode when needed, quote when needed, etc.
+    rv += encodeRFC2047String( mPhraseList[i], e_ncCS, false, false );
+    if ( i != mPhraseList.count() - 1 )
+      rv += ", ";
+  }
+
+  return rv;
+}
+
+QString PhraseList::asUnicodeString()
+{
+  return mPhraseList.join( QLatin1String( ", " ) );
+}
+
+void PhraseList::clear()
+{
+  mPhraseList.clear();
+}
+
+bool PhraseList::isEmpty() const
+{
+  return mPhraseList.isEmpty();
+}
+
+QStringList PhraseList::phrases() const
+{
+  return mPhraseList;
+}
+
+bool PhraseList::parse( const char* &scursor, const char *const send,
                          bool isCRLF )
 {
   mPhraseList.clear();
@@ -513,7 +553,7 @@ bool GPhraseList::parse( const char* &scursor, const char *const send,
       return true;
     }
     // empty entry: ignore.
-    if ( *scursor != ',' ) {
+    if ( *scursor == ',' ) {
       scursor++;
       continue;
     }
@@ -530,18 +570,30 @@ bool GPhraseList::parse( const char* &scursor, const char *const send,
       return true;
     }
     // comma separating the phrases: eat.
-    if ( *scursor != ',' ) {
+    if ( *scursor == ',' ) {
       scursor++;
     }
   }
   return true;
 }
 
-//-----</GPhraseList>-------------------------
+//-----</PhraseList>-------------------------
 
-//-----<GDotAtom>-------------------------
+//-----<DotAtom>-------------------------
 
-bool GDotAtom::parse( const char* &scursor, const char *const send,
+kmime_mk_trivial_ctor( DotAtom, Structured )
+
+void KMime::Headers::Generics::DotAtom::clear()
+{
+  mDotAtom.clear();
+}
+
+bool KMime::Headers::Generics::DotAtom::isEmpty() const
+{
+  return mDotAtom.isEmpty();
+}
+
+bool DotAtom::parse( const char* &scursor, const char *const send,
                       bool isCRLF )
 {
   QString maybeDotAtom;
@@ -559,7 +611,7 @@ bool GDotAtom::parse( const char* &scursor, const char *const send,
   return true;
 }
 
-//-----</GDotAtom>-------------------------
+//-----</DotAtom>-------------------------
 
 //-----<Parametrized>-------------------------
 
@@ -768,6 +820,19 @@ bool SingleIdent::parse( const char* &scursor, const char * const send,
 } // namespace Generics
 
 //-----<ReturnPath>-------------------------
+
+kmime_mk_trivial_ctor_with_name( ReturnPath, Generics::Address, Return-Path )
+
+void ReturnPath::clear()
+{
+  mMailbox.setAddress( Types::AddrSpec() );
+  mMailbox.setName( QString() );
+}
+
+bool ReturnPath::isEmpty() const
+{
+  return !mMailbox.hasAddress() && !mMailbox.hasName();
+}
 
 bool ReturnPath::parse( const char* &scursor, const char * const send,
                         bool isCRLF )
@@ -1537,8 +1602,8 @@ kmime_mk_trivial_ctor_with_name( To, Generics::AddressList, To )
 kmime_mk_trivial_ctor_with_name( Cc, Generics::AddressList, Cc )
 kmime_mk_trivial_ctor_with_name( Bcc, Generics::AddressList, Bcc )
 kmime_mk_trivial_ctor_with_name( ReplyTo, Generics::AddressList, Reply-To )
-kmime_mk_trivial_ctor_with_name( Keywords, Generics::GPhraseList, Keywords )
-kmime_mk_trivial_ctor_with_name( MIMEVersion, Generics::GDotAtom, MIME-Version )
+kmime_mk_trivial_ctor_with_name( Keywords, Generics::PhraseList, Keywords )
+kmime_mk_trivial_ctor_with_name( MIMEVersion, Generics::DotAtom, MIME-Version )
 kmime_mk_trivial_ctor_with_name( ContentID, Generics::SingleIdent, Content-ID )
 kmime_mk_trivial_ctor_with_name( Supersedes, Generics::SingleIdent, Supersedes )
 kmime_mk_trivial_ctor_with_name( InReplyTo, Generics::Ident, In-Reply-To )
