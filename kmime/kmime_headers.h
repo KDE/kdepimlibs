@@ -144,7 +144,7 @@ class KMIME_EXPORT Base
       Returns the encoded header.
       @param withHeaderType Specifies whether the header-type should be included.
     */
-    virtual QByteArray as7BitString( bool withHeaderType = true ) = 0;
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const = 0;
 
     /**
       Returns the charset that is used for RFC2047-encoding.
@@ -169,13 +169,12 @@ class KMIME_EXPORT Base
     /**
       Parses the given string and set the charset.
     */
-    virtual void fromUnicodeString( const QString &s, const QByteArray &b )
-      { Q_UNUSED( s ); Q_UNUSED( b ); }
+    virtual void fromUnicodeString( const QString &s, const QByteArray &b ) = 0;
 
     /**
       Returns the decoded content of the header without the header-type.
     */
-    virtual QString asUnicodeString() { return QString(); }
+    virtual QString asUnicodeString() const = 0;
 
     /**
       Deletes.
@@ -254,11 +253,11 @@ class KMIME_EXPORT Unstructured : public Base
   ~Unstructured() {}
 
   virtual void from7BitString( const QByteArray &str );
-  virtual QByteArray as7BitString( bool withHeaderType=true );
+  virtual QByteArray as7BitString( bool withHeaderType=true ) const;
 
   virtual void fromUnicodeString( const QString &str,
                                   const QByteArray &suggestedCharset );
-  virtual QString asUnicodeString();
+  virtual QString asUnicodeString() const;
 
   virtual void clear()
       { d_ecoded.truncate( 0 ); }
@@ -312,6 +311,7 @@ class KMIME_EXPORT Structured : public Base
     ~Structured() {}
 
     virtual void from7BitString( const QByteArray &str );
+    virtual QString asUnicodeString() const;
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
 
   protected:
@@ -349,18 +349,13 @@ class KMIME_EXPORT Address : public Structured
 */
 class KMIME_EXPORT MailboxList : public Address
 {
+  //@cond PRIVATE
+  kmime_mk_trivial_ctor( MailboxList )
+  //@endcond
   public:
-    MailboxList() : Address() {}
-    MailboxList( Content *p ) : Address( p ) {}
-    MailboxList( Content *p, const QByteArray &s ) : Address( p )
-      { from7BitString( s ); }
-    MailboxList( Content *p, const QString &s, const QByteArray &cs ) : Address( p )
-      { fromUnicodeString( s, cs ); }
-    ~MailboxList() {}
-
-    virtual QByteArray as7BitString( bool withHeaderType = true );
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
-    virtual QString asUnicodeString();
+    virtual QString asUnicodeString() const;
 
     virtual void clear();
     virtual bool isEmpty() const;
@@ -437,18 +432,13 @@ class KMIME_EXPORT SingleMailbox : public MailboxList
 */
 class KMIME_EXPORT AddressList : public Address
 {
+  //@cond PRIVATE
+  kmime_mk_trivial_ctor( AddressList )
+  //@endcond
   public:
-    AddressList() : Address() {}
-    AddressList( Content * p ) : Address( p ) {}
-    AddressList( Content * p, const QByteArray & s ) : Address( p )
-      { from7BitString( s ); }
-    AddressList( Content * p, const QString & s, const QByteArray & cs )
-      : Address( p ) { fromUnicodeString( s, cs ); }
-    ~AddressList() {}
-
-    virtual QByteArray as7BitString( bool withHeaderType = true );
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
-    virtual QString asUnicodeString();
+    virtual QString asUnicodeString() const;
 
     virtual void clear();
     virtual bool isEmpty() const;
@@ -504,17 +494,11 @@ class KMIME_EXPORT AddressList : public Address
 */
 class KMIME_EXPORT Ident : public Address
 {
+  //@cond PRIVATE
+  kmime_mk_trivial_ctor( Ident )
+  //@endcond
   public:
-    Ident() : Address() {}
-    Ident( Content * p ) : Address( p ) {}
-    Ident( Content * p, const QByteArray & s ) : Address( p )
-      { from7BitString( s ); }
-    Ident( Content * p, const QString & s, const QByteArray & cs )
-      : Address( p ) { fromUnicodeString( s, cs ); }
-    ~Ident() {}
-
-    virtual QByteArray as7BitString( bool withHeaderType = true );
-
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
     virtual void clear();
     virtual bool isEmpty() const;
 
@@ -546,15 +530,10 @@ class KMIME_EXPORT Ident : public Address
 */
 class KMIME_EXPORT SingleIdent : public Ident
 {
+  //@cond PRIVATE
+  kmime_mk_trivial_ctor( SingleIdent )
+  //@endcond
   public:
-    SingleIdent() : Ident() {}
-    SingleIdent( Content * p ) : Ident( p ) {}
-    SingleIdent( Content * p, const QByteArray & s ) : Ident( p )
-      { from7BitString( s ); }
-    SingleIdent( Content * p, const QString & s, const QByteArray & cs )
-      : Ident( p ) { fromUnicodeString( s, cs ); }
-    ~SingleIdent() {}
-
     /**
       Returns the identifier contained in this header.
       Note: The identifiers is not enclosed in angle-brackets.
@@ -580,7 +559,7 @@ class KMIME_EXPORT Token : public Structured
   kmime_mk_trivial_ctor( Token )
   //@endcond
   public:
-    virtual QByteArray as7BitString( bool withHeaderType = true );
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
     virtual void clear();
     virtual bool isEmpty() const;
 
@@ -610,8 +589,8 @@ class KMIME_EXPORT PhraseList : public Structured
   kmime_mk_trivial_ctor( PhraseList )
   //@endcond
   public:
-    virtual QByteArray as7BitString( bool withHeaderType = true );
-    virtual QString asUnicodeString();
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
+    virtual QString asUnicodeString() const;
     virtual void clear();
     virtual bool isEmpty() const;
 
@@ -636,8 +615,8 @@ class KMIME_EXPORT DotAtom : public Structured
   kmime_mk_trivial_ctor( DotAtom )
   //@endcond
   public:
-    virtual QByteArray as7BitString( bool withHeaderType = true );
-    virtual QString asUnicodeString();
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
+    virtual QString asUnicodeString() const;
     virtual void clear();
     virtual bool isEmpty() const;
 
@@ -657,7 +636,7 @@ class KMIME_EXPORT Parametrized : public Structured
   kmime_mk_trivial_ctor( Parametrized )
   //@endcond
   public:
-    virtual QByteArray as7BitString( bool withHeaderType = true );
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
 
     virtual bool isEmpty() const;
     virtual void clear();
@@ -701,7 +680,7 @@ class KMIME_EXPORT ReturnPath : public Generics::Address
   kmime_mk_trivial_ctor_with_name( ReturnPath )
   //@endcond
   public:
-    virtual QByteArray as7BitString( bool withHeaderType = true );
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
     virtual void clear();
     virtual bool isEmpty() const;
 
@@ -786,8 +765,8 @@ class KMIME_EXPORT MailCopiesTo : public Generics::AddressList
   kmime_mk_trivial_ctor_with_name( MailCopiesTo )
   //@endcond
   public:
-    virtual QByteArray as7BitString( bool withHeaderType = true );
-    virtual QString asUnicodeString();
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
+    virtual QString asUnicodeString() const;
 
     virtual void clear();
     virtual bool isEmpty() const;
@@ -950,7 +929,7 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
   kmime_mk_trivial_ctor_with_name( ContentType )
   //@endcond
   public:
-    virtual QByteArray as7BitString( bool incType=true );
+    virtual QByteArray as7BitString( bool incType=true ) const;
     virtual void clear();
     virtual bool isEmpty() const;
 
@@ -1103,7 +1082,7 @@ class KMIME_EXPORT ContentDisposition : public Generics::Parametrized
   kmime_mk_trivial_ctor_with_name( ContentDisposition )
   //@endcond
   public:
-    virtual QByteArray as7BitString( bool withHeaderType = true );
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
     virtual bool isEmpty() const;
     virtual void clear();
 
@@ -1207,17 +1186,7 @@ class KMIME_EXPORT Subject : public Generics::Unstructured
 */
 class KMIME_EXPORT Organization : public Generics::Unstructured
 {
-  public:
-    Organization() : Generics::Unstructured() {}
-    Organization( Content *p ) : Generics::Unstructured( p ) {}
-    Organization( Content *p, const QByteArray &s )
-      : Generics::Unstructured( p, s ) {}
-    Organization( Content *p, const QString &s, const QByteArray &cs )
-      : Generics::Unstructured( p, s, cs ) {}
-    ~Organization() {}
-
-    virtual const char *type() const
-      { return "Organization"; }
+  kmime_mk_trivial_ctor_with_name( Organization )
 };
 
 /**
@@ -1249,9 +1218,9 @@ class KMIME_EXPORT Control : public Base
     ~Control() {}
 
     virtual void from7BitString( const QByteArray &s );
-    virtual QByteArray as7BitString( bool incType=true );
+    virtual QByteArray as7BitString( bool incType=true ) const;
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
-    virtual QString asUnicodeString();
+    virtual QString asUnicodeString() const;
     virtual void clear()
       { c_trlMsg.truncate( 0 ); }
 
@@ -1285,9 +1254,9 @@ class KMIME_EXPORT Date : public Base
     ~Date() {}
 
     virtual void from7BitString( const QByteArray &s );
-    virtual QByteArray as7BitString( bool incType=true );
+    virtual QByteArray as7BitString( bool incType=true ) const;
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
-    virtual QString asUnicodeString();
+    virtual QString asUnicodeString() const;
 
     virtual void clear()
       { t_ime=0; }
@@ -1329,9 +1298,9 @@ class KMIME_EXPORT Newsgroups : public Base
     ~Newsgroups() {}
 
     virtual void from7BitString( const QByteArray &s );
-    virtual QByteArray as7BitString( bool incType=true );
+    virtual QByteArray as7BitString( bool incType=true ) const;
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
-    virtual QString asUnicodeString();
+    virtual QString asUnicodeString() const;
     virtual void clear() { g_roups.clear(); }
     virtual bool isEmpty() const { return g_roups.isEmpty(); }
     virtual const char *type() const { return "Newsgroups"; }
@@ -1375,9 +1344,9 @@ class KMIME_EXPORT Lines : public Base
     ~Lines() {}
 
     virtual void from7BitString( const QByteArray &s );
-    virtual QByteArray as7BitString( bool incType=true );
+    virtual QByteArray as7BitString( bool incType=true ) const;
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
-    virtual QString asUnicodeString();
+    virtual QString asUnicodeString() const;
     virtual void clear() { l_ines=-1; }
     virtual bool isEmpty() const { return( l_ines == -1 ); }
     virtual const char *type() const { return "Lines"; }

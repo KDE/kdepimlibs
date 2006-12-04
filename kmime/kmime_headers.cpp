@@ -159,7 +159,7 @@ void Unstructured::from7BitString( const QByteArray &str )
   d_ecoded = decodeRFC2047String( str, e_ncCS, defaultCS(), forceCS() );
 }
 
-QByteArray Unstructured::as7BitString( bool withHeaderType )
+QByteArray Unstructured::as7BitString( bool withHeaderType ) const
 {
   QByteArray result;
   if ( withHeaderType ) {
@@ -177,7 +177,7 @@ void Unstructured::fromUnicodeString( const QString &str,
   e_ncCS = cachedCharset( suggestedCharset );
 }
 
-QString Unstructured::asUnicodeString()
+QString Unstructured::asUnicodeString() const
 {
   return d_ecoded;
 }
@@ -193,6 +193,11 @@ void Structured::from7BitString( const QByteArray &str )
   }
   const char *cursor = str.constData();
   parse( cursor, cursor + str.length() );
+}
+
+QString Structured::asUnicodeString() const
+{
+  return QString::fromLatin1( as7BitString() );
 }
 
 void Structured::fromUnicodeString( const QString &s, const QByteArray &b )
@@ -226,7 +231,9 @@ static bool stringToMailbox( const QByteArray &address,
 
 //-----<MailboxList>-------------------------
 
-QByteArray MailboxList::as7BitString( bool withHeaderType )
+kmime_mk_trivial_ctor( MailboxList, Address )
+
+QByteArray MailboxList::as7BitString( bool withHeaderType ) const
 {
   if ( isEmpty() ) {
     return QByteArray();
@@ -250,7 +257,7 @@ void MailboxList::fromUnicodeString( const QString &s, const QByteArray &b )
   from7BitString( encodeRFC2047String( s, b, false ) );
 }
 
-QString MailboxList::asUnicodeString()
+QString MailboxList::asUnicodeString() const
 {
   return prettyAddresses().join( QLatin1String( ", " ) );
 }
@@ -362,7 +369,9 @@ kmime_mk_trivial_ctor( SingleMailbox, MailboxList )
 
 //-----<AddressList>-------------------------
 
-QByteArray AddressList::as7BitString( bool withHeaderType )
+kmime_mk_trivial_ctor( AddressList, Address )
+
+QByteArray AddressList::as7BitString( bool withHeaderType ) const
 {
   if ( mAddressList.isEmpty() ) {
     return QByteArray();
@@ -388,7 +397,7 @@ void AddressList::fromUnicodeString( const QString &s, const QByteArray &b )
   from7BitString( encodeRFC2047String( s, b, false ) );
 }
 
-QString AddressList::asUnicodeString()
+QString AddressList::asUnicodeString() const
 {
   return prettyAddresses().join( QLatin1String( ", " ) );
 }
@@ -483,7 +492,7 @@ bool AddressList::parse( const char* &scursor, const char *const send,
 
 kmime_mk_trivial_ctor( Token, Structured )
 
-QByteArray Token::as7BitString( bool withHeaderType )
+QByteArray Token::as7BitString( bool withHeaderType ) const
 {
   if ( isEmpty() ) {
     return QByteArray();
@@ -544,7 +553,7 @@ bool Token::parse( const char* &scursor, const char *const send, bool isCRLF )
 
 kmime_mk_trivial_ctor( PhraseList, Structured )
 
-QByteArray PhraseList::as7BitString(bool withHeaderType)
+QByteArray PhraseList::as7BitString(bool withHeaderType) const
 {
   if ( isEmpty() )
     return QByteArray();
@@ -563,7 +572,7 @@ QByteArray PhraseList::as7BitString(bool withHeaderType)
   return rv;
 }
 
-QString PhraseList::asUnicodeString()
+QString PhraseList::asUnicodeString() const
 {
   return mPhraseList.join( QLatin1String( ", " ) );
 }
@@ -625,7 +634,7 @@ bool PhraseList::parse( const char* &scursor, const char *const send,
 
 kmime_mk_trivial_ctor( DotAtom, Structured )
 
-QByteArray DotAtom::as7BitString( bool withHeaderType )
+QByteArray DotAtom::as7BitString( bool withHeaderType ) const
 {
   if ( isEmpty() )
     return QByteArray();
@@ -638,7 +647,7 @@ QByteArray DotAtom::as7BitString( bool withHeaderType )
   return rv;
 }
 
-QString DotAtom::asUnicodeString()
+QString DotAtom::asUnicodeString() const
 {
   return mDotAtom;
 }
@@ -677,7 +686,7 @@ bool DotAtom::parse( const char* &scursor, const char *const send,
 
 kmime_mk_trivial_ctor( Parametrized, Structured )
 
-  QByteArray Parametrized::as7BitString( bool withHeaderType )
+  QByteArray Parametrized::as7BitString( bool withHeaderType ) const
 {
   if ( isEmpty() ) {
     return QByteArray();
@@ -745,7 +754,9 @@ bool Parametrized::parse( const char *& scursor, const char * const send,
 
 //-----<Ident>-------------------------
 
-QByteArray Ident::as7BitString( bool withHeaderType )
+kmime_mk_trivial_ctor( Ident, Address )
+
+QByteArray Ident::as7BitString( bool withHeaderType ) const
 {
   if ( mMsgIdList.isEmpty() ) {
     return QByteArray();
@@ -847,6 +858,8 @@ void Ident::appendIdentifier( const QByteArray &id )
 
 //-----<SingleIdent>-------------------------
 
+kmime_mk_trivial_ctor( SingleIdent, Ident )
+
 QByteArray SingleIdent::identifier() const
 {
   if ( mMsgIdList.isEmpty() ) {
@@ -883,7 +896,7 @@ bool SingleIdent::parse( const char* &scursor, const char * const send,
 
 kmime_mk_trivial_ctor_with_name( ReturnPath, Generics::Address, Return-Path )
 
-QByteArray ReturnPath::as7BitString( bool withHeaderType )
+QByteArray ReturnPath::as7BitString( bool withHeaderType ) const
 {
   if ( isEmpty() )
     return QByteArray();
@@ -988,7 +1001,7 @@ void Control::from7BitString( const QByteArray &s )
   c_trlMsg = s;
 }
 
-QByteArray Control::as7BitString( bool incType )
+QByteArray Control::as7BitString( bool incType ) const
 {
   if ( incType ) {
     return typeIntro() + c_trlMsg;
@@ -1003,7 +1016,7 @@ void Control::fromUnicodeString( const QString &s, const QByteArray &b )
   c_trlMsg = s.toLatin1();
 }
 
-QString Control::asUnicodeString()
+QString Control::asUnicodeString() const
 {
   return QString::fromLatin1( c_trlMsg );
 }
@@ -1015,7 +1028,7 @@ QString Control::asUnicodeString()
 kmime_mk_trivial_ctor_with_name( MailCopiesTo,
                                  Generics::AddressList, Mail-Copies-To )
 
-QByteArray MailCopiesTo::as7BitString( bool withHeaderType )
+QByteArray MailCopiesTo::as7BitString( bool withHeaderType ) const
 {
   QByteArray rv;
   if ( withHeaderType ) {
@@ -1033,7 +1046,7 @@ QByteArray MailCopiesTo::as7BitString( bool withHeaderType )
   return rv;
 }
 
-QString MailCopiesTo::asUnicodeString()
+QString MailCopiesTo::asUnicodeString() const
 {
   if ( !AddressList::isEmpty() ) {
     return AddressList::asUnicodeString();
@@ -1113,7 +1126,7 @@ void Date::from7BitString( const QByteArray &s )
   t_ime=KRFCDate::parseDate( s );
 }
 
-QByteArray Date::as7BitString( bool incType )
+QByteArray Date::as7BitString( bool incType ) const
 {
   if ( incType ) {
     return typeIntro() + KRFCDate::rfc2822DateString( t_ime );
@@ -1128,7 +1141,7 @@ void Date::fromUnicodeString( const QString &s, const QByteArray &b )
   from7BitString( s.toLatin1() );
 }
 
-QString Date::asUnicodeString()
+QString Date::asUnicodeString() const
 {
   return QString::fromLatin1( as7BitString( false ) );
 }
@@ -1156,7 +1169,7 @@ void Newsgroups::from7BitString( const QByteArray &s )
   e_ncCS=cachedCharset( "UTF-8" );
 }
 
-QByteArray Newsgroups::as7BitString( bool incType )
+QByteArray Newsgroups::as7BitString( bool incType ) const
 {
   if ( incType ) {
     return typeIntro() + g_roups;
@@ -1173,7 +1186,7 @@ void Newsgroups::fromUnicodeString( const QString &s, const QByteArray &b )
   e_ncCS = cachedCharset( "UTF-8" );
 }
 
-QString Newsgroups::asUnicodeString()
+QString Newsgroups::asUnicodeString() const
 {
   return QString::fromUtf8( g_roups );
 }
@@ -1216,7 +1229,7 @@ void Lines::from7BitString( const QByteArray &s )
   e_ncCS = cachedCharset( Latin1 );
 }
 
-QByteArray Lines::as7BitString( bool incType )
+QByteArray Lines::as7BitString( bool incType ) const
 {
   QByteArray num;
   num.setNum( l_ines );
@@ -1236,7 +1249,7 @@ void Lines::fromUnicodeString( const QString &s, const QByteArray &b )
   e_ncCS = cachedCharset( Latin1 );
 }
 
-QString Lines::asUnicodeString()
+QString Lines::asUnicodeString() const
 {
   QString num;
   num.setNum( l_ines );
@@ -1264,7 +1277,7 @@ void ContentType::clear()
   Parametrized::clear();
 }
 
-QByteArray ContentType::as7BitString( bool incType )
+QByteArray ContentType::as7BitString( bool incType ) const
 {
   if ( isEmpty() ) {
     return QByteArray();
@@ -1559,7 +1572,7 @@ bool ContentTransferEncoding::parse( const char *& scursor,
 kmime_mk_trivial_ctor_with_name( ContentDisposition,
                                  Generics::Parametrized, Content-Disposition )
 
-QByteArray ContentDisposition::as7BitString( bool incType )
+QByteArray ContentDisposition::as7BitString( bool incType ) const
 {
   if ( isEmpty() ) {
     return QByteArray();
@@ -1680,6 +1693,7 @@ kmime_mk_trivial_ctor_with_name( ContentID, Generics::SingleIdent, Content-ID )
 kmime_mk_trivial_ctor_with_name( Supersedes, Generics::SingleIdent, Supersedes )
 kmime_mk_trivial_ctor_with_name( InReplyTo, Generics::Ident, In-Reply-To )
 kmime_mk_trivial_ctor_with_name( References, Generics::Ident, References )
+kmime_mk_trivial_ctor_with_name( Organization, Generics::Unstructured, Organization )
 kmime_mk_trivial_ctor_with_name( UserAgent, Generics::Unstructured, User-Agent )
 //@endcond
 
