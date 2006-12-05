@@ -106,8 +106,8 @@ void Base::setParent( KMime::Content *parent )
 
 QByteArray Base::rfc2047Charset() const
 {
-  if ( e_ncCS.isEmpty() || forceCS() ) {
-    return defaultCS();
+  if ( e_ncCS.isEmpty() || forceDefaultCharset() ) {
+    return defaultCharset();
   } else {
     return e_ncCS;
   }
@@ -118,12 +118,12 @@ void Base::setRFC2047Charset( const QByteArray &cs )
   e_ncCS=cachedCharset( cs );
 }
 
-bool Base::forceCS() const
+bool Base::forceDefaultCharset() const
 {
   return ( parent() != 0 ? parent()->forceDefaultCharset() : false );
 }
 
-QByteArray Base::defaultCS() const
+QByteArray Base::defaultCharset() const
 {
   return ( parent() != 0 ? parent()->defaultCharset() : Latin1 );
 }
@@ -156,7 +156,7 @@ namespace Generics {
 
 void Unstructured::from7BitString( const QByteArray &str )
 {
-  d_ecoded = decodeRFC2047String( str, e_ncCS, defaultCS(), forceCS() );
+  d_ecoded = decodeRFC2047String( str, e_ncCS, defaultCharset(), forceDefaultCharset() );
 }
 
 QByteArray Unstructured::as7BitString( bool withHeaderType ) const
@@ -189,7 +189,7 @@ QString Unstructured::asUnicodeString() const
 void Structured::from7BitString( const QByteArray &str )
 {
   if ( e_ncCS.isEmpty() ) {
-    e_ncCS = defaultCS();
+    e_ncCS = defaultCharset();
   }
   const char *cursor = str.constData();
   parse( cursor, cursor + str.length() );
@@ -894,7 +894,9 @@ bool SingleIdent::parse( const char* &scursor, const char * const send,
 
 //-----<ReturnPath>-------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor_with_name( ReturnPath, Generics::Address, Return-Path )
+//@endcond
 
 QByteArray ReturnPath::as7BitString( bool withHeaderType ) const
 {
@@ -985,7 +987,9 @@ void Generic::setType( const char *type )
 
 //-----<MessageID>-----------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor_with_name( MessageID, Generics::SingleIdent, Message-Id )
+//@endcond
 
 void MessageID::generate( const QByteArray &fqdn )
 {
@@ -1001,9 +1005,9 @@ void Control::from7BitString( const QByteArray &s )
   c_trlMsg = s;
 }
 
-QByteArray Control::as7BitString( bool incType ) const
+QByteArray Control::as7BitString( bool withHeaderType ) const
 {
-  if ( incType ) {
+  if ( withHeaderType ) {
     return typeIntro() + c_trlMsg;
   } else {
     return c_trlMsg;
@@ -1025,8 +1029,10 @@ QString Control::asUnicodeString() const
 
 //-----<MailCopiesTo>--------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor_with_name( MailCopiesTo,
                                  Generics::AddressList, Mail-Copies-To )
+//@endcond
 
 QByteArray MailCopiesTo::as7BitString( bool withHeaderType ) const
 {
@@ -1126,9 +1132,9 @@ void Date::from7BitString( const QByteArray &s )
   t_ime=KRFCDate::parseDate( s );
 }
 
-QByteArray Date::as7BitString( bool incType ) const
+QByteArray Date::as7BitString( bool withHeaderType ) const
 {
-  if ( incType ) {
+  if ( withHeaderType ) {
     return typeIntro() + KRFCDate::rfc2822DateString( t_ime );
   } else {
     return KRFCDate::rfc2822DateString( t_ime );
@@ -1169,9 +1175,9 @@ void Newsgroups::from7BitString( const QByteArray &s )
   e_ncCS=cachedCharset( "UTF-8" );
 }
 
-QByteArray Newsgroups::as7BitString( bool incType ) const
+QByteArray Newsgroups::as7BitString( bool withHeaderType ) const
 {
-  if ( incType ) {
+  if ( withHeaderType ) {
     return typeIntro() + g_roups;
   } else {
     return g_roups;
@@ -1229,12 +1235,12 @@ void Lines::from7BitString( const QByteArray &s )
   e_ncCS = cachedCharset( Latin1 );
 }
 
-QByteArray Lines::as7BitString( bool incType ) const
+QByteArray Lines::as7BitString( bool withHeaderType ) const
 {
   QByteArray num;
   num.setNum( l_ines );
 
-  if ( incType ) {
+  if ( withHeaderType ) {
     return typeIntro() + num;
   } else {
     return num;
@@ -1261,8 +1267,10 @@ QString Lines::asUnicodeString() const
 
 //-----<Content-Type>--------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor_with_name( ContentType, Generics::Parametrized,
                                  Content-Type )
+//@endcond
 
 bool ContentType::isEmpty() const
 {
@@ -1277,14 +1285,14 @@ void ContentType::clear()
   Parametrized::clear();
 }
 
-QByteArray ContentType::as7BitString( bool incType ) const
+QByteArray ContentType::as7BitString( bool withHeaderType ) const
 {
   if ( isEmpty() ) {
     return QByteArray();
   }
 
   QByteArray rv;
-  if ( incType ) {
+  if ( withHeaderType ) {
     rv += typeIntro();
   }
 
@@ -1373,9 +1381,9 @@ bool ContentType::isPartial() const
 QByteArray ContentType::charset() const
 {
   QByteArray ret = parameter( "charset" ).toLatin1();
-  if ( ret.isEmpty() || forceCS() ) {
+  if ( ret.isEmpty() || forceDefaultCharset() ) {
     //return the default-charset if necessary
-    ret = defaultCS();
+    ret = defaultCharset();
   }
   return ret;
 }
@@ -1506,8 +1514,10 @@ success:
 
 //-----<ContentTransferEncoding>----------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor_with_name( ContentTransferEncoding,
                                  Generics::Token, Content-Transfer-Encoding )
+//@endcond
 
 typedef struct { const char *s; int e; } encTableType;
 
@@ -1569,17 +1579,19 @@ bool ContentTransferEncoding::parse( const char *& scursor,
 
 //-----<ContentDisposition>--------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor_with_name( ContentDisposition,
                                  Generics::Parametrized, Content-Disposition )
+//@endcond
 
-QByteArray ContentDisposition::as7BitString( bool incType ) const
+QByteArray ContentDisposition::as7BitString( bool withHeaderType ) const
 {
   if ( isEmpty() ) {
     return QByteArray();
   }
 
   QByteArray rv;
-  if ( incType ) {
+  if ( withHeaderType ) {
     rv += typeIntro();
   }
 
@@ -1671,9 +1683,11 @@ bool ContentDisposition::parse( const char *& scursor, const char * const send,
 
 //-----</ContentDisposition>-------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor_with_name( Subject, Generics::Unstructured, Subject )
+//@endcond
 
-bool Subject::isReply()
+bool Subject::isReply() const
 {
   return asUnicodeString().indexOf( QLatin1String( "Re:" ), 0, Qt::CaseInsensitive ) == 0;
 }

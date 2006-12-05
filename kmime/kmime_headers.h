@@ -75,6 +75,7 @@ enum contentDisposition {
 };
 
 //often used charset
+// TODO: get rid of this!
 static const QByteArray Latin1( "ISO-8859-1" );
 
 //@cond PRIVATE
@@ -135,8 +136,7 @@ class KMIME_EXPORT Base
 
     /**
       Parses the given string. Take care of RFC2047-encoded strings.
-      A default charset is given. If the last parameter is true the
-      default charset is used in any case
+      @param s The encoded header data.
     */
     virtual void from7BitString( const QByteArray &s ) = 0;
 
@@ -153,21 +153,24 @@ class KMIME_EXPORT Base
 
     /**
       Sets the charset for RFC2047-encoding.
+      @param cs The new charset used for RFC2047 encoding.
     */
     void setRFC2047Charset( const QByteArray &cs );
 
     /**
       Returns the default charset.
     */
-    QByteArray defaultCS() const;
+    QByteArray defaultCharset() const;
 
     /**
       Returns if the default charset is mandatory.
     */
-    bool forceCS() const;
+    bool forceDefaultCharset() const;
 
     /**
       Parses the given string and set the charset.
+      @param s The header data as unicode string.
+      @param b The charset prefered for encoding.
     */
     virtual void fromUnicodeString( const QString &s, const QByteArray &b ) = 0;
 
@@ -327,6 +330,9 @@ class KMIME_EXPORT Structured : public Base
                         bool isCRLF = false ) = 0;
 };
 
+/**
+  Base class for all address related headers.
+*/
 class KMIME_EXPORT Address : public Structured
 {
   public:
@@ -337,8 +343,6 @@ class KMIME_EXPORT Address : public Structured
     Address( Content *p, const QString &s, const QByteArray &cs )
       : Structured( p ) { fromUnicodeString( s, cs ); }
     ~Address() {}
-
-  protected:
 };
 
 /**
@@ -822,14 +826,14 @@ class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
     */
     void setEncoding( contentEncoding e );
 
-    // TODO: de-inline, constify and document
-    bool decoded()
+    // TODO: de-inline and document
+    bool decoded() const
       { return d_ecoded; }
 
     void setDecoded( bool d=true )
       { d_ecoded = d; }
 
-    bool needToEncode()
+    bool needToEncode() const
       { return d_ecoded && (c_te == CEquPr || c_te == CEbase64); }
 
   protected:
@@ -929,7 +933,7 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
   kmime_mk_trivial_ctor_with_name( ContentType )
   //@endcond
   public:
-    virtual QByteArray as7BitString( bool incType=true ) const;
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
     virtual void clear();
     virtual bool isEmpty() const;
 
@@ -1057,7 +1061,7 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
 
     //category
     // TODO: document & de-inline
-    contentCategory category()
+    contentCategory category() const
       { return c_ategory; }
     void setCategory( contentCategory c )
       { c_ategory=c; }
@@ -1163,7 +1167,7 @@ class KMIME_EXPORT Generic : public Generics::Unstructured
 
     void setType( const char *type );
 
-  protected:
+  private:
     char *t_ype;
 };
 
@@ -1178,7 +1182,7 @@ class KMIME_EXPORT Subject : public Generics::Unstructured
   kmime_mk_trivial_ctor_with_name( Subject )
   //@endcond
   public:
-    bool isReply();
+    bool isReply() const;
 };
 
 /**
@@ -1218,7 +1222,7 @@ class KMIME_EXPORT Control : public Base
     ~Control() {}
 
     virtual void from7BitString( const QByteArray &s );
-    virtual QByteArray as7BitString( bool incType=true ) const;
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
     virtual QString asUnicodeString() const;
     virtual void clear()
@@ -1254,7 +1258,7 @@ class KMIME_EXPORT Date : public Base
     ~Date() {}
 
     virtual void from7BitString( const QByteArray &s );
-    virtual QByteArray as7BitString( bool incType=true ) const;
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
     virtual QString asUnicodeString() const;
 
@@ -1298,7 +1302,7 @@ class KMIME_EXPORT Newsgroups : public Base
     ~Newsgroups() {}
 
     virtual void from7BitString( const QByteArray &s );
-    virtual QByteArray as7BitString( bool incType=true ) const;
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
     virtual QString asUnicodeString() const;
     virtual void clear() { g_roups.clear(); }
@@ -1344,7 +1348,7 @@ class KMIME_EXPORT Lines : public Base
     ~Lines() {}
 
     virtual void from7BitString( const QByteArray &s );
-    virtual QByteArray as7BitString( bool incType=true ) const;
+    virtual QByteArray as7BitString( bool withHeaderType = true ) const;
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
     virtual QString asUnicodeString() const;
     virtual void clear() { l_ines=-1; }
@@ -1354,7 +1358,7 @@ class KMIME_EXPORT Lines : public Base
     int numberOfLines() { return l_ines; }
     void setNumberOfLines( int i ) { l_ines = i; }
 
-  protected:
+  private:
     int l_ines;
 };
 
