@@ -942,6 +942,11 @@ void Calendar::notifyIncidenceDeleted( Incidence *i )
   }
 }
 
+void Calendar::customPropertyUpdated()
+{
+  setModified( true );
+}
+
 void Calendar::setProductId( const QString &productId )
 {
   d->mProductId = productId;

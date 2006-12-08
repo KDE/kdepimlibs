@@ -427,6 +427,11 @@ void IncidenceBase::updated()
   }
 }
 
+void IncidenceBase::customPropertyUpdated()
+{
+  updated();
+}
+
 KUrl IncidenceBase::uri() const
 {
   return KUrl( QString( "urn:x-ical:" ) + uid() );

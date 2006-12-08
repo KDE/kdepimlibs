@@ -499,6 +499,12 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     void updated();
 
   protected:
+    /**
+      @copydoc
+      CustomProperties::customPropertyUpdated()
+    */
+    virtual void customPropertyUpdated();
+
     bool mReadOnly;
 
   private:

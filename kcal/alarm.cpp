@@ -372,6 +372,7 @@ void Alarm::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &ne
 {
   d->mAlarmTime = d->mAlarmTime.toTimeSpec( oldSpec );
   d->mAlarmTime.setTimeSpec( newSpec );
+  if ( d->mParent ) d->mParent->updated();
 }
 
 void Alarm::setSnoozeTime( int alarmSnoozeTime )
@@ -510,6 +511,11 @@ void Alarm::setParent( Incidence *parent )
 Incidence *Alarm::parent() const
 {
   return d->mParent;
+}
+
+void Alarm::customPropertyUpdated()
+{
+  if ( d->mParent ) d->mParent->updated();
 }
 
 // DEPRECATED methods

@@ -1,7 +1,7 @@
 /*
     This file is part of the kcal library.
 
-    Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2002,2006 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -65,6 +65,7 @@ void CustomProperties::setCustomProperty(const QByteArray &app, const QByteArray
   if (!checkName(property))
     return;
   mProperties[property] = value;
+  customPropertyUpdated();
 }
 
 void CustomProperties::removeCustomProperty(const QByteArray &app, const QByteArray &key)
@@ -82,13 +83,16 @@ void CustomProperties::setNonKDECustomProperty(const QByteArray &name, const QSt
   if (value.isNull() || !checkName(name))
     return;
   mProperties[name] = value;
+  customPropertyUpdated();
 }
 
 void CustomProperties::removeNonKDECustomProperty(const QByteArray &name)
 {
   QMap<QByteArray, QString>::Iterator it = mProperties.find(name);
-  if (it != mProperties.end())
+  if (it != mProperties.end()) {
     mProperties.erase(it);
+    customPropertyUpdated();
+  }
 }
 
 QString CustomProperties::nonKDECustomProperty(const QByteArray &name) const
@@ -101,12 +105,16 @@ QString CustomProperties::nonKDECustomProperty(const QByteArray &name) const
 
 void CustomProperties::setCustomProperties(const QMap<QByteArray, QString> &properties)
 {
+  bool changed = false;
   for (QMap<QByteArray, QString>::ConstIterator it = properties.begin();  it != properties.end();  ++it) {
     // Validate the property name and convert any null string to empty string
     if (checkName(it.key())) {
       mProperties[it.key()] = it.value().isNull() ? QString("") : it.value();
+      changed = true;
     }
   }
+  if (changed)
+    customPropertyUpdated();
 }
 
 QMap<QByteArray, QString> CustomProperties::customProperties() const

@@ -84,7 +84,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
     /**
       Destroys the alarm.
     */
-    ~Alarm();
+    virtual ~Alarm();
 
     /**
       Compares two alarms for equality.
@@ -592,6 +592,13 @@ class KCAL_EXPORT Alarm : public CustomProperties
       @see setEnabled(), toggleAlarm()
     */
     bool enabled() const;
+
+  protected:
+    /**
+      @copydoc
+      CustomProperties::customPropertyUpdated()
+    */
+    virtual void customPropertyUpdated();
 
   private:
     //@cond PRIVATE

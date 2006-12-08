@@ -971,6 +971,12 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     void notifyIncidenceDeleted( Incidence *incidence );
 
     /**
+      @copydoc
+      CustomProperties::customPropertyUpdated()
+    */
+    virtual void customPropertyUpdated();
+
+    /**
       Let Calendar subclasses notify that they enabled an Observer.
 
       @param enabled if true tells the calendar that a subclass has
