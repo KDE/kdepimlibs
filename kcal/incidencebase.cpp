@@ -257,6 +257,7 @@ void IncidenceBase::shiftTimes( const KDateTime::Spec &oldSpec,
 {
   d->mDtStart = d->mDtStart.toTimeSpec( oldSpec );
   d->mDtStart.setTimeSpec( newSpec );
+  updated();
 }
 
 void IncidenceBase::addComment( const QString &comment )
