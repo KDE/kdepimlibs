@@ -42,7 +42,7 @@
 #include <QList>
 #include <QByteArray>
 
-#include <time.h>
+#include <kdatetime.h>
 
 namespace KMime {
 
@@ -255,7 +255,7 @@ class KMIME_EXPORT Unstructured : public Base
     { fromUnicodeString( s, cs ); }
   ~Unstructured() {}
 
-  virtual void from7BitString( const QByteArray &str );
+  virtual void from7BitString( const QByteArray &s );
   virtual QByteArray as7BitString( bool withHeaderType=true ) const;
 
   virtual void fromUnicodeString( const QString &str,
@@ -313,7 +313,7 @@ class KMIME_EXPORT Structured : public Base
       { fromUnicodeString( s, cs ); }
     ~Structured() {}
 
-    virtual void from7BitString( const QByteArray &str );
+    virtual void from7BitString( const QByteArray &s );
     virtual QString asUnicodeString() const;
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
 
@@ -1244,47 +1244,39 @@ class KMIME_EXPORT Control : public Base
 
 /**
   Represents a "Date" header.
+
+  @see RFC 2822, section 3.3.
 */
-class KMIME_EXPORT Date : public Base
+class KMIME_EXPORT Date : public Generics::Structured
 {
+  //@cond PRIVATE
+  kmime_mk_trivial_ctor_with_name( Date )
+  //@endcond
   public:
-    Date() : Base(), t_ime( 0 ) {}
-    Date( Content *p ) : Base( p ), t_ime( 0 ) {}
-    Date( Content *p, time_t t ) : Base( p ), t_ime( t ) {}
-    Date( Content *p, const QByteArray &s ) : Base( p )
-      { from7BitString( s ); }
-    Date( Content *p, const QString &s ) : Base( p )
-      { fromUnicodeString( s, Latin1 ); }
-    ~Date() {}
-
-    virtual void from7BitString( const QByteArray &s );
     virtual QByteArray as7BitString( bool withHeaderType = true ) const;
-    virtual void fromUnicodeString( const QString &s, const QByteArray &b );
-    virtual QString asUnicodeString() const;
+    virtual void clear();
+    virtual bool isEmpty() const;
 
-    virtual void clear()
-      { t_ime=0; }
+    /**
+      Returns the date contained in this header.
+    */
+    KDateTime dateTime() const;
 
-    virtual bool isEmpty() const
-      { return t_ime == 0; }
+    /**
+      Sets the date.
+    */
+    void setDateTime( const KDateTime &dt );
 
-    virtual const char *type() const
-      { return "Date"; }
-
-    time_t unixTime()
-      { return t_ime; }
-
-    void setUnixTime( time_t t )
-      { t_ime=t; }
-
-    void setUnixTime()
-      { t_ime=time( 0 ); }
-
-    QDateTime qdt();
-    int ageInDays();
+    /**
+      Returns the age of the message.
+    */
+    int ageInDays() const;
 
   protected:
-    time_t t_ime;
+    bool parse( const char* &scursor, const char * const send, bool isCRLF = false );
+
+  private:
+    KDateTime mDateTime;
 };
 
 /**

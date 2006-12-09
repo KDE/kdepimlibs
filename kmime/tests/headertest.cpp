@@ -486,6 +486,34 @@ void HeaderTest::testDotAtomHeader()
   // TODO: more complex atoms
 }
 
+void HeaderTest::testDateHeader()
+{
+  Date *h;
+
+  // empty header
+  h = new Date();
+  QVERIFY( h->isEmpty() );
+
+  // parse a simple date
+  h->from7BitString( "Fri, 21 Nov 1997 09:55:06 -0600" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->dateTime().date(), QDate( 1997, 11, 21 ) );
+  QCOMPARE( h->dateTime().time(), QTime( 9, 55, 6 ) );
+  QCOMPARE( h->dateTime().utcOffset(), -6 * 3600 );
+  QCOMPARE( h->as7BitString(), QByteArray( "Date: Fri, 21 Nov 1997 09:55:06 -0600" ) );
+
+  // clear it again
+  h->clear();
+  QVERIFY( h->isEmpty() );
+  delete h;
+
+  // white spaces and comment (from RFC 2822, Appendix A.5)
+  h = new Date( 0, "Thu,\n  13\n    Feb\n  1969\n  23:32\n  -0330 (Newfoundland Time)" );
+  QEXPECT_FAIL( "", "KDateTime cannot parse this", Continue );
+  QVERIFY( !h->isEmpty() );
+  delete h;
+}
+
 void HeaderTest::noAbstractHeaders()
 {
   ReturnPath* h1 = new ReturnPath(); delete h1;
@@ -507,7 +535,6 @@ void HeaderTest::noAbstractHeaders()
   Organization* h17 = new Organization(); delete h17;
   ContentDescription* h18 = new ContentDescription(); delete h18;
   Control* h19 = new Control(); delete h19;
-  Date* h20 = new Date(); delete h20;
   Newsgroups* h21 = new Newsgroups(); delete h21;
   FollowUpTo* h22 = new FollowUpTo(); delete h22;
   Lines* h23 = new Lines(); delete h23;

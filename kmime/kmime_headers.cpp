@@ -36,7 +36,6 @@
 
 #include <kglobal.h>
 #include <kcharsets.h>
-#include <krfcdate.h>
 
 #include <assert.h>
 
@@ -154,9 +153,9 @@ namespace Generics {
 
 //-----<Unstructured>-------------------------
 
-void Unstructured::from7BitString( const QByteArray &str )
+void Unstructured::from7BitString( const QByteArray &s )
 {
-  d_ecoded = decodeRFC2047String( str, e_ncCS, defaultCharset(), forceDefaultCharset() );
+  d_ecoded = decodeRFC2047String( s, e_ncCS, defaultCharset(), forceDefaultCharset() );
 }
 
 QByteArray Unstructured::as7BitString( bool withHeaderType ) const
@@ -186,13 +185,13 @@ QString Unstructured::asUnicodeString() const
 
 //-----<Structured>-------------------------
 
-void Structured::from7BitString( const QByteArray &str )
+void Structured::from7BitString( const QByteArray &s )
 {
   if ( e_ncCS.isEmpty() ) {
     e_ncCS = defaultCharset();
   }
-  const char *cursor = str.constData();
-  parse( cursor, cursor + str.length() );
+  const char *cursor = s.constData();
+  parse( cursor, cursor + s.length() );
 }
 
 QString Structured::asUnicodeString() const
@@ -349,9 +348,11 @@ bool MailboxList::parse( const char* &scursor, const char *const send,
 
 //-----<SingleMailbox>-------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor( SingleMailbox, MailboxList )
+//@endcond
 
-  bool SingleMailbox::parse( const char* &scursor, const char *const send,
+bool SingleMailbox::parse( const char* &scursor, const char *const send,
                              bool isCRLF )
 {
   if ( !MailboxList::parse( scursor, send, isCRLF ) ) {
@@ -369,7 +370,9 @@ kmime_mk_trivial_ctor( SingleMailbox, MailboxList )
 
 //-----<AddressList>-------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor( AddressList, Address )
+//@endcond
 
 QByteArray AddressList::as7BitString( bool withHeaderType ) const
 {
@@ -490,7 +493,9 @@ bool AddressList::parse( const char* &scursor, const char *const send,
 
 //-----<Token>-------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor( Token, Structured )
+//@endcond
 
 QByteArray Token::as7BitString( bool withHeaderType ) const
 {
@@ -551,7 +556,9 @@ bool Token::parse( const char* &scursor, const char *const send, bool isCRLF )
 
 //-----<PhraseList>-------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor( PhraseList, Structured )
+//@endcond
 
 QByteArray PhraseList::as7BitString(bool withHeaderType) const
 {
@@ -632,7 +639,9 @@ bool PhraseList::parse( const char* &scursor, const char *const send,
 
 //-----<DotAtom>-------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor( DotAtom, Structured )
+//@endcond
 
 QByteArray DotAtom::as7BitString( bool withHeaderType ) const
 {
@@ -684,7 +693,9 @@ bool DotAtom::parse( const char* &scursor, const char *const send,
 
 //-----<Parametrized>-------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor( Parametrized, Structured )
+//@endcond
 
   QByteArray Parametrized::as7BitString( bool withHeaderType ) const
 {
@@ -754,7 +765,9 @@ bool Parametrized::parse( const char *& scursor, const char * const send,
 
 //-----<Ident>-------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor( Ident, Address )
+//@endcond
 
 QByteArray Ident::as7BitString( bool withHeaderType ) const
 {
@@ -858,7 +871,9 @@ void Ident::appendIdentifier( const QByteArray &id )
 
 //-----<SingleIdent>-------------------------
 
+//@cond PRIVATE
 kmime_mk_trivial_ctor( SingleIdent, Ident )
+//@endcond
 
 QByteArray SingleIdent::identifier() const
 {
@@ -1127,42 +1142,54 @@ bool MailCopiesTo::parse( const char *& scursor, const char * const send,
 
 //-----<Date>----------------------------------
 
-void Date::from7BitString( const QByteArray &s )
-{
-  t_ime=KRFCDate::parseDate( s );
-}
+//@cond PRIVATE
+kmime_mk_trivial_ctor_with_name( Date, Generics::Structured, Date )
+//@cond
 
 QByteArray Date::as7BitString( bool withHeaderType ) const
 {
-  if ( withHeaderType ) {
-    return typeIntro() + KRFCDate::rfc2822DateString( t_ime );
-  } else {
-    return KRFCDate::rfc2822DateString( t_ime );
-  }
+  if ( isEmpty() )
+    return QByteArray();
+
+  QByteArray rv;
+  if ( withHeaderType )
+    rv += typeIntro();
+  rv += mDateTime.toString( KDateTime::RFCDateDay ).toLatin1();
+  return rv;
 }
 
-void Date::fromUnicodeString( const QString &s, const QByteArray &b )
+void Date::clear()
 {
-  Q_UNUSED( b );
-  from7BitString( s.toLatin1() );
+  mDateTime = KDateTime();
 }
 
-QString Date::asUnicodeString() const
+bool Date::isEmpty() const
 {
-  return QString::fromLatin1( as7BitString( false ) );
+  return mDateTime.isNull();
 }
 
-QDateTime Date::qdt()
+KDateTime Date::dateTime() const
 {
-  QDateTime dt;
-  dt.setTime_t( t_ime );
-  return dt;
+  return mDateTime;
 }
 
-int Date::ageInDays()
+void Date::setDateTime( const KDateTime &dt )
+{
+  mDateTime = dt;
+}
+
+int Date::ageInDays() const
 {
   QDate today = QDate::currentDate();
-  return qdt().date().daysTo(today);
+  return dateTime().date().daysTo(today);
+}
+
+bool Date::parse(const char *& scursor, const char * const send, bool isCRLF)
+{
+  Q_UNUSED( isCRLF );
+  QByteArray b( scursor, send - scursor );
+  mDateTime = KDateTime::fromString( QString::fromLatin1( b ), KDateTime::RFCDate );
+  return true;
 }
 
 //-----</Date>---------------------------------

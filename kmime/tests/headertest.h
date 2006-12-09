@@ -36,6 +36,7 @@ class HeaderTest : public QObject
     void testContentTransferEncoding();
     void testPhraseListHeader();
     void testDotAtomHeader();
+    void testDateHeader();
 
     // makes sure we don't accidently have an abstract header class that's not
     // meant to be abstract
