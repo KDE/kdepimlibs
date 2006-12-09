@@ -1327,31 +1327,32 @@ class KMIME_EXPORT FollowUpTo : public Newsgroups
 /**
   Represents a "Lines" header.
 */
-class KMIME_EXPORT Lines : public Base
+class KMIME_EXPORT Lines : public Generics::Structured
 {
+  //@cond PRIVATE
+  kmime_mk_trivial_ctor_with_name( Lines )
+  //@endcond
   public:
-    Lines() : Base(), l_ines( -1 ) {}
-    Lines( Content *p ) : Base( p ), l_ines( -1 ) {}
-    Lines( Content *p, unsigned int i ) : Base( p ), l_ines( i ) {}
-    Lines( Content *p, const QByteArray &s ) : Base( p )
-      { from7BitString( s ); }
-    Lines( Content *p, const QString &s ) : Base( p )
-      { fromUnicodeString( s, Latin1 ); }
-    ~Lines() {}
-
-    virtual void from7BitString( const QByteArray &s );
     virtual QByteArray as7BitString( bool withHeaderType = true ) const;
-    virtual void fromUnicodeString( const QString &s, const QByteArray &b );
     virtual QString asUnicodeString() const;
-    virtual void clear() { l_ines=-1; }
-    virtual bool isEmpty() const { return( l_ines == -1 ); }
-    virtual const char *type() const { return "Lines"; }
+    virtual void clear();
+    virtual bool isEmpty() const;
 
-    int numberOfLines() { return l_ines; }
-    void setNumberOfLines( int i ) { l_ines = i; }
+    /**
+      Returns the number of lines, undefined if isEmpty() returns true.
+    */
+    int numberOfLines() const;
+
+    /**
+      Sets the number of lines to @p lines.
+    */
+    void setNumberOfLines( int lines );
+
+  protected:
+    bool parse( const char* &scursor, const char * const send, bool isCRLF = false );
 
   private:
-    int l_ines;
+    int mLines;
 };
 
 /**

@@ -1747,8 +1747,7 @@ static bool parseAlphaNumericTimeZone( const char* &scursor,
 }
 
 // parse a number and return the number of digits parsed:
-static int parseDigits( const char* &scursor, const char * const send,
-                        int &result )
+int parseDigits( const char* &scursor, const char * const send, int &result )
 {
   result = 0;
   int digits = 0;

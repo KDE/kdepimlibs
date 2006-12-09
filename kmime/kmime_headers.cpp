@@ -1253,38 +1253,58 @@ QStringList Newsgroups::getGroups()
 
 //-----<Lines>---------------------------------
 
-void Lines::from7BitString( const QByteArray &s )
-{
-  l_ines = s.toInt();
-  e_ncCS = cachedCharset( Latin1 );
-}
+//@cond PRIVATE
+kmime_mk_trivial_ctor_with_name( Lines, Generics::Structured, Lines )
+//@endcond
 
 QByteArray Lines::as7BitString( bool withHeaderType ) const
 {
+  if ( isEmpty() )
+    return QByteArray();
+
   QByteArray num;
-  num.setNum( l_ines );
+  num.setNum( mLines );
 
-  if ( withHeaderType ) {
+  if ( withHeaderType )
     return typeIntro() + num;
-  } else {
-    return num;
-  }
-}
-
-void Lines::fromUnicodeString( const QString &s, const QByteArray &b )
-{
-  Q_UNUSED( b );
-
-  l_ines = s.toInt();
-  e_ncCS = cachedCharset( Latin1 );
+  return num;
 }
 
 QString Lines::asUnicodeString() const
 {
-  QString num;
-  num.setNum( l_ines );
+  if ( isEmpty() )
+    return QString();
+  return QString::number( mLines );
+}
 
-  return num;
+void Lines::clear()
+{
+  mLines = -1;
+}
+
+bool Lines::isEmpty() const
+{
+  return mLines == -1;
+}
+
+int Lines::numberOfLines() const
+{
+  return mLines;
+}
+
+void Lines::setNumberOfLines( int lines )
+{
+  mLines = lines;
+}
+
+bool Lines::parse(const char *& scursor, const char * const send, bool isCRLF)
+{
+  eatCFWS( scursor, send, isCRLF );
+  if ( parseDigits( scursor, send, mLines )  == 0 ) {
+    clear();
+    return false;
+  }
+  return true;
 }
 
 //-----</Lines>--------------------------------

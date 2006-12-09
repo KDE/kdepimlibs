@@ -300,6 +300,15 @@ KMIME_EXPORT bool parseRawParameterList( const char* &scursor,
                                          QMap<QString,Types::QStringOrQPair> &result,
                                          bool isCRLF=false );
 
+/**
+  Parses an integer number.
+  @param scursor pointer to the first character of the input string
+  @param send pointer to end of input buffer
+  @param result the parsing result
+  @returns The number of parsed digits (don't confuse with @p result!)
+*/
+KMIME_EXPORT int parseDigits( const char* &scursor, const char* const send, int &result );
+
 KMIME_EXPORT bool parseTime( const char* &scursor, const char * const send,
                              int &hour, int &min, int &sec,
                              long int &secsEastOfGMT,

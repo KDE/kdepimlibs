@@ -533,6 +533,32 @@ void HeaderTest::testDateHeader()
   delete h;
 }
 
+void HeaderTest::testLinesHeader()
+{
+  Lines *h;
+
+  // empty header
+  h = new Lines();
+  QVERIFY( h->isEmpty() );
+  QVERIFY( h->as7BitString().isEmpty() );
+
+  // set some content
+  h->setNumberOfLines( 5 );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->as7BitString(), QByteArray( "Lines: 5" ) );
+
+  // clear again
+  h->clear();
+  QVERIFY( h->isEmpty() );
+  delete h;
+
+  // parse header with comment
+  h = new Lines( 0, "(this is a comment) 10 (and yet another comment)" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->numberOfLines(), 10 );
+  delete h;
+}
+
 void HeaderTest::noAbstractHeaders()
 {
   ReturnPath* h1 = new ReturnPath(); delete h1;
@@ -556,7 +582,6 @@ void HeaderTest::noAbstractHeaders()
   Control* h19 = new Control(); delete h19;
   Newsgroups* h21 = new Newsgroups(); delete h21;
   FollowUpTo* h22 = new FollowUpTo(); delete h22;
-  Lines* h23 = new Lines(); delete h23;
   UserAgent* h24 = new UserAgent(); delete h24;
 }
 
