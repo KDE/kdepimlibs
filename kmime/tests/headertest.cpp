@@ -509,8 +509,27 @@ void HeaderTest::testDateHeader()
 
   // white spaces and comment (from RFC 2822, Appendix A.5)
   h = new Date( 0, "Thu,\n  13\n    Feb\n  1969\n  23:32\n  -0330 (Newfoundland Time)" );
-  QEXPECT_FAIL( "", "KDateTime cannot parse this", Continue );
   QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->dateTime().date(), QDate( 1969, 2, 13 ) );
+  QCOMPARE( h->dateTime().time(), QTime( 23, 32 ) );
+  QCOMPARE( h->dateTime().utcOffset(), -12600 );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "Thu, 13 Feb 1969 23:32 -0330" ) );
+  delete h;
+
+  // obsolete date format (from RFC 2822, Appendix A.6.2)
+  h = new Date( 0, "21 Nov 97 09:55:06 GMT" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->dateTime().date(), QDate( 1997, 11, 21 ) );
+  QCOMPARE( h->dateTime().time(), QTime( 9, 55, 6 ) );
+  QCOMPARE( h->dateTime().utcOffset(), 0 );
+  delete h;
+
+  // obsolete whitespaces and commnets (from RFC 2822, Appendix A.6.3)
+  h = new Date( 0, "Fri, 21 Nov 1997 09(comment):   55  :  06 -0600" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->dateTime().date(), QDate( 1997, 11, 21 ) );
+  QCOMPARE( h->dateTime().time(), QTime( 9, 55, 6 ) );
+  QCOMPARE( h->dateTime().utcOffset(), -6 * 3600 );
   delete h;
 }
 

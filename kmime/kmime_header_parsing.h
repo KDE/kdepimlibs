@@ -23,10 +23,10 @@
 #ifndef __KMIME_HEADER_PARSING_H__
 #define __KMIME_HEADER_PARSING_H__
 
-#include <time.h>
-
 #include <QString>
 #include <QPair>
+
+#include <kdatetime.h>
 
 #include "kmime.h"
 
@@ -140,12 +140,6 @@ struct KMIME_EXPORT Address {
   MailboxList mailboxList;
 };
 typedef QList<Address> AddressList;
-
-struct KMIME_EXPORT DateTime {
-  time_t time;            // secs since 1.1.1970, 0:00 UTC/GMT
-  long int secsEastOfGMT; // timezone
-  bool timeZoneKnown;     // do we know the timezone? (e.g. on -0000)
-};
 
 } // namespace KMime::Types
 
@@ -312,7 +306,7 @@ KMIME_EXPORT bool parseTime( const char* &scursor, const char * const send,
                              bool &timeZoneKnown, bool isCRLF=false );
 
 KMIME_EXPORT bool parseDateTime( const char* &scursor, const char * const send,
-                                 Types::DateTime &result, bool isCRLF=false );
+                                 KDateTime &result, bool isCRLF=false );
 
 } // namespace HeaderParsing
 

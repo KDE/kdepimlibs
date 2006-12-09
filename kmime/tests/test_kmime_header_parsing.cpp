@@ -415,14 +415,14 @@ int main( int argc, char * argv[] ) {
     break;
   case 20:
     { // date-time
-      KMime::Types::DateTime result;
+      KDateTime result;
       bool ok =  parseDateTime( iit, iend, result, withCRLF );
+      time_t timet = result.toTime_t();
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result.time (in local timezone): " << ctime( &(result.time) )
-	   << "result.secsEastOfGMT: " << result.secsEastOfGMT
-	   << " (" << result.secsEastOfGMT/60 << "mins)" << endl
-	   << "result.timeZoneKnown: " << result.timeZoneKnown << endl;
+	   << "result.time (in local timezone): " << ctime( &timet )
+	   << "result.secsEastOfGMT: " << result.utcOffset()
+	   << " (" << result.utcOffset()/60 << "mins)" << endl;
     }
     break;
   default:

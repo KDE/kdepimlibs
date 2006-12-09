@@ -23,20 +23,20 @@ main()
   t.setFormat(DateFormatter::Rfc);
   kDebug()<<"\trfc2822 : \t"<<t.dateString(ntime)<<endl;
   QString rfcd = t.formatDate( DateFormatter::Rfc, ntime );
-  Types::DateTime dt;
+  KDateTime dt;
   QDateTime qdt;
   const char *str = rfcd.toLatin1();
   if ( HeaderParsing::parseDateTime( str, str + rfcd.length(), dt ) ) {
-      kDebug()<<"@@@ ntime = "<<(ntime)<<", dt = "<<(dt.time)<<endl;
-      qdt.setTime_t( dt.time );
+      kDebug()<<"@@@ ntime = "<<(ntime)<<", dt = "<<(dt.toTime_t())<<endl;
+      qdt.setTime_t( dt.toTime_t() );
       kDebug()<<"@@@ qq = "<< qdt.toString("ddd, dd MMM yyyy hh:mm:ss") <<endl;
-      kDebug()<<"@@@ rfc2822 : "<<t.formatDate( DateFormatter::Rfc, dt.time )<<endl;
+      kDebug()<<"@@@ rfc2822 : "<<t.formatDate( DateFormatter::Rfc, dt.toTime_t() )<<endl;
   }
   QString ddd = "Mon, 05 Aug 2002 01:57:51 -0700";
   str = ddd.toLatin1();
   if ( HeaderParsing::parseDateTime( str, str + ddd.length(), dt ) ) {
-      kDebug()<<"dt = "<<(dt.time)<<endl;
-      kDebug()<<"@@@ rfc2822 : "<<t.formatDate( DateFormatter::Rfc, dt.time )<<endl;
+      kDebug()<<"dt = "<<(dt.toTime_t())<<endl;
+      kDebug()<<"@@@ rfc2822 : "<<t.formatDate( DateFormatter::Rfc, dt.toTime_t() )<<endl;
   }
 
   t.setCustomFormat("MMMM dddd yyyy Z");

@@ -1165,7 +1165,7 @@ void Date::clear()
 
 bool Date::isEmpty() const
 {
-  return mDateTime.isNull();
+  return mDateTime.isNull() || !mDateTime.isValid();
 }
 
 KDateTime Date::dateTime() const
@@ -1186,10 +1186,7 @@ int Date::ageInDays() const
 
 bool Date::parse(const char *& scursor, const char * const send, bool isCRLF)
 {
-  Q_UNUSED( isCRLF );
-  QByteArray b( scursor, send - scursor );
-  mDateTime = KDateTime::fromString( QString::fromLatin1( b ), KDateTime::RFCDate );
-  return true;
+  return parseDateTime( scursor, send, mDateTime, isCRLF );
 }
 
 //-----</Date>---------------------------------

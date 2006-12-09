@@ -20,10 +20,6 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "kmime_header_parsing.h"
 
 #include "kmime_codecs.h"
@@ -1875,7 +1871,7 @@ bool parseTime( const char* &scursor, const char * send,
 }
 
 bool parseDateTime( const char* &scursor, const char * const send,
-                    Types::DateTime &result, bool isCRLF )
+                    KDateTime &result, bool isCRLF )
 {
   // Parsing date-time; strict mode:
   //
@@ -1887,12 +1883,8 @@ bool parseDateTime( const char* &scursor, const char * const send,
   // month-name  := "Jan" / "Feb" / "Mar" / "Apr" / "May" / "Jun" /
   //                "Jul" / "Aug" / "Sep" / "Oct" / "Nov" / "Dez"
 
-  struct tm maybeDateTime = {
-#if defined(HAVE_TM_GMTOFF)
-    0, 0, // initializers for members tm_gmtoff and tm_zone
-#endif
-    0, 0, 0, 0, 0, 0, 0, 0, 0
-  };
+  result = KDateTime();
+  QDateTime maybeDateTime;
 
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) {
@@ -1927,9 +1919,6 @@ bool parseDateTime( const char* &scursor, const char * const send,
     return false;
   }
 
-  // success: store maybeDay in maybeDateTime:
-  maybeDateTime.tm_mday = maybeDay;
-
   //
   // month-name:
   //
@@ -1941,14 +1930,12 @@ bool parseDateTime( const char* &scursor, const char * const send,
     return false;
   }
   assert( maybeMonth >= 0 ); assert( maybeMonth <= 11 );
+  ++maybeMonth; // 0-11 -> 1-12
 
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) {
     return false;
   }
-
-  // success: store maybeMonth in maybeDateTime:
-  maybeDateTime.tm_mon = maybeMonth;
 
   //
   // 2*DIGIT representing "year":
@@ -1973,8 +1960,7 @@ bool parseDateTime( const char* &scursor, const char * const send,
     return false;
   }
 
-  // success: store maybeYear in maybeDateTime:
-  maybeDateTime.tm_year = maybeYear - 1900;
+  maybeDateTime.setDate( QDate( maybeYear, maybeMonth, maybeDay ) );
 
   //
   // time
@@ -1989,22 +1975,13 @@ bool parseDateTime( const char* &scursor, const char * const send,
     return false;
   }
 
-  // success: store everything in maybeDateTime:
-  maybeDateTime.tm_hour = maybeHour;
-  maybeDateTime.tm_min = maybeMinute;
-  maybeDateTime.tm_sec = maybeSecond;
-  maybeDateTime.tm_isdst = DateFormatter::isDaylight();
-  // now put everything together and check if mktime(3) likes it:
-  result.time = mktime( &maybeDateTime );
-  if ( result.time == (time_t)(-1) ) {
+  maybeDateTime.setTime( QTime( maybeHour, maybeMinute, maybeSecond ) );
+  if ( !maybeDateTime.isValid() )
     return false;
-  }
 
-  // adjust to UTC/GMT:
-  //result.time -= secsEastOfGMT;
-  result.secsEastOfGMT = secsEastOfGMT;
-  result.timeZoneKnown = timeZoneKnown;
-
+  result = KDateTime( maybeDateTime, KDateTime::Spec( KDateTime::OffsetFromUTC, secsEastOfGMT ) );
+  if ( !result.isValid() )
+    return false;
   return true;
 }
 
