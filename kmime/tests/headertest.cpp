@@ -559,6 +559,45 @@ void HeaderTest::testLinesHeader()
   delete h;
 }
 
+void HeaderTest::testNewsgroupsHeader()
+{
+  Newsgroups *h;
+
+  // empty header
+  h = new Newsgroups();
+  QVERIFY( h->isEmpty() );
+  QVERIFY( h->as7BitString().isEmpty() );
+
+  // set newsgroups
+  QList<QByteArray> groups;
+  groups << "gmane.comp.kde.devel.core" << "gmane.comp.kde.devel.buildsystem";
+  h->setGroups( groups );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->as7BitString(), QByteArray( "Newsgroups: gmane.comp.kde.devel.core,gmane.comp.kde.devel.buildsystem" ) );
+
+  // and clear again
+  h->clear();
+  QVERIFY( h->isEmpty() );
+  delete h;
+
+  // parse a header
+  h = new Newsgroups( 0, "gmane.comp.kde.devel.core,gmane.comp.kde.devel.buildsystem" );
+  groups = h->groups();
+  QCOMPARE( groups.count(), 2 );
+  QCOMPARE( groups.takeFirst(), QByteArray("gmane.comp.kde.devel.core") );
+  QCOMPARE( groups.takeFirst(), QByteArray("gmane.comp.kde.devel.buildsystem") );
+  delete h;
+
+  // same again, this time with whitespaces and comments
+  h = new Newsgroups();
+  h->from7BitString( "(comment) gmane.comp.kde.devel.core (second comment),\n gmane.comp.kde.devel.buildsystem (that all)" );
+  groups = h->groups();
+  QCOMPARE( groups.count(), 2 );
+  QCOMPARE( groups.takeFirst(), QByteArray("gmane.comp.kde.devel.core") );
+  QCOMPARE( groups.takeFirst(), QByteArray("gmane.comp.kde.devel.buildsystem") );
+  delete h;
+}
+
 void HeaderTest::noAbstractHeaders()
 {
   ReturnPath* h1 = new ReturnPath(); delete h1;
@@ -580,7 +619,6 @@ void HeaderTest::noAbstractHeaders()
   Organization* h17 = new Organization(); delete h17;
   ContentDescription* h18 = new ContentDescription(); delete h18;
   Control* h19 = new Control(); delete h19;
-  Newsgroups* h21 = new Newsgroups(); delete h21;
   FollowUpTo* h22 = new FollowUpTo(); delete h22;
   UserAgent* h24 = new UserAgent(); delete h24;
 }

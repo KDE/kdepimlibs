@@ -38,6 +38,7 @@
 #include <kcharsets.h>
 
 #include <assert.h>
+#include <ctype.h>
 
 // macro to generate a default constructor implementation
 #define kmime_mk_trivial_ctor( subclass, baseclass )                  \
@@ -1193,60 +1194,82 @@ bool Date::parse(const char *& scursor, const char * const send, bool isCRLF)
 
 //-----<Newsgroups>----------------------------
 
-void Newsgroups::from7BitString( const QByteArray &s )
-{
-  g_roups = s;
-  e_ncCS=cachedCharset( "UTF-8" );
-}
+//@cond PRIVATE
+kmime_mk_trivial_ctor_with_name( Newsgroups, Generics::Structured, Newsgroups )
+kmime_mk_trivial_ctor_with_name( FollowUpTo, Newsgroups, Followup-To )
+//@endcond
 
 QByteArray Newsgroups::as7BitString( bool withHeaderType ) const
 {
-  if ( withHeaderType ) {
-    return typeIntro() + g_roups;
-  } else {
-    return g_roups;
+  if ( isEmpty() )
+    return QByteArray();
+
+  QByteArray rv;
+  if ( withHeaderType )
+    rv += typeIntro();
+
+  for ( int i = 0; i < mGroups.count(); ++i ) {
+    rv += mGroups[ i ];
+    if ( i != mGroups.count() - 1 )
+      rv += ',';
   }
+  return rv;
 }
 
 void Newsgroups::fromUnicodeString( const QString &s, const QByteArray &b )
 {
   Q_UNUSED( b );
-
-  g_roups = s.toUtf8();
+  from7BitString( s.toUtf8() );
   e_ncCS = cachedCharset( "UTF-8" );
 }
 
 QString Newsgroups::asUnicodeString() const
 {
-  return QString::fromUtf8( g_roups );
+  return QString::fromUtf8( as7BitString( false ) );
 }
 
-QByteArray Newsgroups::firstGroup()
+void Newsgroups::clear()
 {
-  int pos = 0;
-  if ( !g_roups.isEmpty() ) {
-    pos = g_roups.indexOf( ',' );
-    if ( pos == -1 ) {
-      return g_roups;
-    } else {
-      return g_roups.left( pos );
-    }
-  } else {
-    return QByteArray();
-  }
+  mGroups.clear();
 }
 
-QStringList Newsgroups::getGroups()
+bool Newsgroups::isEmpty() const
 {
-  QList<QByteArray> temp = g_roups.split( ',' );
-  QStringList ret;
-  QString s;
+  return mGroups.isEmpty();
+}
 
-  foreach ( QByteArray group, temp ) {
-    ret.append( group.simplified() );
+QList<QByteArray> Newsgroups::groups() const
+{
+  return mGroups;
+}
+
+void Newsgroups::setGroups(const QList<QByteArray> &groups)
+{
+  mGroups = groups;
+}
+
+bool Newsgroups::isCrossposted() const
+{
+  return mGroups.count() >= 2;
+}
+
+bool Newsgroups::parse(const char *& scursor, const char * const send, bool isCRLF)
+{
+  clear();
+  forever {
+    eatCFWS( scursor, send, isCRLF );
+    if ( scursor != send && *scursor == ',' )
+      ++scursor;
+    eatCFWS( scursor, send, isCRLF );
+    if ( scursor == send )
+      return true;
+    const char* start = scursor;
+    while ( scursor != send && !isspace( *scursor ) && *scursor != ',' )
+      ++scursor;
+    QByteArray group( start, scursor - start );
+    mGroups.append( group );
   }
-
-  return ret;
+  return true;
 }
 
 //-----</Newsgroups>---------------------------

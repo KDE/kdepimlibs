@@ -1209,6 +1209,8 @@ class KMIME_EXPORT ContentDescription : public Generics::Unstructured
 
 /**
   Represents a "Control" header.
+
+  @see RFC 1036, section 3.
 */
 class KMIME_EXPORT Control : public Base
 {
@@ -1281,51 +1283,60 @@ class KMIME_EXPORT Date : public Generics::Structured
 
 /**
   Represents a "Newsgroups" header.
-*/
-class KMIME_EXPORT Newsgroups : public Base
-{
-  public:
-    Newsgroups() : Base() {}
-    Newsgroups( Content *p ) : Base( p ) {}
-    Newsgroups( Content *p, const QByteArray &s ) : Base( p )
-      { from7BitString( s ); }
-    Newsgroups( Content *p, const QString &s ) : Base( p )
-      { fromUnicodeString( s, Latin1 ); }
-    ~Newsgroups() {}
 
-    virtual void from7BitString( const QByteArray &s );
+  @see RFC 1036, section 2.1.3.
+*/
+class KMIME_EXPORT Newsgroups : public Generics::Structured
+{
+  //@cond PRIVATE
+  kmime_mk_trivial_ctor_with_name( Newsgroups )
+  //@endcond
+  public:
     virtual QByteArray as7BitString( bool withHeaderType = true ) const;
     virtual void fromUnicodeString( const QString &s, const QByteArray &b );
     virtual QString asUnicodeString() const;
-    virtual void clear() { g_roups.clear(); }
-    virtual bool isEmpty() const { return g_roups.isEmpty(); }
-    virtual const char *type() const { return "Newsgroups"; }
+    virtual void clear();
+    virtual bool isEmpty() const;
 
-    QByteArray firstGroup();
-    bool isCrossposted() { return g_roups.contains( ',' ); }
-    QStringList getGroups();
+    /**
+      Returns the list of newsgroups.
+    */
+    QList<QByteArray> groups() const;
+
+    /**
+      Sets the newsgroup list.
+    */
+    void setGroups( const QList<QByteArray> &groups );
+
+    /**
+      Returns true if this message has been cross-posted, i.e. if it has been
+      posted to multiple groups.
+    */
+    bool isCrossposted() const;
 
   protected:
-    QByteArray g_roups;
+    bool parse( const char* &scursor, const char * const send, bool isCRLF = false );
+
+  private:
+    QList<QByteArray> mGroups;
 };
 
 /**
   Represents a "Followup-To" header.
+
+  @see RFC 1036, section 2.2.3.
 */
 class KMIME_EXPORT FollowUpTo : public Newsgroups
 {
-  public:
-    FollowUpTo() : Newsgroups() {}
-    FollowUpTo( Content *p ) : Newsgroups( p ) {}
-    FollowUpTo( Content *p, const QByteArray &s ) : Newsgroups( p, s ) {}
-    FollowUpTo( Content *p, const QString &s ) : Newsgroups( p, s ) {}
-    ~FollowUpTo() {}
-
-    virtual const char *type() const { return "Followup-To"; }
+  //@cond PRIVATE
+  kmime_mk_trivial_ctor_with_name( FollowUpTo )
+  //@endcond
 };
 
 /**
   Represents a "Lines" header.
+
+  @see RFC 1036, section 2.2.12.
 */
 class KMIME_EXPORT Lines : public Generics::Structured
 {
