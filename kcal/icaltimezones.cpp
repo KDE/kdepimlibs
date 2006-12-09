@@ -44,6 +44,10 @@ extern "C" {
 using namespace KCal;
 
 
+// Minimum repetition counts for VTIMEZONE RRULEs
+static const int minRuleCount = 5;   // for any RRULE
+static const int minPhaseCount = 8;  // for separate STANDARD/DAYLIGHT component
+
 // Convert an ical time to QDateTime, preserving the UTC indicator
 static QDateTime toQDateTime(const icaltimetype &t)
 {
@@ -321,9 +325,33 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
   : KTimeZoneData(rhs),
     d(new ICalTimeZoneDataPrivate())
 {
+  // VTIMEZONE RRULE types
+  enum {
+    DAY_OF_MONTH          = 0x01,
+    WEEKDAY_OF_MONTH      = 0x02,
+    LAST_WEEKDAY_OF_MONTH = 0x04
+  };
+
   if (dynamic_cast<const KSystemTimeZone*>(&tz)) {
-    icaltimezone *itz = icaltimezone_get_builtin_timezone( tz.name().toUtf8() );
-    icalcomponent *c = icalcomponent_new_clone( icaltimezone_get_component( itz ) );
+    // Try to fetch a system time zone in preference, on the grounds
+    // that system time zones are more likely to be up to date than
+    // built-in libical ones.
+    icalcomponent *c = 0;
+    KTimeZone *ktz = KSystemTimeZones::readZone( tz.name() );
+    if ( ktz ) {
+      if ( ktz->data(true) ) {
+        ICalTimeZone icaltz( *ktz, earliest );
+        icaltimezone *itz = icaltz.icalTimezone();
+        c = icalcomponent_new_clone( icaltimezone_get_component( itz ) );
+        icaltimezone_free( itz, 1 );
+      }
+      delete ktz;
+    }
+    if ( !c ) {
+      // Try to fetch a built-in libical time zone.
+      icaltimezone *itz = icaltimezone_get_builtin_timezone( tz.name().toUtf8() );
+      c = icalcomponent_new_clone( icaltimezone_get_component( itz ) );
+    }
     if ( c ) {
       // TZID in built-in libical time zones has a standard prefix.
       // To make the VTIMEZONE TZID match TZID references in incidences
@@ -353,15 +381,25 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
   }
   else {
     // Write the time zone data into an iCal component
-    icalcomponent *comp = icalcomponent_new(ICAL_VTIMEZONE_COMPONENT);
-    icalcomponent_add_property(comp, icalproperty_new_tzid( tz.name().toUtf8() ));
-//    icalcomponent_add_property(comp, icalproperty_new_location( tz.name().toUtf8() ));
+    icalcomponent *tzcomp = icalcomponent_new(ICAL_VTIMEZONE_COMPONENT);
+    icalcomponent_add_property(tzcomp, icalproperty_new_tzid( tz.name().toUtf8() ));
+//    icalcomponent_add_property(tzcomp, icalproperty_new_location( tz.name().toUtf8() ));
 
     // Compile an ordered list of transitions so that we can know the phases
     // which occur before and after each transition.
-    const QList<KTimeZone::Transition> transits = transitions();
-    int count = transits.count();
-    QVector<bool> transitionsDone(count);
+    QList<KTimeZone::Transition> transits = transitions();
+    if ( earliest.isValid() ) {
+      // Remove all transitions earlier than those we are interested in
+      for ( int i = 0, end = transits.count();  i < end;  ++i ) {
+        if ( transits[i].time().date() >= earliest) {
+          if ( i > 0 )
+            transits.erase(transits.begin(), transits.begin() + i);
+          break;
+        }
+      }
+    }
+    int trcount = transits.count();
+    QVector<bool> transitionsDone(trcount);
     transitionsDone.fill(false);
 
     // Go through the list of transitions and create an iCal component for each
@@ -370,39 +408,166 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
     dtperiod.period = icalperiodtype_null_period();
     for ( ; ; ) {
       int i = 0;
-      for ( ;  i < count && transitionsDone[i];  ++i) ;
-      if ( i >= count )
+      for ( ;  i < trcount && transitionsDone[i];  ++i) ;
+      if ( i >= trcount )
         break;
       // Found a phase combination which hasn't yet been processed
       int preOffset = (i > 0) ? transits[i-1].phase().utcOffset() : rhs.previousUtcOffset();
       KTimeZone::Phase phase = transits[i].phase();
-      icalcomponent *phcomp = icalcomponent_new( phase.isDst() ?
+      icalcomponent *phaseComp = icalcomponent_new( phase.isDst() ?
                                  ICAL_XDAYLIGHT_COMPONENT : ICAL_XSTANDARD_COMPONENT );
       QList<QByteArray> abbrevs = phase.abbreviations();
       for (int a = 0, aend = abbrevs.count();  a < aend;  ++a) {
-        icalcomponent_add_property(phcomp, icalproperty_new_tzname( static_cast<const char*>(abbrevs[a]) ));
+        icalcomponent_add_property(phaseComp, icalproperty_new_tzname( static_cast<const char*>(abbrevs[a]) ));
       }
       if ( !phase.comment().isEmpty() )
-        icalcomponent_add_property(phcomp, icalproperty_new_comment( phase.comment().toUtf8() ));
-      icalcomponent_add_property(phcomp, icalproperty_new_tzoffsetfrom( preOffset ));
-      icalcomponent_add_property(phcomp, icalproperty_new_tzoffsetto( phase.utcOffset() ));
-      icalcomponent_add_property(phcomp, icalproperty_new_dtstart(
+        icalcomponent_add_property(phaseComp, icalproperty_new_comment( phase.comment().toUtf8() ));
+      icalcomponent_add_property(phaseComp, icalproperty_new_tzoffsetfrom( preOffset ));
+      icalcomponent_add_property(phaseComp, icalproperty_new_tzoffsetto( phase.utcOffset() ));
+      // Create a component to hold initial RRULE if any, plus all RDATEs
+      icalcomponent *phaseComp1 = icalcomponent_new_clone( phaseComp );
+      icalcomponent_add_property(phaseComp1, icalproperty_new_dtstart(
                         writeLocalICalDateTime( transits[i].time(), preOffset ) ));
-      transitionsDone[i] = true;
+      bool useNewRRULE = false;
 
-      while (++i < count) {
-        if (!transitionsDone[i] 
-        &&  transits[i].phase() == phase
-        &&  transits[i-1].phase().utcOffset() == preOffset) {
-          dtperiod.time = writeLocalICalDateTime( transits[i].time(), preOffset );
-          icalcomponent_add_property(phcomp, icalproperty_new_rdate( dtperiod ));
-          transitionsDone[i] = true;
+      // Compile the list of UTC transition dates/times, and
+      // check if the list can be reduced to an RRULE instead of multiple RDATEs.
+      QTime time;
+      QDate date;
+      int year = 0, month = 0, daysInMonth = 0, dayOfMonth = 0;  // initialise to avoid compiler warnings
+      int dayOfWeek = 0;      // Monday = 1
+      int nthFromStart = 0;   // nth (weekday) of month
+      int nthFromEnd = 0;     // nth last (weekday) of month
+      int newRule;
+      int rule = 0;
+      QList<QDateTime> rdates;   // dates which (probably) need to be written as RDATEs
+      QList<QDateTime> times;
+      QDateTime qdt = transits[i].time();   // set 'qdt' for start of loop
+      times += qdt;
+      transitionsDone[i] = true;
+      do {
+        if (!rule) {
+          // Initialise data for detecting a new rule
+          rule         = DAY_OF_MONTH | WEEKDAY_OF_MONTH | LAST_WEEKDAY_OF_MONTH;
+          time         = qdt.time();
+          date         = qdt.date();
+          year         = date.year();
+          month        = date.month();
+          daysInMonth  = date.daysInMonth();
+          dayOfWeek    = date.dayOfWeek();   // Monday = 1
+          dayOfMonth   = date.day();
+          nthFromStart = (dayOfMonth - 1)/7 + 1;   // nth (weekday) of month
+          nthFromEnd   = (daysInMonth - dayOfMonth)/7 + 1;   // nth last (weekday) of month
         }
+        if (++i >= trcount) {
+          newRule = 0;
+          times += QDateTime();   // append a dummy value since last value in list is ignored
+        } else {
+          if (transitionsDone[i] 
+          ||  transits[i].phase() != phase
+          ||  transits[i-1].phase().utcOffset() != preOffset)
+            continue;
+          newRule = rule;
+          transitionsDone[i] = true;
+          qdt = transits[i].time();
+          times += qdt;
+          date = qdt.date();
+          if (qdt.time() != time
+          ||  date.month() != month
+          ||  date.year() != ++year) {
+            newRule = 0;
+          } else {
+            int day = date.day();
+            if ((newRule & DAY_OF_MONTH)  &&  day != dayOfMonth)
+              newRule &= ~DAY_OF_MONTH;
+            if (newRule & (WEEKDAY_OF_MONTH | LAST_WEEKDAY_OF_MONTH)) {
+              if (date.dayOfWeek() != dayOfWeek) {
+                newRule &= ~(WEEKDAY_OF_MONTH | LAST_WEEKDAY_OF_MONTH);
+              } else {
+                if ((newRule & WEEKDAY_OF_MONTH)  &&  (day - 1)/7 + 1 != nthFromStart)
+                  newRule &= ~WEEKDAY_OF_MONTH;
+                if ((newRule & LAST_WEEKDAY_OF_MONTH)  &&  (daysInMonth - day)/7 + 1 != nthFromEnd)
+                  newRule &= ~LAST_WEEKDAY_OF_MONTH;
+              }
+            }
+          }
+        }
+        if (!newRule) {
+          // The previous rule (if any) no longer applies.
+          // Write all the times up to but not including the current one.
+          // First check whether any of the last RDATE values fit this rule.
+          int yr = times[0].date().year();
+	  while (!rdates.isEmpty()) {
+            qdt = rdates.last();
+	    date = qdt.date();
+	    if (qdt.time() != time
+            ||  date.month() != month
+	    ||  date.year() != --yr)
+              break;
+	    int day  = date.day();
+            if (rule & DAY_OF_MONTH) {
+              if (day != dayOfMonth)
+                break;
+	    } else {
+              if (date.dayOfWeek() != dayOfWeek
+              ||  (rule & WEEKDAY_OF_MONTH)  &&  (day - 1)/7 + 1 != nthFromStart
+              ||  (rule & LAST_WEEKDAY_OF_MONTH)  &&  (daysInMonth - day)/7 + 1 != nthFromEnd)
+		break;
+	    }
+	    times.prepend(qdt);
+	    rdates.pop_back();
+	  }
+          if (times.count() > (useNewRRULE ? minPhaseCount : minRuleCount)) {
+            // There are enough dates to combine into an RRULE
+            icalrecurrencetype r;
+            icalrecurrencetype_clear(&r);
+            r.freq = ICAL_YEARLY_RECURRENCE;
+            r.count = (year >= 2030) ? 0 : times.count() - 1;
+            r.by_month[0] = month;
+            if (rule & DAY_OF_MONTH)
+              r.by_month_day[0] = dayOfMonth;
+            else if (rule & WEEKDAY_OF_MONTH)
+              r.by_day[0] = (dayOfWeek % 7 + 1) + (nthFromStart * 8);   // Sunday = 1
+            else if (rule & LAST_WEEKDAY_OF_MONTH)
+              r.by_day[0] = -(dayOfWeek % 7 + 1) - (nthFromEnd * 8);   // Sunday = 1
+            icalproperty *prop = icalproperty_new_rrule(r);
+            if (useNewRRULE) {
+              // This RRULE doesn't start from the phase start date, so set it into
+              // a new STANDARD/DAYLIGHT component in the VTIMEZONE.
+              icalcomponent *c = icalcomponent_new_clone( phaseComp );
+              icalcomponent_add_property(c, icalproperty_new_dtstart(
+                                writeLocalICalDateTime( times[0], preOffset ) ));
+              icalcomponent_add_property(c, prop);
+              icalcomponent_add_component(tzcomp, c);
+            } else {
+              icalcomponent_add_property(phaseComp1, prop);
+            }
+          } else {
+            // Save dates for writing as RDATEs
+            for ( int t = 0, tend = times.count() - 1;  t < tend;  ++t ) {
+              rdates += times[t];
+            }
+          }
+          useNewRRULE = true;
+          // All date/time values but the last have been added to the VTIMEZONE.
+          // Remove them from the list.
+          qdt = times.last();   // set 'qdt' for start of loop
+          times.clear();
+          times += qdt;
+        }
+        rule = newRule;
+      } while (i < trcount);
+
+      // Write remaining dates as RDATEs
+      for ( int rd = 0, rdend = rdates.count();  rd < rdend;  ++rd ) {
+        dtperiod.time = writeLocalICalDateTime( rdates[rd], preOffset );
+        icalcomponent_add_property(phaseComp1, icalproperty_new_rdate( dtperiod ));
       }
-      icalcomponent_add_component(comp, phcomp);
+      icalcomponent_add_component(tzcomp, phaseComp1);
+      icalcomponent_free(phaseComp);
     }
 
-    d->setComponent( comp );
+    d->setComponent( tzcomp );
   }
 }
 
