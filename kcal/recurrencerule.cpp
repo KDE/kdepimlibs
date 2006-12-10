@@ -231,7 +231,7 @@ bool RecurrenceRule::Constraint::isConsistent( PeriodType /*period*/) const
 }
 
 // Return a date/time set to the constraint values, but with those parts less
-// significant than the given period type set to 1.
+// significant than the given period type set to 1 (for dates) or 0 (for times).
 KDateTime RecurrenceRule::Constraint::intervalDateTime( RecurrenceRule::PeriodType type ) const
 {
   QTime t( 0, 0, 0 );
@@ -242,9 +242,9 @@ KDateTime RecurrenceRule::Constraint::intervalDateTime( RecurrenceRule::PeriodTy
     case rSecondly:
       t.setHMS( hour, minute, second ); break;
     case rMinutely:
-      t.setHMS( hour, minute, 1 ); break;
+      t.setHMS( hour, minute, 0 ); break;
     case rHourly:
-      t.setHMS( hour, 1, 1 ); break;
+      t.setHMS( hour, 0, 0 ); break;
     case rDaily:
       break;
     case rWeekly:
