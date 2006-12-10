@@ -598,6 +598,35 @@ void HeaderTest::testNewsgroupsHeader()
   delete h;
 }
 
+void HeaderTest::testControlHeader()
+{
+  Control *h;
+
+  // empty header
+  h = new Control();
+  QVERIFY( h->isEmpty() );
+  QVERIFY( h->as7BitString().isEmpty() );
+
+  // set some content
+  h->setCancel( "<foo@bar>" );
+  QVERIFY( !h->isEmpty() );
+  QVERIFY( h->isCancel() );
+  QCOMPARE( h->as7BitString(),  QByteArray( "Control: cancel <foo@bar>" ) );
+
+  // clear again
+  h->clear();
+  QVERIFY( h->isEmpty() );
+  delete h;
+
+  // parse a control header
+  h = new Control( 0, "cancel <foo@bar>" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->parameter(), QByteArray("<foo@bar>") );
+  QVERIFY( h->isCancel() );
+  QCOMPARE( h->controlType(), QByteArray("cancel") );
+  delete h;
+}
+
 void HeaderTest::noAbstractHeaders()
 {
   ReturnPath* h1 = new ReturnPath(); delete h1;
@@ -618,7 +647,6 @@ void HeaderTest::noAbstractHeaders()
   Subject* h16 = new Subject(); delete h16;
   Organization* h17 = new Organization(); delete h17;
   ContentDescription* h18 = new ContentDescription(); delete h18;
-  Control* h19 = new Control(); delete h19;
   FollowUpTo* h22 = new FollowUpTo(); delete h22;
   UserAgent* h24 = new UserAgent(); delete h24;
 }

@@ -258,8 +258,8 @@ class KMIME_EXPORT Unstructured : public Base
   virtual void from7BitString( const QByteArray &s );
   virtual QByteArray as7BitString( bool withHeaderType=true ) const;
 
-  virtual void fromUnicodeString( const QString &str,
-                                  const QByteArray &suggestedCharset );
+  virtual void fromUnicodeString( const QString &s,
+                                  const QByteArray &b );
   virtual QString asUnicodeString() const;
 
   virtual void clear()
@@ -1201,47 +1201,49 @@ class KMIME_EXPORT ContentDescription : public Generics::Unstructured
   kmime_mk_trivial_ctor_with_name( ContentDescription )
 };
 
-//
-//
-// NOT YET CONVERTED STUFF BELOW:
-//
-//
-
 /**
   Represents a "Control" header.
 
   @see RFC 1036, section 3.
 */
-class KMIME_EXPORT Control : public Base
+class KMIME_EXPORT Control : public Generics::Structured
 {
+  //@cond PRIVATE
+  kmime_mk_trivial_ctor_with_name( Control )
+  //@endcond
   public:
-    Control() : Base() {}
-    Control( Content *p ) : Base( p ) {}
-    Control( Content *p, const QByteArray &s ) : Base( p )
-      { from7BitString( s ); }
-    Control( Content *p, const QString &s ) : Base( p )
-      { fromUnicodeString( s, Latin1 ); }
-    ~Control() {}
-
-    virtual void from7BitString( const QByteArray &s );
     virtual QByteArray as7BitString( bool withHeaderType = true ) const;
-    virtual void fromUnicodeString( const QString &s, const QByteArray &b );
-    virtual QString asUnicodeString() const;
-    virtual void clear()
-      { c_trlMsg.truncate( 0 ); }
+    virtual void clear();
+    virtual bool isEmpty() const;
 
-    virtual bool isEmpty() const
-      { return c_trlMsg.isEmpty(); }
+    /**
+      Returns the control message type.
+    */
+    QByteArray controlType() const;
 
-    virtual const char *type() const
-      { return "Control"; }
+    /**
+      Returns the control message parameter.
+    */
+    QByteArray parameter() const;
 
-    bool isCancel()
-      { return QString::fromLatin1( c_trlMsg ).contains(
-        QLatin1String( "cancel" ), Qt::CaseInsensitive ); }
+    /**
+      Returns true if this is a cancel control message.
+      @see RFC 1036, section 3.1.
+    */
+    bool isCancel() const;
+
+    /**
+      Changes this header into a cancel control message for the given message-id.
+      @param msgid The message-id of the article that should be canceled.
+    */
+    void setCancel( const QByteArray &msgid );
 
   protected:
-    QByteArray c_trlMsg;
+    bool parse( const char* &scursor, const char * const send, bool isCRLF = false );
+
+  private:
+    QByteArray mName;
+    QByteArray mParameter;
 };
 
 /**

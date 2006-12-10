@@ -170,11 +170,10 @@ QByteArray Unstructured::as7BitString( bool withHeaderType ) const
   return result;
 }
 
-void Unstructured::fromUnicodeString( const QString &str,
-                                      const QByteArray &suggestedCharset )
+void Unstructured::fromUnicodeString( const QString &s, const QByteArray &b )
 {
-  d_ecoded = str;
-  e_ncCS = cachedCharset( suggestedCharset );
+  d_ecoded = s;
+  e_ncCS = cachedCharset( b );
 }
 
 QString Unstructured::asUnicodeString() const
@@ -1016,29 +1015,70 @@ void MessageID::generate( const QByteArray &fqdn )
 
 //-----<Control>-------------------------------
 
-void Control::from7BitString( const QByteArray &s )
-{
-  c_trlMsg = s;
-}
+//@cond PRIVATE
+kmime_mk_trivial_ctor_with_name( Control, Generics::Structured, Control )
+//@endcond
 
 QByteArray Control::as7BitString( bool withHeaderType ) const
 {
-  if ( withHeaderType ) {
-    return typeIntro() + c_trlMsg;
-  } else {
-    return c_trlMsg;
-  }
+  if ( isEmpty() )
+    return QByteArray();
+
+  QByteArray rv;
+  if ( withHeaderType )
+    rv += typeIntro();
+
+  rv += mName;
+  if ( !mParameter.isEmpty() )
+    rv += ' ' + mParameter;
+  return rv;
 }
 
-void Control::fromUnicodeString( const QString &s, const QByteArray &b )
+void Control::clear()
 {
-  Q_UNUSED( b );
-  c_trlMsg = s.toLatin1();
+  mName.clear();
+  mParameter.clear();
 }
 
-QString Control::asUnicodeString() const
+bool Control::isEmpty() const
 {
-  return QString::fromLatin1( c_trlMsg );
+  return mName.isEmpty();
+}
+
+QByteArray Control::controlType() const
+{
+  return mName;
+}
+
+QByteArray Control::parameter() const
+{
+  return mParameter;
+}
+
+bool Control::isCancel() const
+{
+  return mName.toLower() == "cancel";
+}
+
+void Control::setCancel( const QByteArray &msgid )
+{
+  mName = "cancel";
+  mParameter = msgid;
+}
+
+bool Control::parse(const char *& scursor, const char * const send, bool isCRLF)
+{
+  clear();
+  eatCFWS( scursor, send, isCRLF );
+  if ( scursor == send )
+    return false;
+  const char *start = scursor;
+  while ( scursor != send && !isspace( *scursor ) )
+    ++scursor;
+  mName = QByteArray( start, scursor - start );
+  eatCFWS( scursor, send, isCRLF );
+  mParameter = QByteArray( scursor, send - scursor );
+  return true;
 }
 
 //-----</Control>------------------------------

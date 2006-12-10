@@ -39,6 +39,7 @@ class HeaderTest : public QObject
     void testDateHeader();
     void testLinesHeader();
     void testNewsgroupsHeader();
+    void testControlHeader();
 
     // makes sure we don't accidently have an abstract header class that's not
     // meant to be abstract
