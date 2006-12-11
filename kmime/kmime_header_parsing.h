@@ -152,12 +152,19 @@ namespace HeaderParsing {
   the input string.
   @param send pointer to end of input buffer.
   @param result the decoded string the encoded work represented.
+  @param language The language parameter according to RFC 2231, section 5.
+  @param usedCS    the used charset is returned here
+  @param defaultCS the charset to use in case the detected
+                   one isn't known to us.
+  @param forceCS   force the use of the default charset.
 
   @return true if the input string was successfully decode; false otherwise.
 */
 KMIME_EXPORT bool parseEncodedWord( const char* &scursor,
                                     const char * const send,
-                                    QString &result, QByteArray &language );
+                                    QString &result, QByteArray &language,
+                                    QByteArray &usedCS, const QByteArray &defaultCS = QByteArray(),
+                                    bool forceCS = false );
 
 //
 // The parsing squad:

@@ -14,8 +14,6 @@ Things we still need to work on in the library
 
 + Lots of methods we might want to de-inline
 
-+ Get rid of one of the two rfc 2047 decoders
-
 + Remove extra namespaces. probably only KMime namespace needed.
 
 + There are also methods, eg. in kmime_header_parsing.h, which don't need to

@@ -22,6 +22,7 @@
 #include "rfc2047test.moc"
 
 #include <kmime_util.h>
+using namespace KMime;
 
 QTEST_KDEMAIN( RFC2047Test, NoGUI )
 
@@ -40,9 +41,13 @@ void RFC2047Test::testRFC2047decode()
   QCOMPARE( KMime::decodeRFC2047String( "=?utf-8?q?Ingo=20Kl=C3=B6cker?=", encCharset, "utf-8", false ),
             QString::fromUtf8( "Ingo Klöcker" ) );
   QCOMPARE( encCharset, QByteArray( "UTF-8" ) );
+
   // whitespaces between two encoded words
   QCOMPARE( KMime::decodeRFC2047String( "=?utf-8?q?Ingo=20Kl=C3=B6cker?=       =?utf-8?q?Ingo=20Kl=C3=B6cker?=", encCharset, "utf-8", false ),
             QString::fromUtf8( "Ingo KlöckerIngo Klöcker" ) );
+  QCOMPARE( decodeRFC2047String( "=?utf-8?q?Ingo=20Kl=C3=B6cker?=  foo  =?utf-8?q?Ingo=20Kl=C3=B6cker?=", encCharset ),
+            QString::fromUtf8( "Ingo Klöcker  foo  Ingo Klöcker" ) );
+
   // iso-8859-x
   QCOMPARE( KMime::decodeRFC2047String( "=?ISO-8859-1?Q?Andr=E9s_Ot=F3n?=", encCharset, "utf-8", false ),
             QString::fromUtf8( "Andrés Otón" ) );
@@ -56,9 +61,27 @@ void RFC2047Test::testRFC2047decode()
   QCOMPARE( KMime::decodeRFC2047String( "Rafael =?iso-8859-15?q?Rodr=EDguez?=", encCharset, "utf-8", false ),
             QString::fromUtf8( "Rafael Rodríguez" ) );
   QCOMPARE( encCharset, QByteArray( "ISO-8859-15" ) );
+
   // wrong charset + charset overwrite
   QCOMPARE( KMime::decodeRFC2047String( "=?iso-8859-1?q?Ingo=20Kl=C3=B6cker?=", encCharset, "utf-8", true ),
             QString::fromUtf8( "Ingo Klöcker" ) );
+
+  // language parameter according to RFC 2231, section 5
+  QCOMPARE( decodeRFC2047String( "From: =?US-ASCII*EN?Q?Keith_Moore?= <moore@cs.utk.edu>", encCharset ),
+            QString::fromUtf8( "From: Keith Moore <moore@cs.utk.edu>" ) );
+  QCOMPARE( encCharset, QByteArray( "US-ASCII" ) );
+}
+
+void RFC2047Test::testInvalidDecode()
+{
+  QByteArray encCharset;
+
+  // invalid / incomplete encoded data
+  QCOMPARE( decodeRFC2047String( "=", encCharset ), QString::fromUtf8("=") );
+  QCOMPARE( decodeRFC2047String( "=?", encCharset ), QString::fromUtf8("=?") );
+  QCOMPARE( decodeRFC2047String( "=?a?b?=", encCharset ), QString::fromUtf8("=?a?b?=") );
+  QCOMPARE( decodeRFC2047String( "=?a?b?c?", encCharset ), QString::fromUtf8("=?a?b?c?") );
+  QCOMPARE( decodeRFC2047String( "=?a??c?=", encCharset ), QString::fromUtf8("=?a??c?=") );
 }
 
 void RFC2047Test::testRFC2047encode()

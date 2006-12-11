@@ -1185,7 +1185,7 @@ bool MailCopiesTo::parse( const char *& scursor, const char * const send,
 
 //@cond PRIVATE
 kmime_mk_trivial_ctor_with_name( Date, Generics::Structured, Date )
-//@cond
+//@endcond
 
 QByteArray Date::as7BitString( bool withHeaderType ) const
 {

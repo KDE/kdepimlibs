@@ -26,6 +26,7 @@ class RFC2047Test : public QObject
   Q_OBJECT
   private slots:
     void testRFC2047decode();
+    void testInvalidDecode();
     void testRFC2047encode();
 };
 

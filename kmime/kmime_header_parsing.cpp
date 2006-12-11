@@ -170,7 +170,9 @@ namespace HeaderParsing {
 
 // parse the encoded-word (scursor points to after the initial '=')
 bool parseEncodedWord( const char* &scursor, const char * const send,
-                       QString &result, QByteArray &language )
+                       QString &result, QByteArray &language,
+                       QByteArray &usedCS, const QByteArray &defaultCS,
+                       bool forceCS )
 {
   // make sure the caller already did a bit of the work.
   assert( *(scursor-1) == '=' );
@@ -301,8 +303,19 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
 
   // try if there's a (text)codec for the charset found:
   bool matchOK = false;
-  QTextCodec
-    *textCodec = KGlobal::charsets()->codecForName( maybeCharset, matchOK );
+  QTextCodec *textCodec = 0;
+  if ( forceCS || maybeCharset.isEmpty() ) {
+    textCodec = KGlobal::charsets()->codecForName( defaultCS, matchOK );
+    usedCS = cachedCharset( defaultCS );
+  } else {
+    textCodec = KGlobal::charsets()->codecForName( maybeCharset, matchOK );
+    if ( !matchOK ) {  //no suitable codec found => use default charset
+      textCodec = KGlobal::charsets()->codecForName( defaultCS, matchOK );
+      usedCS = cachedCharset( defaultCS );
+    } else {
+      usedCS = cachedCharset( maybeCharset );
+    }
+  }
 
   if ( !matchOK || !textCodec ) {
     KMIME_WARN_UNKNOWN( Charset, maybeCharset );
@@ -606,7 +619,7 @@ bool parsePhrase( const char* &scursor, const char * const send,
   } found = None;
 
   QString tmp;
-  QByteArray lang;
+  QByteArray lang, charset;
   const char *successfullyParsed = 0;
   // only used by the encoded-word branch
   const char *oldscursor;
@@ -684,7 +697,8 @@ bool parsePhrase( const char* &scursor, const char * const send,
       tmp.clear();
       oldscursor = scursor;
       lang.clear();
-      if ( parseEncodedWord( scursor, send, tmp, lang ) ) {
+      charset.clear();
+      if ( parseEncodedWord( scursor, send, tmp, lang, charset ) ) {
         successfullyParsed = scursor;
         switch ( found ) {
         case None:

@@ -36,6 +36,7 @@
 #include <kcodecs.h> // for KCodec::{quotedPrintableDe,base64{En,De}}code
 
 #include "kmime_util.h"
+#include "kmime_header_parsing.h"
 
 using namespace KMime;
 
@@ -128,113 +129,50 @@ const uchar eTextMap[16] = {
 QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
                              const QByteArray &defaultCS, bool forceCS )
 {
-  QByteArray result, str;
-  QByteArray declaredCS;
-  int pos = 0, beg = 0, end = 0, mid = 0, endOfLastEncWord = 0;
-  char encoding = '\0';
-  bool valid, onlySpacesSinceLastWord=false;
-  const int maxLen=400;
-  int i;
+  QString result;
+  QByteArray spaceBuffer;
+  const char *scursor = src.constData();
+  const char *send = scursor + src.length();
+  bool onlySpacesSinceLastWord = false;
 
-  if ( !src.contains( "=?" ) ) {
-    result = src;
-  } else {
-    for (pos = 0; pos < src.length(); pos++) {
-      if ( src[pos] != '=' || src[pos + 1] != '?' ) {
-        result += src[pos];
-        if ( onlySpacesSinceLastWord ) {
-          onlySpacesSinceLastWord = ( src[pos] == ' ' || src[pos] == '\t' );
-        }
-        continue;
-      }
-      beg = pos+2;
-      end = beg;
-      valid = true;
-      // parse charset name
-      declaredCS.clear();
-      for ( i = 2, pos += 2;
-            i < maxLen && ( src[pos] != '?' &&
-                            ( ispunct( src[pos] ) || isalnum( src[pos] ) ) );
-            i++ ) {
-        declaredCS += src[pos];
-        pos++;
-      }
-      if ( src[pos] != '?' || i < 4 || i >= maxLen ) {
-        valid = false;
-      } else {
-        // get encoding and check delimiting question marks
-        encoding = toupper( src[pos+1] );
-        if ( src[pos+2] != '?' || ( encoding != 'Q' && encoding != 'B' ) ) {
-          valid = false;
-        }
-        pos += 3;
-        i += 3;
-      }
-      if ( valid ) {
-        mid = pos;
-        // search for end of encoded part
-        while ( i < maxLen && pos < src.length() && ! ( src[pos] == '?' && src[pos + 1] == '=' ) ) {
-          i++;
-          pos++;
-        }
-        end = pos + 2;//end now points to the first char after the encoded string
-        if ( i >= maxLen || src.length() <= pos ) {
-          valid = false;
-        }
-      }
+  while ( scursor != send ) {
+     // space
+    if ( isspace( *scursor ) && onlySpacesSinceLastWord ) {
+      spaceBuffer += *scursor++;
+      continue;
+    }
 
-      if ( valid ) {
-        // cut all linear-white space between two encoded words
-        if ( onlySpacesSinceLastWord ) {
-          result = result.left( endOfLastEncWord );
-        }
-
-        if ( mid < pos ) {
-          str = src.mid( mid, pos - mid );
-          if ( encoding == 'Q' ) {
-            // decode quoted printable text
-            for ( i=str.length()-1 ; i>=0; i-- ) {
-              if ( str[i] == '_') {
-                str[i] = ' ';
-              }
-            }
-            str = KCodecs::quotedPrintableDecode( str );
-          } else {
-            str = KCodecs::base64Decode( str );
-          }
-          result += str;
-        }
-
-        endOfLastEncWord = result.length();
+    // possible start of an encoded word
+    if ( *scursor == '=' ) {
+      QByteArray language;
+      QString decoded;
+      ++scursor;
+      const char *start = scursor;
+      if ( HeaderParsing::parseEncodedWord( scursor, send, decoded, language, usedCS, defaultCS, forceCS ) ) {
+        result += decoded;
         onlySpacesSinceLastWord = true;
-
-        pos = end - 1;
+        spaceBuffer.clear();
       } else {
-        pos = beg - 2;
-        result += src[pos++];
-        result += src[pos];
+        if ( onlySpacesSinceLastWord ) {
+          result += QString::fromLatin1( spaceBuffer );
+          onlySpacesSinceLastWord = false;
+        }
+        result += QLatin1Char( '=' );
+        scursor = start; // reset cursor after parsing failure
       }
-    }
-  }
-
-  //find suitable QTextCodec
-  QTextCodec *codec=0;
-  bool ok=true;
-
-  if ( forceCS || declaredCS.isEmpty() ) {
-    codec = KGlobal::charsets()->codecForName( defaultCS );
-    usedCS = cachedCharset( defaultCS );
-  } else {
-    codec = KGlobal::charsets()->codecForName( declaredCS, ok );
-    if ( !ok ) {  //no suitable codec found => use default charset
-      codec = KGlobal::charsets()->codecForName( defaultCS );
-      usedCS = cachedCharset( defaultCS );
+      continue;
     } else {
-      usedCS = cachedCharset( declaredCS );
+      // unencoded data
+      if ( onlySpacesSinceLastWord ) {
+        result += QString::fromLatin1( spaceBuffer );
+        onlySpacesSinceLastWord = false;
+      }
+      result += QLatin1Char( *scursor );
+      ++scursor;
     }
   }
 
-  return codec->toUnicode( result.data(), result.length() );
+  return result;
 }
 
 QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,

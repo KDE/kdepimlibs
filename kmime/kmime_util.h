@@ -95,8 +95,8 @@ inline bool isEText( char ch )
   @return the decoded string.
 */
 KMIME_EXPORT extern QString decodeRFC2047String(
-  const QByteArray &src, QByteArray &usedCS, const QByteArray &defaultCS,
-  bool forceCS );
+  const QByteArray &src, QByteArray &usedCS, const QByteArray &defaultCS = QByteArray(),
+  bool forceCS = false );
 
 /**
   Encodes string @p src according to RFC2047 using charset @p charset.

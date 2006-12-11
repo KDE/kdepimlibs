@@ -133,10 +133,10 @@ int main( int argc, char * argv[] ) {
   case 0:
     { // encoded-word
       QString result;
-      QByteArray language;
+      QByteArray language, charset;
       // must have checked for initial '=' already:
       bool ok = indata.size() >= 1 && *iit++ == '=' &&
-	parseEncodedWord( iit, iend, result, language );
+      parseEncodedWord( iit, iend, result, language, charset );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
 	   << "result:\n" << result << endl
