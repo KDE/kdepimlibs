@@ -324,15 +324,19 @@ class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
     ICalTimeZone *parse(icaltimezone *tz);
 
     /**
-     * Creates an ICalTimeZone instance for a built-in libical time zone.
+     * Creates an ICalTimeZone instance for a standard time zone. The system
+     * time zone definition is used in preference; otherwise, the built-in
+     * libical time zone definition is used.
      *
      * @param zone time zone name, which may optionally include the libical
      *             prefix string
+     * @param icalBuiltIn @p true to fetch only the libical built-in time zone,
+     *                    and ignore system time zone definitions
      * @return a ICalTimeZone instance containing the time zone data.
      *         The caller is responsible for deleting the ICalTimeZone instance.
      *         Null is returned on error.
      */
-    ICalTimeZone *icalBuiltInZone(const QString &zone);
+    ICalTimeZone *standardZone(const QString &zone, bool icalBuiltIn = false);
 
     /**
      * Returns the prefix string used in the TZID field in built-in libical

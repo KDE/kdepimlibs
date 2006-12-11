@@ -225,7 +225,7 @@ ICalTimeZone::ICalTimeZone(const KTimeZone &tz, const QDate &earliest)
     if ( icaldata )
       setData( new ICalTimeZoneData(*icaldata) );
     else
-      setData( new ICalTimeZoneData(*tz.data(), tz, earliest) );
+      setData( new ICalTimeZoneData(*data, tz, earliest) );
   }
 }
 
@@ -970,9 +970,32 @@ QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool da
   return transitions;
 }
 
-ICalTimeZone *ICalTimeZoneSource::icalBuiltInZone(const QString &zone)
+ICalTimeZone *ICalTimeZoneSource::standardZone(const QString &zone, bool icalBuiltIn)
 {
-  // Try to look it up as a geographical location (e.g. Europe/London)
+  if ( !icalBuiltIn ) {
+    // Try to fetch a system time zone in preference, on the grounds
+    // that system time zones are more likely to be up to date than
+    // built-in libical ones.
+    QString tzid = zone;
+    QString prefix = QString::fromUtf8( icalTzidPrefix() );
+    if ( zone.startsWith( prefix ) ) {
+      int i = zone.indexOf('/', prefix.length() );
+      if ( i > 0 )
+        tzid = zone.mid( i + 1 );   // strip off the libical prefix
+    }
+    KTimeZone *ktz = KSystemTimeZones::readZone( tzid );
+    if ( ktz ) {
+      if ( ktz->data(true) ) {
+        ICalTimeZone *icaltz = new ICalTimeZone( *ktz );
+        delete ktz;
+        kDebug(5800) << "ICalTimeZoneSource::standardZone(" << zone << "): read from system database" << endl;
+        return icaltz;
+      }
+      delete ktz;
+    }
+  }
+  // Try to fetch a built-in libical time zone.
+  // First try to look it up as a geographical location (e.g. Europe/London)
   QByteArray zoneName = zone.toUtf8();
   icaltimezone *icaltz = icaltimezone_get_builtin_timezone( zoneName );
   if ( !icaltz ) {

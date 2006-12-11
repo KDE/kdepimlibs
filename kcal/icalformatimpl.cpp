@@ -1849,41 +1849,16 @@ KDateTime ICalFormatImpl::readICalDateTime( icalproperty *p, const icaltimetype&
     if ( !tzid )
       timeSpec = KDateTime::ClockTime;
     else {
-      const ICalTimeZone *tz = tzlist ? tzlist->zone( QString::fromUtf8(tzid) ) : 0;
+      QString tzidStr = QString::fromUtf8( tzid );
+      const ICalTimeZone *tz = tzlist ? tzlist->zone( tzidStr ) : 0;
       if ( !tz ) {
         // The time zone is not in the existing list for the calendar.
-        // Try to read it from libical's built-in time zones.
-        ICalTimeZone *tznew = 0;
-        icaltimezone* icaltz;
-        if ( QByteArray(tzid).startsWith( ICalTimeZoneSource::icalTzidPrefix() ) ) {
-          // Try to match the ID with the libical time zone's TZID property
-          icaltz = icaltimezone_get_builtin_timezone_from_tzid( tzid );
-        } else {
-          // Try to match the ID with the libical time zone's location property
-          icaltz = icaltimezone_get_builtin_timezone( tzid );
-        }
-        if ( icaltz ) {
-          kDebug(5800) << "ICalFormatImpl::readICalDateTime(): time zone '" << tzid << "' read from libical database" << endl;
-          ICalTimeZoneSource tzsource;
-          tznew = tzsource.parse( icaltz );
-          if ( !tznew ) {
-            kWarning(5800) << "ICalFormatImpl::readICalDateTime(): can't parse built in time zone '" << tzid << "'" << endl;
-          }
-        }
-        if ( !tznew ) {
-          // Can't read it from libical's database, so try the system database
-          KTzfileTimeZoneSource tzsrc( KSystemTimeZones::zoneinfoDir() );
-          KTzfileTimeZone tztz( &tzsrc, tzid );
-          if ( !tztz.data(true) ) {
-            kWarning(5800) << "ICalFormatImpl::readICalDateTime(): time zone '" << tzid << "' not recognised" << endl;
-          } else {
-            tznew = new ICalTimeZone( tztz );
-            kDebug(5800) << "ICalFormatImpl::readICalDateTime(): time zone '" << tzid << "' read from system database" << endl;
-          }
-        }
-        if ( tzlist && tznew )
-          tzlist->add( tznew );
-        tz = tznew;
+        // Try to read it from the system or libical databases.
+        ICalTimeZoneSource tzsource;
+        ICalTimeZone *newtz = tzsource.standardZone( tzidStr );
+        if ( newtz && tzlist )
+          tzlist->add( newtz );
+        tz = newtz;
       }
       timeSpec = tz ? KDateTime::Spec( tz ) : KDateTime::LocalZone;
 //      kDebug(5800) << "--- Time zone: " << (tz ? timeSpec.timeZone()->name() : QString()) << endl;
