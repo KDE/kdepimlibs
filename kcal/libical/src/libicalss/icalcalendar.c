@@ -34,7 +34,6 @@
 #include <sys/stat.h> /* For mkdir, stat */
 #include <sys/types.h> /* For mkdir */
 #include <fcntl.h> /* For mkdir */
-#include <qglobal.h>
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>  /* For mkdir, stat */    
@@ -93,7 +92,7 @@ icalerrorenum icalcalendar_create(struct icalcalendar_impl* impl)
     r = stat(path,&sbuf);
 
     if( r != 0 && errno == ENOENT){
-#ifdef Q_OS_WIN
+#if defined(_WIN32) || defined (_WIN64) 
 	if(mkdir(path)!=0){
 #else
         if(mkdir(path,0777)!=0){
