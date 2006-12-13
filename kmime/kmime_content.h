@@ -250,6 +250,14 @@ class KMIME_EXPORT Content
       Returns the decoded text. Additional to decodedContent(), this also
       applies charset decoding. If this is not a text Content, decodedText()
       returns an empty QString.
+
+      @param trimText if true, then the decoded text will have all trailing
+      whitespace removed.
+      @param removeTrailingNewlines if true, then the decoded text will have
+      all consecutive trailing newlines removed.
+
+      The last trailing new line of the decoded text is always removed.
+
     */
     QString decodedText( bool trimText = false,
                          bool removeTrailingNewlines = false );

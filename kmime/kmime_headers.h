@@ -117,7 +117,7 @@ class KMIME_EXPORT Base
     /**
       Creates an empty header with a parent-content.
     */
-    Base( KMime::Content *parent );
+    explicit Base( KMime::Content *parent );
 
     /**
       Destructor.
@@ -170,7 +170,7 @@ class KMIME_EXPORT Base
     /**
       Parses the given string and set the charset.
       @param s The header data as unicode string.
-      @param b The charset prefered for encoding.
+      @param b The charset preferred for encoding.
     */
     virtual void fromUnicodeString( const QString &s, const QByteArray &b ) = 0;
 

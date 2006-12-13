@@ -11,7 +11,7 @@
 #define INFILE_READ_ERR 3
 #define OUTFILE_WRITE_ERR 4
 
-#include <../kmime_codecs.h>
+#include "kmime/kmime_codecs.h"
 
 #include <kdebug.h>
 
