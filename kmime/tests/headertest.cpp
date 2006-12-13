@@ -307,6 +307,12 @@ void HeaderTest::testParametrizedHeader()
   QCOMPARE( h->as7BitString( false ), QByteArray( "filename=\"genome.jpeg\"; modification-date=\"Wed, 12 Feb 1997 16:29:51 -0500\"" ) );
   delete h;
 
+  // quoting of whitespaces in parameter value
+  h = new Parametrized();
+  h->setParameter( "boundary", "simple boundary" );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "boundary=\"simple boundary\"" ) );
+  delete h;
+
   // TODO: test RFC 2047 encoded values
   // TODO: test case-insensitive key-names
 }
@@ -369,7 +375,7 @@ void HeaderTest::testContentTypeHeader()
   // add some parameters
   h->setId( "bla" );
   h->setCharset( "us-ascii" );
-  QCOMPARE( h->as7BitString( false ), QByteArray( "text/plain; charset=us-ascii; id=bla" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "text/plain; charset=\"us-ascii\"; id=\"bla\"" ) );
 
   // clear header
   h->clear();

@@ -720,7 +720,7 @@ kmime_mk_trivial_ctor( Parametrized, Structured )
     rv += it.key().toLatin1() + '=';
     if ( isUsAscii( it.value() ) ) {
       QByteArray tmp = it.value().toLatin1();
-      addQuotes( tmp, false );
+      addQuotes( tmp, true ); // force quoting, eg. for whitespaces in parameter value
       rv += tmp;
     } else {
       // FIXME: encoded strings are not allowed inside quotes, OTOH we need to quote whitespaces...

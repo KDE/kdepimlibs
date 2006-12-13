@@ -44,6 +44,158 @@ void KMimeContentTest::testGetHeaderInstance( )
   delete c;
 }
 
+void KMimeContentTest::testSetContent()
+{
+  Content *c = new Content();
+  QVERIFY( !c->hasContent() );
 
+  // head and body present
+  c->setContent( "head1\nhead2\n\nbody1\n\nbody2\n" );
+  QVERIFY( c->hasContent() );
+  QCOMPARE( c->head(), QByteArray( "head1\nhead2\n" ) );
+  QCOMPARE( c->body(), QByteArray( "body1\n\nbody2\n" ) );
+
+  QList<QByteArray> list;
+  list << "head1" << "head2" << "" << "body1" << "" << "body2";
+  c->setContent( list );
+  QVERIFY( c->hasContent() );
+  QCOMPARE( c->head(), QByteArray( "head1\nhead2\n" ) );
+  QCOMPARE( c->body(), QByteArray( "body1\n\nbody2\n" ) ); // ### the final \n is questionable
+
+  // empty content
+  c->setContent( QByteArray() );
+  QVERIFY( !c->hasContent() );
+  QVERIFY( c->head().isEmpty() );
+  QVERIFY( c->body().isEmpty() );
+
+  // empty head
+  c->setContent( "\nbody1\n\nbody2\n" );
+  QVERIFY( c->hasContent() );
+  QVERIFY( c->head().isEmpty() );
+  QCOMPARE( c->body(), QByteArray( "body1\n\nbody2\n" ) );
+
+  list.clear();
+  list << "" << "body1" << "" << "body2";
+  c->setContent( list );
+  QVERIFY( c->hasContent() );
+  QVERIFY( c->head().isEmpty() );
+  QCOMPARE( c->body(), QByteArray( "body1\n\nbody2\n" ) );
+
+  // empty body
+  c->setContent( "head1\nhead2\n\n" );
+  QVERIFY( c->hasContent() );
+  QCOMPARE( c->head(), QByteArray( "head1\nhead2\n" ) );
+  QVERIFY( c->body().isEmpty() );
+
+  list.clear();
+  list << "head1" << "head2" << "";
+  c->setContent( list );
+  QVERIFY( c->hasContent() );
+  QCOMPARE( c->head(), QByteArray( "head1\nhead2\n" ) );
+  QVERIFY( c->body().isEmpty() );
+}
+
+void KMimeContentTest::testMultipartMixed()
+{
+  // example taken from RFC 2046, section 5.1.1.
+  QByteArray data =
+    "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
+    "To: Ned Freed <ned@innosoft.com>\n"
+    "Date: Sun, 21 Mar 1993 23:56:48 -0800 (PST)\n"
+    "Subject: Sample message\n"
+    "MIME-Version: 1.0\n"
+    "Content-type: multipart/mixed; boundary=\"simple boundary\"\n"
+    "\n"
+    "This is the preamble.  It is to be ignored, though it\n"
+    "is a handy place for composition agents to include an\n"
+    "explanatory note to non-MIME conformant readers.\n"
+    "\n"
+    "--simple boundary\n"
+    "\n"
+    "This is implicitly typed plain US-ASCII text.\n"
+    "It does NOT end with a linebreak.\n"
+    "--simple boundary\n"
+    "Content-type: text/plain; charset=us-ascii\n"
+    "\n"
+    "This is explicitly typed plain US-ASCII text.\n"
+    "It DOES end with a linebreak.\n"
+    "\n"
+    "--simple boundary--\n"
+    "\n"
+    "This is the epilogue.  It is also to be ignored.\n";
+
+  QByteArray part1 =
+    "This is implicitly typed plain US-ASCII text.\n"
+    "It does NOT end with a linebreak.";
+
+  QByteArray part2 =
+    "This is explicitly typed plain US-ASCII text.\n"
+    "It DOES end with a linebreak.\n";
+
+  // slightly diffrent from original data
+  QByteArray assembled =
+    "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
+    "Subject: Sample message\n"
+    "To: Ned Freed <ned@innosoft.com>\n"
+    "Date: Sun, 21 Mar 1993 23:56:48 -0800\n"
+    "MIME-Version: 1.0\n"
+    "Content-Type: multipart/mixed; boundary=simple boundary\n" // quote boundary!!
+    "\n"
+    "\n"
+    "--simple boundary\n"
+    "\n"
+    "This is implicitly typed plain US-ASCII text.\n"
+    "It does NOT end with a linebreak.\n"
+    "--simple boundary\n"
+    "Content-Type: text/plain; charset=us-ascii\n"
+    "\n"
+    "This is explicitly typed plain US-ASCII text.\n"
+    "It DOES end with a linebreak.\n"
+    "\n"
+    "--simple boundary--\n";
+
+  // test parsing
+  Message *msg = new Message();
+  msg->setContent( data );
+  QCOMPARE( msg->encodedContent(), data );
+  msg->parse();
+  QVERIFY( msg->contentType()->isMultipart() );
+
+  Content::List list = msg->contents();
+  QCOMPARE( list.count(), 2 );
+  Content *c = list.takeFirst();
+  QCOMPARE( c->body(), part1 );
+  c = list.takeFirst();
+  QCOMPARE( c->body(), part2 );
+
+  // assemble again
+  msg->assemble();
+  QCOMPARE( msg->encodedContent(), assembled );
+  delete msg;
+
+  // assembling from scratch
+  msg = new Message();
+  msg->from()->from7BitString( "Nathaniel Borenstein <nsb@bellcore.com>" );
+  msg->to()->from7BitString( "Ned Freed <ned@innosoft.com>" );
+  msg->subject()->from7BitString( "Sample message" );
+  msg->date()->from7BitString( "Sun, 21 Mar 1993 23:56:48 -0800 (PST)" );
+  msg->setBody( part1 );
+  c = new Content();
+  c->setBody( part2 );
+  c->contentType()->setMimeType( "text/plain" );
+  c->contentType()->setCharset( "us-ascii" );
+  msg->addContent( c );
+  msg->contentType()->setBoundary( "simple boundary" );
+
+  list = msg->contents();
+  QCOMPARE( list.count(), 2 );
+  c = list.takeFirst();
+  QCOMPARE( c->body(), part1 );
+  c = list.takeFirst();
+  QCOMPARE( c->body(), part2 );
+
+  msg->assemble();
+  QCOMPARE( msg->encodedContent(), assembled );
+}
 
 #include "kmime_content_test.moc"

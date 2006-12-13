@@ -51,7 +51,7 @@ void Message::parse()
 QByteArray Message::assembleHeaders()
 {
   Headers::Base *h;
-  QByteArray newHead = Content::assembleHeaders();
+  QByteArray newHead;
 
   //Message-ID
   if ( ( h = messageID( false ) ) != 0 )
@@ -112,7 +112,7 @@ QByteArray Message::assembleHeaders()
     }
   }
 
-  return newHead;
+  return newHead + Content::assembleHeaders();
 }
 
 void Message::clear()

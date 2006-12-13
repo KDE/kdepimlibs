@@ -87,7 +87,7 @@ Content::~Content()
 
 bool Content::hasContent() const
 {
-  return !d->head.isEmpty() && ( !d->body.isEmpty() || !d->contents.isEmpty() );
+  return !d->head.isEmpty() || !d->body.isEmpty() || !d->contents.isEmpty();
 }
 
 void Content::setContent( const QList<QByteArray> &l )
@@ -115,15 +115,20 @@ void Content::setContent( const QList<QByteArray> &l )
     }
   }
 
-  //terminate strings
-  hts << '\0';
-  bts << '\0';
-
   //qDebug("Content::setContent( const QList<QByteArray> & l ) : finished");
 }
 
 void Content::setContent( const QByteArray &s )
 {
+  d->head.clear();
+  d->body.clear();
+
+  // empty header
+  if ( s.startsWith( '\n' ) ) {
+    d->body = s.right( s.length() - 1 );
+    return;
+  }
+
   int pos = s.indexOf( "\n\n", 0 );
   if ( pos > -1 ) {
     d->head = s.left( ++pos );  //header *must* end with "\n" !!
@@ -185,7 +190,7 @@ void Content::parse()
     ct->setMimeType( "invalid/invalid" );
   }
 
-  if ( ct->isText() ) {
+  if ( ct->isText() || ct->isEmpty() ) { // default is text/plain
     return; //nothing to do
   }
 
@@ -314,6 +319,8 @@ void Content::parse()
 void Content::assemble()
 {
   d->head = assembleHeaders();
+  foreach ( Content *c, contents() )
+    c->assemble();
 }
 
 QByteArray Content::assembleHeaders()
@@ -321,13 +328,17 @@ QByteArray Content::assembleHeaders()
   QByteArray newHead = "";
 
   //Content-Type
-  newHead += contentType()->as7BitString() + '\n';
+  Headers::Base *h = contentType( false );
+  if ( h && !h->isEmpty() )
+    newHead += contentType()->as7BitString() + '\n';
 
   //Content-Transfer-Encoding
-  newHead += contentTransferEncoding()->as7BitString() + '\n';
+  h = contentTransferEncoding( false );
+  if ( h && !h->isEmpty() )
+    newHead += contentTransferEncoding()->as7BitString() + '\n';
 
   //Content-Description
-  Headers::Base *h = contentDescription( false );
+  h = contentDescription( false );
   if ( h ) {
     newHead += h->as7BitString() + '\n';
   }
@@ -425,7 +436,7 @@ QByteArray Content::encodedContent( bool useCrLf )
   }
   else if ( !d->contents.isEmpty() ) { //this is a multipart message
     Headers::ContentType *ct=contentType();
-    QByteArray boundary = "--" + ct->boundary();
+    QByteArray boundary = "\n--" + ct->boundary();
 
     //add all (encoded) contents separated by boundaries
     foreach ( Content *c, d->contents ) {
