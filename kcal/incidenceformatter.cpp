@@ -155,8 +155,8 @@ static QString eventViewerFormatAttendees( Incidence *event )
   QString tmpStr;
   Attendee::List attendees = event->attendees();
   if ( attendees.count() ) {
-    KIconLoader iconLoader;
-    const QString iconPath = iconLoader.iconPath( "mail_generic",
+    KIconLoader* iconLoader = KGlobal::iconLoader();
+    const QString iconPath = iconLoader->iconPath( "mail_generic",
                                                   K3Icon::Small );
 
     // Add organizer link
@@ -208,8 +208,8 @@ static QString eventViewerFormatBirthday( Event *event )
   QString name_1 = event->customProperty("KABC","NAME-1");
   QString email_1= event->customProperty("KABC","EMAIL-1");
 
-  KIconLoader iconLoader;
-  const QString iconPath = iconLoader.iconPath( "mail_generic",
+  KIconLoader* iconLoader = KGlobal::iconLoader();
+  const QString iconPath = iconLoader->iconPath( "mail_generic",
                                                   K3Icon::Small );
   //TODO: add a tart icon
   QString tmpString = "<ul>";
@@ -232,28 +232,28 @@ static QString eventViewerFormatHeader( Incidence *incidence )
 
   // show icons
   {
-    KIconLoader iconLoader;
+    KIconLoader* iconLoader = KGlobal::iconLoader();
 
     tmpStr += "<td>";
 
     if ( incidence->type() == "Todo" ) {
       tmpStr += "<img src=\"" +
-                iconLoader.iconPath( "todo", K3Icon::Small ) +
+                iconLoader->iconPath( "todo", K3Icon::Small ) +
                 "\">";
     }
     if ( incidence->isAlarmEnabled() ) {
       tmpStr += "<img src=\"" +
-                iconLoader.iconPath( "bell", K3Icon::Small ) +
+                iconLoader->iconPath( "bell", K3Icon::Small ) +
                 "\">";
     }
     if ( incidence->doesRecur() ) {
       tmpStr += "<img src=\"" +
-                iconLoader.iconPath( "recur", K3Icon::Small ) +
+                iconLoader->iconPath( "recur", K3Icon::Small ) +
                 "\">";
     }
     if ( incidence->isReadOnly() ) {
       tmpStr += "<img src=\"" +
-                iconLoader.iconPath( "readonlyevent", K3Icon::Small ) +
+                iconLoader->iconPath( "readonlyevent", K3Icon::Small ) +
                 "\">";
     }
 
