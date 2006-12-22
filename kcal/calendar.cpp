@@ -21,9 +21,9 @@
     Boston, MA 02110-1301, USA.
 */
 /**
-  @file calendar.cpp
+  @file
   This file is part of the API for handling calendar data and
-  provides the main Calendar class.
+  defines the Calendar class.
 
   @author Preston Brown
   @author Cornelius Schumacher
@@ -94,7 +94,7 @@ class KCal::Calendar::Private
     CalFilter *mDefaultFilter;
     CalFilter *mFilter;
 
-    // These lists are used to put together related Todos
+    // These lists are used to put together related To-dos
     QMultiHash<QString, Incidence*> mOrphans;
     QMultiHash<QString, Incidence*> mOrphanUids;
 };
@@ -546,7 +546,7 @@ Todo::List Calendar::sortTodos( Todo::List *todoList,
   // Notice we alphabetically presort Summaries first.
   // We do this so comparison "ties" stay in a nice order.
 
-  // Note that Todos may not have Start DateTimes nor due DateTimes.
+  // Note that To-dos may not have Start DateTimes nor due DateTimes.
 
   switch( sortField ) {
   case TodoSortUnsorted:
@@ -571,15 +571,15 @@ Todo::List Calendar::sortTodos( Todo::List *todoList,
         }
         todoListSorted.insert( sortIt, *eit );
       } else {
-        // Keep a list of the Todos without Start DateTimes
+        // Keep a list of the To-dos without Start DateTimes
         tempList.append( *eit );
       }
     }
     if ( sortDirection == SortDirectionAscending ) {
-      // Append the list of Todos without Start DateTimes
+      // Append the list of To-dos without Start DateTimes
       todoListSorted += tempList;
     } else {
-      // Prepend the list of Todos without Start DateTimes
+      // Prepend the list of To-dos without Start DateTimes
       tempList += todoListSorted;
       todoListSorted = tempList;
     }
@@ -603,15 +603,15 @@ Todo::List Calendar::sortTodos( Todo::List *todoList,
         }
         todoListSorted.insert( sortIt, *eit );
       } else {
-        // Keep a list of the Todos without Due DateTimes
+        // Keep a list of the To-dos without Due DateTimes
         tempList.append( *eit );
       }
     }
     if ( sortDirection == SortDirectionAscending ) {
-      // Append the list of Todos without Due DateTimes
+      // Append the list of To-dos without Due DateTimes
       todoListSorted += tempList;
     } else {
-      // Prepend the list of Todos without Due DateTimes
+      // Prepend the list of To-dos without Due DateTimes
       tempList += todoListSorted;
       todoListSorted = tempList;
     }
@@ -760,8 +760,8 @@ Journal::List Calendar::journals( const QDate &date )
   return el;
 }
 
-// When this is called, the todo have already been added to the calendar.
-// This method is only about linking related todos
+// When this is called, the to-dos have already been added to the calendar.
+// This method is only about linking related to-dos.
 void Calendar::setupRelations( Incidence *forincidence )
 {
   if ( !forincidence ) {

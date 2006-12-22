@@ -46,7 +46,7 @@ class KCAL_EXPORT Duration
 {
   public:
     /**
-      Constructs a duration of 0 seconds (invalid).
+      Constructs a duration of 0 seconds.
     */
     Duration();
 

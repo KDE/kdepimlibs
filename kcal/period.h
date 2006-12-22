@@ -47,7 +47,7 @@ class KCAL_EXPORT Period
 {
   public:
     /**
-      Constructs a period without a duration (invalid).
+      Constructs a period without a duration.
     */
     Period();
 
