@@ -194,6 +194,8 @@ bool ResourceCalendar::saveInhibited() const
 
 bool ResourceCalendar::setValue( const QString &key, const QString &value )
 {
+  Q_UNUSED( key );
+  Q_UNUSED( value );
   return false;
 }
 
