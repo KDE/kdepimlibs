@@ -63,8 +63,8 @@ SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent,
   KButtonBox *buttonBox = new KButtonBox( this );
 
   buttonBox->addStretch();
-  buttonBox->addButton( KStdGuiItem::ok(), this, SLOT( accept() ) );
-  buttonBox->addButton( KStdGuiItem::cancel(), this, SLOT( reject() ) );
+  buttonBox->addButton( KStandardGuiItem::ok(), this, SLOT( accept() ) );
+  buttonBox->addButton( KStandardGuiItem::cancel(), this, SLOT( reject() ) );
   buttonBox->layout();
 
   mainLayout->addWidget( buttonBox );
