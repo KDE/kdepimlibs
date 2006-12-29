@@ -414,8 +414,8 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent, Incidence *incidence,
         incidence->relatedToUid().toUtf8()));
   }
 
-  kDebug(5800) << "Write recurrence for '" << incidence->summary() << "' (" << incidence->uid()
-            << ")" << endl;
+//   kdDebug(5800) << "Write recurrence for '" << incidence->summary() << "' (" << incidence->uid()
+//             << ")" << endl;
 
   RecurrenceRule::List rrules( incidence->recurrence()->rRules() );
   RecurrenceRule::List::ConstIterator rit;
@@ -780,7 +780,7 @@ icalrecurrencetype ICalFormatImpl::writeRecurrenceRule( RecurrenceRule *recur )
 
 icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
 {
-kDebug(5800) << " ICalFormatImpl::writeAlarm" << endl;
+//kDebug(5800) << " ICalFormatImpl::writeAlarm" << endl;
   icalcomponent *a = icalcomponent_new(ICAL_VALARM_COMPONENT);
 
   icalproperty_action action;
@@ -797,7 +797,7 @@ kDebug(5800) << " ICalFormatImpl::writeAlarm" << endl;
       break;
     case Alarm::Audio:
       action = ICAL_ACTION_AUDIO;
-kDebug(5800) << " It's an audio action, file: " << alarm->audioFile() << endl;
+//kDebug(5800) << " It's an audio action, file: " << alarm->audioFile() << endl;
       if (!alarm->audioFile().isEmpty()) {
         attach = icalattach_new_from_url(QFile::encodeName( alarm->audioFile() ).data());
         icalcomponent_add_property(a, icalproperty_new_attach(attach));
@@ -1450,7 +1450,7 @@ void ICalFormatImpl::readCustomProperties(icalcomponent *parent, CustomPropertie
     if ( lastProperty != name )
     {
       customProperties[name] = value;
-      kDebug(5800) << "Set custom property [" << name << '=' << value << ']' << endl;
+      //kDebug(5800) << "Set custom property [" << name << '=' << value << ']' << endl;
     }
     else
     {
@@ -1576,7 +1576,7 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurre
 
 void ICalFormatImpl::readAlarm(icalcomponent *alarm, Incidence *incidence, ICalTimeZones *tzlist)
 {
-  kDebug(5800) << "Read alarm for " << incidence->summary() << endl;
+  //kDebug(5800) << "Read alarm for " << incidence->summary() << endl;
 
   Alarm* ialarm = incidence->newAlarm();
   ialarm->setRepeatCount(0);
@@ -1603,7 +1603,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm, Incidence *incidence, ICalT
     }
   }
   ialarm->setType(type);
-kDebug(5800) << " alarm type =" << type << endl;
+  //kDebug(5800) << " alarm type =" << type << endl;
 
   p = icalcomponent_get_first_property(alarm,ICAL_ANY_PROPERTY);
   while (p) {
