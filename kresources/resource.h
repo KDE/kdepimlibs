@@ -83,7 +83,7 @@ class KRESOURCES_EXPORT Resource : public QObject
      * @param config Configuration to read persistence information from.
      *               If config is 0, create object using default settings.
      */
-    Resource( const KConfig *config );
+    explicit Resource( const KConfig *config );
 
     /**
      * Destructor.

@@ -57,7 +57,8 @@ class KRESOURCES_EXPORT IdMapper
       @param path Category of mapping (path into the mapping namespace)
       @param identifier The concrete mapping object (filename in namespace)
     */
-    IdMapper( const QString &path, const QString &identifier = QString() );
+    explicit IdMapper( const QString &path,
+                       const QString &identifier = QString() );
     /** Destructor. */
     ~IdMapper();
 

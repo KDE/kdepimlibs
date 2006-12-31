@@ -31,7 +31,7 @@ class ManagerAdaptor: public QDBusAbstractAdaptor
     Q_CLASSINFO("D-Bus Interface", "org.kde.KResourcesManager")
 
 public:
-    ManagerAdaptor(QObject *parent);
+    explicit ManagerAdaptor(QObject *parent);
 
 signals:
     void signalKResourceAdded(QString managerId, QString resourceId);
