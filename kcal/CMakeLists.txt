@@ -137,35 +137,11 @@ set(libical_SRCS
    ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/pvl.c           
    ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/sspm.c          
    ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/vsnprintf.c     
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icallangbind.c
 )
 
 set(libicalss_SRCS
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalcalendar.c      
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalcalendar.h      
    ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalclassify.c      
    ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalclassify.h      
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalcluster.c      
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalcluster.h       
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalclusterimpl.h   
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalgauge.c     
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalgauge.h     
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalgaugeimpl.h     
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icaldirset.c        
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icaldirset.h        
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icaldirsetimpl.h    
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalfileset.c       
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalfileset.h       
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalfilesetimpl.h   
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalset.c       
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalset.h       
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalssyacc.h        
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalspanlist.c      
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalspanlist.h      
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalmessage.c       
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalmessage.h       
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalsslexer.c           
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalssyacc.c
 )
 
 

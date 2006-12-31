@@ -25,7 +25,6 @@ set(COMBINEDHEADERSICAL
    ${TOPS}/kcal/libical/src/libical/icalrestriction.h
    ${TOPS}/kcal/libical/src/libical/sspm.h
    ${TOPS}/kcal/libical/src/libical/icalmime.h
-   ${TOPS}/kcal/libical/src/libical/icallangbind.h
 )
 
 FILE(WRITE  ${KDE_FILE_H_FILE} "#ifdef __cplusplus\n")
