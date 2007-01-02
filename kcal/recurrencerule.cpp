@@ -1005,17 +1005,21 @@ bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec 
   // It's a date-time rule, so we need to take the time specification into account.
   KDateTime start( qd, QTime(0,0,0), timeSpec );
   KDateTime end = start.addDays(1);
-//  kDebug(5800) << "         RecurrenceRule::recursOn(" << qd << ", spec)" << endl;
+//   kDebug(5800) << "         RecurrenceRule::recursOn(" << qd << ", spec)" << endl;
   if ( end < startDt() )
     return false;
   // Start date is only included if it really matches
   if ( mDuration >= 0 ) {
     KDateTime endRecur = endDt();
     if ( endRecur.isValid() ) {
-      if ( start > endRecur )
+      if ( start > endRecur ) {
+//  kDebug(5800) << "         start>endRecur" << endl;
         return false;
-      if ( end > endRecur )
+      }
+      if ( end > endRecur ) {
+//  kDebug(5800) << "         end>endRecur" << endl;
         end = endRecur;    // limit end-of-day time to end of recurrence rule
+      }
     }
   }
 
@@ -1380,7 +1384,7 @@ RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const K
 RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const KDateTime &dt, PeriodType type ) const
 {
   // TODO: Simplify this!
- kDebug(5800) << "       (o) getNextValidDateInterval after " << dumpTime(dt) << ", type=" << type << endl;
+//  kDebug(5800) << "       (o) getNextValidDateInterval after " << dumpTime(dt) << ", type=" << type << endl;
   long periods = 0;
   KDateTime start = startDt();
   KDateTime nextValid( start );
@@ -1433,7 +1437,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const KDate
     default:
         break;
   }
- kDebug(5800) << "    ~~~> date in next interval is: : " << dumpTime(nextValid) << endl;
+//  kDebug(5800) << "    ~~~> date in next interval is: : " << dumpTime(nextValid) << endl;
 
   return Constraint( nextValid, type, mWeekStart );
 }
