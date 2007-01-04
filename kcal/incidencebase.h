@@ -301,20 +301,26 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     /**
       Returns an incidence's starting time as a string formatted according
       to the user's locale settings.
+      @param shortfmt If set to true, use short date format, if set to false use
+                      long format.
     */
-    virtual QString dtStartTimeStr() const;
+    virtual QString dtStartTimeStr( bool shortfmt = true ) const;
 
     /**
       Returns an incidence's starting date as a string formatted according
       to the user's locale settings.
+      @param shortfmt If set to true, use short date format, if set to false use
+                      long format.
     */
     virtual QString dtStartDateStr( bool shortfmt = true ) const;
 
     /**
       Returns an incidence's starting date and time as a string formatted
       according to the user's locale settings.
+      @param shortfmt If set to true, use short date format, if set to false use
+                      long format.
     */
-    virtual QString dtStartStr() const;
+    virtual QString dtStartStr( bool shortfmt = true ) const;
 
     /**
       Sets the incidence duration to @p seconds seconds.

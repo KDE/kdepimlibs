@@ -225,9 +225,9 @@ KDateTime IncidenceBase::dtStart() const
   return d->mDtStart;
 }
 
-QString IncidenceBase::dtStartTimeStr() const
+QString IncidenceBase::dtStartTimeStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatTime( dtStart().time() );
+  return KGlobal::locale()->formatTime( dtStart().time(), shortfmt );
 }
 
 QString IncidenceBase::dtStartDateStr( bool shortfmt ) const
@@ -235,9 +235,9 @@ QString IncidenceBase::dtStartDateStr( bool shortfmt ) const
   return KGlobal::locale()->formatDate( dtStart().date(), shortfmt );
 }
 
-QString IncidenceBase::dtStartStr() const
+QString IncidenceBase::dtStartStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDateTime( dtStart().dateTime() );
+  return KGlobal::locale()->formatDateTime( dtStart().dateTime(), shortfmt );
 }
 
 bool IncidenceBase::floats() const

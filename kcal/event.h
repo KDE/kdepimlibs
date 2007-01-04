@@ -84,12 +84,16 @@ class KCAL_EXPORT Event : public Incidence
     /**
       Returns the end time as a string formatted according to the user's
       locale settings.
+      @param shortfmt If set to true, use short date format, if set to false use
+                      long format.
     */
-    QString dtEndTimeStr() const;
+    QString dtEndTimeStr( bool shortfmt = true ) const;
 
     /**
       Returns the end date as a string formatted according to the user's
       locale settings.
+      @param shortfmt If set to true, use short date format, if set to false use
+                      long format.
 
       @param shortfmt if true return string in short format, if false return
                       long format
@@ -99,8 +103,10 @@ class KCAL_EXPORT Event : public Incidence
     /**
       Returns the end date/time as string formatted according to the user's
       locale settings.
+      @param shortfmt If set to true, use short date format, if set to false use
+                      long format.
     */
-    QString dtEndStr() const;
+    QString dtEndStr( bool shortfmt = true ) const;
 
     /**
       Set whether the event has an end date/time.

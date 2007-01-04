@@ -92,7 +92,7 @@ class KCAL_EXPORT Todo : public Incidence
       Returns due time as string formatted according to the user's locale
       settings.
     */
-    QString dtDueTimeStr() const;
+    QString dtDueTimeStr( bool shortfmt = true ) const;
 
     /**
       Returns due date as string formatted according to the user's locale
@@ -106,8 +106,10 @@ class KCAL_EXPORT Todo : public Incidence
     /**
       Returns due date and time as string formatted according to the user's
       locale settings.
+      @param shortfmt If set to true, use short date format, if set to false use
+                      long format.
     */
-    QString dtDueStr() const;
+    QString dtDueStr( bool shortfmt = true ) const;
 
     /**
       Returns true if the todo has a due date, otherwise return false.
@@ -155,12 +157,14 @@ class KCAL_EXPORT Todo : public Incidence
       Returns a todo's starting time as a string formatted according to the
       user's locale settings.
 
+      @param shortfmt If set to true, use short date format, if set to false use
+                      long format.
       @param first If true, the start date of the todo will be returned. If the
       todo recurs, the start date of the first occurrence will be returned.
       If false and the todo recurs, the relative start date will be returned,
       based on the date returned by dtRecurrence().
     */
-    QString dtStartTimeStr( bool first = false ) const;
+    QString dtStartTimeStr( bool shortfmt = true, bool first = false ) const;
 
     /**
       Returns a todo's starting date as a string formatted according to the
@@ -179,12 +183,14 @@ class KCAL_EXPORT Todo : public Incidence
       Returns a todo's starting date and time as a string formatted according
       to the user's locale settings.
 
+      @param shortfmt If set to true, use short date format, if set to false use
+                      long format.
       @param first If true, the start date of the todo will be returned. If the
       todo recurs, the start date of the first occurrence will be returned.
       If false and the todo recurs, the relative start date will be returned,
       based on the date returned by dtRecurrence().
     */
-    QString dtStartStr( bool first = false ) const;
+    QString dtStartStr( bool shortfmt = true, bool first = false ) const;
 
     /**
       Returns true if the todo is 100% completed, otherwise return false.
@@ -228,8 +234,10 @@ class KCAL_EXPORT Todo : public Incidence
     /**
       Returns string contaiting date and time when the todo was completed
       formatted according to the user's locale settings.
+      @param shortfmt If set to true, use short date format, if set to false use
+                      long format.
     */
-    QString completedStr() const;
+    QString completedStr( bool shortfmt = false ) const;
 
     /**
       Sets date and time of completion.

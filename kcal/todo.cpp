@@ -137,9 +137,9 @@ KDateTime Todo::dtDue( bool first ) const
   return d->mDtDue;
 }
 
-QString Todo::dtDueTimeStr() const
+QString Todo::dtDueTimeStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatTime( dtDue( !doesRecur() ).time() );
+  return KGlobal::locale()->formatTime( dtDue( !doesRecur() ).time(), shortfmt );
 }
 
 QString Todo::dtDueDateStr( bool shortfmt ) const
@@ -147,10 +147,9 @@ QString Todo::dtDueDateStr( bool shortfmt ) const
   return KGlobal::locale()->formatDate(dtDue( !doesRecur() ).date(), shortfmt);
 }
 
-//TODO: Add shortfmt param!!!
-QString Todo::dtDueStr() const
+QString Todo::dtDueStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDateTime( dtDue( !doesRecur() ).dateTime() );
+  return KGlobal::locale()->formatDateTime( dtDue( !doesRecur() ).dateTime(), shortfmt );
 }
 
 bool Todo::hasDueDate() const
@@ -205,9 +204,9 @@ void Todo::setDtStart( const KDateTime &dtStart )
   IncidenceBase::setDtStart( dtStart );
 }
 
-QString Todo::dtStartTimeStr( bool first ) const
+QString Todo::dtStartTimeStr( bool shortfmt, bool first ) const
 {
-  return KGlobal::locale()->formatTime( dtStart( first ).time() );
+  return KGlobal::locale()->formatTime( dtStart( first ).time(), shortfmt );
 }
 
 QString Todo::dtStartDateStr( bool shortfmt, bool first ) const
@@ -215,9 +214,9 @@ QString Todo::dtStartDateStr( bool shortfmt, bool first ) const
   return KGlobal::locale()->formatDate( dtStart( first ).date(), shortfmt );
 }
 
-QString Todo::dtStartStr( bool first ) const
+QString Todo::dtStartStr( bool shortfmt, bool first ) const
 {
-  return KGlobal::locale()->formatDateTime( dtStart( first ).dateTime() );
+  return KGlobal::locale()->formatDateTime( dtStart( first ).dateTime(), shortfmt );
 }
 
 bool Todo::isCompleted() const
@@ -250,9 +249,9 @@ KDateTime Todo::completed() const
   }
 }
 
-QString Todo::completedStr() const
+QString Todo::completedStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDateTime( d->mCompleted.dateTime() );
+  return KGlobal::locale()->formatDateTime( d->mCompleted.dateTime(), shortfmt );
 }
 
 void Todo::setCompleted( const KDateTime &completed )

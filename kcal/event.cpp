@@ -95,9 +95,9 @@ QDate Event::dateEnd() const
   }
 }
 
-QString Event::dtEndTimeStr() const
+QString Event::dtEndTimeStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatTime( dtEnd().time() );
+  return KGlobal::locale()->formatTime( dtEnd().time(), shortfmt );
 }
 
 QString Event::dtEndDateStr( bool shortfmt ) const
@@ -105,9 +105,9 @@ QString Event::dtEndDateStr( bool shortfmt ) const
   return KGlobal::locale()->formatDate( dtEnd().date(), shortfmt );
 }
 
-QString Event::dtEndStr() const
+QString Event::dtEndStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDateTime( dtEnd().dateTime() );
+  return KGlobal::locale()->formatDateTime( dtEnd().dateTime(), shortfmt );
 }
 
 void Event::setHasEndDate( bool b )
