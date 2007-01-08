@@ -155,7 +155,7 @@ static QString eventViewerFormatAttendees( Incidence *event )
   QString tmpStr;
   Attendee::List attendees = event->attendees();
   if ( attendees.count() ) {
-    KIconLoader* iconLoader = kapp->iconLoader();
+    KIconLoader* iconLoader = KIconLoader::global();
     const QString iconPath = iconLoader->iconPath( "mail_generic",
                                                   K3Icon::Small );
 
@@ -208,7 +208,7 @@ static QString eventViewerFormatBirthday( Event *event )
   QString name_1 = event->customProperty("KABC","NAME-1");
   QString email_1= event->customProperty("KABC","EMAIL-1");
 
-  KIconLoader* iconLoader = kapp->iconLoader();
+  KIconLoader* iconLoader = KIconLoader::global();
   const QString iconPath = iconLoader->iconPath( "mail_generic",
                                                   K3Icon::Small );
   //TODO: add a tart icon
@@ -232,8 +232,7 @@ static QString eventViewerFormatHeader( Incidence *incidence )
 
   // show icons
   {
-    KIconLoader* iconLoader = kapp->iconLoader();
-
+    KIconLoader* iconLoader = KIconLoader::global();
     tmpStr += "<td>";
 
     if ( incidence->type() == "Todo" ) {
