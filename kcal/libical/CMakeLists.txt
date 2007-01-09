@@ -1,6 +1,3 @@
+# note that the stuff inside src is compiled from the parent dir, not from here
 
-add_subdirectory( doc ) 
-add_subdirectory( scripts ) 
-add_subdirectory( src ) 
-add_subdirectory( zoneinfo ) 
-
+add_subdirectory( zoneinfo )
