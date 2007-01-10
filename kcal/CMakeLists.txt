@@ -237,6 +237,9 @@ install(TARGETS kcal DESTINATION ${LIB_INSTALL_DIR})
 # hack to force ical[ss].h creation
 add_custom_target(ical-headers DEPENDS
         ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/ical.h
+        ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/icalderivedvalue.h
+        ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/icalderivedparameter.h
+        ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/icalderivedproperty.h
         ${CMAKE_BINARY_DIR}/kcal/libical/src/libicalss/icalss.h
 )
 add_dependencies(kcal ical-headers)
