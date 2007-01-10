@@ -75,7 +75,7 @@ ResourceCalendar
   }
 
   KRES::Resource *r;
-  r = KRES::SelectDialog::getResource( list, mParent );
+  r = KRES::SelectDialog::getResource( list, parent() );
   return static_cast<ResourceCalendar *>( r );
 }
 
@@ -180,6 +180,16 @@ void CalendarResources::setAskDestinationPolicy()
 {
   mDestinationPolicy = mAskPolicy;
 }
+
+QWidget *CalendarResources::dialogParentWidget()
+{
+  return mDestinationPolicy->parent();
+}
+void CalendarResources::setDialogParentWidget( QWidget *parent )
+{
+  mDestinationPolicy->setParent( parent );
+}
+
 
 void CalendarResources::close()
 {

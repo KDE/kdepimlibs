@@ -68,9 +68,12 @@ class KCAL_EXPORT CalendarResources :
     class DestinationPolicy
     {
       public:
-        DestinationPolicy( CalendarResourceManager *manager ) :
-          mManager( manager ) {}
-		virtual ~DestinationPolicy(){}
+        DestinationPolicy( CalendarResourceManager *manager, QWidget *parent = 0  ) :
+          mManager( manager ), mParent( parent ) {}
+        virtual ~DestinationPolicy(){}
+  
+        virtual QWidget *parent() { return mParent; }
+        virtual void setParent( QWidget *newparent ) { mParent = newparent; }
         virtual ResourceCalendar *destination( Incidence *incidence ) = 0;
 
       protected:
@@ -79,6 +82,7 @@ class KCAL_EXPORT CalendarResources :
 
       private:
         CalendarResourceManager *mManager;
+        QWidget *mParent;
     };
 
     /**
@@ -87,8 +91,8 @@ class KCAL_EXPORT CalendarResources :
     class StandardDestinationPolicy : public DestinationPolicy
     {
       public:
-        explicit StandardDestinationPolicy( CalendarResourceManager *manager ) :
-          DestinationPolicy( manager ) {}
+        explicit StandardDestinationPolicy( CalendarResourceManager *manager, QWidget *parent = 0 ) :
+          DestinationPolicy( manager, parent ) {}
         virtual ~StandardDestinationPolicy(){}
         ResourceCalendar *destination( Incidence *incidence );
 
@@ -105,13 +109,11 @@ class KCAL_EXPORT CalendarResources :
       public:
         AskDestinationPolicy( CalendarResourceManager *manager,
                               QWidget *parent = 0 ) :
-          DestinationPolicy( manager ), mParent( parent ) {}
-		virtual ~AskDestinationPolicy(){}
+          DestinationPolicy( manager, parent ) {}
+        virtual ~AskDestinationPolicy(){}
         ResourceCalendar *destination( Incidence *incidence );
 
       private:
-        QWidget *mParent;
-
         class Private;
         Private *d;
     };
@@ -253,6 +255,23 @@ class KCAL_EXPORT CalendarResources :
        Resource which is queried.
     */
     void setAskDestinationPolicy();
+    
+    /** 
+       Returns the current parent for new dialogs. This is a bad hack, but we need
+       to properly set the parent for the resource selection dialog. Otherwise
+       the dialog will not be modal to the editor dialog in korganizer and 
+       the user can still work in the editor dialog (and thus crash korganizer).
+       Afterwards we need to reset it (to avoid pointers to widgets that are 
+       already deleted) so we also need the accessor
+    */
+    QWidget *dialogParentWidget();
+    /** 
+       Set the widget parent for new dialogs. This is a bad hack, but we need
+       to properly set the parent for the resource selection dialog. Otherwise
+       the dialog will not be modal to the editor dialog in korganizer and 
+       the user can still work in the editor dialog (and thus crash korganizer).
+    */
+    void setDialogParentWidget( QWidget *parent );
 
     /**
        Request ticket for saving the Calendar.  If a ticket is returned the
