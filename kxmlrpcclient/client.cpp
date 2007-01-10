@@ -22,7 +22,7 @@
 /**
   @file
 
-  The implementation of KXmlRpc::Client 
+  The implementation of KXmlRpc::Client
 **/
 
 using namespace KXmlRpc;
@@ -36,7 +36,7 @@ class Client::Private
 
     QList<Query*> mPendingQueries;
 
-    void queryFinished( Query* );
+    void queryFinished( Query * );
 };
 
 void Client::Private::queryFinished( Query *query )
@@ -55,8 +55,9 @@ Client::Client( QObject *parent )
 Client::Client( const KUrl &url, QObject *parent )
   : QObject( parent ), d( new Private )
 {
-  if ( url.isValid() )
+  if ( url.isValid() ) {
     d->mUrl = url;
+  }
 
   d->mUserAgent = "KDE XMLRPC resources";
   d->mDigestAuth = false;
@@ -64,9 +65,10 @@ Client::Client( const KUrl &url, QObject *parent )
 
 Client::~Client()
 {
-  QList<Query*>::Iterator it;
-  for ( it = d->mPendingQueries.begin(); it != d->mPendingQueries.end(); ++it )
+  QList<Query *>::Iterator it;
+  for ( it = d->mPendingQueries.begin(); it != d->mPendingQueries.end(); ++it ) {
     (*it)->deleteLater();
+  }
 
   d->mPendingQueries.clear();
 
@@ -109,36 +111,39 @@ void Client::disableDigestAuth()
 }
 
 void Client::call( const QString &method, const QList<QVariant> &args,
-                   QObject* msgObj, const char* messageSlot,
-                   QObject* faultObj, const char* faultSlot, const QVariant &id )
+                   QObject *msgObj, const char *messageSlot,
+                   QObject *faultObj, const char *faultSlot, const QVariant &id )
 {
 
   QMap<QString, QString> metaData;
 
-  if ( d->mUrl.isEmpty() )
+  if ( d->mUrl.isEmpty() ) {
     kWarning() << "Cannot execute call to " << method << ": empty server URL" << endl;
+  }
 
   //Fill metadata, with userAgent and possible digest auth
-  if ( d->mUserAgent.isEmpty() )
+  if ( d->mUserAgent.isEmpty() ) {
     metaData["UserAgent"] = "KDE-XMLRPC";
-  else
+  } else {
     metaData["UserAgent"] = d->mUserAgent;
+  }
 
-  if ( d->mDigestAuth )
+  if ( d->mDigestAuth ) {
     metaData["WWW-Authenticate:"] = "Digest";
+  }
 
   Query *query = Query::create( id, this );
-  connect( query, SIGNAL( message( const QList<QVariant> &, const QVariant& ) ), msgObj, messageSlot );
-  connect( query, SIGNAL( fault( int, const QString&, const QVariant& ) ), faultObj, faultSlot );
-  connect( query, SIGNAL( finished( Query* ) ), this, SLOT( queryFinished( Query* ) ) );
+  connect( query, SIGNAL( message( const QList<QVariant> &, const QVariant & ) ), msgObj, messageSlot );
+  connect( query, SIGNAL( fault( int, const QString &, const QVariant & ) ), faultObj, faultSlot );
+  connect( query, SIGNAL( finished( Query * ) ), this, SLOT( queryFinished( Query * ) ) );
   d->mPendingQueries.append( query );
 
   query->call( d->mUrl.url(), method, args, metaData );
 }
 
 void Client::call( const QString &method, const QVariant &arg,
-                   QObject* msgObj, const char* messageSlot,
-                   QObject* faultObj, const char* faultSlot,
+                   QObject *msgObj, const char *messageSlot,
+                   QObject *faultObj, const char *faultSlot,
                    const QVariant &id )
 {
   QList<QVariant> args;
@@ -147,8 +152,8 @@ void Client::call( const QString &method, const QVariant &arg,
 }
 
 void Client::call( const QString &method, int arg,
-                   QObject* msgObj, const char* messageSlot,
-                   QObject* faultObj, const char* faultSlot,
+                   QObject *msgObj, const char *messageSlot,
+                   QObject *faultObj, const char *faultSlot,
                    const QVariant &id )
 {
   QList<QVariant> args;
@@ -157,8 +162,8 @@ void Client::call( const QString &method, int arg,
 }
 
 void Client::call( const QString &method, bool arg,
-                   QObject* msgObj, const char* messageSlot,
-                   QObject* faultObj, const char* faultSlot,
+                   QObject *msgObj, const char *messageSlot,
+                   QObject *faultObj, const char *faultSlot,
                    const QVariant &id )
 {
   QList<QVariant> args;
@@ -167,8 +172,8 @@ void Client::call( const QString &method, bool arg,
 }
 
 void Client::call( const QString &method, double arg ,
-                   QObject* msgObj, const char* messageSlot,
-                   QObject* faultObj, const char* faultSlot,
+                   QObject *msgObj, const char *messageSlot,
+                   QObject *faultObj, const char *faultSlot,
                    const QVariant &id )
 {
   QList<QVariant> args;
@@ -177,8 +182,8 @@ void Client::call( const QString &method, double arg ,
 }
 
 void Client::call( const QString &method, const QString &arg ,
-                   QObject* msgObj, const char* messageSlot,
-                   QObject* faultObj, const char* faultSlot,
+                   QObject *msgObj, const char *messageSlot,
+                   QObject *faultObj, const char *faultSlot,
                    const QVariant &id )
 {
   QList<QVariant> args;
@@ -187,8 +192,8 @@ void Client::call( const QString &method, const QString &arg ,
 }
 
 void Client::call( const QString &method, const QByteArray &arg ,
-                   QObject* msgObj, const char* messageSlot,
-                   QObject* faultObj, const char* faultSlot,
+                   QObject *msgObj, const char *messageSlot,
+                   QObject *faultObj, const char *faultSlot,
                    const QVariant &id )
 {
   QList<QVariant> args;
@@ -197,8 +202,8 @@ void Client::call( const QString &method, const QByteArray &arg ,
 }
 
 void Client::call( const QString &method, const QDateTime &arg,
-                   QObject* msgObj, const char* messageSlot,
-                   QObject* faultObj, const char* faultSlot,
+                   QObject *msgObj, const char *messageSlot,
+                   QObject *faultObj, const char *faultSlot,
                    const QVariant &id )
 {
   QList<QVariant> args;
@@ -207,13 +212,14 @@ void Client::call( const QString &method, const QDateTime &arg,
 }
 
 void Client::call( const QString &method, const QStringList &arg,
-                   QObject* msgObj, const char* messageSlot,
-                   QObject* faultObj, const char* faultSlot,
+                   QObject *msgObj, const char *messageSlot,
+                   QObject *faultObj, const char *faultSlot,
                    const QVariant &id )
 {
   QList<QVariant> args;
-  for ( int i = 0; i < arg.count(); ++i )
+  for ( int i = 0; i < arg.count(); ++i ) {
     args << QVariant( arg[ i ] );
+  }
 
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }

@@ -8,20 +8,6 @@
 *   the Free Software Foundation; either version 2 of the License, or     *
 *   (at your option) any later version.                                   *
 ***************************************************************************/
-
-#ifndef KXML_RPC_CLIENT_H
-#define KXML_RPC_CLIENT_H
-
-#include <QtCore/QList>
-#include <QtCore/QObject>
-#include <QtCore/QVariant>
-
-#include <kurl.h>
-#include "kxmlrpcclient.h"
-
-namespace KXmlRpc
-{
-
 /**
   @file
 
@@ -33,7 +19,19 @@ namespace KXmlRpc
   @author Tobias Koenig <tokoe@kde.org>
 
   \par Maintainer: Narayan Newton <narayannewton@gmail.com>
- */
+*/
+
+#ifndef KXML_RPC_CLIENT_H
+#define KXML_RPC_CLIENT_H
+
+#include <QtCore/QList>
+#include <QtCore/QObject>
+#include <QtCore/QVariant>
+
+#include <kurl.h>
+#include "kxmlrpcclient.h"
+
+namespace KXmlRpc {
 
 /**
   @brief
@@ -143,8 +141,8 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, const QList<QVariant> &args,
-        QObject* msgObj, const char* messageSlot,
-        QObject* faultObj, const char* faultSlot,
+        QObject *msgObj, const char *messageSlot,
+        QObject *faultObj, const char *faultSlot,
         const QVariant &id = QVariant() );
 
     /**
@@ -160,8 +158,8 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, const QVariant &arg,
-        QObject* msgObj, const char* messageSlot,
-        QObject* faultObj, const char* faultSlot,
+        QObject *msgObj, const char *messageSlot,
+        QObject *faultObj, const char *faultSlot,
         const QVariant &id = QVariant() );
 
     /**
@@ -177,8 +175,8 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, int arg ,
-        QObject* msgObj, const char* messageSlot,
-        QObject* faultObj, const char* faultSlot,
+        QObject *msgObj, const char *messageSlot,
+        QObject *faultObj, const char *faultSlot,
         const QVariant &id = QVariant() );
 
     /**
@@ -194,8 +192,8 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, bool arg,
-        QObject* msgObj, const char* messageSlot,
-        QObject* faultObj, const char* faultSlot,
+        QObject *msgObj, const char *messageSlot,
+        QObject *faultObj, const char *faultSlot,
         const QVariant &id = QVariant() );
 
     /**
@@ -211,8 +209,8 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, double arg,
-        QObject* msgObj, const char* messageSlot,
-        QObject* faultObj, const char* faultSlot,
+        QObject *msgObj, const char *messageSlot,
+        QObject *faultObj, const char *faultSlot,
         const QVariant &id = QVariant() );
 
     /**
@@ -228,8 +226,8 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, const QString &arg,
-        QObject* msgObj, const char* messageSlot,
-        QObject* faultObj, const char* faultSlot,
+        QObject *msgObj, const char *messageSlot,
+        QObject *faultObj, const char *faultSlot,
         const QVariant &id = QVariant() );
 
     /**
@@ -245,8 +243,8 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, const QByteArray &arg,
-        QObject* msgObj, const char* messageSlot,
-        QObject* faultObj, const char* faultSlot,
+        QObject *msgObj, const char *messageSlot,
+        QObject *faultObj, const char *faultSlot,
         const QVariant &id = QVariant() );
 
     /**
@@ -262,8 +260,8 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, const QDateTime &arg,
-        QObject* msgObj, const char* messageSlot,
-        QObject* faultObj, const char* faultSlot,
+        QObject *msgObj, const char *messageSlot,
+        QObject *faultObj, const char *faultSlot,
         const QVariant &id = QVariant() );
 
     /**
@@ -279,33 +277,34 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, const QStringList &arg,
-        QObject* msgObj, const char* messageSlot,
-        QObject* faultObj, const char* faultSlot,
+        QObject *msgObj, const char *messageSlot,
+        QObject *faultObj, const char *faultSlot,
         const QVariant &id = QVariant() );
 
   private:
     class Private;
-    Private* const d;
+    Private *const d;
 
     template <typename T>
     void call( const QString &method, const QList<T> &arg,
-        QObject* obj1, const char* messageSlot,
-        QObject* obj2, const char* faultSlot,
+        QObject *obj1, const char *messageSlot,
+        QObject *obj2, const char *faultSlot,
         const QVariant &id = QVariant() );
 
-    Q_PRIVATE_SLOT( d, void queryFinished( Query* ) )
+    Q_PRIVATE_SLOT( d, void queryFinished( Query * ) )
 };
 
 template <typename T>
 void Client::call( const QString &method, const QList<T> &arg,
-                   QObject* msgObj, const char* messageSlot,
-                   QObject* faultObj, const char* faultSlot,
+                   QObject *msgObj, const char *messageSlot,
+                   QObject *faultObj, const char *faultSlot,
                    const QVariant &id )
 {
   QList<QVariant> args;
 
-  for ( int i = 0; i < arg.count(); ++i )
+  for ( int i = 0; i < arg.count(); ++i ) {
     args << QVariant( arg[ i ] );
+  }
 
   return call( method, args, faultObj, faultSlot, msgObj, messageSlot, id );
 }
