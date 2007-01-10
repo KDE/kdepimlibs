@@ -46,10 +46,11 @@ Result::Result( const Result &other )
   *d = *other.d;
 }
 
-Result& Result::operator=( const Result &other )
+Result &Result::operator=( const Result &other )
 {
-  if ( this == &other )
+  if ( this == &other ) {
     return *this;
+  }
 
   *d = *other.d;
 
@@ -105,7 +106,7 @@ class Query::Private
     void slotData( KIO::Job *job, const QByteArray &data );
     void slotResult( KIO::Job *job );
 
-    Query* mParent;
+    Query *mParent;
     QByteArray mBuffer;
     QVariant mId;
     QList<KIO::Job*> mPendingJobs;
@@ -159,8 +160,9 @@ QString Query::Private::markupCall( const QString &cmd, const QList<QVariant> &a
     markup += "<params>\r\n";
     QList<QVariant>::ConstIterator it = args.begin();
     QList<QVariant>::ConstIterator end = args.end();
-    for ( ; it != end; ++it )
+    for ( ; it != end; ++it ) {
       markup += "<param>\r\n" + marshal( *it ) + "</param>\r\n";
+    }
     markup += "</params>\r\n";
   }
 
@@ -196,8 +198,9 @@ QString Query::Private::marshal( const QVariant &arg ) const
         const QList<QVariant> args = arg.toList();
         QList<QVariant>::ConstIterator it = args.begin();
         QList<QVariant>::ConstIterator end = args.end();
-        for ( ; it != end; ++it )
+        for ( ; it != end; ++it ) {
           markup += marshal( *it );
+        }
         markup += "</data></array></value>\r\n";
         return markup;
       }
@@ -230,31 +233,31 @@ QVariant Query::Private::demarshal( const QDomElement &element ) const
   const QDomElement typeElement = element.firstChild().toElement();
   const QString typeName = typeElement.tagName().toLower();
 
-  if ( typeName == "string" )
+  if ( typeName == "string" ) {
     return QVariant( typeElement.text() );
-  else if ( typeName == "i4" || typeName == "int" )
+  } else if ( typeName == "i4" || typeName == "int" ) {
     return QVariant( typeElement.text().toInt() );
-  else if ( typeName == "double" )
+  } else if ( typeName == "double" ) {
     return QVariant( typeElement.text().toDouble() );
-  else if ( typeName == "boolean" ) {
+  } else if ( typeName == "boolean" ) {
 
-   if ( typeElement.text().toLower() == "true" || typeElement.text() == "1" )
-    return QVariant( true );
-  else
-    return QVariant( false );
-  }
-  else if ( typeName == "base64" )
+    if ( typeElement.text().toLower() == "true" || typeElement.text() == "1" ) {
+      return QVariant( true );
+    } else {
+      return QVariant( false );
+    }
+  } else if ( typeName == "base64" ) {
     return QVariant( QByteArray::fromBase64( typeElement.text().toLatin1() ) );
-  else if ( typeName == "datetime" || typeName == "datetime.iso8601" )
+  } else if ( typeName == "datetime" || typeName == "datetime.iso8601" ) {
     return QVariant( QDateTime::fromString( typeElement.text(), Qt::ISODate ) );
-  else if ( typeName == "array" ) {
+  } else if ( typeName == "array" ) {
     QList<QVariant> values;
     QDomNode valueNode = typeElement.firstChild().firstChild();
     while ( !valueNode.isNull() ) {
       values << demarshal( valueNode.toElement() );
       valueNode = valueNode.nextSibling();
     }
-  return QVariant( values );
+    return QVariant( values );
   } else if ( typeName == "struct" ) {
 
     QMap<QString, QVariant> map;
@@ -294,7 +297,7 @@ void Query::Private::slotResult( KIO::Job *job )
   QDomDocument doc;
   QString errMsg;
   int errLine, errCol;
-  if ( !doc.setContent( data, false, &errMsg, &errLine, &errCol  ) ) {
+  if ( !doc.setContent( data, false, &errMsg, &errLine, &errCol ) ) {
     emit mParent->fault( -1, i18n( "Received invalid XML markup: %1 at %2:%3" )
                        .arg( errMsg ).arg( errLine ).arg( errCol ), mId );
     emit mParent->finished( mParent );
@@ -303,9 +306,9 @@ void Query::Private::slotResult( KIO::Job *job )
 
   mBuffer.truncate( 0 );
 
-  if ( isMessageResponse( doc ) )
+  if ( isMessageResponse( doc ) ) {
     emit mParent->message( parseMessageResponse( doc ).data(), mId );
-  else if ( isFaultResponse( doc ) ) {
+  } else if ( isFaultResponse( doc ) ) {
     emit mParent->fault( parseFaultResponse( doc ).errorCode(), parseFaultResponse( doc ).errorString(), mId );
   } else {
     emit mParent->fault( 1, i18n( "Unknown type of XML markup received" ), mId );
@@ -314,13 +317,12 @@ void Query::Private::slotResult( KIO::Job *job )
   emit mParent->finished( mParent );
 }
 
-
 Query *Query::create( const QVariant &id, QObject *parent )
 {
   return new Query( id, parent );
 }
 
-void Query::call( const QString &server, 
+void Query::call( const QString &server,
                   const QString &method,
                   const QList<QVariant> &args,
                   const QMap<QString, QString> &jobMetaData )
@@ -331,7 +333,7 @@ void Query::call( const QString &server,
   QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
 
-  KIO_ARGS << (int)1 << KUrl(server);
+  KIO_ARGS << (int)1 << KUrl( server );
   KIO::TransferJob *job = new KIO::TransferJob( KUrl( server ), KIO::CMD_SPECIAL, packedArgs, postData, false );
 
   if ( !job ) {
@@ -342,15 +344,14 @@ void Query::call( const QString &server,
   job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
   job->addMetaData( "ConnectTimeout", "50" );
 
-  for (mapIter = jobMetaData.begin(); mapIter != jobMetaData.end(); mapIter++) 
-  {
+  for (mapIter = jobMetaData.begin(); mapIter != jobMetaData.end(); mapIter++) {
     job->addMetaData( mapIter.key(), mapIter.value() );
   }
 
-  connect( job, SIGNAL( data( KIO::Job*, const QByteArray& ) ),
-           this, SLOT( slotData( KIO::Job*, const QByteArray& ) ) );
-  connect( job, SIGNAL( result( KIO::Job* ) ),
-           this, SLOT( slotResult( KIO::Job* ) ) );
+  connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+           this, SLOT( slotData( KIO::Job *, const QByteArray & ) ) );
+  connect( job, SIGNAL( result( KIO::Job * ) ),
+           this, SLOT( slotResult( KIO::Job * ) ) );
 
   d->mPendingJobs.append( job );
 }
@@ -364,8 +365,9 @@ Query::Query( const QVariant &id, QObject *parent )
 Query::~Query()
 {
   QList<KIO::Job*>::Iterator it;
-  for ( it = d->mPendingJobs.begin(); it != d->mPendingJobs.end(); ++it )
+  for ( it = d->mPendingJobs.begin(); it != d->mPendingJobs.end(); ++it ) {
     (*it)->kill();
+  }
 }
 
 #include "query.moc"

@@ -9,22 +9,6 @@
 *   (at your option) any later version.                                   *
 ***************************************************************************/
 
-#ifndef KXML_RPC_QUERY_H
-#define KXML_RPC_QUERY_H
-
-#include <QtCore/QList>
-#include <QtCore/QObject>
-#include <QtCore/QVariant>
-#include <QtCore/QMap>
-#include <kxmlrpcclient.h>
-#include <kio/job.h>
-
-class QString;
-class QDomDocument;
-class QDomElement;
-
-namespace KXmlRpc {
-
 /**
   @file
 
@@ -35,7 +19,24 @@ namespace KXmlRpc {
   @author Narayan Newton <narayannewton@gmail.com>
   @author Frerich Raabe <raabe@kde.org>
   @author Tobias Koenig <tokoe@kde.org>
- */
+*/
+
+#ifndef KXML_RPC_QUERY_H
+#define KXML_RPC_QUERY_H
+
+#include <QtCore/QList>
+#include <QtCore/QObject>
+#include <QtCore/QVariant>
+#include <QtCore/QMap>
+#include <kio/job.h>
+
+#include "kxmlrpcclient.h"
+
+class QString;
+class QDomDocument;
+class QDomElement;
+
+namespace KXmlRpc {
 
 /**
   @brief
@@ -60,7 +61,7 @@ class KXMLRPCCLIENT_EXPORT Query : public QObject
 
   public slots:
     /**
-      Calls the specified method on the specified server with 
+      Calls the specified method on the specified server with
       the given argument list.
 
       @param server the server to contact.
@@ -87,23 +88,22 @@ class KXMLRPCCLIENT_EXPORT Query : public QObject
     /**
       A signal sent when a query finishes.
      */
-    void finished( Query* );
+    void finished( Query * );
 
   private:
     Query( const QVariant &id, QObject *parent = 0 );
     virtual ~Query();
 
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotData( KIO::Job*, const QByteArray& ) )
-    Q_PRIVATE_SLOT( d, void slotResult( KIO::Job* ) )
+    Q_PRIVATE_SLOT( d, void slotData( KIO::Job *, const QByteArray & ) )
+    Q_PRIVATE_SLOT( d, void slotResult( KIO::Job * ) )
 };
-
 
 /**
   @brief
-  Result is an internal class that represents a response 
+  Result is an internal class that represents a response
   from a XML-RPC server.
 
   This is an internal class and is only used by Query.
@@ -133,7 +133,7 @@ class Result
     /**
       Assigns the values of one result to this one.
      */
-    Result& operator=( const Result &other );
+    Result &operator=( const Result &other );
 
     /**
       Returns true if the method call succeeded, false
@@ -144,7 +144,7 @@ class Result
     bool success() const;
 
     /**
-      Returns the error code of the fault. 
+      Returns the error code of the fault.
 
       @see success(), errorString()
      */
@@ -158,13 +158,13 @@ class Result
     QString errorString() const;
 
     /**
-      Returns the data sent to us from the server. 
+      Returns the data sent to us from the server.
      */
     QList<QVariant> data() const;
 
   private:
     class Private;
-    Private* const d;
+    Private *const d;
 };
 
 } // namespace XmlRpc
