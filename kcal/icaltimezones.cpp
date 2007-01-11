@@ -463,7 +463,7 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
           newRule = 0;
           times += QDateTime();   // append a dummy value since last value in list is ignored
         } else {
-          if (transitionsDone[i] 
+          if (transitionsDone[i]
           ||  transits[i].phase() != phase
           ||  transits[i-1].phase().utcOffset() != preOffset)
             continue;
@@ -844,7 +844,9 @@ QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool da
       {
         // TZNAME can appear multiple times in order to provide language
         // translations of the time zone offset name.
+#ifdef __GNUC__
 #warning Does this cope with multiple language specifications?
+#endif
         QByteArray tzname = icalproperty_get_tzname(p);
         // Outlook (2000) places "Standard Time" and "Daylight Time" in the TZNAME
         // strings, which is totally useless. So ignore those.
