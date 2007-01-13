@@ -221,7 +221,8 @@ set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS} ${libicalss_SRCS}
    calendarnull.cpp 
    freebusyurlstore.cpp 
    confirmsavedialog.cpp 
-   icaltimezones.cpp )
+   icaltimezones.cpp
+   kresult.cpp )
 
 kde4_automoc(${kcal_LIB_SRCS})
 
@@ -341,5 +342,6 @@ install( FILES
 	todo.h
 	vcaldrag.h
 	vcalformat.h
+        kresult.h
 DESTINATION ${INCLUDE_INSTALL_DIR}/kcal)
 install( FILES kcal_manager.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources)
