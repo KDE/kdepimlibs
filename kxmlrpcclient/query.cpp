@@ -104,12 +104,12 @@ class Query::Private
     QVariant demarshal( const QDomElement &element ) const;
 
     void slotData( KIO::Job *job, const QByteArray &data );
-    void slotResult( KIO::Job *job );
+    void slotResult( KJob *job );
 
     Query *mParent;
     QByteArray mBuffer;
     QVariant mId;
-    QList<KIO::Job*> mPendingJobs;
+    QList<KJob*> mPendingJobs;
 };
 
 bool Query::Private::isMessageResponse( const QDomDocument &doc ) const
@@ -282,7 +282,7 @@ void Query::Private::slotData( KIO::Job *, const QByteArray &data )
   memcpy( mBuffer.data() + oldSize, data.data(), data.size() );
 }
 
-void Query::Private::slotResult( KIO::Job *job )
+void Query::Private::slotResult( KJob *job )
 {
   mPendingJobs.removeAll( job );
 
@@ -350,8 +350,8 @@ void Query::call( const QString &server,
 
   connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            this, SLOT( slotData( KIO::Job *, const QByteArray & ) ) );
-  connect( job, SIGNAL( result( KIO::Job * ) ),
-           this, SLOT( slotResult( KIO::Job * ) ) );
+  connect( job, SIGNAL( result( KJob * ) ),
+           this, SLOT( slotResult( KJob * ) ) );
 
   d->mPendingJobs.append( job );
 }
@@ -364,7 +364,7 @@ Query::Query( const QVariant &id, QObject *parent )
 
 Query::~Query()
 {
-  QList<KIO::Job*>::Iterator it;
+  QList<KJob*>::Iterator it;
   for ( it = d->mPendingJobs.begin(); it != d->mPendingJobs.end(); ++it ) {
     (*it)->kill();
   }

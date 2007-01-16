@@ -98,7 +98,7 @@ class KXMLRPCCLIENT_EXPORT Query : public QObject
     Private *const d;
 
     Q_PRIVATE_SLOT( d, void slotData( KIO::Job *, const QByteArray & ) )
-    Q_PRIVATE_SLOT( d, void slotResult( KIO::Job * ) )
+    Q_PRIVATE_SLOT( d, void slotResult( KJob * ) )
 };
 
 /**
