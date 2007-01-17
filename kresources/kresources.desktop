@@ -9,7 +9,10 @@ X-KDE-Library=kcm_kresources
 X-KDE-FactoryName=kcm_kresources
 
 Name=KDE Resources
+Name[el]=Πόροι του KDE
 
 Comment=Configure KDE Resources
+Comment[el]=Ρύθμιση πόρων του KDE
 
 Keywords=resources,konnector resource,contact resource,calendar resource,notes resource,imap
+Keywords[el]=πόροι,πόροι του konnector,πόρος επαφής,πόρος ημερολογίου,πόρος σημειώσεων,imap

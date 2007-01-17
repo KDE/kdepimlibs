@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Calendar in Local Directory
+Name[el]=Ημερολόγιο σε τοπικό κατάλογο
 Name[fr]=Calendrier dans un dossier local
 X-KDE-Library=kcal_localdir
 Type=Service
