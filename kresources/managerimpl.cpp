@@ -50,15 +50,15 @@ ManagerImpl::ManagerImpl( ManagerNotifier *notifier, const QString &family )
 
   mId = KRandom::randomString( 8 );
 
-  // Register with DCOP
+  // Register with D-Bus
   QDBusConnection::sessionBus().registerService("org.kde.KResourcesManager");
 
   QDBusConnection::sessionBus().connect("", dBusPath, "org.kde.KResourcesManager", "signalKResourceAdded",
-      this, SLOT(dcopKResourceAdded(QString,QString)));
+      this, SLOT(dbusKResourceAdded(QString,QString)));
   QDBusConnection::sessionBus().connect("", dBusPath, "org.kde.KResourcesManager", "signalKResourceModified",
-      this, SLOT(dcopKResourceModified(QString,QString)));
+      this, SLOT(dbusKResourceModified(QString,QString)));
   QDBusConnection::sessionBus().connect("", dBusPath, "org.kde.KResourcesManager", "signalKResourceDeleted",
-      this, SLOT(dcopKResourceDeleted(QString,QString)));
+      this, SLOT(dbusKResourceDeleted(QString,QString)));
 }
 
 ManagerImpl::~ManagerImpl()
@@ -204,14 +204,14 @@ void ManagerImpl::setStandardResource( Resource *resource )
 
 // DCOP asynchronous functions
 
-void ManagerImpl::dcopKResourceAdded( const QString& managerId,
+void ManagerImpl::dbusKResourceAdded( const QString& managerId,
                                       const QString& resourceId )
 {
   if ( managerId == mId ) {
-    kDebug(5650) << "Ignore DCOP notification to myself" << endl;
+    kDebug(5650) << "Ignore D-Bus notification to myself" << endl;
     return;
   }
-  kDebug(5650) << "Receive DCOP call: added resource " << resourceId << endl;
+  kDebug(5650) << "Receive D-Bus call: added resource " << resourceId << endl;
 
   if ( getResource( resourceId ) ) {
     kDebug(5650) << "This resource is already known to me." << endl;
@@ -225,35 +225,35 @@ void ManagerImpl::dcopKResourceAdded( const QString& managerId,
   if ( resource ) {
     mNotifier->notifyResourceAdded( resource );
   } else
-    kError() << "Received DCOP: resource added for unknown resource "
+    kError() << "Received D-Bus: resource added for unknown resource "
               << resourceId << endl;
 }
 
-void ManagerImpl::dcopKResourceModified( const QString& managerId,
+void ManagerImpl::dbusKResourceModified( const QString& managerId,
                                          const QString& resourceId )
 {
   if ( managerId == mId ) {
-    kDebug(5650) << "Ignore DCOP notification to myself" << endl;
+    kDebug(5650) << "Ignore D-Bus notification to myself" << endl;
     return;
   }
-  kDebug(5650) << "Receive DCOP call: modified resource " << resourceId << endl;
+  kDebug(5650) << "Receive D-Bus call: modified resource " << resourceId << endl;
 
   Resource *resource = getResource( resourceId );
   if ( resource ) {
     mNotifier->notifyResourceModified( resource );
   } else
-    kError() << "Received DCOP: resource modified for unknown resource "
+    kError() << "Received D-Bus: resource modified for unknown resource "
               << resourceId << endl;
 }
 
-void ManagerImpl::dcopKResourceDeleted( const QString& managerId,
+void ManagerImpl::dbusKResourceDeleted( const QString& managerId,
                                         const QString& resourceId )
 {
   if ( managerId == mId ) {
-    kDebug(5650) << "Ignore DCOP notification to myself" << endl;
+    kDebug(5650) << "Ignore D-Bus notification to myself" << endl;
     return;
   }
-  kDebug(5650) << "Receive DCOP call: deleted resource " << resourceId << endl;
+  kDebug(5650) << "Receive D-Bus call: deleted resource " << resourceId << endl;
 
   Resource *resource = getResource( resourceId );
   if ( resource ) {
@@ -265,7 +265,7 @@ void ManagerImpl::dcopKResourceDeleted( const QString& managerId,
       mStandard = 0;
     mResources.removeAll( resource );
   } else
-    kError() << "Received DCOP: resource deleted for unknown resource "
+    kError() << "Received D-Bus: resource deleted for unknown resource "
               << resourceId << endl;
 }
 

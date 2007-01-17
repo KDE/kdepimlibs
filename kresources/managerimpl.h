@@ -76,12 +76,12 @@ class KRESOURCES_EXPORT ManagerImpl : public QObject
     void signalKResourceDeleted( QString managerId, QString resourceId );
 
   private Q_SLOTS:
-    // dcop calls
-    void dcopKResourceAdded( const QString& managerId,
+    // dbus calls
+    void dbusKResourceAdded( const QString& managerId,
                              const QString& resourceId );
-    void dcopKResourceModified( const QString& managerId,
+    void dbusKResourceModified( const QString& managerId,
                                 const QString& resourceId );
-    void dcopKResourceDeleted( const QString& managerId,
+    void dbusKResourceDeleted( const QString& managerId,
                                const QString& resourceId );
 
   private:
