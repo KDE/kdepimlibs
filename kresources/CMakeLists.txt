@@ -12,7 +12,6 @@ add_definitions(${QDBUS_DEFINITIONS})
 set(kresources_LIB_SRCS
    resource.cpp
    factory.cpp
-   manageradaptor.cpp
    managerimpl.cpp
    configwidget.cpp
    configdialog.cpp
@@ -20,6 +19,8 @@ set(kresources_LIB_SRCS
    configpage.cpp
    idmapper.cpp
    )
+
+qt4_add_dbus_adaptor( kresources_LIB_SRCS org.kde.KResourcesManager.xml managerimpl.h KRES::ManagerImpl )
 
 kde4_automoc(${kresources_LIB_SRCS})
 

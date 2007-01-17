@@ -34,7 +34,7 @@
 #include "factory.h"
 #include "manager.h"
 #include "managerimpl.h"
-#include "manageradaptor_p.h"
+#include "kresourcesmanageradaptor.h"
 
 using namespace KRES;
 
@@ -43,7 +43,7 @@ ManagerImpl::ManagerImpl( ManagerNotifier *notifier, const QString &family )
     mFamily( family ), mConfig( 0 ), mStdConfig( 0 ), mStandard( 0 ),
     mFactory( 0 ), mConfigRead( false )
 {
-  new ManagerAdaptor(this);
+  new KResourcesManagerAdaptor(this);
   const QString dBusPath = QLatin1String("/ManagerIface_") + family;
   QDBusConnection::sessionBus().registerObject(dBusPath, this);
   kDebug(5650) << "ManagerImpl::ManagerImpl()" << endl;
