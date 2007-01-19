@@ -44,11 +44,16 @@ SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent,
   setObjectName(name);
   setCaption( i18n( "Resource Selection" ) );
   resize( 300, 200 );
+  setButtons(Ok|Cancel);
+  setDefaultButton(Ok);
 
-  QVBoxLayout *mainLayout = new QVBoxLayout( this );
+  QWidget *widget = new QWidget(this);
+  setMainWidget(widget);
+
+  QVBoxLayout *mainLayout = new QVBoxLayout( widget );
   mainLayout->setMargin( marginHint() );
 
-  QGroupBox *groupBox = new QGroupBox( this );
+  QGroupBox *groupBox = new QGroupBox( widget );
   QGridLayout *grid = new QGridLayout;
   groupBox->setLayout( grid );
   groupBox->setTitle( i18n( "Resources" ) );
@@ -59,15 +64,6 @@ SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent,
   mainLayout->addWidget( groupBox );
 
   mainLayout->addSpacing( 10 );
-
-  KButtonBox *buttonBox = new KButtonBox( this );
-
-  buttonBox->addStretch();
-  buttonBox->addButton( KStandardGuiItem::ok(), this, SLOT( accept() ) );
-  buttonBox->addButton( KStandardGuiItem::cancel(), this, SLOT( reject() ) );
-  buttonBox->layout();
-
-  mainLayout->addWidget( buttonBox );
 
   // setup listbox
   uint counter = 0;
@@ -81,7 +77,7 @@ SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent,
   }
 
   mResourceId->setCurrentRow( 0 );
-  connect( mResourceId, SIGNAL( itemActived(QListWidgetItem*)),
+  connect( mResourceId, SIGNAL( itemActivated(QListWidgetItem*)),
            SLOT(accept()) );
 }
 
