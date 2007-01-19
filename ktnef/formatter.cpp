@@ -513,8 +513,8 @@ QString KTnef::Formatter::msTNEFToVPart( const QByteArray &tnef )
 }
 
 QString KTnef::Formatter::formatTNEFInvitation( const QByteArray &tnef,
-                                                Calendar *cal,
-                                                InvitationFormatterHelper *h )
+                                                KCal::Calendar *cal,
+                                                KCal::InvitationFormatterHelper *h )
 {
   QString vPart = msTNEFToVPart( tnef );
   QString iCal = IncidenceFormatter::formatICalInvitation( vPart, cal, h );

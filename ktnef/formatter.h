@@ -51,9 +51,9 @@ class KTNEF_EXPORT Formatter
     /**
       Format a @acronym TNEF attachment to an HTML mail.
 
-      @param tnef is the #QByteArray contain the @acronym TNEF data.
-      @param cal is a pointer to a #Calendar object.
-      @param h is a poitner to a #InvitationFormatterHelp object.
+      @param tnef is the QByteArray contain the @acronym TNEF data.
+      @param cal is a pointer to a Calendar object.
+      @param h is a pointer to a InvitationFormatterHelp object.
     */
     static QString formatTNEFInvitation( const QByteArray &tnef,
                                          KCal::Calendar *cal,
@@ -62,7 +62,7 @@ class KTNEF_EXPORT Formatter
     /**
       Transform a @acronym TNEF attachment to an iCal or vCard.
 
-      @param tnef is the #QByteArray containing the @acronym TNEF data.
+      @param tnef is the QByteArray containing the @acronym TNEF data.
 
       @return a string containing the transformed attachment.
     */

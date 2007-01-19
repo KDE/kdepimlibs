@@ -111,9 +111,9 @@ public:
   void setDefaultExtractDir( const QString &dirname );
 
   /**
-   * Returns the #KTNEFMessage used in the parsing process.
+   * Returns the KTNEFMessage used in the parsing process.
    *
-   * @return a pointer to a #KTNEFMessage object.
+   * @return a pointer to a KTNEFMessage object.
    */
   KTNEFMessage *message() const;
 
@@ -133,7 +133,7 @@ private:
   bool decodeMessage();
 
   /**
-   * Extracts the #KTNEFAttach @p att into the directory @p dirname.
+   * Extracts the KTNEFAttach @p att into the directory @p dirname.
    *
    * @param att is a pointer to the attachment.
    * @param dirname is the name of the extraction directory.
@@ -153,7 +153,7 @@ private:
    * Reads the @acronym MAPI properties.
    *
    * @param props is the @acronym MAPI property map.
-   * @param attach is a pointer to a  #KTNEFAttach object.
+   * @param attach is a pointer to a  KTNEFAttach object.
    *
    * @return true if the read succeeded; otherwise false.
    */
@@ -161,14 +161,14 @@ private:
                            KTNEFAttach *attach = 0 );
 
   /**
-   * Parses the attachment read from the #QIODevice set in #openDevice.
+   * Parses the attachment read from the QIODevice set in openDevice().
    *
    * @return true if the parsing succeeds; otherwise false.
    */
   bool parseDevice();
 
   /**
-   * Removes the #QIODevice from the parser object.
+   * Removes the QIODevice from the parser object.
    */
   void deleteDevice();
 
