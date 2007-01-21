@@ -31,6 +31,7 @@
 #include <kurl.h>
 #include "kxmlrpcclient.h"
 
+/** Names for XmlRpc related classes */
 namespace KXmlRpc {
 
 /**
@@ -133,10 +134,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       argument list.
 
       @param method the method on the server we are going to be calling
-      @param arg the argument list to pass to the server
-      @param obj the object containing the error slot
+      @param args the argument list to pass to the server
+      @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot
+      @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -150,10 +151,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       argument.
 
       @param method the method on the server we are going to be calling
-      @param arg the argument to pass to the server
-      @param obj the object containing the error slot
+      @param args the argument to pass to the server
+      @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot
+      @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -167,10 +168,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       int as the argument.
 
       @param method the method on the server we are going to be calling
-      @param arg the int to pass to the server
-      @param obj the object containing the error slot
+      @param args the int to pass to the server
+      @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot
+      @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -184,10 +185,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       bool as the argument.
 
       @param method the method on the server we are going to be calling
-      @param arg the bool to pass to the server
-      @param obj the object containing the error slot
+      @param args the bool to pass to the server
+      @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot
+      @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -201,10 +202,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       double as the argument.
 
       @param method the method on the server we are going to be calling
-      @param arg the double to pass to the server
-      @param obj the object containing the error slot
+      @param args the double to pass to the server
+      @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot
+      @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -218,10 +219,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       string as the argument.
 
       @param method the method on the server we are going to be calling
-      @param arg the string to pass to the server
-      @param obj the object containing the error slot
+      @param args the string to pass to the server
+      @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot
+      @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -235,10 +236,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       byte array as the argument.
 
       @param method the method on the server we are going to be calling
-      @param arg the array to pass to the server
-      @param obj the object containing the error slot
+      @param args the array to pass to the server
+      @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot
+      @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -252,10 +253,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       date as the argument
 
       @param method the method on the server we are going to be calling
-      @param arg the date and/or time to pass to the server
-      @param obj the object containing the error slot
+      @param args the date and/or time to pass to the server
+      @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot
+      @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */
@@ -269,10 +270,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       string list as the argument
 
       @param method the method on the server we are going to be calling
-      @param arg the list of strings to pass to the server
-      @param obj the object containing the error slot
+      @param args the list of strings to pass to the server
+      @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param obj the object containing the data slot
+      @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
       @param id the id for our #Client object, defaults to empty
      */

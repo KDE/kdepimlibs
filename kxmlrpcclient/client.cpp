@@ -19,12 +19,6 @@
 #include "client.h"
 #include "query.h"
 
-/**
-  @file
-
-  The implementation of KXmlRpc::Client
-**/
-
 using namespace KXmlRpc;
 
 class Client::Private
