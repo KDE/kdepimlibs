@@ -36,6 +36,7 @@ class QString;
 class QDomDocument;
 class QDomElement;
 
+/** Namespace for XmlRpc related classes */
 namespace KXmlRpc {
 
 /**
@@ -67,7 +68,6 @@ class KXMLRPCCLIENT_EXPORT Query : public QObject
       @param server the server to contact.
       @param method the method to call.
       @param args an argument list to pass to said method.
-      @param userAgent the string to identify as to the server.
       @param jobMetaData additional arguments to pass to the KIO::Job.
      */
     void call( const QString &server, const QString &method,
