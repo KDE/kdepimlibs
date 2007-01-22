@@ -33,6 +33,18 @@
 #define KCAL_EXPORT KDE_EXPORT
 #endif
 
+#ifdef COMPILING_TESTS
+#if defined(_WIN32) || defined(_WIN64)
+#ifdef MAKE_KCAL_LIB
+#define KCAL_TEST_EXPORT KDE_EXPORT
+#else
+#define KCAL_TEST_EXPORT KDE_IMPORT
+#endif
+#else
+#define KCAL_TEST_EXPORT KDE_EXPORT
+#endif
+#endif /* COMPILING_TESTS */
+
 /**
   @namespace KCal
 

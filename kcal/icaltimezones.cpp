@@ -363,7 +363,7 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
         QByteArray icalprefix = ICalTimeZoneSource::icalTzidPrefix();
         int len = icalprefix.size();
         if ( !strncmp( icalprefix, tzid, len ) ) {
-          char *s = strchr( tzid + len, '/' );    // find third '/'
+          const char *s = strchr( tzid + len, '/' );    // find third '/'
           if ( s ) {
             QByteArray tzidShort( s + 1 );    // deep copy of string (needed by icalvalue_set_text())
             icalvalue_set_text( value, tzidShort );
