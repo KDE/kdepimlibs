@@ -47,4 +47,7 @@ void KMimeUtilTest::testExtractHeader()
   // extraction of multi-line headers
   QCOMPARE( extractHeader( "To: <foo@bla.org>\nSubject: =?UTF-8?Q?_Notification_for_appointment:?=\n =?UTF-8?Q?_Test?=\nMIME-Version: 1.0", "Subject" ),
             QByteArray("=?UTF-8?Q?_Notification_for_appointment:?= =?UTF-8?Q?_Test?=") );
+
+  // missing space after ':'
+  QCOMPARE( extractHeader( "From:<toma@kovoks.nl>", "From" ), QByteArray( "<toma@kovoks.nl>" ) );
 }

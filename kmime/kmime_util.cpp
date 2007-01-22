@@ -342,7 +342,7 @@ QByteArray unfoldHeader( const QByteArray &header )
 
 QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
 {
-  QByteArray n = name + ": ";
+  QByteArray n = name + ':';
   int pos1=-1;
 
   if ( qstrnicmp( n.data(), src.data(), n.length() ) == 0 ) {
@@ -355,6 +355,9 @@ QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
 
   if ( pos1 > -1) {     //there is a header with the given name
     pos1 += n.length(); //skip the name
+    // skip the usual space after the colon
+    if ( src.at( pos1 ) == ' ' )
+      ++pos1;
     int pos2 = pos1;
     int len = src.length() - 1;
     bool folded = false;
