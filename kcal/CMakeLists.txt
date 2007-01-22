@@ -5,7 +5,6 @@ configure_file(config-kcal.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kcal.h )
 ADD_DEFINITIONS(-DPACKAGE_DATA_DIR=\\""${DATA_INSTALL_DIR}/libical"\\" ) # added manually
 
 if(KDE4_BUILD_TESTS)
-    # only with this definition will the KWORD_TEST_EXPORT macro do something
     add_definitions(-DCOMPILING_TESTS)
 endif(KDE4_BUILD_TESTS)
 
