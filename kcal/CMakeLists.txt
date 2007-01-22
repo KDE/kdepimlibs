@@ -1,6 +1,9 @@
 project(kcal)
 
-configure_file(config-kcal.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kcal.h )
+# was used by libical, but not anymore
+#if (UNIX)
+#  add_definitions(-DICAL_UNIX_NEWLINE=1)
+#endif (UNIX)
 
 ADD_DEFINITIONS(-DPACKAGE_DATA_DIR=\\""${DATA_INSTALL_DIR}/libical"\\" ) # added manually
 
@@ -115,6 +118,7 @@ set(libversit_SRCS
    ${CMAKE_SOURCE_DIR}/kcal/versit/vobject.c 
 )
 
+# Keep absolute paths here, they are used in tests/CMakeLists.txt too.
 set(libical_SRCS
    ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/caldate.c       
    ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalarray.c     

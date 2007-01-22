@@ -23,11 +23,6 @@
 ======================================================================*/
 
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include "config-kcal.h"
 #include "icalcomponent.h"
 #include "pvl.h" /* "Pointer-to-void list" */
 #include "icalerror.h"

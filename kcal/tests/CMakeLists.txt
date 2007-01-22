@@ -118,7 +118,9 @@ kde4_add_executable(testrecurrencetype RUN_UNINSTALLED ${testrecurrencetype_SRCS
 target_link_libraries(testrecurrencetype  ${KDE4_KDECORE_LIBS} kcal )
 
 ########### next target ###############
-set(testicaltimezones_SRCS testicaltimezones.cpp )
+set(testicaltimezones_SRCS testicaltimezones.cpp
+   ${libical_SRCS}
+ )
 
 kde4_automoc(${testicaltimezones_SRCS})
 
