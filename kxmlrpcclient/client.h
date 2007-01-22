@@ -135,10 +135,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
 
       @param method the method on the server we are going to be calling
       @param args the argument list to pass to the server
-      @param faultObj the object containing the error slot
-      @param faultSlot the error slot itself
       @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
+      @param faultObj the object containing the error slot
+      @param faultSlot the error slot itself
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, const QList<QVariant> &args,
@@ -151,11 +151,11 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       argument.
 
       @param method the method on the server we are going to be calling
-      @param args the argument to pass to the server
-      @param faultObj the object containing the error slot
-      @param faultSlot the error slot itself
+      @param arg the argument to pass to the server
       @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
+      @param faultObj the object containing the error slot
+      @param faultSlot the error slot itself
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, const QVariant &arg,
@@ -168,11 +168,11 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       int as the argument.
 
       @param method the method on the server we are going to be calling
-      @param args the int to pass to the server
-      @param faultObj the object containing the error slot
-      @param faultSlot the error slot itself
+      @param arg the int to pass to the server
       @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
+      @param faultObj the object containing the error slot
+      @param faultSlot the error slot itself
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, int arg ,
@@ -185,11 +185,11 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       bool as the argument.
 
       @param method the method on the server we are going to be calling
-      @param args the bool to pass to the server
-      @param faultObj the object containing the error slot
-      @param faultSlot the error slot itself
+      @param arg the bool to pass to the server
       @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
+      @param faultObj the object containing the error slot
+      @param faultSlot the error slot itself
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, bool arg,
@@ -202,11 +202,11 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       double as the argument.
 
       @param method the method on the server we are going to be calling
-      @param args the double to pass to the server
-      @param faultObj the object containing the error slot
-      @param faultSlot the error slot itself
+      @param arg the double to pass to the server
       @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
+      @param faultObj the object containing the error slot
+      @param faultSlot the error slot itself
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, double arg,
@@ -219,11 +219,11 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       string as the argument.
 
       @param method the method on the server we are going to be calling
-      @param args the string to pass to the server
-      @param faultObj the object containing the error slot
-      @param faultSlot the error slot itself
+      @param arg the string to pass to the server
       @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
+      @param faultObj the object containing the error slot
+      @param faultSlot the error slot itself
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, const QString &arg,
@@ -236,11 +236,11 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       byte array as the argument.
 
       @param method the method on the server we are going to be calling
-      @param args the array to pass to the server
-      @param faultObj the object containing the error slot
-      @param faultSlot the error slot itself
+      @param arg the array to pass to the server
       @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
+      @param faultObj the object containing the error slot
+      @param faultSlot the error slot itself
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, const QByteArray &arg,
@@ -253,11 +253,11 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       date as the argument
 
       @param method the method on the server we are going to be calling
-      @param args the date and/or time to pass to the server
-      @param faultObj the object containing the error slot
-      @param faultSlot the error slot itself
+      @param arg the date and/or time to pass to the server
       @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
+      @param faultObj the object containing the error slot
+      @param faultSlot the error slot itself
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, const QDateTime &arg,
@@ -270,11 +270,11 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       string list as the argument
 
       @param method the method on the server we are going to be calling
-      @param args the list of strings to pass to the server
-      @param faultObj the object containing the error slot
-      @param faultSlot the error slot itself
+      @param arg the list of strings to pass to the server
       @param msgObj the object containing the data slot
       @param messageSlot the data slot itself
+      @param faultObj the object containing the error slot
+      @param faultSlot the error slot itself
       @param id the id for our #Client object, defaults to empty
      */
     void call( const QString &method, const QStringList &arg,
