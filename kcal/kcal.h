@@ -43,6 +43,8 @@
 #else
 #define KCAL_TEST_EXPORT KDE_EXPORT
 #endif
+#else /*no unit tests compiled*/
+#define KCAL_TEST_EXPORT
 #endif /* COMPILING_TESTS */
 
 /**
