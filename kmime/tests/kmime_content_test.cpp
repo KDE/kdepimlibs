@@ -139,7 +139,7 @@ void KMimeContentTest::testMultipartMixed()
     "To: Ned Freed <ned@innosoft.com>\n"
     "Date: Sun, 21 Mar 1993 23:56:48 -0800\n"
     "MIME-Version: 1.0\n"
-    "Content-Type: multipart/mixed; boundary=simple boundary\n" // quote boundary!!
+    "Content-Type: multipart/mixed; boundary=\"simple boundary\"\n"
     "\n"
     "\n"
     "--simple boundary\n"
@@ -147,7 +147,7 @@ void KMimeContentTest::testMultipartMixed()
     "This is implicitly typed plain US-ASCII text.\n"
     "It does NOT end with a linebreak.\n"
     "--simple boundary\n"
-    "Content-Type: text/plain; charset=us-ascii\n"
+    "Content-Type: text/plain; charset=\"us-ascii\"\n"
     "\n"
     "This is explicitly typed plain US-ASCII text.\n"
     "It DOES end with a linebreak.\n"
