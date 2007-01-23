@@ -119,7 +119,6 @@ target_link_libraries(testrecurrencetype  ${KDE4_KDECORE_LIBS} kcal )
 
 ########### next target ###############
 set(testicaltimezones_SRCS testicaltimezones.cpp
-   ${libical_SRCS}
  )
 
 kde4_automoc(${testicaltimezones_SRCS})
