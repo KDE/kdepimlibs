@@ -1,34 +1,37 @@
 /*
-    This file is part of KDE.
+  This file is part of KDE.
 
-    Copyright (c) 2005 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2005 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA  02110-1301, USA.
 */
 #ifndef KRESULT_H
 #define KRESULT_H
 
-#include <qstring.h>
+#include <QString>
+#include "kcal.h"
+
+namespace KCal {
 
 /**
   This class represents the result of an operation. It's meant to be used as
   return value of functions for returning status and especially error
   information.
 
-  There are three main types of result: Ok (operation successfull completed),
+  There are three main types of result: Ok (operation successful completed),
   InProgress (operation still in progress) and Error (operation failed).
   InProgress is used by asynchronous operations. Functions which start an
   operation and return before the operation is finished should return the
@@ -95,43 +98,56 @@
       ...
       if ( !load() ) error();
 */
-class KResult
+class KCAL_EXPORT KResult
 {
   public:
     /**
-      Type of result:
-      Ok - Operation successfully completed
-      InProgress - Operation still in progress
-      Error - Operation failed
+      The different types of results.
     */
-    enum Type { Ok, InProgress, Error };
-    /**
-      Specific type of error.
-    */
-    enum ErrorType { NotAnError, Undefined, InvalidUrl, WrongParameter,
-                     ConnectionFailed, WriteError, ReadError, ParseError, 
-                     WrongSchemaRevision };
+    enum Type {
+      Ok,         /**< Operation successfully completed */
+      InProgress, /**< Operation still in-progress */
+      Error       /**< Operation failed */
+    };
 
     /**
-      Construct KResult object. Default type is Ok.
+      The different types of error conditions.
+    */
+    enum ErrorType {
+      NotAnError,         /**< Not an error */
+      Undefined,          /**< Undefined error */
+      InvalidUrl,         /**< Invalid URL */
+      WrongParameter,     /**< Invalid parameter */
+      ConnectionFailed,   /**< unable to establish a connection */
+      WriteError,         /**< Write error */
+      ReadError,          /**< Read error */
+      ParseError,         /**< Parse error */
+      WrongSchemaRevision /**< Invalid schema revision */
+    };
+
+    /**
+      Constructs a KResult object. Default Type is Ok.
     */
     KResult();
+
     /**
       Copy constructor.
     */
     KResult( const KResult & );
-    /**
-      Create KResult object of given type.
-    */
-    KResult( Type );
-    /**
-      Create error KResult object of given error type and optional detailed error
-      message.
-    */
-    KResult( ErrorType, const QString &details = QString::null );
 
     /**
-      Destruct KResult object.
+      Creates a KResult object of the specified Type.
+    */
+    explicit KResult( Type );
+
+    /**
+      Creates a KResult object of the specified ErrorType and an optional
+      detailed error message.
+    */
+    explicit KResult( ErrorType, const QString &details = QString::null );
+
+    /**
+      Destroys the result.
     */
     ~KResult();
 
@@ -143,38 +159,44 @@ class KResult
     operator bool() const;
 
     /**
-      Return true, if KResult is of type Ok, otherwise return false.
+      Returns true if the result is Ok.
     */
     bool isOk() const;
+
     /**
-      Return true, if KResult is of type InProgress, otherwise return false.
+      Returns true if the result is InProgress.
     */
     bool isInProgress() const;
+
     /**
-      Return true, if KResult is of type Error, otherwise return false.
+      Returns true if the result is Error.
     */
     bool isError() const;
 
     /**
-      Return specific error type.
+      Returns the specific result ErrorType.
     */
     ErrorType error() const;
 
     /**
-      Return translated string describing type of result corresponding to Type
+      Returns a translated string describing the result corresponding to Type
       and ErrorType.
     */
     QString message() const;
 
     /**
-      Set detailed error message. This error message should include all
+      Sets a detailed error message. This error message should include all
       details needed to understand and recover from the error. This could be
       information like the URL which was tried, the file which could not be
       written or which parameter was missing.
+
+      @see details().
     */
     void setDetails( const QString & );
+
     /**
-      Return detailed error message. See details().
+      Returns the detailed error message.
+      @see setDetails().
     */
     QString details() const;
 
@@ -196,6 +218,7 @@ class KResult
       return false.
     */
     bool hasChainedResult() const;
+
     /**
       Return chained KResult object.
     */
@@ -217,7 +240,7 @@ class KResult
 /**
   Convenience class for creating a KResult of type Ok.
 */
-class KResultOk : public KResult
+class KCAL_EXPORT KResultOk : public KResult
 {
   public:
     /**
@@ -229,7 +252,7 @@ class KResultOk : public KResult
 /**
   Convenience class for creating a KResult of type InProgress.
 */
-class KResultInProgress : public KResult
+class KCAL_EXPORT KResultInProgress : public KResult
 {
   public:
     /**
@@ -241,23 +264,27 @@ class KResultInProgress : public KResult
 /**
   Convenience class for creating a KResult of type Error.
 */
-class KResultError : public KResult
+class KCAL_EXPORT KResultError : public KResult
 {
   public:
     /**
       Create KResult object of type Error.
     */
     KResultError() : KResult( Error ) {}
+
     /**
       Create KResult object of type Error with given error type and optionally
       a detailed error message.
     */
     KResultError( ErrorType error, const QString &details = QString::null )
       : KResult( error, details ) {}
+
     /**
       Create KResult object of type Error with given detailed error message.
     */
     KResultError( const QString &details ) : KResult( Undefined, details ) {}
 };
+
+}
 
 #endif

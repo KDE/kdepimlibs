@@ -1,28 +1,30 @@
 /*
-    This file is part of KDE.
+  This file is part of KDE.
 
-    Copyright (c) 2005 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2005 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA  02110-1301, USA.
 */
-
-#include "kresult.h"
 
 #include <klocale.h>
 #include <kdebug.h>
+
+#include "kresult.h"
+
+using namespace KCal;
 
 KResult::KResult()
   : mType( Ok ), mErrorType( NotAnError ), mChainedResult( 0 )
@@ -32,8 +34,11 @@ KResult::KResult()
 KResult::KResult( Type type )
   : mType( type ), mChainedResult( 0 )
 {
-  if ( mType == Error ) mErrorType = Undefined;
-  else mErrorType = NotAnError;
+  if ( mType == Error ) {
+    mErrorType = Undefined;
+  } else {
+    mErrorType = NotAnError;
+  }
 }
 
 KResult::KResult( ErrorType error, const QString &details )
@@ -52,8 +57,11 @@ KResult::KResult( const KResult &o )
   mType = o.mType;
   mErrorType = o.mErrorType;
   mDetails = o.mDetails;
-  if ( o.mChainedResult ) mChainedResult = new KResult( *o.mChainedResult );
-  else mChainedResult = 0;
+  if ( o.mChainedResult ) {
+    mChainedResult = new KResult( *o.mChainedResult );
+  } else {
+    mChainedResult = 0;
+  }
 }
 
 KResult::operator bool() const
@@ -76,47 +84,44 @@ bool KResult::isError() const
   return mType == Error;
 }
 
-
 KResult::ErrorType KResult::error() const
 {
   return mErrorType;
 }
 
-
 QString KResult::message() const
 {
   switch ( mType ) {
-    case Ok:
-      return i18n("Ok");
-    case InProgress:
-      return i18n("In progress");
-    case Error:
-      switch ( mErrorType ) {
-        case NotAnError:
-          return i18n("Not an error");
-        case Undefined:
-          return i18n("Error");
-        case InvalidUrl:
-          return i18n("Invalid URL");
-        case ConnectionFailed:
-          return i18n("Connection failed");
-        case WriteError:
-          return i18n("Write error");
-        case ReadError:
-          return i18n("Read error");
-        case WrongParameter:
-          return i18n("Wrong Parameter");
-        case ParseError:
-          return i18n("Parse Error");
-        case WrongSchemaRevision:
-          return i18n("Wrong revision of schema");
-      }
+  case Ok:
+    return i18n("Ok");
+  case InProgress:
+    return i18n("In progress");
+  case Error:
+    switch ( mErrorType ) {
+    case NotAnError:
+      return i18n("Not an error");
+    case Undefined:
+      return i18n("Error");
+    case InvalidUrl:
+      return i18n("Invalid URL");
+    case ConnectionFailed:
+      return i18n("Connection failed");
+    case WriteError:
+      return i18n("Write error");
+    case ReadError:
+      return i18n("Read error");
+    case WrongParameter:
+      return i18n("Wrong Parameter");
+    case ParseError:
+      return i18n("Parse Error");
+    case WrongSchemaRevision:
+      return i18n("Wrong revision of schema");
+    }
   }
 
   kError() << "KResult::message(): Unhandled case" << endl;
-  return QString::null;
+  return QString();
 }
-
 
 void KResult::setDetails( const QString &details )
 {
@@ -127,7 +132,6 @@ QString KResult::details() const
 {
   return mDetails;
 }
-
 
 KResult &KResult::chain( const KResult &result )
 {
@@ -145,17 +149,20 @@ KResult KResult::chainedResult() const
   return *mChainedResult;
 }
 
-
 QString KResult::fullMessage() const
 {
   QString msg = message();
-  if ( !details().isEmpty() ) msg += ": " + details();
+  if ( !details().isEmpty() ) {
+    msg += ": " + details();
+  }
   return msg;
 }
 
 QString KResult::chainedMessage() const
 {
   QString msg = fullMessage();
-  if ( hasChainedResult() ) msg += "\n" + chainedResult().chainedMessage();
+  if ( hasChainedResult() ) {
+    msg += '\n' + chainedResult().chainedMessage();
+  }
   return msg;
 }

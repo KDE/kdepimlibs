@@ -34,6 +34,7 @@ incidencebase         |   D   |         |   D   |   n/a   |         | Allen
 incidenceformatter    |       |         |       |         |         | Allen
 incidence             |       |         |       |   n/a   |         | Allen
 journal               |       |         |       |         |         | Allen
+kresult               |   D   |         |       |         |    D    |
 listbase              |       |         |       |         |         |
 period                |   D   |    D    |   D   |    D    |         | Narayan
 person                |   D   |    D    |   D   |    D    |         | Narayan
