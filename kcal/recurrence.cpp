@@ -105,13 +105,13 @@ bool Recurrence::operator==( const Recurrence& r2 ) const
   return true;
 }
 
-void Recurrence::addObserver( Observer *observer )
+void Recurrence::addObserver( RecurrenceObserver *observer )
 {
   if ( !mObservers.contains( observer ) )
     mObservers.append( observer );
 }
 
-void Recurrence::removeObserver( Observer *observer )
+void Recurrence::removeObserver( RecurrenceObserver *observer )
 {
   if ( mObservers.contains( observer ) )
     mObservers.removeAll( observer );

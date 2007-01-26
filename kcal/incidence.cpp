@@ -43,7 +43,7 @@ Incidence::Incidence() :
   mAttachments.setAutoDelete(true);
 }
 
-Incidence::Incidence( const Incidence &i ) : IncidenceBase( i ),Recurrence::Observer()
+Incidence::Incidence( const Incidence &i ) : IncidenceBase( i ),Recurrence::RecurrenceObserver()
 {
 // TODO: reenable attributes currently commented out.
   mRevision = i.mRevision;

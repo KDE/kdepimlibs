@@ -56,7 +56,7 @@ class KCal::IncidenceBase::Private
 
     Attendee::List mAttendees;   // list of incidence attendees
     QStringList mComments;       // list of incidence comments
-    QList<Observer*> mObservers; // list of incidence observers
+    QList<IncidenceObserver*> mObservers; // list of incidence observers
 
     // PILOT SYNCHRONIZATION STUFF
     unsigned long mPilotId;  // unique id for pilot sync
@@ -408,21 +408,21 @@ unsigned long IncidenceBase::pilotId() const
   return d->mPilotId;
 }
 
-void IncidenceBase::registerObserver( IncidenceBase::Observer *observer )
+void IncidenceBase::registerObserver( IncidenceBase::IncidenceObserver *observer )
 {
   if ( !d->mObservers.contains( observer ) ) {
     d->mObservers.append( observer );
   }
 }
 
-void IncidenceBase::unRegisterObserver( IncidenceBase::Observer *observer )
+void IncidenceBase::unRegisterObserver( IncidenceBase::IncidenceObserver *observer )
 {
   d->mObservers.removeAll( observer );
 }
 
 void IncidenceBase::updated()
 {
-  foreach ( Observer *o, d->mObservers ) {
+  foreach ( IncidenceObserver *o, d->mObservers ) {
     o->incidenceUpdated( this );
   }
 }

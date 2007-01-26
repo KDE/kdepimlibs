@@ -156,18 +156,18 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     };
 
     /**
-      The Observer class.
+      The IncidenceObserver class.
     */
-    class Observer {
+    class IncidenceObserver {
       public:
 
         /**
-          Destroys the Observer.
+          Destroys the IncidenceObserver.
         */
-        virtual ~Observer() {}
+        virtual ~IncidenceObserver() {}
 
         /**
-          The Observer interface.
+          The IncidenceObserver interface.
 
           @param incidenceBase is a pointer to an IncidenceBase object.
         */
@@ -491,12 +491,12 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       Register observer. The observer is notified when the observed object
       changes.
     */
-    void registerObserver( Observer *observer );
+    void registerObserver( IncidenceObserver *observer );
 
     /**
       Unregister observer. It isn't notified anymore about changes.
     */
-    void unRegisterObserver( Observer *observer );
+    void unRegisterObserver( IncidenceObserver *observer );
 
     /**
       Call this to notify the observers after the IncidenceBase object has

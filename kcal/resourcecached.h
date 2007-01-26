@@ -45,7 +45,7 @@ class ICalTimeZone;
   cache the calendar data.
 */
 class KCAL_EXPORT ResourceCached : public ResourceCalendar,
-                                   public KCal::Calendar::Observer
+                                   public KCal::Calendar::CalendarObserver
 {
     Q_OBJECT
   public:
@@ -355,7 +355,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     KRES::IdMapper& idMapper();
 
   protected:
-    // From Calendar::Observer
+    // From Calendar::CalendarObserver
     void calendarIncidenceAdded( KCal::Incidence *incidence );
     void calendarIncidenceChanged( KCal::Incidence *incidence );
     void calendarIncidenceDeleted( KCal::Incidence *incidence );

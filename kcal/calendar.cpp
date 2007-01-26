@@ -89,7 +89,7 @@ class KCal::Calendar::Private
     bool mModified;
     bool mNewObserver;
     bool mObserversEnabled;
-    QList<Observer*> mObservers;
+    QList<CalendarObserver*> mObservers;
 
     CalFilter *mDefaultFilter;
     CalFilter *mFilter;
@@ -866,7 +866,7 @@ void Calendar::removeRelations( Incidence *incidence )
   }
 }
 
-void Calendar::registerObserver( Observer *observer )
+void Calendar::registerObserver( CalendarObserver *observer )
 {
   if ( !d->mObservers.contains( observer ) ) {
     d->mObservers.append( observer );
@@ -874,7 +874,7 @@ void Calendar::registerObserver( Observer *observer )
   d->mNewObserver = true;
 }
 
-void Calendar::unregisterObserver( Observer *observer )
+void Calendar::unregisterObserver( CalendarObserver *observer )
 {
   d->mObservers.removeAll( observer );
 }
@@ -883,7 +883,7 @@ void Calendar::setModified( bool modified )
 {
   if ( modified != d->mModified || d->mNewObserver ) {
     d->mNewObserver = false;
-    foreach ( Observer *observer, d->mObservers ) {
+    foreach ( CalendarObserver *observer, d->mObservers ) {
       observer->calendarModified( modified, this );
     }
     d->mModified = modified;
@@ -915,7 +915,7 @@ void Calendar::notifyIncidenceAdded( Incidence *i )
     return;
   }
 
-  foreach ( Observer *observer, d->mObservers ) {
+  foreach ( CalendarObserver *observer, d->mObservers ) {
     observer->calendarIncidenceAdded( i );
   }
 }
@@ -926,7 +926,7 @@ void Calendar::notifyIncidenceChanged( Incidence *i )
     return;
   }
 
-  foreach ( Observer *observer, d->mObservers ) {
+  foreach ( CalendarObserver *observer, d->mObservers ) {
     observer->calendarIncidenceChanged( i );
   }
 }
@@ -937,7 +937,7 @@ void Calendar::notifyIncidenceDeleted( Incidence *i )
     return;
   }
 
-  foreach ( Observer *observer, d->mObservers ) {
+  foreach ( CalendarObserver *observer, d->mObservers ) {
     observer->calendarIncidenceDeleted( i );
   }
 }

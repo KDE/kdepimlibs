@@ -118,7 +118,7 @@ enum JournalSortField {
   object you get from Calendar -- use the delete...() methods.
 */
 class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
-                             public IncidenceBase::Observer
+                             public IncidenceBase::IncidenceObserver
 {
   Q_OBJECT
 
@@ -849,17 +849,17 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
   // Observer Specific Methods //
 
     /**
-      @class Observer
+      @class CalendarObserver
 
-      The Observer class.
+      The CalendarObserver class.
     */
-    class Observer
+    class CalendarObserver
     {
       public:
         /**
           Destructor.
         */
-        virtual ~Observer() {}
+        virtual ~CalendarObserver() {}
 
         /**
           Notify the Observer that a Calendar has been modified.
@@ -904,7 +904,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @see unregisterObserver()
      */
-    void registerObserver( Observer *observer );
+    void registerObserver( CalendarObserver *observer );
 
     /**
       Unregisters an Observer for this Calendar.
@@ -914,7 +914,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @see registerObserver()
      */
-    void unregisterObserver( Observer *observer );
+    void unregisterObserver( CalendarObserver *observer );
 
   signals:
     /**
