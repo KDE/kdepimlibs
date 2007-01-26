@@ -166,7 +166,7 @@ class KCAL_EXPORT CalendarLocal : public Calendar
       @copydoc
       Calendar::deleteTodo(Todo *)
     */
-    bool deleteTodo( Todo * );
+    bool deleteTodo( Todo *todo );
 
     /**
       Deletes all to-dos from this calendar.
@@ -199,13 +199,13 @@ class KCAL_EXPORT CalendarLocal : public Calendar
       @copydoc
       Calendar::addJournal(Journal *)
     */
-    bool addJournal( Journal * );
+    bool addJournal( Journal *journal );
 
     /**
       @copydoc
       Calendar::deleteJournal(Journal *)
     */
-    bool deleteJournal( Journal * );
+    bool deleteJournal( Journal *journal );
 
     /**
       >Deletes all journals from this calendar.

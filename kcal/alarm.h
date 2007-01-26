@@ -53,7 +53,7 @@ class Incidence;
   Notifications can be on-screen pop-up dialogs, email messages,
   the playing of audio files, or the running of another program.
 
-  Alarms always belong to a parent #Incidence.
+  Alarms always belong to a parent Incidence.
 */
 class KCAL_EXPORT Alarm : public CustomProperties
 {
@@ -75,9 +75,9 @@ class KCAL_EXPORT Alarm : public CustomProperties
     typedef ListBase<Alarm> List;
 
     /**
-      Constructs an alarm belonging to the @p parent #Incidence.
+      Constructs an alarm belonging to the @p parent Incidence.
 
-      @param parent is the #Incidence this alarm will belong to.
+      @param parent is the Incidence this alarm will belong to.
     */
     explicit Alarm( Incidence *parent );
 
@@ -101,9 +101,9 @@ class KCAL_EXPORT Alarm : public CustomProperties
     bool operator!=( const Alarm &a ) const { return !operator==( a ); }
 
     /**
-      Sets the @p parent #Incidence of the alarm.
+      Sets the @p parent Incidence of the alarm.
 
-      @param parent is alarm parent #Incidence to set.
+      @param parent is alarm parent Incidence to set.
 
       @see parent()
     */
@@ -255,7 +255,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
 
       @param subject is the email subject.
       @param text is a string containing the body of the email message.
-      @param addressees is #Person list of email addresses.
+      @param addressees is Person list of email addresses.
       @param attachments is a a #QStringList of optional file names
       of email attachments.
 
@@ -270,7 +270,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
       Sets the email address of an #Email type alarm.
       Ignored if the alarm is not an #Email type.
 
-      @param mailAlarmAddress is a #Person to receive a mail message when
+      @param mailAlarmAddress is a Person to receive a mail message when
       an #Email type alarm is triggered.
 
       @see setMailSubject(), setMailText(), setMailAddresses(),
@@ -282,7 +282,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
       Sets a list of email addresses of an #Email type alarm.
       Ignored if the alarm is not an #Email type.
 
-      @param mailAlarmAddresses is a #Person list to receive a mail message
+      @param mailAlarmAddresses is a Person list to receive a mail message
       when an #Email type alarm is triggered.
 
       @see setMailSubject(), setMailText(), setMailAddress(),
@@ -295,7 +295,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
       alarm is triggered.
       Ignored if the alarm is not an #Email type.
 
-      @param mailAlarmAddress is a #Person to add to the list of addresses to
+      @param mailAlarmAddress is a Person to add to the list of addresses to
       receive a mail message when an #Email type alarm is triggered.
 
       @see setMailAddress(), setMailAddresses(), mailAddresses()
@@ -398,7 +398,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
     /**
       Sets the trigger time of the alarm.
 
-      @param alarmTime is the #KDateTime alarm trigger.
+      @param alarmTime is the KDateTime alarm trigger.
 
       @see time()
     */
@@ -429,10 +429,10 @@ class KCAL_EXPORT Alarm : public CustomProperties
     bool hasTime() const;
 
     /**
-      Sets the alarm offset relative to the start of the parent #Incidence.
+      Sets the alarm offset relative to the start of the parent Incidence.
 
-      @param offset is a #Duration to be used as a time relative to the
-      start of the parent #Incidence to be used as the alarm trigger.
+      @param offset is a Duration to be used as a time relative to the
+      start of the parent Incidence to be used as the alarm trigger.
 
       @see setEndOffset(), startOffset(), endOffset()
     */
@@ -440,7 +440,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Returns offset of alarm in time relative to the start of the parent
-      #Incidence.  If the alarm's time is not defined in terms of an offset
+      Incidence.  If the alarm's time is not defined in terms of an offset
       relative  to the start of the event, returns zero.
 
       @see setStartOffset(), hasStartOffset()
@@ -449,17 +449,17 @@ class KCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Returns whether the alarm is defined in terms of an offset relative
-      to the start of the parent #Incidence.
+      to the start of the parent Incidence.
 
       @see startOffset(), setStartOffset()
     */
     bool hasStartOffset() const;
 
     /**
-      Sets the alarm offset relative to the end of the parent #Incidence.
+      Sets the alarm offset relative to the end of the parent Incidence.
 
-      @param offset is a #Duration to be used as a time relative to the
-      end of the parent #Incidence to be used as the alarm trigger.
+      @param offset is a Duration to be used as a time relative to the
+      end of the parent Incidence to be used as the alarm trigger.
 
       @see setStartOffset(), startOffset(), endOffset()
     */

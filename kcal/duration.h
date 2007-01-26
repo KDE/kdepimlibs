@@ -110,7 +110,7 @@ class KCAL_EXPORT Duration
       in the duration to the specified @p start time.
 
       @param start is a start time.
-      @return a new #KDateTime representing an end time.
+      @return a new KDateTime representing an end time.
     */
     KDateTime end( const KDateTime &start ) const;
 

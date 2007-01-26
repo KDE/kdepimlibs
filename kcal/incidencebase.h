@@ -236,7 +236,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       Sets the time the incidence was last modified to @p lm.
       It is stored as a UTC date/time.
 
-      @param lm is the #KDateTime when the incidence was last modified.
+      @param lm is the KDateTime when the incidence was last modified.
 
       @see lastModified()
     */
@@ -252,7 +252,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     /**
       Sets the organizer for the incidence.
 
-      @param organizer is a #Person to use as the incidence @ref organizer.
+      @param organizer is a Person to use as the incidence @ref organizer.
 
       @see organizer(), setOrganizer(const QString &)
     */
@@ -268,7 +268,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     void setOrganizer( const QString &organizer );
 
     /**
-      Returns the #Person associated with this incidence.
+      Returns the Person associated with this incidence.
 
       @see setOrganizer(const QString &), setOrganizer(const Person &)
     */

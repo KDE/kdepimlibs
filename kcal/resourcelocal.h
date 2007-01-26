@@ -60,9 +60,9 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
 
     /**
       Constructs a resource from configuration information
-      stored in a #KConfig object.
+      stored in a KConfig object.
 
-      @param config the #KConfig object to store as a resource.
+      @param config the KConfig object to store as a resource.
     */
     explicit ResourceLocal( const KConfig *config );
 
@@ -79,7 +79,7 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     virtual ~ResourceLocal();
 
     /**
-      Writes #KConfig @p config to a local file.
+      Writes KConfig @p config to a local file.
     **/
     virtual void writeConfig( KConfig *config );
 
@@ -152,19 +152,19 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     KDateTime readLastModified();
 
     /**
-      Compares this #ResourceLocal and @p other for equality.
+      Compares this ResourceLocal and @p other for equality.
       Returns true if they are equal.
     **/
     bool operator==( const ResourceLocal &other );
 
     /**
-      Sets this #ResourceLocal equal to @param other.
+      Sets this ResourceLocal equal to @p other.
     **/
     ResourceLocal &operator=( const ResourceLocal &other );
 
   private:
-    //@cond PRIVATE
     void init();
+    //@cond PRIVATE
     class Private;
     Private *d;
     //@endcond

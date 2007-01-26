@@ -129,7 +129,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       The time specification is used as the default for creating or
       modifying incidences in the Calendar. The time specification does
       not alter existing incidences.
-      
+
       The constructor also calls setViewTimeSpec(@p timeSpec).
 
       @param timeSpec time specification
@@ -141,7 +141,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       The time zone ID is used as the default for creating or modifying
       incidences in the Calendar. The time zone does not alter existing
       incidences.
-      
+
       The constructor also calls setViewTimeZoneId(@p timeZoneId).
 
       @param timeZoneId is a string containing a time zone ID, which is
@@ -179,7 +179,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     /**
       Sets the owner of the calendar to @p owner.
 
-      @param owner is a #Person object.
+      @param owner is a Person object.
 
       @see owner()
     */
@@ -197,7 +197,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     /**
       Sets the default time specification (time zone, etc.) used for creating
       or modifying incidences in the Calendar.
-      
+
       The method also calls setViewTimeSpec(@p timeSpec).
 
       @param timeSpec time specification
@@ -215,7 +215,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     /**
       Sets the time zone ID used for creating or modifying incidences in the
       Calendar. This method has no effect on existing incidences.
-      
+
       The method also calls setViewTimeZoneId(@p timeZoneId).
 
       @param timeZoneId is a string containing a time zone ID, which is
@@ -242,7 +242,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       makes a note of the new time zone so that it can be read back by
       viewTimeSpec(). The client application must convert date/time values to
       the desired time zone itself.
-      
+
       The time zone is not used in any way by the Calendar or its incidences. It
       is solely for use by the client application.
       @ref viewTimeSpec()
@@ -330,8 +330,8 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     virtual bool reload() = 0;
     /** Use reload() plus setTimeZoneId() instead. */
-    
-    virtual KDE_DEPRECATED 
+
+    virtual KDE_DEPRECATED
     bool reload( const QString &tz ) = 0;
 
     /**

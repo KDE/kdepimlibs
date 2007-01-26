@@ -86,15 +86,15 @@ class KCAL_EXPORT Attendee : public Person
     typedef ListBase<Attendee> List;
 
     /**
-      Constructs an attendee consisting of a #Person name (@p name) and
-      email address (@p email); invitation #Status and #Role;
+      Constructs an attendee consisting of a Person name (@p name) and
+      email address (@p email); invitation status and #Role;
       an optional @acronym RSVP flag and @acronym UID.
 
       @param name is person name of the attendee.
       @param email is person email address of the attendee.
       @param rsvp if set (true), the attendee is requested to reply to
       invitations.
-      @param status is the #Status of the attendee.
+      @param status is the #PartStat status of the attendee.
       @param role is the #Role of the attendee.
       @param uid is the @acronym UID of the attendee.
     */
