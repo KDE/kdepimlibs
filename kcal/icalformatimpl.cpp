@@ -327,17 +327,23 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent, Incidence *incidence,
   // unique id
   // If the scheduling ID is different from the real UID, the real
   // one is stored on X-REALID above
-  icalcomponent_add_property(parent, icalproperty_new_uid(
-      incidence->schedulingID().toUtf8()));
+  if ( !incidence->schedulingID().isEmpty() ) {
+    icalcomponent_add_property(parent,icalproperty_new_uid(
+        incidence->schedulingID().utf8()));
+  }
 
   // revision
-  icalcomponent_add_property(parent, icalproperty_new_sequence(
-      incidence->revision()));
+  if ( incidence->revision() > 0 ) { // 0 is default, so don't write that out
+    icalcomponent_add_property(parent,icalproperty_new_sequence(
+        incidence->revision()));
+  }
 
   // last modification date
-  icalcomponent_add_property( parent,
-      writeICalDateTimeProperty( ICAL_LASTMODIFIED_PROPERTY, incidence->lastModified() ) );
-
+  if ( incidence->lastModified().isValid() ) {
+    icalcomponent_add_property( parent,
+        writeICalDateTimeProperty( ICAL_LASTMODIFIED_PROPERTY, incidence->lastModified() ) );
+  }
+  
   // description
   if (!incidence->description().isEmpty()) {
     icalcomponent_add_property(parent, icalproperty_new_description(
@@ -394,11 +400,15 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent, Incidence *incidence,
       secClass = ICAL_CLASS_PRIVATE;
       break;
   }
-  icalcomponent_add_property(parent, icalproperty_new_class(secClass));
+  if ( secClass != ICAL_CLASS_PUBLIC ) {
+    icalcomponent_add_property(parent,icalproperty_new_class(secClass));
+  }
 
   // priority
-  icalcomponent_add_property(parent, icalproperty_new_priority(
-      incidence->priority()));
+  if ( incidence->priority() > 0 ) { // 0 is undefined priority
+    icalcomponent_add_property(parent,icalproperty_new_priority(
+        incidence->priority()));
+  }
 
   // categories
   QStringList categories = incidence->categories();
@@ -460,8 +470,9 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent, Incidence *incidence,
   // attachments
   Attachment::List attachments = incidence->attachments();
   Attachment::List::ConstIterator atIt;
-  for ( atIt = attachments.begin(); atIt != attachments.end(); ++atIt )
+  for ( atIt = attachments.begin(); atIt != attachments.end(); ++atIt ) {
     icalcomponent_add_property( parent, writeAttachment( *atIt ) );
+  }
 
   // alarms
   Alarm::List::ConstIterator alarmIt;
@@ -488,7 +499,9 @@ void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
       writeICalDateTimeProperty( ICAL_DTSTAMP_PROPERTY, KDateTime::currentUtcDateTime() ) );
 
   // organizer stuff
-  icalcomponent_add_property( parent, writeOrganizer( incidenceBase->organizer() ) );
+  if ( !incidenceBase->organizer().isEmpty() ) {
+    icalcomponent_add_property( parent, writeOrganizer( incidenceBase->organizer() ) );
+  }
 
   // attendees
   if ( incidenceBase->attendeeCount() > 0 ) {
@@ -526,7 +539,7 @@ icalproperty *ICalFormatImpl::writeOrganizer( const Person &organizer )
   if (!organizer.name().isEmpty()) {
     icalproperty_add_parameter( p, icalparameter_new_cn(organizer.name().toUtf8()) );
   }
-  // TODO: Write dir, senty-by and language
+  // TODO: Write dir, sent-by and language
 
   return p;
 }
