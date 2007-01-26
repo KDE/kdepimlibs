@@ -87,7 +87,6 @@ sub checkfile()
   if ( $errors > 0 ) {
     print "~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=\n";
     print "Checking '$outfile':\n";
-    print "Command: $testcmd\n";
     print $errorstr;
     print "Encountered $errors errors\n";
     
@@ -97,6 +96,7 @@ sub checkfile()
     };
     print ERRLOG "\n\n\n~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=\n\n\n";
     print ERRLOG "Checking '$outfile':\n";
+    print ERRLOG "Command: $testcmd\n";
     print ERRLOG $errorstr;
     
     if ( -e "$file.$id.fixme" ) {
