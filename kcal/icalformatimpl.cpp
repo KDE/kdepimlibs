@@ -329,7 +329,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent, Incidence *incidence,
   // one is stored on X-REALID above
   if ( !incidence->schedulingID().isEmpty() ) {
     icalcomponent_add_property(parent,icalproperty_new_uid(
-        incidence->schedulingID().utf8()));
+        incidence->schedulingID().toUtf8()));
   }
 
   // revision
@@ -1200,11 +1200,11 @@ Attachment *ICalFormatImpl::readAttachment( icalproperty *attach )
     if ( isurl == 0 )
       attachment = new Attachment( (const char* )icalattach_get_data( a ) );
     else {
-      attachment = new Attachment( QString( icalattach_get_url( a ) ) );
+      attachment = new Attachment( QString::fromUtf8( icalattach_get_url( a ) ) );
     }
   } else if ( value_kind == ICAL_URI_VALUE ) {
     attachment =
-      new Attachment( QString( icalvalue_get_uri( icalproperty_get_value( attach ) ) ) );
+      new Attachment( QString::fromUtf8( icalvalue_get_uri( icalproperty_get_value( attach ) ) ) );
   }
 
   icalparameter *p =
