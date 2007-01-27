@@ -12,7 +12,7 @@
   @file
 
   This file is part of the API for accessing XML-RPC Servers
-  and defines the #Client class.
+  and defines the Client class.
 
   @author Narayan Newton <narayannewton@gmail.com>
   @author Frerich Raabe <raabe@kde.org>
@@ -55,14 +55,14 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
 
   public:
     /**
-			Constructs a XML-RPC #Client.
+			Constructs a XML-RPC Client.
 
       @param parent the parent of this object, defaults to NULL.
      */
     Client( QObject *parent = 0 );
 
     /**
-      Constructs a XML-RPC #Client, which will connect to @p url.
+      Constructs a XML-RPC Client, which will connect to @p url.
 
       @param url the url of the xml-rpc server.
       @param parent the parent of this object, defaults to NULL.
@@ -70,19 +70,19 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
     explicit Client( const KUrl &url, QObject *parent = 0 );
 
     /**
-      Destroys the XML-RPC #Client.
+      Destroys the XML-RPC Client.
      */
     virtual ~Client();
 
     /**
-      Returns the current url the XML-RPC #Client will connect to.
+      Returns the current url the XML-RPC Client will connect to.
 
       @see setUrl()
      */
     KUrl url() const;
 
     /**
-      Sets the url the #Client will connect to.
+      Sets the url the Client will connect to.
 
       @param url the url for the xml-rpc server we will be connecting to.
 
@@ -91,14 +91,14 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
     void setUrl( const KUrl &url );
 
     /**
-      Returns the user agent string currently used by the #Client.
+      Returns the user agent string currently used by the Client.
 
       @see setUserAgent()
      */
     QString userAgent() const;
 
     /**
-      Sets the userAgent string the #Client will use to identify itself.
+      Sets the userAgent string the Client will use to identify itself.
 
       @param userAgent the user agent string to use.
 
@@ -156,7 +156,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param messageSlot the data slot itself
       @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param id the id for our #Client object, defaults to empty
+      @param id the id for our Client object, defaults to empty
      */
     void call( const QString &method, const QVariant &arg,
         QObject *msgObj, const char *messageSlot,
@@ -173,7 +173,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param messageSlot the data slot itself
       @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param id the id for our #Client object, defaults to empty
+      @param id the id for our Client object, defaults to empty
      */
     void call( const QString &method, int arg ,
         QObject *msgObj, const char *messageSlot,
@@ -190,7 +190,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param messageSlot the data slot itself
       @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param id the id for our #Client object, defaults to empty
+      @param id the id for our Client object, defaults to empty
      */
     void call( const QString &method, bool arg,
         QObject *msgObj, const char *messageSlot,
@@ -207,7 +207,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param messageSlot the data slot itself
       @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param id the id for our #Client object, defaults to empty
+      @param id the id for our Client object, defaults to empty
      */
     void call( const QString &method, double arg,
         QObject *msgObj, const char *messageSlot,
@@ -224,7 +224,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param messageSlot the data slot itself
       @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param id the id for our #Client object, defaults to empty
+      @param id the id for our Client object, defaults to empty
      */
     void call( const QString &method, const QString &arg,
         QObject *msgObj, const char *messageSlot,
@@ -241,7 +241,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param messageSlot the data slot itself
       @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param id the id for our #Client object, defaults to empty
+      @param id the id for our Client object, defaults to empty
      */
     void call( const QString &method, const QByteArray &arg,
         QObject *msgObj, const char *messageSlot,
@@ -258,7 +258,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param messageSlot the data slot itself
       @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param id the id for our #Client object, defaults to empty
+      @param id the id for our Client object, defaults to empty
      */
     void call( const QString &method, const QDateTime &arg,
         QObject *msgObj, const char *messageSlot,
@@ -275,7 +275,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param messageSlot the data slot itself
       @param faultObj the object containing the error slot
       @param faultSlot the error slot itself
-      @param id the id for our #Client object, defaults to empty
+      @param id the id for our Client object, defaults to empty
      */
     void call( const QString &method, const QStringList &arg,
         QObject *msgObj, const char *messageSlot,
@@ -295,6 +295,18 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
     Q_PRIVATE_SLOT( d, void queryFinished( Query * ) )
 };
 
+/**
+  Calls the given method on a XML-RPC server with the given 
+  list of type T arguments. 
+
+  @param method the method on the server we are going to be calling
+  @param arg the list of type T to pass to the server
+  @param msgObj the object containing the data slot
+  @param messageSlot the data slot itself
+  @param faultObj the object containing the error slot
+  @param faultSlot the error slot itself
+  @param id the id for our Client object, defaults to empty
+*/
 template <typename T>
 void Client::call( const QString &method, const QList<T> &arg,
                    QObject *msgObj, const char *messageSlot,
