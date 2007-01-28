@@ -16,13 +16,15 @@ endmacro(add_kmime_test)
 
 ########### next target ###############
 
-set(test_kmime_header_parsing_SRCS test_kmime_header_parsing.cpp )
+if(HAVE_GETOPT_H)
+    set(test_kmime_header_parsing_SRCS test_kmime_header_parsing.cpp )
 
-kde4_automoc(${test_kmime_header_parsing_SRCS})
+    kde4_automoc(${test_kmime_header_parsing_SRCS})
 
-kde4_add_executable(test_kmime_header_parsing ${test_kmime_header_parsing_SRCS})
+    kde4_add_executable(test_kmime_header_parsing ${test_kmime_header_parsing_SRCS})
 
-target_link_libraries(test_kmime_header_parsing  kmime ${KDE4_KDECORE_LIBS} )
+    target_link_libraries(test_kmime_header_parsing  kmime ${KDE4_KDECORE_LIBS} )
+endif(HAVE_GETOPT_H)
 
 ########### next target ###############
 
@@ -36,13 +38,15 @@ target_link_libraries(test_charfreq  kmime ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
 
-set(test_mdn_SRCS test_mdn.cpp )
+if(HAVE_GETOPT_H)
+    set(test_mdn_SRCS test_mdn.cpp )
 
-kde4_automoc(${test_mdn_SRCS})
+    kde4_automoc(${test_mdn_SRCS})
 
-kde4_add_executable(test_mdn ${test_mdn_SRCS})
+    kde4_add_executable(test_mdn ${test_mdn_SRCS})
 
-target_link_libraries(test_mdn  kmime ${KDE4_KDECORE_LIBS} )
+    target_link_libraries(test_mdn  kmime ${KDE4_KDECORE_LIBS} )
+endif(HAVE_GETOPT_H)
 
 ########### next target ###############
 
@@ -55,15 +59,15 @@ kde4_add_executable(test_dates ${test_dates_SRCS})
 target_link_libraries(test_dates  kmime ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
+if(HAVE_GETOPT_H)
+    set(test_kmime_codec_SRCS test_kmime_codec.cpp )
 
-set(test_kmime_codec_SRCS test_kmime_codec.cpp )
-
-kde4_automoc(${test_kmime_codec_SRCS})
-
-kde4_add_executable(test_kmime_codec ${test_kmime_codec_SRCS})
-
-target_link_libraries(test_kmime_codec  kmime ${KDE4_KDECORE_LIBS} )
-
+    kde4_automoc(${test_kmime_codec_SRCS})
+        
+    kde4_add_executable(test_kmime_codec ${test_kmime_codec_SRCS})
+        
+    target_link_libraries(test_kmime_codec  kmime ${KDE4_KDECORE_LIBS} )
+endif(HAVE_GETOPT_H)
 
 # qtestlib unit tests
 add_kmime_test(rfc2047test.cpp)
