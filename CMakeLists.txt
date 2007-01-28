@@ -19,11 +19,8 @@ configure_file (config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 add_subdirectory(emailfunctions)
 add_subdirectory(kxmlrpcclient)
-
-if(NOT MSVC)
 add_subdirectory(kcal)
 add_subdirectory(ktnef)
-endif(NOT MSVC)
 add_subdirectory(syndication)
 add_subdirectory(kldap)
 add_subdirectory(kmime)

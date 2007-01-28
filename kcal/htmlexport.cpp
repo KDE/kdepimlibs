@@ -489,18 +489,18 @@ void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
   *ts << "</tr>\n";
 }
 
-void HtmlExport::createWeekView( QTextStream */*ts*/ )
+void HtmlExport::createWeekView( QTextStream * /*ts*/ )
 {
   // FIXME: Implement this!
 }
 
-void HtmlExport::createJournalView( QTextStream */*ts*/ )
+void HtmlExport::createJournalView( QTextStream * /*ts*/ )
 {
 //   Journal::List rawJournalList = mCalendar->journals();
   // FIXME: Implement this!
 }
 
-void HtmlExport::createFreeBusyView( QTextStream */*ts*/ )
+void HtmlExport::createFreeBusyView( QTextStream * /*ts*/ )
 {
   // FIXME: Implement this!
 }
