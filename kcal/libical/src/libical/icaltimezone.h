@@ -31,6 +31,7 @@
 #define ICALTIMEZONE_H
 
 #include <stdio.h> /* For FILE* */
+#include "kcal.h"
 #include "icaltime.h"
 #include "icalarray.h"
 #include "icalcomponent.h"
@@ -48,11 +49,11 @@ typedef struct _icaltimezone		icaltimezone;
  */
 
 /** Creates a new icaltimezone. */
-icaltimezone *icaltimezone_new			(void);
+KCAL_EXPORT icaltimezone *icaltimezone_new	(void);
 
 /** Frees all memory used for the icaltimezone. Set free_struct to free the
    icaltimezone struct as well. */
-void icaltimezone_free				(icaltimezone *zone,
+KCAL_EXPORT void icaltimezone_free		(icaltimezone *zone,
 						 int free_struct);
 
 
@@ -99,7 +100,7 @@ icalcomponent*	icaltimezone_get_component	(icaltimezone *zone);
 /** Sets the VTIMEZONE component of an icaltimezone, initializing the tzid,
    location & tzname fields. It returns 1 on success or 0 on failure, i.e.
    no TZID was found. */
-int	icaltimezone_set_component		(icaltimezone *zone,
+KCAL_EXPORT int	icaltimezone_set_component	(icaltimezone *zone,
 						 icalcomponent	*comp);
 
 /**

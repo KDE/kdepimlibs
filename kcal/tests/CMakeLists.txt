@@ -67,8 +67,9 @@ target_link_libraries(testresource  ${KDE4_KDECORE_LIBS} kcal )
 
 ########### next target ###############
 set(testfields_SRCS testfields.cpp )
+set(srcfile "${CMAKE_SOURCE_DIR}/kcal/tests/data/test_pilot.ics")
 set_source_files_properties( ${testfields_SRCS} PROPERTIES 
-	COMPILE_FLAGS -DINPUT='"$(srcdir)/data/test_pilot.ics"' )
+	COMPILE_FLAGS -DINPUT="\\"${srcfile}\\"" )
 kde4_automoc(${testfields_SRCS})
 
 

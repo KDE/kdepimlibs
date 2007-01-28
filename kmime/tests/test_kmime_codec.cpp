@@ -21,7 +21,9 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
+#ifdef HAVE_GETOPT_H
 #include <getopt.h>
+#endif
 #include <cassert>
 
 #include <QFile>
