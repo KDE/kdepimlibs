@@ -134,7 +134,7 @@ if(NOT MSVC)
   target_link_libraries(testicaltimezones ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
 
   add_test(kcal-testicaltimezones ${EXECUTABLE_OUTPUT_PATH}/testicaltimezones)
-endif(NOT WIN32)
+endif(NOT MVSC)
 
 ########### next target ###############
 set(testalarm_SRCS testalarm.cpp )
