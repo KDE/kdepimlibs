@@ -24,7 +24,6 @@
 #ifndef ICALCOMPONENT_H
 #define ICALCOMPONENT_H
 
-#include "kcal.h"
 #include "icalproperty.h"
 #include "icalvalue.h"
 #include "icalenums.h" /* defines icalcomponent_kind */
@@ -50,17 +49,17 @@ typedef struct icalcompiter
 
 } icalcompiter;
 
-KCAL_EXPORT icalcomponent* icalcomponent_new(icalcomponent_kind kind);
-KCAL_EXPORT icalcomponent* icalcomponent_new_clone(icalcomponent* component);
-KCAL_EXPORT icalcomponent* icalcomponent_new_from_string(char* str);
-KCAL_EXPORT icalcomponent* icalcomponent_vanew(icalcomponent_kind kind, ...);
-KCAL_EXPORT void icalcomponent_free(icalcomponent* component);
+icalcomponent* icalcomponent_new(icalcomponent_kind kind);
+icalcomponent* icalcomponent_new_clone(icalcomponent* component);
+icalcomponent* icalcomponent_new_from_string(char* str);
+icalcomponent* icalcomponent_vanew(icalcomponent_kind kind, ...);
+void icalcomponent_free(icalcomponent* component);
 
 char* icalcomponent_as_ical_string(icalcomponent* component);
 
 int icalcomponent_is_valid(icalcomponent* component);
 
-KCAL_EXPORT icalcomponent_kind icalcomponent_isa(const icalcomponent* component);
+icalcomponent_kind icalcomponent_isa(const icalcomponent* component);
 
 int icalcomponent_isa_component (void* component);
 
@@ -123,9 +122,9 @@ removes components from the container.*/
 /* Iterate through components */
 icalcomponent* icalcomponent_get_current_component (icalcomponent* component);
 
-KCAL_EXPORT icalcomponent* icalcomponent_get_first_component(icalcomponent* component,
+icalcomponent* icalcomponent_get_first_component(icalcomponent* component,
 					      icalcomponent_kind kind);
-KCAL_EXPORT icalcomponent* icalcomponent_get_next_component(icalcomponent* component,
+icalcomponent* icalcomponent_get_next_component(icalcomponent* component,
 					      icalcomponent_kind kind);
 
 /* Using external iterators */

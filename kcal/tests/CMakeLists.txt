@@ -119,16 +119,19 @@ kde4_add_executable(testrecurrencetype RUN_UNINSTALLED ${testrecurrencetype_SRCS
 target_link_libraries(testrecurrencetype  ${KDE4_KDECORE_LIBS} kcal )
 
 ########### next target ###############
-set(testicaltimezones_SRCS testicaltimezones.cpp
+
+if(NOT MSVC)
+  set(testicaltimezones_SRCS testicaltimezones.cpp
  )
 
-kde4_automoc(${testicaltimezones_SRCS})
+  kde4_automoc(${testicaltimezones_SRCS})
 
-kde4_add_executable(testicaltimezones NOGUI RUN_UNINSTALLED ${testicaltimezones_SRCS})
+  kde4_add_executable(testicaltimezones NOGUI RUN_UNINSTALLED ${testicaltimezones_SRCS})
 
-target_link_libraries(testicaltimezones ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
+  target_link_libraries(testicaltimezones ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
 
-add_test(kcal-testicaltimezones ${EXECUTABLE_OUTPUT_PATH}/testicaltimezones)
+  add_test(kcal-testicaltimezones ${EXECUTABLE_OUTPUT_PATH}/testicaltimezones)
+endif(NOT WIN32)
 
 ########### next target ###############
 set(testalarm_SRCS testalarm.cpp )

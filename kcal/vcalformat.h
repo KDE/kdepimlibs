@@ -33,7 +33,7 @@
 
 #define _VCAL_VERSION "1.0"
 
-class VObject;
+struct VObject;
 
 namespace KCal {
 
