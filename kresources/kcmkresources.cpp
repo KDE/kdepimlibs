@@ -32,7 +32,7 @@ typedef KGenericFactory<KCMKResources, QWidget> ResourcesFactory;
 K_EXPORT_COMPONENT_FACTORY( kcm_kresources, ResourcesFactory( "kcmkresources" ) )
 
 KCMKResources::KCMKResources( QWidget *parent, const QStringList& )
-  : KCModule( ResourcesFactory::instance(), parent, QStringList() )
+  : KCModule( ResourcesFactory::componentData(), parent, QStringList() )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   mConfigPage = new KRES::ConfigPage( this );

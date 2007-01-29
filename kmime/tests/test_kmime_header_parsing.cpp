@@ -2,7 +2,7 @@
 #include "kmime/kmime_headers.h"
 #include "kmime/kmime_header_parsing.h"
 
-#include <kinstance.h>
+#include <kcomponentdata.h>
 
 #include <QFile>
 #include <QByteArray>
@@ -120,7 +120,7 @@ int main( int argc, char * argv[] ) {
 
   if ( index >= tokenTypesLen ) usage( "unknown token type" );
 
-  KInstance instance( "test_kmime_header_parsing" );
+  KComponentData componentData( "test_kmime_header_parsing" );
 
   QFile stdIn;
   stdIn.open( stdin, QIODevice::ReadOnly );
