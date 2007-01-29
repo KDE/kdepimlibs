@@ -120,6 +120,9 @@ target_link_libraries(testrecurrencetype  ${KDE4_KDECORE_LIBS} kcal )
 
 ########### next target ###############
 
+# this test cannot work with msvc because libical should not be altered
+# and therefore we can't add KCAL_EXPORT there
+# it should work fine with mingw because of the auto-import feature
 if(NOT MSVC)
   set(testicaltimezones_SRCS testicaltimezones.cpp
  )
