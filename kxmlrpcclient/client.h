@@ -10,15 +10,15 @@
 ***************************************************************************/
 /**
   @file
-
   This file is part of the API for accessing XML-RPC Servers
   and defines the Client class.
+
+  @brief
+  Defines the Client class.
 
   @author Narayan Newton <narayannewton@gmail.com>
   @author Frerich Raabe <raabe@kde.org>
   @author Tobias Koenig <tokoe@kde.org>
-
-  \par Maintainer: Narayan Newton <narayannewton@gmail.com>
 */
 
 #ifndef KXML_RPC_CLIENT_H

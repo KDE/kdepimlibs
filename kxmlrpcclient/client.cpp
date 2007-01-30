@@ -8,6 +8,18 @@
 *   the Free Software Foundation; either version 2 of the License, or     *
 *   (at your option) any later version.                                   *
 ***************************************************************************/
+/**
+  @file
+  This file is part of the API for accessing XML-RPC Servers
+  and defines the Client class.
+
+  @brief
+  Defines the Client class.
+
+  @author Narayan Newton <narayannewton@gmail.com>
+  @author Frerich Raabe <raabe@kde.org>
+  @author Tobias Koenig <tokoe@kde.org>
+*/
 
 #include <kdebug.h>
 #include <kio/job.h>
