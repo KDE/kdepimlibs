@@ -296,10 +296,10 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   QStringList tmpStrList = anEvent->categories();
   tmpStr = "";
   QString catStr;
-  for ( QStringList::Iterator its = tmpStrList.begin();
-        its != tmpStrList.end();
-        ++its ) {
-    catStr = *its;
+  for ( QStringList::Iterator it = tmpStrList.begin();
+        it != tmpStrList.end();
+        ++it ) {
+    catStr = *it;
     if (catStr[0] == ' ')
       tmpStr += catStr.mid(1);
     else
