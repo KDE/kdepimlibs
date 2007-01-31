@@ -296,14 +296,14 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   QStringList tmpStrList = anEvent->categories();
   tmpStr = "";
   QString catStr;
-  for ( QStringList::Iterator its = tmpStrList.begin();
-        its != tmpStrList.end();
-        ++its ) {
+  QStringList::const_iterator its;
+  for ( its = tmpStrList.constBegin(); its != tmpStrList.constEnd(); ++its ) {
     catStr = *its;
-    if (catStr[0] == ' ')
+    if (catStr[0] == ' ') {
       tmpStr += catStr.mid(1);
-    else
+    } else {
       tmpStr += catStr;
+    }
     // this must be a ';' character as the vCalendar specification requires!
     // vcc.y has been hacked to translate the ';' to a ',' when the vcal is
     // read in.
