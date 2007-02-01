@@ -48,9 +48,6 @@ class KCAL_EXPORT CalStorage
 
   private:
     Calendar *mCalendar;
-
-    class Private;
-    Private *d;
 };
 
 }

@@ -139,7 +139,7 @@ class KCAL_EXPORT Person
   private:
     //@cond PRIVATE
     class Private;
-    Private *d;
+    Private *const d;
    //@endcond
 };
 

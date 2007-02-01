@@ -137,9 +137,6 @@ class KCAL_EXPORT ICalFormat : public CalFormat
     ICalFormatImpl *mImpl;
 
     KDateTime::Spec mTimeSpec;
-
-    class Private;
-    Private *d;
 };
 
 }

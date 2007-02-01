@@ -995,7 +995,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
   private:
     //@cond PRIVATE
     class Private;
-    Private *d;
+    Private *const d;
     //@endcond
   };
 

@@ -92,9 +92,6 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
     KDirWatch mDirWatch;
 
     KABC::Lock *mLock;
-
-    class Private;
-    Private *d;
 };
 
 }

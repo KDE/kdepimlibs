@@ -104,9 +104,6 @@ class KCAL_EXPORT CalFormat
 
     static QString mApplication;      // name of application for unique ID strings
     static QString mProductId;        // PRODID string to write to calendar files
-
-    class Private;
-    Private *d;
 };
 
 }

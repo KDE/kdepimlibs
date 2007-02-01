@@ -539,9 +539,6 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     mutable ushort mCachedType;
 
     QList<RecurrenceObserver*> mObservers;
-
-    class Private;
-    Private *d;
 };
 
 }

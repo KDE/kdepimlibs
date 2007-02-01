@@ -154,7 +154,7 @@ private:
     ICalTimeZones(const ICalTimeZones &);              // prohibit copying
     ICalTimeZones &operator=(const ICalTimeZones &);   // prohibit copying
 
-    ICalTimeZonesPrivate *d;
+    ICalTimeZonesPrivate *const d;
 };
 
 

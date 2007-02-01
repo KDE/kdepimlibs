@@ -47,11 +47,11 @@ class KCAL_EXPORT DndFactory
   public:
     explicit DndFactory( Calendar * );
 
-    /** 
+    /**
       Create the calendar that is contained in the drop event's data.
      */
     Calendar *createDropCalendar( QDropEvent *de );
-    /** 
+    /**
       Create the calendar that is contained in the mime data.
      */
     Calendar *createDropCalendar( const QMimeData *md );
@@ -79,9 +79,6 @@ class KCAL_EXPORT DndFactory
 
   private:
     Calendar *mCalendar;
-
-    class Private;
-    Private *d;
 };
 
 }

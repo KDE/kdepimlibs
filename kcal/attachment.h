@@ -230,7 +230,7 @@ class KCAL_EXPORT Attachment
   private:
     //@cond PRIVATE
     class Private;
-    Private *d;
+    Private *const d;
     //@endcond
 };
 

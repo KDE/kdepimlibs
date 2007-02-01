@@ -114,9 +114,6 @@ class KCAL_EXPORT VCalFormat : public CalFormat
 
     Event::List mEventsRelate;           // events with relations
     Todo::List mTodosRelate;             // todos with relations
-
-    class Private;
-    Private *d;
 };
 
 }

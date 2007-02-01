@@ -166,7 +166,7 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     void init();
     //@cond PRIVATE
     class Private;
-    Private *d;
+    Private *const d;
     //@endcond
 };
 

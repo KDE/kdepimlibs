@@ -516,7 +516,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
   private:
     //@cond PRIVATE
     class Private;
-    Private *d;
+    Private *const d;
     //@endcond
 };
 

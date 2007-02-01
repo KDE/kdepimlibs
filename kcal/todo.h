@@ -313,7 +313,7 @@ class KCAL_EXPORT Todo : public Incidence
 
     //@cond PRIVATE
     class Private;
-    Private *d;
+    Private *const d;
     //@endcond
 };
 

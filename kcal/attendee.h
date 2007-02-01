@@ -224,7 +224,7 @@ class KCAL_EXPORT Attendee : public Person
   private:
     //@cond PRIVATE
     class Private;
-    Private *d;
+    Private *const d;
     //@endcond
 };
 

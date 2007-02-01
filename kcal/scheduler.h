@@ -84,9 +84,6 @@ class KCAL_EXPORT ScheduleMessage
     int mMethod;
     Status mStatus;
     QString mError;
-
-    class Private;
-    Private *d;
 };
 
 /**

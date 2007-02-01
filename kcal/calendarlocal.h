@@ -254,7 +254,7 @@ class KCAL_EXPORT CalendarLocal : public Calendar
 
     //@cond PRIVATE
     class Private;
-    Private *d;
+    Private *const d;
     //@endcond
 };
 

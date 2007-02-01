@@ -157,9 +157,6 @@ class KCAL_EXPORT Event : public Incidence
     KDateTime mDtEnd;
     bool mHasEndDate;
     Transparency mTransparency;
-
-    class Private;
-    Private *d;
 };
 
 }

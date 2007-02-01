@@ -603,7 +603,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
   private:
     //@cond PRIVATE
     class Private;
-    Private *d;
+    Private *const d;
     //@endcond
 };
 

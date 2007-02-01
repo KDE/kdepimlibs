@@ -47,10 +47,6 @@ class KCAL_EXPORT Journal : public Incidence
       Return copy of this Journal. The caller owns the returned object.
     */
     Journal *clone();
-
-  private:
-    class Private;
-    Private *d;
 };
 
 }

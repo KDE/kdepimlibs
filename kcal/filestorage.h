@@ -53,9 +53,6 @@ class KCAL_EXPORT FileStorage : public CalStorage
   private:
     QString mFileName;
     CalFormat *mSaveFormat;
-
-    class Private;
-    Private *d;
 };
 
 }

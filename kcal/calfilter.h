@@ -147,9 +147,6 @@ class KCAL_EXPORT CalFilter
     QStringList mCategoryList;
     QStringList mEmailList;
     int mCompletedTimeSpan;
-
-    class Private;
-    Private *d;
 };
 
 }

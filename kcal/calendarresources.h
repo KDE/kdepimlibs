@@ -71,7 +71,7 @@ class KCAL_EXPORT CalendarResources :
         DestinationPolicy( CalendarResourceManager *manager, QWidget *parent = 0  ) :
           mManager( manager ), mParent( parent ) {}
         virtual ~DestinationPolicy(){}
-  
+
         virtual QWidget *parent() { return mParent; }
         virtual void setParent( QWidget *newparent ) { mParent = newparent; }
         virtual ResourceCalendar *destination( Incidence *incidence ) = 0;
@@ -255,20 +255,20 @@ class KCAL_EXPORT CalendarResources :
        Resource which is queried.
     */
     void setAskDestinationPolicy();
-    
-    /** 
+
+    /**
        Returns the current parent for new dialogs. This is a bad hack, but we need
        to properly set the parent for the resource selection dialog. Otherwise
-       the dialog will not be modal to the editor dialog in korganizer and 
+       the dialog will not be modal to the editor dialog in korganizer and
        the user can still work in the editor dialog (and thus crash korganizer).
-       Afterwards we need to reset it (to avoid pointers to widgets that are 
+       Afterwards we need to reset it (to avoid pointers to widgets that are
        already deleted) so we also need the accessor
     */
     QWidget *dialogParentWidget();
-    /** 
+    /**
        Set the widget parent for new dialogs. This is a bad hack, but we need
        to properly set the parent for the resource selection dialog. Otherwise
-       the dialog will not be modal to the editor dialog in korganizer and 
+       the dialog will not be modal to the editor dialog in korganizer and
        the user can still work in the editor dialog (and thus crash korganizer).
     */
     void setDialogParentWidget( QWidget *parent );

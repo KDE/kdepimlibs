@@ -91,9 +91,6 @@ class KCAL_EXPORT HtmlExport
     Calendar *mCalendar;
     HTMLExportSettings *mSettings;
     QMap<QDate,QString> mHolidayMap;
-
-    class Private;
-    Private *d;
 };
 
 }

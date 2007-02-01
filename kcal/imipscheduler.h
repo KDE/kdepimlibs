@@ -43,10 +43,6 @@ class KCAL_EXPORT IMIPScheduler : public Scheduler
     bool publish (IncidenceBase *incidence,const QString &recipients);
     bool performTransaction(IncidenceBase *incidence,Method method);
     QList<ScheduleMessage*> retrieveTransactions();
-
-  private:
-    class Private;
-    Private *d;
 };
 
 }

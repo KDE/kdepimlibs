@@ -142,7 +142,7 @@ class KCAL_EXPORT Period
   private:
     //@cond PRIVATE
     class Private;
-    Private *d;
+    Private *const d;
     //@endcond
 };
 

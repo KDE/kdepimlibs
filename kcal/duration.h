@@ -122,7 +122,7 @@ class KCAL_EXPORT Duration
   private:
     //@cond PRIVATE
     class Private;
-    Private *d;
+    Private *const d;
     //@endcond
 };
 

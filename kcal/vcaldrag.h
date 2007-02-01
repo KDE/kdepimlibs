@@ -56,7 +56,7 @@ class KCAL_EXPORT VCalDrag
 
   private:
     class Private;
-    Private *d;
+    Private *const d;
 };
 
 }
