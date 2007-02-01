@@ -67,7 +67,7 @@ E. Library Code
 
 F. Coding Style
 
-   Please see http://korganizer.kde.org/develop/hacking.html
+   Please see http://pim.kde.org/development/coding.php
 
    Don't use dynamic_cast.  In most cases, the use of dynamic_cast
    is an indication of design problems. In addition, it isn't always
