@@ -64,7 +64,7 @@ class KCAL_EXPORT RecurrenceRule
     /** structure for describing the n-th weekday of the month/year. */
     class WDayPos {
     public:
-      WDayPos( int ps = 0 , short dy = 0 ) : mDay(dy), mPos(ps) {}
+      explicit WDayPos( int ps = 0 , short dy = 0 ) : mDay(dy), mPos(ps) {}
       short day() const { return mDay; }
       int pos() const { return mPos; }
       void setDay( short dy ) { mDay = dy; }

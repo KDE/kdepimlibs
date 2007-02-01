@@ -41,9 +41,9 @@ class Exception
 {
   public:
     /**
-      Construct exception with descriptive message \a message.
+      Construct exception with descriptive message @p message.
     */
-    Exception( const QString &message = QString() );
+    explicit Exception( const QString &message = QString() );
     virtual ~Exception();
 
     /**

@@ -38,9 +38,9 @@ class ResourceCached;
 */
 class KCAL_EXPORT ResourceCachedReloadConfig : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
-    ResourceCachedReloadConfig( QWidget *parent = 0, const char *name = 0 );
+    explicit ResourceCachedReloadConfig( QWidget *parent = 0, const char *name = 0 );
 
   public slots:
     void loadSettings( ResourceCached *resource );
