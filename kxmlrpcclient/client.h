@@ -59,7 +59,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
 
       @param parent the parent of this object, defaults to NULL.
      */
-    Client( QObject *parent = 0 );
+    explicit Client( QObject *parent = 0 );
 
     /**
       Constructs a XML-RPC Client, which will connect to @p url.
@@ -296,8 +296,8 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
 };
 
 /**
-  Calls the given method on a XML-RPC server with the given 
-  list of type T arguments. 
+  Calls the given method on a XML-RPC server with the given
+  list of type T arguments.
 
   @param method the method on the server we are going to be calling
   @param arg the list of type T to pass to the server

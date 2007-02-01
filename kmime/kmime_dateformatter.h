@@ -87,7 +87,7 @@ class KMIME_EXPORT DateFormatter
 
       @param ftype is the default #FormatType to use.
     */
-    DateFormatter( FormatType ftype=DateFormatter::Fancy );
+    explicit DateFormatter( FormatType ftype=DateFormatter::Fancy );
 
     /**
       Destroys the date formatter.

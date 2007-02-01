@@ -407,7 +407,7 @@ class Encoder
 
       @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
     */
-    Encoder( bool withCRLF=false )
+    explicit Encoder( bool withCRLF=false )
       : mOutputBufferCursor( 0 ), mWithCRLF( withCRLF ) {}
 
   public:
