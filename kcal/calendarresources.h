@@ -68,7 +68,8 @@ class KCAL_EXPORT CalendarResources :
     class DestinationPolicy
     {
       public:
-        DestinationPolicy( CalendarResourceManager *manager, QWidget *parent = 0  ) :
+        explicit DestinationPolicy( CalendarResourceManager *manager,
+                                    QWidget *parent = 0  ) :
           mManager( manager ), mParent( parent ) {}
         virtual ~DestinationPolicy(){}
 
@@ -91,7 +92,8 @@ class KCAL_EXPORT CalendarResources :
     class StandardDestinationPolicy : public DestinationPolicy
     {
       public:
-        explicit StandardDestinationPolicy( CalendarResourceManager *manager, QWidget *parent = 0 ) :
+        explicit StandardDestinationPolicy( CalendarResourceManager *manager,
+                                            QWidget *parent = 0 ) :
           DestinationPolicy( manager, parent ) {}
         virtual ~StandardDestinationPolicy(){}
         ResourceCalendar *destination( Incidence *incidence );
@@ -107,8 +109,8 @@ class KCAL_EXPORT CalendarResources :
     class AskDestinationPolicy : public DestinationPolicy
     {
       public:
-        AskDestinationPolicy( CalendarResourceManager *manager,
-                              QWidget *parent = 0 ) :
+        explicit AskDestinationPolicy( CalendarResourceManager *manager,
+                                       QWidget *parent = 0 ) :
           DestinationPolicy( manager, parent ) {}
         virtual ~AskDestinationPolicy(){}
         ResourceCalendar *destination( Incidence *incidence );

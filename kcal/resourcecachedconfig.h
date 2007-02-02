@@ -63,7 +63,7 @@ class KCAL_EXPORT ResourceCachedSaveConfig : public QWidget
 {
     Q_OBJECT
   public:
-    ResourceCachedSaveConfig( QWidget *parent = 0, const char *name = 0 );
+    explicit ResourceCachedSaveConfig( QWidget *parent = 0, const char *name = 0 );
 
   public slots:
     void loadSettings( ResourceCached *resource );

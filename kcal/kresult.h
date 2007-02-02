@@ -276,7 +276,7 @@ class KCAL_EXPORT KResultError : public KResult
       Create KResult object of type Error with given error type and optionally
       a detailed error message.
     */
-    KResultError( ErrorType error, const QString &details = QString::null )
+    explicit KResultError( ErrorType error, const QString &details = QString() )
       : KResult( error, details ) {}
 
     /**
