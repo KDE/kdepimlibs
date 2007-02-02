@@ -26,12 +26,12 @@
 
 using namespace KCal;
 
-CustomProperties::CustomProperties()
+CustomProperties::CustomProperties() : d( 0 )
 {
 }
 
-CustomProperties::CustomProperties(const CustomProperties &cp)
-  : mProperties(cp.mProperties)
+CustomProperties::CustomProperties( const CustomProperties &cp )
+  : mProperties( cp.mProperties ), d( 0 )
 {
 }
 

@@ -56,6 +56,9 @@ class KCAL_EXPORT ResourceLocalDirConfig : public KRES::ConfigWidget
     Q3ButtonGroup *formatGroup;
     QRadioButton *icalButton;
     QRadioButton *vcalButton;
+
+    class Private;
+    Private *const d;
 };
 
 }

@@ -37,7 +37,8 @@ FileStorage::FileStorage( Calendar *cal, const QString &fileName,
                           CalFormat *format )
   : CalStorage( cal ),
     mFileName( fileName ),
-    mSaveFormat( format )
+    mSaveFormat( format ),
+    d( 0 )
 {
 }
 

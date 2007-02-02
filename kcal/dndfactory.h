@@ -79,6 +79,9 @@ class KCAL_EXPORT DndFactory
 
   private:
     Calendar *mCalendar;
+
+    class Private;
+    Private *const d;
 };
 
 }

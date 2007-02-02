@@ -84,6 +84,9 @@ class KCAL_EXPORT ScheduleMessage
     int mMethod;
     Status mStatus;
     QString mError;
+
+    struct Private;
+    Private *const d;
 };
 
 /**
@@ -182,7 +185,7 @@ class KCAL_EXPORT Scheduler
 
   private:
     struct Private;
-    Private *d;
+    Private *const d;
 };
 
 }

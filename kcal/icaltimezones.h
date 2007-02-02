@@ -241,7 +241,7 @@ class KCAL_EXPORT ICalTimeZone : public KTimeZone
     virtual bool hasTransitions() const;
 
   private:
-    ICalTimeZonePrivate *d;
+    ICalTimeZonePrivate *const d;
 };
 
 
@@ -349,7 +349,7 @@ class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
     static QByteArray icalTzidPrefix();
 
   private:
-    ICalTimeZoneSourcePrivate *d;
+    ICalTimeZoneSourcePrivate *const d;
 };
 
 
@@ -439,7 +439,7 @@ class KCAL_EXPORT ICalTimeZoneData : public KTimeZoneData
     virtual bool hasTransitions() const;
 
 private:
-    ICalTimeZoneDataPrivate *d;
+    ICalTimeZoneDataPrivate *const d;
 };
 
 }

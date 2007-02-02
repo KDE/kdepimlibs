@@ -211,13 +211,13 @@ const ICalTimeZone *ICalTimeZones::utc()
 /******************************************************************************/
 
 ICalTimeZone::ICalTimeZone(ICalTimeZoneSource *source, const QString &name, ICalTimeZoneData *data)
-  : KTimeZone(source, name)
+  : KTimeZone(source, name), d( 0 )
 {
   setData(data);
 }
 
 ICalTimeZone::ICalTimeZone(const KTimeZone &tz, const QDate &earliest)
-  : KTimeZone(0, tz.name(), tz.countryCode(), tz.latitude(), tz.longitude(), tz.comment())
+  : KTimeZone(0, tz.name(), tz.countryCode(), tz.latitude(), tz.longitude(), tz.comment()), d( 0 )
 {
   const KTimeZoneData *data = tz.data(true);
   if (data) {
@@ -230,7 +230,7 @@ ICalTimeZone::ICalTimeZone(const KTimeZone &tz, const QDate &earliest)
 }
 
 ICalTimeZone::ICalTimeZone(const ICalTimeZone &tz)
-  : KTimeZone(tz)
+  : KTimeZone(tz), d( 0 )
 {
 }
 
@@ -642,7 +642,7 @@ class ICalTimeZoneSourcePrivate
 QByteArray ICalTimeZoneSourcePrivate::icalTzidPrefix;
 
 
-ICalTimeZoneSource::ICalTimeZoneSource()
+ICalTimeZoneSource::ICalTimeZoneSource() : d( 0 )
 {
 }
 

@@ -53,6 +53,10 @@ class KCAL_EXPORT VCalDrag
       Decode drag&drop object to vCalendar component \a vcal.
     */
     static bool fromMimeData( const QMimeData *e, Calendar *cal );
+
+  private:
+    class Private;
+    Private *const d;
 };
 
 }

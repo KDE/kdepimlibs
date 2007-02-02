@@ -33,7 +33,7 @@ QString CalFormat::mApplication = QLatin1String("libkcal");
 QString CalFormat::mProductId = QLatin1String("-//K Desktop Environment//NONSGML libkcal 3.5//EN");
 
 
-CalFormat::CalFormat()
+CalFormat::CalFormat() : d( 0 )
 {
   mException = 0;
 }

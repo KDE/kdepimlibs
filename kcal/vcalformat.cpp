@@ -36,7 +36,7 @@
 
 using namespace KCal;
 
-VCalFormat::VCalFormat()
+VCalFormat::VCalFormat() : d( 0 )
 {
 }
 

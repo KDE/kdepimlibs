@@ -40,12 +40,12 @@
 
 using namespace KCal;
 
-ResourceCached::ResourceCached( const KConfig* config )
+ResourceCached::ResourceCached( const KConfig *config )
   : ResourceCalendar( config ), mCalendar( QLatin1String( "UTC" ) ),
     mReloadPolicy( ReloadNever ),  mReloadInterval( 10 ),
     mInhibitReload( false ), mReloaded( false ),
     mSavePending( false ), mSavePolicy( SaveNever ), mSaveInterval( 10 ),
-    mIdMapper( "kcal/uidmaps/" )
+    mIdMapper( "kcal/uidmaps/" ), d( 0 )
 {
   connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( slotReload() ) );
   connect( &mSaveTimer, SIGNAL( timeout() ), SLOT( slotSave() ) );

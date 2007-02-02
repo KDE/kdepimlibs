@@ -452,6 +452,9 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
   private:
     bool mNoReadOnlyOnLoad;
     bool mInhibitSave;     // true to prevent saves
+
+    class Private;
+    Private *const d;
 };
 
 /** Type representing the manager of a ResourceCalendar. */

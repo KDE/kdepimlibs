@@ -23,7 +23,7 @@
 
 using namespace KCal;
 
-Journal::Journal()
+Journal::Journal() : d( 0 )
 {
 }
 

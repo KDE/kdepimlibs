@@ -30,8 +30,8 @@
 
 using namespace KCal;
 
-IMIPScheduler::IMIPScheduler(Calendar *calendar)
-  : Scheduler(calendar)
+IMIPScheduler::IMIPScheduler( Calendar *calendar )
+  : Scheduler( calendar ), d( 0 )
 {
 }
 

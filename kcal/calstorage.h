@@ -33,7 +33,7 @@ class Calendar;
 class KCAL_EXPORT CalStorage
 {
   public:
-    explicit CalStorage( Calendar *calendar )
+    explicit CalStorage( Calendar *calendar ) : d ( 0 )
     {
       mCalendar = calendar;
     }
@@ -48,6 +48,9 @@ class KCAL_EXPORT CalStorage
 
   private:
     Calendar *mCalendar;
+
+    class Private;
+    Private *const d;
 };
 
 }

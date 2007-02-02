@@ -85,6 +85,9 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
     KDateTime mDtEnd;
     PeriodList mBusyPeriods;
     Calendar *mCalendar;
+
+    class Private;
+    Private *const d;
 };
 
 }

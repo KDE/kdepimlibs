@@ -34,8 +34,8 @@ using namespace KCal;
 
 Incidence::Incidence() :
   IncidenceBase(),
-  mRelatedTo(0), mStatus(StatusNone), mSecrecy(SecrecyPublic),
-  mPriority(0), mRecurrence(0)
+  mRelatedTo( 0 ), mStatus( StatusNone ), mSecrecy( SecrecyPublic ),
+  mPriority( 0 ), mRecurrence( 0 ), d( 0 )
 {
   recreate();
 
@@ -43,7 +43,8 @@ Incidence::Incidence() :
   mAttachments.setAutoDelete(true);
 }
 
-Incidence::Incidence( const Incidence &i ) : IncidenceBase( i ),Recurrence::RecurrenceObserver()
+Incidence::Incidence( const Incidence &i ) :
+  IncidenceBase( i ), Recurrence::RecurrenceObserver(), d( 0 )
 {
 // TODO: reenable attributes currently commented out.
   mRevision = i.mRevision;

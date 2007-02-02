@@ -88,10 +88,11 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
 
     KUrl mURL;
 //     ICalFormat mFormat;
-
     KDirWatch mDirWatch;
-
     KABC::Lock *mLock;
+
+    class Private;
+    Private *const d;
 };
 
 }

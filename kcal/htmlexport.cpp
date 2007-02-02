@@ -44,7 +44,7 @@
 using namespace KCal;
 
 HtmlExport::HtmlExport( Calendar *calendar, HTMLExportSettings *settings ) :
-  mCalendar( calendar ), mSettings( settings )
+  mCalendar( calendar ), mSettings( settings ), d( 0 )
 {
 }
 

@@ -40,6 +40,9 @@ class KCAL_EXPORT ConfirmSaveDialog : public KDialog
 
   private:
     QTreeWidget *mListView;
+
+    class Private;
+    Private *const d;
 };
 
 }

@@ -457,6 +457,9 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     QMap<KCal::Incidence *,bool> mDeletedIncidences;
 
     KRES::IdMapper mIdMapper;
+
+    class Private;
+    Private *const d;
 };
 
 }

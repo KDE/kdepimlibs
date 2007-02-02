@@ -235,6 +235,9 @@ class KCAL_EXPORT KResult
     ErrorType mErrorType;
     QString mDetails;
     KResult *mChainedResult;
+
+    class Private;
+    Private *const d;
 };
 
 /**
@@ -246,7 +249,11 @@ class KCAL_EXPORT KResultOk : public KResult
     /**
       Create KResult object of type Ok.
     */
-    KResultOk() : KResult( Ok ) {}
+    KResultOk() : KResult( Ok ), d( 0 ) {}
+
+  private:
+    class Private;
+    Private *const d;
 };
 
 /**
@@ -258,7 +265,11 @@ class KCAL_EXPORT KResultInProgress : public KResult
     /**
       Create KResult object of type InProgress.
     */
-    KResultInProgress() : KResult( InProgress ) {}
+    KResultInProgress() : KResult( InProgress ), d( 0 ) {}
+
+  private:
+    class Private;
+    Private *const d;
 };
 
 /**
@@ -270,19 +281,24 @@ class KCAL_EXPORT KResultError : public KResult
     /**
       Create KResult object of type Error.
     */
-    KResultError() : KResult( Error ) {}
+    KResultError() : KResult( Error ), d( 0 ) {}
 
     /**
       Create KResult object of type Error with given error type and optionally
       a detailed error message.
     */
     explicit KResultError( ErrorType error, const QString &details = QString() )
-      : KResult( error, details ) {}
+      : KResult( error, details ), d( 0 ) {}
 
     /**
       Create KResult object of type Error with given detailed error message.
     */
-    KResultError( const QString &details ) : KResult( Undefined, details ) {}
+    KResultError( const QString &details ) :
+      KResult( Undefined, details ), d( 0 ) {}
+
+  private:
+    class Private;
+    Private *const d;
 };
 
 }

@@ -44,8 +44,8 @@
 
 using namespace KCal;
 
-ResourceLocalDir::ResourceLocalDir( const KConfig* config )
-  : ResourceCached( config ), mLock( 0 )
+ResourceLocalDir::ResourceLocalDir( const KConfig *config )
+  : ResourceCached( config ), mLock( 0 ), d( 0 )
 {
   if ( config ) {
     readConfig( config );
@@ -54,8 +54,8 @@ ResourceLocalDir::ResourceLocalDir( const KConfig* config )
   init();
 }
 
-ResourceLocalDir::ResourceLocalDir( const QString& dirName )
-  : ResourceCached( 0 )
+ResourceLocalDir::ResourceLocalDir( const QString &dirName )
+  : ResourceCached( 0 ), d( 0 )
 {
   mURL = KUrl( dirName );
 

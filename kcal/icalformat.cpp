@@ -52,7 +52,7 @@ extern "C" {
 
 using namespace KCal;
 
-ICalFormat::ICalFormat() : mImpl(0)
+ICalFormat::ICalFormat() : mImpl(0), d( 0 )
 {
   setImplementation( new ICalFormatImpl( this ) );
 

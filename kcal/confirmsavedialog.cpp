@@ -31,7 +31,7 @@ using namespace KCal;
 
 ConfirmSaveDialog::ConfirmSaveDialog( const QString &destination,
                                       QWidget *parent )
-  : KDialog( parent )
+  : KDialog( parent ), d( 0 )
 {
   setCaption( i18n( "Confirm Save" ) );
   setModal( true );

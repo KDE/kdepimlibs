@@ -35,7 +35,7 @@ using namespace KCal;
 ResourceCalendar::ResourceCalendar( const KConfig *config )
     : KRES::Resource( config ),mResolveConflict( false ),
       mNoReadOnlyOnLoad( false ),
-      mInhibitSave( false )
+      mInhibitSave( false ), d( 0 )
 {
 }
 

@@ -123,6 +123,9 @@ class KCAL_EXPORT CustomProperties
     static bool checkName(const QByteArray& name);
 
     QMap<QByteArray, QString> mProperties;   // custom calendar properties
+
+    class Private;
+    Private *const d;
 };
 
 }

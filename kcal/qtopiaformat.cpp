@@ -257,7 +257,7 @@ class QtopiaParser : public QXmlDefaultHandler
 
 QMap<QString,QString> QtopiaParser::mCategoriesMap;
 
-QtopiaFormat::QtopiaFormat()
+QtopiaFormat::QtopiaFormat() : d( 0 )
 {
 }
 

@@ -37,9 +37,8 @@
 
 using namespace KCal;
 
-ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent,
-                                                        const char* )
-  : QWidget( parent )
+ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent )
+  : QWidget( parent ), d( 0 )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
 
@@ -78,8 +77,8 @@ void ResourceCachedReloadConfig::slotIntervalStateChanged( int state )
 }
 
 
-ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent, const char* )
-  : QWidget( parent )
+ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent )
+  : QWidget( parent ), d( 0 )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
 

@@ -35,7 +35,7 @@
 
 using namespace KCal;
 
-ScheduleMessage::ScheduleMessage(IncidenceBase *incidence,int method,ScheduleMessage::Status status)
+ScheduleMessage::ScheduleMessage(IncidenceBase *incidence,int method,ScheduleMessage::Status status) : d( 0 )
 {
   mIncidence = incidence;
   mMethod = method;
@@ -67,19 +67,15 @@ struct KCal::Scheduler::Private
   FreeBusyCache *mFreeBusyCache;
 };
 
-Scheduler::Scheduler(Calendar *calendar)
+Scheduler::Scheduler(Calendar *calendar) : d( 0 )
 {
   mCalendar = calendar;
   mFormat = new ICalFormat();
   mFormat->setTimeSpec( calendar->timeSpec() );
-
-  d = new Private;
 }
 
 Scheduler::~Scheduler()
 {
-  delete d;
-
   delete mFormat;
 }
 

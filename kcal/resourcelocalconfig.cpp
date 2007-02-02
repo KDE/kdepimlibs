@@ -39,9 +39,9 @@
 using namespace KCal;
 
 ResourceLocalConfig::ResourceLocalConfig( QWidget* parent,  const char* name )
-    : KRES::ConfigWidget( parent )
+    : KRES::ConfigWidget( parent ), d( 0 )
 {
-setObjectName(name);
+  setObjectName(name);
   resize( 245, 115 );
   QGridLayout *mainLayout = new QGridLayout( this );
 

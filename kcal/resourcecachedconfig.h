@@ -40,7 +40,7 @@ class KCAL_EXPORT ResourceCachedReloadConfig : public QWidget
 {
   Q_OBJECT
   public:
-    explicit ResourceCachedReloadConfig( QWidget *parent = 0, const char *name = 0 );
+    explicit ResourceCachedReloadConfig( QWidget *parent = 0 );
 
   public slots:
     void loadSettings( ResourceCached *resource );
@@ -52,6 +52,9 @@ class KCAL_EXPORT ResourceCachedReloadConfig : public QWidget
   private:
     Q3ButtonGroup *mGroup;
     QSpinBox *mIntervalSpin;
+
+    class Private;
+    Private *const d;
 };
 
 /**
@@ -63,7 +66,7 @@ class KCAL_EXPORT ResourceCachedSaveConfig : public QWidget
 {
     Q_OBJECT
   public:
-    explicit ResourceCachedSaveConfig( QWidget *parent = 0, const char *name = 0 );
+    explicit ResourceCachedSaveConfig( QWidget *parent = 0 );
 
   public slots:
     void loadSettings( ResourceCached *resource );
@@ -75,6 +78,9 @@ class KCAL_EXPORT ResourceCachedSaveConfig : public QWidget
   private:
     Q3ButtonGroup *mGroup;
     QSpinBox *mIntervalSpin;
+
+    class Private;
+    Private *const d;
 };
 
 }

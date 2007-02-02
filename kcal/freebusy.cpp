@@ -23,22 +23,22 @@
 #include <kdebug.h>
 
 #include "freebusy.h"
-//Added by qt3to4:
 #include <QList>
 
 using namespace KCal;
 
-FreeBusy::FreeBusy()
+FreeBusy::FreeBusy() : d( 0 )
 {
 }
 
-FreeBusy::FreeBusy(const KDateTime &start, const KDateTime &end)
+FreeBusy::FreeBusy( const KDateTime &start, const KDateTime &end ) : d( 0 )
 {
-  setDtStart(start);
-  setDtEnd(end);
+  setDtStart( start );
+  setDtEnd( end );
 }
 
-FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start, const KDateTime &end )
+FreeBusy::FreeBusy( Calendar *calendar,
+                    const KDateTime &start, const KDateTime &end ) : d( 0 )
 {
   kDebug(5800) << "FreeBusy::FreeBusy" << endl;
   mCalendar = calendar;
@@ -190,7 +190,7 @@ bool FreeBusy::addLocalPeriod(const KDateTime &eventStart, const KDateTime &even
   return true;
 }
 
-FreeBusy::FreeBusy( const PeriodList& busyPeriods)
+FreeBusy::FreeBusy( const PeriodList& busyPeriods ) : d( 0 )
 {
   mBusyPeriods = busyPeriods;
 }
@@ -235,13 +235,14 @@ void FreeBusy::merge( FreeBusy *freeBusy )
 
 // DEPRECATED methods
 #include "icaltimezones.h"
-FreeBusy::FreeBusy(const QDateTime &start, const QDateTime &end)
+FreeBusy::FreeBusy( const QDateTime &start, const QDateTime &end ) : d( 0 )
 {
   setDtStart(KDateTime(start));  // use local time zone
   setDtEnd(KDateTime(end));
 }
 
-FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime &end )
+FreeBusy::FreeBusy( Calendar *calendar,
+                    const QDateTime &start, const QDateTime &end ) : d( 0 )
 {
   kDebug(5800) << "FreeBusy::FreeBusy" << endl;
   mCalendar = calendar;

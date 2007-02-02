@@ -55,6 +55,10 @@ class KCAL_EXPORT ICalDrag
       Decode drag&drop object to iCalendar component \a cal.
     */
     static bool fromMimeData( const QMimeData *e, Calendar *cal );
+
+  private:
+    class Private;
+    Private *const d;
 };
 
 }

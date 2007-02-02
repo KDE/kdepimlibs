@@ -34,11 +34,12 @@
 using namespace KCal;
 
 Event::Event() :
-  mHasEndDate( false ), mTransparency( Opaque )
+  mHasEndDate( false ), mTransparency( Opaque ), d( 0 )
 {
 }
 
-Event::Event( const Event &e ) : Incidence( e )
+Event::Event( const Event &e ) :
+  Incidence( e ), d( 0 )
 {
   mDtEnd = e.mDtEnd;
   mHasEndDate = e.mHasEndDate;

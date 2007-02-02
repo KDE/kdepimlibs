@@ -27,14 +27,14 @@
 
 using namespace KCal;
 
-CalFilter::CalFilter()
+CalFilter::CalFilter() : d( 0 )
 {
   mEnabled = true;
   mCriteria = 0;
   mCompletedTimeSpan = 0;
 }
 
-CalFilter::CalFilter(const QString &name)
+CalFilter::CalFilter( const QString &name ) : d( 0 )
 {
   mName = name;
   mEnabled = true;

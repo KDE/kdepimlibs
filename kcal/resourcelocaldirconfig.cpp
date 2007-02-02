@@ -34,8 +34,9 @@
 
 using namespace KCal;
 
-ResourceLocalDirConfig::ResourceLocalDirConfig( QWidget* parent,  const char* name )
-    : KRES::ConfigWidget( parent )
+ResourceLocalDirConfig::ResourceLocalDirConfig( QWidget *parent,
+                                                const char *name )
+    : KRES::ConfigWidget( parent ), d( 0 )
 {
   setObjectName(name);
   resize( 245, 115 );

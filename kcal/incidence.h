@@ -495,6 +495,9 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Recurrenc
 
     // Scheduling ID - used only to identify between scheduling mails
     QString mSchedulingID;
+
+    class Private;
+    Private *const d;
 };
 
 }

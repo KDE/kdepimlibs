@@ -44,6 +44,10 @@ class KCAL_EXPORT QtopiaFormat : public CalFormat
 
     bool fromString( Calendar *, const QString & );
     QString toString( Calendar * );
+
+  private:
+    class Private;
+    Private *const d;
 };
 
 }

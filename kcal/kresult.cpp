@@ -27,12 +27,12 @@
 using namespace KCal;
 
 KResult::KResult()
-  : mType( Ok ), mErrorType( NotAnError ), mChainedResult( 0 )
+  : mType( Ok ), mErrorType( NotAnError ), mChainedResult( 0 ), d( 0 )
 {
 }
 
 KResult::KResult( Type type )
-  : mType( type ), mChainedResult( 0 )
+  : mType( type ), mChainedResult( 0 ), d( 0 )
 {
   if ( mType == Error ) {
     mErrorType = Undefined;
@@ -43,7 +43,7 @@ KResult::KResult( Type type )
 
 KResult::KResult( ErrorType error, const QString &details )
   : mType( Error ), mErrorType( error ), mDetails( details ),
-    mChainedResult( 0 )
+    mChainedResult( 0 ), d( 0 )
 {
 }
 
@@ -52,7 +52,7 @@ KResult::~KResult()
   delete mChainedResult;
 }
 
-KResult::KResult( const KResult &o )
+KResult::KResult( const KResult &o ) : d( 0 )
 {
   mType = o.mType;
   mErrorType = o.mErrorType;
