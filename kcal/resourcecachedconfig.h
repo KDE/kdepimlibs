@@ -75,9 +75,6 @@ class KCAL_EXPORT ResourceCachedSaveConfig : public QWidget
   private:
     Q3ButtonGroup *mGroup;
     QSpinBox *mIntervalSpin;
-
-    class Private;
-    Private *d;
 };
 
 }
