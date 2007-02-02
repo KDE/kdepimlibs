@@ -28,13 +28,6 @@
  * @author Michael Goffioul
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
-#endif
 #include <sys/types.h>
 #include <string.h>
 #include <stdio.h>
@@ -61,10 +54,10 @@
 //@cond PRIVATE
 typedef struct _lzfuheader
 {
-  uint32_t cbSize;
-  uint32_t cbRawSize;
-  uint32_t dwMagic;
-  uint32_t dwCRC;
+  quint32 cbSize;
+  quint32 cbRawSize;
+  quint32 dwMagic;
+  quint32 dwCRC;
 } lzfuheader;
 //@endcond
 
@@ -86,7 +79,7 @@ int lzfu_decompress( QIODevice *input, QIODevice *output )
   unsigned int  wlength = 0, cursor = 0, ocursor = 0;
   lzfuheader    lzfuhdr;
   //blockheader blkhdr;
-  uint16_t      blkhdr;
+  quint16      blkhdr;
   char          bFlags;
   int           nFlags;
 

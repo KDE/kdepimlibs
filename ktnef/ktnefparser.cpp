@@ -28,10 +28,6 @@
  * @author Michael Goffioul
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <QDateTime>
 #include <QDataStream>
 #include <QFile>
@@ -40,10 +36,6 @@
 #include <kdebug.h>
 #include <kmimetype.h>
 #include <ksavefile.h>
-
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
-#endif
 
 #include "ktnefparser.h"
 #include "ktnefattach.h"
@@ -569,18 +561,7 @@ void clearMAPIValue( MAPI_value &mapi, bool clearName )
 QDateTime formatTime( quint32 lowB, quint32 highB )
 {
   QDateTime dt;
-#if ( SIZEOF_UINT64_T == 8 )
-  uint64_t u64;
-#elif ( SIZEOF_UNSIGNED_LONG_LONG == 8 )
-  unsigned long long u64;
-#elif ( SIZEOF_UNSIGNED_LONG == 8 )
-  unsigned long u64;
-#else
-  kWarning() << "Unable to perform date conversion on this system, "
-             << "no 64-bits integer found" << endl;
-  dt.setTime_t( 0xffffffffU );
-  return dt;
-#endif
+  quint64 u64;
   u64 = highB;
   u64 <<= 32;
   u64 |= lowB;

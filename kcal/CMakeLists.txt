@@ -7,17 +7,21 @@ project(kcal)
 
 ADD_DEFINITIONS(-DPACKAGE_DATA_DIR=\\""${DATA_INSTALL_DIR}/libical"\\" ) # added manually
 
+include (ConfigureChecks.cmake)
+configure_file (libical/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libical/config.h)
+
 if(KDE4_BUILD_TESTS)
     add_definitions(-DCOMPILING_TESTS)
 endif(KDE4_BUILD_TESTS)
 
 include_directories(
-	${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/
-	${CMAKE_BINARY_DIR}/kcal/libical/src/libicalss/
-	${CMAKE_SOURCE_DIR}/kcal/versit/
-	${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/
-	${CMAKE_BINARY_DIR}/kcal/libical/src/libical/
-	${CMAKE_SOURCE_DIR}/
+	${CMAKE_CURRENT_SOURCE_DIR}/libical/src/libicalss/
+	${CMAKE_CURRENT_BINARY_DIR}/libical/src/libicalss/
+	${CMAKE_CURRENT_SOURCE_DIR}/versit/
+	${CMAKE_CURRENT_SOURCE_DIR}/libical/src/libical/
+	${CMAKE_CURRENT_BINARY_DIR}/libical/src/libical/
+	${CMAKE_CURRENT_BINARY_DIR}/libical # for config.h
+	${CMAKE_SOURCE_DIR}
 	${CMAKE_SOURCE_DIR}/kabc
 	${CMAKE_BINARY_DIR}/kabc
         ${KDE4_INCLUDE_DIR}

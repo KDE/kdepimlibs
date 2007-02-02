@@ -31,9 +31,7 @@
   @authors the KMime authors (see AUTHORS file)
 */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include "config-kmime.h"
 
 #include <stdlib.h> // for abs()
 
