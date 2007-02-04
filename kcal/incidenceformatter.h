@@ -34,6 +34,7 @@ class IncidenceBase;
 class KCAL_EXPORT InvitationFormatterHelper
 {
   public:
+    InvitationFormatterHelper() : d( 0 ) {}
     virtual ~InvitationFormatterHelper(){}
     virtual QString generateLinkURL( const QString &id ) { return id; }
     virtual QString makeLink( const QString &id, const QString &text );
