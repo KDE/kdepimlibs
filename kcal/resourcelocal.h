@@ -116,7 +116,7 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     **/
     void dump() const;
 
-  protected slots:
+  protected Q_SLOTS:
 
     /**
       Reload the resource data from the local file.

@@ -27,7 +27,7 @@
 class ICalTimeZonesTest : public QObject
 {
     Q_OBJECT
-private slots:
+private Q_SLOTS:
     void parse();
     void general();
     void offsetAtUtc();

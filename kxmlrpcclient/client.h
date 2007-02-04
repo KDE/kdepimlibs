@@ -128,7 +128,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
      */
     void disableDigestAuth();
 
-  public slots:
+  public Q_SLOTS:
     /**
       Calls the given method on a XML-RPC server, with the given
       argument list.

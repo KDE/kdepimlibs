@@ -916,7 +916,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
      */
     void unregisterObserver( CalendarObserver *observer );
 
-  signals:
+  Q_SIGNALS:
     /**
       Signals that the calendar has been modified.
      */

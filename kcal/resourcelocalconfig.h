@@ -45,7 +45,7 @@ class KCAL_EXPORT ResourceLocalConfig : public KRES::ConfigWidget
   public:
     explicit ResourceLocalConfig( QWidget* parent = 0, const char* name = 0 );
 
-  public slots:
+  public Q_SLOTS:
     virtual void loadSettings( KRES::Resource *resource);
     virtual void saveSettings( KRES::Resource *resource );
 

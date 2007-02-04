@@ -42,11 +42,11 @@ class KCAL_EXPORT ResourceCachedReloadConfig : public QWidget
   public:
     explicit ResourceCachedReloadConfig( QWidget *parent = 0 );
 
-  public slots:
+  public Q_SLOTS:
     void loadSettings( ResourceCached *resource );
     void saveSettings( ResourceCached *resource );
 
-  protected slots:
+  protected Q_SLOTS:
     void slotIntervalStateChanged( int );
 
   private:
@@ -68,11 +68,11 @@ class KCAL_EXPORT ResourceCachedSaveConfig : public QWidget
   public:
     explicit ResourceCachedSaveConfig( QWidget *parent = 0 );
 
-  public slots:
+  public Q_SLOTS:
     void loadSettings( ResourceCached *resource );
     void saveSettings( ResourceCached *resource );
 
-  protected slots:
+  protected Q_SLOTS:
     void slotIntervalStateChanged( int );
 
   private:

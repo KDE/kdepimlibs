@@ -603,7 +603,7 @@ class KCAL_EXPORT CalendarResources :
     Alarm::List alarmsTo( const KDateTime &to );
     KDE_DEPRECATED Alarm::List alarmsTo( const QDateTime &to );
 
-  signals:
+  Q_SIGNALS:
     /**
        Signal that the Resource has been modified.
     */
@@ -657,7 +657,7 @@ class KCAL_EXPORT CalendarResources :
     */
     int decrementChangeCount( ResourceCalendar *resource );
 
-  protected slots:
+  protected Q_SLOTS:
     void slotLoadError( ResourceCalendar *resource, const QString &err );
     void slotSaveError( ResourceCalendar *resource, const QString &err );
 

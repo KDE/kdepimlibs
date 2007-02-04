@@ -60,7 +60,7 @@ class KXMLRPCCLIENT_EXPORT Query : public QObject
      */
     static Query *create( const QVariant &id = QVariant(), QObject *parent = 0 );
 
-  public slots:
+  public Q_SLOTS:
     /**
       Calls the specified method on the specified server with
       the given argument list.

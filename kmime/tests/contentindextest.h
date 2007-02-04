@@ -25,7 +25,7 @@
 class ContentIndexTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testToString();
     void testFromString();
     void testContent();

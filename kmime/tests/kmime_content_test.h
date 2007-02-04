@@ -24,7 +24,7 @@
 class KMimeContentTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testGetHeaderInstance();
     void testSetContent();
     void testMultipartMixed();

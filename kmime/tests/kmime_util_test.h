@@ -24,7 +24,7 @@
 class KMimeUtilTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testUnfoldHeader();
     void testExtractHeader();
 };

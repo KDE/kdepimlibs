@@ -210,7 +210,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     */
     virtual bool setValue( const QString &key, const QString &value );
 
-  signals:
+  Q_SIGNALS:
     /**
       This signal is emitted when the data in the resource has changed. The
       resource has to make sure that this signal is emitted whenever any
@@ -396,7 +396,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual QString subresourceIdentifier( Incidence *incidence )
     { Q_UNUSED( incidence ); return QString(); }
 
-  public slots:
+  public Q_SLOTS:
     /**
       (De-)activate a subresource.
     */

@@ -427,7 +427,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     void saveChangesCache( const QMap<Incidence*, bool>&, const QString& );
     void saveChangesCache();
 
-  protected slots:
+  protected Q_SLOTS:
     void slotReload();
     void slotSave();
 

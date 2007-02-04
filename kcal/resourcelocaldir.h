@@ -73,7 +73,7 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
 
     void dump() const;
 
-  protected slots:
+  protected Q_SLOTS:
     void reload( const QString & );
 
   protected:
