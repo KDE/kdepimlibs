@@ -45,7 +45,7 @@ void BoolFlags::set( unsigned int i, bool b )
     p = (1 << i);
     n = 0;
   } else { //second byte
-    p = (1 << i-8);
+    p = (1 << (i-8));
     n = 1;
   }
 
@@ -69,7 +69,7 @@ bool BoolFlags::get( unsigned int i )
     p = (1 << i);
     n = 0;
   } else { //second byte
-    p = (1 << i-8);
+    p = (1 << (i-8));
     n = 1;
   }
 
