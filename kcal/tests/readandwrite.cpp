@@ -73,7 +73,7 @@ int main( int argc, char **argv )
   if ( !cal.load( input ) ) return 1;
   QString tz = cal.nonKDECustomProperty( "X-LibKCal-Testsuite-OutTZ" );
   if ( !tz.isEmpty() ) {
-    cal.setTimeZoneIdViewOnly( tz );
+    cal.setViewTimeZoneId( tz );
   }
   if ( !cal.save( output ) ) return 1;
 
