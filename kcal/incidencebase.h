@@ -30,8 +30,6 @@
   Reinhold Kainhofer \<reinhold@kainhofer.com\>,
   Rafal Rzepecki \<divide@users.sourceforge.net\>
 
-  @port4 doesFloat() method renamed to floats().
-
   @glossary @anchor incidence @b incidence:
   General term for a calendar component.
   Examples are events, to-dos, and journals.

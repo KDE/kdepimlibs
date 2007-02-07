@@ -26,8 +26,6 @@
 
   @author Preston Brown
   @author Cornelius Schumacher
-
-  @port4 the protected method insertEvent() is now private to this class.
  */
 #ifndef KCAL_CALENDARLOCAL_H
 #define KCAL_CALENDARLOCAL_H

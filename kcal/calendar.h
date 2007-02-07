@@ -28,10 +28,6 @@
   @author Preston Brown
   @author Cornelius Schumacher
   @author Reinhold Kainhofer
-
-  @port4 getOwner() method renamed to owner().
-  @port4 appendAlarms() and appendRecurringAlarms() methods have
-  been moved into this class from CalendarLocal.
  */
 #ifndef KCAL_CALENDAR_H
 #define KCAL_CALENDAR_H
