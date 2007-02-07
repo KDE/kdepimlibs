@@ -67,9 +67,6 @@ class KCAL_EXPORT IncidenceFormatter
     class InvitationBodyVisitor;
     class ToolTipVisitor;
     class MailBodyVisitor;
-
-    class Private;
-    Private *const d;
 };
 
 }
