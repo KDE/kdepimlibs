@@ -53,7 +53,7 @@ namespace ICalDrag
       Decode drag&drop object to iCalendar component \a cal.
     */
     KCAL_EXPORT bool fromMimeData( const QMimeData *e, Calendar *cal );
-};
+}
 
 }
 
