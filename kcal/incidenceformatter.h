@@ -51,7 +51,7 @@ class KCAL_EXPORT InvitationFormatterHelper
 
   @short methods to format incidences into various formats for displaying them
 */
-class KCAL_EXPORT IncidenceFormatter
+class KCAL_EXPORT IncidenceFormatter //krazy:exclude=dpointer
 {
   public:
     static QString toolTipString( IncidenceBase *incidence, bool richText = true );
@@ -67,6 +67,7 @@ class KCAL_EXPORT IncidenceFormatter
     class InvitationBodyVisitor;
     class ToolTipVisitor;
     class MailBodyVisitor;
+    //no dpointer needed: static stuff only
 };
 
 }
