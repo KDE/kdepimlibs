@@ -51,23 +51,20 @@ class KCAL_EXPORT InvitationFormatterHelper
 
   @short methods to format incidences into various formats for displaying them
 */
-class KCAL_EXPORT IncidenceFormatter //krazy:exclude=dpointer
+namespace IncidenceFormatter
 {
-  public:
-    static QString toolTipString( IncidenceBase *incidence, bool richText = true );
-    static QString mailBodyString( IncidenceBase *incidencebase );
-    static QString extensiveDisplayString( IncidenceBase *incidence );
+    KCAL_EXPORT QString toolTipString( IncidenceBase *incidence, bool richText = true );
+    KCAL_EXPORT QString mailBodyString( IncidenceBase *incidencebase );
+    KCAL_EXPORT QString extensiveDisplayString( IncidenceBase *incidence );
+    KCAL_EXPORT QString formatICalInvitation( QString invitation, Calendar *mCalendar,
+                                              InvitationFormatterHelper *helper );
 
-    static QString formatICalInvitation( QString invitation, Calendar *mCalendar,
-                                         InvitationFormatterHelper *helper );
-  private:
     class EventViewerVisitor;
     class ScheduleMessageVisitor;
     class InvitationHeaderVisitor;
     class InvitationBodyVisitor;
     class ToolTipVisitor;
     class MailBodyVisitor;
-    //no dpointer needed: static stuff only
 };
 
 }

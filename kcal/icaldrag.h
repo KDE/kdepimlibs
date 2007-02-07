@@ -35,30 +35,24 @@ class Calendar;
 /**
   iCalendar drag&drop class.
 */
-class KCAL_EXPORT ICalDrag
+namespace ICalDrag
 {
-  public:
-
     /**
       Mime-type of iCalendar
     */
-    static QString mimeType();
+    KCAL_EXPORT QString mimeType();
     /**
       Sets the iCalendar representation as data of the drag object
     */
-    static bool populateMimeData( QMimeData *e, Calendar *cal );
+    KCAL_EXPORT bool populateMimeData( QMimeData *e, Calendar *cal );
     /**
       Return, if drag&drop object can be decode to iCalendar.
     */
-    static bool canDecode( const QMimeData * );
+    KCAL_EXPORT bool canDecode( const QMimeData * );
     /**
       Decode drag&drop object to iCalendar component \a cal.
     */
-    static bool fromMimeData( const QMimeData *e, Calendar *cal );
-
-  private:
-    class Private;
-    Private *const d;
+    KCAL_EXPORT bool fromMimeData( const QMimeData *e, Calendar *cal );
 };
 
 }
