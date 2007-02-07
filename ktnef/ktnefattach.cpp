@@ -54,9 +54,8 @@ public:
 };
 //@endcond
 
-KTNEFAttach::KTNEFAttach()
+KTNEFAttach::KTNEFAttach() : d( new KTnef::KTNEFAttach::AttachPrivate )
 {
-  d = new AttachPrivate;
   d->state_ = Unparsed;
   d->offset_ = -1;
   d->size_ = 0;

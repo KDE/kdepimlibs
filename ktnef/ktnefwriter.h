@@ -287,7 +287,7 @@ public:
 private:
   //@cond PRIVATE
   class PrivateData;
-  PrivateData *mData;
+  PrivateData *const d;
   //@endcond
 };
 

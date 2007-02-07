@@ -224,7 +224,7 @@ public:
 private:
   //@cond PRIVATE
   class AttachPrivate;
-  AttachPrivate *d;
+  AttachPrivate *const d;
   //@endcond
 };
 

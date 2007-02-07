@@ -59,10 +59,8 @@ class KTnef::KTNEFWriter::PrivateData
 };
 //@endcond
 
-KTNEFWriter::KTNEFWriter()
+KTNEFWriter::KTNEFWriter() : d( new KTnef::KTNEFWriter::PrivateData )
 {
-  mData = new PrivateData;
-
   // This is not something the user should fiddle with
   // First set the TNEF version
   QVariant v(0x00010000);
@@ -80,13 +78,13 @@ KTNEFWriter::KTNEFWriter()
 
 KTNEFWriter::~KTNEFWriter()
 {
-  delete mData;
+  delete d;
 }
 
 
 void KTNEFWriter::addProperty( int tag, int type, const QVariant &value )
 {
-  mData->properties.addProperty( tag, type, value );
+  d->properties.addProperty( tag, type, value );
 }
 
 //@cond IGNORE
@@ -127,7 +125,7 @@ quint32 mergeTagAndType( quint32 tag, quint32 type )
  */
 bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag ) const
 {
-  QMap<int,KTNEFProperty*>& properties = mData->properties.properties();
+  QMap<int,KTNEFProperty*>& properties = d->properties.properties();
   QMap<int,KTNEFProperty*>::Iterator it = properties.find( tag );
 
   if ( it == properties.end() ) {
@@ -348,7 +346,7 @@ bool KTNEFWriter::writeFile( QDataStream &stream ) const
 
   // Store the PR_ATTACH_NUM value for the first attachment
   // ( must be stored even if *no* attachments are stored )
-  stream << mData->mFirstAttachNum;
+  stream << d->mFirstAttachNum;
 
   // Now do some writing
   bool ok = true;

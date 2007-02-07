@@ -92,7 +92,7 @@ public:
 private:
   //@cond PRIVATE
   class MessagePrivate;
-  MessagePrivate *d;
+  MessagePrivate *const d;
   //@endcond
 };
 

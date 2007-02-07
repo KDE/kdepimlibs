@@ -66,9 +66,8 @@ void KTNEFMessage::MessagePrivate::clearAttachments()
 }
 //@endcond
 
-KTNEFMessage::KTNEFMessage()
+KTNEFMessage::KTNEFMessage() : d( new KTnef::KTNEFMessage::MessagePrivate )
 {
-  d = new MessagePrivate;
 }
 
 KTNEFMessage::~KTNEFMessage()
