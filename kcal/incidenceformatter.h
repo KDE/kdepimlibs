@@ -45,9 +45,9 @@ class KCAL_EXPORT InvitationFormatterHelper
 };
 
 /**
-  This class is a helper class that provides several static methods to format an Incidence
-  into different formats, like an HTML representation for KMail, a representation for tool tips,
-  or a representation for the event viewer.
+  Helpers that provides several static methods to format an Incidence into
+  different formats, like an HTML representation for KMail, a representation
+  for tool tips, or a representation for the event viewer.
 
   @short methods to format incidences into various formats for displaying them
 */
@@ -65,7 +65,7 @@ namespace IncidenceFormatter
     class InvitationBodyVisitor;
     class ToolTipVisitor;
     class MailBodyVisitor;
-};
+}
 
 }
 
