@@ -298,8 +298,8 @@ void Query::Private::slotResult( KJob *job )
   QString errMsg;
   int errLine, errCol;
   if ( !doc.setContent( data, false, &errMsg, &errLine, &errCol ) ) {
-    emit mParent->fault( -1, i18n( "Received invalid XML markup: %1 at %2:%3" )
-                       .arg( errMsg ).arg( errLine ).arg( errCol ), mId );
+    emit mParent->fault( -1, i18n( "Received invalid XML markup: %1 at %2:%3",
+                                   errMsg, errLine, errCol ), mId );
     emit mParent->finished( mParent );
     return;
   }
