@@ -1088,6 +1088,9 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
   icalparameter *p = 0;
 
   QString email = QString::fromUtf8(icalproperty_get_attendee(attendee));
+  if ( email.startsWith("mailto:", Qt::CaseInsensitive ) ) {
+    email = email.mid( 7 );
+  }
 
   QString name;
   QString uid = QString();
@@ -1676,6 +1679,9 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm, Incidence *incidence, ICalT
       // Only in EMAIL alarm
       case ICAL_ATTENDEE_PROPERTY: {
         QString email = QString::fromUtf8(icalproperty_get_attendee(p));
+        if ( email.startsWith("mailto:", Qt::CaseInsensitive ) ) {
+          email = email.mid( 7 );
+        }
         QString name;
         icalparameter *param = icalproperty_get_first_parameter(p, ICAL_CN_PARAMETER);
         if (param) {
