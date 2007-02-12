@@ -330,7 +330,7 @@ static QString eventViewerFormatEvent( Event *event )
 
   if ( event->categories().count() > 0 ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18np( "1 category", "%n categories", event->categories().count() )+ "</b></td>";
+    tmpStr += "<td align=\"right\"><b>" + i18np( "1 category", "%1 categories", event->categories().count() )+ "</b></td>";
     tmpStr += "<td>" + event->categoriesStr() + "</td>";
     tmpStr += "</tr>";
   }
@@ -351,7 +351,7 @@ static QString eventViewerFormatEvent( Event *event )
   int attachmentCount = event->attachments().count();
   if ( attachmentCount > 0 ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18np( "1 attachment", "%n attachments", attachmentCount )+ "</b></td>";
+    tmpStr += "<td align=\"right\"><b>" + i18np( "1 attachment", "%1 attachments", attachmentCount )+ "</b></td>";
     tmpStr += "<td>" + eventViewerFormatAttachments( event ) + "</td>";
     tmpStr += "</tr>";
   }
@@ -381,9 +381,9 @@ static QString eventViewerFormatTodo( Todo *todo )
   tmpStr += eventViewerFormatCategories( todo );
 
   if ( todo->priority() > 0 )
-    tmpStr += i18n("<p><b>Priority:</b> %2</p>", todo->priority());
+    tmpStr += i18n("<p><b>Priority:</b> %1</p>", todo->priority());
   else
-    tmpStr += i18n("<p><b>Priority:</b> %2</p>", i18n("Unspecified"));
+    tmpStr += i18n("<p><b>Priority:</b> %1</p>", i18n("Unspecified"));
 
   tmpStr += i18n("<p><i>%1 % completed</i></p>",
                   todo->percentComplete() );
@@ -432,15 +432,15 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
       int dur = per.duration().asSeconds();
       QString cont;
       if ( dur >= 3600 ) {
-        cont += i18np("1 hour ", "%n hours ", dur / 3600 );
+        cont += i18np("1 hour ", "%1 hours ", dur / 3600 );
         dur %= 3600;
       }
       if ( dur >= 60 ) {
-        cont += i18np("1 minute ", "%n minutes ", dur / 60);
+        cont += i18np("1 minute ", "%1 minutes ", dur / 60);
         dur %= 60;
       }
       if ( dur > 0 ) {
-        cont += i18np("1 second", "%n seconds", dur);
+        cont += i18np("1 second", "%1 seconds", dur);
       }
       text += i18nc("startDate for duration", "%1 for %2",
             KGlobal::locale()->formatDateTime( per.start().dateTime(), false ) ,
@@ -582,10 +582,10 @@ static QString invitationDetailsEvent( Event* event )
     int secs = event->dtStart().secsTo( event->dtEnd() );
     t = sDuration.addSecs( secs );
     if ( t.hour() > 0 ) {
-      tmp += i18np( "1 hour ", "%n hours ", t.hour() );
+      tmp += i18np( "1 hour ", "%1 hours ", t.hour() );
     }
     if ( t.minute() > 0 ) {
-      tmp += i18np( "1 minute ", "%n minutes ", t.minute() );
+      tmp += i18np( "1 minute ", "%1 minutes ", t.minute() );
     }
 
     html += invitationRow( i18n( "Duration:" ), tmp );
@@ -663,15 +663,15 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
       int dur = per.duration().asSeconds();
       QString cont;
       if ( dur >= 3600 ) {
-        cont += i18np("1 hour ", "%n hours ", dur / 3600);
+        cont += i18np("1 hour ", "%1 hours ", dur / 3600);
         dur %= 3600;
       }
       if ( dur >= 60 ) {
-        cont += i18np("1 minute", "%n minutes ", dur / 60);
+        cont += i18np("1 minute", "%1 minutes ", dur / 60);
         dur %= 60;
       }
       if ( dur > 0 ) {
-        cont += i18np("1 second", "%n seconds", dur);
+        cont += i18np("1 second", "%1 seconds", dur);
       }
       html += invitationRow( QString(), i18nc("startDate for duration", "%1 for %2",
             KGlobal::locale()->formatDateTime( per.start().dateTime(), false ) ,
@@ -1341,7 +1341,7 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Event *event )
                event->recurrence()->frequency() );
 
     if ( recur->duration() > 0 ) {
-      mResult += i18np ("Repeats once", "Repeats %n times", recur->duration());
+      mResult += i18np ("Repeats once", "Repeats %1 times", recur->duration());
       mResult += '\n';
     } else {
       if ( recur->duration() != -1 ) {
