@@ -22,7 +22,6 @@
 */
 
 #include <kbuttonbox.h>
-#include <klistbox.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 
