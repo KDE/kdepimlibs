@@ -485,6 +485,8 @@ bool KTNEFParser::extractFileTo( const QString &filename,
 bool KTNEFParser::openFile( const QString &filename )
 {
   deleteDevice();
+  delete d->message_;
+  d->message_ = new KTNEFMessage();
   d->device_ = new QFile( filename );
   d->deleteDevice_ = true;
   return parseDevice();
@@ -809,6 +811,7 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*> & props,
   MAPI_value    mapi;
   KTNEFProperty *p;
   QMap<int,KTNEFProperty*>::ConstIterator it;
+  bool foundAttachment = false;
 
   // some initializations
   mapi.type = MAPI_TYPE_NONE;
@@ -848,7 +851,13 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*> & props,
           attach->setMimeTag( "application/ms-tnef" );
           attach->setDisplayName( "Embedded Message" );
           kDebug() << "MAPI Embedded Message: size=" << data.size() << endl;
-        }
+        } else if ( mapi.type == MAPI_TYPE_BINARY && attach && attach->offset() < 0 ) {
+          foundAttachment = true;
+          int len = mapi.value.toByteArray().size();
+          attach->setSize( len );
+          attach->setOffset( d->device_->at() - len );
+          attach->addAttribute( attATTACHDATA, atpBYTE, QString( "< size=%1 >" ).arg( len ), false );
+       }
         d->device_->seek( d->device_->pos() + ( len-4 ) );
         break;
       }
@@ -910,5 +919,21 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*> & props,
     }
     //kDebug() << "stream: " << d->device_->pos() << endl;
   }
+
+  if ( foundAttachment && attach ) {
+    attach->setIndex( attach->property( MAPI_TAG_INDEX ).toUInt() );
+    attach->setDisplaySize( attach->property( MAPI_TAG_SIZE ).toUInt() );
+    QString str = attach->property( MAPI_TAG_DISPLAYNAME ).toString();
+    if ( !str.isEmpty() )
+      attach->setDisplayName( str );
+    attach->setFileName( attach->property( MAPI_TAG_FILENAME ).toString() );
+    str = attach->property( MAPI_TAG_MIMETAG ).toString();
+    if ( !str.isEmpty() )
+      attach->setMimeTag( str );
+    attach->setExtension( attach->property( MAPI_TAG_EXTENSION ).toString() );
+    if ( attach->name().isEmpty() )
+      attach->setName( attach->fileName() );
+  }
+
   return true;
 }
