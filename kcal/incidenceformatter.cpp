@@ -515,7 +515,7 @@ QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 
 static QString string2HTML( const QString& str )
 {
-  return Qt::convertFromPlainText(str);
+  return Qt::convertFromPlainText( str, Qt::WhiteSpaceNormal );
 }
 
 static QString invitationRow( const QString &cell1, const QString &cell2 )
