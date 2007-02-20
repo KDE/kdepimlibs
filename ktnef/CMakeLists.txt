@@ -1,4 +1,7 @@
 project(ktnef)
+
+add_subdirectory( tests )
+
 ########### next target ###############
 
 include_directories(
@@ -7,14 +10,14 @@ include_directories(
    ${CMAKE_SOURCE_DIR}/kcal
 )
 
-set(ktnef_LIB_SRCS 
-   ktnefparser.cpp 
-   ktnefproperty.cpp 
-   ktnefattach.cpp 
-   mapi.cpp 
-   ktnefpropertyset.cpp 
-   ktnefmessage.cpp 
-   ktnefwriter.cpp 
+set(ktnef_LIB_SRCS
+   ktnefparser.cpp
+   ktnefproperty.cpp
+   ktnefattach.cpp
+   mapi.cpp
+   ktnefpropertyset.cpp
+   ktnefmessage.cpp
+   ktnefwriter.cpp
    lzfu.cpp
    formatter.cpp
 )
