@@ -851,15 +851,15 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*> & props,
           attach->setMimeTag( "application/ms-tnef" );
           attach->setDisplayName( "Embedded Message" );
           kDebug() << "MAPI Embedded Message: size=" << data.size() << endl;
-        } else if ( mapi.type == MAPI_TYPE_BINARY && attach && attach->offset() < 0 ) {
-          foundAttachment = true;
-          int len = mapi.value.toByteArray().size();
-          attach->setSize( len );
-          attach->setOffset( d->device_->at() - len );
-          attach->addAttribute( attATTACHDATA, atpBYTE, QString( "< size=%1 >" ).arg( len ), false );
-       }
+        }
         d->device_->seek( d->device_->pos() + ( len-4 ) );
         break;
+      } else if ( mapi.type == MAPI_TYPE_BINARY && attach && attach->offset() < 0 ) {
+        foundAttachment = true;
+        int len = mapi.value.toByteArray().size();
+        attach->setSize( len );
+        attach->setOffset( d->device_->at() - len );
+        attach->addAttribute( attATTACHDATA, atpBYTE, QString( "< size=%1 >" ).arg( len ), false );
       }
     }
     kDebug().form( "MAPI data: size=%d\n", mapi.value.toByteArray().size() );
