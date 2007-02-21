@@ -89,11 +89,11 @@ void ParserTest::testMAPIAttachments()
 
   att = atts.takeFirst();
   QVERIFY( att != 0 );
-  QVERIFY( att->size() == 213685 );
+  QVERIFY( att->size() == 213688 );
   QVERIFY( att->name() == QString( "VIA_Nytt_1402.pdf" ) );
 
   att = atts.takeFirst();
   QVERIFY( att != 0 );
-  QVERIFY( att->size() == 68919 );
+  QVERIFY( att->size() == 68920 );
   QVERIFY( att->name() == QString( "VIA_Nytt_14021.htm" ) );
 }
