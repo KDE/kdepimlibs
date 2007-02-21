@@ -4,8 +4,6 @@
   CREATOR: eric 30 June 1999
   
  (C) COPYRIGHT 1999, Eric Busboom <eric@softwarestudio.org>, http://www.softwarestudio.org
-  $Id$
-  $Locker:  $
     
  The contents of this file are subject to the Mozilla Public License
  Version 1.0 (the "License"); you may not use this file except in

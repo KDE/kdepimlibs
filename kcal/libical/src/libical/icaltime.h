@@ -4,8 +4,6 @@
  CREATOR: eric 02 June 2000
 
 
- $Id$
- $Locker:  $
 
  (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
      http://www.softwarestudio.org

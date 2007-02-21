@@ -3,7 +3,6 @@
   FILE: icalvalue.c
   CREATOR: eric 02 May 1999
   
-  $Id$
 
 
  (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
