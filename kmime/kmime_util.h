@@ -23,7 +23,7 @@
 #ifndef __KMIME_UTIL_H__
 #define __KMIME_UTIL_H__
 
-#include <qstring.h>
+#include <QtCore/QString>
 #include "kmime.h"
 
 namespace KMime {

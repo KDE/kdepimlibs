@@ -26,8 +26,12 @@
 
 #include "kcal.h"
 
+class QDate;
+class QTime;
 class QDrag;
+class QWidget;
 class QDropEvent;
+class QMimeData;
 
 namespace KCal {
 

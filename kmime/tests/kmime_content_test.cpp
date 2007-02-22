@@ -23,7 +23,6 @@
 #include <kmime_content.h>
 #include <kmime_headers.h>
 #include <kmime_message.h>
-#include <kmime_headers.h>
 using namespace KMime;
 
 QTEST_KDEMAIN( KMimeContentTest, NoGUI )

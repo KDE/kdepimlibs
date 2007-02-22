@@ -26,6 +26,7 @@
 namespace KCal {
 
 class FreeBusy;
+class Person;
 
 class FreeBusyCache
 {

@@ -23,6 +23,8 @@
 
 #include "calstorage.h"
 
+#include <QtCore/QString>
+
 namespace KCal {
 
 class CalFormat;

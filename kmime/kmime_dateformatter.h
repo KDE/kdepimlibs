@@ -49,7 +49,7 @@
 
 #include <time.h>
 #include <qdatetime.h>
-#include <qstring.h>
+#include <QtCore/QString>
 #include "kmime.h"
 
 namespace KMime {
