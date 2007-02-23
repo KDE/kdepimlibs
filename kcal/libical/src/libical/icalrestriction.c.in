@@ -146,7 +146,7 @@ const char* icalrestriction_may_be_comp_need_process(
 
     (void)rec;
     (void)comp;
-    
+
     if( !( stat == ICAL_STATUS_COMPLETED ||
 	   stat == ICAL_STATUS_NEEDSACTION ||
 	   stat == ICAL_STATUS_INPROCESS )){
@@ -243,10 +243,10 @@ const char* icalrestriction_must_be_recurring(icalrestriction_property_record *r
 const char* icalrestriction_must_have_duration(icalrestriction_property_record *rec,
 					 icalcomponent* comp,
 					 icalproperty* prop){
-    
+
     (void)rec;
     (void)prop;
-    
+
     if( !icalcomponent_get_first_property(comp,ICAL_DURATION_PROPERTY)){
 
 	return "Failed iTIP restrictions for DURATION property. This component must have a DURATION property";

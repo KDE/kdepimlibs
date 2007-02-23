@@ -32,7 +32,7 @@ typedef struct pvl_elem_t
 
 /**
  * This global is incremented for each call to pvl_new_element(); it gives each
- * list a unique identifer 
+ * list a unique identifer
  */
 
 extern int  pvl_elem_count;
@@ -86,7 +86,7 @@ pvl_elem pvl_find_next(pvl_list l,pvl_findf f,void* v);
  * Pass each element in the list to a function
  * a is list elem, b is other data
  */
-typedef void (*pvl_applyf)(void* a, void* b); 
+typedef void (*pvl_applyf)(void* a, void* b);
 void pvl_apply(pvl_list l,pvl_applyf f, void *v);
 
 

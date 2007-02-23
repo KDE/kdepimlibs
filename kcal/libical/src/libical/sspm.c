@@ -91,8 +91,8 @@ char* sspm_strdup(const char* str){
 
 static struct  major_content_type_map 
 {
-        enum sspm_major_type type;
-        const char* str;
+    enum sspm_major_type type;
+    const char* str;
 
 } major_content_type_map[]  =
 {
@@ -110,8 +110,8 @@ static struct  major_content_type_map
 
 static struct  minor_content_type_map 
 {
-        enum sspm_minor_type type;
-        const char* str;
+    enum sspm_minor_type type;
+    const char* str;
 
 } minor_content_type_map[]  = 
 {
@@ -130,8 +130,8 @@ static struct  minor_content_type_map
 
 
 struct encoding_map {
-        enum sspm_encoding encoding;
-        const char* str;
+    enum sspm_encoding encoding;
+    const char* str;
 } sspm_encoding_map[] = 
 {
     {SSPM_NO_ENCODING,""},
@@ -218,7 +218,7 @@ char* sspm_value(char* line)
     value[0] = 0;
     c = strchr(line,':');
     if (!c)
-	return value;
+      return value;
     s = strchr(c,';');
 
     /* Skip the colon */

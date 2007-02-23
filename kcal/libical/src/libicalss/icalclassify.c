@@ -4,7 +4,8 @@
     CREATOR: ebusboom 23 aug 2000
   
     
-    (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>, http://www.softwarestudio.org
+    (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
+        http://www.softwarestudio.org
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of either: 
@@ -168,10 +169,10 @@ void icalssutil_get_parts(icalcomponent* c,
 
     p = icalcomponent_get_first_property(inner,ICAL_ORGANIZER_PROPERTY);
     if(p!=0){
-      const char *p_organizer = icalproperty_get_organizer(p); 
-      if (p_organizer!=0) { 
-        parts->organizer = strdup(p_organizer); 
-      } 
+      const char *p_organizer = icalproperty_get_organizer(p);
+      if (p_organizer!=0) {
+        parts->organizer = strdup(p_organizer);
+      }
     }
 
     p = icalcomponent_get_first_property(inner,ICAL_SEQUENCE_PROPERTY);    
@@ -181,10 +182,10 @@ void icalssutil_get_parts(icalcomponent* c,
 
     p = icalcomponent_get_first_property(inner,ICAL_UID_PROPERTY);
     if(p!=0){
-      const char *p_uid = icalproperty_get_uid(p); 
-      if (p_uid!=0) { 
-        parts->uid = strdup(p_uid); 
-      } 
+      const char *p_uid = icalproperty_get_uid(p);
+      if (p_uid!=0) {
+        parts->uid = strdup(p_uid);
+      }
     }
 
     p = icalcomponent_get_first_property(inner,ICAL_RECURRENCEID_PROPERTY);

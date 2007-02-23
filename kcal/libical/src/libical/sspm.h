@@ -2,11 +2,11 @@
   ======================================================================
   FILE: sspm.h Mime Parser
   CREATOR: eric 25 June 2000
-  
-    
+
+
  (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
      http://www.softwarestudio.org
- 
+
  The contents of this file are subject to the Mozilla Public License
  Version 1.0 (the "License"); you may not use this file except in
  compliance with the License. You may obtain a copy of the License at

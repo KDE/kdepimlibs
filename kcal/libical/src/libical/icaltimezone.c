@@ -39,6 +39,7 @@
 
 #ifdef WIN32
 #define snprintf _snprintf
+/*#define PACKAGE_DATA_DIR "/Projects/libical"*/
 #endif
 
 /** This is the toplevel directory where the timezone data is installed in. */
@@ -1243,7 +1244,7 @@ icaltimezone_array_free			(icalarray	*timezones)
 
 	if ( timezones )
 	{
-		for (i = 0; (unsigned int)i < timezones->num_elements; i++) {
+	    for (i = 0; (unsigned int)i < timezones->num_elements; i++) {
 		zone = icalarray_element_at (timezones, i);
 		icaltimezone_free (zone, 0);
 		}
