@@ -172,7 +172,7 @@ void Recurrence::updated()
 
 bool Recurrence::doesRecur() const
 {
-  return !mRRules.isEmpty();
+  return !mRRules.isEmpty() || !mRDates.isEmpty() || !mRDateTimes.isEmpty();
 }
 
 ushort Recurrence::recurrenceType() const

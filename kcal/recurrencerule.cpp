@@ -58,6 +58,8 @@ class DateHelper {
 
 
 #ifndef NDEBUG
+// TODO: Move to a general library / class, as we need the same in the iCal
+//       generator and in the xcal format
 QString DateHelper::dayName( short day )
 {
   switch ( day ) {
@@ -1196,27 +1198,33 @@ KDateTime RecurrenceRule::getNextDate( const KDateTime &preDate ) const
 {
   // Convert to the time spec used by this recurrence rule
   KDateTime fromDate( preDate.toTimeSpec( mDateStart.timeSpec() ) );
-// kDebug(5800) << "         RecurrenceRule::getNextDate: " << dumpTime(fromDate) << endl;
   // Beyond end of recurrence
   if ( mDuration >= 0 && endDt().isValid() && fromDate >= endDt() )
     return KDateTime();
 
   // Start date is only included if it really matches
+  KDateTime adjustedPreDate;
+  if ( fromDate < startDt() ) {
+    adjustedPreDate = startDt().addSecs( -1 );
+  } else {
+    adjustedPreDate = fromDate;
+  }
+
   if ( mDuration > 0 ) {
     if ( !mCached )
       buildCache();
-    int i = mCachedDates.findGT( fromDate );
+    int i = mCachedDates.findGT( adjustedPreDate );
     if ( i >= 0 ) {
-//  kDebug(5800) << "    getNext date after " << dumpTime(fromDate) << ", cached date: " << dumpTime(mCachedDates[i]) << endl;
+//  kDebug(5800) << "    getNext date after " << adjustedPreDate << ", cached date: " << dumpTime(mCachedDates[i]) << endl;
       return mCachedDates[i];
     }
   }
 
-// kDebug(5800) << "    getNext date after " << dumpTime(fromDate) << endl;
+// kDebug(5800) << "    getNext date after " << adjustedPreDate << endl;
   KDateTime end = endDt();
-  Constraint interval( getNextValidDateInterval( fromDate, recurrenceType() ) );
+  Constraint interval( getNextValidDateInterval( adjustedPreDate, recurrenceType() ) );
   DateTimeList dts = datesForInterval( interval, recurrenceType() );
-  int i = dts.findGT( fromDate );
+  int i = dts.findGT( adjustedPreDate );
   if ( i >= 0 ) {
     return ( mDuration < 0 || dts[i] <= end ) ? dts[i] : KDateTime();
   }
@@ -1384,7 +1392,6 @@ RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const K
 RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const KDateTime &dt, PeriodType type ) const
 {
   // TODO: Simplify this!
-//  kDebug(5800) << "       (o) getNextValidDateInterval after " << dumpTime(dt) << ", type=" << type << endl;
   long periods = 0;
   KDateTime start = startDt();
   KDateTime nextValid( start );
@@ -1401,6 +1408,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const KDate
     case rMinutely: modifier *= 60;
     case rSecondly:
         periods = static_cast<int>( start.secsTo_long( toDate ) / modifier );
+        periods = qMax( 0L, periods );
         if ( periods > 0 )
           periods += ( frequency() - 1 - ( (periods - 1) % frequency() ) );
         nextValid = start.addSecs( modifier * periods );
@@ -1413,6 +1421,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const KDate
         modifier *= 7;
     case rDaily:
         periods = start.daysTo( toDate ) / modifier;
+        periods = qMax( 0L, periods );
         if ( periods > 0 )
           periods += (frequency() - 1 - ( (periods - 1) % frequency() ) );
         nextValid = start.addDays( modifier * periods );
@@ -1421,6 +1430,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const KDate
     case rMonthly: {
         periods = 12*( toDate.date().year() - start.date().year() ) +
              ( toDate.date().month() - start.date().month() );
+        periods = qMax( 0L, periods);
         if ( periods > 0 )
           periods += (frequency() - 1 - ( (periods - 1) % frequency() ) );
         // set the day to the first day of the month, so we don't have problems
@@ -1430,6 +1440,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const KDate
         break; }
     case rYearly:
         periods = ( toDate.date().year() - start.date().year() );
+        periods = qMax( 0L, periods);
         if ( periods > 0 )
           periods += ( frequency() - 1 - ( (periods - 1) % frequency() ) );
         nextValid.setDate( start.date().addYears( periods ) );
