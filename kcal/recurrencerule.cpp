@@ -1203,28 +1203,25 @@ KDateTime RecurrenceRule::getNextDate( const KDateTime &preDate ) const
     return KDateTime();
 
   // Start date is only included if it really matches
-  KDateTime adjustedPreDate;
   if ( fromDate < startDt() ) {
-    adjustedPreDate = startDt().addSecs( -1 );
-  } else {
-    adjustedPreDate = fromDate;
+    fromDate = startDt().addSecs( -1 );
   }
 
   if ( mDuration > 0 ) {
     if ( !mCached )
       buildCache();
-    int i = mCachedDates.findGT( adjustedPreDate );
+    int i = mCachedDates.findGT( fromDate );
     if ( i >= 0 ) {
-//  kDebug(5800) << "    getNext date after " << adjustedPreDate << ", cached date: " << dumpTime(mCachedDates[i]) << endl;
+//  kDebug(5800) << "    getNext date after " << fromDate << ", cached date: " << dumpTime(mCachedDates[i]) << endl;
       return mCachedDates[i];
     }
   }
 
-// kDebug(5800) << "    getNext date after " << adjustedPreDate << endl;
+// kDebug(5800) << "    getNext date after " << fromDate << endl;
   KDateTime end = endDt();
-  Constraint interval( getNextValidDateInterval( adjustedPreDate, recurrenceType() ) );
+  Constraint interval( getNextValidDateInterval( fromDate, recurrenceType() ) );
   DateTimeList dts = datesForInterval( interval, recurrenceType() );
-  int i = dts.findGT( adjustedPreDate );
+  int i = dts.findGT( fromDate );
   if ( i >= 0 ) {
     return ( mDuration < 0 || dts[i] <= end ) ? dts[i] : KDateTime();
   }
