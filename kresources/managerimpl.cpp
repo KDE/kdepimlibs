@@ -93,13 +93,12 @@ void ManagerImpl::readConfig( KConfig *cfg )
   }
 
   mStandard = 0;
+  KConfigGroup group= mConfig->group( "General" );
 
-  mConfig->setGroup( "General" );
+  QStringList keys = group.readEntry( "ResourceKeys", QStringList() );
+  keys += group.readEntry( "PassiveResourceKeys", QStringList() );
 
-  QStringList keys = mConfig->readEntry( "ResourceKeys", QStringList() );
-  keys += mConfig->readEntry( "PassiveResourceKeys", QStringList() );
-
-  QString standardKey = mConfig->readEntry( "Standard" );
+  QString standardKey = group.readEntry( "Standard" );
 
   for ( QStringList::Iterator it = keys.begin(); it != keys.end(); ++it ) {
     readResourceConfig( *it, false );
@@ -136,15 +135,15 @@ void ManagerImpl::writeConfig( KConfig *cfg )
   // And then the general group
 
   kDebug(5650) << "Saving general info" << endl;
-  mConfig->setGroup( "General" );
-  mConfig->writeEntry( "ResourceKeys", activeKeys );
-  mConfig->writeEntry( "PassiveResourceKeys", passiveKeys );
+  KConfigGroup group= mConfig->group( "General" );
+  group.writeEntry( "ResourceKeys", activeKeys );
+  group.writeEntry( "PassiveResourceKeys", passiveKeys );
   if ( mStandard )
-    mConfig->writeEntry( "Standard", mStandard->identifier() );
+    group.writeEntry( "Standard", mStandard->identifier() );
   else
-    mConfig->writeEntry( "Standard", "" );
+    group.writeEntry( "Standard", "" );
 
-  mConfig->sync();
+  group.sync();
   kDebug(5650) << "ManagerImpl::save() finished" << endl;
 }
 
@@ -312,10 +311,10 @@ Resource *ManagerImpl::readResourceConfig( const QString &identifier,
     return 0;
   }
 
-  mConfig->setGroup( "Resource_" + identifier );
+  KConfigGroup group= mConfig->group( "Resource_" + identifier );
 
-  QString type = mConfig->readEntry( "ResourceType" );
-  QString name = mConfig->readEntry( "ResourceName" );
+  QString type = group.readEntry( "ResourceType" );
+  QString name = group.readEntry( "ResourceName" );
   Resource *resource = mFactory->resource( type, mConfig );
   if ( !resource ) {
     kDebug(5650) << "Failed to create resource with id " << identifier << endl;
@@ -325,15 +324,15 @@ Resource *ManagerImpl::readResourceConfig( const QString &identifier,
   if ( resource->identifier().isEmpty() )
     resource->setIdentifier( identifier );
 
-  mConfig->setGroup( "General" );
+  group= mConfig->group("General" );
 
-  QString standardKey = mConfig->readEntry( "Standard" );
+  QString standardKey = group.readEntry( "Standard" );
   if ( standardKey == identifier ) {
     mStandard = resource;
   }
 
   if ( checkActive ) {
-    QStringList activeKeys = mConfig->readEntry( "ResourceKeys", QStringList() );
+    QStringList activeKeys = group.readEntry( "ResourceKeys", QStringList() );
     resource->setActive( activeKeys.contains( identifier ) );
   }
   mResources.append( resource );
@@ -393,24 +392,24 @@ void ManagerImpl::removeResource( Resource *resource )
 
   if ( !mConfig ) createStandardConfig();
 
-  mConfig->setGroup( "General" );
-  QStringList activeKeys = mConfig->readEntry( "ResourceKeys", QStringList() );
+  KConfigGroup group= mConfig->group( "General" );
+  QStringList activeKeys = group.readEntry( "ResourceKeys", QStringList() );
   if ( activeKeys.contains( key ) ) {
     activeKeys.removeAll( key );
-    mConfig->writeEntry( "ResourceKeys", activeKeys );
+    group.writeEntry( "ResourceKeys", activeKeys );
   } else {
-    QStringList passiveKeys = mConfig->readEntry( "PassiveResourceKeys", QStringList() );
+    QStringList passiveKeys= group.readEntry( "PassiveResourceKeys", QStringList() );
     passiveKeys.removeAll( key );
-    mConfig->writeEntry( "PassiveResourceKeys", passiveKeys );
+    group.writeEntry( "PassiveResourceKeys", passiveKeys );
   }
 
   QString standardKey = mConfig->readEntry( "Standard" );
   if ( standardKey == key ) {
-    mConfig->writeEntry( "Standard", "" );
+    group.writeEntry( "Standard", "" );
   }
 
   mConfig->deleteGroup( "Resource_" + resource->identifier() );
-  mConfig->sync();
+  group.sync();
 }
 
 Resource *ManagerImpl::getResource( const QString &identifier )
