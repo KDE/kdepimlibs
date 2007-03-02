@@ -197,4 +197,51 @@ void KMimeContentTest::testMultipartMixed()
   QCOMPARE( msg->encodedContent(), assembled );
 }
 
+void KMimeContentTest::testImplicitMultipartGeneration()
+{
+  Content *c1 = new Content();
+  c1->contentType()->from7BitString( "text/plain" );
+  c1->setBody( "textpart" );
+
+  Content *c2 = new Content();
+  c2->contentType()->from7BitString( "text/html" );
+  c2->setBody( "htmlpart" );
+
+  c1->addContent( c2 );
+
+  // c1 implicitly converted into a multipart/mixed node
+  QCOMPARE( c1->contentType()->mimeType(), QByteArray("multipart/mixed") );
+  QVERIFY( c1->body().isEmpty() );
+
+  Content *c = c1->contents().at( 0 ); // former c1
+  QCOMPARE( c->contentType()->mimeType(), QByteArray("text/plain") );
+  QCOMPARE( c->body(), QByteArray("textpart") );
+
+  QCOMPARE( c1->contents().at( 1 ), c2 );
+}
+
+void KMimeContentTest::textExplicitMultipartGeneration()
+{
+  Content *c1 = new Content();
+  c1->contentType()->from7BitString( "multipart/mixed" );
+
+  Content *c2 = new Content();
+  c2->contentType()->from7BitString( "text/plain" );
+  c2->setBody( "textpart" );
+
+  Content *c3 = new Content();
+  c3->contentType()->from7BitString( "text/html" );
+  c3->setBody( "htmlpart" );
+
+  c1->addContent( c2 );
+  c1->addContent( c3 );
+
+  // c1 should not be changed
+  QCOMPARE( c1->contentType()->mimeType(), QByteArray("multipart/mixed") );
+  QVERIFY( c1->body().isEmpty() );
+
+  QCOMPARE( c1->contents().at( 0 ), c2 );
+  QCOMPARE( c1->contents().at( 1 ), c3 );
+}
+
 #include "kmime_content_test.moc"

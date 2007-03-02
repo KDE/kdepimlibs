@@ -595,7 +595,7 @@ Content::List Content::contents() const
 
 void Content::addContent( Content *c, bool prepend )
 {
-  if ( d->contents.isEmpty() ) { // this message is not multipart yet
+  if ( d->contents.isEmpty() && !contentType()->isMultipart() ) { // this message is not multipart yet
 
     // first we convert the body to a content
     Content *main = new Content();

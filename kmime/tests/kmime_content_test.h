@@ -28,6 +28,8 @@ class KMimeContentTest : public QObject
     void testGetHeaderInstance();
     void testSetContent();
     void testMultipartMixed();
+    void testImplicitMultipartGeneration();
+    void textExplicitMultipartGeneration();
 };
 
 #endif
