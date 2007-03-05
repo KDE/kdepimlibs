@@ -70,6 +70,11 @@ void RFC2047Test::testRFC2047decode()
   QCOMPARE( decodeRFC2047String( "From: =?US-ASCII*EN?Q?Keith_Moore?= <moore@cs.utk.edu>", encCharset ),
             QString::fromUtf8( "From: Keith Moore <moore@cs.utk.edu>" ) );
   QCOMPARE( encCharset, QByteArray( "US-ASCII" ) );
+
+  // broken qp endoding (using lowercase)
+  QCOMPARE( decodeRFC2047String( "Subject: =?iso-8859-1?Q?Belangrijk=3a=20Verhuizing=20FTP=20server?=", encCharset ),
+            QString::fromUtf8( "Subject: Belangrijk: Verhuizing FTP server" ) );
+  QCOMPARE( encCharset, QByteArray( "ISO-8859-1" ) );
 }
 
 void RFC2047Test::testInvalidDecode()
