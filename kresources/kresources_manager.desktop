@@ -4,6 +4,8 @@ Type=ServiceType
 X-KDE-ServiceType=KResources/Manager
 Comment=KResource Manager
 Comment[el]=Διαχειριστής KResource
+Comment[pa]=ਕੇ-ਰੀਸੋਰਸ ਮੈਨੇਜਰ
+Comment[x-test]=xxKResource Managerxx
 
 [PropertyDef::X-KDE-ResourceFamily]
 Type=QString

@@ -4,6 +4,7 @@ Type=ServiceType
 X-KDE-ServiceType=KResources/Plugin
 Comment=KResource Framework Plugin
 Comment[el]=Εφαρμογίδιο πλαισίου εργασίας του KResource
+Comment[x-test]=xxKResource Framework Pluginxx
 
 [PropertyDef::X-KDE-ResourceFamily]
 Type=QString
