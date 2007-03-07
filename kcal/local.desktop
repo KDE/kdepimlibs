@@ -3,6 +3,7 @@ Encoding=UTF-8
 Name=Calendar in Local File
 Name[el]=Ημερολόγιο σε τοπικό αρχείο
 Name[fr]=Calendrier dans un fichier local
+Name[ja]=ローカルファイルのカレンダー
 Name[pa]=ਲੋਕਲ ਫਾਇਲ 'ਚ ਕੈਲੰਡਰ
 Name[x-test]=xxCalendar in Local Filexx
 X-KDE-Library=kcal_local
