@@ -40,6 +40,7 @@ class APIMetaWeblog::Private
 APIMetaWeblog::APIMetaWeblog( const KUrl &server, QObject *parent, const char *name ) : APIBlog( server, parent, name ), 
 d( new Private)
 {
+  setUrl( server );
   d->mXmlRpcClient = new KXmlRpc::Client( server );
 }
 

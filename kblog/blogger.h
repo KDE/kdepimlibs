@@ -28,16 +28,18 @@
 #include <QtCore/QVariant>
 #include <QtCore/QList>
 
+#include <kurl.h>
+
 namespace KBlog {
 
 class KBLOG_EXPORT APIBlogger : public APIBlog
 {
+  Q_OBJECT
   public:
     APIBlogger( const KUrl &server, QObject *parent = 0L, const char *name = 0L );
     virtual ~APIBlogger();
-    QString getFunctionName( blogFunctions type );
     QString interfaceName() const { return "Blogger API 1.0"; }
-
+    void setUrl( const KUrl &server );
 
     void userInfo();
     void listBlogs();
@@ -49,20 +51,9 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
     void createMedia( KBlog::BlogMedia *media );
     void removePosting( const QString &postId );
 
-public slots:
-    void slotUserInfo( const QList<QVariant> &result, const QVariant &id );
-    void slotListBlogs( const QList<QVariant> &result, const QVariant &id );
-    void slotListPostings( const QList<QVariant> &result, const QVariant &id );
-    void slotListCategoriesJob( const QList<QVariant> &result, const QVariant &id );
-    void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
-    void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
-    void slotCreateMedia( const QList<QVariant> &result, const QVariant &id );
-    void faultSlot( int, const QString&, const QVariant& );
-protected:
-    bool readPostingFromMap( BlogPosting *post, const QMap<QString, QVariant> &postInfo );
 private:
-    class Private;
-    Private* const d;
+    class APIBloggerPrivate;
+    APIBloggerPrivate* const d;
 };
 
 }

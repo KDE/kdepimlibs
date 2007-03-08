@@ -109,52 +109,19 @@ public:
   void setPublish( const bool publish );
 
   /**
-    Returns the userId.
-
-    @result userId
-    @see setUserId( const QString &userId )
+    Returns the postId. This is for fetched postings.
+    @result postingId
+    @see setPostingId( const QString &postingId )
   */
-  QString userId() const;
-   
-  /**
-    Set the userId value.
-
-    @param userId set this to the user id on the server.
-    @see userId()
-  */ 
-  void setUserId( const QString &userId );
+  QString postingId() const;
 
   /**
-    Returns the blogId.
+    Set the post id value. This is important for modifying postings.
 
-    @result blogId
-    @see setBlogId( const QString &blogId )
+    @param postingId set this to the post id on the server.
+    @see postingId()
   */
-  QString blogId() const;
-
-  /**
-    Set the blogId value.
-
-    @param blogId set this to the blod id on the server.
-    @see blogId()
-  */
-  void setBlogId( const QString &blogId );
-
-  /**
-    Returns the postId.
-
-    @result postId
-    @see setPostId( const QString &postId )
-  */
-  QString postId() const;
-
-  /**
-    Set the post id value.
-
-    @param postId set this to the post id on the server.
-    @see postId()
-  */
-  void setPostId( const QString &postId );
+  void setPostingId( const QString &postingId );
 
   /**
     Returns the title.
@@ -239,12 +206,13 @@ public:
   void setModificationDateTime( const KDateTime &datetime );
   
   /**
-    Returns if the post has been deleted on the server.
+    Returns if the post has been deleted on the server. Note: This is
+    currently not set automatically on post.
 
     @result deleted
     @see setDeleted( const bool deleted )
   */
-  bool deleted() const;
+  bool deleted() const; // TODO: set on post
   
   /**
     Set when the posting has been deleted on the server.
@@ -255,12 +223,13 @@ public:
   void setDeleted( const bool deleted );
   
   /**
-    Returns if the post has been uploaded to the server.
+    Returns if the post has been uploaded to the server. Note: This ist
+    currently not set automatically on post.
 
     @result uploaded
     @see setUploaded( const bool uploaded )
   */
-  bool uploaded() const;
+  bool uploaded() const; // TODO: set on post
 
   /**
     Set when the posting has been uploaded to the server.
@@ -269,7 +238,7 @@ public:
     @see uploaded()
   */
   void setUploaded( const bool deleted);
-//FIXME:   virtual void error( int /*code*/, const QString &/*error*/ ) {}
+
 
 protected:
   // Override this method to detect the new postId assigned when adding a new post
@@ -426,60 +395,103 @@ class KBLOG_EXPORT APIBlog : public QObject
     void setDownloadCount( int nr );
     int downloadCount() const;
 
-    enum blogFunctions {
-      blogGetUserInfo,
-      blogGetUsersBlogs,
-      blogGetCategories,
-      blogGetRecentPosts,
-      blogNewPost,
-      blogNewMedia,
-      blogEditPost,
-      blogDeletePost,
-      blogGetPost,
-      blogGetTemplate, // not implemented yet
-      blogSetTemplate  // not implemented yet
-    };
-
     /**
-        Returns the function name for the corresponding blog backend.
-
-        @result function name
-	@param type the type of the blogFunction
+        Get information about the user from the blog.
+	@see void userInfoRetrieved( const QString &nickname, const QString &userid, const QString &email )
     */
-    virtual QString getFunctionName( blogFunctions type ) = 0;
-
-    /**
-        Returns the default Arguments for the blog.
-        
-	@result list of QVariants with the default args
-	@param id of the blog.
-    */
-    virtual QList<QVariant> defaultArgs( const QString &id = QString::null );
-
-
     virtual void userInfo() = 0;
+
+    /**
+        List the blogs available for this authentication on the server.
+	@see void blogInfoRetrieved( const QString &id, const QString &name )
+    */
     virtual void listBlogs() = 0;
+
+    /**
+        List recent postings on the server..
+	@see     void listedPosting( KBlog::BlogPosting &posting )
+        @see     void fetchedPosting( KBlog::BlogPosting &posting )
+        @see     void listPostingsFinished()
+    */
     virtual void listPostings() = 0;
+
+    /**
+        List the categories of the blog.
+	@see  void categoryInfoRetrieved( const QString &name, const QString &description )
+        @see  void listCategoriesFinished()
+    */
     virtual void listCategories() = 0;
-    virtual void fetchPosting( const QString &postId ) = 0;
-    void fetchPosting( KBlog::BlogPosting *posting );
+
+    /**
+        Fetch the Posting with postingId.
+        @param postingId is the id of the posting on the server.
+
+        @see  void fetchedPosting( KBlog::BlogPosting &posting )
+    */
+    virtual void fetchPosting( const QString &postingId ) = 0;
+
+    /**
+        Overloaded for convenience.
+        @param posting is a posting with the posting id already set. Note: The content is currently not updated on fetch. You will find the posting with @see fetchedPosting( KBlog::BlogPosting &posting ) signal.
+    */
+    void fetchPosting( KBlog::BlogPosting *posting ); // TODO: either update the *posting inside function or remove
+
+    /**
+        Modify a posting on server.
+
+        @param posting is used to send the modified posting including the correct postingId from it to the server.
+    */
     virtual void modifyPosting( KBlog::BlogPosting *posting ) = 0;
+
+    /**
+        Create a new posting on server.
+
+        @param posting is send to the server.
+    */
     virtual void createPosting( KBlog::BlogPosting *posting ) = 0;
+
+    /**
+        Create a new media object, e.g. picture, on server.
+
+        @param media is send to the server.
+    */
     virtual void createMedia( KBlog::BlogMedia *media ) = 0;
-    virtual void removePosting( const QString &postId ) = 0;
+
+    /**
+        Remove a posting from the server.
+
+        @param postingId is the id of the posting to remove.
+
+        @see void removePosting( KBlog::BlogPosting *posting )
+    */
+    virtual void removePosting( const QString &postingId ) = 0;
+
+    /**
+        Overloaded function, provided for convenience.
+
+        @param posting is the posting which will be removed. It will also be deleted.
+    */
     void removePosting( KBlog::BlogPosting *posting );
 
   signals:
     void userInfoRetrieved( const QString &nickname, const QString &userid, const QString &email );
-    void folderInfoRetrieved( const QString &id, const QString &name );
+    void blogInfoRetrieved( const QString &id, const QString &name );
     void categoryInfoRetrieved( const QString &name, const QString &description );
     void mediaInfoRetrieved( const QString &url );
 
-    void itemOnServer( KBlog::BlogPosting &posting );
+    void listedPosting( KBlog::BlogPosting &posting );
+    void fetchedPosting( KBlog::BlogPosting &posting );
+    void createdPosting( const int );
+    void createdMedia( const int );
+    void modifiedPosting( bool );
+
+    void listPostingsFinished();
+    void listCategoriesFinished();
+
+    /**
+         All xml parsing and all structural problems will emit an error.
+    */
     void error( const QString &errorMessage );
-    void uploadPostId( const int );
-    void fetchingPostsFinished();
-    void fetchingCategoriesFinished();
 
   private:
     class Private;

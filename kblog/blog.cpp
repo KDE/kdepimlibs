@@ -35,9 +35,7 @@ class BlogPosting::Private
 {
   public:
     bool mPublish;
-    QString mUserId;
-    QString mBlogId;
-    QString mPostId;
+    QString mPostingId;
     QString mTitle;
     QString mContent;
     QString mCategory;
@@ -76,14 +74,8 @@ BlogPosting::~BlogPosting()
 bool BlogPosting::publish() const { return d->mPublish; }
 void BlogPosting::setPublish( const bool publish ) { d->mPublish = publish; }
 
-QString BlogPosting::userId() const { return d->mUserId; }
-void BlogPosting::setUserId( const QString &userId ) { d->mUserId = userId; }
-
-QString BlogPosting::blogId() const { return d->mBlogId; }
-void BlogPosting::setBlogId( const QString &blogId ) { d->mBlogId = blogId; }
-
-QString BlogPosting::postId() const { return d->mPostId; }
-void BlogPosting::setPostId( const QString &postId ) { assignPostId( postId ); d->mPostId = postId; }
+QString BlogPosting::postingId() const { return d->mPostingId; }
+void BlogPosting::setPostingId( const QString &postingId ) { assignPostId( postingId ); d->mPostingId = postingId; }
 
 QString BlogPosting::title() const { return d->mTitle; }
 void BlogPosting::setTitle( const QString &title ) { d->mTitle = title; }
@@ -144,13 +136,13 @@ class APIBlog::Private
 };
 
 APIBlog::APIBlog( const KUrl &url, QObject *parent, const char *name ) :
-    QObject( parent, name ), d( new Private ) 
+    QObject( parent ), d( new Private ) 
 {
 }
 
 APIBlog::~APIBlog()
 {
-// TODO check for pending queries of client?
+// TODO check for pending queries of client? smart pointer or sth.?
   delete d;
 }
 
@@ -174,42 +166,13 @@ int APIBlog::downloadCount() const { return d->mDownloadCount; }
 
 void APIBlog::removePosting( KBlog::BlogPosting *posting )
 {
-  removePosting( posting->postId() );
+  removePosting( posting->postingId() );
   posting->setDeleted( true );
 }
 
 void APIBlog::fetchPosting( KBlog::BlogPosting *posting )
 {
-  fetchPosting( posting->postId() );
-}
-/*void APIBlog::setTemplateTags( const BlogTemplate& Template )
-{
-  mTemplate = Template;
-}
-BlogTemplate APIBlog::templateTags() const
-{
-  return mTemplate;
-}*/
-
-/*void APIBlog::deletePost( const QString &postId )
-{
-  BlogPosting *post = new BlogPosting();
-  post->setPostId( postId );
-  deletePost( post );
-  delete post;
-}*/
-
-QList<QVariant> APIBlog::defaultArgs( const QString &id )
-{
-  QList<QVariant> args;
-  if ( !d->mAppId.isNull() )
-    args << QVariant( d->mAppId );
-  if ( !id.isNull() ) {
-    args << QVariant( id );
-  }
-  args << QVariant( d->mUsername )
-       << QVariant( d->mPassword );
-  return args;
+  fetchPosting( posting->postingId() );
 }
 
 #include "blog.moc"

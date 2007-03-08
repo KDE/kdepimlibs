@@ -29,6 +29,20 @@ class TestBlogger : public QObject
   Q_OBJECT
 private slots:
   void testValidity();
+
+};
+
+class TestBloggerWarnings : public QObject
+{
+  Q_OBJECT
+private slots:
+  void userInfoTimeoutWarning();
+  void listBlogsTimeoutWarning();
+  void listPostingsTimeoutWarning();
+  void fetchPostingTimeoutWarning();
+  void modifyPostingTimeoutWarning();
+  void createPostingTimeoutWarning();
+  void error( const QString& );
 };
 
 #endif

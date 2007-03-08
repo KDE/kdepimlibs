@@ -7,13 +7,18 @@
  *
  * @section desc Description
  *
- * KBlog is a small library for access to Blogger 1, MetaWeblog and
+ * KBlog is a small library for access to Blogger 1, MetaWeblog and 
  * Blogger 2 compatible blogs. It makes heavy use of the KXmlRpc client
  * library of kdepimlibs and supports asynchronous sending and fetching of
  * posts and, if supported on the server, multimedia files. Almost every modern
  * blog software supports one of the APIs mentioned above. 
  *
- * @maintainer Christian Weilbach  \<christian_weilbach@web.de\>
+ * @authors 
+ *  The major authors of this library are:\n
+ *  Christian Weilbach \<christian_weilbach@web.de\>,
+*   Reinhold Kainhofer \<reinhold@kainhofer.com\>
+ *
+ * @maintainer Christian Weilbach  \<christian_weilbach@web.de\>,
  *
  * @licenses
  * @lgpl
