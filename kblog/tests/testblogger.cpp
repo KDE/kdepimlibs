@@ -31,31 +31,33 @@
 
 #define TIMEOUT 20000
 #define GLOBALTIMEOUT 30000
+#define POSTINGID 41
+#define DOWNLOADCOUNT 5
 
 using namespace KBlog; 
 
 void TestBloggerWarnings::userInfoTimeoutWarning(){
-  QWARN( "userInfo() timeout." );
+  QWARN( "userInfo() timeout. This can be caused by an error, too." );
 }
 
 void TestBloggerWarnings::listBlogsTimeoutWarning(){
-  QWARN( "listBlogs()  timeout." );
+  QWARN( "listBlogs()  timeout. This can be caused by an error, too." );
 }
 
 void TestBloggerWarnings::listPostingsTimeoutWarning(){
-  QWARN( "listPostings() timeout." );
+  QWARN( "listPostings() timeout. This can be caused by an error, too." );
 }
 
 void TestBloggerWarnings::fetchPostingTimeoutWarning(){
-  QWARN( "fetchPosting() timeout." );
+  QWARN( "fetchPosting() timeout. This can be caused by an error, too." );
 }
 
 void TestBloggerWarnings::modifyPostingTimeoutWarning(){
-  QWARN( "modifyPosting() timeout." );
+  QWARN( "modifyPosting() timeout. This can be caused by an error, too." );
 }
 
 void TestBloggerWarnings::createPostingTimeoutWarning(){
-  QWARN( "createPosting() timeout." );
+  QWARN( "createPosting() timeout. This can be caused by an error, too." );
 }
 
 void TestBloggerWarnings::error( const QString& error ){
@@ -72,20 +74,30 @@ void TestBlogger::testValidity()
   b->setUsername( "admin" );
   b->setPassword( "e9f51d" );
   b->setBlogId( "1" );
+  b->setTimezone( KTimeZone() );
+  b->setDownloadCount( DOWNLOADCOUNT );
   QVERIFY( b->url() == KUrl( "http://10.13.37.101/wordpress/xmlrpc.php" ) );
   QVERIFY( b->blogId() == "1" );
   QVERIFY( b->username() == "admin" );
   QVERIFY( b->password() == "e9f51d" );
+  QVERIFY( b->interfaceName() == "Blogger API 1.0" );
+  QVERIFY( b->timezone().name() == QString( "UTC" ) );
+  QVERIFY( b->downloadCount() == DOWNLOADCOUNT );
 
   BlogPosting *p = new BlogPosting();
+  KDateTime mDateTime( QDateTime::currentDateTime() );
   p->setTitle( "TestBlogger" );
   p->setContent( "TestBlogger: posted content." );
-  p->setCreationDateTime( KDateTime::currentDateTime( KDateTime::Spec() ) );
   p->setPublish( true );
+  p->setPostingId( QString( POSTINGID ) );
+  p->setCreationDateTime( mDateTime );
+  p->setModificationDateTime( mDateTime );
   QVERIFY( p->title() == "TestBlogger" );
   QVERIFY( p->content() == "TestBlogger: posted content." );
-  QVERIFY( p->creationDateTime() == KDateTime::currentDateTime( KDateTime::Spec() ) );
   QVERIFY( p->publish() == true );
+  QVERIFY( p->postingId() == QString ( POSTINGID ) );
+  QVERIFY( p->creationDateTime() == mDateTime );
+  QVERIFY( p->modificationDateTime() == mDateTime );
 
   TestBloggerWarnings *warnings = new TestBloggerWarnings();
   connect(b, SIGNAL(error(const QString&)), warnings, SLOT(error(const QString&)));
@@ -135,11 +147,10 @@ void TestBlogger::testValidity()
 
 
   connect(b, SIGNAL(fetchedPosting(KBlog::BlogPosting&)), fetchPostingTimer, SLOT(stop()));  
-  b->fetchPosting( QString( "41" ) );
+  b->fetchPosting( QString( POSTINGID ) );
   fetchPostingTimer->start( TIMEOUT );
 
   connect(b, SIGNAL(modifiedPosting(bool)), modifyPostingTimer, SLOT(stop()));
-  p->setPostingId( QString( "41" ) );
   b->modifyPosting( p );
   modifyPostingTimer->start( TIMEOUT );
 
