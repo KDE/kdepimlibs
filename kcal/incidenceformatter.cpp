@@ -156,7 +156,7 @@ static QString eventViewerFormatAttendees( Incidence *event )
   Attendee::List attendees = event->attendees();
   if ( attendees.count() ) {
     KIconLoader* iconLoader = KIconLoader::global();
-    const QString iconPath = iconLoader->iconPath( "mail_generic",
+    const QString iconPath = iconLoader->iconPath( "mail",
                                                   K3Icon::Small );
 
     // Add organizer link
@@ -209,7 +209,7 @@ static QString eventViewerFormatBirthday( Event *event )
   QString email_1= event->customProperty("KABC","EMAIL-1");
 
   KIconLoader* iconLoader = KIconLoader::global();
-  const QString iconPath = iconLoader->iconPath( "mail_generic",
+  const QString iconPath = iconLoader->iconPath( "mail",
                                                   K3Icon::Small );
   //TODO: add a tart icon
   QString tmpString = "<ul>";
