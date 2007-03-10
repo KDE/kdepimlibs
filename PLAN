@@ -19,19 +19,20 @@ gpgmepp
 indexlib
 kdgantt
 kode - parts moving to kdelibs.  kxforms should be in kdepim?  kwsdl??
-ktnef - change license to LGPL
+<done> ktnef - change license to LGPL
 libakonadi - blocked by libkmime
-libemailfunctions - turned into a stand-alone shared lib. die.die.die eventually
-kcal - versit and libical subdirs licensed ok
+libemailfunctions - done, but we want to move into kmime
+<done> kcal - versit and libical subdirs licensed ok
 libkdepim
 libkholidays
 libkholidays_ng
+kimap - new, rfcdecoders from kioslaves/imap4, and more imap support classes
 libkleo
-libkmime
+<done> kmime
 libkpgp
 libkpimidentities
 libksieve
-libsyndication - ok to move
+<done> libsyndication
 mimelib
 networkstatus
 qgpgme
