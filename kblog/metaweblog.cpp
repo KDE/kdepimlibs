@@ -21,104 +21,85 @@
 */
 
 #include <metaweblog.h>
-#include <kxmlrpcclient/client.h>
 
+#include <kxmlrpcclient/client.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <kdatetime.h>
+#include <metaweblog_p.h>
 
 #include <QtCore/QList>
 
 using namespace KBlog;
 
-class APIMetaWeblog::Private
-{
-  public:
-    KXmlRpc::Client* mXmlRpcClient;
-};
 
 APIMetaWeblog::APIMetaWeblog( const KUrl &server, QObject *parent, const char *name ) : APIBlog( server, parent, name ), 
-d( new Private)
+d( new APIMetaWeblogPrivate )
 {
+  d->parent = this;
   setUrl( server );
-  d->mXmlRpcClient = new KXmlRpc::Client( server );
 }
 
 APIMetaWeblog::~APIMetaWeblog()
 {
-  delete d->mXmlRpcClient;
   delete d;
 }
 
-QString APIMetaWeblog::getFunctionName( blogFunctions type )
+void APIMetaWeblog::setUrl( const KUrl &server )
 {
-  switch ( type ) {
-    case blogGetUserInfo:    return "metaWeblog.getUserInfo";
-    case blogGetUsersBlogs:  return "metaWeblog.getUsersBlogs";
-    case blogGetCategories:  return "metaWeblog.getCategories";
-    case blogGetRecentPosts: return "metaWeblog.getRecentPosts";
-    case blogNewPost:        return "metaWeblog.newPost";
-    case blogNewMedia:	return "metaWeblog.newMediaObject";
-    case blogEditPost:       return "metaWeblog.editPost";
-    case blogDeletePost:     return "metaWeblog.deletePost";
-    case blogGetPost:        return "metaWeblog.getPost";
-    case blogGetTemplate:    return "metaWeblog.getTemplate";
-    case blogSetTemplate:    return "metaWeblog.setTemplate";
-    default: return QString::null;
-  }
+  APIBlog::setUrl( server );
+  delete d->mXmlRpcClient;
+  d->mXmlRpcClient = new KXmlRpc::Client( server );
 }
-
-
-
 
 void APIMetaWeblog::userInfo()
 {
-  kDebug() << "userInfo(): getUserInfo is not available in MetaWeblog API." << endl;
-  emit error( i18n( "User info is not available in MetaWeblog API." ) );
+  kDebug() << "Fetching user information is not available in MetaWeblog API." << endl;
+  emit error( i18n( "Fetching user information is not available in MetaWeblog API." ) );
 }
 
 void APIMetaWeblog::listBlogs()
 {
-  kDebug() << "userInfo(): getUsersBlogs is not available in MetaWeblog API." << endl;
+  kDebug() << "Fetching user's blogs is not available in MetaWeblog API." << endl;
   emit error( i18n( "Fetching user's blogs is not available in MetaWeblog API." ) );
 }
 
 void APIMetaWeblog::listPostings()
 {
   kDebug() << "Fetching List of Posts..." << endl;
-  QList<QVariant> args( defaultArgs( blogId() ) );
+  QList<QVariant> args( d->defaultArgs( blogId() ) );
   args << QVariant( downloadCount() );
-  d->mXmlRpcClient->call( getFunctionName( blogGetRecentPosts ), args, 
-                          this, SLOT( slotListPostings( QList<QVariant> &result, QVariant &id ) ), 
-			  this, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+  d->mXmlRpcClient->call( "metaweblog.getRecentPosts", args, 
+                          d, SLOT( slotListPostings( const QList<QVariant>&, const QVariant& ) ), 
+			  d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 
 void APIMetaWeblog::listCategories(){
   kDebug() << "Fetching List of Categories..." << endl;
-  QList<QVariant> args( defaultArgs( blogId() ) );
-  d->mXmlRpcClient->call( getFunctionName( blogGetCategories ), args, 
+  QList<QVariant> args( d->defaultArgs( blogId() ) );
+  d->mXmlRpcClient->call( "metaweblog.getCategories", args, 
                           this, SLOT( slotListCategories( QList<QVariant> &result, QVariant &id ) ), 
 			  this, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
-
 }
 
-void APIMetaWeblog::fetchPosting( const QString &postId )
+void APIMetaWeblog::fetchPosting( const QString &postingId )
 {
-  kDebug() << "Fetching Posting with postId " << postId << endl;
-  QList<QVariant> args( defaultArgs( postId ) );
-  d->mXmlRpcClient->call( getFunctionName( blogGetPost ), args, 
-                          this, SLOT( slotFetchPosting( QList<QVariant> &result, QVariant &id ) ), 
-			  this, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+  kDebug() << "Fetching Posting with url " << postingId << endl;
+  QList<QVariant> args( d->defaultArgs( postingId ) );
+  d->mXmlRpcClient->call( "metaweblog.getPost", args, 
+                    d, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ), 
+		    d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 
-void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
+void APIMetaWeblog::modifyPosting( KBlog::BlogPosting* posting )
 {
   if ( !posting ) {
     kDebug() << "APIMetaWeblog::modifyPosting: posting null pointer" << endl;
+    emit error ( i18n( "Posting is a null pointer." ) );
+    return;
   }
-  kDebug() << "Uploading Posting with postId " << posting->postId() << endl;
+  kDebug() << "Uploading Posting with postId " << posting->postingId() << endl;
 
-  QList<QVariant> args( defaultArgs( posting->postId() ) );
+  QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
   QMap<QString, QVariant> map;
   QList<QVariant> list;
   list.append( QString( posting->category() ) );
@@ -129,18 +110,20 @@ void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
   map["dateCreated"]=date.currentUtcDateTime().dateTime();
   args << map;
   args << QVariant( posting->publish() );
-  d->mXmlRpcClient->call( getFunctionName( blogEditPost ), args, 
-                          this, SLOT( slotCreatePosting( QList<QVariant> &result, QVariant &id ) ), 
+  d->mXmlRpcClient->call( "metaweblog.editPost", args, 
+                          this, SLOT( slotCreatePosting( QList<QVariant>&, QVariant& ) ), 
 			  this, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 
-void APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
+void APIMetaWeblog::createPosting( KBlog::BlogPosting* posting )
 {
   if ( !posting ) {
     kDebug() << "APIMetaWeblog::createPosting: posting null pointer" << endl;
+    emit error ( i18n( "Posting is a null pointer." ) );
+    return;
   }
-  kDebug() << "Creating new Posting with blogId " << posting->blogId() << endl;
-  QList<QVariant> args( defaultArgs( posting->blogId() ) );
+  kDebug() << "Creating new Posting with blogId " << blogId() << endl;
+  QList<QVariant> args( d->defaultArgs( blogId() ) );
   QMap<QString, QVariant> map;
   QList<QVariant> list;
   list.append( QString( posting->category() ) );
@@ -150,172 +133,33 @@ void APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
   map["dateCreated"]=posting->creationDateTime().dateTime(); // TODO use original date of result?
   args << map;
   args << QVariant( posting->publish() );
-  d->mXmlRpcClient->call( getFunctionName( blogNewPost ), args, 
-                          this, SLOT( slotCreatePosting( QList<QVariant> &result, QVariant &id ) ), 
+  d->mXmlRpcClient->call( "metaweblog.newPost", args, 
+                          this, SLOT( slotCreatePosting( QList<QVariant>&, QVariant& ) ), 
 			  this, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
-  posting->setUploaded( true ); // FIXME check for errors?
 }
 
-void APIMetaWeblog::createMedia( KBlog::BlogMedia *media ){
+void APIMetaWeblog::createMedia( KBlog::BlogMedia* media ){
   kDebug() << "APIMetaWeblog::createMedia: name="<< media->title() << endl;
-  QList<QVariant> args( defaultArgs( media->blogId() ) );
+  QList<QVariant> args( d->defaultArgs( blogId() ) );
   QMap<QString, QVariant> map;
   QList<QVariant> list;
   map["name"]=media->title();
   map["type"]=media->mimetype();
   map["bits"]=media->data();
   args << map;
-  d->mXmlRpcClient->call( getFunctionName( blogNewMedia ), args, 
+  d->mXmlRpcClient->call( "metaweblog.newMedia", args, 
                           this, SLOT( slotCreateMedia( QList<QVariant> &result, QVariant &id ) ), 
 			  this, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
-
 }
 
-void APIMetaWeblog::removePosting( const QString &postId )
+void APIMetaWeblog::removePosting( const QString &postingId )
 {
-  kDebug() << "APIMetaWeblog::removePosting: postid=" << postId << endl;
-  QList<QVariant> args( defaultArgs( postId ) );
+  kDebug() << "APIMetaWeblog::removePosting: postingId=" << postingId << endl;
+  QList<QVariant> args( d->defaultArgs( postingId ) );
   args << QVariant( /*publish=*/true );
-  d->mXmlRpcClient->call( getFunctionName( blogDeletePost ), args, 
-                          this, SLOT( slotCreateMedia( QList<QVariant> &result, QVariant &id ) ), 
-			  this, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+  d->mXmlRpcClient->call( "metaweblog.deletePost", args, 
+                          d, SLOT( slotCreateMedia( QList<QVariant> &result, QVariant &id ) ), 
+			  d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 
-void APIMetaWeblog::slotUserInfo( const QList<QVariant> &result, const QVariant &id )
-{
-  kDebug()<<  "APIMetaWeblog::slotUserInfo not implemented for MetaWeblog API" << endl;
-}
-
-void APIMetaWeblog::slotListBlogs( const QList<QVariant> &result, const QVariant &id )
-{
-  kDebug() << "APIMetaWeblog::slotListBlogs  not implemented for MetaWeblog API" << endl;
-}
-
-void APIMetaWeblog::slotListCategories( const QList<QVariant> &result, const QVariant &id )
-{
-  kDebug() << "APIMetaWeblog::slotListCategories" << endl;
-  kDebug () << "TOP: " << result[0].typeName() << endl;
-
-  const QMap<QString, QVariant> categories = result[0].toMap();
-  const QList<QString> categoryNames = categories.keys();
-
-  QList<QString>::ConstIterator it = categoryNames.begin();
-  QList<QString>::ConstIterator end = categoryNames.end();
-  for ( ; it != end; ++it ) {
-    kDebug () << "MIDDLE: " << ( *it ) << endl;
-    const QString name( *it );
-    const QMap<QString, QVariant> category = categories[ *it ].toMap();
-    const QString description( category["description"].toString() );
-    if (  !name.isEmpty() ) {
-      emit categoryInfoRetrieved( name, description );
-       kDebug()<< "Emitting categorieInfoRetrieved( name=" << name << " description=" << description << " ); " << endl;
-    }
-  }
-  kDebug() << "Emitting fetchingCategoriesFinished()" << endl;
-  emit fetchingCategoriesFinished();
-}
-
-void APIMetaWeblog::slotListPostings( const QList<QVariant> &result, const QVariant &id )
-{
-  kDebug()<<"APIMetaWeblog::slotListPostings"<<endl;
-  kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-
-  const QList<QVariant> postReceived = result[ 0 ].toList();
-  QList<QVariant>::ConstIterator it = postReceived.begin();
-  QList<QVariant>::ConstIterator end = postReceived.end();
-  for ( ; it != end; ++it ) {
-    BlogPosting posting;
-    kDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
-    const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-    if ( readPostingFromMap( &posting, postInfo ) ) {
-       kDebug() << "Emitting itemOnServer( posting with postId()=" << posting.postId() << "); " << endl;
-       emit itemOnServer( posting ); 
-    } else {
-       kDebug() << "readPostingFromMap failed! " << endl;
-       emit error( i18n( "Couldn't read posting." ) );
-    }
-  }
-  kDebug() << "Emitting fetchingPostsFinished() " << endl;
-  emit fetchingPostsFinished();
-}
-
-void APIMetaWeblog::slotFetchPosting( const QList<QVariant> &result, const QVariant &id )
-{
-    //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
-    // TODO: Time zone for the dateCreated!
-  kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  BlogPosting posting;
-  const QMap<QString, QVariant> postInfo = result[ 0 ].toMap();
-  if ( readPostingFromMap( &posting, postInfo ) ) {
-     kDebug() << "Emitting itemOnServer( posting with postId()=" << posting.postId() << "); " << endl;
-     emit itemOnServer( posting ); //KUrl( posting.postId() ) );
-  } else {
-     kDebug() << "readPostingFromMap failed! " << endl;
-     emit error( "Couldn't read posting." );
-  }
-}
-
-void APIMetaWeblog::slotCreatePosting( const QList<QVariant> &result, const QVariant &id )
-{
-  //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
-  // TODO: Time zone for the dateCreated!
-  kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  QString postId = result[ 0 ].toString();
-  kDebug() << "MIDDLE: postId=" << postId << endl;
-  emit uploadPostId( postId.toInt() );
-  kDebug() << "Emitting uploadPostId( " << postId.toInt() << " )" << endl;
-}
-
-void APIMetaWeblog::slotCreateMedia( const QList<QVariant> &result, const QVariant &id )
-{
-  kDebug() << "APIMetaWeblog::slotCreateMedia, no error!" << endl;
-  kDebug () << "TOP: " << result[0].typeName() << endl;
-
-  const QMap<QString, QVariant> resultStruct = result[0].toMap();
-  const QString url = resultStruct["url"].toString();
-  kDebug() << "APIMetaWeblog::slotCreateMedia url="<< url << endl;
-
-  if (  !url.isEmpty() ) {
-    emit mediaInfoRetrieved( url );
-    kDebug()<< "Emitting mediaInfoRetrieved( url=" << url  << " ); " << endl;
-  }
-}
-
-void APIMetaWeblog::faultSlot( int number, const QString& errorString, const QVariant& id )
-{
-  emit error( errorString );
-}
-
-bool APIMetaWeblog::readPostingFromMap( BlogPosting *post, const QMap<QString, QVariant> &postInfo )
-{
-  // FIXME: integrate error handling
-  if ( !post ) return false;
-  QStringList mapkeys = postInfo.keys();
-  kDebug() << endl << "Keys: " << mapkeys.join(", ") << endl << endl;
-  
-  KDateTime dt = KDateTime( postInfo[ "dateCreated" ].toDateTime() );
-  if ( dt.isValid() && !dt.isNull() ) {
-    post->setCreationDateTime( dt );
-  }
-  dt = KDateTime( postInfo[ "lastModified" ].toDateTime() );
-  if ( dt.isValid() && !dt.isNull() ) {
-    post->setModificationDateTime( dt );
-  }
-
-  post->setUserId( postInfo[ "userid" ].toString() );
-  post->setPostId( postInfo[ "postid" ].toString() );
-
-  QString title( postInfo[ "title" ].toString() );
-  QString description( postInfo[ "description" ].toString() );
-  QList<QVariant> categories( postInfo[ "categories" ].toList() );
-
-  post->setTitle( title );
-  post->setContent( description );
-  if ( !categories.isEmpty() ){
-    QString category = ( *categories.begin() ).toString();
-    kDebug() << "Category: " <<  category  << endl;
-    post->setCategory( category );
-  }
-  return true;
-}
-
+#include "metaweblog.moc"

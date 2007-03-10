@@ -25,7 +25,7 @@
 #include <kxmlrpcclient/client.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <apiblogger_p.h>
+#include <blogger_p.h>
 
 #include <QtCore/QList>
 
@@ -80,7 +80,8 @@ void APIBlogger::listPostings()
 }
 
 void APIBlogger::listCategories(){
-  kDebug() << "Categories are not supported in Blogger API 1.0" << endl;
+  emit error( i18n( "Categories are not supported in Blogger API 1.0." ) );
+  kDebug() << "Categories are not supported in Blogger API 1.0." << endl;
 }
 
 void APIBlogger::fetchPosting( const QString &postingId )
@@ -121,7 +122,8 @@ void APIBlogger::createPosting( KBlog::BlogPosting* posting )
 }
 
 void APIBlogger::createMedia( KBlog::BlogMedia* media ){
-  kDebug() << "APIBlogger::createMedia: not available in Blogger API." << endl;
+  emit error( i18n( "Media upload not available in Blogger API 1.0." ) );
+  kDebug() << "Media upload not available in Blogger API 1.0." << endl;
 }
 
 void APIBlogger::removePosting( const QString &postingId )

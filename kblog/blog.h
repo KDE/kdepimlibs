@@ -37,19 +37,19 @@ This is the main interface for blog backends
 @author Ian Reinhart Geiser, Reinhold Kainhofer, Christian Weilbach
 */
 
-namespace KBlog {
-
 /**
   @file
 
   This file is part of the API for accessing Blog Servers
   and defines the #BlogPosting, #BlogMedia, and #APIBlog class.
 
-  @author Reinhold Kainhofer <reinhold@kainhofer.com>
-  @author Christian Weilbach <christian@whiletaker.homeip.net>
+  @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
+  @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
 
-  \par Maintainer: Christian Weilbach <christian@whiletaker.homeip.net>
+  \par Maintainer: Christian Weilbach \<christian\@whiletaker.homeip.net\>
  */
+
+namespace KBlog {
 
 /**
   @brief
@@ -63,7 +63,7 @@ namespace KBlog {
     post->setContent( "Here is some the content..." );
   @endcode
 
-  @author Christian Weilbach <christian@whiletaker.homeip.net>
+  @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
  */
 
 
@@ -258,7 +258,7 @@ private:
     post->setData( some_qbytestream );
   @endcode
 
-  @author Christian Weilbach <christian@whiletaker.homeip.net>
+  @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
  */
 
 
@@ -302,8 +302,8 @@ private:
   A virtual basis class that represents a connection to a blog server.
   This is the main interface to the blog client library.
 
-  @author Christian Weilbach <christian@whiletaker.homeip.net>
-  @author Reinhold Kainhofer <reinhold@kainhofer.com>
+  @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
+  @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
  */
 
 class KBLOG_EXPORT APIBlog : public QObject
@@ -313,7 +313,7 @@ class KBLOG_EXPORT APIBlog : public QObject
       /**
                         Construtor used by the API implementations.
 
-      @param server the server url of the server.
+      @param server the gateway url of the server.
       @param parent the parent of this object, defaults to NULL.
       @param name  the name of the instance.
      */
@@ -491,7 +491,7 @@ class KBLOG_EXPORT APIBlog : public QObject
     /**
          All xml parsing and all structural problems will emit an error.
     */
-    void error( const QString &errorMessage );
+    void error( const QString &errorMessage ); // TODO better error handling, maybe an error id or sth.?
 
   private:
     class Private;

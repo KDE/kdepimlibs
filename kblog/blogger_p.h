@@ -19,10 +19,12 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef API_BLOGGER_PRIVATE_H
-#define API_BLOGGER_PRIVATE_H
+#ifndef BLOGGER_P_H
+#define BLOGGER_P_H
 
 #include <QtCore/QList>
+
+#include <blogger.h>
 
 using namespace KBlog;
 
@@ -40,11 +42,9 @@ class APIBlogger::APIBloggerPrivate : public QObject
     void slotUserInfo( const QList<QVariant> &result, const QVariant &id );
     void slotListBlogs( const QList<QVariant> &result, const QVariant &id );
     void slotListPostings( const QList<QVariant> &result, const QVariant &id );
-    void slotListCategories( const QList<QVariant> &result, const QVariant &id );
     void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
     void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
     void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
-    void slotCreateMedia( const QList<QVariant> &result, const QVariant &id );
     void faultSlot( int, const QString&, const QVariant& );
     bool readPostingFromMap( BlogPosting *post, const QMap<QString, QVariant> &postInfo );
 };

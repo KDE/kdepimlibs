@@ -19,31 +19,31 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <blogger.h>
+#include <metaweblog.h>
 #include <kxmlrpcclient/client.h>
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <apiblogger_p.h>
+#include <metaweblog_p.h>
 
 #include <QtCore/QList>
 
 using namespace KBlog;
 
-APIBlogger::APIBloggerPrivate::APIBloggerPrivate()
+APIMetaWeblog::APIMetaWeblogPrivate::APIMetaWeblogPrivate()
 {
   mXmlRpcClient = 0;
 }
 
-APIBlogger::APIBloggerPrivate::~APIBloggerPrivate()
+APIMetaWeblog::APIMetaWeblogPrivate::~APIMetaWeblogPrivate()
 {
   delete mXmlRpcClient;  
 }
 
-QList<QVariant> APIBlogger::APIBloggerPrivate::defaultArgs( const QString &id )
+QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString &id )
 {
   QList<QVariant> args;
-  args << QVariant( QString( "0123456789ABCDEF" ) );
+//  args << QVariant( QString( "0123456789ABCDEF" ) ); TODO remove
   if ( !id.isNull() ) {
     args << QVariant( id );
   }
@@ -52,61 +52,37 @@ QList<QVariant> APIBlogger::APIBloggerPrivate::defaultArgs( const QString &id )
   return args;
 }
 
-void APIBlogger::APIBloggerPrivate::slotUserInfo( const QList<QVariant> &result, const QVariant &id )
-{
-  // TODO: Implement user authentication
-  kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
+void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVariant> &result, const QVariant &id ){ 
+  kDebug() << "APIMetaWeblogPrivate::slotListCategories" << endl;
+  kDebug () << "TOP: " << result[0].typeName() << endl;
   if( result[ 0 ].type()!=8 ){
-    kDebug () << "Could not fetch user information out of the result from the server." << endl;
-    emit parent->error( i18n("Could not fetch user information out of the result from the server." ) );
+    kDebug () << "Could not list categories out of the result from the server." << endl;
+    emit parent->error( i18n("Could not list categories out of the result from the server." ) );
   }
   else {
-    const QMap<QString,QVariant> userInfo= result[ 0 ].toMap();
-    const QString nickname = userInfo[ "nickname" ].toString();
-    const QString userid = userInfo[ "userid" ].toString();
-    const QString email = userInfo[ "email" ].toString();
-    kDebug() << "emit userInfoRetrieved( " << nickname << ", " << userid << ", " << email << " )" << endl;
-    // FIXME: What about a BlogUserInfo class/struct?
-    emit parent->userInfoRetrieved( nickname, userid, email );
-  }
-}
+    const QMap<QString, QVariant> categories = result[0].toMap();
+    const QList<QString> categoryNames = categories.keys();
 
-void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result, const QVariant &id )
-{
-  kDebug() << "APIBlogger::slotListBlogs" << endl;
-  kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  if( result[ 0 ].type()!=9 ){
-    kDebug () << "Could not fetch blogs out of the result from the server." << endl;
-    emit parent->error( i18n("Could not blogs Posting out of the result from the server." ) );
-  }
-  else {
-    const QList<QVariant> posts = result[ 0 ].toList();
-    QList<QVariant>::ConstIterator it = posts.begin();
-    QList<QVariant>::ConstIterator end = posts.end();
+    QList<QString>::ConstIterator it = categoryNames.begin();
+    QList<QString>::ConstIterator end = categoryNames.end();
     for ( ; it != end; ++it ) {
-      kDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
-      const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-
-      const QString id( postInfo[ "blogid" ].toString() );
-      const QString name( postInfo[ "blogName" ].toString() );
-      const QString url( postInfo[ "url" ].toString() );
-
-      if ( !id.isEmpty() && !name.isEmpty() ) {
-        emit parent->blogInfoRetrieved( id, name );
-        kDebug()<< "Emitting blogInfoRetrieved( id=" << id << ", name=" << name << "); " << endl;
+      kDebug () << "MIDDLE: " << ( *it ) << endl;
+      const QString name( *it );
+      const QMap<QString, QVariant> category = categories[ *it ].toMap();
+      const QString description( category["description"].toString() );
+      if (  !name.isEmpty() ) {
+        emit parent->categoryInfoRetrieved( name, description );
+        kDebug()<< "Emitting categorieInfoRetrieved( name=" << name << " description=" << description << " ); " << endl;
       }
     }
   }
+  kDebug() << "Emitting fetchingCategoriesFinished()" << endl;
+  emit parent->listCategoriesFinished();
 }
 
-void APIBlogger::APIBloggerPrivate::slotListCategories( const QList<QVariant> &result, const QVariant &id ){ // TODO: delete after port of metaweblog
-  kDebug() << "Categories are not supported in Blogger API 1.0" << endl;
-  emit parent->error( i18n("Categories are not supported in Blogger API 1.0") );
-}
-
-void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &result, const QVariant &id )
+void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant> &result, const QVariant &id )
 {
-  kDebug(5800)<<"APIBlogger::slotListPostings"<<endl;
+  kDebug(5800)<<"APIMetaWeblog::slotListPostings"<<endl;
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
   if( result[ 0 ].type()!=9 ){
     kDebug () << "Could not fetch list of postings out of the result from the server." << endl;
@@ -133,9 +109,9 @@ void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &res
   emit parent->listPostingsFinished();
 }
 
-void APIBlogger::APIBloggerPrivate::slotFetchPosting( const QList<QVariant> &result, const QVariant &id )
+void APIMetaWeblog::APIMetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result, const QVariant &id )
 {
-  kDebug(5800)<<"APIBlogger::slotFetchPosting"<<endl;
+  kDebug(5800)<<"APIMetaWeblog::slotFetchPosting"<<endl;
   //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
@@ -158,9 +134,9 @@ void APIBlogger::APIBloggerPrivate::slotFetchPosting( const QList<QVariant> &res
   }
 }
 
-void APIBlogger::APIBloggerPrivate::slotCreatePosting( const QList<QVariant> &result, const QVariant &id )
+void APIMetaWeblog::APIMetaWeblogPrivate::slotCreatePosting( const QList<QVariant> &result, const QVariant &id )
 {
-  kDebug()<<"APIBlogger::slotCreatePosting"<<endl;
+  kDebug()<<"APIMetaWeblog::slotCreatePosting"<<endl;
   //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
@@ -174,9 +150,9 @@ void APIBlogger::APIBloggerPrivate::slotCreatePosting( const QList<QVariant> &re
   }
 }
 
-void APIBlogger::APIBloggerPrivate::slotModifyPosting( const QList<QVariant> &result, const QVariant &id )
+void APIMetaWeblog::APIMetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result, const QVariant &id )
 {
-  kDebug()<<"APIBlogger::slotModifyPosting"<<endl;
+  kDebug()<<"APIMetaWeblog::slotModifyPosting"<<endl;
   //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
@@ -190,44 +166,60 @@ void APIBlogger::APIBloggerPrivate::slotModifyPosting( const QList<QVariant> &re
   }
 }
 
-void APIBlogger::APIBloggerPrivate::slotCreateMedia( const QList<QVariant> &result, const QVariant &id ){
-  kDebug()<< "Sending Media is not available in Blogger API." << endl;
-  emit parent->error ( i18n(  "Sending Media is not available in Blogger API." ) ); 
+void APIMetaWeblog::APIMetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result, const QVariant &id ){
+  kDebug() << "APIMetaWeblogPrivate::slotCreateMedia, no error!" << endl;
+  kDebug () << "TOP: " << result[0].typeName() << endl;
+  if( result[ 0 ].type()!=8 ){
+    kDebug () << "Invalid XML format in response from server. Not a map." << endl;
+    emit parent->error( i18n("Invalid XML format in response from server. Not a map." ) );
+  }
+  else {
+  const QMap<QString, QVariant> resultStruct = result[0].toMap();
+  const QString url = resultStruct["url"].toString();
+  kDebug() << "APIMetaWeblog::slotCreateMedia url="<< url << endl;
+
+  if (  !url.isEmpty() ) {
+    emit parent->mediaInfoRetrieved( url );
+    kDebug()<< "Emitting mediaInfoRetrieved( url=" << url  << " ); " << endl;
+  }
+}
 }
 
-void APIBlogger::APIBloggerPrivate::faultSlot( int number, const QString& errorString, const QVariant& id )
+void APIMetaWeblog::APIMetaWeblogPrivate::faultSlot( int number, const QString& errorString, const QVariant& id )
 {
   emit parent->error( errorString );
 }
 
-bool APIBlogger::APIBloggerPrivate::readPostingFromMap( BlogPosting *post, const QMap<QString, QVariant> &postInfo )
+bool APIMetaWeblog::APIMetaWeblogPrivate::readPostingFromMap( BlogPosting *post, const QMap<QString, QVariant> &postInfo )
 {
-  // FIXME: integrate error handling
+ // FIXME: integrate error handling
   if ( !post ) return false;
   QStringList mapkeys = postInfo.keys();
   kDebug() << endl << "Keys: " << mapkeys.join(", ") << endl << endl;
   
-  KDateTime dt( postInfo[ "dateCreated" ].toDateTime() );
+  KDateTime dt = KDateTime( postInfo[ "dateCreated" ].toDateTime() );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setCreationDateTime( dt );
   }
-  dt = KDateTime ( postInfo[ "lastModified" ].toDateTime() );
+  dt = KDateTime( postInfo[ "lastModified" ].toDateTime() );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setModificationDateTime( dt );
   }
-//  post->setUserId( postInfo[ "userid" ].toString() ); TODO remove if sure that not needed
+
   post->setPostingId( postInfo[ "postid" ].toString() );
 
   QString title( postInfo[ "title" ].toString() );
   QString description( postInfo[ "description" ].toString() );
-  QString contents( postInfo[ "content" ].toString() );
-  QString category;
+  QList<QVariant> categories( postInfo[ "categories" ].toList() );
 
   post->setTitle( title );
-  post->setContent( contents );
-  if ( !category.isEmpty() ) // FIXME remove after porting metaweblog
+  post->setContent( description );
+  if ( !categories.isEmpty() ){
+    QString category = ( *categories.begin() ).toString();
+    kDebug() << "Category: " <<  category  << endl;
     post->setCategory( category );
+  }
   return true;
 }
 
-#include "apiblogger_p.moc"
+#include "metaweblog_p.moc"

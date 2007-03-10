@@ -27,8 +27,9 @@ add_definitions(${QDBUS_DEFINITIONS})
 set(kblog_LIB_SRCS
 blog.cpp
 blogger.cpp
-apiblogger_p.cpp
-#metaweblog.cpp
+blogger_p.cpp
+metaweblog.cpp
+metaweblog_p.cpp
 )
 
 kde4_automoc(${kblog_LIB_SRCS})
