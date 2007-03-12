@@ -17,7 +17,6 @@ visibility macros  (no separate foo_export_win.h)
 To-Be-Determined
 ================
 kode - parts moving to kdelibs.  kxforms should be in kdepim?  kwsdl??
-kdgantt - also used in koffice, we think
 
 High Priority for KDE 4.0
 =========================
@@ -53,3 +52,4 @@ kimap
 kmime
 ktnef
 syndication
+kdgantt - must stay in kdepim due to licensing.
