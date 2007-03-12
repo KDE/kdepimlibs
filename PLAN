@@ -14,25 +14,42 @@ but the library name will still be libfoo.so.
 Each library foo will have its own foo.h that includes all the
 visibility macros  (no separate foo_export_win.h)
 
-
-gpgmepp
-indexlib
-kdgantt
+To-Be-Determined
+================
 kode - parts moving to kdelibs.  kxforms should be in kdepim?  kwsdl??
-<done> ktnef - change license to LGPL
-libakonadi - blocked by libkmime
-libemailfunctions - done, but we want to move into kmime
-<done> kcal - versit and libical subdirs licensed ok
-libkdepim
-libkholidays
-libkholidays_ng
-kimap - new, rfcdecoders from kioslaves/imap4, and more imap support classes
-libkleo
-<done> kmime
+kdgantt - also used in koffice, we think
+
+High Priority for KDE 4.0
+=========================
+libkhalkhi - new, Friedrich W. H. Kossebau <kossebau kde org>
+libkholidays - allen, move this here asap
+libkholidays_ng - allen, move this back to playground
+emailfunctions - done, but we want to move into kmime, and some iof its functions
+                 are already in kmime. vkrause.
+networkstatus - will be moved by Bille asap into kdelibs
+
+High Priority, but not ready until KDE 4.1
+==========================================
+libakonadi - being developed in kdepim, may not be ready until 4.1,
+             API currently too unstable for anything with a freeze policy :)
+
+Low Priority (KDE 4.1)
+======================
+libkdepim - needs a class-by-class review
+gpgmepp, qgpgme
 libkpgp
-libkpimidentities
+libkleo - blocked by libkpgp, gpgmepp, qgpgme
+libkpimidentities - blocked by libkleo and libkdepim
 libksieve
-<done> libsyndication
+
+Really Low Priority (or eliminate entirely)
+===========================================
 mimelib
-networkstatus
-qgpgme
+
+Done
+====
+kcal
+kimap
+kmime
+ktnef
+syndication
