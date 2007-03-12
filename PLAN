@@ -17,11 +17,11 @@ visibility macros  (no separate foo_export_win.h)
 To-Be-Determined
 ================
 kode - parts moving to kdelibs.  kxforms should be in kdepim?  kwsdl??
+libkholidays - must stay in kdepim due to licensing. ask the 'plan' author.
 
 High Priority for KDE 4.0
 =========================
 libkhalkhi - new, Friedrich W. H. Kossebau <kossebau kde org>
-libkholidays - allen, move this here asap
 libkholidays_ng - allen, move this back to playground
 emailfunctions - done, but we want to move into kmime, and some iof its functions
                  are already in kmime. vkrause.
