@@ -16,7 +16,6 @@ visibility macros  (no separate foo_export_win.h)
 
 To-Be-Determined
 ================
-kode - parts moving to kdelibs.  kxforms should be in kdepim?  kwsdl??
 libkholidays - must stay in kdepim due to licensing. ask the 'plan' author.
 
 High Priority for KDE 4.0
@@ -40,6 +39,7 @@ libkpgp
 libkleo - blocked by libkpgp, gpgmepp, qgpgme
 libkpimidentities - blocked by libkleo and libkdepim
 libksieve
+kode - not ready for kdelibs.  kxforms should be in kdepim?  kwsdl??
 
 Really Low Priority (or eliminate entirely)
 ===========================================
