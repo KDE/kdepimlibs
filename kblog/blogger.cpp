@@ -80,7 +80,7 @@ void APIBlogger::listPostings()
 }
 
 void APIBlogger::listCategories(){
-  emit error( i18n( "Categories are not supported in Blogger API 1.0." ) );
+  emit error( NotSupported, i18n( "Categories are not supported in Blogger API 1.0." ) );
   kDebug() << "Categories are not supported in Blogger API 1.0." << endl;
 }
 
@@ -122,7 +122,7 @@ void APIBlogger::createPosting( KBlog::BlogPosting* posting )
 }
 
 void APIBlogger::createMedia( KBlog::BlogMedia* media ){
-  emit error( i18n( "Media upload not available in Blogger API 1.0." ) );
+  emit error( NotSupported, i18n( "Media upload not available in Blogger API 1.0." ) );
   kDebug() << "Media upload not available in Blogger API 1.0." << endl;
 }
 

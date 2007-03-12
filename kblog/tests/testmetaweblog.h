@@ -19,8 +19,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef _KBLOG_TEST_BLOGGER_H_
-#define _KBLOG_TEST_BLOGGER_H_
+#ifndef _KBLOG_TEST_METAWEBLOG_H_
+#define _KBLOG_TEST_METAWEBLOG_H_
 
 #include <QObject>
 
@@ -34,7 +34,7 @@ enum errorType
   Other
 };
 
-class TestBlogger : public QObject 
+class TestMetaWeblog : public QObject 
 {
   Q_OBJECT
 private slots:
@@ -42,12 +42,12 @@ private slots:
 
 };
 
-class TestBloggerWarnings : public QObject
+class TestMetaWeblogWarnings : public QObject
 {
   Q_OBJECT
 private slots:
-  void userInfoTimeoutWarning();
-  void listBlogsTimeoutWarning();
+  void listCategoriesTimeoutWarning();
+  void createMediaTimeoutWarning();
   void listPostingsTimeoutWarning();
   void fetchPostingTimeoutWarning();
   void modifyPostingTimeoutWarning();

@@ -57,7 +57,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
   kDebug () << "TOP: " << result[0].typeName() << endl;
   if( result[ 0 ].type()!=8 ){
     kDebug () << "Could not list categories out of the result from the server." << endl;
-    emit parent->error( i18n("Could not list categories out of the result from the server." ) );
+    emit parent->error( ParsingError, i18n("Could not list categories out of the result from the server." ) );
   }
   else {
     const QMap<QString, QVariant> categories = result[0].toMap();
@@ -86,7 +86,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
   if( result[ 0 ].type()!=9 ){
     kDebug () << "Could not fetch list of postings out of the result from the server." << endl;
-    emit parent->error( i18n("Could not fetch list of postings out of the result from the server." ) );
+    emit parent->error( ParsingError, i18n("Could not fetch list of postings out of the result from the server." ) );
   }
   else {
     const QList<QVariant> postReceived = result[ 0 ].toList();
@@ -101,7 +101,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant
         emit parent->listedPosting( posting ); // KUrl( posting.postingId() ) );
       } else {
         kDebug() << "d->readPostingFromMap failed! " << endl;
-        emit parent->error( i18n("Couldn't read posting.") );
+        emit parent->error( ParsingError, i18n("Couldn't read posting.") );
       }
     }
   } //FIXME should we emit here? (see below, too)
@@ -117,7 +117,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotFetchPosting( const QList<QVariant
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
   if( result[ 0 ].type()!=8 ){
     kDebug () << "Could not fetch posting out of the result from the server." << endl;
-    emit parent->error( i18n("Could not fetch posting out of the result from the server." ) );
+    emit parent->error( ParsingError, i18n("Could not fetch posting out of the result from the server." ) );
   }
   else {
 //     const QList<QVariant> postReceived = result[ 0 ].toList();
@@ -129,7 +129,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotFetchPosting( const QList<QVariant
       emit parent->fetchedPosting( posting ); // KUrl( posting.posingtId() ) );
     } else {
       kDebug() << "d->readPostingFromMap failed! " << endl;
-      emit parent->error( i18n("Could not read posting.") );
+      emit parent->error( ParsingError, i18n("Could not read posting.") );
     }
   }
 }
@@ -141,8 +141,8 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreatePosting( const QList<QVarian
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
   if( result[ 0 ].type()!=2 ){
-    kDebug () << "Invalid XML format in response from server. Not an integer." << endl;
-    emit parent->error( i18n( "Invalid XML format in response from server. Not an integer." ) );
+    kDebug () << "Could not read the postingId, not an integer." << endl;
+    emit parent->error( ParsingError, i18n( "Could not read the postingId, not an integer." ) );
   }
   else {
     emit parent->createdPosting( result[ 0 ].toInt() );
@@ -157,8 +157,8 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotModifyPosting( const QList<QVarian
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
   if( result[ 0 ].type()!=1 ){
-    kDebug () << "Invalid XML format in response from server. Not a boolean." << endl;
-    emit parent->error( i18n( "Invalid XML format in response from server. Not a boolean." ) );
+    kDebug () << "Could not read the result, not a boolean." << endl;
+    emit parent->error( ParsingError, i18n( "Could not read the result, not a boolean." ) );
   }
   else {
     emit parent->modifiedPosting( result[ 0 ].toBool() );
@@ -170,8 +170,8 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreateMedia( const QList<QVariant>
   kDebug() << "APIMetaWeblogPrivate::slotCreateMedia, no error!" << endl;
   kDebug () << "TOP: " << result[0].typeName() << endl;
   if( result[ 0 ].type()!=8 ){
-    kDebug () << "Invalid XML format in response from server. Not a map." << endl;
-    emit parent->error( i18n("Invalid XML format in response from server. Not a map." ) );
+    kDebug () << "Could not read the result, not a map." << endl;
+    emit parent->error( ParsingError, i18n("Could not read the result, not a map." ) );
   }
   else {
   const QMap<QString, QVariant> resultStruct = result[0].toMap();
@@ -179,15 +179,15 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreateMedia( const QList<QVariant>
   kDebug() << "APIMetaWeblog::slotCreateMedia url="<< url << endl;
 
   if (  !url.isEmpty() ) {
-    emit parent->mediaInfoRetrieved( url );
-    kDebug()<< "Emitting mediaInfoRetrieved( url=" << url  << " ); " << endl;
+    emit parent->createdMedia( url );
+    kDebug()<< "Emitting createdMedia( url=" << url  << " ); " << endl;
   }
 }
 }
 
 void APIMetaWeblog::APIMetaWeblogPrivate::faultSlot( int number, const QString& errorString, const QVariant& id )
 {
-  emit parent->error( errorString );
+  emit parent->error( XmlRpc, errorString );
 }
 
 bool APIMetaWeblog::APIMetaWeblogPrivate::readPostingFromMap( BlogPosting *post, const QMap<QString, QVariant> &postInfo )

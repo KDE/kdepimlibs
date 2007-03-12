@@ -54,13 +54,13 @@ void APIMetaWeblog::setUrl( const KUrl &server )
 void APIMetaWeblog::userInfo()
 {
   kDebug() << "Fetching user information is not available in MetaWeblog API." << endl;
-  emit error( i18n( "Fetching user information is not available in MetaWeblog API." ) );
+  emit error( NotSupported, i18n( "Fetching user information is not available in MetaWeblog API." ) );
 }
 
 void APIMetaWeblog::listBlogs()
 {
   kDebug() << "Fetching user's blogs is not available in MetaWeblog API." << endl;
-  emit error( i18n( "Fetching user's blogs is not available in MetaWeblog API." ) );
+  emit error( NotSupported, i18n( "Fetching user's blogs is not available in MetaWeblog API." ) );
 }
 
 void APIMetaWeblog::listPostings()
@@ -68,7 +68,7 @@ void APIMetaWeblog::listPostings()
   kDebug() << "Fetching List of Posts..." << endl;
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   args << QVariant( downloadCount() );
-  d->mXmlRpcClient->call( "metaweblog.getRecentPosts", args, 
+  d->mXmlRpcClient->call( "metaWeblog.getRecentPosts", args, 
                           d, SLOT( slotListPostings( const QList<QVariant>&, const QVariant& ) ), 
 			  d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
 }
@@ -76,16 +76,16 @@ void APIMetaWeblog::listPostings()
 void APIMetaWeblog::listCategories(){
   kDebug() << "Fetching List of Categories..." << endl;
   QList<QVariant> args( d->defaultArgs( blogId() ) );
-  d->mXmlRpcClient->call( "metaweblog.getCategories", args, 
-                          this, SLOT( slotListCategories( QList<QVariant> &result, QVariant &id ) ), 
-			  this, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+  d->mXmlRpcClient->call( "metaWeblog.getCategories", args, 
+                          d, SLOT( slotListCategories( const QList<QVariant>&, const QVariant& ) ), 
+			  d, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 
 void APIMetaWeblog::fetchPosting( const QString &postingId )
 {
   kDebug() << "Fetching Posting with url " << postingId << endl;
   QList<QVariant> args( d->defaultArgs( postingId ) );
-  d->mXmlRpcClient->call( "metaweblog.getPost", args, 
+  d->mXmlRpcClient->call( "metaWeblog.getPost", args, 
                     d, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ), 
 		    d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
 }
@@ -94,7 +94,7 @@ void APIMetaWeblog::modifyPosting( KBlog::BlogPosting* posting )
 {
   if ( !posting ) {
     kDebug() << "APIMetaWeblog::modifyPosting: posting null pointer" << endl;
-    emit error ( i18n( "Posting is a null pointer." ) );
+    emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
   kDebug() << "Uploading Posting with postId " << posting->postingId() << endl;
@@ -110,16 +110,16 @@ void APIMetaWeblog::modifyPosting( KBlog::BlogPosting* posting )
   map["dateCreated"]=date.currentUtcDateTime().dateTime();
   args << map;
   args << QVariant( posting->publish() );
-  d->mXmlRpcClient->call( "metaweblog.editPost", args, 
-                          this, SLOT( slotCreatePosting( QList<QVariant>&, QVariant& ) ), 
-			  this, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+  d->mXmlRpcClient->call( "metaWeblog.editPost", args, 
+                          d, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ), 
+			  d, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 
 void APIMetaWeblog::createPosting( KBlog::BlogPosting* posting )
 {
   if ( !posting ) {
     kDebug() << "APIMetaWeblog::createPosting: posting null pointer" << endl;
-    emit error ( i18n( "Posting is a null pointer." ) );
+    emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
   kDebug() << "Creating new Posting with blogId " << blogId() << endl;
@@ -133,9 +133,9 @@ void APIMetaWeblog::createPosting( KBlog::BlogPosting* posting )
   map["dateCreated"]=posting->creationDateTime().dateTime(); // TODO use original date of result?
   args << map;
   args << QVariant( posting->publish() );
-  d->mXmlRpcClient->call( "metaweblog.newPost", args, 
-                          this, SLOT( slotCreatePosting( QList<QVariant>&, QVariant& ) ), 
-			  this, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+  d->mXmlRpcClient->call( "metaWeblog.newPost", args, 
+                          d, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ), 
+			  d, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 
 void APIMetaWeblog::createMedia( KBlog::BlogMedia* media ){
@@ -147,9 +147,9 @@ void APIMetaWeblog::createMedia( KBlog::BlogMedia* media ){
   map["type"]=media->mimetype();
   map["bits"]=media->data();
   args << map;
-  d->mXmlRpcClient->call( "metaweblog.newMedia", args, 
-                          this, SLOT( slotCreateMedia( QList<QVariant> &result, QVariant &id ) ), 
-			  this, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+  d->mXmlRpcClient->call( "metaWeblog.newMedia", args, 
+                          d, SLOT( slotCreateMedia( QList<QVariant>&, QVariant& ) ), 
+			  d, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 
 void APIMetaWeblog::removePosting( const QString &postingId )
@@ -157,8 +157,8 @@ void APIMetaWeblog::removePosting( const QString &postingId )
   kDebug() << "APIMetaWeblog::removePosting: postingId=" << postingId << endl;
   QList<QVariant> args( d->defaultArgs( postingId ) );
   args << QVariant( /*publish=*/true );
-  d->mXmlRpcClient->call( "metaweblog.deletePost", args, 
-                          d, SLOT( slotCreateMedia( QList<QVariant> &result, QVariant &id ) ), 
+  d->mXmlRpcClient->call( "metaWeblog.deletePost", args, 
+                          d, SLOT( slotCreateMedia( const QList<QVariant>&, const QVariant& ) ), 
 			  d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 

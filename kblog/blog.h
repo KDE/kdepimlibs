@@ -324,6 +324,19 @@ class KBLOG_EXPORT APIBlog : public QObject
      */
     virtual ~APIBlog();
 
+    /**
+        Enumeration for possible errors.
+    */
+    enum errorType
+   {
+      XmlRpc,
+      AtomAPI,
+      ParsingError,
+      AuthenticationError,
+      NotSupported,
+      Other
+    };
+
      /**
         Returns the API of the inherited object.
      */
@@ -477,12 +490,11 @@ class KBLOG_EXPORT APIBlog : public QObject
     void userInfoRetrieved( const QString &nickname, const QString &userid, const QString &email );
     void blogInfoRetrieved( const QString &id, const QString &name );
     void categoryInfoRetrieved( const QString &name, const QString &description );
-    void mediaInfoRetrieved( const QString &url );
 
     void listedPosting( KBlog::BlogPosting &posting );
     void fetchedPosting( KBlog::BlogPosting &posting );
     void createdPosting( const int );
-    void createdMedia( const int );
+    void createdMedia( const QString &url );
     void modifiedPosting( bool );
 
     void listPostingsFinished();
@@ -491,7 +503,7 @@ class KBLOG_EXPORT APIBlog : public QObject
     /**
          All xml parsing and all structural problems will emit an error.
     */
-    void error( const QString &errorMessage ); // TODO better error handling, maybe an error id or sth.?
+    void error( const errorType& type, const QString& errorMessage ); 
 
   private:
     class Private;

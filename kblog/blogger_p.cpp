@@ -58,7 +58,7 @@ void APIBlogger::APIBloggerPrivate::slotUserInfo( const QList<QVariant> &result,
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
   if( result[ 0 ].type()!=8 ){
     kDebug () << "Could not fetch user information out of the result from the server." << endl;
-    emit parent->error( i18n("Could not fetch user information out of the result from the server." ) );
+    emit parent->error( ParsingError, i18n("Could not fetch user information out of the result from the server." ) );
   }
   else {
     const QMap<QString,QVariant> userInfo= result[ 0 ].toMap();
@@ -77,7 +77,7 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
   if( result[ 0 ].type()!=9 ){
     kDebug () << "Could not fetch blogs out of the result from the server." << endl;
-    emit parent->error( i18n("Could not blogs Posting out of the result from the server." ) );
+    emit parent->error( ParsingError, i18n("Could not blogs Posting out of the result from the server." ) );
   }
   else {
     const QList<QVariant> posts = result[ 0 ].toList();
@@ -105,7 +105,7 @@ void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &res
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
   if( result[ 0 ].type()!=9 ){
     kDebug () << "Could not fetch list of postings out of the result from the server." << endl;
-    emit parent->error( i18n("Could not fetch list of postings out of the result from the server." ) );
+    emit parent->error( ParsingError, i18n("Could not fetch list of postings out of the result from the server." ) );
   }
   else {
     const QList<QVariant> postReceived = result[ 0 ].toList();
@@ -120,7 +120,7 @@ void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &res
         emit parent->listedPosting( posting ); // KUrl( posting.postingId() ) );
       } else {
         kDebug() << "d->readPostingFromMap failed! " << endl;
-        emit parent->error( i18n("Couldn't read posting.") );
+        emit parent->error( ParsingError, i18n("Couldn't read posting.") );
       }
     }
   } //FIXME should we emit here? (see below, too)
@@ -136,7 +136,7 @@ void APIBlogger::APIBloggerPrivate::slotFetchPosting( const QList<QVariant> &res
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
   if( result[ 0 ].type()!=8 ){
     kDebug () << "Could not fetch posting out of the result from the server." << endl;
-    emit parent->error( i18n("Could not fetch posting out of the result from the server." ) );
+    emit parent->error( ParsingError, i18n("Could not fetch posting out of the result from the server." ) );
   }
   else {
 //     const QList<QVariant> postReceived = result[ 0 ].toList();
@@ -148,7 +148,7 @@ void APIBlogger::APIBloggerPrivate::slotFetchPosting( const QList<QVariant> &res
       emit parent->fetchedPosting( posting ); // KUrl( posting.posingtId() ) );
     } else {
       kDebug() << "d->readPostingFromMap failed! " << endl;
-      emit parent->error( i18n("Could not read posting.") );
+      emit parent->error( ParsingError, i18n("Could not read posting.") );
     }
   }
 }
@@ -160,8 +160,8 @@ void APIBlogger::APIBloggerPrivate::slotCreatePosting( const QList<QVariant> &re
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
   if( result[ 0 ].type()!=2 ){
-    kDebug () << "Invalid XML format in response from server. Not an integer." << endl;
-    emit parent->error( i18n( "Invalid XML format in response from server. Not an integer." ) );
+    kDebug () << "Could not read the postingId, not an integer." << endl;
+    emit parent->error( ParsingError, i18n( "Could not read the postingId, not an integer." ) );
   }
   else {
     emit parent->createdPosting( result[ 0 ].toInt() );
@@ -176,8 +176,8 @@ void APIBlogger::APIBloggerPrivate::slotModifyPosting( const QList<QVariant> &re
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
   if( result[ 0 ].type()!=1 ){
-    kDebug () << "Invalid XML format in response from server. Not a boolean." << endl;
-    emit parent->error( i18n( "Invalid XML format in response from server. Not a boolean." ) );
+    kDebug () << "Could not read the result, not a boolean." << endl;
+    emit parent->error( ParsingError, i18n( "Could not read the result, not a boolean." ) );
   }
   else {
     emit parent->modifiedPosting( result[ 0 ].toBool() );
@@ -187,7 +187,7 @@ void APIBlogger::APIBloggerPrivate::slotModifyPosting( const QList<QVariant> &re
 
 void APIBlogger::APIBloggerPrivate::faultSlot( int number, const QString& errorString, const QVariant& id )
 {
-  emit parent->error( errorString );
+  emit parent->error( XmlRpc, errorString );
 }
 
 bool APIBlogger::APIBloggerPrivate::readPostingFromMap( BlogPosting *post, const QMap<QString, QVariant> &postInfo )

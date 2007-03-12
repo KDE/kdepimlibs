@@ -23,11 +23,11 @@
 
 #include <qtest_kde.h>
 
-#include "testblogger.h"
-#include "testblogger.moc"
+#include "testmetaweblog.h"
+#include "testmetaweblog.moc"
 
 
-#include <blogger.h>
+#include <metaweblog.h>
 
 #define TIMEOUT 20000
 #define GLOBALTIMEOUT 30000
@@ -36,39 +36,40 @@
 
 using namespace KBlog; 
 
-void TestBloggerWarnings::userInfoTimeoutWarning(){
-  QWARN( "userInfo() timeout. This can be caused by an error, too." );
+void TestMetaWeblogWarnings::listCategoriesTimeoutWarning(){
+  QWARN( "listCategories() timeout. This can be caused by an error, too." );
 }
 
-void TestBloggerWarnings::listBlogsTimeoutWarning(){
-  QWARN( "listBlogs()  timeout. This can be caused by an error, too." );
+void TestMetaWeblogWarnings::createMediaTimeoutWarning(){
+  QWARN( "createMedia()  timeout. This can be caused by an error, too." );
 }
 
-void TestBloggerWarnings::listPostingsTimeoutWarning(){
+void TestMetaWeblogWarnings::listPostingsTimeoutWarning(){
   QWARN( "listPostings() timeout. This can be caused by an error, too." );
 }
 
-void TestBloggerWarnings::fetchPostingTimeoutWarning(){
+void TestMetaWeblogWarnings::fetchPostingTimeoutWarning(){
   QWARN( "fetchPosting() timeout. This can be caused by an error, too." );
 }
 
-void TestBloggerWarnings::modifyPostingTimeoutWarning(){
+void TestMetaWeblogWarnings::modifyPostingTimeoutWarning(){
   QWARN( "modifyPosting() timeout. This can be caused by an error, too." );
 }
 
-void TestBloggerWarnings::createPostingTimeoutWarning(){
+void TestMetaWeblogWarnings::createPostingTimeoutWarning(){
   QWARN( "createPosting() timeout. This can be caused by an error, too." );
 }
 
-void TestBloggerWarnings::error( const errorType& type, const QString& error ){
+void TestMetaWeblogWarnings::error( const errorType& type, const QString& error ){
   QWARN( error.toUtf8().data() );
 }
 
-QTEST_KDEMAIN( TestBlogger, NoGUI )
+QTEST_KDEMAIN( TestMetaWeblog, NoGUI )
 
-void TestBlogger::testValidity() 
+void TestMetaWeblog::testValidity() 
 {
-  APIBlogger *b = new APIBlogger( KUrl( "http://wrong.url.org/somegateway" ) );
+  APIMetaWeblog *b = new APIMetaWeblog( 
+                       KUrl( "http://wrong.url.org/somegateway" ) );
   QVERIFY( b->url() == KUrl( "http://wrong.url.org/somegateway" ) );
   b->setUrl( KUrl( "http://10.13.37.101/wordpress/xmlrpc.php" ) );
   b->setUsername( "admin" );
@@ -80,35 +81,35 @@ void TestBlogger::testValidity()
   QVERIFY( b->blogId() == "1" );
   QVERIFY( b->username() == "admin" );
   QVERIFY( b->password() == "e9f51d" );
-  QVERIFY( b->interfaceName() == "Blogger API 1.0" );
+  QVERIFY( b->interfaceName() == "MetaWeblog API" );
   QVERIFY( b->timezone().name() == QString( "UTC" ) );
   QVERIFY( b->downloadCount() == DOWNLOADCOUNT );
 
   BlogPosting *p = new BlogPosting();
   KDateTime mDateTime( QDateTime::currentDateTime() );
-  p->setTitle( "TestBlogger" );
-  p->setContent( "TestBlogger: posted content." );
+  p->setTitle( "TestMetaWeblog" );
+  p->setContent( "TestMetaWeblog: posted content." );
   p->setPublish( true );
   p->setPostingId( QString( POSTINGID ) );
   p->setCreationDateTime( mDateTime );
   p->setModificationDateTime( mDateTime );
-  QVERIFY( p->title() == "TestBlogger" );
-  QVERIFY( p->content() == "TestBlogger: posted content." );
+  QVERIFY( p->title() == "TestMetaWeblog" );
+  QVERIFY( p->content() == "TestMetaWeblog: posted content." );
   QVERIFY( p->publish() == true );
   QVERIFY( p->postingId() == QString ( POSTINGID ) );
   QVERIFY( p->creationDateTime() == mDateTime );
   QVERIFY( p->modificationDateTime() == mDateTime );
 
-  TestBloggerWarnings *warnings = new TestBloggerWarnings();
+  TestMetaWeblogWarnings *warnings = new TestMetaWeblogWarnings();
   connect(b, SIGNAL(error(const errorType&,const QString&)), warnings, SLOT(error(const errorType&,const QString&)));
 
-  QTimer *userInfoTimer = new QTimer(this);
-  userInfoTimer->setSingleShot( true );
-  connect(userInfoTimer,  SIGNAL(timeout()), warnings, SLOT(userInfoTimeoutWarning()));
+  QTimer *listCategoriesTimer = new QTimer(this);
+  listCategoriesTimer->setSingleShot( true );
+  connect(listCategoriesTimer,  SIGNAL(timeout()), warnings, SLOT(listCategoriesTimeoutWarning()));
 
-  QTimer *listBlogsTimer = new QTimer(this);
-  listBlogsTimer->setSingleShot( true );
-  connect(listBlogsTimer,  SIGNAL(timeout()), warnings, SLOT(listBlogsTimeoutWarning()));
+  QTimer *createMediaTimer = new QTimer(this);
+  createMediaTimer->setSingleShot( true );
+  connect(createMediaTimer,  SIGNAL(timeout()), warnings, SLOT(createMediaTimeoutWarning()));
 
   QTimer *listPostingsTimer = new QTimer(this);
   listPostingsTimer->setSingleShot( true );
@@ -129,16 +130,16 @@ void TestBlogger::testValidity()
   QEventLoop *eventLoop = new QEventLoop(this);
 
 
-  connect(b, SIGNAL(userInfoRetrieved(const QString&, const QString&, const QString&)), 
-                  userInfoTimer, SLOT(stop()));
-  b->userInfo();
-  userInfoTimer->start( TIMEOUT );
+  connect(b, SIGNAL(listCategoriesFinished()), 
+                  listCategoriesTimer, SLOT(stop()));
+  b->listCategories();
+  listCategoriesTimer->start( TIMEOUT );
 
 
-  connect(b, SIGNAL(blogInfoRetrieved(const QString&, const QString&)), 
-                  listBlogsTimer, SLOT(stop()));
-  b->listBlogs();
-  listBlogsTimer->start( TIMEOUT );
+  connect(b, SIGNAL(createdMedia(const QString&)), 
+                  createMediaTimer, SLOT(stop()));
+//  b->createMedia();
+  createMediaTimer->start( TIMEOUT );
 
 
   connect(b, SIGNAL(listPostingsFinished()), listPostingsTimer, SLOT(stop()));
