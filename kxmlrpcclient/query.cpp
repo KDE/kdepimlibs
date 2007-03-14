@@ -1,13 +1,22 @@
-/**************************************************************************
-*   Copyright (C) 2006 by Narayan Newton <narayannewton@gmail.com>        *
-*   Copyright (C) 2003 - 2004 by Frerich Raabe <raabe@kde.org>            *
-*                                Tobias Koenig <tokoe@kde.org>            *
-*                                                                         *
-*   This program is free software; you can redistribute it and/or modify  *
-*   it under the terms of the GNU General Public License as published by  *
-*   the Free Software Foundation; either version 2 of the License, or     *
-*   (at your option) any later version.                                   *
-***************************************************************************/
+/******************************************************************************
+ *   Copyright (C) 2003 - 2004 by Frerich Raabe <raabe@kde.org>               *
+ *                                Tobias Koenig <tokoe@kde.org>               *
+ *   Copyright (C) 2006 by Narayan Newton <narayannewton@gmail.com>           *
+ *                                                                            *
+ * This program is distributed in the hope that it will be useful, but        *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY *
+ * or FITNESS FOR A PARTICULAR PURPOSE. For licensing and distribution        *
+ * details, check the accompanying file 'COPYING.BSD'.                        *
+ *****************************************************************************/
+/**
+  @file
+
+  This file is part of KXmlRpc and defines our internal classes.
+
+  @author Frerich Raabe <raabe@kde.org>
+  @author Tobias Koenig <tokoe@kde.org>
+  @author Narayan Newton <narayannewton@gmail.com>
+*/
 
 #include <kdebug.h>
 #include <klocale.h>
