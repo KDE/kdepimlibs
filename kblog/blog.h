@@ -262,7 +262,7 @@ private:
  */
 
 
-class KBLOG_EXPORT BlogMedia : public BlogPosting {
+class KBLOG_EXPORT BlogMedia {
 public:
   /**
     Default constructor. Creates an empty BlogMedia object.
@@ -273,14 +273,30 @@ public:
     Virtual default destructor.
   */
   virtual ~BlogMedia();
-  
+
+  /**
+    Returns the name. This is most likely the filename on the server side ( at least with wordpress ).
+
+    @result name
+    @see setName( const QString &name )
+  */
+  QString name() const;
+
+  /**
+    Set the name. This will most likely be the filename on the server side ( at least with wordpress ).
+
+    @param title set the name.
+    @see name()
+  */
+  void setName( const QString &title );
+
   /**
     Return the mimetype.
     
     @result mimetype of the object
     @see setMimetype()
   */
-  QString mimetype();
+  QString mimetype() const;
   void setMimetype( const QString& mimetype );
   
   /**
@@ -289,7 +305,7 @@ public:
     @result data
     @see setData()
   */
-  QByteArray data();
+  QByteArray data() const;
   void setData( const QByteArray& data );
 
 private:
@@ -493,7 +509,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
     void listedPosting( KBlog::BlogPosting &posting );
     void fetchedPosting( KBlog::BlogPosting &posting );
-    void createdPosting( const int );
+    void createdPosting( const QString &id );
     void createdMedia( const QString &url );
     void modifiedPosting( bool );
 

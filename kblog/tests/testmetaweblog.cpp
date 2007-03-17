@@ -31,7 +31,7 @@
 
 #define TIMEOUT 20000
 #define GLOBALTIMEOUT 30000
-#define POSTINGID 41
+#define POSTINGID 68
 #define DOWNLOADCOUNT 5
 
 using namespace KBlog; 
@@ -90,15 +90,23 @@ void TestMetaWeblog::testValidity()
   p->setTitle( "TestMetaWeblog" );
   p->setContent( "TestMetaWeblog: posted content." );
   p->setPublish( true );
-  p->setPostingId( QString( POSTINGID ) );
+  p->setPostingId( QString( "41" ) );
   p->setCreationDateTime( mDateTime );
   p->setModificationDateTime( mDateTime );
   QVERIFY( p->title() == "TestMetaWeblog" );
   QVERIFY( p->content() == "TestMetaWeblog: posted content." );
   QVERIFY( p->publish() == true );
-  QVERIFY( p->postingId() == QString ( POSTINGID ) );
+  QVERIFY( p->postingId() == QString ( "41" ) );
   QVERIFY( p->creationDateTime() == mDateTime );
   QVERIFY( p->modificationDateTime() == mDateTime );
+
+  BlogMedia *m = new BlogMedia();
+  m->setName( "testmetaweblog.txt"  );
+  m->setMimetype(  "text/plain" );
+  m->setData( QString( "YTM0NZomIzI2OTsmIzM0NTueYQ==" ).toAscii() );
+  QVERIFY( m->mimetype() == "text/plain" );
+  QVERIFY( m->data() == QString( "YTM0NZomIzI2OTsmIzM0NTueYQ==" ).toAscii() );
+  QVERIFY( m->name() == QString( "testmetaweblog.txt" ) );
 
   TestMetaWeblogWarnings *warnings = new TestMetaWeblogWarnings();
   connect(b, SIGNAL(error(const errorType&,const QString&)), warnings, SLOT(error(const errorType&,const QString&)));
@@ -138,7 +146,7 @@ void TestMetaWeblog::testValidity()
 
   connect(b, SIGNAL(createdMedia(const QString&)), 
                   createMediaTimer, SLOT(stop()));
-//  b->createMedia();
+  b->createMedia( m );
   createMediaTimer->start( TIMEOUT );
 
 
@@ -148,14 +156,14 @@ void TestMetaWeblog::testValidity()
 
 
   connect(b, SIGNAL(fetchedPosting(KBlog::BlogPosting&)), fetchPostingTimer, SLOT(stop()));  
-  b->fetchPosting( QString( POSTINGID ) );
+  b->fetchPosting( QString( "41" ) );
   fetchPostingTimer->start( TIMEOUT );
 
   connect(b, SIGNAL(modifiedPosting(bool)), modifyPostingTimer, SLOT(stop()));
   b->modifyPosting( p );
   modifyPostingTimer->start( TIMEOUT );
 
-  connect(b, SIGNAL(createdPosting(int)), createPostingTimer, SLOT(stop()));
+  connect(b, SIGNAL(createdPosting(QString)), createPostingTimer, SLOT(stop()));
   b->createPosting( p );
   createPostingTimer->start( TIMEOUT );
 

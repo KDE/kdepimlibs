@@ -105,21 +105,25 @@ void BlogPosting::setDeleted( const bool deleted ) { d->mDeleted =  deleted; }
 class BlogMedia::Private 
 {
   public:
+    QString mName;
     QString mMimetype;
     QByteArray mData;
 };
 
-BlogMedia::BlogMedia(): BlogPosting(), d( new Private ) {}
+BlogMedia::BlogMedia(): d( new Private ) {}
 
 BlogMedia::~BlogMedia() 
 {
   delete d;
 }
 
-QString BlogMedia::mimetype() { return d->mMimetype; }
+QString BlogMedia::name() const { return d->mName; }
+void BlogMedia::setName( const QString& name ) { d->mName = name; }
+
+QString BlogMedia::mimetype() const { return d->mMimetype; }
 void BlogMedia::setMimetype( const QString& mimetype ) { d->mMimetype = mimetype; }
 
-QByteArray BlogMedia::data() { return d->mData; }
+QByteArray BlogMedia::data() const { return d->mData; }
 void BlogMedia::setData( const QByteArray& data ) { d->mData = data; }
 
 

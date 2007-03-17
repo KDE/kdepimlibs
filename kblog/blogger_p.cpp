@@ -164,7 +164,7 @@ void APIBlogger::APIBloggerPrivate::slotCreatePosting( const QList<QVariant> &re
     emit parent->error( ParsingError, i18n( "Could not read the postingId, not an integer." ) );
   }
   else {
-    emit parent->createdPosting( result[ 0 ].toInt() );
+    emit parent->createdPosting( QString().setNum( result[ 0 ].toInt() ) );
     kDebug() << "emitting createdPosting( " << result[ 0 ].toInt() << " )" << endl;
   }
 }

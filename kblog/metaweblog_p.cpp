@@ -43,8 +43,10 @@ APIMetaWeblog::APIMetaWeblogPrivate::~APIMetaWeblogPrivate()
 QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString &id )
 {
   QList<QVariant> args;
-//  args << QVariant( QString( "0123456789ABCDEF" ) ); TODO remove
-  if ( !id.isNull() ) {
+  if ( id.toInt() ) {
+    args << QVariant( id.toInt() );
+  }
+  if ( !id.toInt() && !id.isNull() ){
     args << QVariant( id );
   }
   args << QVariant( parent->username() )
@@ -55,13 +57,14 @@ QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString 
 void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVariant> &result, const QVariant &id ){ 
   kDebug() << "APIMetaWeblogPrivate::slotListCategories" << endl;
   kDebug () << "TOP: " << result[0].typeName() << endl;
-  if( result[ 0 ].type()!=8 ){
+  if( result[ 0 ].type()!=8 && result[ 0 ].type()!=9 ){ // include fix for not metaweblog standard compatible apis with array of structs instead of struct of structs, e.g. wordpress
     kDebug () << "Could not list categories out of the result from the server." << endl;
     emit parent->error( ParsingError, i18n("Could not list categories out of the result from the server." ) );
   }
   else {
-    const QMap<QString, QVariant> categories = result[0].toMap();
-    const QList<QString> categoryNames = categories.keys();
+    if( result[ 0 ].type()==8 ){
+      const QMap<QString, QVariant> categories = result[0].toMap();
+      const QList<QString> categoryNames = categories.keys();
 
     QList<QString>::ConstIterator it = categoryNames.begin();
     QList<QString>::ConstIterator end = categoryNames.end();
@@ -74,10 +77,26 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
         emit parent->categoryInfoRetrieved( name, description );
         kDebug()<< "Emitting categorieInfoRetrieved( name=" << name << " description=" << description << " ); " << endl;
       }
+     }
     }
-  }
+    if( result[ 0 ].type()==9 ){// include fix for not metaweblog standard compatible apis with array of structs instead of struct of structs, e.g. wordpress
+      const QList<QVariant> categories = result[ 0 ].toList();
+      QList<QVariant>::ConstIterator it = categories.begin();
+      QList<QVariant>::ConstIterator end = categories.end();
+      for ( ; it != end; ++it ) {
+        kDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
+        const QMap<QString, QVariant> category = ( *it ).toMap();
+        const QString description( category["description"].toString() );
+        const QString name( category["categoryName"].toString() );
+        if (  !name.isEmpty() ) {
+          emit parent->categoryInfoRetrieved( name, description );
+          kDebug()<< "Emitting categorieInfoRetrieved( name=" << name << " description=" << description << " ); " << endl;
+        }
+      }
   kDebug() << "Emitting fetchingCategoriesFinished()" << endl;
   emit parent->listCategoriesFinished();
+  }
+  }
 }
 
 void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant> &result, const QVariant &id )
@@ -140,13 +159,13 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreatePosting( const QList<QVarian
   //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  if( result[ 0 ].type()!=2 ){
-    kDebug () << "Could not read the postingId, not an integer." << endl;
-    emit parent->error( ParsingError, i18n( "Could not read the postingId, not an integer." ) );
+  if( result[ 0 ].type()!=10 ){
+    kDebug () << "Could not read the postingId, not a string." << endl;
+    emit parent->error( ParsingError, i18n( "Could not read the postingId, not a string." ) );
   }
   else {
-    emit parent->createdPosting( result[ 0 ].toInt() );
-    kDebug() << "emitting createdPosting( " << result[ 0 ].toInt() << " )" << endl;
+    emit parent->createdPosting( result[ 0 ].toString() );
+    kDebug() << "emitting createdPosting( " << result[ 0 ].toString() << " )" << endl;
   }
 }
 

@@ -8,7 +8,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${KDE4_KIO_INCLUDES} )
 
 ########### next target ###############
 
-set(testblogger_SRCS testmetaweblog.cpp )
+set(testblogger_SRCS testblogger.cpp )
 
 kde4_automoc(${testblogger_SRCS})
 

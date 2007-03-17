@@ -89,13 +89,13 @@ void TestBlogger::testValidity()
   p->setTitle( "TestBlogger" );
   p->setContent( "TestBlogger: posted content." );
   p->setPublish( true );
-  p->setPostingId( QString( POSTINGID ) );
+  p->setPostingId( QString( "41" ) );
   p->setCreationDateTime( mDateTime );
   p->setModificationDateTime( mDateTime );
   QVERIFY( p->title() == "TestBlogger" );
   QVERIFY( p->content() == "TestBlogger: posted content." );
   QVERIFY( p->publish() == true );
-  QVERIFY( p->postingId() == QString ( POSTINGID ) );
+  QVERIFY( p->postingId() == QString ( "41" ) );
   QVERIFY( p->creationDateTime() == mDateTime );
   QVERIFY( p->modificationDateTime() == mDateTime );
 
@@ -147,14 +147,14 @@ void TestBlogger::testValidity()
 
 
   connect(b, SIGNAL(fetchedPosting(KBlog::BlogPosting&)), fetchPostingTimer, SLOT(stop()));  
-  b->fetchPosting( QString( POSTINGID ) );
+  b->fetchPosting( QString( "41" ) );
   fetchPostingTimer->start( TIMEOUT );
 
   connect(b, SIGNAL(modifiedPosting(bool)), modifyPostingTimer, SLOT(stop()));
   b->modifyPosting( p );
   modifyPostingTimer->start( TIMEOUT );
 
-  connect(b, SIGNAL(createdPosting(int)), createPostingTimer, SLOT(stop()));
+  connect(b, SIGNAL(createdPosting(QString)), createPostingTimer, SLOT(stop()));
   b->createPosting( p );
   createPostingTimer->start( TIMEOUT );
 
