@@ -56,9 +56,9 @@ void APIBlogger::APIBloggerPrivate::slotUserInfo( const QList<QVariant> &result,
 {
   // TODO: Implement user authentication
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  if( result[ 0 ].type()!=8 ){
-    kDebug () << "Could not fetch user information out of the result from the server." << endl;
-    emit parent->error( ParsingError, i18n("Could not fetch user information out of the result from the server." ) );
+  if( result[ 0 ].type()!=QVariant::Map ){
+    kDebug () << "Could not fetch user information out of the result from the server, not a list." << endl;
+    emit parent->error( ParsingError, i18n("Could not fetch user information out of the result from the server, not a list." ) );
   }
   else {
     const QMap<QString,QVariant> userInfo= result[ 0 ].toMap();
@@ -75,9 +75,9 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
 {
   kDebug() << "APIBlogger::slotListBlogs" << endl;
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  if( result[ 0 ].type()!=9 ){
-    kDebug () << "Could not fetch blogs out of the result from the server." << endl;
-    emit parent->error( ParsingError, i18n("Could not blogs Posting out of the result from the server." ) );
+  if( result[ 0 ].type()!=QVariant::List ){
+    kDebug () << "Could not fetch blogs out of the result from the server, not a list." << endl;
+    emit parent->error( ParsingError, i18n("Could not blogs Posting out of the result from the server, not a list." ) );
   }
   else {
     const QList<QVariant> posts = result[ 0 ].toList();
@@ -101,11 +101,11 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
 
 void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &result, const QVariant &id )
 {
-  kDebug(5800)<<"APIBlogger::slotListPostings"<<endl;
+  kDebug()<<"APIBlogger::slotListPostings"<<endl;
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  if( result[ 0 ].type()!=9 ){
-    kDebug () << "Could not fetch list of postings out of the result from the server." << endl;
-    emit parent->error( ParsingError, i18n("Could not fetch list of postings out of the result from the server." ) );
+  if( result[ 0 ].type()!=QVariant::List ){
+    kDebug () << "Could not fetch list of postings out of the result from the server, not a list." << endl;
+    emit parent->error( ParsingError, i18n("Could not fetch list of postings out of the result from the server, not a list." ) );
   }
   else {
     const QList<QVariant> postReceived = result[ 0 ].toList();
@@ -130,11 +130,11 @@ void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &res
 
 void APIBlogger::APIBloggerPrivate::slotFetchPosting( const QList<QVariant> &result, const QVariant &id )
 {
-  kDebug(5800)<<"APIBlogger::slotFetchPosting"<<endl;
+  kDebug()<<"APIBlogger::slotFetchPosting"<<endl;
   //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  if( result[ 0 ].type()!=8 ){
+  if( result[ 0 ].type()!=QVariant::Map ){
     kDebug () << "Could not fetch posting out of the result from the server." << endl;
     emit parent->error( ParsingError, i18n("Could not fetch posting out of the result from the server." ) );
   }
@@ -159,7 +159,7 @@ void APIBlogger::APIBloggerPrivate::slotCreatePosting( const QList<QVariant> &re
   //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  if( result[ 0 ].type()!=2 ){
+  if( result[ 0 ].type()!=QVariant::Int ){
     kDebug () << "Could not read the postingId, not an integer." << endl;
     emit parent->error( ParsingError, i18n( "Could not read the postingId, not an integer." ) );
   }
@@ -175,7 +175,7 @@ void APIBlogger::APIBloggerPrivate::slotModifyPosting( const QList<QVariant> &re
   //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  if( result[ 0 ].type()!=1 ){
+  if( result[ 0 ].type()!=QVariant::Bool ){
     kDebug () << "Could not read the result, not a boolean." << endl;
     emit parent->error( ParsingError, i18n( "Could not read the result, not a boolean." ) );
   }

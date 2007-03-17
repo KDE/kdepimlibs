@@ -27,6 +27,7 @@
 #include <metaweblog_p.h>
 
 #include <QtCore/QList>
+#include <QtCore/QVariant>
 
 using namespace KBlog;
 
@@ -56,13 +57,13 @@ QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString 
 
 void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVariant> &result, const QVariant &id ){ 
   kDebug() << "APIMetaWeblogPrivate::slotListCategories" << endl;
-  kDebug () << "TOP: " << result[0].typeName() << endl;
-  if( result[ 0 ].type()!=8 && result[ 0 ].type()!=9 ){ // include fix for not metaweblog standard compatible apis with array of structs instead of struct of structs, e.g. wordpress
+  kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
+  if( result[ 0 ].type()!=QVariant::Map && result[ 0 ].type()!=QVariant::List ){ // include fix for not metaweblog standard compatible apis with array of structs instead of struct of structs, e.g. wordpress
     kDebug () << "Could not list categories out of the result from the server." << endl;
     emit parent->error( ParsingError, i18n("Could not list categories out of the result from the server." ) );
   }
   else {
-    if( result[ 0 ].type()==8 ){
+    if( result[ 0 ].type()==QVariant::Map ){
       const QMap<QString, QVariant> categories = result[0].toMap();
       const QList<QString> categoryNames = categories.keys();
 
@@ -79,7 +80,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
       }
      }
     }
-    if( result[ 0 ].type()==9 ){// include fix for not metaweblog standard compatible apis with array of structs instead of struct of structs, e.g. wordpress
+    if( result[ 0 ].type()==QVariant::List ){// include fix for not metaweblog standard compatible apis with array of structs instead of struct of structs, e.g. wordpress
       const QList<QVariant> categories = result[ 0 ].toList();
       QList<QVariant>::ConstIterator it = categories.begin();
       QList<QVariant>::ConstIterator end = categories.end();
@@ -101,9 +102,9 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
 
 void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant> &result, const QVariant &id )
 {
-  kDebug(5800)<<"APIMetaWeblog::slotListPostings"<<endl;
+  kDebug()<<"APIMetaWeblog::slotListPostings"<<endl;
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  if( result[ 0 ].type()!=9 ){
+  if( result[ 0 ].type()!=QVariant::List ){
     kDebug () << "Could not fetch list of postings out of the result from the server." << endl;
     emit parent->error( ParsingError, i18n("Could not fetch list of postings out of the result from the server." ) );
   }
@@ -134,7 +135,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotFetchPosting( const QList<QVariant
   //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  if( result[ 0 ].type()!=8 ){
+  if( result[ 0 ].type()!=QVariant::Map ){
     kDebug () << "Could not fetch posting out of the result from the server." << endl;
     emit parent->error( ParsingError, i18n("Could not fetch posting out of the result from the server." ) );
   }
@@ -159,7 +160,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreatePosting( const QList<QVarian
   //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  if( result[ 0 ].type()!=10 ){
+  if( result[ 0 ].type()!=QVariant::String ){
     kDebug () << "Could not read the postingId, not a string." << endl;
     emit parent->error( ParsingError, i18n( "Could not read the postingId, not a string." ) );
   }
@@ -175,7 +176,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotModifyPosting( const QList<QVarian
   //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
-  if( result[ 0 ].type()!=1 ){
+  if( result[ 0 ].type()!=QVariant::Bool ){
     kDebug () << "Could not read the result, not a boolean." << endl;
     emit parent->error( ParsingError, i18n( "Could not read the result, not a boolean." ) );
   }
