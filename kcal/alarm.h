@@ -403,7 +403,6 @@ class KCAL_EXPORT Alarm : public CustomProperties
       @see time()
     */
     void setTime( const KDateTime &alarmTime );
-    KDE_DEPRECATED void setTime( const QDateTime &alarmTime );
 
 
     /**

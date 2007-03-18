@@ -32,7 +32,8 @@ using namespace KCal;
 void CalendarNullTest::testValidity() {
   CalendarNull cal( KDateTime::UTC );
   CalendarNull *s1 = cal.self();
-  QVERIFY( cal.reload( QLatin1String( "America/New_York" ) ) );
+  QVERIFY( cal.reload() );
+  cal.setTimeZoneId( QLatin1String( "America/New_York" ) ) );
   CalendarNull *s2 = cal.self();
   QVERIFY( !( s1 == 0 ) );
   QCOMPARE( s1, s2 );

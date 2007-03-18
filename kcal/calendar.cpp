@@ -4,6 +4,7 @@
     Copyright (c) 1998 Preston Brown <pbrown@kde.org>
     Copyright (c) 2000-2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+    Copyright (c) 2006 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -1108,6 +1109,3 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
 // DEPRECATED methods
 Event::List Calendar::events( const QDateTime &qdt )
 { return events(KDateTime(qdt, timeSpec())); }
-
-Event::List Calendar::rawEventsForDate( const QDateTime &qdt )
-{ return rawEventsForDate(KDateTime(qdt, timeSpec())); }

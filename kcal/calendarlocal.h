@@ -78,8 +78,6 @@ class KCAL_EXPORT CalendarLocal : public Calendar
      * @return success or failure
     */
     bool reload();
-    /** Use reload() plus setTimeZoneId() instead. */
-    KDE_DEPRECATED bool reload( const QString &tz );
 
     /**
       Writes out the calendar to disk in the specified \a format.
@@ -144,7 +142,6 @@ class KCAL_EXPORT CalendarLocal : public Calendar
       Calendar::rawEventsForDate(const KDateTime &)
     */
     Event::List rawEventsForDate( const KDateTime &dt );
-    KDE_DEPRECATED Event::List rawEventsForDate( const QDateTime &dt );
 
     /**
       @copydoc
@@ -242,7 +239,6 @@ class KCAL_EXPORT CalendarLocal : public Calendar
       >Return all alarms, which occur before given date.
     */
     Alarm::List alarmsTo( const KDateTime &to );
-    KDE_DEPRECATED Alarm::List alarmsTo( const QDateTime &to );
 
   private:
     /** inserts an event into its "proper place" in the calendar. */

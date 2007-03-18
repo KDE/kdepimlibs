@@ -100,13 +100,6 @@ class KCAL_EXPORT CalendarNull : public Calendar
     */
     bool reload() { return true; }
 
-    /**
-      @copydoc
-      Calendar::reload(const QString &)
-    */
-    bool reload( const QString &timeZoneId )
-      { Q_UNUSED( timeZoneId ); return true; }
-
   // Event Specific Methods //
 
     /**

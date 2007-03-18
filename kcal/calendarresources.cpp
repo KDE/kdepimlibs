@@ -788,16 +788,3 @@ void CalendarResources::slotSaveError( ResourceCalendar *r, const QString &err )
 }
 
 #include "calendarresources.moc"
-
-// DEPRECATED methods
-Alarm::List CalendarResources::alarmsTo( const QDateTime &to )
-{ return alarmsTo(KDateTime(to, timeSpec())); }
-
-bool CalendarResources::reload( const QString &tz )
-{
-  save();
-  close();
-  setTimeZoneId( tz );
-  load();
-  return true;
-}

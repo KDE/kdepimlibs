@@ -517,12 +517,3 @@ void Alarm::customPropertyUpdated()
 {
   if ( d->mParent ) d->mParent->updated();
 }
-
-// DEPRECATED methods
-void Alarm::setTime( const QDateTime &alarmTime )
-{
-  if (d->mParent && d->mParent->dtStart().isValid())   // use start as best guess for time zone
-    setTime(KDateTime(alarmTime, d->mParent->dtStart().timeSpec()));
-  else
-    setTime(KDateTime(alarmTime));  // use local time zone
-}

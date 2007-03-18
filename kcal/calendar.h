@@ -4,6 +4,7 @@
     Copyright (c) 1998 Preston Brown <pbrown@kde.org>
     Copyright (c) 2001,2003,2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+    Copyright (c) 2006 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -325,10 +326,6 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       @return true if the reload was successful; otherwise false.
     */
     virtual bool reload() = 0;
-    /** Use reload() plus setTimeZoneId() instead. */
-
-    virtual KDE_DEPRECATED
-    bool reload( const QString &tz ) = 0;
 
     /**
       Determine if the calendar is currently being saved.
@@ -570,7 +567,6 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       timestamp.
     */
     virtual Event::List rawEventsForDate( const KDateTime &dt ) = 0;
-    KDE_DEPRECATED Event::List rawEventsForDate( const QDateTime &qdt );
 
     /**
       Returns an unfiltered list of all Events occurring within a date range.

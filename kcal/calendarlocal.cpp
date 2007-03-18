@@ -482,19 +482,3 @@ Journal::List CalendarLocal::rawJournalsForDate( const QDate &date )
   }
   return journalList;
 }
-
-// DEPRECATED methods
-#include "icaltimezones.h"
-Alarm::List CalendarLocal::alarmsTo( const QDateTime &to )
-{ return alarmsTo(KDateTime(to, timeSpec())); }
-
-bool CalendarLocal::reload( const QString &tz )
-{
-  const QString filename = d->mFileName;
-  save();
-  close();
-  d->mFileName = filename;
-  setTimeZoneId( tz );
-  FileStorage storage( this, d->mFileName );
-  return storage.load();
-}

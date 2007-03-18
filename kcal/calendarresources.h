@@ -183,8 +183,6 @@ class KCAL_EXPORT CalendarResources :
      * @return success or failure
      */
     bool reload();
-    /** Use reload() plus setTimeZoneId() instead. */
-    KDE_DEPRECATED bool reload( const QString &tz );
 
     /**
        Clear out the current Calendar, freeing all used memory etc.
@@ -601,7 +599,6 @@ class KCAL_EXPORT CalendarResources :
        @return the list of Alarms occurring before the specified KDateTime.
     */
     Alarm::List alarmsTo( const KDateTime &to );
-    KDE_DEPRECATED Alarm::List alarmsTo( const QDateTime &to );
 
   Q_SIGNALS:
     /**
