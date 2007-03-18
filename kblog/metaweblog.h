@@ -34,7 +34,7 @@
   @file
 
   This file is part of the API for accessing Blog Servers
-  and defines the #APIMetaWeblog class.
+  and defines the APIMetaWeblog class.
 
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
@@ -43,7 +43,23 @@
  */
 
 namespace KBlog {
+/**
+  @brief
+  A class that can be used for access to MetaWeblog API blogs. Almost every blog server
+  supports MetaWeblog API . Compared to Blogger API 1.0 it is a superset of functions added to the its definition. MetaWeblog API is much more functional, but has some drawbacks, e.g. security when compared to Blogger API 2.0 which is based on Atom API and quite new.
 
+  @code
+  APIBlog* myblog = new APIMetaWeblog( "http://example.com/xmlrpc/gateway.php" );
+  KBlog::BlogPosting *post = new BlogPosting();
+  post->setUserId( "some_user_id" );
+  post->setTitle( "This is the title." );
+  post->setContent( "Here is some the content..." );
+  myblog->createPosting( posting );
+  @endcode
+
+  @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
+  @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
+ */
 class KBLOG_EXPORT APIMetaWeblog : public APIBlog
 {
   Q_OBJECT

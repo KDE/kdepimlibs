@@ -34,7 +34,7 @@
   @file
 
   This file is part of the API for accessing Blog Servers
-  and defines the #APIBlogger class.
+  and defines the APIBlogger class.
 
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
@@ -43,7 +43,23 @@
  */
 
 namespace KBlog {
+/**
+  @brief
+  A class that can be used for access to Blogger API 1.0 blogs. Almost every blog server
+  supports Blogger API 1.0 . Compared to MetaWeblog API it is not as functional and is obsolete compared to Blogger API 2.0 which uses Atom API instead of Xml-Rpc.
 
+  @code
+  APIBlog* myblog = new APIBlogger( "http://example.com/xmlrpc/gateway.php" );
+  KBlog::BlogPosting *post = new BlogPosting();
+  post->setUserId( "some_user_id" );
+  post->setTitle( "This is the title." );
+  post->setContent( "Here is some the content..." );
+  myblog->createPosting( posting );
+  @endcode
+
+  @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
+  @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
+ */
 class KBLOG_EXPORT APIBlogger : public APIBlog
 {
   Q_OBJECT

@@ -49,6 +49,7 @@ This is the main interface for blog backends
   \par Maintainer: Christian Weilbach \<christian\@whiletaker.homeip.net\>
  */
 
+/** Namespace for blog related classes. */
 namespace KBlog {
 
 /**
@@ -58,7 +59,6 @@ namespace KBlog {
   @code
     KBlog::BlogPosting *post = new BlogPosting();
     post->setUserId( "some_user_id" );
-    post->setBlogId( "some_blog_id" );
     post->setTitle( "This is the title." );
     post->setContent( "Here is some the content..." );
   @endcode
