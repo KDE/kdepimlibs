@@ -28,6 +28,8 @@
 
 #include <QtCore/QList>
 
+#include <KDateTime>
+
 using namespace KBlog;
 
 APIBlogger::APIBloggerPrivate::APIBloggerPrivate()
@@ -197,11 +199,11 @@ bool APIBlogger::APIBloggerPrivate::readPostingFromMap( BlogPosting *post, const
   QStringList mapkeys = postInfo.keys();
   kDebug() << endl << "Keys: " << mapkeys.join(", ") << endl << endl;
   
-  KDateTime dt( postInfo[ "dateCreated" ].toDateTime() );
+  KDateTime dt( postInfo[ "dateCreated" ].toDateTime(), KDateTime::Spec::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setCreationDateTime( dt );
   }
-  dt = KDateTime ( postInfo[ "lastModified" ].toDateTime() );
+  dt = KDateTime ( postInfo[ "lastModified" ].toDateTime(), KDateTime::Spec::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setModificationDateTime( dt );
   }

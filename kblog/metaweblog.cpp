@@ -107,8 +107,7 @@ void APIMetaWeblog::modifyPosting( KBlog::BlogPosting* posting )
   map["categories"]=list;
   map["description"]=posting->content();
   map["title"]=posting->title();
-  KDateTime date;
-  map["dateCreated"]=date.currentUtcDateTime().dateTime();
+  map["lastModified"]=posting->modificationDateTime().toUtc().dateTime();
   args << map;
   args << QVariant( posting->publish() );
   d->mXmlRpcClient->call( "metaWeblog.editPost", args, 
@@ -131,7 +130,7 @@ void APIMetaWeblog::createPosting( KBlog::BlogPosting* posting )
   map["categories"]=list;
   map["description"]=posting->content();
   map["title"]=posting->title();
-  map["dateCreated"]=posting->creationDateTime().dateTime(); // TODO use original date of result?
+  map["dateCreated"]=posting->creationDateTime().toUtc().dateTime();
   args << map;
   args << QVariant( posting->publish() );
   d->mXmlRpcClient->call( "metaWeblog.newPost", args, 

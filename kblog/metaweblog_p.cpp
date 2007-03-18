@@ -29,6 +29,8 @@
 #include <QtCore/QList>
 #include <QtCore/QVariant>
 
+#include <KDateTime>
+
 using namespace KBlog;
 
 APIMetaWeblog::APIMetaWeblogPrivate::APIMetaWeblogPrivate()
@@ -217,11 +219,11 @@ bool APIMetaWeblog::APIMetaWeblogPrivate::readPostingFromMap( BlogPosting *post,
   QStringList mapkeys = postInfo.keys();
   kDebug() << endl << "Keys: " << mapkeys.join(", ") << endl << endl;
   
-  KDateTime dt = KDateTime( postInfo[ "dateCreated" ].toDateTime() );
+  KDateTime dt = KDateTime( postInfo[ "dateCreated" ].toDateTime(), KDateTime::Spec::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setCreationDateTime( dt );
   }
-  dt = KDateTime( postInfo[ "lastModified" ].toDateTime() );
+  dt = KDateTime( postInfo[ "lastModified" ].toDateTime(), KDateTime::Spec::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setModificationDateTime( dt );
   }
