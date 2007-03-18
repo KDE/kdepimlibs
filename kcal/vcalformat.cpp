@@ -124,10 +124,12 @@ bool VCalFormat::save(Calendar *calendar, const QString &fileName)
 
 bool VCalFormat::fromString( Calendar *calendar, const QString &text )
 {
-  // TODO: Factor out VCalFormat::fromString()
-  mCalendar = calendar;
+  return fromRawString( calendar, text.toUtf8() );
+}
 
-  QByteArray data = text.toUtf8();
+bool VCalFormat::fromRawString( Calendar *calendar, const QByteArray &data )
+{
+  mCalendar = calendar;
 
   if ( !data.size() ) return false;
 

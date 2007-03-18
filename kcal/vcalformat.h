@@ -58,6 +58,7 @@ class KCAL_EXPORT VCalFormat : public CalFormat
       @return true on success, otherwise false
     */
     bool load( Calendar *calendar, const QString &fileName );
+
     /**
       Writes out the given calendar to disk in vCalendar format.
 
@@ -65,49 +66,83 @@ class KCAL_EXPORT VCalFormat : public CalFormat
       @param fileName the name of the file
       @return true on success, otherwise false
     */
-    bool save(Calendar *calendar, const QString &fileName);
+    bool save( Calendar *calendar, const QString &fileName );
 
     /**
       Parse string and populate calendar with that information.
     */
-    bool fromString( Calendar *, const QString & );
+    bool fromString( Calendar *calendar, const QString &text );
+
     /**
       Return calendar information as string.
     */
-    QString toString( Calendar * );
+    QString toString( Calendar *calendar );
+
+    /**
+      Parse string and return first vcal component of a raw byte array of
+      a utf8 encoded string. This is an overload used for efficiency reading
+      to avoid utf8 conversions, which are expensive, when reading from disk.
+    */
+    bool fromRawString( Calendar *calendar, const QByteArray &data );
 
   protected:
-    /** translates a VObject of the TODO type into a Event */
-    Todo *VTodoToEvent(VObject *vtodo);
-    /** translates a VObject into a Event and returns a pointer to it. */
-    Event *VEventToEvent(VObject *vevent);
-    /** translate a Event into a VTodo-type VObject and return pointer */
-    VObject *eventToVTodo(const Todo *anEvent);
-    /** translate a Event into a VObject and returns a pointer to it. */
-    VObject* eventToVEvent(const Event *anEvent);
+    /**
+      Translates a VObject of the TODO type into an Event.
+    */
+    Todo *VTodoToEvent( VObject *vtodo );
 
-    /** takes a QDate and returns a string in the format YYYYMMDDTHHMMSS */
-    QString qDateToISO(const QDate &);
-    /** takes a QDateTime and returns a string in format YYYYMMDDTHHMMSS */
-    QString kDateTimeToISO(const KDateTime &, bool zulu=true);
-    /** takes a string in the format YYYYMMDDTHHMMSS and returns a
-     * valid QDateTime. */
-    KDateTime ISOToKDateTime(const QString & dtStr);
-    /** takes a string in the format YYYYMMDD and returns a
-     * valid QDate. */
-    QDate ISOToQDate(const QString & dtStr);
-    /** takes a vCalendar tree of VObjects, and puts all of them that have
-     * the "event" property into the dictionary, todos in the todo-list, etc. */
-    void populate(VObject *vcal);
+    /**
+      Translates a VObject into a Event and returns a pointer to it.
+    */
+    Event *VEventToEvent( VObject *vevent );
 
-    /** takes a number 0 - 6 and returns the two letter string of that day,
-      * i.e. MO, TU, WE, etc. */
-    const char *dayFromNum(int day);
+    /**
+      Translates an Event into a VTodo-type VObject and return pointer.
+    */
+    VObject *eventToVTodo( const Todo *anEvent );
+
+    /**
+      Translates an Event into a VObject and returns a pointer to it.
+    */
+    VObject* eventToVEvent( const Event *anEvent );
+
+    /**
+      Takes a QDate and returns a string in the format YYYYMMDDTHHMMSS.
+    */
+    QString qDateToISO( const QDate &date );
+
+    /**
+      Takes a QDateTime and returns a string in format YYYYMMDDTHHMMSS.
+    */
+    QString kDateTimeToISO( const KDateTime &date, bool zulu=true );
+
+    /**
+      Takes a string in YYYYMMDDTHHMMSS format and returns a valid QDateTime.
+    */
+    KDateTime ISOToKDateTime( const QString &dtStr );
+
+    /**
+      Takes a string in the YYYYMMDD format and returns a valid QDate.
+    */
+    QDate ISOToQDate( const QString &dtStr );
+
+    /**
+      Takes a vCalendar tree of VObjects, and puts all of them that have the
+      "event" property into the dictionary, todos in the todo-list, etc.
+    */
+    void populate( VObject *vcal );
+
+    /**
+      Takes a number 0 - 6 and returns the two letter string of that day,
+      i.e. MO, TU, WE, etc.
+    */
+    const char *dayFromNum( int day );
+
     /** the reverse of the above function. */
-    int numFromDay(const QString &day);
+    int numFromDay( const QString &day );
 
-    Attendee::PartStat readStatus(const char *s) const;
-    QByteArray writeStatus(Attendee::PartStat status) const;
+    Attendee::PartStat readStatus( const char *s ) const;
+    QByteArray writeStatus( Attendee::PartStat status ) const;
 
   private:
     Calendar *mCalendar;
