@@ -93,7 +93,7 @@ void ManagerImpl::readConfig( KConfig *cfg )
   }
 
   mStandard = 0;
-  KConfigGroup group= mConfig->group( "General" );
+  KConfigGroup group = mConfig->group( "General" );
 
   QStringList keys = group.readEntry( "ResourceKeys", QStringList() );
   keys += group.readEntry( "PassiveResourceKeys", QStringList() );
@@ -135,7 +135,7 @@ void ManagerImpl::writeConfig( KConfig *cfg )
   // And then the general group
 
   kDebug(5650) << "Saving general info" << endl;
-  KConfigGroup group= mConfig->group( "General" );
+  KConfigGroup group = mConfig->group( "General" );
   group.writeEntry( "ResourceKeys", activeKeys );
   group.writeEntry( "PassiveResourceKeys", passiveKeys );
   if ( mStandard )
@@ -311,11 +311,11 @@ Resource *ManagerImpl::readResourceConfig( const QString &identifier,
     return 0;
   }
 
-  KConfigGroup group= mConfig->group( "Resource_" + identifier );
+  KConfigGroup group = mConfig->group( "Resource_" + identifier );
 
   QString type = group.readEntry( "ResourceType" );
   QString name = group.readEntry( "ResourceName" );
-  Resource *resource = mFactory->resource( type, mConfig );
+  Resource *resource = mFactory->resource( type, group );
   if ( !resource ) {
     kDebug(5650) << "Failed to create resource with id " << identifier << endl;
     return 0;
@@ -324,7 +324,7 @@ Resource *ManagerImpl::readResourceConfig( const QString &identifier,
   if ( resource->identifier().isEmpty() )
     resource->setIdentifier( identifier );
 
-  group= mConfig->group("General" );
+  group = mConfig->group( "General" );
 
   QString standardKey = group.readEntry( "Standard" );
   if ( standardKey == identifier ) {
@@ -348,37 +348,37 @@ void ManagerImpl::writeResourceConfig( Resource *resource, bool checkActive )
 
   if ( !mConfig ) createStandardConfig();
 
-  mConfig->setGroup( "Resource_" + key );
-  resource->writeConfig( mConfig );
+  KConfigGroup group( mConfig, "Resource_" + key );
+  resource->writeConfig( group );
 
-  mConfig->setGroup( "General" );
-  QString standardKey = mConfig->readEntry( "Standard" );
+  group = mConfig->group( "General" );
+  QString standardKey = group.readEntry( "Standard" );
 
   if ( resource == mStandard  && standardKey != key )
-    mConfig->writeEntry( "Standard", resource->identifier() );
+    group.writeEntry( "Standard", resource->identifier() );
   else if ( resource != mStandard && standardKey == key )
-    mConfig->writeEntry( "Standard", "" );
+    group.writeEntry( "Standard", "" );
 
   if ( checkActive ) {
-    QStringList activeKeys = mConfig->readEntry( "ResourceKeys", QStringList() );
-    QStringList passiveKeys = mConfig->readEntry( "PassiveResourceKeys", QStringList() );
+    QStringList activeKeys = group.readEntry( "ResourceKeys", QStringList() );
+    QStringList passiveKeys = group.readEntry( "PassiveResourceKeys", QStringList() );
     if ( resource->isActive() ) {
       if ( passiveKeys.contains( key ) ) { // remove it from passive list
         passiveKeys.removeAll( key );
-        mConfig->writeEntry( "PassiveResourceKeys", passiveKeys );
+        group.writeEntry( "PassiveResourceKeys", passiveKeys );
       }
       if ( !activeKeys.contains( key ) ) { // add it to active list
         activeKeys.append( key );
-        mConfig->writeEntry( "ResourceKeys", activeKeys );
+        group.writeEntry( "ResourceKeys", activeKeys );
       }
     } else if ( !resource->isActive() ) {
       if ( activeKeys.contains( key ) ) { // remove it from active list
         activeKeys.removeAll( key );
-        mConfig->writeEntry( "ResourceKeys", activeKeys );
+        group.writeEntry( "ResourceKeys", activeKeys );
       }
       if ( !passiveKeys.contains( key ) ) { // add it to passive list
         passiveKeys.append( key );
-        mConfig->writeEntry( "PassiveResourceKeys", passiveKeys );
+        group.writeEntry( "PassiveResourceKeys", passiveKeys );
       }
     }
   }
@@ -392,7 +392,7 @@ void ManagerImpl::removeResource( Resource *resource )
 
   if ( !mConfig ) createStandardConfig();
 
-  KConfigGroup group= mConfig->group( "General" );
+  KConfigGroup group = mConfig->group( "General" );
   QStringList activeKeys = group.readEntry( "ResourceKeys", QStringList() );
   if ( activeKeys.contains( key ) ) {
     activeKeys.removeAll( key );
@@ -403,7 +403,7 @@ void ManagerImpl::removeResource( Resource *resource )
     group.writeEntry( "PassiveResourceKeys", passiveKeys );
   }
 
-  QString standardKey = mConfig->readEntry( "Standard" );
+  QString standardKey = group.readEntry( "Standard" );
   if ( standardKey == key ) {
     group.writeEntry( "Standard", "" );
   }

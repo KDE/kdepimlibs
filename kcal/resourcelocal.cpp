@@ -54,48 +54,52 @@
 
 using namespace KCal;
 
-ResourceLocal::ResourceLocal( const KConfig *config )
-  : ResourceCached( config ), d( new ResourceLocal::Private() )
+ResourceLocal::ResourceLocal()
+  : ResourceCached(), d( new ResourceLocal::Private() )
 {
   d->mLock = 0;
-  if ( config ) {
-    QString url = config->readPathEntry( "CalendarURL" );
-    d->mURL = KUrl( url );
+  d->mURL = KUrl();
+  d->mFormat = new ICalFormat();
+  init();
+}
 
-    QString format = config->readEntry( "Format" );
-    if ( format == "ical" ) {
-      d->mFormat = new ICalFormat();
-    } else if ( format == "vcal" ) {
-      d->mFormat = new VCalFormat();
-    } else {
-      d->mFormat = new ICalFormat();
-    }
+ResourceLocal::ResourceLocal( const KConfigGroup &group )
+  : ResourceCached( group ), d( new ResourceLocal::Private() )
+{
+  d->mLock = 0;
+  QString url = group.readPathEntry( "CalendarURL" );
+  d->mURL = KUrl( url );
+
+  QString format = group.readEntry( "Format" );
+  if ( format == "ical" ) {
+    d->mFormat = new ICalFormat();
+  } else if ( format == "vcal" ) {
+    d->mFormat = new VCalFormat();
   } else {
-    d->mURL = KUrl();
     d->mFormat = new ICalFormat();
   }
   init();
 }
 
 ResourceLocal::ResourceLocal( const QString &fileName )
-  : ResourceCached( 0 ), d( new ResourceLocal::Private )
+  : ResourceCached(), d( new ResourceLocal::Private )
 {
   d->mURL = KUrl::fromPath( fileName );
   d->mFormat = new ICalFormat();
   init();
 }
 
-void ResourceLocal::writeConfig( KConfig *config )
+void ResourceLocal::writeConfig( KConfigGroup &group )
 {
   kDebug(5800) << "ResourceLocal::writeConfig()" << endl;
 
-  ResourceCalendar::writeConfig( config );
-  config->writePathEntry( "CalendarURL", d->mURL.prettyUrl() );
+  ResourceCalendar::writeConfig( group );
+  group.writePathEntry( "CalendarURL", d->mURL.prettyUrl() );
 
   if ( typeid( *d->mFormat ) == typeid( ICalFormat ) ) {
-    config->writeEntry( "Format", "ical" );
+    group.writeEntry( "Format", "ical" );
   } else if ( typeid( *d->mFormat ) == typeid( VCalFormat ) ) {
-    config->writeEntry( "Format", "vcal" );
+    group.writeEntry( "Format", "vcal" );
   } else {
     kDebug(5800) << "ERROR: Unknown format type" << endl;
   }

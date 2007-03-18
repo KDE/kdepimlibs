@@ -49,12 +49,13 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
     friend class ResourceLocalDirConfig;
 
   public:
-    explicit ResourceLocalDir( const KConfig * );
+    ResourceLocalDir();
+    explicit ResourceLocalDir( const KConfigGroup &group );
     explicit ResourceLocalDir( const QString& fileName );
     virtual ~ResourceLocalDir();
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig* config );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     KABC::Lock *lock();
 

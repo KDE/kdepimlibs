@@ -48,15 +48,15 @@
 namespace KRES {
 
 ResourcePageInfo::ResourcePageInfo() {
-  mManager = 0L;
-  mConfig = 0L;
+  mManager = 0;
+  mConfig = 0;
 }
 
 ResourcePageInfo::~ResourcePageInfo() {
   //delete mManager;
-  mManager = 0L;
+  mManager = 0;
   //delete mConfig;
-  mConfig = 0L;
+  mConfig = 0;
 }
 
 
@@ -151,8 +151,7 @@ ConfigPage::ConfigPage( QWidget *parent )
 
   mLastItem = 0;
 
-  mConfig = new KConfig( "kcmkresourcesrc" );
-  mConfig->setGroup( "General" );
+  mConfigGroup = new KConfigGroup( new KConfig( "kcmkresourcesrc" ), "General" );
 
   load();
 }
@@ -164,9 +163,10 @@ ConfigPage::~ConfigPage()
     (*it)->mManager->removeObserver( this );
   }
 
-  mConfig->writeEntry( "CurrentFamily", mFamilyCombo->currentIndex() );
-  delete mConfig;
-  mConfig = 0;
+  mConfigGroup->writeEntry( "CurrentFamily", mFamilyCombo->currentIndex() );
+  delete mConfigGroup->config();
+  delete mConfigGroup;
+  mConfigGroup = 0;
 }
 
 void ConfigPage::load()
@@ -215,7 +215,7 @@ void ConfigPage::load()
   mFamilyCombo->clear();
   mFamilyCombo->insertItems( 0, familyDisplayNames );
 
-  int currentFamily = mConfig->readEntry( "CurrentFamily", 0 );
+  int currentFamily = mConfigGroup->readEntry( "CurrentFamily", 0 );
   mFamilyCombo->setCurrentIndex( currentFamily );
   slotFamilyChanged( currentFamily );
   emit changed( false );

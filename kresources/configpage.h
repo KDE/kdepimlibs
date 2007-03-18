@@ -92,7 +92,7 @@ class KRESOURCES_EXPORT ConfigPage : public QWidget, public ManagerObserver<Reso
 
     Manager<Resource>* mCurrentManager;
     KConfig* mCurrentConfig;
-    KConfig* mConfig;
+    KConfigGroup* mConfigGroup;
     QString mFamily;
     QStringList mFamilyMap;
     QList<KSharedPtr<ResourcePageInfo> > mInfoMap;

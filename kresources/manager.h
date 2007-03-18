@@ -314,7 +314,7 @@ class Manager : private ManagerNotifier
     */
     T *createResource( const QString& type )
     {
-      return dynamic_cast<T *>( mFactory->resource( type, 0 ) );
+      return dynamic_cast<T *>( mFactory->resource( type ) );
     }
 
     /**

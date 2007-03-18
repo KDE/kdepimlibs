@@ -40,8 +40,19 @@
 
 using namespace KCal;
 
-ResourceCached::ResourceCached( const KConfig *config )
-  : ResourceCalendar( config ), mCalendar( QLatin1String( "UTC" ) ),
+ResourceCached::ResourceCached()
+  : ResourceCalendar(), mCalendar( QLatin1String( "UTC" ) ),
+    mReloadPolicy( ReloadNever ),  mReloadInterval( 10 ),
+    mInhibitReload( false ), mReloaded( false ),
+    mSavePending( false ), mSavePolicy( SaveNever ), mSaveInterval( 10 ),
+    mIdMapper( "kcal/uidmaps/" ), d( 0 )
+{
+  connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( slotReload() ) );
+  connect( &mSaveTimer, SIGNAL( timeout() ), SLOT( slotSave() ) );
+}
+
+ResourceCached::ResourceCached( const KConfigGroup &group )
+  : ResourceCalendar( group ), mCalendar( QLatin1String( "UTC" ) ),
     mReloadPolicy( ReloadNever ),  mReloadInterval( 10 ),
     mInhibitReload( false ), mReloaded( false ),
     mSavePending( false ), mSavePolicy( SaveNever ), mSaveInterval( 10 ),
@@ -107,17 +118,17 @@ int ResourceCached::saveInterval() const
   return mSaveInterval;
 }
 
-void ResourceCached::readConfig( const KConfig *config )
+void ResourceCached::readConfig( const KConfigGroup &group )
 {
-  mReloadPolicy = config->readEntry( "ReloadPolicy", int(ReloadNever) );
-  mReloadInterval = config->readEntry( "ReloadInterval", 10 );
+  mReloadPolicy = group.readEntry( "ReloadPolicy", int(ReloadNever) );
+  mReloadInterval = group.readEntry( "ReloadInterval", 10 );
 
-  mSaveInterval = config->readEntry( "SaveInterval", 10 );
-  mSavePolicy = config->readEntry( "SavePolicy", int(SaveNever) );
+  mSaveInterval = group.readEntry( "SaveInterval", 10 );
+  mSavePolicy = group.readEntry( "SavePolicy", int(SaveNever) );
 
-  QDateTime dt = config->readEntry( "LastLoad", QDateTime() );
+  QDateTime dt = group.readEntry( "LastLoad", QDateTime() );
   mLastLoad = KDateTime( dt, KDateTime::UTC );
-  dt = config->readEntry( "LastSave", QDateTime() );
+  dt = group.readEntry( "LastSave", QDateTime() );
   mLastSave = KDateTime( dt, KDateTime::UTC );
 
   setupSaveTimer();
@@ -146,16 +157,16 @@ void ResourceCached::setupReloadTimer()
   }
 }
 
-void ResourceCached::writeConfig( KConfig *config )
+void ResourceCached::writeConfig( KConfigGroup &group )
 {
-  config->writeEntry( "ReloadPolicy", mReloadPolicy );
-  config->writeEntry( "ReloadInterval", mReloadInterval );
+  group.writeEntry( "ReloadPolicy", mReloadPolicy );
+  group.writeEntry( "ReloadInterval", mReloadInterval );
 
-  config->writeEntry( "SavePolicy", mSavePolicy );
-  config->writeEntry( "SaveInterval", mSaveInterval );
+  group.writeEntry( "SavePolicy", mSavePolicy );
+  group.writeEntry( "SaveInterval", mSaveInterval );
 
-  config->writeEntry( "LastLoad", mLastLoad.toUtc().dateTime() );
-  config->writeEntry( "LastSave", mLastSave.toUtc().dateTime() );
+  group.writeEntry( "LastLoad", mLastLoad.toUtc().dateTime() );
+  group.writeEntry( "LastSave", mLastSave.toUtc().dateTime() );
 }
 
 bool ResourceCached::addEvent(Event *event)

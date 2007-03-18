@@ -48,11 +48,11 @@ namespace KRES {
  *
  * // to allow a transparent configuration of resources, we have
  * // to use a kconfig object.
- * KConfig config( "tst" );
- * config.writePathEntry( "FileName", "/home/foobar/test.vcf" );// resource dependent
- * config.writeEntry( "FileFormat", "vcard" );                  // resource dependent
+ * KConfigGroup group( "tst", "General" );
+ * group.writePathEntry( "FileName", "/home/foobar/test.vcf" );// resource dependent
+ * group.writeEntry( "FileFormat", "vcard" );                  // resource dependent
  *
- * KABC::Resource *res = factory->resource( "file", &config );
+ * KABC::Resource *res = factory->resource( "file", group );
  *
  * // do something with resource
  *
@@ -83,10 +83,10 @@ class KRESOURCES_EXPORT Factory
      * if resource type doesn't exist.
      *
      * @param type   The type of the resource, returned by typeNames()
-     * @param config The config object where the resource get it settings from,
-     *               or 0 if a resource with default values should be created.
+     * @param config The configuration group where the resource should get its settings from.
+     *               If @p group's config object is 0, a resource with default values will be created.
      */
-    Resource *resource( const QString& type, const KConfig *config );
+    Resource *resource( const QString& type, const KConfigGroup &group = KConfigGroup(0,0) );
 
     /**
      * Returns a list of all available resource types.

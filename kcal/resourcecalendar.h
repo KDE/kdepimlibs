@@ -56,12 +56,13 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
 {
     Q_OBJECT
   public:
-    explicit ResourceCalendar( const KConfig * );
+    ResourceCalendar();
+    explicit ResourceCalendar( const KConfigGroup &group );
     virtual ~ResourceCalendar();
 
     void setResolveConflict( bool b);
 
-    virtual void writeConfig( KConfig* config );
+    virtual void writeConfig( KConfigGroup &group );
 
     /**
       Return rich text with info about the resource. Adds standard info and
@@ -180,7 +181,6 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       Get unfiltered events for date \a dt.
     */
     virtual Event::List rawEventsForDate( const KDateTime &dt ) = 0;
-    KDE_DEPRECATED Event::List rawEventsForDate( const QDateTime &qdt );
 
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
@@ -309,8 +309,6 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       Return all alarms which occur before given date.
     */
     virtual Alarm::List alarmsTo( const KDateTime &to ) = 0;
-    KDE_DEPRECATED Alarm::List alarmsTo( const QDateTime &to );
-
 
     /** Returns a list of all incideces */
     Incidence::List rawIncidences();

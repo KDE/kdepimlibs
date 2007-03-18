@@ -127,7 +127,7 @@ QString Factory::typeDescription( const QString &type ) const
   return ptr->comment();
 }
 
-Resource *Factory::resource( const QString& type, const KConfig *config )
+Resource *Factory::resource( const QString& type, const KConfigGroup &group )
 {
   kDebug(5650) << "Factory::resource( " << type << ", config )" << endl;
 
@@ -151,7 +151,7 @@ Resource *Factory::resource( const QString& type, const KConfig *config )
     return 0;
   }
 
-  Resource *resource = pluginFactory->resource( config );
+  Resource *resource = pluginFactory->resource( group );
   if ( !resource ) {
     kDebug(5650) << "'" << ptr->library() << "' is not a " + mResourceFamily +
                      " plugin." << endl;

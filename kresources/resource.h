@@ -28,6 +28,7 @@
 #include <klibloader.h>
 
 class KConfig;
+class KConfigGroup;
 
 namespace KRES {
 
@@ -79,11 +80,22 @@ class KRESOURCES_EXPORT Resource : public QObject
     typedef QList<Resource *> List;
 
     /**
+     * Constructor. Construct resource with default settings.
+     */
+    Resource();
+
+    /**
+     * Constructor. Construct resource from configuration group.
+     * @param group Configuration group to read persistence information from
+     */
+    explicit Resource( const KConfigGroup &group );
+
+    /**
      * Constructor. Construct resource from config.
      * @param config Configuration to read persistence information from.
      *               If config is 0, create object using default settings.
      */
-    explicit Resource( const KConfig *config );
+//    explicit KDE_DEPRECATED Resource( const KConfig *config );
 
     /**
      * Destructor.
@@ -94,9 +106,9 @@ class KRESOURCES_EXPORT Resource : public QObject
      * Write configuration information for this resource to a configuration
      * file. If you override this method, remember to call Resource::writeConfig
      * or Terrible Things(TM) will happen.
-     * @param config Configuration to write persistence information to.
+     * @param group Configuration group to write persistence information to.
      */
-    virtual void writeConfig( KConfig *config );
+    virtual void writeConfig( KConfigGroup &group );
 
     /**
      * Open this resource, if it not already open. Increase the open
@@ -201,7 +213,7 @@ class KRESOURCES_EXPORT Resource : public QObject
 class KRESOURCES_EXPORT PluginFactoryBase : public KLibFactory
 {
   public:
-    virtual Resource *resource( const KConfig *config ) = 0;
+    virtual Resource *resource( const KConfigGroup &group ) = 0;
 
     virtual ConfigWidget *configWidget( QWidget *parent ) = 0;
 
@@ -217,9 +229,9 @@ template<class TR,class TC>
 class PluginFactory : public PluginFactoryBase
 {
   public:
-    Resource *resource( const KConfig *config )
+    Resource *resource( const KConfigGroup &group )
     {
-      return new TR( config );
+      return new TR( group );
     }
 
     ConfigWidget *configWidget( QWidget *parent )

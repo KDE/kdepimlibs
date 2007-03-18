@@ -73,11 +73,12 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
         SyncCache        // update the cache file before loading, or upload cache after saving
     };
 
-    explicit ResourceCached( const KConfig * );
+    ResourceCached();
+    explicit ResourceCached( const KConfigGroup &group );
     virtual ~ResourceCached();
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig *config );
+    void readConfig( const KConfigGroup &group );
+    void writeConfig( KConfigGroup &group );
 
     /**
       Set reload policy. This controls when the cache is refreshed.

@@ -37,8 +37,6 @@
 #include <kurl.h>
 #include <kdirwatch.h>
 
-class KConfig;
-
 #include "calendarlocal.h"
 #include "kcal.h"
 #include "resourcecached.h"
@@ -59,12 +57,17 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
   public:
 
     /**
+      Constructs a resource using default  configuration information.
+    */
+    ResourceLocal();
+
+    /**
       Constructs a resource from configuration information
       stored in a KConfig object.
 
-      @param config the KConfig object to store as a resource.
+      @param group the configuration group to read the resource configuration from
     */
-    explicit ResourceLocal( const KConfig *config );
+    explicit ResourceLocal( const KConfigGroup &group );
 
     /**
       Constructs a resource for file named @p fileName.
@@ -81,7 +84,7 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     /**
       Writes KConfig @p config to a local file.
     **/
-    virtual void writeConfig( KConfig *config );
+    virtual void writeConfig( KConfigGroup &group );
 
     /**
       Returns the lock.

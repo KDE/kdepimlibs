@@ -44,18 +44,21 @@
 
 using namespace KCal;
 
-ResourceLocalDir::ResourceLocalDir( const KConfig *config )
-  : ResourceCached( config ), mLock( 0 ), d( 0 )
+ResourceLocalDir::ResourceLocalDir()
+  : ResourceCached(), mLock( 0 ), d( 0 )
 {
-  if ( config ) {
-    readConfig( config );
-  }
+  init();
+}
 
+ResourceLocalDir::ResourceLocalDir( const KConfigGroup &group )
+  : ResourceCached( group ), mLock( 0 ), d( 0 )
+{
+  readConfig( group );
   init();
 }
 
 ResourceLocalDir::ResourceLocalDir( const QString &dirName )
-  : ResourceCached( 0 ), d( 0 )
+  : ResourceCached(), d( 0 )
 {
   mURL = KUrl( dirName );
 
@@ -63,19 +66,19 @@ ResourceLocalDir::ResourceLocalDir( const QString &dirName )
 }
 
 
-void ResourceLocalDir::readConfig( const KConfig *config )
+void ResourceLocalDir::readConfig( const KConfigGroup &group )
 {
-  QString url = config->readPathEntry( "CalendarURL" );
+  QString url = group.readPathEntry( "CalendarURL" );
   mURL = KUrl( url );
 }
 
-void ResourceLocalDir::writeConfig( KConfig *config )
+void ResourceLocalDir::writeConfig( KConfigGroup &group )
 {
   kDebug(5800) << "ResourceLocalDir::writeConfig()" << endl;
 
-  ResourceCalendar::writeConfig( config );
+  ResourceCalendar::writeConfig( group );
 
-  config->writePathEntry( "CalendarURL", mURL.prettyUrl() );
+  group.writePathEntry( "CalendarURL", mURL.prettyUrl() );
 }
 
 void ResourceLocalDir::init()

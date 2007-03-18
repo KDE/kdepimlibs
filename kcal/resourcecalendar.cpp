@@ -32,10 +32,21 @@
 
 using namespace KCal;
 
-ResourceCalendar::ResourceCalendar( const KConfig *config )
-    : KRES::Resource( config ),mResolveConflict( false ),
+ResourceCalendar::ResourceCalendar()
+    : KRES::Resource(),
+      mResolveConflict( false ),
       mNoReadOnlyOnLoad( false ),
-      mInhibitSave( false ), d( 0 )
+      mInhibitSave( false ),
+      d( 0 )
+{
+}
+
+ResourceCalendar::ResourceCalendar( const KConfigGroup &group )
+    : KRES::Resource( group ),
+      mResolveConflict( false ),
+      mNoReadOnlyOnLoad( false ),
+      mInhibitSave( false ),
+      d( 0 )
 {
 }
 
@@ -63,11 +74,11 @@ QString ResourceCalendar::infoText() const
   return txt;
 }
 
-void ResourceCalendar::writeConfig( KConfig* config )
+void ResourceCalendar::writeConfig( KConfigGroup &group )
 {
 //  kDebug(5800) << "ResourceCalendar::writeConfig()" << endl;
 
-  KRES::Resource::writeConfig( config );
+  KRES::Resource::writeConfig( group );
 }
 
 Incidence *ResourceCalendar::incidence( const QString &uid )
@@ -210,10 +221,3 @@ bool ResourceCalendar::noReadOnlyOnLoad() const
 }
 
 #include "resourcecalendar.moc"
-
-// DEPRECATED methods
-Event::List ResourceCalendar::rawEventsForDate( const QDateTime &qdt )
-{ return rawEventsForDate(KDateTime(qdt, timeSpec())); }
-
-Alarm::List ResourceCalendar::alarmsTo( const QDateTime &to )
-{ return alarmsTo(KDateTime(to, timeSpec())); }

@@ -45,6 +45,7 @@ class Resource::ResourcePrivate
     bool mIsOpen;
 };
 
+/*
 Resource::Resource( const KConfig* config )
   : QObject( 0 ), d( new ResourcePrivate )
 {
@@ -65,21 +66,48 @@ Resource::Resource( const KConfig* config )
     d->mIdentifier = KRandom::randomString( 10 );
   }
 }
+*/
+
+Resource::Resource()
+  : QObject( 0 ), d( new ResourcePrivate )
+{
+  d->mOpenCount = 0;
+  d->mIsOpen = false;
+
+  d->mType = "type";
+  d->mName = i18n("resource");
+  d->mReadOnly = false;
+  d->mActive = true;
+  d->mIdentifier = KRandom::randomString( 10 );
+}
+
+Resource::Resource( const KConfigGroup& group )
+  : QObject( 0 ), d( new ResourcePrivate )
+{
+  d->mOpenCount = 0;
+  d->mIsOpen = false;
+
+  d->mType = group.readEntry( "ResourceType" );
+  d->mName = group.readEntry( "ResourceName" );
+  d->mReadOnly = group.readEntry("ResourceIsReadOnly", false);
+  d->mActive = group.readEntry("ResourceIsActive", true);
+  d->mIdentifier = group.readEntry( "ResourceIdentifier" );
+}
 
 Resource::~Resource()
 {
   delete d;
 }
 
-void Resource::writeConfig( KConfig* config )
+void Resource::writeConfig( KConfigGroup &group )
 {
   kDebug(5650) << "Resource::writeConfig()" << endl;
 
-  config->writeEntry( "ResourceType", d->mType );
-  config->writeEntry( "ResourceName", d->mName );
-  config->writeEntry( "ResourceIsReadOnly", d->mReadOnly );
-  config->writeEntry( "ResourceIsActive", d->mActive );
-  config->writeEntry( "ResourceIdentifier", d->mIdentifier );
+  group.writeEntry( "ResourceType", d->mType );
+  group.writeEntry( "ResourceName", d->mName );
+  group.writeEntry( "ResourceIsReadOnly", d->mReadOnly );
+  group.writeEntry( "ResourceIsActive", d->mActive );
+  group.writeEntry( "ResourceIdentifier", d->mIdentifier );
 }
 
 bool Resource::open()
