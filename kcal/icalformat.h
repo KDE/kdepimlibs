@@ -124,13 +124,14 @@ class KCAL_EXPORT ICalFormat : public CalFormat
     */
     QString timeZoneId() const;
 
-  protected:
     /**
       Parse string and return first ical component of a raw byte array of
       a utf8 encoded string. This is an overload used for efficiency reading
       to avoid utf8 conversions, which are expensive, when reading from disk.
     */
     bool fromRawString( Calendar * calendar, const QByteArray & );
+
+  protected:
     void setImplementation( ICalFormatImpl *impl );
 
   private:
