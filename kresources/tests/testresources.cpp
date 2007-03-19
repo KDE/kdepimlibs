@@ -11,7 +11,7 @@ using namespace KRES;
 class TestResource : public Resource
 {
   public:
-    TestResource() : Resource( 0 ) {}
+    TestResource() : Resource() {}
 
 };
 
