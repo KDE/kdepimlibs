@@ -74,10 +74,11 @@ int main(int argc, char *argv[])
   QString type = QString();
   if ( !args->getOption( "resource" ).isEmpty() )
     type = QString::fromLocal8Bit( args->getOption( "resource" ) );
-  KConfig *config = 0;
-  if ( !args->getOption( "configfile" ).isEmpty() )
-    config = new KConfig( KUrl( args->getOption( "configfile" ) ).url() );
-  kDebug() << KUrl( args->getOption( "configfile" ) ).url() << endl;
+  KConfigGroup *config = 0;
+  if ( !args->getOption( "configfile" ).isEmpty() ) {
+    KConfig _config( KUrl( args->getOption( "configfile" ) ).url() );
+    config = new KConfigGroup( &_config, "FRED" ); //TODO: replace FRED with a real group name
+  }
   KCal::TestResource test( type, config );
   test.setup();
   test.runAll();
@@ -88,7 +89,7 @@ int main(int argc, char *argv[])
 
 namespace KCal {
 
-TestResource::TestResource( const QString &type, KConfig *config )
+TestResource::TestResource( const QString &type, KConfigGroup *config )
  :m_resource_type( type ), m_config( config ), m_res( 0 )
 {}
 
@@ -116,7 +117,7 @@ void TestResource::setup()
   if ( m_config ) {
     kDebug() << "Reading config from file" << endl;
     KRES::Factory *factory = KRES::Factory::self( "calendar" );
-    m_res = dynamic_cast<ResourceCalendar*>( factory->resource( m_resource_type, m_config ) );
+    m_res = dynamic_cast<ResourceCalendar*>( factory->resource( m_resource_type, *m_config ) );
   } else {
     kDebug() << "Creating blank resource" << endl;
     m_res = manager->createResource( m_resource_type );

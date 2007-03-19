@@ -20,7 +20,7 @@
 #define TESTRESOURCE_H
 
 #include <QObject>
-class KConfig;
+class KConfigGroup;
 
 namespace KCal {
 
@@ -31,7 +31,7 @@ class TestResource : public QObject
     Q_OBJECT
 
 public:
-    TestResource( const QString& type, KConfig *config );
+    TestResource( const QString& type, KConfigGroup *config );
     void setup();
     void runAll();
     void cleanup();
@@ -48,7 +48,7 @@ public:
 private:
     bool check(const QString& txt, const QString &a, const QString &b);
     QString m_resource_type;
-    KConfig *m_config;
+    KConfigGroup *m_config;
     ResourceCalendar *m_res;
 };
 }
