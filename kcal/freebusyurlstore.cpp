@@ -52,16 +52,16 @@ FreeBusyUrlStore::~FreeBusyUrlStore()
 
 void FreeBusyUrlStore::writeUrl( const QString &email, const QString &url )
 {
-  mConfig->setGroup( email );
+  KConfigGroup group = mConfig->group(email);
 
-  mConfig->writeEntry( "url", url );
+  group.writeEntry( "url", url );
 }
 
 QString FreeBusyUrlStore::readUrl( const QString &email )
 {
-  mConfig->setGroup( email );
 
-  return mConfig->readEntry( "url" );
+  KConfigGroup group = mConfig->group(email);
+  return group.readEntry( "url" );
 }
 
 void FreeBusyUrlStore::sync()
