@@ -134,11 +134,11 @@ QByteArray NonMimeParser::guessMimeType( const QByteArray &fileName )
       } else if ( tmp == "TIFF" || tmp == "TIF") {
         mimeType = "image/tiff";
       } else if ( tmp == "XPM") {
-        mimeType = "image/x-xpm";
+        mimeType = "image/x-xpixmap";
       } else if ( tmp == "XBM") {
-        mimeType = "image/x-xbm";
+        mimeType = "image/x-xbitmap";
       } else if ( tmp == "BMP") {
-        mimeType = "image/x-bmp";
+        mimeType = "image/bmp";
       } else if ( tmp == "TXT" ||
                   tmp == "ASC" ||
                   tmp == "H" ||

@@ -848,7 +848,7 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*> & props,
           attach->unsetDataParser();
           attach->setOffset( d->device_->pos()+12 );
           attach->setSize( data.size()-16 );
-          attach->setMimeTag( "application/ms-tnef" );
+          attach->setMimeTag( "application/vnd.ms-tnef" );
           attach->setDisplayName( "Embedded Message" );
           kDebug() << "MAPI Embedded Message: size=" << data.size() << endl;
         }
