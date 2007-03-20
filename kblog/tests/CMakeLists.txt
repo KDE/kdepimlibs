@@ -23,7 +23,7 @@ add_test(kblog-testblogger ${EXECUTABLE_OUTPUT_PATH}/testblogger)
 
 set(testmetaweblog_SRCS testmetaweblog.cpp )
 
-kde4_automoc(${testblogger_SRCS})
+kde4_automoc(${testmetaweblog_SRCS})
 
 kde4_add_executable(testmetaweblog RUN_UNINSTALLED ${testmetaweblog_SRCS})
 
