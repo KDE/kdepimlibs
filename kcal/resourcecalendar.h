@@ -383,7 +383,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     {
        // the resource identifier is a sane fallback
        return resource;
-    };
+    }
 
     /**
       Get the identifier of the subresource associated with a specified
