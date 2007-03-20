@@ -98,6 +98,7 @@ void APIBlogger::modifyPosting( KBlog::BlogPosting* posting )
 {
   if ( !posting ) {
     kDebug() << "APIBlogger::modifyPosting: posting is null pointer" << endl;
+    return;
   }
     kDebug() << "Uploading Posting with postingId " << posting->postingId() << endl;
     QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
@@ -112,6 +113,7 @@ void APIBlogger::createPosting( KBlog::BlogPosting* posting )
 {
   if ( !posting ) {
     kDebug() << "APIBlogger::createPosting: posting is null pointer" << endl;
+    return;
   }
     kDebug() << "Creating new Posting with blogid " << blogId() << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
