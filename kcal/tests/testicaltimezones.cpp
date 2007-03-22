@@ -1,7 +1,7 @@
 /*
     This file is part of the kcal library.
 
-    Copyright (c) 2005,2006 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2005-2007 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -60,57 +60,57 @@ static QDateTime spring01     (QDate(2001,5,1),   QTime(7,0,0), Qt::UTC);
 // First daylight savings time has an end date, takes a break for a year,
 // and is then replaced by another
 static const char *VTZ_Western =
-  "BEGIN:VTIMEZONE\n"
-  "TZID:Test-Dummy-Western\n"
-  "LAST-MODIFIED:19870101T000000Z\n"
-  "TZURL:http://tz.reference.net/dummies/western\n"
-  "LOCATION:Zedland/Tryburgh\n"
-  "X-LIC-LOCATION:Wyland/Tryburgh\n"
-  "BEGIN:STANDARD\n"
-  "DTSTART:19671029T020000\n"
-  "RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\n"
-  "TZOFFSETFROM:-0400\n"
-  "TZOFFSETTO:-0500\n"
-  "TZNAME:WST\n"
-  "END:STANDARD\n\n"
-  "BEGIN:DAYLIGHT\n"
-  "DTSTART:19870405T020000\n"
-  "RRULE:FREQ=YEARLY;UNTIL=19970406T070000Z;BYDAY=1SU;BYMONTH=4\n"
-  "TZOFFSETFROM:-0500\n"
-  "TZOFFSETTO:-0400\n"
-  "TZNAME:WDT1\n"
-  "END:DAYLIGHT\n\n"
-  "BEGIN:DAYLIGHT\n"
-  "DTSTART:19990425T020000\n"
-  "RDATE;VALUE=DATE-TIME:20000430T020000\n"
-  "TZOFFSETFROM:-0500\n"
-  "TZOFFSETTO:-0400\n"
-  "TZNAME:WDT2\n"
-  "END:DAYLIGHT\n\n"
-  "END:VTIMEZONE\n\n";
+  "BEGIN:VTIMEZONE\r\n"
+  "TZID:Test-Dummy-Western\r\n"
+  "LAST-MODIFIED:19870101T000000Z\r\n"
+  "TZURL:http://tz.reference.net/dummies/western\r\n"
+  "LOCATION:Zedland/Tryburgh\r\n"
+  "X-LIC-LOCATION:Wyland/Tryburgh\r\n"
+  "BEGIN:STANDARD\r\n"
+  "DTSTART:19671029T020000\r\n"
+  "RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\n"
+  "TZOFFSETFROM:-0400\r\n"
+  "TZOFFSETTO:-0500\r\n"
+  "TZNAME:WST\r\n"
+  "END:STANDARD\r\n\r\n"
+  "BEGIN:DAYLIGHT\r\n"
+  "DTSTART:19870405T020000\r\n"
+  "RRULE:FREQ=YEARLY;UNTIL=19970406T070000Z;BYDAY=1SU;BYMONTH=4\r\n"
+  "TZOFFSETFROM:-0500\r\n"
+  "TZOFFSETTO:-0400\r\n"
+  "TZNAME:WDT1\r\n"
+  "END:DAYLIGHT\r\n\r\n"
+  "BEGIN:DAYLIGHT\r\n"
+  "DTSTART:19990425T020000\r\n"
+  "RDATE;VALUE=DATE-TIME:20000430T020000\r\n"
+  "TZOFFSETFROM:-0500\r\n"
+  "TZOFFSETTO:-0400\r\n"
+  "TZNAME:WDT2\r\n"
+  "END:DAYLIGHT\r\n\r\n"
+  "END:VTIMEZONE\r\n\r\n";
 
 // Standard time only
 static const char *VTZ_other =
-  "BEGIN:VTIMEZONE\n"
-  "TZID:Test-Dummy-Other\n"
-  "TZURL:http://tz.reference.net/dummies/other\n"
-  "X-LIC-LOCATION:Wyland/Tryburgh\n"
-  "BEGIN:STANDARD\n"
-  "DTSTART:19500101T000000\n"
-  "RDATE;VALUE=DATE-TIME:19500101T000000\n"
-  "TZOFFSETFROM:+0000\n"
-  "TZOFFSETTO:+0300\n"
-  "TZNAME:OST\n"
-  "END:STANDARD\n\n"
-  "END:VTIMEZONE\n\n";
+  "BEGIN:VTIMEZONE\r\n"
+  "TZID:Test-Dummy-Other\r\n"
+  "TZURL:http://tz.reference.net/dummies/other\r\n"
+  "X-LIC-LOCATION:Wyland/Tryburgh\r\n"
+  "BEGIN:STANDARD\r\n"
+  "DTSTART:19500101T000000\r\n"
+  "RDATE;VALUE=DATE-TIME:19500101T000000\r\n"
+  "TZOFFSETFROM:+0000\r\n"
+  "TZOFFSETTO:+0300\r\n"
+  "TZNAME:OST\r\n"
+  "END:STANDARD\r\n\r\n"
+  "END:VTIMEZONE\r\n\r\n";
 
 // CALENDAR component header and footer
 static const char *calendarHeader =
-"BEGIN:VCALENDAR\n"
-"PRODID:-//Libkcal//NONSGML ICalTimeZonesTest//EN\n"
-"VERSION:2.0\n";
+"BEGIN:VCALENDAR\r\n"
+"PRODID:-//Libkcal//NONSGML ICalTimeZonesTest//EN\r\n"
+"VERSION:2.0\r\n";
 static const char *calendarFooter =
-"END:CALENDAR\n";
+"END:CALENDAR\r\n";
 
 ///////////////////////////
 // ICalTimeZoneSource tests
