@@ -31,8 +31,8 @@
 #ifndef KTNEFPROPERTY_H
 #define KTNEFPROPERTY_H
 
-#include <QVariant>
-#include <QString>
+#include <QtCore/QVariant>
+#include <QtCore/QString>
 #include "ktnef.h"
 
 namespace KTnef {
@@ -83,6 +83,13 @@ public:
    * @param p is a #KTNEFProperty.
    */
   KTNEFProperty( const KTNEFProperty &p );
+
+  /**
+   * Destroys the property.
+   */
+  ~KTNEFProperty();
+
+  KTNEFProperty& operator=( const KTNEFProperty &other );
 
   /**
    * Returns the key string of the property.
@@ -145,10 +152,8 @@ public:
 
 private:
   //@cond PRIVATE
-  int _key;
-  int _type;
-  QVariant _value;
-  QVariant _name;
+  class Private;
+  Private* const d;
   //@endcond
 };
 

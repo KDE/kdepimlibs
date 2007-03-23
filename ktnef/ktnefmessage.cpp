@@ -28,8 +28,8 @@
  * @author Michael Goffioul
  */
 
-#include <QBuffer>
-#include <QList>
+#include <QtCore/QBuffer>
+#include <QtCore/QList>
 
 #include "ktnefmessage.h"
 #include "ktnefattach.h"

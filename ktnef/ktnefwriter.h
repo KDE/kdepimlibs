@@ -289,6 +289,8 @@ private:
   class PrivateData;
   PrivateData *const d;
   //@endcond
+
+  Q_DISABLE_COPY( KTNEFWriter )
 };
 
 }

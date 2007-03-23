@@ -31,9 +31,9 @@
 #ifndef KTNEFATTACH_H
 #define KTNEFATTACH_H
 
-#include <QString>
-#include <QMap>
-#include <QVariant>
+#include <QtCore/QMap>
+#include <QtCore/QString>
+#include <QtCore/QVariant>
 
 #include "ktnefpropertyset.h"
 #include "ktnef.h"
@@ -226,6 +226,8 @@ private:
   class AttachPrivate;
   AttachPrivate *const d;
   //@endcond
+
+  Q_DISABLE_COPY( KTNEFAttach )
 };
 
 }

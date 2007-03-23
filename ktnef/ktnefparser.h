@@ -31,9 +31,9 @@
 #ifndef KTNEFPARSER_H
 #define KTNEFPARSER_H
 
-#include <QString>
-#include <QMap>
-#include <QIODevice>
+#include <QtCore/QString>
+#include <QtCore/QMap>
+#include <QtCore/QIODevice>
 #include "ktnef.h"
 
 namespace KTnef { class KTNEFAttach; }
@@ -118,65 +118,12 @@ public:
   KTNEFMessage *message() const;
 
 private:
-  /**
-   * Decodes the attachment.
-   *
-   * @return true if the decoding succeeds; otherwise false.
-   */
-  bool decodeAttachment();
-
-  /**
-   * Decodes the message.
-   *
-   * @return true if the decoding succeeds; otherwise false.
-   */
-  bool decodeMessage();
-
-  /**
-   * Extracts the KTNEFAttach @p att into the directory @p dirname.
-   *
-   * @param att is a pointer to the attachment.
-   * @param dirname is the name of the extraction directory.
-   *
-   * @return true if the extraction succeeds; otherwise false.
-   */
-  bool extractAttachmentTo( KTNEFAttach *att, const QString &dirname );
-
-  /**
-   * Initialize current attachment settings.
-   *
-   * @param key is the @acronym TNEF tag.
-   */
-  void checkCurrent( int key );
-
-  /**
-   * Reads the @acronym MAPI properties.
-   *
-   * @param props is the @acronym MAPI property map.
-   * @param attach is a pointer to a  KTNEFAttach object.
-   *
-   * @return true if the read succeeded; otherwise false.
-   */
-  bool readMAPIProperties( QMap<int,KTNEFProperty*>& props,
-                           KTNEFAttach *attach = 0 );
-
-  /**
-   * Parses the attachment read from the QIODevice set in openDevice().
-   *
-   * @return true if the parsing succeeds; otherwise false.
-   */
-  bool parseDevice();
-
-  /**
-   * Removes the QIODevice from the parser object.
-   */
-  void deleteDevice();
-
-private:
   //@cond PRIVATE
   class ParserPrivate;
   ParserPrivate *d;
   //@endcond
+
+  Q_DISABLE_COPY( KTNEFParser )
 };
 
 }

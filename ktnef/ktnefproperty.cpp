@@ -30,38 +30,66 @@
 
 #include <ctype.h>
 
-#include <QDateTime>
+#include <QtCore/QDateTime>
 
 #include "ktnefproperty.h"
 #include "mapi.h"
 
 using namespace KTnef;
 
+class KTNEFProperty::Private
+{
+  public:
+    int _key;
+    int _type;
+    QVariant _value;
+    QVariant _name;
+};
+
 KTNEFProperty::KTNEFProperty()
+  : d( new Private )
 {
 }
 
 KTNEFProperty::KTNEFProperty( int key_, int type_, const QVariant &value_,
                               const QVariant &name_ )
-  : _key( key_ ), _type( type_ ), _value( value_ ), _name( name_ )
+  : d( new Private )
 {
+  d->_key = key_;
+  d->_type = type_;
+  d->_value = value_;
+  d->_name = name_;
 }
 
 KTNEFProperty::KTNEFProperty( const KTNEFProperty &p )
-  : _key( p._key ), _type( p._type ), _value( p._value ), _name( p._name )
+  : d( new Private )
 {
+  *d = *p.d;
+}
+
+KTNEFProperty::~KTNEFProperty()
+{
+  delete d;
+}
+
+KTNEFProperty& KTNEFProperty::operator=( const KTNEFProperty &other )
+{
+  if ( this != &other )
+    *d = *other.d;
+
+  return *this;
 }
 
 QString KTNEFProperty::keyString() const
 {
-  if ( _name.isValid() ) {
-    if ( _name.type() == QVariant::String ) {
-      return _name.toString();
+  if ( d->_name.isValid() ) {
+    if ( d->_name.type() == QVariant::String ) {
+      return d->_name.toString();
     } else {
-      return mapiNamedTagString( _name.toUInt(), _key );
+      return mapiNamedTagString( d->_name.toUInt(), d->_key );
     }
   } else {
-    return mapiTagString( _key );
+    return mapiTagString( d->_key );
   }
 }
 
@@ -98,30 +126,30 @@ QString KTNEFProperty::formatValue( const QVariant &value, bool beautify )
 
 QString KTNEFProperty::valueString() const
 {
-  return formatValue( _value );
+  return formatValue( d->_value );
 }
 
 int KTNEFProperty::key() const
 {
-  return _key;
+  return d->_key;
 }
 
 int KTNEFProperty::type() const
 {
-  return _type;
+  return d->_type;
 }
 
 QVariant KTNEFProperty::value() const
 {
-  return _value;
+  return d->_value;
 }
 
 QVariant KTNEFProperty::name() const
 {
-  return _name;
+  return d->_name;
 }
 
 bool KTNEFProperty::isVector() const
 {
-  return ( _value.type() == QVariant::List );
+  return ( d->_value.type() == QVariant::List );
 }

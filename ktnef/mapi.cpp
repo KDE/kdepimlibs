@@ -29,7 +29,7 @@
  */
 
 #include "mapi.h"
-#include <QMap>
+#include <QtCore/QMap>
 #include <klocale.h>
 
 //@cond IGNORE

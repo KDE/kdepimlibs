@@ -31,7 +31,7 @@
 #ifndef KTNEFMESSAGE_H
 #define KTNEFMESSAGE_H
 
-#include <QList>
+#include <QtCore/QList>
 
 #include "ktnefpropertyset.h"
 #include "ktnef.h"
@@ -94,6 +94,8 @@ private:
   class MessagePrivate;
   MessagePrivate *const d;
   //@endcond
+
+  Q_DISABLE_COPY( KTNEFMessage )
 };
 
 }

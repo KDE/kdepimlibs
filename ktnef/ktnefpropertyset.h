@@ -31,8 +31,8 @@
 #ifndef KTNEFPROPERTYSET_H
 #define KTNEFPROPERTYSET_H
 
-#include <QMap>
-#include <QVariant>
+#include <QtCore/QMap>
+#include <QtCore/QVariant>
 #include "ktnef.h"
 
 namespace KTnef { class KTNEFProperty; }
@@ -154,9 +154,11 @@ public:
 
 private:
   //@cond PRIVATE
-  QMap<int,KTNEFProperty*> properties_;  // used to store MAPI properties
-  QMap<int,KTNEFProperty*> attributes_;  // used to store TNEF attributes
+  class Private;
+  Private* const d;
   //@endcond
+
+  Q_DISABLE_COPY( KTNEFPropertySet )
 };
 
 }

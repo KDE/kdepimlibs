@@ -29,7 +29,7 @@
 #ifndef KTNEF_FORMATTER_H
 #define KTNEF_FORMATTER_H
 
-#include <QString>
+#include <QtCore/QString>
 
 #include "ktnef.h"
 

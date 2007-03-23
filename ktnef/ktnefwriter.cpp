@@ -30,11 +30,11 @@
 
 #include <assert.h>
 
-#include <QFile>
-#include <QDateTime>
-#include <QDataStream>
-#include <QList>
-#include <QByteArray>
+#include <QtCore/QFile>
+#include <QtCore/QDateTime>
+#include <QtCore/QDataStream>
+#include <QtCore/QList>
+#include <QtCore/QByteArray>
 
 #include <kdebug.h>
 
@@ -314,12 +314,12 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag ) cons
       addToChecksum( i, checksum );
       // from reader: d->message_->addProperty( 0x0E07, MAPI_TYPE_ULONG, flag );
     }
-    kDebug() << "Message Status" << " (length=" << i2 << ")" << endl;
+    kDebug(5975) << "Message Status" << " (length=" << i2 << ")" << endl;
     break;
 */
 
   default:
-    kDebug() << "Unknown TNEF tag: " << tag << endl;
+    kDebug(5975) << "Unknown TNEF tag: " << tag << endl;
     return false;
   }
 

@@ -31,7 +31,7 @@
 #ifndef MAPI_H
 #define MAPI_H
 
-#include <QString>
+#include <QtCore/QString>
 
 /**
  * Convert a keycode to a @acronym MAPI tag string.
