@@ -22,7 +22,7 @@
 #ifndef _KBLOG_TEST_BLOGGER_H_
 #define _KBLOG_TEST_BLOGGER_H_
 
-#include <QObject>
+#include <QtCore/QObject>
 
 enum errorType
 {

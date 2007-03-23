@@ -21,9 +21,9 @@
 #ifndef KCAL_CALFORMAT_H
 #define KCAL_CALFORMAT_H
 
-#include <QString>
-#include <QDateTime>
-#include <QEvent>
+#include <QtCore/QString>
+#include <QtCore/QDateTime>
+#include <QtCore/QEvent>
 
 #include "exceptions.h"
 #include "event.h"

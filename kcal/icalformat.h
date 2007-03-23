@@ -21,8 +21,8 @@
 #ifndef KCAL_ICALFORMAT_H
 #define KCAL_ICALFORMAT_H
 
-#include <QString>
-#include <QByteArray>
+#include <QtCore/QString>
+#include <QtCore/QByteArray>
 
 #include <kdatetime.h>
 

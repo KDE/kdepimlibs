@@ -55,9 +55,9 @@
 #ifndef KCAL_INCIDENCEBASE_H
 #define KCAL_INCIDENCEBASE_H
 
-#include <QStringList>
-#include <QByteArray>
-#include <QList>
+#include <QtCore/QStringList>
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
 
 #include <kdatetime.h>
 

@@ -22,10 +22,10 @@
 #ifndef KCAL_HTMLEXPORT_H
 #define KCAL_HTMLEXPORT_H
 
-#include <QDateTime>
-#include <QMap>
-#include <QString>
-#include <QTextStream>
+#include <QtCore/QDateTime>
+#include <QtCore/QMap>
+#include <QtCore/QString>
+#include <QtCore/QTextStream>
 
 #include "calendar.h"
 #include "htmlexportsettings.h"

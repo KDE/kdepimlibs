@@ -27,9 +27,9 @@
 #include <kcomponentdata.h>
 #include <kcmdlineargs.h>
 
-#include <QCoreApplication>
-#include <QFile>
-#include <QFileInfo>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 
 using namespace KCal;
 

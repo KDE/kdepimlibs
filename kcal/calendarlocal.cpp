@@ -28,8 +28,8 @@
   @author Preston Brown
   @author Cornelius Schumacher
  */
-#include <QHash>
-#include <QString>
+#include <QtCore/QHash>
+#include <QtCore/QString>
 
 #include <kdebug.h>
 #include <kdatetime.h>

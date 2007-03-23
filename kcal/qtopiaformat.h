@@ -21,7 +21,7 @@
 #ifndef KCAL_QTOPIAFORMAT_H
 #define KCAL_QTOPIAFORMAT_H
 
-#include <QString>
+#include <QtCore/QString>
 
 #include "scheduler.h"
 

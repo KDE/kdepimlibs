@@ -111,7 +111,7 @@ class ResourceExampleConfig : public KRES::ResourceConfigWidget
 #include <qlayout.h>
 #include <qlabel.h"
 #include <kresources/resourceconfigwidget.h>
-#include <QList>
+#include <QtCore/QList>
 #include "resourceexample.h"
 #include "resourceexampleconfig.h"
 

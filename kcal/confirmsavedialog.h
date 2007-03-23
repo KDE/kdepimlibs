@@ -21,7 +21,7 @@
 #ifndef KCAL_CONFIRMSAVEDIALOG_H
 #define KCAL_CONFIRMSAVEDIALOG_H
 
-#include <QTreeWidget>
+#include <QtGui/QTreeWidget>
 
 #include "incidence.h"
 

@@ -31,8 +31,8 @@
 #include <kdatetime.h>
 #include <kconfig.h>
 
-#include <QString>
-#include <QTimer>
+#include <QtCore/QString>
+#include <QtCore/QTimer>
 
 
 

@@ -19,7 +19,7 @@
 #ifndef KMIME_UTIL_TEST_H
 #define KMIME_UTIL_TEST_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class KMimeUtilTest : public QObject
 {

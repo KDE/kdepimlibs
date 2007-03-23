@@ -20,13 +20,13 @@
 */
 
 #include <q3buttongroup.h>
-#include <QLayout>
-#include <QRadioButton>
-#include <QSpinBox>
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QBoxLayout>
-#include <QCheckBox>
+#include <QtGui/QLayout>
+#include <QtGui/QRadioButton>
+#include <QtGui/QSpinBox>
+#include <QtGui/QLabel>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QBoxLayout>
+#include <QtGui/QCheckBox>
 
 #include <khbox.h>
 #include <klocale.h>

@@ -21,7 +21,7 @@
 #ifndef KCAL_RESOURCECACHEDCONFIG_H
 #define KCAL_RESOURCECACHEDCONFIG_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
 #include "kcal.h"
 
 class Q3ButtonGroup;

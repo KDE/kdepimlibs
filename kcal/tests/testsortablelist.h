@@ -22,7 +22,7 @@
 #ifndef SORTABLELISTTEST_H
 #define SORTABLELISTTEST_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class SortableListTest : public QObject
 {

@@ -22,7 +22,7 @@
 #ifndef __KMIME_KAUTODELETEHASH__
 #define __KMIME_KAUTODELETEHASH__
 
-#include <QHash>
+#include <QtCore/QHash>
 
 namespace KMime {
 

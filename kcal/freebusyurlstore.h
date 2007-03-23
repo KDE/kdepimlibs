@@ -21,7 +21,7 @@
 #ifndef KCAL_FREEBUSYURLSTORE_H
 #define KCAL_FREEBUSYURLSTORE_H
 
-#include <QString>
+#include <QtCore/QString>
 
 #include "kcal.h"
 

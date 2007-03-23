@@ -22,7 +22,7 @@
 #ifndef _KXMLRPC_TEST_QUERY_H_
 #define _KXMLRPC_TEST_QUERY_H_
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class TestQuery : public QObject 
 {

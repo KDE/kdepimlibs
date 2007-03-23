@@ -21,7 +21,7 @@
 #ifndef KCAL_IMIPSCHEDULER_H
 #define KCAL_IMIPSCHEDULER_H
 
-#include <QList>
+#include <QtCore/QList>
 #include "kcal.h"
 
 #include "scheduler.h"

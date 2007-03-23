@@ -22,7 +22,7 @@
 #ifndef _DURATION_TEST_H_
 #define _DURATION_TEST_H_
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class DurationTest : public QObject
 {

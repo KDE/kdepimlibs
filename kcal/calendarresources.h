@@ -30,7 +30,7 @@
 #ifndef KCAL_CALENDARRESOURCES_H
 #define KCAL_CALENDARRESOURCES_H
 
-#include <QMap>
+#include <QtCore/QMap>
 
 #include "calendar.h"
 #include "resourcecalendar.h"

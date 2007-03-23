@@ -24,8 +24,8 @@
 #include <getopt.h>
 #include <cassert>
 
-#include <QFile>
-#include <QByteArray>
+#include <QtCore/QFile>
+#include <QtCore/QByteArray>
 
 using namespace KMime;
 using namespace std;

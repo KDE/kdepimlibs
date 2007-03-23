@@ -47,8 +47,8 @@
 #define __KMIME_MDN_H__
 
 #include "kmime.h"
-#include <QString>
-#include <QList>
+#include <QtCore/QString>
+#include <QtCore/QList>
 
 class QByteArray;
 

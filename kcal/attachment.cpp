@@ -28,7 +28,7 @@
 
 #include "attachment.h"
 
-#include <QByteArray>
+#include <QtCore/QByteArray>
 
 using namespace KCal;
 

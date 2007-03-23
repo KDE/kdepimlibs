@@ -4,10 +4,10 @@
 
 #include <kcomponentdata.h>
 
-#include <QFile>
-#include <QByteArray>
-#include <QList>
-//#include <QString>
+#include <QtCore/QFile>
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
+//#include <QtCore/QString>
 
 //#include <stdio.h>
 #include <iostream>

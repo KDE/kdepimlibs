@@ -24,8 +24,8 @@
 #ifndef KRESOURCES_MANAGER_H
 #define KRESOURCES_MANAGER_H
 
-#include <QList>
-#include <QStringList>
+#include <QtCore/QList>
+#include <QtCore/QStringList>
 
 #include <kdebug.h>
 

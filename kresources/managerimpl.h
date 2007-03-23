@@ -23,7 +23,7 @@
 #ifndef KRESOURCES_MANAGERIMPL_H
 #define KRESOURCES_MANAGERIMPL_H
 
-#include <QString>
+#include <QtCore/QString>
 
 #include "resource.h"
 

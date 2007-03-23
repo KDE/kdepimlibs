@@ -30,9 +30,9 @@
 #include "kmime_header_parsing.h"
 #include "kmime_warning.h"
 
-#include <QTextCodec>
-#include <QString>
-#include <QStringList>
+#include <QtCore/QTextCodec>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 #include <kglobal.h>
 #include <kcharsets.h>

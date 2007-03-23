@@ -22,7 +22,7 @@
 #ifndef _KXMLRPC_TEST_CLIENT_H_
 #define _KXMLRPC_TEST_CLIENT_H_
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class TestClient : public QObject 
 {

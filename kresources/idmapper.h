@@ -22,8 +22,8 @@
 #ifndef KRESOURCES_IDMAPPER_H
 #define KRESOURCES_IDMAPPER_H
 
-#include <QMap>
-#include <QString>
+#include <QtCore/QMap>
+#include <QtCore/QString>
 
 #include "kresources.h"
 

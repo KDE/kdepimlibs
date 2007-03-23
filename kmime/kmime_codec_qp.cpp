@@ -706,7 +706,7 @@ bool Rfc2047QEncodingEncoder::encode( const char* &scursor,
   return scursor == send;
 } // encode
 
-#include <QString>
+#include <QtCore/QString>
 
 bool Rfc2047QEncodingEncoder::finish( char* &dcursor, const char * const dend )
 {

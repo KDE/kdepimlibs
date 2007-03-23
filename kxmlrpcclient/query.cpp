@@ -21,8 +21,8 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <QDateTime>
-#include <QVariant>
+#include <QtCore/QDateTime>
+#include <QtCore/QVariant>
 #include <qdom.h>
 
 #include "query.h"

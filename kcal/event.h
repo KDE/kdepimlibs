@@ -30,7 +30,7 @@
 
 #include "incidence.h"
 
-#include <QByteArray>
+#include <QtCore/QByteArray>
 
 namespace KCal {
 

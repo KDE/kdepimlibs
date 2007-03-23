@@ -19,12 +19,12 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QString>
-#include <QRegExp>
-#include <QClipboard>
-#include <QFile>
-#include <QTextStream>
-#include <QByteArray>
+#include <QtCore/QString>
+#include <QtCore/QRegExp>
+#include <QtGui/QClipboard>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
+#include <QtCore/QByteArray>
 
 #include <kdebug.h>
 #include <klocale.h>

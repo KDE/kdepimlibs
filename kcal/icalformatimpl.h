@@ -23,8 +23,8 @@
 #ifndef KCAL_ICALFORMATIMPL_H
 #define KCAL_ICALFORMATIMPL_H
 
-#include <QString>
-#include <QList>
+#include <QtCore/QString>
+#include <QtCore/QList>
 
 #include <kdatetime.h>
 

@@ -22,7 +22,7 @@
 #ifndef TODOTEST_H
 #define TODOTEST_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class TodoTest : public QObject
 {

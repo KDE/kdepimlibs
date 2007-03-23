@@ -22,8 +22,8 @@
 #ifndef EMAIL_H
 #define EMAIL_H
 
-#include <QStringList>
-#include <QByteArray>
+#include <QtCore/QStringList>
+#include <QtCore/QByteArray>
 
 #include "emailfunctions.h"
 

@@ -30,9 +30,9 @@
 #include <kglobal.h>
 #include <kcharsets.h>
 
-#include <QTextCodec>
-#include <QMap>
-#include <QStringList>
+#include <QtCore/QTextCodec>
+#include <QtCore/QMap>
+#include <QtCore/QStringList>
 
 #include <ctype.h> // for isdigit
 #include <cassert>

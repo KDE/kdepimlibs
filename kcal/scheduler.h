@@ -21,8 +21,8 @@
 #ifndef KCAL_SCHEDULER_H
 #define KCAL_SCHEDULER_H
 
-#include <QString>
-#include <QList>
+#include <QtCore/QString>
+#include <QtCore/QList>
 
 #include "kcal.h"
 

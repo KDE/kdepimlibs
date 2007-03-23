@@ -31,8 +31,8 @@
 #include <klocale.h>
 #include <kcmdlineargs.h>
 
-#include <QFile>
-#include <QFileInfo>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 
 using namespace KCal;
 

@@ -42,9 +42,9 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <QTextCodec>
-#include <QTextStream>
-#include <QByteArray>
+#include <QtCore/QTextCodec>
+#include <QtCore/QTextStream>
+#include <QtCore/QByteArray>
 
 using namespace KMime;
 

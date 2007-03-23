@@ -24,9 +24,9 @@
 #ifndef KCAL_RECURRENCE_H
 #define KCAL_RECURRENCE_H
 
-#include <QString>
-#include <QBitArray>
-#include <QList>
+#include <QtCore/QString>
+#include <QtCore/QBitArray>
+#include <QtCore/QList>
 
 #include <kdatetime.h>
 

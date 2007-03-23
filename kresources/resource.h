@@ -22,8 +22,8 @@
 #ifndef KRESOURCES_RESOURCE_H
 #define KRESOURCES_RESOURCE_H
 
-#include <QMutex>
-#include <QWidget>
+#include <QtCore/QMutex>
+#include <QtGui/QWidget>
 
 #include <klibloader.h>
 

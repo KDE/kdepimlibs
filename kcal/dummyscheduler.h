@@ -22,7 +22,7 @@
 #define DUMMYSCHEDULER_H
 
 #include "scheduler.h"
-#include <QList>
+#include <QtCore/QList>
 
 namespace KCal {
 

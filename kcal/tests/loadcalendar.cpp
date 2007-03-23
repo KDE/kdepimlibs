@@ -24,7 +24,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kcmdlineargs.h>
-#include <QByteArray>
+#include <QtCore/QByteArray>
 
 #include "kcal/calendarlocal.h"
 

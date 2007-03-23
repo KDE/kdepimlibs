@@ -22,7 +22,7 @@
 #ifndef KCAL_INCIDENCEFORMATTER_H
 #define KCAL_INCIDENCEFORMATTER_H
 
-#include <QString>
+#include <QtCore/QString>
 
 #include "kcal.h"
 

@@ -25,8 +25,8 @@
 #include <klocale.h>
 #include <kidna.h>
 
-#include <QRegExp>
-#include <QByteArray>
+#include <QtCore/QRegExp>
+#include <QtCore/QByteArray>
 
 //-----------------------------------------------------------------------------
 QStringList EmailAddressTools::splitAddressList(const QString& aStr)

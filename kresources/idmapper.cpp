@@ -25,9 +25,9 @@
 #include <kstandarddirs.h>
 #include <kdebug.h>
 
-#include <QFile>
-#include <QTextStream>
-#include <QVariant>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
+#include <QtCore/QVariant>
 
 namespace KRES {
 

@@ -22,8 +22,8 @@
 #ifndef KCAL_FREEBUSY_H
 #define KCAL_FREEBUSY_H
 
-#include <QByteArray>
-#include <QList>
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
 
 #include "period.h"
 #include "calendar.h"

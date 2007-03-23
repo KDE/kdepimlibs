@@ -22,10 +22,10 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QApplication>
-#include <QClipboard>
-#include <QDropEvent>
-#include <QPixmap>
+#include <QtGui/QApplication>
+#include <QtGui/QClipboard>
+#include <QtGui/QDropEvent>
+#include <QtGui/QPixmap>
 
 #include <kiconloader.h>
 #include <kdebug.h>

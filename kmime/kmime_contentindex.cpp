@@ -29,7 +29,7 @@
 
 #include "kmime_contentindex.h"
 
-#include <QStringList>
+#include <QtCore/QStringList>
 
 KMime::ContentIndex::ContentIndex()
 {

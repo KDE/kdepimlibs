@@ -23,9 +23,9 @@
 #include <limits.h>
 #include <math.h>
 
-#include <QDateTime>
-#include <QList>
-#include <QStringList>
+#include <QtCore/QDateTime>
+#include <QtCore/QList>
+#include <QtCore/QStringList>
 
 #include <kdebug.h>
 #include <kglobal.h>

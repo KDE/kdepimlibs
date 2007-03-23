@@ -24,8 +24,8 @@
 #ifndef KRESOURCES_FACTORY_H
 #define KRESOURCES_FACTORY_H
 
-#include <QMap>
-#include <QString>
+#include <QtCore/QMap>
+#include <QtCore/QString>
 
 #include <kconfig.h>
 #include <kservice.h>

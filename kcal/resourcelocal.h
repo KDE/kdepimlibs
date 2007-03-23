@@ -31,7 +31,7 @@
 #ifndef KCAL_RESOURCELOCAL_H
 #define KCAL_RESOURCELOCAL_H
 
-#include <QString>
+#include <QtCore/QString>
 
 #include <kdatetime.h>
 #include <kurl.h>

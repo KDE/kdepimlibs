@@ -22,7 +22,7 @@
 #include <kcmdlineargs.h>
 #include <kdebug.h>
 
-#include <QCoreApplication>
+#include <QtCore/QCoreApplication>
 
 #include <stdio.h>
 #include <stdlib.h>

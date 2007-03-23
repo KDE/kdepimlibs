@@ -37,7 +37,7 @@
 #include <kdebug.h>
 #include <kglobal.h>
 
-#include <QByteArray>
+#include <QtCore/QByteArray>
 
 #include <cassert>
 #include <cstring>

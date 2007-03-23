@@ -51,7 +51,7 @@
 #ifndef __KMIME_CHARFREQ_H__
 #define __KMIME_CHARFREQ_H__
 
-#include <QByteArray>
+#include <QtCore/QByteArray>
 #include "kmime.h"
 #undef None
 

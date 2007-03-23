@@ -24,7 +24,7 @@
 #ifndef KCAL_RECURRENCERULE_H
 #define KCAL_RECURRENCERULE_H
 
-#include <QList>
+#include <QtCore/QList>
 #include <kdatetime.h>
 
 #include "kcal/listbase.h"

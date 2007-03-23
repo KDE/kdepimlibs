@@ -25,10 +25,10 @@
 #include <klineedit.h>
 #include <kmessagebox.h>
 
-#include <QGroupBox>
-#include <QLabel>
-#include <QLayout>
-#include <QCheckBox>
+#include <QtGui/QGroupBox>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QCheckBox>
 
 #include "factory.h"
 #include "configdialog.h"

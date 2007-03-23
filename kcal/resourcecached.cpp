@@ -20,9 +20,9 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QDataStream>
-#include <QFile>
-#include <QString>
+#include <QtCore/QDataStream>
+#include <QtCore/QFile>
+#include <QtCore/QString>
 
 #include <kdebug.h>
 #include <klocale.h>

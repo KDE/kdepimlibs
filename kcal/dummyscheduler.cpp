@@ -23,8 +23,8 @@
 // DummyScheduler - iMIP implementation of iTIP methods
 //
 
-#include <QFile>
-#include <QTextStream>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
 
 #include <kdebug.h>
 #include <kstandarddirs.h>

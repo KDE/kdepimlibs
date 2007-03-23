@@ -22,7 +22,7 @@
 #ifndef KRESOURCES_CONFIGWIDGET_H
 #define KRESOURCES_CONFIGWIDGET_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
 #include <kconfig.h>
 

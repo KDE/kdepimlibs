@@ -20,10 +20,10 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QString>
-#include <QRegExp>
-#include <QFile>
-#include <QByteArray>
+#include <QtCore/QString>
+#include <QtCore/QRegExp>
+#include <QtCore/QFile>
+#include <QtCore/QByteArray>
 
 #include <kdebug.h>
 #include <kdatetime.h>

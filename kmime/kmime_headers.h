@@ -34,13 +34,13 @@
 #include "kmime.h"
 #include "kmime_header_parsing.h"
 
-#include <QString>
-#include <QStringList>
-#include <QRegExp>
-#include <QDateTime>
-#include <QMap>
-#include <QList>
-#include <QByteArray>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtCore/QRegExp>
+#include <QtCore/QDateTime>
+#include <QtCore/QMap>
+#include <QtCore/QList>
+#include <QtCore/QByteArray>
 
 #include <kdatetime.h>
 

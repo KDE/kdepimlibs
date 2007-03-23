@@ -22,7 +22,7 @@
 #ifndef KCAL_CALFILTER_H
 #define KCAL_CALFILTER_H
 
-#include <QString>
+#include <QtCore/QString>
 
 #include "event.h"
 #include "todo.h"

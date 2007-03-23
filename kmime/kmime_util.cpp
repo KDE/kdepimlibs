@@ -26,9 +26,9 @@
 #include <stdlib.h>
 #include <unistd.h> // for getpid()
 
-#include <QList>
-#include <QString>
-#include <QTextCodec>
+#include <QtCore/QList>
+#include <QtCore/QString>
+#include <QtCore/QTextCodec>
 
 #include <kglobal.h>
 #include <klocale.h>

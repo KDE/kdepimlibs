@@ -23,8 +23,8 @@
 #ifndef __KMIME_HEADER_PARSING_H__
 #define __KMIME_HEADER_PARSING_H__
 
-#include <QString>
-#include <QPair>
+#include <QtCore/QString>
+#include <QtCore/QPair>
 
 #include <kdatetime.h>
 

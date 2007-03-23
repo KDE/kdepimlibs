@@ -21,9 +21,9 @@
 
 #include <typeinfo>
 
-#include <QLabel>
-#include <QLayout>
-#include <QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QGridLayout>
 
 #include <klocale.h>
 #include <kdebug.h>

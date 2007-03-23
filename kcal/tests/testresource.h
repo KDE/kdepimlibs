@@ -19,7 +19,7 @@
 #ifndef TESTRESOURCE_H
 #define TESTRESOURCE_H
 
-#include <QObject>
+#include <QtCore/QObject>
 class KConfigGroup;
 
 namespace KCal {

@@ -32,7 +32,7 @@
 #include "listbase.h"
 #include "kcal.h"
 
-#include <QString>
+#include <QtCore/QString>
 
 namespace KCal {
 

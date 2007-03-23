@@ -22,7 +22,7 @@
 #ifndef CALENDARTEST_H
 #define CALENDARTEST_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class CalendarNullTest : public QObject
 {

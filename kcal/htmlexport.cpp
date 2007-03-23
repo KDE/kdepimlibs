@@ -20,11 +20,11 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QApplication>
-#include <QFile>
-#include <QTextStream>
-#include <QTextCodec>
-#include <QRegExp>
+#include <QtGui/QApplication>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
+#include <QtCore/QTextCodec>
+#include <QtCore/QRegExp>
 
 #include <kglobal.h>
 #include <klocale.h>

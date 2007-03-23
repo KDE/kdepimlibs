@@ -24,9 +24,9 @@
 #ifndef KRESOURCES_SELECTDIALOG_H
 #define KRESOURCES_SELECTDIALOG_H
 
-#include <QObject>
-#include <QMap>
-#include <QList>
+#include <QtCore/QObject>
+#include <QtCore/QMap>
+#include <QtCore/QList>
 
 #include <kdialog.h>
 

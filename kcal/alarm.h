@@ -29,9 +29,9 @@
 #ifndef KCAL_ALARM_H
 #define KCAL_ALARM_H
 
-#include <QString>
-#include <QStringList>
-#include <QList>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtCore/QList>
 
 #include <kdatetime.h>
 

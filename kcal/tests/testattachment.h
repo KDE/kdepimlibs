@@ -22,7 +22,7 @@
 #ifndef ATTACHMENTTEST_H
 #define ATTACHMENTTEST_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class AttachmentTest : public QObject
 {

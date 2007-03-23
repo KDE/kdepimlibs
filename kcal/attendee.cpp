@@ -26,7 +26,7 @@
   @author Cornelius Schumacher
 */
 
-#include <QStringList>
+#include <QtCore/QStringList>
 
 #include <kdebug.h>
 #include <klocale.h>

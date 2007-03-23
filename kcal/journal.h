@@ -22,7 +22,7 @@
 #ifndef KCAL_JOURNAL_H
 #define KCAL_JOURNAL_H
 
-#include <QByteArray>
+#include <QtCore/QByteArray>
 
 #include "incidence.h"
 

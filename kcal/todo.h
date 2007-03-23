@@ -29,7 +29,7 @@
 #ifndef KCAL_TODO_H
 #define KCAL_TODO_H
 
-#include <QByteArray>
+#include <QtCore/QByteArray>
 
 #include "incidence.h"
 

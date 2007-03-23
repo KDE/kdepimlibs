@@ -19,13 +19,13 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QDateTime>
-#include <QString>
-#include <QList>
-#include <QVector>
-#include <QSet>
-#include <QFile>
-#include <QTextStream>
+#include <QtCore/QDateTime>
+#include <QtCore/QString>
+#include <QtCore/QList>
+#include <QtCore/QVector>
+#include <QtCore/QSet>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
 
 #include <ksystemtimezone.h>
 #include <kdatetime.h>

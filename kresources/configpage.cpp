@@ -21,11 +21,11 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QGroupBox>
-#include <QLabel>
-#include <QLayout>
-#include <QTreeWidget>
-#include <QTreeWidgetItem>
+#include <QtGui/QGroupBox>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QTreeWidget>
+#include <QtGui/QTreeWidgetItem>
 
 #include <kapplication.h>
 #include <kcombobox.h>
@@ -38,7 +38,7 @@
 #include <kbuttonbox.h>
 #include <kservicetypetrader.h>
 #include <kinputdialog.h>
-#include <QList>
+#include <QtCore/QList>
 
 #include "resource.h"
 #include "configdialog.h"

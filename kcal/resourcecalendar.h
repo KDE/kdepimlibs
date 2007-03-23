@@ -25,7 +25,7 @@
 #ifndef KCAL_RESOURCECALENDAR_H
 #define KCAL_RESOURCECALENDAR_H
 
-#include <QString>
+#include <QtCore/QString>
 
 #include <kdatetime.h>
 #include <kconfig.h>

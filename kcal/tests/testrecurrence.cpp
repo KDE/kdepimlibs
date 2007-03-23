@@ -29,8 +29,8 @@
 #include <kdatetime.h>
 #include <ksystemtimezone.h>
 
-#include <QFile>
-#include <QTextStream>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
 
 
 

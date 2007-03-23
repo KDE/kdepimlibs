@@ -22,7 +22,7 @@
 #ifndef KCAL_VCALFORMAT_H
 #define KCAL_VCALFORMAT_H
 
-#include <QByteArray>
+#include <QtCore/QByteArray>
 
 #include <kdatetime.h>
 

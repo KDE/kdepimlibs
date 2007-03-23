@@ -31,7 +31,7 @@
 #ifndef KCAL_PERSON_H
 #define KCAL_PERSON_H
 
-#include <QString>
+#include <QtCore/QString>
 
 #include "kcal.h"
 

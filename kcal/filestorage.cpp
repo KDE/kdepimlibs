@@ -21,7 +21,7 @@
 
 #include <stdlib.h>
 
-#include <QString>
+#include <QtCore/QString>
 
 #include <kdebug.h>
 

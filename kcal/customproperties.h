@@ -22,9 +22,9 @@
 #ifndef KCAL_CUSTOMPROPERTIES_H
 #define KCAL_CUSTOMPROPERTIES_H
 
-#include <QString>
-#include <QMap>
-#include <QByteArray>
+#include <QtCore/QString>
+#include <QtCore/QMap>
+#include <QtCore/QByteArray>
 
 #include "kcal.h"
 

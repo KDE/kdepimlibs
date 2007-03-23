@@ -22,8 +22,8 @@
 #include <stdlib.h>
 
 #include <qtest_kde.h>
-#include <QDateTime>
-#include <QTextStream>
+#include <QtCore/QDateTime>
+#include <QtCore/QTextStream>
 
 #include <ktemporaryfile.h>
 

@@ -20,7 +20,7 @@
 #ifndef IDMAPPERTEST_H
 #define IDMAPPERTEST_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class IdMapperTest : public QObject
 {

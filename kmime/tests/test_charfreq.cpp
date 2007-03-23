@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-#include <QFile>
+#include <QtCore/QFile>
 
 using namespace std;
 using namespace KMime;

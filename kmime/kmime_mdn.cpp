@@ -38,8 +38,8 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <QByteArray>
-#include <QList>
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
 
 #include <unistd.h> // gethostname
 

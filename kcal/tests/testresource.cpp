@@ -25,9 +25,9 @@
 #include <unistd.h>
 #include <assert.h>
 
-#include <QDir>
-#include <QFileInfo>
-#include <QStringList>
+#include <QtCore/QDir>
+#include <QtCore/QFileInfo>
+#include <QtCore/QStringList>
 
 #include <kurl.h>
 #include <kcomponentdata.h>

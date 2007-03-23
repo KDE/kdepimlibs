@@ -23,9 +23,9 @@
 
 #include <time.h>
 
-#include <QBuffer>
-#include <QList>
-#include <QTextDocument>
+#include <QtCore/QBuffer>
+#include <QtCore/QList>
+#include <QtGui/QTextDocument>
 
 #include <kapplication.h>
 #include <kdatetime.h>

@@ -28,7 +28,7 @@
 // returned by an error function, but we can build upon them, if we start
 // to use C++ exceptions.
 
-#include <QString>
+#include <QtCore/QString>
 #include "kcal.h"
 
 namespace KCal {

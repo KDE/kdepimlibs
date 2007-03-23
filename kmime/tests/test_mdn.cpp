@@ -1,8 +1,8 @@
 #include <kmime_mdn.h>
 using namespace KMime::MDN;
 
-#include <QByteArray>
-#include <QString>
+#include <QtCore/QByteArray>
+#include <QtCore/QString>
 
 #include <iostream>
 using std::cout;

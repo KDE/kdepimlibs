@@ -24,7 +24,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kcmdlineargs.h>
-#include <QCoreApplication>
+#include <QtCore/QCoreApplication>
 
 #include "kcal/icalformat.h"
 #include "kcal/event.h"

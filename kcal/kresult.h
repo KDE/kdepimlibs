@@ -21,7 +21,7 @@
 #ifndef KRESULT_H
 #define KRESULT_H
 
-#include <QString>
+#include <QtCore/QString>
 #include "kcal.h"
 
 namespace KCal {

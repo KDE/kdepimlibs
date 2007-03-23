@@ -31,7 +31,7 @@
 #include <typeinfo>
 #include <stdlib.h>
 
-#include <QString>
+#include <QtCore/QString>
 
 #include <kdebug.h>
 #include <klocale.h>

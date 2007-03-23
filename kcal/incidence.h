@@ -29,7 +29,7 @@
 
 #include "incidencebase.h"
 
-#include <QList>
+#include <QtCore/QList>
 
 namespace KCal {
 

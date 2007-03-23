@@ -28,7 +28,7 @@
   @author Reinhold Kainhofer
 */
 
-#include <QRegExp>
+#include <QtCore/QRegExp>
 
 #include <kdebug.h>
 #include <klocale.h>

@@ -23,7 +23,7 @@
 #include <kdebug.h>
 
 #include "freebusy.h"
-#include <QList>
+#include <QtCore/QList>
 
 using namespace KCal;
 

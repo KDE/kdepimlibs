@@ -25,8 +25,8 @@
 #include <kdatetime.h>
 #include <kdebug.h>
 
-#include <QRegExp>
-#include <QList>
+#include <QtCore/QRegExp>
+#include <QtCore/QList>
 
 #include "incidence.h"
 

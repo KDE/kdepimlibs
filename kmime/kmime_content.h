@@ -45,9 +45,9 @@ TODO: possible glossary terms:
 #ifndef __KMIME_CONTENT_H__
 #define __KMIME_CONTENT_H__
 
-#include <QTextStream>
-#include <QByteArray>
-#include <QList>
+#include <QtCore/QTextStream>
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
 
 #include "kmime.h"
 #include "kmime_contentindex.h"

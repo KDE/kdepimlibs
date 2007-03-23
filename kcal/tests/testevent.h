@@ -22,7 +22,7 @@
 #ifndef EVENTTEST_H
 #define EVENTTEST_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class EventTest : public QObject
 {

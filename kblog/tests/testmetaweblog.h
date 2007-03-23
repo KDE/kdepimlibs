@@ -22,7 +22,7 @@
 #ifndef _KBLOG_TEST_METAWEBLOG_H_
 #define _KBLOG_TEST_METAWEBLOG_H_
 
-#include <QObject>
+#include <QtCore/QObject>
 
 enum errorType
 {

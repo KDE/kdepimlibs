@@ -64,7 +64,7 @@
 #  include <qmutex.h>
 #endif
 
-#include <QByteArray>
+#include <QtCore/QByteArray>
 
 #include <kdebug.h> // for kFatal()
 

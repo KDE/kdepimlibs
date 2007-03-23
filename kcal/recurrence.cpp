@@ -24,8 +24,8 @@
 
 #include <limits.h>
 
-#include <QList>
-#include <QBitArray>
+#include <QtCore/QList>
+#include <QtCore/QBitArray>
 
 #include <kglobal.h>
 #include <klocale.h>

@@ -35,7 +35,7 @@
 
 #include <stdlib.h> // for abs()
 
-#include <QTextStream>
+#include <QtCore/QTextStream>
 
 #include <kglobal.h>
 #include <klocale.h>

@@ -23,9 +23,9 @@
 
 #include <klocale.h>
 
-#include <QBoxLayout>
-#include <QLabel>
-#include <QVBoxLayout>
+#include <QtGui/QBoxLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QVBoxLayout>
 
 using namespace KCal;
 

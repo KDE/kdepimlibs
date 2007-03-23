@@ -26,7 +26,7 @@
 #include <klocale.h>
 #include <kurl.h>
 
-#include <QVariant>
+#include <QtCore/QVariant>
 
 #include "client.h"
 #include "query.h"
