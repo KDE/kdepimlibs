@@ -200,7 +200,7 @@ QString Query::Private::marshal( const QVariant &arg ) const
     case QVariant::ByteArray:
       return "<value><base64>" + arg.toByteArray().toBase64() + "</base64></value>\r\n";
     case QVariant::DateTime:
-      return "<value><datetime.iso8601>" + arg.toDateTime().toString( Qt::ISODate ) + "</datetime.iso8601></value>\r\n";
+      return "<value><dateTime.iso8601>" + arg.toDateTime().toString( Qt::ISODate ) + "</dateTime.iso8601></value>\r\n";
     case QVariant::List:
       {
         QString markup = "<value><array><data>\r\n";
