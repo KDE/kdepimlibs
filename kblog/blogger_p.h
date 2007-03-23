@@ -32,13 +32,14 @@ class APIBlogger::APIBloggerPrivate : public QObject
 {
   Q_OBJECT
   public:
-    KXmlRpc::Client* mXmlRpcClient;
-    APIBlogger* parent;
+    KXmlRpc::Client *mXmlRpcClient;
+    APIBlogger *parent;
 
     APIBloggerPrivate();
     ~APIBloggerPrivate();
-    QList<QVariant> defaultArgs( const QString &id = QString::null );
-  public slots:
+    QList<QVariant> defaultArgs( const QString &id = QString() );
+
+  public Q_SLOTS:
     void slotUserInfo( const QList<QVariant> &result, const QVariant &id );
     void slotListBlogs( const QList<QVariant> &result, const QVariant &id );
     void slotListPostings( const QList<QVariant> &result, const QVariant &id );

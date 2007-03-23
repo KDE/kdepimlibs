@@ -40,7 +40,7 @@ APIMetaWeblog::APIMetaWeblogPrivate::APIMetaWeblogPrivate()
 
 APIMetaWeblog::APIMetaWeblogPrivate::~APIMetaWeblogPrivate()
 {
-  delete mXmlRpcClient;  
+  delete mXmlRpcClient;
 }
 
 QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString &id )
@@ -57,7 +57,7 @@ QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString 
   return args;
 }
 
-void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVariant> &result, const QVariant &id ){ 
+void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVariant> &result, const QVariant &id ){
   kDebug() << "APIMetaWeblogPrivate::slotListCategories" << endl;
   kDebug () << "TOP: " << result[ 0 ].typeName() << endl;
   if( result[ 0 ].type()!=QVariant::Map && result[ 0 ].type()!=QVariant::List ){ // include fix for not metaweblog standard compatible apis with array of structs instead of struct of structs, e.g. wordpress
@@ -123,7 +123,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant
         emit parent->listedPosting( posting ); // KUrl( posting.postingId() ) );
       } else {
         kDebug() << "d->readPostingFromMap failed! " << endl;
-        emit parent->error( ParsingError, i18n("Couldn't read posting.") );
+        emit parent->error( ParsingError, i18n("Could not read posting.") );
       }
     }
   } //FIXME should we emit here? (see below, too)
@@ -218,7 +218,7 @@ bool APIMetaWeblog::APIMetaWeblogPrivate::readPostingFromMap( BlogPosting *post,
   if ( !post ) return false;
   QStringList mapkeys = postInfo.keys();
   kDebug() << endl << "Keys: " << mapkeys.join(", ") << endl << endl;
-  
+
   KDateTime dt = KDateTime( postInfo[ "dateCreated" ].toDateTime(), KDateTime::Spec::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setCreationDateTime( dt );

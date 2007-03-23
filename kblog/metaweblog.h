@@ -69,7 +69,8 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlog
 
          @param server is the url for the xmlrpc gateway.
     */
-    APIMetaWeblog( const KUrl &server, QObject *parent = 0L, const char *name = 0L );
+    explicit APIMetaWeblog( const KUrl &server, QObject *parent = 0,
+                            const char *name = 0 );
     virtual ~APIMetaWeblog();
 
     /**
@@ -99,7 +100,7 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlog
     virtual void listPostings();
 
     /**
-        List the categories of the blog. 
+        List the categories of the blog.
 	@see  void categoryInfoRetrieved( const QString &name, const QString &description )
         @see  void listCategoriesFinished()
     */

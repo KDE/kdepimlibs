@@ -32,13 +32,14 @@ class APIMetaWeblog::APIMetaWeblogPrivate : public QObject
 {
   Q_OBJECT
   public:
-    KXmlRpc::Client* mXmlRpcClient;
-    APIMetaWeblog* parent;
+    KXmlRpc::Client *mXmlRpcClient;
+    APIMetaWeblog *parent;
 
     APIMetaWeblogPrivate();
     ~APIMetaWeblogPrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );
-  public slots:
+
+  public Q_SLOTS:
     void slotListPostings( const QList<QVariant> &result, const QVariant &id );
     void slotListCategories( const QList<QVariant> &result, const QVariant &id );
     void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );

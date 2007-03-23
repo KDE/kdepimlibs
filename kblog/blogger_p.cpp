@@ -39,7 +39,7 @@ APIBlogger::APIBloggerPrivate::APIBloggerPrivate()
 
 APIBlogger::APIBloggerPrivate::~APIBloggerPrivate()
 {
-  delete mXmlRpcClient;  
+  delete mXmlRpcClient;
 }
 
 QList<QVariant> APIBlogger::APIBloggerPrivate::defaultArgs( const QString &id )
@@ -122,7 +122,7 @@ void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &res
         emit parent->listedPosting( posting ); // KUrl( posting.postingId() ) );
       } else {
         kDebug() << "d->readPostingFromMap failed! " << endl;
-        emit parent->error( ParsingError, i18n("Couldn't read posting.") );
+        emit parent->error( ParsingError, i18n("Could not read posting.") );
       }
     }
   } //FIXME should we emit here? (see below, too)
@@ -198,7 +198,7 @@ bool APIBlogger::APIBloggerPrivate::readPostingFromMap( BlogPosting *post, const
   if ( !post ) return false;
   QStringList mapkeys = postInfo.keys();
   kDebug() << endl << "Keys: " << mapkeys.join(", ") << endl << endl;
-  
+
   KDateTime dt( postInfo[ "dateCreated" ].toDateTime(), KDateTime::Spec::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setCreationDateTime( dt );

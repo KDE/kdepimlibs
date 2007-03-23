@@ -83,10 +83,10 @@ public:
     @param category
     @param publish
   */
-  BlogPosting( const QString& title, const QString& content, 
-               const QString& category = QString::null, 
+  BlogPosting( const QString& title, const QString& content,
+               const QString& category = QString(),
 	       const bool publish = true );
-  
+
   /**
     Virtual default destructor.
   */
@@ -186,7 +186,7 @@ public:
     @see creationTime()
   */
   void setCreationDateTime( const KDateTime &datetime );
-  
+
   /**
     Returns the modification date time.
 
@@ -204,7 +204,7 @@ public:
     @see setCreationDateTime( const KDateTime &datetime )
   */
   void setModificationDateTime( const KDateTime &datetime );
-  
+
   /**
     Returns if the post has been deleted on the server. Note: This is
     currently not set automatically on post.
@@ -213,7 +213,7 @@ public:
     @see setDeleted( const bool deleted )
   */
   bool deleted() const; // TODO: set on post
-  
+
   /**
     Set when the posting has been deleted on the server.
 
@@ -221,7 +221,7 @@ public:
     @see deleted()
   */
   void setDeleted( const bool deleted );
-  
+
   /**
     Returns if the post has been uploaded to the server. Note: This ist
     currently not set automatically on post.
@@ -292,13 +292,13 @@ public:
 
   /**
     Return the mimetype.
-    
+
     @result mimetype of the object
     @see setMimetype()
   */
   QString mimetype() const;
   void setMimetype( const QString& mimetype );
-  
+
   /**
     Return the data of the file.
 
@@ -333,7 +333,8 @@ class KBLOG_EXPORT APIBlog : public QObject
       @param parent the parent of this object, defaults to NULL.
       @param name  the name of the instance.
      */
-    APIBlog( const KUrl &server, QObject *parent = 0L, const char *name = 0L );
+    explicit APIBlog( const KUrl &server, QObject *parent = 0,
+                      const char *name = 0 );
 
      /**
        Destroys the APIBlog object.
@@ -502,7 +503,7 @@ class KBLOG_EXPORT APIBlog : public QObject
     */
     void removePosting( KBlog::BlogPosting *posting );
 
-  signals:
+  Q_SIGNALS:
     void userInfoRetrieved( const QString &nickname, const QString &userid, const QString &email );
     void blogInfoRetrieved( const QString &id, const QString &name );
     void categoryInfoRetrieved( const QString &name, const QString &description );
@@ -519,7 +520,7 @@ class KBLOG_EXPORT APIBlog : public QObject
     /**
          All xml parsing and all structural problems will emit an error.
     */
-    void error( const errorType& type, const QString& errorMessage ); 
+    void error( const errorType& type, const QString& errorMessage );
 
   private:
     class Private;
