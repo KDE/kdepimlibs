@@ -21,6 +21,7 @@ add_subdirectory(kldap)
 add_subdirectory(kmime)
 add_subdirectory(kresources)
 add_subdirectory(kabc)
+add_subdirectory(kblog)
 
 add_subdirectory(cmake)
 

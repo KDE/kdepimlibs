@@ -16,6 +16,9 @@
  * - <a href="kcal/html/index.html"><b>kcal</b></a>.
  *   <i>An API for the iCalendar and vCalendar formats.</i>
  *
+ * - <a href="kblog/html/index.html"><b>kblog</b></a>.
+ *   <i>An API for weblogging access.</i>
+ *
  * - <a href="kimap/html/index.html"><b>kimap</b></a>.
  *   <i>An API for IMAP support.</i>
  *
