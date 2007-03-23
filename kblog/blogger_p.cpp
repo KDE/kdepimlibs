@@ -227,11 +227,11 @@ bool APIBlogger::APIBloggerPrivate::readPostingFromMap( BlogPosting *post,
   QStringList mapkeys = postInfo.keys();
   kDebug() << endl << "Keys: " << mapkeys.join(", ") << endl << endl;
 
-  KDateTime dt( postInfo["dateCreated"].toDateTime(), KDateTime::Spec::UTC );
+  KDateTime dt( postInfo["dateCreated"].toDateTime(), KDateTime::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setCreationDateTime( dt );
   }
-  dt = KDateTime ( postInfo["lastModified"].toDateTime(), KDateTime::Spec::UTC );
+  dt = KDateTime ( postInfo["lastModified"].toDateTime(), KDateTime::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setModificationDateTime( dt );
   }
