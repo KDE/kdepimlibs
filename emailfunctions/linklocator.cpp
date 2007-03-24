@@ -32,7 +32,7 @@
 #include <limits.h>
 #include <QTextDocument>
 
-namespace LinkLocator {
+namespace LinkLocatorTools {
 
 QMap<QString, QString> *LinkLocator::s_smileyEmoticonNameMap = 0;
 QMap<QString, QString> *LinkLocator::s_smileyEmoticonHTMLCache = 0;

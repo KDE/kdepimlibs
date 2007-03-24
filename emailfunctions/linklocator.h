@@ -25,7 +25,7 @@
 
 #include "emailfunctions.h"
 
-namespace LinkLocator {
+namespace LinkLocatorTools {
 
 /**
  * LinkLocator assists in identifying sections of text that can
@@ -135,6 +135,7 @@ public:
    * @return An HTML version of the text supplied in the 'plainText' parameter,
    *         suitable for inclusion in the BODY of an HTML document.
    */
+  EMAILFUNCTIONS_EXPORT
   static QString convertToHtml(const QString& plainText, int flags = 0,
     int maxUrlLen = 4096, int maxAddressLen = 255);
 
@@ -147,6 +148,7 @@ public:
    *  @param iconPath path to the PNG image
    *  @return A data URL, QString() if the image could not be read.
    */
+  EMAILFUNCTIONS_EXPORT
   static QString pngToDataUrl( const QString & iconPath );
 
 protected:
