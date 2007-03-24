@@ -32,14 +32,11 @@
 
 /**
   @file
-
   This file is part of the API for accessing Blog Servers
   and defines the APIMetaWeblog class.
 
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
-
-  \par Maintainer: Christian Weilbach \<christian\@whiletaker.homeip.net\>
 */
 
 namespace KBlog {
@@ -72,8 +69,7 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlog
 
       @param server is the url for the xmlrpc gateway.
     */
-    explicit APIMetaWeblog( const KUrl &server, QObject *parent = 0,
-                            const char *name = 0 );
+    explicit APIMetaWeblog( const KUrl &server, QObject *parent = 0 );
     virtual ~APIMetaWeblog();
 
     /**

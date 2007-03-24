@@ -31,9 +31,8 @@
 
 using namespace KBlog;
 
-APIMetaWeblog::APIMetaWeblog( const KUrl &server, QObject *parent,
-                              const char *name )
-  : APIBlog( server, parent/*, name*/ ), d( new APIMetaWeblogPrivate )
+APIMetaWeblog::APIMetaWeblog( const KUrl &server, QObject *parent )
+  : APIBlog( server, parent ), d( new APIMetaWeblogPrivate )
 {
   d->parent = this;
   setUrl( server );

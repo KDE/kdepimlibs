@@ -32,14 +32,11 @@
 
 /**
   @file
-
   This file is part of the API for accessing Blog Servers
   and defines the APIBlogger class.
 
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
-
-  \par Maintainer: Christian Weilbach \<christian\@whiletaker.homeip.net\>
 */
 
 namespace KBlog {
