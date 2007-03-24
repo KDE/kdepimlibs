@@ -67,6 +67,7 @@ void TestBloggerWarnings::createPostingTimeoutWarning()
 
 void TestBloggerWarnings::error( const errorType &type, const QString &errStr )
 {
+  Q_UNUSED( type );
   QWARN( errStr.toUtf8().data() );
 }
 

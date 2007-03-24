@@ -57,6 +57,8 @@ QList<QVariant> APIBlogger::APIBloggerPrivate::defaultArgs( const QString &id )
 void APIBlogger::APIBloggerPrivate::slotUserInfo( const QList<QVariant> &result,
                                                   const QVariant &id )
 {
+  Q_UNUSED( id );
+
   // TODO: Implement user authentication
   kDebug () << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::Map ) {
@@ -80,6 +82,8 @@ void APIBlogger::APIBloggerPrivate::slotUserInfo( const QList<QVariant> &result,
 void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result,
                                                    const QVariant &id )
 {
+  Q_UNUSED( id );
+
   kDebug() << "APIBlogger::slotListBlogs" << endl;
   kDebug () << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::List ) {
@@ -112,6 +116,8 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
 void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &result,
                                                       const QVariant &id )
 {
+  Q_UNUSED( id );
+
   kDebug() << "APIBlogger::slotListPostings" << endl;
   kDebug () << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::List ) {
@@ -145,6 +151,8 @@ void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &res
 void APIBlogger::APIBloggerPrivate::slotFetchPosting( const QList<QVariant> &result,
                                                       const QVariant &id )
 {
+  Q_UNUSED( id );
+
   kDebug() << "APIBlogger::slotFetchPosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
@@ -175,6 +183,8 @@ void APIBlogger::APIBloggerPrivate::slotFetchPosting( const QList<QVariant> &res
 void APIBlogger::APIBloggerPrivate::slotCreatePosting( const QList<QVariant> &result,
                                                        const QVariant &id )
 {
+  Q_UNUSED( id );
+
   kDebug() << "APIBlogger::slotCreatePosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
@@ -194,6 +204,8 @@ void APIBlogger::APIBloggerPrivate::slotCreatePosting( const QList<QVariant> &re
 void APIBlogger::APIBloggerPrivate::slotModifyPosting( const QList<QVariant> &result,
                                                        const QVariant &id )
 {
+  Q_UNUSED( id );
+
   kDebug() << "APIBlogger::slotModifyPosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
@@ -214,6 +226,9 @@ void APIBlogger::APIBloggerPrivate::faultSlot( int number,
                                                const QString &errorString,
                                                const QVariant &id )
 {
+  Q_UNUSED( number );
+  Q_UNUSED( id );
+
   emit parent->error( XmlRpc, errorString );
 }
 

@@ -237,9 +237,10 @@ class APIBlog::Private
 };
 //@endcond
 
-APIBlog::APIBlog( const KUrl &url, QObject *parent, const char *name ) :
+APIBlog::APIBlog( const KUrl &server, QObject *parent ) :
   QObject( parent ), d( new Private )
 {
+  Q_UNUSED( server );
 }
 
 APIBlog::~APIBlog()

@@ -31,8 +31,8 @@
 
 using namespace KBlog;
 
-APIBlogger::APIBlogger( const KUrl &server, QObject *parent, const char *name )
-  : APIBlog( server, parent, name ), d( new APIBloggerPrivate )
+APIBlogger::APIBlogger( const KUrl &server, QObject *parent )
+  : APIBlog( server, parent ), d( new APIBloggerPrivate )
 {
   d->parent = this;
   setUrl( server );
@@ -136,6 +136,7 @@ void APIBlogger::createPosting( KBlog::BlogPosting *posting )
 
 void APIBlogger::createMedia( KBlog::BlogMedia *media )
 {
+  Q_UNUSED( media );
   emit error( NotSupported,
               i18n( "Media upload not available in Blogger API 1.0." ) );
   kDebug() << "Media upload not available in Blogger API 1.0." << endl;

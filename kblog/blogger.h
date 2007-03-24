@@ -71,8 +71,7 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
 
       @param server is the url for the xmlrpc gateway.
     */
-    explicit APIBlogger( const KUrl &server, QObject *parent = 0,
-                         const char *name = 0 );
+    explicit APIBlogger( const KUrl &server, QObject *parent = 0 );
     virtual ~APIBlogger();
 
     /**

@@ -330,10 +330,8 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @param server the gateway url of the server.
       @param parent the parent of this object, defaults to NULL.
-      @param name  the name of the instance.
     */
-    explicit APIBlog( const KUrl &server, QObject *parent = 0,
-                      const char *name = 0 );
+    explicit APIBlog( const KUrl &server, QObject *parent = 0 );
 
     /**
       Destroys the APIBlog object.

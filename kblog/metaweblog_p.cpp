@@ -60,6 +60,8 @@ QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString 
 void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
                                                               const QVariant &id )
 {
+  Q_UNUSED( id );
+
   kDebug() << "APIMetaWeblogPrivate::slotListCategories" << endl;
   kDebug () << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::Map &&
@@ -116,6 +118,8 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
 void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant> &result,
                                                             const QVariant &id )
 {
+  Q_UNUSED( id );
+
   kDebug() << "APIMetaWeblog::slotListPostings" << endl;
   kDebug () << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::List ) {
@@ -149,6 +153,8 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant
 void APIMetaWeblog::APIMetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
                                                             const QVariant &id )
 {
+  Q_UNUSED( id );
+
   kDebug(5800) << "APIMetaWeblog::slotFetchPosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
@@ -179,6 +185,8 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotFetchPosting( const QList<QVariant
 void APIMetaWeblog::APIMetaWeblogPrivate::slotCreatePosting( const QList<QVariant> &result,
                                                              const QVariant &id )
 {
+  Q_UNUSED( id );
+
   kDebug() << "APIMetaWeblog::slotCreatePosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
@@ -198,6 +206,8 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreatePosting( const QList<QVarian
 void APIMetaWeblog::APIMetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
                                                              const QVariant &id )
 {
+  Q_UNUSED( id );
+
   kDebug() << "APIMetaWeblog::slotModifyPosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
@@ -217,6 +227,8 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotModifyPosting( const QList<QVarian
 void APIMetaWeblog::APIMetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,
                                                            const QVariant &id )
 {
+  Q_UNUSED( id );
+
   kDebug() << "APIMetaWeblogPrivate::slotCreateMedia, no error!" << endl;
   kDebug () << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != 8 ) {
@@ -239,6 +251,9 @@ void APIMetaWeblog::APIMetaWeblogPrivate::faultSlot( int number,
                                                      const QString &errorString,
                                                      const QVariant &id )
 {
+  Q_UNUSED( number );
+  Q_UNUSED( id );
+
   emit parent->error( XmlRpc, errorString );
 }
 
