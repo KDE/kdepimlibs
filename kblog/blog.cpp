@@ -31,6 +31,7 @@
 
 using namespace KBlog;
 
+//@cond PRIVATE
 class BlogPosting::Private
 {
   public:
@@ -45,6 +46,7 @@ class BlogPosting::Private
   bool mDeleted;
   bool mUploaded;
 };
+//@endcond
 
 BlogPosting::BlogPosting(): d( new Private )
 {
@@ -172,6 +174,7 @@ void BlogPosting::setDeleted( const bool deleted )
   d->mDeleted =  deleted;
 }
 
+//@cond PRIVATE
 class BlogMedia::Private
 {
   public:
@@ -179,6 +182,7 @@ class BlogMedia::Private
     QString mMimetype;
     QByteArray mData;
 };
+//@endcond
 
 BlogMedia::BlogMedia(): d( new Private )
 {
@@ -219,6 +223,7 @@ void BlogMedia::setData( const QByteArray &data )
   d->mData = data;
 }
 
+//@cond PRIVATE
 class APIBlog::Private
 {
   public:
@@ -230,6 +235,7 @@ class APIBlog::Private
     KTimeZone mTimezone;
     unsigned int mDownloadCount;
 };
+//@endcond
 
 APIBlog::APIBlog( const KUrl &url, QObject *parent, const char *name ) :
   QObject( parent ), d( new Private )

@@ -94,13 +94,13 @@ class KBLOG_EXPORT BlogPosting
     /**
       Returns if the posting is published or not.
 
-      @result bool
-      @see setPublish( const bool publish )
+      @return bool
+      @see setPublish()
     */
     bool publish() const;
 
     /**
-      Set the publish value.
+      Sets the publish value.
 
       @param publish set this to true, if you want to publish immediately.
       @see publish()
@@ -109,13 +109,13 @@ class KBLOG_EXPORT BlogPosting
 
     /**
       Returns the postId. This is for fetched postings.
-      @result postingId
-      @see setPostingId( const QString &postingId )
+      @return postingId
+      @see setPostingId()
     */
    QString postingId() const;
 
     /**
-      Set the post id value. This is important for modifying postings.
+      Sets the post id value. This is important for modifying postings.
 
       @param postingId set this to the post id on the server.
       @see postingId()
@@ -125,13 +125,13 @@ class KBLOG_EXPORT BlogPosting
     /**
       Returns the title.
 
-      @result title
-      @see setTitle( const QString &title )
+      @return title
+      @see setTitle()
     */
     QString title() const;
 
     /**
-      Set the title.
+      Sets the title.
 
       @param title set the title.
       @see title()
@@ -141,13 +141,13 @@ class KBLOG_EXPORT BlogPosting
     /**
       Returns the content.
 
-      @result content
-      @see setContent( const QString &content )
+      @return content
+      @see setContent()
     */
     QString content() const;
 
     /**
-      Set the content.
+      Sets the content.
 
       @param content set the content.
       @see content()
@@ -157,13 +157,13 @@ class KBLOG_EXPORT BlogPosting
     /**
       Returns the category.
 
-      @result category
-      @see setCategory( const QString &category )
+      @return category
+      @see setCategory()
     */
     QString category() const;
 
     /**
-      Set the category.
+      Sets the category.
 
       @param category set the category.
       @see category()
@@ -173,13 +173,13 @@ class KBLOG_EXPORT BlogPosting
     /**
       Returns the creation date time.
 
-      @result creationdatetime
-      @see setCreationDateTime( const QString &datetime )
+      @return creationdatetime
+      @see setCreationDateTime()
     */
     KDateTime creationDateTime() const;
 
     /**
-      Set the creation time.
+      Sets the creation time.
 
       @param datetime set the time the posting has been created.
       @see creationTime()
@@ -189,18 +189,16 @@ class KBLOG_EXPORT BlogPosting
     /**
       Returns the modification date time.
 
-      @result modificationdatetime
-      @see setModificationDateTime( const QString &datetime )
-      @see creationDateTime()
+      @return modificationdatetime
+      @see setModificationDateTime(), creationDateTime()
     */
     KDateTime modificationDateTime() const;
 
     /**
-      Set the modification time.
+      Sets the modification time.
 
       @param datetime set the time the posting has been modified.
-      @see modificationTime()
-      @see setCreationDateTime( const KDateTime &datetime )
+      @see modificationTime(), setCreationDateTime()
     */
     void setModificationDateTime( const KDateTime &datetime );
 
@@ -208,13 +206,13 @@ class KBLOG_EXPORT BlogPosting
       Returns if the post has been deleted on the server. Note: This is
       currently not set automatically on post.
 
-      @result deleted
-      @see setDeleted( const bool deleted )
+      @return deleted
+      @see setDeleted()
     */
     bool deleted() const; // TODO: set on post
 
     /**
-      Set when the posting has been deleted on the server.
+      Sets when the posting has been deleted on the server.
 
       @param deleted set to the status of the posting.
       @see deleted()
@@ -225,18 +223,18 @@ class KBLOG_EXPORT BlogPosting
       Returns if the post has been uploaded to the server. Note: This ist
       currently not set automatically on post.
 
-      @result uploaded
-      @see setUploaded( const bool uploaded )
+      @return uploaded
+      @see setUploaded()
     */
     bool uploaded() const; // TODO: set on post
 
     /**
-      Set when the posting has been uploaded to the server.
+      Sets when the posting has been uploaded to the server.
 
       @param uploaded set the status of the posting.
       @see uploaded()
     */
-    void setUploaded( const bool deleted );
+    void setUploaded( const bool uploaded );
 
   protected:
     // Override this method to detect the new postId assigned when
@@ -277,13 +275,13 @@ class KBLOG_EXPORT BlogMedia {
       Returns the name. This is most likely the filename on the server side
       (at least with wordpress).
 
-      @result name
-      @see setName( const QString &name )
+      @return name
+      @see setName()
     */
     QString name() const;
 
     /**
-      Set the name. This will most likely be the filename on the server side
+      Sets the name. This will most likely be the filename on the server side
       (at least with wordpress).
 
       @param title set the name.
@@ -292,18 +290,18 @@ class KBLOG_EXPORT BlogMedia {
     void setName( const QString &title );
 
     /**
-      Return the mimetype.
+      Returns the mimetype.
 
-      @result mimetype of the object
+      @return mimetype of the object
       @see setMimetype()
     */
     QString mimetype() const;
     void setMimetype( const QString &mimetype );
 
     /**
-      Return the data of the file.
+      Returns the data of the file.
 
-      @result data
+      @return data
       @see setData()
     */
     QByteArray data() const;
@@ -360,7 +358,7 @@ class KBLOG_EXPORT APIBlog : public QObject
     virtual QString interfaceName() const = 0;
 
     /**
-      Set the blod id of the Server.
+      Sets the blog id of the Server.
 
       @param blogId
     */
@@ -369,12 +367,14 @@ class KBLOG_EXPORT APIBlog : public QObject
     /**
       Returns the blog id.
 
-      @result blogId
+      @return blogId
     */
     QString blogId() const;
 
     /**
       Sets the password for the blog.
+      @param pass is a QString containing the blog password.
+
       @see password();
     */
     void setPassword( const QString &pass );
@@ -387,18 +387,22 @@ class KBLOG_EXPORT APIBlog : public QObject
 
     /**
       Sets the username for the blog.
+      @param uname is a QString containing the blog username.
+
       @see username()
     */
     void setUsername( const QString &uname );
 
     /**
-       Get the username of the blog.
+       Returns the username of the blog.
        @see setUsername()
     */
     QString username() const;
 
     /**
       Sets the URL for the blog.
+      @param url is the blog URL.
+
       @see url()
     */
     void setUrl( const KUrl &url );
@@ -418,7 +422,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
     /**
       Get the time zone of the blog server.
-      @see void setTimezone( const KTimeZone &tz )
+      @see void setTimezone()
     */
     KTimeZone timezone();
 
@@ -428,28 +432,25 @@ class KBLOG_EXPORT APIBlog : public QObject
 
     /**
       Get information about the user from the blog.
-      @see void userInfoRetrieved( const QString &, const QString &, const QString & )
+      @see userInfoRetrieved()
     */
     virtual void userInfo() = 0;
 
     /**
       List the blogs available for this authentication on the server.
-      @see void blogInfoRetrieved( const QString &id, const QString &name )
+      @see blogInfoRetrieved()
     */
     virtual void listBlogs() = 0;
 
     /**
       List recent postings on the server..
-      @see     void listedPosting( KBlog::BlogPosting &posting )
-      @see     void fetchedPosting( KBlog::BlogPosting &posting )
-      @see     void listPostingsFinished()
+      @see listedPosting(), fetchedPosting(), listPostingsFinished()
     */
     virtual void listPostings() = 0;
 
     /**
       List the categories of the blog.
-      @see  void categoryInfoRetrieved( const QString &, const QString & )
-       @see  void listCategoriesFinished()
+      @see categoryInfoRetrieved(), listCategoriesFinished()
     */
     virtual void listCategories() = 0;
 
@@ -457,7 +458,7 @@ class KBLOG_EXPORT APIBlog : public QObject
       Fetch the Posting with postingId.
       @param postingId is the id of the posting on the server.
 
-      @see  void fetchedPosting( KBlog::BlogPosting &posting )
+      @see fetchedPosting()
     */
     virtual void fetchPosting( const QString &postingId ) = 0;
 
@@ -498,7 +499,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @param postingId is the id of the posting to remove.
 
-      @see void removePosting( KBlog::BlogPosting *posting )
+      @see removePosting()
     */
     virtual void removePosting( const QString &postingId ) = 0;
 
