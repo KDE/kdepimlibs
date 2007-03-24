@@ -4,9 +4,10 @@ add_subdirectory( tests )
 ########### next target ###############
 
 set(emailfunctions_LIB_SRCS
-   email.cpp)
+   email.cpp linklocator.cpp)
 
 kde4_automoc(${emailfunctions_LIB_SRCS})
+kde4_add_kcfg_files(emailfunctions_LIB_SRCS pimemoticons.kcfgc)
 
 kde4_add_library(emailfunctions SHARED ${emailfunctions_LIB_SRCS})
 
@@ -17,4 +18,4 @@ install(TARGETS emailfunctions  DESTINATION ${LIB_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES emailfunctions.h email.h DESTINATION ${INCLUDE_INSTALL_DIR}/emailfunctions  )
+install( FILES emailfunctions.h email.h linklocator.h DESTINATION ${INCLUDE_INSTALL_DIR}/emailfunctions  )
