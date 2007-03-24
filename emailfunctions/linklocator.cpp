@@ -32,7 +32,7 @@
 #include <limits.h>
 #include <QTextDocument>
 
-namespace EmailAddressTools {
+namespace LinkLocator {
 
 QMap<QString, QString> *LinkLocator::s_smileyEmoticonNameMap = 0;
 QMap<QString, QString> *LinkLocator::s_smileyEmoticonHTMLCache = 0;

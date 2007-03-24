@@ -25,7 +25,7 @@
 
 #include "emailfunctions.h"
 
-namespace EmailAddressTools {
+namespace LinkLocator {
 
 /**
  * LinkLocator assists in identifying sections of text that can
