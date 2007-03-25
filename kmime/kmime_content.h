@@ -287,7 +287,7 @@ class KMIME_EXPORT Content
 
       @param recursive if true, all parts in the message are returned. 
     */
-    List contents( bool recursive = false ) const;
+    List contents( bool recursive = false );
 
     /**
       Adds a new sub-Content, the current Content object is converted into a
