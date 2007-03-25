@@ -32,6 +32,10 @@
 #include <QtCore/QString>
 #include <QtCore/QList>
 
+
+#ifdef Q_CC_MSVC
+# undef timezone
+#endif
 /**
   This is the main interface for blog backends
   @author Ian Reinhart Geiser, Reinhold Kainhofer, Christian Weilbach
