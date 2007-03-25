@@ -282,9 +282,12 @@ class KMIME_EXPORT Content
     List attachments( bool incAlternatives = false );
 
     /**
-      Returns a list of sub-Contents.
+      Returns a list of sub-Contents. By default only the top level Contents
+      are returned.
+
+      @param recursive if true, all parts in the message are returned. 
     */
-    List contents() const;
+    List contents( bool recursive = false ) const;
 
     /**
       Adds a new sub-Content, the current Content object is converted into a
