@@ -1,114 +1,104 @@
-/* This file is part of the KDE project
-   Copyright (C) 2005 Ingo Kloecker <kloecker@kde.org>
+/*
+  This file is part of the emailfunctions library.
+  Copyright (C) 2005 Ingo Kloecker <kloecker@kde.org>
+  Copyright (C) 2007 Allen Winter <winter@kde.org>
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License version 2 as published by the Free Software Foundation.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License version 2 as published by the Free Software Foundation.
 
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public License
-   along with this library; see the file COPYING.LIB.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
+#include <qtest_kde.h>
 
-// Test program for libkdepim/linklocator.*
-#include <linklocator.h>
+#include "testlinklocator.h"
+#include "testlinklocator.moc"
 
-#include <kcmdlineargs.h>
-#include <kapplication.h>
-#include <kdebug.h>
+QTEST_KDEMAIN( LinkLocatorTest, NoGUI )
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
+#include "emailfunctions/linklocator.h"
+using namespace EmailAddressTools;
 
-static bool check(const QString& txt, const QString& a, const QString& b)
+void LinkLocatorTest::testGetEmailAddress()
 {
-  if (a == b) {
-    kDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "ok" << endl;
-  }
-  else {
-    kDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "KO !" << endl;
-    exit(1);
-  }
-  return true;
-}
-
-static bool checkGetEmailAddress( const QString & input,
-                                  int atPos,
-                                  const QString & expRetVal,
-                                  bool allowBadAtPos = false )
-{
-  if ( !allowBadAtPos && ( input[atPos] != '@' ) ) {
-    kDebug() << "atPos (" << atPos << ") doesn't point to '@' in \""
-              << input << "\". Fix the check!" << endl;
-    exit(1);
-  }
-  LinkLocator ll( input, atPos );
-  const QString retVal = ll.getEmailAddress();
-  check( "getEmailAddress() \"" + input + "\", " + QString::number( atPos ),
-         retVal, expRetVal );
-  return true;
-}
-
-int main(int argc, char *argv[])
-{
-  // KApplication::disableAutoDcopRegistration();
-  KCmdLineArgs::init( argc, argv, "testlinklocator", 0, 0, 0, 0 );
-  KApplication app( false );
-
   // empty input
-  checkGetEmailAddress( QString(), 0, QString(), true );
+  LinkLocator ll1( QString(), 0 );
+  QVERIFY( ll1.getEmailAddress() == QString() );
 
   // no '@' at scan position
-  checkGetEmailAddress( "foo@bar.baz", 0, QString(), true );
+  LinkLocator ll2( "foo@bar.baz", 0 );
+  QVERIFY( ll2.getEmailAddress() == QString() );
 
   // '@' in local part
-  checkGetEmailAddress( "foo@bar@bar.baz", 7, QString() );
+  LinkLocator ll3( "foo@bar@bar.baz", 7 );
+  QVERIFY( ll3.getEmailAddress() == QString() );
 
   // empty local part
-  checkGetEmailAddress( "@bar.baz", 0, QString() );
-  checkGetEmailAddress( ".@bar.baz", 1, QString() );
-  checkGetEmailAddress( " @bar.baz", 1, QString() );
-  checkGetEmailAddress( ".!#$%&'*+-/=?^_`{|}~@bar.baz", strlen(".!#$%&'*+-/=?^_`{|}~"), QString() );
+  LinkLocator ll4( "@bar.baz", 0 );
+  QVERIFY( ll4.getEmailAddress() == QString() );
+  LinkLocator ll5( ".@bar.baz", 1 );
+  QVERIFY( ll5.getEmailAddress() == QString() );
+  LinkLocator ll6( " @bar.baz", 1 );
+  QVERIFY( ll6.getEmailAddress() == QString() );
+  LinkLocator ll7( ".!#$%&'*+-/=?^_`{|}~@bar.baz",
+                   strlen(".!#$%&'*+-/=?^_`{|}~") );
+  QVERIFY( ll7.getEmailAddress() == QString() );
 
   // allowed special chars in local part of address
-  checkGetEmailAddress( "a.!#$%&'*+-/=?^_`{|}~@bar.baz", strlen("a.!#$%&'*+-/=?^_`{|}~"), "a.!#$%&'*+-/=?^_`{|}~@bar.baz" );
+  LinkLocator ll8( "a.!#$%&'*+-/=?^_`{|}~@bar.baz",
+                   strlen("a.!#$%&'*+-/=?^_`{|}~") );
+  QVERIFY( ll8.getEmailAddress() == "a.!#$%&'*+-/=?^_`{|}~@bar.baz" );
 
   // '@' in domain part
-  checkGetEmailAddress( "foo@bar@bar.baz", 3, QString() );
+  LinkLocator ll9 ( "foo@bar@bar.baz", 3 );
+  QVERIFY( ll9.getEmailAddress() == QString() );
 
   // domain part without dot
-  checkGetEmailAddress( "foo@bar", 3, QString() );
-  checkGetEmailAddress( "foo@bar.", 3, QString() );
-  checkGetEmailAddress( ".foo@bar", 4, QString() );
-  checkGetEmailAddress( "foo@bar ", 3, QString() );
-  checkGetEmailAddress( " foo@bar", 4, QString() );
-  checkGetEmailAddress( "foo@bar-bar", 3, QString() );
+  LinkLocator lla( "foo@bar", 3 );
+  QVERIFY( lla.getEmailAddress() == QString() );
+  LinkLocator llb( "foo@bar.", 3 );
+  QVERIFY( llb.getEmailAddress() == QString() );
+  LinkLocator llc( ".foo@bar", 4 );
+  QVERIFY( llc.getEmailAddress() == QString() );
+  LinkLocator lld( "foo@bar ", 3 );
+  QVERIFY( lld.getEmailAddress() == QString() );
+  LinkLocator lle( " foo@bar", 4 );
+  QVERIFY( lle.getEmailAddress() == QString() );
+  LinkLocator llf( "foo@bar-bar", 3 );
+  QVERIFY( llf.getEmailAddress() == QString() );
 
   // empty domain part
-  checkGetEmailAddress( "foo@", 3, QString() );
-  checkGetEmailAddress( "foo@.", 3, QString() );
-  checkGetEmailAddress( "foo@-", 3, QString() );
+  LinkLocator llg( "foo@", 3 );
+  QVERIFY( llg.getEmailAddress() == QString() );
+  LinkLocator llh( "foo@.", 3 );
+  QVERIFY( llh.getEmailAddress() == QString() );
+  LinkLocator lli( "foo@-", 3 );
+  QVERIFY( lli.getEmailAddress() == QString() );
 
   // simple address
-  checkGetEmailAddress( "foo@bar.baz", 3, "foo@bar.baz" );
-  checkGetEmailAddress( "foo@bar.baz.", 3, "foo@bar.baz" );
-  checkGetEmailAddress( ".foo@bar.baz", 4, "foo@bar.baz" );
-  checkGetEmailAddress( "foo@bar.baz-", 3, "foo@bar.baz" );
-  checkGetEmailAddress( "-foo@bar.baz", 4, "foo@bar.baz" );
-  checkGetEmailAddress( "foo@bar.baz ", 3, "foo@bar.baz" );
-  checkGetEmailAddress( " foo@bar.baz", 4, "foo@bar.baz" );
-  checkGetEmailAddress( "foo@bar-bar.baz", 3, "foo@bar-bar.baz" );
-
-  printf("\nTest OK !\n");
-
-  return 0;
+  LinkLocator llj( "foo@bar.baz", 3 );
+  QVERIFY( llj.getEmailAddress() == "foo@bar.baz" );
+  LinkLocator llk( "foo@bar.baz.", 3 );
+  QVERIFY( llk.getEmailAddress() == "foo@bar.baz" );
+  LinkLocator lll( ".foo@bar.baz", 4 );
+  QVERIFY( lll.getEmailAddress() == "foo@bar.baz" );
+  LinkLocator llm( "foo@bar.baz-", 3 );
+  QVERIFY( llm.getEmailAddress() == "foo@bar.baz" );
+  LinkLocator lln( "-foo@bar.baz", 4 );
+  QVERIFY( lln.getEmailAddress() == "foo@bar.baz" );
+  LinkLocator llo( "foo@bar.baz ", 3 );
+  QVERIFY( llo.getEmailAddress() == "foo@bar.baz" );
+  LinkLocator llp( " foo@bar.baz", 4 );
+  QVERIFY( llp.getEmailAddress() == "foo@bar.baz" );
+  LinkLocator llq( "foo@bar-bar.baz", 3 );
+  QVERIFY( llq.getEmailAddress() == "foo@bar-bar.baz" );
 }
 
