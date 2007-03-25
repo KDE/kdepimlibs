@@ -19,3 +19,5 @@ install(TARGETS emailfunctions  DESTINATION ${LIB_INSTALL_DIR} )
 ########### install files ###############
 
 install( FILES emailfunctions.h email.h linklocator.h DESTINATION ${INCLUDE_INSTALL_DIR}/emailfunctions  )
+
+install(FILES pimemoticons.kcfg  DESTINATION ${KCFG_INSTALL_DIR})

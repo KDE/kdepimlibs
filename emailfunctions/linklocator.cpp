@@ -1,24 +1,25 @@
 /*
-    Copyright (c) 2002 Dave Corrie <kde@davecorrie.com>
+  Copyright (c) 2002 Dave Corrie <kde@davecorrie.com>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
- */
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
+*/
 
 #include "linklocator.h"
 #include "pimemoticons.h"
+
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <kstaticdeleter.h>
@@ -26,13 +27,13 @@
 #include <kdebug.h>
 
 #include <q3stylesheet.h>
-#include <QFile>
-#include <QRegExp>
-
-#include <limits.h>
+#include <QtCore/QFile>
+#include <QtCore/QRegExp>
 #include <QTextDocument>
 
-namespace LinkLocatorTools {
+#include <limits.h>
+
+using namespace EmailAddressTools;
 
 QMap<QString, QString> *LinkLocator::s_smileyEmoticonNameMap = 0;
 QMap<QString, QString> *LinkLocator::s_smileyEmoticonHTMLCache = 0;
@@ -40,8 +41,8 @@ QMap<QString, QString> *LinkLocator::s_smileyEmoticonHTMLCache = 0;
 static KStaticDeleter< QMap<QString, QString> > smileyMapDeleter;
 static KStaticDeleter< QMap<QString, QString> > smileyCacheDeleter;
 
-LinkLocator::LinkLocator(const QString& text, int pos)
-  : mText(text), mPos(pos), mMaxUrlLen(4096), mMaxAddressLen(255)
+LinkLocator::LinkLocator( const QString &text, int pos )
+  : mText( text ), mPos( pos ), mMaxUrlLen( 4096 ), mMaxAddressLen( 255 )
 {
   // If you change either of the above values for maxUrlLen or
   // maxAddressLen, then please also update the documentation for
@@ -55,16 +56,17 @@ LinkLocator::LinkLocator(const QString& text, int pos)
     for ( int i = 0; i < EmotIcons::EnumSindex::COUNT; ++i ) {
       QString imageName( EmotIcons::EnumSindex::enumToString[i] );
       imageName.truncate( imageName.length() - 2 ); //remove the _0 bit
-      s_smileyEmoticonNameMap->insert( EmotIcons::smiley(i), imageName );
+      s_smileyEmoticonNameMap->insert( EmotIcons::smiley( i ), imageName );
     }
   }
 
-  if ( !s_smileyEmoticonHTMLCache )
+  if ( !s_smileyEmoticonHTMLCache ) {
     smileyCacheDeleter.setObject( s_smileyEmoticonHTMLCache,
                                   new QMap<QString, QString>() );
+  }
 }
 
-void LinkLocator::setMaxUrlLen(int length)
+void LinkLocator::setMaxUrlLen( int length )
 {
   mMaxUrlLen = length;
 }
@@ -74,7 +76,7 @@ int LinkLocator::maxUrlLen() const
   return mMaxUrlLen;
 }
 
-void LinkLocator::setMaxAddressLen(int length)
+void LinkLocator::setMaxAddressLen( int length )
 {
   mMaxAddressLen = length;
 }
@@ -87,31 +89,27 @@ int LinkLocator::maxAddressLen() const
 QString LinkLocator::getUrl()
 {
   QString url;
-  if(atUrl())
-  {
+  if ( atUrl() ) {
     // handle cases like this: <link>http://foobar.org/</link>
     int start = mPos;
-    while(mPos < (int)mText.length() && mText[mPos] > ' ' && mText[mPos] != '"' &&
-      QString("<>()[]").indexOf(mText[mPos]) == -1)
-    {
+    while ( mPos < (int)mText.length() &&
+            mText[mPos] > ' ' && mText[mPos] != '"' &&
+            QString( "<>()[]" ).indexOf( mText[mPos] ) == -1 ) {
       ++mPos;
     }
+
     /* some URLs really end with:  # / & - _    */
-    const QString allowedSpecialChars = QString("#/&-_");
-    while(mPos > start && mText[mPos-1].isPunct() &&
-		    allowedSpecialChars.indexOf(mText[mPos-1]) == -1 )
-    {
+    const QString allowedSpecialChars = QString( "#/&-_" );
+    while ( mPos > start && mText[mPos-1].isPunct() &&
+            allowedSpecialChars.indexOf( mText[mPos-1] ) == -1 ) {
       --mPos;
     }
 
-    url = mText.mid(start, mPos - start);
-    if(isEmptyUrl(url) || mPos - start > maxUrlLen())
-    {
+    url = mText.mid( start, mPos - start );
+    if ( isEmptyUrl(url) || mPos - start > maxUrlLen() ) {
       mPos = start;
       url = "";
-    }
-    else
-    {
+    } else {
       --mPos;
     }
   }
@@ -123,46 +121,48 @@ bool LinkLocator::atUrl() const
 {
   // the following characters are allowed in a dot-atom (RFC 2822):
   // a-z A-Z 0-9 . ! # $ % & ' * + - / = ? ^ _ ` { | } ~
-  const QString allowedSpecialChars = QString(".!#$%&'*+-/=?^_`{|}~");
+  const QString allowedSpecialChars = QString( ".!#$%&'*+-/=?^_`{|}~" );
 
   // the character directly before the URL must not be a letter, a number or
   // any other character allowed in a dot-atom (RFC 2822).
-  if( ( mPos > 0 ) && ( mText[mPos-1].isLetterOrNumber() ||
-                        ( allowedSpecialChars.indexOf( mText[mPos-1] ) != -1 ) ) )
+  if ( ( mPos > 0 ) &&
+       ( mText[mPos-1].isLetterOrNumber() ||
+         ( allowedSpecialChars.indexOf( mText[mPos-1] ) != -1 ) ) ) {
     return false;
+  }
 
   QChar ch = mText[mPos];
-  return (ch=='h' && ( mText.mid(mPos, 7) == "http://" ||
-                       mText.mid(mPos, 8) == "https://") ) ||
-         (ch=='v' && mText.mid(mPos, 6) == "vnc://") ||
-         (ch=='f' && ( mText.mid(mPos, 7) == "fish://" ||
-                       mText.mid(mPos, 6) == "ftp://" ||
-                       mText.mid(mPos, 7) == "ftps://") ) ||
-         (ch=='s' && ( mText.mid(mPos, 7) == "sftp://" ||
-                       mText.mid(mPos, 6) == "smb://") ) ||
-         (ch=='m' && mText.mid(mPos, 7) == "mailto:") ||
-         (ch=='w' && mText.mid(mPos, 4) == "www.") ||
-         (ch=='f' && mText.mid(mPos, 4) == "ftp.") ||
-         (ch=='n' && mText.mid(mPos, 5) == "news:");
-         // note: no "file:" for security reasons
+  return ( ch == 'h' && ( mText.mid( mPos, 7 ) == "http://" ||
+                          mText.mid( mPos, 8 ) == "https://" ) ) ||
+    ( ch == 'v' && mText.mid( mPos, 6 ) == "vnc://" ) ||
+    ( ch == 'f' && ( mText.mid( mPos, 7 ) == "fish://" ||
+                     mText.mid( mPos, 6 ) == "ftp://" ||
+                     mText.mid( mPos, 7 ) == "ftps://") ) ||
+    ( ch == 's' && ( mText.mid( mPos, 7 ) == "sftp://" ||
+                   mText.mid( mPos, 6 ) == "smb://" ) ) ||
+    ( ch == 'm' && mText.mid( mPos, 7 ) == "mailto:" ) ||
+    ( ch == 'w' && mText.mid( mPos, 4 ) == "www." ) ||
+    ( ch == 'f' && mText.mid( mPos, 4 ) == "ftp." ) ||
+    ( ch == 'n' && mText.mid( mPos, 5 ) == "news:" );
+  // note: no "file:" for security reasons
 }
 
-bool LinkLocator::isEmptyUrl(const QString& url)
+bool LinkLocator::isEmptyUrl( const QString &url ) const
 {
   return url.isEmpty() ||
-         url == "http://" ||
-         url == "https://" ||
-         url == "fish://" ||
-         url == "ftp://" ||
-         url == "ftps://" ||
-         url == "sftp://" ||
-         url == "smb://" ||
-         url == "vnc://" ||
-         url == "mailto" ||
-         url == "www" ||
-         url == "ftp" ||
-         url == "news" ||
-         url == "news://";
+    url == "http://" ||
+    url == "https://" ||
+    url == "fish://" ||
+    url == "ftp://" ||
+    url == "ftps://" ||
+    url == "sftp://" ||
+    url == "smb://" ||
+    url == "vnc://" ||
+    url == "mailto" ||
+    url == "www" ||
+    url == "ftp" ||
+    url == "news" ||
+    url == "news://";
 }
 
 QString LinkLocator::getEmailAddress()
@@ -172,7 +172,7 @@ QString LinkLocator::getEmailAddress()
   if ( mText[mPos] == '@' ) {
     // the following characters are allowed in a dot-atom (RFC 2822):
     // a-z A-Z 0-9 . ! # $ % & ' * + - / = ? ^ _ ` { | } ~
-    const QString allowedSpecialChars = QString(".!#$%&'*+-/=?^_`{|}~");
+    const QString allowedSpecialChars = QString( ".!#$%&'*+-/=?^_`{|}~" );
 
     // determine the local part of the email address
     int start = mPos - 1;
@@ -180,16 +180,19 @@ QString LinkLocator::getEmailAddress()
             ( mText[start].isLetterOrNumber() ||
               mText[start] == '@' || // allow @ to find invalid email addresses
               allowedSpecialChars.indexOf( mText[start] ) != -1 ) ) {
-      if ( mText[start] == '@' )
+      if ( mText[start] == '@' ) {
         return QString(); // local part contains '@' -> no email address
+      }
       --start;
     }
     ++start;
     // we assume that an email address starts with a letter or a digit
-    while ( ( start < mPos ) && !mText[start].isLetterOrNumber() )
+    while ( ( start < mPos ) && !mText[start].isLetterOrNumber() ) {
       ++start;
-    if ( start == mPos )
+    }
+    if ( start == mPos ) {
       return QString(); // local part is empty -> no email address
+    }
 
     // determine the domain part of the email address
     int dotPos = INT_MAX;
@@ -199,22 +202,28 @@ QString LinkLocator::getEmailAddress()
               mText[end] == '@' || // allow @ to find invalid email addresses
               mText[end] == '.' ||
               mText[end] == '-' ) ) {
-      if ( mText[end] == '@' )
+      if ( mText[end] == '@' ) {
         return QString(); // domain part contains '@' -> no email address
-      if ( mText[end] == '.' )
+      }
+      if ( mText[end] == '.' ) {
         dotPos = qMin( dotPos, end ); // remember index of first dot in domain
+      }
       ++end;
     }
     // we assume that an email address ends with a letter or a digit
-    while ( ( end > mPos ) && !mText[end - 1].isLetterOrNumber() )
+    while ( ( end > mPos ) && !mText[end - 1].isLetterOrNumber() ) {
       --end;
-    if ( end == mPos )
+    }
+    if ( end == mPos ) {
       return QString(); // domain part is empty -> no email address
-    if ( dotPos >= end )
+    }
+    if ( dotPos >= end ) {
       return QString(); // domain part doesn't contain a dot
+    }
 
-    if ( end - start > maxAddressLen() )
+    if ( end - start > maxAddressLen() ) {
       return QString(); // too long -> most likely no email address
+    }
     address = mText.mid( start, end - start );
 
     mPos = end - 1;
@@ -222,59 +231,53 @@ QString LinkLocator::getEmailAddress()
   return address;
 }
 
-QString LinkLocator::convertToHtml(const QString& plainText, int flags,
-  int maxUrlLen, int maxAddressLen)
+QString LinkLocator::convertToHtml( const QString &plainText, int flags,
+                                    int maxUrlLen, int maxAddressLen )
 {
-  LinkLocator locator(plainText);
-  locator.setMaxUrlLen(maxUrlLen);
-  locator.setMaxAddressLen(maxAddressLen);
+  LinkLocator locator( plainText );
+  locator.setMaxUrlLen( maxUrlLen );
+  locator.setMaxAddressLen( maxAddressLen );
 
   QString str;
-  QString result((QChar*)0, (int)locator.mText.length() * 2);
+  QString result( (QChar*)0, (int)locator.mText.length() * 2 );
   QChar ch;
   int x;
   bool startOfLine = true;
   QString emoticon;
 
-  for (locator.mPos = 0, x = 0; locator.mPos < (int)locator.mText.length(); locator.mPos++, x++)
-  {
+  for ( locator.mPos = 0, x = 0; locator.mPos < (int)locator.mText.length();
+        locator.mPos++, x++ ) {
     ch = locator.mText[locator.mPos];
-    if ( flags & PreserveSpaces )
-    {
-      if (ch==' ')
-      {
-        if (startOfLine) {
+    if ( flags & PreserveSpaces ) {
+      if ( ch == ' ' ) {
+        if ( startOfLine ) {
           result += "&nbsp;";
           locator.mPos++, x++;
           startOfLine = false;
         }
-        while (locator.mText[locator.mPos] == ' ')
-        {
+        while ( locator.mText[locator.mPos] == ' ' ) {
           result += " ";
           locator.mPos++, x++;
-          if (locator.mText[locator.mPos] == ' ') {
+          if ( locator.mText[locator.mPos] == ' ' ) {
             result += "&nbsp;";
             locator.mPos++, x++;
           }
         }
         locator.mPos--, x--;
         continue;
-      }
-      else if (ch=='\t')
-      {
+      } else if ( ch == '\t' ) {
         do
         {
           result += "&nbsp;";
           x++;
         }
-        while((x&7) != 0);
+        while ( ( x & 7 ) != 0 );
         x--;
         startOfLine = false;
         continue;
       }
     }
-    if (ch=='\n')
-    {
+    if ( ch == '\n' ) {
       result += "<br />";
       startOfLine = true;
       x = -1;
@@ -282,44 +285,43 @@ QString LinkLocator::convertToHtml(const QString& plainText, int flags,
     }
 
     startOfLine = false;
-    if (ch=='&')
+    if ( ch == '&' ) {
       result += "&amp;";
-    else if (ch=='"')
+    } else if ( ch == '"' ) {
       result += "&quot;";
-    else if (ch=='<')
+    } else if ( ch == '<' ) {
       result += "&lt;";
-    else if (ch=='>')
+    } else if ( ch == '>' ) {
       result += "&gt;";
-    else
-    {
+    } else {
       const int start = locator.mPos;
-      if ( !(flags & IgnoreUrls) ) {
+      if ( !( flags & IgnoreUrls ) ) {
         str = locator.getUrl();
-        if (!str.isEmpty())
-        {
+        if ( !str.isEmpty() ) {
           QString hyperlink;
-          if(str.left(4) == "www.")
+          if ( str.left( 4 ) == "www." ) {
             hyperlink = "http://" + str;
-          else if(str.left(4) == "ftp.")
+          } else if ( str.left( 4 ) == "ftp." ) {
             hyperlink = "ftp://" + str;
-          else
+          } else {
             hyperlink = str;
+          }
 
-          str = str.replace('&', "&amp;");
+          str = str.replace( '&', "&amp;" );
           result += "<a href=\"" + hyperlink + "\">" + str + "</a>";
           x += locator.mPos - start;
           continue;
         }
         str = locator.getEmailAddress();
-        if(!str.isEmpty())
-        {
+        if ( !str.isEmpty() ) {
           // len is the length of the local part
-          int len = str.indexOf('@');
-          QString localPart = str.left(len);
+          int len = str.indexOf( '@' );
+          QString localPart = str.left( len );
 
           // remove the local part from the result (as '&'s have been expanded to
           // &amp; we have to take care of the 4 additional characters per '&')
-          result.truncate(result.length() - len - (localPart.count('&')*4));
+          result.truncate( result.length() -
+                           len - ( localPart.count( '&' ) * 4 ) );
           x -= len;
 
           result += "<a href=\"mailto:" + str + "\">" + str + "</a>";
@@ -350,32 +352,35 @@ QString LinkLocator::convertToHtml(const QString& plainText, int flags,
   return result;
 }
 
-QString LinkLocator::pngToDataUrl( const QString & iconPath )
+QString LinkLocator::pngToDataUrl( const QString &iconPath )
 {
-  if ( iconPath.isEmpty() )
+  if ( iconPath.isEmpty() ) {
     return QString();
+  }
 
   QFile pngFile( iconPath );
-  if ( !pngFile.open( QIODevice::ReadOnly | QIODevice::Unbuffered ) )
+  if ( !pngFile.open( QIODevice::ReadOnly | QIODevice::Unbuffered ) ) {
     return QString();
+  }
 
   QByteArray ba = pngFile.readAll();
   pngFile.close();
   return QString::fromLatin1("data:image/png;base64,%1")
-         .arg( QString::fromAscii( KCodecs::base64Encode( ba ) ) );
+    .arg( QString::fromAscii( KCodecs::base64Encode( ba ) ) );
 }
-
 
 QString LinkLocator::getEmoticon()
 {
   // smileys have to be prepended by whitespace
-  if ( ( mPos > 0 ) && !mText[mPos-1].isSpace() )
+  if ( ( mPos > 0 ) && !mText[mPos-1].isSpace() ) {
     return QString();
+  }
 
   // since smileys start with ':', ';', '(' or '8' short circuit method
   const QChar ch = mText[mPos];
-  if ( ch !=':' && ch != ';' && ch != '(' && ch != '8' )
+  if ( ch !=':' && ch != ';' && ch != '(' && ch != '8' ) {
     return QString();
+  }
 
   // find the end of the smiley (a smiley is at most 4 chars long and ends at
   // lineend or whitespace)
@@ -383,33 +388,34 @@ QString LinkLocator::getEmoticon()
   const int MaxSmileyLen = 4;
   int smileyLen = 1;
   while ( ( smileyLen <= MaxSmileyLen ) &&
-          ( mPos+smileyLen < (int)mText.length() ) &&
-          !mText[mPos+smileyLen].isSpace() )
+          ( mPos + smileyLen < (int)mText.length() ) &&
+          !mText[mPos + smileyLen].isSpace() )
     smileyLen++;
-  if ( smileyLen < MinSmileyLen || smileyLen > MaxSmileyLen )
+  if ( smileyLen < MinSmileyLen || smileyLen > MaxSmileyLen ) {
     return QString();
+  }
 
   const QString smiley = mText.mid( mPos, smileyLen );
-  if ( !s_smileyEmoticonNameMap->contains( smiley ) )
+  if ( !s_smileyEmoticonNameMap->contains( smiley ) ) {
     return QString(); // that's not a (known) smiley
+  }
 
   QString htmlRep;
   if ( s_smileyEmoticonHTMLCache->contains( smiley ) ) {
     htmlRep = (*s_smileyEmoticonHTMLCache)[smiley];
-  }
-  else {
+  } else {
     const QString imageName = (*s_smileyEmoticonNameMap)[smiley];
 
-    const QString iconPath = KStandardDirs::locate( "emoticons",
-                                     EmotIcons::theme() +
-                                     QString::fromLatin1( "/" ) +
-                                     imageName + QString::fromLatin1(".png") );
+    const QString iconPath =
+      KStandardDirs::locate( "emoticons",
+                             EmotIcons::theme() +
+                             QString::fromLatin1( "/" ) +
+                             imageName + QString::fromLatin1(".png") );
 
     const QString dataUrl = pngToDataUrl( iconPath );
     if ( dataUrl.isEmpty() ) {
       htmlRep.clear();
-    }
-    else {
+    } else {
       // create an image tag (the text in attribute alt is used
       // for copy & paste) representing the smiley
       htmlRep = QString("<img class=\"pimsmileyimg\" src=\"%1\" "
@@ -421,8 +427,9 @@ QString LinkLocator::getEmoticon()
     s_smileyEmoticonHTMLCache->insert( smiley, htmlRep );
   }
 
-  if ( !htmlRep.isEmpty() )
+  if ( !htmlRep.isEmpty() ) {
     mPos += smileyLen - 1;
+  }
 
   return htmlRep;
 }
@@ -430,31 +437,32 @@ QString LinkLocator::getEmoticon()
 QString LinkLocator::highlightedText()
 {
   // formating symbols must be prepended with a whitespace
-  if ( ( mPos > 0 ) && !mText[mPos-1].isSpace() )
+  if ( ( mPos > 0 ) && !mText[mPos-1].isSpace() ) {
     return QString();
+  }
 
   const QChar ch = mText[mPos];
-  if ( ch != '/' && ch != '*' && ch != '_' )
+  if ( ch != '/' && ch != '*' && ch != '_' ) {
     return QString();
+  }
 
-  QRegExp re = QRegExp( QString("\\%1([0-9A-Za-z]+)\\%2").arg( ch ).arg( ch ) );
+  QRegExp re =
+    QRegExp( QString( "\\%1([0-9A-Za-z]+)\\%2" ).arg( ch ).arg( ch ) );
   if ( re.indexIn( mText, mPos ) == mPos ) {
     int length = re.matchedLength();
     // there must be a whitespace after the closing formating symbol
-    if ( mPos + length < mText.length() && !mText[mPos + length].isSpace() )
+    if ( mPos + length < mText.length() && !mText[mPos + length].isSpace() ) {
       return QString();
+    }
     mPos += length - 1;
     switch ( ch.toLatin1() ) {
-      case '*':
-        return "<b>" + re.cap( 1 ) + "</b>";
-      case '_':
-        return "<u>" + re.cap( 1 ) + "</u>";
-      case '/':
-        return "<i>" + re.cap( 1 ) + "</i>";
+    case '*':
+      return "<b>" + re.cap( 1 ) + "</b>";
+    case '_':
+      return "<u>" + re.cap( 1 ) + "</u>";
+    case '/':
+      return "<i>" + re.cap( 1 ) + "</i>";
     }
   }
   return QString();
 }
-
-}
-
