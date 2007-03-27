@@ -22,15 +22,15 @@
 #ifndef SPELLINGFILTER_H_INCLUDED
 #define SPELLINGFILTER_H_INCLUDED
 
-#include <QString>
-#include <QStringList>
-#include <kpimutils/linklocator.h>
+#include "kpimutils.h"
+#include "kpimutils/linklocator.h"
 
-#include <kdepim_export.h>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
-using namespace KPIMUtils;
+namespace KPIMUtils {
 
-class KDEPIM_EXPORT SpellingFilter
+class KPIMUTILS_EXPORT SpellingFilter
 {
   public:
     enum UrlFiltering {
@@ -78,6 +78,8 @@ class SpellingFilter::TextCensor : public LinkLocator
 
     void findEmailAddress();
 };
+
+}
 
 #endif // SPELLINGFILTER_H_INCLUDED
 

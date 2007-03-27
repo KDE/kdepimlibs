@@ -19,8 +19,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <kdebug.h>
 #include "spellingfilter.h"
+
+#include <kdebug.h>
+
+using namespace KPIMUtils;
 
 //-----------------------------------------------------------------------------
 // SpellingFilter implementation
