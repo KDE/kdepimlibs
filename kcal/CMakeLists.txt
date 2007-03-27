@@ -242,7 +242,7 @@ kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
 kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 
-target_link_libraries(kcal ${KDE4_KDE3SUPPORT_LIBS} ${QT_QTXML_LIBRARY} kresources kabc emailfunctions )
+target_link_libraries(kcal ${KDE4_KDE3SUPPORT_LIBS} ${QT_QTXML_LIBRARY} kresources kabc kpimutils )
 
 set_target_properties(kcal PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS kcal DESTINATION ${LIB_INSTALL_DIR})

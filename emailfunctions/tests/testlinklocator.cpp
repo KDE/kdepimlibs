@@ -1,5 +1,6 @@
 /*
-  This file is part of the emailfunctions library.
+  This file is part of the kpimutils library.
+
   Copyright (C) 2005 Ingo Kloecker <kloecker@kde.org>
   Copyright (C) 2007 Allen Winter <winter@kde.org>
 
@@ -25,7 +26,7 @@
 QTEST_KDEMAIN( LinkLocatorTest, NoGUI )
 
 #include "emailfunctions/linklocator.h"
-using namespace EmailAddressTools;
+using namespace KPIMUtils;
 
 void LinkLocatorTest::testGetEmailAddress()
 {

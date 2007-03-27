@@ -20,12 +20,12 @@
 #ifndef LINKLOCATOR_H_INCLUDED
 #define LINKLOCATOR_H_INCLUDED
 
-#include "emailfunctions.h"
+#include "kpimutils.h"
 
 #include <QtCore/QString>
 #include <QtCore/QMap>
 
-namespace EmailAddressTools {
+namespace KPIMUtils {
 
 /**
  * LinkLocator assists in identifying sections of text that can
@@ -37,7 +37,7 @@ namespace EmailAddressTools {
  * @short Identifies URLs and email addresses embedded in plaintext.
  * @author Dave Corrie <kde@davecorrie.com>
  */
-class EMAILFUNCTIONS_EXPORT LinkLocator
+class KPIMUTILS_EXPORT LinkLocator
 {
   public:
     /**

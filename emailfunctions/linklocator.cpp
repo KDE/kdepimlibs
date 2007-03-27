@@ -33,7 +33,7 @@
 
 #include <limits.h>
 
-using namespace EmailAddressTools;
+using namespace KPIMUtils;
 
 QMap<QString, QString> *LinkLocator::s_smileyEmoticonNameMap = 0;
 QMap<QString, QString> *LinkLocator::s_smileyEmoticonHTMLCache = 0;
