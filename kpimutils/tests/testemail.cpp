@@ -1,4 +1,5 @@
-/* This file is part of the KDE project
+/*
+   This file is part of the KDE project
    Copyright (C) 2004 David Faure <faure@kde.org>
 
    This library is free software; you can redistribute it and/or
@@ -15,19 +16,19 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-
-// Test program for libemailfunctions/email.h
-#include "email.h"
+#include "kpimutils/email.h"
 
 #include <kcmdlineargs.h>
-#include <kapplication.h>
 #include <kdebug.h>
+
+#include <QtCore/QCoreApplication>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 
-using namespace EmailAddressTools;
+using namespace KPIMUtils;
+
 
 static bool check(const QString& txt, const QString& a, const QString& b)
 {
@@ -56,7 +57,7 @@ static bool check(const QString& txt, const QStringList& a, const QStringList& b
 static bool checkGetNameAndEmail(const QString& input, const QString& expName, const QString& expEmail, bool expRetVal)
 {
   QString name, email;
-  bool retVal = EmailAddressTools::extractEmailAddressAndName(input, email, name);
+  bool retVal = extractEmailAddressAndName(input, email, name);
   check( "getNameAndMail " + input + " retVal", retVal?QString::fromLatin1( "true" ):QString::fromLatin1( "false" ), expRetVal?QString::fromLatin1( "true" ):QString::fromLatin1( "false" ) );
   check( "getNameAndMail " + input + " name", name, expName );
   check( "getNameAndMail " + input + " email", email, expEmail );
@@ -108,7 +109,7 @@ static QString simpleEmailTestParseResultToString( bool validEmail )
 
 static bool checkIsValidEmailAddress( const QString& input, const QString&  expErrorCode )
 {
-  EmailParseResult errorCode = EmailAddressTools::isValidAddress( input );
+  EmailParseResult errorCode = isValidAddress( input );
   QString errorC = emailTestParseResultToString( errorCode );
   check( "isValidEmailAddress " + input + " errorCode ", errorC , expErrorCode );
   return true;
@@ -116,7 +117,7 @@ static bool checkIsValidEmailAddress( const QString& input, const QString&  expE
 
 static bool checkIsValidSimpleEmailAddress( const QString& input, const QString& expResult )
 {
-  bool validEmail = EmailAddressTools::isValidSimpleAddress( input );
+  bool validEmail = isValidSimpleAddress( input );
   QString result = simpleEmailTestParseResultToString( validEmail );
   check( "isValidSimpleEmailAddress " + input + " result ", result, expResult );
   return true;
@@ -124,7 +125,7 @@ static bool checkIsValidSimpleEmailAddress( const QString& input, const QString&
 
 static bool checkGetEmailAddress( const QString& input, const QString& expResult )
 {
-  QString emailAddress = EmailAddressTools::extractEmailAddress( input );
+  QString emailAddress = extractEmailAddress( input );
   QString result = emailAddress;
   check( "getEmailAddress " + input + " result ", result, expResult );
   return true;
@@ -132,14 +133,14 @@ static bool checkGetEmailAddress( const QString& input, const QString& expResult
 
 static bool checkSplitEmailAddrList( const QString& input, const QStringList& expResult )
 {
-  QStringList emailAddresses = EmailAddressTools::splitAddressList( input );
+  QStringList emailAddresses = splitAddressList( input );
   check( "splitEmailAddrList( \"" + input + "\" ) result ", emailAddresses, expResult );
   return true;
 }
 
 static bool checkNormalizeAddressesAndEncodeIDNs( const QString& input, const QString& expResult )
 {
-  QString result = EmailAddressTools::normalizeAddressesAndEncodeIdn( input );
+  QString result = normalizeAddressesAndEncodeIdn( input );
   check( "normalizeAddressesAndEncodeIDNs( \"" + input + "\" ) result ", result, expResult );
   return true;
 }
@@ -154,9 +155,7 @@ static bool checkQuoteIfNecessary( const QString& input, const QString& expResul
 
 int main(int argc, char *argv[])
 {
-  // KApplication::disableAutoDcopRegistration();
-  KCmdLineArgs::init( argc, argv, "testemail", 0, 0, 0, 0 );
-  KApplication app( false );
+  QCoreApplication app( argc, argv );
 
   // Empty input
   checkGetNameAndEmail( QString(), QString(), QString(), false );
@@ -324,10 +323,10 @@ int main(int argc, char *argv[])
   checkIsValidEmailAddress( "\"testing, \\\"testing\\\" <matt@fruitsalad.org>", "UnbalancedQuote" );
 
   // escape a parens and thus make a comma appear
-  checkIsValidEmailAddress( "Matt (jongel, fibbel\\\) <matt@fruitsalad.org>", "UnbalancedParens" );
+  checkIsValidEmailAddress( "Matt (jongel, fibbel\\) <matt@fruitsalad.org>", "UnbalancedParens" );
 
   // several errors inside doublequotes
-  checkIsValidEmailAddress( "Matt \"(jongel,\\\" < fibbel\\\)\" <matt@fruitsalad.org>", "AddressOk" );
+  checkIsValidEmailAddress( "Matt \"(jongel,\\\" < fibbel\\)\" <matt@fruitsalad.org>", "AddressOk" );
 
   // BUG 105705
   checkIsValidEmailAddress( "matt-@fruitsalad.org", "AddressOk" );
@@ -365,6 +364,7 @@ int main(int argc, char *argv[])
   checkIsValidEmailAddress( "|matt@fruitsalad.org", "AddressOk" );
   checkIsValidEmailAddress( "}matt@fruitsalad.org", "AddressOk" );
   checkIsValidEmailAddress( "~matt@fruitsalad.org", "AddressOk" );
+  checkIsValidEmailAddress( "matt%matt@fruitsalad.org", "AddressOk" );
 
   //bug 105405
   checkIsValidEmailAddress( "[foobar] <matt@fruitsalad.org>", "InvalidDisplayName" );
