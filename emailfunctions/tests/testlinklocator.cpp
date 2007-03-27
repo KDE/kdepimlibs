@@ -25,7 +25,7 @@
 
 QTEST_KDEMAIN( LinkLocatorTest, NoGUI )
 
-#include "emailfunctions/linklocator.h"
+#include "kpimutils/linklocator.h"
 using namespace KPIMUtils;
 
 void LinkLocatorTest::testGetEmailAddress()
