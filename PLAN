@@ -22,8 +22,8 @@ High Priority for KDE 4.0
 =========================
 libkhalkhi - new, Friedrich W. H. Kossebau <kossebau kde org>
 libkholidays_ng - allen, move this back to playground
-emailfunctions - done, but we want to move into kmime, and some iof its functions
-                 are already in kmime. vkrause.
+kpimutils - done, but we want to move email.h into kmime, as some if its
+            functions are already in kmime. vkrause.
 networkstatus - will be moved by Bille asap into kdelibs
 
 High Priority, but not ready until KDE 4.1

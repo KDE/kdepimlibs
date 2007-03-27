@@ -33,7 +33,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include "emailfunctions/email.h"
+#include <kpimutils/email.h>
 #include "person.h"
 
 using namespace KCal;

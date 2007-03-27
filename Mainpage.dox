@@ -7,8 +7,8 @@
  *
  * The libraries available in this KDE module are:
  *
- * - <a href="emailfunctions/html/index.html"><b>emailfunctions</b></a>.
- *   <i>A library for general purpose email handling.</i>
+ * - <a href="kpimutils/html/index.html"><b>kpimutils</b></a>.
+ *   <i>A library for general purpose PIM utilities.</i>
  *
  * - <a href="kabc/html/index.html"><b>kabc</b></a>.
  *   <i>An API for the KDE Addressbook.</i>

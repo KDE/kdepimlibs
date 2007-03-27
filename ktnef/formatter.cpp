@@ -34,7 +34,7 @@
 #include <klocale.h>
 #include <kdatetime.h>
 
-#include "emailfunctions/email.h"
+#include <kpimutils/email.h>
 #include "kabc/phonenumber.h"
 #include "kabc/vcardconverter.h"
 #include "kabc/stdaddressbook.h"
