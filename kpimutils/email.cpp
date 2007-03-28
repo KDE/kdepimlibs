@@ -494,6 +494,28 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
 }
 
 //-----------------------------------------------------------------------------
+KPIMUtils::EmailParseResult KPIMUtils::isValidAddressList( const QString &aStr,
+                                                           QString &badAddr )
+{
+  if ( aStr.isEmpty() ) {
+    return AddressEmpty;
+  }
+
+  QStringList list = splitAddressList( aStr );
+
+  QStringList::const_iterator it = list.begin();
+  EmailParseResult errorCode = AddressOk;
+  for ( it = list.begin(); it != list.end(); ++it ) {
+    errorCode = isValidAddress( *it );
+    if ( errorCode != AddressOk ) {
+      badAddr = ( *it );
+      break;
+    }
+  }
+  return errorCode;
+}
+
+//-----------------------------------------------------------------------------
 QString KPIMUtils::emailParseResultToString( EmailParseResult errorCode )
 {
   switch ( errorCode ) {
@@ -959,7 +981,7 @@ QString KPIMUtils::normalizeAddressesAndEncodeIdn( const QString &str )
   for ( QStringList::ConstIterator it = addressList.begin();
         ( it != addressList.end() );
         ++it ) {
-    if( !(*it).isEmpty() ) {
+    if ( !(*it).isEmpty() ) {
       if ( splitAddress( (*it).toUtf8(),
                          displayName, addrSpec, comment ) == AddressOk ) {
 

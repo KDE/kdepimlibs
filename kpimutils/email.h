@@ -47,8 +47,8 @@ namespace KPIMUtils {
     indicate some specific problem with the address which
     is being validated.
 
-    Result type for splitAddress(), isValidEmailAddress()
-    and isValidSimpleEmailAddress().
+    Result type for splitAddress(), isValidAddress()
+    and isValidSimpleAddress().
   */
   enum EmailParseResult {
     AddressOk,          /**< Email is valid */
@@ -144,6 +144,20 @@ namespace KPIMUtils {
   */
   KPIMUTILS_EXPORT
   EmailParseResult isValidAddress( const QString &aStr );
+
+  /**
+    Validates a list of email addresses, and also allow aliases and
+    distribution lists to be expanded before validation.
+
+    @param aStr         a string containing a list of email addresses.
+    @param badAddr      a string to hold the address that was faulty.
+
+    @return AddressOk if no error was encountered. Otherwise an
+    appropriate error code is returned.
+  */
+  KPIMUTILS_EXPORT
+  EmailParseResult isValidAddressList( const QString &aStr,
+                                       QString &badAddr );
 
   /**
     Translate the enum errorcodes from emailParseResult
