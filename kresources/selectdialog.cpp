@@ -21,6 +21,8 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "selectdialog.h"
+
 #include <kbuttonbox.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -30,8 +32,6 @@
 #include <QtGui/QListWidget>
 
 #include "resource.h"
-
-#include "selectdialog.h"
 
 using namespace KRES;
 
