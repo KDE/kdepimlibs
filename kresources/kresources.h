@@ -33,4 +33,14 @@
 #define KRESOURCES_EXPORT KDE_EXPORT
 #endif
 
+#if defined(_WIN32) || defined(_WIN64)
+#ifdef MAKE_KCM_KRESOURCES_LIB
+#define KCM_KRESOURCES_EXPORT KDE_EXPORT
+#else
+#define KCM_KRESOURCES_EXPORT KDE_IMPORT
+#endif
+#else
+#define KCM_KRESOURCES_EXPORT KDE_EXPORT
+#endif
+
 #endif

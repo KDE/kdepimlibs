@@ -22,10 +22,12 @@
 #ifndef KRESOURCES_RESOURCE_H
 #define KRESOURCES_RESOURCE_H
 
-#include <QtCore/QMutex>
-#include <QtGui/QWidget>
+#include "kresources.h"
 
 #include <klibloader.h>
+
+#include <QtCore/QMutex>
+#include <QtGui/QWidget>
 
 class KConfig;
 class KConfigGroup;
