@@ -22,6 +22,7 @@
 #ifndef KRESOURCES_KCMKRESOURCES_H
 #define KRESOURCES_KCMKRESOURCES_H
 
+#include <kresource.h>
 #include <kcmodule.h>
 namespace KRES { class ConfigPage; }
 
