@@ -21,12 +21,11 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "resource.h"
 #include <kdebug.h>
-#include <kapplication.h>
 #include <krandom.h>
 #include <kconfig.h>
 #include <klocale.h>
-#include "resource.h"
 
 using namespace KRES;
 
