@@ -21,6 +21,7 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "configdialog.h"
 #include <klocale.h>
 #include <klineedit.h>
 #include <kmessagebox.h>
@@ -31,7 +32,6 @@
 #include <QtGui/QCheckBox>
 
 #include "factory.h"
-#include "configdialog.h"
 
 using namespace KRES;
 

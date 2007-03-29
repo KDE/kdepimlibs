@@ -21,6 +21,8 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "factory.h"
+
 #include <QtCore/QFile>
 
 #include <kdebug.h>
@@ -31,7 +33,6 @@
 #include <kservicetypetrader.h>
 #include <klibloader.h>
 
-#include "factory.h"
 #include "resource.h"
 
 using namespace KRES;

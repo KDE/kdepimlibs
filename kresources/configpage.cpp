@@ -21,13 +21,14 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "configpage.h"
+
 #include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtGui/QTreeWidget>
 #include <QtGui/QTreeWidgetItem>
 
-#include <kapplication.h>
 #include <kcombobox.h>
 #include <kdebug.h>
 #include <klocale.h>
@@ -43,7 +44,6 @@
 #include "resource.h"
 #include "configdialog.h"
 
-#include "configpage.h"
 
 namespace KRES {
 

@@ -23,6 +23,7 @@
 #define KRESOURCES_KCMKRESOURCES_H
 
 #include <kcmodule.h>
+namespace KRES { class ConfigPage; }
 
 class KCM_KRESOURCES_EXPORT KCMKResources : public KCModule
 {

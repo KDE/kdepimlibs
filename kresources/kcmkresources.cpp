@@ -18,6 +18,7 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+#include "kcmkresources.h"
 
 #include <QtGui/QLayout>
 
@@ -26,7 +27,6 @@
 #include <klocale.h>
 
 #include "configpage.h"
-#include "kcmkresources.h"
 
 typedef KGenericFactory<KCMKResources, QWidget> ResourcesFactory;
 K_EXPORT_COMPONENT_FACTORY( kcm_kresources, ResourcesFactory( "kcmkresources" ) )

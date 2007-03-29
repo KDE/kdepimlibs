@@ -20,6 +20,7 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+#include "managerimpl.h"
 
 #include <kaboutdata.h>
 #include <kapplication.h>
@@ -33,7 +34,6 @@
 #include "resource.h"
 #include "factory.h"
 #include "manager.h"
-#include "managerimpl.h"
 #include "kresourcesmanageradaptor.h"
 
 using namespace KRES;
