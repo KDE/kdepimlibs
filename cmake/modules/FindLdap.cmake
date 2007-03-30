@@ -8,7 +8,7 @@
 
 if(LDAP_INCLUDE_DIR AND LDAP_LIBRARIES)
     # Already in cache, be silent
-    set(LDAP_FIND_QUIETLY TRUE)
+    set(Ldap_FIND_QUIETLY TRUE)
 endif(LDAP_INCLUDE_DIR AND LDAP_LIBRARIES)
 
 
