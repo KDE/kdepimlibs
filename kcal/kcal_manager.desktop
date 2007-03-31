@@ -6,6 +6,7 @@ Name[el]=Ημερολόγιο
 Name[fr]=Calendrier
 Name[ja]=カレンダー
 Name[pa]=ਕੈਲੰਡਰ
+Name[sv]=Kalender
 Name[x-test]=xxCalendarxx
 Type=Service
 ServiceTypes=KResources/Manager

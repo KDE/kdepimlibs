@@ -6,6 +6,7 @@ Comment=KResource Manager
 Comment[el]=Διαχειριστής KResource
 Comment[ja]=K リソース・マネージャ
 Comment[pa]=ਕੇ-ਰੀਸੋਰਸ ਮੈਨੇਜਰ
+Comment[sv]=Resurshantering
 Comment[x-test]=xxKResource Managerxx
 
 [PropertyDef::X-KDE-ResourceFamily]
