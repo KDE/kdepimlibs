@@ -1008,7 +1008,7 @@ void Calendar::appendAlarms( Alarm::List &alarms, Incidence *incidence,
         kDebug(5800) << "Calendar::appendAlarms() '"
                      << incidence->summary() << "': "
                      << dt.toString() << endl;
-        alarms.append( alarms[i] );
+        alarms.append( alarmlist[i] );
       }
     }
   }
