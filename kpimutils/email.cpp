@@ -22,10 +22,10 @@
 
 #include <kdebug.h>
 #include <klocale.h>
-#include <kidna.h>
 
 #include <QtCore/QRegExp>
 #include <QtCore/QByteArray>
+#include <QtCore/QUrl>
 
 using namespace KPIMUtils;
 
@@ -902,7 +902,7 @@ QString KPIMUtils::fromIdn( const QString &addrSpec )
     return addrSpec;
   }
 
-  QString idn = KIDNA::toUnicode( addrSpec.mid( atPos + 1 ) );
+  QString idn = QUrl::fromAce( addrSpec.mid( atPos + 1 ).toLatin1() );
   if ( idn.isEmpty() ) {
     return QString();
   }
@@ -918,7 +918,7 @@ QString KPIMUtils::toIdn( const QString &addrSpec )
     return addrSpec;
   }
 
-  QString idn = KIDNA::toAscii( addrSpec.mid( atPos + 1 ) );
+  QString idn = QUrl::toAce( addrSpec.mid( atPos + 1 ) );
   if ( idn.isEmpty() ) {
     return addrSpec;
   }
