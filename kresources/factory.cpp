@@ -154,9 +154,9 @@ Resource *Factory::resourceInternal( const QString &type, const KConfigGroup *gr
 
   Resource *resource;
   if ( group ) {
-    pluginFactory->resource( *group );
+    resource = pluginFactory->resource( *group );
   } else {
-    pluginFactory->resource();
+    resource = pluginFactory->resource();
   }
 
   if ( !resource ) {
