@@ -44,8 +44,17 @@ void KMimeUtilTest::testUnfoldHeader()
 
 void KMimeUtilTest::testExtractHeader()
 {
+  QByteArray header( "To: <foo@bla.org>\nSubject: =?UTF-8?Q?_Notification_for_appointment:?=\n =?UTF-8?Q?_Test?=\nMIME-Version: 1.0" );
+
+  // basic tests
+  QVERIFY( extractHeader( header, "Foo" ).isEmpty() );
+  QCOMPARE( extractHeader( header, "To" ), QByteArray("<foo@bla.org>") );
+
+  // case insensitive matching
+  QCOMPARE( extractHeader( header, "mime-version" ), QByteArray( "1.0" ) );
+
   // extraction of multi-line headers
-  QCOMPARE( extractHeader( "To: <foo@bla.org>\nSubject: =?UTF-8?Q?_Notification_for_appointment:?=\n =?UTF-8?Q?_Test?=\nMIME-Version: 1.0", "Subject" ),
+  QCOMPARE( extractHeader( header, "Subject" ),
             QByteArray("=?UTF-8?Q?_Notification_for_appointment:?= =?UTF-8?Q?_Test?=") );
 
   // missing space after ':'

@@ -342,15 +342,19 @@ QByteArray unfoldHeader( const QByteArray &header )
 
 QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
 {
-  QByteArray n = name + ':';
+  QByteArray n = name;
+  n.append( ':' );
   int pos1=-1;
 
-  if ( qstrnicmp( n.data(), src.data(), n.length() ) == 0 ) {
+  if ( qstrnicmp( n.constData(), src.constData(), n.length() ) == 0 ) {
     pos1 = 0;
   } else {
     n.prepend('\n');
-    // TODO Possible optimization: Avoid using QString
-    pos1 = QString( src ).indexOf( n, 0, Qt::CaseInsensitive );
+    char* p = strcasestr( src.constData(), n.constData() );
+    if ( !p )
+      pos1 = -1;
+    else
+      pos1 = p - src.constData();
   }
 
   if ( pos1 > -1) {     //there is a header with the given name
@@ -362,7 +366,7 @@ QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
     int len = src.length() - 1;
     bool folded = false;
 
-    if ( src[pos2] != '\n' ) {  // check if the header is not empty
+    if ( src.at(pos2) != '\n' ) {  // check if the header is not empty
       while ( true ) {
         pos2 = src.indexOf( '\n', pos2 + 1 );
         if ( pos2 == -1 || pos2 == len ||
