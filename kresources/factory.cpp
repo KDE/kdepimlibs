@@ -128,8 +128,7 @@ QString Factory::typeDescription( const QString &type ) const
   return ptr->comment();
 }
 
-Resource *Factory::resource( const QString& type, const KConfigGroup &group )
-{
+Resource *Factory::resourceInternal( const QString &type, const KConfigGroup *group ){
   kDebug(5650) << "Factory::resource( " << type << ", config )" << endl;
 
   if ( type.isEmpty() || !mTypeMap.contains( type ) ) {
@@ -152,7 +151,14 @@ Resource *Factory::resource( const QString& type, const KConfigGroup &group )
     return 0;
   }
 
-  Resource *resource = pluginFactory->resource( group );
+
+  Resource *resource;
+  if ( group ) {
+    pluginFactory->resource( *group );
+  } else {
+    pluginFactory->resource();
+  }
+
   if ( !resource ) {
     kDebug(5650) << "'" << ptr->library() << "' is not a " + mResourceFamily +
                      " plugin." << endl;
@@ -162,4 +168,14 @@ Resource *Factory::resource( const QString& type, const KConfigGroup &group )
   resource->setType( type );
 
   return resource;
+}
+
+Resource *Factory::resource( const QString &type, const KConfigGroup &group )
+{
+  return resourceInternal( type, &group );
+}
+
+Resource *Factory::resource( const QString &type )
+{
+  return resourceInternal( type, 0 );
 }

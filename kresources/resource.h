@@ -216,6 +216,7 @@ class KRESOURCES_EXPORT PluginFactoryBase : public KLibFactory
 {
   public:
     virtual Resource *resource( const KConfigGroup &group ) = 0;
+    virtual Resource *resource() = 0;
 
     virtual ConfigWidget *configWidget( QWidget *parent ) = 0;
 
@@ -231,9 +232,13 @@ template<class TR,class TC>
 class PluginFactory : public PluginFactoryBase
 {
   public:
-    Resource *resource( const KConfigGroup &group )
+    virtual Resource *resource( const KConfigGroup &group )
     {
       return new TR( group );
+    }
+    virtual Resource *resource()
+    {
+      return new TR();
     }
 
     ConfigWidget *configWidget( QWidget *parent )

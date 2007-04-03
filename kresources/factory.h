@@ -83,12 +83,21 @@ class KRESOURCES_EXPORT Factory
      * if resource type doesn't exist.
      *
      * @param type   The type of the resource, returned by typeNames()
-     * @param config The configuration group where the resource should get its settings from.
-     *               If @p group's config object is 0, a resource with default values will be created.
+     * @param config The configuration group where the resource should
+     * get its settings from.
      */
-    Resource *resource( const QString& type, const KConfigGroup &group = KConfigGroup(0,0) );
+    Resource *resource( const QString &type, const KConfigGroup &group );
 
     /**
+     * Creates and returns a resource object with default values,
+     * or a null pointer if resource type doesn't exist.
+     *
+     * @param type   The type of the resource, returned by typeNames()
+     */
+    Resource *resource( const QString &type );
+
+    /**
+     *
      * Returns a list of all available resource types.
      */
     QStringList typeNames() const;
@@ -107,6 +116,7 @@ class KRESOURCES_EXPORT Factory
     Factory( const QString& resourceFamily );
 
   private:
+    Resource *resourceInternal ( const QString &type, const KConfigGroup *group );
     static QMap<QString, Factory*> *mSelves;
 
     QString mResourceFamily;
