@@ -75,5 +75,6 @@ add_kmime_test(kmime_util_test.cpp)
 add_kmime_test(contentindextest.cpp)
 add_kmime_test(kmime_content_test.cpp)
 add_kmime_test(headertest.cpp)
+add_kmime_test(kmime_message_test.cpp)
 
 endif(KDE4_BUILD_TESTS)

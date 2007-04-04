@@ -181,4 +181,36 @@ bool Message::isTopLevel() const
   return true;
 }
 
+Content* Message::mainBodyPart(const QByteArray & type)
+{
+  KMime::Content *c = this;
+  while ( c ) {
+    // not a multipart message
+    if ( !c->contentType()->isMultipart() ) {
+      if( c->contentType()->mimeType() == type || type.isEmpty() )
+        return c;
+      return 0;
+    }
+
+    // empty multipart
+    if ( c->contents().count() == 0 )
+      return 0;
+
+    // multipart/alternative
+    if ( c->contentType()->subType() == "alternative" ) {
+      if ( type.isEmpty() )
+        return c->contents().first();
+      foreach ( Content* c, c->contents() ) {
+        if ( c->contentType()->mimeType() == type )
+          return c;
+      }
+      return 0;
+    }
+
+    c = c->contents().first();
+  }
+
+  return 0;
+}
+
 }

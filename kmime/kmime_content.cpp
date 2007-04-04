@@ -588,22 +588,9 @@ Content::List Content::attachments( bool incAlternatives )
   return attachments;
 }
 
-Content::List Content::contents( bool recursive )
+Content::List Content::contents()
 {
-  Content::List total;
-  if ( d->contents.isEmpty() ) {
-    total.append( this );
-    return total;
-  }
-
-  if ( !recursive ) {
-    return d->contents;
-  }
-
-  foreach ( KMime::Content *c, d->contents ) {
-    c->contentType()->isMultipart() ? total += c->contents() : total += c;
-  }
-  return total;
+  return d->contents;
 }
 
 void Content::addContent( Content *c, bool prepend )

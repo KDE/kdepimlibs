@@ -30,6 +30,9 @@
 
 namespace KMime {
 
+/**
+  Represents a (email) message.
+*/
 class KMIME_EXPORT Message : public Content
 {
   public:
@@ -122,6 +125,17 @@ class KMIME_EXPORT Message : public Content
     virtual KMime::Headers::InReplyTo *inReplyTo( bool create=true );
 
     virtual bool isTopLevel() const;
+
+    /**
+      Returns the first main body part of a given type, taking multipart/mixed
+      and multipart/alternative nodes into consideration.
+      Eg. \c bodyPart("text/html") will return a html content object if that is
+      provided in a multipart/alternative node, but not if it's the non-first
+      child node of a multipart/mixed node (ie. an attachment).
+      @param type The mimetype of the body part, if not given, the first
+      body part will be returned, regardless of it's type.
+    */
+    Content* mainBodyPart( const QByteArray &type = QByteArray() );
 
   protected:
     virtual QByteArray assembleHeaders();
