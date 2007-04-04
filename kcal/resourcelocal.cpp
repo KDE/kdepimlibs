@@ -110,6 +110,8 @@ void ResourceLocal::init()
 
   setType( "file" );
 
+  setSavePolicy( SaveDelayed );
+
   connect( &d->mDirWatch, SIGNAL( dirty( const QString & ) ),
            SLOT( reload() ) );
   connect( &d->mDirWatch, SIGNAL( created( const QString & ) ),

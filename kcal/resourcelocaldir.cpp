@@ -85,6 +85,8 @@ void ResourceLocalDir::init()
 {
   setType( "dir" );
 
+  setSavePolicy( SaveDelayed );
+
   connect( &mDirWatch, SIGNAL( dirty( const QString & ) ),
            SLOT( reload( const QString & ) ) );
   connect( &mDirWatch, SIGNAL( created( const QString & ) ),
