@@ -1708,7 +1708,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm, Incidence *incidence, ICalT
               break;
           }
         } else {
-          kDebug() << "Alarm attachments currently only support URIs, but "
+          kDebug(5800) << "Alarm attachments currently only support URIs, but "
                        "no binary data" << endl;
         }
         delete attach;

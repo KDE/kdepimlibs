@@ -975,7 +975,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     deleteStr(s);
     tmpStr.simplified();
     tmpStr = tmpStr.toUpper();
-// kDebug() <<" We have a recurrence rule: " << tmpStr<< endl;
+// kDebug(5800) <<" We have a recurrence rule: " << tmpStr<< endl;
 
     // first, read the type of the recurrence
     int typelen = 1;
@@ -998,7 +998,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     }
 
     if ( type != Recurrence::rNone ) {
-// kDebug() << " It's a supported type " << endl;
+// kDebug(5800) << " It's a supported type " << endl;
 
       // Immediately after the type is the frequency
       int index = tmpStr.indexOf(' ');

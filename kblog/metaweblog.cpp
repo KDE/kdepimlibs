@@ -53,7 +53,7 @@ void APIMetaWeblog::setUrl( const KUrl &server )
 
 void APIMetaWeblog::userInfo()
 {
-  kDebug() << "Fetching user information is not available in MetaWeblog API."
+  kDebug(5323) << "Fetching user information is not available in MetaWeblog API."
            << endl;
   emit error( NotSupported,
               i18n("Fetching user information is not available in "
@@ -62,7 +62,7 @@ void APIMetaWeblog::userInfo()
 
 void APIMetaWeblog::listBlogs()
 {
-  kDebug() << "Fetching user's blogs is not available in MetaWeblog API."
+  kDebug(5323) << "Fetching user's blogs is not available in MetaWeblog API."
            << endl;
   emit error( NotSupported,
               i18n("Fetching user's blogs is not available in "
@@ -71,7 +71,7 @@ void APIMetaWeblog::listBlogs()
 
 void APIMetaWeblog::listPostings()
 {
-  kDebug() << "Fetching List of Posts..." << endl;
+  kDebug(5323) << "Fetching List of Posts..." << endl;
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   args << QVariant( downloadCount() );
   d->mXmlRpcClient->call(
@@ -82,7 +82,7 @@ void APIMetaWeblog::listPostings()
 
 void APIMetaWeblog::listCategories()
 {
-  kDebug() << "Fetching List of Categories..." << endl;
+  kDebug(5323) << "Fetching List of Categories..." << endl;
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   d->mXmlRpcClient->call(
     "metaWeblog.getCategories", args,
@@ -92,7 +92,7 @@ void APIMetaWeblog::listCategories()
 
 void APIMetaWeblog::fetchPosting( const QString &postingId )
 {
-  kDebug() << "Fetching Posting with url " << postingId << endl;
+  kDebug(5323) << "Fetching Posting with url " << postingId << endl;
   QList<QVariant> args( d->defaultArgs( postingId ) );
   d->mXmlRpcClient->call(
     "metaWeblog.getPost", args,
@@ -103,11 +103,11 @@ void APIMetaWeblog::fetchPosting( const QString &postingId )
 void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
-    kDebug() << "APIMetaWeblog::modifyPosting: posting null pointer" << endl;
+    kDebug(5323) << "APIMetaWeblog::modifyPosting: posting null pointer" << endl;
     emit error ( Other, i18n("Posting is a null pointer.") );
     return;
   }
-  kDebug() << "Uploading Posting with postId " << posting->postingId() << endl;
+  kDebug(5323) << "Uploading Posting with postId " << posting->postingId() << endl;
 
   QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
   QMap<QString, QVariant> map;
@@ -128,11 +128,11 @@ void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 void APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
-    kDebug() << "APIMetaWeblog::createPosting: posting null pointer" << endl;
+    kDebug(5323) << "APIMetaWeblog::createPosting: posting null pointer" << endl;
     emit error ( Other, i18n("Posting is a null pointer.") );
     return;
   }
-  kDebug() << "Creating new Posting with blogId " << blogId() << endl;
+  kDebug(5323) << "Creating new Posting with blogId " << blogId() << endl;
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   QMap<QString, QVariant> map;
   QList<QVariant> list;
@@ -151,7 +151,7 @@ void APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
 
 void APIMetaWeblog::createMedia( KBlog::BlogMedia *media )
 {
-  kDebug() << "APIMetaWeblog::createMedia: name="<< media->name() << endl;
+  kDebug(5323) << "APIMetaWeblog::createMedia: name="<< media->name() << endl;
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   QMap<QString, QVariant> map;
   QList<QVariant> list;
@@ -167,7 +167,7 @@ void APIMetaWeblog::createMedia( KBlog::BlogMedia *media )
 
 void APIMetaWeblog::removePosting( const QString &postingId )
 {
-  kDebug() << "APIMetaWeblog::removePosting: postingId=" << postingId << endl;
+  kDebug(5323) << "APIMetaWeblog::removePosting: postingId=" << postingId << endl;
   QList<QVariant> args( d->defaultArgs( postingId ) );
   args << QVariant( /*publish=*/true );
   d->mXmlRpcClient->call(

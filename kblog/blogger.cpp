@@ -53,7 +53,7 @@ void APIBlogger::setUrl( const KUrl &server )
 
 void APIBlogger::userInfo()
 {
-  kDebug() << "read user info..." << endl;
+  kDebug(5323) << "read user info..." << endl;
   QList<QVariant> args( d->defaultArgs() );
   d->mXmlRpcClient->call(
     "blogger.getUserInfo", args,
@@ -63,7 +63,7 @@ void APIBlogger::userInfo()
 
 void APIBlogger::listBlogs()
 {
-  kDebug() << "Fetch List of Blogs..." << endl;
+  kDebug(5323) << "Fetch List of Blogs..." << endl;
   QList<QVariant> args( d->defaultArgs() );
   d->mXmlRpcClient->call(
     "blogger.getUsersBlogs", args,
@@ -73,7 +73,7 @@ void APIBlogger::listBlogs()
 
 void APIBlogger::listPostings()
 {
-  kDebug() << "Fetching List of Posts..." << endl;
+  kDebug(5323) << "Fetching List of Posts..." << endl;
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   args << QVariant( downloadCount() );
   d->mXmlRpcClient->call(
@@ -86,12 +86,12 @@ void APIBlogger::listCategories()
 {
   emit error( NotSupported,
               i18n( "Categories are not supported in Blogger API 1.0." ) );
-  kDebug() << "Categories are not supported in Blogger API 1.0." << endl;
+  kDebug(5323) << "Categories are not supported in Blogger API 1.0." << endl;
 }
 
 void APIBlogger::fetchPosting( const QString &postingId )
 {
-  kDebug() << "Fetching Posting with url " << postingId << endl;
+  kDebug(5323) << "Fetching Posting with url " << postingId << endl;
   QList<QVariant> args( d->defaultArgs( postingId ) );
   d->mXmlRpcClient->call(
     "blogger.getPost", args,
@@ -102,10 +102,10 @@ void APIBlogger::fetchPosting( const QString &postingId )
 void APIBlogger::modifyPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
-    kDebug() << "APIBlogger::modifyPosting: posting is null pointer" << endl;
+    kDebug(5323) << "APIBlogger::modifyPosting: posting is null pointer" << endl;
     return;
   }
-  kDebug() << "Uploading Posting with postingId "
+  kDebug(5323) << "Uploading Posting with postingId "
            << posting->postingId() << endl;
 
   QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
@@ -120,11 +120,11 @@ void APIBlogger::modifyPosting( KBlog::BlogPosting *posting )
 void APIBlogger::createPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
-    kDebug() << "APIBlogger::createPosting: posting is null pointer" << endl;
+    kDebug(5323) << "APIBlogger::createPosting: posting is null pointer" << endl;
     return;
   }
 
-  kDebug() << "Creating new Posting with blogid " << blogId() << endl;
+  kDebug(5323) << "Creating new Posting with blogid " << blogId() << endl;
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   args << QVariant( posting->content() );
   args << QVariant( posting->publish() );
@@ -139,12 +139,12 @@ void APIBlogger::createMedia( KBlog::BlogMedia *media )
   Q_UNUSED( media );
   emit error( NotSupported,
               i18n( "Media upload not available in Blogger API 1.0." ) );
-  kDebug() << "Media upload not available in Blogger API 1.0." << endl;
+  kDebug(5323) << "Media upload not available in Blogger API 1.0." << endl;
 }
 
 void APIBlogger::removePosting( const QString &postingId )
 {
-  kDebug() << "APIBlogger::removePosting: postingId=" << postingId << endl;
+  kDebug(5323) << "APIBlogger::removePosting: postingId=" << postingId << endl;
   QList<QVariant> args( d->defaultArgs( postingId ) );
   args << QVariant( /*publish=*/true );
   d->mXmlRpcClient->call(
