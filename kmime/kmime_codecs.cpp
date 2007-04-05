@@ -100,7 +100,7 @@ Codec *Codec::codecForName( const QByteArray &name )
 #endif
 
   if ( !codec ) {
-    kDebug() << "Unknown codec \"" << name << "\" requested!" << endl;
+    kDebug(5320) << "Unknown codec \"" << name << "\" requested!" << endl;
   }
 
   return codec;

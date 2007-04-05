@@ -659,7 +659,7 @@ void Content::removeContent( Content *c, bool del )
     for ( Headers::Base::List::iterator it = main->h_eaders.begin();
           it != main->h_eaders.end(); ) {
       if ( (*it)->isMimeHeader() ) {
-        kDebug(5003) << "Content::removeContent(Content *c, bool del) : mime-header moved: "
+        kDebug(5320) << "Content::removeContent(Content *c, bool del) : mime-header moved: "
                      << (*it)->as7BitString() << endl;
         // first remove the old header
         removeHeader( (*it)->type() );
