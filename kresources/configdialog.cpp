@@ -20,6 +20,17 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the KDE resource framework and defines the
+  ConfigDialog class.
+
+  @brief
+  Provides a resource configuration dialog.
+
+  @author Tobias Koenig
+  @author Jan-Pascal van Best
+*/
 
 #include "configdialog.h"
 #include <klocale.h>
@@ -35,17 +46,26 @@
 
 using namespace KRES;
 
-ConfigDialog::ConfigDialog( QWidget *parent, const QString& resourceFamily,
-    /*const QString& type,*/ Resource* resource, /*KConfig *config, */const char *name )
-  : KDialog( parent )/*, mConfig( config )*/, mResource( resource )
+class ConfigDialog::Private
 {
-  setObjectName( name );
+  public:
+    ConfigWidget *mConfigWidget;
+    Resource *mResource;
+    KLineEdit *mName;
+    QCheckBox *mReadOnly;
+};
+
+ConfigDialog::ConfigDialog( QWidget *parent, const QString &resourceFamily,
+                             Resource *resource )
+  : KDialog( parent ), d( new Private )
+{
   setModal( true );
   setCaption( i18n( "Resource Configuration" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
   showButtonSeparator( false );
 
+  d->mResource = resource;
   Factory *factory = Factory::self( resourceFamily );
 
   QFrame *main = new QFrame( this );
@@ -58,19 +78,19 @@ ConfigDialog::ConfigDialog( QWidget *parent, const QString& resourceFamily,
   QGridLayout *gbLayout = new QGridLayout;
   gbLayout->setSpacing( spacingHint() );
   generalGroupBox->setLayout( gbLayout );
-  
+
   generalGroupBox->setTitle( i18n( "General Settings" ) );
 
   gbLayout->addWidget( new QLabel( i18n( "Name:" ), generalGroupBox ), 0, 0 );
 
-  mName = new KLineEdit();
-  gbLayout->addWidget( mName, 0, 1 );
+  d->mName = new KLineEdit();
+  gbLayout->addWidget( d->mName, 0, 1 );
 
-  mReadOnly = new QCheckBox( i18n( "Read-only" ), generalGroupBox );
-  gbLayout->addWidget( mReadOnly, 1, 0 );
+  d->mReadOnly = new QCheckBox( i18n( "Read-only" ), generalGroupBox );
+  gbLayout->addWidget( d->mReadOnly, 1, 0 );
 
-  mName->setText( mResource->resourceName() );
-  mReadOnly->setChecked( mResource->readOnly() );
+  d->mName->setText( d->mResource->resourceName() );
+  d->mReadOnly->setChecked( d->mResource->readOnly() );
 
   mainLayout->addWidget( generalGroupBox );
 
@@ -80,58 +100,64 @@ ConfigDialog::ConfigDialog( QWidget *parent, const QString& resourceFamily,
   resourceGroupBox->setLayout( resourceLayout );
 
   resourceGroupBox->setTitle( i18n( "%1 Resource Settings" ,
-                                factory->typeName( resource->type() ) ) );
+                                    factory->typeName( resource->type() ) ) );
   mainLayout->addWidget( resourceGroupBox );
 
   mainLayout->addStretch();
 
-  mConfigWidget = factory->configWidget( resource->type(), resourceGroupBox );
-  if ( mConfigWidget ) {
-    resourceLayout->addWidget( mConfigWidget );
-    mConfigWidget->setInEditMode( false );
-    mConfigWidget->loadSettings( mResource );
-    mConfigWidget->show();
-    connect( mConfigWidget, SIGNAL( setReadOnly( bool ) ),
-        SLOT( setReadOnly( bool ) ) );
+  d->mConfigWidget = factory->configWidget( resource->type(), resourceGroupBox );
+  if ( d->mConfigWidget ) {
+    resourceLayout->addWidget( d->mConfigWidget );
+    d->mConfigWidget->setInEditMode( false );
+    d->mConfigWidget->loadSettings( d->mResource );
+    d->mConfigWidget->show();
+    connect( d->mConfigWidget, SIGNAL( setReadOnly( bool ) ),
+             SLOT( setReadOnly( bool ) ) );
   }
 
-  connect( mName, SIGNAL( textChanged(const QString &)),
-      SLOT( slotNameChanged(const QString &)));
+  connect( d->mName, SIGNAL( textChanged(const QString &) ),
+           SLOT( slotNameChanged(const QString &) ) );
 
-  slotNameChanged( mName->text() );
+  slotNameChanged( d->mName->text() );
   setMinimumSize( sizeHint() );
+}
+
+ConfigDialog::~ConfigDialog()
+{
+  delete d;
 }
 
 void ConfigDialog::setInEditMode( bool value )
 {
-  if ( mConfigWidget )
-    mConfigWidget->setInEditMode( value );
+  if ( d->mConfigWidget ) {
+    d->mConfigWidget->setInEditMode( value );
+  }
 }
 
-void ConfigDialog::slotNameChanged( const QString &text)
+void ConfigDialog::slotNameChanged( const QString &text )
 {
   enableButtonOk( !text.isEmpty() );
 }
 
 void ConfigDialog::setReadOnly( bool value )
 {
-  mReadOnly->setChecked( value );
+  d->mReadOnly->setChecked( value );
 }
 
 void ConfigDialog::accept()
 {
-  if ( mName->text().isEmpty() ) {
+  if ( d->mName->text().isEmpty() ) {
     KMessageBox::sorry( this, i18n( "Please enter a resource name." ) );
     return;
   }
 
-  mResource->setResourceName( mName->text() );
-  mResource->setReadOnly( mReadOnly->isChecked() );
+  d->mResource->setResourceName( d->mName->text() );
+  d->mResource->setReadOnly( d->mReadOnly->isChecked() );
 
-  if ( mConfigWidget ) {
+  if ( d->mConfigWidget ) {
     // First save generic information
     // Also save setting of specific resource type
-    mConfigWidget->saveSettings( mResource );
+    d->mConfigWidget->saveSettings( d->mResource );
   }
 
   KDialog::accept();

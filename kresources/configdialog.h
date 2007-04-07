@@ -18,6 +18,14 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the KDE resource framework and defines the
+  ConfigDialog class.
+
+  @author Tobias Koenig
+  @author Jan-Pascal van Best
+*/
 
 #ifndef KRESOURCES_CONFIGDIALOG_H
 #define KRESOURCES_CONFIGDIALOG_H
@@ -33,27 +41,31 @@ namespace KRES {
   class Resource;
   class ConfigWidget;
 
+/**
+  @brief
+  A dialog for configuring a resource.
+
+  This class provides a resource configuration dialog.
+*/
 class KRESOURCES_EXPORT ConfigDialog : public KDialog
 {
     Q_OBJECT
   public:
     // Resource=0: create new resource
-    ConfigDialog( QWidget *parent, const QString& resourceFamily,
-	          Resource* resource, const char *name = 0);
+    ConfigDialog( QWidget *parent, const QString &resourceFamily,
+	          Resource *resource );
 
+    virtual ~ConfigDialog();
     void setInEditMode( bool value );
 
   protected Q_SLOTS:
     void accept();
     void setReadOnly( bool value );
-    void slotNameChanged( const QString &text);
+    void slotNameChanged( const QString &text );
 
   private:
-    ConfigWidget *mConfigWidget;
-    Resource* mResource;
-
-    KLineEdit *mName;
-    QCheckBox *mReadOnly;
+    class Private;
+    Private *const d;
 };
 
 }
