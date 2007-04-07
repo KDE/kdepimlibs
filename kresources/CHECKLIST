@@ -2,9 +2,9 @@ Legend:  D=Done, X=Keep Off!, n/a=Not Applicable
 
 File                  | Krazy | Doxygen | Style | UnitTst | Qt4Port | Who
 ===============================================================================
-configdialog          |       |         |       |         |         |
-configpage            |       |         |       |         |         |
-configwidget          |       |         |       |         |         |
+configdialog          |   D   |         |   D   |         |    D    |
+configpage            |   D   |         |   D   |         |    D    |
+configwidget          |   D   |         |   D   |   n/a   |    D    |
 factory               |       |         |       |         |         |
 idmapper              |       |         |       |         |         |
 kcmkresources         |       |         |       |         |         |
