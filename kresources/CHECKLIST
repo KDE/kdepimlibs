@@ -1,0 +1,18 @@
+Legend:  D=Done, X=Keep Off!, n/a=Not Applicable
+
+File                  | Krazy | Doxygen | Style | UnitTst | Qt4Port | Who
+===============================================================================
+configdialog          |       |         |       |         |         |
+configpage            |       |         |       |         |         |
+configwidget          |       |         |       |         |         |
+factory               |       |         |       |         |         |
+idmapper              |       |         |       |         |         |
+kcmkresources         |       |         |       |         |         |
+manager               |       |         |       |         |         |
+resource              |       |         |       |         |         |
+selectdialog          |       |         |       |         |         |
+
+
+Todo:
+ - move ResourcePageInfo from configpage and into its own files
+ - move PluginFactoryBase from resource and into its own files
