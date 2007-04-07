@@ -196,7 +196,7 @@ void Structured::from7BitString( const QByteArray &s )
 
 QString Structured::asUnicodeString() const
 {
-  return QString::fromLatin1( as7BitString() );
+  return QString::fromLatin1( as7BitString( false ) );
 }
 
 void Structured::fromUnicodeString( const QString &s, const QByteArray &b )

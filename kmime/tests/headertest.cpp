@@ -41,6 +41,7 @@ void HeaderTest::testIdentHeader()
   h->from7BitString( QByteArray( "<1162746587.784559.5038.nullmailer@svn.kde.org>" ) );
   QCOMPARE( h->identifiers().count(), 1 );
   QCOMPARE( h->identifiers().first(), QByteArray( "1162746587.784559.5038.nullmailer@svn.kde.org" ) );
+  QCOMPARE( h->asUnicodeString(), QString("<1162746587.784559.5038.nullmailer@svn.kde.org>") );
   QVERIFY( !h->isEmpty() );
 
   // clearing a header
