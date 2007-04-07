@@ -20,6 +20,16 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the KDE resource framework and defines the
+  ConfigPage and ResourcePageInfo classes.
+
+  @author Tobias Koenig
+  @author Jan-Pascal van Best
+  @author Cornelius Schumacher
+*/
+
 #ifndef KRESOURCES_CONFIGPAGE_H
 #define KRESOURCES_CONFIGPAGE_H
 
@@ -51,6 +61,12 @@ class KRESOURCES_EXPORT ResourcePageInfo : public KShared
 class Resource;
 class ConfigViewItem;
 
+/**
+  @brief
+  A dialog for configuring a resource.
+
+  This class provides a resource configuration dialog.
+*/
 class KRESOURCES_EXPORT ConfigPage : public QWidget, public ManagerObserver<Resource>
 {
   Q_OBJECT
@@ -64,7 +80,7 @@ class KRESOURCES_EXPORT ConfigPage : public QWidget, public ManagerObserver<Reso
     virtual void defaults();
 
   public Q_SLOTS:
-    void slotFamilyChanged( int );
+    void slotFamilyChanged( int pos );
     void slotAdd();
     void slotRemove();
     void slotEdit();
@@ -81,30 +97,30 @@ class KRESOURCES_EXPORT ConfigPage : public QWidget, public ManagerObserver<Reso
     ConfigViewItem *findItem( Resource *resource );
 
   protected Q_SLOTS:
-    void slotItemClicked( QTreeWidgetItem * );
+    void slotItemClicked( QTreeWidgetItem *item );
 
   Q_SIGNALS:
     void changed( bool );
 
   private:
-    void loadManager( const QString& family );
+    void loadManager( const QString &family );
     void saveResourceSettings();
 
-    Manager<Resource>* mCurrentManager;
-    KConfig* mCurrentConfig;
-    KConfigGroup* mConfigGroup;
+    Manager<Resource> *mCurrentManager;
+    KConfig *mCurrentConfig;
+    KConfigGroup *mConfigGroup;
     QString mFamily;
     QStringList mFamilyMap;
     QList<KSharedPtr<ResourcePageInfo> > mInfoMap;
 
-    KComboBox* mFamilyCombo;
-    QTreeWidget* mListView;
-    QPushButton* mAddButton;
-    QPushButton* mRemoveButton;
-    QPushButton* mEditButton;
-    QPushButton* mStandardButton;
+    KComboBox *mFamilyCombo;
+    QTreeWidget *mListView;
+    QPushButton *mAddButton;
+    QPushButton *mRemoveButton;
+    QPushButton *mEditButton;
+    QPushButton *mStandardButton;
 
-    QTreeWidgetItem* mLastItem;
+    QTreeWidgetItem *mLastItem;
 };
 
 }
