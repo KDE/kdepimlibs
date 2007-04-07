@@ -5,8 +5,8 @@ File                  | Krazy | Doxygen | Style | UnitTst | Qt4Port | Who
 configdialog          |   D   |         |   D   |         |    D    |
 configpage            |   D   |         |   D   |         |    D    |
 configwidget          |   D   |         |   D   |   n/a   |    D    |
-factory               |   D   |         |   D   |         |         |
-idmapper              |       |         |       |         |         |
+factory               |   D   |         |   D   |         |    D    |
+idmapper              |   D   |         |   D   |    D    |    D    |
 kcmkresources         |       |         |       |         |         |
 manager               |       |         |       |         |         |
 resource              |       |         |       |         |         |

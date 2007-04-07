@@ -19,6 +19,15 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the KDE resource framework and defines the
+  IdMapper class.
+
+  @author Tobias Koenig
+  @author Cornelius Schumacher
+*/
+
 #ifndef KRESOURCES_IDMAPPER_H
 #define KRESOURCES_IDMAPPER_H
 
@@ -32,9 +41,12 @@ namespace KRES {
 class IdMapperPrivate;
 
 /**
-    An Id Mapper maps Ids. What to or what for is not entirely
-    clear, but maps have categories. This is probably an
-    adjoint functor, since adjoint functors are everywhere.
+  @brief
+  Keeps a map of paths and identifiers.
+
+  An Id Mapper maps Ids. What to or what for is not entirely
+  clear, but maps have categories. This is probably an
+  adjoint functor, since adjoint functors are everywhere.
 */
 class KRESOURCES_EXPORT IdMapper
 {
@@ -44,6 +56,7 @@ class KRESOURCES_EXPORT IdMapper
       load() or save().
     */
     IdMapper();
+
     /**
       Create Id mapper. The path specifies the category of mapping, the
       identifier the concrete object.
@@ -59,6 +72,7 @@ class KRESOURCES_EXPORT IdMapper
     */
     explicit IdMapper( const QString &path,
                        const QString &identifier = QString() );
+
     /** Destructor. */
     ~IdMapper();
 
@@ -68,6 +82,7 @@ class KRESOURCES_EXPORT IdMapper
       @see IdMapper()
     */
     void setPath( const QString &path );
+
     /**
       Return id map path.
     */
@@ -78,6 +93,7 @@ class KRESOURCES_EXPORT IdMapper
       @param identifier the identifier (filename) within the mapping namespace
     */
     void setIdentifier( const QString &identifier );
+
     /**
       Return id map identifier.
     */
@@ -133,49 +149,47 @@ class KRESOURCES_EXPORT IdMapper
      */
     QString localId( const QString &remoteId ) const;
 
-
     /**
-     * Stores a fingerprint for an id which can be used to detect if
-     * the locally held version differs from what is on the server.
-     * This can be a sequence number of an md5 hash depending on what
-     * the server provides.
-     *
-     * @param localId Local Id to set the fingerprint on.
-     * @param fingerprint Fingerprint (any string will do, though
-     *        an md5 hash is probably a good idea) of the Id.
-     */
+      Stores a fingerprint for an id which can be used to detect if
+      the locally held version differs from what is on the server.
+      This can be a sequence number of an md5 hash depending on what
+      the server provides.
+
+      @param localId Local Id to set the fingerprint on.
+      @param fingerprint Fingerprint (any string will do, though
+             an md5 hash is probably a good idea) of the Id.
+    */
     void setFingerprint( const QString &localId, const QString &fingerprint );
 
     /**
-     * Returns the fingerprint for the map.
-     *
-     * @param localId Local Id to get the fingerprint for.
-     * @todo Figure out if this returns the last fingerprint set
-     *       by setFingerprint() only or if anything else can change it.
-     */
+      Returns the fingerprint for the map.
+
+      @param localId Local Id to get the fingerprint for.
+      @todo Figure out if this returns the last fingerprint set
+            by setFingerprint() only or if anything else can change it.
+    */
     QString fingerprint( const QString &localId ) const;
 
-
     /**
-     * Returns the entire map of local-to-remote Ids.
-     */
+      Returns the entire map of local-to-remote Ids.
+    */
     QMap<QString, QString> remoteIdMap() const;
 
     /**
       Returns a string representation of the id pairs, that's useful
       for debugging.
-     */
+    */
     QString asString() const;
 
   protected:
     /**
-     * Filename of the map when stored on disk. Used in save() and load(),
-     * see also documentation for constructor IdMapper( const QString &path, const QString &identifier )
-     */
+      Filename of the map when stored on disk. Used in save() and load(),
+      @see IdMapper( const QString &path, const QString &identifier )
+    */
     QString filename();
 
   private:
-    IdMapperPrivate* const d;
+    IdMapperPrivate *const d;
 };
 
 }
