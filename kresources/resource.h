@@ -137,12 +137,22 @@ class KRESOURCES_EXPORT Resource : public QObject
     bool isOpen() const;
 
     /**
+      Sets the resource unique identifier.
+    */
+    void setIdentifier( const QString &identifier );
+
+    /**
      * Returns a unique identifier. The identifier is unique for this resource.
      * It is created when the resource is first created, and it is retained
      * in the resource family configuration file for this resource.
      * @return This resource's identifier
      */
     QString identifier() const;
+
+    /**
+      Sets the resourcde type.
+    */
+    void setType( const QString &type );
 
     /**
      * Returns the type of this resource.
@@ -203,9 +213,6 @@ class KRESOURCES_EXPORT Resource : public QObject
      * Post-condition: resource is closed.
      */
     virtual void doClose() {}
-
-    void setIdentifier( const QString &identifier );
-    void setType( const QString &type );
 
   private:
     class ResourcePrivate;
