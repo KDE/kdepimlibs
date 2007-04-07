@@ -20,6 +20,18 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the KDE resource framework and defines the
+  ConfigPage class.
+
+  @brief
+  A resource configuration page.
+
+  @author Tobias Koenig
+  @author Jan-Pascal van Best
+  @author Cornelius Schumacher
+*/
 
 #include "configpage.h"
 

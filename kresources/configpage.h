@@ -23,7 +23,7 @@
 /**
   @file
   This file is part of the KDE resource framework and defines the
-  ConfigPage and ResourcePageInfo classes.
+  ConfigPage class.
 
   @author Tobias Koenig
   @author Jan-Pascal van Best
@@ -63,9 +63,9 @@ class ConfigViewItem;
 
 /**
   @brief
-  A dialog for configuring a resource.
+  A resource configuration page.
 
-  This class provides a resource configuration dialog.
+  This class provides a page for a resource configuration dialog.
 */
 class KRESOURCES_EXPORT ConfigPage : public QWidget, public ManagerObserver<Resource>
 {
