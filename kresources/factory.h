@@ -20,6 +20,15 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the KDE resource framework and defines the
+  Factory class.
+
+  @author Tobias Koenig
+  @author Jan-Pascal van Best
+  @author Cornelius Schumacher
+*/
 
 #ifndef KRESOURCES_FACTORY_H
 #define KRESOURCES_FACTORY_H
@@ -36,84 +45,86 @@
 namespace KRES {
 
 /**
- * Class for loading resource plugins.
- * Use this class if you need resources with special
- * settings, otherwise use KRES::Manager::createResource()
- * to get resources with the default settings.
- *
- * Example:
- *
- * \code
- * KABC::Factory *factory = KABC::Factory::self( "contact" );
- *
- * // to allow a transparent configuration of resources, we have
- * // to use a kconfig object.
- * KConfigGroup group( "tst", "General" );
- * group.writePathEntry( "FileName", "/home/foobar/test.vcf" );// resource dependent
- * group.writeEntry( "FileFormat", "vcard" );                  // resource dependent
- *
- * KABC::Resource *res = factory->resource( "file", group );
- *
- * // do something with resource
- *
- * \endcode
- */
+  @brief
+  A class for loading resource plugins.
+
+  Use this class if you need resources with special
+  settings, otherwise use KRES::Manager::createResource()
+  to get resources with the default settings.
+
+  Example:
+
+  \code
+  KABC::Factory *factory = KABC::Factory::self( "contact" );
+
+  // to allow a transparent configuration of resources, we have
+  // to use a kconfig object.
+  KConfigGroup group( "tst", "General" );
+  group.writePathEntry( "FileName", "/home/foobar/test.vcf" );// resource dependent
+  group.writeEntry( "FileFormat", "vcard" );                  // resource dependent
+
+  KABC::Resource *res = factory->resource( "file", group );
+
+  // do something with resource
+
+  \endcode
+*/
 class KRESOURCES_EXPORT Factory
 {
   public:
 
     /**
-     * Returns the global resource factory.
-     */
-    static Factory *self( const QString& resourceFamily );
+      Returns the global resource factory.
+    */
+    static Factory *self( const QString &resourceFamily );
 
     ~Factory();
 
     /**
-     * Returns the config widget for the given resource type,
-     * or a null pointer if resource type doesn't exist.
-     *
-     * @param type   The type of the resource, returned by typeNames()
-     * @param parent The parent widget
-     */
-    ConfigWidget *configWidget( const QString& type, QWidget *parent = 0 );
+      Returns the config widget for the given resource type,
+      or a null pointer if resource type doesn't exist.
+
+      @param type   The type of the resource, returned by typeNames()
+      @param parent The parent widget
+    */
+    ConfigWidget *configWidget( const QString &type, QWidget *parent = 0 );
 
     /**
-     * Returns a pointer to a resource object or a null pointer
-     * if resource type doesn't exist.
-     *
-     * @param type   The type of the resource, returned by typeNames()
-     * @param config The configuration group where the resource should
-     * get its settings from.
-     */
+      Returns a pointer to a resource object or a null pointer
+      if resource type doesn't exist.
+
+      @param type   The type of the resource, returned by typeNames()
+      @param config The configuration group where the resource should
+      get its settings from.
+    */
     Resource *resource( const QString &type, const KConfigGroup &group );
 
     /**
-     * Creates and returns a resource object with default values,
-     * or a null pointer if resource type doesn't exist.
-     *
-     * @param type   The type of the resource, returned by typeNames()
-     */
+      Creates and returns a resource object with default values,
+      or a null pointer if resource type doesn't exist.
+
+      @param type   The type of the resource, returned by typeNames()
+    */
     Resource *resource( const QString &type );
 
     /**
-     *
-     * Returns a list of all available resource types.
-     */
+
+      Returns a list of all available resource types.
+    */
     QStringList typeNames() const;
 
     /**
-     * Returns the name for a special type.
-     */
+      Returns the name for a special type.
+    */
     QString typeName( const QString &type ) const;
 
     /**
-     * Returns the description for a special type.
-     */
+      Returns the description for a special type.
+    */
     QString typeDescription( const QString &type ) const;
 
   protected:
-    Factory( const QString& resourceFamily );
+    Factory( const QString &resourceFamily );
 
   private:
     Resource *resourceInternal ( const QString &type, const KConfigGroup *group );

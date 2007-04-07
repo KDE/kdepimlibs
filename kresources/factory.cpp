@@ -20,6 +20,18 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the KDE resource framework and defines the
+  Factory class.
+
+  @brief
+  A class for loading resource plugins.
+
+  @author Tobias Koenig
+  @author Jan-Pascal van Best
+  @author Cornelius Schumacher
+*/
 
 #include "factory.h"
 
@@ -40,13 +52,14 @@ using namespace KRES;
 QMap<QString, Factory*> *Factory::mSelves = 0;
 static KStaticDeleter< QMap<QString, Factory*> > staticDeleter;
 
-Factory *Factory::self( const QString& resourceFamily )
+Factory *Factory::self( const QString &resourceFamily )
 {
   kDebug(5650) << "Factory::self()" << endl;
 
   Factory *factory = 0;
-  if ( !mSelves )
+  if ( !mSelves ) {
     staticDeleter.setObject( mSelves, new QMap<QString, Factory*> );
+  }
 
   factory = mSelves->value( resourceFamily, 0 );
 
@@ -58,16 +71,20 @@ Factory *Factory::self( const QString& resourceFamily )
   return factory;
 }
 
-Factory::Factory( const QString& resourceFamily ) :
+Factory::Factory( const QString &resourceFamily ) :
   mResourceFamily( resourceFamily )
 {
-  const KService::List plugins = KServiceTypeTrader::self()->query( "KResources/Plugin", QString( "[X-KDE-ResourceFamily] == '%1'" )
-                                                .arg( resourceFamily ) );
+  const KService::List plugins =
+    KServiceTypeTrader::self()->query( "KResources/Plugin",
+                                       QString( "[X-KDE-ResourceFamily] == '%1'" )
+                                       .arg( resourceFamily ) );
+
   KService::List::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     const QVariant type = (*it)->property( "X-KDE-ResourceType" );
-    if ( !type.toString().isEmpty() )
+    if ( !type.toString().isEmpty() ) {
       mTypeMap.insert( type.toString(), *it );
+    }
   }
 }
 
@@ -80,16 +97,17 @@ QStringList Factory::typeNames() const
   return mTypeMap.keys();
 }
 
-ConfigWidget *Factory::configWidget( const QString& type, QWidget *parent )
+ConfigWidget *Factory::configWidget( const QString &type, QWidget *parent )
 {
-  if ( type.isEmpty() || !mTypeMap.contains( type ) )
+  if ( type.isEmpty() || !mTypeMap.contains( type ) ) {
     return 0;
+  }
 
   KService::Ptr ptr = mTypeMap[ type ];
   KLibFactory *factory = KLibLoader::self()->factory( ptr->library().toLatin1() );
   if ( !factory ) {
     kDebug(5650) << "KRES::Factory::configWidget(): Factory creation failed "
-                  << KLibLoader::self()->lastErrorMessage() << endl;
+                 << KLibLoader::self()->lastErrorMessage() << endl;
     return 0;
   }
 
@@ -97,7 +115,7 @@ ConfigWidget *Factory::configWidget( const QString& type, QWidget *parent )
 
   if ( !pluginFactory ) {
     kDebug(5650) << "KRES::Factory::configWidget(): no plugin factory."
-                  << endl;
+                 << endl;
     return 0;
   }
 
@@ -112,8 +130,9 @@ ConfigWidget *Factory::configWidget( const QString& type, QWidget *parent )
 
 QString Factory::typeName( const QString &type ) const
 {
-  if ( type.isEmpty() || !mTypeMap.contains( type ) )
+  if ( type.isEmpty() || !mTypeMap.contains( type ) ) {
     return QString();
+  }
 
   KService::Ptr ptr = mTypeMap[ type ];
   return ptr->name();
@@ -121,14 +140,16 @@ QString Factory::typeName( const QString &type ) const
 
 QString Factory::typeDescription( const QString &type ) const
 {
-  if ( type.isEmpty() || !mTypeMap.contains( type ) )
+  if ( type.isEmpty() || !mTypeMap.contains( type ) ) {
     return QString();
+  }
 
   KService::Ptr ptr = mTypeMap[ type ];
   return ptr->comment();
 }
 
-Resource *Factory::resourceInternal( const QString &type, const KConfigGroup *group ){
+Resource *Factory::resourceInternal( const QString &type, const KConfigGroup *group )
+{
   kDebug(5650) << "Factory::resource( " << type << ", config )" << endl;
 
   if ( type.isEmpty() || !mTypeMap.contains( type ) ) {
@@ -140,7 +161,7 @@ Resource *Factory::resourceInternal( const QString &type, const KConfigGroup *gr
   KLibFactory *factory = KLibLoader::self()->factory( ptr->library().toLatin1() );
   if ( !factory ) {
     kDebug(5650) << "KRES::Factory::resource(): Factory creation failed "
-                  << KLibLoader::self()->lastErrorMessage() << endl;
+                 << KLibLoader::self()->lastErrorMessage() << endl;
     return 0;
   }
 
@@ -151,7 +172,6 @@ Resource *Factory::resourceInternal( const QString &type, const KConfigGroup *gr
     return 0;
   }
 
-
   Resource *resource;
   if ( group ) {
     resource = pluginFactory->resource( *group );
@@ -161,7 +181,7 @@ Resource *Factory::resourceInternal( const QString &type, const KConfigGroup *gr
 
   if ( !resource ) {
     kDebug(5650) << "'" << ptr->library() << "' is not a " + mResourceFamily +
-                     " plugin." << endl;
+      " plugin." << endl;
     return 0;
   }
 
