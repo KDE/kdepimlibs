@@ -20,6 +20,18 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the KDE resource framework and defines the
+  ConfigWidget abstract base class.
+
+  @brief
+  An abstract base class for deriving resource configuration dialogs.
+
+  @author Tobias Koenig
+  @author Jan-Pascal van Best
+  @author Cornelius Schumacher
+*/
 
 #include "configwidget.h"
 

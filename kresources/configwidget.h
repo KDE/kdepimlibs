@@ -18,6 +18,14 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the KDE resource framework and defines the
+  ConfigWidget abstract base class.
+
+  @author Tobias Koenig
+  @author Jan-Pascal van Best
+*/
 
 #ifndef KRESOURCES_CONFIGWIDGET_H
 #define KRESOURCES_CONFIGWIDGET_H
@@ -28,9 +36,14 @@
 
 #include "resource.h"
 
-
 namespace KRES {
 
+/**
+  @brief
+  An abstract base class for deriving resource configuration dialogs.
+
+  This class provides an abstract base class for configuration dialog.
+*/
 class KRESOURCES_EXPORT ConfigWidget : public QWidget
 {
     Q_OBJECT
