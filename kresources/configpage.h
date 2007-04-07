@@ -103,24 +103,8 @@ class KRESOURCES_EXPORT ConfigPage : public QWidget, public ManagerObserver<Reso
     void changed( bool );
 
   private:
-    void loadManager( const QString &family );
-    void saveResourceSettings();
-
-    Manager<Resource> *mCurrentManager;
-    KConfig *mCurrentConfig;
-    KConfigGroup *mConfigGroup;
-    QString mFamily;
-    QStringList mFamilyMap;
-    QList<KSharedPtr<ResourcePageInfo> > mInfoMap;
-
-    KComboBox *mFamilyCombo;
-    QTreeWidget *mListView;
-    QPushButton *mAddButton;
-    QPushButton *mRemoveButton;
-    QPushButton *mEditButton;
-    QPushButton *mStandardButton;
-
-    QTreeWidgetItem *mLastItem;
+    class Private;
+    Private *const d;
 };
 
 }

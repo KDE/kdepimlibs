@@ -110,8 +110,31 @@ class ConfigViewItem : public QTreeWidgetItem
     bool mIsStandard;
 };
 
+class ConfigPage::Private
+{
+  public:
+    void loadManager( const QString &family, ConfigPage *page );
+    void saveResourceSettings( ConfigPage *page );
+
+    Manager<Resource> *mCurrentManager;
+    KConfig *mCurrentConfig;
+    KConfigGroup *mConfigGroup;
+    QString mFamily;
+    QStringList mFamilyMap;
+    QList<KSharedPtr<ResourcePageInfo> > mInfoMap;
+
+    KComboBox *mFamilyCombo;
+    QTreeWidget *mListView;
+    QPushButton *mAddButton;
+    QPushButton *mRemoveButton;
+    QPushButton *mEditButton;
+    QPushButton *mStandardButton;
+
+    QTreeWidgetItem *mLastItem;
+};
+
 ConfigPage::ConfigPage( QWidget *parent )
-  : QWidget( parent ), mCurrentManager( 0 ), mCurrentConfig( 0 )
+  : QWidget( parent ), d( new KRES::ConfigPage::Private )
 {
   setWindowTitle( i18n( "Resource Configuration" ) );
 
@@ -123,42 +146,51 @@ ConfigPage::ConfigPage( QWidget *parent )
   groupBoxLayout->setSpacing( 6 );
   groupBoxLayout->setMargin( 11 );
 
-  mFamilyCombo = new KComboBox( false, groupBox );
-  groupBoxLayout->addWidget( mFamilyCombo, 0, 0, 1, 2 );
+  d->mFamilyCombo = new KComboBox( false, groupBox );
+  groupBoxLayout->addWidget( d->mFamilyCombo, 0, 0, 1, 2 );
 
-  mListView = new QTreeWidget( groupBox );
-  mListView->setColumnCount( 3 );
+  d->mCurrentManager = 0;
+  d->mCurrentConfig = 0;
+  d->mListView = new QTreeWidget( groupBox );
+  d->mListView->setColumnCount( 3 );
   QStringList headerLabels;
   headerLabels << i18n( "Name" ) << i18n( "Type" ) << i18n( "Standard" );
-  mListView->setHeaderItem( new QTreeWidgetItem( headerLabels ) );
+  d->mListView->setHeaderItem( new QTreeWidgetItem( headerLabels ) );
 
-  groupBoxLayout->addWidget( mListView, 1, 0 );
-  connect( mListView, SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int ) ),
+  groupBoxLayout->addWidget( d->mListView, 1, 0 );
+  connect( d->mListView, SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int ) ),
            this, SLOT( slotEdit() ) );
-  KButtonBox *buttonBox = new KButtonBox( groupBox, Qt::Vertical );
-  mAddButton = buttonBox->addButton( i18n( "&Add..." ), this, SLOT(slotAdd()) );
-  mRemoveButton = buttonBox->addButton( i18n( "&Remove" ), this, SLOT(slotRemove()) );
-  mRemoveButton->setEnabled( false );
-  mEditButton = buttonBox->addButton( i18n( "&Edit..." ), this, SLOT(slotEdit()) );
-  mEditButton->setEnabled( false );
-  mStandardButton = buttonBox->addButton( i18n( "&Use as Standard" ), this, SLOT(slotStandard()) );
-  mStandardButton->setEnabled( false );
-  buttonBox->layout();
 
+  KButtonBox *buttonBox = new KButtonBox( groupBox, Qt::Vertical );
+  d->mAddButton = buttonBox->addButton( i18n( "&Add..." ), this, SLOT(slotAdd()) );
+
+  d->mRemoveButton = buttonBox->addButton( i18n( "&Remove" ), this,
+                                           SLOT(slotRemove()) );
+  d->mRemoveButton->setEnabled( false );
+
+  d->mEditButton = buttonBox->addButton( i18n( "&Edit..." ),
+                                         this, SLOT(slotEdit()) );
+  d->mEditButton->setEnabled( false );
+
+  d->mStandardButton = buttonBox->addButton( i18n( "&Use as Standard" ),
+                                             this, SLOT(slotStandard()) );
+  d->mStandardButton->setEnabled( false );
+
+  buttonBox->layout();
   groupBoxLayout->addWidget( buttonBox, 1, 1 );
 
   mainLayout->addWidget( groupBox );
 
-  connect( mFamilyCombo, SIGNAL( activated( int ) ),
+  connect( d->mFamilyCombo, SIGNAL( activated( int ) ),
            SLOT( slotFamilyChanged( int ) ) );
-  connect( mListView, SIGNAL( itemSelectionChanged() ),
+  connect( d->mListView, SIGNAL( itemSelectionChanged() ),
            SLOT( slotSelectionChanged() ) );
-  connect( mListView, SIGNAL( itemClicked( QTreeWidgetItem *, int ) ),
+  connect( d->mListView, SIGNAL( itemClicked( QTreeWidgetItem *, int ) ),
            SLOT( slotItemClicked( QTreeWidgetItem * ) ) );
 
-  mLastItem = 0;
+  d->mLastItem = 0;
 
-  mConfigGroup = new KConfigGroup( new KConfig( "kcmkresourcesrc" ), "General" );
+  d->mConfigGroup = new KConfigGroup( new KConfig( "kcmkresourcesrc" ), "General" );
 
   load();
 }
@@ -166,23 +198,24 @@ ConfigPage::ConfigPage( QWidget *parent )
 ConfigPage::~ConfigPage()
 {
   QList<KSharedPtr<ResourcePageInfo> >::Iterator it;
-  for ( it = mInfoMap.begin(); it != mInfoMap.end(); ++it ) {
+  for ( it = d->mInfoMap.begin(); it != d->mInfoMap.end(); ++it ) {
     (*it)->mManager->removeObserver( this );
   }
 
-  mConfigGroup->writeEntry( "CurrentFamily", mFamilyCombo->currentIndex() );
-  delete mConfigGroup->config();
-  delete mConfigGroup;
-  mConfigGroup = 0;
+  d->mConfigGroup->writeEntry( "CurrentFamily", d->mFamilyCombo->currentIndex() );
+  delete d->mConfigGroup->config();
+  delete d->mConfigGroup;
+  d->mConfigGroup = 0;
+  delete d;
 }
 
 void ConfigPage::load()
 {
   kDebug(5650) << "ConfigPage::load()" << endl;
 
-  mListView->clear();
-  mFamilyMap.clear();
-  mInfoMap.clear();
+  d->mListView->clear();
+  d->mFamilyMap.clear();
+  d->mInfoMap.clear();
   QStringList familyDisplayNames;
 
   // KDE-3.3 compatibility code: get families from the plugins
@@ -205,35 +238,35 @@ void ConfigPage::load()
     QString family = (*m_it)->property( "X-KDE-ResourceFamily" ).toString();
     if ( !family.isEmpty() ) {
       compatFamilyNames.removeAll( family );
-      mFamilyMap.append( family );
-      loadManager( family );
+      d->mFamilyMap.append( family );
+      d->loadManager( family, this );
     }
   }
 
   // Rest of the kde-3.3 compat code
   QStringList::ConstIterator cfit = compatFamilyNames.begin();
   for ( ; cfit != compatFamilyNames.end(); ++cfit ) {
-    mFamilyMap.append( *cfit );
+    d->mFamilyMap.append( *cfit );
     familyDisplayNames.append( *cfit );
-    loadManager( *cfit );
+    d->loadManager( *cfit, this );
   }
 
-  mCurrentManager = 0;
+  d->mCurrentManager = 0;
 
-  mFamilyCombo->clear();
-  mFamilyCombo->insertItems( 0, familyDisplayNames );
+  d->mFamilyCombo->clear();
+  d->mFamilyCombo->insertItems( 0, familyDisplayNames );
 
-  int currentFamily = mConfigGroup->readEntry( "CurrentFamily", 0 );
-  mFamilyCombo->setCurrentIndex( currentFamily );
+  int currentFamily = d->mConfigGroup->readEntry( "CurrentFamily", 0 );
+  d->mFamilyCombo->setCurrentIndex( currentFamily );
   slotFamilyChanged( currentFamily );
   emit changed( false );
 }
 
-void ConfigPage::loadManager( const QString &family )
+void ConfigPage::Private::loadManager( const QString &family, ConfigPage *page )
 {
   mCurrentManager = new Manager<Resource>( family );
   if ( mCurrentManager ) {
-    mCurrentManager->addObserver( this );
+    mCurrentManager->addObserver( page );
 
     ResourcePageInfo *info = new ResourcePageInfo;
     info->mManager = mCurrentManager;
@@ -246,10 +279,10 @@ void ConfigPage::loadManager( const QString &family )
 
 void ConfigPage::save()
 {
-  saveResourceSettings();
+  d->saveResourceSettings( this );
 
   QList<KSharedPtr<ResourcePageInfo> >::Iterator it;
-  for ( it = mInfoMap.begin(); it != mInfoMap.end(); ++it ) {
+  for ( it = d->mInfoMap.begin(); it != d->mInfoMap.end(); ++it ) {
     (*it)->mManager->writeConfig( (*it)->mConfig );
   }
 
@@ -262,41 +295,41 @@ void ConfigPage::defaults()
 
 void ConfigPage::slotFamilyChanged( int pos )
 {
-  if ( pos < 0 || pos >= (int)mFamilyMap.count() ) {
+  if ( pos < 0 || pos >= (int)d->mFamilyMap.count() ) {
     return;
   }
 
-  saveResourceSettings();
+  d->saveResourceSettings( this );
 
-  mFamily = mFamilyMap[ pos ];
+  d->mFamily = d->mFamilyMap[ pos ];
 
-  mCurrentManager = mInfoMap[ pos ]->mManager;
-  mCurrentConfig = mInfoMap[ pos ]->mConfig;
+  d->mCurrentManager = d->mInfoMap[ pos ]->mManager;
+  d->mCurrentConfig = d->mInfoMap[ pos ]->mConfig;
 
-  if ( !mCurrentManager ) {
+  if ( !d->mCurrentManager ) {
     kDebug(5650) << "ERROR: cannot create ResourceManager<Resource>( mFamily )" << endl;
   }
 
-  mListView->clear();
+  d->mListView->clear();
 
-  if ( mCurrentManager->isEmpty() ) {
+  if ( d->mCurrentManager->isEmpty() ) {
     defaults();
   }
 
-  Resource *standardResource = mCurrentManager->standardResource();
+  Resource *standardResource = d->mCurrentManager->standardResource();
 
   Manager<Resource>::Iterator it;
-  for ( it = mCurrentManager->begin(); it != mCurrentManager->end(); ++it ) {
-    ConfigViewItem *item = new ConfigViewItem( mListView, *it );
+  for ( it = d->mCurrentManager->begin(); it != d->mCurrentManager->end(); ++it ) {
+    ConfigViewItem *item = new ConfigViewItem( d->mListView, *it );
     if ( *it == standardResource ) {
       item->setStandard( true );
     }
   }
 
-  if ( mListView->topLevelItemCount() == 0 ) {
+  if ( d->mListView->topLevelItemCount() == 0 ) {
     defaults();
     emit changed( true );
-    mCurrentManager->writeConfig( mCurrentConfig );
+    d->mCurrentManager->writeConfig( d->mCurrentConfig );
   } else {
     if ( !standardResource ) {
       KMessageBox::sorry( this, i18n( "There is no standard resource. Please select one." ) );
@@ -308,12 +341,12 @@ void ConfigPage::slotFamilyChanged( int pos )
 
 void ConfigPage::slotAdd()
 {
-  if ( !mCurrentManager ) {
+  if ( !d->mCurrentManager ) {
     return;
   }
 
-  QStringList types = mCurrentManager->resourceTypeNames();
-  QStringList descs = mCurrentManager->resourceTypeDescriptions();
+  QStringList types = d->mCurrentManager->resourceTypeNames();
+  QStringList descs = d->mCurrentManager->resourceTypeDescriptions();
   bool ok = false;
   QString desc = KInputDialog::getItem( i18n( "Resource Configuration" ),
                                         i18n( "Please select type of the new resource:" ), descs,
@@ -325,7 +358,7 @@ void ConfigPage::slotAdd()
   QString type = types[ descs.indexOf( desc ) ];
 
   // Create new resource
-  Resource *resource = mCurrentManager->createResource( type );
+  Resource *resource = d->mCurrentManager->createResource( type );
   if ( !resource ) {
     KMessageBox::error( this, i18n("Unable to create resource of type '%1'.",
                                    type ) );
@@ -334,21 +367,21 @@ void ConfigPage::slotAdd()
 
   resource->setResourceName( type + "-resource" );
 
-  ConfigDialog dlg( this, mFamily, resource );
+  ConfigDialog dlg( this, d->mFamily, resource );
 
   if ( dlg.exec() ) {
-    mCurrentManager->add( resource );
+    d->mCurrentManager->add( resource );
 
-    ConfigViewItem *item = new ConfigViewItem( mListView, resource );
+    ConfigViewItem *item = new ConfigViewItem( d->mListView, resource );
 
-    mLastItem = item;
+    d->mLastItem = item;
 
     // if there are only read-only resources we'll set this resource
     // as standard resource
     if ( !resource->readOnly() ) {
       bool onlyReadOnly = true;
-      for ( int i = 0; i < mListView->topLevelItemCount(); ++i ) {
-        ConfigViewItem *confIt = static_cast<ConfigViewItem*>( mListView->topLevelItem( i ) );
+      for ( int i = 0; i < d->mListView->topLevelItemCount(); ++i ) {
+        ConfigViewItem *confIt = static_cast<ConfigViewItem*>( d->mListView->topLevelItem( i ) );
         if ( !confIt->readOnly() && confIt != item ) {
           onlyReadOnly = false;
         }
@@ -368,11 +401,11 @@ void ConfigPage::slotAdd()
 
 void ConfigPage::slotRemove()
 {
-  if ( !mCurrentManager ) {
+  if ( !d->mCurrentManager ) {
     return;
   }
 
-  QTreeWidgetItem *item = mListView->currentItem();
+  QTreeWidgetItem *item = d->mListView->currentItem();
   ConfigViewItem *confItem = static_cast<ConfigViewItem*>( item );
 
   if ( !confItem ) {
@@ -386,13 +419,13 @@ void ConfigPage::slotRemove()
     return;
   }
 
-  mCurrentManager->remove( confItem->resource() );
+  d->mCurrentManager->remove( confItem->resource() );
 
-  if ( item == mLastItem ) {
-    mLastItem = 0;
+  if ( item == d->mLastItem ) {
+    d->mLastItem = 0;
   }
 
-  mListView->takeTopLevelItem( mListView->indexOfTopLevelItem( item ) );
+  d->mListView->takeTopLevelItem( d->mListView->indexOfTopLevelItem( item ) );
   delete item;
 
   emit changed( true );
@@ -400,11 +433,11 @@ void ConfigPage::slotRemove()
 
 void ConfigPage::slotEdit()
 {
-  if ( !mCurrentManager ) {
+  if ( !d->mCurrentManager ) {
     return;
   }
 
-  QTreeWidgetItem *item = mListView->currentItem();
+  QTreeWidgetItem *item = d->mListView->currentItem();
   ConfigViewItem *configItem = static_cast<ConfigViewItem*>( item );
   if ( !configItem ) {
     return;
@@ -412,7 +445,7 @@ void ConfigPage::slotEdit()
 
   Resource *resource = configItem->resource();
 
-  ConfigDialog dlg( this, mFamily, resource );
+  ConfigDialog dlg( this, d->mFamily, resource );
 
   if ( dlg.exec() ) {
     configItem->setText( 0, resource->resourceName() );
@@ -423,18 +456,18 @@ void ConfigPage::slotEdit()
       configItem->setStandard( false );
     }
 
-    mCurrentManager->change( resource );
+    d->mCurrentManager->change( resource );
     emit changed( true );
   }
 }
 
 void ConfigPage::slotStandard()
 {
-  if ( !mCurrentManager ) {
+  if ( !d->mCurrentManager ) {
     return;
   }
 
-  ConfigViewItem *item = static_cast<ConfigViewItem*>( mListView->currentItem() );
+  ConfigViewItem *item = static_cast<ConfigViewItem*>( d->mListView->currentItem() );
   if ( !item ) {
     return;
   }
@@ -449,26 +482,26 @@ void ConfigPage::slotStandard()
     return;
   }
 
-  for ( int i = 0; i < mListView->topLevelItemCount(); ++i ) {
-    ConfigViewItem *configItem = static_cast<ConfigViewItem*>( mListView->topLevelItem( i ) );
+  for ( int i = 0; i < d->mListView->topLevelItemCount(); ++i ) {
+    ConfigViewItem *configItem = static_cast<ConfigViewItem*>( d->mListView->topLevelItem( i ) );
     if ( configItem->standard() ) {
       configItem->setStandard( false );
     }
   }
 
   item->setStandard( true );
-  mCurrentManager->setStandardResource( item->resource() );
+  d->mCurrentManager->setStandardResource( item->resource() );
 
   emit changed( true );
 }
 
 void ConfigPage::slotSelectionChanged()
 {
-  bool state = ( mListView->currentItem() != 0 );
+  bool state = ( d->mListView->currentItem() != 0 );
 
-  mRemoveButton->setEnabled( state );
-  mEditButton->setEnabled( state );
-  mStandardButton->setEnabled( state );
+  d->mRemoveButton->setEnabled( state );
+  d->mEditButton->setEnabled( state );
+  d->mStandardButton->setEnabled( state );
 }
 
 void ConfigPage::resourceAdded( Resource *resource )
@@ -476,11 +509,11 @@ void ConfigPage::resourceAdded( Resource *resource )
   kDebug(5650) << "ConfigPage::resourceAdded( " << resource->resourceName()
                << " )" << endl;
 
-  ConfigViewItem *item = new ConfigViewItem( mListView, resource );
+  ConfigViewItem *item = new ConfigViewItem( d->mListView, resource );
 
   item->setCheckState( 0, resource->isActive()? Qt::Checked : Qt::Unchecked );
 
-  mLastItem = item;
+  d->mLastItem = item;
 
   emit changed( true );
 }
@@ -514,8 +547,8 @@ void ConfigPage::resourceDeleted( Resource *resource )
 
 ConfigViewItem *ConfigPage::findItem( Resource *resource )
 {
-  for ( int i = 0; i < mListView->topLevelItemCount(); ++i ) {
-    ConfigViewItem *item = static_cast<ConfigViewItem *>( mListView->topLevelItem( i ) );
+  for ( int i = 0; i < d->mListView->topLevelItemCount(); ++i ) {
+    ConfigViewItem *item = static_cast<ConfigViewItem *>( d->mListView->topLevelItem( i ) );
     if ( item->resource() == resource ) {
       return item;
     }
@@ -543,7 +576,7 @@ void ConfigPage::slotItemClicked( QTreeWidgetItem *item )
   }
 }
 
-void ConfigPage::saveResourceSettings()
+void ConfigPage::Private::saveResourceSettings( ConfigPage *page )
 {
   if ( mCurrentManager ) {
     for ( int i = 0; i < mListView->topLevelItemCount(); ++i ) {
@@ -559,7 +592,7 @@ void ConfigPage::saveResourceSettings()
     mCurrentManager->writeConfig( mCurrentConfig );
 
     if ( !mCurrentManager->standardResource() ) {
-      KMessageBox::sorry( this,
+      KMessageBox::sorry( page,
                           i18n( "There is no valid standard resource. "
                                 "Please select one which is neither read-only nor inactive." ) );
     }
