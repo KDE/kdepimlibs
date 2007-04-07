@@ -127,11 +127,8 @@ class KRESOURCES_EXPORT Factory
     Factory( const QString &resourceFamily );
 
   private:
-    Resource *resourceInternal ( const QString &type, const KConfigGroup *group );
-    static QMap<QString, Factory*> *mSelves;
-
-    QString mResourceFamily;
-    QMap<QString, KService::Ptr> mTypeMap;
+    class Private;
+    Private *const d;
 };
 
 }

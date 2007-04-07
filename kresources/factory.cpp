@@ -49,7 +49,16 @@
 
 using namespace KRES;
 
-QMap<QString, Factory*> *Factory::mSelves = 0;
+class Factory::Private
+{
+  public:
+    Resource *resourceInternal ( const QString &type, const KConfigGroup *group );
+    static QMap<QString, Factory*> *mSelves;
+    QString mResourceFamily;
+    QMap<QString, KService::Ptr> mTypeMap;
+};
+
+QMap<QString, Factory*> *Factory::Private::mSelves = 0;
 static KStaticDeleter< QMap<QString, Factory*> > staticDeleter;
 
 Factory *Factory::self( const QString &resourceFamily )
@@ -57,53 +66,55 @@ Factory *Factory::self( const QString &resourceFamily )
   kDebug(5650) << "Factory::self()" << endl;
 
   Factory *factory = 0;
-  if ( !mSelves ) {
-    staticDeleter.setObject( mSelves, new QMap<QString, Factory*> );
+  if ( !Private::mSelves ) {
+    staticDeleter.setObject( Private::mSelves, new QMap<QString, Factory*> );
   }
 
-  factory = mSelves->value( resourceFamily, 0 );
+  factory = Private::mSelves->value( resourceFamily, 0 );
 
   if ( !factory ) {
     factory = new Factory( resourceFamily );
-    mSelves->insert( resourceFamily, factory );
+    Private::mSelves->insert( resourceFamily, factory );
   }
 
   return factory;
 }
 
 Factory::Factory( const QString &resourceFamily ) :
-  mResourceFamily( resourceFamily )
+  d( new KRES::Factory::Private )
 {
+  d->mResourceFamily = resourceFamily;
   const KService::List plugins =
     KServiceTypeTrader::self()->query( "KResources/Plugin",
                                        QString( "[X-KDE-ResourceFamily] == '%1'" )
-                                       .arg( resourceFamily ) );
+                                       .arg( d->mResourceFamily ) );
 
   KService::List::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     const QVariant type = (*it)->property( "X-KDE-ResourceType" );
     if ( !type.toString().isEmpty() ) {
-      mTypeMap.insert( type.toString(), *it );
+      d->mTypeMap.insert( type.toString(), *it );
     }
   }
 }
 
 Factory::~Factory()
 {
+  delete d;
 }
 
 QStringList Factory::typeNames() const
 {
-  return mTypeMap.keys();
+  return d->mTypeMap.keys();
 }
 
 ConfigWidget *Factory::configWidget( const QString &type, QWidget *parent )
 {
-  if ( type.isEmpty() || !mTypeMap.contains( type ) ) {
+  if ( type.isEmpty() || !d->mTypeMap.contains( type ) ) {
     return 0;
   }
 
-  KService::Ptr ptr = mTypeMap[ type ];
+  KService::Ptr ptr = d->mTypeMap[ type ];
   KLibFactory *factory = KLibLoader::self()->factory( ptr->library().toLatin1() );
   if ( !factory ) {
     kDebug(5650) << "KRES::Factory::configWidget(): Factory creation failed "
@@ -130,25 +141,25 @@ ConfigWidget *Factory::configWidget( const QString &type, QWidget *parent )
 
 QString Factory::typeName( const QString &type ) const
 {
-  if ( type.isEmpty() || !mTypeMap.contains( type ) ) {
+  if ( type.isEmpty() || !d->mTypeMap.contains( type ) ) {
     return QString();
   }
 
-  KService::Ptr ptr = mTypeMap[ type ];
+  KService::Ptr ptr = d->mTypeMap[ type ];
   return ptr->name();
 }
 
 QString Factory::typeDescription( const QString &type ) const
 {
-  if ( type.isEmpty() || !mTypeMap.contains( type ) ) {
+  if ( type.isEmpty() || !d->mTypeMap.contains( type ) ) {
     return QString();
   }
 
-  KService::Ptr ptr = mTypeMap[ type ];
+  KService::Ptr ptr = d->mTypeMap[ type ];
   return ptr->comment();
 }
 
-Resource *Factory::resourceInternal( const QString &type, const KConfigGroup *group )
+Resource *Factory::Private::resourceInternal( const QString &type, const KConfigGroup *group )
 {
   kDebug(5650) << "Factory::resource( " << type << ", config )" << endl;
 
@@ -180,8 +191,8 @@ Resource *Factory::resourceInternal( const QString &type, const KConfigGroup *gr
   }
 
   if ( !resource ) {
-    kDebug(5650) << "'" << ptr->library() << "' is not a " + mResourceFamily +
-      " plugin." << endl;
+    kDebug(5650) << "'" << ptr->library()
+                 << "' is not a " + mResourceFamily + " plugin." << endl;
     return 0;
   }
 
@@ -192,10 +203,10 @@ Resource *Factory::resourceInternal( const QString &type, const KConfigGroup *gr
 
 Resource *Factory::resource( const QString &type, const KConfigGroup &group )
 {
-  return resourceInternal( type, &group );
+  return d->resourceInternal( type, &group );
 }
 
 Resource *Factory::resource( const QString &type )
 {
-  return resourceInternal( type, 0 );
+  return d->resourceInternal( type, 0 );
 }
