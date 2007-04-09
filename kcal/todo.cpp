@@ -144,12 +144,12 @@ QString Todo::dtDueTimeStr( bool shortfmt ) const
 
 QString Todo::dtDueDateStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDate(dtDue( !doesRecur() ).date(), shortfmt);
+  return KGlobal::locale()->formatDate(dtDue( !doesRecur() ).date(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate));
 }
 
 QString Todo::dtDueStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDateTime( dtDue( !doesRecur() ).dateTime(), shortfmt );
+  return KGlobal::locale()->formatDateTime( dtDue( !doesRecur() ).dateTime(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
 }
 
 bool Todo::hasDueDate() const
@@ -211,12 +211,12 @@ QString Todo::dtStartTimeStr( bool shortfmt, bool first ) const
 
 QString Todo::dtStartDateStr( bool shortfmt, bool first ) const
 {
-  return KGlobal::locale()->formatDate( dtStart( first ).date(), shortfmt );
+  return KGlobal::locale()->formatDate( dtStart( first ).date(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
 }
 
 QString Todo::dtStartStr( bool shortfmt, bool first ) const
 {
-  return KGlobal::locale()->formatDateTime( dtStart( first ).dateTime(), shortfmt );
+  return KGlobal::locale()->formatDateTime( dtStart( first ).dateTime(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
 }
 
 bool Todo::isCompleted() const
@@ -251,7 +251,7 @@ KDateTime Todo::completed() const
 
 QString Todo::completedStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDateTime( d->mCompleted.dateTime(), shortfmt );
+  return KGlobal::locale()->formatDateTime( d->mCompleted.dateTime(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
 }
 
 void Todo::setCompleted( const KDateTime &completed )

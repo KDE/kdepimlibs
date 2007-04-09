@@ -232,12 +232,12 @@ QString IncidenceBase::dtStartTimeStr( bool shortfmt ) const
 
 QString IncidenceBase::dtStartDateStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDate( dtStart().date(), shortfmt );
+  return KGlobal::locale()->formatDate( dtStart().date(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
 }
 
 QString IncidenceBase::dtStartStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDateTime( dtStart().dateTime(), shortfmt );
+  return KGlobal::locale()->formatDateTime( dtStart().dateTime(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
 }
 
 bool IncidenceBase::floats() const

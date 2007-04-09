@@ -340,7 +340,7 @@ static QString eventViewerFormatEvent( Event *event )
                                           KDateTime::currentUtcDateTime() );
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>" + i18n( "Next Occurrence" )+ "</b></td>";
-    tmpStr += "<td>" + KGlobal::locale()->formatDateTime( dt.dateTime(), true ) + "</td>";
+    tmpStr += "<td>" + KGlobal::locale()->formatDateTime( dt.dateTime(), KLocale::ShortDate ) + "</td>";
     tmpStr += "</tr>";
   }
 
@@ -358,7 +358,7 @@ static QString eventViewerFormatEvent( Event *event )
 
   tmpStr += "</table>";
   tmpStr += "<p><em>" + i18n( "Creation date: %1.",
-    KGlobal::locale()->formatDateTime( event->created().dateTime(), true ) ) + "</em>";
+    KGlobal::locale()->formatDateTime( event->created().dateTime(), KLocale::ShortDate ) ) + "</em>";
   return tmpStr;
 }
 
@@ -393,12 +393,12 @@ static QString eventViewerFormatTodo( Todo *todo )
                                          KDateTime::currentUtcDateTime() );
     tmpStr += eventViewerAddTag( "p", "<em>" +
       i18n("This is a recurring to-do. The next occurrence will be on %1.",
-      KGlobal::locale()->formatDateTime( dt.dateTime(), true ) ) + "</em>" );
+      KGlobal::locale()->formatDateTime( dt.dateTime(), KLocale::ShortDate ) ) + "</em>" );
   }
   tmpStr += eventViewerFormatAttendees( todo );
   tmpStr += eventViewerFormatAttachments( todo );
   tmpStr += "<p><em>" + i18n( "Creation date: %1.",
-    KGlobal::locale()->formatDateTime( todo->created().dateTime(), true ) ) + "</em>";
+    KGlobal::locale()->formatDateTime( todo->created().dateTime(), KLocale::ShortDate ) ) + "</em>";
   return tmpStr;
 }
 
@@ -419,8 +419,8 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
   if ( !fb ) return QString();
   QString tmpStr( eventViewerAddTag( "h1", i18n("Free/Busy information for %1", fb->organizer().fullName() ) ) );
   tmpStr += eventViewerAddTag( "h3", i18n("Busy times in date range %1 - %2:",
-        KGlobal::locale()->formatDate( fb->dtStart().date(), true ) ,
-        KGlobal::locale()->formatDate( fb->dtEnd().date(), true ) ) );
+        KGlobal::locale()->formatDate( fb->dtStart().date(), KLocale::ShortDate ) ,
+        KGlobal::locale()->formatDate( fb->dtEnd().date(), KLocale::ShortDate ) ) );
 
   QList<Period> periods = fb->busyPeriods();
 
@@ -443,7 +443,7 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
         cont += i18np("1 second", "%1 seconds", dur);
       }
       text += i18nc("startDate for duration", "%1 for %2",
-            KGlobal::locale()->formatDateTime( per.start().dateTime(), false ) ,
+            KGlobal::locale()->formatDateTime( per.start().dateTime(), KLocale::LongDate ) ,
             cont );
       text += "<br>";
     } else {
@@ -454,8 +454,8 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
               KGlobal::locale()->formatTime( per.end().time() ) );
       } else {
         text += i18nc("fromDateTime - toDateTime", "%1 - %2",
-            KGlobal::locale()->formatDateTime( per.start().dateTime(), false ) ,
-            KGlobal::locale()->formatDateTime( per.end().dateTime(), false ) );
+            KGlobal::locale()->formatDateTime( per.start().dateTime(), KLocale::LongDate ) ,
+            KGlobal::locale()->formatDateTime( per.end().dateTime(), KLocale::LongDate ) );
       }
       text += "<br>";
     }
@@ -650,7 +650,7 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
   html += invitationRow( i18n("Person:"), fb->organizer().fullName() );
   html += invitationRow( i18n("Start date:"), fb->dtStartDateStr() );
   html += invitationRow( i18n("End date:"),
-      KGlobal::locale()->formatDate( fb->dtEnd().date(), true ) );
+      KGlobal::locale()->formatDate( fb->dtEnd().date(), KLocale::ShortDate ) );
   html += "<tr><td colspan=2><hr></td></tr>\n";
   html += "<tr><td colspan=2>Busy periods given in this free/busy object:</td></tr>\n";
 
@@ -674,7 +674,7 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
         cont += i18np("1 second", "%1 seconds", dur);
       }
       html += invitationRow( QString(), i18nc("startDate for duration", "%1 for %2",
-            KGlobal::locale()->formatDateTime( per.start().dateTime(), false ) ,
+            KGlobal::locale()->formatDateTime( per.start().dateTime(), KLocale::LongDate ) ,
            cont) );
     } else {
       QString cont;
@@ -685,8 +685,8 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
               KGlobal::locale()->formatTime( per.end().time() ) );
       } else {
         cont = i18nc("fromDateTime - toDateTime", "%1 - %2",
-            KGlobal::locale()->formatDateTime( per.start().dateTime(), false ) ,
-            KGlobal::locale()->formatDateTime( per.end().dateTime(), false ) );
+            KGlobal::locale()->formatDateTime( per.start().dateTime(), KLocale::LongDate ) ,
+            KGlobal::locale()->formatDateTime( per.end().dateTime(), KLocale::LongDate ) );
       }
 
       html += invitationRow( QString(), cont );

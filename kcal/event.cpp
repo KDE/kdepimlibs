@@ -103,12 +103,12 @@ QString Event::dtEndTimeStr( bool shortfmt ) const
 
 QString Event::dtEndDateStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDate( dtEnd().date(), shortfmt );
+  return KGlobal::locale()->formatDate( dtEnd().date(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
 }
 
 QString Event::dtEndStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDateTime( dtEnd().dateTime(), shortfmt );
+  return KGlobal::locale()->formatDateTime( dtEnd().dateTime(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
 }
 
 void Event::setHasEndDate( bool b )

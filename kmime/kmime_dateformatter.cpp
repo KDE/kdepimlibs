@@ -279,10 +279,10 @@ QString DateFormatter::localized( time_t t, bool shortFormat, bool includeSecs,
     locale = new KLocale( lang );
     locale->setLanguage( lang );
     locale->setCountry( lang );
-    ret = locale->formatDateTime( tmp, shortFormat, includeSecs );
+    ret = locale->formatDateTime( tmp, (shortFormat ? KLocale::ShortDate : KLocale::LongDate), includeSecs );
     delete locale;
   } else {
-    ret = locale->formatDateTime( tmp, shortFormat, includeSecs );
+    ret = locale->formatDateTime( tmp, (shortFormat ? KLocale::ShortDate : KLocale::LongDate), includeSecs );
   }
 
   return ret;
