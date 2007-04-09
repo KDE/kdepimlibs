@@ -343,7 +343,7 @@ void Query::call( const QString &server,
   stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
 
   KIO_ARGS << (int)1 << KUrl( server );
-  KIO::TransferJob *job = new KIO::TransferJob( KUrl( server ), KIO::CMD_SPECIAL, packedArgs, postData, false );
+  KIO::TransferJob *job = new KIO::TransferJob( KUrl( server ), KIO::CMD_SPECIAL, packedArgs, postData );
 
   if ( !job ) {
     kWarning() << "Unable to create KIO job for " << server << endl;
