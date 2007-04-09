@@ -25,7 +25,12 @@
 #include <QtGui/QClipboard>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
-#include <QtXml>
+
+#include <QtXml/QXmlAttributes>
+#include <QtXml/QXmlDefaultHandler>
+#include <QtXml/QXmlParseException>
+#include <QtXml/QXmlInputSource>
+#include <QtXml/QXmlSimpleReader>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -43,7 +48,7 @@ class QtopiaParser : public QXmlDefaultHandler
   public:
     QtopiaParser( Calendar *calendar ) : mCalendar( calendar ) {}
 
-    bool startElement( const QString &, const QString &, const QString & qName,
+    bool startElement( const QString &, const QString &, const QString &qName,
                        const QXmlAttributes &attributes )
     {
       if ( qName == "event" ) {

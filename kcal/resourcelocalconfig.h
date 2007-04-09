@@ -23,12 +23,12 @@
 #define KCAL_RESOURCELOCALCONFIG_H
 
 #include <QtGui/QRadioButton>
-#include <q3buttongroup.h>
+#include <Qt3Support/Q3ButtonGroup>
+
 #include <kurlrequester.h>
 
 #include "kresources/resource.h"
 #include "kresources/configwidget.h"
-
 
 #include "kcal.h"
 
