@@ -22,7 +22,7 @@
 #ifndef API_BLOGGER_H
 #define API_BLOGGER_H
 
-#include <blog.h>
+#include "blog.h"
 
 #include <QtCore/QString>
 #include <QtCore/QVariant>
