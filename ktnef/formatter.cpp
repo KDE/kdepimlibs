@@ -20,34 +20,38 @@
 */
 /**
   @file
-  This file is part of the API for handling TNEF data and provides the
-  Formatter helper class.
+  This file is part of the API for handling TNEF data and provides
+  static Formatter helpers.
+
+  @brief
+  Provides helpers too format @acronym TNEF attachments into different
+  formats like eg. a HTML representation.
 
   @author Cornelius Schumacher
   @author Reinhold Kainhofer
   @author Rafal Rzepecki
 */
 
-#include <time.h>
-
-#include <QtCore/QBuffer>
-#include <klocale.h>
-#include <kdatetime.h>
-
-#include <kpimutils/email.h>
-#include "kabc/phonenumber.h"
-#include "kabc/vcardconverter.h"
-#include "kabc/stdaddressbook.h"
-
-#include "kcal/incidenceformatter.h"
-#include "kcal/calendar.h"
-#include "kcal/calendarlocal.h"
-#include "kcal/icalformat.h"
-
+#include "formatter.h"
 #include "ktnefparser.h"
 #include "ktnefmessage.h"
 #include "ktnefdefs.h"
-#include "formatter.h"
+
+#include <kpimutils/email.h>
+#include <kabc/phonenumber.h>
+#include <kabc/vcardconverter.h>
+#include <kabc/stdaddressbook.h>
+#include <kcal/incidenceformatter.h>
+#include <kcal/calendar.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/icalformat.h>
+
+#include <klocale.h>
+#include <kdatetime.h>
+
+#include <QtCore/QBuffer>
+
+#include <time.h>
 
 using namespace KCal;
 using namespace KTnef;
@@ -186,7 +190,7 @@ static KDateTime pureISOToLocalQDateTime( const QString &dtStr,
 }
 //@endcond
 
-QString KTnef::Formatter::msTNEFToVPart( const QByteArray &tnef )
+QString KTnef::msTNEFToVPart( const QByteArray &tnef )
 {
   bool bOk = false;
 
@@ -512,9 +516,9 @@ QString KTnef::Formatter::msTNEFToVPart( const QByteArray &tnef )
   return QString::fromUtf8( converter.createVCard( addressee ) );
 }
 
-QString KTnef::Formatter::formatTNEFInvitation( const QByteArray &tnef,
-                                                KCal::Calendar *cal,
-                                                KCal::InvitationFormatterHelper *h )
+QString KTnef::formatTNEFInvitation( const QByteArray &tnef,
+                                     KCal::Calendar *cal,
+                                     KCal::InvitationFormatterHelper *h )
 {
   QString vPart = msTNEFToVPart( tnef );
   QString iCal = IncidenceFormatter::formatICalInvitation( vPart, cal, h );
