@@ -83,14 +83,14 @@ void TestMetaWeblog::testValidity()
   b->setUsername( "admin" );
   b->setPassword( "e9f51d" );
   b->setBlogId( "1" );
-  b->setTimezone( KTimeZone() );
+  b->setTimeZone( KTimeZone() );
   b->setDownloadCount( DOWNLOADCOUNT );
   QVERIFY( b->url() == KUrl( "http://10.13.37.101/wordpress/xmlrpc.php" ) );
   QVERIFY( b->blogId() == "1" );
   QVERIFY( b->username() == "admin" );
   QVERIFY( b->password() == "e9f51d" );
   QVERIFY( b->interfaceName() == "MetaWeblog API" );
-  QVERIFY( b->timezone().name() == QString( "UTC" ) );
+  QVERIFY( b->timeZone().name() == QString( "UTC" ) );
   QVERIFY( b->downloadCount() == DOWNLOADCOUNT );
 
   BlogPosting *p = new BlogPosting();

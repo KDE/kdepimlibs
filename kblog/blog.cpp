@@ -233,7 +233,7 @@ class APIBlog::Private
     QString mUsername;
     QString mPassword;
     KUrl mUrl;
-    KTimeZone mTimezone;
+    KTimeZone mTimeZone;
     unsigned int mDownloadCount;
 };
 //@endcond
@@ -290,14 +290,14 @@ KUrl APIBlog::url() const
   return d->mUrl;
 }
 
-void APIBlog::setTimezone( const KTimeZone &tz )
+void APIBlog::setTimeZone( const KTimeZone &tz )
 {
-  d->mTimezone = tz;
+  d->mTimeZone = tz;
 }
 
-KTimeZone APIBlog::timezone()
+KTimeZone APIBlog::timeZone()
 {
-  return d->mTimezone;
+  return d->mTimeZone;
 }
 
 void APIBlog::setDownloadCount( int nr )

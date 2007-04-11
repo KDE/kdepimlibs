@@ -81,14 +81,14 @@ QTEST_KDEMAIN( TestBlogger, NoGUI )
   b->setUsername( "admin" );
   b->setPassword( "e9f51d" );
   b->setBlogId( "1" );
-  b->setTimezone( KTimeZone() );
+  b->setTimeZone( KTimeZone() );
   b->setDownloadCount( DOWNLOADCOUNT );
   QVERIFY( b->url() == KUrl( "http://10.13.37.101/wordpress/xmlrpc.php" ) );
   QVERIFY( b->blogId() == "1" );
   QVERIFY( b->username() == "admin" );
   QVERIFY( b->password() == "e9f51d" );
   QVERIFY( b->interfaceName() == "Blogger API 1.0" );
-  QVERIFY( b->timezone().name() == QString( "UTC" ) );
+  QVERIFY( b->timeZone().name() == QString( "UTC" ) );
   QVERIFY( b->downloadCount() == DOWNLOADCOUNT );
 
   BlogPosting *p = new BlogPosting();

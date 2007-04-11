@@ -32,10 +32,6 @@
 #include <QtCore/QString>
 #include <QtCore/QList>
 
-
-#ifdef Q_CC_MSVC
-# undef timezone
-#endif
 /**
   This is the main interface for blog backends
   @author Ian Reinhart Geiser, Reinhold Kainhofer, Christian Weilbach
@@ -415,15 +411,15 @@ class KBLOG_EXPORT APIBlog : public QObject
     /**
       Sets the time zone of the blog server.
       @param tz time zone of the server
-      @see timezone()
+      @see timeZone()
     */
-    void setTimezone( const KTimeZone &tz );
+    void setTimeZone( const KTimeZone &tz );
 
     /**
       Get the time zone of the blog server.
-      @see void setTimezone()
+      @see void setTimeZone()
     */
-    KTimeZone timezone();
+    KTimeZone timeZone();
 
     // TODO once again, do we need this?
     void setDownloadCount( int nr );
