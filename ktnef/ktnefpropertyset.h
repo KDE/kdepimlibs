@@ -45,120 +45,121 @@ namespace KTnef {
  */
 class KTNEF_EXPORT KTNEFPropertySet
 {
-public:
-  /**
-   * Constructor.
-   */
-  KTNEFPropertySet();
+  public:
+    /**
+      Constructor.
+    */
+    KTNEFPropertySet();
 
-  /**
-   * Destructor.
-   */
-  ~KTNEFPropertySet();
+    /**
+      Destructor.
+    */
+    ~KTNEFPropertySet();
 
-  /**
-   * Adds a @acronym MAPI property.
-   *
-   * @param key is the property key.
-   * @param type is the property type.
-   * @param value is the property value.
-   * @param name is the property name.
-   * @param overwrite if true, then remove the property if it already exists.
-   */
-  void addProperty( int key, int type, const QVariant &value,
-                    const QVariant &name=QVariant(), bool overwrite=false );
+    /**
+      Adds a @acronym MAPI property.
 
-  /**
-   * Finds a property by @p key, returning a formatted value.
-   *
-   * @param key is the property key.
-   * @param fallback is the fallback formatted value to use if the @p key
-   * is not found.
-   * @param convertToUpper if true, then return the formatted value in all
-   * upper case characters.
-   *
-   * @return a formatted value string.
-   */
-  QString findProp( int key, const QString &fallback=QString(),
-                    bool convertToUpper=false );
+      @param key is the property key.
+      @param type is the property type.
+      @param value is the property value.
+      @param name is the property name.
+      @param overwrite if true, then remove the property if it already exists.
+    */
+    void addProperty( int key, int type, const QVariant &value,
+                      const QVariant &name=QVariant(), bool overwrite=false );
 
-  /**
-   * Finds a property by @p name, returning a formatted value.
-   *
-   * @param name is the property name.
-   * @param fallback is the fallback formatted value to use if the @p name
-   * is not found.
-   * @param convertToUpper if true, then return the formatted value in all
-   * upper case characters.
-   *
-   * @return a formatted value string.
-   */
-  QString findNamedProp( const QString &name, const QString &fallback=QString(),
-                         bool convertToUpper=false );
+    /**
+      Finds a property by @p key, returning a formatted value.
 
-  /**
-   * Returns a #QMap of all (key,@acronym MAPI) properties
-   */
-  QMap<int,KTNEFProperty*>& properties();
+      @param key is the property key.
+      @param fallback is the fallback formatted value to use if the @p key
+      is not found.
+      @param convertToUpper if true, then return the formatted value in all
+      upper case characters.
 
-  /**
-   * Returns a #QMap of all (key,@acronym MAPI) properties
-   */
-  const QMap<int,KTNEFProperty*>& properties() const;
+      @return a formatted value string.
+    */
+    QString findProp( int key, const QString &fallback=QString(),
+                      bool convertToUpper=false ) const;
 
-  /**
-   * Returns the property associcated with the specified @p key.
-   *
-   * @param key is the property key.
-   *
-   * @return the property.q
-   */
-  QVariant property( int key ) const;
+    /**
+      Finds a property by @p name, returning a formatted value.
 
-  /**
-   * Adds a @acronym TNEF attribute.
-   *
-   * @param key is the attribute key.
-   * @param type is the attribute type.
-   * @param value is the attribute value.
-   * @param overwrite if true, then remove the attribute if it already exists.
-   */
-  void addAttribute( int key, int type, const QVariant &value,
-                     bool overwrite=false );
+      @param name is the property name.
+      @param fallback is the fallback formatted value to use if the @p name
+      is not found.
+      @param convertToUpper if true, then return the formatted value in all
+      upper case characters.
 
-  /**
-   * Returns a #QMap of all (key,@acronym TNEF) attributes.
-   */
-  QMap<int,KTNEFProperty*>& attributes();
+      @return a formatted value string.
+    */
+    QString findNamedProp( const QString &name,
+                           const QString &fallback=QString(),
+                           bool convertToUpper=false ) const;
 
-  /**
-   * Returns a #QMap of all (key,@acronym TNEF) attributes.
-   */
-  const QMap<int,KTNEFProperty*>& attributes() const;
+    /**
+      Returns a #QMap of all (key,@acronym MAPI) properties
+    */
+    QMap<int,KTNEFProperty*>& properties();
 
-  /**
-   * Returns the attribute associcated with the specified @p key.
-   *
-   * @param key is the @acronym TNEF key.
-   *
-   * @return the attribute associated with the key.
-   */
-  QVariant attribute( int key ) const;
+    /**
+      Returns a #QMap of all (key,@acronym MAPI) properties
+    */
+    const QMap<int,KTNEFProperty*>& properties() const;
 
-  /**
-   * Clears the @acronym MAPI and @acronym TNEF maps.
-   *
-   * @param deleteAll if true, delete the map memory as well.
-   */
-  void clear( bool deleteAll=false );
+    /**
+      Returns the property associcated with the specified @p key.
 
-private:
-  //@cond PRIVATE
-  class Private;
-  Private* const d;
-  //@endcond
+      @param key is the property key.
 
-  Q_DISABLE_COPY( KTNEFPropertySet )
+      @return the property.q
+    */
+    QVariant property( int key ) const;
+
+    /**
+      Adds a @acronym TNEF attribute.
+
+      @param key is the attribute key.
+      @param type is the attribute type.
+      @param value is the attribute value.
+      @param overwrite if true, then remove the attribute if it already exists.
+    */
+    void addAttribute( int key, int type, const QVariant &value,
+                       bool overwrite=false );
+
+    /**
+      Returns a #QMap of all (key,@acronym TNEF) attributes.
+    */
+    QMap<int,KTNEFProperty*>& attributes();
+
+    /**
+      Returns a #QMap of all (key,@acronym TNEF) attributes.
+    */
+    const QMap<int,KTNEFProperty*>& attributes() const;
+
+    /**
+      Returns the attribute associcated with the specified @p key.
+
+      @param key is the @acronym TNEF key.
+
+      @return the attribute associated with the key.
+    */
+    QVariant attribute( int key ) const;
+
+    /**
+      Clears the @acronym MAPI and @acronym TNEF maps.
+
+      @param deleteAll if true, delete the map memory as well.
+    */
+    void clear( bool deleteAll=false );
+
+  private:
+    //@cond PRIVATE
+    class Private;
+    Private *const d;
+    //@endcond
+
+    Q_DISABLE_COPY( KTNEFPropertySet )
 };
 
 }

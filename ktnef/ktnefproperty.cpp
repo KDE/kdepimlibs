@@ -28,12 +28,12 @@
  * @author Michael Goffioul
  */
 
-#include <ctype.h>
+#include "ktnefproperty.h"
+#include "mapi.h"
 
 #include <QtCore/QDateTime>
 
-#include "ktnefproperty.h"
-#include "mapi.h"
+#include <ctype.h>
 
 using namespace KTnef;
 

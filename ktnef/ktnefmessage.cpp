@@ -28,12 +28,12 @@
  * @author Michael Goffioul
  */
 
-#include <QtCore/QBuffer>
-#include <QtCore/QList>
-
 #include "ktnefmessage.h"
 #include "ktnefattach.h"
 #include "lzfu.h"
+
+#include <QtCore/QBuffer>
+#include <QtCore/QList>
 
 using namespace KTnef;
 

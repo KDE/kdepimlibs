@@ -28,7 +28,12 @@
  * @author Bo Thorsen
  */
 
-#include <assert.h>
+#include "ktnefwriter.h"
+#include "ktnefproperty.h"
+#include "ktnefpropertyset.h"
+#include "ktnefdefs.h"
+
+#include <kdebug.h>
 
 #include <QtCore/QFile>
 #include <QtCore/QDateTime>
@@ -36,12 +41,7 @@
 #include <QtCore/QList>
 #include <QtCore/QByteArray>
 
-#include <kdebug.h>
-
-#include "ktnefwriter.h"
-#include "ktnefproperty.h"
-#include "ktnefpropertyset.h"
-#include "ktnefdefs.h"
+#include <assert.h>
 
 using namespace KTnef;
 

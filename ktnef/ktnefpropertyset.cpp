@@ -28,12 +28,12 @@
  * @author Michael Goffioul
  */
 
-#include <QtCore/QList>
+#include "ktnefpropertyset.h"
+#include "ktnefproperty.h"
 
 #include <kdebug.h>
 
-#include "ktnefpropertyset.h"
-#include "ktnefproperty.h"
+#include <QtCore/QList>
 
 using namespace KTnef;
 
@@ -72,7 +72,7 @@ void KTNEFPropertySet::addProperty( int key, int type, const QVariant &value,
 }
 
 QString KTNEFPropertySet::findProp( int key, const QString &fallback,
-                                    bool upper )
+                                    bool upper ) const
 {
   QMap<int,KTNEFProperty*>::Iterator it = d->properties_.find( key );
   if ( d->properties_.end() != it ) {
@@ -86,7 +86,7 @@ QString KTNEFPropertySet::findProp( int key, const QString &fallback,
 
 QString KTNEFPropertySet::findNamedProp( const QString &name,
                                          const QString &fallback,
-                                         bool upper )
+                                         bool upper ) const
 {
   for ( QMap<int,KTNEFProperty*>::Iterator it = d->properties_.begin();
         it != d->properties_.end();

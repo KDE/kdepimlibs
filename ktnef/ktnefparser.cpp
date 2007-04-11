@@ -28,20 +28,21 @@
  * @author Michael Goffioul
  */
 
-#include <QtCore/QDateTime>
-#include <QtCore/QDataStream>
-#include <QtCore/QFile>
-#include <QtCore/QVariant>
-#include <QtCore/QList>
-#include <kdebug.h>
-#include <kmimetype.h>
-#include <ksavefile.h>
-
 #include "ktnefparser.h"
 #include "ktnefattach.h"
 #include "ktnefproperty.h"
 #include "ktnefmessage.h"
 #include "ktnefdefs.h"
+
+#include <kdebug.h>
+#include <kmimetype.h>
+#include <ksavefile.h>
+
+#include <QtCore/QDateTime>
+#include <QtCore/QDataStream>
+#include <QtCore/QFile>
+#include <QtCore/QVariant>
+#include <QtCore/QList>
 
 using namespace KTnef;
 
@@ -423,7 +424,7 @@ bool KTNEFParser::ParserPrivate::parseDevice()
   }
 }
 
-bool KTNEFParser::extractFile( const QString &filename )
+bool KTNEFParser::extractFile( const QString &filename ) const
 {
   KTNEFAttach *att = d->message_->attachment( filename );
   if ( !att ) {
@@ -480,7 +481,7 @@ bool KTNEFParser::extractAll()
 }
 
 bool KTNEFParser::extractFileTo( const QString &filename,
-                                 const QString &dirname )
+                                 const QString &dirname ) const
 {
   kDebug(5975) << "Extracting attachment: filename="
            << filename << ", dir=" << dirname << endl;
@@ -491,7 +492,7 @@ bool KTNEFParser::extractFileTo( const QString &filename,
   return d->extractAttachmentTo( att, dirname );
 }
 
-bool KTNEFParser::openFile( const QString &filename )
+bool KTNEFParser::openFile( const QString &filename ) const
 {
   d->deleteDevice();
   delete d->message_;

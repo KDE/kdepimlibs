@@ -28,13 +28,13 @@
  * @author Michael Goffioul
  */
 
-#include <sys/types.h>
-#include <string.h>
-#include <stdio.h>
+#include "lzfu.h"
 
 #include <QtCore/QIODevice>
 
-#include "lzfu.h"
+#include <sys/types.h>
+#include <string.h>
+#include <stdio.h>
 
 //#define DO_DEBUG
 
