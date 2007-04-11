@@ -22,9 +22,11 @@
 #ifndef BLOGGER_P_H
 #define BLOGGER_P_H
 
-#include <QtCore/QList>
-
 #include <blogger.h>
+
+#include <kxmlrpcclient/client.h>
+
+#include <QtCore/QList>
 
 using namespace KBlog;
 

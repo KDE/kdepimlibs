@@ -20,8 +20,9 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <kxmlrpcclient/client.h>
 #include <blog.h>
+
+#include <kxmlrpcclient/client.h>
 
 #include <kdebug.h>
 #include <kdatetime.h>

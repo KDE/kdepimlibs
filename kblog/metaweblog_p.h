@@ -22,9 +22,11 @@
 #ifndef METAWEBLOG_P_H
 #define METAWEBLOG_P_H
 
-#include <QtCore/QList>
-
 #include <metaweblog.h>
+
+#include <kxmlrpcclient/client.h>
+
+#include <QtCore/QList>
 
 using namespace KBlog;
 

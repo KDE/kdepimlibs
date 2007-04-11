@@ -24,11 +24,11 @@
 
 #include <blog.h>
 
+#include <kurl.h>
+
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 #include <QtCore/QList>
-
-#include <kurl.h>
 
 /**
   @file

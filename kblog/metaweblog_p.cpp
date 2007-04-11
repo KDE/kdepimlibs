@@ -19,17 +19,16 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <metaweblog.h>
-#include <kxmlrpcclient/client.h>
-#include <kdebug.h>
-#include <klocale.h>
-
 #include <metaweblog_p.h>
+
+#include <kxmlrpcclient/client.h>
+
+#include <kdebug.h>
+#include <kdatetime.h>
+#include <klocale.h>
 
 #include <QtCore/QList>
 #include <QtCore/QVariant>
-
-#include <KDateTime>
 
 using namespace KBlog;
 

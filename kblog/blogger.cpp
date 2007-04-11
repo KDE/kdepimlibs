@@ -21,11 +21,10 @@
 */
 
 #include <blogger.h>
+#include <blogger_p.h>
 
-#include <kxmlrpcclient/client.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <blogger_p.h>
 
 #include <QtCore/QList>
 

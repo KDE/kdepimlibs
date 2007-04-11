@@ -19,16 +19,15 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <blogger.h>
-#include <kxmlrpcclient/client.h>
-#include <kdebug.h>
-#include <klocale.h>
-
 #include <blogger_p.h>
 
-#include <QtCore/QList>
+#include <kxmlrpcclient/client.h>
 
-#include <KDateTime>
+#include <kdebug.h>
+#include <kdatetime.h>
+#include <klocale.h>
+
+#include <QtCore/QList>
 
 using namespace KBlog;
 

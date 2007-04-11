@@ -21,11 +21,10 @@
 */
 
 #include <metaweblog.h>
+#include <metaweblog_p.h>
 
-#include <kxmlrpcclient/client.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <metaweblog_p.h>
 
 #include <QtCore/QList>
 
