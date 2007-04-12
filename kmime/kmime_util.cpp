@@ -350,7 +350,7 @@ QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
     pos1 = 0;
   } else {
     n.prepend('\n');
-    char* p = strcasestr( src.constData(), n.constData() );
+    const char* p = strcasestr( src.constData(), n.constData() );
     if ( !p )
       pos1 = -1;
     else
