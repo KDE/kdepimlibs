@@ -313,11 +313,11 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent, Incidence *incidence,
     // incidence->setNonKDECustomProperty("X-PILOTID", QString::number(incidence->pilotId()));
 
     icalproperty *p = 0;
-    p = icalproperty_new_x(QString::number(incidence->syncStatus()).utf8());
+    p = icalproperty_new_x(QString::number(incidence->syncStatus()).toUtf8());
     icalproperty_set_x_name(p,"X-PILOTSTAT");
     icalcomponent_add_property(parent,p);
 
-    p = icalproperty_new_x(QString::number(incidence->pilotId()).utf8());
+    p = icalproperty_new_x(QString::number(incidence->pilotId()).toUtf8());
     icalproperty_set_x_name(p,"X-PILOTID");
     icalcomponent_add_property(parent,p);
   }
