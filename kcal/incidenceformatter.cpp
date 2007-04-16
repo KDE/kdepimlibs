@@ -26,8 +26,8 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QList>
 #include <QtGui/QTextDocument>
+#include <qapplication.h>
 
-#include <kapplication.h>
 #include <kdatetime.h>
 #include <kglobal.h>
 #include <kiconloader.h>

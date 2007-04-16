@@ -21,7 +21,6 @@
 
 #include <klocale.h>
 #include <kdebug.h>
-#include <kapplication.h>
 #include <krandom.h>
 
 #include "calformat.h"

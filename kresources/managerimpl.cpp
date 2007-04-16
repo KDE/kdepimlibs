@@ -23,7 +23,6 @@
 #include "managerimpl.h"
 
 #include <kaboutdata.h>
-#include <kapplication.h>
 #include <krandom.h>
 #include <kdebug.h>
 #include <kconfig.h>

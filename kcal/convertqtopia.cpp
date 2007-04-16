@@ -24,13 +24,13 @@
 #include "qtopiaformat.h"
 
 #include <kaboutdata.h>
-#include <kapplication.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kcmdlineargs.h>
 #include <kglobal.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
+#include <kapplication.h>
 
 #include <iostream>
 
