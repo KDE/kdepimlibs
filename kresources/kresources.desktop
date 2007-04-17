@@ -10,6 +10,7 @@ X-KDE-FactoryName=kcm_kresources
 
 Name=KDE Resources
 Name[el]=Πόροι του KDE
+Name[ga]=Acmhainní KDE
 Name[ja]=KDE リソース
 Name[pa]=KDE ਸਰੋਤ
 Name[sv]=KDE-resurser
@@ -22,4 +23,5 @@ Comment[sv]=Anpassa KDE-resurser
 Comment[x-test]=xxConfigure KDE Resourcesxx
 
 Keywords=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap
+Keywords[el]=πόροι,πόροι του konnector,πόρος επαφής,πόρος ημερολογίου,πόρος σημειώσεων,πόρος ειδοποίησης,imap
 Keywords[sv]=resurser,konnector-resurs,kontaktresurs,kalenderresurs,anteckningsresurs,alarmresurs,IMAP
