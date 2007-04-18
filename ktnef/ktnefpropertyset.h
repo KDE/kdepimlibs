@@ -105,7 +105,7 @@ class KTNEF_EXPORT KTNEFPropertySet
     /**
       Returns a #QMap of all (key,@acronym MAPI) properties
     */
-    const QMap<int,KTNEFProperty*>& properties() const;
+    QMap<int,KTNEFProperty*>& properties() const;
 
     /**
       Returns the property associcated with the specified @p key.
@@ -135,7 +135,7 @@ class KTNEF_EXPORT KTNEFPropertySet
     /**
       Returns a #QMap of all (key,@acronym TNEF) attributes.
     */
-    const QMap<int,KTNEFProperty*>& attributes() const;
+    QMap<int,KTNEFProperty*>& attributes() const;
 
     /**
       Returns the attribute associcated with the specified @p key.
