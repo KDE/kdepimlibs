@@ -72,13 +72,11 @@ Attendee::~Attendee()
 
 bool KCal::Attendee::operator==( const Attendee &attendee )
 {
-  return (
-    (Person &)*this == (const Person &)attendee &&
+  return (Person &)*this == (const Person &)attendee &&
     d->mRSVP == attendee.d->mRSVP &&
     d->mRole == attendee.d->mRole &&
     d->mStatus == attendee.d->mStatus &&
-    d->mUid == attendee.d->mUid
-    );
+    d->mUid == attendee.d->mUid;
 }
 
 void Attendee::setRSVP( bool r )
