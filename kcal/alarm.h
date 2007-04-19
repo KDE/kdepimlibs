@@ -483,7 +483,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
       time as before but in a new time zone. The shift is done from a viewing
       time zone rather than from the actual alarm time zone.
 
-      For example, shifting an alarm with start time is 09:00 America/New York,
+      For example, shifting an alarm whose start time is 09:00 America/New York,
       using an old viewing time zone (@p oldSpec) of Europe/London, to a new
       time zone (@p newSpec) of Europe/Paris, will result in the time being
       shifted from 14:00 (which is the London time of the alarm start) to
