@@ -23,6 +23,9 @@
   This file is part of the API for handling calendar data and
   defines the Attachment class.
 
+  @brief
+  Represents information related to an attachment for a Calendar Incidence.
+
   @author Michael Brade
 */
 
