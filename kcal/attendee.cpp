@@ -23,15 +23,18 @@
   This file is part of the API for handling calendar data and
   defines the Attendee class.
 
+  @brief
+  Represents information related to an attendee of an Calendar Incidence.
+
   @author Cornelius Schumacher
 */
 
-#include <QtCore/QStringList>
+#include "attendee.h"
 
 #include <kdebug.h>
 #include <klocale.h>
 
-#include "attendee.h"
+#include <QtCore/QStringList>
 
 using namespace KCal;
 
