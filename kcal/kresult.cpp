@@ -19,10 +19,10 @@
   Boston, MA  02110-1301, USA.
 */
 
+#include "kresult.h"
+
 #include <klocale.h>
 #include <kdebug.h>
-
-#include "kresult.h"
 
 using namespace KCal;
 

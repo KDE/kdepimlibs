@@ -144,7 +144,7 @@ class KCAL_EXPORT KResult
       Creates a KResult object of the specified ErrorType and an optional
       detailed error message.
     */
-    explicit KResult( ErrorType, const QString &details = QString::null );
+    explicit KResult( ErrorType, const QString &details = QString() );
 
     /**
       Destroys the result.
