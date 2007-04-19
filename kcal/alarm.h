@@ -404,14 +404,12 @@ class KCAL_EXPORT Alarm : public CustomProperties
     */
     void setTime( const KDateTime &alarmTime );
 
-
     /**
       Returns the alarm trigger date/time.
 
       @see setTime()
     */
     KDateTime time() const;
-
 
     /**
       Returns the date/time when the last repetition of the alarm goes off.
@@ -420,7 +418,6 @@ class KCAL_EXPORT Alarm : public CustomProperties
       @see setTime()
     */
     KDateTime endTime() const;
-
 
     /**
       Returns true if the alarm has a trigger date/time.
@@ -486,16 +483,17 @@ class KCAL_EXPORT Alarm : public CustomProperties
       time as before but in a new time zone. The shift is done from a viewing
       time zone rather than from the actual alarm time zone.
 
-      For example, shifting an alarm whose start time is 09:00 America/New York,
-      using an old viewing time zone (@p oldSpec) of Europe/London, to a new time
-      zone (@p newSpec) of Europe/Paris, will result in the time being shifted
-      from 14:00 (which is the London time of the alarm start) to 14:00 Paris
-      time.
+      For example, shifting an alarm with start time is 09:00 America/New York,
+      using an old viewing time zone (@p oldSpec) of Europe/London, to a new
+      time zone (@p newSpec) of Europe/Paris, will result in the time being
+      shifted from 14:00 (which is the London time of the alarm start) to
+      14:00 Paris time.
 
       @param oldSpec the time specification which provides the clock times
       @param newSpec the new time specification
     */
-    void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
+    void shiftTimes( const KDateTime::Spec &oldSpec,
+                     const KDateTime::Spec &newSpec );
 
     /**
       Sets the snooze time interval for the alarm.

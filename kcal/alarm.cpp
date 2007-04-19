@@ -24,14 +24,17 @@
   This file is part of the API for handling calendar data and
   defines the Alarm class.
 
+  @brief
+  Represents an alarm notification.
+
   @author Cornelius Schumacher
 */
 
-#include <kdebug.h>
-
+#include "alarm.h"
 #include "incidence.h"
 #include "todo.h"
-#include "alarm.h"
+
+#include <kdebug.h>
 
 using namespace KCal;
 
@@ -130,8 +133,9 @@ bool Alarm::operator==( const Alarm &rhs ) const
 
 void Alarm::setType( Alarm::Type type )
 {
-  if ( type == d->mType )
+  if ( type == d->mType ) {
     return;
+  }
 
   switch ( type ) {
     case Display:
@@ -154,7 +158,9 @@ void Alarm::setType( Alarm::Type type )
       return;
   }
   d->mType = type;
-  if ( d->mParent ) d->mParent->updated();
+  if ( d->mParent ) {
+    d->mParent->updated();
+  }
 }
 
 Alarm::Type Alarm::type() const
@@ -166,14 +172,18 @@ void Alarm::setAudioAlarm( const QString &audioFile )
 {
   d->mType = Audio;
   d->mFile = audioFile;
-  if ( d->mParent ) d->mParent->updated();
+  if ( d->mParent ) {
+    d->mParent->updated();
+  }
 }
 
 void Alarm::setAudioFile( const QString &audioFile )
 {
   if ( d->mType == Audio ) {
     d->mFile = audioFile;
-    if ( d->mParent ) d->mParent->updated();
+    if ( d->mParent ) {
+      d->mParent->updated();
+    }
   }
 }
 
@@ -188,14 +198,18 @@ void Alarm::setProcedureAlarm( const QString &programFile,
   d->mType = Procedure;
   d->mFile = programFile;
   d->mDescription = arguments;
-  if ( d->mParent ) d->mParent->updated();
+  if ( d->mParent ) {
+    d->mParent->updated();
+  }
 }
 
 void Alarm::setProgramFile( const QString &programFile )
 {
   if ( d->mType == Procedure ) {
     d->mFile = programFile;
-    if ( d->mParent ) d->mParent->updated();
+    if ( d->mParent ) {
+      d->mParent->updated();
+    }
   }
 }
 
@@ -208,7 +222,9 @@ void Alarm::setProgramArguments( const QString &arguments )
 {
   if ( d->mType == Procedure ) {
     d->mDescription = arguments;
-    if ( d->mParent ) d->mParent->updated();
+    if ( d->mParent ) {
+      d->mParent->updated();
+    }
   }
 }
 
@@ -226,7 +242,9 @@ void Alarm::setEmailAlarm( const QString &subject, const QString &text,
   d->mDescription = text;
   d->mMailAddresses = addressees;
   d->mMailAttachFiles = attachments;
-  if ( d->mParent ) d->mParent->updated();
+  if ( d->mParent ) {
+    d->mParent->updated();
+  }
 }
 
 void Alarm::setMailAddress( const Person &mailAddress )
@@ -234,7 +252,9 @@ void Alarm::setMailAddress( const Person &mailAddress )
   if ( d->mType == Email ) {
     d->mMailAddresses.clear();
     d->mMailAddresses += mailAddress;
-    if ( d->mParent ) d->mParent->updated();
+    if ( d->mParent ) {
+      d->mParent->updated();
+    }
   }
 }
 
@@ -242,7 +262,9 @@ void Alarm::setMailAddresses( const QList<Person> &mailAddresses )
 {
   if ( d->mType == Email ) {
     d->mMailAddresses = mailAddresses;
-    if ( d->mParent ) d->mParent->updated();
+    if ( d->mParent ) {
+      d->mParent->updated();
+    }
   }
 }
 
@@ -250,7 +272,9 @@ void Alarm::addMailAddress( const Person &mailAddress )
 {
   if ( d->mType == Email ) {
     d->mMailAddresses += mailAddress;
-    if ( d->mParent ) d->mParent->updated();
+    if ( d->mParent ) {
+      d->mParent->updated();
+    }
   }
 }
 
@@ -263,7 +287,9 @@ void Alarm::setMailSubject( const QString &mailAlarmSubject )
 {
   if ( d->mType == Email ) {
     d->mMailSubject = mailAlarmSubject;
-    if ( d->mParent ) d->mParent->updated();
+    if ( d->mParent ) {
+      d->mParent->updated();
+    }
   }
 }
 
@@ -277,7 +303,9 @@ void Alarm::setMailAttachment( const QString &mailAttachFile )
   if ( d->mType == Email ) {
     d->mMailAttachFiles.clear();
     d->mMailAttachFiles += mailAttachFile;
-    if ( d->mParent ) d->mParent->updated();
+    if ( d->mParent ) {
+      d->mParent->updated();
+    }
   }
 }
 
@@ -285,7 +313,9 @@ void Alarm::setMailAttachments( const QStringList &mailAttachFiles )
 {
   if ( d->mType == Email ) {
     d->mMailAttachFiles = mailAttachFiles;
-    if ( d->mParent ) d->mParent->updated();
+    if ( d->mParent ) {
+      d->mParent->updated();
+    }
   }
 }
 
@@ -293,7 +323,9 @@ void Alarm::addMailAttachment( const QString &mailAttachFile )
 {
   if ( d->mType == Email ) {
     d->mMailAttachFiles += mailAttachFile;
-    if ( d->mParent ) d->mParent->updated();
+    if ( d->mParent ) {
+      d->mParent->updated();
+    }
   }
 }
 
@@ -306,7 +338,9 @@ void Alarm::setMailText( const QString &text )
 {
   if ( d->mType == Email ) {
     d->mDescription = text;
-    if ( d->mParent ) d->mParent->updated();
+    if ( d->mParent ) {
+      d->mParent->updated();
+    }
   }
 }
 
@@ -321,14 +355,18 @@ void Alarm::setDisplayAlarm( const QString &text )
   if ( !text.isNull() ) {
     d->mDescription = text;
   }
-  if ( d->mParent ) d->mParent->updated();
+  if ( d->mParent ) {
+    d->mParent->updated();
+  }
 }
 
 void Alarm::setText( const QString &text )
 {
   if ( d->mType == Display ) {
     d->mDescription = text;
-    if ( d->mParent ) d->mParent->updated();
+    if ( d->mParent ) {
+      d->mParent->updated();
+    }
   }
 }
 
@@ -342,7 +380,9 @@ void Alarm::setTime( const KDateTime &alarmTime )
   d->mAlarmTime = alarmTime;
   d->mHasTime = true;
 
-  if ( d->mParent ) d->mParent->updated();
+  if ( d->mParent ) {
+    d->mParent->updated();
+  }
 }
 
 KDateTime Alarm::time() const
@@ -368,18 +408,23 @@ bool Alarm::hasTime() const
   return d->mHasTime;
 }
 
-void Alarm::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
+void Alarm::shiftTimes( const KDateTime::Spec &oldSpec,
+                        const KDateTime::Spec &newSpec )
 {
   d->mAlarmTime = d->mAlarmTime.toTimeSpec( oldSpec );
   d->mAlarmTime.setTimeSpec( newSpec );
-  if ( d->mParent ) d->mParent->updated();
+  if ( d->mParent ) {
+    d->mParent->updated();
+  }
 }
 
 void Alarm::setSnoozeTime( int alarmSnoozeTime )
 {
   if ( alarmSnoozeTime > 0 ) {
     d->mAlarmSnoozeTime = alarmSnoozeTime;
-    if ( d->mParent ) d->mParent->updated();
+    if ( d->mParent ) {
+      d->mParent->updated();
+    }
   }
 }
 
@@ -391,7 +436,9 @@ int Alarm::snoozeTime() const
 void Alarm::setRepeatCount( int alarmRepeatCount )
 {
   d->mAlarmRepeatCount = alarmRepeatCount;
-  if ( d->mParent ) d->mParent->updated();
+  if ( d->mParent ) {
+    d->mParent->updated();
+  }
 }
 
 int Alarm::repeatCount() const
@@ -453,13 +500,17 @@ KDateTime Alarm::endTime() const
 void Alarm::toggleAlarm()
 {
   d->mAlarmEnabled = !d->mAlarmEnabled;
-  if ( d->mParent ) d->mParent->updated();
+  if ( d->mParent ) {
+    d->mParent->updated();
+  }
 }
 
 void Alarm::setEnabled( bool enable )
 {
   d->mAlarmEnabled = enable;
-  if ( d->mParent ) d->mParent->updated();
+  if ( d->mParent ) {
+    d->mParent->updated();
+  }
 }
 
 bool Alarm::enabled() const
@@ -472,7 +523,9 @@ void Alarm::setStartOffset( const Duration &offset )
   d->mOffset = offset;
   d->mEndOffset = false;
   d->mHasTime = false;
-  if ( d->mParent ) d->mParent->updated();
+  if ( d->mParent ) {
+    d->mParent->updated();
+  }
 }
 
 Duration Alarm::startOffset() const
@@ -495,7 +548,9 @@ void Alarm::setEndOffset( const Duration &offset )
   d->mOffset = offset;
   d->mEndOffset = true;
   d->mHasTime = false;
-  if ( d->mParent ) d->mParent->updated();
+  if ( d->mParent ) {
+    d->mParent->updated();
+  }
 }
 
 Duration Alarm::endOffset() const
@@ -515,5 +570,7 @@ Incidence *Alarm::parent() const
 
 void Alarm::customPropertyUpdated()
 {
-  if ( d->mParent ) d->mParent->updated();
+  if ( d->mParent ) {
+    d->mParent->updated();
+  }
 }
