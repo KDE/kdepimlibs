@@ -23,12 +23,15 @@
   This file is part of the API for handling calendar data and
   defines the Duration class.
 
+  @brief
+  Represents a span of time measured in seconds.
+
   @author Cornelius Schumacher
 */
 
-#include <kdatetime.h>
-
 #include "duration.h"
+
+#include <kdatetime.h>
 
 using namespace KCal;
 
@@ -84,12 +87,12 @@ Duration &Duration::operator=( const Duration &duration )
 
 bool Duration::operator==( const Duration &other ) const
 {
-  return ( d->mSeconds == other.d->mSeconds );
+  return d->mSeconds == other.d->mSeconds;
 }
 
 bool Duration::operator!=( const Duration &other ) const
 {
-  return ( d->mSeconds != other.d->mSeconds );
+  return d->mSeconds != other.d->mSeconds;
 }
 
 KDateTime Duration::end( const KDateTime &start ) const
