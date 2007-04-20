@@ -193,6 +193,17 @@ target_link_libraries(testcalendarnull ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIB
 add_test(kcal-testcalendarnull ${EXECUTABLE_OUTPUT_PATH}/testcalendarnull)
 
 ########### next target ###############
+set(testcalfilter_SRCS testcalfilter.cpp )
+
+kde4_automoc(${testcalfilter_SRCS})
+
+kde4_add_executable(testcalfilter NOGUI RUN_UNINSTALLED ${testcalfilter_SRCS})
+
+target_link_libraries(testcalfilter ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
+
+add_test(kcal-testcalfilter ${EXECUTABLE_OUTPUT_PATH}/testcalfilter)
+
+########### next target ###############
 set(testduration_SRCS testduration.cpp )
 
 kde4_automoc(${testduration_SRCS})
