@@ -22,7 +22,9 @@
 #ifndef API_BLOG_H
 #define API_BLOG_H
 
-#include <kblog.h>
+
+#include <kblog/kblog.h>
+
 #include <kurl.h>
 #include <kio/job.h>
 #include <ktimezones.h>
