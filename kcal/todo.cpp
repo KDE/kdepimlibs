@@ -1,22 +1,22 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 /**
   @file
@@ -144,12 +144,16 @@ QString Todo::dtDueTimeStr( bool shortfmt ) const
 
 QString Todo::dtDueDateStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDate(dtDue( !doesRecur() ).date(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate));
+  return
+    KGlobal::locale()->formatDate( dtDue( !doesRecur() ).date(),
+                                  ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
 }
 
 QString Todo::dtDueStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDateTime( dtDue( !doesRecur() ).dateTime(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
+  return
+    KGlobal::locale()->formatDateTime( dtDue( !doesRecur() ).dateTime(),
+                                       ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
 }
 
 bool Todo::hasDueDate() const
@@ -159,7 +163,9 @@ bool Todo::hasDueDate() const
 
 void Todo::setHasDueDate( bool f )
 {
-  if ( mReadOnly ) return;
+  if ( mReadOnly ) {
+    return;
+  }
   d->mHasDueDate = f;
   updated();
 }
@@ -171,7 +177,9 @@ bool Todo::hasStartDate() const
 
 void Todo::setHasStartDate( bool f )
 {
-  if ( mReadOnly ) return;
+  if ( mReadOnly ) {
+    return;
+  }
 
   if ( doesRecur() && !f ) {
     if ( !comments().filter( "NoStartDate" ).count() ) {
@@ -211,12 +219,16 @@ QString Todo::dtStartTimeStr( bool shortfmt, bool first ) const
 
 QString Todo::dtStartDateStr( bool shortfmt, bool first ) const
 {
-  return KGlobal::locale()->formatDate( dtStart( first ).date(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
+  return
+    KGlobal::locale()->formatDate( dtStart( first ).date(),
+                                   ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
 }
 
 QString Todo::dtStartStr( bool shortfmt, bool first ) const
 {
-  return KGlobal::locale()->formatDateTime( dtStart( first ).dateTime(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
+  return
+    KGlobal::locale()->formatDateTime( dtStart( first ).dateTime(),
+                                       ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
 }
 
 bool Todo::isCompleted() const
@@ -251,7 +263,9 @@ KDateTime Todo::completed() const
 
 QString Todo::completedStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDateTime( d->mCompleted.dateTime(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
+  return
+    KGlobal::locale()->formatDateTime( d->mCompleted.dateTime(),
+                                       ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
 }
 
 void Todo::setCompleted( const KDateTime &completed )
@@ -313,9 +327,10 @@ KDateTime Todo::dtRecurrence() const
 bool Todo::recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const
 {
   QDate today = QDate::currentDate();
-  return ( Incidence::recursOn( date, timeSpec ) &&
-           !( date < today && d->mDtRecurrence.date() < today &&
-              d->mDtRecurrence > recurrence()->startDateTime() ) );
+  return
+    Incidence::recursOn( date, timeSpec ) &&
+    !( date < today && d->mDtRecurrence.date() < today &&
+       d->mDtRecurrence > recurrence()->startDateTime() );
 }
 
 bool Todo::recurTodo()
@@ -355,7 +370,7 @@ bool Todo::isOverdue() const
   bool inPast = floats() ?
                 dtDue().date() < QDate::currentDate() :
                 dtDue() < KDateTime::currentUtcDateTime();
-  return ( inPast && !isCompleted() );
+  return inPast && !isCompleted();
 }
 
 // DEPRECATED methods

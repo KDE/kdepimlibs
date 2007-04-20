@@ -1,22 +1,22 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 /**
   @file
@@ -73,7 +73,10 @@ class KCAL_EXPORT Todo : public Incidence
       Sets due date and time.
 
       @param dtDue The due date/time.
-      @param first Sets the date of the first occurrence (if the todo is recurrent).
+      @param first If true and the todo recurs, the due date of the first
+      occurrence will be returned. If false and recurrent, the date of the
+      current occurrence will be returned. If non-recurrent, the normal due
+      date will be returned.
     */
     void setDtDue( const KDateTime &dtDue, bool first = false );
     KDE_DEPRECATED void setDtDue( const QDateTime &dtDue, bool first = false );
@@ -83,8 +86,8 @@ class KCAL_EXPORT Todo : public Incidence
 
       @param first If true and the todo recurs, the due date of the first
       occurrence will be returned. If false and recurrent, the date of the
-      current occurrence will be returned. If non-recurrent, the normal due date
-      will be returned.
+      current occurrence will be returned. If non-recurrent, the normal due
+      date will be returned.
     */
     KDateTime dtDue( bool first = false ) const;
 
@@ -98,16 +101,16 @@ class KCAL_EXPORT Todo : public Incidence
       Returns due date as string formatted according to the user's locale
       settings.
 
-      @param shortfmt If set to true, use short date format, if set to false use
-                      long format.
+      @param shortfmt If set to true, use short date format, if set to false
+      use long format.
     */
     QString dtDueDateStr( bool shortfmt = true ) const;
 
     /**
       Returns due date and time as string formatted according to the user's
       locale settings.
-      @param shortfmt If set to true, use short date format, if set to false use
-                      long format.
+      @param shortfmt If set to true, use short date format, if set to false
+      use long format.
     */
     QString dtDueStr( bool shortfmt = true ) const;
 
@@ -151,14 +154,14 @@ class KCAL_EXPORT Todo : public Incidence
     */
     void setDtStart( const KDateTime &dtStart );
     KDE_DEPRECATED void setDtStart( const QDateTime &dtStart )
-      { setDtStart( KDateTime ( dtStart ) ); }  // use local time zone
+    { setDtStart( KDateTime ( dtStart ) ); }  // use local time zone
 
     /**
       Returns a todo's starting time as a string formatted according to the
       user's locale settings.
 
-      @param shortfmt If set to true, use short date format, if set to false use
-                      long format.
+      @param shortfmt If set to true, use short date format, if set to false
+      use long format.
       @param first If true, the start date of the todo will be returned. If the
       todo recurs, the start date of the first occurrence will be returned.
       If false and the todo recurs, the relative start date will be returned,
@@ -183,8 +186,8 @@ class KCAL_EXPORT Todo : public Incidence
       Returns a todo's starting date and time as a string formatted according
       to the user's locale settings.
 
-      @param shortfmt If set to true, use short date format, if set to false use
-                      long format.
+      @param shortfmt If set to true, use short date format, if set to false
+      use long format.
       @param first If true, the start date of the todo will be returned. If the
       todo recurs, the start date of the first occurrence will be returned.
       If false and the todo recurs, the relative start date will be returned,
@@ -234,8 +237,8 @@ class KCAL_EXPORT Todo : public Incidence
     /**
       Returns string contaiting date and time when the todo was completed
       formatted according to the user's locale settings.
-      @param shortfmt If set to true, use short date format, if set to false use
-                      long format.
+      @param shortfmt If set to true, use short date format, if set to false
+      use long format.
     */
     QString completedStr( bool shortfmt = false ) const;
 

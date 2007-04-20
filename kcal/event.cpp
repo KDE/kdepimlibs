@@ -1,22 +1,22 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 /**
   @file
@@ -66,7 +66,9 @@ bool Event::operator==( const Event &e2 ) const
 
 void Event::setDtEnd( const KDateTime &dtEnd )
 {
-  if ( mReadOnly ) return;
+  if ( mReadOnly ) {
+    return;
+  }
 
   mDtEnd = dtEnd;
 
@@ -78,8 +80,12 @@ void Event::setDtEnd( const KDateTime &dtEnd )
 
 KDateTime Event::dtEnd() const
 {
-  if ( hasEndDate() ) return mDtEnd;
-  if ( hasDuration() ) return dtStart().addSecs( duration() );
+  if ( hasEndDate() ) {
+    return mDtEnd;
+  }
+  if ( hasDuration() ) {
+    return dtStart().addSecs( duration() );
+  }
 
   kDebug(5800) << "Warning! Event '" << summary()
                << "' has neither end date nor duration." << endl;
@@ -103,12 +109,16 @@ QString Event::dtEndTimeStr( bool shortfmt ) const
 
 QString Event::dtEndDateStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDate( dtEnd().date(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
+  return
+    KGlobal::locale()->formatDate( dtEnd().date(),
+                                   ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
 }
 
 QString Event::dtEndStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDateTime( dtEnd().dateTime(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
+  return
+    KGlobal::locale()->formatDateTime( dtEnd().dateTime(),
+                                       ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
 }
 
 void Event::setHasEndDate( bool b )
@@ -133,7 +143,8 @@ bool Event::isMultiDay() const
   return multi;
 }
 
-void Event::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
+void Event::shiftTimes( const KDateTime::Spec &oldSpec,
+                        const KDateTime::Spec &newSpec )
 {
   Incidence::shiftTimes( oldSpec, newSpec );
   if ( hasEndDate() ) {
@@ -144,7 +155,9 @@ void Event::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &ne
 
 void Event::setTransparency( Event::Transparency transparency )
 {
-  if ( mReadOnly ) return;
+  if ( mReadOnly ) {
+    return;
+  }
   mTransparency = transparency;
   updated();
 }
@@ -161,10 +174,13 @@ void Event::setDuration( int seconds )
 }
 
 // DEPRECATED methods
-void Event::setDtEnd(const QDateTime &dtEnd)
+void Event::setDtEnd( const QDateTime &dtEnd )
 {
-  if (dtStart().isValid())
-    setDtEnd(KDateTime(dtEnd, dtStart().timeSpec()));  // use start as best guess for time zone
-  else
-    setDtEnd(KDateTime(dtEnd));  // use local time zone
+  if (dtStart().isValid()) {
+    // use start as best guess for time zone
+    setDtEnd( KDateTime( dtEnd, dtStart().timeSpec() ) );
+  } else {
+    // use local time zone
+    setDtEnd( KDateTime( dtEnd ) );
+  }
 }
