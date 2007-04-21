@@ -127,7 +127,7 @@ QMap<int,KTNEFProperty*>& KTNEFPropertySet::properties()
   return d->properties_;
 }
 
-QMap<int,KTNEFProperty*>& KTNEFPropertySet::properties() const
+const QMap<int,KTNEFProperty*>& KTNEFPropertySet::properties() const
 {
   return d->properties_;
 }
@@ -178,7 +178,7 @@ QMap<int,KTNEFProperty*>& KTNEFPropertySet::attributes()
   return d->attributes_;
 }
 
-QMap<int,KTNEFProperty*>& KTNEFPropertySet::attributes() const
+const QMap<int,KTNEFProperty*>& KTNEFPropertySet::attributes() const
 {
   return d->attributes_;
 }
