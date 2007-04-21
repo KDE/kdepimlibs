@@ -22,7 +22,7 @@
 #ifndef API_METAWEBLOG_H
 #define API_METAWEBLOG_H
 
-#include <blog.h>
+#include <kblog/blog.h>
 
 #include <kurl.h>
 
