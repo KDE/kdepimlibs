@@ -42,6 +42,11 @@ APIMetaWeblog::~APIMetaWeblog()
   delete d;
 }
 
+QString APIMetaWeblog::interfaceName() const
+{
+  return QLatin1String( "MetaWeblog API" );
+}
+
 void APIMetaWeblog::setUrl( const KUrl &server )
 {
   APIBlog::setUrl( server );

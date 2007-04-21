@@ -42,6 +42,11 @@ APIBlogger::~APIBlogger()
   delete d;
 }
 
+QString APIBlogger::interfaceName() const
+{
+  return QLatin1String( "Blogger API 1.0" );
+}
+
 void APIBlogger::setUrl( const KUrl &server )
 {
   APIBlog::setUrl( server );

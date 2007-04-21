@@ -74,7 +74,7 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
     /**
       Returns the API of the inherited object.
     */
-    QString interfaceName() const { return "Blogger API 1.0"; }
+    QString interfaceName() const;
     void setUrl( const KUrl &server );
 
     /**
