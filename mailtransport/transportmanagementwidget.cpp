@@ -40,9 +40,10 @@ TransportManagementWidget::TransportManagementWidget(QWidget * parent) :
 {
   d->ui.setupUi( this );
 
-  d->ui.transportList->setHeaderLabels( QStringList() << i18n("Name") << i18n("Type") );
-  connect( d->ui.transportList, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)),
-           SLOT(updateButtonState()) );
+  d->ui.transportList->setHeaderLabels(
+                           QStringList() << i18n("Name") << i18n("Type") );
+  connect( d->ui.transportList, SIGNAL(currentItemChanged(QTreeWidgetItem*,
+           QTreeWidgetItem*)), SLOT(updateButtonState()) );
   connect( d->ui.transportList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
            SLOT(editClicked()) );
   connect( d->ui.addButton, SIGNAL(clicked()), SLOT(addClicked()) );
@@ -51,7 +52,8 @@ TransportManagementWidget::TransportManagementWidget(QWidget * parent) :
   connect( d->ui.defaultButton, SIGNAL(clicked()), SLOT(defaultClicked()) );
 
   fillTransportList();
-  connect( TransportManager::self(), SIGNAL(transportsChanged()), SLOT(fillTransportList()) );
+  connect( TransportManager::self(), SIGNAL(transportsChanged()),
+           SLOT(fillTransportList()) );
 }
 
 TransportManagementWidget::~TransportManagementWidget()
@@ -149,14 +151,16 @@ void TransportManagementWidget::removeClicked()
 {
   Q_ASSERT( d->ui.transportList->currentItem() );
 
-  TransportManager::self()->removeTransport( d->ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt() );
+  TransportManager::self()->removeTransport(
+        d->ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt() );
 }
 
 void TransportManagementWidget::defaultClicked()
 {
   Q_ASSERT( d->ui.transportList->currentItem() );
 
-  TransportManager::self()->setDefaultTransport( d->ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt() );
+  TransportManager::self()->setDefaultTransport(
+        d->ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt() );
 }
 
 #include "transportmanagementwidget.moc"

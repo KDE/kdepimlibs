@@ -31,7 +31,8 @@ TransportComboBox::TransportComboBox(QWidget * parent) :
     KComboBox( parent )
 {
   fillComboBox();
-  connect( TransportManager::self(), SIGNAL(transportsChanged()), SLOT(fillComboBox()) );
+  connect( TransportManager::self(), SIGNAL(transportsChanged()),
+           SLOT(fillComboBox()) );
 }
 
 int TransportComboBox::currentTransportId() const

@@ -220,7 +220,9 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
   private slots:
     void slotTransportsChanged();
     void slotWalletOpened( bool success );
-    void dbusServiceOwnerChanged( const QString &service, const QString &oldOwner, const QString &newOwner );
+    void dbusServiceOwnerChanged( const QString &service,
+                                  const QString &oldOwner,
+                                  const QString &newOwner );
     void jobResult( KJob* job );
 
   private:

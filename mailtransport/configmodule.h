@@ -30,7 +30,8 @@ namespace MailTransport {
 class ConfigModule : public KCModule
 {
   public:
-    ConfigModule( QWidget *parent = 0, const QStringList &args = QStringList() );
+    explicit ConfigModule( QWidget *parent = 0,
+                           const QStringList &args = QStringList() );
 };
 
 }

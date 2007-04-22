@@ -36,7 +36,8 @@ PrecommandJob::PrecommandJob(const QString & precommand, QObject * parent) :
   mProcess = new K3Process( this );
   mProcess->setUseShell( true );
   *mProcess << precommand;
-  connect( mProcess, SIGNAL(processExited(K3Process*)), SLOT(processExited(K3Process*)) );
+  connect( mProcess, SIGNAL(processExited(K3Process*)),
+           SLOT(processExited(K3Process*)) );
 }
 
 PrecommandJob::~ PrecommandJob()
@@ -70,12 +71,14 @@ void PrecommandJob::processExited(K3Process *process)
   if ( mProcess->normalExit() ) {
     if ( mProcess->exitStatus() ) {
       setError( UserDefinedError );
-      setErrorText( i18n("The precommand exited with code %1.", mProcess->exitStatus()) );
+      setErrorText( i18n("The precommand exited with code %1.",
+                    mProcess->exitStatus()) );
     }
   }
   if ( mProcess->signalled() ) {
     setError( UserDefinedError );
-    setErrorText( i18n("The precommand was terminated by signal %1", mProcess->exitSignal() ) );
+    setErrorText( i18n("The precommand was terminated by signal %1",
+                  mProcess->exitSignal() ) );
   }
   emitResult();
 }

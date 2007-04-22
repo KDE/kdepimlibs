@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#include "transport.h"
 #include "transportjob.h"
+#include "transport.h"
 
 #include <klocale.h>
 
@@ -121,7 +121,8 @@ void TransportJob::start()
 {
   if ( !transport()->isValid() ) {
     setError( UserDefinedError );
-    setErrorText( i18n("The mail transport \"%1\" is not correcty configured.", transport()->name() ) );
+    setErrorText( i18n("The mail transport \"%1\" is not correcty configured.",
+                  transport()->name() ) );
     emitResult();
     return;
   }

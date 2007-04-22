@@ -17,9 +17,9 @@
     02110-1301, USA.
 */
 
+#include "transportmanager.h"
 #include "mailtransport_defs.h"
 #include "transport.h"
-#include "transportmanager.h"
 #include "smtpjob.h"
 #include "sendmailjob.h"
 
@@ -57,13 +57,17 @@ TransportManager::TransportManager() :
   mConfig = new KConfig( QLatin1String("mailtransports") );
 
   QDBusConnection::sessionBus().registerObject( DBUS_OBJECT_PATH, this,
-      QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals );
+      QDBusConnection::ExportScriptableSlots |
+              QDBusConnection::ExportScriptableSignals );
 
-  QDBusConnection::sessionBus().connect( QString(), QString(), DBUS_INTERFACE_NAME, DBUS_CHANGE_SIGNAL,
-                                         this, SLOT(slotTransportsChanged()) );
+  QDBusConnection::sessionBus().connect( QString(), QString(),
+                              DBUS_INTERFACE_NAME, DBUS_CHANGE_SIGNAL,
+                              this, SLOT(slotTransportsChanged()) );
 
-  mIsMainInstance = QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
-  connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+  mIsMainInstance =
+          QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
+  connect( QDBusConnection::sessionBus().interface(),
+           SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
 }
 
@@ -130,7 +134,7 @@ void TransportManager::schedule(TransportJob * job)
 
   // check if the job is waiting for the wallet
   if ( !job->transport()->isComplete() ) {
-    kDebug() << k_funcinfo << "job waits for wallet: " << job << endl;
+    kDebug(5324) << k_funcinfo << " job waits for wallet: " << job << endl;
     mWalletQueue << job;
     loadPasswordsAsync();
     return;
@@ -149,7 +153,8 @@ void TransportManager::createDefaultTransport()
     t->writeConfig();
     addTransport( t );
   } else
-    kWarning() << k_funcinfo << "KEMailSettings does not contain a vaild transport setting." << endl;
+    kWarning() << k_funcinfo
+            << "KEMailSettings does not contain a valid transport." << endl;
 }
 
 TransportJob* TransportManager::createTransportJob( int transportId )
@@ -297,7 +302,8 @@ void TransportManager::readConfig()
     // see if we happen to have that one already
     foreach ( Transport *old, oldTransports ) {
       if ( old->currentGroup() == QLatin1String("Transport ") + re.cap( 1 ) ) {
-        kDebug() << k_funcinfo << "reloading existing transport: " << s << endl;
+        kDebug(5324) << k_funcinfo
+                << " reloading existing transport: " << s << endl;
         t = old;
         t->readConfig();
         oldTransports.removeAll( old );
@@ -357,7 +363,7 @@ void TransportManager::slotTransportsChanged()
     return;
   }
 
-  kDebug() << k_funcinfo << endl;
+  kDebug(5324) << k_funcinfo << endl;
   mConfig->reparseConfiguration();
   // FIXME: this deletes existing transport objects!
   readConfig();
@@ -428,7 +434,7 @@ void TransportManager::loadPasswords()
 
 void TransportManager::loadPasswordsAsync()
 {
-  kDebug() << k_funcinfo << endl;
+  kDebug(5324) << k_funcinfo << endl;
 
   // check if there is anything to do at all
   bool found = false;
@@ -448,7 +454,8 @@ void TransportManager::loadPasswordsAsync()
       window = qApp->activeWindow()->winId();
     else if ( qApp->mainWidget() )
       window = qApp->mainWidget()->topLevelWidget()->winId();
-    mWallet = Wallet::openWallet( Wallet::NetworkWallet(), window, Wallet::Asynchronous );
+    mWallet = Wallet::openWallet( Wallet::NetworkWallet(), window,
+                                  Wallet::Asynchronous );
     if ( mWallet ) {
       connect( mWallet, SIGNAL(walletOpened(bool)), SLOT(slotWalletOpened(bool)) );
       mWalletAsyncOpen = true;
@@ -465,7 +472,7 @@ void TransportManager::loadPasswordsAsync()
 
 void TransportManager::slotWalletOpened( bool success )
 {
-  kDebug() << k_funcinfo << endl;
+  kDebug(5324) << k_funcinfo << endl;
   mWalletAsyncOpen = false;
   if ( !success ) {
     mWalletOpenFailed = true;
@@ -511,8 +518,9 @@ void TransportManager::migrateToWallet()
 
   // ask user if he wants to migrate
   int result = KMessageBox::questionYesNoList( 0,
-    i18n("The following mail transports store passwords in the configuration file instead in KWallet.\n"
-         "It is recommended to use KWallet for password storage for security reasons.\n"
+    i18n("The following mail transports store passwords in the configuration "
+         "file instead in KWallet.\nIt is recommended to use KWallet for "
+         "password storage for security reasons.\n"
          "Do you want to migrate your passwords to KWallet?"),
     names );
   if ( result != KMessageBox::Yes )

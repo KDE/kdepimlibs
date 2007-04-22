@@ -86,7 +86,8 @@ class MailTransport::TransportConfigDialog::Private
     }
 };
 
-TransportConfigDialog::TransportConfigDialog( Transport* transport, QWidget * parent) :
+TransportConfigDialog::TransportConfigDialog( Transport* transport,
+                                              QWidget * parent) :
     KDialog( parent ),
     d( new Private )
 {
@@ -101,7 +102,8 @@ TransportConfigDialog::TransportConfigDialog( Transport* transport, QWidget * pa
 
   setButtons( Ok|Cancel );
   connect( this, SIGNAL(okClicked()), SLOT(save()) );
-  connect( TransportManager::self(), SIGNAL(passwordsChanged()), SLOT(passwordsLoaded()) );
+  connect( TransportManager::self(), SIGNAL(passwordsChanged()),
+           SLOT(passwordsLoaded()) );
 
   switch ( transport->type() ) {
     case Transport::EnumType::SMTP:
@@ -127,17 +129,22 @@ TransportConfigDialog::TransportConfigDialog( Transport* transport, QWidget * pa
         d->smtp.gssapi->hide();
       }
 
-      connect( d->smtp.checkCapabilities, SIGNAL(clicked()), SLOT(checkSmtpCapabilities()) );
-      connect( d->smtp.kcfg_host, SIGNAL(textChanged(QString)), SLOT(hostNameChanged(QString)) );
-      connect( d->smtp.kcfg_encryption, SIGNAL(clicked(int)), SLOT(encryptionChanged(int)) );
+      connect( d->smtp.checkCapabilities, SIGNAL(clicked()),
+               SLOT(checkSmtpCapabilities()) );
+      connect( d->smtp.kcfg_host, SIGNAL(textChanged(QString)),
+               SLOT(hostNameChanged(QString)) );
+      connect( d->smtp.kcfg_encryption, SIGNAL(clicked(int)),
+               SLOT(encryptionChanged(int)) );
       break;
     }
     case Transport::EnumType::Sendmail:
     {
       d->sendmail.setupUi( mainWidget() );
 
-      connect( d->sendmail.chooseButton, SIGNAL(clicked()), SLOT(chooseSendmail()) );
-      connect( d->sendmail.kcfg_host, SIGNAL(textChanged(QString)), SLOT(hostNameChanged(QString)) );
+      connect( d->sendmail.chooseButton, SIGNAL(clicked()),
+               SLOT(chooseSendmail()) );
+      connect( d->sendmail.kcfg_host, SIGNAL(textChanged(QString)),
+               SLOT(hostNameChanged(QString)) );
     }
   }
 
@@ -165,7 +172,8 @@ void TransportConfigDialog::checkSmtpCapabilities()
   Q_ASSERT( d->transport->type() == Transport::EnumType::SMTP );
 
   delete d->serverTest;
-  d->serverTest = new KPIM::ServerTest( SMTP_PROTOCOL, d->smtp.kcfg_host->text(), d->smtp.kcfg_port->value() );
+  d->serverTest = new KPIM::ServerTest( SMTP_PROTOCOL, d->smtp.kcfg_host->text(),
+                                        d->smtp.kcfg_port->value() );
   connect( d->serverTest,
            SIGNAL( capabilities(QStringList,QStringList,QString,QString,QString)),
            SLOT( smtpCapabilities(QStringList,QStringList,QString,QString,QString)) );
@@ -186,8 +194,8 @@ void TransportConfigDialog::save()
   int suffix = 1;
   QString origName = d->transport->name();
   while ( existingNames.contains( d->transport->name() ) ) {
-    d->transport->setName( i18nc("%1: name; %2: number appended to it to make it unique among a list of names", "%1 %2",
-                           origName, suffix ) );
+    d->transport->setName( i18nc("%1: name; %2: number appended to it to make "
+            "it unique among a list of names", "%1 %2", origName, suffix ) );
     ++suffix;
   }
 
@@ -251,7 +259,8 @@ static QList<int> authMethodsFromStringList( const QStringList &list )
 static QList<int> authMethodsFromString( const QString &s )
 {
   QStringList list;
-  foreach ( QString tmp, s.toUpper().split( QLatin1Char('\n'), QString::SkipEmptyParts ) )
+  foreach ( QString tmp, s.toUpper().split( QLatin1Char('\n'),
+            QString::SkipEmptyParts ) )
     list << tmp.remove( QLatin1String("SASL/") );
   return authMethodsFromStringList( list );
 }
@@ -269,8 +278,11 @@ static void checkHighestEnabledButton( QButtonGroup *group )
   }
 }
 
-void TransportConfigDialog::smtpCapabilities( const QStringList &capaNormal, const QStringList &capaSSL,
-                                              const QString &authNone, const QString &authSSL, const QString &authTLS )
+void TransportConfigDialog::smtpCapabilities( const QStringList &capaNormal,
+                                              const QStringList &capaSSL,
+                                              const QString &authNone,
+                                              const QString &authSSL,
+                                              const QString &authTLS )
 {
   d->smtp.checkCapabilities->setEnabled( true );
 
@@ -282,7 +294,8 @@ void TransportConfigDialog::smtpCapabilities( const QStringList &capaNormal, con
 
   // authentication methods
   if ( authNone.isEmpty() && authSSL.isEmpty() && authTLS.isEmpty() ) {
-    // slave doesn't seem to support "* AUTH METHODS" metadata (or server can't do AUTH)
+    // slave doesn't seem to support "* AUTH METHODS" metadata
+    // (or server can't do AUTH)
     d->noEncCapa = authMethodsFromStringList( capaNormal );
     if ( d->smtp.tls->isEnabled() )
       d->tlsCapa = d->noEncCapa;
@@ -305,14 +318,15 @@ void TransportConfigDialog::hostNameChanged( const QString &text )
 {
   d->resetAuthCapabilities();
   enableButton( Ok, !text.isEmpty() );
-  for ( int i = 0; d->encryptionGroup && i < d->encryptionGroup->buttons().count(); i++ )
+  for ( int i = 0;
+        d->encryptionGroup && i < d->encryptionGroup->buttons().count(); i++ )
     d->encryptionGroup->buttons().at( i )->setEnabled( true );
 }
 
 void TransportConfigDialog::encryptionChanged(int enc)
 {
   Q_ASSERT( d->transport->type() == Transport::EnumType::SMTP );
-  kDebug() << k_funcinfo << enc << endl;
+  kDebug(5324) << k_funcinfo << enc << endl;
 
   // adjust port
   if ( enc == Transport::EnumEncryption::SSL ) {

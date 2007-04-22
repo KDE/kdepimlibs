@@ -69,7 +69,8 @@ SmtpJob::~SmtpJob()
 {
   slavePoolRef--;
   if ( slavePoolRef == 0 ) {
-    kDebug() << k_funcinfo << "clearing SMTP slave pool " << slavePool.count() << endl;
+    kDebug(5324) << k_funcinfo << "clearing SMTP slave pool "
+            << slavePool.count() << endl;
     foreach ( KIO::Slave *slave, slavePool.values() )
       KIO::Scheduler::disconnectSlave( slave );
     slavePool.clear();
@@ -78,7 +79,8 @@ SmtpJob::~SmtpJob()
 
 void SmtpJob::doStart()
 {
-  if ( slavePool.contains( transport()->id() ) || transport()->precommand().isEmpty() ) {
+  if ( slavePool.contains( transport()->id() ) ||
+       transport()->precommand().isEmpty() ) {
     state = Smtp;
     startSmtpJob();
   } else {
@@ -107,7 +109,8 @@ void SmtpJob::startSmtpJob()
     destination.addQueryItem( QLatin1String("bcc"), str );
 
   if ( transport()->specifyHostname() )
-    destination.addQueryItem( QLatin1String("hostname"), transport()->localHostname() );
+    destination.addQueryItem( QLatin1String("hostname"),
+                              transport()->localHostname() );
 
 #ifdef __GNUC__
 #warning Argh!
@@ -117,7 +120,8 @@ void SmtpJob::startSmtpJob()
 
   if ( transport()->requiresAuthentication() ) {
     if( (transport()->userName().isEmpty() || transport()->password().isEmpty())
-         && transport()->authenticationType() != Transport::EnumAuthenticationType::GSSAPI )
+         && transport()->authenticationType() !=
+                Transport::EnumAuthenticationType::GSSAPI )
     {
       QString user = transport()->userName();
       QString passwd = transport()->password();
@@ -130,7 +134,8 @@ void SmtpJob::startSmtpJob()
 //       KCursorSaver idle( KBusyPtr::idle() );
       result = KIO::PasswordDialog::getNameAndPassword(
           user, passwd, &keep,
-          i18n("You need to supply a username and a password to use this SMTP server."),
+          i18n("You need to supply a username and a password to use this "
+                  "SMTP server."),
           false, QString(), transport()->name(), QString() );
 
       if ( result != QDialog::Accepted ) {
@@ -151,22 +156,25 @@ void SmtpJob::startSmtpJob()
   if ( !data().isEmpty() )
     // allow +5% for subsequent LF->CRLF and dotstuffing (an average
     // over 2G-lines gives an average line length of 42-43):
-    destination.addQueryItem( QLatin1String("size"), QString::number( qRound( data().length() * 1.05 ) ) );
+    destination.addQueryItem( QLatin1String("size"),
+                              QString::number( qRound( data().length() * 1.05 ) ) );
 
   destination.setPath( QLatin1String("/send") );
 
   mSlave = slavePool.value( transport()->id() );
   if ( !mSlave ) {
-    kDebug() << k_funcinfo << "creating new SMTP slave" << endl;
+    kDebug(5324) << k_funcinfo << "creating new SMTP slave" << endl;
     KIO::MetaData slaveConfig;
-    slaveConfig.insert( QLatin1String("tls"), (transport()->encryption() == Transport::EnumEncryption::TLS)
+    slaveConfig.insert( QLatin1String("tls"),
+                        (transport()->encryption() == Transport::EnumEncryption::TLS)
         ? QLatin1String("on") : QLatin1String("off") );
     if ( transport()->requiresAuthentication() )
-      slaveConfig.insert( QLatin1String("sasl"), transport()->authenticationTypeString() );
+      slaveConfig.insert( QLatin1String("sasl"),
+                          transport()->authenticationTypeString() );
     mSlave = KIO::Scheduler::getConnectedSlave( destination, slaveConfig );
     slavePool.insert( transport()->id(), mSlave );
   } else {
-    kDebug() << k_funcinfo << "re-using existing slave" << endl;
+    kDebug(5324) << k_funcinfo << "re-using existing slave" << endl;
   }
 
   KIO::TransferJob *job = KIO::put( destination, -1, false, false, false );
@@ -178,7 +186,8 @@ void SmtpJob::startSmtpJob()
   }
 
   job->addMetaData( QLatin1String("lf2crlf+dotstuff"), QLatin1String("slave") );
-  connect( job, SIGNAL(dataReq(KIO::Job*,QByteArray&)), SLOT(dataRequest(KIO::Job*,QByteArray&)) );
+  connect( job, SIGNAL(dataReq(KIO::Job*,QByteArray&)),
+           SLOT(dataRequest(KIO::Job*,QByteArray&)) );
 
   addSubjob( job );
   KIO::Scheduler::assignJobToSlave( mSlave, job );
@@ -227,7 +236,8 @@ void SmtpJob::dataRequest(KIO::Job * job, QByteArray & data)
   setProcessedAmount( KJob::Bytes, buffer()->pos() );
 }
 
-void SmtpJob::slaveError(KIO::Slave * slave, int errorCode, const QString & errorMsg)
+void SmtpJob::slaveError(KIO::Slave * slave, int errorCode,
+                         const QString & errorMsg)
 {
   removeSlaveFromPool( slave, errorCode != KIO::ERR_SLAVE_DIED );
   if ( mSlave == slave ) {

@@ -40,7 +40,7 @@ Transport::Transport( const QString &cfgGroup ) :
     mNeedsWalletMigration( false ),
     mIsAdHoc( false )
 {
-  kDebug() << k_funcinfo << cfgGroup << endl;
+  kDebug(5324) << k_funcinfo << cfgGroup << endl;
   readConfig();
 }
 
@@ -51,7 +51,8 @@ bool Transport::isValid() const
 
 QString Transport::password()
 {
-  if ( !mPasswordLoaded && requiresAuthentication() && storePassword() && mPassword.isEmpty() )
+  if ( !mPasswordLoaded && requiresAuthentication() && storePassword() &&
+       mPassword.isEmpty() )
     TransportManager::self()->loadPasswords();
   return mPassword;
 }
@@ -159,17 +160,20 @@ void Transport::readPassword()
 
   // check wether there is a chance to find our password at all
   if ( Wallet::folderDoesNotExist(Wallet::NetworkWallet(), WALLET_FOLDER) ||
-      Wallet::keyDoesNotExist(Wallet::NetworkWallet(), WALLET_FOLDER, QString::number(id())) )
+      Wallet::keyDoesNotExist(Wallet::NetworkWallet(), WALLET_FOLDER,
+                              QString::number(id())) )
   {
     // try migrating password from kmail
     if ( Wallet::folderDoesNotExist(Wallet::NetworkWallet(), KMAIL_WALLET_FOLDER ) ||
-         Wallet::keyDoesNotExist(Wallet::NetworkWallet(), KMAIL_WALLET_FOLDER, QString::fromLatin1("transport-%1").arg( id() ) ) )
+         Wallet::keyDoesNotExist(Wallet::NetworkWallet(), KMAIL_WALLET_FOLDER,
+                                 QString::fromLatin1("transport-%1").arg( id() ) ) )
       return;
-    kDebug() << k_funcinfo << "migrating password from kmail wallet" << endl;
+    kDebug(5324) << k_funcinfo << "migrating password from kmail wallet" << endl;
     KWallet::Wallet *wallet = TransportManager::self()->wallet();
     if ( wallet ) {
       wallet->setFolder( KMAIL_WALLET_FOLDER );
-      wallet->readPassword( QString::fromLatin1("transport-%1").arg( id() ), mPassword );
+      wallet->readPassword( QString::fromLatin1("transport-%1").arg( id() ),
+                            mPassword );
       wallet->removeEntry( QString::fromLatin1("transport-%1").arg( id() ) );
       wallet->setFolder( WALLET_FOLDER );
       mPasswordDirty = true;
@@ -191,7 +195,7 @@ bool Transport::needsWalletMigration() const
 
 void Transport::migrateToWallet()
 {
-  kDebug() << k_funcinfo << "migrating " << id() << " to wallet" << endl;
+  kDebug(5324) << k_funcinfo << "migrating " << id() << " to wallet" << endl;
   mNeedsWalletMigration = false;
   KConfigGroup group( config(), currentGroup() );
   group.deleteEntry( "password" );
