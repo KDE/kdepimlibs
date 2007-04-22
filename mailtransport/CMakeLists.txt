@@ -48,6 +48,7 @@ install( FILES
         sendmailjob.h
         smtpjob.h
         transport.h
+        ${CMAKE_CURRENT_BINARY_DIR}/transportbase.h
         transportcombobox.h
         transportconfigdialog.h
         transportjob.h
