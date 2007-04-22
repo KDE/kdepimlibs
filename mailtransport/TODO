@@ -28,3 +28,11 @@ TransportJob
 SMTPJob
 -------
 - get rid of kmail specific stuff in start()
+
+Precommand
+----------
+- test conversion from kprocess to qprocess (TA)
+
+transportconfigdialog
+---------------------
+- re-enable the servertest when we know the final location. (TA)

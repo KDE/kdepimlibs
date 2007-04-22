@@ -26,7 +26,7 @@
 
 #include <kjob.h>
 
-class K3Process;
+#include <QProcess>
 
 namespace MailTransport {
 
@@ -56,10 +56,12 @@ class PrecommandJob : public KJob
     virtual bool doKill();
 
   private slots:
-    void processExited(K3Process *process);
+    void slotFinished(int, QProcess::ExitStatus);
+    void slotStarted();
+    void slotEror( QProcess::ProcessError error);
 
   private:
-    K3Process *mProcess;
+    QProcess *mProcess;
     QString mPrecommand;
 };
 

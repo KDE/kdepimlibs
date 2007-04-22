@@ -24,7 +24,7 @@
 #include "precommandjob.h"
 
 #include <klocale.h>
-#include <k3process.h>
+#include <QProcess>
 
 using namespace MailTransport;
 
@@ -33,11 +33,12 @@ PrecommandJob::PrecommandJob(const QString & precommand, QObject * parent) :
     mProcess( 0 ),
     mPrecommand( precommand )
 {
-  mProcess = new K3Process( this );
-  mProcess->setUseShell( true );
-  *mProcess << precommand;
-  connect( mProcess, SIGNAL(processExited(K3Process*)),
-           SLOT(processExited(K3Process*)) );
+  mProcess = new QProcess( this );
+  connect( mProcess, SIGNAL(started()), SLOT(slotStarted()) );
+  connect( mProcess, SIGNAL(error(QProcess::ProcessError error)),
+           SLOT(slotError(QProcess::ProcessError error)));
+  connect( mProcess, SIGNAL(finished(int, QProcess::ExitStatus)),
+           SLOT(slotFinished(int, QProcess::ExitStatus)) );
 }
 
 PrecommandJob::~ PrecommandJob()
@@ -47,14 +48,21 @@ PrecommandJob::~ PrecommandJob()
 
 void PrecommandJob::start()
 {
-  if ( !mProcess->start( K3Process::NotifyOnExit ) ) {
-    setError( UserDefinedError );
-    setErrorText( i18n("Could not execute precommand '%1'.", mPrecommand ) );
-    emitResult();
-  } else {
-    emit infoMessage( this, i18n("Executing precommand"),
-                      i18n("Executing precommand '%1'.", mPrecommand ) );
-  }
+  mProcess->start( mPrecommand );
+}
+
+void PrecommandJob::slotStarted()
+{
+  emit infoMessage( this, i18n("Executing precommand"),
+                    i18n("Executing precommand '%1'.", mPrecommand ) );
+}
+
+void PrecommandJob::slotEror( QProcess::ProcessError error)
+{
+  setError( UserDefinedError );
+  setErrorText( i18n("Could not execute precommand '%1'.", mPrecommand ) );
+  kDebug(5324) << "Execution precommand has failed: " << error << endl;
+  emitResult();
 }
 
 bool PrecommandJob::doKill()
@@ -64,21 +72,16 @@ bool PrecommandJob::doKill()
   return true;
 }
 
-void PrecommandJob::processExited(K3Process *process)
+void PrecommandJob::slotFinished(int exitCode,
+                                 QProcess::ExitStatus exitStatus )
 {
-  Q_ASSERT( mProcess == process );
-
-  if ( mProcess->normalExit() ) {
-    if ( mProcess->exitStatus() ) {
-      setError( UserDefinedError );
-      setErrorText( i18n("The precommand exited with code %1.",
-                    mProcess->exitStatus()) );
-    }
-  }
-  if ( mProcess->signalled() ) {
+  if ( exitStatus == QProcess::CrashExit ) {
     setError( UserDefinedError );
-    setErrorText( i18n("The precommand was terminated by signal %1",
-                  mProcess->exitSignal() ) );
+    setErrorText( i18n("The precommand crashed." ));
+  } else if ( exitCode != 0 ) {
+    setError( UserDefinedError );
+    setErrorText( i18n("The precommand exited with code %1.",
+                  mProcess->exitStatus()) );
   }
   emitResult();
 }
