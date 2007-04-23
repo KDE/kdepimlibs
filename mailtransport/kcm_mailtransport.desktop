@@ -13,7 +13,3 @@ X-KDE-ParentComponents=
 X-KDE-CfgDlgHierarchy=
 
 Name=Mail Transport
-Name[es]=Transporte de correo
-Name[sv]=Brevöverföring
-Name[x-test]=xxMail Transportxx
-Name[zh_TW]=郵件傳輸
