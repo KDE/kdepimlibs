@@ -22,7 +22,8 @@ add_subdirectory(kresources)
 add_subdirectory(kabc)
 add_subdirectory(kblog)
 
-add_subdirectory(mailtransport)
+# Move not complete. Do not enable. Toma
+# add_subdirectory(mailtransport)
 add_subdirectory(cmake)
 
 macro_display_feature_log()
