@@ -26,6 +26,7 @@
 #include <kcmdlineargs.h>
 
 #include "kcal/calendarlocal.h"
+#include "kcal/versit/vobject.h"
 
 using namespace KCal;
 
@@ -76,8 +77,10 @@ int main(int argc,char **argv)
     kDebug() << "Event ends " << d << endl;
   }
 
-  if (e->pilotId()) {
-    kDebug() << "Pilot ID = " << e->pilotId() << endl;
+
+  QString pilotId = e->nonKDECustomProperty( KPilotIdProp );
+  if (!pilotId.isEmpty()) {
+    kDebug() << "Pilot ID = " << pilotId << endl;
   } else {
     kError() << "No Pilot ID" << endl;
     return 1;
