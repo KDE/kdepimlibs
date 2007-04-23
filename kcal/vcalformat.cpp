@@ -36,6 +36,9 @@
 
 using namespace KCal;
 
+/* Pilot synchronization states */
+enum { SYNCNONE = 0, SYNCMOD = 1, SYNCDEL = 3 };
+
 VCalFormat::VCalFormat() : d( 0 )
 {
 }
@@ -342,12 +345,11 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
     }
   }
 
-  if (anEvent->pilotId()) {
+  QString pilotId = anEvent->nonKDECustomProperty(KPilotIdProp);
+  if (!pilotId.isEmpty()) {
     // pilot sync stuff
-    tmpStr.sprintf("%lu",anEvent->pilotId());
-    addPropValue(vtodo, KPilotIdProp, tmpStr.toLocal8Bit());
-    tmpStr.sprintf("%i",anEvent->syncStatus());
-    addPropValue(vtodo, KPilotStatusProp, tmpStr.toLocal8Bit());
+    addPropValue(vtodo, KPilotIdProp, pilotId.toLocal8Bit());
+    addPropValue(vtodo, KPilotStatusProp, anEvent->nonKDECustomProperty(KPilotStatusProp).toLocal8Bit());
   }
 
   return vtodo;
@@ -628,12 +630,11 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
                  anEvent->relatedTo()->uid().toLocal8Bit());
   }
 
-  if (anEvent->pilotId()) {
+  QString pilotId = anEvent->nonKDECustomProperty(KPilotIdProp);
+  if (!pilotId.isEmpty()) {
     // pilot sync stuff
-    tmpStr.sprintf("%lu",anEvent->pilotId());
-    addPropValue(vevent, KPilotIdProp, tmpStr.toLocal8Bit());
-    tmpStr.sprintf("%i",anEvent->syncStatus());
-    addPropValue(vevent, KPilotStatusProp, tmpStr.toLocal8Bit());
+    addPropValue(vevent, KPilotIdProp, pilotId.toLocal8Bit());
+    addPropValue(vevent, KPilotStatusProp, anEvent->nonKDECustomProperty(KPilotStatusProp).toLocal8Bit());
   }
 
   return vevent;
@@ -828,18 +829,15 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
 
   /* PILOT SYNC STUFF */
   if ((vo = isAPropertyOf(vtodo, KPilotIdProp))) {
-    anEvent->setPilotId(atoi(s = fakeCString(vObjectUStringZValue(vo))));
+    anEvent->setNonKDECustomProperty(KPilotIdProp, QString::fromLocal8Bit(s = fakeCString(vObjectUStringZValue(vo))));
     deleteStr(s);
+    if ((vo = isAPropertyOf(vtodo, KPilotStatusProp))) {
+      anEvent->setNonKDECustomProperty(KPilotStatusProp, QString::fromLocal8Bit(s = fakeCString(vObjectUStringZValue(vo))));
+      deleteStr(s);
+    }
+    else
+      anEvent->setNonKDECustomProperty(KPilotStatusProp, QString::number(SYNCMOD));
   }
-  else
-    anEvent->setPilotId(0);
-
-  if ((vo = isAPropertyOf(vtodo, KPilotStatusProp))) {
-    anEvent->setSyncStatus(atoi(s = fakeCString(vObjectUStringZValue(vo))));
-    deleteStr(s);
-  }
-  else
-    anEvent->setSyncStatus(Event::SYNCMOD);
 
   return anEvent;
 }
@@ -1294,18 +1292,15 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
 
   /* PILOT SYNC STUFF */
   if ((vo = isAPropertyOf(vevent, KPilotIdProp))) {
-    anEvent->setPilotId(atoi(s = fakeCString(vObjectUStringZValue(vo))));
+    anEvent->setNonKDECustomProperty(KPilotIdProp, QString::fromLocal8Bit(s = fakeCString(vObjectUStringZValue(vo))));
     deleteStr(s);
+    if ((vo = isAPropertyOf(vevent, KPilotStatusProp))) {
+      anEvent->setNonKDECustomProperty(KPilotStatusProp, QString::fromLocal8Bit(s = fakeCString(vObjectUStringZValue(vo))));
+      deleteStr(s);
+    }
+    else
+      anEvent->setNonKDECustomProperty(KPilotStatusProp, QString::number(SYNCMOD));
   }
-  else
-    anEvent->setPilotId(0);
-
-  if ((vo = isAPropertyOf(vevent, KPilotStatusProp))) {
-    anEvent->setSyncStatus(atoi(s = fakeCString(vObjectUStringZValue(vo))));
-    deleteStr(s);
-  }
-  else
-    anEvent->setSyncStatus(Event::SYNCMOD);
 
   return anEvent;
 }
@@ -1448,7 +1443,7 @@ void VCalFormat::populate(VObject *vcal)
         char *s;
         s = fakeCString(vObjectUStringZValue(curVOProp));
         // check to see if event was deleted by the kpilot conduit
-        if (atoi(s) == Event::SYNCDEL) {
+        if (atoi(s) == SYNCDEL) {
           deleteStr(s);
           kDebug(5800) << "skipping pilot-deleted event" << endl;
           goto SKIP;

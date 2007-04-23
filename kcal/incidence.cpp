@@ -170,8 +170,6 @@ void Incidence::recreate()
   setRevision( 0 );
 
   setLastModified( nowUTC );
-  setPilotId( 0 );
-  setSyncStatus( SYNCNONE );
 }
 
 void Incidence::setReadOnly( bool readOnly )

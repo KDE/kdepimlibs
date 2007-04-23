@@ -457,35 +457,6 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     Attendee *attendeeByUid( const QString &uid ) const;
 
     /**
-      Pilot synchronization states
-    */
-    enum {
-      SYNCNONE = 0,
-      SYNCMOD = 1,
-      SYNCDEL = 3
-    };
-
-    /**
-      Sets synchronization satus.
-    */
-    void setSyncStatus( int status );
-
-    /**
-      Returns synchronization status.
-    */
-    int syncStatus() const;
-
-    /**
-      Sets Pilot Id.
-    */
-    void setPilotId( unsigned long id );
-
-    /**
-      Returns Pilot Id.
-    */
-    unsigned long pilotId() const;
-
-    /**
       Register observer. The observer is notified when the observed object
       changes.
     */

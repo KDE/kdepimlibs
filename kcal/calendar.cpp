@@ -898,7 +898,6 @@ bool Calendar::isModified() const
 
 void Calendar::incidenceUpdated( IncidenceBase *incidence )
 {
-  incidence->setSyncStatus( Event::SYNCMOD );
   incidence->setLastModified( KDateTime::currentUtcDateTime() );
   // we should probably update the revision number here,
   // or internally in the Event itself when certain things change.

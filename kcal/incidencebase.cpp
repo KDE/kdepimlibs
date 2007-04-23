@@ -57,10 +57,6 @@ class KCal::IncidenceBase::Private
     Attendee::List mAttendees;   // list of incidence attendees
     QStringList mComments;       // list of incidence comments
     QList<IncidenceObserver*> mObservers; // list of incidence observers
-
-    // PILOT SYNCHRONIZATION STUFF
-    unsigned long mPilotId;  // unique id for pilot sync
-    int mSyncStatus;         // status (for sync)
 };
 //@endcond
 
@@ -71,9 +67,6 @@ IncidenceBase::IncidenceBase() : d( new KCal::IncidenceBase::Private )
   d->mFloats = true;
   d->mHasDuration = false;
   d->mDuration = 0;
-
-  d->mPilotId = 0;
-  d->mSyncStatus = SYNCMOD;
 
   setUid( CalFormat::createUniqueId() );
 
@@ -88,9 +81,6 @@ IncidenceBase::IncidenceBase( const IncidenceBase &i ) :
   d->mFloats = i.d->mFloats;
   d->mHasDuration = i.d->mHasDuration;
   d->mDuration = i.d->mDuration;
-
-  d->mPilotId = i.d->mPilotId;
-  d->mSyncStatus = i.d->mSyncStatus;
 
   d->mUid = i.d->mUid;
 
@@ -144,9 +134,7 @@ bool IncidenceBase::operator==( const IncidenceBase &i2 ) const
            // of much use. We are not comparing for identity, after all.
            floats() == i2.floats() &&
            duration() == i2.duration() &&
-           hasDuration() == i2.hasDuration() &&
-           pilotId() == i2.pilotId() &&
-           syncStatus() == i2.syncStatus() );
+           hasDuration() == i2.hasDuration() );
   // no need to compare mObserver
 }
 
@@ -383,29 +371,6 @@ void IncidenceBase::setHasDuration( bool hasDuration )
 bool IncidenceBase::hasDuration() const
 {
   return d->mHasDuration;
-}
-
-void IncidenceBase::setSyncStatus( int stat )
-{
-  if ( mReadOnly ) return;
-  d->mSyncStatus = stat;
-}
-
-int IncidenceBase::syncStatus() const
-{
-  return d->mSyncStatus;
-}
-
-void IncidenceBase::setPilotId( unsigned long id )
-{
-  if ( mReadOnly ) return;
-  d->mPilotId = id;
-  updated();
-}
-
-unsigned long IncidenceBase::pilotId() const
-{
-  return d->mPilotId;
 }
 
 void IncidenceBase::registerObserver( IncidenceBase::IncidenceObserver *observer )
