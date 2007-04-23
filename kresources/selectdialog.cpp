@@ -23,7 +23,6 @@
 
 #include "selectdialog.h"
 
-#include <kbuttonbox.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 

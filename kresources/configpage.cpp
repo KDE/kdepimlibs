@@ -48,7 +48,7 @@
 #include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kurlrequester.h>
-#include <kbuttonbox.h>
+#include <kdialogbuttonbox.h>
 #include <kservicetypetrader.h>
 #include <kinputdialog.h>
 #include <QtCore/QList>
@@ -161,18 +161,19 @@ ConfigPage::ConfigPage( QWidget *parent )
   connect( d->mListView, SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int ) ),
            this, SLOT( slotEdit() ) );
 
-  KButtonBox *buttonBox = new KButtonBox( groupBox, Qt::Vertical );
-  d->mAddButton = buttonBox->addButton( i18n( "&Add..." ), this, SLOT(slotAdd()) );
+  KDialogButtonBox *buttonBox = new KDialogButtonBox( groupBox, Qt::Vertical );
+  d->mAddButton = buttonBox->addButton( i18n( "&Add..." ), KDialogButtonBox::ActionRole,
+                                        this, SLOT(slotAdd()) );
 
-  d->mRemoveButton = buttonBox->addButton( i18n( "&Remove" ), this,
-                                           SLOT(slotRemove()) );
+  d->mRemoveButton = buttonBox->addButton( i18n( "&Remove" ), KDialogButtonBox::ActionRole,
+                                           this, SLOT(slotRemove()) );
   d->mRemoveButton->setEnabled( false );
 
-  d->mEditButton = buttonBox->addButton( i18n( "&Edit..." ),
+  d->mEditButton = buttonBox->addButton( i18n( "&Edit..." ), KDialogButtonBox::ActionRole,
                                          this, SLOT(slotEdit()) );
   d->mEditButton->setEnabled( false );
 
-  d->mStandardButton = buttonBox->addButton( i18n( "&Use as Standard" ),
+  d->mStandardButton = buttonBox->addButton( i18n( "&Use as Standard" ), KDialogButtonBox::ActionRole,
                                              this, SLOT(slotStandard()) );
   d->mStandardButton->setEnabled( false );
 
