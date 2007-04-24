@@ -52,5 +52,6 @@ kimap
 kblog
 kmime
 ktnef
+mailtransport
 syndication
 kdgantt - must stay in kdepim due to licensing.

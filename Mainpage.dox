@@ -37,6 +37,9 @@
  * - <a href="kxmlrpcclient/html/index.html"><b>kxmlrpcclient</b></a>.
  *   <i>An XML-RPC client library.</i>
  *
+ * - <a href="mailtransport/html/index.html"><b>mailtransport</b></a>.
+ *   <i>An API and support code for managing mail transport.</i>
+ *
  * - <a href="syndication/html/index.html"><b>syndication</b></a>.
  *   <i>An RSS feed handling library.</i>
  *
