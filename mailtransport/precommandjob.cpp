@@ -28,47 +28,60 @@
 
 using namespace MailTransport;
 
+namespace MailTransport {
+
+/**
+ * Private class that helps to provide binary compatibility between releases.
+ * @internal
+ */
+class PreCommandJobPrivate
+{
+  public:
+    QProcess *process;
+    QString precommand;
+};
+
 PrecommandJob::PrecommandJob(const QString & precommand, QObject * parent) :
     KJob( parent ),
-    mProcess( 0 ),
-    mPrecommand( precommand )
+    d( new PreCommandJobPrivate )
 {
-  mProcess = new QProcess( this );
-  connect( mProcess, SIGNAL(started()), SLOT(slotStarted()) );
-  connect( mProcess, SIGNAL(error(QProcess::ProcessError error)),
+  d->precommand = precommand;
+  d->process = new QProcess( this );
+  connect( d->process, SIGNAL(started()), SLOT(slotStarted()) );
+  connect( d->process, SIGNAL(error(QProcess::ProcessError error)),
            SLOT(slotError(QProcess::ProcessError error)));
-  connect( mProcess, SIGNAL(finished(int, QProcess::ExitStatus)),
+  connect( d->process, SIGNAL(finished(int, QProcess::ExitStatus)),
            SLOT(slotFinished(int, QProcess::ExitStatus)) );
 }
 
 PrecommandJob::~ PrecommandJob()
 {
-  delete mProcess;
+  delete d;
 }
 
 void PrecommandJob::start()
 {
-  mProcess->start( mPrecommand );
+  d->process->start( d->precommand );
 }
 
 void PrecommandJob::slotStarted()
 {
   emit infoMessage( this, i18n("Executing precommand"),
-                    i18n("Executing precommand '%1'.", mPrecommand ) );
+                    i18n("Executing precommand '%1'.", d->precommand ) );
 }
 
 void PrecommandJob::slotEror( QProcess::ProcessError error)
 {
   setError( UserDefinedError );
-  setErrorText( i18n("Could not execute precommand '%1'.", mPrecommand ) );
+  setErrorText( i18n("Could not execute precommand '%1'.", d->precommand ) );
   kDebug(5324) << "Execution precommand has failed: " << error << endl;
   emitResult();
 }
 
 bool PrecommandJob::doKill()
 {
-  delete mProcess;
-  mProcess = 0;
+  delete d->process;
+  d->process = 0;
   return true;
 }
 
@@ -81,9 +94,11 @@ void PrecommandJob::slotFinished(int exitCode,
   } else if ( exitCode != 0 ) {
     setError( UserDefinedError );
     setErrorText( i18n("The precommand exited with code %1.",
-                  mProcess->exitStatus()) );
+                  d->process->exitStatus()) );
   }
   emitResult();
+}
+
 }
 
 #include "precommandjob.moc"

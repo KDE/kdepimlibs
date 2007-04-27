@@ -30,6 +30,8 @@
 
 namespace MailTransport {
 
+class PreCommandJobPrivate;
+
 /**
   Job to execute commands before connecting to an account.
 */
@@ -50,6 +52,9 @@ class PrecommandJob : public KJob
     */
     virtual ~PrecommandJob();
 
+    /**
+      Executes the precommand.
+    */
     virtual void start();
 
   protected:
@@ -61,8 +66,7 @@ class PrecommandJob : public KJob
     void slotEror( QProcess::ProcessError error);
 
   private:
-    QProcess *mProcess;
-    QString mPrecommand;
+    PreCommandJobPrivate *const d;
 };
 
 }
