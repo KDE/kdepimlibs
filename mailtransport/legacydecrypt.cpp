@@ -5,7 +5,7 @@
     Copyright (c) 2000-2002 Michael Haeckel <haeckel@kde.org>
 
     KNode code:
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors. // krazy:exclude=copyright
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by

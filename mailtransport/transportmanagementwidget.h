@@ -47,7 +47,7 @@ class MAILTRANSPORT_EXPORT TransportManagementWidget : public QWidget
     */
     virtual ~TransportManagementWidget();
 
-  private slots:
+  private Q_SLOTS:
     void fillTransportList();
     void updateButtonState();
     void addClicked();

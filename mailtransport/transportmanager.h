@@ -22,8 +22,8 @@
 
 #include <mailtransport/mailtransport_export.h>
 
-#include <QList>
-#include <QObject>
+#include <QtCore/QList>
+#include <QtCore/QObject>
 
 class KConfig;
 class KJob;
@@ -137,7 +137,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     */
     void createDefaultTransport();
 
-  public slots:
+  public Q_SLOTS:
     /**
       Returns true if there are no mail transports at all.
     */
@@ -176,7 +176,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     */
     Q_SCRIPTABLE void removeTransport( int id );
 
-  signals:
+  Q_SIGNALS:
     /**
       Emitted when transport settings have changed (by this or any other
       TransportManager instance).
@@ -217,7 +217,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     void validateDefault();
     void migrateToWallet();
 
-  private slots:
+  private Q_SLOTS:
     void slotTransportsChanged();
     void slotWalletOpened( bool success );
     void dbusServiceOwnerChanged( const QString &service,

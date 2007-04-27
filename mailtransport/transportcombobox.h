@@ -60,7 +60,7 @@ class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
     */
     bool isAdHocTransport() const;
 
-  private slots:
+  private Q_SLOTS:
     void fillComboBox();
 
   private:

@@ -53,13 +53,14 @@ class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
     */
     virtual ~TransportConfigDialog();
 
-  private slots:
+  private Q_SLOTS:
     void checkSmtpCapabilities();
     void chooseSendmail();
     void passwordsLoaded();
     void save();
     void smtpCapabilities( const QStringList &capaNormal, const QStringList &capaSSL,
-                           const QString &authNone, const QString &authSSL, const QString &authTLS );
+                           const QString &authNone, const QString &authSSL,
+                           const QString &authTLS );
     void hostNameChanged( const QString &text );
     void encryptionChanged( int enc );
 

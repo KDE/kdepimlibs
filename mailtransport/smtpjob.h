@@ -62,14 +62,14 @@ class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
     virtual void doStart();
     virtual bool doKill();
 
-  protected slots:
+  protected Q_SLOTS:
     virtual void slotResult( KJob *job );
     void slaveError(KIO::Slave *slave, int errorCode, const QString &errorMsg);
 
   private:
     void startSmtpJob();
 
-  private slots:
+  private Q_SLOTS:
     void dataRequest( KIO::Job* job, QByteArray &data );
 
   private:

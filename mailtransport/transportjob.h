@@ -22,7 +22,7 @@
 
 #include <mailtransport/mailtransport_export.h>
 #include <kcompositejob.h>
-#include <QStringList>
+#include <QtCore/QStringList>
 
 class QBuffer;
 

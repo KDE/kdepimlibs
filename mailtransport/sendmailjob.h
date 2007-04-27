@@ -53,7 +53,7 @@ class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
     virtual void doStart();
     virtual bool doKill();
 
-  private slots:
+  private Q_SLOTS:
     void sendmailExited();
     void wroteStdin();
     void receivedStdErr( K3Process *proc, char* data, int len );
