@@ -28,9 +28,9 @@
 
 #include <QProcess>
 
-namespace MailTransport {
-
 class PreCommandJobPrivate;
+
+namespace MailTransport {
 
 /**
   Job to execute commands before connecting to an account.

@@ -26,6 +26,7 @@
 #include <mailtransport/transportjob.h>
 
 class K3Process;
+class SendMailJobPrivate;
 
 namespace MailTransport {
 
@@ -58,8 +59,7 @@ class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
     void receivedStdErr( K3Process *proc, char* data, int len );
 
   private:
-    K3Process* mProcess;
-    QString mLastError;
+    SendMailJobPrivate *const d;
 };
 
 }

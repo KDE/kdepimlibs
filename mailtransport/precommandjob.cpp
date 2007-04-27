@@ -28,8 +28,6 @@
 
 using namespace MailTransport;
 
-namespace MailTransport {
-
 /**
  * Private class that helps to provide binary compatibility between releases.
  * @internal
@@ -97,8 +95,6 @@ void PrecommandJob::slotFinished(int exitCode,
                   d->process->exitStatus()) );
   }
   emitResult();
-}
-
 }
 
 #include "precommandjob.moc"
