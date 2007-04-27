@@ -32,16 +32,35 @@
 using namespace MailTransport;
 using namespace KWallet;
 
+/**
+ * Private class that helps to provide binary compatibility between releases.
+ * @internal
+ */
+class TransportPrivate {
+  public:
+    QString password;
+    bool passwordLoaded;
+    bool passwordDirty;
+    bool storePasswordInFile;
+    bool needsWalletMigration;
+    bool isAdHoc;
+};
+
 Transport::Transport( const QString &cfgGroup ) :
-    TransportBase( cfgGroup ),
-    mPasswordLoaded( false ),
-    mPasswordDirty( false ),
-    mStorePasswordInFile( false ),
-    mNeedsWalletMigration( false ),
-    mIsAdHoc( false )
+    TransportBase( cfgGroup ), d( new TransportPrivate )
 {
   kDebug(5324) << k_funcinfo << cfgGroup << endl;
+  d->passwordLoaded = false;
+  d->passwordDirty = false;
+  d->storePasswordInFile = false;
+  d->needsWalletMigration = false;
+  d->isAdHoc = false;
   readConfig();
+}
+
+Transport::~Transport()
+{
+  delete d;
 }
 
 bool Transport::isValid() const
@@ -51,24 +70,24 @@ bool Transport::isValid() const
 
 QString Transport::password()
 {
-  if ( !mPasswordLoaded && requiresAuthentication() && storePassword() &&
-       mPassword.isEmpty() )
+  if ( !d->passwordLoaded && requiresAuthentication() && storePassword() &&
+       d->password.isEmpty() )
     TransportManager::self()->loadPasswords();
-  return mPassword;
+  return d->password;
 }
 
 void Transport::setPassword(const QString & passwd)
 {
-  mPasswordLoaded = true;
-  if ( mPassword == passwd )
+  d->passwordLoaded = true;
+  if ( d->password == passwd )
     return;
-  mPasswordDirty = true;
-  mPassword = passwd;
+  d->passwordDirty = true;
+  d->password = passwd;
 }
 
 bool Transport::isComplete() const
 {
-  return !requiresAuthentication() || !storePassword() || mPasswordLoaded;
+  return !requiresAuthentication() || !storePassword() || d->passwordLoaded;
 }
 
 QString Transport::authenticationTypeString() const
@@ -90,24 +109,24 @@ void Transport::usrReadConfig()
   TransportBase::usrReadConfig();
 
   // we have everything we need
-  if ( !storePassword() || mPasswordLoaded )
+  if ( !storePassword() || d->passwordLoaded )
     return;
 
   // try to find a password in the config file otherwise
   KConfigGroup group( config(), currentGroup() );
   if ( group.hasKey( "password" ) )
-    mPassword = KStringHandler::obscure( group.readEntry( "password" ) );
+    d->password = KStringHandler::obscure( group.readEntry( "password" ) );
   else if ( group.hasKey( "password-kmail" ) )
-    mPassword = Legacy::decryptKMail( group.readEntry( "password-kmail" ) );
+    d->password = Legacy::decryptKMail( group.readEntry( "password-kmail" ) );
   else if ( group.hasKey( "password-knode" ) )
-    mPassword = Legacy::decryptKNode( group.readEntry( "password-knode" ) );
+    d->password = Legacy::decryptKNode( group.readEntry( "password-knode" ) );
 
-  if ( !mPassword.isEmpty() ) {
-    mPasswordLoaded = true;
+  if ( !d->password.isEmpty() ) {
+    d->passwordLoaded = true;
     if ( Wallet::isEnabled() ) {
-      mNeedsWalletMigration = true;
+      d->needsWalletMigration = true;
     } else {
-      mStorePasswordInFile = true;
+      d->storePasswordInFile = true;
     }
   } else {
     // read password if wallet is open, defer otherwise
@@ -121,11 +140,11 @@ void Transport::usrWriteConfig()
   if ( isAdHoc() )
     return;
 
-  if ( requiresAuthentication() && storePassword() && mPasswordDirty ) {
+  if ( requiresAuthentication() && storePassword() && d->passwordDirty ) {
     Wallet *wallet = TransportManager::self()->wallet();
-    if ( !wallet || wallet->writePassword(QString::number(id()), mPassword) != 0 ) {
+    if ( !wallet || wallet->writePassword(QString::number(id()), d->password) != 0 ) {
       // wallet saving failed, ask if we should store in the config file instead
-      if ( mStorePasswordInFile || KMessageBox::warningYesNo( 0,
+      if ( d->storePasswordInFile || KMessageBox::warningYesNo( 0,
             i18n("KWallet is not available. It is strongly recommended to use "
                 "KWallet for managing your passwords.\n"
                 "However, the password can be stored in the configuration "
@@ -140,11 +159,11 @@ void Transport::usrWriteConfig()
             == KMessageBox::Yes ) {
         // write to config file
         KConfigGroup group( config(), currentGroup() );
-        group.writeEntry( "password", KStringHandler::obscure( mPassword ) );
-        mStorePasswordInFile = true;
+        group.writeEntry( "password", KStringHandler::obscure( d->password ) );
+        d->storePasswordInFile = true;
       }
     }
-    mPasswordDirty = false;
+    d->passwordDirty = false;
   }
 
   TransportBase::usrWriteConfig();
@@ -156,7 +175,7 @@ void Transport::readPassword()
   // no need to load a password if the account doesn't require auth
   if ( !requiresAuthentication() )
     return;
-  mPasswordLoaded = true;
+  d->passwordLoaded = true;
 
   // check wether there is a chance to find our password at all
   if ( Wallet::folderDoesNotExist(Wallet::NetworkWallet(), WALLET_FOLDER) ||
@@ -173,10 +192,10 @@ void Transport::readPassword()
     if ( wallet ) {
       wallet->setFolder( KMAIL_WALLET_FOLDER );
       wallet->readPassword( QString::fromLatin1("transport-%1").arg( id() ),
-                            mPassword );
+                            d->password );
       wallet->removeEntry( QString::fromLatin1("transport-%1").arg( id() ) );
       wallet->setFolder( WALLET_FOLDER );
-      mPasswordDirty = true;
+      d->passwordDirty = true;
       writeConfig();
     }
     return;
@@ -185,33 +204,33 @@ void Transport::readPassword()
   // finally try to open the wallet and read the password
   KWallet::Wallet *wallet = TransportManager::self()->wallet();
   if ( wallet )
-    wallet->readPassword( QString::number(id()), mPassword );
+    wallet->readPassword( QString::number(id()), d->password );
 }
 
 bool Transport::needsWalletMigration() const
 {
-  return mNeedsWalletMigration;
+  return d->needsWalletMigration;
 }
 
 void Transport::migrateToWallet()
 {
   kDebug(5324) << k_funcinfo << "migrating " << id() << " to wallet" << endl;
-  mNeedsWalletMigration = false;
+  d->needsWalletMigration = false;
   KConfigGroup group( config(), currentGroup() );
   group.deleteEntry( "password" );
-  mPasswordDirty = true;
-  mStorePasswordInFile = false;
+  d->passwordDirty = true;
+  d->storePasswordInFile = false;
   writeConfig();
 }
 
 bool Transport::isAdHoc() const
 {
-  return mIsAdHoc;
+  return d->isAdHoc;
 }
 
 void Transport::setAdHoc(bool b)
 {
-  mIsAdHoc = b;
+  d->isAdHoc = b;
 }
 
 Transport* Transport::clone() const

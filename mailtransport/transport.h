@@ -25,6 +25,8 @@
 
 #include <kconfigbase.h>
 
+class TransportPrivate;
+
 namespace MailTransport {
 
 /**
@@ -37,6 +39,11 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
   friend class TransportManager;
 
   public:
+      /**
+        Destructor
+       */
+    ~Transport();
+
     typedef QList<Transport*> List;
 
     /**
@@ -110,12 +117,7 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     void readPassword();
 
   private:
-    QString mPassword;
-    bool mPasswordLoaded;
-    bool mPasswordDirty;
-    bool mStorePasswordInFile;
-    bool mNeedsWalletMigration;
-    bool mIsAdHoc;
+    TransportPrivate *const d;
 };
 
 }

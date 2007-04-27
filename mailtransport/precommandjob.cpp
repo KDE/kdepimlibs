@@ -40,8 +40,7 @@ class PreCommandJobPrivate
 };
 
 PrecommandJob::PrecommandJob(const QString & precommand, QObject * parent) :
-    KJob( parent ),
-    d( new PreCommandJobPrivate )
+    KJob( parent ), d( new PreCommandJobPrivate )
 {
   d->precommand = precommand;
   d->process = new QProcess( this );
