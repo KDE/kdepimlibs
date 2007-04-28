@@ -43,8 +43,6 @@ class KCAL_EXPORT FreeBusyUrlStore
 
   private:
     FreeBusyUrlStore();
-    static FreeBusyUrlStore *mSelf;
-    KConfig *mConfig;
 
     class Private;
     Private *const d;

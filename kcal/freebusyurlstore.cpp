@@ -21,38 +21,41 @@
 
 #include "freebusyurlstore.h"
 
-#include <kstaticdeleter.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
 
 using namespace KCal;
 
-static KStaticDeleter<FreeBusyUrlStore> selfDeleter;
-
-FreeBusyUrlStore *FreeBusyUrlStore::mSelf = 0;
+class FreeBusyUrlStore::Private
+{
+public:
+    Private()
+     : mConfig(0)
+    {}
+    KConfig *mConfig;
+};
 
 FreeBusyUrlStore *FreeBusyUrlStore::self()
 {
-  if ( !mSelf ) {
-    selfDeleter.setObject( mSelf, new FreeBusyUrlStore() );
-  }
-  return mSelf;
+  K_GLOBAL_STATIC(FreeBusyUrlStore, sSelf)
+  return sSelf;
 }
 
 FreeBusyUrlStore::FreeBusyUrlStore() : d( 0 )
 {
   QString configFile = KStandardDirs::locateLocal( "data", "korganizer/freebusyurls" );
-  mConfig = new KConfig( configFile );
+  d->mConfig = new KConfig( configFile );
 }
 
 FreeBusyUrlStore::~FreeBusyUrlStore()
 {
-  delete mConfig;
+  delete d->mConfig;
+  delete d;
 }
 
 void FreeBusyUrlStore::writeUrl( const QString &email, const QString &url )
 {
-  KConfigGroup group = mConfig->group(email);
+  KConfigGroup group = d->mConfig->group(email);
 
   group.writeEntry( "url", url );
 }
@@ -60,11 +63,11 @@ void FreeBusyUrlStore::writeUrl( const QString &email, const QString &url )
 QString FreeBusyUrlStore::readUrl( const QString &email )
 {
 
-  KConfigGroup group = mConfig->group(email);
+  KConfigGroup group = d->mConfig->group(email);
   return group.readEntry( "url" );
 }
 
 void FreeBusyUrlStore::sync()
 {
-  mConfig->sync();
+  d->mConfig->sync();
 }
