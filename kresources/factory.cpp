@@ -41,7 +41,6 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
-#include <kstaticdeleter.h>
 #include <kservicetypetrader.h>
 #include <klibloader.h>
 
@@ -53,28 +52,24 @@ class Factory::Private
 {
   public:
     Resource *resourceInternal ( const QString &type, const KConfigGroup *group );
-    static QMap<QString, Factory*> *mSelves;
     QString mResourceFamily;
     QMap<QString, KService::Ptr> mTypeMap;
 };
 
-QMap<QString, Factory*> *Factory::Private::mSelves = 0;
-static KStaticDeleter< QMap<QString, Factory*> > staticDeleter;
+typedef QMap<QString, Factory*> factoryMap;
+K_GLOBAL_STATIC(factoryMap, mSelves)
 
 Factory *Factory::self( const QString &resourceFamily )
 {
   kDebug(5650) << "Factory::self()" << endl;
 
   Factory *factory = 0;
-  if ( !Private::mSelves ) {
-    staticDeleter.setObject( Private::mSelves, new QMap<QString, Factory*> );
-  }
 
-  factory = Private::mSelves->value( resourceFamily, 0 );
+  factory = mSelves->value( resourceFamily, 0 );
 
   if ( !factory ) {
     factory = new Factory( resourceFamily );
-    Private::mSelves->insert( resourceFamily, factory );
+    mSelves->insert( resourceFamily, factory );
   }
 
   return factory;
