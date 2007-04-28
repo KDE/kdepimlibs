@@ -76,6 +76,9 @@ TransportManager::~TransportManager()
 TransportManager* TransportManager::self()
 {
   K_GLOBAL_STATIC(TransportManager, sSelf)
+  if ( !sSelf ) {
+    sSelf->readConfig();
+  }
   return sSelf;
 }
 
