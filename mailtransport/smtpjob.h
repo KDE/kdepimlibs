@@ -30,6 +30,8 @@ class Job;
 class Slave;
 }
 
+class SmtpJobPrivate;
+
 namespace MailTransport {
 
 /**
@@ -73,10 +75,7 @@ class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
     void dataRequest( KIO::Job* job, QByteArray &data );
 
   private:
-    KIO::Slave* mSlave;
-    enum State {
-      Idle, Precommand, Smtp
-    } state;
+    SmtpJobPrivate *const d;
 };
 
 }
