@@ -27,6 +27,7 @@
 #include <kdialog.h>
 
 class KButtonGroup;
+class TransportTypeDialogPrivate;
 
 namespace MailTransport {
 
@@ -47,7 +48,7 @@ class MAILTRANSPORT_EXPORT TransportTypeDialog : public KDialog
     int transportType() const;
 
   private:
-    KButtonGroup* mButtonGroup;
+    TransportTypeDialogPrivate *const d;
 };
 
 }

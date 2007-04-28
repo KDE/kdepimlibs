@@ -23,6 +23,8 @@
 #include <mailtransport/mailtransport_export.h>
 #include <kcombobox.h>
 
+class TransportComboBoxPrivate;
+
 namespace MailTransport {
 
 /**
@@ -64,8 +66,7 @@ class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
     void fillComboBox();
 
   private:
-    QList<int> mTransports;
-
+    TransportComboBoxPrivate *const d;
 };
 
 }

@@ -32,6 +32,8 @@ namespace KWallet {
   class Wallet;
 }
 
+class TransportManagerPrivate;
+
 namespace MailTransport {
 
 class Transport;
@@ -226,15 +228,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     void jobResult( KJob* job );
 
   private:
-    KConfig *mConfig;
-    QList<Transport*> mTransports;
-    bool mMyOwnChange;
-    KWallet::Wallet *mWallet;
-    bool mWalletOpenFailed;
-    bool mWalletAsyncOpen;
-    int mDefaultTransportId;
-    bool mIsMainInstance;
-    QList<TransportJob*> mWalletQueue;
+    TransportManagerPrivate *const d;
 };
 
 }

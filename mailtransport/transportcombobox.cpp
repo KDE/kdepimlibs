@@ -27,8 +27,18 @@
 
 using namespace MailTransport;
 
+/**
+ * Private class that helps to provide binary compatibility between releases.
+ * @internal
+ */
+class TransportComboBoxPrivate
+{
+  public:
+    QList<int> transports;
+};
+
 TransportComboBox::TransportComboBox(QWidget * parent) :
-    KComboBox( parent )
+    KComboBox( parent ), d( new TransportComboBoxPrivate )
 {
   fillComboBox();
   connect( TransportManager::self(), SIGNAL(transportsChanged()),
@@ -39,14 +49,14 @@ int TransportComboBox::currentTransportId() const
 {
   if ( currentIndex() == 0 )
     return 0;
-  if( currentIndex() > 0 && currentIndex() < mTransports.count() )
-    return mTransports.at( currentIndex() );
+  if( currentIndex() > 0 && currentIndex() < d->transports.count() )
+    return d->transports.at( currentIndex() );
   return -1;
 }
 
 void TransportComboBox::setCurrentTransport(int transportId)
 {
-  int i = mTransports.indexOf( transportId );
+  int i = d->transports.indexOf( transportId );
   if ( i >= 0 && i < count() )
     setCurrentIndex( i );
 }
@@ -63,7 +73,7 @@ void TransportComboBox::fillComboBox()
   if ( lineEdit() )
     oldText = lineEdit()->text();
   clear();
-  mTransports.clear();
+  d->transports.clear();
 
   if ( !TransportManager::self()->isEmpty() ) {
     QString defName = TransportManager::self()->defaultTransportName();
@@ -72,8 +82,8 @@ void TransportComboBox::fillComboBox()
     else
       addItem( i18n( "Default (%1)", defName ) );
     addItems( TransportManager::self()->transportNames() );
-    mTransports << 0;
-    mTransports << TransportManager::self()->transportIds();
+    d->transports << 0;
+    d->transports << TransportManager::self()->transportIds();
   }
 
   setCurrentTransport( oldTransport );

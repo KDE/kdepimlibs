@@ -23,20 +23,30 @@
 #include "transporttypedialog.h"
 #include "ui_transporttypedialog.h"
 
+/**
+ * Private class that helps to provide binary compatibility between releases.
+ * @internal
+ */
+class TransportTypeDialogPrivate
+{
+  public:
+    KButtonGroup* buttonGroup;
+};
+
 using namespace MailTransport;
 
 TransportTypeDialog::TransportTypeDialog(QWidget * parent) :
-    KDialog( parent )
+    KDialog( parent ), d( new TransportTypeDialogPrivate )
 {
   setCaption( i18n("Add Transport") );
   setButtons( Ok|Cancel );
   Ui::TransportTypeDialog ui;
   ui.setupUi( mainWidget() );
-  mButtonGroup = ui.kcfg_type;
-  mButtonGroup->setSelected( 0 );
+  d->buttonGroup = ui.kcfg_type;
+  d->buttonGroup->setSelected( 0 );
 }
 
 int TransportTypeDialog::transportType() const
 {
-  return mButtonGroup->selected();
+  return d->buttonGroup->selected();
 }
