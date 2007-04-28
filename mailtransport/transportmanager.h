@@ -226,7 +226,6 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     void jobResult( KJob* job );
 
   private:
-    static TransportManager* mInstance;
     KConfig *mConfig;
     QList<Transport*> mTransports;
     bool mMyOwnChange;

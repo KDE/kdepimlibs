@@ -29,7 +29,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <krandom.h>
-#include <kstaticdeleter.h>
 #include <kurl.h>
 #include <kwallet.h>
 #include <kconfiggroup.h>
@@ -42,9 +41,6 @@
 
 using namespace MailTransport;
 using namespace KWallet;
-
-TransportManager* TransportManager::mInstance = 0;
-static KStaticDeleter<TransportManager> sTransportManagerDeleter;
 
 TransportManager::TransportManager() :
     QObject(),
@@ -79,11 +75,8 @@ TransportManager::~TransportManager()
 
 TransportManager* TransportManager::self()
 {
-  if ( !mInstance ) {
-    sTransportManagerDeleter.setObject( mInstance, new TransportManager() );
-    mInstance->readConfig();
-  }
-  return mInstance;
+  K_GLOBAL_STATIC(TransportManager, sSelf)
+  return sSelf;
 }
 
 Transport* TransportManager::transportById(int id, bool def) const
