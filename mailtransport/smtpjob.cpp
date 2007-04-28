@@ -42,18 +42,13 @@ static QHash<int,KIO::Slave*> slavePool;
 
 static void removeSlaveFromPool( KIO::Slave *slave, bool disconnect = false )
 {
-  bool found = false;
-  for ( QHash<int,KIO::Slave*>::Iterator it = slavePool.begin();
-        it != slavePool.end(); ) {
-    if ( it.value() == slave ) {
-      found = true;
-      it = slavePool.erase( it );
-    } else {
-      ++it;
-    }
+  const int slaveKey = slavePool.key( slave );
+  if (slaveKey > 0)
+  {
+    slavePool.remove( slaveKey );
+    if ( disconnect )
+      KIO::Scheduler::disconnectSlave( slave );
   }
-  if ( disconnect && found )
-    KIO::Scheduler::disconnectSlave( slave );
 }
 
 /**
