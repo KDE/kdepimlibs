@@ -22,7 +22,6 @@
 
 #include <kglobal.h>
 #include <kstandarddirs.h>
-#include <kstaticdeleter.h>
 #include <kcodecs.h>
 #include <kdebug.h>
 
@@ -35,11 +34,11 @@
 
 using namespace KPIMUtils;
 
-QMap<QString, QString> *LinkLocator::s_smileyEmoticonNameMap = 0;
-QMap<QString, QString> *LinkLocator::s_smileyEmoticonHTMLCache = 0;
-
-static KStaticDeleter< QMap<QString, QString> > smileyMapDeleter;
-static KStaticDeleter< QMap<QString, QString> > smileyCacheDeleter;
+typedef QMap<QString, QString> kStringMap;
+// maps the smiley text to the corresponding emoticon name
+K_GLOBAL_STATIC(kStringMap, s_smileyEmoticonNameMap);
+// cache for the HTML representation of a smiley
+K_GLOBAL_STATIC(kStringMap, s_smileyEmoticonHTMLCache);
 
 LinkLocator::LinkLocator( const QString &text, int pos )
   : mText( text ), mPos( pos ), mMaxUrlLen( 4096 ), mMaxAddressLen( 255 )
@@ -51,18 +50,11 @@ LinkLocator::LinkLocator( const QString &text, int pos )
   // of convertToHtml().
 
   if ( !s_smileyEmoticonNameMap ) {
-    smileyMapDeleter.setObject( s_smileyEmoticonNameMap,
-                                new QMap<QString, QString>() );
     for ( int i = 0; i < EmotIcons::EnumSindex::COUNT; ++i ) {
       QString imageName( EmotIcons::EnumSindex::enumToString[i] );
       imageName.truncate( imageName.length() - 2 ); //remove the _0 bit
       s_smileyEmoticonNameMap->insert( EmotIcons::smiley( i ), imageName );
     }
-  }
-
-  if ( !s_smileyEmoticonHTMLCache ) {
-    smileyCacheDeleter.setObject( s_smileyEmoticonHTMLCache,
-                                  new QMap<QString, QString>() );
   }
 }
 
