@@ -36,9 +36,9 @@ using namespace KPIMUtils;
 
 typedef QMap<QString, QString> kStringMap;
 // maps the smiley text to the corresponding emoticon name
-K_GLOBAL_STATIC(kStringMap, s_smileyEmoticonNameMap);
+K_GLOBAL_STATIC(kStringMap, s_smileyEmoticonNameMap)
 // cache for the HTML representation of a smiley
-K_GLOBAL_STATIC(kStringMap, s_smileyEmoticonHTMLCache);
+K_GLOBAL_STATIC(kStringMap, s_smileyEmoticonHTMLCache)
 
 LinkLocator::LinkLocator( const QString &text, int pos )
   : mText( text ), mPos( pos ), mMaxUrlLen( 4096 ), mMaxAddressLen( 255 )
