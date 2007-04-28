@@ -60,10 +60,6 @@
 #ifndef __KMIME_CODECS__
 #define __KMIME_CODECS__
 
-#if defined(QT_THREAD_SUPPORT)
-#  include <qmutex.h>
-#endif
-
 #include <QtCore/QByteArray>
 
 #include <kdebug.h> // for kFatal()
@@ -87,13 +83,6 @@ class Decoder;
 class KMIME_EXPORT Codec
 {
   protected:
-    //@cond PRIVATE
-    static KAutoDeleteHash<QByteArray, Codec> *all;
-#if defined(QT_THREAD_SUPPORT)
-    static QMutex *dictLock;
-#endif
-    //@endcond
-
     /**
       Contructs the codec.
     */

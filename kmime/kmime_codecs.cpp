@@ -41,7 +41,9 @@
 
 #include <kascii.h>
 #include <kdebug.h>
-#include <kstaticdeleter.h>
+#include <kglobal.h>
+
+#include <QtCore/QMutex>
 
 #include <cassert>
 #include <cstring>
@@ -53,12 +55,9 @@ namespace KMime {
 
 // global list of KMime::Codec's
 //@cond PRIVATE
-KAutoDeleteHash<QByteArray, Codec> * Codec::all = 0;
-static KStaticDeleter< KAutoDeleteHash<QByteArray, Codec> > sdAll;
-#if defined(QT_THREAD_SUPPORT)
-QMutex *Codec::dictLock = 0;
-static KStaticDeleter<QMutex> sdDictLock;
-#endif
+typedef KAutoDeleteHash<QByteArray, Codec> kCodecHash;
+K_GLOBAL_STATIC(kCodecHash, all)
+K_GLOBAL_STATIC(QMutex, dictLock)
 //@endcond
 
 void Codec::fillDictionary()
@@ -82,22 +81,14 @@ Codec *Codec::codecForName( const char *name )
 
 Codec *Codec::codecForName( const QByteArray &name )
 {
-#if defined(QT_THREAD_SUPPORT)
-  if ( !dictLock ) {
-    sdDictLock.setObject( dictLock, new QMutex );
-  }
   dictLock->lock(); // protect "all"
-#endif
   if ( !all ) {
-    sdAll.setObject( all, new KAutoDeleteHash<QByteArray, Codec>() );
     fillDictionary();
   }
   QByteArray lowerName = name;
   kAsciiToLower( lowerName.data() );
   Codec *codec = (*all)[ lowerName ];
-#if defined(QT_THREAD_SUPPORT)
   dictLock->unlock();
-#endif
 
   if ( !codec ) {
     kDebug(5320) << "Unknown codec \"" << name << "\" requested!" << endl;
