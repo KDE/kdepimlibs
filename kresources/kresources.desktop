@@ -25,3 +25,4 @@ Comment[x-test]=xxConfigure KDE Resourcesxx
 Keywords=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap
 Keywords[el]=πόροι,πόροι του konnector,πόρος επαφής,πόρος ημερολογίου,πόρος σημειώσεων,πόρος ειδοποίησης,imap
 Keywords[sv]=resurser,konnector-resurs,kontaktresurs,kalenderresurs,anteckningsresurs,alarmresurs,IMAP
+Keywords[x-test]=xxresources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imapxx
