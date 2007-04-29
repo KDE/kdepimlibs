@@ -43,7 +43,6 @@ TransportTypeDialog::TransportTypeDialog(QWidget * parent) :
   Ui::TransportTypeDialog ui;
   ui.setupUi( mainWidget() );
   d->buttonGroup = ui.kcfg_type;
-  d->buttonGroup->setSelected( 0 );
 }
 
 int TransportTypeDialog::transportType() const
