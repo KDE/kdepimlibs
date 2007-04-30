@@ -13,4 +13,5 @@ X-KDE-ParentComponents=
 X-KDE-CfgDlgHierarchy=
 
 Name=Mail Transport
+Name[el]=Κύριος μεταφορέας
 Name[x-test]=xxMail Transportxx
