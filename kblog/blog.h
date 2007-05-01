@@ -27,7 +27,7 @@
 
 #include <kurl.h>
 #include <kio/job.h>
-#include <ktimezone.h>
+#include <ktimezones.h>
 #include <kdatetime.h>
 
 #include <QtCore/QObject>

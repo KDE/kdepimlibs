@@ -22,7 +22,7 @@
 #ifndef KCAL_ICALTIMEZONES_H
 #define KCAL_ICALTIMEZONES_H
 
-#include <ktimezone.h>
+#include <ktimezones.h>
 
 #include "kcal.h"
 
