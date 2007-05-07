@@ -18,33 +18,31 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-#ifndef KCAL_H
-#define KCAL_H
+#ifndef KCAL_EXPORT_H
+#define KCAL_EXPORT_H
 
 #include <kdemacros.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-#ifdef MAKE_KCAL_LIB
-#define KCAL_EXPORT KDE_EXPORT
-#else
-#define KCAL_EXPORT KDE_IMPORT
-#endif
-#else
-#define KCAL_EXPORT KDE_EXPORT
+#ifndef KCAL_EXPORT
+# if defined(MAKE_KCAL_LIB)
+   /* We are building this library */
+#  define KCAL_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KCAL_EXPORT KDE_IMPORT
+# endif
 #endif
 
 #ifdef COMPILING_TESTS
-#if defined(_WIN32) || defined(_WIN64)
-#ifdef MAKE_KCAL_LIB
-#define KCAL_TEST_EXPORT KDE_EXPORT
-#else
-#define KCAL_TEST_EXPORT KDE_IMPORT
+#ifndef KCAL_TEST_EXPORT
+# if defined(MAKE_KCAL_TEST_LIB)
+   /* We are building this library */
+#  define KCAL_TEST_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KCAL_TEST_EXPORT KDE_IMPORT
+# endif
 #endif
-#else
-#define KCAL_TEST_EXPORT KDE_EXPORT
-#endif
-#else /*no unit tests compiled*/
-#define KCAL_TEST_EXPORT
 #endif /* COMPILING_TESTS */
 
 /**

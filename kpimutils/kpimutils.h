@@ -23,14 +23,14 @@
 
 #include <kdemacros.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-#ifdef MAKE_KPIMUTILS_LIB
-#define KPIMUTILS_EXPORT KDE_EXPORT
-#else
-#define KPIMUTILS_EXPORT KDE_IMPORT
-#endif
-#else
-#define KPIMUTILS_EXPORT KDE_EXPORT
+#ifndef KPIMUTILS_EXPORT
+# if defined(MAKE_KPIMUTILS_LIB)
+   /* We are building this library */
+#  define KPIMUTILS_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KPIMUTILS_EXPORT KDE_IMPORT
+# endif
 #endif
 
 #endif

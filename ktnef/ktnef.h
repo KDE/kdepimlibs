@@ -23,15 +23,19 @@
 
 #include <kdemacros.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-#ifdef MAKE_KTNEF_LIB
-#define KTNEF_EXPORT KDE_EXPORT
-#else
-#define KTNEF_EXPORT KDE_IMPORT
+#ifndef KTNEF_EXPORT
+# if defined(MAKE_KTNEF_LIB)
+   /* We are building this library */
+#  define KTNEF_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KTNEF_EXPORT KDE_IMPORT
+# endif
 #endif
-#else
-#define KTNEF_EXPORT KDE_EXPORT
-#endif
+
+# ifndef KTNEF_EXPORT_DEPRECATED
+#  define KTNEF_EXPORT_DEPRECATED KDE_DEPRECATED KTNEF_EXPORT
+# endif
 
 /**
  * @namespace KTnef

@@ -23,24 +23,31 @@
 
 #include <kdemacros.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-#ifdef MAKE_KRESOURCES_LIB
-#define KRESOURCES_EXPORT KDE_EXPORT
-#else
-#define KRESOURCES_EXPORT KDE_IMPORT
-#endif
-#else
-#define KRESOURCES_EXPORT KDE_EXPORT
+#ifndef KRESOURCES_EXPORT
+# if defined(MAKE_KRESOURCES_LIB)
+   /* We are building this library */
+#  define KRESOURCES_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KRESOURCES_EXPORT KDE_IMPORT
+# endif
 #endif
 
-#if defined(_WIN32) || defined(_WIN64)
-#ifdef MAKE_KCM_KRESOURCES_LIB
-#define KCM_KRESOURCES_EXPORT KDE_EXPORT
-#else
-#define KCM_KRESOURCES_EXPORT KDE_IMPORT
+#ifndef KCM_KRESOURCES_EXPORT
+# if defined(MAKE_KCM_KRESOURCES_LIB)
+   /* We are building this library */
+#  define KCM_KRESOURCES_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KCM_KRESOURCES_EXPORT KDE_IMPORT
+# endif
 #endif
-#else
-#define KCM_KRESOURCES_EXPORT KDE_EXPORT
-#endif
+
+# ifndef KRESOURCES_EXPORT_DEPRECATED
+#  define KRESOURCES_EXPORT_DEPRECATED KDE_DEPRECATED KRESOURCES_EXPORT
+# endif
+# ifndef KCM_KRESOURCES_EXPORT_DEPRECATED
+#  define KCM_KRESOURCES_EXPORT_DEPRECATED KDE_DEPRECATED KCM_KRESOURCES_EXPORT
+# endif
 
 #endif

@@ -22,14 +22,14 @@
 
 #include <kdemacros.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-#ifdef MAKE_MAILTRANSPORT_LIB
-#define MAILTRANSPORT_EXPORT KDE_EXPORT
-#else
-#define MAILTRANSPORT_EXPORT KDE_IMPORT
-#endif
-#else
-#define MAILTRANSPORT_EXPORT KDE_EXPORT
+#ifndef MAILTRANSPORT_EXPORT
+# if defined(MAKE_MAILTRANSPORT_LIB)
+   /* We are building this library */
+#  define MAILTRANSPORT_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define MAILTRANSPORT_EXPORT KDE_IMPORT
+# endif
 #endif
 
 #endif

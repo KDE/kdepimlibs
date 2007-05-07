@@ -12,14 +12,14 @@
 
 #include <kdemacros.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-#ifdef MAKE_KXMLRPCCLIENT_LIB
-#define KXMLRPCCLIENT_EXPORT KDE_EXPORT
-#else
-#define KXMLRPCCLIENT_EXPORT KDE_IMPORT
-#endif
-#else
-#define KXMLRPCCLIENT_EXPORT KDE_EXPORT
+#ifndef KXMLRPCCLIENT_EXPORT
+# if defined(MAKE_KXMLRPCCLIENT_LIB)
+   /* We are building this library */
+#  define KXMLRPCCLIENT_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KXMLRPCCLIENT_EXPORT KDE_IMPORT
+# endif
 #endif
 
 #endif

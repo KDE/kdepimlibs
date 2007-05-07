@@ -19,19 +19,19 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KBLOG_H
-#define KBLOG_H
+#ifndef KBLOG_EXPORT_H
+#define KBLOG_EXPORT_H
 
 #include <kdemacros.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-#ifdef MAKE_KBLOG_LIB
-#define KBLOG_EXPORT KDE_EXPORT
-#else
-#define KBLOG_EXPORT KDE_IMPORT
-#endif
-#else
-#define KBLOG_EXPORT KDE_EXPORT
+#ifndef KBLOG_EXPORT
+# if defined(MAKE_KBLOG_LIB)
+   /* We are building this library */
+#  define KBLOG_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KBLOG_EXPORT KDE_IMPORT
+# endif
 #endif
 
 #endif
