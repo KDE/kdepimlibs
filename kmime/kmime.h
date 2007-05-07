@@ -23,15 +23,19 @@
 
 #include <kdemacros.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-#ifdef MAKE_KMIME_LIB
-#define KMIME_EXPORT KDE_EXPORT
-#else
-#define KMIME_EXPORT KDE_IMPORT
+#ifndef KMIME_EXPORT
+# if defined(MAKE_KMIME_LIB)
+   /* We are building this library */
+#  define KMIME_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KMIME_EXPORT KDE_IMPORT
+# endif
 #endif
-#else
-#define KMIME_EXPORT KDE_EXPORT
-#endif
+
+# ifndef KMIME_EXPORT_DEPRECATED
+#  define KMIME_EXPORT_DEPRECATED KDE_DEPRECATED KMIME_EXPORT
+# endif
 
 /**
   @namespace KMime
