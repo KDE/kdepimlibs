@@ -31,9 +31,11 @@
 typedef KGenericFactory<KCMKResources, QWidget> ResourcesFactory;
 K_EXPORT_COMPONENT_FACTORY( kcm_kresources, ResourcesFactory( "kcmkresources" ) )
 
-KCMKResources::KCMKResources( QWidget *parent, const QStringList& )
+KCMKResources::KCMKResources( QWidget *parent, const QStringList &l )
   : KCModule( ResourcesFactory::componentData(), parent, QStringList() )
 {
+  Q_UNUSED( l );
+
   QVBoxLayout *layout = new QVBoxLayout( this );
   mConfigPage = new KRES::ConfigPage( this );
   layout->addWidget( mConfigPage );
@@ -46,7 +48,7 @@ KCMKResources::KCMKResources( QWidget *parent, const QStringList& )
                    I18N_NOOP( "(c) 2003 Tobias Koenig" ) );
 
   about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
-  setAboutData(about);
+  setAboutData( about );
 }
 
 void KCMKResources::load()
