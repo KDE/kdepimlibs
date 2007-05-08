@@ -62,10 +62,8 @@ class KRESOURCES_EXPORT SelectDialog : KDialog
      * Constructor.
      * @param list   The list of available resources
      * @param parent The parent widget
-     * @param name   The name of the dialog
      */
-    explicit SelectDialog( QList<Resource *> list, QWidget *parent = 0,
-        const char *name = 0);
+    explicit SelectDialog( QList<Resource *> list, QWidget *parent = 0 );
 
     /**
      * Returns selected resource.

@@ -34,12 +34,10 @@
 
 using namespace KRES;
 
-SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent,
-                            const char *name )
+SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent )
   : KDialog( parent )
 {
   setModal(true);
-  setObjectName(name);
   setCaption( i18n( "Resource Selection" ) );
   resize( 300, 200 );
   setButtons(Ok|Cancel);
