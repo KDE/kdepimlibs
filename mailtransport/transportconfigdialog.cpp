@@ -23,12 +23,12 @@
 #include "transportconfigdialog.h"
 #include "transport.h"
 #include "transportmanager.h"
-#include "servertest.h"
 #include "mailtransport_defs.h"
 
 #include "ui_smtpsettings.h"
 #include "ui_sendmailsettings.h"
 
+// #include <servertest.h>
 
 #include <kconfigdialogmanager.h>
 #include <kdebug.h>
@@ -50,7 +50,7 @@ class MailTransport::TransportConfigDialog::Private
 
     KConfigDialogManager* manager;
     KLineEdit* passwordEdit;
-    MailTransport::ServerTest* serverTest;
+   // KPIM::ServerTest* serverTest;
     QButtonGroup* encryptionGroup;
     QButtonGroup* authGroup;
 
@@ -95,7 +95,7 @@ TransportConfigDialog::TransportConfigDialog( Transport* transport,
 
   d->transport = transport;
   d->passwordEdit = 0;
-  d->serverTest = 0;
+  // d->serverTest = 0;
   d->encryptionGroup = 0;
   d->authGroup = 0;
   d->resetAuthCapabilities();
@@ -171,13 +171,13 @@ void TransportConfigDialog::checkSmtpCapabilities()
 {
   Q_ASSERT( d->transport->type() == Transport::EnumType::SMTP );
 
-  delete d->serverTest;
-  d->serverTest = new MailTransport::ServerTest( SMTP_PROTOCOL, d->smtp.kcfg_host->text(),
-                                        d->smtp.kcfg_port->value() );
-   connect( d->serverTest,
-           SIGNAL( capabilities(QStringList,QStringList,QString,QString,QString)),
-           SLOT( smtpCapabilities(QStringList,QStringList,QString,QString,QString)) );
-   d->smtp.checkCapabilities->setEnabled( false );
+  // delete d->serverTest;
+  //d->serverTest = new KPIM::ServerTest( SMTP_PROTOCOL, d->smtp.kcfg_host->text(),
+  //                                      d->smtp.kcfg_port->value() );
+  // connect( d->serverTest,
+  //         SIGNAL( capabilities(QStringList,QStringList,QString,QString,QString)),
+  //         SLOT( smtpCapabilities(QStringList,QStringList,QString,QString,QString)) );
+  // d->smtp.checkCapabilities->setEnabled( false );
 }
 
 void TransportConfigDialog::save()
@@ -310,8 +310,8 @@ void TransportConfigDialog::smtpCapabilities( const QStringList &capaNormal,
   d->updateAuthCapbilities();
   checkHighestEnabledButton( d->authGroup );
 
-  delete d->serverTest;
-  d->serverTest = 0;
+  // delete d->serverTest;
+  // d->serverTest = 0;
 }
 
 void TransportConfigDialog::hostNameChanged( const QString &text )
