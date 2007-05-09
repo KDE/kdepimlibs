@@ -17,6 +17,8 @@ set(mailtransport_lib_srcs
   smtpjob.cpp
   precommandjob.cpp
   legacydecrypt.cpp
+  socketsafe.cpp
+  servertest.cpp
 )
 
 kde4_automoc(${mailtransport_lib_srcs})
@@ -55,5 +57,6 @@ install( FILES
         transportmanagementwidget.h
         transportmanager.h
         transporttypedialog.h
+        servertest.h
           DESTINATION ${INCLUDE_INSTALL_DIR}/mailtransport )
 
