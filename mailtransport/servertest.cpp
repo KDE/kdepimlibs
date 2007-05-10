@@ -19,7 +19,7 @@
 
 // Own
 #include "servertest.h"
-#include "socketsafe.h"
+#include "socket.h"
 
 // Qt
 #include <QProgressBar>
@@ -50,7 +50,7 @@ ServerTest::~ServerTest() {}
 
 void ServerTest::start()
 {
-  kDebug( 50002 ) << k_funcinfo << endl;
+  kDebug( 5324 ) << k_funcinfo << endl;
 
   m_testResult.clear();
   m_protocolResult.clear();
@@ -95,7 +95,7 @@ void ServerTest::start()
 
 void ServerTest::slotNormalPossible()
 {
-  kDebug( 50002 ) << k_funcinfo << endl;
+  kDebug( 5324 ) << k_funcinfo << endl;
 
   m_normalTimer->stop();
   m_testResult[QLatin1String( "none" )] = true;
@@ -146,7 +146,7 @@ void ServerTest::slotReadSecure( const QString& text )
 
 void ServerTest::read( const QString& type, const QString& text )
 {
-  kDebug( 50002 ) << k_funcinfo << text << endl;
+  kDebug( 5324 ) << k_funcinfo << text << endl;
 
   if ( !text.contains( QLatin1String( "AUTH" ), Qt::CaseInsensitive ) )
     return;
@@ -164,7 +164,7 @@ void ServerTest::read( const QString& type, const QString& text )
 
 void ServerTest::slotNormalNotPossible()
 {
-  kDebug( 50002 ) << k_funcinfo << endl;
+  kDebug( 5324 ) << k_funcinfo << endl;
   m_testResult[QLatin1String( "tls" )] = false;
   m_testResult[QLatin1String( "none" )] = false;
   m_normalFinished = true;
@@ -173,7 +173,7 @@ void ServerTest::slotNormalNotPossible()
 
 void ServerTest::slotSslPossible()
 {
-  kDebug( 50002 ) << k_funcinfo << endl;
+  kDebug( 5324 ) << k_funcinfo << endl;
   m_sslTimer->stop();
   m_testResult[QLatin1String( "ssl" )] = true;
   m_sslFinished = true;
@@ -182,7 +182,7 @@ void ServerTest::slotSslPossible()
 
 void ServerTest::slotSslNotPossible()
 {
-  kDebug( 50002 ) << k_funcinfo << endl;
+  kDebug( 5324 ) << k_funcinfo << endl;
   m_testResult[QLatin1String( "ssl" )] = false;
   m_sslFinished = true;
   finalResult();
@@ -193,7 +193,7 @@ void ServerTest::finalResult()
   if ( !m_sslFinished || !m_normalFinished )
     return;
 
-  kDebug( 50002 ) << k_funcinfo << m_testResult << endl;
+  kDebug( 5324 ) << k_funcinfo << m_testResult << endl;
 
   m_testProgress->hide();
   m_progressTimer->stop();

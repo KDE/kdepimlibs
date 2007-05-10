@@ -31,7 +31,6 @@
 #include "ui_sendmailsettings.h"
 
 #include <kconfigdialogmanager.h>
-#include <kdebug.h>
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <kprotocolinfo.h>

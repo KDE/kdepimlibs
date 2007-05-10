@@ -17,7 +17,7 @@ set(mailtransport_lib_srcs
   smtpjob.cpp
   precommandjob.cpp
   legacydecrypt.cpp
-  socketsafe.cpp
+  socket.cpp
   servertest.cpp
 )
 

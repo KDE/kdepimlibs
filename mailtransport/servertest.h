@@ -31,7 +31,7 @@ class QString;
 namespace MailTransport
 {
 
-  class SocketSafe;
+  class Socket;
 
   /**
    * @class ServerTest
@@ -60,34 +60,43 @@ namespace MailTransport
       void setServer( const QString& server ) { m_server = server; };
 
       /**
-       * Set the progressbar to use. This class will call show() and hide()
-       * and will count down.
+       * Makes @p pb the progressbar to use. This class will call show()
+       * and hide() and will count down. It does not take ownership of
+       * the progressbar.
        */
       void setProgressBar( QProgressBar* pb ) { m_testProgress = pb; };
 
       /**
-       * Set the protocol to test.
+       * Set @p proto the protocol to test, currently supported are
+       * "smtp" and "imap". This will be an enum soon.
        */
-      void setProtocol( const QString& proto ) {m_proto = proto; };
+      void setProtocol( const QString& proto ) { m_proto = proto; };
 
       /**
-       * Start the test.
+       * Starts the test. Will emit finished() when done.
        */
       void start();
 
       /**
-              * Get the protocols for the normal connections.. Call this only
-              * after the finished() signals has been sent.
-              */
-      QStringList normalProtocols() { return m_protocolResult[QLatin1String( "normal" )]; };
+        * Get the protocols for the normal connections.. Call this only
+        * after the finished() signals has been sent.
+        */
+      QStringList normalProtocols()
+                { return m_protocolResult[QLatin1String( "normal" )]; };
 
       /**
-              * Get the protocols for the secure connections.. Call this only
-              * after the finished() signals has been sent.
-              */
-      QStringList secureProtocols() { return m_protocolResult[QLatin1String( "secure" )]; };
+        * Get the protocols for the secure connections.. Call this only
+        * after the finished() signals has been sent.
+        */
+      QStringList secureProtocols()
+                { return m_protocolResult[QLatin1String( "secure" )]; };
 
-    signals:
+    Q_SIGNALS:
+      /**
+       * This will be emitted when the test is done. It will contain
+       * the values "none", "tls" and "ssl" and its bool will inidicate
+       * if that connection is possible.
+       */
       void finished( QHash<QString, bool> );
 
     private:
@@ -111,7 +120,7 @@ namespace MailTransport
       bool                    m_sslFinished;
       bool                    m_normalFinished;
 
-    private slots:
+    private Q_SLOTS:
       void slotNormalPossible();
       void slotNormalNotPossible();
       void slotSslPossible();

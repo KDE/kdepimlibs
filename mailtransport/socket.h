@@ -30,7 +30,8 @@ namespace MailTransport
 
   /**
    * @class Socket
-   * Responsible for communicating with the server with safe IMAPs
+   * Responsible for communicating with the server, it's designed to work
+   * with the ServerTest class.
    * @author Tom Albers <tomalbers@kde.nl>
    */
   class MAILTRANSPORT_EXPORT Socket : public QObject
@@ -43,10 +44,6 @@ namespace MailTransport
        * Contructor, it will not auto connect. Call reconnect() to connect to
        * the parameters given.
        * @param parent the parent
-       * @param name the name, will be printed  on debug.
-       * @param server the server to connect to
-       * @param port the port to connect to
-       * @param safe the safety level
        */
       explicit Socket( QObject* parent );
 
@@ -54,12 +51,6 @@ namespace MailTransport
       * Destructor
       */
       ~Socket();
-
-      /**
-       * Call this when you will terminate the connection, it will
-       * prevent a popup to the user 'do you want to reconnect'
-       */
-      void aboutToClose() { m_aboutToClose = true; };
 
       /**
        * Existing connection will be closed and a new connection will be
@@ -78,18 +69,6 @@ namespace MailTransport
       virtual bool available();
 
       /**
-       * call this when there are ssl errors and you agree to those
-       * and want to connect anyhow.
-       */
-      void acceptSslErrors();
-
-      /**
-       * call this when there are ssl errors and you agree to those
-       * and want to connect anyhow.
-       */
-      void setInteractive( bool ia ) { m_interactive = ia; };
-
-      /**
        * set the protocol to use
        */
       void setProtocol( const QString& proto ) { m_proto = proto; };
@@ -106,11 +85,6 @@ namespace MailTransport
       void setPort( int port ) { m_port = port; };
 
       /**
-       * this will be an tls connection
-       */
-      void setTls( bool what ) { m_tls = what; };
-
-      /**
        * this will be a secure connection
        */
       void setSecure( bool what ) { m_secure = what; };
@@ -120,17 +94,12 @@ namespace MailTransport
       QString             m_server;
       QString             m_proto;
       int                 m_port;
-
-      bool                m_aboutToClose;
-      bool                m_interactive;
       bool                m_secure;
-      bool                m_tls;
 
-      void login();
       void startShake();
 
 
-    signals:
+    Q_SIGNALS:
       /**
        * emits the incoming data
        */
@@ -142,28 +111,11 @@ namespace MailTransport
       void connected();
 
       /**
-       * emitted when the dns request is ok (pretty useless, but still).
-       */
-      void hostFound();
-
-      /**
-       * emitted when there is something wrong, please issue a self
-       * dustruct on me or accept the error by calling accept Errors();
-       */
-      void sslError( const QString& );
-
-      /**
        * emitted when not connected.
        */
       void failed();
 
-      /**
-       * this is the signal when tls succeeded
-       */
-      void tlscomplete();
-
-
-    private slots:
+    private Q_SLOTS:
       void slotConnected();
       void slotStateChanged( QAbstractSocket::SocketState state );
       void slotModeChanged( QSslSocket::SslMode  state );
