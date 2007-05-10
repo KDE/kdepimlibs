@@ -260,15 +260,6 @@ static QList<int> authMethodsFromStringList( const QStringList &list )
   return result;
 }
 
-static QList<int> authMethodsFromString( const QString &s )
-{
-  QStringList list;
-  foreach ( QString tmp, s.toUpper().split( QLatin1Char('\n'),
-            QString::SkipEmptyParts ) )
-    list << tmp.remove( QLatin1String("SASL/") );
-  return authMethodsFromStringList( list );
-}
-
 static void checkHighestEnabledButton( QButtonGroup *group )
 {
   Q_ASSERT( group );
@@ -292,25 +283,18 @@ void TransportConfigDialog::slotFinished( QHash<QString, bool> results )
   d->smtp.tls->setEnabled( results[QLatin1String("tls")] );
   checkHighestEnabledButton( d->encryptionGroup );
 
-/*
-  // authentication methods
-  if ( !results[QLatin1String("none")] && !results[QLatin1String("ssl")] && !results[QLatin1String("tls")] ) {
-    // slave doesn't seem to support "* AUTH METHODS" metadata
-    // (or server can't do AUTH)
-    d->noEncCapa = authMethodsFromStringList( capaNormal );
-    if ( d->smtp.tls->isEnabled() )
-      d->tlsCapa = d->noEncCapa;
-    else
-      d->tlsCapa.clear();
-    d->sslCapa = authMethodsFromStringList( capaSSL );
-  } else {
-    d->noEncCapa = authMethodsFromString( authNone );
-    d->sslCapa = authMethodsFromString( authSSL );
-    d->tlsCapa = authMethodsFromString( authTLS );
-  }
+  kDebug(5324) << "normal: " <<  d->serverTest->normalProtocols() << endl;
+  kDebug(5324) << "secure: " <<  d->serverTest->secureProtocols() << endl;
+
+  d->noEncCapa = authMethodsFromStringList( d->serverTest->normalProtocols() );
+  if ( d->smtp.tls->isEnabled() )
+    d->tlsCapa = d->noEncCapa;
+  else
+    d->tlsCapa.clear();
+  d->sslCapa = authMethodsFromStringList( d->serverTest->secureProtocols() );
   d->updateAuthCapbilities();
   checkHighestEnabledButton( d->authGroup );
-*/
+
   delete d->serverTest;
   d->serverTest = 0;
 }

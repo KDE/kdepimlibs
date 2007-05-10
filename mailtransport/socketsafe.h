@@ -153,17 +153,9 @@ class MAILTRANSPORT_EXPORT SocketSafe : public QObject
         void sslError(const QString&);
 
         /**
-         * emitted when ssl errors are not accepted.
-         * Please delete this class when this signal is emitted.
+         * emitted when not connected.
          */
-        void disconnected();
-
-        /**
-         * emitted when disconnected, but only when the aboutToClose() is
-         * not called before. Please delete this class when this signal
-         * is emitted.
-         */
-        void unexpectedDisconnect();
+        void failed();
 
         /**
          * this is the signal when tls succeeded
@@ -177,7 +169,6 @@ class MAILTRANSPORT_EXPORT SocketSafe : public QObject
         void slotModeChanged(  QSslSocket::SslMode  state);
         void slotSocketRead();
         void slotSslErrors(const QList<QSslError> & errors);
-        void slotDisconnected();
 
 };
 

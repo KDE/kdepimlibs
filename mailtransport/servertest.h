@@ -73,11 +73,24 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
          */
         void start();
 
+	/**
+         * Get the protocols for the normal connections.. Call this only
+         * after the finished() signals has been sent.
+         */
+        QStringList normalProtocols() { return m_protocolResult[QLatin1String("normal")]; };
+
+	/**
+         * Get the protocols for the secure connections.. Call this only
+         * after the finished() signals has been sent.
+         */
+        QStringList secureProtocols() { return m_protocolResult[QLatin1String("secure")]; };
+
     signals:
         void finished( QHash<QString, bool> );
 
     private:
         void finalResult();
+	void read(const QString& type, const QString& text);
 
         QString                 m_server;
         QString                 m_proto;
@@ -86,7 +99,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
         SocketSafe*             m_ssl;
 
         QHash<QString, bool>    m_testResult;
-
+	QHash<QString, QStringList> m_protocolResult;
         QTimer*                 m_normalTimer;
         QTimer*                 m_sslTimer;
         QTimer*                 m_progressTimer;
@@ -101,7 +114,8 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
         void slotNormalNotPossible();
         void slotSslPossible();
         void slotSslNotPossible();
-        void slotRead(const QString& text);
+        void slotReadNormal(const QString& text);
+        void slotReadSecure(const QString& text);
         void slotUpdateProgress();
 };
 

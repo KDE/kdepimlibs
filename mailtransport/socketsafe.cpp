@@ -73,7 +73,6 @@ void SocketSafe::reconnect()
     connect(m_socket, SIGNAL(modeChanged(  QSslSocket::SslMode  )),
             SLOT(slotModeChanged(  QSslSocket::SslMode  )));
     connect(m_socket, SIGNAL(connected()), SLOT(slotConnected()));
-    connect(m_socket, SIGNAL(disconnected()), SLOT(slotDisconnected()));
     connect(m_socket, SIGNAL(readyRead()), SLOT(slotSocketRead()) );
     connect(m_socket, SIGNAL(encrypted()), SIGNAL(connected()) );
     connect(m_socket, SIGNAL(sslErrors( const QList<QSslError> &)),
@@ -102,6 +101,8 @@ void SocketSafe::slotStateChanged( QAbstractSocket::SocketState state)
     kDebug(50002) << objectName() << " "
             << "State is now: " << (int)state << endl;
 #endif
+    if (state == QAbstractSocket::UnconnectedState)
+	emit failed();
 }
 
 void SocketSafe::slotModeChanged(  QSslSocket::SslMode  state)
@@ -114,7 +115,7 @@ void SocketSafe::slotModeChanged(  QSslSocket::SslMode  state)
 }
 void SocketSafe::slotSocketRead()
 {
-    kDebug(50002) << objectName() << " " << k_funcinfo << endl;
+    // kDebug(50002) << objectName() << " " << k_funcinfo << endl;
 
     if (!m_socket)
         return;
@@ -169,15 +170,6 @@ bool SocketSafe::available()
     // kDebug(50002) << objectName() << " " << k_funcinfo << endl;
     bool ok = m_socket && m_socket->state() == QAbstractSocket::ConnectedState;
     return ok;
-}
-
-void SocketSafe::slotDisconnected()
-{
-    // kDebug(50002) << objectName() << " " << k_funcinfo << endl;
-    if (m_aboutToClose)
-        return;
-
-    emit unexpectedDisconnect();
 }
 
 }

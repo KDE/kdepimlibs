@@ -277,6 +277,9 @@
        </item>
        <item row="2" column="0" >
         <widget class="QProgressBar" name="checkCapabilitiesProgress" >
+         <property name="visible" >
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item row="2" column="1" >

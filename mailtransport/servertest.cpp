@@ -54,8 +54,9 @@ void ServerTest::start()
     kDebug(50002) << k_funcinfo << endl;
 
     m_testResult.clear();
+    m_protocolResult.clear();
 
-    m_testProgress->setMaximum(10);
+    m_testProgress->setMaximum(20);
     m_testProgress->setValue(0);
     m_testProgress->setTextVisible( true );
     m_testProgress->show();
@@ -70,12 +71,11 @@ void ServerTest::start()
     else
         m_normal->setPort(25);
     connect(m_normal, SIGNAL(connected()), SLOT(slotNormalPossible()));
-    connect(m_normal, SIGNAL(disconnected()), SLOT(slotNormalNotPossible()));
+    connect(m_normal, SIGNAL(failed()), SLOT(slotNormalNotPossible()));
     connect(m_normal, SIGNAL(data(const QString&)),
-            SLOT(slotRead(const QString&)));
+            SLOT(slotReadNormal(const QString&)));
     m_normal->reconnect();
     m_normalTimer->start(10000);
-
 
     m_ssl = new SocketSafe(this);
     m_ssl->setObjectName(QLatin1String("secure"));
@@ -87,8 +87,9 @@ void ServerTest::start()
         m_ssl->setPort(465);
     m_ssl->setSecure(true);
     connect(m_ssl, SIGNAL(connected()), SLOT(slotSslPossible()));
-    connect(m_ssl, SIGNAL(disconnected()), SLOT(slotSslNotPossible()));
-    m_ssl->setInteractive(false);
+    connect(m_ssl, SIGNAL(failed()), SLOT(slotSslNotPossible()));
+    connect(m_ssl, SIGNAL(data(const QString&)),
+            SLOT(slotReadSecure(const QString&)));
     m_ssl->reconnect();
     m_sslTimer->start(10000);
 }
@@ -101,10 +102,8 @@ void ServerTest::slotNormalPossible()
     m_testResult[QLatin1String("none")] = true;
 }
 
-void ServerTest::slotRead(const QString& text)
+void ServerTest::slotReadNormal(const QString& text)
 {
-    kDebug(50002) << k_funcinfo << text << endl;
-
     static bool first = true;
     if (first)
     {
@@ -115,23 +114,59 @@ void ServerTest::slotRead(const QString& text)
         first = false;
         return;
     }
-
+    
     if (text.contains(QLatin1String("STARTTLS"), Qt::CaseInsensitive))
         m_testResult[QLatin1String("tls")] = true;
     else
         m_testResult[QLatin1String("tls")] = false;
 
-    if (text.contains(QLatin1String("AUTH"), Qt::CaseInsensitive) &&
-        text.contains(QLatin1String("LOGIN"), Qt::CaseInsensitive))
-        m_testResult[QLatin1String("LOGIN")] = true;
-
-    if (text.contains(QLatin1String("AUTH"), Qt::CaseInsensitive) &&
-        text.contains(QLatin1String("PLAIN"), Qt::CaseInsensitive))
-        m_testResult[QLatin1String("PLAIN")] = true;
-
+    read(QLatin1String("normal"), text);
+    
     m_normalFinished = true;
     first = true;
     finalResult();
+}
+
+void ServerTest::slotReadSecure(const QString& text)
+{
+    static bool first = true;
+    if (first)
+    {
+        if (m_proto == QLatin1String("imap"))
+            m_ssl->write(QLatin1String("1 CAPABILITY"));
+        else if (m_proto == QLatin1String("smtp"))
+            m_ssl->write(QLatin1String("EHLO localhost"));
+        first = false;
+        return;
+    }
+    
+    read(QLatin1String("secure"), text);
+    
+    m_sslFinished = true;
+    first = true;
+    finalResult();
+}
+
+void ServerTest::read(const QString& type, const QString& text)
+{
+    kDebug(50002) << k_funcinfo << text << endl;
+
+    if (!text.contains(QLatin1String("AUTH"), Qt::CaseInsensitive))
+         return;
+
+    QStringList protocols;
+    protocols << QLatin1String("LOGIN") 
+              << QLatin1String("PLAIN")
+              << QLatin1String("CRAM-MD5")
+              << QLatin1String("DIGEST-MD5")
+              << QLatin1String("NTLM")
+              << QLatin1String("GSSAPI");
+
+    for (int i = 0 ; i < protocols.count(); ++i)
+    {
+        if (text.contains(protocols.at(i), Qt::CaseInsensitive))
+        	m_protocolResult[type].append( protocols.at(i) );
+    }
 }
 
 void ServerTest::slotNormalNotPossible()
