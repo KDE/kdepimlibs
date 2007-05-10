@@ -58,7 +58,7 @@ class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
     void chooseSendmail();
     void passwordsLoaded();
     void save();
-    void slotFinished( QHash<QString, bool> );
+    void slotFinished( QList<int> results );      
     void hostNameChanged( const QString &text );
     void encryptionChanged( int enc );
 

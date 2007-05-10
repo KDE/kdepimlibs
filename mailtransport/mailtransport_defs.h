@@ -39,4 +39,14 @@
 #define SMTP_PORT 25
 #define SMTPS_PORT 465
 
+/* Because ServerTest is also capable of testing IMAP,
+ * some addition defines. */
+
+#define IMAP_PROTOCOL QLatin1String("imap")
+#define IMAPS_PROTOCOL QLatin1String("imaps")
+
+#define IMAP_PORT 143
+#define IMAPS_PORT 993
+
+
 #endif

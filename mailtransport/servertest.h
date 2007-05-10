@@ -21,6 +21,7 @@
 #define MAILTRANSPORT_SERVERTEST_H
 
 #include <mailtransport/mailtransport_export.h>
+#include <mailtransport/transport.h>
 
 #include <QWidget>
 #include <QHash>
@@ -32,7 +33,7 @@ namespace MailTransport
 {
 
   class Socket;
-
+  
   /**
    * @class ServerTest
    * This class can be used to test certain server to see if they support stuff.
@@ -80,28 +81,27 @@ namespace MailTransport
       /**
         * Get the protocols for the normal connections.. Call this only
         * after the finished() signals has been sent.
+        * @return an enum of the type Transport::EnumAuthenticationType
         */
-      QStringList normalProtocols()
-                { return m_protocolResult[QLatin1String( "normal" )]; };
+      QList< int > normalProtocols();
 
       /**
         * Get the protocols for the secure connections.. Call this only
         * after the finished() signals has been sent.
-        */
-      QStringList secureProtocols()
-                { return m_protocolResult[QLatin1String( "secure" )]; };
+        * @return an enum of the type Transport::EnumAuthenticationType
+       */
+      QList< int > secureProtocols();
 
     Q_SIGNALS:
       /**
        * This will be emitted when the test is done. It will contain
-       * the values "none", "tls" and "ssl" and its bool will inidicate
-       * if that connection is possible.
+       * the values from the enum EnumEncryption which are possible.
        */
-      void finished( QHash<QString, bool> );
+      void finished( QList< int > );
 
     private:
       void finalResult();
-      void read( const QString& type, const QString& text );
+      void read( int type, const QString& text );
 
       QString                 m_server;
       QString                 m_proto;
@@ -109,8 +109,8 @@ namespace MailTransport
       Socket*                 m_normal;
       Socket*                 m_ssl;
 
-      QHash<QString, bool>    m_testResult;
-      QHash<QString, QStringList> m_protocolResult;
+      QList< int >    m_testResult;
+      QHash< int, QList<int> > m_protocolResult;
       QTimer*                 m_normalTimer;
       QTimer*                 m_sslTimer;
       QTimer*                 m_progressTimer;

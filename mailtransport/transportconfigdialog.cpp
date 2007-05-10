@@ -173,7 +173,7 @@ void TransportConfigDialog::checkSmtpCapabilities()
   delete d->serverTest;
 
   d->serverTest = new ServerTest( this );
-  d->serverTest->setProtocol( QLatin1String("smtp") /* TODO enum: SMTP_PROTOCOL */);
+  d->serverTest->setProtocol( SMTP_PROTOCOL );
   d->serverTest->setServer( d->smtp.kcfg_host->text() );
   d->serverTest->setProgressBar( d->smtp.checkCapabilitiesProgress );
 
@@ -232,33 +232,6 @@ void TransportConfigDialog::passwordsLoaded()
     d->passwordEdit->setText( d->transport->password() );
 }
 
-static QList<int> authMethodsFromStringList( const QStringList &list )
-{
-  QList<int> result;
-  for ( QStringList::ConstIterator it = list.begin() ; it != list.end() ; ++it ) {
-    if (  *it == QLatin1String("LOGIN") )
-      result << Transport::EnumAuthenticationType::LOGIN;
-   else if ( *it == QLatin1String("PLAIN") )
-      result << Transport::EnumAuthenticationType::PLAIN;
-    else if ( *it == QLatin1String("CRAM-MD5") )
-      result << Transport::EnumAuthenticationType::CRAM_MD5;
-    else if ( *it == QLatin1String("DIGEST-MD5") )
-      result << Transport::EnumAuthenticationType::DIGEST_MD5;
-    else if ( *it == QLatin1String("NTLM") )
-      result << Transport::EnumAuthenticationType::NTLM;
-    else if ( *it == QLatin1String("GSSAPI") )
-      result << Transport::EnumAuthenticationType::GSSAPI;
-  }
-
-  // LOGIN doesn't offer anything over PLAIN, requires more server
-  // roundtrips and is not an official SASL mechanism, but a MS-ism,
-  // so only enable it if PLAIN isn't available:
-  if ( result.contains( Transport::EnumAuthenticationType::PLAIN ) )
-    result.removeAll( Transport::EnumAuthenticationType::LOGIN );
-
-  return result;
-}
-
 static void checkHighestEnabledButton( QButtonGroup *group )
 {
   Q_ASSERT( group );
@@ -272,25 +245,25 @@ static void checkHighestEnabledButton( QButtonGroup *group )
   }
 }
 
-void TransportConfigDialog::slotFinished( QHash<QString, bool> results )
+void TransportConfigDialog::slotFinished( QList<int> results )
 {
   d->smtp.checkCapabilities->setEnabled( true );
 
   // encryption method
-  d->smtp.none->setEnabled( results[QLatin1String("none")] );
-  d->smtp.ssl->setEnabled( results[QLatin1String("ssl")] );
-  d->smtp.tls->setEnabled( results[QLatin1String("tls")] );
+  d->smtp.none->setEnabled( results.contains( Transport::EnumEncryption::None ) );
+  d->smtp.ssl->setEnabled( results.contains( Transport::EnumEncryption::SSL ) );
+  d->smtp.tls->setEnabled( results.contains( Transport::EnumEncryption::TLS ) );
   checkHighestEnabledButton( d->encryptionGroup );
 
   kDebug(5324) << "normal: " <<  d->serverTest->normalProtocols() << endl;
   kDebug(5324) << "secure: " <<  d->serverTest->secureProtocols() << endl;
 
-  d->noEncCapa = authMethodsFromStringList( d->serverTest->normalProtocols() );
+  d->noEncCapa = d->serverTest->normalProtocols();
   if ( d->smtp.tls->isEnabled() )
     d->tlsCapa = d->noEncCapa;
   else
     d->tlsCapa.clear();
-  d->sslCapa = authMethodsFromStringList( d->serverTest->secureProtocols() );
+  d->sslCapa = d->serverTest->secureProtocols();
   d->updateAuthCapbilities();
   checkHighestEnabledButton( d->authGroup );
 
