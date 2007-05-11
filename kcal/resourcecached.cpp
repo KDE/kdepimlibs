@@ -20,6 +20,14 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "resourcecached.moc"
+
+#include "event.h"
+#include "exceptions.h"
+#include "incidence.h"
+#include "journal.h"
+#include "todo.h"
+
 #include <QtCore/QDataStream>
 #include <QtCore/QFile>
 #include <QtCore/QString>
@@ -28,15 +36,6 @@
 #include <klocale.h>
 #include <kurl.h>
 #include <kstandarddirs.h>
-
-#include "event.h"
-#include "exceptions.h"
-#include "incidence.h"
-#include "journal.h"
-#include "todo.h"
-
-
-#include "resourcecached.h"
 
 using namespace KCal;
 
@@ -781,5 +780,3 @@ const Person & KCal::ResourceCached::owner() const
 {
   return mCalendar.owner();
 }
-
-#include "resourcecached.moc"

@@ -22,13 +22,13 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kconfig.h>
-#include <kdebug.h>
-#include <klocale.h>
+#include "resourcecalendar.moc"
 
 #include "calendar.h"
 
-#include "resourcecalendar.h"
+#include <kconfig.h>
+#include <kdebug.h>
+#include <klocale.h>
 
 using namespace KCal;
 
@@ -219,5 +219,3 @@ bool ResourceCalendar::noReadOnlyOnLoad() const
 {
   return mNoReadOnlyOnLoad;
 }
-
-#include "resourcecalendar.moc"

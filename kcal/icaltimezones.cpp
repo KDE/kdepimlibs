@@ -19,6 +19,11 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "icaltimezones.h"
+
+#include "icalformat.h"
+#include "icalformatimpl.h"
+
 #include <QtCore/QDateTime>
 #include <QtCore/QString>
 #include <QtCore/QList>
@@ -35,11 +40,6 @@ extern "C" {
   #include <ical.h>
   #include <icaltimezone.h>
 }
-
-#include "icalformat.h"
-#include "icalformatimpl.h"
-#include "icaltimezones.h"
-
 
 using namespace KCal;
 

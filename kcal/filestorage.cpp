@@ -19,17 +19,17 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <stdlib.h>
-
-#include <QtCore/QString>
-
-#include <kdebug.h>
+#include "filestorage.h"
 
 #include "calendar.h"
 #include "vcalformat.h"
 #include "icalformat.h"
 
-#include "filestorage.h"
+#include <stdlib.h>
+
+#include <QtCore/QString>
+
+#include <kdebug.h>
 
 using namespace KCal;
 

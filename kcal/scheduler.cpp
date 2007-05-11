@@ -20,9 +20,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <klocale.h>
-#include <kdebug.h>
-#include <kstandarddirs.h>
+#include "scheduler.h"
 
 #include "event.h"
 #include "todo.h"
@@ -31,7 +29,9 @@
 #include "calendar.h"
 #include "freebusycache.h"
 
-#include "scheduler.h"
+#include <klocale.h>
+#include <kdebug.h>
+#include <kstandarddirs.h>
 
 using namespace KCal;
 

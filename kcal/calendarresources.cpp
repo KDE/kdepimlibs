@@ -27,6 +27,17 @@
   @author Cornelius Schumacher
   @author Reinhold Kainhofer
 */
+
+#include "calendarresources.moc"
+
+#include "incidence.h"
+#include "journal.h"
+#include "resourcecalendar.h"
+
+#include "kresources/manager.h"
+#include "kresources/selectdialog.h"
+#include "kabc/lock.h"
+
 #include <stdlib.h>
 
 #include <QtCore/QString>
@@ -36,15 +47,6 @@
 #include <kdatetime.h>
 #include <kstandarddirs.h>
 #include <klocale.h>
-
-#include "kresources/manager.h"
-#include "kresources/selectdialog.h"
-#include "kabc/lock.h"
-
-#include "incidence.h"
-#include "journal.h"
-#include "resourcecalendar.h"
-#include "calendarresources.h"
 
 using namespace KCal;
 
@@ -786,5 +788,3 @@ void CalendarResources::slotSaveError( ResourceCalendar *r, const QString &err )
   Q_UNUSED( r );
   emit signalErrorMessage( err );
 }
-
-#include "calendarresources.moc"

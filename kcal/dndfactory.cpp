@@ -22,6 +22,13 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "dndfactory.h"
+
+#include "vcaldrag.h"
+#include "icaldrag.h"
+#include "calendar.h"
+#include "calendarlocal.h"
+
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
 #include <QtGui/QDropEvent>
@@ -31,12 +38,6 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kurl.h>
-
-#include "vcaldrag.h"
-#include "icaldrag.h"
-#include "calendar.h"
-#include "calendarlocal.h"
-#include "dndfactory.h"
 
 using namespace KCal;
 

@@ -25,11 +25,12 @@
 
   @author Cornelius Schumacher
 */
+
+#include "event.h"
+
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
-
-#include "event.h"
 
 using namespace KCal;
 

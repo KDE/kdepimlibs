@@ -19,6 +19,17 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "resourcelocaldir.moc"
+
+#include "resourcelocaldirconfig.h"
+#include "calendarlocal.h"
+#include "incidence.h"
+#include "event.h"
+#include "todo.h"
+#include "journal.h"
+
+#include "kresources/configwidget.h"
+
 #include <typeinfo>
 #include <stdlib.h>
 
@@ -29,18 +40,6 @@
 #include <kurl.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
-
-#include "calendarlocal.h"
-#include "incidence.h"
-#include "event.h"
-#include "todo.h"
-#include "journal.h"
-
-#include "kresources/configwidget.h"
-
-#include "resourcelocaldirconfig.h"
-
-#include "resourcelocaldir.h"
 
 using namespace KCal;
 
@@ -253,5 +252,3 @@ bool ResourceLocalDir::deleteIncidenceFile(Incidence *incidence)
   mDirWatch.startScan();
   return removed;
 }
-
-#include "resourcelocaldir.moc"

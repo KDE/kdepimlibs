@@ -23,10 +23,10 @@
 #include "icaldrag.h"
 
 #include "icalformat.h"
-
-#include <qmimedata.h>
 #include "calendar.h"
 #include "kcal.h"
+
+#include <QtCore/QMimeData>
 
 #include <kdebug.h>
 

@@ -20,6 +20,8 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "recurrencerule.h"
+
 #include <limits.h>
 #include <math.h>
 
@@ -29,8 +31,6 @@
 
 #include <kdebug.h>
 #include <kglobal.h>
-
-#include "recurrencerule.h"
 
 using namespace KCal;
 

@@ -19,6 +19,10 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "resourcecachedconfig.moc"
+
+#include "resourcecached.h"
+
 #include <q3buttongroup.h>
 #include <QtGui/QLayout>
 #include <QtGui/QRadioButton>
@@ -31,9 +35,6 @@
 #include <khbox.h>
 #include <klocale.h>
 #include <kdebug.h>
-
-#include "resourcecached.h"
-#include "resourcecachedconfig.h"
 
 using namespace KCal;
 
@@ -118,5 +119,3 @@ void ResourceCachedSaveConfig::slotIntervalStateChanged( int state )
   if ( state == Qt::Checked ) mIntervalSpin->setEnabled( true );
   else mIntervalSpin->setEnabled( false );
 }
-
-#include "resourcecachedconfig.moc"

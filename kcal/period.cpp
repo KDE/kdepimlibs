@@ -26,10 +26,10 @@
   @author Cornelius Schumacher
 */
 
+#include "period.h"
+
 #include <kdebug.h>
 #include <klocale.h>
-
-#include "period.h"
 
 using namespace KCal;
 

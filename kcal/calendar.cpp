@@ -30,17 +30,17 @@
   @author Cornelius Schumacher
   @author Reinhold Kainhofer
 */
+
+#include "calendar.h"
+#include "exceptions.h"
+#include "calfilter.h"
+#include "icaltimezones.h"
 #include <kdebug.h>
 #include <klocale.h>
 
 extern "C" {
   #include <icaltimezone.h>
 }
-
-#include "exceptions.h"
-#include "calfilter.h"
-#include "icaltimezones.h"
-#include "calendar.h"
 
 using namespace KCal;
 

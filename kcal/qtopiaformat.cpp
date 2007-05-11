@@ -19,6 +19,11 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "qtopiaformat.h"
+
+#include "calendar.h"
+#include "calendarlocal.h"
+
 #include <QtCore/QDateTime>
 #include <QtCore/QString>
 #include <QtCore/QRegExp>
@@ -35,11 +40,6 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kdatetime.h>
-
-#include "calendar.h"
-#include "calendarlocal.h"
-
-#include "qtopiaformat.h"
 
 using namespace KCal;
 

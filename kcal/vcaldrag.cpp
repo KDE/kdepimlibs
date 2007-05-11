@@ -23,7 +23,7 @@
 #include "vcaldrag.h"
 
 #include "vcalformat.h"
-#include <qmimedata.h>
+#include <QtCore/QMimeData>
 
 using namespace KCal;
 

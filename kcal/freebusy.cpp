@@ -20,9 +20,9 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kdebug.h>
-
 #include "freebusy.h"
+
+#include <kdebug.h>
 #include <QtCore/QList>
 
 using namespace KCal;

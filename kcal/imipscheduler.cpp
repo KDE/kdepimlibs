@@ -23,10 +23,10 @@
 // IMIPScheduler - iMIP implementation of iTIP methods
 //
 
+#include "imipscheduler.h"
+
 #include "event.h"
 #include "icalformat.h"
-
-#include "imipscheduler.h"
 
 using namespace KCal;
 

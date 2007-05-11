@@ -28,13 +28,14 @@
   @author Reinhold Kainhofer
 */
 
+#include "person.h"
+
+#include "kpimutils/email.h"
+
 #include <QtCore/QRegExp>
 
 #include <kdebug.h>
 #include <klocale.h>
-
-#include <kpimutils/email.h>
-#include "person.h"
 
 using namespace KCal;
 

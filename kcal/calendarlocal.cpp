@@ -28,6 +28,14 @@
   @author Preston Brown
   @author Cornelius Schumacher
  */
+
+#include "calendarlocal.h"
+
+#include "incidence.h"
+#include "event.h"
+#include "todo.h"
+#include "journal.h"
+#include "filestorage.h"
 #include <QtCore/QHash>
 #include <QtCore/QString>
 
@@ -35,14 +43,6 @@
 #include <kdatetime.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-
-#include "incidence.h"
-#include "event.h"
-#include "todo.h"
-#include "journal.h"
-#include "filestorage.h"
-
-#include "calendarlocal.h"
 
 using namespace KCal;
 

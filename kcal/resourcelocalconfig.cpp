@@ -20,6 +20,12 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "resourcelocalconfig.moc"
+
+#include "vcalformat.h"
+#include "icalformat.h"
+#include "resourcelocal.h"
+
 #include <typeinfo>
 
 #include <QtGui/QLabel>
@@ -30,11 +36,6 @@
 #include <kmessagebox.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
-
-#include "vcalformat.h"
-#include "icalformat.h"
-#include "resourcelocal.h"
-#include "resourcelocalconfig.h"
 
 using namespace KCal;
 
@@ -104,5 +105,3 @@ void ResourceLocalConfig::saveSettings( KRES::Resource *resource )
   } else
     kDebug(5800) << "ERROR: ResourceLocalConfig::saveSettings(): no ResourceLocal, cast failed" << endl;
 }
-
-#include "resourcelocalconfig.moc"

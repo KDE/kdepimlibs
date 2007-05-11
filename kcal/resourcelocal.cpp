@@ -28,16 +28,9 @@
   @author Cornelius Schumacher <schumacher@kde.org>
 */
 
-#include <typeinfo>
-#include <stdlib.h>
+#include "resourcelocal.moc"
 
-#include <QtCore/QString>
-
-#include <kdebug.h>
-#include <klocale.h>
-#include <kurl.h>
-#include <kstandarddirs.h>
-
+#include "resourcelocalconfig.h"
 #include "vcalformat.h"
 #include "icalformat.h"
 #include "exceptions.h"
@@ -48,9 +41,15 @@
 
 #include "kresources/configwidget.h"
 
-#include "resourcelocalconfig.h"
+#include <typeinfo>
+#include <stdlib.h>
 
-#include "resourcelocal.h"
+#include <QtCore/QString>
+
+#include <kdebug.h>
+#include <klocale.h>
+#include <kurl.h>
+#include <kstandarddirs.h>
 
 using namespace KCal;
 
@@ -240,5 +239,3 @@ ResourceLocal &ResourceLocal::operator=( const ResourceLocal &other )
   d->mLastModified = other.d->mLastModified;
   return *this;
 }
-
-#include "resourcelocal.moc"

@@ -19,6 +19,14 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "icalformat.h"
+
+#include "icalformatimpl.h"
+#include "calendar.h"
+#include "calendarlocal.h"
+#include "journal.h"
+#include "icaltimezones.h"
+
 #include <QtCore/QString>
 #include <QtCore/QRegExp>
 #include <QtGui/QClipboard>
@@ -28,6 +36,7 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <ksavefile.h>
 
 extern "C" {
   #include <ical.h>
@@ -36,15 +45,6 @@ extern "C" {
   #include <icalrestriction.h>
   #include <icalmemory.h>
 }
-
-#include "calendar.h"
-#include "calendarlocal.h"
-#include "journal.h"
-#include "icaltimezones.h"
-
-#include "icalformat.h"
-#include "icalformatimpl.h"
-#include <ksavefile.h>
 
 #include <stdio.h>
 

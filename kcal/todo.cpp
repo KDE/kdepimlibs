@@ -26,11 +26,11 @@
   @authors Cornelius Schumacher \<schumacher@kde.org\>
 */
 
+#include "todo.h"
+
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
-
-#include "todo.h"
 
 using namespace KCal;
 

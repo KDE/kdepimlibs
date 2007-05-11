@@ -22,6 +22,10 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "recurrence.h"
+
+#include "recurrencerule.h"
+
 #include <limits.h>
 
 #include <QtCore/QList>
@@ -30,9 +34,6 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
-
-#include "recurrence.h"
-#include "recurrencerule.h"
 
 using namespace KCal;
 

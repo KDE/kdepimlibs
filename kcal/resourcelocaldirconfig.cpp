@@ -19,6 +19,10 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "resourcelocaldirconfig.moc"
+
+#include "resourcelocaldir.h"
+
 #include <typeinfo>
 
 #include <QtGui/QLabel>
@@ -28,9 +32,6 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
-
-#include "resourcelocaldir.h"
-#include "resourcelocaldirconfig.h"
 
 using namespace KCal;
 
@@ -64,5 +65,3 @@ void ResourceLocalDirConfig::saveSettings( KRES::Resource *resource )
   } else
     kDebug(5700) << "ERROR: ResourceLocalDirConfig::saveSettings(): no ResourceLocalDir, cast failed" << endl;
 }
-
-#include "resourcelocaldirconfig.moc"

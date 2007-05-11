@@ -20,6 +20,16 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "htmlexport.h"
+#include "htmlexportsettings.h"
+
+#include "calendar.h"
+#include "event.h"
+#include "todo.h"
+#ifndef KORG_NOKABC
+ #include "kabc/stdaddressbook.h"
+#endif
+
 #include <QtGui/QApplication>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
@@ -30,16 +40,6 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kcalendarsystem.h>
-
-#include "calendar.h"
-#include "event.h"
-#include "todo.h"
-
-#ifndef KORG_NOKABC
- #include "kabc/stdaddressbook.h"
-#endif
-#include "htmlexport.h"
-#include "htmlexportsettings.h"
 
 using namespace KCal;
 

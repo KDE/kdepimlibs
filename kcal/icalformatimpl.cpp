@@ -21,6 +21,14 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "icalformatimpl.h"
+
+#include "calendar.h"
+#include "journal.h"
+#include "icalformat.h"
+#include "icaltimezones.h"
+#include "compat.h"
+
 #include <QtCore/QString>
 #include <QtCore/QFile>
 #include <QtCore/QList>
@@ -38,13 +46,6 @@ extern "C" {
   #include <icalparser.h>
   #include <icalrestriction.h>
 }
-
-#include "calendar.h"
-#include "journal.h"
-#include "icalformat.h"
-#include "icalformatimpl.h"
-#include "icaltimezones.h"
-#include "compat.h"
 
 #define _ICAL_VERSION "2.0"
 

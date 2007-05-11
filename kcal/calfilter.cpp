@@ -21,9 +21,9 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kdebug.h>
-
 #include "calfilter.h"
+
+#include <kdebug.h>
 
 using namespace KCal;
 

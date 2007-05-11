@@ -23,16 +23,16 @@
 // DummyScheduler - iMIP implementation of iTIP methods
 //
 
+#include "dummyscheduler.h"
+
+#include "event.h"
+#include "icalformat.h"
+
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
 #include <kdebug.h>
 #include <kstandarddirs.h>
-
-#include "event.h"
-#include "icalformat.h"
-
-#include "dummyscheduler.h"
 
 using namespace KCal;
 

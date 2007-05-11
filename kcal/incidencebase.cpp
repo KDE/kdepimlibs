@@ -28,13 +28,14 @@
   @author Reinhold Kainhofer
 */
 
+#include "incidencebase.h"
+
+#include "calformat.h"
+
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kurl.h>
-
-#include "calformat.h"
-#include "incidencebase.h"
 
 using namespace KCal;
 

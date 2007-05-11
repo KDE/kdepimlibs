@@ -20,6 +20,12 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "vcalformat.h"
+
+#include "calendar.h"
+#include "versit/vcc.h"
+#include "versit/vobject.h"
+
 #include <QtCore/QString>
 #include <QtCore/QRegExp>
 #include <QtCore/QFile>
@@ -28,11 +34,6 @@
 #include <kdebug.h>
 #include <kdatetime.h>
 #include <klocale.h>
-
-#include "versit/vcc.h"
-#include "versit/vobject.h"
-#include "calendar.h"
-#include "vcalformat.h"
 
 using namespace KCal;
 

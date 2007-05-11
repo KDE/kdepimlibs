@@ -21,24 +21,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <time.h>
-
-#include <QtCore/QBuffer>
-#include <QtCore/QList>
-#include <QtGui/QTextDocument>
-#include <qapplication.h>
-
-#include <kdatetime.h>
-#include <kglobal.h>
-#include <kiconloader.h>
-#include <klocale.h>
-
-#include <kpimutils/email.h>
-#include "kabc/phonenumber.h"
-#include "kabc/vcardconverter.h"
-#include "kabc/stdaddressbook.h"
-
 #include "incidenceformatter.h"
+
 #include "attachment.h"
 #include "event.h"
 #include "todo.h"
@@ -47,6 +31,23 @@
 #include "calendarlocal.h"
 #include "icalformat.h"
 #include "freebusy.h"
+
+#include "kpimutils/email.h"
+#include "kabc/phonenumber.h"
+#include "kabc/vcardconverter.h"
+#include "kabc/stdaddressbook.h"
+
+#include <time.h>
+
+#include <QtCore/QBuffer>
+#include <QtCore/QList>
+#include <QtGui/QTextDocument>
+#include <QtGui/QApplication>
+
+#include <kdatetime.h>
+#include <kglobal.h>
+#include <kiconloader.h>
+#include <klocale.h>
 
 using namespace KCal;
 

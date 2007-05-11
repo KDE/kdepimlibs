@@ -20,15 +20,15 @@
   Boston, MA 02110-1301, USA.
 */
 
+#include "incidence.h"
+
+#include "calformat.h"
+
 #include <QtCore/QList>
 
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
-
-#include "calformat.h"
-
-#include "incidence.h"
 
 using namespace KCal;
 

@@ -19,10 +19,10 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <klocale.h>
-
-#include "calformat.h"
 #include "exceptions.h"
+#include "calformat.h"
+
+#include <klocale.h>
 
 using namespace KCal;
 
