@@ -28,7 +28,7 @@
 #include <q3stylesheet.h>
 #include <QtCore/QFile>
 #include <QtCore/QRegExp>
-#include <QTextDocument>
+#include <QtGui/QTextDocument>
 
 #include <limits.h>
 
@@ -248,7 +248,7 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
           startOfLine = false;
         }
         while ( locator.mText[locator.mPos] == ' ' ) {
-          result += " ";
+          result += ' ';
           locator.mPos++, x++;
           if ( locator.mText[locator.mPos] == ' ' ) {
             result += "&nbsp;";
