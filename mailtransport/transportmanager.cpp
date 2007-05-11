@@ -57,7 +57,15 @@ class TransportManagerPrivate {
     int defaultTransportId;
     bool isMainInstance;
     QList<TransportJob*> walletQueue;
+
+    static TransportManager *sSelf;
+    static void cleanupTransportManager()
+    {
+        delete sSelf;
+        sSelf = 0;
+    }
 };
+TransportManager *TransportManagerPrivate::sSelf = 0;
 
 TransportManager::TransportManager() :
     QObject(), d( new TransportManagerPrivate )
@@ -92,11 +100,13 @@ TransportManager::~TransportManager()
 
 TransportManager* TransportManager::self()
 {
-  K_GLOBAL_STATIC(TransportManager, sSelf)
-  if ( !sSelf ) {
-    sSelf->readConfig();
+  if ( !TransportManagerPrivate::sSelf ) {
+    TransportManagerPrivate::sSelf = new TransportManager();
+    qAddPostRoutine(TransportManagerPrivate::cleanupTransportManager);
+
+    TransportManagerPrivate::sSelf->readConfig();
   }
-  return sSelf;
+  return TransportManagerPrivate::sSelf;
 }
 
 Transport* TransportManager::transportById(int id, bool def) const
