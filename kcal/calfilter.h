@@ -45,7 +45,14 @@ namespace KCal {
   Provides a filter for calendars.
 
   This class provides a means for filtering calendar incidences by
-  a list of email addresses, a list of categories, or other Criteria.
+  a list of email addresses, a list of categories, or other #Criteria.
+
+  The following #Criteria are available:
+  - remove recurring Incidences
+  - keep Incidences with a matching category (see setCategoryList())
+  - remove completed To-dos (see setCompletedTimeSpan())
+  - remove inactive To-dos
+  - remove To-dos without a matching attendee (see setEmailList())
 */
 class KCAL_EXPORT CalFilter
 {
@@ -55,10 +62,10 @@ class KCAL_EXPORT CalFilter
     */
     enum Criteria {
       HideRecurring = 1,     /**< Remove incidences that recur */
-      HideCompleted = 2,     /**< Remove completed incidences */
+      HideCompletedTodos = 2,/**< Remove completed to-dos */
       ShowCategories = 4,    /**< Show incidences with at least one matching category */
       HideInactiveTodos = 8, /**< Remove to-dos that haven't started yet */
-      HideTodosWithoutAttendeeInEmailList = 16 /**< Remove to-dos without a matching attendee */
+      HideNoMatchingAttendeeTodos = 16 /**< Remove to-dos without a matching attendee */
     };
 
     /**
@@ -96,12 +103,14 @@ class KCAL_EXPORT CalFilter
       Sets the criteria which must be fulfilled for an Incidence to pass
       the filter.
 
-      @param criteria is a combination of Criteria.
+      @param criteria is a combination of #Criteria.
+      @see criteria().
     */
     void setCriteria( int criteria );
 
     /**
       Returns the inclusive filter criteria.
+      @see setCriteria().
     */
     int criteria() const;
 
@@ -153,7 +162,7 @@ class KCAL_EXPORT CalFilter
 
     /**
       Sets the list of categories to be considered when filtering incidences
-      according to the ShowCategories criteria.
+      according to the #ShowCategories criteria.
 
       @param categoryList is a QStringList of categories.
       @see categoryList().
@@ -168,7 +177,7 @@ class KCAL_EXPORT CalFilter
 
     /**
       Sets the list of email addresses to be considered when filtering
-      incidences according ot the HideTodosWithoutAttendeeInEmailList criteria.
+      incidences according ot the #HideNoMatchingAttendeeTodos criteria.
 
       @param emailList is a QStringList of email addresses.
       @see emailList().
@@ -182,17 +191,20 @@ class KCAL_EXPORT CalFilter
     QStringList emailList() const;
 
     /**
-      Sets the number of days for the HideCompleted criteria. If a to-do
-      has been completed within the recent @p timespan days, then that to-do
-      will be removed during filtering.  If nothing is set explicitly, all
-      completed to-dos will  be removed if the HidCompleted criteria is set.
+      Sets the number of days for the #HideCompletedTodos criteria.
+      If a to-do has been completed within the recent @p timespan days,
+      then that to-do will be removed during filtering. If a time span is
+      not specified in the filter, then all completed to-dos will be removed
+      if the #HideCompletedTodos criteria is set.
 
       @param timespan is an integer representing a time span in days.
+      @see completedTimeSpan().
      */
     void setCompletedTimeSpan( int timespan );
 
     /**
       Returns the completed time span for this filter.
+      @see setCompletedTimeSpan()
      */
     int completedTimeSpan() const;
 

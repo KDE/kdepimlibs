@@ -143,7 +143,7 @@ bool CalFilter::filterIncidence( Incidence *incidence ) const
 
   Todo *todo = dynamic_cast<Todo *>( incidence );
   if ( todo ) {
-    if ( ( d->mCriteria & HideCompleted ) && todo->isCompleted() ) {
+    if ( ( d->mCriteria & HideCompletedTodos ) && todo->isCompleted() ) {
       // Check if completion date is suffently long ago:
       if ( todo->completed().addDays( d->mCompletedTimeSpan ) <
            KDateTime::currentUtcDateTime() ) {
@@ -158,7 +158,7 @@ bool CalFilter::filterIncidence( Incidence *incidence ) const
       return false;
     }
 
-    if ( d->mCriteria & HideTodosWithoutAttendeeInEmailList ) {
+    if ( d->mCriteria & HideNoMatchingAttendeeTodos ) {
       bool iAmOneOfTheAttendees = false;
       const Attendee::List &attendees = todo->attendees();
       if ( !todo->attendees().isEmpty() ) {
