@@ -180,6 +180,21 @@ class KPIMUTILS_EXPORT LinkLocator
 
     int mMaxUrlLen;
     int mMaxAddressLen;
+
+    /**
+     * maps the smiley text to the corresponding emoticon name
+     */
+    static QMap<QString, QString> *s_smileyEmoticonNameMap;
+
+    /**
+     * cache for the HTML representation of a smiley
+     */
+    static QMap<QString, QString> *s_smileyEmoticonHTMLCache;
+
+    /**
+     * cleanup the smiley map and HTML cache on exit
+     */
+    static void cleanupLinkLocator();
 };
 
 }

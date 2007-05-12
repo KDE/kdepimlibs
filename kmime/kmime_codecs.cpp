@@ -43,6 +43,7 @@
 #include <kdebug.h>
 #include <kglobal.h>
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QMutex>
 
 #include <cassert>
@@ -55,10 +56,15 @@ namespace KMime {
 
 // global list of KMime::Codec's
 //@cond PRIVATE
-typedef KAutoDeleteHash<QByteArray, Codec> kCodecHash;
-K_GLOBAL_STATIC(kCodecHash, all)
+KAutoDeleteHash<QByteArray, Codec> *Codec::all = 0;
 K_GLOBAL_STATIC(QMutex, dictLock)
 //@endcond
+
+void Codec::cleanupCodec()
+{
+    delete all;
+    all = 0;
+}
 
 void Codec::fillDictionary()
 {
@@ -83,6 +89,8 @@ Codec *Codec::codecForName( const QByteArray &name )
 {
   dictLock->lock(); // protect "all"
   if ( !all ) {
+    all = new KAutoDeleteHash<QByteArray, Codec>();
+    qAddPostRoutine(cleanupCodec);
     fillDictionary();
   }
   QByteArray lowerName = name;

@@ -83,6 +83,10 @@ class Decoder;
 class KMIME_EXPORT Codec
 {
   protected:
+    //@cond PRIVATE
+    static KAutoDeleteHash<QByteArray, Codec> *all;
+    static void cleanupCodec();
+    //@endcond
     /**
       Contructs the codec.
     */

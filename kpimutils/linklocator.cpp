@@ -25,7 +25,7 @@
 #include <kcodecs.h>
 #include <kdebug.h>
 
-#include <q3stylesheet.h>
+#include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 #include <QtCore/QRegExp>
 #include <QtGui/QTextDocument>
@@ -34,11 +34,10 @@
 
 using namespace KPIMUtils;
 
-typedef QMap<QString, QString> kStringMap;
 // maps the smiley text to the corresponding emoticon name
-K_GLOBAL_STATIC(kStringMap, s_smileyEmoticonNameMap)
+QMap<QString, QString> *LinkLocator::s_smileyEmoticonNameMap = 0;
 // cache for the HTML representation of a smiley
-K_GLOBAL_STATIC(kStringMap, s_smileyEmoticonHTMLCache)
+QMap<QString, QString> *LinkLocator::s_smileyEmoticonHTMLCache = 0;
 
 LinkLocator::LinkLocator( const QString &text, int pos )
   : mText( text ), mPos( pos ), mMaxUrlLen( 4096 ), mMaxAddressLen( 255 )
@@ -50,6 +49,9 @@ LinkLocator::LinkLocator( const QString &text, int pos )
   // of convertToHtml().
 
   if ( !s_smileyEmoticonNameMap ) {
+    s_smileyEmoticonNameMap = new QMap<QString, QString>();
+    s_smileyEmoticonHTMLCache = new QMap<QString, QString>();
+    qAddPostRoutine(cleanupLinkLocator);
     for ( int i = 0; i < EmotIcons::EnumSindex::COUNT; ++i ) {
       QString imageName( EmotIcons::EnumSindex::enumToString[i] );
       imageName.truncate( imageName.length() - 2 ); //remove the _0 bit
@@ -457,4 +459,10 @@ QString LinkLocator::highlightedText()
     }
   }
   return QString();
+}
+
+void LinkLocator::cleanupLinkLocator()
+{
+    delete s_smileyEmoticonNameMap;
+    delete s_smileyEmoticonHTMLCache;
 }
