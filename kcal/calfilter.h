@@ -1,155 +1,213 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2001,2003,2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 2001,2003,2004 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the CalFilter class.
+
+  @author Cornelius Schumacher
+  @author Reinhold Kainhofer
+*/
+
 #ifndef KCAL_CALFILTER_H
 #define KCAL_CALFILTER_H
 
 #include <QtCore/QString>
 
+#include "kcal.h"
 #include "event.h"
 #include "todo.h"
 #include "journal.h"
-#include "kcal.h"
 
 namespace KCal {
 
 /**
-  Filter for calendar objects.
+  @brief
+  Provides a filter for calendars.
+
+  This class provides a means for filtering calendar incidences by
+  a list of email addresses, a list of categories, or other Criteria.
 */
 class KCAL_EXPORT CalFilter
 {
   public:
-    /** Construct filter. */
+    /**
+      Filtering Criteria.
+    */
+    enum Criteria {
+      HideRecurring = 1,     /**< Remove incidences that recur */
+      HideCompleted = 2,     /**< Remove completed incidences */
+      ShowCategories = 4,    /**< Show incidences with at least one matching category */
+      HideInactiveTodos = 8, /**< Remove to-dos that haven't started yet */
+      HideTodosWithoutAttendeeInEmailList = 16 /**< Remove to-dos without a matching attendee */
+    };
+
+    /**
+      Constructs an empty filter -- a filter without a name or criteria.
+    */
     CalFilter();
-    /** Construct filter with name */
+
+    /**
+      Constructs a filter with @p name.
+
+      @param name is the name of this filter.
+    */
     explicit CalFilter( const QString &name );
-    /** Destruct filter. */
+
+    /**
+      Destroys this filter.
+    */
     ~CalFilter();
 
     /**
-      Set name of filter.
+      Sets the filter name.
+
+      @param name is the name of this filter.
+      @see name().
     */
-    void setName( const QString &name ) { mName = name; }
-    /**
-      Return name of filter.
-    */
-    QString name() const { return mName; }
+    void setName( const QString &name );
 
     /**
-      Apply filter to eventlist, all events not matching filter criterias are
-      removed from the list.
+      Returns the filter name.
+      @see setName().
     */
-    void apply( Event::List *eventlist ) const;
+    QString name() const;
 
     /**
-      Apply filter to todolist, all todos not matching filter criterias are
-      removed from the list.
+      Sets the criteria which must be fulfilled for an Incidence to pass
+      the filter.
+
+      @param criteria is a combination of Criteria.
     */
-    void apply( Todo::List *todolist ) const;
+    void setCriteria( int criteria );
 
     /**
-      Apply filter to todolist, all todos not matching filter criterias are
-      removed from the list.
-    */
-    void apply( Journal::List *journallist) const;
-
-    /**
-      Apply filter criteria on the specified incidence. Return true, if event passes
-      criteria, otherwise return false.
-    */
-    bool filterIncidence( Incidence * ) const;
-
-    /**
-      Enable or disable filter.
-    */
-    void setEnabled( bool );
-    /**
-      Return whether the filter is enabled or not.
-    */
-    bool isEnabled() const;
-
-
-    /**
-      Set list of categories, which is used for showing/hiding categories of
-      events.
-      See related functions.
-    */
-    void setCategoryList( const QStringList & );
-    /**
-      Return category list, used for showing/hiding categories of events.
-      See related functions.
-    */
-    QStringList categoryList() const;
-
-    /**
-      Set list of email addresses which are to be considered when finding
-      incidences which the current user is not a participant of. This is
-      normally the list used by KOPrefs::thatIsMe() as well.
-    */
-    void setEmailList( const QStringList & );
-    /**
-      Return list of email addresses which are to be considered when finding
-      incidences which the current user is not a participant of. This is
-      normally the list used by KOPrefs::thatIsMe() as well.
-      See related functions.
-    */
-    QStringList emailList() const;
-
-    enum { HideRecurring = 1, HideCompleted = 2, ShowCategories = 4,
-           HideInactiveTodos = 8, HideTodosWithoutAttendeeInEmailList = 16 };
-
-    /**
-      Set criteria, which have to be fulfilled by events passing the filter.
-    */
-    void setCriteria( int );
-    /**
-      Get inclusive filter criteria.
+      Returns the inclusive filter criteria.
     */
     int criteria() const;
 
     /**
-      Set the number of days for "Hide completed todos", after which todos are
-      not shown any more. If nothing is set explicitly, all finished todos will
-      be hidden if the "hide completed todos" option is selected.
+      Applies the filter to a list of Events. All events not matching the
+      filter criteria are removed from the list.
+
+      @param eventList is a list of Events to filter.
+    */
+    void apply( Event::List *eventList ) const;
+
+    /**
+      Applies the filter to a list of To-dos. All to-dos not matching the
+      filter criterias are removed from the list.
+
+      @param todoList is a list of To-dos to filter.
+    */
+    void apply( Todo::List *todoList ) const;
+
+    /**
+      Applies the filter to a list of Journals. All journals not matching the
+      filter criterias are removed from the list.
+
+      @param journalList is a list of Journals to filter.
+    */
+    void apply( Journal::List *journalList ) const;
+
+    /**
+      Applies the filter criteria to the specified Incidence.
+
+      @param incidence is the Incidence to filter.
+      @return true if the Incidence passes the criteria; false otherwise.
+    */
+    bool filterIncidence( Incidence *incidence ) const;
+
+    /**
+      Enables or disables the filter.
+
+      @param enabled is true if the filter is to be enabled; false otherwise.
+      @see isEnabled().
+    */
+    void setEnabled( bool enabled );
+
+    /**
+      Returns whether the filter is enabled or not.
+      @see setEnabled().
+    */
+    bool isEnabled() const;
+
+    /**
+      Sets the list of categories to be considered when filtering incidences
+      according to the ShowCategories criteria.
+
+      @param categoryList is a QStringList of categories.
+      @see categoryList().
+    */
+    void setCategoryList( const QStringList &categoryList );
+
+    /**
+      Returns the category list for this filter.
+      @see setCategoryList().
+    */
+    QStringList categoryList() const;
+
+    /**
+      Sets the list of email addresses to be considered when filtering
+      incidences according ot the HideTodosWithoutAttendeeInEmailList criteria.
+
+      @param emailList is a QStringList of email addresses.
+      @see emailList().
+    */
+    void setEmailList( const QStringList &emailList );
+
+    /**
+      Returns the email list for this filter.
+      @see setEmailList().
+    */
+    QStringList emailList() const;
+
+    /**
+      Sets the number of days for the HideCompleted criteria. If a to-do
+      has been completed within the recent @p timespan days, then that to-do
+      will be removed during filtering.  If nothing is set explicitly, all
+      completed to-dos will  be removed if the HidCompleted criteria is set.
+
+      @param timespan is an integer representing a time span in days.
      */
     void setCompletedTimeSpan( int timespan );
+
     /**
-      Return the number of days for "Hide completed todos", after which todos are
-      not shown any more.
+      Returns the completed time span for this filter.
      */
     int completedTimeSpan() const;
 
+    /**
+      Compares this with @p filter for equality.
+
+      @param filter the CalFilter to compare.
+    */
+    bool operator==( const CalFilter &filter );
+
   private:
-    QString mName;
-
-    int mCriteria;
-
-    bool mEnabled;
-
-    QStringList mCategoryList;
-    QStringList mEmailList;
-    int mCompletedTimeSpan;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }

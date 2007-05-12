@@ -1,24 +1,36 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-    Copyright (C) 2004 Bram Schoenmakers <bramschoenmakers@kde.nl>
+  Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (C) 2004 Bram Schoenmakers <bramschoenmakers@kde.nl>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
+*/
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the CalFilter class.
+
+  @brief
+  Provides a filter for calendars.
+
+  @author Cornelius Schumacher
+  @author Reinhold Kainhofer
+  @author Bram Schoenmakers
 */
 
 #include "calfilter.h"
@@ -27,105 +39,132 @@
 
 using namespace KCal;
 
-CalFilter::CalFilter() : d( 0 )
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
+//@cond PRIVATE
+class KCal::CalFilter::Private
 {
-  mEnabled = true;
-  mCriteria = 0;
-  mCompletedTimeSpan = 0;
+  public:
+    QString mName;   // filter name
+    bool mEnabled;
+    int mCriteria;
+    QStringList mCategoryList;
+    QStringList mEmailList;
+    int mCompletedTimeSpan;
+
+};
+//@endcond
+
+CalFilter::CalFilter() : d( new KCal::CalFilter::Private )
+{
+  d->mEnabled = true;
+  d->mCriteria = 0;
+  d->mCompletedTimeSpan = 0;
 }
 
-CalFilter::CalFilter( const QString &name ) : d( 0 )
+CalFilter::CalFilter( const QString &name ) : d( new KCal::CalFilter::Private )
 {
-  mName = name;
-  mEnabled = true;
-  mCriteria = 0;
-  mCompletedTimeSpan = 0;
+  d->mName = name;
+  d->mEnabled = true;
+  d->mCriteria = 0;
+  d->mCompletedTimeSpan = 0;
 }
 
 CalFilter::~CalFilter()
 {
+  delete d;
 }
 
-void CalFilter::apply( Event::List *eventlist ) const
+bool KCal::CalFilter::operator==( const CalFilter &filter )
 {
-  if ( !mEnabled ) return;
+  return d->mName == filter.d->mName &&
+    d->mCriteria == filter.d->mCriteria &&
+    d->mCategoryList == filter.d->mCategoryList &&
+    d->mEmailList == filter.d->mEmailList &&
+    d->mCompletedTimeSpan == filter.d->mCompletedTimeSpan;
+}
 
-//  kDebug(5800) << "CalFilter::apply()" << endl;
+void CalFilter::apply( Event::List *eventList ) const
+{
+  if ( !d->mEnabled ) {
+    return;
+  }
 
-  Event::List::Iterator it = eventlist->begin();
-  while( it != eventlist->end() ) {
+  Event::List::Iterator it = eventList->begin();
+  while ( it != eventList->end() ) {
     if ( !filterIncidence( *it ) ) {
-      it = eventlist->erase( it );
+      it = eventList->erase( it );
     } else {
       ++it;
     }
   }
-
-//  kDebug(5800) << "CalFilter::apply() done" << endl;
 }
 
 // TODO: avoid duplicating apply() code
-void CalFilter::apply( Todo::List *todolist ) const
+void CalFilter::apply( Todo::List *todoList ) const
 {
-  if ( !mEnabled ) return;
-
-//  kDebug(5800) << "CalFilter::apply()" << endl;
-
-  Todo::List::Iterator it = todolist->begin();
-  while( it != todolist->end() ) {
-    if ( !filterIncidence( *it ) ) {
-      it = todolist->erase( it );
-    } else {
-      ++it;
-    }
+  if ( !d->mEnabled ) {
+    return;
   }
 
-//  kDebug(5800) << "CalFilter::apply() done" << endl;
-}
-
-void CalFilter::apply( Journal::List *journallist ) const
-{
-  if ( !mEnabled ) return;
-
-  Journal::List::Iterator it = journallist->begin();
-  while( it != journallist->end() ) {
+  Todo::List::Iterator it = todoList->begin();
+  while ( it != todoList->end() ) {
     if ( !filterIncidence( *it ) ) {
-      it = journallist->erase( it );
+      it = todoList->erase( it );
     } else {
       ++it;
     }
   }
 }
 
-bool CalFilter::filterIncidence(Incidence *incidence) const
+void CalFilter::apply( Journal::List *journalList ) const
 {
-//  kDebug(5800) << "CalFilter::filterIncidence(): " << incidence->summary() << endl;
+  if ( !d->mEnabled ) {
+    return;
+  }
 
-  if ( !mEnabled ) return true;
+  Journal::List::Iterator it = journalList->begin();
+  while ( it != journalList->end() ) {
+    if ( !filterIncidence( *it ) ) {
+      it = journalList->erase( it );
+    } else {
+      ++it;
+    }
+  }
+}
 
-  Todo *todo = dynamic_cast<Todo *>(incidence);
-  if( todo ) {
-    if ( (mCriteria & HideCompleted) && todo->isCompleted() ) {
+bool CalFilter::filterIncidence( Incidence *incidence ) const
+{
+  if ( !d->mEnabled ) {
+    return true;
+  }
+
+  Todo *todo = dynamic_cast<Todo *>( incidence );
+  if ( todo ) {
+    if ( ( d->mCriteria & HideCompleted ) && todo->isCompleted() ) {
       // Check if completion date is suffently long ago:
-      if ( todo->completed().addDays( mCompletedTimeSpan ) <
+      if ( todo->completed().addDays( d->mCompletedTimeSpan ) <
            KDateTime::currentUtcDateTime() ) {
         return false;
       }
     }
 
-    if( ( mCriteria & HideInactiveTodos ) &&
-        ( todo->hasStartDate() &&
-          KDateTime::currentUtcDateTime() < todo->dtStart() ||
-          todo->isCompleted() ) )
+    if ( ( d->mCriteria & HideInactiveTodos ) &&
+         ( todo->hasStartDate() &&
+           KDateTime::currentUtcDateTime() < todo->dtStart() ||
+           todo->isCompleted() ) ) {
       return false;
+    }
 
-    if ( mCriteria & HideTodosWithoutAttendeeInEmailList ) {
+    if ( d->mCriteria & HideTodosWithoutAttendeeInEmailList ) {
       bool iAmOneOfTheAttendees = false;
       const Attendee::List &attendees = todo->attendees();
       if ( !todo->attendees().isEmpty() ) {
         Attendee::List::ConstIterator it;
-        for( it = attendees.begin(); it != attendees.end(); ++it ) {
-          if ( mEmailList.contains( (*it)->email() ) ) {
+        for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+          if ( d->mEmailList.contains( (*it)->email() ) ) {
             iAmOneOfTheAttendees = true;
             break;
           }
@@ -134,35 +173,37 @@ bool CalFilter::filterIncidence(Incidence *incidence) const
         // no attendees, must be me only
         iAmOneOfTheAttendees = true;
       }
-      if ( !iAmOneOfTheAttendees )
+      if ( !iAmOneOfTheAttendees ) {
         return false;
+      }
     }
   }
 
-
-  if (mCriteria & HideRecurring) {
-    if (incidence->doesRecur()) return false;
+  if ( d->mCriteria & HideRecurring ) {
+    if ( incidence->doesRecur() ) {
+      return false;
+    }
   }
 
-  if (mCriteria & ShowCategories) {
-    for (QStringList::ConstIterator it = mCategoryList.constBegin();
-         it != mCategoryList.constEnd(); ++it ) {
+  if ( d->mCriteria & ShowCategories ) {
+    for ( QStringList::ConstIterator it = d->mCategoryList.constBegin();
+          it != d->mCategoryList.constEnd(); ++it ) {
       QStringList incidenceCategories = incidence->categories();
-      for (QStringList::ConstIterator it2 = incidenceCategories.constBegin();
-           it2 != incidenceCategories.constEnd(); ++it2 ) {
-        if ((*it) == (*it2)) {
+      for ( QStringList::ConstIterator it2 = incidenceCategories.constBegin();
+            it2 != incidenceCategories.constEnd(); ++it2 ) {
+        if ( (*it) == (*it2) ) {
           return true;
         }
       }
     }
     return false;
   } else {
-    for (QStringList::ConstIterator it = mCategoryList.constBegin();
-         it != mCategoryList.constEnd(); ++it ) {
+    for ( QStringList::ConstIterator it = d->mCategoryList.constBegin();
+          it != d->mCategoryList.constEnd(); ++it ) {
       QStringList incidenceCategories = incidence->categories();
-      for (QStringList::ConstIterator it2 = incidenceCategories.constBegin();
-           it2 != incidenceCategories.constEnd(); ++it2 ) {
-        if ((*it) == (*it2)) {
+      for ( QStringList::ConstIterator it2 = incidenceCategories.constBegin();
+            it2 != incidenceCategories.constEnd(); ++it2 ) {
+        if ( (*it) == (*it2) ) {
           return false;
         }
       }
@@ -170,57 +211,65 @@ bool CalFilter::filterIncidence(Incidence *incidence) const
     return true;
   }
 
-//  kDebug(5800) << "CalFilter::filterIncidence(): passed" << endl;
-
   return true;
 }
 
-void CalFilter::setEnabled(bool enabled)
+void CalFilter::setName( const QString &name )
 {
-  mEnabled = enabled;
+  d->mName = name;
+}
+
+QString CalFilter::name() const
+{
+  return d->mName;
+}
+
+void CalFilter::setEnabled( bool enabled )
+{
+  d->mEnabled = enabled;
 }
 
 bool CalFilter::isEnabled() const
 {
-  return mEnabled;
+  return d->mEnabled;
 }
 
-void CalFilter::setCriteria(int criteria)
+void CalFilter::setCriteria( int criteria )
 {
-  mCriteria = criteria;
+  d->mCriteria = criteria;
 }
 
 int CalFilter::criteria() const
 {
-  return mCriteria;
+  return d->mCriteria;
 }
 
-void CalFilter::setCategoryList(const QStringList &categoryList)
+void CalFilter::setCategoryList( const QStringList &categoryList )
 {
-  mCategoryList = categoryList;
+  d->mCategoryList = categoryList;
 }
 
 QStringList CalFilter::categoryList() const
 {
-  return mCategoryList;
+  return d->mCategoryList;
 }
 
-void CalFilter::setEmailList(const QStringList &emailList)
+void CalFilter::setEmailList( const QStringList &emailList )
 {
-  mEmailList = emailList;
+  d->mEmailList = emailList;
 }
 
 QStringList CalFilter::emailList() const
 {
-  return mEmailList;
+  return d->mEmailList;
 }
 
 void CalFilter::setCompletedTimeSpan( int timespan )
 {
-  mCompletedTimeSpan = timespan;
+  d->mCompletedTimeSpan = timespan;
 }
 
 int CalFilter::completedTimeSpan() const
 {
-  return mCompletedTimeSpan;
+  return d->mCompletedTimeSpan;
 }

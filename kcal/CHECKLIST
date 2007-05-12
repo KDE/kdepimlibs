@@ -9,7 +9,7 @@ calendar              |   D   |         |   D   |   n/a   |         | Allen
 calendarlocal         |       |         |       |    D    |    D    | Allen
 calendarnull          |   D   |    D    |   D   |    D    |    D    | Allen
 calendarresources     |   D   |         |       |         |         | Allen
-calfilter             |       |         |       |         |         |
+calfilter             |   D   |    D    |   D   |    D    |    D    | Allen
 calformat             |       |         |       |         |         |
 calstorage            |       |         |       |         |         |
 compat                |       |         |       |         |         |

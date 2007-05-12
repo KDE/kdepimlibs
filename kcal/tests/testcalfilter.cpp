@@ -38,6 +38,8 @@ void CalFilterTest::testValidity()
   delete f;
   CalFilter g( "fredfilter" );
   QVERIFY( g.name() == "fredfilter" );
+  CalFilter f1, f2;
+  QVERIFY( f1 == f2 );
 }
 
 void CalFilterTest::testCats()
