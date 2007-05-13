@@ -23,11 +23,10 @@
 #include <mailtransport/mailtransport_export.h>
 #include <mailtransport/transport.h>
 
-#include <QWidget>
-#include <QHash>
+#include <QtGui/QWidget>
+#include <QtCore/QHash>
 
 class QProgressBar;
-class QString;
   
 class Socket;
 class ServerTestPrivate;
