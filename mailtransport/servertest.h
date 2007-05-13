@@ -115,7 +115,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     void finished( QList< int > );
 
   private:
-    Q_DECLARE_PRIVATE(ServerTest);
+    Q_DECLARE_PRIVATE(ServerTest)
     ServerTestPrivate *const d;
 
     Q_PRIVATE_SLOT(d, void slotNormalPossible() )
