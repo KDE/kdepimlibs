@@ -35,6 +35,9 @@
 
 using namespace MailTransport;
 
+namespace MailTransport
+{
+
 class ServerTestPrivate
 {
   public:
@@ -70,6 +73,8 @@ class ServerTestPrivate
     void slotReadSecure( const QString& text );
     void slotUpdateProgress();
 };
+
+}
 
 ServerTestPrivate::ServerTestPrivate( ServerTest* test) : q( test )
 {

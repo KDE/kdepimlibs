@@ -27,6 +27,7 @@ class QDomElement;
 
 namespace MailTransport
 {
+  class SocketPrivate;
 
   /**
    * @class Socket
@@ -71,33 +72,33 @@ namespace MailTransport
       /**
        * set the protocol to use
        */
-      void setProtocol( const QString& proto ) { m_proto = proto; };
+      void setProtocol( const QString& proto );
 
       /**
        * set the server to use
        */
-      void setServer( const QString& server ) { m_server = server; };
+      void setServer( const QString& server );
 
       /**
        * set the port to use. If not specified, it will use the default
        * belonging to the protocol.
        */
-      void setPort( int port ) { m_port = port; };
+      void setPort( int port );
 
       /**
        * this will be a secure connection
        */
-      void setSecure( bool what ) { m_secure = what; };
+      void setSecure( bool what );
 
     private:
-      QSslSocket*         m_socket;
-      QString             m_server;
-      QString             m_proto;
-      int                 m_port;
-      bool                m_secure;
+      Q_DECLARE_PRIVATE( Socket )
+      SocketPrivate *const d;
 
-      void startShake();
-
+      Q_PRIVATE_SLOT(d, void slotConnected() )
+      Q_PRIVATE_SLOT(d, void slotStateChanged( QAbstractSocket::SocketState state ) )
+      Q_PRIVATE_SLOT(d, void slotModeChanged( QSslSocket::SslMode  state ) )
+      Q_PRIVATE_SLOT(d, void slotSocketRead() )
+      Q_PRIVATE_SLOT(d, void slotSslErrors( const QList<QSslError> & errors ) )
 
     Q_SIGNALS:
       /**
@@ -114,16 +115,7 @@ namespace MailTransport
        * emitted when not connected.
        */
       void failed();
-
-    private Q_SLOTS:
-      void slotConnected();
-      void slotStateChanged( QAbstractSocket::SocketState state );
-      void slotModeChanged( QSslSocket::SslMode  state );
-      void slotSocketRead();
-      void slotSslErrors( const QList<QSslError> & errors );
-
   };
-
 }
 
 #endif

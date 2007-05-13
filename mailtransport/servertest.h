@@ -28,6 +28,9 @@
 
 class QProgressBar;
   
+namespace MailTransport 
+{
+
 class Socket;
 class ServerTestPrivate;
 
@@ -126,5 +129,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     Q_PRIVATE_SLOT(d, void slotSslNotPossible())
     Q_PRIVATE_SLOT(d, void slotUpdateProgress())
 };
+
+}
 
 #endif
