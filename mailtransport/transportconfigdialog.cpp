@@ -176,9 +176,9 @@ void TransportConfigDialog::checkSmtpCapabilities()
   d->serverTest->setProtocol( SMTP_PROTOCOL );
   d->serverTest->setServer( d->smtp.kcfg_host->text() );
   d->serverTest->setProgressBar( d->smtp.checkCapabilitiesProgress );
-
-  connect( d->serverTest, SIGNAL(finished( QHash<QString, bool> )),
-             SLOT(slotFinished( QHash<QString, bool> )));
+  
+  connect( d->serverTest, SIGNAL(finished( QList< int > )),
+           SLOT(slotFinished( QList< int > )));
   d->smtp.checkCapabilities->setEnabled( false );
   d->serverTest->start();
 }

@@ -35,145 +35,60 @@
 
 using namespace MailTransport;
 
-ServerTest::ServerTest( QWidget* parent )
-    : QWidget( parent )
+class ServerTestPrivate
 {
-  m_normalTimer = new QTimer( this );
-  m_normalTimer->setSingleShot( true );
-  connect( m_normalTimer, SIGNAL( timeout() ), SLOT( slotNormalNotPossible() ) );
+  public:
+    ServerTestPrivate( ServerTest* test);
 
-  m_sslTimer = new QTimer( this );
-  m_sslTimer->setSingleShot( true );
-  connect( m_sslTimer, SIGNAL( timeout() ), SLOT( slotSslNotPossible() ) );
+    ServerTest* const q;
+    QString                   server;
+    QString                   testProtocol;
 
-  m_progressTimer = new QTimer( this );
-  connect( m_progressTimer, SIGNAL( timeout() ), SLOT( slotUpdateProgress() ) );
+    MailTransport::Socket*                   normalSocket;
+    MailTransport::Socket*                   secureSocket;
+
+    QList< int >              connectionResults;
+    QHash< int, QList<int> >  authenticationResults;
+    QTimer*                   normalSocketTimer;
+    QTimer*                   secureSocketTimer;
+    QTimer*                   progressTimer;
+
+    QProgressBar*             testProgress;
+
+    bool                      secureSocketFinished;
+    bool                      normalSocketFinished;
+
+    void finalResult();
+    void read( int type, const QString& text );
+
+    // slots
+    void slotNormalPossible();
+    void slotNormalNotPossible();
+    void slotSslPossible();
+    void slotSslNotPossible();
+    void slotReadNormal( const QString& text );
+    void slotReadSecure( const QString& text );
+    void slotUpdateProgress();
+};
+
+ServerTestPrivate::ServerTestPrivate( ServerTest* test) : q( test )
+{
 }
 
-ServerTest::~ServerTest() {}
-
-void ServerTest::start()
+void ServerTestPrivate::finalResult()
 {
-  kDebug( 5324 ) << k_funcinfo << endl;
-
-  m_testResult.clear();
-  m_protocolResult.clear();
-
-  m_testProgress->setMaximum( 20 );
-  m_testProgress->setValue( 0 );
-  m_testProgress->setTextVisible( true );
-  m_testProgress->show();
-  m_progressTimer->start( 1000 );
-
-  m_normal = new Socket( this );
-  m_normal->setObjectName( QLatin1String( "normal" ) );
-  m_normal->setServer( m_server );
-  m_normal->setProtocol( m_proto );
-  if ( m_proto == IMAP_PROTOCOL )
-    m_normal->setPort( IMAP_PORT );
-  else
-    m_normal->setPort( SMTP_PORT );
-  connect( m_normal, SIGNAL( connected() ), SLOT( slotNormalPossible() ) );
-  connect( m_normal, SIGNAL( failed() ), SLOT( slotNormalNotPossible() ) );
-  connect( m_normal, SIGNAL( data( const QString& ) ),
-           SLOT( slotReadNormal( const QString& ) ) );
-  m_normal->reconnect();
-  m_normalTimer->start( 10000 );
-
-  m_ssl = new Socket( this );
-  m_ssl->setObjectName( QLatin1String( "secure" ) );
-  m_ssl->setServer( m_server );
-  m_ssl->setProtocol( m_proto + QLatin1Char( 's' ) );
-  if ( m_proto == IMAP_PROTOCOL)
-    m_ssl->setPort( IMAPS_PORT );
-  else
-    m_ssl->setPort( SMTPS_PORT );
-  m_ssl->setSecure( true );
-  connect( m_ssl, SIGNAL( connected() ), SLOT( slotSslPossible() ) );
-  connect( m_ssl, SIGNAL( failed() ), SLOT( slotSslNotPossible() ) );
-  connect( m_ssl, SIGNAL( data( const QString& ) ),
-           SLOT( slotReadSecure( const QString& ) ) );
-  m_ssl->reconnect();
-  m_sslTimer->start( 10000 );
-}
-
-static QList<int> authMethodsFromStringList( const QStringList &list )
-{
-  QList<int> result;    
-  for ( QStringList::ConstIterator it = list.begin() ;
-        it != list.end() ; ++it )    {
-    if (  *it == QLatin1String("LOGIN") )
-      result << Transport::EnumAuthenticationType::LOGIN;
-    else if ( *it == QLatin1String("PLAIN") )
-        result << Transport::EnumAuthenticationType::PLAIN;
-    else if ( *it == QLatin1String("CRAM-MD5") )
-        result << Transport::EnumAuthenticationType::CRAM_MD5;
-    else if ( *it == QLatin1String("DIGEST-MD5") )
-        result << Transport::EnumAuthenticationType::DIGEST_MD5;
-    else if ( *it == QLatin1String("NTLM") )
-        result << Transport::EnumAuthenticationType::NTLM;
-    else if ( *it == QLatin1String("GSSAPI") )
-        result << Transport::EnumAuthenticationType::GSSAPI;
-   }
-
-// LOGIN doesn't offer anything over PLAIN, requires more server
-// roundtrips and is not an official SASL mechanism, but a MS-ism,
-// so only enable it if PLAIN isn't available:
-   if ( result.contains( Transport::EnumAuthenticationType::PLAIN ) )
-         result.removeAll( Transport::EnumAuthenticationType::LOGIN );
-   return result;
-}
-
-void ServerTest::slotNormalPossible()
-{
-  kDebug( 5324 ) << k_funcinfo << endl;
-
-  m_normalTimer->stop();
-  m_testResult << Transport::EnumEncryption::None;
-}
-
-void ServerTest::slotReadNormal( const QString& text )
-{
-  static bool first = true;
-  if ( first ) {
-    if ( m_proto == IMAP_PROTOCOL )
-      m_normal->write( QLatin1String( "1 CAPABILITY" ) );
-    else if ( m_proto == SMTP_PROTOCOL )
-      m_normal->write( QLatin1String( "EHLO localhost" ) );
-    first = false;
+  if ( !secureSocketFinished || !normalSocketFinished )
     return;
-  }
 
-  if ( text.contains( QLatin1String("STARTTLS" ), Qt::CaseInsensitive) )
-      m_testResult << Transport::EnumEncryption::TLS;
+  kDebug( 5324 ) << k_funcinfo << connectionResults << endl;
 
-  read( Transport::EnumEncryption::None, text );
+  testProgress->hide();
+  progressTimer->stop();
 
-  m_normalFinished = true;
-  first = true;
-  finalResult();
+  emit q->finished( connectionResults );
 }
 
-void ServerTest::slotReadSecure( const QString& text )
-{
-  static bool first = true;
-  if ( first ) {
-    if ( m_proto == IMAPS_PROTOCOL )
-      m_ssl->write( QLatin1String( "1 CAPABILITY" ) );
-    else if ( m_proto == SMTPS_PROTOCOL )
-      m_ssl->write( QLatin1String( "EHLO localhost" ) );
-    first = false;
-    return;
-  }
-
-  read( Transport::EnumEncryption::SSL, text );
-
-  m_sslFinished = true;
-  first = true;
-  finalResult();
-}
-
-void ServerTest::read( int type, const QString& text )
+void ServerTestPrivate::read( int type, const QString& text )
 {
   kDebug( 5324 ) << k_funcinfo << text << endl;
 
@@ -182,8 +97,8 @@ void ServerTest::read( int type, const QString& text )
 
   QStringList protocols;
   protocols << QLatin1String( "LOGIN" ) << QLatin1String( "PLAIN" )
-          << QLatin1String( "CRAM-MD5" ) << QLatin1String("DIGEST-MD5")
-          << QLatin1String( "NTLM" ) << QLatin1String( "GSSAPI" );
+      << QLatin1String( "CRAM-MD5" ) << QLatin1String("DIGEST-MD5")
+      << QLatin1String( "NTLM" ) << QLatin1String( "GSSAPI" );
 
   QStringList results;
   for ( int i = 0 ; i < protocols.count(); ++i ) {
@@ -191,58 +106,210 @@ void ServerTest::read( int type, const QString& text )
       results.append( protocols.at( i ) );
   }
 
-  m_protocolResult[type] = authMethodsFromStringList( results );
+  QList<int> result;
+  for ( QStringList::ConstIterator it = results.begin() ;
+        it != results.end() ; ++it )  {
+    if (  *it == QLatin1String("LOGIN") )
+      result << Transport::EnumAuthenticationType::LOGIN;
+    else if ( *it == QLatin1String("PLAIN") )
+      result << Transport::EnumAuthenticationType::PLAIN;
+    else if ( *it == QLatin1String("CRAM-MD5") )
+      result << Transport::EnumAuthenticationType::CRAM_MD5;
+    else if ( *it == QLatin1String("DIGEST-MD5") )
+      result << Transport::EnumAuthenticationType::DIGEST_MD5;
+    else if ( *it == QLatin1String("NTLM") )
+      result << Transport::EnumAuthenticationType::NTLM;
+    else if ( *it == QLatin1String("GSSAPI") )
+      result << Transport::EnumAuthenticationType::GSSAPI;
+  }
+
+  // LOGIN doesn't offer anything over PLAIN, requires more server
+  // roundtrips and is not an official SASL mechanism, but a MS-ism,
+  // so only enable it if PLAIN isn't available:
+  if ( result.contains( Transport::EnumAuthenticationType::PLAIN ) )
+    result.removeAll( Transport::EnumAuthenticationType::LOGIN );
+
+  authenticationResults[type] = result;
 }
 
-void ServerTest::slotNormalNotPossible()
+void ServerTestPrivate::slotNormalPossible()
 {
-  kDebug( 5324 ) << k_funcinfo << endl;
-  m_normalFinished = true;
-  finalResult();
+  normalSocketTimer->stop();
+  connectionResults << Transport::EnumEncryption::None;
 }
 
-void ServerTest::slotSslPossible()
+void ServerTestPrivate::slotReadNormal( const QString& text )
 {
-  kDebug( 5324 ) << k_funcinfo << endl;
-  m_sslTimer->stop();
-  m_testResult << Transport::EnumEncryption::SSL;
-  m_sslFinished = true;
-  finalResult();
-}
-
-void ServerTest::slotSslNotPossible()
-{
-  kDebug( 5324 ) << k_funcinfo << endl;
-  m_sslFinished = true;
-  finalResult();
-}
-
-void ServerTest::finalResult()
-{
-  if ( !m_sslFinished || !m_normalFinished )
+  static bool first = true;
+  if ( first ) {
+    if ( testProtocol == IMAP_PROTOCOL )
+      normalSocket->write( QLatin1String( "1 CAPABILITY" ) );
+    else if ( testProtocol == SMTP_PROTOCOL )
+      normalSocket->write( QLatin1String( "EHLO localhost" ) );
+    first = false;
     return;
+  }
 
-  kDebug( 5324 ) << k_funcinfo << m_testResult << endl;
+  if ( text.contains( QLatin1String("STARTTLS" ), Qt::CaseInsensitive) )
+    connectionResults << Transport::EnumEncryption::TLS;
 
-  m_testProgress->hide();
-  m_progressTimer->stop();
+  read( Transport::EnumEncryption::None, text );
 
-  emit finished( m_testResult );
+  normalSocketFinished = true;
+  first = true;
+  finalResult();
 }
 
-void ServerTest::slotUpdateProgress()
+void ServerTestPrivate::slotReadSecure( const QString& text )
 {
-  m_testProgress->setValue( m_testProgress->value() + 1 );
+  static bool first = true;
+  if ( first ) {
+    if ( testProtocol == IMAPS_PROTOCOL )
+      secureSocket->write( QLatin1String( "1 CAPABILITY" ) );
+    else if ( testProtocol == SMTPS_PROTOCOL )
+      secureSocket->write( QLatin1String( "EHLO localhost" ) );
+    first = false;
+    return;
+  }
+
+  read( Transport::EnumEncryption::SSL, text );
+
+  secureSocketFinished = true;
+  first = true;
+  finalResult();
+}
+
+void ServerTestPrivate::slotNormalNotPossible()
+{
+  normalSocketFinished = true;
+  finalResult();
+}
+
+void ServerTestPrivate::slotSslPossible()
+{
+  secureSocketTimer->stop();
+  connectionResults << Transport::EnumEncryption::SSL;
+  secureSocketFinished = true;
+  finalResult();
+}
+
+void ServerTestPrivate::slotSslNotPossible()
+{
+  secureSocketFinished = true;
+  finalResult();
+}
+
+void ServerTestPrivate::slotUpdateProgress()
+{
+  testProgress->setValue( testProgress->value() + 1 );
+}
+
+//---------------------- end private class -----------------------//
+
+ServerTest::ServerTest( QWidget* parent )
+  : QWidget( parent ), d( new ServerTestPrivate( this ) )
+{
+  d->normalSocketTimer = new QTimer( this );
+  d->normalSocketTimer->setSingleShot( true );
+  connect( d->normalSocketTimer, SIGNAL( timeout() ), SLOT( slotNormalNotPossible() ) );
+
+  d->secureSocketTimer = new QTimer( this );
+  d->secureSocketTimer->setSingleShot( true );
+  connect( d->secureSocketTimer, SIGNAL( timeout() ), SLOT( slotSslNotPossible() ) );
+
+  d->progressTimer = new QTimer( this );
+  connect( d->progressTimer, SIGNAL( timeout() ), SLOT( slotUpdateProgress() ) );
+}
+
+ServerTest::~ServerTest()
+{
+  delete d;
+}
+
+void ServerTest::start()
+{
+  kDebug( 5324 ) << k_funcinfo << d << endl;
+
+  d->connectionResults.clear();
+  d->authenticationResults.clear();
+
+  d->testProgress->setMaximum( 20 );
+  d->testProgress->setValue( 0 );
+  d->testProgress->setTextVisible( true );
+  d->testProgress->show();
+  d->progressTimer->start( 1000 );
+
+  d->normalSocket = new MailTransport::Socket( this );
+  d->normalSocket->setObjectName( QLatin1String( "normal" ) );
+  d->normalSocket->setServer( d->server );
+  d->normalSocket->setProtocol( d->testProtocol );
+  if ( d->testProtocol == IMAP_PROTOCOL )
+    d->normalSocket->setPort( IMAP_PORT );
+  else
+    d->normalSocket->setPort( SMTP_PORT );
+  connect( d->normalSocket, SIGNAL( connected() ), SLOT( slotNormalPossible() ) );
+  connect( d->normalSocket, SIGNAL( failed() ), SLOT( slotNormalNotPossible() ) );
+  connect( d->normalSocket, SIGNAL( data( const QString& ) ),
+           SLOT( slotReadNormal( const QString& ) ) );
+  d->normalSocket->reconnect();
+  d->normalSocketTimer->start( 10000 );
+
+  d->secureSocket = new MailTransport::Socket( this );
+  d->secureSocket->setObjectName( QLatin1String( "secure" ) );
+  d->secureSocket->setServer( d->server );
+  d->secureSocket->setProtocol( d->testProtocol + QLatin1Char( 's' ) );
+  if ( d->testProtocol == IMAP_PROTOCOL)
+    d->secureSocket->setPort( IMAPS_PORT );
+  else
+    d->secureSocket->setPort( SMTPS_PORT );
+  d->secureSocket->setSecure( true );
+  connect( d->secureSocket, SIGNAL( connected() ), SLOT( slotSslPossible() ) );
+  connect( d->secureSocket, SIGNAL( failed() ), SLOT( slotSslNotPossible() ) );
+  connect( d->secureSocket, SIGNAL( data( const QString& ) ),
+           SLOT( slotReadSecure( const QString& ) ) );
+  d->secureSocket->reconnect();
+  d->secureSocketTimer->start( 10000 );
+}
+
+void ServerTest::setServer( const QString& server )
+{
+  d->server = server;
+}
+
+void ServerTest::setProgressBar( QProgressBar* pb )
+{
+  d->testProgress = pb;
+}
+
+void ServerTest::setProtocol( const QString& protocol )
+{
+  d->testProtocol = protocol;
+}
+
+QString ServerTest::protocol()
+{
+  return d->testProtocol;
+}
+
+QString ServerTest::server()
+{
+  return d->server;
+}
+
+QProgressBar* ServerTest::progressBar()
+{
+  return d->testProgress;
 }
 
 QList< int > ServerTest::normalProtocols()
 {
-  return m_protocolResult[TransportBase::EnumEncryption::None];
+  return d->authenticationResults[TransportBase::EnumEncryption::None];
 }
 
 QList< int > ServerTest::secureProtocols()
 {
-  return m_protocolResult[Transport::EnumEncryption::SSL];
+  return d->authenticationResults[Transport::EnumEncryption::SSL];
 }
+
 
 #include "servertest.moc"

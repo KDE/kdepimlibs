@@ -28,108 +28,104 @@
 
 class QProgressBar;
 class QString;
-
-namespace MailTransport
-{
-
-  class Socket;
   
-  /**
-   * @class ServerTest
-   * This class can be used to test certain server to see if they support stuff.
-   * @author Tom Albers <tomalbers@kde.nl>
-   */
-  class MAILTRANSPORT_EXPORT ServerTest : public QWidget
-  {
-      Q_OBJECT
+class Socket;
+class ServerTestPrivate;
 
-    public:
-      /**
-       * Constructor
-       * @param parent Parent Widget
-       */
-      ServerTest( QWidget* parent = 0 );
+/**
+  * @class ServerTest
+  * This class can be used to test certain server to see if they support stuff.
+  * @author Tom Albers <tomalbers@kde.nl>
+  */
+class MAILTRANSPORT_EXPORT ServerTest : public QWidget
+{
+    Q_OBJECT
+    Q_PROPERTY( QString server READ server WRITE setServer )
+    Q_PROPERTY( QString protocol READ protocol WRITE setProtocol )
+    Q_PROPERTY( QProgressBar* progressBar READ progressBar WRITE setProgressBar )
 
-      /**
-       * Destructor
-       */
-      ~ServerTest();
+  public:
+    /**
+      * Constructor
+      * @param parent Parent Widget
+      */
+    ServerTest( QWidget* parent = 0 );
 
-      /**
-       * Set the server to test.
-       */
-      void setServer( const QString& server ) { m_server = server; };
+    /**
+      * Destructor
+      */
+    ~ServerTest();
 
-      /**
-       * Makes @p pb the progressbar to use. This class will call show()
-       * and hide() and will count down. It does not take ownership of
-       * the progressbar.
-       */
-      void setProgressBar( QProgressBar* pb ) { m_testProgress = pb; };
+    /**
+      * Set the server to test.
+      */
+    void setServer( const QString& server );
 
-      /**
-       * Set @p proto the protocol to test, currently supported are
-       * "smtp" and "imap". This will be an enum soon.
-       */
-      void setProtocol( const QString& proto ) { m_proto = proto; };
+    /**
+      * Get the server to test.
+      */
+    QString server();
 
-      /**
-       * Starts the test. Will emit finished() when done.
-       */
-      void start();
+    /**
+      * Makes @p pb the progressbar to use. This class will call show()
+      * and hide() and will count down. It does not take ownership of
+      * the progressbar.
+      */
+    void setProgressBar( QProgressBar* pb );
 
-      /**
-        * Get the protocols for the normal connections.. Call this only
-        * after the finished() signals has been sent.
-        * @return an enum of the type Transport::EnumAuthenticationType
-        */
-      QList< int > normalProtocols();
+    /**
+      * returns the used progressBar
+      */
+    QProgressBar* progressBar();
 
-      /**
-        * Get the protocols for the secure connections.. Call this only
-        * after the finished() signals has been sent.
-        * @return an enum of the type Transport::EnumAuthenticationType
-       */
-      QList< int > secureProtocols();
+    /**
+      * Set @p proto the protocol to test, currently supported are
+      * "smtp" and "imap". This will be an enum soon.
+      */
+    void setProtocol( const QString& protocol );
 
-    Q_SIGNALS:
-      /**
-       * This will be emitted when the test is done. It will contain
-       * the values from the enum EnumEncryption which are possible.
-       */
-      void finished( QList< int > );
+    /**
+      * returns the protocol
+      */
+    QString protocol();
 
-    private:
-      void finalResult();
-      void read( int type, const QString& text );
+    /**
+      * Starts the test. Will emit finished() when done.
+      */
+    void start();
 
-      QString                 m_server;
-      QString                 m_proto;
+    /**
+      * Get the protocols for the normal connections.. Call this only
+      * after the finished() signals has been sent.
+      * @return an enum of the type Transport::EnumAuthenticationType
+      */
+    QList< int > normalProtocols();
 
-      Socket*                 m_normal;
-      Socket*                 m_ssl;
+    /**
+      * Get the protocols for the secure connections.. Call this only
+      * after the finished() signals has been sent.
+      * @return an enum of the type Transport::EnumAuthenticationType
+      */
+    QList< int > secureProtocols();
 
-      QList< int >    m_testResult;
-      QHash< int, QList<int> > m_protocolResult;
-      QTimer*                 m_normalTimer;
-      QTimer*                 m_sslTimer;
-      QTimer*                 m_progressTimer;
+  Q_SIGNALS:
+    /**
+      * This will be emitted when the test is done. It will contain
+      * the values from the enum EnumEncryption which are possible.
+      */
+    void finished( QList< int > );
 
-      QProgressBar*           m_testProgress;
+  private:
+    Q_DECLARE_PRIVATE(ServerTest);
+    ServerTestPrivate *const d;
 
-      bool                    m_sslFinished;
-      bool                    m_normalFinished;
-
-    private Q_SLOTS:
-      void slotNormalPossible();
-      void slotNormalNotPossible();
-      void slotSslPossible();
-      void slotSslNotPossible();
-      void slotReadNormal( const QString& text );
-      void slotReadSecure( const QString& text );
-      void slotUpdateProgress();
-  };
-
-}
+    Q_PRIVATE_SLOT(d, void slotNormalPossible() )
+    Q_PRIVATE_SLOT(d, void slotSslPossible())
+    Q_PRIVATE_SLOT(d, void slotReadNormal( const QString& text ))
+    Q_PRIVATE_SLOT(d, void slotReadSecure( const QString& text ))
+    Q_PRIVATE_SLOT(d, void slotNormalNotPossible())
+    Q_PRIVATE_SLOT(d, void slotSslNotPossible())
+    Q_PRIVATE_SLOT(d, void slotUpdateProgress())
+};
 
 #endif

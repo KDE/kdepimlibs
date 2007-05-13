@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef MAILTRANSPORT_SOCKETSAFE_H
-#define MAILTRANSPORT_SOCKETSAFE_H
+#ifndef MAILTRANSPORT_SOCKET_H
+#define MAILTRANSPORT_SOCKET_H
 
 #include <mailtransport/mailtransport_export.h>
 
