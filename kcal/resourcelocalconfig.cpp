@@ -29,8 +29,8 @@
 #include <typeinfo>
 
 #include <QtGui/QLabel>
-#include <QtGui/QLayout>
 #include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -50,10 +50,16 @@ ResourceLocalConfig::ResourceLocalConfig( QWidget* parent )
   mainLayout->addWidget( label, 1, 0 );
   mainLayout->addWidget( mURL, 1, 1 );
 
-  formatGroup = new Q3ButtonGroup( 1, Qt::Horizontal, i18n( "Calendar Format" ), this );
+    formatGroup = new QGroupBox( i18n( "Calendar Format" ), this );
 
-  icalButton = new QRadioButton( i18n("iCalendar"), formatGroup );
-  vcalButton = new QRadioButton( i18n("vCalendar"), formatGroup );
+    icalButton = new QRadioButton( i18n("iCalendar"), formatGroup );
+    vcalButton = new QRadioButton( i18n("vCalendar"), formatGroup );
+
+    QVBoxLayout *vbox = new QVBoxLayout;
+    vbox->addWidget(icalButton);
+    vbox->addWidget(vcalButton);
+    vbox->addStretch(1);
+    formatGroup->setLayout(vbox);
 
   mainLayout->addWidget( formatGroup, 2, 1 );
 }
@@ -65,9 +71,9 @@ void ResourceLocalConfig::loadSettings( KRES::Resource *resource )
     mURL->setUrl( res->d->mURL.prettyUrl() );
     kDebug(5800) << "Format typeid().name(): " << typeid( res->d->mFormat ).name() << endl;
     if ( typeid( *(res->d->mFormat) ) == typeid( ICalFormat ) )
-      formatGroup->setButton( 0 );
+      icalButton->setChecked(true);
     else if ( typeid( *(res->d->mFormat) ) == typeid( VCalFormat ) )
-      formatGroup->setButton( 1 );
+      vcalButton->setChecked(true);
     else
       kDebug(5800) << "ERROR: ResourceLocalConfig::loadSettings(): Unknown format type" << endl;
   } else

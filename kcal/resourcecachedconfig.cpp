@@ -23,7 +23,6 @@
 
 #include "resourcecached.h"
 
-#include <q3buttongroup.h>
 #include <QtGui/QLayout>
 #include <QtGui/QRadioButton>
 #include <QtGui/QSpinBox>
@@ -31,6 +30,8 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QBoxLayout>
 #include <QtGui/QCheckBox>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QGroupBox>
 
 #include <khbox.h>
 #include <klocale.h>
@@ -43,16 +44,27 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
 
-  mGroup = new Q3ButtonGroup( 1, Qt::Horizontal, i18n("Automatic Reload"), this );
-  topLayout->addWidget( mGroup );
-  new QRadioButton( i18n("Never"), mGroup );
-  new QRadioButton( i18n("On startup"), mGroup );
+  QGroupBox* groupBox = new QGroupBox( i18n("Automatic Reload"), this );
+  topLayout->addWidget( groupBox );
+  QRadioButton* noAutomaticReload = new QRadioButton( i18n("Never"), groupBox );
+  QRadioButton* automaticReloadOnStartup = new QRadioButton( i18n("On startup"), groupBox );
+  QRadioButton* intervalRadio = new QRadioButton( i18n("Regular interval"),
+                                     groupBox );
+  mGroup = new QButtonGroup( this );
+  mGroup->addButton( noAutomaticReload, 0 );
+  mGroup->addButton( automaticReloadOnStartup, 1 );
+  mGroup->addButton( intervalRadio, 2 );
 
-  QRadioButton *intervalRadio = new QRadioButton( i18n("Regular interval"),
-                                                  mGroup );
+  QVBoxLayout *vbox = new QVBoxLayout;
+  vbox->addWidget(noAutomaticReload);
+  vbox->addWidget(automaticReloadOnStartup);
+  vbox->addWidget(intervalRadio);
+  vbox->addStretch(1);
+  groupBox->setLayout(vbox);
+
   connect( intervalRadio, SIGNAL( stateChanged( int ) ),
            SLOT( slotIntervalStateChanged( int ) ) );
-  KHBox *intervalBox = new KHBox( mGroup );
+  KHBox *intervalBox = new KHBox( groupBox );
   new QLabel( i18n("Interval in minutes"), intervalBox );
   mIntervalSpin = new QSpinBox( intervalBox );
   mIntervalSpin->setRange( 1, 900 );
@@ -61,13 +73,13 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent )
 
 void ResourceCachedReloadConfig::loadSettings( ResourceCached *resource )
 {
-  mGroup->setButton( resource->reloadPolicy() );
+  mGroup->button( resource->reloadPolicy() )->setChecked( true );
   mIntervalSpin->setValue( resource->reloadInterval() );
 }
 
 void ResourceCachedReloadConfig::saveSettings( ResourceCached *resource )
 {
-  resource->setReloadPolicy( mGroup->selectedId() );
+  resource->setReloadPolicy( mGroup->checkedId() );
   resource->setReloadInterval( mIntervalSpin->value() );
 }
 
@@ -83,34 +95,49 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
 
-  mGroup = new Q3ButtonGroup( 1, Qt::Horizontal, i18n("Automatic Save"), this );
-  topLayout->addWidget( mGroup );
-  new QRadioButton( i18n("Never"), mGroup );
-  new QRadioButton( i18n("On exit"), mGroup );
+  QGroupBox* groupBox = new QGroupBox( i18n("Automatic Save"), this );
+  mGroup = new QButtonGroup( this );
+  topLayout->addWidget( groupBox );
+  QRadioButton* never = new QRadioButton( i18n("Never"), groupBox );
+  QRadioButton* onExit = new QRadioButton( i18n("On exit"), groupBox );
 
   QRadioButton *intervalRadio = new QRadioButton( i18n("Regular interval"),
-                                                  mGroup );
+                                                  groupBox );
+
+  mGroup = new QButtonGroup( this );
+  mGroup->addButton( never, 0 );
+  mGroup->addButton( onExit, 1 );
+  mGroup->addButton( intervalRadio, 2 );
+
+  QVBoxLayout *vbox = new QVBoxLayout;
+  vbox->addWidget(never);
+  vbox->addWidget(onExit);
+  vbox->addWidget(intervalRadio);
+  vbox->addStretch(1);
+  groupBox->setLayout(vbox);
+
+
   connect( intervalRadio, SIGNAL( stateChanged( int ) ),
            SLOT( slotIntervalStateChanged( int ) ) );
-  KHBox *intervalBox = new KHBox( mGroup );
+  KHBox *intervalBox = new KHBox( groupBox );
   new QLabel( i18n("Interval in minutes"), intervalBox );
   mIntervalSpin = new QSpinBox( intervalBox );
   mIntervalSpin->setRange( 1, 900 );
   mIntervalSpin->setEnabled( false );
 
-  new QRadioButton( i18n("Delayed after changes"), mGroup );
-  new QRadioButton( i18n("On every change"), mGroup );
+  new QRadioButton( i18n("Delayed after changes"), groupBox );
+  new QRadioButton( i18n("On every change"), groupBox );
 }
 
 void ResourceCachedSaveConfig::loadSettings( ResourceCached *resource )
 {
-  mGroup->setButton( resource->savePolicy() );
+  mGroup->button( resource->savePolicy() )->setChecked( true );
   mIntervalSpin->setValue( resource->saveInterval() );
 }
 
 void ResourceCachedSaveConfig::saveSettings( ResourceCached *resource )
 {
-  resource->setSavePolicy( mGroup->selectedId() );
+  resource->setSavePolicy( mGroup->checkedId() );
   resource->setSaveInterval( mIntervalSpin->value() );
 }
 

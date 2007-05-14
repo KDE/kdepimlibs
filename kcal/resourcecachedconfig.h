@@ -24,7 +24,9 @@
 #include <QtGui/QWidget>
 #include "kcal.h"
 
-class Q3ButtonGroup;
+class QButtonGroup;
+class QRadioButton;
+class QGroupBox;
 class QSpinBox;
 
 namespace KCal {
@@ -50,7 +52,7 @@ class KCAL_EXPORT ResourceCachedReloadConfig : public QWidget
     void slotIntervalStateChanged( int );
 
   private:
-    Q3ButtonGroup *mGroup;
+    QButtonGroup *mGroup;
     QSpinBox *mIntervalSpin;
 
     class Private;
@@ -76,7 +78,7 @@ class KCAL_EXPORT ResourceCachedSaveConfig : public QWidget
     void slotIntervalStateChanged( int );
 
   private:
-    Q3ButtonGroup *mGroup;
+    QButtonGroup *mGroup;
     QSpinBox *mIntervalSpin;
 
     class Private;

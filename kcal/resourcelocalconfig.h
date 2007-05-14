@@ -23,7 +23,6 @@
 #define KCAL_RESOURCELOCALCONFIG_H
 
 #include <QtGui/QRadioButton>
-#include <Qt3Support/Q3ButtonGroup>
 
 #include <kurlrequester.h>
 
@@ -32,6 +31,7 @@
 
 #include "kcal.h"
 
+class QGroupBox;
 namespace KCal {
 
 /**
@@ -51,7 +51,7 @@ class KCAL_EXPORT ResourceLocalConfig : public KRES::ConfigWidget
 
   private:
     KUrlRequester *mURL;
-    Q3ButtonGroup *formatGroup;
+    QGroupBox *formatGroup;
     QRadioButton *icalButton;
     QRadioButton *vcalButton;
 
