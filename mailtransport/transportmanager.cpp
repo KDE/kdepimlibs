@@ -46,8 +46,16 @@ using namespace KWallet;
  * Private class that helps to provide binary compatibility between releases.
  * @internal
  */
-class TransportManagerPrivate {
+class TransportManager::Private {
   public:
+    Private() {
+        sSelf = new TransportManager;
+        qAddPostRoutine(cleanupTransportManager);
+    }
+    ~Private() {
+        qRemovePostRoutine(cleanupTransportManager);
+        cleanupTransportManager();
+    }
     KConfig *config;
     QList<Transport*> transports;
     bool myOwnChange;
@@ -65,10 +73,10 @@ class TransportManagerPrivate {
         sSelf = 0;
     }
 };
-TransportManager *TransportManagerPrivate::sSelf = 0;
+TransportManager *TransportManager::Private::sSelf = 0;
 
 TransportManager::TransportManager() :
-    QObject(), d( new TransportManagerPrivate )
+    QObject(), d( new Private )
 {
   d->myOwnChange = false;
   d->wallet = 0;
@@ -100,13 +108,8 @@ TransportManager::~TransportManager()
 
 TransportManager* TransportManager::self()
 {
-  if ( !TransportManagerPrivate::sSelf ) {
-    TransportManagerPrivate::sSelf = new TransportManager();
-    qAddPostRoutine(TransportManagerPrivate::cleanupTransportManager);
-
-    TransportManagerPrivate::sSelf->readConfig();
-  }
-  return TransportManagerPrivate::sSelf;
+  TransportManager::Private p;
+  return p.sSelf;
 }
 
 Transport* TransportManager::transportById(int id, bool def) const
