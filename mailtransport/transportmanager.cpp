@@ -60,7 +60,7 @@ class TransportManager::Private {
 
     static TransportManager sSelf;
 };
-TransportManager TransportManager::Private::sSelf = TransportManager();
+TransportManager TransportManager::Private::sSelf;
 
 TransportManager::TransportManager() :
     QObject(), d( new Private )
