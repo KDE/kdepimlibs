@@ -48,14 +48,6 @@ using namespace KWallet;
  */
 class TransportManager::Private {
   public:
-    Private() {
-        sSelf = new TransportManager;
-        qAddPostRoutine(cleanupTransportManager);
-    }
-    ~Private() {
-        qRemovePostRoutine(cleanupTransportManager);
-        cleanupTransportManager();
-    }
     KConfig *config;
     QList<Transport*> transports;
     bool myOwnChange;
@@ -66,14 +58,9 @@ class TransportManager::Private {
     bool isMainInstance;
     QList<TransportJob*> walletQueue;
 
-    static TransportManager *sSelf;
-    static void cleanupTransportManager()
-    {
-        delete sSelf;
-        sSelf = 0;
-    }
+    static TransportManager sSelf;
 };
-TransportManager *TransportManager::Private::sSelf = 0;
+TransportManager TransportManager::Private::sSelf = TransportManager();
 
 TransportManager::TransportManager() :
     QObject(), d( new Private )
@@ -108,8 +95,13 @@ TransportManager::~TransportManager()
 
 TransportManager* TransportManager::self()
 {
-  TransportManager::Private p;
-  return p.sSelf;
+  static TransportManager::Private p;
+  static bool bInit = false;
+  if(!bInit) {
+    bInit = true;
+    p.sSelf.readConfig();
+  }
+  return &p.sSelf;
 }
 
 Transport* TransportManager::transportById(int id, bool def) const
