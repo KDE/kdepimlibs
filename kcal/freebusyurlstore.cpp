@@ -21,6 +21,8 @@
 
 #include "freebusyurlstore.h"
 
+#include <QtCore/QCoreApplication>
+
 #include <kconfig.h>
 #include <kstandarddirs.h>
 
@@ -32,13 +34,30 @@ public:
     Private()
      : mConfig(0)
     {}
+    ~Private()
+    {
+      qRemovePostRoutine(cleanupFreeBusyUrlStore);
+      cleanupFreeBusyUrlStore();
+    }
     KConfig *mConfig;
+    
+    static FreeBusyUrlStore *sSelf;
+    static void cleanupFreeBusyUrlStore()
+    {
+      delete sSelf;
+      sSelf = 0;
+    }
 };
+FreeBusyUrlStore *FreeBusyUrlStore::Private::sSelf = 0;
 
 FreeBusyUrlStore *FreeBusyUrlStore::self()
 {
-  K_GLOBAL_STATIC(FreeBusyUrlStore, sSelf)
-  return sSelf;
+  static Private p;
+  if(!p.sSelf) {
+    p.sSelf = new FreeBusyUrlStore();
+    qAddPostRoutine(Private::cleanupFreeBusyUrlStore);
+  }
+  return p.sSelf;
 }
 
 FreeBusyUrlStore::FreeBusyUrlStore() : d( 0 )
