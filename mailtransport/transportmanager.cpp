@@ -107,6 +107,7 @@ TransportManager* TransportManager::self()
   static TransportManager::Private p;
   if(!p.sSelf) {
     p.sSelf = new TransportManager;
+    p.sSelf->readConfig();
     qAddPostRoutine(Private::cleanupTransportManager);
   }
   return p.sSelf;
