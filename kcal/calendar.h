@@ -867,7 +867,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       The CalendarObserver class.
     */
-    class CalendarObserver
+    class KCAL_EXPORT CalendarObserver
     {
       public:
         /**
