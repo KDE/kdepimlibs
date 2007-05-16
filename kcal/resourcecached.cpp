@@ -776,7 +776,7 @@ void KCal::ResourceCached::setOwner( const Person &owner )
   mCalendar.setOwner( owner );
 }
 
-const Person & KCal::ResourceCached::owner() const
+Person KCal::ResourceCached::owner() const
 {
   return mCalendar.owner();
 }
