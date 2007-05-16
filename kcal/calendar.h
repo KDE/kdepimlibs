@@ -1,25 +1,25 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 1998 Preston Brown <pbrown@kde.org>
-    Copyright (c) 2001,2003,2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-    Copyright (c) 2006 David Jarvie <software@astrojar.org.uk>
+  Copyright (c) 1998 Preston Brown <pbrown@kde.org>
+  Copyright (c) 2001,2003,2004 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 2006 David Jarvie <software@astrojar.org.uk>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 /**
   @file
@@ -45,13 +45,13 @@
 #include "todo.h"
 #include "journal.h"
 #include "kcalversion.h"
-#include "person.h"
 
 namespace KCal {
 
 class ICalTimeZone;
 class ICalTimeZones;
 class CalFilter;
+class Person;
 
 /**
   Calendar Incidence sort directions.
@@ -153,21 +153,17 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     virtual ~Calendar();
 
-  // DONE ABOVE
-
     /**
-      Sets the calendar Product ID to @p productId.
+      Sets the calendar Product ID to @p id.
 
-      @param productId is a string containing the Product ID.
+      @param id is a string containing the Product ID.
 
       @see productId() const
     */
-    void setProductId( const QString &productId );
+    void setProductId( const QString &id );
 
     /**
       Returns the calendar's Product ID.
-
-      @return the string containing the Product ID.
 
       @see setProductId()
     */
@@ -189,7 +185,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @see setOwner()
     */
-    const Person &owner() const;
+    Person owner() const;
 
     /**
       Sets the default time specification (time zone, etc.) used for creating
@@ -234,25 +230,55 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     QString timeZoneId() const;
 
     /**
-      Notes the time zone which the client application intends to use for viewing
-      the incidences in this calendar. This is simply a convenience method which
-      makes a note of the new time zone so that it can be read back by
-      viewTimeSpec(). The client application must convert date/time values to
-      the desired time zone itself.
+      Notes the time specification which the client application intends to
+      use for viewing the incidences in this calendar. This is simply a
+      convenience method which makes a note of the new time zone so that
+      it can be read back by viewTimeSpec(). The client application must
+      convert date/time values to the desired time zone itself.
 
-      The time zone is not used in any way by the Calendar or its incidences. It
-      is solely for use by the client application.
-      @ref viewTimeSpec()
+      The time specification is not used in any way by the Calendar or its
+      incidences; it is solely for use by the client application.
+
+      @param timeSpec time specification
+
+      @see viewTimeSpec()
     */
-    void setViewTimeSpec( const KDateTime::Spec &spec ) const;
+    void setViewTimeSpec( const KDateTime::Spec &timeSpec ) const;
+
+    /**
+      Notes the time zone Id which the client application intends to use for
+      viewing the incidences in this calendar. This is simply a convenience
+      method which makes a note of the new time zone so that it can be read
+      back by viewTimeId(). The client application must convert date/time
+      values to the desired time zone itself.
+
+      The Id is not used in any way by the Calendar or its incidences.
+      It is solely for use by the client application.
+
+      @param timeZoneId is a string containing a time zone ID, which is
+      assumed to be valid. The time zone ID is used to set the time zone
+      for viewing Incidence date/times. If no time zone is found, the
+      viewing time specification is set to local clock time.
+      @e Example: "Europe/Berlin"
+
+      @see viewTimeZoneId()
+    */
     void setViewTimeZoneId( const QString &timeZoneId ) const;
 
     /**
-      Returns the time specification (time zone, etc.) used for viewing the
-      incidences in this calendar. This simply returns the time specification
-      last set by setViewTimeSpec().
+      Returns the time specification used for viewing the incidences in
+      this calendar. This simply returns the time specification last
+      set by setViewTimeSpec().
+      @see setViewTimeSpec().
     */
     KDateTime::Spec viewTimeSpec() const;
+
+    /**
+      Returns the time zone Id used for viewing the incidences in this
+      calendar. This simply returns the time specification last set by
+      setViewTimeSpec().
+      @see setViewTimeZoneId().
+    */
     QString viewTimeZoneId() const;
 
     /**
@@ -271,7 +297,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @see isLocalTime()
     */
-    void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
+    void shiftTimes( const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec );
 
     /**
       Returns the time zone collection used by the calendar.
@@ -332,7 +358,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @return true if the calendar is currently being saved; false otherwise.
     */
-    virtual bool isSaving() { return false; }
+    virtual bool isSaving();
 
     /**
       Returns a list of all categories used by Incidences in this Calendar.
@@ -435,9 +461,6 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     virtual bool endChange( Incidence *incidence );
 
-// Dissociate a single occurrence or all future occurrences from a recurring
-// sequence. The new incidence is returned, but not automatically inserted
-// into the calendar, which is left to the calling application.
     /**
       Dissociate an Incidence from a recurring Incidence.
       By default, only one single Incidence for the specified @a date
@@ -513,7 +536,6 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       @return the list of filtered Events occurring on the specified timestamp.
     */
     Event::List events( const KDateTime &dt );
-    KDE_DEPRECATED Event::List events( const QDateTime &qdt );
 
     /**
       Returns a filtered list of all Events occurring within a date range.
@@ -860,32 +882,28 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
           @param calendar is a pointer to the Calendar object that
           is being observed.
         */
-        virtual void calendarModified( bool modified, Calendar *calendar )
-          { Q_UNUSED( modified ); Q_UNUSED( calendar ); }
+        virtual void calendarModified( bool modified, Calendar *calendar );
 
         /**
           Notify the Observer that an Incidence has been inserted.
 
           @param incidence is a pointer to the Incidence that was inserted.
         */
-        virtual void calendarIncidenceAdded( Incidence *incidence )
-          { Q_UNUSED( incidence );}
+        virtual void calendarIncidenceAdded( Incidence *incidence );
 
         /**
           Notify the Observer that an Incidence has been modified.
 
           @param incidence is a pointer to the Incidence that was modified.
         */
-        virtual void calendarIncidenceChanged( Incidence *incidence )
-          { Q_UNUSED( incidence ); }
+        virtual void calendarIncidenceChanged( Incidence *incidence );
 
         /**
           Notify the Observer that an Incidence has been removed.
 
           @param incidence is a pointer to the Incidence that was removed.
         */
-        virtual void calendarIncidenceDeleted( Incidence *incidence )
-          { Q_UNUSED( incidence ); }
+        virtual void calendarIncidenceDeleted( Incidence *incidence );
     };
 
     /**
@@ -938,8 +956,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       @param timeSpec is the time specification (time zone, etc.) for
                       viewing Incidence dates.\n
     */
-    virtual void doSetTimeSpec( const KDateTime::Spec &timeSpec )
-      { Q_UNUSED( timeSpec ); }
+    virtual void doSetTimeSpec( const KDateTime::Spec &timeSpec );
 
     /**
       Let Calendar subclasses notify that they inserted an Incidence.
@@ -976,11 +993,27 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     void setObserversEnabled( bool enabled );
 
-    /** Appends alarms of incidence in interval to list of alarms. */
+    /**
+      Appends alarms of incidence in interval to list of alarms.
+
+      @param alarms is a List of Alarms to be appended onto.
+      @param incidence is a pointer to an Incidence containing the Alarm
+      to be appended.
+      @param from is the lower range of the next Alarm repitition.
+      @param to is the upper range of the next Alarm repitition.
+    */
     void appendAlarms( Alarm::List &alarms, Incidence *incidence,
                        const KDateTime &from, const KDateTime &to );
 
-    /** Appends alarms of recurring events in interval to list of alarms. */
+    /**
+      Appends alarms of recurring events in interval to list of alarms.
+
+      @param alarms is a List of Alarms to be appended onto.
+      @param incidence is a pointer to an Incidence containing the Alarm
+      to be appended.
+      @param from is the lower range of the next Alarm repitition.
+      @param to is the upper range of the next Alarm repitition.
+    */
     void appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
                                 const KDateTime &from, const KDateTime &to );
 

@@ -1,30 +1,33 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 1998 Preston Brown <pbrown@kde.org>
-    Copyright (c) 2000-2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-    Copyright (c) 2006 David Jarvie <software@astrojar.org.uk>
+  Copyright (c) 1998 Preston Brown <pbrown@kde.org>
+  Copyright (c) 2000-2004 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 2006 David Jarvie <software@astrojar.org.uk>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 /**
   @file
   This file is part of the API for handling calendar data and
   defines the Calendar class.
+
+  @brief
+  Represents the main calendar class.
 
   @author Preston Brown
   @author Cornelius Schumacher
@@ -56,11 +59,11 @@ class KCal::Calendar::Private
       : mTimeZones( new ICalTimeZones ),
         mBuiltInTimeZone( 0 ),
         mBuiltInViewTimeZone( 0 ),
-	mModified( false ),
-	mNewObserver( false ),
-	mObserversEnabled( true ),
-	mDefaultFilter( new CalFilter ),
-	mFilter( mDefaultFilter )
+        mModified( false ),
+        mNewObserver( false ),
+        mObserversEnabled( true ),
+        mDefaultFilter( new CalFilter ),
+        mFilter( mDefaultFilter )
     {
         // Setup default filter, which does nothing
         mFilter->setEnabled( false );
@@ -74,8 +77,9 @@ class KCal::Calendar::Private
     {
         delete mTimeZones;
         delete mBuiltInTimeZone;
-        if ( mBuiltInViewTimeZone != mBuiltInTimeZone )
+        if ( mBuiltInViewTimeZone != mBuiltInTimeZone ) {
           delete mBuiltInViewTimeZone;
+        }
         delete mDefaultFilter;
     }
     KDateTime::Spec timeZoneIdSpec( const QString &timeZoneId, bool view );
@@ -119,7 +123,7 @@ Calendar::~Calendar()
   delete d;
 }
 
-const Person &Calendar::owner() const
+Person Calendar::owner() const
 {
   return d->mOwner;
 }
@@ -134,8 +138,9 @@ void Calendar::setOwner( const Person &owner )
 void Calendar::setTimeSpec( const KDateTime::Spec &timeSpec )
 {
   d->mTimeSpec = timeSpec;
-  if ( d->mBuiltInViewTimeZone != d->mBuiltInTimeZone )
+  if ( d->mBuiltInViewTimeZone != d->mBuiltInTimeZone ) {
     delete d->mBuiltInTimeZone;
+  }
   d->mBuiltInTimeZone = 0;
   setViewTimeSpec( timeSpec );
 
@@ -151,41 +156,49 @@ void Calendar::setTimeZoneId( const QString &timeZoneId )
 {
   d->mTimeSpec = d->timeZoneIdSpec( timeZoneId, false );
   d->mViewTimeSpec = d->mTimeSpec;
-  if ( d->mBuiltInViewTimeZone != d->mBuiltInTimeZone )
+  if ( d->mBuiltInViewTimeZone != d->mBuiltInTimeZone ) {
     delete d->mBuiltInViewTimeZone;
+  }
   d->mBuiltInViewTimeZone = d->mBuiltInTimeZone;
 
   doSetTimeSpec( d->mTimeSpec );
 }
 
-KDateTime::Spec Calendar::Private::timeZoneIdSpec( const QString &timeZoneId, bool view )
+//@cond PRIVATE
+KDateTime::Spec Calendar::Private::timeZoneIdSpec( const QString &timeZoneId,
+                                                   bool view )
 {
   if ( view ) {
-    if ( mBuiltInViewTimeZone != mBuiltInTimeZone )
+    if ( mBuiltInViewTimeZone != mBuiltInTimeZone ) {
       delete mBuiltInViewTimeZone;
+    }
     mBuiltInViewTimeZone = 0;
   } else {
-    if ( mBuiltInViewTimeZone != mBuiltInTimeZone )
+    if ( mBuiltInViewTimeZone != mBuiltInTimeZone ) {
       delete mBuiltInTimeZone;
+    }
     mBuiltInTimeZone = 0;
   }
   if ( timeZoneId == QLatin1String("UTC") ) {
     return( KDateTime::UTC );
   }
-  const ICalTimeZone *tz = mTimeZones->zone(timeZoneId);
-  if (!tz) {
+  const ICalTimeZone *tz = mTimeZones->zone( timeZoneId );
+  if ( !tz ) {
     ICalTimeZoneSource tzsrc;
-    tz = tzsrc.parse(icaltimezone_get_builtin_timezone(timeZoneId.toLatin1()));
-    if ( view )
+    tz = tzsrc.parse( icaltimezone_get_builtin_timezone( timeZoneId.toLatin1() ) );
+    if ( view ) {
       mBuiltInViewTimeZone = tz;
-    else
+    } else {
       mBuiltInTimeZone = tz;
+    }
   }
-  if (tz)
+  if ( tz ) {
     return tz;
-  else
+  } else {
     return KDateTime::ClockTime;
+  }
 }
+//@endcond
 
 QString Calendar::timeZoneId() const
 {
@@ -193,11 +206,12 @@ QString Calendar::timeZoneId() const
   return tz ? tz->name() : QString();
 }
 
-void Calendar::setViewTimeSpec( const KDateTime::Spec &spec ) const
+void Calendar::setViewTimeSpec( const KDateTime::Spec &timeSpec ) const
 {
-  d->mViewTimeSpec = spec;
-  if ( d->mBuiltInViewTimeZone != d->mBuiltInTimeZone )
+  d->mViewTimeSpec = timeSpec;
+  if ( d->mBuiltInViewTimeZone != d->mBuiltInTimeZone ) {
     delete d->mBuiltInViewTimeZone;
+  }
   d->mBuiltInViewTimeZone = 0;
 }
 
@@ -222,22 +236,26 @@ ICalTimeZones *Calendar::timeZones() const
   return d->mTimeZones;
 }
 
-void Calendar::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
+void Calendar::shiftTimes( const KDateTime::Spec &oldSpec,
+                           const KDateTime::Spec &newSpec )
 {
   setTimeSpec( newSpec );
 
   int i, end;
   Event::List ev = events();
-  for ( i = 0, end = ev.count();  i < end;  ++i )
+  for ( i = 0, end = ev.count();  i < end;  ++i ) {
     ev[i]->shiftTimes( oldSpec, newSpec );
+  }
 
   Todo::List to = todos();
-  for ( i = 0, end = to.count();  i < end;  ++i )
+  for ( i = 0, end = to.count();  i < end;  ++i ) {
     to[i]->shiftTimes( oldSpec, newSpec );
+  }
 
   Journal::List jo = journals();
-  for ( i = 0, end = jo.count();  i < end;  ++i )
+  for ( i = 0, end = jo.count();  i < end;  ++i ) {
     jo[i]->shiftTimes( oldSpec, newSpec );
+  }
 }
 
 void Calendar::setFilter( CalFilter *filter )
@@ -782,7 +800,7 @@ void Calendar::setupRelations( Incidence *forincidence )
 
   // Now see about this incidences parent
   if ( !forincidence->relatedTo() && !forincidence->relatedToUid().isEmpty() ) {
-    // This incidence has a uid it is related to but is not registered to it yet
+    // Incidence has a uid it is related to but is not registered to it yet.
     // Try to find it
     Incidence *parent = incidence( forincidence->relatedToUid() );
     if ( parent ) {
@@ -867,6 +885,27 @@ void Calendar::removeRelations( Incidence *incidence )
   }
 }
 
+void Calendar::CalendarObserver::calendarModified( bool modified, Calendar *calendar )
+{
+  Q_UNUSED( modified );
+  Q_UNUSED( calendar );
+}
+
+void Calendar::CalendarObserver::calendarIncidenceAdded( Incidence *incidence )
+{
+  Q_UNUSED( incidence );
+}
+
+void Calendar::CalendarObserver::calendarIncidenceChanged( Incidence *incidence )
+{
+  Q_UNUSED( incidence );
+}
+
+void Calendar::CalendarObserver::calendarIncidenceDeleted( Incidence *incidence )
+{
+  Q_UNUSED( incidence );
+}
+
 void Calendar::registerObserver( CalendarObserver *observer )
 {
   if ( !d->mObservers.contains( observer ) ) {
@@ -878,6 +917,11 @@ void Calendar::registerObserver( CalendarObserver *observer )
 void Calendar::unregisterObserver( CalendarObserver *observer )
 {
   d->mObservers.removeAll( observer );
+}
+
+bool Calendar::isSaving()
+{
+  return false;
 }
 
 void Calendar::setModified( bool modified )
@@ -907,6 +951,11 @@ void Calendar::incidenceUpdated( IncidenceBase *incidence )
   notifyIncidenceChanged( static_cast<Incidence *>( incidence ) );
 
   setModified( true );
+}
+
+void Calendar::doSetTimeSpec( const KDateTime::Spec &timeSpec )
+{
+  Q_UNUSED( timeSpec );
 }
 
 void Calendar::notifyIncidenceAdded( Incidence *i )
@@ -947,9 +996,9 @@ void Calendar::customPropertyUpdated()
   setModified( true );
 }
 
-void Calendar::setProductId( const QString &productId )
+void Calendar::setProductId( const QString &id )
 {
-  d->mProductId = productId;
+  d->mProductId = id;
 }
 
 QString Calendar::productId() const
@@ -1104,7 +1153,3 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
 }
 
 #include "calendar.moc"
-
-// DEPRECATED methods
-Event::List Calendar::events( const QDateTime &qdt )
-{ return events(KDateTime(qdt, timeSpec())); }

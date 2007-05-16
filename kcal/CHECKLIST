@@ -5,7 +5,7 @@ File                  | Krazy | Doxygen | D-Ptr | UnitTst | Qt4Port | Who
 alarm                 |   D   |    D    |   D   |    D    |    D    | Allen
 attachment            |   D   |    D    |   D   |    D    |    D    | Allen
 attendee              |   D   |    D    |   D   |    D    |    D    | Allen
-calendar              |   D   |         |   D   |   n/a   |         | Allen
+calendar              |   D   |    D    |   D   |   n/a   |    D    | Allen
 calendarlocal         |       |         |       |    D    |    D    | Allen
 calendarnull          |   D   |    D    |   D   |    D    |    D    | Allen
 calendarresources     |   D   |         |       |         |         | Allen
@@ -36,8 +36,8 @@ incidence             |       |         |       |   n/a   |         | Allen
 journal               |       |         |       |         |         | Allen
 kresult               |   D   |         |       |         |    D    |
 listbase              |       |         |       |         |         |
-period                |   D   |    D    |   D   |    D    |         | Narayan
-person                |   D   |    D    |   D   |    D    |         | Narayan
+period                |   D   |    D    |   D   |    D    |    D    | Narayan
+person                |   D   |    D    |   D   |    D    |    D    | Narayan
 qtopiaformat          |       |         |       |         |         |
 recurrence            |       |         |       |         |         |
 recurrencerule        |       |         |       |         |         |
