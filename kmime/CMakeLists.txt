@@ -5,28 +5,29 @@ include_directories(
 )
 
 include(CheckTimezone)
+check_function_exists(strcasestr HAVE_STRCASESTR)
 configure_file (config-kmime.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kmime.h)
 
 ########### next target ###############
 
 set(kmime_LIB_SRCS
-   kmime_charfreq.cpp 
-   kmime_util.cpp 
-   kmime_mdn.cpp 
-   kmime_codecs.cpp 
-   kmime_codec_base64.cpp 
-   kmime_codec_uuencode.cpp 
-   kmime_codec_qp.cpp 
-   kmime_codec_identity.cpp 
-   kmime_parsers.cpp 
-   kmime_header_parsing.cpp 
+   kmime_charfreq.cpp
+   kmime_util.cpp
+   kmime_mdn.cpp
+   kmime_codecs.cpp
+   kmime_codec_base64.cpp
+   kmime_codec_uuencode.cpp
+   kmime_codec_qp.cpp
+   kmime_codec_identity.cpp
+   kmime_parsers.cpp
+   kmime_header_parsing.cpp
    kmime_content.cpp
    kmime_contentindex.cpp
-   kmime_headers.cpp 
-   kmime_message.cpp 
-   kmime_newsarticle.cpp 
+   kmime_headers.cpp
+   kmime_message.cpp
+   kmime_newsarticle.cpp
    kmime_dateformatter.cpp
-   boolflags.cpp 
+   boolflags.cpp
    kautodeletehash.cpp )
 
 kde4_automoc(${kmime_LIB_SRCS})

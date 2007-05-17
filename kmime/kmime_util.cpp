@@ -38,6 +38,8 @@
 #include "kmime_util.h"
 #include "kmime_header_parsing.h"
 
+#include "config-kmime.h"
+
 using namespace KMime;
 
 namespace KMime {
@@ -350,11 +352,15 @@ QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
     pos1 = 0;
   } else {
     n.prepend('\n');
+#ifdef HAVE_STRCASESTR
     const char* p = strcasestr( src.constData(), n.constData() );
     if ( !p )
       pos1 = -1;
     else
       pos1 = p - src.constData();
+#else
+    pos1 = src.toLower().indexOf( n.toLower() );
+#endif
   }
 
   if ( pos1 > -1) {     //there is a header with the given name
