@@ -30,6 +30,7 @@
 #include <QtCore/QString>
 #include <QtCore/QTextCodec>
 
+#include <kdefakes.h> // for strcasestr
 #include <kglobal.h>
 #include <klocale.h>
 #include <kcharsets.h>
@@ -352,15 +353,12 @@ QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
     pos1 = 0;
   } else {
     n.prepend('\n');
-#ifdef HAVE_STRCASESTR
     const char* p = strcasestr( src.constData(), n.constData() );
-    if ( !p )
+    if ( !p ) {
       pos1 = -1;
-    else
+    } else {
       pos1 = p - src.constData();
-#else
-    pos1 = src.toLower().indexOf( n.toLower() );
-#endif
+    }
   }
 
   if ( pos1 > -1) {     //there is a header with the given name
