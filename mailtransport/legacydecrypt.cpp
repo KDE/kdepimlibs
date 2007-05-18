@@ -1,9 +1,6 @@
 /*
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
-    KMail code:
-    Copyright (c) 2000-2002 Michael Haeckel <haeckel@kde.org>
-
     KNode code:
     Copyright (c) 1999-2005 the KNode authors. // krazy:exclude=copyright
 
@@ -25,15 +22,13 @@
 
 #include "legacydecrypt.h"
 
+#include <kstringhandler.h>
+
 using namespace MailTransport;
 
 QString Legacy::decryptKMail(const QString & data)
 {
-  QString result;
-  for ( int i = 0; i < data.length(); ++i )
-    result += (data[i].unicode() < 0x20) ? data[i] :
-      QChar(0x1001F - data[i].unicode());
-  return result;
+  return KStringHandler::obscure( data );
 }
 
 QString Legacy::decryptKNode(const QString & data)
