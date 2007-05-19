@@ -5,7 +5,6 @@ include_directories(
 )
 
 include(CheckTimezone)
-check_function_exists(strcasestr HAVE_STRCASESTR)
 configure_file (config-kmime.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kmime.h)
 
 ########### next target ###############
