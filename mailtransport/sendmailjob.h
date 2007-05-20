@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007 KovoKs <kovoks@kovoks.nl>
 
     Based on KMail code by:
     Copyright (c) 1996-1998 Stefan Taferner <taferner@kde.org>
@@ -20,12 +21,12 @@
     02110-1301, USA.
 */
 
-#ifndef MailTransport_SENDMAILJOB_H
-#define MailTransport_SENDMAILJOB_H
+#ifndef MAILTRANSPORT_SENDMAILJOB_H
+#define MAILTRANSPORT_SENDMAILJOB_H
 
 #include <mailtransport/transportjob.h>
 
-class K3Process;
+#include <QtCore/QProcess>
 class SendMailJobPrivate;
 
 namespace MailTransport {
@@ -54,9 +55,8 @@ class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
     virtual bool doKill();
 
   private Q_SLOTS:
-    void sendmailExited();
-    void wroteStdin();
-    void receivedStdErr( K3Process *proc, char* data, int len );
+    void sendmailExited(int, QProcess::ExitStatus);
+    void receivedStdErr();
 
   private:
     SendMailJobPrivate *const d;

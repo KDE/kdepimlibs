@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007 KovoKs <kovoks@kovoks.nl>
 
     Based on KMail code by:
     Copyright (c) 1996-1998 Stefan Taferner <taferner@kde.org>
@@ -23,10 +24,10 @@
 #include "sendmailjob.h"
 #include "transport.h"
 
-#include <klocale.h>
-#include <k3process.h>
+#include <KLocale>
 
-#include <qbuffer.h>
+#include <QtCore/QProcess>
+#include <QtCore/QBuffer>
 
 using namespace MailTransport;
 
@@ -37,18 +38,19 @@ using namespace MailTransport;
 class SendMailJobPrivate
 {
   public:
-    K3Process* process;
+    QProcess* process;
     QString lastError;
 };
 
 SendmailJob::SendmailJob(Transport * transport, QObject * parent) :
     TransportJob( transport, parent ), d( new SendMailJobPrivate )
 {
-  d->process = new K3Process( this );
-  connect( d->process, SIGNAL(processExited(K3Process*)), SLOT(sendmailExited()) );
-  connect( d->process, SIGNAL(wroteStdin(K3Process*)), SLOT(wroteStdin()) );
-  connect( d->process, SIGNAL(receivedStderr(K3Process*,char*,int)),
-           SLOT(receivedStdErr(K3Process*,char*,int)) );
+  d->process = new QProcess( this );
+  connect( d->process,
+           SIGNAL(finished(int, QProcess::ExitStatus)),
+           SLOT(sendmailExited(int, QProcess::ExitStatus)) );
+  connect( d->process, SIGNAL(error(QProcess::ProcessError)),
+           SLOT(receivedStdErr()) );
 }
 
 SendmailJob::~ SendmailJob()
@@ -58,42 +60,37 @@ SendmailJob::~ SendmailJob()
 
 void SendmailJob::doStart()
 {
-  *d->process << transport()->host() << "-i"
-          << "-f" << sender() << to() << cc() << bcc();
-  if ( !d->process->start( K3Process::NotifyOnExit, K3Process::All ) ) {
+  QStringList arguments;
+  arguments << QLatin1String("-i") << QLatin1String("-f")
+      << sender() << to() << cc() << bcc();
+  d->process->start(transport()->host(), arguments);
+  
+  if ( !d->process->waitForStarted() ) {
     setError( UserDefinedError );
     setErrorText( i18n("Failed to execute mailer program %1",
                   transport()->host()) );
     emitResult();
+  } else {
+    d->process->write( buffer()->readAll() );
+    d->process->closeWriteChannel();
   }
-  setTotalAmount( KJob::Bytes, data().length() );
-  wroteStdin();
 }
 
-void SendmailJob::sendmailExited()
+void SendmailJob::sendmailExited( int exitCode, QProcess::ExitStatus exitStatus )
 {
-  if ( !d->process->normalExit() || !d->process->exitStatus() == 0 ) {
+  if ( exitStatus != 0 || exitCode != 0) {
     setError( UserDefinedError );
-    setErrorText( i18n("Sendmail exited abnormally: %1", d->lastError) );
+    if (d->lastError.isEmpty())
+      setErrorText( i18n("Sendmail exited abnormally.") );
+    else
+      setErrorText( i18n("Sendmail exited abnormally: %1", d->lastError) );
   }
   emitResult();
 }
 
-void SendmailJob::wroteStdin()
+void SendmailJob::receivedStdErr()
 {
-  setProcessedAmount( KJob::Bytes, buffer()->pos() );
-  if ( buffer()->atEnd() ) {
-    d->process->closeStdin();
-  } else {
-    QByteArray data = buffer()->read( 1024 );
-    d->process->writeStdin( data.constData(), data.length() );
-  }
-}
-
-void SendmailJob::receivedStdErr(K3Process * proc, char * data, int len)
-{
-  Q_ASSERT( proc == d->process );
-  d->lastError += QString::fromLocal8Bit( data, len );
+  d->lastError += d->process->errorString();
 }
 
 bool SendmailJob::doKill()
