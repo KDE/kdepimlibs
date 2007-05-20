@@ -50,6 +50,8 @@ SendmailJob::SendmailJob(Transport * transport, QObject * parent) :
            SIGNAL(finished(int, QProcess::ExitStatus)),
            SLOT(sendmailExited(int, QProcess::ExitStatus)) );
   connect( d->process, SIGNAL(error(QProcess::ProcessError)),
+           SLOT(receivedError()) );
+  connect( d->process, SIGNAL(readyReadStandardError()),
            SLOT(receivedStdErr()) );
 }
 
@@ -88,9 +90,14 @@ void SendmailJob::sendmailExited( int exitCode, QProcess::ExitStatus exitStatus 
   emitResult();
 }
 
-void SendmailJob::receivedStdErr()
+void SendmailJob::receivedError()
 {
   d->lastError += d->process->errorString();
+}
+
+void SendmailJob::receivedStdErr()
+{
+  d->lastError += QLatin1String( d->process->readAllStandardError() );
 }
 
 bool SendmailJob::doKill()

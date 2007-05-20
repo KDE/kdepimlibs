@@ -56,6 +56,7 @@ class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
 
   private Q_SLOTS:
     void sendmailExited(int, QProcess::ExitStatus);
+    void receivedError();
     void receivedStdErr();
 
   private:
