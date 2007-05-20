@@ -1,24 +1,33 @@
 <ui version="4.0" >
- <author>Volker Krause &lt;vkrause@kde.org></author>
+ <author>Volker Krause &lt;vkrause@kde.org>, KovoKs &lt;tomalbers@kde.nl></author>
  <class>SMTPSettings</class>
  <widget class="QWidget" name="SMTPSettings" >
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>424</width>
-    <height>544</height>
+    <width>417</width>
+    <height>488</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" >
-   <property name="margin" >
-    <number>9</number>
-   </property>
    <property name="spacing" >
     <number>6</number>
+   </property>
+   <property name="leftMargin" >
+    <number>9</number>
+   </property>
+   <property name="topMargin" >
+    <number>9</number>
+   </property>
+   <property name="rightMargin" >
+    <number>9</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>9</number>
    </property>
    <item>
     <widget class="QLabel" name="titleLabel" >
@@ -46,24 +55,50 @@
        <string>&amp;General</string>
       </attribute>
       <layout class="QGridLayout" >
-       <property name="margin" >
-        <number>9</number>
-       </property>
-       <property name="spacing" >
-        <number>6</number>
-       </property>
-       <item row="2" column="3" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Horizontal</enum>
+       <item row="0" column="0" >
+        <widget class="QLabel" name="nameLabel" >
+         <property name="text" >
+          <string>&amp;Name:</string>
          </property>
-         <property name="sizeHint" >
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
+         <property name="alignment" >
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
-        </spacer>
+         <property name="buddy" >
+          <cstring>kcfg_name</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" colspan="2" >
+        <widget class="KLineEdit" name="kcfg_name" />
+       </item>
+       <item row="1" column="0" >
+        <widget class="QLabel" name="hostLabel" >
+         <property name="text" >
+          <string>&amp;Host:</string>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy" >
+          <cstring>kcfg_host</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1" colspan="2" >
+        <widget class="KLineEdit" name="kcfg_host" />
+       </item>
+       <item row="2" column="0" >
+        <widget class="QLabel" name="portLabel" >
+         <property name="text" >
+          <string>&amp;Port:</string>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy" >
+          <cstring>kcfg_port</cstring>
+         </property>
+        </widget>
        </item>
        <item row="2" column="1" >
         <widget class="KIntNumInput" name="kcfg_port" >
@@ -78,289 +113,25 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="2" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="11" column="0" >
-        <widget class="QLabel" name="hostnameLabel" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <property name="text" >
-          <string>Hos&amp;tname:</string>
-         </property>
-         <property name="buddy" >
-          <cstring>kcfg_localHostname</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="1" colspan="3" >
-        <widget class="KLineEdit" name="kcfg_localHostname" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" >
-        <widget class="QLabel" name="nameLabel" >
-         <property name="text" >
-          <string>&amp;Name:</string>
-         </property>
-         <property name="buddy" >
-          <cstring>kcfg_name</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" >
-        <widget class="QLabel" name="hostLabel" >
-         <property name="text" >
-          <string>&amp;Host:</string>
-         </property>
-         <property name="buddy" >
-          <cstring>kcfg_host</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1" colspan="3" >
-        <widget class="KLineEdit" name="kcfg_name" />
-       </item>
-       <item row="3" column="0" >
-        <widget class="QLabel" name="precommandLabel" >
-         <property name="text" >
-          <string>Preco&amp;mmand:</string>
-         </property>
-         <property name="buddy" >
-          <cstring>kcfg_precommand</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1" colspan="3" >
-        <widget class="KLineEdit" name="kcfg_precommand" />
-       </item>
-       <item row="6" column="1" colspan="3" >
-        <widget class="KLineEdit" name="kcfg_userName" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0" >
-        <widget class="QLabel" name="usernameLabel" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <property name="text" >
-          <string>&amp;Login:</string>
-         </property>
-         <property name="buddy" >
-          <cstring>kcfg_userName</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0" >
-        <widget class="QLabel" name="passwordLabel" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <property name="text" >
-          <string>P&amp;assword:</string>
-         </property>
-         <property name="buddy" >
-          <cstring>password</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1" colspan="3" >
-        <widget class="KLineEdit" name="password" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <property name="whatsThis" >
-          <string>The password to send to the server for authorization.</string>
-         </property>
-         <property name="echoMode" >
-          <enum>QLineEdit::Password</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0" colspan="4" >
-        <widget class="QCheckBox" name="kcfg_storePassword" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <property name="text" >
-          <string>&amp;Store SMTP password</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0" colspan="4" >
-        <widget class="KSeparator" name="kseparator_2" />
-       </item>
-       <item row="9" column="0" colspan="4" >
-        <widget class="KSeparator" name="kseparator_3" />
-       </item>
-       <item row="5" column="0" colspan="4" >
-        <widget class="QCheckBox" name="kcfg_requiresAuthentication" >
-         <property name="text" >
-          <string>Server &amp;requires authentication</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="0" colspan="4" >
-        <widget class="QCheckBox" name="kcfg_specifyHostname" >
-         <property name="text" >
-          <string>Sen&amp;d custom hostname to server</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1" colspan="3" >
-        <widget class="KLineEdit" name="kcfg_host" />
-       </item>
-       <item row="2" column="0" >
-        <widget class="QLabel" name="portLabel" >
-         <property name="text" >
-          <string>&amp;Port:</string>
-         </property>
-         <property name="buddy" >
-          <cstring>kcfg_port</cstring>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="securityTab" >
-      <attribute name="title" >
-       <string>S&amp;ecurity</string>
-      </attribute>
-      <layout class="QGridLayout" >
-       <property name="margin" >
-        <number>9</number>
-       </property>
-       <property name="spacing" >
-        <number>6</number>
-       </property>
-       <item row="2" column="0" >
+       <item row="2" column="2" >
         <spacer>
          <property name="orientation" >
           <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeHint" >
           <size>
-           <width>181</width>
+           <width>40</width>
            <height>20</height>
           </size>
          </property>
         </spacer>
        </item>
-       <item row="3" column="1" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>20</width>
-           <height>16</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="2" column="0" >
-        <widget class="QProgressBar" name="checkCapabilitiesProgress" >
-         <property name="visible" >
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1" >
-        <widget class="KPushButton" name="checkCapabilities" >
-         <property name="text" >
-          <string>Check &amp;What the Server Supports</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="2" >
-        <widget class="KButtonGroup" name="kcfg_authenticationType" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <property name="title" >
-          <string>Authentication Method</string>
-         </property>
-         <layout class="QVBoxLayout" >
-          <property name="margin" >
-           <number>9</number>
-          </property>
-          <property name="spacing" >
-           <number>6</number>
-          </property>
-          <item>
-           <widget class="QRadioButton" name="login" >
-            <property name="text" >
-             <string>&amp;LOGIN</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="plain" >
-            <property name="text" >
-             <string>&amp;PLAIN</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="crammd5" >
-            <property name="text" >
-             <string>CRAM-MD&amp;5</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="digestmd5" >
-            <property name="text" >
-             <string>&amp;DIGEST-MD5</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="ntlm" >
-            <property name="text" >
-             <string>&amp;NTLM</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="gssapi" >
-            <property name="text" >
-             <string>&amp;GSSAPI</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="2" >
+       <item row="3" column="1" colspan="2" >
         <widget class="KButtonGroup" name="kcfg_encryption" >
          <property name="title" >
           <string>Encryption</string>
          </property>
-         <layout class="QVBoxLayout" >
-          <property name="margin" >
-           <number>9</number>
-          </property>
-          <property name="spacing" >
-           <number>6</number>
-          </property>
+         <layout class="QHBoxLayout" >
           <item>
            <widget class="QRadioButton" name="none" >
             <property name="text" >
@@ -385,23 +156,260 @@
          </layout>
         </widget>
        </item>
+       <item row="4" column="0" colspan="2" >
+        <widget class="QProgressBar" name="checkCapabilitiesProgress" >
+         <property name="visible" >
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="2" >
+        <widget class="KPushButton" name="checkCapabilities" >
+         <property name="text" >
+          <string>Check &amp;What the Server Supports</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="2" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>20</width>
+           <height>111</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="advancedTab" >
+      <attribute name="title" >
+       <string>&amp;Advanced</string>
+      </attribute>
+      <layout class="QGridLayout" >
+       <item row="0" column="0" colspan="2" >
+        <widget class="QLabel" name="noAuthPossible" >
+         <property name="enabled" >
+          <bool>true</bool>
+         </property>
+         <property name="visible" >
+          <bool>false</bool>
+         </property>
+         <property name="frameShape" >
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow" >
+          <enum>QFrame::Raised</enum>
+         </property>
+         <property name="text" >
+          <string>This server does not support authentication</string>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2" >
+        <widget class="QCheckBox" name="kcfg_requiresAuthentication" >
+         <property name="text" >
+          <string>Server &amp;requires authentication</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" >
+        <widget class="QLabel" name="usernameLabel" >
+         <property name="enabled" >
+          <bool>false</bool>
+         </property>
+         <property name="text" >
+          <string>&amp;Login:</string>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy" >
+          <cstring>kcfg_userName</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" >
+        <widget class="KLineEdit" name="kcfg_userName" >
+         <property name="enabled" >
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" >
+        <widget class="QLabel" name="passwordLabel" >
+         <property name="enabled" >
+          <bool>false</bool>
+         </property>
+         <property name="text" >
+          <string>P&amp;assword:</string>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy" >
+          <cstring>password</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1" >
+        <widget class="KLineEdit" name="password" >
+         <property name="enabled" >
+          <bool>false</bool>
+         </property>
+         <property name="whatsThis" >
+          <string>The password to send to the server for authorization.</string>
+         </property>
+         <property name="echoMode" >
+          <enum>QLineEdit::Password</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1" >
+        <widget class="QCheckBox" name="kcfg_storePassword" >
+         <property name="enabled" >
+          <bool>false</bool>
+         </property>
+         <property name="text" >
+          <string>&amp;Store SMTP password</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1" >
+        <widget class="KButtonGroup" name="kcfg_authenticationType" >
+         <property name="enabled" >
+          <bool>false</bool>
+         </property>
+         <property name="title" >
+          <string>Authentication Method</string>
+         </property>
+         <layout class="QGridLayout" >
+          <item row="0" column="0" >
+           <widget class="QRadioButton" name="login" >
+            <property name="text" >
+             <string>&amp;LOGIN</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" >
+           <widget class="QRadioButton" name="plain" >
+            <property name="text" >
+             <string>&amp;PLAIN</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" >
+           <widget class="QRadioButton" name="crammd5" >
+            <property name="text" >
+             <string>CRAM-MD&amp;5</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QRadioButton" name="digestmd5" >
+            <property name="text" >
+             <string>&amp;DIGEST-MD5</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" >
+           <widget class="QRadioButton" name="gssapi" >
+            <property name="text" >
+             <string>&amp;GSSAPI</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" >
+           <widget class="QRadioButton" name="ntlm" >
+            <property name="text" >
+             <string>&amp;NTLM</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="2" >
+        <widget class="KSeparator" name="kseparator_3" />
+       </item>
+       <item row="7" column="0" colspan="2" >
+        <widget class="QCheckBox" name="kcfg_specifyHostname" >
+         <property name="text" >
+          <string>Sen&amp;d custom hostname to server</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0" >
+        <widget class="QLabel" name="hostnameLabel" >
+         <property name="enabled" >
+          <bool>false</bool>
+         </property>
+         <property name="text" >
+          <string>Hos&amp;tname:</string>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy" >
+          <cstring>kcfg_localHostname</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1" >
+        <widget class="KLineEdit" name="kcfg_localHostname" >
+         <property name="enabled" >
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0" colspan="2" >
+        <widget class="KSeparator" name="kseparator_2" />
+       </item>
+       <item row="10" column="0" >
+        <widget class="QLabel" name="precommandLabel" >
+         <property name="text" >
+          <string>Precommand:</string>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1" >
+        <widget class="KLineEdit" name="kcfg_precommand" />
+       </item>
+       <item row="11" column="1" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>214</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
     </widget>
    </item>
   </layout>
  </widget>
- <layoutfunction spacing="KDialog::spacingHint()" margin="KDialog::marginHint()" />
+ <layoutfunction spacing="KDialog::spacingHint" margin="KDialog::marginHint" />
  <customwidgets>
   <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KSeparator</class>
-   <extends>QFrame</extends>
-   <header>kseparator.h</header>
+   <class>KButtonGroup</class>
+   <extends>QGroupBox</extends>
+   <header>kbuttongroup.h</header>
+   <container>1</container>
   </customwidget>
   <customwidget>
    <class>KIntNumInput</class>
@@ -409,15 +417,19 @@
    <header>knuminput.h</header>
   </customwidget>
   <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>KPushButton</class>
    <extends>QPushButton</extends>
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
-   <class>KButtonGroup</class>
-   <extends>QGroupBox</extends>
-   <header>kbuttongroup.h</header>
-   <container>1</container>
+   <class>KSeparator</class>
+   <extends>QFrame</extends>
+   <header>kseparator.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -425,58 +437,9 @@
   <tabstop>kcfg_name</tabstop>
   <tabstop>kcfg_host</tabstop>
   <tabstop>kcfg_port</tabstop>
-  <tabstop>kcfg_precommand</tabstop>
-  <tabstop>kcfg_requiresAuthentication</tabstop>
-  <tabstop>kcfg_userName</tabstop>
-  <tabstop>password</tabstop>
-  <tabstop>kcfg_storePassword</tabstop>
-  <tabstop>kcfg_specifyHostname</tabstop>
-  <tabstop>kcfg_localHostname</tabstop>
-  <tabstop>none</tabstop>
-  <tabstop>ssl</tabstop>
-  <tabstop>tls</tabstop>
-  <tabstop>login</tabstop>
-  <tabstop>plain</tabstop>
-  <tabstop>crammd5</tabstop>
-  <tabstop>digestmd5</tabstop>
-  <tabstop>ntlm</tabstop>
-  <tabstop>gssapi</tabstop>
-  <tabstop>checkCapabilities</tabstop>
  </tabstops>
  <resources/>
  <connections>
-  <connection>
-   <sender>kcfg_requiresAuthentication</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>kcfg_userName</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>152</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>175</x>
-     <y>287</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_requiresAuthentication</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>password</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>239</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>242</x>
-     <y>322</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>kcfg_requiresAuthentication</sender>
    <signal>toggled(bool)</signal>
@@ -484,12 +447,28 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>79</x>
-     <y>254</y>
+     <x>29</x>
+     <y>88</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>89</x>
-     <y>289</y>
+     <x>112</x>
+     <y>117</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_requiresAuthentication</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_userName</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>35</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>186</x>
+     <y>115</y>
     </hint>
    </hints>
   </connection>
@@ -500,44 +479,28 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>129</x>
-     <y>254</y>
+     <x>49</x>
+     <y>88</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>89</x>
-     <y>324</y>
+     <x>61</x>
+     <y>142</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>kcfg_specifyHostname</sender>
+   <sender>kcfg_requiresAuthentication</sender>
    <signal>toggled(bool)</signal>
-   <receiver>kcfg_localHostname</receiver>
+   <receiver>password</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>211</x>
-     <y>397</y>
+     <x>43</x>
+     <y>89</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>206</x>
-     <y>430</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_specifyHostname</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>hostnameLabel</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>131</x>
-     <y>397</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>89</x>
-     <y>432</y>
+     <x>140</x>
+     <y>142</y>
     </hint>
    </hints>
   </connection>
@@ -548,12 +511,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>61</x>
-     <y>254</y>
+     <x>75</x>
+     <y>86</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>69</x>
-     <y>356</y>
+     <x>62</x>
+     <y>176</y>
     </hint>
    </hints>
   </connection>
@@ -564,12 +527,44 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>226</x>
-     <y>254</y>
+     <x>82</x>
+     <y>89</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>110</x>
-     <y>102</y>
+     <x>78</x>
+     <y>202</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_specifyHostname</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>hostnameLabel</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>90</x>
+     <y>334</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>81</x>
+     <y>357</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_specifyHostname</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_localHostname</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>185</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>179</x>
+     <y>360</y>
     </hint>
    </hints>
   </connection>

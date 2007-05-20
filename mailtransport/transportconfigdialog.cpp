@@ -82,6 +82,15 @@ class MailTransport::TransportConfigDialog::Private
 
       for ( int i = 0; i < authGroup->buttons().count(); ++i )
         authGroup->buttons().at( i )->setEnabled( capa.contains( i ) );
+
+      if ( capa.count() == 0 ) {
+        smtp.noAuthPossible->setVisible( true );
+        smtp.kcfg_requiresAuthentication->setChecked( false );
+        smtp.kcfg_requiresAuthentication->setEnabled( false );
+      } else {
+        smtp.noAuthPossible->setVisible( false );
+        smtp.kcfg_requiresAuthentication->setEnabled( true );
+      }
     }
 };
 
