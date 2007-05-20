@@ -77,6 +77,11 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
     */
     virtual void start();
 
+    /**
+      Returns the Transport object containing the mail transport settings.
+    */
+    Transport* transport() const;
+
   protected:
     /**
       Creates a new mail transport job.
@@ -86,11 +91,6 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
       @see TransportManager::createTransportJob()
     */
     explicit TransportJob( Transport* transport, QObject* parent = 0 );
-
-    /**
-      Returns the Transport object containing the mail transport settings.
-    */
-    Transport* transport() const;
 
     /**
       Returns the sender of the mail.
