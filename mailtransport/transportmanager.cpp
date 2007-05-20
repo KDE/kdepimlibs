@@ -307,6 +307,7 @@ void TransportManager::removeTransport(int id)
   Transport *t = transportById( id, false );
   if ( !t )
     return;
+  emit transportRemoved( t->id(), t->name() );
   d->transports.removeAll( t );
   validateDefault();
   QString group = t->currentGroup();

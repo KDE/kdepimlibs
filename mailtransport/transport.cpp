@@ -44,6 +44,7 @@ class TransportPrivate {
     bool storePasswordInFile;
     bool needsWalletMigration;
     bool isAdHoc;
+    QString oldName;
 };
 
 Transport::Transport( const QString &cfgGroup ) :
@@ -133,6 +134,8 @@ void Transport::usrReadConfig()
     if ( Wallet::isOpen( Wallet::NetworkWallet() ) )
       readPassword();
   }
+
+  d->oldName = name();
 }
 
 void Transport::usrWriteConfig()
@@ -168,6 +171,10 @@ void Transport::usrWriteConfig()
 
   TransportBase::usrWriteConfig();
   TransportManager::self()->emitChangesCommitted();
+  if ( name() != d->oldName ) {
+    emit TransportManager::self()->transportRenamed( id(), d->oldName, name() );
+    d->oldName = name();
+  }
 }
 
 void Transport::readPassword()

@@ -195,6 +195,21 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     */
     void passwordsChanged();
 
+    /**
+      Emitted when a transport is deleted.
+      @param id The identifier of the deleted transport.
+      @param name The name of the deleted transport.
+    */
+    void transportRemoved( int id, const QString &name );
+
+    /**
+      Emitted when a transport has been renamed.
+      @param id The identifier of the renamed transport.
+      @param oldName The old name.
+      @param newName The new name.
+    */
+    void transportRenamed( int id, const QString &oldName, const QString &newName );
+
   protected:
     /**
       Returns a pointer to an open wallet if available, 0 otherwise.
