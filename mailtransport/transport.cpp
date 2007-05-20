@@ -108,6 +108,8 @@ QString Transport::authenticationTypeString() const
 void Transport::usrReadConfig()
 {
   TransportBase::usrReadConfig();
+  if ( d->oldName.isEmpty() )
+    d->oldName = name();
 
   // we have everything we need
   if ( !storePassword() || d->passwordLoaded )
@@ -134,8 +136,6 @@ void Transport::usrReadConfig()
     if ( Wallet::isOpen( Wallet::NetworkWallet() ) )
       readPassword();
   }
-
-  d->oldName = name();
 }
 
 void Transport::usrWriteConfig()
