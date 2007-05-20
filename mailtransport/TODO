@@ -4,7 +4,6 @@ Mail Transport TODO
 General
 -------
 - compile without QT3_SUPPORT
-- install mailtransport.upd once KMail and KNode are ported
 
 Migration
 ---------
@@ -36,3 +35,7 @@ Precommand
 transportconfigdialog
 ---------------------
 - re-enable the servertest when we know the final location. (TA)
+
+TransportManagementWidget
+-------------------------
+- support inline editing of transport names
