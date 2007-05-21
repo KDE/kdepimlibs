@@ -50,7 +50,7 @@ int main( int argc, char **argv )
   KComponentData componentData( &aboutData ); // needed by KConfig used by KSaveFile
 
   // Not needed, so let's save time
-  //QCoreApplication app( *KCmdLineArgs::qt_argc(), *KCmdLineArgs::qt_argv() );
+  //QCoreApplication app( KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv() );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 

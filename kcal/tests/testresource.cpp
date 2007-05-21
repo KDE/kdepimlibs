@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
   KCmdLineArgs::addCmdLineOptions( options );
 
   KComponentData componentData( &aboutData );
-  //QCoreApplication app( *KCmdLineArgs::qt_argc(), *KCmdLineArgs::qt_argv() );
+  //QCoreApplication app( KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv() );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   QString type = QString();
