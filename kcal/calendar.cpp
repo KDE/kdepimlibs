@@ -474,7 +474,7 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence,
     if ( duration > 0 ) {
       int doneduration = recur->durationTo( date.addDays( -1 ) );
       if ( doneduration >= duration ) {
-        kDebug(5850) << "The dissociated event already occurred more often "
+        kDebug(5800) << "The dissociated event already occurred more often "
                      << "than it was supposed to ever occur. ERROR!" << endl;
         recur->clear();
       } else {
