@@ -176,12 +176,16 @@ QString VCalFormat::toString( Calendar *calendar )
 
   // TODO: Use all data.
   Event::List events = calendar->events();
+  if( events.isEmpty())
+  {
+     cleanVObject (vcal);
+     return QString();
+  }
   Event *event = events.first();
   if ( !event ) {
     cleanVObject (vcal);
     return QString();
   }
-
   VObject *vevent = eventToVEvent( event );
 
   addVObjectProp( vcal, vevent );
