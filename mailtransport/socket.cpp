@@ -154,7 +154,7 @@ void Socket::reconnect()
              ( KSocketFactory::connectToHost( d->protocol, d->server, d->port, this
                                             ) );
 
-  d->socket->setProtocol( QSslSocket::AnyProtocol );
+  d->socket->setProtocol( QSsl::AnyProtocol );
 
   connect( d->socket, SIGNAL( stateChanged( QAbstractSocket::SocketState ) ),
            SLOT( slotStateChanged( QAbstractSocket::SocketState ) ) );
