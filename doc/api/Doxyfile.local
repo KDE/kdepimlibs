@@ -11,14 +11,22 @@ SORT_MEMBER_DOCS = YES
 PREDEFINED = KCAL_EXPORT="" \
 	KTNEF_EXPORT="" \
 	KABC_EXPORT="" \
+        KABC_FILE_CORE_EXPORT="" \
+        KABC_DIR_EXPORT="" \
+        KABC_NET_EXPORT="" \
 	KRESOURCES_EXPORT="" \
 	SYNDICATION_EXPORT="" \
+        KIMAP_EXPORT="" \
+        KMIME_EXPORT="" \
+        KPIMUTILS_EXPORT="" \
+        KBLOG_EXPORT="" \
+        KLDAP_EXPORT="" \
+        KABC_LDAPKIO_EXPORT="" \
+        MAILTRANSPORT_EXPORT="" \
 	KDE_DEPRECATED="" \
 	Q_OS_UNIX="" \
 	Q_SLOTS="slots" \
 	Q_SIGNALS="signals" \
-	EMAILFUNCTIONS_EXPORT="" \
-	KMIME_EXPORT="" \
 	kmime_mk_trivial_ctor="" \
 	kmime_mk_trivial_ctor_with_name=""
 
