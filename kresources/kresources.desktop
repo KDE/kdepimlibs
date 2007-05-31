@@ -15,12 +15,14 @@ Name[ja]=KDE リソース
 Name[pa]=KDE ਸਰੋਤ
 Name[sv]=KDE-resurser
 Name[x-test]=xxKDE Resourcesxx
+Name[zh_TW]=KDE 資源
 
 Comment=Configure KDE Resources
 Comment[el]=Ρύθμιση πόρων του KDE
 Comment[ja]=KDE リソースの設定
 Comment[sv]=Anpassa KDE-resurser
 Comment[x-test]=xxConfigure KDE Resourcesxx
+Comment[zh_TW]=設定 KDE 資源
 
 Keywords=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap
 Keywords[el]=πόροι,πόροι του konnector,πόρος επαφής,πόρος ημερολογίου,πόρος σημειώσεων,πόρος ειδοποίησης,imap

@@ -7,6 +7,7 @@ Name[ja]=ローカルファイルのカレンダー
 Name[pa]=ਲੋਕਲ ਫਾਇਲ 'ਚ ਕੈਲੰਡਰ
 Name[sv]=Kalender i lokal fil
 Name[x-test]=xxCalendar in Local Filexx
+Name[zh_TW]=本地端檔案裡的行事曆
 X-KDE-Library=kcal_local
 Type=Service
 ServiceTypes=KResources/Plugin

@@ -8,6 +8,7 @@ Comment[ja]=K リソース・マネージャ
 Comment[pa]=ਕੇ-ਰੀਸੋਰਸ ਮੈਨੇਜਰ
 Comment[sv]=Resurshantering
 Comment[x-test]=xxKResource Managerxx
+Comment[zh_TW]=KResource 管理者
 
 [PropertyDef::X-KDE-ResourceFamily]
 Type=QString

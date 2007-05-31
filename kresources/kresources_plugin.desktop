@@ -7,6 +7,7 @@ Comment[el]=Εφαρμογίδιο πλαισίου εργασίας του KRes
 Comment[ja]=K リソース・フレームワーク・プラグイン
 Comment[sv]=Insticksprogram för resursramverk
 Comment[x-test]=xxKResource Framework Pluginxx
+Comment[zh_TW]=KResource 框架外掛程式
 
 [PropertyDef::X-KDE-ResourceFamily]
 Type=QString
