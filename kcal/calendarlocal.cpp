@@ -1,29 +1,32 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 1998 Preston Brown <pbrown@kde.org>
-    Copyright (c) 2001,2003,2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 1998 Preston Brown <pbrown@kde.org>
+  Copyright (c) 2001,2003,2004 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 /**
   @file
   This file is part of the API for handling calendar data and
   defines the CalendarLocal class.
+
+  @brief
+  This class provides a calendar stored as a local file.
 
   @author Preston Brown
   @author Cornelius Schumacher
@@ -56,16 +59,21 @@ class KCal::CalendarLocal::Private
   public:
     Private()
     {
-        mDeletedIncidences.setAutoDelete( true );
+      mDeletedIncidences.setAutoDelete( true );
     }
-    QString mFileName;                  // filename where the calendar is stored
+    QString mFileName;                 // filename where the calendar is stored
+    CalFormat *mFormat;                // calendar format
+
     QHash<QString, Event *> mEvents;    // hash on uids of all calendar events
     QHash<QString, Todo *> mTodos;      // hash on uids of all calendar to-dos
     QHash<QString, Journal *> mJournals;// hash on uids of all calendar journals
     Incidence::List mDeletedIncidences; // list of all deleted incidences
+
+    void insertEvent( Event *event );
+    void insertTodo( Todo *todo );
+    void insertJournal( Journal *journal );
 };
 //@endcond
-
 
 CalendarLocal::CalendarLocal( const KDateTime::Spec &timeSpec )
   : Calendar( timeSpec ),
@@ -102,6 +110,20 @@ bool CalendarLocal::reload()
   return storage.load();
 }
 
+bool CalendarLocal::save()
+{
+  if ( d->mFileName.isEmpty() ) {
+    return false;
+  }
+
+  if ( isModified() ) {
+    FileStorage storage( this, d->mFileName, d->mFormat );
+    return storage.save();
+  } else {
+    return true;
+  }
+}
+
 bool CalendarLocal::save( const QString &fileName, CalFormat *format )
 {
   // Save only if the calendar is either modified, or saved to a
@@ -131,7 +153,7 @@ void CalendarLocal::close()
 
 bool CalendarLocal::addEvent( Event *event )
 {
-  insertEvent( event );
+  d->insertEvent( event );
 
   event->registerObserver( this );
 
@@ -171,7 +193,7 @@ Event *CalendarLocal::event( const QString &uid )
 
 bool CalendarLocal::addTodo( Todo *todo )
 {
-  insertTodo( todo );
+  d->insertTodo( todo );
 
   todo->registerObserver( this );
 
@@ -185,20 +207,21 @@ bool CalendarLocal::addTodo( Todo *todo )
   return true;
 }
 
-void CalendarLocal::insertTodo( Todo *todo )
+//@cond PRIVATE
+void CalendarLocal::Private::insertTodo( Todo *todo )
 {
   QString uid = todo->uid();
-  if ( d->mTodos.value( uid ) == 0 ) {
-    d->mTodos.insert( uid, todo );
-  }
+  if ( mTodos.value( uid ) == 0 ) {
+    mTodos.insert( uid, todo );
+  } else {
 #ifndef NDEBUG
-  else {
     // if we already have an to-do with this UID, it must be the same to-do,
     // otherwise something's really broken
-    Q_ASSERT( d->mTodos.value( uid ) == todo );
-  }
+    Q_ASSERT( mTodos.value( uid ) == todo );
 #endif
+  }
 }
+//@endcond
 
 bool CalendarLocal::deleteTodo( Todo *todo )
 {
@@ -276,20 +299,21 @@ Alarm::List CalendarLocal::alarms( const KDateTime &from, const KDateTime &to )
   return alarms;
 }
 
-void CalendarLocal::insertEvent( Event *event )
+//@cond PRIVATE
+void CalendarLocal::Private::insertEvent( Event *event )
 {
   QString uid = event->uid();
-  if ( d->mEvents.value( uid ) == 0 ) {
-    d->mEvents.insert( uid, event );
-  }
-#ifndef NDEBUG
-  else {
+  if ( mEvents.value( uid ) == 0 ) {
+    mEvents.insert( uid, event );
+  } else {
+#ifdef NDEBUG
     // if we already have an event with this UID, it must be the same event,
     // otherwise something's really broken
-    Q_ASSERT( d->mEvents.value( uid ) == event );
-  }
+    Q_ASSERT( mEvents.value( uid ) == event );
 #endif
+  }
 }
+//@endcond
 
 Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
                                              EventSortField sortField,
@@ -409,7 +433,7 @@ Event::List CalendarLocal::rawEvents( EventSortField sortField,
 
 bool CalendarLocal::addJournal( Journal *journal )
 {
-  insertJournal( journal );
+  d->insertJournal( journal );
 
   journal->registerObserver( this );
 
@@ -420,20 +444,21 @@ bool CalendarLocal::addJournal( Journal *journal )
   return true;
 }
 
-void CalendarLocal::insertJournal( Journal *journal )
+//@cond PRIVATE
+void CalendarLocal::Private::insertJournal( Journal *journal )
 {
   QString uid = journal->uid();
-  if ( d->mJournals.value( uid ) == 0 ) {
-    d->mJournals.insert( uid, journal );
-  }
+  if ( mJournals.value( uid ) == 0 ) {
+    mJournals.insert( uid, journal );
+  } else {
 #ifndef NDEBUG
-  else {
     // if we already have an journal with this UID, it must be the same journal,
     // otherwise something's really broken
-    Q_ASSERT( d->mJournals.value( uid ) == journal );
-  }
+    Q_ASSERT( mJournals.value( uid ) == journal );
 #endif
+  }
 }
+//@endcond
 
 bool CalendarLocal::deleteJournal( Journal *journal )
 {

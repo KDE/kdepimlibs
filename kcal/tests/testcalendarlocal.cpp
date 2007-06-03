@@ -48,6 +48,18 @@ void CalendarLocalTest::testSave() {
   unlink( "foo.ics" );
 }
 
+void CalendarLocalTest::testSaveLoadSave() {
+  CalendarLocal cal( QLatin1String( "UTC" ) );
+  cal.setProductId( QLatin1String( "fredware calendar" ) );
+  QVERIFY( cal.timeZoneId() == QLatin1String( "UTC" ) );
+  QVERIFY( cal.timeSpec() == KDateTime::UTC );
+  QVERIFY( cal.save( "foo.ics" ) );
+  cal.close();
+  QVERIFY( cal.load( "foo.ics" ) );
+  QVERIFY( cal.save() );
+  unlink( "foo.ics" );
+}
+
 void CalendarLocalTest::testEvents() {
   CalendarLocal cal( KDateTime::UTC );
   cal.setProductId( QLatin1String( "fredware calendar" ) );

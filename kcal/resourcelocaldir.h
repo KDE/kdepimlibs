@@ -62,15 +62,28 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
     /** deletes an event from this calendar. */
     bool deleteEvent(Event *);
 
+    /** Removes all Events from this calendar. */
+    void deleteAllEvents();
+
     /**
       Remove a todo from the todolist.
     */
     bool deleteTodo( Todo * );
 
     /**
+      Removes all todos from this calendar.
+    */
+    void deleteAllTodos();
+
+    /**
       Remove a journal from the journallist.
     */
     bool deleteJournal( Journal * );
+
+    /**
+      Removes all journals from this calendar.
+    */
+    void deleteAllJournals();
 
     void dump() const;
 

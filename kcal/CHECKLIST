@@ -6,7 +6,7 @@ alarm                 |   D   |    D    |   D   |    D    |    D    | Allen
 attachment            |   D   |    D    |   D   |    D    |    D    | Allen
 attendee              |   D   |    D    |   D   |    D    |    D    | Allen
 calendar              |   D   |    D    |   D   |   n/a   |    D    | Allen
-calendarlocal         |       |         |       |    D    |    D    | Allen
+calendarlocal         |   D   |    D    |   D   |    D    |    D    | Allen
 calendarnull          |   D   |    D    |   D   |    D    |    D    | Allen
 calendarresources     |   D   |         |       |         |         | Allen
 calfilter             |   D   |    D    |   D   |    D    |    D    | Allen

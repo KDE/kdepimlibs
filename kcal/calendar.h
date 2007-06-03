@@ -342,8 +342,10 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
     /**
       Syncs changes in memory to persistent storage.
+
+      @return true if the save was successful; false otherwise.
     */
-    virtual void save() = 0;
+    virtual bool save() = 0;
 
     /**
       Loads the calendar contents from storage. This requires that the
@@ -500,9 +502,15 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @return true if the Event was successfully remove; false otherwise.
 
-      @see addEvent()
+      @see addEvent(), deleteAllEvents()
     */
     virtual bool deleteEvent( Event *event ) = 0;
+
+    /**
+      Removes all Events from the calendar.
+      @see deleteEvent()
+    */
+    virtual void deleteAllEvents() = 0;
 
     /**
       Sort a list of Events.
@@ -650,9 +658,15 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @return true if the Todo was successfully removed; false otherwise.
 
-      @see addTodo()
+      @see addTodo(), deleteAllTodos()
     */
     virtual bool deleteTodo( Todo *todo ) = 0;
+
+    /**
+      Removes all To-dos from the calendar.
+      @see deleteTodo()
+    */
+    virtual void deleteAllTodos() = 0;
 
     /**
       Sort a list of Todos.
@@ -739,9 +753,15 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @return true if the Journal was successfully removed; false otherwise.
 
-      @see addJournal()
+      @see addJournal(), deleteAllJournals()
     */
     virtual bool deleteJournal( Journal *journal ) = 0;
+
+    /**
+      Removes all Journals from the calendar.
+      @see deleteJournal()
+    */
+    virtual void deleteAllJournals() = 0;
 
     /**
       Sort a list of Journals.

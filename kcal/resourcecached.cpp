@@ -181,6 +181,10 @@ bool ResourceCached::deleteEvent( Event *event )
   return mCalendar.deleteEvent( event );
 }
 
+void ResourceCached::deleteAllEvents()
+{
+  mCalendar.deleteAllEvents();
+}
 
 Event *ResourceCached::event( const QString &uid )
 {
@@ -222,11 +226,20 @@ bool ResourceCached::deleteTodo( Todo *todo )
   return mCalendar.deleteTodo( todo );
 }
 
+void ResourceCached::deleteAllTodos()
+{
+  mCalendar.deleteAllTodos();
+}
+
 bool ResourceCached::deleteJournal( Journal *journal )
 {
   return mCalendar.deleteJournal( journal );
 }
 
+void ResourceCached::deleteAllJournals()
+{
+  mCalendar.deleteAllJournals();
+}
 
 Todo::List ResourceCached::rawTodos( TodoSortField sortField, SortDirection sortDirection )
 {

@@ -1,22 +1,22 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 /*
   @file
@@ -86,19 +86,19 @@ class KCAL_EXPORT CalendarNull : public Calendar
       @copydoc
       Calendar::close()
     */
-    void close() {}
+    void close();
 
     /**
       @copydoc
       Calendar::save()
     */
-    void save() {}
+    bool save();
 
     /**
       @copydoc
       Calendar::reload()
     */
-    bool reload() { return true; }
+    bool reload();
 
   // Event Specific Methods //
 
@@ -106,31 +106,33 @@ class KCAL_EXPORT CalendarNull : public Calendar
       @copydoc
       Calendar::addEvent()
     */
-    bool addEvent( Event *event ) { Q_UNUSED ( event ); return false; }
+    bool addEvent( Event *event );
 
     /**
       @copydoc
       Calendar::deleteEvent()
     */
-    bool deleteEvent( Event *event ) { Q_UNUSED( event ); return false; }
+    bool deleteEvent( Event *event );
+
+    /**
+      @copydoc
+      Calendar::deleteAllEvents()
+    */
+    void deleteAllEvents();
 
     /**
       @copydoc
       Calendar::rawEvents(EventSortField, SortDirection)
     */
     Event::List rawEvents( EventSortField sortField,
-                           SortDirection sortDirection )
-      { Q_UNUSED( sortField ); Q_UNUSED( sortDirection );
-        return Event::List(); }
+                           SortDirection sortDirection );
 
     /**
       @copydoc
       Calendar::rawEvents(const QDate &, const QDate &, bool)
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
-                           bool inclusive )
-      { Q_UNUSED( start ); Q_UNUSED( end ); Q_UNUSED( inclusive );
-        return Event::List(); }
+                           bool inclusive );
 
     /**
       @copydoc
@@ -138,112 +140,113 @@ class KCAL_EXPORT CalendarNull : public Calendar
     */
     Event::List rawEventsForDate( const QDate &date,
                                   EventSortField sortField=EventSortUnsorted,
-                                  SortDirection sortDirection=SortDirectionAscending )
-      { Q_UNUSED( date ); Q_UNUSED( sortField ); Q_UNUSED( sortDirection );
-        return Event::List(); }
+                                  SortDirection sortDirection=SortDirectionAscending );
 
     /**
       @copydoc
       Calendar::rawEventsForDate(const KDateTime &)
     */
-    Event::List rawEventsForDate( const KDateTime &dt )
-      { Q_UNUSED( dt ); return Event::List(); }
+    Event::List rawEventsForDate( const KDateTime &dt );
 
     /**
       @copydoc
-      Calendar::event(const QString &)
+      Calendar::event()
     */
-    Event *event( const QString &uid ) { Q_UNUSED( uid ); return 0; }
+    Event *event( const QString &uid );
 
   // To-do Specific Methods //
 
     /**
       @copydoc
-      Calendar::addTodo(Todo *)
+      Calendar::addTodo()
     */
-    bool addTodo( Todo *todo ) { Q_UNUSED( todo ); return false; }
+    bool addTodo( Todo *todo );
 
     /**
       @copydoc
-      Calendar::deleteTodo(Todo *)
+      Calendar::deleteTodo()
     */
-    bool deleteTodo( Todo *todo ) { Q_UNUSED( todo ); return false; }
+    bool deleteTodo( Todo *todo );
 
     /**
       @copydoc
-      Calendar::rawTodos(TodoSortField, SortDirection)
+      Calendar::deleteAllTodos()
+    */
+    void deleteAllTodos();
+
+    /**
+      @copydoc
+      Calendar::rawTodos()
     */
     Todo::List rawTodos( TodoSortField sortField,
-                         SortDirection sortDirection )
-      { Q_UNUSED( sortField ); Q_UNUSED( sortDirection ); return Todo::List(); }
+                         SortDirection sortDirection );
 
     /**
       @copydoc
-      Calendar::rawTodosForDate(const QDate &)
+      Calendar::rawTodosForDate()
     */
-    Todo::List rawTodosForDate( const QDate &date )
-      { Q_UNUSED ( date ); return Todo::List(); }
+    Todo::List rawTodosForDate( const QDate &date );
 
     /**
       @copydoc
-      Calendar::todo(const QString &)
+      Calendar::todo()
     */
-    Todo *todo( const QString &uid ) { Q_UNUSED( uid ); return 0; }
+    Todo *todo( const QString &uid );
 
   // Journal Specific Methods //
 
     /**
       @copydoc
-      Calendar::addJournal(Journal *)
+      Calendar::addJournal()
     */
-    bool addJournal( Journal *journal ) { Q_UNUSED( journal ); return false; }
+    bool addJournal( Journal *journal );
 
     /**
       @copydoc
-      Calendar::deleteJournal(Journal *)
+      Calendar::deleteJournal()
     */
-    bool deleteJournal( Journal *journal )
-      { Q_UNUSED( journal ); return false; }
+    bool deleteJournal( Journal *journal );
 
     /**
       @copydoc
-      Calendar::rawJournals(JournalSortField, SortDirection)
+      Calendar::deleteAllJournals()
+    */
+    void deleteAllJournals();
+
+    /**
+      @copydoc
+      Calendar::rawJournals()
     */
     Journal::List rawJournals( JournalSortField sortField,
-                               SortDirection sortDirection )
-      { Q_UNUSED( sortField ); Q_UNUSED( sortDirection );
-        return Journal::List(); }
+                               SortDirection sortDirection );
 
     /**
       @copydoc
-      Calendar::rawJournalsForDate(const QDate &)
+      Calendar::rawJournalsForDate()
     */
-    Journal::List rawJournalsForDate( const QDate &date )
-      { Q_UNUSED( date ); return Journal::List(); }
+    Journal::List rawJournalsForDate( const QDate &date );
 
     /**
       @copydoc
-      Calendar::journal(const QString &)
+      Calendar::journal()
     */
-    Journal *journal( const QString &uid ) { Q_UNUSED( uid ); return 0; }
+    Journal *journal( const QString &uid );
 
   // Alarm Specific Methods //
 
     /**
       @copydoc
-      Calendar::alarms(const KDateTime &, const KDateTime &)
+      Calendar::alarms()
     */
-    Alarm::List alarms( const KDateTime &from, const KDateTime &to )
-      { Q_UNUSED( from ); Q_UNUSED( to ); return Alarm::List(); }
+    Alarm::List alarms( const KDateTime &from, const KDateTime &to );
 
   // Observer Specific Methods //
 
     /**
       @copydoc
-      Calendar::incidenceUpdated(IncidenceBase *)
+      Calendar::incidenceUpdated()
     */
-    void incidenceUpdated( IncidenceBase *incidenceBase )
-      { Q_UNUSED( incidenceBase ); }
+    void incidenceUpdated( IncidenceBase *incidenceBase );
 
   private:
     //@cond PRIVATE

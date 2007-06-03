@@ -27,10 +27,11 @@
 class CalendarLocalTest : public QObject
 {
   Q_OBJECT
-private Q_SLOTS:
-  void testValidity();
-  void testSave();
-  void testEvents();
+  private Q_SLOTS:
+    void testValidity();
+    void testSave();
+    void testSaveLoadSave();
+    void testEvents();
 };
 
 #endif

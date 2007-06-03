@@ -206,7 +206,6 @@ void ResourceLocalDir::reload( const QString &file )
   emit resourceChanged( this );
 }
 
-
 bool ResourceLocalDir::deleteEvent(Event *event)
 {
   kDebug(5800) << "ResourceLocalDir::deleteEvent" << endl;
@@ -216,6 +215,10 @@ bool ResourceLocalDir::deleteEvent(Event *event)
     return( false );
 }
 
+void ResourceLocalDir::deleteAllEvents()
+{
+  mCalendar.deleteAllEvents();
+}
 
 bool ResourceLocalDir::deleteTodo(Todo *todo)
 {
@@ -225,6 +228,10 @@ bool ResourceLocalDir::deleteTodo(Todo *todo)
     return( false );
 }
 
+void ResourceLocalDir::deleteAllTodos()
+{
+  mCalendar.deleteAllTodos();
+}
 
 bool ResourceLocalDir::deleteJournal( Journal *journal )
 {
@@ -234,6 +241,10 @@ bool ResourceLocalDir::deleteJournal( Journal *journal )
     return( false );
 }
 
+void ResourceLocalDir::deleteAllJournals()
+{
+  mCalendar.deleteAllJournals();
+}
 
 void ResourceLocalDir::dump() const
 {

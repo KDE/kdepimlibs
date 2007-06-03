@@ -161,6 +161,11 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual bool deleteEvent( Event * ) = 0;
 
     /**
+      Removes all Events from the calendar.
+    */
+    virtual void deleteAllEvents() = 0;
+
+    /**
       Retrieves an event on the basis of the unique string ID.
     */
     virtual Event *event( const QString &uid ) = 0;
@@ -256,25 +261,33 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       Add a todo to the todolist.
     */
     virtual bool addTodo( Todo *todo ) = 0;
+
     /**
       Remove a todo from the todolist.
     */
     virtual bool deleteTodo( Todo * ) = 0;
+
+    /**
+      Removes all To-dos from the calendar.
+    */
+    virtual void deleteAllTodos() = 0;
+
     /**
       Searches todolist for an event with this unique id.
 
       @return pointer to todo or 0 if todo wasn't found
     */
     virtual Todo *todo( const QString &uid ) = 0;
+
     /**
       Return list of all todos.
     */
     virtual Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
+
     /**
       Returns list of todos due on the specified date.
     */
     virtual Todo::List rawTodosForDate( const QDate &date ) = 0;
-
 
     /**
       Add a Journal entry to the resource.
@@ -287,13 +300,20 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual bool deleteJournal( Journal * ) = 0;
 
     /**
+      Removes all Journals from the calendar.
+    */
+    virtual void deleteAllJournals() = 0;
+
+    /**
       Return Journal with given unique id.
     */
     virtual Journal *journal( const QString &uid ) = 0;
+
     /**
       Return list of all journals.
     */
     virtual Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
+
     /**
       Returns list of journals for the given date.
     */

@@ -189,23 +189,32 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       Add event to calendar.
     */
     bool addEvent(Event *anEvent);
+
     /**
       Deletes an event from this calendar.
     */
     bool deleteEvent(Event *);
 
     /**
+      Removes all Events from this calendar.
+    */
+    void deleteAllEvents();
+
+    /**
       Retrieves an event on the basis of the unique string ID.
     */
     Event *event(const QString &UniqueStr);
+
     /**
       Return filtered list of all events in calendar.
     */
     Event::List events();
+
     /**
       Return unfiltered list of all events in calendar.
     */
     Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
@@ -216,6 +225,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       Get unfiltered events for date \a dt.
     */
     Event::List rawEventsForDate( const KDateTime &dt );
+
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events are returned, which are completely included in the range.
@@ -231,35 +241,53 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       Remove a todo from the todolist.
     */
     bool deleteTodo( Todo * );
+
+    /**
+      Removes all todos from this calendar.
+    */
+    void deleteAllTodos();
+
     /**
       Searches todolist for an event with this unique string identifier,
       returns a pointer or null.
     */
     Todo *todo( const QString &uid );
+
     /**
       Return list of all todos.
     */
     Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+
     /**
       Returns list of todos due on the specified date.
     */
     Todo::List rawTodosForDate( const QDate &date );
+
     /**
       Add a Journal entry to calendar
     */
     virtual bool addJournal( Journal * );
+
     /**
       Remove a Journal from the calendar
     */
     virtual bool deleteJournal( Journal * );
+
+    /**
+      Removes all Journals from this calendar.
+    */
+    virtual void deleteAllJournals();
+
     /**
       Return Journal with given unique id.
     */
     virtual Journal *journal( const QString &uid );
+
     /**
       Return list of all journals.
     */
     Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted,SortDirection sortDirection = SortDirectionAscending );
+
     /**
       Return list of journals for the given date.
     */

@@ -1,23 +1,23 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 1998 Preston Brown <pbrown@kde.org>
-    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 1998 Preston Brown <pbrown@kde.org>
+  Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 /**
   @file
@@ -44,47 +44,66 @@ class KCAL_EXPORT CalendarLocal : public Calendar
 {
   public:
     /**
-      Constructs a new calendar, with variables initialized to sane values.
+      @copydoc
+      Calendar::Calendar(const KDateTime::Spec &)
     */
     explicit CalendarLocal( const KDateTime::Spec &timeSpec );
+
     /**
-      Constructs a new calendar, with variables initialized to sane values.
+      @copydoc
+      Calendar::Calendar(const QString &)
     */
     explicit CalendarLocal( const QString &timeZoneId );
 
     /**
-      Destructor.
+      @copydoc
+      Calendar::~Calendar()
     */
     ~CalendarLocal();
 
     /**
-      Loads a calendar on disk in vCalendar or iCalendar format into the current
-      calendar. Incidences already present are preserved. If an event of the
-      file to be loaded has the same unique id as an incidence already present
-      the new incidence is ignored.
+      Loads a calendar on disk in vCalendar or iCalendar format into the
+      current calendar. Incidences already present are preserved. If an
+      incidence of the file to be loaded has the same unique id as an
+      incidence already present the new incidence is ignored.
 
       To load a CalendarLocal object from a file without preserving existing
       incidences call close() before load().
 
-      @return true, if successful, false on error.
       @param fileName the name of the calendar on disk.
-      @param format the format to use. If 0, iCalendar and vCalendar will be used
+      @param format the format to use. If 0, an attempt is made to load
+      iCalendar format, and if that fails tries vCalendar format.
+      @return true, if successful, false on error.
+
+      @see save( const QString &, CalFormat *)
     */
     bool load( const QString &fileName, CalFormat *format = 0 );
 
     /**
-     * Reloads the contents of the storage into memory. The associated file name
-     * must be known, in other words a previous load() must have been executed.
-     * @return success or failure
+      Reloads the contents of the storage into memory. The associated file name
+      must be known, in other words a previous load() must have been executed.
+      @return true if the reload was successful; false otherwise.
     */
     bool reload();
 
     /**
-      Writes out the calendar to disk in the specified \a format.
+      Writes the calendar to disk. The associated file name and format must
+      be known, in other words a previous load() must have been executed.
+
+      @return true if the save was successful; false otherwise.
+      @see save(const QString &, CalFormat *)
+    */
+    bool save();
+
+    /**
+      Writes the calendar to disk in the specified @p format.
       CalendarLocal takes ownership of the CalFormat object.
+
       @param fileName the name of the file
-      @param format the format to use
-      @return true, if successful, false on error.
+      @param format the format to use. If 0, iCalendar will be used.
+      @return true if the save was successful; false otherwise.
+
+      @see save(), load( const QString &, CalFormat *)
     */
     bool save( const QString &fileName, CalFormat *format = 0 );
 
@@ -92,8 +111,6 @@ class KCAL_EXPORT CalendarLocal : public Calendar
       Clears out the current calendar, freeing all used memory etc. etc.
     */
     void close();
-
-    void save() {}
 
   // Event Specific Methods //
 
@@ -110,7 +127,8 @@ class KCAL_EXPORT CalendarLocal : public Calendar
     bool deleteEvent( Event *event );
 
     /**
-      >Deletes all events from this calendar.
+      @copydoc
+      Calendar::deleteAllEvents()
     */
     void deleteAllEvents();
 
@@ -145,7 +163,7 @@ class KCAL_EXPORT CalendarLocal : public Calendar
 
     /**
       @copydoc
-      Calendar::event(const QString &)
+      Calendar::event()
     */
     Event *event( const QString &uid );
 
@@ -159,18 +177,19 @@ class KCAL_EXPORT CalendarLocal : public Calendar
 
     /**
       @copydoc
-      Calendar::deleteTodo(Todo *)
+      Calendar::deleteTodo()
     */
     bool deleteTodo( Todo *todo );
 
     /**
-      Deletes all to-dos from this calendar.
+      @copydoc
+      Calendar::deleteAllTodos()
     */
     void deleteAllTodos();
 
     /**
       @copydoc
-      Calendar::rawTodos(TodoSortField, SortDirection)
+      Calendar::rawTodos()
     */
     Todo::List rawTodos(
       TodoSortField sortField = TodoSortUnsorted,
@@ -178,13 +197,13 @@ class KCAL_EXPORT CalendarLocal : public Calendar
 
     /**
       @copydoc
-      Calendar::rawTodosForDate(const QDate &)
+      Calendar::rawTodosForDate()
     */
     Todo::List rawTodosForDate( const QDate &date );
 
     /**
       @copydoc
-      Calendar::todo(const QString &)
+      Calendar::todo()
     */
     Todo *todo( const QString &uid );
 
@@ -192,24 +211,25 @@ class KCAL_EXPORT CalendarLocal : public Calendar
 
     /**
       @copydoc
-      Calendar::addJournal(Journal *)
+      Calendar::addJournal()
     */
     bool addJournal( Journal *journal );
 
     /**
       @copydoc
-      Calendar::deleteJournal(Journal *)
+      Calendar::deleteJournal()
     */
     bool deleteJournal( Journal *journal );
 
     /**
-      >Deletes all journals from this calendar.
+      @copydoc
+      Calendar::deleteAllJournals()
     */
     void deleteAllJournals();
 
     /**
-       @copydoc
-       Calendar::rawJournals(JournalSortField, SortDirection)
+      @copydoc
+      Calendar::rawJournals()
     */
     Journal::List rawJournals(
       JournalSortField sortField = JournalSortUnsorted,
@@ -217,13 +237,13 @@ class KCAL_EXPORT CalendarLocal : public Calendar
 
     /**
       @copydoc
-      Calendar::rawJournalsForDate(const QDate &)
+      Calendar::rawJournalsForDate()
     */
     Journal::List rawJournalsForDate( const QDate &date );
 
     /**
       @copydoc
-      Calendar::journal(const QString &)
+      Calendar::journal()
     */
     Journal *journal( const QString &uid );
 
@@ -231,21 +251,19 @@ class KCAL_EXPORT CalendarLocal : public Calendar
 
     /**
       @copydoc
-      Calendar::alarms(const KDateTime &, const KDateTime &)
+      Calendar::alarms()
     */
     Alarm::List alarms( const KDateTime &from, const KDateTime &to );
 
     /**
-      >Return all alarms, which occur before given date.
+      Return a list of Alarms that occur before the specified timestamp.
+
+      @param to is the ending timestamp.
+      @return the list of Alarms occurring before the specified KDateTime.
     */
     Alarm::List alarmsTo( const KDateTime &to );
 
   private:
-    /** inserts an event into its "proper place" in the calendar. */
-    void insertEvent( Event *event );
-    void insertTodo( Todo *todo );
-    void insertJournal( Journal *journal );
-
     //@cond PRIVATE
     class Private;
     Private *const d;
