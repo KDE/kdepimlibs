@@ -41,9 +41,7 @@
 
 #include "manager.h"
 
-class KComboBox;
 
-class QPushButton;
 class QTreeWidget;
 class QTreeWidgetItem;
 

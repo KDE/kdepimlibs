@@ -25,7 +25,6 @@
 
 #include "kcal.h"
 
-class KConfig;
 
 namespace KCal {
 

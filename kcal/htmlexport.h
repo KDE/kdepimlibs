@@ -31,7 +31,6 @@
 #include "htmlexportsettings.h"
 #include "kcal.h"
 
-class QFile;
 class QTextStream;
 
 namespace KCal {

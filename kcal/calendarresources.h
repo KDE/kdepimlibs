@@ -41,7 +41,6 @@ class QWidget;
 
 namespace KCal {
 
-class CalFormat;
 
 /**
    @brief

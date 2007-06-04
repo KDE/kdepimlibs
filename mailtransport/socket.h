@@ -23,7 +23,6 @@
 #include <mailtransport/mailtransport_export.h>
 
 #include <QSslSocket>
-class QDomElement;
 
 namespace MailTransport
 {

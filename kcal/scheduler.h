@@ -29,7 +29,6 @@
 namespace KCal {
 
 class IncidenceBase;
-class Event;
 class Calendar;
 class ICalFormat;
 class FreeBusyCache;

@@ -33,14 +33,10 @@
 #include "kresources.h"
 #include <kdialog.h>
 
-class KLineEdit;
-class QCheckBox;
-class KButtonBox;
 
 namespace KRES {
   class Resource;
-  class ConfigWidget;
-
+  
 /**
   @brief
   A dialog for configuring a resource.

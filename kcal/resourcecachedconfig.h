@@ -25,8 +25,6 @@
 #include "kcal.h"
 
 class QButtonGroup;
-class QRadioButton;
-class QGroupBox;
 class QSpinBox;
 
 namespace KCal {

@@ -25,7 +25,6 @@
 #include <QtCore/QList>
 #include <QtCore/QObject>
 
-class KConfig;
 class KJob;
 
 namespace KWallet {

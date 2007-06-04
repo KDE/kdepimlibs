@@ -38,7 +38,6 @@
 
 namespace KCal {
 
-class ICalTimeZone;
 
 /**
   This class provides a calendar resource using a local CalendarLocal object to

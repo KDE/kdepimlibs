@@ -30,8 +30,6 @@
 #include "kxmlrpcclient.h"
 
 class QString;
-class QDomDocument;
-class QDomElement;
 
 /** Namespace for XmlRpc related classes */
 namespace KXmlRpc {

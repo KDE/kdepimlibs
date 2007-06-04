@@ -31,7 +31,6 @@ class QProgressBar;
 namespace MailTransport 
 {
 
-class Socket;
 class ServerTestPrivate;
 
 /**

@@ -43,7 +43,6 @@ class ICalTimeZonesPrivate;
 class ICalTimeZonePrivate;
 class ICalTimeZoneSourcePrivate;
 class ICalTimeZoneDataPrivate;
-class Recurrence;
 
 
 /**

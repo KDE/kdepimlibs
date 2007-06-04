@@ -43,7 +43,6 @@
 
 namespace KCal {
 
-class CalFormat;
 
 /**
   This class provides the interfaces for a calendar resource. It makes use of

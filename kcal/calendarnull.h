@@ -31,7 +31,6 @@
 #include "calendar.h"
 #include "kcal.h"
 
-class KConfig;
 
 namespace KCal {
 

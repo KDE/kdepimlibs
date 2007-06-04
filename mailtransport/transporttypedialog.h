@@ -26,7 +26,6 @@
 #include <mailtransport/mailtransport_export.h>
 #include <kdialog.h>
 
-class KButtonGroup;
 class TransportTypeDialogPrivate;
 
 namespace MailTransport {
