@@ -22,7 +22,7 @@
 #ifndef SPELLINGFILTER_H_INCLUDED
 #define SPELLINGFILTER_H_INCLUDED
 
-#include "kpimutils.h"
+#include "kpimutils_export.h"
 #include "kpimutils/linklocator.h"
 
 #include <QtCore/QString>

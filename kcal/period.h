@@ -31,7 +31,7 @@
 
 #include <kdatetime.h>
 
-#include "kcal.h"
+#include "kcal_export.h"
 #include "duration.h"
 
 namespace KCal {

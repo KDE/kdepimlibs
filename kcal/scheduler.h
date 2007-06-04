@@ -24,7 +24,7 @@
 #include <QtCore/QString>
 #include <QtCore/QList>
 
-#include "kcal.h"
+#include "kcal_export.h"
 
 namespace KCal {
 

@@ -38,7 +38,7 @@
 #include <kdirwatch.h>
 
 #include "calendarlocal.h"
-#include "kcal.h"
+#include "kcal_export.h"
 #include "resourcecached.h"
 
 namespace KCal {

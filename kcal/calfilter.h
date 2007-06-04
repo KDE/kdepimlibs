@@ -33,7 +33,7 @@
 
 #include <QtCore/QString>
 
-#include "kcal.h"
+#include "kcal_export.h"
 #include "event.h"
 #include "todo.h"
 #include "journal.h"

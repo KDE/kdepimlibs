@@ -22,7 +22,7 @@
 #define KCAL_LISTBASE_H
 
 #include <QtCore/QList>
-#include "kcal.h"
+#include "kcal_export.h"
 
 namespace KCal {
 

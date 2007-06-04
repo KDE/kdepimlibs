@@ -31,7 +31,7 @@
 #ifndef __KMIME_BOOLFLAGS_H__
 #define __KMIME_BOOLFLAGS_H__
 
-#include "kmime.h"
+#include "kmime_export.h"
 
 namespace KMime {
 

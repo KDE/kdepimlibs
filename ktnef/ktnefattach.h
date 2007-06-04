@@ -36,7 +36,7 @@
 #include <QtCore/QVariant>
 
 #include "ktnefpropertyset.h"
-#include "ktnef.h"
+#include "ktnef_export.h"
 
 namespace KTnef { class KTNEFProperty; }
 

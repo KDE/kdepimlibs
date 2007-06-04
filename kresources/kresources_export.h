@@ -1,6 +1,6 @@
 /*
-  This file is part of kdepimlibs.
-  Copyright (c) 2004-2006 Szombathelyi György <gyurco@freemail.hu>
+  This file is part of the kresources library.
+  Copyright (c) 2006 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -18,19 +18,36 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KLDAP_H
-#define KLDAP_H
+#ifndef KRESOURCES_EXPORT_H
+#define KRESOURCES_EXPORT_H
 
 #include <kdemacros.h>
 
-#ifndef KLDAP_EXPORT
-# if defined(MAKE_KLDAP_LIB)
+#ifndef KRESOURCES_EXPORT
+# if defined(MAKE_KRESOURCES_LIB)
    /* We are building this library */
-#  define KLDAP_EXPORT KDE_EXPORT
+#  define KRESOURCES_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define KLDAP_EXPORT KDE_IMPORT
+#  define KRESOURCES_EXPORT KDE_IMPORT
 # endif
 #endif
+
+#ifndef KCM_KRESOURCES_EXPORT
+# if defined(MAKE_KCM_KRESOURCES_LIB)
+   /* We are building this library */
+#  define KCM_KRESOURCES_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KCM_KRESOURCES_EXPORT KDE_IMPORT
+# endif
+#endif
+
+# ifndef KRESOURCES_EXPORT_DEPRECATED
+#  define KRESOURCES_EXPORT_DEPRECATED KDE_DEPRECATED KRESOURCES_EXPORT
+# endif
+# ifndef KCM_KRESOURCES_EXPORT_DEPRECATED
+#  define KCM_KRESOURCES_EXPORT_DEPRECATED KDE_DEPRECATED KCM_KRESOURCES_EXPORT
+# endif
 
 #endif

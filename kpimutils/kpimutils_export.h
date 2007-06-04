@@ -1,5 +1,5 @@
 /*
-  This file is part of kdepimlibs.
+  This file is part of the kpimutils library.
   Copyright (c) 2006 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
@@ -18,30 +18,19 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KMIME_H
-#define KMIME_H
+#ifndef KPIMUTILS_EXPORT_H
+#define KPIMUTILS_EXPORT_H
 
 #include <kdemacros.h>
 
-#ifndef KMIME_EXPORT
-# if defined(MAKE_KMIME_LIB)
+#ifndef KPIMUTILS_EXPORT
+# if defined(MAKE_KPIMUTILS_LIB)
    /* We are building this library */
-#  define KMIME_EXPORT KDE_EXPORT
+#  define KPIMUTILS_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define KMIME_EXPORT KDE_IMPORT
+#  define KPIMUTILS_EXPORT KDE_IMPORT
 # endif
 #endif
-
-# ifndef KMIME_EXPORT_DEPRECATED
-#  define KMIME_EXPORT_DEPRECATED KDE_DEPRECATED KMIME_EXPORT
-# endif
-
-/**
-  @namespace KMime
-
-  @brief
-  Contains all the KMIME library global classes, objects, and functions.
-*/
 
 #endif

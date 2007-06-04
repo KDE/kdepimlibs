@@ -34,7 +34,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QString>
 
-#include "kresources.h"
+#include "kresources_export.h"
 
 namespace KRES {
 

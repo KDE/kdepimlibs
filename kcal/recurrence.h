@@ -30,7 +30,7 @@
 
 #include <kdatetime.h>
 
-#include "kcal.h"
+#include "kcal_export.h"
 #include "recurrencerule.h"
 
 namespace KCal {

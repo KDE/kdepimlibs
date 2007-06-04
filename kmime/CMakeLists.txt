@@ -40,7 +40,7 @@ install(TARGETS kmime  DESTINATION ${LIB_INSTALL_DIR})
 
 install( FILES
         boolflags.h
-        kmime.h
+        kmime_export.h
         kmime_charfreq.h
         kmime_codecs.h
         kmime_content.h

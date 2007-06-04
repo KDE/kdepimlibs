@@ -34,7 +34,7 @@
 #ifndef KMIME_CONTENTINDEX_H
 #define KMIME_CONTENTINDEX_H
 
-#include "kmime.h"
+#include "kmime_export.h"
 
 #include <QtCore/QList>
 #include <QtCore/QString>

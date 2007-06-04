@@ -34,7 +34,7 @@
 #include <QtCore/QList>
 
 #include "ktnefpropertyset.h"
-#include "ktnef.h"
+#include "ktnef_export.h"
 
 namespace KTnef { class KTNEFAttach; }
 

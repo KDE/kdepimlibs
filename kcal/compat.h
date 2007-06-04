@@ -23,7 +23,7 @@
 #define KCAL_COMPAT_H
 
 #include <QtCore/QString>
-#include "kcal.h"
+#include "kcal_export.h"
 
 class QDate;
 

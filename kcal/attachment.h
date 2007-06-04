@@ -30,7 +30,7 @@
 #define KCAL_ATTACHMENT_H
 
 #include "listbase.h"
-#include "kcal.h"
+#include "kcal_export.h"
 
 #include <QtCore/QString>
 

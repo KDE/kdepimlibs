@@ -24,7 +24,7 @@
 
 #include "icalformat.h"
 #include "calendar.h"
-#include "kcal.h"
+#include "kcal_export.h"
 
 #include <QtCore/QMimeData>
 

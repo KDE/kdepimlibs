@@ -23,4 +23,4 @@ install(TARGETS kblog  DESTINATION ${LIB_INSTALL_DIR} )
 
 ########### install files ##############
 
-install( FILES kblog.h blog.h blogger.h metaweblog.h DESTINATION ${INCLUDE_INSTALL_DIR}/kblog)
+install( FILES kblog_export.h blog.h blogger.h metaweblog.h DESTINATION ${INCLUDE_INSTALL_DIR}/kblog)

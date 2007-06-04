@@ -23,7 +23,7 @@
 
 #include <QtCore/QString>
 
-#include "kcal.h"
+#include "kcal_export.h"
 
 
 namespace KCal {

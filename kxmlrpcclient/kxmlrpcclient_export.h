@@ -7,8 +7,8 @@
  * details, check the accompanying file 'COPYING.BSD'.                        *
  *****************************************************************************/
 
-#ifndef KXML_RPCCLIENT_H
-#define KXML_RPCCLIENT_H
+#ifndef KXMLRPCCLIENT_EXPORT_H
+#define KXMLRPCCLIENT_EXPORT_H
 
 #include <kdemacros.h>
 

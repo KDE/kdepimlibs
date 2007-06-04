@@ -22,7 +22,7 @@
 #ifndef KRESOURCES_RESOURCE_H
 #define KRESOURCES_RESOURCE_H
 
-#include "kresources.h"
+#include "kresources_export.h"
 
 #include <klibloader.h>
 

@@ -23,7 +23,7 @@
 #ifndef KCAL_ICALDRAG_H
 #define KCAL_ICALDRAG_H
 
-#include "kcal.h"
+#include "kcal_export.h"
 #include <QtCore/QString>
 
 class QMimeData;

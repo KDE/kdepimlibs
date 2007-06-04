@@ -33,7 +33,7 @@
 
 #include <QtCore/QMap>
 #include <QtCore/QVariant>
-#include "ktnef.h"
+#include "ktnef_export.h"
 
 namespace KTnef { class KTNEFProperty; }
 

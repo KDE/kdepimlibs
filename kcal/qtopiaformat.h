@@ -25,7 +25,7 @@
 
 #include "scheduler.h"
 
-#include "kcal.h"
+#include "kcal_export.h"
 #include "calformat.h"
 
 namespace KCal {

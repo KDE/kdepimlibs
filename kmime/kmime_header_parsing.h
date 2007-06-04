@@ -28,7 +28,7 @@
 
 #include <kdatetime.h>
 
-#include "kmime.h"
+#include "kmime_export.h"
 
 template <typename K, typename V> class QMap;
 class QStringList;

@@ -20,7 +20,7 @@
 #ifndef LINKLOCATOR_H_INCLUDED
 #define LINKLOCATOR_H_INCLUDED
 
-#include "kpimutils.h"
+#include "kpimutils_export.h"
 
 #include <QtCore/QString>
 #include <QtCore/QMap>

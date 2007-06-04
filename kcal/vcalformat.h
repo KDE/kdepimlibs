@@ -29,7 +29,7 @@
 #include "calformat.h"
 #include "todo.h"
 #include "event.h"
-#include "kcal.h"
+#include "kcal_export.h"
 
 #define _VCAL_VERSION "1.0"
 

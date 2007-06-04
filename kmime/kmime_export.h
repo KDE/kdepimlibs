@@ -18,30 +18,30 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KTNEF_H
-#define KTNEF_H
+#ifndef KMIME_EXPORT_H
+#define KMIME_EXPORT_H
 
 #include <kdemacros.h>
 
-#ifndef KTNEF_EXPORT
-# if defined(MAKE_KTNEF_LIB)
+#ifndef KMIME_EXPORT
+# if defined(MAKE_KMIME_LIB)
    /* We are building this library */
-#  define KTNEF_EXPORT KDE_EXPORT
+#  define KMIME_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define KTNEF_EXPORT KDE_IMPORT
+#  define KMIME_EXPORT KDE_IMPORT
 # endif
 #endif
 
-# ifndef KTNEF_EXPORT_DEPRECATED
-#  define KTNEF_EXPORT_DEPRECATED KDE_DEPRECATED KTNEF_EXPORT
+# ifndef KMIME_EXPORT_DEPRECATED
+#  define KMIME_EXPORT_DEPRECATED KDE_DEPRECATED KMIME_EXPORT
 # endif
 
 /**
- * @namespace KTnef
- *
- * @brief
- * Contains all the KTNEF library global classes, objects, and functions.
- */
+  @namespace KMime
+
+  @brief
+  Contains all the KMIME library global classes, objects, and functions.
+*/
 
 #endif

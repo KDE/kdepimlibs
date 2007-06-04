@@ -22,7 +22,7 @@
 #define KCAL_RESOURCECACHEDCONFIG_H
 
 #include <QtGui/QWidget>
-#include "kcal.h"
+#include "kcal_export.h"
 
 class QButtonGroup;
 class QSpinBox;

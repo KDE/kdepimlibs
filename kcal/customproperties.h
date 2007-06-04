@@ -26,7 +26,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QByteArray>
 
-#include "kcal.h"
+#include "kcal_export.h"
 
 namespace KCal {
 

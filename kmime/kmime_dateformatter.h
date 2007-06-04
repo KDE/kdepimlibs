@@ -50,7 +50,7 @@
 #include <time.h>
 #include <QtCore/QDateTime>
 #include <QtCore/QString>
-#include "kmime.h"
+#include "kmime_export.h"
 
 namespace KMime {
 

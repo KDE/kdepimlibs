@@ -29,7 +29,7 @@
 #include "kresources/resource.h"
 #include "kresources/configwidget.h"
 
-#include "kcal.h"
+#include "kcal_export.h"
 
 namespace KCal {
 

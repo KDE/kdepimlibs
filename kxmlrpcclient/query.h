@@ -27,7 +27,7 @@
 #include <QtCore/QMap>
 #include <kio/job.h>
 
-#include "kxmlrpcclient.h"
+#include "kxmlrpcclient_export.h"
 
 class QString;
 

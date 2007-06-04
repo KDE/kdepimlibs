@@ -25,7 +25,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QByteArray>
 
-#include "kpimutils.h"
+#include "kpimutils_export.h"
 
 /** @file */
 

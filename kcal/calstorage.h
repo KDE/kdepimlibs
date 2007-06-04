@@ -21,7 +21,7 @@
 #ifndef KCAL_CALSTORAGE_H
 #define KCAL_CALSTORAGE_H
 
-#include "kcal.h"
+#include "kcal_export.h"
 
 namespace KCal {
 

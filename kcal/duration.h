@@ -28,7 +28,7 @@
 #ifndef KCAL_DURATION_H
 #define KCAL_DURATION_H
 
-#include "kcal.h"
+#include "kcal_export.h"
 
 class KDateTime;
 

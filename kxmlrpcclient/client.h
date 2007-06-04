@@ -29,7 +29,7 @@
 #include <QtCore/QVariant>
 
 #include <kurl.h>
-#include "kxmlrpcclient.h"
+#include "kxmlrpcclient_export.h"
 
 /** Names for XmlRpc related classes */
 namespace KXmlRpc {

@@ -52,7 +52,7 @@
 #define __KMIME_CHARFREQ_H__
 
 #include <QtCore/QByteArray>
-#include "kmime.h"
+#include "kmime_export.h"
 #undef None
 
 namespace KMime {

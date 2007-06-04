@@ -33,7 +33,7 @@
 
 #include <QtCore/QVariant>
 #include <QtCore/QString>
-#include "ktnef.h"
+#include "ktnef_export.h"
 
 namespace KTnef {
 

@@ -30,7 +30,7 @@
 #ifndef KRESOURCES_CONFIGDIALOG_H
 #define KRESOURCES_CONFIGDIALOG_H
 
-#include "kresources.h"
+#include "kresources_export.h"
 #include <kdialog.h>
 
 

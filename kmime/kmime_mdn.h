@@ -46,7 +46,7 @@
 #ifndef __KMIME_MDN_H__
 #define __KMIME_MDN_H__
 
-#include "kmime.h"
+#include "kmime_export.h"
 #include <QtCore/QString>
 #include <QtCore/QList>
 

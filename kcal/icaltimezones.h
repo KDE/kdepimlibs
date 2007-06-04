@@ -24,7 +24,7 @@
 
 #include <ktimezone.h>
 
-#include "kcal.h"
+#include "kcal_export.h"
 
 #ifndef ICALCOMPONENT_H
 typedef struct icalcomponent_impl icalcomponent;

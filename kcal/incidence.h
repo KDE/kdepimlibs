@@ -25,7 +25,7 @@
 #include "recurrence.h"
 #include "alarm.h"
 #include "attachment.h"
-#include "kcal.h"
+#include "kcal_export.h"
 
 #include "incidencebase.h"
 

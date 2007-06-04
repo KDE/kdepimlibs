@@ -7,7 +7,7 @@
     <parameter name="application" />
   </kcfgfile>
 
-  <include>kcal/kcal.h</include>
+  <include>kcal/kcal_export.h</include>
   <group name="$(application)-General">
     <entry type="String" key="Name">
       <label>Full name of the calendar owner</label>

@@ -23,7 +23,7 @@
 #ifndef __KMIME_MESSAGE_H__
 #define __KMIME_MESSAGE_H__
 
-#include "kmime.h"
+#include "kmime_export.h"
 #include "kmime_content.h"
 #include "kmime_headers.h"
 #include "boolflags.h"

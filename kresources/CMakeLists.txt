@@ -49,7 +49,7 @@ install(TARGETS kcm_kresources  DESTINATION ${PLUGIN_INSTALL_DIR} )
 install( FILES kresources.desktop  DESTINATION  ${SERVICES_INSTALL_DIR} )
 install( FILES kresources_plugin.desktop kresources_manager.desktop  DESTINATION  ${SERVICETYPES_INSTALL_DIR} )
 install( FILES
-  kresources.h
+  kresources_export.h
   resource.h
   configwidget.h
   factory.h

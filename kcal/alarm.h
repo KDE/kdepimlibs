@@ -39,7 +39,7 @@
 #include "duration.h"
 #include "person.h"
 #include "listbase.h"
-#include "kcal.h"
+#include "kcal_export.h"
 
 namespace KCal {
 

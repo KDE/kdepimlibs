@@ -29,7 +29,7 @@
 #define KCAL_CALENDARNULL_H
 
 #include "calendar.h"
-#include "kcal.h"
+#include "kcal_export.h"
 
 
 namespace KCal {

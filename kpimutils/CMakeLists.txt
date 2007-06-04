@@ -18,6 +18,6 @@ install(TARGETS kpimutils  DESTINATION ${LIB_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES kpimutils.h email.h linklocator.h spellingfilter.h DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils  )
+install( FILES kpimutils_export.h email.h linklocator.h spellingfilter.h DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils  )
 
 install(FILES pimemoticons.kcfg  DESTINATION ${KCFG_INSTALL_DIR})

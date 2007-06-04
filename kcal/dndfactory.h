@@ -24,7 +24,7 @@
 #ifndef KCAL_DNDFACTORY_H
 #define KCAL_DNDFACTORY_H
 
-#include "kcal.h"
+#include "kcal_export.h"
 
 class QDate;
 class QTime;

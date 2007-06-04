@@ -1,6 +1,6 @@
 /*
-  This file is part of the kpimutils library.
-  Copyright (c) 2006 Allen Winter <winter@kde.org>
+  This file is part of kdepimlibs.
+  Copyright (c) 2007 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -18,18 +18,18 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KPIMUTILS_H
-#define KPIMUTILS_H
+#ifndef KIMAP_EXPORT_H
+#define KIMAP_EXPORT_H
 
 #include <kdemacros.h>
 
-#ifndef KPIMUTILS_EXPORT
-# if defined(MAKE_KPIMUTILS_LIB)
+#ifndef KIMAP_EXPORT
+# if defined(MAKE_KIMAP_LIB)
    /* We are building this library */
-#  define KPIMUTILS_EXPORT KDE_EXPORT
+#  define KIMAP_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define KPIMUTILS_EXPORT KDE_IMPORT
+#  define KIMAP_EXPORT KDE_IMPORT
 # endif
 #endif
 

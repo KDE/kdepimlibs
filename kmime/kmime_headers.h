@@ -31,7 +31,7 @@
 // - incompatible, Structured-based field classes
 // - compatible, Unstructured-based field classes
 
-#include "kmime.h"
+#include "kmime_export.h"
 #include "kmime_header_parsing.h"
 
 #include <QtCore/QString>

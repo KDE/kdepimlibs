@@ -29,7 +29,7 @@
 
 #include "calendar.h"
 #include "htmlexportsettings.h"
-#include "kcal.h"
+#include "kcal_export.h"
 
 class QTextStream;
 

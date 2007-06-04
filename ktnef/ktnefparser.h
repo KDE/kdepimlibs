@@ -34,7 +34,7 @@
 #include <QtCore/QString>
 #include <QtCore/QMap>
 #include <QtCore/QIODevice>
-#include "ktnef.h"
+#include "ktnef_export.h"
 
 namespace KTnef { class KTNEFAttach; }
 namespace KTnef { class KTNEFMessage; }

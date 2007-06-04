@@ -24,7 +24,7 @@
 #define __KMIME_UTIL_H__
 
 #include <QtCore/QString>
-#include "kmime.h"
+#include "kmime_export.h"
 
 namespace KMime {
 

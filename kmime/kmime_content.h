@@ -49,7 +49,7 @@ TODO: possible glossary terms:
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 
-#include "kmime.h"
+#include "kmime_export.h"
 #include "kmime_contentindex.h"
 #include "kmime_util.h"
 #include "kmime_headers.h"

@@ -64,7 +64,7 @@
 
 #include <kdebug.h> // for kFatal()
 
-#include "kmime.h"
+#include "kmime_export.h"
 
 namespace KMime {
 

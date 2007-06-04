@@ -334,7 +334,7 @@ install( FILES
 	incidence.h
 	incidenceformatter.h
 	journal.h
-	kcal.h
+	kcal_export.h
 	kcalversion.h
 	listbase.h
 	period.h

@@ -1,6 +1,6 @@
 /*
   This file is part of kdepimlibs.
-  Copyright (c) 2007 Allen Winter <winter@kde.org>
+  Copyright (c) 2006 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -18,19 +18,30 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KIMAP_H
-#define KIMAP_H
+#ifndef KTNEF_EXPORT_H
+#define KTNEF_EXPORT_H
 
 #include <kdemacros.h>
 
-#ifndef KIMAP_EXPORT
-# if defined(MAKE_KIMAP_LIB)
+#ifndef KTNEF_EXPORT
+# if defined(MAKE_KTNEF_LIB)
    /* We are building this library */
-#  define KIMAP_EXPORT KDE_EXPORT
+#  define KTNEF_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define KIMAP_EXPORT KDE_IMPORT
+#  define KTNEF_EXPORT KDE_IMPORT
 # endif
 #endif
+
+# ifndef KTNEF_EXPORT_DEPRECATED
+#  define KTNEF_EXPORT_DEPRECATED KDE_DEPRECATED KTNEF_EXPORT
+# endif
+
+/**
+ * @namespace KTnef
+ *
+ * @brief
+ * Contains all the KTNEF library global classes, objects, and functions.
+ */
 
 #endif

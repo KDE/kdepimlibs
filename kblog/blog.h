@@ -23,7 +23,7 @@
 #define API_BLOG_H
 
 
-#include <kblog/kblog.h>
+#include <kblog/kblog_export.h>
 
 #include <kurl.h>
 #include <kio/job.h>

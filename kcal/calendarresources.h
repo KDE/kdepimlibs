@@ -35,7 +35,7 @@
 #include "calendar.h"
 #include "resourcecalendar.h"
 
-#include "kcal.h"
+#include "kcal_export.h"
 
 class QWidget;
 
