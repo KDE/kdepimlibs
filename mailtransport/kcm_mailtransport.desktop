@@ -13,6 +13,7 @@ X-KDE-ParentComponents=
 X-KDE-CfgDlgHierarchy=
 
 Name=Mail Transport
+Name[be]=Паштовы транспарт
 Name[el]=Κύριος μεταφορέας
 Name[x-test]=xxMail Transportxx
 Name[zh_TW]=Mail 傳送

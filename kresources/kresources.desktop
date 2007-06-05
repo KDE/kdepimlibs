@@ -9,6 +9,7 @@ X-KDE-Library=kcm_kresources
 X-KDE-FactoryName=kcm_kresources
 
 Name=KDE Resources
+Name[be]=Рэсурсы KDE
 Name[el]=Πόροι του KDE
 Name[ga]=Acmhainní KDE
 Name[ja]=KDE リソース
@@ -18,6 +19,7 @@ Name[x-test]=xxKDE Resourcesxx
 Name[zh_TW]=KDE 資源
 
 Comment=Configure KDE Resources
+Comment[be]=Настаўленні рэсурсаў KDE
 Comment[el]=Ρύθμιση πόρων του KDE
 Comment[ja]=KDE リソースの設定
 Comment[sv]=Anpassa KDE-resurser
