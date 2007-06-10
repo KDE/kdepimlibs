@@ -550,7 +550,9 @@ void TransportManager::migrateToWallet()
          "file instead in KWallet.\nIt is recommended to use KWallet for "
          "password storage for security reasons.\n"
          "Do you want to migrate your passwords to KWallet?"),
-    names );
+    names, i18n("Question"),
+    KGuiItem( i18n( "Migrate" ) ), KGuiItem( i18n( "Keep" ) ),
+    QString::fromAscii( "WalletMigrate" ) );
   if ( result != KMessageBox::Yes )
     return;
 
