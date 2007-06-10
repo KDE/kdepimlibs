@@ -108,7 +108,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
                    << " description=" << description << " ); " << endl;
         }
       }
-      kDebug(5323) << "Emitting fetchingCategoriesFinished()" << endl;
+      kDebug(5323) << "Emitting listCategoriesFinished()" << endl;
       emit parent->listCategoriesFinished();
     }
   }

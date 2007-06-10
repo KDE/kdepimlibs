@@ -57,7 +57,6 @@ namespace KBlog {
 
   @code
   KBlog::BlogPosting *post = new BlogPosting();
-  post->setUserId( "some_user_id" );
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
   @endcode
