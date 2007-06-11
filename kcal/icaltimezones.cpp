@@ -907,8 +907,8 @@ QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool da
      * Note that we had to get DTSTART, TZOFFSETFROM, TZOFFSETTO before reading
      * recurrences.
      */
-    KDateTime klocalStart(localStart, KDateTime::Spec::ClockTime);
-    KDateTime maxTime(MAX_DATE(), KDateTime::Spec::ClockTime);
+    KDateTime klocalStart(localStart, KDateTime::Spec::ClockTime());
+    KDateTime maxTime(MAX_DATE(), KDateTime::Spec::ClockTime());
     Recurrence recur;
     icalproperty *p = icalcomponent_get_first_property(c, ICAL_ANY_PROPERTY);
     while (p) {
@@ -947,8 +947,8 @@ QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool da
           // Convert to local time to avoid timesInInterval() getting things wrong.
           if (r.duration() == 0) {
             KDateTime end(r.endDt());
-            if (end.timeSpec() == KDateTime::Spec::UTC) {
-              end.setTimeSpec(KDateTime::Spec::ClockTime);
+            if (end.timeSpec() == KDateTime::Spec::UTC()) {
+              end.setTimeSpec(KDateTime::Spec::ClockTime());
               r.setEndDt( end.addSecs(prevOffset) );
             }
           }

@@ -1604,7 +1604,7 @@ QString dumpTime( const KDateTime &dt )
     if ( dt.isSecondOccurrence() )
       result += QLatin1String(" (2nd)");
   }
-  if ( dt.timeSpec() == KDateTime::Spec::ClockTime)
+  if ( dt.timeSpec() == KDateTime::Spec::ClockTime())
     result += QLatin1String("Clock");
   return result;
 }

@@ -1919,7 +1919,7 @@ KDateTime ICalFormatImpl::readICalDateTimeProperty( icalproperty *p, ICalTimeZon
       break;
   }
   if ( tp.time.is_date ) {
-    return KDateTime( readICalDate(tp.time), KDateTime::Spec::ClockTime );
+    return KDateTime( readICalDate(tp.time), KDateTime::Spec::ClockTime() );
   } else {
     return readICalDateTime( p, tp.time, tzlist, utc );
   }

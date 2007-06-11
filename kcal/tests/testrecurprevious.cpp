@@ -116,7 +116,7 @@ int main( int argc, char **argv )
           (*outstream) << dumpTime(dt, viewSpec) << endl;
       }
     } else {
-      if ( !dt.isValid() ) dt = KDateTime( QDate( 2005, 7, 31 ), QTime( 23, 59, 59 ), KDateTime::Spec::UTC );
+      if ( !dt.isValid() ) dt = KDateTime( QDate( 2005, 7, 31 ), QTime( 23, 59, 59 ), KDateTime::Spec::UTC() );
       else dt = dt.addYears( 2 );
       incidence->recurrence()->dump();
       kDebug(5800) << "-------------------------------------------" << endl;
