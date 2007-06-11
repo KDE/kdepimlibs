@@ -46,6 +46,25 @@ using namespace KCal;
 class KCal::Alarm::Private
 {
   public:
+    Private() {}
+    Private( const Private &other )
+    {
+      mParent = other.mParent;
+      mType = other.mType;
+      mDescription = other.mDescription;
+      mFile = other.mFile;
+      mMailSubject = other.mMailSubject;
+      mMailAttachFiles = other.mMailAttachFiles;
+      mMailAddresses = other.mMailAddresses;
+      mAlarmEnabled = other.mAlarmEnabled;
+      mAlarmTime = other.mAlarmTime;
+      mAlarmSnoozeTime = other.mAlarmSnoozeTime;
+      mAlarmRepeatCount = other.mAlarmRepeatCount;
+      mOffset = other.mOffset;
+      mEndOffset = other.mEndOffset;
+      mHasTime = other.mHasTime;
+    }
+
     Incidence *mParent;  // the incidence which this alarm belongs to
 
     Type mType;          // type of alarm
@@ -81,6 +100,11 @@ Alarm::Alarm( Incidence *parent ) : d( new KCal::Alarm::Private )
   d->mEndOffset = false;
   d->mHasTime = false;
   d->mAlarmEnabled = false;
+}
+
+Alarm::Alarm( const Alarm &other ) :
+  CustomProperties( other ), d( new KCal::Alarm::Private( *other.d ) )
+{
 }
 
 Alarm::~Alarm()

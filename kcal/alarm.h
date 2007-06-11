@@ -82,6 +82,11 @@ class KCAL_EXPORT Alarm : public CustomProperties
     explicit Alarm( Incidence *parent );
 
     /**
+      Copy constructor.
+    */
+    explicit Alarm( const Alarm& other ); 
+
+    /**
       Destroys the alarm.
     */
     virtual ~Alarm();
