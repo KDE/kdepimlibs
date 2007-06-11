@@ -67,14 +67,25 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
       Create an object for Blogger API 1.0
 
       @param server is the url for the xmlrpc gateway.
+      @param parent the parent object.
     */
     explicit APIBlogger( const KUrl &server, QObject *parent = 0 );
+
+    /**
+       Destroy the object.
+    */
     virtual ~APIBlogger();
 
     /**
       Returns the API of the inherited object.
     */
     QString interfaceName() const;
+
+    /**
+       Set the Url of the server.
+
+       @param server is the server Url.
+    */
     void setUrl( const KUrl &server );
 
     /**

@@ -294,6 +294,13 @@ class KBLOG_EXPORT BlogMedia {
       @see setMimetype()
     */
     QString mimetype() const;
+
+    /**
+      Set the mimtype.
+
+      @param mimetype is the mimetype
+      @see mimetype()
+    */
     void setMimetype( const QString &mimetype );
 
     /**
@@ -303,6 +310,13 @@ class KBLOG_EXPORT BlogMedia {
       @see setData()
     */
     QByteArray data() const;
+
+    /**
+       Set the data of the file.
+
+       @param data is the data stream
+       @see data()
+    */
     void setData( const QByteArray &data );
 
   private:
@@ -495,7 +509,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @param postingId is the id of the posting to remove.
 
-      @see removePosting()
+      @see removePosting( KBlog::BlogPosting* )
     */
     virtual void removePosting( const QString &postingId ) = 0;
 

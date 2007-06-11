@@ -68,14 +68,24 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlog
       Create an object for MetaWeblog API
 
       @param server is the url for the xmlrpc gateway.
+      @param parent is the parent object.
     */
     explicit APIMetaWeblog( const KUrl &server, QObject *parent = 0 );
+
+    /**
+      Destroy the object.
+    */
     virtual ~APIMetaWeblog();
 
     /**
       Returns the API of the inherited object.
     */
     QString interfaceName() const;
+    /**
+      Set the Url of the server.
+
+      @param server is the server url.
+    */
     void setUrl( const KUrl &server );
 
     /**
