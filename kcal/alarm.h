@@ -84,7 +84,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
     /**
       Copy constructor.
     */
-    explicit Alarm( const Alarm& other ); 
+    Alarm( const Alarm &other ); 
 
     /**
       Destroys the alarm.
