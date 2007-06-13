@@ -34,8 +34,8 @@
 #include <kconfiggroup.h>
 
 #include <QApplication>
-#include <QDBusConnection>
-#include <QDBusConnectionInterface>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusConnectionInterface>
 #include <QRegExp>
 #include <QStringList>
 
