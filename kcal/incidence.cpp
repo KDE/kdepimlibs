@@ -366,7 +366,9 @@ void Incidence::addRelation( Incidence *event )
 
 void Incidence::removeRelation( Incidence *event )
 {
+  kDebug() << "Entering Incidence::removeRelation " << endl;
   mRelations.removeRef( event );
+  mRelatedToUid=QString();
 //  if (event->getRelatedTo() == this) event->setRelatedTo(0);
 }
 
