@@ -87,7 +87,7 @@ class KXMLRPCCLIENT_EXPORT Query : public QObject
 
   private:
     Query( const QVariant &id, QObject *parent = 0 );
-    virtual ~Query();
+    ~Query();
 
     class Private;
     Private *const d;
@@ -123,7 +123,7 @@ class Result
     /**
       Destroys a result.
      */
-    virtual ~Result();
+    ~Result();
 
     /**
       Assigns the values of one result to this one.

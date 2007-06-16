@@ -72,7 +72,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
     /**
       Destroys the XML-RPC Client.
      */
-    virtual ~Client();
+    ~Client();
 
     /**
       Returns the current url the XML-RPC Client will connect to.
