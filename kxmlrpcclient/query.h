@@ -21,13 +21,13 @@
 #ifndef KXML_RPC_QUERY_H
 #define KXML_RPC_QUERY_H
 
+#include "kxmlrpcclient_export.h"
+
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 #include <QtCore/QMap>
 #include <kio/job.h>
-
-#include "kxmlrpcclient_export.h"
 
 class QString;
 
@@ -38,7 +38,7 @@ namespace KXmlRpc {
   @brief
   Query is a class that represents an individual XML-RPC call.
 
-  This is an internal class and is only used by the KXmlRpc::Server class.
+  This is an internal class and is only used by the KXmlRpc::Client class.
   @internal
  */
 class KXMLRPCCLIENT_EXPORT Query : public QObject
@@ -86,7 +86,7 @@ class KXMLRPCCLIENT_EXPORT Query : public QObject
     void finished( Query * );
 
   private:
-    Query( const QVariant &id, QObject *parent = 0 );
+    explicit Query( const QVariant &id, QObject *parent = 0 );
     ~Query();
 
     class Private;
@@ -94,72 +94,6 @@ class KXMLRPCCLIENT_EXPORT Query : public QObject
 
     Q_PRIVATE_SLOT( d, void slotData( KIO::Job *, const QByteArray & ) )
     Q_PRIVATE_SLOT( d, void slotResult( KJob * ) )
-};
-
-/**
-  @brief
-  Result is an internal class that represents a response
-  from a XML-RPC server.
-
-  This is an internal class and is only used by Query.
-  @internal
- */
-class Result
-{
-  friend class Query;
-  friend class Query::Private;
-
-  public:
-    /**
-      Constructs a result.
-     */
-    Result();
-
-    /**
-      Constructs a result based on another result.
-     */
-    Result( const Result &other );
-
-    /**
-      Destroys a result.
-     */
-    ~Result();
-
-    /**
-      Assigns the values of one result to this one.
-     */
-    Result &operator=( const Result &other );
-
-    /**
-      Returns true if the method call succeeded, false
-      if there was an XML-RPC fault.
-
-      @see errorCode(), errorString()
-     */
-    bool success() const;
-
-    /**
-      Returns the error code of the fault.
-
-      @see success(), errorString()
-     */
-    int errorCode() const;
-
-    /**
-      Returns the error string that describes the fault.
-
-      @see success, errorCode()
-     */
-    QString errorString() const;
-
-    /**
-      Returns the data sent to us from the server.
-     */
-    QList<QVariant> data() const;
-
-  private:
-    class Private;
-    Private *const d;
 };
 
 } // namespace XmlRpc

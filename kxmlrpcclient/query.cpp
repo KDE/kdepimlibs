@@ -32,63 +32,98 @@ using namespace KXmlRpc;
 /**
   @file
 
-  Implementation of Result and Query
+  Implementation of Query
 **/
 
-class Result::Private
+namespace KXmlRpc {
+
+/**
+  @brief
+  Result is an internal class that represents a response
+  from a XML-RPC server.
+
+  This is an internal class and is only used by Query.
+  @internal
+ */
+class Result
 {
+  friend class Query;
+  friend class Query::Private;
+
   public:
+    /**
+      Constructs a result.
+     */
+    Result();
+
+    /**
+      Destroys a result.
+     */
+    ~Result();
+
+    /**
+      Returns true if the method call succeeded, false
+      if there was an XML-RPC fault.
+
+      @see errorCode(), errorString()
+     */
+    bool success() const;
+
+    /**
+      Returns the error code of the fault.
+
+      @see success(), errorString()
+     */
+    int errorCode() const;
+
+    /**
+      Returns the error string that describes the fault.
+
+      @see success, errorCode()
+     */
+    QString errorString() const;
+
+    /**
+      Returns the data sent to us from the server.
+     */
+    QList<QVariant> data() const;
+
+  private:
     bool mSuccess;
     int mErrorCode;
     QString mErrorString;
     QList<QVariant> mData;
 };
 
-Result::Result()
-  : d( new Private )
+} // namespace KXmlRpcClient
+
+
+KXmlRpc::Result::Result()
 {
 }
 
-Result::Result( const Result &other )
-  : d( new Private )
+KXmlRpc::Result::~Result()
 {
-  *d = *other.d;
 }
 
-Result &Result::operator=( const Result &other )
+bool KXmlRpc::Result::success() const
 {
-  if ( this == &other ) {
-    return *this;
-  }
-
-  *d = *other.d;
-
-  return *this;
+  return mSuccess;
 }
 
-Result::~Result()
+int KXmlRpc::Result::errorCode() const
 {
-  delete d;
+  return mErrorCode;
 }
 
-bool Result::success() const
+QString KXmlRpc::Result::errorString() const
 {
-  return d->mSuccess;
+  return mErrorString;
 }
 
-int Result::errorCode() const
+QList<QVariant> KXmlRpc::Result::data() const
 {
-  return d->mErrorCode;
-}
-
-QString Result::errorString() const
-{
-  return d->mErrorString;
-}
-
-QList<QVariant> Result::data() const
-{
-  return d->mData;
+  return mData;
 }
 
 //small macro taken from HTTP IOSlave
@@ -134,11 +169,11 @@ bool Query::Private::isFaultResponse( const QDomDocument &doc ) const
 Result Query::Private::parseMessageResponse( const QDomDocument &doc ) const
 {
   Result response;
-  response.d->mSuccess = true;
+  response.mSuccess = true;
 
   QDomNode paramNode = doc.documentElement().firstChild().firstChild();
   while ( !paramNode.isNull() ) {
-    response.d->mData << demarshal( paramNode.firstChild().toElement() );
+    response.mData << demarshal( paramNode.firstChild().toElement() );
     paramNode = paramNode.nextSibling();
   }
 
@@ -148,12 +183,12 @@ Result Query::Private::parseMessageResponse( const QDomDocument &doc ) const
 Result Query::Private::parseFaultResponse( const QDomDocument &doc ) const
 {
   Result response;
-  response.d->mSuccess = false;
+  response.mSuccess = false;
 
   QDomNode errorNode = doc.documentElement().firstChild().firstChild();
   const QVariant errorVariant = demarshal( errorNode.toElement() );
-  response.d->mErrorCode = errorVariant.toMap() [ "faultCode" ].toInt();
-  response.d->mErrorString = errorVariant.toMap() [ "faultString" ].toString();
+  response.mErrorCode = errorVariant.toMap() [ "faultCode" ].toInt();
+  response.mErrorString = errorVariant.toMap() [ "faultString" ].toString();
 
   return response;
 }
