@@ -12,7 +12,7 @@ set(testclient_SRCS testclient.cpp )
 
 kde4_automoc(${testclient_SRCS})
 
-kde4_add_executable(testclient RUN_UNINSTALLED ${testclient_SRCS})
+kde4_add_executable(testclient NOGUI RUN_UNINSTALLED ${testclient_SRCS})
 
 target_link_libraries(testclient  ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kxmlrpcclient)
 
@@ -24,7 +24,7 @@ set(testquery_SRCS testquery.cpp )
 
 kde4_automoc(${testquery_SRCS})
 
-kde4_add_executable(testquery RUN_UNINSTALLED ${testquery_SRCS})
+kde4_add_executable(testquery NOGUI RUN_UNINSTALLED ${testquery_SRCS})
 
 target_link_libraries(testquery  ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kxmlrpcclient)
 
