@@ -50,6 +50,8 @@ class KCal::Attendee::Private
     Role mRole;
     PartStat mStatus;
     QString mUid;
+    QString mDelegate;
+    QString mDelegator;
 };
 //@endcond
 
@@ -76,7 +78,9 @@ bool KCal::Attendee::operator==( const Attendee &attendee )
     d->mRSVP == attendee.d->mRSVP &&
     d->mRole == attendee.d->mRole &&
     d->mStatus == attendee.d->mStatus &&
-    d->mUid == attendee.d->mUid;
+    d->mUid == attendee.d->mUid &&
+    d->mDelegate == attendee.d->mDelegate &&
+    d->mDelegator == attendee.d->mDelegator;
 }
 
 void Attendee::setRSVP( bool r )
@@ -199,4 +203,24 @@ QStringList Attendee::roleList()
   list << roleName( Chair );
 
   return list;
+}
+
+void Attendee::setDelegate(const QString & delegate)
+{
+  d->mDelegate = delegate;
+}
+
+QString Attendee::delegate() const
+{
+  return d->mDelegate;
+}
+
+void Attendee::setDelegator(const QString & delegator)
+{
+  d->mDelegator = delegator;
+}
+
+QString Attendee::delegator() const
+{
+  return d->mDelegator;
 }

@@ -221,6 +221,24 @@ class KCAL_EXPORT Attendee : public Person
     */
     bool operator==( const Attendee &attendee );
 
+    /**
+      Sets the delegate.
+    */
+    void setDelegate( const QString &delegate );
+    /**
+      Returns the delegate.
+    */
+    QString delegate() const;
+
+    /**
+      Sets the delegator.
+    */
+    void setDelegator( const QString &delegator );
+    /**
+      Returns the delegator.
+    */
+    QString delegator() const;
+
   private:
     //@cond PRIVATE
     class Private;
