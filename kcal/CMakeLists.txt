@@ -288,13 +288,9 @@ set(convertqtopia_SRCS convertqtopia.cpp )
 
 kde4_automoc(${convertqtopia_SRCS})
 
-if(KDE4_BUILD_TESTS)
-
-kde4_add_executable(convertqtopia ${convertqtopia_SRCS})
+kde4_add_test_executable(convertqtopia ${convertqtopia_SRCS})
 
 target_link_libraries(convertqtopia  ${KDE4_KDECORE_LIBS} kcal )
-
-endif(KDE4_BUILD_TESTS)
 
 
 add_subdirectory( libical )
