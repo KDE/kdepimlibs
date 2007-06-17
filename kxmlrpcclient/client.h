@@ -24,12 +24,13 @@
 #ifndef KXML_RPC_CLIENT_H
 #define KXML_RPC_CLIENT_H
 
+#include "kxmlrpcclient_export.h"
+
+#include <KUrl>
+
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
-
-#include <kurl.h>
-#include "kxmlrpcclient_export.h"
 
 /** Names for XmlRpc related classes */
 namespace KXmlRpc {
@@ -55,7 +56,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
 
   public:
     /**
-			Constructs a XML-RPC Client.
+      Constructs a XML-RPC Client.
 
       @param parent the parent of this object, defaults to NULL.
      */
@@ -110,23 +111,18 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       Returns true if HTTP-Digest authentication is enabled, false
       if not.
 
-      @see enableDigestAuth(), disableDigestAuth()
+      @see setDigestAuthEnabled()
      */
-    bool digestAuth() const;
+    bool isDigestAuthEnabled() const;
+
 
     /**
-      Sets HTTP-Digest authentication on.
+      Enables/disables HTTP-Digest authentication
 
-      @see digestAuth(), disableDigestAuth()
+      @see isDigestAuthEnabled()
      */
-    void enableDigestAuth();
 
-    /**
-      Sets HTTP-Digest authentication off.
-
-      @see enableDigestAuth(), digestAuth()
-     */
-    void disableDigestAuth();
+    void setDigestAuthEnabled( bool enabled );
 
   public Q_SLOTS:
     /**

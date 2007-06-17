@@ -36,13 +36,15 @@ using namespace KXmlRpc;
 class Client::Private
 {
   public:
+    Private() : mUserAgent( "KDE XMLRPC resources" ), mDigestAuth( false ) {}
+
+    void queryFinished( Query * );
+
     KUrl mUrl;
     QString mUserAgent;
     bool mDigestAuth;
 
     QList<Query*> mPendingQueries;
-
-    void queryFinished( Query * );
 };
 
 void Client::Private::queryFinished( Query *query )
@@ -54,19 +56,12 @@ void Client::Private::queryFinished( Query *query )
 Client::Client( QObject *parent )
   : QObject( parent ), d( new Private )
 {
-  d->mUserAgent = "KDE XMLRPC resources";
-  d->mDigestAuth = false;
 }
 
 Client::Client( const KUrl &url, QObject *parent )
   : QObject( parent ), d( new Private )
 {
-  if ( url.isValid() ) {
-    d->mUrl = url;
-  }
-
-  d->mUserAgent = "KDE XMLRPC resources";
-  d->mDigestAuth = false;
+  d->mUrl = url;
 }
 
 Client::~Client()
@@ -101,19 +96,14 @@ void Client::setUserAgent( const QString &userAgent )
   d->mUserAgent = userAgent;
 }
 
-bool Client::digestAuth() const
+bool Client::isDigestAuthEnabled() const
 {
   return d->mDigestAuth;
 }
 
-void Client::enableDigestAuth()
+void Client::setDigestAuthEnabled( bool enabled )
 {
-  d->mDigestAuth = true;
-}
-
-void Client::disableDigestAuth()
-{
-  d->mDigestAuth = false;
+  d->mDigestAuth = enabled;
 }
 
 void Client::call( const QString &method, const QList<QVariant> &args,
