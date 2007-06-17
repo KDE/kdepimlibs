@@ -739,36 +739,32 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
 
         switch( attendee->status() ) {
           case Attendee::NeedsAction:
-              return i18n( "%1 indicates this invitation still needs some action" ).arg( attendeeName );
+              return i18n( "%1 indicates this invitation still needs some action", attendeeName );
           case Attendee::Accepted:
               if ( delegatorName.isEmpty() )
-                  return i18n( "%1 accepts this meeting invitation" ).arg( attendeeName );
-              return i18n( "%1 accepts this meeting invitation on behalf of %2" )
-                  .arg( attendeeName ).arg( delegatorName );
+                  return i18n( "%1 accepts this meeting invitation" ,attendeeName );
+              return i18n( "%1 accepts this meeting invitation on behalf of %2", attendeeName, delegatorName );
           case Attendee::Tentative:
               if ( delegatorName.isEmpty() )
-                  return i18n( "%1 tentatively accepts this meeting invitation" ).arg( attendeeName );
-              return i18n( "%1 tentatively accepts this meeting invitation on behalf of %2" )
-                  .arg( attendeeName ).arg( delegatorName );
+                  return i18n( "%1 tentatively accepts this meeting invitation", attendeeName );
+              return i18n( "%1 tentatively accepts this meeting invitation on behalf of %2", attendeeName, delegatorName );
           case Attendee::Declined:
               if ( delegatorName.isEmpty() )
-                  return i18n( "%1 declines this meeting invitation" ).arg( attendeeName );
-              return i18n( "%1 declines this meeting invitation on behalf of %2" )
-                  .arg( attendeeName ).arg( delegatorName );
+                  return i18n( "%1 declines this meeting invitation", attendeeName );
+              return i18n( "%1 declines this meeting invitation on behalf of %2", attendeeName, delegatorName );
           case Attendee::Delegated: {
               QString delegate, dummy;
               KPIMUtils::extractEmailAddressAndName( attendee->delegate(), delegate, dummy );
               if ( delegate.isEmpty() )
                   delegate = attendee->delegate();
               if ( !delegate.isEmpty() )
-                return i18n( "%1 has delegated this meeting invitation to %2" )
-                    .arg( attendeeName ) .arg( delegate );
-              return i18n( "%1 has delegated this meeting invitation" ).arg( attendeeName );
+                return i18n( "%1 has delegated this meeting invitation to %2", attendeeName, delegate );
+              return i18n( "%1 has delegated this meeting invitation", attendeeName );
           }
           case Attendee::Completed:
               return i18n( "This meeting invitation is now completed" );
           case Attendee::InProcess:
-              return i18n( "%1 is still processing the invitation" ).arg( attendeeName );
+              return i18n( "%1 is still processing the invitation", attendeeName );
           default:
               return i18n( "Unknown response to this meeting invitation" );
         }
@@ -828,7 +824,7 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
               if ( delegate.isEmpty() )
                 delegate = attendee->delegate();
               if ( !delegate.isEmpty() )
-                return i18n( "Sender has delegated this request for the task to %1" ).arg( delegate );
+                return i18n( "Sender has delegated this request for the task to %1", delegate );
               return i18n( "Sender has delegated this request for the task " );
           }
           case Attendee::Completed:

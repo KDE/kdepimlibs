@@ -334,12 +334,11 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
     bool attendeeAdded = false;
     for ( Attendee::List::ConstIterator it = attendeesNew.constBegin(); it != attendeesNew.constEnd(); ++it ) {
       Attendee* attNew = *it;
-      QString msg = i18n("%1 wants to attend %2 but was not invited.").arg( attNew->fullName() )
-          .arg( ev ? ev->summary() : to->summary() );
+      QString msg = i18n("%1 wants to attend %2 but was not invited.", attNew->fullName(),
+          ( ev ? ev->summary() : to->summary() ) );
       if ( !attNew->delegator().isEmpty() )
-        msg = i18n("%1 wants to attend %2 on behalf of %3.").arg( attNew->fullName() )
-            .arg( ev ? ev->summary() : to->summary() )
-            .arg( attNew->delegator() );
+        msg = i18n("%1 wants to attend %2 on behalf of %3.", attNew->fullName(),
+            ( ev ? ev->summary() : to->summary() ), attNew->delegator() );
       if ( KMessageBox::questionYesNo( 0, msg, i18n("Uninvited attendee"),
            KGuiItem(i18n("Accept Attendance")), KGuiItem(i18n("Reject Attendance")) )
            != KMessageBox::Yes )
