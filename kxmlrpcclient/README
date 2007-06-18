@@ -15,7 +15,7 @@ use 3 methods: setUrl, setUserAgent and call.
 A small note on authentication. If you will be accessing an XML-RPC server
 which uses HTTP-AUTH, simply set the user and pass in the KURL. Digest
 authentication is more complicated and requires the use of three utility
-methods: enableDigestAuth, disableDigestAuth and digestAuth.
+methods: setDigestAuthEnabled and digestAuth.
 
 Licensing
 ---------
