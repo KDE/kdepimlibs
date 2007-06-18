@@ -13,9 +13,8 @@ kxmlrpcclient/client.h and of that interface, you only need to
 use 3 methods: setUrl, setUserAgent and call. 
 
 A small note on authentication. If you will be accessing an XML-RPC server
-which uses HTTP-AUTH, simply set the user and pass in the KURL. Digest
-authentication is more complicated and requires the use of three utility
-methods: setDigestAuthEnabled and digestAuth.
+which uses HTTP-AUTH, simply set the user and pass in the KURL. To use 
+Digest authentication, call setDigestAuthEnabled( true ).
 
 Licensing
 ---------
