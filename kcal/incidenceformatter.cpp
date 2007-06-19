@@ -733,7 +733,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
           attendeeName = i18n( "Sender" );
 
         QString delegatorName, dummy;
-        KPIMUtils::extractEmailAddressAndName( attendee->delegator(), delegatorName, dummy );
+        KPIMUtils::extractEmailAddressAndName( attendee->delegator(), dummy, delegatorName );
         if ( delegatorName.isEmpty() )
           delegatorName = attendee->delegator();
 
@@ -754,7 +754,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
               return i18n( "%1 declines this meeting invitation on behalf of %2", attendeeName, delegatorName );
           case Attendee::Delegated: {
               QString delegate, dummy;
-              KPIMUtils::extractEmailAddressAndName( attendee->delegate(), delegate, dummy );
+              KPIMUtils::extractEmailAddressAndName( attendee->delegate(), dummy, delegate );
               if ( delegate.isEmpty() )
                   delegate = attendee->delegate();
               if ( !delegate.isEmpty() )
@@ -820,7 +820,7 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
               return i18n( "Sender declines this task" );
           case Attendee::Delegated: {
               QString delegate, dummy;
-              KPIMUtils::extractEmailAddressAndName( attendee->delegate(), delegate, dummy );
+              KPIMUtils::extractEmailAddressAndName( attendee->delegate(), dummy, delegate );
               if ( delegate.isEmpty() )
                 delegate = attendee->delegate();
               if ( !delegate.isEmpty() )
