@@ -55,20 +55,23 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent )
   mGroup->addButton( automaticReloadOnStartup, 1 );
   mGroup->addButton( intervalRadio, 2 );
 
-  QVBoxLayout *vbox = new QVBoxLayout;
-  vbox->addWidget(noAutomaticReload);
-  vbox->addWidget(automaticReloadOnStartup);
-  vbox->addWidget(intervalRadio);
-  vbox->addStretch(1);
-  groupBox->setLayout(vbox);
-
   connect( intervalRadio, SIGNAL( stateChanged( int ) ),
            SLOT( slotIntervalStateChanged( int ) ) );
-  KHBox *intervalBox = new KHBox( groupBox );
+  KHBox *intervalBox = new KHBox;
   new QLabel( i18n("Interval in minutes"), intervalBox );
   mIntervalSpin = new QSpinBox( intervalBox );
   mIntervalSpin->setRange( 1, 900 );
   mIntervalSpin->setEnabled( false );
+
+  QVBoxLayout *vbox = new QVBoxLayout;
+  vbox->addWidget(noAutomaticReload);
+  vbox->addWidget(automaticReloadOnStartup);
+  vbox->addWidget(intervalRadio);
+  vbox->addWidget(intervalBox);
+  vbox->addStretch(1);
+  groupBox->setLayout(vbox);
+
+
 }
 
 void ResourceCachedReloadConfig::loadSettings( ResourceCached *resource )
@@ -109,24 +112,28 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent )
   mGroup->addButton( onExit, 1 );
   mGroup->addButton( intervalRadio, 2 );
 
-  QVBoxLayout *vbox = new QVBoxLayout;
-  vbox->addWidget(never);
-  vbox->addWidget(onExit);
-  vbox->addWidget(intervalRadio);
-  vbox->addStretch(1);
-  groupBox->setLayout(vbox);
-
 
   connect( intervalRadio, SIGNAL( stateChanged( int ) ),
            SLOT( slotIntervalStateChanged( int ) ) );
-  KHBox *intervalBox = new KHBox( groupBox );
+  KHBox *intervalBox = new KHBox;
   new QLabel( i18n("Interval in minutes"), intervalBox );
   mIntervalSpin = new QSpinBox( intervalBox );
   mIntervalSpin->setRange( 1, 900 );
   mIntervalSpin->setEnabled( false );
 
-  new QRadioButton( i18n("Delayed after changes"), groupBox );
-  new QRadioButton( i18n("On every change"), groupBox );
+  QRadioButton* delay = new QRadioButton( i18n("Delayed after changes"), groupBox );
+  QRadioButton* every = new QRadioButton( i18n("On every change"), groupBox );
+
+  QVBoxLayout *vbox = new QVBoxLayout;
+  vbox->addWidget(never);
+  vbox->addWidget(onExit);
+  vbox->addWidget(intervalRadio);
+  vbox->addWidget(intervalBox);
+  vbox->addWidget(delay);
+  vbox->addWidget(every);
+  vbox->addStretch(1);
+  groupBox->setLayout(vbox);
+
 }
 
 void ResourceCachedSaveConfig::loadSettings( ResourceCached *resource )
