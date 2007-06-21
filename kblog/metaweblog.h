@@ -105,7 +105,7 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlog
     virtual void listBlogs();
 
     /**
-      List recent postings on the server..
+      List recent postings on the server.
       @see     void listedPosting( KBlog::BlogPosting &posting )
       @see     void fetchedPosting( KBlog::BlogPosting &posting )
       @see     void listPostingsFinished()

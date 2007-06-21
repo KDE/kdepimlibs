@@ -90,6 +90,7 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
 
     /**
       Get information about the user from the blog.
+
       @see void userInfoRetrieved( const QString &, const QString &, const QString & )
     */
     virtual void userInfo();
@@ -101,7 +102,8 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
     virtual void listBlogs();
 
     /**
-      List recent postings on the server..
+      List recent postings on the server.
+
       @see     void listedPosting( KBlog::BlogPosting &posting )
       @see     void fetchedPosting( KBlog::BlogPosting &posting )
       @see     void listPostingsFinished()
@@ -119,6 +121,7 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
 
     /**
       Fetch the Posting with postingId.
+
       @param postingId is the id of the posting on the server.
 
       @see  void fetchedPosting( KBlog::BlogPosting &posting )

@@ -453,8 +453,10 @@ class KBLOG_EXPORT APIBlog : public QObject
     virtual void listBlogs() = 0;
 
     /**
-      List recent postings on the server..
-      @see listedPosting(), fetchedPosting(), listPostingsFinished()
+      List recent postings on the server.
+      @see listedPosting()
+      @see fetchedPosting()
+      @see listPostingsFinished()
     */
     virtual void listPostings() = 0;
 
