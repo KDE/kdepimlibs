@@ -522,25 +522,102 @@ class KBLOG_EXPORT APIBlog : public QObject
     void removePosting( KBlog::BlogPosting *posting );
 
   Q_SIGNALS:
+    /**
+      This signal is emitted when a userInfo() job fetches the user information from the blogging server.
+
+      @param nickname is the nickname of the user.
+      @param userid is the id of the user on the server.
+      @param email is the email adress used on the server.
+
+'     @see userInfo()
+    */
     void userInfoRetrieved( const QString &nickname, const QString &userid,
                             const QString &email );
 
+    /**
+      This signal is emitted when a listBlogs() job fetches the blog information from the blogging server.
+
+      @param id is the blog's id on the server.
+      @param name is the name of the blog on the server.
+
+      @see listBlogs()
+    */
     void blogInfoRetrieved( const QString &id, const QString &name );
 
+    /**
+      This signal is emitted when a listCategories() job fetches category information from the blogging server.
+
+      @param name is the name of the category on the server.
+      @param description is the description of the category on the server.
+
+      @see listCategories()
+    */
     void categoryInfoRetrieved( const QString &name,
                                 const QString &description );
 
-    void listedPosting( KBlog::BlogPosting &posting );
-    void fetchedPosting( KBlog::BlogPosting &posting );
-    void createdPosting( const QString &id );
-    void createdMedia( const QString &url );
-    void modifiedPosting( bool );
+    /**
+      This signal is emitted when a listPostings() job fetches a posting from the blogging server.
 
+      @param posting is the fetched posting.
+
+      @see listPostings()
+    */
+    void listedPosting( KBlog::BlogPosting &posting );
+
+    /**
+      This signal is emitted when a fetchPosting() job fetches a posting from the blogging server.
+
+      @param posting is the fetched posting.
+
+      @see fetchPosting(KBlog::BlogPosting*)
+    */
+    void fetchedPosting( KBlog::BlogPosting &posting );
+
+    /**
+      This signal is emitted when a createPosting() job successfully creates a posting on the server.
+
+      @param id is the id the posting has on the server.
+
+      @see createPosting( KBlog::BlogPosting* )
+    */
+    void createdPosting( const QString &id );
+
+    /**
+      This signal is emitted when a createMedia() job successfully creates a posting on the server.
+
+      @param url is the url of the posting on the server. This, depending on the server, can only be an id string, too.
+
+      @see createMedia( KBlog::BlogMedia* )
+    */
+    void createdMedia( const QString &url );
+
+    /**
+      This signal is emitted when a modifyPosting() job modifies a posting on the server.
+
+      @param modified shows the success of the modification.
+
+      @see modifyPosting( KBlog::BlogPosting* )
+    */
+    void modifiedPosting( bool modified );
+
+    /**
+      This signal is emitted when the last posting of the listPostings() job has been fetched.
+
+      @see listPostings()
+    */
     void listPostingsFinished();
+
+    /**
+      This signal is emitted when the last category of the listCategories() job has been fetched.
+
+      @see listCategories()
+    */
     void listCategoriesFinished();
 
     /**
       All xml parsing and all structural problems will emit an error.
+
+      @see errorType
     */
     void error( const errorType &type, const QString &errorMessage );
 
