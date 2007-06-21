@@ -4,6 +4,7 @@ Type=ServiceType
 X-KDE-ServiceType=KResources/Manager
 Comment=KResource Manager
 Comment[el]=Διαχειριστής KResource
+Comment[es]=Administrador KResource
 Comment[ja]=K リソース・マネージャ
 Comment[pa]=ਕੇ-ਰੀਸੋਰਸ ਮੈਨੇਜਰ
 Comment[pt]=Gestor do KResource
