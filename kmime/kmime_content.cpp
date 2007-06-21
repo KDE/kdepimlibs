@@ -889,7 +889,7 @@ int Content::lineCount() const
   return ret;
 }
 
-QByteArray Content::rawHeader( const char *name )
+QByteArray Content::rawHeader( const char *name ) const
 {
   return KMime::extractHeader( d->head, name );
 }

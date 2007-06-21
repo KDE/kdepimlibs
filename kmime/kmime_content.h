@@ -386,7 +386,7 @@ class KMIME_EXPORT Content
     */
     virtual QByteArray assembleHeaders();
 
-    QByteArray rawHeader( const char *name );
+    QByteArray rawHeader( const char *name ) const;
     bool decodeText();
     template <class T> T *getHeaderInstance( T *ptr, bool create );
 
