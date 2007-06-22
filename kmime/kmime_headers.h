@@ -21,15 +21,24 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling @ref MIME data and
+  defines the various header classes:
+   - header's base class defining the common interface
+   - generic base classes for different types of fields
+   - incompatible, Structured-based field classes
+   - compatible, Unstructured-based field classes
+
+  @brief
+  Defines the various headers classes.
+
+  @authors the KMime authors (see AUTHORS file),
+  Volker Krause \<vkrause@kde.org\>
+*/
+
 #ifndef __KMIME_HEADERS_H__
 #define __KMIME_HEADERS_H__
-
-// Content:
-//
-// - header's base class defining the common interface
-// - generic base classes for different types of fields
-// - incompatible, Structured-based field classes
-// - compatible, Unstructured-based field classes
 
 #include "kmime_export.h"
 #include "kmime_header_parsing.h"
@@ -46,7 +55,6 @@
 
 namespace KMime {
 
-//forward declaration
 class Content;
 
 namespace Headers {
@@ -82,11 +90,11 @@ static const QByteArray Latin1( "ISO-8859-1" );
 // internal macro to generate default constructors
 #define kmime_mk_trivial_ctor( subclass )                               \
   public:                                                               \
-  subclass();                                                           \
-  subclass( Content *parent );                                          \
-  subclass( Content *parent, const QByteArray &s );                     \
-  subclass( Content *parent, const QString &s, const QByteArray &charset ); \
-  ~subclass();
+    subclass();                                                         \
+    subclass( Content *parent );                                        \
+    subclass( Content *parent, const QByteArray &s );                   \
+    subclass( Content *parent, const QString &s, const QByteArray &charset ); \
+    ~subclass();
 
 #define kmime_mk_trivial_ctor_with_name( subclass )     \
   kmime_mk_trivial_ctor( subclass )                     \
@@ -192,8 +200,7 @@ class KMIME_EXPORT Base
     /**
       Returns the type of this header (e.g. "From").
     */
-    virtual const char *type() const
-      { return ""; }
+    virtual const char *type() const;
 
     /**
       Checks if this header is of type @p t.
@@ -247,26 +254,22 @@ namespace Generics {
 class KMIME_EXPORT Unstructured : public Base
 {
   public:
-  Unstructured() : Base() {}
-  Unstructured( Content *p ) : Base( p ) {}
-  Unstructured( Content *p, const QByteArray &s ) : Base( p )
-    { from7BitString( s ); }
-  Unstructured( Content *p, const QString &s, const QByteArray &cs ) : Base( p )
-    { fromUnicodeString( s, cs ); }
-  ~Unstructured() {}
+    Unstructured();
+    Unstructured( Content *p );
+    Unstructured( Content *p, const QByteArray &s );
+    Unstructured( Content *p, const QString &s, const QByteArray &cs );
+    ~Unstructured();
 
-  virtual void from7BitString( const QByteArray &s );
-  virtual QByteArray as7BitString( bool withHeaderType=true ) const;
+    virtual void from7BitString( const QByteArray &s );
+    virtual QByteArray as7BitString( bool withHeaderType=true ) const;
 
-  virtual void fromUnicodeString( const QString &s,
+    virtual void fromUnicodeString( const QString &s,
                                   const QByteArray &b );
-  virtual QString asUnicodeString() const;
+    virtual QString asUnicodeString() const;
 
-  virtual void clear()
-      { d_ecoded.truncate( 0 ); }
+    virtual void clear();
 
-  virtual bool isEmpty() const
-    { return d_ecoded.isEmpty(); }
+    virtual bool isEmpty() const;
 
   private:
     QString d_ecoded;
@@ -305,13 +308,11 @@ class KMIME_EXPORT Unstructured : public Base
 class KMIME_EXPORT Structured : public Base
 {
   public:
-    Structured() : Base() {}
-    Structured( Content *p ) : Base( p ) {}
-    Structured( Content *p, const QByteArray &s ) : Base( p )
-      { from7BitString( s ); }
-    Structured( Content *p, const QString &s, const QByteArray &cs ) : Base( p )
-      { fromUnicodeString( s, cs ); }
-    ~Structured() {}
+    Structured();
+    Structured( Content *p );
+    Structured( Content *p, const QByteArray &s );
+    Structured( Content *p, const QString &s, const QByteArray &cs );
+    ~Structured();
 
     virtual void from7BitString( const QByteArray &s );
     virtual QString asUnicodeString() const;
@@ -326,7 +327,7 @@ class KMIME_EXPORT Structured : public Base
       @param send Pointer to the end of the data.
       @param isCRLF true if input string is terminated with a CRLF.
     */
-    virtual bool parse( const char* &scursor, const char* const send,
+    virtual bool parse( const char* &scursor, const char *const send,
                         bool isCRLF = false ) = 0;
 };
 
@@ -336,13 +337,11 @@ class KMIME_EXPORT Structured : public Base
 class KMIME_EXPORT Address : public Structured
 {
   public:
-    Address() : Structured() {}
-    Address( Content *p ) : Structured( p ) {}
-    Address( Content *p, const QByteArray &s ) : Structured( p )
-      { from7BitString( s ); }
-    Address( Content *p, const QString &s, const QByteArray &cs )
-      : Structured( p ) { fromUnicodeString( s, cs ); }
-    ~Address() {}
+    Address();
+    Address( Content *p );
+    Address( Content *p, const QByteArray &s );
+    Address( Content *p, const QString &s, const QByteArray &cs );
+    ~Address();
 };
 
 /**
@@ -392,9 +391,10 @@ class KMIME_EXPORT MailboxList : public Address
     QStringList displayNames() const;
 
     /**
-      Returns a list of assembled display name / address strings of the following form:
-      "Display Name &lt;address&gt;". These are unicode strings without any transport
-      encoding, ie. they are only suitable for displaying.
+      Returns a list of assembled display name / address strings of the
+      following form: "Display Name &lt;address&gt;". These are unicode
+      strings without any transport encoding, ie. they are only suitable
+      for displaying.
     */
     QStringList prettyAddresses() const;
 
@@ -404,7 +404,7 @@ class KMIME_EXPORT MailboxList : public Address
     Types::Mailbox::List mailboxes() const;
 
   protected:
-    bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
     /** The list of mailboxes */
     QList<Types::Mailbox> mMailboxList;
@@ -420,7 +420,7 @@ class KMIME_EXPORT SingleMailbox : public MailboxList
   kmime_mk_trivial_ctor( SingleMailbox )
   //@endcond
   protected:
-    bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 };
 
 /**
@@ -485,7 +485,7 @@ class KMIME_EXPORT AddressList : public Address
     Types::Mailbox::List mailboxes() const;
 
   protected:
-    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
     /** The list of addresses */
     QList<Types::Address> mAddressList;
@@ -521,7 +521,7 @@ class KMIME_EXPORT Ident : public Address
     void appendIdentifier( const QByteArray &id );
 
   protected:
-    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
     /** The list of msg-id's */
     QList<Types::AddrSpec> mMsgIdList;
@@ -551,7 +551,7 @@ class KMIME_EXPORT SingleIdent : public Ident
     void setIdentifier( const QByteArray &id );
 
   protected:
-    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 };
 
 /**
@@ -578,7 +578,7 @@ class KMIME_EXPORT Token : public Structured
     void setToken( const QByteArray &t );
 
   protected:
-    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
     QByteArray mToken;
@@ -604,7 +604,7 @@ class KMIME_EXPORT PhraseList : public Structured
     QStringList phrases() const;
 
   protected:
-    bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
     QStringList mPhraseList;
@@ -625,7 +625,7 @@ class KMIME_EXPORT DotAtom : public Structured
     virtual bool isEmpty() const;
 
   protected:
-    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
     QString mDotAtom;
@@ -659,7 +659,7 @@ class KMIME_EXPORT Parametrized : public Structured
     void setParameter( const QString &key, const QString &value );
 
   protected:
-    virtual bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+    virtual bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
     QMap<QString,QString> mParameterHash;
@@ -689,7 +689,7 @@ class KMIME_EXPORT ReturnPath : public Generics::Address
     virtual bool isEmpty() const;
 
   protected:
-    bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
     Types::Mailbox mMailbox;
@@ -796,7 +796,7 @@ class KMIME_EXPORT MailCopiesTo : public Generics::AddressList
     void setNeverCopy();
 
   protected:
-    virtual bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
+    virtual bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
     bool mAlwaysCopy;
@@ -826,18 +826,14 @@ class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
     */
     void setEncoding( contentEncoding e );
 
-    // TODO: de-inline and document
-    bool decoded() const
-      { return d_ecoded; }
+    bool decoded() const;
 
-    void setDecoded( bool d=true )
-      { d_ecoded = d; }
+    void setDecoded( bool d=true );
 
-    bool needToEncode() const
-      { return d_ecoded && (c_te == CEquPr || c_te == CEbase64); }
+    bool needToEncode() const;
 
   protected:
-    virtual bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
+    virtual bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
     contentEncoding c_te;
@@ -1059,15 +1055,13 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
     */
     void setPartialParams( int total, int number );
 
-    //category
-    // TODO: document & de-inline
-    contentCategory category() const
-      { return c_ategory; }
-    void setCategory( contentCategory c )
-      { c_ategory=c; }
+    // TODO: document
+    contentCategory category() const;
+
+    void setCategory( contentCategory c );
 
   protected:
-    bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
     contentCategory c_ategory;
@@ -1117,7 +1111,7 @@ class KMIME_EXPORT ContentDisposition : public Generics::Parametrized
     void setFilename( const QString &filename );
 
   protected:
-    bool parse( const char* &scursor, const char * const send, bool isCRLF=false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
     contentDisposition mDisposition;
@@ -1137,33 +1131,18 @@ class KMIME_EXPORT ContentDisposition : public Generics::Parametrized
 class KMIME_EXPORT Generic : public Generics::Unstructured
 {
   public:
-    Generic() : Generics::Unstructured(), t_ype( 0 ) {}
+    Generic();
+    Generic( const char *t );
+    Generic( const char *t, Content *p );
+    Generic( const char *t, Content *p, const QByteArray &s );
+    Generic( const char *t, Content *p, const QString &s, const QByteArray &cs );
+    ~Generic();
 
-    Generic( const char *t ) : Generics::Unstructured(), t_ype( 0 )
-      { setType( t ); }
+    virtual void clear();
 
-    Generic( const char *t, Content *p )
-      : Generics::Unstructured( p ), t_ype( 0 )
-      { setType( t ); }
+    virtual bool isEmpty() const;
 
-    Generic( const char *t, Content *p, const QByteArray &s )
-      : Generics::Unstructured( p, s ), t_ype( 0 )
-      { setType( t ); }
-
-    Generic( const char *t, Content *p, const QString &s, const QByteArray &cs )
-      : Generics::Unstructured( p, s, cs ), t_ype( 0 )
-      { setType( t ); }
-
-    ~Generic() { delete[] t_ype; }
-
-    virtual void clear()
-      { delete[] t_ype; Unstructured::clear(); }
-
-    virtual bool isEmpty() const
-      { return t_ype == 0 || Unstructured::isEmpty(); }
-
-    virtual const char *type() const
-      { return t_ype; }
+    virtual const char *type() const;
 
     void setType( const char *type );
 
@@ -1239,7 +1218,7 @@ class KMIME_EXPORT Control : public Generics::Structured
     void setCancel( const QByteArray &msgid );
 
   protected:
-    bool parse( const char* &scursor, const char * const send, bool isCRLF = false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF = false );
 
   private:
     QByteArray mName;
@@ -1277,7 +1256,7 @@ class KMIME_EXPORT Date : public Generics::Structured
     int ageInDays() const;
 
   protected:
-    bool parse( const char* &scursor, const char * const send, bool isCRLF = false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF = false );
 
   private:
     KDateTime mDateTime;
@@ -1317,7 +1296,7 @@ class KMIME_EXPORT Newsgroups : public Generics::Structured
     bool isCrossposted() const;
 
   protected:
-    bool parse( const char* &scursor, const char * const send, bool isCRLF = false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF = false );
 
   private:
     QList<QByteArray> mGroups;
@@ -1362,7 +1341,7 @@ class KMIME_EXPORT Lines : public Generics::Structured
     void setNumberOfLines( int lines );
 
   protected:
-    bool parse( const char* &scursor, const char * const send, bool isCRLF = false );
+    bool parse( const char* &scursor, const char *const send, bool isCRLF = false );
 
   private:
     int mLines;
