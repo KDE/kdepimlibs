@@ -196,7 +196,7 @@ void Todo::setHasStartDate( bool f )
 KDateTime Todo::dtStart( bool first ) const
 {
   if ( doesRecur() && !first ) {
-    return d->mDtRecurrence.addDays( dtDue( true ).daysTo( IncidenceBase::dtStart() ) );
+    return d->mDtRecurrence.addDays( dtDue( first ).daysTo( IncidenceBase::dtStart() ) );
   } else {
     return IncidenceBase::dtStart();
   }
