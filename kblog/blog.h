@@ -22,7 +22,6 @@
 #ifndef API_BLOG_H
 #define API_BLOG_H
 
-
 #include <kblog/kblog_export.h>
 
 #include <kurl.h>
@@ -110,7 +109,7 @@ class KBLOG_EXPORT BlogPosting
       @return postingId
       @see setPostingId()
     */
-   QString postingId() const;
+    QString postingId() const;
 
     /**
       Sets the post id value. This is important for modifying postings.
@@ -353,14 +352,14 @@ class KBLOG_EXPORT APIBlog : public QObject
     /**
       Enumeration for possible errors.
     */
-   enum errorType {
-     XmlRpc,
-     AtomAPI,
-     ParsingError,
-     AuthenticationError,
-     NotSupported,
-     Other
-   };
+    enum errorType {
+      XmlRpc,
+      AtomAPI,
+      ParsingError,
+      AuthenticationError,
+      NotSupported,
+      Other
+    };
 
     /**
       Returns the API of the inherited object.
@@ -525,11 +524,12 @@ class KBLOG_EXPORT APIBlog : public QObject
 
   Q_SIGNALS:
     /**
-      This signal is emitted when a userInfo() job fetches the user information from the blogging server.
+      This signal is emitted when a userInfo() job fetches the user
+      information from the blogging server.
 
       @param nickname is the nickname of the user.
       @param userid is the id of the user on the server.
-      @param email is the email adress used on the server.
+      @param email is the email address used on the server.
 
 '     @see userInfo()
     */
@@ -537,7 +537,8 @@ class KBLOG_EXPORT APIBlog : public QObject
                             const QString &email );
 
     /**
-      This signal is emitted when a listBlogs() job fetches the blog information from the blogging server.
+      This signal is emitted when a listBlogs() job fetches the blog
+      information from the blogging server.
 
       @param id is the blog's id on the server.
       @param name is the name of the blog on the server.
@@ -547,7 +548,8 @@ class KBLOG_EXPORT APIBlog : public QObject
     void blogInfoRetrieved( const QString &id, const QString &name );
 
     /**
-      This signal is emitted when a listCategories() job fetches category information from the blogging server.
+      This signal is emitted when a listCategories() job fetches category
+      information from the blogging server.
 
       @param name is the name of the category on the server.
       @param description is the description of the category on the server.
@@ -558,7 +560,8 @@ class KBLOG_EXPORT APIBlog : public QObject
                                 const QString &description );
 
     /**
-      This signal is emitted when a listPostings() job fetches a posting from the blogging server.
+      This signal is emitted when a listPostings() job fetches a posting
+      from the blogging server.
 
       @param posting is the fetched posting.
 
@@ -567,7 +570,8 @@ class KBLOG_EXPORT APIBlog : public QObject
     void listedPosting( KBlog::BlogPosting &posting );
 
     /**
-      This signal is emitted when a fetchPosting() job fetches a posting from the blogging server.
+      This signal is emitted when a fetchPosting() job fetches a posting
+      from the blogging server.
 
       @param posting is the fetched posting.
 
@@ -576,7 +580,8 @@ class KBLOG_EXPORT APIBlog : public QObject
     void fetchedPosting( KBlog::BlogPosting &posting );
 
     /**
-      This signal is emitted when a createPosting() job successfully creates a posting on the server.
+      This signal is emitted when a createPosting() job successfully creates
+      a posting on the server.
 
       @param id is the id the posting has on the server.
 
@@ -585,16 +590,19 @@ class KBLOG_EXPORT APIBlog : public QObject
     void createdPosting( const QString &id );
 
     /**
-      This signal is emitted when a createMedia() job successfully creates a posting on the server.
+      This signal is emitted when a createMedia() job successfully creates
+      a posting on the server.
 
-      @param url is the url of the posting on the server. This, depending on the server, can only be an id string, too.
+      @param url is the url of the posting on the server. This, depending
+      on the server, can only be an id string, too.
 
       @see createMedia( KBlog::BlogMedia* )
     */
     void createdMedia( const QString &url );
 
     /**
-      This signal is emitted when a modifyPosting() job modifies a posting on the server.
+      This signal is emitted when a modifyPosting() job modifies a posting
+      on the server.
 
       @param modified shows the success of the modification.
 
@@ -603,14 +611,16 @@ class KBLOG_EXPORT APIBlog : public QObject
     void modifiedPosting( bool modified );
 
     /**
-      This signal is emitted when the last posting of the listPostings() job has been fetched.
+      This signal is emitted when the last posting of the listPostings()
+      job has been fetched.
 
       @see listPostings()
     */
     void listPostingsFinished();
 
     /**
-      This signal is emitted when the last category of the listCategories() job has been fetched.
+      This signal is emitted when the last category of the listCategories()
+      job has been fetched.
 
       @see listCategories()
     */
