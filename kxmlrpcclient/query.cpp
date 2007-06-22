@@ -126,9 +126,6 @@ QList<QVariant> KXmlRpc::Result::data() const
   return mData;
 }
 
-//small macro taken from HTTP IOSlave
-#define KIO_ARGS QByteArray packedArgs; QDataStream kioArgsStream( &packedArgs, QIODevice::WriteOnly ); kioArgsStream
-
 class Query::Private
 {
   public:
@@ -377,8 +374,7 @@ void Query::call( const QString &server,
   QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
 
-  KIO_ARGS << (int)1 << KUrl( server );
-  KIO::TransferJob *job = new KIO::TransferJob( KUrl( server ), KIO::CMD_SPECIAL, packedArgs, postData );
+  KIO::TransferJob *job = KIO::http_post( KUrl( server ), postData, false);
 
   if ( !job ) {
     kWarning() << "Unable to create KIO job for " << server << endl;
