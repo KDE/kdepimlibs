@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -24,7 +24,7 @@
   @brief
   Defines the ContentIndex class.
 
-  @authors Volker Krause \<volker.krause@rwth-aachen.de\>
+  @authors Volker Krause \<vkrause@kde.org\>
 
   @glossary @anchor RFC3501 @anchor rfc3501 @b RFC @b 3501:
   RFC that defines the <a href="http://tools.ietf.org/html/rfc3501">

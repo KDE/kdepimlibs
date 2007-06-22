@@ -4,7 +4,7 @@
     KMime, the KDE internet mail/usenet news message library.
     Copyright (c) 2001 the KMime authors.
     See file AUTHORS for details
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -30,7 +30,7 @@
   Defines the Content class.
 
   @authors the KMime authors (see AUTHORS file),
-  Volker Krause \<volker.krause@rwth-aachen.de\>
+  Volker Krause \<vkrause@kde.org\>
 
 TODO: possible glossary terms:
  content
@@ -284,7 +284,7 @@ class KMIME_EXPORT Content
     /**
       Returns a list of sub-Contents.
     */
-    List contents();
+    List contents() const;
 
     /**
       Adds a new sub-Content, the current Content object is converted into a
