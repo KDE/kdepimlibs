@@ -155,52 +155,35 @@ class KMIME_EXPORT Content
 
     virtual bool removeHeader( const char *type );
 
-    bool hasHeader( const char *type )
-      { return getHeaderByType( type ) != 0; }
+    bool hasHeader( const char *type );
 
     /**
       Returns the Content type header.
 
       @param create if true, create the header if it doesn't exist yet.
     */
-    Headers::ContentType *contentType( bool create=true )
-      {
-        Headers::ContentType *p=0;
-        return getHeaderInstance( p, create );
-      }
+    Headers::ContentType *contentType( bool create=true );
 
     /**
       Returns the Content transfer encoding.
 
       @param create if true, create the header if it doesn't exist yet.
     */
-    Headers::ContentTransferEncoding *contentTransferEncoding( bool create=true )
-      {
-        Headers::ContentTransferEncoding *p=0;
-        return getHeaderInstance( p, create );
-      }
+    Headers::ContentTransferEncoding *contentTransferEncoding( bool create=true );
 
     /**
       Returns the Content disposition.
 
       @param create if true, create the header if it doesn't exist yet.
     */
-    Headers::ContentDisposition *contentDisposition( bool create=true )
-      {
-        Headers::ContentDisposition *p=0;
-        return getHeaderInstance( p, create );
-      }
+    Headers::ContentDisposition *contentDisposition( bool create=true );
 
     /**
       Returns the Content description.
 
       @param create if true, create the header if it doesn't exist yet.
     */
-    Headers::ContentDescription *contentDescription( bool create=true )
-      {
-        Headers::ContentDescription *p=0;
-        return getHeaderInstance( p, create );
-      }
+    Headers::ContentDescription *contentDescription( bool create=true );
 
     /**
       Returns the size of the Content body after encoding.

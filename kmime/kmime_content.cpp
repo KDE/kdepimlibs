@@ -848,6 +848,35 @@ bool Content::removeHeader( const char *type )
   return false;
 }
 
+bool Content::hasHeader( const char *type )
+{
+  return getHeaderByType( type ) != 0;
+}
+
+Headers::ContentType *Content::contentType( bool create )
+{
+  Headers::ContentType *p=0;
+  return getHeaderInstance( p, create );
+}
+
+Headers::ContentTransferEncoding *Content::contentTransferEncoding( bool create )
+{
+  Headers::ContentTransferEncoding *p=0;
+  return getHeaderInstance( p, create );
+}
+
+Headers::ContentDisposition *Content::contentDisposition( bool create )
+{
+  Headers::ContentDisposition *p=0;
+  return getHeaderInstance( p, create );
+}
+
+Headers::ContentDescription *Content::contentDescription( bool create )
+{
+  Headers::ContentDescription *p=0;
+  return getHeaderInstance( p, create );
+}
+
 int Content::size()
 {
   int ret = d->body.length();
