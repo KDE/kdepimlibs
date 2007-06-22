@@ -26,7 +26,7 @@
 
 #include "kxmlrpcclient_export.h"
 
-#include <KUrl>
+#include <kurl.h>
 
 #include <QtCore/QList>
 #include <QtCore/QObject>
