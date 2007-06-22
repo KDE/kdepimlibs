@@ -97,8 +97,8 @@ void Content::setContent( const QList<QByteArray> &l )
   d->body.clear();
 
   //usage of textstreams is much faster than simply appending the strings
-  QTextStream hts( &(d->head), QIODevice::WriteOnly ),
-    bts( &(d->body), QIODevice::WriteOnly );
+  QTextStream hts( &( d->head ), QIODevice::WriteOnly );
+  QTextStream bts( &( d->body ), QIODevice::WriteOnly );
   hts.setCodec( "ISO 8859-1" );
   bts.setCodec( "ISO 8859-1" );
 
@@ -209,7 +209,8 @@ void Content::parse()
 
         QList<QByteArray> parts = mpp.parts();
         QList<QByteArray>::Iterator it;
-        for ( it=parts.begin(); it!=parts.end(); ++it ) { //create a new Content for every part
+        for ( it=parts.begin(); it != parts.end(); ++it ) {
+          //create a new Content for every part
           c = new Content();
           c->setContent( *it );
           c->parse();
@@ -262,7 +263,9 @@ void Content::parse()
 
         if ( !d->contents.isEmpty() && d->contents.first() ) {
           //readd the plain text before the uuencoded part
-          d->contents.first()->setContent( "Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n" + uup.textPart() );
+          d->contents.first()->setContent(
+            "Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n" +
+            uup.textPart() );
           d->contents.first()->contentType()->setMimeType( "text/plain" );
         }
       }
@@ -303,7 +306,9 @@ void Content::parse()
 
           if ( !d->contents.isEmpty() && d->contents.first() ) {
             //readd the plain text before the uuencoded part
-            d->contents.first()->setContent( "Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n" + yenc.textPart() );
+            d->contents.first()->setContent(
+              "Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n" +
+              yenc.textPart() );
             d->contents.first()->contentType()->setMimeType( "text/plain" );
           }
         }
@@ -319,8 +324,9 @@ void Content::parse()
 void Content::assemble()
 {
   d->head = assembleHeaders();
-  foreach ( Content *c, contents() )
+  foreach ( Content *c, contents() ) {
     c->assemble();
+  }
 }
 
 QByteArray Content::assembleHeaders()
@@ -329,13 +335,15 @@ QByteArray Content::assembleHeaders()
 
   //Content-Type
   Headers::Base *h = contentType( false );
-  if ( h && !h->isEmpty() )
+  if ( h && !h->isEmpty() ) {
     newHead += contentType()->as7BitString() + '\n';
+  }
 
   //Content-Transfer-Encoding
   h = contentTransferEncoding( false );
-  if ( h && !h->isEmpty() )
+  if ( h && !h->isEmpty() ) {
     newHead += contentTransferEncoding()->as7BitString() + '\n';
+  }
 
   //Content-Description
   h = contentDescription( false );
@@ -494,9 +502,9 @@ QByteArray Content::decodedContent()
     }
   }
 
-  if ( removeTrailingNewline && (ret.size() > 0 ) &&
-       ( ret[ret.size()-1] == '\n') )
+  if ( removeTrailingNewline && (ret.size() > 0 ) && ( ret[ret.size()-1] == '\n') ) {
     ret.resize( ret.size() - 1 );
+  }
 
   return ret;
 }
@@ -595,7 +603,8 @@ Content::List Content::contents() const
 
 void Content::addContent( Content *c, bool prepend )
 {
-  if ( d->contents.isEmpty() && !contentType()->isMultipart() ) { // this message is not multipart yet
+  if ( d->contents.isEmpty() && !contentType()->isMultipart() ) {
+    // this message is not multipart yet
 
     // first we convert the body to a content
     Content *main = new Content();
@@ -689,11 +698,14 @@ void Content::changeEncoding( Headers::contentEncoding e )
   }
 
   if ( decodeText() ) {
-    enc->setEncoding( e ); // text is not encoded until it's sent or saved so we just set the new encoding
-  } else { // this content contains non textual data, that has to be re-encoded
-
+    enc->setEncoding( e ); // text is not encoded until it's sent or saved
+                           // so we just set the new encoding
+  } else {
+    // this content contains non textual data, that has to be re-encoded
     if ( e != Headers::CEbase64 ) {
-      //kWarning(5003) << "Content::changeEncoding() : non textual data and encoding != base64 - this should not happen\n => forcing base64" << endl;
+      //kWarning(5003) << "Content::changeEncoding() : non textual data "
+      //               << "and encoding != base64 - this should not happen => "
+      //               << "forcing base64" << endl;
       e = Headers::CEbase64;
     }
 
@@ -882,7 +894,7 @@ int Content::size()
   int ret = d->body.length();
 
   if ( contentTransferEncoding()->encoding() == Headers::CEbase64 ) {
-    return ( ret * 3 / 4 ); //base64 => 6 bit per byte
+    return ret * 3 / 4; //base64 => 6 bit per byte
   }
 
   return ret;
