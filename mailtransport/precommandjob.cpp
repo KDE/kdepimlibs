@@ -24,7 +24,7 @@
 #include "precommandjob.h"
 
 #include <klocale.h>
-#include <QProcess>
+#include <KProcess>
 
 using namespace MailTransport;
 
@@ -35,7 +35,7 @@ using namespace MailTransport;
 class PreCommandJobPrivate
 {
   public:
-    QProcess *process;
+    KProcess *process;
     QString precommand;
 };
 
@@ -43,7 +43,7 @@ PrecommandJob::PrecommandJob(const QString & precommand, QObject * parent) :
     KJob( parent ), d( new PreCommandJobPrivate )
 {
   d->precommand = precommand;
-  d->process = new QProcess( this );
+  d->process = new KProcess( this );
   connect( d->process, SIGNAL(started()), SLOT(slotStarted()) );
   connect( d->process, SIGNAL(error(QProcess::ProcessError error)),
            SLOT(slotError(QProcess::ProcessError error)));
@@ -58,7 +58,8 @@ PrecommandJob::~ PrecommandJob()
 
 void PrecommandJob::start()
 {
-  d->process->start( d->precommand );
+  d->process->setShellCommand( d->precommand );
+  d->process->start();
 }
 
 void PrecommandJob::slotStarted()
@@ -67,7 +68,7 @@ void PrecommandJob::slotStarted()
                     i18n("Executing precommand '%1'.", d->precommand ) );
 }
 
-void PrecommandJob::slotEror( QProcess::ProcessError error)
+void PrecommandJob::slotError( QProcess::ProcessError error)
 {
   setError( UserDefinedError );
   setErrorText( i18n("Could not execute precommand '%1'.", d->precommand ) );

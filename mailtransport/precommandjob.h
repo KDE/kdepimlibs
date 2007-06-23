@@ -63,7 +63,7 @@ class PrecommandJob : public KJob
   private slots:
     void slotFinished(int, QProcess::ExitStatus);
     void slotStarted();
-    void slotEror( QProcess::ProcessError error);
+    void slotError( QProcess::ProcessError error);
 
   private:
     PreCommandJobPrivate *const d;
