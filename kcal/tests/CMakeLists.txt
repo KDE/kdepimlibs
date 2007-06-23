@@ -5,6 +5,18 @@ include_directories(
 	
 )
 
+
+
+########### next target ###############
+
+set(convertqtopia_SRCS convertqtopia.cpp )
+
+kde4_automoc(${convertqtopia_SRCS})
+
+kde4_add_test_executable(convertqtopia ${convertqtopia_SRCS})
+
+target_link_libraries(convertqtopia  ${KDE4_KDECORE_LIBS} kcal )
+
 ########### next target ###############
 
 set(loadcalendar_SRCS loadcalendar.cpp )

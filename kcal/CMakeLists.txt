@@ -282,17 +282,6 @@ target_link_libraries(kcal_localdir  ${KDE4_KDECORE_LIBS} kcal )
 install(TARGETS kcal_localdir  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
-########### next target ###############
-
-set(convertqtopia_SRCS convertqtopia.cpp )
-
-kde4_automoc(${convertqtopia_SRCS})
-
-kde4_add_test_executable(convertqtopia ${convertqtopia_SRCS})
-
-target_link_libraries(convertqtopia  ${KDE4_KDECORE_LIBS} kcal )
-
-
 add_subdirectory( libical )
 add_subdirectory( tests )
 
