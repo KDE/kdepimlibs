@@ -20,6 +20,7 @@
 #ifndef MAILTRANSPORT_TRANSPORTCOMBO_H
 #define MAILTRANSPORT_TRANSPORTCOMBO_H
 
+#include <mailtransport/transportbase.h>
 #include <mailtransport/mailtransport_export.h>
 #include <kcombobox.h>
 
@@ -61,6 +62,11 @@ class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
       has been called.
     */
     bool isAdHocTransport() const;
+
+    /**
+      Returns the type of the selected transport.
+    */  
+    TransportBase::EnumType::type transportType() const;
 
   private Q_SLOTS:
     void fillComboBox();

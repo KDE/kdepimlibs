@@ -17,6 +17,7 @@
     02110-1301, USA.
 */
 
+#include "transport.h"
 #include "transportcombobox.h"
 #include "transportmanager.h"
 
@@ -64,6 +65,12 @@ void TransportComboBox::setCurrentTransport(int transportId)
 bool TransportComboBox::isAdHocTransport() const
 {
   return currentTransportId() == -1;
+}
+
+TransportBase::EnumType::type TransportComboBox::transportType() const
+{
+  int transtype = TransportManager::self()->transportById( currentTransportId() )->type();
+  return (TransportBase::EnumType::type)transtype;
 }
 
 void TransportComboBox::fillComboBox()
