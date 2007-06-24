@@ -31,8 +31,8 @@
   @authors Marc Mutz \<mutz@kde.org\>
 */
 
-#include "kmime_version.h"
 #include "kmime_mdn.h"
+#include "kmime_version.h"
 #include "kmime_util.h"
 
 #include <klocale.h>
@@ -241,7 +241,7 @@ QByteArray dispositionNotificationBodyContent( const QString &r,
 {
   // in Perl: chomp(special)
   QString spec;
-  if ( special.endsWith("\n") ) {
+  if ( special.endsWith('\n') ) {
     spec = special.left( special.length() - 1 );
   } else {
     spec = special;
@@ -275,7 +275,7 @@ QString descriptionFor( DispositionType d,
     }
   }
   kWarning() << "KMime::MDN::descriptionFor(): No such disposition type: "
-             << (int)d << endl;
+             << ( int )d << endl;
   return QString();
 }
 

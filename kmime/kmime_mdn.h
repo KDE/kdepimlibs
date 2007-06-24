@@ -182,14 +182,12 @@ KMIME_EXPORT extern QByteArray dispositionNotificationBodyContent(
   DispositionType disposition,
   ActionMode actionMode,
   SendingMode sendingMode,
-  const QList<DispositionModifier> &dispositionModifers
-  =QList<DispositionModifier>(),
-  const QString & special=QString() );
+  const QList<DispositionModifier> &dispositionModifers=QList<DispositionModifier>(),
+  const QString &special=QString() );
 
 KMIME_EXPORT extern QString descriptionFor(
   DispositionType d,
-  const QList<DispositionModifier> &m
-  =QList<DispositionModifier>() );
+  const QList<DispositionModifier> &m=QList<DispositionModifier>() );
 
 } // namespace MDN
 
