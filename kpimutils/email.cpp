@@ -723,7 +723,7 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
       }
     }
     mail = aStr.mid( i + 1 );
-    if ( mail.endsWith( ">" ) ) {
+    if ( mail.endsWith( '>' ) ) {
       mail.truncate( mail.length() - 1 );
     }
 

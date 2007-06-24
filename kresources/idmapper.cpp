@@ -92,7 +92,7 @@ QString IdMapper::identifier() const
 QString IdMapper::filename()
 {
   QString file = d->path;
-  if ( !file.endsWith( "/" ) ) {
+  if ( !file.endsWith( '/' ) ) {
     file += '/';
   }
   file += d->identifier;
