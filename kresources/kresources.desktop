@@ -10,6 +10,7 @@ X-KDE-FactoryName=kcm_kresources
 
 Name=KDE Resources
 Name[be]=Рэсурсы KDE
+Name[de]=KDE-Ressourcen
 Name[el]=Πόροι του KDE
 Name[es]=Recursos KDE
 Name[ga]=Acmhainní KDE
@@ -23,6 +24,7 @@ Name[zh_TW]=KDE 資源
 
 Comment=Configure KDE Resources
 Comment[be]=Настаўленні рэсурсаў KDE
+Comment[de]=KDE-Ressourcen einrichten
 Comment[el]=Ρύθμιση πόρων του KDE
 Comment[es]=Configurar recursos de KDE
 Comment[ja]=KDE リソースの設定
@@ -33,6 +35,7 @@ Comment[x-test]=xxConfigure KDE Resourcesxx
 Comment[zh_TW]=設定 KDE 資源
 
 Keywords=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap
+Keywords[de]=Ressourcen,Konnector-Ressource,Kontakt-Ressource,Kalender-Ressource,Notizen-Ressource,Alarm-Ressource,Imap
 Keywords[el]=πόροι,πόροι του konnector,πόρος επαφής,πόρος ημερολογίου,πόρος σημειώσεων,πόρος ειδοποίησης,imap
 Keywords[es]=recursos,recursos de konnector,recursos de contacto,recursos de calendario,recursos de notas,recurso de alarma,imap
 Keywords[pt]=recursos,recurso do konector,recurso de contactos,recurso de calendário,recurso de notas,recurso de alarme,imap
