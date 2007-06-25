@@ -20,25 +20,23 @@ libkholidays - must stay in kdepim due to licensing. ask the 'plan' author.
 
 High Priority for KDE 4.0
 =========================
-libkhalkhi - new, Friedrich W. H. Kossebau <kossebau kde org>
-libkholidays_ng - allen, move this back to playground
 kpimutils - done, but we want to move email.h into kmime, as some if its
             functions are already in kmime. vkrause.
-networkstatus - will be moved by Bille asap into kdelibs
+networkstatus - will be moved by Bille into kdelibs and kdebase
 
 High Priority, but not ready until KDE 4.1
 ==========================================
+libkhalkhi - new, Friedrich W. H. Kossebau <kossebau kde org>
 libakonadi - being developed in kdepim, may not be ready until 4.1,
              API currently too unstable for anything with a freeze policy :)
 
 Low Priority (KDE 4.1)
 ======================
 libkdepim - needs a class-by-class review
-gpgmepp, qgpgme
-libkpgp
-libkleo - blocked by libkpgp, gpgmepp, qgpgme
-libkpimidentities - blocked by libkleo and libkdepim
-libksieve
+qgpgme - Relicense to LGPL permission has been granted by Marc Mutz and KDAB
+gpgmepp - Relicense to LGPL permission has been granted by Marc Mutz and KDAB
+libkpimidentities - Relicense to LGPL permission has been granted by Marc Mutz and KDAB. blocked by libkleo and libkdepim
+libksieve - ??
 kode - not ready for kdelibs.  kxforms should be in kdepim?  kwsdl??
 
 Really Low Priority (or eliminate entirely)
@@ -54,4 +52,7 @@ kmime
 ktnef
 mailtransport
 syndication
-kdgantt - must stay in kdepim due to licensing.
+kdgantt - May NOT be relicensed. MUST remain GPL (and therefore cannot be moved)
+libkleo - May NOT be relicensed. MUST remain GPL (and therefore cannot be moved)
+          (requires libkpgp, gpgmepp, qgpgme)
+libkpgp - Relicense request denied (and therefore cannot be moved)
