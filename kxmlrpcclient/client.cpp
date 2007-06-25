@@ -21,15 +21,15 @@
   @author Narayan Newton <narayannewton@gmail.com>
 */
 
-#include <kdebug.h>
+#include "client.h"
+#include "query.h"
+
 #include <kio/job.h>
+#include <kdebug.h>
 #include <klocale.h>
 #include <kurl.h>
 
 #include <QtCore/QVariant>
-
-#include "client.h"
-#include "query.h"
 
 using namespace KXmlRpc;
 

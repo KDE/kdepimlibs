@@ -18,14 +18,14 @@
   @author Narayan Newton <narayannewton@gmail.com>
 */
 
+#include "query.h"
+
 #include <kdebug.h>
 #include <klocale.h>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QVariant>
-#include <qdom.h>
-
-#include "query.h"
+#include <QtXml/QDomDocument>
 
 using namespace KXmlRpc;
 
