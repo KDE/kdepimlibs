@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#include "transport.h"
 #include "transportcombobox.h"
+#include "transport.h"
 #include "transportmanager.h"
 
 #include <kdebug.h>
