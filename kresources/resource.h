@@ -150,7 +150,7 @@ class KRESOURCES_EXPORT Resource : public QObject
     QString identifier() const;
 
     /**
-      Sets the resourcde type.
+      Sets the resource type.
     */
     void setType( const QString &type );
 
