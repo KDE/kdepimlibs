@@ -1,99 +1,98 @@
 /*
-    Copyright (c) 2005 Tom Albers <tomalbers@kde.nl>
-    Copyright (c) 1997-1999 Stefan Taferner <taferner@kde.org>
+  Copyright (c) 2005 Tom Albers <tomalbers@kde.nl>
+  Copyright (c) 1997-1999 Stefan Taferner <taferner@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "kfileio.h"
+#include "kpimutils_export.h"
 
 #include <kmessagebox.h>
 #include <kdebug.h>
-
-#include <assert.h>
-#include <QDir>
-#include <QByteArray>
-
 #include <klocale.h>
 #include <KStandardGuiItem>
 
+#include <QDir>
+#include <QByteArray>
 #include <QWidget>
 #include <QFile>
 #include <QFileInfo>
+
 #include <sys/stat.h>
 #include <sys/types.h>
-
-#include "kpimutils_export.h"
+#include <assert.h>
 
 namespace KPIMUtils {
 
 //-----------------------------------------------------------------------------
-static void msgDialog(const QString &msg)
+static void msgDialog( const QString &msg )
 {
-  KMessageBox::sorry(0, msg, i18n("File I/O Error"));
+  KMessageBox::sorry( 0, msg, i18n( "File I/O Error" ) );
 }
 
-
 //-----------------------------------------------------------------------------
-KPIMUTILS_EXPORT
-QByteArray kFileToByteArray( const QString & aFileName, bool aEnsureNL, bool aVerbose )
+QByteArray kFileToByteArray( const QString &aFileName, bool aEnsureNL,
+                             bool aVerbose )
 {
   QByteArray result;
-  QFileInfo info(aFileName);
+  QFileInfo info( aFileName );
   unsigned int readLen;
   unsigned int len = info.size();
-  QFile file(aFileName);
+  QFile file( aFileName );
 
   //assert(aFileName!=0);
-  if( aFileName.isEmpty() )
+  if( aFileName.isEmpty() ) {
     return "";
+  }
 
-  if (!info.exists())
-  {
-    if (aVerbose)
-      msgDialog(i18n("The specified file does not exist:\n%1", aFileName));
+  if ( !info.exists() ) {
+    if ( aVerbose ) {
+      msgDialog( i18n( "The specified file does not exist:\n%1", aFileName ) );
+    }
     return QByteArray();
   }
-  if (info.isDir())
-  {
-    if (aVerbose)
-      msgDialog(i18n("This is a folder and not a file:\n%1", aFileName));
+  if ( info.isDir() ) {
+    if ( aVerbose ) {
+      msgDialog( i18n( "This is a folder and not a file:\n%1", aFileName ) );
+    }
     return QByteArray();
   }
-  if (!info.isReadable())
-  {
-    if (aVerbose)
-      msgDialog(i18n("You do not have read permissions "
-				   "to the file:\n%1", aFileName));
+  if ( !info.isReadable() ) {
+    if ( aVerbose ) {
+      msgDialog( i18n( "You do not have read permissions to the file:\n%1", aFileName ) );
+    }
     return QByteArray();
   }
-  if (len <= 0) return QByteArray();
+  if ( len <= 0 ) {
+    return QByteArray();
+  }
 
-  if (!file.open(QIODevice::Unbuffered|QIODevice::ReadOnly))
-  {
-    if (aVerbose) switch(file.error())
-    {
-    case QFile::ReadError:
-      msgDialog(i18n("Could not read file:\n%1", aFileName));
-      break;
-    case QFile::OpenError:
-      msgDialog(i18n("Could not open file:\n%1", aFileName));
-      break;
-    default:
-      msgDialog(i18n("Error while reading file:\n%1", aFileName));
+  if ( !file.open( QIODevice::Unbuffered|QIODevice::ReadOnly ) ) {
+    if ( aVerbose ) {
+      switch( file.error() ) {
+      case QFile::ReadError:
+        msgDialog( i18n( "Could not read file:\n%1", aFileName ) );
+        break;
+      case QFile::OpenError:
+        msgDialog( i18n( "Could not open file:\n%1", aFileName ) );
+        break;
+      default:
+        msgDialog( i18n( "Error while reading file:\n%1", aFileName ) );
+      }
     }
     return QByteArray();
   }
@@ -104,16 +103,14 @@ QByteArray kFileToByteArray( const QString & aFileName, bool aEnsureNL, bool aVe
     if ( result[readLen-1] != '\n' ) {
       result[readLen++] = '\n';
       len++;
-    }
-    else
+    } else {
       result.truncate( len );
+    }
   }
 
-  if (readLen < len)
-  {
-    QString msg = i18n("Could only read %1 bytes of %2.",
-                   readLen, len);
-    msgDialog(msg);
+  if ( readLen < len ) {
+    QString msg = i18n( "Could only read %1 bytes of %2.", readLen, len );
+    msgDialog( msg );
     result.truncate( readLen );
   }
 
@@ -121,61 +118,64 @@ QByteArray kFileToByteArray( const QString & aFileName, bool aEnsureNL, bool aVe
 }
 
 //-----------------------------------------------------------------------------
-KPIMUTILS_EXPORT
-bool kByteArrayToFile( const QByteArray & aBuffer, const QString & aFileName,
+bool kByteArrayToFile( const QByteArray &aBuffer, const QString &aFileName,
                        bool aAskIfExists, bool aBackup, bool aVerbose )
 {
   // TODO: use KSaveFile
-  QFile file(aFileName);
+  QFile file( aFileName );
 
   //assert(aFileName!=0);
-  if(aFileName.isEmpty())
+  if( aFileName.isEmpty() ) {
     return false;
+  }
 
-  if (file.exists())
-  {
-    if (aAskIfExists)
-    {
+  if ( file.exists() ) {
+    if ( aAskIfExists ) {
       QString str;
-      str = i18n("File %1 exists.\nDo you want to replace it?",
-		   aFileName);
-      const int rc = KMessageBox::warningContinueCancel(0,
-	   str, i18n("Save to File"), KGuiItem(i18n("&Replace")));
-      if (rc != KMessageBox::Continue) return false;
+      str = i18n( "File %1 exists.\nDo you want to replace it?", aFileName );
+      const int rc =
+        KMessageBox::warningContinueCancel( 0, str, i18n( "Save to File" ),
+                                            KGuiItem( i18n( "&Replace" ) ) );
+      if ( rc != KMessageBox::Continue ) {
+        return false;
+      }
     }
-    if (aBackup)
-    {
+    if ( aBackup ) {
       // make a backup copy
       // TODO: use KSaveFile::backupFile()
       QString bakName = aFileName;
       bakName += '~';
       QFile::remove(bakName);
-      if( !QDir::current().rename(aFileName, bakName) )
-      {
+      if ( !QDir::current().rename( aFileName, bakName ) ) {
 	// failed to rename file
-	if (!aVerbose) return false;
-	const int rc = KMessageBox::warningContinueCancel(0,
-	     i18n("Failed to make a backup copy of %1.\nContinue anyway?",
-	      aFileName),
-             i18n("Save to File"), KStandardGuiItem::save() );
-	if (rc != KMessageBox::Continue) return false;
+        if ( !aVerbose ) {
+          return false;
+        }
+        const int rc =
+          KMessageBox::warningContinueCancel(
+            0,
+            i18n( "Failed to make a backup copy of %1.\nContinue anyway?", aFileName ),
+            i18n( "Save to File" ), KStandardGuiItem::save() );
+
+        if ( rc != KMessageBox::Continue ) {
+          return false;
+        }
       }
     }
   }
 
-  if (!file.open(QIODevice::Unbuffered|QIODevice::WriteOnly|QIODevice::Truncate))
-  {
-    if (aVerbose) switch(file.error())
-    {
-    case QFile::WriteError:
-      msgDialog(i18n("Could not write to file:\n%1", aFileName));
-      break;
-    case QFile::OpenError:
-      msgDialog(i18n("Could not open file for writing:\n%1",
-		 aFileName));
-      break;
-    default:
-      msgDialog(i18n("Error while writing file:\n%1", aFileName));
+  if ( !file.open( QIODevice::Unbuffered|QIODevice::WriteOnly|QIODevice::Truncate ) ) {
+    if ( aVerbose ) {
+      switch( file.error() ) {
+      case QFile::WriteError:
+        msgDialog( i18n( "Could not write to file:\n%1", aFileName ) );
+        break;
+      case QFile::OpenError:
+        msgDialog( i18n( "Could not open file for writing:\n%1", aFileName ) );
+        break;
+      default:
+        msgDialog( i18n( "Error while writing file:\n%1", aFileName ) );
+      }
     }
     return false;
   }
@@ -183,26 +183,25 @@ bool kByteArrayToFile( const QByteArray & aBuffer, const QString & aFileName,
   const int writeLen = file.write( aBuffer.data(), aBuffer.size() );
 
   if ( writeLen < 0 ) {
-    if (aVerbose)
-      msgDialog(i18n("Could not write to file:\n%1", aFileName));
+    if ( aVerbose ) {
+      msgDialog( i18n( "Could not write to file:\n%1", aFileName ) );
+    }
     return false;
-  }
-  else if ( writeLen < aBuffer.size() ) {
-    QString msg = i18n("Could only write %1 bytes of %2.",
-                    writeLen ,
-                    aBuffer.size() );
-    if (aVerbose)
-      msgDialog(msg);
+  } else if ( writeLen < aBuffer.size() ) {
+    QString msg = i18n( "Could only write %1 bytes of %2.", writeLen, aBuffer.size() );
+    if ( aVerbose ) {
+      msgDialog( msg );
+    }
     return false;
   }
 
   return true;
 }
 
-
 QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
-  const bool recursive, const bool wantItReadable,
-  const bool wantItWritable )
+                                              const bool recursive,
+                                              const bool wantItReadable,
+                                              const bool wantItWritable )
 {
   // First we have to find out which type the toCheck is. This can be
   // a directory (follow if recursive) or a file (check permissions).
@@ -214,8 +213,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
   struct stat statbuffer;
 
   if ( !fiToCheck.exists() ) {
-    error.append( i18n("%1 does not exist",
-                   toCheck) + "\n");
+    error.append( i18n( "%1 does not exist", toCheck ) + '\n' );
   }
 
   // check the access bit of a folder.
@@ -226,8 +224,8 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
     QDir g( toCheck );
     if ( !g.isReadable() ) {
       if ( chmod( toCheckEnc, statbuffer.st_mode + S_IXUSR ) != 0 ) {
-        error.append( i18n("%1 is not accessible and that is "
-                           "unchangeable.", toCheck) + "\n");
+        error.append( i18n( "%1 is not accessible and that is "
+                            "unchangeable.", toCheck ) + '\n' );
       } else {
         kDebug(5321) << "Changed access bit for " << toCheck << endl;
       }
@@ -241,14 +239,14 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
     if ( !fiToCheck.isReadable() && wantItReadable ) {
       // Get the current permissions. No need to do anything with an
       // error, it will het added to errors anyhow, later on.
-      if ( stat(toCheckEnc,&statbuffer) != 0 ) {
+      if ( stat( toCheckEnc,&statbuffer ) != 0 ) {
         kDebug(5321) << "wantItR: Can't read perms of " << toCheck << endl;
       }
 
       // Lets try changing it.
       if ( chmod( toCheckEnc, statbuffer.st_mode + S_IRUSR ) != 0 ) {
-        error.append( i18n("%1 is not readable and that is unchangeable.",
-                            toCheck) + "\n");
+        error.append( i18n( "%1 is not readable and that is unchangeable.",
+                            toCheck ) + '\n' );
       } else {
         kDebug(5321) << "Changed the read bit for " << toCheck << endl;
       }
@@ -257,14 +255,13 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
     if ( !fiToCheck.isWritable() && wantItWritable ) {
       // Gets the current persmissions. Needed because it can be changed
       // curing previous operation.
-      if (stat(toCheckEnc,&statbuffer) != 0) {
+      if ( stat( toCheckEnc,&statbuffer ) != 0 ) {
         kDebug(5321) << "wantItW: Can't read perms of " << toCheck << endl;
       }
 
       // Lets try changing it.
-      if ( chmod (toCheckEnc, statbuffer.st_mode + S_IWUSR ) != 0 ) {
-        error.append( i18n("%1 is not writable and that is unchangeable.",
-                            toCheck) + "\n");
+      if ( chmod ( toCheckEnc, statbuffer.st_mode + S_IWUSR ) != 0 ) {
+        error.append( i18n( "%1 is not writable and that is unchangeable.", toCheck ) + '\n' );
       } else {
         kDebug(5321) << "Changed the write bit for " << toCheck << endl;
       }
@@ -274,19 +271,19 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
   // If it is a folder and recursive is true, then we check the contents of
   // the folder.
   if ( fiToCheck.isDir() && recursive ){
-    QDir g(toCheck);
+    QDir g( toCheck );
     // First check if the folder is readable for us. If not, we get
     // some ugly crashes.
     if ( !g.isReadable() ){
-      error.append(i18n("Folder %1 is inaccessible.", toCheck) + "\n");
+      error.append( i18n( "Folder %1 is inaccessible.", toCheck ) + '\n' );
     } else {
-      foreach(QFileInfo fi, g.entryInfoList())
-      {
+      foreach ( QFileInfo fi, g.entryInfoList() ) {
         QString newToCheck = toCheck + '/' + fi.fileName();
         QFileInfo fiNewToCheck(newToCheck);
         if ( fi.fileName() != "." && fi.fileName() != ".." ) {
-          error.append ( checkAndCorrectPermissionsIfPossible( newToCheck,
-                                recursive, wantItReadable, wantItWritable) );
+          error.append (
+            checkAndCorrectPermissionsIfPossible( newToCheck, recursive,
+                                                  wantItReadable, wantItWritable ) );
         }
       }
     }
@@ -295,21 +292,24 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
 }
 
 bool checkAndCorrectPermissionsIfPossibleWithErrorHandling( QWidget *parent,
-  const QString &toCheck, const bool recursive, const bool wantItReadable,
-  const bool wantItWritable )
+                                                            const QString &toCheck,
+                                                            const bool recursive,
+                                                            const bool wantItReadable,
+                                                            const bool wantItWritable )
 {
-  QString error = checkAndCorrectPermissionsIfPossible(toCheck, recursive,
-                                           wantItReadable, wantItWritable);
+  QString error =
+    checkAndCorrectPermissionsIfPossible( toCheck, recursive, wantItReadable, wantItWritable );
+
   // There is no KMessageBox with Retry, Cancel and Details.
   // so, I can't provide a functionality to recheck. So it now
   // it is just a warning.
   if ( !error.isEmpty() ) {
     kDebug(5321) << "checkPermissions found:" << error << endl;
-    KMessageBox::detailedSorry(parent,
-                               i18n("Some files or folders do not have "
-                               "the right permissions, please correct them "
-                               "manually."),
-                               error, i18n("Permissions Check"), false);
+    KMessageBox::detailedSorry( parent,
+                                i18n( "Some files or folders do not have the "
+                                      "necessary permissions, please correct "
+                                      "them manually." ),
+                                error, i18n( "Permissions Check" ), false );
     return false;
   } else {
     return true;
