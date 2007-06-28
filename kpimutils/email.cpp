@@ -17,6 +17,16 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the KDEPIM Utilities library and provides
+  static methods for email address validation.
+
+  @brief
+  Email address validation methods.
+
+  @author Matt Douhan \<matt@fruitsalad.org\>
+ */
 
 #include "email.h"
 
@@ -283,7 +293,7 @@ EmailParseResult KPIMUtils::splitAddress( const QByteArray &address,
                                           QByteArray &comment )
 {
   return splitAddressInternal( address, displayName, addrSpec, comment,
-                               false /* don't allow multiple addresses */ );
+                               false/* don't allow multiple addresses */ );
 }
 
 //-----------------------------------------------------------------------------
@@ -323,7 +333,7 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
 
   int atCount = aStr.count( '@' );
   if ( atCount > 1 ) {
-    tooManyAtsFlag = true;;
+    tooManyAtsFlag = true;
   } else if ( atCount == 0 ) {
     return TooFewAts;
   }
@@ -417,9 +427,11 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
     case InComment :
       {
         switch ( aStr[index].toLatin1() ) {
-        case '(' : ++commentLevel;
+        case '(' :
+          ++commentLevel;
           break;
-        case ')' : --commentLevel;
+        case ')' :
+          --commentLevel;
           if ( commentLevel == 0 ) {
             context = TopLevel;
           }
@@ -442,7 +454,8 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
             return UnexpectedComma;
           }
           break;
-        case '"' : inQuotedString = !inQuotedString;
+        case '"' :
+          inQuotedString = !inQuotedString;
           break;
         case '@' :
           if ( inQuotedString ) {
@@ -460,7 +473,7 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
           break;
         case '\\' : // quoted character
           ++index; // skip the '\'
-          if (( index + 1 )> strlen ) {
+          if ( ( index + 1 ) > strlen ) {
             return UnexpectedEnd;
           }
           break;
@@ -520,57 +533,57 @@ QString KPIMUtils::emailParseResultToString( EmailParseResult errorCode )
 {
   switch ( errorCode ) {
   case TooManyAts :
-    return i18n("The email address you entered is not valid because it "
-                "contains more than one @. "
-                "You will not create valid messages if you do not "
-                "change your address.");
+    return i18n( "The email address you entered is not valid because it "
+                 "contains more than one @. "
+                 "You will not create valid messages if you do not "
+                 "change your address." );
   case TooFewAts :
-    return i18n("The email address you entered is not valid because it "
-                "does not contain a @."
-                "You will not create valid messages if you do not "
-                "change your address.");
+    return i18n( "The email address you entered is not valid because it "
+                 "does not contain a @."
+                 "You will not create valid messages if you do not "
+                 "change your address." );
   case AddressEmpty :
-    return i18n("You have to enter something in the email address field.");
+    return i18n( "You have to enter something in the email address field." );
   case MissingLocalPart :
-    return i18n("The email address you entered is not valid because it "
-                "does not contain a local part.");
+    return i18n( "The email address you entered is not valid because it "
+                 "does not contain a local part." );
   case MissingDomainPart :
-    return i18n("The email address you entered is not valid because it "
-                "does not contain a domain part.");
+    return i18n( "The email address you entered is not valid because it "
+                 "does not contain a domain part." );
   case UnbalancedParens :
-    return i18n("The email address you entered is not valid because it "
-                "contains unclosed comments/brackets.");
+    return i18n( "The email address you entered is not valid because it "
+                 "contains unclosed comments/brackets." );
   case AddressOk :
-    return i18n("The email address you entered is valid.");
+    return i18n( "The email address you entered is valid." );
   case UnclosedAngleAddr :
-    return i18n("The email address you entered is not valid because it "
-                "contains an unclosed anglebracket.");
+    return i18n( "The email address you entered is not valid because it "
+                 "contains an unclosed anglebracket." );
   case UnopenedAngleAddr :
-    return i18n("The email address you entered is not valid because it "
-                "contains an unopened anglebracket.");
+    return i18n( "The email address you entered is not valid because it "
+                 "contains an unopened anglebracket." );
   case UnexpectedComma :
-    return i18n("The email address you have entered is not valid because it "
-                "contains an unexpected comma.");
+    return i18n( "The email address you have entered is not valid because it "
+                 "contains an unexpected comma." );
   case UnexpectedEnd :
-    return i18n("The email address you entered is not valid because it ended "
-                "unexpectedly, this probably means you have used an escaping type "
-                "character like an \\  as the last character in your email "
-                "address.");
+    return i18n( "The email address you entered is not valid because it ended "
+                 "unexpectedly, this probably means you have used an escaping "
+                 "type character like an \\  as the last character in your "
+                 "email address." );
   case UnbalancedQuote :
-    return i18n("The email address you entered is not valid because it "
-                "contains quoted text which does not end.");
+    return i18n( "The email address you entered is not valid because it "
+                 "contains quoted text which does not end." );
   case NoAddressSpec :
-    return i18n("The email address you entered is not valid because it "
-                "does not seem to contain an actual email address, i.e. "
-                "something of the form joe@example.org.");
+    return i18n( "The email address you entered is not valid because it "
+                 "does not seem to contain an actual email address, i.e. "
+                 "something of the form joe@example.org." );
   case DisallowedChar :
-    return i18n("The email address you entered is not valid because it "
-                "contains an illegal character.");
+    return i18n( "The email address you entered is not valid because it "
+                 "contains an illegal character." );
   case InvalidDisplayName :
-    return i18n("The email address you have entered is not valid because it "
-                "contains an invalid displayname.");
+    return i18n( "The email address you have entered is not valid because it "
+                 "contains an invalid displayname." );
   }
-  return i18n("Unknown problem with email address");
+  return i18n( "Unknown problem with email address" );
 }
 
 //-----------------------------------------------------------------------------
@@ -592,7 +605,8 @@ bool KPIMUtils::isValidSimpleAddress( const QString &aStr )
   unsigned int strlen = localPart.length();
   for ( unsigned int index=0; index < strlen; index++ ) {
     switch( localPart[ index ].toLatin1() ) {
-    case '"' : inQuotedString = !inQuotedString;
+    case '"' :
+      inQuotedString = !inQuotedString;
       break;
     case '@' :
       if ( inQuotedString ) {
@@ -623,18 +637,18 @@ bool KPIMUtils::isValidSimpleAddress( const QString &aStr )
 //-----------------------------------------------------------------------------
 QString KPIMUtils::simpleEmailAddressErrorMsg()
 {
-  return i18n("The email address you entered is not valid because it "
-              "does not seem to contain an actual email address, i.e. "
-              "something of the form joe@example.org.");
+  return i18n( "The email address you entered is not valid because it "
+               "does not seem to contain an actual email address, i.e. "
+               "something of the form joe@example.org." );
 }
 
 //-----------------------------------------------------------------------------
-QByteArray KPIMUtils::extractEmailAddress( const QByteArray & address )
+QByteArray KPIMUtils::extractEmailAddress( const QByteArray &address )
 {
   QByteArray dummy1, dummy2, addrSpec;
   EmailParseResult result =
     splitAddressInternal( address, dummy1, addrSpec, dummy2,
-                          false /* don't allow multiple addresses */ );
+                          false/* don't allow multiple addresses */ );
   if ( result != AddressOk ) {
     addrSpec = QByteArray();
     kDebug(5321) // << k_funcinfo << "\n"
@@ -646,18 +660,18 @@ QByteArray KPIMUtils::extractEmailAddress( const QByteArray & address )
 }
 
 //-----------------------------------------------------------------------------
-QString KPIMUtils::extractEmailAddress( const QString & address )
+QString KPIMUtils::extractEmailAddress( const QString &address )
 {
   return QString::fromUtf8( extractEmailAddress( address.toUtf8() ) );
 }
 
 //-----------------------------------------------------------------------------
-QByteArray KPIMUtils::firstEmailAddress( const QByteArray & addresses )
+QByteArray KPIMUtils::firstEmailAddress( const QByteArray &addresses )
 {
   QByteArray dummy1, dummy2, addrSpec;
   EmailParseResult result =
     splitAddressInternal( addresses, dummy1, addrSpec, dummy2,
-                          true /* allow multiple addresses */ );
+                          true/* allow multiple addresses */ );
   if ( result != AddressOk ) {
     addrSpec = QByteArray();
     kDebug(5321) // << k_funcinfo << "\n"
@@ -789,7 +803,7 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
       return false;
     }
 
-    mail.append('@');
+    mail.append( '@' );
 
     // Loop forward until we find the end of the string
     // or a ',' that is outside of a comment

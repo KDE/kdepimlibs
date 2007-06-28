@@ -18,16 +18,24 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the KDEPIM Utilities library and provides
+  static methods for email address validation.
 
-#ifndef EMAIL_H
-#define EMAIL_H
+  @brief
+  Email address validation methods.
+
+  @author Matt Douhan \<matt@fruitsalad.org\>
+ */
+
+#ifndef KPIMUTILS_EMAIL_H
+#define KPIMUTILS_EMAIL_H
 
 #include <QtCore/QStringList>
 #include <QtCore/QByteArray>
 
 #include "kpimutils_export.h"
-
-/** @file */
 
 namespace KPIMUtils {
 
@@ -373,4 +381,4 @@ namespace KPIMUtils {
 
 } // namespace
 
-#endif /* EMAIL_H */
+#endif
