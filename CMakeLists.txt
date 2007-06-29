@@ -25,7 +25,8 @@ add_subdirectory(kmime)
 add_subdirectory(kresources)
 add_subdirectory(kabc)
 add_subdirectory(kblog)
-
+# dont enable toma
+# add_subdirectory(kpimidentities)
 add_subdirectory(mailtransport)
 add_subdirectory(cmake)
 

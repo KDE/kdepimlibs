@@ -27,6 +27,9 @@
  *
  * - <a href="kmime/html/index.html"><b>kmime</b></a>.
  *   <i>A library for MIME handling.</i>
+
+ * - <a href="kpimidentities/html/index.html"><b>kpimidentities</b></a>
+ *   <i>Library for shared identities between mail applications.</i>
  *
  * - <a href="ktnef/html/index.html"><b>ktnef</b></a>.
  *   <i>An API for the handling of TNEF data.</i>
