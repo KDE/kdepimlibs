@@ -34,7 +34,8 @@ add_subdirectory(kmime)
 add_subdirectory(kresources)
 add_subdirectory(kabc)
 add_subdirectory(kblog)
-add_subdirectory(kpimidentities)
+# dont enable toma
+#add_subdirectory(kpimidentities)
 add_subdirectory(mailtransport)
 include (gpgmepp/ConfigureChecks.cmake)
 # dont enable winterz
