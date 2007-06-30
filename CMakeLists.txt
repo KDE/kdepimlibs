@@ -34,14 +34,15 @@ add_subdirectory(kmime)
 add_subdirectory(kresources)
 add_subdirectory(kabc)
 add_subdirectory(kblog)
-# dont enable toma
-# add_subdirectory(kpimidentities)
+add_subdirectory(kpimidentities)
 add_subdirectory(mailtransport)
 include (gpgmepp/ConfigureChecks.cmake)
 # dont enable winterz
 #add_subdirectory(gpgmepp)
 # dont enable winterz
 #add_subdirectory(qgpgme)
+# dont enable toma
+#add_subdirectory(kpgp)
 add_subdirectory(cmake)
 
 macro_display_feature_log()

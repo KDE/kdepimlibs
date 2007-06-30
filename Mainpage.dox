@@ -27,7 +27,10 @@
  *
  * - <a href="kmime/html/index.html"><b>kmime</b></a>.
  *   <i>A library for MIME handling.</i>
-
+ *
+ * - <a href="kpgp/html/index.html"><b>kpgp</b></a>
+ *   <i>Library for kpgp.</i>
+ *
  * - <a href="kpimidentities/html/index.html"><b>kpimidentities</b></a>
  *   <i>Library for shared identities between mail applications.</i>
  *

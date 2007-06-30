@@ -34,6 +34,7 @@ Here is an alphabetical list:
 * kmime: C++ API for MIME handling
 * kpimidentities: C++ API for shared identities for mail applications
 * kpimutils: A library for general purpose PIM utilities
+* kpgp: A library for pgp
 * ktnef: C++ API for the handling of TNEF data
 * kxmlrpclient: An XML-RPC client library
 * mailtransport: C++ API and support code for managing mail transport
