@@ -1,6 +1,4 @@
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include <config.h>
 
 #ifndef HAVE_SNPRINTF
 #error DO NOT USE libical version of vsnprintf.
