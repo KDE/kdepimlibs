@@ -20,12 +20,7 @@
 
 // -*- c++ -*-
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <qgpgme/eventloopinteractor.h>
-
 #include <gpgmepp/context.h>
 
 #include <QSocketNotifier>

@@ -20,8 +20,6 @@
 
 // -*- c++ -*-
 
-#include <config.h>
-
 #include <qgpgme/dataprovider.h>
 
 #include <string.h>

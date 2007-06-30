@@ -24,10 +24,6 @@
 #undef NDEBUG
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <qgpgme/dataprovider.h>
 #include <gpgmepp/data.h>
 #include <gpgmepp/data_p.h>

@@ -33,7 +33,6 @@ libakonadi - being developed in kdepim, may not be ready until 4.1,
 Low Priority (KDE 4.1)
 ======================
 libkdepim - needs a class-by-class review
-gpgmepp - Relicense to LGPL permission has been granted by Marc Mutz and KDAB
 libkpimidentities - Relicense to LGPL permission has been granted by Marc Mutz and KDAB. blocked by libkleo and libkdepim
 libksieve - ??
 kode - not ready for kdelibs.  kxforms should be in kdepim?  kwsdl??
@@ -51,6 +50,8 @@ kmime
 ktnef
 mailtransport
 syndication
+gpgmepp
+qgpgme
 
 Candidates for kdepimlibs-gpl
 =============================
@@ -58,4 +59,3 @@ kdgantt - May NOT be relicensed. MUST remain GPL (and therefore cannot be moved)
 libkleo - May NOT be relicensed. MUST remain GPL (and therefore cannot be moved)
           (requires libkpgp, gpgmepp, qgpgme)
 libkpgp - Relicense request denied (and therefore cannot be moved)
-qgpgme - License the same as GPGME, which is currently GPL.

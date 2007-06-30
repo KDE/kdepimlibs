@@ -46,6 +46,10 @@
  * - <a href="syndication/html/index.html"><b>syndication</b></a>.
  *   <i>An RSS feed handling library.</i>
  *
+ *   <i>A C++ wrapper for gpgme.</i>
+ * - <a href="qgpgme/html/index.html"><b>QGpgME</b></a>
+ *   (<a href="qgpgme/html/classes.html">classes</a>)\n
+ *
  * @b Read about the KDE-PIM architecture by visiting
  * the <a href="http://pim.kde.org/index.php">KDE PIM Home Page</a>.
  *
