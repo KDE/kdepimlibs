@@ -41,7 +41,10 @@ include (gpgmepp/ConfigureChecks.cmake)
 #add_subdirectory(gpgmepp)
 # dont enable winterz
 #add_subdirectory(qgpgme)
-add_subdirectory(kpgp)
+
+if(NOT WIN32)
+  add_subdirectory(kpgp)
+endif(NOT WIN32)
 add_subdirectory(cmake)
 
 macro_display_feature_log()
