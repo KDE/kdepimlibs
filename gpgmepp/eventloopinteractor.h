@@ -107,7 +107,7 @@ namespace GpgME {
 
 
   */
-  class QPGMEPP_EXPORT EventLoopInteractor {
+  class QGPGMEPP_EXPORT EventLoopInteractor {
   protected:
     EventLoopInteractor();
   public:

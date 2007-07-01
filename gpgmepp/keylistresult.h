@@ -31,7 +31,7 @@ namespace GpgME {
 
     class Error;
 
-  class QPGMEPP_EXPORT KeyListResult : public Result {
+  class QGPGMEPP_EXPORT KeyListResult : public Result {
   public:
     KeyListResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit KeyListResult( const Error & err );

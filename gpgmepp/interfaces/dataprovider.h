@@ -29,7 +29,7 @@
 
 namespace GpgME {
 
-  class QPGMEPP_EXPORT DataProvider {
+  class QGPGMEPP_EXPORT DataProvider {
   public:
     virtual ~DataProvider() {}
 

@@ -49,7 +49,7 @@ namespace GpgME {
 
   class EngineInfo;
 
-  class QPGMEPP_EXPORT Error {
+  class QGPGMEPP_EXPORT Error {
   public:
     Error( int e=0 ) : mErr( e ) {}
 
@@ -67,7 +67,7 @@ namespace GpgME {
     int mErr;
   };
 
-  class QPGMEPP_EXPORT Context {
+  class QGPGMEPP_EXPORT Context {
     Context( gpgme_ctx_t );
   public:
     enum Protocol { OpenPGP, CMS, Unknown };
@@ -278,17 +278,17 @@ namespace GpgME {
   //
   //
 
-  QPGMEPP_EXPORT GpgME::Error setDefaultLocale( int category, const char * value );
+  QGPGMEPP_EXPORT GpgME::Error setDefaultLocale( int category, const char * value );
 
-  QPGMEPP_EXPORT Context * wait( GpgME::Error & e, bool hang=true );
+  QGPGMEPP_EXPORT Context * wait( GpgME::Error & e, bool hang=true );
   typedef void (*IdleFunction)(void);
-  QPGMEPP_EXPORT IdleFunction registerIdleFunction( IdleFunction idleFunction );
+  QGPGMEPP_EXPORT IdleFunction registerIdleFunction( IdleFunction idleFunction );
 
   typedef void (*IOCallback)( void * data, int fd );
 
-  QPGMEPP_EXPORT EngineInfo engineInfo( Context::Protocol proto );
+  QGPGMEPP_EXPORT EngineInfo engineInfo( Context::Protocol proto );
 
-  QPGMEPP_EXPORT GpgME::Error checkEngine( Context::Protocol proto );
+  QGPGMEPP_EXPORT GpgME::Error checkEngine( Context::Protocol proto );
 
 } // namespace GpgME
 

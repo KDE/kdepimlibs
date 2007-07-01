@@ -34,7 +34,7 @@ namespace GpgME {
   class Error;
   class InvalidRecipient;
 
-  class QPGMEPP_EXPORT EncryptionResult : public Result {
+  class QGPGMEPP_EXPORT EncryptionResult : public Result {
   public:
     EncryptionResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit EncryptionResult( const Error & err );
@@ -55,7 +55,7 @@ namespace GpgME {
     Private * d;
   };
 
-  class QPGMEPP_EXPORT InvalidRecipient {
+  class QGPGMEPP_EXPORT InvalidRecipient {
     friend class EncryptionResult;
     InvalidRecipient( EncryptionResult::Private * parent, unsigned int index );
   public:

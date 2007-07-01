@@ -29,7 +29,7 @@
 
 namespace GpgME {
 
-  class QPGMEPP_EXPORT EngineInfo {
+  class QGPGMEPP_EXPORT EngineInfo {
   public:
     EngineInfo();
     EngineInfo( gpgme_engine_info_t engine );

@@ -33,7 +33,7 @@ namespace GpgME {
 
   class DataProvider;
 
-  class QPGMEPP_EXPORT Data {
+  class QGPGMEPP_EXPORT Data {
   public:
     Data();
     Data( gpgme_data_t data );

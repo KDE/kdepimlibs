@@ -20,21 +20,21 @@
 #ifndef GPGMEPP_EXPORT_H
 #define GPGMEPP_EXPORT_H
 
-/* needed for QPGMEPP_EXPORT and KDE_IMPORT macros */
+/* needed for QGPGMEPP_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#ifndef QPGMEPP_EXPORT
+#ifndef QGPGMEPP_EXPORT
 # if defined(MAKE_GPGMEPP_LIB)
    /* We are building this library */ 
-#  define QPGMEPP_EXPORT KDE_EXPORT
+#  define QGPGMEPP_EXPORT KDE_EXPORT
 # else
    /* We are using this library */ 
-#  define QPGMEPP_EXPORT KDE_IMPORT
+#  define QGPGMEPP_EXPORT KDE_IMPORT
 # endif
 #endif
 
-# ifndef QPGMEPP_EXPORT_DEPRECATED
-#  define QPGMEPP_EXPORT_DEPRECATED KDE_DEPRECATED QPGMEPP_EXPORT
+# ifndef QGPGMEPP_EXPORT_DEPRECATED
+#  define QGPGMEPP_EXPORT_DEPRECATED KDE_DEPRECATED QGPGMEPP_EXPORT
 # endif
 
 #endif

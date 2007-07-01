@@ -36,7 +36,7 @@ namespace GpgME {
   class Error;
   class Signature;
 
-  class QPGMEPP_EXPORT VerificationResult : public Result {
+  class QGPGMEPP_EXPORT VerificationResult : public Result {
   public:
     VerificationResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit VerificationResult( const Error & err );
@@ -55,7 +55,7 @@ namespace GpgME {
     Private * d;
   };
 
-  class QPGMEPP_EXPORT Signature {
+  class QGPGMEPP_EXPORT Signature {
     friend class VerificationResult;
     Signature( VerificationResult::Private * parent, unsigned int index );
   public:
@@ -111,7 +111,7 @@ namespace GpgME {
     unsigned int idx;
   };
 
-  class QPGMEPP_EXPORT Signature::Notation {
+  class QGPGMEPP_EXPORT Signature::Notation {
     friend class Signature;
     Notation( VerificationResult::Private * parent, unsigned int sindex, unsigned int nindex );
   public:

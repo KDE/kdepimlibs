@@ -31,7 +31,7 @@ namespace GpgME {
 
   class Error;
 
-  class QPGMEPP_EXPORT KeyGenerationResult : public Result {
+  class QGPGMEPP_EXPORT KeyGenerationResult : public Result {
   public:
     KeyGenerationResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit KeyGenerationResult( const Error & err );
