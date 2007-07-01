@@ -33,7 +33,6 @@ libakonadi - being developed in kdepim, may not be ready until 4.1,
 Low Priority (KDE 4.1)
 ======================
 libkdepim - needs a class-by-class review
-libkpimidentities - Relicense to LGPL permission has been granted by Marc Mutz and KDAB. blocked by libkleo and libkdepim
 libksieve - ??
 kode - not ready for kdelibs.  kxforms should be in kdepim?  kwsdl??
 
@@ -43,15 +42,16 @@ mimelib
 
 Done
 ====
+gpgmepp
+kblog
 kcal
 kimap
-kblog
 kmime
+kpimidentities 
 ktnef
 mailtransport
-syndication
-gpgmepp
 qgpgme
+syndication
 
 Candidates for kdepimlibs-gpl
 =============================
