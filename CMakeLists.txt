@@ -6,7 +6,7 @@ set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules )
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
 include (MacroLibrary)
-include (gpgmepp/ConfigureChecks.cmake)
+#include (gpgmepp/ConfigureChecks.cmake)
 
 #boost is a hard dependency
 find_package(Boost)
@@ -36,7 +36,7 @@ add_subdirectory(kabc)
 add_subdirectory(kblog)
 add_subdirectory(kpimidentities)
 add_subdirectory(mailtransport)
-include (gpgmepp/ConfigureChecks.cmake)
+
 # dont enable winterz
 #add_subdirectory(gpgmepp)
 # dont enable winterz
