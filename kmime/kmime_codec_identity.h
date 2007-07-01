@@ -77,26 +77,26 @@ class KMIME_EXPORT IdentityCodec : public Codec
       Codec::maxEncodedSizeFor()
     */
     int maxEncodedSizeFor( int insize, bool withCRLF ) const
-      {
-        if ( withCRLF ) {
-          return 2 * insize;
-        } else {
-          return insize;
-        }
+    {
+      if ( withCRLF ) {
+        return 2 * insize;
+      } else {
+        return insize;
       }
+    }
 
     /**
       @copydoc
       Codec::maxDecodedSizeFor()
     */
     int maxDecodedSizeFor( int insize, bool withCRLF ) const
-      {
-        if ( withCRLF ) {
-          return 2 * insize;
-        } else {
-          return insize;
-        }
+    {
+      if ( withCRLF ) {
+        return 2 * insize;
+      } else {
+        return insize;
       }
+    }
 
     /**
       @copydoc
@@ -135,7 +135,7 @@ class KMIME_EXPORT SevenBitCodec : public IdentityCodec
       Codec::name()
     */
     const char *name() const
-      { return "7bit"; }
+    { return "7bit"; }
 };
 
 /**
@@ -162,7 +162,7 @@ class KMIME_EXPORT EightBitCodec : public IdentityCodec
       Codec::name()
     */
     const char *name() const
-      { return "8bit"; }
+    { return "8bit"; }
 };
 
 /**
@@ -189,21 +189,21 @@ class KMIME_EXPORT BinaryCodec : public IdentityCodec
       Codec::name()
     */
     const char *name() const
-      { return "binary"; }
+    { return "binary"; }
 
     /**
       @copydoc
       Codec::maxEncodedSizeFor()
     */
     int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
-      { Q_UNUSED( withCRLF ); return insize; }
+    { Q_UNUSED( withCRLF ); return insize; }
 
     /**
       @copydoc
       Codec::maxDecodedSizeFor()
     */
     int maxDecodedSizeFor( int insize, bool withCRLF=false ) const
-      { Q_UNUSED( withCRLF ); return insize; }
+    { Q_UNUSED( withCRLF ); return insize; }
 };
 
 } // namespace KMime

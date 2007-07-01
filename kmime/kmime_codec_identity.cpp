@@ -51,22 +51,22 @@ class IdentityEnDecoder : public Encoder, public Decoder
   protected:
     friend class IdentityCodec;
     IdentityEnDecoder( bool withCRLF ): Encoder( false )
-      {
-        kWarning( withCRLF, 5100 ) << "IdentityEnDecoder: withCRLF isn't yet supported!" << endl;
-      }
+    {
+      kWarning( withCRLF, 5100 ) << "IdentityEnDecoder: withCRLF isn't yet supported!" << endl;
+    }
 
   public:
     ~IdentityEnDecoder() {}
 
-    bool encode( const char* &scursor, const char * const send,
+    bool encode( const char* &scursor, const char *const send,
                  char* &dcursor, const char *const dend )
-      { return decode( scursor, send, dcursor, dend ); }
+    { return decode( scursor, send, dcursor, dend ); }
 
-    bool decode( const char* &scursor, const char * const send,
+    bool decode( const char* &scursor, const char *const send,
                  char* &dcursor, const char *const dend );
 
-    bool finish( char* &dcursor, const char * const dend )
-      { Q_UNUSED( dcursor ); Q_UNUSED( dend ); return true; }
+    bool finish( char* &dcursor, const char *const dend )
+    { Q_UNUSED( dcursor ); Q_UNUSED( dend ); return true; }
 };
 
 Encoder *IdentityCodec::makeEncoder( bool withCRLF ) const
@@ -83,7 +83,7 @@ Decoder *IdentityCodec::makeDecoder( bool withCRLF ) const
 /********************************************************/
 /********************************************************/
 
-bool IdentityEnDecoder::decode( const char* &scursor, const char * const send,
+bool IdentityEnDecoder::decode( const char* &scursor, const char *const send,
                                 char* &dcursor, const char *const dend )
 {
   const int size = qMin( send - scursor, dcursor - dend );

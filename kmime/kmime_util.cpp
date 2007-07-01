@@ -21,25 +21,24 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <ctype.h>
-#include <time.h> // for time()
-#include <stdlib.h>
-#include <unistd.h> // for getpid()
+#include "kmime_util.h"
+#include "kmime_header_parsing.h"
+
+#include <config-kmime.h>
+#include <kdefakes.h> // for strcasestr
+#include <kglobal.h>
+#include <klocale.h>
+#include <kcharsets.h>
+#include <kcodecs.h>
 
 #include <QtCore/QList>
 #include <QtCore/QString>
 #include <QtCore/QTextCodec>
 
-#include <kdefakes.h> // for strcasestr
-#include <kglobal.h>
-#include <klocale.h>
-#include <kcharsets.h>
-#include <kcodecs.h> // for KCodec::{quotedPrintableDe,base64{En,De}}code
-
-#include "kmime_util.h"
-#include "kmime_header_parsing.h"
-
-#include "config-kmime.h"
+#include <ctype.h>
+#include <time.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 using namespace KMime;
 
@@ -124,10 +123,6 @@ const uchar eTextMap[16] = {
   0x7F, 0xFF, 0xFF, 0xE0,
   0x7F, 0xFF, 0xFF, 0xE0
 };
-
-#if defined(_AIX) && defined(truncate)
-#undef truncate
-#endif
 
 QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
                              const QByteArray &defaultCS, bool forceCS )
@@ -249,7 +244,7 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
         if ( c == ' ' ) { // make the result readable with not MIME-capable readers
           result += '_';
         } else {
-          if ( ( ( c >= 'a' ) && ( c <= 'z' ) ) || // paranoid mode, encode *all* special characters to avoid problems
+          if ( ( ( c >= 'a' ) && ( c <= 'z' ) ) || // paranoid mode, encode *all* special chars to avoid problems
               ( ( c >= 'A' ) && ( c <= 'Z' ) ) ||  // with "From" & "To" headers
               ( ( c >= '0' ) && ( c <= '9' ) ) ) {
             result += c;
@@ -270,8 +265,7 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
       }
     } else {
       result += "?B?" +
-                KCodecs::base64Encode( encoded8Bit.mid( start, end - start ),
-                                       false );
+                KCodecs::base64Encode( encoded8Bit.mid( start, end - start ), false );
     }
 
     result +="?=";
@@ -353,7 +347,7 @@ QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
     pos1 = 0;
   } else {
     n.prepend('\n');
-    const char* p = strcasestr( src.constData(), n.constData() );
+    const char *p = strcasestr( src.constData(), n.constData() );
     if ( !p ) {
       pos1 = -1;
     } else {
@@ -364,8 +358,9 @@ QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
   if ( pos1 > -1) {     //there is a header with the given name
     pos1 += n.length(); //skip the name
     // skip the usual space after the colon
-    if ( src.at( pos1 ) == ' ' )
+    if ( src.at( pos1 ) == ' ' ) {
       ++pos1;
+    }
     int pos2 = pos1;
     int len = src.length() - 1;
     bool folded = false;
