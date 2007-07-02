@@ -49,7 +49,7 @@ class TestSubResource : public TestResource
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "testresources", "Kresource Test", "0" );
+  KAboutData aboutData( "testresources", 0, ki18n("Kresource Test"), "0" );
   KCmdLineArgs::init( argc, argv, &aboutData );
 
   KApplication app;

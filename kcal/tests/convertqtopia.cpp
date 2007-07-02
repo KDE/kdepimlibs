@@ -36,24 +36,21 @@
 
 using namespace KCal;
 
-static const KCmdLineOptions options[] =
-{
-  {"q", 0, 0 },
-  {"qtopia2icalendar", I18N_NOOP("Convert Qtopia calendar file to iCalendar"), 0 },
-  {"i", 0, 0 },
-  {"icalendar2qtopia", I18N_NOOP("Convert iCalendar to iCalendar"), 0 },
-  {"o", 0, 0},
-  {"output <file>", I18N_NOOP("Output file"), 0 },
-  {"+input", I18N_NOOP("Input file"), 0 },
-  KCmdLineLastOption
-};
-
 int main(int argc,char **argv)
 {
-  KAboutData aboutData("convertqtopia",I18N_NOOP("Qtopia calendar file converter"),"0.1");
-  aboutData.addAuthor("Cornelius Schumacher", 0, "schumacher@kde.org");
+  KAboutData aboutData("convertqtopia", 0,ki18n("Qtopia calendar file converter"),"0.1");
+  aboutData.addAuthor(ki18n("Cornelius Schumacher"), KLocalizedString(), "schumacher@kde.org");
 
   KCmdLineArgs::init(argc,argv,&aboutData);
+
+  KCmdLineOptions options;
+  options.add("q");
+  options.add("qtopia2icalendar", ki18n("Convert Qtopia calendar file to iCalendar"));
+  options.add("i");
+  options.add("icalendar2qtopia", ki18n("Convert iCalendar to iCalendar"));
+  options.add("o");
+  options.add("output <file>", ki18n("Output file"));
+  options.add("+input", ki18n("Input file"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;
@@ -72,16 +69,16 @@ int main(int argc,char **argv)
   }
 
   if ( sourceQtopia && sourceIcalendar ) {
-    KCmdLineArgs::usage(
+    KCmdLineArgs::usageError(
         i18n("Please specify only one of the conversion options.") );
   }
   if ( !sourceQtopia && !sourceIcalendar ) {
-    KCmdLineArgs::usage(
+    KCmdLineArgs::usageError(
         i18n("You have to specify one conversion option.") );
   }
 
   if ( args->count() != 1 ) {
-    KCmdLineArgs::usage( i18n("Error: No input file.") );
+    KCmdLineArgs::usageError( i18n("Error: No input file.") );
   }
 
   QString inputFile = args->arg( 0 );

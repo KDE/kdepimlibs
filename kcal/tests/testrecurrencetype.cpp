@@ -37,19 +37,16 @@ using namespace KCal;
 
 static QString dumpTime( const KDateTime &dt, const KDateTime::Spec &viewSpec );
 
-static const KCmdLineOptions options[] =
-{
-  { "verbose", "Verbose output", 0 },
-  { "+input", "Name of input file", 0 },
-  { "[+output]", "optional name of output file for the recurrence dates", 0 },
-  KCmdLineLastOption
-};
-
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "testrecurrencenew", "Load recurrence rules with the new class and print out debug messages", "0.1" );
+  KAboutData aboutData( "testrecurrencenew", 0, ki18n("Load recurrence rules with the new class and print out debug messages"), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
+
+  KCmdLineOptions options;
+  options.add("verbose", ki18n("Verbose output"));
+  options.add("+input", ki18n("Name of input file"));
+  options.add("[+output]", ki18n("optional name of output file for the recurrence dates"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   KComponentData componentData( &aboutData );
@@ -61,7 +58,7 @@ int main( int argc, char **argv )
     args->usage( "Wrong number of arguments." );
   }
 
-  QString input = QFile::decodeName( args->arg( 0 ) );
+  QString input = args->arg( 0 );
   kDebug(5800) << "Input file: " << input << endl;
 
   QTextStream *outstream;

@@ -32,16 +32,13 @@
 
 using namespace KCal;
 
-static const KCmdLineOptions options[] =
-{
-  {"verbose", "Verbose output", 0},
-  KCmdLineLastOption
-};
-
 int main(int argc,char **argv)
 {
-  KAboutData aboutData("testincidence","Test Incidence","0.1");
+  KAboutData aboutData("testincidence", 0,ki18n("Test Incidence"),"0.1");
   KCmdLineArgs::init(argc,argv,&aboutData);
+
+  KCmdLineOptions options;
+  options.add("verbose", ki18n("Verbose output"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   KComponentData componentData( &aboutData );

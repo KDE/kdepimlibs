@@ -35,19 +35,16 @@
 using namespace KCal;
 
 
-static const KCmdLineOptions options[] =
-{
-  { "verbose", "Verbose output", 0 },
-  { "+input", "Name of input file", 0 },
-  { "[+output]", "optional name of output file for the recurrence dates", 0 },
-  KCmdLineLastOption
-};
-
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "testrecurson", "Tests all dates from 2002 to 2010 to test if the event recurs on each individual date. This is meant to test the Recurrence::recursOn method for errors.", "0.1" );
+  KAboutData aboutData( "testrecurson", 0, ki18n("Tests all dates from 2002 to 2010 to test if the event recurs on each individual date. This is meant to test the Recurrence::recursOn method for errors."), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
+
+  KCmdLineOptions options;
+  options.add("verbose", ki18n("Verbose output"));
+  options.add("+input", ki18n("Name of input file"));
+  options.add("[+output]", ki18n("optional name of output file for the recurrence dates"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   KComponentData componentData( &aboutData );
@@ -59,7 +56,7 @@ int main( int argc, char **argv )
     args->usage( "Wrong number of arguments." );
   }
 
-  QString input = QFile::decodeName( args->arg( 0 ) );
+  QString input = args->arg( 0 );
 //   kDebug(5800) << "Input file: " << input << endl;
 
   QTextStream *outstream;

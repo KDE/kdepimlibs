@@ -42,12 +42,12 @@ KCMKResources::KCMKResources( QWidget *parent, const QStringList &l )
   connect( mConfigPage, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );
   setButtons( Help | Apply );
   KAboutData *about =
-   new KAboutData( I18N_NOOP( "kcmkresources" ),
-                   I18N_NOOP( "KDE Resources configuration module" ),
-                   0, 0, KAboutData::License_GPL,
-                   I18N_NOOP( "(c) 2003 Tobias Koenig" ) );
+   new KAboutData( I18N_NOOP( "kcmkresources" ), 0,
+                   ki18n( "KDE Resources configuration module" ),
+                   0, KLocalizedString(), KAboutData::License_GPL,
+                   ki18n( "(c) 2003 Tobias Koenig" ) );
 
-  about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
+  about->addAuthor( ki18n("Tobias Koenig"), KLocalizedString(), "tokoe@kde.org" );
   setAboutData( about );
 }
 

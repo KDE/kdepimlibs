@@ -45,13 +45,6 @@
 #include "testresource.h"
 #include "testincidencegenerator.h"
 
-static const KCmdLineOptions options[] =
-{
-  { "resource <type>", "The resource to test", 0 },
-  { "configfile <file>", "Location of a config file for the resource", 0 },
-  KCmdLineLastOption // End of options
-};
-
 int main(int argc, char *argv[])
 {
   // Use another directory than the real one, just to keep things clean
@@ -59,8 +52,12 @@ int main(int argc, char *argv[])
   setenv( "KDEHOME", QFile::encodeName( QDir::homePath() + "/.kde-testresource" ), true );
   setenv( "KDE_FORK_SLAVES", "yes", true ); // simpler, for the final cleanup
 
-  KAboutData aboutData("testresource", "Part of LibKCal's test suite.", "0.1");
+  KAboutData aboutData("testresource", 0, ki18n("Part of LibKCal's test suite."), "0.1");
   KCmdLineArgs::init(argc, argv, &aboutData);
+
+  KCmdLineOptions options;
+  options.add("resource <type>", ki18n("The resource to test"));
+  options.add("configfile <file>", ki18n("Location of a config file for the resource"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   KComponentData componentData( &aboutData );
@@ -69,7 +66,7 @@ int main(int argc, char *argv[])
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   QString type = QString();
   if ( !args->getOption( "resource" ).isEmpty() )
-    type = QString::fromLocal8Bit( args->getOption( "resource" ) );
+    type = args->getOption( "resource" );
   KConfigGroup *config = 0;
   if ( !args->getOption( "configfile" ).isEmpty() ) {
     KConfig _config( KUrl( args->getOption( "configfile" ) ).url() );

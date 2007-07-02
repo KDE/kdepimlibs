@@ -101,7 +101,7 @@ void TransportMgr::cancelBtnClicked()
 
 int main( int argc, char** argv )
 {
-  KCmdLineArgs::init(argc, argv, "transportmgr", "transportmgr", "Mail Transport Manager Demo", "0" );
+  KCmdLineArgs::init(argc, argv, "transportmgr", 0, ki18n("transportmgr"), "0" , ki18n("Mail Transport Manager Demo"));
   KApplication app;
   TransportMgr* t = new TransportMgr();
   t->show();
