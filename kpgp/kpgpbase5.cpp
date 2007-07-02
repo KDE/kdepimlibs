@@ -181,7 +181,7 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
     for ( int idx = 0 ; (idx = input.indexOf("\n-", idx)) != -1 ; idx += 4 )
       input.replace(idx, 2, "\n- -");
 
-    output = "-----BEGIN PGP SIGNED MESSAGE-----\n\n" + input + "\n" + output;
+    output = "-----BEGIN PGP SIGNED MESSAGE-----\n\n" + input + '\n' + output;
   }
 
   block.setProcessedText( output );
@@ -362,7 +362,7 @@ Base5::publicKeys( const QStringList & patterns )
   QByteArray cmd = "pgpk -ll";
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
-    cmd += " ";
+    cmd += ' ';
     cmd += KShell::quoteArg( *it ).toLocal8Bit();
   }
   status = 0;
@@ -392,7 +392,7 @@ Base5::secretKeys( const QStringList & patterns )
   QByteArray cmd = "pgpk -ll";
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
-    cmd += " ";
+    cmd += ' ';
     cmd += KShell::quoteArg( *it ).toLocal8Bit();
   }
   status = 0;

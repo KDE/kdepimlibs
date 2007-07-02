@@ -24,7 +24,6 @@
 #include <kdebug.h>
 
 #include <QTextCodec>
-//Added by qt3to4:
 #include <QByteArray>
 
 #include <string.h> /* strncmp */
@@ -411,7 +410,7 @@ BaseG::publicKeys( const QStringList & patterns )
                  "--fixed-list-mode --no-expensive-trust-checks";
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
-    cmd += " ";
+    cmd += ' ';
     cmd += KShell::quoteArg( *it ).toLocal8Bit();
   }
   status = 0;
@@ -443,7 +442,7 @@ BaseG::secretKeys( const QStringList & patterns )
                  "--fixed-list-mode";
   for ( QStringList::ConstIterator it = patterns.begin();
         it != patterns.end(); ++it ) {
-    cmd += " ";
+    cmd += ' ';
     cmd += KShell::quoteArg( *it ).toLocal8Bit();
   }
   status = 0;

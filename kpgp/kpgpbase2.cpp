@@ -531,7 +531,7 @@ Base2::doGetPublicKeys( const QByteArray & cmd, const QStringList & patterns )
 
     for ( QStringList::ConstIterator it = patterns.begin();
           it != patterns.end(); ++it ) {
-      exitStatus = run( cmd + " " + KShell::quoteArg( *it ).toLocal8Bit(),
+      exitStatus = run( cmd + ' ' + KShell::quoteArg( *it ).toLocal8Bit(),
                         0, true );
 
       if ( exitStatus != 0 ) {
