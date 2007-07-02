@@ -16,10 +16,11 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-
+#include "kpgpui.h"
+#include "kpgp.h"
+#include "kpgpkey.h"
 
 #include <QLabel>
-
 #include <QApplication>
 #include <QTextCodec>
 #include <QDateTime>
@@ -33,32 +34,28 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QProgressBar>
-#include <qbuttongroup.h>
+#include <QButtonGroup>
 #include <q3multilineedit.h>
 #include <QGroupBox>
 
+#include <k3listview.h>
+#include <kvbox.h>
+#include <kconfiggroup.h>
 #include <klocale.h>
 #include <kpassworddialog.h>
 #include <kcharsets.h>
 #include <kseparator.h>
 #include <kiconloader.h>
-#include <k3listview.h>
 #include <kconfigbase.h>
 #include <kconfig.h>
 #include <kprogressdialog.h>
-#include <QApplication>
 #include <kwindowsystem.h>
 #include <kpushbutton.h>
 #include <kglobalsettings.h>
 #include <klineedit.h>
 
-#include "kpgp.h"
-#include "kpgpui.h"
-#include "kpgpkey.h"
 #include <assert.h>
 #include <string.h> // for memcpy(3)
-#include <kvbox.h>
-#include <kconfiggroup.h>
 
 const int Kpgp::KeySelectionDialog::sCheckSelectionDelay = 250;
 

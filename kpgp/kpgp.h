@@ -19,22 +19,20 @@
 #ifndef KPGP_H
 #define KPGP_H
 
-#include <stdio.h>
-#include <QString>
-#include <QDialog>
-#include <QWidget>
-#include <QComboBox>
-#include <QLayout>
-#include <QPushButton>
-#include <QRadioButton>
-#include <QCheckBox>
-#include <QGridLayout>
-#include <QByteArray>
-
-#include <kdialog.h>
-
 #include "libkpgp_export.h"
 #include "kpgpkey.h"
+
+#include <QtCore/QByteArray>
+#include <QtCore/QString>
+#include <QtGui/QWidget>
+#include <QtGui/QComboBox>
+#include <QtGui/QLayout>
+#include <QtGui/QPushButton>
+#include <QtGui/QRadioButton>
+#include <QtGui/QCheckBox>
+#include <QtGui/QGridLayout>
+
+#include <stdio.h>
 
 class QCheckBox;
 class QGridLayout;

@@ -16,24 +16,9 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <stdarg.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
-#include <signal.h>
-
-#include <QLabel>
-#include <QCursor>
-#include <QApplication>
-#include <QByteArray>
+#include "kpgp.h"
+#include "kpgpbase.h"
+#include "kpgpui.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -43,12 +28,28 @@
 #include <kstaticdeleter.h>
 #include <kconfiggroup.h>
 
+#include <QLabel>
+#include <QCursor>
+#include <QApplication>
+#include <QByteArray>
+
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <stdarg.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
+#include <signal.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+
 #ifdef ERROR
 #undef ERROR
 #endif
-#include "kpgpbase.h"
-#include "kpgpui.h"
-#include "kpgp.h"
 
 namespace Kpgp {
 

@@ -19,13 +19,11 @@
 #ifndef KPGPKEY_H
 #define KPGPKEY_H
 
-#include <time.h>
-
-#include <QString>
-#include <QStringList>
-
-//Added by qt3to4:
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 #include <Q3PtrList>
+
+#include <time.h>
 
 namespace Kpgp {
 
@@ -75,7 +73,7 @@ class KeyIDList : public QList<KeyID>
 class UserID
 {
  public:
-  /** Constructs a new user id with the given values. 
+  /** Constructs a new user id with the given values.
    *  @param str User Id (descriptive text)
    *  @param validity Validity of key, relevant mostly if @p invalid is @c false
    *  @param revoked Is the key revoked?
@@ -88,7 +86,7 @@ class UserID
              const bool revoked = false,
              const bool invalid = false);
   ~UserID() {}
-  
+
   /** Returns the text of the user id. */
   QString text() const;
 
@@ -101,19 +99,19 @@ class UserID
   /** Returns the validity of resp. the trust in the user id. */
   Validity validity() const;
 
-  /** Sets the text of the user id to @p str. 
+  /** Sets the text of the user id to @p str.
    *  @param str The new user id text.
    */
   void setText(const QString& str);
 
-  /** Sets the flag if the user id has been revoked to @p revoked. 
+  /** Sets the flag if the user id has been revoked to @p revoked.
    *  @param revoked Whether the user id has been revoked or not.
    *  @todo Does one revoke a user id or a key? See also comments
    *        for setInvalid() and setText().
    */
   void setRevoked(const bool revoked);
 
-  /** Sets the flag if the user id is invalid to @p invalid. 
+  /** Sets the flag if the user id is invalid to @p invalid.
    *  @param invalid Whether the user id is invalid or not.
    *  @todo Is it the <em>user id</em> that is invalid or the
    *        key itself? This should then also be documented in
@@ -121,7 +119,7 @@ class UserID
    */
   void setInvalid(const bool invalid);
 
-  /** Sets the validity of resp. the trust in the user id to @p validity . 
+  /** Sets the validity of resp. the trust in the user id to @p validity .
    *  @param validity New validity value.
    *  @todo Are there any restrictions on how you can change validities?
    */
@@ -221,13 +219,13 @@ class Subkey
   /** Returns the length of the subkey in bits. */
   unsigned int keyLength() const;
 
-  /** Returns the long 64 bit key ID of the subkey if it's available. 
+  /** Returns the long 64 bit key ID of the subkey if it's available.
       Otherwise the short 32 bit key ID is returned. */
   KeyID longKeyID() const;
 
   /** Returns the (short) 32 bit key ID of the subkey. */
   KeyID keyID() const;
-  
+
   /** Returns the fingerprint of the subkey. */
   QByteArray fingerprint() const;
 
@@ -237,31 +235,31 @@ class Subkey
   /** Returns the expiration date of the subkey. */
   time_t expirationDate() const;
 
-  /** Sets the flag if the subkey is a secret subkey to @p secret . 
+  /** Sets the flag if the subkey is a secret subkey to @p secret .
    *  @param secret Whether this subkey is secret or not.
    *  @see secret()
    */
   void setSecret(const bool secret);
 
-  /** Sets the flag if the subkey has been revoked to @p revoked . 
+  /** Sets the flag if the subkey has been revoked to @p revoked .
    *  @param revoked Whether this subkey is revoked or not.
    *  @see revoked()
    */
   void setRevoked(const bool revoked);
 
-  /** Sets the flag if the subkey has expired to @p expired . 
+  /** Sets the flag if the subkey has expired to @p expired .
    *  @param expired Whether this subkey has expired or not.
    *  @see expired()
    */
   void setExpired(const bool expired);
 
-  /** Sets the flag if the subkey has been disabled to @p disabled . 
+  /** Sets the flag if the subkey has been disabled to @p disabled .
    *  @param disabled Whether this subkey is disabled or not.
    *  @see disabled()
    */
   void setDisabled(const bool disabled);
 
-  /** Sets the flag if the subkey is invalid to @p invalid . 
+  /** Sets the flag if the subkey is invalid to @p invalid .
    *  @param invalid Whether this subkey is invalid or not.
    *  @see invalid()
    */
@@ -273,7 +271,7 @@ class Subkey
   */
   void setCanEncrypt(const bool canEncrypt);
 
-  /** Sets the flag if the subkey can be used to sign data to @p canSign . 
+  /** Sets the flag if the subkey can be used to sign data to @p canSign .
       @param canSign Whether this subkey can sign or not.
       @see canSign()
   */
@@ -285,10 +283,10 @@ class Subkey
   */
   void setCanCertify(const bool canCertify);
 
-  /** Sets the key algorithm of the subkey to @p keyAlgo . 
+  /** Sets the key algorithm of the subkey to @p keyAlgo .
       @param keyAlgo The key algorithm to use.
       @see keyAlgorithm
-      @todo What are legal values? What do they mean? 
+      @todo What are legal values? What do they mean?
             Where are they documented?
   */
   void setKeyAlgorithm(const unsigned int keyAlgo);
@@ -300,14 +298,14 @@ class Subkey
   */
   void setKeyLength(const unsigned int keyLen);
 
-  /** Sets the key ID of the subkey to @p keyID . 
+  /** Sets the key ID of the subkey to @p keyID .
       @param keyID the key ID for this subkey (just a string)
       @see keyID()
       @todo What are legal key IDs? How about NULL IDs?
   */
   void setKeyID(const KeyID& keyID);
 
-  /** Sets the fingerprint of the subkey to @p fingerprint . 
+  /** Sets the fingerprint of the subkey to @p fingerprint .
       @param fingerprint to use for this subkey
       @see fingerprint()
       @todo What are legal fingerprints?
@@ -315,7 +313,7 @@ class Subkey
   void setFingerprint(const QByteArray& fingerprint);
 
   /** Sets the creation date of the subkey to @p creationDate  seconds
-      since Epoch. 
+      since Epoch.
       @param creationDate Creation time of this subkey, in seconds
              since the epoch (still midnight, january 1, 1970 in most
              places).
@@ -512,7 +510,7 @@ class Key
 {
  public:
   /** Constructs a new PGP key with @p keyid  as key ID of the
-      primary key and @p uid  as primary user ID. 
+      primary key and @p uid  as primary user ID.
       @param keyid Key ID for this Key
       @param uid   UID for this key (user ID)
       @param secret Is this key secret?
@@ -549,13 +547,13 @@ class Key
   /** Returns true if the key can be used to certify keys. */
   bool canCertify() const;
 
-  /** Sets the flag if the key is a secret key to @p secret . 
+  /** Sets the flag if the key is a secret key to @p secret .
       @param secret Whether this key is secret or not
       @see secret()
   */
   void setSecret(const bool secret);
 
-  /** Sets the flag if the key has been revoked to @p revoked . 
+  /** Sets the flag if the key has been revoked to @p revoked .
       @param revoked Whether the key is revoked or not
       @see revoked()
   */
@@ -682,7 +680,7 @@ class Key
   bool mCanEncrypt : 1;
   bool mCanSign : 1;
   bool mCanCertify : 1;
-  
+
   EncryptPref mEncryptPref;
 
   SubkeyList mSubkeys;
@@ -789,7 +787,7 @@ inline QString Key::primaryUserID() const
     return QString();
 }
 
-inline KeyID Key::primaryKeyID() const 
+inline KeyID Key::primaryKeyID() const
 {
   Subkey *key = mSubkeys.getFirst();
 
@@ -810,12 +808,12 @@ inline QByteArray Key::primaryFingerprint() const
 }
 
 inline const UserIDList Key::userIDs() const
-{ 
+{
   return mUserIDs;
 }
 
 inline const SubkeyList Key::subkeys() const
-{ 
+{
   return mSubkeys;
 }
 
@@ -857,7 +855,7 @@ class KeyList : public KeyListBase
 
  private:
   int compareItems( Q3PtrCollection::Item s1, Q3PtrCollection::Item s2 )
-    { 
+    {
       // sort case insensitively by the primary User IDs
       return QString::compare((static_cast<Key*>(s1))->primaryUserID().toLower(),
                               (static_cast<Key*>(s2))->primaryUserID().toLower());

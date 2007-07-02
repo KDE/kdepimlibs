@@ -16,24 +16,23 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-#include <kdebug.h>
 
 #include "kpgpbase.h"
 #include "kpgp.h"
 #include "kpgpblock.h"
 
-#include <stdlib.h> /* setenv, unsetenv */
+#include <kdebug.h>
 #include <kdefakes.h> /* setenv, unsetenv */
+
+#include <QApplication>
+#include <QByteArray>
+
+#include <stdlib.h> /* setenv, unsetenv */
 #include <unistd.h> /* pipe, close, fork, dup2, execl, _exit, write, read */
+#include <errno.h>
 #include <sys/poll.h>  /* poll, etc. */
 #include <sys/types.h> /* pid_t */
 #include <sys/wait.h> /* waitpid */
-#include <errno.h>
-
-#include <QApplication>
-//Added by qt3to4:
-#include <QByteArray>
-
 
 namespace Kpgp {
 
@@ -586,7 +585,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
           // disable polling of stderr
           poller[STD_ERR].events = 0;
         }
-        
+
         if (num_pollers > 2) {
           if (poller[STD_IN].revents & ( POLLERR | POLLHUP ) ) {
             kDebug( 5326 ) << "GnuPG seems to have hung up" << endl;
@@ -636,7 +635,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
   } while(waitpidRetVal == 0);
 
   if( 0 <= pin[1] )
-    close (pin[1]); 
+    close (pin[1]);
   close(pout[0]);
   close(perr[0]);
 

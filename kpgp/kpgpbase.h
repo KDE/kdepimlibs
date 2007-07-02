@@ -19,11 +19,11 @@
 #ifndef KPGPBASE_H
 #define KPGPBASE_H
 
-#include <QString>
-#include <QStringList>
-
 #include "kpgpkey.h"
 #include "kpgpblock.h"
+
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 namespace Kpgp {
 
@@ -34,7 +34,7 @@ public:
   /** virtual class used internally by kpgp */
   Base();
   virtual ~Base();
-  
+
 
   /** Encrypts the message with the given keys. */
   virtual int encrypt( Block& , const KeyIDList& ) { return OK; }
@@ -51,7 +51,7 @@ public:
 
   /** Verifies the message. */
   virtual int verify( Block& block ) { return decrypt( block, 0 ); }
-  
+
 
   /** Reads the key data for the given key and returns it. If
       <em>readTrust</em> is true then the trust of this key will be determined.

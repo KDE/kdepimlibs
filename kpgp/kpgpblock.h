@@ -19,11 +19,11 @@
 #ifndef KPGPBLOCK_H
 #define KPGPBLOCK_H
 
-#include <QStringList>
-#include <QString>
-
 #include "libkpgp_export.h"
 #include "kpgp.h"
+
+#include <QtCore/QStringList>
+#include <QtCore/QString>
 
 namespace Kpgp {
 
@@ -50,11 +50,11 @@ enum MessageStatus{
   UNKNOWN_SIG =  0x0020,
   BADPHRASE   =  0x0040,
   BADKEYS     =  0x0080,
-  NO_SEC_KEY  =  0x0100, 
+  NO_SEC_KEY  =  0x0100,
   MISSINGKEY  =  0x0200,
   CANCEL      =  0x8000
 };
-  
+
 
   /*
    * BEGIN PGP MESSAGE
@@ -79,7 +79,7 @@ enum MessageStatus{
    *     Used for detached signatures, OpenPGP/MIME signatures, and
    *     signatures following clearsigned messages. Note that PGP 2.x
    *     uses BEGIN PGP MESSAGE for detached signatures.
-   * 
+   *
    * BEGIN PGP SIGNED MESSAGE
    *     Used for cleartext signed messages.
    */
@@ -118,7 +118,7 @@ class KPGP_EXPORT Block
   QByteArray signatureKeyId() const;
   void setSignatureKeyId( const QByteArray& keyId );
 
-  /** date of the signature 
+  /** date of the signature
       WARNING: Will most likely be changed to QDateTime */
   QByteArray signatureDate() const;
   void setSignatureDate( const QByteArray& date );
@@ -307,7 +307,7 @@ Block::encryptedFor() const
   return mEncryptedFor;
 }
 
-inline bool 
+inline bool
 Block::isEncrypted() const
 {
   if( mStatus & ENCRYPTED )
@@ -315,7 +315,7 @@ Block::isEncrypted() const
   return false;
 }
 
-inline bool 
+inline bool
 Block::isSigned() const
 {
   if( mStatus & SIGNED )
@@ -323,7 +323,7 @@ Block::isSigned() const
   return false;
 }
 
-inline bool 
+inline bool
 Block::goodSignature() const
 {
   if( mStatus & GOODSIG )

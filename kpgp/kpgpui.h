@@ -19,19 +19,20 @@
 #ifndef KPGPUI_H
 #define KPGPUI_H
 
-#include <kdialog.h>  // base class of all dialogs here
-#include <QWidget>      // base class of Config
-#include <QCheckBox>    // used in inlined methods
-#include <QPixmap>
-#include <QLabel>
-#include <kdebug.h>       // used in inlined methods
-#include <QString>      // is a member in KeyRequester
-#include <QVector> // used in KeyApprovalDialog
-#include <Q3PtrVector>
-#include <kpassworddialog.h>
-
 #include "libkpgp_export.h"
 #include "kpgp.h"
+
+#include <QtCore/QString>     // is a member in KeyRequester
+#include <QtCore/QVector>     // used in KeyApprovalDialog
+#include <QtGui/QWidget>      // base class of Config
+#include <QtGui/QCheckBox>    // used in inlined methods
+#include <QtGui/QPixmap>
+#include <QtGui/QLabel>
+#include <Q3PtrVector>
+
+#include <kdebug.h>       // used in inlined methods
+#include <kdialog.h>      // base class of all dialogs here
+#include <kpassworddialog.h>
 
 class QString;
 class QRegExp;
@@ -84,7 +85,7 @@ class KPGP_EXPORT Config : public QWidget
     virtual void setValues();
     virtual void applySettings();
     QGroupBox* optionsGroupBox() { return mpOptionsGroupBox; }
-  signals:
+  Q_SIGNALS:
     void changed();
 
   protected:
@@ -239,7 +240,7 @@ protected slots:
   void slotDialogButtonClicked();
   void slotEraseButtonClicked();
 
-signals:
+Q_SIGNALS:
   void changed();
 
 private:
