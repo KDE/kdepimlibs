@@ -16,6 +16,7 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
+
 #include "kpimutils/email.h"
 
 #include <kcmdlineargs.h>
@@ -29,42 +30,45 @@
 
 using namespace KPIMUtils;
 
-
-static bool check(const QString& txt, const QString& a, const QString& b)
+static bool check( const QString &txt, const QString &a, const QString &b )
 {
-  if (a == b) {
-    kDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "ok" << endl;
+  if ( a == b ) {
+    kDebug() << txt << " : checking '" << a
+             << "' against expected value '" << b << "'... " << "ok" << endl;
+  } else {
+    kDebug() << txt << " : checking '" << a
+             << "' against expected value '" << b << "'... " << "KO !" << endl;
+    exit( 1 );
   }
-  else {
-    kDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "KO !" << endl;
+  return true;
+}
+
+static bool check( const QString &txt, const QStringList &a, const QStringList &b )
+{
+  if ( a.join( "\n" ) == b.join( "\n" ) ) {
+    kDebug() << txt << " : checking list [ " << a.join( ", " )
+             << " ] against expected value [ " << b.join( ", " ) << " ]... " << "ok" << endl;
+  } else {
+    kDebug() << txt << " : checking list [ " << a.join( ",\n" )
+             << " ] against expected value [ " << b.join( ",\n" ) << " ]... " << "KO !" << endl;
     exit(1);
   }
   return true;
 }
 
-static bool check(const QString& txt, const QStringList& a, const QStringList& b)
-{
-  if ( a.join("\n") == b.join("\n") ) {
-    kDebug() << txt << " : checking list [ " << a.join( ", " ) << " ] against expected value [ " << b.join( ", " ) << " ]... " << "ok" << endl;
-  }
-  else {
-    kDebug() << txt << " : checking list [ " << a.join( ",\n" ) << " ] against expected value [ " << b.join( ",\n" ) << " ]... " << "KO !" << endl;
-    exit(1);
-  }
-  return true;
-}
-
-static bool checkGetNameAndEmail(const QString& input, const QString& expName, const QString& expEmail, bool expRetVal)
+static bool checkGetNameAndEmail( const QString &input, const QString &expName,
+                                  const QString &expEmail, bool expRetVal )
 {
   QString name, email;
-  bool retVal = extractEmailAddressAndName(input, email, name);
-  check( "getNameAndMail " + input + " retVal", retVal?QString::fromLatin1( "true" ):QString::fromLatin1( "false" ), expRetVal?QString::fromLatin1( "true" ):QString::fromLatin1( "false" ) );
+  bool retVal = extractEmailAddressAndName( input, email, name );
+  check( "getNameAndMail " + input + " retVal",
+         retVal?QString::fromLatin1( "true" ):QString::fromLatin1( "false" ),
+         expRetVal?QString::fromLatin1( "true" ):QString::fromLatin1( "false" ) );
   check( "getNameAndMail " + input + " name", name, expName );
   check( "getNameAndMail " + input + " email", email, expEmail );
   return true;
 }
 
-// convert this to a switch instead but hey, nothing speedy in here is needed but still.. it would be nice
 static QString emailTestParseResultToString( EmailParseResult errorCode )
 {
   if( errorCode == TooManyAts ) {
@@ -107,15 +111,15 @@ static QString simpleEmailTestParseResultToString( bool validEmail )
   return "false";
 }
 
-static bool checkIsValidEmailAddress( const QString& input, const QString&  expErrorCode )
+static bool checkIsValidEmailAddress( const QString &input, const QString & expErrorCode )
 {
   EmailParseResult errorCode = isValidAddress( input );
   QString errorC = emailTestParseResultToString( errorCode );
-  check( "isValidEmailAddress " + input + " errorCode ", errorC , expErrorCode );
+  check( "isValidEmailAddress " + input + " errorCode ", errorC, expErrorCode );
   return true;
 }
 
-static bool checkIsValidSimpleEmailAddress( const QString& input, const QString& expResult )
+static bool checkIsValidSimpleEmailAddress( const QString &input, const QString &expResult )
 {
   bool validEmail = isValidSimpleAddress( input );
   QString result = simpleEmailTestParseResultToString( validEmail );
@@ -123,7 +127,7 @@ static bool checkIsValidSimpleEmailAddress( const QString& input, const QString&
   return true;
 }
 
-static bool checkGetEmailAddress( const QString& input, const QString& expResult )
+static bool checkGetEmailAddress( const QString &input, const QString &expResult )
 {
   QString emailAddress = extractEmailAddress( input );
   QString result = emailAddress;
@@ -131,29 +135,28 @@ static bool checkGetEmailAddress( const QString& input, const QString& expResult
   return true;
 }
 
-static bool checkSplitEmailAddrList( const QString& input, const QStringList& expResult )
+static bool checkSplitEmailAddrList( const QString &input, const QStringList &expResult )
 {
   QStringList emailAddresses = splitAddressList( input );
   check( "splitEmailAddrList( \"" + input + "\" ) result ", emailAddresses, expResult );
   return true;
 }
 
-static bool checkNormalizeAddressesAndEncodeIDNs( const QString& input, const QString& expResult )
+static bool checkNormalizeAddressesAndEncodeIDNs( const QString &input, const QString &expResult )
 {
   QString result = normalizeAddressesAndEncodeIdn( input );
   check( "normalizeAddressesAndEncodeIDNs( \"" + input + "\" ) result ", result, expResult );
   return true;
 }
 
-static bool checkQuoteIfNecessary( const QString& input, const QString& expResult )
+static bool checkQuoteIfNecessary( const QString &input, const QString &expResult )
 {
   QString result = quoteNameIfNecessary( input );
   check( "quoteNameIfNecessary " + input + " result ", result, expResult );
   return true;
 }
 
-
-int main(int argc, char *argv[])
+int main( int argc, char *argv[] )
 {
   QCoreApplication app( argc, argv );
 
@@ -171,23 +174,32 @@ int main(int argc, char *argv[])
   checkGetNameAndEmail( "<faure@kde.org> \"David Faure\"", "David Faure", "faure@kde.org", true );
 
   // Parenthesis
-  checkGetNameAndEmail( "faure@kde.org (David Faure)", "David Faure", "faure@kde.org", true );
-  checkGetNameAndEmail( "(David Faure) faure@kde.org", "David Faure", "faure@kde.org", true );
-  checkGetNameAndEmail( "My Name (me) <me@home.net>", "My Name (me)", "me@home.net", true ); // #93513
+  checkGetNameAndEmail( "faure@kde.org (David Faure)",
+                        "David Faure", "faure@kde.org", true );
+  checkGetNameAndEmail( "(David Faure) faure@kde.org",
+                        "David Faure", "faure@kde.org", true );
+  checkGetNameAndEmail( "My Name (me) <me@home.net>", "My Name (me)",
+                        "me@home.net", true ); // #93513
 
   // Nested parenthesis as per https://intevation.de/roundup/kolab/issue858
-  checkGetNameAndEmail( "faure@kde.org (David (The Man) Faure)", "David (The Man) Faure", "faure@kde.org", true );
+  checkGetNameAndEmail( "faure@kde.org (David (The Man) Faure)",
+                        "David (The Man) Faure", "faure@kde.org", true );
 
   // Double-quotes inside parenthesis
-  checkGetNameAndEmail( "faure@kde.org (David \"Crazy\" Faure)", "David \"Crazy\" Faure", "faure@kde.org", true );
-  checkGetNameAndEmail( "(David \"Crazy\" Faure) faure@kde.org", "David \"Crazy\" Faure", "faure@kde.org", true );
+  checkGetNameAndEmail( "faure@kde.org (David \"Crazy\" Faure)",
+                        "David \"Crazy\" Faure", "faure@kde.org", true );
+  checkGetNameAndEmail( "(David \"Crazy\" Faure) faure@kde.org",
+                        "David \"Crazy\" Faure", "faure@kde.org", true );
 
   // Parenthesis inside double-quotes
-  checkGetNameAndEmail( "\"Faure (David)\" <faure@kde.org>", "Faure (David)", "faure@kde.org", true );
-  checkGetNameAndEmail( "<faure@kde.org> \"Faure (David)\"", "Faure (David)", "faure@kde.org", true );
+  checkGetNameAndEmail( "\"Faure (David)\" <faure@kde.org>",
+                        "Faure (David)", "faure@kde.org", true );
+  checkGetNameAndEmail( "<faure@kde.org> \"Faure (David)\"",
+                        "Faure (David)", "faure@kde.org", true );
 
   // Space in email
-  checkGetNameAndEmail( "David Faure < faure@kde.org >", "David Faure", "faure@kde.org", true );
+  checkGetNameAndEmail( "David Faure < faure@kde.org >", "David Faure",
+                        "faure@kde.org", true );
 
   // Check that '@' in name doesn't confuse it
   checkGetNameAndEmail( "faure@kde.org (a@b)", "a@b", "faure@kde.org", true );
@@ -200,13 +212,15 @@ int main(int argc, char *argv[])
   checkGetNameAndEmail( "foo <b", "foo", "b", true );
 
   // If multiple emails are there, only return the first one
-  checkGetNameAndEmail( "\"Faure, David\" <faure@kde.org>, KHZ <khz@khz.khz>", "Faure, David", "faure@kde.org", true );
+  checkGetNameAndEmail( "\"Faure, David\" <faure@kde.org>, KHZ <khz@khz.khz>",
+                        "Faure, David", "faure@kde.org", true );
 
   // domain literals also need to work
-  checkGetNameAndEmail( "Matt Douhan <matt@[123.123.123.123]>", "Matt Douhan", "matt@[123.123.123.123]", true );
+  checkGetNameAndEmail( "Matt Douhan <matt@[123.123.123.123]>",
+                        "Matt Douhan", "matt@[123.123.123.123]", true );
 
   // No '@'
-  checkGetNameAndEmail(  "foo <distlist>", "foo", "distlist", true );
+  checkGetNameAndEmail( "foo <distlist>", "foo", "distlist", true );
 
   // To many @'s
   checkIsValidEmailAddress( "matt@@fruitsalad.org", "TooManyAts" );
@@ -215,7 +229,7 @@ int main(int argc, char *argv[])
   checkIsValidEmailAddress( "mattfruitsalad.org", "TooFewAts" );
 
   // An empty string
-  checkIsValidEmailAddress( QString() , "AddressEmpty" );
+  checkIsValidEmailAddress( QString(), "AddressEmpty" );
 
   // email address starting with a @
   checkIsValidEmailAddress( "@mattfruitsalad.org", "MissingLocalPart" );
@@ -302,31 +316,39 @@ int main(int argc, char *argv[])
   checkIsValidEmailAddress( "Matt Douhan (hey(jongel)fibbel) <matt@fruitsalad.org>", "AddressOk" );
 
   // several comment levels and one (the outer) being unbalanced
-  checkIsValidEmailAddress( "Matt Douhan (hey(jongel)fibbel <matt@fruitsalad.org>", "UnbalancedParens" );
+  checkIsValidEmailAddress( "Matt Douhan (hey(jongel)fibbel <matt@fruitsalad.org>",
+                            "UnbalancedParens" );
 
   // several comment levels and one (the inner) being unbalanced
-  checkIsValidEmailAddress( "Matt Douhan (hey(jongelfibbel) <matt@fruitsalad.org>", "UnbalancedParens" );
+  checkIsValidEmailAddress( "Matt Douhan (hey(jongelfibbel) <matt@fruitsalad.org>",
+                            "UnbalancedParens" );
 
   // an error inside a double quote is no error
-  checkIsValidEmailAddress ( "Matt Douhan \"(jongel\" <matt@fruitsalad.org>", "AddressOk" );
+  checkIsValidEmailAddress ( "Matt Douhan \"(jongel\" <matt@fruitsalad.org>",
+                             "AddressOk" );
 
   // inside a quoted string double quotes are only allowed in pairs as per rfc2822
-  checkIsValidEmailAddress( "Matt Douhan \"jongel\"fibbel\" <matt@fruitsalad.org>", "UnbalancedQuote" );
+  checkIsValidEmailAddress( "Matt Douhan \"jongel\"fibbel\" <matt@fruitsalad.org>",
+                            "UnbalancedQuote" );
 
   // a questionmark is valid in an atom
   checkIsValidEmailAddress ( "Matt? <matt@fruitsalad.org>", "AddressOk" );
 
   // weird but OK
-  checkIsValidEmailAddress( "\"testing, \\\"testing\" <matt@fruitsalad.org>", "AddressOk" );
+  checkIsValidEmailAddress( "\"testing, \\\"testing\" <matt@fruitsalad.org>",
+                            "AddressOk" );
 
   // escape a quote to many to see if it makes it invalid
-  checkIsValidEmailAddress( "\"testing, \\\"testing\\\" <matt@fruitsalad.org>", "UnbalancedQuote" );
+  checkIsValidEmailAddress( "\"testing, \\\"testing\\\" <matt@fruitsalad.org>",
+                            "UnbalancedQuote" );
 
   // escape a parens and thus make a comma appear
-  checkIsValidEmailAddress( "Matt (jongel, fibbel\\) <matt@fruitsalad.org>", "UnbalancedParens" );
+  checkIsValidEmailAddress( "Matt (jongel, fibbel\\) <matt@fruitsalad.org>",
+                            "UnbalancedParens" );
 
   // several errors inside doublequotes
-  checkIsValidEmailAddress( "Matt \"(jongel,\\\" < fibbel\\)\" <matt@fruitsalad.org>", "AddressOk" );
+  checkIsValidEmailAddress( "Matt \"(jongel,\\\" < fibbel\\)\" <matt@fruitsalad.org>",
+                            "AddressOk" );
 
   // BUG 105705
   checkIsValidEmailAddress( "matt-@fruitsalad.org", "AddressOk" );
@@ -338,7 +360,8 @@ int main(int argc, char *argv[])
   checkIsValidEmailAddress( "matt_@(this is a cool host)fruitsalad.org", "AddressOk" );
 
   // To quote rfc2822 the test below is aesthetically displeasing, but perfectly legal.
-  checkIsValidEmailAddress( "Pete(A wonderful \\) chap) <pete(his account)@silly.test(his host)>", "AddressOk" );
+  checkIsValidEmailAddress( "Pete(A wonderful \\) chap) <pete(his account)@silly.test(his host)>",
+                            "AddressOk" );
 
   // quoted pair or not quoted pair
   checkIsValidEmailAddress( "\"jongel '\\\" fibbel\" <matt@fruitsalad.org>", "AddressOk" );
@@ -372,12 +395,11 @@ int main(int argc, char *argv[])
 
   checkIsValidEmailAddress( "Matt Douhan <matt\"@@\"fruitsalad.org>", "TooFewAts" );
 
-
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
-  checkIsValidSimpleEmailAddress( QString::fromUtf8("test@täst.invalid"), "true" );
+  checkIsValidSimpleEmailAddress( QString::fromUtf8( "test@täst.invalid" ), "true" );
   // non-ASCII char as first char of IDN
-  checkIsValidSimpleEmailAddress( QString::fromUtf8("i_want@øl.invalid"), "true" );
+  checkIsValidSimpleEmailAddress( QString::fromUtf8( "i_want@øl.invalid" ), "true" );
   checkIsValidSimpleEmailAddress( "matt@[123.123.123.123]", "true" );
   checkIsValidSimpleEmailAddress( "matt@[3.3.3.3]", "true" );
   checkIsValidSimpleEmailAddress( "matt@[4.4.4.4]", "true" );
@@ -433,39 +455,62 @@ int main(int argc, char *argv[])
   // check the getEmailAddress address method
   checkGetEmailAddress( "matt@fruitsalad.org", "matt@fruitsalad.org" );
   checkGetEmailAddress( "Matt Douhan <matt@fruitsalad.org>", "matt@fruitsalad.org" );
-  checkGetEmailAddress( "\"Matt Douhan <blah blah>\" <matt@fruitsalad.org>", "matt@fruitsalad.org" );
-  checkGetEmailAddress( "\"Matt <blah blah>\" <matt@fruitsalad.org>", "matt@fruitsalad.org" );
-  checkGetEmailAddress( "Matt Douhan (jongel) <matt@fruitsalad.org", QString() );
-  checkGetEmailAddress( "Matt Douhan (m@tt) <matt@fruitsalad.org>", "matt@fruitsalad.org" );
-  checkGetEmailAddress( "\"Douhan, Matt\" <matt@fruitsalad.org>", "matt@fruitsalad.org" );
-  checkGetEmailAddress( "\"Matt Douhan (m@tt)\" <matt@fruitsalad.org>", "matt@fruitsalad.org" );
-  checkGetEmailAddress( "\"Matt Douhan\" (matt <matt@fruitsalad.org>", QString() );
-  checkGetEmailAddress( "Matt Douhan <matt@[123.123.123.123]>", "matt@[123.123.123.123]" );
+  checkGetEmailAddress( "\"Matt Douhan <blah blah>\" <matt@fruitsalad.org>",
+                        "matt@fruitsalad.org" );
+  checkGetEmailAddress( "\"Matt <blah blah>\" <matt@fruitsalad.org>",
+                        "matt@fruitsalad.org" );
+  checkGetEmailAddress( "Matt Douhan (jongel) <matt@fruitsalad.org",
+                        QString() );
+  checkGetEmailAddress( "Matt Douhan (m@tt) <matt@fruitsalad.org>",
+                        "matt@fruitsalad.org" );
+  checkGetEmailAddress( "\"Douhan, Matt\" <matt@fruitsalad.org>",
+                        "matt@fruitsalad.org" );
+  checkGetEmailAddress( "\"Matt Douhan (m@tt)\" <matt@fruitsalad.org>",
+                        "matt@fruitsalad.org" );
+  checkGetEmailAddress( "\"Matt Douhan\" (matt <matt@fruitsalad.org>",
+                        QString() );
+  checkGetEmailAddress( "Matt Douhan <matt@[123.123.123.123]>",
+                        "matt@[123.123.123.123]" );
 
   // check the splitEmailAddrList method
-  checkSplitEmailAddrList( "kloecker@kde.org (Kloecker, Ingo)", QStringList() << "kloecker@kde.org (Kloecker, Ingo)" );
-  checkSplitEmailAddrList( "Matt Douhan <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", QStringList() << "Matt Douhan <matt@fruitsalad.org>" << "Foo Bar <foo@bar.com>" );
-  checkSplitEmailAddrList( "\"Matt, Douhan\" <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", QStringList() << "\"Matt, Douhan\" <matt@fruitsalad.org>" << "Foo Bar <foo@bar.com>" );
+  checkSplitEmailAddrList( "kloecker@kde.org (Kloecker, Ingo)", QStringList()
+                           << "kloecker@kde.org (Kloecker, Ingo)" );
+  checkSplitEmailAddrList( "Matt Douhan <matt@fruitsalad.org>, Foo Bar <foo@bar.com>",
+                           QStringList()
+                           << "Matt Douhan <matt@fruitsalad.org>"
+                           << "Foo Bar <foo@bar.com>" );
+  checkSplitEmailAddrList( "\"Matt, Douhan\" <matt@fruitsalad.org>, Foo Bar <foo@bar.com>",
+                           QStringList()
+                           << "\"Matt, Douhan\" <matt@fruitsalad.org>"
+                           << "Foo Bar <foo@bar.com>" );
 
   // check checkNormalizeAddressesAndEncodeIDNs
   checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org", "matt@fruitsalad.org" );
-  checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan <matt@fruitsalad.org>", "Matt Douhan <matt@fruitsalad.org>" );
-  checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan (jongel) <matt@fruitsalad.org>", "Matt Douhan (jongel) <matt@fruitsalad.org>" );
-  checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan (jongel,fibbel) <matt@fruitsalad.org>", "Matt Douhan (jongel,fibbel) <matt@fruitsalad.org>" );
-  checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org (jongel,fibbel)", "\"jongel,fibbel\" <matt@fruitsalad.org>" );
-  checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org (\"jongel,fibbel\")", "\"jongel,fibbel\" <matt@fruitsalad.org>" );
+  checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan <matt@fruitsalad.org>",
+                                        "Matt Douhan <matt@fruitsalad.org>" );
+  checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan (jongel) <matt@fruitsalad.org>",
+                                        "Matt Douhan (jongel) <matt@fruitsalad.org>" );
+  checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan (jongel,fibbel) <matt@fruitsalad.org>",
+                                        "Matt Douhan (jongel,fibbel) <matt@fruitsalad.org>" );
+  checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org (jongel,fibbel)",
+                                        "\"jongel,fibbel\" <matt@fruitsalad.org>" );
+  checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org (\"jongel,fibbel\")",
+                                        "\"jongel,fibbel\" <matt@fruitsalad.org>" );
 
   // check the "quote if necessary" method
-  checkQuoteIfNecessary( "Matt Douhan", "Matt Douhan");
-  checkQuoteIfNecessary( "Douhan, Matt", "\"Douhan, Matt\"");
-  checkQuoteIfNecessary( "Matt \"jongel\" Douhan", "\"Matt \\\"jongel\\\" Douhan\"");
-  checkQuoteIfNecessary( "Matt \\\"jongel\\\" Douhan", "\"Matt \\\"jongel\\\" Douhan\"");
-  checkQuoteIfNecessary( "trailing '\\\\' should never occur \\", "\"trailing '\\\\' should never occur \\\"");
+  checkQuoteIfNecessary( "Matt Douhan", "Matt Douhan" );
+  checkQuoteIfNecessary( "Douhan, Matt", "\"Douhan, Matt\"" );
+  checkQuoteIfNecessary( "Matt \"jongel\" Douhan",
+                         "\"Matt \\\"jongel\\\" Douhan\"" );
+  checkQuoteIfNecessary( "Matt \\\"jongel\\\" Douhan",
+                         "\"Matt \\\"jongel\\\" Douhan\"" );
+  checkQuoteIfNecessary( "trailing '\\\\' should never occur \\",
+                         "\"trailing '\\\\' should never occur \\\"" );
   checkQuoteIfNecessary( "\"don't quote again\"", "\"don't quote again\"" );
   checkQuoteIfNecessary( "\"leading double quote", "\"\\\"leading double quote\"" );
   checkQuoteIfNecessary( "trailing double quote\"", "\"trailing double quote\\\"\"" );
 
-  printf("\nTest OK !\n");
+  printf( "\nTest OK !\n" );
 
   return 0;
 }

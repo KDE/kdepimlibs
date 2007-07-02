@@ -50,12 +50,12 @@ void LinkLocatorTest::testGetEmailAddress()
   LinkLocator ll6( " @bar.baz", 1 );
   QVERIFY( ll6.getEmailAddress() == QString() );
   LinkLocator ll7( ".!#$%&'*+-/=?^_`{|}~@bar.baz",
-                   strlen(".!#$%&'*+-/=?^_`{|}~") );
+                   strlen( ".!#$%&'*+-/=?^_`{|}~" ) );
   QVERIFY( ll7.getEmailAddress() == QString() );
 
   // allowed special chars in local part of address
   LinkLocator ll8( "a.!#$%&'*+-/=?^_`{|}~@bar.baz",
-                   strlen("a.!#$%&'*+-/=?^_`{|}~") );
+                   strlen( "a.!#$%&'*+-/=?^_`{|}~" ) );
   QVERIFY( ll8.getEmailAddress() == "a.!#$%&'*+-/=?^_`{|}~@bar.baz" );
 
   // '@' in domain part
