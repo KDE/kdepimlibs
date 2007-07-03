@@ -77,16 +77,16 @@ QTEST_KDEMAIN( TestBlogger, NoGUI )
 {
   APIBlogger *b = new APIBlogger( KUrl( "http://wrong.url.org/somegateway" ) );
   QVERIFY( b->url() == KUrl( "http://wrong.url.org/somegateway" ) );
-  b->setUrl( KUrl( "http://10.13.37.101/wordpress/xmlrpc.php" ) );
-  b->setUsername( "admin" );
-  b->setPassword( "e9f51d" );
+  b->setUrl( KUrl( "http://soctest.wordpress.com/xmlrpc.php" ) );
+  b->setUsername( "socapitest" );
+  b->setPassword( "k0nt4ctbl0g" );
   b->setBlogId( "1" );
   b->setTimeZone( KTimeZone() );
   b->setDownloadCount( DOWNLOADCOUNT );
-  QVERIFY( b->url() == KUrl( "http://10.13.37.101/wordpress/xmlrpc.php" ) );
+  QVERIFY( b->url() == KUrl( "http://soctest.wordpress.com/xmlrpc.php" ) );
   QVERIFY( b->blogId() == "1" );
-  QVERIFY( b->username() == "admin" );
-  QVERIFY( b->password() == "e9f51d" );
+  QVERIFY( b->username() == "socapitest" );
+  QVERIFY( b->password() == "k0nt4ctbl0g" );
   QVERIFY( b->interfaceName() == "Blogger API 1.0" );
   QVERIFY( b->timeZone().name() == QString( "UTC" ) );
   QVERIFY( b->downloadCount() == DOWNLOADCOUNT );
