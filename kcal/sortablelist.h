@@ -26,8 +26,8 @@
   @author David Jarvie \<software@astrojar.org.uk\>.
  */
 
-#ifndef KCAL_SORTEDLIST_H
-#define KCAL_SORTEDLIST_H
+#ifndef KCAL_SORTABLELIST_H
+#define KCAL_SORTABLELIST_H
 
 #include <QtCore/QList>
 #include <QtCore/QtAlgorithms>
