@@ -21,6 +21,9 @@
     Boston, MA 02110-1301, USA.
 */
 
+#ifndef KMIME_WARNING_H
+#define KMIME_WARNING_H
+
 #ifndef KMIME_NO_WARNING
 #  include <kdebug.h>
 #  define KMIME_WARN kWarning(5100) << "Tokenizer Warning: "
@@ -52,4 +55,6 @@
 #  define KMIME_WARN_LONE(x) KMIME_NOP
 #  define KMIME_WARN_NON_FOLDING(x) KMIME_NOP
 #  define KMIME_WARN_CTL_OUTSIDE_QS(x) KMIME_NOP
+#endif
+
 #endif
