@@ -81,10 +81,10 @@ SpellingFilter::TextCensor::TextCensor( const QString &s )
 void SpellingFilter::TextCensor::censorQuotations( const QString &quotePrefix )
 {
   mPos = 0;
-  while ( mPos < static_cast<int>(mText.length()) ) {
+  while ( mPos < mText.length() ) {
     // Find start of quotation
     findQuotation( quotePrefix );
-    if ( mPos < static_cast<int>(mText.length()) ) {
+    if ( mPos < mText.length() ) {
       int start = mPos;
       skipQuotation( quotePrefix );
 
@@ -103,15 +103,15 @@ void SpellingFilter::TextCensor::censorQuotations( const QString &quotePrefix )
 void SpellingFilter::TextCensor::censorUrls()
 {
   mPos = 0;
-  while ( mPos < static_cast<int>(mText.length()) ) {
+  while ( mPos < mText.length() ) {
     // Find start of url
     QString url;
-    while ( mPos < static_cast<int>(mText.length() ) && url.isEmpty() ) {
+    while ( mPos < mText.length() && url.isEmpty() ) {
       url = getUrl();
       ++mPos;
     }
 
-    if ( mPos < static_cast<int>(mText.length()) && !url.isEmpty() ) {
+    if ( mPos < mText.length() && !url.isEmpty() ) {
       int start = mPos - url.length();
 
       // Replace url with spaces
@@ -127,10 +127,10 @@ void SpellingFilter::TextCensor::censorUrls()
 void SpellingFilter::TextCensor::censorEmailAddresses()
 {
   mPos = 0;
-  while ( mPos < static_cast<int>(mText.length()) ) {
+  while ( mPos < mText.length() ) {
     // Find start of email address
     findEmailAddress();
-    if ( mPos < static_cast<int>(mText.length()) ) {
+    if ( mPos < mText.length() ) {
       QString address = getEmailAddress();
       ++mPos;
       if ( !address.isEmpty() ) {
@@ -178,7 +178,7 @@ QString SpellingFilter::TextCensor::censoredText() const
 bool SpellingFilter::TextCensor::atLineStart() const
 {
   return
-    ( mPos == 0 && static_cast<int>(mText.length()) > 0 ) ||
+    ( mPos == 0 && mText.length() > 0 ) ||
     ( mText[mPos - 1] == '\n' );
 }
 
@@ -186,7 +186,7 @@ void SpellingFilter::TextCensor::skipLine()
 {
   mPos = mText.indexOf( '\n', mPos );
   if ( mPos == -1 ) {
-    mPos = static_cast<int>(mText.length());
+    mPos = mText.length();
   } else {
     ++mPos;
   }
@@ -207,7 +207,7 @@ void SpellingFilter::TextCensor::skipQuotation( const QString &quotePrefix )
 
 void SpellingFilter::TextCensor::findQuotation( const QString &quotePrefix )
 {
-  while ( mPos < static_cast<int>(mText.length()) &&
+  while ( mPos < mText.length() &&
           !atQuotation( quotePrefix ) ) {
     skipLine();
   }
@@ -215,7 +215,7 @@ void SpellingFilter::TextCensor::findQuotation( const QString &quotePrefix )
 
 void SpellingFilter::TextCensor::findEmailAddress()
 {
-  while ( mPos < static_cast<int>(mText.length()) && mText[mPos] != '@' ) {
+  while ( mPos < mText.length() && mText[mPos] != '@' ) {
     ++mPos;
   }
 }
