@@ -2057,10 +2057,12 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 
   // Populate the calendar's time zone collection with all VTIMEZONE components
   ICalTimeZones *tzlist = cal->timeZones();
+#ifdef __GNUC__
+#warning Do not delete timezones in case KDateTime instances still refer to them
+#endif
   tzlist->clear();
   ICalTimeZoneSource tzs;
   tzs.parse(calendar, *tzlist);
-kDebug(5800)<<"populate(): count="<<tzlist->zones().count()<<endl;
 
   // custom properties
   readCustomProperties(calendar, cal);
@@ -2077,7 +2079,13 @@ kDebug(5800)<<"populate(): count="<<tzlist->zones().count()<<endl;
   while (c) {
 //    kDebug(5800) << "----Todo found" << endl;
     Todo *todo = readTodo(c, tzlist);
-    if (todo && !cal->todo(todo->uid())) cal->addTodo(todo);
+    if (todo) {
+      if (!cal->todo(todo->uid())) {
+        cal->addTodo(todo);
+      } else {
+        delete todo;
+      }
+    }
     c = icalcomponent_get_next_component(calendar,ICAL_VTODO_COMPONENT);
   }
 
@@ -2086,7 +2094,13 @@ kDebug(5800)<<"populate(): count="<<tzlist->zones().count()<<endl;
   while (c) {
 //    kDebug(5800) << "----Event found" << endl;
     Event *event = readEvent(c, tzlist);
-    if (event && !cal->event(event->uid())) cal->addEvent(event);
+    if (event) {
+      if (!cal->event(event->uid())) {
+        cal->addEvent(event);
+      } else {
+        delete event;
+      }
+    }
     c = icalcomponent_get_next_component(calendar,ICAL_VEVENT_COMPONENT);
   }
 
@@ -2095,7 +2109,13 @@ kDebug(5800)<<"populate(): count="<<tzlist->zones().count()<<endl;
   while (c) {
 //    kDebug(5800) << "----Journal found" << endl;
     Journal *journal = readJournal(c, tzlist);
-    if (journal && !cal->journal(journal->uid())) cal->addJournal(journal);
+    if (journal) {
+      if (!cal->journal(journal->uid())) {
+        cal->addJournal(journal);
+      } else {
+        delete journal;
+      }
+    }
     c = icalcomponent_get_next_component(calendar,ICAL_VJOURNAL_COMPONENT);
   }
 
