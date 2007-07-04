@@ -16,6 +16,16 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the KDEPIM Utilities library and provides the
+  LinkLocator class.
+
+  @brief
+  Identifies URLs and email addresses embedded in plaintext.
+
+  @author Dave Corrie \<kde@davecorrie.com\>
+*/
 
 #include "linklocator.h"
 #include "pimemoticons.h"
@@ -34,14 +44,30 @@
 
 using namespace KPIMUtils;
 
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
+//@cond PRIVATE
+class KPIMUtils::LinkLocator::Private
+{
+  public:
+    int mMaxUrlLen;
+    int mMaxAddressLen;
+};
+//@endcond
+
 // maps the smiley text to the corresponding emoticon name
 QMap<QString, QString> *LinkLocator::s_smileyEmoticonNameMap = 0;
 // cache for the HTML representation of a smiley
 QMap<QString, QString> *LinkLocator::s_smileyEmoticonHTMLCache = 0;
 
 LinkLocator::LinkLocator( const QString &text, int pos )
-  : mText( text ), mPos( pos ), mMaxUrlLen( 4096 ), mMaxAddressLen( 255 )
+  : mText( text ), mPos( pos ), d( new KPIMUtils::LinkLocator::Private )
 {
+  d->mMaxUrlLen = 4096;
+  d->mMaxAddressLen = 255;
+
   // If you change either of the above values for maxUrlLen or
   // maxAddressLen, then please also update the documentation for
   // setMaxUrlLen()/setMaxAddressLen() in the header file AND the
@@ -60,24 +86,29 @@ LinkLocator::LinkLocator( const QString &text, int pos )
   }
 }
 
+LinkLocator::~LinkLocator()
+{
+  delete d;
+}
+
 void LinkLocator::setMaxUrlLen( int length )
 {
-  mMaxUrlLen = length;
+  d->mMaxUrlLen = length;
 }
 
 int LinkLocator::maxUrlLen() const
 {
-  return mMaxUrlLen;
+  return d->mMaxUrlLen;
 }
 
 void LinkLocator::setMaxAddressLen( int length )
 {
-  mMaxAddressLen = length;
+  d->mMaxAddressLen = length;
 }
 
 int LinkLocator::maxAddressLen() const
 {
-  return mMaxAddressLen;
+  return d->mMaxAddressLen;
 }
 
 QString LinkLocator::getUrl()
@@ -126,14 +157,15 @@ bool LinkLocator::atUrl() const
   }
 
   QChar ch = mText[mPos];
-  return ( ch == 'h' && ( mText.mid( mPos, 7 ) == "http://" ||
-                          mText.mid( mPos, 8 ) == "https://" ) ) ||
+  return
+    ( ch == 'h' && ( mText.mid( mPos, 7 ) == "http://" ||
+                     mText.mid( mPos, 8 ) == "https://" ) ) ||
     ( ch == 'v' && mText.mid( mPos, 6 ) == "vnc://" ) ||
     ( ch == 'f' && ( mText.mid( mPos, 7 ) == "fish://" ||
                      mText.mid( mPos, 6 ) == "ftp://" ||
                      mText.mid( mPos, 7 ) == "ftps://") ) ||
     ( ch == 's' && ( mText.mid( mPos, 7 ) == "sftp://" ||
-                   mText.mid( mPos, 6 ) == "smb://" ) ) ||
+                     mText.mid( mPos, 6 ) == "smb://" ) ) ||
     ( ch == 'm' && mText.mid( mPos, 7 ) == "mailto:" ) ||
     ( ch == 'w' && mText.mid( mPos, 4 ) == "www." ) ||
     ( ch == 'f' && mText.mid( mPos, 4 ) == "ftp." ) ||
@@ -359,7 +391,7 @@ QString LinkLocator::pngToDataUrl( const QString &iconPath )
 
   QByteArray ba = pngFile.readAll();
   pngFile.close();
-  return QString::fromLatin1("data:image/png;base64,%1")
+  return QString::fromLatin1( "data:image/png;base64,%1" )
     .arg( QString::fromAscii( KCodecs::base64Encode( ba ) ) );
 }
 
@@ -383,8 +415,9 @@ QString LinkLocator::getEmoticon()
   int smileyLen = 1;
   while ( ( smileyLen <= MaxSmileyLen ) &&
           ( mPos + smileyLen < (int)mText.length() ) &&
-          !mText[mPos + smileyLen].isSpace() )
+          !mText[mPos + smileyLen].isSpace() ) {
     smileyLen++;
+  }
   if ( smileyLen < MinSmileyLen || smileyLen > MaxSmileyLen ) {
     return QString();
   }
@@ -404,7 +437,7 @@ QString LinkLocator::getEmoticon()
       KStandardDirs::locate( "emoticons",
                              EmotIcons::theme() +
                              QString::fromLatin1( "/" ) +
-                             imageName + QString::fromLatin1(".png") );
+                             imageName + QString::fromLatin1( ".png" ) );
 
     const QString dataUrl = pngToDataUrl( iconPath );
     if ( dataUrl.isEmpty() ) {
@@ -412,8 +445,8 @@ QString LinkLocator::getEmoticon()
     } else {
       // create an image tag (the text in attribute alt is used
       // for copy & paste) representing the smiley
-      htmlRep = QString("<img class=\"pimsmileyimg\" src=\"%1\" "
-                        "alt=\"%2\" title=\"%3\" width=\"16\" height=\"16\"/>")
+      htmlRep = QString( "<img class=\"pimsmileyimg\" src=\"%1\" "
+                         "alt=\"%2\" title=\"%3\" width=\"16\" height=\"16\"/>" )
                 .arg( dataUrl,
                       Qt::escape( smiley ),
                       Qt::escape( smiley ) );

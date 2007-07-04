@@ -18,9 +18,19 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
+/**
+  @file
+  This file is part of the KDEPIM Utilities library and provides the
+  SpellingFilter class.
 
-#ifndef SPELLINGFILTER_H_INCLUDED
-#define SPELLINGFILTER_H_INCLUDED
+  @brief
+  Filters message text that should not be spellchecked.
+
+  @author Dave Corrie \<kde@davecorrie.com\>
+*/
+
+#ifndef KPIMUTILS_SPELLINGFILTER_H
+#define KPIMUTILS_SPELLINGFILTER_H
 
 #include "kpimutils_export.h"
 #include "kpimutils/linklocator.h"
@@ -39,12 +49,14 @@ class KPIMUTILS_EXPORT SpellingFilter
     };
     enum EmailAddressFiltering {
       DontFilterEmailAddresses,
-      FilterEmailAddresses };
+      FilterEmailAddresses
+    };
 
     SpellingFilter( const QString &text, const QString &quotePrefix,
                     UrlFiltering filterUrls = FilterUrls,
                     EmailAddressFiltering filterEmailAddresses = FilterEmailAddresses,
                     const QStringList &filterStrings = QStringList() );
+    ~SpellingFilter();
 
     QString originalText() const;
     QString filteredText() const;
@@ -52,8 +64,10 @@ class KPIMUTILS_EXPORT SpellingFilter
   class TextCensor;
 
   private:
-    const QString mOriginal;
-    QString mFiltered;
+    //@cond PRIVATE
+    class Private;
+    Private *const d;
+    //@endcond
 };
 
 class SpellingFilter::TextCensor : public LinkLocator
@@ -81,5 +95,4 @@ class SpellingFilter::TextCensor : public LinkLocator
 
 }
 
-#endif // SPELLINGFILTER_H_INCLUDED
-
+#endif

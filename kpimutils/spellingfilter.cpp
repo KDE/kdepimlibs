@@ -18,12 +18,33 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
+/**
+  @file
+  This file is part of the KDEPIM Utilities library and provides the
+  SpellingFilter class.
+
+  @brief
+  Filters message text that should not be spellchecked.
+
+  @author Dave Corrie \<kde@davecorrie.com\>
+*/
 
 #include "spellingfilter.h"
 
-#include <kdebug.h>
-
 using namespace KPIMUtils;
+
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
+//@cond PRIVATE
+class KPIMUtils::SpellingFilter::Private
+{
+  public:
+    QString mOriginal;
+    QString mFiltered;
+};
+//@endcond
 
 //-----------------------------------------------------------------------------
 // SpellingFilter implementation
@@ -34,8 +55,9 @@ SpellingFilter::SpellingFilter( const QString &text,
                                 UrlFiltering filterUrls,
                                 EmailAddressFiltering filterEmailAddresses,
                                 const QStringList &filterStrings )
-  : mOriginal( text )
+  : d( new KPIMUtils::SpellingFilter::Private )
 {
+  d->mOriginal = text;
   TextCensor c( text );
 
   if ( !quotePrefix.isEmpty() ) {
@@ -56,17 +78,22 @@ SpellingFilter::SpellingFilter( const QString &text,
     ++iter;
   }
 
-  mFiltered = c.censoredText();
+  d->mFiltered = c.censoredText();
+}
+
+SpellingFilter::~SpellingFilter()
+{
+  delete d;
 }
 
 QString SpellingFilter::originalText() const
 {
-  return mOriginal;
+  return d->mOriginal;
 }
 
 QString SpellingFilter::filteredText() const
 {
-  return mFiltered;
+  return d->mFiltered;
 }
 
 //-----------------------------------------------------------------------------
@@ -93,9 +120,6 @@ void SpellingFilter::TextCensor::censorQuotations( const QString &quotePrefix )
       QString spaces;
       spaces.fill( ' ', len );
       mText.replace( start, len, spaces );
-
-      //kDebug(5321) << "censored quotation ["
-      //  << start << ", " << mPos << ")" << endl;
     }
   }
 }
@@ -117,9 +141,6 @@ void SpellingFilter::TextCensor::censorUrls()
       // Replace url with spaces
       url.fill( ' ' );
       mText.replace( start, url.length(), url );
-
-      //kDebug(5321) << "censored url ["
-      //  << start << ", " << mPos << ")" << endl;
     }
   }
 }
@@ -139,9 +160,6 @@ void SpellingFilter::TextCensor::censorEmailAddresses()
         // Replace address with spaces
         address.fill( ' ' );
         mText.replace( start, address.length(), address );
-
-        //kDebug(5321) << "censored addr ["
-        //  << start << ", "<< mPos << ")" << endl;
       }
     }
   }
@@ -159,9 +177,6 @@ void SpellingFilter::TextCensor::censorString( const QString &s )
       spaces.fill( ' ', s.length() );
       mText.replace( mPos, s.length(), spaces );
       mPos += s.length();
-
-      //kDebug(5321) << "censored string ["
-      //  << mPos << ", "<< mPos+s.length() << ")" << endl;
     }
   }
 }
@@ -195,7 +210,7 @@ void SpellingFilter::TextCensor::skipLine()
 bool SpellingFilter::TextCensor::atQuotation( const QString &quotePrefix ) const
 {
   return atLineStart() &&
-    mText.mid(mPos, quotePrefix.length()) == quotePrefix;
+    mText.mid( mPos, quotePrefix.length() ) == quotePrefix;
 }
 
 void SpellingFilter::TextCensor::skipQuotation( const QString &quotePrefix )
@@ -219,4 +234,3 @@ void SpellingFilter::TextCensor::findEmailAddress()
     ++mPos;
   }
 }
-
