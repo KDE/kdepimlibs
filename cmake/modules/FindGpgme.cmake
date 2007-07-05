@@ -21,7 +21,14 @@ if (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
       ${CMAKE_INSTALL_PREFIX}/include
     )
     
-    find_library(GPGME_LIBRARIES NAMES gpgme
+    find_library(GPGME_LIBRARY NAMES gpgme
+      PATHS 
+        ${CMAKE_LIBRARY_PATH}
+        ${CMAKE_INSTALL_PREFIX}/lib
+      NO_SYSTEM_ENVIRONMENT_PATH
+    )
+    
+    find_library(GPGME_ERROR_LIBRARY NAMES gpg-error
       PATHS 
         ${CMAKE_LIBRARY_PATH}
         ${CMAKE_INSTALL_PREFIX}/lib
@@ -29,7 +36,7 @@ if (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
     )
     
     set(GPGME_INCLUDES ${GPGME_INCLUDES} CACHE INTERNAL "The gpgme include paths")
-    set(GPGME_LIBRARIES ${GPGME_LIBRARIES} CACHE INTERNAL "The gpgme libraries")
+    set(GPGME_LIBRARIES ${GPGME_LIBRARY} ${GPGME_ERROR_LIBRARY} CACHE INTERNAL "The gpgme libraries")
 
   else (WIN32)
  
