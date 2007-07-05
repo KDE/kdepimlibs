@@ -358,7 +358,7 @@ static QString eventViewerFormatEvent( Event *event )
   }
 
   tmpStr += "</table>";
-  tmpStr += "<p><em>" + i18n( "Creation date: %1.",
+  tmpStr += "<p><em>" + i18n( "Creation date: %1",
     KGlobal::locale()->formatDateTime( event->created().dateTime(), KLocale::ShortDate ) ) + "</em>";
   return tmpStr;
 }
@@ -398,7 +398,7 @@ static QString eventViewerFormatTodo( Todo *todo )
   }
   tmpStr += eventViewerFormatAttendees( todo );
   tmpStr += eventViewerFormatAttachments( todo );
-  tmpStr += "<p><em>" + i18n( "Creation date: %1.",
+  tmpStr += "<p><em>" + i18n( "Creation date: %1",
     KGlobal::locale()->formatDateTime( todo->created().dateTime(), KLocale::ShortDate ) ) + "</em>";
   return tmpStr;
 }
