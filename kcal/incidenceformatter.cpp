@@ -1295,7 +1295,7 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence* incidenc
     if (desc.length()>120) {
       desc = desc.left(120) + "...";
     }
-    tmp += "<br>----------<br>" + i18n("<i>Description:</i><br>") + desc.replace("\n", "<br>");
+    tmp += "<br>----------<br>" + i18n("<i>Description:</i>") + "<br>" + desc.replace("\n", "<br>");
   }
   tmp += "</qt>";
   return tmp;
