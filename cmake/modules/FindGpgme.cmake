@@ -11,41 +11,64 @@ include (MacroEnsureVersion)
 if (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
   set(GPGME_FOUND FALSE)
 
-  FIND_PROGRAM(GPGMECONFIG_EXECUTABLE NAMES gpgme-config)
+  if (WIN32)
+    if(NOT KDEWIN_FOUND)
+      find_package(KDEWIN REQUIRED)
+    endif(NOT KDEWIN_FOUND)
+    
+    	find_path(GPGME_INCLUDES gpgme.h
+      ${CMAKE_INCLUDE_PATH}
+      ${CMAKE_INSTALL_PREFIX}/include
+    )
+    
+    find_library(GPGME_LIBRARIES NAMES gpgme
+      PATHS 
+        ${CMAKE_LIBRARY_PATH}
+        ${CMAKE_INSTALL_PREFIX}/lib
+      NO_SYSTEM_ENVIRONMENT_PATH
+    )
+    
+    set(GPGME_INCLUDES ${GPGME_INCLUDES} CACHE INTERNAL "The gpgme include paths")
+    set(GPGME_LIBRARIES ${GPGME_LIBRARIES} CACHE INTERNAL "The gpgme libraries")
 
-  # if gpgme-config has been found
-  if (GPGMECONFIG_EXECUTABLE)
-
-	message(STATUS "Found gpgme-config")
-
+  else (WIN32)
+ 
+    FIND_PROGRAM(GPGMECONFIG_EXECUTABLE NAMES gpgme-config)
+    
+    # if gpgme-config has been found
+    if (GPGMECONFIG_EXECUTABLE)
+    
+    message(STATUS "Found gpgme-config")
+    
     EXEC_PROGRAM(${GPGMECONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE GPGME_VERSION)
-
+    
     MACRO_ENSURE_VERSION( "0.4.5" ${GPGME_VERSION} GPGME_INSTALLED_VERSION_OK )
-
+    
     if (GPGME_INSTALLED_VERSION_OK)
-
+    
       EXEC_PROGRAM(${GPGMECONFIG_EXECUTABLE} ARGS --libs OUTPUT_VARIABLE GPGME_LIBRARIES)
-
+    
       # append -lgpg-error to the list of libraries, if necessary
       if (NOT GPGME_LIBRARIES MATCHES "lgpg-error")
         set(GPGME_LIBRARIES "${GPGME_LIBRARIES} -lgpg-error")
       endif (NOT GPGME_LIBRARIES MATCHES "lgpg-error")
-
+    
       EXEC_PROGRAM(${GPGMECONFIG_EXECUTABLE} ARGS --cflags OUTPUT_VARIABLE GPGME_CFLAGS)
       if (GPGME_CFLAGS)
         string(REGEX REPLACE "(\r?\n)+$" "" GPGME_CFLAGS "${GPGME_CFLAGS}")
         string(REGEX REPLACE " *-I" ";" GPGME_INCLUDES "${GPGME_CFLAGS}")
       endif (GPGME_CFLAGS)
-
+    
       # ensure that they are cached
       set(GPGME_INCLUDES ${GPGME_INCLUDES} CACHE INTERNAL "The gpgme include paths")
       set(GPGME_LIBRARIES ${GPGME_LIBRARIES} CACHE INTERNAL "The gpgme libraries")
-
+    
     else (GPGME_INSTALLED_VERSION_OK)
       message(STATUS "The installed version of gpgme is too old: ${GPGME_VERSION}")
     endif (GPGME_INSTALLED_VERSION_OK)
-
-  endif (GPGMECONFIG_EXECUTABLE)
+    
+    endif (GPGMECONFIG_EXECUTABLE)
+  endif (WIN32)
 
   if (GPGME_LIBRARIES)
       set(GPGME_FOUND TRUE)
