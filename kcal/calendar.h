@@ -436,6 +436,14 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     Incidence *incidenceFromSchedulingID( const QString &sid );
 
+    /** 
+      Searches all events and todos for an incidence with this
+      scheduling identifiere. Returns a list of matching results.
+
+      @param sid is a unique scheduling identifier string.
+     */
+    Incidence::List incidencesFromSchedulingID( const QString &sid );
+
     /**
       Create a merged list of Events, Todos, and Journals.
 

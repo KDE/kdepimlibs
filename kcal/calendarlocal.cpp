@@ -315,6 +315,20 @@ void CalendarLocal::Private::insertEvent( Event *event )
 }
 //@endcond
 
+void CalendarLocal::incidenceUpdated( IncidenceBase *incidence )
+{
+  KDateTime nowUTC = KDateTime::currentUtcDateTime();
+  incidence->setLastModified( nowUTC );
+  // we should probably update the revision number here,
+  // or internally in the Event itself when certain things change.
+  // need to verify with ical documentation.
+
+  // The static_cast is ok as the CalendarLocal only observes Incidence objects
+  notifyIncidenceChanged( static_cast<Incidence *>( incidence ) );
+
+  setModified( true );
+}
+
 Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
                                              EventSortField sortField,
                                              SortDirection sortDirection )

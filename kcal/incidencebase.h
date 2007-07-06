@@ -170,6 +170,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
           @param incidenceBase is a pointer to an IncidenceBase object.
         */
         virtual void incidenceUpdated( IncidenceBase *incidenceBase ) = 0;
+        virtual void incidenceUpdatedSilent( IncidenceBase * ) {};
     };
 
     /**
@@ -472,6 +473,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       changed.
     */
     void updated();
+    void updatedSilent();
 
   protected:
     /**

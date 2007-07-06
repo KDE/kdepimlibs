@@ -263,6 +263,9 @@ class KCAL_EXPORT CalendarLocal : public Calendar
     */
     Alarm::List alarmsTo( const KDateTime &to );
 
+    /** Notification function of IncidenceBase::Observer. */
+    void incidenceUpdated( IncidenceBase *i );
+
   private:
     //@cond PRIVATE
     class Private;
