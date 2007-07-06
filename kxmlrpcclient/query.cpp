@@ -289,8 +289,23 @@ QVariant Query::Private::demarshal( const QDomElement &element ) const
     }
   } else if ( typeName == "base64" ) {
     return QVariant( QByteArray::fromBase64( typeElement.text().toLatin1() ) );
-  } else if ( typeName == "datetime" || typeName == "datetime.iso8601" ) {
+  } else if ( typeName == "datetime" ) {
     return QVariant( QDateTime::fromString( typeElement.text(), Qt::ISODate ) );
+  } else if ( typeName == "datetime.iso8601" ) {
+    QDateTime date;
+    QString dateText = typeElement.text();
+    // Test for broken use of Basic ISO8601 date and extended ISO8601 time
+    if (dateText.length() == 18 && dateText.at(4) != '-'
+        && dateText.at(11) == ':') {
+        if (dateText.endsWith('Z')) {
+          date = QDateTime::fromString( dateText, "yyyyMMddTHH:mm:ssZ" );
+        } else {
+          date = QDateTime::fromString( dateText, "yyyyMMddTHH:mm:ss" );
+        }
+    } else {
+      date = QDateTime::fromString( dateText, Qt::ISODate );
+    }
+    return QVariant( date );
   } else if ( typeName == "array" ) {
     QList<QVariant> values;
     QDomNode valueNode = typeElement.firstChild().firstChild();
