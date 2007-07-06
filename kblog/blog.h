@@ -435,8 +435,19 @@ class KBLOG_EXPORT APIBlog : public QObject
     */
     KTimeZone timeZone();
 
-    // TODO once again, do we need this?
+    /**
+      Sets the number of blog posts to be downloaded.
+      @param nr number of posts to download. '0' gets all posts.
+      @see listPostings()
+      @see downloadCount()
+    */
     void setDownloadCount( int nr );
+
+    /**
+      Gets the number of blog posts to be downloaded.
+      @see listPostings()
+      @see setDownloadCount()
+    */
     int downloadCount() const;
 
     /**
