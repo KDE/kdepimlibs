@@ -130,7 +130,9 @@ void APIBlogger::createPosting( KBlog::BlogPosting *posting )
 
   kDebug(5323) << "Creating new Posting with blogid " << blogId() << endl;
   QList<QVariant> args( d->defaultArgs( blogId() ) );
-  args << QVariant( posting->content() );
+  QString content = "<title>" + posting->title() + "</title><category>" +
+      posting->category() + "</category>" + posting->content();
+  args << QVariant( content );
   args << QVariant( posting->publish() );
   d->mXmlRpcClient->call(
     "blogger.newPost", args,
