@@ -36,9 +36,10 @@ libkdepim - needs a class-by-class review
 libksieve - ??
 kode - not ready for kdelibs.  kxforms should be in kdepim?  kwsdl??
 
-Really Low Priority (or eliminate entirely)
-===========================================
+Eliminate Entirely
+==================
 mimelib
+libkpgp
 
 Done
 ====
@@ -57,5 +58,4 @@ Candidates for kdepimlibs-gpl
 =============================
 kdgantt - May NOT be relicensed. MUST remain GPL (and therefore cannot be moved)
 libkleo - May NOT be relicensed. MUST remain GPL (and therefore cannot be moved)
-          (requires libkpgp, gpgmepp, qgpgme)
-libkpgp - Relicense request denied (and therefore cannot be moved)
+          (requires gpgmepp, qgpgme)
