@@ -47,4 +47,8 @@ add_subdirectory(syndication)
 
 add_subdirectory(cmake)
 
+# ...and append all library dependencies
+export_library_dependencies(${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake APPEND)
+install( FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
+
 macro_display_feature_log()
