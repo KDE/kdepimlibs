@@ -87,11 +87,21 @@ void TransportComboBox::fillComboBox()
     if ( defName.isEmpty() )
       addItem( i18n( "Default" ) );
     else
-      addItem( i18n( "Default (%1)", defName ) );
-    addItems( TransportManager::self()->transportNames() );
+      addItem( i18n( "%1 (Default)", defName ) );
     d->transports << 0;
-    d->transports << TransportManager::self()->transportIds();
+  
+    QStringList listNames = TransportManager::self()->transportNames();
+    QList<int> listIds = TransportManager::self()->transportIds();
+    for ( int i = 0; i < listIds.count(); ++i )
+    {
+      if ( listNames.at( i ) != defName )
+      {
+        addItem( listNames.at( i ) );
+        d->transports << listIds.at( i );
+      }
+    }
   }
+
 
   setCurrentTransport( oldTransport );
   if ( lineEdit() )
