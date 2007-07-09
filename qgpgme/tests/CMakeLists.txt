@@ -4,7 +4,6 @@ include_directories( ${GPGME_INCLUDES} )
 ########### next target ###############
 set(dataprovidertest_SRCS dataprovidertest.cpp )
 
-kde4_automoc(${dataprovidertest_SRCS})
 
 kde4_add_test_executable(dataprovidertest ${dataprovidertest_SRCS})
 

@@ -5,7 +5,6 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/kresources )
 
 set(testresources_SRCS testresources.cpp)
 
-kde4_automoc(${testresources_SRCS})
 
 kde4_add_unit_test(testresources TESTNAME kresources-testresources  ${testresources_SRCS})
 
@@ -15,7 +14,6 @@ target_link_libraries(testresources ${KDE4_KDECORE_LIBS} kresources)
 
 set(idmappertest_SRCS idmappertest.cpp)
 
-kde4_automoc(${idmappertest_SRCS})
 
 kde4_add_unit_test(idmappertest TESTNAME kresources-idmappertest  ${idmappertest_SRCS})
 

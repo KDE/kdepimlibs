@@ -6,7 +6,6 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${KDE4_KIO_INCLUDES} )
 
 set(testclient_SRCS testclient.cpp )
 
-kde4_automoc(${testclient_SRCS})
 
 kde4_add_unit_test(testclient TESTNAME kxmlrpc-testclient  ${testclient_SRCS})
 
@@ -16,7 +15,6 @@ target_link_libraries(testclient  ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kxml
 
 set(testquery_SRCS testquery.cpp )
 
-kde4_automoc(${testquery_SRCS})
 
 kde4_add_unit_test(testquery TESTNAME kxmlrpc-testquery  ${testquery_SRCS})
 

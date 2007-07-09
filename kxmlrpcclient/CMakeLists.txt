@@ -7,7 +7,6 @@ set(kxmlrpcclient_LIB_SRCS
    client.cpp
    query.cpp)
 
-kde4_automoc(${kxmlrpcclient_LIB_SRCS})
 
 kde4_add_library(kxmlrpcclient SHARED ${kxmlrpcclient_LIB_SRCS})
 

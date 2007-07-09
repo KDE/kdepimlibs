@@ -22,7 +22,6 @@ set(kresources_LIB_SRCS
 
 qt4_add_dbus_adaptor( kresources_LIB_SRCS org.kde.KResourcesManager.xml managerimpl.h KRES::ManagerImpl )
 
-kde4_automoc(${kresources_LIB_SRCS})
 
 kde4_add_library(kresources SHARED ${kresources_LIB_SRCS})
 
@@ -36,7 +35,6 @@ install(TARGETS kresources  DESTINATION ${LIB_INSTALL_DIR} )
 
 set(kcm_kresources_PART_SRCS kcmkresources.cpp )
 
-kde4_automoc(${kcm_kresources_PART_SRCS})
 
 kde4_add_plugin(kcm_kresources ${kcm_kresources_PART_SRCS})
 

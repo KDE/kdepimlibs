@@ -21,7 +21,6 @@ set(mailtransport_lib_srcs
   servertest.cpp
 )
 
-kde4_automoc(${mailtransport_lib_srcs})
 
 kde4_add_ui_files(mailtransport_lib_srcs
   smtpsettings.ui
@@ -39,7 +38,6 @@ install(TARGETS mailtransport DESTINATION ${LIB_INSTALL_DIR})
 install(FILES mailtransport.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 
 set(mailtransport_kcm_srcs configmodule.cpp)
-kde4_automoc(${mailtransport_kcm_srcs})
 kde4_add_plugin(kcm_mailtransport ${mailtransport_kcm_srcs})
 target_link_libraries(kcm_mailtransport  ${KDE4_KDEUI_LIBS} mailtransport)
 

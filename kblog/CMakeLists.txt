@@ -11,7 +11,6 @@ metaweblog.cpp
 metaweblog_p.cpp
 )
 
-kde4_automoc(${kblog_LIB_SRCS})
 
 kde4_add_library(kblog SHARED ${kblog_LIB_SRCS})
 

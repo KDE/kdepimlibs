@@ -6,7 +6,6 @@ add_subdirectory( tests )
 set(kpimutils_LIB_SRCS
    email.cpp linklocator.cpp spellingfilter.cpp kfileio.cpp)
 
-kde4_automoc(${kpimutils_LIB_SRCS})
 kde4_add_kcfg_files(kpimutils_LIB_SRCS pimemoticons.kcfgc)
 
 kde4_add_library(kpimutils SHARED ${kpimutils_LIB_SRCS})

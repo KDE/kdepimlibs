@@ -5,7 +5,6 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${KDE4_KIO_INCLUDES} )
 
 set(testblogger_SRCS testblogger.cpp )
 
-kde4_automoc(${testblogger_SRCS})
 
 kde4_add_unit_test(testblogger TESTNAME kabc-testblogger ${testblogger_SRCS})
 
@@ -16,7 +15,6 @@ kblog)
 
 set(testmetaweblog_SRCS testmetaweblog.cpp )
 
-kde4_automoc(${testmetaweblog_SRCS})
 
 kde4_add_unit_test(testmetaweblog TESTNAME kabc-testmetaweblog ${testmetaweblog_SRCS})
 

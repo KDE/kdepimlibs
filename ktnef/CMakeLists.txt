@@ -22,7 +22,6 @@ set(ktnef_LIB_SRCS
    formatter.cpp
 )
 
-kde4_automoc(${ktnef_LIB_SRCS})
 
 kde4_add_library(ktnef SHARED ${ktnef_LIB_SRCS})
 
