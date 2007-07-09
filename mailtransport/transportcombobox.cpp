@@ -71,36 +71,22 @@ TransportBase::EnumType::type TransportComboBox::transportType() const
 void TransportComboBox::fillComboBox()
 {
   int oldTransport = currentTransportId();
-  QString oldText;
-  if ( lineEdit() )
-    oldText = lineEdit()->text();
   clear();
   d->transports.clear();
 
+  int defaultId = 0;
   if ( !TransportManager::self()->isEmpty() ) {
-    QString defName = TransportManager::self()->defaultTransportName();
-    if ( defName.isEmpty() )
-      addItem( i18n( "Default" ) );
-    else
-      addItem( i18n( "%1 (Default)", defName ) );
-    d->transports << 0;
-  
     QStringList listNames = TransportManager::self()->transportNames();
     QList<int> listIds = TransportManager::self()->transportIds();
-    for ( int i = 0; i < listIds.count(); ++i )
-    {
-      if ( listNames.at( i ) != defName )
-      {
-        addItem( listNames.at( i ) );
-        d->transports << listIds.at( i );
-      }
-    }
+        addItems( listNames );
+        d->transports << listIds;
+    defaultId = TransportManager::self()->defaultTransportId();
   }
 
-
-  setCurrentTransport( oldTransport );
-  if ( lineEdit() )
-    lineEdit()->setText( oldText );
+  if ( oldTransport != -1 )
+    setCurrentTransport( oldTransport );
+  else
+    setCurrentTransport( defaultId );
 }
 
 #include "transportcombobox.moc"
