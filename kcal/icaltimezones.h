@@ -390,7 +390,7 @@ class KCAL_EXPORT ICalTimeZoneData : public KTimeZoneData
      *
      * @return copy of this instance
      */
-    virtual KTimeZoneData *clone();
+    virtual KTimeZoneData *clone() const;
 
     /**
      * Returns the name of the city for this time zone, if any. There is no fixed

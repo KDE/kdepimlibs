@@ -586,7 +586,7 @@ ICalTimeZoneData &ICalTimeZoneData::operator=(const ICalTimeZoneData &rhs)
   return *this;
 }
 
-KTimeZoneData *ICalTimeZoneData::clone()
+KTimeZoneData *ICalTimeZoneData::clone() const
 {
   return new ICalTimeZoneData(*this);
 }
