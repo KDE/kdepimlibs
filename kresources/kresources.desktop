@@ -38,6 +38,7 @@ Keywords=resources,konnector resource,contact resource,calendar resource,notes r
 Keywords[de]=Ressourcen,Konnector-Ressource,Kontakt-Ressource,Kalender-Ressource,Notizen-Ressource,Alarm-Ressource,Imap
 Keywords[el]=πόροι,πόροι του konnector,πόρος επαφής,πόρος ημερολογίου,πόρος σημειώσεων,πόρος ειδοποίησης,imap
 Keywords[es]=recursos,recursos de konnector,recursos de contacto,recursos de calendario,recursos de notas,recurso de alarma,imap
+Keywords[ja]=リソース,konnector resource, コネクターリソース,コンタクトリソース,カレンダーリソース, メモリソース,アラームリソースimap
 Keywords[pt]=recursos,recurso do konector,recurso de contactos,recurso de calendário,recurso de notas,recurso de alarme,imap
 Keywords[sv]=resurser,konnector-resurs,kontaktresurs,kalenderresurs,anteckningsresurs,alarmresurs,IMAP
 Keywords[uk]=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap,ресурс календаря,ресурси
