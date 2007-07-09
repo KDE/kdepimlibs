@@ -62,11 +62,6 @@ void TransportComboBox::setCurrentTransport(int transportId)
     setCurrentIndex( i );
 }
 
-bool TransportComboBox::isAdHocTransport() const
-{
-  return currentTransportId() == -1;
-}
-
 TransportBase::EnumType::type TransportComboBox::transportType() const
 {
   int transtype = TransportManager::self()->transportById( currentTransportId() )->type();

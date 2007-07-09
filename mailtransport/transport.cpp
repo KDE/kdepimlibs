@@ -43,7 +43,6 @@ class TransportPrivate {
     bool passwordDirty;
     bool storePasswordInFile;
     bool needsWalletMigration;
-    bool isAdHoc;
     QString oldName;
 };
 
@@ -55,7 +54,6 @@ Transport::Transport( const QString &cfgGroup ) :
   d->passwordDirty = false;
   d->storePasswordInFile = false;
   d->needsWalletMigration = false;
-  d->isAdHoc = false;
   readConfig();
 }
 
@@ -66,7 +64,7 @@ Transport::~Transport()
 
 bool Transport::isValid() const
 {
-  return (id() > 0 || isAdHoc()) && !host().isEmpty() && port() <= 65536;
+  return ( id() > 0 ) && !host().isEmpty() && port() <= 65536;
 }
 
 QString Transport::password()
@@ -140,9 +138,6 @@ void Transport::usrReadConfig()
 
 void Transport::usrWriteConfig()
 {
-  if ( isAdHoc() )
-    return;
-
   if ( requiresAuthentication() && storePassword() && d->passwordDirty ) {
     Wallet *wallet = TransportManager::self()->wallet();
     if ( !wallet || wallet->writePassword(QString::number(id()), d->password) != 0 ) {
@@ -228,16 +223,6 @@ void Transport::migrateToWallet()
   d->passwordDirty = true;
   d->storePasswordInFile = false;
   writeConfig();
-}
-
-bool Transport::isAdHoc() const
-{
-  return d->isAdHoc;
-}
-
-void Transport::setAdHoc(bool b)
-{
-  d->isAdHoc = b;
 }
 
 Transport* Transport::clone() const

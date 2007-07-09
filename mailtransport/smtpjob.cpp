@@ -135,13 +135,13 @@ void SmtpJob::startSmtpJob()
     {
       QString user = transport()->userName();
       QString passwd = transport()->password();
-      bool keep = !transport()->isAdHoc(); // do not provide keep checkbox for adhoc transports
       int result;
 
 #ifdef __GNUC__
 #warning yet another KMail specific thing
 #endif
 //       KCursorSaver idle( KBusyPtr::idle() );
+      bool keep = true;
       result = KIO::PasswordDialog::getNameAndPassword(
           user, passwd, &keep,
           i18n("You need to supply a username and a password to use this "

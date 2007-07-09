@@ -60,10 +60,6 @@ TransportMgr::TransportMgr() :
 
 void TransportMgr::editBtnClicked()
 {
-  if ( mComboBox->isAdHocTransport() ) {
-    kDebug() << k_funcinfo << "Cannot edit adhoc transport!" << endl;
-    return;
-  }
   TransportConfigDialog *t = new TransportConfigDialog( TransportManager::self()->transportById( mComboBox->currentTransportId() ), this );
   t->exec();
   delete t;
@@ -72,10 +68,7 @@ void TransportMgr::editBtnClicked()
 void TransportMgr::sendBtnClicked()
 {
   TransportJob *job;
-  if ( mComboBox->isAdHocTransport() )
-    job = TransportManager::self()->createTransportJob( mComboBox->currentText() );
-  else
-    job = TransportManager::self()->createTransportJob( mComboBox->currentTransportId() );
+  job = TransportManager::self()->createTransportJob( mComboBox->currentTransportId() );
   if ( !job ) {
     kDebug() << k_funcinfo << "Invalid transport!" << endl;
     return;

@@ -214,48 +214,6 @@ TransportJob* TransportManager::createTransportJob(const QString & transport)
   if ( t )
     return createTransportJob( t->id() );
 
-  KUrl url( transport );
-  if ( !url.isValid() )
-    return 0;
-
-  t = new Transport( QLatin1String("adhoc") );
-  t->setDefaults();
-  t->setName( transport );
-  t->setAdHoc( true );
-
-  if ( url.protocol() == SMTP_PROTOCOL || url.protocol() == SMTPS_PROTOCOL ) {
-    t->setType( Transport::EnumType::SMTP );
-    t->setHost( url.host() );
-    if ( url.protocol() == SMTPS_PROTOCOL ) {
-      t->setEncryption( Transport::EnumEncryption::SSL );
-      t->setPort( SMTPS_PORT );
-    }
-    if ( url.port() != -1 )
-      t->setPort( url.port() );
-    if ( url.hasUser() ) {
-      t->setRequiresAuthentication( true );
-      t->setUserName( url.user() );
-    }
-  }
-
-  else if ( url.protocol() == QLatin1String("file") ) {
-    t->setType( Transport::EnumType::Sendmail );
-    t->setHost( url.path( KUrl::RemoveTrailingSlash ) );
-  }
-
-  else {
-    delete t;
-    return 0;
-  }
-
-  switch ( t->type() ) {
-    case Transport::EnumType::SMTP:
-      return new SmtpJob( t, this );
-    case Transport::EnumType::Sendmail:
-      return new SendmailJob( t, this );
-  }
-
-  delete t;
   Q_ASSERT( false );
   return 0;
 }

@@ -44,9 +44,6 @@ class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
 
     /**
       Returns identifier of the currently selected mail transport.
-      Note: This returns an invalid id if an adhoc transport is
-      selected.
-      @see isAdHocTransport()
     */
     int currentTransportId() const;
 
@@ -55,13 +52,6 @@ class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
       @param transportId The transport identifier.
     */
     void setCurrentTransport( int transportId );
-
-    /**
-      Returns true if the selected transport is an adhoc transport,
-      ie. an url entered directly (only possible if the setEditable(true)
-      has been called.
-    */
-    bool isAdHocTransport() const;
 
     /**
       Returns the type of the selected transport.

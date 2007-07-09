@@ -75,12 +75,6 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     QString authenticationTypeString() const;
 
     /**
-      Returns true if this is a adhoc transport, ie. a non-perisistent transport
-      configuration based on a url entered by the user.
-    */
-    bool isAdHoc() const;
-
-    /**
       Returns a deep copy of this Transport object which will no longer be
       automatically updated. Use this if you need to store a Transport object
       over a longer time. However it is recommended to store transport identifiers
@@ -107,11 +101,6 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
       Try to migrate the password from the config file to the wallet.
     */
     void migrateToWallet();
-
-    /**
-      Sets the adhoc flag.
-    */
-    void setAdHoc( bool b );
 
   private:
     void readPassword();
