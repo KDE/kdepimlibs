@@ -1,7 +1,7 @@
 /*
     This file is part of the kcal library.
 
-    Copyright (c) 2005,2006 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2005-2007 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -239,6 +239,20 @@ class KCAL_EXPORT ICalTimeZone : public KTimeZone
      */
     virtual bool hasTransitions() const;
 
+    /**
+     * Update the definition of the time zone to be identical to another
+     * ICalTimeZone instance. A prerequisite is that the two instances must
+     * have the same name.
+     *
+     * The purpose of this method is to enable updates of ICalTimeZone
+     * definitions when a calendar is reloaded, without invalidating pointers
+     * to the instance (particularly pointers held by KDateTime objects).
+     *
+     * @param other time zone whose definition is to be used
+     * @return true if definition was updated (i.e. names are the same)
+     */
+    bool update(const ICalTimeZone *other);
+
   private:
     ICalTimeZonePrivate *const d;
 };
@@ -277,15 +291,17 @@ class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
 
     /**
      * Creates an ICalTimeZone instance for each VTIMEZONE component within a
-     * CALENDAR component. The ICalTimeZone instances are added to a ICalTimeZones
-     * collection.
+     * CALENDAR component. The ICalTimeZones collection is updated with each new
+     * instance: if a time zone of the same name already exists in the collection,
+     * the existing ICalTimeZone instance is updated with the new data, else the
+     * new ICalTimeZone instance is added to the collection.
      *
      * If an error occurs while processing any time zone, any remaining time zones
      * are left unprocessed.
      *
      * @param calendar the CALENDAR component from which data is to be extracted
-     * @param zones    the time zones collection to which the ICalTimeZone
-     *                 instances are to be added
+     * @param zones    the time zones collection to be updated with the new
+     *                 ICalTimeZone instances
      * @return @c false if any error occurred (either parsing a VTIMEZONE component
      *         or adding an ICalTimeZone to @p zones), @c true otherwise
      */
@@ -294,14 +310,15 @@ class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
     /**
      * Reads an iCalendar file and creates an ICalTimeZone instance for each
      * VTIMEZONE component within it. The ICalTimeZone instances are added to a
-     * ICalTimeZones collection.
+     * ICalTimeZones collection, or existing instances in the collection are
+     * updated.
      *
      * If an error occurs while processing any time zone, any remaining time zones
      * are left unprocessed.
      *
      * @param fileName the file from which data is to be extracted
-     * @param zones    the time zones collection to which the ICalTimeZone
-     *                 instances are to be added
+     * @param zones    the time zones collection to be updated with the new
+     *                 ICalTimeZone instances
      * @return @c false if any error occurred, @c true otherwise
      */
     bool parse(const QString &fileName, ICalTimeZones &zones);

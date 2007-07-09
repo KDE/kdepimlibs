@@ -1,7 +1,7 @@
 /*
     This file is part of the kcal library.
 
-    Copyright (c) 2005,2006 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2005-2007 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -276,7 +276,15 @@ icaltimezone *ICalTimeZone::icalTimezone() const
 
 bool ICalTimeZone::hasTransitions() const
 {
-    return true;
+  return true;
+}
+
+bool ICalTimeZone::update(const ICalTimeZone *other)
+{
+  if (!KTimeZone::updateBase(other))
+    return false;
+  setData(other->data()->clone(), other->source());
+  return true;
 }
 
 
@@ -678,7 +686,14 @@ bool ICalTimeZoneSource::parse(icalcomponent *calendar, ICalTimeZones &zones)
     ICalTimeZone *zone = parse(c);
     if (!zone)
       return false;
-    if (!zones.add(zone)) {
+    ICalTimeZone *oldzone = const_cast<ICalTimeZone*>(zones.zone(zone->name()));
+    if (oldzone) {
+      // The zone already exists in the collection. It's dangerous to delete
+      // KTimeZone objects if any KDateTime instances still refer to them, so
+      // update the definition of the zone rather than using a newly created one.
+      oldzone->update(zone);
+      delete zone;
+    } else if (!zones.add(zone)) {
       delete zone;
       return false;
     }

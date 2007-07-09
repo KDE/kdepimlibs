@@ -2060,7 +2060,6 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 #ifdef __GNUC__
 #warning Do not delete timezones in case KDateTime instances still refer to them
 #endif
-  tzlist->clear();
   ICalTimeZoneSource tzs;
   tzs.parse(calendar, *tzlist);
 
