@@ -53,7 +53,12 @@ class ICalFormatImpl
     explicit ICalFormatImpl( ICalFormat *parent );
     virtual ~ICalFormatImpl();
 
-    bool populate( Calendar *, icalcomponent *fs);
+    /** Update a calendar with data from a raw iCalendar.
+     * Incidences already existing in @p calendar are not affected except that
+     * if a new incidence with the same UID is found, the existing incidence is
+     * replaced.
+     */
+    bool populate( Calendar *calendar, icalcomponent *fs);
 
     icalcomponent *writeIncidence(IncidenceBase *incidence, Scheduler::Method method = Scheduler::Request);
     icalcomponent *writeTodo(Todo *todo, ICalTimeZones *tzlist = 0, ICalTimeZones *tzUsedList = 0);
