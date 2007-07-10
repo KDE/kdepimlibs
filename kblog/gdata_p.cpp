@@ -19,27 +19,33 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <blogger2_p.h>
-#include <kdebug.h>
+#include <gdata_p.h>
 
+#include <syndication/loader.h>
+#include <syndication/item.h>
+
+#include <kdebug.h>
 #include <kio/netaccess.h>
 #include <kio/http.h>
+#include <klocale.h>
+#include <kdatetime.h>
 
 #include <QtCore/QByteArray>
-#include <QtGui/QWidget>
+#include <QtCore/QRegExp>
 #include <QDomDocument>
+#include <QtGui/QWidget>
 
 using namespace KBlog;
 
-APIBlogger2::APIBlogger2Private::APIBlogger2Private(){
+APIGData::APIGDataPrivate::APIGDataPrivate(){
 
 }
 
-APIBlogger2::APIBlogger2Private::~APIBlogger2Private(){
+APIGData::APIGDataPrivate::~APIGDataPrivate(){
 
 }
 
-void APIBlogger2::APIBlogger2Private::getIntrospection(){
+void APIGData::APIGDataPrivate::getIntrospection(){
   // fetch the introspection file synchronously and parse it
   QByteArray data;
   QString parsingError;
@@ -51,7 +57,7 @@ void APIBlogger2::APIBlogger2Private::getIntrospection(){
   if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &parent->url() ) 
         && homepage.setContent( data, false, &parsingError, &parsingErrorLine ) ) {
     kDebug() << "Fetched Homepage data: " << data.data() << endl;
-    QDomNodeList links = homepage.elementsByTagName( QString( "link" ) );
+/*    QDomNodeList links = homepage.elementsByTagName( QString( "link" ) );
     for( int i=0; i<links.count(); i++){
       QDomNamedNodeMap attributes = links.item(i).toElement().attributes();
       if( attributes.namedItem( "rel" ).nodeValue() == QString( "service.post" ) ) {
@@ -65,7 +71,8 @@ void APIBlogger2::APIBlogger2Private::getIntrospection(){
         mFetchPostingsPath = attributes.namedItem( "href" ).nodeValue();
         mFetchPostingsPath = true;
       }
-    }
+
+    }*/
 //     if( !mCreatePostingsPathSuccess || !mFetchPostingsPathSuccess )
       // TODO emit a fitting error
   }
@@ -77,12 +84,56 @@ void APIBlogger2::APIBlogger2Private::getIntrospection(){
   }
 }
 
-void APIBlogger2::APIBlogger2Private::slotLoadingPostingsComplete( Syndication::Loader* loader, 
+void APIGData::APIGDataPrivate::slotLoadingBlogsComplete( Syndication::Loader* loader, 
                                           Syndication::FeedPtr feed, Syndication::ErrorCode status ){
-  if (status != Syndication::Success)
-         return;
+  if (status != Syndication::Success){
+    emit parent->error( AtomAPI, i18n( "Could not get blogs." ) );
+    return;
+  }
+  QList<Syndication::ItemPtr> items = feed->items();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
+  for( ; it!=end; ++it ){
+      QRegExp rx( "blog-(\\d+)" );
+      rx.indexIn( ( *it )->id() );
+      QString id = rx.cap(1);
+      kDebug(5323)<<"QRegExp rx( 'blog-(\\d+)' matches "<< rx.cap(1) << endl;
+      QString name = ( *it )->title();
 
-//  emit parent->
+      if ( !id.isEmpty() && !name.isEmpty() ) {
+        emit parent->blogInfoRetrieved( id, name );
+        kDebug(5323) << "Emitting blogInfoRetrieved( id=" << id
+                 << ", name=" << name << "); " << endl;
+      }
+  }
 }
 
-#include "blogger2_p.moc"
+void APIGData::APIGDataPrivate::slotLoadingPostingsComplete( Syndication::Loader* loader, 
+                                          Syndication::FeedPtr feed, Syndication::ErrorCode status ){
+  if (status != Syndication::Success){
+    emit parent->error( AtomAPI, i18n( "Could not get postings." ) );
+    return;
+  } 
+  QList<Syndication::ItemPtr> items = feed->items();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
+  for( ; it!=end; ++it ){
+      BlogPosting posting;
+      QRegExp rx( "post-(\\d+)" );
+      rx.indexIn( ( *it )->id() );
+      kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
+      posting.setPostingId( rx.cap(1) );
+      posting.setTitle( ( *it )->title() );
+      posting.setContent( ( *it )->content() );
+      // FIXME: assuming UTC for now
+      posting.setCreationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ), KDateTime::Spec::UTC() ) ); 
+      posting.setModificationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
+
+      emit parent->listedPosting( posting );
+      kDebug(5323) << "Emitting listedPosting( postingId=" << posting.postingId() << "); " << endl;
+  }
+  kDebug(5323) << "Emitting listPostingsFinished()" << endl;
+  emit parent->listPostingsFinished();
+}
+
+#include "gdata_p.moc"

@@ -89,7 +89,7 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
     kDebug(5323) << "Could not fetch blogs out of the result from the server, "
               << "not a list." << endl;
     emit parent->error( ParsingError,
-                        i18n("Could not blogs Posting out of the result "
+                        i18n("Could not fetch blogs out of the result "
                              "from the server, not a list.") );
   } else {
     const QList<QVariant> posts = result[0].toList();

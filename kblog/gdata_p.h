@@ -19,29 +19,30 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef API_BLOGGER2_P_H
-#define API_BLOGGER2_P_H
+#ifndef API_GDATA_P_H
+#define API_GDATA_P_H
 
 #include <QtCore/QString>
 #include <syndication/loader.h>
-#include "blogger2.h"
+#include "gdata.h"
 
 using namespace KBlog;
 
-class APIBlogger2::APIBlogger2Private : public QObject {
+class APIGData::APIGDataPrivate : public QObject {
   Q_OBJECT
   private:
     QString mCreatePostingsPath;
     QString mFetchPostingsPath;
   public:
-    APIBlogger2* parent;
-    APIBlogger2Private();
-    ~APIBlogger2Private();
+    APIGData* parent;
+    APIGDataPrivate();
+    ~APIGDataPrivate();
     void getIntrospection();
     QString getFetchPostingsPath(){ return mFetchPostingsPath; }
     QString getCreatePostingPath(){ return mCreatePostingsPath; }
   public slots:
     void slotLoadingPostingsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
+    void slotLoadingBlogsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
 };
 
 #endif

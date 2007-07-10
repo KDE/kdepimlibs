@@ -19,8 +19,8 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-#ifndef API_BLOGGER2_H
-#define API_BLOGGER2_H
+#ifndef API_GDATA_H
+#define API_GDATA_H
 
 #include <blog.h>
 
@@ -34,7 +34,7 @@
   @file
 
   This file is part of the API for accessing Blog Servers
-  and defines the APIBlogger2 class.
+  and defines the APIGData class.
 
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
 
@@ -44,11 +44,11 @@
 namespace KBlog {
 /**
   @brief
-  A class that can be used for access to Blogger2 API blogs. Almost every blog server
-  supports Blogger2 API . Compared to Blogger API 1.0 it is a superset of functions added to the its definition. Blogger2 API is much more functional, but has some drawbacks, e.g. security when compared to Blogger API 2.0 which is based on Blogger2 API and quite new.
+  A class that can be used for access to GData API blogs. Almost every blog server
+  supports GData API . Compared to Blogger API 1.0 it is a superset of functions added to the its definition. GData API is much more functional, but has some drawbacks, e.g. security when compared to Blogger API 2.0 which is based on GData API and quite new.
 
   @code
-  APIBlog* myblog = new APIBlogger2( "http://example.com/xmlrpc/gateway.php" );
+  APIBlog* myblog = new APIGData( "http://example.com/xmlrpc/gateway.php" );
   KBlog::BlogPosting *post = new BlogPosting();
   post->setUserId( "some_user_id" );
   post->setTitle( "This is the title." );
@@ -59,17 +59,17 @@ namespace KBlog {
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
  */
-class KBLOG_EXPORT APIBlogger2 : public APIBlog
+class KBLOG_EXPORT APIGData : public APIBlog
 {
   Q_OBJECT
   public:
     /**
-         Create an object for Blogger2 API
+         Create an object for GData API
 
          @param server is the url for the xmlrpc gateway.
     */
-    APIBlogger2( const KUrl &server, QObject *parent = 0L );
-    virtual ~APIBlogger2();
+    APIGData( const KUrl &server, QObject *parent = 0L );
+    virtual ~APIGData();
 
     /**
         Returns the API of the inherited object.
@@ -143,8 +143,8 @@ class KBLOG_EXPORT APIBlogger2 : public APIBlog
     virtual void removePosting( const QString &postingId );
 
 private:
-    class APIBlogger2Private;
-    APIBlogger2Private* const d;
+    class APIGDataPrivate;
+    APIGDataPrivate* const d;
 };
 
 }
