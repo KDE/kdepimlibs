@@ -34,6 +34,7 @@ class APIGData::APIGDataPrivate : public QObject {
     QString mCreatePostingsPath;
     QString mFetchPostingsPath;
   public:
+    QString mFetchPostingId;//HACK
     APIGData* parent;
     APIGDataPrivate();
     ~APIGDataPrivate();
@@ -42,6 +43,7 @@ class APIGData::APIGDataPrivate : public QObject {
     QString getCreatePostingPath(){ return mCreatePostingsPath; }
   public slots:
     void slotLoadingPostingsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
+    void slotFetchingPostingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
     void slotLoadingBlogsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
 };
 

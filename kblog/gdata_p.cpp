@@ -32,7 +32,6 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QRegExp>
-#include <QDomDocument>
 #include <QtGui/QWidget>
 
 using namespace KBlog;
@@ -48,40 +47,23 @@ APIGData::APIGDataPrivate::~APIGDataPrivate(){
 void APIGData::APIGDataPrivate::getIntrospection(){
   // fetch the introspection file synchronously and parse it
   QByteArray data;
-  QString parsingError;
-  int parsingErrorLine;
-  QDomDocument homepage;
-  bool mCreatePostingsPathSuccess = false;
-  bool mFetchPostingsPathSuccess = false;
   KIO::Job *job = KIO::get( parent->url(), false, false ); 
-  if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &parent->url() ) 
-        && homepage.setContent( data, false, &parsingError, &parsingErrorLine ) ) {
-    kDebug() << "Fetched Homepage data: " << data.data() << endl;
-/*    QDomNodeList links = homepage.elementsByTagName( QString( "link" ) );
-    for( int i=0; i<links.count(); i++){
-      QDomNamedNodeMap attributes = links.item(i).toElement().attributes();
-      if( attributes.namedItem( "rel" ).nodeValue() == QString( "service.post" ) ) {
-        mCreatePostingsPath = attributes.namedItem( "href" ).nodeValue();
-        kDebug() << "CreatePostingsPath: " << mCreatePostingsPath << endl;
-        mCreatePostingsPathSuccess = true;
-      }
-      else if( attributes.namedItem( "type" ).nodeValue() == QString( "application/atom+xml" ) 
-                    && attributes.namedItem( "rel" ).nodeValue() == QString( "alternate" )) {
-        kDebug() << "FetchPostingsPath: " << mFetchPostingsPath << endl;
-        mFetchPostingsPath = attributes.namedItem( "href" ).nodeValue();
-        mFetchPostingsPath = true;
-      }
+  if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &parent->url() ) ) {
+    kDebug() << "Fetched Homepage data." << endl;
+    QRegExp pp( "<link.+rel=\"service.post\".+href=\"(.+)\".*/>" );
+    if( pp.indexIn( data )!=-1 )
+       mCreatePostingsPath = pp.cap(1);
+    else
+       emit parent->error( Other, i18n( "Could not regexp the service.post path." ) );
+    kDebug(5323)<<"QRegExp pp( \"<link.+rel=\"service.post\".+href=\"(.+)\".*/>\" ) matches "<< pp.cap(1) << endl;
+  }
 
-    }*/
-//     if( !mCreatePostingsPathSuccess || !mFetchPostingsPathSuccess )
-      // TODO emit a fitting error
-  }
-  else{
-    kDebug() << "Could not get and parse the dom document." << endl;
-    kDebug() << "Fetched unparsable data: " << data.data() << endl;
-    kDebug() << "Parsing error at line " << QString( "%1" ).arg( parsingErrorLine ) << ": " << parsingError << endl;
-    // TODO emit a fitting error
-  }
+  QRegExp bid( "<link.+blogID=(\\d+).*/>" );
+  if( bid.indexIn( data )!=-1 )
+     parent->setBlogId( bid.cap(1) );
+  else
+    emit parent->error( Other, i18n( "Could not regexp the blogID path." ) );
+  kDebug(5323)<<"QRegExp bid( '<link.+blogID=(\\d+).*/>' matches "<< bid.cap(1) << endl;
 }
 
 void APIGData::APIGDataPrivate::slotLoadingBlogsComplete( Syndication::Loader* loader, 
@@ -95,8 +77,11 @@ void APIGData::APIGDataPrivate::slotLoadingBlogsComplete( Syndication::Loader* l
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for( ; it!=end; ++it ){
       QRegExp rx( "blog-(\\d+)" );
-      rx.indexIn( ( *it )->id() );
-      QString id = rx.cap(1);
+      QString id;
+      if( rx.indexIn( ( *it )->id() )!=-1 )
+         id = rx.cap(1);
+      else
+         emit parent->error( Other, i18n( "Could not regexp the blog id path." ) );
       kDebug(5323)<<"QRegExp rx( 'blog-(\\d+)' matches "<< rx.cap(1) << endl;
       QString name = ( *it )->title();
 
@@ -120,20 +105,54 @@ void APIGData::APIGDataPrivate::slotLoadingPostingsComplete( Syndication::Loader
   for( ; it!=end; ++it ){
       BlogPosting posting;
       QRegExp rx( "post-(\\d+)" );
-      rx.indexIn( ( *it )->id() );
+      if( rx.indexIn( ( *it )->id() )!=-1 )
+         posting.setPostingId( rx.cap(1) );
+      else
+         emit parent->error( Other, i18n( "Could not regexp the blog id path." ) );
       kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
-      posting.setPostingId( rx.cap(1) );
       posting.setTitle( ( *it )->title() );
       posting.setContent( ( *it )->content() );
       // FIXME: assuming UTC for now
       posting.setCreationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ), KDateTime::Spec::UTC() ) ); 
       posting.setModificationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
 
-      emit parent->listedPosting( posting );
-      kDebug(5323) << "Emitting listedPosting( postingId=" << posting.postingId() << "); " << endl;
+      emit parent->fetchedPosting( posting );
+      kDebug(5323) << "Emitting fetchedPosting( postingId=" << posting.postingId() << " ); " << endl;
   }
   kDebug(5323) << "Emitting listPostingsFinished()" << endl;
   emit parent->listPostingsFinished();
+}
+
+void APIGData::APIGDataPrivate::slotFetchingPostingComplete( Syndication::Loader* loader, 
+                                          Syndication::FeedPtr feed, Syndication::ErrorCode status ){
+  if (status != Syndication::Success){
+    emit parent->error( AtomAPI, i18n( "Could not get postings." ) );
+    return;
+  } 
+  QList<Syndication::ItemPtr> items = feed->items();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
+  for( ; it!=end; ++it ){
+      BlogPosting posting;
+      QRegExp rx( "post-(\\d+)" );
+      if( rx.indexIn( ( *it )->id() )!=-1 && rx.cap(1)==mFetchPostingId ){
+         posting.setPostingId( rx.cap(1) );
+         posting.setTitle( ( *it )->title() );
+         posting.setContent( ( *it )->content() );
+         // FIXME: assuming UTC for now
+         posting.setCreationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
+                                                          KDateTime::Spec::UTC() ) ); 
+         posting.setModificationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ), 
+                                                               KDateTime::Spec::UTC() ) );
+         mFetchPostingId=QString(); //HACK
+      }
+      else
+         emit parent->error( Other, i18n( "Could not regexp the blog id path." ) );
+      kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
+
+      emit parent->listedPosting( posting );
+      kDebug(5323) << "Emitting listedPosting( postingId=" << posting.postingId() << " ); " << endl;
+  }
 }
 
 #include "gdata_p.moc"

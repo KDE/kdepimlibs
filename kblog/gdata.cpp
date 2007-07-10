@@ -1,8 +1,7 @@
 /*
     This file is part of the kblog library.
 
-    Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-    Copyright (c) 2006 Christian Weilbach <christian@whiletaker.homeip.net>
+    Copyright (c) 2007 Christian Weilbach <christian@whiletaker.homeip.net>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -86,7 +85,12 @@ void APIGData::listCategories(){
 
 void APIGData::fetchPosting( const QString &postingId )
 {
-// TODO clone listPostings() code
+  kDebug() << "fetchPosting()" << endl;
+  Syndication::Loader *loader = Syndication::Loader::create();
+  d->mFetchPostingId = postingId; //HACK
+  connect(loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
+          d, SLOT(slotFetchingPostingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)));
+  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() + QString( "/posts/default" ) );
 }
 
 void APIGData::modifyPosting( KBlog::BlogPosting* posting )
@@ -98,7 +102,7 @@ void APIGData::modifyPosting( KBlog::BlogPosting* posting )
 
 void APIGData::createPosting( KBlog::BlogPosting* posting )
 {
-
+//FIXME
 }
 
 void APIGData::createMedia( KBlog::BlogMedia* media ){
