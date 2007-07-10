@@ -61,7 +61,7 @@
 #  define iswspace        isspace
 # endif
 #else
-# ifndef HAVE_ISWSPACE
+# if !defined HAVE_ISWSPACE && !defined WIN32
 #  define iswspace        isspace
 # endif
 #endif
