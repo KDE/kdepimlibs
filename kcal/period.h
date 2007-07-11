@@ -81,7 +81,7 @@ class KCAL_EXPORT Period
     ~Period();
 
     /**
-      Returns true if this period is smaller than the @p other one.
+      Returns true if this period starts earlier than the @p other one.
 
       @param other is the other period to compare.
     */
