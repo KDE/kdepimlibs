@@ -211,4 +211,23 @@ void Resource::dump() const
   kDebug(5650) << "  IsOpen: " << ( d->mIsOpen ? "yes" : "no" ) << endl;
 }
 
+bool Resource::doOpen()
+{
+  return true;
+}
+
+void Resource::doClose()
+{
+}
+
+QObject *PluginFactoryBase::createObject( QObject *parent,
+                                          const char *className,
+                                          const QStringList &args )
+{
+  Q_UNUSED( parent );
+  Q_UNUSED( className );
+  Q_UNUSED( args );
+  return 0;
+}
+
 #include "resource.moc"

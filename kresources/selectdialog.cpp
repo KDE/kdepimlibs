@@ -34,8 +34,15 @@
 
 using namespace KRES;
 
+class SelectDialog::SelectDialogPrivate
+{
+  public:
+    QListWidget *mResourceId;
+    QMap<int, Resource*> mResourceMap;
+};
+
 SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent )
-  : KDialog( parent )
+  : KDialog( parent ), d( new SelectDialogPrivate )
 {
   setModal(true);
   setCaption( i18n( "Resource Selection" ) );
@@ -54,8 +61,8 @@ SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent )
   groupBox->setLayout( grid );
   groupBox->setTitle( i18n( "Resources" ) );
 
-  mResourceId = new QListWidget( groupBox );
-  grid->addWidget( mResourceId, 0, 0 );
+  d->mResourceId = new QListWidget( groupBox );
+  grid->addWidget( d->mResourceId, 0, 0 );
 
   mainLayout->addWidget( groupBox );
 
@@ -66,21 +73,26 @@ SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent )
   for ( int i = 0; i < list.count(); ++i ) {
     Resource *resource = list.at( i );
     if ( resource && !resource->readOnly() ) {
-      mResourceMap.insert( counter, resource );
-      mResourceId->addItem( resource->resourceName() );
+      d->mResourceMap.insert( counter, resource );
+      d->mResourceId->addItem( resource->resourceName() );
       counter++;
     }
   }
 
-  mResourceId->setCurrentRow( 0 );
-  connect( mResourceId, SIGNAL( itemActivated(QListWidgetItem*)),
+  d->mResourceId->setCurrentRow( 0 );
+  connect( d->mResourceId, SIGNAL( itemActivated(QListWidgetItem*)),
            SLOT(accept()) );
+}
+
+SelectDialog::~SelectDialog()
+{
+  delete d;
 }
 
 Resource *SelectDialog::resource()
 {
-  if ( mResourceId->currentRow() != -1 ) {
-    return mResourceMap[ mResourceId->currentRow() ];
+  if ( d->mResourceId->currentRow() != -1 ) {
+    return d->mResourceMap[ d->mResourceId->currentRow() ];
   } else {
     return 0;
   }

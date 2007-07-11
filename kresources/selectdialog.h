@@ -66,20 +66,24 @@ class KRESOURCES_EXPORT SelectDialog : KDialog
     explicit SelectDialog( QList<Resource *> list, QWidget *parent = 0 );
 
     /**
+     * Destructor.
+     */
+    ~SelectDialog();
+
+    /**
      * Returns selected resource.
      */
     Resource *resource();
 
     /**
-     * Opens a dialog showing the available resources and returns the resource the
-     * user has selected. Returns 0, if the dialog was canceled.
+     * Opens a dialog showing the available resources and returns the resource
+     * the user has selected. Returns 0, if the dialog was canceled.
      */
     static Resource *getResource( QList<Resource *> list, QWidget *parent = 0 );
 
   private:
-    QListWidget *mResourceId;
-
-    QMap<int, Resource*> mResourceMap;
+    class SelectDialogPrivate;
+    SelectDialogPrivate *const d;
 };
 
 }

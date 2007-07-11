@@ -19,11 +19,12 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qtest_kde.h>
-#include "kresources/idmapper.h"
-
 #include "idmappertest.h"
 #include "idmappertest.moc"
+
+#include "kresources/idmapper.h"
+
+#include <qtest_kde.h>
 
 QTEST_KDEMAIN( IdMapperTest, NoGUI )
 

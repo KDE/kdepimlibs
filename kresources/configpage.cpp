@@ -58,7 +58,11 @@
 
 namespace KRES {
 
-ResourcePageInfo::ResourcePageInfo()
+class ResourcePageInfo::Private
+{
+};
+
+ResourcePageInfo::ResourcePageInfo() : d( new KRES::ResourcePageInfo::Private )
 {
   mManager = 0;
   mConfig = 0;
@@ -70,6 +74,7 @@ ResourcePageInfo::~ResourcePageInfo()
   mManager = 0;
   //delete mConfig;
   mConfig = 0;
+  delete d;
 }
 
 class ConfigViewItem : public QTreeWidgetItem

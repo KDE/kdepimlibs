@@ -53,6 +53,10 @@ class KRESOURCES_EXPORT ResourcePageInfo : public KShared
     ~ResourcePageInfo();
     Manager<Resource> *mManager;
     KConfig *mConfig;
+
+  private:
+    class Private;
+    Private *const d;
 };
 
 class Resource;

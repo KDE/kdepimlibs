@@ -93,13 +93,6 @@ class KRESOURCES_EXPORT Resource : public QObject
     explicit Resource( const KConfigGroup &group );
 
     /**
-     * Constructor. Construct resource from config.
-     * @param config Configuration to read persistence information from.
-     *               If config is 0, create object using default settings.
-     */
-//    explicit KDE_DEPRECATED Resource( const KConfig *config );
-
-    /**
      * Destructor.
      */
     virtual ~Resource();
@@ -206,17 +199,17 @@ class KRESOURCES_EXPORT Resource : public QObject
      *
      * The result of this call can be accessed later by isOpen()
      */
-    virtual bool doOpen() { return true; }
+    virtual bool doOpen();
 
     /**
      * Close this resource. Pre-condition: resource is open.
      * Post-condition: resource is closed.
      */
-    virtual void doClose() {}
+    virtual void doClose();
 
   private:
     class ResourcePrivate;
-    ResourcePrivate* const d;
+    ResourcePrivate *const d;
 };
 
 class KRESOURCES_EXPORT PluginFactoryBase : public KLibFactory
@@ -228,11 +221,8 @@ class KRESOURCES_EXPORT PluginFactoryBase : public KLibFactory
     virtual ConfigWidget *configWidget( QWidget *parent ) = 0;
 
   protected:
-    virtual QObject* createObject( QObject *, const char *,
-                                   const QStringList & )
-    {
-      return 0;
-    }
+    virtual QObject *createObject( QObject *parent, const char *className,
+                                   const QStringList &args );
 };
 
 template<class TR,class TC>

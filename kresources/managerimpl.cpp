@@ -37,17 +37,38 @@
 
 using namespace KRES;
 
-ManagerImpl::ManagerImpl( ManagerNotifier *notifier, const QString &family )
-  : mNotifier( notifier ),
-    mFamily( family ), mConfig( 0 ), mStdConfig( 0 ), mStandard( 0 ),
-    mFactory( 0 ), mConfigRead( false )
+class ManagerImpl::ManagerImplPrivate
 {
-  new KResourcesManagerAdaptor(this);
+  public:
+    ManagerNotifier *mNotifier;
+    QString mFamily;
+    KConfig *mConfig;
+    KConfig *mStdConfig;
+    Resource *mStandard;
+    Factory *mFactory;
+    Resource::List mResources;
+    QString mId;
+    bool mConfigRead;
+
+};
+
+ManagerImpl::ManagerImpl( ManagerNotifier *notifier, const QString &family )
+  : d( new ManagerImplPrivate )
+{
+  d->mNotifier = notifier;
+  d->mFamily = family;
+  d->mConfig = 0;
+  d->mStdConfig = 0;
+  d->mStandard = 0;
+  d->mFactory = 0;
+  d->mConfigRead = false;
+
+  new KResourcesManagerAdaptor( this );
   const QString dBusPath = QLatin1String( "/ManagerIface_" ) + family;
   QDBusConnection::sessionBus().registerObject( dBusPath, this );
   kDebug(5650) << "ManagerImpl::ManagerImpl()" << endl;
 
-  mId = KRandom::randomString( 8 );
+  d->mId = KRandom::randomString( 8 );
 
   // Register with D-Bus
   QDBusConnection::sessionBus().registerService( "org.kde.KResourcesManager" );
@@ -67,35 +88,36 @@ ManagerImpl::~ManagerImpl()
 {
   kDebug(5650) << "ManagerImpl::~ManagerImpl()" << endl;
 
-  qDeleteAll(mResources);
-  delete mStdConfig;
+  qDeleteAll(d->mResources);
+  delete d->mStdConfig;
+  delete d;
 }
 
 void ManagerImpl::createStandardConfig()
 {
-  if ( !mStdConfig ) {
-    QString file = defaultConfigFile( mFamily );
-    mStdConfig = new KConfig( file );
+  if ( !d->mStdConfig ) {
+    QString file = defaultConfigFile( d->mFamily );
+    d->mStdConfig = new KConfig( file );
   }
 
-  mConfig = mStdConfig;
+  d->mConfig = d->mStdConfig;
 }
 
 void ManagerImpl::readConfig( KConfig *cfg )
 {
   kDebug(5650) << "ManagerImpl::readConfig()" << endl;
 
-  delete mFactory;
-  mFactory = Factory::self( mFamily );
+  delete d->mFactory;
+  d->mFactory = Factory::self( d->mFamily );
 
   if ( !cfg ) {
     createStandardConfig();
   } else {
-    mConfig = cfg;
+    d->mConfig = cfg;
   }
 
-  mStandard = 0;
-  KConfigGroup group = mConfig->group( "General" );
+  d->mStandard = 0;
+  KConfigGroup group = d->mConfig->group( "General" );
 
   QStringList keys = group.readEntry( "ResourceKeys", QStringList() );
   keys += group.readEntry( "PassiveResourceKeys", QStringList() );
@@ -106,7 +128,7 @@ void ManagerImpl::readConfig( KConfig *cfg )
     readResourceConfig( *it, false );
   }
 
-  mConfigRead = true;
+  d->mConfigRead = true;
 }
 
 void ManagerImpl::writeConfig( KConfig *cfg )
@@ -116,7 +138,7 @@ void ManagerImpl::writeConfig( KConfig *cfg )
   if ( !cfg ) {
     createStandardConfig();
   } else {
-    mConfig = cfg;
+    d->mConfig = cfg;
   }
 
   QStringList activeKeys;
@@ -124,7 +146,7 @@ void ManagerImpl::writeConfig( KConfig *cfg )
 
   // First write all keys, collect active and passive keys on the way
   Resource::List::Iterator it;
-  for ( it = mResources.begin(); it != mResources.end(); ++it ) {
+  for ( it = d->mResources.begin(); it != d->mResources.end(); ++it ) {
     writeResourceConfig( *it, false );
 
     QString key = (*it)->identifier();
@@ -138,11 +160,11 @@ void ManagerImpl::writeConfig( KConfig *cfg )
   // And then the general group
 
   kDebug(5650) << "Saving general info" << endl;
-  KConfigGroup group = mConfig->group( "General" );
+  KConfigGroup group = d->mConfig->group( "General" );
   group.writeEntry( "ResourceKeys", activeKeys );
   group.writeEntry( "PassiveResourceKeys", passiveKeys );
-  if ( mStandard ) {
-    group.writeEntry( "Standard", mStandard->identifier() );
+  if ( d->mStandard ) {
+    group.writeEntry( "Standard", d->mStandard->identifier() );
   } else {
     group.writeEntry( "Standard", "" );
   }
@@ -155,29 +177,29 @@ void ManagerImpl::add( Resource *resource )
 {
   resource->setActive( true );
 
-  if ( mResources.isEmpty() ) {
-    mStandard = resource;
+  if ( d->mResources.isEmpty() ) {
+    d->mStandard = resource;
   }
 
-  mResources.append( resource );
+  d->mResources.append( resource );
 
-  if ( mConfigRead ) {
+  if ( d->mConfigRead ) {
     writeResourceConfig( resource, true );
   }
 
-  signalKResourceAdded( mId, resource->identifier() );
+  signalKResourceAdded( d->mId, resource->identifier() );
 }
 
 void ManagerImpl::remove( Resource *resource )
 {
-  if ( mStandard == resource ) {
-    mStandard = 0;
+  if ( d->mStandard == resource ) {
+    d->mStandard = 0;
   }
   removeResource( resource );
 
-  mResources.removeAll( resource );
+  d->mResources.removeAll( resource );
 
-  signalKResourceDeleted( mId, resource->identifier() );
+  signalKResourceDeleted( d->mId, resource->identifier() );
 
   delete resource;
 
@@ -188,7 +210,7 @@ void ManagerImpl::change( Resource *resource )
 {
   writeResourceConfig( resource, true );
 
-  signalKResourceModified( mId, resource->identifier() );
+  signalKResourceModified( d->mId, resource->identifier() );
 }
 
 void ManagerImpl::setActive( Resource *resource, bool active )
@@ -200,12 +222,12 @@ void ManagerImpl::setActive( Resource *resource, bool active )
 
 Resource *ManagerImpl::standardResource()
 {
-  return mStandard;
+  return d->mStandard;
 }
 
 void ManagerImpl::setStandardResource( Resource *resource )
 {
-  mStandard = resource;
+  d->mStandard = resource;
 }
 
 // DCOP asynchronous functions
@@ -213,7 +235,7 @@ void ManagerImpl::setStandardResource( Resource *resource )
 void ManagerImpl::dbusKResourceAdded( const QString &managerId,
                                       const QString &resourceId )
 {
-  if ( managerId == mId ) {
+  if ( managerId == d->mId ) {
     kDebug(5650) << "Ignore D-Bus notification to myself" << endl;
     return;
   }
@@ -223,25 +245,25 @@ void ManagerImpl::dbusKResourceAdded( const QString &managerId,
     kDebug(5650) << "This resource is already known to me." << endl;
   }
 
-  if ( !mConfig ) {
+  if ( !d->mConfig ) {
     createStandardConfig();
   }
 
-  mConfig->reparseConfiguration();
+  d->mConfig->reparseConfiguration();
   Resource *resource = readResourceConfig( resourceId, true );
 
   if ( resource ) {
-    mNotifier->notifyResourceAdded( resource );
+    d->mNotifier->notifyResourceAdded( resource );
   } else {
     kError() << "Received D-Bus: resource added for unknown resource "
-              << resourceId << endl;
+             << resourceId << endl;
   }
 }
 
 void ManagerImpl::dbusKResourceModified( const QString &managerId,
                                          const QString &resourceId )
 {
-  if ( managerId == mId ) {
+  if ( managerId == d->mId ) {
     kDebug(5650) << "Ignore D-Bus notification to myself" << endl;
     return;
   }
@@ -249,17 +271,17 @@ void ManagerImpl::dbusKResourceModified( const QString &managerId,
 
   Resource *resource = getResource( resourceId );
   if ( resource ) {
-    mNotifier->notifyResourceModified( resource );
+    d->mNotifier->notifyResourceModified( resource );
   } else {
     kError() << "Received D-Bus: resource modified for unknown resource "
-              << resourceId << endl;
+             << resourceId << endl;
   }
 }
 
 void ManagerImpl::dbusKResourceDeleted( const QString& managerId,
                                         const QString& resourceId )
 {
-  if ( managerId == mId ) {
+  if ( managerId == d->mId ) {
     kDebug(5650) << "Ignore D-Bus notification to myself" << endl;
     return;
   }
@@ -267,17 +289,17 @@ void ManagerImpl::dbusKResourceDeleted( const QString& managerId,
 
   Resource *resource = getResource( resourceId );
   if ( resource ) {
-    mNotifier->notifyResourceDeleted( resource );
+    d->mNotifier->notifyResourceDeleted( resource );
 
     kDebug(5650) << "Removing item from mResources" << endl;
     // Now delete item
-    if ( mStandard == resource ) {
-      mStandard = 0;
+    if ( d->mStandard == resource ) {
+      d->mStandard = 0;
     }
-    mResources.removeAll( resource );
+    d->mResources.removeAll( resource );
   } else {
     kError() << "Received D-Bus: resource deleted for unknown resource "
-              << resourceId << endl;
+             << resourceId << endl;
   }
 }
 
@@ -286,7 +308,7 @@ QStringList ManagerImpl::resourceNames()
   QStringList result;
 
   Resource::List::ConstIterator it;
-  for ( it = mResources.begin(); it != mResources.end(); ++it ) {
+  for ( it = d->mResources.begin(); it != d->mResources.end(); ++it ) {
     result.append( (*it)->resourceName() );
   }
   return result;
@@ -294,21 +316,21 @@ QStringList ManagerImpl::resourceNames()
 
 Resource::List *ManagerImpl::resourceList()
 {
-  return &mResources;
+  return &d->mResources;
 }
 
 QList<Resource *> ManagerImpl::resources()
 {
-  return QList<Resource *>( mResources );
+  return QList<Resource *>( d->mResources );
 }
 
 QList<Resource *> ManagerImpl::resources( bool active )
 {
   QList<Resource *> result;
 
-  for ( int i = 0; i < mResources.size(); ++i ) {
-    if ( mResources.at(i)->isActive() == active ) {
-      result.append( mResources.at(i) );
+  for ( int i = 0; i < d->mResources.size(); ++i ) {
+    if ( d->mResources.at(i)->isActive() == active ) {
+      result.append( d->mResources.at(i) );
     }
   }
   return result;
@@ -319,17 +341,17 @@ Resource *ManagerImpl::readResourceConfig( const QString &identifier,
 {
   kDebug(5650) << "ManagerImpl::readResourceConfig() " << identifier << endl;
 
-  if ( !mFactory ) {
+  if ( !d->mFactory ) {
     kError(5650) << "ManagerImpl::readResourceConfig: mFactory is 0. "
                  << "Did the app forget to call readConfig?" << endl;
     return 0;
   }
 
-  KConfigGroup group = mConfig->group( "Resource_" + identifier );
+  KConfigGroup group = d->mConfig->group( "Resource_" + identifier );
 
   QString type = group.readEntry( "ResourceType" );
   QString name = group.readEntry( "ResourceName" );
-  Resource *resource = mFactory->resource( type, group );
+  Resource *resource = d->mFactory->resource( type, group );
   if ( !resource ) {
     kDebug(5650) << "Failed to create resource with id " << identifier << endl;
     return 0;
@@ -339,18 +361,18 @@ Resource *ManagerImpl::readResourceConfig( const QString &identifier,
     resource->setIdentifier( identifier );
   }
 
-  group = mConfig->group( "General" );
+  group = d->mConfig->group( "General" );
 
   QString standardKey = group.readEntry( "Standard" );
   if ( standardKey == identifier ) {
-    mStandard = resource;
+    d->mStandard = resource;
   }
 
   if ( checkActive ) {
     QStringList activeKeys = group.readEntry( "ResourceKeys", QStringList() );
     resource->setActive( activeKeys.contains( identifier ) );
   }
-  mResources.append( resource );
+  d->mResources.append( resource );
 
   return resource;
 }
@@ -361,19 +383,19 @@ void ManagerImpl::writeResourceConfig( Resource *resource, bool checkActive )
 
   kDebug(5650) << "Saving resource " << key << endl;
 
-  if ( !mConfig ) {
+  if ( !d->mConfig ) {
     createStandardConfig();
   }
 
-  KConfigGroup group( mConfig, "Resource_" + key );
+  KConfigGroup group( d->mConfig, "Resource_" + key );
   resource->writeConfig( group );
 
-  group = mConfig->group( "General" );
+  group = d->mConfig->group( "General" );
   QString standardKey = group.readEntry( "Standard" );
 
-  if ( resource == mStandard  && standardKey != key ) {
+  if ( resource == d->mStandard  && standardKey != key ) {
     group.writeEntry( "Standard", resource->identifier() );
-  } else if ( resource != mStandard && standardKey == key ) {
+  } else if ( resource != d->mStandard && standardKey == key ) {
     group.writeEntry( "Standard", "" );
   }
 
@@ -401,18 +423,18 @@ void ManagerImpl::writeResourceConfig( Resource *resource, bool checkActive )
     }
   }
 
-  mConfig->sync();
+  d->mConfig->sync();
 }
 
 void ManagerImpl::removeResource( Resource *resource )
 {
   QString key = resource->identifier();
 
-  if ( !mConfig ) {
+  if ( !d->mConfig ) {
     createStandardConfig();
   }
 
-  KConfigGroup group = mConfig->group( "General" );
+  KConfigGroup group = d->mConfig->group( "General" );
   QStringList activeKeys = group.readEntry( "ResourceKeys", QStringList() );
   if ( activeKeys.contains( key ) ) {
     activeKeys.removeAll( key );
@@ -428,14 +450,14 @@ void ManagerImpl::removeResource( Resource *resource )
     group.writeEntry( "Standard", "" );
   }
 
-  mConfig->deleteGroup( "Resource_" + resource->identifier() );
+  d->mConfig->deleteGroup( "Resource_" + resource->identifier() );
   group.sync();
 }
 
 Resource *ManagerImpl::getResource( const QString &identifier )
 {
   Resource::List::ConstIterator it;
-  for ( it = mResources.begin(); it != mResources.end(); ++it ) {
+  for ( it = d->mResources.begin(); it != d->mResources.end(); ++it ) {
     if ( (*it)->identifier() == identifier ) {
       return *it;
     }

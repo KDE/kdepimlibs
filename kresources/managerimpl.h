@@ -94,18 +94,8 @@ class KRESOURCES_EXPORT ManagerImpl : public QObject
     Resource *getResource( Resource *resource );
     Resource *getResource( const QString& identifier );
 
-    ManagerNotifier *mNotifier;
-    QString mFamily;
-    KConfig *mConfig;
-    KConfig *mStdConfig;
-    Resource *mStandard;
-    Factory *mFactory;
-    Resource::List mResources;
-    QString mId;
-    bool mConfigRead;
-
     class ManagerImplPrivate;
-    ManagerImplPrivate *d;
+    ManagerImplPrivate *const d;
 };
 
 }
