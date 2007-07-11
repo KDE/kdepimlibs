@@ -28,7 +28,8 @@
 
 using namespace KBlog;
 
-class APIGData::APIGDataPrivate : public QObject {
+class APIGData::APIGDataPrivate : public QObject
+{
   Q_OBJECT
   private:
     QString mCreatePostingsPath;
@@ -42,9 +43,12 @@ class APIGData::APIGDataPrivate : public QObject {
     QString getFetchPostingsPath(){ return mFetchPostingsPath; }
     QString getCreatePostingPath(){ return mCreatePostingsPath; }
   public slots:
-    void slotLoadingPostingsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
-    void slotFetchingPostingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
-    void slotLoadingBlogsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
+    void slotLoadingPostingsComplete( Syndication::Loader *,
+                                      Syndication::FeedPtr, Syndication::ErrorCode );
+    void slotFetchingPostingComplete( Syndication::Loader *,
+                                      Syndication::FeedPtr, Syndication::ErrorCode );
+    void slotLoadingBlogsComplete( Syndication::Loader *,
+                                   Syndication::FeedPtr, Syndication::ErrorCode );
 };
 
 #endif

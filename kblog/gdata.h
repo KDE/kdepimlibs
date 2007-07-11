@@ -21,7 +21,7 @@
 #ifndef API_GDATA_H
 #define API_GDATA_H
 
-#include <blog.h>
+#include <kblog/blog.h>
 
 #include <QtCore/QString>
 #include <QtCore/QVariant>
@@ -43,8 +43,11 @@
 namespace KBlog {
 /**
   @brief
-  A class that can be used for access to GData API blogs. Almost every blog server
-  supports GData API . Compared to Blogger API 1.0 it is a superset of functions added to the its definition. GData API is much more functional, but has some drawbacks, e.g. security when compared to Blogger API 2.0 which is based on GData API and quite new.
+  A class that can be used for access to GData API blogs. Almost every blog
+  server supports GData API. Compared to Blogger API 1.0 it is a superset of
+  functions added to the its definition. GData API is much more functional,
+  but has some drawbacks, e.g. security when compared to Blogger API 2.0 which
+  is based on GData API and quite new.
 
   @code
   APIBlog* myblog = new APIGData( "http://example.com/xmlrpc/gateway.php" );
@@ -63,87 +66,84 @@ class KBLOG_EXPORT APIGData : public APIBlog
   Q_OBJECT
   public:
     /**
-         Create an object for GData API
-
-         @param server is the url for the xmlrpc gateway.
+      Create an object for GData API
+      @param server is the url for the xmlrpc gateway.
     */
     APIGData( const KUrl &server, QObject *parent = 0L );
     virtual ~APIGData();
 
     /**
-        Returns the API of the inherited object.
+      Returns the API of the inherited object.
     */
     QString interfaceName() const;
     void setUrl( const KUrl &server );
 
     /**
-        Get information about the user from the blog. Note: This is not supported on the server side.
-	@see void userInfoRetrieved( const QString &nickname, const QString &userid, const QString &email )
+      Get information about the user from the blog.
+      Note: This is not supported on the server side.
+      @see void userInfoRetrieved( const QString &, const QString &, const QString & )
     */
     virtual void userInfo();
 
     /**
-        List the blogs available for this authentication on the server. Note: This is not supported on the server side.
-	@see void blogInfoRetrieved( const QString &id, const QString &name )
+      List the blogs available for this authentication on the server.
+      Note: This is not supported on the server side.
+      @see void blogInfoRetrieved( const QString &, const QString & )
     */
     virtual void listBlogs();
 
     /**
-        List recent postings on the server..
-	@see     void listedPosting( KBlog::BlogPosting &posting )
-        @see     void fetchedPosting( KBlog::BlogPosting &posting )
-        @see     void listPostingsFinished()
+      List recent postings on the server..
+      @see     void listedPosting( KBlog::BlogPosting & )
+      @see     void fetchedPosting( KBlog::BlogPosting & )
+      @see     void listPostingsFinished()
     */
     virtual void listPostings();
 
     /**
-        List the categories of the blog. 
-	@see  void categoryInfoRetrieved( const QString &name, const QString &description )
-        @see  void listCategoriesFinished()
+      List the categories of the blog.
+      @see  void categoryInfoRetrieved( const QString &, const QString & )
+      @see  void listCategoriesFinished()
     */
     virtual void listCategories();
 
     /**
-        Fetch the Posting with postingId.
-        @param postingId is the id of the posting on the server.
-
-        @see  void fetchedPosting( KBlog::BlogPosting &posting )
+      Fetch the Posting with postingId.
+      @param postingId is the id of the posting on the server.
+      @see  void fetchedPosting( KBlog::BlogPosting & )
     */
     virtual void fetchPosting( const QString &postingId );
 
     /**
-        Modify a posting on server.
+      Modify a posting on server.
 
-        @param posting is used to send the modified posting including the correct postingId from it to the server.
+      @param posting is used to send the modified posting including the correct
+      postingId from it to the server.
     */
     virtual void modifyPosting( KBlog::BlogPosting *posting );
 
     /**
-        Create a new posting on server.
-
-        @param posting is send to the server.
+      Create a new posting on server.
+      @param posting is send to the server.
     */
     virtual void createPosting( KBlog::BlogPosting *posting );
 
     /**
-        Create a new media object, e.g. picture, on server.
-
-        @param media is send to the server.
+      Create a new media object, e.g. picture, on server.
+      @param media is send to the server.
     */
     virtual void createMedia( KBlog::BlogMedia *media );
 
     /**
-        Remove a posting from the server.
-
-        @param postingId is the id of the posting to remove.
-
-        @see void removePosting( KBlog::BlogPosting *posting )
+      Remove a posting from the server.
+      @param postingId is the id of the posting to remove.
+      @see void removePosting( KBlog::BlogPosting *posting )
     */
     virtual void removePosting( const QString &postingId );
 
 private:
     class APIGDataPrivate;
-    APIGDataPrivate* const d;
+    APIGDataPrivate *const d;
 };
 
 }

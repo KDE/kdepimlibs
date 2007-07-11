@@ -30,9 +30,8 @@
 
 using namespace KBlog;
 
-
-APIGData::APIGData( const KUrl &server, QObject *parent ) : 
-                      APIBlog( server, parent ), d( new APIGDataPrivate )
+APIGData::APIGData( const KUrl &server, QObject *parent )
+  : APIBlog( server, parent ), d( new APIGDataPrivate )
 {
   d->parent = this;
   setUrl( server );
@@ -64,8 +63,8 @@ void APIGData::listBlogs()
 {
   kDebug() << "listBlogs()" << endl;
   Syndication::Loader *loader = Syndication::Loader::create();
-  connect(loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
-          d, SLOT(slotLoadingBlogsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)));
+  connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
+           d, SLOT(slotLoadingBlogsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
   loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + username() + QString( "/blogs" ) );
 }
 
@@ -73,12 +72,13 @@ void APIGData::listPostings()
 {
   kDebug() << "listPostings()" << endl;
   Syndication::Loader *loader = Syndication::Loader::create();
-  connect(loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
-          d, SLOT(slotLoadingPostingsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)));
+  connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
+           d, SLOT(slotLoadingPostingsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
   loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() + QString( "/posts/default" ) );
 }
 
-void APIGData::listCategories(){
+void APIGData::listCategories()
+{
   kDebug() << "Fetching categories is not available in GData API." << endl;
   emit error( NotSupported, i18n( "Fetching categories is not available in GData API." ) );
 }
@@ -88,8 +88,8 @@ void APIGData::fetchPosting( const QString &postingId )
   kDebug() << "fetchPosting()" << endl;
   Syndication::Loader *loader = Syndication::Loader::create();
   d->mFetchPostingId = postingId; //HACK
-  connect(loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
-          d, SLOT(slotFetchingPostingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)));
+  connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
+           d, SLOT(slotFetchingPostingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)));
   loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() + QString( "/posts/default" ) );
 }
 
@@ -105,7 +105,8 @@ void APIGData::createPosting( KBlog::BlogPosting* posting )
 //FIXME
 }
 
-void APIGData::createMedia( KBlog::BlogMedia* media ){
+void APIGData::createMedia( KBlog::BlogMedia* media )
+{
   kDebug() << "Creating media is not available in GData API." << endl;
   emit error( NotSupported, i18n( "Creating media is not available in GData API." ) );
 }
