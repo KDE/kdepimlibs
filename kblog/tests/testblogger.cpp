@@ -73,7 +73,7 @@ void TestBloggerWarnings::error( const errorType &type, const QString &errStr )
 
 QTEST_KDEMAIN( TestBlogger, NoGUI )
 
-  void TestBlogger::testValidity()
+void TestBlogger::testValidity()
 {
   APIBlogger *b = new APIBlogger( KUrl( "http://wrong.url.org/somegateway" ) );
   QVERIFY( b->url() == KUrl( "http://wrong.url.org/somegateway" ) );

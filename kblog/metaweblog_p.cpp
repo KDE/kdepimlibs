@@ -67,11 +67,10 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
        result[0].type() != QVariant::List ) {
     // include fix for not metaweblog standard compatible apis with
     // array of structs instead of struct of structs, e.g. wordpress
-    kDebug(5323) << "Could not list categories out of the result from the server."
-              << endl;
+    kDebug(5323) << "Could not list categories out of the result from the server." << endl;
     emit parent->error( ParsingError,
-                        i18n("Could not list categories out of the result "
-                             "from the server.") );
+                        i18n( "Could not list categories out of the result "
+                              "from the server." ) );
   } else {
     if ( result[0].type() == QVariant::Map ) {
       const QMap<QString, QVariant> categories = result[0].toMap();
@@ -84,10 +83,10 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
         const QString name( *it );
         const QMap<QString, QVariant> category = categories[*it].toMap();
         const QString description( category["description"].toString() );
-        if (  !name.isEmpty() ) {
+        if ( !name.isEmpty() ) {
           emit parent->categoryInfoRetrieved( name, description );
           kDebug(5323) << "Emitting categorieInfoRetrieved( name=" << name
-                   << " description=" << description << " ); " << endl;
+                       << " description=" << description << " ); " << endl;
         }
       }
     }
@@ -102,10 +101,10 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
         const QMap<QString, QVariant> category = ( *it ).toMap();
         const QString description( category["description"].toString() );
         const QString name( category["categoryName"].toString() );
-        if (  !name.isEmpty() ) {
+        if ( !name.isEmpty() ) {
           emit parent->categoryInfoRetrieved( name, description );
           kDebug(5323) << "Emitting categorieInfoRetrieved( name=" << name
-                   << " description=" << description << " ); " << endl;
+                       << " description=" << description << " ); " << endl;
         }
       }
       kDebug(5323) << "Emitting listCategoriesFinished()" << endl;
@@ -123,10 +122,10 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::List ) {
     kDebug(5323) << "Could not fetch list of postings out of the "
-              << "result from the server." << endl;
+                 << "result from the server." << endl;
     emit parent->error( ParsingError,
-                        i18n("Could not fetch list of postings out of the "
-                             "result from the server.") );
+                        i18n( "Could not fetch list of postings out of the "
+                              "result from the server." ) );
   } else {
     const QList<QVariant> postReceived = result[0].toList();
     QList<QVariant>::ConstIterator it = postReceived.begin();
@@ -137,11 +136,11 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
       if ( readPostingFromMap( &posting, postInfo ) ) {
         kDebug(5323) << "Emitting listedPosting( posting.postingId()="
-                 << posting.postingId() << "); " << endl;
+                     << posting.postingId() << "); " << endl;
         emit parent->listedPosting( posting ); // KUrl( posting.postingId() ) );
       } else {
         kDebug(5323) << "d->readPostingFromMap failed! " << endl;
-        emit parent->error( ParsingError, i18n("Could not read posting.") );
+        emit parent->error( ParsingError, i18n( "Could not read posting." ) );
       }
     }
   } //FIXME should we emit here? (see below, too)
@@ -160,11 +159,10 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotFetchPosting( const QList<QVariant
   // TODO: Time zone for the dateCreated!
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::Map ) {
-    kDebug(5323) << "Could not fetch posting out of the result from the server."
-              << endl;
+    kDebug(5323) << "Could not fetch posting out of the result from the server." << endl;
     emit parent->error( ParsingError,
-                        i18n("Could not fetch posting out of the "
-                             "result from the server.") );
+                        i18n( "Could not fetch posting out of the "
+                              "result from the server." ) );
   } else {
 //     const QList<QVariant> postReceived = result[0].toList();
 //     QList<QVariant>::ConstIterator it = postReceived.begin();
@@ -172,11 +170,11 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotFetchPosting( const QList<QVariant
     const QMap<QString, QVariant> postInfo = result[0].toMap();
     if ( readPostingFromMap( &posting, postInfo ) ) {
       kDebug(5323) << "Emitting fetchedPosting( posting.postingId()="
-               << posting.postingId() << "); " << endl;
+                   << posting.postingId() << "); " << endl;
       emit parent->fetchedPosting( posting ); // KUrl( posting.posingtId() ) );
     } else {
       kDebug(5323) << "d->readPostingFromMap failed! " << endl;
-      emit parent->error( ParsingError, i18n("Could not read posting.") );
+      emit parent->error( ParsingError, i18n( "Could not read posting." ) );
     }
   }
 }
@@ -194,11 +192,10 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreatePosting( const QList<QVarian
   if ( result[0].type() != QVariant::String ) {
     kDebug(5323) << "Could not read the postingId, not a string." << endl;
     emit parent->error( ParsingError,
-                        i18n("Could not read the postingId, not a string.") );
+                        i18n( "Could not read the postingId, not a string." ) );
   } else {
     emit parent->createdPosting( result[0].toString() );
-    kDebug(5323) << "emitting createdPosting( " << result[0].toString() << " )"
-             << endl;
+    kDebug(5323) << "emitting createdPosting( " << result[0].toString() << " )" << endl;
   }
 }
 
@@ -215,11 +212,10 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotModifyPosting( const QList<QVarian
   if ( result[0].type() != QVariant::Bool ) {
     kDebug(5323) << "Could not read the result, not a boolean." << endl;
     emit parent->error( ParsingError,
-                        i18n("Could not read the result, not a boolean.") );
+                        i18n( "Could not read the result, not a boolean." ) );
   } else {
     emit parent->modifiedPosting( result[0].toBool() );
-    kDebug(5323) << "emitting modifiedPosting( " << result[0].toBool() << " )"
-             << endl;
+    kDebug(5323) << "emitting modifiedPosting( " << result[0].toBool() << " )" << endl;
   }
 }
 
@@ -233,13 +229,13 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreateMedia( const QList<QVariant>
   if ( result[0].type() != 8 ) {
     kDebug(5323) << "Could not read the result, not a map." << endl;
     emit parent->error( ParsingError,
-                        i18n("Could not read the result, not a map.") );
+                        i18n( "Could not read the result, not a map." ) );
   } else {
     const QMap<QString, QVariant> resultStruct = result[0].toMap();
     const QString url = resultStruct["url"].toString();
     kDebug(5323) << "APIMetaWeblog::slotCreateMedia url=" << url << endl;
 
-    if (  !url.isEmpty() ) {
+    if ( !url.isEmpty() ) {
       emit parent->createdMedia( url );
       kDebug(5323) << "Emitting createdMedia( url=" << url  << " ); " << endl;
     }
@@ -257,14 +253,14 @@ void APIMetaWeblog::APIMetaWeblogPrivate::faultSlot( int number,
 }
 
 bool APIMetaWeblog::APIMetaWeblogPrivate::readPostingFromMap( BlogPosting *post,
-                                                              const QMap<QString, QVariant> &postInfo )
+                                                        const QMap<QString, QVariant> &postInfo )
 {
   // FIXME: integrate error handling
   if ( !post ) {
     return false;
   }
   QStringList mapkeys = postInfo.keys();
-  kDebug(5323) << endl << "Keys: " << mapkeys.join(", ") << endl << endl;
+  kDebug(5323) << endl << "Keys: " << mapkeys.join( ", " ) << endl << endl;
 
   KDateTime dt =
     KDateTime( postInfo["dateCreated"].toDateTime(), KDateTime::UTC );

@@ -65,7 +65,8 @@ void APIGData::listBlogs()
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
            d, SLOT(slotLoadingBlogsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + username() + QString( "/blogs" ) );
+  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + username() +
+                    QString( "/blogs" ) );
 }
 
 void APIGData::listPostings()
@@ -74,7 +75,8 @@ void APIGData::listPostings()
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
            d, SLOT(slotLoadingPostingsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() + QString( "/posts/default" ) );
+  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() +
+                    QString( "/posts/default" ) );
 }
 
 void APIGData::listCategories()
@@ -90,7 +92,8 @@ void APIGData::fetchPosting( const QString &postingId )
   d->mFetchPostingId = postingId; //HACK
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
            d, SLOT(slotFetchingPostingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)));
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() + QString( "/posts/default" ) );
+  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() +
+                    QString( "/posts/default" ) );
 }
 
 void APIGData::modifyPosting( KBlog::BlogPosting* posting )

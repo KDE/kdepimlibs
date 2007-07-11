@@ -60,8 +60,8 @@ void APIMetaWeblog::userInfo()
   kDebug(5323) << "Fetching user information is not available in MetaWeblog API."
            << endl;
   emit error( NotSupported,
-              i18n("Fetching user information is not available in "
-                   "MetaWeblog API.") );
+              i18n( "Fetching user information is not available in "
+                    "MetaWeblog API." ) );
 }
 
 void APIMetaWeblog::listBlogs()
@@ -69,8 +69,8 @@ void APIMetaWeblog::listBlogs()
   kDebug(5323) << "Fetching user's blogs is not available in MetaWeblog API."
            << endl;
   emit error( NotSupported,
-              i18n("Fetching user's blogs is not available in "
-                   "MetaWeblog API.") );
+              i18n( "Fetching user's blogs is not available in "
+                    "MetaWeblog API." ) );
 }
 
 void APIMetaWeblog::listPostings()
@@ -108,7 +108,7 @@ void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
     kDebug(5323) << "APIMetaWeblog::modifyPosting: posting null pointer" << endl;
-    emit error ( Other, i18n("Posting is a null pointer.") );
+    emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
   kDebug(5323) << "Uploading Posting with postId " << posting->postingId() << endl;
@@ -133,7 +133,7 @@ void APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
     kDebug(5323) << "APIMetaWeblog::createPosting: posting null pointer" << endl;
-    emit error ( Other, i18n("Posting is a null pointer.") );
+    emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
   kDebug(5323) << "Creating new Posting with blogId " << blogId() << endl;

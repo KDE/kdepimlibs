@@ -73,9 +73,10 @@ void TestGDataWarnings::error( const errorType &type, const QString &errStr )
 
 QTEST_KDEMAIN( TestGData, NoGUI )
 
-  void TestGData::testValidity()
+void TestGData::testValidity()
 {
-  APIGData *b = new APIGData( KUrl(  "http://blogger2test.blogspot.com" ) ); // we do not test the setUrl() function additionally here
+  // we do not test the setUrl() function additionally here
+  APIGData *b = new APIGData( KUrl( "http://blogger2test.blogspot.com" ) );
   b->setUsername( "11235141638164909615" );
   b->setPassword( "Wer ist Hans?" );
   b->setBlogId( "4662848212819772532" );
