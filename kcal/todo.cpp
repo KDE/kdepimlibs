@@ -42,35 +42,39 @@ using namespace KCal;
 class KCal::Todo::Private
 {
   public:
-    bool mHasStartDate;      // true if the to-do has a starting date
+    Private()
+      : mPercentComplete( 0 ),
+        mHasDueDate( false ),
+        mHasStartDate( false ),
+        mHasCompletedDate( false )
+    {}
+    Private( const Private &other )
+      : mDtDue( other.mDtDue ),
+        mDtRecurrence( other.mDtRecurrence ),
+        mCompleted( other.mCompleted ),
+        mPercentComplete( other.mPercentComplete ),
+        mHasDueDate( other.mHasDueDate ),
+        mHasStartDate( other.mHasStartDate ),
+        mHasCompletedDate( other.mHasCompletedDate )
+    {}
     KDateTime mDtDue;        // to-do due date (if there is one)
                              // ALSO the first occurrence of a recurring to-do
-    bool mHasDueDate;        // true if the to-do has a due date
     KDateTime mDtRecurrence; // next occurrence (for recurring to-dos)
-
-    int mPercentComplete;    // to-do percent complete [0,100]
-    bool mHasCompletedDate;  // true if the to-do has a completion date
     KDateTime mCompleted;    // to-do completion date (if it has been completed)
+    int mPercentComplete;    // to-do percent complete [0,100]
+    bool mHasDueDate;        // true if the to-do has a due date
+    bool mHasStartDate;      // true if the to-do has a starting date
+    bool mHasCompletedDate;  // true if the to-do has a completion date
 };
 //@endcond
 
 Todo::Todo() : d( new KCal::Todo::Private )
 {
-  d->mHasDueDate = false;
-  d->mHasStartDate = false;
-  d->mHasCompletedDate = false;
-  d->mPercentComplete = 0;
 }
 
-Todo::Todo( const Todo &t ) : Incidence( t ), d( new KCal::Todo::Private )
+Todo::Todo( const Todo &t )
+  : Incidence( t ), d( new KCal::Todo::Private( *t.d) )
 {
-  d->mDtDue = t.d->mDtDue;
-  d->mHasDueDate = t.d->mHasDueDate;
-  d->mHasStartDate = t.d->mHasStartDate;
-  d->mCompleted = t.d->mCompleted;
-  d->mHasCompletedDate = t.d->mHasCompletedDate;
-  d->mPercentComplete = t.d->mPercentComplete;
-  d->mDtRecurrence = t.d->mDtRecurrence;
 }
 
 Todo::~Todo()

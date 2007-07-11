@@ -46,24 +46,30 @@ using namespace KCal;
 class KCal::Alarm::Private
 {
   public:
-    Private() {}
+    Private()
+      : mType( Alarm::Invalid ),
+        mAlarmSnoozeTime( 5 ),
+        mAlarmRepeatCount( 0 ),
+        mEndOffset( false ),
+        mHasTime( false ),
+        mAlarmEnabled( false )
+    {}
     Private( const Private &other )
-    {
-      mParent = other.mParent;
-      mType = other.mType;
-      mDescription = other.mDescription;
-      mFile = other.mFile;
-      mMailSubject = other.mMailSubject;
-      mMailAttachFiles = other.mMailAttachFiles;
-      mMailAddresses = other.mMailAddresses;
-      mAlarmEnabled = other.mAlarmEnabled;
-      mAlarmTime = other.mAlarmTime;
-      mAlarmSnoozeTime = other.mAlarmSnoozeTime;
-      mAlarmRepeatCount = other.mAlarmRepeatCount;
-      mOffset = other.mOffset;
-      mEndOffset = other.mEndOffset;
-      mHasTime = other.mHasTime;
-    }
+      : mParent( other.mParent ),
+        mType( other.mType ),
+        mDescription( other.mDescription ),
+        mFile( other.mFile ),
+        mMailSubject( other.mMailSubject ),
+        mMailAttachFiles( other.mMailAttachFiles ),
+        mMailAddresses( other.mMailAddresses ),
+        mAlarmTime( other.mAlarmTime ),
+        mAlarmSnoozeTime( other.mAlarmSnoozeTime ),
+        mAlarmRepeatCount( other.mAlarmRepeatCount ),
+        mOffset( other.mOffset ),
+        mEndOffset( other.mEndOffset ),
+        mHasTime( other.mHasTime ),
+        mAlarmEnabled( other.mAlarmEnabled )
+    {}
 
     Incidence *mParent;  // the incidence which this alarm belongs to
 
@@ -74,7 +80,6 @@ class KCal::Alarm::Private
     QStringList mMailAttachFiles; // filenames to attach to email
     QList<Person> mMailAddresses; // who to mail for reminder
 
-    bool mAlarmEnabled;
     KDateTime mAlarmTime;// time at which to trigger the alarm
     int mAlarmSnoozeTime;// number of minutes after alarm to
                          // snooze before ringing again
@@ -85,21 +90,13 @@ class KCal::Alarm::Private
                          // to trigger the alarm
     bool mEndOffset;     // if true, mOffset relates to DTEND, not DTSTART
     bool mHasTime;       // use mAlarmTime, not mOffset
+    bool mAlarmEnabled;
 };
 //@endcond
 
 Alarm::Alarm( Incidence *parent ) : d( new KCal::Alarm::Private )
 {
   d->mParent = parent;
-  d->mType = Invalid;
-  d->mDescription = "";
-  d->mFile = "";
-  d->mMailSubject = "";
-  d->mAlarmSnoozeTime = 5;
-  d->mAlarmRepeatCount = 0;
-  d->mEndOffset = false;
-  d->mHasTime = false;
-  d->mAlarmEnabled = false;
 }
 
 Alarm::Alarm( const Alarm &other ) :

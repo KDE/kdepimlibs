@@ -68,10 +68,9 @@ Person::Person( const QString &name, const QString &email )
   d->mEmail = email;
 }
 
-Person::Person( const Person &person ) : d( new KCal::Person::Private )
+Person::Person( const Person &person )
+  : d( new KCal::Person::Private( *person.d ) )
 {
-    d->mName = person.d->mName;
-    d->mEmail = person.d->mEmail;
 }
 
 Person::~Person()
@@ -87,8 +86,7 @@ bool KCal::Person::operator==( const Person &person )
 
 Person &KCal::Person::operator=( const Person &person )
 {
-  d->mName = person.d->mName;
-  d->mEmail = person.d->mEmail;
+  *d = *person.d;
   return *this;
 }
 

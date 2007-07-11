@@ -37,6 +37,12 @@ using namespace KCal;
 class KCal::Period::Private
 {
   public:
+    Private() : mHasDuration( false ) {}
+    Private( const KDateTime &start, const KDateTime &end, bool hasDuration )
+      : mStart( start ),
+        mEnd( end ),
+        mHasDuration( hasDuration )
+    {}
     KDateTime mStart;  // period starting date/time
     KDateTime mEnd;    // period ending date/time
     bool mHasDuration; // does period have a duration?
@@ -45,30 +51,21 @@ class KCal::Period::Private
 
 Period::Period() : d( new KCal::Period::Private )
 {
-  d->mHasDuration = false;
 }
 
 Period::Period( const KDateTime &start, const KDateTime &end )
-  : d( new KCal::Period::Private )
+  : d( new KCal::Period::Private( start, end, false ) )
 {
-  d->mStart = start;
-  d->mEnd = end;
-  d->mHasDuration = false;
 }
 
 Period::Period( const KDateTime &start, const Duration &duration )
-  : d( new KCal::Period::Private )
+  : d( new KCal::Period::Private( start, duration.end( start ), true ) )
 {
-  d->mStart = start;
-  d->mEnd = duration.end( start );
-  d->mHasDuration = true;
 }
 
-Period::Period( const Period &period ) : d( new KCal::Period::Private )
+Period::Period( const Period &period )
+  : d( new KCal::Period::Private( *period.d ) )
 {
-    d->mStart = period.d->mStart;
-    d->mEnd = period.d->mEnd;
-    d->mHasDuration = period.d->mHasDuration;
 }
 
 Period::~Period()
@@ -90,9 +87,7 @@ bool Period::operator==( const Period &other ) const
 
 Period &Period::operator=( const Period &other )
 {
-  d->mStart = other.d->mStart;
-  d->mEnd = other.d->mEnd;
-  d->mHasDuration = other.d->mHasDuration;
+  *d = *other.d;
   return *this;
 }
 

@@ -43,47 +43,45 @@ using namespace KCal;
 class KCal::Attachment::Private
 {
   public:
+    Private( const QString &data, const QString &mime, bool binary )
+      : mMimeType( mime ),
+        mData( data ),
+        mBinary( binary ),
+        mShowInline( false )
+    {}
+    Private( const Private &other )
+      : mMimeType( other.mMimeType ),
+        mData( other.mData ),
+        mLabel( other.mLabel ),
+        mBinary( other.mBinary ),
+        mLocal( other.mLocal ),
+        mShowInline( other.mShowInline )
+    {}
     QByteArray mDataCache;
     uint mSize;
     QString mMimeType;
     QString mData;
-    bool mBinary;
-    bool mShowInline;
-    bool mLocal;
     QString mLabel;
+    bool mBinary;
+    bool mLocal;
+    bool mShowInline;
 };
 //@endcond
 
 Attachment::Attachment( const Attachment &attachment )
-  : d( new Attachment::Private )
+  : d( new Attachment::Private( *attachment.d ) )
 {
-  d->mMimeType = attachment.d->mMimeType;
-  d->mData = attachment.d->mData;
-  d->mBinary = attachment.d->mBinary;
-  d->mShowInline = attachment.d->mShowInline;
-  d->mLabel = attachment.d->mLabel;
-  d->mLocal = attachment.d->mLocal;
 }
 
 Attachment::Attachment( const QString &uri, const QString &mime )
-  : d( new Attachment::Private )
+  : d( new Attachment::Private( uri, mime, false ) )
 {
-  d->mMimeType = mime;
-  d->mData = uri;
-  d->mBinary = false;
-  d->mShowInline = false;
   d->mLocal = false;
-  d->mLabel.clear();
 }
 
 Attachment::Attachment( const char *base64, const QString &mime )
-  : d( new Attachment::Private )
+  : d( new Attachment::Private( QString::fromUtf8( base64 ), mime, true ) )
 {
-  d->mMimeType = mime;
-  d->mData = QString::fromUtf8( base64 );
-  d->mBinary = true;
-  d->mShowInline = false;
-  d->mLabel.clear();
 }
 
 Attachment::~Attachment()

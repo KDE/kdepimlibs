@@ -47,6 +47,29 @@ using namespace KCal;
 class KCal::IncidenceBase::Private
 {
   public:
+    Private()
+      : mFloats( true ),
+        mHasDuration( false ),
+        mDuration( 0 )
+    {
+        mAttendees.setAutoDelete( true );
+    }
+
+    Private( const Private &other )
+      : mLastModified( other.mLastModified ),
+        mDtStart( other.mDtStart ),
+        mOrganizer( other.mOrganizer ),
+        mUid( other.mUid ),
+        mFloats( other.mFloats ),
+        mHasDuration( other.mHasDuration ),
+        mDuration( other.mDuration )
+        // mComments: should this be copied ??????
+        // mObservers: the copied object is a new one, so it isn't
+        // observed by the observer of the original object.
+    {
+        mAttendees.setAutoDelete( true );
+    }
+
     KDateTime mLastModified;     // incidence last modified date
     KDateTime mDtStart;          // incidence start time
     Person mOrganizer;           // incidence person (owner)
@@ -65,40 +88,19 @@ IncidenceBase::IncidenceBase() : d( new KCal::IncidenceBase::Private )
 {
   mReadOnly = false;
 
-  d->mFloats = true;
-  d->mHasDuration = false;
-  d->mDuration = 0;
-
   setUid( CalFormat::createUniqueId() );
-
-  d->mAttendees.setAutoDelete( true );
 }
 
 IncidenceBase::IncidenceBase( const IncidenceBase &i ) :
-  CustomProperties( i ), d( new KCal::IncidenceBase::Private )
+  CustomProperties( i ), d( new KCal::IncidenceBase::Private( *i.d ) )
 {
   mReadOnly = i.mReadOnly;
 
-  d->mFloats = i.d->mFloats;
-  d->mHasDuration = i.d->mHasDuration;
-  d->mDuration = i.d->mDuration;
-
-  d->mUid = i.d->mUid;
-
-  d->mDtStart = i.d->mDtStart;
-  d->mOrganizer = i.d->mOrganizer;
   Attendee::List attendees = i.attendees();
   Attendee::List::ConstIterator it;
   for ( it = attendees.begin(); it != attendees.end(); ++it ) {
     d->mAttendees.append( new Attendee( *(*it) ) );
   }
-  d->mLastModified = i.d->mLastModified;
-
-  // The copied object is a new one, so it isn't observed by the observer
-  // of the original object.
-  d->mObservers.clear();
-
-  d->mAttendees.setAutoDelete( true );
 }
 
 IncidenceBase::~IncidenceBase()
