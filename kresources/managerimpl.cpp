@@ -43,20 +43,23 @@ ManagerImpl::ManagerImpl( ManagerNotifier *notifier, const QString &family )
     mFactory( 0 ), mConfigRead( false )
 {
   new KResourcesManagerAdaptor(this);
-  const QString dBusPath = QLatin1String("/ManagerIface_") + family;
-  QDBusConnection::sessionBus().registerObject(dBusPath, this);
+  const QString dBusPath = QLatin1String( "/ManagerIface_" ) + family;
+  QDBusConnection::sessionBus().registerObject( dBusPath, this );
   kDebug(5650) << "ManagerImpl::ManagerImpl()" << endl;
 
   mId = KRandom::randomString( 8 );
 
   // Register with D-Bus
-  QDBusConnection::sessionBus().registerService("org.kde.KResourcesManager");
+  QDBusConnection::sessionBus().registerService( "org.kde.KResourcesManager" );
 
-  QDBusConnection::sessionBus().connect("", dBusPath, "org.kde.KResourcesManager", "signalKResourceAdded",
+  QDBusConnection::sessionBus().connect( "", dBusPath,
+                                         "org.kde.KResourcesManager", "signalKResourceAdded",
       this, SLOT(dbusKResourceAdded(QString,QString)));
-  QDBusConnection::sessionBus().connect("", dBusPath, "org.kde.KResourcesManager", "signalKResourceModified",
+  QDBusConnection::sessionBus().connect( "", dBusPath,
+                                         "org.kde.KResourcesManager", "signalKResourceModified",
       this, SLOT(dbusKResourceModified(QString,QString)));
-  QDBusConnection::sessionBus().connect("", dBusPath, "org.kde.KResourcesManager", "signalKResourceDeleted",
+  QDBusConnection::sessionBus().connect( "", dBusPath,
+                                         "org.kde.KResourcesManager", "signalKResourceDeleted",
       this, SLOT(dbusKResourceDeleted(QString,QString)));
 }
 
@@ -125,10 +128,11 @@ void ManagerImpl::writeConfig( KConfig *cfg )
     writeResourceConfig( *it, false );
 
     QString key = (*it)->identifier();
-    if( (*it)->isActive() )
+    if ( (*it)->isActive() ) {
       activeKeys.append( key );
-    else
+    } else {
       passiveKeys.append( key );
+    }
   }
 
   // And then the general group
@@ -137,10 +141,11 @@ void ManagerImpl::writeConfig( KConfig *cfg )
   KConfigGroup group = mConfig->group( "General" );
   group.writeEntry( "ResourceKeys", activeKeys );
   group.writeEntry( "PassiveResourceKeys", passiveKeys );
-  if ( mStandard )
+  if ( mStandard ) {
     group.writeEntry( "Standard", mStandard->identifier() );
-  else
+  } else {
     group.writeEntry( "Standard", "" );
+  }
 
   group.sync();
   kDebug(5650) << "ManagerImpl::save() finished" << endl;
@@ -156,15 +161,18 @@ void ManagerImpl::add( Resource *resource )
 
   mResources.append( resource );
 
-  if ( mConfigRead )
+  if ( mConfigRead ) {
     writeResourceConfig( resource, true );
+  }
 
   signalKResourceAdded( mId, resource->identifier() );
 }
 
 void ManagerImpl::remove( Resource *resource )
 {
-  if ( mStandard == resource ) mStandard = 0;
+  if ( mStandard == resource ) {
+    mStandard = 0;
+  }
   removeResource( resource );
 
   mResources.removeAll( resource );
@@ -202,8 +210,8 @@ void ManagerImpl::setStandardResource( Resource *resource )
 
 // DCOP asynchronous functions
 
-void ManagerImpl::dbusKResourceAdded( const QString& managerId,
-                                      const QString& resourceId )
+void ManagerImpl::dbusKResourceAdded( const QString &managerId,
+                                      const QString &resourceId )
 {
   if ( managerId == mId ) {
     kDebug(5650) << "Ignore D-Bus notification to myself" << endl;
@@ -215,20 +223,23 @@ void ManagerImpl::dbusKResourceAdded( const QString& managerId,
     kDebug(5650) << "This resource is already known to me." << endl;
   }
 
-  if ( !mConfig ) createStandardConfig();
+  if ( !mConfig ) {
+    createStandardConfig();
+  }
 
   mConfig->reparseConfiguration();
   Resource *resource = readResourceConfig( resourceId, true );
 
   if ( resource ) {
     mNotifier->notifyResourceAdded( resource );
-  } else
+  } else {
     kError() << "Received D-Bus: resource added for unknown resource "
               << resourceId << endl;
+  }
 }
 
-void ManagerImpl::dbusKResourceModified( const QString& managerId,
-                                         const QString& resourceId )
+void ManagerImpl::dbusKResourceModified( const QString &managerId,
+                                         const QString &resourceId )
 {
   if ( managerId == mId ) {
     kDebug(5650) << "Ignore D-Bus notification to myself" << endl;
@@ -239,9 +250,10 @@ void ManagerImpl::dbusKResourceModified( const QString& managerId,
   Resource *resource = getResource( resourceId );
   if ( resource ) {
     mNotifier->notifyResourceModified( resource );
-  } else
+  } else {
     kError() << "Received D-Bus: resource modified for unknown resource "
               << resourceId << endl;
+  }
 }
 
 void ManagerImpl::dbusKResourceDeleted( const QString& managerId,
@@ -259,12 +271,14 @@ void ManagerImpl::dbusKResourceDeleted( const QString& managerId,
 
     kDebug(5650) << "Removing item from mResources" << endl;
     // Now delete item
-    if ( mStandard == resource )
+    if ( mStandard == resource ) {
       mStandard = 0;
+    }
     mResources.removeAll( resource );
-  } else
+  } else {
     kError() << "Received D-Bus: resource deleted for unknown resource "
               << resourceId << endl;
+  }
 }
 
 QStringList ManagerImpl::resourceNames()
@@ -292,8 +306,8 @@ QList<Resource *> ManagerImpl::resources( bool active )
 {
   QList<Resource *> result;
 
-  for(int i = 0; i < mResources.size(); ++i) {
-    if( mResources.at(i)->isActive() == active) {
+  for ( int i = 0; i < mResources.size(); ++i ) {
+    if ( mResources.at(i)->isActive() == active ) {
       result.append( mResources.at(i) );
     }
   }
@@ -306,7 +320,8 @@ Resource *ManagerImpl::readResourceConfig( const QString &identifier,
   kDebug(5650) << "ManagerImpl::readResourceConfig() " << identifier << endl;
 
   if ( !mFactory ) {
-    kError(5650) << "ManagerImpl::readResourceConfig: mFactory is 0. Did the app forget to call readConfig?" << endl;
+    kError(5650) << "ManagerImpl::readResourceConfig: mFactory is 0. "
+                 << "Did the app forget to call readConfig?" << endl;
     return 0;
   }
 
@@ -320,8 +335,9 @@ Resource *ManagerImpl::readResourceConfig( const QString &identifier,
     return 0;
   }
 
-  if ( resource->identifier().isEmpty() )
+  if ( resource->identifier().isEmpty() ) {
     resource->setIdentifier( identifier );
+  }
 
   group = mConfig->group( "General" );
 
@@ -345,7 +361,9 @@ void ManagerImpl::writeResourceConfig( Resource *resource, bool checkActive )
 
   kDebug(5650) << "Saving resource " << key << endl;
 
-  if ( !mConfig ) createStandardConfig();
+  if ( !mConfig ) {
+    createStandardConfig();
+  }
 
   KConfigGroup group( mConfig, "Resource_" + key );
   resource->writeConfig( group );
@@ -353,10 +371,11 @@ void ManagerImpl::writeResourceConfig( Resource *resource, bool checkActive )
   group = mConfig->group( "General" );
   QString standardKey = group.readEntry( "Standard" );
 
-  if ( resource == mStandard  && standardKey != key )
+  if ( resource == mStandard  && standardKey != key ) {
     group.writeEntry( "Standard", resource->identifier() );
-  else if ( resource != mStandard && standardKey == key )
+  } else if ( resource != mStandard && standardKey == key ) {
     group.writeEntry( "Standard", "" );
+  }
 
   if ( checkActive ) {
     QStringList activeKeys = group.readEntry( "ResourceKeys", QStringList() );
@@ -389,7 +408,9 @@ void ManagerImpl::removeResource( Resource *resource )
 {
   QString key = resource->identifier();
 
-  if ( !mConfig ) createStandardConfig();
+  if ( !mConfig ) {
+    createStandardConfig();
+  }
 
   KConfigGroup group = mConfig->group( "General" );
   QStringList activeKeys = group.readEntry( "ResourceKeys", QStringList() );
@@ -415,8 +436,9 @@ Resource *ManagerImpl::getResource( const QString &identifier )
 {
   Resource::List::ConstIterator it;
   for ( it = mResources.begin(); it != mResources.end(); ++it ) {
-    if ( (*it)->identifier() == identifier )
+    if ( (*it)->identifier() == identifier ) {
       return *it;
+    }
   }
   return 0;
 }
@@ -424,7 +446,7 @@ Resource *ManagerImpl::getResource( const QString &identifier )
 QString ManagerImpl::defaultConfigFile( const QString &family )
 {
   return KStandardDirs::locateLocal( "config",
-                      QString( "kresources/%1/stdrc" ).arg( family ) );
+                                     QString( "kresources/%1/stdrc" ).arg( family ) );
 }
 
 #include "managerimpl.moc"

@@ -33,10 +33,9 @@
 #include "kresources_export.h"
 #include <kdialog.h>
 
-
 namespace KRES {
   class Resource;
-  
+
 /**
   @brief
   A dialog for configuring a resource.
@@ -49,7 +48,7 @@ class KRESOURCES_EXPORT ConfigDialog : public KDialog
   public:
     // Resource=0: create new resource
     ConfigDialog( QWidget *parent, const QString &resourceFamily,
-	          Resource *resource );
+                  Resource *resource );
 
     virtual ~ConfigDialog();
     void setInEditMode( bool value );

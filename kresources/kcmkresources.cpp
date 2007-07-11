@@ -47,7 +47,7 @@ KCMKResources::KCMKResources( QWidget *parent, const QStringList &l )
                    0, KLocalizedString(), KAboutData::License_GPL,
                    ki18n( "(c) 2003 Tobias Koenig" ) );
 
-  about->addAuthor( ki18n("Tobias Koenig"), KLocalizedString(), "tokoe@kde.org" );
+  about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
   setAboutData( about );
 }
 

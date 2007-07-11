@@ -93,12 +93,34 @@ class Manager : private ManagerNotifier
         Iterator( const Iterator &it ) { mIt = it.mIt; }
 
         T *operator*() { return static_cast<T *>( *mIt ); }
-        Iterator &operator++() { mIt++; return *this; }
-        Iterator &operator++( int ) { mIt++; return *this; }
-        Iterator &operator--() { mIt--; return *this; }
-        Iterator &operator--( int ) { mIt--; return *this; }
-        bool operator==( const Iterator &it ) const { return mIt == it.mIt; }
-        bool operator!=( const Iterator &it ) const { return mIt != it.mIt; }
+        Iterator &operator++()
+        {
+          mIt++;
+          return *this;
+        }
+        Iterator &operator++( int )
+        {
+          mIt++;
+          return *this;
+        }
+        Iterator &operator--()
+        {
+          mIt--;
+          return *this;
+        }
+        Iterator &operator--( int )
+        {
+          mIt--;
+          return *this;
+        }
+        bool operator==( const Iterator &it ) const
+        {
+          return mIt == it.mIt;
+        }
+        bool operator!=( const Iterator &it ) const
+        {
+          return mIt != it.mIt;
+        }
 
       private:
         Resource::List::Iterator mIt;
@@ -168,7 +190,9 @@ class Manager : private ManagerNotifier
         */
         bool checkActive()
         {
-          if ( !mList || mIt == mList->end() ) return false;
+          if ( !mList || mIt == mList->end() ) {
+            return false;
+          }
           return !(*mIt)->isActive();
         }
 
@@ -186,7 +210,9 @@ class Manager : private ManagerNotifier
       it.mIt = mImpl->resourceList()->begin();
       it.mList = mImpl->resourceList();
       if ( it.mIt != mImpl->resourceList()->end() ) {
-        if ( !(*it)->isActive() ) it++;
+        if ( !(*it)->isActive() ) {
+          it++;
+        }
       }
       return it;
     }
@@ -249,7 +275,9 @@ class Manager : private ManagerNotifier
     */
     void add( Resource *resource )
     {
-      if ( resource ) mImpl->add( resource );
+      if ( resource ) {
+        mImpl->add( resource );
+      }
     }
 
     /**
@@ -257,7 +285,9 @@ class Manager : private ManagerNotifier
     */
     void remove( Resource *resource )
     {
-      if ( resource ) mImpl->remove( resource );
+      if ( resource ) {
+        mImpl->remove( resource );
+      }
     }
 
     /**
@@ -282,7 +312,9 @@ class Manager : private ManagerNotifier
     */
     void setStandardResource( T *resource )
     {
-      if ( resource ) mImpl->setStandardResource( resource );
+      if ( resource ) {
+        mImpl->setStandardResource( resource );
+      }
     }
 
     /**
@@ -290,7 +322,9 @@ class Manager : private ManagerNotifier
     */
     void setActive( Resource *resource, bool active )
     {
-      if ( resource ) mImpl->setActive( resource, active );
+      if ( resource ) {
+        mImpl->setActive( resource, active );
+      }
     }
 
     /**
@@ -333,11 +367,11 @@ class Manager : private ManagerNotifier
       QStringList typeDescs;
       QStringList types = mFactory->typeNames();
 
-      for ( QStringList::ConstIterator it = types.begin(); it != types.end();
-            ++it ) {
+      for ( QStringList::ConstIterator it = types.begin(); it != types.end(); ++it ) {
         QString desc = mFactory->typeName( *it );
-        if ( !mFactory->typeDescription( *it ).isEmpty() )
+        if ( !mFactory->typeDescription( *it ).isEmpty() ) {
             desc += QLatin1String( " (" ) + mFactory->typeDescription( *it ) + QLatin1Char( ')' );
+        }
 
         typeDescs.append( desc );
       }
@@ -372,8 +406,9 @@ class Manager : private ManagerNotifier
       kDebug(5650) << "Manager::resourceAdded " << res->resourceName() << endl;
       T *resource = dynamic_cast<T *>( res );
       if ( resource ) {
-        for(int i = 0; i < mObservers.size(); ++i)
+        for ( int i = 0; i < mObservers.size(); ++i ) {
           mObservers.at(i)->resourceAdded( resource );
+        }
       }
     }
 
@@ -386,8 +421,9 @@ class Manager : private ManagerNotifier
                     << endl;
       T *resource = dynamic_cast<T *>( res );
       if ( resource ) {
-        for(int i = 0; i < mObservers.size(); ++i)
+        for ( int i = 0; i < mObservers.size(); ++i ) {
           mObservers.at(i)->resourceAdded( resource );
+        }
       }
     }
 
@@ -400,9 +436,8 @@ class Manager : private ManagerNotifier
                     << endl;
       T *resource = dynamic_cast<T *>( res );
       if ( resource ) {
-        for(int i = 0; i < mObservers.size(); ++i)
-          mObservers.at(i)->resourceDeleted( resource ); {
-          kDebug(5650) << "Notifying a observer to Manager..." << endl;
+        for ( int i = 0; i < mObservers.size(); ++i ) {
+          mObservers.at(i)->resourceDeleted( resource );
         }
       }
     }

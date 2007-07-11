@@ -57,7 +57,7 @@ class Factory::Private
 };
 
 typedef QMap<QString, Factory*> factoryMap;
-K_GLOBAL_STATIC(factoryMap, mSelves)
+K_GLOBAL_STATIC( factoryMap, mSelves )
 
 Factory *Factory::self( const QString &resourceFamily )
 {
@@ -80,9 +80,9 @@ Factory::Factory( const QString &resourceFamily ) :
 {
   d->mResourceFamily = resourceFamily;
   const KService::List plugins =
-    KServiceTypeTrader::self()->query( "KResources/Plugin",
-                                       QString( "[X-KDE-ResourceFamily] == '%1'" )
-                                       .arg( d->mResourceFamily ) );
+    KServiceTypeTrader::self()->query(
+      "KResources/Plugin",
+      QString( "[X-KDE-ResourceFamily] == '%1'" ).arg( d->mResourceFamily ) );
 
   KService::List::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {

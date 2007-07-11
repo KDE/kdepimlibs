@@ -40,11 +40,11 @@ SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent )
   setModal(true);
   setCaption( i18n( "Resource Selection" ) );
   resize( 300, 200 );
-  setButtons(Ok|Cancel);
-  setDefaultButton(Ok);
+  setButtons( Ok|Cancel );
+  setDefaultButton( Ok );
 
-  QWidget *widget = new QWidget(this);
-  setMainWidget(widget);
+  QWidget *widget = new QWidget( this );
+  setMainWidget( widget );
 
   QVBoxLayout *mainLayout = new QVBoxLayout( widget );
   mainLayout->setMargin( marginHint() );
@@ -79,10 +79,11 @@ SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent )
 
 Resource *SelectDialog::resource()
 {
-  if ( mResourceId->currentRow() != -1 )
+  if ( mResourceId->currentRow() != -1 ) {
     return mResourceMap[ mResourceId->currentRow() ];
-  else
+  } else {
     return 0;
+  }
 }
 
 Resource *SelectDialog::getResource( QList<Resource *> list, QWidget *parent )
@@ -92,27 +93,33 @@ Resource *SelectDialog::getResource( QList<Resource *> list, QWidget *parent )
     return 0;
   }
 
-  if ( list.count() == 1 ) return list.first();
+  if ( list.count() == 1 ) {
+    return list.first();
+  }
 
-  // the following lines will return a writeable resource if only _one_ writeable
-  // resource exists
+  // the following lines will return a writeable resource if only _one_
+  // writeable resource exists
   Resource *found = 0;
 
-  for(int i=0; i< list.size(); ++i) {
-    if (!list.at(i)->readOnly()) {
-      if (found) {
+  for ( int i=0; i< list.size(); ++i ) {
+    if ( !list.at(i)->readOnly() ) {
+      if ( found ) {
         found = 0;
         break;
       }
-    }
-    else
+    } else {
       found = list.at(i);
+    }
   }
 
-  if ( found )
+  if ( found ) {
     return found;
+  }
 
   SelectDialog dlg( list, parent );
-  if ( dlg.exec() == KDialog::Accepted ) return dlg.resource();
-  else return 0;
+  if ( dlg.exec() == KDialog::Accepted ) {
+    return dlg.resource();
+  } else {
+    return 0;
+  }
 }

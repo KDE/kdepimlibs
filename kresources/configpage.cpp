@@ -162,18 +162,22 @@ ConfigPage::ConfigPage( QWidget *parent )
            this, SLOT( slotEdit() ) );
 
   KDialogButtonBox *buttonBox = new KDialogButtonBox( groupBox, Qt::Vertical );
-  d->mAddButton = buttonBox->addButton( i18n( "&Add..." ), KDialogButtonBox::ActionRole,
+  d->mAddButton = buttonBox->addButton( i18n( "&Add..." ),
+                                        KDialogButtonBox::ActionRole,
                                         this, SLOT(slotAdd()) );
 
-  d->mRemoveButton = buttonBox->addButton( i18n( "&Remove" ), KDialogButtonBox::ActionRole,
+  d->mRemoveButton = buttonBox->addButton( i18n( "&Remove" ),
+                                           KDialogButtonBox::ActionRole,
                                            this, SLOT(slotRemove()) );
   d->mRemoveButton->setEnabled( false );
 
-  d->mEditButton = buttonBox->addButton( i18n( "&Edit..." ), KDialogButtonBox::ActionRole,
+  d->mEditButton = buttonBox->addButton( i18n( "&Edit..." ),
+                                         KDialogButtonBox::ActionRole,
                                          this, SLOT(slotEdit()) );
   d->mEditButton->setEnabled( false );
 
-  d->mStandardButton = buttonBox->addButton( i18n( "&Use as Standard" ), KDialogButtonBox::ActionRole,
+  d->mStandardButton = buttonBox->addButton( i18n( "&Use as Standard" ),
+                                             KDialogButtonBox::ActionRole,
                                              this, SLOT(slotStandard()) );
   d->mStandardButton->setEnabled( false );
 
@@ -361,8 +365,8 @@ void ConfigPage::slotAdd()
   // Create new resource
   Resource *resource = d->mCurrentManager->createResource( type );
   if ( !resource ) {
-    KMessageBox::error( this, i18n("Unable to create resource of type '%1'.",
-                                   type ) );
+    KMessageBox::error(
+      this, i18n( "Unable to create resource of type '%1'.", type ) );
     return;
   }
 
@@ -584,8 +588,9 @@ void ConfigPage::Private::saveResourceSettings( ConfigPage *page )
       ConfigViewItem *configItem = static_cast<ConfigViewItem *>( mListView->topLevelItem( i ) );
       // check if standard resource
       if ( configItem->standard() && !configItem->readOnly() &&
-           configItem->isOn() )
+           configItem->isOn() ) {
         mCurrentManager->setStandardResource( configItem->resource() );
+      }
 
       // check if active or passive resource
       configItem->resource()->setActive( configItem->isOn() );

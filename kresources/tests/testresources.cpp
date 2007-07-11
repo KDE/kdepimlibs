@@ -70,7 +70,7 @@ int main( int argc, char **argv )
 
   kDebug() << "LIST ALL:" << endl;
   Manager<TestResource>::Iterator it;
-  for( it = manager.begin(); it != manager.end(); ++it ) {
+  for ( it = manager.begin(); it != manager.end(); ++it ) {
     (*it)->dump();
   }
 
@@ -79,7 +79,7 @@ int main( int argc, char **argv )
 
   kDebug() << "LIST ACTIVE" << endl;
   Manager<TestResource>::ActiveIterator it2;
-  for( it2 = manager.activeBegin(); it2 != manager.activeEnd(); ++it2 ) {
+  for ( it2 = manager.activeBegin(); it2 != manager.activeEnd(); ++it2 ) {
     (*it2)->dump();
   }
 
@@ -88,14 +88,12 @@ int main( int argc, char **argv )
   resource3->setActive( true );
 
   kDebug() << "LIST ACTIVE" << endl;
-  for( it2 = manager.activeBegin(); it2 != manager.activeEnd(); ++it2 ) {
+  for ( it2 = manager.activeBegin(); it2 != manager.activeEnd(); ++it2 ) {
     (*it2)->dump();
   }
 
   kDebug() << "LIST ALL" << endl;
-  for( it = manager.begin(); it != manager.end(); ++it ) {
+  for ( it = manager.begin(); it != manager.end(); ++it ) {
     (*it)->dump();
   }
-
-
 }

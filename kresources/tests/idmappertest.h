@@ -24,9 +24,9 @@
 
 class IdMapperTest : public QObject
 {
-	Q_OBJECT
-	private Q_SLOTS:
-		void testIdMapper();
+  Q_OBJECT
+  private Q_SLOTS:
+    void testIdMapper();
 };
 
 #endif

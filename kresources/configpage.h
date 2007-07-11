@@ -41,7 +41,6 @@
 
 #include "manager.h"
 
-
 class QTreeWidget;
 class QTreeWidgetItem;
 

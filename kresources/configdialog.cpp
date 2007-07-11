@@ -99,7 +99,7 @@ ConfigDialog::ConfigDialog( QWidget *parent, const QString &resourceFamily,
   resourceLayout->setSpacing( spacingHint() );
   resourceGroupBox->setLayout( resourceLayout );
 
-  resourceGroupBox->setTitle( i18n( "%1 Resource Settings" ,
+  resourceGroupBox->setTitle( i18n( "%1 Resource Settings",
                                     factory->typeName( resource->type() ) ) );
   mainLayout->addWidget( resourceGroupBox );
 

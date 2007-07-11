@@ -19,7 +19,6 @@
     Boston, MA 02110-1301, USA.
 */
 
-
 #include <qtest_kde.h>
 #include "kresources/idmapper.h"
 
@@ -30,8 +29,8 @@ QTEST_KDEMAIN( IdMapperTest, NoGUI )
 
 void IdMapperTest::testIdMapper()
 {
-  KRES::IdMapper mapper( "test.uidmap" ) ;
-  mapper.setIdentifier("testidentifier");
+  KRES::IdMapper mapper( "test.uidmap" );
+  mapper.setIdentifier( "testidentifier" );
 
   mapper.setRemoteId( "foo", "bar" );
   mapper.setRemoteId( "yes", "klar" );

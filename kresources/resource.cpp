@@ -74,13 +74,13 @@ Resource::Resource()
   d->mIsOpen = false;
 
   d->mType = "type";
-  d->mName = i18n("resource");
+  d->mName = i18n( "resource" );
   d->mReadOnly = false;
   d->mActive = true;
   d->mIdentifier = KRandom::randomString( 10 );
 }
 
-Resource::Resource( const KConfigGroup& group )
+Resource::Resource( const KConfigGroup &group )
   : QObject( 0 ), d( new ResourcePrivate )
 {
   d->mOpenCount = 0;
@@ -88,8 +88,8 @@ Resource::Resource( const KConfigGroup& group )
 
   d->mType = group.readEntry( "ResourceType" );
   d->mName = group.readEntry( "ResourceName" );
-  d->mReadOnly = group.readEntry("ResourceIsReadOnly", false);
-  d->mActive = group.readEntry("ResourceIsActive", true);
+  d->mReadOnly = group.readEntry( "ResourceIsReadOnly", false );
+  d->mActive = group.readEntry( "ResourceIsActive", true );
   d->mIdentifier = group.readEntry( "ResourceIdentifier" );
 }
 
@@ -129,7 +129,8 @@ void Resource::close()
   QMutexLocker guard( &(d->mMutex) );
 #endif
   if ( !d->mOpenCount ) {
-    kDebug(5650) << "ERROR: Resource " << resourceName() << " closed more times than previously opened" << endl;
+    kDebug(5650) << "ERROR: Resource " << resourceName()
+                 << " closed more times than previously opened" << endl;
     return;
   }
   d->mOpenCount--;
@@ -138,7 +139,8 @@ void Resource::close()
     doClose();
     d->mIsOpen = false;
   } else {
-    kDebug(5650) << "Not yet closing resource " << resourceName() << ", open count = " << d->mOpenCount << endl;
+    kDebug(5650) << "Not yet closing resource " << resourceName()
+                 << ", open count = " << d->mOpenCount << endl;
   }
 }
 
