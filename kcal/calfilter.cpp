@@ -47,29 +47,29 @@ using namespace KCal;
 class KCal::CalFilter::Private
 {
   public:
+    Private()
+      : mCriteria( 0 ),
+        mCompletedTimeSpan( 0 ),
+        mEnabled( true )
+    {}
     QString mName;   // filter name
-    bool mEnabled;
-    int mCriteria;
     QStringList mCategoryList;
     QStringList mEmailList;
+    int mCriteria;
     int mCompletedTimeSpan;
+    bool mEnabled;
 
 };
 //@endcond
 
 CalFilter::CalFilter() : d( new KCal::CalFilter::Private )
 {
-  d->mEnabled = true;
-  d->mCriteria = 0;
-  d->mCompletedTimeSpan = 0;
 }
 
-CalFilter::CalFilter( const QString &name ) : d( new KCal::CalFilter::Private )
+CalFilter::CalFilter( const QString &name )
+  : d( new KCal::CalFilter::Private )
 {
   d->mName = name;
-  d->mEnabled = true;
-  d->mCriteria = 0;
-  d->mCompletedTimeSpan = 0;
 }
 
 CalFilter::~CalFilter()

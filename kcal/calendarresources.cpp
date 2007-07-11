@@ -62,13 +62,25 @@ using namespace KCal;
 class KCal::CalendarResources::Private
 {
   public:
+    Private( const QString &family )
+      : mManager( new CalendarResourceManager( family ) ),
+        mStandardPolicy( new StandardDestinationPolicy( mManager ) ),
+        mDestinationPolicy( mStandardPolicy ),
+        mAskPolicy( new AskDestinationPolicy( mManager ) )
+    {}
+    ~Private()
+    {
+      delete mManager;
+      delete mStandardPolicy;
+      delete mAskPolicy;
+    }
     bool mOpen;  //flag that indicates if the resources are "open"
 
     KRES::Manager<ResourceCalendar>* mManager;
     QMap <Incidence*, ResourceCalendar*> mResourceMap;
 
-    DestinationPolicy *mDestinationPolicy;
     StandardDestinationPolicy *mStandardPolicy;
+    DestinationPolicy *mDestinationPolicy;
     AskDestinationPolicy *mAskPolicy;
 
     QMap<ResourceCalendar *, Ticket *> mTickets;
@@ -130,35 +142,22 @@ ResourceCalendar
 CalendarResources::CalendarResources( const KDateTime::Spec &timeSpec,
                                       const QString &family )
   : Calendar( timeSpec ),
-    d( new KCal::CalendarResources::Private )
+    d( new KCal::CalendarResources::Private( family ) )
 {
-  d->mManager = new CalendarResourceManager( family );
   d->mManager->addObserver( this );
-
-  d->mStandardPolicy = new StandardDestinationPolicy( d->mManager );
-  d->mAskPolicy = new AskDestinationPolicy( d->mManager );
-  d->mDestinationPolicy = d->mStandardPolicy;
 }
 
 CalendarResources::CalendarResources( const QString &timeZoneId,
                                       const QString &family )
   : Calendar( timeZoneId ),
-    d( new KCal::CalendarResources::Private )
+    d( new KCal::CalendarResources::Private( family ) )
 {
-  d->mManager = new CalendarResourceManager( family );
   d->mManager->addObserver( this );
-
-  d->mStandardPolicy = new StandardDestinationPolicy( d->mManager );
-  d->mAskPolicy = new AskDestinationPolicy( d->mManager );
-  d->mDestinationPolicy = d->mStandardPolicy;
 }
 
 CalendarResources::~CalendarResources()
 {
   close();
-  delete d->mManager;
-  delete d->mStandardPolicy;
-  delete d->mAskPolicy;
   delete d;
 }
 
