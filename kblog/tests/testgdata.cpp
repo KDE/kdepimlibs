@@ -19,14 +19,14 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <unistd.h>
-
-#include <qtest_kde.h>
-
 #include "testgdata.h"
 #include "testgdata.moc"
 
-#include <gdata.h>
+#include "kblog/gdata.h"
+
+#include <qtest_kde.h>
+
+#include <unistd.h>
 
 #define TIMEOUT 20000
 #define GLOBALTIMEOUT 30000

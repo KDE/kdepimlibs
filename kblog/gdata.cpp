@@ -20,11 +20,12 @@
 */
 
 #include <gdata.h>
+#include <gdata_p.h>
+
+#include <syndication/loader.h>
 
 #include <kdebug.h>
 #include <klocale.h>
-#include <gdata_p.h>
-#include <syndication/loader.h>
 
 #include <QtCore/QList>
 

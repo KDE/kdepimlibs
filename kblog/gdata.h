@@ -69,7 +69,7 @@ class KBLOG_EXPORT APIGData : public APIBlog
       Create an object for GData API
       @param server is the url for the xmlrpc gateway.
     */
-    APIGData( const KUrl &server, QObject *parent = 0L );
+    explicit APIGData( const KUrl &server, QObject *parent = 0 );
     virtual ~APIGData();
 
     /**
