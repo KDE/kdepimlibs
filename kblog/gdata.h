@@ -21,13 +21,11 @@
 #ifndef API_GDATA_H
 #define API_GDATA_H
 
-#include <blog.h>
+#include <kblog/blog.h>
 
 #include <QtCore/QString>
-#include <QtCore/QVariant>
-#include <QtCore/QList>
 
-#include <kurl.h>
+class KUrl;
 
 /**
   @file

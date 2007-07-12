@@ -19,8 +19,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <gdata.h>
-#include <gdata_p.h>
+#include "gdata.h"
+#include "gdata_p.h"
 
 #include <syndication/loader.h>
 
