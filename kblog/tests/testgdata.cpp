@@ -77,15 +77,15 @@ void TestGData::testValidity()
 {
   // we do not test the setUrl() function additionally here
   APIGData *b = new APIGData( KUrl( "http://blogger2test.blogspot.com" ) );
-  b->setUsername( "11235141638164909615" );
-  b->setPassword( "Wer ist Hans?" );
+  b->setUsername( "christian_weilbach@web.de" );
+  b->setPassword( "Wo ist Hans?" );
   b->setBlogId( "4662848212819772532" );
   b->setTimeZone( KTimeZone() );
   b->setDownloadCount( DOWNLOADCOUNT );
   QVERIFY( b->url() == KUrl( "http://blogger2test.blogspot.com" ) );
   QVERIFY( b->blogId() == "4662848212819772532" );
-  QVERIFY( b->username() == "11235141638164909615" );
-  QVERIFY( b->password() == "Wer ist Hans?" );
+  QVERIFY( b->username() == "christian_weilbach@web.de" );
+  QVERIFY( b->password() == "Wo ist Hans?" );
   QVERIFY( b->interfaceName() == "GData API" );
   QVERIFY( b->timeZone().name() == QString( "UTC" ) );
   QVERIFY( b->downloadCount() == DOWNLOADCOUNT );
@@ -140,6 +140,8 @@ void TestGData::testValidity()
            warnings, SLOT( createPostingTimeoutWarning() ) );
 
   QEventLoop *eventLoop = new QEventLoop( this );
+
+  b->getIntrospection();
 
   connect( b, SIGNAL( userInfoRetrieved( const QString&, const QString&, const QString& ) ),
           userInfoTimer, SLOT( stop() ) );

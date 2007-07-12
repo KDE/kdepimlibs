@@ -29,150 +29,150 @@
 #include <kio/http.h>
 #include <klocale.h>
 #include <kdatetime.h>
+#include <kurl.h>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QRegExp>
 #include <QtGui/QWidget>
 
+#define TIMEOUT 600
+
 using namespace KBlog;
 
-APIGData::APIGDataPrivate::APIGDataPrivate()
-{
+APIGData::APIGDataPrivate::APIGDataPrivate():
+  mAuthenticationTime(),mAuthenticationString(),mFetchPostingId(){
+
 }
 
-APIGData::APIGDataPrivate::~APIGDataPrivate()
-{
+APIGData::APIGDataPrivate::~APIGDataPrivate(){
+
 }
 
-void APIGData::APIGDataPrivate::getIntrospection()
-{
-  // fetch the introspection file synchronously and parse it
+QString APIGData::APIGDataPrivate::authenticate(){
   QByteArray data;
-  KIO::Job *job = KIO::get( parent->url(), false, false );
-  if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &parent->url() ) ) {
-    kDebug() << "Fetched Homepage data." << endl;
-    QRegExp pp( "<link.+rel=\"service.post\".+href=\"(.+)\".*/>" );
-    if ( pp.indexIn( data ) != -1 ) {
-      mCreatePostingsPath = pp.cap(1);
-    } else {
-      emit parent->error( Other, i18n( "Could not regexp the service.post path." ) );
+  KUrl authGateway( "https://www.google.com/accounts/ClientLogin" );
+  authGateway.addQueryItem( "Email", parent->username() );
+  authGateway.addQueryItem( "Passwd", parent->password() );
+  authGateway.addQueryItem( "source" , "KBlog" );
+  authGateway.addQueryItem( "service", "blogger" );
+  if( !mAuthenticationTime.isValid() || 
+      QDateTime::currentDateTime().toTime_t() - mAuthenticationTime.toTime_t() > TIMEOUT || 
+      mAuthenticationString.isEmpty() ){
+    KIO::Job *job = KIO::http_post( authGateway, QByteArray(), false ); 
+    job->addMetaData( "content-length", "0" );
+    if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &authGateway ) ) {
+      kDebug(5323) << "Fetched authentication result for " << authGateway.prettyUrl() << ". " << endl;
+      kDebug(5323) << "Authentication response " << data << endl;
+      QRegExp rx( "Auth=(.+)" );
+      if( rx.indexIn( data )!=-1 ){
+        kDebug(5323)<<"RegExp got authentication string: " << rx.cap(1) << endl;
+        mAuthenticationString = rx.cap(1);
+        mAuthenticationTime = QDateTime::currentDateTime();
+        return mAuthenticationString;
+      }
     }
-    kDebug(5323) << "QRegExp pp( \"<link.+rel=\"service.post\".+href=\"(.+)\".*/>\" ) matches "
-                 << pp.cap(1) << endl;
+    return QString();
   }
-
-  QRegExp bid( "<link.+blogID=(\\d+).*/>" );
-  if ( bid.indexIn( data ) != -1 ) {
-    parent->setBlogId( bid.cap(1) );
-  } else {
-    emit parent->error( Other, i18n( "Could not regexp the blogID path." ) );
-  }
-  kDebug(5323)<<"QRegExp bid( '<link.+blogID=(\\d+).*/>' matches "<< bid.cap(1) << endl;
+  return mAuthenticationString;
 }
 
-void APIGData::APIGDataPrivate::slotLoadingBlogsComplete( Syndication::Loader* loader,
-                                                          Syndication::FeedPtr feed,
-                                                          Syndication::ErrorCode status )
-{
-  if ( status != Syndication::Success ){
+void APIGData::APIGDataPrivate::slotLoadingBlogsComplete( Syndication::Loader* loader, 
+                                          Syndication::FeedPtr feed, Syndication::ErrorCode status ){
+  if (status != Syndication::Success){
     emit parent->error( AtomAPI, i18n( "Could not get blogs." ) );
     return;
   }
-
   QList<Syndication::ItemPtr> items = feed->items();
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
-  for ( ; it != end; ++it ) {
-    QRegExp rx( "blog-(\\d+)" );
-    QString id;
-    if ( rx.indexIn( ( *it )->id() ) != -1 ) {
-      id = rx.cap(1);
-    } else {
-      emit parent->error( Other, i18n( "Could not regexp the blog id path." ) );
-    }
-    kDebug(5323)<<"QRegExp rx( 'blog-(\\d+)' matches "<< rx.cap(1) << endl;
-    QString name = ( *it )->title();
+  for( ; it!=end; ++it ){
+      QRegExp rx( "blog-(\\d+)" );
+      QString id, name;
+      if( rx.indexIn( ( *it )->id() )!=-1 ){
+        kDebug(5323)<<"QRegExp rx( 'blog-(\\d+)' matches "<< rx.cap(1) << endl;
+        id = rx.cap(1);
+        name = ( *it )->title();
+      }
+      else{
+        emit parent->error( Other, i18n( "Could not regexp the blog id path." ) );
+        kDebug(5323)<<"QRegExp rx( 'blog-(\\d+)' does not match anything in: "<< ( *it )->id() << endl;
+      }
 
-    if ( !id.isEmpty() && !name.isEmpty() ) {
-      emit parent->blogInfoRetrieved( id, name );
-      kDebug(5323) << "Emitting blogInfoRetrieved( id=" << id
-                   << ", name=" << name << "); " << endl;
-    }
+      if ( !id.isEmpty() && !name.isEmpty() ) {
+        emit parent->blogInfoRetrieved( id, name );
+        kDebug(5323) << "Emitting blogInfoRetrieved( id=" << id
+                 << ", name=" << name << "); " << endl;
+      }
   }
 }
 
-void APIGData::APIGDataPrivate::slotLoadingPostingsComplete( Syndication::Loader* loader,
-                                                             Syndication::FeedPtr feed,
-                                                             Syndication::ErrorCode status )
-{
-  if ( status != Syndication::Success ){
+void APIGData::APIGDataPrivate::slotLoadingPostingsComplete( Syndication::Loader* loader, 
+                                          Syndication::FeedPtr feed, Syndication::ErrorCode status ){
+  if (status != Syndication::Success){
     emit parent->error( AtomAPI, i18n( "Could not get postings." ) );
     return;
-  }
-
+  } 
   QList<Syndication::ItemPtr> items = feed->items();
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
-  for ( ; it != end; ++it ){
-    BlogPosting posting;
-    QRegExp rx( "post-(\\d+)" );
-    if ( rx.indexIn( ( *it )->id() ) != -1 ) {
-      posting.setPostingId( rx.cap(1) );
-    } else {
-      emit parent->error( Other, i18n( "Could not regexp the blog id path." ) );
-    }
-    kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
-    posting.setTitle( ( *it )->title() );
-    posting.setContent( ( *it )->content() );
-    // FIXME: assuming UTC for now
-    posting.setCreationDateTime(
-      KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
-                 KDateTime::Spec::UTC() ) );
-    posting.setModificationDateTime(
-      KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ),
-                 KDateTime::Spec::UTC() ) );
+  for( ; it!=end; ++it ){
+      BlogPosting posting;
+      QRegExp rx( "post-(\\d+)" );
+      if( rx.indexIn( ( *it )->id() )==-1 ){
+        kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' does not match "<< rx.cap(1) << endl; 
+        emit parent->error( Other, i18n( "Could not regexp the posting id path." ) );
+        return;
+      }
 
-    emit parent->fetchedPosting( posting );
-    kDebug(5323) << "Emitting fetchedPosting( postingId=" << posting.postingId() << " ); " << endl;
+      kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl; 
+      posting.setPostingId( rx.cap(1) );
+      posting.setTitle( ( *it )->title() );
+      posting.setContent( ( *it )->content() );
+      // FIXME: assuming UTC for now
+      posting.setCreationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ), KDateTime::Spec::UTC() ) ); 
+      posting.setModificationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
+
+      emit parent->listedPosting( posting );
+      kDebug(5323) << "Emitting listedPosting( postingId=" << posting.postingId() << " ); " << endl;
   }
   kDebug(5323) << "Emitting listPostingsFinished()" << endl;
   emit parent->listPostingsFinished();
 }
 
-void APIGData::APIGDataPrivate::slotFetchingPostingComplete( Syndication::Loader* loader,
-                                                             Syndication::FeedPtr feed,
-                                                             Syndication::ErrorCode status )
-{
-  if ( status != Syndication::Success ){
+void APIGData::APIGDataPrivate::slotFetchingPostingComplete( Syndication::Loader* loader, 
+                                          Syndication::FeedPtr feed, Syndication::ErrorCode status ){
+  bool success = false;
+
+  if (status != Syndication::Success){
     emit parent->error( AtomAPI, i18n( "Could not get postings." ) );
     return;
-  }
+  } 
   QList<Syndication::ItemPtr> items = feed->items();
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
-  for ( ; it != end; ++it ){
-    BlogPosting posting;
-    QRegExp rx( "post-(\\d+)" );
-    if ( rx.indexIn( ( *it )->id() ) != -1 && rx.cap(1) == mFetchPostingId ){
-      posting.setPostingId( rx.cap(1) );
-      posting.setTitle( ( *it )->title() );
-      posting.setContent( ( *it )->content() );
-      // FIXME: assuming UTC for now
-      posting.setCreationDateTime(
-        KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
-                   KDateTime::Spec::UTC() ) );
-      posting.setModificationDateTime(
-        KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ),
-                   KDateTime::Spec::UTC() ) );
-      mFetchPostingId=QString(); //HACK
-    } else {
-      emit parent->error( Other, i18n( "Could not regexp the blog id path." ) );
-    }
-    kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
-
-    emit parent->listedPosting( posting );
-    kDebug(5323) << "Emitting listedPosting( postingId=" << posting.postingId() << " ); " << endl;
+  for( ; it!=end; ++it ){
+      BlogPosting posting;
+      QRegExp rx( "post-(\\d+)" );
+      if( rx.indexIn( ( *it )->id() )!=-1 && rx.cap(1)==getFetchPostingId() ){
+        kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
+        posting.setPostingId( rx.cap(1) );
+        posting.setTitle( ( *it )->title() );
+        posting.setContent( ( *it )->content() );
+        // FIXME: assuming UTC for now
+        posting.setCreationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
+                                                         KDateTime::Spec::UTC() ) ); 
+        posting.setModificationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ), 
+                                                              KDateTime::Spec::UTC() ) );
+        emit parent->fetchedPosting( posting );
+        success = true;
+        kDebug(5323) << "Emitting fetchedPosting( postingId=" << posting.postingId() << " ); " << endl;
+      }
   }
+  if(!success){
+    emit parent->error( Other, i18n( "Could not regexp the blog id path." ) );
+    kDebug(5323) << "QRegExp rx( 'post-(\\d+)' does not match " << mFetchPostingId << ". " << endl;
+  }
+  setFetchPostingId( "" );
 }
 
 #include "gdata_p.moc"

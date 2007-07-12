@@ -26,6 +26,8 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <kio/netaccess.h>
+#include <kio/http.h>
 
 #include <QtCore/QList>
 
@@ -48,16 +50,36 @@ QString APIGData::interfaceName() const
   return QLatin1String( "GData API" );
 }
 
-void APIGData::setUrl( const KUrl &server )
-{
-  APIBlog::setUrl( server );
-  d->getIntrospection();
-}
-
 void APIGData::userInfo()
 {
   kDebug() << "Fetching user information is not available in GData API." << endl;
   emit error( NotSupported, i18n( "Fetching user information is not available in GData API." ) );
+}
+
+void APIGData::getIntrospection(){
+  // fetch the introspection file synchronously and parse it
+  QByteArray data;
+  KIO::Job *job = KIO::get( url(), false, false ); 
+  if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &url() ) ) {
+    kDebug() << "Fetched Homepage data." << endl;
+//     QRegExp pp( "<link.+rel=\"service.post\".+href=\"(.+)\".*/>" );
+//     if( pp.indexIn( data )!=-1 )
+//        mCreatePostingsPath = pp.cap(1);
+//     else
+//        emit parent->error( Other, i18n( "Could not regexp the service.post path." ) );
+//     kDebug(5323)<<"QRegExp pp( \"<link.+rel=\"service.post\".+href=\"(.+)\".*/>\" ) matches "<< pp.cap(1) << endl;
+
+    QRegExp bid( "<link.+blogID=(\\d+).*/>" );
+    if( bid.indexIn( data )!=-1 )
+       setBlogId( bid.cap(1) );
+    else
+      emit error( Other, i18n( "Could not regexp the blogID path." ) );
+    kDebug(5323)<<"QRegExp bid( '<link.+blogID=(\\d+).*/>' matches "<< bid.cap(1) << endl;
+  }
+  else {
+    emit error( Other, i18n( "Could not fetch the homepage data." ) );
+    kDebug(5323)<< "Could not fetch the homepage data." << endl;
+  }
 }
 
 void APIGData::listBlogs()
@@ -66,8 +88,7 @@ void APIGData::listBlogs()
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
            d, SLOT(slotLoadingBlogsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + username() +
-                    QString( "/blogs" ) );
+  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + username() + QString( "/blogs" ) );
 }
 
 void APIGData::listPostings()
@@ -76,8 +97,7 @@ void APIGData::listPostings()
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
            d, SLOT(slotLoadingPostingsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() +
-                    QString( "/posts/default" ) );
+  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() + QString( "/posts/default" ) );
 }
 
 void APIGData::listCategories()
@@ -90,11 +110,10 @@ void APIGData::fetchPosting( const QString &postingId )
 {
   kDebug() << "fetchPosting()" << endl;
   Syndication::Loader *loader = Syndication::Loader::create();
-  d->mFetchPostingId = postingId; //HACK
+  d->setFetchPostingId( postingId );
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
            d, SLOT(slotFetchingPostingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)));
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() +
-                    QString( "/posts/default" ) );
+  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() + QString( "/posts/default" ) );
 }
 
 void APIGData::modifyPosting( KBlog::BlogPosting* posting )
@@ -106,7 +125,8 @@ void APIGData::modifyPosting( KBlog::BlogPosting* posting )
 
 void APIGData::createPosting( KBlog::BlogPosting* posting )
 {
-//FIXME
+  kDebug() << "createPosting()" << endl;
+  d->authenticate();
 }
 
 void APIGData::createMedia( KBlog::BlogMedia* media )

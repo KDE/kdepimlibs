@@ -23,6 +23,7 @@
 #define API_GDATA_P_H
 
 #include <QtCore/QString>
+#include <QtCore/QDateTime>
 #include <syndication/loader.h>
 #include "gdata.h"
 
@@ -32,16 +33,16 @@ class APIGData::APIGDataPrivate : public QObject
 {
   Q_OBJECT
   private:
-    QString mCreatePostingsPath;
-    QString mFetchPostingsPath;
+    QString mFetchPostingId;
+    QString mAuthenticationString;
+    QDateTime mAuthenticationTime;
   public:
-    QString mFetchPostingId;//HACK
     APIGData* parent;
     APIGDataPrivate();
     ~APIGDataPrivate();
-    void getIntrospection();
-    QString getFetchPostingsPath(){ return mFetchPostingsPath; }
-    QString getCreatePostingPath(){ return mCreatePostingsPath; }
+    QString getFetchPostingId(){ return mFetchPostingId; }
+    void setFetchPostingId( const QString &pId ) { mFetchPostingId=pId; }
+    QString authenticate();
   public slots:
     void slotLoadingPostingsComplete( Syndication::Loader *,
                                       Syndication::FeedPtr, Syndication::ErrorCode );
