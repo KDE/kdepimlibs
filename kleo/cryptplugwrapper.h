@@ -29,7 +29,7 @@
 #ifndef cryptplugwrapper_h
 #define cryptplugwrapper_h
 
-#include <libkleo/cryptplug.h>
+#include <kleo/cryptplug.h>
 
 #ifndef LIBKLEOPATRA_NO_COMPAT
 
@@ -45,7 +45,7 @@
   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
                                                                           */
-#include <libkleo/libkleo_export.h>
+#include <kleo/libkleo_export.h>
 #include "kleo/cryptobackend.h"
 
 #include <QDateTime>
