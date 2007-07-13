@@ -25,6 +25,9 @@
  * - <a href="kldap/html/index.html"><b>kldap</b></a>.
  *   <i>An API for accessing LDAP.</i>
  *
+ * - <a href="kleo/html/index.html"><b>kleo</b></a>
+ *   <i>A library for encryption handling.</i>
+ *
  * - <a href="kmime/html/index.html"><b>kmime</b></a>.
  *   <i>A library for MIME handling.</i>
  *
