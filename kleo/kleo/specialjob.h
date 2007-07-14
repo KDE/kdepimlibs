@@ -77,7 +77,7 @@ namespace Kleo {
 
     virtual GpgME::Error exec() = 0;
 
-  signals:
+  Q_SIGNALS:
     void result( const GpgME::Error & result, const QVariant & data );
   };
 
