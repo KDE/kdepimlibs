@@ -21,14 +21,14 @@ if (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
       ${CMAKE_INSTALL_PREFIX}/include
     )
     
-    find_library(GPGME_LIBRARY NAMES gpgme
+    find_library(GPGME_LIBRARY NAMES gpgme libgpgme
       PATHS 
         ${CMAKE_LIBRARY_PATH}
         ${CMAKE_INSTALL_PREFIX}/lib
       NO_SYSTEM_ENVIRONMENT_PATH
     )
     
-    find_library(GPGME_ERROR_LIBRARY NAMES gpg-error
+    find_library(GPGME_ERROR_LIBRARY NAMES gpg-error libgpg-error
       PATHS 
         ${CMAKE_LIBRARY_PATH}
         ${CMAKE_INSTALL_PREFIX}/lib
