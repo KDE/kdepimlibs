@@ -33,8 +33,7 @@
 #define CRYPTOCONFIGMODULE_H
 
 #include <kpagedialog.h>
-#include <q3valuelist.h>
-#include <QList>
+#include <QtCore/QList>
 
 namespace Kleo {
 

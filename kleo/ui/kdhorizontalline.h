@@ -41,10 +41,9 @@
 #ifndef __KDTOOLS__KDHORIZONTALLINE_H__
 #define __KDTOOLS__KDHORIZONTALLINE_H__
 
-#include <q3frame.h>
-#include <QString>
-//Added by qt3to4:
-#include <QPaintEvent>
+#include <Qt3Support/Q3Frame>
+#include <QtCore/QString>
+#include <QtGui/QPaintEvent>
 
 class KDHorizontalLine : public Q3Frame {
   Q_OBJECT

@@ -25,7 +25,7 @@
 #include "qgpgme_export.h"
 #include <gpgmepp/eventloopinteractor.h>
 
-#include <QObject>
+#include <QtCore/QObject>
 
 namespace GpgME {
   class Context;

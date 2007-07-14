@@ -25,7 +25,7 @@
 #include "qgpgme_export.h"
 #include <gpgmepp/interfaces/dataprovider.h>
 
-#include <QByteArray>
+#include <QtCore/QByteArray>
 
 namespace QGpgME {
 

@@ -35,8 +35,8 @@
 
 #include "libkleo_export.h"
 
-#include <QString>
-#include <q3valuevector.h>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 
 class QStringList;
 class QWidget;

@@ -33,7 +33,7 @@
 #ifndef __KLEO_CRYPTOBACKEND_H__
 #define __KLEO_CRYPTOBACKEND_H__
 
-#include <qstring.h>
+#include <QtCore/QString>
 
 namespace Kleo {
   class CryptoConfig;
