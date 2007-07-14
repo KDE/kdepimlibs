@@ -33,16 +33,18 @@
 #ifndef DIRECTORYSERVICESWIDGET_H
 #define DIRECTORYSERVICESWIDGET_H
 
-#include "ui_directoryserviceswidgetbase.h"
 #include "libkleo_export.h"
 #include <kurl.h>
+#include <Q3ListViewItem>
 
 class CryptPlugWrapper;
 namespace Kleo {
 
 class CryptoConfigEntry;
 
-class KLEO_EXPORT DirectoryServicesWidget : public QWidget, public Ui::DirectoryServicesWidgetBase
+class DirectoryServicesWidgetPrivate;
+
+class KLEO_EXPORT DirectoryServicesWidget : public QWidget
 {
   Q_OBJECT
 
@@ -75,7 +77,7 @@ protected Q_SLOTS:
   void slotMoveDown();
 
 private:
-  Kleo::CryptoConfigEntry* mConfigEntry;
+  DirectoryServicesWidgetPrivate * d;
 };
 
 }

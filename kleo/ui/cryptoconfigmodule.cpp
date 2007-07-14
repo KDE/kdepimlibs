@@ -46,6 +46,7 @@
 #include <kurlrequester.h>
 #include <kicon.h>
 
+#include <QApplication>
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>

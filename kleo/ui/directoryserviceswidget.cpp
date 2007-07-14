@@ -30,6 +30,7 @@
     your version.
 */
 
+#include "ui_directoryserviceswidgetbase.h"
 #include "directoryserviceswidget.h"
 #include "adddirectoryservicedialogimpl.h"
 #include "cryptplugwrapper.h"
@@ -88,33 +89,41 @@ private:
   QString mPassword;
 };
 
+class Kleo::DirectoryServicesWidgetPrivate
+{
+public:
+  DirectoryServicesWidgetPrivate( Kleo::CryptoConfigEntry* config ) : configEntry( config )
+  {}
+  Kleo::CryptoConfigEntry* configEntry;
+  Ui::DirectoryServicesWidgetBase ui;
+};
+
 Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
   Kleo::CryptoConfigEntry* configEntry,
   QWidget* parent,  const char* name, Qt::WFlags fl )
     : QWidget( parent, fl ),
-    Ui::DirectoryServicesWidgetBase(),
-      mConfigEntry( configEntry )
+      d( new Kleo::DirectoryServicesWidgetPrivate( configEntry ) )
 {
     setObjectName(name);
-    setupUi(this);
-    x500LV->setSorting( -1 );
+    d->ui.setupUi(this);
+    d->ui.x500LV->setSorting( -1 );
 
     // taken from kmail's configuredialog.cpp
-    upButton->setIcon( KIcon( "go-up" ) );
-    upButton->setIconSize( QSize( K3Icon::SizeSmall, K3Icon::SizeSmall ) );
-    upButton->setEnabled( false ); // b/c no item is selected yet
+    d->ui.upButton->setIcon( KIcon( "go-up" ) );
+    d->ui.upButton->setIconSize( QSize( K3Icon::SizeSmall, K3Icon::SizeSmall ) );
+    d->ui.upButton->setEnabled( false ); // b/c no item is selected yet
 
-    downButton->setIcon( KIcon( "go-down" ) );
-    downButton->setIconSize( QSize( K3Icon::SizeSmall, K3Icon::SizeSmall ) );
-    downButton->setEnabled( false ); // b/c no item is selected yet
+    d->ui.downButton->setIcon( KIcon( "go-down" ) );
+    d->ui.downButton->setIconSize( QSize( K3Icon::SizeSmall, K3Icon::SizeSmall ) );
+    d->ui.downButton->setEnabled( false ); // b/c no item is selected yet
 
-    connect( addServicePB,SIGNAL( clicked () ),SLOT(slotAddService() ) );
-    connect( removeServicePB, SIGNAL( clicked() ), SLOT( slotDeleteService() ) );
-    connect( x500LV, SIGNAL( returnPressed(Q3ListViewItem*) ), SLOT(slotServiceSelected(Q3ListViewItem*) ) );
-    connect( x500LV, SIGNAL(doubleClicked(Q3ListViewItem*) ),SLOT( slotServiceSelected(Q3ListViewItem*) ) );
-    connect( x500LV, SIGNAL( selectionChanged(Q3ListViewItem*) ), SLOT(slotServiceChanged(Q3ListViewItem*) ) );
-    connect( upButton, SIGNAL(clicked() ), SLOT(slotMoveUp() ) );
-    connect( downButton, SIGNAL( clicked() ), SLOT( slotMoveDown() ) );
+    connect( d->ui.addServicePB,SIGNAL( clicked () ),SLOT(slotAddService() ) );
+    connect( d->ui.removeServicePB, SIGNAL( clicked() ), SLOT( slotDeleteService() ) );
+    connect( d->ui.x500LV, SIGNAL( returnPressed(Q3ListViewItem*) ), SLOT(slotServiceSelected(Q3ListViewItem*) ) );
+    connect( d->ui.x500LV, SIGNAL(doubleClicked(Q3ListViewItem*) ),SLOT( slotServiceSelected(Q3ListViewItem*) ) );
+    connect( d->ui.x500LV, SIGNAL( selectionChanged(Q3ListViewItem*) ), SLOT(slotServiceChanged(Q3ListViewItem*) ) );
+    connect( d->ui.upButton, SIGNAL(clicked() ), SLOT(slotMoveUp() ) );
+    connect( d->ui.downButton, SIGNAL( clicked() ), SLOT( slotMoveDown() ) );
 }
 
 
@@ -146,11 +155,11 @@ void DirectoryServicesWidget::enableDisable( CryptPlugWrapper* cryptPlug ) // un
 void DirectoryServicesWidget::slotServiceChanged( Q3ListViewItem* item )
 {
     if( item )
-        removeServicePB->setEnabled( true );
+        d->ui.removeServicePB->setEnabled( true );
     else
-        removeServicePB->setEnabled( false );
-    downButton->setEnabled( item && item->itemBelow() );
-    upButton->setEnabled( item && item->itemAbove() );
+        d->ui.removeServicePB->setEnabled( false );
+    d->ui.downButton->setEnabled( item && item->itemBelow() );
+    d->ui.upButton->setEnabled( item && item->itemAbove() );
 }
 
 
@@ -186,7 +195,7 @@ void DirectoryServicesWidget::slotAddService()
 {
     AddDirectoryServiceDialogImpl* dlg = new AddDirectoryServiceDialogImpl( this );
     if( dlg->exec() == QDialog::Accepted ) {
-      QX500ListViewItem *item = new QX500ListViewItem( x500LV, x500LV->lastItem(),
+      QX500ListViewItem *item = new QX500ListViewItem( d->ui.x500LV, d->ui.x500LV->lastItem(),
                                      dlg->serverNameED->text(),
                                      dlg->portED->text(),
                                      dlg->descriptionED->text(),
@@ -203,26 +212,26 @@ void DirectoryServicesWidget::slotAddService()
  */
 void DirectoryServicesWidget::slotDeleteService()
 {
-    Q3ListViewItem* item = x500LV->selectedItem();
+    Q3ListViewItem* item = d->ui.x500LV->selectedItem();
     Q_ASSERT( item );
     if( !item )
         return;
     else
         delete item;
-    x500LV->triggerUpdate();
-    item = x500LV->currentItem();
-    x500LV->setCurrentItem( item ); // seems necessary...
-    x500LV->setSelected( item, true );
+    d->ui.x500LV->triggerUpdate();
+    item = d->ui.x500LV->currentItem();
+    d->ui.x500LV->setCurrentItem( item ); // seems necessary...
+    d->ui.x500LV->setSelected( item, true );
     emit changed();
 }
 
 
 void DirectoryServicesWidget::setInitialServices( const KUrl::List& urls )
 {
-    x500LV->clear();
+    d->ui.x500LV->clear();
     for( KUrl::List::const_iterator it = urls.begin(); it != urls.end(); ++it ) {
         QString dn = QUrl::fromPercentEncoding( (*it).query().mid( 1 ).toLatin1() ); // decode query and skip leading '?'
-        (void)new QX500ListViewItem( x500LV, x500LV->lastItem(),
+        (void)new QX500ListViewItem( d->ui.x500LV, d->ui.x500LV->lastItem(),
                                      (*it).host(),
                                      QString::number( (*it).port() ),
                                      dn,
@@ -234,7 +243,7 @@ void DirectoryServicesWidget::setInitialServices( const KUrl::List& urls )
 KUrl::List DirectoryServicesWidget::urlList() const
 {
     KUrl::List lst;
-    Q3ListViewItemIterator it( x500LV );
+    Q3ListViewItemIterator it( d->ui.x500LV );
     for ( ; it.current() ; ++it ) {
         Q3ListViewItem* item = it.current();
         KUrl url;
@@ -253,29 +262,29 @@ KUrl::List DirectoryServicesWidget::urlList() const
 
 void DirectoryServicesWidget::clear()
 {
-    x500LV->clear();
+    d->ui.x500LV->clear();
     emit changed();
 }
 
 void DirectoryServicesWidget::load()
 {
-  if ( mConfigEntry ) {
-    setInitialServices( mConfigEntry->urlValueList() );
+  if ( d->configEntry ) {
+    setInitialServices( d->configEntry->urlValueList() );
   }
 }
 
 void DirectoryServicesWidget::save()
 {
-  if ( mConfigEntry ) {
-    mConfigEntry->setURLValueList( urlList() );
+  if ( d->configEntry ) {
+    d->configEntry->setURLValueList( urlList() );
   }
 }
 
 void DirectoryServicesWidget::defaults()
 {
-  if ( mConfigEntry ) {
+  if ( d->configEntry ) {
     // resetToDefault doesn't work since gpgconf doesn't know any defaults for this entry.
-    //mConfigEntry->resetToDefault();
+    //d->configEntry->resetToDefault();
     //load();
     clear(); // the default is an empty list.
   }
@@ -294,25 +303,25 @@ static void swapItems( QX500ListViewItem *item, QX500ListViewItem *other )
 
 void Kleo::DirectoryServicesWidget::slotMoveUp()
 {
-  QX500ListViewItem *item = static_cast<QX500ListViewItem *>( x500LV->selectedItem() );
+  QX500ListViewItem *item = static_cast<QX500ListViewItem *>( d->ui.x500LV->selectedItem() );
   if ( !item ) return;
   QX500ListViewItem *above = static_cast<QX500ListViewItem *>( item->itemAbove() );
   if ( !above ) return;
   swapItems( item, above );
-  x500LV->setCurrentItem( above );
-  x500LV->setSelected( above, true );
+  d->ui.x500LV->setCurrentItem( above );
+  d->ui.x500LV->setSelected( above, true );
   emit changed();
 }
 
 void Kleo::DirectoryServicesWidget::slotMoveDown()
 {
-  QX500ListViewItem *item = static_cast<QX500ListViewItem *>( x500LV->selectedItem() );
+  QX500ListViewItem *item = static_cast<QX500ListViewItem *>( d->ui.x500LV->selectedItem() );
   if ( !item ) return;
   QX500ListViewItem *below = static_cast<QX500ListViewItem *>( item->itemBelow() );
   if ( !below ) return;
   swapItems( item, below );
-  x500LV->setCurrentItem( below );
-  x500LV->setSelected( below, true );
+  d->ui.x500LV->setCurrentItem( below );
+  d->ui.x500LV->setSelected( below, true );
   emit changed();
 }
 
