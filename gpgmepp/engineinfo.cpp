@@ -25,7 +25,8 @@
 
 #include <gpgme.h>
 
-struct GpgME::EngineInfo::Private : public GpgME::Shared {
+class GpgME::EngineInfo::Private : public GpgME::Shared {
+public:
   Private( gpgme_engine_info_t engine=0 ) : Shared(), info( engine ) {}
   ~Private() { info = 0; }
 

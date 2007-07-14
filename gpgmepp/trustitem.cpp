@@ -28,7 +28,8 @@
 
 namespace GpgME {
 
-  struct TrustItem::Private  {
+  class TrustItem::Private  {
+  public:
     Private( gpgme_trust_item_t aItem )
       : item( aItem )
     {

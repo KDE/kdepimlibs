@@ -36,7 +36,8 @@ namespace GpgME {
 
   using std::vector;
 
-  struct Key::Private {
+  class Key::Private {
+  public:
     Private( gpgme_key_t aKey, unsigned int aMode )
       : key( aKey ),
 #ifdef HAVE_GPGME_KEY_T_KEYLIST_MODE
@@ -288,7 +289,8 @@ namespace GpgME {
   //
   //
 
-  struct Subkey::Private {
+  class Subkey::Private {
+  public:
     Private( gpgme_key_t aKey, unsigned int idx )
       : key( aKey ), subkey( 0 )
     {
@@ -444,7 +446,8 @@ namespace GpgME {
   //
   //
 
-  struct UserID::Private {
+  class UserID::Private {
+  public:
     Private( gpgme_key_t aKey, unsigned int idx )
       : key( aKey ), uid( 0 )
     {
@@ -600,7 +603,8 @@ namespace GpgME {
   //
   //
 
-  struct UserID::Signature::Private {
+  class UserID::Signature::Private {
+  public:
     Private( gpgme_key_t aKey, gpgme_user_id_t aUid, unsigned int idx )
       : key( aKey ), uid( 0 ), sig( 0 )
     {
@@ -817,7 +821,8 @@ namespace GpgME {
   //
   //
 
-  struct UserID::Signature::Notation::Private {
+  class UserID::Signature::Notation::Private {
+  public:
     Private( gpgme_key_t aKey, gpgme_user_id_t aUid,
 	     gpgme_key_sig_t aSig, unsigned int idx )
       : key( aKey ), uid( 0 ), sig( 0 ), nota( 0 )

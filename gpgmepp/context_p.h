@@ -31,7 +31,8 @@
 namespace GpgME {
 
 
-  struct Context::Private {
+  class Context::Private {
+  public:
     enum Operation {
       None = 0,
 

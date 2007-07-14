@@ -42,7 +42,8 @@ namespace GpgME {
   // EventLoopInteractor::Private Declaration
   //
 
-  struct EventLoopInteractor::Private {
+  class EventLoopInteractor::Private {
+  public:
     struct OneFD {
       OneFD( int aFd, int aDir, gpgme_io_cb_t aFnc,
 	     void * aFncData, void * aExternalTag )
