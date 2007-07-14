@@ -34,7 +34,7 @@
 #define __KLEO_KEYFILTERMANAGER_H__
 
 #include "libkleo_export.h"
-#include <QObject>
+#include <QtCore/QObject>
 
 namespace GpgME {
   class Key;

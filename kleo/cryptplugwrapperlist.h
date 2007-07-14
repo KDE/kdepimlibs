@@ -24,7 +24,7 @@
 
 #include "cryptplugwrapper.h"
 
-#include <q3ptrlist.h>
+#include <Qt3Support/Q3PtrList>
 
 class CryptPlugWrapperList : public Q3PtrList<CryptPlugWrapper>
 {

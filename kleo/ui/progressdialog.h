@@ -34,8 +34,8 @@
 #define __KLEO_PROGRESSDIALOG_H__
 
 #include "libkleo_export.h"
-#include <qprogressdialog.h>
-#include <QString>
+#include <QtGui/QProgressDialog>
+#include <QtCore/QString>
 namespace Kleo {
 
   class Job;

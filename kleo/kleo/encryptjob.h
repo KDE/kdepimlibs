@@ -35,7 +35,7 @@
 
 #include "job.h"
 
-#include <q3cstring.h>
+#include <QtCore/QByteArray>
 
 #include <vector>
 

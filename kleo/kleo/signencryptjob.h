@@ -36,7 +36,7 @@
 #include <gpgmepp/context.h> // for Context::SignatureMode (or should
 			     // we roll our own enum here?)
 #include "job.h"
-#include <q3cstring.h>
+#include <QtCore/QByteArray>
 
 #include <vector>
 #include <utility>

@@ -36,7 +36,7 @@
 #include "libkleo_export.h"
 #include "cryptobackend.h"
 
-#include <QObject>
+#include <QtCore/QObject>
 
 #include <vector>
 #include <map>

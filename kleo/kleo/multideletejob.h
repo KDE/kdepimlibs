@@ -37,7 +37,7 @@
 #include "kleo/job.h"
 #include "kleo/cryptobackend.h"
 
-#include <QPointer>
+#include <QtCore/QPointer>
 
 #include <vector>
 
