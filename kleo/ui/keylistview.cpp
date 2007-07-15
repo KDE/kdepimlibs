@@ -45,7 +45,6 @@
 #include <QFont>
 #include <QColor>
 #include <QTimer>
-#include <q3cstring.h>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QEvent>
@@ -60,7 +59,8 @@
 static const int updateDelayMilliSecs = 500;
 
 
-struct Kleo::KeyListView::Private {
+class Kleo::KeyListView::Private {
+public:
   Private() : updateTimer( 0 ) {}
 
   std::vector<GpgME::Key> keyBuffer;

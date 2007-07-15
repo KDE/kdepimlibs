@@ -43,7 +43,6 @@
 #include <klocale.h>
 
 #include <QStringList>
-#include <q3valuevector.h>
 
 #include <iostream>
 #include <iterator>
@@ -56,7 +55,8 @@
 #include <kglobal.h>
 #include <kconfiggroup.h>
 
-struct Kleo::DN::Private {
+class Kleo::DN::Private {
+public:
   Private() : mRefCount( 0 ) {}
   Private( const Private & other )
     : attributes( other.attributes ),

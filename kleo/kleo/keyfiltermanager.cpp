@@ -41,7 +41,6 @@
 #include <QApplication>
 #include <QRegExp>
 #include <QStringList>
-#include <q3valuevector.h>
 
 #include <algorithm>
 
@@ -52,7 +51,8 @@ namespace {
   };
 }
 
-struct Kleo::KeyFilterManager::Private {
+class Kleo::KeyFilterManager::Private {
+public:
   void clear() {
     std::for_each( filters.begin(), filters.end(), Delete<KeyFilter>() );
     filters.clear();
