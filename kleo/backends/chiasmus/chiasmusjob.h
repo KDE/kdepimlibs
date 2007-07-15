@@ -90,7 +90,7 @@ namespace Kleo {
     void slotCancel();
 
   private slots:
-    GpgME::Error slotProcessExited( K3Process * );
+    GpgME::Error finished();
     void slotTimeout();
 
   private:
