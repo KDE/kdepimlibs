@@ -92,30 +92,16 @@ namespace KCal {
 class ICalTimeZonesPrivate
 {
 public:
-  ICalTimeZonesPrivate() : zones(new ICalTimeZones::ZoneMap())  {}
-  ~ICalTimeZonesPrivate()  { clear();  delete zones; }
-  void clear();
-  static ICalTimeZone *utc();
+  ICalTimeZonesPrivate() {}
+  static ICalTimeZone utc();
 
-  ICalTimeZones::ZoneMap *zones;
-  QSet<ICalTimeZone*> nonconstZones;   // member zones owned by ICalTimeZones
+  ICalTimeZones::ZoneMap zones;
 };
 
-void ICalTimeZonesPrivate::clear()
+ICalTimeZone ICalTimeZonesPrivate::utc()
 {
-  // Delete all zones actually owned by this collection.
-  for (ICalTimeZones::ZoneMap::ConstIterator it = zones->begin(), end = zones->end();  it != end;  ++it) {
-    if (nonconstZones.contains(const_cast<ICalTimeZone*>(it.value())))   // only delete zones actually owned
-      delete it.value();
-  }
-  zones->clear();
-  nonconstZones.clear();
-}
-
-ICalTimeZone *ICalTimeZonesPrivate::utc()
-{
-  static ICalTimeZone *utcZone = 0;
-  if ( !utcZone ) {
+  static ICalTimeZone utcZone;
+  if ( !utcZone.isValid() ) {
     ICalTimeZoneSource tzs;
     utcZone = tzs.parse( icaltimezone_get_utc_timezone() );
   }
@@ -135,74 +121,61 @@ ICalTimeZones::~ICalTimeZones()
 
 const ICalTimeZones::ZoneMap ICalTimeZones::zones() const
 {
-  return *d->zones;
+  return d->zones;
 }
 
-bool ICalTimeZones::add(ICalTimeZone *zone)
+bool ICalTimeZones::add(const ICalTimeZone &zone)
 {
-  if (!zone)
+  if (!zone.isValid())
     return false;
-  if (d->zones->find(zone->name()) != d->zones->end())
+  if (d->zones.find(zone.name()) != d->zones.end())
     return false;    // name already exists
-  d->zones->insert(zone->name(), zone);
-  d->nonconstZones.insert(zone);
+  d->zones.insert(zone.name(), zone);
   return true;
 }
 
-bool ICalTimeZones::addConst(const ICalTimeZone *zone)
+ICalTimeZone ICalTimeZones::remove(const ICalTimeZone &zone)
 {
-  if (!zone)
-    return false;
-  if (d->zones->find(zone->name()) != d->zones->end())
-    return false;    // name already exists
-  d->zones->insert(zone->name(), zone);
-  return true;
-}
-
-const ICalTimeZone *ICalTimeZones::detach(const ICalTimeZone *zone)
-{
-  if (zone) {
-    for (ZoneMap::Iterator it = d->zones->begin(), end = d->zones->end();  it != end;  ++it) {
+  if (zone.isValid()) {
+    for (ZoneMap::Iterator it = d->zones.begin(), end = d->zones.end();  it != end;  ++it) {
       if (it.value() == zone) {
-        d->zones->erase(it);
-        d->nonconstZones.remove(const_cast<ICalTimeZone*>(zone));
-        return (zone == utc()) ? 0 : zone;
+        d->zones.erase(it);
+        return (zone == utc()) ? ICalTimeZone() : zone;
       }
     }
   }
-  return 0;
+  return ICalTimeZone();
 }
 
-const ICalTimeZone *ICalTimeZones::detach(const QString &name)
+ICalTimeZone ICalTimeZones::remove(const QString &name)
 {
   if (!name.isEmpty()) {
-    ZoneMap::Iterator it = d->zones->find(name);
-    if (it != d->zones->end()) {
-      const ICalTimeZone *zone = it.value();
-      d->zones->erase(it);
-      d->nonconstZones.remove(const_cast<ICalTimeZone*>(zone));
-      return (zone == utc()) ? 0 : zone;
+    ZoneMap::Iterator it = d->zones.find(name);
+    if (it != d->zones.end()) {
+      ICalTimeZone zone = it.value();
+      d->zones.erase(it);
+      return (zone == utc()) ? ICalTimeZone() : zone;
     }
   }
-  return 0;
+  return ICalTimeZone();
 }
 
 void ICalTimeZones::clear()
 {
-  d->clear();
+  d->zones.clear();
 }
 
-const ICalTimeZone *ICalTimeZones::zone(const QString &name) const
+ICalTimeZone ICalTimeZones::zone(const QString &name) const
 {
   if (!name.isEmpty()) {
-    ZoneMap::ConstIterator it = d->zones->find(name);
-    if (it != d->zones->end())
+    ZoneMap::ConstIterator it = d->zones.find(name);
+    if (it != d->zones.end())
       return it.value();
   }
-  return 0;    // error
+  return ICalTimeZone();   // error
 }
 
-const ICalTimeZone *ICalTimeZones::utc()
+ICalTimeZone ICalTimeZones::utc()
 {
   return ICalTimeZonesPrivate::utc();
 }
@@ -210,14 +183,48 @@ const ICalTimeZone *ICalTimeZones::utc()
 
 /******************************************************************************/
 
+ICalTimeZoneBackend::ICalTimeZoneBackend()
+  : KTimeZoneBackend()
+{}
+
+ICalTimeZoneBackend::ICalTimeZoneBackend(ICalTimeZoneSource *source, const QString &name,
+       const QString &countryCode, float latitude, float longitude, const QString &comment)
+  : KTimeZoneBackend(source, name, countryCode, latitude, longitude, comment)
+{}
+
+ICalTimeZoneBackend::ICalTimeZoneBackend(const KTimeZone &tz, const QDate &earliest)
+  : KTimeZoneBackend(0, tz.name(), tz.countryCode(), tz.latitude(), tz.longitude(), tz.comment())
+{}
+
+ICalTimeZoneBackend::~ICalTimeZoneBackend()
+{}
+
+KTimeZoneBackend *ICalTimeZoneBackend::clone() const
+{
+    return new ICalTimeZoneBackend(*this);
+}
+
+bool ICalTimeZoneBackend::hasTransitions(const KTimeZone *caller) const
+{
+    Q_UNUSED(caller)
+    return true;
+}
+
+
+/******************************************************************************/
+
+ICalTimeZone::ICalTimeZone()
+  : KTimeZone(new ICalTimeZoneBackend())
+{}
+
 ICalTimeZone::ICalTimeZone(ICalTimeZoneSource *source, const QString &name, ICalTimeZoneData *data)
-  : KTimeZone(source, name), d( 0 )
+  : KTimeZone(new ICalTimeZoneBackend(source, name))
 {
   setData(data);
 }
 
 ICalTimeZone::ICalTimeZone(const KTimeZone &tz, const QDate &earliest)
-  : KTimeZone(0, tz.name(), tz.countryCode(), tz.latitude(), tz.longitude(), tz.comment()), d( 0 )
+  : KTimeZone(new ICalTimeZoneBackend(0, tz.name(), tz.countryCode(), tz.latitude(), tz.longitude(), tz.comment()))
 {
   const KTimeZoneData *data = tz.data(true);
   if (data) {
@@ -229,20 +236,8 @@ ICalTimeZone::ICalTimeZone(const KTimeZone &tz, const QDate &earliest)
   }
 }
 
-ICalTimeZone::ICalTimeZone(const ICalTimeZone &tz)
-  : KTimeZone(tz), d( 0 )
-{
-}
-
 ICalTimeZone::~ICalTimeZone()
-{
-}
-
-ICalTimeZone &ICalTimeZone::operator=(const ICalTimeZone &tz)
-{
-  KTimeZone::operator=(tz);
-  return *this;
-}
+{}
 
 QString ICalTimeZone::city() const
 {
@@ -274,16 +269,11 @@ icaltimezone *ICalTimeZone::icalTimezone() const
   return dat ? dat->icalTimezone() : 0;
 }
 
-bool ICalTimeZone::hasTransitions() const
+bool ICalTimeZone::update(const ICalTimeZone &other)
 {
-  return true;
-}
-
-bool ICalTimeZone::update(const ICalTimeZone *other)
-{
-  if (!KTimeZone::updateBase(other))
+  if (!updateBase(other))
     return false;
-  setData(other->data()->clone(), other->source());
+  setData(other.data()->clone(), other.source());
   return true;
 }
 
@@ -345,15 +335,14 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
     // that system time zones are more likely to be up to date than
     // built-in libical ones.
     icalcomponent *c = 0;
-    KTimeZone *ktz = KSystemTimeZones::readZone( tz.name() );
-    if ( ktz ) {
-      if ( ktz->data(true) ) {
-        ICalTimeZone icaltz( *ktz, earliest );
+    KTimeZone ktz = KSystemTimeZones::readZone( tz.name() );
+    if ( ktz.isValid() ) {
+      if ( ktz.data(true) ) {
+        ICalTimeZone icaltz( ktz, earliest );
         icaltimezone *itz = icaltz.icalTimezone();
         c = icalcomponent_new_clone( icaltimezone_get_component( itz ) );
         icaltimezone_free( itz, 1 );
       }
-      delete ktz;
     }
     if ( !c ) {
       // Try to fetch a built-in libical time zone.
@@ -683,25 +672,22 @@ bool ICalTimeZoneSource::parse(icalcomponent *calendar, ICalTimeZones &zones)
   for (icalcomponent *c = icalcomponent_get_first_component(calendar, ICAL_VTIMEZONE_COMPONENT);
        c;  c = icalcomponent_get_next_component(calendar, ICAL_VTIMEZONE_COMPONENT))
   {
-    ICalTimeZone *zone = parse(c);
-    if (!zone)
+    ICalTimeZone zone = parse(c);
+    if (!zone.isValid())
       return false;
-    ICalTimeZone *oldzone = const_cast<ICalTimeZone*>(zones.zone(zone->name()));
-    if (oldzone) {
-      // The zone already exists in the collection. It's dangerous to delete
-      // KTimeZone objects if any KDateTime instances still refer to them, so
-      // update the definition of the zone rather than using a newly created one.
-      oldzone->update(zone);
-      delete zone;
+    ICalTimeZone oldzone = zones.zone(zone.name());
+    if (oldzone.isValid()) {
+      // The zone already exists in the collection, so update the definition
+      // of the zone rather than using a newly created one.
+      oldzone.update(zone);
     } else if (!zones.add(zone)) {
-      delete zone;
       return false;
     }
   }
   return true;
 }
 
-ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
+ICalTimeZone ICalTimeZoneSource::parse(icalcomponent *vtimezone)
 {
   QString name;
   QString xlocation;
@@ -750,7 +736,7 @@ ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
   if (name.isEmpty()) {
     kDebug(5800) << "ICalTimeZoneSource::parse(): TZID missing" << endl;
     delete data;
-    return 0;
+    return ICalTimeZone();
   }
   if (data->d->location.isEmpty()  &&  !xlocation.isEmpty())
     data->d->location = xlocation;
@@ -821,10 +807,10 @@ ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
 
   data->d->setComponent( icalcomponent_new_clone(vtimezone) );
   kDebug(5800) << "ICalTimeZoneSource::parse(): VTIMEZONE " << name << endl;
-  return new ICalTimeZone(this, name, data);
+  return ICalTimeZone(this, name, data);
 }
 
-ICalTimeZone *ICalTimeZoneSource::parse(icaltimezone *tz)
+ICalTimeZone ICalTimeZoneSource::parse(icaltimezone *tz)
 {
   /* Parse the VTIMEZONE component stored in the icaltimezone structure.
    * This is both easier and provides more complete information than
@@ -987,7 +973,7 @@ QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool da
   return transitions;
 }
 
-ICalTimeZone *ICalTimeZoneSource::standardZone(const QString &zone, bool icalBuiltIn)
+ICalTimeZone ICalTimeZoneSource::standardZone(const QString &zone, bool icalBuiltIn)
 {
   if ( !icalBuiltIn ) {
     // Try to fetch a system time zone in preference, on the grounds
@@ -1000,15 +986,13 @@ ICalTimeZone *ICalTimeZoneSource::standardZone(const QString &zone, bool icalBui
       if ( i > 0 )
         tzid = zone.mid( i + 1 );   // strip off the libical prefix
     }
-    KTimeZone *ktz = KSystemTimeZones::readZone( tzid );
-    if ( ktz ) {
-      if ( ktz->data(true) ) {
-        ICalTimeZone *icaltz = new ICalTimeZone( *ktz );
-        delete ktz;
+    KTimeZone ktz = KSystemTimeZones::readZone( tzid );
+    if ( ktz.isValid() ) {
+      if ( ktz.data(true) ) {
+        ICalTimeZone icaltz( ktz );
         kDebug(5800) << "ICalTimeZoneSource::standardZone(" << zone << "): read from system database" << endl;
         return icaltz;
       }
-      delete ktz;
     }
   }
   // Try to fetch a built-in libical time zone.
@@ -1019,7 +1003,7 @@ ICalTimeZone *ICalTimeZoneSource::standardZone(const QString &zone, bool icalBui
     // This will find it if it includes the libical prefix
     icaltz = icaltimezone_get_builtin_timezone_from_tzid( zoneName );
     if ( !icaltz )
-      return 0;
+      return ICalTimeZone();
   }
   return parse( icaltz );
 }

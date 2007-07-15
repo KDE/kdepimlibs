@@ -51,8 +51,6 @@ class ICalTimeZoneDataPrivate;
  *
  * Each individual time zone is defined in a ICalTimeZone instance. The time zones in the
  * collection are indexed by name, which must be unique within the collection.
- * ICalTimeZone instances in the collection are owned by the ICalTimeZones instance,
- * and are deleted when the ICalTimeZones instance is destructed.
  *
  * Different calendars could define the same time zone differently. As a result,
  * to avoid conflicting definitions, each calendar should normally have its own
@@ -73,14 +71,14 @@ public:
     /**
      * Returns the time zone with the given name.
      * Note that the ICalTimeZone returned remains a member of the ICalTimeZones
-     * collection, and should not be deleted without calling detach() first.
+     * collection, and should not be deleted without calling remove() first.
      *
      * @param name name of time zone
      * @return time zone, or 0 if not found
      */
-    const ICalTimeZone *zone(const QString &name) const;
+    ICalTimeZone zone(const QString &name) const;
 
-    typedef QMap<QString, const ICalTimeZone*> ZoneMap;
+    typedef QMap<QString, ICalTimeZone> ZoneMap;
 
     /**
      * Returns all the time zones defined in this collection.
@@ -91,48 +89,31 @@ public:
 
     /**
      * Adds a time zone to the collection.
-     * ICalTimeZones takes ownership of the ICalTimeZone instance, which will be deleted
-     * when the ICalTimeZones instance is destructed.
      * The time zone's name must be unique within the collection.
      *
      * @param zone time zone to add
      * @return @c true if successful, @c false if zone's name duplicates one already in the collection
      */
-    bool add(ICalTimeZone *zone);
-
-    /**
-     * Adds a time zone to the collection.
-     * ICalTimeZones does not take ownership of the ICalTimeZone instance.
-     * The time zone's name must be unique within the collection.
-     *
-     * @param zone time zone to add
-     * @return @c true if successful, @c false if zone's name duplicates one already in the collection
-     */
-    bool addConst(const ICalTimeZone *zone);
+    bool add(const ICalTimeZone &zone);
 
     /**
      * Removes a time zone from the collection.
-     * The caller assumes responsibility for deleting the removed ICalTimeZone. If
-     * the removed ICalTimeZone was created by the caller, the constness of the return
-     * value may safely be cast away.
      *
      * @param zone time zone to remove
-     * @return the time zone which was removed, or 0 if not found or not a deletable object
+     * @return the time zone which was removed, or 0 if not found
      */
-    const ICalTimeZone *detach(const ICalTimeZone *zone);
+    ICalTimeZone remove(const ICalTimeZone &zone);
 
     /**
      * Removes a time zone from the collection.
-     * The caller assumes responsibility for deleting the removed ICalTimeZone.
      *
      * @param name name of time zone to remove
-     * @return the time zone which was removed, or 0 if not found or not a deletable object
+     * @return the time zone which was removed, or 0 if not found
      */
-    const ICalTimeZone *detach(const QString &name);
+    ICalTimeZone remove(const QString &name);
 
     /**
      * Clears the collection.
-     * All time zone instances owned by the collection are deleted.
      */
     void clear();
 
@@ -140,14 +121,13 @@ public:
      * Returns a standard UTC time zone, with name "UTC".
      *
      * @note The ICalTimeZone returned by this method does not belong to any
-     * ICalTimeZones collection, and is statically allocated and therefore cannot
-     * be deleted and cannot be added to a ICalTimeZones collection. Any ICalTimeZones
-     * instance may contain its own UTC ICalTimeZone, but that will be a different
-     * instance than this ICalTimeZone.
+     * ICalTimeZones collection. Any ICalTimeZones instance may contain its own
+     * UTC ICalTimeZone defined by its time zone source data, but that will be
+     * a different instance than this ICalTimeZone.
      *
      * @return UTC time zone
      */
-    static const ICalTimeZone *utc();
+    static ICalTimeZone utc();
 
 private:
     ICalTimeZones(const ICalTimeZones &);              // prohibit copying
@@ -166,9 +146,16 @@ private:
  * @see ICalTimeZoneSource, ICalTimeZoneData
  * @author David Jarvie <software@astrojar.org.uk>.
  */
-class KCAL_EXPORT ICalTimeZone : public KTimeZone
+class KCAL_EXPORT ICalTimeZone : public KTimeZone  //krazy:exclude=dpointer (no d-pointer for KTimeZone derived classes)
 {
   public:
+    /**
+     * Constructs a null time zone. A null time zone is invalid.
+     *
+     * @see isValid()
+     */
+    ICalTimeZone();
+
     /**
      * Creates a time zone. This constructor is normally called from ICalTimeZoneSource::parse().
      *
@@ -186,13 +173,7 @@ class KCAL_EXPORT ICalTimeZone : public KTimeZone
      */
     explicit ICalTimeZone(const KTimeZone &tz, const QDate &earliest = QDate());
 
-    /**
-     * Copy constructor.
-     */
-    ICalTimeZone(const ICalTimeZone &);
     virtual ~ICalTimeZone();
-
-    ICalTimeZone &operator=(const ICalTimeZone &);
 
     /**
      * Returns the name of the city for this time zone, if any. There is no fixed
@@ -233,13 +214,6 @@ class KCAL_EXPORT ICalTimeZone : public KTimeZone
     icaltimezone *icalTimezone() const;
 
     /**
-     * Return whether daylight saving transitions are available for the time zone.
-     *
-     * @return @c true
-     */
-    virtual bool hasTransitions() const;
-
-    /**
      * Update the definition of the time zone to be identical to another
      * ICalTimeZone instance. A prerequisite is that the two instances must
      * have the same name.
@@ -251,10 +225,60 @@ class KCAL_EXPORT ICalTimeZone : public KTimeZone
      * @param other time zone whose definition is to be used
      * @return true if definition was updated (i.e. names are the same)
      */
-    bool update(const ICalTimeZone *other);
+    bool update(const ICalTimeZone &other);
 
-  private:
-    ICalTimeZonePrivate *const d;
+private:
+    // d-pointer is in ICalTimeZoneBackend.
+    // This is a requirement for classes inherited from KTimeZone.
+};
+
+
+/**
+ * Backend class for KICalTimeZone class.
+ *
+ * This class implements KICalTimeZone's constructors and virtual methods. A
+ * backend class is required for all classes inherited from KTimeZone to
+ * allow KTimeZone virtual methods to work together with reference counting of
+ * private data.
+ *
+ * @short Backend class for KICalTimeZone class
+ * @see KTimeZoneBackend, KICalTimeZone, KTimeZone
+ * @ingroup timezones
+ * @author David Jarvie <software@astrojar.org.uk>.
+ */
+class KCAL_EXPORT ICalTimeZoneBackend : public KTimeZoneBackend  //krazy:exclude=dpointer (non-const d-pointer for KTimeZoneBackend-derived classes)
+{
+public:
+    /** Implements ICalTimeZone::ICalTimeZone(). */
+    ICalTimeZoneBackend();
+    /** Implements ICalTimeZone::ICalTimeZone(). */
+    ICalTimeZoneBackend(ICalTimeZoneSource *source, const QString &name, const QString &countryCode = QString(),
+                        float latitude = KTimeZone::UNKNOWN, float longitude = KTimeZone::UNKNOWN,
+                        const QString &comment = QString());
+    /** Implements ICalTimeZone::ICalTimeZone(). */
+    ICalTimeZoneBackend(const KTimeZone &tz, const QDate &earliest);
+
+    virtual ~ICalTimeZoneBackend();
+
+    /**
+     * Creates a copy of this instance.
+     *
+     * @return new copy
+     */
+    virtual KTimeZoneBackend *clone() const;
+
+    /**
+     * Implements ICalTimeZone::hasTransitions().
+     *
+     * Return whether daylight saving transitions are available for the time zone.
+     *
+     * @param caller calling ICalTimeZone object
+     * @return @c true
+     */
+    virtual bool hasTransitions(const KTimeZone* caller) const;
+
+private:
+    ICalTimeZonePrivate *d;   // non-const
 };
 
 
@@ -283,25 +307,21 @@ class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
      * from a VTIMEZONE component.
      *
      * @param vtimezone the VTIMEZONE component from which data is to be extracted
-     * @return a ICalTimeZone instance containing the parsed data.
-     *         The caller is responsible for deleting the ICalTimeZone instance.
-     *         Null is returned on error.
+     * @return an ICalTimeZone instance containing the parsed data, or invalid on error
      */
-    ICalTimeZone *parse(icalcomponent *vtimezone);
+    ICalTimeZone parse(icalcomponent *vtimezone);
 
     /**
      * Creates an ICalTimeZone instance for each VTIMEZONE component within a
-     * CALENDAR component. The ICalTimeZones collection is updated with each new
-     * instance: if a time zone of the same name already exists in the collection,
-     * the existing ICalTimeZone instance is updated with the new data, else the
-     * new ICalTimeZone instance is added to the collection.
+     * CALENDAR component. The ICalTimeZone instances are added to a ICalTimeZones
+     * collection.
      *
      * If an error occurs while processing any time zone, any remaining time zones
      * are left unprocessed.
      *
      * @param calendar the CALENDAR component from which data is to be extracted
-     * @param zones    the time zones collection to be updated with the new
-     *                 ICalTimeZone instances
+     * @param zones    the time zones collection to which the ICalTimeZone
+     *                 instances are to be added
      * @return @c false if any error occurred (either parsing a VTIMEZONE component
      *         or adding an ICalTimeZone to @p zones), @c true otherwise
      */
@@ -310,15 +330,14 @@ class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
     /**
      * Reads an iCalendar file and creates an ICalTimeZone instance for each
      * VTIMEZONE component within it. The ICalTimeZone instances are added to a
-     * ICalTimeZones collection, or existing instances in the collection are
-     * updated.
+     * ICalTimeZones collection.
      *
      * If an error occurs while processing any time zone, any remaining time zones
      * are left unprocessed.
      *
      * @param fileName the file from which data is to be extracted
-     * @param zones    the time zones collection to be updated with the new
-     *                 ICalTimeZone instances
+     * @param zones    the time zones collection to which the ICalTimeZone
+     *                 instances are to be added
      * @return @c false if any error occurred, @c true otherwise
      */
     bool parse(const QString &fileName, ICalTimeZones &zones);
@@ -333,11 +352,9 @@ class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
      * VTIMEZONE component.
      *
      * @param tz the icaltimezone structure from which data is to be extracted
-     * @return a ICalTimeZone instance containing the time zone data.
-     *         The caller is responsible for deleting the ICalTimeZone instance.
-     *         Null is returned on error.
+     * @return an ICalTimeZone instance containing the time zone data, or invalid on error
      */
-    ICalTimeZone *parse(icaltimezone *tz);
+    ICalTimeZone parse(icaltimezone *tz);
 
     /**
      * Creates an ICalTimeZone instance for a standard time zone. The system
@@ -348,11 +365,9 @@ class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
      *             prefix string
      * @param icalBuiltIn @p true to fetch only the libical built-in time zone,
      *                    and ignore system time zone definitions
-     * @return a ICalTimeZone instance containing the time zone data.
-     *         The caller is responsible for deleting the ICalTimeZone instance.
-     *         Null is returned on error.
+     * @return an ICalTimeZone instance containing the time zone data, or invalid on error
      */
-    ICalTimeZone *standardZone(const QString &zone, bool icalBuiltIn = false);
+    ICalTimeZone standardZone(const QString &zone, bool icalBuiltIn = false);
 
     /**
      * Returns the prefix string used in the TZID field in built-in libical

@@ -57,8 +57,6 @@ class KCal::Calendar::Private
   public:
     Private()
       : mTimeZones( new ICalTimeZones ),
-        mBuiltInTimeZone( 0 ),
-        mBuiltInViewTimeZone( 0 ),
         mModified( false ),
         mNewObserver( false ),
         mObserversEnabled( true ),
@@ -76,10 +74,6 @@ class KCal::Calendar::Private
     ~Private()
     {
         delete mTimeZones;
-        delete mBuiltInTimeZone;
-        if ( mBuiltInViewTimeZone != mBuiltInTimeZone ) {
-          delete mBuiltInViewTimeZone;
-        }
         delete mDefaultFilter;
     }
     KDateTime::Spec timeZoneIdSpec( const QString &timeZoneId, bool view );
@@ -87,8 +81,8 @@ class KCal::Calendar::Private
     QString mProductId;
     Person mOwner;
     ICalTimeZones *mTimeZones; // collection of time zones used in this calendar
-    const ICalTimeZone *mBuiltInTimeZone;   // cached time zone lookup
-    const ICalTimeZone *mBuiltInViewTimeZone;   // cached viewing time zone lookup
+    ICalTimeZone mBuiltInTimeZone;   // cached time zone lookup
+    ICalTimeZone mBuiltInViewTimeZone;   // cached viewing time zone lookup
     KDateTime::Spec mTimeSpec;
     mutable KDateTime::Spec mViewTimeSpec;
     bool mModified;
@@ -138,10 +132,7 @@ void Calendar::setOwner( const Person &owner )
 void Calendar::setTimeSpec( const KDateTime::Spec &timeSpec )
 {
   d->mTimeSpec = timeSpec;
-  if ( d->mBuiltInViewTimeZone != d->mBuiltInTimeZone ) {
-    delete d->mBuiltInTimeZone;
-  }
-  d->mBuiltInTimeZone = 0;
+  d->mBuiltInTimeZone = ICalTimeZone();
   setViewTimeSpec( timeSpec );
 
   doSetTimeSpec( d->mTimeSpec );
@@ -156,9 +147,6 @@ void Calendar::setTimeZoneId( const QString &timeZoneId )
 {
   d->mTimeSpec = d->timeZoneIdSpec( timeZoneId, false );
   d->mViewTimeSpec = d->mTimeSpec;
-  if ( d->mBuiltInViewTimeZone != d->mBuiltInTimeZone ) {
-    delete d->mBuiltInViewTimeZone;
-  }
   d->mBuiltInViewTimeZone = d->mBuiltInTimeZone;
 
   doSetTimeSpec( d->mTimeSpec );
@@ -169,21 +157,15 @@ KDateTime::Spec Calendar::Private::timeZoneIdSpec( const QString &timeZoneId,
                                                    bool view )
 {
   if ( view ) {
-    if ( mBuiltInViewTimeZone != mBuiltInTimeZone ) {
-      delete mBuiltInViewTimeZone;
-    }
-    mBuiltInViewTimeZone = 0;
+    mBuiltInViewTimeZone = ICalTimeZone();
   } else {
-    if ( mBuiltInViewTimeZone != mBuiltInTimeZone ) {
-      delete mBuiltInTimeZone;
-    }
-    mBuiltInTimeZone = 0;
+    mBuiltInTimeZone = ICalTimeZone();
   }
   if ( timeZoneId == QLatin1String("UTC") ) {
     return( KDateTime::UTC );
   }
-  const ICalTimeZone *tz = mTimeZones->zone( timeZoneId );
-  if ( !tz ) {
+  ICalTimeZone tz = mTimeZones->zone( timeZoneId );
+  if ( !tz.isValid() ) {
     ICalTimeZoneSource tzsrc;
     tz = tzsrc.parse( icaltimezone_get_builtin_timezone( timeZoneId.toLatin1() ) );
     if ( view ) {
@@ -192,7 +174,7 @@ KDateTime::Spec Calendar::Private::timeZoneIdSpec( const QString &timeZoneId,
       mBuiltInTimeZone = tz;
     }
   }
-  if ( tz ) {
+  if ( tz.isValid() ) {
     return tz;
   } else {
     return KDateTime::ClockTime;
@@ -202,17 +184,14 @@ KDateTime::Spec Calendar::Private::timeZoneIdSpec( const QString &timeZoneId,
 
 QString Calendar::timeZoneId() const
 {
-  const KTimeZone *tz = d->mTimeSpec.timeZone();
-  return tz ? tz->name() : QString();
+  KTimeZone tz = d->mTimeSpec.timeZone();
+  return tz.isValid() ? tz.name() : QString();
 }
 
 void Calendar::setViewTimeSpec( const KDateTime::Spec &timeSpec ) const
 {
   d->mViewTimeSpec = timeSpec;
-  if ( d->mBuiltInViewTimeZone != d->mBuiltInTimeZone ) {
-    delete d->mBuiltInViewTimeZone;
-  }
-  d->mBuiltInViewTimeZone = 0;
+  d->mBuiltInViewTimeZone = ICalTimeZone();
 }
 
 void Calendar::setViewTimeZoneId( const QString &timeZoneId ) const
@@ -227,8 +206,8 @@ KDateTime::Spec Calendar::viewTimeSpec() const
 
 QString Calendar::viewTimeZoneId() const
 {
-  const KTimeZone *tz = d->mViewTimeSpec.timeZone();
-  return tz ? tz->name() : QString();
+  KTimeZone tz = d->mViewTimeSpec.timeZone();
+  return tz.isValid() ? tz.name() : QString();
 }
 
 ICalTimeZones *Calendar::timeZones() const

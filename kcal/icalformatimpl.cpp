@@ -1833,21 +1833,24 @@ icalproperty *ICalFormatImpl::writeICalDateTimeProperty(const icalproperty_kind 
       }
     }
   }
-  const KTimeZone *ktz = t.is_utc ? 0 : dt.timeZone();
-  if ( ktz ) {
+  KTimeZone ktz;
+  if ( !t.is_utc ) {
+    ktz = dt.timeZone();
+  }
+  if ( ktz.isValid() ) {
     if ( tzlist ) {
-      const ICalTimeZone *tz = tzlist->zone( ktz->name() );
-      if ( !tz ) {
+      ICalTimeZone tz = tzlist->zone( ktz.name() );
+      if ( !tz.isValid() ) {
         // The time zone isn't in the list of known zones for the calendar
         // - add it to the calendar's zone list
-        ICalTimeZone *tznew = new ICalTimeZone( *ktz );
+        ICalTimeZone tznew( ktz );
         tzlist->add( tznew );
 	tz = tznew;
       }
       if ( tzUsedList )
-        tzUsedList->addConst( tz );   // 'tz' belongs to tzlist
+        tzUsedList->add( tz );
     }
-    icalproperty_add_parameter(p, icalparameter_new_tzid( ktz->name().toUtf8() ));
+    icalproperty_add_parameter(p, icalparameter_new_tzid( ktz.name().toUtf8() ));
   }
   return p;
 }
@@ -1871,17 +1874,20 @@ KDateTime ICalFormatImpl::readICalDateTime( icalproperty *p, const icaltimetype&
       timeSpec = KDateTime::ClockTime;
     else {
       QString tzidStr = QString::fromUtf8( tzid );
-      const ICalTimeZone *tz = tzlist ? tzlist->zone( tzidStr ) : 0;
-      if ( !tz ) {
+      ICalTimeZone tz;
+      if ( tzlist ) {
+        tz = tzlist->zone( tzidStr );
+      }
+      if ( !tz.isValid() ) {
         // The time zone is not in the existing list for the calendar.
         // Try to read it from the system or libical databases.
         ICalTimeZoneSource tzsource;
-        ICalTimeZone *newtz = tzsource.standardZone( tzidStr );
-        if ( newtz && tzlist )
+        ICalTimeZone newtz = tzsource.standardZone( tzidStr );
+        if ( newtz.isValid() && tzlist )
           tzlist->add( newtz );
         tz = newtz;
       }
-      timeSpec = tz ? KDateTime::Spec( tz ) : KDateTime::LocalZone;
+      timeSpec = tz.isValid() ? KDateTime::Spec( tz ) : KDateTime::LocalZone;
 //      kDebug(5800) << "--- Time zone: " << (tz ? timeSpec.timeZone()->name() : QString()) << endl;
     }
   }
@@ -2057,10 +2063,8 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 
   // Populate the calendar's time zone collection with all VTIMEZONE components
   ICalTimeZones *tzlist = cal->timeZones();
-#ifdef __GNUC__
-#warning Do not delete timezones in case KDateTime instances still refer to them
-#endif
   ICalTimeZoneSource tzs;
+  ICalTimeZones newtzlist;
   tzs.parse(calendar, *tzlist);
 
   // custom properties
@@ -2126,7 +2130,9 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   Todo::List::ConstIterator tIt;
   for ( tIt = mTodosRelate.begin(); tIt != mTodosRelate.end(); ++tIt ) {
     (*tIt)->setRelatedTo( cal->incidence( (*tIt)->relatedToUid() ) );
-   }
+  }
+
+  // Remove any previous time zones not actually referenced in the calendar
 
   return true;
 }

@@ -261,7 +261,7 @@ QString ICalFormat::toString( Calendar *cal )
   // time zones
   const ICalTimeZones::ZoneMap zones = tzUsedList.zones();
   for ( ICalTimeZones::ZoneMap::ConstIterator it = zones.begin();  it != zones.end();  ++it) {
-    icaltimezone *tz = (*it)->icalTimezone();
+    icaltimezone *tz = (*it).icalTimezone();
     if ( !tz ) {
       kError(5800) << "ICalFormat::toString(): bad time zone" << endl;
     } else {
@@ -591,6 +591,6 @@ KDateTime::Spec ICalFormat::timeSpec() const
 
 QString ICalFormat::timeZoneId() const
 {
-  const KTimeZone *tz = mTimeSpec.timeZone();
-  return tz ? tz->name() : QString();
+  KTimeZone tz = mTimeSpec.timeZone();
+  return tz.isValid() ? tz.name() : QString();
 }
