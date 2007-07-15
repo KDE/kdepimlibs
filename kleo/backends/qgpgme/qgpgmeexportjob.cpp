@@ -30,10 +30,6 @@
     your version.
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "qgpgmeexportjob.h"
 
 #include <qgpgme/eventloopinteractor.h>
@@ -65,7 +61,7 @@ GpgME::Error Kleo::QGpgMEExportJob::start( const QStringList & pats ) {
   hookupContextToEventLoopInteractor();
 
   const GpgME::Error err = mCtx->startPublicKeyExport( patterns(), *mOutData );
-						  
+
   if ( err )
     deleteLater();
   return err;

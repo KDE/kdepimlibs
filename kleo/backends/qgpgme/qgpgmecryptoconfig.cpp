@@ -98,7 +98,7 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
         reason = i18n( "program not found or cannot be started" );
     else
         reason = strerror(rc); // XXX errno as an exit code?
-    QString wmsg = i18n("<qt>Failed to execute gpgconf:<br>%1</qt>", reason);
+    QString wmsg = i18n("<qt>Failed to execute gpgconf:<p>%1</p></qt>", reason);
     kWarning(5150) << wmsg << endl; // to see it from test_cryptoconfig.cpp
     KMessageBox::error(0, wmsg);
   }
@@ -263,7 +263,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   QList<QString> keylist = mGroups.uniqueKeys();
   foreach (QString key, keylist) {
     QHash<QString,QGpgMECryptoConfigEntry*> entry = mGroups[key]->mEntries;
-    QList<QString> keylistentry = entry.uniqueKeys(); 
+    QList<QString> keylistentry = entry.uniqueKeys();
     foreach (QString keyentry, keylistentry) {
       if(entry[keyentry]->isDirty())
       {
@@ -281,7 +281,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
         dirtyEntries.append( entry[keyentry] );
 
       }
-    } 
+    }
   }
 
   tmpFile.flush();

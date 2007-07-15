@@ -14,9 +14,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -32,13 +32,7 @@
 
 #define MAX_CMD_LENGTH 32768
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "qgpgmerefreshkeysjob.h"
-//Added by qt3to4:
-#include <QByteArray>
 
 #include "gnupgprocessbase.h"
 #include "qgpgmeprogresstokenmapper.h"
@@ -49,6 +43,7 @@
 
 #include <qgpgme/eventloopinteractor.h>
 
+#include <QByteArray>
 #include <QStringList>
 
 #include <gpg-error.h>

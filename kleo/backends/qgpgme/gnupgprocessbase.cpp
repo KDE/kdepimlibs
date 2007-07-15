@@ -14,9 +14,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -38,8 +38,6 @@
 #include <QSocketNotifier>
 #include <QTextCodec>
 #include <QStringList>
-//Added by qt3to4:
-#include <QList>
 #include <QByteArray>
 #include <QList>
 #include <unistd.h>

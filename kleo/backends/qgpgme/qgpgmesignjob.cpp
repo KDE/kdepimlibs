@@ -30,10 +30,6 @@
     your version.
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "qgpgmesignjob.h"
 
 #include <qgpgme/eventloopinteractor.h>
@@ -81,7 +77,7 @@ GpgME::Error Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers
   hookupContextToEventLoopInteractor();
 
   const GpgME::Error err = mCtx->startSigning( *mInData, *mOutData, mode );
-						  
+
   if ( err )
     deleteLater();
   return err;

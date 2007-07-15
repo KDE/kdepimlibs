@@ -30,10 +30,6 @@
     your version.
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "qgpgmeimportjob.h"
 
 #include <qgpgme/eventloopinteractor.h>
@@ -67,7 +63,7 @@ GpgME::Error Kleo::QGpgMEImportJob::start( const QByteArray & keyData ) {
   hookupContextToEventLoopInteractor();
 
   const GpgME::Error err = mCtx->startKeyImport( *mInData );
-						  
+
   if ( err )
     deleteLater();
   return err;

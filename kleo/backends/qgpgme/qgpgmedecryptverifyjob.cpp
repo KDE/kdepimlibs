@@ -30,10 +30,6 @@
     your version.
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "qgpgmedecryptverifyjob.h"
 
 #include <qgpgme/eventloopinteractor.h>
@@ -70,7 +66,7 @@ GpgME::Error Kleo::QGpgMEDecryptVerifyJob::start( const QByteArray & cipherText 
   hookupContextToEventLoopInteractor();
 
   const GpgME::Error err = mCtx->startCombinedDecryptionAndVerification( *mInData, *mOutData );
-						  
+
   if ( err )
     deleteLater();
   return err;

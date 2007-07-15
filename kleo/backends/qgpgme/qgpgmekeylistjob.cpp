@@ -30,10 +30,6 @@
     your version.
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "qgpgmekeylistjob.h"
 
 #include <qgpgme/eventloopinteractor.h>
