@@ -47,7 +47,7 @@ namespace Kleo {
   {
     Q_OBJECT
   public:
-    CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent = 0 );
+    explicit CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent = 0 );
 
   protected Q_SLOTS:
     void slotOk();

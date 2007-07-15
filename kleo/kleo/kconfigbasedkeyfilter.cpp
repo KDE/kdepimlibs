@@ -90,7 +90,7 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config 
 {
   mFgColor = config.readEntry( "foreground-color" );
   mBgColor = config.readEntry( "background-color" );
-  mName = config.readEntry( "name", i18n("<unnamed>") );
+  mName = config.readEntry( "name", i18n("<placeholder>unnamed</placeholder>") );
   mIcon = config.readEntry( "icon" );
   if ( config.hasKey( "font" ) ) {
     mUseFullFont = true;

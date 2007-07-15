@@ -83,7 +83,7 @@ static int pref2cb( Kleo::EncryptionPreference p ) {
 }
 
 static QStringList preferencesStrings() {
-  return QStringList() << i18n("<none>")
+  return QStringList() << i18n("<placeholder>none</placeholder>")
 		       << i18n("Never Encrypt with This Key")
 		       << i18n("Always Encrypt with This Key")
 		       << i18n("Encrypt Whenever Encryption is Possible")
@@ -183,7 +183,7 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
 }
 
 Kleo::KeyApprovalDialog::~KeyApprovalDialog() {
-  delete d; 
+  delete d;
 }
 
 std::vector<GpgME::Key> Kleo::KeyApprovalDialog::senderKeys() const {

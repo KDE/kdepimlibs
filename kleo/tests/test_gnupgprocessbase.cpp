@@ -78,7 +78,7 @@ static QStringList split( char * buffer, int buflen, QString & old ) {
   QStringList l = str.split( '\n' );
   if ( l.empty() )
     return l;
-  if ( str.endsWith( "\n" ) ) {
+  if ( str.endsWith( '\n' ) ) {
     old.clear();
   } else {
     old = l.back();

@@ -216,7 +216,7 @@ namespace {
 	if ( key.shortKeyID() )
 	  return QString::fromUtf8( key.shortKeyID() );
 	else
-	  return i18n("<unknown>");
+	  return i18n("<placeholder>unknown</placeholder>");
       }
       break;
     case 1:
@@ -589,10 +589,10 @@ void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & r
 
   if ( mTruncated > 0 )
     KMessageBox::information( this,
-			      i18np("<qt>One backend returned truncated output.<br>"
-				   "Not all available keys are shown</qt>",
-			           "<qt>%1 backends returned truncated output.<br>"
-				   "Not all available keys are shown</qt>",
+			      i18np("<qt>One backend returned truncated output.<p>"
+				   "Not all available keys are shown</p></qt>",
+			           "<qt>%1 backends returned truncated output.<p>"
+				   "Not all available keys are shown</p></qt>",
 				   mTruncated),
 			      i18n("Key List Result") );
 

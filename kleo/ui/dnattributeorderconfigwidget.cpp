@@ -30,10 +30,6 @@
     your version.
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "dnattributeorderconfigwidget.h"
 
 #include "kleo/dn.h"
@@ -83,7 +79,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
   d->mapper = mapper;
 
   QGridLayout * glay = new QGridLayout( this );
-  glay->setMargin( 0 ); 
+  glay->setMargin( 0 );
   glay->setSpacing( KDialog::spacingHint() );
   glay->setColumnStretch( 0, 1 );
   glay->setColumnStretch( 2, 1 );
