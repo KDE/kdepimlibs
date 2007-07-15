@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMESIGNENCRYPTJOB_H__
 #define __KLEO_QGPGMESIGNENCRYPTJOB_H__
 
-#include "libkleo_export.h"
+#include "kleo_export.h"
 #include "kleo/signencryptjob.h"
 #include "qgpgmejob.h"
 

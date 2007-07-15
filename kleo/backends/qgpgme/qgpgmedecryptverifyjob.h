@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEDECRYPTVERIFYJOB_H__
 #define __KLEO_QGPGMEDECRYPTVERIFYJOB_H__
 
-#include "libkleo_export.h"
+#include "kleo_export.h"
 #include "kleo/decryptverifyjob.h"
 
 #include "qgpgmejob.h"

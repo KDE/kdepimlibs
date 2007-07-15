@@ -33,7 +33,7 @@
 #ifndef __KLEO_CRYPTPLUGFACTORY_H__
 #define __KLEO_CRYPTPLUGFACTORY_H__
 
-#include "libkleo_export.h"
+#include "kleo_export.h"
 #include "kleo/cryptobackendfactory.h"
 
 #ifndef LIBKLEOPATRA_NO_COMPAT
