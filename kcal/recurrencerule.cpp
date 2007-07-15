@@ -1067,7 +1067,7 @@ bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec 
     DateTimeList dts = datesForInterval( interval, recurrenceType() );
     int i = dts.findGE( start );
     if ( i >= 0 ) {
-      return ( dts[i] < end );
+      return ( dts[i] <= end );
     }
     interval.increase( recurrenceType(), frequency() );
 //kDebug(5800)<<"recursOn(): times interval: "<<interval.intervalDateTime( recurrenceType() ).dateTime()<<endl;
