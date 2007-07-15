@@ -3,7 +3,7 @@
 
     Copyright (c) 1998 Preston Brown <pbrown@kde.org>
     Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2002,2006 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2002,2006,2007 David Jarvie <software@astrojar.org.uk>
     Copyright (c) 2005, Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
@@ -91,22 +91,22 @@ class KCAL_EXPORT RecurrenceRule
 
 
     /** Set if recurrence is read-only or can be changed. */
-    void setReadOnly(bool readOnly) { mIsReadOnly = readOnly; }
+    void setReadOnly( bool readOnly );
     /** Returns true if the recurrence is read-only, or false if it can be changed. */
-    bool isReadOnly() const  { return mIsReadOnly; }
+    bool isReadOnly() const;
 
 
     /** Returns the event's recurrence status.  See the enumeration at the top
      * of this file for possible values. */
-    bool doesRecur() const { return mPeriod!=rNone; }
+    bool doesRecur() const;
     void setRecurrenceType( PeriodType period );
-    PeriodType recurrenceType() const { return mPeriod; }
+    PeriodType recurrenceType() const;
     /** Turns off recurrence for the event. */
     void clear();
 
 
     /** Returns frequency of recurrence, in terms of the recurrence time period type. */
-    uint frequency() const { return mFrequency; }
+    uint frequency() const;
     /** Sets the frequency of recurrence, in terms of the recurrence time period type. */
     void setFrequency( int freq );
 
@@ -114,7 +114,7 @@ class KCAL_EXPORT RecurrenceRule
     /** Return the start of the recurrence.
      *  Note that the recurrence does not necessarily occur on the start date/time. For
      *  this to happen, it must actually match the rule. */
-    KDateTime startDt() const   { return mDateStart; }
+    KDateTime startDt() const;
     /** Set start of recurrence, as a date and time.
      *  Note that setting the start date/time does not make the recurrence occur on
      *  that date/time, it simply sets a lower limit to when the recurrences take place. */
@@ -122,7 +122,7 @@ class KCAL_EXPORT RecurrenceRule
 
     /** Returns whether the start date has no time associated. Floating
         means -- according to rfc2445 -- that the event has no time associate. */
-    bool doesFloat() const { return mFloating; }
+    bool doesFloat() const;
     /** Sets whether the dtstart is a floating time (i.e. has no time attached) */
     void setFloats( bool floats );
 
@@ -142,7 +142,7 @@ class KCAL_EXPORT RecurrenceRule
      * Returns -1 if the event recurs infinitely, 0 if the end date is set,
      * otherwise the total number of recurrences, including the initial occurrence.
      */
-    int duration() const { return mDuration; }
+    int duration() const;
     /** Sets the total number of times the event is to occur, including both the
      * first and last. */
     void setDuration(int duration);
@@ -235,18 +235,25 @@ class KCAL_EXPORT RecurrenceRule
     void setBySetPos( const QList<int> bySetPos );
     void setWeekStart( short weekStart );
 
-    const QList<int> &bySeconds() const { return mBySeconds; }
-    const QList<int> &byMinutes() const { return mByMinutes; }
-    const QList<int> &byHours() const { return mByHours; }
+    const QList<int> &bySeconds() const;
+    const QList<int> &byMinutes() const;
+    const QList<int> &byHours() const;
 
-    const QList<WDayPos> &byDays() const { return mByDays; }
-    const QList<int> &byMonthDays() const { return mByMonthDays; }
-    const QList<int> &byYearDays() const { return mByYearDays; }
-    const QList<int> &byWeekNumbers() const { return mByWeekNumbers; }
-    const QList<int> &byMonths() const { return mByMonths; }
-    const QList<int> &bySetPos() const { return mBySetPos; }
-    short weekStart() const { return mWeekStart; }
+    const QList<WDayPos> &byDays() const;
+    const QList<int> &byMonthDays() const;
+    const QList<int> &byYearDays() const;
+    const QList<int> &byWeekNumbers() const;
+    const QList<int> &byMonths() const;
+    const QList<int> &bySetPos() const;
+    short weekStart() const;
 
+    /**
+      Set the RRULE string for the rule.
+      This is merely stored for future reference. The string is not used in any way
+      by the RecurrenceRule.
+     */
+    void setRRule( const QString &rrule );
+    QString rrule() const;
 
     void setDirty();
     /**
@@ -269,88 +276,8 @@ class KCAL_EXPORT RecurrenceRule
       Debug output.
     */
     void dump() const;
-    QString mRRule;
 
   private:
-    class Constraint {
-      public:
-        typedef QList<Constraint> List;
-
-        explicit Constraint( KDateTime::Spec, int wkst = 1 );
-        Constraint( const KDateTime &dt, PeriodType type, int wkst );
-        void clear();
-
-        int year;       // 0 means unspecified
-        int month;      // 0 means unspecified
-        int day;        // 0 means unspecified
-        int hour;       // -1 means unspecified
-        int minute;     // -1 means unspecified
-        int second;     // -1 means unspecified
-        int weekday;    //  0 means unspecified
-        int weekdaynr;  // index of weekday in month/year (0=unspecified)
-        int weeknumber; //  0 means unspecified
-        int yearday;    //  0 means unspecified
-        int weekstart;  //  first day of week (1=monday, 7=sunday, 0=unspec.)
-        KDateTime::Spec timespec;   // time zone etc. to use
-        bool secondOccurrence;  // the time is the second occurrence during daylight savings shift
-
-        bool readDateTime( const KDateTime &dt, PeriodType type );
-        bool matches( const QDate &dt, RecurrenceRule::PeriodType type ) const;
-        bool matches( const KDateTime &dt, RecurrenceRule::PeriodType type ) const;
-        bool isConsistent() const;
-        bool isConsistent( PeriodType period ) const;
-        bool increase( PeriodType type, int freq );
-        KDateTime intervalDateTime( PeriodType type ) const;
-        QList<KDateTime> dateTimes( PeriodType type ) const;
-        void appendDateTime( const QDate &date, const QTime &time, QList<KDateTime> &list ) const;
-        void dump() const;
-    };
-
-    Constraint getNextValidDateInterval( const KDateTime &preDate, PeriodType type ) const;
-    Constraint getPreviousValidDateInterval( const KDateTime &afterDate, PeriodType type ) const;
-    DateTimeList datesForInterval( const Constraint &interval, PeriodType type ) const;
-    bool mergeIntervalConstraint( Constraint *merged, const Constraint &conit,
-                                  const Constraint &interval ) const;
-    bool buildCache() const;
-
-
-    PeriodType mPeriod;
-    KDateTime mDateStart;      // start of recurrence (but mDateStart is not an occurrence
-                               // unless it matches the rule)
-    /** how often it recurs:
-          -1 means infinitely,
-           0 means an explicit end date,
-           positive values give the number of occurrences */
-    int mDuration;
-    KDateTime mDateEnd;
-    uint mFrequency;
-
-    bool mIsReadOnly;
-    bool mFloating;
-
-    QList<int> mBySeconds;     // values: second 0-59
-    QList<int> mByMinutes;     // values: minute 0-59
-    QList<int> mByHours;       // values: hour 0-23
-
-    QList<WDayPos> mByDays;   // n-th weekday of the month or year
-    QList<int> mByMonthDays;   // values: day -31 to -1 and 1-31
-    QList<int> mByYearDays;    // values: day -366 to -1 and 1-366
-    QList<int> mByWeekNumbers; // values: week -53 to -1 and 1-53
-    QList<int> mByMonths;      // values: month 1-12
-    QList<int> mBySetPos;      // values: position -366 to -1 and 1-366
-    short mWeekStart;               // first day of the week (1=Monday, 7=Sunday)
-
-    Constraint::List mConstraints;
-    void buildConstraints();
-    bool mDirty;
-    QList<RuleObserver*> mObservers;
-
-    // Cache for duration
-    mutable DateTimeList mCachedDates;
-    mutable bool mCached;
-    mutable KDateTime mCachedDateEnd;
-    mutable KDateTime mCachedLastDate;   // when mCachedDateEnd invalid, last date checked
-
     class Private;
     Private *d;
 };

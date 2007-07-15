@@ -2,7 +2,7 @@
     This file is part of libkcal.
 
     Copyright (c) 2005 Reinhold Kainhofer <reinhold@kainhofe.com>
-    Copyright (c) 2006 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2006,2007 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -136,25 +136,59 @@ int DateHelper::getWeekNumberNeg( const QDate &date, short weekstart, int *year 
 
 
 /**************************************************************************
- *                       RecurrenceRule::Constraint                       *
+ *                               Constraint                               *
  **************************************************************************/
 
+class Constraint {
+  public:
+    typedef QList<Constraint> List;
 
-RecurrenceRule::Constraint::Constraint( KDateTime::Spec spec, int wkst )
+    explicit Constraint( KDateTime::Spec, int wkst = 1 );
+    Constraint( const KDateTime &dt, RecurrenceRule::PeriodType type, int wkst );
+    void clear();
+
+    int year;       // 0 means unspecified
+    int month;      // 0 means unspecified
+    int day;        // 0 means unspecified
+    int hour;       // -1 means unspecified
+    int minute;     // -1 means unspecified
+    int second;     // -1 means unspecified
+    int weekday;    //  0 means unspecified
+    int weekdaynr;  // index of weekday in month/year (0=unspecified)
+    int weeknumber; //  0 means unspecified
+    int yearday;    //  0 means unspecified
+    int weekstart;  //  first day of week (1=monday, 7=sunday, 0=unspec.)
+    KDateTime::Spec timespec;   // time zone etc. to use
+    bool secondOccurrence;  // the time is the second occurrence during daylight savings shift
+
+    bool readDateTime( const KDateTime &dt, RecurrenceRule::PeriodType type );
+    bool matches( const QDate &dt, RecurrenceRule::PeriodType type ) const;
+    bool matches( const KDateTime &dt, RecurrenceRule::PeriodType type ) const;
+    bool isConsistent() const;
+    bool isConsistent( RecurrenceRule::PeriodType period ) const;
+    bool increase( RecurrenceRule::PeriodType type, int freq );
+    KDateTime intervalDateTime( RecurrenceRule::PeriodType type ) const;
+    QList<KDateTime> dateTimes( RecurrenceRule::PeriodType type ) const;
+    void appendDateTime( const QDate &date, const QTime &time, QList<KDateTime> &list ) const;
+    void dump() const;
+};
+
+
+Constraint::Constraint( KDateTime::Spec spec, int wkst )
   : weekstart( wkst ),
     timespec( spec )
 {
   clear();
 }
 
-RecurrenceRule::Constraint::Constraint( const KDateTime &dt, PeriodType type, int wkst )
+Constraint::Constraint( const KDateTime &dt, RecurrenceRule::PeriodType type, int wkst )
   : weekstart( wkst ),
     timespec( dt.timeSpec() )
 {
   readDateTime( dt, type );
 }
 
-void RecurrenceRule::Constraint::clear()
+void Constraint::clear()
 {
   year = 0;
   month = 0;
@@ -169,7 +203,7 @@ void RecurrenceRule::Constraint::clear()
   secondOccurrence = false;
 }
 
-bool RecurrenceRule::Constraint::matches( const QDate &dt, RecurrenceRule::PeriodType type ) const
+bool Constraint::matches( const QDate &dt, RecurrenceRule::PeriodType type ) const
 {
   // If the event recurs in week 53 or 1, the day might not belong to the same
   // year as the week it is in. E.g. Jan 1, 2005 is in week 53 of year 2004.
@@ -193,7 +227,7 @@ bool RecurrenceRule::Constraint::matches( const QDate &dt, RecurrenceRule::Perio
     if ( weekdaynr != 0 ) {
       // If it's a yearly recurrence and a month is given, the position is
       // still in the month, not in the year.
-      bool inMonth = (type == rMonthly) || ( type == rYearly && month > 0 );
+      bool inMonth = (type == RecurrenceRule::rMonthly) || ( type == RecurrenceRule::rYearly && month > 0 );
       // Monthly
       if ( weekdaynr > 0 && inMonth &&
            weekdaynr != (dt.day() - 1)/7 + 1 ) return false;
@@ -217,7 +251,7 @@ bool RecurrenceRule::Constraint::matches( const QDate &dt, RecurrenceRule::Perio
 /* Check for a match with the specified date/time.
  * The date/time's time specification must correspond with that of the start date/time.
  */
-bool RecurrenceRule::Constraint::matches( const KDateTime &dt, RecurrenceRule::PeriodType type ) const
+bool Constraint::matches( const KDateTime &dt, RecurrenceRule::PeriodType type ) const
 {
   if ( !matches( dt.date(), type ) ) return false;
   if ( hour >= 0 && (hour != dt.time().hour() || secondOccurrence != dt.isSecondOccurrence()) ) return false;
@@ -226,7 +260,7 @@ bool RecurrenceRule::Constraint::matches( const KDateTime &dt, RecurrenceRule::P
   return true;
 }
 
-bool RecurrenceRule::Constraint::isConsistent( PeriodType /*period*/) const
+bool Constraint::isConsistent( RecurrenceRule::PeriodType /*period*/) const
 {
   // TODO: Check for consistency, e.g. byyearday=3 and bymonth=10
   return true;
@@ -234,26 +268,26 @@ bool RecurrenceRule::Constraint::isConsistent( PeriodType /*period*/) const
 
 // Return a date/time set to the constraint values, but with those parts less
 // significant than the given period type set to 1 (for dates) or 0 (for times).
-KDateTime RecurrenceRule::Constraint::intervalDateTime( RecurrenceRule::PeriodType type ) const
+KDateTime Constraint::intervalDateTime( RecurrenceRule::PeriodType type ) const
 {
   QTime t( 0, 0, 0 );
   QDate d( year, (month>0)?month:1, (day>0)?day:1 );
   if ( day < 0 )
     d = d.addDays( d.daysInMonth() + day );
   switch ( type ) {
-    case rSecondly:
+	  case RecurrenceRule::rSecondly:
       t.setHMS( hour, minute, second ); break;
-    case rMinutely:
+    case RecurrenceRule::rMinutely:
       t.setHMS( hour, minute, 0 ); break;
-    case rHourly:
+    case RecurrenceRule::rHourly:
       t.setHMS( hour, 0, 0 ); break;
-    case rDaily:
+    case RecurrenceRule::rDaily:
       break;
-    case rWeekly:
+    case RecurrenceRule::rWeekly:
       d = DateHelper::getNthWeek( year, weeknumber, weekstart ); break;
-    case rMonthly:
+    case RecurrenceRule::rMonthly:
       d.setYMD( year, month, 1 ); break;
-    case rYearly:
+    case RecurrenceRule::rYearly:
       d.setYMD( year, 1, 1 ); break;
     default:
       break;
@@ -282,7 +316,7 @@ KDateTime RecurrenceRule::Constraint::intervalDateTime( RecurrenceRule::PeriodTy
 //           x       | x  x  x |  x  ?  | (-)| (-)
 // 5) All possiblecases have already been treated, so this must be an error!
 
-QList<KDateTime> RecurrenceRule::Constraint::dateTimes( RecurrenceRule::PeriodType type ) const
+QList<KDateTime> Constraint::dateTimes( RecurrenceRule::PeriodType type ) const
 {
 // kDebug(5800) << "              RecurrenceRule::Constraint::dateTimes: " << endl;
   QList<KDateTime> result;
@@ -356,7 +390,7 @@ QList<KDateTime> RecurrenceRule::Constraint::dateTimes( RecurrenceRule::PeriodTy
     // If type == yearly and month is given, pos is still in month not year!
     // TODO_Recurrence: Correct handling of n-th  BYDAY...
     int maxloop = 53;
-    bool inMonth = ( type == rMonthly) || ( type == rYearly && month > 0 );
+    bool inMonth = ( type == RecurrenceRule::rMonthly) || ( type == RecurrenceRule::rYearly && month > 0 );
     if ( inMonth && month > 0 ) {
       dt = QDate( year, month, 1 );
       maxloop = 5;
@@ -398,7 +432,7 @@ QList<KDateTime> RecurrenceRule::Constraint::dateTimes( RecurrenceRule::PeriodTy
   return valid;
 }
 
-void RecurrenceRule::Constraint::appendDateTime( const QDate &date, const QTime &time, QList<KDateTime> &list ) const
+void Constraint::appendDateTime( const QDate &date, const QTime &time, QList<KDateTime> &list ) const
 {
   KDateTime dt( date, time, timespec );
   if ( dt.isValid() ) {
@@ -409,26 +443,26 @@ void RecurrenceRule::Constraint::appendDateTime( const QDate &date, const QTime 
 }
 
 
-bool RecurrenceRule::Constraint::increase( RecurrenceRule::PeriodType type, int freq )
+bool Constraint::increase( RecurrenceRule::PeriodType type, int freq )
 {
   // convert the first day of the interval to QDateTime
   KDateTime dt( intervalDateTime( type ) );
 
   // Now add the intervals
   switch ( type ) {
-    case rSecondly:
+    case RecurrenceRule::rSecondly:
       dt = dt.addSecs( freq ); break;
-    case rMinutely:
+    case RecurrenceRule::rMinutely:
       dt = dt.addSecs( 60*freq ); break;
-    case rHourly:
+    case RecurrenceRule::rHourly:
       dt = dt.addSecs( 3600 * freq ); break;
-    case rDaily:
+    case RecurrenceRule::rDaily:
       dt = dt.addDays( freq ); break;
-    case rWeekly:
+    case RecurrenceRule::rWeekly:
       dt = dt.addDays( 7*freq ); break;
-    case rMonthly:
+    case RecurrenceRule::rMonthly:
       dt = dt.addMonths( freq ); break;
-    case rYearly:
+    case RecurrenceRule::rYearly:
       dt = dt.addYears( freq ); break;
     default:
       break;
@@ -440,27 +474,27 @@ bool RecurrenceRule::Constraint::increase( RecurrenceRule::PeriodType type, int 
 }
 
 // Set the constraint's value appropriate to 'type', to the value contained in a date/time.
-bool RecurrenceRule::Constraint::readDateTime( const KDateTime &dt, PeriodType type )
+bool Constraint::readDateTime( const KDateTime &dt, RecurrenceRule::PeriodType type )
 {
   clear();
   switch ( type ) {
     // Really fall through! Only weekly needs to be treated differentely!
-    case rSecondly:
+    case RecurrenceRule::rSecondly:
       second = dt.time().second();
-    case rMinutely:
+    case RecurrenceRule::rMinutely:
       minute = dt.time().minute();
-    case rHourly:
+    case RecurrenceRule::rHourly:
       hour = dt.time().hour();
       secondOccurrence = dt.isSecondOccurrence();
-    case rDaily:
+    case RecurrenceRule::rDaily:
       day = dt.date().day();
-    case rMonthly:
+    case RecurrenceRule::rMonthly:
       month = dt.date().month();
-    case rYearly:
+    case RecurrenceRule::rYearly:
       year = dt.date().year();
       break;
 
-    case rWeekly:
+    case RecurrenceRule::rWeekly:
       // Determine start day of the current week, calculate the week number from that
       weeknumber = DateHelper::getWeekNumber( dt.date(), weekstart, &year );
       break;
@@ -471,143 +505,128 @@ bool RecurrenceRule::Constraint::readDateTime( const KDateTime &dt, PeriodType t
 }
 
 
-
 /**************************************************************************
- *                              RecurrenceRule                            *
+ *                        RecurrenceRule::Private                         *
  **************************************************************************/
 
-RecurrenceRule::RecurrenceRule( )
-: mPeriod( rNone ), mFrequency( 0 ), mIsReadOnly( false ),
-  mFloating( false ),
-  mWeekStart(1)
+//@cond PRIVATE
+class KCal::RecurrenceRule::Private
 {
-}
+  public:
+    Private( RecurrenceRule *parent )
+      : mParent( parent ),
+        mPeriod( rNone ),
+        mFrequency( 0 ),
+        mWeekStart( 1 ),
+        mIsReadOnly( false ),
+        mFloating( false )
+    {}
 
-RecurrenceRule::RecurrenceRule( const RecurrenceRule &r )
-{
-  mRRule = r.mRRule;
-  mPeriod = r.mPeriod;
-  mDateStart = r.mDateStart;
-  mDuration = r.mDuration;
-  mDateEnd = r.mDateEnd;
-  mFrequency = r.mFrequency;
-
-  mIsReadOnly = r.mIsReadOnly;
-  mFloating = r.mFloating;
-
-  mBySeconds = r.mBySeconds;
-  mByMinutes = r.mByMinutes;
-  mByHours = r.mByHours;
-  mByDays = r.mByDays;
-  mByMonthDays = r.mByMonthDays;
-  mByYearDays = r.mByYearDays;
-  mByWeekNumbers = r.mByWeekNumbers;
-  mByMonths = r.mByMonths;
-  mBySetPos = r.mBySetPos;
-  mWeekStart = r.mWeekStart;
-
-  setDirty();
-}
-
-RecurrenceRule::~RecurrenceRule()
-{
-}
-
-bool RecurrenceRule::operator==( const RecurrenceRule& r ) const
-{
-  if ( mPeriod != r.mPeriod ) return false;
-  if ( mDateStart != r.mDateStart ) return false;
-  if ( mDuration != r.mDuration ) return false;
-  if ( mDateEnd != r.mDateEnd ) return false;
-  if ( mFrequency != r.mFrequency ) return false;
-
-  if ( mIsReadOnly != r.mIsReadOnly ) return false;
-  if ( mFloating != r.mFloating ) return false;
-
-  if ( mBySeconds != r.mBySeconds ) return false;
-  if ( mByMinutes != r.mByMinutes ) return false;
-  if ( mByHours != r.mByHours ) return false;
-  if ( mByDays != r.mByDays ) return false;
-  if ( mByMonthDays != r.mByMonthDays ) return false;
-  if ( mByYearDays != r.mByYearDays ) return false;
-  if ( mByWeekNumbers != r.mByWeekNumbers ) return false;
-  if ( mByMonths != r.mByMonths ) return false;
-  if ( mBySetPos != r.mBySetPos ) return false;
-  if ( mWeekStart != r.mWeekStart ) return false;
-
-  return true;
-}
-
-void RecurrenceRule::addObserver( RuleObserver *observer )
-{
-  if ( !mObservers.contains( observer ) )
-    mObservers.append( observer );
-}
-
-void RecurrenceRule::removeObserver( RuleObserver *observer )
-{
-  if ( mObservers.contains( observer ) )
-    mObservers.removeAll( observer );
-}
-
-
-
-void RecurrenceRule::setRecurrenceType( PeriodType period )
-{
-  if ( isReadOnly() ) return;
-  mPeriod = period;
-  setDirty();
-}
-
-
-KDateTime RecurrenceRule::endDt( bool *result ) const
-{
-  if ( result ) *result = false;
-  if ( mPeriod == rNone ) return KDateTime();
-  if ( mDuration < 0 ) {
-    if ( result ) result = false;
-    return KDateTime();
-  } else if ( mDuration == 0 ) {
-    return mDateEnd;
-  } else {
-    // N occurrences. Check if we have a full cache. If so, return the cached end date.
-    if ( ! mCached ) {
-      // If not enough occurrences can be found (i.e. inconsistent constraints)
-      if ( !buildCache() ) {
-        if ( result ) result = false;
-        return KDateTime();
-      }
+    Private( RecurrenceRule *parent, const Private &p )
+      : mParent( parent ),
+        mRRule( p.mRRule ),
+        mPeriod( p.mPeriod ),
+        mDateStart( p.mDateStart ),
+        mFrequency( p.mFrequency ),
+        mDuration( p.mDuration ),
+        mDateEnd( p.mDateEnd ),
+      
+        mBySeconds( p.mBySeconds ),
+        mByMinutes( p.mByMinutes ),
+        mByHours( p.mByHours ),
+        mByDays( p.mByDays ),
+        mByMonthDays( p.mByMonthDays ),
+        mByYearDays( p.mByYearDays ),
+        mByWeekNumbers( p.mByWeekNumbers ),
+        mByMonths( p.mByMonths ),
+        mBySetPos( p.mBySetPos ),
+        mWeekStart( p.mWeekStart ),
+      
+        mIsReadOnly( p.mIsReadOnly ),
+        mFloating( p.mFloating )
+    {
+        setDirty();
     }
-    return mCachedDateEnd;
+
+    bool operator==( const Private &other ) const;
+    void clear();
+    void setDirty();
+    void buildConstraints();
+    bool buildCache() const;
+    Constraint getNextValidDateInterval( const KDateTime &preDate, PeriodType type ) const;
+    Constraint getPreviousValidDateInterval( const KDateTime &afterDate, PeriodType type ) const;
+    DateTimeList datesForInterval( const Constraint &interval, PeriodType type ) const;
+    bool mergeIntervalConstraint( Constraint *merged, const Constraint &conit,
+                                  const Constraint &interval ) const;
+
+    RecurrenceRule *mParent;
+    QString mRRule;            // RRULE string
+    PeriodType mPeriod;
+    KDateTime mDateStart;      // start of recurrence (but mDateStart is not an occurrence
+                               // unless it matches the rule)
+    uint mFrequency;
+    /** how often it recurs:
+          -1 means infinitely,
+           0 means an explicit end date,
+           positive values give the number of occurrences */
+    int mDuration;
+    KDateTime mDateEnd;
+
+    QList<int> mBySeconds;     // values: second 0-59
+    QList<int> mByMinutes;     // values: minute 0-59
+    QList<int> mByHours;       // values: hour 0-23
+
+    QList<WDayPos> mByDays;   // n-th weekday of the month or year
+    QList<int> mByMonthDays;   // values: day -31 to -1 and 1-31
+    QList<int> mByYearDays;    // values: day -366 to -1 and 1-366
+    QList<int> mByWeekNumbers; // values: week -53 to -1 and 1-53
+    QList<int> mByMonths;      // values: month 1-12
+    QList<int> mBySetPos;      // values: position -366 to -1 and 1-366
+    short mWeekStart;               // first day of the week (1=Monday, 7=Sunday)
+
+    Constraint::List mConstraints;
+    QList<RuleObserver*> mObservers;
+
+    // Cache for duration
+    mutable DateTimeList mCachedDates;
+    mutable KDateTime mCachedDateEnd;
+    mutable KDateTime mCachedLastDate;   // when mCachedDateEnd invalid, last date checked
+    mutable bool mCached;
+
+    bool mDirty;
+    bool mIsReadOnly;
+    bool mFloating;
+};
+//@endcond
+
+bool RecurrenceRule::Private::operator==( const Private& r ) const
+{
+  return ( mPeriod == r.mPeriod
+       &&  mDateStart == r.mDateStart
+       &&  mDuration == r.mDuration
+       &&  mDateEnd == r.mDateEnd
+       &&  mFrequency == r.mFrequency
+     
+       &&  mIsReadOnly == r.mIsReadOnly
+       &&  mFloating == r.mFloating
+     
+       &&  mBySeconds == r.mBySeconds
+       &&  mByMinutes == r.mByMinutes
+       &&  mByHours == r.mByHours
+       &&  mByDays == r.mByDays
+       &&  mByMonthDays == r.mByMonthDays
+       &&  mByYearDays == r.mByYearDays
+       &&  mByWeekNumbers == r.mByWeekNumbers
+       &&  mByMonths == r.mByMonths
+       &&  mBySetPos == r.mBySetPos
+       &&  mWeekStart == r.mWeekStart );
+}
+
+void RecurrenceRule::Private::clear()
+{
+  if ( mIsReadOnly ) {
+    return;
   }
-  return KDateTime();
-}
-
-void RecurrenceRule::setEndDt( const KDateTime &dateTime )
-{
-  if ( isReadOnly() ) return;
-  mDateEnd = dateTime;
-  mDuration = 0; // set to 0 because there is an end date/time
-  setDirty();
-}
-
-void RecurrenceRule::setDuration(int duration)
-{
-  if ( isReadOnly() ) return;
-  mDuration = duration;
-  setDirty();
-}
-
-void RecurrenceRule::setFloats( bool floats )
-{
-  if ( isReadOnly() ) return;
-  mFloating = floats;
-  setDirty();
-}
-
-void RecurrenceRule::clear()
-{
-  if ( isReadOnly() ) return;
   mPeriod = rNone;
   mBySeconds.clear();
   mByMinutes.clear();
@@ -623,7 +642,7 @@ void RecurrenceRule::clear()
   setDirty();
 }
 
-void RecurrenceRule::setDirty()
+void RecurrenceRule::Private::setDirty()
 {
   mConstraints.clear();
   buildConstraints();
@@ -632,104 +651,206 @@ void RecurrenceRule::setDirty()
   mCachedDates.clear();
   for ( int i = 0, iend = mObservers.count();  i < iend;  ++i ) {
     if ( mObservers[i] )
-      mObservers[i]->recurrenceChanged( this );
+      mObservers[i]->recurrenceChanged( mParent );
   }
+}
+
+
+/**************************************************************************
+ *                              RecurrenceRule                            *
+ **************************************************************************/
+
+RecurrenceRule::RecurrenceRule()
+  : d( new Private( this ) )
+{
+}
+
+RecurrenceRule::RecurrenceRule( const RecurrenceRule &r )
+  : d( new Private( this, *r.d ) )
+{
+}
+
+RecurrenceRule::~RecurrenceRule()
+{
+  delete d;
+}
+
+bool RecurrenceRule::operator==( const RecurrenceRule& r ) const
+{
+  return *d == *r.d;
+}
+
+void RecurrenceRule::addObserver( RuleObserver *observer )
+{
+  if ( !d->mObservers.contains( observer ) )
+    d->mObservers.append( observer );
+}
+
+void RecurrenceRule::removeObserver( RuleObserver *observer )
+{
+  if ( d->mObservers.contains( observer ) )
+    d->mObservers.removeAll( observer );
+}
+
+
+
+void RecurrenceRule::setRecurrenceType( PeriodType period )
+{
+  if ( isReadOnly() ) return;
+  d->mPeriod = period;
+  d->setDirty();
+}
+
+
+KDateTime RecurrenceRule::endDt( bool *result ) const
+{
+  if ( result ) *result = false;
+  if ( d->mPeriod == rNone ) return KDateTime();
+  if ( d->mDuration < 0 ) {
+    if ( result ) result = false;
+    return KDateTime();
+  } else if ( d->mDuration == 0 ) {
+    return d->mDateEnd;
+  } else {
+    // N occurrences. Check if we have a full cache. If so, return the cached end date.
+    if ( ! d->mCached ) {
+      // If not enough occurrences can be found (i.e. inconsistent constraints)
+      if ( !d->buildCache() ) {
+        if ( result ) result = false;
+        return KDateTime();
+      }
+    }
+    return d->mCachedDateEnd;
+  }
+  return KDateTime();
+}
+
+void RecurrenceRule::setEndDt( const KDateTime &dateTime )
+{
+  if ( isReadOnly() ) return;
+  d->mDateEnd = dateTime;
+  d->mDuration = 0; // set to 0 because there is an end date/time
+  d->setDirty();
+}
+
+void RecurrenceRule::setDuration(int duration)
+{
+  if ( isReadOnly() ) return;
+  d->mDuration = duration;
+  d->setDirty();
+}
+
+void RecurrenceRule::setFloats( bool floats )
+{
+  if ( isReadOnly() ) return;
+  d->mFloating = floats;
+  d->setDirty();
+}
+
+void RecurrenceRule::clear()
+{
+  d->clear();
+}
+
+void RecurrenceRule::setDirty()
+{
+  d->setDirty();
 }
 
 void RecurrenceRule::setStartDt( const KDateTime &start )
 {
   if ( isReadOnly() ) return;
-  mDateStart = start;
-  setDirty();
+  d->mDateStart = start;
+  d->setDirty();
 }
 
 void RecurrenceRule::setFrequency(int freq)
 {
   if ( isReadOnly() || freq <= 0 ) return;
-  mFrequency = freq;
-  setDirty();
+  d->mFrequency = freq;
+  d->setDirty();
 }
 
 void RecurrenceRule::setBySeconds( const QList<int> bySeconds )
 {
   if ( isReadOnly() ) return;
-  mBySeconds = bySeconds;
-  setDirty();
+  d->mBySeconds = bySeconds;
+  d->setDirty();
 }
 
 void RecurrenceRule::setByMinutes( const QList<int> byMinutes )
 {
   if ( isReadOnly() ) return;
-  mByMinutes = byMinutes;
-  setDirty();
+  d->mByMinutes = byMinutes;
+  d->setDirty();
 }
 
 void RecurrenceRule::setByHours( const QList<int> byHours )
 {
   if ( isReadOnly() ) return;
-  mByHours = byHours;
-  setDirty();
+  d->mByHours = byHours;
+  d->setDirty();
 }
 
 
 void RecurrenceRule::setByDays( const QList<WDayPos> byDays )
 {
   if ( isReadOnly() ) return;
-  mByDays = byDays;
-  setDirty();
+  d->mByDays = byDays;
+  d->setDirty();
 }
 
 void RecurrenceRule::setByMonthDays( const QList<int> byMonthDays )
 {
   if ( isReadOnly() ) return;
-  mByMonthDays = byMonthDays;
-  setDirty();
+  d->mByMonthDays = byMonthDays;
+  d->setDirty();
 }
 
 void RecurrenceRule::setByYearDays( const QList<int> byYearDays )
 {
   if ( isReadOnly() ) return;
-  mByYearDays = byYearDays;
-  setDirty();
+  d->mByYearDays = byYearDays;
+  d->setDirty();
 }
 
 void RecurrenceRule::setByWeekNumbers( const QList<int> byWeekNumbers )
 {
   if ( isReadOnly() ) return;
-  mByWeekNumbers = byWeekNumbers;
-  setDirty();
+  d->mByWeekNumbers = byWeekNumbers;
+  d->setDirty();
 }
 
 void RecurrenceRule::setByMonths( const QList<int> byMonths )
 {
   if ( isReadOnly() ) return;
-  mByMonths = byMonths;
-  setDirty();
+  d->mByMonths = byMonths;
+  d->setDirty();
 }
 
 void RecurrenceRule::setBySetPos( const QList<int> bySetPos )
 {
   if ( isReadOnly() ) return;
-  mBySetPos = bySetPos;
-  setDirty();
+  d->mBySetPos = bySetPos;
+  d->setDirty();
 }
 
 void RecurrenceRule::setWeekStart( short weekStart )
 {
   if ( isReadOnly() ) return;
-  mWeekStart = weekStart;
-  setDirty();
+  d->mWeekStart = weekStart;
+  d->setDirty();
 }
 
 void RecurrenceRule::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
 {
-  mDateStart = mDateStart.toTimeSpec( oldSpec );
-  mDateStart.setTimeSpec( newSpec );
-  if ( mDuration == 0 ) {
-    mDateEnd = mDateEnd.toTimeSpec( oldSpec );
-    mDateEnd.setTimeSpec( newSpec );
+  d->mDateStart = d->mDateStart.toTimeSpec( oldSpec );
+  d->mDateStart.setTimeSpec( newSpec );
+  if ( d->mDuration == 0 ) {
+    d->mDateEnd = d->mDateEnd.toTimeSpec( oldSpec );
+    d->mDateEnd.setTimeSpec( newSpec );
   }
-  setDirty();
+  d->setDirty();
 }
 
 
@@ -790,7 +911,7 @@ void RecurrenceRule::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime:
 //   return 1;
 // }
 
-void RecurrenceRule::buildConstraints()
+void RecurrenceRule::Private::buildConstraints()
 {
   mConstraints.clear();
   Constraint con( mDateStart.timeSpec() );
@@ -895,18 +1016,18 @@ void RecurrenceRule::buildConstraints()
 
 // Build and cache a list of all occurrences.
 // Only call buildCache() if mDuration > 0.
-bool RecurrenceRule::buildCache() const
+bool RecurrenceRule::Private::buildCache() const
 {
-// kDebug(5800) << "         RecurrenceRule::buildCache: " << endl;
+// kDebug(5800) << "         RecurrenceRule::Private::buildCache: " << endl;
   // Build the list of all occurrences of this event (we need that to determine
   // the end date!)
-  Constraint interval( getNextValidDateInterval( startDt(), recurrenceType() ) );
+  Constraint interval( getNextValidDateInterval( mDateStart, mPeriod ) );
   QDateTime next;
 
-  DateTimeList dts = datesForInterval( interval, recurrenceType() );
+  DateTimeList dts = datesForInterval( interval, mPeriod );
   // Only use dates after the event has started (start date is only included
   // if it matches)
-  int i = dts.findLT( startDt() );
+  int i = dts.findLT( mDateStart );
   if ( i >= 0 ) {
     dts.erase( dts.begin(), dts.begin() + i + 1 );
   }
@@ -917,9 +1038,9 @@ bool RecurrenceRule::buildCache() const
   // some validity checks to avoid infinite loops (i.e. if we have
   // done this loop already 10000 times, bail out )
   while ( loopnr < LOOP_LIMIT && dtnr < mDuration ) {
-    interval.increase( recurrenceType(), frequency() );
+    interval.increase( mPeriod, mFrequency );
     // The returned date list is already sorted!
-    dts += datesForInterval( interval, recurrenceType() );
+    dts += datesForInterval( interval, mPeriod );
     dtnr = dts.count();
     ++loopnr;
   }
@@ -942,16 +1063,16 @@ kDebug(5800) << "    Finished Building Cache, cache has " << dts.count() << " en
   } else {
     // The cached date list is incomplete
     mCachedDateEnd = KDateTime();
-    mCachedLastDate = interval.intervalDateTime( recurrenceType() );
+    mCachedLastDate = interval.intervalDateTime( mPeriod );
     return false;
   }
 }
 
 bool RecurrenceRule::dateMatchesRules( const KDateTime &kdt ) const
 {
-  KDateTime dt = kdt.toTimeSpec( mDateStart.timeSpec() );
-  for ( int i = 0, iend = mConstraints.count();  i < iend;  ++i ) {
-    if ( mConstraints[i].matches( dt, recurrenceType() ) )
+  KDateTime dt = kdt.toTimeSpec( d->mDateStart.timeSpec() );
+  for ( int i = 0, iend = d->mConstraints.count();  i < iend;  ++i ) {
+    if ( d->mConstraints[i].matches( dt, recurrenceType() ) )
       return true;
   }
   return false;
@@ -967,7 +1088,7 @@ bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec 
       return false;
     // Start date is only included if it really matches
     QDate endDate;
-    if ( mDuration >= 0 ) {
+    if ( d->mDuration >= 0 ) {
       endDate =  endDt().date();
       if ( qd > endDate )
         return false;
@@ -976,14 +1097,14 @@ bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec 
     // The date must be in an appropriate interval (getNextValidDateInterval),
     // Plus it must match at least one of the constraints
     bool match = false;
-    for ( i = 0, iend = mConstraints.count();  i < iend && !match;  ++i ) {
-      match = mConstraints[i].matches( qd, recurrenceType() );
+    for ( i = 0, iend = d->mConstraints.count();  i < iend && !match;  ++i ) {
+      match = d->mConstraints[i].matches( qd, recurrenceType() );
     }
     if ( !match )
       return false;
 
-    KDateTime start( qd, QTime( 0, 0, 0 ), mDateStart.timeSpec() );
-    Constraint interval( getNextValidDateInterval( start, recurrenceType() ) );
+    KDateTime start( qd, QTime( 0, 0, 0 ), d->mDateStart.timeSpec() );
+    Constraint interval( d->getNextValidDateInterval( start, recurrenceType() ) );
     // Constraint::matches is quite efficient, so first check if it can occur at
     // all before we calculate all actual dates.
     if ( !interval.matches( qd, recurrenceType() ) )
@@ -993,7 +1114,7 @@ bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec 
     // but BYSETPOS selects only one of these matching dates!
     KDateTime end = start.addDays(1);
     do {
-      DateTimeList dts = datesForInterval( interval, recurrenceType() );
+      DateTimeList dts = d->datesForInterval( interval, recurrenceType() );
       for ( i = 0, iend = dts.count();  i < iend;  ++i ) {
         if ( dts[i].date() >= qd ) {
           return ( dts[i].date() == qd );
@@ -1010,8 +1131,9 @@ bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec 
 //   kDebug(5800) << "         RecurrenceRule::recursOn(" << qd << ", spec)" << endl;
   if ( end < startDt() )
     return false;
+kDebug(5800)<<"recursOn("<<qd<<") start="<<startDt().date()<<endl;
   // Start date is only included if it really matches
-  if ( mDuration >= 0 ) {
+  if ( d->mDuration >= 0 ) {
     KDateTime endRecur = endDt();
     if ( endRecur.isValid() ) {
       if ( start > endRecur ) {
@@ -1021,36 +1143,37 @@ bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec 
       if ( end > endRecur ) {
 //  kDebug(5800) << "         end>endRecur" << endl;
         end = endRecur;    // limit end-of-day time to end of recurrence rule
+kDebug(5800)<<"recursOn(): limit end:"<<end.dateTime()<<endl;
       }
     }
   }
 
   // Find the start and end dates in the time spec for the rule
-  QDate startDay = start.toTimeSpec( mDateStart.timeSpec() ).date();
-  QDate endDay = end.toTimeSpec( mDateStart.timeSpec() ).addSecs( -1 ).date();
+  QDate startDay = start.toTimeSpec( d->mDateStart.timeSpec() ).date();
+  QDate endDay = end.toTimeSpec( d->mDateStart.timeSpec() ).addSecs( -1 ).date();
   int dayCount = startDay.daysTo( endDay ) + 1;
 
   // The date must be in an appropriate interval (getNextValidDateInterval),
   // Plus it must match at least one of the constraints
   bool match = false;
-  for ( i = 0, iend = mConstraints.count();  i < iend && !match;  ++i ) {
-    match = mConstraints[i].matches( startDay, recurrenceType() );
-    for ( int d = 1;  d < dayCount && !match;  ++d ) {
-      match = mConstraints[i].matches( startDay.addDays( d ), recurrenceType() );
+  for ( i = 0, iend = d->mConstraints.count();  i < iend && !match;  ++i ) {
+    match = d->mConstraints[i].matches( startDay, recurrenceType() );
+    for ( int day = 1;  day < dayCount && !match;  ++day ) {
+      match = d->mConstraints[i].matches( startDay.addDays( day ), recurrenceType() );
     }
   }
   if ( !match )
     return false;
 
-  Constraint interval( getNextValidDateInterval( start, recurrenceType() ) );
+  Constraint interval( d->getNextValidDateInterval( start, recurrenceType() ) );
   // Constraint::matches is quite efficient, so first check if it can occur at
   // all before we calculate all actual dates.
   match = false;
   Constraint intervalm = interval;
   do {
     match = intervalm.matches( startDay, recurrenceType() );
-    for ( int d = 1;  d < dayCount && !match;  ++d ) {
-      match = intervalm.matches( startDay.addDays( d ), recurrenceType() );
+    for ( int day = 1;  day < dayCount && !match;  ++day ) {
+      match = intervalm.matches( startDay.addDays( day ), recurrenceType() );
     }
     if ( match )
       break;
@@ -1060,18 +1183,21 @@ bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec 
   if ( !match )
     return false;
 
+kDebug(5800)<<"recursOn(): 3: end="<<end.date()<<endl;
   // We really need to obtain the list of dates in this interval, since
   // otherwise BYSETPOS will not work (i.e. the date will match the interval,
   // but BYSETPOS selects only one of these matching dates!
   do {
-    DateTimeList dts = datesForInterval( interval, recurrenceType() );
+    DateTimeList dts = d->datesForInterval( interval, recurrenceType() );
     int i = dts.findGE( start );
     if ( i >= 0 ) {
+kDebug(5800)<<"recursOn(): 4: dts[i]="<<dts[i].dateTime()<<", end="<<end.dateTime()<<endl;
       return ( dts[i] <= end );
     }
     interval.increase( recurrenceType(), frequency() );
 //kDebug(5800)<<"recursOn(): times interval: "<<interval.intervalDateTime( recurrenceType() ).dateTime()<<endl;
   } while ( interval.intervalDateTime( recurrenceType() ) < end );
+kDebug(5800)<<"recursOn() -> false"<<endl;
   return false;
 }
 
@@ -1079,14 +1205,14 @@ bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec 
 bool RecurrenceRule::recursAt( const KDateTime &kdt ) const
 {
   // Convert to the time spec used by this recurrence rule
-  KDateTime dt( kdt.toTimeSpec( mDateStart.timeSpec() ) );
+  KDateTime dt( kdt.toTimeSpec( d->mDateStart.timeSpec() ) );
 // kDebug(5800) << "         RecurrenceRule::recursAt: " << dumpTime(dt) << endl;
   if ( doesFloat() )
     return recursOn( dt.date(), dt.timeSpec() );
   if ( dt < startDt() )
     return false;
   // Start date is only included if it really matches
-  if ( mDuration >= 0 && dt > endDt() )
+  if ( d->mDuration >= 0 && dt > endDt() )
     return false;
 
   // The date must be in an appropriate interval (getNextValidDateInterval),
@@ -1094,8 +1220,8 @@ bool RecurrenceRule::recursAt( const KDateTime &kdt ) const
   if ( !dateMatchesRules( dt ) )
     return false;
   // if it recurs every interval, speed things up...
-//   if ( mFrequency == 1 && mBySetPos.isEmpty() && mByDays.isEmpty() ) return true;
-  Constraint interval( getNextValidDateInterval( dt, recurrenceType() ) );
+//   if ( d->mFrequency == 1 && d->mBySetPos.isEmpty() && d->mByDays.isEmpty() ) return true;
+  Constraint interval( d->getNextValidDateInterval( dt, recurrenceType() ) );
   // TODO_Recurrence: Does this work with BySetPos???
   if ( interval.matches( dt, recurrenceType() ) )
     return true;
@@ -1124,53 +1250,53 @@ TimeList RecurrenceRule::recurTimesOn( const QDate &date, const KDateTime::Spec 
 int RecurrenceRule::durationTo( const KDateTime &dt ) const
 {
   // Convert to the time spec used by this recurrence rule
-  KDateTime toDate( dt.toTimeSpec( mDateStart.timeSpec() ) );
+  KDateTime toDate( dt.toTimeSpec( d->mDateStart.timeSpec() ) );
 // kDebug(5800) << "         RecurrenceRule::durationTo: " << dumpTime(toDate) << endl;
   // Easy cases: either before start, or after all recurrences and we know
   // their number
   if ( toDate < startDt() )
     return 0;
   // Start date is only included if it really matches
-  if ( mDuration > 0 && toDate >= endDt() )
-    return mDuration;
+  if ( d->mDuration > 0 && toDate >= endDt() )
+    return d->mDuration;
 
   return timesInInterval( startDt(), toDate ).count();
 }
 
 int RecurrenceRule::durationTo( const QDate &date ) const
 {
-  return durationTo( KDateTime( date, QTime( 23, 59, 59 ), mDateStart.timeSpec() ) );
+  return durationTo( KDateTime( date, QTime( 23, 59, 59 ), d->mDateStart.timeSpec() ) );
 }
 
 KDateTime RecurrenceRule::getPreviousDate( const KDateTime& afterDate ) const
 {
   // Convert to the time spec used by this recurrence rule
-  KDateTime toDate( afterDate.toTimeSpec( mDateStart.timeSpec() ) );
+  KDateTime toDate( afterDate.toTimeSpec( d->mDateStart.timeSpec() ) );
 // kDebug(5800) << "         RecurrenceRule::getPreviousDate: " << dumpTime(afterDate) << " = " << dumpTime(toDate) << endl;
   // Invalid starting point, or beyond end of recurrence
   if ( !toDate.isValid() || toDate < startDt() )
     return KDateTime();
 
   // If we have a cache (duration given), use that
-  if ( mDuration > 0 ) {
-    if ( !mCached )
-      buildCache();
-    int i = mCachedDates.findLT( toDate );
+  if ( d->mDuration > 0 ) {
+    if ( !d->mCached )
+      d->buildCache();
+    int i = d->mCachedDates.findLT( toDate );
     if ( i >= 0 ) {
-      return mCachedDates[i];
+      return d->mCachedDates[i];
     }
     return KDateTime();
   }
 
 // kDebug(5800) << "    getPrev date before " << dumpTime(toDate) << endl;
   KDateTime prev = toDate;
-  if ( mDuration >= 0 && endDt().isValid() && toDate > endDt() )
-    prev = endDt().addSecs( 1 ).toTimeSpec( mDateStart.timeSpec() );
+  if ( d->mDuration >= 0 && endDt().isValid() && toDate > endDt() )
+    prev = endDt().addSecs( 1 ).toTimeSpec( d->mDateStart.timeSpec() );
 
-  Constraint interval( getPreviousValidDateInterval( prev, recurrenceType() ) );
+  Constraint interval( d->getPreviousValidDateInterval( prev, recurrenceType() ) );
 // kDebug(5800) << "Previous Valid Date Interval for date " << dumpTime(prev) << ": " << endl;
 // interval.dump();
-  DateTimeList dts = datesForInterval( interval, recurrenceType() );
+  DateTimeList dts = d->datesForInterval( interval, recurrenceType() );
   int i = dts.findLT( prev );
   if ( i >= 0 ) {
     return ( dts[i] >= startDt() ) ? dts[i] : KDateTime();
@@ -1182,7 +1308,7 @@ KDateTime RecurrenceRule::getPreviousDate( const KDateTime& afterDate ) const
 // kDebug(5800) << "Decreased interval: " << endl;
 // interval.dump();
     // The returned date list is sorted
-    DateTimeList dts = datesForInterval( interval, recurrenceType() );
+    DateTimeList dts = d->datesForInterval( interval, recurrenceType() );
     // The list is sorted, so take the last one.
     if ( !dts.isEmpty() ) {
       prev = dts.last();
@@ -1197,9 +1323,9 @@ KDateTime RecurrenceRule::getPreviousDate( const KDateTime& afterDate ) const
 KDateTime RecurrenceRule::getNextDate( const KDateTime &preDate ) const
 {
   // Convert to the time spec used by this recurrence rule
-  KDateTime fromDate( preDate.toTimeSpec( mDateStart.timeSpec() ) );
+  KDateTime fromDate( preDate.toTimeSpec( d->mDateStart.timeSpec() ) );
   // Beyond end of recurrence
-  if ( mDuration >= 0 && endDt().isValid() && fromDate >= endDt() )
+  if ( d->mDuration >= 0 && endDt().isValid() && fromDate >= endDt() )
     return KDateTime();
 
   // Start date is only included if it really matches
@@ -1207,26 +1333,26 @@ KDateTime RecurrenceRule::getNextDate( const KDateTime &preDate ) const
     fromDate = startDt().addSecs( -1 );
   }
 
-  if ( mDuration > 0 ) {
-    if ( !mCached )
-      buildCache();
-    int i = mCachedDates.findGT( fromDate );
+  if ( d->mDuration > 0 ) {
+    if ( !d->mCached )
+      d->buildCache();
+    int i = d->mCachedDates.findGT( fromDate );
     if ( i >= 0 ) {
-//  kDebug(5800) << "    getNext date after " << fromDate << ", cached date: " << dumpTime(mCachedDates[i]) << endl;
-      return mCachedDates[i];
+//  kDebug(5800) << "    getNext date after " << fromDate << ", cached date: " << dumpTime(d->mCachedDates[i]) << endl;
+      return d->mCachedDates[i];
     }
   }
 
 // kDebug(5800) << "    getNext date after " << fromDate << endl;
   KDateTime end = endDt();
-  Constraint interval( getNextValidDateInterval( fromDate, recurrenceType() ) );
-  DateTimeList dts = datesForInterval( interval, recurrenceType() );
+  Constraint interval( d->getNextValidDateInterval( fromDate, recurrenceType() ) );
+  DateTimeList dts = d->datesForInterval( interval, recurrenceType() );
   int i = dts.findGT( fromDate );
   if ( i >= 0 ) {
-    return ( mDuration < 0 || dts[i] <= end ) ? dts[i] : KDateTime();
+    return ( d->mDuration < 0 || dts[i] <= end ) ? dts[i] : KDateTime();
   }
   interval.increase( recurrenceType(), frequency() );
-  if ( mDuration >= 0 && interval.intervalDateTime( recurrenceType() ) > end ) {
+  if ( d->mDuration >= 0 && interval.intervalDateTime( recurrenceType() ) > end ) {
     return KDateTime();
   }
 
@@ -1235,15 +1361,15 @@ KDateTime RecurrenceRule::getNextDate( const KDateTime &preDate ) const
     // TODO: some validity checks to avoid infinite loops for contradictory constraints
   int loop = 0;
   do {
-    DateTimeList dts = datesForInterval( interval, recurrenceType() );
+    DateTimeList dts = d->datesForInterval( interval, recurrenceType() );
     if ( dts.count() > 0 ) {
       KDateTime ret( dts[0] );
-      if ( mDuration >= 0 && ret > end ) return KDateTime();
+      if ( d->mDuration >= 0 && ret > end ) return KDateTime();
       else return ret;
     }
     interval.increase( recurrenceType(), frequency() );
   } while ( ++loop < LOOP_LIMIT
-        &&  ( mDuration < 0 || interval.intervalDateTime( recurrenceType() ) < end ));
+        &&  ( d->mDuration < 0 || interval.intervalDateTime( recurrenceType() ) < end ));
   return KDateTime();
 }
 
@@ -1254,7 +1380,7 @@ DateTimeList RecurrenceRule::timesInInterval( const KDateTime &start, const KDat
   if ( end < startDt() )
     return result;    // before start of recurrence
   KDateTime enddt = end;
-  if ( mDuration >= 0 ) {
+  if ( d->mDuration >= 0 ) {
     KDateTime endRecur = endDt();
     if ( endRecur.isValid() ) {
       if ( start >= endRecur )
@@ -1266,24 +1392,24 @@ DateTimeList RecurrenceRule::timesInInterval( const KDateTime &start, const KDat
 
   KDateTime st = start;
   bool done = false;
-  if ( mDuration > 0 ) {
-    if ( !mCached )
-      buildCache();
-    if ( mCachedDateEnd.isValid() && start >= mCachedDateEnd )
+  if ( d->mDuration > 0 ) {
+    if ( !d->mCached )
+      d->buildCache();
+    if ( d->mCachedDateEnd.isValid() && start >= d->mCachedDateEnd )
       return result;    // beyond end of recurrence
-    int i = mCachedDates.findGE( start );
+    int i = d->mCachedDates.findGE( start );
     if ( i >= 0 ) {
-      int iend = mCachedDates.findGT( enddt, i );
+      int iend = d->mCachedDates.findGT( enddt, i );
       if ( iend < 0 )
-        iend = mCachedDates.count();
+        iend = d->mCachedDates.count();
       else
         done = true;
       while ( i < iend ) {
-//  kDebug(5800) << "    cached date: " << dumpTime(mCachedDates[i] ) << endl;
-        result += mCachedDates[i++];
+//  kDebug(5800) << "    cached date: " << dumpTime(d->mCachedDates[i] ) << endl;
+        result += d->mCachedDates[i++];
       }
     }
-    if ( mCachedDateEnd.isValid() )
+    if ( d->mCachedDateEnd.isValid() )
       done = true;
     else if ( !result.isEmpty() ) {
       result += KDateTime();    // indicate that the returned list is incomplete
@@ -1292,14 +1418,14 @@ DateTimeList RecurrenceRule::timesInInterval( const KDateTime &start, const KDat
     if (done)
       return result;
     // We don't have any result yet, but we reached the end of the incomplete cache
-    st = mCachedLastDate.addSecs(1);
+    st = d->mCachedLastDate.addSecs(1);
   }
 
 // kDebug(5800) << "    getNext date after " << dumpTime(st) << endl;
-  Constraint interval( getNextValidDateInterval( st, recurrenceType() ) );
+  Constraint interval( d->getNextValidDateInterval( st, recurrenceType() ) );
   int loop = 0;
   do {
-    DateTimeList dts = datesForInterval( interval, recurrenceType() );
+    DateTimeList dts = d->datesForInterval( interval, recurrenceType() );
     int i = 0;
     int iend = dts.count();
     if ( loop == 0 ) {
@@ -1325,11 +1451,11 @@ DateTimeList RecurrenceRule::timesInInterval( const KDateTime &start, const KDat
 
 // Find the date/time of the occurrence at or before a date/time, for a given period type.
 // Return a constraint whose value appropriate to 'type', is set to the value contained in the date/time.
-RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const KDateTime &dt, PeriodType type ) const
+Constraint RecurrenceRule::Private::getPreviousValidDateInterval( const KDateTime &dt, PeriodType type ) const
 {
 // kDebug(5800) << "       (o) getPreviousValidDateInterval before " << dumpTime(dt) << ", type=" << type << endl;
   long periods = 0;
-  KDateTime start = startDt();
+  KDateTime start = mDateStart;
   KDateTime nextValid( start );
   int modifier = 1;
   KDateTime toDate( dt.toTimeSpec( start.timeSpec() ) );
@@ -1344,8 +1470,8 @@ RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const K
     case rMinutely: modifier *= 60;
     case rSecondly:
         periods = static_cast<int>( start.secsTo_long( toDate ) / modifier );
-        // round it down to the next lower multiple of frequency():
-        periods = ( periods / frequency() ) * frequency();
+        // round it down to the next lower multiple of frequency:
+        periods = ( periods / mFrequency ) * mFrequency;
         nextValid = start.addSecs( modifier * periods );
         break;
 
@@ -1355,16 +1481,16 @@ RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const K
         modifier *= 7;
     case rDaily:
         periods = start.daysTo( toDate ) / modifier;
-        // round it down to the next lower multiple of frequency():
-        periods = ( periods / frequency() ) * frequency();
+        // round it down to the next lower multiple of frequency:
+        periods = ( periods / mFrequency ) * mFrequency;
         nextValid = start.addDays( modifier * periods );
         break;
 
     case rMonthly: {
         periods = 12*( toDate.date().year() - start.date().year() ) +
              ( toDate.date().month() - start.date().month() );
-        // round it down to the next lower multiple of frequency():
-        periods = ( periods / frequency() ) * frequency();
+        // round it down to the next lower multiple of frequency:
+        periods = ( periods / mFrequency ) * mFrequency;
         // set the day to the first day of the month, so we don't have problems
         // with non-existent days like Feb 30 or April 31
         start.setDate( QDate( start.date().year(), start.date().month(), 1 ) );
@@ -1372,8 +1498,8 @@ RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const K
         break; }
     case rYearly:
         periods = ( toDate.date().year() - start.date().year() );
-        // round it down to the next lower multiple of frequency():
-        periods = ( periods / frequency() ) * frequency();
+        // round it down to the next lower multiple of frequency:
+        periods = ( periods / mFrequency ) * mFrequency;
         nextValid.setDate( start.date().addYears( periods ) );
         break;
     default:
@@ -1386,11 +1512,11 @@ RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const K
 
 // Find the date/time of the next occurrence at or after a date/time, for a given period type.
 // Return a constraint whose value appropriate to 'type', is set to the value contained in the date/time.
-RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const KDateTime &dt, PeriodType type ) const
+Constraint RecurrenceRule::Private::getNextValidDateInterval( const KDateTime &dt, PeriodType type ) const
 {
   // TODO: Simplify this!
   long periods = 0;
-  KDateTime start = startDt();
+  KDateTime start = mDateStart;
   KDateTime nextValid( start );
   int modifier = 1;
   KDateTime toDate( dt.toTimeSpec( start.timeSpec() ) );
@@ -1407,7 +1533,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const KDate
         periods = static_cast<int>( start.secsTo_long( toDate ) / modifier );
         periods = qMax( 0L, periods );
         if ( periods > 0 )
-          periods += ( frequency() - 1 - ( (periods - 1) % frequency() ) );
+          periods += ( mFrequency - 1 - ( (periods - 1) % mFrequency ) );
         nextValid = start.addSecs( modifier * periods );
         break;
 
@@ -1420,7 +1546,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const KDate
         periods = start.daysTo( toDate ) / modifier;
         periods = qMax( 0L, periods );
         if ( periods > 0 )
-          periods += (frequency() - 1 - ( (periods - 1) % frequency() ) );
+          periods += (mFrequency - 1 - ( (periods - 1) % mFrequency ) );
         nextValid = start.addDays( modifier * periods );
         break;
 
@@ -1429,7 +1555,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const KDate
              ( toDate.date().month() - start.date().month() );
         periods = qMax( 0L, periods);
         if ( periods > 0 )
-          periods += (frequency() - 1 - ( (periods - 1) % frequency() ) );
+          periods += (mFrequency - 1 - ( (periods - 1) % mFrequency ) );
         // set the day to the first day of the month, so we don't have problems
         // with non-existent days like Feb 30 or April 31
         start.setDate( QDate( start.date().year(), start.date().month(), 1 ) );
@@ -1439,7 +1565,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const KDate
         periods = ( toDate.date().year() - start.date().year() );
         periods = qMax( 0L, periods);
         if ( periods > 0 )
-          periods += ( frequency() - 1 - ( (periods - 1) % frequency() ) );
+          periods += ( mFrequency - 1 - ( (periods - 1) % mFrequency ) );
         nextValid.setDate( start.date().addYears( periods ) );
         break;
     default:
@@ -1450,7 +1576,7 @@ RecurrenceRule::Constraint RecurrenceRule::getNextValidDateInterval( const KDate
   return Constraint( nextValid, type, mWeekStart );
 }
 
-bool RecurrenceRule::mergeIntervalConstraint( Constraint *merged,
+bool RecurrenceRule::Private::mergeIntervalConstraint( Constraint *merged,
           const Constraint &conit, const Constraint &interval ) const
 {
   Constraint result( interval );
@@ -1480,7 +1606,7 @@ bool RecurrenceRule::mergeIntervalConstraint( Constraint *merged,
 }
 
 
-DateTimeList RecurrenceRule::datesForInterval( const Constraint &interval, PeriodType type ) const
+DateTimeList RecurrenceRule::Private::datesForInterval( const Constraint &interval, PeriodType type ) const
 {
   /* -) Loop through constraints,
      -) merge interval with each constraint
@@ -1541,10 +1667,10 @@ void RecurrenceRule::dump() const
 {
 #ifndef NDEBUG
   kDebug(5800) << "RecurrenceRule::dump():" << endl;
-  if ( !mRRule.isEmpty() )
-    kDebug(5800) << "   RRULE=" << mRRule << endl;
+  if ( !d->mRRule.isEmpty() )
+    kDebug(5800) << "   RRULE=" << d->mRRule << endl;
   kDebug(5800) << "   Read-Only: " << isReadOnly() <<
-                   ", dirty: " << mDirty << endl;
+                   ", dirty: " << d->mDirty << endl;
 
   kDebug(5800) << "   Period type: " << recurrenceType() << ", frequency: " << frequency() << endl;
   kDebug(5800) << "   #occurrences: " << duration() << endl;
@@ -1559,35 +1685,35 @@ void RecurrenceRule::dump() const
     }\
     kDebug(5800) << "   " << label << lst.join(", ") << endl;\
   }
-  dumpByIntList( mBySeconds,    "BySeconds:  " );
-  dumpByIntList( mByMinutes,    "ByMinutes:  " );
-  dumpByIntList( mByHours,      "ByHours:    " );
-  if ( !mByDays.isEmpty() ) {
+  dumpByIntList( d->mBySeconds,    "BySeconds:  " );
+  dumpByIntList( d->mByMinutes,    "ByMinutes:  " );
+  dumpByIntList( d->mByHours,      "ByHours:    " );
+  if ( !d->mByDays.isEmpty() ) {
     QStringList lst;
-    for ( int i = 0, iend = mByDays.count();  i < iend;  ++i ) {\
-      lst.append( ( mByDays[i].pos() ? QString::number( mByDays[i].pos() ) : "" ) +
-                   DateHelper::dayName( mByDays[i].day() ) );
+    for ( int i = 0, iend = d->mByDays.count();  i < iend;  ++i ) {\
+      lst.append( ( d->mByDays[i].pos() ? QString::number( d->mByDays[i].pos() ) : "" ) +
+                   DateHelper::dayName( d->mByDays[i].day() ) );
     }
     kDebug(5800) << "   ByDays:     " << lst.join(", ") << endl;
   }
-  dumpByIntList( mByMonthDays,  "ByMonthDays:" );
-  dumpByIntList( mByYearDays,   "ByYearDays: " );
-  dumpByIntList( mByWeekNumbers,"ByWeekNr:   " );
-  dumpByIntList( mByMonths,     "ByMonths:   " );
-  dumpByIntList( mBySetPos,     "BySetPos:   " );
+  dumpByIntList( d->mByMonthDays,  "ByMonthDays:" );
+  dumpByIntList( d->mByYearDays,   "ByYearDays: " );
+  dumpByIntList( d->mByWeekNumbers,"ByWeekNr:   " );
+  dumpByIntList( d->mByMonths,     "ByMonths:   " );
+  dumpByIntList( d->mBySetPos,     "BySetPos:   " );
   #undef dumpByIntList
 
-  kDebug(5800) << "   Week start: " << DateHelper::dayName( mWeekStart ) << endl;
+  kDebug(5800) << "   Week start: " << DateHelper::dayName( d->mWeekStart ) << endl;
 
   kDebug(5800) << "   Constraints:" << endl;
   // dump constraints
-  for ( int i = 0, iend = mConstraints.count();  i < iend;  ++i ) {
-    mConstraints[i].dump();
+  for ( int i = 0, iend = d->mConstraints.count();  i < iend;  ++i ) {
+    d->mConstraints[i].dump();
   }
 #endif
 }
 
-void RecurrenceRule::Constraint::dump() const
+void Constraint::dump() const
 {
   kDebug(5800) << "     ~> Y="<<year<<", M="<<month<<", D="<<day<<", H="<<hour<<", m="<<minute<<", S="<<second<<", wd="<<weekday<<",#wd="<<weekdaynr<<", #w="<<weeknumber<<", yd="<<yearday<<endl;
 }
@@ -1608,3 +1734,24 @@ QString dumpTime( const KDateTime &dt )
     result += QLatin1String("Clock");
   return result;
 }
+
+KDateTime RecurrenceRule::startDt() const  { return d->mDateStart; }
+RecurrenceRule::PeriodType RecurrenceRule::recurrenceType() const  { return d->mPeriod; }
+uint RecurrenceRule::frequency() const  { return d->mFrequency; }
+int RecurrenceRule::duration() const  { return d->mDuration; }
+QString RecurrenceRule::rrule() const  { return d->mRRule; }
+void RecurrenceRule::setRRule( const QString &rrule )  { d->mRRule = rrule; }
+bool RecurrenceRule::isReadOnly() const  { return d->mIsReadOnly; }
+void RecurrenceRule::setReadOnly(bool readOnly) { d->mIsReadOnly = readOnly; }
+bool RecurrenceRule::doesRecur() const { return d->mPeriod != rNone; }
+bool RecurrenceRule::doesFloat() const { return d->mFloating; }
+const QList<int> &RecurrenceRule::bySeconds() const { return d->mBySeconds; }
+const QList<int> &RecurrenceRule::byMinutes() const { return d->mByMinutes; }
+const QList<int> &RecurrenceRule::byHours() const { return d->mByHours; }
+const QList<RecurrenceRule::WDayPos> &RecurrenceRule::byDays() const { return d->mByDays; }
+const QList<int> &RecurrenceRule::byMonthDays() const { return d->mByMonthDays; }
+const QList<int> &RecurrenceRule::byYearDays() const { return d->mByYearDays; }
+const QList<int> &RecurrenceRule::byWeekNumbers() const { return d->mByWeekNumbers; }
+const QList<int> &RecurrenceRule::byMonths() const { return d->mByMonths; }
+const QList<int> &RecurrenceRule::bySetPos() const { return d->mBySetPos; }
+short RecurrenceRule::weekStart() const { return d->mWeekStart; }

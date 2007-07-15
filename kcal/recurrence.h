@@ -115,7 +115,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      @return the current start/time of the recurrence. */
     KDateTime startDateTime() const;
     /** Return the start date/time of the recurrence */
-    QDate startDate() const   { return mStartDateTime.date(); }
+    QDate startDate() const;
     /** Set start of recurrence.
        If @p start is date-only, the recurrence is set to floating. Otherwise, the
        start is set to a date and time, and the recurrence is set to non-floating.
@@ -129,16 +129,16 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * N.B. This property is derived by default from whether setStartDateTime() is
      * called with a date-only or date/time parameter.
      * @return whether the recurrence has a time (false) or it is just a date (true). */
-    bool doesFloat() const { return mFloating; }
+    bool doesFloat() const;
     /** Sets whether the dtstart is a floating time (i.e. has no time attached)
        @param floats If the recurrence is for all-day item (true) or has a time associated (false).
        */
     void setFloats( bool floats );
 
     /** Set if recurrence is read-only or can be changed. */
-    void setRecurReadOnly(bool readOnly) { mRecurReadOnly = readOnly; }
+    void setRecurReadOnly(bool readOnly);
     /** Returns true if the recurrence is read-only, or false if it can be changed. */
-    bool recurReadOnly() const  { return mRecurReadOnly; }
+    bool recurReadOnly() const;
 
     /** Returns whether the event recurs at all. */
     bool doesRecur() const;
@@ -524,21 +524,10 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     RecurrenceRule *setNewRecurrenceType( RecurrenceRule::PeriodType type, int freq );
 
   private:
-    RecurrenceRule::List mExRules;
-    RecurrenceRule::List mRRules;
-    DateTimeList mRDateTimes;
-    DateList     mRDates;
-    DateTimeList mExDateTimes;
-    DateList     mExDates;
-
-    KDateTime mStartDateTime;    // date/time of first recurrence
-    bool mFloating;              // the recurrence has no time, just a date
-    bool mRecurReadOnly;
-
-    // Cache the type of the recurrence with the old system (e.g. MonthlyPos)
-    mutable ushort mCachedType;
-
-    QList<RecurrenceObserver*> mObservers;
+    //@cond PRIVATE
+    class Private;
+    Private *const d;
+    //@endcond
 };
 
 }
