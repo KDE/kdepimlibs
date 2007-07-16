@@ -43,6 +43,13 @@ C. Licensing
       clause'.
    3. X11 license as listed below
 
+   In exceptional cases, a library may be included that is licensed
+   according to the the GNU GENERAL PUBLIC LICENSE, version 2 (as shown
+   in the COPYING file in this directory).  The associated library binary
+   will be installed with the "-gpl" extension to indicate that it has an
+   exceptional license, and that those wishing to link to this library
+   should pay special attention.
+
 
 D. Dependencies
 
