@@ -41,7 +41,7 @@ void PeriodTest::testValidity()
   p2 = p1;
 
   QVERIFY( p2.hasDuration() );
-  QVERIFY( p2.duration() == 60 );
+  QVERIFY( p2.duration() == Duration( 60 ) );
   QVERIFY( p2.start() == KDateTime( QDate(2006, 8, 30), QTime(7, 0, 0), KDateTime::UTC ) );
 }
 
