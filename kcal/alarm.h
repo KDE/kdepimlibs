@@ -503,18 +503,18 @@ class KCAL_EXPORT Alarm : public CustomProperties
     /**
       Sets the snooze time interval for the alarm.
 
-      @param alarmSnoozeTime the time in minutes between snoozes.
+      @param alarmSnoozeTime the time between snoozes.
 
       @see snoozeTime()
     */
-    void setSnoozeTime( int alarmSnoozeTime );
+    void setSnoozeTime( const Duration &alarmSnoozeTime );
 
     /**
-      Returns the snooze time interval, in minutes.
+      Returns the snooze time interval.
 
       @see setSnoozeTime()
     */
-    int snoozeTime() const;
+    Duration snoozeTime() const;
 
     /**
       Sets how many times an alarm is to repeat itself after its initial
@@ -563,13 +563,10 @@ class KCAL_EXPORT Alarm : public CustomProperties
     KDateTime previousRepetition( const KDateTime &afterTime ) const;
 
     /**
-      Returns the number of seconds between the alarm's initial occurrence and
+      Returns the interval between the alarm's initial occurrence and
       its final repetition.
-
-      @return the number of seconds between the initial occurrence and final
-      repetition.
     */
-    int duration() const;
+    Duration duration() const;
 
     /**
       Toggles the alarm status, i.e, an enable alarm becomes disabled

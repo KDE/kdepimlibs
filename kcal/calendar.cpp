@@ -1058,9 +1058,9 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
                                       const KDateTime &to )
 {
   KDateTime dt;
-  int  endOffset = 0;
   bool endOffsetValid = false;
-  int  period = from.secsTo( to );
+  Duration endOffset = 0;
+  Duration period( from, to );
 
   Alarm::List alarmlist = incidence->alarms();
   for ( int i = 0, iend = alarmlist.count();  i < iend;  ++i ) {
@@ -1076,30 +1076,34 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
         // Alarm time is defined by an offset from the event start or end time.
         // Find the offset from the event start time, which is also used as the
         // offset from the recurrence time.
-        int offset = 0;
+        Duration offset( 0 );
         if ( a->hasStartOffset() ) {
-          offset = a->startOffset().asSeconds();
+          offset = a->startOffset();
         } else if ( a->hasEndOffset() ) {
+          offset = a->endOffset();
           if ( !endOffsetValid ) {
-            endOffset = incidence->dtStart().secsTo( incidence->dtEnd() );
+            endOffset = Duration( incidence->dtStart(), incidence->dtEnd() );
             endOffsetValid = true;
           }
-          offset = a->endOffset().asSeconds() + endOffset;
         }
 
         // Find the incidence's earliest alarm
-        KDateTime fromStart = incidence->dtStart().addSecs( offset );
-        if ( fromStart > to ) {
+        KDateTime alarmStart = offset.end( a->hasEndOffset() ? incidence->dtEnd() : incidence->dtStart() );
+//        KDateTime alarmStart = incidence->dtStart().addSecs( offset );
+        if ( alarmStart > to ) {
           continue;
         }
-        if ( from > fromStart ) {
-          fromStart = from;   // don't look earlier than the earliest alarm
+        KDateTime baseStart = incidence->dtStart();
+        if ( from > alarmStart ) {
+          alarmStart = from;   // don't look earlier than the earliest alarm
+          baseStart = (-offset).end( (-endOffset).end( alarmStart ) );
         }
 
-        // Adjust the 'fromStart' date/time and find the next recurrence at or after it
-        dt = incidence->recurrence()->getNextDateTime( fromStart.addSecs(-offset - 1) );
+        // Adjust the 'alarmStart' date/time and find the next recurrence at or after it.
+        // Treate the two offsets separately in case one is daily and the other not.
+        dt = incidence->recurrence()->getNextDateTime( baseStart.addSecs(-1) );
         if ( !dt.isValid() ||
-             ( dt = dt.addSecs( offset ) ) > to ) // adjust 'dt' to get the alarm time
+             ( dt = endOffset.end( offset.end( dt ) ) ) > to ) // adjust 'dt' to get the alarm time
         {
           // The next recurrence is too late.
           if ( !a->repeatCount() ) {
@@ -1109,25 +1113,45 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
           // The alarm has repetitions, so check whether repetitions of previous
           // recurrences fall within the time period.
           bool found = false;
-          dt = fromStart.addSecs( -offset );
-          while ( (dt = incidence->recurrence()->getPreviousDateTime( dt )).isValid() ) {
-            int toFrom = dt.secsTo( fromStart ) - offset;
-            if ( toFrom > a->duration() ) {
+          Duration alarmDuration = a->duration();
+          for (KDateTime base = baseStart;
+               (dt = incidence->recurrence()->getPreviousDateTime( base )).isValid();
+                base = dt )
+          {
+            if ( a->duration().end( dt ) < base ) {
               break;  // this recurrence's last repetition is too early, so give up
             }
 
-            // The last repetition of this recurrence is at or after 'fromStart' time.
-            // Check if a repetition occurs between 'fromStart' and 'to'.
-            int snooze = a->snoozeTime() * 60;   // in seconds
-            if ( period >= snooze ||
-                 toFrom % snooze == 0 ||
-                 ( toFrom / snooze + 1 ) * snooze <= toFrom + period ) {
-              found = true;
+            // The last repetition of this recurrence is at or after 'alarmStart' time.
+            // Check if a repetition occurs between 'alarmStart' and 'to'.
+            int snooze = a->snoozeTime().value();   // in seconds or days
+            if ( a->snoozeTime().isDaily() ) {
+              Duration toFromDuration( dt, base );
+	      int toFrom = toFromDuration.asDays();
+              if ( a->snoozeTime().end( from ) <= to ||
+                   toFromDuration.isDaily() && toFrom % snooze == 0 ||
+                   ( toFrom / snooze + 1 ) * snooze <= toFrom + period.asDays() )
+              {
+                found = true;
 #ifndef NDEBUG
-              // for debug output
-              dt = dt.addSecs( offset + ( ( toFrom - 1 ) / snooze + 1 ) * snooze );
+                // for debug output
+                dt = offset.end( dt ).addDays( ( ( toFrom - 1 ) / snooze + 1 ) * snooze );
 #endif
-              break;
+                break;
+              }
+            } else {
+              int toFrom = dt.secsTo( base );
+              if ( period.asSeconds() >= snooze ||
+                   toFrom % snooze == 0 ||
+                   ( toFrom / snooze + 1 ) * snooze <= toFrom + period.asSeconds() )
+              {
+                found = true;
+#ifndef NDEBUG
+                // for debug output
+                dt = offset.end( dt ).addSecs( ( ( toFrom - 1 ) / snooze + 1 ) * snooze );
+#endif
+                break;
+              }
             }
           }
           if ( !found ) {

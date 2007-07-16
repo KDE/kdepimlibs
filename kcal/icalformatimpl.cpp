@@ -263,16 +263,15 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
 
   //Loops through all the periods in the freebusy object
   QList<Period> list = freebusy->busyPeriods();
-  QList<Period>::Iterator it;
   icalperiodtype period = icalperiodtype_null_period();
-  for (it = list.begin(); it!= list.end(); ++it) {
-    period.start = writeICalUtcDateTime((*it).start());
-    if ( (*it).hasDuration() ) {
-      period.duration = writeICalDuration( (*it).duration().asSeconds() );
+  for ( int i = 0, count = list.count(); i < count; ++i ) {
+    period.start = writeICalUtcDateTime( list[i].start() );
+    if ( list[i].hasDuration() ) {
+      period.duration = writeICalDuration( list[i].duration() );
     } else {
-      period.end = writeICalUtcDateTime((*it).end());
+      period.end = writeICalUtcDateTime( list[i].end() );
     }
-    icalcomponent_add_property(vfreebusy, icalproperty_new_freebusy(period) );
+    icalcomponent_add_property(vfreebusy, icalproperty_new_freebusy( period) );
   }
 
   return vfreebusy;
@@ -864,7 +863,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
       offset = alarm->startOffset();
     else
       offset = alarm->endOffset();
-    trigger.duration = icaldurationtype_from_int( offset.asSeconds() );
+    trigger.duration = writeICalDuration( offset );
   }
   icalproperty *p = icalproperty_new_trigger(trigger);
   if ( alarm->hasEndOffset() )
@@ -875,7 +874,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
   if (alarm->repeatCount()) {
     icalcomponent_add_property(a, icalproperty_new_repeat(alarm->repeatCount()));
     icalcomponent_add_property(a, icalproperty_new_duration(
-                             icaldurationtype_from_int(alarm->snoozeTime()*60)));
+                             writeICalDuration( alarm->snoozeTime() )));
   }
 
   // Custom properties
@@ -1516,7 +1515,7 @@ void ICalFormatImpl::readExceptionRule( icalproperty *rrule, Incidence *incidenc
 void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, RecurrenceRule* recur )
 {
   // Generate the RRULE string
-  recur->mRRule = QString( icalrecurrencetype_as_string( const_cast<struct icalrecurrencetype*>(&r) ) );
+  recur->setRRule( QString( icalrecurrencetype_as_string( const_cast<struct icalrecurrencetype*>(&r) ) ) );
   // Period
   switch ( r.freq ) {
     case ICAL_SECONDLY_RECURRENCE: recur->setRecurrenceType( RecurrenceRule::rSecondly ); break;
@@ -1635,7 +1634,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm, Incidence *incidence, ICalT
           if (icaldurationtype_is_null_duration(trigger.duration)) {
             kDebug(5800) << "ICalFormatImpl::readAlarm(): Trigger has no time and no duration." << endl;
           } else {
-            Duration duration ( icaldurationtype_as_int( trigger.duration ) );
+            Duration duration( readICalDuration( trigger.duration ) );
             icalparameter *param = icalproperty_get_first_parameter(p, ICAL_RELATED_PARAMETER);
             if (param && icalparameter_get_related(param) == ICAL_RELATED_END)
               ialarm->setEndOffset(duration);
@@ -1649,7 +1648,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm, Incidence *incidence, ICalT
       }
       case ICAL_DURATION_PROPERTY: {
         icaldurationtype duration = icalproperty_get_duration(p);
-        ialarm->setSnoozeTime(icaldurationtype_as_int(duration)/60);
+        ialarm->setSnoozeTime( readICalDuration( duration ) );
         break;
       }
       case ICAL_REPEAT_PROPERTY:
@@ -1951,39 +1950,49 @@ KDateTime ICalFormatImpl::readICalDateTimeProperty( icalproperty *p, ICalTimeZon
   }
 }
 
-icaldurationtype ICalFormatImpl::writeICalDuration(int seconds)
+icaldurationtype ICalFormatImpl::writeICalDuration( const Duration &duration )
 {
   icaldurationtype d;
 
-  d.is_neg  = (seconds<0)?1:0;
-  if (seconds<0) seconds = -seconds;
-
-  d.weeks    = seconds / gSecondsPerWeek;
-  seconds   %= gSecondsPerWeek;
-  d.days     = seconds / gSecondsPerDay;
-  seconds   %= gSecondsPerDay;
-  d.hours    = seconds / gSecondsPerHour;
-  seconds   %= gSecondsPerHour;
-  d.minutes  = seconds / gSecondsPerMinute;
-  seconds   %= gSecondsPerMinute;
-  d.seconds  = seconds;
+  int value = duration.value();
+  d.is_neg = ( value < 0 ) ? 1 : 0;
+  if ( value < 0 ) {
+    value = -value;
+  }
+  if ( duration.isDaily() ) {
+    d.weeks = value / 7;
+    d.days  = value % 7;
+    d.hours = d.minutes = d.seconds = 0;
+  } else {
+    d.weeks   = value / gSecondsPerWeek;
+    value    %= gSecondsPerWeek;
+    d.days    = value / gSecondsPerDay;
+    value    %= gSecondsPerDay;
+    d.hours   = value / gSecondsPerHour;
+    value    %= gSecondsPerHour;
+    d.minutes = value / gSecondsPerMinute;
+    value    %= gSecondsPerMinute;
+    d.seconds = value;
+  }
 
   return d;
 }
 
-int ICalFormatImpl::readICalDuration(icaldurationtype d)
+Duration ICalFormatImpl::readICalDuration(icaldurationtype d)
 {
-  int result = 0;
-
-  result += d.weeks   * gSecondsPerWeek;
-  result += d.days    * gSecondsPerDay;
-  result += d.hours   * gSecondsPerHour;
-  result += d.minutes * gSecondsPerMinute;
-  result += d.seconds;
-
-  if (d.is_neg) result *= -1;
-
-  return result;
+  int days = d.weeks * 7;
+  days += d.days;
+  int seconds = d.hours * gSecondsPerHour;
+  seconds += d.minutes * gSecondsPerMinute;
+  seconds += d.seconds;
+  if ( seconds ) {
+    seconds += days * gSecondsPerDay;
+    if (d.is_neg) seconds = -seconds;
+    return Duration( seconds, Duration::Seconds );
+  } else {
+    if ( d.is_neg ) days = -days;
+    return Duration( days, Duration::Days );
+  }
 }
 
 icalcomponent *ICalFormatImpl::createCalendarComponent(Calendar *cal)
@@ -2083,11 +2092,11 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 //    kDebug(5800) << "----Todo found" << endl;
     Todo *todo = readTodo(c, tzlist);
     if (todo) {
-      if (!cal->todo(todo->uid())) {
-        cal->addTodo(todo);
-      } else {
-        delete todo;
+      Todo *old = cal->todo( todo->uid() );
+      if ( old ) {
+        cal->deleteTodo( old );
       }
+      cal->addTodo( todo );
     }
     c = icalcomponent_get_next_component(calendar,ICAL_VTODO_COMPONENT);
   }
@@ -2098,11 +2107,11 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 //    kDebug(5800) << "----Event found" << endl;
     Event *event = readEvent(c, tzlist);
     if (event) {
-      if (!cal->event(event->uid())) {
-        cal->addEvent(event);
-      } else {
-        delete event;
+      Event *old = cal->event(event->uid());
+      if ( old ) {
+        cal->deleteEvent( old );
       }
+      cal->addEvent( event );
     }
     c = icalcomponent_get_next_component(calendar,ICAL_VEVENT_COMPONENT);
   }
@@ -2113,11 +2122,11 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 //    kDebug(5800) << "----Journal found" << endl;
     Journal *journal = readJournal(c, tzlist);
     if (journal) {
-      if (!cal->journal(journal->uid())) {
-        cal->addJournal(journal);
-      } else {
-        delete journal;
+      Journal *old = cal->journal(journal->uid());
+      if ( old ) {
+        cal->deleteJournal( old );
       }
+      cal->addJournal( journal );
     }
     c = icalcomponent_get_next_component(calendar,ICAL_VJOURNAL_COMPONENT);
   }
@@ -2132,7 +2141,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     (*tIt)->setRelatedTo( cal->incidence( (*tIt)->relatedToUid() ) );
   }
 
-  // Remove any previous time zones not actually referenced in the calendar
+  // TODO: Remove any previous time zones no longer referenced in the calendar
 
   return true;
 }

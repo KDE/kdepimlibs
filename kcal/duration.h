@@ -2,6 +2,7 @@
     This file is part of the kcal library.
 
     Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2007 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -24,6 +25,7 @@
   defines the Duration class.
 
   @author Cornelius Schumacher
+  @author David Jarvie
 */
 #ifndef KCAL_DURATION_H
 #define KCAL_DURATION_H
@@ -36,15 +38,27 @@ namespace KCal {
 
 /**
   @brief
-  Represents a span of time measured in seconds.
+  Represents a span of time measured in seconds or days.
 
-  A duration is a span of time measured in seconds.  Construction
-  can be done by specifying a stop and end time, or simply by
-  specifying the number of seconds.
+  A duration is a span of time measured in seconds or days.  Construction can
+  be done by specifying a stop and end time, or simply by specifying the number
+  of seconds or days.
+
+  Much of the time, it does not matter whether a duration is specified in
+  seconds or in days. But it does make a difference when a duration is used to
+  define a time period encompassing a daylight saving time change.
 */
 class KCAL_EXPORT Duration
 {
   public:
+    /**
+      The unit of time used to define the duration.
+    */
+    enum Type {
+      Seconds,   /**< duration is a number of seconds */
+      Days       /**< duration is a number of days */
+    };
+
     /**
       Constructs a duration of 0 seconds.
     */
@@ -53,17 +67,36 @@ class KCAL_EXPORT Duration
     /**
       Constructs a duration from @p start to @p end.
 
+      If the time of day in @p start and @p end is equal, and their time
+      specifications (i.e. time zone etc.) are the same, the duration will be
+      set in terms of days. Otherwise, the duration will be set in terms of
+      seconds.
+
       @param start is the time the duration begins.
       @param end is the time the duration ends.
     */
     Duration( const KDateTime &start, const KDateTime &end );
 
     /**
-      Constructs a duration with a number of @p seconds.
+      Constructs a duration from @p start to @p end.
 
-      @param seconds is the number of seconds in the duration.
+      If @p type is Days, and the time of day in @p start's time zone differs
+      between @p start and @p end, the duration will be rounded down to the
+      nearest whole number of days.
+
+      @param start is the time the duration begins.
+      @param end is the time the duration ends.
+      @param type the unit of time to use (seconds or days)
     */
-    Duration( int seconds ); //not explicit
+    Duration( const KDateTime &start, const KDateTime &end, Type type );
+
+    /**
+      Constructs a duration with a number of seconds or days.
+
+      @param duration the number of seconds or days in the duration
+      @param type the unit of time to use (seconds or days)
+    */
+    Duration( int duration, Type type = Seconds ); //not explicit
 
     /**
       Constructs a duration by copying another duration object.
@@ -78,13 +111,6 @@ class KCAL_EXPORT Duration
     ~Duration();
 
     /**
-      Returns true if this duration is smaller than the @p other one.
-
-      @param other is the other duration to compare.
-    */
-    bool operator<( const Duration &other ) const;
-
-    /**
       Sets this duration equal to @p duration.
 
       @param duration is the duration to copy.
@@ -92,9 +118,30 @@ class KCAL_EXPORT Duration
     Duration &operator=( const Duration &duration );
 
     /**
-      Returns true if this duration is equal to the @p other one.
+      Returns true if this duration is non-zero.
+    */
+    operator bool() const;
+
+    /**
+      Returns true if this duration is zero.
+    */
+    bool operator!() const  { return !operator bool(); }
+
+    /**
+      Returns true if this duration is smaller than the @p other one.
 
       @param other is the other duration to compare.
+    */
+    bool operator<( const Duration &other ) const;
+    bool operator>=( const Duration &other ) const  { return !operator<( other ); }
+    bool operator>( const Duration &other ) const  { return other.operator<( *this ); }
+    bool operator<=( const Duration &other ) const  { return !other.operator<( *this ); }
+
+    /**
+      Returns true if this duration is equal to the @p other one.
+      A daily and non-daily duration are considered unequal.
+
+      @param other the other duration to compare
     */
     bool operator==( const Duration &other ) const;
 
@@ -103,21 +150,89 @@ class KCAL_EXPORT Duration
 
       @param other is the other duration to compare.
     */
-    bool operator!=( const Duration &other ) const;
+    bool operator!=( const Duration &other ) const  { return !operator==( other ); }
 
     /**
-      Computes a duration end time by adding the number of seconds
-      in the duration to the specified @p start time.
+      Adds another duration to this one.
+      If one is in terms of days and the other in terms of seconds,
+      the result is in terms of seconds.
 
-      @param start is a start time.
-      @return a new KDateTime representing an end time.
+      @param other the other duration to add
+    */
+    Duration &operator+=( const Duration &other );
+
+    /**
+      Adds two durations.
+      If one is in terms of days and the other in terms of seconds,
+      the result is in terms of seconds.
+
+      @param other the other duration to add
+      @return combined duration
+    */
+    Duration operator+( const Duration &other ) const  { return Duration( *this ) += other; }
+
+    /**
+      Returns the negative of this duration.
+    */
+    Duration operator-() const;
+
+    /**
+      Subtracts another duration from this one.
+      If one is in terms of days and the other in terms of seconds,
+      the result is in terms of seconds.
+
+      @param other the other duration to subtract
+    */
+    Duration &operator-=( const Duration &other );
+
+    /**
+      Returns the difference between another duration and this.
+      If one is in terms of days and the other in terms of seconds,
+      the result is in terms of seconds.
+
+      @param other the other duration to subtract
+      @return difference in durations
+    */
+    Duration operator-( const Duration &other ) const  { return Duration( *this ) += other; }
+
+    /**
+      Computes a duration end time by adding the number of seconds or
+      days in the duration to the specified @p start time.
+
+      @param start is the start time.
+      @return end time.
     */
     KDateTime end( const KDateTime &start ) const;
+
+    /**
+      Returns the time units (seconds or days) used to specify the duration.
+    */
+    Type type() const;
+
+    /**
+      Returns whether the duration is specified in terms of days rather
+      than seconds.
+    */
+    bool isDaily() const;
 
     /**
       Returns the length of the duration in seconds.
     */
     int asSeconds() const;
+
+    /**
+      Returns the length of the duration in days. If the duration is
+      not an exact number of days, it is rounded down to return the
+      number of whole days.
+    */
+    int asDays() const;
+
+    /**
+      Returns the length of the duration in seconds or days.
+
+      @return if isDaily(), duration in days, else duration in seconds
+    */
+    int value() const;
 
   private:
     //@cond PRIVATE

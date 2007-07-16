@@ -63,6 +63,7 @@
 
 #include "attendee.h"
 #include "customproperties.h"
+#include "duration.h"
 #include "sortablelist.h"
 
 class KUrl;
@@ -322,20 +323,20 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     virtual QString dtStartStr( bool shortfmt = true ) const;
 
     /**
-      Sets the incidence duration to @p seconds seconds.
+      Sets the incidence duration.
 
-      @param seconds is the length of the incidence duration in seconds.
+      @param duration the incidence duration
 
       @see duration()
     */
-    virtual void setDuration( int seconds );
+    virtual void setDuration( const Duration &duration );
 
     /**
-      Returns the length of the incidence duration in seconds.
+      Returns the length of the incidence duration.
 
       @see setDuration()
     */
-    int duration() const;
+    Duration duration() const;
 
     /**
       Sets if the incidence has a duration.

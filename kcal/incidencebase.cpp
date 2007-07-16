@@ -47,36 +47,29 @@ using namespace KCal;
 class KCal::IncidenceBase::Private
 {
   public:
-    Private()
-      : mFloats( true ),
-        mHasDuration( false ),
-        mDuration( 0 )
-    {
-        mAttendees.setAutoDelete( true );
-    }
+    Private() : mFloats( true ), mHasDuration( false )
+      { mAttendees.setAutoDelete( true ); }
 
     Private( const Private &other )
       : mLastModified( other.mLastModified ),
         mDtStart( other.mDtStart ),
         mOrganizer( other.mOrganizer ),
         mUid( other.mUid ),
+        mDuration( other.mDuration ),
         mFloats( other.mFloats ),
-        mHasDuration( other.mHasDuration ),
-        mDuration( other.mDuration )
-        // mComments: should this be copied ??????
-        // mObservers: the copied object is a new one, so it isn't
-        // observed by the observer of the original object.
-    {
-        mAttendees.setAutoDelete( true );
-    }
+        mHasDuration( other.mHasDuration )
+        //????? mComments
+        // mObservers: the copied object is a new one, so it isn't observed
+        // by the observer of the original object.
+      { mAttendees.setAutoDelete( true ); }
 
     KDateTime mLastModified;     // incidence last modified date
     KDateTime mDtStart;          // incidence start time
     Person mOrganizer;           // incidence person (owner)
     QString mUid;                // incidence unique id
+    Duration mDuration;          // incidence duration
     bool mFloats;                // true if the incidence floats
     bool mHasDuration;           // true if the incidence has a duration
-    int mDuration;               // incidence duration, in seconds
 
     Attendee::List mAttendees;   // list of incidence attendees
     QStringList mComments;       // list of incidence comments
@@ -354,14 +347,14 @@ Attendee *IncidenceBase::attendeeByUid( const QString &uid ) const
   return 0;
 }
 
-void IncidenceBase::setDuration( int seconds )
+void IncidenceBase::setDuration( const Duration &duration )
 {
-  d->mDuration = seconds;
+  d->mDuration = duration;
   setHasDuration( true );
   updated();
 }
 
-int IncidenceBase::duration() const
+Duration IncidenceBase::duration() const
 {
   return d->mDuration;
 }

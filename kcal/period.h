@@ -81,18 +81,38 @@ class KCAL_EXPORT Period
     ~Period();
 
     /**
-      Returns true if this period starts earlier than the @p other one.
+      Returns true if the start of this period is earlier than the start of
+      the @p other one.
 
       @param other is the other period to compare.
     */
     bool operator<( const Period &other ) const;
 
     /**
-      Returns true if this period is equal to the @p other one.
+      Returns true if the start of this period is later than the start of
+      the @p other one.
 
-      @param other is the other period to compare.
+      @param other the other period to compare
+    */
+    bool operator>( const Period &other ) const  { return other.operator<( *this ); }
+
+    /**
+      Returns true if this period is equal to the @p other one.
+      Even if their start and end times are the same, two periods are
+      considered not equal if one is defined in terms of a duration and the
+      other in terms of a start and end time.
+
+      @param other the other period to compare
     */
     bool operator==( const Period &other ) const;
+
+    /**
+      Returns true if this period is not equal to the @p other one.
+
+      @param other the other period to compare
+      @see operator==()
+    */
+    bool operator!=( const Period &other ) const  { return !operator==( other ); }
 
     /**
       Sets this period equal to the @p other one.
@@ -113,8 +133,30 @@ class KCAL_EXPORT Period
 
     /**
       Returns the duration of the period.
+
+      If the period is defined in terms of a start and end time, the duration
+      is computed from these. In this case, if the time of day in @p start and
+      @p end is equal, and their time specifications (i.e. time zone etc.) are
+      the same, the duration will be set in terms of days. Otherwise, the
+      duration will be set in terms of seconds.
+
+      If the period is defined in terms of a duration, that duration is
+      returned unchanged.
     */
     Duration duration() const;
+
+    /**
+      Returns the duration of the period.
+
+      If the period is defined in terms of a start and end time, the duration
+      is first computed from these.
+
+      If @p type is Days, and the duration is not an exact number of days,
+      the duration will be rounded down to the nearest whole number of days.
+
+      @param type the unit of time to use (seconds or days)
+    */
+    Duration duration( Duration::Type type ) const;
 
     /**
       Returns true if this period has a set duration, false

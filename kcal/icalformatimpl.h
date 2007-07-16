@@ -139,8 +139,8 @@ class ICalFormatImpl
     /** Read a UTC date/time value from a property. */
     static KDateTime readICalUtcDateTimeProperty( icalproperty *p )
                    { return readICalDateTimeProperty( p, 0, true ); }
-    static icaldurationtype writeICalDuration(int seconds);
-    static int readICalDuration(icaldurationtype);
+    static icaldurationtype writeICalDuration( const Duration &duration );
+    static Duration readICalDuration(icaldurationtype);
     static icaldatetimeperiodtype writeICalDatePeriod( const QDate &date );
 
     icalcomponent *createCalendarComponent(Calendar * = 0);

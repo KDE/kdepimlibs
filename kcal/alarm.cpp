@@ -81,8 +81,8 @@ class KCal::Alarm::Private
     QList<Person> mMailAddresses; // who to mail for reminder
 
     KDateTime mAlarmTime;// time at which to trigger the alarm
-    int mAlarmSnoozeTime;// number of minutes after alarm to
-                         // snooze before ringing again
+    Duration mAlarmSnoozeTime; // how long after alarm to snooze before
+                               // triggering again
     int mAlarmRepeatCount;// number of times for alarm to repeat
                           // after the initial time
 
@@ -439,9 +439,9 @@ void Alarm::shiftTimes( const KDateTime::Spec &oldSpec,
   }
 }
 
-void Alarm::setSnoozeTime( int alarmSnoozeTime )
+void Alarm::setSnoozeTime( const Duration &alarmSnoozeTime )
 {
-  if ( alarmSnoozeTime > 0 ) {
+  if ( alarmSnoozeTime.value() > 0 ) {
     d->mAlarmSnoozeTime = alarmSnoozeTime;
     if ( d->mParent ) {
       d->mParent->updated();
@@ -449,7 +449,7 @@ void Alarm::setSnoozeTime( int alarmSnoozeTime )
   }
 }
 
-int Alarm::snoozeTime() const
+Duration Alarm::snoozeTime() const
 {
   return d->mAlarmSnoozeTime;
 }
@@ -467,9 +467,10 @@ int Alarm::repeatCount() const
   return d->mAlarmRepeatCount;
 }
 
-int Alarm::duration() const
+Duration Alarm::duration() const
 {
-  return d->mAlarmRepeatCount * d->mAlarmSnoozeTime * 60;
+  return Duration( d->mAlarmSnoozeTime.value() * d->mAlarmRepeatCount,
+                   d->mAlarmSnoozeTime.type() );
 }
 
 KDateTime Alarm::nextRepetition( const KDateTime &preTime ) const
@@ -482,13 +483,24 @@ KDateTime Alarm::nextRepetition( const KDateTime &preTime ) const
     // there isn't an occurrence after the specified time
     return KDateTime();
   }
-  int snoozeSecs = d->mAlarmSnoozeTime * 60;
-  int repetition = at.secsTo_long( preTime ) / snoozeSecs + 1;
+  int repetition;
+  int interval = d->mAlarmSnoozeTime.value();
+  bool daily = d->mAlarmSnoozeTime.isDaily();
+  if ( daily ) {
+    int daysTo = at.daysTo( preTime );
+    if ( !preTime.isDateOnly() && preTime.time() <= at.time() ) {
+      --daysTo;
+    }
+    repetition = daysTo / interval + 1;
+  } else {
+    repetition = at.secsTo_long( preTime ) / interval + 1;
+  }
   if ( repetition > d->mAlarmRepeatCount ) {
     // all repetitions have finished before the specified time
     return KDateTime();
   }
-  return at.addSecs( repetition * snoozeSecs );
+  return daily ? at.addDays( repetition * interval )
+               : at.addSecs( repetition * interval );
 }
 
 KDateTime Alarm::previousRepetition( const KDateTime &afterTime ) const
@@ -501,20 +513,34 @@ KDateTime Alarm::previousRepetition( const KDateTime &afterTime ) const
   if ( !d->mAlarmRepeatCount ) {
     return at;
   }
-  int snoozeSecs = d->mAlarmSnoozeTime * 60;
-  int repetition = ( at.secsTo_long( afterTime ) - 1 ) / snoozeSecs;
+  int repetition;
+  int interval = d->mAlarmSnoozeTime.value();
+  bool daily = d->mAlarmSnoozeTime.isDaily();
+  if ( daily ) {
+    int daysTo = at.daysTo( afterTime );
+    if ( afterTime.isDateOnly() || afterTime.time() <= at.time() ) {
+      --daysTo;
+    }
+    repetition = daysTo / interval;
+  } else {
+    repetition = ( at.secsTo_long( afterTime ) - 1 ) / interval;
+  }
   if ( repetition > d->mAlarmRepeatCount ) {
     repetition = d->mAlarmRepeatCount;
   }
-  return at.addSecs( repetition * snoozeSecs );
+  return daily ? at.addDays( repetition * interval )
+               : at.addSecs( repetition * interval );
 }
 
 KDateTime Alarm::endTime() const
 {
-  if ( d->mAlarmRepeatCount ) {
-    return time().addSecs( d->mAlarmRepeatCount * d->mAlarmSnoozeTime * 60 );
-  } else {
+  if ( !d->mAlarmRepeatCount ) {
     return time();
+  }
+  if ( d->mAlarmSnoozeTime.isDaily() ) {
+    return time().addDays( d->mAlarmRepeatCount * d->mAlarmSnoozeTime.asDays() );
+  } else {
+    return time().addSecs( d->mAlarmRepeatCount * d->mAlarmSnoozeTime.asSeconds() );
   }
 }
 

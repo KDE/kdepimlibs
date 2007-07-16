@@ -2,6 +2,7 @@
     This file is part of the kcal library.
 
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2007 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -43,13 +44,14 @@ class KCal::Period::Private
         mEnd( end ),
         mHasDuration( hasDuration )
     {}
-    KDateTime mStart;  // period starting date/time
-    KDateTime mEnd;    // period ending date/time
-    bool mHasDuration; // does period have a duration?
+    KDateTime mStart;    // period starting date/time
+    KDateTime mEnd;      // period ending date/time
+    bool mHasDuration;   // does period have a duration?
+    bool mDailyDuration; // duration is defined as number of days, not seconds
 };
 //@endcond
 
-Period::Period() : d( new KCal::Period::Private )
+Period::Period() : d( new KCal::Period::Private() )
 {
 }
 
@@ -61,6 +63,7 @@ Period::Period( const KDateTime &start, const KDateTime &end )
 Period::Period( const KDateTime &start, const Duration &duration )
   : d( new KCal::Period::Private( start, duration.end( start ), true ) )
 {
+  d->mDailyDuration = duration.isDaily();
 }
 
 Period::Period( const Period &period )
@@ -103,7 +106,16 @@ KDateTime Period::end() const
 
 Duration Period::duration() const
 {
-  return Duration( d->mStart, d->mEnd );
+  if ( d->mHasDuration ) {
+    return Duration( d->mStart, d->mEnd, (d->mDailyDuration ? Duration::Days : Duration::Seconds) );
+  } else {
+    return Duration( d->mStart, d->mEnd );
+  }
+}
+
+Duration Period::duration( Duration::Type type ) const
+{
+  return Duration( d->mStart, d->mEnd, type );
 }
 
 bool Period::hasDuration() const

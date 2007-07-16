@@ -143,7 +143,7 @@ class KCAL_EXPORT Event : public Incidence
     /**
       Sets duration of this event.
     */
-    void setDuration( int seconds );
+    void setDuration( const Duration &duration );
 
   protected:
 

@@ -107,7 +107,7 @@ FreeBusy::FreeBusy( Calendar *calendar,
             if ( event->recursOn(day.addDays(-x), start.timeSpec()) ) {
               tmpStart.setDate(day.addDays(-x));
               tmpStart.setTime(event->dtStart().time());
-              tmpEnd=tmpStart.addSecs( (event->duration()) );
+              tmpEnd = event->duration().end( tmpStart );
 
               addLocalPeriod( tmpStart, tmpEnd );
               break;
@@ -311,7 +311,7 @@ FreeBusy::FreeBusy( Calendar *calendar,
             if ( event->recursOn(day.addDays(-x), mCalendar->timeSpec())) {
               tmpStart.setDate(day.addDays(-x));
               tmpStart.setTime(event->dtStart().time());
-              tmpEnd=tmpStart.addSecs( (event->duration()) );
+              tmpEnd = event->duration().end( tmpStart );
 
               addLocalPeriod( tmpStart, tmpEnd );
               break;

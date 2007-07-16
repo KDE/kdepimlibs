@@ -85,7 +85,7 @@ KDateTime Event::dtEnd() const
     return mDtEnd;
   }
   if ( hasDuration() ) {
-    return dtStart().addSecs( duration() );
+    return duration().end( dtStart() );
   }
 
   kDebug(5800) << "Warning! Event '" << summary()
@@ -168,10 +168,10 @@ Event::Transparency Event::transparency() const
   return mTransparency;
 }
 
-void Event::setDuration( int seconds )
+void Event::setDuration( const Duration &duration )
 {
   setHasEndDate( false );
-  Incidence::setDuration( seconds );
+  Incidence::setDuration( duration );
 }
 
 // DEPRECATED methods
