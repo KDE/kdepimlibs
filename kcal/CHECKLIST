@@ -39,8 +39,8 @@ listbase              |       |         |       |         |         |
 period                |   D   |    D    |   D   |    D    |    D    | Narayan
 person                |   D   |    D    |   D   |    D    |    D    | Narayan
 qtopiaformat          |       |         |       |         |         |
-recurrence            |       |         |       |         |         |
-recurrencerule        |       |         |       |         |         |
+recurrence            |       |         |   D   |         |         |
+recurrencerule        |       |         |   D   |         |         |
 resourcecachedconfig  |       |         |       |         |         |
 resourcecached        |       |         |       |         |         |
 resourcecalendar      |       |         |       |         |         |
