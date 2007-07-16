@@ -2,6 +2,7 @@
     This file is part of the kcal library.
 
     Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2003 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
