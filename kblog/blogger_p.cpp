@@ -259,8 +259,8 @@ bool APIBlogger::APIBloggerPrivate::readPostingFromMap( BlogPosting *post,
   QString category;
 
   // Check for hacked title/category support (e.g. in Wordpress)
-  QRegExp titleMatch = QRegExp("<title>([^<]+)</title>");
-  QRegExp categoryMatch = QRegExp("<category>([^<]+)</category>");
+  QRegExp titleMatch = QRegExp("<title>([^<]*)</title>");
+  QRegExp categoryMatch = QRegExp("<category>([^<]*)</category>");
   if ( contents.contains( titleMatch ) ) {
     // Get the title value from the regular expression match
     title = titleMatch.cap( 1 );
