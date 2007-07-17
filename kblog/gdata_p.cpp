@@ -40,7 +40,7 @@
 using namespace KBlog;
 
 APIGData::APIGDataPrivate::APIGDataPrivate():
-  mAuthenticationTime(),mAuthenticationString(),mFetchPostingId(){
+  mFetchPostingId(),mAuthenticationString(),mAuthenticationTime(){
 
 }
 
