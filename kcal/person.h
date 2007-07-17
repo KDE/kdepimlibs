@@ -24,6 +24,9 @@
   This file is part of the API for handling calendar data and
   defines the Person class.
 
+  @brief
+  Represents a person, by name ane email address.
+
   @author Cornelius Schumacher
   @author Reinhold Kainhofer
 */
@@ -38,9 +41,6 @@
 namespace KCal {
 
 /**
-  @brief
-  Represents a person.
-
   This class represents a person, with a name and an email address.
   It supports the "FirstName LastName <emailaddress>" format.
 */

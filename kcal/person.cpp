@@ -24,6 +24,9 @@
   This file is part of the API for handling calendar data and
   defines the Person class.
 
+  @brief
+  Represents a person, by name and email address.
+
   @author Cornelius Schumacher
   @author Reinhold Kainhofer
 */
@@ -80,8 +83,9 @@ Person::~Person()
 
 bool KCal::Person::operator==( const Person &person )
 {
-  return ( d->mName == person.d->mName &&
-           d->mEmail == person.d->mEmail );
+  return
+    d->mName == person.d->mName &&
+    d->mEmail == person.d->mEmail;
 }
 
 Person &KCal::Person::operator=( const Person &person )
