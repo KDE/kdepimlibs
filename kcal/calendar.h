@@ -436,7 +436,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     Incidence *incidenceFromSchedulingID( const QString &sid );
 
-    /** 
+    /**
       Searches all events and todos for an incidence with this
       scheduling identifiere. Returns a list of matching results.
 
@@ -895,7 +895,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       The CalendarObserver class.
     */
-    class KCAL_EXPORT CalendarObserver
+    class KCAL_EXPORT CalendarObserver //krazy:exclude=dpointer
     {
       public:
         /**

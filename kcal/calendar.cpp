@@ -161,8 +161,8 @@ KDateTime::Spec Calendar::Private::timeZoneIdSpec( const QString &timeZoneId,
   } else {
     mBuiltInTimeZone = ICalTimeZone();
   }
-  if ( timeZoneId == QLatin1String("UTC") ) {
-    return( KDateTime::UTC );
+  if ( timeZoneId == QLatin1String( "UTC" ) ) {
+    return KDateTime::UTC;
   }
   ICalTimeZone tz = mTimeZones->zone( timeZoneId );
   if ( !tz.isValid() ) {
@@ -533,11 +533,12 @@ Incidence *Calendar::incidenceFromSchedulingID( const QString &UID )
 {
   Incidence::List incidences = rawIncidences();
   Incidence::List::iterator it = incidences.begin();
-  for ( ; it != incidences.end(); ++it )
-    if ( (*it)->schedulingID() == UID )
+  for ( ; it != incidences.end(); ++it ) {
+    if ( (*it)->schedulingID() == UID ) {
       // Touchdown, and the crowd goes wild
       return *it;
-
+    }
+  }
   // Not found
   return 0;
 }
@@ -1059,7 +1060,7 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
 {
   KDateTime dt;
   bool endOffsetValid = false;
-  Duration endOffset = 0;
+  Duration endOffset( 0 );
   Duration period( from, to );
 
   Alarm::List alarmlist = incidence->alarms();
@@ -1088,7 +1089,8 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
         }
 
         // Find the incidence's earliest alarm
-        KDateTime alarmStart = offset.end( a->hasEndOffset() ? incidence->dtEnd() : incidence->dtStart() );
+        KDateTime alarmStart =
+          offset.end( a->hasEndOffset() ? incidence->dtEnd() : incidence->dtStart() );
 //        KDateTime alarmStart = incidence->dtStart().addSecs( offset );
         if ( alarmStart > to ) {
           continue;
@@ -1114,10 +1116,9 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
           // recurrences fall within the time period.
           bool found = false;
           Duration alarmDuration = a->duration();
-          for (KDateTime base = baseStart;
-               (dt = incidence->recurrence()->getPreviousDateTime( base )).isValid();
-                base = dt )
-          {
+          for ( KDateTime base = baseStart;
+                ( dt = incidence->recurrence()->getPreviousDateTime( base ) ).isValid();
+                base = dt ) {
             if ( a->duration().end( dt ) < base ) {
               break;  // this recurrence's last repetition is too early, so give up
             }
@@ -1127,7 +1128,7 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
             int snooze = a->snoozeTime().value();   // in seconds or days
             if ( a->snoozeTime().isDaily() ) {
               Duration toFromDuration( dt, base );
-	      int toFrom = toFromDuration.asDays();
+              int toFrom = toFromDuration.asDays();
               if ( a->snoozeTime().end( from ) <= to ||
                    toFromDuration.isDaily() && toFrom % snooze == 0 ||
                    ( toFrom / snooze + 1 ) * snooze <= toFrom + period.asDays() )
