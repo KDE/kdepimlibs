@@ -263,8 +263,12 @@ class KCAL_EXPORT CalendarLocal : public Calendar
     */
     Alarm::List alarmsTo( const KDateTime &to );
 
-    /** Notification function of IncidenceBase::Observer. */
-    void incidenceUpdated( IncidenceBase *i );
+    /**
+      Notify the IncidenceBase::Observer that the incidence has been updated.
+
+      @param incidenceBase is a pointer to the updated IncidenceBase.
+    */
+    void incidenceUpdated( IncidenceBase *incidenceBase );
 
   private:
     //@cond PRIVATE
