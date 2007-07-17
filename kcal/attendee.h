@@ -1,22 +1,22 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 /**
   @file
@@ -92,8 +92,7 @@ class KCAL_EXPORT Attendee : public Person
 
       @param name is person name of the attendee.
       @param email is person email address of the attendee.
-      @param rsvp if set (true), the attendee is requested to reply to
-      invitations.
+      @param rsvp if true, the attendee is requested to reply to invitations.
       @param status is the #PartStat status of the attendee.
       @param role is the #Role of the attendee.
       @param uid is the @acronym UID of the attendee.
@@ -223,19 +222,29 @@ class KCAL_EXPORT Attendee : public Person
 
     /**
       Sets the delegate.
+      @param delegate is a string containing a MAILTO URI of those delegated
+      to attend the meeting.
+      @see delegate(), setDelegator().
     */
     void setDelegate( const QString &delegate );
+
     /**
       Returns the delegate.
+      @see setDelegate().
     */
     QString delegate() const;
 
     /**
       Sets the delegator.
+      @param delegator is a string containing a MAILTO URI of those who
+      have delegated their meeting attendance.
+      @see delegator(), setDelegate().
     */
     void setDelegator( const QString &delegator );
+
     /**
       Returns the delegator.
+      @see setDelegator().
     */
     QString delegator() const;
 

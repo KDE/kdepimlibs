@@ -1,23 +1,23 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2003 David Jarvie <software@astrojar.org.uk>
+  Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2003 David Jarvie <software@astrojar.org.uk>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 /**
   @file
@@ -84,6 +84,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Copy constructor.
+      @param other is the alarm to copy.
     */
     Alarm( const Alarm &other );
 
@@ -94,7 +95,6 @@ class KCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Compares two alarms for equality.
-
       @param a is the comparison alarm.
     */
     bool operator==( const Alarm &a ) const;
@@ -262,7 +262,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
       @param subject is the email subject.
       @param text is a string containing the body of the email message.
       @param addressees is Person list of email addresses.
-      @param attachments is a a #QStringList of optional file names
+      @param attachments is a a QStringList of optional file names
       of email attachments.
 
       @see setMailSubject(), setMailText(), setMailAddresses(),
@@ -350,10 +350,9 @@ class KCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Sets a list of filenames to attach to a mail message for an #Email
-      alarm type.
-      Ignored if the alarm is not an #Email type.
+      alarm type. Ignored if the alarm is not an #Email type.
 
-      @param mailAttachFiles is a #QString list of filenames to attach to
+      @param mailAttachFiles is a QString list of filenames to attach to
       a mail message when an #Email type alarm is triggered.
 
       @see setMailSubject(), setMailText(), setMailAttachment(),
@@ -363,8 +362,7 @@ class KCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Adds a filename to the list of files to attach to a mail message for
-      an #Email alarm type.
-      Ignored if the alarm is not an #Email type.
+      an #Email alarm type. Ignored if the alarm is not an #Email type.
 
       @param mailAttachFile is a string containing a filename to be attached
       to an email message to send when the #Email type alarm is triggered.
