@@ -96,7 +96,7 @@ class KCAL_EXPORT Duration
       @param duration the number of seconds or days in the duration
       @param type the unit of time to use (seconds or days)
     */
-    Duration( int duration, Type type = Seconds ); //not explicit
+    Duration( int duration, Type type = Seconds ); //krazy:exclude=explicit
 
     /**
       Constructs a duration by copying another duration object.
@@ -128,35 +128,46 @@ class KCAL_EXPORT Duration
     bool operator!() const  { return !operator bool(); }
 
     /**
-      Returns true if this duration is smaller than the @p other one.
-
+      Returns true if this duration is smaller than the @p other.
       @param other is the other duration to compare.
     */
     bool operator<( const Duration &other ) const;
-    bool operator>=( const Duration &other ) const  { return !operator<( other ); }
-    bool operator>( const Duration &other ) const  { return other.operator<( *this ); }
-    bool operator<=( const Duration &other ) const  { return !other.operator<( *this ); }
 
     /**
-      Returns true if this duration is equal to the @p other one.
-      A daily and non-daily duration are considered unequal.
+      Returns true if this duration is smaller than or equal to the @p other.
+      @param other is the other duration to compare.
+    */
+    bool operator<=( const Duration &other ) const;
 
+    /**
+      Returns true if this duration is greater than the @p other.
+      @param other is the other duration to compare.
+    */
+    bool operator>( const Duration &other ) const;
+
+    /**
+      Returns true if this duration is greater than or equal to the @p other.
+      @param other is the other duration to compare.
+    */
+    bool operator>=( const Duration &other ) const;
+
+    /**
+      Returns true if this duration is equal to the @p other.
+      A daily and non-daily duration are considered unequal.
       @param other the other duration to compare
     */
     bool operator==( const Duration &other ) const;
 
     /**
-      Returns true if this duration is not equal to the @p other one.
-
+      Returns true if this duration is not equal to the @p other.
       @param other is the other duration to compare.
     */
-    bool operator!=( const Duration &other ) const  { return !operator==( other ); }
+    bool operator!=( const Duration &other ) const;
 
     /**
       Adds another duration to this one.
       If one is in terms of days and the other in terms of seconds,
       the result is in terms of seconds.
-
       @param other the other duration to add
     */
     Duration &operator+=( const Duration &other );
@@ -169,7 +180,7 @@ class KCAL_EXPORT Duration
       @param other the other duration to add
       @return combined duration
     */
-    Duration operator+( const Duration &other ) const  { return Duration( *this ) += other; }
+    Duration operator+( const Duration &other ) const;
 
     /**
       Returns the negative of this duration.
@@ -193,7 +204,7 @@ class KCAL_EXPORT Duration
       @param other the other duration to subtract
       @return difference in durations
     */
-    Duration operator-( const Duration &other ) const  { return Duration( *this ) += other; }
+    Duration operator-( const Duration &other ) const;
 
     /**
       Computes a duration end time by adding the number of seconds or

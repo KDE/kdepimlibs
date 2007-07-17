@@ -53,4 +53,19 @@ void DurationTest::testCompare()
   QVERIFY( d1 != d2 );
   QVERIFY( d1copy == d1 );
   QVERIFY( d1assign == d1 );
+
+  Duration d3( 7, Duration::Days );
+  Duration d4( 7*24*60*60, Duration::Seconds );
+  QVERIFY( d3 == d4 );
+  QVERIFY( d4 == d3 );
+
+  QVERIFY( d3 > d2 );
+  QVERIFY( -d3 < d2 );
+
+  Duration d5 = d1;
+  d5 += d2; // should be 3hrs
+  QVERIFY( d5 > d2 );
+  QVERIFY( d2 < d5 );
+  Duration d6( 3*60*60 );
+  QVERIFY( d6 == d3 );
 }
