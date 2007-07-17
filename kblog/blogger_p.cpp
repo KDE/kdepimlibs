@@ -258,8 +258,23 @@ bool APIBlogger::APIBloggerPrivate::readPostingFromMap( BlogPosting *post,
   QString contents( postInfo["content"].toString() );
   QString category;
 
+  // Check for hacked title/category support (e.g. in Wordpress)
+  QRegExp titleMatch = QRegExp("<title>([^<]+)</title>");
+  QRegExp categoryMatch = QRegExp("<category>([^<]+)</category>");
+  if ( contents.contains( titleMatch ) ) {
+    // Get the title value from the regular expression match
+    title = titleMatch.cap( 1 );
+    contents.remove( titleMatch );
+  }
+  if ( contents.contains( categoryMatch ) ) {
+    // Get the category value from the regular expression match
+    category = categoryMatch.cap( 1 );
+    contents.remove( categoryMatch );
+  }
+
   post->setTitle( title );
   post->setContent( contents );
+  post->setCategory( category );
   return true;
 }
 
