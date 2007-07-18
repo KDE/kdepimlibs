@@ -29,7 +29,6 @@
 #include <kurl.h>
 #include <kio/job.h>
 #include <kio/scheduler.h>
-#include <kio/slave.h>
 #include <kio/passworddialog.h>
 
 #include <qbuffer.h>
