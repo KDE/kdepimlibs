@@ -26,6 +26,7 @@ KCAL_UNIT_TESTS(
   testcalendarnull
   testcalfilter
   testduration
+  testerrorformat
   testevent
   testperiod
   testperson

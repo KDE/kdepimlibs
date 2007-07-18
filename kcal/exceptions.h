@@ -18,15 +18,23 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Exception and ErrorFormat classes.
+
+  We don't use actual C++ exceptions right now. These classes are currently
+  returned by an error function; but we can build upon them, if/when we start
+  to use C++ exceptions.
+
+  @brief
+  Exceptions base class along with the Calendar ErrorFormat class.
+
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+*/
 
 #ifndef KCAL_EXCEPTIONS_H
 #define KCAL_EXCEPTIONS_H
-//
-// Exception classes for the kcal library.
-//
-// We don't use actual C++ exceptions right now. These classes are currently
-// returned by an error function, but we can build upon them, if we start
-// to use C++ exceptions.
 
 #include <QtCore/QString>
 #include "kcal_export.h"
@@ -34,64 +42,89 @@
 namespace KCal {
 
 /**
-  KOrganizer exceptions base class. This is currently used as a fancy kind of
-  error code not as an C++ exception.
+  Exceptions base class, currently used as a fancy kind of error code
+  and not as an C++ exception.
 */
 class Exception
 {
   public:
     /**
-      Construct exception with descriptive message @p message.
+      Construct an exception with a descriptive message.
+      @param message is the message string.
     */
     explicit Exception( const QString &message = QString() );
+
+    /**
+      Destructor.
+    */
     virtual ~Exception();
 
     /**
-      Return descriptive message of exception.
+      Returns the exception message.
     */
     virtual QString message();
 
   protected:
+    /** The current exception message. */
     QString mMessage;
 
   private:
+    //@cond PRIVATE
     class Private;
     Private *d;
+    //@endcond
 };
 
 /**
   Calendar format related error class.
 */
-class ErrorFormat : public Exception
+class KCAL_EXPORT ErrorFormat : public Exception
 {
   public:
-    enum ErrorCodeFormat { LoadError, SaveError,
-                           ParseErrorIcal, ParseErrorKcal,
-                           NoCalendar,
-                           CalVersion1,CalVersion2,
-                           CalVersionUnknown,
-                           Restriction };
+    /**
+      The different types of Calendar format errors.
+    */
+    enum ErrorCodeFormat {
+      LoadError,         /**< Load error */
+      SaveError,         /**< Save error */
+      ParseErrorIcal,    /**< Parse error in libical */
+      ParseErrorKcal,    /**< Parse error in libkcal */
+      NoCalendar,        /**< No calendar component found */
+      CalVersion1,       /**< vCalendar v1.0 detected */
+      CalVersion2,       /**< iCalendar v2.0 detected */
+      CalVersionUnknown, /**< Unknown calendar format detected */
+      Restriction        /**< Restriction violation */
+    };
 
     /**
-      Create format error exception.
+      Creates a format error exception.
+
+      @param code is the exception #ErrorCodeFormat.
+      @param message is the exception message string.
     */
     explicit ErrorFormat( ErrorCodeFormat code,
                           const QString &message = QString() );
 
     /**
-      Return format error message.
+      Destructor.
+    */
+    ~ErrorFormat();
+
+    /**
+      Returns the format error message.
     */
     QString message();
+
     /**
-      Return format error code.
+      Returns the format error code.
     */
     ErrorCodeFormat errorCode();
 
   private:
-    ErrorCodeFormat mCode;
-
+    //@cond PRIVATE
     class Private;
-    Private *d;
+    Private *const d;
+    //@endcond
 };
 
 }
