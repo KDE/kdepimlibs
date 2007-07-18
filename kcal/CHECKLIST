@@ -2,57 +2,60 @@ Legend:  D=Done, X=Keep Off!, n/a=Not Applicable
 
 File                  | Krazy | Doxygen | D-Ptr | UnitTst | Qt4Port | Who
 ===============================================================================
+calendarresources     |   D   |         |       |         |    D    | Allen
+calstorage            |       |         |       |         |    D    |
+compat                |       |         |       |         |    D    |
+confirmsavedialog     |       |         |       |         |    D    |
+customproperties      |       |         |       |         |    D    |
+dndfactory            |       |         |       |         |    D    |
+dummyscheduler        |       |         |       |         |    D    |
+event                 |   D   |         |       |    D    |    D    | Allen
+filestorage           |       |         |       |         |    D    |
+freebusycache         |       |         |       |         |    D    |
+freebusy              |       |         |       |         |    D    |
+freebusyurlstore      |       |         |       |         |    D    |
+htmlexport            |       |         |       |         |    D    |
+icaldrag              |       |         |       |         |    D    |
+icalformat            |       |         |       |         |    D    |
+icalformatimpl        |       |         |       |         |    D    |
+icaltimezones         |       |         |       |         |    D    |
+imipscheduler         |       |         |       |         |    D    |
+incidencebase         |   D   |         |   D   |   n/a   |    D    | Allen
+incidenceformatter    |       |         |       |         |    D    | Allen
+incidence             |       |         |       |   n/a   |    D    | Allen
+journal               |       |         |       |         |    D    | Allen
+kresult               |   D   |         |       |         |    D    |
+listbase              |       |         |       |         |    D    |
+qtopiaformat          |       |         |       |         |    D    |
+recurrence            |       |         |   D   |         |    D    |
+recurrencerule        |       |         |   D   |         |    D    |
+resourcecachedconfig  |       |         |       |         |    D    |
+resourcecached        |       |         |       |         |    D    |
+resourcecalendar      |       |         |       |         |    D    |
+resourcelocalconfig   |       |         |       |         |    D    |
+resourcelocaldirconfig|       |         |       |         |    D    |
+resourcelocaldir      |       |         |       |         |    D    |
+resourcelocal         |   D   |    D    |   D   |    X    |    D    | Narayan
+scheduler             |       |         |       |         |    D    |
+sortablelist.h        |   D   |    D    |  n/a  |    D    |    D    |
+todo                  |   D   |         |   D   |    D    |    D    | Allen
+vcaldrag              |       |         |       |         |    D    |
+vcalformat            |       |         |       |         |    D    |
+
+== DONE ==
 alarm                 |   D   |    D    |   D   |    D    |    D    | Allen
 attachment            |   D   |    D    |   D   |    D    |    D    | Allen
 attendee              |   D   |    D    |   D   |    D    |    D    | Allen
 calendar              |   D   |    D    |   D   |   n/a   |    D    | Allen
 calendarlocal         |   D   |    D    |   D   |    D    |    D    | Allen
-calendarnull          |   D   |    D    |   D   |    D    |    D    | Allen
-calendarresources     |   D   |         |       |         |         | Allen
 calfilter             |   D   |    D    |   D   |    D    |    D    | Allen
-calformat             |       |         |       |         |         |
-calstorage            |       |         |       |         |         |
-compat                |       |         |       |         |         |
-confirmsavedialog     |       |         |       |         |         |
-customproperties      |       |         |       |         |         |
-dndfactory            |       |         |       |         |         |
-dummyscheduler        |       |         |       |         |         |
+calformat             |   D   |    D    |   D   |   n/a   |    D    | Allen
+calendarnull          |   D   |    D    |   D   |    D    |    D    | Allen
 duration              |   D   |    D    |   D   |    D    |    D    | Allen
-event                 |   D   |         |       |    D    |         | Allen
-exceptions            |       |         |       |         |         |
-filestorage           |       |         |       |         |         |
-freebusycache         |       |         |       |         |         |
-freebusy              |       |         |       |         |         |
-freebusyurlstore      |       |         |       |         |         |
-htmlexport            |       |         |       |         |         |
-icaldrag              |       |         |       |         |    D    |
-icalformat            |       |         |       |         |         |
-icalformatimpl        |       |         |       |         |         |
-icaltimezones         |       |         |       |         |         |
-imipscheduler         |       |         |       |         |         |
-incidencebase         |   D   |         |   D   |   n/a   |         | Allen
-incidenceformatter    |       |         |       |         |         | Allen
-incidence             |       |         |       |   n/a   |         | Allen
-journal               |       |         |       |         |         | Allen
-kresult               |   D   |         |       |         |    D    |
-listbase              |       |         |       |         |         |
+exceptions            |   D   |    D    |   D   |    D    |    D    | Allen
 period                |   D   |    D    |   D   |    D    |    D    | Narayan
 person                |   D   |    D    |   D   |    D    |    D    | Narayan
-qtopiaformat          |       |         |       |         |         |
-recurrence            |       |         |   D   |         |         |
-recurrencerule        |       |         |   D   |         |         |
-resourcecachedconfig  |       |         |       |         |         |
-resourcecached        |       |         |       |         |         |
-resourcecalendar      |       |         |       |         |         |
-resourcelocalconfig   |       |         |       |         |         |
-resourcelocaldirconfig|       |         |       |         |         |
-resourcelocaldir      |       |         |       |         |         |
-resourcelocal         |   D   |    D    |   D   |    X    |    X    | Narayan
-scheduler             |       |         |       |         |         |
-sortablelist.h        |   D   |    D    |  n/a  |    D    |    D    |
-todo                  |   D   |         |   D   |    D    |    D    | Allen
-vcaldrag              |       |         |       |         |    D    |
-vcalformat            |       |         |       |         |         |
+== DONE ==
 
 Qt4Port -> no deprecated warnings; thiago says do NO replace const iterator
           loops with 'foreach()'
