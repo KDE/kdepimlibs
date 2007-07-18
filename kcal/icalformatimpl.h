@@ -38,7 +38,6 @@ extern "C" {
 
 namespace KCal {
 
-class Compat;
 class ICalTimeZones;
 
 /**
@@ -88,7 +87,7 @@ class ICalFormatImpl
     void readRecurrence( const struct icalrecurrencetype &r, RecurrenceRule* recur );
     void readAlarm(icalcomponent *alarm, Incidence *incidence, ICalTimeZones *tzlist);
     /** Return the PRODID string loaded from calendar file */
-    const QString &loadedProductId()  { return mLoadedProductId; }
+    QString loadedProductId() const;
 
     static icaltimetype writeICalDate(const QDate &);
     static QDate readICalDate(icaltimetype);
@@ -149,30 +148,10 @@ class ICalFormatImpl
   protected:
     void dumpIcalRecurrence(icalrecurrencetype);
   private:
-    void writeIncidenceBase(icalcomponent *parent,IncidenceBase *);
-    void readIncidenceBase(icalcomponent *parent, IncidenceBase *);
-    void writeCustomProperties(icalcomponent *parent,CustomProperties *);
-    void readCustomProperties(icalcomponent *parent,CustomProperties *);
-    void readTimezone(icalcomponent *vtimezone);
-
-    ICalFormat *mParent;
-    Calendar *mCalendar;
-
-    QString mLoadedProductId;         // PRODID string loaded from calendar file
-
-    Event::List mEventsRelate;           // events with relations
-    Todo::List mTodosRelate;             // todos with relations
-
-    static const int mSecondsPerWeek;
-    static const int mSecondsPerDay;
-    static const int mSecondsPerHour;
-    static const int mSecondsPerMinute;
-
-    Compat *mCompat;
-
-    class ToComponentVisitor;
+    //@cond PRIVATE
     class Private;
-    Private *d;
+    Private *const d;
+    //@endcond
 };
 
 }

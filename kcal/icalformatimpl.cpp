@@ -68,22 +68,7 @@ const int gSecondsPerDay    = gSecondsPerHour   * 24;
 const int gSecondsPerWeek   = gSecondsPerDay    * 7;
 
 
-inline icaltimetype ICalFormatImpl::writeICalUtcDateTime(const KDateTime &dt )
-{
-  return writeICalDateTime( dt.toUtc() );
-}
-
-ICalFormatImpl::ICalFormatImpl( ICalFormat *parent ) :
-  mParent( parent ), mCompat( new Compat )
-{
-}
-
-ICalFormatImpl::~ICalFormatImpl()
-{
-  delete mCompat;
-}
-
-class KCal::ICalFormatImpl::ToComponentVisitor : public IncidenceBase::Visitor
+class ToComponentVisitor : public IncidenceBase::Visitor
 {
   public:
     ToComponentVisitor( ICalFormatImpl *impl, Scheduler::Method m ) : mImpl( impl ), mComponent( 0 ), mMethod( m ) {}
@@ -100,6 +85,50 @@ class KCal::ICalFormatImpl::ToComponentVisitor : public IncidenceBase::Visitor
     icalcomponent *mComponent;
     Scheduler::Method mMethod;
 };
+
+
+class ICalFormatImpl::Private
+{
+  public:
+    Private( ICalFormatImpl *impl, ICalFormat *parent )
+      : mImpl( impl ),
+        mParent( parent ),
+        mCompat( new Compat )
+    {}
+    ~Private()  { delete mCompat; }
+    void writeIncidenceBase( icalcomponent *parent, IncidenceBase * );
+    void readIncidenceBase( icalcomponent *parent, IncidenceBase * );
+    void writeCustomProperties( icalcomponent *parent, CustomProperties * );
+    void readCustomProperties( icalcomponent *parent, CustomProperties * );
+
+    ICalFormatImpl *mImpl;
+    ICalFormat *mParent;
+    QString mLoadedProductId;         // PRODID string loaded from calendar file
+    Event::List mEventsRelate;        // events with relations
+    Todo::List  mTodosRelate;         // todos with relations
+    Compat *mCompat;
+};
+
+
+inline icaltimetype ICalFormatImpl::writeICalUtcDateTime(const KDateTime &dt )
+{
+  return writeICalDateTime( dt.toUtc() );
+}
+
+ICalFormatImpl::ICalFormatImpl( ICalFormat *parent )
+  : d( new Private( this, parent ) )
+{
+}
+
+ICalFormatImpl::~ICalFormatImpl()
+{
+  delete d;
+}
+
+QString ICalFormatImpl::loadedProductId() const
+{
+  return d->mLoadedProductId;
+}
 
 icalcomponent *ICalFormatImpl::writeIncidence( IncidenceBase *incidence, Scheduler::Method method )
 {
@@ -248,7 +277,7 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
 
   icalcomponent *vfreebusy = icalcomponent_new(ICAL_VFREEBUSY_COMPONENT);
 
-  writeIncidenceBase(vfreebusy,freebusy);
+  d->writeIncidenceBase(vfreebusy,freebusy);
 
   icalcomponent_add_property(vfreebusy, icalproperty_new_dtstart(
       writeICalUtcDateTime(freebusy->dtStart())));
@@ -311,7 +340,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent, Incidence *incidence,
   else
     incidence->removeCustomProperty( "LIBKCAL", "ID" );
 
-  writeIncidenceBase(parent, incidence);
+  d->writeIncidenceBase(parent, incidence);
 
   // creation date
   icalcomponent_add_property( parent,
@@ -485,15 +514,15 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent, Incidence *incidence,
   }
 }
 
-void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
-                                         IncidenceBase * incidenceBase )
+void ICalFormatImpl::Private::writeIncidenceBase( icalcomponent *parent,
+                                                  IncidenceBase *incidenceBase )
 {
   icalcomponent_add_property( parent,
       writeICalDateTimeProperty( ICAL_DTSTAMP_PROPERTY, KDateTime::currentUtcDateTime() ) );
 
   // organizer stuff
   if ( !incidenceBase->organizer().isEmpty() ) {
-    icalcomponent_add_property( parent, writeOrganizer( incidenceBase->organizer() ) );
+    icalcomponent_add_property( parent, mImpl->writeOrganizer( incidenceBase->organizer() ) );
   }
 
   // attendees
@@ -501,7 +530,7 @@ void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
     Attendee::List::ConstIterator it;
     for( it = incidenceBase->attendees().begin();
          it != incidenceBase->attendees().end(); ++it ) {
-      icalcomponent_add_property( parent, writeAttendee( *it ) );
+      icalcomponent_add_property( parent, mImpl->writeAttendee( *it ) );
     }
   }
 
@@ -515,7 +544,8 @@ void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
   writeCustomProperties( parent, incidenceBase );
 }
 
-void ICalFormatImpl::writeCustomProperties(icalcomponent *parent,CustomProperties *properties)
+void ICalFormatImpl::Private::writeCustomProperties( icalcomponent *parent,
+                                                     CustomProperties *properties )
 {
   QMap<QByteArray, QString> custom = properties->customProperties();
   for (QMap<QByteArray, QString>::Iterator c = custom.begin();  c != custom.end();  ++c) {
@@ -923,7 +953,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo, ICalTimeZones *tzlist)
 
       case ICAL_RELATEDTO_PROPERTY:  // related todo (parent)
         todo->setRelatedToUid(QString::fromUtf8(icalproperty_get_relatedto(p)));
-        mTodosRelate.append(todo);
+        d->mTodosRelate.append(todo);
         break;
 
       case ICAL_DTSTART_PROPERTY:
@@ -947,7 +977,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo, ICalTimeZones *tzlist)
     p = icalcomponent_get_next_property(vtodo,ICAL_ANY_PROPERTY);
   }
 
-  if (mCompat) mCompat->fixEmptySummary( todo );
+  if (d->mCompat) d->mCompat->fixEmptySummary( todo );
 
   return todo;
 }
@@ -974,7 +1004,7 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, ICalTimeZones *tzlist)
         if ( kdt.isDateOnly() ) {
           // End date is non-inclusive
           QDate endDate = kdt.date().addDays( -1 );
-          if ( mCompat ) mCompat->fixFloatingEnd( endDate );
+          if ( d->mCompat ) d->mCompat->fixFloatingEnd( endDate );
           if ( endDate < event->dtStart().date() ) {
             endDate = event->dtStart().date();
           }
@@ -988,7 +1018,7 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, ICalTimeZones *tzlist)
       }
       case ICAL_RELATEDTO_PROPERTY:  // related event (parent)
         event->setRelatedToUid(QString::fromUtf8(icalproperty_get_relatedto(p)));
-        mEventsRelate.append(event);
+        d->mEventsRelate.append(event);
         break;
 
 
@@ -1026,7 +1056,7 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, ICalTimeZones *tzlist)
     }
   }
 
-  if ( mCompat ) mCompat->fixEmptySummary( event );
+  if ( d->mCompat ) d->mCompat->fixEmptySummary( event );
 
   return event;
 }
@@ -1035,7 +1065,7 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
 {
   FreeBusy *freebusy = new FreeBusy;
 
-  readIncidenceBase(vfreebusy, freebusy);
+  d->readIncidenceBase(vfreebusy, freebusy);
 
   icalproperty *p = icalcomponent_get_first_property(vfreebusy, ICAL_ANY_PROPERTY);
 
@@ -1246,7 +1276,7 @@ Attachment *ICalFormatImpl::readAttachment( icalproperty *attach )
 
 void ICalFormatImpl::readIncidence(icalcomponent *parent, Incidence *incidence, ICalTimeZones *tzlist)
 {
-  readIncidenceBase(parent,incidence);
+  d->readIncidenceBase(parent,incidence);
 
   icalproperty *p = icalcomponent_get_first_property(parent, ICAL_ANY_PROPERTY);
 
@@ -1325,8 +1355,8 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, Incidence *incidence, 
 
       case ICAL_PRIORITY_PROPERTY:  // priority
         intvalue = icalproperty_get_priority( p );
-        if ( mCompat )
-          intvalue = mCompat->fixPriority( intvalue );
+        if ( d->mCompat )
+          intvalue = d->mCompat->fixPriority( intvalue );
         incidence->setPriority( intvalue );
         break;
 
@@ -1401,8 +1431,8 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, Incidence *incidence, 
 
   // Now that recurrence and exception stuff is completely set up,
   // do any backwards compatibility adjustments.
-  if ( incidence->doesRecur() && mCompat )
-      mCompat->fixRecurrence( incidence );
+  if ( incidence->doesRecur() && d->mCompat )
+      d->mCompat->fixRecurrence( incidence );
 
   // add categories
   incidence->setCategories(categories);
@@ -1414,10 +1444,11 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, Incidence *incidence, 
     readAlarm(alarm, incidence, tzlist);
   }
   // Fix incorrect alarm settings by other applications (like outloook 9)
-  if ( mCompat ) mCompat->fixAlarms( incidence );
+  if ( d->mCompat ) d->mCompat->fixAlarms( incidence );
 }
 
-void ICalFormatImpl::readIncidenceBase(icalcomponent *parent, IncidenceBase *incidenceBase)
+void ICalFormatImpl::Private::readIncidenceBase( icalcomponent *parent,
+                                                 IncidenceBase *incidenceBase )
 {
   icalproperty *p = icalcomponent_get_first_property(parent, ICAL_ANY_PROPERTY);
 
@@ -1430,11 +1461,11 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent, IncidenceBase *inc
         break;
 
       case ICAL_ORGANIZER_PROPERTY:  // organizer
-        incidenceBase->setOrganizer( readOrganizer(p));
+        incidenceBase->setOrganizer( mImpl->readOrganizer(p) );
         break;
 
       case ICAL_ATTENDEE_PROPERTY:  // attendee
-        incidenceBase->addAttendee(readAttendee(p));
+        incidenceBase->addAttendee( mImpl->readAttendee(p) );
         break;
 
       case ICAL_COMMENT_PROPERTY:
@@ -1453,7 +1484,8 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent, IncidenceBase *inc
   readCustomProperties(parent, incidenceBase);
 }
 
-void ICalFormatImpl::readCustomProperties(icalcomponent *parent, CustomProperties *properties)
+void ICalFormatImpl::Private::readCustomProperties( icalcomponent *parent,
+                                                    CustomProperties *properties )
 {
   QMap<QByteArray, QString> customProperties;
   QString lastProperty=QString();
@@ -1724,7 +1756,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm, Incidence *incidence, ICalT
   }
 
   // custom properties
-  readCustomProperties(alarm, ialarm);
+  d->readCustomProperties(alarm, ialarm);
 
   // TODO: check for consistency of alarm properties
 }
@@ -2016,7 +2048,7 @@ icalcomponent *ICalFormatImpl::createCalendarComponent(Calendar *cal)
 
   // Custom properties
   if( cal != 0 )
-    writeCustomProperties(calendar, cal);
+    d->writeCustomProperties(calendar, cal);
 
   return calendar;
 }
@@ -2040,19 +2072,19 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   p = icalcomponent_get_first_property(calendar,ICAL_PRODID_PROPERTY);
   if (!p) {
     kDebug(5800) << "No PRODID property found" << endl;
-    mLoadedProductId = "";
+    d->mLoadedProductId = "";
   } else {
-    mLoadedProductId = QString::fromUtf8(icalproperty_get_prodid(p));
-//    kDebug(5800) << "VCALENDAR prodid: '" << mLoadedProductId << "'" << endl;
+    d->mLoadedProductId = QString::fromUtf8(icalproperty_get_prodid(p));
+//    kDebug(5800) << "VCALENDAR prodid: '" << d->mLoadedProductId << "'" << endl;
 
-    delete mCompat;
-    mCompat = CompatFactory::createCompat( mLoadedProductId );
+    delete d->mCompat;
+    d->mCompat = CompatFactory::createCompat( d->mLoadedProductId );
   }
 
   p = icalcomponent_get_first_property(calendar,ICAL_VERSION_PROPERTY);
   if (!p) {
     kDebug(5800) << "No VERSION property found" << endl;
-    mParent->setException(new ErrorFormat(ErrorFormat::CalVersionUnknown));
+    d->mParent->setException(new ErrorFormat(ErrorFormat::CalVersionUnknown));
     return false;
   } else {
     const char *version = icalproperty_get_version(p);
@@ -2060,12 +2092,12 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 
     if (strcmp(version,"1.0") == 0) {
       kDebug(5800) << "Expected iCalendar, got vCalendar" << endl;
-      mParent->setException(new ErrorFormat(ErrorFormat::CalVersion1,
+      d->mParent->setException(new ErrorFormat(ErrorFormat::CalVersion1,
                             i18n("Expected iCalendar format")));
       return false;
     } else if (strcmp(version,"2.0") != 0) {
       kDebug(5800) << "Expected iCalendar, got unknown format" << endl;
-      mParent->setException(new ErrorFormat(ErrorFormat::CalVersionUnknown));
+      d->mParent->setException(new ErrorFormat(ErrorFormat::CalVersionUnknown));
       return false;
     }
   }
@@ -2077,11 +2109,11 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   tzs.parse(calendar, *tzlist);
 
   // custom properties
-  readCustomProperties(calendar, cal);
+  d->readCustomProperties(calendar, cal);
 
   // Store all events with a relatedTo property in a list for post-processing
-  mEventsRelate.clear();
-  mTodosRelate.clear();
+  d->mEventsRelate.clear();
+  d->mTodosRelate.clear();
   // TODO: make sure that only actually added events go to this lists.
 
   icalcomponent *c;
@@ -2133,11 +2165,11 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 
   // Post-Process list of events with relations, put Event objects in relation
   Event::List::ConstIterator eIt;
-  for ( eIt = mEventsRelate.begin(); eIt != mEventsRelate.end(); ++eIt ) {
+  for ( eIt = d->mEventsRelate.begin(); eIt != d->mEventsRelate.end(); ++eIt ) {
     (*eIt)->setRelatedTo( cal->incidence( (*eIt)->relatedToUid() ) );
   }
   Todo::List::ConstIterator tIt;
-  for ( tIt = mTodosRelate.begin(); tIt != mTodosRelate.end(); ++tIt ) {
+  for ( tIt = d->mTodosRelate.begin(); tIt != d->mTodosRelate.end(); ++tIt ) {
     (*tIt)->setRelatedTo( cal->incidence( (*tIt)->relatedToUid() ) );
   }
 

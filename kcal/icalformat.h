@@ -135,11 +135,10 @@ class KCAL_EXPORT ICalFormat : public CalFormat
     void setImplementation( ICalFormatImpl *impl );
 
   private:
-    ICalFormatImpl *mImpl;
-    KDateTime::Spec mTimeSpec;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }
