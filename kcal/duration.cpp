@@ -130,35 +130,11 @@ bool Duration::operator<( const Duration &other ) const
   return d->seconds() < other.d->seconds();
 }
 
-bool Duration::operator>=( const Duration &other ) const
-{
-  return !operator<( other );
-}
-
-bool Duration::operator>( const Duration &other ) const
-{
-  return other.operator<( *this );
-}
-
-bool Duration::operator<=( const Duration &other ) const
-{
-  return !other.operator<( *this );
-}
-
 bool Duration::operator==( const Duration &other ) const
 {
-  if ( d->mDaily == other.d->mDaily ) {
-    return d->mDuration == other.d->mDuration;
-  } else if ( d->mDaily ) {
-    return d->mDuration * 86400 == other.d->mDuration;
-  } else {
-    return d->mDuration == other.d->mDuration * 86400;
-  }
-}
-
-bool Duration::operator!=( const Duration &other ) const
-{
-  return !operator==( other );
+  return
+    d->mDuration == other.d->mDuration &&
+    d->mDaily == other.d->mDaily;
 }
 
 Duration &Duration::operator+=( const Duration &other )
@@ -174,11 +150,6 @@ Duration &Duration::operator+=( const Duration &other )
   return *this;
 }
 
-Duration Duration::operator+( const Duration &other ) const
-{
-  return Duration( *this ) += other;
-}
-
 Duration Duration::operator-() const
 {
   return Duration( -d->mDuration, ( d->mDaily ? Days : Seconds ) );
@@ -187,11 +158,6 @@ Duration Duration::operator-() const
 Duration &Duration::operator-=( const Duration &duration )
 {
   return operator+=( -duration );
-}
-
-Duration Duration::operator-( const Duration &other ) const
-{
-  return Duration( *this ) -= other;
 }
 
 KDateTime Duration::end( const KDateTime &start ) const

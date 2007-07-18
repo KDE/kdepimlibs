@@ -56,8 +56,7 @@ void DurationTest::testCompare()
 
   Duration d3( 7, Duration::Days );
   Duration d4( 7*24*60*60, Duration::Seconds );
-  QVERIFY( d3 == d4 );
-  QVERIFY( d4 == d3 );
+  QVERIFY( d3 != d4 ); // cannot compare days durations with seconds durations
 
   QVERIFY( d3 > d2 );
   QVERIFY( -d3 < d2 );
@@ -67,5 +66,6 @@ void DurationTest::testCompare()
   QVERIFY( d5 > d2 );
   QVERIFY( d2 < d5 );
   Duration d6( 3*60*60 );
-  QVERIFY( d6 == d3 );
+  QVERIFY( d6 == d5 );
+  QVERIFY( ( d6-=( 2*60*60 ) ) == d1 );
 }

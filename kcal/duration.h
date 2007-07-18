@@ -138,19 +138,22 @@ class KCAL_EXPORT Duration
       Returns true if this duration is smaller than or equal to the @p other.
       @param other is the other duration to compare.
     */
-    bool operator<=( const Duration &other ) const;
+    bool operator<=( const Duration &other ) const
+    { return !other.operator<( *this ); }
 
     /**
       Returns true if this duration is greater than the @p other.
       @param other is the other duration to compare.
     */
-    bool operator>( const Duration &other ) const;
+    bool operator>( const Duration &other ) const
+    { return other.operator<( *this ); }
 
     /**
       Returns true if this duration is greater than or equal to the @p other.
       @param other is the other duration to compare.
     */
-    bool operator>=( const Duration &other ) const;
+    bool operator>=( const Duration &other ) const
+    { return !operator<( other ); }
 
     /**
       Returns true if this duration is equal to the @p other.
@@ -163,7 +166,8 @@ class KCAL_EXPORT Duration
       Returns true if this duration is not equal to the @p other.
       @param other is the other duration to compare.
     */
-    bool operator!=( const Duration &other ) const;
+    bool operator!=( const Duration &other ) const
+    { return !operator==( other ); }
 
     /**
       Adds another duration to this one.
@@ -181,7 +185,8 @@ class KCAL_EXPORT Duration
       @param other the other duration to add
       @return combined duration
     */
-    Duration operator+( const Duration &other ) const;
+    Duration operator+( const Duration &other ) const
+    { return Duration( *this ) += other; }
 
     /**
       Returns the negative of this duration.
@@ -205,7 +210,8 @@ class KCAL_EXPORT Duration
       @param other the other duration to subtract
       @return difference in durations
     */
-    Duration operator-( const Duration &other ) const;
+    Duration operator-( const Duration &other ) const
+    { return Duration( *this ) += other; }
 
     /**
       Computes a duration end time by adding the number of seconds or
