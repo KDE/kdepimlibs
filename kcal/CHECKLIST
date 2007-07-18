@@ -16,9 +16,9 @@ freebusy              |       |         |       |         |    D    |
 freebusyurlstore      |       |         |       |         |    D    |
 htmlexport            |       |         |       |         |    D    |
 icaldrag              |       |         |       |         |    D    |
-icalformat            |       |         |       |         |    D    |
-icalformatimpl        |       |         |       |         |    D    |
-icaltimezones         |       |         |       |         |    D    |
+icalformat            |       |         |   D   |         |    D    |
+icalformatimpl        |       |         |   D   |         |    D    |
+icaltimezones         |       |         |   D   |         |    D    |
 imipscheduler         |       |         |       |         |    D    |
 incidencebase         |   D   |         |   D   |   n/a   |    D    | Allen
 incidenceformatter    |       |         |       |         |    D    | Allen
