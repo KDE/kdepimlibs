@@ -155,7 +155,7 @@ void APIBlogger::removePosting( const QString &postingId )
   args << QVariant( /*publish=*/true );
   d->mXmlRpcClient->call(
     "blogger.deletePost", args,
-    d, SLOT( slotCreateMedia( QList<QVariant> &result, QVariant &id ) ),
+    d, SLOT( slotModifyPosting( QList<QVariant> &result, QVariant &id ) ),
     d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 

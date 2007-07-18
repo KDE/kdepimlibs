@@ -44,7 +44,7 @@ APIBlogger::APIBloggerPrivate::~APIBloggerPrivate()
 QList<QVariant> APIBlogger::APIBloggerPrivate::defaultArgs( const QString &id )
 {
   QList<QVariant> args;
-  args << QVariant( QString( "0123456789ABCDEF" ) );
+  args << QVariant( QString( "0123456789ABCDEF" ) ); //AppKey
   if ( !id.isNull() ) {
     args << QVariant( id );
   }
