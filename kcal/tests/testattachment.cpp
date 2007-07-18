@@ -28,7 +28,8 @@ QTEST_KDEMAIN( AttachmentTest, NoGUI )
 #include "kcal/attachment.h"
 using namespace KCal;
 
-void AttachmentTest::testValidity() {
+void AttachmentTest::testValidity()
+{
   Attachment attachment( QString( "http://www.kde.org" ) );
   QVERIFY( attachment.uri() == "http://www.kde.org" );
 }

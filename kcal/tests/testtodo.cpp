@@ -27,7 +27,8 @@ QTEST_KDEMAIN( TodoTest, NoGUI )
 #include "kcal/todo.h"
 using namespace KCal;
 
-void TodoTest::testValidity() {
+void TodoTest::testValidity()
+{
   QDate dt = QDate::currentDate();
   Todo *todo = new Todo();
   todo->setDtStart( KDateTime( dt ) );
@@ -41,7 +42,8 @@ void TodoTest::testValidity() {
   QVERIFY( todo->percentComplete() == 5 );
 }
 
-void TodoTest::testCompare() {
+void TodoTest::testCompare()
+{
   QDate dt = QDate::currentDate();
   Todo todo1;
   todo1.setDtStart( KDateTime( dt ) );
@@ -65,7 +67,8 @@ void TodoTest::testCompare() {
   QVERIFY( !( todo1.isCompleted() == todo2.isCompleted() ) );
 }
 
-void TodoTest::testClone() {
+void TodoTest::testClone()
+{
   QDate dt = QDate::currentDate();
   Todo todo1;
   todo1.setDtStart( KDateTime( dt ) );

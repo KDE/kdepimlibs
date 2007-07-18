@@ -29,7 +29,8 @@ QTEST_KDEMAIN( CalendarLocalTest, NoGUI )
 #include "kcal/calendarlocal.h"
 using namespace KCal;
 
-void CalendarLocalTest::testValidity() {
+void CalendarLocalTest::testValidity()
+{
   CalendarLocal cal( KDateTime::UTC );
   cal.setProductId( QLatin1String( "fredware calendar" ) );
   QVERIFY( cal.productId() == QLatin1String( "fredware calendar" ) );
@@ -38,7 +39,8 @@ void CalendarLocalTest::testValidity() {
   cal.close();
 }
 
-void CalendarLocalTest::testSave() {
+void CalendarLocalTest::testSave()
+{
   CalendarLocal cal( QLatin1String( "UTC" ) );
   cal.setProductId( QLatin1String( "fredware calendar" ) );
   QVERIFY( cal.timeZoneId() == QLatin1String( "UTC" ) );
@@ -48,7 +50,8 @@ void CalendarLocalTest::testSave() {
   unlink( "foo.ics" );
 }
 
-void CalendarLocalTest::testSaveLoadSave() {
+void CalendarLocalTest::testSaveLoadSave()
+{
   CalendarLocal cal( QLatin1String( "UTC" ) );
   cal.setProductId( QLatin1String( "fredware calendar" ) );
   QVERIFY( cal.timeZoneId() == QLatin1String( "UTC" ) );
@@ -60,7 +63,8 @@ void CalendarLocalTest::testSaveLoadSave() {
   unlink( "foo.ics" );
 }
 
-void CalendarLocalTest::testEvents() {
+void CalendarLocalTest::testEvents()
+{
   CalendarLocal cal( KDateTime::UTC );
   cal.setProductId( QLatin1String( "fredware calendar" ) );
   QDate dt = QDate::currentDate();

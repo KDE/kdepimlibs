@@ -28,17 +28,20 @@ QTEST_KDEMAIN( AlarmTest, NoGUI )
 #include "kcal/alarm.h"
 using namespace KCal;
 
-void AlarmTest::testValidity() {
+void AlarmTest::testValidity()
+{
   Event inc;
   Alarm alarm( &inc );
   alarm.setType( Alarm::Email );
   QVERIFY( alarm.type() == Alarm::Email );
 }
 
-void AlarmTest::testCompare() {
+void AlarmTest::testCompare()
+{
   Event inc1, inc2;
   Alarm alarm1( &inc1 ), alarm2( &inc2 );
-  alarm1.setType( Alarm::Email ); alarm2.setType( Alarm::Email );
+  alarm1.setType( Alarm::Email );
+  alarm2.setType( Alarm::Email );
   QVERIFY( alarm1 == alarm2 );
   alarm2.setType( Alarm::Display );
   QVERIFY( alarm1 != alarm2 );

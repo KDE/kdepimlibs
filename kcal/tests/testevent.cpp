@@ -27,7 +27,8 @@ QTEST_KDEMAIN( EventTest, NoGUI )
 #include "kcal/event.h"
 using namespace KCal;
 
-void EventTest::testValidity() {
+void EventTest::testValidity()
+{
   QDate dt = QDate::currentDate();
   Event *event = new Event();
   event->setDtStart( KDateTime( dt ) );
@@ -39,7 +40,8 @@ void EventTest::testValidity() {
   QVERIFY( event->location() == "the place" );
 }
 
-void EventTest::testCompare() {
+void EventTest::testCompare()
+{
   QDate dt = QDate::currentDate();
   Event event1;
   event1.setDtStart( KDateTime( dt ) );
@@ -60,7 +62,8 @@ void EventTest::testCompare() {
   QVERIFY( event2.summary() == "Event2 Summary" );
 }
 
-void EventTest::testClone() {
+void EventTest::testClone()
+{
   QDate dt = QDate::currentDate();
   Event event1;
   event1.setDtStart( KDateTime( dt ) );

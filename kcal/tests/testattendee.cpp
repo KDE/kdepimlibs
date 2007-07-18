@@ -27,13 +27,15 @@ QTEST_KDEMAIN( AttendeeTest, NoGUI )
 #include "kcal/attendee.h"
 using namespace KCal;
 
-void AttendeeTest::testValidity() {
+void AttendeeTest::testValidity()
+{
   Attendee attendee( "fred", "fred@flintstone.com" );
   attendee.setRole( Attendee::Chair );
   QVERIFY( attendee.role() == Attendee::Chair );
 }
 
-void AttendeeTest::testCompare() {
+void AttendeeTest::testCompare()
+{
   Attendee attendee1( "fred", "fred@flintstone.com" );
   Attendee attendee2( "wilma", "wilma@flintstone.com" );
   attendee1.setRole( Attendee::ReqParticipant );

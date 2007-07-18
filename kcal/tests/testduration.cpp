@@ -32,16 +32,16 @@ using namespace KCal;
 
 void DurationTest::testValidity()
 {
-  Duration d( KDateTime( QDate(2006, 8, 3), QTime(7, 0, 0), KDateTime::UTC ),
-              KDateTime( QDate(2006, 8, 3), QTime(8, 0, 0), KDateTime::UTC ) );
+  Duration d( KDateTime( QDate( 2006, 8, 3 ), QTime( 7, 0, 0 ), KDateTime::UTC ),
+              KDateTime( QDate( 2006, 8, 3 ), QTime( 8, 0, 0 ), KDateTime::UTC ) );
 
   QCOMPARE( d.asSeconds(), 1*60*60 );
 }
 
 void DurationTest::testCompare()
 {
-  Duration d1( KDateTime( QDate(2006, 8, 3), QTime(7, 0, 0), KDateTime::UTC ),
-               KDateTime( QDate(2006, 8, 3), QTime(8, 0, 0), KDateTime::UTC ) );
+  Duration d1( KDateTime( QDate( 2006, 8, 3 ), QTime( 7, 0, 0 ), KDateTime::UTC ),
+               KDateTime( QDate( 2006, 8, 3 ), QTime( 8, 0, 0 ), KDateTime::UTC ) );
   //d1 has 1hr duration
 
   Duration d2( 2*60*60 ); // 2hr duration

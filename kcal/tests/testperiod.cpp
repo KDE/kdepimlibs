@@ -1,22 +1,22 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2006 Narayan Newton <narayannewton@gmail.com> 
+  Copyright (c) 2006 Narayan Newton <narayannewton@gmail.com>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #include <qtest_kde.h>
@@ -27,31 +27,33 @@
 QTEST_KDEMAIN( PeriodTest, NoGUI )
 
 #include "kcal/period.h"
+
 using namespace KCal;
 
-void PeriodTest::testValidity() 
+void PeriodTest::testValidity()
 {
-  Period p1( KDateTime( QDate(2006, 8, 30), QTime(7, 0, 0), KDateTime::UTC ), Duration(60));
+  Period p1( KDateTime( QDate( 2006, 8, 30 ), QTime( 7, 0, 0 ), KDateTime::UTC ),
+             Duration( 60 ) );
   Period p2;
 
   QVERIFY( p1.hasDuration() );
   QCOMPARE( p1.duration().asSeconds(), 60 );
-  QVERIFY( p1.start() == KDateTime( QDate(2006, 8, 30), QTime(7, 0, 0), KDateTime::UTC ) );
+  QVERIFY( p1.start() == KDateTime( QDate( 2006, 8, 30 ), QTime( 7, 0, 0 ), KDateTime::UTC ) );
 
   p2 = p1;
 
   QVERIFY( p2.hasDuration() );
   QVERIFY( p2.duration().asSeconds() == 60 );
-  QVERIFY( p2.start() == KDateTime( QDate(2006, 8, 30), QTime(7, 0, 0), KDateTime::UTC ) );
+  QVERIFY( p2.start() == KDateTime( QDate( 2006, 8, 30 ), QTime( 7, 0, 0 ), KDateTime::UTC ) );
 }
 
-void PeriodTest::testCompare() 
+void PeriodTest::testCompare()
 {
-  Period p1(KDateTime(QDate(2006, 8, 30)), Duration(24*60*60));
-  Period p2(KDateTime(QDate(2006, 8, 29)), Duration(23*60*60));
+  Period p1( KDateTime( QDate( 2006, 8, 30 ) ), Duration( 24*60*60 ) );
+  Period p2( KDateTime( QDate( 2006, 8, 29 ) ), Duration( 23*60*60 ) );
   Period p1copy( p1 ); // test copy constructor
   Period p1assign = p1; // test operator=
-  
+
   QVERIFY( p2 < p1 );
   QVERIFY( !( p1 == p2 ) );
   QVERIFY( p1copy == p1 );

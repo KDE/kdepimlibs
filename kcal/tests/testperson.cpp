@@ -27,18 +27,20 @@ QTEST_KDEMAIN( PersonTest, NoGUI )
 #include "kcal/person.h"
 using namespace KCal;
 
-void PersonTest::testValidity() {
+void PersonTest::testValidity()
+{
   Person person( "fred", "fred@flintstone.com" );
   QVERIFY( person.name() == "fred" );
 }
 
-void PersonTest::testCompare() {
+void PersonTest::testCompare()
+{
   Person person1( "fred", "fred@flintstone.com" );
   Person person2( "wilma", "wilma@flintstone.com" );
   Person person3( "fred <fred@flintstone.com>" );
   Person person1copy( person1 ); // test copy constructor
   Person person1assign = person1; // test operator=
-  
+
   QVERIFY( !( person1 == person2 ) );
   QVERIFY( person1 == person3 );
   QVERIFY( person1 == person1copy );

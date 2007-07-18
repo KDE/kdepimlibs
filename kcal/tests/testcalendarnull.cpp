@@ -29,7 +29,8 @@ QTEST_KDEMAIN( CalendarNullTest, NoGUI )
 #include "kcal/calendarnull.h"
 using namespace KCal;
 
-void CalendarNullTest::testValidity() {
+void CalendarNullTest::testValidity()
+{
   CalendarNull cal( KDateTime::UTC );
   CalendarNull *s1 = cal.self();
   QVERIFY( cal.reload() );
