@@ -79,7 +79,6 @@ class KCAL_EXPORT Todo : public Incidence
       date will be returned.
     */
     void setDtDue( const KDateTime &dtDue, bool first = false );
-    KDE_DEPRECATED void setDtDue( const QDateTime &dtDue, bool first = false );
 
     /**
       Returns due date and time.
@@ -153,8 +152,6 @@ class KCAL_EXPORT Todo : public Incidence
       @param dtStart is the to-do start date.
     */
     void setDtStart( const KDateTime &dtStart );
-    KDE_DEPRECATED void setDtStart( const QDateTime &dtStart )
-    { setDtStart( KDateTime ( dtStart ) ); }  // use local time zone
 
     /**
       Returns a todo's starting time as a string formatted according to the
@@ -248,7 +245,6 @@ class KCAL_EXPORT Todo : public Incidence
       @param completeDate is the to-do completion date.
     */
     void setCompleted( const KDateTime &completeDate );
-    KDE_DEPRECATED void setCompleted( const QDateTime &completeDate );
 
     /**
       Returns true, if todo has a date associated with completion, otherwise

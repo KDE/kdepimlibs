@@ -338,23 +338,6 @@ FreeBusy::FreeBusy( Calendar *calendar,
   sortList();
 }
 
-void FreeBusy::setDtStart( const QDateTime &dtStart )
-{
-  if (mCalendar)
-    setDtStart(KDateTime(dtStart, mCalendar->timeSpec()));
-  else
-    setDtStart(KDateTime(dtStart));  // use local time zone
-}
-bool FreeBusy::setDtEnd( const QDateTime &end )
-{
-  if (dtStart().isValid())
-    return setDtEnd(KDateTime(end, dtStart().timeSpec()));
-  else if (mCalendar)
-    return setDtEnd(KDateTime(end, mCalendar->timeSpec()));
-  else
-    return setDtEnd(KDateTime(end));  // use local time zone
-}
-
 void FreeBusy::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
 {
   IncidenceBase::shiftTimes( oldSpec, newSpec );

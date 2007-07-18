@@ -53,10 +53,8 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
     QByteArray type() const { return "FreeBusy"; }
 
     virtual void setDtStart( const KDateTime &dtStart );
-    virtual KDE_DEPRECATED void setDtStart( const QDateTime &dtStart );
     virtual KDateTime dtEnd() const;
     bool setDtEnd( const KDateTime &end );
-    KDE_DEPRECATED bool setDtEnd( const QDateTime &end );
 
     /**
       @copydoc

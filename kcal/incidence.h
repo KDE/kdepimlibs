@@ -163,8 +163,6 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Recurrenc
       Set starting date/time.
     */
     virtual void setDtStart( const KDateTime &dtStart );
-    virtual KDE_DEPRECATED void setDtStart( const QDateTime &dtStart )
-    { setDtStart( KDateTime( dtStart ) ); }  // use local time zone
 
     /**
       Return the incidence's ending date/time as a KDateTime.

@@ -376,21 +376,3 @@ bool Todo::isOverdue() const
                 dtDue() < KDateTime::currentUtcDateTime();
   return inPast && !isCompleted();
 }
-
-// DEPRECATED methods
-void Todo::setDtDue( const QDateTime &dtDue, bool first )
-{
-  if ( dtStart().isValid() ) {
-    setDtDue( KDateTime( dtDue, dtStart().timeSpec() ), first );
-  } else {
-    setDtDue( KDateTime( dtDue ), first );  // use local time zone
-  }
-}
-void Todo::setCompleted( const QDateTime &completed )
-{
-  if ( dtStart().isValid() ) {
-    setCompleted( KDateTime( completed, dtStart().timeSpec() ) );
-  } else {
-    setCompleted( KDateTime( completed ) );  // use local time zone
-  }
-}

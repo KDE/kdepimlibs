@@ -289,8 +289,6 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       is a date/time (not floating) or date-only (floating).
     */
     virtual void setDtStart( const KDateTime &dtStart );
-    virtual KDE_DEPRECATED void setDtStart( const QDateTime &dtStart )
-      { setDtStart( KDateTime( dtStart ) ); }  // use local time zone
 
     /**
       Returns an incidence's starting date/time as a KDateTime.

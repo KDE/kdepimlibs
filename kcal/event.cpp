@@ -173,15 +173,3 @@ void Event::setDuration( const Duration &duration )
   setHasEndDate( false );
   Incidence::setDuration( duration );
 }
-
-// DEPRECATED methods
-void Event::setDtEnd( const QDateTime &dtEnd )
-{
-  if (dtStart().isValid()) {
-    // use start as best guess for time zone
-    setDtEnd( KDateTime( dtEnd, dtStart().timeSpec() ) );
-  } else {
-    // use local time zone
-    setDtEnd( KDateTime( dtEnd ) );
-  }
-}

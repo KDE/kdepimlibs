@@ -67,7 +67,6 @@ class KCAL_EXPORT Event : public Incidence
       Set end date and time.
     */
     void setDtEnd( const KDateTime &dtEnd );
-    KDE_DEPRECATED void setDtEnd( const QDateTime &dtEnd );
 
     /**
       Return end date and time.
