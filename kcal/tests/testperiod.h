@@ -1,6 +1,5 @@
 /*
   This file is part of the kcal library.
-
   Copyright (c) 2006 Narayan Newton <narayannewton@gmail.com>
 
   This library is free software; you can redistribute it and/or
@@ -27,9 +26,9 @@
 class PeriodTest : public QObject
 {
   Q_OBJECT
-private Q_SLOTS:
-  void testValidity();
-  void testCompare();
+  private Q_SLOTS:
+    void testValidity();
+    void testCompare();
 };
 
 #endif

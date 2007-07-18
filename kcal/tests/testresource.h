@@ -1,4 +1,5 @@
-/* This file is part of the KDE project
+/*
+   This file is part of the KDE project
    Copyright (C) 2004 Till Adam <adam@kde.org>
 
    This library is free software; you can redistribute it and/or
@@ -24,13 +25,13 @@ class KConfigGroup;
 
 namespace KCal {
 
-  class ResourceCalendar;
+class ResourceCalendar;
 
 class TestResource : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 
-public:
+  public:
     TestResource( const QString& type, KConfigGroup *config );
     void setup();
     void runAll();
@@ -45,11 +46,12 @@ public:
     void testTodoAddRemove();
     void testJournalAddRemove();
 
-private:
+  private:
     bool check(const QString& txt, const QString &a, const QString &b);
     QString m_resource_type;
     KConfigGroup *m_config;
     ResourceCalendar *m_res;
 };
+
 }
 #endif
