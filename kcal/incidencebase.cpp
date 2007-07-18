@@ -374,7 +374,7 @@ void IncidenceBase::registerObserver( IncidenceBase::IncidenceObserver *observer
   if ( !d->mObservers.contains( observer ) ) {
     d->mObservers.append( observer );
   }
-  updatedSilent();
+  //updatedSilent(); FIXME:CRASH
 }
 
 void IncidenceBase::unRegisterObserver( IncidenceBase::IncidenceObserver *observer )
