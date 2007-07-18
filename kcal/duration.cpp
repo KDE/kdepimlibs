@@ -27,7 +27,8 @@
   @brief
   Represents a span of time measured in seconds.
 
-  @author Cornelius Schumacher
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author David Jarvie \<software@astrojar.org.uk\>
 */
 
 #include "duration.h"

@@ -24,8 +24,8 @@
   This file is part of the API for handling calendar data and
   defines the CalendarLocal class.
 
-  @author Preston Brown
-  @author Cornelius Schumacher
+  @author Preston Brown \<pbrown@kde.org\>
+  @author Cornelius Schumacher \<schumacher@kde.org\>
  */
 #ifndef KCAL_CALENDARLOCAL_H
 #define KCAL_CALENDARLOCAL_H

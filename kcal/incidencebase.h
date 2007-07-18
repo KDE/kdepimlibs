@@ -25,10 +25,9 @@
   This file is part of the API for handling calendar data and
   defines the IncidenceBase class.
 
-  @authors
-  Cornelius Schumacher \<schumacher@kde.org\>,
-  Reinhold Kainhofer \<reinhold@kainhofer.com\>,
-  Rafal Rzepecki \<divide@users.sourceforge.net\>
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
+  @author Rafal Rzepecki \<divide@users.sourceforge.net\>
 
   @glossary @anchor incidence @b incidence:
   General term for a calendar component.

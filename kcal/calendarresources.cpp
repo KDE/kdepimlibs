@@ -28,8 +28,8 @@
    This class provides a Calendar which is composed of other Calendars
    known as "Resources".
 
-  @author Cornelius Schumacher
-  @author Reinhold Kainhofer
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
 */
 
 #include "calendarresources.moc"

@@ -28,8 +28,8 @@
   @brief
   This class provides a calendar stored as a local file.
 
-  @author Preston Brown
-  @author Cornelius Schumacher
+  @author Preston Brown \<pbrown@kde.org\>
+  @author Cornelius Schumacher \<schumacher@kde.org\>
  */
 
 #include "calendarlocal.h"

@@ -23,7 +23,10 @@
   This file is part of the API for handling calendar data and
   defines the Period class.
 
-  @author Cornelius Schumacher
+  @brief
+  Represents a period of time.
+
+  @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 
 #ifndef KCAL_PERIOD_H
@@ -37,9 +40,6 @@
 namespace KCal {
 
 /**
-  @brief
-  Represents a period of time.
-
   The period can be defined by either a start time and an end time or
   by a start time and a duration.
 */

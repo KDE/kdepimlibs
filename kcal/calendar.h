@@ -26,10 +26,12 @@
   This file is part of the API for handling calendar data and
   defines the Calendar class.
 
-  @author Preston Brown
-  @author Cornelius Schumacher
-  @author Reinhold Kainhofer
+  @author Preston Brown \<pbrown@kde.org\>
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
+  @author David Jarvie \<software@astrojar.org.uk\>
  */
+
 #ifndef KCAL_CALENDAR_H
 #define KCAL_CALENDAR_H
 

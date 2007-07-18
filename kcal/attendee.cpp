@@ -26,7 +26,7 @@
   @brief
   Represents information related to an attendee of an Calendar Incidence.
 
-  @author Cornelius Schumacher
+  @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 
 #include "attendee.h"

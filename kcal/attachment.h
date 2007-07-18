@@ -23,7 +23,7 @@
   This file is part of the API for handling calendar data and
   defines the Attachment class.
 
-  @author Michael Brade
+  @author Michael Brade \<brade@kde.org\>
 */
 
 #ifndef KCAL_ATTACHMENT_H

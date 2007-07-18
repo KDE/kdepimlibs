@@ -24,7 +24,10 @@
   This file is part of the API for handling calendar data and
   defines the Period class.
 
-  @author Cornelius Schumacher
+  @brief
+  Represents a period of time.
+
+  @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 
 #include "period.h"
@@ -83,9 +86,10 @@ bool Period::operator<( const Period &other ) const
 
 bool Period::operator==( const Period &other ) const
 {
-  return ( d->mStart == other.d->mStart &&
-           d->mEnd == other.d->mEnd &&
-           d->mHasDuration == other.d->mHasDuration );
+  return
+    d->mStart == other.d->mStart &&
+    d->mEnd == other.d->mEnd &&
+    d->mHasDuration == other.d->mHasDuration;
 }
 
 Period &Period::operator=( const Period &other )
@@ -107,7 +111,8 @@ KDateTime Period::end() const
 Duration Period::duration() const
 {
   if ( d->mHasDuration ) {
-    return Duration( d->mStart, d->mEnd, (d->mDailyDuration ? Duration::Days : Duration::Seconds) );
+    return Duration( d->mStart, d->mEnd,
+                     d->mDailyDuration ? Duration::Days : Duration::Seconds );
   } else {
     return Duration( d->mStart, d->mEnd );
   }

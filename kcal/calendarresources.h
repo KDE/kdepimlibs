@@ -24,8 +24,8 @@
   This file is part of the API for handling calendar data and
   defines the CalendarResources class.
 
-  @author Cornelius Schumacher
-  @author Reinhold Kainhofer
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
  */
 #ifndef KCAL_CALENDARRESOURCES_H
 #define KCAL_CALENDARRESOURCES_H
@@ -41,7 +41,6 @@ class QWidget;
 
 namespace KCal {
 
-
 /**
    @brief
    This class provides a Calendar which is composed of other Calendars
@@ -54,8 +53,7 @@ namespace KCal {
 
 */
 class KCAL_EXPORT CalendarResources
-  : public Calendar,
-    public KRES::ManagerObserver<ResourceCalendar>
+  : public Calendar, public KRES::ManagerObserver<ResourceCalendar>
 {
   Q_OBJECT
   public:

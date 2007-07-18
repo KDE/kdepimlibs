@@ -27,7 +27,7 @@
   Represents a null calendar class; that is, a calendar which contains
   no information and provides no capabilities.
 
-  @author Cornelius Schumacher
+  @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 #include "calendarnull.h"
 

@@ -24,7 +24,7 @@
   This file is part of the API for handling calendar data and
   defines the Alarm class.
 
-  @author Cornelius Schumacher
+  @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 
 #ifndef KCAL_ALARM_H

@@ -24,8 +24,8 @@
   This file is part of the API for handling calendar data and
   defines the IncidenceBase class.
 
-  @author Cornelius Schumacher
-  @author Reinhold Kainhofer
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
 */
 
 #include "incidencebase.h"

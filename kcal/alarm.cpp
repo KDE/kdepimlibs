@@ -28,7 +28,7 @@
   @brief
   Represents an alarm notification.
 
-  @author Cornelius Schumacher
+  @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 
 #include "alarm.h"

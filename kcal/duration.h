@@ -24,9 +24,10 @@
   This file is part of the API for handling calendar data and
   defines the Duration class.
 
-  @author Cornelius Schumacher
-  @author David Jarvie
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author David Jarvie \<software@astrojar.org.uk\>
 */
+
 #ifndef KCAL_DURATION_H
 #define KCAL_DURATION_H
 

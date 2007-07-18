@@ -23,14 +23,13 @@
   This file is part of the API for handling calendar data and
   defines the CalendarNull class.
 
-  @author Cornelius Schumacher
+  @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 #ifndef KCAL_CALENDARNULL_H
 #define KCAL_CALENDARNULL_H
 
 #include "calendar.h"
 #include "kcal_export.h"
-
 
 namespace KCal {
 

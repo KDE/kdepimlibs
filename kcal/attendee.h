@@ -23,7 +23,7 @@
   This file is part of the API for handling calendar data and
   defines the Attendee class.
 
-  @author Cornelius Schumacher
+  @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 
 #ifndef KCAL_ATTENDEE_H

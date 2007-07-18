@@ -29,9 +29,10 @@
   @brief
   Represents the main calendar class.
 
-  @author Preston Brown
-  @author Cornelius Schumacher
-  @author Reinhold Kainhofer
+  @author Preston Brown \<pbrown@kde.org\>
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
+  @author David Jarvie \<software@astrojar.org.uk\>
 */
 
 #include "calendar.h"

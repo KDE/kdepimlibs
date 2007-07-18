@@ -28,9 +28,9 @@
   @brief
   Provides a filter for calendars.
 
-  @author Cornelius Schumacher
-  @author Reinhold Kainhofer
-  @author Bram Schoenmakers
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
+  @author Bram Schoenmakers \<bramschoenmakers@kde.nl\>
 */
 
 #include "calfilter.h"

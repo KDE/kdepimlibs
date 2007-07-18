@@ -26,7 +26,7 @@
   @brief
   Represents information related to an attachment for a Calendar Incidence.
 
-  @author Michael Brade
+  @author Michael Brade \<brade@kde.org\>
 */
 
 #include "attachment.h"

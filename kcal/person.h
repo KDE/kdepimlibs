@@ -27,8 +27,8 @@
   @brief
   Represents a person, by name ane email address.
 
-  @author Cornelius Schumacher
-  @author Reinhold Kainhofer
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
 */
 
 #ifndef KCAL_PERSON_H
