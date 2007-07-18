@@ -336,7 +336,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
 
         s = tnefMsg->findProp( 0x8516 ).replace( QChar( '-' ), QString() )
           .replace( QChar( ':' ), QString() );
-        event->setDtStart( QDateTime::fromString( s ) ); // ## Format??
+        event->setDtStart( KDateTime::fromString( s ) ); // ## Format??
 
         s = tnefMsg->findProp( 0x8517 ).replace( QChar( '-' ), QString() )
           .replace( QChar( ':' ), QString() );
