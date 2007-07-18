@@ -157,6 +157,7 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
       @param postingId is the id of the posting to remove.
 
       @see void removePosting( KBlog::BlogPosting *posting )
+      @see void modifiedPosting( bool modified )
     */
     virtual void removePosting( const QString &postingId );
 
