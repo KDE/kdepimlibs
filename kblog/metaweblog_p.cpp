@@ -42,9 +42,14 @@ APIMetaWeblog::APIMetaWeblogPrivate::~APIMetaWeblogPrivate()
   delete mXmlRpcClient;
 }
 
-QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString &id )
+QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString &id, bool deleteAction )
 {
   QList<QVariant> args;
+
+  //NOTE: deletePost action is a old function of blogger 1.0 api so require a AppKey (that will be ignored)	
+  if ( deleteAction)
+    args << QVariant( "AppKey" );
+
   if ( id.toInt() ) {
     args << QVariant( id.toInt() );
   }

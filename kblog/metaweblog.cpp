@@ -172,11 +172,11 @@ void APIMetaWeblog::createMedia( KBlog::BlogMedia *media )
 void APIMetaWeblog::removePosting( const QString &postingId )
 {
   kDebug(5323) << "APIMetaWeblog::removePosting: postingId=" << postingId << endl;
-  QList<QVariant> args( d->defaultArgs( postingId ) );
+  QList<QVariant> args( d->defaultArgs( postingId,true ) );
   args << QVariant( /*publish=*/true );
   d->mXmlRpcClient->call(
     "metaWeblog.deletePost", args,
-    d, SLOT( slotCreateMedia( const QList<QVariant>&, const QVariant& ) ),
+    d, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ), //TODO: Create slotDeletePosting
     d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 

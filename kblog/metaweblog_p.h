@@ -39,7 +39,7 @@ class APIMetaWeblog::APIMetaWeblogPrivate : public QObject
 
     APIMetaWeblogPrivate();
     ~APIMetaWeblogPrivate();
-    QList<QVariant> defaultArgs( const QString &id = QString() );
+    QList<QVariant> defaultArgs( const QString &id = QString(), bool deleteAction=false );
 
   public Q_SLOTS:
     void slotListPostings( const QList<QVariant> &result, const QVariant &id );
