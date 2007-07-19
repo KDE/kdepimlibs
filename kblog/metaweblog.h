@@ -23,6 +23,7 @@
 #define API_METAWEBLOG_H
 
 #include <kblog/blog.h>
+#include <kblog/blogger.h>
 
 #include <kurl.h>
 
