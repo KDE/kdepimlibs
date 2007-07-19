@@ -217,7 +217,8 @@ QString Query::Private::marshal( const QVariant &arg ) const
   switch ( arg.type() ) {
 
     case QVariant::String:
-      return "<value><string>" + arg.toString() + "</string></value>\r\n";
+      return "<value><string><![CDATA[" + arg.toString() + 
+        "]]></string></value>\r\n";
     case QVariant::Int:
       return "<value><int>" + QString::number( arg.toInt() ) + "</int></value>\r\n";
     case QVariant::Double:
@@ -394,7 +395,7 @@ void Query::call( const QString &server,
     return;
   }
 
-  job->addMetaData( "content-type", "Content-Type: application/xml; charset=utf-8" );
+  job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
   job->addMetaData( "ConnectTimeout", "50" );
 
   for (mapIter = jobMetaData.begin(); mapIter != jobMetaData.end(); mapIter++) {
