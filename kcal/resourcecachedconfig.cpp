@@ -39,38 +39,22 @@
 
 using namespace KCal;
 
-/* FIXME perhaps create base class for ResourceCached{Reload,Save}Config
- * to share private data class or remove this fixme.
- */
-class KCal::ResourceCachedReloadConfig::Private
+class ResourceCachedConfigPrivate
 {
   public:
-    Private()
+    ResourceCachedConfigPrivate()
       : mGroup( 0 ),
         mIntervalSpin( 0 ) {}
-
-    Private( const Private &p ) 
-      : mGroup( p.mGroup ),
-        mIntervalSpin( p.mIntervalSpin ) {}
 
     QButtonGroup *mGroup;
     QSpinBox *mIntervalSpin;
 };
+
+class KCal::ResourceCachedReloadConfig::Private
+  : public ResourceCachedConfigPrivate {};
 
 class KCal::ResourceCachedSaveConfig::Private
-{
-  public:
-    Private()
-      : mGroup( 0 ),
-        mIntervalSpin( 0 ) {}
-
-    Private( const Private &p ) 
-      : mGroup( p.mGroup ),
-        mIntervalSpin( p.mIntervalSpin ) {}
-
-    QButtonGroup *mGroup;
-    QSpinBox *mIntervalSpin;
-};
+  : public ResourceCachedConfigPrivate {};
 
 ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent )
   : QWidget( parent ), d( new KCal::ResourceCachedReloadConfig::Private() )
