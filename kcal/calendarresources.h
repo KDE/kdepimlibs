@@ -26,7 +26,8 @@
 
   @author Cornelius Schumacher \<schumacher@kde.org\>
   @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
- */
+*/
+
 #ifndef KCAL_CALENDARRESOURCES_H
 #define KCAL_CALENDARRESOURCES_H
 
@@ -63,6 +64,11 @@ class KCAL_EXPORT CalendarResources
     class DestinationPolicy
     {
       public:
+        /**
+          Constructs a destination policy.
+          @param manager is a pointer to the CalendarResourceManager.
+          @param parent is a pointer to a QWidget to use for new dialogs.
+        */
         explicit DestinationPolicy( CalendarResourceManager *manager,
                                     QWidget *parent = 0 ) :
           mManager( manager ), mParent( parent ) {}
@@ -140,7 +146,11 @@ class KCAL_EXPORT CalendarResources
     class Ticket
     {
       friend class CalendarResources;
+
       public:
+        /**
+          Returns the ResourceCalendar associated with the ticket.
+        */
         ResourceCalendar *resource() const
         { return mResource; }
 
