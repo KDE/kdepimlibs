@@ -40,7 +40,7 @@ class BlogPosting::Private
   QString mPostingId;
   QString mTitle;
   QString mContent;
-  QString mCategory;
+  QStringList mCategories;
   QString mFingerprint; // TODO what is that for?
   KDateTime mCreationDateTime;
   KDateTime mModificationDateTime;
@@ -57,12 +57,12 @@ BlogPosting::BlogPosting(): d( new Private )
 }
 
 BlogPosting::BlogPosting( const QString &title, const QString &content,
-                          const QString &category, const bool publish ):
+                          const QStringList &categories, const bool publish ):
   d( new Private )
 {
   d->mTitle = title;
   d->mContent = content;
-  d->mCategory = category;
+  d->mCategories = categories;
   d->mPublish = publish;
   d->mCreationDateTime = KDateTime::currentDateTime( KDateTime::Spec() );
   d->mUploaded = false;
@@ -115,14 +115,14 @@ void BlogPosting::setContent( const QString &content )
   d->mContent = content;
 }
 
-QString BlogPosting::category() const
+QStringList BlogPosting::categories() const
 {
-  return d->mCategory;
+  return d->mCategories;
 }
 
-void BlogPosting::setCategory( const QString &category )
+void BlogPosting::setCategories( const QStringList &categories )
 {
-  d->mCategory = category;
+  d->mCategories = categories;
 }
 
 // TODO do we really need these?

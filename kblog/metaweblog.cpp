@@ -115,9 +115,7 @@ void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 
   QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
   QMap<QString, QVariant> map;
-  QList<QVariant> list;
-  list.append( QString( posting->category() ) );
-  map["categories"] = list;
+  map["categories"] = posting->categories();
   map["description"] = posting->content();
   map["title"] = posting->title();
   map["lastModified"] = posting->modificationDateTime().toUtc().dateTime();
@@ -139,9 +137,7 @@ void APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
   kDebug(5323) << "Creating new Posting with blogId " << blogId() << endl;
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   QMap<QString, QVariant> map;
-  QList<QVariant> list;
-  list.append( QString( posting->category() ) );
-  map["categories"] = list;
+  map["categories"] = posting->categories();
   map["description"] = posting->content();
   map["title"] = posting->title();
   map["dateCreated"] = posting->creationDateTime().toUtc().dateTime();

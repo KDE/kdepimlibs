@@ -76,11 +76,11 @@ class KBLOG_EXPORT BlogPosting
 
       @param title
       @param content
-      @param category
+      @param categories
       @param publish
     */
     BlogPosting( const QString &title, const QString &content,
-                 const QString &category = QString(),
+                 const QStringList &categories = QStringList(),
                  const bool publish = true );
 
     /**
@@ -152,20 +152,20 @@ class KBLOG_EXPORT BlogPosting
     void setContent( const QString &content );
 
     /**
-      Returns the category.
+      Returns the categories.
 
-      @return category
-      @see setCategory()
+      @return categories
+      @see setCategories()
     */
-    QString category() const;
+    QStringList categories() const;
 
     /**
-      Sets the category.
+      Sets the categories.
 
-      @param category set the category.
-      @see category()
+      @param categories set the categories.
+      @see categories()
     */
-    void setCategory( const QString &category );
+    void setCategories( const QStringList &categories );
 
     /**
       Returns the creation date time.
@@ -472,7 +472,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
     /**
       List the categories of the blog.
-      @see categoryInfoRetrieved(), listCategoriesFinished()
+      @see categoriesInfoRetrieved(), listCategoriesFinished()
     */
     virtual void listCategories() = 0;
 

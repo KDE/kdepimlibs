@@ -130,8 +130,13 @@ void APIBlogger::createPosting( KBlog::BlogPosting *posting )
 
   kDebug(5323) << "Creating new Posting with blogid " << blogId() << endl;
   QList<QVariant> args( d->defaultArgs( blogId() ) );
-  QString content = "<title>" + posting->title() + "</title><category>" +
-      posting->category() + "</category>" + posting->content();
+  QStringList categories = posting->categories();
+  QString content = "<title>" + posting->title() + "</title>";
+  QStringList::const_iterator it;
+  for ( it = categories.constBegin(); it != categories.constEnd(); ++it ) {
+    content += "<category>" + *it + "</category>";
+  }
+  content += posting->content();
   args << QVariant( content );
   args << QVariant( posting->publish() );
   d->mXmlRpcClient->call(

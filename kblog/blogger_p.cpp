@@ -256,25 +256,25 @@ bool APIBlogger::APIBloggerPrivate::readPostingFromMap( BlogPosting *post,
   QString title( postInfo["title"].toString() );
   QString description( postInfo["description"].toString() );
   QString contents( postInfo["content"].toString() );
-  QString category;
+  QStringList category;
 
   // Check for hacked title/category support (e.g. in Wordpress)
   QRegExp titleMatch = QRegExp("<title>([^<]*)</title>");
   QRegExp categoryMatch = QRegExp("<category>([^<]*)</category>");
-  if ( contents.contains( titleMatch ) ) {
+  contents.remove( titleMatch );
+  if ( titleMatch.numCaptures() > 0) {
     // Get the title value from the regular expression match
     title = titleMatch.cap( 1 );
-    contents.remove( titleMatch );
   }
-  if ( contents.contains( categoryMatch ) ) {
+  contents.remove( categoryMatch );
+  if ( categoryMatch.numCaptures() > 0) {
     // Get the category value from the regular expression match
-    category = categoryMatch.cap( 1 );
-    contents.remove( categoryMatch );
+    category = categoryMatch.capturedTexts();
   }
 
   post->setTitle( title );
   post->setContent( contents );
-  post->setCategory( category );
+  post->setCategories( category );
   return true;
 }
 

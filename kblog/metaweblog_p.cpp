@@ -283,14 +283,13 @@ bool APIMetaWeblog::APIMetaWeblogPrivate::readPostingFromMap( BlogPosting *post,
 
   QString title( postInfo["title"].toString() );
   QString description( postInfo["description"].toString() );
-  QList<QVariant> categories( postInfo["categories"].toList() );
+  QStringList categories( postInfo["categories"].toStringList() );
 
   post->setTitle( title );
   post->setContent( description );
   if ( !categories.isEmpty() ){
-    QString category = ( *categories.begin() ).toString();
-    kDebug(5323) << "Category: " <<  category  << endl;
-    post->setCategory( category );
+    kDebug(5323) << "Categories: " << categories << endl;
+    post->setCategories( categories );
   }
   return true;
 }
