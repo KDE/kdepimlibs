@@ -29,7 +29,7 @@ listbase              |       |         |       |         |    D    |
 qtopiaformat          |       |         |       |         |    D    |
 recurrence            |       |         |   D   |         |    D    |
 recurrencerule        |       |         |   D   |         |    D    |
-resourcecachedconfig  |       |         |       |         |    D    |
+resourcecachedconfig  |   D   |         |   D   |         |    D    |
 resourcecached        |       |         |       |         |    D    |
 resourcecalendar      |       |         |       |         |    D    |
 resourcelocalconfig   |       |         |       |         |    D    |

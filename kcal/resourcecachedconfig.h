@@ -50,11 +50,10 @@ class KCAL_EXPORT ResourceCachedReloadConfig : public QWidget
     void slotIntervalStateChanged( int );
 
   private:
-    QButtonGroup *mGroup;
-    QSpinBox *mIntervalSpin;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 /**
@@ -76,11 +75,10 @@ class KCAL_EXPORT ResourceCachedSaveConfig : public QWidget
     void slotIntervalStateChanged( int );
 
   private:
-    QButtonGroup *mGroup;
-    QSpinBox *mIntervalSpin;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }
