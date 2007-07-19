@@ -60,7 +60,7 @@ namespace KBlog {
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
 */
-class KBLOG_EXPORT APIMetaWeblog : public APIBlog
+class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
 {
   Q_OBJECT
   public:
@@ -81,28 +81,6 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlog
       Returns the API of the inherited object.
     */
     QString interfaceName() const;
-    /**
-      Set the Url of the server.
-
-      @param server is the server url.
-    */
-    void setUrl( const KUrl &server );
-
-    /**
-      Get information about the user from the blog.
-      Note: This is not supported on the server side.
-
-      @see void userInfoRetrieved( const QString &, const QString &, const QString & )
-    */
-    virtual void userInfo();
-
-    /**
-      List the blogs available for this authentication on the server.
-      Note: This is not supported on the server side.
-
-      @see void blogInfoRetrieved( const QString &id, const QString &name )
-    */
-    virtual void listBlogs();
 
     /**
       List recent postings on the server.
@@ -148,16 +126,6 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlog
       @param media is send to the server.
     */
     virtual void createMedia( KBlog::BlogMedia *media );
-
-    /**
-      Remove a posting from the server.
-
-      @param postingId is the id of the posting to remove.
-
-      @see void removePosting( KBlog::BlogPosting *posting )
-      @see void modifiedPosting( bool modified )
-    */
-    virtual void removePosting( const QString &postingId );
 
   private:
     class APIMetaWeblogPrivate;

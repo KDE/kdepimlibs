@@ -32,7 +32,7 @@
 using namespace KBlog;
 
 APIMetaWeblog::APIMetaWeblog( const KUrl &server, QObject *parent )
-  : APIBlog( server, parent ), d( new APIMetaWeblogPrivate )
+  : APIBlogger( server, parent ), d( new APIMetaWeblogPrivate )
 {
   d->parent = this;
   setUrl( server );
@@ -46,32 +46,6 @@ APIMetaWeblog::~APIMetaWeblog()
 QString APIMetaWeblog::interfaceName() const
 {
   return QLatin1String( "MetaWeblog API" );
-}
-
-void APIMetaWeblog::setUrl( const KUrl &server )
-{
-  APIBlog::setUrl( server );
-  delete d->mXmlRpcClient;
-  d->mXmlRpcClient = new KXmlRpc::Client( server );
-  d->mXmlRpcClient->setUserAgent( "KDE-KBlog" );
-}
-
-void APIMetaWeblog::userInfo()
-{
-  kDebug(5323) << "Fetching user information is not available in MetaWeblog API."
-           << endl;
-  emit error( NotSupported,
-              i18n( "Fetching user information is not available in "
-                    "MetaWeblog API." ) );
-}
-
-void APIMetaWeblog::listBlogs()
-{
-  kDebug(5323) << "Fetching user's blogs is not available in MetaWeblog API."
-           << endl;
-  emit error( NotSupported,
-              i18n( "Fetching user's blogs is not available in "
-                    "MetaWeblog API." ) );
 }
 
 void APIMetaWeblog::listPostings()
@@ -164,17 +138,6 @@ void APIMetaWeblog::createMedia( KBlog::BlogMedia *media )
     "metaWeblog.newMediaObject", args,
     d, SLOT( slotCreateMedia( const QList<QVariant>&, const QVariant& ) ),
     d, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
-}
-
-void APIMetaWeblog::removePosting( const QString &postingId )
-{
-  kDebug(5323) << "APIMetaWeblog::removePosting: postingId=" << postingId << endl;
-  QList<QVariant> args( d->defaultArgs( postingId,true ) );
-  args << QVariant( /*publish=*/true );
-  d->mXmlRpcClient->call(
-    "metaWeblog.deletePost", args,
-    d, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ), //TODO: Create slotDeletePosting
-    d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 
 #include "metaweblog.moc"
