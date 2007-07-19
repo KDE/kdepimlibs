@@ -90,7 +90,7 @@ void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 
   QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
   QMap<QString, QVariant> map;
-  map["categories"] = posting->categories();
+  map["categories"] = QVariant(posting->categories()).toList();
   map["description"] = posting->content();
   map["title"] = posting->title();
   map["lastModified"] = posting->modificationDateTime().toUtc().dateTime();
