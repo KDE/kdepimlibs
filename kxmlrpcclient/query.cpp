@@ -140,7 +140,8 @@ class Query::Private
     Result parseMessageResponse( const QDomDocument &doc ) const;
     Result parseFaultResponse( const QDomDocument &doc ) const;
 
-    QString markupCall( const QString &method, const QList<QVariant> &args ) const;
+    QString markupCall( const QString &method, const QList<QVariant> &args )
+        const;
     QString marshal( const QVariant &value ) const;
     QVariant demarshal( const QDomElement &element ) const;
 
@@ -155,12 +156,14 @@ class Query::Private
 
 bool Query::Private::isMessageResponse( const QDomDocument &doc ) const
 {
-  return doc.documentElement().firstChild().toElement().tagName().toLower() == "params";
+  return doc.documentElement().firstChild().toElement().tagName().toLower()
+      == "params";
 }
 
 bool Query::Private::isFaultResponse( const QDomDocument &doc ) const
 {
-  return doc.documentElement().firstChild().toElement().tagName().toLower() == "fault";
+  return doc.documentElement().firstChild().toElement().tagName().toLower()
+      == "fault";
 }
 
 Result Query::Private::parseMessageResponse( const QDomDocument &doc ) const
@@ -190,7 +193,8 @@ Result Query::Private::parseFaultResponse( const QDomDocument &doc ) const
   return response;
 }
 
-QString Query::Private::markupCall( const QString &cmd, const QList<QVariant> &args ) const
+QString Query::Private::markupCall( const QString &cmd,
+                                    const QList<QVariant> &args ) const
 {
   QString markup = "<?xml version=\"1.0\" ?>\r\n<methodCall>\r\n";
 
@@ -217,26 +221,27 @@ QString Query::Private::marshal( const QVariant &arg ) const
   switch ( arg.type() ) {
 
     case QVariant::String:
-      return "<value><string><![CDATA[" + arg.toString() + 
+      return "<value><string><![CDATA[" + arg.toString() +
         "]]></string></value>\r\n";
     case QVariant::StringList:
       {
-	QStringList data=arg.toStringList();
-	QStringListIterator dataIterator(data);
-	QString markup;
-	markup+="<value><array><data>";
-        while ( dataIterator.hasNext() ){
-	markup+="<string><![CDATA["
-	      + dataIterator.next()
-	      + "]]></string>\r\n";
-	}
-	markup+="</data></array></value>";
-	return markup;
+        QStringList data=arg.toStringList();
+        QStringListIterator dataIterator(data);
+        QString markup;
+        markup+="<value><array><data>";
+        while ( dataIterator.hasNext() ) {
+          markup+="<string><![CDATA[" + dataIterator.next()
+              + "]]></string>\r\n";
+        }
+        markup+="</data></array></value>";
+        return markup;
       }
     case QVariant::Int:
-      return "<value><int>" + QString::number( arg.toInt() ) + "</int></value>\r\n";
+      return "<value><int>" + QString::number( arg.toInt() )
+          + "</int></value>\r\n";
     case QVariant::Double:
-      return "<value><double>" + QString::number( arg.toDouble() ) + "</double></value>\r\n";
+      return "<value><double>" + QString::number( arg.toDouble() )
+          + "</double></value>\r\n";
     case QVariant::Bool:
       {
         QString markup = "<value><boolean>";
@@ -245,9 +250,12 @@ QString Query::Private::marshal( const QVariant &arg ) const
         return markup;
       }
     case QVariant::ByteArray:
-      return "<value><base64>" + arg.toByteArray().toBase64() + "</base64></value>\r\n";
+      return "<value><base64>" + arg.toByteArray().toBase64()
+          + "</base64></value>\r\n";
     case QVariant::DateTime:
-      return "<value><dateTime.iso8601>" + arg.toDateTime().toString( Qt::ISODate ) + "</dateTime.iso8601></value>\r\n";
+      return "<value><dateTime.iso8601>"
+          + arg.toDateTime().toString( Qt::ISODate )
+          + "</dateTime.iso8601></value>\r\n";
     case QVariant::List:
       {
         QString markup = "<value><array><data>\r\n";
@@ -276,7 +284,8 @@ QString Query::Private::marshal( const QVariant &arg ) const
         return markup;
       }
     default:
-      kWarning() << "Failed to marshal unknown variant type: " << arg.type() << endl;
+      kWarning() << "Failed to marshal unknown variant type: " << arg.type()
+          << endl;
   };
 
   return QString();
@@ -308,8 +317,8 @@ QVariant Query::Private::demarshal( const QDomElement &element ) const
     QDateTime date;
     QString dateText = typeElement.text();
     // Test for broken use of Basic ISO8601 date and extended ISO8601 time
-    if ( 17 <= dateText.length() && dateText.length() <= 18 && dateText.at(4) != '-'
-         && dateText.at(11) == ':') {
+    if ( 17 <= dateText.length() && dateText.length() <= 18 &&
+         dateText.at(4) != '-' && dateText.at(11) == ':') {
         if (dateText.endsWith('Z')) {
           date = QDateTime::fromString( dateText, "yyyyMMddTHH:mm:ssZ" );
         } else {
@@ -332,8 +341,10 @@ QVariant Query::Private::demarshal( const QDomElement &element ) const
     QMap<QString, QVariant> map;
     QDomNode memberNode = typeElement.firstChild();
     while ( !memberNode.isNull() ) {
-      const QString key = memberNode.toElement().elementsByTagName( "name" ).item( 0 ).toElement().text();
-      const QVariant data = demarshal( memberNode.toElement().elementsByTagName( "value" ).item( 0 ).toElement() );
+      const QString key = memberNode.toElement().elementsByTagName(
+                              "name" ).item( 0 ).toElement().text();
+      const QVariant data = demarshal( memberNode.toElement().elementsByTagName(
+                                       "value" ).item( 0 ).toElement() );
       map[ key ] = data;
       memberNode = memberNode.nextSibling();
     }
@@ -378,9 +389,11 @@ void Query::Private::slotResult( KJob *job )
   if ( isMessageResponse( doc ) ) {
     emit mParent->message( parseMessageResponse( doc ).data(), mId );
   } else if ( isFaultResponse( doc ) ) {
-    emit mParent->fault( parseFaultResponse( doc ).errorCode(), parseFaultResponse( doc ).errorString(), mId );
+    emit mParent->fault( parseFaultResponse( doc ).errorCode(),
+                         parseFaultResponse( doc ).errorString(), mId );
   } else {
-    emit mParent->fault( 1, i18n( "Unknown type of XML markup received" ), mId );
+    emit mParent->fault( 1, i18n( "Unknown type of XML markup received" ),
+                         mId );
   }
 
   emit mParent->finished( mParent );
