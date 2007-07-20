@@ -113,9 +113,9 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
        basic format: YYYYMMDD
       @param extended  true extended format will be used.
 
-      @see dateFormat()
+      @see useExtendedDateFormat()
      */
-    void setDateFormat( bool extended );
+    void setUseExtendedDateFormat( bool extended );
 
      /**
       Sets the Time Format the Client will use.
@@ -123,23 +123,23 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
        basic format: HHMMSS
       @param extended  true extended format will be used.
 
-      @see timeFormat()
+      @see useExtendedTimeFormat()
      */
-    void setTimeFormat( bool extended );
+    void setUseExtendedTimeFormat( bool extended );
 
     /**
       Returns true if the date format is extended
     
-      @see setDateFormat()
+      @see setUseExtendedDateFormat()
      */
-    bool dateFormat() const;
+    bool useExtendedDateFormat() const;
     
     /**
       Returns true if the time format is extended
     
-      @see setTimeFormat()
+      @see setUseExtendedTimeFormat()
      */
-    bool timeFormat() const;
+    bool useExtendedTimeFormat() const;
 
     /**
       Returns true if HTTP-Digest authentication is enabled, false

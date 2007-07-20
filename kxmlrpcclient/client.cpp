@@ -99,22 +99,22 @@ void Client::setUserAgent( const QString &userAgent )
   d->mUserAgent = userAgent;
 }
 
-void Client::setDateFormat( bool extended )
+void Client::setUseExtendedDateFormat( bool extended )
 {
   d->mDateFormatExtended=extended;
 }
 
-void Client::setTimeFormat( bool extended )
+void Client::setUseExtendedTimeFormat( bool extended )
 {
   d->mDateFormatExtended=extended;
 }
 
-bool Client::dateFormat() const
+bool Client::useExtendedDateFormat() const
 {
   return d->mDateFormatExtended;
 }
 
-bool Client::timeFormat() const
+bool Client::useExtendedTimeFormat() const
 {
   return d->mTimeFormatExtended;
 }
