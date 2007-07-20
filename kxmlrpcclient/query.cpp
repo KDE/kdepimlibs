@@ -219,6 +219,20 @@ QString Query::Private::marshal( const QVariant &arg ) const
     case QVariant::String:
       return "<value><string><![CDATA[" + arg.toString() + 
         "]]></string></value>\r\n";
+    case QVariant::StringList:
+      {
+	QStringList data=arg.toStringList();
+	QStringListIterator dataIterator(data);
+	QString markup;
+	markup+="<value><array><data>";
+        while ( dataIterator.hasNext() ){
+	markup+="<string><![CDATA["
+	      + dataIterator.next()
+	      + "]]></string>\r\n";
+	}
+	markup+="</data></array></value>";
+	return markup;
+      }
     case QVariant::Int:
       return "<value><int>" + QString::number( arg.toInt() ) + "</int></value>\r\n";
     case QVariant::Double:
