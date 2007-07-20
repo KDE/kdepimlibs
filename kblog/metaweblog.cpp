@@ -48,6 +48,14 @@ QString APIMetaWeblog::interfaceName() const
   return QLatin1String( "MetaWeblog API" );
 }
 
+void APIMetaWeblog::setUrl( const KUrl &server )
+{
+  APIBlogger::setUrl( server );
+  delete d->mXmlRpcClient;
+  d->mXmlRpcClient = new KXmlRpc::Client( server );
+  d->mXmlRpcClient->setUserAgent( "KDE-KBlog" );
+}
+
 void APIMetaWeblog::listPostings()
 {
   kDebug(5323) << "Fetching List of Posts..." << endl;
@@ -90,7 +98,7 @@ void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 
   QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
   QMap<QString, QVariant> map;
-  map["categories"] = QVariant(posting->categories()).toList();
+  map["categories"] = posting->categories();
   map["description"] = posting->content();
   map["title"] = posting->title();
   map["lastModified"] = posting->modificationDateTime().toUtc().dateTime();
