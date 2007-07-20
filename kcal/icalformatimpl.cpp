@@ -161,7 +161,7 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo, ICalTimeZones *tzlist, ICal
   }
 
   // start time
-  if ( todo->hasStartDate() || todo->doesRecur() ) {
+  if ( todo->hasStartDate() || todo->recurs() ) {
     icaltimetype start;
     if (todo->floats()) {
 //      kDebug(5800) << " Incidence " << todo->summary() << " floats." << endl;
@@ -188,7 +188,7 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo, ICalTimeZones *tzlist, ICal
   icalcomponent_add_property(vtodo,
       icalproperty_new_percentcomplete(todo->percentComplete()));
 
-  if( todo->doesRecur() ) {
+  if( todo->recurs() ) {
     icalcomponent_add_property(vtodo,
         writeICalDateTimeProperty( ICAL_RECURRENCEID_PROPERTY, todo->dtDue(), tzlist, tzUsedList ));
   }
@@ -803,7 +803,7 @@ icalrecurrencetype ICalFormatImpl::writeRecurrenceRule( RecurrenceRule *recur )
   } else if ( recur->duration() == -1 ) {
     r.count = 0;
   } else {
-    if ( recur->doesFloat() )
+    if ( recur->floats() )
       r.until = writeICalDate(recur->endDt().date());
     else
       r.until = writeICalUtcDateTime(recur->endDt());
@@ -1431,7 +1431,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent, Incidence *incidence, 
 
   // Now that recurrence and exception stuff is completely set up,
   // do any backwards compatibility adjustments.
-  if ( incidence->doesRecur() && d->mCompat )
+  if ( incidence->recurs() && d->mCompat )
       d->mCompat->fixRecurrence( incidence );
 
   // add categories
