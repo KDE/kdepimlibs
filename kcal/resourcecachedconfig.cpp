@@ -72,8 +72,8 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent )
   d->mGroup->addButton( automaticReloadOnStartup, 1 );
   d->mGroup->addButton( intervalRadio, 2 );
 
-  connect( intervalRadio, SIGNAL( stateChanged( int ) ),
-           SLOT( slotIntervalStateChanged( int ) ) );
+  connect( intervalRadio, SIGNAL( toggled( bool ) ),
+           SLOT( slotIntervalToggled( bool ) ) );
   KHBox *intervalBox = new KHBox;
   new QLabel( i18n("Interval in minutes"), intervalBox );
   d->mIntervalSpin = new QSpinBox( intervalBox );
@@ -103,9 +103,9 @@ void ResourceCachedReloadConfig::saveSettings( ResourceCached *resource )
   resource->setReloadInterval( d->mIntervalSpin->value() );
 }
 
-void ResourceCachedReloadConfig::slotIntervalStateChanged( int state )
+void ResourceCachedReloadConfig::slotIntervalToggled( bool checked )
 {
-  if ( state == Qt::Checked ) d->mIntervalSpin->setEnabled( true );
+  if ( checked ) d->mIntervalSpin->setEnabled( true );
   else d->mIntervalSpin->setEnabled( false );
 }
 
@@ -130,8 +130,8 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent )
   d->mGroup->addButton( intervalRadio, 2 );
 
 
-  connect( intervalRadio, SIGNAL( stateChanged( int ) ),
-           SLOT( slotIntervalStateChanged( int ) ) );
+  connect( intervalRadio, SIGNAL( toggled( bool ) ),
+           SLOT( slotIntervalToggled( bool ) ) );
   KHBox *intervalBox = new KHBox;
   new QLabel( i18n("Interval in minutes"), intervalBox );
   d->mIntervalSpin = new QSpinBox( intervalBox );
@@ -165,8 +165,8 @@ void ResourceCachedSaveConfig::saveSettings( ResourceCached *resource )
   resource->setSaveInterval( d->mIntervalSpin->value() );
 }
 
-void ResourceCachedSaveConfig::slotIntervalStateChanged( int state )
+void ResourceCachedSaveConfig::slotIntervalToggled( bool checked )
 {
-  if ( state == Qt::Checked ) d->mIntervalSpin->setEnabled( true );
+  if ( checked ) d->mIntervalSpin->setEnabled( true );
   else d->mIntervalSpin->setEnabled( false );
 }

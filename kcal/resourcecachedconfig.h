@@ -47,7 +47,7 @@ class KCAL_EXPORT ResourceCachedReloadConfig : public QWidget
     void saveSettings( ResourceCached *resource );
 
   protected Q_SLOTS:
-    void slotIntervalStateChanged( int );
+    void slotIntervalToggled( bool );
 
   private:
     //@cond PRIVATE
@@ -72,7 +72,7 @@ class KCAL_EXPORT ResourceCachedSaveConfig : public QWidget
     void saveSettings( ResourceCached *resource );
 
   protected Q_SLOTS:
-    void slotIntervalStateChanged( int );
+    void slotIntervalToggled( bool );
 
   private:
     //@cond PRIVATE
