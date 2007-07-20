@@ -64,9 +64,6 @@ TODO: revert foreach() loops?
 TODO: change "todo" to "to-do" in comments
 TODO: put KDE_VERSION stuff into kcal.h and remove kde_version.h??
 
-TODO: rename doesRecur() to recurs()
-TODO: rename doesFloat() to floats()
-
 thiago: rule of thumb: ConstIterators, constBegin, constEnd, all of the time
 if it doesn't compile (i.e., you're doing a non-const operation), then use
 the non-const version

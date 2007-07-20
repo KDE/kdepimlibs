@@ -180,7 +180,7 @@ bool CalFilter::filterIncidence( Incidence *incidence ) const
   }
 
   if ( d->mCriteria & HideRecurring ) {
-    if ( incidence->doesRecur() ) {
+    if ( incidence->recurs() ) {
       return false;
     }
   }

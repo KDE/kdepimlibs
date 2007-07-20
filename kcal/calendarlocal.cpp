@@ -283,7 +283,7 @@ Alarm::List CalendarLocal::alarms( const KDateTime &from, const KDateTime &to )
 {
   Alarm::List alarms;
   foreach ( Event *e, d->mEvents ) {
-    if ( e->doesRecur() ) {
+    if ( e->recurs() ) {
       appendRecurringAlarms( alarms, e, from, to );
     } else {
       appendAlarms( alarms, e, from, to );
@@ -338,7 +338,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
 
   foreach ( Event *event, d->mEvents ) {
 
-    if ( event->doesRecur() ) {
+    if ( event->recurs() ) {
       if ( event->isMultiDay() ) {
         int extraDays = event->dtStart().date().daysTo( event->dtEnd().date() );
         int i;
@@ -371,7 +371,7 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
 
   // Get non-recurring events
   foreach ( Event *event, d->mEvents ) {
-    if ( event->doesRecur() ) {
+    if ( event->recurs() ) {
       QDate rStart = event->dtStart().date();
       bool found = false;
       if ( inclusive ) {

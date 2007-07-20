@@ -98,7 +98,7 @@ FreeBusy::FreeBusy( Calendar *calendar,
       tmpStart.setDate(day);
       tmpEnd.setDate(day);
 
-      if( event->doesRecur() ) {
+      if( event->recurs() ) {
         if ( event->isMultiDay() ) {
 // FIXME: This doesn't work for sub-daily recurrences or recurrences with
 //        a different time than the original event.

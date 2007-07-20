@@ -436,7 +436,7 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence,
                                            const QDate &date,
                                            bool single )
 {
-  if ( !incidence || !incidence->doesRecur() ) {
+  if ( !incidence || !incidence->recurs() ) {
     return 0;
   }
 

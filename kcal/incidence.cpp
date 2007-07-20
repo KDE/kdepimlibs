@@ -402,10 +402,10 @@ uint Incidence::recurrenceType() const
   }
 }
 
-bool Incidence::doesRecur() const
+bool Incidence::recurs() const
 {
   if ( mRecurrence ) {
-    return mRecurrence->doesRecur();
+    return mRecurrence->recurs();
   } else {
     return false;
   }
@@ -445,7 +445,7 @@ QList<KDateTime> Incidence::startDateTimesForDate( const QDate &date,
 
   // if the incidence doesn't recur,
   KDateTime kdate( date, timeSpec );
-  if ( !doesRecur() ) {
+  if ( !recurs() ) {
     if ( !( start > kdate || end < kdate ) ) {
       result << start;
     }
@@ -492,7 +492,7 @@ QList<KDateTime> Incidence::startDateTimesForDateTime( const KDateTime &datetime
   }
 
   // if the incidence doesn't recur,
-  if ( !doesRecur() ) {
+  if ( !recurs() ) {
     if ( !( start > datetime || end < datetime ) ) {
       result << start;
     }

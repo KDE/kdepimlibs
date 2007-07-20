@@ -426,7 +426,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 
   // recurrence rule stuff
   const Recurrence *recur = anEvent->recurrence();
-  if ( recur->doesRecur() ) {
+  if ( recur->recurs() ) {
     bool validRecur = true;
     QString tmpStr2;
     switch ( recur->recurrenceType() ) {

@@ -252,7 +252,7 @@ static QString eventViewerFormatHeader( Incidence *incidence )
                 iconLoader->iconPath( "bell", K3Icon::Small ) +
                 "\">";
     }
-    if ( incidence->doesRecur() ) {
+    if ( incidence->recurs() ) {
       tmpStr += "<img src=\"" +
                 iconLoader->iconPath( "recur", K3Icon::Small ) +
                 "\">";
@@ -342,7 +342,7 @@ static QString eventViewerFormatEvent( Event *event )
     tmpStr += "</tr>";
   }
 
-  if ( event->doesRecur() ) {
+  if ( event->recurs() ) {
     KDateTime dt = event->recurrence()->getNextDateTime(
                                           KDateTime::currentUtcDateTime() );
     tmpStr += "<tr>";
@@ -395,7 +395,7 @@ static QString eventViewerFormatTodo( Todo *todo )
   tmpStr += i18n("<p><i>%1 % completed</i></p>",
                   todo->percentComplete() );
 
-  if ( todo->doesRecur() ) {
+  if ( todo->recurs() ) {
     KDateTime dt = todo->recurrence()->getNextDateTime(
                                          KDateTime::currentUtcDateTime() );
     tmpStr += eventViewerAddTag( "p", "<em>" +
@@ -1391,7 +1391,7 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Event *event )
   if ( !event->floats() ) {
     mResult += i18n("End Time: %1\n", event->dtEndTimeStr() );
   }
-  if ( event->doesRecur() ) {
+  if ( event->recurs() ) {
     Recurrence *recur = event->recurrence();
     // TODO: Merge these two to one of the form "Recurs every 3 days"
     mResult += i18n("Recurs: %1\n",

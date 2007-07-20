@@ -269,9 +269,9 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Recurrenc
     void clearRecurrence();
 
     /**
-      Forward to Recurrence::doesRecur().
+      Forward to Recurrence::recurs().
     */
-    bool doesRecur() const;
+    bool recurs() const;
     uint recurrenceType() const;
 
     /**

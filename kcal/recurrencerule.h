@@ -98,7 +98,7 @@ class KCAL_EXPORT RecurrenceRule
 
     /** Returns the event's recurrence status.  See the enumeration at the top
      * of this file for possible values. */
-    bool doesRecur() const;
+    bool recurs() const;
     void setRecurrenceType( PeriodType period );
     PeriodType recurrenceType() const;
     /** Turns off recurrence for the event. */
@@ -122,7 +122,7 @@ class KCAL_EXPORT RecurrenceRule
 
     /** Returns whether the start date has no time associated. Floating
         means -- according to rfc2445 -- that the event has no time associate. */
-    bool doesFloat() const;
+    bool floats() const;
     /** Sets whether the dtstart is a floating time (i.e. has no time attached) */
     void setFloats( bool floats );
 

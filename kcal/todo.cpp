@@ -110,7 +110,7 @@ void Todo::setDtDue( const KDateTime &dtDue, bool first )
       alarm->setTime(alarm->time().addSecs(diffsecs));
     }
   }*/
-  if ( doesRecur() && !first ) {
+  if ( recurs() && !first ) {
     d->mDtRecurrence = dtDue;
   } else {
     d->mDtDue = dtDue;
@@ -119,7 +119,7 @@ void Todo::setDtDue( const KDateTime &dtDue, bool first )
     recurrence()->setFloats( floats() );
   }
 
-  if ( doesRecur() && dtDue < recurrence()->startDateTime() ) {
+  if ( recurs() && dtDue < recurrence()->startDateTime() ) {
     setDtStart( dtDue );
   }
 
@@ -134,7 +134,7 @@ void Todo::setDtDue( const KDateTime &dtDue, bool first )
 
 KDateTime Todo::dtDue( bool first ) const
 {
-  if ( doesRecur() && !first && d->mDtRecurrence.isValid() ) {
+  if ( recurs() && !first && d->mDtRecurrence.isValid() ) {
     return d->mDtRecurrence;
   }
 
@@ -143,20 +143,20 @@ KDateTime Todo::dtDue( bool first ) const
 
 QString Todo::dtDueTimeStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatTime( dtDue( !doesRecur() ).time(), shortfmt );
+  return KGlobal::locale()->formatTime( dtDue( !recurs() ).time(), shortfmt );
 }
 
 QString Todo::dtDueDateStr( bool shortfmt ) const
 {
   return
-    KGlobal::locale()->formatDate( dtDue( !doesRecur() ).date(),
+    KGlobal::locale()->formatDate( dtDue( !recurs() ).date(),
                                   ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
 }
 
 QString Todo::dtDueStr( bool shortfmt ) const
 {
   return
-    KGlobal::locale()->formatDateTime( dtDue( !doesRecur() ).dateTime(),
+    KGlobal::locale()->formatDateTime( dtDue( !recurs() ).dateTime(),
                                        ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
 }
 
@@ -185,7 +185,7 @@ void Todo::setHasStartDate( bool f )
     return;
   }
 
-  if ( doesRecur() && !f ) {
+  if ( recurs() && !f ) {
     if ( !comments().filter( "NoStartDate" ).count() ) {
       addComment( "NoStartDate" ); //TODO: --> custom flag?
     }
@@ -199,7 +199,7 @@ void Todo::setHasStartDate( bool f )
 
 KDateTime Todo::dtStart( bool first ) const
 {
-  if ( doesRecur() && !first ) {
+  if ( recurs() && !first ) {
     return d->mDtRecurrence.addDays( dtDue( first ).daysTo( IncidenceBase::dtStart() ) );
   } else {
     return IncidenceBase::dtStart();
@@ -209,7 +209,7 @@ KDateTime Todo::dtStart( bool first ) const
 void Todo::setDtStart( const KDateTime &dtStart )
 {
   // TODO: This doesn't seem right (rfc 2445/6 says, recurrence is calculated from the dtstart...)
-  if ( doesRecur() ) {
+  if ( recurs() ) {
     recurrence()->setStartDateTime( d->mDtDue );
     recurrence()->setFloats( floats() );
   }
@@ -308,7 +308,7 @@ void Todo::shiftTimes( const KDateTime::Spec &oldSpec,
   Incidence::shiftTimes( oldSpec, newSpec );
   d->mDtDue = d->mDtDue.toTimeSpec( oldSpec );
   d->mDtDue.setTimeSpec( newSpec );
-  if ( doesRecur() ) {
+  if ( recurs() ) {
     d->mDtRecurrence = d->mDtRecurrence.toTimeSpec( oldSpec );
     d->mDtRecurrence.setTimeSpec( newSpec );
   }
@@ -339,7 +339,7 @@ bool Todo::recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const
 
 bool Todo::recurTodo()
 {
-  if ( doesRecur() ) {
+  if ( recurs() ) {
     Recurrence *r = recurrence();
     KDateTime endDateTime = r->endDateTime();
     KDateTime nextDate = r->getNextDateTime( dtDue() );

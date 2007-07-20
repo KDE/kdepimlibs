@@ -148,7 +148,7 @@ int CompatPre34::fixPriority( int prio )
 void CompatPre32::fixRecurrence( Incidence *incidence )
 {
   Recurrence* recurrence = incidence->recurrence();
-  if ( recurrence->doesRecur() &&  recurrence->duration() > 0 ) {
+  if ( recurrence->recurs() &&  recurrence->duration() > 0 ) {
     recurrence->setDuration( recurrence->duration() + incidence->recurrence()->exDates().count() );
   }
   // Call base class method now that everything else is done

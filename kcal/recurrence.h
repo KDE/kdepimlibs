@@ -129,7 +129,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * N.B. This property is derived by default from whether setStartDateTime() is
      * called with a date-only or date/time parameter.
      * @return whether the recurrence has a time (false) or it is just a date (true). */
-    bool doesFloat() const;
+    bool floats() const;
     /** Sets whether the dtstart is a floating time (i.e. has no time attached)
        @param floats If the recurrence is for all-day item (true) or has a time associated (false).
        */
@@ -141,7 +141,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     bool recurReadOnly() const;
 
     /** Returns whether the event recurs at all. */
-    bool doesRecur() const;
+    bool recurs() const;
     /** Returns the event's recurrence status.  See the enumeration at the top
      * of this file for possible values. */
     ushort recurrenceType() const;

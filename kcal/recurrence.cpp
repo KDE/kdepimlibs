@@ -168,7 +168,7 @@ KDateTime Recurrence::startDateTime() const
   return d->mStartDateTime;
 }
 
-bool Recurrence::doesFloat() const
+bool Recurrence::floats() const
 {
   return d->mFloating;
 }
@@ -217,7 +217,7 @@ void Recurrence::updated()
   }
 }
 
-bool Recurrence::doesRecur() const
+bool Recurrence::recurs() const
 {
   return !d->mRRules.isEmpty() || !d->mRDates.isEmpty() || !d->mRDateTimes.isEmpty();
 }
@@ -311,7 +311,7 @@ bool Recurrence::recursOn(const QDate &qd, const KDateTime::Spec &timeSpec) cons
   TimeList tms;
   // For all-day events a matching exrule excludes the whole day
   // since exclusions take precedence over inclusions, we know it can't occur on that day.
-  if ( doesFloat() ) {
+  if ( floats() ) {
     for ( i = 0, end = d->mExRules.count();  i < end;  ++i ) {
       if ( d->mExRules[i]->recursOn( qd, timeSpec ) )
         return false;
@@ -338,7 +338,7 @@ bool Recurrence::recursOn(const QDate &qd, const KDateTime::Spec &timeSpec) cons
   for ( i = 0, end = d->mExDateTimes.count();  i < end && !exon;  ++i ) {
     exon = ( d->mExDateTimes[i].toTimeSpec( timeSpec ).date() == qd );
   }
-  if ( !doesFloat() ) {     // we have already checked floating times above
+  if ( !floats() ) {     // we have already checked floating times above
     for ( i = 0, end = d->mExRules.count();  i < end && !exon;  ++i ) {
       exon = d->mExRules[i]->recursOn( qd, timeSpec );
     }
@@ -417,7 +417,7 @@ QDate Recurrence::endDate() const
 void Recurrence::setEndDate( const QDate &date )
 {
   KDateTime dt( date, d->mStartDateTime.time(), d->mStartDateTime.timeSpec() );
-  if ( doesFloat() )
+  if ( floats() )
     dt.setTime( QTime( 23, 59, 59 ) );
   setEndDateTime( dt );
 }
@@ -792,7 +792,7 @@ TimeList Recurrence::recurTimesOn( const QDate &date, const KDateTime::Spec &tim
   if ( d->mExDates.containsSorted( date ) ) return times;
   // EXRULE takes precedence over RDATE entries, so for floating events,
   // a matching excule also excludes the whole day automatically
-  if ( doesFloat() ) {
+  if ( floats() ) {
     for ( i = 0, end = d->mExRules.count();  i < end;  ++i ) {
       if ( d->mExRules[i]->recursOn( date, timeSpec ) )
         return times;
@@ -824,7 +824,7 @@ TimeList Recurrence::recurTimesOn( const QDate &date, const KDateTime::Spec &tim
       foundDate = true;
     } else if (foundDate) break;
   }
-  if ( !doesFloat() ) {     // we have already checked floating times above
+  if ( !floats() ) {     // we have already checked floating times above
     for ( i = 0, end = d->mExRules.count();  i < end;  ++i ) {
       extimes += d->mExRules[i]->recurTimesOn( date, timeSpec );
     }

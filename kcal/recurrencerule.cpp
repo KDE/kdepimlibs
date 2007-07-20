@@ -530,7 +530,7 @@ class KCal::RecurrenceRule::Private
         mFrequency( p.mFrequency ),
         mDuration( p.mDuration ),
         mDateEnd( p.mDateEnd ),
-      
+
         mBySeconds( p.mBySeconds ),
         mByMinutes( p.mByMinutes ),
         mByHours( p.mByHours ),
@@ -541,7 +541,7 @@ class KCal::RecurrenceRule::Private
         mByMonths( p.mByMonths ),
         mBySetPos( p.mBySetPos ),
         mWeekStart( p.mWeekStart ),
-      
+
         mIsReadOnly( p.mIsReadOnly ),
         mFloating( p.mFloating )
     {
@@ -606,10 +606,10 @@ bool RecurrenceRule::Private::operator==( const Private& r ) const
        &&  mDuration == r.mDuration
        &&  mDateEnd == r.mDateEnd
        &&  mFrequency == r.mFrequency
-     
+
        &&  mIsReadOnly == r.mIsReadOnly
        &&  mFloating == r.mFloating
-     
+
        &&  mBySeconds == r.mBySeconds
        &&  mByMinutes == r.mByMinutes
        &&  mByHours == r.mByHours
@@ -1081,7 +1081,7 @@ bool RecurrenceRule::dateMatchesRules( const KDateTime &kdt ) const
 bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec ) const
 {
   int i, iend;
-  if ( doesFloat() ) {
+  if ( floats() ) {
     // It's a date-only rule, so it has no time specification.
     // Therefore ignore 'timeSpec'.
     if ( qd < startDt().date() )
@@ -1207,7 +1207,7 @@ bool RecurrenceRule::recursAt( const KDateTime &kdt ) const
   // Convert to the time spec used by this recurrence rule
   KDateTime dt( kdt.toTimeSpec( d->mDateStart.timeSpec() ) );
 // kDebug(5800) << "         RecurrenceRule::recursAt: " << dumpTime(dt) << endl;
-  if ( doesFloat() )
+  if ( floats() )
     return recursOn( dt.date(), dt.timeSpec() );
   if ( dt < startDt() )
     return false;
@@ -1234,7 +1234,7 @@ TimeList RecurrenceRule::recurTimesOn( const QDate &date, const KDateTime::Spec 
 {
 // kDebug(5800) << "         RecurrenceRule::recurTimesOn(" << date << ")" << endl;
   TimeList lst;
-  if ( doesFloat() )
+  if ( floats() )
     return lst;
   KDateTime start( date, QTime(0,0,0), timeSpec );
   KDateTime end = start.addDays(1).addSecs(-1);
@@ -1743,8 +1743,8 @@ QString RecurrenceRule::rrule() const  { return d->mRRule; }
 void RecurrenceRule::setRRule( const QString &rrule )  { d->mRRule = rrule; }
 bool RecurrenceRule::isReadOnly() const  { return d->mIsReadOnly; }
 void RecurrenceRule::setReadOnly(bool readOnly) { d->mIsReadOnly = readOnly; }
-bool RecurrenceRule::doesRecur() const { return d->mPeriod != rNone; }
-bool RecurrenceRule::doesFloat() const { return d->mFloating; }
+bool RecurrenceRule::recurs() const { return d->mPeriod != rNone; }
+bool RecurrenceRule::floats() const { return d->mFloating; }
 const QList<int> &RecurrenceRule::bySeconds() const { return d->mBySeconds; }
 const QList<int> &RecurrenceRule::byMinutes() const { return d->mByMinutes; }
 const QList<int> &RecurrenceRule::byHours() const { return d->mByHours; }
