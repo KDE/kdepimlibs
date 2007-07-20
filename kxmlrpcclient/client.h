@@ -108,6 +108,40 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
     void setUserAgent( const QString &userAgent );
 
     /**
+      Sets the Date Format the Client will use.
+       extended format: YYYY-MM-DD
+       basic format: YYYYMMDD
+      @param extended  true extended format will be used.
+
+      @see dateFormat()
+     */
+    void setDateFormat( bool extended );
+
+     /**
+      Sets the Time Format the Client will use.
+       extended format: HH:MM:SS
+       basic format: HHMMSS
+      @param extended  true extended format will be used.
+
+      @see timeFormat()
+     */
+    void setTimeFormat( bool extended );
+
+    /**
+      Returns true if the date format is extended
+    
+      @see setDateFormat()
+     */
+    bool dateFormat() const;
+    
+    /**
+      Returns true if the time format is extended
+    
+      @see setTimeFormat()
+     */
+    bool timeFormat() const;
+
+    /**
       Returns true if HTTP-Digest authentication is enabled, false
       if not.
 

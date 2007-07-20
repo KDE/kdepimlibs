@@ -36,14 +36,17 @@ using namespace KXmlRpc;
 class Client::Private
 {
   public:
-    Private() : mUserAgent( "KDE XMLRPC resources" ), mDigestAuth( false ) {}
+    Private() : mUserAgent( "KDE XMLRPC resources" ), mDigestAuth( false )
+                                                    , mDateFormatExtended(true)
+						    , mTimeFormatExtended(true){}
 
     void queryFinished( Query * );
 
     KUrl mUrl;
     QString mUserAgent;
     bool mDigestAuth;
-
+    bool mDateFormatExtended;
+    bool mTimeFormatExtended;
     QList<Query*> mPendingQueries;
 };
 
@@ -96,6 +99,26 @@ void Client::setUserAgent( const QString &userAgent )
   d->mUserAgent = userAgent;
 }
 
+void Client::setDateFormat( bool extended )
+{
+  d->mDateFormatExtended=extended;
+}
+
+void Client::setTimeFormat( bool extended )
+{
+  d->mDateFormatExtended=extended;
+}
+
+bool Client::dateFormat() const
+{
+  return d->mDateFormatExtended;
+}
+
+bool Client::timeFormat() const
+{
+  return d->mTimeFormatExtended;
+}
+
 bool Client::isDigestAuthEnabled() const
 {
   return d->mDigestAuth;
@@ -134,7 +157,7 @@ void Client::call( const QString &method, const QList<QVariant> &args,
   connect( query, SIGNAL( finished( Query * ) ), this, SLOT( queryFinished( Query * ) ) );
   d->mPendingQueries.append( query );
 
-  query->call( d->mUrl.url(), method, args, metaData );
+  query->call( d->mUrl.url(), method, args, metaData, d->mDateFormatExtended, d->mTimeFormatExtended  );
 }
 
 void Client::call( const QString &method, const QVariant &arg,
