@@ -47,6 +47,8 @@ class BlogPosting::Private
   KDateTime mModificationDateTime;
   bool mDeleted;
   bool mUploaded;
+  bool mDateFormatExtended;
+  bool mTimeFormatExtended;
 };
 //@endcond
 
@@ -68,6 +70,8 @@ BlogPosting::BlogPosting( const QString &title, const QString &content,
   d->mCreationDateTime = KDateTime::currentDateTime( KDateTime::Spec() );
   d->mUploaded = false;
   d->mDeleted = false;
+  d->mDateFormatExtended=true;
+  d->mTimeFormatExtended=true;
 }
 
 BlogPosting::~BlogPosting()
@@ -164,6 +168,26 @@ bool BlogPosting::uploaded() const
 void BlogPosting::setUploaded( const bool uploaded )
 {
   d->mUploaded = uploaded;
+}
+
+bool BlogPosting::useExtendedDateFormat() const
+{
+  return d->mDateFormatExtended;
+}
+
+void BlogPosting::setUseExtendedDateFormat( bool extended )
+{
+  d->mDateFormatExtended=extended;
+}
+
+bool BlogPosting::useExtendedTimeFormat() const
+{
+  return d->mTimeFormatExtended;
+}
+
+void BlogPosting::setUseExtendedTimeFormat( bool extended )
+{
+  d->mDateFormatExtended=extended;
 }
 
 bool BlogPosting::deleted() const

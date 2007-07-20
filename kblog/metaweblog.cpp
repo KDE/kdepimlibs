@@ -104,6 +104,8 @@ void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
   map["lastModified"] = posting->modificationDateTime().toUtc().dateTime();
   args << map;
   args << QVariant( posting->publish() );
+  d->mXmlRpcClient->setUseExtendedDateFormat(posting->useExtendedTimeFormat());
+  d->mXmlRpcClient->setUseExtendedTimeFormat(posting->useExtendedTimeFormat());
   d->mXmlRpcClient->call(
     "metaWeblog.editPost", args,
     d, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
@@ -126,6 +128,8 @@ void APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
   map["dateCreated"] = posting->creationDateTime().toUtc().dateTime();
   args << map;
   args << QVariant( posting->publish() );
+  d->mXmlRpcClient->setUseExtendedDateFormat(posting->useExtendedTimeFormat());
+  d->mXmlRpcClient->setUseExtendedTimeFormat(posting->useExtendedTimeFormat());
   d->mXmlRpcClient->call (
     "metaWeblog.newPost", args,
     d, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),

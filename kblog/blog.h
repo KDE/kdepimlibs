@@ -234,6 +234,40 @@ class KBLOG_EXPORT BlogPosting
     */
     void setUploaded( const bool uploaded );
 
+    /**
+      Returns true if the date format is extended
+    
+      @see setUseExtendedDateFormat()
+     */
+    bool useExtendedDateFormat() const;
+    
+    /**
+      Sets the Date Format
+       extended format: YYYY-MM-DD
+       basic format: YYYYMMDD
+    
+      @param extended  true extended format will be used.
+      @see useExtendedDateFormat()
+     */
+    void setUseExtendedDateFormat( bool extended );
+    
+    /**
+      Returns true if the time format is extended
+    
+      @see setUseExtendedTimeFormat()
+     */
+    bool useExtendedTimeFormat() const;
+     
+    /**
+      Sets the Time Format
+       extended format: HH:MM:SS
+       basic format: HHMMSS
+    
+      @param extended  true extended format will be used.
+      @see useExtendedTimeFormat()
+     */
+    void setUseExtendedTimeFormat( bool extended );
+
   protected:
     // Override this method to detect the new postId assigned when
     // adding a new post
