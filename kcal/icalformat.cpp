@@ -1,38 +1,51 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
+*/
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the ICalFormat class.
+
+  This class implements the iCalendar format. It provides methods for
+  loading/saving/converting iCalendar format data into the internal
+  representation as Calendar and Incidences.
+
+  @brief
+  iCalendar format implementation.
+
+  @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 
 #include "icalformat.h"
 
-#include "icalformatimpl.h"
 #include "calendar.h"
 #include "calendarlocal.h"
-#include "journal.h"
+#include "icalformatimpl.h"
 #include "icaltimezones.h"
 
 #include <QtCore/QString>
 #include <QtCore/QRegExp>
-#include <QtGui/QClipboard>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QtCore/QByteArray>
+#include <QtGui/QClipboard>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -52,7 +65,7 @@ extern "C" {
 
 using namespace KCal;
 
-
+//@cond PRIVATE
 class ICalFormat::Private
 {
   public:
@@ -64,7 +77,7 @@ class ICalFormat::Private
     ICalFormatImpl *mImpl;
     KDateTime::Spec mTimeSpec;
 };
-
+//@endcond
 
 ICalFormat::ICalFormat()
   : d( new Private( this ) )
@@ -78,24 +91,22 @@ ICalFormat::~ICalFormat()
 
 void ICalFormat::setImplementation( ICalFormatImpl *impl )
 {
-  if ( d->mImpl ) delete d->mImpl;
+  if ( d->mImpl ) {
+    delete d->mImpl;
+  }
   d->mImpl = impl;
 }
 
-#if defined(_AIX) && defined(open)
-#undef open
-#endif
-
-bool ICalFormat::load( Calendar *calendar, const QString &fileName)
+bool ICalFormat::load( Calendar *calendar, const QString &fileName )
 {
   kDebug(5800) << "ICalFormat::load() " << fileName << endl;
 
   clearException();
 
   QFile file( fileName );
-  if (!file.open( QIODevice::ReadOnly ) ) {
+  if ( !file.open( QIODevice::ReadOnly ) ) {
     kDebug(5800) << "ICalFormat::load() load error" << endl;
-    setException(new ErrorFormat(ErrorFormat::LoadError));
+    setException( new ErrorFormat( ErrorFormat::LoadError ) );
     return false;
   }
   QTextStream ts( &file );
@@ -103,12 +114,13 @@ bool ICalFormat::load( Calendar *calendar, const QString &fileName)
   QString text = ts.readAll();
   file.close();
 
-  if ( text.trimmed().isEmpty() ) // empty files are valid
+  if ( text.trimmed().isEmpty() ) {
+    // empty files are valid
     return true;
-  else
+  } else {
     return fromRawString( calendar, text.toLatin1() );
+  }
 }
-
 
 bool ICalFormat::save( Calendar *calendar, const QString &fileName )
 {
@@ -117,8 +129,9 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   clearException();
 
   QString text = toString( calendar );
-
-  if ( text.isNull() ) return false;
+  if ( text.isNull() ) {
+    return false;
+  }
 
   // Write backup file
   KSaveFile::backupFile( fileName );
@@ -127,7 +140,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   if ( !file.open() ) {
     kDebug(5800) << "ICalFormat::save() err: " << file.errorString() << endl;
     setException( new ErrorFormat( ErrorFormat::SaveError,
-                  i18n( "Error saving to '%1'.", fileName ) ) );
+                                   i18n( "Error saving to '%1'.", fileName ) ) );
     return false;
   }
 
@@ -137,8 +150,8 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
 
   if ( !file.finalize() ) {
     kDebug(5800) << "ICalFormat::save() err: " << file.errorString() << endl;
-    setException(new ErrorFormat(ErrorFormat::SaveError,
-                 i18n("Could not save '%1'", fileName)));
+    setException( new ErrorFormat( ErrorFormat::SaveError,
+                                   i18n( "Could not save '%1'", fileName ) ) );
     return false;
   }
 
@@ -157,44 +170,45 @@ bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &text )
   icalcomponent *calendar;
 
   // Let's defend const correctness until the very gates of hell^Wlibical
-  calendar = icalcomponent_new_from_string( const_cast<char*>( (const char*)text ) );
-  //  kDebug(5800) << "Error: " << icalerror_perror() << endl;
-  if (!calendar) {
+  calendar = icalcomponent_new_from_string( const_cast<char*>( ( const char * )text ) );
+  if ( !calendar ) {
     kDebug(5800) << "ICalFormat::load() parse error" << endl;
-    setException(new ErrorFormat(ErrorFormat::ParseErrorIcal));
+    setException( new ErrorFormat( ErrorFormat::ParseErrorIcal ) );
     return false;
   }
 
   bool success = true;
 
-  if (icalcomponent_isa(calendar) == ICAL_XROOT_COMPONENT) {
+  if ( icalcomponent_isa( calendar ) == ICAL_XROOT_COMPONENT ) {
     icalcomponent *comp;
-    for ( comp = icalcomponent_get_first_component(calendar, ICAL_VCALENDAR_COMPONENT);
-          comp; comp = icalcomponent_get_next_component(calendar, ICAL_VCALENDAR_COMPONENT) ) {
+    for ( comp = icalcomponent_get_first_component( calendar, ICAL_VCALENDAR_COMPONENT );
+          comp; comp = icalcomponent_get_next_component( calendar, ICAL_VCALENDAR_COMPONENT ) ) {
       // put all objects into their proper places
       if ( !d->mImpl->populate( cal, comp ) ) {
         kDebug(5800) << "ICalFormat::load(): Could not populate calendar" << endl;
         if ( !exception() ) {
-          setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
+          setException( new ErrorFormat( ErrorFormat::ParseErrorKcal ) );
         }
         success = false;
-      } else
+      } else {
         mLoadedProductId = d->mImpl->loadedProductId();
+      }
     }
-  } else if (icalcomponent_isa(calendar) != ICAL_VCALENDAR_COMPONENT) {
+  } else if ( icalcomponent_isa( calendar ) != ICAL_VCALENDAR_COMPONENT ) {
     kDebug(5800) << "ICalFormat::load(): No VCALENDAR component found" << endl;
-    setException(new ErrorFormat(ErrorFormat::NoCalendar));
+    setException( new ErrorFormat( ErrorFormat::NoCalendar ) );
     success = false;
   } else {
     // put all objects into their proper places
     if ( !d->mImpl->populate( cal, calendar ) ) {
       kDebug(5800) << "ICalFormat::load(): Could not populate calendar" << endl;
       if ( !exception() ) {
-        setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
+        setException( new ErrorFormat( ErrorFormat::ParseErrorKcal ) );
       }
       success = false;
-    } else
+    } else {
       mLoadedProductId = d->mImpl->loadedProductId();
+    }
   }
 
   icalcomponent_free( calendar );
@@ -206,7 +220,7 @@ bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &text )
 Incidence *ICalFormat::fromString( const QString &text )
 {
   CalendarLocal cal( d->mTimeSpec );
-  fromString(&cal, text);
+  fromString( &cal, text );
 
   Incidence *ical = 0;
   Event::List elist = cal.events();
@@ -229,19 +243,16 @@ Incidence *ICalFormat::fromString( const QString &text )
 
 QString ICalFormat::toString( Calendar *cal )
 {
-  icalcomponent *calendar = d->mImpl->createCalendarComponent(cal);
-
+  icalcomponent *calendar = d->mImpl->createCalendarComponent( cal );
   icalcomponent *component;
 
-  ICalTimeZones *tzlist = cal->timeZones();   // time zones possibly used in the calendar
-  ICalTimeZones tzUsedList;                   // time zones actually used in the calendar
+  ICalTimeZones *tzlist = cal->timeZones();  // time zones possibly used in the calendar
+  ICalTimeZones tzUsedList;                  // time zones actually used in the calendar
 
   // todos
   Todo::List todoList = cal->rawTodos();
   Todo::List::ConstIterator it;
-  for( it = todoList.begin(); it != todoList.end(); ++it ) {
-//    kDebug(5800) << "ICalFormat::toString() write todo "
-//                  << (*it)->uid() << endl;
+  for ( it = todoList.begin(); it != todoList.end(); ++it ) {
     component = d->mImpl->writeTodo( *it, tzlist, &tzUsedList );
     icalcomponent_add_component( calendar, component );
   }
@@ -249,12 +260,8 @@ QString ICalFormat::toString( Calendar *cal )
   // events
   Event::List events = cal->rawEvents();
   Event::List::ConstIterator it2;
-  for( it2 = events.begin(); it2 != events.end(); ++it2 )
-  {
-    if (*it2)
-    {
-      // kDebug(5800) << "ICalFormat::toString() write event "
-      //             << (*it2)->uid() << endl;
+  for ( it2 = events.begin(); it2 != events.end(); ++it2 ) {
+    if ( *it2 ) {
       component = d->mImpl->writeEvent( *it2, tzlist, &tzUsedList );
       icalcomponent_add_component( calendar, component );
     }
@@ -263,16 +270,16 @@ QString ICalFormat::toString( Calendar *cal )
   // journals
   Journal::List journals = cal->journals();
   Journal::List::ConstIterator it3;
-  for( it3 = journals.begin(); it3 != journals.end(); ++it3 ) {
+  for ( it3 = journals.begin(); it3 != journals.end(); ++it3 ) {
     kDebug(5800) << "ICalFormat::toString() write journal "
-                  << (*it3)->uid() << endl;
+                 << (*it3)->uid() << endl;
     component = d->mImpl->writeJournal( *it3, tzlist, &tzUsedList );
     icalcomponent_add_component( calendar, component );
   }
 
   // time zones
   const ICalTimeZones::ZoneMap zones = tzUsedList.zones();
-  for ( ICalTimeZones::ZoneMap::ConstIterator it = zones.begin();  it != zones.end();  ++it) {
+  for ( ICalTimeZones::ZoneMap::ConstIterator it = zones.begin();  it != zones.end();  ++it ) {
     icaltimezone *tz = (*it).icalTimezone();
     if ( !tz ) {
       kError(5800) << "ICalFormat::toString(): bad time zone" << endl;
@@ -289,8 +296,8 @@ QString ICalFormat::toString( Calendar *cal )
   icalmemory_free_ring();
 
   if ( text.isNull() ) {
-    setException(new ErrorFormat(ErrorFormat::SaveError,
-                 i18n("libical error")));
+    setException( new ErrorFormat( ErrorFormat::SaveError,
+                                   i18n( "libical error" ) ) );
     return QString();
   }
 
@@ -326,9 +333,11 @@ QString ICalFormat::toString( RecurrenceRule *recurrence )
   return text;
 }
 
-bool ICalFormat::fromString( RecurrenceRule * recurrence, const QString& rrule )
+bool ICalFormat::fromString( RecurrenceRule *recurrence, const QString &rrule )
 {
-  if ( !recurrence ) return false;
+  if ( !recurrence ) {
+    return false;
+  }
   bool success = true;
   icalerror_clear_errno();
   struct icalrecurrencetype recur = icalrecurrencetype_from_string( rrule.toLatin1() );
@@ -344,15 +353,14 @@ bool ICalFormat::fromString( RecurrenceRule * recurrence, const QString& rrule )
   return success;
 }
 
-
-QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
-                                          Scheduler::Method method)
+QString ICalFormat::createScheduleMessage( IncidenceBase *incidence,
+                                           Scheduler::Method method )
 {
   icalcomponent *message = 0;
 
   // Handle scheduling ID being present
   if ( incidence->type() == "Event" || incidence->type() == "Todo" ) {
-    Incidence* i = static_cast<Incidence*>( incidence );
+    Incidence *i = static_cast<Incidence*>( incidence );
     if ( i->schedulingID() != i->uid() ) {
       // We have a separation of scheduling ID and UID
       i = i->clone();
@@ -367,18 +375,13 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
     }
   }
 
-  if ( message == 0 )
-    message = d->mImpl->createScheduleComponent(incidence,method);
+  if ( message == 0 ) {
+    message = d->mImpl->createScheduleComponent( incidence, method );
+  }
 
-  // FIXME TODO: Don't we have to free message? What about the ical_string? MEMLEAK
-  QString messageText = QString::fromUtf8( icalcomponent_as_ical_string(message) );
+  QString messageText = QString::fromUtf8( icalcomponent_as_ical_string( message ) );
 
-#if 0
-  kDebug(5800) << "ICalFormat::createScheduleMessage: message START\n"
-            << messageText
-            << "ICalFormat::createScheduleMessage: message END" << endl;
-#endif
-
+  icalcomponent_free( message );
   return messageText;
 }
 
@@ -389,7 +392,9 @@ FreeBusy *ICalFormat::parseFreeBusy( const QString &str )
   icalcomponent *message;
   message = icalparser_parse_string( str.toUtf8() );
 
-  if ( !message ) return 0;
+  if ( !message ) {
+    return 0;
+  }
 
   FreeBusy *freeBusy = 0;
 
@@ -406,9 +411,9 @@ FreeBusy *ICalFormat::parseFreeBusy( const QString &str )
     }
   }
 
-  if ( !freeBusy )
-    kDebug(5800) << "ICalFormat:parseFreeBusy: object is not a freebusy."
-                  << endl;
+  if ( !freeBusy ) {
+    kDebug(5800) << "ICalFormat:parseFreeBusy: object is not a freebusy." << endl;
+  }
   return freeBusy;
 }
 
@@ -418,136 +423,141 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   setTimeSpec( cal->timeSpec() );
   clearException();
 
-  if (messageText.isEmpty())
-  {
-    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QLatin1String( "messageText was empty, unable to parse into a ScheduleMessage" ) ) );
+  if ( messageText.isEmpty() ) {
+    setException(
+      new ErrorFormat( ErrorFormat::ParseErrorKcal,
+                       QLatin1String( "messageText was empty, unable "
+                                      "to parse into a ScheduleMessage" ) ) );
     return 0;
   }
-  // TODO FIXME: Don't we have to ical-free message??? MEMLEAK
+
   icalcomponent *message;
-  message = icalparser_parse_string(messageText.toUtf8());
+  message = icalparser_parse_string( messageText.toUtf8() );
 
-  if (!message)
-  {
-    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QLatin1String( "icalparser was unable to parse messageText into a ScheduleMessage" ) ) );
+  if ( !message ) {
+    setException(
+      new ErrorFormat( ErrorFormat::ParseErrorKcal,
+                       QLatin1String( "icalparser was unable to parse "
+                                      "messageText into a ScheduleMessage" ) ) );
     return 0;
   }
 
-  icalproperty *m = icalcomponent_get_first_property(message,
-                                                     ICAL_METHOD_PROPERTY);
-  if (!m)
-  {
-    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QLatin1String( "message didn't contain an ICAL_METHOD_PROPERTY" ) ) );
+  icalproperty *m =
+    icalcomponent_get_first_property( message, ICAL_METHOD_PROPERTY );
+  if ( !m ) {
+    setException(
+      new ErrorFormat( ErrorFormat::ParseErrorKcal,
+                       QLatin1String( "message didn't contain an "
+                                      "ICAL_METHOD_PROPERTY" ) ) );
     return 0;
   }
 
   // Populate the message's time zone collection with all VTIMEZONE components
   ICalTimeZones tzlist;
   ICalTimeZoneSource tzs;
-  tzs.parse(message, tzlist);
+  tzs.parse( message, tzlist );
 
   icalcomponent *c;
 
   IncidenceBase *incidence = 0;
-  c = icalcomponent_get_first_component(message,ICAL_VEVENT_COMPONENT);
-  if (c) {
-    incidence = d->mImpl->readEvent(c, &tzlist);
+  c = icalcomponent_get_first_component( message, ICAL_VEVENT_COMPONENT );
+  if ( c ) {
+    incidence = d->mImpl->readEvent( c, &tzlist );
   }
 
-  if (!incidence) {
-    c = icalcomponent_get_first_component(message,ICAL_VTODO_COMPONENT);
-    if (c) {
-      incidence = d->mImpl->readTodo(c, &tzlist);
+  if ( !incidence ) {
+    c = icalcomponent_get_first_component( message, ICAL_VTODO_COMPONENT );
+    if ( c ) {
+      incidence = d->mImpl->readTodo( c, &tzlist );
     }
   }
 
-  if (!incidence) {
-    c = icalcomponent_get_first_component(message,ICAL_VJOURNAL_COMPONENT);
-    if (c) {
-      incidence = d->mImpl->readJournal(c, &tzlist);
+  if ( !incidence ) {
+    c = icalcomponent_get_first_component( message, ICAL_VJOURNAL_COMPONENT );
+    if ( c ) {
+      incidence = d->mImpl->readJournal( c, &tzlist );
     }
   }
 
-  if (!incidence) {
-    c = icalcomponent_get_first_component(message,ICAL_VFREEBUSY_COMPONENT);
-    if (c) {
-      incidence = d->mImpl->readFreeBusy(c);
+  if ( !incidence ) {
+    c = icalcomponent_get_first_component( message, ICAL_VFREEBUSY_COMPONENT );
+    if ( c ) {
+      incidence = d->mImpl->readFreeBusy( c );
     }
   }
 
-
-
-  if (!incidence) {
-    kDebug(5800) << "ICalFormat:parseScheduleMessage: object is not a freebusy, event, todo or journal" << endl;
-    setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QLatin1String( "object is not a freebusy, event, todo or journal" ) ) );
+  if ( !incidence ) {
+    kDebug(5800) << "ICalFormat:parseScheduleMessage: object is not a "
+                 << "freebusy, event, todo or journal" << endl;
+    setException(
+      new ErrorFormat( ErrorFormat::ParseErrorKcal,
+                       QLatin1String( "object is not a freebusy, event, "
+                                      "todo or journal" ) ) );
     return 0;
   }
 
   kDebug(5800) << "ICalFormat::parseScheduleMessage() getting method..." << endl;
 
-  icalproperty_method icalmethod = icalproperty_get_method(m);
+  icalproperty_method icalmethod = icalproperty_get_method( m );
   Scheduler::Method method;
 
-  switch (icalmethod) {
-    case ICAL_METHOD_PUBLISH:
-      method = Scheduler::Publish;
-      break;
-    case ICAL_METHOD_REQUEST:
-      method = Scheduler::Request;
-      break;
-    case ICAL_METHOD_REFRESH:
-      method = Scheduler::Refresh;
-      break;
-    case ICAL_METHOD_CANCEL:
-      method = Scheduler::Cancel;
-      break;
-    case ICAL_METHOD_ADD:
-      method = Scheduler::Add;
-      break;
-    case ICAL_METHOD_REPLY:
-      method = Scheduler::Reply;
-      break;
-    case ICAL_METHOD_COUNTER:
-      method = Scheduler::Counter;
-      break;
-    case ICAL_METHOD_DECLINECOUNTER:
-      method = Scheduler::Declinecounter;
-      break;
-    default:
-      method = Scheduler::NoMethod;
-      kDebug(5800) << "ICalFormat::parseScheduleMessage(): Unknow method" << endl;
-      break;
+  switch ( icalmethod ) {
+  case ICAL_METHOD_PUBLISH:
+    method = Scheduler::Publish;
+    break;
+  case ICAL_METHOD_REQUEST:
+    method = Scheduler::Request;
+    break;
+  case ICAL_METHOD_REFRESH:
+    method = Scheduler::Refresh;
+    break;
+  case ICAL_METHOD_CANCEL:
+    method = Scheduler::Cancel;
+    break;
+  case ICAL_METHOD_ADD:
+    method = Scheduler::Add;
+    break;
+  case ICAL_METHOD_REPLY:
+    method = Scheduler::Reply;
+    break;
+  case ICAL_METHOD_COUNTER:
+    method = Scheduler::Counter;
+    break;
+  case ICAL_METHOD_DECLINECOUNTER:
+    method = Scheduler::Declinecounter;
+    break;
+  default:
+    method = Scheduler::NoMethod;
+    kDebug(5800) << "ICalFormat::parseScheduleMessage(): Unknow method" << endl;
+    break;
   }
 
   kDebug(5800) << "ICalFormat::parseScheduleMessage() restriction..." << endl;
 
-  if (!icalrestriction_check(message)) {
-    kWarning(5800) << k_funcinfo << endl << "kcal library reported a problem while parsing:" << endl;
-    kWarning(5800) << Scheduler::translatedMethodName(method) + ": " + d->mImpl->extractErrorProperty(c)<< endl;
-    /*
-    setException(new ErrorFormat(ErrorFormat::Restriction,
-                                   Scheduler::translatedMethodName(method) + ": " +
-                                   d->mImpl->extractErrorProperty(c)));
-    delete incidence;
-    return 0;
-    */
+  if ( !icalrestriction_check( message ) ) {
+    kWarning(5800) << k_funcinfo << endl
+                   << "kcal library reported a problem while parsing:" << endl;
+    kWarning(5800) << Scheduler::translatedMethodName( method ) + ": " +
+      d->mImpl->extractErrorProperty( c ) << endl;
   }
-  icalcomponent *calendarComponent = d->mImpl->createCalendarComponent(cal);
 
-  Incidence *existingIncidence =
-    cal->incidenceFromSchedulingID(incidence->uid());
-  if (existingIncidence) {
+  Incidence *existingIncidence = cal->incidenceFromSchedulingID( incidence->uid() );
+
+  icalcomponent *calendarComponent;
+  if ( existingIncidence ) {
+    calendarComponent = d->mImpl->createCalendarComponent( cal );
+
     // TODO: check, if cast is required, or if it can be done by virtual funcs.
     // TODO: Use a visitor for this!
-    if (existingIncidence->type() == "Todo") {
-      Todo *todo = static_cast<Todo *>(existingIncidence);
-      icalcomponent_add_component(calendarComponent,
-                                  d->mImpl->writeTodo(todo));
+    if ( existingIncidence->type() == "Todo" ) {
+      Todo *todo = static_cast<Todo *>( existingIncidence );
+      icalcomponent_add_component( calendarComponent,
+                                   d->mImpl->writeTodo( todo ) );
     }
-    if (existingIncidence->type() == "Event") {
-      Event *event = static_cast<Event *>(existingIncidence);
-      icalcomponent_add_component(calendarComponent,
-                                  d->mImpl->writeEvent(event));
+    if ( existingIncidence->type() == "Event" ) {
+      Event *event = static_cast<Event *>( existingIncidence );
+      icalcomponent_add_component( calendarComponent,
+                                   d->mImpl->writeEvent( event ) );
     }
   } else {
     calendarComponent = 0;
@@ -555,40 +565,42 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   kDebug(5800) << "ICalFormat::parseScheduleMessage() classify..." << endl;
 
-  icalproperty_xlicclass result = icalclassify( message, calendarComponent,
-                                                (char *)"" );
+  icalproperty_xlicclass result =
+    icalclassify( message, calendarComponent, (char *)"" );
 
-  kDebug(5800) << "ICalFormat::parseScheduleMessage() returning..." << endl;
-  kDebug(5800) << "ICalFormat::parseScheduleMessage(), result = " << result << endl;
+  kDebug(5800) << "ICalFormat::parseScheduleMessage(), returning with result = "
+               << result << endl;
 
   ScheduleMessage::Status status;
 
-  switch (result) {
-    case ICAL_XLICCLASS_PUBLISHNEW:
-      status = ScheduleMessage::PublishNew;
-      break;
-    case ICAL_XLICCLASS_PUBLISHUPDATE:
-      status = ScheduleMessage::PublishUpdate;
-      break;
-    case ICAL_XLICCLASS_OBSOLETE:
-      status = ScheduleMessage::Obsolete;
-      break;
-    case ICAL_XLICCLASS_REQUESTNEW:
-      status = ScheduleMessage::RequestNew;
-      break;
-    case ICAL_XLICCLASS_REQUESTUPDATE:
-      status = ScheduleMessage::RequestUpdate;
-      break;
-    case ICAL_XLICCLASS_UNKNOWN:
-    default:
-      status = ScheduleMessage::Unknown;
-      break;
+  switch ( result ) {
+  case ICAL_XLICCLASS_PUBLISHNEW:
+    status = ScheduleMessage::PublishNew;
+    break;
+  case ICAL_XLICCLASS_PUBLISHUPDATE:
+    status = ScheduleMessage::PublishUpdate;
+    break;
+  case ICAL_XLICCLASS_OBSOLETE:
+    status = ScheduleMessage::Obsolete;
+    break;
+  case ICAL_XLICCLASS_REQUESTNEW:
+    status = ScheduleMessage::RequestNew;
+    break;
+  case ICAL_XLICCLASS_REQUESTUPDATE:
+    status = ScheduleMessage::RequestUpdate;
+    break;
+  case ICAL_XLICCLASS_UNKNOWN:
+  default:
+    status = ScheduleMessage::Unknown;
+    break;
   }
 
-  kDebug(5800) << "ICalFormat::parseScheduleMessage(), status = " << status << endl;
-// TODO FIXME: Don't we have to free calendarComponent??? MEMLEAK
+  kDebug(5800) << "ICalFormat::parseScheduleMessage(), status = "
+               << status << endl;
 
-  return new ScheduleMessage(incidence,method,status);
+  icalcomponent_free( message );
+  icalcomponent_free( calendarComponent );
+  return new ScheduleMessage( incidence, method, status );
 }
 
 void ICalFormat::setTimeSpec( const KDateTime::Spec &timeSpec )
