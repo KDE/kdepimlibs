@@ -205,7 +205,7 @@ set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS} ${libicalss_SRCS}
    calformat.cpp 
    vcalformat.cpp 
    icalformat.cpp 
-   icalformatimpl.cpp 
+   icalformat_p.cpp 
    incidenceformatter.cpp 
    vcaldrag.cpp 
    icaldrag.cpp 

@@ -34,10 +34,10 @@
 */
 
 #include "icalformat.h"
+#include "icalformat_p.h"
 
 #include "calendar.h"
 #include "calendarlocal.h"
-#include "icalformatimpl.h"
 #include "icaltimezones.h"
 
 #include <QtCore/QString>

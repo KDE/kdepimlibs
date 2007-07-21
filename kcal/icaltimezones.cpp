@@ -22,7 +22,7 @@
 #include "icaltimezones.h"
 
 #include "icalformat.h"
-#include "icalformatimpl.h"
+#include "icalformat_p.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QString>

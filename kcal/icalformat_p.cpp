@@ -37,7 +37,7 @@
   @author David Jarvie \<software@astrojar.org.uk\>
 */
 
-#include "icalformatimpl.h"
+#include "icalformat_p.h"
 
 #include "calendar.h"
 #include "compat.h"
@@ -303,12 +303,6 @@ icalcomponent *ICalFormatImpl::writeEvent( Event *event,
 icalcomponent *ICalFormatImpl::writeFreeBusy( FreeBusy *freebusy,
                                               Scheduler::Method method )
 {
-#if QT_VERSION >= 300
-  kDebug(5800) << "icalformatimpl: writeFreeBusy: startDate: "
-               << freebusy->dtStart().toString( "ddd MMMM d yyyy: h:m:s ap" ) << " End Date: "
-               << freebusy->dtEnd().toString( "ddd MMMM d yyyy: h:m:s ap" ) << endl;
-#endif
-
   icalcomponent *vfreebusy = icalcomponent_new( ICAL_VFREEBUSY_COMPONENT );
 
   d->writeIncidenceBase( vfreebusy, freebusy );

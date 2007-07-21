@@ -37,8 +37,8 @@
   @author David Jarvie \<software@astrojar.org.uk\>
 */
 
-#ifndef KCAL_ICALFORMATIMPL_H
-#define KCAL_ICALFORMATIMPL_H
+#ifndef KCAL_ICALFORMAT_P_H
+#define KCAL_ICALFORMAT_P_H
 
 #include "freebusy.h"
 #include "scheduler.h"
