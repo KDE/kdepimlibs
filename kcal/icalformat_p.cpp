@@ -64,8 +64,6 @@ extern "C" {
 
 #include <cstdlib>
 
-#define _ICAL_VERSION "2.0"
-
 using namespace KCal;
 
 /* Static helpers */
@@ -449,7 +447,7 @@ void ICalFormatImpl::writeIncidence( icalcomponent *parent,
     break;
   case Incidence::StatusX:
   {
-    icalproperty* p = icalproperty_new_status( ICAL_STATUS_X );
+    icalproperty *p = icalproperty_new_status( ICAL_STATUS_X );
     icalvalue_set_x( icalproperty_get_value( p ), incidence->statusStr().toUtf8() );
     icalcomponent_add_property( parent, p );
     break;
@@ -1733,7 +1731,7 @@ void ICalFormatImpl::readAlarm( icalcomponent *alarm,
                                 Incidence *incidence,
                                 ICalTimeZones *tzlist )
 {
-  Alarm* ialarm = incidence->newAlarm();
+  Alarm *ialarm = incidence->newAlarm();
   ialarm->setRepeatCount( 0 );
   ialarm->setEnabled( true );
 

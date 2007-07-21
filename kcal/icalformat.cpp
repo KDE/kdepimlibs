@@ -35,10 +35,17 @@
 
 #include "icalformat.h"
 #include "icalformat_p.h"
-
 #include "calendar.h"
 #include "calendarlocal.h"
 #include "icaltimezones.h"
+
+extern "C" {
+  #include <ical.h>
+  #include <icalss.h>
+  #include <icalparser.h>
+  #include <icalrestriction.h>
+  #include <icalmemory.h>
+}
 
 #include <QtCore/QString>
 #include <QtCore/QRegExp>
@@ -51,17 +58,7 @@
 #include <klocale.h>
 #include <ksavefile.h>
 
-extern "C" {
-  #include <ical.h>
-  #include <icalss.h>
-  #include <icalparser.h>
-  #include <icalrestriction.h>
-  #include <icalmemory.h>
-}
-
 #include <stdio.h>
-
-#define _ICAL_VERSION "2.0"
 
 using namespace KCal;
 

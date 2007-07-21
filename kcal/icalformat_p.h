@@ -56,6 +56,8 @@ namespace KCal {
 
 class ICalTimeZones;
 
+#define _ICAL_VERSION "2.0"
+
 /**
   @internal
 */
