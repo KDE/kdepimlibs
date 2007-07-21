@@ -21,10 +21,10 @@
 /**
   @file
   This file is part of the API for handling calendar data and
-  defines the CalFormat base class.
+  defines the CalFormat abstract base class.
 
   @brief
-  Base class providing an interface to various calendar formats.
+  An abstract base class that provides an interface to various calendar formats.
 
   @author Cornelius Schumacher \<schumacher@kde.org\>
 */
@@ -88,9 +88,23 @@ class KCAL_EXPORT CalFormat
       @param string is the QString containing the Calendar data.
 
       @return true if successful; false otherwise.
-      @see toString().
+      @see fromRawString(), toString().
     */
     virtual bool fromString( Calendar *calendar, const QString &string ) = 0;
+
+    /**
+      Parses a utf8 encoded string, returning the first iCal component
+      encountered in that string. This is an overload used for efficient
+      reading to avoid utf8 conversions, which are expensive when reading
+      from disk.
+
+      @param calendar is the Calendar to be loaded.
+      @param data is the QByteArray containing the Calendar data.
+
+      @return true if successful; false otherwise.
+      @see fromString(), toString().
+    */
+    virtual bool fromRawString( Calendar *calendar, const QByteArray &data ) = 0;
 
     /**
       Returns the calendar as a string.
@@ -98,7 +112,7 @@ class KCAL_EXPORT CalFormat
 
       @return a QString containing the Calendar data if successful;
       an empty string otherwise.
-      @see fromString().
+      @see fromString(), fromRawString().
     */
     virtual QString toString( Calendar *calendar ) = 0;
 

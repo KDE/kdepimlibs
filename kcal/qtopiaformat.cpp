@@ -315,6 +315,12 @@ bool QtopiaFormat::fromString( Calendar *, const QString & )
   return false;
 }
 
+bool QtopiaFormat::fromRawString( Calendar *, const QByteArray & )
+{
+  kDebug(5800) << "QtopiaFormat::fromRawString() not yet implemented." << endl;
+  return false;
+}
+
 QString QtopiaFormat::toString( Calendar * )
 {
   return QString();
