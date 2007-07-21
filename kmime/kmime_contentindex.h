@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -37,13 +37,17 @@
 #include "kmime_export.h"
 
 #include <QtCore/QList>
+#include <QtCore/QSharedDataPointer>
 #include <QtCore/QString>
+
 
 namespace KMime {
 
 /**
   @brief
   A class to uniquely identify message parts (Content) in a hierarchy.
+
+  This class is implicitly shared.
 
   Based on @ref RFC3501 section 6.4.5 and thus compatible with @acronym IMAP.
 */
@@ -62,6 +66,16 @@ class KMIME_EXPORT ContentIndex
       to @ref RFC3501 section 6.4.5.
     */
     explicit ContentIndex( const QString &index );
+
+    /**
+      Copy constructor.
+    */
+    ContentIndex( const ContentIndex &other );
+
+    /**
+      Destructor.
+    */
+    ~ContentIndex();
 
     /**
       Returns true if this index is non-empty (valid).
@@ -106,9 +120,15 @@ class KMIME_EXPORT ContentIndex
     */
     bool operator!=( const ContentIndex &index ) const;
 
+    /**
+      Assignment operator.
+    */
+    ContentIndex& operator=( const ContentIndex &other );
+
   private:
     //@cond PRIVATE
-    QList<unsigned int> mIndex;
+    class Private;
+    QSharedDataPointer<Private> d;
     //@endcond
 };
 

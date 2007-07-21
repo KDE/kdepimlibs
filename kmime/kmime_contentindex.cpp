@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -29,45 +29,68 @@
 
 #include "kmime_contentindex.h"
 
+#include <QSharedData>
 #include <QtCore/QStringList>
 
-KMime::ContentIndex::ContentIndex()
+using namespace KMime;
+
+class ContentIndex::Private : public QSharedData
+{
+  public:
+    Private() {}
+    Private( const Private &other ) : QSharedData( other )
+    {
+      index = other.index;
+    }
+
+    QList<unsigned int> index;
+};
+
+KMime::ContentIndex::ContentIndex() : d( new Private )
 {
 }
 
-KMime::ContentIndex::ContentIndex( const QString &index )
+KMime::ContentIndex::ContentIndex( const QString &index ) : d( new Private )
 {
   QStringList l = index.split( '.' );
   foreach ( QString s, l ) {
     bool ok;
     unsigned int i = s.toUInt( &ok );
     if ( !ok ) {
-      mIndex.clear();
+      d->index.clear();
       break;
     }
-    mIndex.append( i );
+    d->index.append( i );
   }
+}
+
+ContentIndex::ContentIndex(const ContentIndex & other) : d( other.d )
+{
+}
+
+ContentIndex::~ContentIndex()
+{
 }
 
 bool KMime::ContentIndex::isValid() const
 {
-  return !mIndex.isEmpty();
+  return !d->index.isEmpty();
 }
 
 unsigned int KMime::ContentIndex::pop()
 {
-  return mIndex.takeFirst();
+  return d->index.takeFirst();
 }
 
 void KMime::ContentIndex::push( unsigned int index )
 {
-  mIndex.prepend( index );
+  d->index.prepend( index );
 }
 
 QString KMime::ContentIndex::toString() const
 {
   QStringList l;
-  foreach ( unsigned int i, mIndex ) {
+  foreach ( unsigned int i, d->index ) {
     l.append( QString::number( i ) );
   }
   return l.join( "." );
@@ -75,10 +98,17 @@ QString KMime::ContentIndex::toString() const
 
 bool KMime::ContentIndex::operator ==( const ContentIndex &index ) const
 {
-  return mIndex == index.mIndex;
+  return d->index == index.d->index;
 }
 
 bool KMime::ContentIndex::operator !=( const ContentIndex &index ) const
 {
-  return mIndex != index.mIndex;
+  return d->index != index.d->index;
+}
+
+ContentIndex& ContentIndex::operator =(const ContentIndex & other)
+{
+  if ( this != &other )
+    d = other.d;
+  return *this;
 }
