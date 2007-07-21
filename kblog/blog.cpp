@@ -30,6 +30,7 @@
 
 #include <QtCore/QVariant>
 #include <QtCore/QList>
+#include <QtCore/QMutex>
 
 using namespace KBlog;
 
@@ -96,7 +97,6 @@ QString BlogPosting::postingId() const
 
 void BlogPosting::setPostingId( const QString &postingId )
 {
-  assignPostId( postingId );
   d->mPostingId = postingId;
 }
 
@@ -129,16 +129,6 @@ void BlogPosting::setCategories( const QStringList &categories )
 {
   d->mCategories = categories;
 }
-
-// TODO do we really need these?
-//QString BlogPosting::fingerprint() const
-//{
-//return d->mFingerprint;
-//}
-//void BlogPosting::setFingerprint( const QString &fp )
-//{
-//d->mFingerprint = fp;
-//}
 
 KDateTime BlogPosting::creationDateTime() const
 {
@@ -257,6 +247,7 @@ class APIBlog::Private
     QString mBlogId;
     QString mUsername;
     QString mPassword;
+    QMutex mLock;
     KUrl mUrl;
     KTimeZone mTimeZone;
     unsigned int mDownloadCount;

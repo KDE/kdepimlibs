@@ -201,40 +201,6 @@ class KBLOG_EXPORT BlogPosting
     void setModificationDateTime( const KDateTime &datetime );
 
     /**
-      Returns if the post has been deleted on the server. Note: This is
-      currently not set automatically on post.
-
-      @return deleted
-      @see setDeleted()
-    */
-    bool deleted() const; // TODO: set on post
-
-    /**
-      Sets when the posting has been deleted on the server.
-
-      @param deleted set to the status of the posting.
-      @see deleted()
-    */
-    void setDeleted( const bool deleted );
-
-    /**
-      Returns if the post has been uploaded to the server. Note: This ist
-      currently not set automatically on post.
-
-      @return uploaded
-      @see setUploaded()
-    */
-    bool uploaded() const; // TODO: set on post
-
-    /**
-      Sets when the posting has been uploaded to the server.
-
-      @param uploaded set the status of the posting.
-      @see uploaded()
-    */
-    void setUploaded( const bool uploaded );
-
-    /**
       Returns true if the date format is extended
     
       @see setUseExtendedDateFormat()
@@ -267,11 +233,6 @@ class KBLOG_EXPORT BlogPosting
       @see useExtendedTimeFormat()
      */
     void setUseExtendedTimeFormat( bool extended );
-
-  protected:
-    // Override this method to detect the new postId assigned when
-    // adding a new post
-    virtual void assignPostId( const QString &/*postId*/ ) {}
 
   private:
     class Private;
