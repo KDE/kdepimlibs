@@ -31,6 +31,8 @@
   @authors the KMime authors (see AUTHORS file)
 */
 
+#include "kmime_dateformatter.h"
+
 #include "config-kmime.h"
 
 #include <stdlib.h> // for abs()
@@ -40,8 +42,6 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kcalendarsystem.h>
-
-#include "kmime_dateformatter.h"
 
 using namespace KMime;
 

@@ -230,6 +230,7 @@ class KMIME_EXPORT Base
 
   private:
     Q_DECLARE_PRIVATE(Base)
+    Q_DISABLE_COPY(Base)
 };
 
 //

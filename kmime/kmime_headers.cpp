@@ -38,13 +38,13 @@
 */
 
 #include "kmime_headers.h"
+#include "kmime_headers_p.h"
 
 #include "kmime_util.h"
 #include "kmime_content.h"
 #include "kmime_codecs.h"
 #include "kmime_header_parsing.h"
 #include "kmime_warning.h"
-#include "kmime_headers_p.h"
 
 #include <QtCore/QTextCodec>
 #include <QtCore/QString>
