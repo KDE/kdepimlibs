@@ -22,30 +22,30 @@
 */
 
 #include "kmime_message.h"
+#include "kmime_message_p.h"
 
 using namespace KMime;
 
 namespace KMime {
 
-Message::Message()
-{
-  mSubject.setParent( this );
-  mDate.setParent( this );
-}
+Message::Message() : Content( new MessagePrivate( this ) ) {}
+
+Message::Message(MessagePrivate * d) : Content( d ) {}
 
 Message::~Message()
 {}
 
 void Message::parse()
 {
+  Q_D(Message);
   Content::parse();
 
   QByteArray raw;
-  if ( !( raw = rawHeader( mSubject.type() ) ).isEmpty() )
-    mSubject.from7BitString( raw );
+  if ( !( raw = rawHeader( d->subject.type() ) ).isEmpty() )
+    d->subject.from7BitString( raw );
 
-  if ( !( raw = rawHeader( mDate.type() ) ).isEmpty() )
-    mDate.from7BitString( raw );
+  if ( !( raw = rawHeader( d->date.type() ) ).isEmpty() )
+    d->date.from7BitString( raw );
 }
 
 QByteArray Message::assembleHeaders()
@@ -117,25 +117,27 @@ QByteArray Message::assembleHeaders()
 
 void Message::clear()
 {
-  mSubject.clear();
-  mDate.clear();
+  Q_D(Message);
+  d->subject.clear();
+  d->date.clear();
   Content::clear();
 }
 
 Headers::Base *Message::getHeaderByType( const char *type )
 {
+  Q_D(Message);
   if ( strcasecmp( "Subject", type ) == 0 ) {
-    if ( mSubject.isEmpty() ) {
+    if ( d->subject.isEmpty() ) {
       return 0;
     } else {
-      return &mSubject;
+      return &d->subject;
     }
   }
   else if ( strcasecmp("Date", type ) == 0 ){
-    if ( mDate.isEmpty() ) {
+    if ( d->date.isEmpty() ) {
       return 0;
     } else {
-      return &mDate;
+      return &d->date;
     }
   } else {
     return Content::getHeaderByType( type );
@@ -144,11 +146,12 @@ Headers::Base *Message::getHeaderByType( const char *type )
 
 void Message::setHeader( Headers::Base *h )
 {
+  Q_D(Message);
   bool del = true;
   if ( h->is( "Subject" ) ) {
-    mSubject.fromUnicodeString( h->asUnicodeString(), h->rfc2047Charset() );
+    d->subject.fromUnicodeString( h->asUnicodeString(), h->rfc2047Charset() );
   } else if ( h->is( "Date" ) ) {
-    mDate.setDateTime( (static_cast<Headers::Date*>( h))->dateTime() );
+    d->date.setDateTime( (static_cast<Headers::Date*>( h))->dateTime() );
   } else {
     del = false;
     Content::setHeader( h );
@@ -159,10 +162,11 @@ void Message::setHeader( Headers::Base *h )
 
 bool Message::removeHeader( const char *type )
 {
+  Q_D(Message);
   if ( strcasecmp( "Subject", type ) == 0 ) {
-    mSubject.clear();
+    d->subject.clear();
   } else if ( strcasecmp( "Date", type ) == 0 ) {
-    mDate.clear();
+    d->date.clear();
   } else {
     return Content::removeHeader( type );
   }
@@ -170,7 +174,23 @@ bool Message::removeHeader( const char *type )
   return true;
 }
 
-KMime::Headers::InReplyTo* Message::inReplyTo(bool create)
+Headers::Subject* Message::subject(bool create)
+{
+  Q_D(Message);
+  if ( !create && d->subject.isEmpty() )
+    return 0;
+  return &d->subject;
+}
+
+Headers::Date* Message::date( bool create )
+{
+  Q_D(Message);
+  if ( !create && d->date.isEmpty() )
+    return 0;
+  return &d->date;
+}
+
+Headers::InReplyTo* Message::inReplyTo(bool create)
 {
   KMime::Headers::InReplyTo *p = 0;
   return getHeaderInstance( p, create );
@@ -214,3 +234,4 @@ Content* Message::mainBodyPart(const QByteArray & type)
 }
 
 }
+

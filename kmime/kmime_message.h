@@ -30,6 +30,8 @@
 
 namespace KMime {
 
+class MessagePrivate;
+
 /**
   Represents a (email) message.
 */
@@ -60,19 +62,9 @@ class KMIME_EXPORT Message : public Content
         return getHeaderInstance( p, create );
       }
 
-    virtual KMime::Headers::Subject *subject( bool create=true )
-      {
-        if ( !create && mSubject.isEmpty() )
-          return 0;
-        return &mSubject;
-      }
+    virtual KMime::Headers::Subject *subject( bool create=true );
 
-    virtual KMime::Headers::Date *date( bool create=true )
-      {
-        if ( !create && mDate.isEmpty() )
-          return 0;
-        return &mDate;
-      }
+    virtual KMime::Headers::Date *date( bool create=true );
 
     virtual KMime::Headers::From *from( bool create=true )
       {
@@ -140,11 +132,12 @@ class KMIME_EXPORT Message : public Content
   protected:
     virtual QByteArray assembleHeaders();
 
+    // @cond PRIVATE
+    explicit Message( MessagePrivate *d );
+    // @endcond
+
   private:
-    //@cond PRIVATE
-    KMime::Headers::Subject mSubject;
-    KMime::Headers::Date mDate;
-    //@endcond
+    Q_DECLARE_PRIVATE( Message )
 
 }; // class Message
 

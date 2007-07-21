@@ -34,6 +34,7 @@
 */
 
 #include "kmime_content.h"
+#include "kmime_content_p.h"
 #include "kmime_parsers.h"
 
 #include <kcharsets.h>
@@ -50,48 +51,38 @@ using namespace KMime;
 
 namespace KMime {
 
-class ContentPrivate
-{
-  public:
-  QByteArray head;
-  QByteArray body;
-  Content::List contents;
-  QByteArray defaultCS;
-  bool forceDefaultCS;
-};
-
 Content::Content()
-  : d( new ContentPrivate )
+  : d_ptr( new ContentPrivate( this ) )
 {
-  d->forceDefaultCS = false;
-  d->defaultCS = cachedCharset( "ISO-8859-1" );
 }
 
 Content::Content( const QByteArray &h, const QByteArray &b )
-  : d( new ContentPrivate )
+  : d_ptr( new ContentPrivate( this ) )
 {
-  d->forceDefaultCS = false;
-  d->defaultCS = cachedCharset( "ISO-8859-1" );
-  d->head = h;
-  d->body = b;
+  d_ptr->head = h;
+  d_ptr->body = b;
+}
+
+Content::Content( ContentPrivate *d ) :
+    d_ptr( d )
+{
 }
 
 Content::~Content()
 {
-  qDeleteAll( d->contents );
-  d->contents.clear();
   qDeleteAll( h_eaders );
   h_eaders.clear();
-  delete d;
+  delete d_ptr;
 }
 
 bool Content::hasContent() const
 {
-  return !d->head.isEmpty() || !d->body.isEmpty() || !d->contents.isEmpty();
+  return !d_ptr->head.isEmpty() || !d_ptr->body.isEmpty() || !d_ptr->contents.isEmpty();
 }
 
 void Content::setContent( const QList<QByteArray> &l )
 {
+  Q_D(Content);
   //qDebug("Content::setContent( const QList<QByteArray> &l ) : start");
   d->head.clear();
   d->body.clear();
@@ -120,6 +111,7 @@ void Content::setContent( const QList<QByteArray> &l )
 
 void Content::setContent( const QByteArray &s )
 {
+  Q_D(Content);
   d->head.clear();
   d->body.clear();
 
@@ -140,27 +132,28 @@ void Content::setContent( const QByteArray &s )
 
 QByteArray Content::head() const
 {
-  return d->head;
+  return d_ptr->head;
 }
 
 void Content::setHead( const QByteArray &head )
 {
-  d->head = head;
+  d_ptr->head = head;
 }
 
 QByteArray Content::body() const
 {
-  return d->body;
+  return d_ptr->body;
 }
 
 void Content::setBody( const QByteArray &body )
 {
-  d->body = body;
+  d_ptr->body = body;
 }
 
 //parse the message, split multiple parts
 void Content::parse()
 {
+  Q_D(Content);
   //qDebug("void Content::parse() : start");
   qDeleteAll( h_eaders );
   h_eaders.clear();
@@ -323,7 +316,7 @@ void Content::parse()
 
 void Content::assemble()
 {
-  d->head = assembleHeaders();
+  d_ptr->head = assembleHeaders();
   foreach ( Content *c, contents() ) {
     c->assemble();
   }
@@ -362,6 +355,7 @@ QByteArray Content::assembleHeaders()
 
 void Content::clear()
 {
+  Q_D(Content);
   qDeleteAll( h_eaders );
   h_eaders.clear();
   qDeleteAll( d->contents );
@@ -372,6 +366,7 @@ void Content::clear()
 
 QByteArray Content::encodedContent( bool useCrLf )
 {
+  Q_D(Content);
   QByteArray e;
 
   // hack to convert articles with uuencoded or yencoded binaries into
@@ -467,14 +462,14 @@ QByteArray Content::decodedContent()
   QByteArray temp, ret;
   Headers::ContentTransferEncoding *ec=contentTransferEncoding();
   bool removeTrailingNewline=false;
-  int size = d->body.length();
+  int size = d_ptr->body.length();
 
   if ( size == 0 ) {
     return ret;
   }
 
   temp.resize( size );
-  memcpy( temp.data(), d->body.data(), size );
+  memcpy( temp.data(), d_ptr->body.data(), size );
 
   if ( ec->decoded() ) {
     ret = temp;
@@ -485,7 +480,7 @@ QByteArray Content::decodedContent()
       KCodecs::base64Decode( temp, ret );
       break;
     case Headers::CEquPr :
-      ret = KCodecs::quotedPrintableDecode( d->body );
+      ret = KCodecs::quotedPrintableDecode( d_ptr->body );
       ret.resize( ret.size() - 1 );  // remove null-char
       removeTrailingNewline = true;
       break;
@@ -519,7 +514,7 @@ QString Content::decodedText( bool trimText, bool removeTrailingNewlines )
   QTextCodec *codec =
     KGlobal::charsets()->codecForName( contentType()->charset(), ok );
 
-  QString s = codec->toUnicode( d->body.data(), d->body.length() );
+  QString s = codec->toUnicode( d_ptr->body.data(), d_ptr->body.length() );
 
   if ( trimText && removeTrailingNewlines ) {
     int i;
@@ -550,7 +545,7 @@ void Content::fromUnicodeString( const QString &s )
     contentType()->setCharset( chset );
   }
 
-  d->body = codec->fromUnicode( s );
+  d_ptr->body = codec->fromUnicode( s );
   contentTransferEncoding()->setDecoded( true ); //text is always decoded
 }
 
@@ -562,7 +557,7 @@ Content *Content::textContent()
   if ( contentType()->isText() ) {
     ret = this;
   } else {
-    foreach ( Content *c, d->contents ) {
+    foreach ( Content *c, d_ptr->contents ) {
       if ( ( ret = c->textContent() ) != 0 ) {
         break;
       }
@@ -574,10 +569,10 @@ Content *Content::textContent()
 Content::List Content::attachments( bool incAlternatives )
 {
   List attachments;
-  if ( d->contents.isEmpty() ) {
+  if ( d_ptr->contents.isEmpty() ) {
     attachments.append( this );
   } else {
-    foreach ( Content *c, d->contents ) {
+    foreach ( Content *c, d_ptr->contents ) {
       if ( !incAlternatives &&
            c->contentType()->category() == Headers::CCalternativePart ) {
         continue;
@@ -598,11 +593,12 @@ Content::List Content::attachments( bool incAlternatives )
 
 Content::List Content::contents() const
 {
-  return d->contents;
+  return d_ptr->contents;
 }
 
 void Content::addContent( Content *c, bool prepend )
 {
+  Q_D(Content);
   if ( d->contents.isEmpty() && !contentType()->isMultipart() ) {
     // this message is not multipart yet
 
@@ -651,6 +647,7 @@ void Content::addContent( Content *c, bool prepend )
 
 void Content::removeContent( Content *c, bool del )
 {
+  Q_D(Content);
   if ( d->contents.isEmpty() ) { // what the ..
     return;
   }
@@ -710,8 +707,8 @@ void Content::changeEncoding( Headers::contentEncoding e )
     }
 
     if ( enc->encoding() != e ) { // ok, we reencode the content using base64
-      d->body = KCodecs::base64Encode( decodedContent(), true );
-      d->body.append( "\n" );
+      d_ptr->body = KCodecs::base64Encode( decodedContent(), true );
+      d_ptr->body.append( "\n" );
       enc->setEncoding( e ); //set encoding
       enc->setDecoded( false );
     }
@@ -891,7 +888,7 @@ Headers::ContentDescription *Content::contentDescription( bool create )
 
 int Content::size()
 {
-  int ret = d->body.length();
+  int ret = d_ptr->body.length();
 
   if ( contentTransferEncoding()->encoding() == Headers::CEbase64 ) {
     return ret * 3 / 4; //base64 => 6 bit per byte
@@ -902,6 +899,7 @@ int Content::size()
 
 int Content::storageSize() const
 {
+  const Q_D(Content);
   int s = d->head.size();
 
   if ( d->contents.isEmpty() ) {
@@ -917,6 +915,7 @@ int Content::storageSize() const
 
 int Content::lineCount() const
 {
+  const Q_D(Content);
   int ret = 0;
   if ( !isTopLevel() ) {
     ret += d->head.count( '\n' );
@@ -932,11 +931,12 @@ int Content::lineCount() const
 
 QByteArray Content::rawHeader( const char *name ) const
 {
-  return KMime::extractHeader( d->head, name );
+  return KMime::extractHeader( d_ptr->head, name );
 }
 
 bool Content::decodeText()
 {
+  Q_D(Content);
   Headers::ContentTransferEncoding *enc = contentTransferEncoding();
 
   if ( !contentType()->isText() ) {
@@ -972,14 +972,14 @@ bool Content::decodeText()
 
 QByteArray Content::defaultCharset() const
 {
-  return d->defaultCS;
+  return d_ptr->defaultCS;
 }
 
 void Content::setDefaultCharset( const QByteArray &cs )
 {
-  d->defaultCS = KMime::cachedCharset( cs );
+  d_ptr->defaultCS = KMime::cachedCharset( cs );
 
-  foreach ( Content *c, d->contents ) {
+  foreach ( Content *c, d_ptr->contents ) {
     c->setDefaultCharset( cs );
   }
 
@@ -990,14 +990,14 @@ void Content::setDefaultCharset( const QByteArray &cs )
 
 bool Content::forceDefaultCharset() const
 {
-  return d->forceDefaultCS;
+  return d_ptr->forceDefaultCS;
 }
 
 void Content::setForceDefaultCharset( bool b )
 {
-  d->forceDefaultCS = b;
+  d_ptr->forceDefaultCS = b;
 
-  foreach ( Content *c, d->contents ) {
+  foreach ( Content *c, d_ptr->contents ) {
     c->setForceDefaultCharset( b );
   }
 
@@ -1013,8 +1013,8 @@ Content * KMime::Content::content( const ContentIndex &index ) const
   }
   ContentIndex idx = index;
   unsigned int i = idx.pop() - 1; // one-based -> zero-based index
-  if ( i < (unsigned int)d->contents.size() ) {
-    return d->contents[i]->content( idx );
+  if ( i < (unsigned int)d_ptr->contents.size() ) {
+    return d_ptr->contents[i]->content( idx );
   } else {
     return 0;
   }
@@ -1022,15 +1022,15 @@ Content * KMime::Content::content( const ContentIndex &index ) const
 
 ContentIndex KMime::Content::indexForContent( Content * content ) const
 {
-  int i = d->contents.indexOf( content );
+  int i = d_ptr->contents.indexOf( content );
   if ( i > 0 ) {
     ContentIndex ci;
     ci.push( i + 1 ); // zero-based -> one-based index
     return ci;
   }
   // not found, we need to search recursively
-  for ( int i = 0; i < d->contents.size(); ++i ) {
-    ContentIndex ci = d->contents[i]->indexForContent( content );
+  for ( int i = 0; i < d_ptr->contents.size(); ++i ) {
+    ContentIndex ci = d_ptr->contents[i]->indexForContent( content );
     if ( ci.isValid() ) {
       // found it
       ci.push( i + 1 ); // zero-based -> one-based index

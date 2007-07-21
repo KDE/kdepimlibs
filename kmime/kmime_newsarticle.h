@@ -28,12 +28,14 @@
 
 namespace KMime {
 
+class NewsArticlePrivate;
+
 class KMIME_EXPORT NewsArticle : public Message
 {
   public:
 
-    NewsArticle() : Message() { l_ines.setParent(this); }
-    ~NewsArticle() {}
+    NewsArticle();
+    ~NewsArticle();
 
     virtual void parse();
     virtual void clear();
@@ -67,13 +69,13 @@ class KMIME_EXPORT NewsArticle : public Message
         return getHeaderInstance( p, create );
       }
 
-    virtual KMime::Headers::Lines *lines( bool create=true )
-      { if ( !create && l_ines.isEmpty() ) return 0; return &l_ines; }
+    virtual KMime::Headers::Lines *lines( bool create=true );
 
   protected:
     virtual QByteArray assembleHeaders();
 
-    KMime::Headers::Lines l_ines;
+  private:
+    Q_DECLARE_PRIVATE( NewsArticle )
 
 }; // class NewsArticle
 

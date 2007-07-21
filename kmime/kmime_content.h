@@ -375,8 +375,13 @@ class KMIME_EXPORT Content
 
     Headers::Base::List h_eaders;
 
+    //@cond PRIVATE
+    ContentPrivate *d_ptr;
+    explicit Content( ContentPrivate *d );
+    //@endcond
+
   private:
-    ContentPrivate *const d;
+    Q_DECLARE_PRIVATE( Content )
 };
 
 // some compilers (for instance Compaq C++) need template inline functions

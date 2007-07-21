@@ -20,20 +20,40 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+
 #include "kmime_newsarticle.h"
+#include "kmime_message_p.h"
 
 using namespace KMime;
 
 namespace KMime {
 
+class NewsArticlePrivate : public MessagePrivate
+{
+  public:
+    NewsArticlePrivate( NewsArticle *q ) : MessagePrivate( q )
+    {
+      lines.setParent( q );
+    }
+
+    KMime::Headers::Lines lines;
+
+    Q_DECLARE_PUBLIC(NewsArticle)
+};
+
+NewsArticle::NewsArticle() : Message( new NewsArticlePrivate( this ) ) {}
+
+NewsArticle::~NewsArticle() {}
+
 void NewsArticle::parse()
 {
+  Q_D(NewsArticle);
   Message::parse();
 
   QByteArray raw;
 
-  if ( !( raw = rawHeader( l_ines.type() ) ).isEmpty() )
-    l_ines.from7BitString( raw );
+  if ( !( raw = rawHeader( d->lines.type() ) ).isEmpty() )
+    d->lines.from7BitString( raw );
 }
 
 QByteArray NewsArticle::assembleHeaders()
@@ -71,17 +91,19 @@ QByteArray NewsArticle::assembleHeaders()
 
 void NewsArticle::clear()
 {
-  l_ines.clear();
+  Q_D(NewsArticle);
+  d->lines.clear();
   Message::clear();
 }
 
 Headers::Base * NewsArticle::getHeaderByType( const char *type )
 {
+  Q_D(NewsArticle);
   if ( strcasecmp( "Lines", type ) == 0 ) {
-    if ( l_ines.isEmpty() ) {
+    if ( d->lines.isEmpty() ) {
       return 0;
     } else {
-      return &l_ines;
+      return &d->lines;
     }
   } else {
     return Message::getHeaderByType( type );
@@ -90,9 +112,10 @@ Headers::Base * NewsArticle::getHeaderByType( const char *type )
 
 void NewsArticle::setHeader( Headers::Base *h )
 {
+  Q_D(NewsArticle);
   bool del = true;
   if ( h->is( "Lines" ) ) {
-    l_ines.setNumberOfLines( (static_cast<Headers::Lines*>(h))->numberOfLines() );
+    d->lines.setNumberOfLines( (static_cast<Headers::Lines*>(h))->numberOfLines() );
   } else {
     del = false;
     Message::setHeader( h );
@@ -103,13 +126,22 @@ void NewsArticle::setHeader( Headers::Base *h )
 
 bool NewsArticle::removeHeader( const char *type )
 {
+  Q_D(NewsArticle);
   if ( strcasecmp( "Lines", type ) == 0 ) {
-    l_ines.clear();
+    d->lines.clear();
   } else {
     return Message::removeHeader( type );
   }
 
   return true;
+}
+
+Headers::Lines* NewsArticle::lines(bool create)
+{
+  Q_D(NewsArticle);
+  if ( !create && d->lines.isEmpty() )
+    return 0;
+  return &d->lines;
 }
 
 } // namespace KMime
