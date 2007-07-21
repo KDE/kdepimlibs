@@ -80,7 +80,7 @@ void TestGData::testValidity()
   b->setUsername( "christian_weilbach@web.de" );
   b->setPassword( "Wo ist Hans?" );
   b->setBlogId( "4662848212819772532" );
-  b->setTimeZone( KTimeZone() );
+  b->setTimeZone( KTimeZone( "UTC" ) );
   b->setDownloadCount( DOWNLOADCOUNT );
   QVERIFY( b->url() == KUrl( "http://blogger2test.blogspot.com" ) );
   QVERIFY( b->blogId() == "4662848212819772532" );

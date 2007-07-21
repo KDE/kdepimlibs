@@ -83,7 +83,7 @@ void TestMetaWeblog::testValidity()
   b->setUsername( "socapitest" );
   b->setPassword( "k0nt4ctbl0g" );
   b->setBlogId( "1" );
-  b->setTimeZone( KTimeZone() );
+  b->setTimeZone( KTimeZone( "UTC" ) );
   b->setDownloadCount( DOWNLOADCOUNT );
   QVERIFY( b->url() == KUrl( "http://soctest.wordpress.com/xmlrpc.php" ) );
   QVERIFY( b->blogId() == "1" );
