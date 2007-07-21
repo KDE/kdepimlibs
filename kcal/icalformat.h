@@ -86,19 +86,19 @@ class KCAL_EXPORT ICalFormat : public CalFormat
       Parse string and populate calendar with that information.
 
       @param calendar Calendar object to be filled.
-      @param text is a QString containing the data to be parsed.
+      @param string is a QString containing the data to be parsed.
 
       @return true if the parsing was successful; false otherwise.
     */
-    bool fromString( Calendar *calendar, const QString &text );
+    bool fromString( Calendar *calendar, const QString &string);
 
     /**
       Parses a string, returning the first iCal component as an Incidence.
       @return non-zero pointer if the parsing was successful; 0 otherwise.
 
-      @param text is a QString containing the data to be parsed.
+      @param string is a QString containing the data to be parsed.
     */
-    Incidence *fromString( const QString &text );
+    Incidence *fromString( const QString &string );
 
     /**
       Converts Calendar information to a QString.
@@ -174,7 +174,7 @@ class KCAL_EXPORT ICalFormat : public CalFormat
       reading to avoid utf8 conversions, which are expensive when reading
       from disk.
     */
-    bool fromRawString( Calendar *calendar, const QByteArray &s );
+    bool fromRawString( Calendar *calendar, const QByteArray &data );
 
   protected:
     /**
