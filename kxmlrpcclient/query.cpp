@@ -97,7 +97,6 @@ class Result
 
 } // namespace KXmlRpcClient
 
-
 KXmlRpc::Result::Result()
 {
 }
@@ -140,8 +139,7 @@ class Query::Private
     Result parseMessageResponse( const QDomDocument &doc ) const;
     Result parseFaultResponse( const QDomDocument &doc ) const;
 
-    QString markupCall( const QString &method, const QList<QVariant> &args )
-        const;
+    QString markupCall( const QString &method, const QList<QVariant> &args ) const;
     QString marshal( const QVariant &value ) const;
     QVariant demarshal( const QDomElement &element ) const;
 
@@ -223,27 +221,23 @@ QString Query::Private::marshal( const QVariant &arg ) const
   switch ( arg.type() ) {
 
     case QVariant::String:
-      return "<value><string><![CDATA[" + arg.toString() +
-        "]]></string></value>\r\n";
+      return "<value><string><![CDATA[" + arg.toString() + "]]></string></value>\r\n";
     case QVariant::StringList:
       {
-        QStringList data=arg.toStringList();
+        QStringList data = arg.toStringList();
         QStringListIterator dataIterator(data);
         QString markup;
-        markup+="<value><array><data>";
+        markup += "<value><array><data>";
         while ( dataIterator.hasNext() ) {
-          markup+="<string><![CDATA[" + dataIterator.next()
-              + "]]></string>\r\n";
+          markup += "<string><![CDATA[" + dataIterator.next() + "]]></string>\r\n";
         }
-        markup+="</data></array></value>";
+        markup += "</data></array></value>";
         return markup;
       }
     case QVariant::Int:
-      return "<value><int>" + QString::number( arg.toInt() )
-          + "</int></value>\r\n";
+      return "<value><int>" + QString::number( arg.toInt() ) + "</int></value>\r\n";
     case QVariant::Double:
-      return "<value><double>" + QString::number( arg.toDouble() )
-          + "</double></value>\r\n";
+      return "<value><double>" + QString::number( arg.toDouble() ) + "</double></value>\r\n";
     case QVariant::Bool:
       {
         QString markup = "<value><boolean>";
@@ -252,24 +246,25 @@ QString Query::Private::marshal( const QVariant &arg ) const
         return markup;
       }
     case QVariant::ByteArray:
-      return "<value><base64>" + arg.toByteArray().toBase64()
-          + "</base64></value>\r\n";
+      return "<value><base64>" + arg.toByteArray().toBase64() + "</base64></value>\r\n";
     case QVariant::DateTime:
       {
         QString date;
         QString time;
 
-	if ( mTimeFormatExtended )
-	  time= arg.toDateTime().time().toString( Qt::ISODate );
-	else
-	  time= arg.toDateTime().time().toString( "hhmmss");
+        if ( mTimeFormatExtended ) {
+          time = arg.toDateTime().time().toString( Qt::ISODate );
+        } else {
+          time = arg.toDateTime().time().toString( "hhmmss" );
+        }
 
-	if ( mDateFormatExtended )
-	  date= arg.toDateTime().date().toString( Qt::ISODate );
-	else
-	  date= arg.toDateTime().date().toString( "yyyyMMdd");
+        if ( mDateFormatExtended ) {
+          date = arg.toDateTime().date().toString( Qt::ISODate );
+        } else {
+          date = arg.toDateTime().date().toString( "yyyyMMdd" );
+        }
 
-	 return "<value><dateTime.iso8601>" + date + "T" + time + "</dateTime.iso8601></value>\r\n";
+        return "<value><dateTime.iso8601>" + date + 'T' + time + "</dateTime.iso8601></value>\r\n";
       }
     case QVariant::List:
       {
@@ -300,7 +295,7 @@ QString Query::Private::marshal( const QVariant &arg ) const
       }
     default:
       kWarning() << "Failed to marshal unknown variant type: " << arg.type()
-          << endl;
+                 << endl;
   };
 
   return QString();
@@ -333,8 +328,8 @@ QVariant Query::Private::demarshal( const QDomElement &element ) const
     QString dateText = typeElement.text();
     // Test for broken use of Basic ISO8601 date and extended ISO8601 time
     if ( 17 <= dateText.length() && dateText.length() <= 18 &&
-         dateText.at(4) != '-' && dateText.at(11) == ':') {
-        if (dateText.endsWith('Z')) {
+         dateText.at( 4 ) != '-' && dateText.at( 11 ) == ':' ) {
+        if ( dateText.endsWith( 'Z' ) ) {
           date = QDateTime::fromString( dateText, "yyyyMMddTHH:mm:ssZ" );
         } else {
           date = QDateTime::fromString( dateText, "yyyyMMddTHH:mm:ss" );
@@ -423,21 +418,19 @@ void Query::call( const QString &server,
                   const QString &method,
                   const QList<QVariant> &args,
                   const QMap<QString, QString> &jobMetaData,
-		  const bool dateFormatExtended,
-		  const bool timeFormatExtended)
+                  const bool dateFormatExtended,
+                  const bool timeFormatExtended )
 {
   d->mDateFormatExtended=dateFormatExtended;
   d->mTimeFormatExtended=timeFormatExtended;
   const QString xmlMarkup = d->markupCall( method, args );
-  
+
   QMap<QString, QString>::const_iterator mapIter;
   QByteArray postData;
   QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
 
-
-
-  KIO::TransferJob *job = KIO::http_post( KUrl( server ), postData, false);
+  KIO::TransferJob *job = KIO::http_post( KUrl( server ), postData, false );
 
   if ( !job ) {
     kWarning() << "Unable to create KIO job for " << server << endl;
@@ -447,7 +440,7 @@ void Query::call( const QString &server,
   job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
   job->addMetaData( "ConnectTimeout", "50" );
 
-  for (mapIter = jobMetaData.begin(); mapIter != jobMetaData.end(); mapIter++) {
+  for ( mapIter = jobMetaData.begin(); mapIter != jobMetaData.end(); mapIter++ ) {
     job->addMetaData( mapIter.key(), mapIter.value() );
   }
 
