@@ -634,9 +634,23 @@ void HeaderTest::testControlHeader()
   delete h;
 }
 
+void HeaderTest::testReturnPath()
+{
+  ReturnPath *h;
+
+  h = new ReturnPath();
+  QVERIFY( h->isEmpty() );
+  QVERIFY( h->as7BitString().isEmpty() );
+
+  h->from7BitString( "<foo@bar>" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->as7BitString( true ), QByteArray( "Return-Path: <foo@bar>" ) );
+
+  delete h;
+}
+
 void HeaderTest::noAbstractHeaders()
 {
-  ReturnPath* h1 = new ReturnPath(); delete h1;
   From* h2 = new From(); delete h2;
   Sender* h3 = new Sender(); delete h3;
   To* h4 = new To(); delete h4;

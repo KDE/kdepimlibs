@@ -46,6 +46,7 @@ struct KMIME_EXPORT QStringOrQPair {
 
 struct KMIME_EXPORT AddrSpec {
   QString asString() const;
+  bool isEmpty() const;
   QString localPart;
   QString domain;
 };

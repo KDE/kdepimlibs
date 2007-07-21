@@ -67,6 +67,11 @@ QString AddrSpec::asString() const
   }
 }
 
+bool AddrSpec::isEmpty() const
+{
+  return localPart.isEmpty() && domain.isEmpty();
+}
+
 QByteArray Mailbox::address() const
 {
   return mAddrSpec.asString().toLatin1();
@@ -114,7 +119,7 @@ void Mailbox::setNameFrom7Bit( const QByteArray &name,
 
 bool Mailbox::hasAddress() const
 {
-  return !mAddrSpec.asString().isEmpty();
+  return !mAddrSpec.isEmpty();
 }
 
 bool Mailbox::hasName() const

@@ -59,6 +59,8 @@ class Content;
 
 namespace Headers {
 
+class BasePrivate;
+
 enum contentCategory {
   CCsingle,
   CCcontainer,
@@ -90,11 +92,14 @@ static const QByteArray Latin1( "ISO-8859-1" );
 // internal macro to generate default constructors
 #define kmime_mk_trivial_ctor( subclass )                               \
   public:                                                               \
-    subclass();                                                         \
-    subclass( Content *parent );                                        \
+    explicit subclass( Content *parent = 0 );                           \
     subclass( Content *parent, const QByteArray &s );                   \
     subclass( Content *parent, const QString &s, const QByteArray &charset ); \
     ~subclass();
+
+#define kmime_mk_dptr_ctor( subclass ) \
+  protected: \
+    explicit subclass( subclass##Private *d, KMime::Content *parent = 0 );
 
 #define kmime_mk_trivial_ctor_with_name( subclass )     \
   kmime_mk_trivial_ctor( subclass )                     \
@@ -118,14 +123,9 @@ class KMIME_EXPORT Base
     typedef QList<KMime::Headers::Base*> List;
 
     /**
-      Creates an empty header.
-    */
-    Base();
-
-    /**
       Creates an empty header with a parent-content.
     */
-    explicit Base( KMime::Content *parent );
+    explicit Base( KMime::Content *parent = 0 );
 
     /**
       Destructor.
@@ -223,11 +223,13 @@ class KMIME_EXPORT Base
     */
     QByteArray typeIntro() const;
 
-    // TODO: rename and preferably make it private somehow
-    QByteArray e_ncCS;
+    //@cond PRIVATE
+    BasePrivate *d_ptr;
+    kmime_mk_dptr_ctor( Base )
+    //@endcond
 
   private:
-    KMime::Content *mParent;
+    Q_DECLARE_PRIVATE(Base)
 };
 
 //
@@ -237,6 +239,8 @@ class KMIME_EXPORT Base
 //
 
 namespace Generics {
+
+class UnstructuredPrivate;
 
 /**
   Abstract base class for unstructured header fields
@@ -253,9 +257,11 @@ namespace Generics {
 
 class KMIME_EXPORT Unstructured : public Base
 {
+  //@cond PRIVATE
+  kmime_mk_dptr_ctor( Unstructured )
+  //@endcond
   public:
-    Unstructured();
-    Unstructured( Content *p );
+    explicit Unstructured( Content *p = 0 );
     Unstructured( Content *p, const QByteArray &s );
     Unstructured( Content *p, const QString &s, const QByteArray &cs );
     ~Unstructured();
@@ -272,8 +278,11 @@ class KMIME_EXPORT Unstructured : public Base
     virtual bool isEmpty() const;
 
   private:
-    QString d_ecoded;
+    Q_DECLARE_PRIVATE(Unstructured)
 };
+
+
+class StructuredPrivate;
 
 /**
   @brief
@@ -308,8 +317,7 @@ class KMIME_EXPORT Unstructured : public Base
 class KMIME_EXPORT Structured : public Base
 {
   public:
-    Structured();
-    Structured( Content *p );
+    explicit Structured( Content *p = 0 );
     Structured( Content *p, const QByteArray &s );
     Structured( Content *p, const QString &s, const QByteArray &cs );
     ~Structured();
@@ -329,7 +337,17 @@ class KMIME_EXPORT Structured : public Base
     */
     virtual bool parse( const char* &scursor, const char *const send,
                         bool isCRLF = false ) = 0;
+
+    //@cond PRIVATE
+    kmime_mk_dptr_ctor( Structured )
+    //@endcond
+
+  private:
+    Q_DECLARE_PRIVATE(Structured)
 };
+
+
+class AddressPrivate;
 
 /**
   Base class for all address related headers.
@@ -337,12 +355,20 @@ class KMIME_EXPORT Structured : public Base
 class KMIME_EXPORT Address : public Structured
 {
   public:
-    Address();
-    Address( Content *p );
+    explicit Address( Content *p = 0 );
     Address( Content *p, const QByteArray &s );
     Address( Content *p, const QString &s, const QByteArray &cs );
     ~Address();
+  protected:
+    //@cond PRIVATE
+    kmime_mk_dptr_ctor( Address )
+    //@endcond
+  private:
+    Q_DECLARE_PRIVATE(Address)
 };
+
+
+class MailboxListPrivate;
 
 /**
   Base class for headers that deal with (possibly multiple)
@@ -354,6 +380,7 @@ class KMIME_EXPORT MailboxList : public Address
 {
   //@cond PRIVATE
   kmime_mk_trivial_ctor( MailboxList )
+  kmime_mk_dptr_ctor( MailboxList )
   //@endcond
   public:
     virtual QByteArray as7BitString( bool withHeaderType = true ) const;
@@ -406,9 +433,12 @@ class KMIME_EXPORT MailboxList : public Address
   protected:
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
-    /** The list of mailboxes */
-    QList<Types::Mailbox> mMailboxList;
+  private:
+    Q_DECLARE_PRIVATE(MailboxList)
 };
+
+
+class SingleMailboxPrivate;
 
 /**
    Base class for headers that deal with exactly one mailbox
@@ -421,7 +451,12 @@ class KMIME_EXPORT SingleMailbox : public MailboxList
   //@endcond
   protected:
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
+  private:
+    Q_DECLARE_PRIVATE(SingleMailbox)
 };
+
+
+class AddressListPrivate;
 
 /**
   Base class for headers that deal with (possibly multiple)
@@ -438,6 +473,7 @@ class KMIME_EXPORT AddressList : public Address
 {
   //@cond PRIVATE
   kmime_mk_trivial_ctor( AddressList )
+  kmime_mk_dptr_ctor( AddressList )
   //@endcond
   public:
     virtual QByteArray as7BitString( bool withHeaderType = true ) const;
@@ -487,9 +523,12 @@ class KMIME_EXPORT AddressList : public Address
   protected:
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
-    /** The list of addresses */
-    QList<Types::Address> mAddressList;
+  private:
+    Q_DECLARE_PRIVATE(AddressList)
 };
+
+
+class IdentPrivate;
 
 /**
   Base class for headers which deal with a list of msg-id's.
@@ -500,6 +539,7 @@ class KMIME_EXPORT Ident : public Address
 {
   //@cond PRIVATE
   kmime_mk_trivial_ctor( Ident )
+  kmime_mk_dptr_ctor( Ident )
   //@endcond
   public:
     virtual QByteArray as7BitString( bool withHeaderType = true ) const;
@@ -523,9 +563,12 @@ class KMIME_EXPORT Ident : public Address
   protected:
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
-    /** The list of msg-id's */
-    QList<Types::AddrSpec> mMsgIdList;
+  private:
+    Q_DECLARE_PRIVATE(Ident)
 };
+
+
+class SingleIdentPrivate;
 
 /**
   Base class for headers which deal with a single msg-id.
@@ -552,7 +595,13 @@ class KMIME_EXPORT SingleIdent : public Ident
 
   protected:
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
+
+  private:
+    Q_DECLARE_PRIVATE(SingleIdent)
 };
+
+
+class TokenPrivate;
 
 /**
   Base class for headers which deal with a single atom.
@@ -561,6 +610,7 @@ class KMIME_EXPORT Token : public Structured
 {
   //@cond PRIVATE
   kmime_mk_trivial_ctor( Token )
+  kmime_mk_dptr_ctor( Token )
   //@endcond
   public:
     virtual QByteArray as7BitString( bool withHeaderType = true ) const;
@@ -581,8 +631,11 @@ class KMIME_EXPORT Token : public Structured
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    QByteArray mToken;
+    Q_DECLARE_PRIVATE(Token)
 };
+
+
+class PhraseListPrivate;
 
 /**
   Base class for headers containing a list of phrases.
@@ -607,8 +660,11 @@ class KMIME_EXPORT PhraseList : public Structured
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    QStringList mPhraseList;
+    Q_DECLARE_PRIVATE(PhraseList)
 };
+
+
+class DotAtomPrivate;
 
 /**
   Base class for headers containing a dot atom.
@@ -628,8 +684,11 @@ class KMIME_EXPORT DotAtom : public Structured
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    QString mDotAtom;
+    Q_DECLARE_PRIVATE(DotAtom)
 };
+
+
+class ParametrizedPrivate;
 
 /**
   Base class for headers containing a parameter list such as "Content-Type".
@@ -638,6 +697,7 @@ class KMIME_EXPORT Parametrized : public Structured
 {
   //@cond PRIVATE
   kmime_mk_trivial_ctor( Parametrized )
+  kmime_mk_dptr_ctor( Parametrized )
   //@endcond
   public:
     virtual QByteArray as7BitString( bool withHeaderType = true ) const;
@@ -662,7 +722,7 @@ class KMIME_EXPORT Parametrized : public Structured
     virtual bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    QMap<QString,QString> mParameterHash;
+    Q_DECLARE_PRIVATE(Parametrized)
 };
 
 } // namespace Generics
@@ -672,6 +732,8 @@ class KMIME_EXPORT Parametrized : public Structured
 // INCOMPATIBLE, GSTRUCTURED-BASED FIELDS:
 //
 //
+
+class ReturnPathPrivate;
 
 /**
   Represents the Return-Path header field.
@@ -692,7 +754,7 @@ class KMIME_EXPORT ReturnPath : public Generics::Address
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    Types::Mailbox mMailbox;
+    Q_DECLARE_PRIVATE(ReturnPath)
 };
 
 // Address et al.:
@@ -758,6 +820,9 @@ class KMIME_EXPORT ReplyTo : public Generics::AddressList
   kmime_mk_trivial_ctor_with_name( ReplyTo )
 };
 
+
+class MailCopiesToPrivate;
+
 /**
   Represents a "Mail-Copies-To" header.
 
@@ -799,9 +864,11 @@ class KMIME_EXPORT MailCopiesTo : public Generics::AddressList
     virtual bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    bool mAlwaysCopy;
-    bool mNeverCopy;
+    Q_DECLARE_PRIVATE(MailCopiesTo)
 };
+
+
+class ContentTransferEncodingPrivate;
 
 /**
   Represents a "Content-Transfer-Encoding" header.
@@ -828,7 +895,7 @@ class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
 
     bool decoded() const;
 
-    void setDecoded( bool d=true );
+    void setDecoded( bool decoded = true );
 
     bool needToEncode() const;
 
@@ -836,8 +903,7 @@ class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
     virtual bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    contentEncoding c_te;
-    bool d_ecoded;
+    Q_DECLARE_PRIVATE(ContentTransferEncoding)
 };
 
 /**
@@ -917,6 +983,9 @@ class KMIME_EXPORT References : public Generics::Ident
 {
   kmime_mk_trivial_ctor_with_name( References )
 };
+
+
+class ContentTypePrivate;
 
 /**
   Represents a "Content-Type" header.
@@ -1064,10 +1133,11 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    contentCategory c_ategory;
-    QByteArray mMimeType;
-    QByteArray mMimeSubType;
+    Q_DECLARE_PRIVATE(ContentType)
 };
+
+
+class ContentDispositionPrivate;
 
 /**
   Represents a "Content-Disposition" header.
@@ -1091,9 +1161,9 @@ class KMIME_EXPORT ContentDisposition : public Generics::Parametrized
 
     /**
       Sets the content disposition.
-      @param d The new content disposition.
+      @param disp The new content disposition.
     */
-    void setDisposition( contentDisposition d );
+    void setDisposition( contentDisposition disp );
 
     /**
       Returns the suggested filename for the associated MIME part.
@@ -1114,7 +1184,7 @@ class KMIME_EXPORT ContentDisposition : public Generics::Parametrized
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    contentDisposition mDisposition;
+    Q_DECLARE_PRIVATE( ContentDisposition )
 };
 
 //
@@ -1122,6 +1192,9 @@ class KMIME_EXPORT ContentDisposition : public Generics::Parametrized
 // COMPATIBLE GUNSTRUCTURED-BASED FIELDS:
 //
 //
+
+
+class GenericPrivate;
 
 /**
   Represents an arbitrary header, that can contain any header-field.
@@ -1147,7 +1220,7 @@ class KMIME_EXPORT Generic : public Generics::Unstructured
     void setType( const char *type );
 
   private:
-    char *t_ype;
+    Q_DECLARE_PRIVATE( Generic )
 };
 
 /**
@@ -1179,6 +1252,9 @@ class KMIME_EXPORT ContentDescription : public Generics::Unstructured
 {
   kmime_mk_trivial_ctor_with_name( ContentDescription )
 };
+
+
+class ControlPrivate;
 
 /**
   Represents a "Control" header.
@@ -1221,9 +1297,11 @@ class KMIME_EXPORT Control : public Generics::Structured
     bool parse( const char* &scursor, const char *const send, bool isCRLF = false );
 
   private:
-    QByteArray mName;
-    QByteArray mParameter;
+    Q_DECLARE_PRIVATE(Control)
 };
+
+
+class DatePrivate;
 
 /**
   Represents a "Date" header.
@@ -1259,8 +1337,11 @@ class KMIME_EXPORT Date : public Generics::Structured
     bool parse( const char* &scursor, const char *const send, bool isCRLF = false );
 
   private:
-    KDateTime mDateTime;
+    Q_DECLARE_PRIVATE( Date )
 };
+
+
+class NewsgroupsPrivate;
 
 /**
   Represents a "Newsgroups" header.
@@ -1299,7 +1380,7 @@ class KMIME_EXPORT Newsgroups : public Generics::Structured
     bool parse( const char* &scursor, const char *const send, bool isCRLF = false );
 
   private:
-    QList<QByteArray> mGroups;
+    Q_DECLARE_PRIVATE( Newsgroups )
 };
 
 /**
@@ -1313,6 +1394,9 @@ class KMIME_EXPORT FollowUpTo : public Newsgroups
   kmime_mk_trivial_ctor_with_name( FollowUpTo )
   //@endcond
 };
+
+
+class LinesPrivate;
 
 /**
   Represents a "Lines" header.
@@ -1344,7 +1428,7 @@ class KMIME_EXPORT Lines : public Generics::Structured
     bool parse( const char* &scursor, const char *const send, bool isCRLF = false );
 
   private:
-    int mLines;
+    Q_DECLARE_PRIVATE( Lines )
 };
 
 /**
@@ -1361,6 +1445,7 @@ class KMIME_EXPORT UserAgent : public Generics::Unstructured
 
 // undefine code generation macros again
 #undef kmime_mk_trivial_ctor
+#undef kmime_mk_dptr_ctor
 #undef kmime_mk_trivial_ctor_with_name
 
 #endif // __KMIME_HEADERS_H__
