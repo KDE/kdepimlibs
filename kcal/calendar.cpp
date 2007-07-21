@@ -1020,13 +1020,15 @@ Incidence::List Calendar::mergeIncidenceList( const Event::List &events,
   return incidences;
 }
 
-bool Calendar::beginChange( Incidence * )
+bool Calendar::beginChange( Incidence *incidence )
 {
+  Q_UNUSED( incidence );
   return true;
 }
 
-bool Calendar::endChange( Incidence * )
+bool Calendar::endChange( Incidence *incidence )
 {
+  Q_UNUSED( incidence );
   return true;
 }
 
