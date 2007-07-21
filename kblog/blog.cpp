@@ -150,16 +150,6 @@ void BlogPosting::setModificationDateTime( const KDateTime &datetime )
   d->mModificationDateTime = datetime;
 }
 
-bool BlogPosting::uploaded() const
-{
-  return d->mUploaded;
-}
-
-void BlogPosting::setUploaded( const bool uploaded )
-{
-  d->mUploaded = uploaded;
-}
-
 bool BlogPosting::useExtendedDateFormat() const
 {
   return d->mDateFormatExtended;
@@ -178,16 +168,6 @@ bool BlogPosting::useExtendedTimeFormat() const
 void BlogPosting::setUseExtendedTimeFormat( bool extended )
 {
   d->mDateFormatExtended=extended;
-}
-
-bool BlogPosting::deleted() const
-{
-  return d->mDeleted;
-}
-
-void BlogPosting::setDeleted( const bool deleted )
-{
-  d->mDeleted =  deleted;
 }
 
 //@cond PRIVATE
@@ -329,7 +309,6 @@ int APIBlog::downloadCount() const
 void APIBlog::removePosting( KBlog::BlogPosting *posting )
 {
   removePosting( posting->postingId() );
-  posting->setDeleted( true );
 }
 
 void APIBlog::fetchPosting( KBlog::BlogPosting *posting )
