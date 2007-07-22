@@ -1,6 +1,6 @@
 /*
   This file is part of the kcal library.
-  Copyright (c) 2006 Allen Winter <winter@kde.org>
+  Copyright (c) 2006-2007 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -18,8 +18,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef EVENTTEST_H
-#define EVENTTEST_H
+#ifndef TESTEVENT_H
+#define TESTEVENT_H
 
 #include <QtCore/QObject>
 
@@ -30,6 +30,7 @@ class EventTest : public QObject
     void testValidity();
     void testCompare();
     void testClone();
+    void testCopy();
 };
 
 #endif

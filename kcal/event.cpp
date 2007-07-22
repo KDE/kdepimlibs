@@ -23,6 +23,9 @@
   This file is part of the API for handling calendar data and
   defines the Event class.
 
+  @brief
+  This class provides an Event in the sense of RFC2445.
+
   @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 
@@ -34,21 +37,43 @@
 
 using namespace KCal;
 
-Event::Event() :
-  mHasEndDate( false ), mTransparency( Opaque ), d( 0 )
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
+//@cond PRIVATE
+class KCal::Event::Private
+{
+  public:
+    Private()
+      : mHasEndDate( false ),
+        mTransparency( Opaque )
+    {}
+    Private( const KCal::Event::Private &other )
+      : mDtEnd( other.mDtEnd ),
+        mHasEndDate( other.mHasEndDate ),
+        mTransparency( other.mTransparency )
+    {}
+
+    KDateTime mDtEnd;
+    bool mHasEndDate;
+    Transparency mTransparency;
+};
+//@endcond
+
+Event::Event()
+  : d( new KCal::Event::Private )
 {
 }
 
-Event::Event( const Event &e ) :
-  Incidence( e ), d( 0 )
+Event::Event( const Event &other )
+  : Incidence( other ), d( new KCal::Event::Private( *other.d ) )
 {
-  mDtEnd = e.mDtEnd;
-  mHasEndDate = e.mHasEndDate;
-  mTransparency = e.mTransparency;
 }
 
 Event::~Event()
 {
+  delete d;
 }
 
 Event *Event::clone()
@@ -56,13 +81,18 @@ Event *Event::clone()
   return new Event( *this );
 }
 
-bool Event::operator==( const Event &e2 ) const
+bool Event::operator==( const Event &other ) const
 {
   return
-    static_cast<const Incidence&>(*this) == static_cast<const Incidence&>(e2) &&
-    dtEnd() == e2.dtEnd() &&
-    hasEndDate() == e2.hasEndDate() &&
-    transparency() == e2.transparency();
+    static_cast<const Incidence &>( *this ) == static_cast<const Incidence &>( other ) &&
+    dtEnd() == other.dtEnd() &&
+    hasEndDate() == other.hasEndDate() &&
+    transparency() == other.transparency();
+}
+
+QByteArray Event::type() const
+{
+  return "Event";
 }
 
 void Event::setDtEnd( const KDateTime &dtEnd )
@@ -71,8 +101,7 @@ void Event::setDtEnd( const KDateTime &dtEnd )
     return;
   }
 
-  mDtEnd = dtEnd;
-
+  d->mDtEnd = dtEnd;
   setHasEndDate( true );
   setHasDuration( false );
 
@@ -82,7 +111,7 @@ void Event::setDtEnd( const KDateTime &dtEnd )
 KDateTime Event::dtEnd() const
 {
   if ( hasEndDate() ) {
-    return mDtEnd;
+    return d->mDtEnd;
   }
   if ( hasDuration() ) {
     return duration().end( dtStart() );
@@ -124,12 +153,12 @@ QString Event::dtEndStr( bool shortfmt ) const
 
 void Event::setHasEndDate( bool b )
 {
-  mHasEndDate = b;
+  d->mHasEndDate = b;
 }
 
 bool Event::hasEndDate() const
 {
-  return mHasEndDate;
+  return d->mHasEndDate;
 }
 
 bool Event::isMultiDay() const
@@ -137,7 +166,7 @@ bool Event::isMultiDay() const
   // End date is non inclusive, so subtract 1 second...
   KDateTime start( dtStart() );
   KDateTime end( dtEnd() );
-  if ( ! floats() ) {
+  if ( !floats() ) {
     end = end.addSecs( -1 );
   }
   bool multi = ( start.date() != end.date() && start <= end );
@@ -149,8 +178,8 @@ void Event::shiftTimes( const KDateTime::Spec &oldSpec,
 {
   Incidence::shiftTimes( oldSpec, newSpec );
   if ( hasEndDate() ) {
-    mDtEnd = mDtEnd.toTimeSpec( oldSpec );
-    mDtEnd.setTimeSpec( newSpec );
+    d->mDtEnd = d->mDtEnd.toTimeSpec( oldSpec );
+    d->mDtEnd.setTimeSpec( newSpec );
   }
 }
 
@@ -159,17 +188,22 @@ void Event::setTransparency( Event::Transparency transparency )
   if ( mReadOnly ) {
     return;
   }
-  mTransparency = transparency;
+  d->mTransparency = transparency;
   updated();
 }
 
 Event::Transparency Event::transparency() const
 {
-  return mTransparency;
+  return d->mTransparency;
 }
 
 void Event::setDuration( const Duration &duration )
 {
   setHasEndDate( false );
   Incidence::setDuration( duration );
+}
+
+KDateTime Event::endDateRecurrenceBase() const
+{
+  return dtEnd();
 }

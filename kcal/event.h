@@ -29,7 +29,6 @@
 #define KCAL_EVENT_H
 
 #include "incidence.h"
-
 #include <QtCore/QByteArray>
 
 namespace KCal {
@@ -42,83 +41,104 @@ class KCAL_EXPORT Event : public Incidence
 {
   public:
     /**
-      Event transparency types.
+      The different Event transparency types.
     */
     enum Transparency {
       Opaque,      /**< Event appears in free/busy time */
       Transparent  /**< Event does @b not appear in free/busy time */
     };
 
+    /**
+      List of events.
+    */
     typedef ListBase<Event> List;
 
+    /**
+      Constructs an event.
+    */
     Event();
-    Event( const Event & );
-    ~Event();
-    bool operator==( const Event & ) const;
-
-    QByteArray type() const { return "Event"; }
 
     /**
-      Return copy of this Event. The caller owns the returned object.
+      Copy constructor.
+      @param other is the event to copy.
+    */
+    Event( const Event &other );
+
+    /**
+      Destroys the event.
+    */
+    ~Event();
+
+    /**
+      Compares two events for equality.
+      @param other is the comparison event.
+    */
+    bool operator==( const Event &other ) const;
+
+    /**
+      Returns the Incidence type, as a QByteArray.
+    */
+    QByteArray type() const;
+
+    /**
+      Returns a copy of this Event. The caller owns the returned object.
     */
     Event *clone();
 
     /**
-      Set end date and time.
+      Sets the event end date and time.
+      @param dtEnd is a KDateTime specifying when the event ends.
+      @see dtEnd(), dateEnd().
     */
     void setDtEnd( const KDateTime &dtEnd );
 
     /**
-      Return end date and time.
+      Returns the event end date and time.
+      @see setDtEnd().
     */
     virtual KDateTime dtEnd() const;
 
     /**
-      Returns the day when the event ends. This might be different from
+      Returns the date when the event ends. This might be different from
       dtEnd().date, since the end date/time is non-inclusive. So timed events
       ending at 0:00 have their end date on the day before.
     */
     QDate dateEnd() const;
 
     /**
-      Returns the end time as a string formatted according to the user's
-      locale settings.
-      @param shortfmt If set to true, use short date format, if set to false use
-                      long format.
+      Returns the event end time as a string formatted according to the
+      user's locale settings.
+      @param shortfmt If set, use short date format; else use long format.
     */
     QString dtEndTimeStr( bool shortfmt = true ) const;
 
     /**
-      Returns the end date as a string formatted according to the user's
-      locale settings.
-      @param shortfmt If set to true, use short date format, if set to false use
-                      long format.
-
-      @param shortfmt if true return string in short format, if false return
-                      long format
+      Returns the event end date as a string formatted according to the
+      user's locale settings.
+      @param shortfmt If set, use short date format; else use long format.
     */
     QString dtEndDateStr( bool shortfmt = true ) const;
 
     /**
-      Returns the end date/time as string formatted according to the user's
-      locale settings.
-      @param shortfmt If set to true, use short date format, if set to false use
-                      long format.
+      Returns the event end date/time as string formatted according to the
+      user's locale settings.
+      @param shortfmt If set, use short date format; else use long format.
     */
     QString dtEndStr( bool shortfmt = true ) const;
 
     /**
-      Set whether the event has an end date/time.
+      Sets whether the event has an end date/time.
+      @param b If set, indicates the event has an end date.
     */
-    void setHasEndDate( bool );
+    void setHasEndDate( bool b );
 
     /**
-      Return whether the event has an end date/time.
+      Returns whether the event has an end date/time.
     */
     bool hasEndDate() const;
 
     /**
-      Return true if the event spans multiple days, otherwise return false.
+      Returns true if the event spans multiple days, otherwise return false.
     */
     bool isMultiDay() const;
 
@@ -130,36 +150,33 @@ class KCAL_EXPORT Event : public Incidence
                              const KDateTime::Spec &newSpec );
 
     /**
-      Set the event's time transparency level.
+      Sets the event's time transparency level.
+      @param transparency is the event Transparency level.
     */
     void setTransparency( Transparency transparency );
 
     /**
-      Return the event's time transparency level.
+      Returns the event's time transparency level.
     */
     Transparency transparency() const;
 
     /**
-      Sets duration of this event.
+      Sets the duration of this event.
+      @param duration is the event Duration.
     */
     void setDuration( const Duration &duration );
 
   protected:
-
     /**
       Returns the end date/time of the base incidence.
     */
-    virtual KDateTime endDateRecurrenceBase() const { return dtEnd(); }
+    virtual KDateTime endDateRecurrenceBase() const;
 
   private:
-    bool accept( Visitor &v ) { return v.visit( this ); }
-
-    KDateTime mDtEnd;
-    bool mHasEndDate;
-    Transparency mTransparency;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }

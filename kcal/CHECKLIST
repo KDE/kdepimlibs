@@ -9,7 +9,6 @@ confirmsavedialog     |       |         |       |         |    D    |
 customproperties      |       |         |       |         |    D    |
 dndfactory            |       |         |       |         |    D    |
 dummyscheduler        |       |         |       |         |    D    |
-event                 |   D   |         |       |    D    |    D    | Allen
 filestorage           |       |         |       |         |    D    |
 freebusycache         |       |         |       |         |    D    |
 freebusy              |       |         |       |         |    D    |
@@ -52,6 +51,7 @@ calfilter             |   D   |    D    |   D   |    D    |    D    | Allen
 calformat             |   D   |    D    |   D   |   n/a   |    D    | Allen
 calendarnull          |   D   |    D    |   D   |    D    |    D    | Allen
 duration              |   D   |    D    |   D   |    D    |    D    | Allen
+event                 |   D   |    D    |   D   |    D    |    D    | Allen
 exceptions            |   D   |    D    |   D   |    D    |    D    | Allen
 period                |   D   |    D    |   D   |    D    |    D    | Narayan
 person                |   D   |    D    |   D   |    D    |    D    | Narayan

@@ -38,6 +38,7 @@ void EventTest::testValidity()
   event->setLocation( "the place" );
   QVERIFY( event->summary() == "Event1 Summary" );
   QVERIFY( event->location() == "the place" );
+  QVERIFY( event->type() == "Event" );
 }
 
 void EventTest::testCompare()
@@ -78,4 +79,23 @@ void EventTest::testClone()
   QVERIFY( event1.dtEnd() == event2->dtEnd() );
   QVERIFY( event1.description() == event2->description() );
   QVERIFY( event1.location( ) == event2->location() );
+}
+
+void EventTest::testCopy()
+{
+  QDate dt = QDate::currentDate();
+  Event event1;
+  event1.setDtStart( KDateTime( dt ) );
+  event1.setDtEnd( KDateTime( dt ).addDays( 1 ) );
+  event1.setSummary( "Event1 Summary" );
+  event1.setDescription( "This is a description of the first event" );
+  event1.setLocation( "the place" );
+  event1.setTransparency( Event::Transparent );
+
+  Event event2 = event1;
+  QVERIFY( event1.summary() == event2.summary() );
+  QVERIFY( event1.dtStart() == event2.dtStart() );
+  QVERIFY( event1.dtEnd() == event2.dtEnd() );
+  QVERIFY( event1.description() == event2.description() );
+  QVERIFY( event1.location( ) == event2.location() );
 }
