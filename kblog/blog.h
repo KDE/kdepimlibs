@@ -202,41 +202,41 @@ class KBLOG_EXPORT BlogPosting
 
     /**
       Returns true if the date format is extended
-    
+
       @see setUseExtendedDateFormat()
      */
     bool useExtendedDateFormat() const;
-    
+
     /**
       Sets the Date Format
        extended format: YYYY-MM-DD
        basic format: YYYYMMDD
-    
+
       @param extended  true extended format will be used.
       @see useExtendedDateFormat()
      */
     void setUseExtendedDateFormat( bool extended );
-    
+
     /**
       Returns true if the time format is extended
-    
+
       @see setUseExtendedTimeFormat()
      */
     bool useExtendedTimeFormat() const;
-     
+
     /**
       Sets the Time Format
        extended format: HH:MM:SS
        basic format: HHMMSS
-    
+
       @param extended  true extended format will be used.
       @see useExtendedTimeFormat()
      */
     void setUseExtendedTimeFormat( bool extended );
 
   private:
-    class Private;
-    Private *const d;
+    class BlogPostingPrivate;
+    BlogPostingPrivate *const d;
 };
 
 /**
@@ -315,8 +315,8 @@ class KBLOG_EXPORT BlogMedia {
     void setData( const QByteArray &data );
 
   private:
-    class Private;
-    Private *const d;
+    class BlogMediaPrivate;
+    BlogMediaPrivate *const d;
 };
 
 /**
@@ -450,13 +450,13 @@ class KBLOG_EXPORT APIBlog : public QObject
       Get information about the user from the blog.
       @see userInfoRetrieved()
     */
-    virtual void userInfo() = 0;
+    virtual bool userInfo() = 0;
 
     /**
       List the blogs available for this authentication on the server.
       @see blogInfoRetrieved()
     */
-    virtual void listBlogs() = 0;
+    virtual bool listBlogs() = 0;
 
     /**
       List recent postings on the server.
@@ -464,13 +464,13 @@ class KBLOG_EXPORT APIBlog : public QObject
       @see fetchedPosting()
       @see listPostingsFinished()
     */
-    virtual void listPostings() = 0;
+    virtual bool listPostings() = 0;
 
     /**
       List the categories of the blog.
       @see categoriesInfoRetrieved(), listCategoriesFinished()
     */
-    virtual void listCategories() = 0;
+    virtual bool listCategories() = 0;
 
     /**
       Fetch the Posting with postingId.
@@ -478,7 +478,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see fetchedPosting()
     */
-    virtual void fetchPosting( const QString &postingId ) = 0;
+    virtual bool fetchPosting( const QString &postingId ) = 0;
 
     /**
       Overloaded for convenience.
@@ -488,7 +488,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
     */
     //TODO: either update the *posting inside function or remove
-    void fetchPosting( KBlog::BlogPosting *posting );
+    bool fetchPosting( KBlog::BlogPosting *posting );
 
     /**
       Modify a posting on server.
@@ -496,21 +496,21 @@ class KBLOG_EXPORT APIBlog : public QObject
       @param posting is used to send the modified posting including the
       correct postingId from it to the server.
     */
-    virtual void modifyPosting( KBlog::BlogPosting *posting ) = 0;
+    virtual bool modifyPosting( KBlog::BlogPosting *posting ) = 0;
 
     /**
       Create a new posting on server.
 
       @param posting is send to the server.
     */
-    virtual void createPosting( KBlog::BlogPosting *posting ) = 0;
+    virtual bool createPosting( KBlog::BlogPosting *posting ) = 0;
 
     /**
       Create a new media object, e.g. picture, on server.
 
       @param media is send to the server.
     */
-    virtual void createMedia( KBlog::BlogMedia *media ) = 0;
+    virtual bool createMedia( KBlog::BlogMedia *media ) = 0;
 
     /**
       Remove a posting from the server.
@@ -520,7 +520,7 @@ class KBLOG_EXPORT APIBlog : public QObject
       @see removePosting( KBlog::BlogPosting* )
       @see void modifiedPosting( bool modified )
     */
-    virtual void removePosting( const QString &postingId ) = 0;
+    virtual bool removePosting( const QString &postingId ) = 0;
 
     /**
       Overloaded function, provided for convenience.
@@ -528,7 +528,7 @@ class KBLOG_EXPORT APIBlog : public QObject
       @param posting is the posting which will be removed. It will also
       be deleted.
     */
-    void removePosting( KBlog::BlogPosting *posting );
+    bool removePosting( KBlog::BlogPosting *posting );
 
   Q_SIGNALS:
     /**
@@ -642,8 +642,8 @@ class KBLOG_EXPORT APIBlog : public QObject
     void error( const errorType &type, const QString &errorMessage );
 
   private:
-    class Private;
-    Private *const d;
+    class APIBlogPrivate;
+    APIBlogPrivate *const d;
 };
 
 }

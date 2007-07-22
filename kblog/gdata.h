@@ -84,13 +84,13 @@ class KBLOG_EXPORT APIGData : public APIBlog
         Get information about the user from the blog. Note: This is not supported on the server side.
 	@see void userInfoRetrieved( const QString &nickname, const QString &userid, const QString &email )
     */
-    virtual void userInfo();
+    virtual bool userInfo();
 
     /**
         List the blogs available for this authentication on the server. Note: This is not supported on the server side.
 	@see void blogInfoRetrieved( const QString &id, const QString &name )
     */
-    virtual void listBlogs();
+    virtual bool listBlogs();
 
     /**
         List recent postings on the server..
@@ -98,14 +98,14 @@ class KBLOG_EXPORT APIGData : public APIBlog
         @see     void fetchedPosting( KBlog::BlogPosting &posting )
         @see     void listPostingsFinished()
     */
-    virtual void listPostings();
+    virtual bool listPostings();
 
     /**
-        List the categories of the blog. 
+        List the categories of the blog.
 	@see  void categoryInfoRetrieved( const QString &name, const QString &description )
         @see  void listCategoriesFinished()
     */
-    virtual void listCategories();
+    virtual bool listCategories();
 
     /**
         Fetch the Posting with postingId.
@@ -113,28 +113,28 @@ class KBLOG_EXPORT APIGData : public APIBlog
 
         @see  void fetchedPosting( KBlog::BlogPosting &posting )
     */
-    virtual void fetchPosting( const QString &postingId );
+    virtual bool fetchPosting( const QString &postingId );
 
     /**
         Modify a posting on server.
 
         @param posting is used to send the modified posting including the correct postingId from it to the server.
     */
-    virtual void modifyPosting( KBlog::BlogPosting *posting );
+    virtual bool modifyPosting( KBlog::BlogPosting *posting );
 
     /**
         Create a new posting on server.
 
         @param posting is send to the server.
     */
-    virtual void createPosting( KBlog::BlogPosting *posting );
+    virtual bool createPosting( KBlog::BlogPosting *posting );
 
     /**
         Create a new media object, e.g. picture, on server.
 
         @param media is send to the server.
     */
-    virtual void createMedia( KBlog::BlogMedia *media );
+    virtual bool createMedia( KBlog::BlogMedia *media );
 
     /**
         Remove a posting from the server.
@@ -143,7 +143,7 @@ class KBLOG_EXPORT APIGData : public APIBlog
 
         @see void removePosting( KBlog::BlogPosting *posting )
     */
-    virtual void removePosting( const QString &postingId );
+    virtual bool removePosting( const QString &postingId );
 
 private:
     class APIGDataPrivate;

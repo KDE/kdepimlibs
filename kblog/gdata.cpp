@@ -50,17 +50,20 @@ QString APIGData::interfaceName() const
   return QLatin1String( "GData API" );
 }
 
-void APIGData::userInfo()
+bool APIGData::userInfo()
 {
   kDebug() << "Fetching user information is not available in GData API." << endl;
   emit error( NotSupported, i18n( "Fetching user information is not available in GData API." ) );
+  return false;
 }
 
-void APIGData::getIntrospection(){
+void APIGData::getIntrospection()
+{
   // fetch the introspection file synchronously and parse it
   QByteArray data;
-  KIO::Job *job = KIO::get( url(), false, false ); 
-  if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &url() ) ) {
+  KIO::Job *job = KIO::get( url(), false, false );
+  KUrl blogUrl = url();
+  if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &blogUrl ) ) {
     kDebug() << "Fetched Homepage data." << endl;
 //     QRegExp pp( "<link.+rel=\"service.post\".+href=\"(.+)\".*/>" );
 //     if( pp.indexIn( data )!=-1 )
@@ -82,64 +85,88 @@ void APIGData::getIntrospection(){
   }
 }
 
-void APIGData::listBlogs()
+bool APIGData::listBlogs()
 {
-  kDebug() << "listBlogs()" << endl;
-  Syndication::Loader *loader = Syndication::Loader::create();
-  connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
-           d, SLOT(slotLoadingBlogsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + username() + QString( "/blogs" ) );
+  if ( d->mLock.tryLock() ) {
+    kDebug() << "listBlogs()" << endl;
+    Syndication::Loader *loader = Syndication::Loader::create();
+    connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
+            d, SLOT(slotLoadingBlogsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
+    loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + username() + QString( "/blogs" ) );
+    return true;
+  }
+  return false;
 }
 
-void APIGData::listPostings()
+bool APIGData::listPostings()
 {
-  kDebug() << "listPostings()" << endl;
-  Syndication::Loader *loader = Syndication::Loader::create();
-  connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
-           d, SLOT(slotLoadingPostingsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() + QString( "/posts/default" ) );
+  if ( d->mLock.tryLock() ) {
+    kDebug() << "listPostings()" << endl;
+    Syndication::Loader *loader = Syndication::Loader::create();
+    connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
+            d, SLOT(slotLoadingPostingsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
+    loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() + QString( "/posts/default" ) );
+    return true;
+  }
+  return false;
 }
 
-void APIGData::listCategories()
+bool APIGData::listCategories()
 {
   kDebug() << "Fetching categories is not available in GData API." << endl;
   emit error( NotSupported, i18n( "Fetching categories is not available in GData API." ) );
+  return false;
 }
 
-void APIGData::fetchPosting( const QString &postingId )
+bool APIGData::fetchPosting( const QString &postingId )
 {
-  kDebug() << "fetchPosting()" << endl;
-  Syndication::Loader *loader = Syndication::Loader::create();
-  d->setFetchPostingId( postingId );
-  connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
-           d, SLOT(slotFetchingPostingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)));
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() + QString( "/posts/default" ) );
+  if ( d->mLock.tryLock() ) {
+    kDebug() << "fetchPosting()" << endl;
+    Syndication::Loader *loader = Syndication::Loader::create();
+    d->setFetchPostingId( postingId );
+    connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
+            d, SLOT(slotFetchingPostingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)));
+    loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() + QString( "/posts/default" ) );
+    return true;
+  }
+  return false;
 }
 
-void APIGData::modifyPosting( KBlog::BlogPosting* posting )
+bool APIGData::modifyPosting( KBlog::BlogPosting* posting )
 {
+  Q_UNUSED( posting );
 //FIXME
 //   kDebug() << "Modifying postings is not available in GData API." << endl;
 //   emit error( NotSupported, i18n( "Modifying postings is not available in GData API." ) );
+  return false;
 }
 
-void APIGData::createPosting( KBlog::BlogPosting* posting )
+bool APIGData::createPosting( KBlog::BlogPosting* posting )
 {
-  kDebug() << "createPosting()" << endl;
-  d->authenticate();
+  Q_UNUSED( posting );
+  if ( d->mLock.tryLock() ) {
+    kDebug() << "createPosting()" << endl;
+    d->authenticate();
+    return true;
+  }
+  return false;
 }
 
-void APIGData::createMedia( KBlog::BlogMedia* media )
+bool APIGData::createMedia( KBlog::BlogMedia* media )
 {
+  Q_UNUSED( media );
   kDebug() << "Creating media is not available in GData API." << endl;
   emit error( NotSupported, i18n( "Creating media is not available in GData API." ) );
+  return false;
 }
 
-void APIGData::removePosting( const QString &postingId )
+bool APIGData::removePosting( const QString &postingId )
 {
+  Q_UNUSED( postingId );
 //FIXME
 /*  kDebug() << "Removing postings is not available in GData API." << endl;
   emit error( NotSupported, i18n( "Removing postings is not available in GData API." ) );*/
+  return false;
 }
 
 #include "gdata.moc"

@@ -27,6 +27,7 @@
 #include <kxmlrpcclient/client.h>
 
 #include <QtCore/QList>
+#include <QtCore/QMutex>
 
 using namespace KBlog;
 
@@ -36,6 +37,7 @@ class APIMetaWeblog::APIMetaWeblogPrivate : public QObject
   public:
     KXmlRpc::Client *mXmlRpcClient;
     APIMetaWeblog *parent;
+    QMutex mLock;
 
     APIMetaWeblogPrivate();
     ~APIMetaWeblogPrivate();

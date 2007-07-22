@@ -26,16 +26,14 @@
 #include <kxmlrpcclient/client.h>
 
 #include <kdebug.h>
-#include <kdatetime.h>
 
 #include <QtCore/QVariant>
-#include <QtCore/QList>
 #include <QtCore/QMutex>
 
 using namespace KBlog;
 
 //@cond PRIVATE
-class BlogPosting::Private
+class BlogPosting::BlogPostingPrivate
 {
   public:
   bool mPublish;
@@ -53,7 +51,7 @@ class BlogPosting::Private
 };
 //@endcond
 
-BlogPosting::BlogPosting(): d( new Private )
+BlogPosting::BlogPosting(): d( new BlogPostingPrivate )
 {
   d->mPublish=false;
   d->mDeleted=false;
@@ -62,7 +60,7 @@ BlogPosting::BlogPosting(): d( new Private )
 
 BlogPosting::BlogPosting( const QString &title, const QString &content,
                           const QStringList &categories, const bool publish ):
-  d( new Private )
+  d( new BlogPostingPrivate )
 {
   d->mTitle = title;
   d->mContent = content;
@@ -171,7 +169,7 @@ void BlogPosting::setUseExtendedTimeFormat( bool extended )
 }
 
 //@cond PRIVATE
-class BlogMedia::Private
+class BlogMedia::BlogMediaPrivate
 {
   public:
     QString mName;
@@ -180,7 +178,7 @@ class BlogMedia::Private
 };
 //@endcond
 
-BlogMedia::BlogMedia(): d( new Private )
+BlogMedia::BlogMedia(): d( new BlogMediaPrivate )
 {
 }
 
@@ -220,22 +218,23 @@ void BlogMedia::setData( const QByteArray &data )
 }
 
 //@cond PRIVATE
-class APIBlog::Private
+class APIBlog::APIBlogPrivate
 {
   public:
     QString mAppId;
     QString mBlogId;
     QString mUsername;
     QString mPassword;
-    QMutex mLock;
     KUrl mUrl;
     KTimeZone mTimeZone;
     unsigned int mDownloadCount;
+  private:
+    QMutex mLock;
 };
 //@endcond
 
 APIBlog::APIBlog( const KUrl &server, QObject *parent ) :
-  QObject( parent ), d( new Private )
+  QObject( parent ), d( new APIBlogPrivate )
 {
   Q_UNUSED( server );
 }
@@ -306,14 +305,14 @@ int APIBlog::downloadCount() const
   return d->mDownloadCount;
 }
 
-void APIBlog::removePosting( KBlog::BlogPosting *posting )
+bool APIBlog::removePosting( KBlog::BlogPosting *posting )
 {
-  removePosting( posting->postingId() );
+  return removePosting( posting->postingId() );
 }
 
-void APIBlog::fetchPosting( KBlog::BlogPosting *posting )
+bool APIBlog::fetchPosting( KBlog::BlogPosting *posting )
 {
-  fetchPosting( posting->postingId() );
+  return fetchPosting( posting->postingId() );
 }
 
 #include "blog.moc"

@@ -96,14 +96,14 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
 
       @see     void listPostingsFinished()
     */
-    virtual void listPostings();
+    virtual bool listPostings();
 
     /**
       List the categories of the blog.
       @see  void categoryInfoRetrieved( const QString &, const QString & )
       @see  void listCategoriesFinished()
     */
-    virtual void listCategories();
+    virtual bool listCategories();
 
     /**
       Fetch the Posting with postingId.
@@ -111,7 +111,7 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
 
       @see  void fetchedPosting( KBlog::BlogPosting &posting )
     */
-    virtual void fetchPosting( const QString &postingId );
+    virtual bool fetchPosting( const QString &postingId );
 
     /**
       Modify a posting on server.
@@ -119,21 +119,21 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
       @param posting is used to send the modified posting including the
       correct postingId from it to the server.
     */
-    virtual void modifyPosting( KBlog::BlogPosting *posting );
+    virtual bool modifyPosting( KBlog::BlogPosting *posting );
 
     /**
       Create a new posting on server.
 
       @param posting is send to the server.
     */
-    virtual void createPosting( KBlog::BlogPosting *posting );
+    virtual bool createPosting( KBlog::BlogPosting *posting );
 
     /**
       Create a new media object, e.g. picture, on server.
 
       @param media is send to the server.
     */
-    virtual void createMedia( KBlog::BlogMedia *media );
+    virtual bool createMedia( KBlog::BlogMedia *media );
 
   private:
     class APIMetaWeblogPrivate;

@@ -28,7 +28,6 @@
 #include <kdatetime.h>
 #include <klocale.h>
 
-#include <QtCore/QList>
 #include <QtCore/QVariant>
 
 using namespace KBlog;

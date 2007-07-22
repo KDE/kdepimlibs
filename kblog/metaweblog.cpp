@@ -27,8 +27,6 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <QtCore/QList>
-
 using namespace KBlog;
 
 APIMetaWeblog::APIMetaWeblog( const KUrl &server, QObject *parent )
@@ -56,100 +54,124 @@ void APIMetaWeblog::setUrl( const KUrl &server )
   d->mXmlRpcClient->setUserAgent( "KDE-KBlog" );
 }
 
-void APIMetaWeblog::listPostings()
+bool APIMetaWeblog::listPostings()
 {
-  kDebug(5323) << "Fetching List of Posts..." << endl;
-  QList<QVariant> args( d->defaultArgs( blogId() ) );
-  args << QVariant( downloadCount() );
-  d->mXmlRpcClient->call(
-    "metaWeblog.getRecentPosts", args,
-    d, SLOT( slotListPostings( const QList<QVariant>&, const QVariant& ) ),
-    d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
+  if ( d->mLock.tryLock() ) {
+    kDebug(5323) << "Fetching List of Posts..." << endl;
+    QList<QVariant> args( d->defaultArgs( blogId() ) );
+    args << QVariant( downloadCount() );
+    d->mXmlRpcClient->call(
+      "metaWeblog.getRecentPosts", args,
+      d, SLOT( slotListPostings( const QList<QVariant>&, const QVariant& ) ),
+      d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
+    return true;
+  }
+  return false;
 }
 
-void APIMetaWeblog::listCategories()
+bool APIMetaWeblog::listCategories()
 {
-  kDebug(5323) << "Fetching List of Categories..." << endl;
-  QList<QVariant> args( d->defaultArgs( blogId() ) );
-  d->mXmlRpcClient->call(
-    "metaWeblog.getCategories", args,
-    d, SLOT( slotListCategories( const QList<QVariant>&, const QVariant& ) ),
-    d, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+  if ( d->mLock.tryLock() ) {
+    kDebug(5323) << "Fetching List of Categories..." << endl;
+    QList<QVariant> args( d->defaultArgs( blogId() ) );
+    d->mXmlRpcClient->call(
+      "metaWeblog.getCategories", args,
+      d, SLOT( slotListCategories( const QList<QVariant>&, const QVariant& ) ),
+      d, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+    return true;
+  }
+  return false;
 }
 
-void APIMetaWeblog::fetchPosting( const QString &postingId )
+bool APIMetaWeblog::fetchPosting( const QString &postingId )
 {
-  kDebug(5323) << "Fetching Posting with url " << postingId << endl;
-  QList<QVariant> args( d->defaultArgs( postingId ) );
-  d->mXmlRpcClient->call(
-    "metaWeblog.getPost", args,
-    d, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
-    d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
+  if ( d->mLock.tryLock() ) {
+    kDebug(5323) << "Fetching Posting with url " << postingId << endl;
+    QList<QVariant> args( d->defaultArgs( postingId ) );
+    d->mXmlRpcClient->call(
+      "metaWeblog.getPost", args,
+      d, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
+      d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
+    return true;
+  }
+  return false;
 }
 
-void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
+bool APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
     kDebug(5323) << "APIMetaWeblog::modifyPosting: posting null pointer" << endl;
     emit error ( Other, i18n( "Posting is a null pointer." ) );
-    return;
+    return false;
   }
-  kDebug(5323) << "Uploading Posting with postId " << posting->postingId() << endl;
+  if ( d->mLock.tryLock() ) {
+    kDebug(5323) << "Uploading Posting with postId " << posting->postingId() << endl;
 
-  QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
-  QMap<QString, QVariant> map;
-  map["categories"] = posting->categories();
-  map["description"] = posting->content();
-  map["title"] = posting->title();
-  map["lastModified"] = posting->modificationDateTime().toUtc().dateTime();
-  args << map;
-  args << QVariant( posting->publish() );
-  d->mXmlRpcClient->setUseExtendedDateFormat(posting->useExtendedTimeFormat());
-  d->mXmlRpcClient->setUseExtendedTimeFormat(posting->useExtendedTimeFormat());
-  d->mXmlRpcClient->call(
-    "metaWeblog.editPost", args,
-    d, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
-    d, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+    QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
+    QMap<QString, QVariant> map;
+    map["categories"] = posting->categories();
+    map["description"] = posting->content();
+    map["title"] = posting->title();
+    map["lastModified"] = posting->modificationDateTime().toUtc().dateTime();
+    args << map;
+    args << QVariant( posting->publish() );
+    d->mXmlRpcClient->setUseExtendedDateFormat(posting->useExtendedTimeFormat());
+    d->mXmlRpcClient->setUseExtendedTimeFormat(posting->useExtendedTimeFormat());
+    d->mXmlRpcClient->call(
+      "metaWeblog.editPost", args,
+      d, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
+      d, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+    return true;
+  }
+  return false;
 }
 
-void APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
+bool APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
     kDebug(5323) << "APIMetaWeblog::createPosting: posting null pointer" << endl;
     emit error ( Other, i18n( "Posting is a null pointer." ) );
-    return;
+    return false;
   }
-  kDebug(5323) << "Creating new Posting with blogId " << blogId() << endl;
-  QList<QVariant> args( d->defaultArgs( blogId() ) );
-  QMap<QString, QVariant> map;
-  map["categories"] = posting->categories();
-  map["description"] = posting->content();
-  map["title"] = posting->title();
-  map["dateCreated"] = posting->creationDateTime().toUtc().dateTime();
-  args << map;
-  args << QVariant( posting->publish() );
-  d->mXmlRpcClient->setUseExtendedDateFormat(posting->useExtendedTimeFormat());
-  d->mXmlRpcClient->setUseExtendedTimeFormat(posting->useExtendedTimeFormat());
-  d->mXmlRpcClient->call (
-    "metaWeblog.newPost", args,
-    d, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
-    d, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+  if ( d->mLock.tryLock() ) {
+    kDebug(5323) << "Creating new Posting with blogId " << blogId() << endl;
+    QList<QVariant> args( d->defaultArgs( blogId() ) );
+    QMap<QString, QVariant> map;
+    map["categories"] = posting->categories();
+    map["description"] = posting->content();
+    map["title"] = posting->title();
+    map["dateCreated"] = posting->creationDateTime().toUtc().dateTime();
+    args << map;
+    args << QVariant( posting->publish() );
+    d->mXmlRpcClient->setUseExtendedDateFormat(posting->useExtendedTimeFormat());
+    d->mXmlRpcClient->setUseExtendedTimeFormat(posting->useExtendedTimeFormat());
+    d->mXmlRpcClient->call (
+      "metaWeblog.newPost", args,
+      d, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
+      d, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+    return true;
+  }
+  return false;
 }
 
-void APIMetaWeblog::createMedia( KBlog::BlogMedia *media )
+bool APIMetaWeblog::createMedia( KBlog::BlogMedia *media )
 {
-  kDebug(5323) << "APIMetaWeblog::createMedia: name="<< media->name() << endl;
-  QList<QVariant> args( d->defaultArgs( blogId() ) );
-  QMap<QString, QVariant> map;
-  QList<QVariant> list;
-  map["name"] = media->name();
-  map["type"] = media->mimetype();
-  map["bits"] = media->data();
-  args << map;
-  d->mXmlRpcClient->call(
-    "metaWeblog.newMediaObject", args,
-    d, SLOT( slotCreateMedia( const QList<QVariant>&, const QVariant& ) ),
-    d, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+  if ( d->mLock.tryLock() ) {
+    kDebug(5323) << "APIMetaWeblog::createMedia: name="<< media->name() << endl;
+    QList<QVariant> args( d->defaultArgs( blogId() ) );
+    QMap<QString, QVariant> map;
+    QList<QVariant> list;
+    map["name"] = media->name();
+    map["type"] = media->mimetype();
+    map["bits"] = media->data();
+    args << map;
+    d->mXmlRpcClient->call(
+      "metaWeblog.newMediaObject", args,
+      d, SLOT( slotCreateMedia( const QList<QVariant>&, const QVariant& ) ),
+      d, SLOT ( faultSlot( int, const QString&, const QVariant& ) ) );
+    return true;
+  }
+  return false;
 }
 
 #include "metaweblog.moc"

@@ -24,6 +24,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QDateTime>
+#include <QtCore/QMutex>
 #include <syndication/loader.h>
 #include "gdata.h"
 
@@ -38,6 +39,7 @@ class APIGData::APIGDataPrivate : public QObject
     QDateTime mAuthenticationTime;
   public:
     APIGData* parent;
+    QMutex mLock;
     APIGDataPrivate();
     ~APIGDataPrivate();
     QString getFetchPostingId(){ return mFetchPostingId; }
