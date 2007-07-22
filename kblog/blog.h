@@ -64,8 +64,10 @@ namespace KBlog {
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
 */
 
-class KBLOG_EXPORT BlogPosting
+class KBLOG_EXPORT BlogPosting : public QObject
 {
+  Q_OBJECT
+
   public:
     /**
       Default constructor. Creates an empty BlogPosting object.
@@ -200,39 +202,15 @@ class KBLOG_EXPORT BlogPosting
     */
     void setModificationDateTime( const KDateTime &datetime );
 
-    /**
-      Returns true if the date format is extended
+    enum Status { New, Fetched, Created, Modified, Deleted, Error };
 
-      @see setUseExtendedDateFormat()
-     */
-    bool useExtendedDateFormat() const;
+    Status status();
 
-    /**
-      Sets the Date Format
-       extended format: YYYY-MM-DD
-       basic format: YYYYMMDD
+    void setStatus( Status status );
 
-      @param extended  true extended format will be used.
-      @see useExtendedDateFormat()
-     */
-    void setUseExtendedDateFormat( bool extended );
+  Q_SIGNALS:
 
-    /**
-      Returns true if the time format is extended
-
-      @see setUseExtendedTimeFormat()
-     */
-    bool useExtendedTimeFormat() const;
-
-    /**
-      Sets the Time Format
-       extended format: HH:MM:SS
-       basic format: HHMMSS
-
-      @param extended  true extended format will be used.
-      @see useExtendedTimeFormat()
-     */
-    void setUseExtendedTimeFormat( bool extended );
+    void statusChanged( Status &status );
 
   private:
     class BlogPostingPrivate;
@@ -252,7 +230,10 @@ class KBLOG_EXPORT BlogPosting
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
 */
 
-class KBLOG_EXPORT BlogMedia {
+class KBLOG_EXPORT BlogMedia : public QObject 
+{
+  Q_OBJECT
+
   public:
     /**
       Default constructor. Creates an empty BlogMedia object.
@@ -313,6 +294,16 @@ class KBLOG_EXPORT BlogMedia {
        @see data()
     */
     void setData( const QByteArray &data );
+
+    enum Status { New, Fetched, Created, Modified, Deleted, Error };
+
+    Status status();
+
+    void setStatus( Status status );
+
+  Q_SIGNALS:
+
+    void statusChanged( Status &status );
 
   private:
     class BlogMediaPrivate;
@@ -391,18 +382,18 @@ class KBLOG_EXPORT APIBlog : public QObject
     virtual QString password() const;
 
     /**
-      Sets the username for the blog.
-      @param uname is a QString containing the blog username.
+      Sets the user's id for the blog.
+      @param uid is a QString containing the blog username.
 
-      @see username()
+      @see userId()
     */
-    virtual void setUsername( const QString &uname );
+    virtual void setUserId( const QString &uid );
 
     /**
-       Returns the username of the blog.
-       @see setUsername()
+       Returns the user's id of the blog.
+       @see setUserId()
     */
-    virtual QString username() const;
+    virtual QString userId() const;
 
     /**
       Sets the URL for the blog.
@@ -450,13 +441,13 @@ class KBLOG_EXPORT APIBlog : public QObject
       Get information about the user from the blog.
       @see userInfoRetrieved()
     */
-    virtual bool userInfo() = 0;
+    virtual void userInfo() = 0;
 
     /**
       List the blogs available for this authentication on the server.
       @see blogInfoRetrieved()
     */
-    virtual bool listBlogs() = 0;
+    virtual void listBlogs() = 0;
 
     /**
       List recent postings on the server.
@@ -464,13 +455,13 @@ class KBLOG_EXPORT APIBlog : public QObject
       @see fetchedPosting()
       @see listPostingsFinished()
     */
-    virtual bool listPostings() = 0;
+    virtual void listPostings() = 0;
 
     /**
       List the categories of the blog.
       @see categoriesInfoRetrieved(), listCategoriesFinished()
     */
-    virtual bool listCategories() = 0;
+    virtual void listCategories() = 0;
 
     /**
       Fetch the Posting with postingId.
@@ -478,7 +469,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see fetchedPosting()
     */
-    virtual bool fetchPosting( const QString &postingId ) = 0;
+    virtual void fetchPosting( KBlog::BlogPosting *posting ) = 0;
 
     /**
       Modify a posting on server.
@@ -486,39 +477,28 @@ class KBLOG_EXPORT APIBlog : public QObject
       @param posting is used to send the modified posting including the
       correct postingId from it to the server.
     */
-    virtual bool modifyPosting( KBlog::BlogPosting *posting ) = 0;
+    virtual void modifyPosting( KBlog::BlogPosting *posting ) = 0;
 
     /**
       Create a new posting on server.
 
       @param posting is send to the server.
     */
-    virtual bool createPosting( KBlog::BlogPosting *posting ) = 0;
+    virtual void createPosting( KBlog::BlogPosting *posting ) = 0;
 
     /**
       Create a new media object, e.g. picture, on server.
 
       @param media is send to the server.
     */
-    virtual bool createMedia( KBlog::BlogMedia *media ) = 0;
+    virtual void createMedia( KBlog::BlogMedia *media ) = 0;
 
     /**
       Remove a posting from the server.
 
-      @param postingId is the id of the posting to remove.
-
-      @see removePosting( KBlog::BlogPosting* )
-      @see void modifiedPosting( bool modified )
+      @param posting* is the BlogPosting to remove.
     */
-    virtual bool removePosting( const QString &postingId ) = 0;
-
-    /**
-      Overloaded function, provided for convenience.
-
-      @param posting is the posting which will be removed. It will also
-      be deleted.
-    */
-    virtual bool removePosting( KBlog::BlogPosting *posting );
+    virtual void removePosting( KBlog::BlogPosting *posting ) = 0;
 
   Q_SIGNALS:
     /**
@@ -575,7 +555,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see fetchPosting(KBlog::BlogPosting*)
     */
-    virtual void fetchedPosting( KBlog::BlogPosting &posting );
+//     virtual void fetchedPosting( KBlog::BlogPosting &posting );
 
     /**
       This signal is emitted when a createPosting() job successfully creates
@@ -585,7 +565,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see createPosting( KBlog::BlogPosting* )
     */
-    virtual void createdPosting( const QString &id );
+//     virtual void createdPosting( const QString &id );
 
     /**
       This signal is emitted when a createMedia() job successfully creates
@@ -596,7 +576,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see createMedia( KBlog::BlogMedia* )
     */
-    virtual void createdMedia( const QString &url );
+//     virtual void createdMedia( const QString &url );
 
     /**
       This signal is emitted when a modifyPosting() job modifies a posting
@@ -606,7 +586,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see modifyPosting( KBlog::BlogPosting* )
     */
-    virtual void modifiedPosting( bool modified );
+//     virtual void modifiedPosting( void modified );
 
     /**
       This signal is emitted when the last posting of the listPostings()

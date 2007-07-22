@@ -56,37 +56,30 @@ void APIBlogger::setUrl( const KUrl &server )
   d->mXmlRpcClient->setUserAgent( "KDE-KBlog" );
 }
 
-bool APIBlogger::userInfo()
+void APIBlogger::userInfo()
 {
-  if ( d->mLock.tryLock() ) {
     kDebug(5323) << "read user info..." << endl;
     QList<QVariant> args( d->defaultArgs() );
     d->mXmlRpcClient->call(
       "blogger.getUserInfo", args,
       d, SLOT( slotUserInfo( const QList<QVariant>&, const QVariant& ) ),
       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
-    return true;
-  }
-  return false;
 }
 
-bool APIBlogger::listBlogs()
+void APIBlogger::listBlogs()
 {
-  if ( d->mLock.tryLock() ) {
+
     kDebug(5323) << "Fetch List of Blogs..." << endl;
     QList<QVariant> args( d->defaultArgs() );
     d->mXmlRpcClient->call(
       "blogger.getUsersBlogs", args,
       d, SLOT( slotListBlogs( const QList<QVariant>&, const QVariant& ) ),
       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
-    return true;
-  }
-  return false;
 }
 
-bool APIBlogger::listPostings()
+void APIBlogger::listPostings()
 {
-  if ( d->mLock.tryLock() ) {
+
     kDebug(5323) << "Fetching List of Posts..." << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     args << QVariant( downloadCount() );
@@ -94,40 +87,34 @@ bool APIBlogger::listPostings()
       "blogger.getRecentPosts", args,
       d, SLOT( slotListPostings( const QList<QVariant>&, const QVariant& ) ),
       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
-    return true;
-  }
-  return false;
 }
 
-bool APIBlogger::listCategories()
+void APIBlogger::listCategories()
 {
   emit error( NotSupported,
               i18n( "Categories are not supported in Blogger API 1.0." ) );
   kDebug(5323) << "Categories are not supported in Blogger API 1.0." << endl;
-  return false;
 }
 
-bool APIBlogger::fetchPosting( const QString &postingId )
+void APIBlogger::fetchPosting( KBlog::BlogPosting *posting )
 {
-  if ( d->mLock.tryLock() ) {
-    kDebug(5323) << "Fetching Posting with url " << postingId << endl;
-    QList<QVariant> args( d->defaultArgs( postingId ) );
-    d->mXmlRpcClient->call(
-      "blogger.getPost", args,
-      d, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
-    return true;
-  }
-  return false;
+//   if ( d->mLock.tryLock() ) {
+//     kDebug(5323) << "Fetching Posting with url " << postingId << endl;
+//     QList<QVariant> args( d->defaultArgs( postingId ) );
+//     d->mXmlRpcClient->call(
+//       "blogger.getPost", args,
+//       d, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
+//       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
+//     return true;
+//   }
+//   return false;
 }
 
-bool APIBlogger::modifyPosting( KBlog::BlogPosting *posting )
+void APIBlogger::modifyPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
     kDebug(5323) << "APIBlogger::modifyPosting: posting is null pointer" << endl;
-    return false;
   }
-  if ( d->mLock.tryLock() ) {
     kDebug(5323) << "Uploading Posting with postingId "
             << posting->postingId() << endl;
 
@@ -138,18 +125,13 @@ bool APIBlogger::modifyPosting( KBlog::BlogPosting *posting )
       "blogger.editPost", args,
       d, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
-    return true;
-  }
-  return false;
 }
 
-bool APIBlogger::createPosting( KBlog::BlogPosting *posting )
+void APIBlogger::createPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
     kDebug(5323) << "APIBlogger::createPosting: posting is null pointer" << endl;
-    return false;
   }
-  if ( d->mLock.tryLock() ) {
     kDebug(5323) << "Creating new Posting with blogid " << blogId() << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     QStringList categories = posting->categories();
@@ -165,33 +147,29 @@ bool APIBlogger::createPosting( KBlog::BlogPosting *posting )
       "blogger.newPost", args,
       d, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
-    return true;
-  }
-  return false;
 }
 
-bool APIBlogger::createMedia( KBlog::BlogMedia *media )
+void APIBlogger::createMedia( KBlog::BlogMedia *media )
 {
   Q_UNUSED( media );
   emit error( NotSupported,
               i18n( "Media upload not available in Blogger API 1.0." ) );
   kDebug(5323) << "Media upload not available in Blogger API 1.0." << endl;
-  return false;
 }
 
-bool APIBlogger::removePosting( const QString &postingId )
+void APIBlogger::removePosting( KBlog::BlogPosting *posting )
 {
-  if ( d->mLock.tryLock() ) {
-    kDebug(5323) << "APIBlogger::removePosting: postingId=" << postingId << endl;
-    QList<QVariant> args( d->defaultArgs( postingId ) );
-    args << QVariant( /*publish=*/true );
-    d->mXmlRpcClient->call(
-      "blogger.deletePost", args,
-      d, SLOT( slotModifyPosting( QList<QVariant> &result, QVariant &id ) ),
-      d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
-    return true;
-  }
-  return false;
+//   if ( d->mLock.tryLock() ) {
+//     kDebug(5323) << "APIBlogger::removePosting: postingId=" << postingId << endl;
+//     QList<QVariant> args( d->defaultArgs( postingId ) );
+//     args << QVariant( /*publish=*/true );
+//     d->mXmlRpcClient->call(
+//       "blogger.deletePost", args,
+//       d, SLOT( slotModifyPosting( QList<QVariant> &result, QVariant &id ) ),
+//       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
+//     return true;
+//   }
+//   return false;
 }
 
 #include "blogger.moc"

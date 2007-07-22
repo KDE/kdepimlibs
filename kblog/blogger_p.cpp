@@ -49,7 +49,7 @@ QList<QVariant> APIBlogger::APIBloggerPrivate::defaultArgs( const QString &id )
   if ( !id.isNull() ) {
     args << QVariant( id );
   }
-  args << QVariant( parent->username() )
+  args << QVariant( parent->userId() )
        << QVariant( parent->password() );
   return args;
 }
@@ -172,7 +172,7 @@ void APIBlogger::APIBloggerPrivate::slotFetchPosting( const QList<QVariant> &res
     if ( readPostingFromMap( &posting, postInfo ) ) {
       kDebug(5323) << "Emitting fetchedPosting( posting.postingId()="
                    << posting.postingId() << "); " << endl;
-      emit parent->fetchedPosting( posting ); // KUrl( posting.posingtId() ) );
+//       emit parent->fetchedPosting( posting ); // KUrl( posting.posingtId() ) );
     } else {
       kDebug(5323) << "d->readPostingFromMap failed! " << endl;
       emit parent->error( ParsingError, i18n( "Could not read posting." ) );
@@ -195,7 +195,7 @@ void APIBlogger::APIBloggerPrivate::slotCreatePosting( const QList<QVariant> &re
     emit parent->error( ParsingError,
                         i18n( "Could not read the postingId, not an integer." ) );
   } else {
-    emit parent->createdPosting( QString().setNum( result[0].toInt() ) );
+//     emit parent->createdPosting( QString().setNum( result[0].toInt() ) );
     kDebug(5323) << "emitting createdPosting( " << result[0].toInt()
                  << " )" << endl;
   }
@@ -216,7 +216,7 @@ void APIBlogger::APIBloggerPrivate::slotModifyPosting( const QList<QVariant> &re
     emit parent->error( ParsingError,
                         i18n( "Could not read the result, not a boolean." ) );
   } else {
-    emit parent->modifiedPosting( result[0].toBool() );
+//     emit parent->modifiedPosting( result[0].toBool() );
     kDebug(5323) << "emitting modifiedPosting( " << result[0].toBool()
                  << " )" << endl;
   }

@@ -36,13 +36,10 @@ class BlogPosting::BlogPostingPrivate
   QString mTitle;
   QString mContent;
   QStringList mCategories;
-  QString mFingerprint; // TODO what is that for?
+  QString mError;
+  Status mStatus;
   KDateTime mCreationDateTime;
   KDateTime mModificationDateTime;
-  bool mDeleted;
-  bool mUploaded;
-  bool mDateFormatExtended;
-  bool mTimeFormatExtended;
 };
 
 class BlogMedia::BlogMediaPrivate
@@ -51,6 +48,7 @@ class BlogMedia::BlogMediaPrivate
     QString mName;
     QString mMimetype;
     QByteArray mData;
+    Status mStatus;
 };
 
 class APIBlog::APIBlogPrivate
@@ -58,7 +56,7 @@ class APIBlog::APIBlogPrivate
   public:
     APIBlog *parent;
     QString mBlogId;
-    QString mUsername;
+    QString mUserId;
     QString mPassword;
     KUrl mUrl;
     KTimeZone mTimeZone;

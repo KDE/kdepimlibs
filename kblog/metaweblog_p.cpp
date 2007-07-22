@@ -52,7 +52,7 @@ QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString 
   if ( !id.toInt() && !id.isNull() ){
     args << QVariant( id );
   }
-  args << QVariant( parent->username() )
+  args << QVariant( parent->userId() )
        << QVariant( parent->password() );
   return args;
 }
@@ -172,7 +172,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotFetchPosting( const QList<QVariant
     if ( readPostingFromMap( &posting, postInfo ) ) {
       kDebug(5323) << "Emitting fetchedPosting( posting.postingId()="
                    << posting.postingId() << "); " << endl;
-      emit parent->fetchedPosting( posting ); // KUrl( posting.posingtId() ) );
+//       emit parent->fetchedPosting( posting ); // KUrl( posting.posingtId() ) );
     } else {
       kDebug(5323) << "d->readPostingFromMap failed! " << endl;
       emit parent->error( ParsingError, i18n( "Could not read posting." ) );
@@ -195,7 +195,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreatePosting( const QList<QVarian
     emit parent->error( ParsingError,
                         i18n( "Could not read the postingId, not a string." ) );
   } else {
-    emit parent->createdPosting( result[0].toString() );
+//     emit parent->createdPosting( result[0].toString() );
     kDebug(5323) << "emitting createdPosting( " << result[0].toString() << " )" << endl;
   }
 }
@@ -215,7 +215,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotModifyPosting( const QList<QVarian
     emit parent->error( ParsingError,
                         i18n( "Could not read the result, not a boolean." ) );
   } else {
-    emit parent->modifiedPosting( result[0].toBool() );
+//     emit parent->modifiedPosting( result[0].toBool() );
     kDebug(5323) << "emitting modifiedPosting( " << result[0].toBool() << " )" << endl;
   }
 }
@@ -237,7 +237,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreateMedia( const QList<QVariant>
     kDebug(5323) << "APIMetaWeblog::slotCreateMedia url=" << url << endl;
 
     if ( !url.isEmpty() ) {
-      emit parent->createdMedia( url );
+//       emit parent->createdMedia( url );
       kDebug(5323) << "Emitting createdMedia( url=" << url  << " ); " << endl;
     }
   }

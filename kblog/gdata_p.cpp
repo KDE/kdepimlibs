@@ -165,7 +165,7 @@ void APIGData::APIGDataPrivate::slotFetchingPostingComplete( Syndication::Loader
                                                          KDateTime::Spec::UTC() ) );
         posting.setModificationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ),
                                                               KDateTime::Spec::UTC() ) );
-        emit parent->fetchedPosting( posting );
+//         emit parent->fetchedPosting( posting );
         success = true;
         kDebug(5323) << "Emitting fetchedPosting( postingId=" << posting.postingId() << " ); " << endl;
       }

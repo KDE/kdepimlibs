@@ -33,8 +33,6 @@ using namespace KBlog;
 BlogPosting::BlogPosting(): d( new BlogPostingPrivate )
 {
   d->mPublish=false;
-  d->mDeleted=false;
-  d->mUploaded=false;
 }
 
 BlogPosting::BlogPosting( const QString &title, const QString &content,
@@ -46,10 +44,6 @@ BlogPosting::BlogPosting( const QString &title, const QString &content,
   d->mCategories = categories;
   d->mPublish = publish;
   d->mCreationDateTime = KDateTime::currentDateTime( KDateTime::Spec() );
-  d->mUploaded = false;
-  d->mDeleted = false;
-  d->mDateFormatExtended=true;
-  d->mTimeFormatExtended=true;
 }
 
 BlogPosting::~BlogPosting()
@@ -127,24 +121,14 @@ void BlogPosting::setModificationDateTime( const KDateTime &datetime )
   d->mModificationDateTime = datetime;
 }
 
-bool BlogPosting::useExtendedDateFormat() const
+BlogPosting::Status BlogPosting::status()
 {
-  return d->mDateFormatExtended;
+  return d->mStatus;
 }
 
-void BlogPosting::setUseExtendedDateFormat( bool extended )
+void BlogPosting::setStatus( BlogPosting::Status status )
 {
-  d->mDateFormatExtended=extended;
-}
-
-bool BlogPosting::useExtendedTimeFormat() const
-{
-  return d->mTimeFormatExtended;
-}
-
-void BlogPosting::setUseExtendedTimeFormat( bool extended )
-{
-  d->mDateFormatExtended=extended;
+  d->mStatus = status;
 }
 
 BlogMedia::BlogMedia(): d( new BlogMediaPrivate )
@@ -186,6 +170,16 @@ void BlogMedia::setData( const QByteArray &data )
   d->mData = data;
 }
 
+BlogMedia::Status BlogMedia::status()
+{
+  return d->mStatus;
+}
+
+void BlogMedia::setStatus( BlogMedia::Status status )
+{
+  d->mStatus = status;
+}
+
 APIBlog::APIBlog( const KUrl &server, QObject *parent ) :
   QObject( parent ), d( new APIBlogPrivate )
 {
@@ -207,14 +201,14 @@ QString APIBlog::password() const
   return d->mPassword;
 }
 
-void APIBlog::setUsername( const QString &uname )
+void APIBlog::setUserId( const QString &uid )
 {
-  d->mUsername = uname;
+  d->mUserId = uid;
 }
 
-QString APIBlog::username() const
+QString APIBlog::userId() const
 {
-  return d->mUsername;
+  return d->mUserId;
 }
 
 void APIBlog::setBlogId( const QString &blogId )
@@ -255,11 +249,6 @@ void APIBlog::setDownloadCount( int nr )
 int APIBlog::downloadCount() const
 {
   return d->mDownloadCount;
-}
-
-bool APIBlog::removePosting( KBlog::BlogPosting *posting )
-{
-  return removePosting( posting->postingId() );
 }
 
 #include "blog.moc"
