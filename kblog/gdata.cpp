@@ -28,6 +28,7 @@
 #include <klocale.h>
 #include <kio/netaccess.h>
 #include <kio/http.h>
+#include <kio/slave.h>
 
 #include <QtCore/QList>
 
@@ -134,10 +135,11 @@ bool APIGData::fetchPosting( const QString &postingId )
 
 bool APIGData::modifyPosting( KBlog::BlogPosting* posting )
 {
-  Q_UNUSED( posting );
-//FIXME
-//   kDebug() << "Modifying postings is not available in GData API." << endl;
-//   emit error( NotSupported, i18n( "Modifying postings is not available in GData API." ) );
+  if ( d->mLock.tryLock() ) {
+    kDebug() << "modifyPosting()" << endl;
+    d->authenticate();
+    return true;
+  }
   return false;
 }
 
@@ -147,6 +149,47 @@ bool APIGData::createPosting( KBlog::BlogPosting* posting )
   if ( d->mLock.tryLock() ) {
     kDebug() << "createPosting()" << endl;
     d->authenticate();
+
+    QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
+    atomMarkup += "<title type='text'>"+posting->title() +"</title>";
+    if( !posting->publish() )
+    {
+      atomMarkup += "<app:control xmlns:app=*http://purl.org/atom/app#'>";
+      atomMarkup += "<app:draft>yes</app:draft></app:control>";
+    }
+    atomMarkup += "<content type='xhtml'>";
+    atomMarkup += "<div xmlns='http://www.w3.org/1999/xhtml'>";
+    atomMarkup += posting->content();
+    atomMarkup += "</div></content>";
+    atomMarkup += "<author>";
+    atomMarkup += "<name>" + username() + "</name>";
+    atomMarkup += "<email>" + email() + "</email>";
+    atomMarkup += "</author>";
+    atomMarkup += "</entry>";
+
+    QByteArray postData;
+    QDataStream stream( &postData, QIODevice::WriteOnly );
+    stream.writeRawData( atomMarkup.toUtf8(), atomMarkup.toUtf8().length() );
+
+    KIO::TransferJob *job = KIO::http_post( KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default" ), 
+                                         postData, false );
+
+    if ( !job ) {
+      kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/" << blogId() 
+      << "/posts/default" << endl;
+      return true;
+    }
+
+    job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
+    job->addMetaData( "ConnectTimeout", "50" );
+
+    connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+             d, SLOT( slotData( KIO::Job *, const QByteArray & ) ) );
+    connect( job, SIGNAL( result( KJob * ) ),
+             d, SLOT( slotCreatePosting( KJob * ) ) );
+
+//     job->start( d->mSlave );
+
     return true;
   }
   return false;
@@ -163,9 +206,11 @@ bool APIGData::createMedia( KBlog::BlogMedia* media )
 bool APIGData::removePosting( const QString &postingId )
 {
   Q_UNUSED( postingId );
-//FIXME
-/*  kDebug() << "Removing postings is not available in GData API." << endl;
-  emit error( NotSupported, i18n( "Removing postings is not available in GData API." ) );*/
+  if ( d->mLock.tryLock() ) {
+    kDebug() << "deletePosting()" << endl;
+    d->authenticate();
+    return true;
+  }
   return false;
 }
 

@@ -28,6 +28,8 @@
 #include <syndication/loader.h>
 #include "gdata.h"
 
+#include <kio/slave.h>
+
 using namespace KBlog;
 
 class APIGData::APIGDataPrivate : public QObject
@@ -41,6 +43,8 @@ class APIGData::APIGDataPrivate : public QObject
     APIGData* parent;
     QMutex mLock;
     QString mEmail;
+    QByteArray mBuffer;
+//     KIO::Slave* mSlave;
     APIGDataPrivate();
     ~APIGDataPrivate();
     QString getFetchPostingId(){ return mFetchPostingId; }
@@ -53,6 +57,8 @@ class APIGData::APIGDataPrivate : public QObject
                                       Syndication::FeedPtr, Syndication::ErrorCode );
     void slotLoadingBlogsComplete( Syndication::Loader *,
                                    Syndication::FeedPtr, Syndication::ErrorCode );
+    void slotData( KIO::Job *, const QByteArray& );
+    void slotCreatePosting( KJob *job );
 };
 
 #endif

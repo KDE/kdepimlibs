@@ -41,17 +41,17 @@ using namespace KBlog;
 
 APIGData::APIGDataPrivate::APIGDataPrivate():
   mFetchPostingId(),mAuthenticationString(),mAuthenticationTime(){
-
+//   mSlave = new KIO::Slave::Slave( QString( "http" ) );
 }
 
 APIGData::APIGDataPrivate::~APIGDataPrivate(){
-
+//   delete mSlave;
 }
 
 QString APIGData::APIGDataPrivate::authenticate(){
   QByteArray data;
   KUrl authGateway( "https://www.google.com/accounts/ClientLogin" );
-  authGateway.addQueryItem( "Email", mEmail );
+  authGateway.addQueryItem( "Email", parent->email() );
   authGateway.addQueryItem( "Passwd", parent->password() );
   authGateway.addQueryItem( "source" , "KDE-KBlog-4" );
   authGateway.addQueryItem( "service", "blogger" );
@@ -175,6 +175,28 @@ void APIGData::APIGDataPrivate::slotFetchingPostingComplete( Syndication::Loader
     kDebug(5323) << "QRegExp rx( 'post-(\\d+)' does not match " << mFetchPostingId << ". " << endl;
   }
   setFetchPostingId( "" );
+}
+
+void APIGData::APIGDataPrivate::slotData( KIO::Job *, const QByteArray &data )
+{
+  unsigned int oldSize = mBuffer.size();
+  mBuffer.resize( oldSize + data.size() );
+  memcpy( mBuffer.data() + oldSize, data.data(), data.size() );
+}
+
+void APIGData::APIGDataPrivate::slotCreatePosting( KJob *job )
+{
+  if ( job->error() != 0 ) {
+    kDebug(5323) << "slotCreatePosting error: " << job->errorString() << endl;
+    emit parent->error( AtomAPI, job->errorString() );
+    mBuffer.resize( 0 );
+    mLock.unlock();
+    return;
+  }
+
+  const QString data = QString::fromUtf8( mBuffer.data(), mBuffer.size() );
+
+  kDebug(5323) << "Response: " << data << endl;
 }
 
 #include "gdata_p.moc"
