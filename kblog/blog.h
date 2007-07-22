@@ -367,14 +367,14 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @param blogId
     */
-    void setBlogId( const QString &blogId );
+    virtual void setBlogId( const QString &blogId );
 
     /**
       Returns the blog id.
 
       @return blogId
     */
-    QString blogId() const;
+    virtual QString blogId() const;
 
     /**
       Sets the password for the blog.
@@ -382,13 +382,13 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see password();
     */
-    void setPassword( const QString &pass );
+    virtual void setPassword( const QString &pass );
 
     /**
       Returns the password of the blog.
       @see setPassword();
     */
-    QString password() const;
+    virtual QString password() const;
 
     /**
       Sets the username for the blog.
@@ -396,13 +396,13 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see username()
     */
-    void setUsername( const QString &uname );
+    virtual void setUsername( const QString &uname );
 
     /**
        Returns the username of the blog.
        @see setUsername()
     */
-    QString username() const;
+    virtual QString username() const;
 
     /**
       Sets the URL for the blog.
@@ -410,26 +410,26 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see url()
     */
-    void setUrl( const KUrl &url );
+    virtual void setUrl( const KUrl &url );
 
     /**
       Get the URL for the blog.
       @see setUrl()
     */
-    KUrl url() const;
+    virtual KUrl url() const;
 
     /**
       Sets the time zone of the blog server.
       @param tz time zone of the server
       @see timeZone()
     */
-    void setTimeZone( const KTimeZone &tz );
+    virtual void setTimeZone( const KTimeZone &tz );
 
     /**
       Get the time zone of the blog server.
       @see void setTimeZone()
     */
-    KTimeZone timeZone();
+    virtual KTimeZone timeZone();
 
     /**
       Sets the number of blog posts to be downloaded.
@@ -437,14 +437,14 @@ class KBLOG_EXPORT APIBlog : public QObject
       @see listPostings()
       @see downloadCount()
     */
-    void setDownloadCount( int nr );
+    virtual void setDownloadCount( int nr );
 
     /**
       Gets the number of blog posts to be downloaded.
       @see listPostings()
       @see setDownloadCount()
     */
-    int downloadCount() const;
+    virtual int downloadCount() const;
 
     /**
       Get information about the user from the blog.
@@ -479,16 +479,6 @@ class KBLOG_EXPORT APIBlog : public QObject
       @see fetchedPosting()
     */
     virtual bool fetchPosting( const QString &postingId ) = 0;
-
-    /**
-      Overloaded for convenience.
-      @param posting is a posting with the posting id already set.
-      Note: The content is currently not updated on fetch. You will find
-      the posting with fetchedPosting( KBlog::BlogPosting &posting ) signal.
-
-    */
-    //TODO: either update the *posting inside function or remove
-    bool fetchPosting( KBlog::BlogPosting *posting );
 
     /**
       Modify a posting on server.
@@ -528,7 +518,7 @@ class KBLOG_EXPORT APIBlog : public QObject
       @param posting is the posting which will be removed. It will also
       be deleted.
     */
-    bool removePosting( KBlog::BlogPosting *posting );
+    virtual bool removePosting( KBlog::BlogPosting *posting );
 
   Q_SIGNALS:
     /**
@@ -541,7 +531,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
 '     @see userInfo()
     */
-    void userInfoRetrieved( const QString &nickname, const QString &userid,
+    virtual void userInfoRetrieved( const QString &nickname, const QString &userid,
                             const QString &email );
 
     /**
@@ -553,7 +543,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see listBlogs()
     */
-    void blogInfoRetrieved( const QString &id, const QString &name );
+    virtual void blogInfoRetrieved( const QString &id, const QString &name );
 
     /**
       This signal is emitted when a listCategories() job fetches category
@@ -564,7 +554,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see listCategories()
     */
-    void categoryInfoRetrieved( const QString &name,
+    virtual void categoryInfoRetrieved( const QString &name,
                                 const QString &description );
 
     /**
@@ -575,7 +565,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see listPostings()
     */
-    void listedPosting( KBlog::BlogPosting &posting );
+    virtual void listedPosting( KBlog::BlogPosting &posting );
 
     /**
       This signal is emitted when a fetchPosting() job fetches a posting
@@ -585,7 +575,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see fetchPosting(KBlog::BlogPosting*)
     */
-    void fetchedPosting( KBlog::BlogPosting &posting );
+    virtual void fetchedPosting( KBlog::BlogPosting &posting );
 
     /**
       This signal is emitted when a createPosting() job successfully creates
@@ -595,7 +585,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see createPosting( KBlog::BlogPosting* )
     */
-    void createdPosting( const QString &id );
+    virtual void createdPosting( const QString &id );
 
     /**
       This signal is emitted when a createMedia() job successfully creates
@@ -606,7 +596,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see createMedia( KBlog::BlogMedia* )
     */
-    void createdMedia( const QString &url );
+    virtual void createdMedia( const QString &url );
 
     /**
       This signal is emitted when a modifyPosting() job modifies a posting
@@ -616,7 +606,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see modifyPosting( KBlog::BlogPosting* )
     */
-    void modifiedPosting( bool modified );
+    virtual void modifiedPosting( bool modified );
 
     /**
       This signal is emitted when the last posting of the listPostings()
@@ -624,7 +614,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see listPostings()
     */
-    void listPostingsFinished();
+    virtual void listPostingsFinished();
 
     /**
       This signal is emitted when the last category of the listCategories()
@@ -632,16 +622,16 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see listCategories()
     */
-    void listCategoriesFinished();
+    virtual void listCategoriesFinished();
 
     /**
       All xml parsing and all structural problems will emit an error.
 
       @see errorType
     */
-    void error( const errorType &type, const QString &errorMessage );
+    virtual void error( const errorType &type, const QString &errorMessage );
 
-  private:
+  protected:
     class APIBlogPrivate;
     APIBlogPrivate *const d;
 };

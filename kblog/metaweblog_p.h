@@ -35,23 +35,22 @@ class APIMetaWeblog::APIMetaWeblogPrivate : public QObject
 {
   Q_OBJECT
   public:
-    KXmlRpc::Client *mXmlRpcClient;
     APIMetaWeblog *parent;
     QMutex mLock;
-
+    KXmlRpc::Client *mXmlRpcClient;
     APIMetaWeblogPrivate();
     ~APIMetaWeblogPrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );
 
   public Q_SLOTS:
-    void slotListPostings( const QList<QVariant> &result, const QVariant &id );
-    void slotListCategories( const QList<QVariant> &result, const QVariant &id );
-    void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
-    void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
-    void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
-    void slotCreateMedia( const QList<QVariant> &result, const QVariant &id );
-    void faultSlot( int, const QString&, const QVariant& );
-    bool readPostingFromMap( BlogPosting *post, const QMap<QString, QVariant> &postInfo );
+    virtual void slotListPostings( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotListCategories( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotCreateMedia( const QList<QVariant> &result, const QVariant &id );
+    virtual void faultSlot( int, const QString&, const QVariant& );
+    virtual bool readPostingFromMap( BlogPosting *post, const QMap<QString, QVariant> &postInfo );
 };
 
 #endif

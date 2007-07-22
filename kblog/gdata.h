@@ -145,6 +145,24 @@ class KBLOG_EXPORT APIGData : public APIBlog
     */
     virtual bool removePosting( const QString &postingId );
 
+    /**
+        Get the E-Mail of the user.
+
+        @return email
+
+        @see setEmail( QString& email )
+    */
+    virtual QString email();
+
+    /**
+        Set the E-Mail of the user. This is used for authentication.
+
+        @param email is the mail address of the user
+
+        @see email()
+    */
+    virtual void setEmail( const QString& email );
+
 private:
     class APIGDataPrivate;
     APIGDataPrivate* const d;

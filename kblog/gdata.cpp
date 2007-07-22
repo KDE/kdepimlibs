@@ -169,4 +169,8 @@ bool APIGData::removePosting( const QString &postingId )
   return false;
 }
 
+QString APIGData::email() { return d->mEmail; }
+
+void APIGData::setEmail( const QString& email ) { d->mEmail = email; }
+
 #include "gdata.moc"

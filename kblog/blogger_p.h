@@ -23,6 +23,7 @@
 #define BLOGGER_P_H
 
 #include <blogger.h>
+#include <blog_p.h>
 
 #include <kxmlrpcclient/client.h>
 
@@ -34,24 +35,24 @@ using namespace KBlog;
 class APIBlogger::APIBloggerPrivate : public QObject
 {
   Q_OBJECT
+
   public:
-    KXmlRpc::Client *mXmlRpcClient;
     APIBlogger *parent;
     QMutex mLock;
-
+    KXmlRpc::Client *mXmlRpcClient;
     APIBloggerPrivate();
     ~APIBloggerPrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );
 
   public Q_SLOTS:
-    void slotUserInfo( const QList<QVariant> &result, const QVariant &id );
-    void slotListBlogs( const QList<QVariant> &result, const QVariant &id );
-    void slotListPostings( const QList<QVariant> &result, const QVariant &id );
-    void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
-    void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
-    void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
-    void faultSlot( int number, const QString &errorString, const QVariant &id );
-    bool readPostingFromMap( BlogPosting *post,
+    virtual void slotUserInfo( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotListBlogs( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotListPostings( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
+    virtual void faultSlot( int number, const QString &errorString, const QVariant &id );
+    virtual bool readPostingFromMap( BlogPosting *post,
                              const QMap<QString, QVariant> &postInfo );
 };
 

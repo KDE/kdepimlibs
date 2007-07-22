@@ -33,13 +33,14 @@ using namespace KBlog;
 class APIGData::APIGDataPrivate : public QObject
 {
   Q_OBJECT
-  private:
+  protected:
     QString mFetchPostingId;
     QString mAuthenticationString;
     QDateTime mAuthenticationTime;
   public:
     APIGData* parent;
     QMutex mLock;
+    QString mEmail;
     APIGDataPrivate();
     ~APIGDataPrivate();
     QString getFetchPostingId(){ return mFetchPostingId; }

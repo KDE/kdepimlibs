@@ -22,13 +22,11 @@
 */
 
 #include <blog.h>
-
-#include <kxmlrpcclient/client.h>
+#include <blog_p.h>
 
 #include <kdebug.h>
 
 #include <QtCore/QVariant>
-#include <QtCore/QMutex>
 
 using namespace KBlog;
 
@@ -217,22 +215,6 @@ void BlogMedia::setData( const QByteArray &data )
   d->mData = data;
 }
 
-//@cond PRIVATE
-class APIBlog::APIBlogPrivate
-{
-  public:
-    QString mAppId;
-    QString mBlogId;
-    QString mUsername;
-    QString mPassword;
-    KUrl mUrl;
-    KTimeZone mTimeZone;
-    unsigned int mDownloadCount;
-  private:
-    QMutex mLock;
-};
-//@endcond
-
 APIBlog::APIBlog( const KUrl &server, QObject *parent ) :
   QObject( parent ), d( new APIBlogPrivate )
 {
@@ -308,11 +290,6 @@ int APIBlog::downloadCount() const
 bool APIBlog::removePosting( KBlog::BlogPosting *posting )
 {
   return removePosting( posting->postingId() );
-}
-
-bool APIBlog::fetchPosting( KBlog::BlogPosting *posting )
-{
-  return fetchPosting( posting->postingId() );
 }
 
 #include "blog.moc"
