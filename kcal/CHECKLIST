@@ -16,7 +16,7 @@ freebusy              |       |         |       |         |    D    |
 freebusyurlstore      |       |         |       |         |    D    |
 htmlexport            |       |         |       |         |    D    |
 icaldrag              |       |         |       |         |    D    |
-icalformat            |       |         |   D   |         |    D    |
+icalformat            |   D   |    D    |   D   |         |    D    | Allen
 icalformat_p          |   D   |         |   D   |         |    D    | Allen
 icaltimezones         |       |         |   D   |         |    D    |
 imipscheduler         |       |         |       |         |    D    |
@@ -40,7 +40,7 @@ scheduler             |       |         |       |         |    D    |
 sortablelist.h        |   D   |    D    |  n/a  |    D    |    D    |
 todo                  |   D   |         |   D   |    D    |    D    | Allen
 vcaldrag              |       |         |       |         |    D    |
-vcalformat            |       |         |       |         |    D    |
+vcalformat            |   D   |         |   D   |         |    D    | Allen
 
 == DONE ==
 alarm                 |   D   |    D    |   D   |    D    |    D    | Allen

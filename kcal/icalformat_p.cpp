@@ -25,10 +25,6 @@
   This file is part of the API for handling calendar data and
   defines the internal ICalFormatImpl class.
 
-  This class implements the iCalendar format. It provides methods for
-  loading/saving/converting iCalendar format data into the internal
-  representation as Calendar and Incidences.
-
   @brief
   This class provides the libical dependent functions for ICalFormat.
 

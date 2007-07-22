@@ -23,9 +23,6 @@
   This file is part of the API for handling calendar data and
   defines the CalFormat abstract base class.
 
-  @brief
-  An abstract base class that provides an interface to various calendar formats.
-
   @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 
@@ -45,6 +42,9 @@ namespace KCal {
 class Calendar;
 
 /**
+  @brief
+  An abstract base class that provides an interface to various calendar formats.
+
   This is the base class for calendar formats. It provides an interface for the
   generation/interpretation of a textual representation of a calendar.
 */

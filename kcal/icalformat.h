@@ -23,13 +23,6 @@
   This file is part of the API for handling calendar data and
   defines the ICalFormat class.
 
-  This class implements the iCalendar format. It provides methods for
-  loading/saving/converting iCalendar format data into the internal
-  representation as Calendar and Incidences.
-
-  @brief
-  iCalendar format implementation.
-
   @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 
@@ -49,11 +42,19 @@ namespace KCal {
 class ICalFormatImpl;
 class FreeBusy;
 
+/**
+  @brief
+  iCalendar format implementation.
+
+  This class implements the iCalendar format. It provides methods for
+  loading/saving/converting iCalendar format data into the internal
+  representation as Calendar and Incidences.
+*/
 class KCAL_EXPORT ICalFormat : public CalFormat
 {
   public:
     /**
-      Constructor an ICalFormat with an empty ICalFormatImpl.
+      Constructor a new iCalendar Format object.
     */
     ICalFormat();
 
@@ -63,60 +64,53 @@ class KCAL_EXPORT ICalFormat : public CalFormat
     virtual ~ICalFormat();
 
     /**
-      Loads a calendar on disk in iCalendar format into calendar.
-      Returns true if successful, else returns false. Provides more error
-      information by exception().
-
-      @param calendar Calendar object to be filled.
-      @param fileName The name of the calendar file on disk.
-      @return true if successful; false otherwise.
+      @copydoc
+      CalFormat::load()
     */
     bool load( Calendar *calendar, const QString &fileName );
 
     /**
-      Writes out the calendar to disk in iCalendar format.
-
-      @param calendar The Calendar object to be written.
-      @param fileName The name of the calendar file on disk.
-      @return true if successful; false otherwise.
+      @copydoc
+      CalFormat::save()
     */
     bool save( Calendar *calendar, const QString &fileName );
 
     /**
-      Parse string and populate calendar with that information.
-
-      @param calendar Calendar object to be filled.
-      @param string is a QString containing the data to be parsed.
-
-      @return true if the parsing was successful; false otherwise.
+      @copydoc
+      CalFormat::fromString()
     */
-    bool fromString( Calendar *calendar, const QString &string);
+    bool fromString( Calendar *calendar, const QString &string );
 
     /**
       Parses a string, returning the first iCal component as an Incidence.
-      @return non-zero pointer if the parsing was successful; 0 otherwise.
 
       @param string is a QString containing the data to be parsed.
+
+      @return non-zero pointer if the parsing was successful; 0 otherwise.
+      @see fromString(Calendar *, const QString &), fromRawString()
     */
     Incidence *fromString( const QString &string );
 
     /**
-      Converts Calendar information to a QString.
+      Parses a string and fills a RecurrenceRule object with the information.
 
-      @param calendar Calendar object containing the information to be converted
-      into a QString.
-      @return the QString will be Null if the conversion was unsuccessful.
+      @param rule is a pointer to a RecurrenceRule object.
+      @param string is a QString containing the data to be parsed.
+      @return true if successful; false otherwise.
     */
-    QString toString( Calendar *calendar );
+    bool fromString ( RecurrenceRule *rule, const QString &string );
 
     /**
-      Converts an Incidence to iCalendar formatted text.
-
-      @param incidence is a pointer to an Incidence object to be converted
-      into iCal formatted text.
-      @return the QString will be Null if the conversion was unsuccessful.
+      @copydoc
+      CalFormat::fromRawString()
     */
-    QString toICalString( Incidence *incidence );
+    bool fromRawString( Calendar *calendar, const QByteArray &data );
+
+    /**
+      @copydoc
+      CalFormat::toString()
+    */
+    QString toString( Calendar *calendar );
 
     /**
       Converts an Incidence to a QString.
@@ -128,53 +122,74 @@ class KCAL_EXPORT ICalFormat : public CalFormat
     QString toString( Incidence *incidence );
 
     /**
-      Return recurrence rule as iCalendar formatted text.
+      Converts a RecurrenceRule to a QString.
+      @param rule is a pointer to a RecurrenceRule object to be converted
+      into a QString.
+
+      @return the QString will be Null if the conversion was unsuccessful.
     */
     QString toString( RecurrenceRule *rule );
 
     /**
-      Parse string and fill recurrence object with
-      that information
+      Converts an Incidence to iCalendar formatted text.
+
+      @param incidence is a pointer to an Incidence object to be converted
+      into iCal formatted text.
+      @return the QString will be Null if the conversion was unsuccessful.
     */
-    bool fromString ( RecurrenceRule *rule, const QString &s );
+    QString toICalString( Incidence *incidence );
 
     /**
-      Create a scheduling message for event @p e using method @p m.
+      Creates a scheduling message string for an Incidence.
+
+      @param incidence is a pointer to an IncidenceBase object to be scheduled.
+      @param method is a Scheduler::Method
+
+      @return a QString containing the message if successful; 0 otherwise.
     */
-    QString createScheduleMessage( IncidenceBase *e, Scheduler::Method m );
+    QString createScheduleMessage( IncidenceBase *incidence,
+                                   Scheduler::Method method );
 
     /**
-      Parse scheduling message provided as string @p s.
+      Parses a Calendar scheduling message string into ScheduleMessage object.
+
+      @param calendar is a pointer to a Calendar object associated with the
+      scheduling message.
+      @param string is a QString containing the data to be parsed.
+
+      @return a pointer to a ScheduleMessage object if successful; 0 otherwise.
+      The calling routine may later free the return memory.
     */
-    ScheduleMessage *parseScheduleMessage( Calendar *calendar, const QString &s );
+    ScheduleMessage *parseScheduleMessage( Calendar *calendar, const QString &string );
 
     /**
-      Parse FREEBUSY object.
+      Converts a QString into a FreeBusy object.
+
+      @param string is a QString containing the data to be parsed.
+      @return a pointer to a FreeBusy object if successful; 0 otherwise.
+
+      @note Do not attempt to free the FreeBusy memory from the calling routine.
     */
-    FreeBusy *parseFreeBusy( const QString &s );
+    FreeBusy *parseFreeBusy( const QString &string );
 
     /**
-      Set time specification (time zone, etc.) used.
+      Sets the iCalendar time specification (time zone, etc.).
+      @param timeSpec is the time specification to set.
+      @see timeSpec().
     */
     void setTimeSpec( const KDateTime::Spec &timeSpec );
 
     /**
-      Return time specification used.
+      Returns the iCalendar time specification.
+      @see setTimeSpec().
     */
     KDateTime::Spec timeSpec() const;
 
     /**
-      Return id string of timezone used (if any).
+      Returns the timezone id string used by the iCalendar; an empty string
+      if the iCalendar does not have a timezone.
     */
     QString timeZoneId() const;
-
-    /**
-      Parses a utf8 encoded string, returning the first iCal component
-      encountered in that string. This is an overload used for efficient
-      reading to avoid utf8 conversions, which are expensive when reading
-      from disk.
-    */
-    bool fromRawString( Calendar *calendar, const QByteArray &data );
 
   private:
     //@cond PRIVATE
