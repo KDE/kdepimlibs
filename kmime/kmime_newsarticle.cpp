@@ -144,4 +144,20 @@ Headers::Lines* NewsArticle::lines(bool create)
   return &d->lines;
 }
 
+// @cond PRIVATE
+#define kmime_mk_header_accessor( header, method ) \
+Headers::header* NewsArticle::method( bool create ) { \
+  Headers::header *p = 0; \
+  return getHeaderInstance( p, create ); \
+}
+
+kmime_mk_header_accessor( Control, control )
+kmime_mk_header_accessor( Supersedes, supersedes )
+kmime_mk_header_accessor( MailCopiesTo, mailCopiesTo )
+kmime_mk_header_accessor( Newsgroups, newsgroups )
+kmime_mk_header_accessor( FollowUpTo, followUpTo )
+
+#undef kmime_mk_header_accessor
+// @endcond
+
 } // namespace KMime

@@ -190,12 +190,6 @@ Headers::Date* Message::date( bool create )
   return &d->date;
 }
 
-Headers::InReplyTo* Message::inReplyTo(bool create)
-{
-  KMime::Headers::InReplyTo *p = 0;
-  return getHeaderInstance( p, create );
-}
-
 bool Message::isTopLevel() const
 {
   return true;
@@ -232,6 +226,27 @@ Content* Message::mainBodyPart(const QByteArray & type)
 
   return 0;
 }
+
+// @cond PRIVATE
+#define kmime_mk_header_accessor( header, method ) \
+Headers::header* Message::method( bool create ) { \
+  Headers::header *p = 0; \
+  return getHeaderInstance( p, create ); \
+}
+
+kmime_mk_header_accessor( MessageID, messageID )
+kmime_mk_header_accessor( Organization, organization )
+kmime_mk_header_accessor( From, from )
+kmime_mk_header_accessor( ReplyTo, replyTo )
+kmime_mk_header_accessor( To, to )
+kmime_mk_header_accessor( Cc, cc )
+kmime_mk_header_accessor( Bcc, bcc )
+kmime_mk_header_accessor( References, references )
+kmime_mk_header_accessor( UserAgent, userAgent )
+kmime_mk_header_accessor( InReplyTo, inReplyTo )
+
+#undef kmime_mk_header_accessor
+// @endcond
 
 }
 

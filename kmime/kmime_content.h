@@ -382,6 +382,7 @@ class KMIME_EXPORT Content
 
   private:
     Q_DECLARE_PRIVATE( Content )
+    Q_DISABLE_COPY( Content )
 };
 
 // some compilers (for instance Compaq C++) need template inline functions

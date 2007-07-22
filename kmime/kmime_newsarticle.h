@@ -44,32 +44,12 @@ class KMIME_EXPORT NewsArticle : public Message
     virtual void setHeader( KMime::Headers::Base *h );
     virtual bool removeHeader( const char *type );
 
-    virtual KMime::Headers::Control *control( bool create=true )
-      { KMime::Headers::Control *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::Supersedes *supersedes( bool create=true )
-      { KMime::Headers::Supersedes *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::MailCopiesTo *mailCopiesTo( bool create=true )
-      { KMime::Headers::MailCopiesTo *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::Newsgroups *newsgroups( bool create=true )
-      { KMime::Headers::Newsgroups *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::FollowUpTo *followUpTo( bool create=true )
-      { KMime::Headers::FollowUpTo *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::Lines *lines( bool create=true );
+    virtual KMime::Headers::Control *control( bool create = true );
+    virtual KMime::Headers::Supersedes *supersedes( bool create = true );
+    virtual KMime::Headers::MailCopiesTo *mailCopiesTo( bool create = true );
+    virtual KMime::Headers::Newsgroups *newsgroups( bool create = true );
+    virtual KMime::Headers::FollowUpTo *followUpTo( bool create = true );
+    virtual KMime::Headers::Lines *lines( bool create = true );
 
   protected:
     virtual QByteArray assembleHeaders();

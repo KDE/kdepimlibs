@@ -56,65 +56,18 @@ class KMIME_EXPORT Message : public Content
     /**
       Returns the message MessageID
     */
-    virtual KMime::Headers::MessageID *messageID( bool create=true )
-      {
-        KMime::Headers::MessageID *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::Subject *subject( bool create=true );
-
-    virtual KMime::Headers::Date *date( bool create=true );
-
-    virtual KMime::Headers::From *from( bool create=true )
-      {
-        KMime::Headers::From *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::Organization *organization( bool create=true )
-      {
-        KMime::Headers::Organization *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::ReplyTo *replyTo( bool create=true )
-      {
-        KMime::Headers::ReplyTo *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::To *to( bool create=true )
-      {
-        KMime::Headers::To *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::Cc *cc( bool create=true )
-      {
-        KMime::Headers::Cc *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::Bcc *bcc( bool create=true )
-      {
-        KMime::Headers::Bcc *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::References *references( bool create=true )
-      {
-        KMime::Headers::References *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::UserAgent *userAgent( bool create=true )
-      {
-        KMime::Headers::UserAgent *p=0;
-        return getHeaderInstance( p, create );
-      }
-
-    virtual KMime::Headers::InReplyTo *inReplyTo( bool create=true );
+    virtual KMime::Headers::MessageID *messageID( bool create = true );
+    virtual KMime::Headers::Subject *subject( bool create = true );
+    virtual KMime::Headers::Date *date( bool create = true );
+    virtual KMime::Headers::From *from( bool create = true );
+    virtual KMime::Headers::Organization *organization( bool create = true );
+    virtual KMime::Headers::ReplyTo *replyTo( bool create = true );
+    virtual KMime::Headers::To *to( bool create = true );
+    virtual KMime::Headers::Cc *cc( bool create = true );
+    virtual KMime::Headers::Bcc *bcc( bool create = true );
+    virtual KMime::Headers::References *references( bool create = true );
+    virtual KMime::Headers::UserAgent *userAgent( bool create = true );
+    virtual KMime::Headers::InReplyTo *inReplyTo( bool create = true );
 
     virtual bool isTopLevel() const;
 
