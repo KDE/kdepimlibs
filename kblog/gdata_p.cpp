@@ -51,18 +51,17 @@ APIGData::APIGDataPrivate::~APIGDataPrivate(){
 QString APIGData::APIGDataPrivate::authenticate(){
   QByteArray data;
   KUrl authGateway( "https://www.google.com/accounts/ClientLogin" );
-  authGateway.addQueryItem( "Email", parent->username() );
+  authGateway.addQueryItem( "Email", "christian_weilbach@web.de" );
   authGateway.addQueryItem( "Passwd", parent->password() );
-  authGateway.addQueryItem( "source" , "KBlog" );
+  authGateway.addQueryItem( "source" , "KDE-KBlog-4" );
   authGateway.addQueryItem( "service", "blogger" );
   if( !mAuthenticationTime.isValid() ||
       QDateTime::currentDateTime().toTime_t() - mAuthenticationTime.toTime_t() > TIMEOUT ||
       mAuthenticationString.isEmpty() ){
     KIO::Job *job = KIO::http_post( authGateway, QByteArray(), false );
-    job->addMetaData( "content-length", "0" );
     if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &authGateway ) ) {
       kDebug(5323) << "Fetched authentication result for " << authGateway.prettyUrl() << ". " << endl;
-      kDebug(5323) << "Authentication response " << data << endl;
+      kDebug(5323) << "Authentication response: " << data << endl;
       QRegExp rx( "Auth=(.+)" );
       if( rx.indexIn( data )!=-1 ){
         kDebug(5323)<<"RegExp got authentication string: " << rx.cap(1) << endl;
