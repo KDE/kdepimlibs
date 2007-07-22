@@ -176,14 +176,6 @@ class KCAL_EXPORT ICalFormat : public CalFormat
     */
     bool fromRawString( Calendar *calendar, const QByteArray &data );
 
-  protected:
-    /**
-      Sets the iCal format implementation.
-
-      @param impl is a pointer to an ICalFormatImpl object.
-    */
-    void setImplementation( ICalFormatImpl *impl );
-
   private:
     //@cond PRIVATE
     class Private;

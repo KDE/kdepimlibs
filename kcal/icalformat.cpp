@@ -86,14 +86,6 @@ ICalFormat::~ICalFormat()
   delete d;
 }
 
-void ICalFormat::setImplementation( ICalFormatImpl *impl )
-{
-  if ( d->mImpl ) {
-    delete d->mImpl;
-  }
-  d->mImpl = impl;
-}
-
 bool ICalFormat::load( Calendar *calendar, const QString &fileName )
 {
   kDebug(5800) << "ICalFormat::load() " << fileName << endl;
