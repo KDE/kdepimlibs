@@ -30,25 +30,6 @@
 
 using namespace KBlog;
 
-//@cond PRIVATE
-class BlogPosting::BlogPostingPrivate
-{
-  public:
-  bool mPublish;
-  QString mPostingId;
-  QString mTitle;
-  QString mContent;
-  QStringList mCategories;
-  QString mFingerprint; // TODO what is that for?
-  KDateTime mCreationDateTime;
-  KDateTime mModificationDateTime;
-  bool mDeleted;
-  bool mUploaded;
-  bool mDateFormatExtended;
-  bool mTimeFormatExtended;
-};
-//@endcond
-
 BlogPosting::BlogPosting(): d( new BlogPostingPrivate )
 {
   d->mPublish=false;
@@ -166,16 +147,6 @@ void BlogPosting::setUseExtendedTimeFormat( bool extended )
   d->mDateFormatExtended=extended;
 }
 
-//@cond PRIVATE
-class BlogMedia::BlogMediaPrivate
-{
-  public:
-    QString mName;
-    QString mMimetype;
-    QByteArray mData;
-};
-//@endcond
-
 BlogMedia::BlogMedia(): d( new BlogMediaPrivate )
 {
 }
@@ -223,7 +194,6 @@ APIBlog::APIBlog( const KUrl &server, QObject *parent ) :
 
 APIBlog::~APIBlog()
 {
-// TODO check for pending queries of client? smart pointer or sth.?
   delete d;
 }
 

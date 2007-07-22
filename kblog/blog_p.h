@@ -28,18 +28,41 @@
 
 using namespace KBlog;
 
+class BlogPosting::BlogPostingPrivate
+{
+  public:
+  bool mPublish;
+  QString mPostingId;
+  QString mTitle;
+  QString mContent;
+  QStringList mCategories;
+  QString mFingerprint; // TODO what is that for?
+  KDateTime mCreationDateTime;
+  KDateTime mModificationDateTime;
+  bool mDeleted;
+  bool mUploaded;
+  bool mDateFormatExtended;
+  bool mTimeFormatExtended;
+};
+
+class BlogMedia::BlogMediaPrivate
+{
+  public:
+    QString mName;
+    QString mMimetype;
+    QByteArray mData;
+};
+
 class APIBlog::APIBlogPrivate
 {
   public:
     APIBlog *parent;
-    QString mAppId;
     QString mBlogId;
     QString mUsername;
     QString mPassword;
     KUrl mUrl;
     KTimeZone mTimeZone;
     unsigned int mDownloadCount;
-    QMutex mLock;
 };
 
 #endif

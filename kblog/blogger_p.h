@@ -37,6 +37,7 @@ class APIBlogger::APIBloggerPrivate : public QObject
   Q_OBJECT
 
   public:
+    QString mAppId;
     APIBlogger *parent;
     QMutex mLock;
     KXmlRpc::Client *mXmlRpcClient;
