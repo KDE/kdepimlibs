@@ -1305,7 +1305,7 @@ Attachment *ICalFormatImpl::readAttachment( icalproperty *attach )
 
   icalvalue_kind value_kind = icalvalue_isa( icalproperty_get_value( attach ) );
 
-  if ( value_kind == ICAL_ATTACH_VALUE ) {
+  if ( value_kind == ICAL_ATTACH_VALUE || value_kind == ICAL_BINARY_VALUE ) {
     icalattach *a = icalproperty_get_attach( attach );
 
     int isurl = icalattach_get_is_url( a );
@@ -1339,6 +1339,13 @@ Attachment *ICalFormatImpl::readAttachment( icalproperty *attach )
       attachment->setLocal( xvalue.toLower() == "local" );
     }
     p = icalproperty_get_next_parameter( attach, ICAL_X_PARAMETER );
+  }
+
+  p = icalproperty_get_first_parameter(attach,ICAL_X_PARAMETER);
+  while (p) {
+   if ( strncmp (icalparameter_get_xname(p), "X-LABEL", 7) == 0 )
+     attachment->setLabel( icalparameter_get_xvalue(p) );
+    p = icalproperty_get_next_parameter(attach, ICAL_X_PARAMETER);
   }
 
   return attachment;
