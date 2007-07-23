@@ -174,8 +174,8 @@ class KCAL_EXPORT Event : public Incidence
 
   private:
     /**
-     @copydoc
-     IncidenceBase::accept()
+      @copydoc
+      IncidenceBase::accept()
     */
     bool accept( Visitor &v ) { return v.visit( this ); }
 
