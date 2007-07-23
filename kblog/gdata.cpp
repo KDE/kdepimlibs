@@ -162,13 +162,6 @@ void APIGData::createPosting( KBlog::BlogPosting* posting )
 //     job->start( d->mSlave );
 }
 
-void APIGData::createMedia( KBlog::BlogMedia* media )
-{
-  Q_UNUSED( media );
-  kDebug() << "Creating media is not available in GData API." << endl;
-  emit error( NotSupported, i18n( "Creating media is not available in GData API." ) );
-}
-
 void APIGData::removePosting( KBlog::BlogPosting *posting )
 {
 //   Q_UNUSED( postingId );

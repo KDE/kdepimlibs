@@ -142,14 +142,6 @@ void APIBlogger::createPosting( KBlog::BlogPosting *posting )
       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 
-void APIBlogger::createMedia( KBlog::BlogMedia *media )
-{
-  Q_UNUSED( media );
-  emit error( NotSupported,
-              i18n( "Media upload not available in Blogger API 1.0." ) );
-  kDebug(5323) << "Media upload not available in Blogger API 1.0." << endl;
-}
-
 void APIBlogger::removePosting( KBlog::BlogPosting *posting )
 {
 //   if ( d->mLock.tryLock() ) {

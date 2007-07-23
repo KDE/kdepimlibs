@@ -116,13 +116,6 @@ class KBLOG_EXPORT APIGData : public APIBlog
     virtual void createPosting( KBlog::BlogPosting *posting );
 
     /**
-        Create a new media object, e.g. picture, on server.
-
-        @param media is send to the server.
-    */
-    virtual void createMedia( KBlog::BlogMedia *media );
-
-    /**
         Remove a posting from the server.
 
         @param postingId is the id of the posting to remove.

@@ -86,6 +86,8 @@ class KBLOG_EXPORT BlogPosting : public QObject
                  const QStringList &categories = QStringList(),
                  const bool publish = true );
 
+    BlogPosting( const QString &postingId );
+
     /**
       Virtual default destructor.
     */
@@ -510,13 +512,6 @@ class KBLOG_EXPORT APIBlog : public QObject
       @param posting is send to the server.
     */
     virtual void createPosting( KBlog::BlogPosting *posting ) = 0;
-
-    /**
-      Create a new media object, e.g. picture, on server.
-
-      @param media is send to the server.
-    */
-    virtual void createMedia( KBlog::BlogMedia *media ) = 0;
 
     /**
       Remove a posting from the server.

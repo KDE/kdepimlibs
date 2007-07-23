@@ -33,6 +33,7 @@ using namespace KBlog;
 BlogPosting::BlogPosting(): d( new BlogPostingPrivate )
 {
   d->mPublish=false;
+  d->mStatus=New;
 }
 
 BlogPosting::BlogPosting( const QString &title, const QString &content,
@@ -44,6 +45,14 @@ BlogPosting::BlogPosting( const QString &title, const QString &content,
   d->mCategories = categories;
   d->mPublish = publish;
   d->mCreationDateTime = KDateTime::currentDateTime( KDateTime::Spec() );
+  d->mStatus = New;
+}
+
+BlogPosting::BlogPosting( const QString &postingId ):
+  d( new BlogPostingPrivate )
+{
+  d->mPostingId = postingId;
+  d->mStatus = New;
 }
 
 BlogPosting::~BlogPosting()
