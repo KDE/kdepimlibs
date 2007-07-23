@@ -45,14 +45,14 @@ class APIMetaWeblog::APIMetaWeblogPrivate : public QObject
     QList<QVariant> defaultArgs( const QString &id = QString() );
 
   public Q_SLOTS:
-    virtual void slotListPostings( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotListCategories( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotCreateMedia( const QList<QVariant> &result, const QVariant &id );
-    virtual void faultSlot( int, const QString&, const QVariant& );
-    virtual bool readPostingFromMap( BlogPosting *post, const QMap<QString, QVariant> &postInfo );
+    void slotListPostings( const QList<QVariant> &result, const QVariant &id );
+    void slotListCategories( const QList<QVariant> &result, const QVariant &id );
+    void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
+    void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
+    void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
+    void slotCreateMedia( const QList<QVariant> &result, const QVariant &id );
+    void faultSlot( int, const QString&, const QVariant& );
+    bool readPostingFromMap( BlogPosting *post, const QMap<QString, QVariant> &postInfo );
 };
 
 #endif

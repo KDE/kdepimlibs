@@ -37,7 +37,7 @@ BlogPosting::BlogPosting(): d( new BlogPostingPrivate )
 }
 
 BlogPosting::BlogPosting( const QString &title, const QString &content,
-                          const QStringList &categories, const bool publish ):
+                          const QStringList &categories, bool publish ):
   d( new BlogPostingPrivate )
 {
   d->mTitle = title;
@@ -65,7 +65,7 @@ bool BlogPosting::publish() const
   return d->mPublish;
 }
 
-void BlogPosting::setPublish( const bool publish )
+void BlogPosting::setPublish( bool publish )
 {
   d->mPublish = publish;
 }
@@ -130,7 +130,7 @@ void BlogPosting::setModificationDateTime( const KDateTime &datetime )
   d->mModificationDateTime = datetime;
 }
 
-BlogPosting::Status BlogPosting::status()
+BlogPosting::Status BlogPosting::status() const
 {
   return d->mStatus;
 }

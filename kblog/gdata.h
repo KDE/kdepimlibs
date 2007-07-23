@@ -66,7 +66,7 @@ class KBLOG_EXPORT APIGData : public APIBlog
          @param server is the url for the xmlrpc gateway.
     */
     explicit APIGData( const KUrl &server, QObject *parent = 0 );
-    virtual ~APIGData();
+    ~APIGData();
 
     /**
         Returns the API of the inherited object.
@@ -77,13 +77,13 @@ class KBLOG_EXPORT APIGData : public APIBlog
         Get information about the user from the blog. Note: This is not supported on the server side.
 	@see void userInfoRetrieved( const QString &nickname, const QString &userid, const QString &email )
     */
-    virtual void userInfo();
+    void userInfo();
 
     /**
         List the blogs available for this authentication on the server. Note: This is not supported on the server side.
 	@see void blogInfoRetrieved( const QString &id, const QString &name )
     */
-    virtual void listBlogs();
+    void listBlogs();
 
     /**
         List recent postings on the server..
@@ -91,7 +91,7 @@ class KBLOG_EXPORT APIGData : public APIBlog
         @see     void fetchedPosting( KBlog::BlogPosting &posting )
         @see     void listPostingsFinished()
     */
-    virtual void listPostings();
+    void listPostings();
 
     /**
         Fetch the Posting with postingId.
@@ -99,21 +99,21 @@ class KBLOG_EXPORT APIGData : public APIBlog
 
         @see  void fetchedPosting( KBlog::BlogPosting &posting )
     */
-    virtual void fetchPosting( KBlog::BlogPosting *posting );
+    void fetchPosting( KBlog::BlogPosting *posting );
 
     /**
         Modify a posting on server.
 
         @param posting is used to send the modified posting including the correct postingId from it to the server.
     */
-    virtual void modifyPosting( KBlog::BlogPosting *posting );
+    void modifyPosting( KBlog::BlogPosting *posting );
 
     /**
         Create a new posting on server.
 
         @param posting is send to the server.
     */
-    virtual void createPosting( KBlog::BlogPosting *posting );
+    void createPosting( KBlog::BlogPosting *posting );
 
     /**
         Remove a posting from the server.
@@ -122,7 +122,7 @@ class KBLOG_EXPORT APIGData : public APIBlog
 
         @see void removePosting( KBlog::BlogPosting *posting )
     */
-    virtual void removePosting( KBlog::BlogPosting *posting );
+    void removePosting( KBlog::BlogPosting *posting );
 
 private:
     class APIGDataPrivate;

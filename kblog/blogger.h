@@ -74,7 +74,7 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
     /**
        Destroy the object.
     */
-    virtual ~APIBlogger();
+    ~APIBlogger();
 
     /**
       Returns the API of the inherited object.
@@ -93,13 +93,13 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
 
       @see void userInfoRetrieved( const QString &, const QString &, const QString & )
     */
-    virtual void userInfo();
+    void userInfo();
 
     /**
       List the blogs available for this authentication on the server.
       @see void blogInfoRetrieved( const QString &id, const QString &name )
     */
-    virtual void listBlogs();
+    void listBlogs();
 
     /**
       List recent postings on the server.
@@ -108,7 +108,7 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
       @see     void fetchedPosting( KBlog::BlogPosting &posting )
       @see     void listPostingsFinished()
     */
-    virtual void listPostings();
+    void listPostings();
 
     /**
       Fetch the Posting with postingId.
@@ -117,7 +117,7 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
 
       @see  void fetchedPosting( KBlog::BlogPosting &posting )
     */
-    virtual void fetchPosting( KBlog::BlogPosting *posting ); //FIXME docs
+    void fetchPosting( KBlog::BlogPosting *posting ); //FIXME docs
 
     /**
       Modify a posting on server.
@@ -125,14 +125,14 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
       @param posting is used to send the modified posting including
       the correct postingId from it to the server.
     */
-    virtual void modifyPosting( KBlog::BlogPosting *posting );
+    void modifyPosting( KBlog::BlogPosting *posting );
 
     /**
       Create a new posting on server.
 
       @param posting is send to the server.
     */
-    virtual void createPosting( KBlog::BlogPosting *posting );
+    void createPosting( KBlog::BlogPosting *posting );
 
     /**
       Remove a posting from the server.
@@ -142,7 +142,7 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
       @see void removePosting( KBlog::BlogPosting *posting )
       @see void modifiedPosting( void modified )
     */
-    virtual void removePosting( KBlog::BlogPosting *posting ); //FIXME docs
+    void removePosting( KBlog::BlogPosting *posting ); //FIXME docs
 
   protected:
     class APIBloggerPrivate;

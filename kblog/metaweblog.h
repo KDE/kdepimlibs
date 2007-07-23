@@ -77,7 +77,7 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
     /**
       Destroy the object.
     */
-    virtual ~APIMetaWeblog();
+    ~APIMetaWeblog();
 
     /**
       Returns the API of the inherited object.
@@ -101,14 +101,14 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
 
       @see     void listPostingsFinished()
     */
-    virtual void listPostings();
+    void listPostings();
 
     /**
       List the categories of the blog.
       @see  void categoryInfoRetrieved( const QString &, const QString & )
       @see  void listCategoriesFinished()
     */
-    virtual void listCategories();
+    void listCategories();
 
     /**
       Fetch the Posting with postingId.
@@ -116,7 +116,7 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
 
       @see  void fetchedPosting( KBlog::BlogPosting &posting )
     */
-    virtual void fetchPosting( KBlog::BlogPosting *posting );
+    void fetchPosting( KBlog::BlogPosting *posting );
 
     /**
       Modify a posting on server.
@@ -124,21 +124,21 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
       @param posting is used to send the modified posting including the
       correct postingId from it to the server.
     */
-    virtual void modifyPosting( KBlog::BlogPosting *posting );
+    void modifyPosting( KBlog::BlogPosting *posting );
 
     /**
       Create a new posting on server.
 
       @param posting is send to the server.
     */
-    virtual void createPosting( KBlog::BlogPosting *posting );
+    void createPosting( KBlog::BlogPosting *posting );
 
     /**
       Create a new media object, e.g. picture, on server.
 
       @param media is send to the server.
     */
-    virtual void createMedia( KBlog::BlogMedia *media );
+    void createMedia( KBlog::BlogMedia *media );
 
   Q_SIGNALS:
     /**
@@ -147,7 +147,7 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
 
       @see listCategories()
     */
-    virtual void categoryInfoRetrieved();
+    void categoryInfoRetrieved();
 
   private:
     class APIMetaWeblogPrivate;

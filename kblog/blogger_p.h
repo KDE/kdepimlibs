@@ -46,14 +46,14 @@ class APIBlogger::APIBloggerPrivate : public QObject
     QList<QVariant> defaultArgs( const QString &id = QString() );
 
   public Q_SLOTS:
-    virtual void slotUserInfo( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotListBlogs( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotListPostings( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
-    virtual void faultSlot( int number, const QString &errorString, const QVariant &id );
-    virtual bool readPostingFromMap( BlogPosting *post,
+    void slotUserInfo( const QList<QVariant> &result, const QVariant &id );
+    void slotListBlogs( const QList<QVariant> &result, const QVariant &id );
+    void slotListPostings( const QList<QVariant> &result, const QVariant &id );
+    void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
+    void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
+    void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
+    void faultSlot( int number, const QString &errorString, const QVariant &id );
+    bool readPostingFromMap( BlogPosting *post,
                              const QMap<QString, QVariant> &postInfo );
 };
 

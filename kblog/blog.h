@@ -84,7 +84,7 @@ class KBLOG_EXPORT BlogPosting : public QObject
     */
     BlogPosting( const QString &title, const QString &content,
                  const QStringList &categories = QStringList(),
-                 const bool publish = true );
+                 bool publish = true );
 
     BlogPosting( const QString &postingId );
 
@@ -107,7 +107,7 @@ class KBLOG_EXPORT BlogPosting : public QObject
       @param publish set this to true, if you want to publish immediately.
       @see publish()
     */
-    void setPublish( const bool publish );
+    void setPublish( bool publish );
 
     /**
       Returns the postId. This is for fetched postings.
@@ -206,13 +206,13 @@ class KBLOG_EXPORT BlogPosting : public QObject
 
     enum Status { New, Fetched, Created, Modified, Deleted, Error };
 
-    Status status();
+    Status status() const;
 
     void setStatus( Status status );
 
   Q_SIGNALS:
 
-    void statusChanged( Status &status );
+    void statusChanged( Status status );
 
   private:
     class BlogPostingPrivate;
@@ -305,7 +305,7 @@ class KBLOG_EXPORT BlogMedia : public QObject
 
   Q_SIGNALS:
 
-    void statusChanged( Status &status );
+    void statusChanged( Status status );
 
   private:
     class BlogMediaPrivate;
