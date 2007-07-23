@@ -87,7 +87,7 @@ class KCAL_EXPORT VCalFormat : public CalFormat
       @copydoc
       CalFormat::fromRawString()
     */
-    bool fromRawString( Calendar *calendar, const QByteArray &data );
+    bool fromRawString( Calendar *calendar, const QByteArray &string );
 
   protected:
     /**

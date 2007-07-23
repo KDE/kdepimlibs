@@ -104,7 +104,7 @@ class KCAL_EXPORT ICalFormat : public CalFormat
       @copydoc
       CalFormat::fromRawString()
     */
-    bool fromRawString( Calendar *calendar, const QByteArray &data );
+    bool fromRawString( Calendar *calendar, const QByteArray &string );
 
     /**
       @copydoc

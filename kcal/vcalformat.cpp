@@ -156,15 +156,15 @@ bool VCalFormat::fromString( Calendar *calendar, const QString &text )
   return fromRawString( calendar, text.toUtf8() );
 }
 
-bool VCalFormat::fromRawString( Calendar *calendar, const QByteArray &data )
+bool VCalFormat::fromRawString( Calendar *calendar, const QByteArray &string )
 {
   d->mCalendar = calendar;
 
-  if ( !data.size() ) {
+  if ( !string.size() ) {
     return false;
   }
 
-  VObject *vcal = Parse_MIME( data.data(), data.size() );
+  VObject *vcal = Parse_MIME( string.data(), string.size() );
   if ( !vcal ) {
     return false;
   }

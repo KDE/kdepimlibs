@@ -99,12 +99,12 @@ class KCAL_EXPORT CalFormat
       from disk.
 
       @param calendar is the Calendar to be loaded.
-      @param data is the QByteArray containing the Calendar data.
+      @param string is the QByteArray containing the Calendar data.
 
       @return true if successful; false otherwise.
       @see fromString(), toString().
     */
-    virtual bool fromRawString( Calendar *calendar, const QByteArray &data ) = 0;
+    virtual bool fromRawString( Calendar *calendar, const QByteArray &string ) = 0;
 
     /**
       Returns the calendar as a string.

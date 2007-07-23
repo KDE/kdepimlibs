@@ -23,7 +23,7 @@
 /**
   @file
   This file is part of the API for handling calendar data and
-  defines the internal ICalFormatImpl class.
+  defines the internal ICalFormat classes.
 
   @brief
   This class provides the libical dependent functions for ICalFormat.
@@ -34,11 +34,10 @@
 */
 
 #include "icalformat_p.h"
-
-#include "calendar.h"
-#include "compat.h"
 #include "icalformat.h"
 #include "icaltimezones.h"
+#include "calendar.h"
+#include "compat.h"
 #include "journal.h"
 
 extern "C" {
@@ -63,7 +62,8 @@ extern "C" {
 using namespace KCal;
 
 /* Static helpers */
-/*static void _dumpIcaltime( const icaltimetype& t)
+/*
+static void _dumpIcaltime( const icaltimetype& t)
 {
   kDebug(5800) << "--- Y: " << t.year << " M: " << t.month << " D: " << t.day
       << endl;
@@ -72,8 +72,10 @@ using namespace KCal;
   kDebug(5800) << "--- isUtc: " << icaltime_is_utc( t )<< endl;
   kDebug(5800) << "--- zoneId: " << icaltimezone_get_tzid( const_cast<icaltimezone*>( t.zone ) );
   kDebug(5800) << endl;
-}*/
+}
+*/
 
+//@cond PRIVATE
 const int gSecondsPerMinute = 60;
 const int gSecondsPerHour   = gSecondsPerMinute * 60;
 const int gSecondsPerDay    = gSecondsPerHour   * 24;
@@ -135,6 +137,7 @@ class ICalFormatImpl::Private
     Todo::List  mTodosRelate;         // todos with relations
     Compat *mCompat;
 };
+//@endcond
 
 inline icaltimetype ICalFormatImpl::writeICalUtcDateTime ( const KDateTime &dt )
 {

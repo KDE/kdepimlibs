@@ -148,14 +148,14 @@ bool ICalFormat::fromString( Calendar *cal, const QString &string )
   return fromRawString( cal, string.toUtf8() );
 }
 
-bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &data )
+bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &string )
 {
   // Get first VCALENDAR component.
   // TODO: Handle more than one VCALENDAR or non-VCALENDAR top components
   icalcomponent *calendar;
 
   // Let's defend const correctness until the very gates of hell^Wlibical
-  calendar = icalcomponent_new_from_string( const_cast<char*>( ( const char * )data ) );
+  calendar = icalcomponent_new_from_string( const_cast<char*>( ( const char * )string ) );
   if ( !calendar ) {
     kDebug(5800) << "ICalFormat::load() parse error" << endl;
     setException( new ErrorFormat( ErrorFormat::ParseErrorIcal ) );
