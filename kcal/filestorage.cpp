@@ -33,40 +33,52 @@
 
 using namespace KCal;
 
+class KCal::FileStorage::Private
+{
+  public:
+    Private( const QString &fileName, CalFormat *format )
+      : mFileName( fileName ),
+        mSaveFormat( format )
+    {}
+    ~Private() { delete mSaveFormat; }
+
+    QString mFileName;
+    CalFormat *mSaveFormat;
+};
+
+
 FileStorage::FileStorage( Calendar *cal, const QString &fileName,
                           CalFormat *format )
   : CalStorage( cal ),
-    mFileName( fileName ),
-    mSaveFormat( format ),
-    d( 0 )
+    d( new Private( fileName, format ) )
 {
 }
 
 FileStorage::~FileStorage()
 {
-  delete mSaveFormat;
+  delete d;
 }
 
 void FileStorage::setFileName( const QString &fileName )
 {
-  mFileName = fileName;
+  d->mFileName = fileName;
 }
 
 QString FileStorage::fileName()const
 {
-  return mFileName;
+  return d->mFileName;
 }
 
 
 void FileStorage::setSaveFormat( CalFormat *format )
 {
-  delete mSaveFormat;
-  mSaveFormat = format;
+  delete d->mSaveFormat;
+  d->mSaveFormat = format;
 }
 
 CalFormat *FileStorage::saveFormat()const
 {
-  return mSaveFormat;
+  return d->mSaveFormat;
 }
 
 
@@ -77,22 +89,22 @@ bool FileStorage::open()
 
 bool FileStorage::load()
 {
-//  kDebug(5800) << "FileStorage::load(): '" << mFileName << "'" << endl;
+//  kDebug(5800) << "FileStorage::load(): '" << d->mFileName << "'" << endl;
 
   // do we want to silently accept this, or make some noise?  Dunno...
   // it is a semantical thing vs. a practical thing.
-  if (mFileName.isEmpty()) return false;
+  if (d->mFileName.isEmpty()) return false;
 
   // Always try to load with iCalendar. It will detect, if it is actually a
   // vCalendar file.
   bool success;
   // First try the supplied format. Otherwise fall through to iCalendar, then
   // to vCalendar
-  success = saveFormat() && saveFormat()->load( calendar(), mFileName );
+  success = saveFormat() && saveFormat()->load( calendar(), d->mFileName );
   if ( !success ) {
     ICalFormat iCal;
 
-    success = iCal.load( calendar(), mFileName);
+    success = iCal.load( calendar(), d->mFileName);
 
     if ( !success ) {
       if ( iCal.exception() ) {
@@ -101,7 +113,7 @@ bool FileStorage::load()
           // Expected non vCalendar file, but detected vCalendar
           kDebug(5800) << "FileStorage::load() Fallback to VCalFormat" << endl;
           VCalFormat vCal;
-          success = vCal.load( calendar(), mFileName );
+          success = vCal.load( calendar(), d->mFileName );
           calendar()->setProductId( vCal.productId() );
         } else {
           return false;
@@ -123,13 +135,11 @@ bool FileStorage::load()
 
 bool FileStorage::save()
 {
-  if ( mFileName.isEmpty() ) return false;
+  if ( d->mFileName.isEmpty() ) return false;
 
-  CalFormat *format = 0;
-  if ( mSaveFormat ) format = mSaveFormat;
-  else format = new ICalFormat;
+  CalFormat *format = d->mSaveFormat ? d->mSaveFormat : new ICalFormat;
 
-  bool success = format->save( calendar(), mFileName );
+  bool success = format->save( calendar(), d->mFileName );
 
   if ( success ) {
     calendar()->setModified( false );
@@ -143,7 +153,7 @@ bool FileStorage::save()
     }
   }
 
-  if ( !mSaveFormat ) delete format;
+  if ( !d->mSaveFormat ) delete format;
 
   return success;
 }

@@ -28,6 +28,7 @@
 namespace KCal {
 
 class CalFormat;
+
 /**
   This class provides a calendar storage as a local file.
 */
@@ -53,11 +54,10 @@ class KCAL_EXPORT FileStorage : public CalStorage
     bool close();
 
   private:
-    QString mFileName;
-    CalFormat *mSaveFormat;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }

@@ -22,32 +22,49 @@
 
 #include "freebusy.h"
 
+#include "calendar.h"
+#include "event.h"
+
 #include <kdebug.h>
 #include <QtCore/QList>
 
 using namespace KCal;
 
-FreeBusy::FreeBusy() : d( 0 )
+class FreeBusy::Private
+{
+  public:
+    //This is used for creating a freebusy object for the current user
+    bool addLocalPeriod( FreeBusy *fb, const KDateTime &start, const KDateTime &end );
+    KDateTime mDtEnd;
+    PeriodList mBusyPeriods;
+    Calendar *mCalendar;    // not owned by this instance
+};
+
+
+FreeBusy::FreeBusy()
+  : d( new Private )
 {
 }
 
-FreeBusy::FreeBusy( const KDateTime &start, const KDateTime &end ) : d( 0 )
+FreeBusy::FreeBusy( const KDateTime &start, const KDateTime &end )
+  : d( new Private )
 {
   setDtStart( start );
   setDtEnd( end );
 }
 
 FreeBusy::FreeBusy( Calendar *calendar,
-                    const KDateTime &start, const KDateTime &end ) : d( 0 )
+                    const KDateTime &start, const KDateTime &end )
+  : d( new Private )
 {
   kDebug(5800) << "FreeBusy::FreeBusy" << endl;
-  mCalendar = calendar;
+  d->mCalendar = calendar;
 
   setDtStart(start);
   setDtEnd(end);
 
   // Get all the events in the calendar
-  Event::List eventList = mCalendar->rawEvents( start.date(), end.date() );
+  Event::List eventList = d->mCalendar->rawEvents( start.date(), end.date() );
 
   int extraDays, i, x, duration;
   duration = start.daysTo(end);
@@ -109,7 +126,7 @@ FreeBusy::FreeBusy( Calendar *calendar,
               tmpStart.setTime(event->dtStart().time());
               tmpEnd = event->duration().end( tmpStart );
 
-              addLocalPeriod( tmpStart, tmpEnd );
+              d->addLocalPeriod( this, tmpStart, tmpEnd );
               break;
             }
           }
@@ -118,14 +135,14 @@ FreeBusy::FreeBusy( Calendar *calendar,
             tmpStart.setTime(event->dtStart().time());
             tmpEnd.setTime(event->dtEnd().time());
 
-            addLocalPeriod (tmpStart, tmpEnd);
+            d->addLocalPeriod (this, tmpStart, tmpEnd);
           }
         }
       }
 
     }
     // Non-recurring events
-    addLocalPeriod(event->dtStart(), event->dtEnd());
+    d->addLocalPeriod(this, event->dtStart(), event->dtEnd());
 
     // Clean up
     delete floatingEvent;
@@ -134,8 +151,15 @@ FreeBusy::FreeBusy( Calendar *calendar,
   sortList();
 }
 
+FreeBusy::FreeBusy( const PeriodList& busyPeriods )
+  : d( new Private )
+{
+  d->mBusyPeriods = busyPeriods;
+}
+
 FreeBusy::~FreeBusy()
 {
+  delete d;
 }
 
 void FreeBusy::setDtStart(const KDateTime &dtStart)
@@ -146,40 +170,42 @@ void FreeBusy::setDtStart(const KDateTime &dtStart)
 
 bool FreeBusy::setDtEnd( const KDateTime &end )
 {
-  mDtEnd = end;
+  d->mDtEnd = end;
   return true;
 }
 
 KDateTime FreeBusy::dtEnd() const
 {
-  return mDtEnd;
+  return d->mDtEnd;
 }
 
 PeriodList FreeBusy::busyPeriods() const
 {
-  return mBusyPeriods;
+  return d->mBusyPeriods;
 }
 
-bool FreeBusy::addLocalPeriod(const KDateTime &eventStart, const KDateTime &eventEnd ) {
+bool FreeBusy::Private::addLocalPeriod(FreeBusy *fb, const KDateTime &eventStart, const KDateTime &eventEnd )
+{
   KDateTime tmpStart;
   KDateTime tmpEnd;
 
   //Check to see if the start *or* end of the event is
   //between the start and end of the freebusy dates.
-  if ( !( ( ( dtStart().secsTo(eventStart) >= 0 ) &&
-            ( eventStart.secsTo(dtEnd()) >= 0 ) )
-       || ( ( dtStart().secsTo(eventEnd) >= 0 ) &&
-            ( eventEnd.secsTo(dtEnd()) >= 0 ) ) ) )
+  KDateTime start = fb->dtStart();
+  if ( !( ( ( start.secsTo(eventStart) >= 0 ) &&
+            ( eventStart.secsTo(mDtEnd) >= 0 ) )
+       || ( ( start.secsTo(eventEnd) >= 0 ) &&
+            ( eventEnd.secsTo(mDtEnd) >= 0 ) ) ) )
     return false;
 
-  if ( eventStart.secsTo( dtStart() ) >= 0 ) {
-    tmpStart = dtStart();
+  if ( eventStart.secsTo( start ) >= 0 ) {
+    tmpStart = start;
   } else {
     tmpStart = eventStart;
   }
 
-  if ( eventEnd.secsTo( dtEnd() ) <= 0 ) {
-    tmpEnd = dtEnd();
+  if ( eventEnd.secsTo( mDtEnd ) <= 0 ) {
+    tmpEnd = mDtEnd;
   } else {
     tmpEnd = eventEnd;
   }
@@ -190,32 +216,27 @@ bool FreeBusy::addLocalPeriod(const KDateTime &eventStart, const KDateTime &even
   return true;
 }
 
-FreeBusy::FreeBusy( const PeriodList& busyPeriods ) : d( 0 )
-{
-  mBusyPeriods = busyPeriods;
-}
-
 void FreeBusy::sortList()
 {
-  qSort( mBusyPeriods );
+  qSort( d->mBusyPeriods );
   return;
 }
 
 void FreeBusy::addPeriods(const PeriodList &list )
 {
-  mBusyPeriods += list;
+  d->mBusyPeriods += list;
   sortList();
 }
 
 void FreeBusy::addPeriod(const KDateTime &start, const KDateTime &end)
 {
-  mBusyPeriods.append( Period(start, end) );
+  d->mBusyPeriods.append( Period(start, end) );
   sortList();
 }
 
 void FreeBusy::addPeriod( const KDateTime &start, const Duration &dur )
 {
-  mBusyPeriods.append( Period(start, dur) );
+  d->mBusyPeriods.append( Period(start, dur) );
   sortList();
 }
 
@@ -236,9 +257,9 @@ void FreeBusy::merge( FreeBusy *freeBusy )
 void FreeBusy::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
 {
   IncidenceBase::shiftTimes( oldSpec, newSpec );
-  mDtEnd = mDtEnd.toTimeSpec( oldSpec );
-  mDtEnd.setTimeSpec( newSpec );
-  for ( int i = 0, end = mBusyPeriods.count();  i < end;  ++end)
-    mBusyPeriods[i].shiftTimes( oldSpec, newSpec );
+  d->mDtEnd = d->mDtEnd.toTimeSpec( oldSpec );
+  d->mDtEnd.setTimeSpec( newSpec );
+  for ( int i = 0, end = d->mBusyPeriods.count();  i < end;  ++end)
+    d->mBusyPeriods[i].shiftTimes( oldSpec, newSpec );
 }
 

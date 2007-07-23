@@ -26,12 +26,11 @@
 #include <QtCore/QList>
 
 #include "period.h"
-#include "calendar.h"
-
 #include "incidencebase.h"
 
 namespace KCal {
 
+  class Calendar;
   typedef QList<Period> PeriodList;
 /**
   This class provides information about free/busy time of a calendar user.
@@ -73,16 +72,13 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
     void merge( FreeBusy *freebusy );
 
   private:
+    // Override virtual inherited method.
     bool accept( Visitor &v ) { return v.visit( this ); }
-    //This is used for creating a freebusy object for the current user
-    bool addLocalPeriod( const KDateTime &start, const KDateTime &end );
 
-    KDateTime mDtEnd;
-    PeriodList mBusyPeriods;
-    Calendar *mCalendar;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }

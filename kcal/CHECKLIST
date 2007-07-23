@@ -9,9 +9,9 @@ confirmsavedialog     |       |         |       |         |    D    |
 customproperties      |       |         |   D   |         |    D    |
 dndfactory            |       |         |       |         |    D    |
 dummyscheduler        |       |         |       |         |    D    |
-filestorage           |       |         |       |         |    D    |
+filestorage           |       |         |   D   |         |    D    |
 freebusycache         |       |         |       |         |    D    |
-freebusy              |       |         |       |         |    D    |
+freebusy              |       |         |   D   |         |    D    |
 freebusyurlstore      |       |         |       |         |    D    |
 htmlexport            |       |         |       |         |    D    |
 icaldrag              |       |         |       |         |    D    |
