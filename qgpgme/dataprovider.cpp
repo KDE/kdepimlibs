@@ -62,7 +62,7 @@ ssize_t QGpgME::QByteArrayDataProvider::read( void * buffer, size_t bufSize ) {
 
 ssize_t QGpgME::QByteArrayDataProvider::write( const void * buffer, size_t bufSize ) {
 #ifndef NDEBUG
-  qDebug( "QGpgME::QByteArrayDataProvider::write( %p, %d )", buffer, bufSize );
+    qDebug( "QGpgME::QByteArrayDataProvider::write( %p, %lu )", buffer, static_cast<unsigned long>( bufSize ) );
 #endif
   if ( bufSize == 0 )
     return 0;
@@ -72,7 +72,7 @@ ssize_t QGpgME::QByteArrayDataProvider::write( const void * buffer, size_t bufSi
     errno = EIO;
     return -1;
   }
-  assert( bufSize <= mArray.size() - mOff );
+  assert( bufSize <= static_cast<size_t>(mArray.size()) - mOff );
   memcpy( mArray.data() + mOff, buffer, bufSize );
   mOff += bufSize;
   return bufSize;
