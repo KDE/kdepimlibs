@@ -54,7 +54,15 @@ namespace GpgME {
 
     static Data null;
 
-    const Data & operator=( const Data & other );
+    const Data & operator=( Data other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( Data & other ) {
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     bool isNull() const;
 
@@ -70,5 +78,7 @@ namespace GpgME {
   };
 
 }
+
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( Data )
 
 #endif // __GPGMEPP_DATA_H__

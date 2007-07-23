@@ -60,18 +60,6 @@ GpgME::Data::~Data() {
 }
 
 
-const GpgME::Data & GpgME::Data::operator=( const Data & other ) {
-  if ( this->d == other.d ) return *this;
-
-  if ( other.d )
-    other.d->ref();
-  if ( this->d )
-    this->d->unref();
-  this->d = other.d;
-
-  return *this;
-}
-
 GpgME::Data::Data( const char * buffer, size_t size, bool copy ) {
   gpgme_data_t data;
   const gpgme_error_t e = gpgme_data_new_from_mem( &data, buffer, size, int( copy ) );

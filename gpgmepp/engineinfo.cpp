@@ -56,19 +56,6 @@ GpgME::EngineInfo::~EngineInfo() {
     d->deref();
 }
 
-const GpgME::EngineInfo & GpgME::EngineInfo::operator=( const GpgME::EngineInfo & other ) {
-  if ( this->d == other.d )
-    return *this;
-
-  if ( other.d )
-    other.d->ref();
-  if ( this->d )
-    this->d->unref();
-
-  this->d = other.d;
-  return *this;
-}
-
 bool GpgME::EngineInfo::isNull() const {
   return !d || !d->info;
 }

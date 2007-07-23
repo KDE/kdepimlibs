@@ -51,7 +51,15 @@ namespace GpgME {
 
     static Key null;
 
-    const Key & operator=( const Key & other );
+    const Key & operator=( Key other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( Key & other ) {
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     bool isNull() const;
 
@@ -123,7 +131,15 @@ namespace GpgME {
     Subkey( const Subkey & other );
     ~Subkey();
 
-    const Subkey & operator=( const Subkey & other );
+    const Subkey & operator=( Subkey other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( Subkey & other ) {
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     bool isNull() const;
 
@@ -172,7 +188,15 @@ namespace GpgME {
     UserID( const UserID & other );
     ~UserID();
 
-    const UserID & operator=( const UserID & other );
+    const UserID & operator=( UserID other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( UserID & other ) {
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     bool isNull() const;
 
@@ -214,7 +238,15 @@ namespace GpgME {
     Signature( const Signature & other );
     ~Signature();
 
-    const Signature & operator=( const Signature & other );
+    const Signature & operator=( Signature other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( Signature & other ) {
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     bool isNull() const;
 
@@ -271,7 +303,15 @@ namespace GpgME {
     Notation( const Notation & other );
     ~Notation();
 
-    const Notation & operator=( const Notation & other );
+    const Notation & operator=( Notation other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( Notation & other ) {
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     bool isNull() const;
 
@@ -286,5 +326,11 @@ namespace GpgME {
   };
 
 } // namespace GpgME
+
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( Key )
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( Subkey )
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( UserID )
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( UserID::Signature )
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( UserID::Signature::Notation )
 
 #endif // __GPGMEPP_KEY_H__

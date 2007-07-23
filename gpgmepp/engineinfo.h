@@ -36,7 +36,15 @@ namespace GpgME {
     EngineInfo( const EngineInfo & other );
     ~EngineInfo();
 
-    const EngineInfo & operator=( const EngineInfo & other );
+    const EngineInfo & operator=( EngineInfo other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( EngineInfo & other ) {
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     bool isNull() const;
 
@@ -50,5 +58,7 @@ namespace GpgME {
   };
 
 }
+
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( EngineInfo )
 
 #endif // __GPGMEPP_ENGINEINFO_H__

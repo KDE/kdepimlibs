@@ -50,17 +50,6 @@ namespace GpgME {
       gpgme_trust_item_ref( d->item );
   }
 
-  const TrustItem & TrustItem::operator=( const TrustItem & other ) {
-    if ( &other == this ) return *this;
-
-    if ( other.d->item )
-      gpgme_trust_item_ref( other.d->item );
-    if ( d->item )
-      gpgme_trust_item_unref( d->item );
-    *d = *other.d;
-    return *this;
-  }
-
   TrustItem::~TrustItem() {
     if ( d->item )
       gpgme_trust_item_unref( d->item );

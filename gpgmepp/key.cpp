@@ -73,17 +73,6 @@ namespace GpgME {
     delete d; d = 0;
   }
 
-  const Key & Key::operator=( const Key & other ) {
-    if ( d == other.d ) return *this;
-
-    if ( other.d->key )
-      gpgme_key_ref( other.d->key );
-    if ( d->key )
-      gpgme_key_unref( d->key );
-    *d = *other.d;
-    return *this;
-  }
-
   bool Key::isNull() const {
     return d->key == 0;
   }
@@ -345,17 +334,6 @@ namespace GpgME {
     delete d; d = 0;
   }
 
-  const Subkey & Subkey::operator=( const Subkey & other ) {
-    if ( &other == this ) return *this;
-
-    if ( other.d->key )
-      gpgme_key_ref( other.d->key );
-    if ( d->key )
-      gpgme_key_unref( d->key );
-    *d = *other.d;
-    return *this;
-  }
-
   bool Subkey::isNull() const {
     return !d || !d->key || !d->subkey;
   }
@@ -500,17 +478,6 @@ namespace GpgME {
     if ( d->key )
       gpgme_key_unref( d->key );
     delete d; d = 0;
-  }
-
-  const UserID & UserID::operator=( const UserID & other ) {
-    if ( &other == this ) return *this;
-
-    if ( other.d->key )
-      gpgme_key_ref( other.d->key );
-    if ( d->key )
-      gpgme_key_unref( d->key );
-    *d = *other.d;
-    return *this;
   }
 
   bool UserID::isNull() const {
@@ -674,17 +641,6 @@ namespace GpgME {
     if ( d->key )
       gpgme_key_unref( d->key );
     delete d; d = 0;
-  }
-
-  const UserID::Signature & UserID::Signature::operator=( const Signature & other ) {
-    if ( &other == this ) return *this;
-
-    if ( other.d->key )
-      gpgme_key_ref( other.d->key );
-    if ( d->key )
-      gpgme_key_unref( d->key );
-    *d = *other.d;
-    return *this;
   }
 
   bool UserID::Signature::isNull() const {
@@ -917,17 +873,6 @@ namespace GpgME {
     if ( d->key )
       gpgme_key_unref( d->key );
     delete d; d = 0;
-  }
-
-  const UserID::Signature::Notation & UserID::Signature::Notation::operator=( const Notation & other ) {
-    if ( &other == this ) return *this;
-
-    if ( other.d->key )
-      gpgme_key_ref( other.d->key );
-    if ( d->key )
-      gpgme_key_unref( d->key );
-    *d = *other.d;
-    return *this;
   }
 
   bool UserID::Signature::Notation::isNull() const {

@@ -39,7 +39,15 @@ namespace GpgME {
     TrustItem( const TrustItem & other );
     virtual ~TrustItem();
 
-    const TrustItem & operator=( const TrustItem & other );
+    const TrustItem & operator=( TrustItem other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( TrustItem & other ) {
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     bool isNull() const;
 
@@ -61,5 +69,7 @@ namespace GpgME {
   };
 
 } // namepace GpgME
+
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( TrustItem )
 
 #endif // __GPGMEPP_TRUSTITEM_H__
