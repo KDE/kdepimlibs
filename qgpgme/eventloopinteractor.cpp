@@ -24,18 +24,18 @@
 #include <gpgmepp/context.h>
 
 #include <QSocketNotifier>
-#include <QApplication>
+#include <QCoreApplication>
 
 using namespace GpgME;
 
-QGpgME::EventLoopInteractor::EventLoopInteractor( QObject * parent, const char * name )
+QGpgME::EventLoopInteractor::EventLoopInteractor( QObject * parent )
  : QObject( parent ), GpgME::EventLoopInteractor()
 {
-  setObjectName(name);
+  setObjectName( QLatin1String( "QGpgME::EventLoopInteractor::instance()" ) );
   if ( !parent )
-    if ( qApp ) {
-      connect( qApp, SIGNAL(aboutToQuit()), SLOT(deleteLater()) );
-      connect( qApp, SIGNAL(aboutToQuit()), SIGNAL(aboutToDestroy()) );
+    if ( QCoreApplication * const app = QCoreApplication::instance() ) {
+      connect( app, SIGNAL(aboutToQuit()), SLOT(deleteLater()) );
+      connect( app, SIGNAL(aboutToQuit()), SIGNAL(aboutToDestroy()) );
     }
   mSelf = this;
 }
@@ -50,16 +50,16 @@ QGpgME::EventLoopInteractor * QGpgME::EventLoopInteractor::mSelf = 0;
 QGpgME::EventLoopInteractor * QGpgME::EventLoopInteractor::instance() {
   if ( !mSelf )
 #ifndef NDEBUG
-    if ( !qApp )
-      qWarning( "QGpgME::EventLoopInteractor: Need a QApplication object before calling instance()!" );
+    if ( !QCoreApplication::instance() )
+      qWarning( "QGpgME::EventLoopInteractor: Need a Q(Core)Application object before calling instance()!" );
     else
 #endif
-      (void)new EventLoopInteractor( 0, "QGpgME::EventLoopInteractor::instance()" );
+     (void)new EventLoopInteractor;
   return mSelf;
 }
 
 void * QGpgME::EventLoopInteractor::registerWatcher( int fd, Direction dir, bool & ok ) {
-  QSocketNotifier * sn = new QSocketNotifier( fd,
+  QSocketNotifier * const sn = new QSocketNotifier( fd,
       dir == Read ? QSocketNotifier::Read : QSocketNotifier::Write );
   if ( dir == Read )
     connect( sn, SIGNAL(activated(int)), SLOT(slotReadActivity(int)) );

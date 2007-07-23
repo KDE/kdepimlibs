@@ -39,7 +39,7 @@ namespace QGpgME {
   class QGPGME_EXPORT EventLoopInteractor : public QObject, public GpgME::EventLoopInteractor {
     Q_OBJECT
   protected:
-    EventLoopInteractor( QObject * parent, const char * name=0 );
+    explicit EventLoopInteractor( QObject * parent=0 );
   public:
     virtual ~EventLoopInteractor();
 
