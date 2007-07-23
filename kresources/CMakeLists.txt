@@ -58,6 +58,6 @@ install( FILES
   configpage.h
   idmapper.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/kresources)
-install( FILES org.kde.KResourcesManager.xml DESTINATION ${DBUS_INTERFACES_DIR} )
+install( FILES org.kde.KResourcesManager.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 
 
