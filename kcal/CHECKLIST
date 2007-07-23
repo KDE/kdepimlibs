@@ -6,7 +6,7 @@ calendarresources     |   D   |         |       |         |    D    | Allen
 calstorage            |       |         |       |         |    D    |
 compat                |       |         |   D   |         |    D    |
 confirmsavedialog     |       |         |       |         |    D    |
-customproperties      |       |         |       |         |    D    |
+customproperties      |       |         |   D   |         |    D    |
 dndfactory            |       |         |       |         |    D    |
 dummyscheduler        |       |         |       |         |    D    |
 filestorage           |       |         |       |         |    D    |
@@ -24,13 +24,13 @@ incidenceformatter    |       |         |       |         |    D    | Allen
 incidence             |       |         |       |   n/a   |    D    | Allen
 journal               |       |         |       |         |    D    | Allen
 kresult               |   D   |         |       |         |    D    |
-listbase              |       |         |       |         |    D    |
+listbase              |       |         |  n/a  |         |    D    |
 qtopiaformat          |       |         |       |         |    D    |
 recurrence            |       |         |   D   |         |    D    |
 recurrencerule        |       |         |   D   |         |    D    |
 resourcecachedconfig  |   D   |         |   D   |         |    D    |
-resourcecached        |       |         |       |         |    D    | David
-resourcecalendar      |       |         |       |         |    D    | David
+resourcecached        |       |         |   D   |         |    D    |
+resourcecalendar      |       |         |       |         |    D    | David (D-ptr)
 resourcelocalconfig   |       |         |       |         |    D    |
 resourcelocaldirconfig|       |         |       |         |    D    |
 resourcelocaldir      |       |         |       |         |    D    |

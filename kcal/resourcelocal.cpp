@@ -150,7 +150,7 @@ bool ResourceLocal::doLoad( bool )
     // Save the empty calendar, so the calendar file will be created.
     success = doSave( true );
   } else {
-    success = mCalendar.load( d->mURL.path() );
+    success = calendar()->load( d->mURL.path() );
     if ( success ) d->mLastModified = readLastModified();
   }
 
@@ -159,7 +159,7 @@ bool ResourceLocal::doLoad( bool )
 
 bool ResourceLocal::doSave( bool )
 {
-  bool success = mCalendar.save( d->mURL.path() );
+  bool success = calendar()->save( d->mURL.path() );
   d->mLastModified = readLastModified();
 
   return success;
@@ -182,8 +182,8 @@ bool ResourceLocal::doReload()
     return false;
   }
 
-  mCalendar.close();
-  mCalendar.load( d->mURL.path() );
+  calendar()->close();
+  calendar()->load( d->mURL.path() );
   return true;
 }
 

@@ -111,7 +111,7 @@ bool ResourceLocalDir::doLoad( bool )
 {
   kDebug(5800) << "ResourceLocalDir::load()" << endl;
 
-  mCalendar.close();
+  calendar()->close();
   QString dirName = mURL.path();
   bool success = true;
 
@@ -136,7 +136,7 @@ bool ResourceLocalDir::doLoad( bool )
 
       QString fileName = dirName + '/' + *it;
       kDebug(5800) << " read '" << fileName << "'" << endl;
-      CalendarLocal cal( mCalendar.timeSpec() );
+      CalendarLocal cal( calendar()->timeSpec() );
       if ( !doFileLoad( cal, fileName ) ) {
         success = false;
       }
@@ -154,7 +154,7 @@ bool ResourceLocalDir::doFileLoad( CalendarLocal &cal, const QString &fileName )
   Incidence::List::ConstIterator it;
   for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
     Incidence *i = *it;
-    if ( i ) mCalendar.addIncidence( i->clone() );
+    if ( i ) calendar()->addIncidence( i->clone() );
   }
   return true;
 }
@@ -178,7 +178,7 @@ bool ResourceLocalDir::doSave( bool, Incidence *incidence )
   QString fileName = mURL.path() + '/' + incidence->uid();
   kDebug(5800) << "writing '" << fileName << "'" << endl;
 
-  CalendarLocal cal( mCalendar.timeSpec() );
+  CalendarLocal cal( calendar()->timeSpec() );
   cal.addIncidence( incidence->clone() );
   cal.save( fileName );
 
@@ -200,7 +200,7 @@ void ResourceLocalDir::reload( const QString &file )
 
   kDebug(5800) << "  File: '" << file << "'" << endl;
 
-  mCalendar.close();
+  calendar()->close();
   load();
 
   emit resourceChanged( this );
@@ -210,40 +210,40 @@ bool ResourceLocalDir::deleteEvent(Event *event)
 {
   kDebug(5800) << "ResourceLocalDir::deleteEvent" << endl;
   if ( deleteIncidenceFile(event) )
-    return( mCalendar.deleteEvent( event ) );
+    return( calendar()->deleteEvent( event ) );
   else
     return( false );
 }
 
 void ResourceLocalDir::deleteAllEvents()
 {
-  mCalendar.deleteAllEvents();
+  calendar()->deleteAllEvents();
 }
 
 bool ResourceLocalDir::deleteTodo(Todo *todo)
 {
   if ( deleteIncidenceFile(todo) )
-    return( mCalendar.deleteTodo( todo ) );
+    return( calendar()->deleteTodo( todo ) );
   else
     return( false );
 }
 
 void ResourceLocalDir::deleteAllTodos()
 {
-  mCalendar.deleteAllTodos();
+  calendar()->deleteAllTodos();
 }
 
 bool ResourceLocalDir::deleteJournal( Journal *journal )
 {
   if ( deleteIncidenceFile( journal ) )
-    return( mCalendar.deleteJournal( journal ) );
+    return( calendar()->deleteJournal( journal ) );
   else
     return( false );
 }
 
 void ResourceLocalDir::deleteAllJournals()
 {
-  mCalendar.deleteAllJournals();
+  calendar()->deleteAllJournals();
 }
 
 void ResourceLocalDir::dump() const

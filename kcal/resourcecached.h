@@ -24,20 +24,19 @@
 
 #include "resourcecalendar.h"
 
-#include "kresources/idmapper.h"
 #include "incidence.h"
-#include "calendarlocal.h"
 
 #include <kdatetime.h>
-#include <kconfig.h>
 
 #include <QtCore/QString>
-#include <QtCore/QTimer>
 
+class KConfigGroup;
+namespace KRES { class IdMapper; }
 
 
 namespace KCal {
 
+class CalendarLocal;
 
 /**
   This class provides a calendar resource using a local CalendarLocal object to
@@ -114,12 +113,12 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       @param inhibit  true to inhibit reloads, false to allow them
     */
     bool inhibitDefaultReload( bool inhibit );
-    bool defaultReloadInhibited() const   { return mInhibitReload; }
+    bool defaultReloadInhibited() const;
 
     /**
       Return whether the resource cache has been reloaded since startup.
      */
-    bool reloaded() const   { return mReloaded; }
+    bool reloaded() const;
 
     /**
       Set save policy. This controls when the cache is refreshed.
@@ -383,12 +382,12 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     KRES::IdMapper& idMapper();
 
   protected:
+    CalendarLocal *calendar() const;
+
     // From Calendar::CalendarObserver
     void calendarIncidenceAdded( KCal::Incidence *incidence );
     void calendarIncidenceChanged( KCal::Incidence *incidence );
     void calendarIncidenceDeleted( KCal::Incidence *incidence );
-
-    CalendarLocal mCalendar;
 
     /**
       Virtual method from KRES::Resource, called when the last instace of the
@@ -409,7 +408,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       Set the cache-reloaded status.
       Non-local resources must set this true once the cache has been downloaded successfully.
      */
-    void setReloaded( bool done )   { mReloaded = done; }
+    void setReloaded( bool done );
     /**
       Do the actual saving of the resource data. Called by save(CacheAction). Saves
       the resource data to the cache and optionally uploads (if a remote resource).
@@ -462,32 +461,14 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     void setIdMapperIdentifier();
 
   private:
-    // Virtual methods which should not be used by derived classes.
-    virtual bool doLoad()   { return doLoad( true ); }
-    virtual bool doSave()   { return doSave( true ); }
+    // Inherited virtual methods which should not be used by derived classes.
+    virtual bool doLoad();
+    virtual bool doSave();
 
-    int mReloadPolicy;
-    int mReloadInterval;
-    QTimer mReloadTimer;
-    bool mInhibitReload;   // true to prevent downloads by load(DefaultCache)
-    bool mReloaded;        // true once it has been downloaded
-    bool mSavePending;     // true if a save of changes has been scheduled on the timer
-
-    int mSavePolicy;
-    int mSaveInterval;
-    QTimer mSaveTimer;
-
-    KDateTime mLastLoad;
-    KDateTime mLastSave;
-
-    QMap<KCal::Incidence *,bool> mAddedIncidences;
-    QMap<KCal::Incidence *,bool> mChangedIncidences;
-    QMap<KCal::Incidence *,bool> mDeletedIncidences;
-
-    KRES::IdMapper mIdMapper;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }
