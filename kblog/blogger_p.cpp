@@ -20,7 +20,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <blogger_p.h>
+#include "blogger_p.h"
+#include "blogposting.h"
 
 #include <kxmlrpcclient/client.h>
 

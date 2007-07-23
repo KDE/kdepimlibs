@@ -29,6 +29,7 @@
 #include "gdata.h"
 
 //#include <kio/slave.h>
+class KJob;
 
 using namespace KBlog;
 

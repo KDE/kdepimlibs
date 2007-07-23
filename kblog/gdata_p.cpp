@@ -19,7 +19,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <gdata_p.h>
+#include "gdata_p.h"
+#include "blogposting.h"
 
 #include <syndication/loader.h>
 #include <syndication/item.h>
@@ -27,6 +28,7 @@
 #include <kdebug.h>
 #include <kio/netaccess.h>
 #include <kio/http.h>
+#include <kio/job.h>
 #include <klocale.h>
 #include <kdatetime.h>
 #include <kurl.h>

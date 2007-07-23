@@ -24,32 +24,12 @@
 
 #include <blog.h>
 
+#include <KTimeZone>
+#include <KUrl>
+
 #include <QtCore/QMutex>
 
 using namespace KBlog;
-
-class BlogPosting::BlogPostingPrivate
-{
-  public:
-  bool mPublish;
-  QString mPostingId;
-  QString mTitle;
-  QString mContent;
-  QStringList mCategories;
-  QString mError;
-  Status mStatus;
-  KDateTime mCreationDateTime;
-  KDateTime mModificationDateTime;
-};
-
-class BlogMedia::BlogMediaPrivate
-{
-  public:
-    QString mName;
-    QString mMimetype;
-    QByteArray mData;
-    Status mStatus;
-};
 
 class APIBlog::APIBlogPrivate
 {

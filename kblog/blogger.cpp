@@ -21,11 +21,12 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <blogger.h>
-#include <blogger_p.h>
+#include "blogger.h"
+#include "blogger_p.h"
+#include "blogposting.h"
 
-#include <kdebug.h>
-#include <klocale.h>
+#include <KDebug>
+#include <KLocale>
 
 #include <QtCore/QList>
 

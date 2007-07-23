@@ -21,6 +21,7 @@
 */
 
 #include <metaweblog_p.h>
+#include "blogposting.h"
 
 #include <kxmlrpcclient/client.h>
 

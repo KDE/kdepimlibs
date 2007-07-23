@@ -21,6 +21,7 @@
 
 #include "gdata.h"
 #include "gdata_p.h"
+#include "blogposting.h"
 
 #include <syndication/loader.h>
 
@@ -28,6 +29,7 @@
 #include <klocale.h>
 #include <kio/netaccess.h>
 #include <kio/http.h>
+#include <kio/job.h>
 
 #include <QtCore/QList>
 

@@ -21,11 +21,13 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <metaweblog.h>
-#include <metaweblog_p.h>
-
+#include "metaweblog.h"
+#include "metaweblog_p.h"
+#include "blogposting.h"
+#include "blogmedia.h"
 #include <kdebug.h>
 #include <klocale.h>
+#include <kdatetime.h>
 
 using namespace KBlog;
 
