@@ -6,7 +6,6 @@ set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules )
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
 include (MacroLibrary)
-include (gpgme++/ConfigureChecks.cmake)
 
 #boost is a hard dependency
 find_package(Boost)
@@ -19,6 +18,8 @@ if(UNIX)
 else(UNIX)
   find_package(Gpgme)
 endif(UNIX)
+
+include (gpgme++/ConfigureChecks.cmake)
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
