@@ -71,7 +71,7 @@ if (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
       set(GPGME_LIBRARIES ${GPGME_LIBRARIES} CACHE INTERNAL "The gpgme libraries")
     
     else (GPGME_INSTALLED_VERSION_OK)
-      message(STATUS "The installed version of gpgme is too old: ${GPGME_VERSION}")
+      message(STATUS "The installed version of gpgme is too old: ${GPGME_VERSION} (required: >= 1.0.0)")
     endif (GPGME_INSTALLED_VERSION_OK)
     
     endif (GPGMECONFIG_EXECUTABLE)
