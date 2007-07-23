@@ -28,6 +28,7 @@
 
 #include <sys/types.h> // for size_t, off_t
 #include <cstdio> // FILE
+#include <algorithm>
 
 namespace GpgME {
 
