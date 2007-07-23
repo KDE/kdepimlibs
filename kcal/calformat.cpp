@@ -45,23 +45,27 @@ using namespace KCal;
 class KCal::CalFormat::Private
 {
   public:
+    Private() : mException( 0 ) {}
+    ~Private() { delete mException; }
+    static QString mApplication; // Name of application, for creating unique ID strings
+    static QString mProductId;   // PRODID string to write to calendar files
+    QString mLoadedProductId;    // PRODID string loaded from calendar file
     ErrorFormat *mException;
 };
 //@endcond
 
 //TODO: change strings to use "kcal" instead of "libkcal"?
-QString CalFormat::mApplication = QLatin1String( "libkcal" );
-QString CalFormat::mProductId =
+QString CalFormat::Private::mApplication = QLatin1String( "libkcal" );
+QString CalFormat::Private::mProductId =
   QLatin1String( "-//K Desktop Environment//NONSGML libkcal 3.5//EN" );
 
-CalFormat::CalFormat() : d( new KCal::CalFormat::Private )
+CalFormat::CalFormat()
+  : d( new KCal::CalFormat::Private )
 {
-  d->mException = 0;
 }
 
 CalFormat::~CalFormat()
 {
-  delete d->mException;
   delete d;
 }
 
@@ -85,23 +89,28 @@ ErrorFormat *CalFormat::exception()
 void CalFormat::setApplication( const QString &application,
                                 const QString &productID )
 {
-  mApplication = application;
-  mProductId = productID;
+  Private::mApplication = application;
+  Private::mProductId = productID;
 }
 
 const QString &CalFormat::application()
 {
-  return mApplication;
+  return Private::mApplication;
 }
 
 const QString &CalFormat::productId()
 {
-  return mProductId;
+  return Private::mProductId;
 }
 
 const QString &CalFormat::loadedProductId()
 {
-  return mLoadedProductId;
+  return d->mLoadedProductId;
+}
+
+void CalFormat::setLoadedProductId( const QString &id )
+{
+  d->mLoadedProductId = id;
 }
 
 QString CalFormat::createUniqueId()
@@ -110,7 +119,7 @@ QString CalFormat::createUniqueId()
                  QTime::currentTime().minute() + QTime::currentTime().second() +
                  QTime::currentTime().msec();
   QString uidStr = QString( "%1-%2.%3" ).
-                   arg( mApplication ).
+                   arg( Private::mApplication ).
                    arg( KRandom::random() ).
                    arg( hashTime );
   return uidStr;

@@ -8,12 +8,12 @@ compat                |       |         |   D   |         |    D    |
 confirmsavedialog     |       |         |       |         |    D    |
 customproperties      |       |         |   D   |         |    D    |
 dndfactory            |       |         |       |         |    D    |
-dummyscheduler        |       |         |       |         |    D    |
+dummyscheduler        |       |         |   D   |         |    D    |
 filestorage           |       |         |   D   |         |    D    |
 freebusycache         |       |         |       |         |    D    |
 freebusy              |       |         |   D   |         |    D    |
 freebusyurlstore      |       |         |       |         |    D    |
-htmlexport            |       |         |       |         |    D    |
+htmlexport            |       |         |   D   |         |    D    |
 icaldrag              |       |         |       |         |    D    |
 icalformat            |   D   |    D    |   D   |         |    D    | Allen
 icalformat_p          |   D   |         |   D   |         |    D    | Allen

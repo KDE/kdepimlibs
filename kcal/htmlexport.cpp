@@ -25,6 +25,7 @@
 
 #include "calendar.h"
 #include "event.h"
+#include "htmlexportsettings.h"
 #include "todo.h"
 #ifndef KORG_NOKABC
  #include "kabc/stdaddressbook.h"
@@ -35,6 +36,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QTextCodec>
 #include <QtCore/QRegExp>
+#include <QtCore/QMap>
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -43,18 +45,39 @@
 
 using namespace KCal;
 
-HtmlExport::HtmlExport( Calendar *calendar, HTMLExportSettings *settings ) :
-  mCalendar( calendar ), mSettings( settings ), d( 0 )
+static QString cleanChars( const QString &txt );
+
+class KCal::HtmlExport::Private
 {
+  public:
+    Private( Calendar *calendar, HTMLExportSettings *settings )
+      : mCalendar( calendar ),
+        mSettings( settings )
+    {}
+
+    Calendar *mCalendar;
+    HTMLExportSettings *mSettings;
+    QMap<QDate,QString> mHolidayMap;
+};
+
+
+HtmlExport::HtmlExport( Calendar *calendar, HTMLExportSettings *settings ) :
+  d( new Private( calendar, settings ) )
+{
+}
+
+HtmlExport::~HtmlExport()
+{
+  delete d;
 }
 
 bool HtmlExport::save( const QString &fileName )
 {
   QString fn( fileName );
-  if ( fn.isEmpty() && mSettings ) {
-    fn = mSettings->outputFile();
+  if ( fn.isEmpty() && d->mSettings ) {
+    fn = d->mSettings->outputFile();
   }
-  if ( !mSettings || fn.isEmpty() ) {
+  if ( !d->mSettings || fn.isEmpty() ) {
     return false;
   }
   QFile f( fileName );
@@ -69,7 +92,7 @@ bool HtmlExport::save( const QString &fileName )
 
 bool HtmlExport::save(QTextStream *ts)
 {
-  if ( !mSettings ) return false;
+  if ( !d->mSettings ) return false;
   ts->setCodec( "UTF-8" );
 
   // Write HTML header
@@ -79,8 +102,8 @@ bool HtmlExport::save(QTextStream *ts)
   *ts << "<html><head>" << endl;
   *ts << "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=";
   *ts << "UTF-8\" />\n";
-  if ( !mSettings->pageTitle().isEmpty())
-    *ts << "  <title>" << mSettings->pageTitle() << "</title>\n";
+  if ( !d->mSettings->pageTitle().isEmpty())
+    *ts << "  <title>" << d->mSettings->pageTitle() << "</title>\n";
   *ts << "  <style type=\"text/css\">\n";
   *ts << styleSheet();
   *ts << "  </style>\n";
@@ -89,39 +112,39 @@ bool HtmlExport::save(QTextStream *ts)
   // FIXME: Write header
   // (Heading, Calendar-Owner, Calendar-Date, ...)
 
-  if ( mSettings->eventView() || mSettings->monthView() || mSettings->weekView() ) {
-    if (!mSettings->eventTitle().isEmpty())
-      *ts << "<h1>" << mSettings->eventTitle() << "</h1>\n";
+  if ( d->mSettings->eventView() || d->mSettings->monthView() || d->mSettings->weekView() ) {
+    if (!d->mSettings->eventTitle().isEmpty())
+      *ts << "<h1>" << d->mSettings->eventTitle() << "</h1>\n";
 
     // Write Week View
-    if ( mSettings->weekView() )
+    if ( d->mSettings->weekView() )
       createWeekView( ts );
     // Write Month View
-    if ( mSettings->monthView() )
+    if ( d->mSettings->monthView() )
       createMonthView( ts );
     // Write Event List
-    if ( mSettings->eventView() )
+    if ( d->mSettings->eventView() )
       createEventList( ts );
   }
 
   // Write Todo List
-  if ( mSettings->todoView() ) {
-    if ( !mSettings->todoListTitle().isEmpty())
-      *ts << "<h1>" << mSettings->todoListTitle() << "</h1>\n";
+  if ( d->mSettings->todoView() ) {
+    if ( !d->mSettings->todoListTitle().isEmpty())
+      *ts << "<h1>" << d->mSettings->todoListTitle() << "</h1>\n";
     createTodoList(ts);
   }
 
   // Write Journals
-  if ( mSettings->journalView() ) {
-    if ( !mSettings->journalTitle().isEmpty())
-      *ts << "<h1>" << mSettings->journalTitle() << "</h1>\n";
+  if ( d->mSettings->journalView() ) {
+    if ( !d->mSettings->journalTitle().isEmpty())
+      *ts << "<h1>" << d->mSettings->journalTitle() << "</h1>\n";
     createJournalView(ts);
   }
 
   // Write Free/Busy
-  if ( mSettings->freeBusyView() ) {
-    if ( !mSettings->freeBusyTitle().isEmpty())
-      *ts << "<h1>" << mSettings->freeBusyTitle() << "</h1>\n";
+  if ( d->mSettings->freeBusyView() ) {
+    if ( !d->mSettings->freeBusyTitle().isEmpty())
+      *ts << "<h1>" << d->mSettings->freeBusyTitle() << "</h1>\n";
     createFreeBusyView(ts);
   }
 
@@ -170,22 +193,22 @@ void HtmlExport::createMonthView(QTextStream *ts)
         *ts << "    <td valign=\"top\"><table border=\"0\">";
 
         *ts << "<tr><td ";
-        if (mHolidayMap.contains(start) || start.dayOfWeek() == 7) {
+        if (d->mHolidayMap.contains(start) || start.dayOfWeek() == 7) {
           *ts << "class=\"dateholiday\"";
         } else {
           *ts << "class=\"date\"";
         }
         *ts << ">" << QString::number(start.day());
 
-        if (mHolidayMap.contains(start)) {
-          *ts << " <em>" << mHolidayMap[start] << "</em>";
+        if (d->mHolidayMap.contains(start)) {
+          *ts << " <em>" << d->mHolidayMap[start] << "</em>";
         }
 
         *ts << "</td></tr><tr><td valign=\"top\">";
 
-        Event::List events = mCalendar->events( start,
-                                                EventSortStartDate,
-                                                SortDirectionAscending );
+        Event::List events = d->mCalendar->events( start,
+                                                   EventSortStartDate,
+                                                   SortDirectionAscending );
         if (events.count()) {
           *ts << "<table>";
           Event::List::ConstIterator it;
@@ -223,15 +246,15 @@ void HtmlExport::createEventList (QTextStream *ts)
   *ts << "    <th class=\"sum\">" << i18n("Start Time") << "</th>\n";
   *ts << "    <th>" << i18n("End Time") << "</th>\n";
   *ts << "    <th>" << i18n("Event") << "</th>\n";
-  if ( mSettings->eventLocation() ) {
+  if ( d->mSettings->eventLocation() ) {
     *ts << "    <th>" << i18n("Location") << "</th>\n";
     ++columns;
   }
-  if ( mSettings->eventCategories() ) {
+  if ( d->mSettings->eventCategories() ) {
     *ts << "    <th>" << i18n("Categories") << "</th>\n";
     ++columns;
   }
-  if ( mSettings->eventAttendees() ) {
+  if ( d->mSettings->eventAttendees() ) {
     *ts << "    <th>" << i18n("Attendees") << "</th>\n";
     ++columns;
   }
@@ -240,9 +263,9 @@ void HtmlExport::createEventList (QTextStream *ts)
 
   for ( QDate dt = fromDate(); dt <= toDate(); dt = dt.addDays(1) ) {
     kDebug(5800) << "Getting events for " << dt.toString() << endl;
-    Event::List events = mCalendar->events(dt,
-                                           EventSortStartDate,
-                                           SortDirectionAscending );
+    Event::List events = d->mCalendar->events(dt,
+                                              EventSortStartDate,
+                                              SortDirectionAscending );
     if (events.count()) {
       *ts << "  <tr><td colspan=\"" << QString::number(columns)
           << "\" class=\"datehead\"><i>"
@@ -289,19 +312,19 @@ void HtmlExport::createEvent ( QTextStream *ts, Event *event,
   }
   *ts << "    </td>\n";
 
-  if ( mSettings->eventLocation() ) {
+  if ( d->mSettings->eventLocation() ) {
     *ts << "  <td>\n";
     formatLocation( ts, event );
     *ts << "  </td>\n";
   }
 
-  if ( mSettings->eventCategories() ) {
+  if ( d->mSettings->eventCategories() ) {
     *ts << "  <td>\n";
     formatCategories( ts, event );
     *ts << "  </td>\n";
   }
 
-  if ( mSettings->eventAttendees() ) {
+  if ( d->mSettings->eventAttendees() ) {
     *ts << "  <td>\n";
     formatAttendees( ts, event );
     *ts << "  </td>\n";
@@ -312,7 +335,7 @@ void HtmlExport::createEvent ( QTextStream *ts, Event *event,
 
 void HtmlExport::createTodoList ( QTextStream *ts )
 {
-  Todo::List rawTodoList = mCalendar->todos();
+  Todo::List rawTodoList = d->mCalendar->todos();
 
   int index = 0;
   while ( index < rawTodoList.count() ) {
@@ -352,19 +375,19 @@ void HtmlExport::createTodoList ( QTextStream *ts )
   *ts << "    <th class=\"sum\">" << i18n("Task") << "</th>\n";
   *ts << "    <th>" << i18n("Priority") << "</th>\n";
   *ts << "    <th>" << i18n("Completed") << "</th>\n";
-  if ( mSettings->taskDueDate() ) {
+  if ( d->mSettings->taskDueDate() ) {
     *ts << "    <th>" << i18n("Due Date") << "</th>\n";
     ++columns;
   }
-  if ( mSettings->taskLocation() ) {
+  if ( d->mSettings->taskLocation() ) {
     *ts << "    <th>" << i18n("Location") << "</th>\n";
     ++columns;
   }
-  if ( mSettings->taskCategories() ) {
+  if ( d->mSettings->taskCategories() ) {
     *ts << "    <th>" << i18n("Categories") << "</th>\n";
     ++columns;
   }
-  if ( mSettings->taskAttendees() ) {
+  if ( d->mSettings->taskAttendees() ) {
     *ts << "    <th>" << i18n("Attendees") << "</th>\n";
     ++columns;
   }
@@ -450,7 +473,7 @@ void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
   *ts << "    " << i18n("%1 %", todo->percentComplete()) << "\n";
   *ts << "  </td>\n";
 
-  if ( mSettings->taskDueDate() ) {
+  if ( d->mSettings->taskDueDate() ) {
     *ts << "  <td";
     if (completed) *ts << " class=\"done\"";
     *ts << ">\n";
@@ -462,7 +485,7 @@ void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
     *ts << "  </td>\n";
   }
 
-  if ( mSettings->taskLocation() ) {
+  if ( d->mSettings->taskLocation() ) {
     *ts << "  <td";
     if (completed) *ts << " class=\"done\"";
     *ts << ">\n";
@@ -470,7 +493,7 @@ void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
     *ts << "  </td>\n";
   }
 
-  if ( mSettings->taskCategories() ) {
+  if ( d->mSettings->taskCategories() ) {
     *ts << "  <td";
     if (completed) *ts << " class=\"done\"";
     *ts << ">\n";
@@ -478,7 +501,7 @@ void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
     *ts << "  </td>\n";
   }
 
-  if ( mSettings->taskAttendees() ) {
+  if ( d->mSettings->taskAttendees() ) {
     *ts << "  <td";
     if (completed) *ts << " class=\"done\"";
     *ts << ">\n";
@@ -498,7 +521,7 @@ void HtmlExport::createWeekView( QTextStream *ts )
 void HtmlExport::createJournalView( QTextStream *ts )
 {
   Q_UNUSED( ts );
-//   Journal::List rawJournalList = mCalendar->journals();
+//   Journal::List rawJournalList = d->mCalendar->journals();
   // FIXME: Implement this!
 }
 
@@ -514,11 +537,11 @@ bool HtmlExport::checkSecrecy( Incidence *incidence )
   if ( secrecy == Incidence::SecrecyPublic ) {
     return true;
   }
-  if ( secrecy == Incidence::SecrecyPrivate && !mSettings->excludePrivate() ) {
+  if ( secrecy == Incidence::SecrecyPrivate && !d->mSettings->excludePrivate() ) {
     return true;
   }
   if ( secrecy == Incidence::SecrecyConfidential &&
-       !mSettings->excludeConfidential() ) {
+       !d->mSettings->excludeConfidential() ) {
     return true;
   }
   return false;
@@ -607,28 +630,28 @@ void HtmlExport::createFooter( QTextStream *ts )
   bool hasCredit = false;
   bool hasCreditURL = false;
   QString mail, name, credit, creditURL;*/
-  if (!mSettings->eMail().isEmpty()) {
-    if (!mSettings->name().isEmpty())
-      trailer += i18n("by <a href=\"mailto:%1\">%2</a> ", mSettings->eMail(), mSettings->name() );
+  if (!d->mSettings->eMail().isEmpty()) {
+    if (!d->mSettings->name().isEmpty())
+      trailer += i18n("by <a href=\"mailto:%1\">%2</a> ", d->mSettings->eMail(), d->mSettings->name() );
     else
-      trailer += i18n("by <a href=\"mailto:%1\">%2</a> ", mSettings->eMail(), mSettings->eMail() );
+      trailer += i18n("by <a href=\"mailto:%1\">%2</a> ", d->mSettings->eMail(), d->mSettings->eMail() );
   } else {
-    if (!mSettings->name().isEmpty())
-      trailer += i18n("by %1 ", mSettings->name() );
+    if (!d->mSettings->name().isEmpty())
+      trailer += i18n("by %1 ", d->mSettings->name() );
   }
-  if (!mSettings->creditName().isEmpty()) {
-    if (!mSettings->creditURL().isEmpty())
+  if (!d->mSettings->creditName().isEmpty()) {
+    if (!d->mSettings->creditURL().isEmpty())
       trailer += i18n("with <a href=\"%1\">%2</a>",
-                       mSettings->creditURL() ,
-                       mSettings->creditName() );
+                       d->mSettings->creditURL() ,
+                       d->mSettings->creditName() );
     else
-      trailer += i18n("with %1", mSettings->creditName() );
+      trailer += i18n("with %1", d->mSettings->creditName() );
   }
   *ts << "<p>" << trailer << "</p>\n";
 }
 
 
-QString HtmlExport::cleanChars(const QString &text)
+QString cleanChars(const QString &text)
 {
   QString txt = text;
   txt = txt.replace( "&", "&amp;" );
@@ -650,8 +673,8 @@ QString HtmlExport::cleanChars(const QString &text)
 
 QString HtmlExport::styleSheet() const
 {
-  if ( !mSettings->styleSheet().isEmpty() )
-    return mSettings->styleSheet();
+  if ( !d->mSettings->styleSheet().isEmpty() )
+    return d->mSettings->styleSheet();
 
   QString css;
 
@@ -685,19 +708,19 @@ QString HtmlExport::styleSheet() const
 
 void HtmlExport::addHoliday( const QDate &date, const QString &name)
 {
-  if ( mHolidayMap[date].isEmpty() ) {
-    mHolidayMap[date] = name;
+  if ( d->mHolidayMap[date].isEmpty() ) {
+    d->mHolidayMap[date] = name;
   } else {
-    mHolidayMap[date] = i18nc( "list of holidays", "%1, %2", mHolidayMap[date], name );
+    d->mHolidayMap[date] = i18nc( "list of holidays", "%1, %2", d->mHolidayMap[date], name );
   }
 }
 
 QDate HtmlExport::fromDate() const
 {
-  return mSettings->dateStart().date();
+  return d->mSettings->dateStart().date();
 }
 
 QDate HtmlExport::toDate() const
 {
-  return mSettings->dateEnd().date();
+  return d->mSettings->dateEnd().date();
 }

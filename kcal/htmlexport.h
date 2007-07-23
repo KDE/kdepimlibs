@@ -23,17 +23,20 @@
 #define KCAL_HTMLEXPORT_H
 
 #include <QtCore/QDateTime>
-#include <QtCore/QMap>
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
 
-#include "calendar.h"
-#include "htmlexportsettings.h"
 #include "kcal_export.h"
 
 class QTextStream;
+class HTMLExportSettings;
 
 namespace KCal {
+
+class Calendar;
+class Event;
+class Incidence;
+class Todo;
 
 /**
   This class provides the functions to export a calendar as a HTML page.
@@ -45,7 +48,7 @@ class KCAL_EXPORT HtmlExport
       Create new HTML exporter for calendar.
     */
     HtmlExport( Calendar *calendar, HTMLExportSettings *settings );
-    virtual ~HtmlExport() {}
+    virtual ~HtmlExport();
 
     /**
       Writes out the calendar in HTML format.
@@ -85,14 +88,10 @@ class KCAL_EXPORT HtmlExport
     QString styleSheet() const;
 
   private:
-    QString cleanChars( const QString &txt );
-
-    Calendar *mCalendar;
-    HTMLExportSettings *mSettings;
-    QMap<QDate,QString> mHolidayMap;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }

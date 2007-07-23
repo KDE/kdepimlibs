@@ -1460,7 +1460,7 @@ void VCalFormat::populate( VObject *vcal )
       kDebug(5800) << "This vCalendar file was not created by KOrganizer or  "
                    << "any other product we support. Loading anyway..." << endl;
     }
-    mLoadedProductId = s;
+    setLoadedProductId( s );
     deleteStr( s );
   }
 

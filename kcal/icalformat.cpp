@@ -59,7 +59,7 @@ extern "C" {
 using namespace KCal;
 
 //@cond PRIVATE
-class ICalFormat::Private
+class KCal::ICalFormat::Private
 {
   public:
     Private( ICalFormat *parent )
@@ -176,7 +176,7 @@ bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &string )
         }
         success = false;
       } else {
-        mLoadedProductId = d->mImpl->loadedProductId();
+        setLoadedProductId( d->mImpl->loadedProductId() );
       }
     }
   } else if ( icalcomponent_isa( calendar ) != ICAL_VCALENDAR_COMPONENT ) {
@@ -192,7 +192,7 @@ bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &string )
       }
       success = false;
     } else {
-      mLoadedProductId = d->mImpl->loadedProductId();
+      setLoadedProductId( d->mImpl->loadedProductId() );
     }
   }
 

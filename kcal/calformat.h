@@ -167,14 +167,9 @@ class KCAL_EXPORT CalFormat
 
   protected:
     /** PRODID string loaded from calendar file. */
-    QString mLoadedProductId;
+    void setLoadedProductId( const QString &id );
 
   private:
-    /** Name of application, for creating unique ID strings. */
-    static QString mApplication;
-    /** PRODID string to write to calendar files. */
-    static QString mProductId;
-
     //@cond PRIVATE
     class Private;
     Private *const d;
