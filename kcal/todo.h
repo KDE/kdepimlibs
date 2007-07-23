@@ -30,18 +30,20 @@
 #define KCAL_TODO_H
 
 #include <QtCore/QByteArray>
-
 #include "incidence.h"
 
 namespace KCal {
 
 /**
   @brief
-  Provides a @ref to-do in the sense of RFC2445.
+  Provides a To-do in the sense of RFC2445.
 */
 class KCAL_EXPORT Todo : public Incidence
 {
   public:
+    /**
+      List of to-dos.
+    */
     typedef ListBase<Todo> List;
 
     /**
@@ -50,18 +52,21 @@ class KCAL_EXPORT Todo : public Incidence
     Todo();
 
     /**
-      Constructs a to-do as a copy of another to-do object.
-
-      @param todo is the to-do to copy.
+      Copy constructor.
+      @param other is the to-do to copy.
     */
-    Todo( const Todo &todo );
+    Todo( const Todo &other );
 
     /**
       Destroys a to-do.
     */
     ~Todo();
 
-    QByteArray type() const { return "Todo"; }
+    /**
+      @copydoc
+      IncidenceBase::type()
+    */
+    QByteArray type() const;
 
     /**
       Returns an exact copy of this todo. The returned object is owned by the
@@ -300,15 +305,14 @@ class KCAL_EXPORT Todo : public Incidence
     /**
       Returns the end date/time of the base incidence.
     */
-    virtual KDateTime endDateRecurrenceBase() const { return dtDue(); }
+    virtual KDateTime endDateRecurrenceBase() const;
 
   private:
-    bool accept( Visitor &v ) { return v.visit( this ); }
-
     /**
-      Returns true if the todo got a new date, else false will be returned.
+      @copydoc
+      IncidenceBase::accept()
     */
-    bool recurTodo();
+    bool accept( Visitor &v ) { return v.visit( this ); }
 
     //@cond PRIVATE
     class Private;

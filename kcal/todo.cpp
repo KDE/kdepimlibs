@@ -23,6 +23,9 @@
   This file is part of the API for handling calendar data and
   defines the Todo class.
 
+  @brief
+  Provides a To-do in the sense of RFC2445.
+
   @authors Cornelius Schumacher \<schumacher@kde.org\>
 */
 
@@ -48,7 +51,7 @@ class KCal::Todo::Private
         mHasStartDate( false ),
         mHasCompletedDate( false )
     {}
-    Private( const Private &other )
+    Private( const KCal::Todo::Private &other )
       : mDtDue( other.mDtDue ),
         mDtRecurrence( other.mDtRecurrence ),
         mCompleted( other.mCompleted ),
@@ -57,6 +60,7 @@ class KCal::Todo::Private
         mHasStartDate( other.mHasStartDate ),
         mHasCompletedDate( other.mHasCompletedDate )
     {}
+
     KDateTime mDtDue;        // to-do due date (if there is one)
                              // ALSO the first occurrence of a recurring to-do
     KDateTime mDtRecurrence; // next occurrence (for recurring to-dos)
@@ -65,15 +69,21 @@ class KCal::Todo::Private
     bool mHasDueDate;        // true if the to-do has a due date
     bool mHasStartDate;      // true if the to-do has a starting date
     bool mHasCompletedDate;  // true if the to-do has a completion date
+
+    /**
+      Returns true if the todo got a new date, else false will be returned.
+    */
+    bool recurTodo( Todo *todo );
 };
 //@endcond
 
-Todo::Todo() : d( new KCal::Todo::Private )
+Todo::Todo()
+  : d( new KCal::Todo::Private )
 {
 }
 
-Todo::Todo( const Todo &t )
-  : Incidence( t ), d( new KCal::Todo::Private( *t.d) )
+Todo::Todo( const Todo &other )
+  : Incidence( other ), d( new KCal::Todo::Private( *other.d ) )
 {
 }
 
@@ -90,13 +100,18 @@ Todo *Todo::clone()
 bool Todo::operator==( const Todo &t2 ) const
 {
   return
-    static_cast<const Incidence&>(*this) == static_cast<const Incidence&>(t2) &&
+    static_cast<const Incidence &>( *this ) == static_cast<const Incidence &>( t2 ) &&
     dtDue() == t2.dtDue() &&
     hasDueDate() == t2.hasDueDate() &&
     hasStartDate() == t2.hasStartDate() &&
     completed() == t2.completed() &&
     hasCompletedDate() == t2.hasCompletedDate() &&
     percentComplete() == t2.percentComplete();
+}
+
+QByteArray Todo::type() const
+{
+  return "Todo";
 }
 
 void Todo::setDtDue( const KDateTime &dtDue, bool first )
@@ -274,7 +289,7 @@ QString Todo::completedStr( bool shortfmt ) const
 
 void Todo::setCompleted( const KDateTime &completed )
 {
-  if ( !recurTodo() ) {
+  if ( !d->recurTodo( this ) ) {
     d->mHasCompletedDate = true;
     d->mPercentComplete = 100;
     d->mCompleted = completed.toUtc();
@@ -337,18 +352,18 @@ bool Todo::recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const
        d->mDtRecurrence > recurrence()->startDateTime() );
 }
 
-bool Todo::recurTodo()
+bool Todo::Private::recurTodo( Todo *todo )
 {
-  if ( recurs() ) {
-    Recurrence *r = recurrence();
+  if ( todo->recurs() ) {
+    Recurrence *r = todo->recurrence();
     KDateTime endDateTime = r->endDateTime();
-    KDateTime nextDate = r->getNextDateTime( dtDue() );
+    KDateTime nextDate = r->getNextDateTime( todo->dtDue() );
 
     if ( ( r->duration() == -1 ||
            ( nextDate.isValid() && endDateTime.isValid() &&
              nextDate <= endDateTime ) ) ) {
 
-      while ( !recursAt( nextDate ) ||
+      while ( !todo->recursAt( nextDate ) ||
               nextDate <= KDateTime::currentUtcDateTime() ) {
 
         if ( !nextDate.isValid() || nextDate > endDateTime ) {
@@ -358,9 +373,9 @@ bool Todo::recurTodo()
         nextDate = r->getNextDateTime( nextDate );
       }
 
-      setDtDue( nextDate );
-      setCompleted( false );
-      setRevision( revision() + 1 );
+      todo->setDtDue( nextDate );
+      todo->setCompleted( false );
+      todo->setRevision( todo->revision() + 1 );
 
       return true;
     }
@@ -375,4 +390,9 @@ bool Todo::isOverdue() const
                 dtDue().date() < QDate::currentDate() :
                 dtDue() < KDateTime::currentUtcDateTime();
   return inPast && !isCompleted();
+}
+
+KDateTime Todo::endDateRecurrenceBase() const
+{
+  return dtDue();
 }
