@@ -74,8 +74,8 @@ void APIBlogger::APIBloggerPrivate::slotUserInfo( const QList<QVariant> &result,
     const QString email = userInfo["email"].toString();
     kDebug(5323) << "emit userInfoRetrieved( " << nickname << ", "
                  << userid << ", " << email << " )" << endl;
-    // FIXME: What about a BlogUserInfo class/struct?
-    emit parent->userInfoRetrieved( nickname, userid, email );
+    // FIXME: set the data
+    emit parent->userInfoRetrieved();
   }
 }
 
@@ -105,7 +105,7 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
       const QString url( postInfo["url"].toString() );
 
       if ( !id.isEmpty() && !name.isEmpty() ) {
-        emit parent->blogInfoRetrieved( id, name );
+        emit parent->blogInfoRetrieved(); //FIXME set the data
         kDebug(5323) << "Emitting blogInfoRetrieved( id=" << id
                      << ", name=" << name << "); " << endl;
       }

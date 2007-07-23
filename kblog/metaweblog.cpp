@@ -54,6 +54,16 @@ void APIMetaWeblog::setUrl( const KUrl &server )
   d->mXmlRpcClient->setUserAgent( "KDE-KBlog" );
 }
 
+QMap<QString,QString> APIMetaWeblog::categories() const
+{
+  return d->mCategories;
+}
+
+void APIMetaWeblog::setCategories( const QMap<QString,QString> &categories )
+{
+  d->mCategories = categories;
+}
+
 void APIMetaWeblog::listPostings()
 {
     kDebug(5323) << "Fetching List of Posts..." << endl;

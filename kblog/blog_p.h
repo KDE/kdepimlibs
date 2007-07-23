@@ -57,6 +57,8 @@ class APIBlog::APIBlogPrivate
     APIBlog *parent;
     QString mBlogId;
     QString mUserId;
+    QString mUserName;
+    QString mEmail;
     QString mPassword;
     KUrl mUrl;
     KTimeZone mTimeZone;

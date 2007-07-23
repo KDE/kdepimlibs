@@ -30,6 +30,7 @@
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 #include <QtCore/QList>
+#include <QtCore/QMap>
 
 /**
   @file
@@ -90,6 +91,10 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
     */
     void setUrl( const KUrl &server );
 
+    QMap<QString,QString> categories() const;
+
+    void setCategories( const QMap<QString,QString> &categories );
+
     /**
       List recent postings on the server.
       @see     void listedPosting( KBlog::BlogPosting &posting )
@@ -134,6 +139,15 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
       @param media is send to the server.
     */
     virtual void createMedia( KBlog::BlogMedia *media );
+
+  Q_SIGNALS:
+    /**
+      This signal is emitted when a listCategories() job fetches category
+      information from the blogging server.
+
+      @see listCategories()
+    */
+    virtual void categoryInfoRetrieved();
 
   private:
     class APIMetaWeblogPrivate;

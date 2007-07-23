@@ -99,7 +99,7 @@ void APIGData::APIGDataPrivate::slotLoadingBlogsComplete( Syndication::Loader* l
       }
 
       if ( !id.isEmpty() && !name.isEmpty() ) {
-        emit parent->blogInfoRetrieved( id, name );
+        emit parent->blogInfoRetrieved(); //FIXME set the data
         kDebug(5323) << "Emitting blogInfoRetrieved( id=" << id
                  << ", name=" << name << "); " << endl;
       }
@@ -190,7 +190,6 @@ void APIGData::APIGDataPrivate::slotCreatePosting( KJob *job )
     kDebug(5323) << "slotCreatePosting error: " << job->errorString() << endl;
     emit parent->error( AtomAPI, job->errorString() );
     mBuffer.resize( 0 );
-    mLock.unlock();
     return;
   }
 

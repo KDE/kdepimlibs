@@ -201,14 +201,34 @@ QString APIBlog::password() const
   return d->mPassword;
 }
 
+QString APIBlog::userId() const
+{
+  return d->mUserId;
+}
+
 void APIBlog::setUserId( const QString &uid )
 {
   d->mUserId = uid;
 }
 
-QString APIBlog::userId() const
+QString APIBlog::userName() const
 {
-  return d->mUserId;
+  return d->mUserName;
+}
+
+void APIBlog::setUserName( const QString &uname )
+{
+  d->mUserName = uname;
+}
+
+QString APIBlog::email() const
+{
+  return d->mEmail;
+}
+
+void APIBlog::setEmail( const QString& email )
+{
+  d->mEmail = email;
 }
 
 void APIBlog::setBlogId( const QString &blogId )

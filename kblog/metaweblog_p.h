@@ -36,6 +36,7 @@ class APIMetaWeblog::APIMetaWeblogPrivate : public QObject
   Q_OBJECT
   public:
     QString mAppId;
+    QMap<QString,QString> mCategories;
     APIMetaWeblog *parent;
     QMutex mLock;
     KXmlRpc::Client *mXmlRpcClient;

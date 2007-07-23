@@ -111,15 +111,6 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
     virtual void listPostings();
 
     /**
-      List the categories of the blog.
-      Note: This is not supported on the server side.
-
-      @see  void categoryInfoRetrieved( const QString &, const QString & )
-      @see  void listCategoriesFinished()
-    */
-    virtual void listCategories();
-
-    /**
       Fetch the Posting with postingId.
 
       @param postingId is the id of the posting on the server.

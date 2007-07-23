@@ -394,6 +394,37 @@ class KBLOG_EXPORT APIBlog : public QObject
        @see setUserId()
     */
     virtual QString userId() const;
+    /**
+      Sets the user's name for the blog.
+      @param uname is a QString containing the blog username.
+
+      @see userName()
+    */
+    virtual void setUserName( const QString &uname );
+
+    /**
+       Returns the user's name of the blog.
+       @see setUserName()
+    */
+    virtual QString userName() const;
+
+    /**
+        Get the E-Mail of the user.
+
+        @return email
+
+        @see setEmail( QString& email )
+    */
+    virtual QString email() const;
+
+    /**
+        Set the E-Mail of the user. This is used for authentication.
+
+        @param email is the mail address of the user
+
+        @see email()
+    */
+    virtual void setEmail( const QString& email );
 
     /**
       Sets the URL for the blog.
@@ -458,12 +489,6 @@ class KBLOG_EXPORT APIBlog : public QObject
     virtual void listPostings() = 0;
 
     /**
-      List the categories of the blog.
-      @see categoriesInfoRetrieved(), listCategoriesFinished()
-    */
-    virtual void listCategories() = 0;
-
-    /**
       Fetch the Posting with postingId.
       @param postingId is the id of the posting on the server.
 
@@ -505,37 +530,17 @@ class KBLOG_EXPORT APIBlog : public QObject
       This signal is emitted when a userInfo() job fetches the user
       information from the blogging server.
 
-      @param nickname is the nickname of the user.
-      @param userid is the id of the user on the server.
-      @param email is the email address used on the server.
-
 '     @see userInfo()
     */
-    virtual void userInfoRetrieved( const QString &nickname, const QString &userid,
-                            const QString &email );
+    virtual void userInfoRetrieved();
 
     /**
       This signal is emitted when a listBlogs() job fetches the blog
       information from the blogging server.
 
-      @param id is the blog's id on the server.
-      @param name is the name of the blog on the server.
-
       @see listBlogs()
     */
-    virtual void blogInfoRetrieved( const QString &id, const QString &name );
-
-    /**
-      This signal is emitted when a listCategories() job fetches category
-      information from the blogging server.
-
-      @param name is the name of the category on the server.
-      @param description is the description of the category on the server.
-
-      @see listCategories()
-    */
-    virtual void categoryInfoRetrieved( const QString &name,
-                                const QString &description );
+    virtual void blogInfoRetrieved();
 
     /**
       This signal is emitted when a listPostings() job fetches a posting

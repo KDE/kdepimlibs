@@ -53,17 +53,11 @@ QString APIGData::interfaceName() const
 
 void APIGData::userInfo()
 {
-  kDebug() << "Fetching user information is not available in GData API." << endl;
-  emit error( NotSupported, i18n( "Fetching user information is not available in GData API." ) );
-}
-
-void APIGData::getIntrospection()
-{
   // fetch the introspection file synchronously and parse it
   QByteArray data;
   KIO::Job *job = KIO::get( url(), false, false );
   KUrl blogUrl = url();
-  if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &blogUrl ) ) {
+  if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &blogUrl ) ) { // make asynchronous
     kDebug() << "Fetched Homepage data." << endl;
 //     QRegExp pp( "<link.+rel=\"service.post\".+href=\"(.+)\".*/>" );
 //     if( pp.indexIn( data )!=-1 )
@@ -101,12 +95,6 @@ void APIGData::listPostings()
     connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
             d, SLOT(slotLoadingPostingsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
     loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId() + QString( "/posts/default" ) );
-}
-
-void APIGData::listCategories()
-{
-  kDebug() << "Fetching categories is not available in GData API." << endl;
-  emit error( NotSupported, i18n( "Fetching categories is not available in GData API." ) );
 }
 
 void APIGData::fetchPosting( KBlog::BlogPosting *posting )
@@ -188,9 +176,5 @@ void APIGData::removePosting( KBlog::BlogPosting *posting )
     kDebug() << "deletePosting()" << endl;
     d->authenticate();
 }
-
-QString APIGData::email() { return d->mEmail; }
-
-void APIGData::setEmail( const QString& email ) { d->mEmail = email; }
 
 #include "gdata.moc"

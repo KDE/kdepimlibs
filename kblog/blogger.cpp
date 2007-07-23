@@ -89,13 +89,6 @@ void APIBlogger::listPostings()
       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 
-void APIBlogger::listCategories()
-{
-  emit error( NotSupported,
-              i18n( "Categories are not supported in Blogger API 1.0." ) );
-  kDebug(5323) << "Categories are not supported in Blogger API 1.0." << endl;
-}
-
 void APIBlogger::fetchPosting( KBlog::BlogPosting *posting )
 {
 //   if ( d->mLock.tryLock() ) {

@@ -74,13 +74,6 @@ class KBLOG_EXPORT APIGData : public APIBlog
     QString interfaceName() const;
 
     /**
-        Sets the blogId accordingly to the HTML website.
-
-        @see KBlog::APIBlog::setBlogId( QString& )
-    */
-    virtual void getIntrospection();
-
-    /**
         Get information about the user from the blog. Note: This is not supported on the server side.
 	@see void userInfoRetrieved( const QString &nickname, const QString &userid, const QString &email )
     */
@@ -99,13 +92,6 @@ class KBLOG_EXPORT APIGData : public APIBlog
         @see     void listPostingsFinished()
     */
     virtual void listPostings();
-
-    /**
-        List the categories of the blog.
-	@see  void categoryInfoRetrieved( const QString &name, const QString &description )
-        @see  void listCategoriesFinished()
-    */
-    virtual void listCategories();
 
     /**
         Fetch the Posting with postingId.
@@ -144,24 +130,6 @@ class KBLOG_EXPORT APIGData : public APIBlog
         @see void removePosting( KBlog::BlogPosting *posting )
     */
     virtual void removePosting( KBlog::BlogPosting *posting );
-
-    /**
-        Get the E-Mail of the user.
-
-        @return email
-
-        @see setEmail( QString& email )
-    */
-    virtual QString email();
-
-    /**
-        Set the E-Mail of the user. This is used for authentication.
-
-        @param email is the mail address of the user
-
-        @see email()
-    */
-    virtual void setEmail( const QString& email );
 
 private:
     class APIGDataPrivate;

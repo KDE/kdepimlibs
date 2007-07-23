@@ -85,7 +85,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
         const QMap<QString, QVariant> category = categories[*it].toMap();
         const QString description( category["description"].toString() );
         if ( !name.isEmpty() ) {
-          emit parent->categoryInfoRetrieved( name, description );
+          emit parent->categoryInfoRetrieved(); //FIXME set the data
           kDebug(5323) << "Emitting categorieInfoRetrieved( name=" << name
                        << " description=" << description << " ); " << endl;
         }
@@ -103,7 +103,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
         const QString description( category["description"].toString() );
         const QString name( category["categoryName"].toString() );
         if ( !name.isEmpty() ) {
-          emit parent->categoryInfoRetrieved( name, description );
+          emit parent->categoryInfoRetrieved();//FIXME set the data
           kDebug(5323) << "Emitting categorieInfoRetrieved( name=" << name
                        << " description=" << description << " ); " << endl;
         }

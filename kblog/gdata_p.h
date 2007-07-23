@@ -41,8 +41,6 @@ class APIGData::APIGDataPrivate : public QObject
     QDateTime mAuthenticationTime;
   public:
     APIGData* parent;
-    QMutex mLock;
-    QString mEmail;
     QByteArray mBuffer;
 //     KIO::Slave* mSlave;
     APIGDataPrivate();
