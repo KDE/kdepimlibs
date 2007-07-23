@@ -28,7 +28,6 @@
 #include <klocale.h>
 #include <kio/netaccess.h>
 #include <kio/http.h>
-#include <kio/slave.h>
 
 #include <QtCore/QList>
 

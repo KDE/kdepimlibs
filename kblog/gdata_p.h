@@ -28,7 +28,7 @@
 #include <syndication/loader.h>
 #include "gdata.h"
 
-#include <kio/slave.h>
+//#include <kio/slave.h>
 
 using namespace KBlog;
 
