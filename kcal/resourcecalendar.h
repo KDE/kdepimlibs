@@ -59,7 +59,8 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     explicit ResourceCalendar( const KConfigGroup &group );
     virtual ~ResourceCalendar();
 
-    void setResolveConflict( bool b);
+    bool isResolveConflictSet() const;
+    void setResolveConflict( bool b );
 
     virtual void writeConfig( KConfigGroup &group );
 
@@ -420,11 +421,6 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual void setSubresourceActive( const QString &, bool active );
 
   protected:
-
-    bool mResolveConflict;
-    bool mReceivedLoadError;
-    bool mReceivedSaveError;
-
     /**
       Do the actual loading of the resource data. Called by load().
     */
@@ -453,6 +449,12 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       A resource should call this function if a save error happens.
     */
     void saveError( const QString &errorMessage = QString() );
+
+    bool receivedLoadError() const;
+    void setReceivedLoadError( bool b );
+    bool receivedSaveError() const;
+    void setReceivedSaveError( bool b );
+
     /**
       Specify whether individual incidences should be set read-only when a
       read-only resource is loaded.
@@ -467,11 +469,10 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     bool noReadOnlyOnLoad() const;
 
   private:
-    bool mNoReadOnlyOnLoad;
-    bool mInhibitSave;     // true to prevent saves
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 /** Type representing the manager of a ResourceCalendar. */

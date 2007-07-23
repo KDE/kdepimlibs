@@ -396,7 +396,7 @@ bool ResourceCached::load( CacheAction action )
 {
   kDebug(5800) << "Loading resource " + resourceName() << endl;
 
-  mReceivedLoadError = false;
+  setReceivedLoadError( false );
 
   bool success = true;
   if ( !isOpen() ) success = open();
@@ -416,7 +416,7 @@ bool ResourceCached::load( CacheAction action )
     }
     success = doLoad( update );
   }
-  if ( !success && !mReceivedLoadError ) loadError();
+  if ( !success && !receivedLoadError() ) loadError();
 
   // If the resource is read-only, we need to set its incidences to read-only,
   // too. This can't be done at a lower-level, since the read-only setting
@@ -460,7 +460,7 @@ bool ResourceCached::save( CacheAction action, Incidence *incidence )
   if ( !readOnly() ) {
     kDebug(5800) << "Save resource " + resourceName() << endl;
 
-    mReceivedSaveError = false;
+    setReceivedSaveError( false );
 
     if ( !isOpen() ) return true;
     bool upload = false;
@@ -476,7 +476,7 @@ bool ResourceCached::save( CacheAction action, Incidence *incidence )
         break;
     }
     bool success = incidence ? doSave( upload, incidence ) : doSave( upload );
-    if ( !success && !mReceivedSaveError ) saveError();
+    if ( !success && !receivedSaveError() ) saveError();
 
     return success;
   } else {

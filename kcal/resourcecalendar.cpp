@@ -32,32 +32,50 @@
 
 using namespace KCal;
 
+class ResourceCalendar::Private
+{
+  public:
+    Private()
+      : mResolveConflict( false ),
+        mNoReadOnlyOnLoad( false ),
+        mInhibitSave( false )
+    {}
+    bool mResolveConflict;
+    bool mNoReadOnlyOnLoad;
+    bool mInhibitSave;     // true to prevent saves
+    bool mReceivedLoadError;
+    bool mReceivedSaveError;
+
+};
+
+
 ResourceCalendar::ResourceCalendar()
-    : KRES::Resource(),
-      mResolveConflict( false ),
-      mNoReadOnlyOnLoad( false ),
-      mInhibitSave( false ),
-      d( 0 )
+  : KRES::Resource(),
+    d( new Private )
 {
 }
 
 ResourceCalendar::ResourceCalendar( const KConfigGroup &group )
-    : KRES::Resource( group ),
-      mResolveConflict( false ),
-      mNoReadOnlyOnLoad( false ),
-      mInhibitSave( false ),
-      d( 0 )
+  : KRES::Resource( group ),
+    d( new Private )
 {
 }
 
 ResourceCalendar::~ResourceCalendar()
 {
+  delete d;
+}
+
+bool ResourceCalendar::isResolveConflictSet() const
+{
+  return d->mResolveConflict;
 }
 
 void ResourceCalendar::setResolveConflict( bool b)
 {
- mResolveConflict = b;
+  d->mResolveConflict = b;
 }
+
 QString ResourceCalendar::infoText() const
 {
   QString txt;
@@ -116,19 +134,19 @@ bool ResourceCalendar::load()
 {
   kDebug(5800) << "Loading resource " + resourceName() << endl;
 
-  mReceivedLoadError = false;
+  d->mReceivedLoadError = false;
 
   bool success = true;
   if ( !isOpen() ) success = open();
   if ( success ) {
     success = doLoad();
   }
-  if ( !success && !mReceivedLoadError ) loadError();
+  if ( !success && !d->mReceivedLoadError ) loadError();
 
   // If the resource is read-only, we need to set its incidences to read-only,
   // too. This can't be done at a lower-level, since the read-only setting
   // happens at this level
-  if ( !mNoReadOnlyOnLoad && readOnly() ) {
+  if ( !d->mNoReadOnlyOnLoad && readOnly() ) {
     Incidence::List incidences( rawIncidences() );
     Incidence::List::Iterator it;
     for ( it = incidences.begin(); it != incidences.end(); ++it ) {
@@ -145,7 +163,7 @@ void ResourceCalendar::loadError( const QString &err )
 {
   kDebug(5800) << "Error loading resource: " << err << endl;
 
-  mReceivedLoadError = true;
+  d->mReceivedLoadError = true;
 
   QString msg = i18n("Error while loading %1.\n", resourceName() );
   if ( !err.isEmpty() ) {
@@ -154,18 +172,28 @@ void ResourceCalendar::loadError( const QString &err )
   emit resourceLoadError( this, msg );
 }
 
+bool ResourceCalendar::receivedLoadError() const
+{
+  return d->mReceivedLoadError;
+}
+
+void ResourceCalendar::setReceivedLoadError( bool b )
+{
+  d->mReceivedLoadError = b;
+}
+
 bool ResourceCalendar::save( Incidence *incidence )
 {
-  if ( mInhibitSave )
+  if ( d->mInhibitSave )
     return true;
   if ( !readOnly() ) {
     kDebug(5800) << "Save resource " + resourceName() << endl;
 
-    mReceivedSaveError = false;
+    d->mReceivedSaveError = false;
 
     if ( !isOpen() ) return true;
     bool success = incidence ? doSave(incidence) : doSave();
-    if ( !success && !mReceivedSaveError ) saveError();
+    if ( !success && !d->mReceivedSaveError ) saveError();
 
     return success;
   } else {
@@ -184,7 +212,7 @@ void ResourceCalendar::saveError( const QString &err )
 {
   kDebug(5800) << "Error saving resource: " << err << endl;
 
-  mReceivedSaveError = true;
+  d->mReceivedSaveError = true;
 
   QString msg = i18n("Error while saving %1.\n", resourceName() );
   if ( !err.isEmpty() ) {
@@ -193,14 +221,24 @@ void ResourceCalendar::saveError( const QString &err )
   emit resourceSaveError( this, msg );
 }
 
+bool ResourceCalendar::receivedSaveError() const
+{
+  return d->mReceivedSaveError;
+}
+
+void ResourceCalendar::setReceivedSaveError( bool b )
+{
+  d->mReceivedSaveError = b;
+}
+
 void ResourceCalendar::setInhibitSave( bool inhibit )
 {
-  mInhibitSave = inhibit;
+  d->mInhibitSave = inhibit;
 }
 
 bool ResourceCalendar::saveInhibited() const
 {
-  return mInhibitSave;
+  return d->mInhibitSave;
 }
 
 bool ResourceCalendar::setValue( const QString &key, const QString &value )
@@ -212,10 +250,10 @@ bool ResourceCalendar::setValue( const QString &key, const QString &value )
 
 void ResourceCalendar::setNoReadOnlyOnLoad(bool noReadOnly)
 {
-  mNoReadOnlyOnLoad = noReadOnly;
+  d->mNoReadOnlyOnLoad = noReadOnly;
 }
 
 bool ResourceCalendar::noReadOnlyOnLoad() const
 {
-  return mNoReadOnlyOnLoad;
+  return d->mNoReadOnlyOnLoad;
 }

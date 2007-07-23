@@ -30,7 +30,7 @@ recurrence            |       |         |   D   |         |    D    |
 recurrencerule        |       |         |   D   |         |    D    |
 resourcecachedconfig  |   D   |         |   D   |         |    D    |
 resourcecached        |       |         |   D   |         |    D    |
-resourcecalendar      |       |         |       |         |    D    | David (D-ptr)
+resourcecalendar      |       |         |   D   |         |    D    |
 resourcelocalconfig   |       |         |       |         |    D    |
 resourcelocaldirconfig|       |         |       |         |    D    |
 resourcelocaldir      |       |         |       |         |    D    |
