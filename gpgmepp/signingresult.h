@@ -45,7 +45,16 @@ namespace GpgME {
     SigningResult( const SigningResult & other );
     ~SigningResult();
 
-    const SigningResult & operator=( const SigningResult & other );
+    const SigningResult & operator=( SigningResult other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( SigningResult & other ) {
+	Result::swap( other );
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     bool isNull() const;
 
@@ -68,7 +77,16 @@ namespace GpgME {
     InvalidSigningKey( const InvalidSigningKey & other );
     ~InvalidSigningKey();
 
-    const InvalidSigningKey & operator=( const InvalidSigningKey & other );
+    const InvalidSigningKey & operator=( InvalidSigningKey other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( InvalidSigningKey & other ) {
+	using std::swap;
+	swap( this->d, other.d );
+	swap( this->idx, other.idx );
+    }
 
     bool isNull() const;
 
@@ -89,7 +107,16 @@ namespace GpgME {
     CreatedSignature( const CreatedSignature & other );
     ~CreatedSignature();
 
-    const CreatedSignature & operator=( const CreatedSignature & other );
+    const CreatedSignature & operator=( CreatedSignature other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( CreatedSignature & other ) {
+	using std::swap;
+	swap( this->d, other.d );
+	swap( this->idx, other.idx );
+    }
 
     bool isNull() const;
 
@@ -113,5 +140,9 @@ namespace GpgME {
   };
 
 }
+
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( SigningResult )
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( InvalidSigningKey )
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( CreatedSignature )
 
 #endif // __GPGMEPP_SIGNINGRESULT_H__

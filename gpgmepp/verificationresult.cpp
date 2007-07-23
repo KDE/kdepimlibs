@@ -137,20 +137,6 @@ GpgME::Signature::~Signature() {
     d->unref();
 }
 
-const GpgME::Signature & GpgME::Signature::operator=( const Signature & other ) {
-  if ( this->d != other.d ) {
-    if ( other.d )
-      other.d->ref();
-    if ( this->d )
-      this->d->unref();
-    this->d = other.d;
-  }
-
-  this->idx = other.idx;
-  return *this;
-}
-
-
 bool GpgME::Signature::isNull() const {
   return !d || idx >= d->sigs.size() ;
 }
@@ -268,20 +254,6 @@ GpgME::Signature::Notation::Notation( const Notation & other )
 GpgME::Signature::Notation::~Notation() {
   if ( d )
     d->unref();
-}
-
-const GpgME::Signature::Notation & GpgME::Signature::Notation::operator=( const Notation & other ) {
-  if ( this->d != other.d ) {
-    if ( other.d )
-      other.d->ref();
-    if ( this->d )
-      this->d->ref();
-    this->d = other.d;
-  }
-
-  sidx = other.sidx;
-  nidx = other.nidx;
-  return *this;
 }
 
 bool GpgME::Signature::Notation::isNull() const {

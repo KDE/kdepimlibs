@@ -38,7 +38,16 @@ namespace GpgME {
     DecryptionResult( const DecryptionResult & other );
     ~DecryptionResult();
 
-    const DecryptionResult & operator=( const DecryptionResult & other );
+    const DecryptionResult & operator=( DecryptionResult other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( DecryptionResult & other ) {
+	Result::swap( other );
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     bool isNull() const;
 
@@ -54,4 +63,6 @@ namespace GpgME {
 
 }
 
-#endif // __GPGMEPP_KEYGENERATIONRESULT_H__
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( DecryptionResult )
+
+#endif // __GPGMEPP_DECRYPTIONRESULT_H__

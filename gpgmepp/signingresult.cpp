@@ -131,20 +131,6 @@ GpgME::InvalidSigningKey::~InvalidSigningKey() {
     d->unref();
 }
 
-const GpgME::InvalidSigningKey & GpgME::InvalidSigningKey::operator=( const InvalidSigningKey & other ) {
-  if ( this->d != other.d ) {
-    if ( other.d )
-      other.d->ref();
-    if ( this->d )
-      this->d->unref();
-    this->d = other.d;
-  }
-
-  this->idx = other.idx;
-  return *this;
-}
-
-
 bool GpgME::InvalidSigningKey::isNull() const {
   return !d || idx >= d->invalid.size() ;
 }
@@ -179,20 +165,6 @@ GpgME::CreatedSignature::~CreatedSignature() {
   if ( d )
     d->unref();
 }
-
-const GpgME::CreatedSignature & GpgME::CreatedSignature::operator=( const CreatedSignature & other ) {
-  if ( this->d != other.d ) {
-    if ( other.d )
-      other.d->ref();
-    if ( this->d )
-      this->d->unref();
-    this->d = other.d;
-  }
-
-  this->idx = other.idx;
-  return *this;
-}
-
 
 bool GpgME::CreatedSignature::isNull() const {
   return !d || idx >= d->created.size() ;

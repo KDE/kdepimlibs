@@ -39,7 +39,15 @@ namespace GpgME {
     KeyListResult( const KeyListResult & other );
     ~KeyListResult();
 
-    const KeyListResult & operator=( const KeyListResult & other );
+    const KeyListResult & operator=( KeyListResult other ) {
+	swap( other );
+	return *this;
+    }
+    void swap( KeyListResult & other ) {
+	Result::swap( other );
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     const KeyListResult & operator+=( const KeyListResult & other ) {
       mergeWith( other );
@@ -59,5 +67,7 @@ namespace GpgME {
   };
 
 }
+
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( KeyListResult )
 
 #endif // __GPGMEPP_KEYLISTRESULT_H__

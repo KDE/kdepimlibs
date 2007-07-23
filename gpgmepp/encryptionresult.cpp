@@ -109,20 +109,6 @@ GpgME::InvalidRecipient::~InvalidRecipient() {
     d->unref();
 }
 
-const GpgME::InvalidRecipient & GpgME::InvalidRecipient::operator=( const InvalidRecipient & other ) {
-  if ( this->d != other.d ) {
-    if ( other.d )
-      other.d->ref();
-    if ( this->d )
-      this->d->unref();
-    this->d = other.d;
-  }
-
-  this->idx = other.idx;
-  return *this;
-}
-
-
 bool GpgME::InvalidRecipient::isNull() const {
   return !d || idx >= d->invalid.size() ;
 }

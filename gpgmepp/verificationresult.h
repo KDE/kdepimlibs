@@ -43,12 +43,21 @@ namespace GpgME {
     VerificationResult( const VerificationResult & other );
     ~VerificationResult();
 
-    const VerificationResult & operator=( const VerificationResult & other );
+    const VerificationResult & operator=( VerificationResult other ) {
+	swap( other );
+	return *this;
+    }
 
     bool isNull() const;
 
     Signature signature( unsigned int index ) const;
     std::vector<Signature> signatures() const;
+
+    void swap( VerificationResult & other ) {
+	Result::swap( other );
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     class Private;
   private:
@@ -65,7 +74,16 @@ namespace GpgME {
     Signature( const Signature & other );
     ~Signature();
 
-    const Signature & operator=( const Signature & other );
+    const Signature & operator=( Signature other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( Signature & other ) {
+	using std::swap;
+	swap( this->d, other.d );
+	swap( this->idx, other.idx );
+    }
 
     bool isNull() const;
 
@@ -119,7 +137,17 @@ namespace GpgME {
     Notation( const Notation & other );
     ~Notation();
 
-    const Notation & operator=( const Notation & other );
+    const Notation & operator=( Notation other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( Notation & other ) {
+	using std::swap;
+	swap( this->d, other.d );
+	swap( this->sidx, other.sidx );
+	swap( this->nidx, other.nidx );
+    }
 
     bool isNull() const;
 
@@ -133,5 +161,9 @@ namespace GpgME {
   };
 
 }
+
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( VerificationResult )
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( Signature )
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( Signature::Notation )
 
 #endif // __GPGMEPP_VERIFICATIONRESULT_H__

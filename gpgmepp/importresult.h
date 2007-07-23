@@ -41,7 +41,16 @@ namespace GpgME {
     ImportResult( const ImportResult & other );
     ~ImportResult();
 
-    const ImportResult & operator=( const ImportResult & other );
+    const ImportResult & operator=( ImportResult other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( ImportResult & other ) {
+	Result::swap( other );
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     bool isNull() const;
 
@@ -78,7 +87,16 @@ namespace GpgME {
     Import( const Import & other );
     ~Import();
 
-    const Import & operator=( const Import & other );
+    const Import & operator=( Import other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( Import & other ) {
+	using std::swap;
+	swap( this->d, other.d );
+	swap( this->idx, other.idx );
+    }
 
     bool isNull() const;
 
@@ -101,5 +119,8 @@ namespace GpgME {
   };
 
 }
+
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( ImportResult )
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( Import )
 
 #endif // __GPGMEPP_IMPORTRESULT_H__

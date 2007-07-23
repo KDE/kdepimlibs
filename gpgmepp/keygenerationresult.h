@@ -38,7 +38,16 @@ namespace GpgME {
     KeyGenerationResult( const KeyGenerationResult & other );
     ~KeyGenerationResult();
 
-    const KeyGenerationResult & operator=( const KeyGenerationResult & other );
+    const KeyGenerationResult & operator=( KeyGenerationResult other ) {
+	swap( other );
+	return *this;
+    }
+
+    void swap( KeyGenerationResult & other ) {
+	Result::swap( other );
+	using std::swap;
+	swap( this->d, other.d );
+    }
 
     bool isNull() const;
 
@@ -54,5 +63,7 @@ namespace GpgME {
   };
 
 }
+
+GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( KeyGenerationResult )
 
 #endif // __GPGMEPP_KEYGENERATIONRESULT_H__

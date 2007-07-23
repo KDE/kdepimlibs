@@ -41,4 +41,9 @@
 #  define GPGMEPP_DEPRECATED KDE_DEPRECATED
 # endif
 
+# ifndef GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION
+#  define GPGMEPP_MAKE_STD_SWAP_SPECIALIZATION( Class ) \
+    namespace std { template <> inline void swap< GpgME::Class >( GpgME::Class & lhs, GpgME::Class & rhs ) { lhs.swap( rhs ); } }
+# endif
+
 #endif

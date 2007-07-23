@@ -26,15 +26,20 @@
 #include <gpgmepp/gpgmefw.h>
 #include <gpgmepp/context.h>
 
+#include <algorithm> // std::swap
+
 namespace GpgME {
 
   class GPGMEPP_EXPORT Result {
-  public:
+  protected:
     explicit Result( int error=0 ) : mError( error ) {}
 
+    void swap( Result & other ) { std::swap( other.mError, mError ); }
+
+  public:
     const Error & error() const { return mError; }
 
-  private:
+  protected:
     Error mError;
   };
 
