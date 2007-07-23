@@ -28,6 +28,8 @@
 #include <gpgmepp/key.h>
 #include <gpgmepp/gpgmepp_export.h>
 
+#include <algorithm>
+
 namespace GpgME {
 
   class Context;

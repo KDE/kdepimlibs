@@ -27,6 +27,8 @@
 #include <gpgmepp/context.h>
 #include <gpgmepp/gpgmepp_export.h>
 
+#include <algorithm>
+
 namespace GpgME {
 
   class GPGMEPP_EXPORT EngineInfo {

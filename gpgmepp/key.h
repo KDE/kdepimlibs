@@ -31,6 +31,7 @@
 #include <sys/time.h>
 
 #include <vector>
+#include <algorithm>
 
 namespace GpgME {
 
