@@ -81,7 +81,7 @@ class KCAL_EXPORT Event : public Incidence
     QByteArray type() const;
 
     /**
-      Returns a copy of this Event. The caller owns the returned object.
+      Returns an exact copy of this Event. The caller owns the returned object.
     */
     Event *clone();
 
@@ -173,6 +173,12 @@ class KCAL_EXPORT Event : public Incidence
     virtual KDateTime endDateRecurrenceBase() const;
 
   private:
+    /**
+     @copydoc
+     IncidenceBase::accept()
+    */
+    bool accept( Visitor &v ) { return v.visit( this ); }
+
     //@cond PRIVATE
     class Private;
     Private *const d;
