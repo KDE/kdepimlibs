@@ -51,7 +51,7 @@ namespace GpgME {
 
   class GPGMEPP_EXPORT Error {
   public:
-    /*explicit*/ Error( int e=0 ) : mErr( e ) {}
+    explicit Error( int e=0 ) : mErr( e ) {}
 
     const char * source() const;
     const char * asString() const;
