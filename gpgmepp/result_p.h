@@ -38,19 +38,6 @@ GpgME::x::x( const Error & error ) \
  \
 }
 
-#define make_assignment_operator(x) \
-const GpgME::x & GpgME::x::operator=( const x & other ) { \
-  if ( other.d ) \
-    other.d->ref(); \
-  if ( this->d ) \
-    this->d->unref(); \
-  this->d = other.d; \
- \
-  Result::operator=( other ); \
- \
-  return *this; \
-}
-
 #define make_dtor(x) \
 GpgME::x::~x() { \
   if ( d ) \
@@ -63,7 +50,6 @@ GpgME::x::~x() { \
 #define make_standard_stuff(x) \
 make_copy_ctor(x) \
 make_error_ctor(x) \
-make_assignment_operator(x) \
 make_isNull(x) \
 make_dtor(x)
 
