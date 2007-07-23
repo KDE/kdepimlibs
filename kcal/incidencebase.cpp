@@ -374,7 +374,6 @@ void IncidenceBase::registerObserver( IncidenceBase::IncidenceObserver *observer
   if ( !d->mObservers.contains( observer ) ) {
     d->mObservers.append( observer );
   }
-  //updatedSilent(); FIXME:CRASH
 }
 
 void IncidenceBase::unRegisterObserver( IncidenceBase::IncidenceObserver *observer )
@@ -397,12 +396,5 @@ void IncidenceBase::customPropertyUpdated()
 KUrl IncidenceBase::uri() const
 {
   return KUrl( QString( "urn:x-ical:" ) + uid() );
-}
-
-void IncidenceBase::updatedSilent()
-{
-  foreach ( IncidenceObserver *o, d->mObservers ) {
-    o->incidenceUpdatedSilent( this );
-  }
 }
 
