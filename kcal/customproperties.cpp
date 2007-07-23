@@ -26,34 +26,51 @@
 
 using namespace KCal;
 
-CustomProperties::CustomProperties() : d( 0 )
+static bool checkName(const QByteArray& name);
+
+class CustomProperties::Private
+{
+  public:
+    bool operator==( const Private &other ) const;
+    QMap<QByteArray, QString> mProperties;   // custom calendar properties
+};
+
+bool CustomProperties::Private::operator==( const CustomProperties::Private &other ) const
+{
+  if ( mProperties.count() != other.mProperties.count() ) {
+    return false;
+  }
+  for ( QMap<QByteArray, QString>::ConstIterator it = mProperties.begin();
+        it != mProperties.end(); ++it ) {
+    QMap<QByteArray, QString>::ConstIterator itOther =
+               other.mProperties.find( it.key() );
+    if ( itOther == other.mProperties.end()
+    ||   itOther.value() != it.value() ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+
+CustomProperties::CustomProperties()
+  : d( new Private )
 {
 }
 
 CustomProperties::CustomProperties( const CustomProperties &cp )
-  : mProperties( cp.mProperties ), d( 0 )
+  : d( new Private( *cp.d ) )
 {
 }
 
 CustomProperties::~CustomProperties()
 {
+  delete d;
 }
 
 bool CustomProperties::operator==( const CustomProperties &other ) const
 {
-  if ( mProperties.count() != other.mProperties.count() ) return false;
-  QMap<QByteArray, QString>::ConstIterator it;
-  for( it = mProperties.begin(); it != mProperties.end(); ++it ) {
-    QMap<QByteArray, QString>::ConstIterator itOther =
-      other.mProperties.find( it.key() );
-
-    if ( itOther == other.mProperties.end() ) {
-      return false;
-    }
-    if ( itOther.value() != it.value() ) return false;
-  }
-
-  return true;
+  return *d == *other.d;
 }
 
 void CustomProperties::setCustomProperty(const QByteArray &app, const QByteArray &key,
@@ -64,7 +81,7 @@ void CustomProperties::setCustomProperty(const QByteArray &app, const QByteArray
   QByteArray property = "X-KDE-" + app + '-' + key;
   if (!checkName(property))
     return;
-  mProperties[property] = value;
+  d->mProperties[property] = value;
   customPropertyUpdated();
 }
 
@@ -82,23 +99,23 @@ void CustomProperties::setNonKDECustomProperty(const QByteArray &name, const QSt
 {
   if (value.isNull() || !checkName(name))
     return;
-  mProperties[name] = value;
+  d->mProperties[name] = value;
   customPropertyUpdated();
 }
 
 void CustomProperties::removeNonKDECustomProperty(const QByteArray &name)
 {
-  QMap<QByteArray, QString>::Iterator it = mProperties.find(name);
-  if (it != mProperties.end()) {
-    mProperties.erase(it);
+  QMap<QByteArray, QString>::Iterator it = d->mProperties.find(name);
+  if (it != d->mProperties.end()) {
+    d->mProperties.erase(it);
     customPropertyUpdated();
   }
 }
 
 QString CustomProperties::nonKDECustomProperty(const QByteArray &name) const
 {
-  QMap<QByteArray, QString>::ConstIterator it = mProperties.find(name);
-  if (it == mProperties.end())
+  QMap<QByteArray, QString>::ConstIterator it = d->mProperties.find(name);
+  if (it == d->mProperties.end())
     return QString();
   return it.value();
 }
@@ -109,7 +126,7 @@ void CustomProperties::setCustomProperties(const QMap<QByteArray, QString> &prop
   for (QMap<QByteArray, QString>::ConstIterator it = properties.begin();  it != properties.end();  ++it) {
     // Validate the property name and convert any null string to empty string
     if (checkName(it.key())) {
-      mProperties[it.key()] = it.value().isNull() ? QString("") : it.value();
+      d->mProperties[it.key()] = it.value().isNull() ? QString("") : it.value();
       changed = true;
     }
   }
@@ -119,10 +136,10 @@ void CustomProperties::setCustomProperties(const QMap<QByteArray, QString> &prop
 
 QMap<QByteArray, QString> CustomProperties::customProperties() const
 {
-  return mProperties;
+  return d->mProperties;
 }
 
-bool CustomProperties::checkName(const QByteArray &name)
+bool checkName(const QByteArray &name)
 {
   // Check that the property name starts with 'X-' and contains
   // only the permitted characters
