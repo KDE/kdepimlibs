@@ -103,6 +103,11 @@ ResourceCached::~ResourceCached()
   delete d;
 }
 
+CalendarLocal *ResourceCached::calendar() const
+{
+  return &d->mCalendar;
+}
+
 bool ResourceCached::doLoad()
 {
   return doLoad( true );
