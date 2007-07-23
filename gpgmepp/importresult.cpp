@@ -184,13 +184,13 @@ const char * GpgME::Import::fingerprint() const {
 }
 
 GpgME::Error GpgME::Import::error() const {
-  return isNull() ? 0 : d->imports[idx]->result ;
+  return Error( isNull() ? 0 : d->imports[idx]->result );
 }
 
 GpgME::Import::Status GpgME::Import::status() const {
   if ( isNull() )
     return Unknown;
-  unsigned int s = d->imports[idx]->status;
+  const unsigned int s = d->imports[idx]->status;
   unsigned int result = Unknown;
   if ( s & GPGME_IMPORT_NEW )    result |= NewKey;
   if ( s & GPGME_IMPORT_UID )    result |= NewUserIDs;

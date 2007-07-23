@@ -23,8 +23,6 @@
 #ifndef __GPGMEPP_INTERFACES_PASSPHRASEPROVIDER_H__
 #define __GPGMEPP_INTERFACES_PASSPHRASEPROVIDER_H__
 
-#include <string>
-
 namespace GpgME {
 
   class PassphraseProvider {
@@ -32,7 +30,7 @@ namespace GpgME {
     virtual ~PassphraseProvider() {}
 
     virtual char * getPassphrase( const char * useridHint, const char * description,
-				  bool previousWasbad, bool & canceled ) = 0;
+				  bool previousWasBad, bool & canceled ) = 0;
   };
 
 } // namespace GpgME

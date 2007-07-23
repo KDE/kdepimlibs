@@ -41,7 +41,7 @@ namespace GpgME {
   // class Key
   //
 
-  class QGPGMEPP_EXPORT Key {
+  class GPGMEPP_EXPORT Key {
     friend class Context;
   public:
     Key();
@@ -116,9 +116,9 @@ namespace GpgME {
   // class Subkey
   //
 
-  class QGPGMEPP_EXPORT Subkey {
+  class GPGMEPP_EXPORT Subkey {
   public:
-    Subkey( gpgme_key_t key=0, gpgme_sub_key_t subkey=0 );
+    explicit Subkey( gpgme_key_t key=0, gpgme_sub_key_t subkey=0 );
     Subkey( gpgme_key_t key, unsigned int idx );
     Subkey( const Subkey & other );
     ~Subkey();
@@ -163,11 +163,11 @@ namespace GpgME {
   // class UserID
   //
 
-  class QGPGMEPP_EXPORT UserID {
+  class GPGMEPP_EXPORT UserID {
   public:
     class Signature;
 
-    UserID( gpgme_key_t key=0, gpgme_user_id_t uid=0 );
+    explicit UserID( gpgme_key_t key=0, gpgme_user_id_t uid=0 );
     UserID( gpgme_key_t key, unsigned int idx );
     UserID( const UserID & other );
     ~UserID();
@@ -205,11 +205,11 @@ namespace GpgME {
   // class UserID::Signature
   //
 
-  class QGPGMEPP_EXPORT UserID::Signature {
+  class GPGMEPP_EXPORT UserID::Signature {
   public:
     class Notation;
 
-    Signature( gpgme_key_t key=0, gpgme_user_id_t uid=0, gpgme_key_sig_t sig=0 );
+    explicit Signature( gpgme_key_t key=0, gpgme_user_id_t uid=0, gpgme_key_sig_t sig=0 );
     Signature( gpgme_key_t key, gpgme_user_id_t uid, unsigned int idx );
     Signature( const Signature & other );
     ~Signature();
@@ -262,12 +262,12 @@ namespace GpgME {
   //
   //
 
-  class QGPGMEPP_EXPORT UserID::Signature::Notation {
+  class GPGMEPP_EXPORT UserID::Signature::Notation {
   public:
-    Notation( gpgme_key_t key=0, gpgme_user_id_t uid=0,
-	      gpgme_key_sig_t sig=0, gpgme_sig_notation_t nota=0 );
+    explicit Notation( gpgme_key_t key=0, gpgme_user_id_t uid=0,
+                       gpgme_key_sig_t sig=0, gpgme_sig_notation_t nota=0 );
     Notation( gpgme_key_t key, gpgme_user_id_t uid,
-	      gpgme_key_sig_t sig, unsigned int idx );
+              gpgme_key_sig_t sig, unsigned int idx );
     Notation( const Notation & other );
     ~Notation();
 

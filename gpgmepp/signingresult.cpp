@@ -154,7 +154,7 @@ const char * GpgME::InvalidSigningKey::fingerprint() const {
 }
 
 GpgME::Error GpgME::InvalidSigningKey::reason() const {
-  return isNull() ? 0 : d->invalid[idx]->reason ;
+  return Error( isNull() ? 0 : d->invalid[idx]->reason );
 }
 
 

@@ -29,11 +29,11 @@
 
 namespace GpgME {
 
-    class Error;
+  class Error;
 
-  class QGPGMEPP_EXPORT KeyListResult : public Result {
+  class GPGMEPP_EXPORT KeyListResult : public Result {
   public:
-    KeyListResult( gpgme_ctx_t ctx=0, int error=0 );
+    explicit KeyListResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit KeyListResult( const Error & err );
     KeyListResult( const Error & err, const _gpgme_op_keylist_result & res );
     KeyListResult( const KeyListResult & other );

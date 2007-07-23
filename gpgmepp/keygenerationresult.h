@@ -31,9 +31,9 @@ namespace GpgME {
 
   class Error;
 
-  class QGPGMEPP_EXPORT KeyGenerationResult : public Result {
+  class GPGMEPP_EXPORT KeyGenerationResult : public Result {
   public:
-    KeyGenerationResult( gpgme_ctx_t ctx=0, int error=0 );
+    explicit KeyGenerationResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit KeyGenerationResult( const Error & err );
     KeyGenerationResult( const KeyGenerationResult & other );
     ~KeyGenerationResult();
@@ -42,8 +42,10 @@ namespace GpgME {
 
     bool isNull() const;
 
-    bool primaryKeyGenerated() const;
-    bool subkeyGenerated() const;
+    GPGMEPP_DEPRECATED bool primaryKeyGenerated() const { return isPrimaryKeyGenerated(); }
+    GPGMEPP_DEPRECATED bool subkeyGenerated() const { return isSubkeyGenerated(); }
+    bool isPrimaryKeyGenerated() const;
+    bool isSubkeyGenerated() const;
     const char * fingerprint() const;
 
   private:

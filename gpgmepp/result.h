@@ -28,15 +28,9 @@
 
 namespace GpgME {
 
-  class QGPGMEPP_EXPORT Result {
+  class GPGMEPP_EXPORT Result {
   public:
-    Result( int error=0 ) : mError( error ) {}
-    Result( const Result & other ) : mError( other.error() ) {}
-
-    const Result & operator=( const Result & other ) {
-      mError = other.mError;
-      return *this;
-    }
+    explicit Result( int error=0 ) : mError( error ) {}
 
     const Error & error() const { return mError; }
 

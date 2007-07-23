@@ -34,9 +34,9 @@ namespace GpgME {
   class Error;
   class Import;
 
-  class QGPGMEPP_EXPORT ImportResult : public Result {
+  class GPGMEPP_EXPORT ImportResult : public Result {
   public:
-    ImportResult( gpgme_ctx_t ctx=0, int error=0 );
+    explicit ImportResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit ImportResult( const Error & error );
     ImportResult( const ImportResult & other );
     ~ImportResult();
@@ -70,7 +70,7 @@ namespace GpgME {
     Private * d;
   };
 
-  class QGPGMEPP_EXPORT Import {
+  class GPGMEPP_EXPORT Import {
     friend class ImportResult;
     Import( ImportResult::Private * parent, unsigned int idx );
   public:

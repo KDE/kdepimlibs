@@ -26,15 +26,16 @@
 
 #include <gpgmepp/gpgmefw.h>
 #include <gpgmepp/key.h>
+#include <gpgmepp/gpgmepp_export.h>
 
 namespace GpgME {
 
   class Context;
 
-  class TrustItem {
+  class GPGMEPP_EXPORT TrustItem {
     friend class Context;
   public:
-    TrustItem( gpgme_trust_item_t item=0 );
+    explicit TrustItem( gpgme_trust_item_t item=0 );
     TrustItem( const TrustItem & other );
     virtual ~TrustItem();
 

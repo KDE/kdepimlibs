@@ -49,9 +49,9 @@ namespace GpgME {
 
   class EngineInfo;
 
-  class QGPGMEPP_EXPORT Error {
+  class GPGMEPP_EXPORT Error {
   public:
-    Error( int e=0 ) : mErr( e ) {}
+    explicit Error( int e=0 ) : mErr( e ) {}
 
     const char * source() const;
     const char * asString() const;
@@ -67,8 +67,8 @@ namespace GpgME {
     int mErr;
   };
 
-  class QGPGMEPP_EXPORT Context {
-    Context( gpgme_ctx_t );
+  class GPGMEPP_EXPORT Context {
+    explicit Context( gpgme_ctx_t );
   public:
     enum Protocol { OpenPGP, CMS, Unknown };
 
@@ -263,7 +263,8 @@ namespace GpgME {
     GpgME::Error cancelPendingOperation();
 
     class Private;
-    Private * impl() const { return d; }
+    const Private * impl() const { return d; }
+    Private * impl() { return d; }
   private:
     Private * d;
 
@@ -278,17 +279,17 @@ namespace GpgME {
   //
   //
 
-  QGPGMEPP_EXPORT GpgME::Error setDefaultLocale( int category, const char * value );
+  GPGMEPP_EXPORT GpgME::Error setDefaultLocale( int category, const char * value );
 
-  QGPGMEPP_EXPORT Context * wait( GpgME::Error & e, bool hang=true );
+  GPGMEPP_EXPORT Context * wait( GpgME::Error & e, bool hang=true );
   typedef void (*IdleFunction)(void);
-  QGPGMEPP_EXPORT IdleFunction registerIdleFunction( IdleFunction idleFunction );
+  GPGMEPP_EXPORT IdleFunction registerIdleFunction( IdleFunction idleFunction );
 
   typedef void (*IOCallback)( void * data, int fd );
 
-  QGPGMEPP_EXPORT EngineInfo engineInfo( Context::Protocol proto );
+  GPGMEPP_EXPORT EngineInfo engineInfo( Context::Protocol proto );
 
-  QGPGMEPP_EXPORT GpgME::Error checkEngine( Context::Protocol proto );
+  GPGMEPP_EXPORT GpgME::Error checkEngine( Context::Protocol proto );
 
 } // namespace GpgME
 

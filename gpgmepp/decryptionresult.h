@@ -31,9 +31,9 @@ namespace GpgME {
 
   class Error;
 
-  class QGPGMEPP_EXPORT DecryptionResult : public Result {
+  class GPGMEPP_EXPORT DecryptionResult : public Result {
   public:
-    DecryptionResult( gpgme_ctx_t ctx=0, int error=0 );
+    explicit DecryptionResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit DecryptionResult( const Error & err );
     DecryptionResult( const DecryptionResult & other );
     ~DecryptionResult();
@@ -44,7 +44,8 @@ namespace GpgME {
 
     const char * unsupportedAlgortihm() const;
 
-    bool wrongKeyUsage() const;
+    GPGMEPP_DEPRECATED bool wrongKeyUsage() const { return isWrongKeyUsage(); }
+    bool isWrongKeyUsage() const;
 
   private:
     class Private;

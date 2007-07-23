@@ -38,9 +38,9 @@ namespace GpgME {
   class CreatedSignature;
   class InvalidSigningKey;
 
-  class QGPGMEPP_EXPORT SigningResult : public Result {
+  class GPGMEPP_EXPORT SigningResult : public Result {
   public:
-    SigningResult( gpgme_ctx_t ctx=0, int error=0 );
+    explicit SigningResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit SigningResult( const Error & err );
     SigningResult( const SigningResult & other );
     ~SigningResult();
@@ -60,7 +60,7 @@ namespace GpgME {
     Private * d;
   };
 
-  class QGPGMEPP_EXPORT InvalidSigningKey {
+  class GPGMEPP_EXPORT InvalidSigningKey {
     friend class SigningResult;
     InvalidSigningKey( SigningResult::Private * parent, unsigned int index );
   public:
@@ -80,7 +80,7 @@ namespace GpgME {
     unsigned int idx;
   };
 
-  class QGPGMEPP_EXPORT CreatedSignature {
+  class GPGMEPP_EXPORT CreatedSignature {
     friend class SigningResult;
     CreatedSignature( SigningResult::Private * parent, unsigned int index );
   public:

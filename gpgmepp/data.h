@@ -33,22 +33,22 @@ namespace GpgME {
 
   class DataProvider;
 
-  class QGPGMEPP_EXPORT Data {
+  class GPGMEPP_EXPORT Data {
   public:
     Data();
-    Data( gpgme_data_t data );
+    explicit Data( gpgme_data_t data );
     Data( const Data & other );
 
     // Memory-Based Data Buffers:
     Data( const char * buffer, size_t size, bool copy=true );
-    Data( const char * filename );
+    explicit Data( const char * filename );
     Data( const char * filename, off_t offset, size_t length );
     Data( FILE * fp, off_t offset, size_t length );
     // File-Based Data Buffers:
-    Data( FILE * fp );
-    Data( int fd );
+    explicit Data( FILE * fp );
+    explicit Data( int fd );
     // Callback-Based Data Buffers:
-    Data( DataProvider * provider );
+    explicit Data( DataProvider * provider );
 
     virtual ~Data();
 
@@ -63,7 +63,8 @@ namespace GpgME {
     off_t seek( off_t offset, int whence );
 
     class Private;
-    Private * impl() const { return d; }
+    Private * impl() { return d; }
+    const Private * impl() const { return d; }
   private:
     Private * d;
   };

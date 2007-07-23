@@ -58,11 +58,11 @@ GpgME::KeyGenerationResult::KeyGenerationResult( gpgme_ctx_t ctx, int error )
 
 make_standard_stuff(KeyGenerationResult)
 
-bool GpgME::KeyGenerationResult::primaryKeyGenerated() const {
+bool GpgME::KeyGenerationResult::isPrimaryKeyGenerated() const {
   return d && d->res.primary;
 }
 
-bool GpgME::KeyGenerationResult::subkeyGenerated() const {
+bool GpgME::KeyGenerationResult::isSubkeyGenerated() const {
   return d && d->res.sub;
 }
 

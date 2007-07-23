@@ -122,7 +122,7 @@ namespace GpgME {
 	gpgme_error_t e = *static_cast<gpgme_error_t*>( type_data );
 	if ( ctx && ctx->impl() )
 	  ctx->impl()->lasterr = e;
-	instance()->operationDoneEvent( ctx, e );
+	instance()->operationDoneEvent( ctx, Error( e ) );
       }
       break;
     case GPGME_EVENT_NEXT_KEY:

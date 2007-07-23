@@ -180,7 +180,7 @@ const char * GpgME::Signature::fingerprint() const {
 }
 
 GpgME::Error GpgME::Signature::status() const {
-  return isNull() ? 0 : d->sigs[idx]->status ;
+  return Error( isNull() ? 0 : d->sigs[idx]->status );
 }
 
 time_t GpgME::Signature::creationTime() const {
@@ -229,7 +229,7 @@ char GpgME::Signature::validityAsString() const {
 }
 
 GpgME::Error GpgME::Signature::nonValidityReason() const {
-  return isNull() ? 0 : d->sigs[idx]->validity_reason ;
+  return Error( isNull() ? 0 : d->sigs[idx]->validity_reason );
 }
 
 

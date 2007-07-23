@@ -132,6 +132,6 @@ const char * GpgME::InvalidRecipient::fingerprint() const {
 }
 
 GpgME::Error GpgME::InvalidRecipient::reason() const {
-  return isNull() ? 0 : d->invalid[idx]->reason ;
+  return Error( isNull() ? 0 : d->invalid[idx]->reason );
 }
 
