@@ -62,6 +62,7 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
 
   kDebug(5323) << "APIBlogger::slotListBlogs" << endl;
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
+  QMap<QString,QString> blogsInfo;
   if ( result[0].type() != QVariant::List ) {
     kDebug(5323) << "Could not fetch blogs out of the result from the server, "
                  << "not a list." << endl;
@@ -75,15 +76,15 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
     for ( ; it != end; ++it ) {
       kDebug(5323) << "MIDDLE: " << ( *it ).typeName() << endl;
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-
-      const QString id( postInfo["blogid"].toString() );
-      const QString name( postInfo["blogName"].toString() );
-      const QString url( postInfo["url"].toString() );
-
+      
+      blogsInfo["id"]= postInfo["blogid"].toString();
+      blogsInfo["name"]= postInfo["blogName"].toString();
+      blogsInfo["url"]= urlpostInfo["url"].toString();
+      
       if ( !id.isEmpty() && !name.isEmpty() ) {
-        emit parent->listedBlogs( id, name, url );
-        kDebug(5323) << "Emitting blogInfoRetrieved( id=" << id
-                     << ", name=" << name << "); " << endl;
+        emit parent->listedBlogs( blogsInfo );
+        kDebug(5323) << "blogs infos retrieved id=" << id
+                     << ", name=" << name << endl;
       }
     }
   }
