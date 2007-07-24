@@ -222,7 +222,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see listBlogs()
     */
-    virtual void listedBlogs( QMap<QString,QString> *blogs );
+    virtual void listedBlogs(const QString&,const QString&,const QString& );
 
     /**
       This signal is emitted when a listPostings() job fetches a posting

@@ -81,7 +81,7 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
       const QString url( postInfo["url"].toString() );
 
       if ( !id.isEmpty() && !name.isEmpty() ) {
-        //emit parent->listedBlogs(); //FIXME set the data
+        emit parent->listedBlogs( id, name, url );
         kDebug(5323) << "Emitting blogInfoRetrieved( id=" << id
                      << ", name=" << name << "); " << endl;
       }
