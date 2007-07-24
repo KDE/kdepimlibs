@@ -79,12 +79,11 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
       
       blogsInfo["id"]= postInfo["blogid"].toString();
       blogsInfo["name"]= postInfo["blogName"].toString();
-      blogsInfo["url"]= urlpostInfo["url"].toString();
       
-      if ( !id.isEmpty() && !name.isEmpty() ) {
+      if ( blogsInfo["id"].isEmpty() && !blogsInfo["name"].isEmpty() ) {
         emit parent->listedBlogs( blogsInfo );
-        kDebug(5323) << "blogs infos retrieved id=" << id
-                     << ", name=" << name << endl;
+        kDebug(5323) << "blogs infos retrieved id=" << blogsInfo["id"]
+                     << ", name=" << blogsInfo["name"] << endl;
       }
     }
   }
@@ -93,7 +92,7 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
 void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &result,
                                                       const QVariant &id )
 {
-   Q_UNUSED( id );
+   int count = id.toInt();
 
    kDebug(5323) << "APIBlogger::slotListPostings" << endl;
    kDebug(5323) << "TOP: " << result[0].typeName() << endl;
@@ -123,6 +122,8 @@ void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &res
          kDebug(5323) << "d->readPostingFromMap failed! " << endl;
          emit parent->error( ParsingError, i18n( "Could not read posting." ) );
        }
+       if( --count == 0 )
+         break;
      }
    }
    kDebug(5323) << "Emitting listPostingsFinished()" << endl;

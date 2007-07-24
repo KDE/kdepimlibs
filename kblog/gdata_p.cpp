@@ -43,11 +43,11 @@ using namespace KBlog;
 
 APIGData::APIGDataPrivate::APIGDataPrivate():
   mFetchPostingId(),mAuthenticationString(),mAuthenticationTime(){
-//   mSlave = new KIO::Slave::Slave( QString( "http" ) );
+
 }
 
 APIGData::APIGDataPrivate::~APIGDataPrivate(){
-//   delete mSlave;
+
 }
 
 QString APIGData::APIGDataPrivate::authenticate(){
