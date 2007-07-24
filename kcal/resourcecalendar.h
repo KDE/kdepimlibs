@@ -392,6 +392,11 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual QStringList subresources() const { return QStringList(); }
 
     /**
+     * Is this resource capable of having subresources or not?
+     */
+    virtual bool canHaveSubresources() const { return false; }
+
+    /**
       Is this subresource active or not?
     */
     virtual bool subresourceActive( const QString& ) const { return true; }
