@@ -131,17 +131,17 @@ class KBLOG_EXPORT APIBlog : public QObject
 
     /**
       Sets the user's authentication name for the blog.
-      @param userName is a QString containing the blog username.
+      @param username is a QString containing the blog username.
 
       @see userId()
     */
-    virtual void setUserName( const QString &userName );
+    virtual void setUsername( const QString &userName );
 
     /**
        Returns the user's id of the blog.
        @see setUserId()
     */
-    virtual QString userName() const;
+    virtual QString username() const;
 
     /**
       Sets the URL for the blog.

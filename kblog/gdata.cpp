@@ -54,12 +54,12 @@ QString APIGData::interfaceName() const
 
 QString APIGData::fullName() const
 {
-  return d->mUserName;
+  return d->mFullName;
 }
 
-void APIGData::setFullName( const QString &uname )
+void APIGData::setFullName( const QString &fullName )
 {
-  d->mUserName = uname;
+  d->mFullName = fullName;
 }
 
 QString APIGData::email() const
@@ -106,7 +106,7 @@ void APIGData::listBlogs()
     Syndication::Loader *loader = Syndication::Loader::create();
     connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
             d, SLOT(slotLoadingBlogsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
-    loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + userName() + QString( "/blogs" ) );
+    loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + username() + QString( "/blogs" ) );
 }
 
 void APIGData::listPostings()

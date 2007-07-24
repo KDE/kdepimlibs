@@ -52,14 +52,14 @@ QString APIBlog::password() const
   return d->mPassword;
 }
 
-QString APIBlog::userName() const
+QString APIBlog::username() const
 {
-  return d->mUserName;
+  return d->mUsername;
 }
 
-void APIBlog::setUserName( const QString &userName )
+void APIBlog::setUsername( const QString &userName )
 {
-  d->mUserName = userName;
+  d->mUsername = userName;
 }
 
 void APIBlog::setBlogId( const QString &blogId )

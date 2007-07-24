@@ -36,7 +36,7 @@ class APIBlog::APIBlogPrivate
   public:
     APIBlog *parent;
     QString mBlogId;
-    QString mUserName;
+    QString mUsername;
     QString mPassword;
     KUrl mUrl;
     KTimeZone mTimeZone;

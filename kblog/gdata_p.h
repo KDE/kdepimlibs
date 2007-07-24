@@ -44,7 +44,8 @@ class APIGData::APIGDataPrivate : public QObject
     APIGData* parent;
     QByteArray mBuffer;
 //     KIO::Slave* mSlave;
-    QString mUserName;
+    QString mUsername;
+    QString mFullName;
     QString mEmail;
     APIGDataPrivate();
     ~APIGDataPrivate();

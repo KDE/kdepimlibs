@@ -126,15 +126,15 @@ class KBLOG_EXPORT APIGData : public APIBlog
 
     /**
       Sets the user's name for the blog.
-      @param uname is a QString containing the blog username.
+      @param fullName is a QString containing the blog username.
 
-      @see userName()
+      @see username()
     */
-    virtual void setFullName( const QString &uname );
+    virtual void setFullName( const QString &fullName );
 
     /**
        Returns the user's name of the blog.
-       @see setUserName()
+       @see setUsername()
     */
     virtual QString fullName() const;
 
