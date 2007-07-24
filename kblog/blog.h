@@ -232,7 +232,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see listPostings()
     */
-    virtual void listedRecentPostings( QList<KBlog::BlogPosting> *postings );
+    virtual void listedRecentPostings( const QList<KBlog::BlogPosting*>& postings );
 
     /**
       All xml parsing and all structural problems will emit an error.

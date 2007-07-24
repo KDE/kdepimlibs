@@ -92,36 +92,40 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
 void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &result,
                                                       const QVariant &id )
 {
-//   Q_UNUSED( id );
-// 
-//   kDebug(5323) << "APIBlogger::slotListPostings" << endl;
-//   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
-//   if ( result[0].type() != QVariant::List ) {
-//     kDebug(5323) << "Could not fetch list of postings out of the "
-//                  << "result from the server, not a list." << endl;
-//     emit parent->error( ParsingError,
-//                         i18n( "Could not fetch list of postings out of the "
-//                               "result from the server, not a list." ) );
-//   } else {
-//     const QList<QVariant> postReceived = result[0].toList();
-//     QList<QVariant>::ConstIterator it = postReceived.begin();
-//     QList<QVariant>::ConstIterator end = postReceived.end();
-//     for ( ; it != end; ++it ) {
-//       BlogPosting* posting = new BlogPosting;
-//       kDebug(5323) << "MIDDLE: " << ( *it ).typeName() << endl;
-//       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-//       if ( readPostingFromMap( posting, postInfo ) ) {
-//         kDebug(5323) << "Emitting listedPosting( posting.postingId()="
-//                      << posting->postingId() << "); " << endl;
-//         emit parent->listedPosting( posting ); // KUrl( posting.postingId() ) );
-//       } else {
-//         kDebug(5323) << "d->readPostingFromMap failed! " << endl;
-//         emit parent->error( ParsingError, i18n( "Could not read posting." ) );
-//       }
-//     }
-//   } //FIXME should we emit here? (see below, too)
-//   kDebug(5323) << "Emitting listPostingsFinished()" << endl;
-//   emit parent->listPostingsFinished();
+   Q_UNUSED( id );
+
+   kDebug(5323) << "APIBlogger::slotListPostings" << endl;
+   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
+
+   QList <BlogPosting*> fetchedPostingList;
+
+   if ( result[0].type() != QVariant::List ) {
+     kDebug(5323) << "Could not fetch list of postings out of the "
+                  << "result from the server, not a list." << endl;
+     emit parent->error( ParsingError,
+                         i18n( "Could not fetch list of postings out of the "
+                               "result from the server, not a list." ) );
+   } else {
+     const QList<QVariant> postReceived = result[0].toList();
+     QList<QVariant>::ConstIterator it = postReceived.begin();
+     QList<QVariant>::ConstIterator end = postReceived.end();
+     for ( ; it != end; ++it ) {
+       BlogPosting* posting = new BlogPosting;
+       kDebug(5323) << "MIDDLE: " << ( *it ).typeName() << endl;
+       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
+       if ( readPostingFromMap( posting, postInfo ) ) {
+         kDebug(5323) << "Posting with ID:"
+                     << posting->postingId()
+                     << " appended in fetchedPostingList" << endl;
+         fetchedPostingList << posting;
+       } else {
+         kDebug(5323) << "d->readPostingFromMap failed! " << endl;
+         emit parent->error( ParsingError, i18n( "Could not read posting." ) );
+       }
+     }
+   }
+   kDebug(5323) << "Emitting listPostingsFinished()" << endl;
+   emit parent->listedRecentPostings(fetchedPostingList);
 }
 
 void APIBlogger::APIBloggerPrivate::slotFetchPosting( const QList<QVariant> &result,
