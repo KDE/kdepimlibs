@@ -47,7 +47,12 @@ extern "C" {
 
 namespace KCal {
 
+class Alarm;
+class Attachment;
+class Incidence;
 class ICalTimeZones;
+class Recurrence;
+class RecurrenceRule;
 
 #define _ICAL_VERSION "2.0"
 
