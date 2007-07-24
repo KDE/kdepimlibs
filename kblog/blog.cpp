@@ -92,14 +92,4 @@ KTimeZone APIBlog::timeZone()
   return d->mTimeZone;
 }
 
-void APIBlog::setDownloadCount( int nr )
-{
-  d->mDownloadCount = nr;
-}
-
-int APIBlog::downloadCount() const
-{
-  return d->mDownloadCount;
-}
-
 #include "blog.moc"

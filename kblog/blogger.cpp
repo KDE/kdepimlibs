@@ -68,16 +68,16 @@ void APIBlogger::listBlogs()
       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
 }
 
-void APIBlogger::listPostings()
+void APIBlogger::listRecentPostings( int number )
 {
-
+/*
     kDebug(5323) << "Fetching List of Posts..." << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     args << QVariant( downloadCount() );
     d->mXmlRpcClient->call(
       "blogger.getRecentPosts", args,
       d, SLOT( slotListPostings( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
+      d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );*/
 }
 
 void APIBlogger::fetchPosting( KBlog::BlogPosting *posting )

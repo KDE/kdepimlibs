@@ -29,6 +29,7 @@
 
 class QString;
 template <class T> class QList;
+template <class T,class S> class QMap;
 
 class KDateTime;
 class KTimeZone;
@@ -171,21 +172,6 @@ class KBLOG_EXPORT APIBlog : public QObject
     virtual KTimeZone timeZone();
 
     /**
-      Sets the number of blog posts to be downloaded.
-      @param nr number of posts to download. '0' gets all posts.
-      @see listPostings()
-      @see downloadCount()
-    */
-    virtual void setDownloadCount( int nr );
-
-    /**
-      Gets the number of blog posts to be downloaded.
-      @see listPostings()
-      @see setDownloadCount()
-    */
-    virtual int downloadCount() const;
-
-    /**
       List the blogs available for this authentication on the server.
       @see blogInfoRetrieved()
     */
@@ -197,7 +183,7 @@ class KBLOG_EXPORT APIBlog : public QObject
       @see fetchedPosting()
       @see listPostingsFinished()
     */
-    virtual void listPostings() = 0;
+    virtual void listRecentPostings( int number ) = 0;
 
     /**
       Fetch the Posting with postingId.
@@ -236,7 +222,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see listBlogs()
     */
-    virtual void blogInfoRetrieved();
+    virtual void listedBlogs( QMap<QString,QString> *blogs );
 
     /**
       This signal is emitted when a listPostings() job fetches a posting
@@ -246,15 +232,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see listPostings()
     */
-    virtual void listedPosting( KBlog::BlogPosting* posting );
-
-    /**
-      This signal is emitted when the last posting of the listPostings()
-      job has been fetched.
-
-      @see listPostings()
-    */
-    virtual void listPostingsFinished();
+    virtual void listedRecentPostings( QList<KBlog::BlogPosting> *postings );
 
     /**
       All xml parsing and all structural problems will emit an error.

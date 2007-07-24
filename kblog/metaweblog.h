@@ -91,17 +91,13 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
     */
     void setUrl( const KUrl &server );
 
-    QMap<QString,QString> categories() const;
-
-    void setCategories( const QMap<QString,QString> &categories );
-
     /**
       List recent postings on the server.
       @see     void listedPosting( KBlog::BlogPosting &posting )
 
       @see     void listPostingsFinished()
     */
-    void listPostings();
+    void listRecentPostings( int number );
 
     /**
       List the categories of the blog.
@@ -141,13 +137,6 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
     void createMedia( KBlog::BlogMedia *media );
 
   Q_SIGNALS:
-    /**
-      This signal is emitted when a listCategories() job fetches category
-      information from the blogging server.
-
-      @see listCategories()
-    */
-    void categoryInfoRetrieved();
 
     /**
       This signal is emitted when the last category of the listCategories()
@@ -155,7 +144,7 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
 
       @see listCategories()
     */
-    void listCategoriesFinished();
+    void listedCategories( QMap<QString,QString> *categories );
 
   private:
     class APIMetaWeblogPrivate;

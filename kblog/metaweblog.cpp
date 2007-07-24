@@ -56,21 +56,11 @@ void APIMetaWeblog::setUrl( const KUrl &server )
   d->mXmlRpcClient->setUserAgent( "KDE-KBlog" );
 }
 
-QMap<QString,QString> APIMetaWeblog::categories() const
-{
-  return d->mCategories;
-}
-
-void APIMetaWeblog::setCategories( const QMap<QString,QString> &categories )
-{
-  d->mCategories = categories;
-}
-
-void APIMetaWeblog::listPostings()
+void APIMetaWeblog::listRecentPostings( int number )
 {
     kDebug(5323) << "Fetching List of Posts..." << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
-    args << QVariant( downloadCount() );
+    args << QVariant( number );
     d->mXmlRpcClient->call(
       "metaWeblog.getRecentPosts", args,
       d, SLOT( slotListPostings( const QList<QVariant>&, const QVariant& ) ),

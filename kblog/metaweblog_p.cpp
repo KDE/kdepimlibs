@@ -61,65 +61,65 @@ QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString 
 void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
                                                               const QVariant &id )
 {
-  Q_UNUSED( id );
-
-  kDebug(5323) << "APIMetaWeblogPrivate::slotListCategories" << endl;
-  kDebug(5323) << "TOP: " << result[0].typeName() << endl;
-  if ( result[0].type() != QVariant::Map &&
-       result[0].type() != QVariant::List ) {
-    // include fix for not metaweblog standard compatible apis with
-    // array of structs instead of struct of structs, e.g. wordpress
-    kDebug(5323) << "Could not list categories out of the result from the server." << endl;
-    emit parent->error( ParsingError,
-                        i18n( "Could not list categories out of the result "
-                              "from the server." ) );
-  } else {
-    if ( result[0].type() == QVariant::Map ) {
-      const QMap<QString, QVariant> categories = result[0].toMap();
-      const QList<QString> categoryNames = categories.keys();
-
-      QList<QString>::ConstIterator it = categoryNames.begin();
-      QList<QString>::ConstIterator end = categoryNames.end();
-      for ( ; it != end; ++it ) {
-        kDebug(5323) << "MIDDLE: " << ( *it ) << endl;
-        const QString name( *it );
-        const QMap<QString, QVariant> category = categories[*it].toMap();
-        const QString description( category["description"].toString() );
-        if ( !name.isEmpty() ) {
-          emit parent->categoryInfoRetrieved(); //FIXME set the data
-          kDebug(5323) << "Emitting categorieInfoRetrieved( name=" << name
-                       << " description=" << description << " ); " << endl;
-        }
-      }
-    }
-    if ( result[0].type() == QVariant::List ) {
-      // include fix for not metaweblog standard compatible apis with
-      // array of structs instead of struct of structs, e.g. wordpress
-      const QList<QVariant> categories = result[0].toList();
-      QList<QVariant>::ConstIterator it = categories.begin();
-      QList<QVariant>::ConstIterator end = categories.end();
-      for ( ; it != end; ++it ) {
-        kDebug(5323) << "MIDDLE: " << ( *it ).typeName() << endl;
-        const QMap<QString, QVariant> category = ( *it ).toMap();
-        const QString description( category["description"].toString() );
-        const QString name( category["categoryName"].toString() );
-        if ( !name.isEmpty() ) {
-          emit parent->categoryInfoRetrieved();//FIXME set the data
-          kDebug(5323) << "Emitting categorieInfoRetrieved( name=" << name
-                       << " description=" << description << " ); " << endl;
-        }
-      }
-      kDebug(5323) << "Emitting listCategoriesFinished()" << endl;
-      emit parent->listCategoriesFinished();
-    }
-  }
+//   Q_UNUSED( id );
+// 
+//   kDebug(5323) << "APIMetaWeblogPrivate::slotListCategories" << endl;
+//   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
+//   if ( result[0].type() != QVariant::Map &&
+//        result[0].type() != QVariant::List ) {
+//     // include fix for not metaweblog standard compatible apis with
+//     // array of structs instead of struct of structs, e.g. wordpress
+//     kDebug(5323) << "Could not list categories out of the result from the server." << endl;
+//     emit parent->error( ParsingError,
+//                         i18n( "Could not list categories out of the result "
+//                               "from the server." ) );
+//   } else {
+//     if ( result[0].type() == QVariant::Map ) {
+//       const QMap<QString, QVariant> categories = result[0].toMap();
+//       const QList<QString> categoryNames = categories.keys();
+// 
+//       QList<QString>::ConstIterator it = categoryNames.begin();
+//       QList<QString>::ConstIterator end = categoryNames.end();
+//       for ( ; it != end; ++it ) {
+//         kDebug(5323) << "MIDDLE: " << ( *it ) << endl;
+//         const QString name( *it );
+//         const QMap<QString, QVariant> category = categories[*it].toMap();
+//         const QString description( category["description"].toString() );
+//         if ( !name.isEmpty() ) {
+//           emit parent->categoryInfoRetrieved(); //FIXME set the data
+//           kDebug(5323) << "Emitting categorieInfoRetrieved( name=" << name
+//                        << " description=" << description << " ); " << endl;
+//         }
+//       }
+//     }
+//     if ( result[0].type() == QVariant::List ) {
+//       // include fix for not metaweblog standard compatible apis with
+//       // array of structs instead of struct of structs, e.g. wordpress
+//       const QList<QVariant> categories = result[0].toList();
+//       QList<QVariant>::ConstIterator it = categories.begin();
+//       QList<QVariant>::ConstIterator end = categories.end();
+//       for ( ; it != end; ++it ) {
+//         kDebug(5323) << "MIDDLE: " << ( *it ).typeName() << endl;
+//         const QMap<QString, QVariant> category = ( *it ).toMap();
+//         const QString description( category["description"].toString() );
+//         const QString name( category["categoryName"].toString() );
+//         if ( !name.isEmpty() ) {
+//           emit parent->categoryInfoRetrieved();//FIXME set the data
+//           kDebug(5323) << "Emitting categorieInfoRetrieved( name=" << name
+//                        << " description=" << description << " ); " << endl;
+//         }
+//       }
+//       kDebug(5323) << "Emitting listCategoriesFinished()" << endl;
+//       emit parent->listCategoriesFinished();
+//     }
+//   }
 }
 
 void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant> &result,
                                                             const QVariant &id )
 {
   Q_UNUSED( id );
-
+/*
   kDebug(5323) << "APIMetaWeblog::slotListPostings" << endl;
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::List ) {
@@ -147,7 +147,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant
     }
   } //FIXME should we emit here? (see below, too)
   kDebug(5323) << "Emitting listPostingsFinished()" << endl;
-  emit parent->listPostingsFinished();
+  emit parent->listPostingsFinished();*/
 }
 
 void APIMetaWeblog::APIMetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,

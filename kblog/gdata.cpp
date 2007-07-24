@@ -109,7 +109,7 @@ void APIGData::listBlogs()
     loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + username() + QString( "/blogs" ) );
 }
 
-void APIGData::listPostings()
+void APIGData::listRecentPostings( int number )
 {
     kDebug() << "listPostings()" << endl;
     Syndication::Loader *loader = Syndication::Loader::create();
@@ -182,8 +182,6 @@ void APIGData::createPosting( KBlog::BlogPosting* posting )
              d, SLOT( slotData( KIO::Job *, const QByteArray & ) ) );
     connect( job, SIGNAL( result( KJob * ) ),
              d, SLOT( slotCreatePosting( KJob * ) ) );
-
-//     job->start( d->mSlave );
 }
 
 void APIGData::removePosting( KBlog::BlogPosting *posting )

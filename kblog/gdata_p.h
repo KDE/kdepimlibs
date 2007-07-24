@@ -28,7 +28,6 @@
 #include <syndication/loader.h>
 #include "gdata.h"
 
-//#include <kio/slave.h>
 class KJob;
 
 using namespace KBlog;
@@ -43,7 +42,6 @@ class APIGData::APIGDataPrivate : public QObject
   public:
     APIGData* parent;
     QByteArray mBuffer;
-//     KIO::Slave* mSlave;
     QString mUsername;
     QString mFullName;
     QString mEmail;
