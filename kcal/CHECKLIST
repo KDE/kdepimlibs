@@ -37,7 +37,6 @@ resourcelocaldir      |       |         |       |         |    D    |
 resourcelocal         |   D   |    D    |   D   |    X    |    D    | Narayan
 scheduler             |       |         |       |         |    D    |
 sortablelist.h        |   D   |    D    |  n/a  |    D    |    D    |
-todo                  |   D   |         |   D   |    D    |    D    | Allen
 vcaldrag              |       |         |       |         |    D    |
 vcalformat            |   D   |         |   D   |         |    D    | Allen
 
@@ -55,6 +54,7 @@ event                 |   D   |    D    |   D   |    D    |    D    | Allen
 exceptions            |   D   |    D    |   D   |    D    |    D    | Allen
 period                |   D   |    D    |   D   |    D    |    D    | Narayan
 person                |   D   |    D    |   D   |    D    |    D    | Narayan
+todo                  |   D   |    D    |   D   |    D    |    D    | Allen
 == DONE ==
 
 Qt4Port -> no deprecated warnings; thiago says do NO replace const iterator

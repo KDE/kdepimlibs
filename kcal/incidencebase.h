@@ -203,10 +203,15 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       <pre>
         bool accept(Visitor &v) { return v.visit(this); }
       </pre>
+
+      @param v is a reference to a Visitor object.
     */
     virtual bool accept( Visitor &v )
     { Q_UNUSED( v ); return false; }
 
+    /**
+      Prints the type of Incidence as a string.
+    */
     virtual QByteArray type() const = 0;
 
     /**

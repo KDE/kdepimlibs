@@ -352,6 +352,20 @@ bool Todo::recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const
        d->mDtRecurrence > recurrence()->startDateTime() );
 }
 
+bool Todo::isOverdue() const
+{
+  bool inPast = floats() ?
+                dtDue().date() < QDate::currentDate() :
+                dtDue() < KDateTime::currentUtcDateTime();
+  return inPast && !isCompleted();
+}
+
+KDateTime Todo::endDateRecurrenceBase() const
+{
+  return dtDue();
+}
+
+//@cond PRIVATE
 bool Todo::Private::recurTodo( Todo *todo )
 {
   if ( todo->recurs() ) {
@@ -383,16 +397,4 @@ bool Todo::Private::recurTodo( Todo *todo )
 
   return false;
 }
-
-bool Todo::isOverdue() const
-{
-  bool inPast = floats() ?
-                dtDue().date() < QDate::currentDate() :
-                dtDue() < KDateTime::currentUtcDateTime();
-  return inPast && !isCompleted();
-}
-
-KDateTime Todo::endDateRecurrenceBase() const
-{
-  return dtDue();
-}
+//@endcond
