@@ -29,8 +29,8 @@
 #ifndef KCAL_TODO_H
 #define KCAL_TODO_H
 
-#include <QtCore/QByteArray>
 #include "incidence.h"
+#include <QtCore/QByteArray>
 
 namespace KCal {
 
@@ -293,7 +293,7 @@ class KCAL_EXPORT Todo : public Incidence
     bool isOverdue() const;
 
     /**
-      Compare this with @p to-do for equality.
+      Compare this with @p todo for equality.
 
       @param todo is the to-do to compare.
     */
