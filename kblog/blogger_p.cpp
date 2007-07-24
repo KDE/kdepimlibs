@@ -76,16 +76,16 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
     for ( ; it != end; ++it ) {
       kDebug(5323) << "MIDDLE: " << ( *it ).typeName() << endl;
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-      
-      blogsInfo["id"]= postInfo["blogid"].toString();
-      blogsInfo["name"]= postInfo["blogName"].toString();
-      
-      if ( blogsInfo["id"].isEmpty() && !blogsInfo["name"].isEmpty() ) {
-        emit parent->listedBlogs( blogsInfo );
+
+      QString blogId = postInfo["blogId"].toString();
+      QString blogName = postInfo["blogName"].toString();
+      if ( blogId.isEmpty() && !blogName.isEmpty() ) {
         kDebug(5323) << "blogs infos retrieved id=" << blogsInfo["id"]
                      << ", name=" << blogsInfo["name"] << endl;
+        blogsInfo[blogId]=blogName;
       }
     }
+    emit parent->listedBlogs( blogsInfo );
   }
 }
 
