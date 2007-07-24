@@ -44,7 +44,7 @@ class APIGData::APIGDataPrivate : public QObject
     QByteArray mBuffer;
     QString mUsername;
     QString mFullName;
-    QString mEmail;
+    QString mProfileId;
     APIGDataPrivate();
     ~APIGDataPrivate();
     QString getFetchPostingId(){ return mFetchPostingId; }

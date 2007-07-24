@@ -139,22 +139,23 @@ class KBLOG_EXPORT APIGData : public APIBlog
     QString fullName() const;
 
     /**
-        Get the E-Mail of the user.
-
-        @return email
-
-        @see setEmail( QString& email )
-    */
-    QString email() const;
-
-    /**
-        Set the E-Mail of the user. This is used for authentication.
+        Set the ProfileId of the blog. This is used for authentication.
 
         @param email is the mail address of the user
 
-        @see email()
+        @see setProfileId( QString& id )
     */
-    void setEmail( const QString &email );
+    QString profileId() const;
+
+
+    /**
+        Get the profile's id of the blog.
+
+        @return email
+
+        @see profileId()
+    */
+    void setProfileId( const QString &pid );
 
 private:
     class APIGDataPrivate;

@@ -53,7 +53,7 @@ APIGData::APIGDataPrivate::~APIGDataPrivate(){
 QString APIGData::APIGDataPrivate::authenticate(){
   QByteArray data;
   KUrl authGateway( "https://www.google.com/accounts/ClientLogin" );
-  authGateway.addQueryItem( "Email", parent->email() );
+  authGateway.addQueryItem( "Email", parent->username() );
   authGateway.addQueryItem( "Passwd", parent->password() );
   authGateway.addQueryItem( "source" , "KDE-KBlog-4" );
   authGateway.addQueryItem( "service", "blogger" );

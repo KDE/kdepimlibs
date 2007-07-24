@@ -62,14 +62,14 @@ void APIGData::setFullName( const QString &fullName )
   d->mFullName = fullName;
 }
 
-QString APIGData::email() const
+QString APIGData::profileId() const
 {
-  return d->mEmail;
+  return d->mProfileId;
 }
 
-void APIGData::setEmail( const QString& email )
+void APIGData::setProfileId( const QString& pid )
 {
-  d->mEmail = email;
+  d->mProfileId = pid;
 }
 
 void APIGData::userInfo()
@@ -106,7 +106,7 @@ void APIGData::listBlogs()
     Syndication::Loader *loader = Syndication::Loader::create();
     connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
             d, SLOT(slotLoadingBlogsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
-    loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + username() + QString( "/blogs" ) );
+    loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + profileId() + QString( "/blogs" ) );
 }
 
 void APIGData::listRecentPostings( int number )
@@ -159,7 +159,7 @@ void APIGData::createPosting( KBlog::BlogPosting* posting )
     atomMarkup += "</div></content>";
     atomMarkup += "<author>";
     atomMarkup += "<name>" + fullName() + "</name>"; //FIXME user's name
-    atomMarkup += "<email>" + email() + "</email>";
+    atomMarkup += "<email>" + username() + "</email>";
     atomMarkup += "</author>";
     atomMarkup += "</entry>";
 
