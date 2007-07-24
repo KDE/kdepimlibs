@@ -425,6 +425,23 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     */
     virtual void setSubresourceActive( const QString &, bool active );
 
+    /**
+     * Remove a subresource with the id @param resource
+     */
+    virtual bool removeSubresource( const QString& resource );
+
+    /**
+     * Add a subresource with the id @param resource and the parent
+     * id @param parent.
+     */
+    virtual bool addSubresource( const QString& resource, const QString& parent );
+
+    /**
+     * Returns the type of the subresource: "event", "todo", or "journal", QString if 
+     * unknown/mixed.
+     */
+    virtual QString subresourceType( const QString& resource );
+
   protected:
     /**
       Do the actual loading of the resource data. Called by load().

@@ -130,6 +130,28 @@ void ResourceCalendar::setSubresourceActive( const QString &, bool )
 {
 }
 
+
+/*virtual*/
+bool ResourceCalendar::removeSubresource( const QString& resource )
+{
+    Q_UNUSED(resource)
+    return true;
+}
+
+/*virtual*/
+bool ResourceCalendar::addSubresource( const QString& resource, const QString& parent )
+{
+    Q_UNUSED(resource)
+    Q_UNUSED(parent)
+    return true;
+}
+
+QString ResourceCalendar::subresourceType( const QString& resource )
+{
+    Q_UNUSED(resource)
+    return QString();
+}
+
 bool ResourceCalendar::load()
 {
   kDebug(5800) << "Loading resource " + resourceName() << endl;
