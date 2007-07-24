@@ -133,12 +133,12 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant
     QList<QVariant>::ConstIterator it = postReceived.begin();
     QList<QVariant>::ConstIterator end = postReceived.end();
     for ( ; it != end; ++it ) {
-      BlogPosting posting;
+      BlogPosting* posting = new BlogPosting;
       kDebug(5323) << "MIDDLE: " << ( *it ).typeName() << endl;
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-      if ( readPostingFromMap( &posting, postInfo ) ) {
+      if ( readPostingFromMap( posting, postInfo ) ) {
         kDebug(5323) << "Emitting listedPosting( posting.postingId()="
-                     << posting.postingId() << "); " << endl;
+                     << posting->postingId() << "); " << endl;
         emit parent->listedPosting( posting ); // KUrl( posting.postingId() ) );
       } else {
         kDebug(5323) << "d->readPostingFromMap failed! " << endl;

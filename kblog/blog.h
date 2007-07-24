@@ -246,7 +246,7 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see listPostings()
     */
-    virtual void listedPosting( KBlog::BlogPosting &posting );
+    virtual void listedPosting( KBlog::BlogPosting* posting );
 
     /**
       This signal is emitted when the last posting of the listPostings()

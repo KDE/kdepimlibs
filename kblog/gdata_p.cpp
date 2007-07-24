@@ -119,7 +119,7 @@ void APIGData::APIGDataPrivate::slotLoadingPostingsComplete( Syndication::Loader
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for( ; it!=end; ++it ){
-      BlogPosting posting;
+      BlogPosting* posting = new BlogPosting;
       QRegExp rx( "post-(\\d+)" );
       if( rx.indexIn( ( *it )->id() )==-1 ){
         kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' does not match "<< rx.cap(1) << endl;
@@ -128,15 +128,15 @@ void APIGData::APIGDataPrivate::slotLoadingPostingsComplete( Syndication::Loader
       }
 
       kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
-      posting.setPostingId( rx.cap(1) );
-      posting.setTitle( ( *it )->title() );
-      posting.setContent( ( *it )->content() );
+      posting->setPostingId( rx.cap(1) );
+      posting->setTitle( ( *it )->title() );
+      posting->setContent( ( *it )->content() );
       // FIXME: assuming UTC for now
-      posting.setCreationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ), KDateTime::Spec::UTC() ) );
-      posting.setModificationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
+      posting->setCreationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ), KDateTime::Spec::UTC() ) );
+      posting->setModificationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
 
       emit parent->listedPosting( posting );
-      kDebug(5323) << "Emitting listedPosting( postingId=" << posting.postingId() << " ); " << endl;
+      kDebug(5323) << "Emitting listedPosting( postingId=" << posting->postingId() << " ); " << endl;
   }
   kDebug(5323) << "Emitting listPostingsFinished()" << endl;
   emit parent->listPostingsFinished();
