@@ -124,6 +124,38 @@ class KBLOG_EXPORT APIGData : public APIBlog
     */
     void removePosting( KBlog::BlogPosting *posting );
 
+    /**
+      Sets the user's name for the blog.
+      @param uname is a QString containing the blog username.
+
+      @see userName()
+    */
+    virtual void setFullName( const QString &uname );
+
+    /**
+       Returns the user's name of the blog.
+       @see setUserName()
+    */
+    virtual QString fullName() const;
+
+    /**
+        Get the E-Mail of the user.
+
+        @return email
+
+        @see setEmail( QString& email )
+    */
+    virtual QString email() const;
+
+    /**
+        Set the E-Mail of the user. This is used for authentication.
+
+        @param email is the mail address of the user
+
+        @see email()
+    */
+    virtual void setEmail( const QString &email );
+
 private:
     class APIGDataPrivate;
     APIGDataPrivate* const d;

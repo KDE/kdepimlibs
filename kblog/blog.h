@@ -87,7 +87,7 @@ class KBLOG_EXPORT APIBlog : public QObject
     /**
       Enumeration for possible errors.
     */
-    enum errorType {
+    enum ErrorType {
       XmlRpc,
       AtomAPI,
       ParsingError,
@@ -130,49 +130,18 @@ class KBLOG_EXPORT APIBlog : public QObject
     virtual QString password() const;
 
     /**
-      Sets the user's id for the blog.
-      @param uid is a QString containing the blog username.
+      Sets the user's authentication name for the blog.
+      @param userName is a QString containing the blog username.
 
       @see userId()
     */
-    virtual void setUserId( const QString &uid );
+    virtual void setUserName( const QString &userName );
 
     /**
        Returns the user's id of the blog.
        @see setUserId()
     */
-    virtual QString userId() const;
-    /**
-      Sets the user's name for the blog.
-      @param uname is a QString containing the blog username.
-
-      @see userName()
-    */
-    virtual void setUserName( const QString &uname );
-
-    /**
-       Returns the user's name of the blog.
-       @see setUserName()
-    */
     virtual QString userName() const;
-
-    /**
-        Get the E-Mail of the user.
-
-        @return email
-
-        @see setEmail( QString& email )
-    */
-    virtual QString email() const;
-
-    /**
-        Set the E-Mail of the user. This is used for authentication.
-
-        @param email is the mail address of the user
-
-        @see email()
-    */
-    virtual void setEmail( const QString& email );
 
     /**
       Sets the URL for the blog.
@@ -215,12 +184,6 @@ class KBLOG_EXPORT APIBlog : public QObject
       @see setDownloadCount()
     */
     virtual int downloadCount() const;
-
-    /**
-      Get information about the user from the blog.
-      @see userInfoRetrieved()
-    */
-    virtual void userInfo() = 0;
 
     /**
       List the blogs available for this authentication on the server.
@@ -268,14 +231,6 @@ class KBLOG_EXPORT APIBlog : public QObject
 
   Q_SIGNALS:
     /**
-      This signal is emitted when a userInfo() job fetches the user
-      information from the blogging server.
-
-'     @see userInfo()
-    */
-    virtual void userInfoRetrieved();
-
-    /**
       This signal is emitted when a listBlogs() job fetches the blog
       information from the blogging server.
 
@@ -294,47 +249,6 @@ class KBLOG_EXPORT APIBlog : public QObject
     virtual void listedPosting( KBlog::BlogPosting &posting );
 
     /**
-      This signal is emitted when a fetchPosting() job fetches a posting
-      from the blogging server.
-
-      @param posting is the fetched posting.
-
-      @see fetchPosting(KBlog::BlogPosting*)
-    */
-//     virtual void fetchedPosting( KBlog::BlogPosting &posting );
-
-    /**
-      This signal is emitted when a createPosting() job successfully creates
-      a posting on the server.
-
-      @param id is the id the posting has on the server.
-
-      @see createPosting( KBlog::BlogPosting* )
-    */
-//     virtual void createdPosting( const QString &id );
-
-    /**
-      This signal is emitted when a createMedia() job successfully creates
-      a posting on the server.
-
-      @param url is the url of the posting on the server. This, depending
-      on the server, can only be an id string, too.
-
-      @see createMedia( KBlog::BlogMedia* )
-    */
-//     virtual void createdMedia( const QString &url );
-
-    /**
-      This signal is emitted when a modifyPosting() job modifies a posting
-      on the server.
-
-      @param modified shows the success of the modification.
-
-      @see modifyPosting( KBlog::BlogPosting* )
-    */
-//     virtual void modifiedPosting( void modified );
-
-    /**
       This signal is emitted when the last posting of the listPostings()
       job has been fetched.
 
@@ -343,23 +257,25 @@ class KBLOG_EXPORT APIBlog : public QObject
     virtual void listPostingsFinished();
 
     /**
-      This signal is emitted when the last category of the listCategories()
-      job has been fetched.
-
-      @see listCategories()
-    */
-    virtual void listCategoriesFinished();
-
-    /**
       All xml parsing and all structural problems will emit an error.
 
-      @see errorType
+      @see ErrorType
     */
-    virtual void error( const errorType &type, const QString &errorMessage );
+    virtual void error( const ErrorType &type, const QString &errorMessage );
 
   protected:
     class APIBlogPrivate;
     APIBlogPrivate *const d;
+
+    /**
+      Set's the server ID of a BlogPosting upon creation on the server.
+
+      @param posting
+      @param postingId
+      @see ErrorType
+    */
+    static void setBlogPostingId( BlogPosting *posting,
+                                  const QString &postingId );
 };
 
 }

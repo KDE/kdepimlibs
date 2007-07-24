@@ -53,7 +53,7 @@ QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString 
   if ( !id.toInt() && !id.isNull() ){
     args << QVariant( id );
   }
-  args << QVariant( parent->userId() )
+  args << QVariant( parent->userName() )
        << QVariant( parent->password() );
   return args;
 }

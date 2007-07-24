@@ -19,29 +19,28 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef BLOG_P_H
-#define BLOG_P_H
+#ifndef BLOGPOSTING_P_H
+#define BLOGPOSTING_P_H
 
-#include <blog.h>
+#include <blogposting.h>
 
-#include <KTimeZone>
-#include <KUrl>
-
-#include <QtCore/QMutex>
+#include <KDateTime>
 
 using namespace KBlog;
 
-class APIBlog::APIBlogPrivate
+class BlogPosting::BlogPostingPrivate
 {
   public:
-    APIBlog *parent;
-    QString mBlogId;
-    QString mUserName;
-    QString mPassword;
-    KUrl mUrl;
-    KTimeZone mTimeZone;
-    unsigned int mDownloadCount;
-    void setBlogPostingId( BlogPosting *posting, const QString &postingId );
+    friend class APIBlog;
+    bool mPublished;
+    QString mPostingId;
+    QString mTitle;
+    QString mContent;
+    QStringList mCategories;
+    QString mError;
+    Status mStatus;
+    KDateTime mCreationDateTime;
+    KDateTime mModificationDateTime;
 };
 
 #endif

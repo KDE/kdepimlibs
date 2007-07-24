@@ -46,7 +46,6 @@ class APIBlogger::APIBloggerPrivate : public QObject
     QList<QVariant> defaultArgs( const QString &id = QString() );
 
   public Q_SLOTS:
-    void slotUserInfo( const QList<QVariant> &result, const QVariant &id );
     void slotListBlogs( const QList<QVariant> &result, const QVariant &id );
     void slotListPostings( const QList<QVariant> &result, const QVariant &id );
     void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );

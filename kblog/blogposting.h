@@ -50,7 +50,6 @@ namespace KBlog {
 class KBLOG_EXPORT BlogPosting : public QObject
 {
   Q_OBJECT
-
   public:
     /**
       Default constructor. Creates an empty BlogPosting object.
@@ -60,15 +59,8 @@ class KBLOG_EXPORT BlogPosting : public QObject
     /**
       Constructor for convenience.
 
-      @param title
-      @param content
-      @param categories
-      @param publish
+      @param postingId The ID of the posting on the server.
     */
-    BlogPosting( const QString &title, const QString &content,
-                 const QStringList &categories = QStringList(),
-                 bool publish = true );
-
     BlogPosting( const QString &postingId );
 
     /**
@@ -82,7 +74,7 @@ class KBLOG_EXPORT BlogPosting : public QObject
       @return bool
       @see setPublish()
     */
-    bool publish() const;
+    bool isPublished() const;
 
     /**
       Sets the publish value.
@@ -90,7 +82,7 @@ class KBLOG_EXPORT BlogPosting : public QObject
       @param publish set this to true, if you want to publish immediately.
       @see publish()
     */
-    void setPublish( bool publish );
+    void setPublished( bool published );
 
     /**
       Returns the postId. This is for fetched postings.
@@ -194,7 +186,6 @@ class KBLOG_EXPORT BlogPosting : public QObject
     void setStatus( Status status );
 
   Q_SIGNALS:
-
     void statusChanged( Status status );
 
   private:

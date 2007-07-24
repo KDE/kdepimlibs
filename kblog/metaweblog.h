@@ -149,6 +149,14 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
     */
     void categoryInfoRetrieved();
 
+    /**
+      This signal is emitted when the last category of the listCategories()
+      job has been fetched.
+
+      @see listCategories()
+    */
+    virtual void listCategoriesFinished();
+
   private:
     class APIMetaWeblogPrivate;
     APIMetaWeblogPrivate *const d;

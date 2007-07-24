@@ -89,13 +89,6 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
     void setUrl( const KUrl &server );
 
     /**
-      Get information about the user from the blog.
-
-      @see void userInfoRetrieved( const QString &, const QString &, const QString & )
-    */
-    void userInfo();
-
-    /**
       List the blogs available for this authentication on the server.
       @see void blogInfoRetrieved( const QString &id, const QString &name )
     */

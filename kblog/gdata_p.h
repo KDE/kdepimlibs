@@ -44,6 +44,8 @@ class APIGData::APIGDataPrivate : public QObject
     APIGData* parent;
     QByteArray mBuffer;
 //     KIO::Slave* mSlave;
+    QString mUserName;
+    QString mEmail;
     APIGDataPrivate();
     ~APIGDataPrivate();
     QString getFetchPostingId(){ return mFetchPostingId; }

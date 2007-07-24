@@ -57,16 +57,6 @@ void APIBlogger::setUrl( const KUrl &server )
   d->mXmlRpcClient->setUserAgent( "KDE-KBlog" );
 }
 
-void APIBlogger::userInfo()
-{
-    kDebug(5323) << "read user info..." << endl;
-    QList<QVariant> args( d->defaultArgs() );
-    d->mXmlRpcClient->call(
-      "blogger.getUserInfo", args,
-      d, SLOT( slotUserInfo( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
-}
-
 void APIBlogger::listBlogs()
 {
 
@@ -114,7 +104,7 @@ void APIBlogger::modifyPosting( KBlog::BlogPosting *posting )
 
     QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
     args << QVariant( posting->content() );
-    args << QVariant( posting->publish() );
+    args << QVariant( posting->isPublished() );
     d->mXmlRpcClient->call(
       "blogger.editPost", args,
       d, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
@@ -136,7 +126,7 @@ void APIBlogger::createPosting( KBlog::BlogPosting *posting )
     }
     content += posting->content();
     args << QVariant( content );
-    args << QVariant( posting->publish() );
+    args << QVariant( posting->isPublished() );
     d->mXmlRpcClient->call(
       "blogger.newPost", args,
       d, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),

@@ -50,34 +50,9 @@ QList<QVariant> APIBlogger::APIBloggerPrivate::defaultArgs( const QString &id )
   if ( !id.isNull() ) {
     args << QVariant( id );
   }
-  args << QVariant( parent->userId() )
+  args << QVariant( parent->userName() )
        << QVariant( parent->password() );
   return args;
-}
-
-void APIBlogger::APIBloggerPrivate::slotUserInfo( const QList<QVariant> &result,
-                                                  const QVariant &id )
-{
-  Q_UNUSED( id );
-
-  // TODO: Implement user authentication
-  kDebug (5323) << "TOP: " << result[0].typeName() << endl;
-  if ( result[0].type() != QVariant::Map ) {
-    kDebug (5323) << "Could not fetch user information out "
-                  << "of the result from the server, not a list." << endl;
-    emit parent->error( ParsingError,
-                        i18n( "Could not fetch user information out "
-                              "of the result from the server, not a list." ) );
-  } else {
-    const QMap<QString,QVariant> userInfo= result[0].toMap();
-    const QString nickname = userInfo["nickname"].toString();
-    const QString userid = userInfo["userid"].toString();
-    const QString email = userInfo["email"].toString();
-    kDebug(5323) << "emit userInfoRetrieved( " << nickname << ", "
-                 << userid << ", " << email << " )" << endl;
-    // FIXME: set the data
-    emit parent->userInfoRetrieved();
-  }
 }
 
 void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result,

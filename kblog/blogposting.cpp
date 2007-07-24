@@ -22,6 +22,7 @@
 */
 
 #include "blogposting.h"
+#include "blogposting_p.h"
 
 #include <KDateTime>
 
@@ -29,35 +30,9 @@
 
 namespace KBlog {
 
-class BlogPosting::BlogPostingPrivate
-{
-  public:
-  bool mPublish;
-  QString mPostingId;
-  QString mTitle;
-  QString mContent;
-  QStringList mCategories;
-  QString mError;
-  Status mStatus;
-  KDateTime mCreationDateTime;
-  KDateTime mModificationDateTime;
-};
-
 BlogPosting::BlogPosting(): d( new BlogPostingPrivate )
 {
-  d->mPublish=false;
-  d->mStatus=New;
-}
-
-BlogPosting::BlogPosting( const QString &title, const QString &content,
-                          const QStringList &categories, bool publish ):
-  d( new BlogPostingPrivate )
-{
-  d->mTitle = title;
-  d->mContent = content;
-  d->mCategories = categories;
-  d->mPublish = publish;
-  d->mCreationDateTime = KDateTime::currentDateTime( KDateTime::Spec() );
+  d->mPublished = false;
   d->mStatus = New;
 }
 
@@ -73,14 +48,14 @@ BlogPosting::~BlogPosting()
   delete d;
 }
 
-bool BlogPosting::publish() const
+bool BlogPosting::isPublished() const
 {
-  return d->mPublish;
+  return d->mPublished;
 }
 
-void BlogPosting::setPublish( bool publish )
+void BlogPosting::setPublished( bool published )
 {
-  d->mPublish = publish;
+  d->mPublished = published;
 }
 
 QString BlogPosting::postingId() const

@@ -23,6 +23,7 @@
 
 #include <blog.h>
 #include <blog_p.h>
+#include <blogposting_p.h>
 
 #include <kdebug.h>
 
@@ -51,34 +52,14 @@ QString APIBlog::password() const
   return d->mPassword;
 }
 
-QString APIBlog::userId() const
-{
-  return d->mUserId;
-}
-
-void APIBlog::setUserId( const QString &uid )
-{
-  d->mUserId = uid;
-}
-
 QString APIBlog::userName() const
 {
   return d->mUserName;
 }
 
-void APIBlog::setUserName( const QString &uname )
+void APIBlog::setUserName( const QString &userName )
 {
-  d->mUserName = uname;
-}
-
-QString APIBlog::email() const
-{
-  return d->mEmail;
-}
-
-void APIBlog::setEmail( const QString& email )
-{
-  d->mEmail = email;
+  d->mUserName = userName;
 }
 
 void APIBlog::setBlogId( const QString &blogId )

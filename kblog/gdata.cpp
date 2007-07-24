@@ -52,6 +52,26 @@ QString APIGData::interfaceName() const
   return QLatin1String( "GData API" );
 }
 
+QString APIGData::fullName() const
+{
+  return d->mUserName;
+}
+
+void APIGData::setFullName( const QString &uname )
+{
+  d->mUserName = uname;
+}
+
+QString APIGData::email() const
+{
+  return d->mEmail;
+}
+
+void APIGData::setEmail( const QString& email )
+{
+  d->mEmail = email;
+}
+
 void APIGData::userInfo()
 {
   // fetch the introspection file synchronously and parse it
@@ -86,7 +106,7 @@ void APIGData::listBlogs()
     Syndication::Loader *loader = Syndication::Loader::create();
     connect( loader, SIGNAL(loadingComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)),
             d, SLOT(slotLoadingBlogsComplete(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode)) );
-    loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + userId() + QString( "/blogs" ) );
+    loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + userName() + QString( "/blogs" ) );
 }
 
 void APIGData::listPostings()
@@ -100,6 +120,7 @@ void APIGData::listPostings()
 
 void APIGData::fetchPosting( KBlog::BlogPosting *posting )
 {
+  Q_UNUSED( posting );
 //   if ( d->mLock.tryLock() ) {
 //     kDebug() << "fetchPosting()" << endl;
 //     Syndication::Loader *loader = Syndication::Loader::create();
@@ -114,6 +135,7 @@ void APIGData::fetchPosting( KBlog::BlogPosting *posting )
 
 void APIGData::modifyPosting( KBlog::BlogPosting* posting )
 {
+    Q_UNUSED( posting );
     kDebug() << "modifyPosting()" << endl;
     d->authenticate();
 }
@@ -126,7 +148,7 @@ void APIGData::createPosting( KBlog::BlogPosting* posting )
 
     QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
     atomMarkup += "<title type='text'>"+posting->title() +"</title>";
-    if( !posting->publish() )
+    if( !posting->isPublished() )
     {
       atomMarkup += "<app:control xmlns:app=*http://purl.org/atom/app#'>";
       atomMarkup += "<app:draft>yes</app:draft></app:control>";
@@ -136,7 +158,7 @@ void APIGData::createPosting( KBlog::BlogPosting* posting )
     atomMarkup += posting->content();
     atomMarkup += "</div></content>";
     atomMarkup += "<author>";
-    atomMarkup += "<name>" + userId() + "</name>"; //FIXME user's name
+    atomMarkup += "<name>" + fullName() + "</name>"; //FIXME user's name
     atomMarkup += "<email>" + email() + "</email>";
     atomMarkup += "</author>";
     atomMarkup += "</entry>";
@@ -145,12 +167,12 @@ void APIGData::createPosting( KBlog::BlogPosting* posting )
     QDataStream stream( &postData, QIODevice::WriteOnly );
     stream.writeRawData( atomMarkup.toUtf8(), atomMarkup.toUtf8().length() );
 
-    KIO::TransferJob *job = KIO::http_post( KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default" ), 
+    KIO::TransferJob *job = KIO::http_post( KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default" ),
                                          postData, false );
 
     if ( !job ) {
-      kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/" << blogId() <<"/posts/default" 
-                        << endl; 
+      kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/" << blogId() <<"/posts/default"
+                        << endl;
     }
 
     job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
@@ -166,7 +188,7 @@ void APIGData::createPosting( KBlog::BlogPosting* posting )
 
 void APIGData::removePosting( KBlog::BlogPosting *posting )
 {
-//   Q_UNUSED( postingId );
+    Q_UNUSED( posting );
     kDebug() << "deletePosting()" << endl;
     d->authenticate();
 }
