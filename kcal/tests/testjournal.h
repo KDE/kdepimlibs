@@ -1,7 +1,6 @@
 /*
   This file is part of the kcal library.
-
-  Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2007 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -18,42 +17,19 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-/**
-  @file
-  This file is part of the API for handling calendar data and
-  defines the Journal class.
 
-  @brief
-  Provides a Journal in the sense of RFC2445.
+#ifndef JOURNALTEST_H
+#define JOURNALTEST_H
 
-  @author Cornelius Schumacher \<schumacher@kde.org\>
-*/
+#include <QtCore/QObject>
 
-#include "journal.h"
-
-using namespace KCal;
-
-Journal::Journal() : d( 0 )
+class JournalTest : public QObject
 {
-}
+  Q_OBJECT
+  private Q_SLOTS:
+    void testValidity();
+    void testCompare();
+    void testClone();
+};
 
-Journal::~Journal()
-{
-}
-
-QByteArray Journal::type() const
-{
-  return "Journal";
-}
-
-Journal *Journal::clone()
-{
-  return new Journal( *this );
-}
-
-bool Journal::operator==( const Journal &j2 ) const
-{
-    return
-      static_cast<const Incidence &>( *this ) == static_cast<const Incidence &>( j2 );
-}
-
+#endif

@@ -28,6 +28,7 @@ KCAL_UNIT_TESTS(
   testduration
   testerrorformat
   testevent
+  testjournal
   testperiod
   testperson
   testsortablelist

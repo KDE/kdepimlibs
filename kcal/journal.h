@@ -19,38 +19,74 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Journal class.
+
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
+*/
 #ifndef KCAL_JOURNAL_H
 #define KCAL_JOURNAL_H
 
-#include <QtCore/QByteArray>
-
 #include "incidence.h"
+#include <QtCore/QByteArray>
 
 namespace KCal {
 
 /**
-  This class provides a Journal in the sense of RFC2445.
+  @brief
+  Provides a Journal in the sense of RFC2445.
 */
 class KCAL_EXPORT Journal : public Incidence
 {
   public:
+    /**
+      List of journals.
+    */
     typedef ListBase<Journal> List;
 
+    /**
+      Constructs an empty journal.
+    */
     Journal();
-    ~Journal();
-    bool accept( Visitor &v ) { return v.visit( this ); }
-    bool operator==( const Journal &journal ) const;
-
-    QByteArray type() const { return "Journal"; }
 
     /**
-      Return copy of this Journal. The caller owns the returned object.
+      Destroys a journal.
+    */
+    ~Journal();
+
+    /**
+      @copydoc
+      IncidenceBase::type()
+    */
+    QByteArray type() const;
+
+    /**
+      Returns an exact copy of this journal. The returned object is owned
+      by the caller.
     */
     Journal *clone();
 
+    /**
+      Compare this with @p journal for equality.
+
+      @param journal is the journal to compare.
+    */
+    bool operator==( const Journal &journal ) const;
+
   private:
+    /**
+      @copydoc
+      IncidenceBase::accept()
+    */
+    bool accept( Visitor &v ) { return v.visit( this ); }
+
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }

@@ -22,7 +22,6 @@ imipscheduler         |       |         |       |         |    D    |
 incidencebase         |   D   |         |   D   |   n/a   |    D    | Allen
 incidenceformatter    |       |         |       |         |    D    | Allen
 incidence             |       |         |       |   n/a   |    D    | Allen
-journal               |       |         |       |         |    D    | Allen
 kresult               |   D   |         |       |         |    D    |
 listbase              |       |         |  n/a  |         |    D    |
 qtopiaformat          |       |         |       |         |    D    |
@@ -52,6 +51,7 @@ calendarnull          |   D   |    D    |   D   |    D    |    D    | Allen
 duration              |   D   |    D    |   D   |    D    |    D    | Allen
 event                 |   D   |    D    |   D   |    D    |    D    | Allen
 exceptions            |   D   |    D    |   D   |    D    |    D    | Allen
+journal               |   D   |    D    |   D   |    D    |    D    | Allen
 period                |   D   |    D    |   D   |    D    |    D    | Narayan
 person                |   D   |    D    |   D   |    D    |    D    | Narayan
 todo                  |   D   |    D    |   D   |    D    |    D    | Allen
