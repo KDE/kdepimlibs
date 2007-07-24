@@ -26,7 +26,7 @@
   @brief
   Provides a To-do in the sense of RFC2445.
 
-  @authors Cornelius Schumacher \<schumacher@kde.org\>
+  @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 
 #include "todo.h"
