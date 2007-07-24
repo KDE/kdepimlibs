@@ -50,18 +50,14 @@ namespace KBlog {
 class KBLOG_EXPORT BlogPosting : public QObject
 {
   Q_OBJECT
-  public:
+public:
     /**
-      Default constructor. Creates an empty BlogPosting object.
-    */
-    BlogPosting();
-
-    /**
-      Constructor for convenience.
+      Constructor.
 
       @param postingId The ID of the posting on the server.
+      @param parent Parent object of this BlogPosting
     */
-    BlogPosting( const QString &postingId );
+    explicit BlogPosting( const QString &postingId = QString(), QObject *parent = 0 );
 
     /**
       Virtual default destructor.

@@ -27,9 +27,7 @@
 #include <KTimeZone>
 #include <KUrl>
 
-#include <QtCore/QMutex>
-
-using namespace KBlog;
+namespace KBlog {
 
 class APIBlog::APIBlogPrivate
 {
@@ -43,5 +41,7 @@ class APIBlog::APIBlogPrivate
     unsigned int mDownloadCount;
     void setBlogPostingId( BlogPosting *posting, const QString &postingId );
 };
+
+}
 
 #endif

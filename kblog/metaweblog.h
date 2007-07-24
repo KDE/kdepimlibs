@@ -155,7 +155,7 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
 
       @see listCategories()
     */
-    virtual void listCategoriesFinished();
+    void listCategoriesFinished();
 
   private:
     class APIMetaWeblogPrivate;

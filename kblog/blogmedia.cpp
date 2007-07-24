@@ -37,7 +37,7 @@ class BlogMedia::BlogMediaPrivate
     Status mStatus;
 };
 
-BlogMedia::BlogMedia(): d( new BlogMediaPrivate )
+BlogMedia::BlogMedia( QObject* parent ): QObject( parent ), d( new BlogMediaPrivate )
 {
 }
 

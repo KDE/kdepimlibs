@@ -130,13 +130,13 @@ class KBLOG_EXPORT APIGData : public APIBlog
 
       @see username()
     */
-    virtual void setFullName( const QString &fullName );
+    void setFullName( const QString &fullName );
 
     /**
        Returns the user's name of the blog.
        @see setUsername()
     */
-    virtual QString fullName() const;
+    QString fullName() const;
 
     /**
         Get the E-Mail of the user.
@@ -145,7 +145,7 @@ class KBLOG_EXPORT APIGData : public APIBlog
 
         @see setEmail( QString& email )
     */
-    virtual QString email() const;
+    QString email() const;
 
     /**
         Set the E-Mail of the user. This is used for authentication.
@@ -154,7 +154,7 @@ class KBLOG_EXPORT APIGData : public APIBlog
 
         @see email()
     */
-    virtual void setEmail( const QString &email );
+    void setEmail( const QString &email );
 
 private:
     class APIGDataPrivate;

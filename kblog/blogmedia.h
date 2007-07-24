@@ -56,7 +56,7 @@ class KBLOG_EXPORT BlogMedia : public QObject
     /**
       Default constructor. Creates an empty BlogMedia object.
     */
-    BlogMedia();
+    explicit BlogMedia( QObject* parent = 0 );
 
     /**
       Virtual default destructor.
