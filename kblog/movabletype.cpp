@@ -54,7 +54,7 @@ QString APIMovableType::interfaceName() const
 
 void APIMovableType::setUrl( const KUrl &server )
 {
-  APIBlogger::setUrl( server );
+  APIMetaWeblog::setUrl( server );
   delete d->mXmlRpcClient;
   d->mXmlRpcClient = new KXmlRpc::Client( server );
   d->mXmlRpcClient->setUserAgent( userAgent() );
