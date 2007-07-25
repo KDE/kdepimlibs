@@ -93,20 +93,9 @@ class ICalTimeZonesPrivate
 {
 public:
   ICalTimeZonesPrivate() {}
-  static ICalTimeZone utc();
 
   ICalTimeZones::ZoneMap zones;
 };
-
-ICalTimeZone ICalTimeZonesPrivate::utc()
-{
-  static ICalTimeZone utcZone;
-  if ( !utcZone.isValid() ) {
-    ICalTimeZoneSource tzs;
-    utcZone = tzs.parse( icaltimezone_get_utc_timezone() );
-  }
-  return utcZone;
-}
 
 
 ICalTimeZones::ICalTimeZones()
@@ -140,7 +129,7 @@ ICalTimeZone ICalTimeZones::remove(const ICalTimeZone &zone)
     for (ZoneMap::Iterator it = d->zones.begin(), end = d->zones.end();  it != end;  ++it) {
       if (it.value() == zone) {
         d->zones.erase(it);
-        return (zone == utc()) ? ICalTimeZone() : zone;
+        return (zone == KTimeZone::utc()) ? ICalTimeZone() : zone;
       }
     }
   }
@@ -154,7 +143,7 @@ ICalTimeZone ICalTimeZones::remove(const QString &name)
     if (it != d->zones.end()) {
       ICalTimeZone zone = it.value();
       d->zones.erase(it);
-      return (zone == utc()) ? ICalTimeZone() : zone;
+      return (zone == KTimeZone::utc()) ? ICalTimeZone() : zone;
     }
   }
   return ICalTimeZone();
@@ -173,11 +162,6 @@ ICalTimeZone ICalTimeZones::zone(const QString &name) const
       return it.value();
   }
   return ICalTimeZone();   // error
-}
-
-ICalTimeZone ICalTimeZones::utc()
-{
-  return ICalTimeZonesPrivate::utc();
 }
 
 
@@ -275,6 +259,16 @@ bool ICalTimeZone::update(const ICalTimeZone &other)
     return false;
   setData(other.data()->clone(), other.source());
   return true;
+}
+
+ICalTimeZone ICalTimeZone::utc()
+{
+  static ICalTimeZone utcZone;
+  if ( !utcZone.isValid() ) {
+    ICalTimeZoneSource tzs;
+    utcZone = tzs.parse( icaltimezone_get_utc_timezone() );
+  }
+  return utcZone;
 }
 
 

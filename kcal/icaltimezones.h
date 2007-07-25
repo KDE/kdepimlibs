@@ -117,18 +117,6 @@ public:
      */
     void clear();
 
-    /**
-     * Returns a standard UTC time zone, with name "UTC".
-     *
-     * @note The ICalTimeZone returned by this method does not belong to any
-     * ICalTimeZones collection. Any ICalTimeZones instance may contain its own
-     * UTC ICalTimeZone defined by its time zone source data, but that will be
-     * a different instance than this ICalTimeZone.
-     *
-     * @return UTC time zone
-     */
-    static ICalTimeZone utc();
-
 private:
     ICalTimeZones(const ICalTimeZones &);              // prohibit copying
     ICalTimeZones &operator=(const ICalTimeZones &);   // prohibit copying
@@ -226,6 +214,18 @@ class KCAL_EXPORT ICalTimeZone : public KTimeZone  //krazy:exclude=dpointer (no 
      * @return true if definition was updated (i.e. names are the same)
      */
     bool update(const ICalTimeZone &other);
+
+    /**
+     * Returns a standard UTC time zone, with name "UTC".
+     *
+     * @note The ICalTimeZone returned by this method does not belong to any
+     * ICalTimeZones collection. Any ICalTimeZones instance may contain its own
+     * UTC ICalTimeZone defined by its time zone source data, but that will be
+     * a different instance than this ICalTimeZone.
+     *
+     * @return UTC time zone
+     */
+    static ICalTimeZone utc();
 
 private:
     // d-pointer is in ICalTimeZoneBackend.
