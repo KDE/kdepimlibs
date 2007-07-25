@@ -187,7 +187,7 @@ public:
     void setError( const QString& error );
 
   Q_SIGNALS:
-    void statusChanged( Status status );
+    void statusChanged( KBlog::BlogPosting::Status status );
 
   private:
     class BlogPostingPrivate;

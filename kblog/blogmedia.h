@@ -114,8 +114,7 @@ class KBLOG_EXPORT BlogMedia : public QObject
     void setStatus( Status status );
 
   Q_SIGNALS:
-
-    void statusChanged( Status status );
+    void statusChanged( KBlog::BlogMedia::Status status );
 
   private:
     class BlogMediaPrivate;

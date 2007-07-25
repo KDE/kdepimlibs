@@ -55,7 +55,7 @@ class APIBlogger::APIBloggerPrivate : public QObject
     void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
     void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
     void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
-    void slotFault( int number, const QString &errorString,
+    void slotError( int number, const QString &errorString,
                     const QVariant &id );
 };
 

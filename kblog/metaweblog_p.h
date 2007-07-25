@@ -51,7 +51,7 @@ class APIMetaWeblog::APIMetaWeblogPrivate : public QObject
     void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
     void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
     void slotCreateMedia( const QList<QVariant> &result, const QVariant &id );
-    void slotFault( int, const QString&, const QVariant& );
+    void slotError( int, const QString&, const QVariant& );
 };
 
 #endif

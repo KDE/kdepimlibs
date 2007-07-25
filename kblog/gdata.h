@@ -153,7 +153,6 @@ class KBLOG_EXPORT APIGData : public APIBlog
     */
     QString profileId() const;
 
-
     /**
         Get the profile's id of the blog.
 

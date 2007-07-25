@@ -65,7 +65,7 @@ void APIMetaWeblog::listRecentPostings( int number )
     d->mXmlRpcClient->call(
       "metaWeblog.getRecentPosts", args,
       d, SLOT( slotListRecentPostings( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT( slotFault( int, const QString&, const QVariant& ) ) );
+      d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void APIMetaWeblog::listCategories()
@@ -75,7 +75,7 @@ void APIMetaWeblog::listCategories()
     d->mXmlRpcClient->call(
       "metaWeblog.getCategories", args,
       d, SLOT( slotListCategories( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT ( slotFault( int, const QString&, const QVariant& ) ) );
+      d, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void APIMetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
@@ -86,7 +86,7 @@ void APIMetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
 //     d->mXmlRpcClient->call(
 //       "metaWeblog.getPost", args,
 //       d, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
-//       d, SLOT( slotFault( int, const QString&, const QVariant& ) ) );
+//       d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 //     return true;
 //   }
 //   return false;
@@ -113,7 +113,7 @@ void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
     d->mXmlRpcClient->call(
       "metaWeblog.editPost", args,
       d, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT ( slotFault( int, const QString&, const QVariant& ) ) );
+      d, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
@@ -135,7 +135,7 @@ void APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
     d->mXmlRpcClient->call (
       "metaWeblog.newPost", args,
       d, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT ( slotFault( int, const QString&, const QVariant& ) ) );
+      d, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void APIMetaWeblog::createMedia( KBlog::BlogMedia *media )
@@ -151,7 +151,7 @@ void APIMetaWeblog::createMedia( KBlog::BlogMedia *media )
     d->mXmlRpcClient->call(
       "metaWeblog.newMediaObject", args,
       d, SLOT( slotCreateMedia( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT ( slotFault( int, const QString&, const QVariant& ) ) );
+      d, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 
 }
 

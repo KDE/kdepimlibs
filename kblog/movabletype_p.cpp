@@ -64,7 +64,7 @@ void APIMovableType::APIMovableTypePrivate::slotCreatePosting(
   //TODO
 }
 
-void APIMovableType::APIMovableTypePrivate::slotFault( int number,
+void APIMovableType::APIMovableTypePrivate::slotError( int number,
     const QString &errorString, const QVariant &id )
 {
   //TODO

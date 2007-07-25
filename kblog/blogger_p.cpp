@@ -208,7 +208,7 @@ void APIBlogger::APIBloggerPrivate::slotModifyPosting(
   }
 }
 
-void APIBlogger::APIBloggerPrivate::slotFault( int number,
+void APIBlogger::APIBloggerPrivate::slotError( int number,
                                                const QString &errorString,
                                                const QVariant &id )
 {

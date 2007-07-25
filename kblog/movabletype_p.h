@@ -47,7 +47,7 @@ class APIMovableType::APIMovableTypePrivate : public QObject
 
   public Q_SLOTS:
     void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
-    void slotFault( int, const QString&, const QVariant& );
+    void slotError( int, const QString&, const QVariant& );
     void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
     void slotListRecentPostings( const QList<QVariant> &result,
                                  const QVariant &id );

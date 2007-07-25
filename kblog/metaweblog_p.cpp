@@ -242,7 +242,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreateMedia( const QList<QVariant>
   }
 }
 
-void APIMetaWeblog::APIMetaWeblogPrivate::slotFault( int number,
+void APIMetaWeblog::APIMetaWeblogPrivate::slotError( int number,
                                                      const QString &errorString,
                                                      const QVariant &id )
 {

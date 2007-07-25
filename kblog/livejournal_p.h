@@ -57,7 +57,7 @@ class APILiveJournal::APILiveJournalPrivate : public QObject
     void slotExpireCookie( const QList<QVariant> &result, const QVariant &id );
     void slotExpireAllCookies( const QList<QVariant> &result,
                                const QVariant &id );
-    void slotFault( int, const QString&, const QVariant& );
+    void slotError( int, const QString&, const QVariant& );
     void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
     void slotFetchUserInfo( const QList<QVariant> &result, const QVariant &id );
     void slotGenerateCookie( const QList<QVariant> &result,

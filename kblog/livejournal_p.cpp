@@ -99,7 +99,7 @@ void APILiveJournal::APILiveJournalPrivate::slotExpireAllCookies(
 }
 
 
-void APILiveJournal::APILiveJournalPrivate::slotFault( int number,
+void APILiveJournal::APILiveJournalPrivate::slotError( int number,
     const QString &errorString, const QVariant &id )
 {
   //TODO
