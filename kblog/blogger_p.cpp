@@ -36,6 +36,7 @@ using namespace KBlog;
 APIBlogger::APIBloggerPrivate::APIBloggerPrivate()
 {
   mXmlRpcClient = 0;
+  callCounter = 1;
 }
 
 APIBlogger::APIBloggerPrivate::~APIBloggerPrivate()
@@ -133,7 +134,9 @@ void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &res
 void APIBlogger::APIBloggerPrivate::slotFetchPosting( const QList<QVariant> &result,
                                                       const QVariant &id )
 {
-  Q_UNUSED( id );
+  if( !id.toInt() ) return; //FIXME
+
+  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
 
   kDebug(5323) << "APIBlogger::slotFetchPosting" << endl;
   //array of structs containing ISO.8601
@@ -146,20 +149,21 @@ void APIBlogger::APIBloggerPrivate::slotFetchPosting( const QList<QVariant> &res
     emit parent->error( ParsingError,
                         i18n( "Could not fetch posting out of the result from "
                               "the server." ) );
+    posting->setError( i18n( "Could not fetch posting out of the "
+                              "result from the server." ) );
+//    emit posting->statusChanged( KBlog::BlogPosting::Error );
   } else {
-//     const QList<QVariant> postReceived = result[0].toList();
-//     QList<QVariant>::ConstIterator it = postReceived.begin();
-    BlogPosting posting;
     const QMap<QString, QVariant> postInfo = result[0].toMap();
-    if ( readPostingFromMap( &posting, postInfo ) ) {
+    if ( readPostingFromMap( posting, postInfo ) ) {
       kDebug(5323) << "Emitting fetchedPosting( posting.postingId()="
-                   << posting.postingId() << "); " << endl;
+                   << posting->postingId() << "); " << endl;
 //       emit parent->fetchedPosting( posting ); // KUrl( posting.posingtId() ) );
     } else {
       kDebug(5323) << "d->readPostingFromMap failed! " << endl;
       emit parent->error( ParsingError, i18n( "Could not read posting." ) );
     }
   }
+  callMap.remove( id.toInt() );
 }
 
 void APIBlogger::APIBloggerPrivate::slotCreatePosting( const QList<QVariant> &result,

@@ -123,6 +123,16 @@ void BlogPosting::setStatus( BlogPosting::Status status )
   d->mStatus = status;
 }
 
+QString BlogPosting::error() const
+{
+  return d->mError;
+}
+
+void BlogPosting::setError( const QString &error )
+{
+  d->mError = error;
+}
+
 } // namespace KBlog
 
 #include "blogposting.moc"

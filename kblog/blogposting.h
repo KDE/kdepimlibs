@@ -181,6 +181,10 @@ public:
 
     void setStatus( Status status );
 
+    QString error() const;
+
+    void setError( const QString& error );
+
   Q_SIGNALS:
     void statusChanged( Status status );
 

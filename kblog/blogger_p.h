@@ -41,6 +41,8 @@ class APIBlogger::APIBloggerPrivate : public QObject
     APIBlogger *parent;
     QMutex mLock;
     KXmlRpc::Client *mXmlRpcClient;
+    int callCounter;
+    QMap<int,KBlog::BlogPosting*> callMap;
     APIBloggerPrivate();
     ~APIBloggerPrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );

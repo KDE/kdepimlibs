@@ -81,16 +81,13 @@ void APIBlogger::listRecentPostings( int number )
 
 void APIBlogger::fetchPosting( KBlog::BlogPosting *posting )
 {
-//   if ( d->mLock.tryLock() ) {
-//     kDebug(5323) << "Fetching Posting with url " << postingId << endl;
-//     QList<QVariant> args( d->defaultArgs( postingId ) );
-//     d->mXmlRpcClient->call(
-//       "blogger.getPost", args,
-//       d, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
-//       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
-//     return true;
-//   }
-//   return false;
+     kDebug(5323) << "Fetching Posting with url " << posting->postingId() << endl;
+     QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
+     d->callMap[ d->callCounter++ ] = posting;
+     d->mXmlRpcClient->call(
+       "blogger.getPost", args,
+       d, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
+       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ), QVariant( d->callCounter ) );
 }
 
 void APIBlogger::modifyPosting( KBlog::BlogPosting *posting )
