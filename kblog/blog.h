@@ -256,16 +256,6 @@ class KBLOG_EXPORT APIBlog : public QObject
   protected:
     class APIBlogPrivate;
     APIBlogPrivate *const d;
-
-    /**
-      Set's the server ID of a BlogPosting upon creation on the server.
-
-      @param posting
-      @param postingId
-      @see ErrorType
-    */
-    static void setBlogPostingId( BlogPosting *posting,
-                                  const QString &postingId );
 };
 
 } //namespace KBlog
