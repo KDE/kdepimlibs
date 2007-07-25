@@ -45,7 +45,7 @@ namespace KBlog {
    Blogger API 2.0 which uses Atom API instead of Xml-Rpc.
 
    @code
-   APIBlog* myblog = new APIBlogger( "http://example.com/xmlrpc/gateway.php" );
+   APIBlog* myblog = new APIBlogger("http://example.com/xmlrpc/gateway.php");
    KBlog::BlogPosting *post = new BlogPosting();
    post->setUserId( "some_user_id" );
    post->setTitle( "This is the title." );

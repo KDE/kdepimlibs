@@ -46,7 +46,7 @@ namespace KBlog {
   Blogger API 2.0 which is based on Atom API and quite new.
 
   @code
-  APIBlog* myblog = new APIMetaWeblog( "http://example.com/xmlrpc/gateway.php" );
+  APIBlog* myblog = new APIMetaWeblog("http://example.com/xmlrpc/gateway.php");
   KBlog::BlogPosting *post = new BlogPosting();
   post->setUserId( "some_user_id" );
   post->setTitle( "This is the title." );

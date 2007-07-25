@@ -42,8 +42,7 @@ namespace KBlog {
   A class that can be used for access to Movable Type API blogs. Almost every
   blog server supports Movable Type API. Blah blah
   @code
-  APIBlog* myblog =
-      new APILiveJournal( "http://example.com/xmlrpc/gateway.php" );
+  APIBlog* myblog = new APILiveJournal("http://example.com/xmlrpc/gateway.php");
   KBlog::BlogPosting *post = new BlogPosting();
   post->setUserId( "some_user_id" );
   post->setTitle( "This is the title." );
@@ -155,7 +154,8 @@ class KBLOG_EXPORT APILiveJournal : public APIBlog
     void generatedCookie( const QString &cookie );
     void listedCategories( const QMap<QString, QString> &categories );
     void listedFriends( const QMap<QString, QMap<QString, QString> > &friends );
-    void listedFriendsOf( const QMap<QString, QMap<QString, QString> > &friendsOf );
+    void listedFriendsOf( const QMap<QString,
+                          QMap<QString, QString> > &friendsOf );
     void listedMoods( const QMap<int, QString> &moods );
     void listedPictureKeywords( const QMap<QString, KUrl> &pictureKeywords );
     void fetchedUserInfo();

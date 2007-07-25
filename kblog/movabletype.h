@@ -40,7 +40,7 @@ namespace KBlog {
   A class that can be used for access to Movable Type API blogs. Almost every
   blog server supports Movable Type API. Blah blah
   @code
-  APIBlog* myblog = new APIMovableType( "http://example.com/xmlrpc/gateway.php" );
+  APIBlog* myblog = new APIMovableType("http://example.com/xmlrpc/gateway.php");
   KBlog::BlogPosting *post = new BlogPosting();
   post->setUserId( "some_user_id" );
   post->setTitle( "This is the title." );
