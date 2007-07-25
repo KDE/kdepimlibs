@@ -23,9 +23,9 @@
 #ifndef API_BLOGGER_H
 #define API_BLOGGER_H
 
-#include "blog.h"
+#include <kblog/blog.h>
 
-#include <KUrl>
+class KUrl;
 
 /**
   @file

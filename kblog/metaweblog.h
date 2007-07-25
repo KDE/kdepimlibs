@@ -23,10 +23,9 @@
 #ifndef API_METAWEBLOG_H
 #define API_METAWEBLOG_H
 
-#include "blog.h"
-#include "blogger.h"
+#include <kblog/blogger.h>
 
-#include <KUrl>
+class KUrl;
 
 /**
   @file

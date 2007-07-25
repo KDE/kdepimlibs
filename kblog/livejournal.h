@@ -22,13 +22,12 @@
 #ifndef API_LIVEJOURNAL_H
 #define API_LIVEJOURNAL_H
 
-#include "blog.h"
-
-#include <KUrl>
+#include <kblog/blog.h>
 
 #include <QColor>
 
 class KHttpCookie;
+class KUrl;
 
 /**
   @file

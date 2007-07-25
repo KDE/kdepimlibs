@@ -22,7 +22,7 @@
 #ifndef API_GDATA_H
 #define API_GDATA_H
 
-#include "blog.h"
+#include <kblog/blog.h>
 
 class KUrl;
 

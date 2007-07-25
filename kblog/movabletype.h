@@ -22,10 +22,9 @@
 #ifndef API_MOVABLETYPE_H
 #define API_MOVABLETYPE_H
 
-#include "blog.h"
-#include "metaweblog.h"
+#include <kblog/metaweblog.h>
 
-#include <KUrl>
+class KUrl;
 
 /**
   @file
