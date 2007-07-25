@@ -134,11 +134,15 @@ void APIBlogger::APIBloggerPrivate::slotListRecentPostings(
 void APIBlogger::APIBloggerPrivate::slotFetchPosting(
     const QList<QVariant> &result, const QVariant &id )
 {
-  if( !id.toInt() ) return; //FIXME
+  kDebug(5323) << "APIBlogger::slotFetchPosting" << endl;
+
+//   if( !callMap[ id.toInt() ] ){
+//     kDebug(5323) << "Could not map the the id back to the posting. " << endl;
+//     break;
+//   }
 
   KBlog::BlogPosting* posting = callMap[ id.toInt() ];
 
-  kDebug(5323) << "APIBlogger::slotFetchPosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
@@ -157,7 +161,6 @@ void APIBlogger::APIBloggerPrivate::slotFetchPosting(
     if ( readPostingFromMap( posting, postInfo ) ) {
       kDebug(5323) << "Emitting fetchedPosting( posting.postingId()="
                    << posting->postingId() << "); " << endl;
-//       emit parent->fetchedPosting( posting ); // KUrl( posting.posingtId() ) );
     } else {
       kDebug(5323) << "d->readPostingFromMap failed! " << endl;
       emit parent->error( ParsingError, i18n( "Could not read posting." ) );
