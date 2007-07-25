@@ -42,7 +42,7 @@ APIBlog::~APIBlog()
   delete d;
 }
 
-QString APIBlog::userAgent()
+QString APIBlog::userAgent() const
 {
   return QString( "KDE-KBlog" );
 }

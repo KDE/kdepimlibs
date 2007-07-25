@@ -100,7 +100,7 @@ class KBLOG_EXPORT APIBlog : public QObject
     /**
       Returns user agent used in requests.
     */
-    QString userAgent();
+    QString userAgent() const;
 
     /**
       Returns the API of the inherited object.
