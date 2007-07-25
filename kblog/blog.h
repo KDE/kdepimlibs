@@ -251,7 +251,7 @@ class KBLOG_EXPORT APIBlog : public QObject
     */
     virtual void error( KBlog::APIBlog::ErrorType type, const QString &errorMessage );
 
-  protected:
+  private:
     class APIBlogPrivate;
     APIBlogPrivate *const d;
 };

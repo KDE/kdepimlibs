@@ -134,7 +134,7 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
     */
     void removePosting( KBlog::BlogPosting *posting ); //FIXME docs
 
-  protected:
+  private:
     class APIBloggerPrivate;
     APIBloggerPrivate *const d;
 };

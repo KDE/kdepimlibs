@@ -35,7 +35,7 @@ using namespace KBlog;
 class APIGData::APIGDataPrivate : public QObject
 {
   Q_OBJECT
-  protected:
+  private:
     QString mFetchPostingId;
     QString mAuthenticationString;
     QDateTime mAuthenticationTime;
