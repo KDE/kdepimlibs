@@ -31,6 +31,7 @@
 class QStringList;
 
 class KDateTime;
+class KUrl;
 
 namespace KBlog {
 
@@ -127,6 +128,36 @@ public:
       @see content()
     */
     void setContent( const QString &content );
+
+    QString abbreviatedContent() const;
+    void setAbbreviatedContent( const QString &abbreviatedContent );
+
+    KUrl link() const;
+    void setLink( const KUrl &link ) const;
+
+    KUrl permalink() const;
+    void setPermalink( const KUrl &permalink ) const;
+
+    bool isCommentAllowed() const;
+    void setCommentAllowed( bool commentAllowed );
+
+    bool isTrackBackAllowed() const; // pings in Movable Type
+    void setTrackBackAllowed ( bool allowTrackBacks );
+
+    QString summary() const; // excerpts in Movable Type
+    void setSummary( const QString &summary );
+
+    QString tags() const; // keywords in Movable Type
+    void setTags( const QString &tags );
+
+    QList<KUrl> trackBackUrls() const;
+    void setTrackBackUrls( const QList<KUrl> &trackBackUrls );
+
+    QString mood() const;
+    void setMood( const QString &mood );
+
+    QString music() const;
+    void setMusic( const QString &music );
 
     /**
       Returns the categories.

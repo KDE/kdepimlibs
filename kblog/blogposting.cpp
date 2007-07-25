@@ -25,6 +25,7 @@
 #include "blogposting_p.h"
 
 #include <KDateTime>
+#include <KUrl>
 
 #include <QStringList>
 
@@ -81,6 +82,116 @@ QString BlogPosting::content() const
 void BlogPosting::setContent( const QString &content )
 {
   d->mContent = content;
+}
+
+QString BlogPosting::abbreviatedContent() const
+{
+  //TODO
+  return 0;
+}
+
+void BlogPosting::setAbbreviatedContent( const QString &abbreviatedContent )
+{
+  //TODO
+}
+
+KUrl BlogPosting::link() const
+{
+  //TODO
+  return KUrl();
+}
+
+void BlogPosting::setLink( const KUrl &link ) const
+{
+  //TODO
+}
+
+KUrl BlogPosting::permalink() const
+{
+  //TODO
+  return KUrl();
+}
+
+void BlogPosting::setPermalink( const KUrl &permalink ) const
+{
+  //TODO
+}
+
+bool BlogPosting::isCommentAllowed() const
+{
+  //TODO
+  return false;
+}
+
+void BlogPosting::setCommentAllowed( bool commentAllowed )
+{
+  //TODO
+}
+
+bool BlogPosting::isTrackBackAllowed() const
+{
+  //TODO
+  return false;
+}
+
+void BlogPosting::setTrackBackAllowed ( bool allowTrackBacks )
+{
+  //TODO
+}
+
+QString BlogPosting::summary() const
+{
+  //TODO
+  return QString();
+}
+
+void BlogPosting::setSummary( const QString &summary )
+{
+  //TODO
+}
+
+QString BlogPosting::tags() const
+{
+  //TODO
+  return QString();
+}
+
+void BlogPosting::setTags( const QString &tags )
+{
+  //TODO
+}
+
+QList<KUrl> BlogPosting::trackBackUrls() const
+{
+  //TODO
+  return QList<KUrl>();
+}
+
+void BlogPosting::setTrackBackUrls( const QList<KUrl> &trackBackUrls )
+{
+  //TODO
+}
+
+QString BlogPosting::mood() const
+{
+  //TODO
+  return QString();
+}
+
+void BlogPosting::setMood( const QString &mood )
+{
+  //TODO
+}
+
+QString BlogPosting::music() const
+{
+  //TODO
+  return QString();
+}
+
+void BlogPosting::setMusic( const QString &music )
+{
+  //TODO
 }
 
 QStringList BlogPosting::categories() const
