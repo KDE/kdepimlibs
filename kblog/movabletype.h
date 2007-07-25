@@ -91,7 +91,7 @@ class KBLOG_EXPORT APIMovableType : public APIMetaWeblog
       List recent postings on the server.
       @see     void listedPosting( KBlog::BlogPosting &posting )
 
-      @see     void listPostingsFinished()
+      @see     void listRecentPostingsFinished()
     */
     void listRecentPostings( int number );
 

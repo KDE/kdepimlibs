@@ -190,7 +190,7 @@ class KBLOG_EXPORT APIBlog : public QObject
       List recent postings on the server.
       @see listedPosting()
       @see fetchedPosting()
-      @see listPostingsFinished()
+      @see listRecentPostingsFinished()
     */
     virtual void listRecentPostings( int number ) = 0;
 
@@ -234,12 +234,12 @@ class KBLOG_EXPORT APIBlog : public QObject
     virtual void listedBlogs( const QMap<QString,QString>& blogsInfo );
 
     /**
-      This signal is emitted when a listPostings() job fetches a posting
+      This signal is emitted when a listRecentPostings() job fetches a posting
       from the blogging server.
 
       @param posting is the fetched posting.
 
-      @see listPostings()
+      @see listRecentPostings()
     */
     virtual void listedRecentPostings(
         const QList<KBlog::BlogPosting*>& postings );

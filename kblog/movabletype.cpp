@@ -71,7 +71,7 @@ void APIMovableType::listTrackbackPings( KBlog::BlogPosting *posting ) {
   d->mXmlRpcClient->call( "mt.getTracebackPings", args,
     d, SLOT( slotListTrackbackPings(
               const QList<QVariant>&, const QVariant& ) ),
-    d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
+    d, SLOT( slotFault( int, const QString&, const QVariant& ) ) );
   */
 }
 

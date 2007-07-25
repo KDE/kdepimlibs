@@ -64,7 +64,7 @@ void APIBlogger::listBlogs()
     d->mXmlRpcClient->call(
       "blogger.getUsersBlogs", args,
       d, SLOT( slotListBlogs( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
+      d, SLOT( slotFault( int, const QString&, const QVariant& ) ) );
 }
 
 void APIBlogger::listRecentPostings( int number )
@@ -74,8 +74,8 @@ void APIBlogger::listRecentPostings( int number )
     args << QVariant( number );
     d->mXmlRpcClient->call(
       "blogger.getRecentPosts", args,
-      d, SLOT( slotListPostings( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT( faultSlot( int, const QString&, const QVariant& ) ),
+      d, SLOT( slotListRecentPostings( const QList<QVariant>&, const QVariant& ) ),
+      d, SLOT( slotFault( int, const QString&, const QVariant& ) ),
                QVariant( number ) );
 }
 
@@ -88,7 +88,7 @@ void APIBlogger::fetchPosting( KBlog::BlogPosting *posting )
      d->mXmlRpcClient->call(
        "blogger.getPost", args,
        d, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
-       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ),
+       d, SLOT( slotFault( int, const QString&, const QVariant& ) ),
                 QVariant( d->callCounter ) );
 }
 
@@ -107,7 +107,7 @@ void APIBlogger::modifyPosting( KBlog::BlogPosting *posting )
     d->mXmlRpcClient->call(
       "blogger.editPost", args,
       d, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
+      d, SLOT( slotFault( int, const QString&, const QVariant& ) ) );
 }
 
 void APIBlogger::createPosting( KBlog::BlogPosting *posting )
@@ -130,7 +130,7 @@ void APIBlogger::createPosting( KBlog::BlogPosting *posting )
     d->mXmlRpcClient->call(
       "blogger.newPost", args,
       d, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
+      d, SLOT( slotFault( int, const QString&, const QVariant& ) ) );
 }
 
 void APIBlogger::removePosting( KBlog::BlogPosting *posting )
@@ -143,7 +143,7 @@ void APIBlogger::removePosting( KBlog::BlogPosting *posting )
 //     d->mXmlRpcClient->call(
 //       "blogger.deletePost", args,
 //       d, SLOT( slotModifyPosting( QList<QVariant> &result, QVariant &id ) ),
-//       d, SLOT( faultSlot( int, const QString&, const QVariant& ) ) );
+//       d, SLOT( slotFault( int, const QString&, const QVariant& ) ) );
 //     return true;
 //   }
 //   return false;

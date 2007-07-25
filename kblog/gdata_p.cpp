@@ -149,8 +149,8 @@ void APIGData::APIGDataPrivate::slotLoadingPostingsComplete(
       kDebug(5323) << "Emitting listedPosting( postingId="
           << posting->postingId() << " ); " << endl;
   }
-  kDebug(5323) << "Emitting listPostingsFinished()" << endl;
-  emit parent->listPostingsFinished();
+  kDebug(5323) << "Emitting listRecentPostingsFinished()" << endl;
+  emit parent->listRecentPostingsFinished();
   */
 }
 

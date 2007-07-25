@@ -96,7 +96,7 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
 
       @see     void listedPosting( KBlog::BlogPosting &posting )
       @see     void fetchedPosting( KBlog::BlogPosting &posting )
-      @see     void listPostingsFinished()
+      @see     void listRecentPostingsFinished()
     */
     void listRecentPostings( int number );
 

@@ -90,7 +90,7 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
       List recent postings on the server.
       @see     void listedPosting( KBlog::BlogPosting &posting )
 
-      @see     void listPostingsFinished()
+      @see     void listRecentPostingsFinished()
     */
     void listRecentPostings( int number );
 

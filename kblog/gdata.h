@@ -94,7 +94,7 @@ class KBLOG_EXPORT APIGData : public APIBlog
         List recent postings on the server..
         @see     void listedPosting( KBlog::BlogPosting &posting )
         @see     void fetchedPosting( KBlog::BlogPosting &posting )
-        @see     void listPostingsFinished()
+        @see     void listRecentPostingsFinished()
     */
     void listRecentPostings( int number );
 

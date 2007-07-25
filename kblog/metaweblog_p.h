@@ -45,13 +45,13 @@ class APIMetaWeblog::APIMetaWeblogPrivate : public QObject
                              const QMap<QString, QVariant> &postInfo );
 
   public Q_SLOTS:
-    void slotListPostings( const QList<QVariant> &result, const QVariant &id );
+    void slotListRecentPostings( const QList<QVariant> &result, const QVariant &id );
     void slotListCategories( const QList<QVariant> &result, const QVariant &id );
     void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
     void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
     void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
     void slotCreateMedia( const QList<QVariant> &result, const QVariant &id );
-    void faultSlot( int, const QString&, const QVariant& );
+    void slotFault( int, const QString&, const QVariant& );
 };
 
 #endif

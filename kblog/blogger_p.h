@@ -51,11 +51,11 @@ class APIBlogger::APIBloggerPrivate : public QObject
 
   public Q_SLOTS:
     void slotListBlogs( const QList<QVariant> &result, const QVariant &id );
-    void slotListPostings( const QList<QVariant> &result, const QVariant &id );
+    void slotListRecentPostings( const QList<QVariant> &result, const QVariant &id );
     void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
     void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
     void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
-    void faultSlot( int number, const QString &errorString,
+    void slotFault( int number, const QString &errorString,
                     const QVariant &id );
 };
 

@@ -117,7 +117,7 @@ void APIGData::listBlogs()
 
 void APIGData::listRecentPostings( int number )
 {
-    kDebug() << "listPostings()" << endl;
+    kDebug() << "listRecentPostings()" << endl;
     Syndication::Loader *loader = Syndication::Loader::create();
     connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                             Syndication::FeedPtr, Syndication::ErrorCode)),

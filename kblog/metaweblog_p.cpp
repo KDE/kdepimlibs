@@ -113,12 +113,12 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
 //   }
 }
 
-void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant> &result,
+void APIMetaWeblog::APIMetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
                                                             const QVariant &id )
 {
   Q_UNUSED( id );
 /*
-  kDebug(5323) << "APIMetaWeblog::slotListPostings" << endl;
+  kDebug(5323) << "APIMetaWeblog::slotListRecentPostings" << endl;
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::List ) {
     kDebug(5323) << "Could not fetch list of postings out of the "
@@ -144,8 +144,8 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListPostings( const QList<QVariant
       }
     }
   } //FIXME should we emit here? (see below, too)
-  kDebug(5323) << "Emitting listPostingsFinished()" << endl;
-  emit parent->listPostingsFinished();*/
+  kDebug(5323) << "Emitting listRecentPostingsFinished()" << endl;
+  emit parent->listRecentPostingsFinished();*/
 }
 
 void APIMetaWeblog::APIMetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
@@ -242,7 +242,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreateMedia( const QList<QVariant>
   }
 }
 
-void APIMetaWeblog::APIMetaWeblogPrivate::faultSlot( int number,
+void APIMetaWeblog::APIMetaWeblogPrivate::slotFault( int number,
                                                      const QString &errorString,
                                                      const QVariant &id )
 {

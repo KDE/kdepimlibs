@@ -90,12 +90,12 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs(
   }
 }
 
-void APIBlogger::APIBloggerPrivate::slotListPostings(
+void APIBlogger::APIBloggerPrivate::slotListRecentPostings(
     const QList<QVariant> &result, const QVariant &id )
 {
    int count = id.toInt();
 
-   kDebug(5323) << "APIBlogger::slotListPostings" << endl;
+   kDebug(5323) << "APIBlogger::slotListRecentPostings" << endl;
    kDebug(5323) << "TOP: " << result[0].typeName() << endl;
 
    QList <BlogPosting*> fetchedPostingList;
@@ -127,7 +127,7 @@ void APIBlogger::APIBloggerPrivate::slotListPostings(
          break;
      }
    }
-   kDebug(5323) << "Emitting listPostingsFinished()" << endl;
+   kDebug(5323) << "Emitting listRecentPostingsFinished()" << endl;
    emit parent->listedRecentPostings(fetchedPostingList);
 }
 
@@ -208,7 +208,7 @@ void APIBlogger::APIBloggerPrivate::slotModifyPosting(
   }
 }
 
-void APIBlogger::APIBloggerPrivate::faultSlot( int number,
+void APIBlogger::APIBloggerPrivate::slotFault( int number,
                                                const QString &errorString,
                                                const QVariant &id )
 {
