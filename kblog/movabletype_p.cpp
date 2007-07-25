@@ -61,7 +61,14 @@ bool APIMovableType::APIMovableTypePrivate::readPostingFromMap(
 void APIMovableType::APIMovableTypePrivate::slotCreatePosting(
     const QList<QVariant> &result, const QVariant &id )
 {
-  //TODO
+  //TODO 7 new keys are:
+  // int mt_allow_comments: the value for the allow_comments field
+  // int mt_allow_pings, the value for the allow_pings field
+  // String mt_convert_breaks, the value for the convert_breaks field
+  // String mt_text_more, the value for the additional entry text
+  // String mt_excerpt, the value for the excerpt field
+  // String mt_keywords, the value for the keywords field
+  // array mt_tb_ping_urls, the list of TrackBack ping URLs for this entry
 }
 
 void APIMovableType::APIMovableTypePrivate::slotError( int number,
@@ -73,25 +80,47 @@ void APIMovableType::APIMovableTypePrivate::slotError( int number,
 void APIMovableType::APIMovableTypePrivate::slotFetchPosting(
     const QList<QVariant> &result, const QVariant &id )
 {
-  //TODO
+  //TODO 6 new keys are:
+  // int mt_allow_comments: the value for the allow_comments field
+  // int mt_allow_pings, the value for the allow_pings field
+  // String mt_convert_breaks, the value for the convert_breaks field
+  // String mt_text_more, the value for the additional entry text
+  // String mt_excerpt, the value for the excerpt field
+  // String mt_keywords, the value for the keywords field
 }
 
 void APIMovableType::APIMovableTypePrivate::slotListRecentPostings(
     const QList<QVariant> &result, const QVariant &id )
 {
-  //TODO
+  //TODO 6 new keys are:
+  // int mt_allow_comments: the value for the allow_comments field
+  // int mt_allow_pings, the value for the allow_pings field
+  // String mt_convert_breaks, the value for the convert_breaks field
+  // String mt_text_more, the value for the additional entry text
+  // String mt_excerpt, the value for the excerpt field
+  // String mt_keywords, the value for the keywords field
 }
 
 void APIMovableType::APIMovableTypePrivate::slotListTrackbackPings(
     const QList<QVariant> &result, const QVariant &id )
 {
-  //TODO
+  //TODO Contains:
+  // String pingTitle: the title of the entry sent in the ping
+  // String pingURL: the URL of the entry
+  // String pingIP: the IP address of the host that sent the ping
 }
 
 void APIMovableType::APIMovableTypePrivate::slotModifyPosting(
     const QList<QVariant> &result, const QVariant &id )
 {
-  //TODO
+  //TODO 5 new keys are:
+  // int mt_allow_comments: the value for the allow_comments field
+  // int mt_allow_pings, the value for the allow_pings field
+  // String mt_convert_breaks, the value for the convert_breaks field
+  // String mt_text_more, the value for the additional entry text
+  // String mt_excerpt, the value for the excerpt field
+  // String mt_keywords, the value for the keywords field
+  // array mt_tb_ping_urls, the list of TrackBack ping URLs for this entry
 }
 
 #include "movabletype_p.moc"
