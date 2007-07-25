@@ -28,6 +28,8 @@
 
 #include <QObject>
 
+#define KBLOG_VERSION 4.0
+
 template <class T,class S> class QMap;
 
 class KTimeZone;
@@ -99,6 +101,12 @@ class KBLOG_EXPORT APIBlog : public QObject
       Returns user agent used in requests.
     */
     QString userAgent() const;
+
+    /**
+      Sets the user agent based on the client application.
+    */
+    void setUserAgent( const QString &applicationName,
+                       const QString &applicationVersion );
 
     /**
       Returns the API of the inherited object.

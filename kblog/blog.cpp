@@ -42,7 +42,16 @@ APIBlog::~APIBlog()
 
 QString APIBlog::userAgent() const
 {
-  return QString( "KDE-KBlog" );
+  return d->mUserAgent;
+}
+
+void APIBlog::setUserAgent( const QString &applicationName,
+                            const QString &applicationVersion )
+{
+  if ( !applicationName.isEmpty() && !applicationVersion.isEmpty() ) {
+    d->mUserAgent = "(" + applicationName + "/" + applicationVersion
+        + ") KDE-KBlog/KBLOG_VERSION";
+  }
 }
 
 void APIBlog::setPassword( const QString &pass )

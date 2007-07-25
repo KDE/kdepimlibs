@@ -36,6 +36,7 @@ class APIBlog::APIBlogPrivate
     QString mBlogId;
     QString mUsername;
     QString mPassword;
+    QString mUserAgent;
     KUrl mUrl;
     KTimeZone mTimeZone;
     unsigned int mDownloadCount;
