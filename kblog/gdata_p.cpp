@@ -55,7 +55,7 @@ QString APIGData::APIGDataPrivate::authenticate(){
   KUrl authGateway( "https://www.google.com/accounts/ClientLogin" );
   authGateway.addQueryItem( "Email", parent->username() );
   authGateway.addQueryItem( "Passwd", parent->password() );
-  authGateway.addQueryItem( "source" , userAgent() );
+  authGateway.addQueryItem( "source" , parent->userAgent() );
   authGateway.addQueryItem( "service", "blogger" );
   if( !mAuthenticationTime.isValid() ||
       QDateTime::currentDateTime().toTime_t() - mAuthenticationTime.toTime_t() > TIMEOUT ||
