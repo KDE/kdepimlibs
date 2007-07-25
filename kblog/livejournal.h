@@ -153,11 +153,11 @@ class KBLOG_EXPORT APILiveJournal : public APIBlog
     void expiredCookie();
     void expiredAllCookies();
     void generatedCookie( const QString &cookie );
-    void listedCategories( QMap<QString, QString> *categories );
-    void listedFriends( QMap<QString, QMap<QString, QString> > *friends );
-    void listedFriendsOf( QMap<QString, QMap<QString, QString> > *friendsOf );
-    void listedMoods( QMap<int, QString> *moods );
-    void listedPictureKeywords( QMap<QString, KUrl> *pictureKeywords );
+    void listedCategories( const QMap<QString, QString> &categories );
+    void listedFriends( const QMap<QString, QMap<QString, QString> > &friends );
+    void listedFriendsOf( const QMap<QString, QMap<QString, QString> > &friendsOf );
+    void listedMoods( const QMap<int, QString> &moods );
+    void listedPictureKeywords( const QMap<QString, KUrl> &pictureKeywords );
     void fetchedUserInfo();
 
   private:

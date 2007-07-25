@@ -124,7 +124,7 @@ class KBLOG_EXPORT APIMovableType : public APIMetaWeblog
 
       @see listTrackbackPings()
     */
-    void listedTrackbackPings( QMap<QString, QString> *pings );
+    void listedTrackbackPings( const QMap<QString, QString> &pings );
 
   private:
     class APIMovableTypePrivate;
