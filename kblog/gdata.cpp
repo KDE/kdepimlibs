@@ -70,7 +70,7 @@ void APIGData::setProfileId( const QString& pid )
   d->mProfileId = pid;
 }
 
-void APIGData::userInfo()
+void APIGData::fetchUserInfo()
 {
   // fetch the introspection file synchronously and parse it
   QByteArray data;
@@ -109,7 +109,7 @@ void APIGData::listBlogs()
     Syndication::Loader *loader = Syndication::Loader::create();
     connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                             Syndication::FeedPtr, Syndication::ErrorCode)),
-            d, SLOT(slotLoadingBlogsComplete(Syndication::Loader*,
+                            d, SLOT(slotListedBlogs(Syndication::Loader*,
                     Syndication::FeedPtr, Syndication::ErrorCode)) );
     loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + profileId()
         + QString( "/blogs" ) );
@@ -121,7 +121,8 @@ void APIGData::listRecentPostings( int number )
     Syndication::Loader *loader = Syndication::Loader::create();
     connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                             Syndication::FeedPtr, Syndication::ErrorCode)),
-            d, SLOT(slotLoadingPostingsComplete(Syndication::Loader*,
+                            d, SLOT(slotListedRecentPostings(
+                                    Syndication::Loader*,
                     Syndication::FeedPtr, Syndication::ErrorCode)) );
     loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
         + QString( "/posts/default" ) );
@@ -136,7 +137,7 @@ void APIGData::fetchPosting( KBlog::BlogPosting *posting )
 //     d->setFetchPostingId( postingId );
 //     connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
 //                      Syndication::FeedPtr, Syndication::ErrorCode)),
-//             d, SLOT(slotFetchingPostingComplete(Syndication::Loader*,
+//             d, SLOT(slotFetchedPosting(Syndication::Loader*,
 //                     Syndication::FeedPtr, Syndication::ErrorCode)));
 //     loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
 //         + QString( "/posts/default" ) );

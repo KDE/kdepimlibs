@@ -78,10 +78,10 @@ class KBLOG_EXPORT APIGData : public APIBlog
     /**
         Get information about the user from the blog. Note: This is not
         supported on the server side.
-        @see void userInfoRetrieved( const QString &nickname,
+        @see void fetchedUserInfo( const QString &nickname,
                 const QString &userid, const QString &email )
     */
-    void userInfo();
+    void fetchUserInfo();
 
     /**
         List the blogs available for this authentication on the server.

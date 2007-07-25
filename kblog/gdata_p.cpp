@@ -78,7 +78,7 @@ QString APIGData::APIGDataPrivate::authenticate(){
   return mAuthenticationString;
 }
 
-void APIGData::APIGDataPrivate::slotLoadingBlogsComplete(
+void APIGData::APIGDataPrivate::slotListedBlogs(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status ) {
   Q_UNUSED( loader );
@@ -112,7 +112,7 @@ void APIGData::APIGDataPrivate::slotLoadingBlogsComplete(
   }
 }
 
-void APIGData::APIGDataPrivate::slotLoadingPostingsComplete(
+void APIGData::APIGDataPrivate::slotListedRecentPostings(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status ) {
   Q_UNUSED( loader );
@@ -154,7 +154,7 @@ void APIGData::APIGDataPrivate::slotLoadingPostingsComplete(
   */
 }
 
-void APIGData::APIGDataPrivate::slotFetchingPostingComplete(
+void APIGData::APIGDataPrivate::slotFetchedPosting(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status ){
   Q_UNUSED( loader );
@@ -203,7 +203,7 @@ void APIGData::APIGDataPrivate::slotData( KIO::Job *, const QByteArray &data )
   memcpy( mBuffer.data() + oldSize, data.data(), data.size() );
 }
 
-void APIGData::APIGDataPrivate::slotCreatePosting( KJob *job )
+void APIGData::APIGDataPrivate::slotCreatedPosting( KJob *job )
 {
   if ( job->error() != 0 ) {
     kDebug(5323) << "slotCreatePosting error: " << job->errorString() << endl;

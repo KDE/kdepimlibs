@@ -50,18 +50,18 @@ class APIGData::APIGDataPrivate : public QObject
     QString getFetchPostingId(){ return mFetchPostingId; }
     void setFetchPostingId( const QString &pId ) { mFetchPostingId=pId; }
     QString authenticate();
-  public slots:
-    void slotLoadingPostingsComplete( Syndication::Loader *,
-                                      Syndication::FeedPtr,
-                                      Syndication::ErrorCode );
-    void slotFetchingPostingComplete( Syndication::Loader *,
-                                      Syndication::FeedPtr,
-                                      Syndication::ErrorCode );
-    void slotLoadingBlogsComplete( Syndication::Loader *,
+  public Q_SLOTS:
+    void slotListedRecentPostings( Syndication::Loader *,
                                    Syndication::FeedPtr,
                                    Syndication::ErrorCode );
+    void slotFetchedPosting( Syndication::Loader *,
+                             Syndication::FeedPtr,
+                             Syndication::ErrorCode );
+    void slotListedBlogs( Syndication::Loader *,
+                          Syndication::FeedPtr,
+                          Syndication::ErrorCode );
     void slotData( KIO::Job *, const QByteArray& );
-    void slotCreatePosting( KJob *job );
+    void slotCreatedPosting( KJob *job );
 };
 
 #endif
