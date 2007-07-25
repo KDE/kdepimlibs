@@ -59,6 +59,7 @@ bool APILiveJournal::APILiveJournalPrivate::readPostingFromMap(
     BlogPosting *post, const QMap<QString, QVariant> &postInfo )
 {
   //TODO
+  return false;
 }
 
 void APILiveJournal::APILiveJournalPrivate::slotAddFriend(

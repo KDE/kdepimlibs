@@ -55,6 +55,7 @@ bool APIMovableType::APIMovableTypePrivate::readPostingFromMap(
     BlogPosting *post, const QMap<QString, QVariant> &postInfo )
 {
   //TODO
+  return false;
 }
 
 void APIMovableType::APIMovableTypePrivate::slotCreatePosting(
