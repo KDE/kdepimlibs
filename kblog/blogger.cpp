@@ -27,6 +27,8 @@
 
 #include <KDebug>
 
+#include <QStringList>
+
 using namespace KBlog;
 
 APIBlogger::APIBlogger( const KUrl &server, QObject *parent )

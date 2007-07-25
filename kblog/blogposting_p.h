@@ -26,6 +26,8 @@
 
 #include <KDateTime>
 
+#include <QStringList>
+
 using namespace KBlog;
 
 class BlogPosting::BlogPostingPrivate

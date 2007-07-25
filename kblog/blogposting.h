@@ -26,7 +26,10 @@
 
 #include <kblog/kblog_export.h>
 
-#include <QStringList>
+#include <QObject>
+#include <QString>
+
+class QStringList;
 
 class KDateTime;
 
