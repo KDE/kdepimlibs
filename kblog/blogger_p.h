@@ -45,6 +45,10 @@ class APIBlogger::APIBloggerPrivate : public QObject
     ~APIBloggerPrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );
 
+  private:
+    bool readPostingFromMap( BlogPosting *post,
+                          const QMap<QString, QVariant> &postInfo );
+
   public Q_SLOTS:
     void slotListBlogs( const QList<QVariant> &result, const QVariant &id );
     void slotListPostings( const QList<QVariant> &result, const QVariant &id );
@@ -53,8 +57,6 @@ class APIBlogger::APIBloggerPrivate : public QObject
     void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
     void faultSlot( int number, const QString &errorString,
                     const QVariant &id );
-    bool readPostingFromMap( BlogPosting *post,
-                             const QMap<QString, QVariant> &postInfo );
 };
 
 #endif

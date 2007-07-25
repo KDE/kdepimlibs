@@ -40,6 +40,8 @@ class APIMovableType::APIMovableTypePrivate : public QObject
     APIMovableTypePrivate();
     ~APIMovableTypePrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );
+
+  private:
     bool readPostingFromMap( BlogPosting *post,
                              const QMap<QString, QVariant> &postInfo );
 

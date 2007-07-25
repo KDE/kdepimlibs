@@ -43,6 +43,8 @@ class APILiveJournal::APILiveJournalPrivate : public QObject
     APILiveJournalPrivate();
     ~APILiveJournalPrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );
+
+  private:
     bool readPostingFromMap( BlogPosting *post,
                              const QMap<QString, QVariant> &postInfo );
 

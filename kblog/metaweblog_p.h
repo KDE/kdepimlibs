@@ -40,6 +40,10 @@ class APIMetaWeblog::APIMetaWeblogPrivate : public QObject
     ~APIMetaWeblogPrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );
 
+  private:
+    bool readPostingFromMap( BlogPosting *post,
+                             const QMap<QString, QVariant> &postInfo );
+
   public Q_SLOTS:
     void slotListPostings( const QList<QVariant> &result, const QVariant &id );
     void slotListCategories( const QList<QVariant> &result, const QVariant &id );
@@ -48,7 +52,6 @@ class APIMetaWeblog::APIMetaWeblogPrivate : public QObject
     void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
     void slotCreateMedia( const QList<QVariant> &result, const QVariant &id );
     void faultSlot( int, const QString&, const QVariant& );
-    bool readPostingFromMap( BlogPosting *post, const QMap<QString, QVariant> &postInfo );
 };
 
 #endif
