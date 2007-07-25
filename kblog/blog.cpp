@@ -25,6 +25,8 @@
 #include "blog_p.h"
 #include "blogposting_p.h"
 
+#include <kdeversion.h>
+
 #include <KDebug>
 
 using namespace KBlog;
@@ -50,7 +52,7 @@ void APIBlog::setUserAgent( const QString &applicationName,
 {
   if ( !applicationName.isEmpty() && !applicationVersion.isEmpty() ) {
     d->mUserAgent = "(" + applicationName + "/" + applicationVersion
-        + ") KDE-KBlog/KBLOG_VERSION";
+        + ") KDE-KBlog/KDE_VERSION";
   }
 }
 

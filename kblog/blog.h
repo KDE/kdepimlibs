@@ -28,8 +28,6 @@
 
 #include <QObject>
 
-#define KBLOG_VERSION 4.0
-
 template <class T,class S> class QMap;
 
 class KTimeZone;
