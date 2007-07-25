@@ -98,6 +98,11 @@ class KBLOG_EXPORT APIBlog : public QObject
     };
 
     /**
+      Returns user agent used in requests.
+    */
+    QString userAgent();
+
+    /**
       Returns the API of the inherited object.
     */
     virtual QString interfaceName() const = 0;

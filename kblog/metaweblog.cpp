@@ -53,7 +53,7 @@ void APIMetaWeblog::setUrl( const KUrl &server )
   APIBlogger::setUrl( server );
   delete d->mXmlRpcClient;
   d->mXmlRpcClient = new KXmlRpc::Client( server );
-  d->mXmlRpcClient->setUserAgent( "KDE-KBlog" );
+  d->mXmlRpcClient->setUserAgent( userAgent() );
 }
 
 void APIMetaWeblog::listRecentPostings( int number )

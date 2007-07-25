@@ -54,7 +54,7 @@ void APIBlogger::setUrl( const KUrl &server )
   APIBlog::setUrl( server );
   delete d->mXmlRpcClient;
   d->mXmlRpcClient = new KXmlRpc::Client( server );
-  d->mXmlRpcClient->setUserAgent( "KDE-KBlog" );
+  d->mXmlRpcClient->setUserAgent( userAgent() );
 }
 
 void APIBlogger::listBlogs()

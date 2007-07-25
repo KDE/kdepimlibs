@@ -60,7 +60,7 @@ void APIMovableType::setUrl( const KUrl &server )
   APIBlogger::setUrl( server );
   delete d->mXmlRpcClient;
   d->mXmlRpcClient = new KXmlRpc::Client( server );
-  d->mXmlRpcClient->setUserAgent( "KDE-KBlog" );
+  d->mXmlRpcClient->setUserAgent( userAgent() );
 }
 
 void APIMovableType::listRecentPostings( int number )

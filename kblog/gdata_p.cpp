@@ -55,7 +55,7 @@ QString APIGData::APIGDataPrivate::authenticate(){
   KUrl authGateway( "https://www.google.com/accounts/ClientLogin" );
   authGateway.addQueryItem( "Email", parent->username() );
   authGateway.addQueryItem( "Passwd", parent->password() );
-  authGateway.addQueryItem( "source" , "KDE-KBlog-4" );
+  authGateway.addQueryItem( "source" , userAgent() );
   authGateway.addQueryItem( "service", "blogger" );
   if( !mAuthenticationTime.isValid() ||
       QDateTime::currentDateTime().toTime_t() - mAuthenticationTime.toTime_t() > TIMEOUT ||
@@ -126,7 +126,7 @@ void APIGData::APIGDataPrivate::slotLoadingPostingsComplete( Syndication::Loader
 //         emit parent->error( Other, i18n( "Could not regexp the posting id path." ) );
 //         return;
 //       }
-// 
+//
 //       kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
 //       posting->setPostingId( rx.cap(1) );
 //       posting->setTitle( ( *it )->title() );
@@ -134,7 +134,7 @@ void APIGData::APIGDataPrivate::slotLoadingPostingsComplete( Syndication::Loader
 //       // FIXME: assuming UTC for now
 //       posting->setCreationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ), KDateTime::Spec::UTC() ) );
 //       posting->setModificationDateTime( KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
-// 
+//
 //       emit parent->listedPosting( posting );
 //       kDebug(5323) << "Emitting listedPosting( postingId=" << posting->postingId() << " ); " << endl;
 //   }

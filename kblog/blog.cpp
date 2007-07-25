@@ -42,6 +42,11 @@ APIBlog::~APIBlog()
   delete d;
 }
 
+QString APIBlog::userAgent()
+{
+  return QString( "KDE-KBlog" );
+}
+
 void APIBlog::setPassword( const QString &pass )
 {
   d->mPassword = pass;
