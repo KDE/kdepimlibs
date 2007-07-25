@@ -74,7 +74,7 @@ public:
      * collection, and should not be deleted without calling remove() first.
      *
      * @param name name of time zone
-     * @return time zone, or 0 if not found
+     * @return time zone, or invalid if not found
      */
     ICalTimeZone zone(const QString &name) const;
 
@@ -100,7 +100,7 @@ public:
      * Removes a time zone from the collection.
      *
      * @param zone time zone to remove
-     * @return the time zone which was removed, or 0 if not found
+     * @return the time zone which was removed, or invalid if not found
      */
     ICalTimeZone remove(const ICalTimeZone &zone);
 
@@ -108,7 +108,7 @@ public:
      * Removes a time zone from the collection.
      *
      * @param name name of time zone to remove
-     * @return the time zone which was removed, or 0 if not found
+     * @return the time zone which was removed, or invalid if not found
      */
     ICalTimeZone remove(const QString &name);
 
