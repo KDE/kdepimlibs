@@ -25,9 +25,10 @@
 #include "metaweblog_p.h"
 #include "blogposting.h"
 #include "blogmedia.h"
-#include <kdebug.h>
-#include <klocale.h>
-#include <kdatetime.h>
+
+#include <KDebug>
+#include <KLocale>
+#include <KDateTime>
 
 using namespace KBlog;
 
@@ -94,10 +95,12 @@ void APIMetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
 void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
-    kDebug(5323) << "APIMetaWeblog::modifyPosting: posting null pointer" << endl;
+    kDebug(5323) << "APIMetaWeblog::modifyPosting: posting null pointer"
+        << endl;
     emit error ( Other, i18n( "Posting is a null pointer." ) );
   }
-    kDebug(5323) << "Uploading Posting with postId " << posting->postingId() << endl;
+    kDebug(5323) << "Uploading Posting with postId " << posting->postingId()
+        << endl;
 
     QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
     QMap<QString, QVariant> map;
@@ -116,7 +119,8 @@ void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 void APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
-    kDebug(5323) << "APIMetaWeblog::createPosting: posting null pointer" << endl;
+    kDebug(5323) << "APIMetaWeblog::createPosting: posting null pointer"
+        << endl;
     emit error ( Other, i18n( "Posting is a null pointer." ) );
   }
     kDebug(5323) << "Creating new Posting with blogId " << blogId() << endl;

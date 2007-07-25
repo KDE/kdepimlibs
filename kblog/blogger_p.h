@@ -22,13 +22,12 @@
 #ifndef BLOGGER_P_H
 #define BLOGGER_P_H
 
-#include <blogger.h>
-#include <blog_p.h>
+#include "blogger.h"
+#include "blog_p.h"
 
 #include <kxmlrpcclient/client.h>
 
-#include <QtCore/QList>
-#include <QtCore/QMutex>
+#include <QList>
 
 using namespace KBlog;
 
@@ -39,7 +38,6 @@ class APIBlogger::APIBloggerPrivate : public QObject
   public:
     QString mAppId;
     APIBlogger *parent;
-    QMutex mLock;
     KXmlRpc::Client *mXmlRpcClient;
     int callCounter;
     QMap<int,KBlog::BlogPosting*> callMap;
@@ -53,7 +51,8 @@ class APIBlogger::APIBloggerPrivate : public QObject
     void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
     void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
     void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
-    void faultSlot( int number, const QString &errorString, const QVariant &id );
+    void faultSlot( int number, const QString &errorString,
+                    const QVariant &id );
     bool readPostingFromMap( BlogPosting *post,
                              const QMap<QString, QVariant> &postInfo );
 };

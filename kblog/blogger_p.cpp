@@ -25,11 +25,11 @@
 
 #include <kxmlrpcclient/client.h>
 
-#include <kdebug.h>
-#include <kdatetime.h>
-#include <klocale.h>
+#include <KDebug>
+#include <KDateTime>
+#include <KLocale>
 
-#include <QtCore/QList>
+#include <QList>
 
 using namespace KBlog;
 
@@ -56,8 +56,8 @@ QList<QVariant> APIBlogger::APIBloggerPrivate::defaultArgs( const QString &id )
   return args;
 }
 
-void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result,
-                                                   const QVariant &id )
+void APIBlogger::APIBloggerPrivate::slotListBlogs(
+    const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( id );
 
@@ -90,8 +90,8 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs( const QList<QVariant> &result
   }
 }
 
-void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &result,
-                                                      const QVariant &id )
+void APIBlogger::APIBloggerPrivate::slotListPostings(
+    const QList<QVariant> &result, const QVariant &id )
 {
    int count = id.toInt();
 
@@ -131,8 +131,8 @@ void APIBlogger::APIBloggerPrivate::slotListPostings( const QList<QVariant> &res
    emit parent->listedRecentPostings(fetchedPostingList);
 }
 
-void APIBlogger::APIBloggerPrivate::slotFetchPosting( const QList<QVariant> &result,
-                                                      const QVariant &id )
+void APIBlogger::APIBloggerPrivate::slotFetchPosting(
+    const QList<QVariant> &result, const QVariant &id )
 {
   if( !id.toInt() ) return; //FIXME
 
@@ -166,8 +166,8 @@ void APIBlogger::APIBloggerPrivate::slotFetchPosting( const QList<QVariant> &res
   callMap.remove( id.toInt() );
 }
 
-void APIBlogger::APIBloggerPrivate::slotCreatePosting( const QList<QVariant> &result,
-                                                       const QVariant &id )
+void APIBlogger::APIBloggerPrivate::slotCreatePosting(
+    const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( id );
 
@@ -187,8 +187,8 @@ void APIBlogger::APIBloggerPrivate::slotCreatePosting( const QList<QVariant> &re
   }
 }
 
-void APIBlogger::APIBloggerPrivate::slotModifyPosting( const QList<QVariant> &result,
-                                                       const QVariant &id )
+void APIBlogger::APIBloggerPrivate::slotModifyPosting(
+    const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( id );
 
@@ -218,8 +218,8 @@ void APIBlogger::APIBloggerPrivate::faultSlot( int number,
   emit parent->error( XmlRpc, errorString );
 }
 
-bool APIBlogger::APIBloggerPrivate::readPostingFromMap( BlogPosting *post,
-                                                        const QMap<QString, QVariant> &postInfo )
+bool APIBlogger::APIBloggerPrivate::readPostingFromMap(
+    BlogPosting *post, const QMap<QString, QVariant> &postInfo )
 {
   // FIXME: integrate error handling
   if ( !post ) {

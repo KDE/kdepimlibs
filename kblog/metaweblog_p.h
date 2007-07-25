@@ -22,12 +22,9 @@
 #ifndef METAWEBLOG_P_H
 #define METAWEBLOG_P_H
 
-#include <metaweblog.h>
+#include "metaweblog.h"
 
 #include <kxmlrpcclient/client.h>
-
-#include <QtCore/QList>
-#include <QtCore/QMutex>
 
 using namespace KBlog;
 
@@ -38,7 +35,6 @@ class APIMetaWeblog::APIMetaWeblogPrivate : public QObject
     QString mAppId;
     QMap<QString,QString> mCategories;
     APIMetaWeblog *parent;
-    QMutex mLock;
     KXmlRpc::Client *mXmlRpcClient;
     APIMetaWeblogPrivate();
     ~APIMetaWeblogPrivate();

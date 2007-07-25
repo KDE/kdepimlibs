@@ -27,12 +27,6 @@
 
 #include <QObject>
 
-class QByteArray;
-class QString;
-class QStringList;
-
-class KDateTime;
-
 namespace KBlog {
 
 /**
@@ -48,7 +42,7 @@ namespace KBlog {
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
 */
 
-class KBLOG_EXPORT BlogMedia : public QObject 
+class KBLOG_EXPORT BlogMedia : public QObject
 {
   Q_OBJECT
 
@@ -128,6 +122,6 @@ class KBLOG_EXPORT BlogMedia : public QObject
     BlogMediaPrivate *const d;
 };
 
-} // namespace 
+} //namespace KBlog
 
 #endif

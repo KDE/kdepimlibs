@@ -22,11 +22,11 @@
 #ifndef API_GDATA_P_H
 #define API_GDATA_P_H
 
-#include <QtCore/QString>
-#include <QtCore/QDateTime>
-#include <QtCore/QMutex>
-#include <syndication/loader.h>
 #include "gdata.h"
+
+#include <syndication/loader.h>
+
+#include <QDateTime>
 
 class KJob;
 
@@ -52,11 +52,14 @@ class APIGData::APIGDataPrivate : public QObject
     QString authenticate();
   public slots:
     void slotLoadingPostingsComplete( Syndication::Loader *,
-                                      Syndication::FeedPtr, Syndication::ErrorCode );
+                                      Syndication::FeedPtr,
+                                      Syndication::ErrorCode );
     void slotFetchingPostingComplete( Syndication::Loader *,
-                                      Syndication::FeedPtr, Syndication::ErrorCode );
+                                      Syndication::FeedPtr,
+                                      Syndication::ErrorCode );
     void slotLoadingBlogsComplete( Syndication::Loader *,
-                                   Syndication::FeedPtr, Syndication::ErrorCode );
+                                   Syndication::FeedPtr,
+                                   Syndication::ErrorCode );
     void slotData( KIO::Job *, const QByteArray& );
     void slotCreatePosting( KJob *job );
 };

@@ -22,13 +22,10 @@
 #ifndef API_MOVABLETYPE_H
 #define API_MOVABLETYPE_H
 
-#include <kblog/blog.h>
-#include <kblog/metaweblog.h>
+#include "blog.h"
+#include "metaweblog.h"
 
-#include <kurl.h>
-
-#include <QtCore/QString>
-#include <QtCore/QMap>
+#include <KUrl>
 
 /**
   @file
@@ -135,5 +132,5 @@ class KBLOG_EXPORT APIMovableType : public APIMetaWeblog
     APIMovableTypePrivate *const d;
 };
 
-}
+} //namespace KBlog
 #endif

@@ -19,16 +19,10 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <movabletype_p.h>
+#include "movabletype_p.h"
 #include "blogposting.h"
 
 #include <kxmlrpcclient/client.h>
-
-#include <kdebug.h>
-#include <kdatetime.h>
-#include <klocale.h>
-
-#include <QtCore/QVariant>
 
 using namespace KBlog;
 

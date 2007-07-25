@@ -19,16 +19,13 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <livejournal_p.h>
+#include "livejournal_p.h"
 #include "blogposting.h"
 
 #include <kxmlrpcclient/client.h>
 
-#include <kdebug.h>
-#include <kdatetime.h>
-#include <klocale.h>
-
-#include <QtCore/QVariant>
+#include <KDebug>
+#include <KLocale>
 
 using namespace KBlog;
 

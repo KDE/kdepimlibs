@@ -19,18 +19,14 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+
 #ifndef API_METAWEBLOG_H
 #define API_METAWEBLOG_H
 
-#include <kblog/blog.h>
-#include <kblog/blogger.h>
+#include "blog.h"
+#include "blogger.h"
 
-#include <kurl.h>
-
-#include <QtCore/QString>
-#include <QtCore/QVariant>
-#include <QtCore/QList>
-#include <QtCore/QMap>
+#include <KUrl>
 
 /**
   @file
@@ -151,5 +147,5 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
     APIMetaWeblogPrivate *const d;
 };
 
-}
+} //namespace KBlog
 #endif

@@ -22,12 +22,9 @@
 #ifndef LIVEJOURNAL_P_H
 #define LIVEJOURNAL_P_H
 
-#include <livejournal.h>
+#include "livejournal.h"
 
 #include <kxmlrpcclient/client.h>
-
-#include <QtCore/QList>
-#include <QtCore/QMutex>
 
 using namespace KBlog;
 

@@ -19,16 +19,13 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+
 #ifndef API_BLOGGER_H
 #define API_BLOGGER_H
 
-#include <kblog/blog.h>
+#include "blog.h"
 
-#include <QtCore/QString>
-#include <QtCore/QVariant>
-#include <QtCore/QList>
-
-#include <kurl.h>
+#include <KUrl>
 
 /**
   @file
@@ -142,5 +139,5 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
     APIBloggerPrivate *const d;
 };
 
-}
+} //namespace KBlog
 #endif

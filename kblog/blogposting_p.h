@@ -22,7 +22,7 @@
 #ifndef BLOGPOSTING_P_H
 #define BLOGPOSTING_P_H
 
-#include <blogposting.h>
+#include "blogposting.h"
 
 #include <KDateTime>
 

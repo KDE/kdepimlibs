@@ -22,12 +22,9 @@
 #ifndef MOVABLETYPE_P_H
 #define MOVABLETYPE_P_H
 
-#include <movabletype.h>
+#include "movabletype.h"
 
 #include <kxmlrpcclient/client.h>
-
-#include <QtCore/QList>
-#include <QtCore/QMutex>
 
 using namespace KBlog;
 
@@ -38,7 +35,6 @@ class APIMovableType::APIMovableTypePrivate : public QObject
     QString mAppId;
     QMap<QString,QString> mCategories;
     APIMovableType *parent;
-    QMutex mLock;
     KXmlRpc::Client *mXmlRpcClient;
 
     APIMovableTypePrivate();

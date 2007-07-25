@@ -18,12 +18,11 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+
 #ifndef API_GDATA_H
 #define API_GDATA_H
 
-#include <kblog/blog.h>
-
-#include <QtCore/QString>
+#include "blog.h"
 
 class KUrl;
 
@@ -41,8 +40,11 @@ class KUrl;
 namespace KBlog {
 /**
   @brief
-  A class that can be used for access to GData API blogs. Almost every blog server
-  supports GData API . Compared to Blogger API 1.0 it is a superset of functions added to the its definition. GData API is much more functional, but has some drawbacks, e.g. security when compared to Blogger API 2.0 which is based on GData API and quite new.
+  A class that can be used for access to GData API blogs. Almost every blog
+  server supports GData API . Compared to Blogger API 1.0 it is a superset of
+  functions added to the its definition. GData API is much more functional, but
+  has some drawbacks, e.g. security when compared to Blogger API 2.0 which is
+  based on GData API and quite new.
 
   @code
   APIBlog* myblog = new APIGData( "http://example.com/xmlrpc/gateway.php" );
@@ -74,20 +76,23 @@ class KBLOG_EXPORT APIGData : public APIBlog
     QString interfaceName() const;
 
     /**
-        Get information about the user from the blog. Note: This is not supported on the server side.
-	@see void userInfoRetrieved( const QString &nickname, const QString &userid, const QString &email )
+        Get information about the user from the blog. Note: This is not
+        supported on the server side.
+        @see void userInfoRetrieved( const QString &nickname,
+                const QString &userid, const QString &email )
     */
     void userInfo();
 
     /**
-        List the blogs available for this authentication on the server. Note: This is not supported on the server side.
-	@see void blogInfoRetrieved( const QString &id, const QString &name )
+        List the blogs available for this authentication on the server.
+        Note: This is not supported on the server side.
+        @see void blogInfoRetrieved( const QString &id, const QString &name )
     */
     void listBlogs();
 
     /**
         List recent postings on the server..
-	@see     void listedPosting( KBlog::BlogPosting &posting )
+        @see     void listedPosting( KBlog::BlogPosting &posting )
         @see     void fetchedPosting( KBlog::BlogPosting &posting )
         @see     void listPostingsFinished()
     */
@@ -104,7 +109,8 @@ class KBLOG_EXPORT APIGData : public APIBlog
     /**
         Modify a posting on server.
 
-        @param posting is used to send the modified posting including the correct postingId from it to the server.
+        @param posting is used to send the modified posting including the
+          correct postingId from it to the server.
     */
     void modifyPosting( KBlog::BlogPosting *posting );
 
@@ -162,5 +168,5 @@ private:
     APIGDataPrivate* const d;
 };
 
-}
+} //namespace KBlog
 #endif

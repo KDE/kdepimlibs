@@ -22,7 +22,7 @@
 #ifndef BLOG_P_H
 #define BLOG_P_H
 
-#include <blog.h>
+#include "blog.h"
 
 #include <KTimeZone>
 #include <KUrl>
@@ -42,6 +42,6 @@ class APIBlog::APIBlogPrivate
     void setBlogPostingId( BlogPosting *posting, const QString &postingId );
 };
 
-}
+} //namespace KBlog
 
 #endif

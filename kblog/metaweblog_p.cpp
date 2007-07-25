@@ -20,16 +20,14 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <metaweblog_p.h>
+#include "metaweblog_p.h"
 #include "blogposting.h"
 
 #include <kxmlrpcclient/client.h>
 
-#include <kdebug.h>
-#include <kdatetime.h>
-#include <klocale.h>
-
-#include <QtCore/QVariant>
+#include <KDebug>
+#include <KDateTime>
+#include <KLocale>
 
 using namespace KBlog;
 
@@ -62,7 +60,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
                                                               const QVariant &id )
 {
 //   Q_UNUSED( id );
-// 
+//
 //   kDebug(5323) << "APIMetaWeblogPrivate::slotListCategories" << endl;
 //   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
 //   if ( result[0].type() != QVariant::Map &&
@@ -77,7 +75,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
 //     if ( result[0].type() == QVariant::Map ) {
 //       const QMap<QString, QVariant> categories = result[0].toMap();
 //       const QList<QString> categoryNames = categories.keys();
-// 
+//
 //       QList<QString>::ConstIterator it = categoryNames.begin();
 //       QList<QString>::ConstIterator end = categoryNames.end();
 //       for ( ; it != end; ++it ) {

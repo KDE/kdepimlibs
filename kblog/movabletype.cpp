@@ -22,9 +22,6 @@
 #include "movabletype.h"
 #include "movabletype_p.h"
 #include "blogposting.h"
-#include <kdebug.h>
-#include <klocale.h>
-#include <kdatetime.h>
 
 using namespace KBlog;
 

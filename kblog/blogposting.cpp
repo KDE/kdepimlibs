@@ -30,8 +30,8 @@
 
 namespace KBlog {
 
-BlogPosting::BlogPosting( const QString &postingId, QObject* parent ) : QObject( parent ),
-  d( new BlogPostingPrivate )
+BlogPosting::BlogPosting( const QString &postingId, QObject* parent ) :
+    QObject( parent ), d( new BlogPostingPrivate )
 {
   d->mPublished = false;
   d->mPostingId = postingId;

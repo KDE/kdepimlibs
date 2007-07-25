@@ -20,18 +20,16 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+
 #ifndef API_BLOG_H
 #define API_BLOG_H
 
 #include <kblog/kblog_export.h>
 
-#include <QtCore/QObject>
+#include <QObject>
 
-class QString;
-template <class T> class QList;
 template <class T,class S> class QMap;
 
-class KDateTime;
 class KTimeZone;
 class KUrl;
 
@@ -237,7 +235,8 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see listPostings()
     */
-    virtual void listedRecentPostings( const QList<KBlog::BlogPosting*>& postings );
+    virtual void listedRecentPostings(
+        const QList<KBlog::BlogPosting*>& postings );
 
     /**
       All xml parsing and all structural problems will emit an error.
@@ -261,5 +260,5 @@ class KBLOG_EXPORT APIBlog : public QObject
                                   const QString &postingId );
 };
 
-}
+} //namespace KBlog
 #endif

@@ -20,15 +20,13 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+
 #ifndef KBLOG_BLOGPOSTING_H
 #define KBLOG_BLOGPOSTING_H
 
 #include <kblog/kblog_export.h>
 
-#include <QObject>
 #include <QStringList>
-
-class QString;
 
 class KDateTime;
 
@@ -57,7 +55,8 @@ public:
       @param postingId The ID of the posting on the server.
       @param parent Parent object of this BlogPosting
     */
-    explicit BlogPosting( const QString &postingId = QString(), QObject *parent = 0 );
+    explicit BlogPosting( const QString &postingId = QString(),
+                          QObject *parent = 0 );
 
     /**
       Virtual default destructor.

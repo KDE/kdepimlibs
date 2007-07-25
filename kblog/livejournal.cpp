@@ -22,9 +22,8 @@
 #include "livejournal.h"
 #include "livejournal_p.h"
 #include "blogposting.h"
-#include <kdebug.h>
-#include <klocale.h>
-#include <kdatetime.h>
+
+#include <KDebug>
 
 using namespace KBlog;
 

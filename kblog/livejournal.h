@@ -22,12 +22,10 @@
 #ifndef API_LIVEJOURNAL_H
 #define API_LIVEJOURNAL_H
 
-#include <kblog/blog.h>
+#include "blog.h"
 
 #include <KUrl>
 
-#include <QtCore/QString>
-#include <QtCore/QMap>
 #include <QColor>
 
 class KHttpCookie;
@@ -168,5 +166,5 @@ class KBLOG_EXPORT APILiveJournal : public APIBlog
     APILiveJournalPrivate *const d;
 };
 
-}
+} //namespace KBlog
 #endif
