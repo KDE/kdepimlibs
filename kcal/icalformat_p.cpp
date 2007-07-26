@@ -1131,7 +1131,7 @@ FreeBusy *ICalFormatImpl::readFreeBusy( icalcomponent *vfreebusy )
 
   icalproperty *p = icalcomponent_get_first_property( vfreebusy, ICAL_ANY_PROPERTY );
 
-  PeriodList periods;
+  Period::List periods;
 
   while ( p ) {
     icalproperty_kind kind = icalproperty_isa( p );

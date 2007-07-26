@@ -32,10 +32,11 @@
 #ifndef KCAL_PERIOD_H
 #define KCAL_PERIOD_H
 
-#include <kdatetime.h>
-
 #include "kcal_export.h"
 #include "duration.h"
+
+#include <kdatetime.h>
+#include <QtCore/QList>
 
 namespace KCal {
 
@@ -46,6 +47,11 @@ namespace KCal {
 class KCAL_EXPORT Period
 {
   public:
+   /**
+      List of periods.
+    */
+    typedef QList<Period> List;
+
     /**
       Constructs a period without a duration.
     */
