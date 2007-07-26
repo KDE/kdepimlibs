@@ -20,8 +20,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef API_METAWEBLOG_H
-#define API_METAWEBLOG_H
+#ifndef KBLOG_METAWEBLOG_H
+#define KBLOG_METAWEBLOG_H
 
 #include <kblog/blogger.h>
 
@@ -29,8 +29,8 @@ class KUrl;
 
 /**
   @file
-  This file is part of the API for accessing Blog Servers
-  and defines the APIMetaWeblog class.
+  This file is part of the  for accessing Blog Servers
+  and defines the MetaWeblog class.
 
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
@@ -39,14 +39,14 @@ class KUrl;
 namespace KBlog {
 /**
   @brief
-  A class that can be used for access to MetaWeblog API blogs. Almost every
-  blog server supports MetaWeblog API . Compared to Blogger API 1.0 it is a
-  superset of functions added to the its definition. MetaWeblog API is much
+  A class that can be used for access to MetaWeblog  blogs. Almost every
+  blog server supports MetaWeblog. Compared to Blogger 1.0 it is a
+  superset of functions added to the its definition. MetaWeblog  is much
   more functional, but has some drawbacks, e.g. security when compared to
-  Blogger API 2.0 which is based on Atom API and quite new.
+  GData which is based on Atom API and is quite new.
 
   @code
-  APIBlog* myblog = new APIMetaWeblog("http://example.com/xmlrpc/gateway.php");
+  Blog* myblog = new MetaWeblog("http://example.com/xmlrpc/gateway.php");
   KBlog::BlogPosting *post = new BlogPosting();
   post->setUserId( "some_user_id" );
   post->setTitle( "This is the title." );
@@ -57,25 +57,25 @@ namespace KBlog {
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
 */
-class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
+class KBLOG_EXPORT MetaWeblog : public Blogger1
 {
   Q_OBJECT
   public:
     /**
-      Create an object for MetaWeblog API
+      Create an object for MetaWeblog 
 
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
     */
-    explicit APIMetaWeblog( const KUrl &server, QObject *parent = 0 );
+    explicit MetaWeblog( const KUrl &server, QObject *parent = 0 );
 
     /**
       Destroy the object.
     */
-    ~APIMetaWeblog();
+    ~MetaWeblog();
 
     /**
-      Returns the API of the inherited object.
+      Returns the  of the inherited object.
     */
     QString interfaceName() const;
 
@@ -142,8 +142,8 @@ class KBLOG_EXPORT APIMetaWeblog : public APIBlogger
     void listedCategories( QMap<QString,QString> *categories );
 
   private:
-    class APIMetaWeblogPrivate;
-    APIMetaWeblogPrivate *const d;
+    class MetaWeblogPrivate;
+    MetaWeblogPrivate *const d;
 };
 
 } //namespace KBlog

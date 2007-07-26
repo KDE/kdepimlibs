@@ -19,21 +19,21 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef _KBLOG_TEST_BLOGGER_H_
-#define _KBLOG_TEST_BLOGGER_H_
+#ifndef KBLOG_KBLOG_TEST_BLOGGER_H_
+#define KBLOG_KBLOG_TEST_BLOGGER_H_
 
 #include <QtCore/QObject>
 
 enum errorType {
   XmlRpc,
-  AtomAPI,
+  Atom,
   ParsingError,
   AuthenticationError,
   NotSupported,
   Other
 };
 
-class TestBlogger : public QObject
+class TestBlogger1 : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
@@ -41,7 +41,7 @@ class TestBlogger : public QObject
 
 };
 
-class TestBloggerWarnings : public QObject
+class TestBlogger1Warnings : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:

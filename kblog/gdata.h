@@ -19,8 +19,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef API_GDATA_H
-#define API_GDATA_H
+#ifndef KBLOG_GDATA_H
+#define KBLOG_GDATA_H
 
 #include <kblog/blog.h>
 
@@ -29,8 +29,8 @@ class KUrl;
 /**
   @file
 
-  This file is part of the API for accessing Blog Servers
-  and defines the APIGData class.
+  This file is part of the  for accessing Blog Servers
+  and defines the GData class.
 
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
 
@@ -43,14 +43,14 @@ namespace KBlog {
 
 /**
   @brief
-  A class that can be used for access to GData API blogs. Almost every blog
-  server supports GData API . Compared to Blogger API 1.0 it is a superset of
-  functions added to the its definition. GData API is much more functional, but
-  has some drawbacks, e.g. security when compared to Blogger API 2.0 which is
-  based on GData API and quite new.
+  A class that can be used for access to GData  blogs. Almost every blog
+  server supports GData  . Compared to Blogger1  1.0 it is a superset of
+  functions added to the its definition. GData  is much more functional, but
+  has some drawbacks, e.g. security when compared to Blogger1  2.0 which is
+  based on GData  and quite new.
 
   @code
-  APIBlog* myblog = new APIGData("http://example.com/xmlrpc/gateway.php");
+  Blog* myblog = new GData("http://example.com/xmlrpc/gateway.php");
   KBlog::BlogPosting *post = new BlogPosting();
   post->setUserId( "some_user_id" );
   post->setTitle( "This is the title." );
@@ -61,20 +61,20 @@ namespace KBlog {
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
  */
-class KBLOG_EXPORT APIGData : public APIBlog
+class KBLOG_EXPORT GData : public Blog
 {
   Q_OBJECT
   public:
     /**
-         Create an object for GData API
+         Create an object for GData 
 
          @param server is the url for the xmlrpc gateway.
     */
-    explicit APIGData( const KUrl &server, QObject *parent = 0 );
-    ~APIGData();
+    explicit GData( const KUrl &server, QObject *parent = 0 );
+    ~GData();
 
     /**
-        Returns the API of the inherited object.
+        Returns the  of the inherited object.
     */
     QString interfaceName() const;
 
@@ -170,8 +170,8 @@ class KBLOG_EXPORT APIGData : public APIBlog
     void setProfileId( const QString &pid );
 
 private:
-    class APIGDataPrivate;
-    APIGDataPrivate* const d;
+    class GDataPrivate;
+    GDataPrivate* const d;
 };
 
 } //namespace KBlog

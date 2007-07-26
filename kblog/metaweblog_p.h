@@ -28,16 +28,16 @@
 
 using namespace KBlog;
 
-class APIMetaWeblog::APIMetaWeblogPrivate : public QObject
+class MetaWeblog::MetaWeblogPrivate : public QObject
 {
   Q_OBJECT
   public:
     QString mAppId;
     QMap<QString,QString> mCategories;
-    APIMetaWeblog *parent;
+    MetaWeblog *parent;
     KXmlRpc::Client *mXmlRpcClient;
-    APIMetaWeblogPrivate();
-    ~APIMetaWeblogPrivate();
+    MetaWeblogPrivate();
+    ~MetaWeblogPrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );
 
   private:

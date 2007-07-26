@@ -31,23 +31,23 @@
 
 using namespace KBlog;
 
-APIBlog::APIBlog( const KUrl &server, QObject *parent ) :
-  QObject( parent ), d( new APIBlogPrivate )
+Blog::Blog( const KUrl &server, QObject *parent ) :
+  QObject( parent ), d( new BlogPrivate )
 {
   Q_UNUSED( server );
 }
 
-APIBlog::~APIBlog()
+Blog::~Blog()
 {
   delete d;
 }
 
-QString APIBlog::userAgent() const
+QString Blog::userAgent() const
 {
   return d->mUserAgent;
 }
 
-void APIBlog::setUserAgent( const QString &applicationName,
+void Blog::setUserAgent( const QString &applicationName,
                             const QString &applicationVersion )
 {
   if ( !applicationName.isEmpty() && !applicationVersion.isEmpty() ) {
@@ -56,52 +56,52 @@ void APIBlog::setUserAgent( const QString &applicationName,
   }
 }
 
-void APIBlog::setPassword( const QString &pass )
+void Blog::setPassword( const QString &pass )
 {
   d->mPassword = pass;
 }
 
-QString APIBlog::password() const
+QString Blog::password() const
 {
   return d->mPassword;
 }
 
-QString APIBlog::username() const
+QString Blog::username() const
 {
   return d->mUsername;
 }
 
-void APIBlog::setUsername( const QString &userName )
+void Blog::setUsername( const QString &userName )
 {
   d->mUsername = userName;
 }
 
-void APIBlog::setBlogId( const QString &blogId )
+void Blog::setBlogId( const QString &blogId )
 {
   d->mBlogId = blogId;
 }
 
-QString APIBlog::blogId() const
+QString Blog::blogId() const
 {
   return d->mBlogId;
 }
 
-void APIBlog::setUrl( const KUrl &url )
+void Blog::setUrl( const KUrl &url )
 {
   d->mUrl = url;
 }
 
-KUrl APIBlog::url() const
+KUrl Blog::url() const
 {
   return d->mUrl;
 }
 
-void APIBlog::setTimeZone( const KTimeZone &tz )
+void Blog::setTimeZone( const KTimeZone &tz )
 {
   d->mTimeZone = tz;
 }
 
-KTimeZone APIBlog::timeZone()
+KTimeZone Blog::timeZone()
 {
   return d->mTimeZone;
 }

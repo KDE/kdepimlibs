@@ -28,20 +28,20 @@
 
 using namespace KBlog;
 
-class APILiveJournal::APILiveJournalPrivate : public QObject
+class LiveJournal::LiveJournalPrivate : public QObject
 {
   Q_OBJECT
   public:
     QString mAppId;
     QMap<QString,QString> mCategories;
-    APILiveJournal *parent;
+    LiveJournal *parent;
     KXmlRpc::Client *mXmlRpcClient;
     QString mServerMessage;
     QString mUserId;
     QString mFullName;
 
-    APILiveJournalPrivate();
-    ~APILiveJournalPrivate();
+    LiveJournalPrivate();
+    ~LiveJournalPrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );
 
   private:

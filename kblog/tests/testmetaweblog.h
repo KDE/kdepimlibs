@@ -19,14 +19,14 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef _KBLOG_TEST_METAWEBLOG_H_
-#define _KBLOG_TEST_METAWEBLOG_H_
+#ifndef KBLOG_KBLOG_TEST_METAWEBLOG_H_
+#define KBLOG_KBLOG_TEST_METAWEBLOG_H_
 
 #include <QtCore/QObject>
 
 enum errorType {
   XmlRpc,
-  AtomAPI,
+  Atom,
   ParsingError,
   AuthenticationError,
   NotSupported,

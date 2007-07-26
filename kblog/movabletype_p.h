@@ -28,17 +28,17 @@
 
 using namespace KBlog;
 
-class APIMovableType::APIMovableTypePrivate : public QObject
+class MovableType::MovableTypePrivate : public QObject
 {
   Q_OBJECT
   public:
     QString mAppId;
     QMap<QString,QString> mCategories;
-    APIMovableType *parent;
+    MovableType *parent;
     KXmlRpc::Client *mXmlRpcClient;
 
-    APIMovableTypePrivate();
-    ~APIMovableTypePrivate();
+    MovableTypePrivate();
+    ~MovableTypePrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );
 
   private:

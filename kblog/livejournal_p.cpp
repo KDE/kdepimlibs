@@ -29,17 +29,17 @@
 
 using namespace KBlog;
 
-APILiveJournal::APILiveJournalPrivate::APILiveJournalPrivate()
+LiveJournal::LiveJournalPrivate::LiveJournalPrivate()
 {
   mXmlRpcClient = 0;
 }
 
-APILiveJournal::APILiveJournalPrivate::~APILiveJournalPrivate()
+LiveJournal::LiveJournalPrivate::~LiveJournalPrivate()
 {
   delete mXmlRpcClient;
 }
 
-QList<QVariant> APILiveJournal::APILiveJournalPrivate::defaultArgs(
+QList<QVariant> LiveJournal::LiveJournalPrivate::defaultArgs(
     const QString &id )
 {
   QList<QVariant> args;
@@ -55,111 +55,111 @@ QList<QVariant> APILiveJournal::APILiveJournalPrivate::defaultArgs(
   return args;
 }
 
-bool APILiveJournal::APILiveJournalPrivate::readPostingFromMap(
+bool LiveJournal::LiveJournalPrivate::readPostingFromMap(
     BlogPosting *post, const QMap<QString, QVariant> &postInfo )
 {
   //TODO
   return false;
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotAddFriend(
+void LiveJournal::LiveJournalPrivate::slotAddFriend(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotAssignFriendToCategory(
+void LiveJournal::LiveJournalPrivate::slotAssignFriendToCategory(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotCreatePosting(
+void LiveJournal::LiveJournalPrivate::slotCreatePosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotDeleteFriend(
+void LiveJournal::LiveJournalPrivate::slotDeleteFriend(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotExpireCookie(
+void LiveJournal::LiveJournalPrivate::slotExpireCookie(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotExpireAllCookies(
+void LiveJournal::LiveJournalPrivate::slotExpireAllCookies(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
 
-void APILiveJournal::APILiveJournalPrivate::slotError( int number,
+void LiveJournal::LiveJournalPrivate::slotError( int number,
     const QString &errorString, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotFetchPosting(
+void LiveJournal::LiveJournalPrivate::slotFetchPosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotFetchUserInfo(
+void LiveJournal::LiveJournalPrivate::slotFetchUserInfo(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotGenerateCookie(
+void LiveJournal::LiveJournalPrivate::slotGenerateCookie(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotListCategories(
+void LiveJournal::LiveJournalPrivate::slotListCategories(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotListFriends(
+void LiveJournal::LiveJournalPrivate::slotListFriends(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotListFriendsOf(
+void LiveJournal::LiveJournalPrivate::slotListFriendsOf(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotListMoods(
+void LiveJournal::LiveJournalPrivate::slotListMoods(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotListPictureKeywords(
+void LiveJournal::LiveJournalPrivate::slotListPictureKeywords(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotListRecentPostings(
+void LiveJournal::LiveJournalPrivate::slotListRecentPostings(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void APILiveJournal::APILiveJournalPrivate::slotModifyPosting(
+void LiveJournal::LiveJournalPrivate::slotModifyPosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO

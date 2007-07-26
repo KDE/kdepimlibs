@@ -19,8 +19,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef API_LIVEJOURNAL_H
-#define API_LIVEJOURNAL_H
+#ifndef KBLOG_LIVEJOURNAL_H
+#define KBLOG_LIVEJOURNAL_H
 
 #include <kblog/blog.h>
 
@@ -31,18 +31,18 @@ class KUrl;
 
 /**
   @file
-  This file is part of the API for accessing Blog Servers
-  and defines the APILiveJournal class.
+  This file is part of the  for accessing Blog Servers
+  and defines the LiveJournal class.
 
   @author Mike Arthur \<mike\@mikearthur.co.uk\>
 */
 namespace KBlog {
 /**
   @brief
-  A class that can be used for access to Movable Type API blogs. Almost every
-  blog server supports Movable Type API. Blah blah
+  A class that can be used for access to Movable Type  blogs. Almost every
+  blog server supports Movable Type . Blah blah
   @code
-  APIBlog* myblog = new APILiveJournal("http://example.com/xmlrpc/gateway.php");
+  Blog* myblog = new LiveJournal("http://example.com/xmlrpc/gateway.php");
   KBlog::BlogPosting *post = new BlogPosting();
   post->setUserId( "some_user_id" );
   post->setTitle( "This is the title." );
@@ -52,22 +52,22 @@ namespace KBlog {
 
   @author Mike Arthur \<mike\@mikearthur.co.uk\>
 */
-class KBLOG_EXPORT APILiveJournal : public APIBlog
+class KBLOG_EXPORT LiveJournal : public Blog
 {
   Q_OBJECT
   public:
     /**
-      Create an object for Movable Type API
+      Create an object for Movable Type 
 
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
     */
-    explicit APILiveJournal( const KUrl &server, QObject *parent = 0 );
+    explicit LiveJournal( const KUrl &server, QObject *parent = 0 );
 
     /**
       Destroy the object.
     */
-    ~APILiveJournal();
+    ~LiveJournal();
 
     void addFriend( const QString &username, int group,
                     const QColor &fgcolor = QColor( "#000000" ),
@@ -103,7 +103,7 @@ class KBLOG_EXPORT APILiveJournal : public APIBlog
     void generateCookie( bool longExpiration, bool fixedIP );
 
     /**
-      Returns the API of the inherited object.
+      Returns the  of the inherited object.
     */
     QString interfaceName() const;
 
@@ -161,8 +161,8 @@ class KBLOG_EXPORT APILiveJournal : public APIBlog
     void fetchedUserInfo();
 
   private:
-    class APILiveJournalPrivate;
-    APILiveJournalPrivate *const d;
+    class LiveJournalPrivate;
+    LiveJournalPrivate *const d;
 };
 
 } //namespace KBlog

@@ -32,32 +32,32 @@
 
 using namespace KBlog;
 
-APIMetaWeblog::APIMetaWeblog( const KUrl &server, QObject *parent )
-  : APIBlogger( server, parent ), d( new APIMetaWeblogPrivate )
+MetaWeblog::MetaWeblog( const KUrl &server, QObject *parent )
+  : Blogger1( server, parent ), d( new MetaWeblogPrivate )
 {
   d->parent = this;
   setUrl( server );
 }
 
-APIMetaWeblog::~APIMetaWeblog()
+MetaWeblog::~MetaWeblog()
 {
   delete d;
 }
 
-QString APIMetaWeblog::interfaceName() const
+QString MetaWeblog::interfaceName() const
 {
-  return QLatin1String( "MetaWeblog API" );
+  return QLatin1String( "MetaWeblog " );
 }
 
-void APIMetaWeblog::setUrl( const KUrl &server )
+void MetaWeblog::setUrl( const KUrl &server )
 {
-  APIBlogger::setUrl( server );
+  Blogger1::setUrl( server );
   delete d->mXmlRpcClient;
   d->mXmlRpcClient = new KXmlRpc::Client( server );
   d->mXmlRpcClient->setUserAgent( userAgent() );
 }
 
-void APIMetaWeblog::listRecentPostings( int number )
+void MetaWeblog::listRecentPostings( int number )
 {
     kDebug(5323) << "Fetching List of Posts..." << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
@@ -68,7 +68,7 @@ void APIMetaWeblog::listRecentPostings( int number )
       d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
-void APIMetaWeblog::listCategories()
+void MetaWeblog::listCategories()
 {
     kDebug(5323) << "Fetching List of Categories..." << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
@@ -78,7 +78,7 @@ void APIMetaWeblog::listCategories()
       d, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 }
 
-void APIMetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
+void MetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
 {
 //   if ( d->mLock.tryLock() ) {
 //     kDebug(5323) << "Fetching Posting with url " << postingId << endl;
@@ -92,10 +92,10 @@ void APIMetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
 //   return false;
 }
 
-void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
+void MetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
-    kDebug(5323) << "APIMetaWeblog::modifyPosting: posting null pointer"
+    kDebug(5323) << "MetaWeblog::modifyPosting: posting null pointer"
         << endl;
     emit error ( Other, i18n( "Posting is a null pointer." ) );
   }
@@ -116,10 +116,10 @@ void APIMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
       d, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 }
 
-void APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
+void MetaWeblog::createPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
-    kDebug(5323) << "APIMetaWeblog::createPosting: posting null pointer"
+    kDebug(5323) << "MetaWeblog::createPosting: posting null pointer"
         << endl;
     emit error ( Other, i18n( "Posting is a null pointer." ) );
   }
@@ -138,9 +138,9 @@ void APIMetaWeblog::createPosting( KBlog::BlogPosting *posting )
       d, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 }
 
-void APIMetaWeblog::createMedia( KBlog::BlogMedia *media )
+void MetaWeblog::createMedia( KBlog::BlogMedia *media )
 {
-    kDebug(5323) << "APIMetaWeblog::createMedia: name="<< media->name() << endl;
+    kDebug(5323) << "MetaWeblog::createMedia: name="<< media->name() << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     QMap<QString, QVariant> map;
     QList<QVariant> list;

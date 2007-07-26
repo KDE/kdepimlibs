@@ -25,47 +25,47 @@
 
 using namespace KBlog;
 
-APIMovableType::APIMovableType( const KUrl &server, QObject *parent )
-  : APIMetaWeblog( server, parent ), d( new APIMovableTypePrivate )
+MovableType::MovableType( const KUrl &server, QObject *parent )
+  : MetaWeblog( server, parent ), d( new MovableTypePrivate )
 {
   d->parent = this;
   setUrl( server );
 }
 
-APIMovableType::~APIMovableType()
+MovableType::~MovableType()
 {
   delete d;
 }
 
-void APIMovableType::createPosting( KBlog::BlogPosting *posting )
+void MovableType::createPosting( KBlog::BlogPosting *posting )
 {
   //TODO
 }
 
-void APIMovableType::fetchPosting( KBlog::BlogPosting *posting )
+void MovableType::fetchPosting( KBlog::BlogPosting *posting )
 {
   //TODO
 }
 
-QString APIMovableType::interfaceName() const
+QString MovableType::interfaceName() const
 {
-  return QLatin1String( "Movable Type API" );
+  return QLatin1String( "Movable Type " );
 }
 
-void APIMovableType::setUrl( const KUrl &server )
+void MovableType::setUrl( const KUrl &server )
 {
-  APIMetaWeblog::setUrl( server );
+  MetaWeblog::setUrl( server );
   delete d->mXmlRpcClient;
   d->mXmlRpcClient = new KXmlRpc::Client( server );
   d->mXmlRpcClient->setUserAgent( userAgent() );
 }
 
-void APIMovableType::listRecentPostings( int number )
+void MovableType::listRecentPostings( int number )
 {
   //TODO
 }
 
-void APIMovableType::listTrackbackPings( KBlog::BlogPosting *posting ) {
+void MovableType::listTrackbackPings( KBlog::BlogPosting *posting ) {
   //TODO
   /*
   d->mXmlRpcClient->call( "mt.getTracebackPings", args,
@@ -75,7 +75,7 @@ void APIMovableType::listTrackbackPings( KBlog::BlogPosting *posting ) {
   */
 }
 
-void APIMovableType::modifyPosting( KBlog::BlogPosting *posting )
+void MovableType::modifyPosting( KBlog::BlogPosting *posting )
 {
   //TODO
 }

@@ -40,16 +40,16 @@
 
 using namespace KBlog;
 
-APIGData::APIGDataPrivate::APIGDataPrivate():
+GData::GDataPrivate::GDataPrivate():
   mFetchPostingId(),mAuthenticationString(),mAuthenticationTime(){
 
 }
 
-APIGData::APIGDataPrivate::~APIGDataPrivate(){
+GData::GDataPrivate::~GDataPrivate(){
 
 }
 
-QString APIGData::APIGDataPrivate::authenticate(){
+QString GData::GDataPrivate::authenticate(){
   QByteArray data;
   KUrl authGateway( "https://www.google.com/accounts/ClientLogin" );
   authGateway.addQueryItem( "Email", parent->username() );
@@ -78,12 +78,12 @@ QString APIGData::APIGDataPrivate::authenticate(){
   return mAuthenticationString;
 }
 
-void APIGData::APIGDataPrivate::slotListedBlogs(
+void GData::GDataPrivate::slotListedBlogs(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status ) {
   Q_UNUSED( loader );
   if (status != Syndication::Success){
-    emit parent->error( AtomAPI, i18n( "Could not get blogs." ) );
+    emit parent->error( Atom, i18n( "Could not get blogs." ) );
     return;
   }
   QList<Syndication::ItemPtr> items = feed->items();
@@ -112,13 +112,13 @@ void APIGData::APIGDataPrivate::slotListedBlogs(
   }
 }
 
-void APIGData::APIGDataPrivate::slotListedRecentPostings(
+void GData::GDataPrivate::slotListedRecentPostings(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status ) {
   Q_UNUSED( loader );
   /*
   if (status != Syndication::Success){
-    emit parent->error( AtomAPI, i18n( "Could not get postings." ) );
+    emit parent->error( Atom, i18n( "Could not get postings." ) );
     return;
   }
   QList<Syndication::ItemPtr> items = feed->items();
@@ -154,14 +154,14 @@ void APIGData::APIGDataPrivate::slotListedRecentPostings(
   */
 }
 
-void APIGData::APIGDataPrivate::slotFetchedPosting(
+void GData::GDataPrivate::slotFetchedPosting(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status ){
   Q_UNUSED( loader );
   bool success = false;
 
   if (status != Syndication::Success){
-    emit parent->error( AtomAPI, i18n( "Could not get postings." ) );
+    emit parent->error( Atom, i18n( "Could not get postings." ) );
     return;
   }
   QList<Syndication::ItemPtr> items = feed->items();
@@ -196,18 +196,18 @@ void APIGData::APIGDataPrivate::slotFetchedPosting(
   setFetchPostingId( "" );
 }
 
-void APIGData::APIGDataPrivate::slotData( KIO::Job *, const QByteArray &data )
+void GData::GDataPrivate::slotData( KIO::Job *, const QByteArray &data )
 {
   unsigned int oldSize = mBuffer.size();
   mBuffer.resize( oldSize + data.size() );
   memcpy( mBuffer.data() + oldSize, data.data(), data.size() );
 }
 
-void APIGData::APIGDataPrivate::slotCreatedPosting( KJob *job )
+void GData::GDataPrivate::slotCreatedPosting( KJob *job )
 {
   if ( job->error() != 0 ) {
     kDebug(5323) << "slotCreatePosting error: " << job->errorString() << endl;
-    emit parent->error( AtomAPI, job->errorString() );
+    emit parent->error( Atom, job->errorString() );
     mBuffer.resize( 0 );
     return;
   }

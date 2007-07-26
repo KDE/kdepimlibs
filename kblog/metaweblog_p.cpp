@@ -31,17 +31,17 @@
 
 using namespace KBlog;
 
-APIMetaWeblog::APIMetaWeblogPrivate::APIMetaWeblogPrivate()
+MetaWeblog::MetaWeblogPrivate::MetaWeblogPrivate()
 {
   mXmlRpcClient = 0;
 }
 
-APIMetaWeblog::APIMetaWeblogPrivate::~APIMetaWeblogPrivate()
+MetaWeblog::MetaWeblogPrivate::~MetaWeblogPrivate()
 {
   delete mXmlRpcClient;
 }
 
-QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString &id )
+QList<QVariant> MetaWeblog::MetaWeblogPrivate::defaultArgs( const QString &id )
 {
   QList<QVariant> args;
 
@@ -56,12 +56,12 @@ QList<QVariant> APIMetaWeblog::APIMetaWeblogPrivate::defaultArgs( const QString 
   return args;
 }
 
-void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
+void MetaWeblog::MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
                                                               const QVariant &id )
 {
 //   Q_UNUSED( id );
 //
-//   kDebug(5323) << "APIMetaWeblogPrivate::slotListCategories" << endl;
+//   kDebug(5323) << "MetaWeblogPrivate::slotListCategories" << endl;
 //   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
 //   if ( result[0].type() != QVariant::Map &&
 //        result[0].type() != QVariant::List ) {
@@ -113,12 +113,12 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListCategories( const QList<QVaria
 //   }
 }
 
-void APIMetaWeblog::APIMetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
+void MetaWeblog::MetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
                                                             const QVariant &id )
 {
   Q_UNUSED( id );
 /*
-  kDebug(5323) << "APIMetaWeblog::slotListRecentPostings" << endl;
+  kDebug(5323) << "MetaWeblog::slotListRecentPostings" << endl;
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::List ) {
     kDebug(5323) << "Could not fetch list of postings out of the "
@@ -148,12 +148,12 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotListRecentPostings( const QList<QV
   emit parent->listRecentPostingsFinished();*/
 }
 
-void APIMetaWeblog::APIMetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
+void MetaWeblog::MetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
                                                             const QVariant &id )
 {
   Q_UNUSED( id );
 
-  kDebug(5323) << "APIMetaWeblog::slotFetchPosting" << endl;
+  kDebug(5323) << "MetaWeblog::slotFetchPosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
@@ -179,12 +179,12 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotFetchPosting( const QList<QVariant
   }
 }
 
-void APIMetaWeblog::APIMetaWeblogPrivate::slotCreatePosting( const QList<QVariant> &result,
+void MetaWeblog::MetaWeblogPrivate::slotCreatePosting( const QList<QVariant> &result,
                                                              const QVariant &id )
 {
   Q_UNUSED( id );
 
-  kDebug(5323) << "APIMetaWeblog::slotCreatePosting" << endl;
+  kDebug(5323) << "MetaWeblog::slotCreatePosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
@@ -199,12 +199,12 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreatePosting( const QList<QVarian
   }
 }
 
-void APIMetaWeblog::APIMetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
+void MetaWeblog::MetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
                                                              const QVariant &id )
 {
   Q_UNUSED( id );
 
-  kDebug(5323) << "APIMetaWeblog::slotModifyPosting" << endl;
+  kDebug(5323) << "MetaWeblog::slotModifyPosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
@@ -219,12 +219,12 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotModifyPosting( const QList<QVarian
   }
 }
 
-void APIMetaWeblog::APIMetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,
+void MetaWeblog::MetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,
                                                            const QVariant &id )
 {
   Q_UNUSED( id );
 
-  kDebug(5323) << "APIMetaWeblogPrivate::slotCreateMedia, no error!" << endl;
+  kDebug(5323) << "MetaWeblogPrivate::slotCreateMedia, no error!" << endl;
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != 8 ) {
     kDebug(5323) << "Could not read the result, not a map." << endl;
@@ -233,7 +233,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreateMedia( const QList<QVariant>
   } else {
     const QMap<QString, QVariant> resultStruct = result[0].toMap();
     const QString url = resultStruct["url"].toString();
-    kDebug(5323) << "APIMetaWeblog::slotCreateMedia url=" << url << endl;
+    kDebug(5323) << "MetaWeblog::slotCreateMedia url=" << url << endl;
 
     if ( !url.isEmpty() ) {
 //       emit parent->createdMedia( url );
@@ -242,7 +242,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotCreateMedia( const QList<QVariant>
   }
 }
 
-void APIMetaWeblog::APIMetaWeblogPrivate::slotError( int number,
+void MetaWeblog::MetaWeblogPrivate::slotError( int number,
                                                      const QString &errorString,
                                                      const QVariant &id )
 {
@@ -252,7 +252,7 @@ void APIMetaWeblog::APIMetaWeblogPrivate::slotError( int number,
   emit parent->error( XmlRpc, errorString );
 }
 
-bool APIMetaWeblog::APIMetaWeblogPrivate::readPostingFromMap( BlogPosting *post,
+bool MetaWeblog::MetaWeblogPrivate::readPostingFromMap( BlogPosting *post,
                                                         const QMap<QString, QVariant> &postInfo )
 {
   // FIXME: integrate error handling

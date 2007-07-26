@@ -31,37 +31,37 @@
 
 using namespace KBlog;
 
-APIBlogger::APIBlogger( const KUrl &server, QObject *parent )
-  : APIBlog( server, parent ), d( new APIBloggerPrivate )
+Blogger1::Blogger1( const KUrl &server, QObject *parent )
+  : Blog( server, parent ), d( new Blogger1Private )
 {
   d->parent = this;
   setUrl( server );
 }
 
-APIBlogger::~APIBlogger()
+Blogger1::~Blogger1()
 {
   delete d;
 }
 
-QString APIBlogger::interfaceName() const
+QString Blogger1::interfaceName() const
 {
-  return QLatin1String( "Blogger API 1.0" );
+  return QLatin1String( "Blogger1  1.0" );
 }
 
-void APIBlogger::setUrl( const KUrl &server )
+void Blogger1::setUrl( const KUrl &server )
 {
-  APIBlog::setUrl( server );
+  Blog::setUrl( server );
   delete d->mXmlRpcClient;
   d->mXmlRpcClient = new KXmlRpc::Client( server );
   d->mXmlRpcClient->setUserAgent( userAgent() );
 }
 
-void APIBlogger::fetchUserInfo()
+void Blogger1::fetchUserInfo()
 {
   return; //TODO
 }
 
-void APIBlogger::listBlogs()
+void Blogger1::listBlogs()
 {
 
     kDebug(5323) << "Fetch List of Blogs..." << endl;
@@ -72,7 +72,7 @@ void APIBlogger::listBlogs()
       d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
-void APIBlogger::listRecentPostings( int number )
+void Blogger1::listRecentPostings( int number )
 {
     kDebug(5323) << "Fetching List of Posts..." << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
@@ -84,7 +84,7 @@ void APIBlogger::listRecentPostings( int number )
                QVariant( number ) );
 }
 
-void APIBlogger::fetchPosting( KBlog::BlogPosting *posting )
+void Blogger1::fetchPosting( KBlog::BlogPosting *posting )
 {
      kDebug(5323) << "Fetching Posting with url " << posting->postingId()
          << endl;
@@ -97,10 +97,10 @@ void APIBlogger::fetchPosting( KBlog::BlogPosting *posting )
                 QVariant( d->callCounter ) );
 }
 
-void APIBlogger::modifyPosting( KBlog::BlogPosting *posting )
+void Blogger1::modifyPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
-    kDebug(5323) << "APIBlogger::modifyPosting: posting is null pointer"
+    kDebug(5323) << "Blogger1::modifyPosting: posting is null pointer"
         << endl;
   }
     kDebug(5323) << "Uploading Posting with postingId "
@@ -115,10 +115,10 @@ void APIBlogger::modifyPosting( KBlog::BlogPosting *posting )
       d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
-void APIBlogger::createPosting( KBlog::BlogPosting *posting )
+void Blogger1::createPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
-    kDebug(5323) << "APIBlogger::createPosting: posting is null pointer"
+    kDebug(5323) << "Blogger1::createPosting: posting is null pointer"
         << endl;
   }
     kDebug(5323) << "Creating new Posting with blogid " << blogId() << endl;
@@ -138,10 +138,10 @@ void APIBlogger::createPosting( KBlog::BlogPosting *posting )
       d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
-void APIBlogger::removePosting( KBlog::BlogPosting *posting )
+void Blogger1::removePosting( KBlog::BlogPosting *posting )
 {
 //   if ( d->mLock.tryLock() ) {
-//     kDebug(5323) << "APIBlogger::removePosting: postingId=" << postingId
+//     kDebug(5323) << "Blogger1::removePosting: postingId=" << postingId
 //          << endl;
 //     QList<QVariant> args( d->defaultArgs( postingId ) );
 //     args << QVariant( /*publish=*/true );

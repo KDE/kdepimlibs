@@ -32,7 +32,7 @@ using namespace KBlog;
 class BlogPostingComment::BlogPostingCommentPrivate
 {
   public:
-    friend class APIBlog;
+    friend class Blog;
     QString mTitle;
     QString mContent;
     QString mEmail;

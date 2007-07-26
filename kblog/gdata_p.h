@@ -19,8 +19,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef API_GDATA_P_H
-#define API_GDATA_P_H
+#ifndef KBLOG_GDATA_P_H
+#define KBLOG_GDATA_P_H
 
 #include "gdata.h"
 
@@ -32,7 +32,7 @@ class KJob;
 
 using namespace KBlog;
 
-class APIGData::APIGDataPrivate : public QObject
+class GData::GDataPrivate : public QObject
 {
   Q_OBJECT
   private:
@@ -40,13 +40,13 @@ class APIGData::APIGDataPrivate : public QObject
     QString mAuthenticationString;
     QDateTime mAuthenticationTime;
   public:
-    APIGData* parent;
+    GData* parent;
     QByteArray mBuffer;
     QString mUsername;
     QString mFullName;
     QString mProfileId;
-    APIGDataPrivate();
-    ~APIGDataPrivate();
+    GDataPrivate();
+    ~GDataPrivate();
     QString getFetchPostingId(){ return mFetchPostingId; }
     void setFetchPostingId( const QString &pId ) { mFetchPostingId=pId; }
     QString authenticate();

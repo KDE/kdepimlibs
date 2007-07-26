@@ -79,7 +79,7 @@ QTEST_KDEMAIN( TestGData, NoGUI )
 void TestGData::testValidity()
 {
   // we do not test the setUrl() function additionally here
-  APIGData *b = new APIGData( KUrl( "http://blogger2test.blogspot.com" ) );
+  GData *b = new GData( KUrl( "http://blogger2test.blogspot.com" ) );
   b->setUsername( "christian_weilbach@web.de" );
   b->setProfileId( "11235141638164909615" );
   b->setPassword( "Wo ist Hans?" );
@@ -90,7 +90,7 @@ void TestGData::testValidity()
   QVERIFY( b->username() == "christian_weilbach@web.de" );
   QVERIFY( b->profileId() == "11235141638164909615" );
   QVERIFY( b->password() == "Wo ist Hans?" );
-  QVERIFY( b->interfaceName() == "GData API" );
+  QVERIFY( b->interfaceName() == "GData " );
   QVERIFY( b->timeZone().name() == QString( "UTC" ) );
 
   BlogPosting *p = new BlogPosting();

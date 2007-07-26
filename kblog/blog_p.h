@@ -29,10 +29,10 @@
 
 namespace KBlog {
 
-class APIBlog::APIBlogPrivate
+class Blog::BlogPrivate
 {
   public:
-    APIBlog *parent;
+    Blog *parent;
     QString mBlogId;
     QString mUsername;
     QString mPassword;

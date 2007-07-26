@@ -33,7 +33,7 @@ using namespace KBlog;
 class BlogPosting::BlogPostingPrivate
 {
   public:
-    friend class APIBlog;
+    friend class Blog;
     bool mPublished;
     QString mPostingId;
     QString mTitle;

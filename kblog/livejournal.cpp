@@ -27,19 +27,19 @@
 
 using namespace KBlog;
 
-APILiveJournal::APILiveJournal( const KUrl &server, QObject *parent )
-  : APIBlog( server, parent ), d( new APILiveJournalPrivate )
+LiveJournal::LiveJournal( const KUrl &server, QObject *parent )
+  : Blog( server, parent ), d( new LiveJournalPrivate )
 {
   d->parent = this;
   setUrl( server );
 }
 
-APILiveJournal::~APILiveJournal()
+LiveJournal::~LiveJournal()
 {
   delete d;
 }
 
-void APILiveJournal::addFriend( const QString &username, int group,
+void LiveJournal::addFriend( const QString &username, int group,
                                 const QColor &fgcolor, const QColor &bgcolor )
 {
   Q_UNUSED( username );
@@ -50,7 +50,7 @@ void APILiveJournal::addFriend( const QString &username, int group,
   // LJ.XMLRPC.editfriends
 }
 
-void APILiveJournal::assignFriendToCategory ( const QString &username,
+void LiveJournal::assignFriendToCategory ( const QString &username,
                                               int category )
 {
   Q_UNUSED( username );
@@ -59,46 +59,46 @@ void APILiveJournal::assignFriendToCategory ( const QString &username,
   // LJ.XMLRPC.editfriendgroups
 }
 
-void APILiveJournal::createPosting( KBlog::BlogPosting *posting )
+void LiveJournal::createPosting( KBlog::BlogPosting *posting )
 {
   Q_UNUSED( posting );
   //TODO
   // LJ.XMLRPC.postevent
 }
 
-void APILiveJournal::deleteFriend( const QString &username )
+void LiveJournal::deleteFriend( const QString &username )
 {
   Q_UNUSED( username );
   //TODO
   // LJ.XMLRPC.editfriends
 }
 
-void APILiveJournal::expireCookie( const QString &cookie )
+void LiveJournal::expireCookie( const QString &cookie )
 {
   Q_UNUSED( cookie );
   //TODO
   // LJ.XMLRPC.sessionexpire
 }
 
-void APILiveJournal::expireAllCookies()
+void LiveJournal::expireAllCookies()
 {
   //TODO
   // LJ.XMLRPC.sessionexpire
 }
 
-void APILiveJournal::fetchPosting( KBlog::BlogPosting *posting )
+void LiveJournal::fetchPosting( KBlog::BlogPosting *posting )
 {
   Q_UNUSED( posting );
   //TODO
   // LJ.XMLRPC.getevents
 }
 
-QString APILiveJournal::fullName() const
+QString LiveJournal::fullName() const
 {
   return d->mFullName;
 }
 
-void APILiveJournal::generateCookie( bool longExpiration, bool fixedIP )
+void LiveJournal::generateCookie( bool longExpiration, bool fixedIP )
 {
   Q_UNUSED( longExpiration );
   Q_UNUSED( fixedIP );
@@ -106,73 +106,73 @@ void APILiveJournal::generateCookie( bool longExpiration, bool fixedIP )
   // LJ.XMLRPC.sessiongenerate
 }
 
-QString APILiveJournal::interfaceName() const
+QString LiveJournal::interfaceName() const
 {
-  return QLatin1String( "Movable Type API" );
+  return QLatin1String( "Movable Type " );
 }
 
-void APILiveJournal::listCategories()
+void LiveJournal::listCategories()
 {
   //TODO
   // LJ.XMLRPC.getfriendgroups
 }
 
-void APILiveJournal::listFriends()
+void LiveJournal::listFriends()
 {
   //TODO
   // LJ.XMLRPC.getfriends and their groups
 }
 
-void APILiveJournal::listFriendsOf()
+void LiveJournal::listFriendsOf()
 {
   //TODO
   // LJ.XMLRPC.friendof
 }
 
-void APILiveJournal::listMoods()
+void LiveJournal::listMoods()
 {
   //TODO
   // LJ.XMLRPC.login
 }
 
-void APILiveJournal::listPictureKeywords()
+void LiveJournal::listPictureKeywords()
 {
   //TODO
   // LJ.XMLRPC.login
 }
 
-void APILiveJournal::listRecentPostings( int number )
+void LiveJournal::listRecentPostings( int number )
 {
   Q_UNUSED( number );
   //TODO
   // LJ.XMLRPC.getevents with lastn and howmany
 }
 
-void APILiveJournal::modifyPosting( KBlog::BlogPosting *posting )
+void LiveJournal::modifyPosting( KBlog::BlogPosting *posting )
 {
   Q_UNUSED( posting );
   //TODO
   // LJ.XMLRPC.editevent
 }
 
-void APILiveJournal::removePosting( KBlog::BlogPosting *posting )
+void LiveJournal::removePosting( KBlog::BlogPosting *posting )
 {
   Q_UNUSED( posting );
   //TODO
   // LJ.XMLRPC.editevent
 }
 
-void APILiveJournal::setUrl( const KUrl &server )
+void LiveJournal::setUrl( const KUrl &server )
 {
-  APIBlog::setUrl( server );
+  Blog::setUrl( server );
 }
 
-QString APILiveJournal::serverMessage() const {
+QString LiveJournal::serverMessage() const {
   //TODO
   return d->mServerMessage;
 }
 
-QString APILiveJournal::userId() const {
+QString LiveJournal::userId() const {
   //TODO
   return d->mUserId;
 }

@@ -21,8 +21,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef API_BLOG_H
-#define API_BLOG_H
+#ifndef KBLOG_BLOG_H
+#define KBLOG_BLOG_H
 
 #include <kblog/kblog_export.h>
 
@@ -44,8 +44,8 @@ namespace KIO {
 
 /**
   @file
-  This file is part of the API for accessing Blog Servers
-  and defines the BlogPosting, BlogMedia, and APIBlog class.
+  This file is part of the  for accessing Blog Servers
+  and defines the BlogPosting, BlogMedia, and Blog class.
 
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
@@ -66,29 +66,29 @@ class BlogMedia;
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
 */
 
-class KBLOG_EXPORT APIBlog : public QObject
+class KBLOG_EXPORT Blog : public QObject
 {
   Q_OBJECT
   public:
     /**
-      Construtor used by the API implementations.
+      Construtor used by the  implementations.
 
       @param server the gateway url of the server.
       @param parent the parent of this object, defaults to NULL.
     */
-    explicit APIBlog( const KUrl &server, QObject *parent = 0 );
+    explicit Blog( const KUrl &server, QObject *parent = 0 );
 
     /**
-      Destroys the APIBlog object.
+      Destroys the Blog object.
     */
-    virtual ~APIBlog();
+    virtual ~Blog();
 
     /**
       Enumeration for possible errors.
     */
     enum ErrorType {
       XmlRpc,
-      AtomAPI,
+      Atom,
       ParsingError,
       AuthenticationError,
       NotSupported,
@@ -107,7 +107,7 @@ class KBLOG_EXPORT APIBlog : public QObject
                        const QString &applicationVersion );
 
     /**
-      Returns the API of the inherited object.
+      Returns the  of the inherited object.
     */
     virtual QString interfaceName() const = 0;
 
@@ -249,11 +249,11 @@ class KBLOG_EXPORT APIBlog : public QObject
 
       @see ErrorType
     */
-    virtual void error( KBlog::APIBlog::ErrorType type, const QString &errorMessage );
+    virtual void error( KBlog::Blog::ErrorType type, const QString &errorMessage );
 
   private:
-    class APIBlogPrivate;
-    APIBlogPrivate *const d;
+    class BlogPrivate;
+    BlogPrivate *const d;
 };
 
 } //namespace KBlog

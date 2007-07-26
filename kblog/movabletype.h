@@ -19,8 +19,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef API_MOVABLETYPE_H
-#define API_MOVABLETYPE_H
+#ifndef KBLOG_MOVABLETYPE_H
+#define KBLOG_MOVABLETYPE_H
 
 #include <kblog/metaweblog.h>
 
@@ -28,8 +28,8 @@ class KUrl;
 
 /**
   @file
-  This file is part of the API for accessing Blog Servers
-  and defines the APIMovableType class.
+  This file is part of the  for accessing Blog Servers
+  and defines the MovableType class.
 
   @author Mike Arthur \<mike\@mikearthur.co.uk\>
 */
@@ -37,10 +37,10 @@ class KUrl;
 namespace KBlog {
 /**
   @brief
-  A class that can be used for access to Movable Type API blogs. Almost every
-  blog server supports Movable Type API. Blah blah
+  A class that can be used for access to Movable Type blogs. Almost every
+  blog server supports Movable Type.
   @code
-  APIBlog* myblog = new APIMovableType("http://example.com/xmlrpc/gateway.php");
+  Blog* myblog = new MovableType("http://example.com/xmlrpc/gateway.php");
   KBlog::BlogPosting *post = new BlogPosting();
   post->setUserId( "some_user_id" );
   post->setTitle( "This is the title." );
@@ -50,22 +50,22 @@ namespace KBlog {
 
   @author Mike Arthur \<mike\@mikearthur.co.uk\>
 */
-class KBLOG_EXPORT APIMovableType : public APIMetaWeblog
+class KBLOG_EXPORT MovableType : public MetaWeblog
 {
   Q_OBJECT
   public:
     /**
-      Create an object for Movable Type API
+      Create an object for Movable Type 
 
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
     */
-    explicit APIMovableType( const KUrl &server, QObject *parent = 0 );
+    explicit MovableType( const KUrl &server, QObject *parent = 0 );
 
     /**
       Destroy the object.
     */
-    ~APIMovableType();
+    ~MovableType();
 
     /**
       Create a new posting on server.
@@ -83,7 +83,7 @@ class KBLOG_EXPORT APIMovableType : public APIMetaWeblog
     void fetchPosting( KBlog::BlogPosting *posting );
 
     /**
-      Returns the API of the inherited object.
+      Returns the  of the inherited object.
     */
     QString interfaceName() const;
 
@@ -127,8 +127,8 @@ class KBLOG_EXPORT APIMovableType : public APIMetaWeblog
     void listedTrackbackPings( const QMap<QString, QString> &pings );
 
   private:
-    class APIMovableTypePrivate;
-    APIMovableTypePrivate *const d;
+    class MovableTypePrivate;
+    MovableTypePrivate *const d;
 };
 
 } //namespace KBlog

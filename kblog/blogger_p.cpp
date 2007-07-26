@@ -33,18 +33,18 @@
 
 using namespace KBlog;
 
-APIBlogger::APIBloggerPrivate::APIBloggerPrivate()
+Blogger1::Blogger1Private::Blogger1Private()
 {
   mXmlRpcClient = 0;
   callCounter = 1;
 }
 
-APIBlogger::APIBloggerPrivate::~APIBloggerPrivate()
+Blogger1::Blogger1Private::~Blogger1Private()
 {
   delete mXmlRpcClient;
 }
 
-QList<QVariant> APIBlogger::APIBloggerPrivate::defaultArgs( const QString &id )
+QList<QVariant> Blogger1::Blogger1Private::defaultArgs( const QString &id )
 {
   QList<QVariant> args;
   args << QVariant( QString( "0123456789ABCDEF" ) ); //AppKey
@@ -56,12 +56,12 @@ QList<QVariant> APIBlogger::APIBloggerPrivate::defaultArgs( const QString &id )
   return args;
 }
 
-void APIBlogger::APIBloggerPrivate::slotListBlogs(
+void Blogger1::Blogger1Private::slotListBlogs(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( id );
 
-  kDebug(5323) << "APIBlogger::slotListBlogs" << endl;
+  kDebug(5323) << "Blogger1::slotListBlogs" << endl;
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   QMap<QString,QString> blogsInfo;
   if ( result[0].type() != QVariant::List ) {
@@ -90,12 +90,12 @@ void APIBlogger::APIBloggerPrivate::slotListBlogs(
   }
 }
 
-void APIBlogger::APIBloggerPrivate::slotListRecentPostings(
+void Blogger1::Blogger1Private::slotListRecentPostings(
     const QList<QVariant> &result, const QVariant &id )
 {
    int count = id.toInt();
 
-   kDebug(5323) << "APIBlogger::slotListRecentPostings" << endl;
+   kDebug(5323) << "Blogger1::slotListRecentPostings" << endl;
    kDebug(5323) << "TOP: " << result[0].typeName() << endl;
 
    QList <BlogPosting*> fetchedPostingList;
@@ -131,10 +131,10 @@ void APIBlogger::APIBloggerPrivate::slotListRecentPostings(
    emit parent->listedRecentPostings(fetchedPostingList);
 }
 
-void APIBlogger::APIBloggerPrivate::slotFetchPosting(
+void Blogger1::Blogger1Private::slotFetchPosting(
     const QList<QVariant> &result, const QVariant &id )
 {
-  kDebug(5323) << "APIBlogger::slotFetchPosting" << endl;
+  kDebug(5323) << "Blogger1::slotFetchPosting" << endl;
 
 //   if( !callMap[ id.toInt() ] ){
 //     kDebug(5323) << "Could not map the the id back to the posting. " << endl;
@@ -169,12 +169,12 @@ void APIBlogger::APIBloggerPrivate::slotFetchPosting(
   callMap.remove( id.toInt() );
 }
 
-void APIBlogger::APIBloggerPrivate::slotCreatePosting(
+void Blogger1::Blogger1Private::slotCreatePosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( id );
 
-  kDebug(5323) << "APIBlogger::slotCreatePosting" << endl;
+  kDebug(5323) << "Blogger1::slotCreatePosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
@@ -190,12 +190,12 @@ void APIBlogger::APIBloggerPrivate::slotCreatePosting(
   }
 }
 
-void APIBlogger::APIBloggerPrivate::slotModifyPosting(
+void Blogger1::Blogger1Private::slotModifyPosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( id );
 
-  kDebug(5323) << "APIBlogger::slotModifyPosting" << endl;
+  kDebug(5323) << "Blogger1::slotModifyPosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
@@ -211,7 +211,7 @@ void APIBlogger::APIBloggerPrivate::slotModifyPosting(
   }
 }
 
-void APIBlogger::APIBloggerPrivate::slotError( int number,
+void Blogger1::Blogger1Private::slotError( int number,
                                                const QString &errorString,
                                                const QVariant &id )
 {
@@ -221,7 +221,7 @@ void APIBlogger::APIBloggerPrivate::slotError( int number,
   emit parent->error( XmlRpc, errorString );
 }
 
-bool APIBlogger::APIBloggerPrivate::readPostingFromMap(
+bool Blogger1::Blogger1Private::readPostingFromMap(
     BlogPosting *post, const QMap<QString, QVariant> &postInfo )
 {
   // FIXME: integrate error handling

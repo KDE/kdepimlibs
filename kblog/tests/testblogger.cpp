@@ -35,47 +35,47 @@
 
 using namespace KBlog;
 
-void TestBloggerWarnings::userInfoTimeoutWarning()
+void TestBlogger1Warnings::userInfoTimeoutWarning()
 {
   QWARN( "userInfo() timeout. This can be caused by an error, too." );
 }
 
-void TestBloggerWarnings::listBlogsTimeoutWarning()
+void TestBlogger1Warnings::listBlogsTimeoutWarning()
 {
   QWARN( "listBlogs()  timeout. This can be caused by an error, too." );
 }
 
-void TestBloggerWarnings::listPostingsTimeoutWarning()
+void TestBlogger1Warnings::listPostingsTimeoutWarning()
 {
   QWARN( "listPostings() timeout. This can be caused by an error, too." );
 }
 
-void TestBloggerWarnings::fetchPostingTimeoutWarning()
+void TestBlogger1Warnings::fetchPostingTimeoutWarning()
 {
   QWARN( "fetchPosting() timeout. This can be caused by an error, too." );
 }
 
-void TestBloggerWarnings::modifyPostingTimeoutWarning()
+void TestBlogger1Warnings::modifyPostingTimeoutWarning()
 {
   QWARN( "modifyPosting() timeout. This can be caused by an error, too." );
 }
 
-void TestBloggerWarnings::createPostingTimeoutWarning()
+void TestBlogger1Warnings::createPostingTimeoutWarning()
 {
   QWARN( "createPosting() timeout. This can be caused by an error, too." );
 }
 
-void TestBloggerWarnings::error( const errorType &type, const QString &errStr )
+void TestBlogger1Warnings::error( const errorType &type, const QString &errStr )
 {
   Q_UNUSED( type );
   QWARN( errStr.toUtf8().data() );
 }
 
-QTEST_KDEMAIN( TestBlogger, NoGUI )
+QTEST_KDEMAIN( TestBlogger1, NoGUI )
 
-void TestBlogger::testValidity()
+void TestBlogger1::testValidity()
 {
-  APIBlogger *b = new APIBlogger( KUrl( "http://wrong.url.org/somegateway" ) );
+  Blogger1 *b = new Blogger1( KUrl( "http://wrong.url.org/somegateway" ) );
   QVERIFY( b->url() == KUrl( "http://wrong.url.org/somegateway" ) );
   b->setUrl( KUrl( "http://soctest.wordpress.com/xmlrpc.php" ) );
   b->setUsername( "socapitest" );
@@ -87,26 +87,26 @@ void TestBlogger::testValidity()
   QVERIFY( b->blogId() == "1" );
   QVERIFY( b->username() == "socapitest" );
   QVERIFY( b->password() == "k0nt4ctbl0g" );
-  QVERIFY( b->interfaceName() == "Blogger API 1.0" );
+  QVERIFY( b->interfaceName() == "Blogger1  1.0" );
   QVERIFY( b->timeZone().name() == QString( "UTC" ) );
   QVERIFY( b->downloadCount() == DOWNLOADCOUNT );
 
   BlogPosting *p = new BlogPosting();
   KDateTime mDateTime( QDateTime::currentDateTime() );
-  p->setTitle( "TestBlogger" );
-  p->setContent( "TestBlogger: posted content." );
+  p->setTitle( "TestBlogger1" );
+  p->setContent( "TestBlogger1: posted content." );
   p->setPublish( true );
   p->setPostingId( QString( "41" ) );
   p->setCreationDateTime( mDateTime );
   p->setModificationDateTime( mDateTime );
-  QVERIFY( p->title() == "TestBlogger" );
-  QVERIFY( p->content() == "TestBlogger: posted content." );
+  QVERIFY( p->title() == "TestBlogger1" );
+  QVERIFY( p->content() == "TestBlogger1: posted content." );
   QVERIFY( p->publish() == true );
   QVERIFY( p->postingId() == QString ( "41" ) );
   QVERIFY( p->creationDateTime() == mDateTime );
   QVERIFY( p->modificationDateTime() == mDateTime );
 
-  TestBloggerWarnings *warnings = new TestBloggerWarnings();
+  TestBlogger1Warnings *warnings = new TestBlogger1Warnings();
   connect( b, SIGNAL( error( const errorType&, const QString& ) ),
            warnings, SLOT( error( const errorType&, const QString& ) ) );
 

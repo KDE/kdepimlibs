@@ -34,44 +34,44 @@
 
 using namespace KBlog;
 
-APIGData::APIGData( const KUrl &server, QObject *parent )
-  : APIBlog( server, parent ), d( new APIGDataPrivate )
+GData::GData( const KUrl &server, QObject *parent )
+  : Blog( server, parent ), d( new GDataPrivate )
 {
   d->parent = this;
   setUrl( server );
 }
 
-APIGData::~APIGData()
+GData::~GData()
 {
   delete d;
 }
 
-QString APIGData::interfaceName() const
+QString GData::interfaceName() const
 {
-  return QLatin1String( "GData API" );
+  return QLatin1String( "GData " );
 }
 
-QString APIGData::fullName() const
+QString GData::fullName() const
 {
   return d->mFullName;
 }
 
-void APIGData::setFullName( const QString &fullName )
+void GData::setFullName( const QString &fullName )
 {
   d->mFullName = fullName;
 }
 
-QString APIGData::profileId() const
+QString GData::profileId() const
 {
   return d->mProfileId;
 }
 
-void APIGData::setProfileId( const QString& pid )
+void GData::setProfileId( const QString& pid )
 {
   d->mProfileId = pid;
 }
 
-void APIGData::fetchUserInfo()
+void GData::fetchUserInfo()
 {
   // fetch the introspection file synchronously and parse it
   QByteArray data;
@@ -104,7 +104,7 @@ void APIGData::fetchUserInfo()
   }
 }
 
-void APIGData::listBlogs()
+void GData::listBlogs()
 {
     kDebug() << "listBlogs()" << endl;
     Syndication::Loader *loader = Syndication::Loader::create();
@@ -116,7 +116,7 @@ void APIGData::listBlogs()
         + QString( "/blogs" ) );
 }
 
-void APIGData::listRecentPostings( int number )
+void GData::listRecentPostings( int number )
 {
     kDebug() << "listRecentPostings()" << endl;
     Syndication::Loader *loader = Syndication::Loader::create();
@@ -129,12 +129,12 @@ void APIGData::listRecentPostings( int number )
         + QString( "/posts/default" ) );
 }
 
-void APIGData::listComments( KBlog::BlogPosting *posting )
+void GData::listComments( KBlog::BlogPosting *posting )
 {
   return; //FIXME
 }
 
-void APIGData::fetchPosting( KBlog::BlogPosting *posting )
+void GData::fetchPosting( KBlog::BlogPosting *posting )
 {
   Q_UNUSED( posting );
 //   if ( d->mLock.tryLock() ) {
@@ -152,14 +152,14 @@ void APIGData::fetchPosting( KBlog::BlogPosting *posting )
 //   return false;
 }
 
-void APIGData::modifyPosting( KBlog::BlogPosting* posting )
+void GData::modifyPosting( KBlog::BlogPosting* posting )
 {
     Q_UNUSED( posting );
     kDebug() << "modifyPosting()" << endl;
     d->authenticate();
 }
 
-void APIGData::createPosting( KBlog::BlogPosting* posting )
+void GData::createPosting( KBlog::BlogPosting* posting )
 {
   Q_UNUSED( posting );
     kDebug() << "createPosting()" << endl;
@@ -204,14 +204,14 @@ void APIGData::createPosting( KBlog::BlogPosting* posting )
              d, SLOT( slotCreatePosting( KJob * ) ) );
 }
 
-void APIGData::removePosting( KBlog::BlogPosting *posting )
+void GData::removePosting( KBlog::BlogPosting *posting )
 {
     Q_UNUSED( posting );
     kDebug() << "deletePosting()" << endl;
     d->authenticate();
 }
 
-void APIGData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
+void GData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
 {
   return; //FIXME
 }

@@ -20,8 +20,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef API_BLOGGER_H
-#define API_BLOGGER_H
+#ifndef KBLOG_BLOGGER_H
+#define KBLOG_BLOGGER_H
 
 #include <kblog/blog.h>
 
@@ -29,8 +29,8 @@ class KUrl;
 
 /**
   @file
-  This file is part of the API for accessing Blog Servers
-  and defines the APIBlogger class.
+  This file is part of the  for accessing Blog Servers
+  and defines the Blogger1 class.
 
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
@@ -39,13 +39,13 @@ class KUrl;
 namespace KBlog {
 /**
    @brief
-   A class that can be used for access to Blogger API 1.0 blogs.
-   Almost every blog server supports Blogger API 1.0. Compared to
-   MetaWeblog API it is not as functional and is obsolete compared to
-   Blogger API 2.0 which uses Atom API instead of Xml-Rpc.
+   A class that can be used for access to Blogger  1.0 blogs.
+   Almost every blog server supports Blogger  1.0. Compared to
+   MetaWeblog  it is not as functional and is obsolete compared to
+   GData which uses Atom instead of Xml-Rpc.
 
    @code
-   APIBlog* myblog = new APIBlogger("http://example.com/xmlrpc/gateway.php");
+   Blog* myblog = new Blogger1("http://example.com/xmlrpc/gateway.php");
    KBlog::BlogPosting *post = new BlogPosting();
    post->setUserId( "some_user_id" );
    post->setTitle( "This is the title." );
@@ -56,25 +56,25 @@ namespace KBlog {
    @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
    @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
 */
-class KBLOG_EXPORT APIBlogger : public APIBlog
+class KBLOG_EXPORT Blogger1 : public Blog
 {
   Q_OBJECT
   public:
     /**
-      Create an object for Blogger API 1.0
+      Create an object for Blogger  1.0
 
       @param server is the url for the xmlrpc gateway.
       @param parent the parent object.
     */
-    explicit APIBlogger( const KUrl &server, QObject *parent = 0 );
+    explicit Blogger1( const KUrl &server, QObject *parent = 0 );
 
     /**
        Destroy the object.
     */
-    ~APIBlogger();
+    ~Blogger1();
 
     /**
-      Returns the API of the inherited object.
+      Returns the  of the inherited object.
     */
     QString interfaceName() const;
 
@@ -143,8 +143,8 @@ class KBLOG_EXPORT APIBlogger : public APIBlog
     void removePosting( KBlog::BlogPosting *posting ); //FIXME docs
 
   private:
-    class APIBloggerPrivate;
-    APIBloggerPrivate *const d;
+    class Blogger1Private;
+    Blogger1Private *const d;
 };
 
 } //namespace KBlog

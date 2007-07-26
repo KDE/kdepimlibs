@@ -31,18 +31,18 @@
 
 using namespace KBlog;
 
-class APIBlogger::APIBloggerPrivate : public QObject
+class Blogger1::Blogger1Private : public QObject
 {
   Q_OBJECT
 
   public:
     QString mAppId;
-    APIBlogger *parent;
+    Blogger1 *parent;
     KXmlRpc::Client *mXmlRpcClient;
     int callCounter;
     QMap<int,KBlog::BlogPosting*> callMap;
-    APIBloggerPrivate();
-    ~APIBloggerPrivate();
+    Blogger1Private();
+    ~Blogger1Private();
     QList<QVariant> defaultArgs( const QString &id = QString() );
 
   private:

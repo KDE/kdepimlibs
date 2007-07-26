@@ -76,7 +76,7 @@ QTEST_KDEMAIN( TestMetaWeblog, NoGUI )
 
 void TestMetaWeblog::testValidity()
 {
-  APIMetaWeblog *b = new APIMetaWeblog(
+  MetaWeblog *b = new MetaWeblog(
     KUrl( "http://wrong.url.org/somegateway" ) );
   QVERIFY( b->url() == KUrl( "http://wrong.url.org/somegateway" ) );
   b->setUrl( KUrl( "http://soctest.wordpress.com/xmlrpc.php" ) );
@@ -89,7 +89,7 @@ void TestMetaWeblog::testValidity()
   QVERIFY( b->blogId() == "1" );
   QVERIFY( b->username() == "socapitest" );
   QVERIFY( b->password() == "k0nt4ctbl0g" );
-  QVERIFY( b->interfaceName() == "MetaWeblog API" );
+  QVERIFY( b->interfaceName() == "MetaWeblog " );
   QVERIFY( b->timeZone().name() == QString( "UTC" ) );
   QVERIFY( b->downloadCount() == DOWNLOADCOUNT );
 
