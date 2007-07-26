@@ -38,6 +38,9 @@ class KUrl;
  */
 
 namespace KBlog {
+
+  class BlogPostingComment;
+
 /**
   @brief
   A class that can be used for access to GData API blogs. Almost every blog
@@ -98,6 +101,8 @@ class KBLOG_EXPORT APIGData : public APIBlog
     */
     void listRecentPostings( int number );
 
+    void listComments( KBlog::BlogPosting *posting );
+
     /**
         Fetch the Posting with postingId.
         @param postingId is the id of the posting on the server.
@@ -129,6 +134,8 @@ class KBLOG_EXPORT APIGData : public APIBlog
         @see void removePosting( KBlog::BlogPosting *posting )
     */
     void removePosting( KBlog::BlogPosting *posting );
+
+    void createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
 
     /**
       Sets the user's name for the blog.

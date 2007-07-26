@@ -22,6 +22,7 @@
 #include "gdata.h"
 #include "gdata_p.h"
 #include "blogposting.h"
+#include "blogpostingcomment.h"
 
 #include <syndication/loader.h>
 #include <kio/netaccess.h>
@@ -128,6 +129,11 @@ void APIGData::listRecentPostings( int number )
         + QString( "/posts/default" ) );
 }
 
+void APIGData::listComments( KBlog::BlogPosting *posting )
+{
+  return; //FIXME
+}
+
 void APIGData::fetchPosting( KBlog::BlogPosting *posting )
 {
   Q_UNUSED( posting );
@@ -203,6 +209,11 @@ void APIGData::removePosting( KBlog::BlogPosting *posting )
     Q_UNUSED( posting );
     kDebug() << "deletePosting()" << endl;
     d->authenticate();
+}
+
+void APIGData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
+{
+  return; //FIXME
 }
 
 #include "gdata.moc"

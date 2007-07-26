@@ -35,6 +35,8 @@ class KUrl;
 
 namespace KBlog {
 
+  class BlogPostingComment;
+
 /**
   @brief
   A class that represents a blog posting on the server.
@@ -219,6 +221,8 @@ public:
 
   Q_SIGNALS:
     void statusChanged( KBlog::BlogPosting::Status status );
+
+    void listedComments( const QList<KBlog::BlogPostingComment*> &comments );
 
   private:
     class BlogPostingPrivate;
