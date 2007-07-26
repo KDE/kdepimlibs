@@ -9,6 +9,7 @@ add_subdirectory( tests )
 set(kblog_LIB_SRCS
 blog.cpp
 blogposting.cpp
+blogpostingcomment.cpp
 blogmedia.cpp
 blogger.cpp
 blogger_p.cpp
@@ -33,4 +34,4 @@ install(TARGETS kblog  DESTINATION ${LIB_INSTALL_DIR} )
 
 ########### install files ##############
 
-install( FILES kblog_export.h blog.h blogposting.h blogmedia.h blogger.h gdata.h livejournal.h metaweblog.h movabletype.h DESTINATION ${INCLUDE_INSTALL_DIR}/kblog)
+install( FILES kblog_export.h blog.h blogposting.h blogpostingcomment.h blogmedia.h blogger.h gdata.h livejournal.h metaweblog.h movabletype.h DESTINATION ${INCLUDE_INSTALL_DIR}/kblog)
