@@ -19,10 +19,10 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef BLOGGER_P_H
-#define BLOGGER_P_H
+#ifndef BLOGGER1_P_H
+#define BLOGGER1_P_H
 
-#include "blogger.h"
+#include "blogger1.h"
 #include "blog_p.h"
 
 #include <kxmlrpcclient/client.h>

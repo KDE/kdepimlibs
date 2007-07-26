@@ -21,8 +21,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include "blogger.h"
-#include "blogger_p.h"
+#include "blogger1.h"
+#include "blogger1_p.h"
 #include "blogposting.h"
 
 #include <KDebug>
@@ -154,4 +154,4 @@ void Blogger1::removePosting( KBlog::BlogPosting *posting )
 //   return false;
 }
 
-#include "blogger.moc"
+#include "blogger1.moc"

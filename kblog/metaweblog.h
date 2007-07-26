@@ -23,7 +23,7 @@
 #ifndef KBLOG_METAWEBLOG_H
 #define KBLOG_METAWEBLOG_H
 
-#include <kblog/blogger.h>
+#include <kblog/blogger1.h>
 
 class KUrl;
 
@@ -62,7 +62,7 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
   Q_OBJECT
   public:
     /**
-      Create an object for MetaWeblog 
+      Create an object for MetaWeblog
 
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.

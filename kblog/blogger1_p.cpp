@@ -20,7 +20,7 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include "blogger_p.h"
+#include "blogger1_p.h"
 #include "blogposting.h"
 
 #include <kxmlrpcclient/client.h>
@@ -268,4 +268,4 @@ bool Blogger1::Blogger1Private::readPostingFromMap(
   return true;
 }
 
-#include "blogger_p.moc"
+#include "blogger1_p.moc"
