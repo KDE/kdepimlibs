@@ -56,6 +56,11 @@ void APIBlogger::setUrl( const KUrl &server )
   d->mXmlRpcClient->setUserAgent( userAgent() );
 }
 
+void APIBlogger::fetchUserInfo()
+{
+  return; //TODO
+}
+
 void APIBlogger::listBlogs()
 {
 
