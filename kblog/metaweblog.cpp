@@ -33,15 +33,24 @@
 using namespace KBlog;
 
 MetaWeblog::MetaWeblog( const KUrl &server, QObject *parent )
-  : Blogger1( server, parent ), d( new MetaWeblogPrivate )
+  : Blogger1( server, *new MetaWeblogPrivate, parent )
 {
+  Q_D(MetaWeblog);
+  d->parent = this;
+  setUrl( server );
+}
+
+MetaWeblog::MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd,
+                        QObject *parent )
+  : Blogger1( server, dd, parent )
+{
+  Q_D(MetaWeblog);
   d->parent = this;
   setUrl( server );
 }
 
 MetaWeblog::~MetaWeblog()
 {
-  delete d;
 }
 
 QString MetaWeblog::interfaceName() const
@@ -51,6 +60,7 @@ QString MetaWeblog::interfaceName() const
 
 void MetaWeblog::setUrl( const KUrl &server )
 {
+  Q_D(MetaWeblog);
   Blogger1::setUrl( server );
   delete d->mXmlRpcClient;
   d->mXmlRpcClient = new KXmlRpc::Client( server );
@@ -59,27 +69,30 @@ void MetaWeblog::setUrl( const KUrl &server )
 
 void MetaWeblog::listRecentPostings( int number )
 {
+    Q_D(MetaWeblog);
     kDebug(5323) << "Fetching List of Posts..." << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     args << QVariant( number );
     d->mXmlRpcClient->call(
       "metaWeblog.getRecentPosts", args,
-      d, SLOT( slotListRecentPostings( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
+      this, SLOT( slotListRecentPostings( const QList<QVariant>&, const QVariant& ) ),
+      this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void MetaWeblog::listCategories()
 {
+    Q_D(MetaWeblog);
     kDebug(5323) << "Fetching List of Categories..." << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     d->mXmlRpcClient->call(
       "metaWeblog.getCategories", args,
-      d, SLOT( slotListCategories( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
+      this, SLOT( slotListCategories( const QList<QVariant>&, const QVariant& ) ),
+      this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void MetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
 {
+//   Q_D(MetaWeblog);
 //   if ( d->mLock.tryLock() ) {
 //     kDebug(5323) << "Fetching Posting with url " << postingId << endl;
 //     QList<QVariant> args( d->defaultArgs( postingId ) );
@@ -94,6 +107,7 @@ void MetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
 
 void MetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 {
+  Q_D(MetaWeblog);
   if ( !posting ) {
     kDebug(5323) << "MetaWeblog::modifyPosting: posting null pointer"
         << endl;
@@ -112,12 +126,13 @@ void MetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
     args << QVariant( posting->isPublished() );
     d->mXmlRpcClient->call(
       "metaWeblog.editPost", args,
-      d, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
+      this, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
+      this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void MetaWeblog::createPosting( KBlog::BlogPosting *posting )
 {
+  Q_D(MetaWeblog);
   if ( !posting ) {
     kDebug(5323) << "MetaWeblog::createPosting: posting null pointer"
         << endl;
@@ -134,12 +149,13 @@ void MetaWeblog::createPosting( KBlog::BlogPosting *posting )
     args << QVariant( posting->isPublished() );
     d->mXmlRpcClient->call (
       "metaWeblog.newPost", args,
-      d, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
+      this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
+      this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void MetaWeblog::createMedia( KBlog::BlogMedia *media )
 {
+    Q_D(MetaWeblog);
     kDebug(5323) << "MetaWeblog::createMedia: name="<< media->name() << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     QMap<QString, QVariant> map;
@@ -150,8 +166,8 @@ void MetaWeblog::createMedia( KBlog::BlogMedia *media )
     args << map;
     d->mXmlRpcClient->call(
       "metaWeblog.newMediaObject", args,
-      d, SLOT( slotCreateMedia( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
+      this, SLOT( slotCreateMedia( const QList<QVariant>&, const QVariant& ) ),
+      this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 
 }
 

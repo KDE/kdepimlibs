@@ -23,35 +23,36 @@
 #define METAWEBLOG_P_H
 
 #include "metaweblog.h"
+#include "blogger1_p.h"
 
 #include <kxmlrpcclient/client.h>
 
 using namespace KBlog;
 
-class MetaWeblog::MetaWeblogPrivate : public QObject
+class MetaWeblogPrivate : public Blogger1Private
 {
-  Q_OBJECT
   public:
-    QString mAppId;
     QMap<QString,QString> mCategories;
-    MetaWeblog *parent;
-    KXmlRpc::Client *mXmlRpcClient;
     MetaWeblogPrivate();
     ~MetaWeblogPrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );
+    virtual void slotListRecentPostings( const QList<QVariant> &result,
+                                         const QVariant &id );
+    virtual void slotListCategories( const QList<QVariant> &result,
+                                     const QVariant &id );
+    virtual void slotFetchPosting( const QList<QVariant> &result,
+                                   const QVariant &id );
+    virtual void slotCreatePosting( const QList<QVariant> &result,
+                                    const QVariant &id );
+    virtual void slotModifyPosting( const QList<QVariant> &result,
+                                    const QVariant &id );
+    virtual void slotCreateMedia( const QList<QVariant> &result,
+                                  const QVariant &id );
+    virtual void slotError( int, const QString&, const QVariant& );
 
   private:
     bool readPostingFromMap( BlogPosting *post,
                              const QMap<QString, QVariant> &postInfo );
-
-  public Q_SLOTS:
-    void slotListRecentPostings( const QList<QVariant> &result, const QVariant &id );
-    void slotListCategories( const QList<QVariant> &result, const QVariant &id );
-    void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
-    void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
-    void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
-    void slotCreateMedia( const QList<QVariant> &result, const QVariant &id );
-    void slotError( int, const QString&, const QVariant& );
 };
 
 #endif

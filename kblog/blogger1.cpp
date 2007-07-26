@@ -32,15 +32,23 @@
 using namespace KBlog;
 
 Blogger1::Blogger1( const KUrl &server, QObject *parent )
-  : Blog( server, parent ), d( new Blogger1Private )
+  : Blog( server, *new Blogger1Private, parent )
 {
+  Q_D(Blogger1);
+  d->parent = this;
+  setUrl( server );
+}
+
+Blogger1::Blogger1( const KUrl &server, Blogger1Private &dd, QObject *parent )
+  : Blog( server, dd, parent )
+{
+  Q_D(Blogger1);
   d->parent = this;
   setUrl( server );
 }
 
 Blogger1::~Blogger1()
 {
-  delete d;
 }
 
 QString Blogger1::interfaceName() const
@@ -50,6 +58,7 @@ QString Blogger1::interfaceName() const
 
 void Blogger1::setUrl( const KUrl &server )
 {
+  Q_D(Blogger1);
   Blog::setUrl( server );
   delete d->mXmlRpcClient;
   d->mXmlRpcClient = new KXmlRpc::Client( server );
@@ -63,42 +72,45 @@ void Blogger1::fetchUserInfo()
 
 void Blogger1::listBlogs()
 {
-
+    Q_D(Blogger1);
     kDebug(5323) << "Fetch List of Blogs..." << endl;
     QList<QVariant> args( d->defaultArgs() );
     d->mXmlRpcClient->call(
       "blogger.getUsersBlogs", args,
-      d, SLOT( slotListBlogs( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
+      this, SLOT( slotListBlogs( const QList<QVariant>&, const QVariant& ) ),
+      this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void Blogger1::listRecentPostings( int number )
 {
+    Q_D(Blogger1);
     kDebug(5323) << "Fetching List of Posts..." << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     args << QVariant( number );
     d->mXmlRpcClient->call(
       "blogger.getRecentPosts", args,
-      d, SLOT( slotListRecentPostings( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT( slotError( int, const QString&, const QVariant& ) ),
+      this, SLOT( slotListRecentPostings( const QList<QVariant>&, const QVariant& ) ),
+      this, SLOT( slotError( int, const QString&, const QVariant& ) ),
                QVariant( number ) );
 }
 
 void Blogger1::fetchPosting( KBlog::BlogPosting *posting )
 {
+     Q_D(Blogger1);
      kDebug(5323) << "Fetching Posting with url " << posting->postingId()
          << endl;
      QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
      d->callMap[ d->callCounter++ ] = posting;
      d->mXmlRpcClient->call(
        "blogger.getPost", args,
-       d, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
-       d, SLOT( slotError( int, const QString&, const QVariant& ) ),
+       this, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
+       this, SLOT( slotError( int, const QString&, const QVariant& ) ),
                 QVariant( d->callCounter ) );
 }
 
 void Blogger1::modifyPosting( KBlog::BlogPosting *posting )
 {
+  Q_D(Blogger1);
   if ( !posting ) {
     kDebug(5323) << "Blogger1::modifyPosting: posting is null pointer"
         << endl;
@@ -111,12 +123,13 @@ void Blogger1::modifyPosting( KBlog::BlogPosting *posting )
     args << QVariant( posting->isPublished() );
     d->mXmlRpcClient->call(
       "blogger.editPost", args,
-      d, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
+      this, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
+      this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void Blogger1::createPosting( KBlog::BlogPosting *posting )
 {
+  Q_D(Blogger1);
   if ( !posting ) {
     kDebug(5323) << "Blogger1::createPosting: posting is null pointer"
         << endl;
@@ -134,12 +147,13 @@ void Blogger1::createPosting( KBlog::BlogPosting *posting )
     args << QVariant( posting->isPublished() );
     d->mXmlRpcClient->call(
       "blogger.newPost", args,
-      d, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
-      d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
+      this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
+      this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void Blogger1::removePosting( KBlog::BlogPosting *posting )
 {
+//  Q_D(Blogger1);
 //   if ( d->mLock.tryLock() ) {
 //     kDebug(5323) << "Blogger1::removePosting: postingId=" << postingId
 //          << endl;
@@ -147,8 +161,8 @@ void Blogger1::removePosting( KBlog::BlogPosting *posting )
 //     args << QVariant( /*publish=*/true );
 //     d->mXmlRpcClient->call(
 //       "blogger.deletePost", args,
-//       d, SLOT( slotModifyPosting( QList<QVariant> &result, QVariant &id ) ),
-//       d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
+//     this, SLOT( slotModifyPosting( QList<QVariant> &result, QVariant &id ) ),
+//     this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 //     return true;
 //   }
 //   return false;

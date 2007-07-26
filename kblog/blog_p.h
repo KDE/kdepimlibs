@@ -26,13 +26,19 @@
 
 #include <KTimeZone>
 #include <KUrl>
+#include <kxmlrpcclient/client.h>
 
 namespace KBlog {
 
-class Blog::BlogPrivate
+class BlogPrivate
 {
   public:
+    BlogPrivate();
+    virtual ~BlogPrivate();
     Blog *parent;
+    KXmlRpc::Client *mXmlRpcClient;
+    int callCounter;
+    QMap<int,KBlog::BlogPosting*> callMap;
     QString mBlogId;
     QString mUsername;
     QString mPassword;
@@ -40,7 +46,23 @@ class Blog::BlogPrivate
     KUrl mUrl;
     KTimeZone mTimeZone;
     unsigned int mDownloadCount;
-    void setBlogPostingId( BlogPosting *posting, const QString &postingId );
+    virtual QList<QVariant> defaultArgs( const QString &id = QString() );
+    virtual void slotListBlogs( const QList<QVariant> &result,
+                                const QVariant &id );
+    virtual void slotListRecentPostings( const QList<QVariant> &result,
+                                         const QVariant &id );
+    virtual void slotFetchPosting( const QList<QVariant> &result,
+                                   const QVariant &id );
+    virtual void slotCreatePosting( const QList<QVariant> &result,
+                                    const QVariant &id );
+    virtual void slotModifyPosting( const QList<QVariant> &result,
+                                    const QVariant &id );
+    virtual void slotError( int number, const QString &errorString,
+                            const QVariant &id );
+
+  private:
+    virtual bool readPostingFromMap( BlogPosting *post,
+                                     const QMap<QString, QVariant> &postInfo );
 };
 
 } //namespace KBlog

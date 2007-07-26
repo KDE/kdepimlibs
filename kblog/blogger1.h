@@ -26,6 +26,7 @@
 #include <kblog/blog.h>
 
 class KUrl;
+class Blogger1Private;
 
 /**
   @file
@@ -37,6 +38,7 @@ class KUrl;
 */
 
 namespace KBlog {
+
 /**
    @brief
    A class that can be used for access to Blogger  1.0 blogs.
@@ -142,9 +144,11 @@ class KBLOG_EXPORT Blogger1 : public Blog
     */
     void removePosting( KBlog::BlogPosting *posting ); //FIXME docs
 
+  protected:
+    Blogger1( const KUrl &server, Blogger1Private &dd, QObject *parent = 0 );
+
   private:
-    class Blogger1Private;
-    Blogger1Private *const d;
+    Q_DECLARE_PRIVATE(Blogger1)
 };
 
 } //namespace KBlog

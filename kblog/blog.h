@@ -56,6 +56,7 @@ namespace KBlog {
 
 class BlogPosting;
 class BlogMedia;
+class BlogPrivate;
 
 /**
   @brief
@@ -249,11 +250,27 @@ class KBLOG_EXPORT Blog : public QObject
 
       @see ErrorType
     */
-    virtual void error( KBlog::Blog::ErrorType type, const QString &errorMessage );
+    virtual void error( KBlog::Blog::ErrorType type,
+                        const QString &errorMessage );
+
+  protected:
+    BlogPrivate * const d_ptr;
+    Blog( const KUrl &server, BlogPrivate &dd, QObject *parent = 0 );
 
   private:
-    class BlogPrivate;
-    BlogPrivate *const d;
+    Q_DECLARE_PRIVATE(Blog)
+    Q_PRIVATE_SLOT(d_ptr, void slotListBlogs(
+                   const QList<QVariant> &result, const QVariant &id ))
+    Q_PRIVATE_SLOT(d_ptr, void slotListRecentPostings(
+                    const QList<QVariant> &result, const QVariant &id ))
+    Q_PRIVATE_SLOT(d_ptr, void slotFetchPosting(
+                    const QList<QVariant> &result, const QVariant &id ))
+    Q_PRIVATE_SLOT(d_ptr, void slotCreatePosting(
+                    const QList<QVariant> &result, const QVariant &id ))
+    Q_PRIVATE_SLOT(d_ptr, void slotModifyPosting(
+                    const QList<QVariant> &result, const QVariant &id ))
+    Q_PRIVATE_SLOT(d_ptr, void slotError( int number,
+                    const QString &errorString, const QVariant &id ))
 };
 
 } //namespace KBlog

@@ -8,6 +8,7 @@ add_subdirectory( tests )
 
 set(kblog_LIB_SRCS
 blog.cpp
+blog_p.cpp
 blogposting.cpp
 blogpostingcomment.cpp
 blogmedia.cpp

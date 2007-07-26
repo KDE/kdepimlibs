@@ -31,32 +31,13 @@
 
 using namespace KBlog;
 
-class Blogger1::Blogger1Private : public QObject
+class Blogger1Private : public BlogPrivate
 {
-  Q_OBJECT
-
   public:
     QString mAppId;
-    Blogger1 *parent;
-    KXmlRpc::Client *mXmlRpcClient;
-    int callCounter;
-    QMap<int,KBlog::BlogPosting*> callMap;
     Blogger1Private();
-    ~Blogger1Private();
-    QList<QVariant> defaultArgs( const QString &id = QString() );
-
-  private:
-    bool readPostingFromMap( BlogPosting *post,
-                          const QMap<QString, QVariant> &postInfo );
-
-  public Q_SLOTS:
-    void slotListBlogs( const QList<QVariant> &result, const QVariant &id );
-    void slotListRecentPostings( const QList<QVariant> &result, const QVariant &id );
-    void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
-    void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
-    void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
-    void slotError( int number, const QString &errorString,
-                    const QVariant &id );
+    virtual ~Blogger1Private();
+    virtual QList<QVariant> defaultArgs( const QString &id = QString() );
 };
 
 #endif

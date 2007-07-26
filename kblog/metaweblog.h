@@ -26,6 +26,7 @@
 #include <kblog/blogger1.h>
 
 class KUrl;
+class MetaWeblogPrivate;
 
 /**
   @file
@@ -141,9 +142,11 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
     */
     void listedCategories( QMap<QString,QString> *categories );
 
+  protected:
+    MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd, QObject *parent = 0 );
+
   private:
-    class MetaWeblogPrivate;
-    MetaWeblogPrivate *const d;
+    Q_DECLARE_PRIVATE(MetaWeblog)
 };
 
 } //namespace KBlog
