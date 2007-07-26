@@ -19,8 +19,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KBLOG_KBLOG_TEST_BLOGGER_H_
-#define KBLOG_KBLOG_TEST_BLOGGER_H_
+#ifndef KBLOG_TEST_BLOGGER1_H
+#define KBLOG_TEST_BLOGGER1_H
 
 #include <QtCore/QObject>
 

@@ -3,12 +3,12 @@
 # 
 # ########### next target ###############
 # 
-# set(testblogger_SRCS testblogger.cpp )
+# set(testblogger1_SRCS testblogger1.cpp )
 # 
 # 
-# kde4_add_unit_test(testblogger TESTNAME kabc-testblogger ${testblogger_SRCS})
+# kde4_add_unit_test(testblogger1 TESTNAME kabc-testblogger1 ${testblogger1_SRCS})
 # 
-# target_link_libraries(testblogger ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+# target_link_libraries(testblogger1 ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 # 
 # ########### next target ###############
 

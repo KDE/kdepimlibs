@@ -19,10 +19,10 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include "testblogger.h"
-#include "testblogger.moc"
+#include "testblogger1.h"
+#include "testblogger1.moc"
 
-#include "kblog/blogger.h"
+#include "kblog/blogger1.h"
 
 #include <qtest_kde.h>
 
