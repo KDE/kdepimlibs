@@ -23,37 +23,31 @@
 #define MOVABLETYPE_P_H
 
 #include "movabletype.h"
+#include "metaweblog_p.h"
 
 #include <kxmlrpcclient/client.h>
 
 using namespace KBlog;
 
-class MovableType::MovableTypePrivate : public QObject
+class MovableTypePrivate : public MetaWeblogPrivate
 {
-  Q_OBJECT
   public:
-    QString mAppId;
-    QMap<QString,QString> mCategories;
-    MovableType *parent;
-    KXmlRpc::Client *mXmlRpcClient;
-
     MovableTypePrivate();
-    ~MovableTypePrivate();
-    QList<QVariant> defaultArgs( const QString &id = QString() );
+    virtual ~MovableTypePrivate();
+    virtual QList<QVariant> defaultArgs( const QString &id = QString() );
 
-  private:
-    bool readPostingFromMap( BlogPosting *post,
-                             const QMap<QString, QVariant> &postInfo );
-
-  public Q_SLOTS:
     void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
     void slotError( int, const QString&, const QVariant& );
     void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
     void slotListRecentPostings( const QList<QVariant> &result,
                                  const QVariant &id );
-    void slotListTrackbackPings( const QList<QVariant> &result,
+    virtual void slotListTrackbackPings( const QList<QVariant> &result,
                                  const QVariant &id );
     void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
+    Q_DECLARE_PUBLIC(MovableType)
+  private:
+    bool readPostingFromMap( BlogPosting *post,
+                             const QMap<QString, QVariant> &postInfo );
 };
 
 #endif

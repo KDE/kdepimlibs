@@ -26,18 +26,19 @@
 
 using namespace KBlog;
 
-MovableType::MovableTypePrivate::MovableTypePrivate()
+MovableTypePrivate::MovableTypePrivate()
 {
   mXmlRpcClient = 0;
 }
 
-MovableType::MovableTypePrivate::~MovableTypePrivate()
+MovableTypePrivate::~MovableTypePrivate()
 {
   delete mXmlRpcClient;
 }
 
-QList<QVariant> MovableType::MovableTypePrivate::defaultArgs( const QString &id )
+QList<QVariant> MovableTypePrivate::defaultArgs( const QString &id )
 {
+  Q_Q(MovableType);
   QList<QVariant> args;
 
   if ( id.toInt() ) {
@@ -46,19 +47,19 @@ QList<QVariant> MovableType::MovableTypePrivate::defaultArgs( const QString &id 
   if ( !id.toInt() && !id.isNull() ){
     args << QVariant( id );
   }
-  args << QVariant( parent->username() )
-       << QVariant( parent->password() );
+  args << QVariant( q->username() )
+       << QVariant( q->password() );
   return args;
 }
 
-bool MovableType::MovableTypePrivate::readPostingFromMap(
+bool MovableTypePrivate::readPostingFromMap(
     BlogPosting *post, const QMap<QString, QVariant> &postInfo )
 {
   //TODO
   return false;
 }
 
-void MovableType::MovableTypePrivate::slotCreatePosting(
+void MovableTypePrivate::slotCreatePosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO 7 new keys are:
@@ -71,13 +72,13 @@ void MovableType::MovableTypePrivate::slotCreatePosting(
   // array mt_tb_ping_urls, the list of TrackBack ping URLs for this entry
 }
 
-void MovableType::MovableTypePrivate::slotError( int number,
+void MovableTypePrivate::slotError( int number,
     const QString &errorString, const QVariant &id )
 {
   //TODO
 }
 
-void MovableType::MovableTypePrivate::slotFetchPosting(
+void MovableTypePrivate::slotFetchPosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO 6 new keys are:
@@ -89,7 +90,7 @@ void MovableType::MovableTypePrivate::slotFetchPosting(
   // String mt_keywords, the value for the keywords field
 }
 
-void MovableType::MovableTypePrivate::slotListRecentPostings(
+void MovableTypePrivate::slotListRecentPostings(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO 6 new keys are:
@@ -101,7 +102,7 @@ void MovableType::MovableTypePrivate::slotListRecentPostings(
   // String mt_keywords, the value for the keywords field
 }
 
-void MovableType::MovableTypePrivate::slotListTrackbackPings(
+void MovableTypePrivate::slotListTrackbackPings(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO Contains:
@@ -110,7 +111,7 @@ void MovableType::MovableTypePrivate::slotListTrackbackPings(
   // String pingIP: the IP address of the host that sent the ping
 }
 
-void MovableType::MovableTypePrivate::slotModifyPosting(
+void MovableTypePrivate::slotModifyPosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO 5 new keys are:

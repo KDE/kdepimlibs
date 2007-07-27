@@ -26,15 +26,13 @@
 using namespace KBlog;
 
 MovableType::MovableType( const KUrl &server, QObject *parent )
-  : MetaWeblog( server, parent ), d( new MovableTypePrivate )
+  : MetaWeblog( server, *new MovableTypePrivate, parent )
 {
-  d->parent = this;
   setUrl( server );
 }
 
 MovableType::~MovableType()
 {
-  delete d;
 }
 
 void MovableType::createPosting( KBlog::BlogPosting *posting )
@@ -54,6 +52,7 @@ QString MovableType::interfaceName() const
 
 void MovableType::setUrl( const KUrl &server )
 {
+  Q_D(MovableType);
   MetaWeblog::setUrl( server );
   delete d->mXmlRpcClient;
   d->mXmlRpcClient = new KXmlRpc::Client( server );
@@ -68,6 +67,7 @@ void MovableType::listRecentPostings( int number )
 void MovableType::listTrackbackPings( KBlog::BlogPosting *posting ) {
   //TODO
   /*
+  Q_D(MovableType);
   d->mXmlRpcClient->call( "mt.getTracebackPings", args,
     d, SLOT( slotListTrackbackPings(
               const QList<QVariant>&, const QVariant& ) ),

@@ -35,6 +35,7 @@ class Blogger1Private : public BlogPrivate
 {
   public:
     QString mAppId;
+    KXmlRpc::Client *mXmlRpcClient;
     Blogger1Private();
     virtual ~Blogger1Private();
     virtual QList<QVariant> defaultArgs( const QString &id = QString() );

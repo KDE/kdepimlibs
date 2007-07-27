@@ -25,6 +25,7 @@
 #include <kblog/metaweblog.h>
 
 class KUrl;
+class MovableTypePrivate;
 
 /**
   @file
@@ -93,7 +94,7 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
       @see     void listRecentPostingsFinished()
     */
-    void listRecentPostings( int number );
+    virtual void listRecentPostings( int number );
 
     /**
       TODO
@@ -101,7 +102,7 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
       @see  void fetchedPosting( KBlog::BlogPosting &posting )
     */
-    void listTrackbackPings( KBlog::BlogPosting *posting );
+    virtual void listTrackbackPings( KBlog::BlogPosting *posting );
 
     /**
       Modify a posting on server.
@@ -124,11 +125,13 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
       @see listTrackbackPings()
     */
-    void listedTrackbackPings( const QMap<QString, QString> &pings );
+    virtual void listedTrackbackPings( const QMap<QString, QString> &pings );
+
+  protected:
+    MovableType( const KUrl &server, MovableTypePrivate &dd, QObject *parent = 0 );
 
   private:
-    class MovableTypePrivate;
-    MovableTypePrivate *const d;
+    Q_DECLARE_PRIVATE(MovableType)
 };
 
 } //namespace KBlog
