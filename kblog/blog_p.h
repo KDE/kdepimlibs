@@ -33,9 +33,10 @@ namespace KBlog {
 class BlogPrivate
 {
   public:
+
     BlogPrivate();
     virtual ~BlogPrivate();
-    Blog *parent;
+    Blog *q_ptr;
     KXmlRpc::Client *mXmlRpcClient;
     int callCounter;
     QMap<int,KBlog::BlogPosting*> callMap;
@@ -59,6 +60,7 @@ class BlogPrivate
                                     const QVariant &id );
     virtual void slotError( int number, const QString &errorString,
                             const QVariant &id );
+    Q_DECLARE_PUBLIC(Blog)
 
   private:
     virtual bool readPostingFromMap( BlogPosting *post,

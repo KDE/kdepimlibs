@@ -35,15 +35,14 @@
 using namespace KBlog;
 
 GData::GData( const KUrl &server, QObject *parent )
-  : Blog( server, parent ), d( new GDataPrivate )
+  : Blog( server, *new GDataPrivate, parent )
 {
-  d->parent = this;
+  Q_D(GData);
   setUrl( server );
 }
 
 GData::~GData()
 {
-  delete d;
 }
 
 QString GData::interfaceName() const
@@ -53,26 +52,29 @@ QString GData::interfaceName() const
 
 QString GData::fullName() const
 {
-  return d->mFullName;
+  return d_func()->mFullName;
 }
 
 void GData::setFullName( const QString &fullName )
 {
+  Q_D(GData);
   d->mFullName = fullName;
 }
 
 QString GData::profileId() const
 {
-  return d->mProfileId;
+  return d_func()->mProfileId;
 }
 
 void GData::setProfileId( const QString& pid )
 {
+  Q_D(GData);
   d->mProfileId = pid;
 }
 
 void GData::fetchUserInfo()
 {
+  Q_D(GData);
   // fetch the introspection file synchronously and parse it
   QByteArray data;
   KIO::Job *job = KIO::get( url(), false, false );
@@ -106,36 +108,40 @@ void GData::fetchUserInfo()
 
 void GData::listBlogs()
 {
+  Q_D(GData);
     kDebug() << "listBlogs()" << endl;
-    Syndication::Loader *loader = Syndication::Loader::create();
-    connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
-                            Syndication::FeedPtr, Syndication::ErrorCode)),
-                            d, SLOT(slotListedBlogs(Syndication::Loader*,
-                    Syndication::FeedPtr, Syndication::ErrorCode)) );
-    loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + profileId()
-        + QString( "/blogs" ) );
+//     Syndication::Loader *loader = Syndication::Loader::create();
+//     connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
+//                             Syndication::FeedPtr, Syndication::ErrorCode)),
+//                             d_func(), SLOT(slotListedBlogs(Syndication::Loader*,
+//                     Syndication::FeedPtr, Syndication::ErrorCode)) );
+//     loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + profileId()
+//         + QString( "/blogs" ) );
 }
 
 void GData::listRecentPostings( int number )
 {
+  Q_D(GData);
     kDebug() << "listRecentPostings()" << endl;
-    Syndication::Loader *loader = Syndication::Loader::create();
-    connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
-                            Syndication::FeedPtr, Syndication::ErrorCode)),
-                            d, SLOT(slotListedRecentPostings(
-                                    Syndication::Loader*,
-                    Syndication::FeedPtr, Syndication::ErrorCode)) );
-    loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
-        + QString( "/posts/default" ) );
+//     Syndication::Loader *loader = Syndication::Loader::create();
+//     connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
+//                             Syndication::FeedPtr, Syndication::ErrorCode)),
+//                             d_func(), SLOT(slotListedRecentPostings(
+//                                     Syndication::Loader*,
+//                     Syndication::FeedPtr, Syndication::ErrorCode)) );
+//     loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
+//         + QString( "/posts/default" ) );
 }
 
 void GData::listComments( KBlog::BlogPosting *posting )
 {
+  Q_D(GData);
   return; //FIXME
 }
 
 void GData::fetchPosting( KBlog::BlogPosting *posting )
 {
+  Q_D(GData);
   Q_UNUSED( posting );
 //   if ( d->mLock.tryLock() ) {
 //     kDebug() << "fetchPosting()" << endl;
@@ -154,6 +160,7 @@ void GData::fetchPosting( KBlog::BlogPosting *posting )
 
 void GData::modifyPosting( KBlog::BlogPosting* posting )
 {
+  Q_D(GData);
     Q_UNUSED( posting );
     kDebug() << "modifyPosting()" << endl;
     d->authenticate();
@@ -161,6 +168,7 @@ void GData::modifyPosting( KBlog::BlogPosting* posting )
 
 void GData::createPosting( KBlog::BlogPosting* posting )
 {
+  Q_D(GData);
   Q_UNUSED( posting );
     kDebug() << "createPosting()" << endl;
     d->authenticate();
@@ -198,14 +206,15 @@ void GData::createPosting( KBlog::BlogPosting* posting )
     job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
     job->addMetaData( "ConnectTimeout", "50" );
 
-    connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-             d, SLOT( slotData( KIO::Job *, const QByteArray & ) ) );
-    connect( job, SIGNAL( result( KJob * ) ),
-             d, SLOT( slotCreatePosting( KJob * ) ) );
+//     connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+//              d, SLOT( slotData( KIO::Job *, const QByteArray & ) ) );
+//     connect( job, SIGNAL( result( KJob * ) ),
+//              d, SLOT( slotCreatePosting( KJob * ) ) );
 }
 
 void GData::removePosting( KBlog::BlogPosting *posting )
 {
+  Q_D(GData);
     Q_UNUSED( posting );
     kDebug() << "deletePosting()" << endl;
     d->authenticate();
@@ -213,6 +222,7 @@ void GData::removePosting( KBlog::BlogPosting *posting )
 
 void GData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
 {
+  Q_D(GData);
   return; //FIXME
 }
 

@@ -46,13 +46,14 @@ Blogger1Private::~Blogger1Private()
 
 QList<QVariant> Blogger1Private::defaultArgs( const QString &id )
 {
+  Q_Q(Blogger1);
   QList<QVariant> args;
   args << QVariant( QString( "0123456789ABCDEF" ) ); //AppKey
   if ( !id.isNull() ) {
     args << QVariant( id );
   }
-  args << QVariant( parent->username() )
-       << QVariant( parent->password() );
+  args << QVariant( q->username() )
+       << QVariant( q->password() );
   return args;
 }
 

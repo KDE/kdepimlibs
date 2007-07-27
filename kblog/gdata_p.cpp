@@ -40,21 +40,22 @@
 
 using namespace KBlog;
 
-GData::GDataPrivate::GDataPrivate():
-  mFetchPostingId(),mAuthenticationString(),mAuthenticationTime(){
+GDataPrivate::GDataPrivate():
+  mAuthenticationString(),mAuthenticationTime(){
 
 }
 
-GData::GDataPrivate::~GDataPrivate(){
+GDataPrivate::~GDataPrivate(){
 
 }
 
-QString GData::GDataPrivate::authenticate(){
+QString GDataPrivate::authenticate(){
+  Q_Q(GData);
   QByteArray data;
   KUrl authGateway( "https://www.google.com/accounts/ClientLogin" );
-  authGateway.addQueryItem( "Email", parent->username() );
-  authGateway.addQueryItem( "Passwd", parent->password() );
-  authGateway.addQueryItem( "source" , parent->userAgent() );
+  authGateway.addQueryItem( "Email", q->username() );
+  authGateway.addQueryItem( "Passwd", q->password() );
+  authGateway.addQueryItem( "source" , q->userAgent() );
   authGateway.addQueryItem( "service", "blogger" );
   if( !mAuthenticationTime.isValid() ||
       QDateTime::currentDateTime().toTime_t() - mAuthenticationTime.toTime_t()
@@ -78,12 +79,13 @@ QString GData::GDataPrivate::authenticate(){
   return mAuthenticationString;
 }
 
-void GData::GDataPrivate::slotListedBlogs(
+void GDataPrivate::slotListBlogs(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status ) {
+  Q_Q(GData);
   Q_UNUSED( loader );
   if (status != Syndication::Success){
-    emit parent->error( Atom, i18n( "Could not get blogs." ) );
+//     emit q->error( Atom, i18n( "Could not get blogs." ) );
     return;
   }
   QList<Syndication::ItemPtr> items = feed->items();
@@ -98,27 +100,28 @@ void GData::GDataPrivate::slotListedBlogs(
         name = ( *it )->title();
       }
       else{
-        emit parent->error( Other,
-                            i18n( "Could not regexp the blog id path." ) );
+//         emit q->error( Other,
+//                             i18n( "Could not regexp the blog id path." ) );
         kDebug(5323)<<"QRegExp rx( 'blog-(\\d+)' does not match anything in: "
             << ( *it )->id() << endl;
       }
 
       if ( !id.isEmpty() && !name.isEmpty() ) {
-//         emit parent->blogInfoRetrieved(); //FIXME set the data
+//         emit q->blogInfoRetrieved(); //FIXME set the data
         kDebug(5323) << "Emitting blogInfoRetrieved( id=" << id
                  << ", name=" << name << "); " << endl;
       }
   }
 }
 
-void GData::GDataPrivate::slotListedRecentPostings(
+void GDataPrivate::slotListRecentPostings(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status ) {
+  Q_Q(GData);
   Q_UNUSED( loader );
   /*
   if (status != Syndication::Success){
-    emit parent->error( Atom, i18n( "Could not get postings." ) );
+    emit q->error( Atom, i18n( "Could not get postings." ) );
     return;
   }
   QList<Syndication::ItemPtr> items = feed->items();
@@ -130,7 +133,7 @@ void GData::GDataPrivate::slotListedRecentPostings(
       if( rx.indexIn( ( *it )->id() )==-1 ){
         kDebug(5323)<<
         "QRegExp rx( 'post-(\\d+)' does not match "<< rx.cap(1) << endl;
-        emit parent->error( Other,
+        emit q->error( Other,
         i18n( "Could not regexp the posting id path." ) );
         return;
       }
@@ -145,69 +148,71 @@ void GData::GDataPrivate::slotListedRecentPostings(
       posting->setModificationDateTime( KDateTime( QDateTime::fromTime_t(
   ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
 
-      emit parent->listedPosting( posting );
+      emit q->listedPosting( posting );
       kDebug(5323) << "Emitting listedPosting( postingId="
           << posting->postingId() << " ); " << endl;
   }
   kDebug(5323) << "Emitting listRecentPostingsFinished()" << endl;
-  emit parent->listRecentPostingsFinished();
+  emit q->listRecentPostingsFinished();
   */
 }
 
-void GData::GDataPrivate::slotFetchedPosting(
+void GDataPrivate::slotFetchPosting(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status ){
+  Q_Q(GData);
   Q_UNUSED( loader );
-  bool success = false;
-
-  if (status != Syndication::Success){
-    emit parent->error( Atom, i18n( "Could not get postings." ) );
-    return;
-  }
-  QList<Syndication::ItemPtr> items = feed->items();
-  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
-  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
-  for( ; it!=end; ++it ){
-      BlogPosting posting;
-      QRegExp rx( "post-(\\d+)" );
-      if( rx.indexIn( ( *it )->id() )!=-1 && rx.cap(1)==getFetchPostingId() ){
-        kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
-        posting.setPostingId( rx.cap(1) );
-        posting.setTitle( ( *it )->title() );
-        posting.setContent( ( *it )->content() );
-        // FIXME: assuming UTC for now
-        posting.setCreationDateTime( KDateTime( QDateTime::fromTime_t(
-                                     ( *it )->datePublished() ),
-                                        KDateTime::Spec::UTC() ) );
-        posting.setModificationDateTime( KDateTime( QDateTime::fromTime_t(
-                                         ( *it )->dateUpdated() ),
-                                            KDateTime::Spec::UTC() ) );
-//         emit parent->fetchedPosting( posting );
-        success = true;
-        kDebug(5323) << "Emitting fetchedPosting( postingId="
-            << posting.postingId() << " ); " << endl;
-      }
-  }
-  if(!success){
-    emit parent->error( Other, i18n( "Could not regexp the blog id path." ) );
-    kDebug(5323) << "QRegExp rx( 'post-(\\d+)' does not match "
-        << mFetchPostingId << ". " << endl;
-  }
-  setFetchPostingId( "" );
+//   bool success = false;
+// 
+//   if (status != Syndication::Success){
+// //     emit q->error( Atom, i18n( "Could not get postings." ) );
+//     return;
+//   }
+//   QList<Syndication::ItemPtr> items = feed->items();
+//   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
+//   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
+//   for( ; it!=end; ++it ){
+//       BlogPosting posting;
+//       QRegExp rx( "post-(\\d+)" );
+//       if( rx.indexIn( ( *it )->id() )!=-1 && rx.cap(1)==getFetchPostingId() ){
+//         kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
+//         posting.setPostingId( rx.cap(1) );
+//         posting.setTitle( ( *it )->title() );
+//         posting.setContent( ( *it )->content() );
+//         // FIXME: assuming UTC for now
+//         posting.setCreationDateTime( KDateTime( QDateTime::fromTime_t(
+//                                      ( *it )->datePublished() ),
+//                                         KDateTime::Spec::UTC() ) );
+//         posting.setModificationDateTime( KDateTime( QDateTime::fromTime_t(
+//                                          ( *it )->dateUpdated() ),
+//                                             KDateTime::Spec::UTC() ) );
+// //         emit q->fetchedPosting( posting );
+//         success = true;
+//         kDebug(5323) << "Emitting fetchedPosting( postingId="
+//             << posting.postingId() << " ); " << endl;
+//       }
+//   }
+//   if(!success){
+// //     emit q->error( Other, i18n( "Could not regexp the blog id path." ) );
+//     kDebug(5323) << "QRegExp rx( 'post-(\\d+)' does not match "
+//         << mFetchPostingId << ". " << endl;
+//   }
+//   setFetchPostingId( "" );
 }
 
-void GData::GDataPrivate::slotData( KIO::Job *, const QByteArray &data )
+void GDataPrivate::slotData( KIO::Job *, const QByteArray &data )
 {
   unsigned int oldSize = mBuffer.size();
   mBuffer.resize( oldSize + data.size() );
   memcpy( mBuffer.data() + oldSize, data.data(), data.size() );
 }
 
-void GData::GDataPrivate::slotCreatedPosting( KJob *job )
+void GDataPrivate::slotCreatePosting( KJob *job )
 {
+  Q_Q(GData);
   if ( job->error() != 0 ) {
     kDebug(5323) << "slotCreatePosting error: " << job->errorString() << endl;
-    emit parent->error( Atom, job->errorString() );
+//     emit q->error( Atom, job->errorString() );
     mBuffer.resize( 0 );
     return;
   }

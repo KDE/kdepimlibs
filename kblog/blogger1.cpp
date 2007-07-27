@@ -35,7 +35,6 @@ Blogger1::Blogger1( const KUrl &server, QObject *parent )
   : Blog( server, *new Blogger1Private, parent )
 {
   Q_D(Blogger1);
-  d->parent = this;
   setUrl( server );
 }
 
@@ -43,7 +42,6 @@ Blogger1::Blogger1( const KUrl &server, Blogger1Private &dd, QObject *parent )
   : Blog( server, dd, parent )
 {
   Q_D(Blogger1);
-  d->parent = this;
   setUrl( server );
 }
 

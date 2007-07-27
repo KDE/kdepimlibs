@@ -23,6 +23,7 @@
 #define KBLOG_GDATA_P_H
 
 #include "gdata.h"
+#include "blog_p.h"
 
 #include <syndication/loader.h>
 
@@ -32,36 +33,23 @@ class KJob;
 
 using namespace KBlog;
 
-class GData::GDataPrivate : public QObject
+class GDataPrivate : public BlogPrivate
 {
-  Q_OBJECT
-  private:
-    QString mFetchPostingId;
+  public:
     QString mAuthenticationString;
     QDateTime mAuthenticationTime;
-  public:
-    GData* parent;
     QByteArray mBuffer;
-    QString mUsername;
     QString mFullName;
     QString mProfileId;
     GDataPrivate();
     ~GDataPrivate();
-    QString getFetchPostingId(){ return mFetchPostingId; }
-    void setFetchPostingId( const QString &pId ) { mFetchPostingId=pId; }
     QString authenticate();
-  public Q_SLOTS:
-    void slotListedRecentPostings( Syndication::Loader *,
-                                   Syndication::FeedPtr,
-                                   Syndication::ErrorCode );
-    void slotFetchedPosting( Syndication::Loader *,
-                             Syndication::FeedPtr,
-                             Syndication::ErrorCode );
-    void slotListedBlogs( Syndication::Loader *,
-                          Syndication::FeedPtr,
-                          Syndication::ErrorCode );
-    void slotData( KIO::Job *, const QByteArray& );
-    void slotCreatedPosting( KJob *job );
+    virtual void slotListBlogs(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
+    virtual void slotListRecentPostings(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
+    virtual void slotFetchPosting(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
+    virtual void slotCreatePosting(KJob*);
+    virtual void slotData( KIO::Job *, const QByteArray& );
+    Q_DECLARE_PUBLIC(GData)
 };
 
 #endif

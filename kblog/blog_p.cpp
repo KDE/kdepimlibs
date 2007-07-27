@@ -48,8 +48,8 @@ QList<QVariant> BlogPrivate::defaultArgs( const QString &id )
   if ( !id.isNull() ) {
     args << QVariant( id );
   }
-  args << QVariant( parent->username() )
-       << QVariant( parent->password() );
+  args << QVariant( q_ptr->username() )
+       << QVariant( q_ptr->password() );
   return args;
 }
 
@@ -64,7 +64,7 @@ void BlogPrivate::slotListBlogs(
   if ( result[0].type() != QVariant::List ) {
     kDebug(5323) << "Could not fetch blogs out of the result from the server, "
                  << "not a list." << endl;
-    emit parent->error( KBlog::Blog::ParsingError,
+    emit q_ptr->error( KBlog::Blog::ParsingError,
                         i18n( "Could not fetch blogs out of the result "
                               "from the server, not a list." ) );
   } else {
@@ -83,7 +83,7 @@ void BlogPrivate::slotListBlogs(
         blogsInfo[blogId]=blogName;
       }
     }
-    emit parent->listedBlogs( blogsInfo );
+    emit q_ptr->listedBlogs( blogsInfo );
   }
 }
 
@@ -100,7 +100,7 @@ void BlogPrivate::slotListRecentPostings(
    if ( result[0].type() != QVariant::List ) {
      kDebug(5323) << "Could not fetch list of postings out of the "
                   << "result from the server, not a list." << endl;
-     emit parent->error( KBlog::Blog::ParsingError,
+     emit q_ptr->error( KBlog::Blog::ParsingError,
                          i18n( "Could not fetch list of postings out of the "
                                "result from the server, not a list." ) );
    } else {
@@ -118,7 +118,7 @@ void BlogPrivate::slotListRecentPostings(
          fetchedPostingList << posting;
        } else {
          kDebug(5323) << "d->readPostingFromMap failed! " << endl;
-         emit parent->error( KBlog::Blog::ParsingError,
+         emit q_ptr->error( KBlog::Blog::ParsingError,
                              i18n( "Could not read posting." ) );
        }
        if( --count == 0 )
@@ -126,7 +126,7 @@ void BlogPrivate::slotListRecentPostings(
      }
    }
    kDebug(5323) << "Emitting listRecentPostingsFinished()" << endl;
-   emit parent->listedRecentPostings(fetchedPostingList);
+   emit q_ptr->listedRecentPostings(fetchedPostingList);
 }
 
 void BlogPrivate::slotFetchPosting(
@@ -148,7 +148,7 @@ void BlogPrivate::slotFetchPosting(
   if ( result[0].type() != QVariant::Map ) {
     kDebug (5323) << "Could not fetch posting out of the result from "
                   << "the server." << endl;
-    emit parent->error( KBlog::Blog::ParsingError,
+    emit q_ptr->error( KBlog::Blog::ParsingError,
                         i18n( "Could not fetch posting out of the result from "
                               "the server." ) );
     posting->setError( i18n( "Could not fetch posting out of the "
@@ -161,7 +161,7 @@ void BlogPrivate::slotFetchPosting(
                    << posting->postingId() << "); " << endl;
     } else {
       kDebug(5323) << "d->readPostingFromMap failed! " << endl;
-      emit parent->error( KBlog::Blog::ParsingError,
+      emit q_ptr->error( KBlog::Blog::ParsingError,
                           i18n( "Could not read posting." ) );
     }
   }
@@ -180,10 +180,10 @@ void BlogPrivate::slotCreatePosting(
   kDebug (5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::Int ) {
     kDebug(5323) << "Could not read the postingId, not an integer." << endl;
-    emit parent->error( KBlog::Blog::ParsingError,
+    emit q_ptr->error( KBlog::Blog::ParsingError,
                         i18n( "Could not read the postingId, not an integer." ) );
   } else {
-//     emit parent->createdPosting( QString().setNum( result[0].toInt() ) );
+//     emit q_ptr->createdPosting( QString().setNum( result[0].toInt() ) );
     kDebug(5323) << "emitting createdPosting( " << result[0].toInt()
                  << " )" << endl;
   }
@@ -201,10 +201,10 @@ void BlogPrivate::slotModifyPosting(
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::Bool ) {
     kDebug (5323) << "Could not read the result, not a boolean." << endl;
-    emit parent->error( KBlog::Blog::ParsingError,
+    emit q_ptr->error( KBlog::Blog::ParsingError,
                         i18n( "Could not read the result, not a boolean." ) );
   } else {
-//     emit parent->modifiedPosting( result[0].toBool() );
+//     emit q_ptr->modifiedPosting( result[0].toBool() );
     kDebug(5323) << "emitting modifiedPosting( " << result[0].toBool()
                  << " )" << endl;
   }
@@ -217,7 +217,7 @@ void BlogPrivate::slotError( int number,
   Q_UNUSED( number );
   Q_UNUSED( id );
 
-  emit parent->error( KBlog::Blog::XmlRpc, errorString );
+  emit q_ptr->error( KBlog::Blog::XmlRpc, errorString );
 }
 
 bool BlogPrivate::readPostingFromMap(

@@ -38,6 +38,7 @@ class Blogger1Private : public BlogPrivate
     Blogger1Private();
     virtual ~Blogger1Private();
     virtual QList<QVariant> defaultArgs( const QString &id = QString() );
+    Q_DECLARE_PUBLIC(Blogger1)
 };
 
 #endif

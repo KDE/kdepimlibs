@@ -25,6 +25,8 @@
 #include <kblog/blog.h>
 
 class KUrl;
+class GDataPrivate;
+
 
 /**
   @file
@@ -168,10 +170,11 @@ class KBLOG_EXPORT GData : public Blog
         @see profileId()
     */
     void setProfileId( const QString &pid );
-
-private:
-    class GDataPrivate;
-    GDataPrivate* const d;
+  protected:
+    GData( const KUrl &server, GDataPrivate &dd, QObject *parent = 0 );
+  private:
+    Q_DECLARE_PRIVATE(GData)
+//     Q_PRIVATE_SLOT(d, void slotData( KIO::Job *, const QByteArray& ))
 };
 
 } //namespace KBlog

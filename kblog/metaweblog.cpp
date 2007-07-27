@@ -36,7 +36,6 @@ MetaWeblog::MetaWeblog( const KUrl &server, QObject *parent )
   : Blogger1( server, *new MetaWeblogPrivate, parent )
 {
   Q_D(MetaWeblog);
-  d->parent = this;
   setUrl( server );
 }
 
@@ -45,7 +44,6 @@ MetaWeblog::MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd,
   : Blogger1( server, dd, parent )
 {
   Q_D(MetaWeblog);
-  d->parent = this;
   setUrl( server );
 }
 
