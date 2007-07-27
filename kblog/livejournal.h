@@ -100,7 +100,14 @@ class KBLOG_EXPORT LiveJournal : public Blog
 
     QString fullName() const;
 
-    void generateCookie( bool longExpiration, bool fixedIP );
+    enum GenerateCookieOption {
+      LongExpiriation = 0x01,
+      FixedIP = 0x02
+    };
+    Q_DECLARE_FLAGS(GenerateCookieOptions,
+                                        GenerateCookieOption)
+
+    void generateCookie( const GenerateCookieOptions& options );
 
     /**
       Returns the  of the inherited object.
@@ -164,6 +171,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
     class LiveJournalPrivate;
     LiveJournalPrivate *const d;
 };
+Q_DECLARE_OPERATORS_FOR_FLAGS(LiveJournal::GenerateCookieOptions)
 
 } //namespace KBlog
 #endif

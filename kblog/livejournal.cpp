@@ -98,10 +98,9 @@ QString LiveJournal::fullName() const
   return d->mFullName;
 }
 
-void LiveJournal::generateCookie( bool longExpiration, bool fixedIP )
+void LiveJournal::generateCookie( const GenerateCookieOptions& options )
 {
-  Q_UNUSED( longExpiration );
-  Q_UNUSED( fixedIP );
+  Q_UNUSED( options );
   //TODO
   // LJ.XMLRPC.sessiongenerate
 }
