@@ -29,19 +29,20 @@
 
 using namespace KBlog;
 
-LiveJournal::LiveJournalPrivate::LiveJournalPrivate()
+LiveJournalPrivate::LiveJournalPrivate()
 {
   mXmlRpcClient = 0;
 }
 
-LiveJournal::LiveJournalPrivate::~LiveJournalPrivate()
+LiveJournalPrivate::~LiveJournalPrivate()
 {
   delete mXmlRpcClient;
 }
 
-QList<QVariant> LiveJournal::LiveJournalPrivate::defaultArgs(
+QList<QVariant> LiveJournalPrivate::defaultArgs(
     const QString &id )
 {
+  Q_Q(LiveJournal);
   QList<QVariant> args;
 
   if ( id.toInt() ) {
@@ -50,116 +51,116 @@ QList<QVariant> LiveJournal::LiveJournalPrivate::defaultArgs(
   if ( !id.toInt() && !id.isNull() ){
     args << QVariant( id );
   }
-  args << QVariant( parent->username() )
-       << QVariant( parent->password() );
+  args << QVariant( q->username() )
+       << QVariant( q->password() );
   return args;
 }
 
-bool LiveJournal::LiveJournalPrivate::readPostingFromMap(
+bool LiveJournalPrivate::readPostingFromMap(
     BlogPosting *post, const QMap<QString, QVariant> &postInfo )
 {
   //TODO
   return false;
 }
 
-void LiveJournal::LiveJournalPrivate::slotAddFriend(
+void LiveJournalPrivate::slotAddFriend(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotAssignFriendToCategory(
+void LiveJournalPrivate::slotAssignFriendToCategory(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotCreatePosting(
+void LiveJournalPrivate::slotCreatePosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotDeleteFriend(
+void LiveJournalPrivate::slotDeleteFriend(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotExpireCookie(
+void LiveJournalPrivate::slotExpireCookie(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotExpireAllCookies(
+void LiveJournalPrivate::slotExpireAllCookies(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
 
-void LiveJournal::LiveJournalPrivate::slotError( int number,
+void LiveJournalPrivate::slotError( int number,
     const QString &errorString, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotFetchPosting(
+void LiveJournalPrivate::slotFetchPosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotFetchUserInfo(
+void LiveJournalPrivate::slotFetchUserInfo(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotGenerateCookie(
+void LiveJournalPrivate::slotGenerateCookie(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotListCategories(
+void LiveJournalPrivate::slotListCategories(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotListFriends(
+void LiveJournalPrivate::slotListFriends(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotListFriendsOf(
+void LiveJournalPrivate::slotListFriendsOf(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotListMoods(
+void LiveJournalPrivate::slotListMoods(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotListPictureKeywords(
+void LiveJournalPrivate::slotListPictureKeywords(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotListRecentPostings(
+void LiveJournalPrivate::slotListRecentPostings(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO
 }
 
-void LiveJournal::LiveJournalPrivate::slotModifyPosting(
+void LiveJournalPrivate::slotModifyPosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   //TODO

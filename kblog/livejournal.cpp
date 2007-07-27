@@ -28,15 +28,13 @@
 using namespace KBlog;
 
 LiveJournal::LiveJournal( const KUrl &server, QObject *parent )
-  : Blog( server, parent ), d( new LiveJournalPrivate )
+  : Blog( server, *new LiveJournalPrivate, parent )
 {
-  d->parent = this;
   setUrl( server );
 }
 
 LiveJournal::~LiveJournal()
 {
-  delete d;
 }
 
 void LiveJournal::addFriend( const QString &username, int group,
@@ -95,7 +93,7 @@ void LiveJournal::fetchPosting( KBlog::BlogPosting *posting )
 
 QString LiveJournal::fullName() const
 {
-  return d->mFullName;
+  return d_func()->mFullName;
 }
 
 void LiveJournal::generateCookie( const GenerateCookieOptions& options )
@@ -168,12 +166,12 @@ void LiveJournal::setUrl( const KUrl &server )
 
 QString LiveJournal::serverMessage() const {
   //TODO
-  return d->mServerMessage;
+  return d_func()->mServerMessage;
 }
 
 QString LiveJournal::userId() const {
   //TODO
-  return d->mUserId;
+  return d_func()->mUserId;
 }
 
 #include "livejournal.moc"

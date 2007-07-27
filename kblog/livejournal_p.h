@@ -23,56 +23,53 @@
 #define LIVEJOURNAL_P_H
 
 #include "livejournal.h"
+#include "blog_p.h"
 
 #include <kxmlrpcclient/client.h>
 
 using namespace KBlog;
 
-class LiveJournal::LiveJournalPrivate : public QObject
+class LiveJournalPrivate : public BlogPrivate
 {
-  Q_OBJECT
   public:
     QString mAppId;
     QMap<QString,QString> mCategories;
-    LiveJournal *parent;
     KXmlRpc::Client *mXmlRpcClient;
     QString mServerMessage;
     QString mUserId;
     QString mFullName;
 
     LiveJournalPrivate();
-    ~LiveJournalPrivate();
-    QList<QVariant> defaultArgs( const QString &id = QString() );
+    virtual ~LiveJournalPrivate();
+    virtual QList<QVariant> defaultArgs( const QString &id = QString() );
 
+    virtual void slotAddFriend( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotAssignFriendToCategory( const QList<QVariant> &result,
+                                     const QVariant &id );
+    virtual void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotDeleteFriend( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotExpireCookie( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotExpireAllCookies( const QList<QVariant> &result,
+                               const QVariant &id );
+    virtual void slotError( int, const QString&, const QVariant& );
+    virtual void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotFetchUserInfo( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotGenerateCookie( const QList<QVariant> &result,
+                             const QVariant &id );
+    virtual void slotListCategories( const QList<QVariant> &result,
+                             const QVariant &id );
+    virtual void slotListFriends( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotListFriendsOf( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotListMoods( const QList<QVariant> &result, const QVariant &id );
+    virtual void slotListPictureKeywords( const QList<QVariant> &result,
+                                  const QVariant &id );
+    virtual void slotListRecentPostings( const QList<QVariant> &result,
+                                 const QVariant &id );
+    virtual void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
+    Q_DECLARE_PUBLIC(LiveJournal)
   private:
     bool readPostingFromMap( BlogPosting *post,
                              const QMap<QString, QVariant> &postInfo );
-
-  public Q_SLOTS:
-    void slotAddFriend( const QList<QVariant> &result, const QVariant &id );
-    void slotAssignFriendToCategory( const QList<QVariant> &result,
-                                     const QVariant &id );
-    void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
-    void slotDeleteFriend( const QList<QVariant> &result, const QVariant &id );
-    void slotExpireCookie( const QList<QVariant> &result, const QVariant &id );
-    void slotExpireAllCookies( const QList<QVariant> &result,
-                               const QVariant &id );
-    void slotError( int, const QString&, const QVariant& );
-    void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
-    void slotFetchUserInfo( const QList<QVariant> &result, const QVariant &id );
-    void slotGenerateCookie( const QList<QVariant> &result,
-                             const QVariant &id );
-    void slotListCategories( const QList<QVariant> &result,
-                             const QVariant &id );
-    void slotListFriends( const QList<QVariant> &result, const QVariant &id );
-    void slotListFriendsOf( const QList<QVariant> &result, const QVariant &id );
-    void slotListMoods( const QList<QVariant> &result, const QVariant &id );
-    void slotListPictureKeywords( const QList<QVariant> &result,
-                                  const QVariant &id );
-    void slotListRecentPostings( const QList<QVariant> &result,
-                                 const QVariant &id );
-    void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
-
 };
 
 #endif

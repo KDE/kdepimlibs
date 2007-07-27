@@ -28,6 +28,7 @@
 
 class KHttpCookie;
 class KUrl;
+class LiveJournalPrivate;
 
 /**
   @file
@@ -167,9 +168,10 @@ class KBLOG_EXPORT LiveJournal : public Blog
     void listedPictureKeywords( const QMap<QString, KUrl> &pictureKeywords );
     void fetchedUserInfo();
 
+  protected:
+    LiveJournal( const KUrl &server, LiveJournalPrivate &dd, QObject *parent = 0 );
   private:
-    class LiveJournalPrivate;
-    LiveJournalPrivate *const d;
+    Q_DECLARE_PRIVATE(LiveJournal)
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(LiveJournal::GenerateCookieOptions)
 
