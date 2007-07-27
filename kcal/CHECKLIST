@@ -11,7 +11,6 @@ dndfactory            |       |         |       |         |    D    |
 dummyscheduler        |       |         |   D   |         |    D    |
 filestorage           |       |         |   D   |         |    D    |
 freebusycache         |       |         |       |         |    D    |
-freebusy              |       |         |   D   |         |    D    |
 freebusyurlstore      |       |         |       |         |    D    |
 htmlexport            |       |         |   D   |         |    D    |
 icaldrag              |       |         |       |         |    D    |
@@ -51,12 +50,14 @@ calendarnull          |   D   |    D    |   D   |    D    |    D    | Allen
 duration              |   D   |    D    |   D   |    D    |    D    | Allen
 event                 |   D   |    D    |   D   |    D    |    D    | Allen
 exceptions            |   D   |    D    |   D   |    D    |    D    | Allen
+freebusy              |   D   |    D    |   D   |    D    |    D    |
 journal               |   D   |    D    |   D   |    D    |    D    | Allen
 period                |   D   |    D    |   D   |    D    |    D    | Narayan
 person                |   D   |    D    |   D   |    D    |    D    | Narayan
 todo                  |   D   |    D    |   D   |    D    |    D    | Allen
 == DONE ==
 
+TODO: Q_DISABLE_COPY() where needed (dpointer, no copy-ctor in base class)
 Qt4Port -> no deprecated warnings; thiago says do NO replace const iterator
           loops with 'foreach()'
 
