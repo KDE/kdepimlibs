@@ -146,8 +146,10 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
       Adds a list of periods to the freebusy object and then sorts that list.
       Use this if you are adding many items, instead of the addPeriod method,
       to avoid sorting repeatedly.
+
+      @param list is a QList of Period objects.
     */
-    void addPeriods( const Period::List & );
+    void addPeriods( const Period::List &list );
 
     /**
       Sorts the list of free/busy periods into ascending order.
