@@ -129,7 +129,7 @@ ICalTimeZone ICalTimeZones::remove(const ICalTimeZone &zone)
     for (ZoneMap::Iterator it = d->zones.begin(), end = d->zones.end();  it != end;  ++it) {
       if (it.value() == zone) {
         d->zones.erase(it);
-        return (zone == KTimeZone::utc()) ? ICalTimeZone() : zone;
+        return (zone == ICalTimeZone::utc()) ? ICalTimeZone() : zone;
       }
     }
   }
@@ -143,7 +143,7 @@ ICalTimeZone ICalTimeZones::remove(const QString &name)
     if (it != d->zones.end()) {
       ICalTimeZone zone = it.value();
       d->zones.erase(it);
-      return (zone == KTimeZone::utc()) ? ICalTimeZone() : zone;
+      return (zone == ICalTimeZone::utc()) ? ICalTimeZone() : zone;
     }
   }
   return ICalTimeZone();
