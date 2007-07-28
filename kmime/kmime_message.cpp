@@ -244,6 +244,7 @@ kmime_mk_header_accessor( Bcc, bcc )
 kmime_mk_header_accessor( References, references )
 kmime_mk_header_accessor( UserAgent, userAgent )
 kmime_mk_header_accessor( InReplyTo, inReplyTo )
+kmime_mk_header_accessor( Sender, sender )
 
 #undef kmime_mk_header_accessor
 // @endcond

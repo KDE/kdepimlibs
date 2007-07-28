@@ -68,6 +68,7 @@ class KMIME_EXPORT Message : public Content
     virtual KMime::Headers::References *references( bool create = true );
     virtual KMime::Headers::UserAgent *userAgent( bool create = true );
     virtual KMime::Headers::InReplyTo *inReplyTo( bool create = true );
+    virtual KMime::Headers::Sender *sender( bool create = true );
 
     virtual bool isTopLevel() const;
 
