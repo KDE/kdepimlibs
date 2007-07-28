@@ -113,13 +113,6 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     */
     void modifyPosting( KBlog::BlogPosting *posting );
 
-    /**
-      Set the Url of the server.
-
-      @param server is the server url.
-    */
-    void setUrl( const KUrl &server );
-
   Q_SIGNALS:
     /**
       TODO

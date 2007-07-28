@@ -52,15 +52,6 @@ QString MovableType::interfaceName() const
   return QLatin1String( "Movable Type " );
 }
 
-void MovableType::setUrl( const KUrl &server )
-{
-  Q_D(MovableType);
-  MetaWeblog::setUrl( server );
-  delete d->mXmlRpcClient;
-  d->mXmlRpcClient = new KXmlRpc::Client( server );
-  d->mXmlRpcClient->setUserAgent( userAgent() );
-}
-
 void MovableType::listRecentPostings( int number )
 {
   //TODO

@@ -82,13 +82,6 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
     QString interfaceName() const;
 
     /**
-      Set the Url of the server.
-
-      @param server is the server url.
-    */
-    void setUrl( const KUrl &server );
-
-    /**
       List recent postings on the server.
       @see     void listedPosting( KBlog::BlogPosting &posting )
 

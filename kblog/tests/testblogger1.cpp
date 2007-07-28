@@ -89,7 +89,7 @@ void TestBlogger1::testValidity()
   QVERIFY( b->blogId() == "1" );
   QVERIFY( b->username() == "socapitest" );
   QVERIFY( b->password() == "k0nt4ctbl0g" );
-  QVERIFY( b->interfaceName() == "Blogger  1.0" );
+  QVERIFY( b->interfaceName() == "Blogger 1.0" );
   QVERIFY( b->timeZone().name() == QString( "UTC" ) );
 
   BlogPosting *p = new BlogPosting();

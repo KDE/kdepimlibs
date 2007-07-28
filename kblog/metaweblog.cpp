@@ -57,15 +57,6 @@ QString MetaWeblog::interfaceName() const
   return QLatin1String( "MetaWeblog " );
 }
 
-void MetaWeblog::setUrl( const KUrl &server )
-{
-  Q_D(MetaWeblog);
-  Blogger1::setUrl( server );
-  delete d->mXmlRpcClient;
-  d->mXmlRpcClient = new KXmlRpc::Client( server );
-  d->mXmlRpcClient->setUserAgent( userAgent() );
-}
-
 void MetaWeblog::listRecentPostings( int number )
 {
     Q_D(MetaWeblog);

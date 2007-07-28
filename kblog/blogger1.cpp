@@ -57,7 +57,7 @@ Blogger1::~Blogger1()
 
 QString Blogger1::interfaceName() const
 {
-  return QLatin1String( "Blogger1  1.0" );
+  return QLatin1String( "Blogger 1.0" );
 }
 
 void Blogger1::setUrl( const KUrl &server )
@@ -172,9 +172,9 @@ void Blogger1::removePosting( KBlog::BlogPosting *posting )
 //   return false;
 }
 
-Blogger1Private::Blogger1Private()
+Blogger1Private::Blogger1Private() :
+mXmlRpcClient(0)
 {
-  mXmlRpcClient = 0;
   callCounter = 1;
 }
 
