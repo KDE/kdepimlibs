@@ -1,7 +1,7 @@
 /*
   This file is part of the kblog library.
 
-  Copyright (c) 2007 Christian Weilbach <christian@whiletaker.homeip.net>
+  Copyright (c) 2007 Christian Weilbach <christian_weilbach@web.de>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -174,7 +174,11 @@ class KBLOG_EXPORT GData : public Blog
     GData( const KUrl &server, GDataPrivate &dd, QObject *parent = 0 );
   private:
     Q_DECLARE_PRIVATE(GData)
-//     Q_PRIVATE_SLOT(d, void slotData( KIO::Job *, const QByteArray& ))
+    Q_PRIVATE_SLOT(d_func(), void slotListBlogs(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(), void slotListRecentPostings(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(), void slotFetchPosting(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(), void slotCreatePosting(KJob*))
+    Q_PRIVATE_SLOT(d_func(), void slotData( KIO::Job *, const QByteArray& ))
 };
 
 } //namespace KBlog

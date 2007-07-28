@@ -2,7 +2,7 @@
   This file is part of the kblog library.
 
   Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-  Copyright (c) 2006 Christian Weilbach <christian@whiletaker.homeip.net>
+  Copyright (c) 2006 Christian Weilbach <christian_weilbach@web.de>
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
@@ -259,18 +259,6 @@ class KBLOG_EXPORT Blog : public QObject
 
   private:
     Q_DECLARE_PRIVATE(Blog)
-    Q_PRIVATE_SLOT(d_ptr, void slotListBlogs(
-                   const QList<QVariant> &result, const QVariant &id ))
-    Q_PRIVATE_SLOT(d_ptr, void slotListRecentPostings(
-                    const QList<QVariant> &result, const QVariant &id ))
-    Q_PRIVATE_SLOT(d_ptr, void slotFetchPosting(
-                    const QList<QVariant> &result, const QVariant &id ))
-    Q_PRIVATE_SLOT(d_ptr, void slotCreatePosting(
-                    const QList<QVariant> &result, const QVariant &id ))
-    Q_PRIVATE_SLOT(d_ptr, void slotModifyPosting(
-                    const QList<QVariant> &result, const QVariant &id ))
-    Q_PRIVATE_SLOT(d_ptr, void slotError( int number,
-                    const QString &errorString, const QVariant &id ))
 };
 
 } //namespace KBlog

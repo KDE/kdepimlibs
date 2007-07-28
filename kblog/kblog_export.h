@@ -1,7 +1,7 @@
 /*
   This file is part of the kblog library.
 
-  Copyright (c) 2006 Christian Weilbach <christian@whiletaker.homeip.net>
+  Copyright (c) 2006 Christian Weilbach <christian_weilbach@web.de>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public

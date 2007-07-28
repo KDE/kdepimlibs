@@ -132,6 +132,8 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
   private:
     Q_DECLARE_PRIVATE(MovableType)
+    Q_PRIVATE_SLOT( d_func(), void slotListTrackbackPings(
+    const QList<QVariant>&, const QVariant& ))
 };
 
 } //namespace KBlog

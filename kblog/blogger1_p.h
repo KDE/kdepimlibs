@@ -1,7 +1,7 @@
 /*
   This file is part of the kblog library.
 
-  Copyright (c) 2007 Christian Weilbach <christian@whiletaker.homeip.net>
+  Copyright (c) 2007 Christian Weilbach <christian_weilbach@web.de>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -36,10 +36,30 @@ class Blogger1Private : public BlogPrivate
   public:
     QString mAppId;
     KXmlRpc::Client *mXmlRpcClient;
+    int callCounter;
+    QMap<int,KBlog::BlogPosting*> callMap;
     Blogger1Private();
     virtual ~Blogger1Private();
     virtual QList<QVariant> defaultArgs( const QString &id = QString() );
+
+    virtual void slotListBlogs( const QList<QVariant> &result,
+                                const QVariant &id );
+    virtual void slotListRecentPostings( const QList<QVariant> &result,
+                                         const QVariant &id );
+    virtual void slotFetchPosting( const QList<QVariant> &result,
+                                   const QVariant &id );
+    virtual void slotCreatePosting( const QList<QVariant> &result,
+                                    const QVariant &id );
+    virtual void slotModifyPosting( const QList<QVariant> &result,
+                                    const QVariant &id );
+    virtual void slotError( int number, const QString &errorString,
+                            const QVariant &id );
+
     Q_DECLARE_PUBLIC(Blogger1)
+
+  private:
+    virtual bool readPostingFromMap( BlogPosting *post,
+                                     const QMap<QString, QVariant> &postInfo );
 };
 
 #endif
