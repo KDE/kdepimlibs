@@ -146,7 +146,7 @@ void TestGData::testValidity()
 
   connect( b, SIGNAL( userInfoRetrieved( const QString&, const QString&, const QString& ) ),
           userInfoTimer, SLOT( stop() ) );
-  b->fetchUserInfo();
+  b->fetchProfileId();
   userInfoTimer->start( TIMEOUT );
 
   connect( b, SIGNAL( blogInfoRetrieved( const QString&, const QString& ) ),
