@@ -125,4 +125,12 @@ KTimeZone Blog::timeZone()
   return d->mTimeZone;
 }
 
+BlogPrivate::BlogPrivate()
+{
+}
+
+BlogPrivate::~BlogPrivate()
+{
+}
+
 #include "blog.moc"

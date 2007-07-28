@@ -33,10 +33,6 @@ template <class T,class S> class QMap;
 class KTimeZone;
 class KUrl;
 
-namespace KIO {
-    class Job;
-}
-
 /**
   This is the main interface for blog backends
   @author Ian Reinhart Geiser, Reinhold Kainhofer, Christian Weilbach
@@ -232,7 +228,7 @@ class KBLOG_EXPORT Blog : public QObject
 
       @see listBlogs()
     */
-    virtual void listedBlogs( const QMap<QString,QString>& blogsInfo );
+    void listedBlogs( const QMap<QString,QString>& blogsInfo );
 
     /**
       This signal is emitted when a listRecentPostings() job fetches a posting
@@ -242,7 +238,7 @@ class KBLOG_EXPORT Blog : public QObject
 
       @see listRecentPostings()
     */
-    virtual void listedRecentPostings(
+    void listedRecentPostings(
         const QList<KBlog::BlogPosting*>& postings );
 
     /**
@@ -250,7 +246,7 @@ class KBLOG_EXPORT Blog : public QObject
 
       @see ErrorType
     */
-    virtual void error( KBlog::Blog::ErrorType type,
+    void error( KBlog::Blog::ErrorType type,
                         const QString &errorMessage );
 
   protected:

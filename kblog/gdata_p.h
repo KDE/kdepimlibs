@@ -31,6 +31,11 @@
 
 class KJob;
 
+namespace KIO
+{
+  class Job;
+}
+
 namespace KBlog {
 
 class GDataPrivate : public BlogPrivate

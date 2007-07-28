@@ -8,20 +8,14 @@ add_subdirectory( tests )
 
 set(kblog_LIB_SRCS
 blog.cpp
-blog_p.cpp
 blogposting.cpp
 blogpostingcomment.cpp
 blogmedia.cpp
 blogger1.cpp
-blogger1_p.cpp
 gdata.cpp
-gdata_p.cpp
 livejournal.cpp
-livejournal_p.cpp
 metaweblog.cpp
-metaweblog_p.cpp
 movabletype.cpp
-movabletype_p.cpp
 )
 
 

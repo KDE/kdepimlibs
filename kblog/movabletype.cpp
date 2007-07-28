@@ -23,6 +23,8 @@
 #include "movabletype_p.h"
 #include "blogposting.h"
 
+#include <kxmlrpcclient/client.h>
+
 using namespace KBlog;
 
 MovableType::MovableType( const KUrl &server, QObject *parent )
@@ -78,6 +80,104 @@ void MovableType::listTrackbackPings( KBlog::BlogPosting *posting ) {
 void MovableType::modifyPosting( KBlog::BlogPosting *posting )
 {
   //TODO
+}
+
+MovableTypePrivate::MovableTypePrivate()
+{
+  mXmlRpcClient = 0;
+}
+
+MovableTypePrivate::~MovableTypePrivate()
+{
+  delete mXmlRpcClient;
+}
+
+QList<QVariant> MovableTypePrivate::defaultArgs( const QString &id )
+{
+  Q_Q(MovableType);
+  QList<QVariant> args;
+
+  if ( id.toInt() ) {
+    args << QVariant( id.toInt() );
+  }
+  if ( !id.toInt() && !id.isNull() ){
+    args << QVariant( id );
+  }
+  args << QVariant( q->username() )
+       << QVariant( q->password() );
+  return args;
+}
+
+bool MovableTypePrivate::readPostingFromMap(
+    BlogPosting *post, const QMap<QString, QVariant> &postInfo )
+{
+  //TODO
+  return false;
+}
+
+void MovableTypePrivate::slotCreatePosting(
+    const QList<QVariant> &result, const QVariant &id )
+{
+  //TODO 7 new keys are:
+  // int mt_allow_comments: the value for the allow_comments field
+  // int mt_allow_pings, the value for the allow_pings field
+  // String mt_convert_breaks, the value for the convert_breaks field
+  // String mt_text_more, the value for the additional entry text
+  // String mt_excerpt, the value for the excerpt field
+  // String mt_keywords, the value for the keywords field
+  // array mt_tb_ping_urls, the list of TrackBack ping URLs for this entry
+}
+
+void MovableTypePrivate::slotError( int number,
+    const QString &errorString, const QVariant &id )
+{
+  //TODO
+}
+
+void MovableTypePrivate::slotFetchPosting(
+    const QList<QVariant> &result, const QVariant &id )
+{
+  //TODO 6 new keys are:
+  // int mt_allow_comments: the value for the allow_comments field
+  // int mt_allow_pings, the value for the allow_pings field
+  // String mt_convert_breaks, the value for the convert_breaks field
+  // String mt_text_more, the value for the additional entry text
+  // String mt_excerpt, the value for the excerpt field
+  // String mt_keywords, the value for the keywords field
+}
+
+void MovableTypePrivate::slotListRecentPostings(
+    const QList<QVariant> &result, const QVariant &id )
+{
+  //TODO 6 new keys are:
+  // int mt_allow_comments: the value for the allow_comments field
+  // int mt_allow_pings, the value for the allow_pings field
+  // String mt_convert_breaks, the value for the convert_breaks field
+  // String mt_text_more, the value for the additional entry text
+  // String mt_excerpt, the value for the excerpt field
+  // String mt_keywords, the value for the keywords field
+}
+
+void MovableTypePrivate::slotListTrackbackPings(
+    const QList<QVariant> &result, const QVariant &id )
+{
+  //TODO Contains:
+  // String pingTitle: the title of the entry sent in the ping
+  // String pingURL: the URL of the entry
+  // String pingIP: the IP address of the host that sent the ping
+}
+
+void MovableTypePrivate::slotModifyPosting(
+    const QList<QVariant> &result, const QVariant &id )
+{
+  //TODO 5 new keys are:
+  // int mt_allow_comments: the value for the allow_comments field
+  // int mt_allow_pings, the value for the allow_pings field
+  // String mt_convert_breaks, the value for the convert_breaks field
+  // String mt_text_more, the value for the additional entry text
+  // String mt_excerpt, the value for the excerpt field
+  // String mt_keywords, the value for the keywords field
+  // array mt_tb_ping_urls, the list of TrackBack ping URLs for this entry
 }
 
 #include "movabletype.moc"
