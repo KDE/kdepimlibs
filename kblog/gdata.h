@@ -86,7 +86,7 @@ class KBLOG_EXPORT GData : public Blog
         @see void fetchedUserInfo( const QString &nickname,
                 const QString &userid, const QString &email )
     */
-    void fetchUserInfo();
+    void fetchProfileId();
 
     /**
         List the blogs available for this authentication on the server.
@@ -170,15 +170,21 @@ class KBLOG_EXPORT GData : public Blog
         @see profileId()
     */
     void setProfileId( const QString &pid );
+
+  Q_SIGNALS:
+    void fetchedProfileId();
+
   protected:
     GData( const KUrl &server, GDataPrivate &dd, QObject *parent = 0 );
   private:
     Q_DECLARE_PRIVATE(GData)
-    Q_PRIVATE_SLOT(d_func(), void slotListBlogs(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode))
-    Q_PRIVATE_SLOT(d_func(), void slotListRecentPostings(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode))
-    Q_PRIVATE_SLOT(d_func(), void slotFetchPosting(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode))
-    Q_PRIVATE_SLOT(d_func(), void slotCreatePosting(KJob*))
-    Q_PRIVATE_SLOT(d_func(), void slotData( KIO::Job *, const QByteArray& ))
+    Q_PRIVATE_SLOT(d_func(), void slotFetchProfileId(KIO::Job*))
+    Q_PRIVATE_SLOT(d_func(), void slotFetchProfileIdData(KIO::Job*,const QByteArray&))
+    Q_PRIVATE_SLOT(d_func(), void slotListBlogs(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(), void slotListRecentPostings(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(), void slotFetchPosting(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(), void slotCreatePosting(KIO::Job*))
+    Q_PRIVATE_SLOT(d_func(), void slotCreatePostingData(KIO::Job *,const QByteArray&))
 };
 
 } //namespace KBlog

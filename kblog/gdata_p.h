@@ -27,9 +27,10 @@
 
 #include <syndication/loader.h>
 
-#include <QDateTime>
-
 class KJob;
+class QDateTime;
+class QByteArray;
+template <class T,class S>class QMap;
 
 namespace KIO
 {
@@ -43,17 +44,20 @@ class GDataPrivate : public BlogPrivate
   public:
     QString mAuthenticationString;
     QDateTime mAuthenticationTime;
-    QByteArray mBuffer;
+    QMap<KIO::Job*,QByteArray> mCreatePostingBuffer;
+    QMap<KIO::Job*,QByteArray> mFetchProfileIdBuffer;
     QString mFullName;
     QString mProfileId;
     GDataPrivate();
     ~GDataPrivate();
     QString authenticate();
+    virtual void slotFetchProfileIdData(KIO::Job*,const QByteArray&);
+    virtual void slotFetchProfileId(KIO::Job*);
     virtual void slotListBlogs(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
     virtual void slotListRecentPostings(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
     virtual void slotFetchPosting(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
-    virtual void slotCreatePosting(KJob*);
-    virtual void slotData( KIO::Job *, const QByteArray& );
+    virtual void slotCreatePosting(KIO::Job*);
+    virtual void slotCreatePostingData( KIO::Job *, const QByteArray& );
     Q_DECLARE_PUBLIC(GData)
 };
 

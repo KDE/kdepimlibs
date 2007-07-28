@@ -80,38 +80,16 @@ void GData::setProfileId( const QString& pid )
   d->mProfileId = pid;
 }
 
-void GData::fetchUserInfo()
+void GData::fetchProfileId()
 {
   Q_D(GData);
-  // fetch the introspection file synchronously and parse it
   QByteArray data;
   KIO::Job *job = KIO::get( url(), false, false );
   KUrl blogUrl = url();
-  /* make asynchronous */
-  if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &blogUrl ) ) {
-    kDebug() << "Fetched Homepage data." << endl;
-//     QRegExp pp( "<link.+rel=\"service.post\".+href=\"(.+)\".*/>" );
-//     if( pp.indexIn( data )!=-1 )
-//        mCreatePostingsPath = pp.cap(1);
-//     else
-//        emit parent->error( Other,
-//    i18n( "Could not regexp the service.post path." ) );
-//     kDebug(5323)<<
-//   "QRegExp pp( \"<link.+rel=\"service.post\".+href=\"(.+)\".*/>\" ) matches "
-//    << pp.cap(1) << endl;
-
-    QRegExp bid( "<link.+blogID=(\\d+).*/>" );
-    if( bid.indexIn( data )!=-1 )
-       setBlogId( bid.cap(1) );
-    else
-      emit error( Other, i18n( "Could not regexp the blogID path." ) );
-    kDebug(5323)<<"QRegExp bid( '<link.+blogID=(\\d+).*/>' matches "
-        << bid.cap(1) << endl;
-  }
-  else {
-    emit error( Other, i18n( "Could not fetch the homepage data." ) );
-    kDebug(5323)<< "Could not fetch the homepage data." << endl;
-  }
+  connect( job, SIGNAL(data(KIO::Job*,const QByteArray&)),
+                  this,SLOT(slotFetchProfileIdData(KIO::Job*,const QByteArray&)));
+  connect( job, SIGNAL(result(KIO::Job*)),
+                  this,SLOT(slotFetchProfileId(KIO::Job*)));
 }
 
 void GData::listBlogs()
@@ -268,6 +246,36 @@ QString GDataPrivate::authenticate(){
   return mAuthenticationString;
 }
 
+void GDataPrivate::slotFetchProfileIdData( KIO::Job *job, const QByteArray &data )
+{
+  unsigned int oldSize = mFetchProfileIdBuffer[ job ].size();
+  mFetchProfileIdBuffer[ job ].resize( oldSize + data.size() );
+  memcpy( mFetchProfileIdBuffer[ job ].data() + oldSize, data.data(), data.size() );
+}
+
+void GDataPrivate::slotFetchProfileId(KIO::Job* job)
+{
+  Q_Q(GData);
+  if ( !job->error() ) {
+    QRegExp pid( "http://www.blogger.com/profile/(\\d+)" );
+    if( pid.indexIn( mFetchProfileIdBuffer[ job ] )!=-1 ){
+       q->setProfileId( pid.cap(1) );
+       emit q->fetchedProfileId();
+    }
+    else
+      emit q->error( GData::Other, i18n( "Could not regexp the Profile ID." ) );
+
+    kDebug(5323)<<"QRegExp bid( 'http://www.blogger.com/profile/(\\d+)' matches "
+        << pid.cap(1) << endl;
+  }
+  else {
+    emit q->error( GData::Other, i18n( "Could not fetch the homepage data." ) );
+    kDebug(5323)<< "Could not fetch the homepage data." << endl;
+  }
+  mFetchProfileIdBuffer[ job ].resize( 0 );
+  mFetchProfileIdBuffer.remove( job );
+}
+
 void GDataPrivate::slotListBlogs(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status ) {
@@ -388,24 +396,25 @@ void GDataPrivate::slotFetchPosting(
   }
 }
 
-void GDataPrivate::slotData( KIO::Job *, const QByteArray &data )
+void GDataPrivate::slotCreatePostingData( KIO::Job *job, const QByteArray &data )
 {
-  unsigned int oldSize = mBuffer.size();
-  mBuffer.resize( oldSize + data.size() );
-  memcpy( mBuffer.data() + oldSize, data.data(), data.size() );
+  unsigned int oldSize = mCreatePostingBuffer[ job ].size();
+  mCreatePostingBuffer[ job ].resize( oldSize + data.size() );
+  memcpy( mCreatePostingBuffer[ job ].data() + oldSize, data.data(), data.size() );
 }
 
-void GDataPrivate::slotCreatePosting( KJob *job )
+void GDataPrivate::slotCreatePosting( KIO::Job *job )
 {
   Q_Q(GData);
   if ( job->error() != 0 ) {
     kDebug(5323) << "slotCreatePosting error: " << job->errorString() << endl;
     emit q->error( GData::Atom, job->errorString() );
-    mBuffer.resize( 0 );
+    mCreatePostingBuffer[ job ].resize( 0 );
+    mCreatePostingBuffer.remove( job );
     return;
   }
 
-  const QString data = QString::fromUtf8( mBuffer.data(), mBuffer.size() );
+  const QString data = QString::fromUtf8( mCreatePostingBuffer[ job ].data(), mCreatePostingBuffer[ job ].size() );
 
   kDebug(5323) << "Response: " << data << endl;
 }
