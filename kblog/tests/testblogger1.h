@@ -45,9 +45,9 @@ class TestBlogger1Warnings : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
-    void userInfoTimeoutWarning();
+    void fetchUserInfoTimeoutWarning();
     void listBlogsTimeoutWarning();
-    void listPostingsTimeoutWarning();
+    void listRecentPostingsTimeoutWarning();
     void fetchPostingTimeoutWarning();
     void modifyPostingTimeoutWarning();
     void createPostingTimeoutWarning();

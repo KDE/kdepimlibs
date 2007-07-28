@@ -35,12 +35,14 @@ Blog::Blog( const KUrl &server, QObject *parent ) :
   QObject( parent ), d_ptr( new BlogPrivate )
 {
   Q_UNUSED( server );
+  d_ptr->q_ptr = this;
 }
 
 Blog::Blog( const KUrl &server, BlogPrivate &dd, QObject *parent ) :
     QObject( parent ), d_ptr( &dd )
 {
   Q_UNUSED( server );
+  d_ptr->q_ptr = this;
 }
 
 Blog::~Blog()
@@ -83,10 +85,10 @@ QString Blog::username() const
   return d->mUsername;
 }
 
-void Blog::setUsername( const QString &userName )
+void Blog::setUsername( const QString &username )
 {
   Q_D(Blog);
-  d->mUsername = userName;
+  d->mUsername = username;
 }
 
 void Blog::setBlogId( const QString &blogId )
@@ -125,7 +127,7 @@ KTimeZone Blog::timeZone()
   return d->mTimeZone;
 }
 
-BlogPrivate::BlogPrivate()
+BlogPrivate::BlogPrivate() : q_ptr(0)
 {
 }
 

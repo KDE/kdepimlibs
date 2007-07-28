@@ -2,13 +2,13 @@
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${KDE4_KIO_INCLUDES} )
  
 # ########### next target ###############
-#  
-#  set(testblogger1_SRCS testblogger1.cpp )
-#  
-#  
-#  kde4_add_unit_test(testblogger1 TESTNAME kabc-testblogger1 ${testblogger1_SRCS})
-#  
-#  target_link_libraries(testblogger1 ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+ 
+ set(testblogger1_SRCS testblogger1.cpp )
+ 
+ 
+ kde4_add_unit_test(testblogger1 TESTNAME kabc-testblogger1 ${testblogger1_SRCS})
+ 
+ target_link_libraries(testblogger1 ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
  
 # ########### next target ###############
 

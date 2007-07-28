@@ -126,7 +126,7 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
       @see listTrackbackPings()
     */
-    virtual void listedTrackbackPings( const QMap<QString, QString> &pings );
+    void listedTrackbackPings( const QMap<QString, QString> &pings );
 
   protected:
     MovableType( const KUrl &server, MovableTypePrivate &dd, QObject *parent = 0 );
