@@ -26,7 +26,6 @@
 #include <kblog/blog.h>
 
 class KUrl;
-class Blogger1Private;
 
 /**
   @file
@@ -38,6 +37,8 @@ class Blogger1Private;
 */
 
 namespace KBlog {
+
+class Blogger1Private;
 
 /**
    @brief

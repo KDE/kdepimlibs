@@ -25,7 +25,6 @@
 #include <kblog/metaweblog.h>
 
 class KUrl;
-class MovableTypePrivate;
 
 /**
   @file
@@ -36,6 +35,8 @@ class MovableTypePrivate;
 */
 
 namespace KBlog {
+
+    class MovableTypePrivate;
 /**
   @brief
   A class that can be used for access to Movable Type blogs. Almost every

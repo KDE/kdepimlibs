@@ -26,7 +26,6 @@
 #include <kblog/blogger1.h>
 
 class KUrl;
-class MetaWeblogPrivate;
 
 /**
   @file
@@ -38,6 +37,8 @@ class MetaWeblogPrivate;
 */
 
 namespace KBlog {
+
+    class MetaWeblogPrivate;
 /**
   @brief
   A class that can be used for access to MetaWeblog  blogs. Almost every

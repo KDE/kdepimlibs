@@ -27,7 +27,7 @@
 
 #include <kxmlrpcclient/client.h>
 
-using namespace KBlog;
+namespace KBlog {
 
 class MovableTypePrivate : public MetaWeblogPrivate
 {
@@ -49,5 +49,7 @@ class MovableTypePrivate : public MetaWeblogPrivate
     bool readPostingFromMap( BlogPosting *post,
                              const QMap<QString, QVariant> &postInfo );
 };
+
+}
 
 #endif

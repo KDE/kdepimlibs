@@ -28,7 +28,6 @@
 
 class KHttpCookie;
 class KUrl;
-class LiveJournalPrivate;
 
 /**
   @file
@@ -38,6 +37,9 @@ class LiveJournalPrivate;
   @author Mike Arthur \<mike\@mikearthur.co.uk\>
 */
 namespace KBlog {
+
+    class LiveJournalPrivate;
+
 /**
   @brief
   A class that can be used for access to Movable Type  blogs. Almost every

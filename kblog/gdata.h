@@ -25,7 +25,6 @@
 #include <kblog/blog.h>
 
 class KUrl;
-class GDataPrivate;
 
 
 /**
@@ -41,6 +40,7 @@ class GDataPrivate;
 
 namespace KBlog {
 
+  class GDataPrivate;
   class BlogPostingComment;
 
 /**

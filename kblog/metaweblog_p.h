@@ -27,7 +27,7 @@
 
 #include <kxmlrpcclient/client.h>
 
-using namespace KBlog;
+namespace KBlog {
 
 class MetaWeblogPrivate : public Blogger1Private
 {
@@ -55,4 +55,5 @@ class MetaWeblogPrivate : public Blogger1Private
                              const QMap<QString, QVariant> &postInfo );
 };
 
+}
 #endif

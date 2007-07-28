@@ -27,7 +27,7 @@
 
 #include <kxmlrpcclient/client.h>
 
-using namespace KBlog;
+namespace KBlog {
 
 class LiveJournalPrivate : public BlogPrivate
 {
@@ -71,5 +71,7 @@ class LiveJournalPrivate : public BlogPrivate
     bool readPostingFromMap( BlogPosting *post,
                              const QMap<QString, QVariant> &postInfo );
 };
+
+}
 
 #endif

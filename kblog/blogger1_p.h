@@ -29,7 +29,7 @@
 
 #include <QList>
 
-using namespace KBlog;
+namespace KBlog {
 
 class Blogger1Private : public BlogPrivate
 {
@@ -55,11 +55,13 @@ class Blogger1Private : public BlogPrivate
     virtual void slotError( int number, const QString &errorString,
                             const QVariant &id );
 
-    Q_DECLARE_PUBLIC(Blogger1)
+    Q_DECLARE_PUBLIC(KBlog::Blogger1)
 
   private:
     virtual bool readPostingFromMap( BlogPosting *post,
                                      const QMap<QString, QVariant> &postInfo );
 };
+
+}
 
 #endif

@@ -31,7 +31,7 @@
 
 class KJob;
 
-using namespace KBlog;
+namespace KBlog {
 
 class GDataPrivate : public BlogPrivate
 {
@@ -52,4 +52,5 @@ class GDataPrivate : public BlogPrivate
     Q_DECLARE_PUBLIC(GData)
 };
 
+}
 #endif
