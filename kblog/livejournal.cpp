@@ -111,6 +111,11 @@ QString LiveJournal::interfaceName() const
   return QLatin1String( "Movable Type " );
 }
 
+void LiveJournal::fetchUserInfo()
+{
+  //TODO
+}
+
 void LiveJournal::listCategories()
 {
   //TODO
