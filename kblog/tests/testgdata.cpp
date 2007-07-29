@@ -144,7 +144,7 @@ void TestGData::testValidity()
 
   QEventLoop *eventLoop = new QEventLoop( this );
 
-  connect( b, SIGNAL( userInfoRetrieved( const QString&, const QString&, const QString& ) ),
+  connect( b, SIGNAL( fetchedProfileId() ),
           userInfoTimer, SLOT( stop() ) );
   b->fetchProfileId();
   userInfoTimer->start( TIMEOUT );
@@ -156,7 +156,7 @@ void TestGData::testValidity()
 
   connect( b, SIGNAL( listedRecentPostings( const QList<KBlog::BlogPosting> &postings ) ),
            listPostingsTimer, SLOT( stop() ) );
-  b->listRecentPostings( 10 );
+  b->listRecentPostings( DOWNLOADCOUNT );
   listPostingsTimer->start( TIMEOUT );
 
 //   connect( b, SIGNAL( fetchedPosting( KBlog::BlogPosting& ) ),

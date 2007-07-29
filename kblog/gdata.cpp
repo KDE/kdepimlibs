@@ -36,7 +36,6 @@
 
 #include <QByteArray>
 #include <QRegExp>
-#include <QWidget>
 
 #define TIMEOUT 600
 
@@ -83,6 +82,7 @@ void GData::setProfileId( const QString& pid )
 void GData::fetchProfileId()
 {
   Q_D(GData);
+  kDebug() << "fetchProfileId()" << endl;
   QByteArray data;
   KIO::Job *job = KIO::get( url(), false, false );
   KUrl blogUrl = url();

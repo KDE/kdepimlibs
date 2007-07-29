@@ -76,6 +76,38 @@ class KBLOG_EXPORT GData : public Blog
     ~GData();
 
     /**
+      Sets the user's name for the blog.
+      @param fullName is a QString containing the blog username.
+
+      @see username()
+    */
+    void setFullName( const QString &fullName );
+
+    /**
+       Returns the user's name of the blog.
+       @see setUsername()
+    */
+    QString fullName() const;
+
+    /**
+        Set the ProfileId of the blog. This is used for authentication.
+
+        @param email is the mail address of the user
+
+        @see setProfileId( QString& id )
+    */
+    QString profileId() const;
+
+    /**
+        Get the profile's id of the blog.
+
+        @return email
+
+        @see profileId()
+    */
+    void setProfileId( const QString &pid );
+
+    /**
         Returns the  of the inherited object.
     */
     QString interfaceName() const;
@@ -95,6 +127,8 @@ class KBLOG_EXPORT GData : public Blog
     */
     void listBlogs();
 
+    virtual void listComments( KBlog::BlogPosting *posting );
+
     /**
         List recent postings on the server..
         @see     void listedPosting( KBlog::BlogPosting &posting )
@@ -102,8 +136,6 @@ class KBLOG_EXPORT GData : public Blog
         @see     void listRecentPostingsFinished()
     */
     void listRecentPostings( int number );
-
-    void listComments( KBlog::BlogPosting *posting );
 
     /**
         Fetch the Posting with postingId.
@@ -138,38 +170,6 @@ class KBLOG_EXPORT GData : public Blog
     void removePosting( KBlog::BlogPosting *posting );
 
     void createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
-
-    /**
-      Sets the user's name for the blog.
-      @param fullName is a QString containing the blog username.
-
-      @see username()
-    */
-    void setFullName( const QString &fullName );
-
-    /**
-       Returns the user's name of the blog.
-       @see setUsername()
-    */
-    QString fullName() const;
-
-    /**
-        Set the ProfileId of the blog. This is used for authentication.
-
-        @param email is the mail address of the user
-
-        @see setProfileId( QString& id )
-    */
-    QString profileId() const;
-
-    /**
-        Get the profile's id of the blog.
-
-        @return email
-
-        @see profileId()
-    */
-    void setProfileId( const QString &pid );
 
   Q_SIGNALS:
     void fetchedProfileId();
