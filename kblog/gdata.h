@@ -81,7 +81,7 @@ class KBLOG_EXPORT GData : public Blog
 
       @see username()
     */
-    void setFullName( const QString &fullName );
+    virtual void setFullName( const QString &fullName );
 
     /**
        Returns the user's name of the blog.
@@ -105,7 +105,7 @@ class KBLOG_EXPORT GData : public Blog
 
         @see profileId()
     */
-    void setProfileId( const QString &pid );
+    virtual void setProfileId( const QString &pid );
 
     /**
         Returns the  of the inherited object.

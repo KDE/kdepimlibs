@@ -120,7 +120,7 @@ class KBLOG_EXPORT Blog : public QObject
 
       @return blogId
     */
-    virtual QString blogId() const;
+    QString blogId() const;
 
     /**
       Sets the password for the blog.
@@ -134,7 +134,7 @@ class KBLOG_EXPORT Blog : public QObject
       Returns the password of the blog.
       @see setPassword();
     */
-    virtual QString password() const;
+    QString password() const;
 
     /**
       Sets the user's authentication name for the blog.
@@ -148,7 +148,7 @@ class KBLOG_EXPORT Blog : public QObject
        Returns the user's id of the blog.
        @see setUserId()
     */
-    virtual QString username() const;
+    QString username() const;
 
     /**
       Sets the URL for the blog.
@@ -162,7 +162,7 @@ class KBLOG_EXPORT Blog : public QObject
       Get the URL for the blog.
       @see setUrl()
     */
-    virtual KUrl url() const;
+    KUrl url() const;
 
     /**
       Sets the time zone of the blog server.
@@ -175,7 +175,7 @@ class KBLOG_EXPORT Blog : public QObject
       Get the time zone of the blog server.
       @see void setTimeZone()
     */
-    virtual KTimeZone timeZone();
+    KTimeZone timeZone();
 
     /**
       List the blogs available for this authentication on the server.

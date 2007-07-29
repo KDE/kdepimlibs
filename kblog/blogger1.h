@@ -74,7 +74,7 @@ class KBLOG_EXPORT Blogger1 : public Blog
     /**
        Destroy the object.
     */
-    ~Blogger1();
+    virtual ~Blogger1();
 
     /**
       Returns the  of the inherited object.
@@ -94,7 +94,7 @@ class KBLOG_EXPORT Blogger1 : public Blog
         @see void fetchedUserInfo( const QString &nickname,
                 const QString &userid, const QString &email )
     */
-    void fetchUserInfo();
+    virtual void fetchUserInfo();
 
     /**
       List the blogs available for this authentication on the server.

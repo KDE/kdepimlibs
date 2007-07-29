@@ -74,7 +74,7 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
     /**
       Destroy the object.
     */
-    ~MetaWeblog();
+    virtual ~MetaWeblog();
 
     /**
       Returns the  of the inherited object.
@@ -94,7 +94,7 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
       @see  void categoryInfoRetrieved( const QString &, const QString & )
       @see  void listCategoriesFinished()
     */
-    void listCategories();
+    virtual void listCategories();
 
     /**
       Fetch the Posting with postingId.
@@ -124,7 +124,7 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
       @param media is send to the server.
     */
-    void createMedia( KBlog::BlogMedia *media );
+    virtual void createMedia( KBlog::BlogMedia *media );
 
   Q_SIGNALS:
 

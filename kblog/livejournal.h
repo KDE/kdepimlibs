@@ -70,13 +70,13 @@ class KBLOG_EXPORT LiveJournal : public Blog
     /**
       Destroy the object.
     */
-    ~LiveJournal();
+    virtual ~LiveJournal();
 
-    void addFriend( const QString &username, int group,
+    virtual void addFriend( const QString &username, int group,
                     const QColor &fgcolor = QColor( "#000000" ),
                     const QColor &bgcolor = QColor( "#FFFFFF" ) );
 
-    void assignFriendToCategory( const QString &username, int category );
+    virtual void assignFriendToCategory( const QString &username, int category );
 
     /**
       Create a new posting on server.
@@ -85,11 +85,11 @@ class KBLOG_EXPORT LiveJournal : public Blog
     */
     void createPosting( KBlog::BlogPosting *posting );
 
-    void deleteFriend( const QString &username );
+    virtual void deleteFriend( const QString &username );
 
-    void expireCookie( const QString &cookie );
+    virtual void expireCookie( const QString &cookie );
 
-    void expireAllCookies();
+    virtual void expireAllCookies();
 
     /**
       Fetch the Posting with postingId.
@@ -99,7 +99,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
     */
     void fetchPosting( KBlog::BlogPosting *posting );
 
-    void fetchUserInfo();
+    virtual void fetchUserInfo();
 
     QString fullName() const;
 
@@ -110,7 +110,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
     Q_DECLARE_FLAGS(GenerateCookieOptions,
                                         GenerateCookieOption)
 
-    void generateCookie( const GenerateCookieOptions& options );
+    virtual void generateCookie( const GenerateCookieOptions& options );
 
     /**
       Returns the  of the inherited object.
@@ -119,13 +119,13 @@ class KBLOG_EXPORT LiveJournal : public Blog
 
     void listCategories();
 
-    void listFriends();
+    virtual void listFriends();
 
-    void listFriendsOf();
+    virtual void listFriendsOf();
 
-    void listMoods();
+    virtual void listMoods();
 
-    void listPictureKeywords();
+    virtual void listPictureKeywords();
 
     /**
       List recent postings on the server.

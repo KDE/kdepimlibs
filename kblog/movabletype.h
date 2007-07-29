@@ -67,7 +67,7 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     /**
       Destroy the object.
     */
-    ~MovableType();
+    virtual ~MovableType();
 
     /**
       Create a new posting on server.
