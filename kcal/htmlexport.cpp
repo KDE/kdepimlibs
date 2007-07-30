@@ -206,7 +206,7 @@ void HtmlExport::createMonthView(QTextStream *ts)
 
         *ts << "</td></tr><tr><td valign=\"top\">";
 
-        Event::List events = d->mCalendar->events( start,
+        Event::List events = d->mCalendar->events( start, d->mCalendar->timeSpec(),
                                                    EventSortStartDate,
                                                    SortDirectionAscending );
         if (events.count()) {
@@ -263,7 +263,7 @@ void HtmlExport::createEventList (QTextStream *ts)
 
   for ( QDate dt = fromDate(); dt <= toDate(); dt = dt.addDays(1) ) {
     kDebug(5800) << "Getting events for " << dt.toString() << endl;
-    Event::List events = d->mCalendar->events(dt,
+    Event::List events = d->mCalendar->events(dt, d->mCalendar->timeSpec(),
                                               EventSortStartDate,
                                               SortDirectionAscending );
     if (events.count()) {

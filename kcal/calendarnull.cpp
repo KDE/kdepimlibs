@@ -107,19 +107,23 @@ Event::List CalendarNull::rawEvents( EventSortField sortField,
 }
 
 Event::List CalendarNull::rawEvents( const QDate &start, const QDate &end,
+                                     const KDateTime::Spec &timespec,
                                      bool inclusive )
 {
   Q_UNUSED( start );
   Q_UNUSED( end );
+  Q_UNUSED( timespec );
   Q_UNUSED( inclusive );
   return Event::List();
 }
 
 Event::List CalendarNull::rawEventsForDate( const QDate &date,
+                                            const KDateTime::Spec &timespec,
                                             EventSortField sortField,
                                             SortDirection sortDirection )
 {
   Q_UNUSED( date );
+  Q_UNUSED( timespec );
   Q_UNUSED( sortField );
   Q_UNUSED( sortDirection );
   return Event::List();

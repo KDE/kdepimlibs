@@ -2248,7 +2248,6 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
   // Populate the calendar's time zone collection with all VTIMEZONE components
   ICalTimeZones *tzlist = cal->timeZones();
   ICalTimeZoneSource tzs;
-  ICalTimeZones newtzlist;
   tzs.parse( calendar, *tzlist );
 
   // custom properties

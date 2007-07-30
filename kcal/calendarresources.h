@@ -416,17 +416,19 @@ class KCAL_EXPORT CalendarResources
 
     /**
       @copydoc
-      Calendar::rawEvents(const QDate &, const QDate &, bool)
+      Calendar::rawEvents(const QDate &, const QDate &, const KDateTime::Spec &, bool)
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
+                           const KDateTime::Spec &timespec = KDateTime::Spec(),
                            bool inclusive = false );
 
     /**
       @copydoc
-      Calendar::rawEventsForDate(const QDate &, EventSortField, SortDirection)
+      Calendar::rawEventsForDate(const QDate &, const KDateTime::Spec &, EventSortField, SortDirection)
     */
     Event::List rawEventsForDate(
       const QDate &date,
+      const KDateTime::Spec &timespec = KDateTime::Spec(),
       EventSortField sortField = EventSortUnsorted,
       SortDirection sortDirection = SortDirectionAscending );
 

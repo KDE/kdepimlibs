@@ -330,11 +330,12 @@ void CalendarLocal::incidenceUpdated( IncidenceBase *incidence )
 }
 
 Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
+                                             const KDateTime::Spec &timespec,
                                              EventSortField sortField,
                                              SortDirection sortDirection )
 {
-//TODO: add KDateTime::Spec parameter?
   Event::List eventList;
+  KDateTime::Spec ts = timespec.isValid() ? timespec : timeSpec();
 
   foreach ( Event *event, d->mEvents ) {
 
@@ -343,19 +344,28 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
         int extraDays = event->dtStart().date().daysTo( event->dtEnd().date() );
         int i;
         for ( i = 0; i <= extraDays; i++ ) {
-          if ( event->recursOn( qd.addDays( -i ), timeSpec() ) ) {
+          if ( event->recursOn( qd.addDays( -i ), ts ) ) {
             eventList.append( event );
             break;
           }
         }
       } else {
-        if ( event->recursOn( qd, timeSpec() ) ) {
+        if ( event->recursOn( qd, ts ) ) {
           eventList.append( event );
         }
       }
     } else {
-      if ( event->dtStart().date() <= qd && event->dateEnd() >= qd ) {
-        eventList.append( event );
+      KDateTime kdt( qd, ts );
+      if ( event->dtStart() <= kdt ) {
+        KDateTime end( event->dtEnd().toTimeSpec( event->dtStart() ) );
+        if ( event->floats() ) {
+          end.setDateOnly( true );
+        } else {
+          end = end.addSecs(-1);
+        }
+        if ( end >= kdt ) {
+          eventList.append( event );
+        }
       }
     }
   }
@@ -364,23 +374,25 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
 }
 
 Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
-                                          bool inclusive )
+                                      const KDateTime::Spec &timespec, bool inclusive )
 {
-//TODO: add KDateTime::Spec parameter?
   Event::List eventList;
+  KDateTime::Spec ts = timespec.isValid() ? timespec : timeSpec();
+  KDateTime st(start, ts);
+  KDateTime nd(end, ts);
 
   // Get non-recurring events
   foreach ( Event *event, d->mEvents ) {
     if ( event->recurs() ) {
-      QDate rStart = event->dtStart().date();
+      KDateTime rStart = event->dtStart();
       bool found = false;
       if ( inclusive ) {
-        if ( rStart >= start && rStart <= end ) {
+        if ( rStart >= st && rStart <= nd ) {
           // Start date of event is in range. Now check for end date.
           // if duration is negative, event recurs forever, so do not include it.
           if ( event->recurrence()->duration() == 0 ) {  // End date set
-            QDate rEnd = event->recurrence()->endDate();
-            if ( rEnd >= start && rEnd <= end ) {  // End date within range
+            KDateTime rEnd = event->recurrence()->endDateTime();
+            if ( rEnd >= st && rEnd <= nd ) {  // End date within range
               found = true;
             }
           } else if ( event->recurrence()->duration() > 0 ) {  // Duration set
@@ -389,14 +401,14 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
           }
         }
       } else {
-        if ( rStart <= end ) {  // Start date not after range
-          if ( rStart >= start ) {  // Start date within range
+        if ( rStart <= nd ) {  // Start date not after range
+          if ( rStart >= st ) {  // Start date within range
             found = true;
           } else if ( event->recurrence()->duration() == -1 ) {// Recurs forever
             found = true;
           } else if ( event->recurrence()->duration() == 0 ) { // End date set
-            QDate rEnd = event->recurrence()->endDate();
-            if ( rEnd >= start && rEnd <= end ) {  // End date within range
+            KDateTime rEnd = event->recurrence()->endDateTime();
+            if ( rEnd >= st && rEnd <= nd ) {  // End date within range
               found = true;
             }
           } else {  // Duration set
@@ -412,15 +424,15 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
       }
 
     } else {
-      QDate s = event->dtStart().date();
-      QDate e = event->dtEnd().date();
+      KDateTime s = event->dtStart();
+      KDateTime e = event->dtEnd();
 
       if ( inclusive ) {
-        if ( s >= start && e <= end ) {
+        if ( s >= st && e <= nd ) {
           eventList.append( event );
         }
       } else {
-        if ( s <= end && e >= start ) {
+        if ( s <= nd && e >= st ) {
           eventList.append( event );
         }
       }
@@ -430,9 +442,9 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
   return eventList;
 }
 
-Event::List CalendarLocal::rawEventsForDate( const KDateTime &qdt )
+Event::List CalendarLocal::rawEventsForDate( const KDateTime &kdt )
 {
-  return rawEventsForDate( qdt.date() );
+  return rawEventsForDate( kdt.date(), kdt.timeSpec() );
 }
 
 Event::List CalendarLocal::rawEvents( EventSortField sortField,

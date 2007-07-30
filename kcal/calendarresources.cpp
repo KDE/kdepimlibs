@@ -497,6 +497,7 @@ Alarm::List CalendarResources::alarms( const KDateTime &from,
 /****************************** PROTECTED METHODS ****************************/
 
 Event::List CalendarResources::rawEventsForDate( const QDate &date,
+                                                 const KDateTime::Spec &timespec,
                                                  EventSortField sortField,
                                                  SortDirection sortDirection )
 {
@@ -504,31 +505,31 @@ Event::List CalendarResources::rawEventsForDate( const QDate &date,
   CalendarResourceManager::ActiveIterator it;
   for ( it = d->mManager->activeBegin(); it != d->mManager->activeEnd(); ++it ) {
     d->appendIncidences<Event::List>( result,
-                                      (*it)->rawEventsForDate( date ), *it );
+                                      (*it)->rawEventsForDate( date, timespec ), *it );
   }
   return sortEvents( &result, sortField, sortDirection );
 }
 
 Event::List CalendarResources::rawEvents( const QDate &start, const QDate &end,
-                                          bool inclusive )
+                                          const KDateTime::Spec &timespec, bool inclusive )
 {
   Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = d->mManager->activeBegin(); it != d->mManager->activeEnd(); ++it ) {
     d->appendIncidences<Event::List>( result,
-                                      (*it)->rawEvents( start, end, inclusive ), *it );
+                                      (*it)->rawEvents( start, end, timespec, inclusive ), *it );
   }
   return result;
 }
 
-Event::List CalendarResources::rawEventsForDate( const KDateTime &qdt )
+Event::List CalendarResources::rawEventsForDate( const KDateTime &kdt )
 {
   // @TODO: Remove the code duplication by the resourcemap iteration block.
   Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = d->mManager->activeBegin(); it != d->mManager->activeEnd(); ++it ) {
     d->appendIncidences<Event::List>( result,
-                                      (*it)->rawEventsForDate( qdt ), *it );
+                                      (*it)->rawEventsForDate( kdt ), *it );
   }
   return result;
 }

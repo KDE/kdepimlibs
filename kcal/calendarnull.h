@@ -127,18 +127,19 @@ class KCAL_EXPORT CalendarNull : public Calendar
 
     /**
       @copydoc
-      Calendar::rawEvents(const QDate &, const QDate &, bool)
+      Calendar::rawEvents(const QDate &, const QDate &, const KDateTime::Spec &, bool)
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
-                           bool inclusive );
+                           const KDateTime::Spec &timespec = KDateTime::Spec(),
+                           bool inclusive = false );
 
     /**
       @copydoc
-      Calendar::rawEventsForDate(const QDate &, EventSortField, SortDirection)
+      Calendar::rawEventsForDate(const QDate &, const KDateTime::Spec &, EventSortField, SortDirection)
     */
-    Event::List rawEventsForDate( const QDate &date,
-                                  EventSortField sortField=EventSortUnsorted,
-                                  SortDirection sortDirection=SortDirectionAscending );
+    Event::List rawEventsForDate( const QDate &date, const KDateTime::Spec &timespec = KDateTime::Spec(),
+                                  EventSortField sortField = EventSortUnsorted,
+                                  SortDirection sortDirection = SortDirectionAscending );
 
     /**
       @copydoc

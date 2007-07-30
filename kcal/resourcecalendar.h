@@ -180,7 +180,10 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       Builds and then returns a list of all events that match the
       date specified. Useful for dayView, etc. etc.
     */
-    virtual Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
+    virtual Event::List rawEventsForDate( const QDate &date,
+                                          const KDateTime::Spec &timespec = KDateTime::Spec(),
+                                          EventSortField sortField = EventSortUnsorted,
+                                          SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
       Get unfiltered events for date \a dt.
@@ -192,6 +195,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       only events which are completely included in the range are returned.
     */
     virtual Event::List rawEvents( const QDate &start, const QDate &end,
+                                   const KDateTime::Spec &timespec = KDateTime::Spec(),
                                    bool inclusive = false ) = 0;
 
     /**

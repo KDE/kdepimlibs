@@ -379,10 +379,11 @@ Event::List Calendar::sortEvents( Event::List *eventList,
 }
 
 Event::List Calendar::events( const QDate &date,
+                              const KDateTime::Spec &timespec,
                               EventSortField sortField,
                               SortDirection sortDirection )
 {
-  Event::List el = rawEventsForDate( date, sortField, sortDirection );
+  Event::List el = rawEventsForDate( date, timespec, sortField, sortDirection );
   d->mFilter->apply( &el );
   return el;
 }
@@ -395,9 +396,10 @@ Event::List Calendar::events( const KDateTime &dt )
 }
 
 Event::List Calendar::events( const QDate &start, const QDate &end,
+                              const KDateTime::Spec &timespec,
                               bool inclusive )
 {
-  Event::List el = rawEvents( start, end, inclusive );
+  Event::List el = rawEvents( start, end, timespec, inclusive );
   d->mFilter->apply( &el );
   return el;
 }
