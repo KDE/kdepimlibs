@@ -408,3 +408,26 @@ KUrl IncidenceBase::uri() const
   return KUrl( QString( "urn:x-ical:" ) + uid() );
 }
 
+bool IncidenceBase::Visitor::visit( Event *event )
+{
+  Q_UNUSED( event );
+  return false;
+}
+
+bool IncidenceBase::Visitor::visit( Todo *todo )
+{
+  Q_UNUSED( todo );
+  return false;
+}
+
+bool IncidenceBase::Visitor::visit( Journal *journal )
+{
+  Q_UNUSED( journal );
+  return false;
+}
+
+bool IncidenceBase::Visitor::visit( FreeBusy *freebusy )
+{
+  Q_UNUSED( freebusy );
+  return false;
+}

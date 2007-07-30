@@ -121,41 +121,25 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on an Event object.
         */
-        virtual bool visit( Event *event )
-        {
-          Q_UNUSED( event );
-          return false;
-        }
+        virtual bool visit( Event *event );
 
         /**
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on a Todo object.
         */
-        virtual bool visit( Todo *todo )
-        {
-          Q_UNUSED ( todo );
-          return false;
-        }
+        virtual bool visit( Todo *todo );
 
         /**
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on an Journal object.
         */
-        virtual bool visit( Journal *journal )
-        {
-          Q_UNUSED( journal );
-          return false;
-        }
+        virtual bool visit( Journal *journal );
 
         /**
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on a FreeBusy object.
         */
-        virtual bool visit( FreeBusy *freebusy )
-        {
-          Q_UNUSED( freebusy );
-          return false;
-        }
+        virtual bool visit( FreeBusy *freebusy );
 
       protected:
         /**
