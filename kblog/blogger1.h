@@ -146,7 +146,9 @@ class KBLOG_EXPORT Blogger1 : public Blog
     void removePosting( KBlog::BlogPosting *posting ); //FIXME docs
 
   Q_SIGNALS:
-    void fetchedUserInfo();
+    void fetchedUserInfo( const QString &nickname, const QString &userId,
+                                       const QString &usr, const QString &email,
+                                       const QString &lastname, const QString &fistname );
 
   protected:
     Blogger1( const KUrl &server, Blogger1Private &dd, QObject *parent = 0 );

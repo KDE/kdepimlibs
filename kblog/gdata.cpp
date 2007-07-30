@@ -260,16 +260,17 @@ void GDataPrivate::slotFetchProfileId(KIO::Job* job)
     QRegExp pid( "http://www.blogger.com/profile/(\\d+)" );
     if( pid.indexIn( mFetchProfileIdBuffer[ job ] )!=-1 ){
        q->setProfileId( pid.cap(1) );
-       emit q->fetchedProfileId();
+       emit q->fetchedProfileId( pid.cap(1) );
     }
     else
       emit q->error( GData::Other, i18n( "Could not regexp the Profile ID." ) );
-
+      emit q->fetchedProfileId( QString() );
     kDebug(5323)<<"QRegExp bid( 'http://www.blogger.com/profile/(\\d+)' matches "
         << pid.cap(1) << endl;
   }
   else {
     emit q->error( GData::Other, i18n( "Could not fetch the homepage data." ) );
+    emit q->fetchedProfileId( QString() );
     kDebug(5323)<< "Could not fetch the homepage data." << endl;
   }
   mFetchProfileIdBuffer[ job ].resize( 0 );

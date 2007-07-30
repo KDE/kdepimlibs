@@ -172,7 +172,7 @@ class KBLOG_EXPORT GData : public Blog
     void createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
 
   Q_SIGNALS:
-    void fetchedProfileId();
+    void fetchedProfileId( const QString &profileId );
 
   protected:
     GData( const KUrl &server, GDataPrivate &dd, QObject *parent = 0 );

@@ -44,7 +44,7 @@ class KUrl;
   and defines the BlogPosting, BlogMedia, and Blog class.
 
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
-  @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
+  @author Christian Weilbach \<christian_weilbach\@web.de\>
 */
 
 /** Namespace for blog related classes. */
