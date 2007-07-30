@@ -178,12 +178,6 @@ class KBLOG_EXPORT Blog : public QObject
     KTimeZone timeZone();
 
     /**
-      List the blogs available for this authentication on the server.
-      @see blogInfoRetrieved()
-    */
-    virtual void listBlogs() = 0;
-
-    /**
       List recent postings on the server.
       @see listedPosting()
       @see fetchedPosting()
@@ -222,13 +216,6 @@ class KBLOG_EXPORT Blog : public QObject
     virtual void removePosting( KBlog::BlogPosting *posting ) = 0;
 
   Q_SIGNALS:
-    /**
-      This signal is emitted when a listBlogs() job fetches the blog
-      information from the blogging server.
-
-      @see listBlogs()
-    */
-    void listedBlogs( const QMap<QString,QString>& blogsInfo );
 
     /**
       This signal is emitted when a listRecentPostings() job fetches a posting

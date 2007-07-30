@@ -125,7 +125,7 @@ class KBLOG_EXPORT GData : public Blog
         Note: This is not supported on the server side.
         @see void blogInfoRetrieved( const QString &id, const QString &name )
     */
-    void listBlogs();
+    virtual void listBlogs();
 
     virtual void listComments( KBlog::BlogPosting *posting );
 
@@ -172,6 +172,15 @@ class KBLOG_EXPORT GData : public Blog
     void createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
 
   Q_SIGNALS:
+
+    /**
+      This signal is emitted when a listBlogs() job fetches the blog
+      information from the blogging server.
+
+      @see listBlogs()
+    */
+    void listedBlogs( const QMap<QString,QString>& blogsInfo );
+
     void fetchedProfileId( const QString &profileId );
 
   protected:

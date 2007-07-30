@@ -100,7 +100,7 @@ class KBLOG_EXPORT Blogger1 : public Blog
       List the blogs available for this authentication on the server.
       @see void blogInfoRetrieved( const QString &id, const QString &name )
     */
-    void listBlogs();
+    virtual void listBlogs();
 
     /**
       List recent postings on the server.
@@ -146,6 +146,15 @@ class KBLOG_EXPORT Blogger1 : public Blog
     void removePosting( KBlog::BlogPosting *posting ); //FIXME docs
 
   Q_SIGNALS:
+
+    /**
+      This signal is emitted when a listBlogs() job fetches the blog
+      information from the blogging server.
+
+      @see listBlogs()
+    */
+    void listedBlogs( const QMap<QString,QString>& blogsInfo );
+
     void fetchedUserInfo( const QString &nickname, const QString &userId,
                                        const QString &usr, const QString &email,
                                        const QString &lastname, const QString &fistname );
