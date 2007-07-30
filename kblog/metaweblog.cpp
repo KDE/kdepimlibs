@@ -82,17 +82,19 @@ void MetaWeblog::listCategories()
 
 void MetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
 {
-//   Q_D(MetaWeblog);
-//   if ( d->mLock.tryLock() ) {
-//     kDebug(5323) << "Fetching Posting with url " << postingId << endl;
-//     QList<QVariant> args( d->defaultArgs( postingId ) );
-//     d->mXmlRpcClient->call(
-//       "metaWeblog.getPost", args,
-//       d, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
-//       d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
-//     return true;
-//   }
-//   return false;
+  Q_D(MetaWeblog);
+  if ( !posting ) {
+    kDebug(5323) << "MetaWeblog::modifyPosting: posting null pointer"
+        << endl;
+    emit error ( Other, i18n( "Posting is a null pointer." ) );
+    return;
+  }
+  kDebug(5323) << "Fetching Posting with url " << posting->postingId() << endl;
+  QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
+  d->mXmlRpcClient->call(
+    "metaWeblog.getPost", args,
+    this, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
+    this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void MetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
@@ -102,22 +104,23 @@ void MetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
     kDebug(5323) << "MetaWeblog::modifyPosting: posting null pointer"
         << endl;
     emit error ( Other, i18n( "Posting is a null pointer." ) );
+    return;
   }
-    kDebug(5323) << "Uploading Posting with postId " << posting->postingId()
-        << endl;
+  kDebug(5323) << "Uploading Posting with postId " << posting->postingId()
+      << endl;
 
-    QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
-    QMap<QString, QVariant> map;
-    map["categories"] = posting->categories();
-    map["description"] = posting->content();
-    map["title"] = posting->title();
-    map["lastModified"] = posting->modificationDateTime().toUtc().dateTime();
-    args << map;
-    args << QVariant( posting->isPublished() );
-    d->mXmlRpcClient->call(
-      "metaWeblog.editPost", args,
-      this, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
-      this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
+  QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
+  QMap<QString, QVariant> map;
+  map["categories"] = posting->categories();
+  map["description"] = posting->content();
+  map["title"] = posting->title();
+  map["lastModified"] = posting->modificationDateTime().toUtc().dateTime();
+  args << map;
+  args << QVariant( posting->isPublished() );
+  d->mXmlRpcClient->call(
+    "metaWeblog.editPost", args,
+     this, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
+     this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void MetaWeblog::createPosting( KBlog::BlogPosting *posting )
@@ -127,48 +130,47 @@ void MetaWeblog::createPosting( KBlog::BlogPosting *posting )
     kDebug(5323) << "MetaWeblog::createPosting: posting null pointer"
         << endl;
     emit error ( Other, i18n( "Posting is a null pointer." ) );
+    return;
   }
-    kDebug(5323) << "Creating new Posting with blogId " << blogId() << endl;
-    QList<QVariant> args( d->defaultArgs( blogId() ) );
-    QMap<QString, QVariant> map;
-    map["categories"] = posting->categories();
-    map["description"] = posting->content();
-    map["title"] = posting->title();
-    map["dateCreated"] = posting->creationDateTime().toUtc().dateTime();
-    args << map;
-    args << QVariant( posting->isPublished() );
-    d->mXmlRpcClient->call (
-      "metaWeblog.newPost", args,
-      this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
-      this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
+  kDebug(5323) << "Creating new Posting with blogId " << blogId() << endl;
+  QList<QVariant> args( d->defaultArgs( blogId() ) );
+  QMap<QString, QVariant> map;
+  map["categories"] = posting->categories();
+  map["description"] = posting->content();
+  map["title"] = posting->title();
+  map["dateCreated"] = posting->creationDateTime().toUtc().dateTime();
+  args << map;
+  args << QVariant( posting->isPublished() );
+  d->mXmlRpcClient->call (
+    "metaWeblog.newPost", args,
+    this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
+    this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void MetaWeblog::createMedia( KBlog::BlogMedia *media )
 {
-    Q_D(MetaWeblog);
-    kDebug(5323) << "MetaWeblog::createMedia: name="<< media->name() << endl;
-    QList<QVariant> args( d->defaultArgs( blogId() ) );
-    QMap<QString, QVariant> map;
-    QList<QVariant> list;
-    map["name"] = media->name();
-    map["type"] = media->mimetype();
-    map["bits"] = media->data();
-    args << map;
-    d->mXmlRpcClient->call(
-      "metaWeblog.newMediaObject", args,
-      this, SLOT( slotCreateMedia( const QList<QVariant>&, const QVariant& ) ),
-      this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
+  Q_D(MetaWeblog);
+  kDebug(5323) << "MetaWeblog::createMedia: name="<< media->name() << endl;
+  QList<QVariant> args( d->defaultArgs( blogId() ) );
+  QMap<QString, QVariant> map;
+  QList<QVariant> list;
+  map["name"] = media->name();
+  map["type"] = media->mimetype();
+  map["bits"] = media->data();
+  args << map;
+  d->mXmlRpcClient->call(
+    "metaWeblog.newMediaObject", args,
+    this, SLOT( slotCreateMedia( const QList<QVariant>&, const QVariant& ) ),
+    this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 
 }
 
 MetaWeblogPrivate::MetaWeblogPrivate()
 {
-  mXmlRpcClient = 0;
 }
 
 MetaWeblogPrivate::~MetaWeblogPrivate()
 {
-  delete mXmlRpcClient;
 }
 
 QList<QVariant> MetaWeblogPrivate::defaultArgs( const QString &id )
@@ -293,9 +295,9 @@ void MetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::Map ) {
     kDebug(5323) << "Could not fetch posting out of the result from the server." << endl;
-    //emit q->error( KBlog::Blog::ParsingError,
-    //                    i18n( "Could not fetch posting out of the "
-    //                          "result from the server." ) );
+    emit q->error( MetaWeblog::ParsingError,
+                       i18n( "Could not fetch posting out of the "
+                             "result from the server." ) );
   } else {
 //     const QList<QVariant> postReceived = result[0].toList();
 //     QList<QVariant>::ConstIterator it = postReceived.begin();
@@ -307,8 +309,8 @@ void MetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
 //       emit q->fetchedPosting( posting ); // KUrl( posting.posingtId() ) );
     } else {
       kDebug(5323) << "d->readPostingFromMap failed! " << endl;
-      //emit q->error( KBlog::Blog::ParsingError,
-      //                    i18n( "Could not read posting." ) );
+      emit q->error( MetaWeblog::ParsingError,
+                         i18n( "Could not read posting." ) );
     }
   }
 }
@@ -325,8 +327,8 @@ void MetaWeblogPrivate::slotCreatePosting( const QList<QVariant> &result,
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::String ) {
     kDebug(5323) << "Could not read the postingId, not a string." << endl;
-    //emit q->error( KBlog::Blog::ParsingError,
-    //                    i18n( "Could not read the postingId, not a string." ) );
+    emit q->error( MetaWeblog::ParsingError,
+                       i18n( "Could not read the postingId, not a string." ) );
   } else {
 //     emit q->createdPosting( result[0].toString() );
     kDebug(5323) << "emitting createdPosting( " << result[0].toString() << " )" << endl;
@@ -345,8 +347,8 @@ void MetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::Bool ) {
     kDebug(5323) << "Could not read the result, not a boolean." << endl;
-    //emit q->error( KBlog::Blog::ParsingError,
-    //                    i18n( "Could not read the result, not a boolean." ) );
+    emit q->error( MetaWeblog::ParsingError,
+                       i18n( "Could not read the result, not a boolean." ) );
   } else {
 //     emit q->modifiedPosting( result[0].toBool() );
     kDebug(5323) << "emitting modifiedPosting( " << result[0].toBool() << " )" << endl;
@@ -362,8 +364,8 @@ void MetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != 8 ) {
     kDebug(5323) << "Could not read the result, not a map." << endl;
-    //emit q->error( KBlog::Blog::ParsingError,
-    //                    i18n( "Could not read the result, not a map." ) );
+    emit q->error( MetaWeblog::ParsingError,
+                       i18n( "Could not read the result, not a map." ) );
   } else {
     const QMap<QString, QVariant> resultStruct = result[0].toMap();
     const QString url = resultStruct["url"].toString();
@@ -380,10 +382,11 @@ void MetaWeblogPrivate::slotError( int number,
                                                      const QString &errorString,
                                                      const QVariant &id )
 {
+  Q_Q(MetaWeblog);
   Q_UNUSED( number );
   Q_UNUSED( id );
 
-  //emit q->error( KBlog::Blog::XmlRpc, errorString );
+  emit q->error( MetaWeblog::XmlRpc, errorString );
 }
 
 bool MetaWeblogPrivate::readPostingFromMap( BlogPosting *post,
