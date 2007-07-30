@@ -22,12 +22,11 @@
 #ifndef INCIDENCE_H
 #define INCIDENCE_H
 
-#include "recurrence.h"
+#include "kcal_export.h"
+#include "incidencebase.h"
 #include "alarm.h"
 #include "attachment.h"
-#include "kcal_export.h"
-
-#include "incidencebase.h"
+#include "recurrence.h"
 
 #include <QtCore/QList>
 
@@ -82,39 +81,75 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Recurrenc
       public:
         DeleteVisitor( T *r ) : mResource( r ) {}
 
-        bool visit( Event *e ) { mResource->deleteEvent( e ); return true; }
-        bool visit( Todo *t ) { mResource->deleteTodo( t ); return true; }
-        bool visit( Journal *j ) { mResource->deleteJournal( j ); return true; }
+        bool visit( Event *e )
+        {
+          mResource->deleteEvent( e );
+          return true;
+        }
+        bool visit( Todo *t )
+        {
+          mResource->deleteTodo( t );
+          return true;
+        }
+        bool visit( Journal *j )
+        {
+          mResource->deleteJournal( j );
+          return true;
+        }
 
       private:
         T *mResource;
     };
 
-    /** Enumeration for describing an event's status.  */
+    /**
+      The different types of incidence status.
+    */
     enum Status {
-        StatusNone, StatusTentative, StatusConfirmed, StatusCompleted,
-        StatusNeedsAction, StatusCanceled, StatusInProcess, StatusDraft,
-        StatusFinal,
-        StatusX   // indicates a non-standard status string
+      StatusNone,
+      StatusTentative,
+      StatusConfirmed,
+      StatusCompleted,
+      StatusNeedsAction,
+      StatusCanceled,
+      StatusInProcess,
+      StatusDraft,
+      StatusFinal,
+      StatusX   // indicates a non-standard status string
     };
-
-    /** enumeration for describing an event's secrecy. */
-    enum {
-      SecrecyPublic = 0,
-      SecrecyPrivate = 1,
-      SecrecyConfidential = 2
-    };
-
-    typedef ListBase<Incidence> List;
-
-    Incidence();
-    Incidence( const Incidence & );
-    ~Incidence();
-
-    bool operator==( const Incidence & ) const;
 
     /**
-      Return copy of this object. The returned object is owned by the caller.
+      The different types of incidence secrecy.
+    */
+    enum {
+      SecrecyPublic = 0,         /**< Not secret */
+      SecrecyPrivate = 1,        /**< Secret to the owner */
+      SecrecyConfidential = 2    /**< Secret to the owner and some others */
+    };
+
+    /**
+      List of incidences.
+    */
+    typedef ListBase<Incidence> List;
+
+    /**
+      Constructs an empty incidence.*
+    */
+    Incidence();
+
+    /**
+      Copy constructor.
+      @param other is the incidence to copy.
+    */
+    Incidence( const Incidence &other );
+
+    /**
+      Destroys an incidence.
+    */
+    ~Incidence();
+
+    /**
+      Returns an exact copy of this incidence. The returned object is owned
+      by the caller.
     */
     virtual Incidence *clone() = 0;
 
@@ -505,6 +540,13 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Recurrenc
     */
     virtual void recurrenceUpdated( Recurrence * );
 
+    /**
+      Compare this with @p incidence for equality.
+
+      @param incidence is the incidence to compare.
+    */
+    bool operator==( const Incidence &incidence ) const;
+
   protected:
     /**
       Returns the end date/time of the base incidence (e.g. due date/time for
@@ -514,34 +556,10 @@ class KCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Recurrenc
     virtual KDateTime endDateRecurrenceBase() const { return dtStart(); }
 
   private:
-    int mRevision;
-
-    // base components of jounal, event and todo
-    KDateTime mCreated;
-    QString mDescription;
-    QString mSummary;
-    QStringList mCategories;
-    Incidence *mRelatedTo;
-    QString mRelatedToUid;
-    Incidence::List mRelations;
-    Attachment::List mAttachments;
-    QStringList mResources;
-
-    QString mStatusString;
-    Status  mStatus;
-    int mSecrecy;
-    int mPriority;                        // 1 = highest, 2 = less, etc.
-
-    Alarm::List mAlarms;
-    mutable Recurrence *mRecurrence;
-
-    QString mLocation;
-
-    // Scheduling ID - used only to identify between scheduling mails
-    QString mSchedulingID;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }

@@ -21,96 +21,135 @@
 */
 
 #include "incidence.h"
-
 #include "calformat.h"
-
-#include <QtCore/QList>
 
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
 
+#include <QtCore/QList>
+
 using namespace KCal;
 
-Incidence::Incidence() :
-  IncidenceBase(),
-  mRelatedTo( 0 ), mStatus( StatusNone ), mSecrecy( SecrecyPublic ),
-  mPriority( 0 ), mRecurrence( 0 ), d( 0 )
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
+//@cond PRIVATE
+class KCal::Incidence::Private
+{
+  public:
+    Private()
+      : mRecurrence( 0 ),
+        mStatus( StatusNone ),
+        mSecrecy( SecrecyPublic ),
+        mPriority( 0 ),
+        mRelatedTo( 0 )
+    {}
+
+    KDateTime mCreated;              // creation datetime
+    int mRevision;                   // revision number
+
+    QString mDescription;            // description string
+    QString mSummary;                // summary string
+    QString mLocation;               // location string
+    QStringList mCategories;         // category list
+    mutable Recurrence *mRecurrence; // recurrence
+    Attachment::List mAttachments;   // attachments list
+    Alarm::List mAlarms;             // alarms list
+    QStringList mResources;          // resources list
+    Status mStatus;                  // status
+    QString mStatusString;           // status string, for custom status
+    int mSecrecy;                    // secrecy
+    int mPriority;                   // priority: 1 = highest, 2 = less, etc.
+    QString mSchedulingID;           // ID for scheduling mails
+
+    Incidence *mRelatedTo;           // incidence this is related to
+    QString mRelatedToUid;           // incidence (by Uid) this is related to
+    Incidence::List mRelations;      // a list of incidences this is related to
+};
+//@endcond
+
+Incidence::Incidence()
+  : IncidenceBase(), d( new KCal::Incidence::Private )
 {
   recreate();
 
-  mAlarms.setAutoDelete( true );
-  mAttachments.setAutoDelete( true );
+  d->mAlarms.setAutoDelete( true );
+  d->mAttachments.setAutoDelete( true );
 }
 
-Incidence::Incidence( const Incidence &i ) :
-  IncidenceBase( i ), Recurrence::RecurrenceObserver(), d( 0 )
+Incidence::Incidence( const Incidence &i )
+  : IncidenceBase( i ), Recurrence::RecurrenceObserver(),
+    d( new KCal::Incidence::Private )
 {
 // TODO: reenable attributes currently commented out.
-  mRevision = i.mRevision;
-  mCreated = i.mCreated;
-  mDescription = i.mDescription;
-  mSummary = i.mSummary;
-  mCategories = i.mCategories;
+  d->mRevision = i.d->mRevision;
+  d->mCreated = i.d->mCreated;
+  d->mDescription = i.d->mDescription;
+  d->mSummary = i.d->mSummary;
+  d->mCategories = i.d->mCategories;
 //  Incidence *mRelatedTo;          Incidence *mRelatedTo;
-  mRelatedTo = 0;
-  mRelatedToUid = i.mRelatedToUid;
+  d->mRelatedTo = 0;
+  d->mRelatedToUid = i.d->mRelatedToUid;
 //  Incidence::List mRelations;    Incidence::List mRelations;
-  mResources = i.mResources;
-  mStatusString = i.mStatusString;
-  mStatus = i.mStatus;
-  mSecrecy = i.mSecrecy;
-  mPriority = i.mPriority;
-  mLocation = i.mLocation;
+  d->mResources = i.d->mResources;
+  d->mStatusString = i.d->mStatusString;
+  d->mStatus = i.d->mStatus;
+  d->mSecrecy = i.d->mSecrecy;
+  d->mPriority = i.d->mPriority;
+  d->mLocation = i.d->mLocation;
 
   // Alarms and Attachments are stored in ListBase<...>, which is a QValueList<...*>.
   // We need to really duplicate the objects stored therein, otherwise deleting
   // i will also delete all attachments from this object (setAutoDelete...)
   Alarm::List::ConstIterator it;
-  for ( it = i.mAlarms.begin(); it != i.mAlarms.end(); ++it ) {
+  for ( it = i.d->mAlarms.begin(); it != i.d->mAlarms.end(); ++it ) {
     Alarm *b = new Alarm( **it );
     b->setParent( this );
-    mAlarms.append( b );
+    d->mAlarms.append( b );
   }
-  mAlarms.setAutoDelete( true );
+  d->mAlarms.setAutoDelete( true );
 
   Attachment::List::ConstIterator it1;
-  for ( it1 = i.mAttachments.begin(); it1 != i.mAttachments.end(); ++it1 ) {
+  for ( it1 = i.d->mAttachments.begin(); it1 != i.d->mAttachments.end(); ++it1 ) {
     Attachment *a = new Attachment( **it1 );
-    mAttachments.append( a );
+    d->mAttachments.append( a );
   }
-  mAttachments.setAutoDelete( true );
+  d->mAttachments.setAutoDelete( true );
 
-  if ( i.mRecurrence ) {
-    mRecurrence = new Recurrence( *( i.mRecurrence ) );
-    mRecurrence->addObserver( this );
+  if ( i.d->mRecurrence ) {
+    d->mRecurrence = new Recurrence( *( i.d->mRecurrence ) );
+    d->mRecurrence->addObserver( this );
   } else {
-    mRecurrence = 0;
+    d->mRecurrence = 0;
   }
 
-  mSchedulingID = i.mSchedulingID;
+  d->mSchedulingID = i.d->mSchedulingID;
 }
 
 Incidence::~Incidence()
 {
-  Incidence::List Relations = mRelations;
+  Incidence::List Relations = d->mRelations;
   List::ConstIterator it;
   for ( it = Relations.begin(); it != Relations.end(); ++it ) {
     if ( (*it)->relatedTo() == this ) {
-      (*it)->mRelatedTo = 0;
+      (*it)->d->mRelatedTo = 0;
     }
   }
   if ( relatedTo() ) {
     relatedTo()->removeRelation( this );
   }
 
-  delete mRecurrence;
+  delete d->mRecurrence;
+  delete d;
 }
 
 // A string comparison that considers that null and empty are the same
 static bool stringCompare( const QString &s1, const QString &s2 )
 {
-  return ( s1.isEmpty() && s2.isEmpty() ) || ( s1 == s2 );
+  return
+    ( s1.isEmpty() && s2.isEmpty() ) || ( s1 == s2 );
 }
 
 bool Incidence::operator==( const Incidence &i2 ) const
@@ -133,11 +172,11 @@ bool Incidence::operator==( const Incidence &i2 ) const
     return false;
   }
 
-  bool recurrenceEqual = ( mRecurrence == 0 && i2.mRecurrence == 0 );
+  bool recurrenceEqual = ( d->mRecurrence == 0 && i2.d->mRecurrence == 0 );
   if ( !recurrenceEqual ) {
-    recurrenceEqual = mRecurrence != 0 &&
-                      i2.mRecurrence != 0 &&
-                      *mRecurrence == *i2.mRecurrence;
+    recurrenceEqual = d->mRecurrence != 0 &&
+                      i2.d->mRecurrence != 0 &&
+                      *d->mRecurrence == *i2.d->mRecurrence;
   }
 
   return
@@ -151,8 +190,9 @@ bool Incidence::operator==( const Incidence &i2 ) const
     relations() == i2.relations() &&
     attachments() == i2.attachments() &&
     resources() == i2.resources() &&
-    mStatus == i2.mStatus &&
-    ( mStatus == StatusNone || stringCompare( mStatusString, i2.mStatusString ) ) &&
+    d->mStatus == i2.d->mStatus &&
+    ( d->mStatus == StatusNone ||
+      stringCompare( d->mStatusString, i2.d->mStatusString ) ) &&
     secrecy() == i2.secrecy() &&
     priority() == i2.priority() &&
     stringCompare( location(), i2.location() ) &&
@@ -175,8 +215,8 @@ void Incidence::recreate()
 void Incidence::setReadOnly( bool readOnly )
 {
   IncidenceBase::setReadOnly( readOnly );
-  if ( mRecurrence ) {
-    mRecurrence->setRecurReadOnly( readOnly );
+  if ( d->mRecurrence ) {
+    d->mRecurrence->setRecurReadOnly( readOnly );
   }
 }
 
@@ -197,7 +237,7 @@ void Incidence::setCreated( const KDateTime &created )
     return;
   }
 
-  mCreated = created.toUtc();
+  d->mCreated = created.toUtc();
 
 // FIXME: Shouldn't we call updated for the creation date, too?
 //  updated();
@@ -205,7 +245,7 @@ void Incidence::setCreated( const KDateTime &created )
 
 KDateTime Incidence::created() const
 {
-  return mCreated;
+  return d->mCreated;
 }
 
 void Incidence::setRevision( int rev )
@@ -214,21 +254,21 @@ void Incidence::setRevision( int rev )
     return;
   }
 
-  mRevision = rev;
+  d->mRevision = rev;
 
   updated();
 }
 
 int Incidence::revision() const
 {
-  return mRevision;
+  return d->mRevision;
 }
 
 void Incidence::setDtStart( const KDateTime &dtStart )
 {
-  if ( mRecurrence ) {
-    mRecurrence->setStartDateTime( dtStart );
-    mRecurrence->setFloats( floats() );
+  if ( d->mRecurrence ) {
+    d->mRecurrence->setStartDateTime( dtStart );
+    d->mRecurrence->setFloats( floats() );
   }
   IncidenceBase::setDtStart( dtStart );
 }
@@ -237,11 +277,11 @@ void Incidence::shiftTimes( const KDateTime::Spec &oldSpec,
                             const KDateTime::Spec &newSpec )
 {
   IncidenceBase::shiftTimes( oldSpec, newSpec );
-  if ( mRecurrence ) {
-    mRecurrence->shiftTimes( oldSpec, newSpec );
+  if ( d->mRecurrence ) {
+    d->mRecurrence->shiftTimes( oldSpec, newSpec );
   }
-  for ( int i = 0, end = mAlarms.count();  i < end;  ++i ) {
-    mAlarms[i]->shiftTimes( oldSpec, newSpec );
+  for ( int i = 0, end = d->mAlarms.count();  i < end;  ++i ) {
+    d->mAlarms[i]->shiftTimes( oldSpec, newSpec );
   }
 }
 
@@ -250,13 +290,13 @@ void Incidence::setDescription( const QString &description )
   if ( mReadOnly ) {
     return;
   }
-  mDescription = description;
+  d->mDescription = description;
   updated();
 }
 
 QString Incidence::description() const
 {
-  return mDescription;
+  return d->mDescription;
 }
 
 void Incidence::setSummary( const QString &summary )
@@ -264,13 +304,13 @@ void Incidence::setSummary( const QString &summary )
   if ( mReadOnly ) {
     return;
   }
-  mSummary = summary;
+  d->mSummary = summary;
   updated();
 }
 
 QString Incidence::summary() const
 {
-  return mSummary;
+  return d->mSummary;
 }
 
 void Incidence::setCategories( const QStringList &categories )
@@ -278,7 +318,7 @@ void Incidence::setCategories( const QStringList &categories )
   if ( mReadOnly ) {
     return;
   }
-  mCategories = categories;
+  d->mCategories = categories;
   updated();
 }
 
@@ -288,16 +328,16 @@ void Incidence::setCategories( const QString &catStr )
   if ( mReadOnly ) {
     return;
   }
-  mCategories.clear();
+  d->mCategories.clear();
 
   if ( catStr.isEmpty() ) {
     return;
   }
 
-  mCategories = catStr.split( "," );
+  d->mCategories = catStr.split( "," );
 
   QStringList::Iterator it;
-  for ( it = mCategories.begin();it != mCategories.end(); ++it ) {
+  for ( it = d->mCategories.begin();it != d->mCategories.end(); ++it ) {
     *it = (*it).trimmed();
   }
 
@@ -306,41 +346,41 @@ void Incidence::setCategories( const QString &catStr )
 
 QStringList Incidence::categories() const
 {
-  return mCategories;
+  return d->mCategories;
 }
 
 QString Incidence::categoriesStr() const
 {
-  return mCategories.join( "," );
+  return d->mCategories.join( "," );
 }
 
 void Incidence::setRelatedToUid( const QString &relatedToUid )
 {
-  if ( mReadOnly || mRelatedToUid == relatedToUid ) {
+  if ( mReadOnly || d->mRelatedToUid == relatedToUid ) {
     return;
   }
-  mRelatedToUid = relatedToUid;
+  d->mRelatedToUid = relatedToUid;
   updated();
 }
 
 QString Incidence::relatedToUid() const
 {
-  return mRelatedToUid;
+  return d->mRelatedToUid;
 }
 
 void Incidence::setRelatedTo( Incidence *relatedTo )
 {
-  if ( mReadOnly || mRelatedTo == relatedTo ) {
+  if ( mReadOnly || d->mRelatedTo == relatedTo ) {
     return;
   }
-  if ( mRelatedTo ) {
-    mRelatedTo->removeRelation( this );
+  if ( d->mRelatedTo ) {
+    d->mRelatedTo->removeRelation( this );
   }
-  mRelatedTo = relatedTo;
-  if ( mRelatedTo ) {
-    mRelatedTo->addRelation( this );
-    if ( mRelatedTo->uid() != mRelatedToUid ) {
-      setRelatedToUid( mRelatedTo->uid() );
+  d->mRelatedTo = relatedTo;
+  if ( d->mRelatedTo ) {
+    d->mRelatedTo->addRelation( this );
+    if ( d->mRelatedTo->uid() != d->mRelatedToUid ) {
+      setRelatedToUid( d->mRelatedTo->uid() );
     }
   } else {
     setRelatedToUid( QString() );
@@ -349,54 +389,54 @@ void Incidence::setRelatedTo( Incidence *relatedTo )
 
 Incidence *Incidence::relatedTo() const
 {
-  return mRelatedTo;
+  return d->mRelatedTo;
 }
 
 Incidence::List Incidence::relations() const
 {
-  return mRelations;
+  return d->mRelations;
 }
 
-void Incidence::addRelation( Incidence *event )
+void Incidence::addRelation( Incidence *incidence )
 {
-  if ( !mRelations.contains( event ) ) {
-    mRelations.append( event );
+  if ( !d->mRelations.contains( incidence ) ) {
+    d->mRelations.append( incidence );
   }
 }
 
-void Incidence::removeRelation( Incidence *event )
+void Incidence::removeRelation( Incidence *incidence )
 {
   kDebug() << "Entering Incidence::removeRelation " << endl;
-  mRelations.removeRef( event );
-  mRelatedToUid=QString();
-//  if (event->getRelatedTo() == this) event->setRelatedTo(0);
+  d->mRelations.removeRef( incidence );
+  d->mRelatedToUid = QString();
+//  if (incidence->getRelatedTo() == this) incidence->setRelatedTo(0);
 }
 
 // %%%%%%%%%%%%  Recurrence-related methods %%%%%%%%%%%%%%%%%%%%
 
 Recurrence *Incidence::recurrence() const
 {
-  if ( !mRecurrence ) {
-    mRecurrence = new Recurrence();
-    mRecurrence->setStartDateTime( IncidenceBase::dtStart() );
-    mRecurrence->setFloats( floats() );
-    mRecurrence->setRecurReadOnly( mReadOnly );
-    mRecurrence->addObserver( const_cast<KCal::Incidence*>( this ) );
+  if ( !d->mRecurrence ) {
+    d->mRecurrence = new Recurrence();
+    d->mRecurrence->setStartDateTime( IncidenceBase::dtStart() );
+    d->mRecurrence->setFloats( floats() );
+    d->mRecurrence->setRecurReadOnly( mReadOnly );
+    d->mRecurrence->addObserver( const_cast<KCal::Incidence*>( this ) );
   }
 
-  return mRecurrence;
+  return d->mRecurrence;
 }
 
 void Incidence::clearRecurrence()
 {
-  delete mRecurrence;
-  mRecurrence = 0;
+  delete d->mRecurrence;
+  d->mRecurrence = 0;
 }
 
 uint Incidence::recurrenceType() const
 {
-  if ( mRecurrence ) {
-    return mRecurrence->recurrenceType();
+  if ( d->mRecurrence ) {
+    return d->mRecurrence->recurrenceType();
   } else {
     return Recurrence::rNone;
   }
@@ -404,8 +444,8 @@ uint Incidence::recurrenceType() const
 
 bool Incidence::recurs() const
 {
-  if ( mRecurrence ) {
-    return mRecurrence->recurs();
+  if ( d->mRecurrence ) {
+    return d->mRecurrence->recurs();
   } else {
     return false;
   }
@@ -414,12 +454,12 @@ bool Incidence::recurs() const
 bool Incidence::recursOn( const QDate &qd,
                           const KDateTime::Spec &timeSpec ) const
 {
-  return mRecurrence && mRecurrence->recursOn( qd, timeSpec );
+  return d->mRecurrence && d->mRecurrence->recursOn( qd, timeSpec );
 }
 
 bool Incidence::recursAt( const KDateTime &qdt ) const
 {
-  return mRecurrence && mRecurrence->recursAt( qdt );
+  return d->mRecurrence && d->mRecurrence->recursAt( qdt );
 }
 
 /**
@@ -553,7 +593,7 @@ void Incidence::addExDate( const QDate &date )
 
 DateList Incidence::exDates() const
 {
-  if ( mRecurrence ) return mRecurrence->exDates();
+  if ( d->mRecurrence ) return d->mRecurrence->exDates();
   else return DateList();
 }
 
@@ -574,7 +614,7 @@ void Incidence::addExDateTime( const KDateTime &date )
 
 DateTimeList Incidence::exDateTimes() const
 {
-  if ( mRecurrence ) return mRecurrence->exDateTimes();
+  if ( d->mRecurrence ) return d->mRecurrence->exDateTimes();
   else return DateTimeList();
 }
 
@@ -595,7 +635,7 @@ void Incidence::addRDate( const QDate &date )
 
 DateList Incidence::rDates() const
 {
-  if ( mRecurrence ) return mRecurrence->rDates();
+  if ( d->mRecurrence ) return d->mRecurrence->rDates();
   else return DateList();
 }
 
@@ -616,7 +656,7 @@ void Incidence::addRDateTime( const KDateTime &date )
 
 DateTimeList Incidence::rDateTimes() const
 {
-  if ( mRecurrence ) return mRecurrence->rDateTimes();
+  if ( d->mRecurrence ) return d->mRecurrence->rDateTimes();
   else return DateTimeList();
 }*/
 
@@ -628,21 +668,21 @@ void Incidence::addAttachment( Attachment *attachment )
     return;
   }
 
-  mAttachments.append( attachment );
+  d->mAttachments.append( attachment );
   updated();
 }
 
 void Incidence::deleteAttachment( Attachment *attachment )
 {
-  mAttachments.removeRef( attachment );
+  d->mAttachments.removeRef( attachment );
 }
 
 void Incidence::deleteAttachments( const QString &mime )
 {
-  Attachment::List::Iterator it = mAttachments.begin();
-  while ( it != mAttachments.end() ) {
+  Attachment::List::Iterator it = d->mAttachments.begin();
+  while ( it != d->mAttachments.end() ) {
     if ( (*it)->mimeType() == mime ) {
-      mAttachments.erase( it );
+      d->mAttachments.erase( it );
     } else {
       ++it;
     }
@@ -651,14 +691,14 @@ void Incidence::deleteAttachments( const QString &mime )
 
 Attachment::List Incidence::attachments() const
 {
-  return mAttachments;
+  return d->mAttachments;
 }
 
 Attachment::List Incidence::attachments( const QString &mime ) const
 {
   Attachment::List attachments;
   Attachment::List::ConstIterator it;
-  for ( it = mAttachments.begin(); it != mAttachments.end(); ++it ) {
+  for ( it = d->mAttachments.begin(); it != d->mAttachments.end(); ++it ) {
     if ( (*it)->mimeType() == mime ) {
       attachments.append( *it );
     }
@@ -668,7 +708,7 @@ Attachment::List Incidence::attachments( const QString &mime ) const
 
 void Incidence::clearAttachments()
 {
-  mAttachments.clear();
+  d->mAttachments.clear();
 }
 
 void Incidence::setResources( const QStringList &resources )
@@ -677,13 +717,13 @@ void Incidence::setResources( const QStringList &resources )
     return;
   }
 
-  mResources = resources;
+  d->mResources = resources;
   updated();
 }
 
 QStringList Incidence::resources() const
 {
-  return mResources;
+  return d->mResources;
 }
 
 void Incidence::setPriority( int priority )
@@ -692,13 +732,13 @@ void Incidence::setPriority( int priority )
     return;
   }
 
-  mPriority = priority;
+  d->mPriority = priority;
   updated();
 }
 
 int Incidence::priority() const
 {
-  return mPriority;
+  return d->mPriority;
 }
 
 void Incidence::setStatus( Incidence::Status status )
@@ -707,8 +747,8 @@ void Incidence::setStatus( Incidence::Status status )
     return;
   }
 
-  mStatus = status;
-  mStatusString.clear();
+  d->mStatus = status;
+  d->mStatusString.clear();
   updated();
 }
 
@@ -718,48 +758,48 @@ void Incidence::setCustomStatus( const QString &status )
     return;
   }
 
-  mStatus = status.isEmpty() ? StatusNone : StatusX;
-  mStatusString = status;
+  d->mStatus = status.isEmpty() ? StatusNone : StatusX;
+  d->mStatusString = status;
   updated();
 }
 
 Incidence::Status Incidence::status() const
 {
-  return mStatus;
+  return d->mStatus;
 }
 
 QString Incidence::statusStr() const
 {
-  if ( mStatus == StatusX ) {
-    return mStatusString;
+  if ( d->mStatus == StatusX ) {
+    return d->mStatusString;
   }
 
-  return statusName( mStatus );
+  return statusName( d->mStatus );
 }
 
 QString Incidence::statusName( Incidence::Status status )
 {
   switch ( status ) {
-    case StatusTentative:
-      return i18nc("incidence status", "Tentative");
-    case StatusConfirmed:
-      return i18n("Confirmed");
-    case StatusCompleted:
-      return i18n("Completed");
-    case StatusNeedsAction:
-      return i18n("Needs-Action");
-    case StatusCanceled:
-      return i18n("Canceled");
-    case StatusInProcess:
-      return i18n("In-Process");
-    case StatusDraft:
-      return i18n("Draft");
-    case StatusFinal:
-      return i18n("Final");
-    case StatusX:
-    case StatusNone:
-    default:
-      return QString();
+  case StatusTentative:
+    return i18nc( "incidence status", "Tentative" );
+  case StatusConfirmed:
+    return i18n( "Confirmed" );
+  case StatusCompleted:
+    return i18n( "Completed" );
+  case StatusNeedsAction:
+    return i18n( "Needs-Action" );
+  case StatusCanceled:
+    return i18n( "Canceled" );
+  case StatusInProcess:
+    return i18n( "In-Process" );
+  case StatusDraft:
+    return i18n( "Draft" );
+  case StatusFinal:
+    return i18n( "Final" );
+  case StatusX:
+  case StatusNone:
+  default:
+    return QString();
   }
 }
 
@@ -769,31 +809,31 @@ void Incidence::setSecrecy( int sec )
     return;
   }
 
-  mSecrecy = sec;
+  d->mSecrecy = sec;
   updated();
 }
 
 int Incidence::secrecy() const
 {
-  return mSecrecy;
+  return d->mSecrecy;
 }
 
 QString Incidence::secrecyStr() const
 {
-  return secrecyName( mSecrecy );
+  return secrecyName( d->mSecrecy );
 }
 
 QString Incidence::secrecyName( int secrecy )
 {
   switch ( secrecy ) {
-    case SecrecyPublic:
-      return i18n("Public");
-    case SecrecyPrivate:
-      return i18n("Private");
-    case SecrecyConfidential:
-      return i18n("Confidential");
-    default:
-      return i18n("Undefined");
+  case SecrecyPublic:
+    return i18n( "Public" );
+  case SecrecyPrivate:
+    return i18n( "Private" );
+  case SecrecyConfidential:
+    return i18n( "Confidential" );
+  default:
+    return i18n( "Undefined" );
   }
 }
 
@@ -809,38 +849,38 @@ QStringList Incidence::secrecyList()
 
 const Alarm::List &Incidence::alarms() const
 {
-  return mAlarms;
+  return d->mAlarms;
 }
 
 Alarm *Incidence::newAlarm()
 {
   Alarm *alarm = new Alarm( this );
-  mAlarms.append( alarm );
+  d->mAlarms.append( alarm );
   return alarm;
 }
 
 void Incidence::addAlarm( Alarm *alarm )
 {
-  mAlarms.append( alarm );
+  d->mAlarms.append( alarm );
   updated();
 }
 
 void Incidence::removeAlarm( Alarm *alarm )
 {
-  mAlarms.removeRef( alarm );
+  d->mAlarms.removeRef( alarm );
   updated();
 }
 
 void Incidence::clearAlarms()
 {
-  mAlarms.clear();
+  d->mAlarms.clear();
   updated();
 }
 
 bool Incidence::isAlarmEnabled() const
 {
   Alarm::List::ConstIterator it;
-  for ( it = mAlarms.begin(); it != mAlarms.end(); ++it ) {
+  for ( it = d->mAlarms.begin(); it != d->mAlarms.end(); ++it ) {
     if ( (*it)->enabled() ) {
       return true;
     }
@@ -854,27 +894,27 @@ void Incidence::setLocation( const QString &location )
     return;
   }
 
-  mLocation = location;
+  d->mLocation = location;
   updated();
 }
 
 QString Incidence::location() const
 {
-  return mLocation;
+  return d->mLocation;
 }
 
 void Incidence::setSchedulingID( const QString &sid )
 {
-  mSchedulingID = sid;
+  d->mSchedulingID = sid;
 }
 
 QString Incidence::schedulingID() const
 {
-  if ( mSchedulingID.isNull() ) {
+  if ( d->mSchedulingID.isNull() ) {
     // Nothing set, so use the normal uid
     return uid();
   }
-  return mSchedulingID;
+  return d->mSchedulingID;
 }
 
 /** Observer interface for the recurrence class. If the recurrence is changed,
@@ -882,7 +922,7 @@ QString Incidence::schedulingID() const
     belongs to. */
 void Incidence::recurrenceUpdated( Recurrence *recurrence )
 {
-  if ( recurrence == mRecurrence ) {
+  if ( recurrence == d->mRecurrence ) {
     updated();
   }
 }
