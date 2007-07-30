@@ -95,7 +95,7 @@ void ResourceLocalDir::init()
 
   mLock = new KABC::Lock( mURL.path() );
 
-  mDirWatch.addDir( mURL.path(), true );
+  mDirWatch.addDir( mURL.path(), KDirWatch::WatchFiles );
   mDirWatch.startScan();
 }
 
