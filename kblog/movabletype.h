@@ -95,7 +95,7 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
       @see     void listRecentPostingsFinished()
     */
-    virtual void listRecentPostings( int number );
+    void listRecentPostings( int number );
 
     /**
       TODO
