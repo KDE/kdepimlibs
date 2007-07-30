@@ -18,9 +18,9 @@ icalformat            |   D   |    D    |   D   |         |    D    | Allen
 icalformat_p          |   D   |         |   D   |         |    D    | Allen
 icaltimezones         |       |         |   D   |         |    D    |
 imipscheduler         |       |         |       |         |    D    |
+incidence             |   D   |         |   D   |   n/a   |    D    | Allen
 incidencebase         |   D   |         |   D   |   n/a   |    D    | Allen
 incidenceformatter    |       |         |       |         |    D    | Allen
-incidence             |       |         |       |   n/a   |    D    | Allen
 kresult               |   D   |         |       |         |    D    |
 listbase              |       |         |  n/a  |         |    D    |
 qtopiaformat          |       |         |       |         |    D    |
