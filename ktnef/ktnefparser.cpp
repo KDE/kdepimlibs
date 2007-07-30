@@ -352,8 +352,8 @@ bool KTNEFParser::ParserPrivate::decodeAttachment()
     break;
   default:
     value = readTNEFAttribute( stream_, type, i );
-    kDebug(5975).form( "Attachment unknown field:         tag=%x, length=%d\n",
-                   tag, i );
+    kDebug(5975) << "Attachment unknown field:         tag="
+                 << hex << tag << ", length=" << dec << i;
     break;
   }
   stream_ >> u;	// u <- checksum
@@ -391,7 +391,8 @@ bool KTNEFParser::ParserPrivate::parseDevice()
   stream_ >> i;
   if ( i == TNEF_SIGNATURE ) {
     stream_ >> u;
-    kDebug(5975).form( "Attachment cross reference key: 0x%04x\n", u );
+    kDebug(5975).nospace() << "Attachment cross reference key: 0x"
+                           << hex << qSetFieldWidth(4) << qSetPadChar('0') << u;
     //kDebug(5975) << "stream: " << device_->pos() << endl;
     while (!stream_.atEnd()) {
       stream_ >> c;
@@ -582,8 +583,9 @@ QDateTime formatTime( quint32 lowB, quint32 highB )
   if ( u64 <= 0xffffffffU ) {
     dt.setTime_t( ( unsigned int )u64 );
   } else {
-    kWarning().form( "Invalid date: low byte=0x%08X, high byte=0x%08X\n",
-                     lowB, highB );
+    kWarning().nospace() << "Invalid date: low byte="
+                         << showbase << qSetFieldWidth(8) << qSetPadChar('0')
+                         << lowB << ", high byte=" << highB;
     dt.setTime_t( 0xffffffffU );
   }
   return dt;
@@ -837,8 +839,8 @@ bool KTNEFParser::ParserPrivate::readMAPIProperties( QMap<int,KTNEFProperty*> & 
     }
     readMAPIValue( stream_, mapi );
     if ( mapi.type == MAPI_TYPE_NONE ) {
-      kDebug(5975).form( "MAPI unsupported:         tag=%x, type=%x\n",
-                     mapi.tag, mapi.type );
+      kDebug(5975).nospace() << "MAPI unsupported:         tag="
+                             << hex << mapi.tag << ", type=" << mapi.type;
       clearMAPIValue( mapi );
       return false;
     }
@@ -873,7 +875,7 @@ bool KTNEFParser::ParserPrivate::readMAPIProperties( QMap<int,KTNEFProperty*> & 
         attach->addAttribute( attATTACHDATA, atpBYTE, QString( "< size=%1 >" ).arg( len ), false );
       }
     }
-    kDebug(5975).form( "MAPI data: size=%d\n", mapi.value.toByteArray().size() );
+    kDebug(5975) << "MAPI data: size=" << mapi.value.toByteArray().size();
     break;
     default:
     {
@@ -887,36 +889,42 @@ bool KTNEFParser::ParserPrivate::readMAPIProperties( QMap<int,KTNEFProperty*> & 
       }
       switch ( mapi.type & 0x0FFF ) {
       case MAPI_TYPE_UINT16:
-        kDebug(5975).form( "(tag=%04x) MAPI short%s: 0x%x\n",
-                       mapi.tag, mapiname.toAscii().data(),
-                       mapi.value.toUInt() );
+        kDebug(5975).nospace() << "(tag="
+                               << hex << mapi.tag
+                               << ") MAPI short" <<  mapiname.toAscii().data()
+                               << ": " << hex << mapi.value.toUInt();
         break;
       case MAPI_TYPE_ULONG:
-        kDebug(5975).form( "(tag=%04x) MAPI long%s: 0x%x\n",
-                       mapi.tag, mapiname.toAscii().data(),
-                       mapi.value.toUInt() );
+        kDebug(5975).nospace() << "(tag="
+                               << hex << mapi.tag
+                               << ") MAPI long" <<  mapiname.toAscii().data()
+                               << ": " << hex << mapi.value.toUInt();
         break;
       case MAPI_TYPE_BOOLEAN:
-        kDebug(5975).form( "(tag=%04x) MAPI boolean%s: %s\n",
-                       mapi.tag, mapiname.toAscii().data(),
-                       ( mapi.value.toBool() ? "true" : "false" ) );
+        kDebug(5975).nospace() << "(tag="
+                               << hex << mapi.tag
+                               << ") MAPI boolean" <<  mapiname.toAscii().data()
+                               << ": " << mapi.value.toBool();
         break;
       case MAPI_TYPE_TIME:
-        kDebug(5975).form( "(tag=%04x) MAPI time%s: %s\n",
-                       mapi.tag, mapiname.toAscii().data(),
-                       mapi.value.toString().toAscii().data() );
+        kDebug(5975).nospace() << "(tag="
+                               << hex << mapi.tag
+                               << ") MAPI time" <<  mapiname.toAscii().data()
+                               << ": " << mapi.value.toString().toAscii().data();
         break;
       case MAPI_TYPE_USTRING:
       case MAPI_TYPE_STRING8:
-        kDebug(5975).form( "(tag=%04x) MAPI string%s: size=%d \"%s\"\n",
-                       mapi.tag, mapiname.toAscii().data(),
-                       mapi.value.toByteArray().size(),
-                       mapi.value.toString().toAscii().data() );
+        kDebug(5975).nospace() << "(tag="
+                               << hex << mapi.tag
+                               << ") MAPI string" <<  mapiname.toAscii().data()
+                               << ": size=" << mapi.value.toByteArray().size()
+                               << mapi.value.toString();
         break;
       case MAPI_TYPE_BINARY:
-        kDebug(5975).form( "(tag=%04x) MAPI binary%s: size=%d\n",
-                       mapi.tag, mapiname.toAscii().data(),
-                       mapi.value.toByteArray().size() );
+        kDebug(5975).nospace() << "(tag="
+                               << hex << mapi.tag
+                               << ") MAPI binary" <<  mapiname.toAscii().data()
+                               << ": size=" << mapi.value.toByteArray().size();
         break;
       }
     }
