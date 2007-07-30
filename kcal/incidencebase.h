@@ -122,28 +122,40 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
           IncidenceBase::Visitor to perform actions on an Event object.
         */
         virtual bool visit( Event *event )
-        { Q_UNUSED( event ); return false; }
+        {
+          Q_UNUSED( event );
+          return false;
+        }
 
         /**
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on a Todo object.
         */
         virtual bool visit( Todo *todo )
-        { Q_UNUSED ( todo ); return false; }
+        {
+          Q_UNUSED ( todo );
+          return false;
+        }
 
         /**
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on an Journal object.
         */
         virtual bool visit( Journal *journal )
-        { Q_UNUSED( journal ); return false; }
+        {
+          Q_UNUSED( journal );
+          return false;
+        }
 
         /**
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on a FreeBusy object.
         */
         virtual bool visit( FreeBusy *freebusy )
-        { Q_UNUSED( freebusy ); return false; }
+        {
+          Q_UNUSED( freebusy );
+          return false;
+        }
 
       protected:
         /**
@@ -207,7 +219,10 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       @param v is a reference to a Visitor object.
     */
     virtual bool accept( Visitor &v )
-    { Q_UNUSED( v ); return false; }
+    {
+      Q_UNUSED( v );
+      return false;
+    }
 
     /**
       Prints the type of Incidence as a string.
@@ -483,6 +498,9 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     */
     virtual void customPropertyUpdated();
 
+    /**
+      Identifies a read-only incidence.
+    */
     bool mReadOnly;
 
   private:

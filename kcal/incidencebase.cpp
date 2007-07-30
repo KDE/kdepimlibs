@@ -48,7 +48,7 @@ class KCal::IncidenceBase::Private
 {
   public:
     Private() : mFloats( true ), mHasDuration( false )
-      { mAttendees.setAutoDelete( true ); }
+    { mAttendees.setAutoDelete( true ); }
 
     Private( const Private &other )
       : mLastModified( other.mLastModified ),
@@ -123,14 +123,15 @@ bool IncidenceBase::operator==( const IncidenceBase &i2 ) const
     return false;
   }
 
-  return ( dtStart() == i2.dtStart() &&
-           organizer() == i2.organizer() &&
-           uid() == i2.uid() &&
-           // Don't compare lastModified, otherwise the operator is not
-           // of much use. We are not comparing for identity, after all.
-           floats() == i2.floats() &&
-           duration() == i2.duration() &&
-           hasDuration() == i2.hasDuration() );
+  return
+    dtStart() == i2.dtStart() &&
+    organizer() == i2.organizer() &&
+    uid() == i2.uid() &&
+    // Don't compare lastModified, otherwise the operator is not
+    // of much use. We are not comparing for identity, after all.
+    floats() == i2.floats() &&
+    duration() == i2.duration() &&
+    hasDuration() == i2.hasDuration();
   // no need to compare mObserver
 }
 
@@ -216,12 +217,14 @@ QString IncidenceBase::dtStartTimeStr( bool shortfmt ) const
 
 QString IncidenceBase::dtStartDateStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDate( dtStart().date(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
+  return KGlobal::locale()->formatDate(
+    dtStart().date(), ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
 }
 
 QString IncidenceBase::dtStartStr( bool shortfmt ) const
 {
-  return KGlobal::locale()->formatDateTime( dtStart().dateTime(), (shortfmt ? KLocale::ShortDate : KLocale::LongDate) );
+  return KGlobal::locale()->formatDateTime(
+    dtStart().dateTime(), ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
 }
 
 bool IncidenceBase::floats() const
@@ -231,7 +234,9 @@ bool IncidenceBase::floats() const
 
 void IncidenceBase::setFloats( bool f )
 {
-  if ( mReadOnly || f == d->mFloats ) return;
+  if ( mReadOnly || f == d->mFloats ) {
+    return;
+  }
   d->mFloats = f;
   updated();
 }
@@ -276,7 +281,10 @@ QStringList IncidenceBase::comments() const
 
 void IncidenceBase::addAttendee( Attendee *a, bool doupdate )
 {
-  if ( mReadOnly ) return;
+  if ( mReadOnly ) {
+    return;
+  }
+
   if ( a->name().left(7).toUpper() == "MAILTO:" ) {
     a->setName( a->name().remove( 0, 7 ) );
   }
@@ -299,7 +307,9 @@ int IncidenceBase::attendeeCount() const
 
 void IncidenceBase::clearAttendees()
 {
-  if ( mReadOnly ) return;
+  if ( mReadOnly ) {
+    return;
+  }
   d->mAttendees.clear();
 }
 
