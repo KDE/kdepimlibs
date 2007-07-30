@@ -268,6 +268,13 @@ public:
     virtual KTimeZoneBackend *clone() const;
 
     /**
+     * Returns the class name of the data represented by this instance.
+     *
+     * @return "ICalTimeZone"
+     */
+    virtual QByteArray type() const;
+
+    /**
      * Implements ICalTimeZone::hasTransitions().
      *
      * Return whether daylight saving transitions are available for the time zone.

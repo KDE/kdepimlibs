@@ -188,6 +188,11 @@ KTimeZoneBackend *ICalTimeZoneBackend::clone() const
     return new ICalTimeZoneBackend(*this);
 }
 
+QByteArray ICalTimeZoneBackend::type() const
+{
+    return "ICalTimeZone";
+}
+
 bool ICalTimeZoneBackend::hasTransitions(const KTimeZone *caller) const
 {
     Q_UNUSED(caller)
@@ -324,7 +329,7 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
     LAST_WEEKDAY_OF_MONTH = 0x04
   };
 
-  if (dynamic_cast<const KSystemTimeZone*>(&tz)) {
+  if (tz.type() == "KSystemTimeZone") {
     // Try to fetch a system time zone in preference, on the grounds
     // that system time zones are more likely to be up to date than
     // built-in libical ones.
