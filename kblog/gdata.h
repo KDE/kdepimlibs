@@ -169,7 +169,7 @@ class KBLOG_EXPORT GData : public Blog
     */
     void removePosting( KBlog::BlogPosting *posting );
 
-    void createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
+    virtual void createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
 
   Q_SIGNALS:
 
