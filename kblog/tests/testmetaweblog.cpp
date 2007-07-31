@@ -23,10 +23,14 @@
 #include "testmetaweblog.moc"
 
 #include "kblog/metaweblog.h"
+#include "kblog/blogposting.h"
+#include "kblog/blogmedia.h"
 
 #include <qtest_kde.h>
 
 #include <unistd.h>
+#include <ktimezone.h>
+#include <kdatetime.h>
 
 #define TIMEOUT 20000
 #define GLOBALTIMEOUT 30000
@@ -84,26 +88,24 @@ void TestMetaWeblog::testValidity()
   b->setPassword( "k0nt4ctbl0g" );
   b->setBlogId( "1" );
   b->setTimeZone( KTimeZone( "UTC" ) );
-  b->setDownloadCount( DOWNLOADCOUNT );
   QVERIFY( b->url() == KUrl( "http://soctest.wordpress.com/xmlrpc.php" ) );
   QVERIFY( b->blogId() == "1" );
   QVERIFY( b->username() == "socapitest" );
   QVERIFY( b->password() == "k0nt4ctbl0g" );
   QVERIFY( b->interfaceName() == "MetaWeblog " );
   QVERIFY( b->timeZone().name() == QString( "UTC" ) );
-  QVERIFY( b->downloadCount() == DOWNLOADCOUNT );
 
   BlogPosting *p = new BlogPosting();
   KDateTime mDateTime( QDateTime::currentDateTime() );
   p->setTitle( "TestMetaWeblog" );
   p->setContent( "TestMetaWeblog: posted content." );
-  p->setPublish( true );
+  p->setPublished( true );
   p->setPostingId( QString( "41" ) );
   p->setCreationDateTime( mDateTime );
   p->setModificationDateTime( mDateTime );
   QVERIFY( p->title() == "TestMetaWeblog" );
   QVERIFY( p->content() == "TestMetaWeblog: posted content." );
-  QVERIFY( p->publish() == true );
+  QVERIFY( p->isPublished() == true );
   QVERIFY( p->postingId() == QString ( "41" ) );
   QVERIFY( p->creationDateTime() == mDateTime );
   QVERIFY( p->modificationDateTime() == mDateTime );
@@ -164,12 +166,12 @@ void TestMetaWeblog::testValidity()
 
   connect( b, SIGNAL( listPostingsFinished() ),
            listPostingsTimer, SLOT( stop() ) );
-  b->listPostings();
+  b->listRecentPostings( DOWNLOADCOUNT );
   listPostingsTimer->start( TIMEOUT );
 
   connect( b, SIGNAL( fetchedPosting( KBlog::BlogPosting& ) ),
            fetchPostingTimer, SLOT( stop() ) );
-  b->fetchPosting( QString( "41" ) );
+  b->fetchPosting( p );
   fetchPostingTimer->start( TIMEOUT );
 
   connect( b, SIGNAL( modifiedPosting( bool ) ),

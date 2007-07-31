@@ -128,13 +128,15 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
   Q_SIGNALS:
 
+    void createdMedia( KBlog::BlogMedia *media );
+
     /**
       This signal is emitted when the last category of the listCategories()
       job has been fetched.
 
       @see listCategories()
     */
-    void listedCategories( QMap<QString,QMap<QString,QString> > categories );
+    void listedCategories( QMap<QString,QMap<QString,QString> > &categories );
 
   protected:
     MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd, QObject *parent = 0 );

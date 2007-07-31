@@ -25,6 +25,7 @@
 
 #include <QByteArray>
 #include <QString>
+#include <kurl.h>
 
 namespace KBlog {
 
@@ -33,6 +34,7 @@ class BlogMediaPrivate
   public:
     BlogMedia *q_ptr;
     QString mName;
+    KUrl mUrl;
     QString mMimetype;
     QByteArray mData;
     BlogMedia::Status mStatus;
@@ -57,6 +59,16 @@ QString BlogMedia::name() const
 void BlogMedia::setName( const QString &name )
 {
   d_func()->mName = name;
+}
+
+KUrl BlogMedia::url() const
+{
+  return d_func()->mUrl;
+}
+
+void BlogMedia::setUrl( const KUrl &url )
+{
+  d_func()->mUrl = url;
 }
 
 QString BlogMedia::mimetype() const
@@ -86,6 +98,7 @@ BlogMedia::Status BlogMedia::status() const
 
 void BlogMedia::setStatus( BlogMedia::Status status )
 {
+  emit statusChanged( status );
   d_func()->mStatus = status;
 }
 

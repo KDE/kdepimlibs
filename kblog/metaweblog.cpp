@@ -262,15 +262,18 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
 void MetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
                                                             const QVariant &id )
 {
-  Q_UNUSED( result );
-  Q_UNUSED( id );
-/*
+  Q_Q(MetaWeblog);
+
+  int count = id.toInt(); 
+
+  QList <BlogPosting*> fetchedPostingList;
+
   kDebug(5323) << "MetaWeblog::slotListRecentPostings" << endl;
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != QVariant::List ) {
     kDebug(5323) << "Could not fetch list of postings out of the "
                  << "result from the server." << endl;
-    emit q->error( ParsingError,
+    emit q->error( MetaWeblog::ParsingError,
                         i18n( "Could not fetch list of postings out of the "
                               "result from the server." ) );
   } else {
@@ -284,22 +287,25 @@ void MetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
       if ( readPostingFromMap( posting, postInfo ) ) {
         kDebug(5323) << "Emitting listedPosting( posting.postingId()="
                      << posting->postingId() << "); " << endl;
-        emit q->listedPosting( posting ); // KUrl( posting.postingId() ) );
+        fetchedPostingList.append( posting );
       } else {
-        kDebug(5323) << "d->readPostingFromMap failed! " << endl;
-        emit q->error( ParsingError, i18n( "Could not read posting." ) );
+        kDebug(5323) << "readPostingFromMap failed! " << endl;
+        emit q->error( MetaWeblog::ParsingError, i18n( "Could not read posting." ) );
       }
     }
   } //FIXME should we emit here? (see below, too)
   kDebug(5323) << "Emitting listRecentPostingsFinished()" << endl;
-  emit q->listRecentPostingsFinished();*/
+  emit q->listedRecentPostings( fetchedPostingList );
 }
 
 void MetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
                                                             const QVariant &id )
 {
-  Q_UNUSED( id );
   Q_Q(MetaWeblog);
+
+  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
+  callMap.remove( id.toInt() );
+
   kDebug(5323) << "MetaWeblog::slotFetchPosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
@@ -311,16 +317,14 @@ void MetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
                        i18n( "Could not fetch posting out of the "
                              "result from the server." ) );
   } else {
-//     const QList<QVariant> postReceived = result[0].toList();
-//     QList<QVariant>::ConstIterator it = postReceived.begin();
-    BlogPosting posting;
     const QMap<QString, QVariant> postInfo = result[0].toMap();
-    if ( readPostingFromMap( &posting, postInfo ) ) {
+    if ( readPostingFromMap( posting, postInfo ) ) {
       kDebug(5323) << "Emitting fetchedPosting( posting.postingId()="
-                   << posting.postingId() << "); " << endl;
-//       emit q->fetchedPosting( posting ); // KUrl( posting.posingtId() ) );
+                   << posting->postingId() << "); " << endl;
+      posting->setStatus( BlogPosting::Fetched );
+      emit q->fetchedPosting( posting );
     } else {
-      kDebug(5323) << "d->readPostingFromMap failed! " << endl;
+      kDebug(5323) << "readPostingFromMap failed! " << endl;
       emit q->error( MetaWeblog::ParsingError,
                          i18n( "Could not read posting." ) );
     }
@@ -330,8 +334,11 @@ void MetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
 void MetaWeblogPrivate::slotCreatePosting( const QList<QVariant> &result,
                                                              const QVariant &id )
 {
-  Q_UNUSED( id );
   Q_Q(MetaWeblog);
+
+  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
+  callMap.remove( id.toInt() );
+
   kDebug(5323) << "MetaWeblog::slotCreatePosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
@@ -342,7 +349,9 @@ void MetaWeblogPrivate::slotCreatePosting( const QList<QVariant> &result,
     emit q->error( MetaWeblog::ParsingError,
                        i18n( "Could not read the postingId, not a string." ) );
   } else {
-//     emit q->createdPosting( result[0].toString() );
+     posting->setPostingId( result[0].toString() );
+     posting->setStatus( BlogPosting::Created );
+     emit q->createdPosting( posting );
     kDebug(5323) << "emitting createdPosting( " << result[0].toString() << " )" << endl;
   }
 }
@@ -350,8 +359,11 @@ void MetaWeblogPrivate::slotCreatePosting( const QList<QVariant> &result,
 void MetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
                                                              const QVariant &id )
 {
-  Q_UNUSED( id );
   Q_Q(MetaWeblog);
+
+  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
+  callMap.remove( id.toInt() );
+
   kDebug(5323) << "MetaWeblog::slotModifyPosting" << endl;
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
@@ -362,7 +374,8 @@ void MetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
     emit q->error( MetaWeblog::ParsingError,
                        i18n( "Could not read the result, not a boolean." ) );
   } else {
-//     emit q->modifiedPosting( result[0].toBool() );
+    posting->setStatus( BlogPosting::Modified );
+    emit q->modifiedPosting( posting );
     kDebug(5323) << "emitting modifiedPosting( " << result[0].toBool() << " )" << endl;
   }
 }
@@ -370,8 +383,11 @@ void MetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
 void MetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,
                                                            const QVariant &id )
 {
-  Q_UNUSED( id );
   Q_Q(MetaWeblog);
+
+  KBlog::BlogMedia* media = callMediaMap[ id.toInt() ];
+  callMediaMap.remove( id.toInt() );
+
   kDebug(5323) << "MetaWeblogPrivate::slotCreateMedia, no error!" << endl;
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
   if ( result[0].type() != 8 ) {
@@ -384,7 +400,9 @@ void MetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,
     kDebug(5323) << "MetaWeblog::slotCreateMedia url=" << url << endl;
 
     if ( !url.isEmpty() ) {
-//       emit q->createdMedia( url );
+      media->setUrl( KUrl( url ) );
+      media->setStatus( BlogMedia::Created );
+      emit q->createdMedia( media );
       kDebug(5323) << "Emitting createdMedia( url=" << url  << " ); " << endl;
     }
   }

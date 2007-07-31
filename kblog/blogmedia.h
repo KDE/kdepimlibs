@@ -79,6 +79,10 @@ class KBLOG_EXPORT BlogMedia : public QObject
     */
     void setName( const QString &title );
 
+    KUrl url() const;
+
+    void setUrl( const KUrl &url );
+
     /**
       Returns the mimetype.
 

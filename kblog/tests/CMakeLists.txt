@@ -20,11 +20,11 @@ kde4_add_unit_test(testgdata TESTNAME kabc-testgdata ${testgdata_SRCS})
 target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 
 # ########### next target ###############
-#  
-#  set(testmetaweblog_SRCS testmetaweblog.cpp )
-#  
-#  
-#  kde4_add_unit_test(testmetaweblog TESTNAME kabc-testmetaweblog ${testmetaweblog_SRCS})
-#  
-#  target_link_libraries(testmetaweblog ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+ 
+ set(testmetaweblog_SRCS testmetaweblog.cpp )
+ 
+ 
+ kde4_add_unit_test(testmetaweblog TESTNAME kabc-testmetaweblog ${testmetaweblog_SRCS})
+ 
+ target_link_libraries(testmetaweblog ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 
