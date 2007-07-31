@@ -2,7 +2,7 @@
   This file is part of the kblog library.
 
   Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-  Copyright (c) 2006 Christian Weilbach <christian_weilbach@web.de>
+  Copyright (c) 2007 Christian Weilbach <christian_weilbach@web.de>
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
@@ -28,8 +28,11 @@
 
 #include <QObject>
 
+class KUrl;
+
 namespace KBlog {
 
+  class BlogMediaPrivate;
 /**
   @brief
   A class that represents a media object on the server.
@@ -40,7 +43,7 @@ namespace KBlog {
   post->setData( some_qbytestream );
   @endcode
 
-  @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
+  @author Christian Weilbach \<christian_weilbach\@web.de\>
 */
 
 class KBLOG_EXPORT BlogMedia : public QObject
@@ -108,7 +111,7 @@ class KBLOG_EXPORT BlogMedia : public QObject
     */
     void setData( const QByteArray &data );
 
-    enum Status { New, Fetched, Created, Modified, Deleted, Error };
+    enum Status { New, Fetched, Created, Modified, Removed, Error };
 
     Status status() const;
 
@@ -117,9 +120,12 @@ class KBLOG_EXPORT BlogMedia : public QObject
   Q_SIGNALS:
     void statusChanged( KBlog::BlogMedia::Status status );
 
+  protected:
+    BlogMediaPrivate * const d_ptr;
+    BlogMedia( const KUrl &server, BlogMediaPrivate &dd, QObject *parent = 0 );
+
   private:
-    class BlogMediaPrivate;
-    BlogMediaPrivate *const d;
+    Q_DECLARE_PRIVATE(BlogMedia)
 };
 
 } //namespace KBlog

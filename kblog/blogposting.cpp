@@ -32,56 +32,56 @@
 namespace KBlog {
 
 BlogPosting::BlogPosting( const QString &postingId, QObject* parent ) :
-    QObject( parent ), d( new BlogPostingPrivate )
+    QObject( parent ), d_ptr( new BlogPostingPrivate )
 {
-  d->mPublished = false;
-  d->mPostingId = postingId;
-  d->mStatus = New;
+  d_ptr->mPublished = false;
+  d_ptr->mPostingId = postingId;
+  d_ptr->mStatus = New;
 }
 
 BlogPosting::~BlogPosting()
 {
-  delete d;
+  delete d_ptr;
 }
 
 bool BlogPosting::isPublished() const
 {
-  return d->mPublished;
+  return d_func()->mPublished;
 }
 
 void BlogPosting::setPublished( bool published )
 {
-  d->mPublished = published;
+  d_func()->mPublished = published;
 }
 
 QString BlogPosting::postingId() const
 {
-  return d->mPostingId;
+  return d_func()->mPostingId;
 }
 
 void BlogPosting::setPostingId( const QString &postingId )
 {
-  d->mPostingId = postingId;
+  d_func()->mPostingId = postingId;
 }
 
 QString BlogPosting::title() const
 {
-  return d->mTitle;
+  return d_func()->mTitle;
 }
 
 void BlogPosting::setTitle( const QString &title )
 {
-  d->mTitle = title;
+  d_func()->mTitle = title;
 }
 
 QString BlogPosting::content() const
 {
-  return d->mContent;
+  return d_func()->mContent;
 }
 
 void BlogPosting::setContent( const QString &content )
 {
-  d->mContent = content;
+  d_func()->mContent = content;
 }
 
 QString BlogPosting::abbreviatedContent() const
@@ -196,52 +196,53 @@ void BlogPosting::setMusic( const QString &music )
 
 QStringList BlogPosting::categories() const
 {
-  return d->mCategories;
+  return d_func()->mCategories;
 }
 
 void BlogPosting::setCategories( const QStringList &categories )
 {
-  d->mCategories = categories;
+  d_func()->mCategories = categories;
 }
 
 KDateTime BlogPosting::creationDateTime() const
 {
-  return d->mCreationDateTime;
+  return d_func()->mCreationDateTime;
 }
 
 void BlogPosting::setCreationDateTime( const KDateTime &datetime )
 {
-  d->mCreationDateTime = datetime;
+  d_func()->mCreationDateTime = datetime;
 }
 
 KDateTime BlogPosting::modificationDateTime() const
 {
-  return d->mModificationDateTime;
+  return d_func()->mModificationDateTime;
 }
 
 void BlogPosting::setModificationDateTime( const KDateTime &datetime )
 {
-  d->mModificationDateTime = datetime;
+  d_func()->mModificationDateTime = datetime;
 }
 
 BlogPosting::Status BlogPosting::status() const
 {
-  return d->mStatus;
+  return d_func()->mStatus;
 }
 
 void BlogPosting::setStatus( BlogPosting::Status status )
 {
-  d->mStatus = status;
+  d_func()->mStatus = status;
+  emit statusChanged( status );
 }
 
 QString BlogPosting::error() const
 {
-  return d->mError;
+  return d_func()->mError;
 }
 
 void BlogPosting::setError( const QString &error )
 {
-  d->mError = error;
+  d_func()->mError = error;
 }
 
 } // namespace KBlog

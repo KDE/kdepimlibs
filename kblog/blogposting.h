@@ -35,6 +35,7 @@ class KUrl;
 
 namespace KBlog {
 
+  class BlogPostingPrivate;
   class BlogPostingComment;
 
 /**
@@ -224,9 +225,12 @@ public:
 
     void listedComments( const QList<KBlog::BlogPostingComment*> &comments );
 
+  protected:
+    BlogPostingPrivate * const d_ptr;
+    BlogPosting( const KUrl &server, BlogPostingPrivate &dd, QObject *parent = 0 );
+
   private:
-    class BlogPostingPrivate;
-    BlogPostingPrivate *const d;
+    Q_DECLARE_PRIVATE(BlogPosting)
 };
 
 

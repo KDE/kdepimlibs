@@ -28,21 +28,24 @@
 
 #include <QStringList>
 
-using namespace KBlog;
+namespace KBlog{
 
-class BlogPosting::BlogPostingPrivate
+class BlogPostingPrivate
 {
   public:
     friend class Blog;
     bool mPublished;
+    BlogPosting *q_ptr;
     QString mPostingId;
     QString mTitle;
     QString mContent;
     QStringList mCategories;
     QString mError;
-    Status mStatus;
+    BlogPosting::Status mStatus;
     KDateTime mCreationDateTime;
     KDateTime mModificationDateTime;
+    Q_DECLARE_PUBLIC(BlogPosting);
 };
 
+} // namespace
 #endif

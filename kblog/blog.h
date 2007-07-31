@@ -228,6 +228,14 @@ class KBLOG_EXPORT Blog : public QObject
     void listedRecentPostings(
         const QList<KBlog::BlogPosting*>& postings );
 
+    void createdPosting( KBlog::BlogPosting *posting );
+
+    void fetchedPosting( KBlog::BlogPosting *posting );
+
+    void modifiedPosting( KBlog::BlogPosting *posting );
+
+    void removedPosting( KBlog::BlogPosting *posting );
+
     /**
       All xml parsing and all structural problems will emit an error.
 

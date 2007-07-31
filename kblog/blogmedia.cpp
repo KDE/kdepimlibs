@@ -28,63 +28,65 @@
 
 namespace KBlog {
 
-class BlogMedia::BlogMediaPrivate
+class BlogMediaPrivate
 {
   public:
+    BlogMedia *q_ptr;
     QString mName;
     QString mMimetype;
     QByteArray mData;
-    Status mStatus;
+    BlogMedia::Status mStatus;
+    Q_DECLARE_PUBLIC(BlogMedia)
 };
 
 BlogMedia::BlogMedia( QObject* parent ): QObject( parent ),
-                      d( new BlogMediaPrivate )
+                      d_ptr( new BlogMediaPrivate )
 {
 }
 
 BlogMedia::~BlogMedia()
 {
-  delete d;
+  delete d_ptr;
 }
 
 QString BlogMedia::name() const
 {
-  return d->mName;
+  return d_func()->mName;
 }
 
 void BlogMedia::setName( const QString &name )
 {
-  d->mName = name;
+  d_func()->mName = name;
 }
 
 QString BlogMedia::mimetype() const
 {
-  return d->mMimetype;
+  return d_func()->mMimetype;
 }
 
 void BlogMedia::setMimetype( const QString &mimetype )
 {
-  d->mMimetype = mimetype;
+  d_func()->mMimetype = mimetype;
 }
 
 QByteArray BlogMedia::data() const
 {
-  return d->mData;
+  return d_func()->mData;
 }
 
 void BlogMedia::setData( const QByteArray &data )
 {
-  d->mData = data;
+  d_func()->mData = data;
 }
 
 BlogMedia::Status BlogMedia::status() const
 {
-  return d->mStatus;
+  return d_func()->mStatus;
 }
 
 void BlogMedia::setStatus( BlogMedia::Status status )
 {
-  d->mStatus = status;
+  d_func()->mStatus = status;
 }
 
 } //namespace KBlog

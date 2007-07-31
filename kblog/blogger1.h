@@ -174,6 +174,8 @@ class KBLOG_EXPORT Blogger1 : public Blog
                     const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotModifyPosting(
                     const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotRemovePosting(
+                    const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotError( int ,
                     const QString&, const QVariant& ))
 };

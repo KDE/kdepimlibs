@@ -2,7 +2,7 @@
   This file is part of the kblog library.
 
   Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-  Copyright (c) 2006 Christian Weilbach <christian_weilbach@web.de>
+  Copyright (c) 2007 Christian Weilbach <christian_weilbach@web.de>
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
@@ -171,7 +171,7 @@ void Blogger1::removePosting( KBlog::BlogPosting *posting )
 {
  Q_D(Blogger1);
   if ( !posting ) {
-    kDebug(5323) << "Blogger1::modifyPosting: posting is null pointer"
+    kDebug(5323) << "Blogger1::removePosting: posting is null pointer"
         << endl;
     return;
   }
@@ -183,7 +183,7 @@ void Blogger1::removePosting( KBlog::BlogPosting *posting )
  args << QVariant( /*publish=*/true );
  d->mXmlRpcClient->call(
    "blogger.deletePost", args,
-   this, SLOT( slotModifyPosting( QList<QVariant> &result, QVariant &id ) ),
+   this, SLOT( slotRemovePosting( QList<QVariant> &result, QVariant &id ) ),
    this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
@@ -250,8 +250,8 @@ void Blogger1Private::slotListRecentPostings(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q(Blogger1);
-  int count = id.toInt(); // not sure if needed, actually the API should 
-// give more posts
+  int count = id.toInt(); // not sure if needed, actually the API should
+// not give more posts
 
   kDebug(5323) << "Blog::slotListRecentPostings" << endl;
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
@@ -278,7 +278,7 @@ void Blogger1Private::slotListRecentPostings(
                     << " appended in fetchedPostingList" << endl;
         fetchedPostingList << posting;
       } else {
-        kDebug(5323) << "d->readPostingFromMap failed! " << endl;
+        kDebug(5323) << "readPostingFromMap failed! " << endl;
         emit q->error( Blogger1::ParsingError,
                              i18n( "Could not read posting." ) );
        }
@@ -311,19 +311,20 @@ void Blogger1Private::slotFetchPosting(
                               "the server." ) );
     posting->setError( i18n( "Could not fetch posting out of the "
                               "result from the server." ) );
-//     emit posting->statusChanged( BlogPosting::Error );
+    posting->setStatus( BlogPosting::Error );
   } else {
     const QMap<QString, QVariant> postInfo = result[0].toMap();
     if ( readPostingFromMap( posting, postInfo ) ) {
       kDebug(5323) << "Emitting fetchedPosting( posting.postingId()="
                    << posting->postingId() << "); " << endl;
-//       emit posting->statusChanged( BlogPosting::Fetched );
+      posting->setStatus( BlogPosting::Fetched );
+      emit q->fetchedPosting( posting );
     } else {
-      kDebug(5323) << "d->readPostingFromMap failed! " << endl;
+      kDebug(5323) << "readPostingFromMap failed! " << endl;
       emit q->error( Blogger1::ParsingError,
                           i18n( "Could not read posting." ) );
       posting->setError( i18n( "Could not read posting." ) );
-//       emit posting->statusChanged( BlogPosting::Error );
+      posting->setStatus( BlogPosting::Error );
     }
   }
 
@@ -347,7 +348,8 @@ void Blogger1Private::slotCreatePosting(
                         i18n( "Could not read the postingId, not an integer." ) );
   } else {
     posting->setPostingId( QString( result[0].toInt() ) );
-//     emit posting->statusChanged( KBlog::BlogPosting::Created );
+    posting->setStatus( KBlog::BlogPosting::Created );
+    emit q->createdPosting( posting );
     kDebug(5323) << "emitting statusChanged( Created )" <<
              " for " << result[0].toInt() << endl;
   }
@@ -371,8 +373,33 @@ void Blogger1Private::slotModifyPosting(
     emit q->error( Blogger1::ParsingError,
                         i18n( "Could not read the result, not a boolean." ) );
   } else {
-//     emit posting->statusChanged( KBlog::BlogPosting::Modified );
+    posting->setStatus( KBlog::BlogPosting::Modified );
+    emit q->modifiedPosting( posting );
     kDebug(5323) << "emitting statusChanged( Modified )" <<
+             " for " << result[0].toInt() << endl;
+  }
+}
+
+void Blogger1Private::slotRemovePosting(
+    const QList<QVariant> &result, const QVariant &id )
+{
+  Q_Q(Blogger1);
+  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
+  callMap.remove( id.toInt() );
+
+  kDebug(5323) << "Blog::slotRemovePosting" << endl;
+  //array of structs containing ISO.8601
+  // dateCreated, String userid, String postid, String content;
+  // TODO: Time zone for the dateCreated!
+  kDebug(5323) << "TOP: " << result[0].typeName() << endl;
+  if ( result[0].type() != QVariant::Bool ) {
+    kDebug (5323) << "Could not read the result, not a boolean." << endl;
+    emit q->error( Blogger1::ParsingError,
+                        i18n( "Could not read the result, not a boolean." ) );
+  } else {
+    posting->setStatus( KBlog::BlogPosting::Removed );
+    emit q->removedPosting( posting );
+    kDebug(5323) << "emitting statusChanged( Removed )" <<
              " for " << result[0].toInt() << endl;
   }
 }

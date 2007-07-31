@@ -52,6 +52,8 @@ class Blogger1Private : public BlogPrivate
                                     const QVariant &id );
     virtual void slotModifyPosting( const QList<QVariant> &result,
                                     const QVariant &id );
+    virtual void slotRemovePosting( const QList<QVariant> &result,
+                                    const QVariant &id );
     virtual void slotError( int number, const QString &errorString,
                             const QVariant &id );
 
