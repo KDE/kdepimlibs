@@ -36,7 +36,7 @@ class Blogger1Private : public BlogPrivate
   public:
     QString mAppId;
     KXmlRpc::Client *mXmlRpcClient;
-    int callCounter;
+    unsigned int callCounter; // TODO a better counter
     QMap<int,KBlog::BlogPosting*> callMap;
     Blogger1Private();
     virtual ~Blogger1Private();

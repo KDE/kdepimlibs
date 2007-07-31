@@ -209,7 +209,7 @@ public:
     */
     void setModificationDateTime( const KDateTime &datetime );
 
-    enum Status { New, Fetched, Created, Modified, Deleted, Error };
+    enum Status { New, Fetched, Created, Modified, Removed, Error };
 
     Status status() const;
 

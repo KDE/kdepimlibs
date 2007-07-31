@@ -100,35 +100,44 @@ void Blogger1::listRecentPostings( int number )
 
 void Blogger1::fetchPosting( KBlog::BlogPosting *posting )
 {
+  if ( !posting ) {
+    kDebug(5323) << "Blogger1::modifyPosting: posting is null pointer"
+        << endl;
+    return;
+  }
      Q_D(Blogger1);
      kDebug(5323) << "Fetching Posting with url " << posting->postingId()
          << endl;
      QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
-     d->callMap[ d->callCounter++ ] = posting;
+     unsigned int i= d->callCounter++; // multithreading problem? must be executed at once
+     d->callMap[ i ] = posting;
      d->mXmlRpcClient->call(
        "blogger.getPost", args,
        this, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
        this, SLOT( slotError( int, const QString&, const QVariant& ) ),
-                QVariant( d->callCounter ) );
+                QVariant( i ) );
 }
 
 void Blogger1::modifyPosting( KBlog::BlogPosting *posting )
 {
   Q_D(Blogger1);
+
   if ( !posting ) {
     kDebug(5323) << "Blogger1::modifyPosting: posting is null pointer"
         << endl;
+    return;
   }
     kDebug(5323) << "Uploading Posting with postingId "
             << posting->postingId() << endl;
-
+    unsigned int i= d->callCounter++;
+    d->callMap[ i ] = posting;
     QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
     args << QVariant( posting->content() );
     args << QVariant( posting->isPublished() );
     d->mXmlRpcClient->call(
       "blogger.editPost", args,
       this, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
-      this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
+      this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
 void Blogger1::createPosting( KBlog::BlogPosting *posting )
@@ -137,7 +146,10 @@ void Blogger1::createPosting( KBlog::BlogPosting *posting )
   if ( !posting ) {
     kDebug(5323) << "Blogger1::createPosting: posting is null pointer"
         << endl;
+    return;
   }
+    unsigned int i= d->callCounter++;
+    d->callMap[ i ] = posting;
     kDebug(5323) << "Creating new Posting with blogid " << blogId() << endl;
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     QStringList categories = posting->categories();
@@ -152,24 +164,27 @@ void Blogger1::createPosting( KBlog::BlogPosting *posting )
     d->mXmlRpcClient->call(
       "blogger.newPost", args,
       this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
-      this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
+      this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
 void Blogger1::removePosting( KBlog::BlogPosting *posting )
 {
-//  Q_D(Blogger1);
-//   if ( d->mLock.tryLock() ) {
-//     kDebug(5323) << "Blogger1::removePosting: postingId=" << postingId
-//          << endl;
-//     QList<QVariant> args( d->defaultArgs( postingId ) );
-//     args << QVariant( /*publish=*/true );
-//     d->mXmlRpcClient->call(
-//       "blogger.deletePost", args,
-//     this, SLOT( slotModifyPosting( QList<QVariant> &result, QVariant &id ) ),
-//     this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
-//     return true;
-//   }
-//   return false;
+ Q_D(Blogger1);
+  if ( !posting ) {
+    kDebug(5323) << "Blogger1::modifyPosting: posting is null pointer"
+        << endl;
+    return;
+  }
+  unsigned int i = d->callCounter++;
+  d->callMap[ i ] = posting;
+ kDebug(5323) << "Blogger1::removePosting: postingId=" << posting->postingId()
+       << endl;
+ QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
+ args << QVariant( /*publish=*/true );
+ d->mXmlRpcClient->call(
+   "blogger.deletePost", args,
+   this, SLOT( slotModifyPosting( QList<QVariant> &result, QVariant &id ) ),
+   this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
 Blogger1Private::Blogger1Private() :
@@ -235,7 +250,8 @@ void Blogger1Private::slotListRecentPostings(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q(Blogger1);
-  int count = id.toInt();
+  int count = id.toInt(); // not sure if needed, actually the API should 
+// give more posts
 
   kDebug(5323) << "Blog::slotListRecentPostings" << endl;
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
@@ -281,6 +297,7 @@ void Blogger1Private::slotFetchPosting(
   kDebug(5323) << "Blog::slotFetchPosting" << endl;
 
   KBlog::BlogPosting* posting = callMap[ id.toInt() ];
+  callMap.remove( id.toInt() );
 
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
@@ -309,14 +326,15 @@ void Blogger1Private::slotFetchPosting(
 //       emit posting->statusChanged( BlogPosting::Error );
     }
   }
-  callMap.remove( id.toInt() );
+
 }
 
 void Blogger1Private::slotCreatePosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q(Blogger1);
-  Q_UNUSED( id );
+  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
+  callMap.remove( id.toInt() );
 
   kDebug(5323) << "Blog::slotCreatePosting" << endl;
   //array of structs containing ISO.8601
@@ -328,17 +346,20 @@ void Blogger1Private::slotCreatePosting(
     emit q->error( Blogger1::ParsingError,
                         i18n( "Could not read the postingId, not an integer." ) );
   } else {
-//     emit q->createdPosting( QString().setNum( result[0].toInt() ) );
-    kDebug(5323) << "emitting createdPosting( " << result[0].toInt()
-                 << " )" << endl;
+    posting->setPostingId( QString( result[0].toInt() ) );
+//     emit posting->statusChanged( KBlog::BlogPosting::Created );
+    kDebug(5323) << "emitting statusChanged( Created )" <<
+             " for " << result[0].toInt() << endl;
   }
+
 }
 
 void Blogger1Private::slotModifyPosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q(Blogger1);
-  Q_UNUSED( id );
+  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
+  callMap.remove( id.toInt() );
 
   kDebug(5323) << "Blog::slotModifyPosting" << endl;
   //array of structs containing ISO.8601
@@ -350,9 +371,9 @@ void Blogger1Private::slotModifyPosting(
     emit q->error( Blogger1::ParsingError,
                         i18n( "Could not read the result, not a boolean." ) );
   } else {
-//     emit q->modifiedPosting( result[0].toBool() );
-    kDebug(5323) << "emitting modifiedPosting( " << result[0].toBool()
-                 << " )" << endl;
+//     emit posting->statusChanged( KBlog::BlogPosting::Modified );
+    kDebug(5323) << "emitting statusChanged( Modified )" <<
+             " for " << result[0].toInt() << endl;
   }
 }
 
