@@ -66,7 +66,7 @@ void MetaWeblog::listRecentPostings( int number )
     d->mXmlRpcClient->call(
       "metaWeblog.getRecentPosts", args,
       this, SLOT( slotListRecentPostings( const QList<QVariant>&, const QVariant& ) ),
-      this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
+      this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( number ) );
 }
 
 void MetaWeblog::listCategories()
@@ -84,28 +84,32 @@ void MetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
 {
   Q_D(MetaWeblog);
   if ( !posting ) {
-    kDebug(5323) << "MetaWeblog::modifyPosting: posting null pointer"
+    kDebug(5323) << "MetaWeblog::modifyPosting: posting is a null pointer"
         << endl;
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
+  unsigned int i = d->callCounter++;
+  d->callMap[ i ] = posting;
   kDebug(5323) << "Fetching Posting with url " << posting->postingId() << endl;
   QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
   d->mXmlRpcClient->call(
     "metaWeblog.getPost", args,
     this, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
-    this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
+    this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
 void MetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 {
   Q_D(MetaWeblog);
   if ( !posting ) {
-    kDebug(5323) << "MetaWeblog::modifyPosting: posting null pointer"
+    kDebug(5323) << "MetaWeblog::modifyPosting: posting is a null pointer"
         << endl;
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
+  unsigned int i = d->callCounter++;
+  d->callMap[ i ] = posting;
   kDebug(5323) << "Uploading Posting with postId " << posting->postingId()
       << endl;
 
@@ -120,18 +124,20 @@ void MetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
   d->mXmlRpcClient->call(
     "metaWeblog.editPost", args,
      this, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
-     this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
+     this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
 void MetaWeblog::createPosting( KBlog::BlogPosting *posting )
 {
   Q_D(MetaWeblog);
   if ( !posting ) {
-    kDebug(5323) << "MetaWeblog::createPosting: posting null pointer"
+    kDebug(5323) << "MetaWeblog::createPosting: posting is a null pointer"
         << endl;
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
+  unsigned int i = d->callCounter++;
+  d->callMap[ i ] = posting;
   kDebug(5323) << "Creating new Posting with blogId " << blogId() << endl;
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   QMap<QString, QVariant> map;
@@ -144,12 +150,20 @@ void MetaWeblog::createPosting( KBlog::BlogPosting *posting )
   d->mXmlRpcClient->call (
     "metaWeblog.newPost", args,
     this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
-    this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
+    this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
 void MetaWeblog::createMedia( KBlog::BlogMedia *media )
 {
   Q_D(MetaWeblog);
+  if ( !media ) {
+    kDebug(5323) << "MetaWeblog::createMedia: media is a null pointer"
+        << endl;
+    emit error ( Other, i18n( "Media is a null pointer." ) );
+    return;
+  }
+  unsigned int i = d->callMediaCounter++;
+  d->callMediaMap[ i ] = media;
   kDebug(5323) << "MetaWeblog::createMedia: name="<< media->name() << endl;
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   QMap<QString, QVariant> map;
@@ -161,12 +175,13 @@ void MetaWeblog::createMedia( KBlog::BlogMedia *media )
   d->mXmlRpcClient->call(
     "metaWeblog.newMediaObject", args,
     this, SLOT( slotCreateMedia( const QList<QVariant>&, const QVariant& ) ),
-    this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
+    this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 
 }
 
 MetaWeblogPrivate::MetaWeblogPrivate()
 {
+  callMediaCounter=1;
 }
 
 MetaWeblogPrivate::~MetaWeblogPrivate()
@@ -192,60 +207,57 @@ QList<QVariant> MetaWeblogPrivate::defaultArgs( const QString &id )
 void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
                                                               const QVariant &id )
 {
-  Q_UNUSED( result );
+  Q_Q(MetaWeblog);
   Q_UNUSED( id );
-//
-//   kDebug(5323) << "MetaWeblogPrivate::slotListCategories" << endl;
-//   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
-//   if ( result[0].type() != QVariant::Map &&
-//        result[0].type() != QVariant::List ) {
-//     // include fix for not metaweblog standard compatible apis with
-//     // array of structs instead of struct of structs, e.g. wordpress
-//     kDebug(5323) << "Could not list categories out of the result from the server." << endl;
-//     emit q->error( ParsingError,
-//                         i18n( "Could not list categories out of the result "
-//                               "from the server." ) );
-//   } else {
-//     if ( result[0].type() == QVariant::Map ) {
-//       const QMap<QString, QVariant> categories = result[0].toMap();
-//       const QList<QString> categoryNames = categories.keys();
-//
-//       QList<QString>::ConstIterator it = categoryNames.begin();
-//       QList<QString>::ConstIterator end = categoryNames.end();
-//       for ( ; it != end; ++it ) {
-//         kDebug(5323) << "MIDDLE: " << ( *it ) << endl;
-//         const QString name( *it );
-//         const QMap<QString, QVariant> category = categories[*it].toMap();
-//         const QString description( category["description"].toString() );
-//         if ( !name.isEmpty() ) {
-//           emit q->categoryInfoRetrieved(); //FIXME set the data
-//           kDebug(5323) << "Emitting categorieInfoRetrieved( name=" << name
-//                        << " description=" << description << " ); " << endl;
-//         }
-//       }
-//     }
-//     if ( result[0].type() == QVariant::List ) {
-//       // include fix for not metaweblog standard compatible apis with
-//       // array of structs instead of struct of structs, e.g. wordpress
-//       const QList<QVariant> categories = result[0].toList();
-//       QList<QVariant>::ConstIterator it = categories.begin();
-//       QList<QVariant>::ConstIterator end = categories.end();
-//       for ( ; it != end; ++it ) {
-//         kDebug(5323) << "MIDDLE: " << ( *it ).typeName() << endl;
-//         const QMap<QString, QVariant> category = ( *it ).toMap();
-//         const QString description( category["description"].toString() );
-//         const QString name( category["categoryName"].toString() );
-//         if ( !name.isEmpty() ) {
-//           emit q->categoryInfoRetrieved();//FIXME set the data
-//           kDebug(5323) << "Emitting categorieInfoRetrieved( name=" << name
-//                        << " description=" << description << " ); " << endl;
-//         }
-//       }
-//       kDebug(5323) << "Emitting listCategoriesFinished()" << endl;
-//       emit q->listCategoriesFinished();
-//     }
-//   }
-}
+
+  QMap<QString,QMap<QString,QString> > categoriesMap;
+
+  kDebug(5323) << "MetaWeblogPrivate::slotListCategories" << endl;
+  kDebug(5323) << "TOP: " << result[0].typeName() << endl;
+  if ( result[0].type() != QVariant::Map &&
+       result[0].type() != QVariant::List ) {
+    // include fix for not metaweblog standard compatible apis with
+    // array of structs instead of struct of structs, e.g. wordpress
+    kDebug(5323) << "Could not list categories out of the result from the server." << endl;
+    emit q->error( MetaWeblog::ParsingError,
+                        i18n( "Could not list categories out of the result "
+                              "from the server." ) );
+  } else {
+    if ( result[0].type() == QVariant::Map ) {
+      const QMap<QString, QVariant> categories = result[0].toMap();
+      const QList<QString> categoryNames = categories.keys();
+
+      QList<QString>::ConstIterator it = categoryNames.begin();
+      QList<QString>::ConstIterator end = categoryNames.end();
+      for ( ; it != end; ++it ) {
+        kDebug(5323) << "MIDDLE: " << ( *it ) << endl;
+        const QMap<QString, QVariant> c = categories[*it].toMap();
+        categoriesMap[ *it ]["description"] = c[ "description" ].toString();
+        categoriesMap[ *it ]["htmlUrl"]=c[ "htmlUrl" ].toString();
+        categoriesMap[ *it ]["rssUrl"]=c[ "rssUrl" ].toString();
+        }
+        emit q->listedCategories( categoriesMap );
+        kDebug(5323) << "Emitting listedCategories" << endl;
+      }
+    }
+    if ( result[0].type() == QVariant::List ) {
+      // include fix for not metaweblog standard compatible apis with
+      // array of structs instead of struct of structs, e.g. wordpress
+      const QList<QVariant> categories = result[0].toList();
+      QList<QVariant>::ConstIterator it = categories.begin();
+      QList<QVariant>::ConstIterator end = categories.end();
+      for ( ; it != end; ++it ) {
+        kDebug(5323) << "MIDDLE: " << ( *it ).typeName() << endl;
+        const QMap<QString, QVariant> c = ( *it ).toMap();
+        const QString name( c["categoryName"].toString() );
+        categoriesMap[ name ]["description"] = c[ "description" ].toString();
+        categoriesMap[ name ]["htmlUrl"]=c[ "htmlUrl" ].toString();
+        categoriesMap[ name ]["rssUrl"]=c[ "rssUrl" ].toString();
+      }
+      kDebug(5323) << "Emitting listedCategories()" << endl;
+      emit q->listedCategories( categoriesMap );
+    }
+  }
 
 void MetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
                                                             const QVariant &id )

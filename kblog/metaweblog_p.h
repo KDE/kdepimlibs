@@ -33,6 +33,8 @@ class MetaWeblogPrivate : public Blogger1Private
 {
   public:
     QMap<QString,QString> mCategories;
+    unsigned int callMediaCounter;
+    QMap<unsigned int,KBlog::BlogMedia*> callMediaMap;
     MetaWeblogPrivate();
     ~MetaWeblogPrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );
