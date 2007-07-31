@@ -24,6 +24,10 @@
   This file is part of the API for handling calendar data and
   defines the IncidenceBase class.
 
+  @brief
+  An abstract base class that provides a common base for all calendar incidence
+  classes.
+
   @author Cornelius Schumacher \<schumacher@kde.org\>
   @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
 */

@@ -148,19 +148,33 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     /** Returns the recurrence status for a recurrence rule.
      * See the enumeration at the top of this file for possible values. */
     static ushort recurrenceType( const RecurrenceRule *rrule );
-    /** Returns true if the date specified is one on which the event will recur.
-     *
-     * @param date date to check
-     * @param timeSpec time specification for @p date
-     */
+
+    /**
+      Returns true if the date specified is one on which the event will recur.
+
+      @param date date to check.
+      @param timeSpec time specification for @p date.
+    */
     bool recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const;
-    /** Returns true if the date/time specified is one at which the event will
-     * recur. Times are rounded down to the nearest minute to determine the result. */
-    bool recursAt( const KDateTime & ) const;
-    /** Removes all recurrence rules. Recurrence dates and exceptions are
-        not removed. */
+
+    /**
+      Returns true if the date/time specified is one at which the event will
+      recur. Times are rounded down to the nearest minute to determine the
+      result.
+
+      @param dt is the date/time to check.
+    */
+    bool recursAt( const KDateTime &dt ) const;
+
+    /**
+      Removes all recurrence rules. Recurrence dates and exceptions are
+      not removed.
+    */
     void unsetRecurs();
-    /** Removes all recurrence and exception rules and dates. */
+
+    /**
+      Removes all recurrence and exception rules and dates.
+    */
     void clear();
 
     /** Returns a list of the times on the specified date at which the

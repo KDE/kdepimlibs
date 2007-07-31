@@ -19,6 +19,18 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Incidence class.
+
+  @brief
+  Provides the class common to non-FreeBusy (Events, To-dos, Journals)
+  calendar components known as incidences.
+
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
+*/
 
 #include "incidence.h"
 #include "calformat.h"
@@ -57,10 +69,10 @@ class KCal::Incidence::Private
     mutable Recurrence *mRecurrence; // recurrence
     Attachment::List mAttachments;   // attachments list
     Alarm::List mAlarms;             // alarms list
-    QStringList mResources;          // resources list
+    QStringList mResources;          // resources list (not calendar resources)
     Status mStatus;                  // status
     QString mStatusString;           // status string, for custom status
-    int mSecrecy;                    // secrecy
+    Secrecy mSecrecy;                // secrecy
     int mPriority;                   // priority: 1 = highest, 2 = less, etc.
     QString mSchedulingID;           // ID for scheduling mails
 
@@ -145,12 +157,14 @@ Incidence::~Incidence()
   delete d;
 }
 
+//@cond PRIVATE
 // A string comparison that considers that null and empty are the same
 static bool stringCompare( const QString &s1, const QString &s2 )
 {
   return
     ( s1.isEmpty() && s2.isEmpty() ) || ( s1 == s2 );
 }
+//@endcond
 
 bool Incidence::operator==( const Incidence &i2 ) const
 {
@@ -220,15 +234,15 @@ void Incidence::setReadOnly( bool readOnly )
   }
 }
 
-void Incidence::setFloats( bool f )
+void Incidence::setFloats( bool floats )
 {
   if ( mReadOnly ) {
     return;
   }
   if ( recurrence() ) {
-    recurrence()->setFloats( f );
+    recurrence()->setFloats( floats );
   }
-  IncidenceBase::setFloats( f );
+  IncidenceBase::setFloats( floats );
 }
 
 void Incidence::setCreated( const KDateTime &created )
@@ -264,13 +278,18 @@ int Incidence::revision() const
   return d->mRevision;
 }
 
-void Incidence::setDtStart( const KDateTime &dtStart )
+void Incidence::setDtStart( const KDateTime &dt )
 {
   if ( d->mRecurrence ) {
-    d->mRecurrence->setStartDateTime( dtStart );
+    d->mRecurrence->setStartDateTime( dt );
     d->mRecurrence->setFloats( floats() );
   }
-  IncidenceBase::setDtStart( dtStart );
+  IncidenceBase::setDtStart( dt );
+}
+
+KDateTime Incidence::dtEnd() const
+{
+  return KDateTime();
 }
 
 void Incidence::shiftTimes( const KDateTime::Spec &oldSpec,
@@ -368,15 +387,15 @@ QString Incidence::relatedToUid() const
   return d->mRelatedToUid;
 }
 
-void Incidence::setRelatedTo( Incidence *relatedTo )
+void Incidence::setRelatedTo( Incidence *incidence )
 {
-  if ( mReadOnly || d->mRelatedTo == relatedTo ) {
+  if ( mReadOnly || d->mRelatedTo == incidence ) {
     return;
   }
   if ( d->mRelatedTo ) {
     d->mRelatedTo->removeRelation( this );
   }
-  d->mRelatedTo = relatedTo;
+  d->mRelatedTo = incidence;
   if ( d->mRelatedTo ) {
     d->mRelatedTo->addRelation( this );
     if ( d->mRelatedTo->uid() != d->mRelatedToUid ) {
@@ -433,7 +452,7 @@ void Incidence::clearRecurrence()
   d->mRecurrence = 0;
 }
 
-uint Incidence::recurrenceType() const
+ushort Incidence::recurrenceType() const
 {
   if ( d->mRecurrence ) {
     return d->mRecurrence->recurrenceType();
@@ -451,10 +470,10 @@ bool Incidence::recurs() const
   }
 }
 
-bool Incidence::recursOn( const QDate &qd,
+bool Incidence::recursOn( const QDate &date,
                           const KDateTime::Spec &timeSpec ) const
 {
-  return d->mRecurrence && d->mRecurrence->recursOn( qd, timeSpec );
+  return d->mRecurrence && d->mRecurrence->recursOn( date, timeSpec );
 }
 
 bool Incidence::recursAt( const KDateTime &qdt ) const
@@ -803,17 +822,17 @@ QString Incidence::statusName( Incidence::Status status )
   }
 }
 
-void Incidence::setSecrecy( int sec )
+void Incidence::setSecrecy( Incidence::Secrecy secrecy )
 {
   if ( mReadOnly ) {
     return;
   }
 
-  d->mSecrecy = sec;
+  d->mSecrecy = secrecy;
   updated();
 }
 
-int Incidence::secrecy() const
+Incidence::Secrecy Incidence::secrecy() const
 {
   return d->mSecrecy;
 }
@@ -823,7 +842,7 @@ QString Incidence::secrecyStr() const
   return secrecyName( d->mSecrecy );
 }
 
-QString Incidence::secrecyName( int secrecy )
+QString Incidence::secrecyName( Incidence::Secrecy secrecy )
 {
   switch ( secrecy ) {
   case SecrecyPublic:

@@ -1261,7 +1261,7 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
 #endif
 
   // secrecy
-  int secrecy = Incidence::SecrecyPublic;
+  Incidence::Secrecy secrecy = Incidence::SecrecyPublic;
   if ( ( vo = isAPropertyOf( vevent, VCClassProp ) ) != 0 ) {
     s = fakeCString( vObjectUStringZValue( vo ) );
     if ( strcmp( s, "PRIVATE" ) == 0 ) {

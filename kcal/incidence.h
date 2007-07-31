@@ -19,6 +19,15 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the Incidence class.
+
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
+*/
+
 #ifndef INCIDENCE_H
 #define INCIDENCE_H
 
@@ -33,8 +42,9 @@
 namespace KCal {
 
 /**
-  This class provides the base class common to non-FreeBusy (Events, To-dos,
-  Journals) calendar components.
+  @brief
+  Provides the abstract base class common to non-FreeBusy (Events, To-dos,
+  Journals) calendar components known as incidences.
 
   Several properties are not allowed for VFREEBUSY objects (see rfc:2445),
   so they are not in IncidenceBase. The hierarchy is:
@@ -55,27 +65,40 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
 {
   public:
     /**
-      This class implements a visitor for adding an Incidence to a resource
-      supporting addEvent(), addTodo() and addJournal() calls.
+      Template for a class that implements a visitor for adding an Incidence
+      to a resource supporting addEvent(), addTodo() and addJournal() calls.
     */
+    //@cond PRIVATE
     template<class T>
     class AddVisitor : public IncidenceBase::Visitor
     {
       public:
         AddVisitor( T *r ) : mResource( r ) {}
 
-        bool visit( Event *e ) { return mResource->addEvent( e ); }
-        bool visit( Todo *t ) { return mResource->addTodo( t ); }
-        bool visit( Journal *j ) { return mResource->addJournal( j ); }
+        bool visit( Event *e )
+        {
+          return mResource->addEvent( e );
+        }
+        bool visit( Todo *t )
+        {
+          return mResource->addTodo( t );
+        }
+        bool visit( Journal *j )
+        {
+          return mResource->addJournal( j );
+        }
 
       private:
         T *mResource;
     };
+    //@endcond
 
     /**
-      This class implements a visitor for deleting an Incidence from a resource
-      supporting deleteEvent(), deleteTodo() and deleteJournal() calls.
+      Template for a class that implements a visitor for deleting an Incidence
+      from a resource supporting deleteEvent(), deleteTodo() and deleteJournal()
+      calls.
     */
+    //@cond PRIVATE
     template<class T>
     class DeleteVisitor : public IncidenceBase::Visitor
     {
@@ -101,30 +124,31 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
       private:
         T *mResource;
     };
+    //@endcond
 
     /**
-      The different types of incidence status.
+      The different types of incidence status, used for task management.
     */
     enum Status {
-      StatusNone,
-      StatusTentative,
-      StatusConfirmed,
-      StatusCompleted,
-      StatusNeedsAction,
-      StatusCanceled,
-      StatusInProcess,
-      StatusDraft,
-      StatusFinal,
-      StatusX   // indicates a non-standard status string
+      StatusNone,           /**< No status */
+      StatusTentative,      /**< Tentatively accepted the task */
+      StatusConfirmed,      /**< Accepted the task */
+      StatusCompleted,      /**< Completed the task */
+      StatusNeedsAction,    /**< No information about the task available */
+      StatusCanceled,       /**< Task canceled */
+      StatusInProcess,      /**< Work on the task is in-progress */
+      StatusDraft,          /**< Draft proposl being prepared */
+      StatusFinal,          /**< Final proposal complete */
+      StatusX               /**< a non-standard status string */
     };
 
     /**
       The different types of incidence secrecy.
     */
-    enum {
-      SecrecyPublic = 0,         /**< Not secret */
-      SecrecyPrivate = 1,        /**< Secret to the owner */
-      SecrecyConfidential = 2    /**< Secret to the owner and some others */
+    enum Secrecy {
+      SecrecyPublic=0,      /**< Not secret */
+      SecrecyPrivate=1,     /**< Secret to the owner */
+      SecrecyConfidential=2 /**< Secret to the owner and some others */
     };
 
     /**
@@ -163,10 +187,10 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     void setReadOnly( bool readonly );
 
     /**
-      Sets whether the incidence floats, i.e. has a date but no time attached
-      to it.
+      @copydoc
+      IncidenceBase::setFloats().
     */
-    void setFloats( bool f );
+    void setFloats( bool floats );
 
     /**
       Recreate event. The event is made a new unique event, but already stored
@@ -176,34 +200,46 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     void recreate();
 
     /**
-      Set creation date. It is stored as a UTC date/time.
+      Sets the incidence creation date/time. It is stored as a UTC date/time.
+
+      @param dt is the creation date/time.
+      @see created().
     */
-    void setCreated( const KDateTime & );
+    void setCreated( const KDateTime &dt );
 
     /**
-      Return time and date of creation.
+      Returns the incidence creation date/time.
+      @see setCreated().
     */
     KDateTime created() const;
 
     /**
-      Set the number of revisions this incidence has seen.
+      Sets the number of revisions this incidence has seen.
+
+      @param rev is the incidence revision number.
+      @see revision().
     */
     void setRevision( int rev );
 
     /**
-      Return the number of revisions this incidence has seen.
+      Returns the number of revisions this incidence has seen.
+      @see setRevision().
     */
     int revision() const;
 
     /**
-      Set starting date/time.
+      Sets the incidence starting date/time.
+
+      @param dt is the starting date/time.
+      @see IncidenceBase::dtStart().
     */
-    virtual void setDtStart( const KDateTime &dtStart );
+    virtual void setDtStart( const KDateTime &dt );
 
     /**
-      Return the incidence's ending date/time as a KDateTime.
+      Returns the incidence ending date/time.
+      @see IncidenceBase::dtStart().
     */
-    virtual KDateTime dtEnd() const  { return KDateTime(); }
+    virtual KDateTime dtEnd() const;
 
     /**
       @copydoc
@@ -213,112 +249,154 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
                              const KDateTime::Spec &newSpec );
 
     /**
-      Set the long description.
+      Sets the incidence description.
+
+      @param description is the incidence description string.
+      @see description().
     */
     void setDescription( const QString &description );
 
     /**
-      Return long description.
+      Returns the incidence description.
+      @see setDescription().
     */
     QString description() const;
 
     /**
-      Set short summary.
+      Sets the incidence summary.
+
+      @param summary is the incidence summary string.
+      @see summary().
     */
     void setSummary( const QString &summary );
 
     /**
-      Return short summary.
+      Returns the incidence summary.
+      @see setSummary().
     */
     QString summary() const;
 
     /**
-      Set categories.
+      Sets the incidence category list.
+
+      @param categories is a list of category strings.
+      @see setCategories( const QString &), categories().
     */
     void setCategories( const QStringList &categories );
 
     /**
-      Set categories based on a comma delimited string.
+      Sets the incidence category list based on a comma delimited string.
+
+      @param catStr is a QString containing a list of categories which
+      are delimited by a comma character.
+      @see setCategories( const QStringList &), categories().
     */
     void setCategories( const QString &catStr );
 
     /**
-      Return categories as a list of strings.
+      Returns the incidence categories as a list of strings.
+      @see setCategories( const QStringList &), setCategories( Const QString &).
     */
     QStringList categories() const;
 
     /**
-      Return categories as a comma separated string.
+      Returns the incidence categories as a comma separated string.
+      @see categories().
     */
     QString categoriesStr() const;
 
     /**
-      Point at some other event to which the event relates. This function
-      should only be used when constructing a calendar before the related
-      Incidence exists.
+      Relates another incidence to this one, by UID. This function should only
+      be used when constructing a calendar before the related incidence exists.
+
+      @param uid is a QString containing a UID for another incidence.
+      @see relatedToUid(), setRelatedTo().
     */
     void setRelatedToUid( const QString &uid );
 
     /**
-      What event does this one relate to? This function should
-      only be used when constructing a calendar before the related Incidence
-      exists.
+      Returns a UID string for the incidence that is related to this one.
+      This function should only be used when constructing a calendar before
+      the related incidence exists.
+      @see setRelatedToUid(), relatedTo().
     */
     QString relatedToUid() const;
 
     /**
-      Point at some other event to which the event relates
+      Relates another incidence to this one. This function should only be
+      used when constructing a calendar before the related incidence exists.
+
+      @param incidence is a pointer to another incidence object.
+      @see relatedTo(), setRelatedToUid().
     */
-    void setRelatedTo( Incidence *relatedTo );
+    void setRelatedTo( Incidence *incidence );
 
     /**
-      What event does this one relate to?
+      Returns a pointer for the incidence that is related to this one.
+      This function should only be used when constructing a calendar before
+      the related incidence exists.
+      @see setRelatedTo(), relatedToUid().
     */
     Incidence *relatedTo() const;
 
     /**
-      All events that are related to this event.
+      Returns a list of all incidences related to this one.
+      @see addRelation, removeRelation().
     */
     Incidence::List relations() const;
 
     /**
-      Add an event which is related to this event.
+      Adds an incidence that is related to this one.
+
+      @param incidence is a pointer to an Incidence object.
+      @see removeRelation(), relations().
     */
-    void addRelation( Incidence * );
+    void addRelation( Incidence *incidence );
 
     /**
-      Remove event that is related to this event.
+      Removes an incidence that is related to this one.
+
+      @param incidence is a pointer to an Incidence object.
+      @see addRelation(), relations().
     */
-    void removeRelation( Incidence * );
+    void removeRelation( Incidence *incidence );
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%  Recurrence-related methods
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
-      Return the recurrence rule associated with this incidence. If there is
+      Returns the recurrence rule associated with this incidence. If there is
       none, returns an appropriate (non-0) object.
     */
     Recurrence *recurrence() const;
 
-    /** Removes all recurrence and exception rules and dates. */
+    /**
+      Removes all recurrence and exception rules and dates.
+    */
     void clearRecurrence();
 
     /**
-      Forward to Recurrence::recurs().
+      @copydoc
+      Recurrence::recurs()
     */
     bool recurs() const;
-    uint recurrenceType() const;
 
     /**
-      Returns true if the date specified is one on which the incidence will
-      recur.
+      @copydoc
+      Recurrence::recurrenceType()
     */
-    virtual bool recursOn( const QDate &qd, const KDateTime::Spec &timeSpec ) const;
+    ushort recurrenceType() const;
 
     /**
-      Returns true if the date/time specified is one on which the incidence
-      will recur.
+      @copydoc
+      Recurrence::recursOn()
+    */
+    virtual bool recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const;
+
+    /**
+      @copydoc
+      Recurrence::recursAt()
     */
     bool recursAt( const KDateTime &dt ) const;
 
@@ -326,10 +404,12 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
       Calculates the start date/time for all recurrences that happen at some
       time on the given date (might start before that date, but end on or
       after the given date).
+
       @param date the date when the incidence should occur
+      @param timeSpec time specification for @p date.
       @return the start date/time of all occurrences that overlap with the
-      given date. Empty list if the incidence does not overlap with the date
-      at all.
+      given date; an empty list if the incidence does not overlap with the
+      date at all.
     */
     virtual QList<KDateTime> startDateTimesForDate(
       const QDate &date,
@@ -338,15 +418,23 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     /**
       Calculates the start date/time for all recurrences that happen at the
       given time.
-      @param datetime the date/time when the incidence should occur
+
+      @param datetime the date/time when the incidence should occur.
       @return the start date/time of all occurrences that overlap with the
-      given date/time. Empty list if the incidence does not happen at the
+      given date/time; an empty list if the incidence does not happen at the
       given time at all.
     */
-    virtual QList<KDateTime> startDateTimesForDateTime( const KDateTime &datetime ) const;
+    virtual QList<KDateTime> startDateTimesForDateTime(
+      const KDateTime &datetime ) const;
 
     /**
-      Return the end time of the occurrence if it starts at the given date/time
+      Returns the end date/time of the incidence occurrence if it starts at
+      specified date/time.
+
+      @param startDt is the specified starting date/time.
+      @return the corresponding end date/time for the occurrence; or the start
+      date/time if the end date/time is invalid; or the end date/time if
+      the start date/time is invalid.
     */
     virtual KDateTime endDateForStart( const KDateTime &startDt ) const;
 
@@ -355,32 +443,48 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
-      Add attachment.
+      Adds an attachment to the incidence.
+
+      @param attachment is a pointer to a valid Attachment object.
+      @see deleteAttachment().
     */
     void addAttachment( Attachment *attachment );
 
     /**
-      Remove and delete a specific attachment.
+      Removes the specified attachment from the incidence.  Additionally,
+      the memory used by the attachment is freed.
+
+      @param attachment is a pointer to a valid Attachment object.
+      @see addAttachment(), deleteAttachments().
     */
     void deleteAttachment( Attachment *attachment );
 
     /**
-      Remove and delete all attachments with this mime type.
+      Removes all attachments of the specified MIME type from the incidence.
+      The memory used by all the removed attachments is freed.
+
+      @param mime is a QString containing the MIME type.
+      @see deleteAttachment().
     */
     void deleteAttachments( const QString &mime );
 
     /**
-      Return list of all associated attachments.
+      Returns a list of all incidence attachments.
+      @see attachments( const QString &).
     */
     Attachment::List attachments() const;
 
     /**
-      Find a list of attachments with this mime type.
+      Returns a list of all incidence attachments with the specified MIME type.
+
+      @param mime is a QString containing the MIME type.
+      @see attachments().
     */
     Attachment::List attachments( const QString &mime ) const;
 
     /**
-      Remove and delete all attachments.
+      Removes all attachments and frees the memory used by them.
+      @see deleteAttachment( Attachment *), deleteAttachments( const QString &).
     */
     void clearAttachments();
 
@@ -389,83 +493,109 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
-      Sets secrecy status. This can be Public, Private or Confidential. See
-      separate enum.
+      Sets the incidence #Secrecy.
+
+      @param secrecy is the incidence #Secrecy to set.
+      @see secrecy(), secrecyStr().
     */
-    void setSecrecy( int );
+    void setSecrecy( Secrecy secrecy );
 
     /**
-      Return the event's secrecy.
+      Returns the incidence #Secrecy.
+      @see setSecrecy(), secrecyStr().
     */
-    int secrecy() const;
+    Secrecy secrecy() const;
 
     /**
-      Return secrecy as translated string.
+      Returns the incidence #Secrecy as translated string.
+      @see secrecy().
     */
     QString secrecyStr() const;
 
     /**
-      Return list of all available secrecy states as list of translated strings.
+      Returns a list of all available #Secrecy types as a list of translated
+      strings.
+      @see secrecyName().
     */
     static QStringList secrecyList();
 
     /**
-      Return human-readable translated name of secrecy class.
+      Returns the translated string form of a specified #Secrecy.
+
+      @param secrecy is a #Secrecy type.
+      @see secrecyList().
     */
-    static QString secrecyName( int );
+    static QString secrecyName( Secrecy secrecy );
 
     /**
-      Sets the incidence status to a standard status value. See
-      separate enum. Note that StatusX cannot be specified.
+      Sets the incidence status to a standard #Status value.
+      Note that StatusX cannot be specified.
+
+      @param status is the incidence #Status to set.
+      @see status(), setCustomStatus().
     */
     void setStatus( Status status );
 
     /**
-      Sets the incidence status to a non-standard status value.
-      @param status non-standard status string. If empty,
-      the incidence status will be set to StatusNone.
+      Sets the incidence #Status to a non-standard status value.
+
+      @param status is a non-standard status string. If empty,
+      the incidence #Status will be set to StatusNone.
+      @see setStatus(), status().
     */
     void setCustomStatus( const QString &status );
 
     /**
-      Return the event's status.
+      Returns the incidence #Status.
+      @see setStatus(), setCustomStatus(), statusStr().
     */
     Status status() const;
 
     /**
-      Return the event's status string.
+      Returns the incidence #Status as translated string.
+      @see status().
     */
     QString statusStr() const;
 
     /**
-      Return human-readable translated name of status value.
+      Returns the translated string form of a specified #Status.
+
+      @param status is a #Status type.
     */
-    static QString statusName( Status );
+    static QString statusName( Status status );
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%  Other methods
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
-      Set resources used, such as Office, Car, etc.
+      Sets a list of incidence resources. (Note: resources in this context
+      means items used by the incidence such as money, fuel, hours, etc).
+
+      @param resources is a list of resource strings.
+      @see resources().
     */
     void setResources( const QStringList &resources );
 
     /**
-      Return list of current resources.
+      Returns the incidence resources as a list of strings.
+      @see setResources().
     */
     QStringList resources() const;
 
     /**
-      Set the incidences priority. The priority has to be a value between
-      0 and 9, 0 is undefined, 1 the highest, 9 the lowest priority (decreasing
-      order).
+      Sets the incidences priority. The priority must be an integer value
+      between 0 and 9, where 0 is undefined, 1 is the highest, and 9 is the
+      lowest priority (decreasing order).
+
+      @param priority is the incidence priority to set.
+      @see priority().
     */
     void setPriority( int priority );
 
     /**
-      Return priority. The priority is a number between 1 and 9. 1 is highest
-      priority. If the priority is undefined 0 is returned.
+      Returns the incidence priority.
+      @see setPriority().
     */
     int priority() const;
 
@@ -474,32 +604,39 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
-      All alarms that are associated with this incidence.
+      Returns a list of all incidence alarms.
     */
     const Alarm::List &alarms() const;
 
     /**
-      Create a new alarm which is associated with this incidence.
+      Create a new incidence alarm.
     */
     Alarm *newAlarm();
 
     /**
-      Add an alarm which is associated with this incidence.
+      Adds an alarm to the incidence.
+
+      @param alarm is a pointer to a valid Alarm object.
+      @see removeAlarm().
     */
-    void addAlarm( Alarm * );
+    void addAlarm( Alarm *alarm );
 
     /**
-      Remove an alarm that is associated with this incidence.
+      Removes the specified alarm from the incidence.
+
+      @param alarm is a pointer to a valid Alarm object.
+      @see addAlarm().
     */
-    void removeAlarm( Alarm * );
+    void removeAlarm( Alarm *alarm );
 
     /**
-      Remove all alarms that are associated with this incidence.
+      Removes all alarms.
+      @see removeAlarm().
     */
     void clearAlarms();
 
     /**
-      Return whether any alarm associated with this incidence is enabled.
+      Returns true if any of the incidence alarms are enabled; false otherwise.
     */
     bool isAlarmEnabled() const;
 
@@ -508,29 +645,37 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
-      Set the event's/todo's location. Do _not_ use it with journal.
+      Sets the incidence location. Do _not_ use with journals.
+
+      @param location is the incidence location string.
+      @see location().
     */
     void setLocation( const QString &location );
 
     /**
-      Return the event's/todo's location. Do _not_ use it with journal.
+      Returns the incidence location. Do _not_ use with journals.
+      @see setLocation().
     */
     QString location() const;
 
     /**
-      Set the event's/todo's scheduling ID. Does not make sense for journals.
+      Set the incidence scheduling ID. Do _not_ use with journals.
       This is used for accepted invitations as the place to store the UID
       of the invitation. It is later used again if updates to the
       invitation comes in.
       If we did not set a new UID on incidences from invitations, we can
       end up with more than one resource having events with the same UID,
       if you have access to other peoples resources.
+
+      @param sid is a QString containing the scheduling ID.
+      @see schedulingID().
     */
     void setSchedulingID( const QString &sid );
 
     /**
-      Return the event's/todo's scheduling ID. Does not make sense for journals
-      If this is not set, it will return uid().
+      Returns the incidence scheduling ID. Do _not_ use with journals.
+      If a scheduling ID is not set, then return the incidence UID.
+      @see setSchedulingID().
     */
     QString schedulingID() const;
 
@@ -538,8 +683,10 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
       Observer interface for the recurrence class. If the recurrence is
       changed, this method will be called for the incidence the recurrence
       object belongs to.
+
+      @param recurrence is a pointer to a valid Recurrence object.
     */
-    virtual void recurrenceUpdated( Recurrence * );
+    virtual void recurrenceUpdated( Recurrence *recurrence );
 
     /**
       Compare this with @p incidence for equality.
@@ -552,9 +699,12 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     /**
       Returns the end date/time of the base incidence (e.g. due date/time for
       to-dos, end date/time for events).
-      This method needs to be reimplemented by derived classes.
+      This method must be reimplemented by derived classes.
     */
-    virtual KDateTime endDateRecurrenceBase() const { return dtStart(); }
+    virtual KDateTime endDateRecurrenceBase() const
+    {
+      return dtStart();
+    }
 
   private:
     //@cond PRIVATE

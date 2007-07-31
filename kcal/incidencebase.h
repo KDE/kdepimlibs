@@ -80,7 +80,7 @@ class FreeBusy;
 
 /**
   @brief
-  An abstract class that provides a common base for all calendar @ref incidence
+  An abstract class that provides a common base for all calendar incidence
   classes.
 
   define: floats
@@ -120,24 +120,28 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
         /**
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on an Event object.
+          @param event is a pointer to a valid Event object.
         */
         virtual bool visit( Event *event );
 
         /**
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on a Todo object.
+          @param event is a pointer to a valid Todo object.
         */
         virtual bool visit( Todo *todo );
 
         /**
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on an Journal object.
+          @param event is a pointer to a valid Journal object.
         */
         virtual bool visit( Journal *journal );
 
         /**
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on a FreeBusy object.
+          @param event is a pointer to a valid FreeBusy object.
         */
         virtual bool visit( FreeBusy *freebusy );
 
@@ -230,7 +234,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     QString uid() const;
 
     /**
-      >Returns the uri for the incidence, of form urn:x-ical:\<uid\>
+      Returns the uri for the incidence, of form urn:x-ical:\<uid\>
     */
     KUrl uri() const;
 
