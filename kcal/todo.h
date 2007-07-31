@@ -100,24 +100,33 @@ class KCAL_EXPORT Todo : public Incidence
       settings.
 
       @param shortfmt If set, use short date format; else use long format.
+      @param spec If set, return the time in the given spec, else use the
+      todo's current spec.
     */
-    QString dtDueTimeStr( bool shortfmt = true ) const;
+    QString dtDueTimeStr( bool shortfmt = true,
+                          const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns due date as string formatted according to the user's locale
       settings.
 
       @param shortfmt If set, use short date format; else use long format.
+      @param spec If set, return the date in the given spec, else use the
+      todo's current spec.
     */
-    QString dtDueDateStr( bool shortfmt = true ) const;
+    QString dtDueDateStr( bool shortfmt = true,
+                          const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns due date and time as string formatted according to the user's
       locale settings.
 
       @param shortfmt If set, use short date format; else use long format.
+      @param spec If set, return the date/time in the given spec, else use
+      the todo's current spec.
     */
-    QString dtDueStr( bool shortfmt = true ) const;
+    QString dtDueStr( bool shortfmt = true,
+                      const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns true if the todo has a due date, otherwise return false.

@@ -127,21 +127,21 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
         /**
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on a Todo object.
-          @param event is a pointer to a valid Todo object.
+          @param todo is a pointer to a valid Todo object.
         */
         virtual bool visit( Todo *todo );
 
         /**
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on an Journal object.
-          @param event is a pointer to a valid Journal object.
+          @param journal is a pointer to a valid Journal object.
         */
         virtual bool visit( Journal *journal );
 
         /**
           Reimplement this function in your concrete subclass of
           IncidenceBase::Visitor to perform actions on a FreeBusy object.
-          @param event is a pointer to a valid FreeBusy object.
+          @param freebusy is a pointer to a valid FreeBusy object.
         */
         virtual bool visit( FreeBusy *freebusy );
 
@@ -193,7 +193,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     /**
       Compares this with IncidenceBase @p ib for equality.
 
-      @p ib is the IncidenceBase to compare.
+      @param ib is the IncidenceBase to compare.
     */
     bool operator==( const IncidenceBase &ib ) const;
 
@@ -305,26 +305,38 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     /**
       Returns an incidence's starting time as a string formatted according
       to the user's locale settings.
+
       @param shortfmt If set to true, use short date format, if set to false use
-                      long format.
+      long format.
+      @param spec If set, return the time in the given spec, else use the
+      incidence's current spec.
     */
-    virtual QString dtStartTimeStr( bool shortfmt = true ) const;
+    virtual QString dtStartTimeStr( bool shortfmt = true,
+                                    const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns an incidence's starting date as a string formatted according
       to the user's locale settings.
+
       @param shortfmt If set to true, use short date format, if set to false use
-                      long format.
+      long format.
+      @param spec If set, return the date in the given spec, else use the
+      incidence's current spec.
     */
-    virtual QString dtStartDateStr( bool shortfmt = true ) const;
+    virtual QString dtStartDateStr( bool shortfmt = true,
+                                    const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns an incidence's starting date and time as a string formatted
       according to the user's locale settings.
+
       @param shortfmt If set to true, use short date format, if set to false use
-                      long format.
+      long format.
+      @param spec If set, return the date and time in the given spec, else use
+      the incidence's current spec.
     */
-    virtual QString dtStartStr( bool shortfmt = true ) const;
+    virtual QString dtStartStr( bool shortfmt = true,
+                                const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Sets the incidence duration.
@@ -394,31 +406,31 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
                              const KDateTime::Spec &newSpec );
 
     /**
-      Add a comment to this incidence.
+      Adds a comment to thieincidence. Does not add a linefeed character; simply
+      appends the text as specified.
 
-      Does not add a linefeed character.  Just appends the text as passed in.
-
-      @param comment  The comment to add.
+      @param comment is the QString containing the comment to add.
+      @see removeComment().
     */
     void addComment( const QString &comment );
 
     /**
-      Remove a comment from the incidence.
+      Removes a comment from the incidence. Removes the first comment whose
+      string is an exact match for the specified string in @p comment.
 
-      Removes first comment whose string is an exact match for the string
-      passed in.
-
+      @param comment is the QString containing the comment to remove.
       @return true if match found, false otherwise.
+      @see addComment().
      */
     bool removeComment( const QString &comment );
 
     /**
-      Deletes all comments associated with this incidence.
+      Deletes all incidence comments.
     */
     void clearComments();
 
     /**
-      Returns all comments associated with this incidence.
+      Returns all incidence comments as a list of strings.
     */
     QStringList comments() const;
 
@@ -432,33 +444,34 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     void addAttendee( Attendee *attendee, bool doUpdate = true );
 
     /**
-      Remove all Attendees.
+      Removes all attendees from the incidence.
     */
     void clearAttendees();
 
     /**
-      Returns list of attendees.
+      Returns a list of incidence attendees.
     */
     const Attendee::List &attendees() const;
 
     /**
-      Returns number of attendees.
+      Returns the number of incidence attendees.
     */
     int attendeeCount() const;
 
     /**
-      Returns the Attendee with this email address.
+      Returns the attendee with this email address.
     */
     Attendee *attendeeByMail( const QString &email ) const;
 
     /**
-      Returns first Attendee with one of the given email addresses.
+      Returns the first incidence attendee with one of the specified
+      email addresses.
     */
     Attendee *attendeeByMails( const QStringList &emails,
                                const QString &email = QString() ) const;
 
     /**
-      Returns attendee with given uid.
+      Returns the incidence attendee with given uid.
     */
     Attendee *attendeeByUid( const QString &uid ) const;
 

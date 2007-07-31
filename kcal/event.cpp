@@ -132,23 +132,39 @@ QDate Event::dateEnd() const
   }
 }
 
-QString Event::dtEndTimeStr( bool shortfmt ) const
+QString Event::dtEndTimeStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
-  return KGlobal::locale()->formatTime( dtEnd().time(), shortfmt );
+  if ( spec.isValid() ) {
+    return KGlobal::locale()->formatTime( dtEnd().toTimeSpec( spec ).time(), shortfmt );
+  } else {
+    return KGlobal::locale()->formatTime( dtEnd().time(), shortfmt );
+  }
 }
 
-QString Event::dtEndDateStr( bool shortfmt ) const
+QString Event::dtEndDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
-  return
-    KGlobal::locale()->formatDate( dtEnd().date(),
-                                   ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  if ( spec.isValid() ) {
+    return KGlobal::locale()->formatDate(
+      dtEnd().toTimeSpec( spec ).date(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  } else {
+    return KGlobal::locale()->formatDate(
+      dtEnd().date(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  }
 }
 
-QString Event::dtEndStr( bool shortfmt ) const
+QString Event::dtEndStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
-  return
-    KGlobal::locale()->formatDateTime( dtEnd().dateTime(),
-                                       ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  if ( spec.isValid() ) {
+    return KGlobal::locale()->formatDateTime(
+      dtEnd().toTimeSpec( spec ).dateTime(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  } else {
+    return KGlobal::locale()->formatDateTime(
+      dtEnd().dateTime(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  }
 }
 
 void Event::setHasEndDate( bool b )

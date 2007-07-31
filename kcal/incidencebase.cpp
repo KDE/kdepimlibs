@@ -214,21 +214,37 @@ KDateTime IncidenceBase::dtStart() const
   return d->mDtStart;
 }
 
-QString IncidenceBase::dtStartTimeStr( bool shortfmt ) const
+QString IncidenceBase::dtStartTimeStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
-  return KGlobal::locale()->formatTime( dtStart().time(), shortfmt );
+  if ( spec.isValid() ) {
+    return KGlobal::locale()->formatTime( dtStart().toTimeSpec( spec ).time(), shortfmt );
+  } else {
+    return KGlobal::locale()->formatTime( dtStart().time(), shortfmt );
+  }
 }
 
-QString IncidenceBase::dtStartDateStr( bool shortfmt ) const
+QString IncidenceBase::dtStartDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
-  return KGlobal::locale()->formatDate(
-    dtStart().date(), ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  if ( spec.isValid() ) {
+    return KGlobal::locale()->formatDate(
+      dtStart().toTimeSpec( spec ).date(), ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  } else {
+    return KGlobal::locale()->formatDate(
+      dtStart().date(), ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  }
 }
 
-QString IncidenceBase::dtStartStr( bool shortfmt ) const
+QString IncidenceBase::dtStartStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
-  return KGlobal::locale()->formatDateTime(
-    dtStart().dateTime(), ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  if ( spec.isValid() ) {
+    return KGlobal::locale()->formatDateTime(
+      dtStart().toTimeSpec( spec ).dateTime(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  } else {
+    return KGlobal::locale()->formatDateTime(
+      dtStart().dateTime(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  }
 }
 
 bool IncidenceBase::floats() const

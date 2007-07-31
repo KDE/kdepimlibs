@@ -156,23 +156,39 @@ KDateTime Todo::dtDue( bool first ) const
   return d->mDtDue;
 }
 
-QString Todo::dtDueTimeStr( bool shortfmt ) const
+QString Todo::dtDueTimeStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
-  return KGlobal::locale()->formatTime( dtDue( !recurs() ).time(), shortfmt );
+  if ( spec.isValid() ) {
+    return KGlobal::locale()->formatTime( dtDue( !recurs() ).toTimeSpec( spec ).time(), shortfmt );
+  } else {
+    return KGlobal::locale()->formatTime( dtDue( !recurs() ).time(), shortfmt );
+  }
 }
 
-QString Todo::dtDueDateStr( bool shortfmt ) const
+QString Todo::dtDueDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
-  return
-    KGlobal::locale()->formatDate( dtDue( !recurs() ).date(),
-                                  ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  if ( spec.isValid() ) {
+    return KGlobal::locale()->formatDate(
+      dtDue( !recurs() ).toTimeSpec( spec ).date(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  } else {
+    return KGlobal::locale()->formatDate(
+      dtDue( !recurs() ).date(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  }
 }
 
-QString Todo::dtDueStr( bool shortfmt ) const
+QString Todo::dtDueStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
-  return
-    KGlobal::locale()->formatDateTime( dtDue( !recurs() ).dateTime(),
-                                       ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  if ( spec.isValid() ) {
+    return KGlobal::locale()->formatDateTime(
+      dtDue( !recurs() ).toTimeSpec( spec ).dateTime(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  } else {
+    return  KGlobal::locale()->formatDateTime(
+      dtDue( !recurs() ).dateTime(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  }
 }
 
 bool Todo::hasDueDate() const

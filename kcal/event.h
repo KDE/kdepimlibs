@@ -108,23 +108,35 @@ class KCAL_EXPORT Event : public Incidence
     /**
       Returns the event end time as a string formatted according to the
       user's locale settings.
+
       @param shortfmt If set, use short date format; else use long format.
+      @param spec If set, return the time in the given spec, else use the
+      event's current spec.
     */
-    QString dtEndTimeStr( bool shortfmt = true ) const;
+    QString dtEndTimeStr( bool shortfmt = true,
+                          const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns the event end date as a string formatted according to the
       user's locale settings.
+
       @param shortfmt If set, use short date format; else use long format.
+      @param spec If set, return the date in the given spec, else use the
+      event's current spec.
     */
-    QString dtEndDateStr( bool shortfmt = true ) const;
+    QString dtEndDateStr( bool shortfmt = true,
+                          const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns the event end date/time as string formatted according to the
       user's locale settings.
+
       @param shortfmt If set, use short date format; else use long format.
+      @param spec If set, return the date/time in the given spec, else use
+      the event's current spec.
     */
-    QString dtEndStr( bool shortfmt = true ) const;
+    QString dtEndStr( bool shortfmt = true,
+                      const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Sets whether the event has an end date/time.
