@@ -111,7 +111,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       on the concrete types of calendar components, without changing the
       calendar component classes.
     */
-    class Visitor
+    class KCAL_EXPORT Visitor
     {
       public:
         /** Destruct Incidence::Visitor */
