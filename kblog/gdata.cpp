@@ -179,9 +179,12 @@ void GData::modifyPosting( KBlog::BlogPosting* posting )
 void GData::createPosting( KBlog::BlogPosting* posting )
 {
   Q_D(GData);
-  Q_UNUSED( posting );
     kDebug() << "createPosting()" << endl;
-    d->authenticate();
+    if ( d->authenticate().isEmpty() ){
+      kDebug(5323) << "Authentication failed." << endl;
+      emit error( Atom, "Authentication failed." );
+      return;
+    }
 
     QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
     atomMarkup += "<title type='text'>"+posting->title() +"</title>";
@@ -208,6 +211,8 @@ void GData::createPosting( KBlog::BlogPosting* posting )
         KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default" ),
         postData, false );
 
+    d->mCreatePostingMap[ job ] = posting;
+
     if ( !job ) {
       kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/"
           << blogId() <<"/posts/default" << endl;
@@ -215,11 +220,12 @@ void GData::createPosting( KBlog::BlogPosting* posting )
 
     job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
     job->addMetaData( "ConnectTimeout", "50" );
+    job->addMetaData( "Authorization:", "GoogleLogin auth=" + d->mAuthenticationString );
 
-//     connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-//              d, SLOT( slotData( KIO::Job *, const QByteArray & ) ) );
-//     connect( job, SIGNAL( result( KJob * ) ),
-//              d, SLOT( slotCreatePosting( KJob * ) ) );
+    connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+             this, SLOT( slotCreatePostingData( KIO::Job *, const QByteArray & ) ) );
+    connect( job, SIGNAL( result( KJob * ) ),
+             this, SLOT( slotCreatePosting( KJob * ) ) );
 }
 
 void GData::removePosting( KBlog::BlogPosting *posting )
@@ -464,9 +470,19 @@ void GDataPrivate::slotCreatePosting( KIO::Job *job )
     return;
   }
 
-  const QString data = QString::fromUtf8( mCreatePostingBuffer[ job ].data(), mCreatePostingBuffer[ job ].size() );
+  KBlog::BlogPosting* posting = mCreatePostingMap[ job ];
+  mCreatePostingMap.remove( job );
 
+  const QString data = QString::fromUtf8( mCreatePostingBuffer[ job ].data(), mCreatePostingBuffer[ job ].size() );
   kDebug(5323) << "Response: " << data << endl;
+  QRegExp rx( "<id>(\\d+)</id>" ); //FIXME check that and do better handling
+  if(! rx.indexIn( data ) ){
+    kDebug(5323) << "Could not regexp the id out of the result." << endl;
+    return;
+  }
+  posting->setPostingId( rx.cap(1) );
+  posting->setStatus( BlogPosting::Created );
+  emit q->createdPosting( posting );
 }
 
 #include "gdata.moc"

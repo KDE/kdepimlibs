@@ -45,6 +45,7 @@ class GDataPrivate : public BlogPrivate
     QString mAuthenticationString;
     QDateTime mAuthenticationTime;
     QMap<KIO::Job*,QByteArray> mCreatePostingBuffer;
+    QMap<KIO::Job*,KBlog::BlogPosting*> mCreatePostingMap;
     QMap<KIO::Job*,QByteArray> mFetchProfileIdBuffer;
     QMap<Syndication::Loader*,KBlog::BlogPosting*> mFetchPostingsMap;
     QString mFullName;
