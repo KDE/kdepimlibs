@@ -322,7 +322,7 @@ void GDataPrivate::slotListBlogs(
     return;
   }
 
-  QMap <QString,QString> blogMap;
+  QMap <QString,QMap<QString,QString> > blogMap;
 
   QList<Syndication::ItemPtr> items = feed->items();
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
@@ -331,7 +331,8 @@ void GDataPrivate::slotListBlogs(
       QRegExp rx( "blog-(\\d+)" );
       if( rx.indexIn( ( *it )->id() )!=-1 ){
         kDebug(5323)<<"QRegExp rx( 'blog-(\\d+)' matches "<< rx.cap(1) << endl;
-        blogMap[ rx.cap(1) ] = ( *it )->title();
+        blogMap[ rx.cap(1) ]["title"] = ( *it )->title();
+        blogMap[ rx.cap(1) ]["summary"] = ( *it )->description(); //TODO fix/add more
       }
       else{
         emit q->error( GData::Other,
@@ -341,7 +342,7 @@ void GDataPrivate::slotListBlogs(
       }
 
     }
-    emit q->listedBlogs( blogMap ); //FIXME set the data
+    emit q->listedBlogs( blogMap );
     kDebug(5323) << "Emitting listedBlogs(); " << endl;
 }
 
