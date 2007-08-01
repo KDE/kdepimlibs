@@ -49,7 +49,7 @@ void MovableType::fetchPosting( KBlog::BlogPosting *posting )
 
 QString MovableType::interfaceName() const
 {
-  return QLatin1String( "Movable Type " );
+  return QLatin1String( "Movable Type" );
 }
 
 void MovableType::listRecentPostings( int number )

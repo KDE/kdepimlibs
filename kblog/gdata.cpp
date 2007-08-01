@@ -54,7 +54,7 @@ GData::~GData()
 
 QString GData::interfaceName() const
 {
-  return QLatin1String( "GData " );
+  return QLatin1String( "Google Blogger Data" );
 }
 
 QString GData::fullName() const
@@ -352,7 +352,7 @@ void GDataPrivate::slotListRecentPostings(
   }
   kDebug(5323) << "Emitting listRecentPostingsFinished()" << endl;
 //   emit q->listRecentPostingsFinished();
-  
+
 }
 
 void GDataPrivate::slotFetchPosting(

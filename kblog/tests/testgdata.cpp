@@ -90,7 +90,7 @@ void TestGData::testValidity()
   QVERIFY( b->username() == "christian_weilbach@web.de" );
   QVERIFY( b->profileId() == "11235141638164909615" );
   QVERIFY( b->password() == "Wo ist Hans?" );
-  QVERIFY( b->interfaceName() == "GData " );
+  QVERIFY( b->interfaceName() == "Google Blogger Data" );
   QVERIFY( b->timeZone().name() == QString( "UTC" ) );
 
   BlogPosting *p = new BlogPosting();

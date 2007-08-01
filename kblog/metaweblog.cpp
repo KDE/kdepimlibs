@@ -54,7 +54,7 @@ MetaWeblog::~MetaWeblog()
 
 QString MetaWeblog::interfaceName() const
 {
-  return QLatin1String( "MetaWeblog " );
+  return QLatin1String( "MetaWeblog" );
 }
 
 void MetaWeblog::listRecentPostings( int number )
@@ -264,7 +264,7 @@ void MetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
 {
   Q_Q(MetaWeblog);
 
-  int count = id.toInt(); 
+  int count = id.toInt();
 
   QList <BlogPosting*> fetchedPostingList;
 

@@ -108,7 +108,7 @@ void LiveJournal::generateCookie( const GenerateCookieOptions& options )
 
 QString LiveJournal::interfaceName() const
 {
-  return QLatin1String( "Movable Type " );
+  return QLatin1String( "LiveJournal" );
 }
 
 void LiveJournal::fetchUserInfo()

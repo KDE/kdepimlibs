@@ -92,7 +92,7 @@ void TestMetaWeblog::testValidity()
   QVERIFY( b->blogId() == "1" );
   QVERIFY( b->username() == "socapitest" );
   QVERIFY( b->password() == "k0nt4ctbl0g" );
-  QVERIFY( b->interfaceName() == "MetaWeblog " );
+  QVERIFY( b->interfaceName() == "MetaWeblog" );
   QVERIFY( b->timeZone().name() == QString( "UTC" ) );
 
   BlogPosting *p = new BlogPosting();
