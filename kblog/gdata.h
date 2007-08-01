@@ -23,7 +23,7 @@
 #define KBLOG_GDATA_H
 
 #include <kblog/blog.h>
-#include <KDateTime>
+#include <kdatetime.h>
 
 class KUrl;
 
