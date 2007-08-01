@@ -35,7 +35,9 @@ Blog::Blog( const KUrl &server, QObject *parent ) :
   QObject( parent ), d_ptr( new BlogPrivate )
 {
   Q_UNUSED( server );
+  Q_D(Blog);
   d_ptr->q_ptr = this;
+  d->mUserAgent = "KDE-KBlog/KDE_VERSION";
 }
 
 Blog::Blog( const KUrl &server, BlogPrivate &dd, QObject *parent ) :
@@ -61,9 +63,9 @@ void Blog::setUserAgent( const QString &applicationName,
 {
   Q_D(Blog);
   if ( !applicationName.isEmpty() && !applicationVersion.isEmpty() ) {
-    QString userAgent = "(" + applicationName + "/" + applicationVersion
+    QString userAgent = '(' + applicationName + '/' + applicationVersion
         + ") KDE-KBlog/KDE_VERSION";
-    d->mUserAgent = "userAgent";
+    d->mUserAgent = userAgent;
   }
 }
 
