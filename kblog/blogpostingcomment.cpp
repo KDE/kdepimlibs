@@ -31,74 +31,105 @@ namespace KBlog {
 
 BlogPostingComment::BlogPostingComment(
     const QString &postingId, QObject* parent ) :
-    QObject( parent ), d( new BlogPostingCommentPrivate )
+    QObject( parent ), d_ptr( new BlogPostingCommentPrivate )
 {
-  d->mStatus = New;
+  d_func()->mStatus = New;
 }
 
 BlogPostingComment::~BlogPostingComment()
 {
-  delete d;
+  delete d_ptr;
 }
 
 QString BlogPostingComment::title() const
 {
-  return d->mTitle;
+  return d_func()->mTitle;
 }
 
 void BlogPostingComment::setTitle( const QString &title )
 {
-  d->mTitle = title;
+  d_func()->mTitle = title;
 }
 
 QString BlogPostingComment::content() const
 {
-  return d->mContent;
+  return d_func()->mContent;
 }
 
 void BlogPostingComment::setContent( const QString &content )
 {
-  d->mContent = content;
+  d_func()->mContent = content;
+}
+
+QString BlogPostingComment::commentId() const
+{
+  return d_func()->mCommentId;
+}
+
+void BlogPostingComment::setCommentId( const QString &commentId )
+{
+  d_func()->mCommentId = commentId;
 }
 
 QString BlogPostingComment::email() const
 {
-  return d->mEmail;
+  return d_func()->mEmail;
 }
 
 void BlogPostingComment::setEmail( const QString &email )
 {
-  d->mEmail = email;
+  d_func()->mEmail = email;
 }
 
 KUrl BlogPostingComment::url() const
 {
-  return d->mUrl;
+  return d_func()->mUrl;
 }
 
 void BlogPostingComment::setUrl( const KUrl &url )
 {
-  d->mUrl = url;
+  d_func()->mUrl = url;
 }
+
+KDateTime BlogPostingComment::modificationDateTime() const
+{
+  return d_func()->mModificationDateTime;
+}
+
+void BlogPostingComment::setModificationDateTime( const KDateTime &datetime )
+{
+  d_func()->mModificationDateTime=datetime;
+}
+
+KDateTime BlogPostingComment::creationDateTime() const
+{
+  return d_func()->mCreationDateTime;
+}
+
+void BlogPostingComment::setCreationDateTime( const KDateTime &datetime )
+{
+  d_func()->mCreationDateTime= datetime;
+}
+
 
 BlogPostingComment::Status BlogPostingComment::status() const
 {
-  return d->mStatus;
+  return d_func()->mStatus;
 }
 
 void BlogPostingComment::setStatus( BlogPostingComment::Status status )
 {
-  d->mStatus = status;
+  d_func()->mStatus = status;
 }
 
 QString BlogPostingComment::error() const
 {
-  return d->mError;
+  return d_func()->mError;
 }
 
 void BlogPostingComment::setError( const QString &error )
 {
-  d->mError = error;
+  d_func()->mError = error;
 }
 
 } // namespace KBlog

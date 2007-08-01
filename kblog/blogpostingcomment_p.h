@@ -27,19 +27,23 @@
 #include <KDateTime>
 #include <KUrl>
 
-using namespace KBlog;
+namespace KBlog{
 
-class BlogPostingComment::BlogPostingCommentPrivate
+class BlogPostingCommentPrivate
 {
   public:
-    friend class Blog;
+    BlogPostingComment *q_ptr;
     QString mTitle;
     QString mContent;
     QString mEmail;
+    QString mCommentId;
     KUrl mUrl;
     QString mError;
-    Status mStatus;
-    KDateTime mDateTime;
+    BlogPostingComment::Status mStatus;
+    KDateTime mModificationDateTime;
+    KDateTime mCreationDateTime;
+    Q_DECLARE_PUBLIC(BlogPostingComment)
 };
 
+} // namespace KBlog
 #endif

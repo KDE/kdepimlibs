@@ -105,7 +105,7 @@ void GData::listBlogs()
       + QString( "/blogs" ) );
 }
 
-void GData::listRecentPostings( const QString &label, const int number, 
+void GData::listRecentPostings( const QStringList &labels, const int number, 
                 const KDateTime &minTime, const KDateTime &maxTime, 
                 const listRecentPostingsOptions &opts )
 {
@@ -364,7 +364,44 @@ void GDataPrivate::slotListAllComments(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status )
 {
+  Q_Q(GData);
+  Q_UNUSED( loader );
 
+  if (status != Syndication::Success){
+    emit q->error( GData::Atom, i18n( "Could not get comments." ) );
+    return;
+  }
+
+  QList<KBlog::BlogPostingComment*> commentList;
+
+  QList<Syndication::ItemPtr> items = feed->items();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
+  for( ; it!=end; ++it ){
+      BlogPostingComment* comment = new BlogPostingComment;
+      QRegExp rx( "post-(\\d+)" );
+      if( rx.indexIn( ( *it )->id() )==-1 ){
+        kDebug(5323)<<
+        "QRegExp rx( 'post-(\\d+)' does not match "<< rx.cap(1) << endl;
+        emit q->error( GData::Other,
+        i18n( "Could not regexp the comment id path." ) );
+      }
+      else {
+        comment->setCommentId( rx.cap(1) );
+      }
+
+      kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
+      comment->setTitle( ( *it )->title() );
+      comment->setContent( ( *it )->content() );
+//       FIXME: assuming UTC for now
+      comment->setCreationDateTime( KDateTime( QDateTime::fromTime_t(
+  ( *it )->datePublished() ), KDateTime::Spec::UTC() ) );
+      comment->setModificationDateTime( KDateTime( QDateTime::fromTime_t(
+  ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
+      commentList.append( comment );
+  }
+  kDebug(5323) << "Emitting listedRecentPostings()" << endl;
+  emit q->listedAllComments( commentList );
 }
 
 void GDataPrivate::slotListRecentPostings(
@@ -386,16 +423,17 @@ void GDataPrivate::slotListRecentPostings(
   for( ; it!=end; ++it ){
       BlogPosting* posting = new BlogPosting;
       QRegExp rx( "post-(\\d+)" );
-      if( rx.indexIn( ( *it )->id() )==-1 ){
+      if( rx.indexIn( ( *it )->id() ) ==-1 ){
         kDebug(5323)<<
         "QRegExp rx( 'post-(\\d+)' does not match "<< rx.cap(1) << endl;
         emit q->error( GData::Other,
         i18n( "Could not regexp the posting id path." ) );
-        return;
+      }
+      else {
+        posting->setPostingId( rx.cap(1) );
       }
 
       kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
-      posting->setPostingId( rx.cap(1) );
       posting->setTitle( ( *it )->title() );
       posting->setContent( ( *it )->content() );
 //       FIXME: assuming UTC for now

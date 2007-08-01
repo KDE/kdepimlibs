@@ -25,6 +25,8 @@
 #include <kblog/blog.h>
 #include <kdatetime.h>
 
+#include <QtCore/QStringList>
+
 class KUrl;
 
 /**
@@ -145,7 +147,7 @@ class KBLOG_EXPORT GData : public Blog
     };
     Q_DECLARE_FLAGS(listRecentPostingsOptions,
                                         listRecentPostingsOption)
-    virtual void listRecentPostings( const QString &label=QString(), const int number=0, 
+    virtual void listRecentPostings( const QStringList &label=QStringList(), const int number=0, 
                 const KDateTime &minTime=KDateTime(), 
                 const KDateTime &maxTime=KDateTime(), 
                 const listRecentPostingsOptions &opts = updated );
@@ -198,6 +200,8 @@ class KBLOG_EXPORT GData : public Blog
     void listedBlogs( const QMap<QString,QMap<QString,QString> >& blogsInfo );
 
     void listedAllComments( const QList<KBlog::BlogPostingComment*> &comments );
+
+    void listedComments( const QList<KBlog::BlogPostingComment*> &comments, KBlog::BlogPosting *posting );
 
     void fetchedProfileId( const QString &profileId );
 

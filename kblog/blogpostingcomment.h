@@ -33,6 +33,7 @@ class KUrl;
 
 namespace KBlog {
 
+    class BlogPostingCommentPrivate;
 /**
   @brief
   A class that represents a blog comment on the blog post.
@@ -96,6 +97,9 @@ class KBLOG_EXPORT BlogPostingComment : public QObject
   */
   void setContent( const QString &content );
 
+  QString commentId() const;
+  void setCommentId( const QString& id );
+
   /**
     Returns the email.
 
@@ -134,7 +138,7 @@ class KBLOG_EXPORT BlogPostingComment : public QObject
     @return dateTime
     @see setDateTime()
   */
-  KDateTime dateTime() const;
+  KDateTime modificationDateTime() const;
 
   /**
     Sets the creation time.
@@ -142,9 +146,25 @@ class KBLOG_EXPORT BlogPostingComment : public QObject
     @param datetime set the time the comment has been created.
     @see creationTime()
   */
-  void setDateTime( const KDateTime &datetime );
+  void setModificationDateTime( const KDateTime &datetime );
 
-  enum Status { New, Fetched, Created, Modified, Deleted, Error };
+  /**
+    Returns the creation date time.
+
+    @return dateTime
+    @see setDateTime()
+  */
+  KDateTime creationDateTime() const;
+
+  /**
+    Sets the creation time.
+
+    @param datetime set the time the comment has been created.
+    @see creationTime()
+  */
+  void setCreationDateTime( const KDateTime &datetime );
+
+  enum Status { New, Fetched, Created, Modified, Removed, Error };
 
   Status status() const;
 
@@ -157,9 +177,11 @@ class KBLOG_EXPORT BlogPostingComment : public QObject
   Q_SIGNALS:
     void statusChanged( KBlog::BlogPostingComment::Status status );
 
+  protected:
+    BlogPostingComment( BlogPostingCommentPrivate &dd, QObject *parent = 0 );
   private:
-    class BlogPostingCommentPrivate;
-    BlogPostingCommentPrivate *const d;
+    BlogPostingCommentPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(BlogPostingComment)
 };
 
 
