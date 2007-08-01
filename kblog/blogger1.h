@@ -155,15 +155,15 @@ class KBLOG_EXPORT Blogger1 : public Blog
     */
     void listedBlogs( const QMap<QString,QString>& blogsInfo );
 
-    void fetchedUserInfo( const QString &nickname, const QString &userId,
-                                       const QString &usr, const QString &email,
-                                       const QString &lastname, const QString &fistname );
+    void fetchedUserInfo( const QMap<QString,QString>& userInfo );
 
   protected:
     Blogger1( const KUrl &server, Blogger1Private &dd, QObject *parent = 0 );
 
   private:
     Q_DECLARE_PRIVATE(Blogger1)
+    Q_PRIVATE_SLOT(d_func(), void slotFetchUserInfo(
+                   const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotListBlogs(
                    const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotListRecentPostings(

@@ -23,9 +23,9 @@
 #define KBLOG_GDATA_H
 
 #include <kblog/blog.h>
+#include <KDateTime>
 
 class KUrl;
-
 
 /**
   @file
@@ -129,13 +129,27 @@ class KBLOG_EXPORT GData : public Blog
 
     virtual void listComments( KBlog::BlogPosting *posting );
 
+    virtual void listAllComments();
+
     /**
         List recent postings on the server..
         @see     void listedPosting( KBlog::BlogPosting &posting )
         @see     void fetchedPosting( KBlog::BlogPosting &posting )
         @see     void listRecentPostingsFinished()
     */
-    void listRecentPostings( int number );
+    void listRecentPostings( const int number );
+
+    enum listRecentPostingsOption {
+      updated = 0x01,
+      published = 0x02
+    };
+    Q_DECLARE_FLAGS(listRecentPostingsOptions,
+                                        listRecentPostingsOption)
+    virtual void listRecentPostings( const QString &label=QString(), const int number=0, 
+                const KDateTime &minTime=KDateTime(), 
+                const KDateTime &maxTime=KDateTime(), 
+                const listRecentPostingsOptions &opts = updated );
+
 
     /**
         Fetch the Posting with postingId.
@@ -170,6 +184,8 @@ class KBLOG_EXPORT GData : public Blog
     void removePosting( KBlog::BlogPosting *posting );
 
     virtual void createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
+
+    virtual void deleteComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
 
   Q_SIGNALS:
 

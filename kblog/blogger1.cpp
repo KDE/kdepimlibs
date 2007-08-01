@@ -71,7 +71,13 @@ void Blogger1::setUrl( const KUrl &server )
 
 void Blogger1::fetchUserInfo()
 {
-  return; //TODO
+    Q_D(Blogger1);
+    kDebug(5323) << "Fetch user's info..." << endl;
+    QList<QVariant> args( d->defaultArgs() );
+    d->mXmlRpcClient->call(
+      "blogger.getUserInfo", args,
+      this, SLOT( slotFetchUserInfo( const QList<QVariant>&, const QVariant& ) ),
+      this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
 void Blogger1::listBlogs()
@@ -85,7 +91,7 @@ void Blogger1::listBlogs()
       this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
-void Blogger1::listRecentPostings( int number )
+void Blogger1::listRecentPostings( const int number )
 {
     Q_D(Blogger1);
     kDebug(5323) << "Fetching List of Posts..." << endl;
@@ -209,6 +215,34 @@ QList<QVariant> Blogger1Private::defaultArgs( const QString &id )
   args << QVariant( q->username() )
        << QVariant( q->password() );
   return args;
+}
+
+void Blogger1Private::slotFetchUserInfo(
+    const QList<QVariant> &result, const QVariant &id )
+{
+  Q_Q(Blogger1);
+  Q_UNUSED( id );
+
+  kDebug(5323) << "Blog::slotFetchUserInfo" << endl;
+  kDebug(5323) << "TOP: " << result[0].typeName() << endl;
+  QMap<QString,QString> userInfo;
+  if ( result[0].type() != QVariant::Map ) {
+    kDebug(5323) << "Could not fetch user's info out of the result from the server, "
+                 << "not a map." << endl;
+    emit q->error( Blogger1::ParsingError,
+                        i18n( "Could not fetch user's info out of the result "
+                              "from the server, not a map." ) );
+  } else {
+    const QMap<QString,QVariant> resultMap = result[0].toMap();
+    userInfo["nickname"]=resultMap["nickname"].toString();
+    userInfo["userid"]=resultMap["userid"].toString();
+    userInfo["url"]=resultMap["url"].toString();
+    userInfo["email"]=resultMap["email"].toString();
+    userInfo["lastname"]=resultMap["lastname"].toString();
+    userInfo["firstname"]=resultMap["firstname"].toString();
+
+    emit q->fetchedUserInfo( userInfo );
+  }
 }
 
 void Blogger1Private::slotListBlogs(

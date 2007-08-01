@@ -146,7 +146,7 @@ void LiveJournal::listPictureKeywords()
   // LJ.XMLRPC.login
 }
 
-void LiveJournal::listRecentPostings( int number )
+void LiveJournal::listRecentPostings( const int number )
 {
   Q_UNUSED( number );
   //TODO

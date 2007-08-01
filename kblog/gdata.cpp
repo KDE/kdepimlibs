@@ -105,7 +105,14 @@ void GData::listBlogs()
       + QString( "/blogs" ) );
 }
 
-void GData::listRecentPostings( int number )
+void GData::listRecentPostings( const QString &label, const int number, 
+                const KDateTime &minTime, const KDateTime &maxTime, 
+                const listRecentPostingsOptions &opts )
+{
+
+}
+
+void GData::listRecentPostings( const int number )
 {
   Q_D(GData);
   kDebug() << "listRecentPostings()" << endl;
@@ -120,6 +127,12 @@ void GData::listRecentPostings( int number )
 }
 
 void GData::listComments( KBlog::BlogPosting *posting )
+{
+  Q_D(GData);
+  return; //FIXME
+}
+
+void GData::listAllComments()
 {
   Q_D(GData);
   return; //FIXME
@@ -202,6 +215,12 @@ void GData::removePosting( KBlog::BlogPosting *posting )
 }
 
 void GData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
+{
+  Q_D(GData);
+  return; //FIXME
+}
+
+void GData::deleteComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
 {
   Q_D(GData);
   return; //FIXME

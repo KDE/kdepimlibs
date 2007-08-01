@@ -52,7 +52,7 @@ QString MovableType::interfaceName() const
   return QLatin1String( "Movable Type" );
 }
 
-void MovableType::listRecentPostings( int number )
+void MovableType::listRecentPostings( const int number )
 {
   //TODO
 }

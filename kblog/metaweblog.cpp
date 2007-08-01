@@ -57,7 +57,7 @@ QString MetaWeblog::interfaceName() const
   return QLatin1String( "MetaWeblog" );
 }
 
-void MetaWeblog::listRecentPostings( int number )
+void MetaWeblog::listRecentPostings( const int number )
 {
     Q_D(MetaWeblog);
     kDebug(5323) << "Fetching List of Posts..." << endl;
@@ -210,7 +210,7 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
   Q_Q(MetaWeblog);
   Q_UNUSED( id );
 
-  QMap<QString,QMap<QString,QString> > categoriesMap;
+  QMap<QString,QString> categoriesMap;
 
   kDebug(5323) << "MetaWeblogPrivate::slotListCategories" << endl;
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
@@ -232,9 +232,10 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
       for ( ; it != end; ++it ) {
         kDebug(5323) << "MIDDLE: " << ( *it ) << endl;
         const QMap<QString, QVariant> c = categories[*it].toMap();
-        categoriesMap[ *it ]["description"] = c[ "description" ].toString();
-        categoriesMap[ *it ]["htmlUrl"]=c[ "htmlUrl" ].toString();
-        categoriesMap[ *it ]["rssUrl"]=c[ "rssUrl" ].toString();
+        categoriesMap["name"]= *it;
+        categoriesMap["description"] = c[ "description" ].toString();
+        categoriesMap["htmlUrl"]=c[ "htmlUrl" ].toString();
+        categoriesMap["rssUrl"]=c[ "rssUrl" ].toString();
         }
         emit q->listedCategories( categoriesMap );
         kDebug(5323) << "Emitting listedCategories" << endl;
@@ -249,10 +250,10 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
       for ( ; it != end; ++it ) {
         kDebug(5323) << "MIDDLE: " << ( *it ).typeName() << endl;
         const QMap<QString, QVariant> c = ( *it ).toMap();
-        const QString name( c["categoryName"].toString() );
-        categoriesMap[ name ]["description"] = c[ "description" ].toString();
-        categoriesMap[ name ]["htmlUrl"]=c[ "htmlUrl" ].toString();
-        categoriesMap[ name ]["rssUrl"]=c[ "rssUrl" ].toString();
+        categoriesMap["name"]= c["categoryName"].toString();
+        categoriesMap["description"] = c[ "description" ].toString();
+        categoriesMap["htmlUrl"]=c[ "htmlUrl" ].toString();
+        categoriesMap["rssUrl"]=c[ "rssUrl" ].toString();
       }
       kDebug(5323) << "Emitting listedCategories()" << endl;
       emit q->listedCategories( categoriesMap );

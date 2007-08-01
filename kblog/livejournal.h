@@ -133,7 +133,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
 
       @see     void listRecentPostingsFinished()
     */
-    void listRecentPostings( int number );
+    void listRecentPostings( const int number );
 
     /**
       Modify a posting on server.

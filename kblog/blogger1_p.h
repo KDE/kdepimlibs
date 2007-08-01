@@ -42,6 +42,8 @@ class Blogger1Private : public BlogPrivate
     virtual ~Blogger1Private();
     QList<QVariant> defaultArgs( const QString &id = QString() );
 
+    virtual void slotFetchUserInfo( const QList<QVariant> &result,
+                                   const QVariant &id );
     virtual void slotListBlogs( const QList<QVariant> &result,
                                 const QVariant &id );
     virtual void slotListRecentPostings( const QList<QVariant> &result,

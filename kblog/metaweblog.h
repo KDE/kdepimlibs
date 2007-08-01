@@ -87,7 +87,7 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
       @see     void listRecentPostingsFinished()
     */
-    void listRecentPostings( int number );
+    void listRecentPostings( const int number );
 
     /**
       List the categories of the blog.
@@ -136,7 +136,7 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
       @see listCategories()
     */
-    void listedCategories( QMap<QString,QMap<QString,QString> > &categories );
+    void listedCategories( const QMap<QString,QString>& categories );
 
   protected:
     MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd, QObject *parent = 0 );
