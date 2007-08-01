@@ -40,7 +40,7 @@ class Blogger1Private : public BlogPrivate
     QMap<unsigned int,KBlog::BlogPosting*> callMap;
     Blogger1Private();
     virtual ~Blogger1Private();
-    virtual QList<QVariant> defaultArgs( const QString &id = QString() );
+    QList<QVariant> defaultArgs( const QString &id = QString() );
 
     virtual void slotListBlogs( const QList<QVariant> &result,
                                 const QVariant &id );
