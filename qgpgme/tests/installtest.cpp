@@ -53,20 +53,18 @@ void searchEngine(gpgme_engine_info_t &ei,gpgme_protocol_t p)
       {                                                                         
         printf("engine info found for %s\n",(p == GPGME_PROTOCOL_OpenPGP) ? "OpenPGP":"CMS");                                          
         result = EngineInfo( i );
-        foundEngine = true;	
+        foundEngine = true;
+        printf("isNull ? %s\n", result.isNull() ? "true" : "false" );
+        printf("home_dir %s\n", result.homeDirectory());
+        printf("version %s\n", result.version());
+        printf("requiredVersion %s\n",result.requiredVersion());
+        printf("fileName %s\n\n",result.fileName());
       }                                                                         
     }                      
     if(!foundEngine) 
     {
-     printf("engine info not found for %s\n",(p == GPGME_PROTOCOL_OpenPGP) ? "OpenPGP":"CMS");    
+        printf("engine info not found for %s\n",(p == GPGME_PROTOCOL_OpenPGP) ? "OpenPGP":"CMS");    
     }
-    else
-    {
-      printf("home_dir %s\n", result.homeDirectory());
-      printf("version %s\n", result.version());
-      printf("requiredVersion %s\n",result.requiredVersion());
-      printf("fileName %s\n\n",result.fileName());
-    }    
 }
 
 int main( int, char** ) {
@@ -83,3 +81,4 @@ int main( int, char** ) {
   }
   return 0;
 }
+
