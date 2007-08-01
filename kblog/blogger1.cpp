@@ -233,14 +233,14 @@ void Blogger1Private::slotListBlogs(
     for ( ; it != end; ++it ) {
       kDebug(5323) << "MIDDLE: " << ( *it ).typeName() << endl;
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-
-      QString blogId = postInfo["blogId"].toString();
+      QString blogId = postInfo["blogid"].toString();
       QString blogName = postInfo["blogName"].toString();
       if ( blogId.isEmpty() && !blogName.isEmpty() ) {
-        kDebug(5323) << "blogs infos retrieved id=" << blogsInfo["id"]
-                     << ", name=" << blogsInfo["name"] << endl;
-        blogsInfo[blogId]=blogName;
+        blogId = blogName;
       }
+      kDebug(5323) << "Blog information retrieved: ID = " << blogId
+          << ", Name = " << blogName << endl;
+      blogsInfo.insert( blogId, blogName );
     }
     emit q->listedBlogs( blogsInfo );
   }
