@@ -68,12 +68,18 @@ class KBLOG_EXPORT Blog : public QObject
   Q_OBJECT
   public:
     /**
-      Construtor used by the  implementations.
+    Construtor used by the  implementations.
 
-      @param server the gateway url of the server.
-      @param parent the parent of this object, defaults to NULL.
-    */
-    explicit Blog( const KUrl &server, QObject *parent = 0 );
+    @param server the gateway url of the server.
+    @param parent the parent of this object, defaults to NULL.
+    @param applicationName the client application's name to use in the
+    user agent, defaults to empty string.
+    @param applicationVersion the client application's version to use in the
+    user agent, defaults to empty string.
+     */
+    explicit Blog( const KUrl &server, QObject *parent = 0,
+                   const QString &applicationName = QString(),
+                   const QString &applicationVersion = QString() );
 
     /**
       Destroys the Blog object.
@@ -96,12 +102,6 @@ class KBLOG_EXPORT Blog : public QObject
       Returns user agent used in requests.
     */
     QString userAgent() const;
-
-    /**
-      Sets the user agent based on the client application.
-    */
-    void setUserAgent( const QString &applicationName,
-                       const QString &applicationVersion );
 
     /**
       Returns the  of the inherited object.
@@ -246,9 +246,13 @@ class KBLOG_EXPORT Blog : public QObject
 
   protected:
     BlogPrivate * const d_ptr;
-    Blog( const KUrl &server, BlogPrivate &dd, QObject *parent = 0 );
+    Blog( const KUrl &server, BlogPrivate &dd, QObject *parent = 0,
+          const QString &applicationName = QString(),
+          const QString &applicationVersion = QString() );
 
   private:
+    void setUserAgent( const QString &applicationName,
+                       const QString &applicationVersion );
     Q_DECLARE_PRIVATE(Blog)
 };
 
