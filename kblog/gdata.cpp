@@ -129,13 +129,29 @@ void GData::listRecentPostings( const int number )
 void GData::listComments( KBlog::BlogPosting *posting )
 {
   Q_D(GData);
-  return; //FIXME
+  kDebug() << "listComments()" << endl;
+  Syndication::Loader *loader = Syndication::Loader::create();
+  connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
+                          Syndication::FeedPtr, Syndication::ErrorCode)),
+                          this, SLOT(slotListedComments(
+                                  Syndication::Loader*,
+                  Syndication::FeedPtr, Syndication::ErrorCode)) );
+  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
+      + posting->postingId() + QString( "/comments/default" ) );
 }
 
 void GData::listAllComments()
 {
   Q_D(GData);
-  return; //FIXME
+  kDebug() << "listRecentPostings()" << endl;
+  Syndication::Loader *loader = Syndication::Loader::create();
+  connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
+                          Syndication::FeedPtr, Syndication::ErrorCode)),
+                          this, SLOT(slotListedAllComments(
+                                  Syndication::Loader*,
+                  Syndication::FeedPtr, Syndication::ErrorCode)) );
+  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
+      + QString( "/comments/default" ) );
 }
 
 void GData::fetchPosting( KBlog::BlogPosting *posting )
@@ -305,16 +321,17 @@ void GDataPrivate::slotListBlogs(
     emit q->error( GData::Atom, i18n( "Could not get blogs." ) );
     return;
   }
+
+  QMap <QString,QString> blogMap;
+
   QList<Syndication::ItemPtr> items = feed->items();
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for( ; it!=end; ++it ){
       QRegExp rx( "blog-(\\d+)" );
-      QString id, name;
       if( rx.indexIn( ( *it )->id() )!=-1 ){
         kDebug(5323)<<"QRegExp rx( 'blog-(\\d+)' matches "<< rx.cap(1) << endl;
-        id = rx.cap(1);
-        name = ( *it )->title();
+        blogMap[ rx.cap(1) ] = ( *it )->title();
       }
       else{
         emit q->error( GData::Other,
@@ -323,12 +340,24 @@ void GDataPrivate::slotListBlogs(
             << ( *it )->id() << endl;
       }
 
-      if ( !id.isEmpty() && !name.isEmpty() ) {
-//         emit q->blogInfoRetrieved(); //FIXME set the data
-        kDebug(5323) << "Emitting blogInfoRetrieved( id=" << id
-                 << ", name=" << name << "); " << endl;
-      }
-  }
+    }
+    emit q->listedBlogs( blogMap ); //FIXME set the data
+    kDebug(5323) << "Emitting listedBlogs(); " << endl;
+}
+
+
+void GDataPrivate::slotListComments(
+    Syndication::Loader* loader, Syndication::FeedPtr feed,
+    Syndication::ErrorCode status )
+{
+
+}
+
+void GDataPrivate::slotListAllComments(
+    Syndication::Loader* loader, Syndication::FeedPtr feed,
+    Syndication::ErrorCode status )
+{
+
 }
 
 void GDataPrivate::slotListRecentPostings(
@@ -341,6 +370,9 @@ void GDataPrivate::slotListRecentPostings(
     emit q->error( GData::Atom, i18n( "Could not get postings." ) );
     return;
   }
+
+  QList<KBlog::BlogPosting*> postingList;
+
   QList<Syndication::ItemPtr> items = feed->items();
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
@@ -364,21 +396,17 @@ void GDataPrivate::slotListRecentPostings(
   ( *it )->datePublished() ), KDateTime::Spec::UTC() ) );
       posting->setModificationDateTime( KDateTime( QDateTime::fromTime_t(
   ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
-
-//       emit q->listedPosting( posting );
-      kDebug(5323) << "Emitting listedPosting( postingId="
-          << posting->postingId() << " ); " << endl;
+      postingList.append( posting );
   }
-  kDebug(5323) << "Emitting listRecentPostingsFinished()" << endl;
-//   emit q->listRecentPostingsFinished();
-
+  kDebug(5323) << "Emitting listedRecentPostings()" << endl;
+  emit q->listedRecentPostings( postingList );
 }
 
 void GDataPrivate::slotFetchPosting(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status ){
   Q_Q(GData);
-  Q_UNUSED( loader );
+
   bool success = false;
 
   if (status != Syndication::Success){
@@ -389,31 +417,32 @@ void GDataPrivate::slotFetchPosting(
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for( ; it!=end; ++it ){
-      BlogPosting posting;
+      BlogPosting* posting = new BlogPosting();
       QRegExp rx( "post-(\\d+)" );
-/*      if( rx.indexIn( ( *it )->id() )!=-1 && rx.cap(1)==getFetchPostingId() ){
+      if( rx.indexIn( ( *it )->id() )!=-1 && rx.cap(1)==mFetchPostingsMap[ loader ]->postingId() ){
         kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
-        posting.setPostingId( rx.cap(1) );
-        posting.setTitle( ( *it )->title() );
-        posting.setContent( ( *it )->content() );
-        // FIXME: assuming UTC for now
-        posting.setCreationDateTime( KDateTime( QDateTime::fromTime_t(
+        posting->setPostingId( rx.cap(1) );
+        posting->setTitle( ( *it )->title() );
+        posting->setContent( ( *it )->content() );
+//         FIXME: assuming UTC for now
+        posting->setCreationDateTime( KDateTime( QDateTime::fromTime_t(
                                      ( *it )->datePublished() ),
                                         KDateTime::Spec::UTC() ) );
-        posting.setModificationDateTime( KDateTime( QDateTime::fromTime_t(
+        posting->setModificationDateTime( KDateTime( QDateTime::fromTime_t(
                                          ( *it )->dateUpdated() ),
                                             KDateTime::Spec::UTC() ) );
-//         emit q->fetchedPosting( posting );
+        emit q->fetchedPosting( posting );
         success = true;
         kDebug(5323) << "Emitting fetchedPosting( postingId="
-            << posting.postingId() << " ); " << endl;
-      }*/
+            << posting->postingId() << " ); " << endl;
+      }
   }
   if(!success){
     emit q->error( GData::Other, i18n( "Could not regexp the blog id path." ) );
-//     kDebug(5323) << "QRegExp rx( 'post-(\\d+)' does not match "
-//         << mFetchPostingId << ". " << endl;
+    kDebug(5323) << "QRegExp rx( 'post-(\\d+)' does not match "
+        << mFetchPostingsMap[ loader ]->postingId() << ". " << endl;
   }
+  mFetchPostingsMap.remove( loader );
 }
 
 void GDataPrivate::slotCreatePostingData( KIO::Job *job, const QByteArray &data )

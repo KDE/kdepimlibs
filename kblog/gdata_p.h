@@ -46,6 +46,7 @@ class GDataPrivate : public BlogPrivate
     QDateTime mAuthenticationTime;
     QMap<KIO::Job*,QByteArray> mCreatePostingBuffer;
     QMap<KIO::Job*,QByteArray> mFetchProfileIdBuffer;
+    QMap<Syndication::Loader*,KBlog::BlogPosting*> mFetchPostingsMap;
     QString mFullName;
     QString mProfileId;
     GDataPrivate();
@@ -54,6 +55,8 @@ class GDataPrivate : public BlogPrivate
     virtual void slotFetchProfileIdData(KIO::Job*,const QByteArray&);
     virtual void slotFetchProfileId(KIO::Job*);
     virtual void slotListBlogs(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
+    virtual void slotListComments(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
+    virtual void slotListAllComments(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
     virtual void slotListRecentPostings(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
     virtual void slotFetchPosting(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
     virtual void slotCreatePosting(KIO::Job*);

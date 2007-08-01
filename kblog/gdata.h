@@ -197,6 +197,8 @@ class KBLOG_EXPORT GData : public Blog
     */
     void listedBlogs( const QMap<QString,QString>& blogsInfo );
 
+    void listedAllComments( const QList<KBlog::BlogPostingComment*> &comments );
+
     void fetchedProfileId( const QString &profileId );
 
   protected:
@@ -206,6 +208,8 @@ class KBLOG_EXPORT GData : public Blog
     Q_PRIVATE_SLOT(d_func(), void slotFetchProfileId(KIO::Job*))
     Q_PRIVATE_SLOT(d_func(), void slotFetchProfileIdData(KIO::Job*,const QByteArray&))
     Q_PRIVATE_SLOT(d_func(), void slotListBlogs(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(), void slotListComments(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(), void slotListAllComments(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
     Q_PRIVATE_SLOT(d_func(), void slotListRecentPostings(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
     Q_PRIVATE_SLOT(d_func(), void slotFetchPosting(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
     Q_PRIVATE_SLOT(d_func(), void slotCreatePosting(KIO::Job*))
