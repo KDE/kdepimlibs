@@ -177,8 +177,11 @@ class KCAL_EXPORT Todo : public Incidence
       todo recurs, the start date of the first occurrence will be returned.
       If false and the todo recurs, the relative start date will be returned,
       based on the date returned by dtRecurrence().
+      @param spec If set, returns the time in the given spec, else use the
+      todo's current spec.
     */
-    QString dtStartTimeStr( bool shortfmt = true, bool first = false ) const;
+    QString dtStartTimeStr( bool shortfmt = true, bool first = false,
+                            const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns a todo's starting date as a string formatted according to the
@@ -189,8 +192,11 @@ class KCAL_EXPORT Todo : public Incidence
       todo recurs, the start date of the first occurrence will be returned.
       If false and the todo recurs, the relative start date will be returned,
       based on the date returned by dtRecurrence().
+      @param spec If set, returns the date in the given spec, else use the
+      todo's current spec.
     */
-    QString dtStartDateStr( bool shortfmt = true, bool first = false ) const;
+    QString dtStartDateStr( bool shortfmt = true, bool first = false,
+                            const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns a todo's starting date and time as a string formatted according
@@ -201,8 +207,11 @@ class KCAL_EXPORT Todo : public Incidence
       todo recurs, the start date of the first occurrence will be returned.
       If false and the todo recurs, the relative start date will be returned,
       based on the date returned by dtRecurrence().
+      @param spec If set, returns the date and time in the given spec, else
+      use the todo's current spec.
     */
-    QString dtStartStr( bool shortfmt = true, bool first = false ) const;
+    QString dtStartStr( bool shortfmt = true, bool first = false,
+                        const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns true if the todo is 100% completed, otherwise return false.

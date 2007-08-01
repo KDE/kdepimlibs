@@ -177,14 +177,22 @@ bool Event::hasEndDate() const
   return d->mHasEndDate;
 }
 
-bool Event::isMultiDay() const
+bool Event::isMultiDay( const KDateTime::Spec &spec ) const
 {
   // End date is non inclusive, so subtract 1 second...
-  KDateTime start( dtStart() );
-  KDateTime end( dtEnd() );
+  KDateTime start, end;
+  if ( spec.isValid() ) {
+    start = dtStart().toTimeSpec( spec );
+    end = dtEnd().toTimeSpec( spec );
+  } else {
+    start = dtStart();
+    end = dtEnd();
+  }
+
   if ( !floats() ) {
     end = end.addSecs( -1 );
   }
+
   bool multi = ( start.date() != end.date() && start <= end );
   return multi;
 }

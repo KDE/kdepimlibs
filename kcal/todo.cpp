@@ -247,23 +247,39 @@ void Todo::setDtStart( const KDateTime &dtStart )
   IncidenceBase::setDtStart( dtStart );
 }
 
-QString Todo::dtStartTimeStr( bool shortfmt, bool first ) const
+QString Todo::dtStartTimeStr( bool shortfmt, bool first, const KDateTime::Spec &spec ) const
 {
-  return KGlobal::locale()->formatTime( dtStart( first ).time(), shortfmt );
+  if ( spec.isValid() ) {
+    return KGlobal::locale()->formatTime( dtStart( first ).toTimeSpec( spec ).time(), shortfmt );
+  } else {
+    return KGlobal::locale()->formatTime( dtStart( first ).time(), shortfmt );
+  }
 }
 
-QString Todo::dtStartDateStr( bool shortfmt, bool first ) const
+QString Todo::dtStartDateStr( bool shortfmt, bool first, const KDateTime::Spec &spec ) const
 {
-  return
-    KGlobal::locale()->formatDate( dtStart( first ).date(),
+  if ( spec.isValid() ) {
+    return
+      KGlobal::locale()->formatDate( dtStart( first ).toTimeSpec( spec ).date(),
                                    ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  } else {
+    return
+      KGlobal::locale()->formatDate( dtStart( first ).date(),
+                                   ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  }
 }
 
-QString Todo::dtStartStr( bool shortfmt, bool first ) const
+QString Todo::dtStartStr( bool shortfmt, bool first, const KDateTime::Spec &spec ) const
 {
-  return
-    KGlobal::locale()->formatDateTime( dtStart( first ).dateTime(),
+  if ( spec.isValid() ) {
+    return
+      KGlobal::locale()->formatDateTime( dtStart( first ).toTimeSpec( spec ).dateTime(),
                                        ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  } else {
+    return
+      KGlobal::locale()->formatDateTime( dtStart( first ).dateTime(),
+                                       ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  }
 }
 
 bool Todo::isCompleted() const

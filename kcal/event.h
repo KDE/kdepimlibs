@@ -151,8 +151,11 @@ class KCAL_EXPORT Event : public Incidence
 
     /**
       Returns true if the event spans multiple days, otherwise return false.
+
+      @param spec If set, looks if the event is multiday for the given spec.
+      If not set, looks if event this multiday for its spec.
     */
-    bool isMultiDay() const;
+    bool isMultiDay( const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       @copydoc
