@@ -24,7 +24,7 @@
 
 #include <kblog/blog.h>
 
-#include <QColor>
+#include <QtGui/QColor>
 
 class KHttpCookie;
 class KUrl;

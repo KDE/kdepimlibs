@@ -24,7 +24,7 @@
 
 #include <kblog/kblog_export.h>
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class QStringList;
 
