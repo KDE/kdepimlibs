@@ -136,7 +136,7 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
       @see listCategories()
     */
-    void listedCategories( const QMap<QString,QString>& categories );
+    void listedCategories( const QMap<QString,QMap<QString,QString> >& categories );
 
   protected:
     MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd, QObject *parent = 0 );

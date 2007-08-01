@@ -210,7 +210,7 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
   Q_Q(MetaWeblog);
   Q_UNUSED( id );
 
-  QMap<QString,QString> categoriesMap;
+  QMap<QString,QMap<QString,QString> > categoriesMap;
 
   kDebug(5323) << "MetaWeblogPrivate::slotListCategories" << endl;
   kDebug(5323) << "TOP: " << result[0].typeName() << endl;
@@ -232,10 +232,9 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
       for ( ; it != end; ++it ) {
         kDebug(5323) << "MIDDLE: " << ( *it ) << endl;
         const QMap<QString, QVariant> c = categories[*it].toMap();
-        categoriesMap["name"]= *it;
-        categoriesMap["description"] = c[ "description" ].toString();
-        categoriesMap["htmlUrl"]=c[ "htmlUrl" ].toString();
-        categoriesMap["rssUrl"]=c[ "rssUrl" ].toString();
+        categoriesMap[ *it ]["description"] = c[ "description" ].toString();
+        categoriesMap[ *it ]["htmlUrl"]=c[ "htmlUrl" ].toString();
+        categoriesMap[ *it ]["rssUrl"]=c[ "rssUrl" ].toString();
         }
         emit q->listedCategories( categoriesMap );
         kDebug(5323) << "Emitting listedCategories" << endl;
@@ -250,10 +249,10 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
       for ( ; it != end; ++it ) {
         kDebug(5323) << "MIDDLE: " << ( *it ).typeName() << endl;
         const QMap<QString, QVariant> c = ( *it ).toMap();
-        categoriesMap["name"]= c["categoryName"].toString();
-        categoriesMap["description"] = c[ "description" ].toString();
-        categoriesMap["htmlUrl"]=c[ "htmlUrl" ].toString();
-        categoriesMap["rssUrl"]=c[ "rssUrl" ].toString();
+        const QString name= c["categoryName"].toString();
+        categoriesMap[ name ]["description"] = c[ "description" ].toString();
+        categoriesMap[ name ]["htmlUrl"]=c[ "htmlUrl" ].toString();
+        categoriesMap[ name ]["rssUrl"]=c[ "rssUrl" ].toString();
       }
       kDebug(5323) << "Emitting listedCategories()" << endl;
       emit q->listedCategories( categoriesMap );
