@@ -57,7 +57,7 @@ QString MetaWeblog::interfaceName() const
   return QLatin1String( "MetaWeblog" );
 }
 
-void MetaWeblog::listRecentPostings( const int number )
+void MetaWeblog::listRecentPostings( int number )
 {
     Q_D(MetaWeblog);
     kDebug(5323) << "Fetching List of Posts...";

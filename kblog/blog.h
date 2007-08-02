@@ -183,7 +183,7 @@ class KBLOG_EXPORT Blog : public QObject
       @see fetchedPosting()
       @see listRecentPostingsFinished()
     */
-    virtual void listRecentPostings( const int number ) = 0;
+    virtual void listRecentPostings( int number ) = 0;
 
     /**
       Fetch the Posting with postingId.

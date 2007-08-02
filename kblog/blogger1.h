@@ -109,7 +109,7 @@ class KBLOG_EXPORT Blogger1 : public Blog
       @see     void fetchedPosting( KBlog::BlogPosting &posting )
       @see     void listRecentPostingsFinished()
     */
-    void listRecentPostings( const int number );
+    void listRecentPostings( int number );
 
     /**
       Fetch the Posting with postingId.

@@ -139,18 +139,13 @@ class KBLOG_EXPORT GData : public Blog
         @see     void fetchedPosting( KBlog::BlogPosting &posting )
         @see     void listRecentPostingsFinished()
     */
-    void listRecentPostings( const int number );
+    void listRecentPostings( int number );
 
-    enum listRecentPostingsOption {
-      updated = 0x01,
-      published = 0x02
-    };
-    Q_DECLARE_FLAGS(listRecentPostingsOptions,
-                                        listRecentPostingsOption)
-    virtual void listRecentPostings( const QStringList &label=QStringList(), const int number=0, 
-                const KDateTime &minTime=KDateTime(), 
-                const KDateTime &maxTime=KDateTime(), 
-                const listRecentPostingsOptions &opts = updated );
+    virtual void listRecentPostings( const QStringList &label=QStringList(), int number=0, 
+                const KDateTime &upMinTime=KDateTime(), 
+                const KDateTime &upMaxTime=KDateTime(), 
+                const KDateTime &pubMinTime=KDateTime(), 
+                const KDateTime &pubMaxTime=KDateTime() );
 
 
     /**
@@ -201,7 +196,7 @@ class KBLOG_EXPORT GData : public Blog
 
     void listedAllComments( const QList<KBlog::BlogPostingComment> &comments );
 
-    void listedComments( const QList<KBlog::BlogPostingComment> &comments, KBlog::BlogPosting *posting );
+    void listedComments( KBlog::BlogPosting *posting, const QList<KBlog::BlogPostingComment> &comments );
 
     void createdComment( const KBlog::BlogPosting *posting, const KBlog::BlogPostingComment *comment );
 

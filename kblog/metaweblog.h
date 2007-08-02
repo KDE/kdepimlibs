@@ -87,7 +87,7 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
       @see     void listRecentPostingsFinished()
     */
-    void listRecentPostings( const int number );
+    void listRecentPostings( int number );
 
     /**
       List the categories of the blog.

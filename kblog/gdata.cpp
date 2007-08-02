@@ -103,29 +103,59 @@ void GData::listBlogs()
                           Syndication::FeedPtr, Syndication::ErrorCode)),
                           this, SLOT(slotListBlogs(Syndication::Loader*,
                   Syndication::FeedPtr, Syndication::ErrorCode)) );
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + profileId()
-      + QString( "/blogs" ) );
+  loader->loadFrom( "http://www.blogger.com/feeds/" + profileId()
+      + "/blogs" );
 }
 
 void GData::listRecentPostings( const QStringList &labels, const int number, 
-                const KDateTime &minTime, const KDateTime &maxTime, 
-                const listRecentPostingsOptions &opts )
-{
-
-}
-
-void GData::listRecentPostings( const int number )
+                const KDateTime &upMinTime, const KDateTime &upMaxTime, 
+                const KDateTime &pubMinTime, const KDateTime &pubMaxTime )
 {
   Q_D(GData);
+  QString urlString( "http://www.blogger.com/feeds/" + blogId()
+      + "/posts/default" );
+  if(! labels.empty() )
+    urlString += "/-/"+labels.join( "/" );
   kDebug() << "listRecentPostings()";
+  KUrl url( urlString );
+
+  if( !upMinTime.isNull() )
+    url.addQueryItem( "updated-min", upMinTime.toString() );
+
+  if( !upMaxTime.isNull() )
+    url.addQueryItem( "updated-max", upMaxTime.toString() );
+
+  if( !pubMinTime.isNull() )
+    url.addQueryItem( "published-min", pubMinTime.toString() );
+
+  if( !pubMaxTime.isNull() )
+    url.addQueryItem( "published-max", pubMaxTime.toString() );
+
   Syndication::Loader *loader = Syndication::Loader::create();
+  if( number>0 )
+    d->mListRecentPostingsMap[ loader ] = number;
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                           Syndication::FeedPtr, Syndication::ErrorCode)),
                           this, SLOT(slotListRecentPostings(
                                   Syndication::Loader*,
                   Syndication::FeedPtr, Syndication::ErrorCode)) );
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
-      + QString( "/posts/default" ) );
+  loader->loadFrom( url.url() );
+}
+
+void GData::listRecentPostings( int number )
+{
+  Q_D(GData);
+  kDebug() << "listRecentPostings()";
+  Syndication::Loader *loader = Syndication::Loader::create();
+  if( number>0 )
+    d->mListRecentPostingsMap[ loader ] = number;
+  connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
+                          Syndication::FeedPtr, Syndication::ErrorCode)),
+                          this, SLOT(slotListRecentPostings(
+                                  Syndication::Loader*,
+                  Syndication::FeedPtr, Syndication::ErrorCode)) );
+  loader->loadFrom( "http://www.blogger.com/feeds/" + blogId()
+      + "/posts/default" );
 }
 
 void GData::listComments( KBlog::BlogPosting *posting )
@@ -133,13 +163,14 @@ void GData::listComments( KBlog::BlogPosting *posting )
   Q_D(GData);
   kDebug() << "listComments()";
   Syndication::Loader *loader = Syndication::Loader::create();
+  d->mListCommentsMap[ loader ] = posting;
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                           Syndication::FeedPtr, Syndication::ErrorCode)),
                           this, SLOT(slotListComments(
                                   Syndication::Loader*,
                   Syndication::FeedPtr, Syndication::ErrorCode)) );
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
-      + posting->postingId() + QString( "/comments/default" ) );
+  loader->loadFrom( "http://www.blogger.com/feeds/" + blogId()
+      + "/" + posting->postingId() + "/comments/default" );
 }
 
 void GData::listAllComments()
@@ -152,8 +183,8 @@ void GData::listAllComments()
                           this, SLOT(slotListAllComments(
                                   Syndication::Loader*,
                   Syndication::FeedPtr, Syndication::ErrorCode)) );
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
-      + QString( "/comments/default" ) );
+  loader->loadFrom( "http://www.blogger.com/feeds/" + blogId()
+      + "/comments/default" );
 }
 
 void GData::fetchPosting( KBlog::BlogPosting *posting )
@@ -166,8 +197,8 @@ void GData::fetchPosting( KBlog::BlogPosting *posting )
                    Syndication::FeedPtr, Syndication::ErrorCode)),
                    this, SLOT(slotFetchPosting(Syndication::Loader*,
                    Syndication::FeedPtr, Syndication::ErrorCode)));
-  loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
-      + QString( "/posts/default" ) );
+  loader->loadFrom( "http://www.blogger.com/feeds/" + blogId()
+      + "/posts/default" );
 }
 
 void GData::modifyPosting( KBlog::BlogPosting* posting )
@@ -498,7 +529,44 @@ void GDataPrivate::slotListComments(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status )
 {
+  Q_Q(GData);
+  Q_UNUSED( loader );
 
+  if (status != Syndication::Success){
+    emit q->error( GData::Atom, i18n( "Could not get comments." ) );
+    return;
+  }
+  BlogPosting* posting = mListCommentsMap[ loader ];
+  QList<KBlog::BlogPostingComment> commentList;
+
+  QList<Syndication::ItemPtr> items = feed->items();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
+  for( ; it!=end; ++it ){
+      BlogPostingComment comment;
+      QRegExp rx( "post-(\\d+)" );
+      if( rx.indexIn( ( *it )->id() )==-1 ){
+        kDebug(5323)<<
+        "QRegExp rx( 'post-(\\d+)' does not match"<< rx.cap(1);
+        emit q->error( GData::Other,
+        i18n( "Could not regexp the comment id path." ) );
+      }
+      else {
+        comment.setCommentId( rx.cap(1) );
+      }
+
+      kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches"<< rx.cap(1);
+      comment.setTitle( ( *it )->title() );
+      comment.setContent( ( *it )->content() );
+//       FIXME: assuming UTC for now
+      comment.setCreationDateTime( KDateTime( QDateTime::fromTime_t(
+  ( *it )->datePublished() ), KDateTime::Spec::UTC() ) );
+      comment.setModificationDateTime( KDateTime( QDateTime::fromTime_t(
+  ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
+      commentList.append( comment );
+  }
+  kDebug(5323) << "Emitting listedRecentPostings()";
+  emit q->listedComments( posting, commentList );
 }
 
 void GDataPrivate::slotListAllComments(
@@ -542,7 +610,7 @@ void GDataPrivate::slotListAllComments(
       commentList.append( comment );
   }
   kDebug(5323) << "Emitting listedRecentPostings()";
-  emit q->listedAllComments( commentList ); //TODO change
+  emit q->listedAllComments( commentList );
 }
 
 void GDataPrivate::slotListRecentPostings(
@@ -555,6 +623,12 @@ void GDataPrivate::slotListRecentPostings(
     emit q->error( GData::Atom, i18n( "Could not get postings." ) );
     return;
   }
+  int number=0;
+
+  if( mListRecentPostingsMap.contains( loader ) )
+    number = mListRecentPostingsMap[ loader ];
+
+  mListRecentPostingsMap.remove( loader );
 
   QList<KBlog::BlogPosting> postingList;
 
@@ -583,6 +657,8 @@ void GDataPrivate::slotListRecentPostings(
       posting.setModificationDateTime( KDateTime( QDateTime::fromTime_t(
   ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
       postingList.append( posting );
+      if( --number = 0 )
+        break;
   }
   kDebug(5323) << "Emitting listedRecentPostings()";
   emit q->listedRecentPostings( postingList );
@@ -794,32 +870,32 @@ void GDataPrivate::slotCreateComment( KJob *job )
   }
 
 // TODO check for result and fit appropriately
-//   QRegExp rxId( "post-(\\d+)" ); //FIXME check that and do better handling, especially the creation date time
-//   if( rxId.indexIn( data )==-1 ){
-//     kDebug(5323) << "Could not regexp the id out of the result:" << data;
-//     emit q->error( GData::Atom, i18n( "Could not regexp the id out of the result." ), posting );
-//     return;
-//   }
-//   kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
-// 
-//   QRegExp rxPub( "<published>(.+)</published>" ); 
-//   if( rxPub.indexIn( data )==-1 ){
-//     kDebug(5323) << "Could not regexp the published time out of the result:" << data;
-//     emit q->error( GData::Atom, i18n( "Could not regexp the published time out of the result." ), posting );
-//     return;
-//   }
-//   kDebug(5323) << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap(1);
-// 
-//   QRegExp rxUp( "<updated>(.+)</updated>" );
-//   if( rxUp.indexIn( data )==-1 ){
-//     kDebug(5323) << "Could not regexp the update time out of the result:" << data;
-//     emit q->error( GData::Atom, i18n( "Could not regexp the update time out of the result." ), posting );
-//     return;
-//   }
-//   kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
-//   posting->setPostingId( rxId.cap(1) );
-//   posting->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
-//   posting->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) )); 
+  QRegExp rxId( "post-(\\d+)" );
+  if( rxId.indexIn( data )==-1 ){
+    kDebug(5323) << "Could not regexp the id out of the result:" << data;
+    emit q->error( GData::Atom, i18n( "Could not regexp the id out of the result." ), posting );
+    return;
+  }
+  kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
+
+  QRegExp rxPub( "<published>(.+)</published>" ); 
+  if( rxPub.indexIn( data )==-1 ){
+    kDebug(5323) << "Could not regexp the published time out of the result:" << data;
+    emit q->error( GData::Atom, i18n( "Could not regexp the published time out of the result." ), posting );
+    return;
+  }
+  kDebug(5323) << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap(1);
+
+  QRegExp rxUp( "<updated>(.+)</updated>" );
+  if( rxUp.indexIn( data )==-1 ){
+    kDebug(5323) << "Could not regexp the update time out of the result:" << data;
+    emit q->error( GData::Atom, i18n( "Could not regexp the update time out of the result." ), posting );
+    return;
+  }
+  kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
+  comment->setCommentId( rxId.cap(1) );
+  comment->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
+  comment->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) )); 
   emit q->createdComment( posting, comment );
 }
 

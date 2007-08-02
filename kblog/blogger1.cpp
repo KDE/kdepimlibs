@@ -91,7 +91,7 @@ void Blogger1::listBlogs()
       this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
-void Blogger1::listRecentPostings( const int number )
+void Blogger1::listRecentPostings( int number )
 {
     Q_D(Blogger1);
     kDebug(5323) << "Fetching List of Posts...";

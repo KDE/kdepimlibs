@@ -56,6 +56,8 @@ class GDataPrivate : public BlogPrivate
     QMap<KJob*,KBlog::BlogPosting*> mRemovePostingMap;
     QMap<KJob*,QByteArray> mFetchProfileIdBuffer;
     QMap<Syndication::Loader*,KBlog::BlogPosting*> mFetchPostingMap;
+    QMap<Syndication::Loader*,KBlog::BlogPosting*> mListCommentsMap;
+    QMap<Syndication::Loader*,int> mListRecentPostingsMap;
     QString mFullName;
     QString mProfileId;
     GDataPrivate();
