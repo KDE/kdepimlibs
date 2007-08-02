@@ -65,13 +65,10 @@ using namespace KCal;
 /*
 static void _dumpIcaltime( const icaltimetype& t)
 {
-  kDebug(5800) << "--- Y: " << t.year << " M: " << t.month << " D: " << t.day
-      << endl;
-  kDebug(5800) << "--- H: " << t.hour << " M: " << t.minute << " S: " << t.second
-      << endl;
-  kDebug(5800) << "--- isUtc: " << icaltime_is_utc( t )<< endl;
-  kDebug(5800) << "--- zoneId: " << icaltimezone_get_tzid( const_cast<icaltimezone*>( t.zone ) );
-  kDebug(5800) << endl;
+  kDebug(5800) << "--- Y:" << t.year << "M:" << t.month << "D:" << t.day;
+  kDebug(5800) << "--- H:" << t.hour << "M:" << t.minute << "S:" << t.second;
+  kDebug(5800) << "--- isUtc:" << icaltime_is_utc( t );
+  kDebug(5800) << "--- zoneId:" << icaltimezone_get_tzid( const_cast<icaltimezone*>( t.zone ) );
 }
 */
 
@@ -774,7 +771,7 @@ icalrecurrencetype ICalFormatImpl::writeRecurrenceRule( RecurrenceRule *recur )
     break;
   default:
     r.freq = ICAL_NO_RECURRENCE;
-    kDebug(5800) << "ICalFormatImpl::writeRecurrence(): no recurrence" << endl;
+    kDebug(5800) << "ICalFormatImpl::writeRecurrence(): no recurrence";
     break;
   }
 
@@ -930,7 +927,7 @@ icalcomponent *ICalFormatImpl::writeAlarm( Alarm *alarm )
     break;
   case Alarm::Invalid:
   default:
-    kDebug(5800) << "Unknown type of alarm" << endl;
+    kDebug(5800) << "Unknown type of alarm";
     action = ICAL_ACTION_NONE;
     break;
   }
@@ -1746,7 +1743,7 @@ void ICalFormatImpl::readAlarm( icalcomponent *alarm,
   Alarm::Type type = Alarm::Display;
   icalproperty_action action = ICAL_ACTION_DISPLAY;
   if ( !p ) {
-    kDebug(5800) << "Unknown type of alarm, using default" << endl;
+    kDebug(5800) << "Unknown type of alarm, using default";
     // TODO: do something about unknown alarm type?
   } else {
 
@@ -1781,8 +1778,8 @@ void ICalFormatImpl::readAlarm( icalcomponent *alarm,
       icaltriggertype trigger = icalproperty_get_trigger( p );
       if ( icaltime_is_null_time( trigger.time ) ) {
         if ( icaldurationtype_is_null_duration( trigger.duration ) ) {
-          kDebug(5800) << "ICalFormatImpl::readAlarm(): "
-                       << "Trigger has no time and no duration." << endl;
+          kDebug(5800) << "ICalFormatImpl::readAlarm():"
+                       << "Trigger has no time and no duration.";
         } else {
           Duration duration( readICalDuration( trigger.duration ) );
           icalparameter *param =
@@ -1865,8 +1862,8 @@ void ICalFormatImpl::readAlarm( icalcomponent *alarm,
           break;
         }
       } else {
-        kDebug(5800) << "Alarm attachments currently only support URIs, "
-                     << "but no binary data" << endl;
+        kDebug(5800) << "Alarm attachments currently only support URIs,"
+                     << "but no binary data";
       }
       delete attach;
       break;
@@ -2021,7 +2018,7 @@ KDateTime ICalFormatImpl::readICalDateTime( icalproperty *p,
                                             ICalTimeZones *tzlist,
                                             bool utc )
 {
-//  kDebug(5800) << "ICalFormatImpl::readICalDateTime()" << endl;
+//  kDebug(5800) << "ICalFormatImpl::readICalDateTime()";
 
 //  _dumpIcaltime( t );
 
@@ -2215,7 +2212,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
 
   p = icalcomponent_get_first_property( calendar, ICAL_PRODID_PROPERTY );
   if ( !p ) {
-    kDebug(5800) << "No PRODID property found" << endl;
+    kDebug(5800) << "No PRODID property found";
     d->mLoadedProductId = "";
   } else {
     d->mLoadedProductId = QString::fromUtf8( icalproperty_get_prodid( p ) );
@@ -2226,20 +2223,20 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
 
   p = icalcomponent_get_first_property( calendar, ICAL_VERSION_PROPERTY );
   if ( !p ) {
-    kDebug(5800) << "No VERSION property found" << endl;
+    kDebug(5800) << "No VERSION property found";
     d->mParent->setException( new ErrorFormat( ErrorFormat::CalVersionUnknown ) );
     return false;
   } else {
     const char *version = icalproperty_get_version( p );
 
     if ( strcmp( version, "1.0" ) == 0 ) {
-      kDebug(5800) << "Expected iCalendar, got vCalendar" << endl;
+      kDebug(5800) << "Expected iCalendar, got vCalendar";
       d->mParent->setException(
         new ErrorFormat( ErrorFormat::CalVersion1,
                          i18n( "Expected iCalendar format" ) ) );
       return false;
     } else if ( strcmp( version, "2.0" ) != 0 ) {
-      kDebug(5800) << "Expected iCalendar, got unknown format" << endl;
+      kDebug(5800) << "Expected iCalendar, got unknown format";
       d->mParent->setException( new ErrorFormat( ErrorFormat::CalVersionUnknown ) );
       return false;
     }
@@ -2319,8 +2316,8 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
 
 QString ICalFormatImpl::extractErrorProperty( icalcomponent *c )
 {
-//  kDebug(5800) << "ICalFormatImpl:extractErrorProperty: "
-//            << icalcomponent_as_ical_string(c) << endl;
+//  kDebug(5800) << "ICalFormatImpl:extractErrorProperty:"
+//            << icalcomponent_as_ical_string(c);
 
   QString errorMessage;
 
@@ -2339,16 +2336,16 @@ void ICalFormatImpl::dumpIcalRecurrence( icalrecurrencetype r )
 {
   int i;
 
-  kDebug(5800) << " Freq: " << r.freq << endl;
-  kDebug(5800) << " Until: " << icaltime_as_ical_string( r.until ) << endl;
-  kDebug(5800) << " Count: " << r.count << endl;
+  kDebug(5800) << " Freq:" << r.freq;
+  kDebug(5800) << " Until:" << icaltime_as_ical_string( r.until );
+  kDebug(5800) << " Count:" << r.count;
   if ( r.by_day[0] != ICAL_RECURRENCE_ARRAY_MAX ) {
     int index = 0;
     QString out = " By Day: ";
     while ( ( i = r.by_day[index++] ) != ICAL_RECURRENCE_ARRAY_MAX ) {
       out.append( QString::number( i ) + ' ' );
     }
-    kDebug(5800) << out << endl;
+    kDebug(5800) << out;
   }
   if ( r.by_month_day[0] != ICAL_RECURRENCE_ARRAY_MAX ) {
     int index = 0;
@@ -2356,7 +2353,7 @@ void ICalFormatImpl::dumpIcalRecurrence( icalrecurrencetype r )
     while ( ( i = r.by_month_day[index++] ) != ICAL_RECURRENCE_ARRAY_MAX ) {
       out.append( QString::number( i ) + ' ' );
     }
-    kDebug(5800) << out << endl;
+    kDebug(5800) << out;
   }
   if ( r.by_year_day[0] != ICAL_RECURRENCE_ARRAY_MAX ) {
     int index = 0;
@@ -2364,7 +2361,7 @@ void ICalFormatImpl::dumpIcalRecurrence( icalrecurrencetype r )
     while ( ( i = r.by_year_day[index++] ) != ICAL_RECURRENCE_ARRAY_MAX ) {
       out.append( QString::number( i ) + ' ' );
     }
-    kDebug(5800) << out << endl;
+    kDebug(5800) << out;
   }
   if ( r.by_month[0] != ICAL_RECURRENCE_ARRAY_MAX ) {
     int index = 0;
@@ -2372,16 +2369,16 @@ void ICalFormatImpl::dumpIcalRecurrence( icalrecurrencetype r )
     while ( ( i = r.by_month[index++] ) != ICAL_RECURRENCE_ARRAY_MAX ) {
       out.append( QString::number( i ) + ' ' );
     }
-    kDebug(5800) << out << endl;
+    kDebug(5800) << out;
   }
   if ( r.by_set_pos[0] != ICAL_RECURRENCE_ARRAY_MAX ) {
     int index = 0;
     QString out = " By Set Pos: ";
     while ( ( i = r.by_set_pos[index++] ) != ICAL_RECURRENCE_ARRAY_MAX ) {
-      kDebug(5800) << "========= " << i << endl;
+      kDebug(5800) << "=========" << i;
       out.append( QString::number( i ) + ' ' );
     }
-    kDebug(5800) << out << endl;
+    kDebug(5800) << out;
   }
 }
 
@@ -2418,7 +2415,7 @@ icalcomponent *ICalFormatImpl::createScheduleComponent( IncidenceBase *incidence
     icalmethod = ICAL_METHOD_DECLINECOUNTER;
     break;
   default:
-    kDebug(5800) << "ICalFormat::createScheduleMessage(): Unknow method" << endl;
+    kDebug(5800) << "ICalFormat::createScheduleMessage(): Unknow method";
     return message;
   }
 

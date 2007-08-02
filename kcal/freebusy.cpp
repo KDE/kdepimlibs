@@ -69,7 +69,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start,
                     const KDateTime &end )
   : d( new Private )
 {
-  kDebug(5800) << "FreeBusy::FreeBusy" << endl;
+  kDebug(5800) << "FreeBusy::FreeBusy";
   d->mCalendar = calendar;
 
   setDtStart( start );
@@ -96,7 +96,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start,
     Event *floatingEvent = 0;
     if ( event->floats() ) {
       // Floating event. Do the hack
-      kDebug(5800) << "Floating event\n";
+      kDebug(5800) << "Floating event";
       floatingEvent = new Event( *event );
 
       // Set the start and end times to be on midnight
@@ -108,8 +108,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start,
       floatingEvent->setDtStart( st );
       floatingEvent->setDtEnd( nd );
 
-      kDebug(5800) << "Use: " << st.toString() << " to " << nd.toString()
-                    << endl;
+      kDebug(5800) << "Use:" << st.toString() << "to" << nd.toString();
       // Finally, use this event for the setting below
       event = floatingEvent;
     }

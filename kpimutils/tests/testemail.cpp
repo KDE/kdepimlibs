@@ -33,11 +33,11 @@ using namespace KPIMUtils;
 static bool check( const QString &txt, const QString &a, const QString &b )
 {
   if ( a == b ) {
-    kDebug() << txt << " : checking '" << a
-             << "' against expected value '" << b << "'... " << "ok" << endl;
+    kDebug() << txt << ": checking '" << a
+             << "' against expected value '" << b << "'..." << "ok";
   } else {
-    kDebug() << txt << " : checking '" << a
-             << "' against expected value '" << b << "'... " << "KO !" << endl;
+    kDebug() << txt << ": checking '" << a
+             << "' against expected value '" << b << "'..." << "KO !";
     exit( 1 );
   }
   return true;
@@ -46,11 +46,11 @@ static bool check( const QString &txt, const QString &a, const QString &b )
 static bool check( const QString &txt, const QStringList &a, const QStringList &b )
 {
   if ( a.join( "\n" ) == b.join( "\n" ) ) {
-    kDebug() << txt << " : checking list [ " << a.join( ", " )
-             << " ] against expected value [ " << b.join( ", " ) << " ]... " << "ok" << endl;
+    kDebug() << txt << ": checking list [" << a.join( ", " )
+             << "] against expected value [" << b.join( ", " ) << "]..." << "ok";
   } else {
-    kDebug() << txt << " : checking list [ " << a.join( ",\n" )
-             << " ] against expected value [ " << b.join( ",\n" ) << " ]... " << "KO !" << endl;
+    kDebug() << txt << " : checking list [" << a.join( ",\n" )
+             << "] against expected value [" << b.join( ",\n" ) << "]..." << "KO !";
     exit(1);
   }
   return true;

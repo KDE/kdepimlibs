@@ -63,21 +63,21 @@ int main(int argc,char **argv)
 
 /*  if (e->hasStartDate()) {
     KDateTime d = e->dtStart();
-    kDebug() << "Event starts " << d << endl;
+    kDebug() << "Event starts" << d;
   }
 */
 
-  kDebug() << "Event description " << e->summary() << endl;
+  kDebug() << "Event description" << e->summary();
 
   if (e->hasEndDate()) {
     KDateTime d = e->dtEnd();
-    kDebug() << "Event ends " << d << endl;
+    kDebug() << "Event ends" << d;
   }
 
 
   QString pilotId = e->nonKDECustomProperty( KPilotIdProp );
   if (!pilotId.isEmpty()) {
-    kDebug() << "Pilot ID = " << pilotId << endl;
+    kDebug() << "Pilot ID =" << pilotId;
   } else {
     kError() << "No Pilot ID" << endl;
     return 1;

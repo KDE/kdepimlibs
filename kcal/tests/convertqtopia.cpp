@@ -86,8 +86,8 @@ int main(int argc,char **argv)
   QString outputFile;
   if ( args->isSet("output") ) outputFile = args->getOption( "output" );
 
-  kDebug(5800) << "Input File: '" << inputFile << "'" << endl;
-  kDebug(5800) << "Output File: '" << outputFile << "'" << endl;
+  kDebug(5800) << "Input File: '" << inputFile << "'";
+  kDebug(5800) << "Output File: '" << outputFile << "'";
 
   if ( sourceQtopia ) {
     CalendarLocal cal( QLatin1String( "UTC" ) );

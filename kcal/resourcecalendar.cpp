@@ -94,7 +94,7 @@ QString ResourceCalendar::infoText() const
 
 void ResourceCalendar::writeConfig( KConfigGroup &group )
 {
-//  kDebug(5800) << "ResourceCalendar::writeConfig()" << endl;
+//  kDebug(5800) << "ResourceCalendar::writeConfig()";
 
   KRES::Resource::writeConfig( group );
 }
@@ -154,7 +154,7 @@ QString ResourceCalendar::subresourceType( const QString& resource )
 
 bool ResourceCalendar::load()
 {
-  kDebug(5800) << "Loading resource " + resourceName() << endl;
+  kDebug(5800) << "Loading resource" << resourceName();
 
   d->mReceivedLoadError = false;
 
@@ -176,14 +176,14 @@ bool ResourceCalendar::load()
     }
   }
 
-  kDebug(5800) << "Done loading resource " + resourceName() << endl;
+  kDebug(5800) << "Done loading resource" << resourceName();
 
   return success;
 }
 
 void ResourceCalendar::loadError( const QString &err )
 {
-  kDebug(5800) << "Error loading resource: " << err << endl;
+  kDebug(5800) << "Error loading resource:" << err;
 
   d->mReceivedLoadError = true;
 
@@ -209,7 +209,7 @@ bool ResourceCalendar::save( Incidence *incidence )
   if ( d->mInhibitSave )
     return true;
   if ( !readOnly() ) {
-    kDebug(5800) << "Save resource " + resourceName() << endl;
+    kDebug(5800) << "Save resource" << resourceName();
 
     d->mReceivedSaveError = false;
 
@@ -220,7 +220,7 @@ bool ResourceCalendar::save( Incidence *incidence )
     return success;
   } else {
     // Read-only, just don't save...
-    kDebug(5800) << "Don't save read-only resource " + resourceName() << endl;
+    kDebug(5800) << "Don't save read-only resource" << resourceName();
     return true;
   }
 }
@@ -232,7 +232,7 @@ bool ResourceCalendar::doSave( Incidence * )
 
 void ResourceCalendar::saveError( const QString &err )
 {
-  kDebug(5800) << "Error saving resource: " << err << endl;
+  kDebug(5800) << "Error saving resource:" << err;
 
   d->mReceivedSaveError = true;
 

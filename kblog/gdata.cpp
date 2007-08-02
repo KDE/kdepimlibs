@@ -173,9 +173,9 @@ void GData::fetchPosting( KBlog::BlogPosting *posting )
 void GData::modifyPosting( KBlog::BlogPosting* posting )
 {
   Q_D(GData);
-    kDebug() << "modifyPosting()" << endl;
+    kDebug() << "modifyPosting()";
     if ( d->authenticate().isEmpty() ){
-      kDebug(5323) << "Authentication failed." << endl;
+      kDebug(5323) << "Authentication failed.";
       emit error( Atom, "Authentication failed." );
       return;
     }
@@ -574,21 +574,21 @@ void GDataPrivate::slotCreatePosting( KJob *job )
     kDebug(5323) << "Could not regexp the id out of the result:" << data;
     return;
   }
-  kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches " << rxId.cap(1) << endl;
+  kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
 
   QRegExp rxPub( "<published>(.+)</published>" ); 
   if( rxPub.indexIn( data )==-1 ){
-    kDebug(5323) << "Could not regexp the published time out of the result: " << data << endl;
+    kDebug(5323) << "Could not regexp the published time out of the result:" << data;
     return;
   }
-  kDebug(5323) << "QRegExp rx( '<published>(.+)</published>' ) matches " << rxPub.cap(1) << endl;
+  kDebug(5323) << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap(1);
 
   QRegExp rxUp( "<updated>(.+)</updated>" );
   if( rxUp.indexIn( data )==-1 ){
-    kDebug(5323) << "Could not regexp the update time out of the result: " << data << endl;
+    kDebug(5323) << "Could not regexp the update time out of the result:" << data;
     return;
   }
-  kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches " << rxUp.cap(1) << endl;
+  kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
   posting->setPostingId( rxId.cap(1) );
   posting->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
   posting->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
@@ -599,8 +599,8 @@ void GDataPrivate::slotCreatePosting( KJob *job )
 
 void GDataPrivate::slotModifyPostingData( KIO::Job *job, const QByteArray &data )
 {
-  kDebug(5323) << "slotModifyPostingData()" << endl;
-  kDebug(5323) << "Dump modify data: " << data << endl;
+  kDebug(5323) << "slotModifyPostingData()";
+  kDebug(5323) << "Dump modify data: " << data;
   unsigned int oldSize = mModifyPostingBuffer[ job ].size();
   mModifyPostingBuffer[ job ].resize( oldSize + data.size() );
   memcpy( mModifyPostingBuffer[ job ].data() + oldSize, data.data(), data.size() );
@@ -608,12 +608,12 @@ void GDataPrivate::slotModifyPostingData( KIO::Job *job, const QByteArray &data 
 
 void GDataPrivate::slotModifyPosting( KJob *job )
 {
-  kDebug(5323) << "slotModifyPosting()" << endl;  
+  kDebug(5323) << "slotModifyPosting()";  
   const QString data = QString::fromUtf8( mModifyPostingBuffer[ job ].data(), mModifyPostingBuffer[ job ].size() );
 //   Syndication::Atom::Entry entry( data.documentElement() );
   Q_Q(GData);
   if ( job->error() != 0 ) {
-    kDebug(5323) << "slotModifyPosting error: " << job->errorString() << endl;
+    kDebug(5323) << "slotModifyPosting error: " << job->errorString();
     emit q->error( GData::Atom, job->errorString() );
     mModifyPostingBuffer[ job ].resize( 0 );
     mModifyPostingBuffer.remove( job );
@@ -625,24 +625,24 @@ void GDataPrivate::slotModifyPosting( KJob *job )
 
   QRegExp rxId( "post-(\\d+)" ); //FIXME check that and do better handling, especially the creation date time
   if( rxId.indexIn( data )==-1 ){
-    kDebug(5323) << "Could not regexp the id out of the result: " << data << endl;
+    kDebug(5323) << "Could not regexp the id out of the result: " << data;
     return;
   }
-  kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches " << rxId.cap(1) << endl;
+  kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
 
   QRegExp rxPub( "<published>(.+)</published>" ); 
   if( rxPub.indexIn( data )==-1 ){
-    kDebug(5323) << "Could not regexp the published time out of the result: " << data << endl;
+    kDebug(5323) << "Could not regexp the published time out of the result:" << data;
     return;
   }
-  kDebug(5323) << "QRegExp rx( '<published>(.+)</published>' ) matches " << rxPub.cap(1) << endl;
+  kDebug(5323) << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap(1);
 
   QRegExp rxUp( "<updated>(.+)</updated>" );
   if( rxUp.indexIn( data )==-1 ){
-    kDebug(5323) << "Could not regexp the update time out of the result: " << data << endl;
+    kDebug(5323) << "Could not regexp the update time out of the result:" << data;
     return;
   }
-  kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches " << rxUp.cap(1) << endl;
+  kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
   posting->setPostingId( rxId.cap(1) );
   posting->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
   posting->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );

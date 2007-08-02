@@ -56,16 +56,16 @@ int main(int argc,char **argv)
   // Build dictionary to look up Task object from Todo uid.  Each task is a
   // QListViewItem, and is initially added with the view as the parent.
   todoList = cal.rawTodos();
-  kDebug() << (*todoList.begin())->uid() << endl;
+  kDebug() << (*todoList.begin())->uid();
   QString result=(*todoList.begin())->customProperty(QByteArray("karm"),QByteArray("totalTaskTime"));
-  kDebug() << result << endl;
+  kDebug() << result;
   if (result != QString("a,b"))
   {
-    kDebug() << "The string a,b was expected, but given was " << result << endl;
+    kDebug() << "The string a,b was expected, but given was" << result;
     return 1;
   }
   else
   {
-    kDebug() << "Test passed" << endl;
+    kDebug() << "Test passed";
   }
 }

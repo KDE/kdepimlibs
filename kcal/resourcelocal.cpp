@@ -90,7 +90,7 @@ ResourceLocal::ResourceLocal( const QString &fileName )
 
 void ResourceLocal::writeConfig( KConfigGroup &group )
 {
-  kDebug(5800) << "ResourceLocal::writeConfig()" << endl;
+  kDebug(5800) << "ResourceLocal::writeConfig()";
 
   ResourceCalendar::writeConfig( group );
   group.writePathEntry( "CalendarURL", d->mURL.prettyUrl() );
@@ -100,7 +100,7 @@ void ResourceLocal::writeConfig( KConfigGroup &group )
   } else if ( typeid( *d->mFormat ) == typeid( VCalFormat ) ) {
     group.writeEntry( "Format", "vcal" );
   } else {
-    kDebug(5800) << "ERROR: Unknown format type" << endl;
+    kDebug(5800) << "ERROR: Unknown format type";
   }
 }
 
@@ -146,7 +146,7 @@ bool ResourceLocal::doLoad( bool )
   bool success;
 
   if ( !KStandardDirs::exists( d->mURL.path() ) ) {
-    kDebug(5800) << "ResourceLocal::load(): File doesn't exist yet." << endl;
+    kDebug(5800) << "ResourceLocal::load(): File doesn't exist yet.";
     // Save the empty calendar, so the calendar file will be created.
     success = doSave( true );
   } else {
@@ -172,13 +172,12 @@ KABC::Lock *ResourceLocal::lock()
 
 bool ResourceLocal::doReload()
 {
-  kDebug(5800) << "ResourceLocal::doReload()" << endl;
+  kDebug(5800) << "ResourceLocal::doReload()";
 
   if ( !isOpen() ) return false;
 
   if ( d->mLastModified == readLastModified() ) {
-    kDebug(5800) << "ResourceLocal::reload(): file not modified since last read."
-              << endl;
+    kDebug(5800) << "ResourceLocal::reload(): file not modified since last read.";
     return false;
   }
 
@@ -196,7 +195,7 @@ void ResourceLocal::reload()
 void ResourceLocal::dump() const
 {
   ResourceCalendar::dump();
-  kDebug(5800) << "  Url: " << d->mURL.url() << endl;
+  kDebug(5800) << "  Url:" << d->mURL.url();
 }
 
 QString ResourceLocal::fileName() const

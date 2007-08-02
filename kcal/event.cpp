@@ -118,7 +118,7 @@ KDateTime Event::dtEnd() const
   }
 
   kDebug(5800) << "Warning! Event '" << summary()
-               << "' has neither end date nor duration." << endl;
+               << "' has neither end date nor duration.";
   return dtStart();
 }
 

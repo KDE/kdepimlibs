@@ -73,7 +73,7 @@ void ResourceLocalDir::readConfig( const KConfigGroup &group )
 
 void ResourceLocalDir::writeConfig( KConfigGroup &group )
 {
-  kDebug(5800) << "ResourceLocalDir::writeConfig()" << endl;
+  kDebug(5800) << "ResourceLocalDir::writeConfig()";
 
   ResourceCalendar::writeConfig( group );
 
@@ -109,14 +109,14 @@ ResourceLocalDir::~ResourceLocalDir()
 
 bool ResourceLocalDir::doLoad( bool )
 {
-  kDebug(5800) << "ResourceLocalDir::load()" << endl;
+  kDebug(5800) << "ResourceLocalDir::load()";
 
   calendar()->close();
   QString dirName = mURL.path();
   bool success = true;
 
   if ( !( KStandardDirs::exists( dirName ) || KStandardDirs::exists( dirName + '/') ) ) {
-    kDebug(5800) << "ResourceLocalDir::load(): Directory '" << dirName << "' doesn't exist yet. Creating it..." << endl;
+    kDebug(5800) << "ResourceLocalDir::load(): Directory '" << dirName << "' doesn't exist yet. Creating it...";
 
     // Create the directory. Use 0775 to allow group-writable if the umask
     // allows it (permissions will be 0775 & ~umask). This is desired e.g. for
@@ -124,7 +124,7 @@ bool ResourceLocalDir::doLoad( bool )
     success = KStandardDirs::makeDir( dirName, 0775 );
   } else {
 
-    kDebug(5800) << "ResourceLocalDir::load(): '" << dirName << "'" << endl;
+    kDebug(5800) << "ResourceLocalDir::load(): '" << dirName << "'";
     QDir dir( dirName );
 
     QStringList entries = dir.entryList( QDir::Files | QDir::Readable );
@@ -135,7 +135,7 @@ bool ResourceLocalDir::doLoad( bool )
         continue;
 
       QString fileName = dirName + '/' + *it;
-      kDebug(5800) << " read '" << fileName << "'" << endl;
+      kDebug(5800) << " read '" << fileName << "'";
       CalendarLocal cal( calendar()->timeSpec() );
       if ( !doFileLoad( cal, fileName ) ) {
         success = false;
@@ -176,7 +176,7 @@ bool ResourceLocalDir::doSave( bool, Incidence *incidence )
   mDirWatch.stopScan();  // do prohibit the dirty() signal and a following reload()
 
   QString fileName = mURL.path() + '/' + incidence->uid();
-  kDebug(5800) << "writing '" << fileName << "'" << endl;
+  kDebug(5800) << "writing '" << fileName << "'";
 
   CalendarLocal cal( calendar()->timeSpec() );
   cal.addIncidence( incidence->clone() );
@@ -194,11 +194,11 @@ KABC::Lock *ResourceLocalDir::lock()
 
 void ResourceLocalDir::reload( const QString &file )
 {
-  kDebug(5800) << "ResourceLocalDir::reload()" << endl;
+  kDebug(5800) << "ResourceLocalDir::reload()";
 
   if ( !isOpen() ) return;
 
-  kDebug(5800) << "  File: '" << file << "'" << endl;
+  kDebug(5800) << "  File: '" << file << "'";
 
   calendar()->close();
   load();
@@ -208,7 +208,7 @@ void ResourceLocalDir::reload( const QString &file )
 
 bool ResourceLocalDir::deleteEvent(Event *event)
 {
-  kDebug(5800) << "ResourceLocalDir::deleteEvent" << endl;
+  kDebug(5800) << "ResourceLocalDir::deleteEvent";
   if ( deleteIncidenceFile(event) )
     return( calendar()->deleteEvent( event ) );
   else
@@ -249,7 +249,7 @@ void ResourceLocalDir::deleteAllJournals()
 void ResourceLocalDir::dump() const
 {
   ResourceCalendar::dump();
-  kDebug(5800) << "  Url: " << mURL.url() << endl;
+  kDebug(5800) << "  Url:" << mURL.url();
 }
 
 bool ResourceLocalDir::deleteIncidenceFile(Incidence *incidence)

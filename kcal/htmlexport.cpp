@@ -262,7 +262,7 @@ void HtmlExport::createEventList (QTextStream *ts)
   *ts << "  </tr>\n";
 
   for ( QDate dt = fromDate(); dt <= toDate(); dt = dt.addDays(1) ) {
-    kDebug(5800) << "Getting events for " << dt.toString() << endl;
+    kDebug(5800) << "Getting events for" << dt.toString();
     Event::List events = d->mCalendar->events(dt, d->mCalendar->timeSpec(),
                                               EventSortStartDate,
                                               SortDirectionAscending );
@@ -287,7 +287,7 @@ void HtmlExport::createEventList (QTextStream *ts)
 void HtmlExport::createEvent ( QTextStream *ts, Event *event,
                                QDate date,bool withDescription )
 {
-  kDebug(5800) << "HtmlExport::createEvent(): " << event->summary() << endl;
+  kDebug(5800) << "HtmlExport::createEvent():" << event->summary();
   *ts << "  <tr>\n";
 
   if ( !event->floats() ) {
@@ -440,7 +440,7 @@ void HtmlExport::createTodoList ( QTextStream *ts )
 
 void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
 {
-  kDebug(5800) << "HtmlExport::createTodo()" << endl;
+  kDebug(5800) << "HtmlExport::createTodo()";
 
   bool completed = todo->isCompleted();
   Incidence::List relations = todo->relations();

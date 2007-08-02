@@ -359,7 +359,7 @@ bool KTNEFParser::ParserPrivate::decodeAttachment()
   stream_ >> u;	// u <- checksum
   // add TNEF attribute
   current_->addAttribute( tag, type, value, true );
-  //kDebug(5975) << "stream: " << device_->pos();
+  //kDebug(5975) << "stream:" << device_->pos();
 
   return true;
 }

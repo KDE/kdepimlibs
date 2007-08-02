@@ -457,8 +457,8 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence,
     if ( duration > 0 ) {
       int doneduration = recur->durationTo( date.addDays( -1 ) );
       if ( doneduration >= duration ) {
-        kDebug(5800) << "The dissociated event already occurred more often "
-                     << "than it was supposed to ever occur. ERROR!" << endl;
+        kDebug(5800) << "The dissociated event already occurred more often"
+                     << "than it was supposed to ever occur. ERROR!";
         recur->clear();
       } else {
         recur->setDuration( duration - doneduration );
@@ -1051,8 +1051,8 @@ void Calendar::appendAlarms( Alarm::List &alarms, Incidence *incidence,
       KDateTime dt = alarmlist[i]->nextRepetition( preTime );
       if ( dt.isValid() && dt <= to ) {
         kDebug(5800) << "Calendar::appendAlarms() '"
-                     << incidence->summary() << "': "
-                     << dt.toString() << endl;
+                     << incidence->summary() << "':"
+                     << dt.toString();
         alarms.append( alarmlist[i] );
       }
     }
@@ -1167,7 +1167,7 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
         }
       }
       kDebug(5800) << "Calendar::appendAlarms() '" << incidence->summary()
-                   << "': " << dt.toString() << endl;
+                   << "':" << dt.toString();
       alarms.append( a );
     }
   }

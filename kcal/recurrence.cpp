@@ -785,7 +785,7 @@ void Recurrence::addYearlyMonth( short month )
 
 TimeList Recurrence::recurTimesOn( const QDate &date, const KDateTime::Spec &timeSpec ) const
 {
-// kDebug(5800) << "recurTimesOn(" << date << ")" << endl;
+// kDebug(5800) << "recurTimesOn(" << date << ")";
   int i, end;
   TimeList times;
   // The whole day is excepted
@@ -884,7 +884,7 @@ DateTimeList Recurrence::timesInInterval( const KDateTime &start, const KDateTim
 
 KDateTime Recurrence::getNextDateTime( const KDateTime &preDateTime ) const
 {
-kDebug(5800) << " Recurrence::getNextDateTime after " << preDateTime.dateTime() << endl;
+kDebug(5800) << " Recurrence::getNextDateTime after" << preDateTime.dateTime();
   KDateTime nextDT = preDateTime;
   // prevent infinite loops, e.g. when an exrule extinguishes an rrule (e.g.
   // the exrule is identical to the rrule). If an occurrence is found, break
@@ -914,8 +914,8 @@ kDebug(5800) << " Recurrence::getNextDateTime after " << preDateTime.dateTime() 
       dates << d->mRDateTimes[i];
     }
 
-/*kDebug(5800) << "    nextDT: " << nextDT << ", startDT: " << startDateTime() << endl;
-kDebug(5800) << "   getNextDateTime: found " << dates.count() << " RDATES and DTSTART in loop " << loop << endl;*/
+/*kDebug(5800) << "    nextDT:" << nextDT << ", startDT:" << startDateTime();
+kDebug(5800) << "   getNextDateTime: found" << dates.count() << "RDATES and DTSTART in loop" << loop;*/
     KDateTime kdt( startDateTime() );
     for ( i = 0, end = d->mRDates.count();  i < end;  ++i ) {
       kdt.setDate( d->mRDates[i] );
@@ -933,19 +933,19 @@ kDebug(5800) << "   getNextDateTime: found " << dates.count() << " RDATES and DT
 
     // Take the first of these (all others can't be used later on)
     dates.sortUnique();
-// kDebug(5800) << "   getNextDateTime: found " << dates.count() << " dates in loop " << loop << endl;
+// kDebug(5800) << "   getNextDateTime: found" << dates.count() << "dates in loop" << loop;
 
     if ( dates.isEmpty() ) return KDateTime();
     nextDT = dates.first();
 
     // Check if that date/time is excluded explicitly or by an exrule:
     if ( !d->mExDates.containsSorted( nextDT.date() ) && !d->mExDateTimes.containsSorted( nextDT ) ) {
-// kDebug(5800) << "   NextDT" << nextDT << " not excluded by EXDATE " << endl;
+// kDebug(5800) << "   NextDT" << nextDT << "not excluded by EXDATE";
       bool allowed = true;
       for ( i = 0, end = d->mExRules.count();  i < end;  ++i ) {
         allowed = allowed && !( d->mExRules[i]->recursAt( nextDT ) );
       }
-// kDebug(5800) << "   NextDT " << nextDT << ", allowed=" << allowed << endl;
+// kDebug(5800) << "   NextDT" << nextDT << ", allowed=" << allowed;
       if ( allowed ) return nextDT;
     }
   }
@@ -996,7 +996,7 @@ KDateTime Recurrence::getPreviousDateTime( const KDateTime &afterDateTime ) cons
       KDateTime dt = d->mRRules[i]->getPreviousDate( prevDT );
       if ( dt.isValid() ) dates << dt;
     }
-kDebug(5800) << "   getPreviousDateTime: found " << dates.count() << " dates in loop " << loop << endl;
+kDebug(5800) << "   getPreviousDateTime: found" << dates.count() << "dates in loop" << loop;
 
     // Take the last of these (all others can't be used later on)
     dates.sortUnique();
@@ -1158,41 +1158,41 @@ void Recurrence::recurrenceChanged( RecurrenceRule * )
 
 void Recurrence::dump() const
 {
-  kDebug(5800) << "Recurrence::dump():" << endl;
+  kDebug(5800) << "Recurrence::dump():";
 
   int i;
   int count = d->mRRules.count();
-  kDebug(5800) << "  -) " << count << " RRULEs: " << endl;
+  kDebug(5800) << "  -)" << count << "RRULEs:";
   for ( i = 0;  i < count;  ++i ) {
-    kDebug(5800) << "    -) RecurrenceRule : " << endl;
+    kDebug(5800) << "    -) RecurrenceRule: ";
     d->mRRules[i]->dump();
   }
   count = d->mExRules.count();
-  kDebug(5800) << "  -) " << count << " EXRULEs: " << endl;
+  kDebug(5800) << "  -)" << count << "EXRULEs:";
   for ( i = 0;  i < count;  ++i ) {
-    kDebug(5800) << "    -) ExceptionRule : " << endl;
+    kDebug(5800) << "    -) ExceptionRule :";
     d->mExRules[i]->dump();
   }
 
 
   count = d->mRDates.count();
-  kDebug(5800) << endl << "  -) " << count << " Recurrence Dates: " << endl;
+  kDebug(5800) << endl << "  -)" << count << "Recurrence Dates:";
   for ( i = 0;  i < count;  ++i ) {
-    kDebug(5800) << "     " << d->mRDates[i] << endl;
+    kDebug(5800) << "    " << d->mRDates[i];
   }
   count = d->mRDateTimes.count();
-  kDebug(5800) << endl << "  -) " << count << " Recurrence Date/Times: " << endl;
+  kDebug(5800) << endl << "  -)" << count << "Recurrence Date/Times:";
   for ( i = 0;  i < count;  ++i ) {
-    kDebug(5800) << "     " << d->mRDateTimes[i].dateTime() << endl;
+    kDebug(5800) << "    " << d->mRDateTimes[i].dateTime();
   }
   count = d->mExDates.count();
-  kDebug(5800) << endl << "  -) " << count << " Exceptions Dates: " << endl;
+  kDebug(5800) << endl << "  -)" << count << "Exceptions Dates:";
   for ( i = 0;  i < count;  ++i ) {
-    kDebug(5800) << "     " << d->mExDates[i] << endl;
+    kDebug(5800) << "    " << d->mExDates[i];
   }
   count = d->mExDateTimes.count();
-  kDebug(5800) << endl << "  -) " << count << " Exception Date/Times: " << endl;
+  kDebug(5800) << endl << "  -)" << count << "Exception Date/Times:";
   for ( i = 0;  i < count;  ++i ) {
-    kDebug(5800) << "     " << d->mExDateTimes[i].dateTime() << endl;
+    kDebug(5800) << "    " << d->mExDateTimes[i].dateTime();
   }
 }

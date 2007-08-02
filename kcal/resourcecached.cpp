@@ -205,8 +205,8 @@ void ResourceCached::readConfig( const KConfigGroup &group )
 void ResourceCached::setupSaveTimer()
 {
   if ( d->mSavePolicy == SaveInterval ) {
-    kDebug(5800) << "ResourceCached::setSavePolicy(): start save timer (interval "
-              << d->mSaveInterval << " minutes)." << endl;
+    kDebug(5800) << "ResourceCached::setSavePolicy(): start save timer (interval"
+              << d->mSaveInterval << "minutes).";
     d->mSaveTimer.start( d->mSaveInterval * 60 * 1000 ); // n minutes
   } else {
     d->mSaveTimer.stop();
@@ -216,8 +216,8 @@ void ResourceCached::setupSaveTimer()
 void ResourceCached::setupReloadTimer()
 {
   if ( d->mReloadPolicy == ReloadInterval ) {
-    kDebug(5800) << "ResourceCached::setSavePolicy(): start reload timer "
-                 "(interval " << d->mReloadInterval << " minutes)" << endl;
+    kDebug(5800) << "ResourceCached::setSavePolicy(): start reload timer"
+                 "(interval" << d->mReloadInterval << "minutes)";
     d->mReloadTimer.start( d->mReloadInterval * 60 * 1000 ); // n minutes
   } else {
     d->mReloadTimer.stop();
@@ -244,7 +244,7 @@ bool ResourceCached::addEvent(Event *event)
 // probably not really efficient, but...it works for now.
 bool ResourceCached::deleteEvent( Event *event )
 {
-  kDebug(5800) << "ResourceCached::deleteEvent" << endl;
+  kDebug(5800) << "ResourceCached::deleteEvent";
 
   return d->mCalendar.deleteEvent( event );
 }
@@ -327,7 +327,7 @@ Todo::List ResourceCached::rawTodosForDate( const QDate &date )
 
 bool ResourceCached::addJournal( Journal *journal )
 {
-  kDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
+  kDebug(5800) << "Adding Journal on" << journal->dtStart().toString();
 
   return d->mCalendar.addJournal( journal );
 }
@@ -355,7 +355,7 @@ Alarm::List ResourceCached::alarmsTo( const KDateTime &to )
 
 Alarm::List ResourceCached::alarms( const KDateTime &from, const KDateTime &to )
 {
-//  kDebug(5800) << "ResourceCached::alarms(" << from.toString() << " - " << to.toString() << ")\n";
+//  kDebug(5800) << "ResourceCached::alarms(" << from.toString() << "-" << to.toString() << ")";
 
   return d->mCalendar.alarms( from, to );
 }
@@ -394,7 +394,7 @@ void ResourceCached::clearChanges()
 
 bool ResourceCached::load( CacheAction action )
 {
-  kDebug(5800) << "Loading resource " + resourceName() << endl;
+  kDebug(5800) << "Loading resource" << resourceName();
 
   setReceivedLoadError( false );
 
@@ -429,7 +429,7 @@ bool ResourceCached::load( CacheAction action )
     }
   }
 
-  kDebug(5800) << "Done loading resource " + resourceName() << endl;
+  kDebug(5800) << "Done loading resource" << resourceName();
 
   return success;
 }
@@ -458,7 +458,7 @@ bool ResourceCached::save( CacheAction action, Incidence *incidence )
   if ( saveInhibited() )
     return true;
   if ( !readOnly() ) {
-    kDebug(5800) << "Save resource " + resourceName() << endl;
+    kDebug(5800) << "Save resource" << resourceName();
 
     setReceivedSaveError( false );
 
@@ -481,7 +481,7 @@ bool ResourceCached::save( CacheAction action, Incidence *incidence )
     return success;
   } else {
     // Read-only, just don't save...
-    kDebug(5800) << "Don't save read-only resource " + resourceName() << endl;
+    kDebug(5800) << "Don't save read-only resource" << resourceName();
     return true;
   }
 }
@@ -493,7 +493,7 @@ bool ResourceCached::doSave( bool syncCache, Incidence * )
 
 void ResourceCached::saveToCache()
 {
-  kDebug(5800) << "ResourceCached::saveToCache(): " << cacheFile() << endl;
+  kDebug(5800) << "ResourceCached::saveToCache():" << cacheFile();
 
   setIdMapperIdentifier();
   d->mIdMapper.save();
@@ -640,8 +640,8 @@ void ResourceCached::loadChangesCache()
 void ResourceCached::calendarIncidenceAdded( Incidence *i )
 {
 #if 1
-  kDebug(5800) << "ResourceCached::calendarIncidenceAdded(): "
-            << i->uid() << endl;
+  kDebug(5800) << "ResourceCached::calendarIncidenceAdded():"
+            << i->uid();
 #endif
 
   QMap<Incidence *,bool>::ConstIterator it;
@@ -656,8 +656,8 @@ void ResourceCached::calendarIncidenceAdded( Incidence *i )
 void ResourceCached::calendarIncidenceChanged( Incidence *i )
 {
 #if 1
-  kDebug(5800) << "ResourceCached::calendarIncidenceChanged(): "
-            << i->uid() << endl;
+  kDebug(5800) << "ResourceCached::calendarIncidenceChanged():"
+            << i->uid();
 #endif
 
   QMap<Incidence *,bool>::ConstIterator it;
@@ -673,8 +673,8 @@ void ResourceCached::calendarIncidenceChanged( Incidence *i )
 void ResourceCached::calendarIncidenceDeleted( Incidence *i )
 {
 #if 1
-  kDebug(5800) << "ResourceCached::calendarIncidenceDeleted(): "
-            << i->uid() << endl;
+  kDebug(5800) << "ResourceCached::calendarIncidenceDeleted():"
+            << i->uid();
 #endif
 
   QMap<Incidence *,bool>::ConstIterator it;
@@ -780,7 +780,7 @@ void ResourceCached::slotReload()
 {
   if ( !isActive() ) return;
 
-  kDebug(5800) << "ResourceCached::slotReload()" << endl;
+  kDebug(5800) << "ResourceCached::slotReload()";
 
   load( SyncCache );
 }
@@ -789,7 +789,7 @@ void ResourceCached::slotSave()
 {
   if ( !isActive() ) return;
 
-  kDebug(5800) << "ResourceCached::slotSave()" << endl;
+  kDebug(5800) << "ResourceCached::slotSave()";
 
   save( SyncCache );
 }
@@ -797,13 +797,12 @@ void ResourceCached::slotSave()
 void ResourceCached::checkForAutomaticSave()
 {
   if ( d->mSavePolicy == SaveAlways )  {
-    kDebug(5800) << "ResourceCached::checkForAutomaticSave(): save now" << endl;
+    kDebug(5800) << "ResourceCached::checkForAutomaticSave(): save now";
     d->mSavePending = true;
     d->mSaveTimer.setSingleShot( true );
     d->mSaveTimer.start( 1 * 1000 ); // 1 second
   } else if ( d->mSavePolicy == SaveDelayed ) {
-    kDebug(5800) << "ResourceCached::checkForAutomaticSave(): save delayed"
-              << endl;
+    kDebug(5800) << "ResourceCached::checkForAutomaticSave(): save delayed";
     d->mSavePending = true;
     d->mSaveTimer.setSingleShot( true );
     d->mSaveTimer.start( 15 * 1000 ); // 15 seconds
@@ -848,7 +847,7 @@ void ResourceCached::doClose()
 
 bool ResourceCached::doOpen()
 {
-  kDebug(5800) << "Opening resource " << resourceName() << endl;
+  kDebug(5800) << "Opening resource" << resourceName();
   return true;
 }
 

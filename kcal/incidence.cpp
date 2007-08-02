@@ -425,7 +425,7 @@ void Incidence::addRelation( Incidence *incidence )
 
 void Incidence::removeRelation( Incidence *incidence )
 {
-  kDebug() << "Entering Incidence::removeRelation " << endl;
+  kDebug() << "Entering Incidence::removeRelation";
   d->mRelations.removeRef( incidence );
   d->mRelatedToUid = QString();
 //  if (incidence->getRelatedTo() == this) incidence->setRelatedTo(0);

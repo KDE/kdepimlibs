@@ -138,7 +138,7 @@ void Todo::setDtDue( const KDateTime &dtDue, bool first )
     setDtStart( dtDue );
   }
 
-  //kDebug(5800) << "setDtDue says date is " << d->mDtDue.toString() << endl;
+  //kDebug(5800) << "setDtDue says date is" << d->mDtDue.toString();
 
   /*const Alarm::List& alarms = alarms();
   for (Alarm* alarm = alarms.first(); alarm; alarm = alarms.next())

@@ -89,7 +89,7 @@ bool FileStorage::open()
 
 bool FileStorage::load()
 {
-//  kDebug(5800) << "FileStorage::load(): '" << d->mFileName << "'" << endl;
+//  kDebug(5800) << "FileStorage::load(): '" << d->mFileName << "'";
 
   // do we want to silently accept this, or make some noise?  Dunno...
   // it is a semantical thing vs. a practical thing.
@@ -108,10 +108,10 @@ bool FileStorage::load()
 
     if ( !success ) {
       if ( iCal.exception() ) {
-//        kDebug(5800) << "---Error: " << mFormat->exception()->errorCode() << endl;
+//        kDebug(5800) << "---Error:" << mFormat->exception()->errorCode();
         if ( iCal.exception()->errorCode() == ErrorFormat::CalVersion1 ) {
           // Expected non vCalendar file, but detected vCalendar
-          kDebug(5800) << "FileStorage::load() Fallback to VCalFormat" << endl;
+          kDebug(5800) << "FileStorage::load() Fallback to VCalFormat";
           VCalFormat vCal;
           success = vCal.load( calendar(), d->mFileName );
           calendar()->setProductId( vCal.productId() );
@@ -119,11 +119,11 @@ bool FileStorage::load()
           return false;
         }
       } else {
-        kDebug(5800) << "Warning! There should be an exception set." << endl;
+        kDebug(5800) << "Warning! There should be an exception set.";
         return false;
       }
     } else {
-//     kDebug(5800) << "---Success" << endl;
+//     kDebug(5800) << "---Success";
       calendar()->setProductId( iCal.loadedProductId() );
     }
   }
@@ -145,11 +145,9 @@ bool FileStorage::save()
     calendar()->setModified( false );
   } else {
     if ( !format->exception() ) {
-      kDebug(5800) << "FileStorage::save(): Error. There should be an expection set."
-                << endl;
+      kDebug(5800) << "FileStorage::save(): Error. There should be an expection set.";
     } else {
-      kDebug(5800) << "FileStorage::save(): " << format->exception()->message()
-                << endl;
+      kDebug(5800) << "FileStorage::save():" << format->exception()->message();
     }
   }
 

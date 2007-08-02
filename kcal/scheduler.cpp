@@ -93,7 +93,7 @@ FreeBusyCache *Scheduler::freeBusyCache() const
 bool Scheduler::acceptTransaction(IncidenceBase *incidence,Method method,ScheduleMessage::Status status)
 {
   kDebug(5800) << "Scheduler::acceptTransaction, method="
-                << methodName( method ) << endl;
+                << methodName( method );
 
   switch (method) {
     case Publish:
@@ -181,7 +181,7 @@ bool Scheduler::acceptPublish( IncidenceBase *newIncBase,
 
   bool res = false;
   kDebug(5800) << "Scheduler::acceptPublish, status="
-            << ScheduleMessage::statusName( status ) << endl;
+            << ScheduleMessage::statusName( status );
   Incidence *newInc = static_cast<Incidence *>( newIncBase );
   Incidence *calInc = mCalendar->incidence( newIncBase->uid() );
   switch ( status ) {
@@ -304,7 +304,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
 
   if (ev || to) {
     //get matching attendee in calendar
-    kDebug(5800) << "Scheduler::acceptTransaction match found!" << endl;
+    kDebug(5800) << "Scheduler::acceptTransaction match found!";
     Attendee::List attendeesIn = incidence->attendees();
     Attendee::List attendeesEv;
     Attendee::List attendeesNew;
@@ -319,7 +319,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
         Attendee *attEv = *evIt;
         if (attIn->email().toLower()==attEv->email().toLower()) {
           //update attendee-info
-          kDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
+          kDebug(5800) << "Scheduler::acceptTransaction update attendee";
           attEv->setStatus(attIn->status());
           attEv->setDelegate(attIn->delegate());
           attEv->setDelegator(attIn->delegator());
@@ -421,7 +421,7 @@ bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
 
   FreeBusy *freebusy = static_cast<FreeBusy *>(incidence);
 
-  kDebug(5800) << "acceptFreeBusy:: freeBusyDirName: " << freeBusyDir() << endl;
+  kDebug(5800) << "acceptFreeBusy:: freeBusyDirName:" << freeBusyDir();
 
   Person from;
   if(method == Scheduler::Publish) {

@@ -109,7 +109,7 @@ Calendar *DndFactory::createDropCalendar( QDropEvent *de )
 
 Event *DndFactory::createDropEvent(QDropEvent *de)
 {
-  kDebug(5800) << "DndFactory::createDrop()" << endl;
+  kDebug(5800) << "DndFactory::createDrop()";
   Event *ev = 0;
   Calendar *cal = createDropCalendar( de );
 
@@ -125,7 +125,7 @@ Event *DndFactory::createDropEvent(QDropEvent *de)
 
 Todo *DndFactory::createDropTodo(QDropEvent *de)
 {
-  kDebug(5800) << "DndFactory::createDropTodo()" << endl;
+  kDebug(5800) << "DndFactory::createDropTodo()";
   Todo *todo = 0;
   Calendar *cal = createDropCalendar( de );
 
@@ -169,13 +169,13 @@ bool DndFactory::copyIncidence( Incidence *selectedInc )
 
 Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime)
 {
-//  kDebug(5800) << "DnDFactory::pasteEvent()" << endl;
+//  kDebug(5800) << "DnDFactory::pasteEvent()";
   QClipboard *cb = QApplication::clipboard();
 
   Calendar *cal = createDropCalendar( cb->mimeData() );
 
   if ( !cal ) {
-    kDebug(5800) << "Can't parse clipboard" << endl;
+    kDebug(5800) << "Can't parse clipboard";
     return 0;
   }
   Incidence *ret = 0;
@@ -228,7 +228,7 @@ Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime
       }
       anJournal->setDtStart( startDate );
     } else {
-      kDebug(5800) << "Trying to paste unknown incidence of type " << inc->type() << endl;
+      kDebug(5800) << "Trying to paste unknown incidence of type" << inc->type();
     }
 
     ret = inc;

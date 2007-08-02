@@ -125,7 +125,7 @@ class QtopiaParser : public QXmlDefaultHandler
 
         QString alarmStr = attributes.value( "alarm" );
         if ( !alarmStr.isEmpty() ) {
-          kDebug(5800) << "Alarm: " << alarmStr << endl;
+          kDebug(5800) << "Alarm:" << alarmStr;
           Alarm *alarm = new Alarm( event );
           alarm->setType( Alarm::Display );
           alarm->setEnabled( true );
@@ -189,21 +189,21 @@ class QtopiaParser : public QXmlDefaultHandler
 
     bool warning ( const QXmlParseException &exception )
     {
-      kDebug(5800) << "WARNING" << endl;
+      kDebug(5800) << "WARNING";
       printException( exception );
       return true;
     }
 
     bool error ( const QXmlParseException &exception )
     {
-      kDebug(5800) << "ERROR" << endl;
+      kDebug(5800) << "ERROR";
       printException( exception );
       return false;
     }
 
     bool fatalError ( const QXmlParseException &exception )
     {
-      kDebug(5800) << "FATALERROR" << endl;
+      kDebug(5800) << "FATALERROR";
       printException( exception );
       return false;
     }
@@ -272,7 +272,7 @@ QtopiaFormat::~QtopiaFormat()
 
 bool QtopiaFormat::load( Calendar *calendar, const QString &fileName)
 {
-  kDebug(5800) << "QtopiaFormat::load() " << fileName << endl;
+  kDebug(5800) << "QtopiaFormat::load():" << fileName;
 
   clearException();
 
@@ -286,7 +286,7 @@ bool QtopiaFormat::load( Calendar *calendar, const QString &fileName)
 
 bool QtopiaFormat::save( Calendar *calendar, const QString &fileName )
 {
-  kDebug(5800) << "QtopiaFormat::save(): " << fileName << endl;
+  kDebug(5800) << "QtopiaFormat::save():" << fileName;
 
   clearException();
 
@@ -311,13 +311,13 @@ bool QtopiaFormat::save( Calendar *calendar, const QString &fileName )
 
 bool QtopiaFormat::fromString( Calendar *, const QString & )
 {
-  kDebug(5800) << "QtopiaFormat::fromString() not yet implemented." << endl;
+  kDebug(5800) << "QtopiaFormat::fromString() not yet implemented.";
   return false;
 }
 
 bool QtopiaFormat::fromRawString( Calendar *, const QByteArray & )
 {
-  kDebug(5800) << "QtopiaFormat::fromRawString() not yet implemented." << endl;
+  kDebug(5800) << "QtopiaFormat::fromRawString() not yet implemented.";
   return false;
 }
 
