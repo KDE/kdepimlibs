@@ -284,7 +284,7 @@ void GData::createPosting( KBlog::BlogPosting* posting )
 void GData::removePosting( KBlog::BlogPosting *posting )
 {
   Q_D(GData);
-    kDebug() << "createPosting()";
+    kDebug() << "removePosting()";
     if ( d->authenticate() ){
       kDebug(5323) << "Authentication failed.";
       emit error( Atom, "Authentication failed." );
@@ -316,14 +316,77 @@ void GData::removePosting( KBlog::BlogPosting *posting )
 
 void GData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
 {
+  kDebug(5323) << "createComment()";
   Q_D(GData);
-  return; //FIXME
+    if ( d->authenticate() ){
+      kDebug(5323) << "Authentication failed.";
+      emit error( Atom, "Authentication failed." );
+      return;
+    }
+  QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
+  atomMarkup += "<title type=\"text\">"+comment->title().toUtf8()+"</title>";
+  atomMarkup += "<content type=\"html\">"+comment->content().toUtf8()+"</content>";
+  atomMarkup += "<author>";
+  atomMarkup += "<name>"+comment->name()+"</name>";
+  atomMarkup += "</author></entry>";
+
+    QByteArray postData;
+    QDataStream stream( &postData, QIODevice::WriteOnly );
+    stream.writeRawData( atomMarkup.toUtf8(), atomMarkup.toUtf8().length() );
+
+    KIO::TransferJob *job = KIO::http_post(
+        KUrl( "http://www.blogger.com/feeds/" + blogId() +"/"+ posting->postingId() +"/comments/default" ),
+        postData, false );
+
+    d->mCreateCommentMap[ job ][posting] = comment;
+
+    if ( !job ) {
+      kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/"
+          << blogId() << "/" << posting->postingId() << "/comments/default";
+    }
+
+  job->addMetaData( "content-type", "Content-Type: application/atom+xml; charset=utf-8" );
+  job->addMetaData( "ConnectTimeout", "50" );
+  job->addMetaData( "customHTTPHeader", "Authorization: GoogleLogin auth=" + d->mAuthenticationString );
+
+    connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+             this, SLOT( slotCreateCommentData( KIO::Job *, const QByteArray & ) ) );
+    connect( job, SIGNAL( result( KJob * ) ),
+             this, SLOT( slotCreateComment( KJob * ) ) );
 }
 
-void GData::deleteComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
+void GData::removeComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
 {
   Q_D(GData);
-  return; //FIXME
+    kDebug() << "removeComment()";
+    if ( d->authenticate() ){
+      kDebug(5323) << "Authentication failed.";
+      emit error( Atom, "Authentication failed." );
+      return;
+    }
+
+    QByteArray postData;
+
+    KIO::TransferJob *job = KIO::http_post(
+            KUrl( "http://www.blogger.com/feeds/" + blogId() +"/"+ posting->postingId() +
+           "/comments/default/" + comment->commentId() ),
+            postData, false );
+
+    d->mRemoveCommentMap[ job ][ posting ] = comment;
+
+    if ( !job ) {
+      kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/"
+          << blogId() << posting->postingId() << "/comments/default/" << comment->commentId();
+    }
+
+  job->addMetaData( "ConnectTimeout", "50" );
+  job->addMetaData( "customHTTPHeader", "Authorization: GoogleLogin auth=" + d->mAuthenticationString +
+                                   "\r\nX-HTTP-Method-Override: DELETE" );
+
+    connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+             this, SLOT( slotRemoveCommentData( KIO::Job *, const QByteArray & ) ) );
+    connect( job, SIGNAL( result( KJob * ) ),
+             this, SLOT( slotRemoveComment( KJob * ) ) );
 }
 
 GDataPrivate::GDataPrivate():
@@ -702,6 +765,91 @@ void GDataPrivate::slotRemovePosting( KJob *job )
   }
 
   emit q->removedPosting( posting );
+}
+
+void GDataPrivate::slotCreateCommentData( KIO::Job *job, const QByteArray &data )
+{
+  kDebug(5323) << "slotCreateCommentData()";
+  unsigned int oldSize = mCreateCommentBuffer[ job ].size();
+  mCreateCommentBuffer[ job ].resize( oldSize + data.size() );
+  memcpy( mCreateCommentBuffer[ job ].data() + oldSize, data.data(), data.size() );
+}
+
+void GDataPrivate::slotCreateComment( KJob *job )
+{
+  kDebug(5323) << "slotCreateComment()";  
+  const QString data = QString::fromUtf8( mCreateCommentBuffer[ job ].data(), mCreateCommentBuffer[ job ].size() );
+  mCreateCommentBuffer[ job ].resize( 0 );
+
+  Q_Q(GData);
+
+  KBlog::BlogPostingComment* comment = mCreateCommentMap[ job ].values().first();
+  KBlog::BlogPosting* posting = mCreateCommentMap[ job ].keys().first();
+  mCreateCommentMap.remove( job );
+
+  if ( job->error() != 0 ) {
+    kDebug(5323) << "slotCreateComment error:" << job->errorString();
+    emit q->error( GData::Atom, job->errorString() );
+    return;
+  }
+
+// TODO check for result and fit appropriately
+//   QRegExp rxId( "post-(\\d+)" ); //FIXME check that and do better handling, especially the creation date time
+//   if( rxId.indexIn( data )==-1 ){
+//     kDebug(5323) << "Could not regexp the id out of the result:" << data;
+//     emit q->error( GData::Atom, i18n( "Could not regexp the id out of the result." ), posting );
+//     return;
+//   }
+//   kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
+// 
+//   QRegExp rxPub( "<published>(.+)</published>" ); 
+//   if( rxPub.indexIn( data )==-1 ){
+//     kDebug(5323) << "Could not regexp the published time out of the result:" << data;
+//     emit q->error( GData::Atom, i18n( "Could not regexp the published time out of the result." ), posting );
+//     return;
+//   }
+//   kDebug(5323) << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap(1);
+// 
+//   QRegExp rxUp( "<updated>(.+)</updated>" );
+//   if( rxUp.indexIn( data )==-1 ){
+//     kDebug(5323) << "Could not regexp the update time out of the result:" << data;
+//     emit q->error( GData::Atom, i18n( "Could not regexp the update time out of the result." ), posting );
+//     return;
+//   }
+//   kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
+//   posting->setPostingId( rxId.cap(1) );
+//   posting->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
+//   posting->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) )); 
+  emit q->createdComment( posting, comment );
+}
+
+void GDataPrivate::slotRemoveCommentData( KIO::Job *job, const QByteArray &data )
+{
+  kDebug(5323) << "slotRemoveCommentData()";
+  unsigned int oldSize = mRemoveCommentBuffer[ job ].size();
+  mRemoveCommentBuffer[ job ].resize( oldSize + data.size() );
+  memcpy( mRemoveCommentBuffer[ job ].data() + oldSize, data.data(), data.size() );
+}
+
+void GDataPrivate::slotRemoveComment( KJob *job )
+{
+  kDebug(5323) << "slotRemoveComment()";  
+  const QString data = QString::fromUtf8( mRemoveCommentBuffer[ job ].data(), mRemoveCommentBuffer[ job ].size() );
+  mRemoveCommentBuffer[ job ].resize( 0 );
+
+  Q_Q(GData);
+
+  KBlog::BlogPostingComment* comment = mRemoveCommentMap[ job ].values().first();
+  KBlog::BlogPosting* posting = mRemoveCommentMap[ job ].keys().first();
+  mRemoveCommentMap.remove( job );
+
+  if ( job->error() != 0 ) {
+    kDebug(5323) << "slotRemoveComment error:" << job->errorString();
+    emit q->error( GData::Atom, job->errorString() );
+    return;
+  }
+
+  emit q->removedComment( posting, comment );
 }
 
 #include "gdata.moc"

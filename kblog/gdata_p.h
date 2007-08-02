@@ -46,6 +46,10 @@ class GDataPrivate : public BlogPrivate
     QDateTime mAuthenticationTime;
     QMap<KJob*,QByteArray> mCreatePostingBuffer;
     QMap<KJob*,KBlog::BlogPosting*> mCreatePostingMap;
+    QMap<KJob*,QByteArray> mCreateCommentBuffer;
+    QMap<KJob*,QMap<KBlog::BlogPosting*,KBlog::BlogPostingComment*> > mCreateCommentMap;
+    QMap<KJob*,QByteArray> mRemoveCommentBuffer;
+    QMap<KJob*,QMap<KBlog::BlogPosting*,KBlog::BlogPostingComment*> > mRemoveCommentMap;
     QMap<KJob*,QByteArray> mModifyPostingBuffer;
     QMap<KJob*,KBlog::BlogPosting*> mModifyPostingMap;
     QMap<KJob*,QByteArray> mRemovePostingBuffer;
@@ -70,6 +74,10 @@ class GDataPrivate : public BlogPrivate
     virtual void slotModifyPostingData( KIO::Job *, const QByteArray& );
     virtual void slotRemovePosting(KJob*);
     virtual void slotRemovePostingData( KIO::Job *, const QByteArray& );
+    virtual void slotCreateComment(KJob*);
+    virtual void slotCreateCommentData( KIO::Job *, const QByteArray& );
+    virtual void slotRemoveComment(KJob*);
+    virtual void slotRemoveCommentData( KIO::Job *, const QByteArray& );
     Q_DECLARE_PUBLIC(GData)
 };
 

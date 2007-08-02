@@ -36,6 +36,7 @@ class BlogPostingCommentPrivate
     QString mTitle;
     QString mContent;
     QString mEmail;
+    QString mName;
     QString mCommentId;
     KUrl mUrl;
     QString mError;

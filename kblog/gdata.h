@@ -187,7 +187,7 @@ class KBLOG_EXPORT GData : public Blog
 
     virtual void createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
 
-    virtual void deleteComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
+    virtual void removeComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
 
   Q_SIGNALS:
 
@@ -202,6 +202,10 @@ class KBLOG_EXPORT GData : public Blog
     void listedAllComments( const QList<KBlog::BlogPostingComment> &comments );
 
     void listedComments( const QList<KBlog::BlogPostingComment> &comments, KBlog::BlogPosting *posting );
+
+    void createdComment( const KBlog::BlogPosting *posting, const KBlog::BlogPostingComment *comment );
+
+    void removedComment( const KBlog::BlogPosting *posting, const KBlog::BlogPostingComment *comment );
 
     void fetchedProfileId( const QString &profileId );
 
@@ -222,6 +226,10 @@ class KBLOG_EXPORT GData : public Blog
     Q_PRIVATE_SLOT(d_func(), void slotModifyPostingData(KIO::Job *,const QByteArray&))
     Q_PRIVATE_SLOT(d_func(), void slotRemovePosting(KJob*))
     Q_PRIVATE_SLOT(d_func(), void slotRemovePostingData(KIO::Job *,const QByteArray&))
+    Q_PRIVATE_SLOT(d_func(), void slotCreateComment(KJob*))
+    Q_PRIVATE_SLOT(d_func(), void slotCreateCommentData(KIO::Job *,const QByteArray&))
+    Q_PRIVATE_SLOT(d_func(), void slotRemoveComment(KJob*))
+    Q_PRIVATE_SLOT(d_func(), void slotRemoveCommentData(KIO::Job *,const QByteArray&))
 };
 
 } //namespace KBlog

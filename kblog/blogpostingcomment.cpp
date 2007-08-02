@@ -37,6 +37,7 @@ BlogPostingComment::BlogPostingComment(
   d_ptr->mTitle=c.title();
   d_ptr->mContent=c.content();
   d_ptr->mEmail=c.email();
+  d_ptr->mName=c.name();
   d_ptr->mCommentId=c.commentId();
   d_ptr->mUrl=c.url();
   d_ptr->mError=c.error();
@@ -98,6 +99,15 @@ void BlogPostingComment::setEmail( const QString &email )
   d_ptr->mEmail = email;
 }
 
+QString BlogPostingComment::name() const
+{
+  return d_ptr->mName;
+}
+
+void BlogPostingComment::setName( const QString &name )
+{
+  d_ptr->mName = name;
+}
 KUrl BlogPostingComment::url() const
 {
   return d_ptr->mUrl;

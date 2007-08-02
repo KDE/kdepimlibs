@@ -56,7 +56,6 @@ class KBLOG_EXPORT BlogPostingComment
     Constructor.
 
     @param postingId The ID of the posting on the server.
-    @param parent Parent object of this BlogPosting
   */
   explicit BlogPostingComment( const QString &postingId = QString() );
 
@@ -107,6 +106,22 @@ class KBLOG_EXPORT BlogPostingComment
     @see setContent()
   */
   QString email() const;
+
+  /**
+    Sets the email.
+
+    @param email set the email.
+    @see content()
+  */
+  void setName( const QString &name );
+
+  /**
+    Returns the email.
+
+    @return email
+    @see setContent()
+  */
+  QString name() const;
 
   /**
     Sets the email.
