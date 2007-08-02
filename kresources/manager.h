@@ -403,7 +403,7 @@ class Manager : private ManagerNotifier
     */
     void notifyResourceAdded( Resource *res )
     {
-      kDebug(5650) << "Manager::resourceAdded " << res->resourceName() << endl;
+      kDebug(5650) << "Manager::resourceAdded" << res->resourceName();
       T *resource = dynamic_cast<T *>( res );
       if ( resource ) {
         for ( int i = 0; i < mObservers.size(); ++i ) {
@@ -417,8 +417,7 @@ class Manager : private ManagerNotifier
     */
     void notifyResourceModified( Resource *res )
     {
-      kDebug(5650) << "Manager::resourceModified " << res->resourceName()
-                    << endl;
+      kDebug(5650) << "Manager::resourceModified" << res->resourceName();
       T *resource = dynamic_cast<T *>( res );
       if ( resource ) {
         for ( int i = 0; i < mObservers.size(); ++i ) {
@@ -432,8 +431,7 @@ class Manager : private ManagerNotifier
     */
     void notifyResourceDeleted( Resource *res )
     {
-      kDebug(5650) << "Manager::resourceDeleted " << res->resourceName()
-                    << endl;
+      kDebug(5650) << "Manager::resourceDeleted" << res->resourceName();
       T *resource = dynamic_cast<T *>( res );
       if ( resource ) {
         for ( int i = 0; i < mObservers.size(); ++i ) {

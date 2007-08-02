@@ -42,7 +42,7 @@ class TestSubResource : public TestResource
 
     void dump() const
     {
-      kDebug() << "TestSubResource" << endl;
+      kDebug() << "TestSubResource";
       TestResource::dump();
     }
 };
@@ -68,7 +68,7 @@ int main( int argc, char **argv )
   resource3->setResourceName( "Three" );
   manager.add( resource3 );
 
-  kDebug() << "LIST ALL:" << endl;
+  kDebug() << "LIST ALL:";
   Manager<TestResource>::Iterator it;
   for ( it = manager.begin(); it != manager.end(); ++it ) {
     (*it)->dump();
@@ -77,7 +77,7 @@ int main( int argc, char **argv )
   resource2->setActive( false );
   resource3->setActive( true );
 
-  kDebug() << "LIST ACTIVE" << endl;
+  kDebug() << "LIST ACTIVE";
   Manager<TestResource>::ActiveIterator it2;
   for ( it2 = manager.activeBegin(); it2 != manager.activeEnd(); ++it2 ) {
     (*it2)->dump();
@@ -87,12 +87,12 @@ int main( int argc, char **argv )
   resource2->setActive( true );
   resource3->setActive( true );
 
-  kDebug() << "LIST ACTIVE" << endl;
+  kDebug() << "LIST ACTIVE";
   for ( it2 = manager.activeBegin(); it2 != manager.activeEnd(); ++it2 ) {
     (*it2)->dump();
   }
 
-  kDebug() << "LIST ALL" << endl;
+  kDebug() << "LIST ALL";
   for ( it = manager.begin(); it != manager.end(); ++it ) {
     (*it)->dump();
   }
