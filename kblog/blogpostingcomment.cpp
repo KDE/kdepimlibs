@@ -30,10 +30,27 @@
 namespace KBlog {
 
 BlogPostingComment::BlogPostingComment(
-    const QString &postingId, QObject* parent ) :
-    QObject( parent ), d_ptr( new BlogPostingCommentPrivate )
+    const BlogPostingComment& c ) :
+    d_ptr( new BlogPostingCommentPrivate )
 {
-  d_func()->mStatus = New;
+  d_ptr->q_ptr=this;
+  d_ptr->mTitle=c.title();
+  d_ptr->mContent=c.content();
+  d_ptr->mEmail=c.email();
+  d_ptr->mCommentId=c.commentId();
+  d_ptr->mUrl=c.url();
+  d_ptr->mError=c.error();
+  d_ptr->mStatus=c.status();
+  d_ptr->mModificationDateTime=c.modificationDateTime();
+  d_ptr->mCreationDateTime=c.creationDateTime();
+}
+
+BlogPostingComment::BlogPostingComment(
+    const QString &postingId ) :
+    d_ptr( new BlogPostingCommentPrivate )
+{
+  d_ptr->q_ptr=this;
+  d_ptr->mStatus = New;
 }
 
 BlogPostingComment::~BlogPostingComment()
@@ -43,93 +60,99 @@ BlogPostingComment::~BlogPostingComment()
 
 QString BlogPostingComment::title() const
 {
-  return d_func()->mTitle;
+  return d_ptr->mTitle;
 }
 
 void BlogPostingComment::setTitle( const QString &title )
 {
-  d_func()->mTitle = title;
+  d_ptr->mTitle = title;
 }
 
 QString BlogPostingComment::content() const
 {
-  return d_func()->mContent;
+  return d_ptr->mContent;
 }
 
 void BlogPostingComment::setContent( const QString &content )
 {
-  d_func()->mContent = content;
+  d_ptr->mContent = content;
 }
 
 QString BlogPostingComment::commentId() const
 {
-  return d_func()->mCommentId;
+  return d_ptr->mCommentId;
 }
 
 void BlogPostingComment::setCommentId( const QString &commentId )
 {
-  d_func()->mCommentId = commentId;
+  d_ptr->mCommentId = commentId;
 }
 
 QString BlogPostingComment::email() const
 {
-  return d_func()->mEmail;
+  return d_ptr->mEmail;
 }
 
 void BlogPostingComment::setEmail( const QString &email )
 {
-  d_func()->mEmail = email;
+  d_ptr->mEmail = email;
 }
 
 KUrl BlogPostingComment::url() const
 {
-  return d_func()->mUrl;
+  return d_ptr->mUrl;
 }
 
 void BlogPostingComment::setUrl( const KUrl &url )
 {
-  d_func()->mUrl = url;
+  d_ptr->mUrl = url;
 }
 
 KDateTime BlogPostingComment::modificationDateTime() const
 {
-  return d_func()->mModificationDateTime;
+  return d_ptr->mModificationDateTime;
 }
 
 void BlogPostingComment::setModificationDateTime( const KDateTime &datetime )
 {
-  d_func()->mModificationDateTime=datetime;
+  d_ptr->mModificationDateTime=datetime;
 }
 
 KDateTime BlogPostingComment::creationDateTime() const
 {
-  return d_func()->mCreationDateTime;
+  return d_ptr->mCreationDateTime;
 }
 
 void BlogPostingComment::setCreationDateTime( const KDateTime &datetime )
 {
-  d_func()->mCreationDateTime= datetime;
+  d_ptr->mCreationDateTime= datetime;
 }
 
 
 BlogPostingComment::Status BlogPostingComment::status() const
 {
-  return d_func()->mStatus;
+  return d_ptr->mStatus;
 }
 
 void BlogPostingComment::setStatus( BlogPostingComment::Status status )
 {
-  d_func()->mStatus = status;
+  d_ptr->mStatus = status;
 }
 
 QString BlogPostingComment::error() const
 {
-  return d_func()->mError;
+  return d_ptr->mError;
 }
 
 void BlogPostingComment::setError( const QString &error )
 {
-  d_func()->mError = error;
+  d_ptr->mError = error;
+}
+
+BlogPostingComment& BlogPostingComment::operator=(const BlogPostingComment &comment)
+{
+  *this = BlogPostingComment ( comment );
+  return *this;
 }
 
 } // namespace KBlog

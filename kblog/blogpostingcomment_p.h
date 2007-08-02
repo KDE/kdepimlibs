@@ -42,7 +42,6 @@ class BlogPostingCommentPrivate
     BlogPostingComment::Status mStatus;
     KDateTime mModificationDateTime;
     KDateTime mCreationDateTime;
-    Q_DECLARE_PUBLIC(BlogPostingComment)
 };
 
 } // namespace KBlog

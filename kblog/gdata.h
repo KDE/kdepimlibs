@@ -199,9 +199,9 @@ class KBLOG_EXPORT GData : public Blog
     */
     void listedBlogs( const QMap<QString,QMap<QString,QString> >& blogsInfo );
 
-    void listedAllComments( const QList<KBlog::BlogPostingComment*> &comments );
+    void listedAllComments( const QList<KBlog::BlogPostingComment> &comments );
 
-    void listedComments( const QList<KBlog::BlogPostingComment*> &comments, KBlog::BlogPosting *posting );
+    void listedComments( const QList<KBlog::BlogPostingComment> &comments, KBlog::BlogPosting *posting );
 
     void fetchedProfileId( const QString &profileId );
 

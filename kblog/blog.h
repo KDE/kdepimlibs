@@ -226,7 +226,7 @@ class KBLOG_EXPORT Blog : public QObject
       @see listRecentPostings()
     */
     void listedRecentPostings(
-        const QList<KBlog::BlogPosting*>& postings );
+        const QList<KBlog::BlogPosting>& postings );
 
     void createdPosting( KBlog::BlogPosting *posting );
 

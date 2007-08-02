@@ -52,29 +52,33 @@ namespace KBlog {
   post->setContent( "Here is some the content..." );
   @endcode
 
-  @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
+  @author Christian Weilbach \<christian_weilbach\@web.de\>
 */
 
-class KBLOG_EXPORT BlogPosting : public QObject
+class KBLOG_EXPORT BlogPosting
 {
-  Q_OBJECT
+
 public:
+
+    /**
+      Constructor.
+    */
+    BlogPosting( const KBlog::BlogPosting& posting );
+
     /**
       Constructor.
 
       @param postingId The ID of the posting on the server.
       @param parent Parent object of this BlogPosting
     */
-    explicit BlogPosting( const QString &postingId = QString(),
-                          QObject *parent = 0 );
+    explicit BlogPosting( const QString &postingId = QString() );
 
     /** Constructor to create a blog posting from a KCal Journal.
 
       @param journal The journal to use to create the posting
       @param parent Parent object of this BlogPosting
      */
-    explicit BlogPosting( const KCal::Journal &journal,
-                          QObject *parent = 0 );
+    explicit BlogPosting( const KCal::Journal &journal );
 
     /**
       Virtual default destructor.
@@ -246,18 +250,13 @@ public:
 
     void setError( const QString& error );
 
-  Q_SIGNALS:
-    void statusChanged( KBlog::BlogPosting::Status status );
-
-    void listedComments( const QList<KBlog::BlogPostingComment*> &comments );
+    BlogPosting& operator=( const BlogPosting &posting );
 
   protected:
     BlogPostingPrivate * const d_ptr;
-    BlogPosting( const QString &postingId, BlogPostingPrivate &dd, QObject *parent = 0 );
-    BlogPosting( const KCal::Journal &journal, BlogPostingPrivate &dd, QObject *parent = 0 );
+    BlogPosting( const QString &postingId, BlogPostingPrivate &dd );
+    BlogPosting( const KCal::Journal &journal, BlogPostingPrivate &dd );
 
-  private:
-    Q_DECLARE_PRIVATE(BlogPosting)
 };
 
 

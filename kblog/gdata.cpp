@@ -425,13 +425,13 @@ void GDataPrivate::slotListAllComments(
     return;
   }
 
-  QList<KBlog::BlogPostingComment*> commentList;
+  QList<KBlog::BlogPostingComment> commentList;
 
   QList<Syndication::ItemPtr> items = feed->items();
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for( ; it!=end; ++it ){
-      BlogPostingComment* comment = new BlogPostingComment;
+      BlogPostingComment comment;
       QRegExp rx( "post-(\\d+)" );
       if( rx.indexIn( ( *it )->id() )==-1 ){
         kDebug(5323)<<
@@ -440,21 +440,21 @@ void GDataPrivate::slotListAllComments(
         i18n( "Could not regexp the comment id path." ) );
       }
       else {
-        comment->setCommentId( rx.cap(1) );
+        comment.setCommentId( rx.cap(1) );
       }
 
       kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches"<< rx.cap(1);
-      comment->setTitle( ( *it )->title() );
-      comment->setContent( ( *it )->content() );
+      comment.setTitle( ( *it )->title() );
+      comment.setContent( ( *it )->content() );
 //       FIXME: assuming UTC for now
-      comment->setCreationDateTime( KDateTime( QDateTime::fromTime_t(
+      comment.setCreationDateTime( KDateTime( QDateTime::fromTime_t(
   ( *it )->datePublished() ), KDateTime::Spec::UTC() ) );
-      comment->setModificationDateTime( KDateTime( QDateTime::fromTime_t(
+      comment.setModificationDateTime( KDateTime( QDateTime::fromTime_t(
   ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
       commentList.append( comment );
   }
   kDebug(5323) << "Emitting listedRecentPostings()";
-  emit q->listedAllComments( commentList );
+  emit q->listedAllComments( commentList ); //TODO change
 }
 
 void GDataPrivate::slotListRecentPostings(
@@ -468,13 +468,13 @@ void GDataPrivate::slotListRecentPostings(
     return;
   }
 
-  QList<KBlog::BlogPosting*> postingList;
+  QList<KBlog::BlogPosting> postingList;
 
   QList<Syndication::ItemPtr> items = feed->items();
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for( ; it!=end; ++it ){
-      BlogPosting* posting = new BlogPosting;
+      BlogPosting posting;
       QRegExp rx( "post-(\\d+)" );
       if( rx.indexIn( ( *it )->id() ) ==-1 ){
         kDebug(5323)<<
@@ -483,16 +483,16 @@ void GDataPrivate::slotListRecentPostings(
         i18n( "Could not regexp the posting id path." ) );
       }
       else {
-        posting->setPostingId( rx.cap(1) );
+        posting.setPostingId( rx.cap(1) );
       }
 
       kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches"<< rx.cap(1);
-      posting->setTitle( ( *it )->title() );
-      posting->setContent( ( *it )->content() );
+      posting.setTitle( ( *it )->title() );
+      posting.setContent( ( *it )->content() );
 //       FIXME: assuming UTC for now
-      posting->setCreationDateTime( KDateTime( QDateTime::fromTime_t(
+      posting.setCreationDateTime( KDateTime( QDateTime::fromTime_t(
   ( *it )->datePublished() ), KDateTime::Spec::UTC() ) );
-      posting->setModificationDateTime( KDateTime( QDateTime::fromTime_t(
+      posting.setModificationDateTime( KDateTime( QDateTime::fromTime_t(
   ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
       postingList.append( posting );
   }
@@ -600,7 +600,6 @@ void GDataPrivate::slotCreatePosting( KJob *job )
 void GDataPrivate::slotModifyPostingData( KIO::Job *job, const QByteArray &data )
 {
   kDebug(5323) << "slotModifyPostingData()";
-  kDebug(5323) << "Dump modify data:" << data;
   unsigned int oldSize = mModifyPostingBuffer[ job ].size();
   mModifyPostingBuffer[ job ].resize( oldSize + data.size() );
   memcpy( mModifyPostingBuffer[ job ].data() + oldSize, data.data(), data.size() );

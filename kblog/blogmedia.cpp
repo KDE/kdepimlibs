@@ -38,12 +38,22 @@ class BlogMediaPrivate
     QString mMimetype;
     QByteArray mData;
     BlogMedia::Status mStatus;
-    Q_DECLARE_PUBLIC(BlogMedia)
 };
 
-BlogMedia::BlogMedia( QObject* parent ): QObject( parent ),
-                      d_ptr( new BlogMediaPrivate )
+BlogMedia::BlogMedia(): d_ptr( new BlogMediaPrivate )
 {
+  d_ptr->q_ptr=this;
+}
+
+BlogMedia::BlogMedia( const BlogMedia& m ) :
+d_ptr( new BlogMediaPrivate )
+{
+  d_ptr->q_ptr=this;
+  d_ptr->mName=m.name();
+  d_ptr->mUrl=m.url();
+  d_ptr->mMimetype=m.mimetype();
+  d_ptr->mData=m.data();
+  d_ptr->mStatus=m.status();
 }
 
 BlogMedia::~BlogMedia()
@@ -53,53 +63,58 @@ BlogMedia::~BlogMedia()
 
 QString BlogMedia::name() const
 {
-  return d_func()->mName;
+  return d_ptr->mName;
 }
 
 void BlogMedia::setName( const QString &name )
 {
-  d_func()->mName = name;
+  d_ptr->mName = name;
 }
 
 KUrl BlogMedia::url() const
 {
-  return d_func()->mUrl;
+  return d_ptr->mUrl;
 }
 
 void BlogMedia::setUrl( const KUrl &url )
 {
-  d_func()->mUrl = url;
+  d_ptr->mUrl = url;
 }
 
 QString BlogMedia::mimetype() const
 {
-  return d_func()->mMimetype;
+  return d_ptr->mMimetype;
 }
 
 void BlogMedia::setMimetype( const QString &mimetype )
 {
-  d_func()->mMimetype = mimetype;
+  d_ptr->mMimetype = mimetype;
 }
 
 QByteArray BlogMedia::data() const
 {
-  return d_func()->mData;
+  return d_ptr->mData;
 }
 
 void BlogMedia::setData( const QByteArray &data )
 {
-  d_func()->mData = data;
+  d_ptr->mData = data;
 }
 
 BlogMedia::Status BlogMedia::status() const
 {
-  return d_func()->mStatus;
+  return d_ptr->mStatus;
 }
 
 void BlogMedia::setStatus( BlogMedia::Status status )
 {
-  emit statusChanged( status );
-  d_func()->mStatus = status;
+  d_ptr->mStatus = status;
+}
+
+BlogMedia& BlogMedia::operator=(const BlogMedia &media)
+{
+  *this = BlogMedia ( media );
+  return *this;
 }
 
 } //namespace KBlog

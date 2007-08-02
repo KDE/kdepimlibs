@@ -261,7 +261,7 @@ void MetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
 
   int count = id.toInt();
 
-  QList <BlogPosting*> fetchedPostingList;
+  QList <BlogPosting> fetchedPostingList;
 
   kDebug(5323) << "MetaWeblog::slotListRecentPostings";
   kDebug(5323) << "TOP:" << result[0].typeName();
@@ -276,13 +276,13 @@ void MetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
     QList<QVariant>::ConstIterator it = postReceived.begin();
     QList<QVariant>::ConstIterator end = postReceived.end();
     for ( ; it != end; ++it ) {
-      BlogPosting* posting = new BlogPosting;
+      BlogPosting posting;
       kDebug(5323) << "MIDDLE:" << ( *it ).typeName();
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-      if ( readPostingFromMap( posting, postInfo ) ) {
+      if ( readPostingFromMap( &posting, postInfo ) ) {
         kDebug(5323) << "Emitting listedPosting( posting.postingId()="
-                     << posting->postingId() << ");";
-        fetchedPostingList.append( posting );
+                     << posting.postingId() << ");";
+        fetchedPostingList << posting;
       } else {
         kDebug(5323) << "readPostingFromMap failed!";
         emit q->error( MetaWeblog::ParsingError, i18n( "Could not read posting." ) );

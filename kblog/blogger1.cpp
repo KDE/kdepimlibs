@@ -290,7 +290,7 @@ void Blogger1Private::slotListRecentPostings(
   kDebug(5323) << "Blog::slotListRecentPostings";
   kDebug(5323) << "TOP:" << result[0].typeName();
 
-  QList <BlogPosting*> fetchedPostingList;
+  QList <BlogPosting> fetchedPostingList;
 
   if ( result[0].type() != QVariant::List ) {
     kDebug(5323) << "Could not fetch list of postings out of the"
@@ -303,14 +303,14 @@ void Blogger1Private::slotListRecentPostings(
     QList<QVariant>::ConstIterator it = postReceived.begin();
     QList<QVariant>::ConstIterator end = postReceived.end();
     for ( ; it != end; ++it ) {
-      BlogPosting* posting = new BlogPosting;
+      BlogPosting posting;
       kDebug(5323) << "MIDDLE:" << ( *it ).typeName();
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-      if ( readPostingFromMap( posting, postInfo ) ) {
+      if ( readPostingFromMap( &posting, postInfo ) ) {
         kDebug(5323) << "Posting with ID:"
-                    << posting->postingId()
+                    << posting.postingId()
                     << "appended in fetchedPostingList";
-        fetchedPostingList << posting;
+        fetchedPostingList.append( posting );
       } else {
         kDebug(5323) << "readPostingFromMap failed!";
         emit q->error( Blogger1::ParsingError,

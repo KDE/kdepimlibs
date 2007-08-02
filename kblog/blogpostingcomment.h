@@ -47,18 +47,18 @@ namespace KBlog {
   @author Mike Arthur \<mike\@mikearthur.co.uk\>
 */
 
-class KBLOG_EXPORT BlogPostingComment : public QObject
+class KBLOG_EXPORT BlogPostingComment
 {
-  Q_OBJECT
   public:
+
+  BlogPostingComment( const BlogPostingComment& comment );
   /**
     Constructor.
 
     @param postingId The ID of the posting on the server.
     @param parent Parent object of this BlogPosting
   */
-  explicit BlogPostingComment( const QString &postingId = QString(),
-                          QObject *parent = 0 );
+  explicit BlogPostingComment( const QString &postingId = QString() );
 
   /**
     Virtual default destructor.
@@ -174,14 +174,12 @@ class KBLOG_EXPORT BlogPostingComment : public QObject
 
   void setError( const QString& error );
 
-  Q_SIGNALS:
-    void statusChanged( KBlog::BlogPostingComment::Status status );
+  BlogPostingComment& operator=(const BlogPostingComment &comment );
 
   protected:
-    BlogPostingComment( BlogPostingCommentPrivate &dd, QObject *parent = 0 );
+    BlogPostingComment( BlogPostingCommentPrivate &dd );
   private:
     BlogPostingCommentPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(BlogPostingComment)
 };
 
 

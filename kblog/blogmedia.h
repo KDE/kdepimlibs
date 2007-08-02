@@ -46,15 +46,16 @@ namespace KBlog {
   @author Christian Weilbach \<christian_weilbach\@web.de\>
 */
 
-class KBLOG_EXPORT BlogMedia : public QObject
+class KBLOG_EXPORT BlogMedia
 {
-  Q_OBJECT
 
   public:
     /**
       Default constructor. Creates an empty BlogMedia object.
     */
-    explicit BlogMedia( QObject* parent = 0 );
+    explicit BlogMedia();
+
+    BlogMedia( const BlogMedia& media );
 
     /**
       Virtual default destructor.
@@ -121,15 +122,11 @@ class KBLOG_EXPORT BlogMedia : public QObject
 
     void setStatus( Status status );
 
-  Q_SIGNALS:
-    void statusChanged( KBlog::BlogMedia::Status status );
+    BlogMedia& operator=(const BlogMedia &media );
 
   protected:
     BlogMediaPrivate * const d_ptr;
-    BlogMedia( const KUrl &server, BlogMediaPrivate &dd, QObject *parent = 0 );
-
-  private:
-    Q_DECLARE_PRIVATE(BlogMedia)
+    BlogMedia( const KUrl &server, BlogMediaPrivate &dd );
 };
 
 } //namespace KBlog
