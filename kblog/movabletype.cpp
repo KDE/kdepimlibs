@@ -25,6 +25,12 @@
 
 #include <kxmlrpcclient/client.h>
 
+#include <KDebug>
+#include <KLocale>
+#include <KDateTime>
+
+#include <QtCore/QStringList>
+
 using namespace KBlog;
 
 MovableType::MovableType( const KUrl &server, QObject *parent )
@@ -39,12 +45,78 @@ MovableType::~MovableType()
 
 void MovableType::createPosting( KBlog::BlogPosting *posting )
 {
-  //TODO
+  Q_D(MovableType);
+  if ( !posting ) {
+    kDebug(5323) << "MovableType::createPosting: posting is a null pointer";
+    emit error ( Other, i18n( "Posting is a null pointer." ) );
+    return;
+  }
+  unsigned int i = d->callCounter++;
+  d->callMap[ i ] = posting;
+  kDebug(5323) << "Creating new Posting with blogId" << blogId();
+  QList<QVariant> args( d->defaultArgs( blogId() ) );
+  QMap<QString, QVariant> map;
+  map["categories"] = posting->categories();
+  map["description"] = posting->content();
+  map["title"] = posting->title();
+  map["dateCreated"] = posting->creationDateTime().toUtc().dateTime();
+  map["mt_allow_comments"] = (int)posting->isCommentAllowed();
+  map["mt_allow_pings"] = (int)posting->isTrackBackAllowed();
+  map["mt_text_more"] = posting->summary();
+  //map["mt_tb_ping_urls"] check for that, i think this should only be done on the server.
+  args << map;
+  args << QVariant( posting->isPublished() );
+  d->mXmlRpcClient->call (
+    "metaWeblog.newPost", args,
+    this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
+    this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
+}
+
+void MovableType::modifyPosting( KBlog::BlogPosting *posting )
+{
+  Q_D(MovableType);
+  if ( !posting ) {
+    kDebug(5323) << "MovableType::modifyPosting: posting is a null pointer";
+    emit error ( Other, i18n( "Posting is a null pointer." ) );
+    return;
+  }
+  unsigned int i = d->callCounter++;
+  d->callMap[ i ] = posting;
+  kDebug(5323) << "Uploading Posting with postId" << posting->postingId();
+
+  QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
+  QMap<QString, QVariant> map;
+  map["categories"] = posting->categories();
+  map["description"] = posting->content();
+  map["title"] = posting->title();
+  map["lastModified"] = posting->modificationDateTime().toUtc().dateTime();
+  map["mt_allow_comments"] = (int)posting->isCommentAllowed();
+  map["mt_allow_pings"] = (int)posting->isTrackBackAllowed();
+  map["mt_text_more"] = posting->summary();
+  args << map;
+  args << QVariant( posting->isPublished() );
+  d->mXmlRpcClient->call(
+    "metaWeblog.editPost", args,
+     this, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
+     this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
 void MovableType::fetchPosting( KBlog::BlogPosting *posting )
 {
-  //TODO
+  Q_D(MovableType);
+  if ( !posting ) {
+    kDebug(5323) << "MovableType::fetchPosting: posting is a null pointer";
+    emit error ( Other, i18n( "Posting is a null pointer." ) );
+    return;
+  }
+  unsigned int i = d->callCounter++;
+  d->callMap[ i ] = posting;
+  kDebug(5323) << "Fetching Posting with url" << posting->postingId();
+  QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
+  d->mXmlRpcClient->call(
+    "metaWeblog.getPost", args,
+    this, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
+    this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
 QString MovableType::interfaceName() const
@@ -66,11 +138,6 @@ void MovableType::listTrackbackPings( KBlog::BlogPosting *posting ) {
               const QList<QVariant>&, const QVariant& ) ),
     d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
   */
-}
-
-void MovableType::modifyPosting( KBlog::BlogPosting *posting )
-{
-  //TODO
 }
 
 MovableTypePrivate::MovableTypePrivate()

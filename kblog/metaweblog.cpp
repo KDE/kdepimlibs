@@ -84,7 +84,7 @@ void MetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
 {
   Q_D(MetaWeblog);
   if ( !posting ) {
-    kDebug(5323) << "MetaWeblog::modifyPosting: posting is a null pointer";
+    kDebug(5323) << "MetaWeblog::fetchPosting: posting is a null pointer";
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
@@ -143,10 +143,10 @@ void MetaWeblog::createPosting( KBlog::BlogPosting *posting )
   map["dateCreated"] = posting->creationDateTime().toUtc().dateTime();
   args << map;
   args << QVariant( posting->isPublished() );
-  d->mXmlRpcClient->call (
-    "metaWeblog.newPost", args,
-    this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
-    this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
+//   d->mXmlRpcClient->call (
+//     "metaWeblog.newPost", args,
+//     this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
+//     this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
 void MetaWeblog::createMedia( KBlog::BlogMedia *media )
