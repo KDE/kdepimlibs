@@ -484,12 +484,14 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       @param incidence is a pointer to a recurring Incidence.
       @param date is the QDate within the recurring Incidence on which
       the dissociation will be performed.
+      @param spec is the spec in which the @a date is formulated.
       @param single is a flag meaning that a new Incidence should be created
       from the recurring Incidences after @a date.
 
       @return a pointer to a new recurring Incidence if @a single is false.
     */
     Incidence *dissociateOccurrence( Incidence *incidence, const QDate &date,
+                                     const KDateTime::Spec &spec,
                                      bool single = true );
 
   // Event Specific Methods //

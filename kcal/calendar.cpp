@@ -436,6 +436,7 @@ bool Calendar::deleteIncidence( Incidence *incidence )
 // into the calendar, which is left to the calling application.
 Incidence *Calendar::dissociateOccurrence( Incidence *incidence,
                                            const QDate &date,
+                                           const KDateTime::Spec &spec,
                                            bool single )
 {
   if ( !incidence || !incidence->recurs() ) {
@@ -468,7 +469,7 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence,
   if ( incidence->type() == "Event" ) {
     Event *ev = static_cast<Event *>( newInc );
     KDateTime start( ev->dtStart() );
-    int daysTo = start.date().daysTo( date );
+    int daysTo = start.toTimeSpec( spec ).date().daysTo( date );
     ev->setDtStart( start.addDays( daysTo ) );
     ev->setDtEnd( ev->dtEnd().addDays( daysTo ) );
   } else if ( incidence->type() == "Todo" ) {
@@ -477,14 +478,14 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence,
     int daysTo = 0;
     if ( td->hasDueDate() ) {
       KDateTime due( td->dtDue() );
-      daysTo = due.date().daysTo( date );
+      daysTo = due.toTimeSpec( spec ).date().daysTo( date );
       td->setDtDue( due.addDays( daysTo ), true );
       haveOffset = true;
     }
     if ( td->hasStartDate() ) {
       KDateTime start( td->dtStart() );
       if ( !haveOffset ) {
-        daysTo = start.date().daysTo( date );
+        daysTo = start.toTimeSpec( spec ).date().daysTo( date );
       }
       td->setDtStart( start.addDays( daysTo ) );
       haveOffset = true;
