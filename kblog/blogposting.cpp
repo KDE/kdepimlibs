@@ -101,7 +101,7 @@ BlogPosting::~BlogPosting()
   delete d_ptr;
 }
 
-KCal::Journal* BlogPosting::journal( const Blog &blog )
+KCal::Journal* BlogPosting::journal( const Blog &blog ) const
 {
   QString url = blog.url().url();
   QString username = blog.username();

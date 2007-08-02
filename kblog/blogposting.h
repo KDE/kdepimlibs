@@ -90,7 +90,7 @@ public:
 
       @return journal
      */
-    KCal::Journal* journal( const Blog &blog );
+    KCal::Journal* journal( const Blog &blog ) const;
 
     /**
       Returns the ID used by the journal in creation, if created from a journal.
