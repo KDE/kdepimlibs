@@ -99,7 +99,7 @@ void Mailbox::setAddress( const QByteArray &addr )
                                        cursor + addr.length(), mAddrSpec ) ) {
     if ( !HeaderParsing::parseAddrSpec( cursor, cursor + addr.length(),
                                         mAddrSpec ) ) {
-      kWarning() << k_funcinfo << "Invalid address" << endl;
+      kWarning() << k_funcinfo << "Invalid address";
       return;
     }
   }
@@ -343,8 +343,8 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
   //
 
   if ( !dec->decode( encodedTextStart, encodedTextEnd, bit, bend ) ) {
-    KMIME_WARN << codec->name() << " codec lies about it's maxDecodedSizeFor( "
-               << encodedTextLength << " )\nresult may be truncated" << endl;
+    KMIME_WARN << codec->name() << "codec lies about it's maxDecodedSizeFor("
+               << encodedTextLength << ")\nresult may be truncated";
   }
 
   result = textCodec->toUnicode( buffer.begin(), bit - buffer.begin() );
@@ -1041,7 +1041,7 @@ bool parseAngleAddr( const char* &scursor, const char * const send,
 
   if ( *scursor == '@' || *scursor == ',' ) {
     // obs-route: parse, but ignore:
-    KMIME_WARN << "obsolete source route found! ignoring." << endl;
+    KMIME_WARN << "obsolete source route found! ignoring.";
     QStringList dummy;
     if ( !parseObsRoute( scursor, send, dummy,
                          isCRLF, false /* don't save */ ) ) {
@@ -1316,8 +1316,8 @@ bool parseParameter( const char* &scursor, const char * const send,
   if ( scursor == send ) {
     // don't choke on attribute=, meaning the value was omitted:
     if ( maybeAttribute.endsWith( asterisk ) ) {
-      KMIME_WARN << "attribute ends with \"*\", but value is empty! "
-        "Chopping away \"*\"." << endl;
+      KMIME_WARN << "attribute ends with \"*\", but value is empty!"
+        "Chopping away \"*\".";
       maybeAttribute.truncate( maybeAttribute.length() - 1 );
     }
     result = qMakePair( maybeAttribute.toLower(), QStringOrQPair() );
@@ -1337,8 +1337,8 @@ bool parseParameter( const char* &scursor, const char * const send,
       // attributes ending with "*" designate extended-parameters,
       // which cannot have quoted-strings as values. So we remove the
       // trailing "*" to not confuse upper layers.
-      KMIME_WARN << "attribute ends with \"*\", but value is a quoted-string! "
-        "Chopping away \"*\"." << endl;
+      KMIME_WARN << "attribute ends with \"*\", but value is a quoted-string!"
+        "Chopping away \"*\".";
       maybeAttribute.truncate( maybeAttribute.length() - 1 );
     }
 
@@ -1451,8 +1451,8 @@ static void decodeRFC2231Value( Codec* &rfc2231Codec,
     if ( decCursor == decEnd ) {
       // there wasn't a single single quote at all!
       // take the whole value to be in latin-1:
-      KMIME_WARN << "No charset in extended-initial-value. "
-        "Assuming \"iso-8859-1\"." << endl;
+      KMIME_WARN << "No charset in extended-initial-value."
+        "Assuming \"iso-8859-1\".";
       value += QString::fromLatin1( decBegin, source.second );
       return;
     }
@@ -1469,8 +1469,8 @@ static void decodeRFC2231Value( Codec* &rfc2231Codec,
       }
     }
     if ( decCursor == decEnd ) {
-      KMIME_WARN << "No language in extended-initial-value. "
-        "Trying to recover." << endl;
+      KMIME_WARN << "No language in extended-initial-value."
+        "Trying to recover.";
       decCursor = oldDecCursor;
     } else {
       decCursor++;
@@ -1515,8 +1515,8 @@ static void decodeRFC2231Value( Codec* &rfc2231Codec,
 
   if ( !dec->decode( decCursor, decEnd, bit, bend ) ) {
     KMIME_WARN << rfc2231Codec->name()
-               << " codec lies about it's maxDecodedSizeFor()\n"
-               << "result may be truncated" << endl;
+               << "codec lies about it's maxDecodedSizeFor()" << endl
+               << "result may be truncated";
   }
 
   value += textcodec->toUnicode( buffer.begin(), bit - buffer.begin() );

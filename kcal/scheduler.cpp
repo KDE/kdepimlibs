@@ -415,7 +415,7 @@ bool Scheduler::acceptCounter(IncidenceBase *incidence,ScheduleMessage::Status /
 bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
 {
   if ( !d->mFreeBusyCache ) {
-    kError() << "KCal::Scheduler: no FreeBusyCache." << endl;
+    kError() << "KCal::Scheduler: no FreeBusyCache.";
     return false;
   }
 

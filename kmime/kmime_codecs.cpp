@@ -148,8 +148,7 @@ QByteArray Codec::encode( const QByteArray &src, bool withCRLF ) const
 
   // encode
   if ( !encode( iit, iend, oit, oend, withCRLF ) ) {
-    kFatal() << name() << " codec lies about it's mEncodedSizeFor()"
-             << endl;
+    kFatal() << name() << "codec lies about it's mEncodedSizeFor()";
   }
 
   // shrink result to actual size:
@@ -172,8 +171,7 @@ QByteArray Codec::decode( const QByteArray &src, bool withCRLF ) const
 
   // decode
   if ( !decode( iit, iend, oit, oend, withCRLF ) ) {
-    kFatal() << name() << " codec lies about it's maxDecodedSizeFor()"
-             << endl;
+    kFatal() << name() << "codec lies about it's maxDecodedSizeFor()";
   }
 
   // shrink result to actual size:

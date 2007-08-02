@@ -52,7 +52,7 @@ class IdentityEnDecoder : public Encoder, public Decoder
     friend class IdentityCodec;
     IdentityEnDecoder( bool withCRLF ): Encoder( false )
     {
-      kWarning( withCRLF, 5100 ) << "IdentityEnDecoder: withCRLF isn't yet supported!" << endl;
+      kWarning( withCRLF, 5100 ) << "IdentityEnDecoder: withCRLF isn't yet supported!";
     }
 
   public:
@@ -97,13 +97,13 @@ bool IdentityEnDecoder::decode( const char* &scursor, const char *const send,
 
 QByteArray IdentityCodec::encode( const QByteArray &src, bool withCRLF ) const
 {
-  kWarning( withCRLF, 5100 ) << "IdentityCodec::encode(): withCRLF not yet supported!" << endl;
+  kWarning( withCRLF, 5100 ) << "IdentityCodec::encode(): withCRLF not yet supported!";
   return src;
 }
 
 QByteArray IdentityCodec::decode( const QByteArray &src, bool withCRLF ) const
 {
-  kWarning( withCRLF, 5100 ) << "IdentityCodec::decode(): withCRLF not yet supported!" << endl;
+  kWarning( withCRLF, 5100 ) << "IdentityCodec::decode(): withCRLF not yet supported!";
   return src;
 }
 

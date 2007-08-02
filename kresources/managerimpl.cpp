@@ -255,8 +255,8 @@ void ManagerImpl::dbusKResourceAdded( const QString &managerId,
   if ( resource ) {
     d->mNotifier->notifyResourceAdded( resource );
   } else {
-    kError() << "Received D-Bus: resource added for unknown resource "
-             << resourceId << endl;
+    kError() << "Received D-Bus: resource added for unknown resource"
+             << resourceId;
   }
 }
 
@@ -273,8 +273,8 @@ void ManagerImpl::dbusKResourceModified( const QString &managerId,
   if ( resource ) {
     d->mNotifier->notifyResourceModified( resource );
   } else {
-    kError() << "Received D-Bus: resource modified for unknown resource "
-             << resourceId << endl;
+    kError() << "Received D-Bus: resource modified for unknown resource"
+             << resourceId;
   }
 }
 
@@ -298,8 +298,8 @@ void ManagerImpl::dbusKResourceDeleted( const QString& managerId,
     }
     d->mResources.removeAll( resource );
   } else {
-    kError() << "Received D-Bus: resource deleted for unknown resource "
-             << resourceId << endl;
+    kError() << "Received D-Bus: resource deleted for unknown resource"
+             << resourceId;
   }
 }
 
@@ -342,8 +342,8 @@ Resource *ManagerImpl::readResourceConfig( const QString &identifier,
   kDebug(5650) << "ManagerImpl::readResourceConfig()" << identifier;
 
   if ( !d->mFactory ) {
-    kError(5650) << "ManagerImpl::readResourceConfig: mFactory is 0. "
-                 << "Did the app forget to call readConfig?" << endl;
+    kError(5650) << "ManagerImpl::readResourceConfig: mFactory is 0."
+                 << "Did the app forget to call readConfig?";
     return 0;
   }
 

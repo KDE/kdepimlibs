@@ -700,9 +700,9 @@ void Content::changeEncoding( Headers::contentEncoding e )
   } else {
     // this content contains non textual data, that has to be re-encoded
     if ( e != Headers::CEbase64 ) {
-      //kWarning(5003) << "Content::changeEncoding() : non textual data "
-      //               << "and encoding != base64 - this should not happen => "
-      //               << "forcing base64" << endl;
+      //kWarning(5003) << "Content::changeEncoding() : non textual data"
+      //               << "and encoding != base64 - this should not happen =>"
+      //               << "forcing base64";
       e = Headers::CEbase64;
     }
 

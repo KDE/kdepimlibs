@@ -50,14 +50,14 @@ int main(int argc,char **argv)
 
   QString file = QLatin1String( INPUT );
   if (!cal.load( file ) ) {
-    kError() << "Can't load " << file << endl;
+    kError() << "Can't load" << file;
     return 1;
   }
 
   QString uid = QLatin1String("KOrganizer-1345486115.965");
   Event *e = cal.event( uid );
   if (!e) {
-    kError() << "No event " << uid << endl;
+    kError() << "No event" << uid;
     return 1;
   }
 
@@ -79,7 +79,7 @@ int main(int argc,char **argv)
   if (!pilotId.isEmpty()) {
     kDebug() << "Pilot ID =" << pilotId;
   } else {
-    kError() << "No Pilot ID" << endl;
+    kError() << "No Pilot ID";
     return 1;
   }
 

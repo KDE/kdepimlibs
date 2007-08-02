@@ -294,8 +294,7 @@ QString Query::Private::marshal( const QVariant &arg ) const
         return markup;
       }
     default:
-      kWarning() << "Failed to marshal unknown variant type: " << arg.type()
-                 << endl;
+      kWarning() << "Failed to marshal unknown variant type:" << arg.type();
   };
 
   return QString();
@@ -360,7 +359,7 @@ QVariant Query::Private::demarshal( const QDomElement &element ) const
     }
     return QVariant( map );
   } else {
-    kWarning() << "Cannot demarshal unknown type " << typeName << endl;
+    kWarning() << "Cannot demarshal unknown type" << typeName;
   }
   return QVariant();
 }
@@ -433,7 +432,7 @@ void Query::call( const QString &server,
   KIO::TransferJob *job = KIO::http_post( KUrl( server ), postData, false );
 
   if ( !job ) {
-    kWarning() << "Unable to create KIO job for " << server << endl;
+    kWarning() << "Unable to create KIO job for" << server;
     return;
   }
 

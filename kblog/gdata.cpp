@@ -213,7 +213,7 @@ void GData::modifyPosting( KBlog::BlogPosting* posting )
 
     if ( !job ) {
       kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/"
-          << blogId() <<"/posts/default/" << posting->postingId()  << endl;
+          << blogId() <<"/posts/default/" << posting->postingId();
     }
 
 
@@ -268,7 +268,7 @@ void GData::createPosting( KBlog::BlogPosting* posting )
 
     if ( !job ) {
       kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/"
-          << blogId() <<"/posts/default" << endl;
+          << blogId() << "/posts/default";
     }
 
   job->addMetaData( "content-type", "Content-Type: application/atom+xml; charset=utf-8" );
@@ -600,7 +600,7 @@ void GDataPrivate::slotCreatePosting( KJob *job )
 void GDataPrivate::slotModifyPostingData( KIO::Job *job, const QByteArray &data )
 {
   kDebug(5323) << "slotModifyPostingData()";
-  kDebug(5323) << "Dump modify data: " << data;
+  kDebug(5323) << "Dump modify data:" << data;
   unsigned int oldSize = mModifyPostingBuffer[ job ].size();
   mModifyPostingBuffer[ job ].resize( oldSize + data.size() );
   memcpy( mModifyPostingBuffer[ job ].data() + oldSize, data.data(), data.size() );
@@ -613,7 +613,7 @@ void GDataPrivate::slotModifyPosting( KJob *job )
 //   Syndication::Atom::Entry entry( data.documentElement() );
   Q_Q(GData);
   if ( job->error() != 0 ) {
-    kDebug(5323) << "slotModifyPosting error: " << job->errorString();
+    kDebug(5323) << "slotModifyPosting error:" << job->errorString();
     emit q->error( GData::Atom, job->errorString() );
     mModifyPostingBuffer[ job ].resize( 0 );
     mModifyPostingBuffer.remove( job );
@@ -625,7 +625,7 @@ void GDataPrivate::slotModifyPosting( KJob *job )
 
   QRegExp rxId( "post-(\\d+)" ); //FIXME check that and do better handling, especially the creation date time
   if( rxId.indexIn( data )==-1 ){
-    kDebug(5323) << "Could not regexp the id out of the result: " << data;
+    kDebug(5323) << "Could not regexp the id out of the result:" << data;
     return;
   }
   kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);

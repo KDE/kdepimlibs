@@ -190,7 +190,7 @@ int main( int argc, char * argv[] ) {
     kDebug() << "using  input buffer size of" << inbufsize;
   }
   if ( !withFinish )
-    kWarning() << "omitting finish calls. Results may be truncated!" << endl;
+    kWarning() << "omitting finish calls. Results may be truncated!";
 
   if ( inbufsize <= 0 )
     inbufsize = infile.size();

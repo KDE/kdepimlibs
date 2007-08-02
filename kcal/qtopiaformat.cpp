@@ -216,11 +216,11 @@ class QtopiaParser : public QXmlDefaultHandler
   protected:
     void printException( const QXmlParseException &exception )
     {
-      kError() << "XML Parse Error (line " << exception.lineNumber()
-                << ", col " << exception.columnNumber() << "): "
+      kError() << "XML Parse Error (line" << exception.lineNumber()
+                << ", col" << exception.columnNumber() << "):"
                 << exception.message() << "(public ID: '"
                 << exception.publicId() << "' system ID: '"
-                << exception.systemId() << "')" << endl;
+                << exception.systemId() << "')";
     }
 
     KDateTime toDateTime( const QString &value )

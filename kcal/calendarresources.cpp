@@ -739,7 +739,7 @@ bool CalendarResources::beginChange( Incidence *incidence )
   if ( !r ) {
     r = d->mDestinationPolicy->destination( incidence );
     if ( !r ) {
-      kError() << "Unable to get destination resource." << endl;
+      kError() << "Unable to get destination resource.";
       return false;
     }
     d->mResourceMap[ incidence ] = r;
@@ -797,14 +797,14 @@ int CalendarResources::incrementChangeCount( ResourceCalendar *r )
 int CalendarResources::decrementChangeCount( ResourceCalendar *r )
 {
   if ( !d->mChangeCounts.contains( r ) ) {
-    kError() << "No change count for resource." << endl;
+    kError() << "No change count for resource.";
     return 0;
   }
 
   int count = d->mChangeCounts[ r ];
   --count;
   if ( count < 0 ) {
-    kError() << "Can't decrement change count. It already is 0." << endl;
+    kError() << "Can't decrement change count. It already is 0.";
     count = 0;
   }
   d->mChangeCounts[ r ] = count;

@@ -112,8 +112,7 @@ void UUDecoder::searchForBegin( const char* &scursor, const char * const send )
     } else if ( mSawBegin ) {
       // OK, skip stuff until the next \n
     } else {
-      kWarning() << "UUDecoder: garbage before \"begin\", resetting parser"
-                 << endl;
+      kWarning() << "UUDecoder: garbage before \"begin\", resetting parser";
       mIntoBeginLine = 0;
     }
   }
@@ -158,8 +157,8 @@ bool UUDecoder::decode( const char* &scursor, const char * const send,
         }
         continue;
       } else {
-        kWarning() << "UUDecoder: invalid line octet count looks like \"end\" (mIntoEndLine = "
-                   << mIntoEndLine << " )!" << endl;
+        kWarning() << "UUDecoder: invalid line octet count looks like \"end\" (mIntoEndLine ="
+                   << mIntoEndLine << ")!";
         mIntoEndLine = 0;
         // fall through...
       }
@@ -234,7 +233,7 @@ bool UUDecoder::decode( const char* &scursor, const char * const send,
     // check whether we ran over the announced octet count for this line:
     kWarning( mCurrentOctetCount == mAnnouncedOctetCount + 1 )
       << "UUDecoder: mismatch between announced ("
-      << mAnnouncedOctetCount << ") and actual line octet count!" << endl;
+      << mAnnouncedOctetCount << ") and actual line octet count!";
 
   }
 

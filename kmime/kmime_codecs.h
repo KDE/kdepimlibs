@@ -159,7 +159,7 @@ class KMIME_EXPORT Codec
       Example usage (@p in contains the input data):
       <pre>
       KMime::Codec *codec = KMime::Codec::codecForName( "base64" );
-      kFatal( !codec ) << "no base64 codec found!?" << endl;
+      kFatal( !codec ) << "no base64 codec found!?";
       QByteArray out( in.size()*1.4 ); // crude maximal size of b64 encoding
       QByteArray::Iterator iit = in.begin();
       QByteArray::Iterator oit = out.begin();
@@ -197,7 +197,7 @@ class KMIME_EXPORT Codec
       Example usage (@p in contains the input data):
       <pre>
       KMime::Codec *codec = KMime::Codec::codecForName( "base64" );
-      kFatal( !codec ) << "no base64 codec found!?" << endl;
+      kFatal( !codec ) << "no base64 codec found!?";
       QByteArray out( in.size() ); // good guess for any encoding...
       QByteArray::Iterator iit = in.begin();
       QByteArray::Iterator oit = out.begin();
@@ -311,7 +311,7 @@ class KMIME_EXPORT Codec
 
   <pre>
   KMime::Codec *codec = KMime::Codec::codecForName( "base64" );
-  kFatal( !codec ) << "No codec found for base64!" << endl;
+  kFatal( !codec ) << "No codec found for base64!";
   KMime::Decoder *dec = codec->makeDecoder();
   assert( dec ); // should not happen
   QByteArray out( 256 ); // small buffer is enough ;-)
@@ -457,7 +457,7 @@ class Encoder
         } else {
           // else buffer the output:
           kFatal( mOutputBufferCursor >= maxBufferedChars )
-            << "KMime::Encoder: internal buffer overflow!" << endl;
+            << "KMime::Encoder: internal buffer overflow!";
           mOutputBuffer[ mOutputBufferCursor++ ] = ch;
           return false;
         }

@@ -345,7 +345,7 @@ static bool stringToMailbox( const QByteArray &address,
   const char *cursor = address.constData();
   if ( !parseAngleAddr( cursor, cursor + address.length(), addrSpec ) ) {
     if ( !parseAddrSpec( cursor, cursor + address.length(), addrSpec ) ) {
-      kWarning() << k_funcinfo << "Invalid address" << endl;
+      kWarning() << k_funcinfo << "Invalid address";
       return false;
     }
   }
@@ -1029,7 +1029,7 @@ void Ident::appendIdentifier( const QByteArray &id )
   if ( parseAngleAddr( cursor, cursor + tmp.length(), msgId ) ) {
     d->msgIdList.append( msgId );
   } else {
-    kWarning() << k_funcinfo << "Unable to parse address spec!" << endl;
+    kWarning() << k_funcinfo << "Unable to parse address spec!";
   }
 }
 

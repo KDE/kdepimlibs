@@ -267,7 +267,7 @@ QString ICalFormat::toString( Calendar *cal )
   for ( ICalTimeZones::ZoneMap::ConstIterator it = zones.begin();  it != zones.end();  ++it ) {
     icaltimezone *tz = (*it).icalTimezone();
     if ( !tz ) {
-      kError(5800) << "ICalFormat::toString(): bad time zone" << endl;
+      kError(5800) << "ICalFormat::toString(): bad time zone";
     } else {
       component = icalcomponent_new_clone( icaltimezone_get_component( tz ) );
       icalcomponent_add_component( calendar, component );
@@ -521,9 +521,9 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   if ( !icalrestriction_check( message ) ) {
     kWarning(5800) << k_funcinfo << endl
-                   << "kcal library reported a problem while parsing:" << endl;
-    kWarning(5800) << Scheduler::translatedMethodName( method ) + ": " +
-      d->mImpl->extractErrorProperty( c ) << endl;
+                   << "kcal library reported a problem while parsing:";
+    kWarning(5800) << Scheduler::translatedMethodName( method ) << ":" <<
+      d->mImpl->extractErrorProperty( c );
   }
 
   Incidence *existingIncidence = cal->incidenceFromSchedulingID( incidence->uid() );

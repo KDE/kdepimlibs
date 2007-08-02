@@ -1019,7 +1019,7 @@ QByteArray ICalTimeZoneSource::icalTzidPrefix()
         return ICalTimeZoneSourcePrivate::icalTzidPrefix;
       }
     }
-    kError(5800) << "ICalTimeZoneSource: failed to get libical TZID prefix" << endl;
+    kError(5800) << "ICalTimeZoneSource: failed to get libical TZID prefix";
   }
   return ICalTimeZoneSourcePrivate::icalTzidPrefix;
 }

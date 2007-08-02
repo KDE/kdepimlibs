@@ -181,7 +181,7 @@ void TransportManager::createDefaultTransport()
     addTransport( t );
   } else
     kWarning() << k_funcinfo
-            << "KEMailSettings does not contain a valid transport." << endl;
+            << "KEMailSettings does not contain a valid transport.";
 }
 
 TransportJob* TransportManager::createTransportJob( int transportId )
