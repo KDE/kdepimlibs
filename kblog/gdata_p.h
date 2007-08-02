@@ -45,16 +45,18 @@ class GDataPrivate : public BlogPrivate
     QString mAuthenticationString;
     QDateTime mAuthenticationTime;
     QMap<KJob*,QByteArray> mCreatePostingBuffer;
-    QMap<KJob*,KBlog::BlogPosting*> mModifyPostingMap;
-    QMap<KJob*,QByteArray> mModifyPostingBuffer;
     QMap<KJob*,KBlog::BlogPosting*> mCreatePostingMap;
+    QMap<KJob*,QByteArray> mModifyPostingBuffer;
+    QMap<KJob*,KBlog::BlogPosting*> mModifyPostingMap;
+    QMap<KJob*,QByteArray> mRemovePostingBuffer;
+    QMap<KJob*,KBlog::BlogPosting*> mRemovePostingMap;
     QMap<KJob*,QByteArray> mFetchProfileIdBuffer;
     QMap<Syndication::Loader*,KBlog::BlogPosting*> mFetchPostingMap;
     QString mFullName;
     QString mProfileId;
     GDataPrivate();
     ~GDataPrivate();
-    QString authenticate();
+    bool authenticate();
     virtual void slotFetchProfileIdData(KIO::Job*,const QByteArray&);
     virtual void slotFetchProfileId(KJob*);
     virtual void slotListBlogs(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
@@ -66,6 +68,8 @@ class GDataPrivate : public BlogPrivate
     virtual void slotCreatePostingData( KIO::Job *, const QByteArray& );
     virtual void slotModifyPosting(KJob*);
     virtual void slotModifyPostingData( KIO::Job *, const QByteArray& );
+    virtual void slotRemovePosting(KJob*);
+    virtual void slotRemovePostingData( KIO::Job *, const QByteArray& );
     Q_DECLARE_PUBLIC(GData)
 };
 

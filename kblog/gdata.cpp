@@ -174,7 +174,7 @@ void GData::modifyPosting( KBlog::BlogPosting* posting )
 {
   Q_D(GData);
     kDebug() << "modifyPosting()";
-    if ( d->authenticate().isEmpty() ){
+    if ( d->authenticate() ){
       kDebug(5323) << "Authentication failed.";
       emit error( Atom, "Authentication failed." );
       return;
@@ -233,7 +233,7 @@ void GData::createPosting( KBlog::BlogPosting* posting )
 {
   Q_D(GData);
     kDebug() << "createPosting()";
-    if ( d->authenticate().isEmpty() ){
+    if ( d->authenticate() ){
       kDebug(5323) << "Authentication failed.";
       emit error( Atom, "Authentication failed." );
       return;
@@ -284,9 +284,34 @@ void GData::createPosting( KBlog::BlogPosting* posting )
 void GData::removePosting( KBlog::BlogPosting *posting )
 {
   Q_D(GData);
-    Q_UNUSED( posting );
-    kDebug() << "deletePosting()";
-    d->authenticate();
+    kDebug() << "createPosting()";
+    if ( d->authenticate() ){
+      kDebug(5323) << "Authentication failed.";
+      emit error( Atom, "Authentication failed." );
+      return;
+    }
+
+    QByteArray postData;
+
+    KIO::TransferJob *job = KIO::http_post(
+        KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default/"+posting->postingId() ),
+        postData, false );
+
+    d->mRemovePostingMap[ job ] = posting;
+
+    if ( !job ) {
+      kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/"
+          << blogId() << "/posts/default/" + posting->postingId();
+    }
+
+  job->addMetaData( "ConnectTimeout", "50" );
+  job->addMetaData( "customHTTPHeader", "Authorization: GoogleLogin auth=" + d->mAuthenticationString +
+                                   "\r\nX-HTTP-Method-Override: DELETE" );
+
+    connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+             this, SLOT( slotRemovePostingData( KIO::Job *, const QByteArray & ) ) );
+    connect( job, SIGNAL( result( KJob * ) ),
+             this, SLOT( slotRemovePosting( KJob * ) ) );
 }
 
 void GData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
@@ -310,7 +335,7 @@ GDataPrivate::~GDataPrivate(){
 
 }
 
-QString GDataPrivate::authenticate(){
+bool GDataPrivate::authenticate(){
   Q_Q(GData);
   QByteArray data;
   KUrl authGateway( "https://www.google.com/accounts/ClientLogin" );
@@ -332,12 +357,12 @@ QString GDataPrivate::authenticate(){
         kDebug(5323)<<"RegExp got authentication string:" << rx.cap(1);
         mAuthenticationString = rx.cap(1);
         mAuthenticationTime = QDateTime::currentDateTime();
-        return mAuthenticationString;
+        return true;
       }
     }
-    return QString();
+    return false;
   }
-  return mAuthenticationString;
+  return true;
 }
 
 void GDataPrivate::slotFetchProfileIdData( KIO::Job *job, const QByteArray &data )
@@ -557,6 +582,7 @@ void GDataPrivate::slotCreatePosting( KJob *job )
 {
   kDebug(5323) << "slotCreatePosting()";  
   const QString data = QString::fromUtf8( mCreatePostingBuffer[ job ].data(), mCreatePostingBuffer[ job ].size() );
+  mCreatePostingBuffer[ job ].resize( 0 );
 
   Q_Q(GData);
 
@@ -566,8 +592,6 @@ void GDataPrivate::slotCreatePosting( KJob *job )
   if ( job->error() != 0 ) {
     kDebug(5323) << "slotCreatePosting error:" << job->errorString();
     emit q->error( GData::Atom, job->errorString(), posting );
-    mCreatePostingBuffer[ job ].resize( 0 );
-    mCreatePostingBuffer.remove( job );
     return;
   }
 
@@ -599,8 +623,6 @@ void GDataPrivate::slotCreatePosting( KJob *job )
   posting->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
   posting->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
   emit q->createdPosting( posting );
-  mCreatePostingBuffer[ job ].resize( 0 );
-  mCreatePostingBuffer.remove( job );
 }
 
 void GDataPrivate::slotModifyPostingData( KIO::Job *job, const QByteArray &data )
@@ -615,6 +637,7 @@ void GDataPrivate::slotModifyPosting( KJob *job )
 {
   kDebug(5323) << "slotModifyPosting()";  
   const QString data = QString::fromUtf8( mModifyPostingBuffer[ job ].data(), mModifyPostingBuffer[ job ].size() );
+  mModifyPostingBuffer[ job ].resize( 0 );
 
   KBlog::BlogPosting* posting = mModifyPostingMap[ job ];
   mModifyPostingMap.remove( job );
@@ -622,8 +645,6 @@ void GDataPrivate::slotModifyPosting( KJob *job )
   if ( job->error() != 0 ) {
     kDebug(5323) << "slotModifyPosting error:" << job->errorString();
     emit q->error( GData::Atom, job->errorString(), posting );
-    mModifyPostingBuffer[ job ].resize( 0 );
-    mModifyPostingBuffer.remove( job );
     return;
   }
 
@@ -655,8 +676,32 @@ void GDataPrivate::slotModifyPosting( KJob *job )
   posting->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
   posting->setStatus( BlogPosting::Modified );
   emit q->modifiedPosting( posting );
-  mModifyPostingBuffer[ job ].resize( 0 );
-  mModifyPostingBuffer.remove( job );
+}
+
+void GDataPrivate::slotRemovePostingData( KIO::Job *job, const QByteArray &data )
+{
+  kDebug(5323) << "slotRemovePostingData()";
+  unsigned int oldSize = mRemovePostingBuffer[ job ].size();
+  mRemovePostingBuffer[ job ].resize( oldSize + data.size() );
+  memcpy( mRemovePostingBuffer[ job ].data() + oldSize, data.data(), data.size() );
+}
+
+void GDataPrivate::slotRemovePosting( KJob *job )
+{
+  kDebug(5323) << "slotRemovePosting()";  
+  const QString data = QString::fromUtf8( mRemovePostingBuffer[ job ].data(), mRemovePostingBuffer[ job ].size() );
+  mRemovePostingBuffer[ job ].resize( 0 );
+
+  KBlog::BlogPosting* posting = mRemovePostingMap[ job ];
+  mRemovePostingMap.remove( job );
+  Q_Q(GData);
+  if ( job->error() != 0 ) {
+    kDebug(5323) << "slotRemovePosting error:" << job->errorString();
+    emit q->error( GData::Atom, job->errorString(), posting );
+    return;
+  }
+
+  emit q->removedPosting( posting );
 }
 
 #include "gdata.moc"

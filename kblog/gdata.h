@@ -220,6 +220,8 @@ class KBLOG_EXPORT GData : public Blog
     Q_PRIVATE_SLOT(d_func(), void slotCreatePostingData(KIO::Job *,const QByteArray&))
     Q_PRIVATE_SLOT(d_func(), void slotModifyPosting(KJob*))
     Q_PRIVATE_SLOT(d_func(), void slotModifyPostingData(KIO::Job *,const QByteArray&))
+    Q_PRIVATE_SLOT(d_func(), void slotRemovePosting(KJob*))
+    Q_PRIVATE_SLOT(d_func(), void slotRemovePostingData(KIO::Job *,const QByteArray&))
 };
 
 } //namespace KBlog
