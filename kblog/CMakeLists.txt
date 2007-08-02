@@ -21,7 +21,7 @@ movabletype.cpp
 
 kde4_add_library(kblog SHARED ${kblog_LIB_SRCS})
 
-target_link_libraries(kblog kxmlrpcclient syndication ${KDE4_KIO_LIBS} )
+target_link_libraries(kblog kxmlrpcclient syndication ${KDE4_KIO_LIBS} kcal )
 
 set_target_properties(kblog PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 

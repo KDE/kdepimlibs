@@ -24,8 +24,11 @@
 #include "blogposting.h"
 #include "blogposting_p.h"
 
+#include "blog.h"
+
 #include <KDateTime>
 #include <KUrl>
+#include <kcal/journal.h>
 
 #include <QStringList>
 
@@ -39,9 +42,64 @@ BlogPosting::BlogPosting( const QString &postingId, QObject* parent ) :
   d_ptr->mStatus = New;
 }
 
+BlogPosting::BlogPosting( const QString &postingId, BlogPostingPrivate &dd,
+                          QObject *parent )
+  : QObject( parent ), d_ptr( &dd )
+{
+  d_ptr->mPublished = false;
+  d_ptr->mPostingId = postingId;
+  d_ptr->mStatus = New;
+}
+
+BlogPosting::BlogPosting( const KCal::Journal &journal, QObject* parent ) :
+    QObject( parent ), d_ptr( new BlogPostingPrivate )
+{
+  d_ptr->mPublished = false;
+  d_ptr->mPostingId = journal.customProperty( "KBLOG", "ID" );
+  d_ptr->mStatus = New;
+  d_ptr->mTitle = journal.summary();
+  d_ptr->mContent = journal.description();
+  d_ptr->mCategories = journal.categories();
+  d_ptr->mCreationDateTime = journal.dtStart();
+}
+
+BlogPosting::BlogPosting( const KCal::Journal &journal, BlogPostingPrivate &dd,
+                          QObject *parent )
+  : QObject( parent ), d_ptr( &dd )
+{
+  d_ptr->mPublished = false;
+  d_ptr->mPostingId = journal.customProperty( "KBLOG", "ID" );
+  d_ptr->mStatus = New;
+  d_ptr->mTitle = journal.summary();
+  d_ptr->mContent = journal.description();
+  d_ptr->mCategories = journal.categories();
+  d_ptr->mCreationDateTime = journal.dtStart();
+}
+
 BlogPosting::~BlogPosting()
 {
   delete d_ptr;
+}
+
+KCal::Journal* BlogPosting::journal( const Blog &blog )
+{
+  QString url = blog.url().url();
+  QString username = blog.username();
+  QString blogId = blog.blogId();
+  // Generate unique ID. Should be unique enough...
+  QString id = "kblog-" + url + '-' + blogId  + '-' + username +
+      '-' + d_ptr->mPostingId;
+  KCal::Journal *journal = new KCal::Journal();
+  journal->setUid( id );
+  journal->setSummary( d_ptr->mTitle );
+  journal->setCategories( d_ptr->mCategories );
+  journal->setDescription( d_ptr->mContent );
+  journal->setDtStart( d_ptr->mCreationDateTime );
+  journal->setCustomProperty( "KBLOG", "URL", url );
+  journal->setCustomProperty( "KBLOG", "USER", blog.username() );
+  journal->setCustomProperty( "KBLOG", "BLOG", blogId );
+  journal->setCustomProperty( "KBLOG", "ID", d_ptr->mPostingId );
+  return journal;
 }
 
 bool BlogPosting::isPublished() const

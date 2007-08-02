@@ -33,8 +33,12 @@ class QStringList;
 class KDateTime;
 class KUrl;
 
-namespace KBlog {
+namespace KCal {
+  class Journal;
+}
 
+namespace KBlog {
+  class Blog;
   class BlogPostingPrivate;
   class BlogPostingComment;
 
@@ -64,10 +68,25 @@ public:
     explicit BlogPosting( const QString &postingId = QString(),
                           QObject *parent = 0 );
 
+    /** Constructor to create a blog posting from a KCal Journal.
+
+      @param journal The journal to use to create the posting
+      @param parent Parent object of this BlogPosting
+     */
+    explicit BlogPosting( const KCal::Journal &journal,
+                          QObject *parent = 0 );
+
     /**
       Virtual default destructor.
     */
     virtual ~BlogPosting();
+
+    /**
+      Returns a KCal journal from the blog posting owned by the caller.
+
+      @return journal
+     */
+    KCal::Journal* journal( const Blog &blog );
 
     /**
       Returns if the posting is published or not.
@@ -227,7 +246,8 @@ public:
 
   protected:
     BlogPostingPrivate * const d_ptr;
-    BlogPosting( const KUrl &server, BlogPostingPrivate &dd, QObject *parent = 0 );
+    BlogPosting( const QString &postingId, BlogPostingPrivate &dd, QObject *parent = 0 );
+    BlogPosting( const KCal::Journal &journal, BlogPostingPrivate &dd, QObject *parent = 0 );
 
   private:
     Q_DECLARE_PRIVATE(BlogPosting)
