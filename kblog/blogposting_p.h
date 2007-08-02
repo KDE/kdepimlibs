@@ -40,6 +40,7 @@ class BlogPostingPrivate
     QString mContent;
     QStringList mCategories;
     QString mError;
+    QString mJournalId;
     BlogPosting::Status mStatus;
     KDateTime mCreationDateTime;
     KDateTime mModificationDateTime;

@@ -89,6 +89,13 @@ public:
     KCal::Journal* journal( const Blog &blog );
 
     /**
+      Returns the ID used by the journal in creation, if created from a journal.
+
+      @return journal ID
+    */
+    QString journalId() const;
+
+    /**
       Returns if the posting is published or not.
 
       @return bool

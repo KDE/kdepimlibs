@@ -134,7 +134,14 @@ void Blogger1::modifyPosting( KBlog::BlogPosting *posting )
     unsigned int i= d->callCounter++;
     d->callMap[ i ] = posting;
     QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
-    args << QVariant( posting->content() );
+    QStringList categories = posting->categories();
+    QString content = "<title>" + posting->title() + "</title>";
+    QStringList::const_iterator it;
+    for ( it = categories.constBegin(); it != categories.constEnd(); ++it ) {
+      content += "<category>" + *it + "</category>";
+    }
+    content += posting->content();
+    args << QVariant( content );
     args << QVariant( posting->isPublished() );
     d->mXmlRpcClient->call(
       "blogger.editPost", args,

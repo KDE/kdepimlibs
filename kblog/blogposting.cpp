@@ -56,6 +56,7 @@ BlogPosting::BlogPosting( const KCal::Journal &journal, QObject* parent ) :
 {
   d_ptr->mPublished = false;
   d_ptr->mPostingId = journal.customProperty( "KBLOG", "ID" );
+  d_ptr->mJournalId = journal.uid();
   d_ptr->mStatus = New;
   d_ptr->mTitle = journal.summary();
   d_ptr->mContent = journal.description();
@@ -69,6 +70,7 @@ BlogPosting::BlogPosting( const KCal::Journal &journal, BlogPostingPrivate &dd,
 {
   d_ptr->mPublished = false;
   d_ptr->mPostingId = journal.customProperty( "KBLOG", "ID" );
+  d_ptr->mJournalId = journal.uid();
   d_ptr->mStatus = New;
   d_ptr->mTitle = journal.summary();
   d_ptr->mContent = journal.description();
@@ -100,6 +102,11 @@ KCal::Journal* BlogPosting::journal( const Blog &blog )
   journal->setCustomProperty( "KBLOG", "BLOG", blogId );
   journal->setCustomProperty( "KBLOG", "ID", d_ptr->mPostingId );
   return journal;
+}
+
+QString BlogPosting::journalId() const
+{
+  return d_func()->mJournalId;
 }
 
 bool BlogPosting::isPublished() const
