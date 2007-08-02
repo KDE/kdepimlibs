@@ -24,7 +24,7 @@
 
 #include <QtCore/QObject>
 
-enum errorType {
+enum ErrorType {
   XmlRpc,
   Atom,
   ParsingError,
@@ -51,7 +51,7 @@ class TestGDataWarnings : public QObject
     void fetchPostingTimeoutWarning();
     void modifyPostingTimeoutWarning();
     void createPostingTimeoutWarning();
-    void error( const errorType &type, const QString &errStr );
+    void error( const ErrorType type, const QString &errStr );
 };
 
 #endif

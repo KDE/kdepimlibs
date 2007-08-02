@@ -44,23 +44,23 @@ class GDataPrivate : public BlogPrivate
   public:
     QString mAuthenticationString;
     QDateTime mAuthenticationTime;
-    QMap<KIO::Job*,QByteArray> mCreatePostingBuffer;
-    QMap<KIO::Job*,KBlog::BlogPosting*> mCreatePostingMap;
-    QMap<KIO::Job*,QByteArray> mFetchProfileIdBuffer;
-    QMap<Syndication::Loader*,KBlog::BlogPosting*> mFetchPostingsMap;
+    QMap<KJob*,QByteArray> mCreatePostingBuffer;
+    QMap<KJob*,KBlog::BlogPosting*> mCreatePostingMap;
+    QMap<KJob*,QByteArray> mFetchProfileIdBuffer;
+    QMap<Syndication::Loader*,KBlog::BlogPosting*> mFetchPostingMap;
     QString mFullName;
     QString mProfileId;
     GDataPrivate();
     ~GDataPrivate();
     QString authenticate();
     virtual void slotFetchProfileIdData(KIO::Job*,const QByteArray&);
-    virtual void slotFetchProfileId(KIO::Job*);
+    virtual void slotFetchProfileId(KJob*);
     virtual void slotListBlogs(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
     virtual void slotListComments(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
     virtual void slotListAllComments(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
     virtual void slotListRecentPostings(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
     virtual void slotFetchPosting(Syndication::Loader*, Syndication::FeedPtr, Syndication::ErrorCode);
-    virtual void slotCreatePosting(KIO::Job*);
+    virtual void slotCreatePosting(KJob*);
     virtual void slotCreatePostingData( KIO::Job *, const QByteArray& );
     Q_DECLARE_PUBLIC(GData)
 };

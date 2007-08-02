@@ -26,6 +26,7 @@
 
 #include <syndication/loader.h>
 #include <syndication/item.h>
+#include <syndication/atom/entry.h>
 
 #include <kio/netaccess.h>
 #include <kio/http.h>
@@ -36,6 +37,7 @@
 
 #include <QByteArray>
 #include <QRegExp>
+#include <QDomDocument>
 
 #define TIMEOUT 600
 
@@ -88,8 +90,8 @@ void GData::fetchProfileId()
   KUrl blogUrl = url();
   connect( job, SIGNAL(data(KIO::Job*,const QByteArray&)),
                   this,SLOT(slotFetchProfileIdData(KIO::Job*,const QByteArray&)));
-  connect( job, SIGNAL(result(KIO::Job*)),
-                  this,SLOT(slotFetchProfileId(KIO::Job*)));
+  connect( job, SIGNAL(result(KJob*)),
+                  this,SLOT(slotFetchProfileId(KJob*)));
 }
 
 void GData::listBlogs()
@@ -99,7 +101,7 @@ void GData::listBlogs()
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                           Syndication::FeedPtr, Syndication::ErrorCode)),
-                          this, SLOT(slotListedBlogs(Syndication::Loader*,
+                          this, SLOT(slotListBlogs(Syndication::Loader*,
                   Syndication::FeedPtr, Syndication::ErrorCode)) );
   loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + profileId()
       + QString( "/blogs" ) );
@@ -119,7 +121,7 @@ void GData::listRecentPostings( const int number )
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                           Syndication::FeedPtr, Syndication::ErrorCode)),
-                          this, SLOT(slotListedRecentPostings(
+                          this, SLOT(slotListRecentPostings(
                                   Syndication::Loader*,
                   Syndication::FeedPtr, Syndication::ErrorCode)) );
   loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
@@ -133,7 +135,7 @@ void GData::listComments( KBlog::BlogPosting *posting )
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                           Syndication::FeedPtr, Syndication::ErrorCode)),
-                          this, SLOT(slotListedComments(
+                          this, SLOT(slotListComments(
                                   Syndication::Loader*,
                   Syndication::FeedPtr, Syndication::ErrorCode)) );
   loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
@@ -147,7 +149,7 @@ void GData::listAllComments()
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                           Syndication::FeedPtr, Syndication::ErrorCode)),
-                          this, SLOT(slotListedAllComments(
+                          this, SLOT(slotListAllComments(
                                   Syndication::Loader*,
                   Syndication::FeedPtr, Syndication::ErrorCode)) );
   loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
@@ -159,10 +161,10 @@ void GData::fetchPosting( KBlog::BlogPosting *posting )
   Q_D(GData);
   kDebug() << "fetchPosting()" << endl;
   Syndication::Loader *loader = Syndication::Loader::create();
-//   d->setFetchPostingId( postingId );
+  d->mFetchPostingMap[ loader ] = posting;
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                    Syndication::FeedPtr, Syndication::ErrorCode)),
-                   this, SLOT(slotFetchedPosting(Syndication::Loader*,
+                   this, SLOT(slotFetchPosting(Syndication::Loader*,
                    Syndication::FeedPtr, Syndication::ErrorCode)));
   loader->loadFrom( QString( "http://www.blogger.com/feeds/" ) + blogId()
       + QString( "/posts/default" ) );
@@ -195,7 +197,7 @@ void GData::createPosting( KBlog::BlogPosting* posting )
     }
     atomMarkup += "<content type='xhtml'>";
     atomMarkup += "<div xmlns='http://www.w3.org/1999/xhtml'>";
-    atomMarkup += posting->content();
+    atomMarkup += posting->content().toUtf8(); // FIXME check for Utf
     atomMarkup += "</div></content>";
     atomMarkup += "<author>";
     atomMarkup += "<name>" + fullName() + "</name>"; //FIXME user's name
@@ -218,9 +220,9 @@ void GData::createPosting( KBlog::BlogPosting* posting )
           << blogId() <<"/posts/default" << endl;
     }
 
-    job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
-    job->addMetaData( "ConnectTimeout", "50" );
-    job->addMetaData( "Authorization:", "GoogleLogin auth=" + d->mAuthenticationString );
+  job->addMetaData( "content-type", "Content-Type: application/atom+xml; charset=utf-8" );
+  job->addMetaData( "ConnectTimeout", "50" );
+  job->addMetaData( "customHTTPHeader", "Authorization: GoogleLogin auth=" + d->mAuthenticationString );
 
     connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
              this, SLOT( slotCreatePostingData( KIO::Job *, const QByteArray & ) ) );
@@ -294,7 +296,7 @@ void GDataPrivate::slotFetchProfileIdData( KIO::Job *job, const QByteArray &data
   memcpy( mFetchProfileIdBuffer[ job ].data() + oldSize, data.data(), data.size() );
 }
 
-void GDataPrivate::slotFetchProfileId(KIO::Job* job)
+void GDataPrivate::slotFetchProfileId(KJob* job)
 {
   Q_Q(GData);
   if ( !job->error() ) {
@@ -450,6 +452,7 @@ void GDataPrivate::slotListRecentPostings(
 void GDataPrivate::slotFetchPosting(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status ){
+  kDebug(5323) << "slotFetchPosting" << endl;
   Q_Q(GData);
 
   bool success = false;
@@ -462,9 +465,9 @@ void GDataPrivate::slotFetchPosting(
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for( ; it!=end; ++it ){
-      BlogPosting* posting = new BlogPosting();
+      BlogPosting* posting = new BlogPosting;
       QRegExp rx( "post-(\\d+)" );
-      if( rx.indexIn( ( *it )->id() )!=-1 && rx.cap(1)==mFetchPostingsMap[ loader ]->postingId() ){
+      if( rx.indexIn( ( *it )->id() )!=-1 && rx.cap(1)==mFetchPostingMap[ loader ]->postingId() ){
         kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
         posting->setPostingId( rx.cap(1) );
         posting->setTitle( ( *it )->title() );
@@ -485,20 +488,24 @@ void GDataPrivate::slotFetchPosting(
   if(!success){
     emit q->error( GData::Other, i18n( "Could not regexp the blog id path." ) );
     kDebug(5323) << "QRegExp rx( 'post-(\\d+)' does not match "
-        << mFetchPostingsMap[ loader ]->postingId() << ". " << endl;
+        << mFetchPostingMap[ loader ]->postingId() << ". " << endl;
   }
-  mFetchPostingsMap.remove( loader );
+  mFetchPostingMap.remove( loader );
 }
 
 void GDataPrivate::slotCreatePostingData( KIO::Job *job, const QByteArray &data )
 {
+  kDebug(5323) << "slotCreatePostingData()" << endl;
   unsigned int oldSize = mCreatePostingBuffer[ job ].size();
   mCreatePostingBuffer[ job ].resize( oldSize + data.size() );
   memcpy( mCreatePostingBuffer[ job ].data() + oldSize, data.data(), data.size() );
 }
 
-void GDataPrivate::slotCreatePosting( KIO::Job *job )
+void GDataPrivate::slotCreatePosting( KJob *job )
 {
+  kDebug(5323) << "slotCreatePosting()" << endl;  
+  const QString data = QString::fromUtf8( mCreatePostingBuffer[ job ].data(), mCreatePostingBuffer[ job ].size() );
+//   Syndication::Atom::Entry entry( data.documentElement() );
   Q_Q(GData);
   if ( job->error() != 0 ) {
     kDebug(5323) << "slotCreatePosting error: " << job->errorString() << endl;
@@ -511,13 +518,12 @@ void GDataPrivate::slotCreatePosting( KIO::Job *job )
   KBlog::BlogPosting* posting = mCreatePostingMap[ job ];
   mCreatePostingMap.remove( job );
 
-  const QString data = QString::fromUtf8( mCreatePostingBuffer[ job ].data(), mCreatePostingBuffer[ job ].size() );
-  kDebug(5323) << "Response: " << data << endl;
-  QRegExp rx( "<id>(\\d+)</id>" ); //FIXME check that and do better handling
-  if(! rx.indexIn( data ) ){
-    kDebug(5323) << "Could not regexp the id out of the result." << endl;
+  QRegExp rx( "post-(\\d+)" ); //FIXME check that and do better handling
+  if( rx.indexIn( data )==-1 ){
+    kDebug(5323) << "Could not regexp the id out of the result: " << data << endl;
     return;
   }
+  kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches " << rx.cap(1) << endl;
   posting->setPostingId( rx.cap(1) );
   posting->setStatus( BlogPosting::Created );
   emit q->createdPosting( posting );

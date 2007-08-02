@@ -68,7 +68,7 @@ void TestGDataWarnings::createPostingTimeoutWarning()
   QWARN( "createPosting() timeout. This can be caused by an error, too." );
 }
 
-void TestGDataWarnings::error( const errorType &type, const QString &errStr )
+void TestGDataWarnings::error( const ErrorType type, const QString &errStr )
 {
   Q_UNUSED( type );
   QWARN( errStr.toUtf8().data() );
@@ -81,12 +81,14 @@ void TestGData::testValidity()
   // we do not test the setUrl() function additionally here
   GData *b = new GData( KUrl( "http://blogger2test.blogspot.com" ) );
   b->setUsername( "christian_weilbach@web.de" );
+  b->setFullName( "Santa Claus" );
   b->setProfileId( "11235141638164909615" );
   b->setPassword( "Wo ist Hans?" );
   b->setBlogId( "4662848212819772532" );
   b->setTimeZone( KTimeZone( "UTC" ) );
   QVERIFY( b->url() == KUrl( "http://blogger2test.blogspot.com" ) );
   QVERIFY( b->blogId() == "4662848212819772532" );
+  QVERIFY( b->fullName() == "Santa Claus" );
   QVERIFY( b->username() == "christian_weilbach@web.de" );
   QVERIFY( b->profileId() == "11235141638164909615" );
   QVERIFY( b->password() == "Wo ist Hans?" );
@@ -98,19 +100,19 @@ void TestGData::testValidity()
   p->setTitle( "TestGData" );
   p->setContent( "TestGData: posted content." );
   p->setPublished( true );
-  p->setPostingId( QString( "41" ) );
+  p->setPostingId( QString( "7104923864416116806" ) );
   p->setCreationDateTime( mDateTime );
   p->setModificationDateTime( mDateTime );
   QVERIFY( p->title() == "TestGData" );
   QVERIFY( p->content() == "TestGData: posted content." );
   QVERIFY( p->isPublished() == true );
-  QVERIFY( p->postingId() == QString ( "41" ) );
+  QVERIFY( p->postingId() == QString ( "7104923864416116806" ) );
   QVERIFY( p->creationDateTime() == mDateTime );
   QVERIFY( p->modificationDateTime() == mDateTime );
 
   TestGDataWarnings *warnings = new TestGDataWarnings();
-  connect( b, SIGNAL( error( const errorType&, const QString& ) ),
-           warnings, SLOT( error( const errorType&, const QString& ) ) );
+  connect( b, SIGNAL( error( const ErrorType, const QString& ) ),
+           warnings, SLOT( error( const ErrorType, const QString& ) ) );
 
   QTimer *userInfoTimer = new QTimer( this );
   userInfoTimer->setSingleShot( true );
@@ -144,32 +146,32 @@ void TestGData::testValidity()
 
   QEventLoop *eventLoop = new QEventLoop( this );
 
-  connect( b, SIGNAL( fetchedProfileId() ),
+  connect( b, SIGNAL( fetchedProfileId( QString ) ),
           userInfoTimer, SLOT( stop() ) );
   b->fetchProfileId();
   userInfoTimer->start( TIMEOUT );
 
-  connect( b, SIGNAL( blogInfoRetrieved( const QString&, const QString& ) ),
+  connect( b, SIGNAL( listedBlogs( QMap<QString,QMap<QString,QString> > ) ),
            listBlogsTimer, SLOT( stop() ) );
   b->listBlogs();
   listBlogsTimer->start( TIMEOUT );
 
-  connect( b, SIGNAL( listedRecentPostings( const QList<KBlog::BlogPosting> &postings ) ),
+  connect( b, SIGNAL( listedRecentPostings( QList<KBlog::BlogPosting*> ) ),
            listPostingsTimer, SLOT( stop() ) );
   b->listRecentPostings( DOWNLOADCOUNT );
   listPostingsTimer->start( TIMEOUT );
 
-//   connect( b, SIGNAL( fetchedPosting( KBlog::BlogPosting& ) ),
-//            fetchPostingTimer, SLOT( stop() ) );
-//   b->fetchPosting( QString( "3250382476119530786" ) );
-//   fetchPostingTimer->start( TIMEOUT );
+  connect( b, SIGNAL( fetchedPosting( KBlog::BlogPosting* ) ),
+           fetchPostingTimer, SLOT( stop() ) );
+  b->fetchPosting( p );
+  fetchPostingTimer->start( TIMEOUT );
 // 
 //   connect( b, SIGNAL( modifiedPosting( bool ) ),
 //            modifyPostingTimer, SLOT( stop() ) );
 //   b->modifyPosting( p );
 //   modifyPostingTimer->start( TIMEOUT );
 
-  connect( b, SIGNAL( createdPosting( QString ) ),
+  connect( b, SIGNAL( createdPosting( KBlog::BlogPosting* ) ),
            createPostingTimer, SLOT( stop() ) );
   b->createPosting( p );
   createPostingTimer->start( TIMEOUT );
