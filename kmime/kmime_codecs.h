@@ -164,10 +164,10 @@ class KMIME_EXPORT Codec
       QByteArray::Iterator iit = in.begin();
       QByteArray::Iterator oit = out.begin();
       if ( !codec->encode( iit, in.end(), oit, out.end() ) ) {
-        kDebug(5320) << "output buffer too small" << endl;
+        kDebug(5320) << "output buffer too small";
         return;
       }
-      kDebug(5320) << "Size of encoded data: " << oit - out.begin() << endl;
+      kDebug(5320) << "Size of encoded data:" << oit - out.begin();
       </pre>
 
       @param scursor is a pointer to the start of the input buffer.
@@ -202,10 +202,10 @@ class KMIME_EXPORT Codec
       QByteArray::Iterator iit = in.begin();
       QByteArray::Iterator oit = out.begin();
       if ( !codec->decode( iit, in.end(), oit, out.end() ) ) {
-        kDebug(5320) << "output buffer too small" << endl;
+        kDebug(5320) << "output buffer too small";
         return;
       }
-      kDebug(5320) << "Size of decoded data: " << oit - out.begin() << endl;
+      kDebug(5320) << "Size of decoded data:" << oit - out.begin();
       </pre>
 
       @param scursor is a pointer to the start of the input buffer.

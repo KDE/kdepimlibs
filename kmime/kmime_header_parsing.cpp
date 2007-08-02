@@ -190,7 +190,7 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
   char ch = *scursor++;
 
   if ( ch != '?' ) {
-    kDebug(5320) << "first" << endl;
+    kDebug(5320) << "first";
     KMIME_WARN_PREMATURE_END_OF( EncodedWord );
     return false;
   }
@@ -212,7 +212,7 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
 
   // not found? can't be an encoded-word!
   if ( scursor == send || *scursor != '?' ) {
-    kDebug(5320) << "second" << endl;
+    kDebug(5320) << "second";
     KMIME_WARN_PREMATURE_END_OF( EncodedWord );
     return false;
   }
@@ -243,7 +243,7 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
 
   // not found? Can't be an encoded-word!
   if ( scursor == send || *scursor != '?' ) {
-    kDebug(5320) << "third" << endl;
+    kDebug(5320) << "third";
     KMIME_WARN_PREMATURE_END_OF( EncodedWord );
     return false;
   }
@@ -253,7 +253,7 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
 
   kDebug(5320) << "parseEncodedWord: found charset == \"" << maybeCharset
            << "\"; language == \"" << maybeLanguage
-           << "\"; encoding == \"" << maybeEncoding << "\"" << endl;
+           << "\"; encoding == \"" << maybeEncoding << "\"";
 
   //
   // STEP 3:
@@ -274,14 +274,14 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
   // not found? Can't be an encoded-word!
   // ### maybe evaluate it nonetheless if the rest is OK?
   if ( scursor == send || *scursor != '?' ) {
-    kDebug(5320) << "fourth" << endl;
+    kDebug(5320) << "fourth";
     KMIME_WARN_PREMATURE_END_OF( EncodedWord );
     return false;
   }
   scursor++;
   // check for trailing '=':
   if ( scursor == send || *scursor != '=' ) {
-    kDebug(5320) << "fifth" << endl;
+    kDebug(5320) << "fifth";
     KMIME_WARN_PREMATURE_END_OF( EncodedWord );
     return false;
   }
@@ -328,7 +328,7 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
     return false;
   };
 
-  kDebug(5320) << "mimeName(): \"" << textCodec->name() << "\"" << endl;
+  kDebug(5320) << "mimeName(): \"" << textCodec->name() << "\"";
 
   // allocate a temporary buffer to store the 8bit text:
   int encodedTextLength = encodedTextEnd - encodedTextStart;
@@ -349,7 +349,7 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
 
   result = textCodec->toUnicode( buffer.begin(), bit - buffer.begin() );
 
-  kDebug(5320) << "result now: \"" << result << "\"" << endl;
+  kDebug(5320) << "result now: \"" << result << "\"";
   // cleanup:
   delete dec;
   language = maybeLanguage;
@@ -1521,7 +1521,7 @@ static void decodeRFC2231Value( Codec* &rfc2231Codec,
 
   value += textcodec->toUnicode( buffer.begin(), bit - buffer.begin() );
 
-  kDebug(5320) << "value now: \"" << value << "\"" << endl;
+  kDebug(5320) << "value now: \"" << value << "\"";
   // cleanup:
   delete dec;
 }
@@ -1653,7 +1653,7 @@ static bool parseDayName( const char* &scursor, const char * const send )
   for ( int i = 0 ; i < stdDayNamesLen ; ++i ) {
     if ( qstrnicmp( scursor, stdDayNames[i], 3 ) == 0 ) {
       scursor += 3;
-      // kDebug(5320) << "found " << stdDayNames[i] << endl;
+      // kDebug(5320) << "found" << stdDayNames[i];
       return true;
     }
   }

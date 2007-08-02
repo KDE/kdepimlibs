@@ -84,7 +84,7 @@ void GData::setProfileId( const QString& pid )
 void GData::fetchProfileId()
 {
   Q_D(GData);
-  kDebug() << "fetchProfileId()" << endl;
+  kDebug() << "fetchProfileId()";
   QByteArray data;
   KIO::Job *job = KIO::get( url(), false, false );
   KUrl blogUrl = url();
@@ -97,7 +97,7 @@ void GData::fetchProfileId()
 void GData::listBlogs()
 {
   Q_D(GData);
-  kDebug() << "listBlogs()" << endl;
+  kDebug() << "listBlogs()";
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                           Syndication::FeedPtr, Syndication::ErrorCode)),
@@ -117,7 +117,7 @@ void GData::listRecentPostings( const QStringList &labels, const int number,
 void GData::listRecentPostings( const int number )
 {
   Q_D(GData);
-  kDebug() << "listRecentPostings()" << endl;
+  kDebug() << "listRecentPostings()";
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                           Syndication::FeedPtr, Syndication::ErrorCode)),
@@ -131,7 +131,7 @@ void GData::listRecentPostings( const int number )
 void GData::listComments( KBlog::BlogPosting *posting )
 {
   Q_D(GData);
-  kDebug() << "listComments()" << endl;
+  kDebug() << "listComments()";
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                           Syndication::FeedPtr, Syndication::ErrorCode)),
@@ -145,7 +145,7 @@ void GData::listComments( KBlog::BlogPosting *posting )
 void GData::listAllComments()
 {
   Q_D(GData);
-  kDebug() << "listRecentPostings()" << endl;
+  kDebug() << "listRecentPostings()";
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
                           Syndication::FeedPtr, Syndication::ErrorCode)),
@@ -159,7 +159,7 @@ void GData::listAllComments()
 void GData::fetchPosting( KBlog::BlogPosting *posting )
 {
   Q_D(GData);
-  kDebug() << "fetchPosting()" << endl;
+  kDebug() << "fetchPosting()";
   Syndication::Loader *loader = Syndication::Loader::create();
   d->mFetchPostingMap[ loader ] = posting;
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
@@ -174,16 +174,16 @@ void GData::modifyPosting( KBlog::BlogPosting* posting )
 {
   Q_D(GData);
   Q_UNUSED( posting );
-  kDebug() << "modifyPosting()" << endl;
+  kDebug() << "modifyPosting()";
   d->authenticate();
 }
 
 void GData::createPosting( KBlog::BlogPosting* posting )
 {
   Q_D(GData);
-    kDebug() << "createPosting()" << endl;
+    kDebug() << "createPosting()";
     if ( d->authenticate().isEmpty() ){
-      kDebug(5323) << "Authentication failed." << endl;
+      kDebug(5323) << "Authentication failed.";
       emit error( Atom, "Authentication failed." );
       return;
     }
@@ -234,7 +234,7 @@ void GData::removePosting( KBlog::BlogPosting *posting )
 {
   Q_D(GData);
     Q_UNUSED( posting );
-    kDebug() << "deletePosting()" << endl;
+    kDebug() << "deletePosting()";
     d->authenticate();
 }
 
@@ -273,12 +273,12 @@ QString GDataPrivate::authenticate(){
     KIO::Job *job = KIO::http_post( authGateway, QByteArray(), false );
     if ( KIO::NetAccess::synchronousRun(
          job, (QWidget*)0, &data, &authGateway ) ) {
-      kDebug(5323) << "Fetched authentication result for " <<
-          authGateway.prettyUrl() << ". " << endl;
-      kDebug(5323) << "Authentication response: " << data << endl;
+      kDebug(5323) << "Fetched authentication result for" <<
+          authGateway.prettyUrl() << ".";
+      kDebug(5323) << "Authentication response:" << data;
       QRegExp rx( "Auth=(.+)" );
       if( rx.indexIn( data )!=-1 ){
-        kDebug(5323)<<"RegExp got authentication string: " << rx.cap(1) << endl;
+        kDebug(5323)<<"RegExp got authentication string:" << rx.cap(1);
         mAuthenticationString = rx.cap(1);
         mAuthenticationTime = QDateTime::currentDateTime();
         return mAuthenticationString;
@@ -308,13 +308,13 @@ void GDataPrivate::slotFetchProfileId(KJob* job)
     else
       emit q->error( GData::Other, i18n( "Could not regexp the Profile ID." ) );
       emit q->fetchedProfileId( QString() );
-    kDebug(5323)<<"QRegExp bid( 'http://www.blogger.com/profile/(\\d+)' matches "
-        << pid.cap(1) << endl;
+    kDebug(5323)<<"QRegExp bid( 'http://www.blogger.com/profile/(\\d+)' matches"
+        << pid.cap(1);
   }
   else {
     emit q->error( GData::Other, i18n( "Could not fetch the homepage data." ) );
     emit q->fetchedProfileId( QString() );
-    kDebug(5323)<< "Could not fetch the homepage data." << endl;
+    kDebug(5323)<< "Could not fetch the homepage data.";
   }
   mFetchProfileIdBuffer[ job ].resize( 0 );
   mFetchProfileIdBuffer.remove( job );
@@ -338,20 +338,20 @@ void GDataPrivate::slotListBlogs(
   for( ; it!=end; ++it ){
       QRegExp rx( "blog-(\\d+)" );
       if( rx.indexIn( ( *it )->id() )!=-1 ){
-        kDebug(5323)<<"QRegExp rx( 'blog-(\\d+)' matches "<< rx.cap(1) << endl;
+        kDebug(5323)<<"QRegExp rx( 'blog-(\\d+)' matches"<< rx.cap(1);
         blogMap[ rx.cap(1) ]["title"] = ( *it )->title();
         blogMap[ rx.cap(1) ]["summary"] = ( *it )->description(); //TODO fix/add more
       }
       else{
         emit q->error( GData::Other,
                             i18n( "Could not regexp the blog id path." ) );
-        kDebug(5323)<<"QRegExp rx( 'blog-(\\d+)' does not match anything in: "
-            << ( *it )->id() << endl;
+        kDebug(5323)<<"QRegExp rx( 'blog-(\\d+)' does not match anything in:"
+            << ( *it )->id();
       }
 
     }
     emit q->listedBlogs( blogMap );
-    kDebug(5323) << "Emitting listedBlogs(); " << endl;
+    kDebug(5323) << "Emitting listedBlogs(); ";
 }
 
 
@@ -384,7 +384,7 @@ void GDataPrivate::slotListAllComments(
       QRegExp rx( "post-(\\d+)" );
       if( rx.indexIn( ( *it )->id() )==-1 ){
         kDebug(5323)<<
-        "QRegExp rx( 'post-(\\d+)' does not match "<< rx.cap(1) << endl;
+        "QRegExp rx( 'post-(\\d+)' does not match"<< rx.cap(1);
         emit q->error( GData::Other,
         i18n( "Could not regexp the comment id path." ) );
       }
@@ -392,7 +392,7 @@ void GDataPrivate::slotListAllComments(
         comment->setCommentId( rx.cap(1) );
       }
 
-      kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
+      kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches"<< rx.cap(1);
       comment->setTitle( ( *it )->title() );
       comment->setContent( ( *it )->content() );
 //       FIXME: assuming UTC for now
@@ -402,7 +402,7 @@ void GDataPrivate::slotListAllComments(
   ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
       commentList.append( comment );
   }
-  kDebug(5323) << "Emitting listedRecentPostings()" << endl;
+  kDebug(5323) << "Emitting listedRecentPostings()";
   emit q->listedAllComments( commentList );
 }
 
@@ -427,7 +427,7 @@ void GDataPrivate::slotListRecentPostings(
       QRegExp rx( "post-(\\d+)" );
       if( rx.indexIn( ( *it )->id() ) ==-1 ){
         kDebug(5323)<<
-        "QRegExp rx( 'post-(\\d+)' does not match "<< rx.cap(1) << endl;
+        "QRegExp rx( 'post-(\\d+)' does not match"<< rx.cap(1);
         emit q->error( GData::Other,
         i18n( "Could not regexp the posting id path." ) );
       }
@@ -435,7 +435,7 @@ void GDataPrivate::slotListRecentPostings(
         posting->setPostingId( rx.cap(1) );
       }
 
-      kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
+      kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches"<< rx.cap(1);
       posting->setTitle( ( *it )->title() );
       posting->setContent( ( *it )->content() );
 //       FIXME: assuming UTC for now
@@ -445,14 +445,14 @@ void GDataPrivate::slotListRecentPostings(
   ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
       postingList.append( posting );
   }
-  kDebug(5323) << "Emitting listedRecentPostings()" << endl;
+  kDebug(5323) << "Emitting listedRecentPostings()";
   emit q->listedRecentPostings( postingList );
 }
 
 void GDataPrivate::slotFetchPosting(
     Syndication::Loader* loader, Syndication::FeedPtr feed,
     Syndication::ErrorCode status ){
-  kDebug(5323) << "slotFetchPosting" << endl;
+  kDebug(5323) << "slotFetchPosting";
   Q_Q(GData);
 
   bool success = false;
@@ -468,7 +468,7 @@ void GDataPrivate::slotFetchPosting(
       BlogPosting* posting = new BlogPosting;
       QRegExp rx( "post-(\\d+)" );
       if( rx.indexIn( ( *it )->id() )!=-1 && rx.cap(1)==mFetchPostingMap[ loader ]->postingId() ){
-        kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches "<< rx.cap(1) << endl;
+        kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches"<< rx.cap(1);
         posting->setPostingId( rx.cap(1) );
         posting->setTitle( ( *it )->title() );
         posting->setContent( ( *it )->content() );
@@ -482,20 +482,20 @@ void GDataPrivate::slotFetchPosting(
         emit q->fetchedPosting( posting );
         success = true;
         kDebug(5323) << "Emitting fetchedPosting( postingId="
-            << posting->postingId() << " ); " << endl;
+            << posting->postingId() << ");";
       }
   }
   if(!success){
     emit q->error( GData::Other, i18n( "Could not regexp the blog id path." ) );
-    kDebug(5323) << "QRegExp rx( 'post-(\\d+)' does not match "
-        << mFetchPostingMap[ loader ]->postingId() << ". " << endl;
+    kDebug(5323) << "QRegExp rx( 'post-(\\d+)' does not match"
+        << mFetchPostingMap[ loader ]->postingId() << ".";
   }
   mFetchPostingMap.remove( loader );
 }
 
 void GDataPrivate::slotCreatePostingData( KIO::Job *job, const QByteArray &data )
 {
-  kDebug(5323) << "slotCreatePostingData()" << endl;
+  kDebug(5323) << "slotCreatePostingData()";
   unsigned int oldSize = mCreatePostingBuffer[ job ].size();
   mCreatePostingBuffer[ job ].resize( oldSize + data.size() );
   memcpy( mCreatePostingBuffer[ job ].data() + oldSize, data.data(), data.size() );
@@ -503,12 +503,12 @@ void GDataPrivate::slotCreatePostingData( KIO::Job *job, const QByteArray &data 
 
 void GDataPrivate::slotCreatePosting( KJob *job )
 {
-  kDebug(5323) << "slotCreatePosting()" << endl;  
+  kDebug(5323) << "slotCreatePosting()";  
   const QString data = QString::fromUtf8( mCreatePostingBuffer[ job ].data(), mCreatePostingBuffer[ job ].size() );
 //   Syndication::Atom::Entry entry( data.documentElement() );
   Q_Q(GData);
   if ( job->error() != 0 ) {
-    kDebug(5323) << "slotCreatePosting error: " << job->errorString() << endl;
+    kDebug(5323) << "slotCreatePosting error:" << job->errorString();
     emit q->error( GData::Atom, job->errorString() );
     mCreatePostingBuffer[ job ].resize( 0 );
     mCreatePostingBuffer.remove( job );
@@ -520,10 +520,10 @@ void GDataPrivate::slotCreatePosting( KJob *job )
 
   QRegExp rx( "post-(\\d+)" ); //FIXME check that and do better handling
   if( rx.indexIn( data )==-1 ){
-    kDebug(5323) << "Could not regexp the id out of the result: " << data << endl;
+    kDebug(5323) << "Could not regexp the id out of the result:" << data;
     return;
   }
-  kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches " << rx.cap(1) << endl;
+  kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rx.cap(1);
   posting->setPostingId( rx.cap(1) );
   posting->setStatus( BlogPosting::Created );
   emit q->createdPosting( posting );

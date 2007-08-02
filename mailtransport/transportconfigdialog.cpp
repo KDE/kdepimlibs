@@ -264,8 +264,8 @@ void TransportConfigDialog::slotFinished( QList<int> results )
   d->smtp.tls->setEnabled( results.contains( Transport::EnumEncryption::TLS ) );
   checkHighestEnabledButton( d->encryptionGroup );
 
-  kDebug(5324) << "normal: " <<  d->serverTest->normalProtocols() << endl;
-  kDebug(5324) << "secure: " <<  d->serverTest->secureProtocols() << endl;
+  kDebug(5324) << "normal:" <<  d->serverTest->normalProtocols();
+  kDebug(5324) << "secure:" <<  d->serverTest->secureProtocols();
 
   d->noEncCapa = d->serverTest->normalProtocols();
   if ( d->smtp.tls->isEnabled() )
@@ -292,7 +292,7 @@ void TransportConfigDialog::hostNameChanged( const QString &text )
 void TransportConfigDialog::encryptionChanged(int enc)
 {
   Q_ASSERT( d->transport->type() == Transport::EnumType::SMTP );
-  kDebug(5324) << k_funcinfo << enc << endl;
+  kDebug(5324) << k_funcinfo << enc;
 
   // adjust port
   if ( enc == Transport::EnumEncryption::SSL ) {

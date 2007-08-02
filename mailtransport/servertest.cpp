@@ -85,7 +85,7 @@ void ServerTestPrivate::finalResult()
   if ( !secureSocketFinished || !normalSocketFinished )
     return;
 
-  kDebug( 5324 ) << k_funcinfo << connectionResults << endl;
+  kDebug( 5324 ) << k_funcinfo << connectionResults;
 
   testProgress->hide();
   progressTimer->stop();
@@ -95,7 +95,7 @@ void ServerTestPrivate::finalResult()
 
 void ServerTestPrivate::read( int type, const QString& text )
 {
-  kDebug( 5324 ) << k_funcinfo << text << endl;
+  kDebug( 5324 ) << k_funcinfo << text;
 
   if ( !text.contains( QLatin1String( "AUTH" ), Qt::CaseInsensitive ) )
     return;
@@ -233,7 +233,7 @@ ServerTest::~ServerTest()
 
 void ServerTest::start()
 {
-  kDebug( 5324 ) << k_funcinfo << d << endl;
+  kDebug( 5324 ) << k_funcinfo << d;
 
   d->connectionResults.clear();
   d->authenticationResults.clear();

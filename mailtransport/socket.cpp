@@ -63,13 +63,13 @@ SocketPrivate::SocketPrivate( Socket* s) : q(s)
 
 void SocketPrivate::slotConnected()
 {
-  kDebug( 5324 ) << k_funcinfo << endl;
+  kDebug( 5324 ) << k_funcinfo;
 
   if ( !secure ) {
-    kDebug( 5324 ) << "normal connect" << endl;
+    kDebug( 5324 ) << "normal connect";
     emit q->connected();
   } else {
-    kDebug( 5324 ) << "encrypted connect" << endl;
+    kDebug( 5324 ) << "encrypted connect";
     socket->startClientEncryption();
   }
 }
@@ -77,8 +77,7 @@ void SocketPrivate::slotConnected()
 void SocketPrivate::slotStateChanged( QAbstractSocket::SocketState state )
 {
 #ifdef comm_debug
-  kDebug( 5324 ) << objectName() << " "
-      << "State is now: " << ( int ) state << endl;
+  kDebug( 5324 ) << objectName() << "State is now:" << ( int ) state;
 #endif
   if ( state == QAbstractSocket::UnconnectedState )
     emit q->failed();
@@ -87,13 +86,13 @@ void SocketPrivate::slotStateChanged( QAbstractSocket::SocketState state )
 void SocketPrivate::slotModeChanged( QSslSocket::SslMode  state )
 {
 #ifdef comm_debug
-  kDebug( 5324 ) << objectName() << " "  << "Mode is now: " << state << endl;
+  kDebug( 5324 ) << objectName() << "Mode is now:" << state;
 #endif
 }
 
 void SocketPrivate::slotSocketRead()
 {
-  // kDebug(5324) << objectName() << " " << k_funcinfo << endl;
+  // kDebug(5324) << objectName() << k_funcinfo;
 
   if ( !socket )
     return;
@@ -105,7 +104,7 @@ void SocketPrivate::slotSocketRead()
     return;
 
 #ifdef comm_debug
-  kDebug( 5324 ) << socket->isEncrypted() << msg.trimmed() << endl;
+  kDebug( 5324 ) << socket->isEncrypted() << msg.trimmed();
 #endif
 
   emit q->data( msg );
@@ -114,7 +113,7 @@ void SocketPrivate::slotSocketRead()
 
 void SocketPrivate::slotSslErrors( const QList<QSslError> & )
 {
-  kDebug( 5324 ) << k_funcinfo << endl;
+  kDebug( 5324 ) << k_funcinfo;
   /* We can safely ignore the errors, we are only interested in the
   capabilities. We're not sending auth info. */
   socket->ignoreSslErrors();
@@ -130,21 +129,21 @@ Socket::Socket( QObject* parent )
   d->socket = 0;
   d->port = 0;
   d->secure = false;
-  kDebug( 5324 ) << k_funcinfo << endl;
+  kDebug( 5324 ) << k_funcinfo;
 }
 
 Socket::~Socket()
 {
-  kDebug( 5324 ) << objectName() << " " << k_funcinfo << endl;
+  kDebug( 5324 ) << objectName() << k_funcinfo;
 }
 
 void Socket::reconnect()
 {
-  kDebug( 5324 ) << objectName() << " " << "Connecting to: " << d->server
-          <<  ":" <<  d->port << endl;
+  kDebug( 5324 ) << objectName() << "Connecting to:" << d->server
+          <<  ":" <<  d->port;
 
 #ifdef comm_debug
-  // kDebug(5324) << objectName() << d->protocol << endl;
+  // kDebug(5324) << objectName() << d->protocol;
 #endif
 
   if ( d->socket )
@@ -169,7 +168,7 @@ void Socket::reconnect()
 
 void Socket::write( const QString& text )
 {
-  // kDebug(5324) << objectName() << " " << k_funcinfo << endl;
+  // kDebug(5324) << objectName() << k_funcinfo;
   // Eat things in the queue when there is no connection. We need
   // to get a connection first don't we...
   if ( !d->socket || !available() )
@@ -178,8 +177,7 @@ void Socket::write( const QString& text )
   QByteArray cs = ( text + QLatin1String( "\r\n" ) ).toLatin1();
 
 #ifdef comm_debug
-  kDebug( 5324 ) << objectName() << " " << "C   : "
-  << cs << endl;
+  kDebug( 5324 ) << objectName() << "C   :" << cs;
 #endif
 
   d->socket->write( cs.data(), cs.size() );
@@ -187,7 +185,7 @@ void Socket::write( const QString& text )
 
 bool Socket::available()
 {
-  // kDebug(5324) << objectName() << " " << k_funcinfo << endl;
+  // kDebug(5324) << objectName() << k_funcinfo;
   bool ok = d->socket && d->socket->state() == QAbstractSocket::ConnectedState;
   return ok;
 }
