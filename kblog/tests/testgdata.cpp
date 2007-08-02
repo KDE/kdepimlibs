@@ -165,11 +165,11 @@ void TestGData::testValidity()
            fetchPostingTimer, SLOT( stop() ) );
   b->fetchPosting( p );
   fetchPostingTimer->start( TIMEOUT );
-// 
-//   connect( b, SIGNAL( modifiedPosting( bool ) ),
-//            modifyPostingTimer, SLOT( stop() ) );
-//   b->modifyPosting( p );
-//   modifyPostingTimer->start( TIMEOUT );
+
+  connect( b, SIGNAL( modifiedPosting( KBlog::BlogPosting* ) ),
+           modifyPostingTimer, SLOT( stop() ) );
+  b->modifyPosting( p );
+  modifyPostingTimer->start( TIMEOUT );
 
   connect( b, SIGNAL( createdPosting( KBlog::BlogPosting* ) ),
            createPostingTimer, SLOT( stop() ) );

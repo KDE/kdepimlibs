@@ -173,10 +173,61 @@ void GData::fetchPosting( KBlog::BlogPosting *posting )
 void GData::modifyPosting( KBlog::BlogPosting* posting )
 {
   Q_D(GData);
-  Q_UNUSED( posting );
-  kDebug() << "modifyPosting()";
-  d->authenticate();
+    kDebug() << "modifyPosting()" << endl;
+    if ( d->authenticate().isEmpty() ){
+      kDebug(5323) << "Authentication failed." << endl;
+      emit error( Atom, "Authentication failed." );
+      return;
+    }
+
+    QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
+    atomMarkup += "<id>tag:blogger.com,1999:blog-"+blogId();
+    atomMarkup += ".post-"+posting->postingId()+"</id>";
+    atomMarkup += "<published>"+posting->creationDateTime().toString() +"</published>";
+    atomMarkup += "<updated>"+posting->modificationDateTime().toString()+"</updated>";
+    atomMarkup += "<title type='text'>"+posting->title().toUtf8() +"</title>";
+    if( !posting->isPublished() )
+    {
+      atomMarkup += "<app:control xmlns:app=*http://purl.org/atom/app#'>";
+      atomMarkup += "<app:draft>yes</app:draft></app:control>";
+    }
+    atomMarkup += "<content type='xhtml'>";
+    atomMarkup += "<div xmlns='http://www.w3.org/1999/xhtml'>";
+    atomMarkup += posting->content().toUtf8();
+    atomMarkup += "</div></content>";
+    atomMarkup += "<author>";
+    atomMarkup += "<name>" + fullName().toUtf8() + "</name>";
+    atomMarkup += "<email>" + username().toUtf8() + "</email>";
+    atomMarkup += "</author>";
+    atomMarkup += "</entry>";
+
+    QByteArray postData;
+    QDataStream stream( &postData, QIODevice::WriteOnly );
+    stream.writeRawData( atomMarkup.toUtf8(), atomMarkup.toUtf8().length() );
+
+    KIO::TransferJob *job = KIO::http_post(
+        KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default/"+posting->postingId() ),
+        postData, false );
+
+    d->mCreatePostingMap[ job ] = posting;
+
+    if ( !job ) {
+      kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/"
+          << blogId() <<"/posts/default/" << posting->postingId()  << endl;
+    }
+
+
+  job->addMetaData( "content-type", "Content-Type: application/atom+xml; charset=utf-8" );
+  job->addMetaData( "ConnectTimeout", "50" );
+  job->addMetaData( "customHTTPHeader", "Authorization: GoogleLogin auth=" + d->mAuthenticationString +
+                                   "\r\nX-HTTP-Method-Override: PUT" );
+
+    connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+             this, SLOT( slotModifyPostingData( KIO::Job *, const QByteArray & ) ) );
+    connect( job, SIGNAL( result( KJob * ) ),
+             this, SLOT( slotModifyPosting( KJob * ) ) );
 }
+
 
 void GData::createPosting( KBlog::BlogPosting* posting )
 {
@@ -189,7 +240,7 @@ void GData::createPosting( KBlog::BlogPosting* posting )
     }
 
     QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
-    atomMarkup += "<title type='text'>"+posting->title() +"</title>";
+    atomMarkup += "<title type='text'>"+posting->title().toUtf8() +"</title>";
     if( !posting->isPublished() )
     {
       atomMarkup += "<app:control xmlns:app=*http://purl.org/atom/app#'>";
@@ -200,8 +251,8 @@ void GData::createPosting( KBlog::BlogPosting* posting )
     atomMarkup += posting->content().toUtf8(); // FIXME check for Utf
     atomMarkup += "</div></content>";
     atomMarkup += "<author>";
-    atomMarkup += "<name>" + fullName() + "</name>"; //FIXME user's name
-    atomMarkup += "<email>" + username() + "</email>";
+    atomMarkup += "<name>" + fullName().toUtf8() + "</name>";
+    atomMarkup += "<email>" + username().toUtf8() + "</email>";
     atomMarkup += "</author>";
     atomMarkup += "</entry>";
 
@@ -518,15 +569,87 @@ void GDataPrivate::slotCreatePosting( KJob *job )
   KBlog::BlogPosting* posting = mCreatePostingMap[ job ];
   mCreatePostingMap.remove( job );
 
-  QRegExp rx( "post-(\\d+)" ); //FIXME check that and do better handling
-  if( rx.indexIn( data )==-1 ){
+  QRegExp rxId( "post-(\\d+)" ); //FIXME check that and do better handling, especially the creation date time
+  if( rxId.indexIn( data )==-1 ){
     kDebug(5323) << "Could not regexp the id out of the result:" << data;
     return;
   }
-  kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rx.cap(1);
-  posting->setPostingId( rx.cap(1) );
-  posting->setStatus( BlogPosting::Created );
+  kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches " << rxId.cap(1) << endl;
+
+  QRegExp rxPub( "<published>(.+)</published>" ); 
+  if( rxPub.indexIn( data )==-1 ){
+    kDebug(5323) << "Could not regexp the published time out of the result: " << data << endl;
+    return;
+  }
+  kDebug(5323) << "QRegExp rx( '<published>(.+)</published>' ) matches " << rxPub.cap(1) << endl;
+
+  QRegExp rxUp( "<updated>(.+)</updated>" );
+  if( rxUp.indexIn( data )==-1 ){
+    kDebug(5323) << "Could not regexp the update time out of the result: " << data << endl;
+    return;
+  }
+  kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches " << rxUp.cap(1) << endl;
+  posting->setPostingId( rxId.cap(1) );
+  posting->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
+  posting->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
   emit q->createdPosting( posting );
+  mCreatePostingBuffer[ job ].resize( 0 );
+  mCreatePostingBuffer.remove( job );
+}
+
+void GDataPrivate::slotModifyPostingData( KIO::Job *job, const QByteArray &data )
+{
+  kDebug(5323) << "slotModifyPostingData()" << endl;
+  kDebug(5323) << "Dump modify data: " << data << endl;
+  unsigned int oldSize = mModifyPostingBuffer[ job ].size();
+  mModifyPostingBuffer[ job ].resize( oldSize + data.size() );
+  memcpy( mModifyPostingBuffer[ job ].data() + oldSize, data.data(), data.size() );
+}
+
+void GDataPrivate::slotModifyPosting( KJob *job )
+{
+  kDebug(5323) << "slotModifyPosting()" << endl;  
+  const QString data = QString::fromUtf8( mModifyPostingBuffer[ job ].data(), mModifyPostingBuffer[ job ].size() );
+//   Syndication::Atom::Entry entry( data.documentElement() );
+  Q_Q(GData);
+  if ( job->error() != 0 ) {
+    kDebug(5323) << "slotModifyPosting error: " << job->errorString() << endl;
+    emit q->error( GData::Atom, job->errorString() );
+    mModifyPostingBuffer[ job ].resize( 0 );
+    mModifyPostingBuffer.remove( job );
+    return;
+  }
+
+  KBlog::BlogPosting* posting = mModifyPostingMap[ job ];
+  mModifyPostingMap.remove( job );
+
+  QRegExp rxId( "post-(\\d+)" ); //FIXME check that and do better handling, especially the creation date time
+  if( rxId.indexIn( data )==-1 ){
+    kDebug(5323) << "Could not regexp the id out of the result: " << data << endl;
+    return;
+  }
+  kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches " << rxId.cap(1) << endl;
+
+  QRegExp rxPub( "<published>(.+)</published>" ); 
+  if( rxPub.indexIn( data )==-1 ){
+    kDebug(5323) << "Could not regexp the published time out of the result: " << data << endl;
+    return;
+  }
+  kDebug(5323) << "QRegExp rx( '<published>(.+)</published>' ) matches " << rxPub.cap(1) << endl;
+
+  QRegExp rxUp( "<updated>(.+)</updated>" );
+  if( rxUp.indexIn( data )==-1 ){
+    kDebug(5323) << "Could not regexp the update time out of the result: " << data << endl;
+    return;
+  }
+  kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches " << rxUp.cap(1) << endl;
+  posting->setPostingId( rxId.cap(1) );
+  posting->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
+  posting->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
+  posting->setStatus( BlogPosting::Modified );
+  emit q->modifiedPosting( posting );
+  mModifyPostingBuffer[ job ].resize( 0 );
+  mModifyPostingBuffer.remove( job );
 }
 
 #include "gdata.moc"
