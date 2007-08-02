@@ -310,7 +310,7 @@ void MetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
     kDebug(5323) << "Could not fetch posting out of the result from the server.";
     emit q->error( MetaWeblog::ParsingError,
                        i18n( "Could not fetch posting out of the "
-                             "result from the server." ) );
+                             "result from the server." ), posting );
   } else {
     const QMap<QString, QVariant> postInfo = result[0].toMap();
     if ( readPostingFromMap( posting, postInfo ) ) {
@@ -321,7 +321,7 @@ void MetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
     } else {
       kDebug(5323) << "readPostingFromMap failed!";
       emit q->error( MetaWeblog::ParsingError,
-                         i18n( "Could not read posting." ) );
+                         i18n( "Could not read posting." ), posting );
     }
   }
 }
@@ -342,7 +342,7 @@ void MetaWeblogPrivate::slotCreatePosting( const QList<QVariant> &result,
   if ( result[0].type() != QVariant::String ) {
     kDebug(5323) << "Could not read the postingId, not a string.";
     emit q->error( MetaWeblog::ParsingError,
-                       i18n( "Could not read the postingId, not a string." ) );
+                       i18n( "Could not read the postingId, not a string." ), posting );
   } else {
      posting->setPostingId( result[0].toString() );
      posting->setStatus( BlogPosting::Created );
@@ -367,7 +367,7 @@ void MetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
   if ( result[0].type() != QVariant::Bool ) {
     kDebug(5323) << "Could not read the result, not a boolean.";
     emit q->error( MetaWeblog::ParsingError,
-                       i18n( "Could not read the result, not a boolean." ) );
+                       i18n( "Could not read the result, not a boolean." ), posting );
   } else {
     posting->setStatus( BlogPosting::Modified );
     emit q->modifiedPosting( posting );

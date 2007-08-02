@@ -342,7 +342,7 @@ void Blogger1Private::slotFetchPosting(
                   << "the server.";
     emit q->error( Blogger1::ParsingError,
                         i18n( "Could not fetch posting out of the result from "
-                              "the server." ) );
+                              "the server." ), posting );
     posting->setError( i18n( "Could not fetch posting out of the "
                               "result from the server." ) );
     posting->setStatus( BlogPosting::Error );
@@ -356,7 +356,7 @@ void Blogger1Private::slotFetchPosting(
     } else {
       kDebug(5323) << "readPostingFromMap failed!";
       emit q->error( Blogger1::ParsingError,
-                          i18n( "Could not read posting." ) );
+                          i18n( "Could not read posting." ), posting );
       posting->setError( i18n( "Could not read posting." ) );
       posting->setStatus( BlogPosting::Error );
     }
@@ -379,7 +379,7 @@ void Blogger1Private::slotCreatePosting(
   if ( result[0].type() != QVariant::Int ) {
     kDebug(5323) << "Could not read the postingId, not an integer.";
     emit q->error( Blogger1::ParsingError,
-                        i18n( "Could not read the postingId, not an integer." ) );
+                        i18n( "Could not read the postingId, not an integer." ), posting );
   } else {
     posting->setPostingId( QString( result[0].toInt() ) );
     posting->setStatus( KBlog::BlogPosting::Created );
@@ -405,7 +405,7 @@ void Blogger1Private::slotModifyPosting(
   if ( result[0].type() != QVariant::Bool ) {
     kDebug (5323) << "Could not read the result, not a boolean.";
     emit q->error( Blogger1::ParsingError,
-                        i18n( "Could not read the result, not a boolean." ) );
+                        i18n( "Could not read the result, not a boolean." ), posting );
   } else {
     posting->setStatus( KBlog::BlogPosting::Modified );
     emit q->modifiedPosting( posting );
@@ -429,7 +429,7 @@ void Blogger1Private::slotRemovePosting(
   if ( result[0].type() != QVariant::Bool ) {
     kDebug (5323) << "Could not read the result, not a boolean.";
     emit q->error( Blogger1::ParsingError,
-                        i18n( "Could not read the result, not a boolean." ) );
+                        i18n( "Could not read the result, not a boolean." ), posting );
   } else {
     posting->setStatus( KBlog::BlogPosting::Removed );
     emit q->removedPosting( posting );
@@ -444,9 +444,9 @@ void Blogger1Private::slotError( int number,
 {
   Q_Q(Blogger1);
   Q_UNUSED( number );
-  Q_UNUSED( id );
+  BlogPosting *posting = callMap[ id.toInt() ];
 
-  emit q->error( Blogger1::XmlRpc, errorString );
+  emit q->error( Blogger1::XmlRpc, errorString, posting );
 }
 
 bool Blogger1Private::readPostingFromMap(

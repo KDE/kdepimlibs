@@ -242,7 +242,7 @@ class KBLOG_EXPORT Blog : public QObject
       @see ErrorType
     */
     void error( KBlog::Blog::ErrorType type,
-                        const QString &errorMessage );
+                        const QString &errorMessage, KBlog::BlogPosting* = 0 );
 
   protected:
     BlogPrivate * const d_ptr;
