@@ -20,6 +20,7 @@
 */
 
 #include "testblogger1.h"
+#include "data.h"
 #include "testblogger1.moc"
 
 #include "kblog/blogger1.h"
@@ -34,7 +35,6 @@
 
 #define TIMEOUT 20000
 #define GLOBALTIMEOUT 120000
-#define POSTINGID 115
 #define DOWNLOADCOUNT 5
 
 using namespace KBlog;
@@ -124,12 +124,30 @@ void TestBlogger1::listRecentPostings(
   createPostingTimer->start( TIMEOUT );
 }
 
+void TestBlogger1::createPosting( KBlog::BlogPosting *posting )
+{
+  createPostingTimer->stop();
+  kDebug(5323) << "########### createPosting ############";
+  dumpPosting( posting );
+  kDebug(5323) << "################################\r\n";
+  QVERIFY( posting->status() == BlogPosting::Created );
+
+  connect( b, SIGNAL( modifiedPosting( KBlog::BlogPosting* ) ),
+           this, SLOT( modifyPosting( KBlog::BlogPosting* ) ) );
+  p->setContent( mModifiedContent );
+  b->modifyPosting( p );
+  modifyPostingTimer->start( TIMEOUT );
+}
+
 void TestBlogger1::fetchPosting( KBlog::BlogPosting *posting )
 {
   fetchPostingTimer->stop();
   kDebug(5323) << "########### fetchPosting ############";
   dumpPosting( posting );
   kDebug(5323) << "###############################\r\n";
+  QVERIFY( posting->status() == BlogPosting::Fetched );
+  QVERIFY( posting->postingId() == mPostingId );
+  QVERIFY( posting->content() == mModifiedContent );
 
   connect( b, SIGNAL( removedPosting( KBlog::BlogPosting* ) ),
            this, SLOT( removePosting( KBlog::BlogPosting* ) ) );
@@ -143,6 +161,7 @@ void TestBlogger1::modifyPosting( KBlog::BlogPosting *posting )
   kDebug(5323) << "########### modifyPosting ############";
   dumpPosting( posting );
   kDebug(5323) << "################################\r\n";
+  QVERIFY( posting->status() == BlogPosting::Modified );
 
   connect( b, SIGNAL( fetchedPosting( KBlog::BlogPosting* ) ),
            this, SLOT( fetchPosting( KBlog::BlogPosting* ) ) );
@@ -151,19 +170,6 @@ void TestBlogger1::modifyPosting( KBlog::BlogPosting *posting )
   fetchPostingTimer->start( TIMEOUT );
 }
 
-void TestBlogger1::createPosting( KBlog::BlogPosting *posting )
-{
-  createPostingTimer->stop();
-  kDebug(5323) << "########### createPosting ############";
-  dumpPosting( posting );
-  kDebug(5323) << "################################\r\n";
-
-  connect( b, SIGNAL( modifiedPosting( KBlog::BlogPosting* ) ),
-           this, SLOT( modifyPosting( KBlog::BlogPosting* ) ) );
-  p->setContent( "TestBlogger1: modified content." );
-  b->modifyPosting( p );
-  modifyPostingTimer->start( TIMEOUT );
-}
 
 void TestBlogger1::removePosting( KBlog::BlogPosting *posting )
 {
@@ -171,6 +177,7 @@ void TestBlogger1::removePosting( KBlog::BlogPosting *posting )
   kDebug(5323) << "########### removePosting ###########";
   dumpPosting( posting );
   kDebug(5323) << "################################\r\n";
+  QVERIFY( posting->status() == BlogPosting::Removed );
 }
 
 void TestBlogger1Warnings::fetchUserInfoTimeoutWarning()
@@ -232,32 +239,31 @@ void TestBlogger1::testValidity()
 {
   b = new Blogger1( KUrl( "http://wrong.url.org/somegateway" ) );
   QVERIFY( b->url() == KUrl( "http://wrong.url.org/somegateway" ) );
-  b->setUrl( KUrl( "http://soctest.wordpress.com/xmlrpc.php" ) );
-  b->setUsername( "socapitest" );
-  b->setPassword( "k0nt4ctbl0g" );
-  b->setBlogId( "1" );
-  b->setTimeZone( KTimeZone( "UTC" ) );
-  QVERIFY( b->url() == KUrl( "http://soctest.wordpress.com/xmlrpc.php" ) );
-  QVERIFY( b->blogId() == "1" );
-  QVERIFY( b->username() == "socapitest" );
-  QVERIFY( b->password() == "k0nt4ctbl0g" );
+  b->setUrl( mUrl );
+  b->setUsername( mUsername );
+  b->setPassword( mPassword );
+  b->setBlogId( mBlogId );
+  b->setTimeZone( mTimeZone );
+  QVERIFY( b->url() == mUrl );
+  QVERIFY( b->blogId() == mBlogId );
+  QVERIFY( b->username() == mUsername );
+  QVERIFY( b->password() == mPassword );
   QVERIFY( b->interfaceName() == "Blogger 1.0" );
-  QVERIFY( b->timeZone().name() == QString( "UTC" ) );
+  QVERIFY( b->timeZone().name() == mTimeZone.name() );
 
   p = new BlogPosting();
-  KDateTime mDateTime( QDateTime::currentDateTime() );
-  p->setTitle( "TestBlogger1" );
-  p->setContent( "TestBlogger1: posted content." );
-  p->setPublished( true );
-  p->setPostingId( QString( POSTINGID ) );
-  p->setCreationDateTime( mDateTime );
-  p->setModificationDateTime( mDateTime );
-  QVERIFY( p->title() == "TestBlogger1" );
-  QVERIFY( p->content() == "TestBlogger1: posted content." );
-  QVERIFY( p->isPublished() == true );
-  QVERIFY( p->postingId() == QString ( POSTINGID ) );
-  QVERIFY( p->creationDateTime() == mDateTime );
-  QVERIFY( p->modificationDateTime() == mDateTime );
+  p->setTitle( mTitle );
+  p->setContent( mContent );
+  p->setPublished( mPublished );
+  p->setPostingId( mPostingId );
+  p->setCreationDateTime( mCreationDateTime );
+  p->setModificationDateTime( mModificationDateTime );
+  QVERIFY( p->title() == mTitle );
+  QVERIFY( p->content() == mContent );
+  QVERIFY( p->isPublished() == mPublished );
+  QVERIFY( p->postingId() == mPostingId );
+  QVERIFY( p->creationDateTime() == mCreationDateTime );
+  QVERIFY( p->modificationDateTime() == mModificationDateTime );
 
   TestBlogger1Warnings *warnings = new TestBlogger1Warnings();
   connect( b, SIGNAL( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPosting* ) ),
