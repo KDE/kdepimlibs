@@ -1,8 +1,7 @@
 /*
   This file is part of the kblog library.
 
-  Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-  Copyright (c) 2007 Christian Weilbach <christian_weilbach@web.de>
+  Copyright (c) 2006-2007 Christian Weilbach <christian_weilbach@web.de>
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or

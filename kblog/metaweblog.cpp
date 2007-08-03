@@ -2,7 +2,7 @@
   This file is part of the kblog library.
 
   Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-  Copyright (c) 2007 Christian Weilbach <christian_weilbach@web.de>
+  Copyright (c) 2006-2007 Christian Weilbach <christian_weilbach@web.de>
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
@@ -143,10 +143,10 @@ void MetaWeblog::createPosting( KBlog::BlogPosting *posting )
   map["dateCreated"] = posting->creationDateTime().toUtc().dateTime();
   args << map;
   args << QVariant( posting->isPublished() );
-//   d->mXmlRpcClient->call (
-//     "metaWeblog.newPost", args,
-//     this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
-//     this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
+  d->mXmlRpcClient->call (
+    "metaWeblog.newPost", args,
+    this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
+    this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
 void MetaWeblog::createMedia( KBlog::BlogMedia *media )
