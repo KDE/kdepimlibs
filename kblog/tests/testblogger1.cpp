@@ -30,13 +30,147 @@
 #include <unistd.h>
 #include <ktimezone.h>
 #include <kdatetime.h>
+#include <kdebug.h>
 
 #define TIMEOUT 20000
-#define GLOBALTIMEOUT 30000
-#define POSTINGID 41
+#define GLOBALTIMEOUT 120000
+#define POSTINGID 115
 #define DOWNLOADCOUNT 5
 
 using namespace KBlog;
+
+void TestBlogger1::dumpPosting( const BlogPosting* posting )
+{
+  kDebug(5323) << "########### posting ############";
+  kDebug(5323) << "# postingId: " << posting->postingId();
+  kDebug(5323) << "# titel: " << posting->title();
+  kDebug(5323) << "# content: " << posting->content();
+  kDebug(5323) << "# publish: " << posting->isPublished();
+  kDebug(5323) << "# categories: " << posting->categories().join( " " );
+  kDebug(5323) << "# error: " << posting->error();
+  kDebug(5323) << "# journalId: " << posting->journalId();
+  switch ( posting->status() ){
+    case BlogPosting::New:
+      kDebug(5323) << "# status: New"; break;
+    case BlogPosting::Fetched:
+      kDebug(5323) << "# status: Fetched"; break;
+    case BlogPosting::Created:
+      kDebug(5323) << "# status: Created"; break;
+    case BlogPosting::Modified:
+      kDebug(5323) << "# status: Modified"; break;
+    case BlogPosting::Removed:
+      kDebug(5323) << "# status: Removed"; break;
+    case BlogPosting::Error:
+      kDebug(5323) << "# status: Error"; break;
+  };
+  kDebug(5323) << "# creationDateTime(UTC): " << 
+      posting->creationDateTime().toUtc().toString();
+  kDebug(5323) << "# modificationDateTime(UTC): " << 
+      posting->modificationDateTime().toUtc().toString();
+  kDebug(5323) << "###########################\r\n";
+}
+
+void TestBlogger1::fetchUserInfo( const QMap<QString,QString>& userInfo )
+{
+  fetchUserInfoTimer->stop();
+  kDebug(5323) << "########### fetchUserInfo ###########";
+  kDebug(5323) << "# nickname: " << userInfo["nickname"];
+  kDebug(5323) << "# userid: "  << userInfo["userid"];
+  kDebug(5323) << "# url: " <<  userInfo["url"];
+  kDebug(5323) << "# email: " <<  userInfo["email"];
+  kDebug(5323) << "# lastname: " << userInfo["lastname"];
+  kDebug(5323) << "# firstname: " <<  userInfo["firstname"];
+  kDebug(5323) << "##############################\r\n";
+
+  connect( b, SIGNAL( listedBlogs( const QMap<QString,QString>& ) ),
+           this, SLOT( listBlogs( const QMap<QString,QString>& ) ) );
+  b->listBlogs();
+  listBlogsTimer->start( TIMEOUT );
+}
+
+void TestBlogger1::listBlogs( const QMap<QString,QString>& listedBlogs )
+{
+  listBlogsTimer->stop();
+  QList<QString> keys = listedBlogs.keys();
+  kDebug(5323) << "########### listBlogs ###########";
+  QList<QString>::ConstIterator it = keys.begin();
+  QList<QString>::ConstIterator end = keys.end();
+  for ( ; it != end; ++it ) {
+    kDebug(5323) << "# " << ( *it ) << ": " << listedBlogs[ ( *it ) ];
+  }
+  kDebug(5323) << "###########################\r\n";
+
+  connect( b, SIGNAL( listedRecentPostings(const QList<KBlog::BlogPosting>&) ),
+           this, SLOT( listRecentPostings(const QList<KBlog::BlogPosting>&) ) );
+  b->listRecentPostings( DOWNLOADCOUNT );
+  listRecentPostingsTimer->start( TIMEOUT );
+}
+
+void TestBlogger1::listRecentPostings( 
+           const QList<KBlog::BlogPosting>& postings )
+{
+  listRecentPostingsTimer->stop();
+  kDebug(5323) << "########### listRecentPostings ###########";
+  QList<KBlog::BlogPosting>::ConstIterator it = postings.begin();
+  QList<KBlog::BlogPosting>::ConstIterator end = postings.end();
+  for ( ; it != end; ++it ) {
+    dumpPosting( &( *it ) );
+  }
+  kDebug(5323) << "#################################\r\n";
+
+  connect( b, SIGNAL( createdPosting( KBlog::BlogPosting* ) ),
+           this, SLOT( createPosting( KBlog::BlogPosting* ) ) );
+  b->createPosting( p ); // start chain
+  createPostingTimer->start( TIMEOUT );
+}
+
+void TestBlogger1::fetchPosting( KBlog::BlogPosting *posting )
+{
+  fetchPostingTimer->stop();
+  kDebug(5323) << "########### fetchPosting ############";
+  dumpPosting( posting );
+  kDebug(5323) << "###############################\r\n";
+
+  connect( b, SIGNAL( removedPosting( KBlog::BlogPosting* ) ),
+           this, SLOT( removePosting( KBlog::BlogPosting* ) ) );
+  b->removePosting( p );
+  removePostingTimer->start( TIMEOUT );
+}
+
+void TestBlogger1::modifyPosting( KBlog::BlogPosting *posting )
+{
+  modifyPostingTimer->stop();
+  kDebug(5323) << "########### modifyPosting ############";
+  dumpPosting( posting );
+  kDebug(5323) << "################################\r\n";
+
+  connect( b, SIGNAL( fetchedPosting( KBlog::BlogPosting* ) ),
+           this, SLOT( fetchPosting( KBlog::BlogPosting* ) ) );
+  p->setContent( "TestBlogger1: created content." );
+  b->fetchPosting( p );
+  fetchPostingTimer->start( TIMEOUT );
+}
+
+void TestBlogger1::createPosting( KBlog::BlogPosting *posting )
+{
+  createPostingTimer->stop();
+  kDebug(5323) << "########### createPosting ############";
+  dumpPosting( posting );
+  kDebug(5323) << "################################\r\n";
+
+  connect( b, SIGNAL( modifiedPosting( KBlog::BlogPosting* ) ),
+           this, SLOT( modifyPosting( KBlog::BlogPosting* ) ) );
+  b->modifyPosting( p );
+  modifyPostingTimer->start( TIMEOUT );
+}
+
+void TestBlogger1::removePosting( KBlog::BlogPosting *posting )
+{
+  removePostingTimer->stop();
+  kDebug(5323) << "########### removePosting ###########";
+  dumpPosting( posting );
+  kDebug(5323) << "################################\r\n";
+}
 
 void TestBlogger1Warnings::fetchUserInfoTimeoutWarning()
 {
@@ -47,6 +181,7 @@ void TestBlogger1Warnings::listBlogsTimeoutWarning()
 {
   QWARN( "listBlogs()  timeout. This can be caused by an error, too." );
 }
+
 
 void TestBlogger1Warnings::listRecentPostingsTimeoutWarning()
 {
@@ -68,17 +203,33 @@ void TestBlogger1Warnings::createPostingTimeoutWarning()
   QWARN( "createPosting() timeout. This can be caused by an error, too." );
 }
 
-void TestBlogger1Warnings::error( const errorType &type, const QString &errStr )
+void TestBlogger1Warnings::removePostingTimeoutWarning()
 {
-  Q_UNUSED( type );
-  QWARN( errStr.toUtf8().data() );
+  QWARN( "removePosting() timeout. This can be caused by an error, too." );
+}
+
+void TestBlogger1Warnings::error( KBlog::Blog::ErrorType type, const QString &errStr,
+        KBlog::BlogPosting* posting )
+{
+  kDebug(5323) << "############ error #############";
+  switch ( type ){
+    case Blog::Atom: kDebug(5323) << "type: Atom"; break;
+    case Blog::XmlRpc: kDebug(5323) << "type: xmlRpc"; break;
+    case Blog::ParsingError: kDebug(5323) << "type: ParsingError"; break;
+    case Blog::AuthenticationError: kDebug(5323) << "type: AuthenticationError"; break;
+    case Blog::NotSupported: kDebug(5323) << "type: NotSupported"; break;
+    case Blog::Other: kDebug(5323) << "type: Other"; break;
+  };
+  kDebug(5323) << "error: " << errStr;
+//   if( posting!=0 ) dumpPosting( posting );
+  kDebug(5323) << "#############################\r\n";
 }
 
 QTEST_KDEMAIN( TestBlogger1, NoGUI )
 
 void TestBlogger1::testValidity()
 {
-  Blogger1 *b = new Blogger1( KUrl( "http://wrong.url.org/somegateway" ) );
+  b = new Blogger1( KUrl( "http://wrong.url.org/somegateway" ) );
   QVERIFY( b->url() == KUrl( "http://wrong.url.org/somegateway" ) );
   b->setUrl( KUrl( "http://soctest.wordpress.com/xmlrpc.php" ) );
   b->setUsername( "socapitest" );
@@ -92,86 +243,66 @@ void TestBlogger1::testValidity()
   QVERIFY( b->interfaceName() == "Blogger 1.0" );
   QVERIFY( b->timeZone().name() == QString( "UTC" ) );
 
-  BlogPosting *p = new BlogPosting();
+  p = new BlogPosting();
   KDateTime mDateTime( QDateTime::currentDateTime() );
   p->setTitle( "TestBlogger1" );
   p->setContent( "TestBlogger1: posted content." );
   p->setPublished( true );
-  p->setPostingId( QString( "41" ) );
+  p->setPostingId( QString( POSTINGID ) );
   p->setCreationDateTime( mDateTime );
   p->setModificationDateTime( mDateTime );
   QVERIFY( p->title() == "TestBlogger1" );
   QVERIFY( p->content() == "TestBlogger1: posted content." );
   QVERIFY( p->isPublished() == true );
-  QVERIFY( p->postingId() == QString ( "41" ) );
+  QVERIFY( p->postingId() == QString ( POSTINGID ) );
   QVERIFY( p->creationDateTime() == mDateTime );
   QVERIFY( p->modificationDateTime() == mDateTime );
 
   TestBlogger1Warnings *warnings = new TestBlogger1Warnings();
-  connect( b, SIGNAL( error( const errorType&, const QString& ) ),
-           warnings, SLOT( error( const errorType&, const QString& ) ) );
+  connect( b, SIGNAL( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPosting* ) ),
+           warnings, SLOT( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPosting* ) ) );
 
-  QTimer *fetchUserInfoTimer = new QTimer( this );
+  fetchUserInfoTimer = new QTimer( this );
   fetchUserInfoTimer->setSingleShot( true );
   connect( fetchUserInfoTimer, SIGNAL( timeout() ),
            warnings, SLOT( fetchUserInfoTimeoutWarning() ) );
 
-  QTimer *listBlogsTimer = new QTimer( this );
+  listBlogsTimer = new QTimer( this );
   listBlogsTimer->setSingleShot( true );
   connect( listBlogsTimer, SIGNAL( timeout() ),
            warnings, SLOT( listBlogsTimeoutWarning() ) );
 
-  QTimer *listRecentPostingsTimer = new QTimer( this );
+  listRecentPostingsTimer = new QTimer( this );
   listRecentPostingsTimer->setSingleShot( true );
   connect( listRecentPostingsTimer, SIGNAL( timeout() ),
            warnings, SLOT( listRecentPostingsTimeoutWarning() ) );
 
-  QTimer *fetchPostingTimer = new QTimer( this );
+  fetchPostingTimer = new QTimer( this );
   fetchPostingTimer->setSingleShot( true );
   connect( fetchPostingTimer, SIGNAL( timeout() ),
            warnings, SLOT( fetchPostingTimeoutWarning() ) );
 
-  QTimer *modifyPostingTimer = new QTimer( this );
+  modifyPostingTimer = new QTimer( this );
   modifyPostingTimer->setSingleShot( true );
   connect( modifyPostingTimer, SIGNAL( timeout() ),
            warnings, SLOT( modifyPostingTimeoutWarning() ) );
 
-  QTimer *createPostingTimer = new QTimer( this );
+  createPostingTimer = new QTimer( this );
   createPostingTimer->setSingleShot( true );
   connect( createPostingTimer, SIGNAL( timeout() ),
            warnings, SLOT( createPostingTimeoutWarning() ) );
 
+  removePostingTimer = new QTimer( this );
+  removePostingTimer->setSingleShot( true );
+  connect( removePostingTimer, SIGNAL( timeout() ),
+           warnings, SLOT( removePostingTimeoutWarning() ) );
+
   QEventLoop *eventLoop = new QEventLoop( this );
 
-  connect( b, SIGNAL( fetchUserInfoRetrieved( const QString&, const QString&, const QString& ) ),
-          fetchUserInfoTimer, SLOT( stop() ) );
+  connect( b, SIGNAL( fetchedUserInfo( const QMap<QString,QString>& ) ),
+          this, SLOT( fetchUserInfo( const QMap<QString,QString>&) ) );
   b->fetchUserInfo();
   fetchUserInfoTimer->start( TIMEOUT );
-
-  connect( b, SIGNAL( blogInfoRetrieved( const QString&, const QString& ) ),
-           listBlogsTimer, SLOT( stop() ) );
-  b->listBlogs();
-  listBlogsTimer->start( TIMEOUT );
-
-  connect( b, SIGNAL( listRecentPostingsFinished() ),
-           listRecentPostingsTimer, SLOT( stop() ) );
-  b->listRecentPostings( DOWNLOADCOUNT );
-  listRecentPostingsTimer->start( TIMEOUT );
-
-  connect( b, SIGNAL( fetchedPosting( KBlog::BlogPosting& ) ),
-           fetchPostingTimer, SLOT( stop() ) );
-  b->fetchPosting( p );
-  fetchPostingTimer->start( TIMEOUT );
-
-  connect( b, SIGNAL( modifiedPosting( bool ) ),
-           modifyPostingTimer, SLOT( stop() ) );
-  b->modifyPosting( p );
-  modifyPostingTimer->start( TIMEOUT );
-
-  connect( b, SIGNAL( createdPosting( QString ) ),
-           createPostingTimer, SLOT( stop() ) );
-  b->createPosting( p );
-  createPostingTimer->start( TIMEOUT );
 
 // wait for all jobs to finish
 

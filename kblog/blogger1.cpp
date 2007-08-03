@@ -189,7 +189,7 @@ void Blogger1::removePosting( KBlog::BlogPosting *posting )
  args << QVariant( /*publish=*/true );
  d->mXmlRpcClient->call(
    "blogger.deletePost", args,
-   this, SLOT( slotRemovePosting( QList<QVariant> &result, QVariant &id ) ),
+   this, SLOT( slotRemovePosting( const QList<QVariant>&, const QVariant& ) ),
    this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
@@ -381,10 +381,10 @@ void Blogger1Private::slotCreatePosting(
     emit q->error( Blogger1::ParsingError,
                         i18n( "Could not read the postingId, not an integer." ), posting );
   } else {
-    posting->setPostingId( QString( result[0].toInt() ) );
+    posting->setPostingId( QString( "%1" ).arg( result[0].toInt() ) );
     posting->setStatus( KBlog::BlogPosting::Created );
     emit q->createdPosting( posting );
-    kDebug(5323) << "emitting statusChanged( Created )" <<
+    kDebug(5323) << "emitting createdPosting()" <<
              "for" << result[0].toInt();
   }
 
@@ -409,7 +409,7 @@ void Blogger1Private::slotModifyPosting(
   } else {
     posting->setStatus( KBlog::BlogPosting::Modified );
     emit q->modifiedPosting( posting );
-    kDebug(5323) << "emitting statusChanged( Modified )" <<
+    kDebug(5323) << "emitting modifiedPosting()" <<
              "for" << result[0].toInt();
   }
 }
@@ -433,7 +433,7 @@ void Blogger1Private::slotRemovePosting(
   } else {
     posting->setStatus( KBlog::BlogPosting::Removed );
     emit q->removedPosting( posting );
-    kDebug(5323) << "emitting statusChanged( Removed )" <<
+    kDebug(5323) << "emitting removedPosting()" <<
              "for" << result[0].toInt();
   }
 }

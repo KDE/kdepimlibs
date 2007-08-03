@@ -23,22 +23,39 @@
 #define KBLOG_TEST_BLOGGER1_H
 
 #include <QtCore/QObject>
+#include "kblog/blogger1.h"
 
-enum errorType {
-  XmlRpc,
-  Atom,
-  ParsingError,
-  AuthenticationError,
-  NotSupported,
-  Other
-};
+
+template <class S, class T>class QMap;
+template <class T>class QList;
+class QTimer;
+namespace KBlog{
+  class BlogPosting;
+}
 
 class TestBlogger1 : public QObject
 {
   Q_OBJECT
+  private:
+    void dumpPosting( const KBlog::BlogPosting* );
+    KBlog::Blogger1 *b;
+    KBlog::BlogPosting *p;
+    QTimer *fetchUserInfoTimer;
+    QTimer *listBlogsTimer;
+    QTimer *listRecentPostingsTimer;
+    QTimer *fetchPostingTimer;
+    QTimer *modifyPostingTimer;
+    QTimer *createPostingTimer;
+    QTimer *removePostingTimer;
   private Q_SLOTS:
-    void testValidity();
-
+    void testValidity(); 
+    void fetchUserInfo( const QMap<QString,QString>& );
+    void listBlogs( const QMap<QString,QString>& );
+    void listRecentPostings( const QList<KBlog::BlogPosting>& postings );
+    void fetchPosting( KBlog::BlogPosting* posting );
+    void modifyPosting( KBlog::BlogPosting* posting );
+    void createPosting( KBlog::BlogPosting* posting );
+    void removePosting( KBlog::BlogPosting* posting );
 };
 
 class TestBlogger1Warnings : public QObject
@@ -51,7 +68,8 @@ class TestBlogger1Warnings : public QObject
     void fetchPostingTimeoutWarning();
     void modifyPostingTimeoutWarning();
     void createPostingTimeoutWarning();
-    void error( const errorType &type, const QString &errStr );
+    void removePostingTimeoutWarning();
+    void error( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPosting* );
 };
 
 #endif

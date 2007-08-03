@@ -25,7 +25,8 @@
 #include "blog_p.h"
 #include "blogposting_p.h"
 
-#include <kdeversion.h>
+//FIXME find the right header
+#define KDE_VERSION "4.0.0"
 
 #include <KDebug>
 
@@ -64,14 +65,18 @@ void Blog::setUserAgent( const QString &applicationName,
                          const QString &applicationVersion)
 {
   Q_D(Blog);
+  QString userAgent;
   if ( !applicationName.isEmpty() && !applicationVersion.isEmpty() ) {
-    QString userAgent = '(' + applicationName + '/' + applicationVersion
-        + ") KDE-KBlog/KDE_VERSION";
-    d->mUserAgent = userAgent;
+    userAgent = '(' + applicationName + '/' + applicationVersion
+        + ") KDE-KBlog/";
   }
   else {
-    d->mUserAgent = "KDE-KBlog/KDE_VERSION";
+    userAgent = "KDE-KBlog/";
   }
+  userAgent += KDE_VERSION;
+  d->mUserAgent = userAgent;
+  kDebug(5323) << "Version String: " << userAgent; // FIXME remove
+  kDebug(5323) << "KDE String: " << KDE_VERSION;
 }
 
 void Blog::setPassword( const QString &pass )
