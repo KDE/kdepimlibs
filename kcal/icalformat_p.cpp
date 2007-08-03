@@ -399,19 +399,22 @@ void ICalFormatImpl::writeIncidence( icalcomponent *parent,
   // description
   if ( !incidence->description().isEmpty() ) {
     icalcomponent_add_property(
-      parent, icalproperty_new_description( incidence->description().toUtf8() ) );
+      parent, writeDescription(
+        incidence->description(), incidence->descriptionIsRich() ) );
   }
 
   // summary
   if ( !incidence->summary().isEmpty() ) {
     icalcomponent_add_property(
-      parent, icalproperty_new_summary( incidence->summary().toUtf8() ) );
+      parent, writeSummary(
+        incidence->summary(), incidence->summaryIsRich() ) );
   }
 
   // location
   if ( !incidence->location().isEmpty() ) {
     icalcomponent_add_property(
-      parent, icalproperty_new_location( incidence->location().toUtf8() ) );
+      parent, writeLocation(
+        incidence->location(), incidence->locationIsRich() ) );
   }
 
   // status
@@ -614,6 +617,33 @@ icalproperty *ICalFormatImpl::writeOrganizer( const Person &organizer )
   }
   // TODO: Write dir, sent-by and language
 
+  return p;
+}
+
+icalproperty *ICalFormatImpl::writeDescription( const QString &description, bool isRich )
+{
+  icalproperty *p = icalproperty_new_description( description.toUtf8() );
+  if ( isRich ) {
+    icalproperty_add_parameter( p, icalparameter_new_from_string( "X-KDE-TEXTFORMAT=HTML" ) );
+  }
+  return p;
+}
+
+icalproperty *ICalFormatImpl::writeSummary( const QString &summary, bool isRich )
+{
+  icalproperty *p = icalproperty_new_summary( summary.toUtf8() );
+  if ( isRich ) {
+    icalproperty_add_parameter( p, icalparameter_new_from_string( "X-KDE-TEXTFORMAT=HTML" ) );
+  }
+  return p;
+}
+
+icalproperty *ICalFormatImpl::writeLocation( const QString &location, bool isRich )
+{
+  icalproperty *p = icalproperty_new_location( location.toUtf8() );
+  if ( isRich ) {
+    icalproperty_add_parameter( p, icalparameter_new_from_string( "X-KDE-TEXTFORMAT=HTML" ) );
+  }
   return p;
 }
 
@@ -1338,11 +1368,12 @@ Attachment *ICalFormatImpl::readAttachment( icalproperty *attach )
     p = icalproperty_get_next_parameter( attach, ICAL_X_PARAMETER );
   }
 
-  p = icalproperty_get_first_parameter(attach,ICAL_X_PARAMETER);
-  while (p) {
-   if ( strncmp (icalparameter_get_xname(p), "X-LABEL", 7) == 0 )
-     attachment->setLabel( icalparameter_get_xvalue(p) );
-    p = icalproperty_get_next_parameter(attach, ICAL_X_PARAMETER);
+  p = icalproperty_get_first_parameter( attach, ICAL_X_PARAMETER );
+  while ( p ) {
+    if ( strncmp ( icalparameter_get_xname( p ), "X-LABEL", 7 ) == 0 ) {
+     attachment->setLabel( icalparameter_get_xvalue( p ) );
+    }
+    p = icalproperty_get_next_parameter( attach, ICAL_X_PARAMETER );
   }
 
   return attachment;
@@ -1391,19 +1422,49 @@ void ICalFormatImpl::readIncidence( icalcomponent *parent,
       break;
 
     case ICAL_DESCRIPTION_PROPERTY:  // description
-      text = icalproperty_get_description( p );
-      incidence->setDescription( QString::fromUtf8( text ) );
-      break;
+    {
+      QString textStr = QString::fromUtf8( icalproperty_get_description( p ) );
+      if ( !textStr.isEmpty() ) {
+        QString valStr = QString::fromUtf8(
+          icalproperty_get_parameter_as_string( p, "X-KDE-TEXTFORMAT" ) );
+        if ( !valStr.compare( "HTML", Qt::CaseInsensitive ) ) {
+          incidence->setDescription( textStr, true );
+        } else {
+          incidence->setDescription( textStr, false );
+        }
+      }
+    }
+    break;
 
     case ICAL_SUMMARY_PROPERTY:  // summary
-      text = icalproperty_get_summary( p );
-      incidence->setSummary( QString::fromUtf8( text ) );
-      break;
+    {
+      QString textStr = QString::fromUtf8( icalproperty_get_summary( p ) );
+      if ( !textStr.isEmpty() ) {
+        QString valStr = QString::fromUtf8(
+          icalproperty_get_parameter_as_string( p, "X-KDE-TEXTFORMAT" ) );
+        if ( !valStr.compare( "HTML", Qt::CaseInsensitive ) ) {
+          incidence->setSummary( textStr, true );
+        } else {
+          incidence->setSummary( textStr, false );
+        }
+      }
+    }
+    break;
 
     case ICAL_LOCATION_PROPERTY:  // location
-      text = icalproperty_get_location( p );
-      incidence->setLocation( QString::fromUtf8( text ) );
-      break;
+    {
+      QString textStr = QString::fromUtf8( icalproperty_get_location( p ) );
+      if ( !textStr.isEmpty() ) {
+        QString valStr = QString::fromUtf8(
+          icalproperty_get_parameter_as_string( p, "X-KDE-TEXTFORMAT" ) );
+        if ( !valStr.compare( "HTML", Qt::CaseInsensitive ) ) {
+          incidence->setLocation( textStr, true );
+        } else {
+          incidence->setLocation( textStr, false );
+        }
+      }
+    }
+    break;
 
     case ICAL_STATUS_PROPERTY:  // status
     {
@@ -2316,9 +2377,6 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
 
 QString ICalFormatImpl::extractErrorProperty( icalcomponent *c )
 {
-//  kDebug(5800) << "ICalFormatImpl:extractErrorProperty:"
-//            << icalcomponent_as_ical_string(c);
-
   QString errorMessage;
 
   icalproperty *error;

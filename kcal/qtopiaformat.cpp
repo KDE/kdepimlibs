@@ -31,6 +31,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
+#include <QtGui/QTextDocument>
+
 #include <QtXml/QXmlAttributes>
 #include <QtXml/QXmlDefaultHandler>
 #include <QtXml/QXmlParseException>
@@ -56,9 +58,12 @@ class QtopiaParser : public QXmlDefaultHandler
         QString uid = "Qtopia" + attributes.value( "uid" );
         event->setUid( uid );
 
-        event->setSummary( attributes.value( "description" ) );
-        event->setLocation( attributes.value( "location" ) );
-        event->setDescription( attributes.value( "note" ) );
+        event->setSummary( attributes.value( "description" ),
+                           Qt::mightBeRichText( attributes.value( "description" ) ) );
+        event->setLocation( attributes.value( "location" ),
+                            Qt::mightBeRichText( attributes.value( "location" ) ) );
+        event->setDescription( attributes.value( "note" ),
+                               Qt::mightBeRichText( attributes.value( "note" ) ) );
         event->setDtStart( toDateTime( attributes.value( "start" ) ) );
         event->setDtEnd( toDateTime( attributes.value( "end" ) ) );
 
@@ -85,7 +90,7 @@ class QtopiaParser : public QXmlDefaultHandler
           int weekDaysNum = weekDaysStr.toInt();
           QBitArray weekDays( 7 );
           int i;
-          for( i = 1; i <= 7; ++i ) {
+          for ( i = 1; i <= 7; ++i ) {
             weekDays.setBit( i - 1, ( 2 << i ) & weekDaysNum );
           }
 
@@ -96,27 +101,34 @@ class QtopiaParser : public QXmlDefaultHandler
 
           if ( rtype == "Daily" ) {
             r->setDaily( freq );
-            if ( hasEndDate ) r->setEndDate( endDate );
+            if ( hasEndDate ) {
+              r->setEndDate( endDate );
+            }
           } else if ( rtype == "Weekly" ) {
             r->setWeekly( freq, weekDays );
-            if ( hasEndDate ) r->setEndDate( endDate );
+            if ( hasEndDate ) {
+              r->setEndDate( endDate );
+            }
           } else if ( rtype == "MonthlyDate" ) {
             r->setMonthly( freq );
-            if ( hasEndDate )
+            if ( hasEndDate ) {
               r->setEndDate( endDate );
+            }
             r->addMonthlyDate( startDate.day() );
           } else if ( rtype == "MonthlyDay" ) {
             r->setMonthly( freq );
-            if ( hasEndDate )
+            if ( hasEndDate ) {
               r->setEndDate( endDate );
+            }
             QBitArray days( 7 );
             days.fill( false );
             days.setBit( startDate.dayOfWeek() - 1 );
             r->addMonthlyPos( pos, days );
           } else if ( rtype == "Yearly" ) {
             r->setYearly( freq );
-            if ( hasEndDate )
+            if ( hasEndDate ) {
               r->setEndDate( endDate );
+            }
           }
         }
 
@@ -135,7 +147,9 @@ class QtopiaParser : public QXmlDefaultHandler
         }
 
         Event *oldEvent = mCalendar->event( uid );
-        if ( oldEvent ) mCalendar->deleteEvent( oldEvent );
+        if ( oldEvent ) {
+          mCalendar->deleteEvent( oldEvent );
+        }
 
         mCalendar->addEvent( event );
       } else if ( qName == "Task" ) {
@@ -148,10 +162,10 @@ class QtopiaParser : public QXmlDefaultHandler
         int pos = description.indexOf( '\n' );
         if ( pos > 0 ) {
           QString summary = description.left( pos );
-          todo->setSummary( summary );
-          todo->setDescription( description );
+          todo->setSummary( summary, Qt::mightBeRichText( summary ) );
+          todo->setDescription( description, Qt::mightBeRichText( description ) );
         } else {
-          todo->setSummary( description );
+          todo->setSummary( description, Qt::mightBeRichText( description ) );
         }
 
         int priority = attributes.value( "Priority" ).toInt();
@@ -162,7 +176,9 @@ class QtopiaParser : public QXmlDefaultHandler
         todo->setCategories( lookupCategories( categoryList ) );
 
         QString completedStr = attributes.value( "Completed" );
-        if ( completedStr == "1" ) todo->setCompleted( true );
+        if ( completedStr == "1" ) {
+          todo->setCompleted( true );
+        }
 
         QString hasDateStr = attributes.value( "HasDate" );
         if ( hasDateStr == "1" ) {
@@ -175,7 +191,9 @@ class QtopiaParser : public QXmlDefaultHandler
         }
 
         Todo *oldTodo = mCalendar->todo( uid );
-        if ( oldTodo ) mCalendar->deleteTodo( oldTodo );
+        if ( oldTodo ) {
+          mCalendar->deleteTodo( oldTodo );
+        }
 
         mCalendar->addTodo( todo );
       } else if ( qName == "Category" ) {
@@ -236,7 +254,7 @@ class QtopiaParser : public QXmlDefaultHandler
       QStringList categoryIds = categoryList.split( ";" );
       QStringList categories;
       QStringList::ConstIterator it;
-      for( it = categoryIds.begin(); it != categoryIds.end(); ++it ) {
+      for ( it = categoryIds.begin(); it != categoryIds.end(); ++it ) {
         categories.append( category( *it ) );
       }
       return categories;
@@ -248,8 +266,11 @@ class QtopiaParser : public QXmlDefaultHandler
     static QString category( const QString &id )
     {
       QMap<QString,QString>::ConstIterator it = mCategoriesMap.find( id );
-      if ( it == mCategoriesMap.end() ) return id;
-      else return *it;
+      if ( it == mCategoriesMap.end() ) {
+        return id;
+      } else {
+        return *it;
+      }
     }
 
     static void setCategory( const QString &id, const QString &name )
@@ -270,7 +291,7 @@ QtopiaFormat::~QtopiaFormat()
 {
 }
 
-bool QtopiaFormat::load( Calendar *calendar, const QString &fileName)
+bool QtopiaFormat::load( Calendar *calendar, const QString &fileName )
 {
   kDebug(5800) << "QtopiaFormat::load():" << fileName;
 
@@ -292,14 +313,16 @@ bool QtopiaFormat::save( Calendar *calendar, const QString &fileName )
 
   QString text = toString( calendar );
 
-  if ( text.isNull() ) return false;
+  if ( text.isNull() ) {
+    return false;
+  }
 
   // TODO: write backup file
 
   QFile file( fileName );
   if (!file.open( QIODevice::WriteOnly ) ) {
-    setException(new ErrorFormat(ErrorFormat::SaveError,
-                 i18n("Could not open file '%1'", fileName)));
+    setException( new ErrorFormat( ErrorFormat::SaveError,
+                                   i18n( "Could not open file '%1'", fileName ) ) );
     return false;
   }
   QTextStream ts( &file );

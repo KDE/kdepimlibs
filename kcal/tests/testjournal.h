@@ -30,6 +30,7 @@ class JournalTest : public QObject
     void testValidity();
     void testCompare();
     void testClone();
+    void testRich();
 };
 
 #endif

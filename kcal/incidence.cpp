@@ -63,8 +63,11 @@ class KCal::Incidence::Private
     int mRevision;                   // revision number
 
     QString mDescription;            // description string
+    bool mDescriptionIsRich;         // description string is richtext.
     QString mSummary;                // summary string
+    bool mSummaryIsRich;             // summary string is richtext.
     QString mLocation;               // location string
+    bool mLocationIsRich;            // location string is richtext.
     QStringList mCategories;         // category list
     mutable Recurrence *mRecurrence; // recurrence
     Attachment::List mAttachments;   // attachments list
@@ -304,12 +307,13 @@ void Incidence::shiftTimes( const KDateTime::Spec &oldSpec,
   }
 }
 
-void Incidence::setDescription( const QString &description )
+void Incidence::setDescription( const QString &description, bool isRich )
 {
   if ( mReadOnly ) {
     return;
   }
   d->mDescription = description;
+  d->mDescriptionIsRich = isRich;
   updated();
 }
 
@@ -318,18 +322,29 @@ QString Incidence::description() const
   return d->mDescription;
 }
 
-void Incidence::setSummary( const QString &summary )
+bool Incidence::descriptionIsRich() const
+{
+  return d->mDescriptionIsRich;
+}
+
+void Incidence::setSummary( const QString &summary, bool isRich )
 {
   if ( mReadOnly ) {
     return;
   }
   d->mSummary = summary;
+  d->mSummaryIsRich = isRich;
   updated();
 }
 
 QString Incidence::summary() const
 {
   return d->mSummary;
+}
+
+bool Incidence::summaryIsRich() const
+{
+  return d->mSummaryIsRich;
 }
 
 void Incidence::setCategories( const QStringList &categories )
@@ -907,19 +922,25 @@ bool Incidence::isAlarmEnabled() const
   return false;
 }
 
-void Incidence::setLocation( const QString &location )
+void Incidence::setLocation( const QString &location, bool isRich )
 {
   if ( mReadOnly ) {
     return;
   }
 
   d->mLocation = location;
+  d->mLocationIsRich = isRich;
   updated();
 }
 
 QString Incidence::location() const
 {
   return d->mLocation;
+}
+
+bool Incidence::locationIsRich() const
+{
+  return d->mLocationIsRich;
 }
 
 void Incidence::setSchedulingID( const QString &sid )

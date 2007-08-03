@@ -252,9 +252,10 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
       Sets the incidence description.
 
       @param description is the incidence description string.
+      @param isRich if true indicates the description string contains richtext.
       @see description().
     */
-    void setDescription( const QString &description );
+    void setDescription( const QString &description, bool isRich=false );
 
     /**
       Returns the incidence description.
@@ -263,18 +264,52 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     QString description() const;
 
     /**
+      Returns true if incidence description contains RichText; false otherwise.
+      @see setDescription(), description().
+    */
+    bool descriptionIsRich() const;
+
+    /**
       Sets the incidence summary.
 
       @param summary is the incidence summary string.
+      @param isRich if true indicates the summary string contains richtext.
       @see summary().
     */
-    void setSummary( const QString &summary );
+    void setSummary( const QString &summary, bool isRich=false );
 
     /**
       Returns the incidence summary.
       @see setSummary().
     */
     QString summary() const;
+
+    /**
+      Returns true if incidence summary contains RichText; false otherwise.
+      @see setSummary(), summary().
+    */
+    bool summaryIsRich() const;
+
+    /**
+      Sets the incidence location. Do _not_ use with journals.
+
+      @param location is the incidence location string.
+      @param isRich if true indicates the location string contains richtext.
+      @see location().
+    */
+    void setLocation( const QString &location, bool isRich=false );
+
+    /**
+      Returns the incidence location. Do _not_ use with journals.
+      @see setLocation().
+    */
+    QString location() const;
+
+    /**
+      Returns true if incidence location contains RichText; false otherwise.
+      @see setLocation(), location().
+    */
+    bool locationIsRich() const;
 
     /**
       Sets the incidence category list.
@@ -643,20 +678,6 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%  Other methods
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    /**
-      Sets the incidence location. Do _not_ use with journals.
-
-      @param location is the incidence location string.
-      @see location().
-    */
-    void setLocation( const QString &location );
-
-    /**
-      Returns the incidence location. Do _not_ use with journals.
-      @see setLocation().
-    */
-    QString location() const;
 
     /**
       Set the incidence scheduling ID. Do _not_ use with journals.

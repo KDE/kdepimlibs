@@ -73,3 +73,16 @@ void JournalTest::testClone()
   QVERIFY( journal1.description() == journal2->description() );
   QVERIFY( journal1.location( ) == journal2->location() );
 }
+
+void JournalTest::testRich()
+{
+  QDate dt = QDate::currentDate();
+  Journal journal1;
+  journal1.setDtStart( KDateTime( dt ) );
+  journal1.setSummary( "<html><b><i>Journal1 Summary</i></b></html>", true );
+  journal1.setDescription( "<html>This is a of the <b>first</b> journal</html>", true );
+  journal1.setLocation( "<qt><h1>the place</h1></qt>", true );
+  QVERIFY( journal1.summaryIsRich() );
+  QVERIFY( journal1.descriptionIsRich() );
+  QVERIFY( journal1.locationIsRich() );
+}

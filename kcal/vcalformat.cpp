@@ -48,6 +48,7 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QFile>
 #include <QtCore/QByteArray>
+#include <QtGui/QTextDocument>
 
 using namespace KCal;
 
@@ -772,21 +773,21 @@ Todo *VCalFormat::VTodoToEvent( VObject *vtodo )
   // description for todo
   if ( ( vo = isAPropertyOf( vtodo, VCDescriptionProp ) ) != 0 ) {
     s = fakeCString( vObjectUStringZValue( vo ) );
-    anEvent->setDescription( QString::fromLocal8Bit( s ) );
+    anEvent->setDescription( QString::fromLocal8Bit( s ), Qt::mightBeRichText( s ) );
     deleteStr( s );
   }
 
   // summary
   if ( ( vo = isAPropertyOf( vtodo, VCSummaryProp ) ) ) {
     s = fakeCString( vObjectUStringZValue( vo ) );
-    anEvent->setSummary( QString::fromLocal8Bit( s ) );
+    anEvent->setSummary( QString::fromLocal8Bit( s ), Qt::mightBeRichText( s ) );
     deleteStr( s );
   }
 
   // location
   if ( ( vo = isAPropertyOf( vtodo, VCLocationProp ) ) != 0 ) {
     s = fakeCString( vObjectUStringZValue( vo ) );
-    anEvent->setLocation( QString::fromLocal8Bit( s ) );
+    anEvent->setLocation( QString::fromLocal8Bit( s ), Qt::mightBeRichText( s ) );
     deleteStr( s );
   }
 
@@ -1218,17 +1219,19 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
   // summary
   if ( ( vo = isAPropertyOf( vevent, VCSummaryProp ) ) ) {
     s = fakeCString( vObjectUStringZValue( vo ) );
-    anEvent->setSummary( QString::fromLocal8Bit( s ) );
+    anEvent->setSummary( QString::fromLocal8Bit( s ), Qt::mightBeRichText( s ) );
     deleteStr( s );
   }
 
   // description
   if ( ( vo = isAPropertyOf( vevent, VCDescriptionProp ) ) != 0 ) {
     s = fakeCString( vObjectUStringZValue( vo ) );
+    bool isRich = Qt::mightBeRichText( s );
     if ( !anEvent->description().isEmpty() ) {
-      anEvent->setDescription( anEvent->description() + '\n' + QString::fromLocal8Bit( s ) );
+      anEvent->setDescription(
+        anEvent->description() + '\n' + QString::fromLocal8Bit( s ), isRich );
     } else {
-      anEvent->setDescription( QString::fromLocal8Bit( s ) );
+      anEvent->setDescription( QString::fromLocal8Bit( s ), isRich );
     }
     deleteStr( s );
   }
@@ -1236,7 +1239,7 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
   // location
   if ( ( vo = isAPropertyOf( vevent, VCLocationProp ) ) != 0 ) {
     s = fakeCString( vObjectUStringZValue( vo ) );
-    anEvent->setLocation( QString::fromLocal8Bit( s ) );
+    anEvent->setLocation( QString::fromLocal8Bit( s ), Qt::mightBeRichText( s ) );
     deleteStr( s );
   }
 

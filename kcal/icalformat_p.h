@@ -99,6 +99,9 @@ class ICalFormatImpl
     void writeIncidence( icalcomponent *parent, Incidence *incidence,
                          ICalTimeZones *tzlist = 0, ICalTimeZones *tzUsedList = 0 );
 
+    icalproperty *writeDescription( const QString &description, bool isRich = false );
+    icalproperty *writeSummary( const QString &summary, bool isRich = false );
+    icalproperty *writeLocation( const QString &location, bool isRich = false );
     icalproperty *writeAttendee( Attendee *attendee );
     icalproperty *writeOrganizer( const Person &organizer );
     icalproperty *writeAttachment( Attachment *attach );
