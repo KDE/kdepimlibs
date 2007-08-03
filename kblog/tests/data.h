@@ -33,11 +33,15 @@
   QString mBlogId( "1" );
   QDateTime mCreationDateTime( QDateTime::currentDateTime() );
   QDateTime mModificationDateTime( QDateTime::currentDateTime() );
-  QString mTitle( "TestBlogger1" );
-  QString mContent( "TestBlogger1: <strong>posted</strong> content." );
-  QString mModifiedContent( "TestBlogger1: <strong>modified</strong> <em>content</em>." );
+  QString mTitle( "TestBlog" );
+  QString mContent( "TestBlog: <strong>posted</strong> content." );
+  QString mModifiedContent( "TestBlog: <strong>modified</strong> <em>content</em>." );
   bool mPublished = true;
   QString mPostingId( QString( "113" ) );
+
+  QString mCommentTitle( "TestBlog Comment" );
+  QString mCommentContent( "TestBlog: posted comment." );
+  QString mCommentEmail( QString( "fancy_mail@not.valid" ) );
 
 #endif
 

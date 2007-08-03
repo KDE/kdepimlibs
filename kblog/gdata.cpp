@@ -349,6 +349,7 @@ void GData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingCommen
   atomMarkup += "<content type=\"html\">"+comment->content().toUtf8()+"</content>";
   atomMarkup += "<author>";
   atomMarkup += "<name>"+comment->name()+"</name>";
+  atomMarkup += "<email>"+comment->email()+"</email>";
   atomMarkup += "</author></entry>";
 
     QByteArray postData;
@@ -850,6 +851,7 @@ void GDataPrivate::slotCreateComment( KJob *job )
   kDebug(5323) << "slotCreateComment()";  
   const QString data = QString::fromUtf8( mCreateCommentBuffer[ job ].data(), mCreateCommentBuffer[ job ].size() );
   mCreateCommentBuffer[ job ].resize( 0 );
+  kDebug(5323) << "Dump data: " << data; 
 
   Q_Q(GData);
 
@@ -892,6 +894,7 @@ void GDataPrivate::slotCreateComment( KJob *job )
   comment->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ));
   comment->setStatus( BlogPostingComment::Created );
   emit q->createdComment( posting, comment );
+  kDebug(5323) << "Emitting createdComment()";
 }
 
 void GDataPrivate::slotRemoveCommentData( KIO::Job *job, const QByteArray &data )
@@ -922,6 +925,7 @@ void GDataPrivate::slotRemoveComment( KJob *job )
 
   comment->setStatus( BlogPostingComment::Created );
   emit q->removedComment( posting, comment );
+  kDebug(5323) << "Emitting removedComment()";
 }
 
 #include "gdata.moc"

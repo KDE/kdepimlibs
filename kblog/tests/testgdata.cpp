@@ -23,6 +23,7 @@
 
 #include "kblog/gdata.h"
 #include "kblog/blogposting.h"
+#include "kblog/blogpostingcomment.h"
 
 #include <qtest_kde.h>
 
@@ -46,6 +47,8 @@ class TestGData : public QObject
     void listBlogs( const QMap<QString,QMap<QString,QString> >& );
     void listRecentPostings( const QList<KBlog::BlogPosting>& postings );
     void createPosting( KBlog::BlogPosting* posting );
+    void createComment( const KBlog::BlogPosting* posting, const KBlog::BlogPostingComment *comment );
+    void removeComment( const KBlog::BlogPosting* posting, const KBlog::BlogPostingComment *comment );
     void modifyPosting( KBlog::BlogPosting* posting );
     void fetchPosting( KBlog::BlogPosting* posting );
     void removePosting( KBlog::BlogPosting* posting );
@@ -56,8 +59,10 @@ class TestGData : public QObject
     void testNetwork();
   private:
     void dumpPosting( const KBlog::BlogPosting* );
+    void dumpComment( const KBlog::BlogPostingComment* );
     KBlog::GData *b;
     KBlog::BlogPosting *p;
+    KBlog::BlogPostingComment *c;
     QEventLoop *eventLoop;
     QTimer *fetchProfileIdTimer;
     QTimer *listBlogsTimer;
@@ -65,6 +70,8 @@ class TestGData : public QObject
     QTimer *fetchPostingTimer;
     QTimer *modifyPostingTimer;
     QTimer *createPostingTimer;
+    QTimer *createCommentTimer;
+    QTimer *removeCommentTimer;
     QTimer *removePostingTimer;
 };
 
@@ -79,7 +86,8 @@ class TestGDataWarnings : public QObject
     void modifyPostingTimeoutWarning();
     void createPostingTimeoutWarning();
     void removePostingTimeoutWarning();
-
+    void createCommentTimeoutWarning();
+    void removeCommentTimeoutWarning();
 };
 
 #include "testGData.moc"
@@ -112,6 +120,37 @@ void TestGData::dumpPosting( const BlogPosting* posting )
       posting->creationDateTime().toUtc().toString();
   qDebug() << "# modificationDateTime(UTC): " << 
       posting->modificationDateTime().toUtc().toString();
+  qDebug() << "###########################";
+}
+
+void TestGData::dumpComment( const BlogPostingComment* comment )
+{
+  qDebug() << "########### comment ############";
+  qDebug() << "# commentId: " << comment->commentId();
+  qDebug() << "# title: " << comment->title();
+  qDebug() << "# content: " << comment->content();
+  qDebug() << "# name: " << comment->name();
+  qDebug() << "# email: " << comment->email();
+  qDebug() << "# url: " << comment->url().url();
+  qDebug() << "# error: " << comment->error();
+  switch ( comment->status() ){
+    case BlogPostingComment::New:
+      qDebug() << "# status: New"; break;
+    case BlogPostingComment::Fetched:
+      qDebug() << "# status: Fetched"; break;
+    case BlogPostingComment::Created:
+      qDebug() << "# status: Created"; break;
+    case BlogPostingComment::Modified:
+      qDebug() << "# status: Modified"; break;
+    case BlogPostingComment::Removed:
+      qDebug() << "# status: Removed"; break;
+    case BlogPostingComment::Error:
+      qDebug() << "# status: Error"; break;
+  };
+  qDebug() << "# creationDateTime(UTC): " << 
+      comment->creationDateTime().toUtc().toString();
+  qDebug() << "# modificationDateTime(UTC): " << 
+      comment->modificationDateTime().toUtc().toString();
   qDebug() << "###########################";
 }
 
@@ -173,6 +212,38 @@ void TestGData::createPosting( KBlog::BlogPosting *posting )
   dumpPosting( posting );
   qDebug() << "################################\n";
   QVERIFY( posting->status() == BlogPosting::Created );
+
+  connect( b, SIGNAL( createdComment( const KBlog::BlogPosting*, const KBlog::BlogPostingComment* ) ),
+           this, SLOT( createComment( const KBlog::BlogPosting*, const KBlog::BlogPostingComment* ) ) );
+  b->createComment( p, c );
+  createCommentTimer->start( TIMEOUT );
+}
+
+
+void TestGData::createComment( const KBlog::BlogPosting* posting, const KBlog::BlogPostingComment *comment )
+{
+  createPostingTimer->stop();
+  qDebug() << "########### createComment ############";
+  dumpPosting( posting );
+  dumpComment( comment );
+  qDebug() << "################################\n";
+  QVERIFY( comment->status() == BlogPostingComment::Created );
+
+  connect( b, SIGNAL( removedComment( const KBlog::BlogPosting*, const KBlog::BlogPostingComment * ) ),
+           this, SLOT( removeComment( const KBlog::BlogPosting*, const KBlog::BlogPostingComment* ) ) );
+  b->removeComment( p, c );
+  removeCommentTimer->start( TIMEOUT );
+}
+
+
+void TestGData::removeComment( const KBlog::BlogPosting* posting, const KBlog::BlogPostingComment *comment )
+{
+  createPostingTimer->stop();
+  qDebug() << "########### removeComment ############";
+  dumpPosting( posting );
+  dumpComment( comment );
+  qDebug() << "################################\n";
+  QVERIFY( comment->status() == BlogPostingComment::Created );
 
   connect( b, SIGNAL( modifiedPosting( KBlog::BlogPosting* ) ),
            this, SLOT( modifyPosting( KBlog::BlogPosting* ) ) );
@@ -270,6 +341,16 @@ void TestGDataWarnings::createPostingTimeoutWarning()
   QWARN( "createPosting() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
+void TestGDataWarnings::createCommentTimeoutWarning()
+{
+  QWARN( "createComment() timeout. This can be caused by an error, too. Any following calls will fail." );
+}
+
+void TestGDataWarnings::removeCommentTimeoutWarning()
+{
+  QWARN( "removeComment() timeout. This can be caused by an error, too. Any following calls will fail." );
+}
+
 void TestGDataWarnings::removePostingTimeoutWarning()
 {
   QWARN( "removePosting() timeout. This can be caused by an error, too. Any following calls will fail." );
@@ -309,6 +390,13 @@ void TestGData::testNetwork()
   p->setCreationDateTime( mCDateTime );
   p->setModificationDateTime( mMDateTime );
 
+  c = new BlogPostingComment(); // no need to delete later ;-)
+  c->setTitle( mCommentTitle );
+  c->setContent( mCommentContent );
+  c->setName( mUsername );
+  c->setEmail( mCommentEmail );
+  c->setCreationDateTime( mCDateTime );
+  c->setModificationDateTime( mMDateTime );
 
   connect( b, SIGNAL( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPosting* ) ),
            this, SLOT( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPosting* ) ) );
@@ -344,6 +432,17 @@ void TestGData::testNetwork()
   createPostingTimer->setSingleShot( true );
   connect( createPostingTimer, SIGNAL( timeout() ),
            warnings, SLOT( createPostingTimeoutWarning() ) );
+
+  createCommentTimer = new QTimer( this );
+  createCommentTimer->setSingleShot( true );
+  connect( createCommentTimer, SIGNAL( timeout() ),
+           warnings, SLOT( createCommentTimeoutWarning() ) );
+
+  removeCommentTimer = new QTimer( this );
+  removeCommentTimer->setSingleShot( true );
+  connect( removeCommentTimer, SIGNAL( timeout() ),
+           warnings, SLOT( removeCommentTimeoutWarning() ) );
+
 
   removePostingTimer = new QTimer( this );
   removePostingTimer->setSingleShot( true );

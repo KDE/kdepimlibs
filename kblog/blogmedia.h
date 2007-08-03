@@ -121,6 +121,10 @@ class KBLOG_EXPORT BlogMedia
 
     void setStatus( Status status );
 
+    QString error() const;
+
+    void setError( const QString &error );
+
     BlogMedia& operator=(const BlogMedia &media );
 
   protected:

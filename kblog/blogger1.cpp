@@ -253,7 +253,7 @@ void Blogger1Private::slotListBlogs(
 
   kDebug(5323) << "Blog::slotListBlogs";
   kDebug(5323) << "TOP:" << result[0].typeName();
-  QMap<QString,QString> blogsInfo;
+  QMap<QString,QMap<QString,QString> > blogsInfo;
   if ( result[0].type() != QVariant::List ) {
     kDebug(5323) << "Could not fetch blogs out of the result from the server,"
                  << "not a list.";
@@ -274,7 +274,7 @@ void Blogger1Private::slotListBlogs(
       }
       kDebug(5323) << "Blog information retrieved: ID =" << blogId
           << ", Name =" << blogName;
-      blogsInfo.insert( blogId, blogName );
+      blogsInfo[ blogId ][ blogName ] = QString();
     }
     emit q->listedBlogs( blogsInfo );
   }

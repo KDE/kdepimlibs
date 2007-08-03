@@ -35,6 +35,7 @@ class BlogMediaPrivate
     QString mName;
     KUrl mUrl;
     QString mMimetype;
+    QString mError;
     QByteArray mData;
     BlogMedia::Status mStatus;
 };
@@ -53,6 +54,7 @@ d_ptr( new BlogMediaPrivate )
   d_ptr->mMimetype=m.mimetype();
   d_ptr->mData=m.data();
   d_ptr->mStatus=m.status();
+  d_ptr->mError=m.error();
 }
 
 BlogMedia::~BlogMedia()
@@ -108,6 +110,16 @@ BlogMedia::Status BlogMedia::status() const
 void BlogMedia::setStatus( BlogMedia::Status status )
 {
   d_ptr->mStatus = status;
+}
+
+QString BlogMedia::error() const
+{
+  return d_ptr->mError;
+}
+
+void BlogMedia::setError( const QString &error )
+{
+  d_ptr->mError = error;
 }
 
 BlogMedia& BlogMedia::operator=(const BlogMedia &media)
