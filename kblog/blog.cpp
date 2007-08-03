@@ -25,8 +25,7 @@
 #include "blog_p.h"
 #include "blogposting_p.h"
 
-//FIXME find the right header
-#define KDE_VERSION "4.0.0"
+#include <kdeversion.h>
 
 #include <KDebug>
 
