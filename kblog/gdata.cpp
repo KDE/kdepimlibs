@@ -240,6 +240,7 @@ void GData::modifyPosting( KBlog::BlogPosting* posting )
 
   job->addMetaData( "content-type", "Content-Type: application/atom+xml; charset=utf-8" );
   job->addMetaData( "ConnectTimeout", "50" );
+  job->addMetaData( "UserAgent", userAgent() );
   job->addMetaData( "customHTTPHeader", "Authorization: GoogleLogin auth=" + d->mAuthenticationString +
                                    "\r\nX-HTTP-Method-Override: PUT" );
 
@@ -294,6 +295,7 @@ void GData::createPosting( KBlog::BlogPosting* posting )
 
   job->addMetaData( "content-type", "Content-Type: application/atom+xml; charset=utf-8" );
   job->addMetaData( "ConnectTimeout", "50" );
+  job->addMetaData( "UserAgent", userAgent() );
   job->addMetaData( "customHTTPHeader", "Authorization: GoogleLogin auth=" + d->mAuthenticationString );
 
     connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
@@ -326,6 +328,7 @@ void GData::removePosting( KBlog::BlogPosting *posting )
     }
 
   job->addMetaData( "ConnectTimeout", "50" );
+  job->addMetaData( "UserAgent", userAgent() );
   job->addMetaData( "customHTTPHeader", "Authorization: GoogleLogin auth=" + d->mAuthenticationString +
                                    "\r\nX-HTTP-Method-Override: DELETE" );
 
@@ -370,6 +373,7 @@ void GData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingCommen
   job->addMetaData( "content-type", "Content-Type: application/atom+xml; charset=utf-8" );
   job->addMetaData( "ConnectTimeout", "50" );
   job->addMetaData( "customHTTPHeader", "Authorization: GoogleLogin auth=" + d->mAuthenticationString );
+  job->addMetaData( "UserAgent", userAgent() );
 
     connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
              this, SLOT( slotCreateCommentData( KIO::Job *, const QByteArray & ) ) );
@@ -402,6 +406,7 @@ void GData::removeComment( KBlog::BlogPosting *posting, KBlog::BlogPostingCommen
     }
 
   job->addMetaData( "ConnectTimeout", "50" );
+  job->addMetaData( "UserAgent", userAgent() );
   job->addMetaData( "customHTTPHeader", "Authorization: GoogleLogin auth=" + d->mAuthenticationString +
                                    "\r\nX-HTTP-Method-Override: DELETE" );
 
@@ -756,6 +761,7 @@ void GDataPrivate::slotCreatePosting( KJob *job )
   posting->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
   posting->setStatus( BlogPosting::Created );
   emit q->createdPosting( posting );
+  kDebug(5323) << "Emitting createdPosting()";
 }
 
 void GDataPrivate::slotModifyPostingData( KIO::Job *job, const QByteArray &data )
@@ -836,6 +842,7 @@ void GDataPrivate::slotRemovePosting( KJob *job )
 
   posting->setStatus( BlogPosting::Removed );
   emit q->removedPosting( posting );
+  kDebug(5323) << "Emitting removedPosting()";
 }
 
 void GDataPrivate::slotCreateCommentData( KIO::Job *job, const QByteArray &data )
