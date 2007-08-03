@@ -25,13 +25,14 @@
 #include <QtCore/QString>
 #include <kurl.h>
 #include <ktimezone.h>
-#include <kdatetime.h>
+#include <QtCore/QDateTime>
 
   KUrl mUrl( "http://soctest.wordpress.com/xmlrpc.php" );
   QString mUsername( "socapitest" );
   QString mPassword( "k0nt4ctbl0g" );
   QString mBlogId( "1" );
-
+  QDateTime mCreationDateTime( QDateTime::currentDateTime() );
+  QDateTime mModificationDateTime( QDateTime::currentDateTime() );
   QString mTitle( "TestBlogger1" );
   QString mContent( "TestBlogger1: <strong>posted</strong> content." );
   QString mModifiedContent( "TestBlogger1: <strong>modified</strong> <em>content</em>." );
