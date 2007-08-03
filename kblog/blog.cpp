@@ -72,10 +72,8 @@ void Blog::setUserAgent( const QString &applicationName,
   else {
     userAgent = "KDE-KBlog/";
   }
-  userAgent += KDE_VERSION;
+  userAgent += KDE_VERSION_STRING;
   d->mUserAgent = userAgent;
-  kDebug(5323) << "Version String: " << userAgent; // FIXME remove
-  kDebug(5323) << "KDE String: " << KDE_VERSION;
 }
 
 void Blog::setPassword( const QString &pass )

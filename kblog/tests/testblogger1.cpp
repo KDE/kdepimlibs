@@ -19,9 +19,7 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include "testblogger1.h"
 #include "data.h"
-#include "testblogger1.moc"
 
 #include "kblog/blogger1.h"
 #include "kblog/blogposting.h"
@@ -38,6 +36,48 @@
 #define DOWNLOADCOUNT 5
 
 using namespace KBlog;
+
+class TestBlogger1 : public QObject
+{
+  Q_OBJECT
+  private:
+    void dumpPosting( const KBlog::BlogPosting* );
+    KBlog::Blogger1 *b;
+    KBlog::BlogPosting *p;
+    QEventLoop *eventLoop;
+    QTimer *fetchUserInfoTimer;
+    QTimer *listBlogsTimer;
+    QTimer *listRecentPostingsTimer;
+    QTimer *fetchPostingTimer;
+    QTimer *modifyPostingTimer;
+    QTimer *createPostingTimer;
+    QTimer *removePostingTimer;
+  private Q_SLOTS:
+    void testValidity(); 
+    void fetchUserInfo( const QMap<QString,QString>& );
+    void listBlogs( const QMap<QString,QString>& );
+    void listRecentPostings( const QList<KBlog::BlogPosting>& postings );
+    void fetchPosting( KBlog::BlogPosting* posting );
+    void modifyPosting( KBlog::BlogPosting* posting );
+    void createPosting( KBlog::BlogPosting* posting );
+    void removePosting( KBlog::BlogPosting* posting );
+};
+
+class TestBlogger1Warnings : public QObject
+{
+  Q_OBJECT
+  private Q_SLOTS:
+    void fetchUserInfoTimeoutWarning();
+    void listBlogsTimeoutWarning();
+    void listRecentPostingsTimeoutWarning();
+    void fetchPostingTimeoutWarning();
+    void modifyPostingTimeoutWarning();
+    void createPostingTimeoutWarning();
+    void removePostingTimeoutWarning();
+    void error( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPosting* );
+};
+
+#include "testblogger1.moc"
 
 void TestBlogger1::dumpPosting( const BlogPosting* posting )
 {
@@ -233,7 +273,6 @@ void TestBlogger1Warnings::error( KBlog::Blog::ErrorType type, const QString &er
   kDebug(5323) << "#############################\r\n";
 }
 
-QTEST_KDEMAIN( TestBlogger1, NoGUI )
 
 void TestBlogger1::testValidity()
 {
@@ -263,12 +302,6 @@ void TestBlogger1::testValidity()
   p->setPostingId( mPostingId );
   p->setCreationDateTime( mCreationDateTime );
   p->setModificationDateTime( mModificationDateTime );
-  QVERIFY( p->title() == mTitle );
-  QVERIFY( p->content() == mContent );
-  QVERIFY( p->isPublished() == mPublished );
-  QVERIFY( p->postingId() == mPostingId );
-  QVERIFY( p->creationDateTime() == mCreationDateTime );
-  QVERIFY( p->modificationDateTime() == mModificationDateTime );
 
   TestBlogger1Warnings *warnings = new TestBlogger1Warnings();
   connect( b, SIGNAL( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPosting* ) ),
@@ -323,3 +356,5 @@ void TestBlogger1::testValidity()
   delete b;
   delete p;
 }
+
+QTEST_KDEMAIN_CORE(TestBlogger1)

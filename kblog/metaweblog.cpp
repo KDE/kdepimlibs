@@ -371,7 +371,7 @@ void MetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
   } else {
     posting->setStatus( BlogPosting::Modified );
     emit q->modifiedPosting( posting );
-    kDebug(5323) << "emitting modifiedPosting(" << result[0].toBool() << ")";
+    kDebug(5323) << "emitting modifiedPosting()";
   }
 }
 
