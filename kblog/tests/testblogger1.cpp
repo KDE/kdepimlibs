@@ -146,7 +146,6 @@ void TestBlogger1::fetchPosting( KBlog::BlogPosting *posting )
   dumpPosting( posting );
   kDebug(5323) << "###############################\r\n";
   QVERIFY( posting->status() == BlogPosting::Fetched );
-  QVERIFY( posting->postingId() == mPostingId );
   QVERIFY( posting->content() == mModifiedContent );
 
   connect( b, SIGNAL( removedPosting( KBlog::BlogPosting* ) ),
@@ -178,6 +177,7 @@ void TestBlogger1::removePosting( KBlog::BlogPosting *posting )
   dumpPosting( posting );
   kDebug(5323) << "################################\r\n";
   QVERIFY( posting->status() == BlogPosting::Removed );
+  eventLoop->quit();
 }
 
 void TestBlogger1Warnings::fetchUserInfoTimeoutWarning()
@@ -237,8 +237,13 @@ QTEST_KDEMAIN( TestBlogger1, NoGUI )
 
 void TestBlogger1::testValidity()
 {
+  eventLoop = new QEventLoop( this );
+
   b = new Blogger1( KUrl( "http://wrong.url.org/somegateway" ) );
   QVERIFY( b->url() == KUrl( "http://wrong.url.org/somegateway" ) );
+  KTimeZone mTimeZone( KTimeZone( "UTC" ) );
+  KDateTime mCreationDateTime( QDateTime::currentDateTime() );
+  KDateTime mModificationDateTime( QDateTime::currentDateTime() );
   b->setUrl( mUrl );
   b->setUsername( mUsername );
   b->setPassword( mPassword );
@@ -304,7 +309,6 @@ void TestBlogger1::testValidity()
   connect( removePostingTimer, SIGNAL( timeout() ),
            warnings, SLOT( removePostingTimeoutWarning() ) );
 
-  QEventLoop *eventLoop = new QEventLoop( this );
 
   connect( b, SIGNAL( fetchedUserInfo( const QMap<QString,QString>& ) ),
           this, SLOT( fetchUserInfo( const QMap<QString,QString>&) ) );

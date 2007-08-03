@@ -29,9 +29,7 @@
 template <class S, class T>class QMap;
 template <class T>class QList;
 class QTimer;
-namespace KBlog{
-  class BlogPosting;
-}
+class QEventLoop;
 
 class TestBlogger1 : public QObject
 {
@@ -40,6 +38,7 @@ class TestBlogger1 : public QObject
     void dumpPosting( const KBlog::BlogPosting* );
     KBlog::Blogger1 *b;
     KBlog::BlogPosting *p;
+    QEventLoop *eventLoop;
     QTimer *fetchUserInfoTimer;
     QTimer *listBlogsTimer;
     QTimer *listRecentPostingsTimer;
