@@ -30,7 +30,7 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 
 # ########### next target ###############
 #  
-#  set(testmetaweblog_SRCS testblogposting.cpp )
+#  set(testblogposting_SRCS testblogposting.cpp )
 #  
 #  
 #  kde4_add_unit_test(testblogposting TESTNAME kabc-testblogposting ${testblogposting_SRCS})

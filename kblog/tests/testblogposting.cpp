@@ -26,7 +26,7 @@
 #include "kblog/blogposting.h"
 #include "kurl.h"
 #include "kdatetime.h"
-#include "testblogposting.moc"
+
 
 using namespace KBlog;
 
@@ -35,17 +35,12 @@ class testBlogPosting: public QObject
     Q_OBJECT
 private slots:
     void testValidity();
-    void testBlogPosting():
-    void testBlogPosting_data();
+    void testValidity_data();
 };
 
-void testBlogPosting::testValidity()
-{
-  int i = 0;
-  i++;
-}
+#include "testblogposting.moc"
 
-void testBlogPosting::testBlogPosting_data()
+void testBlogPosting::testValidity_data()
 {
     QTest::addColumn<QString>("postingId");
     QTest::addColumn<QString>("title");
@@ -67,19 +62,21 @@ void testBlogPosting::testBlogPosting_data()
     QTest::addColumn<BlogPosting::Status>("status");
     QTest::addColumn<QString>("error");
 
+    QList<KUrl> url;
+    url.append( KUrl( "http://track.back.url/some/path" ) );
+    QStringList categories( "Category" );
     QTest::newRow("SimpleTest") << QString("123ABC") << QString("Title") 
       << QString("Content") << true << QString("Abbreviated Content")
-      << KUrl( "http://my.link/in/outer/space" << KUrl( "http://my.perma/link/space" )
+      << KUrl( "http://my.link/in/outer/space" ) << KUrl( "http://my.perma/link/space" )
       << true << true << QString( "Summary" ) << QString( "Tags 1 2" )
-      << QList<KUrl>().append( KUrl( "http://track.back.url/some/path" ) )
-      << QString( "Mood" ) << QString( "Music" )
-      << QStringList().append( "Category" )
-      << KDatetime( KDateTime::currentDateTime() )
-      << KDatetime( KDateTime::currentDateTime() ) << BlogPosting::New
+      << url  << QString( "Mood" ) << QString( "Music" )
+      << categories
+      << KDateTime( QDateTime::currentDateTime() )
+      << KDateTime( QDateTime::currentDateTime() ) << BlogPosting::New
       << QString( "Error" );
 }
 
-void testBlogPosting::testBlogPosting()
+void testBlogPosting::testValidity()
 {
     BlogPosting p;
 
@@ -94,9 +91,9 @@ void testBlogPosting::testBlogPosting()
     QFETCH(bool, isTrackBackAllowed);
     QFETCH(QString, summary);
     QFETCH(QString, tags);
-    QFETCH(QList<KUrl> >, trackBackUrls);
+    QFETCH(QList<KUrl>, trackBackUrls);
     QFETCH(QString, mood);
-    QFETCH(QString>, music);
+    QFETCH(QString, music);
     QFETCH(QStringList, categories);
     QFETCH(KDateTime, creationDateTime);
     QFETCH(KDateTime, modificationDateTime);
@@ -123,25 +120,25 @@ void testBlogPosting::testBlogPosting()
     p.setStatus( status );
     p.setError( error );
 
-    QCOMPARE(p.postingId()==postingId );
-    QCOMPARE(p.title()==title );
-    QCOMPARE(p.content()==content );
-    QCOMPARE(p.isPublished()==isPublished );
-    QCOMPARE(p.abbreviatedContent()==abbreviatedContent );
-    QCOMPARE(p.link()==link );
-    QCOMPARE(p.permalink()==permalink );
-    QCOMPARE(p.isCommentAllowed()==isCommentAllowed );
-    QCOMPARE(p.isTrackBackAllowed()==isTrackBackAllowed );
-    QCOMPARE(p.summary()==summary );
-    QCOMPARE(p.tags()==tags );
-    QCOMPARE(p.trackBackUrls()==trackBackUrls );
-    QCOMPARE(p.mood()==mood );
-    QCOMPARE(p.music()==music );
-    QCOMPARE(p.categories()==categories );
-    QCOMPARE(p.creationDateTime()==creationDateTime );
-    QCOMPARE(p.modificationDateTime()==modificationDateTime );
-    QCOMPARE(p.status()==status );
-    QCOMPARE(p.error()==error );
+    QCOMPARE(p.postingId(), postingId );
+    QCOMPARE(p.title(), title );
+    QCOMPARE(p.content(), content );
+    QCOMPARE(p.isPublished(), isPublished );
+    QCOMPARE(p.abbreviatedContent(), abbreviatedContent );
+    QCOMPARE(p.link(), link );
+    QCOMPARE(p.permalink(), permalink );
+    QCOMPARE(p.isCommentAllowed(), isCommentAllowed );
+    QCOMPARE(p.isTrackBackAllowed(), isTrackBackAllowed );
+    QCOMPARE(p.summary(), summary );
+    QCOMPARE(p.tags(), tags );
+    QCOMPARE(p.trackBackUrls(), trackBackUrls );
+    QCOMPARE(p.mood(), mood );
+    QCOMPARE(p.music(), music );
+    QCOMPARE(p.categories(), categories );
+    QCOMPARE(p.creationDateTime(), creationDateTime );
+    QCOMPARE(p.modificationDateTime(), modificationDateTime );
+    QCOMPARE(p.status(), status );
+    QCOMPARE(p.error(), error );
 }
 
-QTEST_MAIN(testBlogPosting)
+QTEST_KDEMAIN_CORE(testBlogPosting)
