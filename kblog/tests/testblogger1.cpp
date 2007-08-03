@@ -39,6 +39,21 @@ using namespace KBlog;
 class TestBlogger1 : public QObject
 {
   Q_OBJECT
+
+  public Q_SLOTS:
+    // use this functions as a chain to go through network traffic.
+    void fetchUserInfo( const QMap<QString,QString>& );
+    void listBlogs( const QMap<QString,QString>& );
+    void listRecentPostings( const QList<KBlog::BlogPosting>& postings );
+    void createPosting( KBlog::BlogPosting* posting );
+    void modifyPosting( KBlog::BlogPosting* posting );
+    void fetchPosting( KBlog::BlogPosting* posting );
+    void removePosting( KBlog::BlogPosting* posting );
+    // end chain
+    void error( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPosting* );
+  private Q_SLOTS:
+    void testValidity();
+    void testNetwork();
   private:
     void dumpPosting( const KBlog::BlogPosting* );
     KBlog::Blogger1 *b;
@@ -51,19 +66,6 @@ class TestBlogger1 : public QObject
     QTimer *modifyPostingTimer;
     QTimer *createPostingTimer;
     QTimer *removePostingTimer;
-  private Q_SLOTS:
-    void testValidity();
-    void testNetwork();
-    // use this functions as a chain to go through network traffic.
-    void fetchUserInfo( const QMap<QString,QString>& );
-    void listBlogs( const QMap<QString,QString>& );
-    void listRecentPostings( const QList<KBlog::BlogPosting>& postings );
-    void createPosting( KBlog::BlogPosting* posting );
-    void modifyPosting( KBlog::BlogPosting* posting );
-    void fetchPosting( KBlog::BlogPosting* posting );
-    void removePosting( KBlog::BlogPosting* posting );
-    // end chain
-    void error( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPosting* );
 };
 
 class TestBlogger1Warnings : public QObject
