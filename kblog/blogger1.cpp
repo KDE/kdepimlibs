@@ -409,8 +409,7 @@ void Blogger1Private::slotModifyPosting(
   } else {
     posting->setStatus( KBlog::BlogPosting::Modified );
     emit q->modifiedPosting( posting );
-    kDebug(5323) << "emitting modifiedPosting()" <<
-             "for" << result[0].toInt();
+    kDebug(5323) << "emitting modifiedPosting()";
   }
 }
 
@@ -433,8 +432,7 @@ void Blogger1Private::slotRemovePosting(
   } else {
     posting->setStatus( KBlog::BlogPosting::Removed );
     emit q->removedPosting( posting );
-    kDebug(5323) << "emitting removedPosting()" <<
-             "for" << result[0].toInt();
+    kDebug(5323) << "emitting removedPosting()";
   }
 }
 

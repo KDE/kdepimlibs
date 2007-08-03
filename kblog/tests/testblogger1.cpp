@@ -43,7 +43,7 @@ void TestBlogger1::dumpPosting( const BlogPosting* posting )
 {
   kDebug(5323) << "########### posting ############";
   kDebug(5323) << "# postingId: " << posting->postingId();
-  kDebug(5323) << "# titel: " << posting->title();
+  kDebug(5323) << "# title: " << posting->title();
   kDebug(5323) << "# content: " << posting->content();
   kDebug(5323) << "# publish: " << posting->isPublished();
   kDebug(5323) << "# categories: " << posting->categories().join( " " );
@@ -160,6 +160,7 @@ void TestBlogger1::createPosting( KBlog::BlogPosting *posting )
 
   connect( b, SIGNAL( modifiedPosting( KBlog::BlogPosting* ) ),
            this, SLOT( modifyPosting( KBlog::BlogPosting* ) ) );
+  p->setContent( "TestBlogger1: modified content." );
   b->modifyPosting( p );
   modifyPostingTimer->start( TIMEOUT );
 }
