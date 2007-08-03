@@ -107,7 +107,7 @@ void GData::listBlogs()
       + "/blogs" );
 }
 
-void GData::listRecentPostings( const QStringList &labels, const int number, 
+void GData::listRecentPostings( const QStringList &labels, int number, 
                 const KDateTime &upMinTime, const KDateTime &upMaxTime, 
                 const KDateTime &pubMinTime, const KDateTime &pubMaxTime )
 {
@@ -145,17 +145,7 @@ void GData::listRecentPostings( const QStringList &labels, const int number,
 void GData::listRecentPostings( int number )
 {
   Q_D(GData);
-  kDebug() << "listRecentPostings()";
-  Syndication::Loader *loader = Syndication::Loader::create();
-  if( number>0 )
-    d->mListRecentPostingsMap[ loader ] = number;
-  connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
-                          Syndication::FeedPtr, Syndication::ErrorCode)),
-                          this, SLOT(slotListRecentPostings(
-                                  Syndication::Loader*,
-                  Syndication::FeedPtr, Syndication::ErrorCode)) );
-  loader->loadFrom( "http://www.blogger.com/feeds/" + blogId()
-      + "/posts/default" );
+  listRecentPostings( QStringList(), number );
 }
 
 void GData::listComments( KBlog::BlogPosting *posting )
@@ -205,7 +195,7 @@ void GData::modifyPosting( KBlog::BlogPosting* posting )
 {
   Q_D(GData);
     kDebug() << "modifyPosting()";
-    if ( d->authenticate() ){
+    if ( !d->authenticate() ){
       kDebug(5323) << "Authentication failed.";
       emit error( Atom, "Authentication failed." );
       return;
@@ -240,7 +230,7 @@ void GData::modifyPosting( KBlog::BlogPosting* posting )
         KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default/"+posting->postingId() ),
         postData, false );
 
-    d->mCreatePostingMap[ job ] = posting;
+    d->mModifyPostingMap[ job ] = posting;
 
     if ( !job ) {
       kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/"
@@ -264,7 +254,7 @@ void GData::createPosting( KBlog::BlogPosting* posting )
 {
   Q_D(GData);
     kDebug() << "createPosting()";
-    if ( d->authenticate() ){
+    if ( !d->authenticate() ){
       kDebug(5323) << "Authentication failed.";
       emit error( Atom, "Authentication failed." );
       return;
@@ -316,7 +306,7 @@ void GData::removePosting( KBlog::BlogPosting *posting )
 {
   Q_D(GData);
     kDebug() << "removePosting()";
-    if ( d->authenticate() ){
+    if ( !d->authenticate() ){
       kDebug(5323) << "Authentication failed.";
       emit error( Atom, "Authentication failed." );
       return;
@@ -349,7 +339,7 @@ void GData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingCommen
 {
   kDebug(5323) << "createComment()";
   Q_D(GData);
-    if ( d->authenticate() ){
+    if ( !d->authenticate() ){
       kDebug(5323) << "Authentication failed.";
       emit error( Atom, "Authentication failed." );
       return;
@@ -390,7 +380,7 @@ void GData::removeComment( KBlog::BlogPosting *posting, KBlog::BlogPostingCommen
 {
   Q_D(GData);
     kDebug() << "removeComment()";
-    if ( d->authenticate() ){
+    if ( !d->authenticate() ){
       kDebug(5323) << "Authentication failed.";
       emit error( Atom, "Authentication failed." );
       return;
@@ -475,9 +465,10 @@ void GDataPrivate::slotFetchProfileId(KJob* job)
        q->setProfileId( pid.cap(1) );
        emit q->fetchedProfileId( pid.cap(1) );
     }
-    else
+    else {
       emit q->error( GData::Other, i18n( "Could not regexp the Profile ID." ) );
       emit q->fetchedProfileId( QString() );
+    }
     kDebug(5323)<<"QRegExp bid( 'http://www.blogger.com/profile/(\\d+)' matches"
         << pid.cap(1);
   }
@@ -627,7 +618,6 @@ void GDataPrivate::slotListRecentPostings(
 
   if( mListRecentPostingsMap.contains( loader ) )
     number = mListRecentPostingsMap[ loader ];
-
   mListRecentPostingsMap.remove( loader );
 
   QList<KBlog::BlogPosting> postingList;
@@ -657,7 +647,7 @@ void GDataPrivate::slotListRecentPostings(
       posting.setModificationDateTime( KDateTime( QDateTime::fromTime_t(
   ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
       postingList.append( posting );
-      if( --number = 0 )
+      if( number-- == 0 )
         break;
   }
   kDebug(5323) << "Emitting listedRecentPostings()";
@@ -688,6 +678,7 @@ void GDataPrivate::slotFetchPosting(
         posting->setPostingId( rx.cap(1) );
         posting->setTitle( ( *it )->title() );
         posting->setContent( ( *it )->content() );
+        posting->setStatus( BlogPosting::Fetched );
 //         FIXME: assuming UTC for now
         posting->setCreationDateTime( KDateTime( QDateTime::fromTime_t(
                                      ( *it )->datePublished() ),
@@ -758,9 +749,11 @@ void GDataPrivate::slotCreatePosting( KJob *job )
     return;
   }
   kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
+
   posting->setPostingId( rxId.cap(1) );
   posting->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
   posting->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
+  posting->setStatus( BlogPosting::Created );
   emit q->createdPosting( posting );
 }
 
@@ -840,6 +833,7 @@ void GDataPrivate::slotRemovePosting( KJob *job )
     return;
   }
 
+  posting->setStatus( BlogPosting::Removed );
   emit q->removedPosting( posting );
 }
 
@@ -895,7 +889,8 @@ void GDataPrivate::slotCreateComment( KJob *job )
   kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
   comment->setCommentId( rxId.cap(1) );
   comment->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
-  comment->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) )); 
+  comment->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ));
+  comment->setStatus( BlogPostingComment::Created );
   emit q->createdComment( posting, comment );
 }
 
@@ -925,6 +920,7 @@ void GDataPrivate::slotRemoveComment( KJob *job )
     return;
   }
 
+  comment->setStatus( BlogPostingComment::Created );
   emit q->removedComment( posting, comment );
 }
 

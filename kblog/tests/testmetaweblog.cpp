@@ -325,7 +325,7 @@ void TestMetaWeblog::testValidity()
   QVERIFY( b->blogId() == mBlogId );
   QVERIFY( b->username() == mUsername );
   QVERIFY( b->password() == mPassword );
-  QVERIFY( b->interfaceName() == "Blogger 1.0" );
+  QVERIFY( b->interfaceName() == "MetaWeblog" );
   QVERIFY( b->timeZone().name() == mTimeZone.name() );
 }
 
