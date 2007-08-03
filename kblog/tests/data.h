@@ -33,8 +33,8 @@
   QString mBlogId( "1" );
 
   QString mTitle( "TestBlogger1" );
-  QString mContent( "TestBlogger1: posted content." );
-  QString mModifiedContent( "TestBlogger1: posted content." );
+  QString mContent( "TestBlogger1: <strong>posted</strong> content." );
+  QString mModifiedContent( "TestBlogger1: <strong>modified</strong> <em>content</em>." );
   bool mPublished = true;
   QString mPostingId( QString( "113" ) );
 

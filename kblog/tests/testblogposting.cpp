@@ -27,6 +27,9 @@
 #include "kurl.h"
 #include "kdatetime.h"
 
+Q_DECLARE_METATYPE(QList<KUrl>)
+Q_DECLARE_METATYPE(KDateTime)
+Q_DECLARE_METATYPE(KBlog::BlogPosting::Status)
 
 using namespace KBlog;
 
@@ -119,6 +122,7 @@ void testBlogPosting::testValidity()
     p.setModificationDateTime( modificationDateTime );
     p.setStatus( status );
     p.setError( error );
+
 
     QCOMPARE(p.postingId(), postingId );
     QCOMPARE(p.title(), title );
