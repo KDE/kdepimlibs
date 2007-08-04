@@ -23,6 +23,7 @@
 
 #include "kmime_newsarticle.h"
 #include "kmime_message_p.h"
+#include "kmime_util_p.h"
 
 using namespace KMime;
 
@@ -58,32 +59,44 @@ void NewsArticle::parse()
 
 QByteArray NewsArticle::assembleHeaders()
 {
+  Q_D(NewsArticle);
   Headers::Base *h;
   QByteArray newHead;
 
   //Control
-  if ( ( h = control( false ) ) != 0 )
+  if ( ( h = control( false ) ) != 0 && !h->isEmpty() ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //Supersedes
-  if ( ( h = supersedes( false ) ) != 0 )
+  if ( ( h = supersedes( false ) ) != 0 && !h->isEmpty() ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //Newsgroups
-  if ( ( h = newsgroups( false ) ) != 0 )
+  if ( ( h = newsgroups( false ) ) != 0 && !h->isEmpty() ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //Followup-To
-  if ( ( h = followUpTo( false ) ) != 0 )
+  if ( ( h = followUpTo( false ) ) != 0 && !h->isEmpty() ) {
     newHead+=h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //Mail-Copies-To
-  if ( ( h = mailCopiesTo( false ) ) != 0 )
+  if ( ( h = mailCopiesTo( false ) ) != 0 && !h->isEmpty() ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //Lines
   h = lines(); // "Lines" is mandatory
   newHead += h->as7BitString() + '\n';
+  KMime::removeHeader( d->head, h->type() );
 
   newHead += Message::assembleHeaders();
   return newHead;

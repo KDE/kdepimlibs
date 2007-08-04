@@ -220,7 +220,7 @@ void KMimeContentTest::testImplicitMultipartGeneration()
   QCOMPARE( c1->contents().at( 1 ), c2 );
 }
 
-void KMimeContentTest::textExplicitMultipartGeneration()
+void KMimeContentTest::testExplicitMultipartGeneration()
 {
   Content *c1 = new Content();
   c1->contentType()->from7BitString( "multipart/mixed" );

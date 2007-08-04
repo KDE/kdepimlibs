@@ -76,3 +76,31 @@ void MessageTest::testMainBodyPart()
   QCOMPARE( msg3->mainBodyPart( "text/plain" ), text );
   QCOMPARE( msg3->mainBodyPart( "text/html" ), html );
 }
+
+void MessageTest::testBrunosMultiAssembleBug()
+{
+  QByteArray data =
+    "From: Sender <sender@test.org>\n"
+    "Subject: Sample message\n"
+    "To: Receiver <receiver@test.org>\n"
+    "Date: Sat, 04 Aug 2007 12:44 +0200\n"
+    "MIME-Version: 1.0\n"
+    "Content-Type: text/plain\n"
+    "X-Foo: bla\n"
+    "X-Bla: foo\n"
+    "\n"
+    "body";
+
+  Message *msg = new Message;
+  msg->setContent( data );
+  msg->parse();
+  msg->assemble();
+  QCOMPARE( msg->encodedContent(), data );
+
+  msg->inReplyTo();
+  msg->assemble();
+  QCOMPARE( msg->encodedContent(), data );
+
+  delete msg;
+}
+

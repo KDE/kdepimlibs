@@ -23,6 +23,7 @@
 
 #include "kmime_message.h"
 #include "kmime_message_p.h"
+#include "kmime_util_p.h"
 
 using namespace KMime;
 
@@ -50,67 +51,76 @@ void Message::parse()
 
 QByteArray Message::assembleHeaders()
 {
+  Q_D(Message);
   Headers::Base *h;
   QByteArray newHead;
 
   //Message-ID
-  if ( ( h = messageID( false ) ) != 0 )
+  if ( ( h = messageID( false ) ) != 0 && !h->isEmpty() ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //From
   h = from(); // "From" is mandatory
   newHead += h->as7BitString() + '\n';
+  KMime::removeHeader( d->head, h->type() );
 
   //Subject
   h = subject(); // "Subject" is mandatory
   newHead += h->as7BitString() + '\n';
+  KMime::removeHeader( d->head, h->type() );
 
   //To
-  if ( ( h = to( false )) != 0 )
+  if ( ( h = to( false )) != 0 && !h->isEmpty() ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //Cc
-  if ( ( h = cc( false )) != 0 )
+  if ( ( h = cc( false )) != 0 && !h->isEmpty() ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //Reply-To
-  if ( ( h = replyTo( false )) != 0 )
+  if ( ( h = replyTo( false )) != 0 && !h->isEmpty() ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //Date
   h = date(); // "Date" is mandatory
   newHead += h->as7BitString() + '\n';
+  KMime::removeHeader( d->head, h->type() );
 
   //References
-  if ( ( h = references( false )) != 0 )
+  if ( ( h = references( false )) != 0 && !h->isEmpty() ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //Organization
-  if ( ( h = organization( false )) != 0 )
+  if ( ( h = organization( false )) != 0 && !h->isEmpty() ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //UserAgent
-  if ( ( h = userAgent( false )) != 0 )
+  if ( ( h = userAgent( false )) != 0 && !h->isEmpty() ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   // In-Reply-To
-  if ( ( h = inReplyTo( false ) ) != 0 )
+  if ( ( h = inReplyTo( false ) ) != 0 && !h->isEmpty() ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //Mime-Version
   newHead += "MIME-Version: 1.0\n";
-
-  //X-Headers
-  int pos = head().indexOf( "\nX-" );
-  if ( pos > -1 ) { //we already have some x-headers => "recycle" them
-    newHead += head().mid( pos + 1, head().length() - pos );
-  } else {
-    foreach ( Headers::Base *h, h_eaders ) {
-      if ( h->isXHeader() ) {
-        newHead += h->as7BitString() + '\n';
-      }
-    }
-  }
+  KMime::removeHeader( d->head, "MIME-Version" );
 
   return newHead + Content::assembleHeaders();
 }

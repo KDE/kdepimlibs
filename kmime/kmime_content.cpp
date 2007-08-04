@@ -36,6 +36,7 @@
 #include "kmime_content.h"
 #include "kmime_content_p.h"
 #include "kmime_parsers.h"
+#include "kmime_util_p.h"
 
 #include <kcharsets.h>
 #include <kcodecs.h>
@@ -316,7 +317,17 @@ void Content::parse()
 
 void Content::assemble()
 {
-  d_ptr->head = assembleHeaders();
+  Q_D(Content);
+  QByteArray newHead = assembleHeaders();
+  foreach ( Headers::Base *h, h_eaders ) {
+    if ( h->isXHeader() ) {
+      newHead += h->as7BitString() + '\n';
+      KMime::removeHeader( d->head, h->type() );
+    }
+  }
+  newHead += d->head; // keep unparsed headers
+  d->head = newHead;
+
   foreach ( Content *c, contents() ) {
     c->assemble();
   }
@@ -324,30 +335,35 @@ void Content::assemble()
 
 QByteArray Content::assembleHeaders()
 {
-  QByteArray newHead = "";
+  Q_D(Content);
+  QByteArray newHead;
 
   //Content-Type
   Headers::Base *h = contentType( false );
   if ( h && !h->isEmpty() ) {
     newHead += contentType()->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
   }
 
   //Content-Transfer-Encoding
   h = contentTransferEncoding( false );
   if ( h && !h->isEmpty() ) {
     newHead += contentTransferEncoding()->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
   }
 
   //Content-Description
   h = contentDescription( false );
   if ( h ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
   }
 
   //Content-Disposition
   h = contentDisposition( false );
   if ( h ) {
     newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
   }
 
   return newHead;

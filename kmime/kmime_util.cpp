@@ -22,6 +22,7 @@
 */
 
 #include "kmime_util.h"
+#include "kmime_util_p.h"
 #include "kmime_header_parsing.h"
 
 #include <config-kmime.h>
@@ -337,59 +338,85 @@ QByteArray unfoldHeader( const QByteArray &header )
   return result;
 }
 
-QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
+int indexOfHeader( const QByteArray &src, const QByteArray &name, int &end, int &dataBegin, bool *folded )
 {
   QByteArray n = name;
   n.append( ':' );
-  int pos1=-1;
+  int begin = -1;
 
   if ( qstrnicmp( n.constData(), src.constData(), n.length() ) == 0 ) {
-    pos1 = 0;
+    begin = 0;
   } else {
     n.prepend('\n');
     const char *p = strcasestr( src.constData(), n.constData() );
     if ( !p ) {
-      pos1 = -1;
+      begin = -1;
     } else {
-      pos1 = p - src.constData();
+      begin = p - src.constData();
+      ++begin;
     }
   }
 
-  if ( pos1 > -1) {     //there is a header with the given name
-    pos1 += n.length(); //skip the name
+  if ( begin > -1) {     //there is a header with the given name
+    dataBegin = begin + name.length() + 1; //skip the name
     // skip the usual space after the colon
-    if ( src.at( pos1 ) == ' ' ) {
-      ++pos1;
+    if ( src.at( dataBegin ) == ' ' ) {
+      ++dataBegin;
     }
-    int pos2 = pos1;
+    end = dataBegin;
     int len = src.length() - 1;
-    bool folded = false;
+    if ( folded )
+      *folded = false;
 
-    if ( src.at(pos2) != '\n' ) {  // check if the header is not empty
+    if ( src.at(end) != '\n' ) {  // check if the header is not empty
       while ( true ) {
-        pos2 = src.indexOf( '\n', pos2 + 1 );
-        if ( pos2 == -1 || pos2 == len ||
-             ( src[pos2+1] != ' ' && src[pos2+1] != '\t' ) ) {
+        end = src.indexOf( '\n', end + 1 );
+        if ( end == -1 || end == len ||
+             ( src[end+1] != ' ' && src[end+1] != '\t' ) ) {
           //break if we reach the end of the string, honor folded lines
           break;
         } else {
-          folded = true;
+          if ( folded )
+            *folded = true;
         }
       }
     }
 
-    if ( pos2 < 0 ) {
-      pos2 = len + 1; //take the rest of the string
+    if ( end < 0 ) {
+      end = len + 1; //take the rest of the string
     }
+    return begin;
 
+  } else {
+    dataBegin = -1;
+    return -1; //header not found
+  }
+}
+
+QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
+{
+  int begin, end;
+  bool folded;
+  indexOfHeader( src, name, end, begin, &folded );
+
+  if ( begin >= 0 ) {
     if ( !folded ) {
-      return src.mid( pos1, pos2 - pos1 );
+      return src.mid( begin, end - begin );
     } else {
-      QByteArray hdrValue = src.mid( pos1, pos2 - pos1 );
+      QByteArray hdrValue = src.mid( begin, end - begin );
       return unfoldHeader( hdrValue );
     }
   } else {
     return QByteArray(); //header not found
+  }
+}
+
+void removeHeader( QByteArray &header, const QByteArray &name )
+{
+  int begin, end, dummy;
+  begin = indexOfHeader( header, name, end, dummy );
+  if ( begin >= 0 ) {
+    header.remove( begin, end - begin + 1 );
   }
 }
 

@@ -27,6 +27,7 @@ class MessageTest : public QObject
   Q_OBJECT
   private slots:
     void testMainBodyPart();
+    void testBrunosMultiAssembleBug();
 };
 
 
