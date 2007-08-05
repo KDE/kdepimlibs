@@ -36,7 +36,6 @@ using namespace KBlog;
 MetaWeblog::MetaWeblog( const KUrl &server, QObject *parent )
   : Blogger1( server, *new MetaWeblogPrivate, parent )
 {
-  Q_D(MetaWeblog);
   setUrl( server );
 }
 
@@ -44,7 +43,6 @@ MetaWeblog::MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd,
                         QObject *parent )
   : Blogger1( server, dd, parent )
 {
-  Q_D(MetaWeblog);
   setUrl( server );
 }
 
@@ -287,6 +285,7 @@ void MetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
         kDebug(5323) << "readPostingFromMap failed!";
         emit q->error( MetaWeblog::ParsingError, i18n( "Could not read posting." ) );
       }
+      if( --count == 0 ) break;
     }
   } //FIXME should we emit here? (see below, too)
   kDebug(5323) << "Emitting listRecentPostingsFinished()";

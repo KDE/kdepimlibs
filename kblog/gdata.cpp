@@ -46,7 +46,6 @@ using namespace KBlog;
 GData::GData( const KUrl &server, QObject *parent )
   : Blog( server, *new GDataPrivate, parent )
 {
-  Q_D(GData);
   setUrl( server );
 }
 
@@ -83,7 +82,6 @@ void GData::setProfileId( const QString& pid )
 
 void GData::fetchProfileId()
 {
-  Q_D(GData);
   kDebug() << "fetchProfileId()";
   QByteArray data;
   KIO::Job *job = KIO::get( url(), false, false );
@@ -96,7 +94,6 @@ void GData::fetchProfileId()
 
 void GData::listBlogs()
 {
-  Q_D(GData);
   kDebug() << "listBlogs()";
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
@@ -144,7 +141,6 @@ void GData::listRecentPostings( const QStringList &labels, int number,
 
 void GData::listRecentPostings( int number )
 {
-  Q_D(GData);
   listRecentPostings( QStringList(), number );
 }
 
@@ -165,7 +161,6 @@ void GData::listComments( KBlog::BlogPosting *posting )
 
 void GData::listAllComments()
 {
-  Q_D(GData);
   kDebug() << "listRecentPostings()";
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader, SIGNAL(loadingComplete(Syndication::Loader*,
