@@ -356,7 +356,6 @@ void Incidence::setCategories( const QStringList &categories )
   updated();
 }
 
-// TODO: remove setCategories(QString) function
 void Incidence::setCategories( const QString &catStr )
 {
   if ( mReadOnly ) {
@@ -440,7 +439,6 @@ void Incidence::addRelation( Incidence *incidence )
 
 void Incidence::removeRelation( Incidence *incidence )
 {
-  kDebug() << "Entering Incidence::removeRelation";
   d->mRelations.removeRef( incidence );
   d->mRelatedToUid = QString();
 //  if (incidence->getRelatedTo() == this) incidence->setRelatedTo(0);
@@ -496,14 +494,6 @@ bool Incidence::recursAt( const KDateTime &qdt ) const
   return d->mRecurrence && d->mRecurrence->recursAt( qdt );
 }
 
-/**
-  Calculates the start date/time for all recurrences that happen at some time
-  on the given date (might start before that date, but end on or after the
-  given date).
-  @param date the date where the incidence should occur
-  @return the start date/time of all occurrences that overlap with the given
-      date. Empty list if the incidence does not overlap with the date at all
-*/
 QList<KDateTime> Incidence::startDateTimesForDate( const QDate &date,
                                                    const KDateTime::Spec &timeSpec ) const
 {
@@ -545,14 +535,6 @@ QList<KDateTime> Incidence::startDateTimesForDate( const QDate &date,
   return result;
 }
 
-/**
-  Calculates the start date/time for all recurrences that happen at the given
-  time.
-  @param datetime the date/time where the incidence should occur
-  @return the start date/time of all occurrences that overlap with the given
-      date/time. Empty list if the incidence does not happen at the given
-      time at all.
-*/
 QList<KDateTime> Incidence::startDateTimesForDateTime( const KDateTime &datetime ) const
 {
   KDateTime start = dtStart();
@@ -593,7 +575,6 @@ QList<KDateTime> Incidence::startDateTimesForDateTime( const KDateTime &datetime
   return result;
 }
 
-/** Return the end time of the occurrence if it starts at the given date/time */
 KDateTime Incidence::endDateForStart( const KDateTime &startDt ) const
 {
   KDateTime start = dtStart();
@@ -607,94 +588,6 @@ KDateTime Incidence::endDateForStart( const KDateTime &startDt ) const
 
   return startDt.addSecs( start.secsTo( end ) );
 }
-
-// %%%%%%%%%%%%%%%%% begin:RecurrenceRule %%%%%%%%%%%%%%%%%
-
-// Exception Dates
-/*void Incidence::setExDates(const DateList &exDates)
-{
-  if ( mReadOnly ) return;
-  recurrence()->setExDates( exDates );
-  updated();
-}
-
-void Incidence::addExDate( const QDate &date )
-{
-  if ( mReadOnly ) return;
-  recurrence()->addExDate( date );
-  updated();
-}
-
-DateList Incidence::exDates() const
-{
-  if ( d->mRecurrence ) return d->mRecurrence->exDates();
-  else return DateList();
-}
-
-// Exception DateTimes
-void Incidence::setExDateTimes( const DateTimeList &exDates )
-{
-  if ( mReadOnly ) return;
-  recurrence()->setExDateTimes( exDates );
-  updated();
-}
-
-void Incidence::addExDateTime( const KDateTime &date )
-{
-  if ( mReadOnly ) return;
-  recurrence()->addExDateTime( date );
-  updated();
-}
-
-DateTimeList Incidence::exDateTimes() const
-{
-  if ( d->mRecurrence ) return d->mRecurrence->exDateTimes();
-  else return DateTimeList();
-}
-
-// Recurrence Dates
-void Incidence::setRDates(const DateList &exDates)
-{
-  if ( mReadOnly ) return;
-  recurrence()->setRDates( exDates );
-  updated();
-}
-
-void Incidence::addRDate( const QDate &date )
-{
-  if ( mReadOnly ) return;
-  recurrence()->addRDate( date );
-  updated();
-}
-
-DateList Incidence::rDates() const
-{
-  if ( d->mRecurrence ) return d->mRecurrence->rDates();
-  else return DateList();
-}
-
-// Recurrence DateTimes
-void Incidence::setRDateTimes( const DateTimeList &exDates )
-{
-  if ( mReadOnly ) return;
-  recurrence()->setRDateTimes( exDates );
-  updated();
-}
-
-void Incidence::addRDateTime( const KDateTime &date )
-{
-  if ( mReadOnly ) return;
-  recurrence()->addRDateTime( date );
-  updated();
-}
-
-DateTimeList Incidence::rDateTimes() const
-{
-  if ( d->mRecurrence ) return d->mRecurrence->rDateTimes();
-  else return DateTimeList();
-}*/
-
-// %%%%%%%%%%%%%%%%% end:RecurrenceRule %%%%%%%%%%%%%%%%%
 
 void Incidence::addAttachment( Attachment *attachment )
 {
