@@ -150,6 +150,7 @@ void MovableType::listRecentPostings( const int number )
 
 void MovableType::listTrackbackPings( KBlog::BlogPosting *posting ) {
   //TODO
+  Q_UNUSED( posting );
   /*
   Q_D(MovableType);
   d->mXmlRpcClient->call( "mt.getTracebackPings", args,
@@ -342,6 +343,8 @@ void MovableTypePrivate::slotListRecentPostings(
 void MovableTypePrivate::slotListTrackbackPings(
     const QList<QVariant> &result, const QVariant &id )
 {
+  Q_UNUSED( result );
+  Q_UNUSED( id );
   //TODO Contains:
   // String pingTitle: the title of the entry sent in the ping
   // String pingURL: the URL of the entry
