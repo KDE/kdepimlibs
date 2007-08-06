@@ -18,7 +18,6 @@ icalformat            |   D   |    D    |   D   |         |    D    | Allen
 icalformat_p          |   D   |         |   D   |         |    D    | Allen
 icaltimezones         |       |         |   D   |         |    D    |
 imipscheduler         |       |         |       |         |    D    |
-incidencebase         |   D   |         |   D   |   n/a   |    D    | Allen
 incidenceformatter    |       |         |       |         |    D    | Allen
 kresult               |   D   |         |       |         |    D    |
 listbase              |       |         |  n/a  |         |    D    |
@@ -51,6 +50,7 @@ event                 |   D   |    D    |   D   |    D    |    D    | Allen
 exceptions            |   D   |    D    |   D   |    D    |    D    | Allen
 freebusy              |   D   |    D    |   D   |    D    |    D    | Allen
 incidence             |   D   |    D    |   D   |   n/a   |    D    | Allen
+incidencebase         |   D   |    D    |   D   |   n/a   |    D    | Allen
 journal               |   D   |    D    |   D   |    D    |    D    | Allen
 period                |   D   |    D    |   D   |    D    |    D    | Narayan
 person                |   D   |    D    |   D   |    D    |    D    | Narayan

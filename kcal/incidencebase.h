@@ -111,7 +111,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       on the concrete types of calendar components, without changing the
       calendar component classes.
     */
-    class KCAL_EXPORT Visitor
+    class KCAL_EXPORT Visitor //krazy:exclude=dpointer
     {
       public:
         /** Destruct Incidence::Visitor */
@@ -259,7 +259,6 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       Sets the organizer for the incidence.
 
       @param organizer is a Person to use as the incidence @ref organizer.
-
       @see organizer(), setOrganizer(const QString &)
     */
     void setOrganizer( const Person &organizer );
@@ -268,7 +267,6 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       Sets the incidence organizer to any string @p organizer.
 
       @param organizer is a string to use as the incidence @ref organizer.
-
       @see organizer(), setOrganizer(const Person &)
     */
     void setOrganizer( const QString &organizer );
@@ -282,11 +280,16 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
 
     /**
       Sets readonly status.
+
+      @param readOnly if set, the incidence is read-only; else the incidence
+      can be modified.
+      @see isReadOnly().
     */
     virtual void setReadOnly( bool readOnly );
 
     /**
-      Returns if the object is read-only.
+      Returns true the object is read-only; false otherwise.
+      @see setReadOnly()
     */
     bool isReadOnly() const { return mReadOnly; }
 
@@ -294,11 +297,15 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       Sets the incidence's starting date/time with a KDateTime.
       The incidence's floating status is set according to whether @p dtStart
       is a date/time (not floating) or date-only (floating).
+
+      @param dtStart is the incidence start date/time.
+      @see dtStart().
     */
     virtual void setDtStart( const KDateTime &dtStart );
 
     /**
       Returns an incidence's starting date/time as a KDateTime.
+      @see setDtStart().
     */
     virtual KDateTime dtStart() const;
 
@@ -459,30 +466,51 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     int attendeeCount() const;
 
     /**
-      Returns the attendee with this email address.
+      Returns the attendee with the specified email address.
+
+      @param email is a QString containing an email address of the
+      form "FirstName LastName <emailaddress>".
+      @see attendeeByMails(), attendeesByUid().
     */
     Attendee *attendeeByMail( const QString &email ) const;
 
     /**
       Returns the first incidence attendee with one of the specified
       email addresses.
+
+      @param emails is a list of QStrings containing email addresses of the
+      form "FirstName LastName <emailaddress>".
+      @param email is a QString containing a single email address to search
+      in addition to the list specified in @p emails.
+      @see attendeeByMail(), attendeesByUid().
     */
     Attendee *attendeeByMails( const QStringList &emails,
                                const QString &email = QString() ) const;
 
     /**
-      Returns the incidence attendee with given uid.
+      Returns the incidence attendee with the specified attendee @acronym UID.
+
+      @param uid is a QString containing an attendee @acronym UID.
+      @see attendeeByMail(), attendeeByMails().
     */
     Attendee *attendeeByUid( const QString &uid ) const;
 
     /**
       Register observer. The observer is notified when the observed object
       changes.
+
+      @param observer is a pointer to an IncidenceObserver object that will be
+      watching this incidence.
+      @see unRegisterObserver()
     */
     void registerObserver( IncidenceObserver *observer );
 
     /**
       Unregister observer. It isn't notified anymore about changes.
+
+      @param observer is a pointer to an IncidenceObserver object that will be
+      watching this incidence.
+      @see registerObserver().
     */
     void unRegisterObserver( IncidenceObserver *observer );
 
