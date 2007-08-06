@@ -93,29 +93,29 @@ QString KResult::message() const
 {
   switch ( mType ) {
   case Ok:
-    return i18n("Ok");
+    return i18n( "Ok" );
   case InProgress:
-    return i18n("In progress");
+    return i18n( "In progress" );
   case Error:
     switch ( mErrorType ) {
     case NotAnError:
-      return i18n("Not an error");
+      return i18n( "Not an error" );
     case Undefined:
-      return i18n("Error");
+      return i18n( "Error" );
     case InvalidUrl:
-      return i18n("Invalid URL");
+      return i18n( "Invalid URL" );
     case ConnectionFailed:
-      return i18n("Connection failed");
+      return i18n( "Connection failed" );
     case WriteError:
-      return i18n("Write error");
+      return i18n( "Write error" );
     case ReadError:
-      return i18n("Read error");
+      return i18n( "Read error" );
     case WrongParameter:
-      return i18n("Wrong Parameter");
+      return i18n( "Wrong Parameter" );
     case ParseError:
-      return i18n("Parse Error");
+      return i18n( "Parse Error" );
     case WrongSchemaRevision:
-      return i18n("Wrong revision of schema");
+      return i18n( "Wrong revision of schema" );
     }
   }
 

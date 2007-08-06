@@ -1,22 +1,22 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2002,2006 David Jarvie <software@astrojar.org.uk>
+  Copyright (c) 2002,2006 David Jarvie <software@astrojar.org.uk>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #ifndef KCAL_CUSTOMPROPERTIES_H
@@ -61,6 +61,7 @@ class KCAL_EXPORT CustomProperties
     */
     void setCustomProperty( const QByteArray &app, const QByteArray &key,
                             const QString &value );
+
     /**
       Delete a custom calendar property.
 
@@ -68,6 +69,7 @@ class KCAL_EXPORT CustomProperties
       @param key Property identifier specific to the application.
     */
     void removeCustomProperty( const QByteArray &app, const QByteArray &key );
+
     /**
       Return the value of a custom calendar property.
 
@@ -86,12 +88,14 @@ class KCAL_EXPORT CustomProperties
                    will be ignored.
     */
     void setNonKDECustomProperty( const QByteArray &name, const QString &value );
+
     /**
       Delete a non-KDE or non-standard custom calendar property.
 
       @param name Full property name
     */
     void removeNonKDECustomProperty( const QByteArray &name );
+
     /**
       Return the value of a non-KDE or non-standard custom calendar property.
 
@@ -99,13 +103,14 @@ class KCAL_EXPORT CustomProperties
       @return Property value, or QString() if (and only if) the property
               does not exist.
     */
-    QString nonKDECustomProperty( const QByteArray& name ) const;
+    QString nonKDECustomProperty( const QByteArray &name ) const;
 
     /**
       Initialise the alarm's custom calendar properties to the specified
       key/value pairs.
     */
     void setCustomProperties( const QMap<QByteArray, QString> &properties );
+
     /**
       Return all custom calendar property key/value pairs.
     */

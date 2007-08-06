@@ -137,7 +137,8 @@ class KCAL_EXPORT CalendarNull : public Calendar
       @copydoc
       Calendar::rawEventsForDate(const QDate &, const KDateTime::Spec &, EventSortField, SortDirection)
     */
-    Event::List rawEventsForDate( const QDate &date, const KDateTime::Spec &timespec = KDateTime::Spec(),
+    Event::List rawEventsForDate( const QDate &date,
+                                  const KDateTime::Spec &timespec = KDateTime::Spec(),
                                   EventSortField sortField = EventSortUnsorted,
                                   SortDirection sortDirection = SortDirectionAscending );
 

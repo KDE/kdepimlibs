@@ -378,8 +378,8 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
 {
   Event::List eventList;
   KDateTime::Spec ts = timespec.isValid() ? timespec : timeSpec();
-  KDateTime st(start, ts);
-  KDateTime nd(end, ts);
+  KDateTime st( start, ts );
+  KDateTime nd( end, ts );
 
   // Get non-recurring events
   foreach ( Event *event, d->mEvents ) {
