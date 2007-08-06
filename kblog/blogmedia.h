@@ -128,8 +128,9 @@ class KBLOG_EXPORT BlogMedia
     BlogMedia& operator=(const BlogMedia &media );
 
   protected:
-    BlogMediaPrivate * const d_ptr;
     BlogMedia( const KUrl &server, BlogMediaPrivate &dd );
+  private:
+    BlogMediaPrivate * const d_ptr;
 };
 
 } //namespace KBlog

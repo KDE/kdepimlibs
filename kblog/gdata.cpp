@@ -156,7 +156,7 @@ void GData::listComments( KBlog::BlogPosting *posting )
                                   Syndication::Loader*,
                   Syndication::FeedPtr, Syndication::ErrorCode)) );
   loader->loadFrom( "http://www.blogger.com/feeds/" + blogId()
-      + "/" + posting->postingId() + "/comments/default" );
+      + '/' + posting->postingId() + "/comments/default" );
 }
 
 void GData::listAllComments()

@@ -252,10 +252,11 @@ public:
     BlogPosting& operator=( const BlogPosting &posting );
 
   protected:
-    BlogPostingPrivate * const d_ptr;
+
     BlogPosting( const QString &postingId, BlogPostingPrivate &dd );
     BlogPosting( const KCal::Journal &journal, BlogPostingPrivate &dd );
-
+  private:
+    BlogPostingPrivate * const d_ptr;
 };
 
 
