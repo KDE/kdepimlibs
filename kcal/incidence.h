@@ -127,26 +127,27 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     //@endcond
 
     /**
-      The different types of incidence status, used for task management.
+      The different types of overall incidence status or confirmation.
+      The meaning is specific to the incidence type in context.
     */
     enum Status {
       StatusNone,           /**< No status */
-      StatusTentative,      /**< Tentatively accepted the task */
-      StatusConfirmed,      /**< Accepted the task */
-      StatusCompleted,      /**< Completed the task */
-      StatusNeedsAction,    /**< No information about the task available */
-      StatusCanceled,       /**< Task canceled */
-      StatusInProcess,      /**< Work on the task is in-progress */
-      StatusDraft,          /**< Draft proposl being prepared */
-      StatusFinal,          /**< Final proposal complete */
+      StatusTentative,      /**< event is tentative */
+      StatusConfirmed,      /**< event is definite */
+      StatusCompleted,      /**< to-do completed */
+      StatusNeedsAction,    /**< to-do needs action */
+      StatusCanceled,       /**< event or to-do canceled; journal removed */
+      StatusInProcess,      /**< to-do in process */
+      StatusDraft,          /**< journal is draft */
+      StatusFinal,          /**< journal is final */
       StatusX               /**< a non-standard status string */
     };
 
     /**
-      The different types of incidence secrecy.
+      The different types of incidence access classifications.
     */
     enum Secrecy {
-      SecrecyPublic=0,      /**< Not secret */
+      SecrecyPublic=0,      /**< Not secret (default) */
       SecrecyPrivate=1,     /**< Secret to the owner */
       SecrecyConfidential=2 /**< Secret to the owner and some others */
     };

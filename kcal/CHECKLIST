@@ -18,7 +18,6 @@ icalformat            |   D   |    D    |   D   |         |    D    | Allen
 icalformat_p          |   D   |         |   D   |         |    D    | Allen
 icaltimezones         |       |         |   D   |         |    D    |
 imipscheduler         |       |         |       |         |    D    |
-incidence             |   D   |         |   D   |   n/a   |    D    | Allen
 incidencebase         |   D   |         |   D   |   n/a   |    D    | Allen
 incidenceformatter    |       |         |       |         |    D    | Allen
 kresult               |   D   |         |       |         |    D    |
@@ -51,6 +50,7 @@ duration              |   D   |    D    |   D   |    D    |    D    | Allen
 event                 |   D   |    D    |   D   |    D    |    D    | Allen
 exceptions            |   D   |    D    |   D   |    D    |    D    | Allen
 freebusy              |   D   |    D    |   D   |    D    |    D    | Allen
+incidence             |   D   |    D    |   D   |   n/a   |    D    | Allen
 journal               |   D   |    D    |   D   |    D    |    D    | Allen
 period                |   D   |    D    |   D   |    D    |    D    | Narayan
 person                |   D   |    D    |   D   |    D    |    D    | Narayan
@@ -58,12 +58,16 @@ todo                  |   D   |    D    |   D   |    D    |    D    | Allen
 == DONE ==
 
 TODO: Q_DISABLE_COPY() where needed (dpointer, no copy-ctor in base class)
+TODO: KUIT
+
 Qt4Port -> no deprecated warnings; thiago says do NO replace const iterator
           loops with 'foreach()'
 
 TODO: revert foreach() loops?
 TODO: change "todo" to "to-do" in comments
 TODO: put KDE_VERSION stuff into kcal.h and remove kde_version.h??
+
+FIXME's and TODOs and clean #if 0 blocks
 
 thiago: rule of thumb: ConstIterators, constBegin, constEnd, all of the time
 if it doesn't compile (i.e., you're doing a non-const operation), then use

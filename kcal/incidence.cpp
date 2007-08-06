@@ -708,21 +708,21 @@ QString Incidence::statusName( Incidence::Status status )
 {
   switch ( status ) {
   case StatusTentative:
-    return i18nc( "incidence status", "Tentative" );
+    return i18nc( "@item event is tentative", "Tentative" );
   case StatusConfirmed:
-    return i18n( "Confirmed" );
+    return i18nc( "@item event is definite", "Confirmed" );
   case StatusCompleted:
-    return i18n( "Completed" );
+    return i18nc( "@item to-do is complete", "Completed" );
   case StatusNeedsAction:
-    return i18n( "Needs-Action" );
+    return i18nc( "@item to-do needs action", "Needs-Action" );
   case StatusCanceled:
-    return i18n( "Canceled" );
+    return i18nc( "@item event orto-do is canceled; journal is removed", "Canceled" );
   case StatusInProcess:
-    return i18n( "In-Process" );
+    return i18nc( "@item to-do is in process", "In-Process" );
   case StatusDraft:
-    return i18n( "Draft" );
+    return i18nc( "@item journal is in draft form", "Draft" );
   case StatusFinal:
-    return i18n( "Final" );
+    return i18nc( "@item journal is in final form", "Final" );
   case StatusX:
   case StatusNone:
   default:
@@ -754,13 +754,13 @@ QString Incidence::secrecyName( Incidence::Secrecy secrecy )
 {
   switch ( secrecy ) {
   case SecrecyPublic:
-    return i18n( "Public" );
+    return i18nc( "@item incidence access if for everyone", "Public" );
   case SecrecyPrivate:
-    return i18n( "Private" );
+    return i18nc( "@item incidence access is by owner only", "Private" );
   case SecrecyConfidential:
-    return i18n( "Confidential" );
+    return i18nc( "@item incidence access is by owner and a controlled group", "Confidential" );
   default:
-    return i18n( "Undefined" );
+    return QString();  // to make compilers happy
   }
 }
 
