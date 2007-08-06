@@ -60,7 +60,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
   Q_OBJECT
   public:
     /**
-      Create an object for Movable Type 
+      Create an object for Movable Type
 
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
@@ -172,8 +172,45 @@ class KBLOG_EXPORT LiveJournal : public Blog
 
   protected:
     LiveJournal( const KUrl &server, LiveJournalPrivate &dd, QObject *parent = 0 );
+
   private:
     Q_DECLARE_PRIVATE(LiveJournal)
+    Q_PRIVATE_SLOT(d_func(), void slotAddFriend(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotAssignFriendToCategory(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotCreatePosting(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotDeleteFriend(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotExpireCookie(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotExpireAllCookies(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotFetchPosting(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotFetchUserInfo(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotGenerateCookie(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotListCategories(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotListFriends(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotListFriendsOf(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotListMoods(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotListPictureKeywords(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotListRecentPostings(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotModifyPosting(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotRemovePosting(
+                    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), void slotError( int ,
+                    const QString&, const QVariant& ))
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(LiveJournal::GenerateCookieOptions)
 
