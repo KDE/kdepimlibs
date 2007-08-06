@@ -12,10 +12,7 @@ if(LDAP_INCLUDE_DIR AND LDAP_LIBRARIES)
 endif(LDAP_INCLUDE_DIR AND LDAP_LIBRARIES)
 
 
-FIND_PATH(LDAP_INCLUDE_DIR ldap.h
-   /usr/include
-   /usr/local/include
-)
+FIND_PATH(LDAP_INCLUDE_DIR ldap.h)
 
 if(APPLE)
    FIND_LIBRARY(LDAP_LIBRARIES NAMES LDAP
@@ -24,17 +21,9 @@ if(APPLE)
    	/Library/Frameworks
    )
 else(APPLE)
-   FIND_LIBRARY(LDAP_LIBRARIES NAMES ldap
-      PATHS
-      /usr/lib
-      /usr/local/lib
-   )
+   FIND_LIBRARY(LDAP_LIBRARIES NAMES ldap)
    
-   FIND_LIBRARY(LBER_LIBRARIES NAMES lber
-      PATHS
-      /usr/lib
-      /usr/local/lib
-   )
+   FIND_LIBRARY(LBER_LIBRARIES NAMES lber)
 endif(APPLE)
 
 if(LDAP_INCLUDE_DIR AND LDAP_LIBRARIES)
