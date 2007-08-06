@@ -1,30 +1,29 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 #ifndef KCAL_INCIDENCEFORMATTER_H
 #define KCAL_INCIDENCEFORMATTER_H
 
-#include <QtCore/QString>
-
 #include "kcal_export.h"
+#include <QtCore/QString>
 
 namespace KCal {
 class Calendar;
@@ -53,18 +52,18 @@ class KCAL_EXPORT InvitationFormatterHelper
 */
 namespace IncidenceFormatter
 {
-    KCAL_EXPORT QString toolTipString( IncidenceBase *incidence, bool richText = true );
-    KCAL_EXPORT QString mailBodyString( IncidenceBase *incidencebase );
-    KCAL_EXPORT QString extensiveDisplayString( IncidenceBase *incidence );
-    KCAL_EXPORT QString formatICalInvitation( QString invitation, Calendar *mCalendar,
-                                              InvitationFormatterHelper *helper );
+  KCAL_EXPORT QString toolTipString( IncidenceBase *incidence, bool richText = true );
+  KCAL_EXPORT QString mailBodyString( IncidenceBase *incidencebase );
+  KCAL_EXPORT QString extensiveDisplayString( IncidenceBase *incidence );
+  KCAL_EXPORT QString formatICalInvitation( QString invitation, Calendar *mCalendar,
+                                            InvitationFormatterHelper *helper );
 
-    class EventViewerVisitor;
-    class ScheduleMessageVisitor;
-    class InvitationHeaderVisitor;
-    class InvitationBodyVisitor;
-    class ToolTipVisitor;
-    class MailBodyVisitor;
+  class EventViewerVisitor;
+  class ScheduleMessageVisitor;
+  class InvitationHeaderVisitor;
+  class InvitationBodyVisitor;
+  class ToolTipVisitor;
+  class MailBodyVisitor;
 }
 
 }
