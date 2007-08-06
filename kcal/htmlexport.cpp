@@ -291,15 +291,15 @@ void HtmlExport::createEvent ( QTextStream *ts, Event *event,
   *ts << "  <tr>\n";
 
   if ( !event->floats() ) {
-    if ( event->isMultiDay() && ( event->dtStart().date() != date ) ) {
+    if ( event->isMultiDay( d->mCalendar->timeSpec() ) && ( event->dtStart().date() != date ) ) {
       *ts << "    <td>&nbsp;</td>\n";
     } else {
-      *ts << "    <td valign=\"top\">" << event->dtStartTimeStr() << "</td>\n";
+      *ts << "    <td valign=\"top\">" << event->dtStartTimeStr( true, d->mCalendar->timeSpec() ) << "</td>\n";
     }
-    if ( event->isMultiDay() && ( event->dtEnd().date() != date ) ) {
+    if ( event->isMultiDay( d->mCalendar->timeSpec() ) && ( event->dtEnd().date() != date ) ) {
       *ts << "    <td>&nbsp;</td>\n";
     } else {
-      *ts << "    <td valign=\"top\">" << event->dtEndTimeStr() << "</td>\n";
+      *ts << "    <td valign=\"top\">" << event->dtEndTimeStr( true, d->mCalendar->timeSpec() ) << "</td>\n";
     }
   } else {
     *ts << "    <td>&nbsp;</td><td>&nbsp;</td>\n";
