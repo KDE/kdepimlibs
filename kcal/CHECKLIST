@@ -7,7 +7,7 @@ calstorage            |       |         |       |         |    D    |
 compat                |       |         |   D   |         |    D    |
 confirmsavedialog     |       |         |       |         |    D    |
 customproperties      |       |         |   D   |         |    D    |
-dndfactory            |       |         |       |         |    D    |
+dndfactory            |   D   |         |   D   |         |    D    | Allen
 dummyscheduler        |       |         |   D   |         |    D    |
 filestorage           |       |         |   D   |         |    D    |
 freebusycache         |       |         |       |         |    D    |

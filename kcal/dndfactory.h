@@ -1,24 +1,33 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 1998 Preston Brown <pbrown@kde.org>
-    Copyright (c) 2001,2002,2003 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 1998 Preston Brown <pbrown@kde.org>
+  Copyright (c) 2001,2002,2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
+*/
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the DndFactory class.
+
+  @author Preston Brown \<pbrown@kde.org\>
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
 */
 
 #ifndef KCAL_DNDFACTORY_H
@@ -41,24 +50,29 @@ class Incidence;
 class Calendar;
 
 /**
+  @brief
+  vCalendar/iCalendar Drag-and-Drop object factory.
+
   This class implements functions to create Drag and Drop objects used for
   Drag-and-Drop and Copy-and-Paste.
-
-  @short vCalendar/iCalendar Drag-and-Drop object factory.
 */
 class KCAL_EXPORT DndFactory
 {
   public:
     explicit DndFactory( Calendar * );
 
+    ~DndFactory();
+
     /**
       Create the calendar that is contained in the drop event's data.
      */
     Calendar *createDropCalendar( QDropEvent *de );
+
     /**
       Create the calendar that is contained in the mime data.
      */
     Calendar *createDropCalendar( const QMimeData *md );
+
     /**
       Create a drag object for the whole calendar.
     */
@@ -70,22 +84,25 @@ class KCAL_EXPORT DndFactory
     QDrag *createDrag( Incidence *incidence, QWidget *owner );
 
     /** Create Todo object from drop event */
-    Todo *createDropTodo(QDropEvent *de);
+    Todo *createDropTodo( QDropEvent *de );
+
     /** Create Event object from drop event */
-    Event *createDropEvent(QDropEvent *de);
+    Event *createDropEvent( QDropEvent *de );
 
     /** cut incidence to clipboard */
     void cutIncidence( Incidence * );
+
     /** copy the incidence to clipboard */
     bool copyIncidence( Incidence * );
+
     /** pastes the event or todo and returns a pointer to the new incidence pasted. */
     Incidence *pasteIncidence( const QDate &, const QTime *newTime = 0 );
 
   private:
-    Calendar *mCalendar;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }
