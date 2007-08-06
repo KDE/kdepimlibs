@@ -288,7 +288,7 @@ void MetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
       if( --count == 0 ) break;
     }
   } //FIXME should we emit here? (see below, too)
-  kDebug(5323) << "Emitting listRecentPostingsFinished()";
+  kDebug(5323) << "Emitting listedRecentPostings()";
   emit q->listedRecentPostings( fetchedPostingList );
 }
 

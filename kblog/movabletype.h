@@ -103,7 +103,7 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
       @see  void fetchedPosting( KBlog::BlogPosting &posting )
     */
-    virtual void listTrackbackPings( KBlog::BlogPosting *posting );
+    virtual void listTrackBackPings( KBlog::BlogPosting *posting );
 
     /**
       Modify a posting on server.
@@ -117,16 +117,16 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     /**
       TODO
 
-      @see listTrackbackPings()
+      @see listTrackBackPings()
     */
-    void listedTrackbackPings( const QMap<QString, QString> &pings );
+    void listedTrackBackPings( KBlog::BlogPosting*, const QList<QMap<QString, QString> > &pings );
 
   protected:
     MovableType( const KUrl &server, MovableTypePrivate &dd, QObject *parent = 0 );
 
   private:
     Q_DECLARE_PRIVATE(MovableType)
-    Q_PRIVATE_SLOT( d_func(), void slotListTrackbackPings(
+    Q_PRIVATE_SLOT( d_func(), void slotListTrackBackPings(
     const QList<QVariant>&, const QVariant& ))
 };
 

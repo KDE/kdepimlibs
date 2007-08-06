@@ -251,7 +251,7 @@ void Blogger1Private::slotListBlogs(
 
   kDebug(5323) << "Blog::slotListBlogs";
   kDebug(5323) << "TOP:" << result[0].typeName();
-  QMap<QString,QMap<QString,QString> > blogsInfo;
+  QList<QMap<QString,QString> > blogsList;
   if ( result[0].type() != QVariant::List ) {
     kDebug(5323) << "Could not fetch blogs out of the result from the server,"
                  << "not a list.";
@@ -265,16 +265,14 @@ void Blogger1Private::slotListBlogs(
     for ( ; it != end; ++it ) {
       kDebug(5323) << "MIDDLE:" << ( *it ).typeName();
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-      QString blogId = postInfo["blogid"].toString();
-      QString blogName = postInfo["blogName"].toString();
-      if ( blogId.isEmpty() && !blogName.isEmpty() ) {
-        blogId = blogName;
-      }
-      kDebug(5323) << "Blog information retrieved: ID =" << blogId
-          << ", Name =" << blogName;
-      blogsInfo[ blogId ][ blogName ] = QString();
+      QMap<QString,QString> blogInfo;
+      blogInfo[ "id" ] = postInfo["blogid"].toString();
+      blogInfo[ "name" ] = postInfo["blogName"].toString();
+      kDebug(5323) << "Blog information retrieved: ID =" << blogInfo["id"]
+          << ", Name =" << blogInfo["name"];
+      blogsList << blogInfo;
     }
-    emit q->listedBlogs( blogsInfo );
+    emit q->listedBlogs( blogsList );
   }
 }
 

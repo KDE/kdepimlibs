@@ -41,7 +41,7 @@ class MovableTypePrivate : public MetaWeblogPrivate
     void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
     void slotListRecentPostings( const QList<QVariant> &result,
                                  const QVariant &id );
-    virtual void slotListTrackbackPings( const QList<QVariant> &result,
+    virtual void slotListTrackBackPings( const QList<QVariant> &result,
                                  const QVariant &id );
     void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
     Q_DECLARE_PUBLIC(MovableType)

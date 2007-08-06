@@ -148,16 +148,17 @@ void MovableType::listRecentPostings( const int number )
       this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( number ) );
 }
 
-void MovableType::listTrackbackPings( KBlog::BlogPosting *posting ) {
-  //TODO
-  Q_UNUSED( posting );
-  /*
+void MovableType::listTrackBackPings( KBlog::BlogPosting *posting ) {
   Q_D(MovableType);
+  kDebug(5323) << "List trackback pings...";
+  QList<QVariant> args;
+  args << QVariant( posting->postingId() );
+  unsigned int i = d->callCounter++;
+  d->callMap[ i ] = posting;
   d->mXmlRpcClient->call( "mt.getTracebackPings", args,
-    d, SLOT( slotListTrackbackPings(
+    this, SLOT( slotListTrackbackPings(
               const QList<QVariant>&, const QVariant& ) ),
-    d, SLOT( slotError( int, const QString&, const QVariant& ) ) );
-  */
+    this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
 MovableTypePrivate::MovableTypePrivate()
@@ -340,15 +341,40 @@ void MovableTypePrivate::slotListRecentPostings(
   emit q->listedRecentPostings( fetchedPostingList );
 }
 
-void MovableTypePrivate::slotListTrackbackPings(
+void MovableTypePrivate::slotListTrackBackPings(
     const QList<QVariant> &result, const QVariant &id )
 {
-  Q_UNUSED( result );
-  Q_UNUSED( id );
+  Q_Q(MovableType);
+  kDebug(5323) << "slotTrackbackPings()";
+  BlogPosting *posting = callMap[ id.toInt() ];
+  callMap.remove( id.toInt() );
   //TODO Contains:
   // String pingTitle: the title of the entry sent in the ping
   // String pingURL: the URL of the entry
   // String pingIP: the IP address of the host that sent the ping
+  QList<QMap<QString,QString> > trackBackList;
+  if ( result[0].type() != QVariant::List ) {
+    kDebug(5323) << "Could not fetch list of trackback pings out of the"
+                 << "result from the server.";
+    emit q->error( MovableType::ParsingError,
+                        i18n( "Could not fetch list of trackback pings out of the "
+                              "result from the server." ) );
+  } else {
+    const QList<QVariant> trackBackReceived = result[0].toList();
+    QList<QVariant>::ConstIterator it = trackBackReceived.begin();
+    QList<QVariant>::ConstIterator end = trackBackReceived.end();
+    for ( ; it != end; ++it ) {
+      QMap<QString,QString> tping;
+      kDebug(5323) << "MIDDLE:" << ( *it ).typeName();
+      const QMap<QString, QVariant> trackBackInfo = ( *it ).toMap();
+      tping[ "title" ] = trackBackInfo[ "pingTitle"].toString();
+      tping[ "url" ] = trackBackInfo[ "pingURL"].toString();
+      tping[ "ip" ] = trackBackInfo[ "pingIP"].toString();
+      trackBackList << tping;
+    }
+  }
+  kDebug(5323) << "Emitting listedTrackBackPings()";
+  emit q->listedTrackBackPings( posting, trackBackList );
 }
 
 void MovableTypePrivate::slotModifyPosting(

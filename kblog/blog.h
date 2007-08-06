@@ -51,6 +51,7 @@ class KUrl;
 namespace KBlog {
 
 class BlogPosting;
+class BlogPostingComment;
 class BlogMedia;
 class BlogPrivate;
 
@@ -59,7 +60,7 @@ class BlogPrivate;
   A virtual basis class that represents a connection to a blog server.
   This is the main interface to the blog client library.
 
-  @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
+  @author Christian Weilbach \<christian_weilbach\@web.de\>
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
 */
 
@@ -243,6 +244,12 @@ class KBLOG_EXPORT Blog : public QObject
     */
     void error( KBlog::Blog::ErrorType type,
                         const QString &errorMessage, KBlog::BlogPosting* = 0 );
+
+    void error( KBlog::Blog::ErrorType type,
+                        const QString &errorMessage, KBlog::BlogMedia* );
+
+    void error( KBlog::Blog::ErrorType type,
+                        const QString &errorMessage, KBlog::BlogPosting*, KBlog::BlogPostingComment* );
 
   protected:
     BlogPrivate * const d_ptr;
