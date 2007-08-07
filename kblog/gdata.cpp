@@ -175,6 +175,12 @@ void GData::listAllComments()
 void GData::fetchPosting( KBlog::BlogPosting *posting )
 {
   Q_D(GData);
+
+  if ( !posting ) {
+    kError(5323) << "GData::fetchPosting: posting is null pointer";
+    return;
+  }
+
   kDebug() << "fetchPosting()";
   Syndication::Loader *loader = Syndication::Loader::create();
   d->mFetchPostingMap[ loader ] = posting;
@@ -189,48 +195,52 @@ void GData::fetchPosting( KBlog::BlogPosting *posting )
 void GData::modifyPosting( KBlog::BlogPosting* posting )
 {
   Q_D(GData);
-    kDebug() << "modifyPosting()";
-    if ( !d->authenticate() ){
-      kDebug(5323) << "Authentication failed.";
-      emit error( Atom, i18n( "Authentication failed." ), posting );
-      return;
-    }
+  kDebug() << "modifyPosting()";
 
-    QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
-    atomMarkup += "<id>tag:blogger.com,1999:blog-"+blogId();
-    atomMarkup += ".post-"+posting->postingId()+"</id>";
-    atomMarkup += "<published>"+posting->creationDateTime().toString() +"</published>";
-    atomMarkup += "<updated>"+posting->modificationDateTime().toString()+"</updated>";
-    atomMarkup += "<title type='text'>"+posting->title().toUtf8() +"</title>";
-    if( posting->isPrivate() )
-    {
-      atomMarkup += "<app:control xmlns:app=*http://purl.org/atom/app#'>";
-      atomMarkup += "<app:draft>yes</app:draft></app:control>";
-    }
-    atomMarkup += "<content type='xhtml'>";
-    atomMarkup += "<div xmlns='http://www.w3.org/1999/xhtml'>";
-    atomMarkup += posting->content().toUtf8();
-    atomMarkup += "</div></content>";
-    atomMarkup += "<author>";
-    atomMarkup += "<name>" + fullName().toUtf8() + "</name>";
-    atomMarkup += "<email>" + username().toUtf8() + "</email>";
-    atomMarkup += "</author>";
-    atomMarkup += "</entry>";
+  if ( !posting ) {
+    kError(5323) << "GData::modifyPosting: posting is null pointer";
+    return;
+  }
 
-    QByteArray postData;
-    QDataStream stream( &postData, QIODevice::WriteOnly );
-    stream.writeRawData( atomMarkup.toUtf8(), atomMarkup.toUtf8().length() );
+  if ( !d->authenticate() ){
+    kError(5323) << "Authentication failed.";
+    emit error( Atom, i18n( "Authentication failed." ), posting );
+    return;
+  }
 
-    KIO::TransferJob *job = KIO::http_post(
-        KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default/"+posting->postingId() ),
-        postData, false );
+  QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
+  atomMarkup += "<id>tag:blogger.com,1999:blog-"+blogId();
+  atomMarkup += ".post-"+posting->postingId()+"</id>";
+  atomMarkup += "<published>"+posting->creationDateTime().toString() +"</published>";
+  atomMarkup += "<updated>"+posting->modificationDateTime().toString()+"</updated>";
+  atomMarkup += "<title type='text'>"+posting->title().toUtf8() +"</title>";
+  if( !posting->isPrivate() )
+  {
+    atomMarkup += "<app:control xmlns:app=*http://purl.org/atom/app#'>";
+    atomMarkup += "<app:draft>yes</app:draft></app:control>";
+  }
+  atomMarkup += "<content type='xhtml'>";
+  atomMarkup += "<div xmlns='http://www.w3.org/1999/xhtml'>";
+  atomMarkup += posting->content().toUtf8();
+  atomMarkup += "</div></content>";
+  atomMarkup += "<author>";
+  atomMarkup += "<name>" + fullName().toUtf8() + "</name>";
+  atomMarkup += "<email>" + username().toUtf8() + "</email>";
+  atomMarkup += "</author>";
+  atomMarkup += "</entry>";
+  QByteArray postData;
+  QDataStream stream( &postData, QIODevice::WriteOnly );
+  stream.writeRawData( atomMarkup.toUtf8(), atomMarkup.toUtf8().length() );
 
-    d->mModifyPostingMap[ job ] = posting;
+  KIO::TransferJob *job = KIO::http_post(
+      KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default/"+posting->postingId() ),
+      postData, false );
+  d->mModifyPostingMap[ job ] = posting;
 
-    if ( !job ) {
-      kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/"
-          << blogId() <<"/posts/default/" << posting->postingId();
-    }
+  if ( !job ) {
+    kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/"
+        << blogId() <<"/posts/default/" << posting->postingId();
+  }
 
 
   job->addMetaData( "content-type", "Content-Type: application/atom+xml; charset=utf-8" );
@@ -239,9 +249,9 @@ void GData::modifyPosting( KBlog::BlogPosting* posting )
   job->addMetaData( "customHTTPHeader", "Authorization: GoogleLogin auth=" + d->mAuthenticationString +
                                    "\r\nX-HTTP-Method-Override: PUT" );
 
-    connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+  connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
              this, SLOT( slotModifyPostingData( KIO::Job *, const QByteArray & ) ) );
-    connect( job, SIGNAL( result( KJob * ) ),
+  connect( job, SIGNAL( result( KJob * ) ),
              this, SLOT( slotModifyPosting( KJob * ) ) );
 }
 
@@ -250,8 +260,15 @@ void GData::createPosting( KBlog::BlogPosting* posting )
 {
   Q_D(GData);
     kDebug() << "createPosting()";
+
+
+  if ( !posting ) {
+    kError(5323) << "GData::createPosting: posting is null pointer";
+    return;
+  }
+
     if ( !d->authenticate() ){
-      kDebug(5323) << "Authentication failed.";
+      kError(5323) << "Authentication failed.";
       emit error( Atom, i18n( "Authentication failed." ), posting );
       return;
     }
@@ -303,8 +320,15 @@ void GData::removePosting( KBlog::BlogPosting *posting )
 {
   Q_D(GData);
     kDebug() << "removePosting()";
+
+
+  if ( !posting ) {
+    kError(5323) << "GData::removePosting: posting is null pointer";
+    return;
+  }
+
     if ( !d->authenticate() ){
-      kDebug(5323) << "Authentication failed.";
+      kError(5323) << "Authentication failed.";
       emit error( Atom, i18n( "Authentication failed." ), posting );
       return;
     }
@@ -336,9 +360,20 @@ void GData::removePosting( KBlog::BlogPosting *posting )
 void GData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
 {
   kDebug(5323) << "createComment()";
+
+  if ( !comment ) {
+    kError(5323) << "GData::createComment: comment is null pointer";
+    return;
+  }
+
+  if ( !posting ) {
+    kError(5323) << "GData::createComment: posting is null pointer";
+    return;
+  }
+
   Q_D(GData);
     if ( !d->authenticate() ){
-      kDebug(5323) << "Authentication failed.";
+      kError(5323) << "Authentication failed.";
       emit error( Atom, i18n( "Authentication failed." ), posting, comment );
       return;
     }
@@ -380,8 +415,21 @@ void GData::removeComment( KBlog::BlogPosting *posting, KBlog::BlogPostingCommen
 {
   Q_D(GData);
     kDebug() << "removeComment()";
+
+
+  if ( !comment ) {
+    kError(5323) << "GData::removeComment: comment is null pointer";
+    return;
+  }
+
+  if ( !posting ) {
+    kError(5323) << "GData::removeComment: posting is null pointer";
+    return;
+  }
+
+
     if ( !d->authenticate() ){
-      kDebug(5323) << "Authentication failed.";
+      kError(5323) << "Authentication failed.";
       emit error( Atom, i18n( "Authentication failed." ), posting, comment );
       return;
     }
