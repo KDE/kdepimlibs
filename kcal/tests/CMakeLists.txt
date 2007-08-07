@@ -28,6 +28,7 @@ KCAL_UNIT_TESTS(
   testduration
   testerrorformat
   testevent
+  testfilestorage
   testfreebusy
   testjournal
   testperiod
