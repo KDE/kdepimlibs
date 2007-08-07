@@ -94,13 +94,13 @@ class Compat
       @param incidence is a pointer to an Incidence object that may need
       its alarms fixed.
     */
-    virtual void fixAlarms( Incidence *incidence ) {}
+    virtual void fixAlarms( Incidence *incidence ) { Q_UNUSED( incidence ); }
 
     /**
       Fixes the end date for floating events.
       @param date is the end date to fix.
     */
-    virtual void fixFloatingEnd( QDate &date ) {}
+    virtual void fixFloatingEnd( QDate &date ) { Q_UNUSED( date ); }
 
     /**
       Fixes the priority.
