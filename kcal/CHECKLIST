@@ -8,7 +8,7 @@ confirmsavedialog     |       |         |       |         |    D    |
 customproperties      |       |         |   D   |         |    D    |
 dndfactory            |   D   |         |   D   |         |    D    | Allen
 dummyscheduler        |       |         |   D   |         |    D    |
-filestorage           |       |         |   D   |         |    D    |
+filestorage           |   D   |    D    |   D   |         |    D    | Allen
 freebusycache         |       |         |       |         |    D    |
 freebusyurlstore      |       |         |       |         |    D    |
 htmlexport            |       |         |   D   |         |    D    |

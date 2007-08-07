@@ -1,38 +1,52 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
+*/
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the FileStorage abstract base class.
+
+  @brief
+  This class provides a calendar storage as a local file.
+
+  @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 
 #include "filestorage.h"
-
 #include "calendar.h"
 #include "vcalformat.h"
 #include "icalformat.h"
 
-#include <stdlib.h>
+#include <kdebug.h>
 
 #include <QtCore/QString>
 
-#include <kdebug.h>
+#include <stdlib.h>
 
 using namespace KCal;
 
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
+//@cond PRIVATE
 class KCal::FileStorage::Private
 {
   public:
@@ -45,7 +59,7 @@ class KCal::FileStorage::Private
     QString mFileName;
     CalFormat *mSaveFormat;
 };
-
+//@endcond
 
 FileStorage::FileStorage( Calendar *cal, const QString &fileName,
                           CalFormat *format )
@@ -64,11 +78,10 @@ void FileStorage::setFileName( const QString &fileName )
   d->mFileName = fileName;
 }
 
-QString FileStorage::fileName()const
+QString FileStorage::fileName() const
 {
   return d->mFileName;
 }
-
 
 void FileStorage::setSaveFormat( CalFormat *format )
 {
@@ -76,11 +89,10 @@ void FileStorage::setSaveFormat( CalFormat *format )
   d->mSaveFormat = format;
 }
 
-CalFormat *FileStorage::saveFormat()const
+CalFormat *FileStorage::saveFormat() const
 {
   return d->mSaveFormat;
 }
-
 
 bool FileStorage::open()
 {
@@ -89,11 +101,11 @@ bool FileStorage::open()
 
 bool FileStorage::load()
 {
-//  kDebug(5800) << "FileStorage::load(): '" << d->mFileName << "'";
-
   // do we want to silently accept this, or make some noise?  Dunno...
   // it is a semantical thing vs. a practical thing.
-  if (d->mFileName.isEmpty()) return false;
+  if ( d->mFileName.isEmpty() ) {
+    return false;
+  }
 
   // Always try to load with iCalendar. It will detect, if it is actually a
   // vCalendar file.
@@ -104,11 +116,10 @@ bool FileStorage::load()
   if ( !success ) {
     ICalFormat iCal;
 
-    success = iCal.load( calendar(), d->mFileName);
+    success = iCal.load( calendar(), d->mFileName );
 
     if ( !success ) {
       if ( iCal.exception() ) {
-//        kDebug(5800) << "---Error:" << mFormat->exception()->errorCode();
         if ( iCal.exception()->errorCode() == ErrorFormat::CalVersion1 ) {
           // Expected non vCalendar file, but detected vCalendar
           kDebug(5800) << "FileStorage::load() Fallback to VCalFormat";
@@ -123,7 +134,6 @@ bool FileStorage::load()
         return false;
       }
     } else {
-//     kDebug(5800) << "---Success";
       calendar()->setProductId( iCal.loadedProductId() );
     }
   }
@@ -135,7 +145,9 @@ bool FileStorage::load()
 
 bool FileStorage::save()
 {
-  if ( d->mFileName.isEmpty() ) return false;
+  if ( d->mFileName.isEmpty() ) {
+    return false;
+  }
 
   CalFormat *format = d->mSaveFormat ? d->mSaveFormat : new ICalFormat;
 
@@ -151,7 +163,9 @@ bool FileStorage::save()
     }
   }
 
-  if ( !d->mSaveFormat ) delete format;
+  if ( !d->mSaveFormat ) {
+    delete format;
+  }
 
   return success;
 }
