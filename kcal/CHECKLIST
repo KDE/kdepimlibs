@@ -8,7 +8,6 @@ confirmsavedialog     |       |         |       |         |    D    |
 customproperties      |       |         |   D   |         |    D    |
 dndfactory            |   D   |         |   D   |         |    D    | Allen
 dummyscheduler        |       |         |   D   |         |    D    |
-filestorage           |   D   |    D    |   D   |         |    D    | Allen
 freebusycache         |       |         |       |         |    D    |
 freebusyurlstore      |       |         |       |         |    D    |
 htmlexport            |       |         |   D   |         |    D    |
@@ -48,6 +47,7 @@ calstorage            |   D   |    D    |   D   |   N/A   |    D    | Allen
 duration              |   D   |    D    |   D   |    D    |    D    | Allen
 event                 |   D   |    D    |   D   |    D    |    D    | Allen
 exceptions            |   D   |    D    |   D   |    D    |    D    | Allen
+filestorage           |   D   |    D    |   D   |    D    |    D    | Allen
 freebusy              |   D   |    D    |   D   |    D    |    D    | Allen
 incidence             |   D   |    D    |   D   |   n/a   |    D    | Allen
 incidencebase         |   D   |    D    |   D   |   n/a   |    D    | Allen

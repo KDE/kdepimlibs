@@ -51,7 +51,8 @@ class KCAL_EXPORT FileStorage : public CalStorage
       @param fileName is the name of the disk file containing the Calendar data.
       @param format is a pointer to a valid CalFormat object that specifies
       the calendar format to be used. FileStorage takes ownership; i.e., the
-      memory for @p format is deleted by this destructor.
+      memory for @p format is deleted by this destructor. If no format is
+      specified, then iCalendar format is assumed.
     */
     explicit FileStorage( Calendar *calendar,
                           const QString &fileName = QString(),
