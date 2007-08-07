@@ -179,68 +179,62 @@ void BlogPosting::setAbbreviatedContent( const QString &abbreviatedContent )
 
 KUrl BlogPosting::link() const
 {
-  //TODO
-  return KUrl();
+  return d_ptr->mLink;
 }
 
 void BlogPosting::setLink( const KUrl &link ) const
 {
-  //TODO
+  d_ptr->mLink = link;
 }
 
-KUrl BlogPosting::permalink() const
+KUrl BlogPosting::permaLink() const
 {
-  //TODO
-  return KUrl();
+  return d_ptr->mPermaLink;
 }
 
-void BlogPosting::setPermalink( const KUrl &permalink ) const
+void BlogPosting::setPermaLink( const KUrl &permalink ) const
 {
-  //TODO
+  d_ptr->mPermaLink = permalink;
 }
 
 bool BlogPosting::isCommentAllowed() const
 {
-  //TODO
-  return false;
+  return d_ptr->mCommentAllowed;
 }
 
 void BlogPosting::setCommentAllowed( bool commentAllowed )
 {
-  //TODO
+  d_ptr->mCommentAllowed = commentAllowed;
 }
 
 bool BlogPosting::isTrackBackAllowed() const
 {
-  //TODO
-  return false;
+  return d_ptr->mCommentAllowed;
 }
 
 void BlogPosting::setTrackBackAllowed ( bool allowTrackBacks )
 {
-  //TODO
+  d_ptr->mTrackBackAllowed = allowTrackBacks;
 }
 
 QString BlogPosting::summary() const
 {
-  //TODO
-  return QString();
+  return d_ptr->mSummary;
 }
 
 void BlogPosting::setSummary( const QString &summary )
 {
-  //TODO
+  d_ptr->mSummary = summary;
 }
 
 QString BlogPosting::tags() const
 {
-  //TODO
-  return QString();
+  return d_ptr->mTags;
 }
 
 void BlogPosting::setTags( const QString &tags )
 {
-  //TODO
+  d_ptr->mTags = tags;
 }
 
 QList<KUrl> BlogPosting::trackBackUrls() const

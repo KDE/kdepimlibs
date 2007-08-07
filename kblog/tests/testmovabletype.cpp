@@ -102,6 +102,8 @@ void TestMovableType::dumpPosting( const BlogPosting* posting )
   qDebug() << "# allowComment: " << posting->isCommentAllowed();
   qDebug() << "# summary: " << posting->summary();
   qDebug() << "# tags: " << posting->tags();
+  qDebug() << "# link: " << posting->link().url();
+  qDebug() << "# permalink: " << posting->permaLink().url();
   switch ( posting->status() ){
     case BlogPosting::New:
       qDebug() << "# status: New"; break;

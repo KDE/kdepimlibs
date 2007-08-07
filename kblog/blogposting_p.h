@@ -24,9 +24,9 @@
 
 #include "blogposting.h"
 
-#include <KDateTime>
-
-#include <QStringList>
+#include <QtCore/QStringList>
+#include <kdatetime.h>
+#include <kurl.h>
 
 namespace KBlog{
 
@@ -41,6 +41,11 @@ class BlogPostingPrivate
     QStringList mCategories;
     QString mError;
     QString mJournalId;
+    QString mSummary;
+    QString mTags;
+    bool mCommentAllowed;
+    bool mTrackBackAllowed;
+    KUrl mLink, mPermaLink;
     BlogPosting::Status mStatus;
     KDateTime mCreationDateTime;
     KDateTime mModificationDateTime;

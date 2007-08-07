@@ -104,7 +104,7 @@ void MovableType::modifyPosting( KBlog::BlogPosting *posting )
   map["mt_allow_comments"] = (int)posting->isCommentAllowed();
   map["mt_allow_pings"] = (int)posting->isTrackBackAllowed();
   map["mt_excerpt"] = posting->summary();
-  map["mt_keywords"] = posting->tags(); // TODO some convertion needed?
+  map["mt_keywords"] = posting->tags(); // TODO some conversion needed?
   args << map;
   args << QVariant( posting->isPublished() );
   d->mXmlRpcClient->call(
@@ -225,6 +225,8 @@ bool MovableTypePrivate::readPostingFromMap(
   post->setTrackBackAllowed( (bool)postInfo["mt_allow_pings"].toInt() );
   post->setSummary( postInfo["mt_excerpt"].toString() );
   post->setTags( postInfo["mt_keywords"].toString() );
+  post->setLink( postInfo["link"].toString() );
+  post->setPermaLink( postInfo["permaLink"].toString() );
 
   if ( !categories.isEmpty() ){
     kDebug(5323) << "Categories:" << categories;

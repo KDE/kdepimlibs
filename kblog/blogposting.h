@@ -167,8 +167,8 @@ public:
     KUrl link() const;
     void setLink( const KUrl &link ) const;
 
-    KUrl permalink() const;
-    void setPermalink( const KUrl &permalink ) const;
+    KUrl permaLink() const;
+    void setPermaLink( const KUrl &permalink ) const;
 
     bool isCommentAllowed() const;
     void setCommentAllowed( bool commentAllowed );

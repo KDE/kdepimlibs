@@ -109,7 +109,7 @@ void testBlogPosting::testValidity()
     p.setPublished( isPublished );
     p.setAbbreviatedContent( abbreviatedContent );
     p.setLink( link );
-    p.setPermalink( permalink );
+    p.setPermaLink( permalink );
     p.setCommentAllowed( isCommentAllowed );
     p.setTrackBackAllowed( isTrackBackAllowed );
     p.setSummary( summary );
@@ -130,7 +130,7 @@ void testBlogPosting::testValidity()
     QCOMPARE(p.isPublished(), isPublished );
     QCOMPARE(p.abbreviatedContent(), abbreviatedContent );
     QCOMPARE(p.link(), link );
-    QCOMPARE(p.permalink(), permalink );
+    QCOMPARE(p.permaLink(), permalink );
     QCOMPARE(p.isCommentAllowed(), isCommentAllowed );
     QCOMPARE(p.isTrackBackAllowed(), isTrackBackAllowed );
     QCOMPARE(p.summary(), summary );
