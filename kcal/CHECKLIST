@@ -2,7 +2,7 @@ Legend:  D=Done, X=Keep Off!, n/a=Not Applicable
 
 File                  | Krazy | Doxygen | D-Ptr | UnitTst | Qt4Port | Who
 ===============================================================================
-calendarresources     |   D   |         |       |         |    D    | Allen
+calendarresources     |   D   |    D    |       |         |    D    | Allen
 compat                |       |         |   D   |         |    D    |
 confirmsavedialog     |       |         |       |         |    D    |
 customproperties      |       |         |   D   |         |    D    |
