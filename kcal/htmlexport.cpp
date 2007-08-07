@@ -1,47 +1,45 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #include "htmlexport.h"
 #include "htmlexportsettings.h"
-
 #include "calendar.h"
 #include "event.h"
-#include "htmlexportsettings.h"
 #include "todo.h"
 #ifndef KORG_NOKABC
  #include "kabc/stdaddressbook.h"
 #endif
 
-#include <QtGui/QApplication>
+#include <kglobal.h>
+#include <klocale.h>
+#include <kdebug.h>
+#include <kcalendarsystem.h>
+
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QtCore/QTextCodec>
 #include <QtCore/QRegExp>
 #include <QtCore/QMap>
-
-#include <kglobal.h>
-#include <klocale.h>
-#include <kdebug.h>
-#include <kcalendarsystem.h>
+#include <QtGui/QApplication>
 
 using namespace KCal;
 
@@ -60,9 +58,8 @@ class KCal::HtmlExport::Private
     QMap<QDate,QString> mHolidayMap;
 };
 
-
-HtmlExport::HtmlExport( Calendar *calendar, HTMLExportSettings *settings ) :
-  d( new Private( calendar, settings ) )
+HtmlExport::HtmlExport( Calendar *calendar, HTMLExportSettings *settings )
+  : d( new Private( calendar, settings ) )
 {
 }
 
@@ -81,18 +78,20 @@ bool HtmlExport::save( const QString &fileName )
     return false;
   }
   QFile f( fileName );
-  if ( !f.open(QIODevice::WriteOnly)) {
+  if ( !f.open( QIODevice::WriteOnly ) ) {
     return false;
   }
-  QTextStream ts(&f);
-  bool success = save(&ts);
+  QTextStream ts( &f );
+  bool success = save( &ts );
   f.close();
   return success;
 }
 
-bool HtmlExport::save(QTextStream *ts)
+bool HtmlExport::save( QTextStream *ts )
 {
-  if ( !d->mSettings ) return false;
+  if ( !d->mSettings ) {
+    return false;
+  }
   ts->setCodec( "UTF-8" );
 
   // Write HTML header
@@ -102,8 +101,9 @@ bool HtmlExport::save(QTextStream *ts)
   *ts << "<html><head>" << endl;
   *ts << "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=";
   *ts << "UTF-8\" />\n";
-  if ( !d->mSettings->pageTitle().isEmpty())
+  if ( !d->mSettings->pageTitle().isEmpty() ) {
     *ts << "  <title>" << d->mSettings->pageTitle() << "</title>\n";
+  }
   *ts << "  <style type=\"text/css\">\n";
   *ts << styleSheet();
   *ts << "  </style>\n";
@@ -113,39 +113,46 @@ bool HtmlExport::save(QTextStream *ts)
   // (Heading, Calendar-Owner, Calendar-Date, ...)
 
   if ( d->mSettings->eventView() || d->mSettings->monthView() || d->mSettings->weekView() ) {
-    if (!d->mSettings->eventTitle().isEmpty())
+    if ( !d->mSettings->eventTitle().isEmpty() ) {
       *ts << "<h1>" << d->mSettings->eventTitle() << "</h1>\n";
+    }
 
     // Write Week View
-    if ( d->mSettings->weekView() )
+    if ( d->mSettings->weekView() ) {
       createWeekView( ts );
+    }
     // Write Month View
-    if ( d->mSettings->monthView() )
+    if ( d->mSettings->monthView() ) {
       createMonthView( ts );
+    }
     // Write Event List
-    if ( d->mSettings->eventView() )
+    if ( d->mSettings->eventView() ) {
       createEventList( ts );
+    }
   }
 
   // Write Todo List
   if ( d->mSettings->todoView() ) {
-    if ( !d->mSettings->todoListTitle().isEmpty())
+    if ( !d->mSettings->todoListTitle().isEmpty() ) {
       *ts << "<h1>" << d->mSettings->todoListTitle() << "</h1>\n";
-    createTodoList(ts);
+    }
+    createTodoList( ts );
   }
 
   // Write Journals
   if ( d->mSettings->journalView() ) {
-    if ( !d->mSettings->journalTitle().isEmpty())
+    if ( !d->mSettings->journalTitle().isEmpty() ) {
       *ts << "<h1>" << d->mSettings->journalTitle() << "</h1>\n";
-    createJournalView(ts);
+    }
+    createJournalView( ts );
   }
 
   // Write Free/Busy
   if ( d->mSettings->freeBusyView() ) {
-    if ( !d->mSettings->freeBusyTitle().isEmpty())
+    if ( !d->mSettings->freeBusyTitle().isEmpty() ) {
       *ts << "<h1>" << d->mSettings->freeBusyTitle() << "</h1>\n";
-    createFreeBusyView(ts);
+    }
+    createFreeBusyView( ts );
   }
 
   createFooter( ts );
@@ -156,7 +163,7 @@ bool HtmlExport::save(QTextStream *ts)
   return true;
 }
 
-void HtmlExport::createMonthView(QTextStream *ts)
+void HtmlExport::createMonthView( QTextStream *ts )
 {
   QDate start = fromDate();
   start.setYMD( start.year(), start.month(), 1 );  // go back to first day in month
@@ -168,39 +175,41 @@ void HtmlExport::createMonthView(QTextStream *ts)
 
   while ( start < toDate() ) {
     // Write header
-    *ts << "<h2>" << (i18nc("month_year","%1 %2", KGlobal::locale()->calendar()->monthName(start),
-         start.year())) << "</h2>\n";
+    *ts << "<h2>"
+        << i18nc( "month_year", "%1 %2",
+                  KGlobal::locale()->calendar()->monthName( start ), start.year() )
+        << "</h2>\n";
     if ( KGlobal::locale()->weekStartDay() == 1 ) {
-      start = start.addDays(1 - start.dayOfWeek());
+      start = start.addDays( 1 - start.dayOfWeek() );
     } else {
-      if (start.dayOfWeek() != 7) {
-        start = start.addDays(-start.dayOfWeek());
+      if ( start.dayOfWeek() != 7 ) {
+        start = start.addDays( -start.dayOfWeek() );
       }
     }
     *ts << "<table border=\"1\">\n";
 
     // Write table header
     *ts << "  <tr>";
-    for(int i=0; i<7; ++i) {
+    for ( int i=0; i < 7; ++i ) {
       *ts << "<th>" << KGlobal::locale()->calendar()->weekDayName( start.addDays(i) ) << "</th>";
     }
     *ts << "</tr>\n";
 
     // Write days
-    while (start <= end) {
+    while ( start <= end ) {
       *ts << "  <tr>\n";
-      for(int i=0;i<7;++i) {
+      for ( int i=0; i < 7; ++i ) {
         *ts << "    <td valign=\"top\"><table border=\"0\">";
 
         *ts << "<tr><td ";
-        if (d->mHolidayMap.contains(start) || start.dayOfWeek() == 7) {
+        if ( d->mHolidayMap.contains( start ) || start.dayOfWeek() == 7 ) {
           *ts << "class=\"dateholiday\"";
         } else {
           *ts << "class=\"date\"";
         }
-        *ts << ">" << QString::number(start.day());
+        *ts << ">" << QString::number( start.day() );
 
-        if (d->mHolidayMap.contains(start)) {
+        if ( d->mHolidayMap.contains( start ) ) {
           *ts << " <em>" << d->mHolidayMap[start] << "</em>";
         }
 
@@ -209,10 +218,10 @@ void HtmlExport::createMonthView(QTextStream *ts)
         Event::List events = d->mCalendar->events( start, d->mCalendar->timeSpec(),
                                                    EventSortStartDate,
                                                    SortDirectionAscending );
-        if (events.count()) {
+        if ( events.count() ) {
           *ts << "<table>";
           Event::List::ConstIterator it;
-          for( it = events.begin(); it != events.end(); ++it ) {
+          for ( it = events.begin(); it != events.end(); ++it ) {
             if ( checkSecrecy( *it ) ) {
               createEvent( ts, *it, start, false );
             }
@@ -223,7 +232,7 @@ void HtmlExport::createMonthView(QTextStream *ts)
         }
 
         *ts << "</td></tr></table></td>\n";
-        start = start.addDays(1);
+        start = start.addDays( 1 );
       }
       *ts << "  </tr>\n";
     }
@@ -234,11 +243,11 @@ void HtmlExport::createMonthView(QTextStream *ts)
       startmonth = 1;
     }
     start.setYMD( startyear, startmonth, 1 );
-    end.setYMD(start.year(),start.month(),start.daysInMonth());
+    end.setYMD( start.year(), start.month(), start.daysInMonth() );
   }
 }
 
-void HtmlExport::createEventList (QTextStream *ts)
+void HtmlExport::createEventList( QTextStream *ts )
 {
   int columns = 3;
   *ts << "<table border=\"0\" cellpadding=\"3\" cellspacing=\"3\">\n";
@@ -247,15 +256,15 @@ void HtmlExport::createEventList (QTextStream *ts)
   *ts << "    <th>" << i18n("End Time") << "</th>\n";
   *ts << "    <th>" << i18n("Event") << "</th>\n";
   if ( d->mSettings->eventLocation() ) {
-    *ts << "    <th>" << i18n("Location") << "</th>\n";
+    *ts << "    <th>" << i18n( "Location" ) << "</th>\n";
     ++columns;
   }
   if ( d->mSettings->eventCategories() ) {
-    *ts << "    <th>" << i18n("Categories") << "</th>\n";
+    *ts << "    <th>" << i18n( "Categories" ) << "</th>\n";
     ++columns;
   }
   if ( d->mSettings->eventAttendees() ) {
-    *ts << "    <th>" << i18n("Attendees") << "</th>\n";
+    *ts << "    <th>" << i18n( "Attendees" ) << "</th>\n";
     ++columns;
   }
 
@@ -263,17 +272,17 @@ void HtmlExport::createEventList (QTextStream *ts)
 
   for ( QDate dt = fromDate(); dt <= toDate(); dt = dt.addDays(1) ) {
     kDebug(5800) << "Getting events for" << dt.toString();
-    Event::List events = d->mCalendar->events(dt, d->mCalendar->timeSpec(),
-                                              EventSortStartDate,
-                                              SortDirectionAscending );
-    if (events.count()) {
-      *ts << "  <tr><td colspan=\"" << QString::number(columns)
+    Event::List events = d->mCalendar->events( dt, d->mCalendar->timeSpec(),
+                                               EventSortStartDate,
+                                               SortDirectionAscending );
+    if ( events.count() ) {
+      *ts << "  <tr><td colspan=\"" << QString::number( columns )
           << "\" class=\"datehead\"><i>"
-          << KGlobal::locale()->formatDate(dt)
+          << KGlobal::locale()->formatDate( dt )
           << "</i></td></tr>\n";
 
       Event::List::ConstIterator it;
-      for( it = events.begin(); it != events.end(); ++it ) {
+      for ( it = events.begin(); it != events.end(); ++it ) {
         if ( checkSecrecy( *it ) ) {
           createEvent( ts, *it, dt );
         }
@@ -285,7 +294,7 @@ void HtmlExport::createEventList (QTextStream *ts)
 }
 
 void HtmlExport::createEvent ( QTextStream *ts, Event *event,
-                               QDate date,bool withDescription )
+                               QDate date, bool withDescription )
 {
   kDebug(5800) << "HtmlExport::createEvent():" << event->summary();
   *ts << "  <tr>\n";
@@ -294,19 +303,21 @@ void HtmlExport::createEvent ( QTextStream *ts, Event *event,
     if ( event->isMultiDay( d->mCalendar->timeSpec() ) && ( event->dtStart().date() != date ) ) {
       *ts << "    <td>&nbsp;</td>\n";
     } else {
-      *ts << "    <td valign=\"top\">" << event->dtStartTimeStr( true, d->mCalendar->timeSpec() ) << "</td>\n";
+      *ts << "    <td valign=\"top\">"
+          << event->dtStartTimeStr( true, d->mCalendar->timeSpec() ) << "</td>\n";
     }
     if ( event->isMultiDay( d->mCalendar->timeSpec() ) && ( event->dtEnd().date() != date ) ) {
       *ts << "    <td>&nbsp;</td>\n";
     } else {
-      *ts << "    <td valign=\"top\">" << event->dtEndTimeStr( true, d->mCalendar->timeSpec() ) << "</td>\n";
+      *ts << "    <td valign=\"top\">"
+          << event->dtEndTimeStr( true, d->mCalendar->timeSpec() ) << "</td>\n";
     }
   } else {
     *ts << "    <td>&nbsp;</td><td>&nbsp;</td>\n";
   }
 
   *ts << "    <td class=\"sum\">\n";
-  *ts << "      <b>" << cleanChars(event->summary()) << "</b>\n";
+  *ts << "      <b>" << cleanChars( event->summary() ) << "</b>\n";
   if ( withDescription && !event->description().isEmpty() ) {
     *ts << "      <p>" << breakString( cleanChars( event->description() ) ) << "</p>\n";
   }
@@ -342,7 +353,7 @@ void HtmlExport::createTodoList ( QTextStream *ts )
     Todo *ev = rawTodoList[ index ];
     Todo *subev = ev;
     if ( ev->relatedTo() ) {
-      if ( ev->relatedTo()->type()=="Todo" ) {
+      if ( ev->relatedTo()->type() == "Todo" ) {
         if ( !rawTodoList.contains( static_cast<Todo *>( ev->relatedTo() ) ) ) {
           rawTodoList.append( static_cast<Todo *>( ev->relatedTo() ) );
         }
@@ -357,17 +368,17 @@ void HtmlExport::createTodoList ( QTextStream *ts )
   Todo::List todoList;
   Todo::List::ConstIterator it;
   for ( int i = 1; i <= 9; ++i ) {
-    for( it = rawTodoList.begin(); it != rawTodoList.end(); ++it ) {
+    for ( it = rawTodoList.begin(); it != rawTodoList.end(); ++it ) {
       if ( (*it)->priority() == i && checkSecrecy( *it ) ) {
         todoList.append( *it );
       }
     }
   }
-  for( it = rawTodoList.begin(); it != rawTodoList.end(); ++it ) {
+  for ( it = rawTodoList.begin(); it != rawTodoList.end(); ++it ) {
     if ( (*it)->priority() == 0 && checkSecrecy( *it ) ) {
       todoList.append( *it );
     }
- }
+  }
 
   int columns = 3;
   *ts << "<table border=\"0\" cellpadding=\"3\" cellspacing=\"3\">\n";
@@ -380,35 +391,37 @@ void HtmlExport::createTodoList ( QTextStream *ts )
     ++columns;
   }
   if ( d->mSettings->taskLocation() ) {
-    *ts << "    <th>" << i18n("Location") << "</th>\n";
+    *ts << "    <th>" << i18n( "Location" ) << "</th>\n";
     ++columns;
   }
   if ( d->mSettings->taskCategories() ) {
-    *ts << "    <th>" << i18n("Categories") << "</th>\n";
+    *ts << "    <th>" << i18n( "Categories" ) << "</th>\n";
     ++columns;
   }
   if ( d->mSettings->taskAttendees() ) {
-    *ts << "    <th>" << i18n("Attendees") << "</th>\n";
+    *ts << "    <th>" << i18n( "Attendees" ) << "</th>\n";
     ++columns;
   }
   *ts << "  </tr>\n";
 
   // Create top-level list.
-  for( it = todoList.begin(); it != todoList.end(); ++it ) {
-    if ( !(*it)->relatedTo() ) createTodo( ts, *it );
+  for ( it = todoList.begin(); it != todoList.end(); ++it ) {
+    if ( !(*it)->relatedTo() ) {
+      createTodo( ts, *it );
+    }
   }
 
   // Create sub-level lists
-  for( it = todoList.begin(); it != todoList.end(); ++it ) {
+  for ( it = todoList.begin(); it != todoList.end(); ++it ) {
     Incidence::List relations = (*it)->relations();
-    if (relations.count()) {
+    if ( relations.count() ) {
       // Generate sub-task list of event ev
       *ts << "  <tr>\n";
       *ts << "    <td class=\"subhead\" colspan=";
       *ts << "\"" << QString::number(columns) << "\"";
       *ts << "><a name=\"sub" << (*it)->uid() << "\"></a>"
-          << i18n("Sub-Tasks of: ") << "<a href=\"#"
-          << (*it)->uid() << "\"><b>" << cleanChars( (*it)->summary())
+          << i18n( "Sub-Tasks of: " ) << "<a href=\"#"
+          << (*it)->uid() << "\"><b>" << cleanChars( (*it)->summary() )
           << "</b></a></td>\n";
       *ts << "  </tr>\n";
 
@@ -417,19 +430,23 @@ void HtmlExport::createTodoList ( QTextStream *ts )
       // replaced by a real sorting algorithm.
       for ( int i = 1; i <= 9; ++i ) {
         Incidence::List::ConstIterator it2;
-        for( it2 = relations.begin(); it2 != relations.end(); ++it2 ) {
+        for ( it2 = relations.begin(); it2 != relations.end(); ++it2 ) {
           Todo *ev3 = dynamic_cast<Todo *>( *it2 );
-          if ( ev3 && ev3->priority() == i ) sortedList.append( ev3 );
+          if ( ev3 && ev3->priority() == i ) {
+            sortedList.append( ev3 );
+          }
         }
       }
       Incidence::List::ConstIterator it2;
-      for( it2 = relations.begin(); it2 != relations.end(); ++it2 ) {
+      for ( it2 = relations.begin(); it2 != relations.end(); ++it2 ) {
         Todo *ev3 = dynamic_cast<Todo *>( *it2 );
-        if ( ev3 && ev3->priority() == 0 ) sortedList.append( ev3 );
+        if ( ev3 && ev3->priority() == 0 ) {
+          sortedList.append( ev3 );
+        }
       }
 
       Todo::List::ConstIterator it3;
-      for( it3 = sortedList.begin(); it3 != sortedList.end(); ++it3 ) {
+      for ( it3 = sortedList.begin(); it3 != sortedList.end(); ++it3 ) {
         createTodo( ts, *it3 );
       }
     }
@@ -438,7 +455,7 @@ void HtmlExport::createTodoList ( QTextStream *ts )
   *ts << "</table>\n";
 }
 
-void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
+void HtmlExport::createTodo( QTextStream *ts, Todo *todo )
 {
   kDebug(5800) << "HtmlExport::createTodo()";
 
@@ -451,33 +468,39 @@ void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
   if (completed) *ts << "done";
   *ts << "\">\n";
   *ts << "    <a name=\"" << todo->uid() << "\"></a>\n";
-  *ts << "    <b>" << cleanChars(todo->summary()) << "</b>\n";
-  if (!todo->description().isEmpty()) {
-    *ts << "    <p>" << breakString(cleanChars(todo->description())) << "</p>\n";
+  *ts << "    <b>" << cleanChars( todo->summary() ) << "</b>\n";
+  if ( !todo->description().isEmpty() ) {
+    *ts << "    <p>" << breakString( cleanChars( todo->description() ) ) << "</p>\n";
   }
-  if (relations.count()) {
+  if ( relations.count() ) {
     *ts << "    <div align=\"right\"><a href=\"#sub" << todo->uid()
         << "\">" << i18n("Sub-Tasks") << "</a></div>\n";
   }
   *ts << "  </td>\n";
 
   *ts << "  <td";
-  if (completed) *ts << " class=\"done\"";
+  if ( completed ) {
+    *ts << " class=\"done\"";
+  }
   *ts << ">\n";
   *ts << "    " << todo->priority() << "\n";
   *ts << "  </td>\n";
 
   *ts << "  <td";
-  if (completed) *ts << " class=\"done\"";
+  if ( completed ) {
+    *ts << " class=\"done\"";
+  }
   *ts << ">\n";
-  *ts << "    " << i18n("%1 %", todo->percentComplete()) << "\n";
+  *ts << "    " << i18n( "%1 %", todo->percentComplete() ) << "\n";
   *ts << "  </td>\n";
 
   if ( d->mSettings->taskDueDate() ) {
     *ts << "  <td";
-    if (completed) *ts << " class=\"done\"";
+    if ( completed ) {
+      *ts << " class=\"done\"";
+    }
     *ts << ">\n";
-    if (todo->hasDueDate()) {
+    if ( todo->hasDueDate() ) {
       *ts << "    " << todo->dtDueDateStr() << "\n";
     } else {
       *ts << "    &nbsp;\n";
@@ -487,25 +510,31 @@ void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
 
   if ( d->mSettings->taskLocation() ) {
     *ts << "  <td";
-    if (completed) *ts << " class=\"done\"";
+    if ( completed ) {
+      *ts << " class=\"done\"";
+    }
     *ts << ">\n";
-    formatLocation(ts,todo);
+    formatLocation( ts, todo );
     *ts << "  </td>\n";
   }
 
   if ( d->mSettings->taskCategories() ) {
     *ts << "  <td";
-    if (completed) *ts << " class=\"done\"";
+    if ( completed ) {
+      *ts << " class=\"done\"";
+    }
     *ts << ">\n";
-    formatCategories(ts,todo);
+    formatCategories( ts, todo );
     *ts << "  </td>\n";
   }
 
   if ( d->mSettings->taskAttendees() ) {
     *ts << "  <td";
-    if (completed) *ts << " class=\"done\"";
+    if ( completed ) {
+      *ts << " class=\"done\"";
+    }
     *ts << ">\n";
-    formatAttendees(ts,todo);
+    formatAttendees( ts, todo );
     *ts << "  </td>\n";
   }
 
@@ -547,19 +576,19 @@ bool HtmlExport::checkSecrecy( Incidence *incidence )
   return false;
 }
 
-void HtmlExport::formatLocation (QTextStream *ts,Incidence *event)
+void HtmlExport::formatLocation( QTextStream *ts, Incidence *event )
 {
-  if (!event->location().isEmpty()) {
-    *ts << "    " << cleanChars(event->location()) << "\n";
+  if ( !event->location().isEmpty() ) {
+    *ts << "    " << cleanChars( event->location() ) << "\n";
   } else {
     *ts << "    &nbsp;\n";
   }
 }
 
-void HtmlExport::formatCategories (QTextStream *ts,Incidence *event)
+void HtmlExport::formatCategories( QTextStream *ts, Incidence *event )
 {
-  if (!event->categoriesStr().isEmpty()) {
-    *ts << "    " << cleanChars(event->categoriesStr()) << "\n";
+  if ( !event->categoriesStr().isEmpty() ) {
+    *ts << "    " << cleanChars( event->categoriesStr() ) << "\n";
   } else {
     *ts << "    &nbsp;\n";
   }
@@ -568,31 +597,31 @@ void HtmlExport::formatCategories (QTextStream *ts,Incidence *event)
 void HtmlExport::formatAttendees( QTextStream *ts, Incidence *event )
 {
   Attendee::List attendees = event->attendees();
-  if (attendees.count()) {
+  if ( attendees.count() ) {
     *ts << "<em>";
 #ifndef KORG_NOKABC
     KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
     KABC::Addressee::List addressList;
-    addressList = add_book->findByEmail(event->organizer().email());
+    addressList = add_book->findByEmail( event->organizer().email() );
     KABC::Addressee o = addressList.first();
-    if (!o.isEmpty() && addressList.size()<2) {
+    if ( !o.isEmpty() && addressList.size() < 2 ) {
       *ts << "<a href=\"mailto:" << event->organizer().email() << "\">";
-      *ts << cleanChars(o.formattedName()) << "</a>\n";
+      *ts << cleanChars( o.formattedName() ) << "</a>\n";
+    } else {
+      *ts << event->organizer().fullName();
     }
-    else *ts << event->organizer().fullName();
 #else
     *ts << event->organizer().fullName();
 #endif
     *ts << "</em><br />";
     Attendee::List::ConstIterator it;
-    for( it = attendees.begin(); it != attendees.end(); ++it ) {
+    for ( it = attendees.begin(); it != attendees.end(); ++it ) {
       Attendee *a = *it;
-      if (!a->email().isEmpty()) {
+      if ( !a->email().isEmpty() ) {
         *ts << "<a href=\"mailto:" << a->email();
-        *ts << "\">" << cleanChars(a->name()) << "</a>";
-      }
-      else {
-        *ts << "    " << cleanChars(a->name());
+        *ts << "\">" << cleanChars( a->name() ) << "</a>";
+      } else {
+        *ts << "    " << cleanChars( a->name() );
       }
       *ts << "<br />" << "\n";
     }
@@ -601,20 +630,20 @@ void HtmlExport::formatAttendees( QTextStream *ts, Incidence *event )
   }
 }
 
-QString HtmlExport::breakString(const QString &text)
+QString HtmlExport::breakString( const QString &text )
 {
-  int number = text.count("\n");
-  if(number <= 0) {
+  int number = text.count( "\n" );
+  if ( number <= 0 ) {
     return text;
   } else {
     QString out;
     QString tmpText = text;
     int pos = 0;
     QString tmp;
-    for(int i=0;i<=number;i++) {
-      pos = tmpText.indexOf("\n");
-      tmp = tmpText.left(pos);
-      tmpText = tmpText.right(tmpText.length() - pos - 1);
+    for ( int i=0; i<=number; i++ ) {
+      pos = tmpText.indexOf( "\n" );
+      tmp = tmpText.left( pos );
+      tmpText = tmpText.right( tmpText.length() - pos - 1 );
       out += tmp + "<br />";
     }
     return out;
@@ -624,34 +653,37 @@ QString HtmlExport::breakString(const QString &text)
 void HtmlExport::createFooter( QTextStream *ts )
 {
   // FIXME: Implement this in a translatable way!
-  QString trailer = i18n("This page was created ");
+  QString trailer = i18n( "This page was created " );
 
 /*  bool hasPerson = false;
   bool hasCredit = false;
   bool hasCreditURL = false;
   QString mail, name, credit, creditURL;*/
-  if (!d->mSettings->eMail().isEmpty()) {
-    if (!d->mSettings->name().isEmpty())
-      trailer += i18n("by <a href=\"mailto:%1\">%2</a> ", d->mSettings->eMail(), d->mSettings->name() );
-    else
-      trailer += i18n("by <a href=\"mailto:%1\">%2</a> ", d->mSettings->eMail(), d->mSettings->eMail() );
+  if ( !d->mSettings->eMail().isEmpty() ) {
+    if ( !d->mSettings->name().isEmpty() ) {
+      trailer += i18n( "by <a href=\"mailto:%1\">%2</a> ",
+                       d->mSettings->eMail(), d->mSettings->name() );
+    } else {
+      trailer += i18n( "by <a href=\"mailto:%1\">%2</a> ",
+                       d->mSettings->eMail(), d->mSettings->eMail() );
+    }
   } else {
-    if (!d->mSettings->name().isEmpty())
-      trailer += i18n("by %1 ", d->mSettings->name() );
+    if ( !d->mSettings->name().isEmpty() ) {
+      trailer += i18n( "by %1 ", d->mSettings->name() );
+    }
   }
-  if (!d->mSettings->creditName().isEmpty()) {
-    if (!d->mSettings->creditURL().isEmpty())
-      trailer += i18n("with <a href=\"%1\">%2</a>",
-                       d->mSettings->creditURL() ,
-                       d->mSettings->creditName() );
-    else
-      trailer += i18n("with %1", d->mSettings->creditName() );
+  if ( !d->mSettings->creditName().isEmpty() ) {
+    if ( !d->mSettings->creditURL().isEmpty() ) {
+      trailer += i18n( "with <a href=\"%1\">%2</a>",
+                       d->mSettings->creditURL(), d->mSettings->creditName() );
+    } else {
+      trailer += i18n( "with %1", d->mSettings->creditName() );
+    }
   }
   *ts << "<p>" << trailer << "</p>\n";
 }
 
-
-QString cleanChars(const QString &text)
+QString cleanChars( const QString &text )
 {
   QString txt = text;
   txt = txt.replace( "&", "&amp;" );
@@ -673,8 +705,9 @@ QString cleanChars(const QString &text)
 
 QString HtmlExport::styleSheet() const
 {
-  if ( !d->mSettings->styleSheet().isEmpty() )
+  if ( !d->mSettings->styleSheet().isEmpty() ) {
     return d->mSettings->styleSheet();
+  }
 
   QString css;
 
@@ -705,8 +738,7 @@ QString HtmlExport::styleSheet() const
   return css;
 }
 
-
-void HtmlExport::addHoliday( const QDate &date, const QString &name)
+void HtmlExport::addHoliday( const QDate &date, const QString &name )
 {
   if ( d->mHolidayMap[date].isEmpty() ) {
     d->mHolidayMap[date] = name;
