@@ -112,7 +112,10 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       Return true if a save operation is still in progress, otherwise return
       false.
     */
-    virtual bool isSaving() { return false; }
+    virtual bool isSaving()
+    {
+      return false;
+    }
 
     /**
       Inhibit or allow saves, overriding the save policy set by setSavePolicy().
@@ -403,17 +406,27 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       In most cases, resources do not have subresources, so this is
       by default just empty.
     */
-    virtual QStringList subresources() const { return QStringList(); }
+    virtual QStringList subresources() const
+    {
+      return QStringList();
+    }
 
     /**
      * Is this resource capable of having subresources or not?
      */
-    virtual bool canHaveSubresources() const { return false; }
+    virtual bool canHaveSubresources() const
+    {
+      return false;
+    }
 
     /**
       Is this subresource active or not?
     */
-    virtual bool subresourceActive( const QString &resource ) const { return true; }
+    virtual bool subresourceActive( const QString &resource ) const
+    {
+      Q_UNUSED( resource );
+      return true;
+    }
 
     /**
       What is the label for this subresource?
