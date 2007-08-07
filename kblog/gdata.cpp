@@ -192,7 +192,7 @@ void GData::modifyPosting( KBlog::BlogPosting* posting )
     kDebug() << "modifyPosting()";
     if ( !d->authenticate() ){
       kDebug(5323) << "Authentication failed.";
-      emit error( Atom, "Authentication failed." );
+      emit error( Atom, i18n( "Authentication failed." ), posting );
       return;
     }
 
@@ -252,7 +252,7 @@ void GData::createPosting( KBlog::BlogPosting* posting )
     kDebug() << "createPosting()";
     if ( !d->authenticate() ){
       kDebug(5323) << "Authentication failed.";
-      emit error( Atom, "Authentication failed." );
+      emit error( Atom, i18n( "Authentication failed." ), posting );
       return;
     }
 
@@ -305,7 +305,7 @@ void GData::removePosting( KBlog::BlogPosting *posting )
     kDebug() << "removePosting()";
     if ( !d->authenticate() ){
       kDebug(5323) << "Authentication failed.";
-      emit error( Atom, "Authentication failed." );
+      emit error( Atom, i18n( "Authentication failed." ), posting );
       return;
     }
 
@@ -339,7 +339,7 @@ void GData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingCommen
   Q_D(GData);
     if ( !d->authenticate() ){
       kDebug(5323) << "Authentication failed.";
-      emit error( Atom, "Authentication failed." );
+      emit error( Atom, i18n( "Authentication failed." ), posting, comment );
       return;
     }
   QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
@@ -382,7 +382,7 @@ void GData::removeComment( KBlog::BlogPosting *posting, KBlog::BlogPostingCommen
     kDebug() << "removeComment()";
     if ( !d->authenticate() ){
       kDebug(5323) << "Authentication failed.";
-      emit error( Atom, "Authentication failed." );
+      emit error( Atom, i18n( "Authentication failed." ), posting, comment );
       return;
     }
 
@@ -524,13 +524,14 @@ void GDataPrivate::slotListComments(
     Syndication::ErrorCode status )
 {
   Q_Q(GData);
-  Q_UNUSED( loader );
+  BlogPosting* posting = mListCommentsMap[ loader ];
+  mListCommentsMap.remove( loader );
 
   if (status != Syndication::Success){
-    emit q->error( GData::Atom, i18n( "Could not get comments." ) );
+    emit q->error( GData::Atom, i18n( "Could not get comments." ), posting );
     return;
   }
-  BlogPosting* posting = mListCommentsMap[ loader ];
+
   QList<KBlog::BlogPostingComment> commentList;
 
   QList<Syndication::ItemPtr> items = feed->items();
@@ -548,7 +549,6 @@ void GDataPrivate::slotListComments(
       else {
         comment.setCommentId( rx.cap(1) );
       }
-
       kDebug(5323)<<"QRegExp rx( 'post-(\\d+)' matches"<< rx.cap(1);
       comment.setTitle( ( *it )->title() );
       comment.setContent( ( *it )->content() );
@@ -865,7 +865,7 @@ void GDataPrivate::slotCreateComment( KJob *job )
 
   if ( job->error() != 0 ) {
     kDebug(5323) << "slotCreateComment error:" << job->errorString();
-    emit q->error( GData::Atom, job->errorString() );
+    emit q->error( GData::Atom, job->errorString(), posting, comment );
     return;
   }
 
@@ -923,7 +923,7 @@ void GDataPrivate::slotRemoveComment( KJob *job )
 
   if ( job->error() != 0 ) {
     kDebug(5323) << "slotRemoveComment error:" << job->errorString();
-    emit q->error( GData::Atom, job->errorString() );
+    emit q->error( GData::Atom, job->errorString(), posting, comment );
     return;
   }
 
