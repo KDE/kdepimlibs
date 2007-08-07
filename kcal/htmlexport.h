@@ -58,7 +58,7 @@ class KCAL_EXPORT HtmlExport
     /**
       Writes out calendar to text stream.
     */
-    bool save( QTextStream * );
+    bool save( QTextStream *ts );
 
     void addHoliday( const QDate &date, const QString &name );
 
@@ -75,11 +75,11 @@ class KCAL_EXPORT HtmlExport
                       bool withDescription = true );
     void createFooter( QTextStream *ts );
 
-    bool checkSecrecy( Incidence * );
+    bool checkSecrecy( Incidence *incidence );
 
-    void formatLocation( QTextStream *ts, Incidence *event );
-    void formatCategories( QTextStream *ts, Incidence *event );
-    void formatAttendees( QTextStream *ts, Incidence *event );
+    void formatLocation( QTextStream *ts, Incidence *incidence );
+    void formatCategories( QTextStream *ts, Incidence *incidence );
+    void formatAttendees( QTextStream *ts, Incidence *incidence );
 
     QString breakString( const QString &text );
 

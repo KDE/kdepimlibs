@@ -252,9 +252,9 @@ void HtmlExport::createEventList( QTextStream *ts )
   int columns = 3;
   *ts << "<table border=\"0\" cellpadding=\"3\" cellspacing=\"3\">\n";
   *ts << "  <tr>\n";
-  *ts << "    <th class=\"sum\">" << i18n("Start Time") << "</th>\n";
-  *ts << "    <th>" << i18n("End Time") << "</th>\n";
-  *ts << "    <th>" << i18n("Event") << "</th>\n";
+  *ts << "    <th class=\"sum\">" << i18n( "Start Time" ) << "</th>\n";
+  *ts << "    <th>" << i18n( "End Time" ) << "</th>\n";
+  *ts << "    <th>" << i18n( "Event" ) << "</th>\n";
   if ( d->mSettings->eventLocation() ) {
     *ts << "    <th>" << i18n( "Location" ) << "</th>\n";
     ++columns;
@@ -383,11 +383,11 @@ void HtmlExport::createTodoList ( QTextStream *ts )
   int columns = 3;
   *ts << "<table border=\"0\" cellpadding=\"3\" cellspacing=\"3\">\n";
   *ts << "  <tr>\n";
-  *ts << "    <th class=\"sum\">" << i18n("Task") << "</th>\n";
-  *ts << "    <th>" << i18n("Priority") << "</th>\n";
-  *ts << "    <th>" << i18n("Completed") << "</th>\n";
+  *ts << "    <th class=\"sum\">" << i18n( "Task" ) << "</th>\n";
+  *ts << "    <th>" << i18n( "Priority" ) << "</th>\n";
+  *ts << "    <th>" << i18n( "Completed" ) << "</th>\n";
   if ( d->mSettings->taskDueDate() ) {
-    *ts << "    <th>" << i18n("Due Date") << "</th>\n";
+    *ts << "    <th>" << i18n( "Due Date" ) << "</th>\n";
     ++columns;
   }
   if ( d->mSettings->taskLocation() ) {
@@ -415,7 +415,7 @@ void HtmlExport::createTodoList ( QTextStream *ts )
   for ( it = todoList.begin(); it != todoList.end(); ++it ) {
     Incidence::List relations = (*it)->relations();
     if ( relations.count() ) {
-      // Generate sub-task list of event ev
+      // Generate sub-task list
       *ts << "  <tr>\n";
       *ts << "    <td class=\"subhead\" colspan=";
       *ts << "\"" << QString::number(columns) << "\"";
@@ -474,7 +474,7 @@ void HtmlExport::createTodo( QTextStream *ts, Todo *todo )
   }
   if ( relations.count() ) {
     *ts << "    <div align=\"right\"><a href=\"#sub" << todo->uid()
-        << "\">" << i18n("Sub-Tasks") << "</a></div>\n";
+        << "\">" << i18n( "Sub-Tasks" ) << "</a></div>\n";
   }
   *ts << "  </td>\n";
 
@@ -576,42 +576,42 @@ bool HtmlExport::checkSecrecy( Incidence *incidence )
   return false;
 }
 
-void HtmlExport::formatLocation( QTextStream *ts, Incidence *event )
+void HtmlExport::formatLocation( QTextStream *ts, Incidence *incidence )
 {
-  if ( !event->location().isEmpty() ) {
-    *ts << "    " << cleanChars( event->location() ) << "\n";
+  if ( !incidence->location().isEmpty() ) {
+    *ts << "    " << cleanChars( incidence->location() ) << "\n";
   } else {
     *ts << "    &nbsp;\n";
   }
 }
 
-void HtmlExport::formatCategories( QTextStream *ts, Incidence *event )
+void HtmlExport::formatCategories( QTextStream *ts, Incidence *incidence )
 {
-  if ( !event->categoriesStr().isEmpty() ) {
-    *ts << "    " << cleanChars( event->categoriesStr() ) << "\n";
+  if ( !incidence->categoriesStr().isEmpty() ) {
+    *ts << "    " << cleanChars( incidence->categoriesStr() ) << "\n";
   } else {
     *ts << "    &nbsp;\n";
   }
 }
 
-void HtmlExport::formatAttendees( QTextStream *ts, Incidence *event )
+void HtmlExport::formatAttendees( QTextStream *ts, Incidence *incidence )
 {
-  Attendee::List attendees = event->attendees();
+  Attendee::List attendees = incidence->attendees();
   if ( attendees.count() ) {
     *ts << "<em>";
 #ifndef KORG_NOKABC
     KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
     KABC::Addressee::List addressList;
-    addressList = add_book->findByEmail( event->organizer().email() );
+    addressList = add_book->findByEmail( incidence->organizer().email() );
     KABC::Addressee o = addressList.first();
     if ( !o.isEmpty() && addressList.size() < 2 ) {
-      *ts << "<a href=\"mailto:" << event->organizer().email() << "\">";
+      *ts << "<a href=\"mailto:" << incidence->organizer().email() << "\">";
       *ts << cleanChars( o.formattedName() ) << "</a>\n";
     } else {
-      *ts << event->organizer().fullName();
+      *ts << incidence->organizer().fullName();
     }
 #else
-    *ts << event->organizer().fullName();
+    *ts << incidence->organizer().fullName();
 #endif
     *ts << "</em><br />";
     Attendee::List::ConstIterator it;
