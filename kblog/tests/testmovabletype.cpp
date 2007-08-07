@@ -94,7 +94,7 @@ void TestMovableType::dumpPosting( const BlogPosting* posting )
   qDebug() << "# postingId: " << posting->postingId();
   qDebug() << "# title: " << posting->title();
   qDebug() << "# content: " << posting->content();
-  qDebug() << "# publish: " << posting->isPrivate();
+  qDebug() << "# private: " << posting->isPrivate();
   qDebug() << "# categories: " << posting->categories().join( " " );
   qDebug() << "# error: " << posting->error();
   qDebug() << "# journalId: " << posting->journalId();
