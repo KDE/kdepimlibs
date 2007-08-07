@@ -21,7 +21,7 @@
 
 #include "data.h"
 
-#include "kblog/metaweblog.h"
+#include "kblog/movabletype.h"
 #include "kblog/blogposting.h"
 #include "kblog/blogmedia.h"
 
@@ -37,7 +37,7 @@
 
 using namespace KBlog;
 
-class TestMetaWeblog : public QObject
+class TestMovableType : public QObject
 {
   Q_OBJECT
 
@@ -58,7 +58,7 @@ class TestMetaWeblog : public QObject
     void testNetwork();
   private:
     void dumpPosting( const KBlog::BlogPosting* );
-    KBlog::MetaWeblog *b;
+    KBlog::MovableType *b;
     KBlog::BlogPosting *p;
     QEventLoop *eventLoop;
     QTimer *fetchUserInfoTimer;
@@ -71,7 +71,7 @@ class TestMetaWeblog : public QObject
     QTimer *removePostingTimer;
 };
 
-class TestMetaWeblogWarnings : public QObject
+class TestMovableTypeWarnings : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
@@ -86,9 +86,9 @@ class TestMetaWeblogWarnings : public QObject
 
 };
 
-#include "testmetaweblog.moc"
+#include "testmovabletype.moc"
 
-void TestMetaWeblog::dumpPosting( const BlogPosting* posting )
+void TestMovableType::dumpPosting( const BlogPosting* posting )
 {
   qDebug() << "########### posting ############";
   qDebug() << "# postingId: " << posting->postingId();
@@ -121,7 +121,7 @@ void TestMetaWeblog::dumpPosting( const BlogPosting* posting )
 
 // the chain starts here
 
-void TestMetaWeblog::fetchUserInfo( const QMap<QString,QString>& userInfo )
+void TestMovableType::fetchUserInfo( const QMap<QString,QString>& userInfo )
 {
   fetchUserInfoTimer->stop();
   qDebug() << "########### fetchUserInfo ###########";
@@ -139,7 +139,7 @@ void TestMetaWeblog::fetchUserInfo( const QMap<QString,QString>& userInfo )
   listBlogsTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::listBlogs( const QMap<QString,QString>& listedBlogs )
+void TestMovableType::listBlogs( const QMap<QString,QString>& listedBlogs )
 {
   listBlogsTimer->stop();
   QList<QString> keys = listedBlogs.keys();
@@ -157,7 +157,7 @@ void TestMetaWeblog::listBlogs( const QMap<QString,QString>& listedBlogs )
   listRecentPostingsTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::listRecentPostings( 
+void TestMovableType::listRecentPostings( 
            const QList<KBlog::BlogPosting>& postings )
 {
   listRecentPostingsTimer->stop();
@@ -175,7 +175,7 @@ void TestMetaWeblog::listRecentPostings(
   listCategoriesTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::listCategories( 
+void TestMovableType::listCategories( 
            const QMap<QString,QMap<QString,QString> >& categories )
 {
   listRecentPostingsTimer->stop();
@@ -194,7 +194,7 @@ void TestMetaWeblog::listCategories(
   createPostingTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::createPosting( KBlog::BlogPosting *posting )
+void TestMovableType::createPosting( KBlog::BlogPosting *posting )
 {
   createPostingTimer->stop();
   qDebug() << "########### createPosting ############";
@@ -209,7 +209,7 @@ void TestMetaWeblog::createPosting( KBlog::BlogPosting *posting )
   modifyPostingTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
+void TestMovableType::modifyPosting( KBlog::BlogPosting *posting )
 {
   modifyPostingTimer->stop();
   qDebug() << "########### modifyPosting ############";
@@ -219,12 +219,12 @@ void TestMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 
   connect( b, SIGNAL( fetchedPosting( KBlog::BlogPosting* ) ),
            this, SLOT( fetchPosting( KBlog::BlogPosting* ) ) );
-  p->setContent( "TestMetaWeblog: created content." );
+  p->setContent( "TestMovableType: created content." );
   b->fetchPosting( p );
   fetchPostingTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
+void TestMovableType::fetchPosting( KBlog::BlogPosting *posting )
 {
   fetchPostingTimer->stop();
   qDebug() << "########### fetchPosting ############";
@@ -239,7 +239,7 @@ void TestMetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
   removePostingTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::removePosting( KBlog::BlogPosting *posting )
+void TestMovableType::removePosting( KBlog::BlogPosting *posting )
 {
   removePostingTimer->stop();
   qDebug() << "########### removePosting ###########";
@@ -249,7 +249,7 @@ void TestMetaWeblog::removePosting( KBlog::BlogPosting *posting )
   eventLoop->quit();
 }
 
-void TestMetaWeblog::error( KBlog::Blog::ErrorType type, const QString &errStr,
+void TestMovableType::error( KBlog::Blog::ErrorType type, const QString &errStr,
         KBlog::BlogPosting* posting )
 {
   qDebug() << "############ error #############";
@@ -268,52 +268,52 @@ void TestMetaWeblog::error( KBlog::Blog::ErrorType type, const QString &errStr,
 
 // Warnings for Timouts:
 
-void TestMetaWeblogWarnings::fetchUserInfoTimeoutWarning()
+void TestMovableTypeWarnings::fetchUserInfoTimeoutWarning()
 {
   QWARN( "fetchUserInfo() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::listBlogsTimeoutWarning()
+void TestMovableTypeWarnings::listBlogsTimeoutWarning()
 {
   QWARN( "listBlogs()  timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::listRecentPostingsTimeoutWarning()
+void TestMovableTypeWarnings::listRecentPostingsTimeoutWarning()
 {
   QWARN( "listRecentPostings() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::listCategoriesTimeoutWarning()
+void TestMovableTypeWarnings::listCategoriesTimeoutWarning()
 {
   QWARN( "listCategories() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::fetchPostingTimeoutWarning()
+void TestMovableTypeWarnings::fetchPostingTimeoutWarning()
 {
   QWARN( "fetchPosting() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::modifyPostingTimeoutWarning()
+void TestMovableTypeWarnings::modifyPostingTimeoutWarning()
 {
   QWARN( "modifyPosting() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::createPostingTimeoutWarning()
+void TestMovableTypeWarnings::createPostingTimeoutWarning()
 {
   QWARN( "createPosting() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::removePostingTimeoutWarning()
+void TestMovableTypeWarnings::removePostingTimeoutWarning()
 {
   QWARN( "removePosting() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblog::testValidity()
+void TestMovableType::testValidity()
 {
   eventLoop = new QEventLoop( this );
 
   // no need to delete later ;-):
-  b = new MetaWeblog( KUrl( "http://wrong.url.org/somegateway" ) );
+  b = new MovableType( KUrl( "http://wrong.url.org/somegateway" ) );
   QVERIFY( b->url() == KUrl( "http://wrong.url.org/somegateway" ) );
   KTimeZone mTimeZone( KTimeZone( "UTC" ) );
   b->setUrl( mUrl );
@@ -325,11 +325,11 @@ void TestMetaWeblog::testValidity()
   QVERIFY( b->blogId() == mBlogId );
   QVERIFY( b->username() == mUsername );
   QVERIFY( b->password() == mPassword );
-  QVERIFY( b->interfaceName() == "MetaWeblog" );
+  QVERIFY( b->interfaceName() == "MovableType" );
   QVERIFY( b->timeZone().name() == mTimeZone.name() );
 }
 
-void TestMetaWeblog::testNetwork()
+void TestMovableType::testNetwork()
 {
   KDateTime mCDateTime( mCreationDateTime );
   KDateTime mMDateTime( mModificationDateTime );
@@ -342,17 +342,17 @@ void TestMetaWeblog::testNetwork()
   p->setModificationDateTime( mMDateTime );
 
   BlogMedia *m = new BlogMedia();
-  m->setName( "testmetaweblog.txt" );
+  m->setName( "testMovableType.txt" );
   m->setMimetype( "text/plain" );
   m->setData( QString( "YTM0NZomIzI2OTsmIzM0NTueYQ==" ).toAscii() );
   QVERIFY( m->mimetype() == "text/plain" );
   QVERIFY( m->data() == QString( "YTM0NZomIzI2OTsmIzM0NTueYQ==" ).toAscii() );
-  QVERIFY( m->name() == QString( "testmetaweblog.txt" ) );
+  QVERIFY( m->name() == QString( "testMovableType.txt" ) );
 
   connect( b, SIGNAL( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPosting* ) ),
            this, SLOT( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPosting* ) ) );
 
-  TestMetaWeblogWarnings *warnings = new TestMetaWeblogWarnings();
+  TestMovableTypeWarnings *warnings = new TestMovableTypeWarnings();
 
   fetchUserInfoTimer = new QTimer( this );
   fetchUserInfoTimer->setSingleShot( true );
@@ -406,4 +406,4 @@ void TestMetaWeblog::testNetwork()
   eventLoop->exec();
 }
 
-QTEST_KDEMAIN_CORE(TestMetaWeblog)
+QTEST_KDEMAIN_CORE(TestMovableType)

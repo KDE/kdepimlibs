@@ -263,9 +263,9 @@ void MovableTypePrivate::slotError( int number,
 {
   Q_Q(MovableType);
   Q_UNUSED( number );
-  Q_UNUSED( id );
+  BlogPosting *posting = mCallMap[ id.toInt() ];
 
-  emit q->error( MovableType::XmlRpc, errorString );
+  emit q->error( MovableType::XmlRpc, errorString, posting );
 }
 
 void MovableTypePrivate::slotFetchPosting(
@@ -348,10 +348,6 @@ void MovableTypePrivate::slotListTrackBackPings(
   kDebug(5323) << "slotTrackbackPings()";
   BlogPosting *posting = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
-  //TODO Contains:
-  // String pingTitle: the title of the entry sent in the ping
-  // String pingURL: the URL of the entry
-  // String pingIP: the IP address of the host that sent the ping
   QList<QMap<QString,QString> > trackBackList;
   if ( result[0].type() != QVariant::List ) {
     kDebug(5323) << "Could not fetch list of trackback pings out of the"

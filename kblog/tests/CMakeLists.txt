@@ -30,6 +30,15 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 
 # ########### next target ###############
  
+ set(testmovabletype_SRCS testmovabletype.cpp )
+ 
+ 
+ kde4_add_unit_test(testmovabletype TESTNAME kabc-testmovabletype ${testmovabletype_SRCS})
+ 
+ target_link_libraries(testmovabletype ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+
+# ########### next target ###############
+ 
  set(testblogposting_SRCS testblogposting.cpp )
  
  
@@ -54,4 +63,6 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
  kde4_add_unit_test(testblogpostingcomment TESTNAME kabc-testblogpostingcomment ${testblogpostingcomment_SRCS})
  
  target_link_libraries(testblogpostingcomment ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+
+
 

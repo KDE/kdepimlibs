@@ -408,9 +408,9 @@ void MetaWeblogPrivate::slotError( int number,
 {
   Q_Q(MetaWeblog);
   Q_UNUSED( number );
-  Q_UNUSED( id );
+  BlogPosting *posting = mCallMap[ id.toInt() ];
 
-  emit q->error( MetaWeblog::XmlRpc, errorString );
+  emit q->error( MetaWeblog::XmlRpc, errorString, posting );
 }
 
 bool MetaWeblogPrivate::readPostingFromMap( BlogPosting *post,
