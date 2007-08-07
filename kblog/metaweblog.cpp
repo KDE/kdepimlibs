@@ -82,13 +82,13 @@ void MetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
 {
   Q_D(MetaWeblog);
   if ( !posting ) {
-    kDebug(5323) << "MetaWeblog::fetchPosting: posting is a null pointer";
+    kError(5323) << "MetaWeblog::fetchPosting: posting is a null pointer";
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
   unsigned int i = d->mCallCounter++;
   d->mCallMap[ i ] = posting;
-  kDebug(5323) << "Fetching Posting with url" << posting->postingId();
+  kError(5323) << "Fetching Posting with url" << posting->postingId();
   QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
   d->mXmlRpcClient->call(
     "metaWeblog.getPost", args,
@@ -100,7 +100,7 @@ void MetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 {
   Q_D(MetaWeblog);
   if ( !posting ) {
-    kDebug(5323) << "MetaWeblog::modifyPosting: posting is a null pointer";
+    kError(5323) << "MetaWeblog::modifyPosting: posting is a null pointer";
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
@@ -126,7 +126,7 @@ void MetaWeblog::createPosting( KBlog::BlogPosting *posting )
 {
   Q_D(MetaWeblog);
   if ( !posting ) {
-    kDebug(5323) << "MetaWeblog::createPosting: posting is a null pointer";
+    kError(5323) << "MetaWeblog::createPosting: posting is a null pointer";
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
@@ -151,7 +151,7 @@ void MetaWeblog::createMedia( KBlog::BlogMedia *media )
 {
   Q_D(MetaWeblog);
   if ( !media ) {
-    kDebug(5323) << "MetaWeblog::createMedia: media is a null pointer";
+    kError(5323) << "MetaWeblog::createMedia: media is a null pointer";
     emit error ( Other, i18n( "Media is a null pointer." ) );
     return;
   }
@@ -211,7 +211,7 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
        result[0].type() != QVariant::List ) {
     // include fix for not metaweblog standard compatible apis with
     // array of structs instead of struct of structs, e.g. wordpress
-    kDebug(5323) << "Could not list categories out of the result from the server.";
+    kError(5323) << "Could not list categories out of the result from the server.";
     emit q->error( MetaWeblog::ParsingError,
                         i18n( "Could not list categories out of the result "
                               "from the server." ) );
@@ -264,7 +264,7 @@ void MetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
   kDebug(5323) << "MetaWeblog::slotListRecentPostings";
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::List ) {
-    kDebug(5323) << "Could not fetch list of postings out of the"
+    kError(5323) << "Could not fetch list of postings out of the"
                  << "result from the server.";
     emit q->error( MetaWeblog::ParsingError,
                         i18n( "Could not fetch list of postings out of the "
@@ -282,7 +282,7 @@ void MetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
                      << posting.postingId() << ");";
         fetchedPostingList << posting;
       } else {
-        kDebug(5323) << "readPostingFromMap failed!";
+        kError(5323) << "readPostingFromMap failed!";
         emit q->error( MetaWeblog::ParsingError, i18n( "Could not read posting." ) );
       }
       if( --count == 0 ) break;
@@ -306,7 +306,7 @@ void MetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
   // TODO: Time zone for the dateCreated!
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::Map ) {
-    kDebug(5323) << "Could not fetch posting out of the result from the server.";
+    kError(5323) << "Could not fetch posting out of the result from the server.";
     emit q->error( MetaWeblog::ParsingError,
                        i18n( "Could not fetch posting out of the "
                              "result from the server." ), posting );
@@ -318,7 +318,7 @@ void MetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
       posting->setStatus( BlogPosting::Fetched );
       emit q->fetchedPosting( posting );
     } else {
-      kDebug(5323) << "readPostingFromMap failed!";
+      kError(5323) << "readPostingFromMap failed!";
       emit q->error( MetaWeblog::ParsingError,
                          i18n( "Could not read posting." ), posting );
     }
@@ -339,7 +339,7 @@ void MetaWeblogPrivate::slotCreatePosting( const QList<QVariant> &result,
   // TODO: Time zone for the dateCreated!
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::String ) {
-    kDebug(5323) << "Could not read the postingId, not a string.";
+    kError(5323) << "Could not read the postingId, not a string.";
     emit q->error( MetaWeblog::ParsingError,
                        i18n( "Could not read the postingId, not a string." ), posting );
   } else {
@@ -364,7 +364,7 @@ void MetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
   // TODO: Time zone for the dateCreated!
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::Bool ) {
-    kDebug(5323) << "Could not read the result, not a boolean.";
+    kError(5323) << "Could not read the result, not a boolean.";
     emit q->error( MetaWeblog::ParsingError,
                        i18n( "Could not read the result, not a boolean." ), posting );
   } else {
@@ -385,7 +385,7 @@ void MetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,
   kDebug(5323) << "MetaWeblogPrivate::slotCreateMedia, no error!";
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != 8 ) {
-    kDebug(5323) << "Could not read the result, not a map.";
+    kError(5323) << "Could not read the result, not a map.";
     emit q->error( MetaWeblog::ParsingError,
                        i18n( "Could not read the result, not a map." ) );
   } else {

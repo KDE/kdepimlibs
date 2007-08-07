@@ -105,7 +105,7 @@ void Blogger1::listRecentPostings( int number )
 void Blogger1::fetchPosting( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
-    kDebug(5323) << "Blogger1::modifyPosting: posting is null pointer";
+    kError(5323) << "Blogger1::modifyPosting: posting is null pointer";
     return;
   }
      Q_D(Blogger1);
@@ -125,7 +125,7 @@ void Blogger1::modifyPosting( KBlog::BlogPosting *posting )
   Q_D(Blogger1);
 
   if ( !posting ) {
-    kDebug(5323) << "Blogger1::modifyPosting: posting is null pointer";
+    kError(5323) << "Blogger1::modifyPosting: posting is null pointer";
     return;
   }
     kDebug(5323) << "Uploading Posting with postingId" << posting->postingId();
@@ -151,7 +151,7 @@ void Blogger1::createPosting( KBlog::BlogPosting *posting )
 {
   Q_D(Blogger1);
   if ( !posting ) {
-    kDebug(5323) << "Blogger1::createPosting: posting is null pointer";
+    kError(5323) << "Blogger1::createPosting: posting is null pointer";
     return;
   }
     unsigned int i= d->mCallCounter++;
@@ -177,7 +177,7 @@ void Blogger1::removePosting( KBlog::BlogPosting *posting )
 {
  Q_D(Blogger1);
   if ( !posting ) {
-    kDebug(5323) << "Blogger1::removePosting: posting is null pointer";
+    kError(5323) << "Blogger1::removePosting: posting is null pointer";
     return;
   }
   unsigned int i = d->mCallCounter++;
@@ -225,7 +225,7 @@ void Blogger1Private::slotFetchUserInfo(
   kDebug(5323) << "TOP:" << result[0].typeName();
   QMap<QString,QString> userInfo;
   if ( result[0].type() != QVariant::Map ) {
-    kDebug(5323) << "Could not fetch user's info out of the result from the server,"
+    kError(5323) << "Could not fetch user's info out of the result from the server,"
                  << "not a map.";
     emit q->error( Blogger1::ParsingError,
                         i18n( "Could not fetch user's info out of the result "
@@ -253,7 +253,7 @@ void Blogger1Private::slotListBlogs(
   kDebug(5323) << "TOP:" << result[0].typeName();
   QList<QMap<QString,QString> > blogsList;
   if ( result[0].type() != QVariant::List ) {
-    kDebug(5323) << "Could not fetch blogs out of the result from the server,"
+    kError(5323) << "Could not fetch blogs out of the result from the server,"
                  << "not a list.";
     emit q->error( Blogger1::ParsingError,
                         i18n( "Could not fetch blogs out of the result "
@@ -289,7 +289,7 @@ void Blogger1Private::slotListRecentPostings(
   QList <BlogPosting> fetchedPostingList;
 
   if ( result[0].type() != QVariant::List ) {
-    kDebug(5323) << "Could not fetch list of postings out of the"
+    kError(5323) << "Could not fetch list of postings out of the"
                  << "result from the server, not a list.";
     emit q->error( Blogger1::ParsingError,
                          i18n( "Could not fetch list of postings out of the "
@@ -308,7 +308,7 @@ void Blogger1Private::slotListRecentPostings(
                     << "appended in fetchedPostingList";
         fetchedPostingList.append( posting );
       } else {
-        kDebug(5323) << "readPostingFromMap failed!";
+        kError(5323) << "readPostingFromMap failed!";
         emit q->error( Blogger1::ParsingError,
                              i18n( "Could not read posting." ) );
        }
@@ -334,7 +334,7 @@ void Blogger1Private::slotFetchPosting(
   // TODO: Time zone for the dateCreated!
   kDebug (5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::Map ) {
-    kDebug (5323) << "Could not fetch posting out of the result from"
+    kError(5323) << "Could not fetch posting out of the result from"
                   << "the server.";
     emit q->error( Blogger1::ParsingError,
                         i18n( "Could not fetch posting out of the result from "
@@ -350,7 +350,7 @@ void Blogger1Private::slotFetchPosting(
       posting->setStatus( BlogPosting::Fetched );
       emit q->fetchedPosting( posting );
     } else {
-      kDebug(5323) << "readPostingFromMap failed!";
+      kError(5323) << "readPostingFromMap failed!";
       emit q->error( Blogger1::ParsingError,
                           i18n( "Could not read posting." ), posting );
       posting->setError( i18n( "Could not read posting." ) );
@@ -373,7 +373,7 @@ void Blogger1Private::slotCreatePosting(
   // TODO: Time zone for the dateCreated!
   kDebug (5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::Int ) {
-    kDebug(5323) << "Could not read the postingId, not an integer.";
+    kError(5323) << "Could not read the postingId, not an integer.";
     emit q->error( Blogger1::ParsingError,
                         i18n( "Could not read the postingId, not an integer." ), posting );
   } else {
@@ -399,7 +399,7 @@ void Blogger1Private::slotModifyPosting(
   // TODO: Time zone for the dateCreated!
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::Bool ) {
-    kDebug (5323) << "Could not read the result, not a boolean.";
+    kError(5323) << "Could not read the result, not a boolean.";
     emit q->error( Blogger1::ParsingError,
                         i18n( "Could not read the result, not a boolean." ), posting );
   } else {
@@ -422,7 +422,7 @@ void Blogger1Private::slotRemovePosting(
   // TODO: Time zone for the dateCreated!
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::Bool ) {
-    kDebug (5323) << "Could not read the result, not a boolean.";
+    kError(5323) << "Could not read the result, not a boolean.";
     emit q->error( Blogger1::ParsingError,
                         i18n( "Could not read the result, not a boolean." ), posting );
   } else {

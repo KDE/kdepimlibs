@@ -53,7 +53,7 @@ void MovableType::createPosting( KBlog::BlogPosting *posting )
   // array mt_tb_ping_urls, the list of TrackBack ping URLs for this entry
   Q_D(MovableType);
   if ( !posting ) {
-    kDebug(5323) << "MovableType::createPosting: posting is a null pointer";
+    kError(5323) << "MovableType::createPosting: posting is a null pointer";
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
@@ -87,7 +87,7 @@ void MovableType::modifyPosting( KBlog::BlogPosting *posting )
   // array mt_tb_ping_urls, the list of TrackBack ping URLs for this entry
   Q_D(MovableType);
   if ( !posting ) {
-    kDebug(5323) << "MovableType::modifyPosting: posting is a null pointer";
+    kError(5323) << "MovableType::modifyPosting: posting is a null pointer";
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
@@ -117,7 +117,7 @@ void MovableType::fetchPosting( KBlog::BlogPosting *posting )
 {
   Q_D(MovableType);
   if ( !posting ) {
-    kDebug(5323) << "MovableType::fetchPosting: posting is a null pointer";
+    kError(5323) << "MovableType::fetchPosting: posting is a null pointer";
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
@@ -249,7 +249,7 @@ void MovableTypePrivate::slotCreatePosting(
   // TODO: Time zone for the dateCreated!
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::String ) {
-    kDebug(5323) << "Could not read the postingId, not a string.";
+    kError(5323) << "Could not read the postingId, not a string.";
     emit q->error( MovableType::ParsingError,
                        i18n( "Could not read the postingId, not a string." ), posting );
   } else {
@@ -284,7 +284,7 @@ void MovableTypePrivate::slotFetchPosting(
   // TODO: Time zone for the dateCreated!
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::Map ) {
-    kDebug(5323) << "Could not fetch posting out of the result from the server.";
+    kError(5323) << "Could not fetch posting out of the result from the server.";
     emit q->error( MovableType::ParsingError,
                        i18n( "Could not fetch posting out of the "
                              "result from the server." ), posting );
@@ -296,7 +296,7 @@ void MovableTypePrivate::slotFetchPosting(
       posting->setStatus( BlogPosting::Fetched );
       emit q->fetchedPosting( posting );
     } else {
-      kDebug(5323) << "readPostingFromMap failed!";
+      kError(5323) << "readPostingFromMap failed!";
       emit q->error( MovableType::ParsingError,
                          i18n( "Could not read posting." ), posting );
     }
@@ -315,7 +315,7 @@ void MovableTypePrivate::slotListRecentPostings(
   kDebug(5323) << "MovableType::slotListRecentPostings";
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::List ) {
-    kDebug(5323) << "Could not fetch list of postings out of the"
+    kError(5323) << "Could not fetch list of postings out of the"
                  << "result from the server.";
     emit q->error( MovableType::ParsingError,
                         i18n( "Could not fetch list of postings out of the "
@@ -333,7 +333,7 @@ void MovableTypePrivate::slotListRecentPostings(
                      << posting.postingId() << ");";
         fetchedPostingList << posting;
       } else {
-        kDebug(5323) << "readPostingFromMap failed!";
+        kError(5323) << "readPostingFromMap failed!";
         emit q->error( MovableType::ParsingError, i18n( "Could not read posting." ) );
       }
       if( --count == 0 ) break;
@@ -352,7 +352,7 @@ void MovableTypePrivate::slotListTrackBackPings(
   mCallMap.remove( id.toInt() );
   QList<QMap<QString,QString> > trackBackList;
   if ( result[0].type() != QVariant::List ) {
-    kDebug(5323) << "Could not fetch list of trackback pings out of the"
+    kError(5323) << "Could not fetch list of trackback pings out of the"
                  << "result from the server.";
     emit q->error( MovableType::ParsingError,
                         i18n( "Could not fetch list of trackback pings out of the "
@@ -389,7 +389,7 @@ void MovableTypePrivate::slotModifyPosting(
   // TODO: Time zone for the dateCreated!
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::Bool ) {
-    kDebug(5323) << "Could not read the result, not a boolean.";
+    kError(5323) << "Could not read the result, not a boolean.";
     emit q->error( MovableType::ParsingError,
                        i18n( "Could not read the result, not a boolean." ), posting );
   } else {
