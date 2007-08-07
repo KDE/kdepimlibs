@@ -24,6 +24,7 @@ KCAL_UNIT_TESTS(
   testattendee
   testcalendarlocal
   testcalendarnull
+  testcalendarresources
   testcalfilter
   testduration
   testerrorformat
