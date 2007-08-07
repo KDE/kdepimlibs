@@ -42,6 +42,10 @@
   QString mCommentTitle( "TestBlog Comment" );
   QString mCommentContent( "TestBlog: posted comment." );
   QString mCommentEmail( QString( "fancy_mail@not.valid" ) );
+  bool mCommentAllowed = true;
+  bool mTrackBackAllowed = true;
+  QString mTags = "some funny tags";
+  QString mSummary ="A simple summary.";
 
 #endif
 

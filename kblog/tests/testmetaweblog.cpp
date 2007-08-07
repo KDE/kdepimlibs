@@ -44,7 +44,7 @@ class TestMetaWeblog : public QObject
   public Q_SLOTS:
     // use this functions as a chain to go through network traffic.
     void fetchUserInfo( const QMap<QString,QString>& );
-    void listBlogs( const QMap<QString,QString>& );
+    void listBlogs( const QList<QMap<QString,QString> >& );
     void listCategories( const QMap<QString,QMap<QString,QString> >& categories );
     void listRecentPostings( const QList<KBlog::BlogPosting>& postings );
     void createPosting( KBlog::BlogPosting* posting );
@@ -133,21 +133,20 @@ void TestMetaWeblog::fetchUserInfo( const QMap<QString,QString>& userInfo )
   qDebug() << "# firstname: " <<  userInfo["firstname"];
   qDebug() << "##############################\n";
 
-  connect( b, SIGNAL( listedBlogs( const QMap<QString,QString>& ) ),
-           this, SLOT( listBlogs( const QMap<QString,QString>& ) ) );
+  connect( b, SIGNAL( listedBlogs( const QList<QMap<QString,QString> >& ) ),
+           this, SLOT( listBlogs( const QList<QMap<QString,QString> >& ) ) );
   b->listBlogs();
   listBlogsTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::listBlogs( const QMap<QString,QString>& listedBlogs )
+void TestMetaWeblog::listBlogs( const QList<QMap<QString,QString> >& listedBlogs )
 {
   listBlogsTimer->stop();
-  QList<QString> keys = listedBlogs.keys();
   qDebug() << "########### listBlogs ###########";
-  QList<QString>::ConstIterator it = keys.begin();
-  QList<QString>::ConstIterator end = keys.end();
+  QList<QMap<QString,QString> >::ConstIterator it = listedBlogs.begin();
+  QList<QMap<QString,QString> >::ConstIterator end = listedBlogs.end();
   for ( ; it != end; ++it ) {
-    qDebug() << "# " << ( *it ) << ": " << listedBlogs[ ( *it ) ];
+    qDebug() << "# " << ( *it ).keys().first() << ": " << ( *it ).values().first();
   }
   qDebug() << "###########################\n";
 
