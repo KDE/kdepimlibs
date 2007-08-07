@@ -1,29 +1,28 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 1998 Preston Brown <pbrown@kde.org>
-    Copyright (c) 2001-2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 1998 Preston Brown <pbrown@kde.org>
+  Copyright (c) 2001-2004 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
+  Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #include "resourcecalendar.moc"
-
 #include "calendar.h"
 
 #include <kconfig.h>
@@ -48,10 +47,8 @@ class ResourceCalendar::Private
 
 };
 
-
 ResourceCalendar::ResourceCalendar()
-  : KRES::Resource(),
-    d( new Private )
+  : KRES::Resource(), d( new Private )
 {
 }
 
@@ -71,7 +68,7 @@ bool ResourceCalendar::isResolveConflictSet() const
   return d->mResolveConflict;
 }
 
-void ResourceCalendar::setResolveConflict( bool b)
+void ResourceCalendar::setResolveConflict( bool b )
 {
   d->mResolveConflict = b;
 }
@@ -85,7 +82,7 @@ QString ResourceCalendar::infoText() const
 
   KRES::Factory *factory = KRES::Factory::self( "calendar" );
   QString t = factory->typeName( type() );
-  txt += i18n("Type: %1", t );
+  txt += i18n( "Type: %1", t );
 
   addInfoText( txt );
 
@@ -102,9 +99,15 @@ void ResourceCalendar::writeConfig( KConfigGroup &group )
 Incidence *ResourceCalendar::incidence( const QString &uid )
 {
   Incidence *i = event( uid );
-  if ( i ) return i;
+  if ( i ) {
+    return i;
+  }
+
   i = todo( uid );
-  if ( i ) return i;
+  if ( i ) {
+    return i;
+  }
+
   i = journal( uid );
   return i;
 }
@@ -130,23 +133,22 @@ void ResourceCalendar::setSubresourceActive( const QString &, bool )
 {
 }
 
-
 /*virtual*/
-bool ResourceCalendar::removeSubresource( const QString& resource )
+bool ResourceCalendar::removeSubresource( const QString &resource )
 {
     Q_UNUSED(resource)
     return true;
 }
 
 /*virtual*/
-bool ResourceCalendar::addSubresource( const QString& resource, const QString& parent )
+bool ResourceCalendar::addSubresource( const QString &resource, const QString &parent )
 {
     Q_UNUSED(resource)
     Q_UNUSED(parent)
     return true;
 }
 
-QString ResourceCalendar::subresourceType( const QString& resource )
+QString ResourceCalendar::subresourceType( const QString &resource )
 {
     Q_UNUSED(resource)
     return QString();
@@ -159,11 +161,15 @@ bool ResourceCalendar::load()
   d->mReceivedLoadError = false;
 
   bool success = true;
-  if ( !isOpen() ) success = open();
+  if ( !isOpen() ) {
+    success = open();
+  }
   if ( success ) {
     success = doLoad();
   }
-  if ( !success && !d->mReceivedLoadError ) loadError();
+  if ( !success && !d->mReceivedLoadError ) {
+    loadError();
+  }
 
   // If the resource is read-only, we need to set its incidences to read-only,
   // too. This can't be done at a lower-level, since the read-only setting
@@ -187,7 +193,7 @@ void ResourceCalendar::loadError( const QString &err )
 
   d->mReceivedLoadError = true;
 
-  QString msg = i18n("Error while loading %1.\n", resourceName() );
+  QString msg = i18n( "Error while loading %1.\n", resourceName() );
   if ( !err.isEmpty() ) {
     msg += err;
   }
@@ -206,16 +212,22 @@ void ResourceCalendar::setReceivedLoadError( bool b )
 
 bool ResourceCalendar::save( Incidence *incidence )
 {
-  if ( d->mInhibitSave )
+  if ( d->mInhibitSave ) {
     return true;
+  }
+
   if ( !readOnly() ) {
     kDebug(5800) << "Save resource" << resourceName();
 
     d->mReceivedSaveError = false;
 
-    if ( !isOpen() ) return true;
+    if ( !isOpen() ) {
+      return true;
+    }
     bool success = incidence ? doSave(incidence) : doSave();
-    if ( !success && !d->mReceivedSaveError ) saveError();
+    if ( !success && !d->mReceivedSaveError ) {
+      saveError();
+    }
 
     return success;
   } else {
@@ -225,8 +237,9 @@ bool ResourceCalendar::save( Incidence *incidence )
   }
 }
 
-bool ResourceCalendar::doSave( Incidence * )
+bool ResourceCalendar::doSave( Incidence *incidence )
 {
+  Q_UNUSED( incidence );
   return doSave();
 }
 
@@ -236,7 +249,7 @@ void ResourceCalendar::saveError( const QString &err )
 
   d->mReceivedSaveError = true;
 
-  QString msg = i18n("Error while saving %1.\n", resourceName() );
+  QString msg = i18n( "Error while saving %1.\n", resourceName() );
   if ( !err.isEmpty() ) {
     msg += err;
   }
@@ -270,7 +283,7 @@ bool ResourceCalendar::setValue( const QString &key, const QString &value )
   return false;
 }
 
-void ResourceCalendar::setNoReadOnlyOnLoad(bool noReadOnly)
+void ResourceCalendar::setNoReadOnlyOnLoad( bool noReadOnly )
 {
   d->mNoReadOnlyOnLoad = noReadOnly;
 }

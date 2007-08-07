@@ -1,34 +1,29 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 1998 Preston Brown <pbrown@kde.org>
-    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 1998 Preston Brown <pbrown@kde.org>
+  Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
+  Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #ifndef KCAL_RESOURCECALENDAR_H
 #define KCAL_RESOURCECALENDAR_H
-
-#include <QtCore/QString>
-
-#include <kdatetime.h>
-#include <kconfig.h>
 
 #include "alarm.h"
 #include "todo.h"
@@ -40,9 +35,12 @@
 #include "kresources/manager.h"
 #include "kabc/lock.h"
 
+#include <kdatetime.h>
+#include <kconfig.h>
+
+#include <QtCore/QString>
 
 namespace KCal {
-
 
 /**
   This class provides the interfaces for a calendar resource. It makes use of
@@ -124,6 +122,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       @param inhibit true to inhibit saves, false to allow them
     */
     void setInhibitSave( bool inhibit );
+
     /**
       Return whether saves have been inhibited by setInhibitSave().
      */
@@ -174,16 +173,19 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       Return unfiltered list of all events in calendar. Use with care,
       this can be a bad idea for server-based calendars.
     */
-    virtual Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
+    virtual Event::List rawEvents(
+      EventSortField sortField = EventSortUnsorted,
+      SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
       Builds and then returns a list of all events that match the
       date specified. Useful for dayView, etc. etc.
     */
-    virtual Event::List rawEventsForDate( const QDate &date,
-                                          const KDateTime::Spec &timespec = KDateTime::Spec(),
-                                          EventSortField sortField = EventSortUnsorted,
-                                          SortDirection sortDirection = SortDirectionAscending ) = 0;
+    virtual Event::List rawEventsForDate(
+      const QDate &date,
+      const KDateTime::Spec &timespec = KDateTime::Spec(),
+      EventSortField sortField = EventSortUnsorted,
+      SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
       Get unfiltered events for date \a dt.
@@ -194,9 +196,10 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events which are completely included in the range are returned.
     */
-    virtual Event::List rawEvents( const QDate &start, const QDate &end,
-                                   const KDateTime::Spec &timespec = KDateTime::Spec(),
-                                   bool inclusive = false ) = 0;
+    virtual Event::List rawEvents(
+      const QDate &start, const QDate &end,
+      const KDateTime::Spec &timespec = KDateTime::Spec(),
+      bool inclusive = false ) = 0;
 
     /**
       Sets a particular value of the resource's configuration. The possible
@@ -233,6 +236,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       finished.
     */
     void resourceLoaded( ResourceCalendar * );
+
     /**
       This signal is emitted when saving the data of the resource has been
       finished.
@@ -243,6 +247,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       This signal is emitted when an error occurs during loading.
     */
     void resourceLoadError( ResourceCalendar *, const QString &error );
+
     /**
       This signal is emitted when an error occurs during saving.
     */
@@ -251,8 +256,8 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
      This signal is emitted when a subresource is added.
     */
-    void signalSubresourceAdded( ResourceCalendar *, const QString& type,
-                                 const QString& subresource, const QString& label );
+    void signalSubresourceAdded( ResourceCalendar *, const QString &type,
+                                 const QString &subresource, const QString &label );
 
     /**
      This signal is emitted when a subresource is removed.
@@ -286,7 +291,9 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Return list of all todos.
     */
-    virtual Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
+    virtual Todo::List rawTodos(
+      TodoSortField sortField = TodoSortUnsorted,
+      SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
       Returns list of todos due on the specified date.
@@ -316,7 +323,9 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Return list of all journals.
     */
-    virtual Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
+    virtual Journal::List rawJournals(
+      JournalSortField sortField = JournalSortUnsorted,
+      SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
       Returns list of journals for the given date.
@@ -386,7 +395,8 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       @param oldSpec the time specification which provides the clock times
       @param newSpec the new time specification
     */
-    virtual void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec) = 0;
+    virtual void shiftTimes( const KDateTime::Spec &oldSpec,
+                             const KDateTime::Spec &newSpec ) = 0;
 
     /**
       If this resource has subresources, return a QStringList of them.
@@ -403,12 +413,12 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Is this subresource active or not?
     */
-    virtual bool subresourceActive( const QString& ) const { return true; }
+    virtual bool subresourceActive( const QString &resource ) const { return true; }
 
     /**
       What is the label for this subresource?
      */
-    virtual const QString labelForSubresource( const QString& resource ) const
+    virtual const QString labelForSubresource( const QString &resource ) const
     {
        // the resource identifier is a sane fallback
        return resource;
@@ -421,36 +431,40 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       @return the identifier of the subresource or an empty string.
     */
     virtual QString subresourceIdentifier( Incidence *incidence )
-    { Q_UNUSED( incidence ); return QString(); }
+    {
+      Q_UNUSED( incidence );
+      return QString();
+    }
 
   public Q_SLOTS:
     /**
       (De-)activate a subresource.
     */
-    virtual void setSubresourceActive( const QString &, bool active );
+    virtual void setSubresourceActive( const QString &resource, bool active );
 
     /**
      * Remove a subresource with the id @param resource
      */
-    virtual bool removeSubresource( const QString& resource );
+    virtual bool removeSubresource( const QString &resource );
 
     /**
-     * Add a subresource with the id @param resource and the parent
-     * id @param parent.
-     */
-    virtual bool addSubresource( const QString& resource, const QString& parent );
+      Add a subresource with the id @param resource and the parent id
+      @param parent
+    */
+    virtual bool addSubresource( const QString &resource, const QString &parent );
 
     /**
-     * Returns the type of the subresource: "event", "todo", or "journal", QString if 
-     * unknown/mixed.
-     */
-    virtual QString subresourceType( const QString& resource );
+      Returns the type of the subresource: "event", "todo", or "journal",
+      QString if unknown/mixed.
+    */
+    virtual QString subresourceType( const QString &resource );
 
   protected:
     /**
       Do the actual loading of the resource data. Called by load().
     */
     virtual bool doLoad() = 0;
+
     /**
       Do the actual saving of the resource data. Called by save().
     */
@@ -458,7 +472,8 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
 
     /**
       Do the actual saving of the resource data. Called by save().
-      Save one Incidence. The default implementation calls doSave() to save everything
+      Save one Incidence. The default implementation calls doSave()
+      to save everything.
     */
     virtual bool doSave( Incidence * );
 
@@ -471,6 +486,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       A resource should call this function if a load error happens.
     */
     void loadError( const QString &errorMessage = QString() );
+
     /**
       A resource should call this function if a save error happens.
     */
@@ -488,6 +504,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
                         false to allow incidences to be set read-only
     */
     void setNoReadOnlyOnLoad( bool noReadOnly );
+
     /**
       Return whether individual incidences are inhibited from being set
       read-only when a read-only resources is loaded.
