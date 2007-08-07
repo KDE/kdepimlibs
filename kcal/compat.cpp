@@ -1,26 +1,38 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
+*/
+/**
+  @file
+  This file is part of the API for handling calendar data and defines
+  classes for managing compatability between different calendar formats.
+
+  @brief
+  Classes that provide compatibility to older or "broken" calendar formats.
+
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
 */
 
 #include "compat.h"
+#include "incidence.h"
 
 #include <kdatetime.h>
 #include <kdebug.h>
@@ -28,19 +40,14 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QList>
 
-#include "incidence.h"
-
 using namespace KCal;
 
 Compat *CompatFactory::createCompat( const QString &productId )
 {
-//  kDebug(5800) << "CompatFactory::createCompat(): '" << productId << "'";
-
   Compat *compat = 0;
 
   int korg = productId.indexOf( "KOrganizer" );
   int outl9 = productId.indexOf( "Outlook 9.0" );
-//   int kcal = productId.find( "LibKCal" );
 
   // TODO: Use the version of LibKCal to determine the compat class...
   if ( korg >= 0 ) {
@@ -50,7 +57,6 @@ Compat *CompatFactory::createCompat( const QString &productId )
       if ( versionStop >= 0 ) {
         QString version = productId.mid( versionStart + 1,
                                          versionStop - versionStart - 1 );
-//        kDebug(5800) << "Found KOrganizer version:" << version;
 
         int versionNum = version.section( ".", 0, 0 ).toInt() * 10000 +
                          version.section( ".", 1, 1 ).toInt() * 100 +
@@ -60,10 +66,6 @@ Compat *CompatFactory::createCompat( const QString &productId )
         if ( releaseStop > versionStop ) {
           release = productId.mid( versionStop+1, releaseStop-versionStop-1 );
         }
-//        kDebug(5800) << "KOrganizer release: \"" << release << "\"";
-
-//        kDebug(5800) << "Numerical version:" << versionNum;
-
         if ( versionNum < 30100 ) {
           compat = new CompatPre31;
         } else if ( versionNum < 30200 ) {
@@ -83,7 +85,9 @@ Compat *CompatFactory::createCompat( const QString &productId )
     compat = new CompatOutlook9;
   }
 
-  if ( !compat ) compat = new Compat;
+  if ( !compat ) {
+    compat = new Compat;
+  }
 
   return compat;
 }
@@ -94,36 +98,32 @@ void Compat::fixEmptySummary( Incidence *incidence )
   // instead of Summary for the default field. Correct for this: Copy the
   // first line of the description to the summary (if summary is just one
   // line, move it)
-  if (incidence->summary().isEmpty() &&
-      !(incidence->description().isEmpty())) {
+  if ( incidence->summary().isEmpty() && !( incidence->description().isEmpty() ) ) {
     QString oldDescription = incidence->description().trimmed();
     QString newSummary( oldDescription );
-    newSummary.remove( QRegExp("\n.*") );
+    newSummary.remove( QRegExp( "\n.*" ) );
     incidence->setSummary( newSummary );
-    if ( oldDescription == newSummary )
-      incidence->setDescription("");
+    if ( oldDescription == newSummary ) {
+      incidence->setDescription( "" );
+    }
   }
 }
 
-void Compat::fixRecurrence( Incidence */*incidence*/ )
+void Compat::fixRecurrence( Incidence *incidence )
 {
+  Q_UNUSED( incidence );
   // Prevent use of compatibility mode during subsequent changes by the application
 //  incidence->recurrence()->setCompatVersion();
 }
 
-/** Before kde 3.5, the start date was not automatically a recurring date. So
-    if the start date doesn't match the recurrence rule, we need to add an ex
-    date for the date start. If a duration was given, the DTSTART was only counted
-    if it matched, so by accident this was already the correct behavior, so
-    we don't need to adjust the duration... */
 void CompatPre35::fixRecurrence( Incidence *incidence )
 {
-  Recurrence* recurrence = incidence->recurrence();
-  if (recurrence ) {
+  Recurrence *recurrence = incidence->recurrence();
+  if ( recurrence ) {
     KDateTime start( incidence->dtStart() );
     // kde < 3.5 only had one rrule, so no need to loop over all RRULEs.
     RecurrenceRule *r = recurrence->defaultRRule();
-    if ( r && !r->dateMatchesRules( start )  ) {
+    if ( r && !r->dateMatchesRules( start ) ) {
       recurrence->addExDateTime( start );
     }
   }
@@ -132,21 +132,19 @@ void CompatPre35::fixRecurrence( Incidence *incidence )
   Compat::fixRecurrence( incidence );
 }
 
-int CompatPre34::fixPriority( int prio )
+int CompatPre34::fixPriority( int priority )
 {
-  if ( 0<prio && prio<6 ) {
+  if ( 0 < priority && priority < 6 ) {
     // adjust 1->1, 2->3, 3->5, 4->7, 5->9
-    return 2*prio - 1;
-  } else return prio;
+    return 2 * priority - 1;
+  } else {
+    return priority;
+  }
 }
 
-/** The recurrence has a specified number of repetitions.
-    Pre-3.2, this was extended by the number of exception dates.
-    This is also rfc 2445-compliant. The duration of an RRULE also counts
-    events that are later excluded via EXDATE or EXRULE. */
 void CompatPre32::fixRecurrence( Incidence *incidence )
 {
-  Recurrence* recurrence = incidence->recurrence();
+  Recurrence *recurrence = incidence->recurrence();
   if ( recurrence->recurs() &&  recurrence->duration() > 0 ) {
     recurrence->setDuration( recurrence->duration() + incidence->recurrence()->exDates().count() );
   }
@@ -154,17 +152,6 @@ void CompatPre32::fixRecurrence( Incidence *incidence )
   CompatPre35::fixRecurrence( incidence );
 }
 
-/** Before kde 3.1, floating events (events without a date) had 0:00 of their
-    last day as the end date. E.g. 28.5.2005  0:00 until 28.5.2005 0:00 for an
-    event that lasted the whole day on May 28, 2005. According to RFC 2445, the
-    end date for such an event needs to be 29.5.2005 0:00.
-
-    Update: We misunderstood rfc 2445 in this regard. For all-day events, the
-    DTEND is the last day of the event. See a mail from the Author or rfc 2445:
-         http://www.imc.org/ietf-calendar/archive1/msg03648.html
-    However, as all other applications also got this wrong, we'll just leave it
-    as it is and use the wrong interpretation (was also discussed on
-    ietf-calsify)*/
 void CompatPre31::fixFloatingEnd( QDate &endDate )
 {
   endDate = endDate.addDays( 1 );
@@ -176,7 +163,9 @@ void CompatPre31::fixRecurrence( Incidence *incidence )
 
   Recurrence *recur = incidence->recurrence();
   RecurrenceRule *r = 0;
-  if ( recur ) r = recur->defaultRRule();
+  if ( recur ) {
+    r = recur->defaultRRule();
+  }
   if ( recur && r ) {
     int duration = r->duration();
     if ( duration > 0 ) {
@@ -190,53 +179,59 @@ void CompatPre31::fixRecurrence( Incidence *incidence )
       // # of periods:
       int tmp = ( duration - 1 ) * r->frequency();
       switch ( r->recurrenceType() ) {
-        case RecurrenceRule::rWeekly: {
-          end = end.addDays( tmp * 7 + 7 - end.dayOfWeek() );
-          break; }
-        case RecurrenceRule::rMonthly: {
-          int month = end.month() - 1 + tmp;
-          end.setYMD( end.year() + month / 12, month % 12 + 1, 31 );
-          break; }
-        case RecurrenceRule::rYearly: {
-          end.setYMD( end.year() + tmp, 12, 31);
-          break; }
-        default:
-          doNothing = true;
-          break;
+      case RecurrenceRule::rWeekly:
+      {
+        end = end.addDays( tmp * 7 + 7 - end.dayOfWeek() );
+        break;
+      }
+      case RecurrenceRule::rMonthly:
+      {
+        int month = end.month() - 1 + tmp;
+        end.setYMD( end.year() + month / 12, month % 12 + 1, 31 );
+        break;
+      }
+      case RecurrenceRule::rYearly:
+      {
+        end.setYMD( end.year() + tmp, 12, 31 );
+        break;
+      }
+      default:
+        doNothing = true;
+        break;
       }
       if ( !doNothing ) {
-        duration = r->durationTo( KDateTime( end, QTime( 0, 0, 0 ), incidence->dtStart().timeSpec() ) );
+        duration = r->durationTo(
+          KDateTime( end, QTime( 0, 0, 0 ), incidence->dtStart().timeSpec() ) );
         r->setDuration( duration );
       }
     }
 
     /* addYearlyNum */
-    // Dates were stored as day numbers, with a fiddle to take account of leap years.
-    // Convert the day number to a month.
+    // Dates were stored as day numbers, with a fiddle to take account of
+    // leap years. Convert the day number to a month.
     QList<int> days = r->byYearDays();
     if ( !days.isEmpty() ) {
       QList<int> months = r->byMonths();
-		for (int i = 0; i < months.size(); ++i) {
-				int newmonth = QDate( r->startDt().date().year(), 1, 1).addDays( months.at(i) - 1 ).month();
-       			if ( !months.contains( newmonth ) )
-          			months.append( newmonth );
-		}
+      for ( int i = 0; i < months.size(); ++i ) {
+        int newmonth =
+          QDate( r->startDt().date().year(), 1, 1 ).addDays( months.at( i ) - 1 ).month();
+        if ( !months.contains( newmonth ) ) {
+          months.append( newmonth );
+        }
+      }
 
       r->setByMonths( months );
       days.clear();
       r->setByYearDays( days );
     }
   }
-
-
 }
 
-/** In Outlook 9, alarms have the wrong sign. I.e. RFC 2445 says that negative
-    values for the trigger are before the event's start. Outlook/exchange,
-    however used positive values. */
 void CompatOutlook9::fixAlarms( Incidence *incidence )
 {
-  if ( !incidence ) return;
+  if ( !incidence ) {
+    return;
+  }
   Alarm::List alarms = incidence->alarms();
   Alarm::List::Iterator it;
   for ( it = alarms.begin(); it != alarms.end(); ++it ) {
@@ -244,8 +239,9 @@ void CompatOutlook9::fixAlarms( Incidence *incidence )
     if ( al && al->hasStartOffset() ) {
       Duration offsetDuration = al->startOffset();
       int offs = offsetDuration.asSeconds();
-      if ( offs>0 )
+      if ( offs > 0 ) {
         offsetDuration = Duration( -offs );
+      }
       al->setStartOffset( offsetDuration );
     }
   }
