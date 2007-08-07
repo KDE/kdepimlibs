@@ -17,7 +17,6 @@ icaltimezones         |       |         |   D   |         |    D    |
 imipscheduler         |       |         |       |         |    D    |
 incidenceformatter    |       |         |       |         |    D    | Allen
 kresult               |   D   |         |       |         |    D    |
-listbase              |       |         |  n/a  |         |    D    |
 qtopiaformat          |       |         |       |         |    D    |
 recurrence            |       |         |   D   |         |    D    |
 recurrencerule        |       |         |   D   |         |    D    |
@@ -52,6 +51,7 @@ freebusy              |   D   |    D    |   D   |    D    |    D    | Allen
 incidence             |   D   |    D    |   D   |   n/a   |    D    | Allen
 incidencebase         |   D   |    D    |   D   |   n/a   |    D    | Allen
 journal               |   D   |    D    |   D   |    D    |    D    | Allen
+listbase              |   D   |    D    |  n/a  |   n/a   |    D    | Allen
 period                |   D   |    D    |   D   |    D    |    D    | Narayan
 person                |   D   |    D    |   D   |    D    |    D    | Narayan
 todo                  |   D   |    D    |   D   |    D    |    D    | Allen
