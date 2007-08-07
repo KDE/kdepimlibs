@@ -21,7 +21,7 @@
 /**
   @file
   This file is part of the API for handling calendar data and
-  defines the FileStorage abstract base class.
+  defines the FileStorage class.
 
   @brief
   This class provides a calendar storage as a local file.
