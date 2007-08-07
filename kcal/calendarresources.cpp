@@ -125,7 +125,8 @@ class KCal::CalendarResources::Ticket::Private
 };
 //@endcond
 
-CalendarResources::DestinationPolicy::DestinationPolicy( CalendarResourceManager *manager, QWidget *parent )
+CalendarResources::DestinationPolicy::DestinationPolicy(
+  CalendarResourceManager *manager, QWidget *parent )
   : d( new KCal::CalendarResources::DestinationPolicy::Private( manager, parent ) )
 {
 }
@@ -150,8 +151,10 @@ CalendarResourceManager *CalendarResources::DestinationPolicy::resourceManager()
   return d->mManager;
 }
 
-CalendarResources::StandardDestinationPolicy::StandardDestinationPolicy( CalendarResourceManager *manager, QWidget *parent)
-  : DestinationPolicy( manager, parent ), d( new KCal::CalendarResources::StandardDestinationPolicy::Private )
+CalendarResources::StandardDestinationPolicy::StandardDestinationPolicy(
+  CalendarResourceManager *manager, QWidget *parent )
+  : DestinationPolicy( manager, parent ),
+    d( new KCal::CalendarResources::StandardDestinationPolicy::Private )
 {
 }
 
@@ -160,14 +163,16 @@ CalendarResources::StandardDestinationPolicy::~StandardDestinationPolicy()
   delete d;
 }
 
-ResourceCalendar *CalendarResources::StandardDestinationPolicy::destination( Incidence *i )
+ResourceCalendar *CalendarResources::StandardDestinationPolicy::destination( Incidence *incidence )
 {
-  Q_UNUSED( i );
+  Q_UNUSED( incidence );
   return resourceManager()->standardResource();
 }
 
-CalendarResources::AskDestinationPolicy::AskDestinationPolicy( CalendarResourceManager *manager, QWidget *parent)
-  : DestinationPolicy( manager, parent ), d( new KCal::CalendarResources::AskDestinationPolicy::Private )
+CalendarResources::AskDestinationPolicy::AskDestinationPolicy(
+  CalendarResourceManager *manager, QWidget *parent )
+  : DestinationPolicy( manager, parent ),
+    d( new KCal::CalendarResources::AskDestinationPolicy::Private )
 {
 }
 
@@ -176,9 +181,9 @@ CalendarResources::AskDestinationPolicy::~AskDestinationPolicy()
   delete d;
 }
 
-ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidence *i )
+ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidence *incidence )
 {
-  Q_UNUSED( i );
+  Q_UNUSED( incidence );
   QList<KRES::Resource*> list;
 
   CalendarResourceManager::ActiveIterator it;
