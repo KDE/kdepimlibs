@@ -33,7 +33,6 @@
 */
 
 #include "calendarresources.moc"
-
 #include "incidence.h"
 #include "journal.h"
 #include "resourcecalendar.h"
@@ -55,7 +54,7 @@
 using namespace KCal;
 
 /**
-  Private class that helps to provide binary compatibility between releases.
+  Private classes that helps to provide binary compatibility between releases.
   @internal
 */
 //@cond PRIVATE
@@ -90,33 +89,94 @@ class KCal::CalendarResources::Private
     void appendIncidences( IncidenceList &result, const IncidenceList &extra,
                            ResourceCalendar * );
 };
+
+class KCal::CalendarResources::DestinationPolicy::Private
+{
+  public:
+    Private( CalendarResourceManager *manager, QWidget *parent )
+      : mManager( manager ),
+        mParent( parent )
+    {}
+    CalendarResourceManager *mManager;
+    QWidget *mParent;
+};
+
+class KCal::CalendarResources::StandardDestinationPolicy::Private
+{
+  public:
+    Private()
+    {}
+};
+
+class KCal::CalendarResources::AskDestinationPolicy::Private
+{
+  public:
+    Private()
+    {}
+};
+
+class KCal::CalendarResources::Ticket::Private
+{
+  public:
+    Private( ResourceCalendar *resource )
+      : mResource( resource )
+    {}
+    ResourceCalendar *mResource;
+};
 //@endcond
+
+CalendarResources::DestinationPolicy::DestinationPolicy( CalendarResourceManager *manager, QWidget *parent )
+  : d( new KCal::CalendarResources::DestinationPolicy::Private( manager, parent ) )
+{
+}
+
+CalendarResources::DestinationPolicy::~DestinationPolicy()
+{
+  delete d;
+}
 
 QWidget *CalendarResources::DestinationPolicy::parent()
 {
-  return mParent;
+  return d->mParent;
 }
 
 void CalendarResources::DestinationPolicy::setParent( QWidget *parent )
 {
-  mParent = parent;
+  d->mParent = parent;
 }
 
-CalendarResourceManager
-*CalendarResources::DestinationPolicy::resourceManager()
+CalendarResourceManager *CalendarResources::DestinationPolicy::resourceManager()
 {
-  return mManager;
+  return d->mManager;
 }
 
-ResourceCalendar
-*CalendarResources::StandardDestinationPolicy::destination( Incidence *i )
+CalendarResources::StandardDestinationPolicy::StandardDestinationPolicy( CalendarResourceManager *manager, QWidget *parent)
+  : DestinationPolicy( manager, parent ), d( new KCal::CalendarResources::StandardDestinationPolicy::Private )
+{
+}
+
+CalendarResources::StandardDestinationPolicy::~StandardDestinationPolicy()
+{
+  delete d;
+}
+
+ResourceCalendar *CalendarResources::StandardDestinationPolicy::destination( Incidence *i )
 {
   Q_UNUSED( i );
   return resourceManager()->standardResource();
 }
 
-ResourceCalendar
-*CalendarResources::AskDestinationPolicy::destination( Incidence *i )
+CalendarResources::AskDestinationPolicy::AskDestinationPolicy( CalendarResourceManager *manager, QWidget *parent)
+  : DestinationPolicy( manager, parent ), d( new KCal::CalendarResources::AskDestinationPolicy::Private )
+{
+}
+
+CalendarResources::AskDestinationPolicy::~AskDestinationPolicy()
+{
+  delete d;
+}
+
+ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidence *i )
 {
   Q_UNUSED( i );
   QList<KRES::Resource*> list;
@@ -698,8 +758,17 @@ void CalendarResources::doSetTimeSpec( const KDateTime::Spec &timeSpec )
   }
 }
 
-CalendarResources::Ticket
-*CalendarResources::requestSaveTicket( ResourceCalendar *resource )
+CalendarResources::Ticket::Ticket( ResourceCalendar *resource )
+  : d( new KCal::CalendarResources::Ticket::Private( resource ) )
+{
+}
+
+CalendarResources::Ticket::~Ticket()
+{
+  delete d;
+}
+
+CalendarResources::Ticket *CalendarResources::requestSaveTicket( ResourceCalendar *resource )
 {
   KABC::Lock *lock = resource->lock();
   if ( !lock ) {
@@ -710,6 +779,11 @@ CalendarResources::Ticket
   } else {
     return 0;
   }
+}
+
+ResourceCalendar *CalendarResources::Ticket::resource() const
+{
+  return d->mResource;
 }
 
 bool CalendarResources::save( Ticket *ticket, Incidence *incidence )

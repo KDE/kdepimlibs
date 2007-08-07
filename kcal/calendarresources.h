@@ -69,10 +69,12 @@ class KCAL_EXPORT CalendarResources
           @param manager is a pointer to the CalendarResourceManager.
           @param parent is a pointer to a QWidget to use for new dialogs.
         */
-        explicit DestinationPolicy( CalendarResourceManager *manager,
-                                    QWidget *parent = 0 ) :
-          mManager( manager ), mParent( parent ) {}
-        virtual ~DestinationPolicy(){}
+        explicit DestinationPolicy( CalendarResourceManager *manager, QWidget *parent = 0 );
+
+        /**
+          Destructor.
+        */
+        virtual ~DestinationPolicy();
 
         /**
           Returns parent widget to use for new dialogs.
@@ -84,6 +86,11 @@ class KCAL_EXPORT CalendarResources
           @param parent is a pointer to a QWidget containing the parent.
         */
         virtual void setParent( QWidget *parent );
+
+        /**
+          Returns the destination ResourceCalendar for the specified incidence.
+          @param incidence is a pointer to a valid Incidence object.
+        */
         virtual ResourceCalendar *destination( Incidence *incidence ) = 0;
 
       protected:
@@ -93,9 +100,6 @@ class KCAL_EXPORT CalendarResources
         CalendarResourceManager *resourceManager();
 
       private:
-        CalendarResourceManager *mManager;
-        QWidget *mParent;
-
         //@cond PRIVATE
         class Private;
         Private *d;
@@ -108,10 +112,22 @@ class KCAL_EXPORT CalendarResources
     class StandardDestinationPolicy : public DestinationPolicy
     {
       public:
-        explicit StandardDestinationPolicy( CalendarResourceManager *manager,
-                                            QWidget *parent = 0 ) :
-          DestinationPolicy( manager, parent ) {}
-        virtual ~StandardDestinationPolicy(){}
+        /**
+          Constructs a standard destination policy.
+          @param manager is a pointer to the CalendarResourceManager.
+          @param parent is a pointer to a QWidget to use for new dialogs.
+        */
+        explicit StandardDestinationPolicy( CalendarResourceManager *manager, QWidget *parent = 0 );
+
+        /**
+          Destructor.
+        */
+        virtual ~StandardDestinationPolicy();
+
+        /**
+          Returns the destination ResourceCalendar for the specified incidence.
+          @param incidence is a pointer to a valid Incidence object.
+        */
         ResourceCalendar *destination( Incidence *incidence );
 
       private:
@@ -127,10 +143,22 @@ class KCAL_EXPORT CalendarResources
     class AskDestinationPolicy : public DestinationPolicy
     {
       public:
-        explicit AskDestinationPolicy( CalendarResourceManager *manager,
-                                       QWidget *parent = 0 ) :
-          DestinationPolicy( manager, parent ) {}
-        virtual ~AskDestinationPolicy(){}
+        /**
+          Constructs an Ask destination policy.
+          @param manager is a pointer to the CalendarResourceManager.
+          @param parent is a pointer to a QWidget to use for new dialogs.
+        */
+        explicit AskDestinationPolicy( CalendarResourceManager *manager, QWidget *parent = 0 );
+
+        /**
+          Destructor.
+        */
+        virtual ~AskDestinationPolicy();
+
+        /**
+          Returns the destination ResourceCalendar for the specified incidence.
+          @param incidence is a pointer to a valid Incidence object.
+        */
         ResourceCalendar *destination( Incidence *incidence );
 
       private:
@@ -151,13 +179,19 @@ class KCAL_EXPORT CalendarResources
         /**
           Returns the ResourceCalendar associated with the ticket.
         */
-        ResourceCalendar *resource() const
-        { return mResource; }
+        ResourceCalendar *resource() const;
+
+        /**
+          Destructor.
+        */
+        ~Ticket();
 
       private:
-        Ticket( ResourceCalendar *r ) : mResource( r ) {}
-
-        ResourceCalendar *mResource;
+        /**
+          Constructs a Ticket for a ResourceCalendar.
+          @param resource is a pointer to a valid ResourceCalendar object.
+        */
+        Ticket( ResourceCalendar *resource );
 
         //@cond PRIVATE
         class Private;
@@ -424,7 +458,7 @@ class KCAL_EXPORT CalendarResources
 
     /**
       @copydoc
-      Calendar::rawEventsForDate(const QDate &, const KDateTime::Spec &, EventSortField, SortDirection)
+      Calendar::rawEventsForDate(const QDate &,const KDateTime::Spec &,EventSortField,SortDirection)
     */
     Event::List rawEventsForDate(
       const QDate &date,
