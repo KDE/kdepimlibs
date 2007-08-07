@@ -90,7 +90,7 @@ void TestBlogger1::dumpPosting( const BlogPosting* posting )
   qDebug() << "# postingId: " << posting->postingId();
   qDebug() << "# title: " << posting->title();
   qDebug() << "# content: " << posting->content();
-  qDebug() << "# publish: " << posting->isPublished();
+  qDebug() << "# private: " << posting->isPrivate();
   qDebug() << "# categories: " << posting->categories().join( " " );
   qDebug() << "# error: " << posting->error();
   qDebug() << "# journalId: " << posting->journalId();
@@ -108,9 +108,9 @@ void TestBlogger1::dumpPosting( const BlogPosting* posting )
     case BlogPosting::Error:
       qDebug() << "# status: Error"; break;
   };
-  qDebug() << "# creationDateTime(UTC): " << 
+  qDebug() << "# creationDateTime(UTC): " <<
       posting->creationDateTime().toUtc().toString();
-  qDebug() << "# modificationDateTime(UTC): " << 
+  qDebug() << "# modificationDateTime(UTC): " <<
       posting->modificationDateTime().toUtc().toString();
   qDebug() << "###########################";
 }
@@ -152,7 +152,7 @@ void TestBlogger1::listBlogs( const QList<QMap<QString,QString> >& listedBlogs )
   listRecentPostingsTimer->start( TIMEOUT );
 }
 
-void TestBlogger1::listRecentPostings( 
+void TestBlogger1::listRecentPostings(
            const QList<KBlog::BlogPosting>& postings )
 {
   listRecentPostingsTimer->stop();
@@ -307,7 +307,7 @@ void TestBlogger1::testNetwork()
   p = new BlogPosting(); // no need to delete later ;-)
   p->setTitle( mTitle );
   p->setContent( mContent );
-  p->setPublished( mPublished );
+  p->setPrivate( mPrivate );
   p->setPostingId( mPostingId );
   p->setCreationDateTime( mCDateTime );
   p->setModificationDateTime( mMDateTime );

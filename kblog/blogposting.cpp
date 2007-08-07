@@ -37,7 +37,7 @@ BlogPosting::BlogPosting( const KBlog::BlogPosting& posting ):
     d_ptr( new BlogPostingPrivate )
 {
   d_ptr->q_ptr=this;
-  d_ptr->mPublished=posting.isPublished();
+  d_ptr->mPrivate=posting.isPrivate();
   d_ptr->mPostingId=posting.postingId();
   d_ptr->mTitle=posting.title();
   d_ptr->mContent=posting.content();
@@ -53,7 +53,7 @@ BlogPosting::BlogPosting( const QString &postingId ) :
     d_ptr( new BlogPostingPrivate )
 {
   d_ptr->q_ptr = this;
-  d_ptr->mPublished = false;
+  d_ptr->mPrivate = false;
   d_ptr->mPostingId = postingId;
   d_ptr->mStatus = New;
 }
@@ -62,7 +62,7 @@ BlogPosting::BlogPosting( const QString &postingId, BlogPostingPrivate &dd )
   : d_ptr( &dd )
 {
   d_ptr->q_ptr = this;
-  d_ptr->mPublished = false;
+  d_ptr->mPrivate = false;
   d_ptr->mPostingId = postingId;
   d_ptr->mStatus = New;
 }
@@ -71,7 +71,7 @@ BlogPosting::BlogPosting( const KCal::Journal &journal ) :
     d_ptr( new BlogPostingPrivate )
 {
   d_ptr->q_ptr = this;
-  d_ptr->mPublished = false;
+  d_ptr->mPrivate = false;
   d_ptr->mPostingId = journal.customProperty( "KBLOG", "ID" );
   d_ptr->mJournalId = journal.uid();
   d_ptr->mStatus = New;
@@ -85,7 +85,7 @@ BlogPosting::BlogPosting( const KCal::Journal &journal, BlogPostingPrivate &dd )
   : d_ptr( &dd )
 {
   d_ptr->q_ptr = this;
-  d_ptr->mPublished = false;
+  d_ptr->mPrivate = false;
   d_ptr->mPostingId = journal.customProperty( "KBLOG", "ID" );
   d_ptr->mJournalId = journal.uid();
   d_ptr->mStatus = New;
@@ -126,14 +126,14 @@ QString BlogPosting::journalId() const
   return d_ptr->mJournalId;
 }
 
-bool BlogPosting::isPublished() const
+bool BlogPosting::isPrivate() const
 {
-  return d_ptr->mPublished;
+  return d_ptr->mPrivate;
 }
 
-void BlogPosting::setPublished( bool published )
+void BlogPosting::setPrivate( bool privatePosting )
 {
-  d_ptr->mPublished = published;
+  d_ptr->mPrivate = privatePosting;
 }
 
 QString BlogPosting::postingId() const
@@ -174,6 +174,7 @@ QString BlogPosting::abbreviatedContent() const
 
 void BlogPosting::setAbbreviatedContent( const QString &abbreviatedContent )
 {
+  Q_UNUSED( abbreviatedContent );
   //TODO
 }
 
@@ -245,6 +246,7 @@ QList<KUrl> BlogPosting::trackBackUrls() const
 
 void BlogPosting::setTrackBackUrls( const QList<KUrl> &trackBackUrls )
 {
+  Q_UNUSED( trackBackUrls );
   //TODO
 }
 
@@ -256,6 +258,7 @@ QString BlogPosting::mood() const
 
 void BlogPosting::setMood( const QString &mood )
 {
+  Q_UNUSED( mood );
   //TODO
 }
 
@@ -267,6 +270,7 @@ QString BlogPosting::music() const
 
 void BlogPosting::setMusic( const QString &music )
 {
+  Q_UNUSED( music );
   //TODO
 }
 

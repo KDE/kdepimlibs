@@ -104,8 +104,8 @@ void GData::listBlogs()
       + "/blogs" );
 }
 
-void GData::listRecentPostings( const QStringList &labels, int number, 
-                const KDateTime &upMinTime, const KDateTime &upMaxTime, 
+void GData::listRecentPostings( const QStringList &labels, int number,
+                const KDateTime &upMinTime, const KDateTime &upMaxTime,
                 const KDateTime &pubMinTime, const KDateTime &pubMaxTime )
 {
   Q_D(GData);
@@ -202,7 +202,7 @@ void GData::modifyPosting( KBlog::BlogPosting* posting )
     atomMarkup += "<published>"+posting->creationDateTime().toString() +"</published>";
     atomMarkup += "<updated>"+posting->modificationDateTime().toString()+"</updated>";
     atomMarkup += "<title type='text'>"+posting->title().toUtf8() +"</title>";
-    if( !posting->isPublished() )
+    if( posting->isPrivate() )
     {
       atomMarkup += "<app:control xmlns:app=*http://purl.org/atom/app#'>";
       atomMarkup += "<app:draft>yes</app:draft></app:control>";
@@ -258,7 +258,7 @@ void GData::createPosting( KBlog::BlogPosting* posting )
 
     QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
     atomMarkup += "<title type='text'>"+posting->title().toUtf8() +"</title>";
-    if( !posting->isPublished() )
+    if( posting->isPrivate() )
     {
       atomMarkup += "<app:control xmlns:app=*http://purl.org/atom/app#'>";
       atomMarkup += "<app:draft>yes</app:draft></app:control>";
@@ -715,7 +715,7 @@ void GDataPrivate::slotCreatePostingData( KIO::Job *job, const QByteArray &data 
 
 void GDataPrivate::slotCreatePosting( KJob *job )
 {
-  kDebug(5323) << "slotCreatePosting()";  
+  kDebug(5323) << "slotCreatePosting()";
   const QString data = QString::fromUtf8( mCreatePostingBuffer[ job ].data(), mCreatePostingBuffer[ job ].size() );
   mCreatePostingBuffer[ job ].resize( 0 );
 
@@ -739,7 +739,7 @@ void GDataPrivate::slotCreatePosting( KJob *job )
   }
   kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
 
-  QRegExp rxPub( "<published>(.+)</published>" ); 
+  QRegExp rxPub( "<published>(.+)</published>" );
   if( rxPub.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the published time out of the result:" << data;
     emit q->error( GData::Atom, i18n( "Could not regexp the published time out of the result." ), posting );
@@ -773,7 +773,7 @@ void GDataPrivate::slotModifyPostingData( KIO::Job *job, const QByteArray &data 
 
 void GDataPrivate::slotModifyPosting( KJob *job )
 {
-  kDebug(5323) << "slotModifyPosting()";  
+  kDebug(5323) << "slotModifyPosting()";
   const QString data = QString::fromUtf8( mModifyPostingBuffer[ job ].data(), mModifyPostingBuffer[ job ].size() );
   mModifyPostingBuffer[ job ].resize( 0 );
 
@@ -794,7 +794,7 @@ void GDataPrivate::slotModifyPosting( KJob *job )
   }
   kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
 
-  QRegExp rxPub( "<published>(.+)</published>" ); 
+  QRegExp rxPub( "<published>(.+)</published>" );
   if( rxPub.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the published time out of the result:" << data;
     emit q->error( GData::Atom, i18n( "Could not regexp the published time out of the result." ), posting );
@@ -826,7 +826,7 @@ void GDataPrivate::slotRemovePostingData( KIO::Job *job, const QByteArray &data 
 
 void GDataPrivate::slotRemovePosting( KJob *job )
 {
-  kDebug(5323) << "slotRemovePosting()";  
+  kDebug(5323) << "slotRemovePosting()";
   const QString data = QString::fromUtf8( mRemovePostingBuffer[ job ].data(), mRemovePostingBuffer[ job ].size() );
   mRemovePostingBuffer[ job ].resize( 0 );
 
@@ -854,10 +854,10 @@ void GDataPrivate::slotCreateCommentData( KIO::Job *job, const QByteArray &data 
 
 void GDataPrivate::slotCreateComment( KJob *job )
 {
-  kDebug(5323) << "slotCreateComment()";  
+  kDebug(5323) << "slotCreateComment()";
   const QString data = QString::fromUtf8( mCreateCommentBuffer[ job ].data(), mCreateCommentBuffer[ job ].size() );
   mCreateCommentBuffer[ job ].resize( 0 );
-  kDebug(5323) << "Dump data: " << data; 
+  kDebug(5323) << "Dump data: " << data;
 
   Q_Q(GData);
 
@@ -880,7 +880,7 @@ void GDataPrivate::slotCreateComment( KJob *job )
   }
   kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
 
-  QRegExp rxPub( "<published>(.+)</published>" ); 
+  QRegExp rxPub( "<published>(.+)</published>" );
   if( rxPub.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the published time out of the result:" << data;
     emit q->error( GData::Atom, i18n( "Could not regexp the published time out of the result." ), posting );
@@ -913,7 +913,7 @@ void GDataPrivate::slotRemoveCommentData( KIO::Job *job, const QByteArray &data 
 
 void GDataPrivate::slotRemoveComment( KJob *job )
 {
-  kDebug(5323) << "slotRemoveComment()";  
+  kDebug(5323) << "slotRemoveComment()";
   const QString data = QString::fromUtf8( mRemoveCommentBuffer[ job ].data(), mRemoveCommentBuffer[ job ].size() );
   mRemoveCommentBuffer[ job ].resize( 0 );
 

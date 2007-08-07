@@ -102,17 +102,18 @@ public:
       Returns if the posting is published or not.
 
       @return bool
-      @see setPublish()
+      @see setPrivate()
     */
-    bool isPublished() const;
+    bool isPrivate() const;
 
     /**
-      Sets the publish value.
+      Sets the posting to private viewings only.
 
-      @param publish set this to true, if you want to publish immediately.
-      @see publish()
+      @param privatePosting set this to false, if you don't want to publish
+      the blog posting immediately.
+      @see isPrivate()
     */
-    void setPublished( bool published );
+    void setPrivate( bool privatePosting );
 
     /**
       Returns the postId. This is for fetched postings.

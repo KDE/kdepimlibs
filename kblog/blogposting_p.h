@@ -33,7 +33,7 @@ namespace KBlog{
 class BlogPostingPrivate
 {
   public:
-    bool mPublished;
+    bool mPrivate;
     BlogPosting *q_ptr;
     QString mPostingId;
     QString mTitle;

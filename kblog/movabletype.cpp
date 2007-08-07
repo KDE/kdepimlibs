@@ -72,7 +72,7 @@ void MovableType::createPosting( KBlog::BlogPosting *posting )
   map["mt_keywords"] = posting->tags(); // TODO some convertion needed?
   //map["mt_tb_ping_urls"] check for that, i think this should only be done on the server.
   args << map;
-  args << QVariant( posting->isPublished() );
+  args << QVariant( !posting->isPrivate() );
   d->mXmlRpcClient->call (
     "metaWeblog.newPost", args,
     this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
@@ -106,7 +106,7 @@ void MovableType::modifyPosting( KBlog::BlogPosting *posting )
   map["mt_excerpt"] = posting->summary();
   map["mt_keywords"] = posting->tags(); // TODO some conversion needed?
   args << map;
-  args << QVariant( posting->isPublished() );
+  args << QVariant( !posting->isPrivate() );
   d->mXmlRpcClient->call(
     "metaWeblog.editPost", args,
      this, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),

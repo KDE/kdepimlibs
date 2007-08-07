@@ -94,7 +94,7 @@ void TestMovableType::dumpPosting( const BlogPosting* posting )
   qDebug() << "# postingId: " << posting->postingId();
   qDebug() << "# title: " << posting->title();
   qDebug() << "# content: " << posting->content();
-  qDebug() << "# publish: " << posting->isPublished();
+  qDebug() << "# publish: " << posting->isPrivate();
   qDebug() << "# categories: " << posting->categories().join( " " );
   qDebug() << "# error: " << posting->error();
   qDebug() << "# journalId: " << posting->journalId();
@@ -118,9 +118,9 @@ void TestMovableType::dumpPosting( const BlogPosting* posting )
     case BlogPosting::Error:
       qDebug() << "# status: Error"; break;
   };
-  qDebug() << "# creationDateTime(UTC): " << 
+  qDebug() << "# creationDateTime(UTC): " <<
       posting->creationDateTime().toUtc().toString();
-  qDebug() << "# modificationDateTime(UTC): " << 
+  qDebug() << "# modificationDateTime(UTC): " <<
       posting->modificationDateTime().toUtc().toString();
   qDebug() << "###########################";
 }
@@ -162,7 +162,7 @@ void TestMovableType::listBlogs( const QList<QMap<QString,QString> >& listedBlog
   listRecentPostingsTimer->start( TIMEOUT );
 }
 
-void TestMovableType::listRecentPostings( 
+void TestMovableType::listRecentPostings(
            const QList<KBlog::BlogPosting>& postings )
 {
   listRecentPostingsTimer->stop();
@@ -180,7 +180,7 @@ void TestMovableType::listRecentPostings(
   listCategoriesTimer->start( TIMEOUT );
 }
 
-void TestMovableType::listCategories( 
+void TestMovableType::listCategories(
            const QMap<QString,QMap<QString,QString> >& categories )
 {
   listRecentPostingsTimer->stop();
@@ -341,7 +341,7 @@ void TestMovableType::testNetwork()
   p = new BlogPosting(); // no need to delete later ;-)
   p->setTitle( mTitle );
   p->setContent( mContent );
-  p->setPublished( mPublished );
+  p->setPrivate( mPrivate );
   p->setPostingId( mPostingId );
   p->setCreationDateTime( mCDateTime );
   p->setModificationDateTime( mMDateTime );

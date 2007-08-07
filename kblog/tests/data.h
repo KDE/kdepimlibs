@@ -36,7 +36,7 @@
   QString mTitle( "TestBlog" );
   QString mContent( "TestBlog: <strong>posted</strong> content." );
   QString mModifiedContent( "TestBlog: <strong>modified</strong> <em>content</em>." );
-  bool mPublished = true;
+  bool mPrivate = false;
   QString mPostingId( QString( "113" ) );
 
   QString mCommentTitle( "TestBlog Comment" );

@@ -140,7 +140,7 @@ void Blogger1::modifyPosting( KBlog::BlogPosting *posting )
     }
     content += posting->content();
     args << QVariant( content );
-    args << QVariant( posting->isPublished() );
+    args << QVariant( !posting->isPrivate() );
     d->mXmlRpcClient->call(
       "blogger.editPost", args,
       this, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
@@ -166,7 +166,7 @@ void Blogger1::createPosting( KBlog::BlogPosting *posting )
     }
     content += posting->content();
     args << QVariant( content );
-    args << QVariant( posting->isPublished() );
+    args << QVariant( !posting->isPrivate() );
     d->mXmlRpcClient->call(
       "blogger.newPost", args,
       this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
@@ -184,7 +184,7 @@ void Blogger1::removePosting( KBlog::BlogPosting *posting )
   d->mCallMap[ i ] = posting;
  kDebug(5323) << "Blogger1::removePosting: postingId=" << posting->postingId();
  QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
- args << QVariant( /*publish=*/true );
+ args << QVariant( true ); // Publish must be set to remove posting.
  d->mXmlRpcClient->call(
    "blogger.deletePost", args,
    this, SLOT( slotRemovePosting( const QList<QVariant>&, const QVariant& ) ),

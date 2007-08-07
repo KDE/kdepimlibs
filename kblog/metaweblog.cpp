@@ -115,7 +115,7 @@ void MetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
   map["title"] = posting->title();
   map["lastModified"] = posting->modificationDateTime().toUtc().dateTime();
   args << map;
-  args << QVariant( posting->isPublished() );
+  args << QVariant( !posting->isPrivate() );
   d->mXmlRpcClient->call(
     "metaWeblog.editPost", args,
      this, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
@@ -140,7 +140,7 @@ void MetaWeblog::createPosting( KBlog::BlogPosting *posting )
   map["title"] = posting->title();
   map["dateCreated"] = posting->creationDateTime().toUtc().dateTime();
   args << map;
-  args << QVariant( posting->isPublished() );
+  args << QVariant( !posting->isPrivate() );
   d->mXmlRpcClient->call (
     "metaWeblog.newPost", args,
     this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),

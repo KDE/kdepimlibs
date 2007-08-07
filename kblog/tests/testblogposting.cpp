@@ -48,7 +48,7 @@ void testBlogPosting::testValidity_data()
     QTest::addColumn<QString>("postingId");
     QTest::addColumn<QString>("title");
     QTest::addColumn<QString>("content");
-    QTest::addColumn<bool>("isPublished");
+    QTest::addColumn<bool>("isPrivate");
     QTest::addColumn<QString>("abbreviatedContent");
     QTest::addColumn<KUrl>("link");
     QTest::addColumn<KUrl>("permalink");
@@ -68,7 +68,7 @@ void testBlogPosting::testValidity_data()
     QList<KUrl> url;
     url.append( KUrl( "http://track.back.url/some/path" ) );
     QStringList categories( "Category" );
-    QTest::newRow("SimpleTest") << QString("123ABC") << QString("Title") 
+    QTest::newRow("SimpleTest") << QString("123ABC") << QString("Title")
       << QString("Content") << true << QString("Abbreviated Content")
       << KUrl( "http://my.link/in/outer/space" ) << KUrl( "http://my.perma/link/space" )
       << true << true << QString( "Summary" ) << QString( "Tags 1 2" )
@@ -86,7 +86,7 @@ void testBlogPosting::testValidity()
     QFETCH(QString, postingId);
     QFETCH(QString, title);
     QFETCH(QString, content);
-    QFETCH(bool, isPublished);
+    QFETCH(bool, isPrivate);
     QFETCH(QString, abbreviatedContent);
     QFETCH(KUrl, link);
     QFETCH(KUrl, permalink);
@@ -106,7 +106,7 @@ void testBlogPosting::testValidity()
     p.setPostingId( postingId );
     p.setTitle( title );
     p.setContent( content );
-    p.setPublished( isPublished );
+    p.setPrivate( isPrivate );
     p.setAbbreviatedContent( abbreviatedContent );
     p.setLink( link );
     p.setPermaLink( permalink );
@@ -127,7 +127,7 @@ void testBlogPosting::testValidity()
     QCOMPARE(p.postingId(), postingId );
     QCOMPARE(p.title(), title );
     QCOMPARE(p.content(), content );
-    QCOMPARE(p.isPublished(), isPublished );
+    QCOMPARE(p.isPrivate(), isPrivate );
     QCOMPARE(p.abbreviatedContent(), abbreviatedContent );
     QCOMPARE(p.link(), link );
     QCOMPARE(p.permaLink(), permalink );
