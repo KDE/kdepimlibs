@@ -111,8 +111,8 @@ void Blogger1::fetchPosting( KBlog::BlogPosting *posting )
      Q_D(Blogger1);
      kDebug(5323) << "Fetching Posting with url" << posting->postingId();
      QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
-     unsigned int i= d->callCounter++; // multithreading problem? must be executed at once
-     d->callMap[ i ] = posting;
+     unsigned int i= d->mCallCounter++; // multithreading problem? must be executed at once
+     d->mCallMap[ i ] = posting;
      d->mXmlRpcClient->call(
        "blogger.getPost", args,
        this, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
@@ -129,8 +129,8 @@ void Blogger1::modifyPosting( KBlog::BlogPosting *posting )
     return;
   }
     kDebug(5323) << "Uploading Posting with postingId" << posting->postingId();
-    unsigned int i= d->callCounter++;
-    d->callMap[ i ] = posting;
+    unsigned int i= d->mCallCounter++;
+    d->mCallMap[ i ] = posting;
     QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
     QStringList categories = posting->categories();
     QString content = "<title>" + posting->title() + "</title>";
@@ -154,8 +154,8 @@ void Blogger1::createPosting( KBlog::BlogPosting *posting )
     kDebug(5323) << "Blogger1::createPosting: posting is null pointer";
     return;
   }
-    unsigned int i= d->callCounter++;
-    d->callMap[ i ] = posting;
+    unsigned int i= d->mCallCounter++;
+    d->mCallMap[ i ] = posting;
     kDebug(5323) << "Creating new Posting with blogid" << blogId();
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     QStringList categories = posting->categories();
@@ -180,8 +180,8 @@ void Blogger1::removePosting( KBlog::BlogPosting *posting )
     kDebug(5323) << "Blogger1::removePosting: posting is null pointer";
     return;
   }
-  unsigned int i = d->callCounter++;
-  d->callMap[ i ] = posting;
+  unsigned int i = d->mCallCounter++;
+  d->mCallMap[ i ] = posting;
  kDebug(5323) << "Blogger1::removePosting: postingId=" << posting->postingId();
  QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
  args << QVariant( /*publish=*/true );
@@ -194,7 +194,7 @@ void Blogger1::removePosting( KBlog::BlogPosting *posting )
 Blogger1Private::Blogger1Private() :
 mXmlRpcClient(0)
 {
-  callCounter = 1;
+  mCallCounter = 1;
 }
 
 Blogger1Private::~Blogger1Private()
@@ -326,8 +326,8 @@ void Blogger1Private::slotFetchPosting(
   Q_Q(Blogger1);
   kDebug(5323) << "Blog::slotFetchPosting";
 
-  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
-  callMap.remove( id.toInt() );
+  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  mCallMap.remove( id.toInt() );
 
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
@@ -364,8 +364,8 @@ void Blogger1Private::slotCreatePosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q(Blogger1);
-  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
-  callMap.remove( id.toInt() );
+  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "Blog::slotCreatePosting";
   //array of structs containing ISO.8601
@@ -390,8 +390,8 @@ void Blogger1Private::slotModifyPosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q(Blogger1);
-  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
-  callMap.remove( id.toInt() );
+  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "Blog::slotModifyPosting";
   //array of structs containing ISO.8601
@@ -413,8 +413,8 @@ void Blogger1Private::slotRemovePosting(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q(Blogger1);
-  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
-  callMap.remove( id.toInt() );
+  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "Blog::slotRemovePosting";
   //array of structs containing ISO.8601
@@ -438,7 +438,7 @@ void Blogger1Private::slotError( int number,
 {
   Q_Q(Blogger1);
   Q_UNUSED( number );
-  BlogPosting *posting = callMap[ id.toInt() ];
+  BlogPosting *posting = mCallMap[ id.toInt() ];
 
   emit q->error( Blogger1::XmlRpc, errorString, posting );
 }

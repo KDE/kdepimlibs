@@ -57,8 +57,8 @@ void MovableType::createPosting( KBlog::BlogPosting *posting )
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
-  unsigned int i = d->callCounter++;
-  d->callMap[ i ] = posting;
+  unsigned int i = d->mCallCounter++;
+  d->mCallMap[ i ] = posting;
   kDebug(5323) << "Creating new Posting with blogId" << blogId();
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   QMap<QString, QVariant> map;
@@ -91,8 +91,8 @@ void MovableType::modifyPosting( KBlog::BlogPosting *posting )
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
-  unsigned int i = d->callCounter++;
-  d->callMap[ i ] = posting;
+  unsigned int i = d->mCallCounter++;
+  d->mCallMap[ i ] = posting;
   kDebug(5323) << "Uploading Posting with postId" << posting->postingId();
 
   QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
@@ -121,8 +121,8 @@ void MovableType::fetchPosting( KBlog::BlogPosting *posting )
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
-  unsigned int i = d->callCounter++;
-  d->callMap[ i ] = posting;
+  unsigned int i = d->mCallCounter++;
+  d->mCallMap[ i ] = posting;
   kDebug(5323) << "Fetching Posting with url" << posting->postingId();
   QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
   d->mXmlRpcClient->call(
@@ -153,8 +153,8 @@ void MovableType::listTrackBackPings( KBlog::BlogPosting *posting ) {
   kDebug(5323) << "List trackback pings...";
   QList<QVariant> args;
   args << QVariant( posting->postingId() );
-  unsigned int i = d->callCounter++;
-  d->callMap[ i ] = posting;
+  unsigned int i = d->mCallCounter++;
+  d->mCallMap[ i ] = posting;
   d->mXmlRpcClient->call( "mt.getTracebackPings", args,
     this, SLOT( slotListTrackbackPings(
               const QList<QVariant>&, const QVariant& ) ),
@@ -238,8 +238,8 @@ void MovableTypePrivate::slotCreatePosting(
 {
   Q_Q(MovableType);
 
-  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
-  callMap.remove( id.toInt() );
+  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "MovableType::slotCreatePosting";
   //array of structs containing ISO.8601
@@ -273,8 +273,8 @@ void MovableTypePrivate::slotFetchPosting(
 {
   Q_Q(MovableType);
 
-  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
-  callMap.remove( id.toInt() );
+  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "MovableType::slotFetchPosting";
   //array of structs containing ISO.8601
@@ -346,8 +346,8 @@ void MovableTypePrivate::slotListTrackBackPings(
 {
   Q_Q(MovableType);
   kDebug(5323) << "slotTrackbackPings()";
-  BlogPosting *posting = callMap[ id.toInt() ];
-  callMap.remove( id.toInt() );
+  BlogPosting *posting = mCallMap[ id.toInt() ];
+  mCallMap.remove( id.toInt() );
   //TODO Contains:
   // String pingTitle: the title of the entry sent in the ping
   // String pingURL: the URL of the entry
@@ -382,8 +382,8 @@ void MovableTypePrivate::slotModifyPosting(
 {
   Q_Q(MovableType);
 
-  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
-  callMap.remove( id.toInt() );
+  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "MovableType::slotModifyPosting";
   //array of structs containing ISO.8601

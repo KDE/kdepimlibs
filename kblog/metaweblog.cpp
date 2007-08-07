@@ -86,8 +86,8 @@ void MetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
-  unsigned int i = d->callCounter++;
-  d->callMap[ i ] = posting;
+  unsigned int i = d->mCallCounter++;
+  d->mCallMap[ i ] = posting;
   kDebug(5323) << "Fetching Posting with url" << posting->postingId();
   QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
   d->mXmlRpcClient->call(
@@ -104,8 +104,8 @@ void MetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
-  unsigned int i = d->callCounter++;
-  d->callMap[ i ] = posting;
+  unsigned int i = d->mCallCounter++;
+  d->mCallMap[ i ] = posting;
   kDebug(5323) << "Uploading Posting with postId" << posting->postingId();
 
   QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
@@ -130,8 +130,8 @@ void MetaWeblog::createPosting( KBlog::BlogPosting *posting )
     emit error ( Other, i18n( "Posting is a null pointer." ) );
     return;
   }
-  unsigned int i = d->callCounter++;
-  d->callMap[ i ] = posting;
+  unsigned int i = d->mCallCounter++;
+  d->mCallMap[ i ] = posting;
   kDebug(5323) << "Creating new Posting with blogId" << blogId();
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   QMap<QString, QVariant> map;
@@ -155,8 +155,8 @@ void MetaWeblog::createMedia( KBlog::BlogMedia *media )
     emit error ( Other, i18n( "Media is a null pointer." ) );
     return;
   }
-  unsigned int i = d->callMediaCounter++;
-  d->callMediaMap[ i ] = media;
+  unsigned int i = d->mCallMediaCounter++;
+  d->mCallMediaMap[ i ] = media;
   kDebug(5323) << "MetaWeblog::createMedia: name="<< media->name();
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   QMap<QString, QVariant> map;
@@ -174,7 +174,7 @@ void MetaWeblog::createMedia( KBlog::BlogMedia *media )
 
 MetaWeblogPrivate::MetaWeblogPrivate()
 {
-  callMediaCounter=1;
+  mCallMediaCounter=1;
 }
 
 MetaWeblogPrivate::~MetaWeblogPrivate()
@@ -297,8 +297,8 @@ void MetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
 {
   Q_Q(MetaWeblog);
 
-  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
-  callMap.remove( id.toInt() );
+  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "MetaWeblog::slotFetchPosting";
   //array of structs containing ISO.8601
@@ -330,8 +330,8 @@ void MetaWeblogPrivate::slotCreatePosting( const QList<QVariant> &result,
 {
   Q_Q(MetaWeblog);
 
-  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
-  callMap.remove( id.toInt() );
+  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "MetaWeblog::slotCreatePosting";
   //array of structs containing ISO.8601
@@ -355,8 +355,8 @@ void MetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
 {
   Q_Q(MetaWeblog);
 
-  KBlog::BlogPosting* posting = callMap[ id.toInt() ];
-  callMap.remove( id.toInt() );
+  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "MetaWeblog::slotModifyPosting";
   //array of structs containing ISO.8601
@@ -379,8 +379,8 @@ void MetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,
 {
   Q_Q(MetaWeblog);
 
-  KBlog::BlogMedia* media = callMediaMap[ id.toInt() ];
-  callMediaMap.remove( id.toInt() );
+  KBlog::BlogMedia* media = mCallMediaMap[ id.toInt() ];
+  mCallMediaMap.remove( id.toInt() );
 
   kDebug(5323) << "MetaWeblogPrivate::slotCreateMedia, no error!";
   kDebug(5323) << "TOP:" << result[0].typeName();
