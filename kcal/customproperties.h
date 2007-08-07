@@ -18,19 +18,29 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the CustomProperties class.
+
+  @author David Jarvie \<software@astrojar.org.uk\>
+*/
 
 #ifndef KCAL_CUSTOMPROPERTIES_H
 #define KCAL_CUSTOMPROPERTIES_H
+
+#include "kcal_export.h"
 
 #include <QtCore/QString>
 #include <QtCore/QMap>
 #include <QtCore/QByteArray>
 
-#include "kcal_export.h"
-
 namespace KCal {
 
 /**
+  @brief
+  A class to manage custom calendar properties.
+
   This class represents custom calendar properties.
   It is used as a base class for classes which represent calendar components.
   A custom property name written by the kcal library has the form X-KDE-APP-KEY
@@ -43,13 +53,26 @@ class KCAL_EXPORT CustomProperties
 {
   public:
     /**
-      Construct a new empty custom properties instance.
+      Constructs an empty custom properties instance.
     */
     CustomProperties();
-    CustomProperties( const CustomProperties & );
+
+    /**
+      Copy constructor.
+      @param other is the one to copy.
+    */
+    CustomProperties( const CustomProperties &other );
+
+    /**
+      Destructor.
+    */
     virtual ~CustomProperties();
 
-    bool operator==( const CustomProperties & ) const;
+    /**
+      Compare this with @p properties for equality.
+      @param properties is the one to compare.
+    */
+    bool operator==( const CustomProperties &properties ) const;
 
     /**
       Create or modify a custom calendar property.
@@ -57,7 +80,8 @@ class KCAL_EXPORT CustomProperties
       @param app   Application name as it appears in the custom property name.
       @param key   Property identifier specific to the application.
       @param value The property's value. A call with a value of QString()
-                   will be ignored.
+      will be ignored.
+      @see removeCustomProperty().
     */
     void setCustomProperty( const QByteArray &app, const QByteArray &key,
                             const QString &value );
@@ -67,6 +91,7 @@ class KCAL_EXPORT CustomProperties
 
       @param app Application name as it appears in the custom property name.
       @param key Property identifier specific to the application.
+      @see setCustomProperty().
     */
     void removeCustomProperty( const QByteArray &app, const QByteArray &key );
 
@@ -76,7 +101,7 @@ class KCAL_EXPORT CustomProperties
       @param app Application name as it appears in the custom property name.
       @param key Property identifier specific to the application.
       @return Property value, or QString() if (and only if) the property
-              does not exist.
+      does not exist.
     */
     QString customProperty( const QByteArray &app, const QByteArray &key ) const;
 
@@ -85,7 +110,8 @@ class KCAL_EXPORT CustomProperties
 
       @param name Full property name
       @param value The property's value. A call with a value of QString()
-                   will be ignored.
+      will be ignored.
+      @see removeNonKDECustomProperty().
     */
     void setNonKDECustomProperty( const QByteArray &name, const QString &value );
 
@@ -93,6 +119,7 @@ class KCAL_EXPORT CustomProperties
       Delete a non-KDE or non-standard custom calendar property.
 
       @param name Full property name
+      @see setNonKDECustomProperty().
     */
     void removeNonKDECustomProperty( const QByteArray &name );
 
@@ -101,18 +128,21 @@ class KCAL_EXPORT CustomProperties
 
       @param name Full property name
       @return Property value, or QString() if (and only if) the property
-              does not exist.
+      does not exist.
     */
     QString nonKDECustomProperty( const QByteArray &name ) const;
 
     /**
       Initialise the alarm's custom calendar properties to the specified
       key/value pairs.
+      @param properties is a QMap of property key/value pairs.
+      @see customProperties().
     */
     void setCustomProperties( const QMap<QByteArray, QString> &properties );
 
     /**
-      Return all custom calendar property key/value pairs.
+      Returns all custom calendar property key/value pairs.
+      @see setCustomProperties().
     */
     QMap<QByteArray, QString> customProperties() const;
 
