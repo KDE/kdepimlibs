@@ -112,7 +112,7 @@ KCal::Journal* BlogPosting::journal( const Blog &blog ) const
   journal->setUid( id );
   journal->setSummary( d_ptr->mTitle );
   journal->setCategories( d_ptr->mCategories );
-  journal->setDescription( d_ptr->mContent );
+  journal->setDescription( d_ptr->mContent, true );
   journal->setDtStart( d_ptr->mCreationDateTime );
   journal->setCustomProperty( "KBLOG", "URL", url );
   journal->setCustomProperty( "KBLOG", "USER", blog.username() );
