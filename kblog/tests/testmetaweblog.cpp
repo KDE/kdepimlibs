@@ -177,7 +177,7 @@ void TestMetaWeblog::listRecentPostings(
 void TestMetaWeblog::listCategories(
            const QMap<QString,QMap<QString,QString> >& categories )
 {
-  listRecentPostingsTimer->stop();
+  listCategoriesTimer->stop();
   qDebug() << "########### listCategories ###########";
   QList<QString> catKeys = categories.keys();
   QList<QString>::ConstIterator it = catKeys.begin();

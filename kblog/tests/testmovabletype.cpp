@@ -183,7 +183,7 @@ void TestMovableType::listRecentPostings(
 void TestMovableType::listCategories(
            const QMap<QString,QMap<QString,QString> >& categories )
 {
-  listRecentPostingsTimer->stop();
+  listCategoriesTimer->stop();
   qDebug() << "########### listCategories ###########";
   QList<QString> catKeys = categories.keys();
   QList<QString>::ConstIterator it = catKeys.begin();
@@ -330,7 +330,7 @@ void TestMovableType::testValidity()
   QVERIFY( b->blogId() == mBlogId );
   QVERIFY( b->username() == mUsername );
   QVERIFY( b->password() == mPassword );
-  QVERIFY( b->interfaceName() == "MovableType" );
+  QVERIFY( b->interfaceName() == "Movable Type" );
   QVERIFY( b->timeZone().name() == mTimeZone.name() );
 }
 
