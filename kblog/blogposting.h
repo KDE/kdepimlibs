@@ -180,8 +180,8 @@ public:
     QString summary() const; // excerpts in Movable Type
     void setSummary( const QString &summary );
 
-    QString tags() const; // keywords in Movable Type
-    void setTags( const QString &tags );
+    QStringList tags() const; // keywords in Movable Type
+    void setTags( const QStringList &tags );
 
     QList<KUrl> trackBackUrls() const;
     void setTrackBackUrls( const QList<KUrl> &trackBackUrls );

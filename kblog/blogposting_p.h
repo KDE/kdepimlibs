@@ -42,7 +42,7 @@ class BlogPostingPrivate
     QString mError;
     QString mJournalId;
     QString mSummary;
-    QString mTags;
+    QStringList mTags;
     bool mCommentAllowed;
     bool mTrackBackAllowed;
     KUrl mLink, mPermaLink;

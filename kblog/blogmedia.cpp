@@ -130,5 +130,4 @@ BlogMedia& BlogMedia::operator=(const BlogMedia &media)
 
 } //namespace KBlog
 
-#include "blogmedia.moc"
 

@@ -23,14 +23,21 @@
 #define KBLOG_TEST_DATA_H_
 
 #include <QtCore/QString>
+#include <QtCore/QStringList>
 #include <kurl.h>
 #include <ktimezone.h>
 #include <QtCore/QDateTime>
 
-  KUrl mUrl( "http://soctest.wordpress.com/xmlrpc.php" );
-  QString mUsername( "socapitest" );
-  QString mPassword( "k0nt4ctbl0g" );
+//   KUrl mUrl( "http://soctest.wordpress.com/xmlrpc.php" );
+//   QString mUsername( "socapitest" );
+//   QString mPassword( "k0nt4ctbl0g" );
+//   QString mBlogId( "1" );
+
+  KUrl mUrl( "http://www.manalaa.net/xmlrpc.php" );
+  QString mUsername( "kblog" );
+  QString mPassword( "PudfgytvV7" );
   QString mBlogId( "1" );
+
   QDateTime mCreationDateTime( QDateTime::currentDateTime() );
   QDateTime mModificationDateTime( QDateTime::currentDateTime() );
   QString mTitle( "TestBlog" );
@@ -44,7 +51,7 @@
   QString mCommentEmail( QString( "fancy_mail@not.valid" ) );
   bool mCommentAllowed = true;
   bool mTrackBackAllowed = true;
-  QString mTags = "some funny tags";
+  QStringList mTags("funny");
   QString mSummary ="A simple summary.";
 
 #endif

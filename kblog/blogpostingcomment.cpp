@@ -48,11 +48,12 @@ BlogPostingComment::BlogPostingComment(
 }
 
 BlogPostingComment::BlogPostingComment(
-    const QString &postingId ) :
+    const QString &commentId ) :
     d_ptr( new BlogPostingCommentPrivate )
 {
   d_ptr->q_ptr=this;
   d_ptr->mStatus = New;
+  d_ptr->mCommentId = commentId;
 }
 
 BlogPostingComment::~BlogPostingComment()
@@ -167,5 +168,3 @@ BlogPostingComment& BlogPostingComment::operator=(const BlogPostingComment &comm
 }
 
 } // namespace KBlog
-
-#include "blogpostingcomment.moc"

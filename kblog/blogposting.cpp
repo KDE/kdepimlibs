@@ -228,12 +228,12 @@ void BlogPosting::setSummary( const QString &summary )
   d_ptr->mSummary = summary;
 }
 
-QString BlogPosting::tags() const
+QStringList BlogPosting::tags() const
 {
   return d_ptr->mTags;
 }
 
-void BlogPosting::setTags( const QString &tags )
+void BlogPosting::setTags( const QStringList &tags )
 {
   d_ptr->mTags = tags;
 }

@@ -25,7 +25,7 @@
 
 #include <kblog/kblog_export.h>
 
-#include <QtCore/QObject>
+#include <QtCore/QString>
 
 class QStringList;
 
@@ -56,9 +56,9 @@ class KBLOG_EXPORT BlogPostingComment
   /**
     Constructor.
 
-    @param postingId The ID of the posting on the server.
+    @param commentId The ID of the comment on the server.
   */
-  explicit BlogPostingComment( const QString &postingId = QString() );
+  explicit BlogPostingComment( const QString &commentId = QString() );
 
   /**
     Virtual default destructor.

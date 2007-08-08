@@ -25,8 +25,6 @@
 
 #include <kblog/kblog_export.h>
 
-#include <QtCore/QObject>
-
 class KUrl;
 
 namespace KBlog {

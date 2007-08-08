@@ -67,13 +67,12 @@ void testBlogPosting::testValidity_data()
 
     QList<KUrl> url;
     url.append( KUrl( "http://track.back.url/some/path" ) );
-    QStringList categories( "Category" );
     QTest::newRow("SimpleTest") << QString("123ABC") << QString("Title")
       << QString("Content") << true << QString("Abbreviated Content")
       << KUrl( "http://my.link/in/outer/space" ) << KUrl( "http://my.perma/link/space" )
-      << true << true << QString( "Summary" ) << QString( "Tags 1 2" )
+      << true << true << QString( "Summary" ) << QStringList( "Tags" )
       << url  << QString( "Mood" ) << QString( "Music" )
-      << categories
+      << QStringList( "Category" )
       << KDateTime( QDateTime::currentDateTime() )
       << KDateTime( QDateTime::currentDateTime() ) << BlogPosting::New
       << QString( "Error" );
@@ -93,7 +92,7 @@ void testBlogPosting::testValidity()
     QFETCH(bool, isCommentAllowed);
     QFETCH(bool, isTrackBackAllowed);
     QFETCH(QString, summary);
-    QFETCH(QString, tags);
+    QFETCH(QStringList, tags);
     QFETCH(QList<KUrl>, trackBackUrls);
     QFETCH(QString, mood);
     QFETCH(QString, music);

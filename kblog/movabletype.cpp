@@ -224,7 +224,7 @@ bool MovableTypePrivate::readPostingFromMap(
   post->setCommentAllowed( (bool)postInfo["mt_allow_comments"].toInt() );
   post->setTrackBackAllowed( (bool)postInfo["mt_allow_pings"].toInt() );
   post->setSummary( postInfo["mt_excerpt"].toString() );
-  post->setTags( postInfo["mt_keywords"].toString() );
+  post->setTags( postInfo["mt_keywords"].toStringList() );
   post->setLink( postInfo["link"].toString() );
   post->setPermaLink( postInfo["permaLink"].toString() );
 
