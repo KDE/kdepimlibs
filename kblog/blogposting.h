@@ -25,7 +25,7 @@
 
 #include <kblog/kblog_export.h>
 
-#include <QtCore/QObject>
+#include <kurl.h>
 
 class QStringList;
 

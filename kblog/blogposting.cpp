@@ -333,4 +333,3 @@ BlogPosting& BlogPosting::operator=(const BlogPosting &posting)
 
 } // namespace KBlog
 
-#include "blogposting.moc"
