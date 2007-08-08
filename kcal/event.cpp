@@ -138,8 +138,9 @@ QString Event::dtEndTimeStr( bool shortfmt, const KDateTime::Spec &spec ) const
   if ( spec.isValid() ) {
 
     QString timeZone;
-    if ( spec.timeZone() != KSystemTimeZones::local() )
+    if ( spec.timeZone() != KSystemTimeZones::local() ) {
       timeZone = ' ' + spec.timeZone().name();
+    }
 
     return KGlobal::locale()->formatTime( dtEnd().toTimeSpec( spec ).time(), shortfmt )
       + timeZone;
@@ -153,8 +154,9 @@ QString Event::dtEndDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
   if ( spec.isValid() ) {
 
     QString timeZone;
-    if ( spec.timeZone() != KSystemTimeZones::local() )
+    if ( spec.timeZone() != KSystemTimeZones::local() ) {
       timeZone = ' ' + spec.timeZone().name();
+    }
 
     return KGlobal::locale()->formatDate(
       dtEnd().toTimeSpec( spec ).date(),
@@ -172,8 +174,9 @@ QString Event::dtEndStr( bool shortfmt, const KDateTime::Spec &spec ) const
   if ( spec.isValid() ) {
 
     QString timeZone;
-    if ( spec.timeZone() != KSystemTimeZones::local() )
+    if ( spec.timeZone() != KSystemTimeZones::local() ) {
       timeZone = ' ' + spec.timeZone().name();
+    }
 
     return KGlobal::locale()->formatDateTime(
       dtEnd().toTimeSpec( spec ).dateTime(),

@@ -162,8 +162,9 @@ QString Todo::dtDueTimeStr( bool shortfmt, const KDateTime::Spec &spec ) const
   if ( spec.isValid() ) {
 
     QString timeZone;
-    if ( spec.timeZone() != KSystemTimeZones::local() )
+    if ( spec.timeZone() != KSystemTimeZones::local() ) {
       timeZone = ' ' + spec.timeZone().name();
+    }
 
     return KGlobal::locale()->formatTime( dtDue( !recurs() ).toTimeSpec( spec ).time(), shortfmt )
       + timeZone;
@@ -177,8 +178,9 @@ QString Todo::dtDueDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
   if ( spec.isValid() ) {
 
     QString timeZone;
-    if ( spec.timeZone() != KSystemTimeZones::local() )
+    if ( spec.timeZone() != KSystemTimeZones::local() ) {
       timeZone = ' ' + spec.timeZone().name();
+    }
 
     return KGlobal::locale()->formatDate(
       dtDue( !recurs() ).toTimeSpec( spec ).date(),
@@ -196,8 +198,9 @@ QString Todo::dtDueStr( bool shortfmt, const KDateTime::Spec &spec ) const
   if ( spec.isValid() ) {
 
     QString timeZone;
-    if ( spec.timeZone() != KSystemTimeZones::local() )
+    if ( spec.timeZone() != KSystemTimeZones::local() ) {
       timeZone = ' ' + spec.timeZone().name();
+    }
 
     return KGlobal::locale()->formatDateTime(
       dtDue( !recurs() ).toTimeSpec( spec ).dateTime(),
@@ -271,8 +274,9 @@ QString Todo::dtStartTimeStr( bool shortfmt, bool first, const KDateTime::Spec &
   if ( spec.isValid() ) {
 
     QString timeZone;
-    if ( spec.timeZone() != KSystemTimeZones::local() )
+    if ( spec.timeZone() != KSystemTimeZones::local() ) {
       timeZone = ' ' + spec.timeZone().name();
+    }
 
     return KGlobal::locale()->formatTime( dtStart( first ).toTimeSpec( spec ).time(), shortfmt )
       + timeZone;
@@ -286,8 +290,9 @@ QString Todo::dtStartDateStr( bool shortfmt, bool first, const KDateTime::Spec &
   if ( spec.isValid() ) {
 
     QString timeZone;
-    if ( spec.timeZone() != KSystemTimeZones::local() )
+    if ( spec.timeZone() != KSystemTimeZones::local() ) {
       timeZone = ' ' + spec.timeZone().name();
+    }
 
     return
       KGlobal::locale()->formatDate( dtStart( first ).toTimeSpec( spec ).date(),
@@ -305,8 +310,9 @@ QString Todo::dtStartStr( bool shortfmt, bool first, const KDateTime::Spec &spec
   if ( spec.isValid() ) {
 
     QString timeZone;
-    if ( spec.timeZone() != KSystemTimeZones::local() )
+    if ( spec.timeZone() != KSystemTimeZones::local() ) {
       timeZone = ' ' + spec.timeZone().name();
+    }
 
     return
       KGlobal::locale()->formatDateTime( dtStart( first ).toTimeSpec( spec ).dateTime(),

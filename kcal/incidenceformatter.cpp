@@ -293,28 +293,32 @@ static QString eventViewerFormatEvent( Event *event )
                       event->dtEndDateStr( true, event->dtStart().timeSpec() ) ) + "</td>";
     } else {
       tmpStr += "<td align=\"right\"><b>" + i18n( "Date" ) + "</b></td>";
-      tmpStr += "<td>" + i18nc("date as string","%1",
-                               event->dtStartDateStr( true, event->dtStart().timeSpec()) ) + "</td>";
+      tmpStr += "<td>" +
+                i18nc( "date as string","%1",
+                       event->dtStartDateStr( true, event->dtStart().timeSpec() ) ) + "</td>";
     }
   } else {
     if ( event->isMultiDay() ) {
       tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
-      tmpStr += "<td>" + i18nc("<beginTime> - <endTime>","%1 - %2",
-                               event->dtStartStr( true, event->dtStart().timeSpec() ),
-                               event->dtEndStr( true,  event->dtStart().timeSpec() ) ) + "</td>";
+      tmpStr += "<td>" +
+                i18nc( "<beginTime> - <endTime>","%1 - %2",
+                       event->dtStartStr( true, event->dtStart().timeSpec() ),
+                       event->dtEndStr( true, event->dtStart().timeSpec() ) ) + "</td>";
     } else {
       tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
       if ( event->hasEndDate() && event->dtStart() != event->dtEnd() ) {
-        tmpStr += "<td>" + i18nc("<beginTime> - <endTime>","%1 - %2",
-                                 event->dtStartTimeStr( true, event->dtStart().timeSpec() ),
-                                 event->dtEndTimeStr( true, event->dtStart().timeSpec() ) ) + "</td>";
+        tmpStr += "<td>" +
+                  i18nc( "<beginTime> - <endTime>","%1 - %2",
+                         event->dtStartTimeStr( true, event->dtStart().timeSpec() ),
+                         event->dtEndTimeStr( true, event->dtStart().timeSpec() ) ) + "</td>";
       } else {
         tmpStr += "<td>" + event->dtStartTimeStr( true, event->dtStart().timeSpec() ) + "</td>";
       }
       tmpStr += "</tr><tr>";
       tmpStr += "<td align=\"right\"><b>" + i18n( "Date" ) + "</b></td>";
-      tmpStr += "<td>" + i18nc("date as string","%1",
-                               event->dtStartDateStr( true, event->dtStart().timeSpec() ) ) + "</td>";
+      tmpStr += "<td>" +
+                i18nc( "date as string","%1",
+                       event->dtStartDateStr( true, event->dtStart().timeSpec() ) ) + "</td>";
     }
   }
   tmpStr += "</tr>";
@@ -426,7 +430,9 @@ static QString eventViewerFormatJournal( Journal *journal )
   if ( !journal->summary().isEmpty() ) {
     tmpStr+= eventViewerAddTag( "h1", journal->summary() );
   }
-  tmpStr += eventViewerAddTag( "h2", i18n( "Journal for %1", journal->dtStartDateStr( false, journal->dtStart().timeSpec()  ) ) );
+  tmpStr += eventViewerAddTag(
+    "h2", i18n( "Journal for %1",
+                journal->dtStartDateStr( false, journal->dtStart().timeSpec() ) ) );
   if ( !journal->description().isEmpty() ) {
     tmpStr += eventViewerAddTag( "p", journal->description() );
   }
@@ -440,10 +446,12 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
   }
 
   QString tmpStr(
-    eventViewerAddTag( "h1", i18n( "Free/Busy information for %1", fb->organizer().fullName() ) ) );
-  tmpStr += eventViewerAddTag( "h3", i18n( "Busy times in date range %1 - %2:",
-        KGlobal::locale()->formatDate( fb->dtStart().date(), KLocale::ShortDate ),
-        KGlobal::locale()->formatDate( fb->dtEnd().date(), KLocale::ShortDate ) ) );
+    eventViewerAddTag(
+      "h1", i18n( "Free/Busy information for %1", fb->organizer().fullName() ) ) );
+  tmpStr += eventViewerAddTag(
+    "h3", i18n( "Busy times in date range %1 - %2:",
+                KGlobal::locale()->formatDate( fb->dtStart().date(), KLocale::ShortDate ),
+                KGlobal::locale()->formatDate( fb->dtEnd().date(), KLocale::ShortDate ) ) );
 
   QList<Period> periods = fb->busyPeriods();
 
@@ -593,7 +601,8 @@ static QString invitationDetailsEvent( Event *event )
   if ( event->hasEndDate() ) {
     if ( ! event->floats() ) {
       tmp =  i18nc( "%1: End Date, %2: End Time", "%1 %2",
-                    event->dtEndDateStr( true, event->dtStart().timeSpec() ), event->dtEndTimeStr( true, event->dtStart().timeSpec() ) );
+                    event->dtEndDateStr( true, event->dtStart().timeSpec() ),
+                    event->dtEndTimeStr( true, event->dtStart().timeSpec() ) );
     } else {
       tmp = i18nc( "%1: End Date", "%1 (time unspecified)",
                    event->dtEndDateStr( true, event->dtStart().timeSpec() ) );
@@ -664,7 +673,8 @@ static QString invitationDetailsJournal( Journal *journal )
   }
   QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
   html += invitationRow( i18n( "Summary:" ), sSummary );
-  html += invitationRow( i18n( "Date:" ), journal->dtStartDateStr( false, journal->dtStart().timeSpec() ) );
+  html += invitationRow( i18n( "Date:" ),
+                         journal->dtStartDateStr( false, journal->dtStart().timeSpec() ) );
   html += invitationRow( i18n( "Description:" ), sDescr );
   html += "</table>\n";
 
@@ -679,7 +689,8 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
 
   QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
   html += invitationRow( i18n( "Person:" ), fb->organizer().fullName() );
-  html += invitationRow( i18n( "Start date:" ), fb->dtStartDateStr( true, fb->dtStart().timeSpec() ) );
+  html += invitationRow( i18n( "Start date:" ),
+                         fb->dtStartDateStr( true, fb->dtStart().timeSpec() ) );
   html += invitationRow( i18n( "End date:" ),
                          KGlobal::locale()->formatDate( fb->dtEnd().date(), KLocale::ShortDate ) );
   html += "<tr><td colspan=2><hr></td></tr>\n";
@@ -1262,10 +1273,12 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
 
   } else {
 
-    ret += "<br>"+i18n("<i>Date:</i>&nbsp;%1", event->dtStartDateStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) );
+    ret += "<br>" +
+           i18n( "<i>Date:</i>&nbsp;%1",
+                 event->dtStartDateStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) );
     if ( !event->floats() ) {
-      if ( event->dtStartTimeStr( true, event->dtStart().timeSpec() )
-           == event->dtEndTimeStr( true, event->dtStart().timeSpec() ) ) { // to prevent 'Time: 17:00 - 17:00'
+      if ( event->dtStartTimeStr( true, event->dtStart().timeSpec() ) ==
+           event->dtEndTimeStr( true, event->dtStart().timeSpec() ) ) { // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" +
               i18nc( "time for event, &nbsp; to prevent ugly line breaks", "<i>Time:</i>&nbsp;%1",
                      event->dtStartTimeStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) );

@@ -220,8 +220,9 @@ QString IncidenceBase::dtStartTimeStr( bool shortfmt, const KDateTime::Spec &spe
   if ( spec.isValid() ) {
 
     QString timeZone;
-    if ( spec.timeZone() != KSystemTimeZones::local() )
+    if ( spec.timeZone() != KSystemTimeZones::local() ) {
       timeZone = ' ' + spec.timeZone().name();
+    }
 
     return KGlobal::locale()->formatTime( dtStart().toTimeSpec( spec ).time(), shortfmt )
       + timeZone;
@@ -235,8 +236,9 @@ QString IncidenceBase::dtStartDateStr( bool shortfmt, const KDateTime::Spec &spe
   if ( spec.isValid() ) {
 
     QString timeZone;
-    if ( spec.timeZone() != KSystemTimeZones::local() )
+    if ( spec.timeZone() != KSystemTimeZones::local() ) {
       timeZone = ' ' + spec.timeZone().name();
+    }
 
     return KGlobal::locale()->formatDate(
       dtStart().toTimeSpec( spec ).date(), ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) )
@@ -252,8 +254,9 @@ QString IncidenceBase::dtStartStr( bool shortfmt, const KDateTime::Spec &spec ) 
   if ( spec.isValid() ) {
 
     QString timeZone;
-    if ( spec.timeZone() != KSystemTimeZones::local() )
+    if ( spec.timeZone() != KSystemTimeZones::local() ) {
       timeZone = ' ' + spec.timeZone().name();
+    }
 
     return KGlobal::locale()->formatDateTime(
       dtStart().toTimeSpec( spec ).dateTime(),
