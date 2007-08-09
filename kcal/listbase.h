@@ -75,7 +75,7 @@ class ListBase : public QList<T *>
     }
 
     /**
-      Assigns this ListBase to @p l.
+      Assigns @p l to this listbase.
       @param l is the ListBase to copy.
     */
     ListBase &operator=( const ListBase &l )
