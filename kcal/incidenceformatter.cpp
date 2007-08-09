@@ -290,7 +290,7 @@ static QString eventViewerFormatEvent( Event *event )
       tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
       tmpStr += "<td>" + i18nc("<beginTime> - <endTime>","%1 - %2",
                       event->dtStartDateStr( true, event->dtStart().timeSpec() ),
-                      event->dtEndDateStr( true, event->dtStart().timeSpec() ) ) + "</td>";
+                      event->dtEndDateStr( true, event->dtEnd().timeSpec() ) ) + "</td>";
     } else {
       tmpStr += "<td align=\"right\"><b>" + i18n( "Date" ) + "</b></td>";
       tmpStr += "<td>" +
@@ -301,16 +301,16 @@ static QString eventViewerFormatEvent( Event *event )
     if ( event->isMultiDay() ) {
       tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
       tmpStr += "<td>" +
-                i18nc( "<beginTime> - <endTime>","%1 - %2",
-                       event->dtStartStr( true, event->dtStart().timeSpec() ),
-                       event->dtEndStr( true, event->dtStart().timeSpec() ) ) + "</td>";
+	        i18nc( "<beginTime> - <endTime>","%1 - %2",
+		       event->dtStartStr( true, event->dtStart().timeSpec() ),
+		       event->dtEndStr( true, event->dtEnd().timeSpec() ) ) + "</td>";
     } else {
       tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
       if ( event->hasEndDate() && event->dtStart() != event->dtEnd() ) {
         tmpStr += "<td>" +
-                  i18nc( "<beginTime> - <endTime>","%1 - %2",
-                         event->dtStartTimeStr( true, event->dtStart().timeSpec() ),
-                         event->dtEndTimeStr( true, event->dtStart().timeSpec() ) ) + "</td>";
+	          i18nc( "<beginTime> - <endTime>","%1 - %2",
+			 event->dtStartTimeStr( true, event->dtStart().timeSpec() ),
+			 event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) ) + "</td>";
       } else {
         tmpStr += "<td>" + event->dtStartTimeStr( true, event->dtStart().timeSpec() ) + "</td>";
       }
@@ -601,11 +601,11 @@ static QString invitationDetailsEvent( Event *event )
   if ( event->hasEndDate() ) {
     if ( ! event->floats() ) {
       tmp =  i18nc( "%1: End Date, %2: End Time", "%1 %2",
-                    event->dtEndDateStr( true, event->dtStart().timeSpec() ),
-                    event->dtEndTimeStr( true, event->dtStart().timeSpec() ) );
+                    event->dtEndDateStr( true, event->dtEnd().timeSpec() ),
+		    event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) );
     } else {
       tmp = i18nc( "%1: End Date", "%1 (time unspecified)",
-                   event->dtEndDateStr( true, event->dtStart().timeSpec() ) );
+                   event->dtEndDateStr( true, event->dtEnd().timeSpec() ) );
     }
   } else {
     tmp = i18n( "Unspecified" );
@@ -1267,7 +1267,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
     if ( event->floats() ) {
       tmp = event->dtEndDateStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" );
     } else {
-      tmp = event->dtEndStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" );
+      tmp = event->dtEndStr( true, event->dtEnd().timeSpec() ).replace( " ", "&nbsp;" );
     }
     ret += "<br>" + i18nc( "Event end","<i>To:</i>&nbsp;%1", tmp );
 
@@ -1277,8 +1277,8 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
            i18n( "<i>Date:</i>&nbsp;%1",
                  event->dtStartDateStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) );
     if ( !event->floats() ) {
-      if ( event->dtStartTimeStr( true, event->dtStart().timeSpec() ) ==
-           event->dtEndTimeStr( true, event->dtStart().timeSpec() ) ) { // to prevent 'Time: 17:00 - 17:00'
+      if ( event->dtStartTimeStr( true, event->dtStart().timeSpec() ) == 
+	   event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) ) { // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" +
               i18nc( "time for event, &nbsp; to prevent ugly line breaks", "<i>Time:</i>&nbsp;%1",
                      event->dtStartTimeStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) );
@@ -1287,7 +1287,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
               i18nc( "time range for event, &nbsp; to prevent ugly line breaks",
                      "<i>Time:</i>&nbsp;%1&nbsp;-&nbsp;%2",
                      event->dtStartTimeStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ),
-                     event->dtEndTimeStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) );
+                     event->dtEndTimeStr( true, event->dtEnd().timeSpec() ).replace( " ", "&nbsp;" ) );
       }
       ret += tmp;
     }
@@ -1312,7 +1312,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
     ret += "<br>" + i18n( "<i>Due:</i>&nbsp;%1",
                           ( floats ) ?
                           ( todo->dtDueDateStr( true, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) :
-                          ( todo->dtDueStr( true, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) );
+                          ( todo->dtDueStr( true, todo->dtDue().timeSpec() ).replace( " ", "&nbsp;" ) ) );
   }
   if ( todo->isCompleted() ) {
     ret += "<br>" +
