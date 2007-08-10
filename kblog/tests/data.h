@@ -42,7 +42,7 @@
   QDateTime mModificationDateTime( QDateTime::currentDateTime() );
   QString mTitle( "TestBlog" );
   QString mContent( "TestBlog: <strong>posted</strong> content." );
-  QString mModifiedContent( "TestBlog: <strong>modified</strong> <em>content</em>." );
+  QString mModifiedContent( "TestBlog: <strong>modified</strong>content." );
   bool mPrivate = false;
   QString mPostingId( QString( "113" ) );
 

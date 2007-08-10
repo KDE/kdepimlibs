@@ -185,15 +185,10 @@ QList<QVariant> MetaWeblogPrivate::defaultArgs( const QString &id )
 {
   Q_Q(MetaWeblog);
   QList<QVariant> args;
-
-  if ( id.toInt() ) {
-    args << QVariant( id.toInt() );
-  }
-  if ( !id.toInt() && !id.isNull() ){
+  if( !id.isEmpty() )
     args << QVariant( id );
-  }
   args << QVariant( q->username() )
-       << QVariant( q->password() );
+          << QVariant( q->password() );
   return args;
 }
 

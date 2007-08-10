@@ -206,12 +206,11 @@ QList<QVariant> Blogger1Private::defaultArgs( const QString &id )
 {
   Q_Q(Blogger1);
   QList<QVariant> args;
-  args << QVariant( QString( "0123456789ABCDEF" ) ); //AppKey
-  if ( !id.isNull() ) {
+  args << QVariant( QString( "0123456789ABCDEF" ) );
+  if( !id.isEmpty() )
     args << QVariant( id );
-  }
   args << QVariant( q->username() )
-       << QVariant( q->password() );
+          << QVariant( q->password() );
   return args;
 }
 
@@ -372,12 +371,12 @@ void Blogger1Private::slotCreatePosting(
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug (5323) << "TOP:" << result[0].typeName();
-  if ( result[0].type() != QVariant::Int ) {
-    kError(5323) << "Could not read the postingId, not an integer.";
+  if ( result[0].type() != QVariant::String ) {
+    kError(5323) << "Could not read the postingId, not a string.";
     emit q->error( Blogger1::ParsingError,
-                        i18n( "Could not read the postingId, not an integer." ), posting );
+                        i18n( "Could not read the postingId, not a string." ), posting );
   } else {
-    posting->setPostingId( QString( "%1" ).arg( result[0].toInt() ) );
+    posting->setPostingId( result[0].toString() );
     posting->setStatus( KBlog::BlogPosting::Created );
     emit q->createdPosting( posting );
     kDebug(5323) << "emitting createdPosting()" <<
