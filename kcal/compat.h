@@ -100,7 +100,7 @@ class Compat
       Fixes the end date for floating events.
       @param date is the end date to fix.
     */
-    virtual void fixFloatingEnd( QDate &date ) { Q_UNUSED( date ); }
+    virtual void fixFloatingEnd( QDate &date );
 
     /**
       Fixes the priority.

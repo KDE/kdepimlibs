@@ -109,6 +109,11 @@ void Compat::fixEmptySummary( Incidence *incidence )
   }
 }
 
+void Compat::fixFloatingEnd( QDate &date )
+{
+    Q_UNUSED( date );
+}
+
 void Compat::fixRecurrence( Incidence *incidence )
 {
   Q_UNUSED( incidence );
