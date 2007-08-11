@@ -163,12 +163,10 @@ void MovableType::listTrackBackPings( KBlog::BlogPosting *posting ) {
 
 MovableTypePrivate::MovableTypePrivate()
 {
-  mXmlRpcClient = 0;
 }
 
 MovableTypePrivate::~MovableTypePrivate()
 {
-  delete mXmlRpcClient;
 }
 
 QList<QVariant> MovableTypePrivate::defaultArgs( const QString &id )

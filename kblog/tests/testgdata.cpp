@@ -459,6 +459,9 @@ void TestGData::testNetwork()
 
   QTimer::singleShot( GLOBALTIMEOUT, eventLoop, SLOT(quit()));
   eventLoop->exec();
+  delete b;
+  delete p;
+  delete c;
 }
 
 QTEST_KDEMAIN_CORE(TestGData)
