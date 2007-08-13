@@ -222,19 +222,51 @@ class KBLOG_EXPORT Blog : public QObject
       This signal is emitted when a listRecentPostings() job fetches a posting
       from the blogging server.
 
-      @param posting is the fetched posting.
+      @param postings is the list of postings.
 
       @see listRecentPostings()
     */
     void listedRecentPostings(
         const QList<KBlog::BlogPosting>& postings );
 
+    /**
+      This signal is emitted when a createPosting() job creates a posting
+      on the blogging server.
+
+      @param posting is the created posting.
+
+      @see createPosting()
+    */
     void createdPosting( KBlog::BlogPosting *posting );
 
+    /**
+      This signal is emitted when a fetchPosting() job fetches a posting
+      from the blogging server.
+
+      @param posting is the fetched posting.
+
+      @see fetchPosting()
+    */
     void fetchedPosting( KBlog::BlogPosting *posting );
 
+    /**
+      This signal is emitted when a modifyPosting() job modifies a posting
+      on the blogging server.
+
+      @param posting is the modified posting.
+
+      @see modifyPosting()
+    */
     void modifiedPosting( KBlog::BlogPosting *posting );
 
+    /**
+      This signal is emitted when a removePosting() job removes a posting
+      from the blogging server.
+
+      @param posting is the removed posting.
+
+      @see removePosting()
+    */
     void removedPosting( KBlog::BlogPosting *posting );
 
     /**
@@ -245,9 +277,19 @@ class KBLOG_EXPORT Blog : public QObject
     void error( KBlog::Blog::ErrorType type,
                         const QString &errorMessage, KBlog::BlogPosting* = 0 );
 
+    /**
+      All xml parsing and all structural problems will emit an error.
+
+      @see ErrorType
+    */
     void error( KBlog::Blog::ErrorType type,
                         const QString &errorMessage, KBlog::BlogMedia* );
 
+    /**
+      All xml parsing and all structural problems will emit an error.
+
+      @see ErrorType
+    */
     void error( KBlog::Blog::ErrorType type,
                         const QString &errorMessage, KBlog::BlogPosting*, KBlog::BlogPostingComment* );
 

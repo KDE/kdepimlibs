@@ -49,14 +49,14 @@ void testBlogPosting::testValidity_data()
     QTest::addColumn<QString>("title");
     QTest::addColumn<QString>("content");
     QTest::addColumn<bool>("isPrivate");
-    QTest::addColumn<QString>("abbreviatedContent");
+//     QTest::addColumn<QString>("abbreviatedContent");
     QTest::addColumn<KUrl>("link");
     QTest::addColumn<KUrl>("permalink");
     QTest::addColumn<bool>("isCommentAllowed");
     QTest::addColumn<bool>("isTrackBackAllowed");
     QTest::addColumn<QString>("summary");
     QTest::addColumn<QString>("tags");
-    QTest::addColumn<QList<KUrl> >("trackBackUrls");
+//     QTest::addColumn<QList<KUrl> >("trackBackUrls");
     QTest::addColumn<QString>("mood");
     QTest::addColumn<QString>("music");
     QTest::addColumn<QStringList>("categories");
@@ -65,13 +65,13 @@ void testBlogPosting::testValidity_data()
     QTest::addColumn<BlogPosting::Status>("status");
     QTest::addColumn<QString>("error");
 
-    QList<KUrl> url;
-    url.append( KUrl( "http://track.back.url/some/path" ) );
+//     QList<KUrl> url;
+//     url.append( KUrl( "http://track.back.url/some/path" ) );
     QTest::newRow("SimpleTest") << QString("123ABC") << QString("Title")
-      << QString("Content") << true << QString("Abbreviated Content")
+      << QString("Content") << true //<< QString("Abbreviated Content")
       << KUrl( "http://my.link/in/outer/space" ) << KUrl( "http://my.perma/link/space" )
-      << true << true << QString( "Summary" ) << QStringList( "Tags" )
-      << url  << QString( "Mood" ) << QString( "Music" )
+      << true << true << QString( "Summary" ) << QStringList( "Tags" ) //<< url  
+      << QString( "Mood" ) << QString( "Music" )
       << QStringList( "Category" )
       << KDateTime( QDateTime::currentDateTime() )
       << KDateTime( QDateTime::currentDateTime() ) << BlogPosting::New
@@ -86,14 +86,14 @@ void testBlogPosting::testValidity()
     QFETCH(QString, title);
     QFETCH(QString, content);
     QFETCH(bool, isPrivate);
-    QFETCH(QString, abbreviatedContent);
+//     QFETCH(QString, abbreviatedContent);
     QFETCH(KUrl, link);
     QFETCH(KUrl, permalink);
     QFETCH(bool, isCommentAllowed);
     QFETCH(bool, isTrackBackAllowed);
     QFETCH(QString, summary);
     QFETCH(QStringList, tags);
-    QFETCH(QList<KUrl>, trackBackUrls);
+//     QFETCH(QList<KUrl>, trackBackUrls);
     QFETCH(QString, mood);
     QFETCH(QString, music);
     QFETCH(QStringList, categories);
@@ -106,14 +106,14 @@ void testBlogPosting::testValidity()
     p.setTitle( title );
     p.setContent( content );
     p.setPrivate( isPrivate );
-    p.setAbbreviatedContent( abbreviatedContent );
+//     p.setAbbreviatedContent( abbreviatedContent );
     p.setLink( link );
     p.setPermaLink( permalink );
     p.setCommentAllowed( isCommentAllowed );
     p.setTrackBackAllowed( isTrackBackAllowed );
     p.setSummary( summary );
     p.setTags( tags );
-    p.setTrackBackUrls( trackBackUrls );
+//     p.setTrackBackUrls( trackBackUrls );
     p.setMood( mood );
     p.setMusic( music );
     p.setCategories( categories );
@@ -127,14 +127,14 @@ void testBlogPosting::testValidity()
     QCOMPARE(p.title(), title );
     QCOMPARE(p.content(), content );
     QCOMPARE(p.isPrivate(), isPrivate );
-    QCOMPARE(p.abbreviatedContent(), abbreviatedContent );
+//     QCOMPARE(p.abbreviatedContent(), abbreviatedContent );
     QCOMPARE(p.link(), link );
     QCOMPARE(p.permaLink(), permalink );
     QCOMPARE(p.isCommentAllowed(), isCommentAllowed );
     QCOMPARE(p.isTrackBackAllowed(), isTrackBackAllowed );
     QCOMPARE(p.summary(), summary );
     QCOMPARE(p.tags(), tags );
-    QCOMPARE(p.trackBackUrls(), trackBackUrls );
+//     QCOMPARE(p.trackBackUrls(), trackBackUrls );
     QCOMPARE(p.mood(), mood );
     QCOMPARE(p.music(), music );
     QCOMPARE(p.categories(), categories );

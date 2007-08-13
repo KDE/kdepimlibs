@@ -166,17 +166,17 @@ void BlogPosting::setContent( const QString &content )
   d_ptr->mContent = content;
 }
 
-QString BlogPosting::abbreviatedContent() const
-{
-  //TODO
-  return 0;
-}
-
-void BlogPosting::setAbbreviatedContent( const QString &abbreviatedContent )
-{
-  Q_UNUSED( abbreviatedContent );
-  //TODO
-}
+// QString BlogPosting::abbreviatedContent() const
+// {
+//   //TODO
+//   return 0;
+// }
+// 
+// void BlogPosting::setAbbreviatedContent( const QString &abbreviatedContent )
+// {
+//   Q_UNUSED( abbreviatedContent );
+//   //TODO
+// }
 
 KUrl BlogPosting::link() const
 {
@@ -238,17 +238,17 @@ void BlogPosting::setTags( const QStringList &tags )
   d_ptr->mTags = tags;
 }
 
-QList<KUrl> BlogPosting::trackBackUrls() const
-{
-  //TODO
-  return QList<KUrl>();
-}
-
-void BlogPosting::setTrackBackUrls( const QList<KUrl> &trackBackUrls )
-{
-  Q_UNUSED( trackBackUrls );
-  //TODO
-}
+// QList<KUrl> BlogPosting::trackBackUrls() const
+// {
+//   //TODO
+//   return QList<KUrl>();
+// }
+// 
+// void BlogPosting::setTrackBackUrls( const QList<KUrl> &trackBackUrls )
+// {
+//   Q_UNUSED( trackBackUrls );
+//   //TODO
+// }
 
 QString BlogPosting::mood() const
 {

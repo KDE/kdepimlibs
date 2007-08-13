@@ -97,7 +97,20 @@ class KBLOG_EXPORT BlogPostingComment
   */
   void setContent( const QString &content );
 
+  /**
+    Returns the comment's id.
+
+    @return comment id
+    @see setCommentId()
+  */
   QString commentId() const;
+
+  /**
+    Sets the comment's id.
+
+    @param id The comment's id.
+    @see commentId()
+  */
   void setCommentId( const QString& id );
 
   /**
@@ -180,16 +193,47 @@ class KBLOG_EXPORT BlogPostingComment
   */
   void setCreationDateTime( const KDateTime &datetime );
 
+  /**
+    The enumartion of the different posting status, reflecting the status changes
+    on the server.
+  */
   enum Status { New, Fetched, Created, Modified, Removed, Error };
 
+  /**
+    Returns the status on the server.
+
+    @return status
+    @see setStatus(), Status
+  */
   Status status() const;
 
+  /**
+    Sets the status.
+
+    @param status The status on the server.
+    @see status(), Status
+  */
   void setStatus( Status status );
 
+  /**
+    Returns the last error.
+
+    @returns error
+    @see setError(), Error
+  */
   QString error() const;
 
+  /**
+    Sets the error.
+
+    @param error The error string.
+    @see error(), Error
+  */
   void setError( const QString& error );
 
+  /**
+    The overloaed = operator.
+  */
   BlogPostingComment& operator=(const BlogPostingComment &comment );
 
   protected:

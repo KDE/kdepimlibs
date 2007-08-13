@@ -98,7 +98,6 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     void listRecentPostings( int number );
 
     /**
-      TODO
       @param postingId is the id of the posting on the server.
 
       @see  void fetchedPosting( KBlog::BlogPosting &posting )

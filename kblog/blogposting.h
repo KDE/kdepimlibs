@@ -49,6 +49,16 @@ namespace KBlog {
   KBlog::BlogPosting *post = new BlogPosting();
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
+  post->setPrivate( true ); // false on default
+  connect( backend, createdPosting( KBlog::BlogPosting* ),
+                 this, createdPosting( KBlog::BlogPosting* );
+  backend->createPosting( post );
+  ...
+  void createdPosting( KBlog::BlogPosting* post )
+  {
+    setMyFancyGUIPostingId( post->postingId() );
+    setMyFancyGUIPermaLink( post->permaLink() );
+  }
   @endcode
 
   @author Christian Weilbach \<christian_weilbach\@web.de\>
@@ -162,29 +172,107 @@ public:
     */
     void setContent( const QString &content );
 
-    QString abbreviatedContent() const;
-    void setAbbreviatedContent( const QString &abbreviatedContent );
+//     QString abbreviatedContent() const; // TODO check if necessary
+//     void setAbbreviatedContent( const QString &abbreviatedContent );
 
+    /**
+      Returns the link path.
+
+      @return link
+      @see setLink()
+    */
     KUrl link() const;
+
+    /**
+      Set the link path.
+
+      @param link The path to set.
+      @see link()
+    */
     void setLink( const KUrl &link ) const;
 
+    /**
+      Returns the perma link path.
+
+      @return permaLink
+      @see setPermaLink()
+    */
     KUrl permaLink() const;
+
+    /**
+      Set the perma link path.
+
+      @param permalink The path to set.
+      @see permaLink()
+    */
     void setPermaLink( const KUrl &permalink ) const;
 
+    /**
+      Returns whether comments should be allowed.
+
+      @return commentAllowed
+      @see setCommentAllowed()
+    */
     bool isCommentAllowed() const;
+
+    /**
+      Set whether comments should be allowed.
+
+      @param commentAllowed
+      @see isCommentAllowed()
+    */
     void setCommentAllowed( bool commentAllowed );
 
-    bool isTrackBackAllowed() const; // pings in Movable Type
-    void setTrackBackAllowed ( bool allowTrackBacks );
+    /**
+      Returns whether track back should be allowed.
 
+      @return trackBackAllowed
+      @see setTrackBackAllowed()
+    */
+    bool isTrackBackAllowed() const; // pings in Movable Type
+
+    /**
+      Set whether track back should be allowed.
+
+      @param allowTrackBacks
+      @see isTrackBackAllowed()
+    */ 
+   void setTrackBackAllowed ( bool allowTrackBacks );
+
+    /**
+      Returns the summary.
+
+      @return summary
+      @see setSummary()
+    */
     QString summary() const; // excerpts in Movable Type
+
+    /**
+      Set the summary.
+
+      @param summary
+      @see summary()
+    */
     void setSummary( const QString &summary );
 
+    /**
+      Returns the tags list as a QStringList.
+
+      @return tags list
+      @see setTags()
+    */
     QStringList tags() const; // keywords in Movable Type
+
+    /**
+      Set the tags list.
+
+      @param tags The tags list.
+      @see tags()
+    */
     void setTags( const QStringList &tags );
 
-    QList<KUrl> trackBackUrls() const;
-    void setTrackBackUrls( const QList<KUrl> &trackBackUrls );
+//     QList<KUrl> trackBackUrls() const; // TODO check if necessary
+//     void setTrackBackUrls( const QList<KUrl> &trackBackUrls );
 
     QString mood() const;
     void setMood( const QString &mood );
@@ -240,18 +328,48 @@ public:
     */
     void setModificationDateTime( const KDateTime &datetime );
 
+    /**
+      The enumartion of the different posting status, reflecting the status changes
+      on the server.
+    */
     enum Status { New, Fetched, Created, Modified, Removed, Error };
 
+    /**
+      Returns the status on the server.
+
+      @return status
+      @see setStatus(), Status
+    */
     Status status() const;
 
+    /**
+      Sets the status.
+
+      @param status The status on the server.
+      @see status(), Status
+    */
     void setStatus( Status status );
 
+    /**
+      Returns the last error.
+
+      @returns error
+      @see setError(), Error
+    */
     QString error() const;
 
+    /**
+      Sets the error.
+
+      @param error The error string.
+      @see error(), Error
+    */
     void setError( const QString& error );
 
+    /**
+      The overloaed = operator.
+    */
     BlogPosting& operator=( const BlogPosting &posting );
-
   protected:
 
     BlogPosting( const QString &postingId, BlogPostingPrivate &dd );
