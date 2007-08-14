@@ -25,7 +25,13 @@
 
 #include <QSocketNotifier>
 #include <QCoreApplication>
-
+#ifdef Q_WS_WIN 
+//uncomment it when fixed
+//#include "eventloopnotify_win.h"
+#include "eventloopnotify.h"
+#else
+#include "eventloopnotify.h"
+#endif
 using namespace GpgME;
 
 QGpgME::EventLoopInteractor::EventLoopInteractor( QObject * parent )
@@ -59,18 +65,18 @@ QGpgME::EventLoopInteractor * QGpgME::EventLoopInteractor::instance() {
 }
 
 void * QGpgME::EventLoopInteractor::registerWatcher( int fd, Direction dir, bool & ok ) {
-  QSocketNotifier * const sn = new QSocketNotifier( fd,
-      dir == Read ? QSocketNotifier::Read : QSocketNotifier::Write );
-  if ( dir == Read )
-    connect( sn, SIGNAL(activated(int)), SLOT(slotReadActivity(int)) );
-  else
-    connect( sn, SIGNAL(activated(int)), SLOT(slotWriteActivity(int)) );
+  QGpgME::EventLoopNotify * const sn = new QGpgME::EventLoopNotify(fd,
+       dir);
+   if(dir==Read)
+      connect(sn,SIGNAL(activated(int)),SLOT(slotReadActivity(int)));
+   else
+      connect(sn,SIGNAL(activated(int)),SLOT(slotWriteActivity(int)));
   ok = true; // Can above operations fails?
   return sn;
 }
 
 void QGpgME::EventLoopInteractor::unregisterWatcher( void * tag ) {
-  delete static_cast<QSocketNotifier*>( tag );
+  delete static_cast<QGpgME::EventLoopNotify*>( tag );
 }
 
 void QGpgME::EventLoopInteractor::slotWriteActivity( int socket ) {

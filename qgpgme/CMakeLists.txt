@@ -8,8 +8,13 @@ add_subdirectory( tests )
 
 ########### next target ###############
 
-set(qgpgme_LIB_SRCS eventloopinteractor.cpp dataprovider.cpp )
+set(qgpgme_LIB_SRCS dataprovider.cpp eventloopinteractor.cpp )
 
+#if(WIN32)
+#  set(qgpgme_LIB_SRCS ${qgpgme_LIB_SRCS} eventloopnotify_win.cpp)
+#else(WIN32)
+  set(qgpgme_LIB_SRCS ${qgpgme_LIB_SRCS} eventloopnotify.cpp)
+#endif(WIN32)
 
 kde4_add_library(qgpgme SHARED ${qgpgme_LIB_SRCS})
 
