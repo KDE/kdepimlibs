@@ -37,7 +37,7 @@ class KUrl;
 
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
 
-  \par Maintainer: Christian Weilbach \<christian\@whiletaker.homeip.net\>
+  \par Maintainer: Christian Weilbach \<christian_weilbach\@web.de\>
  */
 
 namespace KBlog {
@@ -47,22 +47,22 @@ namespace KBlog {
 
 /**
   @brief
-  A class that can be used for access to GData  blogs. Almost every blog
-  server supports GData  . Compared to Blogger1  1.0 it is a superset of
-  functions added to the its definition. GData  is much more functional, but
-  has some drawbacks, e.g. security when compared to Blogger1  2.0 which is
-  based on GData  and quite new.
+  A class that can be used for access to GData blogs. The new blogspot.com
+  accounts ( August 2007 ) exclusively support GData API which is a standard
+  based on Atom API. Compared to Blogger 1.0, which is based on Xml-Rpc and
+  less secure, it adds new functionality like titles and comments.
 
   @code
-  Blog* myblog = new GData("http://example.com/xmlrpc/gateway.php");
+  Blog* myblog = new GData("http://myblogspot.account.com");
+  myblog->setProfileId( "2039484587348593945823" ); // can be fetched via fetchProfileId()
   KBlog::BlogPosting *post = new BlogPosting();
-  post->setUserId( "some_user_id" );
+  post->setUsername( "your_email@address.com" );
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
   myblog->createPosting( posting );
   @endcode
 
-  @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
+  @author Christian Weilbach \<christian_weilbach\@web.de\>
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
  */
 class KBLOG_EXPORT GData : public Blog
@@ -78,23 +78,26 @@ class KBLOG_EXPORT GData : public Blog
     ~GData();
 
     /**
-      Sets the user's name for the blog.
+      Sets the user's name for the blog. Username is only the E-Mail
+      address of the user. This is used in createPosting and modifyPosting.
       @param fullName is a QString containing the blog username.
 
       @see username()
+      @see createPosting( KBlog::BlogPosting* )
+      @see modifiyPosting( KBlog::BlogPosting* )
     */
     virtual void setFullName( const QString &fullName );
 
     /**
-       Returns the user's name of the blog.
-       @see setUsername()
+       Returns the full name of user of the blog.
+       @see setFullName()
     */
     QString fullName() const;
 
     /**
-        Set the ProfileId of the blog. This is used for authentication.
+        Returns the profile id of the blog. This is used for rss paths internally.
 
-        @param email is the mail address of the user
+        @param id This is nummeric id.
 
         @see setProfileId( QString& id )
     */
@@ -103,7 +106,7 @@ class KBLOG_EXPORT GData : public Blog
     /**
         Get the profile's id of the blog.
 
-        @return email
+        @return The profile id.
 
         @see profileId()
     */
@@ -115,32 +118,59 @@ class KBLOG_EXPORT GData : public Blog
     QString interfaceName() const;
 
     /**
-        Get information about the user from the blog. Note: This is not
-        supported on the server side.
-        @see void fetchedUserInfo( const QString &nickname,
-                const QString &userid, const QString &email )
+        Get information about the user from the blog.
+
+        @see void fetchedUserInfo( const QMap\<QString,QString\>& )
     */
     void fetchProfileId();
 
     /**
         List the blogs available for this authentication on the server.
-        Note: This is not supported on the server side.
-        @see void blogInfoRetrieved( const QString &id, const QString &name )
+
+        @see void listedBlogs( const QList\<QMap\<QString,QString\>\>& )
     */
     virtual void listBlogs();
 
+
+    /**
+        List the comments available for this posting on the server.
+
+        @see void listedComments( KBlog::BlogPosting*, const QList\<KBlog::BlogPostingComment\>& )
+    */
     virtual void listComments( KBlog::BlogPosting *posting );
 
+
+    /**
+        List the all comments available for this authentication on the server.
+
+        @see void listedAllComments( const QList\<KBlog::BlogPostingComment\>& )
+    */
     virtual void listAllComments();
 
     /**
-        List recent postings on the server..
-        @see     void listedPosting( KBlog::BlogPosting &posting )
-        @see     void fetchedPosting( KBlog::BlogPosting &posting )
-        @see     void listRecentPostingsFinished()
+        List recent postings on the server.
+
+        @param number The number of postings to fetch. The order is newest first.
+
+        @see     void listedPostings( const QList\<KBlog::BlogPosting\>& )
+        @see     void fetchPosting( KBlog::BlogPosting* )
     */
     void listRecentPostings( int number );
 
+
+    /**
+        List recent postings on the server depending on meta information about the posting.
+
+        @param label The lables of postings to fetch.
+        @param number The number of postings to fetch. The order is newest first.
+        @param upMinTime The oldest upload time of the postings to fetch.
+        @param upMaxTime The newest upload time of the postings to fetch.
+        @param pubMinTime The oldest publication time of the postings to fetch.
+        @param pubMaxTime The newest publication time of the postings to fetch.
+
+        @see     void listedPostings( const QList\<KBlog::BlogPosting\>& )
+        @see     void fetchPosting( KBlog::BlogPosting* )
+    */
     virtual void listRecentPostings( const QStringList &label=QStringList(), int number=0, 
                 const KDateTime &upMinTime=KDateTime(), 
                 const KDateTime &upMaxTime=KDateTime(), 
@@ -149,59 +179,131 @@ class KBLOG_EXPORT GData : public Blog
 
 
     /**
-        Fetch the Posting with postingId.
-        @param postingId is the id of the posting on the server.
+        Fetch the Posting with a specific id.
+        @param posting This is the posting with its id set correctly.
 
-        @see  void fetchedPosting( KBlog::BlogPosting &posting )
+        @see BlogPosting::setPostingId( const QString& )
+        @see fetchedPosting( KBlog::BlogPosting *posting )
     */
     void fetchPosting( KBlog::BlogPosting *posting );
 
     /**
         Modify a posting on server.
 
-        @param posting is used to send the modified posting including the
-          correct postingId from it to the server.
+        @param posting This is used to send the modified posting including the
+          correct id.
     */
     void modifyPosting( KBlog::BlogPosting *posting );
 
     /**
         Create a new posting on server.
 
-        @param posting is send to the server.
+        @param posting This is send to the server.
+
+        @see createdPosting( KBlog::BlogPosting *posting )
     */
     void createPosting( KBlog::BlogPosting *posting );
 
     /**
         Remove a posting from the server.
 
-        @param postingId is the id of the posting to remove.
+        @param posting This is the posting whith its id set correctly.
 
-        @see void removePosting( KBlog::BlogPosting *posting )
+        @see BlogPosting::setPostingId( const QString& )
+        @see removedPosting( KBlog::BlogPosting* )
     */
     void removePosting( KBlog::BlogPosting *posting );
 
+
+    /**
+        Create a comment on the server.
+
+        @param posting This is the posting whith its id set correctly.
+        @param comment This is the comment to create.
+
+        @see BlogPosting::setPostingId( const QString& )
+        @see createdComment( KBlog::BlogPosting*, KBlog::BlogPostingComment*  )
+    */
     virtual void createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
 
+
+    /**
+        Remove a comment from the server.
+
+        @param posting This is the posting whith its id set correctly.
+        @param comment This is the comment to remove.
+
+        @see BlogPosting::setPostingId( const QString& )
+        @see removedComment( KBlog::BlogPosting*, KBlog::BlogPostingComment*  )
+    */
     virtual void removeComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
 
   Q_SIGNALS:
 
     /**
-      This signal is emitted when a listBlogs() job fetches the blog
-      information from the blogging server.
+      This signal is emitted when a list of blogs has been fetched
+      from the blogging server.
+
+      @param blogsList The list of blogs.
 
       @see listBlogs()
     */
     void listedBlogs( const QList<QMap<QString,QString> >& blogsList );
 
-    void listedAllComments( const QList<KBlog::BlogPostingComment> &comments );
+    /**
+      This signal is emitted when a list of all comments has been 
+      fetched from the blogging server.
 
+      @param commentsList The list of comments.
+
+      @see listAllComments()
+    */
+    void listedAllComments( const QList<KBlog::BlogPostingComment> &commentsList );
+
+
+    /**
+      This signal is emitted when a list of comments has been fetched 
+      from the blogging server.
+
+      @param posting This is the corresponding posting.
+      @param comments The list of comments.
+
+      @see listComments( KBlog::BlogPosting* )
+    */
     void listedComments( KBlog::BlogPosting *posting, const QList<KBlog::BlogPostingComment> &comments );
 
+
+    /**
+      This signal is emitted when a comment has been created
+      on the blogging server.
+
+      @param posting This is the corresponding posting.
+      @param comment This is the created comment.
+
+      @see createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
+    */
     void createdComment( const KBlog::BlogPosting *posting, const KBlog::BlogPostingComment *comment );
 
+
+    /**
+      This signal is emitted when a comment has been removed
+      from the blogging server.
+
+      @param posting This is the corresponding posting.
+      @param comment This is the removed comment.
+
+      @see removeComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
+    */
     void removedComment( const KBlog::BlogPosting *posting, const KBlog::BlogPostingComment *comment );
 
+    /**
+      This signal is emitted when the profile id has been
+      fetched.
+
+      @param profileId This is the fetched id. On error it is QString()
+
+      @see fetchProfileId()
+    */
     void fetchedProfileId( const QString &profileId );
 
   protected:

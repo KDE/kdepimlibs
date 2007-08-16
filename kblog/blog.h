@@ -133,7 +133,7 @@ class KBLOG_EXPORT Blog : public QObject
 
     /**
       Returns the password of the blog.
-      @see setPassword();
+      @see setPassword( const QString & );
     */
     QString password() const;
 
@@ -147,7 +147,7 @@ class KBLOG_EXPORT Blog : public QObject
 
     /**
        Returns the user's id of the blog.
-       @see setUserId()
+       @see setUserId(const QString &)
     */
     QString username() const;
 
@@ -161,7 +161,7 @@ class KBLOG_EXPORT Blog : public QObject
 
     /**
       Get the URL for the blog.
-      @see setUrl()
+      @see setUrl(const KUrl &)
     */
     KUrl url() const;
 

@@ -60,11 +60,11 @@ class KBLOG_EXPORT BlogMedia
     virtual ~BlogMedia();
 
     /**
-      Returns the name. This is most likely the filename on the server side
+      Returns the wished name. This is most likely the filename on the server side
       (at least with wordpress).
 
-      @return name
-      @see setName()
+      @return The wished name on the server.
+      @see setName( const QString& )
     */
     QString name() const;
 
@@ -72,27 +72,40 @@ class KBLOG_EXPORT BlogMedia
       Sets the name. This will most likely be the filename on the server side
       (at least with wordpress).
 
-      @param title set the name.
+      @param name The whished name for the object.
       @see name()
     */
-    void setName( const QString &title );
+    void setName( const QString &name );
 
+    /**
+      Returns the server side url.
+
+      @return The url on the server.
+      @see setUrl( const KUrl& )
+    */
     KUrl url() const;
 
+    /**
+      Sets the url of the server side object. Note: You should *not* set this
+      on your own normally. It is used internally in MetaWeblog.
+
+      @param url The whished name for the object.
+      @see url()
+    */
     void setUrl( const KUrl &url );
 
     /**
       Returns the mimetype.
 
-      @return mimetype of the object
-      @see setMimetype()
+      @return The mimetype of the object
+      @see setMimetype( const QString& )
     */
     QString mimetype() const;
 
     /**
       Set the mimtype.
 
-      @param mimetype is the mimetype
+      @param mimetype This is the mimetype.
       @see mimetype()
     */
     void setMimetype( const QString &mimetype );
@@ -100,29 +113,66 @@ class KBLOG_EXPORT BlogMedia
     /**
       Returns the data of the file.
 
-      @return data
-      @see setData()
+      @return The data.
+      @see setData( const QByteArray& )
     */
     QByteArray data() const;
 
     /**
        Set the data of the file.
 
-       @param data is the data stream
+       @param data This is the data stream.
        @see data()
     */
     void setData( const QByteArray &data );
 
-    enum Status { New, Fetched, Created, Modified, Removed, Error };
+    /**
+       The different possible status. At the moment you cannot do
+       much with media objects.
+    */
+    enum Status { New, Created, Error };
 
+
+    /**
+       Returns the status.
+
+       @return This is the status.
+       @see setStatus( Status )
+    */
     Status status() const;
 
+
+    /**
+       Set the status. Note: You should *not* set this on your own
+       it is used mostly internally.
+
+       @param status This is the status.
+       @see status()
+    */
     void setStatus( Status status );
 
+
+    /**
+       Returns the error string.
+
+       @return The error string.
+       @see setError( const QString& )
+    */
     QString error() const;
 
+
+    /**
+       Set the error of the object.
+
+       @param error This is the error string.
+       @see error()
+    */
     void setError( const QString &error );
 
+
+    /**
+       Overloaded for QList handling.
+    */
     BlogMedia& operator=(const BlogMedia &media );
 
   protected:

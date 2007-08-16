@@ -50,7 +50,7 @@ namespace KBlog {
   @code
   Blog* myblog = new MetaWeblog("http://example.com/xmlrpc/gateway.php");
   KBlog::BlogPosting *post = new BlogPosting();
-  post->setUserId( "some_user_id" );
+  post->setUsername( "some_user_id" );
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
   myblog->createPosting( posting );
@@ -83,24 +83,25 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
     /**
       List recent postings on the server.
-      @see     void listedPosting( KBlog::BlogPosting &posting )
+      @see     void listedPosting( KBlog::BlogPosting *posting )
 
-      @see     void listRecentPostingsFinished()
+      @see     void listedRecentPostings( QList\<KBlog::BlogPosting\>& )
     */
     void listRecentPostings( int number );
 
     /**
       List the categories of the blog.
-      @see  void categoryInfoRetrieved( const QString &, const QString & )
-      @see  void listCategoriesFinished()
+      @see listedCategories( const QList\<QMap\<QString,QString\> \>& )
     */
     virtual void listCategories();
 
     /**
       Fetch the Posting with postingId.
-      @param postingId is the id of the posting on the server.
+      @param posting is the posting with its id set to get the corresponding
+      posting. 
 
-      @see  void fetchedPosting( KBlog::BlogPosting &posting )
+      @see BlogPosting::setPostingId( const QString& )
+      @see fetchedPosting( KBlog::BlogPosting *posting )
     */
     void fetchPosting( KBlog::BlogPosting *posting );
 
@@ -109,34 +110,49 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
       @param posting is used to send the modified posting including the
       correct postingId from it to the server.
+
+      @see modifiedPosting( KBlog::BlogPosting *posting )
     */
     void modifyPosting( KBlog::BlogPosting *posting );
 
     /**
       Create a new posting on server.
 
-      @param posting is send to the server.
+      @param posting This posting to send.
+
+      @see createdPosting( KBlog::BlogPosting *posting )
     */
     void createPosting( KBlog::BlogPosting *posting );
 
     /**
       Create a new media object, e.g. picture, on server.
 
-      @param media is send to the server.
+      @param media The media to send.
     */
     virtual void createMedia( KBlog::BlogMedia *media );
 
   Q_SIGNALS:
 
+    /**
+      This signal is emitted when a media has been created 
+      on the server.
+
+      @param media The created media.
+
+      @see createMedia( KBlog::BlogMedia *media )
+    */
     void createdMedia( KBlog::BlogMedia *media );
 
     /**
       This signal is emitted when the last category of the listCategories()
       job has been fetched.
 
+      @param categories This list contains the categories. Each map has the keys: 
+      name, description, htmlUrl, rssUrl.
+
       @see listCategories()
     */
-    void listedCategories( const QMap<QString,QMap<QString,QString> >& categories );
+    void listedCategories( const QList<QMap<QString,QString> >& categories );
 
   protected:
     MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd, QObject *parent = 0 );

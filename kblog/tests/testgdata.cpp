@@ -140,8 +140,6 @@ void TestGData::dumpComment( const BlogPostingComment* comment )
       qDebug() << "# status: Fetched"; break;
     case BlogPostingComment::Created:
       qDebug() << "# status: Created"; break;
-    case BlogPostingComment::Modified:
-      qDebug() << "# status: Modified"; break;
     case BlogPostingComment::Removed:
       qDebug() << "# status: Removed"; break;
     case BlogPostingComment::Error:

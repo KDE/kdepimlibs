@@ -68,15 +68,15 @@ class KBLOG_EXPORT BlogPostingComment
   /**
     Returns the title.
 
-    @return title
-    @see setTitle()
+    @return The title.
+    @see setTitle( const QString& )
   */
   QString title() const;
 
   /**
     Sets the title.
 
-    @param title set the title.
+    @param title This is the title.
     @see title()
   */
   void setTitle( const QString &title );
@@ -84,15 +84,15 @@ class KBLOG_EXPORT BlogPostingComment
   /**
     Returns the content.
 
-    @return content
-    @see setContent()
+    @return The content.
+    @see setContent( const QString& )
   */
   QString content() const;
 
   /**
     Sets the content.
 
-    @param content set the content.
+    @param content This is the content.
     @see content()
   */
   void setContent( const QString &content );
@@ -100,8 +100,8 @@ class KBLOG_EXPORT BlogPostingComment
   /**
     Returns the comment's id.
 
-    @return comment id
-    @see setCommentId()
+    @return The comment's id
+    @see setCommentId( const QString& )
   */
   QString commentId() const;
 
@@ -114,82 +114,82 @@ class KBLOG_EXPORT BlogPostingComment
   void setCommentId( const QString& id );
 
   /**
-    Returns the email.
+    Returns the E-Mail address of the commentator.
 
-    @return email
-    @see setContent()
+    @return The E-Mail.
+    @see setEmail( const QString& )
   */
   QString email() const;
 
   /**
-    Sets the email.
+    Sets the E-Mail.
 
-    @param email set the email.
-    @see content()
+    @param email This is the E-Mail address of the commentator.
+    @see email()
   */
-  void setName( const QString &name );
+  void setEmail( const QString &name );
 
   /**
-    Returns the email.
+    Returns the commentator's name.
 
-    @return email
-    @see setContent()
+    @return The name.
+    @see setName()
   */
   QString name() const;
 
   /**
-    Sets the email.
+    Sets the name of the commentator.
 
-    @param email set the email.
-    @see content()
+    @param name This is the commenator's name.
+    @see name()
   */
-  void setEmail( const QString &email );
+  void setName( const QString &name );
 
   /**
-    Returns the poster's homepage URL.
+    Returns the commentator's homepage URL.
 
-    @return content
-    @see setContent()
+    @return The url of the commentator's homepage
+    @see setUrl( const KUrl& )
   */
   KUrl url() const;
 
   /**
-  Sets the poster's homepage URL.
+  Sets the commentator's homepage URL.
 
-    @param content set the homepage.
+    @param url The commentator's homepage url.
     @see url()
   */
   void setUrl( const KUrl &url );
 
   /**
-    Returns the creation date time.
+    Returns the modification date-time.
 
-    @return dateTime
-    @see setDateTime()
+    @return The modification date-time.
+    @see setModificationDateTime( const KDateTime& )
   */
   KDateTime modificationDateTime() const;
 
   /**
-    Sets the creation time.
+    Sets the modification date-time.
 
-    @param datetime set the time the comment has been created.
-    @see creationTime()
+    @param datetime The date-time the comment has been modified.
+    @see modificationDateTime( const KDateTime& )
   */
   void setModificationDateTime( const KDateTime &datetime );
 
   /**
-    Returns the creation date time.
+    Returns the creation date-time.
 
-    @return dateTime
-    @see setDateTime()
+    @return The creation date-time.
+    @see setCreationDateTime( const KDateTime& )
   */
   KDateTime creationDateTime() const;
 
   /**
-    Sets the creation time.
+    Sets the creation date-time.
 
-    @param datetime set the time the comment has been created.
-    @see creationTime()
+    @param datetime The date-time the comment has been created.
+    @see creationDateTime()
   */
   void setCreationDateTime( const KDateTime &datetime );
 
@@ -197,13 +197,13 @@ class KBLOG_EXPORT BlogPostingComment
     The enumartion of the different posting status, reflecting the status changes
     on the server.
   */
-  enum Status { New, Fetched, Created, Modified, Removed, Error };
+  enum Status { New, Fetched, Created, Removed, Error };
 
   /**
     Returns the status on the server.
 
-    @return status
-    @see setStatus(), Status
+    @return The status.
+    @see setStatus( Status ), Status
   */
   Status status() const;
 
@@ -218,8 +218,8 @@ class KBLOG_EXPORT BlogPostingComment
   /**
     Returns the last error.
 
-    @returns error
-    @see setError(), Error
+    @returns The last error string.
+    @see setError( const QString& ), Error
   */
   QString error() const;
 
@@ -232,7 +232,7 @@ class KBLOG_EXPORT BlogPostingComment
   void setError( const QString& error );
 
   /**
-    The overloaed = operator.
+    Overloaded for QList handling.
   */
   BlogPostingComment& operator=(const BlogPostingComment &comment );
 

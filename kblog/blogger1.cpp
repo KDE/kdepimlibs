@@ -51,6 +51,7 @@ Blogger1::Blogger1( const KUrl &server, Blogger1Private &dd, QObject *parent )
 
 Blogger1::~Blogger1()
 {
+  kDebug(5323) << "~Blogger1()";
 }
 
 QString Blogger1::interfaceName() const
@@ -199,6 +200,7 @@ mXmlRpcClient(0)
 
 Blogger1Private::~Blogger1Private()
 {
+  kDebug(5323) << "~Blogger1Private()";
   delete mXmlRpcClient;
 }
 

@@ -31,6 +31,7 @@ class KUrl;
   This file is part of the  for accessing Blog Servers
   and defines the MovableType class.
 
+  @author Christian Weilbach \<christian_weilbach\@web.de\>
   @author Mike Arthur \<mike\@mikearthur.co.uk\>
 */
 
@@ -44,12 +45,13 @@ namespace KBlog {
   @code
   Blog* myblog = new MovableType("http://example.com/xmlrpc/gateway.php");
   KBlog::BlogPosting *post = new BlogPosting();
-  post->setUserId( "some_user_id" );
+  post->setUsername( "some_user_id" );
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
   myblog->createPosting( posting );
   @endcode
 
+  @author Christian Weilbach \<christian_weilbach\@web.de\>
   @author Mike Arthur \<mike\@mikearthur.co.uk\>
 */
 class KBLOG_EXPORT MovableType : public MetaWeblog
@@ -78,11 +80,24 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
     /**
       Fetch the Posting with postingId.
-      @param postingId is the id of the posting on the server.
+      @param posting This is the posting with its id set to the
+      corresponding posting on the server.
 
-      @see  void fetchedPosting( KBlog::BlogPosting &posting )
+      @see BlogPosting::setPostingId( const QString& )
+      @see fetchedPosting( KBlog::BlogPosting* )
     */
     void fetchPosting( KBlog::BlogPosting *posting );
+
+    /**
+      Modify a posting on server.
+
+      @param posting The posting to be modified on the
+      server. You need to set its id correctly.
+
+      @see BlogPosting::setPostingId( const QString& )
+      @see modifiedPosting( KBlog::BlogPosting* )
+    */
+    void modifyPosting( KBlog::BlogPosting *posting );
 
     /**
       Returns the  of the inherited object.
@@ -91,34 +106,34 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
     /**
       List recent postings on the server.
-      @see     void listedPosting( KBlog::BlogPosting &posting )
+      @see     void listedPosting( KBlog::BlogPosting* )
 
-      @see     void listRecentPostingsFinished()
+      @see     void listedRecentPostings( const QList\<KBlog::BlogPosting\>& )
     */
     void listRecentPostings( int number );
 
     /**
-      @param postingId is the id of the posting on the server.
+      Get the list of trackback pings from the server.
 
-      @see  void fetchedPosting( KBlog::BlogPosting &posting )
+      @param posting This is the posting to get the trackback pings from.
+      You need to set its id correctly.
+
+      @see BlogPosting::setPostingId( const QString& )
+      @see listedTrackBackPings( KBlog::BlogPosting *, const QList\<QMap\<QString,QString\> \>& )
+
     */
     virtual void listTrackBackPings( KBlog::BlogPosting *posting );
 
-    /**
-      Modify a posting on server.
-
-      @param posting is used to send the modified posting including the
-      correct postingId from it to the server.
-    */
-    void modifyPosting( KBlog::BlogPosting *posting );
-
   Q_SIGNALS:
     /**
-      TODO
+      This signal is emitted when the trackback pings are fetched completely.
+
+      @param posting This is the posting of the trackback ping list.
+      @param pings This is the list itself. The map contains the keys: id, url, ip.
 
       @see listTrackBackPings()
     */
-    void listedTrackBackPings( KBlog::BlogPosting*, const QList<QMap<QString, QString> > &pings );
+    void listedTrackBackPings( KBlog::BlogPosting *posting, const QList<QMap<QString,QString> > &pings );
 
   protected:
     MovableType( const KUrl &server, MovableTypePrivate &dd, QObject *parent = 0 );

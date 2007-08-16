@@ -43,6 +43,7 @@ MovableType::MovableType( const KUrl &server, QObject *parent )
 
 MovableType::~MovableType()
 {
+  kDebug(5323) << "~MovableType()";
 }
 
 void MovableType::createPosting( KBlog::BlogPosting *posting )
@@ -167,6 +168,7 @@ MovableTypePrivate::MovableTypePrivate()
 
 MovableTypePrivate::~MovableTypePrivate()
 {
+  kDebug(5323) << "~MovableTypePrivate()";
 }
 
 QList<QVariant> MovableTypePrivate::defaultArgs( const QString &id )

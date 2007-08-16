@@ -48,6 +48,7 @@ MetaWeblog::MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd,
 
 MetaWeblog::~MetaWeblog()
 {
+  kDebug(5323) << "~MetaWeblog()";
 }
 
 QString MetaWeblog::interfaceName() const
@@ -179,6 +180,7 @@ MetaWeblogPrivate::MetaWeblogPrivate()
 
 MetaWeblogPrivate::~MetaWeblogPrivate()
 {
+  kDebug(5323) << "~MetaWeblogPrivate()";
 }
 
 QList<QVariant> MetaWeblogPrivate::defaultArgs( const QString &id )
@@ -198,7 +200,7 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
   Q_Q(MetaWeblog);
   Q_UNUSED( id );
 
-  QMap<QString,QMap<QString,QString> > categoriesMap;
+  QList<QMap<QString,QString> > categoriesList;
 
   kDebug(5323) << "MetaWeblogPrivate::slotListCategories";
   kDebug(5323) << "TOP:" << result[0].typeName();
@@ -212,38 +214,43 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
                               "from the server." ) );
   } else {
     if ( result[0].type() == QVariant::Map ) {
-      const QMap<QString, QVariant> categories = result[0].toMap();
-      const QList<QString> categoryNames = categories.keys();
+      const QMap<QString, QVariant> serverMap = result[0].toMap();
+      const QList<QString> serverKeys = serverMap.keys();
 
-      QList<QString>::ConstIterator it = categoryNames.begin();
-      QList<QString>::ConstIterator end = categoryNames.end();
+      QList<QString>::ConstIterator it = serverKeys.begin();
+      QList<QString>::ConstIterator end = serverKeys.end();
       for ( ; it != end; ++it ) {
         kDebug(5323) << "MIDDLE:" << ( *it );
-        const QMap<QString, QVariant> c = categories[*it].toMap();
-        categoriesMap[ *it ]["description"] = c[ "description" ].toString();
-        categoriesMap[ *it ]["htmlUrl"]=c[ "htmlUrl" ].toString();
-        categoriesMap[ *it ]["rssUrl"]=c[ "rssUrl" ].toString();
+        QMap<QString,QString> category;
+        const QMap<QString, QVariant> serverCategory = serverMap[*it].toMap();
+        category["name"]= ( *it );
+        category["description"] = serverCategory[ "description" ].toString();
+        category["htmlUrl"] = serverCategory[ "htmlUrl" ].toString();
+        category["rssUrl"] = serverCategory[ "rssUrl" ].toString();
+        categoriesList.append( category );
         }
-        emit q->listedCategories( categoriesMap );
+        emit q->listedCategories( categoriesList );
         kDebug(5323) << "Emitting listedCategories";
       }
     }
     if ( result[0].type() == QVariant::List ) {
       // include fix for not metaweblog standard compatible apis with
       // array of structs instead of struct of structs, e.g. wordpress
-      const QList<QVariant> categories = result[0].toList();
-      QList<QVariant>::ConstIterator it = categories.begin();
-      QList<QVariant>::ConstIterator end = categories.end();
+      const QList<QVariant> serverList = result[0].toList();
+      QList<QVariant>::ConstIterator it = serverList.begin();
+      QList<QVariant>::ConstIterator end = serverList.end();
       for ( ; it != end; ++it ) {
         kDebug(5323) << "MIDDLE:" << ( *it ).typeName();
-        const QMap<QString, QVariant> c = ( *it ).toMap();
-        const QString name= c["categoryName"].toString();
-        categoriesMap[ name ]["description"] = c[ "description" ].toString();
-        categoriesMap[ name ]["htmlUrl"]=c[ "htmlUrl" ].toString();
-        categoriesMap[ name ]["rssUrl"]=c[ "rssUrl" ].toString();
+        QMap<QString,QString> category;
+        const QMap<QString, QVariant> serverCategory = ( *it ).toMap();
+        category[ "name" ] = serverCategory["categoryName"].toString();
+        category["description"] = serverCategory[ "description" ].toString();
+        category["htmlUrl"] = serverCategory[ "htmlUrl" ].toString();
+        category["rssUrl"] = serverCategory[ "rssUrl" ].toString();
+        categoriesList.append( category );
       }
       kDebug(5323) << "Emitting listedCategories()";
-      emit q->listedCategories( categoriesMap );
+      emit q->listedCategories( categoriesList );
     }
   }
 

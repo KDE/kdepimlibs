@@ -33,7 +33,7 @@ class KUrl;
   and defines the Blogger1 class.
 
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
-  @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
+  @author Christian Weilbach \<christian_weilbach\@web.de\>
 */
 
 namespace KBlog {
@@ -44,19 +44,19 @@ class Blogger1Private;
    @brief
    A class that can be used for access to Blogger  1.0 blogs.
    Almost every blog server supports Blogger  1.0. Compared to
-   MetaWeblog  it is not as functional and is obsolete compared to
-   GData which uses Atom instead of Xml-Rpc.
+   MetaWeblog  it is not as functional and is obsolete on blogspot.com 
+   compared to GData which uses Atom instead of Xml-Rpc.
 
    @code
    Blog* myblog = new Blogger1("http://example.com/xmlrpc/gateway.php");
    KBlog::BlogPosting *post = new BlogPosting();
-   post->setUserId( "some_user_id" );
+   post->setUsername( "some_user_id" );
    post->setTitle( "This is the title." );
    post->setContent( "Here is some the content..." );
    myblog->createPosting( posting );
    @endcode
 
-   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
+   @author Christian Weilbach \<christian_weilbach\@web.de\>
    @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
 */
 class KBLOG_EXPORT Blogger1 : public Blog
@@ -64,7 +64,7 @@ class KBLOG_EXPORT Blogger1 : public Blog
   Q_OBJECT
   public:
     /**
-      Create an object for Blogger  1.0
+      Create an object for Blogger 1.0
 
       @param server is the url for the xmlrpc gateway.
       @param parent the parent object.
@@ -91,23 +91,21 @@ class KBLOG_EXPORT Blogger1 : public Blog
     /**
         Get information about the user from the blog. Note: This is not
         supported on the server side.
-        @see void fetchedUserInfo( const QString &nickname,
-                const QString &userid, const QString &email )
+        @see void fetchedUserInfo( const QMap\<QString,QString\>& )
     */
     virtual void fetchUserInfo();
 
     /**
       List the blogs available for this authentication on the server.
-      @see void blogInfoRetrieved( const QString &id, const QString &name )
+      @see void listedBlogs( const QList\<QMap\<QString,QString\> \>& )
     */
     virtual void listBlogs();
 
     /**
       List recent postings on the server.
 
-      @see     void listedPosting( KBlog::BlogPosting &posting )
-      @see     void fetchedPosting( KBlog::BlogPosting &posting )
-      @see     void listRecentPostingsFinished()
+      @see     void listedRecentPostings( QList\<KBlog::BlogPosting> & )
+      @see     void fetchPosting( KBlog::BlogPosting *posting )
     */
     void listRecentPostings( int number );
 
@@ -116,7 +114,7 @@ class KBLOG_EXPORT Blogger1 : public Blog
 
       @param postingId is the id of the posting on the server.
 
-      @see  void fetchedPosting( KBlog::BlogPosting &posting )
+      @see  void fetchedPosting( KBlog::BlogPosting *posting )
     */
     void fetchPosting( KBlog::BlogPosting *posting ); //FIXME docs
 
@@ -125,6 +123,8 @@ class KBLOG_EXPORT Blogger1 : public Blog
 
       @param posting is used to send the modified posting including
       the correct postingId from it to the server.
+
+      @see  void modifiedPosting( KBlog::BlogPosting *posting )
     */
     void modifyPosting( KBlog::BlogPosting *posting );
 
@@ -132,6 +132,8 @@ class KBLOG_EXPORT Blogger1 : public Blog
       Create a new posting on server.
 
       @param posting is send to the server.
+
+      @see  void createdPosting( KBlog::BlogPosting *posting )
     */
     void createPosting( KBlog::BlogPosting *posting );
 
@@ -140,10 +142,9 @@ class KBLOG_EXPORT Blogger1 : public Blog
 
       @param postingId is the id of the posting to remove.
 
-      @see void removePosting( KBlog::BlogPosting *posting )
-      @see void modifiedPosting( void modified )
+      @see void removedPosting( KBlog::BlogPosting *posting )
     */
-    void removePosting( KBlog::BlogPosting *posting ); //FIXME docs
+    void removePosting( KBlog::BlogPosting *posting );
 
   Q_SIGNALS:
 
@@ -151,10 +152,23 @@ class KBLOG_EXPORT Blogger1 : public Blog
       This signal is emitted when a listBlogs() job fetches the blog
       information from the blogging server.
 
+      @param blogsList The list of maps, in which each maps corresponds to 
+      a blog on the server. Each map has the keys id and name.
+
       @see listBlogs()
     */
     void listedBlogs( const QList<QMap<QString,QString> >& blogsList );
 
+    /**
+      This signal is emitted when a fetchUserInfo() job fetches the blog
+      information from the blogging server.
+
+      @param userInfo The map with the keys: nickname,
+      userid, url, email, lastname, firstname. Note: Not all keys are
+      supported by all servers.
+
+      @see fetchUserInfo()
+    */
     void fetchedUserInfo( const QMap<QString,QString>& userInfo );
 
   protected:
