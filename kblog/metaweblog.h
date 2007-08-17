@@ -83,7 +83,8 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
     /**
       List recent postings on the server.
-      @see     void listedPosting( KBlog::BlogPosting *posting )
+
+      @param number The number of postings to fetch. Latest first.
 
       @see     void listedRecentPostings( QList\<KBlog::BlogPosting\>& )
     */
@@ -155,6 +156,9 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
     void listedCategories( const QList<QMap<QString,QString> >& categories );
 
   protected:
+    /**
+      Constructor needed for private inheritance.
+    */
     MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd, QObject *parent = 0 );
 
   private:

@@ -78,14 +78,12 @@ public:
       Constructor.
 
       @param postingId The ID of the posting on the server.
-      @param parent Parent object of this BlogPosting
     */
     explicit BlogPosting( const QString &postingId = QString() );
 
     /** Constructor to create a blog posting from a KCal Journal.
 
       @param journal The journal to use to create the posting
-      @param parent Parent object of this BlogPosting
      */
     explicit BlogPosting( const KCal::Journal &journal );
 
@@ -332,7 +330,25 @@ public:
       The enumartion of the different posting status, reflecting the status changes
       on the server.
     */
-    enum Status { New, Fetched, Created, Modified, Removed, Error };
+    enum Status { 
+      /** Status of a freshly constructed posting on the client. */
+      New, 
+      /** Status of a successfully fetched posting. 
+      @see Blog::fetchPosting( KBlog::BlogPosting* ) */
+      Fetched, 
+      /** Status of a successfully created posting. 
+      @see Blog::createPosting( KBlog::BlogPosting* ) */
+      Created, 
+      /** Status of a successfully modified posting. 
+      @see Blog::modifyPosting( KBlog::BlogPosting* ) */
+      Modified, 
+      /** Status of a successfully removed posting. 
+      @see Blog::removePosting( KBlog::BlogPosting* ) */
+      Removed, 
+      /** Status when an error on the server side occured. 
+      @see error() */
+      Error 
+    };
 
     /**
       Returns the status on the server.
@@ -371,8 +387,13 @@ public:
     */
     BlogPosting& operator=( const BlogPosting &posting );
   protected:
-
+    /**
+      Constructor needed for private inheritance.
+    */
     BlogPosting( const QString &postingId, BlogPostingPrivate &dd );
+    /**
+      Constructor needed for private inheritance.
+    */
     BlogPosting( const KCal::Journal &journal, BlogPostingPrivate &dd );
   private:
     BlogPostingPrivate * const d_ptr;

@@ -91,11 +91,18 @@ class KBLOG_EXPORT Blog : public QObject
       Enumeration for possible errors.
     */
     enum ErrorType {
+      /** This type specifies an error in the KXmlRpcClient. */
       XmlRpc,
+      /** This type specifies an error in Syndication. */
       Atom,
+      /** This type specifies a parsing error. */
       ParsingError,
+      /** This type specifies an error on authentication. */
       AuthenticationError,
+      /** This type specifies an error when the method is not
+      supported by the API you chose. */
       NotSupported,
+      /** This type specifies a unique error type not yet specified. */
       Other
     };
 
@@ -139,15 +146,15 @@ class KBLOG_EXPORT Blog : public QObject
 
     /**
       Sets the user's authentication name for the blog.
-      @param username is a QString containing the blog username.
+      @param userName is a QString containing the blog username.
 
-      @see userId()
+      @see username()
     */
     virtual void setUsername( const QString &userName );
 
     /**
-       Returns the user's id of the blog.
-       @see setUserId(const QString &)
+       Returns the user's name of the blog.
+       @see setUsername(const QString &)
     */
     QString username() const;
 
@@ -188,7 +195,7 @@ class KBLOG_EXPORT Blog : public QObject
 
     /**
       Fetch the Posting with postingId.
-      @param postingId is the id of the posting on the server.
+      @param posting is the id of the posting on the server.
 
       @see fetchedPosting()
     */
@@ -272,29 +279,46 @@ class KBLOG_EXPORT Blog : public QObject
     /**
       All xml parsing and all structural problems will emit an error.
 
+     @param type The type of the error.
+     @param errorMessage The string containing the error message.
+     @param posting The posting to which the error belongs.
+
       @see ErrorType
     */
     void error( KBlog::Blog::ErrorType type,
-                        const QString &errorMessage, KBlog::BlogPosting* = 0 );
+                        const QString &errorMessage, KBlog::BlogPosting* posting = 0 );
 
     /**
       All xml parsing and all structural problems will emit an error.
 
+     @param type The type of the error.
+     @param errorMessage The string containing the error message.
+     @param media The media to which the error belongs.
+
       @see ErrorType
     */
     void error( KBlog::Blog::ErrorType type,
-                        const QString &errorMessage, KBlog::BlogMedia* );
+                        const QString &errorMessage, KBlog::BlogMedia* media );
 
     /**
       All xml parsing and all structural problems will emit an error.
 
+     @param type The type of the error.
+     @param errorMessage The string containing the error message.
+     @param posting The posting the comment belongs to.
+     @param comment The comment the error belongs to.
+
       @see ErrorType
     */
     void error( KBlog::Blog::ErrorType type,
-                        const QString &errorMessage, KBlog::BlogPosting*, KBlog::BlogPostingComment* );
+                        const QString &errorMessage, KBlog::BlogPosting* posting, 
+                        KBlog::BlogPostingComment* comment );
 
   protected:
     BlogPrivate * const d_ptr;
+    /**
+      Constructor needed for private inheritance.
+    */
     Blog( const KUrl &server, BlogPrivate &dd, QObject *parent = 0,
           const QString &applicationName = QString(),
           const QString &applicationVersion = QString() );

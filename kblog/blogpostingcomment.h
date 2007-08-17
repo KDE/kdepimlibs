@@ -51,9 +51,14 @@ namespace KBlog {
 class KBLOG_EXPORT BlogPostingComment
 {
   public:
-
-  BlogPostingComment( const BlogPostingComment& comment );
   /**
+    Copy Constructor for list handling.
+
+    @param comment The comment to copy.
+  */
+  BlogPostingComment( const BlogPostingComment& comment );
+
+   /**
     Constructor.
 
     @param commentId The ID of the comment on the server.
@@ -127,7 +132,7 @@ class KBLOG_EXPORT BlogPostingComment
     @param email This is the E-Mail address of the commentator.
     @see email()
   */
-  void setEmail( const QString &name );
+  void setEmail( const QString &email );
 
   /**
     Returns the commentator's name.
@@ -197,7 +202,21 @@ class KBLOG_EXPORT BlogPostingComment
     The enumartion of the different posting status, reflecting the status changes
     on the server.
   */
-  enum Status { New, Fetched, Created, Removed, Error };
+  enum Status { 
+    /** Status of a freshly constructed comment on the client. */
+    New,
+    /** Status of a successfully fetched comment. */
+    Fetched, 
+    /** Status of a successfully created comment. 
+    @see GData::createComment( BlogPosting*, BlogPostingComment* ) */
+    Created, 
+    /** Status of a successfully removed comment. 
+    @see GData::removeComment( BlogPosting*, BlogPostingComment* ) */
+    Removed, 
+    /** Status when an error has occured on the server side. 
+    @see error() */
+    Error 
+  };
 
   /**
     Returns the status on the server.
@@ -237,6 +256,9 @@ class KBLOG_EXPORT BlogPostingComment
   BlogPostingComment& operator=(const BlogPostingComment &comment );
 
   protected:
+    /**
+      Constructor needed for private inheritance.
+    */
     BlogPostingComment( BlogPostingCommentPrivate &dd );
   private:
     BlogPostingCommentPrivate * const d_ptr;

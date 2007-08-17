@@ -463,8 +463,6 @@ bool Blogger1Private::readPostingFromMap(
   if ( dt.isValid() && !dt.isNull() ) {
     post->setModificationDateTime( dt );
   }
-  //TODO remove if sure that not needed
-  //post->setUserId( postInfo["userid"].toString() );
   post->setPostingId( postInfo["postid"].toString() );
 
   QString title( postInfo["title"].toString() );

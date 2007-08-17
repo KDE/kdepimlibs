@@ -72,7 +72,8 @@ class KBLOG_EXPORT GData : public Blog
     /**
          Create an object for GData 
 
-         @param server is the url for the xmlrpc gateway.
+         @param server The server url for the xmlrpc gateway.
+         @param parent The parent object, inherited from QObject.
     */
     explicit GData( const KUrl &server, QObject *parent = 0 );
     ~GData();
@@ -97,16 +98,16 @@ class KBLOG_EXPORT GData : public Blog
     /**
         Returns the profile id of the blog. This is used for rss paths internally.
 
-        @param id This is nummeric id.
+        @return The profile id.
 
-        @see setProfileId( QString& id )
+        @see setProfileId( const QString& )
     */
     QString profileId() const;
 
     /**
         Get the profile's id of the blog.
 
-        @return The profile id.
+        @param pid This is nummeric id.
 
         @see profileId()
     */
@@ -134,6 +135,8 @@ class KBLOG_EXPORT GData : public Blog
 
     /**
         List the comments available for this posting on the server.
+
+        @param posting The posting, which postings should be listed.
 
         @see void listedComments( KBlog::BlogPosting*, const QList\<KBlog::BlogPostingComment\>& )
     */
@@ -207,7 +210,7 @@ class KBLOG_EXPORT GData : public Blog
     /**
         Remove a posting from the server.
 
-        @param posting This is the posting whith its id set correctly.
+        @param posting This is the posting with its id set correctly.
 
         @see BlogPosting::setPostingId( const QString& )
         @see removedPosting( KBlog::BlogPosting* )
@@ -218,7 +221,7 @@ class KBLOG_EXPORT GData : public Blog
     /**
         Create a comment on the server.
 
-        @param posting This is the posting whith its id set correctly.
+        @param posting This is the posting with its id set correctly.
         @param comment This is the comment to create.
 
         @see BlogPosting::setPostingId( const QString& )
@@ -230,7 +233,7 @@ class KBLOG_EXPORT GData : public Blog
     /**
         Remove a comment from the server.
 
-        @param posting This is the posting whith its id set correctly.
+        @param posting This is the posting with its id set correctly.
         @param comment This is the comment to remove.
 
         @see BlogPosting::setPostingId( const QString& )

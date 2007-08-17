@@ -104,19 +104,23 @@ class KBLOG_EXPORT Blogger1 : public Blog
     /**
       List recent postings on the server.
 
+     @param number The number of postings to fetch. Latest first.
+
       @see     void listedRecentPostings( QList\<KBlog::BlogPosting> & )
       @see     void fetchPosting( KBlog::BlogPosting *posting )
     */
     void listRecentPostings( int number );
 
     /**
-      Fetch the Posting with postingId.
+      Fetch a posting from the server.
 
-      @param postingId is the id of the posting on the server.
+      @param posting is the posting. Note: Its id has to be set 
+      appropriately.
 
-      @see  void fetchedPosting( KBlog::BlogPosting *posting )
+      @see BlogPosting::setPostingId( const QString& )
+      @see fetchedPosting( KBlog::BlogPosting *posting )
     */
-    void fetchPosting( KBlog::BlogPosting *posting ); //FIXME docs
+    void fetchPosting( KBlog::BlogPosting *posting );
 
     /**
       Modify a posting on server.
@@ -131,18 +135,20 @@ class KBLOG_EXPORT Blogger1 : public Blog
     /**
       Create a new posting on server.
 
-      @param posting is send to the server.
+      @param posting is sent to the server.
 
-      @see  void createdPosting( KBlog::BlogPosting *posting )
+      @see createdPosting( KBlog::BlogPosting *posting )
     */
     void createPosting( KBlog::BlogPosting *posting );
 
     /**
       Remove a posting from the server.
 
-      @param postingId is the id of the posting to remove.
+      @param posting is the posting. Note: Its id has to be set 
+      appropriately.
 
-      @see void removedPosting( KBlog::BlogPosting *posting )
+      @see BlogPosting::setPostingId( const QString& )
+      @see removedPosting( KBlog::BlogPosting *posting )
     */
     void removePosting( KBlog::BlogPosting *posting );
 
@@ -172,6 +178,9 @@ class KBLOG_EXPORT Blogger1 : public Blog
     void fetchedUserInfo( const QMap<QString,QString>& userInfo );
 
   protected:
+    /**
+      Constructor needed for private inheritance.
+    */
     Blogger1( const KUrl &server, Blogger1Private &dd, QObject *parent = 0 );
 
   private:

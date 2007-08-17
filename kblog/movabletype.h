@@ -106,7 +106,8 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
     /**
       List recent postings on the server.
-      @see     void listedPosting( KBlog::BlogPosting* )
+
+     @param number The number of postings to fetch. Latest first.
 
       @see     void listedRecentPostings( const QList\<KBlog::BlogPosting\>& )
     */
@@ -136,6 +137,9 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     void listedTrackBackPings( KBlog::BlogPosting *posting, const QList<QMap<QString,QString> > &pings );
 
   protected:
+    /**
+      Constructor needed for private inheritance.
+    */
     MovableType( const KUrl &server, MovableTypePrivate &dd, QObject *parent = 0 );
 
   private:

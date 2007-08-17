@@ -52,6 +52,9 @@ class KBLOG_EXPORT BlogMedia
     */
     explicit BlogMedia();
 
+    /**
+      Copy Constructor needed for list handling.
+    */
     BlogMedia( const BlogMedia& media );
 
     /**
@@ -130,7 +133,14 @@ class KBLOG_EXPORT BlogMedia
        The different possible status. At the moment you cannot do
        much with media objects.
     */
-    enum Status { New, Created, Error };
+    enum Status { 
+       /** Status of freshly constructed media object on the client side. */
+       New, 
+       /** Status of a media object succesfully created on the server. */
+       Created, 
+       /** Status when an error on uploading has occured. */
+       Error 
+    };
 
 
     /**
