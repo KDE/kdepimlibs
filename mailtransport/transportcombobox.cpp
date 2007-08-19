@@ -48,9 +48,7 @@ TransportComboBox::TransportComboBox(QWidget * parent) :
 
 int TransportComboBox::currentTransportId() const
 {
-  if ( currentIndex() == 0 )
-    return 0;
-  if( currentIndex() > 0 && currentIndex() < d->transports.count() )
+  if( currentIndex() >= 0 && currentIndex() < d->transports.count() )
     return d->transports.at( currentIndex() );
   return -1;
 }
