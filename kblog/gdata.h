@@ -76,6 +76,10 @@ class KBLOG_EXPORT GData : public Blog
          @param parent The parent object, inherited from QObject.
     */
     explicit GData( const KUrl &server, QObject *parent = 0 );
+
+     /**
+         Destructor.
+    */
     ~GData();
 
     /**
@@ -310,6 +314,9 @@ class KBLOG_EXPORT GData : public Blog
     void fetchedProfileId( const QString &profileId );
 
   protected:
+    /**
+       Overloaded for private inheritance handling.
+    */
     GData( const KUrl &server, GDataPrivate &dd, QObject *parent = 0 );
   private:
     Q_DECLARE_PRIVATE(GData)

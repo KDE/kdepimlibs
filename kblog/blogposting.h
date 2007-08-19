@@ -95,6 +95,8 @@ public:
     /**
       Returns a KCal journal from the blog posting owned by the caller.
 
+      @param blog The blog object to convert.
+
       @return journal
      */
     KCal::Journal* journal( const Blog &blog ) const;

@@ -182,10 +182,15 @@ class KBLOG_EXPORT BlogMedia
 
     /**
        Overloaded for QList handling.
+
+       @param media The media file to copy.
     */
     BlogMedia& operator=(const BlogMedia &media );
 
   protected:
+    /**
+       Overloaded for private handling.
+    */
     BlogMedia( const KUrl &server, BlogMediaPrivate &dd );
   private:
     BlogMediaPrivate * const d_ptr;

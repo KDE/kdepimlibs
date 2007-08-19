@@ -187,6 +187,9 @@ class KBLOG_EXPORT Blog : public QObject
 
     /**
       List recent postings on the server.
+
+      @param number The number of postings to fetch. Latest first.
+
       @see listedPosting()
       @see fetchedPosting()
       @see listRecentPostingsFinished()
