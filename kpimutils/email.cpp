@@ -649,7 +649,7 @@ QByteArray KPIMUtils::extractEmailAddress( const QByteArray &address )
                           false/* don't allow multiple addresses */ );
   if ( result != AddressOk ) {
     addrSpec = QByteArray();
-    kDebug(5321) // << k_funcinfo << "\n"
+    kDebug(5321) // << "\n"
       << "Input: aStr\nError:"
       << emailParseResultToString( result );
   }
@@ -672,7 +672,7 @@ QByteArray KPIMUtils::firstEmailAddress( const QByteArray &addresses )
                           true/* allow multiple addresses */ );
   if ( result != AddressOk ) {
     addrSpec = QByteArray();
-    kDebug(5321) // << k_funcinfo << "\n"
+    kDebug(5321) // << "\n"
       << "Input: aStr\nError:"
       << emailParseResultToString( result );
   }

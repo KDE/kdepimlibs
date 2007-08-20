@@ -70,7 +70,7 @@ void TransportMgr::sendBtnClicked()
   TransportJob *job;
   job = TransportManager::self()->createTransportJob( mComboBox->currentTransportId() );
   if ( !job ) {
-    kDebug() << k_funcinfo << "Invalid transport!";
+    kDebug() << "Invalid transport!";
     return;
   }
   job->setSender( mSenderEdit->text() );
@@ -88,7 +88,7 @@ void TransportMgr::sendBtnClicked()
 void TransportMgr::cancelBtnClicked()
 {
   if ( mCurrentJob )
-    kDebug() << k_funcinfo << "kill success:" << mCurrentJob->kill();
+    kDebug() << "kill success:" << mCurrentJob->kill();
   mCurrentJob = 0;
 }
 
@@ -104,21 +104,21 @@ int main( int argc, char** argv )
 
 void TransportMgr::jobResult( KJob* job )
 {
-  kDebug() << k_funcinfo << job->error() << job->errorText();
+  kDebug() << job->error() << job->errorText();
   mCurrentJob = 0;
 }
 
 void TransportMgr::jobPercent(KJob * job, unsigned long percent)
 {
   Q_UNUSED( job );
-  kDebug() << k_funcinfo << percent << "%";
+  kDebug() << percent << "%";
 }
 
 void TransportMgr::jobInfoMessage(KJob * job, const QString & info, const QString & info2)
 {
   Q_UNUSED( job );
-  kDebug() << k_funcinfo << info;
-  kDebug() << k_funcinfo << info2;
+  kDebug() << info;
+  kDebug() << info2;
 }
 
 #include "transportmgr.moc"

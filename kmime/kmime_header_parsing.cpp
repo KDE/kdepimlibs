@@ -99,7 +99,7 @@ void Mailbox::setAddress( const QByteArray &addr )
                                        cursor + addr.length(), mAddrSpec ) ) {
     if ( !HeaderParsing::parseAddrSpec( cursor, cursor + addr.length(),
                                         mAddrSpec ) ) {
-      kWarning() << k_funcinfo << "Invalid address";
+      kWarning() << "Invalid address";
       return;
     }
   }

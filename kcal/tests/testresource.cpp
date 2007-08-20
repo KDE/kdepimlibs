@@ -157,7 +157,7 @@ bool TestResource::check(const QString& txt, const QString &a, const QString &b)
 
 void TestResource::testOpenAndClose()
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
   assert( m_res->open() );
   assert( m_res->isOpen() );
   m_res->close();
@@ -166,7 +166,7 @@ void TestResource::testOpenAndClose()
 
 void TestResource::testResourceAttributes()
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
 
   check( "type", m_res->type(), m_resource_type );
 
@@ -187,14 +187,14 @@ void TestResource::testResourceAttributes()
 
 void TestResource::testResourceCalendarAttributes()
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
 }
 
 
 void TestResource::testEventAddRemove()
 {
   ICalFormat f;
-  kDebug() << k_funcinfo;
+  kDebug() ;
 
   int oldcount = m_res->rawIncidences().count();
   Event *event = makeTestEvent();
@@ -214,7 +214,7 @@ void TestResource::testEventAddRemove()
 void TestResource::testTodoAddRemove()
 {
   ICalFormat f;
-  kDebug() << k_funcinfo;
+  kDebug() ;
 
   int oldcount = m_res->rawIncidences().count();
   Todo *todo = makeTestTodo();
@@ -234,7 +234,7 @@ void TestResource::testTodoAddRemove()
 void TestResource::testJournalAddRemove()
 {
   ICalFormat f;
-  kDebug() << k_funcinfo;
+  kDebug() ;
 
   int oldcount = m_res->rawIncidences().count();
   Journal *journal = makeTestJournal();
@@ -253,7 +253,7 @@ void TestResource::testJournalAddRemove()
 
 void TestResource::cleanup()
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
 }
 
 }

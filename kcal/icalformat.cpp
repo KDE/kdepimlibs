@@ -520,7 +520,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   kDebug(5800) << "ICalFormat::parseScheduleMessage() restriction...";
 
   if ( !icalrestriction_check( message ) ) {
-    kWarning(5800) << k_funcinfo << endl
+    kWarning(5800) << endl
                    << "kcal library reported a problem while parsing:";
     kWarning(5800) << Scheduler::translatedMethodName( method ) << ":" <<
       d->mImpl->extractErrorProperty( c );

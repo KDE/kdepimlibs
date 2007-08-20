@@ -292,7 +292,7 @@ void TransportConfigDialog::hostNameChanged( const QString &text )
 void TransportConfigDialog::encryptionChanged(int enc)
 {
   Q_ASSERT( d->transport->type() == Transport::EnumType::SMTP );
-  kDebug(5324) << k_funcinfo << enc;
+  kDebug(5324) << enc;
 
   // adjust port
   if ( enc == Transport::EnumEncryption::SSL ) {

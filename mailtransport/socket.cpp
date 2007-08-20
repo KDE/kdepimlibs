@@ -63,7 +63,7 @@ SocketPrivate::SocketPrivate( Socket* s) : q(s)
 
 void SocketPrivate::slotConnected()
 {
-  kDebug( 5324 ) << k_funcinfo;
+  kDebug( 5324 ) ;
 
   if ( !secure ) {
     kDebug( 5324 ) << "normal connect";
@@ -92,7 +92,7 @@ void SocketPrivate::slotModeChanged( QSslSocket::SslMode  state )
 
 void SocketPrivate::slotSocketRead()
 {
-  // kDebug(5324) << objectName() << k_funcinfo;
+  // kDebug(5324) << objectName() ;
 
   if ( !socket )
     return;
@@ -113,7 +113,7 @@ void SocketPrivate::slotSocketRead()
 
 void SocketPrivate::slotSslErrors( const QList<QSslError> & )
 {
-  kDebug( 5324 ) << k_funcinfo;
+  kDebug( 5324 ) ;
   /* We can safely ignore the errors, we are only interested in the
   capabilities. We're not sending auth info. */
   socket->ignoreSslErrors();
@@ -129,12 +129,12 @@ Socket::Socket( QObject* parent )
   d->socket = 0;
   d->port = 0;
   d->secure = false;
-  kDebug( 5324 ) << k_funcinfo;
+  kDebug( 5324 ) ;
 }
 
 Socket::~Socket()
 {
-  kDebug( 5324 ) << objectName() << k_funcinfo;
+  kDebug( 5324 ) << objectName() ;
 }
 
 void Socket::reconnect()
@@ -168,7 +168,7 @@ void Socket::reconnect()
 
 void Socket::write( const QString& text )
 {
-  // kDebug(5324) << objectName() << k_funcinfo;
+  // kDebug(5324) << objectName() ;
   // Eat things in the queue when there is no connection. We need
   // to get a connection first don't we...
   if ( !d->socket || !available() )
@@ -185,7 +185,7 @@ void Socket::write( const QString& text )
 
 bool Socket::available()
 {
-  // kDebug(5324) << objectName() << k_funcinfo;
+  // kDebug(5324) << objectName() ;
   bool ok = d->socket && d->socket->state() == QAbstractSocket::ConnectedState;
   return ok;
 }

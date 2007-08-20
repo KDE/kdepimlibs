@@ -49,7 +49,7 @@ class TransportPrivate {
 Transport::Transport( const QString &cfgGroup ) :
     TransportBase( cfgGroup ), d( new TransportPrivate )
 {
-  kDebug(5324) << k_funcinfo << cfgGroup;
+  kDebug(5324) << cfgGroup;
   d->passwordLoaded = false;
   d->passwordDirty = false;
   d->storePasswordInFile = false;
@@ -189,7 +189,7 @@ void Transport::readPassword()
          Wallet::keyDoesNotExist(Wallet::NetworkWallet(), KMAIL_WALLET_FOLDER,
                                  QString::fromLatin1("transport-%1").arg( id() ) ) )
       return;
-    kDebug(5324) << k_funcinfo << "migrating password from kmail wallet";
+    kDebug(5324) << "migrating password from kmail wallet";
     KWallet::Wallet *wallet = TransportManager::self()->wallet();
     if ( wallet ) {
       wallet->setFolder( KMAIL_WALLET_FOLDER );
@@ -216,7 +216,7 @@ bool Transport::needsWalletMigration() const
 
 void Transport::migrateToWallet()
 {
-  kDebug(5324) << k_funcinfo << "migrating" << id() << "to wallet";
+  kDebug(5324) << "migrating" << id() << "to wallet";
   d->needsWalletMigration = false;
   KConfigGroup group( config(), currentGroup() );
   group.deleteEntry( "password" );
