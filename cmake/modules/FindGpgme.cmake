@@ -49,7 +49,7 @@ if (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
     
     EXEC_PROGRAM(${GPGMECONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE GPGME_VERSION)
     
-    MACRO_ENSURE_VERSION( "1.0.3" ${GPGME_VERSION} GPGME_INSTALLED_VERSION_OK )
+    MACRO_ENSURE_VERSION( "1.0.0" ${GPGME_VERSION} GPGME_INSTALLED_VERSION_OK )
     
     if (GPGME_INSTALLED_VERSION_OK)
     
@@ -71,7 +71,7 @@ if (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
       set(GPGME_LIBRARIES ${GPGME_LIBRARIES} CACHE INTERNAL "The gpgme libraries")
     
     else (GPGME_INSTALLED_VERSION_OK)
-      message(STATUS "The installed version of gpgme is too old: ${GPGME_VERSION} (required: >= 1.0.3)")
+      message(STATUS "The installed version of gpgme is too old: ${GPGME_VERSION} (required: >= 1.0.0)")
     endif (GPGME_INSTALLED_VERSION_OK)
     
     endif (GPGMECONFIG_EXECUTABLE)
@@ -99,7 +99,7 @@ if (NOT Gpgme_FIND_QUIETLY)
    else (Gpgme_FIND_REQUIRED)
       set (_req FALSE)
    endif (Gpgme_FIND_REQUIRED)
-   macro_log_feature(GPGME_FOUND "gpgme" "GnuPG Made Easy Development Libraries" "http://www.gnupg.org/related_software/gpgme" ${_req} "1.0.3 or greater" "Needed to provide GNU Privacy Guard support in KDE PIM applications. Necessary to compile many PIM application, including KMail.")
+   macro_log_feature(GPGME_FOUND "gpgme" "GnuPG Made Easy Development Libraries" "http://www.gnupg.org/related_software/gpgme" ${_req} "1.0.0 or greater" "Needed to provide GNU Privacy Guard support in KDE PIM applications. Necessary to compile many PIM application, including KMail.")
 else (NOT Gpgme_FIND_QUIETLY)
    if (NOT GPGME_FOUND)
       if (Gpgme_FIND_REQUIRED)
