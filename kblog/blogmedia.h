@@ -187,11 +187,6 @@ class KBLOG_EXPORT BlogMedia
     */
     BlogMedia& operator=(const BlogMedia &media );
 
-  protected:
-    /**
-       Overloaded for private handling.
-    */
-    BlogMedia( const KUrl &server, BlogMediaPrivate &dd );
   private:
     BlogMediaPrivate * const d_ptr;
 };

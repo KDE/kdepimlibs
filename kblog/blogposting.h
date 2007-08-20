@@ -332,24 +332,24 @@ public:
       The enumartion of the different posting status, reflecting the status changes
       on the server.
     */
-    enum Status { 
+    enum Status {
       /** Status of a freshly constructed posting on the client. */
-      New, 
+      New,
       /** Status of a successfully fetched posting. 
       @see Blog::fetchPosting( KBlog::BlogPosting* ) */
-      Fetched, 
+      Fetched,
       /** Status of a successfully created posting. 
       @see Blog::createPosting( KBlog::BlogPosting* ) */
-      Created, 
+      Created,
       /** Status of a successfully modified posting. 
       @see Blog::modifyPosting( KBlog::BlogPosting* ) */
-      Modified, 
+      Modified,
       /** Status of a successfully removed posting. 
       @see Blog::removePosting( KBlog::BlogPosting* ) */
-      Removed, 
+      Removed,
       /** Status when an error on the server side occured. 
       @see error() */
-      Error 
+      Error
     };
 
     /**
@@ -388,15 +388,7 @@ public:
       The overloaed = operator.
     */
     BlogPosting& operator=( const BlogPosting &posting );
-  protected:
-    /**
-      Constructor needed for private inheritance.
-    */
-    BlogPosting( const QString &postingId, BlogPostingPrivate &dd );
-    /**
-      Constructor needed for private inheritance.
-    */
-    BlogPosting( const KCal::Journal &journal, BlogPostingPrivate &dd );
+
   private:
     BlogPostingPrivate * const d_ptr;
 };

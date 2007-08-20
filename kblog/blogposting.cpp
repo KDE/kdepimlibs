@@ -58,15 +58,6 @@ BlogPosting::BlogPosting( const QString &postingId ) :
   d_ptr->mStatus = New;
 }
 
-BlogPosting::BlogPosting( const QString &postingId, BlogPostingPrivate &dd )
-  : d_ptr( &dd )
-{
-  d_ptr->q_ptr = this;
-  d_ptr->mPrivate = false;
-  d_ptr->mPostingId = postingId;
-  d_ptr->mStatus = New;
-}
-
 BlogPosting::BlogPosting( const KCal::Journal &journal ) :
     d_ptr( new BlogPostingPrivate )
 {
@@ -81,19 +72,19 @@ BlogPosting::BlogPosting( const KCal::Journal &journal ) :
   d_ptr->mCreationDateTime = journal.dtStart();
 }
 
-BlogPosting::BlogPosting( const KCal::Journal &journal, BlogPostingPrivate &dd )
-  : d_ptr( &dd )
-{
-  d_ptr->q_ptr = this;
-  d_ptr->mPrivate = false;
-  d_ptr->mPostingId = journal.customProperty( "KBLOG", "ID" );
-  d_ptr->mJournalId = journal.uid();
-  d_ptr->mStatus = New;
-  d_ptr->mTitle = journal.summary();
-  d_ptr->mContent = journal.description();
-  d_ptr->mCategories = journal.categories();
-  d_ptr->mCreationDateTime = journal.dtStart();
-}
+// BlogPosting::BlogPosting( const KCal::Journal &journal, BlogPostingPrivate &dd )
+//   : d_ptr( &dd )
+// {
+//   d_ptr->q_ptr = this;
+//   d_ptr->mPrivate = false;
+//   d_ptr->mPostingId = journal.customProperty( "KBLOG", "ID" );
+//   d_ptr->mJournalId = journal.uid();
+//   d_ptr->mStatus = New;
+//   d_ptr->mTitle = journal.summary();
+//   d_ptr->mContent = journal.description();
+//   d_ptr->mCategories = journal.categories();
+//   d_ptr->mCreationDateTime = journal.dtStart();
+// }
 
 BlogPosting::~BlogPosting()
 {

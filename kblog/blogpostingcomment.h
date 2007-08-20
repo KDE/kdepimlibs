@@ -202,20 +202,20 @@ class KBLOG_EXPORT BlogPostingComment
     The enumartion of the different posting status, reflecting the status changes
     on the server.
   */
-  enum Status { 
+  enum Status {
     /** Status of a freshly constructed comment on the client. */
     New,
     /** Status of a successfully fetched comment. */
-    Fetched, 
+    Fetched,
     /** Status of a successfully created comment. 
     @see GData::createComment( BlogPosting*, BlogPostingComment* ) */
-    Created, 
+    Created,
     /** Status of a successfully removed comment. 
     @see GData::removeComment( BlogPosting*, BlogPostingComment* ) */
-    Removed, 
+    Removed,
     /** Status when an error has occured on the server side. 
     @see error() */
-    Error 
+    Error
   };
 
   /**
@@ -255,15 +255,9 @@ class KBLOG_EXPORT BlogPostingComment
   */
   BlogPostingComment& operator=(const BlogPostingComment &comment );
 
-  protected:
-    /**
-      Constructor needed for private inheritance.
-    */
-    BlogPostingComment( BlogPostingCommentPrivate &dd );
   private:
     BlogPostingCommentPrivate * const d_ptr;
 };
-
 
 } //namespace KBlog
 
