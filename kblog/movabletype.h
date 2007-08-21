@@ -44,8 +44,9 @@ namespace KBlog {
   blog server supports Movable Type.
   @code
   Blog* myblog = new MovableType("http://example.com/xmlrpc/gateway.php");
+  myblog->setUsername( "some_user_id" );
+  myblog->setPassword( "YoURFunnyPAsSwoRD" );
   KBlog::BlogPosting *post = new BlogPosting();
-  post->setUsername( "some_user_id" );
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
   myblog->createPosting( posting );

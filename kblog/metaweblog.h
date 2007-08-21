@@ -50,8 +50,9 @@ namespace KBlog {
 
   @code
   Blog* myblog = new MetaWeblog("http://example.com/xmlrpc/gateway.php");
+  myblog->setUsername( "some_user_id" );
+  myblog->setPassword( "YouRFuNNYPasSwoRD" );
   KBlog::BlogPosting *post = new BlogPosting();
-  post->setUsername( "some_user_id" );
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
   myblog->createPosting( posting );

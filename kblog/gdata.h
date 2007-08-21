@@ -55,8 +55,9 @@ namespace KBlog {
   @code
   Blog* myblog = new GData("http://myblogspot.account.com");
   myblog->setProfileId( "2039484587348593945823" ); // can be fetched via fetchProfileId()
+  myblog->setUsername( "your_email@address.com" );
+  myblog->setPassword( "yOuRFuNnYPasSword" );
   KBlog::BlogPosting *post = new BlogPosting();
-  post->setUsername( "your_email@address.com" );
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
   myblog->createPosting( posting );
@@ -123,9 +124,11 @@ class KBLOG_EXPORT GData : public Blog
     QString interfaceName() const;
 
     /**
-        Get information about the user from the blog.
+        Get information about the profile from the blog.
+        Sets the profileId automatically for the blog it is called from.
 
-        @see void fetchedUserInfo( const QMap\<QString,QString\>& )
+        @see setProfileId( const QString& )
+        @see void fetchedProfileId( const QString& )
     */
     void fetchProfileId();
 
