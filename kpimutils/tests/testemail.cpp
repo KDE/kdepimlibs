@@ -219,6 +219,9 @@ int main( int argc, char *argv[] )
   checkGetNameAndEmail( "Matt Douhan <matt@[123.123.123.123]>",
                         "Matt Douhan", "matt@[123.123.123.123]", true );
 
+  // @ inside the comment
+  checkGetNameAndEmail( "\"Matt@Douhan\" <matt@fruitsalad.org>", "Matt@Douhan", "matt@fruitsalad.org", true );
+
   // No '@'
   checkGetNameAndEmail( "foo <distlist>", "foo", "distlist", true );
 

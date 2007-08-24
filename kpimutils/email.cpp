@@ -22,8 +22,6 @@
   This file is part of the KDEPIM Utilities library and provides
   static methods for email address validation.
 
-  @brief
-  Email address validation methods.
 
   @author Matt Douhan \<matt@fruitsalad.org\>
  */
@@ -696,27 +694,26 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
   const int len = aStr.length();
   const char cQuotes = '"';
 
-  bool bInComment, bInQuotesOutsideOfEmail;
+  bool bInComment = false;
+  bool bInQuotesOutsideOfEmail = false;
   int i=0, iAd=0, iMailStart=0, iMailEnd=0;
   QChar c;
+  unsigned int commentstack = 0;
 
   // Find the '@' of the email address
   // skipping all '@' inside "(...)" comments:
-  bInComment = false;
   while ( i < len ) {
     c = aStr[i];
-    if ( !bInComment ) {
-      if ( '(' == c ) {
-        bInComment = true;
-      } else {
-        if ( '@' == c ) {
-          iAd = i;
-          break; // found it
-        }
-      }
-    } else {
-      if ( ')' == c ) {
-        bInComment = false;
+    if( '(' == c ) commentstack++;
+    if( ')' == c ) commentstack--;
+    bInComment = commentstack != 0;
+    if( '"' == c && !bInComment )
+        bInQuotesOutsideOfEmail = !bInQuotesOutsideOfEmail;
+
+    if( !bInComment && !bInQuotesOutsideOfEmail ) {
+      if( '@' == c ){
+        iAd = i;
+        break; // found it
       }
     }
     ++i;
