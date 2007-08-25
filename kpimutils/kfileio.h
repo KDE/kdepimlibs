@@ -121,6 +121,18 @@ bool checkAndCorrectPermissionsIfPossibleWithErrorHandling( QWidget *parent,
                                                             const bool wantItReadable,
                                                             const bool wantItWritable );
 
+
+/**
+ * Removed a directory on the local filesystem whether it is empty or not. All
+ * contents are irredeemably lost.
+ *
+ * @param path          An absolute or relative path to the directory to be
+ *                      removed.
+ *
+ * @return Success or failure.
+ */
+bool removeDirAndContentsRecursively( const QString & path );
+
 }
 
 #endif
