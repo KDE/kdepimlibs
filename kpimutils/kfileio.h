@@ -86,7 +86,7 @@ KPIMUTILS_EXPORT bool kByteArrayToFile( const QByteArray & buffer,
   @return It will return a string with all files and folders which do not
           have the right permissions. If empty, then all permissions are ok.
 */
-QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
+KPIMUTILS_EXPORT QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
                                               const bool recursive,
                                               const bool wantItReadable,
                                               const bool wantItWritable );
@@ -115,7 +115,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
           then the permissions are not ok and it was not possible to correct
           all errors.
 */
-bool checkAndCorrectPermissionsIfPossibleWithErrorHandling( QWidget *parent,
+KPIMUTILS_EXPORT bool checkAndCorrectPermissionsIfPossibleWithErrorHandling( QWidget *parent,
                                                             const QString &toCheck,
                                                             const bool recursive,
                                                             const bool wantItReadable,
@@ -131,7 +131,7 @@ bool checkAndCorrectPermissionsIfPossibleWithErrorHandling( QWidget *parent,
  *
  * @return Success or failure.
  */
-bool removeDirAndContentsRecursively( const QString & path );
+KPIMUTILS_EXPORT bool removeDirAndContentsRecursively( const QString & path );
 
 }
 
