@@ -841,6 +841,8 @@ Headers::Base *Content::getHeaderByType( const char *type )
       h = new Headers::ContentDisposition( this, raw );
     } else if ( strcasecmp( "Content-Description", type ) == 0 ) {
       h = new Headers::ContentDescription( this, raw );
+    } else if ( strcasecmp( "Sender", type ) == 0 ) {
+      h = new Headers::Sender( this, raw );
     } else {
       h = new Headers::Generic( type, this, raw );
     }

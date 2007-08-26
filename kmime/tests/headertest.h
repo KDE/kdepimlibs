@@ -28,6 +28,8 @@ class HeaderTest : public QObject
   private Q_SLOTS:
     void testIdentHeader();
     void testAddressListHeader();
+    void testMailboxListHeader();
+    void testSingleMailboxHeader();
     void testMailCopiesToHeader();
     void testParametrizedHeader();
     void testContentDispositionHeader();

@@ -104,3 +104,42 @@ void MessageTest::testBrunosMultiAssembleBug()
   delete msg;
 }
 
+void MessageTest::testWillsAndTillsCrash()
+{
+  QByteArray deadlyMail = "From: censored@yahoogroups.com\n"
+      "To: censored@yahoogroups.com\n"
+      "Sender: censored@yahoogroups.com\n"
+      "MIME-Version: 1.0\n"
+      "Date: 29 Jan 2006 23:58:21 -0000\n"
+      "Subject: [censored] Birthday Reminder\n"
+      "Reply-To: censored@yahoogroups.com\n"
+      "Content-Type: multipart/alternative;\n boundary=\"YCalReminder=cNM4SNTGA4Cg1MVLaPpqNF1138579098\"\n"
+      "X-Length: 9594\n"
+      "X-UID: 6161\n"
+      "Status: RO\n"
+      "X-Status: OC\n"
+      "X-KMail-EncryptionState:\n"
+      "X-KMail-SignatureState:\n"
+      "X-KMail-MDN-Sent:\n\n";
+
+//   QByteArray deadlyMail;
+//   QFile f( "deadlymail" );
+//   f.open( QFile::ReadOnly );
+//   deadlyMail = f.readAll();
+
+  KMime::Message *msg = new KMime::Message;
+  msg->setContent( deadlyMail );
+  msg->parse();
+  QVERIFY( !msg->date()->isEmpty() );
+  QCOMPARE( msg->subject()->as7BitString( false ), QByteArray( "[censored] Birthday Reminder" ) );
+  QCOMPARE( msg->from()->mailboxes().count(), 1 );
+  QCOMPARE( msg->sender()->mailboxes().count(), 1 );
+  QCOMPARE( msg->replyTo()->mailboxes().count(), 1 );
+  QCOMPARE( msg->to()->mailboxes().count(), 1 );
+  QCOMPARE( msg->cc()->mailboxes().count(), 0 );
+  QCOMPARE( msg->bcc()->mailboxes().count(), 0 );
+  QCOMPARE( msg->inReplyTo()->identifiers().count(), 0 );
+  QCOMPARE( msg->messageID()->identifiers().count(), 0 );
+  delete msg;
+}
+

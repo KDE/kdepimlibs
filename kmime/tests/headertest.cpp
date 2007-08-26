@@ -230,6 +230,45 @@ void HeaderTest::testAddressListHeader()
   delete h;
 }
 
+void HeaderTest::testMailboxListHeader()
+{
+  // empty header
+  Headers::Generics::MailboxList *h = new Headers::Generics::MailboxList();
+  QVERIFY( h->isEmpty() );
+
+  // parse single simple address
+  h->from7BitString( "joe_smith@where.test" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->mailboxes().count(), 1 );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first(), QByteArray("joe_smith@where.test") );
+  QCOMPARE( h->displayNames().count(), 1 );
+  QCOMPARE( h->displayNames().first(), QString() );
+  QCOMPARE( h->prettyAddresses().count(), 1 );
+  QCOMPARE( h->prettyAddresses().first(), QString("joe_smith@where.test") );
+
+  delete h;
+}
+
+void HeaderTest::testSingleMailboxHeader()
+{
+  // empty header
+  Headers::Generics::SingleMailbox *h = new Headers::Generics::SingleMailbox();
+  QVERIFY( h->isEmpty() );
+
+  // parse single simple address
+  h->from7BitString( "joe_smith@where.test" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first(), QByteArray("joe_smith@where.test") );
+  QCOMPARE( h->displayNames().count(), 1 );
+  QCOMPARE( h->displayNames().first(), QString() );
+  QCOMPARE( h->prettyAddresses().count(), 1 );
+  QCOMPARE( h->prettyAddresses().first(), QString("joe_smith@where.test") );
+
+  delete h;
+}
+
 void HeaderTest::testMailCopiesToHeader()
 {
   Headers::MailCopiesTo *h;
