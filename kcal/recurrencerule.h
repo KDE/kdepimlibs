@@ -117,13 +117,19 @@ class KCAL_EXPORT RecurrenceRule
     KDateTime startDt() const;
     /** Set start of recurrence, as a date and time.
      *  Note that setting the start date/time does not make the recurrence occur on
-     *  that date/time, it simply sets a lower limit to when the recurrences take place. */
+     *  that date/time, it simply sets a lower limit to when the recurrences take place.
+     *
+     *  @param start the recurrence's start date and time
+     */
     void setStartDt(const KDateTime &start);
 
     /** Returns whether the start date has no time associated. Floating
         means -- according to rfc2445 -- that the event has no time associate. */
     bool floats() const;
-    /** Sets whether the dtstart is a floating time (i.e. has no time attached) */
+    /** Sets whether the dtstart is a floating time (i.e. has no time attached)
+     *
+     * @param floats Whether start datetime is floating
+     */
     void setFloats( bool floats );
 
 
@@ -178,12 +184,18 @@ class KCAL_EXPORT RecurrenceRule
     bool recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const;
     /** Returns true if the date/time specified is one at which the event will
      * recur. Times are rounded down to the nearest minute to determine the result.
-     * The start date/time returns true only if it actually matches the rule. */
+     * The start date/time returns true only if it actually matches the rule.
+     *
+     * @param dt the date+time to check for recurrency
+     */
     bool recursAt( const KDateTime &dt ) const;
     /** Returns true if the date matches the rules. It does not necessarily
         mean that this is an actual occurrence. In particular, the method does
         not check if the date is after the end date, or if the frequency interval
-        matches */
+        matches.
+
+        @param dt the date+time to check for matching the rules
+     */
     bool dateMatchesRules( const KDateTime &dt ) const;
 
 
@@ -251,6 +263,8 @@ class KCAL_EXPORT RecurrenceRule
       Set the RRULE string for the rule.
       This is merely stored for future reference. The string is not used in any way
       by the RecurrenceRule.
+
+      @param rrule the RRULE string
      */
     void setRRule( const QString &rrule );
     QString rrule() const;

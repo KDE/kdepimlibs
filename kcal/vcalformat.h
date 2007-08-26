@@ -139,6 +139,8 @@ class KCAL_EXPORT VCalFormat : public CalFormat
     /**
       Takes a number 0 - 6 and returns the two letter string of that day,
       i.e. MO, TU, WE, etc.
+
+      @param day number of the day to get a two letter name for. Range @c 0 - @c 6
     */
     const char *dayFromNum( int day );
 

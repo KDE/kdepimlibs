@@ -146,7 +146,10 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * of this file for possible values. */
     ushort recurrenceType() const;
     /** Returns the recurrence status for a recurrence rule.
-     * See the enumeration at the top of this file for possible values. */
+     * See the enumeration at the top of this file for possible values.
+     *
+     * @param rrule the recurrence rule to get the type for
+     */
     static ushort recurrenceType( const RecurrenceRule *rrule );
 
     /**

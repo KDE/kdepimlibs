@@ -216,6 +216,11 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
+
+      @param date date for which to get the events
+      @param timespec the time specification of the date
+      @param sortField field used as the sort key for the result list
+      @param sortDirection direction of sorting according to @p sortField
     */
     Event::List rawEventsForDate( const QDate &date,
                                   const KDateTime::Spec &timespec = KDateTime::Spec(),
@@ -230,6 +235,12 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events are returned, which are completely included in the range.
+
+      @param start date at the begin of the searching range
+      @param end date at the end of the searching range
+      @param timeSpec timeSpec of the searching range
+      @param inclusive if @c true, only match events which are completely within
+             the specified range
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
                            const KDateTime::Spec &timespec = KDateTime::Spec(),
@@ -307,6 +318,9 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
 
     /**
       Set the time specification (time zone, etc.).
+
+      @param timeSpec the time specification to set
+      @see timeSpec()
     */
     void setTimeSpec( const KDateTime::Spec &timeSpec );
 
@@ -319,6 +333,9 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
 
     /**
       Set id of timezone, e.g. "Europe/Berlin"
+
+      @param timeZoneId the identifier for the timezone
+      @see timeZoneId()
     */
     void setTimeZoneId( const QString &timeZoneId );
 
@@ -342,6 +359,8 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     Person owner() const;
     /**
       Set the owner of the calendar. Should be owner's full name.
+
+      @param owner the person who owns this calendar resource
     */
     void setOwner( const Person &owner );
 
@@ -411,6 +430,8 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Set the cache-reloaded status.
       Non-local resources must set this true once the cache has been downloaded successfully.
+
+      @param done the new cache-reloaded status
      */
     void setReloaded( bool done );
     /**
@@ -423,7 +444,10 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     virtual bool doSave( bool syncCache ) = 0;
     /**
       Do the actual saving of the resource data. Called by save(CacheAction).
-      Save one Incidence. The default implementation calls doSave(bool) to save everything
+      Save one Incidence. The default implementation calls doSave(bool) to save everything.
+
+      @param syncCache if @c true, the cache will be uploaded to the remote
+             resource. If @c false, only the cache will be updated
     */
     virtual bool doSave( bool syncCache, Incidence * );
 

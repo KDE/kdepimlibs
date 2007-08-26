@@ -149,6 +149,8 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Return incidence with given unique id. If there is no incidence with that
       uid, return 0.
+
+      @param uid the identifier of the Incidence to look for
     */
     Incidence *incidence( const QString &uid );
 
@@ -175,6 +177,9 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Return unfiltered list of all events in calendar. Use with care,
       this can be a bad idea for server-based calendars.
+
+      @param sortField field used as the sort key for the result list
+      @param sortDirection direction of sorting according to @p sortField
     */
     virtual Event::List rawEvents(
       EventSortField sortField = EventSortUnsorted,
@@ -183,6 +188,11 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Builds and then returns a list of all events that match the
       date specified. Useful for dayView, etc. etc.
+
+      @param date date for which to get the events
+      @param timespec the time specification of the date
+      @param sortField field used as the sort key for the result list
+      @param sortDirection direction of sorting according to @p sortField
     */
     virtual Event::List rawEventsForDate(
       const QDate &date,
@@ -198,6 +208,12 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events which are completely included in the range are returned.
+
+      @param start date at the begin of the searching range
+      @param end date at the end of the searching range
+      @param timeSpec timeSpec of the searching range
+      @param inclusive if @c true, only match events which are completely within
+             the specified range
     */
     virtual Event::List rawEvents(
       const QDate &start, const QDate &end,
@@ -222,6 +238,9 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
           res->setValue( "DownloadURL", yourURL );
           manager->add( res );
         }
+
+      @param key the key of the resource configuration option
+      @param value the value to set for the given option
     */
     virtual bool setValue( const QString &key, const QString &value );
 
@@ -286,6 +305,8 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
 
     /**
       Searches todolist for an event with this unique id.
+
+      @param uid the identifier of the todo to look for
 
       @return pointer to todo or 0 if todo wasn't found
     */
@@ -440,6 +461,8 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Get the identifier of the subresource associated with a specified
       incidence.
+
+      @param incidence the incidence to get the identifier for
 
       @return the identifier of the subresource or an empty string.
     */

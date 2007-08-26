@@ -102,6 +102,8 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
       Sets the fileName for this resource. This will be the local
       file where the resource data will be stored.
 
+      @param fileName the file to use for this resource
+
       @see fileName()
     **/
     bool setFileName( const QString &fileName );
@@ -157,6 +159,8 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     /**
       Compares this ResourceLocal and @p other for equality.
       Returns true if they are equal.
+
+      @param other the instance to compare with
     **/
     bool operator==( const ResourceLocal &other );
 

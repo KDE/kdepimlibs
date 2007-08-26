@@ -39,12 +39,12 @@ class KCAL_EXPORT QtopiaFormat : public CalFormat
     QtopiaFormat();
     virtual ~QtopiaFormat();
 
-    bool load( Calendar *, const QString &fileName );
-    bool save( Calendar *, const QString &fileName );
+    bool load( Calendar *calendar, const QString &fileName );
+    bool save( Calendar *calendar, const QString &fileName );
 
-    bool fromString( Calendar *, const QString & );
+    bool fromString( Calendar *calendar, const QString & );
     bool fromRawString( Calendar *calendar, const QByteArray &string );
-    QString toString( Calendar * );
+    QString toString( Calendar *calendar );
 
   private:
     class Private;
