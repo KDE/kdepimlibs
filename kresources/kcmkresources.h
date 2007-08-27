@@ -23,7 +23,9 @@
 #define KRESOURCES_KCMKRESOURCES_H
 
 #include <kresources_export.h>
+#define KDE3_SUPPORT
 #include <kcmodule.h>
+#undef KDE3_SUPPORT
 namespace KRES { class ConfigPage; }
 
 class KCM_KRESOURCES_EXPORT KCMKResources : public KCModule
