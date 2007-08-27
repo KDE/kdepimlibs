@@ -32,7 +32,7 @@ namespace QGpgME {
   class QGPGME_EXPORT QByteArrayDataProvider : public GpgME::DataProvider {
   public:
     QByteArrayDataProvider();
-    QByteArrayDataProvider( const QByteArray & initialData );
+    explicit QByteArrayDataProvider( const QByteArray & initialData );
     ~QByteArrayDataProvider();
 
     const QByteArray & data() const { return mArray; }
