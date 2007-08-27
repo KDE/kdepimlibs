@@ -157,7 +157,7 @@ else() # not WIN32
     # if gpgme-config has been found
     if ( _GPGMECONFIG_EXECUTABLE )
 
-      message( STATUS "Found gpgme-config" )
+      message( STATUS "Found gpgme-config at ${_GPGMECONFIG_EXECUTABLE}" )
 
       exec_program( ${_GPGMECONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE GPGME_VERSION )
 
@@ -170,11 +170,22 @@ else() # not WIN32
 
       else()
 
-        message( STATUS "Found gpgme v${GPGME_VERSION}." )
+        message( STATUS "Found gpgme v${GPGME_VERSION}, checking for flavours..." )
 
-        exec_program( ${_GPGMECONFIG_EXECUTABLE} ARGS                  --libs OUTPUT_VARIABLE GPGME_LIBRARIES         )
-        exec_program( ${_GPGMECONFIG_EXECUTABLE} ARGS --thread=pthread --libs OUTPUT_VARIABLE GPGME_PTHREAD_LIBRARIES )
-        exec_program( ${_GPGMECONFIG_EXECUTABLE} ARGS --thread=pth     --libs OUTPUT_VARIABLE GPGME_PTH_LIBRARIES     )
+        exec_program( ${_GPGMECONFIG_EXECUTABLE} ARGS                  --libs OUTPUT_VARIABLE GPGME_LIBRARIES         RETURN_VALUE _ret )
+	if ( _ret )
+	  set( GPGME_LIBRARIES "" )
+	endif()
+
+        exec_program( ${_GPGMECONFIG_EXECUTABLE} ARGS --thread=pthread --libs OUTPUT_VARIABLE GPGME_PTHREAD_LIBRARIES RETURN_VALUE _ret )
+	if ( _ret )
+	  set( GPGME_PTHREAD_LIBRARIES "" )
+	endif()
+
+        exec_program( ${_GPGMECONFIG_EXECUTABLE} ARGS --thread=pth     --libs OUTPUT_VARIABLE GPGME_PTH_LIBRARIES     RETURN_VALUE _ret )
+	if ( _ret )
+	  set( GPGME_PTH_LIBRARIES "" )
+	endif()
 
         # append -lgpg-error to the list of libraries, if necessary
         if ( GPGME_LIBRARIES AND NOT GPGME_LIBRARIES MATCHES "lgpg-error" )
