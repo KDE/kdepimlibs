@@ -11,23 +11,17 @@ include (MacroLibrary)
 find_package(Boost)
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Needed by libsyndication")
 
-#we require the gpgme package for Unix.
-#we make gpgme optional for non-Unix (since it does not exist yet).
-if(UNIX)
-  find_package(Gpgme REQUIRED)
-else(UNIX)
-  find_package(Gpgme)
-endif(UNIX)
+# gpgme is a hard dependency
+find_package(Gpgme REQUIRED)
 
 include (gpgme++/ConfigureChecks.cmake)
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
 
-if(GPGME_FOUND)
-  add_subdirectory(gpgme++)
-  add_subdirectory(qgpgme)
-endif(GPGME_FOUND)
+add_subdirectory(gpgme++)
+add_subdirectory(qgpgme)
+# (gpgme++/qgpgme handle their conditions inside their own CMakeLists.txt files)
 add_subdirectory(kabc)
 add_subdirectory(kblog)
 add_subdirectory(kcal)

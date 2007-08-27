@@ -1,5 +1,5 @@
 /* qeventloopinteractor.cpp
-   Copyright (C) 2003 Klarälvdalens Datakonsult AB
+   Copyright (C) 2003, 2007 Klarälvdalens Datakonsult AB
 
    This file is part of QGPGME.
 
@@ -23,15 +23,8 @@
 #include <qgpgme/eventloopinteractor.h>
 #include <gpgme++/context.h>
 
-#include <QSocketNotifier>
 #include <QCoreApplication>
-#ifdef Q_WS_WIN 
-//uncomment it when fixed
-//#include "eventloopnotify_win.h"
-#include "eventloopnotify.h"
-#else
-#include "eventloopnotify.h"
-#endif
+
 using namespace GpgME;
 
 QGpgME::EventLoopInteractor::EventLoopInteractor( QObject * parent )
@@ -62,21 +55,6 @@ QGpgME::EventLoopInteractor * QGpgME::EventLoopInteractor::instance() {
 #endif
      (void)new EventLoopInteractor;
   return mSelf;
-}
-
-void * QGpgME::EventLoopInteractor::registerWatcher( int fd, Direction dir, bool & ok ) {
-  QGpgME::EventLoopNotify * const sn = new QGpgME::EventLoopNotify(fd,
-       dir);
-   if(dir==Read)
-      connect(sn,SIGNAL(activated(int)),SLOT(slotReadActivity(int)));
-   else
-      connect(sn,SIGNAL(activated(int)),SLOT(slotWriteActivity(int)));
-  ok = true; // Can above operations fails?
-  return sn;
-}
-
-void QGpgME::EventLoopInteractor::unregisterWatcher( void * tag ) {
-  delete static_cast<QGpgME::EventLoopNotify*>( tag );
 }
 
 void QGpgME::EventLoopInteractor::slotWriteActivity( int socket ) {

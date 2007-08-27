@@ -1,5 +1,5 @@
-/* qeventloopinteractor.h
-   Copyright (C) 2007 Klarälvdalens Datakonsult AB
+/* qeventloopinteractor.cpp
+   Copyright (C) 2003, 2007 Klarälvdalens Datakonsult AB
 
    This file is part of QGPGME.
 
@@ -19,28 +19,21 @@
    Boston, MA 02110-1301, USA. */
 
 // -*- c++ -*-
-#ifndef __QGPGME_EVENTLOOPNOTIFY_H__
-#define __QGPGME_EVENTLOOPNOTIFY_H__
 
-#include "qgpgme_export.h"
-#include <gpgme++/eventloopinteractor.h>
-#include <QtCore/QObject>
+#include <qgpgme/eventloopinteractor.h>
 
-namespace QGpgME {
-  class QGPGME_EXPORT EventLoopNotify : public QObject
-  {
-    Q_OBJECT
-    public:
-       EventLoopNotify(int fd, GpgME::EventLoopInteractor::Direction dir);
-       ~EventLoopNotify();
-    signals:
-       void activated(int);
-    private:
-       QSocketNotifier *sn;
-  };
- 
-} // namespace QGpgME
+#include <QSocketNotifier>
 
-#endif // __QGPGME_EVENTLOOPNOTIFY_H__
+void * QGpgME::EventLoopInteractor::registerWatcher( int fd, Direction dir, bool & ok ) {
+    QSocketNotifier * const sn = new QSocketNotifier( fd, dir == Read ? QSocketNotifier::Read : QSocketNotifier::Write );
+    if( dir == Read )
+        connect( sn, SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)) );
+    else
+        connect( sn, SIGNAL(activated(int)), this, SLOT(slotWriteActivity(int)) );
+    ok = true; // Can above operations fails?
+    return sn;
+}
 
-
+void QGpgME::EventLoopInteractor::unregisterWatcher( void * tag ) {
+    delete static_cast<QSocketNotifier*>( tag );
+}
