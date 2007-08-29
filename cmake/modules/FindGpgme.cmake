@@ -34,6 +34,24 @@ macro( macro_bool_to_bool FOUND_VAR )
   endforeach()
 endmacro()
 
+# same here
+macro( check_c_library_exists_explicit _lib _func _cflags _ldflags _result )
+  set( _cclee_CMAKE_REQUIRED_LIBRARIES_saved ${CMAKE_REQUIRED_LIBRARIES} )
+  set( CMAKE_REQUIRED_LIBRARIES "${_ldflags}" )
+  set( _cclee_FILE "${CMAKE_BINARY_DIR}/CMakeTmp/cclee_${_lib}_${_func}.c" )
+  file( WRITE ${_cclee_FILE} "extern void ${_func}(void); int main() { return &${_func} == 0; }" )
+  ### this should fail when e.g. gpgme-pth is tested without libpth-dev being installed,
+  ### but it just happily reports true nonetheless. Someone with more knowledge of this
+  ### crap than me can have a go at fixing this, I give up.
+  try_run( _run_result _compile_result "${CMAKE_BINARY_DIR}" "${_cclee_FILE}" COMPILE_DEFINITIONS "${_cflags}" OUTPUT_VARIABLE OUTPUT )
+  if ( _run_result EQUAL 0 AND _compile_result )
+    set( ${_result} true )
+  else()
+    set( ${_result} false )
+  endif()
+  set( CMAKE_REQUIRED_LIBRARIES ${_cclee_CMAKE_REQUIRED_LIBRARIES_saved} )
+endmacro()
+
 include (MacroEnsureVersion)
 
 
@@ -152,6 +170,10 @@ else() # not WIN32
 
   else()
 
+    set( GPGME_FOUND         false )
+    set( GPGME_PTHREAD_FOUND false )
+    set( GPGME_PTH_FOUND     false )
+
     find_program( _GPGMECONFIG_EXECUTABLE NAMES gpgme-config )
 
     # if gpgme-config has been found
@@ -200,17 +222,43 @@ else() # not WIN32
           set( GPGME_PTH_LIBRARIES "${GPGME_PTH_LIBRARIES} -lgpg-error" )
         endif()
 
-        macro_bool_to_bool( GPGME_LIBRARIES GPGME_FOUND )
-        macro_bool_to_bool( GPGME_PTHREAD_LIBRARIES GPGME_PTHREAD_FOUND )
-        macro_bool_to_bool( GPGME_PTH_LIBRARIES  GPGME_PTH_FOUND  )
-
-        if ( GPGME_FOUND OR GPGME_PTHREAD_FOUND OR GPGME_PTH_FOUND )
+        if ( GPGME_LIBRARIES OR GPGME_PTHREAD_LIBRARIES OR GPGME_PTH_LIBRARIES )
 
           exec_program( ${_GPGMECONFIG_EXECUTABLE} ARGS --cflags OUTPUT_VARIABLE _GPGME_CFLAGS )
 
           if ( _GPGME_CFLAGS )
             string( REGEX REPLACE "(\r?\n)+$" " " _GPGME_CFLAGS  "${_GPGME_CFLAGS}" )
             string( REGEX REPLACE " *-I"      ";" GPGME_INCLUDES "${_GPGME_CFLAGS}" )
+          endif()
+
+          if ( GPGME_LIBRARIES )
+            check_c_library_exists_explicit( gpgme         gpgme_check_version "${_GPGME_CFLAGS}" "${GPGME_LIBRARIES}"         GPGME_FOUND         )
+            if ( GPGME_FOUND )
+              set( _answer "yes" )
+            else()
+              set( _answer "no, check the output of gpgme-config --libs --cflags and make sure all libraries' -dev packages are installed" )
+            endif()
+            message( STATUS " Found flavour vanilla, checking whether it's usable...${_answer}" )
+          endif()
+
+          if ( GPGME_PTHREAD_LIBRARIES )
+            check_c_library_exists_explicit( gpgme-pthread gpgme_check_version "${_GPGME_CFLAGS}" "${GPGME_PTHREAD_LIBRARIES}" GPGME_PTHREAD_FOUND )
+            if ( GPGME_FOUND )
+              set( _answer "yes" )
+            else()
+              set( _answer "no, check the output of gpgme-config --thread=pthread --libs --cflags and make sure all libraries' -dev packages are installed" )
+            endif()
+            message( STATUS " Found flavour pthread, checking whether it's usable...${_answer}" )
+          endif()
+
+          if ( GPGME_PTH_LIBRARIES )
+            check_c_library_exists_explicit( gpgme-pth     gpgme_check_version "${_GPGME_CFLAGS}" "${GPGME_PTH_LIBRARIES}"     GPGME_PTH_FOUND     )
+            if ( GPGME_FOUND )
+              set( _answer "yes" )
+            else()
+              set( _answer "no, check the output of gpgme-config --thread=pth --libs --cflags and make sure all libraries' -dev packages are installed" )
+            endif()
+            message( STATUS " Found flavour pth, checking whether it's usable...${_answer}" )
           endif()
 
           # ensure that they are cached
