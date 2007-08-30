@@ -176,7 +176,7 @@ void HtmlExport::createMonthView( QTextStream *ts )
   while ( start < toDate() ) {
     // Write header
     *ts << "<h2>"
-        << i18nc( "month_year", "%1 %2",
+        << i18nc( "@title month and year", "%1 %2",
                   KGlobal::locale()->calendar()->monthName( start ), start.year() )
         << "</h2>\n";
     if ( KGlobal::locale()->weekStartDay() == 1 ) {
@@ -252,19 +252,19 @@ void HtmlExport::createEventList( QTextStream *ts )
   int columns = 3;
   *ts << "<table border=\"0\" cellpadding=\"3\" cellspacing=\"3\">\n";
   *ts << "  <tr>\n";
-  *ts << "    <th class=\"sum\">" << i18n( "Start Time" ) << "</th>\n";
-  *ts << "    <th>" << i18n( "End Time" ) << "</th>\n";
-  *ts << "    <th>" << i18n( "Event" ) << "</th>\n";
+  *ts << "    <th class=\"sum\">" << i18nc( "@title:column", "Start Time" ) << "</th>\n";
+  *ts << "    <th>" << i18nc( "@title:column", "End Time" ) << "</th>\n";
+  *ts << "    <th>" << i18nc( "@title:column", "Event" ) << "</th>\n";
   if ( d->mSettings->eventLocation() ) {
-    *ts << "    <th>" << i18n( "Location" ) << "</th>\n";
+    *ts << "    <th>" << i18nc( "@title:column", "Location" ) << "</th>\n";
     ++columns;
   }
   if ( d->mSettings->eventCategories() ) {
-    *ts << "    <th>" << i18n( "Categories" ) << "</th>\n";
+    *ts << "    <th>" << i18nc( "@title:column", "Categories" ) << "</th>\n";
     ++columns;
   }
   if ( d->mSettings->eventAttendees() ) {
-    *ts << "    <th>" << i18n( "Attendees" ) << "</th>\n";
+    *ts << "    <th>" << i18nc( "@title:column", "Attendees" ) << "</th>\n";
     ++columns;
   }
 
@@ -383,23 +383,23 @@ void HtmlExport::createTodoList ( QTextStream *ts )
   int columns = 3;
   *ts << "<table border=\"0\" cellpadding=\"3\" cellspacing=\"3\">\n";
   *ts << "  <tr>\n";
-  *ts << "    <th class=\"sum\">" << i18n( "Task" ) << "</th>\n";
-  *ts << "    <th>" << i18n( "Priority" ) << "</th>\n";
-  *ts << "    <th>" << i18n( "Completed" ) << "</th>\n";
+  *ts << "    <th class=\"sum\">" << i18nc( "@title:column", "Task" ) << "</th>\n";
+  *ts << "    <th>" << i18nc( "@title:column to-do priority", "Priority" ) << "</th>\n";
+  *ts << "    <th>" << i18nc( "@title:column to-do percent completed", "Completed" ) << "</th>\n";
   if ( d->mSettings->taskDueDate() ) {
-    *ts << "    <th>" << i18n( "Due Date" ) << "</th>\n";
+    *ts << "    <th>" << i18nc( "@title:column to-do due date", "Due Date" ) << "</th>\n";
     ++columns;
   }
   if ( d->mSettings->taskLocation() ) {
-    *ts << "    <th>" << i18n( "Location" ) << "</th>\n";
+    *ts << "    <th>" << i18nc( "@title:column to-do location", "Location" ) << "</th>\n";
     ++columns;
   }
   if ( d->mSettings->taskCategories() ) {
-    *ts << "    <th>" << i18n( "Categories" ) << "</th>\n";
+    *ts << "    <th>" << i18nc( "@title:column to-do categories", "Categories" ) << "</th>\n";
     ++columns;
   }
   if ( d->mSettings->taskAttendees() ) {
-    *ts << "    <th>" << i18n( "Attendees" ) << "</th>\n";
+    *ts << "    <th>" << i18nc( "@title:column to-do attendees", "Attendees" ) << "</th>\n";
     ++columns;
   }
   *ts << "  </tr>\n";
@@ -420,7 +420,7 @@ void HtmlExport::createTodoList ( QTextStream *ts )
       *ts << "    <td class=\"subhead\" colspan=";
       *ts << "\"" << QString::number(columns) << "\"";
       *ts << "><a name=\"sub" << (*it)->uid() << "\"></a>"
-          << i18n( "Sub-Tasks of: " ) << "<a href=\"#"
+          << i18nc( "@title:column", "Sub-Tasks of: " ) << "<a href=\"#"
           << (*it)->uid() << "\"><b>" << cleanChars( (*it)->summary() )
           << "</b></a></td>\n";
       *ts << "  </tr>\n";
@@ -474,7 +474,7 @@ void HtmlExport::createTodo( QTextStream *ts, Todo *todo )
   }
   if ( relations.count() ) {
     *ts << "    <div align=\"right\"><a href=\"#sub" << todo->uid()
-        << "\">" << i18n( "Sub-Tasks" ) << "</a></div>\n";
+        << "\">" << i18nc( "@title:column", "Sub-Tasks" ) << "</a></div>\n";
   }
   *ts << "  </td>\n";
 
@@ -491,7 +491,8 @@ void HtmlExport::createTodo( QTextStream *ts, Todo *todo )
     *ts << " class=\"done\"";
   }
   *ts << ">\n";
-  *ts << "    " << i18n( "%1 %", todo->percentComplete() ) << "\n";
+  *ts << "    " << i18nc( "@info to-do percent complete",
+                          "%1 %", todo->percentComplete() ) << "\n";
   *ts << "  </td>\n";
 
   if ( d->mSettings->taskDueDate() ) {
@@ -653,7 +654,7 @@ QString HtmlExport::breakString( const QString &text )
 void HtmlExport::createFooter( QTextStream *ts )
 {
   // FIXME: Implement this in a translatable way!
-  QString trailer = i18n( "This page was created " );
+  QString trailer = i18nc( "@info", "This page was created " );
 
 /*  bool hasPerson = false;
   bool hasCredit = false;
@@ -661,23 +662,28 @@ void HtmlExport::createFooter( QTextStream *ts )
   QString mail, name, credit, creditURL;*/
   if ( !d->mSettings->eMail().isEmpty() ) {
     if ( !d->mSettings->name().isEmpty() ) {
-      trailer += i18n( "by <a href=\"mailto:%1\">%2</a> ",
-                       d->mSettings->eMail(), d->mSettings->name() );
+      trailer += i18nc( "@info page creator email link with name",
+                        "by <link url='mailto:%1'>%2</link>",
+                        d->mSettings->eMail(), d->mSettings->name() );
     } else {
-      trailer += i18n( "by <a href=\"mailto:%1\">%2</a> ",
-                       d->mSettings->eMail(), d->mSettings->eMail() );
+      trailer += i18nc( "@info page creator email link",
+                        "by <link url='mailto:%1'>%2</link>",
+                        d->mSettings->eMail(), d->mSettings->eMail() );
     }
   } else {
     if ( !d->mSettings->name().isEmpty() ) {
-      trailer += i18n( "by %1 ", d->mSettings->name() );
+      trailer += i18nc( "@info page creator name only",
+                        "by %1 ", d->mSettings->name() );
     }
   }
   if ( !d->mSettings->creditName().isEmpty() ) {
     if ( !d->mSettings->creditURL().isEmpty() ) {
-      trailer += i18n( "with <a href=\"%1\">%2</a>",
-                       d->mSettings->creditURL(), d->mSettings->creditName() );
+      trailer += i18nc( "@info page credit with name and link",
+                        "with <link url='%1'>%2</link>",
+                        d->mSettings->creditURL(), d->mSettings->creditName() );
     } else {
-      trailer += i18n( "with %1", d->mSettings->creditName() );
+      trailer += i18nc( "@info page credit name only",
+                        "with %1", d->mSettings->creditName() );
     }
   }
   *ts << "<p>" << trailer << "</p>\n";
@@ -743,7 +749,8 @@ void HtmlExport::addHoliday( const QDate &date, const QString &name )
   if ( d->mHolidayMap[date].isEmpty() ) {
     d->mHolidayMap[date] = name;
   } else {
-    d->mHolidayMap[date] = i18nc( "list of holidays", "%1, %2", d->mHolidayMap[date], name );
+    d->mHolidayMap[date] = i18nc( "@info holiday by date and name",
+                                  "%1, %2", d->mHolidayMap[date], name );
   }
 }
 
