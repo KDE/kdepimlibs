@@ -58,26 +58,27 @@ class KCAL_EXPORT Attendee : public Person
   public:
 
     /**
-      The different types of participant statuses.
+      The different types of participant status.
+      The meaning is specific to the incidence type in context.
     */
     enum PartStat {
-      NeedsAction,     /**< No information about the task/invitation received */
-      Accepted,        /**< Accepted the task/invitation */
-      Declined,        /**< Declined the task/invitation */
-      Tentative,       /**< Tentatively accepted the task/invitation */
-      Delegated,       /**< Delegated the task to another */
-      Completed,       /**< Completed the task */
-      InProcess        /**< Work on the task is in-progress */
+      NeedsAction,     /**< Event, to-do or journal needs action (default) */
+      Accepted,        /**< Event, to-do or journal accepted */
+      Declined,        /**< Event, to-do or journal declined */
+      Tentative,       /**< Event or to-do tentatively accepted */
+      Delegated,       /**< Event or to-do delegated */
+      Completed,       /**< To-do completed */
+      InProcess        /**< To-do in process of being completed */
     };
 
     /**
-      The different types of meeting roles.
+      The different types of participation roles.
     */
     enum Role {
-      ReqParticipant,  /**< Required participant */
-      OptParticipant,  /**< Optional participant */
-      NonParticipant,  /**< Non-participant */
-      Chair            /**< Meeting chairperson */
+      ReqParticipant,  /**< Participation is required (default) */
+      OptParticipant,  /**< Participation is optional */
+      NonParticipant,  /**< Non-Participant; copied for information purposes */
+      Chair            /**< Chairperson */
     };
 
     /**

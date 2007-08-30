@@ -109,30 +109,30 @@ QString Attendee::statusStr() const
   return statusName( d->mStatus );
 }
 
-QString Attendee::statusName( Attendee::PartStat s )
+QString Attendee::statusName( Attendee::PartStat status )
 {
-  switch ( s ) {
+  switch ( status ) {
   default:
   case NeedsAction:
-    return i18n( "Needs Action" );
+    return i18nc( "@item event, to-do or journal needs action", "Needs Action" );
     break;
   case Accepted:
-    return i18n( "Accepted" );
+    return i18nc( "@item event, to-do or journal accepted", "Accepted" );
     break;
   case Declined:
-    return i18n( "Declined" );
+    return i18nc( "@item event, to-do or journal declined", "Declined" );
     break;
   case Tentative:
-    return i18nc( "attendee status", "Tentative" );
+    return i18nc( "@item event or to-do tentatively accepted", "Tentative" );
     break;
   case Delegated:
-    return i18n( "Delegated" );
+    return i18nc( "@item event or to-do delegated", "Delegated" );
     break;
   case Completed:
-    return i18n( "Completed" );
+    return i18nc( "@item to-do completed", "Completed" );
     break;
   case InProcess:
-    return i18n( "In Process" );
+    return i18nc( "@item to-do in process of being completed", "In Process" );
     break;
   }
 }
@@ -176,21 +176,21 @@ QString Attendee::uid() const
   return d->mUid;
 }
 
-QString Attendee::roleName( Attendee::Role r )
+QString Attendee::roleName( Attendee::Role role )
 {
-  switch ( r ) {
+  switch ( role ) {
   case Chair:
-    return i18n( "Chair" );
+    return i18nc( "@item chairperson", "Chair" );
     break;
   default:
   case ReqParticipant:
-    return i18n( "Participant" );
+    return i18nc( "@item participation is required", "Participant" );
     break;
   case OptParticipant:
-    return i18n( "Optional Participant" );
+    return i18nc( "@item participation is optional", "Optional Participant" );
     break;
   case NonParticipant:
-    return i18n( "Observer" );
+    return i18nc( "@item non-participant copied for information", "Observer" );
     break;
   }
 }
