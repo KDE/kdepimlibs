@@ -389,7 +389,7 @@ void HtmlExport::createTodoList ( QTextStream *ts )
   int columns = 3;
   *ts << "<table border=\"0\" cellpadding=\"3\" cellspacing=\"3\">\n";
   *ts << "  <tr>\n";
-  *ts << "    <th class=\"sum\">" << i18nc( "@title:column", "Task" ) << "</th>\n";
+  *ts << "    <th class=\"sum\">" << i18nc( "@title:column", "To-do" ) << "</th>\n";
   *ts << "    <th>" << i18nc( "@title:column to-do priority", "Priority" ) << "</th>\n";
   *ts << "    <th>" << i18nc( "@title:column to-do percent completed", "Completed" ) << "</th>\n";
   if ( d->mSettings->taskDueDate() ) {
@@ -421,13 +421,13 @@ void HtmlExport::createTodoList ( QTextStream *ts )
   for ( it = todoList.begin(); it != todoList.end(); ++it ) {
     Incidence::List relations = (*it)->relations();
     if ( relations.count() ) {
-      // Generate sub-task list
+      // Generate sub-to-do list
       *ts << "  <tr>\n";
       *ts << "    <td class=\"subhead\" colspan=";
       *ts << "\"" << QString::number(columns) << "\"";
       *ts << "><a name=\"sub" << (*it)->uid() << "\"></a>"
-          << i18nc( "@title:column sub-tasks of the parent to-do",
-                    "Sub-Tasks of: " ) << "<a href=\"#"
+          << i18nc( "@title:column sub-to-dos of the parent to-do",
+                    "Sub-To-dos of: " ) << "<a href=\"#"
           << (*it)->uid() << "\"><b>" << cleanChars( (*it)->summary() )
           << "</b></a></td>\n";
       *ts << "  </tr>\n";
@@ -481,8 +481,8 @@ void HtmlExport::createTodo( QTextStream *ts, Todo *todo )
   }
   if ( relations.count() ) {
     *ts << "    <div align=\"right\"><a href=\"#sub" << todo->uid()
-        << "\">" << i18nc( "@title:column sub-tasks of the parent to-do",
-                           "Sub-Tasks" ) << "</a></div>\n";
+        << "\">" << i18nc( "@title:column sub-to-dos of the parent to-do",
+                           "Sub-To-dos" ) << "</a></div>\n";
   }
   *ts << "  </td>\n";
 
