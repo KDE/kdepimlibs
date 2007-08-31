@@ -165,8 +165,10 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
   private:
     Q_DECLARE_PRIVATE(MetaWeblog)
-    Q_PRIVATE_SLOT(d_func(), void slotListCategories( 
-    const QList<QVariant>&, const QVariant& ))
+    Q_PRIVATE_SLOT(d_func(), 
+      void slotListCategories( const QList<QVariant>&, const QVariant& ) )
+    Q_PRIVATE_SLOT(d_func(),
+      void slotCreateMedia( const QList<QVariant>&, const QVariant& ))
 };
 
 } //namespace KBlog

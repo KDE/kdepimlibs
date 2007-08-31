@@ -169,7 +169,7 @@ void MetaWeblog::createMedia( KBlog::BlogMedia *media )
   d->mXmlRpcClient->call(
     "metaWeblog.newMediaObject", args,
     this, SLOT( slotCreateMedia( const QList<QVariant>&, const QVariant& ) ),
-    this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
+    this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 
 }
 
@@ -360,7 +360,7 @@ void MetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
   KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
-  kDebug(5323) << "MetaWeblog::slotModifyPosting";
+  kDebug(5323) << "MetaWeblogPrivate::slotModifyPosting";
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
