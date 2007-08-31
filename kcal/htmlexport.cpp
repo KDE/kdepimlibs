@@ -252,19 +252,25 @@ void HtmlExport::createEventList( QTextStream *ts )
   int columns = 3;
   *ts << "<table border=\"0\" cellpadding=\"3\" cellspacing=\"3\">\n";
   *ts << "  <tr>\n";
-  *ts << "    <th class=\"sum\">" << i18nc( "@title:column", "Start Time" ) << "</th>\n";
-  *ts << "    <th>" << i18nc( "@title:column", "End Time" ) << "</th>\n";
-  *ts << "    <th>" << i18nc( "@title:column", "Event" ) << "</th>\n";
+  *ts << "    <th class=\"sum\">" << i18nc( "@title:column event start time",
+                                            "Start Time" ) << "</th>\n";
+  *ts << "    <th>" << i18nc( "@title:column event end time",
+                              "End Time" ) << "</th>\n";
+  *ts << "    <th>" << i18nc( "@title:column event description",
+                              "Event" ) << "</th>\n";
   if ( d->mSettings->eventLocation() ) {
-    *ts << "    <th>" << i18nc( "@title:column", "Location" ) << "</th>\n";
+    *ts << "    <th>" << i18nc( "@title:column event locatin",
+                                "Location" ) << "</th>\n";
     ++columns;
   }
   if ( d->mSettings->eventCategories() ) {
-    *ts << "    <th>" << i18nc( "@title:column", "Categories" ) << "</th>\n";
+    *ts << "    <th>" << i18nc( "@title:column event categories",
+                                "Categories" ) << "</th>\n";
     ++columns;
   }
   if ( d->mSettings->eventAttendees() ) {
-    *ts << "    <th>" << i18nc( "@title:column", "Attendees" ) << "</th>\n";
+    *ts << "    <th>" << i18nc( "@title:column event attendees",
+                                "Attendees" ) << "</th>\n";
     ++columns;
   }
 
@@ -420,7 +426,8 @@ void HtmlExport::createTodoList ( QTextStream *ts )
       *ts << "    <td class=\"subhead\" colspan=";
       *ts << "\"" << QString::number(columns) << "\"";
       *ts << "><a name=\"sub" << (*it)->uid() << "\"></a>"
-          << i18nc( "@title:column", "Sub-Tasks of: " ) << "<a href=\"#"
+          << i18nc( "@title:column sub-tasks of the parent to-do",
+                    "Sub-Tasks of: " ) << "<a href=\"#"
           << (*it)->uid() << "\"><b>" << cleanChars( (*it)->summary() )
           << "</b></a></td>\n";
       *ts << "  </tr>\n";
@@ -474,7 +481,8 @@ void HtmlExport::createTodo( QTextStream *ts, Todo *todo )
   }
   if ( relations.count() ) {
     *ts << "    <div align=\"right\"><a href=\"#sub" << todo->uid()
-        << "\">" << i18nc( "@title:column", "Sub-Tasks" ) << "</a></div>\n";
+        << "\">" << i18nc( "@title:column sub-tasks of the parent to-do",
+                           "Sub-Tasks" ) << "</a></div>\n";
   }
   *ts << "  </td>\n";
 
