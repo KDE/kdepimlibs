@@ -83,7 +83,7 @@
       </choices>
     </entry>
     <entry name="authenticationType" type="Enum" key="authtype">
-      <label>Authentification method</label>
+      <label>Authentication method</label>
       <choices>
         <!-- TODO - -> _ conversion? -->
         <choice name="LOGIN"/>
