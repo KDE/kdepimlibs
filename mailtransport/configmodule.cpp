@@ -26,8 +26,8 @@
 
 using namespace MailTransport;
 
-K_PLUGIN_FACTORY(MailTransportConfigFactory, registerPlugin<ConfigModule>();)
-K_EXPORT_PLUGIN(MailTransportConfigFactory("mailtrasnport"))
+K_PLUGIN_FACTORY( MailTransportConfigFactory, registerPlugin<ConfigModule>(); )
+K_EXPORT_PLUGIN( MailTransportConfigFactory( "mailtrasnport" ) )
 
 ConfigModule::ConfigModule( QWidget * parent, const QVariantList & args ) :
     KCModule( MailTransportConfigFactory::componentData(), parent, args )

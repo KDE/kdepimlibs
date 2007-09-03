@@ -29,8 +29,8 @@
 
 #include "configpage.h"
 
-K_PLUGIN_FACTORY(ResourcesFactory, registerPlugin<KCMKResources>();)
-K_EXPORT_PLUGIN(ResourcesFactory("kcmkresources"))
+K_PLUGIN_FACTORY( ResourcesFactory, registerPlugin<KCMKResources>(); )
+K_EXPORT_PLUGIN( ResourcesFactory( "kcmkresources" ) )
 
 KCMKResources::KCMKResources( QWidget *parent, const QVariantList &l )
   : KCModule( ResourcesFactory::componentData(), parent, QVariantList() )
