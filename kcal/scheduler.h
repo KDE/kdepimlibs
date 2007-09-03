@@ -1,22 +1,22 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 #ifndef KCAL_SCHEDULER_H
 #define KCAL_SCHEDULER_H
@@ -46,37 +46,46 @@ class KCAL_EXPORT ScheduleMessage
     /**
       Message status.
     */
-    enum Status { PublishNew, PublishUpdate, Obsolete, RequestNew,
-                  RequestUpdate, Unknown };
+    enum Status {
+      PublishNew,      /**< */
+      PublishUpdate,   /**< */
+      Obsolete,        /**< */
+      RequestNew,      /**< */
+      RequestUpdate,   /**< */
+      Unknown          /**< */
+    };
 
     /**
-      Create a scheduling message with method as defined in Scheduler::Method
+      Creates a scheduling message with method as defined in Scheduler::Method
       and a status.
     */
     ScheduleMessage( IncidenceBase *, int method, Status status );
     ~ScheduleMessage() {}
 
     /**
-      Return event associated with this message.
+      Returns the event associated with this message.
     */
-    IncidenceBase *event() { return mIncidence; }
-    /**
-      Return iTIP method associated with this message.
-    */
-    int method() { return mMethod; }
-    /**
-      Return status of this message.
-    */
-    Status status() { return mStatus; }
-    /**
-      Return error message if there is any.
-    */
-    QString error() { return mError; }
+    IncidenceBase *event();
 
     /**
-      Return a human-readable name for an iTIP message status.
+      Returns the iTIP method associated with this message.
+    */
+    int method();
+
+    /**
+      Returns the status of this message.
+    */
+    Status status();
+
+    /**
+      Returns a human-readable name for an iTIP message status.
     */
     static QString statusName( Status status );
+
+    /**
+      Returns the error message if there is any.
+    */
+    QString error();
 
   private:
     IncidenceBase *mIncidence;
@@ -89,9 +98,9 @@ class KCAL_EXPORT ScheduleMessage
 };
 
 /**
-  This class provides an encapsulation of iTIP transactions. It is an abstract
-  base class for inheritance by implementations of the iTIP scheme like iMIP or
-  iRIP.
+  This class provides an encapsulation of iTIP transactions (RFC 2446).
+  It is an abstract base class for inheritance by implementations of the
+  iTIP scheme like iMIP or iRIP.
 */
 class KCAL_EXPORT Scheduler
 {
@@ -99,11 +108,20 @@ class KCAL_EXPORT Scheduler
     /**
       iTIP methods.
     */
-    enum Method { Publish,Request,Refresh,Cancel,Add,Reply,Counter,
-                  Declinecounter,NoMethod };
+    enum Method {
+      Publish,         /**< Event, to-do, journal or freebusy posting */
+      Request,         /**< Event, to-do or freebusy scheduling request */
+      Reply,           /**< Event, to-do or freebusy reply to request */
+      Add,             /**< Event, to-do or journal additional properties request */
+      Cancel,          /**< Event, to-do or journal cancellation notice */
+      Refresh,         /**< Event or to-do description update request */
+      Counter,         /**< Event or to-do description counter proposal submission */
+      Declinecounter,  /**< Event or to-do decline a counter proposal */
+      NoMethod         /**< No method */
+    };
 
     /**
-      Create scheduler for calendar specified as argument.
+      Creates a scheduler for calendar specified as argument.
     */
     explicit Scheduler( Calendar *calendar );
     virtual ~Scheduler();
@@ -114,7 +132,7 @@ class KCAL_EXPORT Scheduler
     virtual bool publish( IncidenceBase *incidence,
                           const QString &recipients ) = 0;
     /**
-      Perform iTIP transaction on incidence. The method is specified as the
+      Performs iTIP transaction on incidence. The method is specified as the
       method argument and can be any valid iTIP method.
 
       @param incidence the incidence for the transaction
@@ -122,8 +140,9 @@ class KCAL_EXPORT Scheduler
     */
     virtual bool performTransaction( IncidenceBase *incidence,
                                      Method method ) = 0;
+
     /**
-      Perform iTIP transaction on incidence to specified recipient(s). The
+      Performs iTIP transaction on incidence to specified recipient(s). The
       method is specified as the method argumanet and can be any valid iTIP
       method.
 
@@ -133,16 +152,17 @@ class KCAL_EXPORT Scheduler
     */
     virtual bool performTransaction( IncidenceBase *incidence, Method method,
                                      const QString &recipients ) = 0;
+
     /**
-      Retrieve incoming iTIP transactions.
+      Retrieves incoming iTIP transactions.
     */
     virtual QList<ScheduleMessage*> retrieveTransactions() = 0;
 
     /**
-      Accept transaction. The incidence argument specifies the iCal compoennt
-      on which the transaction acts. The status is the result of processing a
-      iTIP message with the current calendar and specifies the action to be
-      taken for this incidence.
+      Accepts the transaction. The incidence argument specifies the iCal
+      component on which the transaction acts. The status is the result of
+      processing a iTIP message with the current calendar and specifies the
+      action to be taken for this incidence.
 
       @param method iTIP transaction method to check
       @param status scheduling status
@@ -151,11 +171,12 @@ class KCAL_EXPORT Scheduler
                             ScheduleMessage::Status status );
 
     /**
-      Return a machine-readable name for a iTIP method.
+      Returns a machine-readable name for a iTIP method.
     */
     static QString methodName( Method );
+
     /**
-      Return a translated human-readable name for a iTIP method.
+      Returns a translated human-readable name for a iTIP method.
     */
     static QString translatedMethodName( Method );
 
@@ -167,24 +188,22 @@ class KCAL_EXPORT Scheduler
     virtual QString freeBusyDir() = 0;
 
     /**
-      Set free/busy cache used to store free/busy information.
+      Sets the free/busy cache used to store free/busy information.
     */
     void setFreeBusyCache( FreeBusyCache * );
+
     /**
-      Return free/busy cache.
+      Returns the free/busy cache.
     */
     FreeBusyCache *freeBusyCache() const;
 
   protected:
-    bool acceptPublish( IncidenceBase *, ScheduleMessage::Status status,
-                        Method method );
+    bool acceptPublish( IncidenceBase *, ScheduleMessage::Status status, Method method );
     bool acceptRequest( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptAdd( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
-    bool acceptDeclineCounter( IncidenceBase *,
-                               ScheduleMessage::Status status );
-    bool acceptReply( IncidenceBase *, ScheduleMessage::Status status,
-                      Method method );
+    bool acceptDeclineCounter( IncidenceBase *, ScheduleMessage::Status status );
+    bool acceptReply( IncidenceBase *, ScheduleMessage::Status status, Method method );
     bool acceptRefresh( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptCounter( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptFreeBusy( IncidenceBase *, Method method );

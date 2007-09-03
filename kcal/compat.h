@@ -22,7 +22,7 @@
 /**
   @file
   This file is part of the API for handling calendar data and defines
-  classes for managing compatability between different calendar formats.
+  classes for managing compatibility between different calendar formats.
 
   @author Cornelius Schumacher \<schumacher@kde.org\>
   @author Reinhold Kainhofer \<reinhold@kainhofer.com\>

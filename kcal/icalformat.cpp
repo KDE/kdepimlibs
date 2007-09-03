@@ -411,7 +411,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   if ( messageText.isEmpty() ) {
     setException(
       new ErrorFormat( ErrorFormat::ParseErrorKcal,
-                       QLatin1String( "messageText was empty, unable "
+                       QLatin1String( "messageText is empty, unable "
                                       "to parse into a ScheduleMessage" ) ) );
     return 0;
   }
@@ -422,7 +422,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   if ( !message ) {
     setException(
       new ErrorFormat( ErrorFormat::ParseErrorKcal,
-                       QLatin1String( "icalparser was unable to parse "
+                       QLatin1String( "icalparser is unable to parse "
                                       "messageText into a ScheduleMessage" ) ) );
     return 0;
   }
@@ -432,7 +432,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   if ( !m ) {
     setException(
       new ErrorFormat( ErrorFormat::ParseErrorKcal,
-                       QLatin1String( "message didn't contain an "
+                       QLatin1String( "message does not contain an "
                                       "ICAL_METHOD_PROPERTY" ) ) );
     return 0;
   }

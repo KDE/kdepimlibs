@@ -1,33 +1,39 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
+*/
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the FreeBusyUrlStore class.
+
+  @author Cornelius Schumacher \<schumacher@kde.org\>
 */
 
 #include "freebusyurlstore.h"
-
-#include <QtCore/QCoreApplication>
-
 #include <kconfig.h>
 #include <kstandarddirs.h>
+#include <QtCore/QCoreApplication>
 
 using namespace KCal;
 
+//@cond PRIVATE
 class FreeBusyUrlStore::Private
 {
 public:
@@ -40,7 +46,7 @@ public:
       cleanupFreeBusyUrlStore();
     }
     KConfig *mConfig;
-    
+
     static FreeBusyUrlStore *sSelf;
     static void cleanupFreeBusyUrlStore()
     {
@@ -49,20 +55,22 @@ public:
     }
 };
 FreeBusyUrlStore *FreeBusyUrlStore::Private::sSelf = 0;
+//@endcond
 
 FreeBusyUrlStore *FreeBusyUrlStore::self()
 {
   static Private p;
-  if(!p.sSelf) {
+  if ( !p.sSelf ) {
     p.sSelf = new FreeBusyUrlStore();
-    qAddPostRoutine(Private::cleanupFreeBusyUrlStore);
+    qAddPostRoutine( Private::cleanupFreeBusyUrlStore );
   }
   return p.sSelf;
 }
 
 FreeBusyUrlStore::FreeBusyUrlStore() : d( new Private() )
 {
-  QString configFile = KStandardDirs::locateLocal( "data", "korganizer/freebusyurls" );
+  QString configFile =
+    KStandardDirs::locateLocal( "data", "korganizer/freebusyurls" );
   d->mConfig = new KConfig( configFile );
 }
 
@@ -74,15 +82,13 @@ FreeBusyUrlStore::~FreeBusyUrlStore()
 
 void FreeBusyUrlStore::writeUrl( const QString &email, const QString &url )
 {
-  KConfigGroup group = d->mConfig->group(email);
-
+  KConfigGroup group = d->mConfig->group( email );
   group.writeEntry( "url", url );
 }
 
 QString FreeBusyUrlStore::readUrl( const QString &email )
 {
-
-  KConfigGroup group = d->mConfig->group(email);
+  KConfigGroup group = d->mConfig->group( email );
   return group.readEntry( "url" );
 }
 

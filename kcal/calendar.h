@@ -1065,7 +1065,9 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     class Private;
     Private *const d;
     //@endcond
-  };
+
+    Q_DISABLE_COPY( Calendar )
+};
 
 }
 

@@ -6,8 +6,8 @@ confirmsavedialog     |       |         |       |         |    D    |
 customproperties      |   D   |    D    |   D   |         |    D    | Allen
 dndfactory            |   D   |         |   D   |         |    D    | Allen
 dummyscheduler        |       |         |   D   |         |    D    |
-freebusycache         |       |         |       |         |    D    |
-freebusyurlstore      |       |         |       |         |    D    |
+freebusycache         |       |         |  n/a  |   n/a   |    D    | Allen
+freebusyurlstore      |       |         |   D   |         |    D    |
 htmlexport            |       |         |   D   |         |    D    |
 icaldrag              |       |         |       |         |    D    |
 icalformat            |   D   |    D    |   D   |         |    D    | Allen
