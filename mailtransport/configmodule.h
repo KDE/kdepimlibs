@@ -33,7 +33,7 @@ class ConfigModule : public KCModule
 {
   public:
     explicit ConfigModule( QWidget *parent = 0,
-                           const QStringList &args = QStringList() );
+                           const QVariantList &args = QVariantList() );
 };
 
 }

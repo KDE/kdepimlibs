@@ -20,15 +20,16 @@
 #include "configmodule.h"
 #include "transportmanagementwidget.h"
 
-#include <kgenericfactory.h>
+#include <kpluginfactory.h>
+#include <kpluginloader.h>
 #include <qboxlayout.h>
 
 using namespace MailTransport;
 
-typedef KGenericFactory<ConfigModule, QWidget> MailTransportConfigFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_mailtransport, MailTransportConfigFactory( "mailtrasnport" ) )
+K_PLUGIN_FACTORY(MailTransportConfigFactory, registerPlugin<ConfigModule>();)
+K_EXPORT_PLUGIN(MailTransportConfigFactory("mailtrasnport"))
 
-ConfigModule::ConfigModule( QWidget * parent, const QStringList & args ) :
+ConfigModule::ConfigModule( QWidget * parent, const QVariantList & args ) :
     KCModule( MailTransportConfigFactory::componentData(), parent, args )
 {
   setButtons( 0 );

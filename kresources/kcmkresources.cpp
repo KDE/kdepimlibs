@@ -23,16 +23,17 @@
 #include <QtGui/QLayout>
 
 #include <kaboutdata.h>
-#include <kgenericfactory.h>
+#include <kpluginfactory.h>
+#include <kpluginloader.h>
 #include <klocale.h>
 
 #include "configpage.h"
 
-typedef KGenericFactory<KCMKResources, QWidget> ResourcesFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_kresources, ResourcesFactory( "kcmkresources" ) )
+K_PLUGIN_FACTORY(ResourcesFactory, registerPlugin<KCMKResources>();)
+K_EXPORT_PLUGIN(ResourcesFactory("kcmkresources"))
 
-KCMKResources::KCMKResources( QWidget *parent, const QStringList &l )
-  : KCModule( ResourcesFactory::componentData(), parent, QStringList() )
+KCMKResources::KCMKResources( QWidget *parent, const QVariantList &l )
+  : KCModule( ResourcesFactory::componentData(), parent, QVariantList() )
 {
   Q_UNUSED( l );
 
