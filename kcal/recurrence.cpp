@@ -43,7 +43,7 @@ class KCal::Recurrence::Private
   public:
     Private()
       : mCachedType( rMax ),
-        mFloating( false ),
+        mAllDay( false ),
         mRecurReadOnly( false )
     {
         mExRules.setAutoDelete( true );
@@ -57,7 +57,7 @@ class KCal::Recurrence::Private
         mExDates( p.mExDates ),
         mStartDateTime( p.mStartDateTime ),
         mCachedType( p.mCachedType ),
-        mFloating( p.mFloating ),
+        mAllDay( p.mAllDay ),
         mRecurReadOnly(p.mRecurReadOnly)
     {
         mExRules.setAutoDelete( true );
@@ -78,7 +78,7 @@ class KCal::Recurrence::Private
     // Cache the type of the recurrence with the old system (e.g. MonthlyPos)
     mutable ushort mCachedType;
 
-    bool mFloating;              // the recurrence has no time, just a date
+    bool mAllDay;                // the recurrence has no time, just a date
     bool mRecurReadOnly;
 };
 //@endcond
@@ -86,7 +86,7 @@ class KCal::Recurrence::Private
 bool Recurrence::Private::operator==( const Recurrence::Private &p ) const
 {
   if ( mStartDateTime != p.mStartDateTime
-  ||   mFloating != p.mFloating
+  ||   mAllDay != p.mAllDay
   ||   mRecurReadOnly != p.mRecurReadOnly
   ||   mExDates != p.mExDates
   ||   mExDateTimes != p.mExDateTimes
@@ -168,22 +168,22 @@ KDateTime Recurrence::startDateTime() const
   return d->mStartDateTime;
 }
 
-bool Recurrence::floats() const
+bool Recurrence::allDay() const
 {
-  return d->mFloating;
+  return d->mAllDay;
 }
 
-void Recurrence::setFloats( bool floats )
+void Recurrence::setAllDay( bool allDay )
 {
-  if ( d->mRecurReadOnly || floats == d->mFloating )
+  if ( d->mRecurReadOnly || allDay == d->mAllDay )
     return;
-  d->mFloating = floats;
+  d->mAllDay = allDay;
 
   for ( int i = 0, end = d->mRRules.count();  i < end;  ++i ) {
-    d->mRRules[i]->setFloats( floats );
+    d->mRRules[i]->setAllDay( allDay );
   }
   for ( int i = 0, end = d->mExRules.count();  i < end;  ++i ) {
-    d->mExRules[i]->setFloats( floats );
+    d->mExRules[i]->setAllDay( allDay );
   }
   updated();
 }
@@ -311,7 +311,7 @@ bool Recurrence::recursOn(const QDate &qd, const KDateTime::Spec &timeSpec) cons
   TimeList tms;
   // For all-day events a matching exrule excludes the whole day
   // since exclusions take precedence over inclusions, we know it can't occur on that day.
-  if ( floats() ) {
+  if ( allDay() ) {
     for ( i = 0, end = d->mExRules.count();  i < end;  ++i ) {
       if ( d->mExRules[i]->recursOn( qd, timeSpec ) )
         return false;
@@ -338,7 +338,7 @@ bool Recurrence::recursOn(const QDate &qd, const KDateTime::Spec &timeSpec) cons
   for ( i = 0, end = d->mExDateTimes.count();  i < end && !exon;  ++i ) {
     exon = ( d->mExDateTimes[i].toTimeSpec( timeSpec ).date() == qd );
   }
-  if ( !floats() ) {     // we have already checked floating times above
+  if ( !allDay() ) {     // we have already checked all-day times above
     for ( i = 0, end = d->mExRules.count();  i < end && !exon;  ++i ) {
       exon = d->mExRules[i]->recursOn( qd, timeSpec );
     }
@@ -417,7 +417,7 @@ QDate Recurrence::endDate() const
 void Recurrence::setEndDate( const QDate &date )
 {
   KDateTime dt( date, d->mStartDateTime.time(), d->mStartDateTime.timeSpec() );
-  if ( floats() )
+  if ( allDay() )
     dt.setTime( QTime( 23, 59, 59 ) );
   setEndDateTime( dt );
 }
@@ -518,10 +518,10 @@ void Recurrence::setStartDateTime( const KDateTime &start )
 {
   if ( d->mRecurReadOnly ) return;
   d->mStartDateTime = start;
-  if ( start.isDateOnly() )
-    setFloats( true );
-  else {
-    setFloats( false );   // set all RRULEs and EXRULEs
+  if ( start.isDateOnly() ) {
+    setAllDay( true );
+  } else {
+    setAllDay( false );   // set all RRULEs and EXRULEs
 
     int i, end;
     for ( i = 0, end = d->mRRules.count();  i < end;  ++i ) {
@@ -790,9 +790,9 @@ TimeList Recurrence::recurTimesOn( const QDate &date, const KDateTime::Spec &tim
   TimeList times;
   // The whole day is excepted
   if ( d->mExDates.containsSorted( date ) ) return times;
-  // EXRULE takes precedence over RDATE entries, so for floating events,
+  // EXRULE takes precedence over RDATE entries, so for all-day events,
   // a matching excule also excludes the whole day automatically
-  if ( floats() ) {
+  if ( allDay() ) {
     for ( i = 0, end = d->mExRules.count();  i < end;  ++i ) {
       if ( d->mExRules[i]->recursOn( date, timeSpec ) )
         return times;
@@ -824,7 +824,7 @@ TimeList Recurrence::recurTimesOn( const QDate &date, const KDateTime::Spec &tim
       foundDate = true;
     } else if (foundDate) break;
   }
-  if ( !floats() ) {     // we have already checked floating times above
+  if ( !allDay() ) {     // we have already checked all-day times above
     for ( i = 0, end = d->mExRules.count();  i < end;  ++i ) {
       extimes += d->mExRules[i]->recurTimesOn( date, timeSpec );
     }
@@ -1029,7 +1029,7 @@ RecurrenceRule::List Recurrence::rRules() const
 void Recurrence::addRRule( RecurrenceRule *rrule )
 {
   if ( d->mRecurReadOnly || !rrule ) return;
-  rrule->setFloats( d->mFloating );
+  rrule->setAllDay( d->mAllDay );
   d->mRRules.append( rrule );
   rrule->addObserver( this );
   updated();
@@ -1051,7 +1051,7 @@ RecurrenceRule::List Recurrence::exRules() const
 void Recurrence::addExRule( RecurrenceRule *exrule )
 {
   if ( d->mRecurReadOnly || !exrule ) return;
-  exrule->setFloats( d->mFloating );
+  exrule->setAllDay( d->mAllDay );
   d->mExRules.append( exrule );
   exrule->addObserver( this );
   updated();

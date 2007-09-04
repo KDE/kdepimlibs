@@ -322,7 +322,7 @@ QList<KDateTime> Constraint::dateTimes( RecurrenceRule::PeriodType type ) const
   QList<KDateTime> result;
   bool done = false;
   if ( !isConsistent( type ) ) return result;
-  // TODO_Recurrence: Handle floating
+  // TODO_Recurrence: Handle all-day
   QTime tm( hour, minute, second );
 
   if ( !done && day > 0 && month > 0 ) {
@@ -519,7 +519,7 @@ class KCal::RecurrenceRule::Private
         mFrequency( 0 ),
         mWeekStart( 1 ),
         mIsReadOnly( false ),
-        mFloating( false )
+        mAllDay( false )
     {}
 
     Private( RecurrenceRule *parent, const Private &p )
@@ -543,7 +543,7 @@ class KCal::RecurrenceRule::Private
         mWeekStart( p.mWeekStart ),
 
         mIsReadOnly( p.mIsReadOnly ),
-        mFloating( p.mFloating )
+        mAllDay( p.mAllDay )
     {
         setDirty();
     }
@@ -595,7 +595,7 @@ class KCal::RecurrenceRule::Private
 
     bool mDirty;
     bool mIsReadOnly;
-    bool mFloating;
+    bool mAllDay;
 };
 //@endcond
 
@@ -608,7 +608,7 @@ bool RecurrenceRule::Private::operator==( const Private& r ) const
        &&  mFrequency == r.mFrequency
 
        &&  mIsReadOnly == r.mIsReadOnly
-       &&  mFloating == r.mFloating
+       &&  mAllDay == r.mAllDay
 
        &&  mBySeconds == r.mBySeconds
        &&  mByMinutes == r.mByMinutes
@@ -740,10 +740,10 @@ void RecurrenceRule::setDuration(int duration)
   d->setDirty();
 }
 
-void RecurrenceRule::setFloats( bool floats )
+void RecurrenceRule::setAllDay( bool allDay )
 {
   if ( isReadOnly() ) return;
-  d->mFloating = floats;
+  d->mAllDay = allDay;
   d->setDirty();
 }
 
@@ -1081,7 +1081,7 @@ bool RecurrenceRule::dateMatchesRules( const KDateTime &kdt ) const
 bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec ) const
 {
   int i, iend;
-  if ( floats() ) {
+  if ( allDay() ) {
     // It's a date-only rule, so it has no time specification.
     // Therefore ignore 'timeSpec'.
     if ( qd < startDt().date() )
@@ -1207,7 +1207,7 @@ bool RecurrenceRule::recursAt( const KDateTime &kdt ) const
   // Convert to the time spec used by this recurrence rule
   KDateTime dt( kdt.toTimeSpec( d->mDateStart.timeSpec() ) );
 // kDebug(5800) << "         RecurrenceRule::recursAt:" << dumpTime(dt);
-  if ( floats() )
+  if ( allDay() )
     return recursOn( dt.date(), dt.timeSpec() );
   if ( dt < startDt() )
     return false;
@@ -1234,7 +1234,7 @@ TimeList RecurrenceRule::recurTimesOn( const QDate &date, const KDateTime::Spec 
 {
 // kDebug(5800) << "         RecurrenceRule::recurTimesOn(" << date << ")";
   TimeList lst;
-  if ( floats() )
+  if ( allDay() )
     return lst;
   KDateTime start( date, QTime(0,0,0), timeSpec );
   KDateTime end = start.addDays(1).addSecs(-1);
@@ -1744,7 +1744,7 @@ void RecurrenceRule::setRRule( const QString &rrule )  { d->mRRule = rrule; }
 bool RecurrenceRule::isReadOnly() const  { return d->mIsReadOnly; }
 void RecurrenceRule::setReadOnly(bool readOnly) { d->mIsReadOnly = readOnly; }
 bool RecurrenceRule::recurs() const { return d->mPeriod != rNone; }
-bool RecurrenceRule::floats() const { return d->mFloating; }
+bool RecurrenceRule::allDay() const { return d->mAllDay; }
 const QList<int> &RecurrenceRule::bySeconds() const { return d->mBySeconds; }
 const QList<int> &RecurrenceRule::byMinutes() const { return d->mByMinutes; }
 const QList<int> &RecurrenceRule::byHours() const { return d->mByHours; }

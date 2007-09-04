@@ -189,9 +189,9 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
 
     /**
       @copydoc
-      IncidenceBase::setFloats().
+      IncidenceBase::setAllDay().
     */
-    void setFloats( bool floats );
+    void setAllDay( bool allDay );
 
     /**
       Recreate event. The event is made a new unique event, but already stored

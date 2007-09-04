@@ -237,15 +237,15 @@ void Incidence::setReadOnly( bool readOnly )
   }
 }
 
-void Incidence::setFloats( bool floats )
+void Incidence::setAllDay( bool allDay )
 {
   if ( mReadOnly ) {
     return;
   }
   if ( recurrence() ) {
-    recurrence()->setFloats( floats );
+    recurrence()->setAllDay( allDay );
   }
-  IncidenceBase::setFloats( floats );
+  IncidenceBase::setAllDay( allDay );
 }
 
 void Incidence::setCreated( const KDateTime &created )
@@ -285,7 +285,7 @@ void Incidence::setDtStart( const KDateTime &dt )
 {
   if ( d->mRecurrence ) {
     d->mRecurrence->setStartDateTime( dt );
-    d->mRecurrence->setFloats( floats() );
+    d->mRecurrence->setAllDay( allDay() );
   }
   IncidenceBase::setDtStart( dt );
 }
@@ -451,7 +451,7 @@ Recurrence *Incidence::recurrence() const
   if ( !d->mRecurrence ) {
     d->mRecurrence = new Recurrence();
     d->mRecurrence->setStartDateTime( IncidenceBase::dtStart() );
-    d->mRecurrence->setFloats( floats() );
+    d->mRecurrence->setAllDay( allDay() );
     d->mRecurrence->setRecurReadOnly( mReadOnly );
     d->mRecurrence->addObserver( const_cast<KCal::Incidence*>( this ) );
   }

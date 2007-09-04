@@ -68,9 +68,9 @@ class QtopiaParser : public QXmlDefaultHandler
         event->setDtEnd( toDateTime( attributes.value( "end" ) ) );
 
         if ( attributes.value( "type" ) == "AllDay" ) {
-          event->setFloats( true );
+          event->setAllDay( true );
         } else {
-          event->setFloats( false );
+          event->setAllDay( false );
         }
 
         QString rtype = attributes.value( "rtype" );

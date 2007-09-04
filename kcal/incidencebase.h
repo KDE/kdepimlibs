@@ -83,7 +83,6 @@ class FreeBusy;
   An abstract class that provides a common base for all calendar incidence
   classes.
 
-  define: floats
   define: organizer (person)
   define: uid (same as the attendee uid?)
 
@@ -295,8 +294,8 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
 
     /**
       Sets the incidence's starting date/time with a KDateTime.
-      The incidence's floating status is set according to whether @p dtStart
-      is a date/time (not floating) or date-only (floating).
+      The incidence's all-day status is set according to whether @p dtStart
+      is a date/time (not all-day) or date-only (all-day).
 
       @param dtStart is the incidence start date/time.
       @see dtStart().
@@ -378,22 +377,22 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     bool hasDuration() const;
 
     /**
-      Returns true or false depending on whether the incidence "floats,"
+      Returns true or false depending on whether the incidence is all-day.
       i.e. has a date but no time attached to it.
 
-      @see setFloats()
+      @see setAllDay()
     */
-    bool floats() const;
+    bool allDay() const;
 
     /**
-      Sets whether the incidence floats, i.e. has a date but no time attached
-      to it.
+      Sets whether the incidence is all-day, i.e. has a date but no time
+      attached to it.
 
-      @param floats sets (true) or unsets (false) whether the incidence floats.
+      @param allDay sets whether the incidence is all-day.
 
-      @see floats()
+      @see allDay()
     */
-    void setFloats( bool floats );
+    void setAllDay( bool allDay );
 
     /**
       Shift the times of the incidence so that they appear at the same clock

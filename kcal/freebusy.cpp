@@ -89,28 +89,28 @@ FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start,
   for ( it = eventList.begin(); it != eventList.end(); ++it ) {
     Event *event = *it;
 
-    // The code below can not handle floating events. Fixing this resulted
+    // The code below can not handle all-dayevents. Fixing this resulted
     // in a lot of duplicated code. Instead, make a copy of the event and
     // set the period to the full day(s). This trick works for recurring,
-    // multiday, and single day floating events.
-    Event *floatingEvent = 0;
-    if ( event->floats() ) {
-      // Floating event. Do the hack
-      kDebug(5800) << "Floating event";
-      floatingEvent = new Event( *event );
+    // multiday, and single day all-day events.
+    Event *allDayEvent = 0;
+    if ( event->allDay() ) {
+      // addDay event. Do the hack
+      kDebug(5800) << "All-day event";
+      allDayEvent = new Event( *event );
 
       // Set the start and end times to be on midnight
-      KDateTime st = floatingEvent->dtStart();
+      KDateTime st = allDayEvent->dtStart();
       st.setTime( QTime( 0, 0 ) );
-      KDateTime nd = floatingEvent->dtEnd();
+      KDateTime nd = allDayEvent->dtEnd();
       nd.setTime( QTime( 23, 59, 59, 999 ) );
-      floatingEvent->setFloats( false );
-      floatingEvent->setDtStart( st );
-      floatingEvent->setDtEnd( nd );
+      allDayEvent->setAllDay( false );
+      allDayEvent->setDtStart( st );
+      allDayEvent->setDtEnd( nd );
 
       kDebug(5800) << "Use:" << st.toString() << "to" << nd.toString();
       // Finally, use this event for the setting below
-      event = floatingEvent;
+      event = allDayEvent;
     }
 
     // This whole for loop is for recurring events, it loops through
@@ -156,7 +156,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start,
     d->addLocalPeriod( this, event->dtStart(), event->dtEnd() );
 
     // Clean up
-    delete floatingEvent;
+    delete allDayEvent;
   }
 
   sortList();

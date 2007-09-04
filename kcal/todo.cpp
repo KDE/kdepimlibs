@@ -132,7 +132,7 @@ void Todo::setDtDue( const KDateTime &dtDue, bool first )
     d->mDtDue = dtDue;
     // TODO: This doesn't seem right...
     recurrence()->setStartDateTime( dtDue );
-    recurrence()->setFloats( floats() );
+    recurrence()->setAllDay( allDay() );
   }
 
   if ( recurs() && dtDue < recurrence()->startDateTime() ) {
@@ -264,7 +264,7 @@ void Todo::setDtStart( const KDateTime &dtStart )
   // TODO: This doesn't seem right (rfc 2445/6 says, recurrence is calculated from the dtstart...)
   if ( recurs() ) {
     recurrence()->setStartDateTime( d->mDtDue );
-    recurrence()->setFloats( floats() );
+    recurrence()->setAllDay( allDay() );
   }
   IncidenceBase::setDtStart( dtStart );
 }
@@ -429,7 +429,7 @@ bool Todo::recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const
 
 bool Todo::isOverdue() const
 {
-  bool inPast = floats() ?
+  bool inPast = allDay() ?
                 dtDue().date() < QDate::currentDate() :
                 dtDue() < KDateTime::currentUtcDateTime();
   return inPast && !isCompleted();

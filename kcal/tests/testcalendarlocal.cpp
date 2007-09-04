@@ -129,7 +129,7 @@ void CalendarLocalTest::testIncidences()
   Todo *todo2 = new Todo();
   todo2->setUid( "4" );
   todo2->setDtStart( KDateTime( dt ).addDays( 1 ) );
-  todo2->setFloats( true );
+  todo2->setAllDay( true );
   todo2->setSummary( "<qt><h1>Todo2 Summary</h1></qt>", true );
   todo2->setDescription( "This is a description of a todo" );
   todo2->setLocation( "<html><a href=\"http://www.fred.com\">this place</a></html>", true );

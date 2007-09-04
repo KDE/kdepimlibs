@@ -358,7 +358,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
       KDateTime kdt( qd, ts );
       if ( event->dtStart() <= kdt ) {
         KDateTime end( event->dtEnd().toTimeSpec( event->dtStart() ) );
-        if ( event->floats() ) {
+        if ( event->allDay() ) {
           end.setDateOnly( true );
         } else {
           end = end.addSecs(-1);

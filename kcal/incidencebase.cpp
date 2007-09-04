@@ -52,7 +52,7 @@ using namespace KCal;
 class KCal::IncidenceBase::Private
 {
   public:
-    Private() : mFloats( true ), mHasDuration( false )
+    Private() : mAllDay( true ), mHasDuration( false )
     { mAttendees.setAutoDelete( true ); }
 
     Private( const Private &other )
@@ -61,7 +61,7 @@ class KCal::IncidenceBase::Private
         mOrganizer( other.mOrganizer ),
         mUid( other.mUid ),
         mDuration( other.mDuration ),
-        mFloats( other.mFloats ),
+        mAllDay( other.mAllDay ),
         mHasDuration( other.mHasDuration )
         //????? mComments
         // mObservers: the copied object is a new one, so it isn't observed
@@ -73,7 +73,7 @@ class KCal::IncidenceBase::Private
     Person mOrganizer;           // incidence person (owner)
     QString mUid;                // incidence unique id
     Duration mDuration;          // incidence duration
-    bool mFloats;                // true if the incidence floats
+    bool mAllDay;                // true if the incidence is all-day
     bool mHasDuration;           // true if the incidence has a duration
 
     Attendee::List mAttendees;   // list of incidence attendees
@@ -134,7 +134,7 @@ bool IncidenceBase::operator==( const IncidenceBase &i2 ) const
     uid() == i2.uid() &&
     // Don't compare lastModified, otherwise the operator is not
     // of much use. We are not comparing for identity, after all.
-    floats() == i2.floats() &&
+    allDay() == i2.allDay() &&
     duration() == i2.duration() &&
     hasDuration() == i2.hasDuration();
   // no need to compare mObserver
@@ -206,7 +206,7 @@ void IncidenceBase::setDtStart( const KDateTime &dtStart )
 {
 //  if ( mReadOnly ) return;
   d->mDtStart = dtStart;
-  d->mFloats = dtStart.isDateOnly();
+  d->mAllDay = dtStart.isDateOnly();
   updated();
 }
 
@@ -268,17 +268,17 @@ QString IncidenceBase::dtStartStr( bool shortfmt, const KDateTime::Spec &spec ) 
   }
 }
 
-bool IncidenceBase::floats() const
+bool IncidenceBase::allDay() const
 {
-  return d->mFloats;
+  return d->mAllDay;
 }
 
-void IncidenceBase::setFloats( bool f )
+void IncidenceBase::setAllDay( bool f )
 {
-  if ( mReadOnly || f == d->mFloats ) {
+  if ( mReadOnly || f == d->mAllDay ) {
     return;
   }
-  d->mFloats = f;
+  d->mAllDay = f;
   updated();
 }
 

@@ -94,7 +94,7 @@ int main( int argc, char **argv )
     incidence->recurrence()->dump();
 
     KDateTime dt;
-    if ( incidence->floats() )
+    if ( incidence->allDay() )
       dt = incidence->dtStart().addDays(-1);
     else
       dt = incidence->dtStart().addSecs(-1);

@@ -126,7 +126,7 @@ KDateTime Event::dtEnd() const
 QDate Event::dateEnd() const
 {
   KDateTime end = dtEnd().toTimeSpec( dtStart() );
-  if ( floats() ) {
+  if ( allDay() ) {
     return end.date();
   } else {
     return end.addSecs(-1).date();
@@ -211,7 +211,7 @@ bool Event::isMultiDay( const KDateTime::Spec &spec ) const
     end = dtEnd();
   }
 
-  if ( !floats() ) {
+  if ( !allDay() ) {
     end = end.addSecs( -1 );
   }
 

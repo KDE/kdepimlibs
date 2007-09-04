@@ -237,15 +237,13 @@ VObject *VCalFormat::eventToVTodo( const Todo *anEvent )
 
   // due date
   if ( anEvent->hasDueDate() ) {
-    tmpStr = kDateTimeToISO( anEvent->dtDue(),
-                             !anEvent->floats() );
+    tmpStr = kDateTimeToISO( anEvent->dtDue(), !anEvent->allDay() );
     addPropValue( vtodo, VCDueProp, tmpStr.toLocal8Bit() );
   }
 
   // start date
   if ( anEvent->hasStartDate() ) {
-    tmpStr = kDateTimeToISO( anEvent->dtStart(),
-                             !anEvent->floats() );
+    tmpStr = kDateTimeToISO( anEvent->dtStart(), !anEvent->allDay() );
     addPropValue( vtodo, VCDTstartProp, tmpStr.toLocal8Bit() );
   }
 
@@ -398,15 +396,13 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
   vevent = newVObject( VCEventProp );
 
   // start and end time
-  tmpStr = kDateTimeToISO( anEvent->dtStart(),
-                           !anEvent->floats() );
+  tmpStr = kDateTimeToISO( anEvent->dtStart(), !anEvent->allDay() );
   addPropValue( vevent, VCDTstartProp, tmpStr.toLocal8Bit() );
 
   // events that have time associated but take up no time should
   // not have both DTSTART and DTEND.
   if ( anEvent->dtStart() != anEvent->dtEnd() ) {
-    tmpStr = kDateTimeToISO( anEvent->dtEnd(),
-                             !anEvent->floats() );
+    tmpStr = kDateTimeToISO( anEvent->dtEnd(), !anEvent->allDay() );
     addPropValue( vevent, VCDTendProp, tmpStr.toLocal8Bit() );
   }
 
@@ -984,22 +980,22 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
   }
 
   // This isn't strictly true.  An event that doesn't have a start time
-  // or an end time doesn't "float", it has an anchor in time but it doesn't
+  // or an end time isn't all-day, it has an anchor in time but it doesn't
   // "take up" any time.
   /*if ((isAPropertyOf(vevent, VCDTstartProp) == 0) ||
       (isAPropertyOf(vevent, VCDTendProp) == 0)) {
-    anEvent->setFloats(true);
+    anEvent->setAllDay(true);
     } else {
     }*/
 
-  anEvent->setFloats( false );
+  anEvent->setAllDay( false );
 
   // start time
   if ( ( vo = isAPropertyOf( vevent, VCDTstartProp ) ) != 0 ) {
     anEvent->setDtStart( ISOToKDateTime( s = fakeCString( vObjectUStringZValue( vo ) ) ) );
     deleteStr( s );
     if ( anEvent->dtStart().time().isNull() ) {
-      anEvent->setFloats( true );
+      anEvent->setAllDay( true );
     }
   }
 
@@ -1008,7 +1004,7 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
     anEvent->setDtEnd( ISOToKDateTime( s = fakeCString( vObjectUStringZValue( vo ) ) ) );
     deleteStr( s );
     if ( anEvent->dtEnd().time().isNull() ) {
-      anEvent->setFloats( true );
+      anEvent->setAllDay( true );
     }
   }
 

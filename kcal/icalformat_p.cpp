@@ -181,7 +181,7 @@ icalcomponent *ICalFormatImpl::writeTodo( Todo *todo, ICalTimeZones *tzlist,
   icalproperty *prop;
   if ( todo->hasDueDate() ) {
     icaltimetype due;
-    if ( todo->floats() ) {
+    if ( todo->allDay() ) {
       due = writeICalDate( todo->dtDue( true ).date() );
       prop = icalproperty_new_due(due);
     } else {
@@ -194,7 +194,7 @@ icalcomponent *ICalFormatImpl::writeTodo( Todo *todo, ICalTimeZones *tzlist,
   // start time
   if ( todo->hasStartDate() || todo->recurs() ) {
     icaltimetype start;
-    if ( todo->floats() ) {
+    if ( todo->allDay() ) {
       start = writeICalDate( todo->dtStart( true ).date() );
       prop = icalproperty_new_dtstart( start );
     } else {
@@ -239,7 +239,7 @@ icalcomponent *ICalFormatImpl::writeEvent( Event *event,
   // start time
   icalproperty *prop;
   icaltimetype start;
-  if ( event->floats() ) {
+  if ( event->allDay() ) {
     start = writeICalDate( event->dtStart().date() );
     prop = icalproperty_new_dtstart( start );
   } else {
@@ -253,7 +253,7 @@ icalcomponent *ICalFormatImpl::writeEvent( Event *event,
     // RFC2445 says that if DTEND is present, it has to be greater than DTSTART.
     icaltimetype end;
     KDateTime dt = event->dtEnd();
-    if ( event->floats() ) {
+    if ( event->allDay() ) {
       // +1 day because end date is non-inclusive.
       end = writeICalDate( dt.date().addDays( 1 ) );
       icalcomponent_add_property( vevent, icalproperty_new_dtend(end) );
@@ -342,7 +342,7 @@ icalcomponent *ICalFormatImpl::writeJournal( Journal *journal,
   KDateTime dt = journal->dtStart();
   if ( dt.isValid() ) {
     icaltimetype start;
-    if ( journal->floats() ) {
+    if ( journal->allDay() ) {
       start = writeICalDate( dt.date() );
       prop = icalproperty_new_dtstart( start );
     } else {
@@ -886,7 +886,7 @@ icalrecurrencetype ICalFormatImpl::writeRecurrenceRule( RecurrenceRule *recur )
   } else if ( recur->duration() == -1 ) {
     r.count = 0;
   } else {
-    if ( recur->floats() ) {
+    if ( recur->allDay() ) {
       r.until = writeICalDate( recur->endDt().date() );
     } else {
       r.until = writeICalUtcDateTime( recur->endDt() );
@@ -1023,7 +1023,7 @@ Todo *ICalFormatImpl::readTodo( icalcomponent *vtodo, ICalTimeZones *tzlist )
         todo->setDtDue( KDateTime( kdt.date(), todo->dtStart().timeSpec() ), true );
       } else {
         todo->setDtDue( kdt, true );
-        todo->setFloats( false );
+        todo->setAllDay( false );
       }
       todo->setHasDueDate( true );
       break;
@@ -1100,7 +1100,7 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, ICalTimeZones *tzlist )
         event->setDtEnd( KDateTime( endDate, event->dtStart().timeSpec() ) );
       } else {
         event->setDtEnd( kdt );
-        event->setFloats( false );
+        event->setAllDay( false );
       }
       dtEndProcessed = true;
       break;
@@ -1135,9 +1135,9 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, ICalTimeZones *tzlist )
 
   QString msade = event->nonKDECustomProperty( "X-MICROSOFT-CDO-ALLDAYEVENT" );
   if ( !msade.isNull() ) {
-    bool floats = ( msade == QLatin1String( "TRUE" ) );
-    event->setFloats( floats );
-    if ( floats ) {
+    bool allDay = ( msade == QLatin1String( "TRUE" ) );
+    event->setAllDay( allDay );
+    if ( allDay ) {
       KDateTime endDate = event->dtEnd();
       event->setDtEnd( endDate.addDays( -1 ) );
     }
@@ -1413,7 +1413,7 @@ void ICalFormatImpl::readIncidence( icalcomponent *parent,
     case ICAL_DTSTART_PROPERTY:  // start date and time
       kdt = readICalDateTimeProperty( p, tzlist );
       incidence->setDtStart( kdt );
-      incidence->setFloats( kdt.isDateOnly() );
+      incidence->setAllDay( kdt.isDateOnly() );
       break;
 
     case ICAL_DURATION_PROPERTY:  // start date and time

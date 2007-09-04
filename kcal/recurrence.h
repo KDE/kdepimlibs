@@ -111,29 +111,29 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     bool operator==( const Recurrence& ) const;
     bool operator!=( const Recurrence& r ) const  { return !operator==(r); }
 
-    /** Return the start date/time of the recurrence (Time for floating recurrences will be 0:00).
+    /** Return the start date/time of the recurrence (Time for all-day recurrences will be 0:00).
      @return the current start/time of the recurrence. */
     KDateTime startDateTime() const;
     /** Return the start date/time of the recurrence */
     QDate startDate() const;
     /** Set start of recurrence.
-       If @p start is date-only, the recurrence is set to floating. Otherwise, the
-       start is set to a date and time, and the recurrence is set to non-floating.
+       If @p start is date-only, the recurrence is set to all-day. Otherwise, the
+       start is set to a date and time, and the recurrence is set to non-all-day.
        @param start the new start date or date/time of the recurrence.
     */
     void setStartDateTime( const KDateTime &start );
 
     /** Set whether the recurrence has no time, just a date.
-     * Floating means -- according to rfc2445 -- that the event has no time
+     * All-day means -- according to rfc2445 -- that the event has no time
      * associated.
      * N.B. This property is derived by default from whether setStartDateTime() is
      * called with a date-only or date/time parameter.
      * @return whether the recurrence has a time (false) or it is just a date (true). */
-    bool floats() const;
-    /** Sets whether the dtstart is a floating time (i.e. has no time attached)
-       @param floats If the recurrence is for all-day item (true) or has a time associated (false).
+    bool allDay() const;
+    /** Sets whether the dtstart is a all-day (i.e. has no time attached)
+       @param allDay If the recurrence is for all-day item (true) or has a time associated (false).
        */
-    void setFloats( bool floats );
+    void setAllDay( bool allDay );
 
     /** Set if recurrence is read-only or can be changed. */
     void setRecurReadOnly(bool readOnly);
@@ -246,7 +246,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     QDate endDate() const;
     /** Sets the date of the last recurrence. The end time is set to the recurrence start time.
      * @param endDate the ending date after which to stop recurring. If the
-     *   recurrence is not floating, the end time will be 23:59.*/
+     *   recurrence is not all-day, the end time will be 23:59.*/
     void setEndDate( const QDate &endDate );
     /** Sets the date and time of the last recurrence.
      * @param endDateTime the ending date/time after which to stop recurring. */

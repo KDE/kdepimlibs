@@ -123,14 +123,14 @@ class KCAL_EXPORT RecurrenceRule
      */
     void setStartDt(const KDateTime &start);
 
-    /** Returns whether the start date has no time associated. Floating
+    /** Returns whether the start date has no time associated. All-Day
         means -- according to rfc2445 -- that the event has no time associate. */
-    bool floats() const;
-    /** Sets whether the dtstart is a floating time (i.e. has no time attached)
+    bool allDay() const;
+    /** Sets whether the dtstart is all-day (i.e. has no time attached)
      *
-     * @param floats Whether start datetime is floating
+     * @param allDay Whether start datetime is all-day
      */
-    void setFloats( bool floats );
+    void setAllDay( bool allDay );
 
 
     /** Returns the date and time of the last recurrence.
