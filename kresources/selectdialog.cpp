@@ -54,10 +54,13 @@ SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent )
   setMainWidget( widget );
 
   QVBoxLayout *mainLayout = new QVBoxLayout( widget );
-  mainLayout->setMargin( marginHint() );
+  mainLayout->setMargin( 0 );
+  mainLayout->setSpacing( spacingHint() );
 
   QGroupBox *groupBox = new QGroupBox( widget );
   QGridLayout *grid = new QGridLayout;
+  grid->setMargin( marginHint() );
+  grid->setSpacing( spacingHint() );
   groupBox->setLayout( grid );
   groupBox->setTitle( i18n( "Resources" ) );
 
@@ -65,8 +68,6 @@ SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent )
   grid->addWidget( d->mResourceId, 0, 0 );
 
   mainLayout->addWidget( groupBox );
-
-  mainLayout->addSpacing( 10 );
 
   // setup listbox
   uint counter = 0;
