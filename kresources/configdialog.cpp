@@ -73,6 +73,7 @@ ConfigDialog::ConfigDialog( QWidget *parent, const QString &resourceFamily,
 
   QVBoxLayout *mainLayout = new QVBoxLayout( main );
   mainLayout->setSpacing( spacingHint() );
+  mainLayout->setMargin( 0 );
 
   QGroupBox *generalGroupBox = new QGroupBox( main );
   QGridLayout *gbLayout = new QGridLayout;
