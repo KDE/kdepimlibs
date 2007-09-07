@@ -43,7 +43,6 @@ public:
     ~Private()
     {
       qRemovePostRoutine(cleanupFreeBusyUrlStore);
-      cleanupFreeBusyUrlStore();
     }
     KConfig *mConfig;
 
