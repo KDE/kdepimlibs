@@ -98,6 +98,7 @@ ConfigDialog::ConfigDialog( QWidget *parent, const QString &resourceFamily,
   QGroupBox *resourceGroupBox = new QGroupBox( main );
   QGridLayout *resourceLayout = new QGridLayout;
   resourceLayout->setSpacing( spacingHint() );
+  resourceLayout->setMargin( marginHint() );
   resourceGroupBox->setLayout( resourceLayout );
 
   resourceGroupBox->setTitle( i18n( "%1 Resource Settings",
