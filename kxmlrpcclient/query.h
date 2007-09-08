@@ -64,14 +64,11 @@ class KXMLRPCCLIENT_EXPORT Query : public QObject
       @param method the method to call.
       @param args an argument list to pass to said method.
       @param jobMetaData additional arguments to pass to the KIO::Job.
-      @param dateFormatExtended an optional parameter
-      @param timeFormatExtended an optional parameter
      */
     void call( const QString &server, const QString &method,
                const QList<QVariant> &args,
-               const QMap<QString, QString> &jobMetaData,
-	       const bool dateFormatExtended,
-	       const bool timeFormatExtended);
+               const QMap<QString, QString> &jobMetaData
+	       );
 
   Q_SIGNALS:
     /**

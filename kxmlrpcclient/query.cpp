@@ -150,8 +150,6 @@ class Query::Private
     QByteArray mBuffer;
     QVariant mId;
     QList<KJob*> mPendingJobs;
-    bool mDateFormatExtended;
-    bool mTimeFormatExtended;
 };
 
 bool Query::Private::isMessageResponse( const QDomDocument &doc ) const
@@ -249,22 +247,7 @@ QString Query::Private::marshal( const QVariant &arg ) const
       return "<value><base64>" + arg.toByteArray().toBase64() + "</base64></value>\r\n";
     case QVariant::DateTime:
       {
-        QString date;
-        QString time;
-
-        if ( mTimeFormatExtended ) {
-          time = arg.toDateTime().time().toString( Qt::ISODate );
-        } else {
-          time = arg.toDateTime().time().toString( "hhmmss" );
-        }
-
-        if ( mDateFormatExtended ) {
-          date = arg.toDateTime().date().toString( Qt::ISODate );
-        } else {
-          date = arg.toDateTime().date().toString( "yyyyMMdd" );
-        }
-
-        return "<value><dateTime.iso8601>" + date + 'T' + time + "</dateTime.iso8601></value>\r\n";
+        return "<value><dateTime.iso8601>" + arg.toDateTime().toString( Qt::ISODate ) + "</dateTime.iso8601></value>\r\n";
       }
     case QVariant::List:
       {
@@ -416,12 +399,9 @@ Query *Query::create( const QVariant &id, QObject *parent )
 void Query::call( const QString &server,
                   const QString &method,
                   const QList<QVariant> &args,
-                  const QMap<QString, QString> &jobMetaData,
-                  const bool dateFormatExtended,
-                  const bool timeFormatExtended )
+                  const QMap<QString, QString> &jobMetaData)
 {
-  d->mDateFormatExtended=dateFormatExtended;
-  d->mTimeFormatExtended=timeFormatExtended;
+
   const QString xmlMarkup = d->markupCall( method, args );
 
   QMap<QString, QString>::const_iterator mapIter;
