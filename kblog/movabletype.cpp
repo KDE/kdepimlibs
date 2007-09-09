@@ -245,8 +245,9 @@ void MovableTypePrivate::slotCreatePosting(
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::String ) {
     kError(5323) << "Could not read the postingId, not a string.";
-    emit q->error( MovableType::ParsingError,
-                       i18n( "Could not read the postingId, not a string." ), posting );
+    emit q->errorPosting( MovableType::ParsingError,
+                          i18n( "Could not read the postingId, not a string." ),
+                          posting );
   } else {
      posting->setPostingId( result[0].toString() );
      posting->setStatus( BlogPosting::Created );
@@ -262,7 +263,7 @@ void MovableTypePrivate::slotError( int number,
   Q_UNUSED( number );
   BlogPosting *posting = mCallMap[ id.toInt() ];
 
-  emit q->error( MovableType::XmlRpc, errorString, posting );
+  emit q->errorPosting( MovableType::XmlRpc, errorString, posting );
 }
 
 void MovableTypePrivate::slotFetchPosting(
@@ -280,9 +281,9 @@ void MovableTypePrivate::slotFetchPosting(
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::Map ) {
     kError(5323) << "Could not fetch posting out of the result from the server.";
-    emit q->error( MovableType::ParsingError,
-                       i18n( "Could not fetch posting out of the "
-                             "result from the server." ), posting );
+    emit q->errorPosting( MovableType::ParsingError,
+                          i18n( "Could not fetch posting out of the "
+                                "result from the server." ), posting );
   } else {
     const QMap<QString, QVariant> postInfo = result[0].toMap();
     if ( readPostingFromMap( posting, postInfo ) ) {
@@ -292,8 +293,8 @@ void MovableTypePrivate::slotFetchPosting(
       emit q->fetchedPosting( posting );
     } else {
       kError(5323) << "readPostingFromMap failed!";
-      emit q->error( MovableType::ParsingError,
-                         i18n( "Could not read posting." ), posting );
+      emit q->errorPosting( MovableType::ParsingError,
+                            i18n( "Could not read posting." ), posting );
     }
   }
 }
@@ -313,8 +314,8 @@ void MovableTypePrivate::slotListRecentPostings(
     kError(5323) << "Could not fetch list of postings out of the"
                  << "result from the server.";
     emit q->error( MovableType::ParsingError,
-                        i18n( "Could not fetch list of postings out of the "
-                              "result from the server." ) );
+                   i18n( "Could not fetch list of postings out of the "
+                         "result from the server." ) );
   } else {
     const QList<QVariant> postReceived = result[0].toList();
     QList<QVariant>::ConstIterator it = postReceived.begin();
@@ -329,7 +330,8 @@ void MovableTypePrivate::slotListRecentPostings(
         fetchedPostingList << posting;
       } else {
         kError(5323) << "readPostingFromMap failed!";
-        emit q->error( MovableType::ParsingError, i18n( "Could not read posting." ) );
+        emit q->error( MovableType::ParsingError,
+                       i18n( "Could not read posting." ) );
       }
       if( --count == 0 ) break;
     }
@@ -350,8 +352,8 @@ void MovableTypePrivate::slotListTrackBackPings(
     kError(5323) << "Could not fetch list of trackback pings out of the"
                  << "result from the server.";
     emit q->error( MovableType::ParsingError,
-                        i18n( "Could not fetch list of trackback pings out of the "
-                              "result from the server." ) );
+                   i18n( "Could not fetch list of trackback pings out of the "
+                         "result from the server." ) );
   } else {
     const QList<QVariant> trackBackReceived = result[0].toList();
     QList<QVariant>::ConstIterator it = trackBackReceived.begin();
@@ -385,8 +387,9 @@ void MovableTypePrivate::slotModifyPosting(
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::Bool ) {
     kError(5323) << "Could not read the result, not a boolean.";
-    emit q->error( MovableType::ParsingError,
-                       i18n( "Could not read the result, not a boolean." ), posting );
+    emit q->errorPosting( MovableType::ParsingError,
+                          i18n( "Could not read the result, not a boolean." ),
+                          posting );
   } else {
     posting->setStatus( BlogPosting::Modified );
     emit q->modifiedPosting( posting );

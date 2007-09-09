@@ -280,6 +280,17 @@ class KBLOG_EXPORT Blog : public QObject
     void removedPosting( KBlog::BlogPosting *posting );
 
     /**
+    All xml parsing and all structural problems will emit an error.
+
+    @param type The type of the error.
+    @param errorMessage The string containing the error message.
+    @param posting The posting to which the error belongs.
+
+    @see ErrorType
+     */
+    void error( KBlog::Blog::ErrorType type, const QString &errorMessage );
+
+    /**
       All xml parsing and all structural problems will emit an error.
 
      @param type The type of the error.
@@ -288,8 +299,8 @@ class KBLOG_EXPORT Blog : public QObject
 
       @see ErrorType
     */
-    void error( KBlog::Blog::ErrorType type,
-                        const QString &errorMessage, KBlog::BlogPosting* posting = 0 );
+    void errorPosting( KBlog::Blog::ErrorType type,
+                       const QString &errorMessage, KBlog::BlogPosting* posting );
 
     /**
       All xml parsing and all structural problems will emit an error.
@@ -300,8 +311,8 @@ class KBLOG_EXPORT Blog : public QObject
 
       @see ErrorType
     */
-    void error( KBlog::Blog::ErrorType type,
-                        const QString &errorMessage, KBlog::BlogMedia* media );
+    void errorMedia( KBlog::Blog::ErrorType type,
+                     const QString &errorMessage, KBlog::BlogMedia* media );
 
     /**
       All xml parsing and all structural problems will emit an error.
@@ -313,9 +324,9 @@ class KBLOG_EXPORT Blog : public QObject
 
       @see ErrorType
     */
-    void error( KBlog::Blog::ErrorType type,
-                        const QString &errorMessage, KBlog::BlogPosting* posting, 
-                        KBlog::BlogPostingComment* comment );
+    void errorComment( KBlog::Blog::ErrorType type,
+                       const QString &errorMessage, KBlog::BlogPosting* posting,
+                       KBlog::BlogPostingComment* comment );
 
   protected:
     BlogPrivate * const d_ptr;

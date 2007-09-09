@@ -297,7 +297,7 @@ void LiveJournalPrivate::slotCreatePosting( const QList<QVariant> &result,
   if ( result[0].type() != QVariant::Map ) { // Make sure the only return type is a struct.
     kError(5323) << "Could not fetch posting's ID out of the result from the server,"
         << "not a map."; // If not a struct, print error.
-    emit q->error( LiveJournal::ParsingError,
+    emit q->errorPosting( LiveJournal::ParsingError,
                    i18n( "Could not read the posting ID, result not a map." ), posting ); // Emit an error signal if we can't get the posting ID.
   } else {
     QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>(); // Get post ID from struct.
@@ -435,7 +435,7 @@ void LiveJournalPrivate::slotRemovePosting( const QList<QVariant> &result,
   if ( result[0].type() != QVariant::Map ) { // Make sure the only return type is a struct.
     kError(5323) << "Could not fetch posting's ID out of the result from the server,"
         << "not a map."; // If not a struct, print error.
-    emit q->error( LiveJournal::ParsingError,
+    emit q->errorPosting( LiveJournal::ParsingError,
                    i18n( "Could not read the posting ID, result not a map." ), posting ); // Emit an error signal if we can't get the posting ID.
   } else {
     QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>();
@@ -447,7 +447,7 @@ void LiveJournalPrivate::slotRemovePosting( const QList<QVariant> &result,
     }
     else {
       kError(5323) << "The returned posting ID did not match the sent one."; // If not matching, print error.
-      emit q->error( LiveJournal::ParsingError,
+      emit q->errorPosting( LiveJournal::ParsingError,
                      i18n( "The returned posting ID did not match the sent one: " ), posting ); // Emit an error signal if the posting IDs don't match.
     }
   }

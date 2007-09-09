@@ -204,7 +204,7 @@ void GData::modifyPosting( KBlog::BlogPosting* posting )
 
   if ( !d->authenticate() ){
     kError(5323) << "Authentication failed.";
-    emit error( Atom, i18n( "Authentication failed." ), posting );
+    emit errorPosting( Atom, i18n( "Authentication failed." ), posting );
     return;
   }
 
@@ -269,7 +269,7 @@ void GData::createPosting( KBlog::BlogPosting* posting )
 
     if ( !d->authenticate() ){
       kError(5323) << "Authentication failed.";
-      emit error( Atom, i18n( "Authentication failed." ), posting );
+      emit errorPosting( Atom, i18n( "Authentication failed." ), posting );
       return;
     }
 
@@ -329,7 +329,7 @@ void GData::removePosting( KBlog::BlogPosting *posting )
 
     if ( !d->authenticate() ){
       kError(5323) << "Authentication failed.";
-      emit error( Atom, i18n( "Authentication failed." ), posting );
+      emit errorPosting( Atom, i18n( "Authentication failed." ), posting );
       return;
     }
 
@@ -374,7 +374,8 @@ void GData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingCommen
   Q_D(GData);
     if ( !d->authenticate() ){
       kError(5323) << "Authentication failed.";
-      emit error( Atom, i18n( "Authentication failed." ), posting, comment );
+      emit errorComment( Atom, i18n( "Authentication failed." ),
+                         posting, comment );
       return;
     }
   QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
@@ -430,7 +431,8 @@ void GData::removeComment( KBlog::BlogPosting *posting, KBlog::BlogPostingCommen
 
     if ( !d->authenticate() ){
       kError(5323) << "Authentication failed.";
-      emit error( Atom, i18n( "Authentication failed." ), posting, comment );
+      emit errorComment( Atom, i18n( "Authentication failed." ),
+                         posting, comment );
       return;
     }
 
@@ -578,7 +580,7 @@ void GDataPrivate::slotListComments(
   mListCommentsMap.remove( loader );
 
   if (status != Syndication::Success){
-    emit q->error( GData::Atom, i18n( "Could not get comments." ), posting );
+    emit q->errorPosting( GData::Atom, i18n( "Could not get comments." ), posting );
     return;
   }
 
@@ -718,7 +720,8 @@ void GDataPrivate::slotFetchPosting(
   BlogPosting* posting = mFetchPostingMap[ loader ];
 
   if (status != Syndication::Success){
-    emit q->error( GData::Atom, i18n( "Could not get postings." ), posting );
+    emit q->errorPosting( GData::Atom, i18n( "Could not get postings." ),
+                          posting );
     return;
   }
   QList<Syndication::ItemPtr> items = feed->items();
@@ -746,7 +749,9 @@ void GDataPrivate::slotFetchPosting(
       }
   }
   if(!success){
-    emit q->error( GData::Other, i18n( "Could not regexp the blog id path." ), posting );
+    emit q->errorPosting( GData::Other,
+                          i18n( "Could not regexp the blog id path." ),
+                          posting );
     kError(5323) << "QRegExp rx( 'post-(\\d+)' does not match"
         << mFetchPostingMap[ loader ]->postingId() << ".";
   }
@@ -774,7 +779,7 @@ void GDataPrivate::slotCreatePosting( KJob *job )
 
   if ( job->error() != 0 ) {
     kError(5323) << "slotCreatePosting error:" << job->errorString();
-    emit q->error( GData::Atom, job->errorString(), posting );
+    emit q->errorPosting( GData::Atom, job->errorString(), posting );
     return;
   }
 
@@ -782,7 +787,9 @@ void GDataPrivate::slotCreatePosting( KJob *job )
   QRegExp rxId( "post-(\\d+)" ); //FIXME check that and do better handling, especially the creation date time
   if( rxId.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the id out of the result:" << data;
-    emit q->error( GData::Atom, i18n( "Could not regexp the id out of the result." ), posting );
+    emit q->errorPosting( GData::Atom,
+                          i18n( "Could not regexp the id out of the result." ),
+                          posting );
     return;
   }
   kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
@@ -790,7 +797,9 @@ void GDataPrivate::slotCreatePosting( KJob *job )
   QRegExp rxPub( "<published>(.+)</published>" );
   if( rxPub.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the published time out of the result:" << data;
-    emit q->error( GData::Atom, i18n( "Could not regexp the published time out of the result." ), posting );
+    emit q->errorPosting( GData::Atom,
+                          i18n( "Could not regexp the published time out of "
+                                "the result." ), posting );
     return;
   }
   kDebug(5323) << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap(1);
@@ -798,7 +807,9 @@ void GDataPrivate::slotCreatePosting( KJob *job )
   QRegExp rxUp( "<updated>(.+)</updated>" );
   if( rxUp.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the update time out of the result:" << data;
-    emit q->error( GData::Atom, i18n( "Could not regexp the update time out of the result." ), posting );
+    emit q->errorPosting( GData::Atom,
+                          i18n( "Could not regexp the update time out "
+                                "of the result." ), posting );
     return;
   }
   kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
@@ -830,14 +841,16 @@ void GDataPrivate::slotModifyPosting( KJob *job )
   Q_Q(GData);
   if ( job->error() != 0 ) {
     kError(5323) << "slotModifyPosting error:" << job->errorString();
-    emit q->error( GData::Atom, job->errorString(), posting );
+    emit q->errorPosting( GData::Atom, job->errorString(), posting );
     return;
   }
 
   QRegExp rxId( "post-(\\d+)" ); //FIXME check that and do better handling, especially the creation date time
   if( rxId.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the id out of the result:" << data;
-    emit q->error( GData::Atom, i18n( "Could not regexp the id out of the result." ), posting );
+    emit q->errorPosting( GData::Atom,
+                          i18n( "Could not regexp the id out of the result." ),
+                          posting );
     return;
   }
   kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
@@ -845,7 +858,9 @@ void GDataPrivate::slotModifyPosting( KJob *job )
   QRegExp rxPub( "<published>(.+)</published>" );
   if( rxPub.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the published time out of the result:" << data;
-    emit q->error( GData::Atom, i18n( "Could not regexp the published time out of the result." ), posting );
+    emit q->errorPosting( GData::Atom,
+                          i18n( "Could not regexp the published time out "
+                                "of the result." ), posting );
     return;
   }
   kDebug(5323) << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap(1);
@@ -853,7 +868,9 @@ void GDataPrivate::slotModifyPosting( KJob *job )
   QRegExp rxUp( "<updated>(.+)</updated>" );
   if( rxUp.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the update time out of the result:" << data;
-    emit q->error( GData::Atom, i18n( "Could not regexp the update time out of the result." ), posting );
+    emit q->errorPosting( GData::Atom,
+                          i18n( "Could not regexp the update time out "
+                                "of the result." ), posting );
     return;
   }
   kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
@@ -883,7 +900,7 @@ void GDataPrivate::slotRemovePosting( KJob *job )
   Q_Q(GData);
   if ( job->error() != 0 ) {
     kError(5323) << "slotRemovePosting error:" << job->errorString();
-    emit q->error( GData::Atom, job->errorString(), posting );
+    emit q->errorPosting( GData::Atom, job->errorString(), posting );
     return;
   }
 
@@ -915,7 +932,7 @@ void GDataPrivate::slotCreateComment( KJob *job )
 
   if ( job->error() != 0 ) {
     kError(5323) << "slotCreateComment error:" << job->errorString();
-    emit q->error( GData::Atom, job->errorString(), posting, comment );
+    emit q->errorComment( GData::Atom, job->errorString(), posting, comment );
     return;
   }
 
@@ -923,7 +940,9 @@ void GDataPrivate::slotCreateComment( KJob *job )
   QRegExp rxId( "post-(\\d+)" );
   if( rxId.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the id out of the result:" << data;
-    emit q->error( GData::Atom, i18n( "Could not regexp the id out of the result." ), posting );
+    emit q->errorPosting( GData::Atom,
+                          i18n( "Could not regexp the id out of the result." ),
+                          posting );
     return;
   }
   kDebug(5323) << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
@@ -931,7 +950,9 @@ void GDataPrivate::slotCreateComment( KJob *job )
   QRegExp rxPub( "<published>(.+)</published>" );
   if( rxPub.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the published time out of the result:" << data;
-    emit q->error( GData::Atom, i18n( "Could not regexp the published time out of the result." ), posting );
+    emit q->errorPosting( GData::Atom,
+                          i18n( "Could not regexp the published time out "
+                                "of the result." ), posting );
     return;
   }
   kDebug(5323) << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap(1);
@@ -939,7 +960,9 @@ void GDataPrivate::slotCreateComment( KJob *job )
   QRegExp rxUp( "<updated>(.+)</updated>" );
   if( rxUp.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the update time out of the result:" << data;
-    emit q->error( GData::Atom, i18n( "Could not regexp the update time out of the result." ), posting );
+    emit q->errorPosting( GData::Atom,
+                          i18n( "Could not regexp the update time out "
+                                "of the result." ), posting );
     return;
   }
   kDebug(5323) << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
@@ -973,7 +996,7 @@ void GDataPrivate::slotRemoveComment( KJob *job )
 
   if ( job->error() != 0 ) {
     kError(5323) << "slotRemoveComment error:" << job->errorString();
-    emit q->error( GData::Atom, job->errorString(), posting, comment );
+    emit q->errorComment( GData::Atom, job->errorString(), posting, comment );
     return;
   }
 
