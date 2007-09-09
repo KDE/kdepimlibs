@@ -36,17 +36,32 @@ namespace KCal {
 class FreeBusy;
 class Person;
 
+/**
+  @brief
+  An abstract base class to allow different implementations of storing
+  free busy information, e.g. local storage or storage on a Kolab server.
+*/
 class FreeBusyCache
 {
   public:
+    /**
+      Destructor.
+    */
     virtual ~FreeBusyCache(){}
+
     /**
       Save freebusy information belonging to an email.
+
+      @param freebusy is a pointer to a valid FreeBusy instance.
+      @param person is a valid Person instance.
     */
     virtual bool saveFreeBusy( FreeBusy *freebusy, const Person &person ) = 0;
 
     /**
       Load freebusy information belonging to an email.
+
+      @param email is a QString containing a email string in the
+      "FirstName LastName <emailaddress>" format.
     */
     virtual FreeBusy *loadFreeBusy( const QString &email ) = 0;
 };
