@@ -1,37 +1,37 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 1998 Preston Brown <pbrown@kde.org>
-    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2002,2006 David Jarvie <software@astrojar.org.uk>
-    Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 1998 Preston Brown <pbrown@kde.org>
+  Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2002,2006 David Jarvie <software@astrojar.org.uk>
+  Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 #ifndef KCAL_RECURRENCE_H
 #define KCAL_RECURRENCE_H
 
-#include <QtCore/QString>
-#include <QtCore/QBitArray>
-#include <QtCore/QList>
+#include "kcal_export.h"
+#include "recurrencerule.h"
 
 #include <kdatetime.h>
 
-#include "kcal_export.h"
-#include "recurrencerule.h"
+#include <QtCore/QString>
+#include <QtCore/QBitArray>
+#include <QtCore/QList>
 
 namespace KCal {
 
@@ -95,21 +95,31 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
       public:
         virtual ~RecurrenceObserver() {}
         /** This method will be called on each change of the recurrence object */
-        virtual void recurrenceUpdated( Recurrence * ) = 0;
+        virtual void recurrenceUpdated( Recurrence *r ) = 0;
     };
 
     /** enumeration for describing how an event recurs, if at all. */
-    enum { rNone = 0, rMinutely = 0x001, rHourly = 0x0002, rDaily = 0x0003,
-           rWeekly = 0x0004, rMonthlyPos = 0x0005, rMonthlyDay = 0x0006,
-           rYearlyMonth = 0x0007, rYearlyDay = 0x0008, rYearlyPos = 0x0009,
-           rOther = 0x000A, rMax=0x00FF };
+    enum {
+      rNone = 0,
+      rMinutely = 0x001,
+      rHourly = 0x0002,
+      rDaily = 0x0003,
+      rWeekly = 0x0004,
+      rMonthlyPos = 0x0005,
+      rMonthlyDay = 0x0006,
+      rYearlyMonth = 0x0007,
+      rYearlyDay = 0x0008,
+      rYearlyPos = 0x0009,
+      rOther = 0x000A,
+      rMax=0x00FF
+    };
 
     Recurrence();
-    Recurrence( const Recurrence& );
+    Recurrence( const Recurrence &r );
     virtual ~Recurrence();
 
-    bool operator==( const Recurrence& ) const;
-    bool operator!=( const Recurrence& r ) const  { return !operator==(r); }
+    bool operator==( const Recurrence &r ) const;
+    bool operator!=( const Recurrence &r ) const  { return !operator==(r); }
 
     /** Return the start date/time of the recurrence (Time for all-day recurrences will be 0:00).
      @return the current start/time of the recurrence. */
@@ -136,15 +146,18 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     void setAllDay( bool allDay );
 
     /** Set if recurrence is read-only or can be changed. */
-    void setRecurReadOnly(bool readOnly);
+    void setRecurReadOnly( bool readOnly );
+
     /** Returns true if the recurrence is read-only, or false if it can be changed. */
     bool recurReadOnly() const;
 
     /** Returns whether the event recurs at all. */
     bool recurs() const;
+
     /** Returns the event's recurrence status.  See the enumeration at the top
      * of this file for possible values. */
     ushort recurrenceType() const;
+
     /** Returns the recurrence status for a recurrence rule.
      * See the enumeration at the top of this file for possible values.
      *
@@ -205,34 +218,40 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     /** Returns the date and time of the next recurrence, after the specified date/time.
      * If the recurrence has no time, the next date after the specified date is returned.
      * @param preDateTime the date/time after which to find the recurrence.
-     * @return date/time of next recurrence (strictly later than the given KDateTime), or invalid date if none.
+     * @return date/time of next recurrence (strictly later than the given
+     *         KDateTime), or invalid date if none.
      */
-    KDateTime getNextDateTime( const KDateTime& preDateTime ) const;
+    KDateTime getNextDateTime( const KDateTime &preDateTime ) const;
 
     /** Returns the date and time of the last previous recurrence, before the specified date/time.
      * If a time later than 00:00:00 is specified and the recurrence has no time, 00:00:00 on
      * the specified date is returned if that date recurs.
      *
      * @param afterDateTime the date/time before which to find the recurrence.
-     * @return date/time of previous recurrence (strictly earlier than the given KDateTime), or invalid date if none.
+     * @return date/time of previous recurrence (strictly earlier than the given
+     *         KDateTime), or invalid date if none.
      */
-    KDateTime getPreviousDateTime( const KDateTime& afterDateTime ) const;
+    KDateTime getPreviousDateTime( const KDateTime &afterDateTime ) const;
 
     /** Returns frequency of recurrence, in terms of the recurrence time period type. */
     int frequency() const;
+
     /** Sets the frequency of recurrence, in terms of the recurrence time period type. */
-    void setFrequency(int freq);
+    void setFrequency( int freq );
 
     /**
      * Returns -1 if the event recurs infinitely, 0 if the end date is set,
      * otherwise the total number of recurrences, including the initial occurrence.
      */
     int duration() const;
+
     /** Sets the total number of times the event is to occur, including both the
      * first and last. */
-    void setDuration(int duration);
+    void setDuration( int duration );
+
     /** Returns the number of recurrences up to and including the date/time specified. */
-    int durationTo(const KDateTime &dt) const;
+    int durationTo( const KDateTime &dt ) const;
+
     /** Returns the number of recurrences up to and including the date specified. */
     int durationTo( const QDate &date ) const;
 
@@ -240,14 +259,17 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * An invalid date is returned if the recurrence has no end.
      */
     KDateTime endDateTime() const;
+
     /** Returns the date of the last recurrence.
      * An invalid date is returned if the recurrence has no end.
      */
     QDate endDate() const;
+
     /** Sets the date of the last recurrence. The end time is set to the recurrence start time.
      * @param endDate the ending date after which to stop recurring. If the
      *   recurrence is not all-day, the end time will be 23:59.*/
     void setEndDate( const QDate &endDate );
+
     /** Sets the date and time of the last recurrence.
      * @param endDateTime the ending date/time after which to stop recurring. */
     void setEndDateTime( const KDateTime &endDateTime );
@@ -266,8 +288,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
       @param oldSpec the time specification which provides the clock times
       @param newSpec the new time specification
     */
-    void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
-
+    void shiftTimes( const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec );
 
     /** Sets an event to recur minutely. By default infinite recurrence is used.
         To set an end date use the method setEndDate and to set the number
@@ -336,6 +357,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * @param weekStart the first day of the week (Monday=1 .. Sunday=7, default is Monday).
      */
     void setWeekly( int freq, const QBitArray &days, int weekStart = 1 );
+
     /** Adds days to the weekly day recurrence list.
      * @param days a 7 bit array indicating which days on which to recur (bit 0 = Monday).
      */
@@ -346,6 +368,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * @return Weekday of the first day of the week (Monday=1 .. Sunday=7)
      */
     int weekStart() const;
+
     /** Returns week day mask (bit 0 = Monday). */
     QBitArray days() const; // Emulate the old behavior
 
@@ -364,6 +387,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * @param freq the frequency to recur, e.g. 3 for every third month.
      */
     void setMonthly( int freq );
+
     /** Adds a position (e.g. first monday) to the monthly recurrence rule.
      * @param pos the position in the month for the recurrence, with valid
      * values being 1-5 (5 weeks max in a month).
@@ -373,13 +397,16 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      */
     void addMonthlyPos( short pos, const QBitArray &days );
     void addMonthlyPos( short pos, ushort day );
+
     /** Adds a date (e.g. the 15th of each month) to the monthly day
      *  recurrence list.
      * @param day the date in the month to recur.
      */
     void addMonthlyDate( short day );
+
     /** Returns list of day positions in months. */
     QList<RecurrenceRule::WDayPos> monthPositions() const;
+
     /** Returns list of day numbers of a  month. */
     // Emulate old behavior
     QList<int> monthDays() const;
@@ -407,6 +434,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * @param freq the frequency to recur, e.g. 3 for every third year.
      */
     void setYearly( int freq );
+
     /** Adds day number of year within a yearly recurrence.
      *  By default infinite recurrence is used. To set an end date use the
      *  method setEndDate and to set the number of occurrences use setDuration.
@@ -414,6 +442,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      *            means Feb 29 in leap years and March 1 in non-leap years.
      */
     void addYearlyDay( int day );
+
     /** Adds date within a yearly recurrence. The month(s) for the recurrence
      *  can be specified with addYearlyMonth(), otherwise the month of the
      *  start date is used.
@@ -423,12 +452,14 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * @param date the day of the month for the event
      */
     void addYearlyDate( int date );
+
     /** Adds month in yearly recurrence. You can specify specific day numbers
      *  within the months (by calling addYearlyDate()) or specific day positions
      *  within the month (by calling addYearlyPos).
      * @param _rNum the month in which the event shall recur.
      */
     void addYearlyMonth( short _rNum );
+
     /** Adds position within month/year within a yearly recurrence. If months
      *  are specified (via addYearlyMonth()), the parameters are understood as
      *  position within these months, otherwise within the year.
@@ -453,6 +484,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      *         on Feb 29 in leap years and March 1 in non-leap years.
      */
     QList<int> yearDays() const;
+
     /** Returns the dates within a yearly recurrence.
      * @return the days of the month for the event. E.g. if the list contains
      *         13, this means the recurrence happens on the 13th of the month.
@@ -461,6 +493,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      *         date is used.
      */
     QList<int> yearDates() const;
+
     /** Returns the months within a yearly recurrence.
      * @return the months for the event. E.g. if the list contains
      *         11, this means the recurrence happens in November.
@@ -470,6 +503,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      *         month. If none is specified, the date of the start date is used.
      */
     QList<int> yearMonths() const;
+
     /** Returns the positions within a yearly recurrence.
      * @return the positions for the event, either within a month (if months
      *         are set through addYearlyMonth()) or within the year.
@@ -489,7 +523,6 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     */
     void dump() const;
 
-
     // RRULE
     RecurrenceRule::List rRules() const;
     void addRRule( RecurrenceRule *rrule );
@@ -502,16 +535,16 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
     // RDATE
     DateTimeList rDateTimes() const;
     DateList rDates() const;
-    void setRDateTimes( const DateTimeList &rdates);
-    void setRDates( const DateList &rdates);
+    void setRDateTimes( const DateTimeList &rdates );
+    void setRDates( const DateList &rdates );
     void addRDateTime( const KDateTime &rdate );
     void addRDate( const QDate &rdate );
 
     // ExDATE
     DateTimeList exDateTimes() const;
     DateList exDates() const;
-    void setExDateTimes( const DateTimeList &exdates);
-    void setExDates( const DateList &exdates);
+    void setExDateTimes( const DateTimeList &exdates );
+    void setExDates( const DateList &exdates );
     void addExDateTime( const KDateTime &exdate );
     void addExDate( const QDate &exdate );
 

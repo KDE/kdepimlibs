@@ -17,8 +17,8 @@ imipscheduler         |       |         |       |         |    D    |
 incidenceformatter    |       |         |       |         |    D    | Allen
 kresult               |   D   |         |       |         |    D    |
 qtopiaformat          |       |         |       |         |    D    |
-recurrence            |       |         |   D   |         |    D    |
-recurrencerule        |       |         |   D   |         |    D    |
+recurrence            |   D   |         |   D   |         |    D    |
+recurrencerule        |   D   |         |   D   |         |    D    |
 resourcecachedconfig  |   D   |         |   D   |         |    D    |
 resourcecached        |       |         |   D   |         |    D    |
 resourcecalendar      |       |         |   D   |         |    D    |
