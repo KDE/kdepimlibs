@@ -80,7 +80,6 @@ class KCal::Recurrence::Private
     bool mAllDay;                // the recurrence has no time, just a date
     bool mRecurReadOnly;
 };
-//@endcond
 
 bool Recurrence::Private::operator==( const Recurrence::Private &p ) const
 {
@@ -117,6 +116,7 @@ bool Recurrence::Private::operator==( const Recurrence::Private &p ) const
   }
   return true;
 }
+//@endcond
 
 Recurrence::Recurrence()
   : d( new KCal::Recurrence::Private() )

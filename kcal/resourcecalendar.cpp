@@ -31,6 +31,7 @@
 
 using namespace KCal;
 
+//@cond PRIVATE
 class ResourceCalendar::Private
 {
   public:
@@ -46,6 +47,7 @@ class ResourceCalendar::Private
     bool mReceivedSaveError;
 
 };
+//@endcond
 
 ResourceCalendar::ResourceCalendar()
   : KRES::Resource(), d( new Private )

@@ -18,10 +18,11 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-
-#include "resourcecachedconfig.moc"
-
 #include "resourcecached.h"
+
+#include <khbox.h>
+#include <klocale.h>
+#include <kdebug.h>
 
 #include <QtGui/QLayout>
 #include <QtGui/QRadioButton>
@@ -33,12 +34,11 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QGroupBox>
 
-#include <khbox.h>
-#include <klocale.h>
-#include <kdebug.h>
+#include "resourcecachedconfig.moc"
 
 using namespace KCal;
 
+//@cond PRIVATE
 class ResourceCachedConfigPrivate
 {
   public:
@@ -59,6 +59,7 @@ class KCal::ResourceCachedSaveConfig::Private
   : public ResourceCachedConfigPrivate
 {
 };
+//@endcond
 
 ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent )
   : QWidget( parent ), d( new KCal::ResourceCachedReloadConfig::Private() )

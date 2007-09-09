@@ -562,6 +562,7 @@ void ICalFormatImpl::writeIncidence( icalcomponent *parent,
   }
 }
 
+//@cond PRIVATE
 void ICalFormatImpl::Private::writeIncidenceBase( icalcomponent *parent,
                                                   IncidenceBase *incidenceBase )
 {
@@ -605,6 +606,7 @@ void ICalFormatImpl::Private::writeCustomProperties( icalcomponent *parent,
     icalcomponent_add_property( parent, p );
   }
 }
+//@endcond
 
 icalproperty *ICalFormatImpl::writeOrganizer( const Person &organizer )
 {
@@ -1607,6 +1609,7 @@ void ICalFormatImpl::readIncidence( icalcomponent *parent,
   }
 }
 
+//@cond PRIVATE
 void ICalFormatImpl::Private::readIncidenceBase( icalcomponent *parent,
                                                  IncidenceBase *incidenceBase )
 {
@@ -1664,6 +1667,7 @@ void ICalFormatImpl::Private::readCustomProperties( icalcomponent *parent,
 
   properties->setCustomProperties( customProperties );
 }
+//@endcond
 
 void ICalFormatImpl::readRecurrenceRule( icalproperty *rrule,
                                          Incidence *incidence )
@@ -1750,6 +1754,7 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r,
   int i;
   int index = 0;
 
+//@cond PRIVATE
 #define readSetByList( rrulecomp, setfunc )                             \
   index = 0;                                                            \
   lst.clear();                                                          \
@@ -1759,6 +1764,7 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r,
   if ( !lst.isEmpty() ) {                                               \
     recur->setfunc( lst );                                              \
   }
+//@endcond
 
   // BYSECOND, MINUTE and HOUR, MONTHDAY, YEARDAY, WEEKNUMBER, MONTH
   // and SETPOS are standard int lists, so we can treat them with the

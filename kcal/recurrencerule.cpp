@@ -42,7 +42,7 @@ static QString dumpTime( const KDateTime &dt );   // for debugging
 /**************************************************************************
  *                               DateHelper                               *
  **************************************************************************/
-
+//@cond PRIVATE
 class DateHelper {
   public:
 #ifndef NDEBUG
@@ -141,11 +141,12 @@ int DateHelper::getWeekNumberNeg( const QDate &date, short weekstart, int *year 
   int weekpos = getWeekNumber( date, weekstart, year );
   return weekNumbersInYear( *year, weekstart ) - weekpos - 1;
 }
+//@endcond
 
 /**************************************************************************
  *                               Constraint                               *
  **************************************************************************/
-
+//@cond PRIVATE
 class Constraint {
   public:
     typedef QList<Constraint> List;
@@ -560,6 +561,7 @@ bool Constraint::readDateTime( const KDateTime &dt, RecurrenceRule::PeriodType t
   }
   return true;
 }
+//@endcond
 
 /**************************************************************************
  *                        RecurrenceRule::Private                         *
@@ -653,7 +655,6 @@ class KCal::RecurrenceRule::Private
     bool mIsReadOnly;
     bool mAllDay;
 };
-//@endcond
 
 bool RecurrenceRule::Private::operator==( const Private &r ) const
 {
@@ -710,6 +711,7 @@ void RecurrenceRule::Private::setDirty()
     }
   }
 }
+//@endcond
 
 /**************************************************************************
  *                              RecurrenceRule                            *
@@ -1002,6 +1004,7 @@ void RecurrenceRule::shiftTimes( const KDateTime::Spec &oldSpec, const KDateTime
 //   return 1;
 // }
 
+//@cond PRIVATE
 void RecurrenceRule::Private::buildConstraints()
 {
   mConstraints.clear();
@@ -1160,6 +1163,7 @@ bool RecurrenceRule::Private::buildCache() const
     return false;
   }
 }
+//@endcond
 
 bool RecurrenceRule::dateMatchesRules( const KDateTime &kdt ) const
 {
@@ -1552,6 +1556,7 @@ DateTimeList RecurrenceRule::timesInInterval( const KDateTime &start, const KDat
   return result;
 }
 
+//@cond PRIVATE
 // Find the date/time of the occurrence at or before a date/time,
 // for a given period type.
 // Return a constraint whose value appropriate to 'type', is set to
@@ -1779,6 +1784,7 @@ DateTimeList RecurrenceRule::Private::datesForInterval( const Constraint &interv
 
   return lst;
 }
+//@endcond
 
 void RecurrenceRule::dump() const
 {
@@ -1832,6 +1838,7 @@ void RecurrenceRule::dump() const
 #endif
 }
 
+//@cond PRIVATE
 void Constraint::dump() const
 {
   kDebug(5800) << "     ~> Y=" << year
@@ -1845,6 +1852,7 @@ void Constraint::dump() const
                << ", #w=" << weeknumber
                << ", yd=" << yearday;
 }
+//@endcond
 
 QString dumpTime( const KDateTime &dt )
 {

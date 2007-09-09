@@ -83,12 +83,14 @@ QString ScheduleMessage::error()
   return mError;
 }
 
+//@cond PRIVATE
 struct KCal::Scheduler::Private
 {
   Private() : mFreeBusyCache( 0 ) {}
 
   FreeBusyCache *mFreeBusyCache;
 };
+//@endcond
 
 Scheduler::Scheduler( Calendar *calendar ) : d( 0 )
 {

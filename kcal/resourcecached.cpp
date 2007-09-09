@@ -42,7 +42,7 @@
 
 using namespace KCal;
 
-
+//@cond PRIVATE
 class ResourceCached::Private
 {
   public:
@@ -80,7 +80,7 @@ class ResourceCached::Private
 
     KRES::IdMapper mIdMapper;
 };
-
+//@endcond
 
 ResourceCached::ResourceCached()
   : ResourceCalendar(),

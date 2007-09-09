@@ -45,6 +45,7 @@
 
 using namespace KCal;
 
+//@cond PRIVATE
 class QtopiaParser : public QXmlDefaultHandler
 {
   public:
@@ -282,6 +283,7 @@ class QtopiaParser : public QXmlDefaultHandler
 };
 
 QMap<QString,QString> QtopiaParser::mCategoriesMap;
+//@endcond
 
 QtopiaFormat::QtopiaFormat() : d( 0 )
 {

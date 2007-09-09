@@ -45,6 +45,7 @@ using namespace KCal;
 
 static QString cleanChars( const QString &txt );
 
+//@cond PRIVATE
 class KCal::HtmlExport::Private
 {
   public:
@@ -57,6 +58,7 @@ class KCal::HtmlExport::Private
     HTMLExportSettings *mSettings;
     QMap<QDate,QString> mHolidayMap;
 };
+//@endcond
 
 HtmlExport::HtmlExport( Calendar *calendar, HTMLExportSettings *settings )
   : d( new Private( calendar, settings ) )

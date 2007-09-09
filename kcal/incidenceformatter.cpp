@@ -499,6 +499,7 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
   return tmpStr;
 }
 
+//@cond PRIVATE
 class KCal::IncidenceFormatter::EventViewerVisitor : public IncidenceBase::Visitor
 {
   public:
@@ -530,6 +531,7 @@ class KCal::IncidenceFormatter::EventViewerVisitor : public IncidenceBase::Visit
   protected:
     QString mResult;
 };
+//@endcond
 
 QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 {
@@ -998,6 +1000,7 @@ static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
   }
 }
 
+//@cond PRIVATE
 class KCal::IncidenceFormatter::ScheduleMessageVisitor : public IncidenceBase::Visitor
 {
   public:
@@ -1065,6 +1068,7 @@ class KCal::IncidenceFormatter::InvitationBodyVisitor
       return !mResult.isEmpty();
     }
 };
+//@endcond
 
 QString InvitationFormatterHelper::makeLink( const QString &id, const QString &text )
 {
@@ -1220,6 +1224,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
  *  Helper functions for the Incidence tooltips
  *******************************************************************/
 
+//@cond PRIVATE
 class KCal::IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
 {
   public:
@@ -1398,6 +1403,7 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
   tmp += "</qt>";
   return tmp;
 }
+//@endcond
 
 QString IncidenceFormatter::toolTipString( IncidenceBase *incidence, bool richText )
 {
@@ -1413,6 +1419,22 @@ QString IncidenceFormatter::toolTipString( IncidenceBase *incidence, bool richTe
  *  Helper functions for the Incidence tooltips
  *******************************************************************/
 
+static QString mailBodyIncidence( Incidence *incidence )
+{
+  QString body;
+  if ( !incidence->summary().isEmpty() ) {
+    body += i18n( "Summary: %1\n", incidence->summary() );
+  }
+  if ( !incidence->organizer().isEmpty() ) {
+    body += i18n( "Organizer: %1\n", incidence->organizer().fullName() );
+  }
+  if ( !incidence->location().isEmpty() ) {
+    body += i18n( "Location: %1\n", incidence->location() );
+  }
+  return body;
+}
+
+//@cond PRIVATE
 class KCal::IncidenceFormatter::MailBodyVisitor : public IncidenceBase::Visitor
 {
   public:
@@ -1440,21 +1462,6 @@ class KCal::IncidenceFormatter::MailBodyVisitor : public IncidenceBase::Visitor
   protected:
     QString mResult;
 };
-
-static QString mailBodyIncidence( Incidence *incidence )
-{
-  QString body;
-  if ( !incidence->summary().isEmpty() ) {
-    body += i18n( "Summary: %1\n", incidence->summary() );
-  }
-  if ( !incidence->organizer().isEmpty() ) {
-    body += i18n( "Organizer: %1\n", incidence->organizer().fullName() );
-  }
-  if ( !incidence->location().isEmpty() ) {
-    body += i18n( "Location: %1\n", incidence->location() );
-  }
-  return body;
-}
 
 bool IncidenceFormatter::MailBodyVisitor::visit( Event *event )
 {
@@ -1549,6 +1556,7 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Journal *journal )
   }
   return !mResult.isEmpty();
 }
+//@endcond
 
 QString IncidenceFormatter::mailBodyString( IncidenceBase *incidence )
 {

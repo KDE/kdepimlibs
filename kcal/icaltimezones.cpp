@@ -89,6 +89,7 @@ namespace KCal {
 
 /******************************************************************************/
 
+//@cond PRIVATE
 class ICalTimeZonesPrivate
 {
 public:
@@ -96,7 +97,7 @@ public:
 
   ICalTimeZones::ZoneMap zones;
 };
-
+//@endcond
 
 ICalTimeZones::ICalTimeZones()
   : d(new ICalTimeZonesPrivate)
@@ -279,6 +280,7 @@ ICalTimeZone ICalTimeZone::utc()
 
 /******************************************************************************/
 
+//@cond PRIVATE
 class ICalTimeZoneDataPrivate
 {
 public:
@@ -301,7 +303,7 @@ public:
 private:
     icalcomponent *icalComponent; // ical component representing this time zone
 };
-
+//@endcond
 
 ICalTimeZoneData::ICalTimeZoneData()
   : d(new ICalTimeZoneDataPrivate())
@@ -629,14 +631,16 @@ bool ICalTimeZoneData::hasTransitions() const
 
 /******************************************************************************/
 
+//@cond PRIVATE
 class ICalTimeZoneSourcePrivate
 {
   public:
     static QList<QDateTime> parsePhase(icalcomponent*, bool daylight, int &prevOffset, KTimeZone::Phase&);
     static QByteArray icalTzidPrefix;
 };
-QByteArray ICalTimeZoneSourcePrivate::icalTzidPrefix;
 
+QByteArray ICalTimeZoneSourcePrivate::icalTzidPrefix;
+//@endcond
 
 ICalTimeZoneSource::ICalTimeZoneSource() : d( 0 )
 {
@@ -818,6 +822,7 @@ ICalTimeZone ICalTimeZoneSource::parse(icaltimezone *tz)
   return parse(icaltimezone_get_component(tz));
 }
 
+//@cond PRIVATE
 QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool daylight, int &prevOffset,
                                       KTimeZone::Phase &phase)
 {
@@ -971,6 +976,7 @@ QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, bool da
   phase = KTimeZone::Phase(utcOffset, abbrevs, daylight, comment);
   return transitions;
 }
+//@endcond
 
 ICalTimeZone ICalTimeZoneSource::standardZone(const QString &zone, bool icalBuiltIn)
 {

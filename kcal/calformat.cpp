@@ -52,12 +52,12 @@ class KCal::CalFormat::Private
     QString mLoadedProductId;    // PRODID string loaded from calendar file
     ErrorFormat *mException;
 };
-//@endcond
 
 //TODO: change strings to use "kcal" instead of "libkcal"?
 QString CalFormat::Private::mApplication = QLatin1String( "libkcal" );
 QString CalFormat::Private::mProductId =
   QLatin1String( "-//K Desktop Environment//NONSGML libkcal 3.5//EN" );
+//@endcond
 
 CalFormat::CalFormat()
   : d( new KCal::CalFormat::Private )
