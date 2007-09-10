@@ -114,11 +114,34 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
       rMax=0x00FF
     };
 
+    /**
+     * Constructs an empty recurrence.
+     */
     Recurrence();
+    /**
+     * Copy constructor.
+     *
+     * @param r instance to copy from
+     */
     Recurrence( const Recurrence &r );
+    /**
+     * Destructor.
+     */
     virtual ~Recurrence();
 
+    /**
+     * Comparison operator for equality.
+     *
+     * @param r instance to compare with
+     * @return true if recurrences are the same, false otherwise
+     */
     bool operator==( const Recurrence &r ) const;
+    /**
+     * Comparison operator for inequality.
+     *
+     * @param r instance to compare with
+     * @return true if recurrences are the different, false if the same
+     */
     bool operator!=( const Recurrence &r ) const  { return !operator==(r); }
 
     /** Return the start date/time of the recurrence (Time for all-day recurrences will be 0:00).

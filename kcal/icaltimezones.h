@@ -65,7 +65,13 @@ class ICalTimeZoneDataPrivate;
 class KCAL_EXPORT ICalTimeZones
 {
 public:
+    /**
+     * Constructs an empty time zone collection.
+     */
     ICalTimeZones();
+    /**
+     * Destructor.
+     */
     ~ICalTimeZones();
 
     /**
@@ -161,6 +167,9 @@ class KCAL_EXPORT ICalTimeZone : public KTimeZone  //krazy:exclude=dpointer (no 
      */
     explicit ICalTimeZone(const KTimeZone &tz, const QDate &earliest = QDate());
 
+    /**
+     * Destructor.
+     */
     virtual ~ICalTimeZone();
 
     /**
@@ -251,11 +260,24 @@ class KCAL_EXPORT ICalTimeZoneBackend : public KTimeZoneBackend  //krazy:exclude
 public:
     /** Implements ICalTimeZone::ICalTimeZone(). */
     ICalTimeZoneBackend();
-    /** Implements ICalTimeZone::ICalTimeZone(). */
+    /**
+     * Implements ICalTimeZone::ICalTimeZone().
+     *
+     * @param source      iCalendar VTIMEZONE reader and parser
+     * @param name        time zone's unique name within the iCalendar object
+     * @param countryCode ISO 3166 2-character country code, empty if unknown
+     * @param latitude    in degrees (between -90 and +90), UNKNOWN if not known
+     * @param longitude   in degrees (between -180 and +180), UNKNOWN if not known
+     * @param comment     description of the time zone, if any
+     */
     ICalTimeZoneBackend(ICalTimeZoneSource *source, const QString &name, const QString &countryCode = QString(),
                         float latitude = KTimeZone::UNKNOWN, float longitude = KTimeZone::UNKNOWN,
                         const QString &comment = QString());
-    /** Implements ICalTimeZone::ICalTimeZone(). */
+    /** Implements ICalTimeZone::ICalTimeZone().
+     *
+     * @param tz KTimeZone instance
+     * @param earliest earliest date for which time zone data should be stored
+     */
     ICalTimeZoneBackend(const KTimeZone &tz, const QDate &earliest);
 
     virtual ~ICalTimeZoneBackend();
@@ -307,6 +329,9 @@ class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
      * Constructs an iCalendar time zone source.
      */
     ICalTimeZoneSource();
+    /**
+     * Destructor.
+     */
     virtual ~ICalTimeZoneSource();
 
     /**
@@ -406,7 +431,15 @@ class KCAL_EXPORT ICalTimeZoneData : public KTimeZoneData
     friend class ICalTimeZoneSource;
 
   public:
+    /**
+     * Default constructor.
+     */
     ICalTimeZoneData();
+    /**
+     * Copy constructor.
+     *
+     * @param rhs instance to copy from
+     */
     ICalTimeZoneData(const ICalTimeZoneData &rhs);
     /**
      * Constructor which converts a KTimeZoneData to an ICalTimeZoneData instance.
@@ -420,7 +453,16 @@ class KCAL_EXPORT ICalTimeZoneData : public KTimeZoneData
      * @param earliest earliest date for which time zone data should be stored
      */
     ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz, const QDate &earliest);
+    /**
+     * Destructor.
+     */
     virtual ~ICalTimeZoneData();
+    /**
+     * Assignment operator.
+     *
+     * @param rhs instance to copy from
+     * @return this instance
+     */
     ICalTimeZoneData &operator=(const ICalTimeZoneData &rhs);
 
     /**
