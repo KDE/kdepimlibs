@@ -11,10 +11,16 @@ include (MacroLibrary)
 find_package(Boost)
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Needed by libsyndication")
 
+macro_optional_find_package(Sasl2)
+macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins. IMAP and Sieve kioslaves will not be built.")
+
 # gpgme is a hard dependency
 find_package(Gpgme REQUIRED)
 
 include (gpgme++/ConfigureChecks.cmake)
+include (ConfigureChecks.cmake)
+configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
@@ -35,6 +41,7 @@ add_subdirectory(ktnef)
 add_subdirectory(kxmlrpcclient)
 add_subdirectory(mailtransport)
 add_subdirectory(syndication)
+add_subdirectory(kioslave)
 
 add_subdirectory(cmake)
 

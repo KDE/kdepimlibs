@@ -1,4 +1,3 @@
-
 if(SASL2_FOUND)
 	add_subdirectory( imap4 )
 	add_subdirectory( sieve )
