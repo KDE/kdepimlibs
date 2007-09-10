@@ -19,13 +19,13 @@ qtopiaformat          |       |         |       |         |    D    |
 recurrence            |   D   |         |   D   |         |    D    |
 recurrencerule        |   D   |         |   D   |         |    D    |
 resourcecachedconfig  |   D   |         |   D   |         |    D    |
-resourcecached        |       |         |   D   |         |    D    |
+resourcecached        |   D   |         |   D   |         |    D    |
 resourcecalendar      |   D   |         |   D   |         |    D    |
 resourcelocalconfig   |       |         |       |         |    D    |
 resourcelocaldirconfig|       |         |       |         |    D    |
 resourcelocaldir      |       |         |       |         |    D    |
-resourcelocal         |   D   |    D    |   D   |    X    |    D    | Narayan
-scheduler             |   D   |         |   D   |         |    D    |
+resourcelocal         |   D   |    D    |   D   |         |    D    | Narayan
+scheduler             |   D   |         |   D   |   n/a   |    D    |
 sortablelist.h        |   D   |    D    |  n/a  |    D    |    D    |
 vcaldrag              |       |         |       |         |    D    |
 vcalformat            |   D   |         |   D   |         |    D    | Allen

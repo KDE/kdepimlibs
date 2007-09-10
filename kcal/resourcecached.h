@@ -1,29 +1,28 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2006 David Jarvie <software@astrojar.org.uk>
-    Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2006 David Jarvie <software@astrojar.org.uk>
+  Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 #ifndef KCAL_RESOURCECACHED_H
 #define KCAL_RESOURCECACHED_H
 
 #include "resourcecalendar.h"
-
 #include "incidence.h"
 
 #include <kdatetime.h>
@@ -32,7 +31,6 @@
 
 class KConfigGroup;
 namespace KRES { class IdMapper; }
-
 
 namespace KCal {
 
@@ -45,20 +43,29 @@ class CalendarLocal;
 class KCAL_EXPORT ResourceCached : public ResourceCalendar,
                                    public KCal::Calendar::CalendarObserver
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     /**
       Reload policy.
-
       @see setReloadPolicy(), reloadPolicy()
     */
-    enum { ReloadNever, ReloadOnStartup, ReloadInterval };
+    enum {
+      ReloadNever,
+      ReloadOnStartup,
+      ReloadInterval
+    };
+
     /**
       Save policy.
-
       @see setSavePolicy(), savePolicy()
     */
-    enum { SaveNever, SaveOnExit, SaveInterval, SaveDelayed, SaveAlways };
+    enum {
+      SaveNever,
+      SaveOnExit,
+      SaveInterval,
+      SaveDelayed,
+      SaveAlways
+    };
 
     /**
       Whether to update the cache file when loading a resource, or whether to
@@ -66,9 +73,9 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       Only applicable to genuinely cached resources.
      */
     enum CacheAction {
-        DefaultCache,    // use the default action set by setReloadPolicy() or setSavePolicy()
-        NoSyncCache,     // perform a cache-only operation, without downloading or uploading
-        SyncCache        // update the cache file before loading, or upload cache after saving
+      DefaultCache,/**< use the default action set by setReloadPolicy() or setSavePolicy() */
+      NoSyncCache, /**< perform a cache-only operation, without downloading or uploading */
+      SyncCache    /**< update the cache file before loading, or upload cache after saving */
     };
 
     ResourceCached();
@@ -167,31 +174,33 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Load resource data.
      */
-    virtual bool load()   { return load( SyncCache ); }
+    virtual bool load();
 
     /**
-      Save the resource data to cache, and optionally upload the cache file afterwards.
-      For a non-cached resource, this method has the same effect as save().
+      Save the resource data to cache, and optionally upload the cache file
+      afterwards. For a non-cached resource, this method has the same effect
+      as save().
 
-      @param incidence if given as 0, doSave(bool) is called to save all incidences,
-             else doSave(bool, incidence) is called to save only the given one
+      @param incidence if given as 0, doSave(bool) is called to save all
+      incidences, else doSave(bool, incidence) is called to save only the
+      given one.
     */
     bool save( CacheAction, Incidence *incidence = 0 );
 
     /**
       Save resource data.
      */
-    virtual bool save( Incidence *incidence = 0 )   { return save( SyncCache, incidence ); }
+    virtual bool save( Incidence *incidence = 0 );
 
     /**
       Add event to calendar.
     */
-    bool addEvent(Event *anEvent);
+    bool addEvent( Event *event );
 
     /**
       Deletes an event from this calendar.
     */
-    bool deleteEvent(Event *);
+    bool deleteEvent( Event *event );
 
     /**
       Removes all Events from this calendar.
@@ -201,7 +210,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Retrieves an event on the basis of the unique string ID.
     */
-    Event *event(const QString &UniqueStr);
+    Event *event( const QString &UniqueStr );
 
     /**
       Return filtered list of all events in calendar.
@@ -211,7 +220,8 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Return unfiltered list of all events in calendar.
     */
-    Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    Event::List rawEvents( EventSortField sortField = EventSortUnsorted,
+                           SortDirection sortDirection = SortDirectionAscending );
 
     /**
       Builds and then returns a list of all events that match for the
@@ -269,7 +279,8 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Return list of all todos.
     */
-    Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted,
+                         SortDirection sortDirection = SortDirectionAscending );
 
     /**
       Returns list of todos due on the specified date.
@@ -299,7 +310,8 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Return list of all journals.
     */
-    Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted,SortDirection sortDirection = SortDirectionAscending );
+    Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted,
+                               SortDirection sortDirection = SortDirectionAscending );
 
     /**
       Return list of journals for the given date.
@@ -351,15 +363,15 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       @copydoc
       ResourceCalendar::shiftTimes()
     */
-    virtual void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
+    virtual void shiftTimes( const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec );
 
     /**
       Return the owner of the calendar's full name.
     */
     Person owner() const;
+
     /**
       Set the owner of the calendar. Should be owner's full name.
-
       @param owner the person who owns this calendar resource
     */
     void setOwner( const Person &owner );
@@ -367,7 +379,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     void enableChangeNotification();
     void disableChangeNotification();
 
-    void clearChange( Incidence * );
+    void clearChange( Incidence *incidence );
     void clearChange( const QString &uid );
 
     void clearChanges();
@@ -402,7 +414,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Returns a reference to the id mapper.
      */
-    KRES::IdMapper& idMapper();
+    KRES::IdMapper &idMapper();
 
   protected:
     CalendarLocal *calendar() const;
@@ -419,7 +431,8 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     virtual void doClose();
     /**
       Opens the resource. Dummy implementation, so child classes don't have to
-      reimplement this method. By default, this does not do anything, but can be reimplemented in child classes
+      reimplement this method. By default, this does not do anything, but can be
+      reimplemented in child classes
      */
     virtual bool doOpen();
 
@@ -428,23 +441,25 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     */
     virtual bool doLoad( bool syncCache ) = 0;
     /**
-      Set the cache-reloaded status.
-      Non-local resources must set this true once the cache has been downloaded successfully.
+      Set the cache-reloaded status. Non-local resources must set this true once
+      the cache has been downloaded successfully.
 
       @param done the new cache-reloaded status
      */
     void setReloaded( bool done );
     /**
-      Do the actual saving of the resource data. Called by save(CacheAction). Saves
-      the resource data to the cache and optionally uploads (if a remote resource).
+      Do the actual saving of the resource data. Called by save(CacheAction).
+      Saves the resource data to the cache and optionally uploads (if a remote
+      resource).
 
-      @param syncCache if true, the cache will be uploaded to the remote resource. If false,
-                       only the cache will be updated.
+      @param syncCache if true, the cache will be uploaded to the remote
+      resource. If false, only the cache will be updated.
     */
     virtual bool doSave( bool syncCache ) = 0;
     /**
       Do the actual saving of the resource data. Called by save(CacheAction).
-      Save one Incidence. The default implementation calls doSave(bool) to save everything.
+      Save one Incidence. The default implementation calls doSave(bool) to
+      save everything.
 
       @param syncCache if @c true, the cache will be uploaded to the remote
              resource. If @c false, only the cache will be updated
@@ -476,10 +491,10 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Functions for keeping the changes persistent.
      */
-    virtual QString changesCacheFile( const QString& ) const;
-    void loadChangesCache( QMap<Incidence*, bool>&, const QString& );
+    virtual QString changesCacheFile( const QString &type ) const;
+    void loadChangesCache( QMap<Incidence *, bool> &map, const QString &type );
     void loadChangesCache();
-    void saveChangesCache( const QMap<Incidence*, bool>&, const QString& );
+    void saveChangesCache( const QMap<Incidence *, bool> &map, const QString &type );
     void saveChangesCache();
 
   protected Q_SLOTS:

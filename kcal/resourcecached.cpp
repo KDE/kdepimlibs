@@ -1,44 +1,46 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright © 2006 by David Jarvie <software@astrojar.org.uk>
-    Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
+  Copyright © 2006 by David Jarvie <software@astrojar.org.uk>
+  Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
-#include "resourcecached.moc"
-
+#include "resourcecached.h"
 #include "calendarlocal.h"
 #include "event.h"
 #include "exceptions.h"
 #include "incidence.h"
 #include "journal.h"
 #include "todo.h"
+
 #include "kresources/idmapper.h"
+
+#include <kdebug.h>
+#include <klocale.h>
+#include <kurl.h>
+#include <kstandarddirs.h>
 
 #include <QtCore/QDataStream>
 #include <QtCore/QFile>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 
-#include <kdebug.h>
-#include <klocale.h>
-#include <kurl.h>
-#include <kstandarddirs.h>
+#include "resourcecached.moc"
 
 using namespace KCal;
 
@@ -157,8 +159,9 @@ int ResourceCached::reloadInterval() const
 
 bool ResourceCached::inhibitDefaultReload( bool inhibit )
 {
-  if ( inhibit == d->mInhibitReload )
+  if ( inhibit == d->mInhibitReload ) {
     return false;
+  }
   d->mInhibitReload = inhibit;
   return true;
 }
@@ -216,8 +219,8 @@ void ResourceCached::setupSaveTimer()
 void ResourceCached::setupReloadTimer()
 {
   if ( d->mReloadPolicy == ReloadInterval ) {
-    kDebug(5800) << "ResourceCached::setSavePolicy(): start reload timer"
-                 "(interval" << d->mReloadInterval << "minutes)";
+    kDebug(5800) << "ResourceCached::setSavePolicy(): start reload timer (interval"
+                 << d->mReloadInterval << "minutes)";
     d->mReloadTimer.start( d->mReloadInterval * 60 * 1000 ); // n minutes
   } else {
     d->mReloadTimer.stop();
@@ -236,7 +239,7 @@ void ResourceCached::writeConfig( KConfigGroup &group )
   group.writeEntry( "LastSave", d->mLastSave.toUtc().dateTime() );
 }
 
-bool ResourceCached::addEvent(Event *event)
+bool ResourceCached::addEvent( Event *event )
 {
   return d->mCalendar.addEvent( event );
 }
@@ -324,7 +327,6 @@ Todo::List ResourceCached::rawTodosForDate( const QDate &date )
   return d->mCalendar.rawTodosForDate( date );
 }
 
-
 bool ResourceCached::addJournal( Journal *journal )
 {
   kDebug(5800) << "Adding Journal on" << journal->dtStart().toString();
@@ -346,7 +348,6 @@ Journal::List ResourceCached::rawJournalsForDate( const QDate &date )
 {
   return d->mCalendar.rawJournalsForDate( date );
 }
-
 
 Alarm::List ResourceCached::alarmsTo( const KDateTime &to )
 {
@@ -370,7 +371,7 @@ KDateTime::Spec ResourceCached::timeSpec() const
   return d->mCalendar.timeSpec();
 }
 
-void ResourceCached::setTimeZoneId( const QString& tzid )
+void ResourceCached::setTimeZoneId( const QString &tzid )
 {
   d->mCalendar.setTimeZoneId( tzid );
 }
@@ -380,7 +381,7 @@ QString ResourceCached::timeZoneId() const
   return d->mCalendar.timeZoneId();
 }
 
-void ResourceCached::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
+void ResourceCached::shiftTimes( const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec )
 {
   d->mCalendar.shiftTimes( oldSpec, newSpec );
 }
@@ -399,24 +400,28 @@ bool ResourceCached::load( CacheAction action )
   setReceivedLoadError( false );
 
   bool success = true;
-  if ( !isOpen() ) success = open();
+  if ( !isOpen() ) {
+    success = open();
+  }
   if ( success ) {
     bool update = false;
-    switch ( action )
-    {
-      case DefaultCache:
-        if ( !d->mReloaded && !d->mInhibitReload )
-          update = checkForReload();
-        break;
-      case NoSyncCache:
-        break;
-      case SyncCache:
-        update = true;
-        break;
+    switch ( action ) {
+    case DefaultCache:
+      if ( !d->mReloaded && !d->mInhibitReload ) {
+        update = checkForReload();
+      }
+      break;
+    case NoSyncCache:
+      break;
+    case SyncCache:
+      update = true;
+      break;
     }
     success = doLoad( update );
   }
-  if ( !success && !receivedLoadError() ) loadError();
+  if ( !success && !receivedLoadError() ) {
+    loadError();
+  }
 
   // If the resource is read-only, we need to set its incidences to read-only,
   // too. This can't be done at a lower-level, since the read-only setting
@@ -434,13 +439,19 @@ bool ResourceCached::load( CacheAction action )
   return success;
 }
 
+bool ResourceCached::load()
+{
+  return load( SyncCache );
+}
+
 bool ResourceCached::loadFromCache()
 {
   setIdMapperIdentifier();
   d->mIdMapper.load();
 
-  if ( !KStandardDirs::exists( cacheFile() ) )
+  if ( !KStandardDirs::exists( cacheFile() ) ) {
     return false;
+  }
   d->mCalendar.load( cacheFile() );
   if ( !noReadOnlyOnLoad() && readOnly() ) {
     Incidence::List incidences( rawIncidences() );
@@ -455,29 +466,32 @@ bool ResourceCached::loadFromCache()
 bool ResourceCached::save( CacheAction action, Incidence *incidence )
 {
   d->mSavePending = false;
-  if ( saveInhibited() )
+  if ( saveInhibited() ) {
     return true;
+  }
   if ( !readOnly() ) {
     kDebug(5800) << "Save resource" << resourceName();
 
     setReceivedSaveError( false );
 
-    if ( !isOpen() ) return true;
+    if ( !isOpen() ) {
+      return true;
+    }
     bool upload = false;
-    switch ( action )
-    {
-      case DefaultCache:
-        upload = checkForSave();
-        break;
-      case NoSyncCache:
-        break;
-      case SyncCache:
-        upload = true;
-        break;
+    switch ( action ) {
+    case DefaultCache:
+      upload = checkForSave();
+      break;
+    case NoSyncCache:
+      break;
+    case SyncCache:
+      upload = true;
+      break;
     }
     bool success = incidence ? doSave( upload, incidence ) : doSave( upload );
-    if ( !success && !receivedSaveError() ) saveError();
-
+    if ( !success && !receivedSaveError() ) {
+      saveError();
+    }
     return success;
   } else {
     // Read-only, just don't save...
@@ -486,8 +500,14 @@ bool ResourceCached::save( CacheAction action, Incidence *incidence )
   }
 }
 
-bool ResourceCached::doSave( bool syncCache, Incidence * )
+bool ResourceCached::save( Incidence *incidence )
 {
+  return save( SyncCache, incidence );
+}
+
+bool ResourceCached::doSave( bool syncCache, Incidence *incidence )
+{
+  Q_UNUSED( incidence );
   return doSave( syncCache );
 }
 
@@ -515,25 +535,28 @@ void ResourceCached::cleanUpEventCache( const Event::List &eventList )
 {
   CalendarLocal calendar ( QLatin1String( "UTC" ) );
 
-  if ( KStandardDirs::exists( cacheFile() ) )
+  if ( KStandardDirs::exists( cacheFile() ) ) {
     calendar.load( cacheFile() );
-  else
+  } else {
     return;
+  }
 
   Event::List list = calendar.events();
   Event::List::ConstIterator cacheIt, it;
   for ( cacheIt = list.begin(); cacheIt != list.end(); ++cacheIt ) {
     bool found = false;
     for ( it = eventList.begin(); it != eventList.end(); ++it ) {
-      if ( (*it)->uid() == (*cacheIt)->uid() )
+      if ( (*it)->uid() == (*cacheIt)->uid() ) {
         found = true;
+      }
     }
 
     if ( !found ) {
       d->mIdMapper.removeRemoteId( d->mIdMapper.remoteId( (*cacheIt)->uid() ) );
       Event *event = d->mCalendar.event( (*cacheIt)->uid() );
-      if ( event )
+      if ( event ) {
         d->mCalendar.deleteEvent( event );
+      }
     }
   }
 
@@ -544,10 +567,11 @@ void ResourceCached::cleanUpTodoCache( const Todo::List &todoList )
 {
   CalendarLocal calendar ( QLatin1String( "UTC" ) );
 
-  if ( KStandardDirs::exists( cacheFile() ) )
+  if ( KStandardDirs::exists( cacheFile() ) ) {
     calendar.load( cacheFile() );
-  else
+  } else {
     return;
+  }
 
   Todo::List list = calendar.todos();
   Todo::List::ConstIterator cacheIt, it;
@@ -555,22 +579,24 @@ void ResourceCached::cleanUpTodoCache( const Todo::List &todoList )
 
     bool found = false;
     for ( it = todoList.begin(); it != todoList.end(); ++it ) {
-      if ( (*it)->uid() == (*cacheIt)->uid() )
+      if ( (*it)->uid() == (*cacheIt)->uid() ) {
         found = true;
+      }
     }
 
     if ( !found ) {
       d->mIdMapper.removeRemoteId( d->mIdMapper.remoteId( (*cacheIt)->uid() ) );
       Todo *todo = d->mCalendar.todo( (*cacheIt)->uid() );
-      if ( todo )
+      if ( todo ) {
         d->mCalendar.deleteTodo( todo );
+      }
     }
   }
 
   calendar.close();
 }
 
-KRES::IdMapper& ResourceCached::idMapper()
+KRES::IdMapper &ResourceCached::idMapper()
 {
   return d->mIdMapper;
 }
@@ -585,7 +611,7 @@ QString ResourceCached::changesCacheFile( const QString &type ) const
   return KStandardDirs::locateLocal( "cache", "kcal/changescache/" + identifier() + '_' + type );
 }
 
-void ResourceCached::saveChangesCache( const QMap<Incidence*, bool> &map, const QString &type )
+void ResourceCached::saveChangesCache( const QMap<Incidence *, bool> &map, const QString &type )
 {
   CalendarLocal calendar ( QLatin1String( "UTC" ) );
 
@@ -613,19 +639,21 @@ void ResourceCached::saveChangesCache()
   saveChangesCache( d->mChangedIncidences, "changed" );
 }
 
-void ResourceCached::loadChangesCache( QMap<Incidence*, bool> &map, const QString &type )
+void ResourceCached::loadChangesCache( QMap<Incidence *, bool> &map, const QString &type )
 {
   CalendarLocal calendar ( QLatin1String( "UTC" ) );
 
-  if ( KStandardDirs::exists( changesCacheFile( type ) ) )
+  if ( KStandardDirs::exists( changesCacheFile( type ) ) ) {
     calendar.load( changesCacheFile( type ) );
-  else
+  } else {
     return;
+  }
 
   const Incidence::List list = calendar.incidences();
   Incidence::List::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it )
+  for ( it = list.begin(); it != list.end(); ++it ) {
     map.insert( (*it)->clone(), true );
+  }
 
   calendar.close();
 }
@@ -690,7 +718,7 @@ Incidence::List ResourceCached::addedIncidences() const
 {
   Incidence::List added;
   QMap<Incidence *,bool>::ConstIterator it;
-  for( it = d->mAddedIncidences.begin(); it != d->mAddedIncidences.end(); ++it ) {
+  for ( it = d->mAddedIncidences.begin(); it != d->mAddedIncidences.end(); ++it ) {
     added.append( it.key() );
   }
   return added;
@@ -700,7 +728,7 @@ Incidence::List ResourceCached::changedIncidences() const
 {
   Incidence::List changed;
   QMap<Incidence *,bool>::ConstIterator it;
-  for( it = d->mChangedIncidences.begin(); it != d->mChangedIncidences.end(); ++it ) {
+  for ( it = d->mChangedIncidences.begin(); it != d->mChangedIncidences.end(); ++it ) {
     changed.append( it.key() );
   }
   return changed;
@@ -710,7 +738,7 @@ Incidence::List ResourceCached::deletedIncidences() const
 {
   Incidence::List deleted;
   QMap<Incidence *,bool>::ConstIterator it;
-  for( it = d->mDeletedIncidences.begin(); it != d->mDeletedIncidences.end(); ++it ) {
+  for ( it = d->mDeletedIncidences.begin(); it != d->mDeletedIncidences.end(); ++it ) {
     deleted.append( it.key() );
   }
   return deleted;
@@ -720,13 +748,13 @@ Incidence::List ResourceCached::allChanges() const
 {
   Incidence::List changes;
   QMap<Incidence *,bool>::ConstIterator it;
-  for( it = d->mAddedIncidences.begin(); it != d->mAddedIncidences.end(); ++it ) {
+  for ( it = d->mAddedIncidences.begin(); it != d->mAddedIncidences.end(); ++it ) {
     changes.append( it.key() );
   }
-  for( it = d->mChangedIncidences.begin(); it != d->mChangedIncidences.end(); ++it ) {
+  for ( it = d->mChangedIncidences.begin(); it != d->mChangedIncidences.end(); ++it ) {
     changes.append( it.key() );
   }
-  for( it = d->mDeletedIncidences.begin(); it != d->mDeletedIncidences.end(); ++it ) {
+  for ( it = d->mDeletedIncidences.begin(); it != d->mDeletedIncidences.end(); ++it ) {
     changes.append( it.key() );
   }
   return changes;
@@ -745,25 +773,28 @@ void ResourceCached::clearChange( Incidence *incidence )
 
 void ResourceCached::clearChange( const QString &uid )
 {
-  QMap<Incidence*, bool>::Iterator it;
+  QMap<Incidence *, bool>::Iterator it;
 
-  for ( it = d->mAddedIncidences.begin(); it != d->mAddedIncidences.end(); ++it )
+  for ( it = d->mAddedIncidences.begin(); it != d->mAddedIncidences.end(); ++it ) {
     if ( it.key()->uid() == uid ) {
       d->mAddedIncidences.erase( it );
       break;
     }
+  }
 
-  for ( it = d->mChangedIncidences.begin(); it != d->mChangedIncidences.end(); ++it )
+  for ( it = d->mChangedIncidences.begin(); it != d->mChangedIncidences.end(); ++it ) {
     if ( it.key()->uid() == uid ) {
       d->mChangedIncidences.erase( it );
       break;
     }
+  }
 
-  for ( it = d->mDeletedIncidences.begin(); it != d->mDeletedIncidences.end(); ++it )
+  for ( it = d->mDeletedIncidences.begin(); it != d->mDeletedIncidences.end(); ++it ) {
     if ( it.key()->uid() == uid ) {
       d->mDeletedIncidences.erase( it );
       break;
     }
+  }
 }
 
 void ResourceCached::enableChangeNotification()
@@ -778,7 +809,9 @@ void ResourceCached::disableChangeNotification()
 
 void ResourceCached::slotReload()
 {
-  if ( !isActive() ) return;
+  if ( !isActive() ) {
+    return;
+  }
 
   kDebug(5800) << "ResourceCached::slotReload()";
 
@@ -787,7 +820,9 @@ void ResourceCached::slotReload()
 
 void ResourceCached::slotSave()
 {
-  if ( !isActive() ) return;
+  if ( !isActive() ) {
+    return;
+  }
 
   kDebug(5800) << "ResourceCached::slotSave()";
 
@@ -811,14 +846,20 @@ void ResourceCached::checkForAutomaticSave()
 
 bool ResourceCached::checkForReload()
 {
-  if ( d->mReloadPolicy == ReloadNever ) return false;
-  if ( d->mReloadPolicy == ReloadOnStartup ) return !d->mReloaded;
+  if ( d->mReloadPolicy == ReloadNever ) {
+    return false;
+  }
+  if ( d->mReloadPolicy == ReloadOnStartup ) {
+    return !d->mReloaded;
+  }
   return true;
 }
 
 bool ResourceCached::checkForSave()
 {
-  if ( d->mSavePolicy == SaveNever ) return false;
+  if ( d->mSavePolicy == SaveNever ) {
+    return false;
+  }
   return true;
 }
 
@@ -826,22 +867,24 @@ void ResourceCached::addInfoText( QString &txt ) const
 {
   if ( d->mLastLoad.isValid() ) {
     txt += "<br>";
-    txt += i18n("Last loaded: %1",
-             KGlobal::locale()->formatDateTime( d->mLastLoad.toUtc().dateTime() ) );
+    txt += i18n( "Last loaded: %1",
+                 KGlobal::locale()->formatDateTime( d->mLastLoad.toUtc().dateTime() ) );
   }
   if ( d->mLastSave.isValid() ) {
     txt += "<br>";
-    txt += i18n("Last saved: %1",
-             KGlobal::locale()->formatDateTime( d->mLastSave.toUtc().dateTime() ) );
+    txt += i18n( "Last saved: %1",
+                 KGlobal::locale()->formatDateTime( d->mLastSave.toUtc().dateTime() ) );
   }
 }
 
 void ResourceCached::doClose()
 {
-  if ( d->mSavePending )
+  if ( d->mSavePending ) {
     d->mSaveTimer.stop();
-  if ( d->mSavePending  ||  d->mSavePolicy == SaveOnExit  ||  d->mSavePolicy == SaveInterval )
+  }
+  if ( d->mSavePending  ||  d->mSavePolicy == SaveOnExit  ||  d->mSavePolicy == SaveInterval ) {
     save( SyncCache );
+  }
   d->mCalendar.close();
 }
 
