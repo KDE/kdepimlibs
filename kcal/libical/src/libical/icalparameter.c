@@ -26,11 +26,7 @@
 
  ======================================================================*/
 /*#line 29 "icalparameter.c.in"*/
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-
+#include "config-libical.h"
 #include "icalparameter.h"
 #include "icalproperty.h"
 #include "icalerror.h"

@@ -23,13 +23,10 @@
 
 ======================================================================*/
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #ifndef ICALATTACHIMPL_H
 #define ICALATTACHIMPL_H
 
+#include "config-libical.h"
 #include "icalattach.h"
 
 /* Private structure for ATTACH values */

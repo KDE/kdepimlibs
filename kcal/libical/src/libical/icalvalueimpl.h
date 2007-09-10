@@ -27,13 +27,10 @@
 
 ======================================================================*/
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #ifndef ICALVALUEIMPL_H
 #define ICALVALUEIMPL_H
 
+#include "config-libical.h"
 #include "icalenums.h"
 #include "icalproperty.h"
 #include "icalderivedvalue.h"

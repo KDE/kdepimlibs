@@ -32,11 +32,7 @@
      http://www.softwarestudio.org
  ======================================================================*/
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-
+#include "config-libical.h"
 #include "pvl.h"
 #include "icalerror.h"
 #include "icalvalue.h"

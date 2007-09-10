@@ -1,4 +1,4 @@
-#include <config.h>
+#include "config-libical.h"
 
 #ifndef HAVE_SNPRINTF
 #error DO NOT USE libical version of vsnprintf.

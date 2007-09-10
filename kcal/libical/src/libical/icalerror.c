@@ -24,9 +24,7 @@
  ======================================================================*/
 
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include "config-libical.h"
 
 #include <stdlib.h>		/* for malloc() */
 #include <string.h>		/* for strcmp */

@@ -50,14 +50,11 @@
 
 #define ICALMEMORY_C
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif
 
+#include "config-libical.h"
 #include "icalmemory.h"
 #include "icalerror.h"
 

@@ -129,17 +129,14 @@
 
  ======================================================================*/
 
-#include <config.h>
+#include "config-libical.h"
+#include "icalrecur.h"
+#include "icalerror.h"
+#include "icalmemory.h"
 
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
-
-#include "icalrecur.h"
-
-#include "icalerror.h"
-#include "icalmemory.h"
-
 #include <stdlib.h> /* for malloc */
 #include <errno.h> /* for errno */
 #include <string.h> /* for strdup and strchr*/

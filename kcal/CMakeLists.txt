@@ -8,7 +8,7 @@ project(kcal)
 ADD_DEFINITIONS(-DPACKAGE_DATA_DIR=\\""${DATA_INSTALL_DIR}/libical"\\" ) # added manually
 
 include (ConfigureChecks.cmake)
-configure_file (libical/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libical/config.h)
+configure_file (libical/config-libical.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libical/config-libical.h)
 
 if(KDE4_BUILD_TESTS)
     add_definitions(-DCOMPILING_TESTS)

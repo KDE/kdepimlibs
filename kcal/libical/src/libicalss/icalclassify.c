@@ -21,10 +21,7 @@
 
     ======================================================================*/
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
+#include "config-libical.h"
 #include "ical.h"
 #include "icalclassify.h"
 #include "icalmemory.h"

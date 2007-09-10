@@ -6,10 +6,7 @@
  ======================================================================*/
 /*#line 7 "icalrestriction.c.in"*/
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
+#include "config-libical.h"
 #include "icalrestriction.h"
 #include "icalenums.h"
 #include "icalerror.h"

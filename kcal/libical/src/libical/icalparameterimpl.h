@@ -25,13 +25,11 @@
      Graham Davison (g.m.davison@computer.org)
 
  ======================================================================*/
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
 
 #ifndef ICALPARAMETER_IMPL
 #define ICALPARAMETER_IMPL
 
+#include "config-libical.h"
 #include "icalparameter.h"
 #include "icalproperty.h"
 

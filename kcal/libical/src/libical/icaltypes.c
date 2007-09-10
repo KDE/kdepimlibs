@@ -22,10 +22,7 @@
   The original code is icaltypes.c
 
  ======================================================================*/
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
+#include "config-libical.h"
 #include "icaltypes.h"
 #include "icalerror.h"
 #include "icalmemory.h"

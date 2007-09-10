@@ -28,10 +28,7 @@
 
 ======================================================================*/
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
+#include "config-libical.h"
 #include "icalerror.h"
 #include "icalmemory.h"
 #include "icalparser.h"

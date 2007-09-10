@@ -30,10 +30,7 @@
 #include <assert.h>
 #include <stdio.h> /* For icalerror_warn() */
 
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include "config-libical.h"
 
 #define ICAL_SETERROR_ISFUNC
 
