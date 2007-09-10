@@ -38,7 +38,14 @@ using namespace KBlog;
 MovableType::MovableType( const KUrl &server, QObject *parent )
   : MetaWeblog( server, *new MovableTypePrivate, parent )
 {
-  setUrl( server );
+  kDebug(5323) << "MovableType()";
+}
+
+MovableType::MovableType( const KUrl &server, MovableTypePrivate &dd,
+                        QObject *parent )
+  : MetaWeblog( server, dd, parent )
+{
+  kDebug(5323) << "MovableType()";
 }
 
 MovableType::~MovableType()

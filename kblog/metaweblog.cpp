@@ -36,14 +36,14 @@ using namespace KBlog;
 MetaWeblog::MetaWeblog( const KUrl &server, QObject *parent )
   : Blogger1( server, *new MetaWeblogPrivate, parent )
 {
-  setUrl( server );
+  kDebug(5323) << "MetaWeblog()";
 }
 
 MetaWeblog::MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd,
                         QObject *parent )
   : Blogger1( server, dd, parent )
 {
-  setUrl( server );
+  kDebug(5323) << "MetaWeblog()";
 }
 
 MetaWeblog::~MetaWeblog()

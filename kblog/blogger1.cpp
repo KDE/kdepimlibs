@@ -40,12 +40,14 @@ using namespace KBlog;
 Blogger1::Blogger1( const KUrl &server, QObject *parent )
   : Blog( server, *new Blogger1Private, parent )
 {
+  kDebug(5323) << "Blogger1()";
   setUrl( server );
 }
 
 Blogger1::Blogger1( const KUrl &server, Blogger1Private &dd, QObject *parent )
   : Blog( server, dd, parent )
 {
+  kDebug(5323) << "Blogger1()";
   setUrl( server );
 }
 
