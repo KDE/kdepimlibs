@@ -25,12 +25,12 @@ include_directories(  ${smtp_optional_includes}  )
 ########### next target ###############
 
 set(kio_smtp_PART_SRCS
-   smtp.cc
-   request.cc
-   response.cc
-   capabilities.cc
-   command.cc
-   transactionstate.cc )
+   smtp.cpp
+   request.cpp
+   response.cpp
+   capabilities.cpp
+   command.cpp
+   transactionstate.cpp )
 
 
 kde4_add_plugin(kio_smtp ${kio_smtp_PART_SRCS})

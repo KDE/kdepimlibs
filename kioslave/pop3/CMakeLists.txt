@@ -19,7 +19,7 @@ include_directories(  ${pop3_optional_includes}  )
 
 ########### next target ###############
 
-set(kio_pop3_PART_SRCS pop3.cc )
+set(kio_pop3_PART_SRCS pop3.cpp )
 
 
 kde4_add_plugin(kio_pop3 ${kio_pop3_PART_SRCS})

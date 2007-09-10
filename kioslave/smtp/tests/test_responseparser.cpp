@@ -103,4 +103,4 @@ void ResponseParserTest::testResponseParser()
 }
 
 #include "test_responseparser.moc"
-#include "../response.cc"
+#include "../response.cpp"
