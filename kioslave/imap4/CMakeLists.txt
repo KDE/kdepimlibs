@@ -6,16 +6,16 @@ add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 ########### next target ###############
 
 set(kio_imap4_PART_SRCS 
-   imapcommand.cc 
-   imaplist.cc 
-   mailaddress.cc 
-   mimeheader.cc 
-   imap4.cc 
-   imapinfo.cc 
-   imapparser.cc 
-   mailheader.cc 
-   mimehdrline.cc 
-   mimeio.cc )
+   imapcommand.cpp 
+   imaplist.cpp
+   mailaddress.cpp
+   mimeheader.cpp
+   imap4.cpp
+   imapinfo.cpp
+   imapparser.cpp 
+   mailheader.cpp
+   mimehdrline.cpp
+   mimeio.cpp )
 
 
 kde4_add_plugin(kio_imap4 ${kio_imap4_PART_SRCS})

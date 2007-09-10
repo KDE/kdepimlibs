@@ -5,11 +5,11 @@
 ########### next target ###############
 
 set(kio_mbox_PART_SRCS 
-   mbox.cc 
-   mboxfile.cc 
-   readmbox.cc 
-   stat.cc 
-   urlinfo.cc )
+   mbox.cpp
+   mboxfile.cpp 
+   readmbox.cpp
+   stat.cpp 
+   urlinfo.cpp )
 
 
 kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
