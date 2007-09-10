@@ -243,14 +243,14 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
         prodID += "VERSION:2.0\n";
         calFormat.setApplication( "Outlook", prodID );
 
-        Scheduler::Method method;
+        iTIPMethod method;
         if ( bCompatMethodRequest )
-          method = Scheduler::Request;
+          method = iTIPRequest;
         else if ( bCompatMethodCancled )
-          method = Scheduler::Cancel;
+          method = iTIPCancel;
         else if ( bCompatMethodAccepted || bCompatMethodAcceptedCond ||
                  bCompatMethodDeclined ) {
-          method = Scheduler::Reply;
+          method = iTIPReply;
           bIsReply = true;
         } else {
           // pending(khz): verify whether "0x0c17" is the right tag ???
@@ -264,7 +264,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           if ( tnefMsg->findProp(0x0c17) == "1" ) {
             bIsReply = true;
           }
-          method = Scheduler::Request;
+          method = iTIPRequest;
         }
 
         /// ###  FIXME Need to get this attribute written
