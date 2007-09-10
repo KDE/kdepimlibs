@@ -223,7 +223,7 @@ else() # not WIN32
           endif()
         endforeach()
 
-        if ( _gpgme_config_libs OR _gpgme_config_pthread_libs OR _gpgme_config_pth_libs )
+        if ( _gpgme_config_vanilla_libs OR _gpgme_config_pthread_libs OR _gpgme_config_pth_libs )
 
           exec_program( ${_GPGMECONFIG_EXECUTABLE} ARGS --cflags OUTPUT_VARIABLE _GPGME_CFLAGS )
 
