@@ -29,10 +29,10 @@
 #include <QtCore/QTextStream>
 
 class QTextStream;
-class HTMLExportSettings;
 
 namespace KCal {
 
+class HTMLExportSettings;
 class Calendar;
 class Event;
 class Incidence;

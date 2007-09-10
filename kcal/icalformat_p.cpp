@@ -81,7 +81,7 @@ const int gSecondsPerWeek   = gSecondsPerDay    * 7;
 class ToComponentVisitor : public IncidenceBase::Visitor
 {
   public:
-    ToComponentVisitor( ICalFormatImpl *impl, Scheduler::Method m )
+    ToComponentVisitor( ICalFormatImpl *impl, iTIPMethod m )
       : mImpl( impl ), mComponent( 0 ), mMethod( m ) {}
 
     bool visit( Event *e )
@@ -113,7 +113,7 @@ class ToComponentVisitor : public IncidenceBase::Visitor
   private:
     ICalFormatImpl *mImpl;
     icalcomponent *mComponent;
-    Scheduler::Method mMethod;
+    iTIPMethod mMethod;
 };
 
 class ICalFormatImpl::Private
@@ -157,7 +157,7 @@ QString ICalFormatImpl::loadedProductId() const
 }
 
 icalcomponent *ICalFormatImpl::writeIncidence( IncidenceBase *incidence,
-                                               Scheduler::Method method )
+                                               iTIPMethod method )
 {
   ToComponentVisitor v( this, method );
   if ( incidence->accept(v) ) {
@@ -295,7 +295,7 @@ icalcomponent *ICalFormatImpl::writeEvent( Event *event,
 }
 
 icalcomponent *ICalFormatImpl::writeFreeBusy( FreeBusy *freebusy,
-                                              Scheduler::Method method )
+                                              iTIPMethod method )
 {
   icalcomponent *vfreebusy = icalcomponent_new( ICAL_VFREEBUSY_COMPONENT );
 
@@ -307,7 +307,7 @@ icalcomponent *ICalFormatImpl::writeFreeBusy( FreeBusy *freebusy,
   icalcomponent_add_property(
     vfreebusy, icalproperty_new_dtend( writeICalUtcDateTime( freebusy->dtEnd() ) ) );
 
-  if ( method == Scheduler::Request ) {
+  if ( method == iTIPRequest ) {
     icalcomponent_add_property(
       vfreebusy, icalproperty_new_uid( freebusy->uid().toUtf8() ) );
   }
@@ -2447,35 +2447,35 @@ void ICalFormatImpl::dumpIcalRecurrence( icalrecurrencetype r )
 }
 
 icalcomponent *ICalFormatImpl::createScheduleComponent( IncidenceBase *incidence,
-                                                        Scheduler::Method method )
+                                                        iTIPMethod method )
 {
   icalcomponent *message = createCalendarComponent();
 
   icalproperty_method icalmethod = ICAL_METHOD_NONE;
 
   switch (method) {
-  case Scheduler::Publish:
+  case iTIPPublish:
     icalmethod = ICAL_METHOD_PUBLISH;
     break;
-  case Scheduler::Request:
+  case iTIPRequest:
     icalmethod = ICAL_METHOD_REQUEST;
     break;
-  case Scheduler::Refresh:
+  case iTIPRefresh:
     icalmethod = ICAL_METHOD_REFRESH;
     break;
-  case Scheduler::Cancel:
+  case iTIPCancel:
     icalmethod = ICAL_METHOD_CANCEL;
     break;
-  case Scheduler::Add:
+  case iTIPAdd:
     icalmethod = ICAL_METHOD_ADD;
     break;
-  case Scheduler::Reply:
+  case iTIPReply:
     icalmethod = ICAL_METHOD_REPLY;
     break;
-  case Scheduler::Counter:
+  case iTIPCounter:
     icalmethod = ICAL_METHOD_COUNTER;
     break;
-  case Scheduler::Declinecounter:
+  case iTIPDeclineCounter:
     icalmethod = ICAL_METHOD_DECLINECOUNTER;
     break;
   default:

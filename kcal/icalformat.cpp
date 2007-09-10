@@ -339,7 +339,7 @@ bool ICalFormat::fromString( RecurrenceRule *recurrence, const QString &rrule )
 }
 
 QString ICalFormat::createScheduleMessage( IncidenceBase *incidence,
-                                           Scheduler::Method method )
+                                           iTIPMethod method )
 {
   icalcomponent *message = 0;
 
@@ -484,35 +484,35 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   kDebug(5800) << "ICalFormat::parseScheduleMessage() getting method...";
 
   icalproperty_method icalmethod = icalproperty_get_method( m );
-  Scheduler::Method method;
+  iTIPMethod method;
 
   switch ( icalmethod ) {
   case ICAL_METHOD_PUBLISH:
-    method = Scheduler::Publish;
+    method = iTIPPublish;
     break;
   case ICAL_METHOD_REQUEST:
-    method = Scheduler::Request;
+    method = iTIPRequest;
     break;
   case ICAL_METHOD_REFRESH:
-    method = Scheduler::Refresh;
+    method = iTIPRefresh;
     break;
   case ICAL_METHOD_CANCEL:
-    method = Scheduler::Cancel;
+    method = iTIPCancel;
     break;
   case ICAL_METHOD_ADD:
-    method = Scheduler::Add;
+    method = iTIPAdd;
     break;
   case ICAL_METHOD_REPLY:
-    method = Scheduler::Reply;
+    method = iTIPReply;
     break;
   case ICAL_METHOD_COUNTER:
-    method = Scheduler::Counter;
+    method = iTIPCounter;
     break;
   case ICAL_METHOD_DECLINECOUNTER:
-    method = Scheduler::Declinecounter;
+    method = iTIPDeclineCounter;
     break;
   default:
-    method = Scheduler::NoMethod;
+    method = iTIPNoMethod;
     kDebug(5800) << "ICalFormat::parseScheduleMessage(): Unknow method";
     break;
   }
@@ -580,8 +580,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
     break;
   }
 
-  kDebug(5800) << "ICalFormat::parseScheduleMessage(), status ="
-               << status;
+  kDebug(5800) << "ICalFormat::parseScheduleMessage(), status =" << status;
 
   icalcomponent_free( message );
   icalcomponent_free( calendarComponent );

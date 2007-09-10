@@ -22,12 +22,13 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include "resourcecalendar.moc"
-#include "calendar.h"
+#include "resourcecalendar.h"
 
 #include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>
+
+#include "resourcecalendar.moc"
 
 using namespace KCal;
 
@@ -93,8 +94,6 @@ QString ResourceCalendar::infoText() const
 
 void ResourceCalendar::writeConfig( KConfigGroup &group )
 {
-//  kDebug(5800) << "ResourceCalendar::writeConfig()";
-
   KRES::Resource::writeConfig( group );
 }
 
@@ -135,24 +134,22 @@ void ResourceCalendar::setSubresourceActive( const QString &, bool )
 {
 }
 
-/*virtual*/
 bool ResourceCalendar::removeSubresource( const QString &resource )
 {
-    Q_UNUSED(resource)
+    Q_UNUSED( resource )
     return true;
 }
 
-/*virtual*/
 bool ResourceCalendar::addSubresource( const QString &resource, const QString &parent )
 {
-    Q_UNUSED(resource)
-    Q_UNUSED(parent)
+    Q_UNUSED( resource )
+    Q_UNUSED( parent )
     return true;
 }
 
 QString ResourceCalendar::subresourceType( const QString &resource )
 {
-    Q_UNUSED(resource)
+    Q_UNUSED( resource )
     return QString();
 }
 
@@ -239,6 +236,11 @@ bool ResourceCalendar::save( Incidence *incidence )
   }
 }
 
+bool ResourceCalendar::isSaving()
+{
+  return false;
+}
+
 bool ResourceCalendar::doSave( Incidence *incidence )
 {
   Q_UNUSED( incidence );
@@ -256,6 +258,34 @@ void ResourceCalendar::saveError( const QString &err )
     msg += err;
   }
   emit resourceSaveError( this, msg );
+}
+
+QStringList ResourceCalendar::subresources() const
+{
+  return QStringList();
+}
+
+bool ResourceCalendar::canHaveSubresources() const
+{
+  return false;
+}
+
+bool ResourceCalendar::subresourceActive( const QString &resource ) const
+{
+  Q_UNUSED( resource );
+  return true;
+}
+
+QString ResourceCalendar::labelForSubresource( const QString &resource ) const
+{
+  // the resource identifier is a sane fallback
+  return resource;
+}
+
+QString ResourceCalendar::subresourceIdentifier( Incidence *incidence )
+{
+  Q_UNUSED( incidence );
+  return QString();
 }
 
 bool ResourceCalendar::receivedSaveError() const

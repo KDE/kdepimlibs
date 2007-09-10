@@ -82,7 +82,7 @@ class ICalFormatImpl
     bool populate( Calendar *calendar, icalcomponent *fs );
 
     icalcomponent *writeIncidence( IncidenceBase *incidence,
-                                   Scheduler::Method method = Scheduler::Request );
+                                   iTIPMethod method = iTIPRequest );
 
     icalcomponent *writeTodo( Todo *todo, ICalTimeZones *tzlist = 0,
                               ICalTimeZones *tzUsedList = 0 );
@@ -91,7 +91,7 @@ class ICalFormatImpl
                                ICalTimeZones *tzUsedList = 0 );
 
     icalcomponent *writeFreeBusy( FreeBusy *freebusy,
-                                  Scheduler::Method method = Scheduler::Publish );
+                                  iTIPMethod method = iTIPPublish );
 
     icalcomponent *writeJournal( Journal *journal, ICalTimeZones *tzlist = 0,
                                  ICalTimeZones *tzUsedList = 0 );
@@ -206,16 +206,17 @@ class ICalFormatImpl
 
     static icaldurationtype writeICalDuration( const Duration &duration );
 
-    static Duration readICalDuration( icaldurationtype );
+    static Duration readICalDuration( icaldurationtype d );
 
     static icaldatetimeperiodtype writeICalDatePeriod( const QDate &date );
 
     icalcomponent *createCalendarComponent( Calendar *calendar = 0 );
 
-    icalcomponent *createScheduleComponent( IncidenceBase *, Scheduler::Method );
+    icalcomponent *createScheduleComponent( IncidenceBase *incidence,
+                                            iTIPMethod method );
 
   protected:
-    void dumpIcalRecurrence( icalrecurrencetype );
+    void dumpIcalRecurrence( icalrecurrencetype r );
 
   private:
     //@cond PRIVATE

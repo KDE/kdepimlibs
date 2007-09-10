@@ -21,13 +21,12 @@
 */
 
 #include "scheduler.h"
-
+#include "calendar.h"
 #include "event.h"
 #include "todo.h"
 #include "freebusy.h"
-#include "icalformat.h"
-#include "calendar.h"
 #include "freebusycache.h"
+#include "icalformat.h"
 
 #include <klocale.h>
 #include <kdebug.h>
@@ -36,63 +35,84 @@
 
 using namespace KCal;
 
-ScheduleMessage::ScheduleMessage( IncidenceBase *incidence, int method,
-                                  ScheduleMessage::Status status )
-  : d( 0 )
+//@cond PRIVATE
+class KCal::ScheduleMessage::Private
 {
-  mIncidence = incidence;
-  mMethod = method;
-  mStatus = status;
+  public:
+    Private() {}
+
+    IncidenceBase *mIncidence;
+    iTIPMethod mMethod;
+    Status mStatus;
+    QString mError;
+};
+//@endcond
+
+ScheduleMessage::ScheduleMessage( IncidenceBase *incidence,
+                                  iTIPMethod method,
+                                  ScheduleMessage::Status status )
+  : d( new KCal::ScheduleMessage::Private )
+{
+  d->mIncidence = incidence;
+  d->mMethod = method;
+  d->mStatus = status;
+}
+
+ScheduleMessage::~ScheduleMessage()
+{
+  delete d;
 }
 
 IncidenceBase *ScheduleMessage::event()
 {
-  return mIncidence;
+  return d->mIncidence;
 }
 
-int ScheduleMessage::method()
+iTIPMethod ScheduleMessage::method()
 {
-  return mMethod;
+  return d->mMethod;
 }
 
 ScheduleMessage::Status ScheduleMessage::status()
 {
-  return mStatus;
+  return d->mStatus;
 }
 
 QString ScheduleMessage::statusName( ScheduleMessage::Status status )
 {
   switch( status ) {
   case PublishNew:
-    return i18nc( "@item", "Publish" );
+    return i18nc( "@item new message posting", "New Message Publish" );
   case PublishUpdate:
-    return i18nc( "@item", "Updated Publish" );
+    return i18nc( "@item updated message", "Updated Message Published" );
   case Obsolete:
-    return i18nc( "@item", "Obsolete" );
+    return i18nc( "@item obsolete status", "Obsolete" );
   case RequestNew:
-    return i18nc( "@item", "New Request" );
+    return i18nc( "@item request new message posting", "Request New Message" );
   case RequestUpdate:
-    return i18nc( "@item", "Updated Request" );
+    return i18nc( "@item request updated posting", "Request Updated Message" );
   default:
-    return i18nc( "@item", "Unknown Status: %1", status );
+    return i18nc( "@item unknown status", "Unknown Status: %1", status );
   }
 }
 
 QString ScheduleMessage::error()
 {
-  return mError;
+  return d->mError;
 }
 
 //@cond PRIVATE
 struct KCal::Scheduler::Private
 {
-  Private() : mFreeBusyCache( 0 ) {}
-
-  FreeBusyCache *mFreeBusyCache;
+  Private()
+    : mFreeBusyCache( 0 )
+    {
+    }
+    FreeBusyCache *mFreeBusyCache;
 };
 //@endcond
 
-Scheduler::Scheduler( Calendar *calendar ) : d( 0 )
+Scheduler::Scheduler( Calendar *calendar ) : d( new KCal::Scheduler::Private )
 {
   mCalendar = calendar;
   mFormat = new ICalFormat();
@@ -102,6 +122,7 @@ Scheduler::Scheduler( Calendar *calendar ) : d( 0 )
 Scheduler::~Scheduler()
 {
   delete mFormat;
+  delete d;
 }
 
 void Scheduler::setFreeBusyCache( FreeBusyCache *c )
@@ -114,27 +135,27 @@ FreeBusyCache *Scheduler::freeBusyCache() const
   return d->mFreeBusyCache;
 }
 
-bool Scheduler::acceptTransaction( IncidenceBase *incidence, Method method,
+bool Scheduler::acceptTransaction( IncidenceBase *incidence, iTIPMethod method,
                                    ScheduleMessage::Status status )
 {
   kDebug(5800) << "Scheduler::acceptTransaction, method=" << methodName( method );
 
   switch ( method ) {
-  case Publish:
+  case iTIPPublish:
     return acceptPublish( incidence, status, method );
-  case Request:
+  case iTIPRequest:
     return acceptRequest( incidence, status );
-  case Add:
+  case iTIPAdd:
     return acceptAdd( incidence, status );
-  case Cancel:
+  case iTIPCancel:
     return acceptCancel( incidence, status );
-  case Declinecounter:
+  case iTIPDeclineCounter:
     return acceptDeclineCounter( incidence, status );
-  case Reply:
+  case iTIPReply:
     return acceptReply( incidence, status, method );
-  case Refresh:
+  case iTIPRefresh:
     return acceptRefresh( incidence, status );
-  case Counter:
+  case iTIPCounter:
     return acceptCounter( incidence, status );
   default:
     break;
@@ -143,49 +164,49 @@ bool Scheduler::acceptTransaction( IncidenceBase *incidence, Method method,
   return false;
 }
 
-QString Scheduler::methodName( Method method )
+QString Scheduler::methodName( iTIPMethod method )
 {
   switch ( method ) {
-  case Publish:
+  case iTIPPublish:
     return QLatin1String( "Publish" );
-  case Request:
+  case iTIPRequest:
     return QLatin1String( "Request" );
-  case Refresh:
+  case iTIPRefresh:
     return QLatin1String( "Refresh" );
-  case Cancel:
+  case iTIPCancel:
     return QLatin1String( "Cancel" );
-  case Add:
+  case iTIPAdd:
     return QLatin1String( "Add" );
-  case Reply:
+  case iTIPReply:
     return QLatin1String( "Reply" );
-  case Counter:
+  case iTIPCounter:
     return QLatin1String( "Counter" );
-  case Declinecounter:
+  case iTIPDeclineCounter:
     return QLatin1String( "Decline Counter" );
   default:
     return QLatin1String( "Unknown" );
   }
 }
 
-QString Scheduler::translatedMethodName( Method method )
+QString Scheduler::translatedMethodName( iTIPMethod method )
 {
   switch ( method ) {
-  case Publish:
+  case iTIPPublish:
     return i18nc( "@item event, to-do, journal or freebusy posting", "Publish" );
-  case Request:
+  case iTIPRequest:
     return i18nc( "@item event, to-do or freebusy scheduling requests", "Request" );
-  case Reply:
+  case iTIPReply:
     return i18nc( "@item event, to-do or freebusy reply to request", "Reply" );
-  case Add:
+  case iTIPAdd:
     return i18nc(
-      "@item event, to-do or journal additional properties request", "Add" );
-  case Cancel:
+      "@item event, to-do or journal additional property request", "Add" );
+  case iTIPCancel:
     return i18nc( "@item event, to-do or journal cancellation notice", "Cancel" );
-  case Refresh:
+  case iTIPRefresh:
     return i18nc( "@item event or to-do description update request", "Refresh" );
-  case Counter:
-    return i18nc( "@item event or to-do description counter proposal submission", "Counter" );
-  case Declinecounter:
+  case iTIPCounter:
+    return i18nc( "@item event or to-do submit counter proposal", "Counter" );
+  case iTIPDeclineCounter:
     return i18nc( "@item event or to-do decline a counter proposal", "Decline Counter" );
   default:
     return i18nc( "@item no method", "Unknown" );
@@ -198,15 +219,18 @@ bool Scheduler::deleteTransaction(IncidenceBase *)
 }
 
 bool Scheduler::acceptPublish( IncidenceBase *newIncBase,
-                               ScheduleMessage::Status status, Method method )
+                               ScheduleMessage::Status status,
+                               iTIPMethod method )
 {
   if( newIncBase->type() == "FreeBusy" ) {
     return acceptFreeBusy( newIncBase, method );
   }
 
   bool res = false;
+
   kDebug(5800) << "Scheduler::acceptPublish, status="
-            << ScheduleMessage::statusName( status );
+               << ScheduleMessage::statusName( status );
+
   Incidence *newInc = static_cast<Incidence *>( newIncBase );
   Incidence *calInc = mCalendar->incidence( newIncBase->uid() );
   switch ( status ) {
@@ -296,15 +320,17 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence, ScheduleMessage::Status 
   return ret;
 }
 
-bool Scheduler::acceptDeclineCounter( IncidenceBase *incidence, ScheduleMessage::Status status )
+bool Scheduler::acceptDeclineCounter( IncidenceBase *incidence,
+                                      ScheduleMessage::Status status )
 {
   Q_UNUSED( status );
   deleteTransaction( incidence );
   return false;
 }
 
-bool Scheduler::acceptReply( IncidenceBase *incidence, ScheduleMessage::Status status,
-                             Method method )
+bool Scheduler::acceptReply( IncidenceBase *incidence,
+                             ScheduleMessage::Status status,
+                             iTIPMethod method )
 {
   Q_UNUSED( status );
   if ( incidence->type() == "FreeBusy" ) {
@@ -365,22 +391,25 @@ bool Scheduler::acceptReply( IncidenceBase *incidence, ScheduleMessage::Status s
           it != attendeesNew.constEnd(); ++it ) {
       Attendee *attNew = *it;
       QString msg =
-        i18n( "%1 wants to attend %2 but was not invited.", attNew->fullName(),
-              ( ev ? ev->summary() : to->summary() ) );
+        i18nc( "@info", "%1 wants to attend %2 but was not invited.",
+               attNew->fullName(),
+               ( ev ? ev->summary() : to->summary() ) );
       if ( !attNew->delegator().isEmpty() ) {
-        msg =
-          i18n( "%1 wants to attend %2 on behalf of %3.", attNew->fullName(),
-                ( ev ? ev->summary() : to->summary() ), attNew->delegator() );
+        msg = i18nc( "@info", "%1 wants to attend %2 on behalf of %3.",
+                     attNew->fullName(),
+                     ( ev ? ev->summary() : to->summary() ), attNew->delegator() );
       }
       if ( KMessageBox::questionYesNo(
-             0, msg, i18n( "Uninvited attendee" ),
-             KGuiItem( i18n( "Accept Attendance" ) ),
-             KGuiItem( i18n( "Reject Attendance" ) ) ) != KMessageBox::Yes ) {
+             0, msg, i18nc( "@title", "Uninvited attendee" ),
+             KGuiItem( i18nc( "@option", "Accept Attendance" ) ),
+             KGuiItem( i18nc( "@option", "Reject Attendance" ) ) ) != KMessageBox::Yes ) {
         KCal::Incidence *cancel = dynamic_cast<Incidence*>( incidence );
         if ( cancel ) {
-          cancel->addComment( i18n( "The organizer rejected your attendance at this meeting." ) );
+          cancel->addComment(
+            i18nc( "@info",
+                   "The organizer rejected your attendance at this meeting." ) );
         }
-        performTransaction( cancel ? cancel : incidence, Scheduler::Cancel, attNew->fullName() );
+        performTransaction( cancel ? cancel : incidence, iTIPCancel, attNew->fullName() );
         delete cancel;
         continue;
       }
@@ -402,11 +431,11 @@ bool Scheduler::acceptReply( IncidenceBase *incidence, ScheduleMessage::Status s
     if ( attendeeAdded ) {
       if ( ev ) {
         ev->setRevision( ev->revision() + 1 );
-        performTransaction( ev, Scheduler::Request );
+        performTransaction( ev, iTIPRequest );
       }
       if ( to ) {
         to->setRevision( ev->revision() + 1 );
-        performTransaction( to, Scheduler::Request );
+        performTransaction( to, iTIPRequest );
       }
     }
 
@@ -454,7 +483,7 @@ bool Scheduler::acceptCounter( IncidenceBase *incidence, ScheduleMessage::Status
   return false;
 }
 
-bool Scheduler::acceptFreeBusy( IncidenceBase *incidence, Method method )
+bool Scheduler::acceptFreeBusy( IncidenceBase *incidence, iTIPMethod method )
 {
   if ( !d->mFreeBusyCache ) {
     kError() << "KCal::Scheduler: no FreeBusyCache.";
@@ -466,10 +495,10 @@ bool Scheduler::acceptFreeBusy( IncidenceBase *incidence, Method method )
   kDebug(5800) << "acceptFreeBusy:: freeBusyDirName:" << freeBusyDir();
 
   Person from;
-  if( method == Scheduler::Publish ) {
+  if( method == iTIPPublish ) {
     from = freebusy->organizer();
   }
-  if ( ( method == Scheduler::Reply ) && ( freebusy->attendeeCount() == 1 ) ) {
+  if ( ( method == iTIPReply ) && ( freebusy->attendeeCount() == 1 ) ) {
     Attendee *attendee = freebusy->attendees().first();
     from.setName( attendee->name() );
     from.setEmail( attendee->email() );

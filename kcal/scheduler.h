@@ -21,12 +21,27 @@
 #ifndef KCAL_SCHEDULER_H
 #define KCAL_SCHEDULER_H
 
+#include "kcal_export.h"
+
 #include <QtCore/QString>
 #include <QtCore/QList>
 
-#include "kcal_export.h"
-
 namespace KCal {
+
+/**
+   iTIP methods.
+*/
+enum iTIPMethod {
+  iTIPPublish,       /**< Event, to-do, journal or freebusy posting */
+  iTIPRequest,       /**< Event, to-do or freebusy scheduling request */
+  iTIPReply,         /**< Event, to-do or freebusy reply to request */
+  iTIPAdd,           /**< Event, to-do or journal additional property request */
+  iTIPCancel,        /**< Event, to-do or journal cancellation notice */
+  iTIPRefresh,       /**< Event or to-do description update request */
+  iTIPCounter,       /**< Event or to-do submit counter proposal */
+  iTIPDeclineCounter,/**< Event or to-do decline a counter proposal */
+  iTIPNoMethod       /**< No method */
+};
 
 class IncidenceBase;
 class Calendar;
@@ -34,11 +49,11 @@ class ICalFormat;
 class FreeBusyCache;
 
 /**
-  This class provides an encapsulation of a scheduling message. It associates an
-  incidence with a method and status information. This class is used by the
-  Scheduler class.
+  @brief
+  A Scheduling message class.
 
-  @short A Scheduling message
+  This class provides an encapsulation of a scheduling message.
+  It associates an incidence with an iTIPMethod and status information.
 */
 class KCAL_EXPORT ScheduleMessage
 {
@@ -47,20 +62,24 @@ class KCAL_EXPORT ScheduleMessage
       Message status.
     */
     enum Status {
-      PublishNew,      /**< */
-      PublishUpdate,   /**< */
-      Obsolete,        /**< */
-      RequestNew,      /**< */
-      RequestUpdate,   /**< */
-      Unknown          /**< */
+      PublishNew,      /**< New message posting */
+      PublishUpdate,   /**< Updated message */
+      Obsolete,        /**< obsolete */
+      RequestNew,      /**< Request new message posting */
+      RequestUpdate,   /**< Request updated message */
+      Unknown          /**< No status */
     };
 
     /**
-      Creates a scheduling message with method as defined in Scheduler::Method
+      Creates a scheduling message with method as defined in iTIPMethod
       and a status.
     */
-    ScheduleMessage( IncidenceBase *, int method, Status status );
-    ~ScheduleMessage() {}
+    ScheduleMessage( IncidenceBase *incidence, iTIPMethod method, Status status );
+
+    /**
+      Destructor.
+    */
+    ~ScheduleMessage();
 
     /**
       Returns the event associated with this message.
@@ -70,7 +89,7 @@ class KCAL_EXPORT ScheduleMessage
     /**
       Returns the iTIP method associated with this message.
     */
-    int method();
+    iTIPMethod method();
 
     /**
       Returns the status of this message.
@@ -88,11 +107,6 @@ class KCAL_EXPORT ScheduleMessage
     QString error();
 
   private:
-    IncidenceBase *mIncidence;
-    int mMethod;
-    Status mStatus;
-    QString mError;
-
     struct Private;
     Private *const d;
 };
@@ -105,21 +119,6 @@ class KCAL_EXPORT ScheduleMessage
 class KCAL_EXPORT Scheduler
 {
   public:
-    /**
-      iTIP methods.
-    */
-    enum Method {
-      Publish,         /**< Event, to-do, journal or freebusy posting */
-      Request,         /**< Event, to-do or freebusy scheduling request */
-      Reply,           /**< Event, to-do or freebusy reply to request */
-      Add,             /**< Event, to-do or journal additional properties request */
-      Cancel,          /**< Event, to-do or journal cancellation notice */
-      Refresh,         /**< Event or to-do description update request */
-      Counter,         /**< Event or to-do description counter proposal submission */
-      Declinecounter,  /**< Event or to-do decline a counter proposal */
-      NoMethod         /**< No method */
-    };
-
     /**
       Creates a scheduler for calendar specified as argument.
     */
@@ -135,22 +134,23 @@ class KCAL_EXPORT Scheduler
       Performs iTIP transaction on incidence. The method is specified as the
       method argument and can be any valid iTIP method.
 
-      @param incidence the incidence for the transaction
-      @param method the iTIP transaction method to use
+      @param incidence the incidence for the transaction.
+      @param method the iTIP transaction method to use.
     */
     virtual bool performTransaction( IncidenceBase *incidence,
-                                     Method method ) = 0;
+                                     iTIPMethod method ) = 0;
 
     /**
       Performs iTIP transaction on incidence to specified recipient(s). The
       method is specified as the method argumanet and can be any valid iTIP
       method.
 
-      @param incidence the incidence for the transaction
-      @param method the iTIP transaction method to use
-      @param recipients the receipients of the transaction
+      @param incidence the incidence for the transaction.
+      @param method the iTIP transaction method to use.
+      @param recipients the receipients of the transaction.
     */
-    virtual bool performTransaction( IncidenceBase *incidence, Method method,
+    virtual bool performTransaction( IncidenceBase *incidence,
+                                     iTIPMethod method,
                                      const QString &recipients ) = 0;
 
     /**
@@ -164,21 +164,21 @@ class KCAL_EXPORT Scheduler
       processing a iTIP message with the current calendar and specifies the
       action to be taken for this incidence.
 
-      @param method iTIP transaction method to check
-      @param status scheduling status
+      @param method iTIP transaction method to check.
+      @param status scheduling status.
     */
-    bool acceptTransaction( IncidenceBase *, Method method,
+    bool acceptTransaction( IncidenceBase *, iTIPMethod method,
                             ScheduleMessage::Status status );
 
     /**
       Returns a machine-readable name for a iTIP method.
     */
-    static QString methodName( Method );
+    static QString methodName( iTIPMethod method );
 
     /**
       Returns a translated human-readable name for a iTIP method.
     */
-    static QString translatedMethodName( Method );
+    static QString translatedMethodName( iTIPMethod method );
 
     virtual bool deleteTransaction( IncidenceBase *incidence );
 
@@ -198,15 +198,15 @@ class KCAL_EXPORT Scheduler
     FreeBusyCache *freeBusyCache() const;
 
   protected:
-    bool acceptPublish( IncidenceBase *, ScheduleMessage::Status status, Method method );
+    bool acceptPublish( IncidenceBase *, ScheduleMessage::Status status, iTIPMethod method );
     bool acceptRequest( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptAdd( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptDeclineCounter( IncidenceBase *, ScheduleMessage::Status status );
-    bool acceptReply( IncidenceBase *, ScheduleMessage::Status status, Method method );
+    bool acceptReply( IncidenceBase *, ScheduleMessage::Status status, iTIPMethod method );
     bool acceptRefresh( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptCounter( IncidenceBase *, ScheduleMessage::Status status );
-    bool acceptFreeBusy( IncidenceBase *, Method method );
+    bool acceptFreeBusy( IncidenceBase *, iTIPMethod method );
 
     Calendar *mCalendar;
     ICalFormat *mFormat;

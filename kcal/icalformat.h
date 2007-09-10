@@ -148,7 +148,7 @@ class KCAL_EXPORT ICalFormat : public CalFormat
       @return a QString containing the message if successful; 0 otherwise.
     */
     QString createScheduleMessage( IncidenceBase *incidence,
-                                   Scheduler::Method method );
+                                   iTIPMethod method );
 
     /**
       Parses a Calendar scheduling message string into ScheduleMessage object.

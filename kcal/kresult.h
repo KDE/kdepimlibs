@@ -18,6 +18,13 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA  02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and
+  defines the CalendarLocal class.
+
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+*/
 #ifndef KRESULT_H
 #define KRESULT_H
 
@@ -27,8 +34,9 @@
 namespace KCal {
 
 /**
-  This class represents the result of an operation. It's meant to be used as
-  return value of functions for returning status and especially error
+  @brief
+  This class represents the result of an operation. It's meant to be used
+  as return value of functions for returning status and especially error
   information.
 
   There are three main types of result: Ok (operation successful completed),
@@ -137,14 +145,18 @@ class KCAL_EXPORT KResult
 
     /**
       Creates a KResult object of the specified Type.
+      @param type is the result #Type.
     */
-    explicit KResult( Type );
+    explicit KResult( Type type );
 
     /**
       Creates a KResult object of the specified ErrorType and an optional
       detailed error message.
+      @param error is the #ErrorType.
+      @param details is a QString containing optional details to add
+      to the message corresponding to this error.
     */
-    explicit KResult( ErrorType, const QString &details = QString() );
+    explicit KResult( ErrorType error, const QString &details = QString() );
 
     /**
       Destroys the result.
@@ -181,6 +193,7 @@ class KCAL_EXPORT KResult
     /**
       Returns a translated string describing the result corresponding to Type
       and ErrorType.
+      @see fullMessage().
     */
     QString message() const;
 
@@ -190,9 +203,11 @@ class KCAL_EXPORT KResult
       information like the URL which was tried, the file which could not be
       written or which parameter was missing.
 
+      @param details is a QString containing details to add to the message
+      for this error.
       @see details().
     */
-    void setDetails( const QString & );
+    void setDetails( const QString &details );
 
     /**
       Returns the detailed error message.
@@ -201,46 +216,45 @@ class KCAL_EXPORT KResult
     QString details() const;
 
     /**
-      Return full error message. This includes the type-specific message (see
-      message()) and the detailed message (see details()).
+      Returns the full error message. This includes the type-specific message
+      (see message()) and the detailed message (see details()).
     */
     QString fullMessage() const;
 
     /**
-      Chain result objects. This can be used to remember the cause of an error.
+      Chains result objects. This can be used to remember the cause of an error.
       The full error messages including the messages from chained objects can be
       accessed through chainedMessage().
+      @param result is another KResult to chain this one to.
     */
-    KResult &chain( const KResult & );
+    KResult &chain( const KResult &result );
 
     /**
-      Return true, if the KResult object has a chained KResult object, otherwise
-      return false.
+      Returns true if the KResult object has a chained KResult object;
+      else returns false.
     */
     bool hasChainedResult() const;
 
     /**
-      Return chained KResult object.
+      Returns a chained KResult object.
     */
     KResult chainedResult() const;
 
     /**
-      Return error message including full details of all chained messages. This
-      can constitute a backtrace of a error.
+      Returns an error message including full details of all chained messages.
+      This can constitute a backtrace of a error.
     */
     QString chainedMessage() const;
 
   private:
-    Type mType;
-    ErrorType mErrorType;
-    QString mDetails;
-    KResult *mChainedResult;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 /**
+  @brief
   Convenience class for creating a KResult of type Ok.
 */
 class KCAL_EXPORT KResultOk : public KResult
@@ -252,11 +266,14 @@ class KCAL_EXPORT KResultOk : public KResult
     KResultOk() : KResult( Ok ), d( 0 ) {}
 
   private:
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 /**
+  @brief
   Convenience class for creating a KResult of type InProgress.
 */
 class KCAL_EXPORT KResultInProgress : public KResult
@@ -268,11 +285,14 @@ class KCAL_EXPORT KResultInProgress : public KResult
     KResultInProgress() : KResult( InProgress ), d( 0 ) {}
 
   private:
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 /**
+  @brief
   Convenience class for creating a KResult of type Error.
 */
 class KCAL_EXPORT KResultError : public KResult
@@ -286,19 +306,28 @@ class KCAL_EXPORT KResultError : public KResult
     /**
       Create KResult object of type Error with given error type and optionally
       a detailed error message.
+
+      @param error is the #ErrorType.
+      @param details is a QString containing optional details to add
+      to the message corresponding to this error.
     */
     explicit KResultError( ErrorType error, const QString &details = QString() )
       : KResult( error, details ), d( 0 ) {}
 
     /**
       Create KResult object of type Error with given detailed error message.
+
+      @param details is a QString containing optional details to add
+      to the message corresponding to this error.
     */
     KResultError( const QString &details ) :
       KResult( Undefined, details ), d( 0 ) {}
 
   private:
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond PRIVATE
 };
 
 }

@@ -5,28 +5,27 @@ File                  | Krazy | Doxygen | D-Ptr | UnitTst | Qt4Port | Who
 confirmsavedialog     |       |         |       |         |    D    |
 customproperties      |   D   |    D    |   D   |         |    D    | Allen
 dndfactory            |   D   |         |   D   |         |    D    | Allen
-dummyscheduler        |       |         |   D   |         |    D    |
-freebusycache         |       |         |  n/a  |   n/a   |    D    | Allen
+dummyscheduler        |   D   |         |   D   |         |    D    |
 freebusyurlstore      |       |         |   D   |         |    D    |
 htmlexport            |       |         |   D   |         |    D    |
 icaldrag              |       |         |       |         |    D    |
 icalformat            |   D   |    D    |   D   |         |    D    | Allen
 icalformat_p          |   D   |         |   D   |         |    D    | Allen
 icaltimezones         |       |         |   D   |         |    D    |
-imipscheduler         |       |         |       |         |    D    |
+imipscheduler         |   D   |         |   D   |         |    D    |
 incidenceformatter    |       |         |       |         |    D    | Allen
-kresult               |   D   |         |       |         |    D    |
+kresult               |   D   |    D    |   D   |         |    D    |
 qtopiaformat          |       |         |       |         |    D    |
 recurrence            |   D   |         |   D   |         |    D    |
 recurrencerule        |   D   |         |   D   |         |    D    |
 resourcecachedconfig  |   D   |         |   D   |         |    D    |
 resourcecached        |       |         |   D   |         |    D    |
-resourcecalendar      |       |         |   D   |         |    D    |
+resourcecalendar      |   D   |         |   D   |         |    D    |
 resourcelocalconfig   |       |         |       |         |    D    |
 resourcelocaldirconfig|       |         |       |         |    D    |
 resourcelocaldir      |       |         |       |         |    D    |
 resourcelocal         |   D   |    D    |   D   |    X    |    D    | Narayan
-scheduler             |       |         |       |         |    D    |
+scheduler             |   D   |         |   D   |         |    D    |
 sortablelist.h        |   D   |    D    |  n/a  |    D    |    D    |
 vcaldrag              |       |         |       |         |    D    |
 vcalformat            |   D   |         |   D   |         |    D    | Allen
@@ -48,6 +47,7 @@ event                 |   D   |    D    |   D   |    D    |    D    | Allen
 exceptions            |   D   |    D    |   D   |    D    |    D    | Allen
 filestorage           |   D   |    D    |   D   |    D    |    D    | Allen
 freebusy              |   D   |    D    |   D   |    D    |    D    | Allen
+freebusycache         |   D   |    D    |  n/a  |   n/a   |    D    | Allen
 incidence             |   D   |    D    |   D   |   n/a   |    D    | Allen
 incidencebase         |   D   |    D    |   D   |   n/a   |    D    | Allen
 journal               |   D   |    D    |   D   |    D    |    D    | Allen

@@ -750,21 +750,21 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
   }
 
   switch ( msg->method() ) {
-  case Scheduler::Publish:
+  case iTIPPublish:
     return i18n( "This event has been published" );
-  case Scheduler::Request:
+  case iTIPRequest:
     if ( event->revision() > 0 ) {
       return i18n( "<h2>This meeting has been updated</h2>" );
     } else {
       return i18n( "You have been invited to this meeting" );
     }
-  case Scheduler::Refresh:
+  case iTIPRefresh:
     return i18n( "This invitation was refreshed" );
-  case Scheduler::Cancel:
+  case iTIPCancel:
     return i18n( "This meeting has been canceled" );
-  case Scheduler::Add:
+  case iTIPAdd:
     return i18n( "Addition to the meeting invitation" );
-  case Scheduler::Reply:
+  case iTIPReply:
   {
     Attendee::List attendees = event->attendees();
     if( attendees.count() == 0 ) {
@@ -832,11 +832,11 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     }
     break;
   }
-  case Scheduler::Counter:
+  case iTIPCounter:
     return i18n( "Sender makes this counter proposal" );
-  case Scheduler::Declinecounter:
+  case iTIPDeclineCounter:
     return i18n( "Sender declines the counter proposal" );
-  case Scheduler::NoMethod:
+  case iTIPNoMethod:
     return i18n( "Error: iMIP message with unknown method: '%1'", msg->method() );
   }
   return QString();
@@ -849,21 +849,21 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
   }
 
   switch ( msg->method() ) {
-  case Scheduler::Publish:
+  case iTIPPublish:
     return i18n( "This task has been published" );
-  case Scheduler::Request:
+  case iTIPRequest:
     if ( todo->revision() > 0 ) {
       return i18n( "This task has been updated" );
     } else {
       return i18n( "You have been assigned this task" );
     }
-  case Scheduler::Refresh:
+  case iTIPRefresh:
     return i18n( "This task was refreshed" );
-  case Scheduler::Cancel:
+  case iTIPCancel:
     return i18n( "This task was canceled" );
-  case Scheduler::Add:
+  case iTIPAdd:
     return i18n( "Addition to the task" );
-  case Scheduler::Reply:
+  case iTIPReply:
   {
     Attendee::List attendees = todo->attendees();
     if ( attendees.count() == 0 ) {
@@ -905,11 +905,11 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
     }
     break;
   }
-  case Scheduler::Counter:
+  case iTIPCounter:
     return i18n( "Sender makes this counter proposal" );
-  case Scheduler::Declinecounter:
+  case iTIPDeclineCounter:
     return i18n( "Sender declines the counter proposal" );
-  case Scheduler::NoMethod:
+  case iTIPNoMethod:
     return i18n( "Error: iMIP message with unknown method: '%1'", msg->method() );
   }
   return QString();
@@ -923,17 +923,17 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
   }
 
   switch ( msg->method() ) {
-  case Scheduler::Publish:
+  case iTIPPublish:
     return i18n( "This journal has been published" );
-  case Scheduler::Request:
+  case iTIPRequest:
     return i18n( "You have been assigned this journal" );
-  case Scheduler::Refresh:
+  case iTIPRefresh:
     return i18n( "This journal was refreshed" );
-  case Scheduler::Cancel:
+  case iTIPCancel:
     return i18n( "This journal was canceled" );
-  case Scheduler::Add:
+  case iTIPAdd:
     return i18n( "Addition to the journal" );
-  case Scheduler::Reply:
+  case iTIPReply:
   {
     Attendee::List attendees = journal->attendees();
     if ( attendees.count() == 0 ) {
@@ -967,11 +967,11 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
     }
     break;
   }
-  case Scheduler::Counter:
+  case iTIPCounter:
     return i18n( "Sender makes this counter proposal" );
-  case Scheduler::Declinecounter:
+  case iTIPDeclineCounter:
     return i18n( "Sender declines the counter proposal" );
-  case Scheduler::NoMethod:
+  case iTIPNoMethod:
     return i18n( "Error: iMIP message with unknown method: '%1'", msg->method() );
   }
   return QString();
@@ -984,17 +984,17 @@ static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
   }
 
   switch ( msg->method() ) {
-  case Scheduler::Publish:
+  case iTIPPublish:
     return i18n( "This free/busy list has been published" );
-  case Scheduler::Request:
+  case iTIPRequest:
     return i18n( "The free/busy list has been requested" );
-  case Scheduler::Refresh:
+  case iTIPRefresh:
     return i18n( "This free/busy list was refreshed" );
-  case Scheduler::Cancel:
+  case iTIPCancel:
     return i18n( "This free/busy list was canceled" );
-  case Scheduler::Add:
+  case iTIPAdd:
     return i18n( "Addition to the free/busy list" );
-  case Scheduler::NoMethod:
+  case iTIPNoMethod:
   default:
     return i18n( "Error: Free/Busy iMIP message with unknown method: '%1'", msg->method() );
   }
@@ -1134,10 +1134,10 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
   Incidence *incidence = dynamic_cast<Incidence*>( incBase );
   switch ( msg->method() ) {
-  case Scheduler::Publish:
-  case Scheduler::Request:
-  case Scheduler::Refresh:
-  case Scheduler::Add:
+  case iTIPPublish:
+  case iTIPRequest:
+  case iTIPRefresh:
+  case iTIPAdd:
   {
     if ( incidence && incidence->revision() > 0 ) {
       html += "<td colspan=\"9\">";
@@ -1174,12 +1174,12 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     break;
   }
 
-  case Scheduler::Cancel:
+  case iTIPCancel:
     // Cancel event from my calendar
     html += helper->makeLink( "cancel", i18n( "[Remove this from my calendar]" ) );
     break;
 
-  case Scheduler::Reply:
+  case iTIPReply:
     // Enter this into my calendar
     if ( incBase->type() == "Todo" ) {
       html += helper->makeLink( "reply", i18n( "[Enter this into my task list]" ) );
@@ -1188,9 +1188,9 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     }
     break;
 
-  case Scheduler::Counter:
-  case Scheduler::Declinecounter:
-  case Scheduler::NoMethod:
+  case iTIPCounter:
+  case iTIPDeclineCounter:
+  case iTIPNoMethod:
     break;
   }
 
@@ -1204,8 +1204,8 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
       html += string2HTML( sDescr ) + "</td></tr></table>";
     }
     QStringList comments = incidence->comments();
-    if ( ( msg->method() == Scheduler::Request ||
-           msg->method() == Scheduler::Cancel ) && !comments.isEmpty() ) {
+    if ( ( msg->method() == iTIPRequest ||
+           msg->method() == iTIPCancel ) && !comments.isEmpty() ) {
       html += "<br><u>" + i18n( "Comments:" ) +
               "</u><br><table border=\"0\"><tr><td>&nbsp;</td><td><ul>";
       for ( int i = 0; i < comments.count(); ++i ) {

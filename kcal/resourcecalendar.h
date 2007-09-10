@@ -51,7 +51,7 @@ namespace KCal {
 */
 class KCAL_EXPORT ResourceCalendar : public KRES::Resource
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     ResourceCalendar();
     explicit ResourceCalendar( const KConfigGroup &group );
@@ -112,10 +112,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       Return true if a save operation is still in progress, otherwise return
       false.
     */
-    virtual bool isSaving()
-    {
-      return false;
-    }
+    virtual bool isSaving();
 
     /**
       Inhibit or allow saves, overriding the save policy set by setSavePolicy().
@@ -427,36 +424,22 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       In most cases, resources do not have subresources, so this is
       by default just empty.
     */
-    virtual QStringList subresources() const
-    {
-      return QStringList();
-    }
+    virtual QStringList subresources() const;
 
     /**
      * Is this resource capable of having subresources or not?
      */
-    virtual bool canHaveSubresources() const
-    {
-      return false;
-    }
+    virtual bool canHaveSubresources() const;
 
     /**
       Is this subresource active or not?
     */
-    virtual bool subresourceActive( const QString &resource ) const
-    {
-      Q_UNUSED( resource );
-      return true;
-    }
+    virtual bool subresourceActive( const QString &resource ) const;
 
     /**
       What is the label for this subresource?
      */
-    virtual const QString labelForSubresource( const QString &resource ) const
-    {
-       // the resource identifier is a sane fallback
-       return resource;
-    }
+    virtual QString labelForSubresource( const QString &resource ) const;
 
     /**
       Get the identifier of the subresource associated with a specified
@@ -466,11 +449,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
 
       @return the identifier of the subresource or an empty string.
     */
-    virtual QString subresourceIdentifier( Incidence *incidence )
-    {
-      Q_UNUSED( incidence );
-      return QString();
-    }
+    virtual QString subresourceIdentifier( Incidence *incidence );
 
   public Q_SLOTS:
     /**
