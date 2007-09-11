@@ -22,8 +22,7 @@
  *
  *********************************************************************/
 
-#include <config.h>
-
+#include "imap4-config.h"
 #include "imapparser.h"
 #include "imapinfo.h"
 #include "mailheader.h"

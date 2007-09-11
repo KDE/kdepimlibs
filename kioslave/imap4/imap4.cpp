@@ -56,23 +56,19 @@ imap://server/folder/
  *  ERR_DOES_NOT_EXIST is reserved for folders.
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
+#include "imap4-config.h"
 #include "imap4.h"
 
-#include <sys/stat.h>
+#include <QByteArray>
+#include <Q3PtrList>
+#include <QList>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-//Added by qt3to4:
-#include <QByteArray>
-#include <Q3PtrList>
-#include <QList>
 
 #ifdef HAVE_LIBSASL2
 extern "C" {

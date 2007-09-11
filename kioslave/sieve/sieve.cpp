@@ -24,10 +24,7 @@
  * false, where it signifies an error, thus doesn't need to call error() itself.
  */
 
-#include <config-sieve.h>
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include "sieve-config.h"
 
 extern "C" {
 #include <sasl/sasl.h>
@@ -790,11 +787,7 @@ void kio_sieveProtocol::chmod(const KUrl& url, int permissions)
   finished();
 }
 
-#if defined(_AIX) && defined(stat)
-#undef stat
-#endif
-
-void kio_sieveProtocol::stat(const KUrl& url)
+void kio_sieveProtocol::urlStat(const KUrl& url)
 {
 	changeCheck( url );
 	if (!connect())

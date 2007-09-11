@@ -19,8 +19,6 @@ find_package(Gpgme REQUIRED)
 
 include (gpgme++/ConfigureChecks.cmake)
 include (ConfigureChecks.cmake)
-configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
-
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})

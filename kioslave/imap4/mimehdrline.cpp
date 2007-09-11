@@ -15,13 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <config.h>
+#include "mimehdrline.h"
 #include <iostream>
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-#include "mimehdrline.h"
 
 using namespace std;
 
