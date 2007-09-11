@@ -13,7 +13,7 @@ icalformat            |   D   |    D    |   D   |         |    D    | Allen
 icalformat_p          |   D   |         |   D   |         |    D    | Allen
 icaltimezones         |       |         |   D   |         |    D    |
 imipscheduler         |   D   |         |   D   |         |    D    |
-incidenceformatter    |       |         |       |         |    D    | Allen
+incidenceformatter    |   D   |         |   D   |         |    D    | Allen
 kresult               |   D   |    D    |   D   |         |    D    |
 qtopiaformat          |       |         |       |         |    D    |
 recurrence            |   D   |         |   D   |         |    D    |

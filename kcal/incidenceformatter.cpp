@@ -301,16 +301,16 @@ static QString eventViewerFormatEvent( Event *event )
     if ( event->isMultiDay() ) {
       tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
       tmpStr += "<td>" +
-	        i18nc( "<beginTime> - <endTime>","%1 - %2",
-		       event->dtStartStr( true, event->dtStart().timeSpec() ),
-		       event->dtEndStr( true, event->dtEnd().timeSpec() ) ) + "</td>";
+                i18nc( "<beginTime> - <endTime>","%1 - %2",
+                       event->dtStartStr( true, event->dtStart().timeSpec() ),
+                       event->dtEndStr( true, event->dtEnd().timeSpec() ) ) + "</td>";
     } else {
       tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
       if ( event->hasEndDate() && event->dtStart() != event->dtEnd() ) {
         tmpStr += "<td>" +
-	          i18nc( "<beginTime> - <endTime>","%1 - %2",
-			 event->dtStartTimeStr( true, event->dtStart().timeSpec() ),
-			 event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) ) + "</td>";
+                  i18nc( "<beginTime> - <endTime>","%1 - %2",
+                         event->dtStartTimeStr( true, event->dtStart().timeSpec() ),
+                         event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) ) + "</td>";
       } else {
         tmpStr += "<td>" + event->dtStartTimeStr( true, event->dtStart().timeSpec() ) + "</td>";
       }
@@ -455,8 +455,9 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
 
   QList<Period> periods = fb->busyPeriods();
 
-  QString text = eventViewerAddTag( "em",
-                                    eventViewerAddTag( "b", i18n( "Busy:" ) ) );
+  QString text =
+    eventViewerAddTag( "em",
+                       eventViewerAddTag( "b", i18nc( "tag for busy periods list", "Busy:" ) ) );
 
   QList<Period>::iterator it;
   for ( it = periods.begin(); it != periods.end(); ++it ) {
@@ -465,15 +466,15 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
       int dur = per.duration().asSeconds();
       QString cont;
       if ( dur >= 3600 ) {
-        cont += i18np( "1 hour ", "%1 hours ", dur / 3600 );
+        cont += i18ncp( "hours part of duration", "1 hour ", "%1 hours ", dur / 3600 );
         dur %= 3600;
       }
       if ( dur >= 60 ) {
-        cont += i18np( "1 minute ", "%1 minutes ", dur / 60 );
+        cont += i18ncp( "minutes part duration", "1 minute ", "%1 minutes ", dur / 60 );
         dur %= 60;
       }
       if ( dur > 0 ) {
-        cont += i18np( "1 second", "%1 seconds", dur );
+        cont += i18ncp( "seconds part of duration", "1 second", "%1 seconds", dur );
       }
       text += i18nc( "startDate for duration", "%1 for %2",
                      KGlobal::locale()->formatDateTime(
@@ -604,7 +605,7 @@ static QString invitationDetailsEvent( Event *event )
     if ( ! event->allDay() ) {
       tmp =  i18nc( "%1: End Date, %2: End Time", "%1 %2",
                     event->dtEndDateStr( true, event->dtEnd().timeSpec() ),
-		    event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) );
+                    event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) );
     } else {
       tmp = i18nc( "%1: End Date", "%1 (time unspecified)",
                    event->dtEndDateStr( true, event->dtEnd().timeSpec() ) );
@@ -706,15 +707,15 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
       int dur = per.duration().asSeconds();
       QString cont;
       if ( dur >= 3600 ) {
-        cont += i18np( "1 hour ", "%1 hours ", dur / 3600 );
+        cont += i18ncp( "hours part of duration", "1 hour ", "%1 hours ", dur / 3600 );
         dur %= 3600;
       }
       if ( dur >= 60 ) {
-        cont += i18np( "1 minute", "%1 minutes ", dur / 60 );
+        cont += i18ncp( "minutes part of duration", "1 minute", "%1 minutes ", dur / 60 );
         dur %= 60;
       }
       if ( dur > 0 ) {
-        cont += i18np( "1 second", "%1 seconds", dur );
+        cont += i18ncp( "seconds part of duration", "1 second", "%1 seconds", dur );
       }
       html += invitationRow(
         QString(), i18nc( "startDate for duration", "%1 for %2",
@@ -1070,6 +1071,11 @@ class KCal::IncidenceFormatter::InvitationBodyVisitor
 };
 //@endcond
 
+QString InvitationFormatterHelper::generateLinkURL( const QString &id )
+{
+  return id;
+}
+
 QString InvitationFormatterHelper::makeLink( const QString &id, const QString &text )
 {
   QString res( "<a href=\"%1\"><b>%2</b></a>" );
@@ -1151,21 +1157,21 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     html += "<td>";
 
     // Accept
-    html += helper->makeLink( "accept", i18n( "[Accept]" ) );
+    html += helper->makeLink( "accept", i18nc( "accept task request", "[Accept]" ) );
     html += "</td><td> &nbsp; </td><td>";
     html += helper->makeLink( "accept_conditionally",
                               i18nc( "Accept conditionally", "[Accept cond.]" ) );
     html += "</td><td> &nbsp; </td><td>";
     // Decline
-    html += helper->makeLink( "decline", i18n( "[Decline]" ) );
+    html += helper->makeLink( "decline", i18nc( "decline task request", "[Decline]" ) );
     html += "</td><td> &nbsp; </td><td>";
 
     // Delegate
-    html += helper->makeLink( "delegate", i18n( "[Delegate]" ) );
+    html += helper->makeLink( "delegate", i18nc( "delegate task to another", "[Delegate]" ) );
     html += "</td><td> &nbsp; </td><td>";
 
     // Forward
-    html += helper->makeLink( "forward", i18n( "[Forward]" ) );
+    html += helper->makeLink( "forward", i18nc( "forward request to another", "[Forward]" ) );
 #if 0
     // TODO: implement this
     html += "</b></a></td><td> &nbsp; </td><td>";
@@ -1280,19 +1286,24 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
 
     ret += "<br>" +
            i18n( "<i>Date:</i>&nbsp;%1",
-                 event->dtStartDateStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) );
+                 event->dtStartDateStr(
+                   true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) );
     if ( !event->allDay() ) {
       if ( event->dtStartTimeStr( true, event->dtStart().timeSpec() ) ==
-	   event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) ) { // to prevent 'Time: 17:00 - 17:00'
+           event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) ) {
+        // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" +
               i18nc( "time for event, &nbsp; to prevent ugly line breaks", "<i>Time:</i>&nbsp;%1",
-                     event->dtStartTimeStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) );
+                     event->dtStartTimeStr(
+                       true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) );
       } else {
         tmp = "<br>" +
               i18nc( "time range for event, &nbsp; to prevent ugly line breaks",
                      "<i>Time:</i>&nbsp;%1&nbsp;-&nbsp;%2",
-                     event->dtStartTimeStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ),
-                     event->dtEndTimeStr( true, event->dtEnd().timeSpec() ).replace( " ", "&nbsp;" ) );
+                     event->dtStartTimeStr(
+                       true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ),
+                     event->dtEndTimeStr(
+                       true, event->dtEnd().timeSpec() ).replace( " ", "&nbsp;" ) );
       }
       ret += tmp;
     }
@@ -1310,20 +1321,24 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
     // italics here :)
     ret += "<br>" + i18n( "<i>Start:</i>&nbsp;%1",
                           ( allDay ) ?
-                          ( todo->dtStartDateStr( true, false, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) :
-                          ( todo->dtStartStr( true, false, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) ) ;
+                          ( todo->dtStartDateStr(
+                            true, false, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) :
+                          ( todo->dtStartStr(
+                            true, false, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) ) ;
   }
   if ( todo->hasDueDate() ) {
     ret += "<br>" + i18n( "<i>Due:</i>&nbsp;%1",
                           ( allDay ) ?
-                          ( todo->dtDueDateStr( true, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) :
-                          ( todo->dtDueStr( true, todo->dtDue().timeSpec() ).replace( " ", "&nbsp;" ) ) );
+                          ( todo->dtDueDateStr(
+                            true, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) :
+                          ( todo->dtDueStr(
+                            true, todo->dtDue().timeSpec() ).replace( " ", "&nbsp;" ) ) );
   }
   if ( todo->isCompleted() ) {
     ret += "<br>" +
            i18n( "<i>Completed:</i>&nbsp;%1", todo->completedStr().replace( " ", "&nbsp;" ) );
   } else {
-    ret += "<br>" + i18n( "%1 % completed", todo->percentComplete() );
+    ret += "<br>" + i18nc( "percent complete", "%1 % completed", todo->percentComplete() );
   }
 
   return ret;
@@ -1333,16 +1348,19 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal *journal )
 {
   QString ret;
   if ( journal->dtStart().isValid() ) {
-    ret += "<br>" + i18n( "<i>Date:</i>&nbsp;%1", journal->dtStartDateStr( false,  journal->dtStart().timeSpec() ) );
+    ret += "<br>" +
+           i18n( "<i>Date:</i>&nbsp;%1",
+                 journal->dtStartDateStr( false, journal->dtStart().timeSpec() ) );
   }
   return ret;
 }
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( FreeBusy *fb )
 {
-  QString ret = "<br>" +
-                i18n( "<i>Period start:</i>&nbsp;%1",
-                      KGlobal::locale()->formatDateTime( fb->dtStart().dateTime() ) );
+  QString ret;
+  ret = "<br>" +
+        i18n( "<i>Period start:</i>&nbsp;%1",
+              KGlobal::locale()->formatDateTime( fb->dtStart().dateTime() ) );
   ret += "<br>" +
          i18n( "<i>Period start:</i>&nbsp;%1",
                KGlobal::locale()->formatDateTime( fb->dtEnd().dateTime() ) );
@@ -1467,27 +1485,31 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Event *event )
 {
   QString recurrence[]= {
     i18nc( "no recurrence", "None" ),
-    i18n( "Minutely" ),
-    i18n( "Hourly" ),
-    i18n( "Daily" ),
-    i18n( "Weekly" ),
-    i18n( "Monthly Same Day" ),
-    i18n( "Monthly Same Position" ),
-    i18n( "Yearly" ),
-    i18n( "Yearly" ),
-    i18n( "Yearly" )
+    i18nc( "event recurs by minutes", "Minutely" ),
+    i18nc( "event recurs by hours", "Hourly" ),
+    i18nc( "event recurs by days", "Daily" ),
+    i18nc( "event recurs by weeks", "Weekly" ),
+    i18nc( "event recurs same position (e.g. first monday) each month", "Monthly Same Position" ),
+    i18nc( "event recurs same day each month", "Monthly Same Day" ),
+    i18nc( "event recurs same month each year", "Yearly Same Month" ),
+    i18nc( "event recurs same day each year", "Yearly Same Day" ),
+    i18nc( "event recurs same position (e.g. first monday) each year", "Yearly Same Position" )
   };
 
   mResult = mailBodyIncidence( event );
-  mResult += i18n( "Start Date: %1\n", event->dtStartDateStr( true, event->dtStart().timeSpec() ) );
+  mResult += i18n( "Start Date: %1\n",
+                   event->dtStartDateStr( true, event->dtStart().timeSpec() ) );
   if ( !event->allDay() ) {
-    mResult += i18n( "Start Time: %1\n", event->dtStartTimeStr( true, event->dtStart().timeSpec() ) );
+    mResult += i18n( "Start Time: %1\n",
+                     event->dtStartTimeStr( true, event->dtStart().timeSpec() ) );
   }
   if ( event->dtStart() != event->dtEnd() ) {
-    mResult += i18n( "End Date: %1\n", event->dtEndDateStr( true, event->dtStart().timeSpec() ) );
+    mResult += i18n( "End Date: %1\n",
+                     event->dtEndDateStr( true, event->dtStart().timeSpec() ) );
   }
   if ( !event->allDay() ) {
-    mResult += i18n( "End Time: %1\n", event->dtEndTimeStr( true, event->dtStart().timeSpec() ) );
+    mResult += i18n( "End Time: %1\n",
+                     event->dtEndTimeStr( true, event->dtStart().timeSpec() ) );
   }
   if ( event->recurs() ) {
     Recurrence *recur = event->recurrence();
@@ -1526,15 +1548,19 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Todo *todo )
   mResult = mailBodyIncidence( todo );
 
   if ( todo->hasStartDate() ) {
-    mResult += i18n( "Start Date: %1\n", todo->dtStartDateStr( true, false, todo->dtStart().timeSpec() ) );
+    mResult += i18n( "Start Date: %1\n",
+                     todo->dtStartDateStr( true, false, todo->dtStart().timeSpec() ) );
     if ( !todo->allDay() ) {
-      mResult += i18n( "Start Time: %1\n", todo->dtStartTimeStr( true, false, todo->dtStart().timeSpec() ) );
+      mResult += i18n( "Start Time: %1\n",
+                       todo->dtStartTimeStr( true, false, todo->dtStart().timeSpec() ) );
     }
   }
   if ( todo->hasDueDate() ) {
-    mResult += i18n( "Due Date: %1\n", todo->dtDueDateStr( true, todo->dtStart().timeSpec() ) );
+    mResult += i18n( "Due Date: %1\n",
+                     todo->dtDueDateStr( true, todo->dtStart().timeSpec() ) );
     if ( !todo->allDay() ) {
-      mResult += i18n( "Due Time: %1\n", todo->dtDueTimeStr( true, todo->dtStart().timeSpec() ) );
+      mResult += i18n( "Due Time: %1\n",
+                       todo->dtDueTimeStr( true, todo->dtStart().timeSpec() ) );
     }
   }
   QString details = todo->description();
