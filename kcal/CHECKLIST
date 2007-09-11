@@ -6,28 +6,28 @@ confirmsavedialog     |   D   |    D    |   D   |         |    D    |
 customproperties      |   D   |    D    |   D   |         |    D    | Allen
 dndfactory            |   D   |         |   D   |         |    D    | Allen
 dummyscheduler        |   D   |         |   D   |         |    D    |
-freebusyurlstore      |       |         |   D   |         |    D    |
-htmlexport            |       |         |   D   |         |    D    |
-icaldrag              |       |         |   D   |         |    D    |
+freebusyurlstore      |   D   |         |   D   |         |    D    |
+htmlexport            |   D   |         |   D   |         |    D    |
+icaldrag              |   D   |         |   D   |         |    D    |
 icalformat            |   D   |    D    |   D   |         |    D    | Allen
 icalformat_p          |   D   |         |   D   |         |    D    | Allen
 icaltimezones         |       |         |   D   |         |    D    |
 imipscheduler         |   D   |         |   D   |         |    D    |
 incidenceformatter    |   D   |         |   D   |         |    D    | Allen
 kresult               |   D   |    D    |   D   |         |    D    |
-qtopiaformat          |       |         |   D   |         |    D    |
+qtopiaformat          |   D   |         |   D   |         |    D    |
 recurrence            |   D   |         |   D   |         |    D    |
 recurrencerule        |   D   |         |   D   |         |    D    |
 resourcecachedconfig  |   D   |         |   D   |         |    D    |
 resourcecached        |   D   |         |   D   |         |    D    |
 resourcecalendar      |   D   |         |   D   |         |    D    |
-resourcelocalconfig   |       |         |   D   |         |    D    |
-resourcelocaldirconfig|       |         |   D   |         |    D    |
-resourcelocaldir      |       |         |   D   |         |    D    |
+resourcelocalconfig   |   D   |         |   D   |         |    D    |
+resourcelocaldirconfig|   D   |         |   D   |         |    D    |
+resourcelocaldir      |   D   |         |   D   |         |    D    |
 resourcelocal         |   D   |    D    |   D   |         |    D    | Narayan
 scheduler             |   D   |         |   D   |   n/a   |    D    |
 sortablelist.h        |   D   |    D    |  n/a  |    D    |    D    |
-vcaldrag              |       |         |   D   |         |    D    |
+vcaldrag              |   D   |         |   D   |         |    D    |
 vcalformat            |   D   |         |   D   |         |    D    | Allen
 
 == DONE ==
