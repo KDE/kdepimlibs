@@ -21,7 +21,7 @@
 
 #include "data.h"
 
-#include "kblog/metaweblog.h"
+#include "kblog/wordpressbuggy.h"
 #include "kblog/blogposting.h"
 #include "kblog/blogmedia.h"
 
@@ -37,7 +37,7 @@
 
 using namespace KBlog;
 
-class TestMetaWeblog : public QObject
+class TestWordpressBuggy : public QObject
 {
   Q_OBJECT
 
@@ -58,7 +58,7 @@ class TestMetaWeblog : public QObject
     void testNetwork();
   private:
     void dumpPosting( const KBlog::BlogPosting* );
-    KBlog::MetaWeblog *b;
+    KBlog::WordpressBuggy *b;
     KBlog::BlogPosting *p;
     QEventLoop *eventLoop;
     QTimer *fetchUserInfoTimer;
@@ -71,7 +71,7 @@ class TestMetaWeblog : public QObject
     QTimer *removePostingTimer;
 };
 
-class TestMetaWeblogWarnings : public QObject
+class TestWordpressBuggyWarnings : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
@@ -86,9 +86,9 @@ class TestMetaWeblogWarnings : public QObject
 
 };
 
-#include "testmetaweblog.moc"
+#include "testwordpressbuggy.moc"
 
-void TestMetaWeblog::dumpPosting( const BlogPosting* posting )
+void TestWordpressBuggy::dumpPosting( const BlogPosting* posting )
 {
   qDebug() << "########### posting ############";
   qDebug() << "# postingId: " << posting->postingId();
@@ -98,6 +98,12 @@ void TestMetaWeblog::dumpPosting( const BlogPosting* posting )
   qDebug() << "# categories: " << posting->categories().join( " " );
   qDebug() << "# error: " << posting->error();
   qDebug() << "# journalId: " << posting->journalId();
+  qDebug() << "# allowTrackBack: " << posting->isTrackBackAllowed();
+  qDebug() << "# allowComment: " << posting->isCommentAllowed();
+  qDebug() << "# summary: " << posting->summary();
+  qDebug() << "# tags: " << posting->tags();
+  qDebug() << "# link: " << posting->link().url();
+  qDebug() << "# permalink: " << posting->permaLink().url();
   switch ( posting->status() ){
     case BlogPosting::New:
       qDebug() << "# status: New"; break;
@@ -121,7 +127,7 @@ void TestMetaWeblog::dumpPosting( const BlogPosting* posting )
 
 // the chain starts here
 
-void TestMetaWeblog::fetchUserInfo( const QMap<QString,QString>& userInfo )
+void TestWordpressBuggy::fetchUserInfo( const QMap<QString,QString>& userInfo )
 {
   fetchUserInfoTimer->stop();
   qDebug() << "########### fetchUserInfo ###########";
@@ -139,7 +145,7 @@ void TestMetaWeblog::fetchUserInfo( const QMap<QString,QString>& userInfo )
   listBlogsTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::listBlogs( const QList<QMap<QString,QString> >& listedBlogs )
+void TestWordpressBuggy::listBlogs( const QList<QMap<QString,QString> >& listedBlogs )
 {
   listBlogsTimer->stop();
   qDebug() << "########### listBlogs ###########";
@@ -156,7 +162,7 @@ void TestMetaWeblog::listBlogs( const QList<QMap<QString,QString> >& listedBlogs
   listRecentPostingsTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::listRecentPostings(
+void TestWordpressBuggy::listRecentPostings(
            const QList<KBlog::BlogPosting>& postings )
 {
   listRecentPostingsTimer->stop();
@@ -174,7 +180,7 @@ void TestMetaWeblog::listRecentPostings(
   listCategoriesTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::listCategories(
+void TestWordpressBuggy::listCategories(
            const QList<QMap<QString,QString> >& categories )
 {
   listCategoriesTimer->stop();
@@ -192,7 +198,7 @@ void TestMetaWeblog::listCategories(
   createPostingTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::createPosting( KBlog::BlogPosting *posting )
+void TestWordpressBuggy::createPosting( KBlog::BlogPosting *posting )
 {
   createPostingTimer->stop();
   qDebug() << "########### createPosting ############";
@@ -207,7 +213,7 @@ void TestMetaWeblog::createPosting( KBlog::BlogPosting *posting )
   modifyPostingTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
+void TestWordpressBuggy::modifyPosting( KBlog::BlogPosting *posting )
 {
   modifyPostingTimer->stop();
   qDebug() << "########### modifyPosting ############";
@@ -217,12 +223,12 @@ void TestMetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
 
   connect( b, SIGNAL( fetchedPosting( KBlog::BlogPosting* ) ),
            this, SLOT( fetchPosting( KBlog::BlogPosting* ) ) );
-  p->setContent( "TestMetaWeblog: created content." );
+  p->setContent( "TestWordpressBuggy: created content." );
   b->fetchPosting( p );
   fetchPostingTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
+void TestWordpressBuggy::fetchPosting( KBlog::BlogPosting *posting )
 {
   fetchPostingTimer->stop();
   qDebug() << "########### fetchPosting ############";
@@ -237,7 +243,7 @@ void TestMetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
   removePostingTimer->start( TIMEOUT );
 }
 
-void TestMetaWeblog::removePosting( KBlog::BlogPosting *posting )
+void TestWordpressBuggy::removePosting( KBlog::BlogPosting *posting )
 {
   removePostingTimer->stop();
   qDebug() << "########### removePosting ###########";
@@ -247,7 +253,7 @@ void TestMetaWeblog::removePosting( KBlog::BlogPosting *posting )
   eventLoop->quit();
 }
 
-void TestMetaWeblog::error( KBlog::Blog::ErrorType type, const QString &errStr,
+void TestWordpressBuggy::error( KBlog::Blog::ErrorType type, const QString &errStr,
         KBlog::BlogPosting* posting )
 {
   qDebug() << "############ error #############";
@@ -266,52 +272,52 @@ void TestMetaWeblog::error( KBlog::Blog::ErrorType type, const QString &errStr,
 
 // Warnings for Timouts:
 
-void TestMetaWeblogWarnings::fetchUserInfoTimeoutWarning()
+void TestWordpressBuggyWarnings::fetchUserInfoTimeoutWarning()
 {
   QWARN( "fetchUserInfo() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::listBlogsTimeoutWarning()
+void TestWordpressBuggyWarnings::listBlogsTimeoutWarning()
 {
   QWARN( "listBlogs()  timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::listRecentPostingsTimeoutWarning()
+void TestWordpressBuggyWarnings::listRecentPostingsTimeoutWarning()
 {
   QWARN( "listRecentPostings() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::listCategoriesTimeoutWarning()
+void TestWordpressBuggyWarnings::listCategoriesTimeoutWarning()
 {
   QWARN( "listCategories() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::fetchPostingTimeoutWarning()
+void TestWordpressBuggyWarnings::fetchPostingTimeoutWarning()
 {
   QWARN( "fetchPosting() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::modifyPostingTimeoutWarning()
+void TestWordpressBuggyWarnings::modifyPostingTimeoutWarning()
 {
   QWARN( "modifyPosting() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::createPostingTimeoutWarning()
+void TestWordpressBuggyWarnings::createPostingTimeoutWarning()
 {
   QWARN( "createPosting() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblogWarnings::removePostingTimeoutWarning()
+void TestWordpressBuggyWarnings::removePostingTimeoutWarning()
 {
   QWARN( "removePosting() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestMetaWeblog::testValidity()
+void TestWordpressBuggy::testValidity()
 {
   eventLoop = new QEventLoop( this );
 
   // no need to delete later ;-):
-  b = new MetaWeblog( KUrl( "http://wrong.url.org/somegateway" ) );
+  b = new WordpressBuggy( KUrl( "http://wrong.url.org/somegateway" ) );
   QVERIFY( b->url() == KUrl( "http://wrong.url.org/somegateway" ) );
   KTimeZone mTimeZone( KTimeZone( "UTC" ) );
   b->setUrl( mUrl );
@@ -323,11 +329,11 @@ void TestMetaWeblog::testValidity()
   QVERIFY( b->blogId() == mBlogId );
   QVERIFY( b->username() == mUsername );
   QVERIFY( b->password() == mPassword );
-  QVERIFY( b->interfaceName() == "MetaWeblog" );
+  QVERIFY( b->interfaceName() == "Movable Type" );
   QVERIFY( b->timeZone().name() == mTimeZone.name() );
 }
 
-void TestMetaWeblog::testNetwork()
+void TestWordpressBuggy::testNetwork()
 {
   KDateTime mCDateTime( mCreationDateTime );
   KDateTime mMDateTime( mModificationDateTime );
@@ -338,19 +344,23 @@ void TestMetaWeblog::testNetwork()
   p->setPostingId( mPostingId );
   p->setCreationDateTime( mCDateTime );
   p->setModificationDateTime( mMDateTime );
+  p->setCommentAllowed( mCommentAllowed );
+  p->setTrackBackAllowed( mTrackBackAllowed );
+  p->setSummary( mSummary );
+  p->setTags( mTags );
 
   BlogMedia *m = new BlogMedia();
-  m->setName( "testmetaweblog.txt" );
+  m->setName( "testWordpressBuggy.txt" );
   m->setMimetype( "text/plain" );
   m->setData( QString( "YTM0NZomIzI2OTsmIzM0NTueYQ==" ).toAscii() );
   QVERIFY( m->mimetype() == "text/plain" );
   QVERIFY( m->data() == QString( "YTM0NZomIzI2OTsmIzM0NTueYQ==" ).toAscii() );
-  QVERIFY( m->name() == QString( "testmetaweblog.txt" ) );
+  QVERIFY( m->name() == QString( "testWordpressBuggy.txt" ) );
 
-  connect( b, SIGNAL( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPosting* ) ),
+  connect( b, SIGNAL( errorPosting( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPosting* ) ),
            this, SLOT( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPosting* ) ) );
 
-  TestMetaWeblogWarnings *warnings = new TestMetaWeblogWarnings();
+  TestWordpressBuggyWarnings *warnings = new TestWordpressBuggyWarnings();
 
   fetchUserInfoTimer = new QTimer( this );
   fetchUserInfoTimer->setSingleShot( true );
@@ -406,4 +416,4 @@ void TestMetaWeblog::testNetwork()
   delete p;
 }
 
-QTEST_KDEMAIN_CORE(TestMetaWeblog)
+QTEST_KDEMAIN_CORE(TestWordpressBuggy)

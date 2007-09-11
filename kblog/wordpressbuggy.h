@@ -42,9 +42,9 @@ namespace KBlog {
   A class that can be used for access to Wordpress blogs. This is needed because of an ugly
   DateTime bug in Wordpress. Hopefully the bug will be fixed in the near feature. This class 
   reimplements createPosting and modifyPosting from scratch to send the DateTime in a format 
-  like yyyy-MM-ddThhmmss which is not ISO conform. The date is extended, where the time is not extended.
+  like yyyyMMddThh:mm:ss which is not ISO conform. The date is not extended, where the time is extended.
   The rest of the code is used from MovableType, as Wordpress implements MovableType. You should not use this
-  code on non Wordpress blogs.
+  code on non-Wordpress blogs.
   @code
   Blog* myblog = new WordpressBuggy("http://example.com/xmlrpc/gateway.php");
   myblog->setUsername( "some_user_id" );

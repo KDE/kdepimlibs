@@ -39,6 +39,15 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 
 # ########### next target ###############
  
+ set(testwordpressbuggy_SRCS testwordpressbuggy.cpp )
+ 
+ 
+ kde4_add_unit_test(testwordpressbuggy TESTNAME kabc-testwordpressbuggy ${testwordpressbuggy_SRCS})
+ 
+ target_link_libraries(testwordpressbuggy ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+
+# ########### next target ###############
+ 
  set(testblogposting_SRCS testblogposting.cpp )
  
  

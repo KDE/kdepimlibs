@@ -55,6 +55,7 @@ WordpressBuggy::~WordpressBuggy()
 
 void WordpressBuggy::createPosting( KBlog::BlogPosting *posting )
 {
+  kDebug(5323) << "createPosting()";
   Q_D(WordpressBuggy);
   if ( !posting ) {
     kError(5323) << "WordpressBuggy::createPosting: posting is a null pointer";
@@ -67,19 +68,19 @@ void WordpressBuggy::createPosting( KBlog::BlogPosting *posting )
   xmlMarkup += "<methodCall>";
   xmlMarkup += "<methodName>metaWeblog.newPost</methodName>";
   xmlMarkup += "<params><param>";
-  xmlMarkup += "<value><![CDATA["+blogId()+"]]></value>";
+  xmlMarkup += "<value><string><![CDATA["+blogId()+"]]></string></value>";
   xmlMarkup += "</param>";
   xmlMarkup += "<param>";
-  xmlMarkup += "<value><![CDATA["+username()+"]]></value>";
+  xmlMarkup += "<value><string><![CDATA["+username()+"]]></string></value>";
   xmlMarkup += "</param><param>";
-  xmlMarkup += "<value><![CDATA["+password()+"]]></value>";
+  xmlMarkup += "<value><string><![CDATA["+password()+"]]></string></value>";
   xmlMarkup += "</param>";
   xmlMarkup += "<param><struct>";
   xmlMarkup += "<member><name>description</name>";
-  xmlMarkup += "<value><![CDATA["+posting->content().toUtf8()+"]]></value>";
+  xmlMarkup += "<value><string><![CDATA["+posting->content().toUtf8()+"]]></string></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>title</name>";
-  xmlMarkup += "<value><![CDATA["+posting->title().toUtf8()+"]]></value>";
+  xmlMarkup += "<value><string><![CDATA["+posting->title().toUtf8()+"]]></string></value>";
   xmlMarkup += "</member><member>";
 
   QList<QString> catList = posting->categories();
@@ -97,23 +98,23 @@ void WordpressBuggy::createPosting( KBlog::BlogPosting *posting )
 
   xmlMarkup += "<name>dateCreated</name>";
   xmlMarkup += "<value><dateTime.iso8601>"+
-    posting->creationDateTime().toUtc().dateTime().toString("yyyy-MM-ddThhmmss")+
+    posting->creationDateTime().toUtc().dateTime().toString("yyyyMMddThh:mm:ss")+
   "</dateTime.iso8601></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_allow_comments</name>";
-  xmlMarkup += QString("<value><i4>%1</i4></value>").
+  xmlMarkup += QString("<value><int>%1</int></value>").
     arg( (int)posting->isCommentAllowed() );
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_allow_pings</name>";
-  xmlMarkup += QString("<value><i4>%1</i4></value>").
+  xmlMarkup += QString("<value><int>%1</int></value>").
     arg( (int)posting->isTrackBackAllowed() );
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_excerpt</name>";
-  xmlMarkup += "<value><![CDATA["+posting->summary().toUtf8()+"]]></value>";
+  xmlMarkup += "<value><string><![CDATA["+posting->summary().toUtf8()+"]]></string></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_keywords</name>";
-  xmlMarkup += "<value><![CDATA["+posting->tags().join(" ").toUtf8()+"]]></value>";
-  xmlMarkup += "</struct></member>";
+  xmlMarkup += "<value><string><![CDATA["+posting->tags().join(" ").toUtf8()+"]]></string></value>";
+  xmlMarkup += "</member></struct></param>";
   xmlMarkup += "<param><value><boolean>"+
     QString( "%1" ).arg( (int)(!posting->isPrivate()) )+
     "</boolean></value></param>";
@@ -131,6 +132,8 @@ void WordpressBuggy::createPosting( KBlog::BlogPosting *posting )
     kWarning() << "Failed to create job for: " << url().url();
   }
 
+  job->addMetaData( "customHTTPHeader", "X-hacker: Shame on you Wordpress, "
+    + QString() + "you took another 4 hours of my life to work around the stupid dateTime bug." );
   job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
   job->addMetaData( "ConnectTimeout", "50" );
   job->addMetaData( "UserAgent", userAgent() );
@@ -143,6 +146,7 @@ void WordpressBuggy::createPosting( KBlog::BlogPosting *posting )
 
 void WordpressBuggy::modifyPosting( KBlog::BlogPosting *posting )
 {
+  kDebug(5323) << "modifyPosting()";
   Q_D(WordpressBuggy);
   if ( !posting ) {
     kError(5323) << "WordpressBuggy::modifyPosting: posting is a null pointer";
@@ -151,23 +155,24 @@ void WordpressBuggy::modifyPosting( KBlog::BlogPosting *posting )
   }
 
   kDebug(5323) << "Uploading Posting with postId" << posting->postingId();
+
   QString xmlMarkup = "<?xml version=\"1.0\"?>";
   xmlMarkup += "<methodCall>";
   xmlMarkup += "<methodName>metaWeblog.editPost</methodName>";
   xmlMarkup += "<params><param>";
-  xmlMarkup += "<value><![CDATA["+posting->postingId()+"]]></value>";
+  xmlMarkup += "<value><string><![CDATA["+posting->postingId()+"]]></string></value>";
   xmlMarkup += "</param>";
   xmlMarkup += "<param>";
-  xmlMarkup += "<value><![CDATA["+username()+"]]></value>";
+  xmlMarkup += "<value><string><![CDATA["+username()+"]]></string></value>";
   xmlMarkup += "</param><param>";
-  xmlMarkup += "<value><![CDATA["+password()+"]]></value>";
+  xmlMarkup += "<value><string><![CDATA["+password()+"]]></string></value>";
   xmlMarkup += "</param>";
   xmlMarkup += "<param><struct>";
   xmlMarkup += "<member><name>description</name>";
-  xmlMarkup += "<value><![CDATA["+posting->content().toUtf8()+"]]></value>";
+  xmlMarkup += "<value><string><![CDATA["+posting->content().toUtf8()+"]]></string></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>title</name>";
-  xmlMarkup += "<value><![CDATA["+posting->title().toUtf8()+"]]></value>";
+  xmlMarkup += "<value><string><![CDATA["+posting->title().toUtf8()+"]]></string></value>";
   xmlMarkup += "</member><member>";
 
   QList<QString> catList = posting->categories();
@@ -185,23 +190,23 @@ void WordpressBuggy::modifyPosting( KBlog::BlogPosting *posting )
 
   xmlMarkup += "<name>lastModified</name>";
   xmlMarkup += "<value><dateTime.iso8601>"+
-    posting->modificationDateTime().toUtc().dateTime().toString("yyyy-MM-ddThhmmss")+
+    posting->modificationDateTime().toUtc().dateTime().toString("yyyyMMddThh:mm:ss")+
   "</dateTime.iso8601></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_allow_comments</name>";
-  xmlMarkup += QString("<value><i4>%1</i4></value>").
+  xmlMarkup += QString("<value><int>%1</int></value>").
     arg( (int)posting->isCommentAllowed() );
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_allow_pings</name>";
-  xmlMarkup += QString("<value><i4>%1</i4></value>").
+  xmlMarkup += QString("<value><int>%1</int></value>").
     arg( (int)posting->isTrackBackAllowed() );
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_excerpt</name>";
-  xmlMarkup += "<value><![CDATA["+posting->summary().toUtf8()+"]]></value>";
+  xmlMarkup += "<value><string><![CDATA["+posting->summary().toUtf8()+"]]></string></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_keywords</name>";
-  xmlMarkup += "<value><![CDATA["+posting->tags().join(" ").toUtf8()+"]]></value>";
-  xmlMarkup += "</struct></member>";
+  xmlMarkup += "<value><string><![CDATA["+posting->tags().join(" ").toUtf8()+"]]></string></value>";
+  xmlMarkup += "</member></struct></param>";
   xmlMarkup += "<param><value><boolean>"+
     QString( "%1" ).arg( (int)(!posting->isPrivate()) )+
     "</boolean></value></param>";
@@ -219,14 +224,16 @@ void WordpressBuggy::modifyPosting( KBlog::BlogPosting *posting )
     kWarning() << "Failed to create job for: " << url().url();
   }
 
+  job->addMetaData( "customHTTPHeader", "X-hacker: Shame on you Wordpress, "
+    + QString() + "you took another 4 hours of my life to work around the stupid dateTime bug." );
   job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
   job->addMetaData( "ConnectTimeout", "50" );
   job->addMetaData( "UserAgent", userAgent() );
 
   connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-           this, SLOT( slotCreatePostingData( KIO::Job *, const QByteArray & ) ) );
+           this, SLOT( slotModifyPostingData( KIO::Job *, const QByteArray & ) ) );
   connect( job, SIGNAL( result( KJob * ) ),
-           this, SLOT( slotCreatePosting( KJob * ) ) );
+           this, SLOT( slotModifyPosting( KJob * ) ) );
 }
 
 QString WordpressBuggy::interfaceName() const
@@ -339,7 +346,7 @@ void WordpressBuggyPrivate::slotModifyPosting( KJob *job )
     return;
   }
 
-  QRegExp rxId( "<string>(.+)</string>" );
+  QRegExp rxId( "<boolean>(.+)</boolean>" );
   if( rxId.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the id out of the result:" << data;
     emit q->errorPosting( WordpressBuggy::XmlRpc,
@@ -347,11 +354,14 @@ void WordpressBuggyPrivate::slotModifyPosting( KJob *job )
                           posting );
     return;
   }
-  kDebug(5323) << "QRegExp rx(  \"<string>(.+)</string>\" ) matches" << rxId.cap(1);
+  kDebug(5323) << "QRegExp rx(  \"<boolean>(.+)</boolean>\" ) matches" << rxId.cap(1);
 
-  posting->setPostingId( rxId.cap(1) );
-  posting->setStatus( BlogPosting::Modified );
-  emit q->modifiedPosting( posting );
+  if( rxId.cap(1).toInt() == 1 )
+ {
+    kDebug(5323) << "Posting successfully updatet.";
+    posting->setStatus( BlogPosting::Modified );
+    emit q->modifiedPosting( posting );
+  }
 }
 
 

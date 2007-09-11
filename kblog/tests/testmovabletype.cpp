@@ -45,7 +45,7 @@ class TestMovableType : public QObject
     // use this functions as a chain to go through network traffic.
     void fetchUserInfo( const QMap<QString,QString>& );
     void listBlogs( const QList<QMap<QString,QString> >& );
-    void listCategories( const QMap<QString,QMap<QString,QString> >& categories );
+    void listCategories( const QList<QMap<QString,QString> >& categories );
     void listRecentPostings( const QList<KBlog::BlogPosting>& postings );
     void createPosting( KBlog::BlogPosting* posting );
     void modifyPosting( KBlog::BlogPosting* posting );
@@ -174,22 +174,21 @@ void TestMovableType::listRecentPostings(
   }
   qDebug() << "#################################\n";
 
-  connect( b, SIGNAL( listedCategories( const QMap<QString,QMap<QString,QString> >& ) ),
-           this, SLOT( listCategories( const QMap<QString,QMap<QString,QString> >&) ) );
+  connect( b, SIGNAL( listedCategories( const QList<QMap<QString,QString> >& ) ),
+           this, SLOT( listCategories( const QList<QMap<QString,QString> >&) ) );
   b->listCategories(); // start chain
   listCategoriesTimer->start( TIMEOUT );
 }
 
 void TestMovableType::listCategories(
-           const QMap<QString,QMap<QString,QString> >& categories )
+           const QList<QMap<QString,QString> >& categories )
 {
   listCategoriesTimer->stop();
   qDebug() << "########### listCategories ###########";
-  QList<QString> catKeys = categories.keys();
-  QList<QString>::ConstIterator it = catKeys.begin();
-  QList<QString>::ConstIterator end = catKeys.end();
+  QList<QMap<QString,QString> >::ConstIterator it = categories.begin();
+  QList<QMap<QString,QString> >::ConstIterator end = categories.end();
   for ( ; it != end; ++it ) {
-    qDebug() << "# category: " << ( *it );
+    qDebug() << "# category name: " << ( *it )["name"];
   }
   qDebug() << "###############################\n";
 
