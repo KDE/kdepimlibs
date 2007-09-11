@@ -262,7 +262,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   imapCommand *cmd;
 
   tmp = QByteArray::fromRawData( out, outlen );
-  KCodecs::base64Encode( tmp, challenge );
+  challenge = tmp.toBase64();
   tmp.clear();
   // then lets try it
   QString firstCommand = aAuth;
@@ -283,7 +283,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
 //      kDebug(7116) <<"S:" << QCString(continuation.data(),continuation.size()+1);
       if ( continuation.size() > 4 ) {
         tmp = QByteArray::fromRawData( continuation.data() + 2, continuation.size() - 4 );
-        KCodecs::base64Decode( tmp, challenge );
+        challenge = QByteArray::fromBase64( tmp );
 //        kDebug(7116) <<"S-1:" << QCString(challenge.data(),challenge.size()+1);
         tmp.clear();
       }
@@ -311,7 +311,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
 
       tmp = QByteArray::fromRawData( out, outlen );
 //      kDebug(7116) <<"C-1:" << QCString(tmp.data(),tmp.size()+1);
-      KCodecs::base64Encode( tmp, challenge );
+      challenge = tmp.toBase64();
       tmp.clear();
 //      kDebug(7116) <<"C:" << QCString(challenge.data(),challenge.size()+1);
       parseWriteLine (challenge);

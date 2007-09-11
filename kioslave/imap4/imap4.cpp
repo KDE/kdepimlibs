@@ -2455,7 +2455,7 @@ void IMAP4Protocol::flushOutput(QString contentEncoding)
     if ( contentEncoding.startsWith("quoted-printable", Qt::CaseInsensitive) )
       decoded = KCodecs::quotedPrintableDecode(outputCache);
     else if ( contentEncoding.startsWith("base64", Qt::CaseInsensitive) )
-      KCodecs::base64Decode(outputCache, decoded);
+      decoded = QByteArray::fromBase64( outputCache );
     else
       decoded = outputCache;
 
