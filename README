@@ -39,6 +39,7 @@ Here is an alphabetical list:
 * mailtransport: C++ API and support code for managing mail transport
 * syndication: An RSS/Atom feed parser library
 * qgpgme: A C++ wrapper for gpgme
+* kioslaves/sieve: Sieve kioslave
 
 Licensing
 ---------
