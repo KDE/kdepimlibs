@@ -1,33 +1,31 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
 #ifndef KCAL_RESOURCELOCALDIRDIR_H
 #define KCAL_RESOURCELOCALDIRDIR_H
 
-#include <kurl.h>
-#include <kdirwatch.h>
-
-
+#include "kcal_export.h"
 #include "resourcecached.h"
 
-#include "kcal_export.h"
+#include <kurl.h>
+#include <kdirwatch.h>
 
 class QString;
 class KConfig;
@@ -38,20 +36,18 @@ class CalendarLocal;
 class Incidence;
 
 /**
-  \internal
-
+  @brief
   This class provides a calendar stored as a file per incidence in a directory.
 */
 class KCAL_EXPORT ResourceLocalDir : public ResourceCached
 {
-    Q_OBJECT
-
-    friend class ResourceLocalDirConfig;
+  Q_OBJECT
+  friend class ResourceLocalDirConfig;
 
   public:
     ResourceLocalDir();
     explicit ResourceLocalDir( const KConfigGroup &group );
-    explicit ResourceLocalDir( const QString& fileName );
+    explicit ResourceLocalDir( const QString &fileName );
     virtual ~ResourceLocalDir();
 
     void readConfig( const KConfigGroup &group );
@@ -60,7 +56,7 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
     KABC::Lock *lock();
 
     /** deletes an event from this calendar. */
-    bool deleteEvent(Event *);
+    bool deleteEvent( Event *event );
 
     /** Removes all Events from this calendar. */
     void deleteAllEvents();
@@ -68,7 +64,7 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
     /**
       Remove a todo from the todolist.
     */
-    bool deleteTodo( Todo * );
+    bool deleteTodo( Todo *todo );
 
     /**
       Removes all todos from this calendar.
@@ -78,7 +74,7 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
     /**
       Remove a journal from the journallist.
     */
-    bool deleteJournal( Journal * );
+    bool deleteJournal( Journal *journal );
 
     /**
       Removes all journals from this calendar.
@@ -88,26 +84,46 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
     void dump() const;
 
   protected Q_SLOTS:
-    void reload( const QString & );
+    void reload( const QString &file );
 
   protected:
     virtual bool doLoad( bool syncCache );
     virtual bool doSave( bool syncCache );
-    bool doSave( bool syncCache, Incidence * );
-    virtual bool doFileLoad( CalendarLocal &, const QString &fileName );
+    bool doSave( bool syncCache, Incidence *incidence );
+    virtual bool doFileLoad( CalendarLocal &cal, const QString &fileName );
 
   private:
-    void init();
-    bool deleteIncidenceFile(Incidence *incidence);
-
-    KUrl mURL;
-//     ICalFormat mFormat;
-    KDirWatch mDirWatch;
-    KABC::Lock *mLock;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
+
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
+//@cond PRIVATE
+class KCal::ResourceLocalDir::Private
+{
+  public:
+    Private()
+      : mLock( 0 )
+    {
+    }
+
+    Private ( const QString &dirName )
+    {
+      mURL = KUrl( dirName );
+    }
+
+    void init( ResourceLocalDir *rdir );
+    bool deleteIncidenceFile( Incidence *incidence );
+    KABC::Lock *mLock;
+    KUrl mURL;
+    KDirWatch mDirWatch;
+};
+//@endcond
 
 }
 

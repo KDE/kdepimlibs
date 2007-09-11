@@ -2,32 +2,32 @@ Legend:  D=Done, X=Keep Off!, n/a=Not Applicable
 
 File                  | Krazy | Doxygen | D-Ptr | UnitTst | Qt4Port | Who
 ===============================================================================
-confirmsavedialog     |   D   |    D    |       |         |    D    |
+confirmsavedialog     |   D   |    D    |   D   |         |    D    |
 customproperties      |   D   |    D    |   D   |         |    D    | Allen
 dndfactory            |   D   |         |   D   |         |    D    | Allen
 dummyscheduler        |   D   |         |   D   |         |    D    |
 freebusyurlstore      |       |         |   D   |         |    D    |
 htmlexport            |       |         |   D   |         |    D    |
-icaldrag              |       |         |       |         |    D    |
+icaldrag              |       |         |   D   |         |    D    |
 icalformat            |   D   |    D    |   D   |         |    D    | Allen
 icalformat_p          |   D   |         |   D   |         |    D    | Allen
 icaltimezones         |       |         |   D   |         |    D    |
 imipscheduler         |   D   |         |   D   |         |    D    |
 incidenceformatter    |   D   |         |   D   |         |    D    | Allen
 kresult               |   D   |    D    |   D   |         |    D    |
-qtopiaformat          |       |         |       |         |    D    |
+qtopiaformat          |       |         |   D   |         |    D    |
 recurrence            |   D   |         |   D   |         |    D    |
 recurrencerule        |   D   |         |   D   |         |    D    |
 resourcecachedconfig  |   D   |         |   D   |         |    D    |
 resourcecached        |   D   |         |   D   |         |    D    |
 resourcecalendar      |   D   |         |   D   |         |    D    |
-resourcelocalconfig   |       |         |       |         |    D    |
-resourcelocaldirconfig|       |         |       |         |    D    |
-resourcelocaldir      |       |         |       |         |    D    |
+resourcelocalconfig   |       |         |   D   |         |    D    |
+resourcelocaldirconfig|       |         |   D   |         |    D    |
+resourcelocaldir      |       |         |   D   |         |    D    |
 resourcelocal         |   D   |    D    |   D   |         |    D    | Narayan
 scheduler             |   D   |         |   D   |   n/a   |    D    |
 sortablelist.h        |   D   |    D    |  n/a  |    D    |    D    |
-vcaldrag              |       |         |       |         |    D    |
+vcaldrag              |       |         |   D   |         |    D    |
 vcalformat            |   D   |         |   D   |         |    D    | Allen
 
 == DONE ==
