@@ -21,10 +21,7 @@
 #ifndef KCAL_CONFIRMSAVEDIALOG_H
 #define KCAL_CONFIRMSAVEDIALOG_H
 
-#include <QtGui/QTreeWidget>
-
 #include "incidence.h"
-
 #include <kdialog.h>
 
 namespace KCal {
@@ -33,15 +30,15 @@ class KCAL_EXPORT ConfirmSaveDialog : public KDialog
 {
   public:
     ConfirmSaveDialog( const QString &destination, QWidget *parent );
-
+    ~ConfirmSaveDialog();
     void addIncidences( const Incidence::List &incidences,
                         const QString &operation );
 
   private:
-    QTreeWidget *mListView;
-
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }

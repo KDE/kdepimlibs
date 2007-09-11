@@ -2,7 +2,7 @@ Legend:  D=Done, X=Keep Off!, n/a=Not Applicable
 
 File                  | Krazy | Doxygen | D-Ptr | UnitTst | Qt4Port | Who
 ===============================================================================
-confirmsavedialog     |       |         |       |         |    D    |
+confirmsavedialog     |   D   |    D    |       |         |    D    |
 customproperties      |   D   |    D    |   D   |         |    D    | Allen
 dndfactory            |   D   |         |   D   |         |    D    | Allen
 dummyscheduler        |   D   |         |   D   |         |    D    |

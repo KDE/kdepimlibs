@@ -1,22 +1,22 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #include "confirmsavedialog.h"
@@ -26,12 +26,27 @@
 #include <QtGui/QBoxLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
+#include <QtGui/QTreeWidget>
 
 using namespace KCal;
 
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
+//@cond PRIVATE
+class KCal::ConfirmSaveDialog::Private
+{
+  public:
+    Private()
+    {}
+    QTreeWidget *mListView;
+};
+//@endcond
+
 ConfirmSaveDialog::ConfirmSaveDialog( const QString &destination,
                                       QWidget *parent )
-  : KDialog( parent ), d( 0 )
+  : KDialog( parent ), d( new KCal::ConfirmSaveDialog::Private )
 {
   setCaption( i18n( "Confirm Save" ) );
   setModal( true );
@@ -44,27 +59,35 @@ ConfirmSaveDialog::ConfirmSaveDialog( const QString &destination,
   topLayout->setSpacing( spacingHint() );
 
   QLabel *label = new QLabel(
-      i18n("You have requested to save the following objects to '%1':",
-        destination ), topFrame );
+      i18n( "You have requested to save the following objects to '%1':",
+            destination ), topFrame );
   topLayout->addWidget( label );
 
   QStringList headers;
-  headers << i18n("Operation") << i18n("Type") << i18n("Summary") << i18n("UID");
+  headers << i18n( "Operation" )
+          << i18n( "Type" )
+          << i18n( "Summary" )
+          << i18n( "UID" );
 
-  mListView = new QTreeWidget( topFrame );
-  mListView->setColumnCount( 4 );
-  mListView->setHeaderLabels( headers );
+  d->mListView = new QTreeWidget( topFrame );
+  d->mListView->setColumnCount( 4 );
+  d->mListView->setHeaderLabels( headers );
 
-  topLayout->addWidget( mListView );
+  topLayout->addWidget( d->mListView );
+}
+
+ConfirmSaveDialog::~ConfirmSaveDialog()
+{
+  delete d;
 }
 
 void ConfirmSaveDialog::addIncidences( const Incidence::List &incidences,
                                        const QString &operation )
 {
   Incidence::List::ConstIterator it;
-  for( it = incidences.begin(); it != incidences.end(); ++it ) {
+  for ( it = incidences.begin(); it != incidences.end(); ++it ) {
     Incidence *i = *it;
-    QTreeWidgetItem *item = new QTreeWidgetItem( mListView );
+    QTreeWidgetItem *item = new QTreeWidgetItem( d->mListView );
     item->setText( 0, operation );
     item->setText( 1, i->type() );
     item->setText( 2, i->summary() );
