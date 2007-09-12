@@ -243,26 +243,22 @@ void BlogPosting::setTags( const QStringList &tags )
 
 QString BlogPosting::mood() const
 {
-  //TODO
-  return QString();
+  return d_ptr->mMood;
 }
 
 void BlogPosting::setMood( const QString &mood )
 {
-  Q_UNUSED( mood );
-  //TODO
+  d_ptr->mMood = mood;
 }
 
 QString BlogPosting::music() const
 {
-  //TODO
-  return QString();
+  return d_ptr->mMusic;
 }
 
 void BlogPosting::setMusic( const QString &music )
 {
-  Q_UNUSED( music );
-  //TODO
+  d_ptr->mMusic = music;
 }
 
 QStringList BlogPosting::categories() const
@@ -303,7 +299,6 @@ BlogPosting::Status BlogPosting::status() const
 void BlogPosting::setStatus( BlogPosting::Status status )
 {
   d_ptr->mStatus = status;
-//   emit statusChanged( status );
 }
 
 QString BlogPosting::error() const

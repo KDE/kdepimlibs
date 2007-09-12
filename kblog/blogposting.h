@@ -274,10 +274,36 @@ public:
 //     QList<KUrl> trackBackUrls() const; // TODO check if necessary
 //     void setTrackBackUrls( const QList<KUrl> &trackBackUrls );
 
+    /**
+      Returns the mood.
+
+      @return mood
+      @see setMood()
+    */
     QString mood() const;
+
+    /**
+      Set the mood list.
+
+      @param mood The mood.
+      @see mood()
+    */
     void setMood( const QString &mood );
 
+    /**
+      Returns the music.
+
+      @return music
+      @see setMusic()
+    */
     QString music() const;
+
+    /**
+      Set the music.
+
+      @param music The music.
+      @see music()
+    */
     void setMusic( const QString &music );
 
     /**

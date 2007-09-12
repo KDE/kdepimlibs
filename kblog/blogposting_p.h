@@ -44,6 +44,8 @@ class BlogPostingPrivate
     QString mJournalId;
     QString mSummary;
     QStringList mTags;
+    QString mMood;
+    QString mMusic;
     bool mCommentAllowed;
     bool mTrackBackAllowed;
     KUrl mLink, mPermaLink;
