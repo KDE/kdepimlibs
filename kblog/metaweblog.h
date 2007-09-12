@@ -55,7 +55,7 @@ namespace KBlog {
   KBlog::BlogPost *post = new BlogPost();
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
-  myblog->createPosting( posting );
+  myblog->createPost( post );
   @endcode
 
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
@@ -84,13 +84,13 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
     QString interfaceName() const;
 
     /**
-      List recent postings on the server.
+      List recent posts on the server.
 
-      @param number The number of postings to fetch. Latest first.
+      @param number The number of posts to fetch. Latest first.
 
-      @see     void listedRecentPostings( QList\<KBlog::BlogPost\>& )
+      @see     void listedRecentPosts( QList\<KBlog::BlogPost\>& )
     */
-    void listRecentPostings( int number );
+    void listRecentPosts( int number );
 
     /**
       List the categories of the blog.
@@ -99,33 +99,33 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
     virtual void listCategories();
 
     /**
-      Fetch the Posting with postingId.
-      @param posting is the posting with its id set to get the corresponding
-      posting. 
+      Fetch the Post with postId.
+      @param post is the post with its id set to get the corresponding
+      post. 
 
-      @see BlogPost::setPostingId( const QString& )
-      @see fetchedPosting( KBlog::BlogPost *posting )
+      @see BlogPost::setPostId( const QString& )
+      @see fetchedPost( KBlog::BlogPost *post )
     */
-    void fetchPosting( KBlog::BlogPost *posting );
+    void fetchPost( KBlog::BlogPost *post );
 
     /**
-      Modify a posting on server.
+      Modify a post on server.
 
-      @param posting is used to send the modified posting including the
-      correct postingId from it to the server.
+      @param post is used to send the modified post including the
+      correct postId from it to the server.
 
-      @see modifiedPosting( KBlog::BlogPost *posting )
+      @see modifiedPost( KBlog::BlogPost *post )
     */
-    void modifyPosting( KBlog::BlogPost *posting );
+    void modifyPost( KBlog::BlogPost *post );
 
     /**
-      Create a new posting on server.
+      Create a new post on server.
 
-      @param posting This posting to send.
+      @param post This post to send.
 
-      @see createdPosting( KBlog::BlogPost *posting )
+      @see createdPost( KBlog::BlogPost *post )
     */
-    void createPosting( KBlog::BlogPost *posting );
+    void createPost( KBlog::BlogPost *post );
 
     /**
       Create a new media object, e.g. picture, on server.

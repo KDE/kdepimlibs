@@ -47,15 +47,15 @@ class Blogger1Private : public BlogPrivate
                                    const QVariant &id );
     virtual void slotListBlogs( const QList<QVariant> &result,
                                 const QVariant &id );
-    virtual void slotListRecentPostings( const QList<QVariant> &result,
+    virtual void slotListRecentPosts( const QList<QVariant> &result,
                                          const QVariant &id );
-    virtual void slotFetchPosting( const QList<QVariant> &result,
+    virtual void slotFetchPost( const QList<QVariant> &result,
                                    const QVariant &id );
-    virtual void slotCreatePosting( const QList<QVariant> &result,
+    virtual void slotCreatePost( const QList<QVariant> &result,
                                     const QVariant &id );
-    virtual void slotModifyPosting( const QList<QVariant> &result,
+    virtual void slotModifyPost( const QList<QVariant> &result,
                                     const QVariant &id );
-    virtual void slotRemovePosting( const QList<QVariant> &result,
+    virtual void slotRemovePost( const QList<QVariant> &result,
                                     const QVariant &id );
     virtual void slotError( int number, const QString &errorString,
                             const QVariant &id );
@@ -63,7 +63,7 @@ class Blogger1Private : public BlogPrivate
     Q_DECLARE_PUBLIC(KBlog::Blogger1)
 
   private:
-    virtual bool readPostingFromMap( BlogPost *post,
+    virtual bool readPostFromMap( BlogPost *post,
                                      const QMap<QString, QVariant> &postInfo );
 };
 

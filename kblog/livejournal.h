@@ -50,7 +50,7 @@ namespace KBlog {
   post->setUserId( "some_user_id" );
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
-  myblog->createPosting( posting );
+  myblog->createPost( post );
   @endcode
 
   @author Mike Arthur \<mike\@mikearthur.co.uk\>
@@ -79,11 +79,11 @@ class KBLOG_EXPORT LiveJournal : public Blog
     virtual void assignFriendToCategory( const QString &username, int category );
 
     /**
-      Create a new posting on server.
+      Create a new post on server.
 
-      @param posting is send to the server.
+      @param post is send to the server.
     */
-    void createPosting( KBlog::BlogPost *posting );
+    void createPost( KBlog::BlogPost *post );
 
     virtual void deleteFriend( const QString &username );
 
@@ -92,12 +92,12 @@ class KBLOG_EXPORT LiveJournal : public Blog
     virtual void expireAllCookies();
 
     /**
-      Fetch the Posting with postingId.
-      @param postingId is the id of the posting on the server.
+      Fetch the Post with postId.
+      @param postId is the id of the post on the server.
 
-      @see  void fetchedPosting( KBlog::BlogPost &posting )
+      @see  void fetchedPost( KBlog::BlogPost &post )
     */
-    void fetchPosting( KBlog::BlogPost *posting );
+    void fetchPost( KBlog::BlogPost *post );
 
     virtual void fetchUserInfo();
 
@@ -128,22 +128,22 @@ class KBLOG_EXPORT LiveJournal : public Blog
     virtual void listPictureKeywords();
 
     /**
-      List recent postings on the server.
-      @see     void listedPosting( KBlog::BlogPost &posting )
+      List recent posts on the server.
+      @see     void listedPost( KBlog::BlogPost &post )
 
-      @see     void listRecentPostingsFinished()
+      @see     void listRecentPostsFinished()
     */
-    void listRecentPostings( int number );
+    void listRecentPosts( int number );
 
     /**
-      Modify a posting on server.
+      Modify a post on server.
 
-      @param posting is used to send the modified posting including the
-      correct postingId from it to the server.
+      @param post is used to send the modified post including the
+      correct postId from it to the server.
     */
-    void modifyPosting( KBlog::BlogPost *posting );
+    void modifyPost( KBlog::BlogPost *post );
 
-    void removePosting( KBlog::BlogPost *posting );
+    void removePost( KBlog::BlogPost *post );
     /**
       Set the Url of the server.
 
@@ -179,7 +179,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
                     const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotAssignFriendToCategory(
                     const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotCreatePosting(
+    Q_PRIVATE_SLOT(d_func(), void slotCreatePost(
                     const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotDeleteFriend(
                     const QList<QVariant>&, const QVariant& ))
@@ -187,7 +187,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
                     const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotExpireAllCookies(
                     const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotFetchPosting(
+    Q_PRIVATE_SLOT(d_func(), void slotFetchPost(
                     const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotFetchUserInfo(
                     const QList<QVariant>&, const QVariant& ))
@@ -203,11 +203,11 @@ class KBLOG_EXPORT LiveJournal : public Blog
                     const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotListPictureKeywords(
                     const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotListRecentPostings(
+    Q_PRIVATE_SLOT(d_func(), void slotListRecentPosts(
                     const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotModifyPosting(
+    Q_PRIVATE_SLOT(d_func(), void slotModifyPost(
                     const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotRemovePosting(
+    Q_PRIVATE_SLOT(d_func(), void slotRemovePost(
                     const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotError( int ,
                     const QString&, const QVariant& ))

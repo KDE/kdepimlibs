@@ -92,7 +92,7 @@ void Blogger1::listBlogs()
       this, SLOT( slotError( int, const QString&, const QVariant& ) ) );
 }
 
-void Blogger1::listRecentPostings( int number )
+void Blogger1::listRecentPosts( int number )
 {
     Q_D(Blogger1);
     kDebug(5323) << "Fetching List of Posts...";
@@ -100,97 +100,97 @@ void Blogger1::listRecentPostings( int number )
     args << QVariant( number );
     d->mXmlRpcClient->call(
       "blogger.getRecentPosts", args,
-      this, SLOT( slotListRecentPostings( const QList<QVariant>&, const QVariant& ) ),
+      this, SLOT( slotListRecentPosts( const QList<QVariant>&, const QVariant& ) ),
       this, SLOT( slotError( int, const QString&, const QVariant& ) ),
                QVariant( number ) );
 }
 
-void Blogger1::fetchPosting( KBlog::BlogPost *posting )
+void Blogger1::fetchPost( KBlog::BlogPost *post )
 {
-  if ( !posting ) {
-    kError(5323) << "Blogger1::modifyPosting: posting is null pointer";
+  if ( !post ) {
+    kError(5323) << "Blogger1::modifyPost: post is null pointer";
     return;
   }
      Q_D(Blogger1);
-     kDebug(5323) << "Fetching Posting with url" << posting->postingId();
-     QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
+     kDebug(5323) << "Fetching Post with url" << post->postId();
+     QList<QVariant> args( d->defaultArgs( post->postId() ) );
      unsigned int i= d->mCallCounter++; // multithreading problem? must be executed at once
-     d->mCallMap[ i ] = posting;
+     d->mCallMap[ i ] = post;
      d->mXmlRpcClient->call(
        "blogger.getPost", args,
-       this, SLOT( slotFetchPosting( const QList<QVariant>&, const QVariant& ) ),
+       this, SLOT( slotFetchPost( const QList<QVariant>&, const QVariant& ) ),
        this, SLOT( slotError( int, const QString&, const QVariant& ) ),
                 QVariant( i ) );
 }
 
-void Blogger1::modifyPosting( KBlog::BlogPost *posting )
+void Blogger1::modifyPost( KBlog::BlogPost *post )
 {
   Q_D(Blogger1);
 
-  if ( !posting ) {
-    kError(5323) << "Blogger1::modifyPosting: posting is null pointer";
+  if ( !post ) {
+    kError(5323) << "Blogger1::modifyPost: post is null pointer";
     return;
   }
-    kDebug(5323) << "Uploading Posting with postingId" << posting->postingId();
+    kDebug(5323) << "Uploading Post with postId" << post->postId();
     unsigned int i= d->mCallCounter++;
-    d->mCallMap[ i ] = posting;
-    QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
-    QStringList categories = posting->categories();
-    QString content = "<title>" + posting->title() + "</title>";
+    d->mCallMap[ i ] = post;
+    QList<QVariant> args( d->defaultArgs( post->postId() ) );
+    QStringList categories = post->categories();
+    QString content = "<title>" + post->title() + "</title>";
     QStringList::const_iterator it;
     for ( it = categories.constBegin(); it != categories.constEnd(); ++it ) {
       content += "<category>" + *it + "</category>";
     }
-    content += posting->content();
+    content += post->content();
     args << QVariant( content );
-    args << QVariant( !posting->isPrivate() );
+    args << QVariant( !post->isPrivate() );
     d->mXmlRpcClient->call(
       "blogger.editPost", args,
-      this, SLOT( slotModifyPosting( const QList<QVariant>&, const QVariant& ) ),
+      this, SLOT( slotModifyPost( const QList<QVariant>&, const QVariant& ) ),
       this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
-void Blogger1::createPosting( KBlog::BlogPost *posting )
+void Blogger1::createPost( KBlog::BlogPost *post )
 {
   Q_D(Blogger1);
-  if ( !posting ) {
-    kError(5323) << "Blogger1::createPosting: posting is null pointer";
+  if ( !post ) {
+    kError(5323) << "Blogger1::createPost: post is null pointer";
     return;
   }
     unsigned int i= d->mCallCounter++;
-    d->mCallMap[ i ] = posting;
-    kDebug(5323) << "Creating new Posting with blogid" << blogId();
+    d->mCallMap[ i ] = post;
+    kDebug(5323) << "Creating new Post with blogid" << blogId();
     QList<QVariant> args( d->defaultArgs( blogId() ) );
-    QStringList categories = posting->categories();
-    QString content = "<title>" + posting->title() + "</title>";
+    QStringList categories = post->categories();
+    QString content = "<title>" + post->title() + "</title>";
     QStringList::const_iterator it;
     for ( it = categories.constBegin(); it != categories.constEnd(); ++it ) {
       content += "<category>" + *it + "</category>";
     }
-    content += posting->content();
+    content += post->content();
     args << QVariant( content );
-    args << QVariant( !posting->isPrivate() );
+    args << QVariant( !post->isPrivate() );
     d->mXmlRpcClient->call(
       "blogger.newPost", args,
-      this, SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ),
+      this, SLOT( slotCreatePost( const QList<QVariant>&, const QVariant& ) ),
       this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
-void Blogger1::removePosting( KBlog::BlogPost *posting )
+void Blogger1::removePost( KBlog::BlogPost *post )
 {
  Q_D(Blogger1);
-  if ( !posting ) {
-    kError(5323) << "Blogger1::removePosting: posting is null pointer";
+  if ( !post ) {
+    kError(5323) << "Blogger1::removePost: post is null pointer";
     return;
   }
   unsigned int i = d->mCallCounter++;
-  d->mCallMap[ i ] = posting;
- kDebug(5323) << "Blogger1::removePosting: postingId=" << posting->postingId();
- QList<QVariant> args( d->defaultArgs( posting->postingId() ) );
- args << QVariant( true ); // Publish must be set to remove posting.
+  d->mCallMap[ i ] = post;
+ kDebug(5323) << "Blogger1::removePost: postId=" << post->postId();
+ QList<QVariant> args( d->defaultArgs( post->postId() ) );
+ args << QVariant( true ); // Publish must be set to remove post.
  d->mXmlRpcClient->call(
    "blogger.deletePost", args,
-   this, SLOT( slotRemovePosting( const QList<QVariant>&, const QVariant& ) ),
+   this, SLOT( slotRemovePost( const QList<QVariant>&, const QVariant& ) ),
    this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
@@ -279,57 +279,57 @@ void Blogger1Private::slotListBlogs(
   }
 }
 
-void Blogger1Private::slotListRecentPostings(
+void Blogger1Private::slotListRecentPosts(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q(Blogger1);
   int count = id.toInt(); // not sure if needed, actually the API should
 // not give more posts
 
-  kDebug(5323) << "Blog::slotListRecentPostings";
+  kDebug(5323) << "Blog::slotListRecentPosts";
   kDebug(5323) << "TOP:" << result[0].typeName();
 
-  QList <BlogPost> fetchedPostingList;
+  QList <BlogPost> fetchedPostList;
 
   if ( result[0].type() != QVariant::List ) {
-    kError(5323) << "Could not fetch list of postings out of the"
+    kError(5323) << "Could not fetch list of posts out of the"
                  << "result from the server, not a list.";
     emit q->error( Blogger1::ParsingError,
-                         i18n( "Could not fetch list of postings out of the "
+                         i18n( "Could not fetch list of posts out of the "
                                "result from the server, not a list." ) );
   } else {
     const QList<QVariant> postReceived = result[0].toList();
     QList<QVariant>::ConstIterator it = postReceived.begin();
     QList<QVariant>::ConstIterator end = postReceived.end();
     for ( ; it != end; ++it ) {
-      BlogPost posting;
+      BlogPost post;
       kDebug(5323) << "MIDDLE:" << ( *it ).typeName();
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-      if ( readPostingFromMap( &posting, postInfo ) ) {
-        kDebug(5323) << "Posting with ID:"
-                    << posting.postingId()
-                    << "appended in fetchedPostingList";
-        fetchedPostingList.append( posting );
+      if ( readPostFromMap( &post, postInfo ) ) {
+        kDebug(5323) << "Post with ID:"
+                    << post.postId()
+                    << "appended in fetchedPostList";
+        fetchedPostList.append( post );
       } else {
-        kError(5323) << "readPostingFromMap failed!";
+        kError(5323) << "readPostFromMap failed!";
         emit q->error( Blogger1::ParsingError,
-                             i18n( "Could not read posting." ) );
+                             i18n( "Could not read post." ) );
        }
        if( --count == 0 )
          break;
      }
    }
-   kDebug(5323) << "Emitting listRecentPostingsFinished()";
-   emit q->listedRecentPostings(fetchedPostingList);
+   kDebug(5323) << "Emitting listRecentPostsFinished()";
+   emit q->listedRecentPosts(fetchedPostList);
 }
 
-void Blogger1Private::slotFetchPosting(
+void Blogger1Private::slotFetchPost(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q(Blogger1);
-  kDebug(5323) << "Blog::slotFetchPosting";
+  kDebug(5323) << "Blog::slotFetchPost";
 
-  KBlog::BlogPost* posting = mCallMap[ id.toInt() ];
+  KBlog::BlogPost* post = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
   //array of structs containing ISO.8601
@@ -337,104 +337,104 @@ void Blogger1Private::slotFetchPosting(
   // TODO: Time zone for the dateCreated!
   kDebug (5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::Map ) {
-    kError(5323) << "Could not fetch posting out of the result from "
+    kError(5323) << "Could not fetch post out of the result from "
                   << "the server.";
-    emit q->errorPosting( Blogger1::ParsingError,
-                          i18n( "Could not fetch posting out of the result"
-                                "from the server." ), posting );
-    posting->setError( i18n( "Could not fetch posting out of the "
+    emit q->errorPost( Blogger1::ParsingError,
+                          i18n( "Could not fetch post out of the result"
+                                "from the server." ), post );
+    post->setError( i18n( "Could not fetch post out of the "
                               "result from the server." ) );
-    posting->setStatus( BlogPost::Error );
+    post->setStatus( BlogPost::Error );
   } else {
     const QMap<QString, QVariant> postInfo = result[0].toMap();
-    if ( readPostingFromMap( posting, postInfo ) ) {
-      kDebug(5323) << "Emitting fetchedPosting( posting.postingId()="
-                   << posting->postingId() << ");";
-      posting->setStatus( BlogPost::Fetched );
-      emit q->fetchedPosting( posting );
+    if ( readPostFromMap( post, postInfo ) ) {
+      kDebug(5323) << "Emitting fetchedPost( post.postId()="
+                   << post->postId() << ");";
+      post->setStatus( BlogPost::Fetched );
+      emit q->fetchedPost( post );
     } else {
-      kError(5323) << "readPostingFromMap failed!";
-      emit q->errorPosting( Blogger1::ParsingError,
-                            i18n( "Could not read posting." ), posting );
-      posting->setError( i18n( "Could not read posting." ) );
-      posting->setStatus( BlogPost::Error );
+      kError(5323) << "readPostFromMap failed!";
+      emit q->errorPost( Blogger1::ParsingError,
+                            i18n( "Could not read post." ), post );
+      post->setError( i18n( "Could not read post." ) );
+      post->setStatus( BlogPost::Error );
     }
   }
 
 }
 
-void Blogger1Private::slotCreatePosting(
+void Blogger1Private::slotCreatePost(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q(Blogger1);
-  KBlog::BlogPost* posting = mCallMap[ id.toInt() ];
+  KBlog::BlogPost* post = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
-  kDebug(5323) << "Blog::slotCreatePosting";
+  kDebug(5323) << "Blog::slotCreatePost";
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug (5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::String ) {
-    kError(5323) << "Could not read the postingId, not a string.";
-    emit q->errorPosting( Blogger1::ParsingError,
-                          i18n( "Could not read the postingId, not a string." ),
-                          posting );
+    kError(5323) << "Could not read the postId, not a string.";
+    emit q->errorPost( Blogger1::ParsingError,
+                          i18n( "Could not read the postId, not a string." ),
+                          post );
   } else {
-    posting->setPostingId( result[0].toString() );
-    posting->setStatus( KBlog::BlogPost::Created );
-    emit q->createdPosting( posting );
-    kDebug(5323) << "emitting createdPosting()" <<
+    post->setPostId( result[0].toString() );
+    post->setStatus( KBlog::BlogPost::Created );
+    emit q->createdPost( post );
+    kDebug(5323) << "emitting createdPost()" <<
              "for" << result[0].toInt();
   }
 
 }
 
-void Blogger1Private::slotModifyPosting(
+void Blogger1Private::slotModifyPost(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q(Blogger1);
-  KBlog::BlogPost* posting = mCallMap[ id.toInt() ];
+  KBlog::BlogPost* post = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
-  kDebug(5323) << "Blog::slotModifyPosting";
+  kDebug(5323) << "Blog::slotModifyPost";
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::Bool ) {
     kError(5323) << "Could not read the result, not a boolean.";
-    emit q->errorPosting( Blogger1::ParsingError,
+    emit q->errorPost( Blogger1::ParsingError,
                           i18n( "Could not read the result, not a boolean." ),
-                          posting );
+                          post );
   } else {
-    posting->setStatus( KBlog::BlogPost::Modified );
-    emit q->modifiedPosting( posting );
-    kDebug(5323) << "emitting modifiedPosting()";
+    post->setStatus( KBlog::BlogPost::Modified );
+    emit q->modifiedPost( post );
+    kDebug(5323) << "emitting modifiedPost()";
   }
 }
 
-void Blogger1Private::slotRemovePosting(
+void Blogger1Private::slotRemovePost(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q(Blogger1);
-  KBlog::BlogPost* posting = mCallMap[ id.toInt() ];
+  KBlog::BlogPost* post = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
-  kDebug(5323) << "Blog::slotRemovePosting";
+  kDebug(5323) << "Blog::slotRemovePost";
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug(5323) << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::Bool ) {
     kError(5323) << "Could not read the result, not a boolean.";
-    emit q->errorPosting( Blogger1::ParsingError,
+    emit q->errorPost( Blogger1::ParsingError,
                           i18n( "Could not read the result, not a boolean." ),
-                          posting );
+                          post );
   } else {
-    posting->setStatus( KBlog::BlogPost::Removed );
-    emit q->removedPosting( posting );
-    kDebug(5323) << "emitting removedPosting()";
+    post->setStatus( KBlog::BlogPost::Removed );
+    emit q->removedPost( post );
+    kDebug(5323) << "emitting removedPost()";
   }
 }
 
@@ -444,12 +444,12 @@ void Blogger1Private::slotError( int number,
 {
   Q_Q(Blogger1);
   Q_UNUSED( number );
-  BlogPost *posting = mCallMap[ id.toInt() ];
+  BlogPost *post = mCallMap[ id.toInt() ];
 
-  emit q->errorPosting( Blogger1::XmlRpc, errorString, posting );
+  emit q->errorPost( Blogger1::XmlRpc, errorString, post );
 }
 
-bool Blogger1Private::readPostingFromMap(
+bool Blogger1Private::readPostFromMap(
     BlogPost *post, const QMap<QString, QVariant> &postInfo )
 {
   // FIXME: integrate error handling
@@ -468,7 +468,7 @@ bool Blogger1Private::readPostingFromMap(
   if ( dt.isValid() && !dt.isNull() ) {
     post->setModificationDateTime( dt );
   }
-  post->setPostingId( postInfo["postid"].toString() );
+  post->setPostId( postInfo["postid"].toString() );
 
   QString title( postInfo["title"].toString() );
   QString description( postInfo["description"].toString() );

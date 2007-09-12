@@ -61,22 +61,22 @@ void LiveJournal::assignFriendToCategory ( const QString &username,
   // LJ.XMLRPC.editfriendgroups
 }
 
-void LiveJournal::createPosting( KBlog::BlogPost *posting )
+void LiveJournal::createPost( KBlog::BlogPost *post )
 {
   Q_D(LiveJournal); // Enable d-pointer access to the LiveJournalPrivate object
-  if ( !posting ) { // Check if posting has a valid memory address (>0)
-    kError(5323) << "Blogger1::createPosting: posting is null pointer"; // If it doesn't print an error to the console.
+  if ( !post ) { // Check if post has a valid memory address (>0)
+    kError(5323) << "Blogger1::createPost: post is null pointer"; // If it doesn't print an error to the console.
     return; // If it doesnt, exit the method
   }
   unsigned int i = d->mCallCounter++; // Add one to the call counter and assign it
-  d->mCallMap[ i ] = posting; // Put the posting in the map at location i
-  kDebug(5323) << "LiveJournal::createPosting()"; // Send a message to the console to state which method we have entered.
+  d->mCallMap[ i ] = post; // Put the post in the map at location i
+  kDebug(5323) << "LiveJournal::createPost()"; // Send a message to the console to state which method we have entered.
   QList<QVariant> args; // Create the argument list, in this case will just contain the map.
   QMap<QString,QVariant> map( d->defaultArgs() ); // Create the initial map from the default arguments.
-  map.insert( "event", posting->content() ); // Insert the posting's content into the struct.
-  map.insert( "subject", posting->title() ); // Insert the posting's subject into the struct.
-  // TODO map.insert( "allowmask", posting->categories() ); // We want to use the allowmask to use categories/tags
-  KDateTime date = posting->creationDateTime(); // Get the date of the posting's creation
+  map.insert( "event", post->content() ); // Insert the post's content into the struct.
+  map.insert( "subject", post->title() ); // Insert the post's subject into the struct.
+  // TODO map.insert( "allowmask", post->categories() ); // We want to use the allowmask to use categories/tags
+  KDateTime date = post->creationDateTime(); // Get the date of the post's creation
   int year = date.toString( "%Y" ).toInt(); // Get the year from the date using a format string and converting string to an integer
   int month = date.toString( "%m" ).toInt(); // Get the month from the date using a format string and converting string to an integer
   int day = date.toString( "%d" ).toInt(); // Get the day from the date using a format string and converting string to an integer
@@ -91,7 +91,7 @@ void LiveJournal::createPosting( KBlog::BlogPost *posting )
   d->mXmlRpcClient->call("LJ.XMLRPC.postevent", // The XML-RPC procedure to call.
                          args, // A list containing all the arguments to pass to the procedure.
                          this, // The object containing the slot to use on success.
-                         SLOT( slotCreatePosting( const QList<QVariant>&, const QVariant& ) ), // The slot to call on success.
+                         SLOT( slotCreatePost( const QList<QVariant>&, const QVariant& ) ), // The slot to call on success.
                          this, // The object containing the slot to call on failure.
                          SLOT( slotError( int, const QString&, const QVariant& ) ), // The slot to call on failure
                          QVariant( i ) ); // The ID, as we haven't created a post, the location in the map.
@@ -117,9 +117,9 @@ void LiveJournal::expireAllCookies()
   // LJ.XMLRPC.sessionexpire
 }
 
-void LiveJournal::fetchPosting( KBlog::BlogPost *posting )
+void LiveJournal::fetchPost( KBlog::BlogPost *post )
 {
-  Q_UNUSED( posting );
+  Q_UNUSED( post );
   //TODO
   // LJ.XMLRPC.getevents
 }
@@ -176,31 +176,31 @@ void LiveJournal::listPictureKeywords()
   // LJ.XMLRPC.login
 }
 
-void LiveJournal::listRecentPostings( int number )
+void LiveJournal::listRecentPosts( int number )
 {
   Q_UNUSED( number );
   //TODO
   // LJ.XMLRPC.getevents with lastn and howmany
 }
 
-void LiveJournal::modifyPosting( KBlog::BlogPost *posting )
+void LiveJournal::modifyPost( KBlog::BlogPost *post )
 {
-  Q_UNUSED( posting );
+  Q_UNUSED( post );
   //TODO
   // LJ.XMLRPC.editevent
 }
 
-void LiveJournal::removePosting( KBlog::BlogPost *posting )
+void LiveJournal::removePost( KBlog::BlogPost *post )
 {
   Q_D(LiveJournal); // Enable d-pointer access to the LiveJournalPrivate object
-  kDebug(5323) << "LiveJournal::removePosting()"; // Send a message to the console to state which method we have entered.
+  kDebug(5323) << "LiveJournal::removePost()"; // Send a message to the console to state which method we have entered.
   QList<QVariant> args; // Create the argument list, in this case will just contain the map.
   QMap<QString,QVariant> map( d->defaultArgs() ); // Create the initial map from the default arguments.
-  map.insert( "itemid", posting->postingId().toInt() ); // Insert the posting's unique ID into the struct.
+  map.insert( "itemid", post->postId().toInt() ); // Insert the post's unique ID into the struct.
   map.insert( "event", QString() ); // Insert no content into the struct to delete the post.
-  map.insert( "subject", posting->title() ); // Insert the posting's subject into the struct.
-  // TODO map.insert( "allowmask", posting->categories() );
-  KDateTime date = posting->creationDateTime(); // Get the date of the posting's creation
+  map.insert( "subject", post->title() ); // Insert the post's subject into the struct.
+  // TODO map.insert( "allowmask", post->categories() );
+  KDateTime date = post->creationDateTime(); // Get the date of the post's creation
   int year = date.toString( "%Y" ).toInt(); // Get the year from the date using a format string and converting string to an integer
   int month = date.toString( "%m" ).toInt(); // Get the month from the date using a format string and converting string to an integer
   int day = date.toString( "%d").toInt(); // Get the day from the date using a format string and converting string to an integer
@@ -215,7 +215,7 @@ void LiveJournal::removePosting( KBlog::BlogPost *posting )
   d->mXmlRpcClient->call("LJ.XMLRPC.editevent", // The XML-RPC procedure to call.
                          args, // A list containing all the arguments to pass to the procedure.
                          this, // The object containing the slot to use on success.
-                         SLOT( slotRemovePosting( const QList<QVariant>&, const QVariant& ) ), // The slot to call on success.
+                         SLOT( slotRemovePost( const QList<QVariant>&, const QVariant& ) ), // The slot to call on success.
                          this, // The object containing the slot to call on failure.
                          SLOT( slotError( int, const QString&, const QVariant& ) ) ); // The slot to call on failure.
 }
@@ -259,7 +259,7 @@ QMap<QString,QVariant> LiveJournalPrivate::defaultArgs()
   return args; // return the QMap.
 }
 
-bool LiveJournalPrivate::readPostingFromMap(
+bool LiveJournalPrivate::readPostFromMap(
     BlogPost *post, const QMap<QString, QVariant> &postInfo )
 {
   Q_UNUSED( post );
@@ -284,27 +284,27 @@ void LiveJournalPrivate::slotAssignFriendToCategory(
   //TODO
 }
 
-void LiveJournalPrivate::slotCreatePosting( const QList<QVariant> &result,
+void LiveJournalPrivate::slotCreatePost( const QList<QVariant> &result,
                                             const QVariant &id )
 {
-  kDebug(5323) << "LiveJournal::slotCreatePosting: " << id; // Print method name and id to the console.
+  kDebug(5323) << "LiveJournal::slotCreatePost: " << id; // Print method name and id to the console.
   Q_Q(LiveJournal); // Get access to the q object which allows access to LiveJournal.* from LiveJournalPrivate
-  KBlog::BlogPost* posting = mCallMap[ id.toInt() ]; // Retrieve the posting from the calling map
-  mCallMap.remove( id.toInt() ); // Remove the posting as it is now owned by the signal catcher
+  KBlog::BlogPost* post = mCallMap[ id.toInt() ]; // Retrieve the post from the calling map
+  mCallMap.remove( id.toInt() ); // Remove the post as it is now owned by the signal catcher
 
   // struct containing String anum, String itemid
   kDebug (5323) << "TOP:" << result[0].typeName(); // Print first return type to the console.
   if ( result[0].type() != QVariant::Map ) { // Make sure the only return type is a struct.
-    kError(5323) << "Could not fetch posting's ID out of the result from the server,"
+    kError(5323) << "Could not fetch post's ID out of the result from the server,"
         << "not a map."; // If not a struct, print error.
-    emit q->errorPosting( LiveJournal::ParsingError,
-                   i18n( "Could not read the posting ID, result not a map." ), posting ); // Emit an error signal if we can't get the posting ID.
+    emit q->errorPost( LiveJournal::ParsingError,
+                   i18n( "Could not read the post ID, result not a map." ), post ); // Emit an error signal if we can't get the post ID.
   } else {
     QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>(); // Get post ID from struct.
-    posting->setPostingId( itemid ); // Set the posting ID to the anum value from the return struct.
-    posting->setStatus( KBlog::BlogPost::Created ); // Set the posting's status to indicate it has been successfully created.
-    emit q->createdPosting( posting ); // Emit the created posting
-    kDebug(5323) << "emitting createdPosting()" <<
+    post->setPostId( itemid ); // Set the post ID to the anum value from the return struct.
+    post->setStatus( KBlog::BlogPost::Created ); // Set the post's status to indicate it has been successfully created.
+    emit q->createdPost( post ); // Emit the created post
+    kDebug(5323) << "emitting createdPost()" <<
         "for" << itemid; // Notify emission to the console
   }
 }
@@ -342,7 +342,7 @@ void LiveJournalPrivate::slotError( int number,
   kError(5323) << "XML-RPC error for " << id;
 }
 
-void LiveJournalPrivate::slotFetchPosting(
+void LiveJournalPrivate::slotFetchPost(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
@@ -406,7 +406,7 @@ void LiveJournalPrivate::slotListPictureKeywords(
   //TODO
 }
 
-void LiveJournalPrivate::slotListRecentPostings(
+void LiveJournalPrivate::slotListRecentPosts(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
@@ -414,7 +414,7 @@ void LiveJournalPrivate::slotListRecentPostings(
   //TODO
 }
 
-void LiveJournalPrivate::slotModifyPosting(
+void LiveJournalPrivate::slotModifyPost(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
@@ -422,33 +422,33 @@ void LiveJournalPrivate::slotModifyPosting(
   //TODO
 }
 
-void LiveJournalPrivate::slotRemovePosting( const QList<QVariant> &result,
+void LiveJournalPrivate::slotRemovePost( const QList<QVariant> &result,
                                             const QVariant &id )
 {
-  kDebug(5323) << "LiveJournal::slotCreatePosting: " << id; // Print method name and id to the console.
+  kDebug(5323) << "LiveJournal::slotCreatePost: " << id; // Print method name and id to the console.
   Q_Q(LiveJournal); // Get access to the q object which allows access to LiveJournal.* from LiveJournalPrivate
-  KBlog::BlogPost* posting = mCallMap[ id.toInt() ]; // Retrieve the posting from the calling map
-  mCallMap.remove( id.toInt() ); // Remove the posting as it is now owned by the signal catcher
+  KBlog::BlogPost* post = mCallMap[ id.toInt() ]; // Retrieve the post from the calling map
+  mCallMap.remove( id.toInt() ); // Remove the post as it is now owned by the signal catcher
 
   // struct containing String anum, String itemid
   kDebug (5323) << "TOP:" << result[0].typeName(); // Print first return type to the console.
   if ( result[0].type() != QVariant::Map ) { // Make sure the only return type is a struct.
-    kError(5323) << "Could not fetch posting's ID out of the result from the server,"
+    kError(5323) << "Could not fetch post's ID out of the result from the server,"
         << "not a map."; // If not a struct, print error.
-    emit q->errorPosting( LiveJournal::ParsingError,
-                   i18n( "Could not read the posting ID, result not a map." ), posting ); // Emit an error signal if we can't get the posting ID.
+    emit q->errorPost( LiveJournal::ParsingError,
+                   i18n( "Could not read the post ID, result not a map." ), post ); // Emit an error signal if we can't get the post ID.
   } else {
     QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>();
-    if ( itemid == posting->postingId() ) { // Check the posting ID matches the anum value from the return struct.
-      posting->setStatus( KBlog::BlogPost::Removed ); // Set the posting's status to indicate it has been successfully removed.
-      emit q->removedPosting( posting ); // Emit the removed posting
-      kDebug(5323) << "emitting createdPosting()" <<
+    if ( itemid == post->postId() ) { // Check the post ID matches the anum value from the return struct.
+      post->setStatus( KBlog::BlogPost::Removed ); // Set the post's status to indicate it has been successfully removed.
+      emit q->removedPost( post ); // Emit the removed post
+      kDebug(5323) << "emitting createdPost()" <<
           "for" << itemid; // Notify emission to the console
     }
     else {
-      kError(5323) << "The returned posting ID did not match the sent one."; // If not matching, print error.
-      emit q->errorPosting( LiveJournal::ParsingError,
-                     i18n( "The returned posting ID did not match the sent one: " ), posting ); // Emit an error signal if the posting IDs don't match.
+      kError(5323) << "The returned post ID did not match the sent one."; // If not matching, print error.
+      emit q->errorPost( LiveJournal::ParsingError,
+                     i18n( "The returned post ID did not match the sent one: " ), post ); // Emit an error signal if the post IDs don't match.
     }
   }
 }

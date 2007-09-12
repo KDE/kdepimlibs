@@ -50,7 +50,7 @@ namespace KBlog {
   KBlog::BlogPost *post = new BlogPost();
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
-  myblog->createPosting( posting );
+  myblog->createPost( post );
   @endcode
 
   @author Christian Weilbach \<christian_weilbach\@web.de\>
@@ -74,32 +74,32 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     virtual ~MovableType();
 
     /**
-      Create a new posting on server.
+      Create a new post on server.
 
-      @param posting is send to the server.
+      @param post is send to the server.
     */
-    void createPosting( KBlog::BlogPost *posting );
+    void createPost( KBlog::BlogPost *post );
 
     /**
-      Fetch the Posting with postingId.
-      @param posting This is the posting with its id set to the
-      corresponding posting on the server.
+      Fetch the Post with postId.
+      @param post This is the post with its id set to the
+      corresponding post on the server.
 
-      @see BlogPost::setPostingId( const QString& )
-      @see fetchedPosting( KBlog::BlogPost* )
+      @see BlogPost::setPostId( const QString& )
+      @see fetchedPost( KBlog::BlogPost* )
     */
-    void fetchPosting( KBlog::BlogPost *posting );
+    void fetchPost( KBlog::BlogPost *post );
 
     /**
-      Modify a posting on server.
+      Modify a post on server.
 
-      @param posting The posting to be modified on the
+      @param post The post to be modified on the
       server. You need to set its id correctly.
 
-      @see BlogPost::setPostingId( const QString& )
-      @see modifiedPosting( KBlog::BlogPost* )
+      @see BlogPost::setPostId( const QString& )
+      @see modifiedPost( KBlog::BlogPost* )
     */
-    void modifyPosting( KBlog::BlogPost *posting );
+    void modifyPost( KBlog::BlogPost *post );
 
     /**
       Returns the  of the inherited object.
@@ -107,36 +107,36 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     QString interfaceName() const;
 
     /**
-      List recent postings on the server.
+      List recent posts on the server.
 
-     @param number The number of postings to fetch. Latest first.
+     @param number The number of posts to fetch. Latest first.
 
-      @see     void listedRecentPostings( const QList\<KBlog::BlogPost\>& )
+      @see     void listedRecentPosts( const QList\<KBlog::BlogPost\>& )
     */
-    void listRecentPostings( int number );
+    void listRecentPosts( int number );
 
     /**
       Get the list of trackback pings from the server.
 
-      @param posting This is the posting to get the trackback pings from.
+      @param post This is the post to get the trackback pings from.
       You need to set its id correctly.
 
-      @see BlogPost::setPostingId( const QString& )
+      @see BlogPost::setPostId( const QString& )
       @see listedTrackBackPings( KBlog::BlogPost *, const QList\<QMap\<QString,QString\> \>& )
 
     */
-    virtual void listTrackBackPings( KBlog::BlogPost *posting );
+    virtual void listTrackBackPings( KBlog::BlogPost *post );
 
   Q_SIGNALS:
     /**
       This signal is emitted when the trackback pings are fetched completely.
 
-      @param posting This is the posting of the trackback ping list.
+      @param post This is the post of the trackback ping list.
       @param pings This is the list itself. The map contains the keys: id, url, ip.
 
       @see listTrackBackPings()
     */
-    void listedTrackBackPings( KBlog::BlogPost *posting, const QList<QMap<QString,QString> > &pings );
+    void listedTrackBackPings( KBlog::BlogPost *post, const QList<QMap<QString,QString> > &pings );
 
   protected:
     /**

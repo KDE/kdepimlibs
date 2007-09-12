@@ -60,7 +60,7 @@ namespace KBlog {
   KBlog::BlogPost *post = new BlogPost();
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
-  myblog->createPosting( posting );
+  myblog->createPost( post );
   @endcode
 
   @author Christian Weilbach \<christian_weilbach\@web.de\>
@@ -85,12 +85,12 @@ class KBLOG_EXPORT GData : public Blog
 
     /**
       Sets the user's name for the blog. Username is only the E-Mail
-      address of the user. This is used in createPosting and modifyPosting.
+      address of the user. This is used in createPost and modifyPost.
       @param fullName is a QString containing the blog username.
 
       @see username()
-      @see createPosting( KBlog::BlogPost* )
-      @see modifiyPosting( KBlog::BlogPost* )
+      @see createPost( KBlog::BlogPost* )
+      @see modifiyPost( KBlog::BlogPost* )
     */
     virtual void setFullName( const QString &fullName );
 
@@ -141,13 +141,13 @@ class KBLOG_EXPORT GData : public Blog
 
 
     /**
-        List the comments available for this posting on the server.
+        List the comments available for this post on the server.
 
-        @param posting The posting, which postings should be listed.
+        @param post The post, which posts should be listed.
 
         @see void listedComments( KBlog::BlogPost*, const QList\<KBlog::BlogComment\>& )
     */
-    virtual void listComments( KBlog::BlogPost *posting );
+    virtual void listComments( KBlog::BlogPost *post );
 
 
     /**
@@ -158,30 +158,30 @@ class KBLOG_EXPORT GData : public Blog
     virtual void listAllComments();
 
     /**
-        List recent postings on the server.
+        List recent posts on the server.
 
-        @param number The number of postings to fetch. The order is newest first.
+        @param number The number of posts to fetch. The order is newest first.
 
-        @see     void listedPostings( const QList\<KBlog::BlogPost\>& )
-        @see     void fetchPosting( KBlog::BlogPost* )
+        @see     void listedPosts( const QList\<KBlog::BlogPost\>& )
+        @see     void fetchPost( KBlog::BlogPost* )
     */
-    void listRecentPostings( int number );
+    void listRecentPosts( int number );
 
 
     /**
-        List recent postings on the server depending on meta information about the posting.
+        List recent posts on the server depending on meta information about the post.
 
-        @param label The lables of postings to fetch.
-        @param number The number of postings to fetch. The order is newest first.
-        @param upMinTime The oldest upload time of the postings to fetch.
-        @param upMaxTime The newest upload time of the postings to fetch.
-        @param pubMinTime The oldest publication time of the postings to fetch.
-        @param pubMaxTime The newest publication time of the postings to fetch.
+        @param label The lables of posts to fetch.
+        @param number The number of posts to fetch. The order is newest first.
+        @param upMinTime The oldest upload time of the posts to fetch.
+        @param upMaxTime The newest upload time of the posts to fetch.
+        @param pubMinTime The oldest publication time of the posts to fetch.
+        @param pubMaxTime The newest publication time of the posts to fetch.
 
-        @see     void listedPostings( const QList\<KBlog::BlogPost\>& )
-        @see     void fetchPosting( KBlog::BlogPost* )
+        @see     void listedPosts( const QList\<KBlog::BlogPost\>& )
+        @see     void fetchPost( KBlog::BlogPost* )
     */
-    virtual void listRecentPostings( const QStringList &label=QStringList(), int number=0, 
+    virtual void listRecentPosts( const QStringList &label=QStringList(), int number=0, 
                 const KDateTime &upMinTime=KDateTime(), 
                 const KDateTime &upMaxTime=KDateTime(), 
                 const KDateTime &pubMinTime=KDateTime(), 
@@ -189,64 +189,64 @@ class KBLOG_EXPORT GData : public Blog
 
 
     /**
-        Fetch the Posting with a specific id.
-        @param posting This is the posting with its id set correctly.
+        Fetch the Post with a specific id.
+        @param post This is the post with its id set correctly.
 
-        @see BlogPost::setPostingId( const QString& )
-        @see fetchedPosting( KBlog::BlogPost *posting )
+        @see BlogPost::setPostId( const QString& )
+        @see fetchedPost( KBlog::BlogPost *post )
     */
-    void fetchPosting( KBlog::BlogPost *posting );
+    void fetchPost( KBlog::BlogPost *post );
 
     /**
-        Modify a posting on server.
+        Modify a post on server.
 
-        @param posting This is used to send the modified posting including the
+        @param post This is used to send the modified post including the
           correct id.
     */
-    void modifyPosting( KBlog::BlogPost *posting );
+    void modifyPost( KBlog::BlogPost *post );
 
     /**
-        Create a new posting on server.
+        Create a new post on server.
 
-        @param posting This is send to the server.
+        @param post This is send to the server.
 
-        @see createdPosting( KBlog::BlogPost *posting )
+        @see createdPost( KBlog::BlogPost *post )
     */
-    void createPosting( KBlog::BlogPost *posting );
+    void createPost( KBlog::BlogPost *post );
 
     /**
-        Remove a posting from the server.
+        Remove a post from the server.
 
-        @param posting This is the posting with its id set correctly.
+        @param post This is the post with its id set correctly.
 
-        @see BlogPost::setPostingId( const QString& )
-        @see removedPosting( KBlog::BlogPost* )
+        @see BlogPost::setPostId( const QString& )
+        @see removedPost( KBlog::BlogPost* )
     */
-    void removePosting( KBlog::BlogPost *posting );
+    void removePost( KBlog::BlogPost *post );
 
 
     /**
         Create a comment on the server.
 
-        @param posting This is the posting with its id set correctly.
+        @param post This is the post with its id set correctly.
         @param comment This is the comment to create.
 
-        @see BlogPost::setPostingId( const QString& )
+        @see BlogPost::setPostId( const QString& )
         @see createdComment( KBlog::BlogPost*, KBlog::BlogComment*  )
     */
-    virtual void createComment( KBlog::BlogPost *posting, KBlog::BlogComment *comment );
+    virtual void createComment( KBlog::BlogPost *post, KBlog::BlogComment *comment );
 
 
     /**
         Remove a comment from the server.
 
-        @param posting This is the posting with its id set correctly.
+        @param post This is the post with its id set correctly.
         @param comment This is the comment to remove.
 
-        @see BlogPost::setPostingId( const QString& )
+        @see BlogPost::setPostId( const QString& )
         @see removedComment( KBlog::BlogPost*, KBlog::BlogComment*  )
     */
-    virtual void removeComment( KBlog::BlogPost *posting, KBlog::BlogComment *comment );
+    virtual void removeComment( KBlog::BlogPost *post, KBlog::BlogComment *comment );
 
   Q_SIGNALS:
 
@@ -275,36 +275,36 @@ class KBLOG_EXPORT GData : public Blog
       This signal is emitted when a list of comments has been fetched 
       from the blogging server.
 
-      @param posting This is the corresponding posting.
+      @param post This is the corresponding post.
       @param comments The list of comments.
 
       @see listComments( KBlog::BlogPost* )
     */
-    void listedComments( KBlog::BlogPost *posting, const QList<KBlog::BlogComment> &comments );
+    void listedComments( KBlog::BlogPost *post, const QList<KBlog::BlogComment> &comments );
 
 
     /**
       This signal is emitted when a comment has been created
       on the blogging server.
 
-      @param posting This is the corresponding posting.
+      @param post This is the corresponding post.
       @param comment This is the created comment.
 
-      @see createComment( KBlog::BlogPost *posting, KBlog::BlogComment *comment )
+      @see createComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
     */
-    void createdComment( const KBlog::BlogPost *posting, const KBlog::BlogComment *comment );
+    void createdComment( const KBlog::BlogPost *post, const KBlog::BlogComment *comment );
 
 
     /**
       This signal is emitted when a comment has been removed
       from the blogging server.
 
-      @param posting This is the corresponding posting.
+      @param post This is the corresponding post.
       @param comment This is the removed comment.
 
-      @see removeComment( KBlog::BlogPost *posting, KBlog::BlogComment *comment )
+      @see removeComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
     */
-    void removedComment( const KBlog::BlogPost *posting, const KBlog::BlogComment *comment );
+    void removedComment( const KBlog::BlogPost *post, const KBlog::BlogComment *comment );
 
     /**
       This signal is emitted when the profile id has been
@@ -328,14 +328,14 @@ class KBLOG_EXPORT GData : public Blog
     Q_PRIVATE_SLOT(d_func(), void slotListBlogs(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
     Q_PRIVATE_SLOT(d_func(), void slotListComments(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
     Q_PRIVATE_SLOT(d_func(), void slotListAllComments(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
-    Q_PRIVATE_SLOT(d_func(), void slotListRecentPostings(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
-    Q_PRIVATE_SLOT(d_func(), void slotFetchPosting(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
-    Q_PRIVATE_SLOT(d_func(), void slotCreatePosting(KJob*))
-    Q_PRIVATE_SLOT(d_func(), void slotCreatePostingData(KIO::Job *,const QByteArray&))
-    Q_PRIVATE_SLOT(d_func(), void slotModifyPosting(KJob*))
-    Q_PRIVATE_SLOT(d_func(), void slotModifyPostingData(KIO::Job *,const QByteArray&))
-    Q_PRIVATE_SLOT(d_func(), void slotRemovePosting(KJob*))
-    Q_PRIVATE_SLOT(d_func(), void slotRemovePostingData(KIO::Job *,const QByteArray&))
+    Q_PRIVATE_SLOT(d_func(), void slotListRecentPosts(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(), void slotFetchPost(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(), void slotCreatePost(KJob*))
+    Q_PRIVATE_SLOT(d_func(), void slotCreatePostData(KIO::Job *,const QByteArray&))
+    Q_PRIVATE_SLOT(d_func(), void slotModifyPost(KJob*))
+    Q_PRIVATE_SLOT(d_func(), void slotModifyPostData(KIO::Job *,const QByteArray&))
+    Q_PRIVATE_SLOT(d_func(), void slotRemovePost(KJob*))
+    Q_PRIVATE_SLOT(d_func(), void slotRemovePostData(KIO::Job *,const QByteArray&))
     Q_PRIVATE_SLOT(d_func(), void slotCreateComment(KJob*))
     Q_PRIVATE_SLOT(d_func(), void slotCreateCommentData(KIO::Job *,const QByteArray&))
     Q_PRIVATE_SLOT(d_func(), void slotRemoveComment(KJob*))

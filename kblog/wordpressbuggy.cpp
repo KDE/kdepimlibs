@@ -53,16 +53,16 @@ WordpressBuggy::~WordpressBuggy()
   kDebug(5323) << "~WordpressBuggy()";
 }
 
-void WordpressBuggy::createPosting( KBlog::BlogPost *posting )
+void WordpressBuggy::createPost( KBlog::BlogPost *post )
 {
-  kDebug(5323) << "createPosting()";
+  kDebug(5323) << "createPost()";
   Q_D(WordpressBuggy);
-  if ( !posting ) {
-    kError(5323) << "WordpressBuggy::createPosting: posting is a null pointer";
-    emit error ( Other, i18n( "Posting is a null pointer." ) );
+  if ( !post ) {
+    kError(5323) << "WordpressBuggy::createPost: post is a null pointer";
+    emit error ( Other, i18n( "Post is a null pointer." ) );
     return;
   }
-  kDebug(5323) << "Creating new Posting with blogId" << blogId();
+  kDebug(5323) << "Creating new Post with blogId" << blogId();
 
   QString xmlMarkup = "<?xml version=\"1.0\"?>";
   xmlMarkup += "<methodCall>";
@@ -77,13 +77,13 @@ void WordpressBuggy::createPosting( KBlog::BlogPost *posting )
   xmlMarkup += "</param>";
   xmlMarkup += "<param><struct>";
   xmlMarkup += "<member><name>description</name>";
-  xmlMarkup += "<value><string><![CDATA["+posting->content().toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->content().toUtf8()+"]]></string></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>title</name>";
-  xmlMarkup += "<value><string><![CDATA["+posting->title().toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->title().toUtf8()+"]]></string></value>";
   xmlMarkup += "</member><member>";
 
-  QList<QString> catList = posting->categories();
+  QList<QString> catList = post->categories();
   if( !catList.empty() ){
     xmlMarkup += "<name>categories</name>";
     xmlMarkup += "<value><array>";
@@ -98,25 +98,25 @@ void WordpressBuggy::createPosting( KBlog::BlogPost *posting )
 
   xmlMarkup += "<name>dateCreated</name>";
   xmlMarkup += "<value><dateTime.iso8601>"+
-    posting->creationDateTime().toUtc().dateTime().toString("yyyyMMddThh:mm:ss")+
+    post->creationDateTime().toUtc().dateTime().toString("yyyyMMddThh:mm:ss")+
   "</dateTime.iso8601></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_allow_comments</name>";
   xmlMarkup += QString("<value><int>%1</int></value>").
-    arg( (int)posting->isCommentAllowed() );
+    arg( (int)post->isCommentAllowed() );
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_allow_pings</name>";
   xmlMarkup += QString("<value><int>%1</int></value>").
-    arg( (int)posting->isTrackBackAllowed() );
+    arg( (int)post->isTrackBackAllowed() );
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_excerpt</name>";
-  xmlMarkup += "<value><string><![CDATA["+posting->summary().toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->summary().toUtf8()+"]]></string></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_keywords</name>";
-  xmlMarkup += "<value><string><![CDATA["+posting->tags().join(" ").toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->tags().join(" ").toUtf8()+"]]></string></value>";
   xmlMarkup += "</member></struct></param>";
   xmlMarkup += "<param><value><boolean>"+
-    QString( "%1" ).arg( (int)(!posting->isPrivate()) )+
+    QString( "%1" ).arg( (int)(!post->isPrivate()) )+
     "</boolean></value></param>";
   xmlMarkup += "</params></methodCall>";
 
@@ -126,7 +126,7 @@ void WordpressBuggy::createPosting( KBlog::BlogPost *posting )
 
   KIO::TransferJob *job = KIO::http_post( url(), postData, false );
 
-  d->mCreatePostingMap[ job ] = posting;
+  d->mCreatePostMap[ job ] = post;
 
   if ( !job ) {
     kWarning() << "Failed to create job for: " << url().url();
@@ -139,28 +139,28 @@ void WordpressBuggy::createPosting( KBlog::BlogPost *posting )
   job->addMetaData( "UserAgent", userAgent() );
 
   connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-           this, SLOT( slotCreatePostingData( KIO::Job *, const QByteArray & ) ) );
+           this, SLOT( slotCreatePostData( KIO::Job *, const QByteArray & ) ) );
   connect( job, SIGNAL( result( KJob * ) ),
-           this, SLOT( slotCreatePosting( KJob * ) ) );
+           this, SLOT( slotCreatePost( KJob * ) ) );
 }
 
-void WordpressBuggy::modifyPosting( KBlog::BlogPost *posting )
+void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
 {
-  kDebug(5323) << "modifyPosting()";
+  kDebug(5323) << "modifyPost()";
   Q_D(WordpressBuggy);
-  if ( !posting ) {
-    kError(5323) << "WordpressBuggy::modifyPosting: posting is a null pointer";
-    emit error ( Other, i18n( "Posting is a null pointer." ) );
+  if ( !post ) {
+    kError(5323) << "WordpressBuggy::modifyPost: post is a null pointer";
+    emit error ( Other, i18n( "Post is a null pointer." ) );
     return;
   }
 
-  kDebug(5323) << "Uploading Posting with postId" << posting->postingId();
+  kDebug(5323) << "Uploading Post with postId" << post->postId();
 
   QString xmlMarkup = "<?xml version=\"1.0\"?>";
   xmlMarkup += "<methodCall>";
   xmlMarkup += "<methodName>metaWeblog.editPost</methodName>";
   xmlMarkup += "<params><param>";
-  xmlMarkup += "<value><string><![CDATA["+posting->postingId()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->postId()+"]]></string></value>";
   xmlMarkup += "</param>";
   xmlMarkup += "<param>";
   xmlMarkup += "<value><string><![CDATA["+username()+"]]></string></value>";
@@ -169,13 +169,13 @@ void WordpressBuggy::modifyPosting( KBlog::BlogPost *posting )
   xmlMarkup += "</param>";
   xmlMarkup += "<param><struct>";
   xmlMarkup += "<member><name>description</name>";
-  xmlMarkup += "<value><string><![CDATA["+posting->content().toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->content().toUtf8()+"]]></string></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>title</name>";
-  xmlMarkup += "<value><string><![CDATA["+posting->title().toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->title().toUtf8()+"]]></string></value>";
   xmlMarkup += "</member><member>";
 
-  QList<QString> catList = posting->categories();
+  QList<QString> catList = post->categories();
   if( !catList.empty() ){
     xmlMarkup += "<name>categories</name>";
     xmlMarkup += "<value><array>";
@@ -190,25 +190,25 @@ void WordpressBuggy::modifyPosting( KBlog::BlogPost *posting )
 
   xmlMarkup += "<name>lastModified</name>";
   xmlMarkup += "<value><dateTime.iso8601>"+
-    posting->modificationDateTime().toUtc().dateTime().toString("yyyyMMddThh:mm:ss")+
+    post->modificationDateTime().toUtc().dateTime().toString("yyyyMMddThh:mm:ss")+
   "</dateTime.iso8601></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_allow_comments</name>";
   xmlMarkup += QString("<value><int>%1</int></value>").
-    arg( (int)posting->isCommentAllowed() );
+    arg( (int)post->isCommentAllowed() );
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_allow_pings</name>";
   xmlMarkup += QString("<value><int>%1</int></value>").
-    arg( (int)posting->isTrackBackAllowed() );
+    arg( (int)post->isTrackBackAllowed() );
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_excerpt</name>";
-  xmlMarkup += "<value><string><![CDATA["+posting->summary().toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->summary().toUtf8()+"]]></string></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_keywords</name>";
-  xmlMarkup += "<value><string><![CDATA["+posting->tags().join(" ").toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->tags().join(" ").toUtf8()+"]]></string></value>";
   xmlMarkup += "</member></struct></param>";
   xmlMarkup += "<param><value><boolean>"+
-    QString( "%1" ).arg( (int)(!posting->isPrivate()) )+
+    QString( "%1" ).arg( (int)(!post->isPrivate()) )+
     "</boolean></value></param>";
   xmlMarkup += "</params></methodCall>";
 
@@ -218,7 +218,7 @@ void WordpressBuggy::modifyPosting( KBlog::BlogPost *posting )
 
   KIO::TransferJob *job = KIO::http_post( url(), postData, false );
 
-  d->mModifyPostingMap[ job ] = posting;
+  d->mModifyPostMap[ job ] = post;
 
   if ( !job ) {
     kWarning() << "Failed to create job for: " << url().url();
@@ -231,9 +231,9 @@ void WordpressBuggy::modifyPosting( KBlog::BlogPost *posting )
   job->addMetaData( "UserAgent", userAgent() );
 
   connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-           this, SLOT( slotModifyPostingData( KIO::Job *, const QByteArray & ) ) );
+           this, SLOT( slotModifyPostData( KIO::Job *, const QByteArray & ) ) );
   connect( job, SIGNAL( result( KJob * ) ),
-           this, SLOT( slotModifyPosting( KJob * ) ) );
+           this, SLOT( slotModifyPost( KJob * ) ) );
 }
 
 QString WordpressBuggy::interfaceName() const
@@ -261,28 +261,28 @@ QList<QVariant> WordpressBuggyPrivate::defaultArgs( const QString &id )
   return args;
 }
 
-void WordpressBuggyPrivate::slotCreatePostingData( KIO::Job *job, const QByteArray &data )
+void WordpressBuggyPrivate::slotCreatePostData( KIO::Job *job, const QByteArray &data )
 {
-  kDebug(5323) << "slotCreatePostingData()";
-  unsigned int oldSize = mCreatePostingBuffer[ job ].size();
-  mCreatePostingBuffer[ job ].resize( oldSize + data.size() );
-  memcpy( mCreatePostingBuffer[ job ].data() + oldSize, data.data(), data.size() );
+  kDebug(5323) << "slotCreatePostData()";
+  unsigned int oldSize = mCreatePostBuffer[ job ].size();
+  mCreatePostBuffer[ job ].resize( oldSize + data.size() );
+  memcpy( mCreatePostBuffer[ job ].data() + oldSize, data.data(), data.size() );
 }
 
-void WordpressBuggyPrivate::slotCreatePosting( KJob *job )
+void WordpressBuggyPrivate::slotCreatePost( KJob *job )
 {
-  kDebug(5323) << "slotCreatePosting()";
-  const QString data = QString::fromUtf8( mCreatePostingBuffer[ job ].data(), mCreatePostingBuffer[ job ].size() );
-  mCreatePostingBuffer[ job ].resize( 0 );
+  kDebug(5323) << "slotCreatePost()";
+  const QString data = QString::fromUtf8( mCreatePostBuffer[ job ].data(), mCreatePostBuffer[ job ].size() );
+  mCreatePostBuffer[ job ].resize( 0 );
 
   Q_Q(WordpressBuggy);
 
-  KBlog::BlogPost* posting = mCreatePostingMap[ job ];
-  mCreatePostingMap.remove( job );
+  KBlog::BlogPost* post = mCreatePostMap[ job ];
+  mCreatePostMap.remove( job );
 
   if ( job->error() != 0 ) {
-    kError(5323) << "slotCreatePosting error:" << job->errorString();
-    emit q->errorPosting( WordpressBuggy::Atom, job->errorString(), posting );
+    kError(5323) << "slotCreatePost error:" << job->errorString();
+    emit q->errorPost( WordpressBuggy::Atom, job->errorString(), post );
     return;
   }
 
@@ -292,46 +292,46 @@ void WordpressBuggyPrivate::slotCreatePosting( KJob *job )
     if( rxError.indexIn( data ) != -1 )
       kDebug(5323) << "RegExp of faultString failed.";
     kDebug(5323) << rxError.cap(1);
-    emit q->errorPosting( WordpressBuggy::XmlRpc, rxError.cap(1), posting );
+    emit q->errorPost( WordpressBuggy::XmlRpc, rxError.cap(1), post );
     return;
   }
 
   QRegExp rxId( "<string>(.+)</string>" );
   if( rxId.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the id out of the result:" << data;
-    emit q->errorPosting( WordpressBuggy::XmlRpc,
+    emit q->errorPost( WordpressBuggy::XmlRpc,
                           i18n( "Could not regexp the id out of the result." ),
-                          posting );
+                          post );
     return;
   }
   kDebug(5323) << "QRegExp rx(  \"<string>(.+)</string>\" ) matches" << rxId.cap(1);
 
-  posting->setPostingId( rxId.cap(1) );
-  posting->setStatus( BlogPost::Created );
-  emit q->createdPosting( posting );
-  kDebug(5323) << "Emitting createdPosting()";
+  post->setPostId( rxId.cap(1) );
+  post->setStatus( BlogPost::Created );
+  emit q->createdPost( post );
+  kDebug(5323) << "Emitting createdPost()";
 }
 
-void WordpressBuggyPrivate::slotModifyPostingData( KIO::Job *job, const QByteArray &data )
+void WordpressBuggyPrivate::slotModifyPostData( KIO::Job *job, const QByteArray &data )
 {
-  kDebug(5323) << "slotModifyPostingData()";
-  unsigned int oldSize = mModifyPostingBuffer[ job ].size();
-  mModifyPostingBuffer[ job ].resize( oldSize + data.size() );
-  memcpy( mModifyPostingBuffer[ job ].data() + oldSize, data.data(), data.size() );
+  kDebug(5323) << "slotModifyPostData()";
+  unsigned int oldSize = mModifyPostBuffer[ job ].size();
+  mModifyPostBuffer[ job ].resize( oldSize + data.size() );
+  memcpy( mModifyPostBuffer[ job ].data() + oldSize, data.data(), data.size() );
 }
 
-void WordpressBuggyPrivate::slotModifyPosting( KJob *job )
+void WordpressBuggyPrivate::slotModifyPost( KJob *job )
 {
-  kDebug(5323) << "slotModifyPosting()";
-  const QString data = QString::fromUtf8( mModifyPostingBuffer[ job ].data(), mModifyPostingBuffer[ job ].size() );
-  mModifyPostingBuffer[ job ].resize( 0 );
+  kDebug(5323) << "slotModifyPost()";
+  const QString data = QString::fromUtf8( mModifyPostBuffer[ job ].data(), mModifyPostBuffer[ job ].size() );
+  mModifyPostBuffer[ job ].resize( 0 );
 
-  KBlog::BlogPost* posting = mModifyPostingMap[ job ];
-  mModifyPostingMap.remove( job );
+  KBlog::BlogPost* post = mModifyPostMap[ job ];
+  mModifyPostMap.remove( job );
   Q_Q(WordpressBuggy);
   if ( job->error() != 0 ) {
-    kError(5323) << "slotModifyPosting error:" << job->errorString();
-    emit q->errorPosting( WordpressBuggy::Atom, job->errorString(), posting );
+    kError(5323) << "slotModifyPost error:" << job->errorString();
+    emit q->errorPost( WordpressBuggy::Atom, job->errorString(), post );
     return;
   }
 
@@ -342,25 +342,25 @@ void WordpressBuggyPrivate::slotModifyPosting( KJob *job )
     if( rxError.indexIn( data ) != -1 )
       kDebug(5323) << "RegExp of faultString failed.";
     kDebug(5323) << rxError.cap(1);
-    emit q->errorPosting( WordpressBuggy::XmlRpc, rxError.cap(1), posting );
+    emit q->errorPost( WordpressBuggy::XmlRpc, rxError.cap(1), post );
     return;
   }
 
   QRegExp rxId( "<boolean>(.+)</boolean>" );
   if( rxId.indexIn( data )==-1 ){
     kError(5323) << "Could not regexp the id out of the result:" << data;
-    emit q->errorPosting( WordpressBuggy::XmlRpc,
+    emit q->errorPost( WordpressBuggy::XmlRpc,
                           i18n( "Could not regexp the id out of the result." ),
-                          posting );
+                          post );
     return;
   }
   kDebug(5323) << "QRegExp rx(  \"<boolean>(.+)</boolean>\" ) matches" << rxId.cap(1);
 
   if( rxId.cap(1).toInt() == 1 )
  {
-    kDebug(5323) << "Posting successfully updatet.";
-    posting->setStatus( BlogPost::Modified );
-    emit q->modifiedPosting( posting );
+    kDebug(5323) << "Post successfully updatet.";
+    post->setStatus( BlogPost::Modified );
+    emit q->modifiedPost( post );
   }
 }
 

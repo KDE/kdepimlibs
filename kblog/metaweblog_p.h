@@ -39,22 +39,22 @@ class MetaWeblogPrivate : public Blogger1Private
     MetaWeblogPrivate();
     ~MetaWeblogPrivate();
     QList<QVariant> defaultArgs( const QString &id = QString() );
-    virtual void slotListRecentPostings( const QList<QVariant> &result,
+    virtual void slotListRecentPosts( const QList<QVariant> &result,
                                          const QVariant &id );
     virtual void slotListCategories( const QList<QVariant> &result,
                                      const QVariant &id );
-    virtual void slotFetchPosting( const QList<QVariant> &result,
+    virtual void slotFetchPost( const QList<QVariant> &result,
                                    const QVariant &id );
-    virtual void slotCreatePosting( const QList<QVariant> &result,
+    virtual void slotCreatePost( const QList<QVariant> &result,
                                     const QVariant &id );
-    virtual void slotModifyPosting( const QList<QVariant> &result,
+    virtual void slotModifyPost( const QList<QVariant> &result,
                                     const QVariant &id );
     virtual void slotCreateMedia( const QList<QVariant> &result,
                                   const QVariant &id );
     virtual void slotError( int, const QString&, const QVariant& );
     Q_DECLARE_PUBLIC(MetaWeblog)
   private:
-    bool readPostingFromMap( BlogPost *post,
+    bool readPostFromMap( BlogPost *post,
                              const QMap<QString, QVariant> &postInfo );
 };
 

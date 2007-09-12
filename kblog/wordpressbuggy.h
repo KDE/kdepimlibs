@@ -41,7 +41,7 @@ namespace KBlog {
   @brief
   A class that can be used for access to Wordpress blogs. This is needed because of an ugly
   DateTime bug in Wordpress. Hopefully the bug will be fixed in the near feature. This class 
-  reimplements createPosting and modifyPosting from scratch to send the DateTime in a format 
+  reimplements createPost and modifyPost from scratch to send the DateTime in a format 
   like yyyyMMddThh:mm:ss which is not ISO conform. The date is not extended, where the time is extended.
   The rest of the code is used from MovableType, as Wordpress implements MovableType. You should not use this
   code on non-Wordpress blogs.
@@ -49,10 +49,10 @@ namespace KBlog {
   Blog* myblog = new WordpressBuggy("http://example.com/xmlrpc/gateway.php");
   myblog->setUsername( "some_user_id" );
   myblog->setPassword( "YoURFunnyPAsSwoRD" );
-  KBlog::BlogPost *post = new BlogPosting();
+  KBlog::BlogPost *post = new BlogPost();
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
-  myblog->createPosting( posting );
+  myblog->createPost( post );
   @endcode
 
   @author Christian Weilbach \<christian_weilbach\@web.de\>
@@ -75,22 +75,22 @@ class KBLOG_EXPORT WordpressBuggy : public MovableType
     virtual ~WordpressBuggy();
 
     /**
-      Create a new posting on server.
+      Create a new post on server.
 
-      @param posting is send to the server.
+      @param post is send to the server.
     */
-    void createPosting( KBlog::BlogPost *posting );
+    void createPost( KBlog::BlogPost *post );
 
     /**
-      Modify a posting on server.
+      Modify a post on server.
 
-      @param posting The posting to be modified on the
+      @param post The post to be modified on the
       server. You need to set its id correctly.
 
-      @see BlogPost::setPostingId( const QString& )
-      @see modifiedPosting( KBlog::BlogPost* )
+      @see BlogPost::setPostId( const QString& )
+      @see modifiedPost( KBlog::BlogPost* )
     */
-    void modifyPosting( KBlog::BlogPost *posting );
+    void modifyPost( KBlog::BlogPost *post );
 
     /**
       Returns the  of the inherited object.
@@ -105,10 +105,10 @@ class KBLOG_EXPORT WordpressBuggy : public MovableType
 
   private:
     Q_DECLARE_PRIVATE(WordpressBuggy)
-    Q_PRIVATE_SLOT(d_func(), void slotCreatePosting(KJob*))
-    Q_PRIVATE_SLOT(d_func(), void slotCreatePostingData(KIO::Job *,const QByteArray&))
-    Q_PRIVATE_SLOT(d_func(), void slotModifyPosting(KJob*))
-    Q_PRIVATE_SLOT(d_func(), void slotModifyPostingData(KIO::Job *,const QByteArray&))
+    Q_PRIVATE_SLOT(d_func(), void slotCreatePost(KJob*))
+    Q_PRIVATE_SLOT(d_func(), void slotCreatePostData(KIO::Job *,const QByteArray&))
+    Q_PRIVATE_SLOT(d_func(), void slotModifyPost(KJob*))
+    Q_PRIVATE_SLOT(d_func(), void slotModifyPostData(KIO::Job *,const QByteArray&))
 };
 
 } //namespace KBlog

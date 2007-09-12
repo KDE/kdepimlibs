@@ -33,28 +33,28 @@
 
 namespace KBlog {
 
-BlogPost::BlogPost( const KBlog::BlogPost& posting ):
+BlogPost::BlogPost( const KBlog::BlogPost& post ):
     d_ptr( new BlogPostPrivate )
 {
   d_ptr->q_ptr=this;
-  d_ptr->mPrivate=posting.isPrivate();
-  d_ptr->mPostingId=posting.postingId();
-  d_ptr->mTitle=posting.title();
-  d_ptr->mContent=posting.content();
-  d_ptr->mCategories=posting.categories();
-  d_ptr->mError=posting.error();
-  d_ptr->mJournalId=posting.journalId();
-  d_ptr->mStatus=posting.status();
-  d_ptr->mCreationDateTime=posting.creationDateTime();
-  d_ptr->mModificationDateTime=posting.modificationDateTime();
+  d_ptr->mPrivate=post.isPrivate();
+  d_ptr->mPostId=post.postId();
+  d_ptr->mTitle=post.title();
+  d_ptr->mContent=post.content();
+  d_ptr->mCategories=post.categories();
+  d_ptr->mError=post.error();
+  d_ptr->mJournalId=post.journalId();
+  d_ptr->mStatus=post.status();
+  d_ptr->mCreationDateTime=post.creationDateTime();
+  d_ptr->mModificationDateTime=post.modificationDateTime();
 }
 
-BlogPost::BlogPost( const QString &postingId ) :
+BlogPost::BlogPost( const QString &postId ) :
     d_ptr( new BlogPostPrivate )
 {
   d_ptr->q_ptr = this;
   d_ptr->mPrivate = false;
-  d_ptr->mPostingId = postingId;
+  d_ptr->mPostId = postId;
   d_ptr->mStatus = New;
 }
 
@@ -63,7 +63,7 @@ BlogPost::BlogPost( const KCal::Journal &journal ) :
 {
   d_ptr->q_ptr = this;
   d_ptr->mPrivate = false;
-  d_ptr->mPostingId = journal.customProperty( "KBLOG", "ID" );
+  d_ptr->mPostId = journal.customProperty( "KBLOG", "ID" );
   d_ptr->mJournalId = journal.uid();
   d_ptr->mStatus = New;
   d_ptr->mTitle = journal.summary();
@@ -77,7 +77,7 @@ BlogPost::BlogPost( const KCal::Journal &journal ) :
 // {
 //   d_ptr->q_ptr = this;
 //   d_ptr->mPrivate = false;
-//   d_ptr->mPostingId = journal.customProperty( "KBLOG", "ID" );
+//   d_ptr->mPostId = journal.customProperty( "KBLOG", "ID" );
 //   d_ptr->mJournalId = journal.uid();
 //   d_ptr->mStatus = New;
 //   d_ptr->mTitle = journal.summary();
@@ -98,7 +98,7 @@ KCal::Journal* BlogPost::journal( const Blog &blog ) const
   QString blogId = blog.blogId();
   // Generate unique ID. Should be unique enough...
   QString id = "kblog-" + url + '-' + blogId  + '-' + username +
-      '-' + d_ptr->mPostingId;
+      '-' + d_ptr->mPostId;
   KCal::Journal *journal = new KCal::Journal();
   journal->setUid( id );
   journal->setSummary( d_ptr->mTitle );
@@ -108,7 +108,7 @@ KCal::Journal* BlogPost::journal( const Blog &blog ) const
   journal->setCustomProperty( "KBLOG", "URL", url );
   journal->setCustomProperty( "KBLOG", "USER", blog.username() );
   journal->setCustomProperty( "KBLOG", "BLOG", blogId );
-  journal->setCustomProperty( "KBLOG", "ID", d_ptr->mPostingId );
+  journal->setCustomProperty( "KBLOG", "ID", d_ptr->mPostId );
   return journal;
 }
 
@@ -122,19 +122,19 @@ bool BlogPost::isPrivate() const
   return d_ptr->mPrivate;
 }
 
-void BlogPost::setPrivate( bool privatePosting )
+void BlogPost::setPrivate( bool privatePost )
 {
-  d_ptr->mPrivate = privatePosting;
+  d_ptr->mPrivate = privatePost;
 }
 
-QString BlogPost::postingId() const
+QString BlogPost::postId() const
 {
-  return d_ptr->mPostingId;
+  return d_ptr->mPostId;
 }
 
-void BlogPost::setPostingId( const QString &postingId )
+void BlogPost::setPostId( const QString &postId )
 {
-  d_ptr->mPostingId = postingId;
+  d_ptr->mPostId = postId;
 }
 
 QString BlogPost::title() const
@@ -311,9 +311,9 @@ void BlogPost::setError( const QString &error )
   d_ptr->mError = error;
 }
 
-BlogPost& BlogPost::operator=(const BlogPost &posting)
+BlogPost& BlogPost::operator=(const BlogPost &post)
 {
-  *this = BlogPost ( posting );
+  *this = BlogPost ( post );
   return *this;
 }
 

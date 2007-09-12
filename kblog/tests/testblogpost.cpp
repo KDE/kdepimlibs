@@ -45,7 +45,7 @@ private slots:
 
 void testBlogPost::testValidity_data()
 {
-    QTest::addColumn<QString>("postingId");
+    QTest::addColumn<QString>("postId");
     QTest::addColumn<QString>("title");
     QTest::addColumn<QString>("content");
     QTest::addColumn<bool>("isPrivate");
@@ -82,7 +82,7 @@ void testBlogPost::testValidity()
 {
     BlogPost p;
 
-    QFETCH(QString, postingId);
+    QFETCH(QString, postId);
     QFETCH(QString, title);
     QFETCH(QString, content);
     QFETCH(bool, isPrivate);
@@ -102,7 +102,7 @@ void testBlogPost::testValidity()
     QFETCH(BlogPost::Status, status);
     QFETCH(QString, error);
 
-    p.setPostingId( postingId );
+    p.setPostId( postId );
     p.setTitle( title );
     p.setContent( content );
     p.setPrivate( isPrivate );
@@ -123,7 +123,7 @@ void testBlogPost::testValidity()
     p.setError( error );
 
 
-    QCOMPARE(p.postingId(), postingId );
+    QCOMPARE(p.postId(), postId );
     QCOMPARE(p.title(), title );
     QCOMPARE(p.content(), content );
     QCOMPARE(p.isPrivate(), isPrivate );

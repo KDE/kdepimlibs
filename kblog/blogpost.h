@@ -43,20 +43,20 @@ namespace KBlog {
 
 /**
   @brief
-  A class that represents a blog posting on the server.
+  A class that represents a blog post on the server.
 
   @code
   KBlog::BlogPost *post = new BlogPost();
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
   post->setPrivate( true ); // false on default
-  connect( backend, createdPosting( KBlog::BlogPost* ),
-                 this, createdPosting( KBlog::BlogPost* );
-  backend->createPosting( post );
+  connect( backend, createdPost( KBlog::BlogPost* ),
+                 this, createdPost( KBlog::BlogPost* );
+  backend->createPost( post );
   ...
-  void createdPosting( KBlog::BlogPost* post )
+  void createdPost( KBlog::BlogPost* post )
   {
-    setMyFancyGUIPostingId( post->postingId() );
+    setMyFancyGUIPostId( post->postId() );
     setMyFancyGUIPermaLink( post->permaLink() );
   }
   @endcode
@@ -72,18 +72,18 @@ public:
     /**
       Constructor.
     */
-    BlogPost( const KBlog::BlogPost& posting );
+    BlogPost( const KBlog::BlogPost& post );
 
     /**
       Constructor.
 
-      @param postingId The ID of the posting on the server.
+      @param postId The ID of the post on the server.
     */
-    explicit BlogPost( const QString &postingId = QString() );
+    explicit BlogPost( const QString &postId = QString() );
 
-    /** Constructor to create a blog posting from a KCal Journal.
+    /** Constructor to create a blog post from a KCal Journal.
 
-      @param journal The journal to use to create the posting
+      @param journal The journal to use to create the post
      */
     explicit BlogPost( const KCal::Journal &journal );
 
@@ -93,7 +93,7 @@ public:
     virtual ~BlogPost();
 
     /**
-      Returns a KCal journal from the blog posting owned by the caller.
+      Returns a KCal journal from the blog post owned by the caller.
 
       @param blog The blog object to convert.
 
@@ -109,7 +109,7 @@ public:
     QString journalId() const;
 
     /**
-      Returns if the posting is published or not.
+      Returns if the post is published or not.
 
       @return bool
       @see setPrivate()
@@ -117,28 +117,28 @@ public:
     bool isPrivate() const;
 
     /**
-      Sets the posting to private viewings only.
+      Sets the post to private viewings only.
 
-      @param privatePosting set this to false, if you don't want to publish
-      the blog posting immediately.
+      @param privatePost set this to false, if you don't want to publish
+      the blog post immediately.
       @see isPrivate()
     */
-    void setPrivate( bool privatePosting );
+    void setPrivate( bool privatePost );
 
     /**
-      Returns the postId. This is for fetched postings.
-      @return postingId
-      @see setPostingId()
+      Returns the postId. This is for fetched posts.
+      @return postId
+      @see setPostId()
     */
-    QString postingId() const;
+    QString postId() const;
 
     /**
-      Sets the post id value. This is important for modifying postings.
+      Sets the post id value. This is important for modifying posts.
 
-      @param postingId set this to the post id on the server.
-      @see postingId()
+      @param postId set this to the post id on the server.
+      @see postId()
     */
-    void setPostingId( const QString &postingId );
+    void setPostId( const QString &postId );
 
     /**
       Returns the title.
@@ -333,7 +333,7 @@ public:
     /**
       Sets the creation time.
 
-      @param datetime set the time the posting has been created.
+      @param datetime set the time the post has been created.
       @see creationTime()
     */
     void setCreationDateTime( const KDateTime &datetime );
@@ -349,29 +349,29 @@ public:
     /**
       Sets the modification time.
 
-      @param datetime set the time the posting has been modified.
+      @param datetime set the time the post has been modified.
       @see modificationTime(), setCreationDateTime()
     */
     void setModificationDateTime( const KDateTime &datetime );
 
     /**
-      The enumartion of the different posting status, reflecting the status changes
+      The enumartion of the different post status, reflecting the status changes
       on the server.
     */
     enum Status {
-      /** Status of a freshly constructed posting on the client. */
+      /** Status of a freshly constructed post on the client. */
       New,
-      /** Status of a successfully fetched posting. 
-      @see Blog::fetchPosting( KBlog::BlogPost* ) */
+      /** Status of a successfully fetched post. 
+      @see Blog::fetchPost( KBlog::BlogPost* ) */
       Fetched,
-      /** Status of a successfully created posting. 
-      @see Blog::createPosting( KBlog::BlogPost* ) */
+      /** Status of a successfully created post. 
+      @see Blog::createPost( KBlog::BlogPost* ) */
       Created,
-      /** Status of a successfully modified posting. 
-      @see Blog::modifyPosting( KBlog::BlogPost* ) */
+      /** Status of a successfully modified post. 
+      @see Blog::modifyPost( KBlog::BlogPost* ) */
       Modified,
-      /** Status of a successfully removed posting. 
-      @see Blog::removePosting( KBlog::BlogPost* ) */
+      /** Status of a successfully removed post. 
+      @see Blog::removePost( KBlog::BlogPost* ) */
       Removed,
       /** Status when an error on the server side occured. 
       @see error() */
@@ -413,7 +413,7 @@ public:
     /**
       The overloaed = operator.
     */
-    BlogPost& operator=( const BlogPost &posting );
+    BlogPost& operator=( const BlogPost &post );
 
   private:
     BlogPostPrivate * const d_ptr;

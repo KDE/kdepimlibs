@@ -49,7 +49,7 @@ class LiveJournalPrivate : public BlogPrivate
                                 const QVariant &id );
     virtual void slotAssignFriendToCategory( const QList<QVariant> &result,
                                      const QVariant &id );
-    virtual void slotCreatePosting( const QList<QVariant> &result,
+    virtual void slotCreatePost( const QList<QVariant> &result,
                                     const QVariant &id );
     virtual void slotDeleteFriend( const QList<QVariant> &result,
                                    const QVariant &id );
@@ -58,7 +58,7 @@ class LiveJournalPrivate : public BlogPrivate
     virtual void slotExpireAllCookies( const QList<QVariant> &result,
                                const QVariant &id );
     virtual void slotError( int, const QString&, const QVariant& );
-    virtual void slotFetchPosting( const QList<QVariant> &result,
+    virtual void slotFetchPost( const QList<QVariant> &result,
                                    const QVariant &id );
     virtual void slotFetchUserInfo( const QList<QVariant> &result,
                                     const QVariant &id );
@@ -74,16 +74,16 @@ class LiveJournalPrivate : public BlogPrivate
                                 const QVariant &id );
     virtual void slotListPictureKeywords( const QList<QVariant> &result,
                                   const QVariant &id );
-    virtual void slotListRecentPostings( const QList<QVariant> &result,
+    virtual void slotListRecentPosts( const QList<QVariant> &result,
                                  const QVariant &id );
-    virtual void slotModifyPosting( const QList<QVariant> &result,
+    virtual void slotModifyPost( const QList<QVariant> &result,
                                     const QVariant &id );
-    virtual void slotRemovePosting( const QList<QVariant> &result,
+    virtual void slotRemovePost( const QList<QVariant> &result,
                                     const QVariant &id );
     Q_DECLARE_PUBLIC(LiveJournal)
 
   private:
-    bool readPostingFromMap( BlogPost *post,
+    bool readPostFromMap( BlogPost *post,
                              const QMap<QString, QVariant> &postInfo );
 };
 

@@ -199,7 +199,7 @@ class KBLOG_EXPORT BlogComment
   void setCreationDateTime( const KDateTime &datetime );
 
   /**
-    The enumartion of the different posting status, reflecting the status changes
+    The enumartion of the different post status, reflecting the status changes
     on the server.
   */
   enum Status {

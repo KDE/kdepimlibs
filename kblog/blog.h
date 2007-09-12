@@ -195,99 +195,99 @@ class KBLOG_EXPORT Blog : public QObject
       The posts are returned in descending chronological order.
 
       @param number the number of posts to fetch.
-      @see listedRecentPostings( const QList<KBlog::BlogPost>& posts )
+      @see listedRecentPosts( const QList<KBlog::BlogPost>& posts )
     */
-    virtual void listRecentPostings( int number ) = 0;
+    virtual void listRecentPosts( int number ) = 0;
 
     /**
       Fetch a blog post from the server with a specific ID.
-      The ID of the existing post must be retrieved using getRecentPostings
+      The ID of the existing post must be retrieved using getRecentPosts
       and then be modified and provided to this method or a new BlogPost
       created with the existing ID.
 
       @param post a blog post with the ID identifying the blog post to fetch.
-      @see fetchedPosting()
-      @see listedRecentPostings( int number )
+      @see fetchedPost()
+      @see listedRecentPosts( int number )
     */
-    virtual void fetchPosting( KBlog::BlogPost *post ) = 0;
+    virtual void fetchPost( KBlog::BlogPost *post ) = 0;
 
     /**
       Modify an existing blog post on the server.
-      The ID of the existing post must be retrieved using getRecentPostings
+      The ID of the existing post must be retrieved using getRecentPosts
       and then be modified and provided to this method or a new BlogPost
       created with the existing ID.
 
       @param post the new blog post.
-      @see modifiedPosting()
-      @see listedRecentPostings( int number )
+      @see modifiedPost()
+      @see listedRecentPosts( int number )
     */
-    virtual void modifyPosting( KBlog::BlogPost *post ) = 0;
+    virtual void modifyPost( KBlog::BlogPost *post ) = 0;
 
     /**
       Create a new blog post on the server.
 
       @param post the blog post to create.
-      @see createdPosting()
+      @see createdPost()
     */
-    virtual void createPosting( KBlog::BlogPost *post ) = 0;
+    virtual void createPost( KBlog::BlogPost *post ) = 0;
 
     /**
       Remove an existing blog post from the server.
       The BlogPost object representing the existing post must be retrieved
-      using getRecentPostings and then provided to this method.
+      using getRecentPosts and then provided to this method.
 
       @param post* the blog post to remove.
-      @see removedPosting()
-      @see listedRecentPostings( int number )
+      @see removedPost()
+      @see listedRecentPosts( int number )
     */
-    virtual void removePosting( KBlog::BlogPost *post ) = 0;
+    virtual void removePost( KBlog::BlogPost *post ) = 0;
 
   Q_SIGNALS:
     /**
-      This signal is emitted when a listRecentPostings() job fetches a post
+      This signal is emitted when a listRecentPosts() job fetches a post
       from the blogging server.
 
       @param posts the list of posts.
-      @see listRecentPostings()
+      @see listRecentPosts()
     */
-    void listedRecentPostings(
+    void listedRecentPosts(
         const QList<KBlog::BlogPost>& posts );
 
     /**
-      This signal is emitted when a createPosting() job creates a new blog post
+      This signal is emitted when a createPost() job creates a new blog post
       on the blogging server.
 
       @param post the created post.
-      @see createPosting()
+      @see createPost()
     */
-    void createdPosting( KBlog::BlogPost *post );
+    void createdPost( KBlog::BlogPost *post );
 
     /**
-      This signal is emitted when a fetchPosting() job fetches a post
+      This signal is emitted when a fetchPost() job fetches a post
       from the blogging server.
 
       @param post the fetched post.
-      @see fetchPosting()
+      @see fetchPost()
     */
-    void fetchedPosting( KBlog::BlogPost *post );
+    void fetchedPost( KBlog::BlogPost *post );
 
     /**
-      This signal is emitted when a modifyPosting() job modifies a post
+      This signal is emitted when a modifyPost() job modifies a post
       on the blogging server.
 
       @param post the modified post.
-      @see modifyPosting()
+      @see modifyPost()
     */
-    void modifiedPosting( KBlog::BlogPost *post );
+    void modifiedPost( KBlog::BlogPost *post );
 
     /**
-      This signal is emitted when a removePosting() job removes a post
+      This signal is emitted when a removePost() job removes a post
       from the blogging server.
 
       @param post the removed post.
-      @see removePosting()
+      @see removePost()
     */
-    void removedPosting( KBlog::BlogPost *post );
+    void removedPost( KBlog::BlogPost *post );
 
     /**
       This signal is emitted when an error occurs with XML parsing or a
@@ -308,7 +308,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param post the post that caused the error.
       @see ErrorType
     */
-    void errorPosting( KBlog::Blog::ErrorType type,
+    void errorPost( KBlog::Blog::ErrorType type,
                        const QString &errorMessage, KBlog::BlogPost* post );
 
     /**

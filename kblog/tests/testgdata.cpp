@@ -45,20 +45,20 @@ class TestGData : public QObject
     // use this functions as a chain to go through network traffic.
     void fetchProfileId( const QString & );
     void listBlogs( const QMap<QString,QMap<QString,QString> >& );
-    void listRecentPostings( const QList<KBlog::BlogPost>& postings );
-    void createPosting( KBlog::BlogPost* posting );
-    void createComment( const KBlog::BlogPost* posting, const KBlog::BlogComment *comment );
-    void removeComment( const KBlog::BlogPost* posting, const KBlog::BlogComment *comment );
-    void modifyPosting( KBlog::BlogPost* posting );
-    void fetchPosting( KBlog::BlogPost* posting );
-    void removePosting( KBlog::BlogPost* posting );
+    void listRecentPosts( const QList<KBlog::BlogPost>& posts );
+    void createPost( KBlog::BlogPost* post );
+    void createComment( const KBlog::BlogPost* post, const KBlog::BlogComment *comment );
+    void removeComment( const KBlog::BlogPost* post, const KBlog::BlogComment *comment );
+    void modifyPost( KBlog::BlogPost* post );
+    void fetchPost( KBlog::BlogPost* post );
+    void removePost( KBlog::BlogPost* post );
     // end chain
     void error( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPost* );
   private Q_SLOTS:
     void testValidity();
     void testNetwork();
   private:
-    void dumpPosting( const KBlog::BlogPost* );
+    void dumpPost( const KBlog::BlogPost* );
     void dumpComment( const KBlog::BlogComment* );
     KBlog::GData *b;
     KBlog::BlogPost *p;
@@ -66,13 +66,13 @@ class TestGData : public QObject
     QEventLoop *eventLoop;
     QTimer *fetchProfileIdTimer;
     QTimer *listBlogsTimer;
-    QTimer *listRecentPostingsTimer;
-    QTimer *fetchPostingTimer;
-    QTimer *modifyPostingTimer;
-    QTimer *createPostingTimer;
+    QTimer *listRecentPostsTimer;
+    QTimer *fetchPostTimer;
+    QTimer *modifyPostTimer;
+    QTimer *createPostTimer;
     QTimer *createCommentTimer;
     QTimer *removeCommentTimer;
-    QTimer *removePostingTimer;
+    QTimer *removePostTimer;
 };
 
 class TestGDataWarnings : public QObject
@@ -81,28 +81,28 @@ class TestGDataWarnings : public QObject
   private Q_SLOTS:
     void fetchProfileIdTimeoutWarning();
     void listBlogsTimeoutWarning();
-    void listRecentPostingsTimeoutWarning();
-    void fetchPostingTimeoutWarning();
-    void modifyPostingTimeoutWarning();
-    void createPostingTimeoutWarning();
-    void removePostingTimeoutWarning();
+    void listRecentPostsTimeoutWarning();
+    void fetchPostTimeoutWarning();
+    void modifyPostTimeoutWarning();
+    void createPostTimeoutWarning();
+    void removePostTimeoutWarning();
     void createCommentTimeoutWarning();
     void removeCommentTimeoutWarning();
 };
 
 #include "testGData.moc"
 
-void TestGData::dumpPosting( const BlogPost* posting )
+void TestGData::dumpPost( const BlogPost* post )
 {
-  qDebug() << "########### posting ############";
-  qDebug() << "# postingId: " << posting->postingId();
-  qDebug() << "# title: " << posting->title();
-  qDebug() << "# content: " << posting->content();
-  qDebug() << "# private: " << posting->isPrivate();
-  qDebug() << "# categories: " << posting->categories().join( " " );
-  qDebug() << "# error: " << posting->error();
-  qDebug() << "# journalId: " << posting->journalId();
-  switch ( posting->status() ){
+  qDebug() << "########### post ############";
+  qDebug() << "# postId: " << post->postId();
+  qDebug() << "# title: " << post->title();
+  qDebug() << "# content: " << post->content();
+  qDebug() << "# private: " << post->isPrivate();
+  qDebug() << "# categories: " << post->categories().join( " " );
+  qDebug() << "# error: " << post->error();
+  qDebug() << "# journalId: " << post->journalId();
+  switch ( post->status() ){
     case BlogPost::New:
       qDebug() << "# status: New"; break;
     case BlogPost::Fetched:
@@ -117,9 +117,9 @@ void TestGData::dumpPosting( const BlogPost* posting )
       qDebug() << "# status: Error"; break;
   };
   qDebug() << "# creationDateTime(UTC): " <<
-      posting->creationDateTime().toUtc().toString();
+      post->creationDateTime().toUtc().toString();
   qDebug() << "# modificationDateTime(UTC): " <<
-      posting->modificationDateTime().toUtc().toString();
+      post->modificationDateTime().toUtc().toString();
   qDebug() << "###########################";
 }
 
@@ -179,37 +179,37 @@ void TestGData::listBlogs( const QMap<QString,QMap<QString,QString> >& listedBlo
   }
   qDebug() << "###########################\n";
 
-  connect( b, SIGNAL( listedRecentPostings(const QList<KBlog::BlogPost>&) ),
-           this, SLOT( listRecentPostings(const QList<KBlog::BlogPost>&) ) );
-  b->listRecentPostings( DOWNLOADCOUNT );
-  listRecentPostingsTimer->start( TIMEOUT );
+  connect( b, SIGNAL( listedRecentPosts(const QList<KBlog::BlogPost>&) ),
+           this, SLOT( listRecentPosts(const QList<KBlog::BlogPost>&) ) );
+  b->listRecentPosts( DOWNLOADCOUNT );
+  listRecentPostsTimer->start( TIMEOUT );
 }
 
-void TestGData::listRecentPostings(
-           const QList<KBlog::BlogPost>& postings )
+void TestGData::listRecentPosts(
+           const QList<KBlog::BlogPost>& posts )
 {
-  listRecentPostingsTimer->stop();
-  qDebug() << "########### listRecentPostings ###########";
-  QList<KBlog::BlogPost>::ConstIterator it = postings.begin();
-  QList<KBlog::BlogPost>::ConstIterator end = postings.end();
+  listRecentPostsTimer->stop();
+  qDebug() << "########### listRecentPosts ###########";
+  QList<KBlog::BlogPost>::ConstIterator it = posts.begin();
+  QList<KBlog::BlogPost>::ConstIterator end = posts.end();
   for ( ; it != end; ++it ) {
-    dumpPosting( &( *it ) );
+    dumpPost( &( *it ) );
   }
   qDebug() << "#################################\n";
 
-  connect( b, SIGNAL( createdPosting( KBlog::BlogPost* ) ),
-           this, SLOT( createPosting( KBlog::BlogPost* ) ) );
-  b->createPosting( p ); // start chain
-  createPostingTimer->start( TIMEOUT );
+  connect( b, SIGNAL( createdPost( KBlog::BlogPost* ) ),
+           this, SLOT( createPost( KBlog::BlogPost* ) ) );
+  b->createPost( p ); // start chain
+  createPostTimer->start( TIMEOUT );
 }
 
-void TestGData::createPosting( KBlog::BlogPost *posting )
+void TestGData::createPost( KBlog::BlogPost *post )
 {
-  createPostingTimer->stop();
-  qDebug() << "########### createPosting ############";
-  dumpPosting( posting );
+  createPostTimer->stop();
+  qDebug() << "########### createPost ############";
+  dumpPost( post );
   qDebug() << "################################\n";
-  QVERIFY( posting->status() == BlogPost::Created );
+  QVERIFY( post->status() == BlogPost::Created );
 
   connect( b, SIGNAL( createdComment( const KBlog::BlogPost*, const KBlog::BlogComment* ) ),
            this, SLOT( createComment( const KBlog::BlogPost*, const KBlog::BlogComment* ) ) );
@@ -218,11 +218,11 @@ void TestGData::createPosting( KBlog::BlogPost *posting )
 }
 
 
-void TestGData::createComment( const KBlog::BlogPost* posting, const KBlog::BlogComment *comment )
+void TestGData::createComment( const KBlog::BlogPost* post, const KBlog::BlogComment *comment )
 {
-  createPostingTimer->stop();
+  createPostTimer->stop();
   qDebug() << "########### createComment ############";
-  dumpPosting( posting );
+  dumpPost( post );
   dumpComment( comment );
   qDebug() << "################################\n";
   QVERIFY( comment->status() == BlogComment::Created );
@@ -234,64 +234,64 @@ void TestGData::createComment( const KBlog::BlogPost* posting, const KBlog::Blog
 }
 
 
-void TestGData::removeComment( const KBlog::BlogPost* posting, const KBlog::BlogComment *comment )
+void TestGData::removeComment( const KBlog::BlogPost* post, const KBlog::BlogComment *comment )
 {
-  createPostingTimer->stop();
+  createPostTimer->stop();
   qDebug() << "########### removeComment ############";
-  dumpPosting( posting );
+  dumpPost( post );
   dumpComment( comment );
   qDebug() << "################################\n";
   QVERIFY( comment->status() == BlogComment::Created );
 
-  connect( b, SIGNAL( modifiedPosting( KBlog::BlogPost* ) ),
-           this, SLOT( modifyPosting( KBlog::BlogPost* ) ) );
+  connect( b, SIGNAL( modifiedPost( KBlog::BlogPost* ) ),
+           this, SLOT( modifyPost( KBlog::BlogPost* ) ) );
   p->setContent( mModifiedContent );
-  b->modifyPosting( p );
-  modifyPostingTimer->start( TIMEOUT );
+  b->modifyPost( p );
+  modifyPostTimer->start( TIMEOUT );
 }
 
-void TestGData::modifyPosting( KBlog::BlogPost *posting )
+void TestGData::modifyPost( KBlog::BlogPost *post )
 {
-  modifyPostingTimer->stop();
-  qDebug() << "########### modifyPosting ############";
-  dumpPosting( posting );
+  modifyPostTimer->stop();
+  qDebug() << "########### modifyPost ############";
+  dumpPost( post );
   qDebug() << "################################\n";
-  QVERIFY( posting->status() == BlogPost::Modified );
+  QVERIFY( post->status() == BlogPost::Modified );
 
-  connect( b, SIGNAL( fetchedPosting( KBlog::BlogPost* ) ),
-           this, SLOT( fetchPosting( KBlog::BlogPost* ) ) );
+  connect( b, SIGNAL( fetchedPost( KBlog::BlogPost* ) ),
+           this, SLOT( fetchPost( KBlog::BlogPost* ) ) );
   p->setContent( "TestGData: created content." );
-  b->fetchPosting( p );
-  fetchPostingTimer->start( TIMEOUT );
+  b->fetchPost( p );
+  fetchPostTimer->start( TIMEOUT );
 }
 
-void TestGData::fetchPosting( KBlog::BlogPost *posting )
+void TestGData::fetchPost( KBlog::BlogPost *post )
 {
-  fetchPostingTimer->stop();
-  qDebug() << "########### fetchPosting ############";
-  dumpPosting( posting );
+  fetchPostTimer->stop();
+  qDebug() << "########### fetchPost ############";
+  dumpPost( post );
   qDebug() << "###############################\n";
-  QVERIFY( posting->status() == BlogPost::Fetched );
-//   QVERIFY( posting->content() == mModifiedContent ); // changed by GData
+  QVERIFY( post->status() == BlogPost::Fetched );
+//   QVERIFY( post->content() == mModifiedContent ); // changed by GData
 
-  connect( b, SIGNAL( removedPosting( KBlog::BlogPost* ) ),
-           this, SLOT( removePosting( KBlog::BlogPost* ) ) );
-  b->removePosting( p );
-  removePostingTimer->start( TIMEOUT );
+  connect( b, SIGNAL( removedPost( KBlog::BlogPost* ) ),
+           this, SLOT( removePost( KBlog::BlogPost* ) ) );
+  b->removePost( p );
+  removePostTimer->start( TIMEOUT );
 }
 
-void TestGData::removePosting( KBlog::BlogPost *posting )
+void TestGData::removePost( KBlog::BlogPost *post )
 {
-  removePostingTimer->stop();
-  qDebug() << "########### removePosting ###########";
-  dumpPosting( posting );
+  removePostTimer->stop();
+  qDebug() << "########### removePost ###########";
+  dumpPost( post );
   qDebug() << "################################\n";
-  QVERIFY( posting->status() == BlogPost::Removed );
+  QVERIFY( post->status() == BlogPost::Removed );
   eventLoop->quit();
 }
 
 void TestGData::error( KBlog::Blog::ErrorType type, const QString &errStr,
-        KBlog::BlogPost* posting )
+        KBlog::BlogPost* post )
 {
   qDebug() << "############ error #############";
   switch ( type ){
@@ -303,7 +303,7 @@ void TestGData::error( KBlog::Blog::ErrorType type, const QString &errStr,
     case Blog::Other: qDebug() << "type: Other"; break;
   };
   qDebug() << "error: " << errStr;
-  if( posting!=0 ) dumpPosting( posting );
+  if( post!=0 ) dumpPost( post );
   qDebug() << "#############################\n";
 }
 
@@ -319,24 +319,24 @@ void TestGDataWarnings::listBlogsTimeoutWarning()
   QWARN( "listBlogs()  timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestGDataWarnings::listRecentPostingsTimeoutWarning()
+void TestGDataWarnings::listRecentPostsTimeoutWarning()
 {
-  QWARN( "listRecentPostings() timeout. This can be caused by an error, too. Any following calls will fail." );
+  QWARN( "listRecentPosts() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestGDataWarnings::fetchPostingTimeoutWarning()
+void TestGDataWarnings::fetchPostTimeoutWarning()
 {
-  QWARN( "fetchPosting() timeout. This can be caused by an error, too. Any following calls will fail." );
+  QWARN( "fetchPost() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestGDataWarnings::modifyPostingTimeoutWarning()
+void TestGDataWarnings::modifyPostTimeoutWarning()
 {
-  QWARN( "modifyPosting() timeout. This can be caused by an error, too. Any following calls will fail." );
+  QWARN( "modifyPost() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestGDataWarnings::createPostingTimeoutWarning()
+void TestGDataWarnings::createPostTimeoutWarning()
 {
-  QWARN( "createPosting() timeout. This can be caused by an error, too. Any following calls will fail." );
+  QWARN( "createPost() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
 void TestGDataWarnings::createCommentTimeoutWarning()
@@ -349,9 +349,9 @@ void TestGDataWarnings::removeCommentTimeoutWarning()
   QWARN( "removeComment() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
-void TestGDataWarnings::removePostingTimeoutWarning()
+void TestGDataWarnings::removePostTimeoutWarning()
 {
-  QWARN( "removePosting() timeout. This can be caused by an error, too. Any following calls will fail." );
+  QWARN( "removePost() timeout. This can be caused by an error, too. Any following calls will fail." );
 }
 
 void TestGData::testValidity()
@@ -384,7 +384,7 @@ void TestGData::testNetwork()
   p->setTitle( mTitle );
   p->setContent( mContent );
   p->setPrivate( mPrivate );
-  p->setPostingId( mPostingId );
+  p->setPostId( mPostId );
   p->setCreationDateTime( mCDateTime );
   p->setModificationDateTime( mMDateTime );
 
@@ -411,25 +411,25 @@ void TestGData::testNetwork()
   connect( listBlogsTimer, SIGNAL( timeout() ),
            warnings, SLOT( listBlogsTimeoutWarning() ) );
 
-  listRecentPostingsTimer = new QTimer( this );
-  listRecentPostingsTimer->setSingleShot( true );
-  connect( listRecentPostingsTimer, SIGNAL( timeout() ),
-           warnings, SLOT( listRecentPostingsTimeoutWarning() ) );
+  listRecentPostsTimer = new QTimer( this );
+  listRecentPostsTimer->setSingleShot( true );
+  connect( listRecentPostsTimer, SIGNAL( timeout() ),
+           warnings, SLOT( listRecentPostsTimeoutWarning() ) );
 
-  fetchPostingTimer = new QTimer( this );
-  fetchPostingTimer->setSingleShot( true );
-  connect( fetchPostingTimer, SIGNAL( timeout() ),
-           warnings, SLOT( fetchPostingTimeoutWarning() ) );
+  fetchPostTimer = new QTimer( this );
+  fetchPostTimer->setSingleShot( true );
+  connect( fetchPostTimer, SIGNAL( timeout() ),
+           warnings, SLOT( fetchPostTimeoutWarning() ) );
 
-  modifyPostingTimer = new QTimer( this );
-  modifyPostingTimer->setSingleShot( true );
-  connect( modifyPostingTimer, SIGNAL( timeout() ),
-           warnings, SLOT( modifyPostingTimeoutWarning() ) );
+  modifyPostTimer = new QTimer( this );
+  modifyPostTimer->setSingleShot( true );
+  connect( modifyPostTimer, SIGNAL( timeout() ),
+           warnings, SLOT( modifyPostTimeoutWarning() ) );
 
-  createPostingTimer = new QTimer( this );
-  createPostingTimer->setSingleShot( true );
-  connect( createPostingTimer, SIGNAL( timeout() ),
-           warnings, SLOT( createPostingTimeoutWarning() ) );
+  createPostTimer = new QTimer( this );
+  createPostTimer->setSingleShot( true );
+  connect( createPostTimer, SIGNAL( timeout() ),
+           warnings, SLOT( createPostTimeoutWarning() ) );
 
   createCommentTimer = new QTimer( this );
   createCommentTimer->setSingleShot( true );
@@ -442,10 +442,10 @@ void TestGData::testNetwork()
            warnings, SLOT( removeCommentTimeoutWarning() ) );
 
 
-  removePostingTimer = new QTimer( this );
-  removePostingTimer->setSingleShot( true );
-  connect( removePostingTimer, SIGNAL( timeout() ),
-           warnings, SLOT( removePostingTimeoutWarning() ) );
+  removePostTimer = new QTimer( this );
+  removePostTimer->setSingleShot( true );
+  connect( removePostTimer, SIGNAL( timeout() ),
+           warnings, SLOT( removePostTimeoutWarning() ) );
 
   // start the chain
   connect( b, SIGNAL( fetchedProfileId( const QString & ) ),

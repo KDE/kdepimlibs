@@ -36,7 +36,7 @@ class BlogPostPrivate
   public:
     bool mPrivate;
     BlogPost *q_ptr;
-    QString mPostingId;
+    QString mPostId;
     QString mTitle;
     QString mContent;
     QStringList mCategories;

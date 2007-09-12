@@ -44,7 +44,7 @@
   QString mContent( "TestBlog: <strong>posted</strong> content." );
   QString mModifiedContent( "TestBlog: <strong>modified</strong>content." );
   bool mPrivate = false;
-  QString mPostingId( QString( "113" ) );
+  QString mPostId( QString( "113" ) );
 
   QString mCommentTitle( "TestBlog Comment" );
   QString mCommentContent( "TestBlog: posted comment." );

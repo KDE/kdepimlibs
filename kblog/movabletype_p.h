@@ -36,17 +36,17 @@ class MovableTypePrivate : public MetaWeblogPrivate
     virtual ~MovableTypePrivate();
     virtual QList<QVariant> defaultArgs( const QString &id = QString() );
 
-    void slotCreatePosting( const QList<QVariant> &result, const QVariant &id );
+    void slotCreatePost( const QList<QVariant> &result, const QVariant &id );
     void slotError( int, const QString&, const QVariant& );
-    void slotFetchPosting( const QList<QVariant> &result, const QVariant &id );
-    void slotListRecentPostings( const QList<QVariant> &result,
+    void slotFetchPost( const QList<QVariant> &result, const QVariant &id );
+    void slotListRecentPosts( const QList<QVariant> &result,
                                  const QVariant &id );
     virtual void slotListTrackBackPings( const QList<QVariant> &result,
                                  const QVariant &id );
-    void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
+    void slotModifyPost( const QList<QVariant> &result, const QVariant &id );
     Q_DECLARE_PUBLIC(MovableType)
   private:
-    bool readPostingFromMap( BlogPost *post,
+    bool readPostFromMap( BlogPost *post,
                              const QMap<QString, QVariant> &postInfo );
 };
 

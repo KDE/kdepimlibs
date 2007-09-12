@@ -55,7 +55,7 @@ class Blogger1Private;
    KBlog::BlogPost *post = new BlogPost();
    post->setTitle( "This is the title." );
    post->setContent( "Here is some the content..." );
-   myblog->createPosting( posting );
+   myblog->createPost( post );
    @endcode
 
    @author Christian Weilbach \<christian_weilbach\@web.de\>
@@ -104,55 +104,55 @@ class KBLOG_EXPORT Blogger1 : public Blog
     virtual void listBlogs();
 
     /**
-      List recent postings on the server.
+      List recent posts on the server.
 
-     @param number The number of postings to fetch. Latest first.
+     @param number The number of posts to fetch. Latest first.
 
-      @see     void listedRecentPostings( QList\<KBlog::BlogPost> & )
-      @see     void fetchPosting( KBlog::BlogPost *posting )
+      @see     void listedRecentPosts( QList\<KBlog::BlogPost> & )
+      @see     void fetchPost( KBlog::BlogPost *post )
     */
-    void listRecentPostings( int number );
+    void listRecentPosts( int number );
 
     /**
-      Fetch a posting from the server.
+      Fetch a post from the server.
 
-      @param posting is the posting. Note: Its id has to be set 
+      @param post is the post. Note: Its id has to be set 
       appropriately.
 
-      @see BlogPost::setPostingId( const QString& )
-      @see fetchedPosting( KBlog::BlogPost *posting )
+      @see BlogPost::setPostId( const QString& )
+      @see fetchedPost( KBlog::BlogPost *post )
     */
-    void fetchPosting( KBlog::BlogPost *posting );
+    void fetchPost( KBlog::BlogPost *post );
 
     /**
-      Modify a posting on server.
+      Modify a post on server.
 
-      @param posting is used to send the modified posting including
-      the correct postingId from it to the server.
+      @param post is used to send the modified post including
+      the correct postId from it to the server.
 
-      @see  void modifiedPosting( KBlog::BlogPost *posting )
+      @see  void modifiedPost( KBlog::BlogPost *post )
     */
-    void modifyPosting( KBlog::BlogPost *posting );
+    void modifyPost( KBlog::BlogPost *post );
 
     /**
-      Create a new posting on server.
+      Create a new post on server.
 
-      @param posting is sent to the server.
+      @param post is sent to the server.
 
-      @see createdPosting( KBlog::BlogPost *posting )
+      @see createdPost( KBlog::BlogPost *post )
     */
-    void createPosting( KBlog::BlogPost *posting );
+    void createPost( KBlog::BlogPost *post );
 
     /**
-      Remove a posting from the server.
+      Remove a post from the server.
 
-      @param posting is the posting. Note: Its id has to be set 
+      @param post is the post. Note: Its id has to be set 
       appropriately.
 
-      @see BlogPost::setPostingId( const QString& )
-      @see removedPosting( KBlog::BlogPost *posting )
+      @see BlogPost::setPostId( const QString& )
+      @see removedPost( KBlog::BlogPost *post )
     */
-    void removePosting( KBlog::BlogPost *posting );
+    void removePost( KBlog::BlogPost *post );
 
   Q_SIGNALS:
 
@@ -191,15 +191,15 @@ class KBLOG_EXPORT Blogger1 : public Blog
                    const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotListBlogs(
                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotListRecentPostings(
+    Q_PRIVATE_SLOT(d_func(), void slotListRecentPosts(
                     const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotFetchPosting(
+    Q_PRIVATE_SLOT(d_func(), void slotFetchPost(
                     const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotCreatePosting(
+    Q_PRIVATE_SLOT(d_func(), void slotCreatePost(
                     const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotModifyPosting(
+    Q_PRIVATE_SLOT(d_func(), void slotModifyPost(
                     const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotRemovePosting(
+    Q_PRIVATE_SLOT(d_func(), void slotRemovePost(
                     const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotError( int ,
                     const QString&, const QVariant& ))
