@@ -43,9 +43,9 @@ class WordpressBuggyPrivate : public MovableTypePrivate
 {
   public:
     QMap<KJob*,QByteArray> mCreatePostingBuffer;
-    QMap<KJob*,KBlog::BlogPosting*> mCreatePostingMap;
+    QMap<KJob*,KBlog::BlogPost*> mCreatePostingMap;
     QMap<KJob*,QByteArray> mModifyPostingBuffer;
-    QMap<KJob*,KBlog::BlogPosting*> mModifyPostingMap;
+    QMap<KJob*,KBlog::BlogPost*> mModifyPostingMap;
     WordpressBuggyPrivate();
     virtual ~WordpressBuggyPrivate();
     virtual QList<QVariant> defaultArgs( const QString &id = QString() );

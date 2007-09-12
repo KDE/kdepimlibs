@@ -22,7 +22,7 @@
 #include "wordpressbuggy.h"
 #include "wordpressbuggy_p.h"
 
-#include "blogposting.h"
+#include "blogpost.h"
 
 #include <KDebug>
 #include <KLocale>
@@ -53,7 +53,7 @@ WordpressBuggy::~WordpressBuggy()
   kDebug(5323) << "~WordpressBuggy()";
 }
 
-void WordpressBuggy::createPosting( KBlog::BlogPosting *posting )
+void WordpressBuggy::createPosting( KBlog::BlogPost *posting )
 {
   kDebug(5323) << "createPosting()";
   Q_D(WordpressBuggy);
@@ -144,7 +144,7 @@ void WordpressBuggy::createPosting( KBlog::BlogPosting *posting )
            this, SLOT( slotCreatePosting( KJob * ) ) );
 }
 
-void WordpressBuggy::modifyPosting( KBlog::BlogPosting *posting )
+void WordpressBuggy::modifyPosting( KBlog::BlogPost *posting )
 {
   kDebug(5323) << "modifyPosting()";
   Q_D(WordpressBuggy);
@@ -277,7 +277,7 @@ void WordpressBuggyPrivate::slotCreatePosting( KJob *job )
 
   Q_Q(WordpressBuggy);
 
-  KBlog::BlogPosting* posting = mCreatePostingMap[ job ];
+  KBlog::BlogPost* posting = mCreatePostingMap[ job ];
   mCreatePostingMap.remove( job );
 
   if ( job->error() != 0 ) {
@@ -307,7 +307,7 @@ void WordpressBuggyPrivate::slotCreatePosting( KJob *job )
   kDebug(5323) << "QRegExp rx(  \"<string>(.+)</string>\" ) matches" << rxId.cap(1);
 
   posting->setPostingId( rxId.cap(1) );
-  posting->setStatus( BlogPosting::Created );
+  posting->setStatus( BlogPost::Created );
   emit q->createdPosting( posting );
   kDebug(5323) << "Emitting createdPosting()";
 }
@@ -326,7 +326,7 @@ void WordpressBuggyPrivate::slotModifyPosting( KJob *job )
   const QString data = QString::fromUtf8( mModifyPostingBuffer[ job ].data(), mModifyPostingBuffer[ job ].size() );
   mModifyPostingBuffer[ job ].resize( 0 );
 
-  KBlog::BlogPosting* posting = mModifyPostingMap[ job ];
+  KBlog::BlogPost* posting = mModifyPostingMap[ job ];
   mModifyPostingMap.remove( job );
   Q_Q(WordpressBuggy);
   if ( job->error() != 0 ) {
@@ -359,7 +359,7 @@ void WordpressBuggyPrivate::slotModifyPosting( KJob *job )
   if( rxId.cap(1).toInt() == 1 )
  {
     kDebug(5323) << "Posting successfully updatet.";
-    posting->setStatus( BlogPosting::Modified );
+    posting->setStatus( BlogPost::Modified );
     emit q->modifiedPosting( posting );
   }
 }
