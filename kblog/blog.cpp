@@ -23,7 +23,7 @@
 
 #include "blog.h"
 #include "blog_p.h"
-#include "blogposting_p.h"
+#include "blogpost_p.h"
 
 #include <kdeversion.h>
 

@@ -47,7 +47,7 @@ namespace KBlog {
   Blog* myblog = new MovableType("http://example.com/xmlrpc/gateway.php");
   myblog->setUsername( "some_user_id" );
   myblog->setPassword( "YoURFunnyPAsSwoRD" );
-  KBlog::BlogPosting *post = new BlogPosting();
+  KBlog::BlogPost *post = new BlogPost();
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
   myblog->createPosting( posting );
@@ -78,17 +78,17 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
       @param posting is send to the server.
     */
-    void createPosting( KBlog::BlogPosting *posting );
+    void createPosting( KBlog::BlogPost *posting );
 
     /**
       Fetch the Posting with postingId.
       @param posting This is the posting with its id set to the
       corresponding posting on the server.
 
-      @see BlogPosting::setPostingId( const QString& )
-      @see fetchedPosting( KBlog::BlogPosting* )
+      @see BlogPost::setPostingId( const QString& )
+      @see fetchedPosting( KBlog::BlogPost* )
     */
-    void fetchPosting( KBlog::BlogPosting *posting );
+    void fetchPosting( KBlog::BlogPost *posting );
 
     /**
       Modify a posting on server.
@@ -96,10 +96,10 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
       @param posting The posting to be modified on the
       server. You need to set its id correctly.
 
-      @see BlogPosting::setPostingId( const QString& )
-      @see modifiedPosting( KBlog::BlogPosting* )
+      @see BlogPost::setPostingId( const QString& )
+      @see modifiedPosting( KBlog::BlogPost* )
     */
-    void modifyPosting( KBlog::BlogPosting *posting );
+    void modifyPosting( KBlog::BlogPost *posting );
 
     /**
       Returns the  of the inherited object.
@@ -111,7 +111,7 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
      @param number The number of postings to fetch. Latest first.
 
-      @see     void listedRecentPostings( const QList\<KBlog::BlogPosting\>& )
+      @see     void listedRecentPostings( const QList\<KBlog::BlogPost\>& )
     */
     void listRecentPostings( int number );
 
@@ -121,11 +121,11 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
       @param posting This is the posting to get the trackback pings from.
       You need to set its id correctly.
 
-      @see BlogPosting::setPostingId( const QString& )
-      @see listedTrackBackPings( KBlog::BlogPosting *, const QList\<QMap\<QString,QString\> \>& )
+      @see BlogPost::setPostingId( const QString& )
+      @see listedTrackBackPings( KBlog::BlogPost *, const QList\<QMap\<QString,QString\> \>& )
 
     */
-    virtual void listTrackBackPings( KBlog::BlogPosting *posting );
+    virtual void listTrackBackPings( KBlog::BlogPost *posting );
 
   Q_SIGNALS:
     /**
@@ -136,7 +136,7 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
       @see listTrackBackPings()
     */
-    void listedTrackBackPings( KBlog::BlogPosting *posting, const QList<QMap<QString,QString> > &pings );
+    void listedTrackBackPings( KBlog::BlogPost *posting, const QList<QMap<QString,QString> > &pings );
 
   protected:
     /**

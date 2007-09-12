@@ -23,17 +23,17 @@
 #include <QtCore>
 
 #include <qtest_kde.h>
-#include "kblog/blogposting.h"
+#include "kblog/blogpost.h"
 #include "kurl.h"
 #include "kdatetime.h"
 
 Q_DECLARE_METATYPE(QList<KUrl>)
 Q_DECLARE_METATYPE(KDateTime)
-Q_DECLARE_METATYPE(KBlog::BlogPosting::Status)
+Q_DECLARE_METATYPE(KBlog::BlogPost::Status)
 
 using namespace KBlog;
 
-class testBlogPosting: public QObject
+class testBlogPost: public QObject
 {
     Q_OBJECT
 private slots:
@@ -41,9 +41,9 @@ private slots:
     void testValidity_data();
 };
 
-#include "testblogposting.moc"
+#include "testblogpost.moc"
 
-void testBlogPosting::testValidity_data()
+void testBlogPost::testValidity_data()
 {
     QTest::addColumn<QString>("postingId");
     QTest::addColumn<QString>("title");
@@ -62,7 +62,7 @@ void testBlogPosting::testValidity_data()
     QTest::addColumn<QStringList>("categories");
     QTest::addColumn<KDateTime>("creationDateTime");
     QTest::addColumn<KDateTime>("modificationDateTime");
-    QTest::addColumn<BlogPosting::Status>("status");
+    QTest::addColumn<BlogPost::Status>("status");
     QTest::addColumn<QString>("error");
 
 //     QList<KUrl> url;
@@ -74,13 +74,13 @@ void testBlogPosting::testValidity_data()
       << QString( "Mood" ) << QString( "Music" )
       << QStringList( "Category" )
       << KDateTime( QDateTime::currentDateTime() )
-      << KDateTime( QDateTime::currentDateTime() ) << BlogPosting::New
+      << KDateTime( QDateTime::currentDateTime() ) << BlogPost::New
       << QString( "Error" );
 }
 
-void testBlogPosting::testValidity()
+void testBlogPost::testValidity()
 {
-    BlogPosting p;
+    BlogPost p;
 
     QFETCH(QString, postingId);
     QFETCH(QString, title);
@@ -99,7 +99,7 @@ void testBlogPosting::testValidity()
     QFETCH(QStringList, categories);
     QFETCH(KDateTime, creationDateTime);
     QFETCH(KDateTime, modificationDateTime);
-    QFETCH(BlogPosting::Status, status);
+    QFETCH(BlogPost::Status, status);
     QFETCH(QString, error);
 
     p.setPostingId( postingId );
@@ -144,4 +144,4 @@ void testBlogPosting::testValidity()
     QCOMPARE(p.error(), error );
 }
 
-QTEST_KDEMAIN_CORE(testBlogPosting)
+QTEST_KDEMAIN_CORE(testBlogPost)

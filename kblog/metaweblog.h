@@ -52,7 +52,7 @@ namespace KBlog {
   Blog* myblog = new MetaWeblog("http://example.com/xmlrpc/gateway.php");
   myblog->setUsername( "some_user_id" );
   myblog->setPassword( "YouRFuNNYPasSwoRD" );
-  KBlog::BlogPosting *post = new BlogPosting();
+  KBlog::BlogPost *post = new BlogPost();
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
   myblog->createPosting( posting );
@@ -88,7 +88,7 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
       @param number The number of postings to fetch. Latest first.
 
-      @see     void listedRecentPostings( QList\<KBlog::BlogPosting\>& )
+      @see     void listedRecentPostings( QList\<KBlog::BlogPost\>& )
     */
     void listRecentPostings( int number );
 
@@ -103,10 +103,10 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
       @param posting is the posting with its id set to get the corresponding
       posting. 
 
-      @see BlogPosting::setPostingId( const QString& )
-      @see fetchedPosting( KBlog::BlogPosting *posting )
+      @see BlogPost::setPostingId( const QString& )
+      @see fetchedPosting( KBlog::BlogPost *posting )
     */
-    void fetchPosting( KBlog::BlogPosting *posting );
+    void fetchPosting( KBlog::BlogPost *posting );
 
     /**
       Modify a posting on server.
@@ -114,18 +114,18 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
       @param posting is used to send the modified posting including the
       correct postingId from it to the server.
 
-      @see modifiedPosting( KBlog::BlogPosting *posting )
+      @see modifiedPosting( KBlog::BlogPost *posting )
     */
-    void modifyPosting( KBlog::BlogPosting *posting );
+    void modifyPosting( KBlog::BlogPost *posting );
 
     /**
       Create a new posting on server.
 
       @param posting This posting to send.
 
-      @see createdPosting( KBlog::BlogPosting *posting )
+      @see createdPosting( KBlog::BlogPost *posting )
     */
-    void createPosting( KBlog::BlogPosting *posting );
+    void createPosting( KBlog::BlogPost *posting );
 
     /**
       Create a new media object, e.g. picture, on server.

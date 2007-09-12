@@ -23,16 +23,16 @@
 #include <QtCore>
 
 #include <qtest_kde.h>
-#include "kblog/blogpostingcomment.h"
+#include "kblog/blogcomment.h"
 #include "kurl.h"
 #include "kdatetime.h"
 
-Q_DECLARE_METATYPE(KBlog::BlogPostingComment::Status)
+Q_DECLARE_METATYPE(KBlog::BlogComment::Status)
 Q_DECLARE_METATYPE(KDateTime)
 
 using namespace KBlog;
 
-class testBlogPostingComment: public QObject
+class testBlogComment: public QObject
 {
     Q_OBJECT
 private slots:
@@ -40,9 +40,9 @@ private slots:
     void testValidity_data();
 };
 
-#include "testblogpostingcomment.moc"
+#include "testblogcomment.moc"
 
-void testBlogPostingComment::testValidity_data()
+void testBlogComment::testValidity_data()
 {
     QTest::addColumn<QString>( "commentId" );
     QTest::addColumn<QString>( "title" );
@@ -50,7 +50,7 @@ void testBlogPostingComment::testValidity_data()
     QTest::addColumn<QString>( "name" );
     QTest::addColumn<QString>( "email" );
     QTest::addColumn<KUrl>("url");
-    QTest::addColumn<BlogPostingComment::Status>("status");
+    QTest::addColumn<BlogComment::Status>("status");
     QTest::addColumn<QString>("error");
     QTest::addColumn<KDateTime>("creationDateTime");
     QTest::addColumn<KDateTime>("modificationDateTime");
@@ -59,14 +59,14 @@ void testBlogPostingComment::testValidity_data()
       << QString( "Title" ) << QString( "Content" )
       << QString( "Name" ) << QString( "E-Mail" )
       << KUrl( "http://my.link/in/outer/space/fancy/ABC123" )
-      << BlogPostingComment::New << QString( "Error" )
+      << BlogComment::New << QString( "Error" )
       << KDateTime( QDateTime::currentDateTime() )
       << KDateTime( QDateTime::currentDateTime() );
 }
 
-void testBlogPostingComment::testValidity()
+void testBlogComment::testValidity()
 {
-    BlogPostingComment p;
+    BlogComment p;
 
     QFETCH( QString, commentId );
     QFETCH( QString, title );
@@ -74,7 +74,7 @@ void testBlogPostingComment::testValidity()
     QFETCH( QString, name );
     QFETCH( QString, email );
     QFETCH( KUrl, url );
-    QFETCH( BlogPostingComment::Status, status );
+    QFETCH( BlogComment::Status, status );
     QFETCH( QString, error );
     QFETCH( KDateTime, creationDateTime );
     QFETCH( KDateTime, modificationDateTime  );
@@ -103,4 +103,4 @@ void testBlogPostingComment::testValidity()
 
 }
 
-QTEST_KDEMAIN_CORE(testBlogPostingComment)
+QTEST_KDEMAIN_CORE(testBlogComment)

@@ -54,7 +54,7 @@ class MetaWeblogPrivate : public Blogger1Private
     virtual void slotError( int, const QString&, const QVariant& );
     Q_DECLARE_PUBLIC(MetaWeblog)
   private:
-    bool readPostingFromMap( BlogPosting *post,
+    bool readPostingFromMap( BlogPost *post,
                              const QMap<QString, QVariant> &postInfo );
 };
 

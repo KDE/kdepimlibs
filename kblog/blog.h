@@ -52,8 +52,8 @@ class KUrl;
 /** Namespace for blog related classes. */
 namespace KBlog {
 
-class BlogPosting;
-class BlogPostingComment;
+class BlogPost;
+class BlogComment;
 class BlogMedia;
 class BlogPrivate;
 
@@ -195,33 +195,33 @@ class KBLOG_EXPORT Blog : public QObject
       The posts are returned in descending chronological order.
 
       @param number the number of posts to fetch.
-      @see listedRecentPostings( const QList<KBlog::BlogPosting>& posts )
+      @see listedRecentPostings( const QList<KBlog::BlogPost>& posts )
     */
     virtual void listRecentPostings( int number ) = 0;
 
     /**
       Fetch a blog post from the server with a specific ID.
       The ID of the existing post must be retrieved using getRecentPostings
-      and then be modified and provided to this method or a new BlogPosting
+      and then be modified and provided to this method or a new BlogPost
       created with the existing ID.
 
       @param post a blog post with the ID identifying the blog post to fetch.
       @see fetchedPosting()
       @see listedRecentPostings( int number )
     */
-    virtual void fetchPosting( KBlog::BlogPosting *post ) = 0;
+    virtual void fetchPosting( KBlog::BlogPost *post ) = 0;
 
     /**
       Modify an existing blog post on the server.
       The ID of the existing post must be retrieved using getRecentPostings
-      and then be modified and provided to this method or a new BlogPosting
+      and then be modified and provided to this method or a new BlogPost
       created with the existing ID.
 
       @param post the new blog post.
       @see modifiedPosting()
       @see listedRecentPostings( int number )
     */
-    virtual void modifyPosting( KBlog::BlogPosting *post ) = 0;
+    virtual void modifyPosting( KBlog::BlogPost *post ) = 0;
 
     /**
       Create a new blog post on the server.
@@ -229,18 +229,18 @@ class KBLOG_EXPORT Blog : public QObject
       @param post the blog post to create.
       @see createdPosting()
     */
-    virtual void createPosting( KBlog::BlogPosting *post ) = 0;
+    virtual void createPosting( KBlog::BlogPost *post ) = 0;
 
     /**
       Remove an existing blog post from the server.
-      The BlogPosting object representing the existing post must be retrieved
+      The BlogPost object representing the existing post must be retrieved
       using getRecentPostings and then provided to this method.
 
       @param post* the blog post to remove.
       @see removedPosting()
       @see listedRecentPostings( int number )
     */
-    virtual void removePosting( KBlog::BlogPosting *post ) = 0;
+    virtual void removePosting( KBlog::BlogPost *post ) = 0;
 
   Q_SIGNALS:
     /**
@@ -251,7 +251,7 @@ class KBLOG_EXPORT Blog : public QObject
       @see listRecentPostings()
     */
     void listedRecentPostings(
-        const QList<KBlog::BlogPosting>& posts );
+        const QList<KBlog::BlogPost>& posts );
 
     /**
       This signal is emitted when a createPosting() job creates a new blog post
@@ -260,7 +260,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param post the created post.
       @see createPosting()
     */
-    void createdPosting( KBlog::BlogPosting *post );
+    void createdPosting( KBlog::BlogPost *post );
 
     /**
       This signal is emitted when a fetchPosting() job fetches a post
@@ -269,7 +269,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param post the fetched post.
       @see fetchPosting()
     */
-    void fetchedPosting( KBlog::BlogPosting *post );
+    void fetchedPosting( KBlog::BlogPost *post );
 
     /**
       This signal is emitted when a modifyPosting() job modifies a post
@@ -278,7 +278,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param post the modified post.
       @see modifyPosting()
     */
-    void modifiedPosting( KBlog::BlogPosting *post );
+    void modifiedPosting( KBlog::BlogPost *post );
 
     /**
       This signal is emitted when a removePosting() job removes a post
@@ -287,7 +287,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param post the removed post.
       @see removePosting()
     */
-    void removedPosting( KBlog::BlogPosting *post );
+    void removedPosting( KBlog::BlogPost *post );
 
     /**
       This signal is emitted when an error occurs with XML parsing or a
@@ -309,7 +309,7 @@ class KBLOG_EXPORT Blog : public QObject
       @see ErrorType
     */
     void errorPosting( KBlog::Blog::ErrorType type,
-                       const QString &errorMessage, KBlog::BlogPosting* post );
+                       const QString &errorMessage, KBlog::BlogPost* post );
 
     /**
       This signal is emitted when an error occurs with XML parsing or a
@@ -334,8 +334,8 @@ class KBLOG_EXPORT Blog : public QObject
       @see ErrorType
     */
     void errorComment( KBlog::Blog::ErrorType type,
-                       const QString &errorMessage, KBlog::BlogPosting* post,
-                       KBlog::BlogPostingComment* comment );
+                       const QString &errorMessage, KBlog::BlogPost* post,
+                       KBlog::BlogComment* comment );
 
   protected:
     /** A pointer to the corresponding 'Private' class */

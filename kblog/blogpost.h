@@ -38,23 +38,23 @@ namespace KCal {
 
 namespace KBlog {
   class Blog;
-  class BlogPostingPrivate;
-  class BlogPostingComment;
+  class BlogPostPrivate;
+  class BlogComment;
 
 /**
   @brief
   A class that represents a blog posting on the server.
 
   @code
-  KBlog::BlogPosting *post = new BlogPosting();
+  KBlog::BlogPost *post = new BlogPost();
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
   post->setPrivate( true ); // false on default
-  connect( backend, createdPosting( KBlog::BlogPosting* ),
-                 this, createdPosting( KBlog::BlogPosting* );
+  connect( backend, createdPosting( KBlog::BlogPost* ),
+                 this, createdPosting( KBlog::BlogPost* );
   backend->createPosting( post );
   ...
-  void createdPosting( KBlog::BlogPosting* post )
+  void createdPosting( KBlog::BlogPost* post )
   {
     setMyFancyGUIPostingId( post->postingId() );
     setMyFancyGUIPermaLink( post->permaLink() );
@@ -64,7 +64,7 @@ namespace KBlog {
   @author Christian Weilbach \<christian_weilbach\@web.de\>
 */
 
-class KBLOG_EXPORT BlogPosting
+class KBLOG_EXPORT BlogPost
 {
 
 public:
@@ -72,25 +72,25 @@ public:
     /**
       Constructor.
     */
-    BlogPosting( const KBlog::BlogPosting& posting );
+    BlogPost( const KBlog::BlogPost& posting );
 
     /**
       Constructor.
 
       @param postingId The ID of the posting on the server.
     */
-    explicit BlogPosting( const QString &postingId = QString() );
+    explicit BlogPost( const QString &postingId = QString() );
 
     /** Constructor to create a blog posting from a KCal Journal.
 
       @param journal The journal to use to create the posting
      */
-    explicit BlogPosting( const KCal::Journal &journal );
+    explicit BlogPost( const KCal::Journal &journal );
 
     /**
       Virtual default destructor.
     */
-    virtual ~BlogPosting();
+    virtual ~BlogPost();
 
     /**
       Returns a KCal journal from the blog posting owned by the caller.
@@ -362,16 +362,16 @@ public:
       /** Status of a freshly constructed posting on the client. */
       New,
       /** Status of a successfully fetched posting. 
-      @see Blog::fetchPosting( KBlog::BlogPosting* ) */
+      @see Blog::fetchPosting( KBlog::BlogPost* ) */
       Fetched,
       /** Status of a successfully created posting. 
-      @see Blog::createPosting( KBlog::BlogPosting* ) */
+      @see Blog::createPosting( KBlog::BlogPost* ) */
       Created,
       /** Status of a successfully modified posting. 
-      @see Blog::modifyPosting( KBlog::BlogPosting* ) */
+      @see Blog::modifyPosting( KBlog::BlogPost* ) */
       Modified,
       /** Status of a successfully removed posting. 
-      @see Blog::removePosting( KBlog::BlogPosting* ) */
+      @see Blog::removePosting( KBlog::BlogPost* ) */
       Removed,
       /** Status when an error on the server side occured. 
       @see error() */
@@ -413,10 +413,10 @@ public:
     /**
       The overloaed = operator.
     */
-    BlogPosting& operator=( const BlogPosting &posting );
+    BlogPost& operator=( const BlogPost &posting );
 
   private:
-    BlogPostingPrivate * const d_ptr;
+    BlogPostPrivate * const d_ptr;
 };
 
 

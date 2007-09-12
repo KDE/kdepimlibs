@@ -23,7 +23,7 @@
 #ifndef BLOGPOSTING_P_H
 #define BLOGPOSTING_P_H
 
-#include "blogposting.h"
+#include "blogpost.h"
 
 #include <QtCore/QStringList>
 #include <kdatetime.h>
@@ -31,11 +31,11 @@
 
 namespace KBlog{
 
-class BlogPostingPrivate
+class BlogPostPrivate
 {
   public:
     bool mPrivate;
-    BlogPosting *q_ptr;
+    BlogPost *q_ptr;
     QString mPostingId;
     QString mTitle;
     QString mContent;
@@ -49,7 +49,7 @@ class BlogPostingPrivate
     bool mCommentAllowed;
     bool mTrackBackAllowed;
     KUrl mLink, mPermaLink;
-    BlogPosting::Status mStatus;
+    BlogPost::Status mStatus;
     KDateTime mCreationDateTime;
     KDateTime mModificationDateTime;
 };

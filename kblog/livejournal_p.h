@@ -35,7 +35,7 @@ class LiveJournalPrivate : public BlogPrivate
     QString mAppId;
     QMap<QString,QString> mCategories;
     KXmlRpc::Client *mXmlRpcClient;
-    QMap<unsigned int,KBlog::BlogPosting*> mCallMap;
+    QMap<unsigned int,KBlog::BlogPost*> mCallMap;
     unsigned int mCallCounter;
     QString mServerMessage;
     QString mUserId;
@@ -83,7 +83,7 @@ class LiveJournalPrivate : public BlogPrivate
     Q_DECLARE_PUBLIC(LiveJournal)
 
   private:
-    bool readPostingFromMap( BlogPosting *post,
+    bool readPostingFromMap( BlogPost *post,
                              const QMap<QString, QVariant> &postInfo );
 };
 

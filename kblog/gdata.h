@@ -43,7 +43,7 @@ class KUrl;
 namespace KBlog {
 
   class GDataPrivate;
-  class BlogPostingComment;
+  class BlogComment;
 
 /**
   @brief
@@ -57,7 +57,7 @@ namespace KBlog {
   myblog->setProfileId( "2039484587348593945823" ); // can be fetched via fetchProfileId()
   myblog->setUsername( "your_email@address.com" );
   myblog->setPassword( "yOuRFuNnYPasSword" );
-  KBlog::BlogPosting *post = new BlogPosting();
+  KBlog::BlogPost *post = new BlogPost();
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
   myblog->createPosting( posting );
@@ -89,8 +89,8 @@ class KBLOG_EXPORT GData : public Blog
       @param fullName is a QString containing the blog username.
 
       @see username()
-      @see createPosting( KBlog::BlogPosting* )
-      @see modifiyPosting( KBlog::BlogPosting* )
+      @see createPosting( KBlog::BlogPost* )
+      @see modifiyPosting( KBlog::BlogPost* )
     */
     virtual void setFullName( const QString &fullName );
 
@@ -145,15 +145,15 @@ class KBLOG_EXPORT GData : public Blog
 
         @param posting The posting, which postings should be listed.
 
-        @see void listedComments( KBlog::BlogPosting*, const QList\<KBlog::BlogPostingComment\>& )
+        @see void listedComments( KBlog::BlogPost*, const QList\<KBlog::BlogComment\>& )
     */
-    virtual void listComments( KBlog::BlogPosting *posting );
+    virtual void listComments( KBlog::BlogPost *posting );
 
 
     /**
         List the all comments available for this authentication on the server.
 
-        @see void listedAllComments( const QList\<KBlog::BlogPostingComment\>& )
+        @see void listedAllComments( const QList\<KBlog::BlogComment\>& )
     */
     virtual void listAllComments();
 
@@ -162,8 +162,8 @@ class KBLOG_EXPORT GData : public Blog
 
         @param number The number of postings to fetch. The order is newest first.
 
-        @see     void listedPostings( const QList\<KBlog::BlogPosting\>& )
-        @see     void fetchPosting( KBlog::BlogPosting* )
+        @see     void listedPostings( const QList\<KBlog::BlogPost\>& )
+        @see     void fetchPosting( KBlog::BlogPost* )
     */
     void listRecentPostings( int number );
 
@@ -178,8 +178,8 @@ class KBLOG_EXPORT GData : public Blog
         @param pubMinTime The oldest publication time of the postings to fetch.
         @param pubMaxTime The newest publication time of the postings to fetch.
 
-        @see     void listedPostings( const QList\<KBlog::BlogPosting\>& )
-        @see     void fetchPosting( KBlog::BlogPosting* )
+        @see     void listedPostings( const QList\<KBlog::BlogPost\>& )
+        @see     void fetchPosting( KBlog::BlogPost* )
     */
     virtual void listRecentPostings( const QStringList &label=QStringList(), int number=0, 
                 const KDateTime &upMinTime=KDateTime(), 
@@ -192,10 +192,10 @@ class KBLOG_EXPORT GData : public Blog
         Fetch the Posting with a specific id.
         @param posting This is the posting with its id set correctly.
 
-        @see BlogPosting::setPostingId( const QString& )
-        @see fetchedPosting( KBlog::BlogPosting *posting )
+        @see BlogPost::setPostingId( const QString& )
+        @see fetchedPosting( KBlog::BlogPost *posting )
     */
-    void fetchPosting( KBlog::BlogPosting *posting );
+    void fetchPosting( KBlog::BlogPost *posting );
 
     /**
         Modify a posting on server.
@@ -203,26 +203,26 @@ class KBLOG_EXPORT GData : public Blog
         @param posting This is used to send the modified posting including the
           correct id.
     */
-    void modifyPosting( KBlog::BlogPosting *posting );
+    void modifyPosting( KBlog::BlogPost *posting );
 
     /**
         Create a new posting on server.
 
         @param posting This is send to the server.
 
-        @see createdPosting( KBlog::BlogPosting *posting )
+        @see createdPosting( KBlog::BlogPost *posting )
     */
-    void createPosting( KBlog::BlogPosting *posting );
+    void createPosting( KBlog::BlogPost *posting );
 
     /**
         Remove a posting from the server.
 
         @param posting This is the posting with its id set correctly.
 
-        @see BlogPosting::setPostingId( const QString& )
-        @see removedPosting( KBlog::BlogPosting* )
+        @see BlogPost::setPostingId( const QString& )
+        @see removedPosting( KBlog::BlogPost* )
     */
-    void removePosting( KBlog::BlogPosting *posting );
+    void removePosting( KBlog::BlogPost *posting );
 
 
     /**
@@ -231,10 +231,10 @@ class KBLOG_EXPORT GData : public Blog
         @param posting This is the posting with its id set correctly.
         @param comment This is the comment to create.
 
-        @see BlogPosting::setPostingId( const QString& )
-        @see createdComment( KBlog::BlogPosting*, KBlog::BlogPostingComment*  )
+        @see BlogPost::setPostingId( const QString& )
+        @see createdComment( KBlog::BlogPost*, KBlog::BlogComment*  )
     */
-    virtual void createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
+    virtual void createComment( KBlog::BlogPost *posting, KBlog::BlogComment *comment );
 
 
     /**
@@ -243,10 +243,10 @@ class KBLOG_EXPORT GData : public Blog
         @param posting This is the posting with its id set correctly.
         @param comment This is the comment to remove.
 
-        @see BlogPosting::setPostingId( const QString& )
-        @see removedComment( KBlog::BlogPosting*, KBlog::BlogPostingComment*  )
+        @see BlogPost::setPostingId( const QString& )
+        @see removedComment( KBlog::BlogPost*, KBlog::BlogComment*  )
     */
-    virtual void removeComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment );
+    virtual void removeComment( KBlog::BlogPost *posting, KBlog::BlogComment *comment );
 
   Q_SIGNALS:
 
@@ -268,7 +268,7 @@ class KBLOG_EXPORT GData : public Blog
 
       @see listAllComments()
     */
-    void listedAllComments( const QList<KBlog::BlogPostingComment> &commentsList );
+    void listedAllComments( const QList<KBlog::BlogComment> &commentsList );
 
 
     /**
@@ -278,9 +278,9 @@ class KBLOG_EXPORT GData : public Blog
       @param posting This is the corresponding posting.
       @param comments The list of comments.
 
-      @see listComments( KBlog::BlogPosting* )
+      @see listComments( KBlog::BlogPost* )
     */
-    void listedComments( KBlog::BlogPosting *posting, const QList<KBlog::BlogPostingComment> &comments );
+    void listedComments( KBlog::BlogPost *posting, const QList<KBlog::BlogComment> &comments );
 
 
     /**
@@ -290,9 +290,9 @@ class KBLOG_EXPORT GData : public Blog
       @param posting This is the corresponding posting.
       @param comment This is the created comment.
 
-      @see createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
+      @see createComment( KBlog::BlogPost *posting, KBlog::BlogComment *comment )
     */
-    void createdComment( const KBlog::BlogPosting *posting, const KBlog::BlogPostingComment *comment );
+    void createdComment( const KBlog::BlogPost *posting, const KBlog::BlogComment *comment );
 
 
     /**
@@ -302,9 +302,9 @@ class KBLOG_EXPORT GData : public Blog
       @param posting This is the corresponding posting.
       @param comment This is the removed comment.
 
-      @see removeComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
+      @see removeComment( KBlog::BlogPost *posting, KBlog::BlogComment *comment )
     */
-    void removedComment( const KBlog::BlogPosting *posting, const KBlog::BlogPostingComment *comment );
+    void removedComment( const KBlog::BlogPost *posting, const KBlog::BlogComment *comment );
 
     /**
       This signal is emitted when the profile id has been

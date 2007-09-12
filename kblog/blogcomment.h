@@ -34,13 +34,13 @@ class KUrl;
 
 namespace KBlog {
 
-    class BlogPostingCommentPrivate;
+    class BlogCommentPrivate;
 /**
   @brief
   A class that represents a blog comment on the blog post.
 
   @code
-  KBlog::BlogPostingComment *comment = new BlogPostingComment();
+  KBlog::BlogComment *comment = new BlogComment();
   comment->setTitle( "This is the title." );
   comment->setContent( "Here is some the content..." );
   @endcode
@@ -48,7 +48,7 @@ namespace KBlog {
   @author Mike Arthur \<mike\@mikearthur.co.uk\>
 */
 
-class KBLOG_EXPORT BlogPostingComment
+class KBLOG_EXPORT BlogComment
 {
   public:
   /**
@@ -56,19 +56,19 @@ class KBLOG_EXPORT BlogPostingComment
 
     @param comment The comment to copy.
   */
-  BlogPostingComment( const BlogPostingComment& comment );
+  BlogComment( const BlogComment& comment );
 
    /**
     Constructor.
 
     @param commentId The ID of the comment on the server.
   */
-  explicit BlogPostingComment( const QString &commentId = QString() );
+  explicit BlogComment( const QString &commentId = QString() );
 
   /**
     Virtual default destructor.
   */
-  virtual ~BlogPostingComment();
+  virtual ~BlogComment();
 
   /**
     Returns the title.
@@ -208,10 +208,10 @@ class KBLOG_EXPORT BlogPostingComment
     /** Status of a successfully fetched comment. */
     Fetched,
     /** Status of a successfully created comment. 
-    @see GData::createComment( BlogPosting*, BlogPostingComment* ) */
+    @see GData::createComment( BlogPost*, BlogComment* ) */
     Created,
     /** Status of a successfully removed comment. 
-    @see GData::removeComment( BlogPosting*, BlogPostingComment* ) */
+    @see GData::removeComment( BlogPost*, BlogComment* ) */
     Removed,
     /** Status when an error has occured on the server side. 
     @see error() */
@@ -253,10 +253,10 @@ class KBLOG_EXPORT BlogPostingComment
   /**
     Overloaded for QList handling.
   */
-  BlogPostingComment& operator=(const BlogPostingComment &comment );
+  BlogComment& operator=(const BlogComment &comment );
 
   private:
-    BlogPostingCommentPrivate * const d_ptr;
+    BlogCommentPrivate * const d_ptr;
 };
 
 } //namespace KBlog

@@ -46,7 +46,7 @@ class MovableTypePrivate : public MetaWeblogPrivate
     void slotModifyPosting( const QList<QVariant> &result, const QVariant &id );
     Q_DECLARE_PUBLIC(MovableType)
   private:
-    bool readPostingFromMap( BlogPosting *post,
+    bool readPostingFromMap( BlogPost *post,
                              const QMap<QString, QVariant> &postInfo );
 };
 

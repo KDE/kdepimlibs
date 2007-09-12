@@ -20,8 +20,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include "blogposting.h"
-#include "blogposting_p.h"
+#include "blogpost.h"
+#include "blogpost_p.h"
 
 #include "blog.h"
 
@@ -33,8 +33,8 @@
 
 namespace KBlog {
 
-BlogPosting::BlogPosting( const KBlog::BlogPosting& posting ):
-    d_ptr( new BlogPostingPrivate )
+BlogPost::BlogPost( const KBlog::BlogPost& posting ):
+    d_ptr( new BlogPostPrivate )
 {
   d_ptr->q_ptr=this;
   d_ptr->mPrivate=posting.isPrivate();
@@ -49,8 +49,8 @@ BlogPosting::BlogPosting( const KBlog::BlogPosting& posting ):
   d_ptr->mModificationDateTime=posting.modificationDateTime();
 }
 
-BlogPosting::BlogPosting( const QString &postingId ) :
-    d_ptr( new BlogPostingPrivate )
+BlogPost::BlogPost( const QString &postingId ) :
+    d_ptr( new BlogPostPrivate )
 {
   d_ptr->q_ptr = this;
   d_ptr->mPrivate = false;
@@ -58,8 +58,8 @@ BlogPosting::BlogPosting( const QString &postingId ) :
   d_ptr->mStatus = New;
 }
 
-BlogPosting::BlogPosting( const KCal::Journal &journal ) :
-    d_ptr( new BlogPostingPrivate )
+BlogPost::BlogPost( const KCal::Journal &journal ) :
+    d_ptr( new BlogPostPrivate )
 {
   d_ptr->q_ptr = this;
   d_ptr->mPrivate = false;
@@ -72,7 +72,7 @@ BlogPosting::BlogPosting( const KCal::Journal &journal ) :
   d_ptr->mCreationDateTime = journal.dtStart();
 }
 
-// BlogPosting::BlogPosting( const KCal::Journal &journal, BlogPostingPrivate &dd )
+// BlogPost::BlogPost( const KCal::Journal &journal, BlogPostPrivate &dd )
 //   : d_ptr( &dd )
 // {
 //   d_ptr->q_ptr = this;
@@ -86,12 +86,12 @@ BlogPosting::BlogPosting( const KCal::Journal &journal ) :
 //   d_ptr->mCreationDateTime = journal.dtStart();
 // }
 
-BlogPosting::~BlogPosting()
+BlogPost::~BlogPost()
 {
   delete d_ptr;
 }
 
-KCal::Journal* BlogPosting::journal( const Blog &blog ) const
+KCal::Journal* BlogPost::journal( const Blog &blog ) const
 {
   QString url = blog.url().url();
   QString username = blog.username();
@@ -112,208 +112,208 @@ KCal::Journal* BlogPosting::journal( const Blog &blog ) const
   return journal;
 }
 
-QString BlogPosting::journalId() const
+QString BlogPost::journalId() const
 {
   return d_ptr->mJournalId;
 }
 
-bool BlogPosting::isPrivate() const
+bool BlogPost::isPrivate() const
 {
   return d_ptr->mPrivate;
 }
 
-void BlogPosting::setPrivate( bool privatePosting )
+void BlogPost::setPrivate( bool privatePosting )
 {
   d_ptr->mPrivate = privatePosting;
 }
 
-QString BlogPosting::postingId() const
+QString BlogPost::postingId() const
 {
   return d_ptr->mPostingId;
 }
 
-void BlogPosting::setPostingId( const QString &postingId )
+void BlogPost::setPostingId( const QString &postingId )
 {
   d_ptr->mPostingId = postingId;
 }
 
-QString BlogPosting::title() const
+QString BlogPost::title() const
 {
   return d_ptr->mTitle;
 }
 
-void BlogPosting::setTitle( const QString &title )
+void BlogPost::setTitle( const QString &title )
 {
   d_ptr->mTitle = title;
 }
 
-QString BlogPosting::content() const
+QString BlogPost::content() const
 {
   return d_ptr->mContent;
 }
 
-void BlogPosting::setContent( const QString &content )
+void BlogPost::setContent( const QString &content )
 {
   d_ptr->mContent = content;
 }
 
-// QString BlogPosting::abbreviatedContent() const
+// QString BlogPost::abbreviatedContent() const
 // {
 //   //TODO
 //   return 0;
 // }
 // 
-// void BlogPosting::setAbbreviatedContent( const QString &abbreviatedContent )
+// void BlogPost::setAbbreviatedContent( const QString &abbreviatedContent )
 // {
 //   Q_UNUSED( abbreviatedContent );
 //   //TODO
 // }
 
-KUrl BlogPosting::link() const
+KUrl BlogPost::link() const
 {
   return d_ptr->mLink;
 }
 
-void BlogPosting::setLink( const KUrl &link ) const
+void BlogPost::setLink( const KUrl &link ) const
 {
   d_ptr->mLink = link;
 }
 
-KUrl BlogPosting::permaLink() const
+KUrl BlogPost::permaLink() const
 {
   return d_ptr->mPermaLink;
 }
 
-void BlogPosting::setPermaLink( const KUrl &permalink ) const
+void BlogPost::setPermaLink( const KUrl &permalink ) const
 {
   d_ptr->mPermaLink = permalink;
 }
 
-bool BlogPosting::isCommentAllowed() const
+bool BlogPost::isCommentAllowed() const
 {
   return d_ptr->mCommentAllowed;
 }
 
-void BlogPosting::setCommentAllowed( bool commentAllowed )
+void BlogPost::setCommentAllowed( bool commentAllowed )
 {
   d_ptr->mCommentAllowed = commentAllowed;
 }
 
-bool BlogPosting::isTrackBackAllowed() const
+bool BlogPost::isTrackBackAllowed() const
 {
   return d_ptr->mCommentAllowed;
 }
 
-void BlogPosting::setTrackBackAllowed ( bool allowTrackBacks )
+void BlogPost::setTrackBackAllowed ( bool allowTrackBacks )
 {
   d_ptr->mTrackBackAllowed = allowTrackBacks;
 }
 
-QString BlogPosting::summary() const
+QString BlogPost::summary() const
 {
   return d_ptr->mSummary;
 }
 
-void BlogPosting::setSummary( const QString &summary )
+void BlogPost::setSummary( const QString &summary )
 {
   d_ptr->mSummary = summary;
 }
 
-QStringList BlogPosting::tags() const
+QStringList BlogPost::tags() const
 {
   return d_ptr->mTags;
 }
 
-void BlogPosting::setTags( const QStringList &tags )
+void BlogPost::setTags( const QStringList &tags )
 {
   d_ptr->mTags = tags;
 }
 
-// QList<KUrl> BlogPosting::trackBackUrls() const
+// QList<KUrl> BlogPost::trackBackUrls() const
 // {
 //   //TODO
 //   return QList<KUrl>();
 // }
 // 
-// void BlogPosting::setTrackBackUrls( const QList<KUrl> &trackBackUrls )
+// void BlogPost::setTrackBackUrls( const QList<KUrl> &trackBackUrls )
 // {
 //   Q_UNUSED( trackBackUrls );
 //   //TODO
 // }
 
-QString BlogPosting::mood() const
+QString BlogPost::mood() const
 {
   return d_ptr->mMood;
 }
 
-void BlogPosting::setMood( const QString &mood )
+void BlogPost::setMood( const QString &mood )
 {
   d_ptr->mMood = mood;
 }
 
-QString BlogPosting::music() const
+QString BlogPost::music() const
 {
   return d_ptr->mMusic;
 }
 
-void BlogPosting::setMusic( const QString &music )
+void BlogPost::setMusic( const QString &music )
 {
   d_ptr->mMusic = music;
 }
 
-QStringList BlogPosting::categories() const
+QStringList BlogPost::categories() const
 {
   return d_ptr->mCategories;
 }
 
-void BlogPosting::setCategories( const QStringList &categories )
+void BlogPost::setCategories( const QStringList &categories )
 {
   d_ptr->mCategories = categories;
 }
 
-KDateTime BlogPosting::creationDateTime() const
+KDateTime BlogPost::creationDateTime() const
 {
   return d_ptr->mCreationDateTime;
 }
 
-void BlogPosting::setCreationDateTime( const KDateTime &datetime )
+void BlogPost::setCreationDateTime( const KDateTime &datetime )
 {
   d_ptr->mCreationDateTime = datetime;
 }
 
-KDateTime BlogPosting::modificationDateTime() const
+KDateTime BlogPost::modificationDateTime() const
 {
   return d_ptr->mModificationDateTime;
 }
 
-void BlogPosting::setModificationDateTime( const KDateTime &datetime )
+void BlogPost::setModificationDateTime( const KDateTime &datetime )
 {
   d_ptr->mModificationDateTime = datetime;
 }
 
-BlogPosting::Status BlogPosting::status() const
+BlogPost::Status BlogPost::status() const
 {
   return d_ptr->mStatus;
 }
 
-void BlogPosting::setStatus( BlogPosting::Status status )
+void BlogPost::setStatus( BlogPost::Status status )
 {
   d_ptr->mStatus = status;
 }
 
-QString BlogPosting::error() const
+QString BlogPost::error() const
 {
   return d_ptr->mError;
 }
 
-void BlogPosting::setError( const QString &error )
+void BlogPost::setError( const QString &error )
 {
   d_ptr->mError = error;
 }
 
-BlogPosting& BlogPosting::operator=(const BlogPosting &posting)
+BlogPost& BlogPost::operator=(const BlogPost &posting)
 {
-  *this = BlogPosting ( posting );
+  *this = BlogPost ( posting );
   return *this;
 }
 

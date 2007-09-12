@@ -23,7 +23,7 @@
 
 #include "movabletype.h"
 #include "movabletype_p.h"
-#include "blogposting.h"
+#include "blogpost.h"
 
 #include <kxmlrpcclient/client.h>
 
@@ -53,7 +53,7 @@ MovableType::~MovableType()
   kDebug(5323) << "~MovableType()";
 }
 
-void MovableType::createPosting( KBlog::BlogPosting *posting )
+void MovableType::createPosting( KBlog::BlogPost *posting )
 {
   //TODO 3 new keys are:
   // String mt_convert_breaks, the value for the convert_breaks field
@@ -87,7 +87,7 @@ void MovableType::createPosting( KBlog::BlogPosting *posting )
     this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
-void MovableType::modifyPosting( KBlog::BlogPosting *posting )
+void MovableType::modifyPosting( KBlog::BlogPost *posting )
 {
   //TODO 3 new keys are:
   // String mt_convert_breaks, the value for the convert_breaks field
@@ -121,7 +121,7 @@ void MovableType::modifyPosting( KBlog::BlogPosting *posting )
      this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
-void MovableType::fetchPosting( KBlog::BlogPosting *posting )
+void MovableType::fetchPosting( KBlog::BlogPost *posting )
 {
   Q_D(MovableType);
   if ( !posting ) {
@@ -156,7 +156,7 @@ void MovableType::listRecentPostings( const int number )
       this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( number ) );
 }
 
-void MovableType::listTrackBackPings( KBlog::BlogPosting *posting ) {
+void MovableType::listTrackBackPings( KBlog::BlogPost *posting ) {
   Q_D(MovableType);
   kDebug(5323) << "List trackback pings...";
   QList<QVariant> args;
@@ -190,7 +190,7 @@ QList<QVariant> MovableTypePrivate::defaultArgs( const QString &id )
 }
 
 bool MovableTypePrivate::readPostingFromMap(
-    BlogPosting *post, const QMap<QString, QVariant> &postInfo )
+    BlogPost *post, const QMap<QString, QVariant> &postInfo )
 {
 
   // FIXME: integrate error handling
@@ -242,7 +242,7 @@ void MovableTypePrivate::slotCreatePosting(
 {
   Q_Q(MovableType);
 
-  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  KBlog::BlogPost* posting = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "MovableType::slotCreatePosting";
@@ -257,7 +257,7 @@ void MovableTypePrivate::slotCreatePosting(
                           posting );
   } else {
      posting->setPostingId( result[0].toString() );
-     posting->setStatus( BlogPosting::Created );
+     posting->setStatus( BlogPost::Created );
      emit q->createdPosting( posting );
     kDebug(5323) << "emitting createdPosting(" << result[0].toString() << ")";
   }
@@ -268,7 +268,7 @@ void MovableTypePrivate::slotError( int number,
 {
   Q_Q(MovableType);
   Q_UNUSED( number );
-  BlogPosting *posting = mCallMap[ id.toInt() ];
+  BlogPost *posting = mCallMap[ id.toInt() ];
 
   emit q->errorPosting( MovableType::XmlRpc, errorString, posting );
 }
@@ -278,7 +278,7 @@ void MovableTypePrivate::slotFetchPosting(
 {
   Q_Q(MovableType);
 
-  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  KBlog::BlogPost* posting = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "MovableType::slotFetchPosting";
@@ -296,7 +296,7 @@ void MovableTypePrivate::slotFetchPosting(
     if ( readPostingFromMap( posting, postInfo ) ) {
       kDebug(5323) << "Emitting fetchedPosting( posting.postingId()="
                    << posting->postingId() << ");";
-      posting->setStatus( BlogPosting::Fetched );
+      posting->setStatus( BlogPost::Fetched );
       emit q->fetchedPosting( posting );
     } else {
       kError(5323) << "readPostingFromMap failed!";
@@ -313,7 +313,7 @@ void MovableTypePrivate::slotListRecentPostings(
 
   int count = id.toInt();
 
-  QList <BlogPosting> fetchedPostingList;
+  QList <BlogPost> fetchedPostingList;
 
   kDebug(5323) << "MovableType::slotListRecentPostings";
   kDebug(5323) << "TOP:" << result[0].typeName();
@@ -328,7 +328,7 @@ void MovableTypePrivate::slotListRecentPostings(
     QList<QVariant>::ConstIterator it = postReceived.begin();
     QList<QVariant>::ConstIterator end = postReceived.end();
     for ( ; it != end; ++it ) {
-      BlogPosting posting;
+      BlogPost posting;
       kDebug(5323) << "MIDDLE:" << ( *it ).typeName();
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
       if ( readPostingFromMap( &posting, postInfo ) ) {
@@ -352,7 +352,7 @@ void MovableTypePrivate::slotListTrackBackPings(
 {
   Q_Q(MovableType);
   kDebug(5323) << "slotTrackbackPings()";
-  BlogPosting *posting = mCallMap[ id.toInt() ];
+  BlogPost *posting = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
   QList<QMap<QString,QString> > trackBackList;
   if ( result[0].type() != QVariant::List ) {
@@ -384,7 +384,7 @@ void MovableTypePrivate::slotModifyPosting(
 {
   Q_Q(MovableType);
 
-  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  KBlog::BlogPost* posting = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "MovableType::slotModifyPosting";
@@ -398,7 +398,7 @@ void MovableTypePrivate::slotModifyPosting(
                           i18n( "Could not read the result, not a boolean." ),
                           posting );
   } else {
-    posting->setStatus( BlogPosting::Modified );
+    posting->setStatus( BlogPost::Modified );
     emit q->modifiedPosting( posting );
     kDebug(5323) << "emitting modifiedPosting()";
   }

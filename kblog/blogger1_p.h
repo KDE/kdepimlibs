@@ -38,7 +38,7 @@ class Blogger1Private : public BlogPrivate
     QString mAppId;
     KXmlRpc::Client *mXmlRpcClient;
     unsigned int mCallCounter; // TODO a better counter
-    QMap<unsigned int,KBlog::BlogPosting*> mCallMap;
+    QMap<unsigned int,KBlog::BlogPost*> mCallMap;
     Blogger1Private();
     virtual ~Blogger1Private();
     QList<QVariant> defaultArgs( const QString &id = QString() );
@@ -63,7 +63,7 @@ class Blogger1Private : public BlogPrivate
     Q_DECLARE_PUBLIC(KBlog::Blogger1)
 
   private:
-    virtual bool readPostingFromMap( BlogPosting *post,
+    virtual bool readPostingFromMap( BlogPost *post,
                                      const QMap<QString, QVariant> &postInfo );
 };
 

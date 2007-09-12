@@ -20,8 +20,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include "blogpostingcomment.h"
-#include "blogpostingcomment_p.h"
+#include "blogcomment.h"
+#include "blogcomment_p.h"
 
 #include <KDateTime>
 #include <KUrl>
@@ -30,9 +30,9 @@
 
 namespace KBlog {
 
-BlogPostingComment::BlogPostingComment(
-    const BlogPostingComment& c ) :
-    d_ptr( new BlogPostingCommentPrivate )
+BlogComment::BlogComment(
+    const BlogComment& c ) :
+    d_ptr( new BlogCommentPrivate )
 {
   d_ptr->q_ptr=this;
   d_ptr->mTitle=c.title();
@@ -47,123 +47,123 @@ BlogPostingComment::BlogPostingComment(
   d_ptr->mCreationDateTime=c.creationDateTime();
 }
 
-BlogPostingComment::BlogPostingComment(
+BlogComment::BlogComment(
     const QString &commentId ) :
-    d_ptr( new BlogPostingCommentPrivate )
+    d_ptr( new BlogCommentPrivate )
 {
   d_ptr->q_ptr=this;
   d_ptr->mStatus = New;
   d_ptr->mCommentId = commentId;
 }
 
-BlogPostingComment::~BlogPostingComment()
+BlogComment::~BlogComment()
 {
   delete d_ptr;
 }
 
-QString BlogPostingComment::title() const
+QString BlogComment::title() const
 {
   return d_ptr->mTitle;
 }
 
-void BlogPostingComment::setTitle( const QString &title )
+void BlogComment::setTitle( const QString &title )
 {
   d_ptr->mTitle = title;
 }
 
-QString BlogPostingComment::content() const
+QString BlogComment::content() const
 {
   return d_ptr->mContent;
 }
 
-void BlogPostingComment::setContent( const QString &content )
+void BlogComment::setContent( const QString &content )
 {
   d_ptr->mContent = content;
 }
 
-QString BlogPostingComment::commentId() const
+QString BlogComment::commentId() const
 {
   return d_ptr->mCommentId;
 }
 
-void BlogPostingComment::setCommentId( const QString &commentId )
+void BlogComment::setCommentId( const QString &commentId )
 {
   d_ptr->mCommentId = commentId;
 }
 
-QString BlogPostingComment::email() const
+QString BlogComment::email() const
 {
   return d_ptr->mEmail;
 }
 
-void BlogPostingComment::setEmail( const QString &email )
+void BlogComment::setEmail( const QString &email )
 {
   d_ptr->mEmail = email;
 }
 
-QString BlogPostingComment::name() const
+QString BlogComment::name() const
 {
   return d_ptr->mName;
 }
 
-void BlogPostingComment::setName( const QString &name )
+void BlogComment::setName( const QString &name )
 {
   d_ptr->mName = name;
 }
-KUrl BlogPostingComment::url() const
+KUrl BlogComment::url() const
 {
   return d_ptr->mUrl;
 }
 
-void BlogPostingComment::setUrl( const KUrl &url )
+void BlogComment::setUrl( const KUrl &url )
 {
   d_ptr->mUrl = url;
 }
 
-KDateTime BlogPostingComment::modificationDateTime() const
+KDateTime BlogComment::modificationDateTime() const
 {
   return d_ptr->mModificationDateTime;
 }
 
-void BlogPostingComment::setModificationDateTime( const KDateTime &datetime )
+void BlogComment::setModificationDateTime( const KDateTime &datetime )
 {
   d_ptr->mModificationDateTime=datetime;
 }
 
-KDateTime BlogPostingComment::creationDateTime() const
+KDateTime BlogComment::creationDateTime() const
 {
   return d_ptr->mCreationDateTime;
 }
 
-void BlogPostingComment::setCreationDateTime( const KDateTime &datetime )
+void BlogComment::setCreationDateTime( const KDateTime &datetime )
 {
   d_ptr->mCreationDateTime= datetime;
 }
 
 
-BlogPostingComment::Status BlogPostingComment::status() const
+BlogComment::Status BlogComment::status() const
 {
   return d_ptr->mStatus;
 }
 
-void BlogPostingComment::setStatus( BlogPostingComment::Status status )
+void BlogComment::setStatus( BlogComment::Status status )
 {
   d_ptr->mStatus = status;
 }
 
-QString BlogPostingComment::error() const
+QString BlogComment::error() const
 {
   return d_ptr->mError;
 }
 
-void BlogPostingComment::setError( const QString &error )
+void BlogComment::setError( const QString &error )
 {
   d_ptr->mError = error;
 }
 
-BlogPostingComment& BlogPostingComment::operator=(const BlogPostingComment &comment)
+BlogComment& BlogComment::operator=(const BlogComment &comment)
 {
-  *this = BlogPostingComment ( comment );
+  *this = BlogComment ( comment );
   return *this;
 }
 

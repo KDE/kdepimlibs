@@ -21,7 +21,7 @@
 
 #include "livejournal.h"
 #include "livejournal_p.h"
-#include "blogposting.h"
+#include "blogpost.h"
 
 #include <kxmlrpcclient/client.h>
 
@@ -61,7 +61,7 @@ void LiveJournal::assignFriendToCategory ( const QString &username,
   // LJ.XMLRPC.editfriendgroups
 }
 
-void LiveJournal::createPosting( KBlog::BlogPosting *posting )
+void LiveJournal::createPosting( KBlog::BlogPost *posting )
 {
   Q_D(LiveJournal); // Enable d-pointer access to the LiveJournalPrivate object
   if ( !posting ) { // Check if posting has a valid memory address (>0)
@@ -117,7 +117,7 @@ void LiveJournal::expireAllCookies()
   // LJ.XMLRPC.sessionexpire
 }
 
-void LiveJournal::fetchPosting( KBlog::BlogPosting *posting )
+void LiveJournal::fetchPosting( KBlog::BlogPost *posting )
 {
   Q_UNUSED( posting );
   //TODO
@@ -183,14 +183,14 @@ void LiveJournal::listRecentPostings( int number )
   // LJ.XMLRPC.getevents with lastn and howmany
 }
 
-void LiveJournal::modifyPosting( KBlog::BlogPosting *posting )
+void LiveJournal::modifyPosting( KBlog::BlogPost *posting )
 {
   Q_UNUSED( posting );
   //TODO
   // LJ.XMLRPC.editevent
 }
 
-void LiveJournal::removePosting( KBlog::BlogPosting *posting )
+void LiveJournal::removePosting( KBlog::BlogPost *posting )
 {
   Q_D(LiveJournal); // Enable d-pointer access to the LiveJournalPrivate object
   kDebug(5323) << "LiveJournal::removePosting()"; // Send a message to the console to state which method we have entered.
@@ -260,7 +260,7 @@ QMap<QString,QVariant> LiveJournalPrivate::defaultArgs()
 }
 
 bool LiveJournalPrivate::readPostingFromMap(
-    BlogPosting *post, const QMap<QString, QVariant> &postInfo )
+    BlogPost *post, const QMap<QString, QVariant> &postInfo )
 {
   Q_UNUSED( post );
   Q_UNUSED( postInfo );
@@ -289,7 +289,7 @@ void LiveJournalPrivate::slotCreatePosting( const QList<QVariant> &result,
 {
   kDebug(5323) << "LiveJournal::slotCreatePosting: " << id; // Print method name and id to the console.
   Q_Q(LiveJournal); // Get access to the q object which allows access to LiveJournal.* from LiveJournalPrivate
-  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ]; // Retrieve the posting from the calling map
+  KBlog::BlogPost* posting = mCallMap[ id.toInt() ]; // Retrieve the posting from the calling map
   mCallMap.remove( id.toInt() ); // Remove the posting as it is now owned by the signal catcher
 
   // struct containing String anum, String itemid
@@ -302,7 +302,7 @@ void LiveJournalPrivate::slotCreatePosting( const QList<QVariant> &result,
   } else {
     QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>(); // Get post ID from struct.
     posting->setPostingId( itemid ); // Set the posting ID to the anum value from the return struct.
-    posting->setStatus( KBlog::BlogPosting::Created ); // Set the posting's status to indicate it has been successfully created.
+    posting->setStatus( KBlog::BlogPost::Created ); // Set the posting's status to indicate it has been successfully created.
     emit q->createdPosting( posting ); // Emit the created posting
     kDebug(5323) << "emitting createdPosting()" <<
         "for" << itemid; // Notify emission to the console
@@ -427,7 +427,7 @@ void LiveJournalPrivate::slotRemovePosting( const QList<QVariant> &result,
 {
   kDebug(5323) << "LiveJournal::slotCreatePosting: " << id; // Print method name and id to the console.
   Q_Q(LiveJournal); // Get access to the q object which allows access to LiveJournal.* from LiveJournalPrivate
-  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ]; // Retrieve the posting from the calling map
+  KBlog::BlogPost* posting = mCallMap[ id.toInt() ]; // Retrieve the posting from the calling map
   mCallMap.remove( id.toInt() ); // Remove the posting as it is now owned by the signal catcher
 
   // struct containing String anum, String itemid
@@ -440,7 +440,7 @@ void LiveJournalPrivate::slotRemovePosting( const QList<QVariant> &result,
   } else {
     QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>();
     if ( itemid == posting->postingId() ) { // Check the posting ID matches the anum value from the return struct.
-      posting->setStatus( KBlog::BlogPosting::Removed ); // Set the posting's status to indicate it has been successfully removed.
+      posting->setStatus( KBlog::BlogPost::Removed ); // Set the posting's status to indicate it has been successfully removed.
       emit q->removedPosting( posting ); // Emit the removed posting
       kDebug(5323) << "emitting createdPosting()" <<
           "for" << itemid; // Notify emission to the console

@@ -23,7 +23,7 @@
 
 #include "metaweblog.h"
 #include "metaweblog_p.h"
-#include "blogposting.h"
+#include "blogpost.h"
 #include "blogmedia.h"
 
 #include <kxmlrpcclient/client.h>
@@ -79,7 +79,7 @@ void MetaWeblog::listCategories()
       this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
 }
 
-void MetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
+void MetaWeblog::fetchPosting( KBlog::BlogPost *posting )
 {
   Q_D(MetaWeblog);
   if ( !posting ) {
@@ -97,7 +97,7 @@ void MetaWeblog::fetchPosting( KBlog::BlogPosting *posting )
     this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
-void MetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
+void MetaWeblog::modifyPosting( KBlog::BlogPost *posting )
 {
   Q_D(MetaWeblog);
   if ( !posting ) {
@@ -123,7 +123,7 @@ void MetaWeblog::modifyPosting( KBlog::BlogPosting *posting )
      this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
-void MetaWeblog::createPosting( KBlog::BlogPosting *posting )
+void MetaWeblog::createPosting( KBlog::BlogPost *posting )
 {
   Q_D(MetaWeblog);
   if ( !posting ) {
@@ -261,7 +261,7 @@ void MetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
 
   int count = id.toInt();
 
-  QList <BlogPosting> fetchedPostingList;
+  QList <BlogPost> fetchedPostingList;
 
   kDebug(5323) << "MetaWeblog::slotListRecentPostings";
   kDebug(5323) << "TOP:" << result[0].typeName();
@@ -276,7 +276,7 @@ void MetaWeblogPrivate::slotListRecentPostings( const QList<QVariant> &result,
     QList<QVariant>::ConstIterator it = postReceived.begin();
     QList<QVariant>::ConstIterator end = postReceived.end();
     for ( ; it != end; ++it ) {
-      BlogPosting posting;
+      BlogPost posting;
       kDebug(5323) << "MIDDLE:" << ( *it ).typeName();
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
       if ( readPostingFromMap( &posting, postInfo ) ) {
@@ -299,7 +299,7 @@ void MetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
 {
   Q_Q(MetaWeblog);
 
-  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  KBlog::BlogPost* posting = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "MetaWeblog::slotFetchPosting";
@@ -317,7 +317,7 @@ void MetaWeblogPrivate::slotFetchPosting( const QList<QVariant> &result,
     if ( readPostingFromMap( posting, postInfo ) ) {
       kDebug(5323) << "Emitting fetchedPosting( posting.postingId()="
                    << posting->postingId() << ");";
-      posting->setStatus( BlogPosting::Fetched );
+      posting->setStatus( BlogPost::Fetched );
       emit q->fetchedPosting( posting );
     } else {
       kError(5323) << "readPostingFromMap failed!";
@@ -332,7 +332,7 @@ void MetaWeblogPrivate::slotCreatePosting( const QList<QVariant> &result,
 {
   Q_Q(MetaWeblog);
 
-  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  KBlog::BlogPost* posting = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "MetaWeblog::slotCreatePosting";
@@ -347,7 +347,7 @@ void MetaWeblogPrivate::slotCreatePosting( const QList<QVariant> &result,
                           posting );
   } else {
      posting->setPostingId( result[0].toString() );
-     posting->setStatus( BlogPosting::Created );
+     posting->setStatus( BlogPost::Created );
      emit q->createdPosting( posting );
     kDebug(5323) << "emitting createdPosting(" << result[0].toString() << ")";
   }
@@ -358,7 +358,7 @@ void MetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
 {
   Q_Q(MetaWeblog);
 
-  KBlog::BlogPosting* posting = mCallMap[ id.toInt() ];
+  KBlog::BlogPost* posting = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
   kDebug(5323) << "MetaWeblogPrivate::slotModifyPosting";
@@ -372,7 +372,7 @@ void MetaWeblogPrivate::slotModifyPosting( const QList<QVariant> &result,
                           i18n( "Could not read the result, not a boolean." ),
                           posting );
   } else {
-    posting->setStatus( BlogPosting::Modified );
+    posting->setStatus( BlogPost::Modified );
     emit q->modifiedPosting( posting );
     kDebug(5323) << "emitting modifiedPosting()";
   }
@@ -413,12 +413,12 @@ void MetaWeblogPrivate::slotError( int number,
 {
   Q_Q(MetaWeblog);
   Q_UNUSED( number );
-  BlogPosting *posting = mCallMap[ id.toInt() ];
+  BlogPost *posting = mCallMap[ id.toInt() ];
 
   emit q->errorPosting( MetaWeblog::XmlRpc, errorString, posting );
 }
 
-bool MetaWeblogPrivate::readPostingFromMap( BlogPosting *post,
+bool MetaWeblogPrivate::readPostingFromMap( BlogPost *post,
                                                         const QMap<QString, QVariant> &postInfo )
 {
   // FIXME: integrate error handling

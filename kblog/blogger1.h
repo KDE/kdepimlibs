@@ -52,7 +52,7 @@ class Blogger1Private;
    Blog* myblog = new Blogger1("http://example.com/xmlrpc/gateway.php");
    myblog->setUsername( "some_user_id" );
    myblog->setPassword( "YoUrFunnYPasSword" );
-   KBlog::BlogPosting *post = new BlogPosting();
+   KBlog::BlogPost *post = new BlogPost();
    post->setTitle( "This is the title." );
    post->setContent( "Here is some the content..." );
    myblog->createPosting( posting );
@@ -108,8 +108,8 @@ class KBLOG_EXPORT Blogger1 : public Blog
 
      @param number The number of postings to fetch. Latest first.
 
-      @see     void listedRecentPostings( QList\<KBlog::BlogPosting> & )
-      @see     void fetchPosting( KBlog::BlogPosting *posting )
+      @see     void listedRecentPostings( QList\<KBlog::BlogPost> & )
+      @see     void fetchPosting( KBlog::BlogPost *posting )
     */
     void listRecentPostings( int number );
 
@@ -119,10 +119,10 @@ class KBLOG_EXPORT Blogger1 : public Blog
       @param posting is the posting. Note: Its id has to be set 
       appropriately.
 
-      @see BlogPosting::setPostingId( const QString& )
-      @see fetchedPosting( KBlog::BlogPosting *posting )
+      @see BlogPost::setPostingId( const QString& )
+      @see fetchedPosting( KBlog::BlogPost *posting )
     */
-    void fetchPosting( KBlog::BlogPosting *posting );
+    void fetchPosting( KBlog::BlogPost *posting );
 
     /**
       Modify a posting on server.
@@ -130,18 +130,18 @@ class KBLOG_EXPORT Blogger1 : public Blog
       @param posting is used to send the modified posting including
       the correct postingId from it to the server.
 
-      @see  void modifiedPosting( KBlog::BlogPosting *posting )
+      @see  void modifiedPosting( KBlog::BlogPost *posting )
     */
-    void modifyPosting( KBlog::BlogPosting *posting );
+    void modifyPosting( KBlog::BlogPost *posting );
 
     /**
       Create a new posting on server.
 
       @param posting is sent to the server.
 
-      @see createdPosting( KBlog::BlogPosting *posting )
+      @see createdPosting( KBlog::BlogPost *posting )
     */
-    void createPosting( KBlog::BlogPosting *posting );
+    void createPosting( KBlog::BlogPost *posting );
 
     /**
       Remove a posting from the server.
@@ -149,10 +149,10 @@ class KBLOG_EXPORT Blogger1 : public Blog
       @param posting is the posting. Note: Its id has to be set 
       appropriately.
 
-      @see BlogPosting::setPostingId( const QString& )
-      @see removedPosting( KBlog::BlogPosting *posting )
+      @see BlogPost::setPostingId( const QString& )
+      @see removedPosting( KBlog::BlogPost *posting )
     */
-    void removePosting( KBlog::BlogPosting *posting );
+    void removePosting( KBlog::BlogPost *posting );
 
   Q_SIGNALS:
 

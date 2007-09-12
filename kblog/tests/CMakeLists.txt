@@ -48,12 +48,12 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 
 # ########### next target ###############
  
- set(testblogposting_SRCS testblogposting.cpp )
+ set(testblogpost_SRCS testblogpost.cpp )
  
  
- kde4_add_unit_test(testblogposting TESTNAME kabc-testblogposting ${testblogposting_SRCS})
+ kde4_add_unit_test(testblogpost TESTNAME kabc-testblogpost ${testblogpost_SRCS})
  
- target_link_libraries(testblogposting ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+ target_link_libraries(testblogpost ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 
 # ########### next target ###############
  
@@ -66,12 +66,12 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 
 # ########### next target ###############
  
- set(testblogpostingcomment_SRCS testblogpostingcomment.cpp )
+ set(testblogcomment_SRCS testblogcomment.cpp )
  
  
- kde4_add_unit_test(testblogpostingcomment TESTNAME kabc-testblogpostingcomment ${testblogpostingcomment_SRCS})
+ kde4_add_unit_test(testblogcomment TESTNAME kabc-testblogcomment ${testblogcomment_SRCS})
  
- target_link_libraries(testblogpostingcomment ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+ target_link_libraries(testblogcomment ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 
 
 

@@ -21,8 +21,8 @@
 
 #include "gdata.h"
 #include "gdata_p.h"
-#include "blogposting.h"
-#include "blogpostingcomment.h"
+#include "blogpost.h"
+#include "blogcomment.h"
 
 #include <syndication/loader.h>
 #include <syndication/item.h>
@@ -144,7 +144,7 @@ void GData::listRecentPostings( int number )
   listRecentPostings( QStringList(), number );
 }
 
-void GData::listComments( KBlog::BlogPosting *posting )
+void GData::listComments( KBlog::BlogPost *posting )
 {
   Q_D(GData);
   kDebug() << "listComments()";
@@ -172,7 +172,7 @@ void GData::listAllComments()
       + "/comments/default" );
 }
 
-void GData::fetchPosting( KBlog::BlogPosting *posting )
+void GData::fetchPosting( KBlog::BlogPost *posting )
 {
   Q_D(GData);
 
@@ -192,7 +192,7 @@ void GData::fetchPosting( KBlog::BlogPosting *posting )
       + "/posts/default" );
 }
 
-void GData::modifyPosting( KBlog::BlogPosting* posting )
+void GData::modifyPosting( KBlog::BlogPost* posting )
 {
   Q_D(GData);
   kDebug() << "modifyPosting()";
@@ -256,7 +256,7 @@ void GData::modifyPosting( KBlog::BlogPosting* posting )
 }
 
 
-void GData::createPosting( KBlog::BlogPosting* posting )
+void GData::createPosting( KBlog::BlogPost* posting )
 {
   Q_D(GData);
     kDebug() << "createPosting()";
@@ -316,7 +316,7 @@ void GData::createPosting( KBlog::BlogPosting* posting )
              this, SLOT( slotCreatePosting( KJob * ) ) );
 }
 
-void GData::removePosting( KBlog::BlogPosting *posting )
+void GData::removePosting( KBlog::BlogPost *posting )
 {
   Q_D(GData);
     kDebug() << "removePosting()";
@@ -357,7 +357,7 @@ void GData::removePosting( KBlog::BlogPosting *posting )
              this, SLOT( slotRemovePosting( KJob * ) ) );
 }
 
-void GData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
+void GData::createComment( KBlog::BlogPost *posting, KBlog::BlogComment *comment )
 {
   kDebug(5323) << "createComment()";
 
@@ -412,7 +412,7 @@ void GData::createComment( KBlog::BlogPosting *posting, KBlog::BlogPostingCommen
              this, SLOT( slotCreateComment( KJob * ) ) );
 }
 
-void GData::removeComment( KBlog::BlogPosting *posting, KBlog::BlogPostingComment *comment )
+void GData::removeComment( KBlog::BlogPost *posting, KBlog::BlogComment *comment )
 {
   Q_D(GData);
     kDebug() << "removeComment()";
@@ -576,7 +576,7 @@ void GDataPrivate::slotListComments(
     Syndication::ErrorCode status )
 {
   Q_Q(GData);
-  BlogPosting* posting = mListCommentsMap[ loader ];
+  BlogPost* posting = mListCommentsMap[ loader ];
   mListCommentsMap.remove( loader );
 
   if (status != Syndication::Success){
@@ -584,13 +584,13 @@ void GDataPrivate::slotListComments(
     return;
   }
 
-  QList<KBlog::BlogPostingComment> commentList;
+  QList<KBlog::BlogComment> commentList;
 
   QList<Syndication::ItemPtr> items = feed->items();
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for( ; it!=end; ++it ){
-      BlogPostingComment comment;
+      BlogComment comment;
       QRegExp rx( "post-(\\d+)" );
       if( rx.indexIn( ( *it )->id() )==-1 ){
         kError(5323)<<
@@ -627,13 +627,13 @@ void GDataPrivate::slotListAllComments(
     return;
   }
 
-  QList<KBlog::BlogPostingComment> commentList;
+  QList<KBlog::BlogComment> commentList;
 
   QList<Syndication::ItemPtr> items = feed->items();
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for( ; it!=end; ++it ){
-      BlogPostingComment comment;
+      BlogComment comment;
       QRegExp rx( "post-(\\d+)" );
       if( rx.indexIn( ( *it )->id() )==-1 ){
         kError(5323)<<
@@ -675,13 +675,13 @@ void GDataPrivate::slotListRecentPostings(
     number = mListRecentPostingsMap[ loader ];
   mListRecentPostingsMap.remove( loader );
 
-  QList<KBlog::BlogPosting> postingList;
+  QList<KBlog::BlogPost> postingList;
 
   QList<Syndication::ItemPtr> items = feed->items();
   QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for( ; it!=end; ++it ){
-      BlogPosting posting;
+      BlogPost posting;
       QRegExp rx( "post-(\\d+)" );
       if( rx.indexIn( ( *it )->id() ) ==-1 ){
         kError(5323)<<
@@ -717,7 +717,7 @@ void GDataPrivate::slotFetchPosting(
 
   bool success = false;
 
-  BlogPosting* posting = mFetchPostingMap[ loader ];
+  BlogPost* posting = mFetchPostingMap[ loader ];
 
   if (status != Syndication::Success){
     emit q->errorPosting( GData::Atom, i18n( "Could not get postings." ),
@@ -734,7 +734,7 @@ void GDataPrivate::slotFetchPosting(
         posting->setPostingId( rx.cap(1) );
         posting->setTitle( ( *it )->title() );
         posting->setContent( ( *it )->content() );
-        posting->setStatus( BlogPosting::Fetched );
+        posting->setStatus( BlogPost::Fetched );
 //         FIXME: assuming UTC for now
         posting->setCreationDateTime( KDateTime( QDateTime::fromTime_t(
                                      ( *it )->datePublished() ),
@@ -774,7 +774,7 @@ void GDataPrivate::slotCreatePosting( KJob *job )
 
   Q_Q(GData);
 
-  KBlog::BlogPosting* posting = mCreatePostingMap[ job ];
+  KBlog::BlogPost* posting = mCreatePostingMap[ job ];
   mCreatePostingMap.remove( job );
 
   if ( job->error() != 0 ) {
@@ -817,7 +817,7 @@ void GDataPrivate::slotCreatePosting( KJob *job )
   posting->setPostingId( rxId.cap(1) );
   posting->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
   posting->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
-  posting->setStatus( BlogPosting::Created );
+  posting->setStatus( BlogPost::Created );
   emit q->createdPosting( posting );
   kDebug(5323) << "Emitting createdPosting()";
 }
@@ -836,7 +836,7 @@ void GDataPrivate::slotModifyPosting( KJob *job )
   const QString data = QString::fromUtf8( mModifyPostingBuffer[ job ].data(), mModifyPostingBuffer[ job ].size() );
   mModifyPostingBuffer[ job ].resize( 0 );
 
-  KBlog::BlogPosting* posting = mModifyPostingMap[ job ];
+  KBlog::BlogPost* posting = mModifyPostingMap[ job ];
   mModifyPostingMap.remove( job );
   Q_Q(GData);
   if ( job->error() != 0 ) {
@@ -877,7 +877,7 @@ void GDataPrivate::slotModifyPosting( KJob *job )
   posting->setPostingId( rxId.cap(1) );
   posting->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
   posting->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
-  posting->setStatus( BlogPosting::Modified );
+  posting->setStatus( BlogPost::Modified );
   emit q->modifiedPosting( posting );
 }
 
@@ -895,7 +895,7 @@ void GDataPrivate::slotRemovePosting( KJob *job )
   const QString data = QString::fromUtf8( mRemovePostingBuffer[ job ].data(), mRemovePostingBuffer[ job ].size() );
   mRemovePostingBuffer[ job ].resize( 0 );
 
-  KBlog::BlogPosting* posting = mRemovePostingMap[ job ];
+  KBlog::BlogPost* posting = mRemovePostingMap[ job ];
   mRemovePostingMap.remove( job );
   Q_Q(GData);
   if ( job->error() != 0 ) {
@@ -904,7 +904,7 @@ void GDataPrivate::slotRemovePosting( KJob *job )
     return;
   }
 
-  posting->setStatus( BlogPosting::Removed );
+  posting->setStatus( BlogPost::Removed );
   emit q->removedPosting( posting );
   kDebug(5323) << "Emitting removedPosting()";
 }
@@ -926,8 +926,8 @@ void GDataPrivate::slotCreateComment( KJob *job )
 
   Q_Q(GData);
 
-  KBlog::BlogPostingComment* comment = mCreateCommentMap[ job ].values().first();
-  KBlog::BlogPosting* posting = mCreateCommentMap[ job ].keys().first();
+  KBlog::BlogComment* comment = mCreateCommentMap[ job ].values().first();
+  KBlog::BlogPost* posting = mCreateCommentMap[ job ].keys().first();
   mCreateCommentMap.remove( job );
 
   if ( job->error() != 0 ) {
@@ -969,7 +969,7 @@ void GDataPrivate::slotCreateComment( KJob *job )
   comment->setCommentId( rxId.cap(1) );
   comment->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
   comment->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ));
-  comment->setStatus( BlogPostingComment::Created );
+  comment->setStatus( BlogComment::Created );
   emit q->createdComment( posting, comment );
   kDebug(5323) << "Emitting createdComment()";
 }
@@ -990,8 +990,8 @@ void GDataPrivate::slotRemoveComment( KJob *job )
 
   Q_Q(GData);
 
-  KBlog::BlogPostingComment* comment = mRemoveCommentMap[ job ].values().first();
-  KBlog::BlogPosting* posting = mRemoveCommentMap[ job ].keys().first();
+  KBlog::BlogComment* comment = mRemoveCommentMap[ job ].values().first();
+  KBlog::BlogPost* posting = mRemoveCommentMap[ job ].keys().first();
   mRemoveCommentMap.remove( job );
 
   if ( job->error() != 0 ) {
@@ -1000,7 +1000,7 @@ void GDataPrivate::slotRemoveComment( KJob *job )
     return;
   }
 
-  comment->setStatus( BlogPostingComment::Created );
+  comment->setStatus( BlogComment::Created );
   emit q->removedComment( posting, comment );
   kDebug(5323) << "Emitting removedComment()";
 }

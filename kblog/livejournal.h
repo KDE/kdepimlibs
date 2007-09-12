@@ -46,7 +46,7 @@ namespace KBlog {
   blog server supports Movable Type . Blah blah
   @code
   Blog* myblog = new LiveJournal("http://example.com/xmlrpc/gateway.php");
-  KBlog::BlogPosting *post = new BlogPosting();
+  KBlog::BlogPost *post = new BlogPost();
   post->setUserId( "some_user_id" );
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );
@@ -83,7 +83,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
 
       @param posting is send to the server.
     */
-    void createPosting( KBlog::BlogPosting *posting );
+    void createPosting( KBlog::BlogPost *posting );
 
     virtual void deleteFriend( const QString &username );
 
@@ -95,9 +95,9 @@ class KBLOG_EXPORT LiveJournal : public Blog
       Fetch the Posting with postingId.
       @param postingId is the id of the posting on the server.
 
-      @see  void fetchedPosting( KBlog::BlogPosting &posting )
+      @see  void fetchedPosting( KBlog::BlogPost &posting )
     */
-    void fetchPosting( KBlog::BlogPosting *posting );
+    void fetchPosting( KBlog::BlogPost *posting );
 
     virtual void fetchUserInfo();
 
@@ -129,7 +129,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
 
     /**
       List recent postings on the server.
-      @see     void listedPosting( KBlog::BlogPosting &posting )
+      @see     void listedPosting( KBlog::BlogPost &posting )
 
       @see     void listRecentPostingsFinished()
     */
@@ -141,9 +141,9 @@ class KBLOG_EXPORT LiveJournal : public Blog
       @param posting is used to send the modified posting including the
       correct postingId from it to the server.
     */
-    void modifyPosting( KBlog::BlogPosting *posting );
+    void modifyPosting( KBlog::BlogPost *posting );
 
-    void removePosting( KBlog::BlogPosting *posting );
+    void removePosting( KBlog::BlogPost *posting );
     /**
       Set the Url of the server.
 
