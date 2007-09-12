@@ -1,31 +1,34 @@
 /*!
- * @mainpage kblog - an blog library for KDE.
+ * @mainpage KBlog - a blogging library for KDE.
  *
  * @section purpose Purpose
  *
- * kblog provides client-side support for weblogs.
+ * KBlog provides client-side support for web application remote blogging APIs.
  *
  * @section desc Description
  *
- * KBlog is a small library for access to Blogger 1.0, MetaWeblog, MovableType
- * and GData compatible blogs. It makes heavy use of the KXmlRpc client
- * library and of Syndication of kdepimlibs. 
- * It supports asynchronous sending and fetching of posts and, if supported 
- * on the server, multimedia files. 
- * Almost every modern blog software supports one of the APIs mentioned above. 
+ * KBlog is a library for calling functions on Blogger 1.0, MetaWeblog,
+ * MovableType and GData compatible blogs. It calls the APIs using KXmlRpcClient
+ * and Syndication.
+ * It supports asynchronous sending and fetching of posts and, if supported
+ * on the server, multimedia files.
+ * Almost every modern blogging web application that provides an XML data
+ * interface supports one of the APIs mentioned above.
  *
- * @authors 
+ * @authors
  *  The major authors of this library are:\n
  *  Christian Weilbach \<christian_weilbach@web.de\>,
- *  Reinhold Kainhofer \<reinhold@kainhofer.com\>
+ *  Reinhold Kainhofer \<reinhold@kainhofer.com\> and
+ *  Mike Arthur \<mike@mikearthur.co.uk\>
  *
- * @maintainers Christian Weilbach  \<christian_weilbach@web.de\>
+ * @maintainers Christian Weilbach \<christian_weilbach@web.de\>
  *
  * @licenses
  * @lgpl
  *
- * kblog development is discussed on the
- * <a href="mailto:kde-pim@kde.org">kde-pim@kde.org</a> mailing list.
+ * KBlog development is discussed on the
+ * <a href="mailto:kde-pim@kde.org">kde-pim@kde.org</a> mailing list or the
+ * #kblogger IRC channel on Freenode.
  */
 
 // DOXYGEN_PROJECTNAME=KBlog Client Library
