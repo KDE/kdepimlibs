@@ -34,17 +34,19 @@ class KTimeZone;
 class KUrl;
 
 /**
-  This is the main interface for blog backends
-  @author Ian Reinhart Geiser, Reinhold Kainhofer, Christian Weilbach
+  This is the main interface for blogging APIs.
+  It's methods represent the core functionality of a blogging API.
+  @author Reinhold Kainhofer, Christian Weilbach and Mike Arthur.
 */
 
 /**
   @file
-  This file is part of the  for accessing Blog Servers
-  and defines the BlogPosting, BlogMedia, and Blog class.
+  This file is part of the library for accessing blogs and defines the
+  Blog class.
 
-  @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
   @author Christian Weilbach \<christian_weilbach\@web.de\>
+  @author Mike Arthur \<reinhold\@kainhofer.com\>
+  @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
 */
 
 /** Namespace for blog related classes. */
@@ -57,10 +59,12 @@ class BlogPrivate;
 
 /**
   @brief
-  A virtual basis class that represents a connection to a blog server.
-  This is the main interface to the blog client library.
+  A class that provides methods to call functions on a supported blog
+  web application.
+  This is the main interface to the blogging client library.
 
   @author Christian Weilbach \<christian_weilbach\@web.de\>
+  @author Mike Arthur \<reinhold\@kainhofer.com\>
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
 */
 
@@ -69,15 +73,15 @@ class KBLOG_EXPORT Blog : public QObject
   Q_OBJECT
   public:
     /**
-    Construtor used by the  implementations.
+      Constructor used by the remote interface implementations.
 
-    @param server the gateway url of the server.
-    @param parent the parent of this object, defaults to NULL.
-    @param applicationName the client application's name to use in the
-    user agent, defaults to empty string.
-    @param applicationVersion the client application's version to use in the
-    user agent, defaults to empty string.
-     */
+      @param server URL for the blog's remote interface.
+      @param parent the parent of this object, defaults to null.
+      @param applicationName the client application's name to use in the
+      HTTP user agent string, defaults to KBlog's own.
+      @param applicationVersion the client application's version to use in the
+      HTTP user agent string, defaults to KBlog's own.
+    */
     explicit Blog( const KUrl &server, QObject *parent = 0,
                    const QString &applicationName = QString(),
                    const QString &applicationVersion = QString() );
@@ -91,52 +95,50 @@ class KBLOG_EXPORT Blog : public QObject
       Enumeration for possible errors.
     */
     enum ErrorType {
-      /** This type specifies an error in the KXmlRpcClient. */
+      /** An error in the XML-RPC client. */
       XmlRpc,
-      /** This type specifies an error in Syndication. */
+      /** An error in the syndication client. */
       Atom,
-      /** This type specifies a parsing error. */
+      /** A parsing error. */
       ParsingError,
-      /** This type specifies an error on authentication. */
+      /** An error on authentication. */
       AuthenticationError,
-      /** This type specifies an error when the method is not
-      supported by the API you chose. */
+      /** An error where the method called is not supported by this object. */
       NotSupported,
-      /** This type specifies a unique error type not yet specified. */
+      /** Any other miscellaneous error. */
       Other
     };
 
     /**
-      Returns user agent used in requests.
+      Returns the HTTP user agent string used to make the HTTP requests.
     */
     QString userAgent() const;
 
     /**
-      Returns the  of the inherited object.
+      Returns the name of the blogging API this object implements.
     */
     virtual QString interfaceName() const = 0;
 
     /**
-      Sets the blog id of the Server.
-
-      @param blogId
+      Sets the unique ID for the specific blog on the server.
+      @param blogId the ID of the blog to send/receive from.
+      @see blogId();
     */
     virtual void setBlogId( const QString &blogId );
 
     /**
-      Returns the blog id.
-
-      @return blogId
+      Returns the unique ID for the specific blog on the server.
+      @see setBlogId( const QString &blogId );
     */
     QString blogId() const;
 
     /**
-      Sets the password for the blog.
-      @param pass is a QString containing the blog password.
+      Sets the password used in blog authentication.
+      @param password the blog's password.
 
       @see password();
     */
-    virtual void setPassword( const QString &pass );
+    virtual void setPassword( const QString &password );
 
     /**
       Returns the password of the blog.
@@ -145,199 +147,224 @@ class KBLOG_EXPORT Blog : public QObject
     QString password() const;
 
     /**
-      Sets the user's authentication name for the blog.
-      @param userName is a QString containing the blog username.
-
+      Sets the username used in blog authentication.
+      @param username the blog's username.
       @see username()
     */
-    virtual void setUsername( const QString &userName );
+    virtual void setUsername( const QString &username );
 
     /**
-       Returns the user's name of the blog.
-       @see setUsername(const QString &)
+      Returns the username used in blog authentication.
+
+      @see setUsername( const QString & )
     */
     QString username() const;
 
     /**
-      Sets the URL for the blog.
-      @param url is the blog URL.
+      Sets the URL for the blog's XML-RPC interface.
 
+      @param url the blog's XML-RPC URL.
       @see url()
     */
     virtual void setUrl( const KUrl &url );
 
     /**
-      Get the URL for the blog.
-      @see setUrl(const KUrl &)
+      Get the URL for the blog's XML-RPC interface.
+
+      @see setUrl( const KUrl & )
     */
     KUrl url() const;
 
     /**
-      Sets the time zone of the blog server.
-      @param tz time zone of the server
+      Sets the time zone of the blog's server.
+
+      @param timezone the time zone of the server.
       @see timeZone()
     */
-    virtual void setTimeZone( const KTimeZone &tz );
+    virtual void setTimeZone( const KTimeZone &timezone );
 
     /**
-      Get the time zone of the blog server.
+      Get the time zone of the blog's server.
+
       @see void setTimeZone()
     */
     KTimeZone timeZone();
 
     /**
-      List recent postings on the server.
+      List a number of recent posts from the server.
+      The posts are returned in descending chronological order.
 
-      @param number The number of postings to fetch. Latest first.
-
-      @see listedPosting()
-      @see fetchedPosting()
-      @see listRecentPostingsFinished()
+      @param number the number of posts to fetch.
+      @see listedRecentPostings( const QList<KBlog::BlogPosting>& posts )
     */
     virtual void listRecentPostings( int number ) = 0;
 
     /**
-      Fetch the Posting with postingId.
-      @param posting is the id of the posting on the server.
+      Fetch a blog post from the server with a specific ID.
+      The ID of the existing post must be retrieved using getRecentPostings
+      and then be modified and provided to this method or a new BlogPosting
+      created with the existing ID.
 
+      @param post a blog post with the ID identifying the blog post to fetch.
       @see fetchedPosting()
+      @see listedRecentPostings( int number )
     */
-    virtual void fetchPosting( KBlog::BlogPosting *posting ) = 0;
+    virtual void fetchPosting( KBlog::BlogPosting *post ) = 0;
 
     /**
-      Modify a posting on server.
+      Modify an existing blog post on the server.
+      The ID of the existing post must be retrieved using getRecentPostings
+      and then be modified and provided to this method or a new BlogPosting
+      created with the existing ID.
 
-      @param posting is used to send the modified posting including the
-      correct postingId from it to the server.
+      @param post the new blog post.
+      @see modifiedPosting()
+      @see listedRecentPostings( int number )
     */
-    virtual void modifyPosting( KBlog::BlogPosting *posting ) = 0;
+    virtual void modifyPosting( KBlog::BlogPosting *post ) = 0;
 
     /**
-      Create a new posting on server.
+      Create a new blog post on the server.
 
-      @param posting is send to the server.
+      @param post the blog post to create.
+      @see createdPosting()
     */
-    virtual void createPosting( KBlog::BlogPosting *posting ) = 0;
+    virtual void createPosting( KBlog::BlogPosting *post ) = 0;
 
     /**
-      Remove a posting from the server.
+      Remove an existing blog post from the server.
+      The BlogPosting object representing the existing post must be retrieved
+      using getRecentPostings and then provided to this method.
 
-      @param posting* is the BlogPosting to remove.
+      @param post* the blog post to remove.
+      @see removedPosting()
+      @see listedRecentPostings( int number )
     */
-    virtual void removePosting( KBlog::BlogPosting *posting ) = 0;
+    virtual void removePosting( KBlog::BlogPosting *post ) = 0;
 
   Q_SIGNALS:
-
     /**
-      This signal is emitted when a listRecentPostings() job fetches a posting
+      This signal is emitted when a listRecentPostings() job fetches a post
       from the blogging server.
 
-      @param postings is the list of postings.
-
+      @param posts the list of posts.
       @see listRecentPostings()
     */
     void listedRecentPostings(
-        const QList<KBlog::BlogPosting>& postings );
+        const QList<KBlog::BlogPosting>& posts );
 
     /**
-      This signal is emitted when a createPosting() job creates a posting
+      This signal is emitted when a createPosting() job creates a new blog post
       on the blogging server.
 
-      @param posting is the created posting.
-
+      @param post the created post.
       @see createPosting()
     */
-    void createdPosting( KBlog::BlogPosting *posting );
+    void createdPosting( KBlog::BlogPosting *post );
 
     /**
-      This signal is emitted when a fetchPosting() job fetches a posting
+      This signal is emitted when a fetchPosting() job fetches a post
       from the blogging server.
 
-      @param posting is the fetched posting.
-
+      @param post the fetched post.
       @see fetchPosting()
     */
-    void fetchedPosting( KBlog::BlogPosting *posting );
+    void fetchedPosting( KBlog::BlogPosting *post );
 
     /**
-      This signal is emitted when a modifyPosting() job modifies a posting
+      This signal is emitted when a modifyPosting() job modifies a post
       on the blogging server.
 
-      @param posting is the modified posting.
-
+      @param post the modified post.
       @see modifyPosting()
     */
-    void modifiedPosting( KBlog::BlogPosting *posting );
+    void modifiedPosting( KBlog::BlogPosting *post );
 
     /**
-      This signal is emitted when a removePosting() job removes a posting
+      This signal is emitted when a removePosting() job removes a post
       from the blogging server.
 
-      @param posting is the removed posting.
-
+      @param post the removed post.
       @see removePosting()
     */
-    void removedPosting( KBlog::BlogPosting *posting );
+    void removedPosting( KBlog::BlogPosting *post );
 
     /**
-    All xml parsing and all structural problems will emit an error.
+      This signal is emitted when an error occurs with XML parsing or a
+      structural problem.
 
-    @param type The type of the error.
-    @param errorMessage The string containing the error message.
-    @param posting The posting to which the error belongs.
-
-    @see ErrorType
-     */
+      @param type the type of the error.
+      @param errorMessage the error message.
+      @see ErrorType
+    */
     void error( KBlog::Blog::ErrorType type, const QString &errorMessage );
 
     /**
-      All xml parsing and all structural problems will emit an error.
+      This signal is emitted when an error occurs with XML parsing or a
+      structural problem in an operation involving a blog post.
 
-     @param type The type of the error.
-     @param errorMessage The string containing the error message.
-     @param posting The posting to which the error belongs.
-
+      @param type the type of the error.
+      @param errorMessage the error message.
+      @param post the post that caused the error.
       @see ErrorType
     */
     void errorPosting( KBlog::Blog::ErrorType type,
-                       const QString &errorMessage, KBlog::BlogPosting* posting );
+                       const QString &errorMessage, KBlog::BlogPosting* post );
 
     /**
-      All xml parsing and all structural problems will emit an error.
+      This signal is emitted when an error occurs with XML parsing or a
+      structural problem in an operation involving some blog media.
 
-     @param type The type of the error.
-     @param errorMessage The string containing the error message.
-     @param media The media to which the error belongs.
-
+      @param type the type of the error.
+      @param errorMessage the error message.
+      @param media the media that caused the error.
       @see ErrorType
     */
     void errorMedia( KBlog::Blog::ErrorType type,
                      const QString &errorMessage, KBlog::BlogMedia* media );
 
     /**
-      All xml parsing and all structural problems will emit an error.
+      This signal is emitted when an error occurs with XML parsing or a
+      structural problem in an operation involving a blog post's comment.
 
-     @param type The type of the error.
-     @param errorMessage The string containing the error message.
-     @param posting The posting the comment belongs to.
-     @param comment The comment the error belongs to.
-
+      @param type the type of the error.
+      @param errorMessage the error message.
+      @param post the post that caused the error.
+      @param comment the comment that caused the error.
       @see ErrorType
     */
     void errorComment( KBlog::Blog::ErrorType type,
-                       const QString &errorMessage, KBlog::BlogPosting* posting,
+                       const QString &errorMessage, KBlog::BlogPosting* post,
                        KBlog::BlogPostingComment* comment );
 
   protected:
-    BlogPrivate * const d_ptr;
+    /** A pointer to the corresponding 'Private' class */
+    BlogPrivate* const d_ptr;
     /**
-      Constructor needed for private inheritance.
+      Constructor needed to allow private inheritance of 'Private' classes.
+
+      @param server URL for the blog's XML-RPC interface.
+      @param dd URL for the corresponding private class.
+      @param parent the parent of this object, defaults to null.
+      @param applicationName the client application's name to use in the
+      HTTP user agent string, defaults to KBlog's own.
+      @param applicationVersion the client application's version to use in the
+      HTTP user agent string, defaults to KBlog's own.
     */
     Blog( const KUrl &server, BlogPrivate &dd, QObject *parent = 0,
           const QString &applicationName = QString(),
           const QString &applicationVersion = QString() );
 
   private:
+    /**
+      Sets the HTTP user agent string used to make the HTTP requests.
+
+      @param applicationName the client application's name to use in the
+      HTTP user agent string.
+      @param applicationVersion the client application's version to use in the
+      HTTP user agent string.
+      @see userAgent()
+    */
     void setUserAgent( const QString &applicationName,
                        const QString &applicationVersion );
     Q_DECLARE_PRIVATE(Blog)
