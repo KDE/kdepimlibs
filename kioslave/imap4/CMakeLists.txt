@@ -4,8 +4,6 @@ add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 set(imap4_optional_includes)
 set(imap4_optional_libs)
 
-macro_optional_find_package(Sasl2)
-
 if (SASL2_FOUND)
    set(imap4_optional_includes ${imap4_optional_includes} ${SASL2_INCLUDE_DIR})
    set(imap4_optional_libs     ${imap4_optional_libs}     ${SASL2_LIBRARIES})

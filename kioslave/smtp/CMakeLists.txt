@@ -7,8 +7,6 @@ add_definitions (-DQT3_SUPPORT)
 set(smtp_optional_includes)
 set(smtp_optional_libs)
 
-macro_optional_find_package(Sasl2)
-
 if (SASL2_FOUND)
    set(smtp_optional_includes ${smtp_optional_includes} ${SASL2_INCLUDE_DIR})
    set(smtp_optional_libs     ${smtp_optional_libs}     ${SASL2_LIBRARIES})
