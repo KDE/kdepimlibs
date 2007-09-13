@@ -155,7 +155,8 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     /**
       The IncidenceObserver class.
     */
-    class IncidenceObserver {
+    class IncidenceObserver
+    {
       public:
 
         /**

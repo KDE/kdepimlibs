@@ -151,7 +151,9 @@ bool ResourceLocal::doLoad( bool )
     success = doSave( true );
   } else {
     success = calendar()->load( d->mURL.path() );
-    if ( success ) d->mLastModified = readLastModified();
+    if ( success ) {
+      d->mLastModified = readLastModified();
+    }
   }
 
   return success;
@@ -174,7 +176,9 @@ bool ResourceLocal::doReload()
 {
   kDebug(5800) << "ResourceLocal::doReload()";
 
-  if ( !isOpen() ) return false;
+  if ( !isOpen() ) {
+    return false;
+  }
 
   if ( d->mLastModified == readLastModified() ) {
     kDebug(5800) << "ResourceLocal::reload(): file not modified since last read.";
@@ -188,8 +192,9 @@ bool ResourceLocal::doReload()
 
 void ResourceLocal::reload()
 {
-  if ( doReload() )
+  if ( doReload() ) {
     emit resourceChanged( this );
+  }
 }
 
 void ResourceLocal::dump() const
@@ -206,7 +211,9 @@ QString ResourceLocal::fileName() const
 bool ResourceLocal::setFileName( const QString &fileName )
 {
   bool open = isOpen();
-  if ( open ) close();
+  if ( open ) {
+    close();
+  }
   delete d->mLock;
   d->mDirWatch.stopScan();
   d->mDirWatch.removeFile( d->mURL.path() );
@@ -228,8 +235,9 @@ bool ResourceLocal::setValue( const QString &key, const QString &value )
 
 bool ResourceLocal::operator==( const ResourceLocal &other )
 {
-  return ( d->mURL == other.d->mURL &&
-           d->mLastModified == other.d->mLastModified );
+  return
+    d->mURL == other.d->mURL &&
+    d->mLastModified == other.d->mLastModified;
 }
 
 ResourceLocal &ResourceLocal::operator=( const ResourceLocal &other )

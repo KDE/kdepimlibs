@@ -91,7 +91,8 @@ class RecurrenceRule;
 class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
 {
   public:
-    class RecurrenceObserver {
+    class RecurrenceObserver
+    {
       public:
         virtual ~RecurrenceObserver() {}
         /** This method will be called on each change of the recurrence object */

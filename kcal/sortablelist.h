@@ -38,8 +38,9 @@ namespace KCal {
 template <class T>
 void qSortUnique( QList<T> &list )
 {
-  if ( list.count() <= 1 )
+  if ( list.count() <= 1 ) {
     return;
+  }
   qSort( list );
   typename QList<T>::iterator prev = list.begin();
   for ( typename QList<T>::iterator it = prev + 1;  it != list.end();  ++it ) {
@@ -48,8 +49,9 @@ void qSortUnique( QList<T> &list )
       // them all together for efficiency.
       while ( ++it != list.end()  &&  *it == *prev ) ;
       prev = it = list.erase( prev + 1, it );
-      if ( it == list.end() )
+      if ( it == list.end() ) {
         break;
+      }
     } else {
       prev = it;
     }
@@ -290,8 +292,9 @@ template <class T>
 int SortableList<T>::removeSorted( const T &value, int start )
 {
   int i = findSorted( value, start );
-  if ( i >= 0 )
+  if ( i >= 0 ) {
     QList<T>::removeAt( i );
+  }
   return i;
 }
 

@@ -76,7 +76,8 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent )
       i18nc( "@option:radio reload the cache on startup", "On startup" ), groupBox );
   QRadioButton *intervalRadio =
     new QRadioButton(
-      i18nc( "@option:radio reload the cache at regular intervals", "Regular interval" ), groupBox );
+      i18nc( "@option:radio reload the cache at regular intervals",
+             "Regular interval" ), groupBox );
   d->mGroup = new QButtonGroup( this );
   d->mGroup->addButton( noAutomaticReload, 0 );
   d->mGroup->addButton( automaticReloadOnStartup, 1 );
@@ -154,8 +155,14 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent )
   d->mIntervalSpin->setRange( 1, 900 );
   d->mIntervalSpin->setEnabled( false );
 
-  QRadioButton *delay = new QRadioButton( i18nc( "@option:radio save the cache after some delay", "Delayed after changes" ), groupBox );
-  QRadioButton *every = new QRadioButton( i18nc( "@option:radio save the cache after every modification", "On every change" ), groupBox );
+  QRadioButton *delay =
+    new QRadioButton(
+      i18nc( "@option:radio save the cache after some delay",
+             "Delayed after changes" ), groupBox );
+  QRadioButton *every =
+    new QRadioButton(
+      i18nc( "@option:radio save the cache after every modification",
+             "On every change" ), groupBox );
 
   QVBoxLayout *vbox = new QVBoxLayout;
   vbox->addWidget(never);

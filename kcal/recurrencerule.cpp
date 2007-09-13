@@ -43,7 +43,8 @@ static QString dumpTime( const KDateTime &dt );   // for debugging
  *                               DateHelper                               *
  **************************************************************************/
 //@cond PRIVATE
-class DateHelper {
+class DateHelper
+{
   public:
 #ifndef NDEBUG
     static QString dayName( short day );
@@ -147,7 +148,8 @@ int DateHelper::getWeekNumberNeg( const QDate &date, short weekstart, int *year 
  *                               Constraint                               *
  **************************************************************************/
 //@cond PRIVATE
-class Constraint {
+class Constraint
+{
   public:
     typedef QList<Constraint> List;
 

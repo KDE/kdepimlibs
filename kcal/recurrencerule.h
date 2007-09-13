@@ -46,7 +46,8 @@ typedef SortableList<QTime> TimeList;
 class KCAL_EXPORT RecurrenceRule
 {
   public:
-    class RuleObserver {
+    class RuleObserver
+    {
       public:
         virtual ~RuleObserver() {}
         /** This method is called on each change of the recurrence object */
@@ -67,22 +68,23 @@ class KCAL_EXPORT RecurrenceRule
     };
 
     /** structure for describing the n-th weekday of the month/year. */
-    class WDayPos {
-    public:
-      explicit WDayPos( int ps = 0, short dy = 0 ) : mDay( dy ), mPos( ps ) {}
-      short day() const { return mDay; }
-      int pos() const { return mPos; }
-      void setDay( short dy ) { mDay = dy; }
-      void setPos( int ps ) { mPos = ps; }
+    class WDayPos
+    {
+      public:
+        explicit WDayPos( int ps = 0, short dy = 0 ) : mDay( dy ), mPos( ps ) {}
+        short day() const { return mDay; }
+        int pos() const { return mPos; }
+        void setDay( short dy ) { mDay = dy; }
+        void setPos( int ps ) { mPos = ps; }
 
-      bool operator==( const RecurrenceRule::WDayPos &pos2 ) const {
-        return mDay == pos2.mDay && mPos == pos2.mPos;
+        bool operator==( const RecurrenceRule::WDayPos &pos2 ) const {
+          return mDay == pos2.mDay && mPos == pos2.mPos;
       }
 
-    protected:
-      short mDay; // Weekday, 1=monday, 7=sunday
-      int mPos;   // week of the day (-1 for last, 1 for first, 0 for all weeks)
-                  // Bounded by -366 and +366, 0 means all weeks in that period
+      protected:
+        short mDay; // Weekday, 1=monday, 7=sunday
+        int mPos;   // week of the day (-1 for last, 1 for first, 0 for all weeks)
+                    // Bounded by -366 and +366, 0 means all weeks in that period
     };
 
     RecurrenceRule();

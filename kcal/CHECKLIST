@@ -26,7 +26,6 @@ resourcelocaldirconfig|   D   |         |   D   |         |    D    |
 resourcelocaldir      |   D   |         |   D   |         |    D    |
 resourcelocal         |   D   |    D    |   D   |         |    D    | Narayan
 scheduler             |   D   |         |   D   |   n/a   |    D    |
-sortablelist.h        |   D   |    D    |  n/a  |    D    |    D    |
 vcaldrag              |   D   |         |   D   |         |    D    |
 vcalformat            |   D   |         |   D   |         |    D    | Allen
 
@@ -54,6 +53,7 @@ journal               |   D   |    D    |   D   |    D    |    D    | Allen
 listbase              |   D   |    D    |  n/a  |   n/a   |    D    | Allen
 period                |   D   |    D    |   D   |    D    |    D    | Narayan
 person                |   D   |    D    |   D   |    D    |    D    | Narayan
+sortablelist.h        |   D   |    D    |  n/a  |    D    |    D    | Allen
 todo                  |   D   |    D    |   D   |    D    |    D    | Allen
 == DONE ==
 
