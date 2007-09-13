@@ -1,8 +1,8 @@
 if(SASL2_FOUND)
-  add_subdirectory( imap4 )
   add_subdirectory( sieve )
 endif(SASL2_FOUND)
 
+add_subdirectory( imap4 )
 add_subdirectory( ldap )
 add_subdirectory( mbox ) 
 add_subdirectory( nntp )
