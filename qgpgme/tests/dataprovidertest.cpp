@@ -29,6 +29,11 @@
 #include <gpgme++/data_p.h>
 #include <gpgme.h>
 
+#include <QBuffer>
+#include <QByteArray>
+#include <QIODevice>
+#include <QTemporaryFile>
+
 #include <iostream>
 
 #include <string.h>
@@ -47,7 +52,7 @@ static const char nulls[256] = { '\0' };
 do { \
   long long foo = (expr); \
   if ( foo != (long long)expected ) { \
-    std::cerr << #expr << ": expected " << expected << "; got " << foo \
+    std::cerr << __LINE__ << ": " #expr << ": expected " << expected << "; got " << foo \
               << ";errno: " << errno << "(" << strerror( errno ) << ")" << std::endl; \
     exit( 1 ); \
   } \
@@ -116,6 +121,132 @@ int main( int, char** ) {
     const QByteArray ba1 = qba_dp.data();
     assertEqual( ba1.size(), inputSize );
     assertEqual( memcmp( ba1.data(), input, inputSize ), 0 );
+  }
+
+  {
+    //
+    // QIODeviceDataProvider w/QBuffer
+    //
+
+    // writing:
+    QByteArray ba;
+    QBuffer qbuf( &ba );
+    qbuf.open( QIODevice::ReadWrite );
+    QGpgME::QIODeviceDataProvider qio_dp( &qbuf );
+    Data data( &qio_dp );
+
+    assertEqual( data.write( input, inputSize ), inputSize );
+
+    const QIODevice * io1 = qio_dp.ioDevice();
+    assertEqual( io1->size(), inputSize );
+    assertEqual( ba.size(),   inputSize );
+    assertEqual( memcmp( ba.data(), input, inputSize ), 0 );
+
+    // seeking and reading:
+    assertEqual( data.seek( 0, SEEK_CUR ), inputSize );
+    assertEqual( data.seek( 4, SEEK_SET ), 4 );
+    char ch = '\0';
+    assertEqual( data.read( &ch, 1 ), 1 );
+    assertEqual( ch, input[4] );
+    assertEqual( data.read( &ch, 1 ), 1 );
+    assertEqual( ch, input[5] );
+
+    char buf[ inputSize + 10 ] = { '\0' };
+    assertEqual( data.seek( 0, SEEK_SET ), 0 );
+    assertEqual( data.read( buf, sizeof buf ), inputSize );
+    assertEqual( memcmp( buf, input, inputSize ), 0 );
+
+    // writing single char at end:
+    assertEqual( data.seek( 0, SEEK_END ), inputSize );
+    assertEqual( data.write( &ch, 1 ) , 1 );
+    const QIODevice * io2 = qio_dp.ioDevice();
+    assertEqual( io2->size(), inputSize + 1 );
+    assertEqual( ba.size(), inputSize + 1 );
+    assertEqual( memcmp( ba.data(), input, inputSize ), 0 );
+    assertEqual( ba.at(inputSize), ch );
+
+    // writing past end of buffer: (not supported by QBuffer)
+    assertEqual( data.seek( 10, SEEK_END ), (off_t)-1 );
+    assertEqual( errno, EINVAL );
+#if 0
+    assertEqual( data.write( &ch, 1 ), 1 );
+    const QIODevice * io3 = qio_dp.ioDevice();
+    assertEqual( io3->size(), inputSize + 12 );
+    assertEqual( ba.size(), inputSize + 12 );
+    assertEqual( memcmp( ba.data(), input, inputSize ), 0 );
+    assertEqual( ba.at(inputSize), ch );
+    assertEqual( ba.at(inputSize+11), ch );
+    assertEqual( memcmp( ba.data() + inputSize + 1, nulls, 10 ), 0 );
+#endif
+  }
+
+  {
+    //
+    // QIODeviceDataProvider w/QBuffer
+    //
+
+    // writing:
+    QTemporaryFile file;
+    assertEqual( file.open(), true );
+    QGpgME::QIODeviceDataProvider qio_dp( &file );
+    Data data( &qio_dp );
+
+    assertEqual( data.write( input, inputSize ), inputSize );
+
+    const QIODevice * io1 = qio_dp.ioDevice();
+    assertEqual( io1->size(), inputSize );
+    assertEqual( file.size(),   inputSize );
+    //assertEqual( memcmp( ba.data(), input, inputSize ), 0 );
+
+    // seeking and reading:
+    assertEqual( data.seek( 0, SEEK_CUR ), inputSize );
+    assertEqual( data.seek( 4, SEEK_SET ), 4 );
+    char ch = '\0';
+    assertEqual( data.read( &ch, 1 ), 1 );
+    assertEqual( ch, input[4] );
+    assertEqual( data.read( &ch, 1 ), 1 );
+    assertEqual( ch, input[5] );
+
+    char buf[ inputSize + 10 ] = { '\0' };
+    assertEqual( data.seek( 0, SEEK_SET ), 0 );
+    assertEqual( data.read( buf, sizeof buf ), inputSize );
+    assertEqual( memcmp( buf, input, inputSize ), 0 );
+
+    // writing single char at end:
+    assertEqual( data.seek( 0, SEEK_END ), inputSize );
+    assertEqual( data.write( &ch, 1 ) , 1 );
+    const QIODevice * io2 = qio_dp.ioDevice();
+    assertEqual( io2->size(), inputSize + 1 );
+    assertEqual( file.size(), inputSize + 1 );
+    //assertEqual( memcmp( ba.data(), input, inputSize ), 0 );
+    //assertEqual( ba.at(inputSize), ch );
+
+    // writing past end of buffer:
+    assertEqual( data.seek( 10, SEEK_END ), inputSize + 11 );
+    assertEqual( data.write( &ch, 1 ), 1 );
+    const QIODevice * io3 = qio_dp.ioDevice();
+    assertEqual( io3->size(), inputSize + 12 );
+    assertEqual( file.size(), inputSize + 12 );
+    //assertEqual( memcmp( ba.data(), input, inputSize ), 0 );
+    //assertEqual( ba.at(inputSize), ch );
+    //assertEqual( ba.at(inputSize+11), ch );
+    //assertEqual( memcmp( ba.data() + inputSize + 1, nulls, 10 ), 0 );
+  }
+
+  {
+    //
+    // QIODeviceDataProvider with initial data:
+    //
+    QByteArray ba = QByteArray( input, inputSize );
+    QBuffer qbuf( &ba );
+    qbuf.open( QIODevice::ReadOnly );
+    QGpgME::QIODeviceDataProvider qio_dp( &qbuf );
+    Data data( &qio_dp );
+
+    assertEqual( data.seek( 0, SEEK_END ), inputSize );
+    assertEqual( data.seek( 0, SEEK_SET ), 0 );
+    const QIODevice * io1 = qio_dp.ioDevice();
+    assertEqual( io1->size(), inputSize );
   }
   return 0;
 }

@@ -26,6 +26,8 @@
 #include <gpgme++/interfaces/dataprovider.h>
 
 #include <QtCore/QByteArray>
+#include <QtCore/QPointer>
+#include <QtCore/QIODevice>
 
 namespace QGpgME {
 
@@ -54,6 +56,36 @@ namespace QGpgME {
   private:
     QByteArray mArray;
     off_t mOff;
+  };
+
+  class QGPGME_EXPORT QIODeviceDataProvider : public GpgME::DataProvider {
+  public:
+    explicit QIODeviceDataProvider( QIODevice * initialData );
+    ~QIODeviceDataProvider();
+
+    void setOwnsDevice( bool ownz );
+    bool ownsDevice() const;
+
+    QIODevice * ioDevice() const { return mIO; }
+
+  private:
+    // these shall only be accessed through the dataprovider
+    // interface, where they're public:
+    /*! \reimp */
+    bool isSupported( Operation ) const;
+    /*! \reimp */
+    ssize_t read( void * buffer, size_t bufSize );
+    /*! \reimp */
+    ssize_t write( const void * buffer, size_t bufSize );
+    /*! \reimp */
+    off_t seek( off_t offset, int whence );
+    /*! \reimp */
+    void release();
+
+  private:
+    QPointer<QIODevice> mIO;
+    bool mOwnsDevice      :  1;
+    unsigned int reserved : 31;
   };
 
 } // namespace QGpgME
