@@ -15,3 +15,5 @@ Description=An ioslave for the Sieve mail filtering protocol
 Description[fr]=Un ioslave pour le protocole de filtrage de messagerie Sieve
 Description[ga]=ioslave le haghaidh prótacail scagtha ríomhphoist Sieve
 Description[pt]=Um 'ioslave' para o protocolo de filtragem de correio Sieve
+Description[sv]=En I/O-slav för brevfiltreringsprotokollet Sieve
+Description[zh_TW]=Sieve 郵件過濾協定的 ioslave
