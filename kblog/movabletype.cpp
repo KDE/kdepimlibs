@@ -109,6 +109,7 @@ void MovableType::modifyPost( KBlog::BlogPost *post )
   map["description"] = post->content();
   map["title"] = post->title();
   map["lastModified"] = post->modificationDateTime().toUtc().dateTime();
+  map["dateCreated"] = post->creationDateTime().toUtc().dateTime(); // this could be lastModified, too, which would be more correct, but is not used by the backends.
   map["mt_allow_comments"] = (int)post->isCommentAllowed();
   map["mt_allow_pings"] = (int)post->isTrackBackAllowed();
   map["mt_excerpt"] = post->summary();

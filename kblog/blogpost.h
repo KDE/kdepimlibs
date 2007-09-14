@@ -331,7 +331,8 @@ public:
     KDateTime creationDateTime() const;
 
     /**
-      Sets the creation time.
+      Sets the creation time. This is used by most Blogs and is generally
+      the shown date. Set it if you want to change the shown date.
 
       @param datetime set the time the post has been created.
       @see creationTime()

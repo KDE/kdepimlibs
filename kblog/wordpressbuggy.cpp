@@ -193,6 +193,11 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
     post->modificationDateTime().toUtc().dateTime().toString("yyyyMMddThh:mm:ss")+
   "</dateTime.iso8601></value>";
   xmlMarkup += "</member><member>";
+  xmlMarkup += "<name>dateCreated</name>";
+  xmlMarkup += "<value><dateTime.iso8601>"+
+    post->creationDateTime().toUtc().dateTime().toString("yyyyMMddThh:mm:ss")+
+  "</dateTime.iso8601></value>";
+  xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_allow_comments</name>";
   xmlMarkup += QString("<value><int>%1</int></value>").
     arg( (int)post->isCommentAllowed() );
