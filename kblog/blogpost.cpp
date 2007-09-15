@@ -36,23 +36,16 @@ namespace KBlog {
 BlogPost::BlogPost( const KBlog::BlogPost& post ):
     d_ptr( new BlogPostPrivate )
 {
-  d_ptr->q_ptr=this;
-  d_ptr->mPrivate=post.isPrivate();
-  d_ptr->mPostId=post.postId();
-  d_ptr->mTitle=post.title();
-  d_ptr->mContent=post.content();
-  d_ptr->mCategories=post.categories();
-  d_ptr->mError=post.error();
-  d_ptr->mJournalId=post.journalId();
-  d_ptr->mStatus=post.status();
-  d_ptr->mCreationDateTime=post.creationDateTime();
-  d_ptr->mModificationDateTime=post.modificationDateTime();
+  *this = post;
 }
 
 BlogPost::BlogPost( const QString &postId ) :
     d_ptr( new BlogPostPrivate )
 {
-  *this = BlogPost ( post );
+  d_ptr->q_ptr = this;
+  d_ptr->mPrivate = false;
+  d_ptr->mPostId = postId;
+  d_ptr->mStatus = New;
 }
 
 BlogPost::BlogPost( const KCal::Journal &journal ) :
@@ -310,10 +303,17 @@ void BlogPost::setError( const QString &error )
 
 BlogPost& BlogPost::operator=(const BlogPost &post)
 {
-  d_ptr->q_ptr = this;
-  d_ptr->mPrivate = false;
-  d_ptr->mPostId = postId;
-  d_ptr->mStatus = New;
+  d_ptr->q_ptr=this;
+  d_ptr->mPrivate=post.isPrivate();
+  d_ptr->mPostId=post.postId();
+  d_ptr->mTitle=post.title();
+  d_ptr->mContent=post.content();
+  d_ptr->mCategories=post.categories();
+  d_ptr->mError=post.error();
+  d_ptr->mJournalId=post.journalId();
+  d_ptr->mStatus=post.status();
+  d_ptr->mCreationDateTime=post.creationDateTime();
+  d_ptr->mModificationDateTime=post.modificationDateTime();
 
   return *this;
 }
