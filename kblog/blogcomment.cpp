@@ -51,9 +51,7 @@ BlogComment::BlogComment(
     const QString &commentId ) :
     d_ptr( new BlogCommentPrivate )
 {
-  d_ptr->q_ptr=this;
-  d_ptr->mStatus = New;
-  d_ptr->mCommentId = commentId;
+  *this = BlogComment ( comment );
 }
 
 BlogComment::~BlogComment()
@@ -163,7 +161,10 @@ void BlogComment::setError( const QString &error )
 
 BlogComment& BlogComment::operator=(const BlogComment &comment)
 {
-  *this = BlogComment ( comment );
+  d_ptr->q_ptr=this;
+  d_ptr->mStatus = New;
+  d_ptr->mCommentId = commentId;
+
   return *this;
 }
 

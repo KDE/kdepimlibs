@@ -52,10 +52,7 @@ BlogPost::BlogPost( const KBlog::BlogPost& post ):
 BlogPost::BlogPost( const QString &postId ) :
     d_ptr( new BlogPostPrivate )
 {
-  d_ptr->q_ptr = this;
-  d_ptr->mPrivate = false;
-  d_ptr->mPostId = postId;
-  d_ptr->mStatus = New;
+  *this = BlogPost ( post );
 }
 
 BlogPost::BlogPost( const KCal::Journal &journal ) :
@@ -313,7 +310,11 @@ void BlogPost::setError( const QString &error )
 
 BlogPost& BlogPost::operator=(const BlogPost &post)
 {
-  *this = BlogPost ( post );
+  d_ptr->q_ptr = this;
+  d_ptr->mPrivate = false;
+  d_ptr->mPostId = postId;
+  d_ptr->mStatus = New;
+
   return *this;
 }
 
