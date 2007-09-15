@@ -178,10 +178,10 @@ class KBLOG_EXPORT Blog : public QObject
     /**
       Sets the time zone of the blog's server.
 
-      @param timezone the time zone of the server.
+      @param timeZone the time zone of the server.
       @see timeZone()
     */
-    virtual void setTimeZone( const KTimeZone &timezone );
+    virtual void setTimeZone( const KTimeZone &timeZone );
 
     /**
       Get the time zone of the blog's server.
