@@ -32,7 +32,6 @@ class KConfig;
 namespace KRES {
 
 class Resource;
-class Factory;
 class ManagerNotifier;
 
 /**

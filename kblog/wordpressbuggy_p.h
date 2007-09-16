@@ -28,7 +28,6 @@
 #include <kxmlrpcclient/client.h>
 
 class KJob;
-class QDateTime;
 class QByteArray;
 template <class T,class S>class QMap;
 

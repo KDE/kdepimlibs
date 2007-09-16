@@ -26,7 +26,6 @@
 
 #include <QtGui/QColor>
 
-class KHttpCookie;
 class KUrl;
 
 /**

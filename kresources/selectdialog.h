@@ -32,7 +32,6 @@
 
 #include <kdialog.h>
 
-class QListWidget;
 
 namespace KRES {
 

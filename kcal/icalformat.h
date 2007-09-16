@@ -39,7 +39,6 @@
 
 namespace KCal {
 
-class ICalFormatImpl;
 class FreeBusy;
 
 /**

@@ -24,8 +24,6 @@
 #include <QtGui/QWidget>
 #include "kcal_export.h"
 
-class QButtonGroup;
-class QSpinBox;
 
 namespace KCal {
 

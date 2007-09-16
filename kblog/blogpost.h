@@ -39,8 +39,7 @@ namespace KCal {
 namespace KBlog {
   class Blog;
   class BlogPostPrivate;
-  class BlogComment;
-
+  
 /**
   @brief
   A class that represents a blog post on the server.

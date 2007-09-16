@@ -31,7 +31,6 @@
 
 #include <QtGui/QRadioButton>
 
-class QGroupBox;
 
 namespace KCal {
 

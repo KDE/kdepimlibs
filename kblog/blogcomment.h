@@ -27,7 +27,6 @@
 
 #include <QtCore/QString>
 
-class QStringList;
 
 class KDateTime;
 class KUrl;
