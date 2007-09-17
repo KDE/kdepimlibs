@@ -36,7 +36,7 @@ public:
 	 * @param url The url: this url is used to split the location data off.
 	 * @param type The possible types of the url
 	 */
-	UrlInfo( const KUrl &url, const UrlType type = (UrlType)( message | directory ) );
+	explicit UrlInfo( const KUrl &url, const UrlType type = (UrlType)( message | directory ) );
 
 	/**
 	 * Destructor
@@ -53,11 +53,11 @@ public:
 	 * @return the mimetype of the url
 	 */
 	QString mimetype() const;
-	
+
 	/**
 	 * @return The location of the mbox-file
 	 */
-	QString filename() const; 
+	QString filename() const;
 	/**
 	 * @return The id given in the url.
 	 */

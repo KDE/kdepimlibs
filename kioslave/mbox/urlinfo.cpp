@@ -64,7 +64,7 @@ QString UrlInfo::id() const
 
 QString UrlInfo::url() const
 {
-	return *m_filename + "/" + *m_id;
+	return *m_filename + '/' + *m_id;
 }
 
 
@@ -112,7 +112,7 @@ bool UrlInfo::isMessage( const KUrl& url )
 	QString path = url.path();
 	QFileInfo info;
 	int cutindex = path.lastIndexOf( '/' );
-	
+
 	//Does it contain at least one /?
 	if( cutindex < 0 )
 		return false;
@@ -121,13 +121,13 @@ bool UrlInfo::isMessage( const KUrl& url )
 	info.setFile( path.left( cutindex ) );
 	if( !info.isFile() )
 		return false;
-	
+
 	//Settings parameters
 	kDebug() <<"urlInfo::isMessage(" << url <<" )";
 	m_type = message;
 	*m_id = path.right( path.length() - cutindex - 1 );
 	*m_filename = path.left( cutindex );
-	
+
 	return true;
 }
 
