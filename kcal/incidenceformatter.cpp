@@ -1132,6 +1132,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr><tr>";
 
 #if 0
+  // TODO: implement this
   html += helper->makeLinkURL( "accept", i18n( "[Enter this into my calendar]" ) );
   html += "</td><td> &nbsp; </td><td>";
 #endif
