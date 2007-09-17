@@ -1,6 +1,5 @@
 # KDE Config File
 [Desktop Entry]
-Encoding=UTF-8
 Name=Calendar
 Name[be]=Каляндар
 Name[ca]=Calendari
@@ -19,6 +18,5 @@ Name[uk]=Календар
 Name[x-test]=xxCalendarxx
 Name[zh_TW]=行事曆
 Type=Service
-ServiceTypes=KResources/Manager
-
+X-KDE-ServiceTypes=KResources/Manager
 X-KDE-ResourceFamily=calendar

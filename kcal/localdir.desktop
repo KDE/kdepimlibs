@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Calendar in Local Directory
 Name[be]=Каляндар у мясцовай тэчцы
 Name[ca]=Calendari en un directori local
@@ -18,6 +17,6 @@ Name[x-test]=xxCalendar in Local Directoryxx
 Name[zh_TW]=本地端目錄裡的行事曆
 X-KDE-Library=kcal_localdir
 Type=Service
-ServiceTypes=KResources/Plugin
+X-KDE-ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=calendar
 X-KDE-ResourceType=localdir
