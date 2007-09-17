@@ -2,7 +2,7 @@
  *
  *   imap4.cc  - IMAP4rev1 KIOSlave
  *   Copyright (C) 2001-2002  Michael Haeckel <haeckel@kde.org>
- *   Copyright (C) 1999  John Corey
+ *   Copyright (C) 1999  John Corey <jcorey@fruity.ath.cx>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
