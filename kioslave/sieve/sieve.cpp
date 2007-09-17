@@ -24,13 +24,13 @@
  * false, where it signifies an error, thus doesn't need to call error() itself.
  */
 
-#include "sieve-config.h"
+#include "sieve.h"
 
 extern "C" {
 #include <sasl/sasl.h>
 }
-#include "sieve.h"
 
+#include <kdemacros.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
 #include <klocale.h>
@@ -38,8 +38,6 @@ extern "C" {
 #include <kglobal.h>
 
 #include <sys/stat.h>
-
-#include <kdemacros.h>
 
 static const int debugArea = 7122;
 
@@ -292,7 +290,7 @@ void kio_sieveProtocol::changeCheck( const KUrl &url )
 	else {
 	// ... and if not found, check the x-mech=AUTH query part of the url.
 		QString query = url.query();
-		if ( query.startsWith("?") ) query.remove( 0, 1 );
+		if ( query.startsWith('?') ) query.remove( 0, 1 );
 		QStringList q = query.split( "," );
 		QStringList::iterator it;
 
@@ -428,7 +426,7 @@ void kio_sieveProtocol::special(const QByteArray &data)
 			break;
 	}
 
-	infoMessage(i18n("Done."));
+	infoMessage(i18nc("special command completed", "Done."));
 
 	finished();
 }
@@ -641,7 +639,7 @@ void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, bool /*overwri
 	//if ( permissions != -1 )
 	//	chmod( url, permissions );
 
-	infoMessage(i18n("Done."));
+	infoMessage(i18nc("data upload complete", "Done."));
 
 	finished();
 }
@@ -731,7 +729,7 @@ void kio_sieveProtocol::get(const KUrl& url)
 		return;
 	}
 
-	infoMessage(i18n("Done."));
+	infoMessage(i18nc("data retrival complete", "Done."));
 	finished();
 }
 
@@ -765,7 +763,7 @@ void kio_sieveProtocol::del(const KUrl &url, bool isfile)
 		return;
 	}
 
-	infoMessage(i18n("Done."));
+	infoMessage(i18nc("file removal complete", "Done."));
 
 	finished();
 }
