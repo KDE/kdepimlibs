@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1999,2000 Alex Zepeda
+ * Copyright (c) 1999,2000 Alex Zepeda <zipzippy@sonic.net>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,16 +26,15 @@
  */
 
 #ifndef _POP3_H
-#define _POP3_H 
+#define _POP3_H
+
+#include "pop3-config.h"
+
+#include <kio/tcpslavebase.h>
 
 #include <sys/types.h>
 #include <sys/time.h>
-
 #include <stdio.h>
-
-
-
-#include <kio/tcpslavebase.h>
 
 #define MAX_PACKET_LEN 4096
 
@@ -106,17 +105,17 @@ protected:
   bool pop3_open();
   /**
    * Authenticate via APOP
-   */  
+   */
   int loginAPOP( char *challenge, KIO::AuthInfo &ai );
 
   bool saslInteract( void *in, KIO::AuthInfo &ai );
   /**
    * Authenticate via SASL
-   */  
+   */
   int loginSASL( KIO::AuthInfo &ai );
   /**
    * Authenticate via traditional USER/PASS
-   */  
+   */
   bool loginPASS( KIO::AuthInfo &ai );
 
   int m_cmd;

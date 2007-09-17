@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1999-2001 Alex Zepeda
+ * Copyright (c) 1999-2001 Alex Zepeda <zipzippy@sonic.net>
  * Copyright (c) 2001-2002 Michael Haeckel <haeckel@kde.org>
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * SUCH DAMAGE.
  *
  */
-#include <pop3-config.h>
+#include "pop3.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -56,7 +56,6 @@ extern "C" {
 #include <kprotocolmanager.h>
 
 #include <kio/slaveinterface.h>
-#include "pop3.h"
 
 #define GREETING_BUF_LEN 1024
 #define MAX_RESPONSE_LEN 512
