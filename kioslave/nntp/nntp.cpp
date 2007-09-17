@@ -97,7 +97,7 @@ void NNTPProtocol::get( const KUrl& url )
 {
   DBG << "get " << url.prettyUrl() << endl;
   QString path = QDir::cleanPath(url.path());
-  path = QUrl::fromPercentEncoding( path.toLatin1() );
+  path = KUrl::fromPercentEncoding( path.toLatin1() );
 
   // path should be like: /group/<msg_id> or /group/<serial number>
   if ( path.startsWith( QDir::separator() ) )
@@ -295,7 +295,7 @@ void NNTPProtocol::stat( const KUrl& url ) {
   } else if (regMsgId.indexIn(path) == 0) {
     pos = path.indexOf('<');
     group = path.left(pos);
-    msg_id = QUrl::fromPercentEncoding( path.right(path.length()-pos).toLatin1() );
+    msg_id = KUrl::fromPercentEncoding( path.right(path.length()-pos).toLatin1() );
     if ( group.startsWith( '/' ) )
       group.remove( 0, 1 );
     if ((pos = group.indexOf('/')) > 0) group = group.left(pos);
