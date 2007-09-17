@@ -1,19 +1,18 @@
-#include <sys/stat.h>
-
-#include <unistd.h>
-#include <stdlib.h>
-#include <netdb.h>
-#include <netinet/in.h>
-
-#include <kdebug.h>
-#include <kcomponentdata.h>
-#include <klocale.h>
+#include "kio_ldap.h"
 
 #include <kldap/ldif.h>
 #include <kldap/ldapcontrol.h>
 #include <kldap/ldapdefs.h>
 
-#include "kio_ldap.h"
+#include <kdebug.h>
+#include <kcomponentdata.h>
+#include <klocale.h>
+
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <netdb.h>
+#include <netinet/in.h>
 
 using namespace KIO;
 using namespace KLDAP;
@@ -141,7 +140,7 @@ void LDAPProtocol::LDAPErr( int err )
 
     default:
       error( ERR_SLAVE_DEFINED,
-        i18n( "LDAP server returned the error: %1 %2\nThe LDAP URL was: %3" , 
+        i18n( "LDAP server returned the error: %1 %2\nThe LDAP URL was: %3" ,
          LdapConnection::errorString(err), extramsg, mServer.url().prettyUrl() ) );
   }
 }
@@ -213,7 +212,7 @@ void LDAPProtocol::changeCheck( LdapUrl &url )
   server.setUrl( url );
 
   if ( mConnected ) {
-    if ( server.host() != mServer.host() || 
+    if ( server.host() != mServer.host() ||
        server.port() != mServer.port() ||
        server.baseDn() != mServer.baseDn() ||
        server.user() != mServer.user() ||
@@ -240,9 +239,9 @@ void LDAPProtocol::changeCheck( LdapUrl &url )
 void LDAPProtocol::setHost( const QString& host, quint16 port,
                             const QString& user, const QString& password )
 {
-  if( mServer.host() != host || 
-      mServer.port() != port || 
-      mServer.user() != user || 
+  if( mServer.host() != host ||
+      mServer.port() != port ||
+      mServer.user() != user ||
       mServer.password() != password )
     closeConnection();
 
@@ -334,7 +333,7 @@ void LDAPProtocol::openConnection()
         firstauth = false;
         mConn.setServer( mServer );
       }
-                          
+
     } else {
       LDAPErr( retval );
       closeConnection();
@@ -460,12 +459,12 @@ void LDAPProtocol::stat( const KUrl &_url )
   // look how many entries match
   saveatt = usrc.attributes();
   att.append( "dn" );
-  
+
   if ( (id = mOp.search( usrc.dn(), usrc.scope(), usrc.filter(), att )) == -1 ) {
     LDAPErr();
     return;
   }
-  
+
   kDebug(7125) << "stat() getting result";
   do {
     ret = mOp.waitForResult( id, -1 );
@@ -594,7 +593,7 @@ void LDAPProtocol::put( const KUrl &_url, int, bool overwrite, bool )
                 " newRdn: " <<  ldif.newRdn() <<
                 " newSuperior: " << ldif.newSuperior() <<
                 " deloldrdn: " << ldif.delOldRdn() << endl;
-              ldaperr = mOp.rename_s( ldif.dn(), ldif.newRdn(), 
+              ldaperr = mOp.rename_s( ldif.dn(), ldif.newRdn(),
                 ldif.newSuperior(), ldif.delOldRdn() );
               break;
             case Ldif::Entry_Mod:
@@ -641,7 +640,7 @@ void LDAPProtocol::put( const KUrl &_url, int, bool overwrite, bool )
                   break;
               }
               op.attr = ldif.attr();
-              if ( !ldif.value().isNull() ) 
+              if ( !ldif.value().isNull() )
                 op.values.append( ldif.value() );
               modops.append( op );
               break;
