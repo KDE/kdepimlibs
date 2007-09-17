@@ -22,7 +22,6 @@
  *
  *********************************************************************/
 
-#include "imap4-config.h"
 #include "imapparser.h"
 #include "imapinfo.h"
 #include "mailheader.h"
@@ -266,7 +265,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   // then lets try it
   QString firstCommand = aAuth;
   if ( !challenge.isEmpty() ) {
-    firstCommand += " ";
+    firstCommand += ' ';
     firstCommand += QString::fromLatin1( challenge.data(), challenge.size() );
   }
   cmd = sendCommand (new imapCommand ("AUTHENTICATE", firstCommand.toLatin1()));
@@ -1060,7 +1059,7 @@ mimeHeader * imapParser::parseSimplePart (parseString & inWords,
   //body subtype
   subtype = parseLiteral(inWords);
 
-  localPart->setType (typeStr + "/" + subtype);
+  localPart->setType (typeStr + '/' + subtype);
 
   //body parameter parenthesized list
   parameters = parseParameters (inWords);
@@ -1208,7 +1207,7 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
     {
       outSection = QString::number(++section);
       if (!init)
-        outSection = inSection + "." + outSection;
+        outSection = inSection + '.' + outSection;
       mimeHeader *subpart = parseBodyStructure (inWords, outSection, 0);
       localPart->addNestedPart (subpart);
     }
@@ -1653,7 +1652,7 @@ void imapParser::parseNamespace (parseString & result)
         // at least one personal ns
         personalAvailable = true;
       }
-      QString nsentry = QString::number( ns ) + "=" + prefix + "=" + delim;
+      QString nsentry = QString::number( ns ) + '=' + prefix + '=' + delim;
       imapNamespaces.append( nsentry );
       if ( prefix.right( 1 ) == delim ) {
         // strip delimiter to get a correct entry for comparisons
@@ -1737,7 +1736,7 @@ int imapParser::parseLoop ()
         else
         {
           kDebug(7116) <<"imapParser::parseLoop - unknown tag '" << tag <<"'";
-          QByteArray cstr = tag + " " + result.cstr();
+          QByteArray cstr = tag + ' ' + result.cstr();
           result.data = cstr;
           result.pos = 0;
           result.data.resize(cstr.length());

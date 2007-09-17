@@ -151,9 +151,9 @@ const QString
 imapCommand::getStr ()
 {
   if (parameter().isEmpty())
-    return id() + " " + command() + "\r\n";
+    return id() + ' ' + command() + "\r\n";
   else
-    return id() + " " + command() + " " + parameter() + "\r\n";
+    return id() + ' ' + command() + ' ' + parameter() + "\r\n";
 }
 
 imapCommand *
@@ -176,9 +176,9 @@ imapCommand::clientFetch (ulong fromUid, ulong toUid, const QString & fields,
 
   if (fromUid != toUid)
   {
-    uid += ":";
+    uid += ':';
     if (toUid < fromUid)
-      uid += "*";
+      uid += '*';
     else
       uid += QString::number(toUid);
   }
@@ -190,7 +190,7 @@ imapCommand::clientFetch (const QString & sequence, const QString & fields,
                           bool nouid)
 {
   return new imapCommand (nouid ? "FETCH" : "UID FETCH",
-                          sequence + " (" + fields + ")");
+                          sequence + " (" + fields + ')');
 }
 
 imapCommand *
@@ -233,8 +233,8 @@ imapCommand::clientAppend (const QString & box, const QString & flags,
 {
   return new imapCommand ("APPEND",
                           "\"" + KIMAP::encodeImapFolderName (box) + "\" " +
-                          ((flags.isEmpty()) ? "" : ("(" + flags + ") ")) +
-                          "{" + QString::number(size) + "}");
+                          ((flags.isEmpty()) ? "" : ('(' + flags + ") ")) +
+                          '{' + QString::number(size) + '}');
 }
 
 imapCommand *
@@ -298,7 +298,7 @@ imapCommand::clientStore (const QString & set, const QString & item,
                           const QString & data, bool nouid)
 {
   return new imapCommand (nouid ? "STORE" : "UID STORE",
-                          set + " " + item + " (" + data + ")");
+                          set + ' ' + item + " (" + data + ')');
 }
 
 imapCommand *

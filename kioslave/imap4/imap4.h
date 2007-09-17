@@ -24,13 +24,13 @@
  *
  *********************************************************************/
 
+#include "imap4-config.h"
 #include "imapparser.h"
 #include "mimeio.h"
 
 #include <kio/tcpslavebase.h>
 #include <QBuffer>
 #include <QDateTime>
-//Added by qt3to4:
 #include <QByteArray>
 
 #define IMAP_BUFFER 8192
@@ -83,7 +83,7 @@ public:
    */
   virtual void del (const KUrl & _url, bool isFile);
   /**
-   * @brief Capabilites, NOOP, (Un)subscribe, Change status,
+   * @brief Capabilities, NOOP, (Un)subscribe, Change status,
    * Change ACL
    */
   virtual void special (const QByteArray & data);
@@ -129,7 +129,7 @@ public:
   virtual int outputLine (const QByteArray & _str, int len = -1);
 
   /** @brief send out cached data to the application */
-  virtual void flushOutput(QString contentEncoding = QString());
+  virtual void flushOutput(const QString &contentEncoding = QString());
 
 protected:
 

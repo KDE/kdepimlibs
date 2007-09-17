@@ -274,7 +274,7 @@ mimeHeader::getParameter (const QByteArray& aStr, Q3Dict < QString > *aDict)
     if (!found)
     {
       //might be a continuated or encoded parameter
-      found = aDict->find (aStr + "*");
+      found = aDict->find (aStr + '*');
       if (!found)
       {
         //continuated parameter
@@ -285,11 +285,11 @@ mimeHeader::getParameter (const QByteArray& aStr, Q3Dict < QString > *aDict)
         {
           QByteArray search;
           search.setNum (part);
-          search = aStr + "*" + search;
+          search = aStr + '*' + search;
           found = aDict->find (search);
           if (!found)
           {
-            found = aDict->find (search + "*");
+            found = aDict->find (search + '*');
             if (found)
               encoded += KIMAP::encodeRFC2231String (*found);
           }
@@ -379,7 +379,7 @@ mimeHeader::setParameter (const QByteArray& aLabel, const QString& aValue,
         }
         shortValue = val.left( partLen );
         shortLabel.setNum (i);
-        shortLabel = aLabel + "*" + shortLabel;
+        shortLabel = aLabel + '*' + shortLabel;
         val = val.right( vlen - partLen );
         vlen = vlen - partLen;
         if (encoded)
@@ -388,7 +388,7 @@ mimeHeader::setParameter (const QByteArray& aLabel, const QString& aValue,
           {
             shortValue = "''" + shortValue;
           }
-          shortLabel += "*";
+          shortLabel += '*';
         }
         //kDebug(7116) <<"mimeHeader::setParameter() - shortLabel = '" << shortLabel <<"'";
         //kDebug(7116) <<"mimeHeader::setParameter() - shortValue = '" << shortValue <<"'";
@@ -412,7 +412,7 @@ QByteArray mimeHeader::outputParameter (Q3Dict < QString > *aDict)
     Q3DictIterator < QString > it (*aDict);
     while (it.current ())
     {
-      retVal += (";\n\t" + it.currentKey () + "=").toLatin1 ();
+      retVal += (";\n\t" + it.currentKey () + '=').toLatin1 ();
       if (it.current ()->indexOf (' ') > 0 || it.current ()->indexOf (';') > 0)
       {
         retVal += '"' + it.current ()->toUtf8 () + '"';
@@ -424,7 +424,7 @@ QByteArray mimeHeader::outputParameter (Q3Dict < QString > *aDict)
       // << it.current()->toUtf8() << "'";
       ++it;
     }
-    retVal += "\n";
+    retVal += '\n';
   }
   return retVal;
 }

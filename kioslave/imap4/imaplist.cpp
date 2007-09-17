@@ -39,9 +39,10 @@
     imap://server/folder/ - List messages in folder
  */
 
-#include <kimap/rfccodecs.h>
 #include "imaplist.h"
 #include "imapparser.h"
+
+#include <kimap/rfccodecs.h>
 
 #include <kdebug.h>
 

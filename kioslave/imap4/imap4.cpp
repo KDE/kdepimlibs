@@ -56,7 +56,6 @@ imap://server/folder/
  *  ERR_DOES_NOT_EXIST is reserved for folders.
  */
 
-#include "imap4-config.h"
 #include "imap4.h"
 
 #include <QByteArray>
@@ -428,9 +427,9 @@ IMAP4Protocol::listDir (const KUrl & _url)
 
     if (mySection.isEmpty())
     {
-      listStr += "%";
+      listStr += '%';
     } else if (mySection == "COMPLETE") {
-      listStr += "*";
+      listStr += '*';
     }
     kDebug(7116) <<"IMAP4Protocol::listDir - listStr=" << listStr;
     cmd =
@@ -566,7 +565,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
         //redirect
         KUrl newUrl = _url;
 
-        newUrl.setPath ("/" + myBox + ";UIDVALIDITY=" +
+        newUrl.setPath ('/' + myBox + ";UIDVALIDITY=" +
                         QString::number(selectInfo.uidValidity ()));
         kDebug(7116) <<"IMAP4::listDir - redirecting to" << newUrl.prettyUrl();
         redirection (newUrl);
@@ -984,7 +983,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
 
       QString subDir = dBox.right (dBox.length () - dBox.lastIndexOf ('/'));
       QString topDir = dBox.left (sub);
-      testDir.setPath ("/" + topDir);
+      testDir.setPath ('/' + topDir);
       dType =
         parseURL (testDir, topDir, dSection, dLType, dSequence, dValidity,
           dDelimiter, dInfo);
@@ -1000,7 +999,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
       {
 
         // maybe if we create a new mailbox
-        topDir = "/" + topDir + subDir;
+        topDir = '/' + topDir + subDir;
         testDir.setPath (topDir);
         kDebug(7116) <<"IMAP4::copy - checking this destination" << topDir;
         dType =
@@ -1398,8 +1397,8 @@ IMAP4Protocol::special (const QByteArray & aData)
     if (cmd->result () != "OK")
     {
       completeQueue.removeRef (cmd);
-      error(ERR_COULD_NOT_WRITE, i18n("Changing the flags of message %1 "
-                                      "failed.").arg(_url.prettyUrl()));
+      error(ERR_COULD_NOT_WRITE,
+            i18n( "Changing the flags of message %1 failed.", _url.prettyUrl() ) );
       return;
     }
     completeQueue.removeRef (cmd);
@@ -1830,7 +1829,7 @@ IMAP4Protocol::stat (const KUrl & _url)
         //redirect
         KUrl newUrl = _url;
 
-        newUrl.setPath ("/" + aBox + ";UIDVALIDITY=" +
+        newUrl.setPath ('/' + aBox + ";UIDVALIDITY=" +
                         QString::number(validity));
         kDebug(7116) <<"IMAP4::stat - redirecting to" << newUrl.prettyUrl();
         redirection (newUrl);
@@ -2155,7 +2154,7 @@ IMAP4Protocol::doListEntry (const QString & encodedUrl, int stretch, imapCache *
     {
       mailHeader *header = cache->getHeader();
       if (header)
-        tmp += " " + header->getSubject();
+        tmp += ' ' + header->getSubject();
     }
     entry.insert (UDSEntry::UDS_NAME,tmp);
 
@@ -2437,7 +2436,7 @@ IMAP4Protocol::outputLine (const QByteArray & _str, int len)
   return 0;
 }
 
-void IMAP4Protocol::flushOutput(QString contentEncoding)
+void IMAP4Protocol::flushOutput(const QString &contentEncoding)
 {
   // send out cached data to the application
   if (outputBufferIndex == 0)

@@ -24,26 +24,25 @@
  *
  *********************************************************************/
 
+#include "imap4-config.h"
+#include "imaplist.h"
+#include "imapcommand.h"
+#include "imapinfo.h"
+#include "mailheader.h"
+
+#include <kio/authinfo.h>
+#include <kio/slavebase.h>
+
 #include <QStringList>
 #include <q3valuelist.h>
 #include <q3ptrlist.h>
 #include <q3asciidict.h>
 #include <QByteArray>
 
-#include <kio/authinfo.h>
-#include <kio/slavebase.h>
-
-#include "imaplist.h"
-#include "imapcommand.h"
-#include "imapinfo.h"
-
-#include "mailheader.h"
-
 class KUrl;
 class QString;
 class mailAddress;
 class mimeHeader;
-
 
 /** @brief a string used during parsing
  * the string allows you to move the effective start of the string using

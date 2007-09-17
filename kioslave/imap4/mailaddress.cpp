@@ -205,7 +205,7 @@ const QByteArray mailAddress::getStr ()
   if (!rawFullName.isEmpty ())
   {
     KMime::addQuotes( rawFullName, false );
-    retVal = rawFullName + " ";
+    retVal = rawFullName + ' ';
   }
   if (!user.isEmpty ())
   {
@@ -266,13 +266,13 @@ QString mailAddress::emailAddrAsAnchor (const mailAddress & adr, bool shortAdr)
   if (!adr.getFullName ().isEmpty ())
   {
     // should do some umlaut escaping
-    retVal += adr.getFullName () + " ";
+    retVal += adr.getFullName () + ' ';
   }
   if (!adr.getUser ().isEmpty () && !shortAdr)
   {
     retVal += "&lt;" + adr.getUser ();
     if (!adr.getHost ().isEmpty ())
-      retVal += "@" + adr.getHost ();
+      retVal += '@' + adr.getHost ();
     retVal += "&gt; ";
   }
   if (!adr.getComment ().isEmpty ())
@@ -286,7 +286,7 @@ QString mailAddress::emailAddrAsAnchor (const mailAddress & adr, bool shortAdr)
     QString mail;
     mail = adr.getUser ();
     if (!mail.isEmpty () && !adr.getHost ().isEmpty ())
-      mail += "@" + adr.getHost ();
+      mail += '@' + adr.getHost ();
     if (!mail.isEmpty ())
       retVal = "<A HREF=\"mailto:" + mail + "\">" + retVal + "</A>";
   }
