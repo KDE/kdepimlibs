@@ -450,7 +450,7 @@ bool Scheduler::acceptReply( IncidenceBase *incidence,
     }
     if ( to ) {
       // for VTODO a REPLY can be used to update the completion status of
-      // a task. see RFC2446 3.4.3
+      // a to-do. see RFC2446 3.4.3
       Todo *update = dynamic_cast<Todo*> ( incidence );
       Q_ASSERT( update );
       if ( update && ( to->percentComplete() != update->percentComplete() ) ) {

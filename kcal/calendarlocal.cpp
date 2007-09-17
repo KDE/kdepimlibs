@@ -197,7 +197,7 @@ bool CalendarLocal::addTodo( Todo *todo )
 
   todo->registerObserver( this );
 
-  // Set up subtask relations
+  // Set up sub-to-do relations
   setupRelations( todo );
 
   setModified( true );

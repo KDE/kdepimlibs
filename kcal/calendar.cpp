@@ -813,7 +813,7 @@ void Calendar::setupRelations( Incidence *forincidence )
   }
 }
 
-// If a task with subtasks is deleted, move it's subtasks to the orphans list
+// If a to-do with sub-to-dos is deleted, move it's sub-to-dos to the orphan list
 void Calendar::removeRelations( Incidence *incidence )
 {
   if ( !incidence ) {

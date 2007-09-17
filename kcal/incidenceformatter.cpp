@@ -639,7 +639,7 @@ static QString invitationDetailsEvent( Event *event )
 
 static QString invitationDetailsTodo( Todo *todo )
 {
-  // Task details are formatted into an HTML table
+  // To-do details are formatted into an HTML table
   if ( !todo ) {
     return QString();
   }
@@ -851,19 +851,19 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
 
   switch ( msg->method() ) {
   case iTIPPublish:
-    return i18n( "This task has been published" );
+    return i18n( "This to-do has been published" );
   case iTIPRequest:
     if ( todo->revision() > 0 ) {
-      return i18n( "This task has been updated" );
+      return i18n( "This to-do has been updated" );
     } else {
-      return i18n( "You have been assigned this task" );
+      return i18n( "You have been assigned this to-do" );
     }
   case iTIPRefresh:
-    return i18n( "This task was refreshed" );
+    return i18n( "This to-do was refreshed" );
   case iTIPCancel:
-    return i18n( "This task was canceled" );
+    return i18n( "This to-do was canceled" );
   case iTIPAdd:
-    return i18n( "Addition to the task" );
+    return i18n( "Addition to the to-do" );
   case iTIPReply:
   {
     Attendee::List attendees = todo->attendees();
@@ -878,13 +878,13 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
     Attendee *attendee = *attendees.begin();
     switch( attendee->status() ) {
     case Attendee::NeedsAction:
-      return i18n( "Sender indicates this task assignment still needs some action" );
+      return i18n( "Sender indicates this to-do assignment still needs some action" );
     case Attendee::Accepted:
-      return i18n( "Sender accepts this task" );
+      return i18n( "Sender accepts this to-do" );
     case Attendee::Tentative:
-      return i18n( "Sender tentatively accepts this task" );
+      return i18n( "Sender tentatively accepts this to-do" );
     case Attendee::Declined:
-      return i18n( "Sender declines this task" );
+      return i18n( "Sender declines this to-do" );
     case Attendee::Delegated:
     {
       QString delegate, dummy;
@@ -893,16 +893,16 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
         delegate = attendee->delegate();
       }
       if ( !delegate.isEmpty() ) {
-        return i18n( "Sender has delegated this request for the task to %1", delegate );
+        return i18n( "Sender has delegated this request for the to-do to %1", delegate );
       }
-      return i18n( "Sender has delegated this request for the task " );
+      return i18n( "Sender has delegated this request for the to-do " );
     }
     case Attendee::Completed:
-      return i18n( "The request for this task is now completed" );
+      return i18n( "The request for this to-do is now completed" );
     case Attendee::InProcess:
       return i18n( "Sender is still processing the invitation" );
     default:
-      return i18n( "Unknown response to this task" );
+      return i18n( "Unknown response to this to-do" );
     }
     break;
   }
@@ -1148,7 +1148,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     if ( incidence && incidence->revision() > 0 ) {
       html += "<td colspan=\"9\">";
       if ( incBase->type() == "Todo" ) {
-        html += helper->makeLink( "reply", i18n( "[Enter this into my task list]" ) );
+        html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
       } else {
         html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
       }
@@ -1157,17 +1157,17 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     html += "<td>";
 
     // Accept
-    html += helper->makeLink( "accept", i18nc( "accept task request", "[Accept]" ) );
+    html += helper->makeLink( "accept", i18nc( "accept to-do request", "[Accept]" ) );
     html += "</td><td> &nbsp; </td><td>";
     html += helper->makeLink( "accept_conditionally",
                               i18nc( "Accept conditionally", "[Accept cond.]" ) );
     html += "</td><td> &nbsp; </td><td>";
     // Decline
-    html += helper->makeLink( "decline", i18nc( "decline task request", "[Decline]" ) );
+    html += helper->makeLink( "decline", i18nc( "decline to-do request", "[Decline]" ) );
     html += "</td><td> &nbsp; </td><td>";
 
     // Delegate
-    html += helper->makeLink( "delegate", i18nc( "delegate task to another", "[Delegate]" ) );
+    html += helper->makeLink( "delegate", i18nc( "delegate to-do to another", "[Delegate]" ) );
     html += "</td><td> &nbsp; </td><td>";
 
     // Forward
@@ -1188,7 +1188,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   case iTIPReply:
     // Enter this into my calendar
     if ( incBase->type() == "Todo" ) {
-      html += helper->makeLink( "reply", i18n( "[Enter this into my task list]" ) );
+      html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
     } else {
       html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
     }
