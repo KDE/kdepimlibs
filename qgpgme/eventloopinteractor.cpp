@@ -24,6 +24,8 @@
 #include <gpgme++/context.h>
 
 #include <QCoreApplication>
+#include <QSocketNotifier>
+#include <QPointer>
 
 using namespace GpgME;
 
@@ -58,11 +60,22 @@ QGpgME::EventLoopInteractor * QGpgME::EventLoopInteractor::instance() {
 }
 
 void QGpgME::EventLoopInteractor::slotWriteActivity( int socket ) {
+  // Make sure to disable the notifier while we are processing the event, as
+  // it's easy to run into re-entrancy issues, if actOn causes things to return
+  // to the event loop in some way (such as showing the passphrase dialog).
+  // We use a qpointer as actOn will destroy the notifier, when it's done with the FD
+  QPointer<QSocketNotifier> snf = qobject_cast<QSocketNotifier*>( sender() );
+  const bool wasEnabled  = snf? snf->isEnabled() : false;
+  if ( snf ) snf->setEnabled( false );
   actOn( socket , Write );
+  if ( snf ) snf->setEnabled( wasEnabled );
 }
 
 void QGpgME::EventLoopInteractor::slotReadActivity( int socket ) {
+  QPointer<QSocketNotifier> snf = qobject_cast<QSocketNotifier*>( sender() );
+  const bool wasEnabled  = snf? snf->isEnabled() : false;
   actOn( socket , Read );
+  if ( snf ) snf->setEnabled( wasEnabled );
 }
 
 void QGpgME::EventLoopInteractor::nextTrustItemEvent( GpgME::Context * context, const GpgME::TrustItem & item ) {
