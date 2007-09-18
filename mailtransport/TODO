@@ -1,10 +1,6 @@
 Mail Transport TODO
 ~~~~~~~~~~~~~~~~~~~
 
-General
--------
-- compile without QT3_SUPPORT
-
 Migration
 ---------
 - password migration within kwallet (for kmail and knode), requires KWallet to
