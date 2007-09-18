@@ -4,7 +4,7 @@
  *
  *   imapparser.h  - IMAP4rev1 Parser
  *   Copyright (C) 2001-2002 Michael Haeckel <haeckel@kde.org>
- *   Copyright (C) 2000 s.carstens@gmx.de
+ *   Copyright (C) 2000 Sven Carstens <s.carstens@gmx.de>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -33,10 +33,9 @@
 #include <kio/authinfo.h>
 #include <kio/slavebase.h>
 
+#include <QHash>
 #include <QStringList>
-#include <q3valuelist.h>
 #include <q3ptrlist.h>
-#include <q3asciidict.h>
 #include <QByteArray>
 
 class KUrl;
@@ -308,13 +307,13 @@ public:
       mimeHeader * localPart = 0);
 
   /** parse a parameter list (name value pairs) */
-  Q3AsciiDict < QString > parseParameters (parseString & inWords);
+  QHash< QByteArray, QString > parseParameters (parseString & inWords);
 
   /**
    * parse the disposition list (disposition (name value pairs))
    * the disposition has the key 'content-disposition'
    */
-  Q3AsciiDict < QString > parseDisposition (parseString & inWords);
+  QHash< QByteArray, QString > parseDisposition (parseString & inWords);
 
   // reimplement these
 

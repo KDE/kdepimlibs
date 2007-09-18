@@ -3,7 +3,7 @@
 /**********************************************************************
  *
  *   mailaddress.h - mail address handler
- *   Copyright (C) 2000 s.carstens@gmx.de
+ *   Copyright (C) 2000 Sven Carstens <s.carstens@gmx.de>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by

@@ -2,7 +2,7 @@
  *
  *   imapparser.cc  - IMAP4rev1 Parser
  *   Copyright (C) 2001-2002 Michael Haeckel <haeckel@kde.org>
- *   Copyright (C) 2000 s.carstens@gmx.de
+ *   Copyright (C) 2000 Sven Carstens <s.carstens@gmx.de>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -33,7 +33,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <QList>
-#include <Q3PtrList>
 
 #ifdef HAVE_LIBSASL2
 extern "C" {
@@ -961,13 +960,10 @@ mailHeader * imapParser::parseEnvelope (parseString & inWords)
 
 // parse parameter pairs into a dictionary
 // caller must clean up the dictionary items
-Q3AsciiDict < QString > imapParser::parseDisposition (parseString & inWords)
+QHash < QByteArray, QString > imapParser::parseDisposition (parseString & inWords)
 {
   QByteArray disposition;
-  Q3AsciiDict < QString > retVal (17, false);
-
-  // return value is a shallow copy
-  retVal.setAutoDelete (false);
+  QHash < QByteArray, QString > retVal;
 
   if (inWords[0] != '(')
   {
@@ -991,7 +987,7 @@ Q3AsciiDict < QString > imapParser::parseDisposition (parseString & inWords)
 
   if (!disposition.isEmpty ())
   {
-    retVal.insert ("content-disposition", new QString(disposition));
+    retVal.insert ("content-disposition", QString(disposition));
   }
 
   return retVal;
@@ -999,12 +995,9 @@ Q3AsciiDict < QString > imapParser::parseDisposition (parseString & inWords)
 
 // parse parameter pairs into a dictionary
 // caller must clean up the dictionary items
-Q3AsciiDict < QString > imapParser::parseParameters (parseString & inWords)
+QHash < QByteArray, QString > imapParser::parseParameters (parseString & inWords)
 {
-  Q3AsciiDict < QString > retVal (17, false);
-
-  // return value is a shallow copy
-  retVal.setAutoDelete (false);
+  QHash < QByteArray, QString > retVal;
 
   if (inWords[0] != '(')
   {
@@ -1020,7 +1013,7 @@ Q3AsciiDict < QString > imapParser::parseParameters (parseString & inWords)
     {
       const QByteArray l1 = parseLiteral(inWords);
       const QByteArray l2 = parseLiteral(inWords);
-      retVal.insert (l1, new QString(l2));
+      retVal.insert (l1, QString(l2));
     }
 
     if (inWords[0] != ')')
@@ -1037,10 +1030,8 @@ mimeHeader * imapParser::parseSimplePart (parseString & inWords,
 {
   QByteArray subtype;
   QByteArray typeStr;
-  Q3AsciiDict < QString > parameters (17, false);
+  QHash < QByteArray, QString > parameters;
   ulong size;
-
-  parameters.setAutoDelete (true);
 
   if (inWords[0] != '(')
     return 0;
@@ -1064,12 +1055,12 @@ mimeHeader * imapParser::parseSimplePart (parseString & inWords,
   //body parameter parenthesized list
   parameters = parseParameters (inWords);
   {
-    Q3AsciiDictIterator < QString > it (parameters);
+    QHashIterator < QByteArray, QString > it (parameters);
 
-    while (it.current ())
+    while (it.hasNext ())
     {
-      localPart->setTypeParm (it.currentKey (), *(it.current ()));
-      ++it;
+      it.next();
+      localPart->setTypeParm (it.key (), it.value ());
     }
     parameters.clear ();
   }
@@ -1117,17 +1108,14 @@ mimeHeader * imapParser::parseSimplePart (parseString & inWords,
     // body disposition
     parameters = parseDisposition (inWords);
     {
-      QString *disposition = parameters["content-disposition"];
+      QString disposition = parameters["content-disposition"];
 
-      if (disposition)
-        localPart->setDisposition (disposition->toAscii ());
-      parameters.remove ("content-disposition");
-      Q3AsciiDictIterator < QString > it (parameters);
-      while (it.current ())
+      localPart->setDisposition (disposition.toAscii ());
+      QHashIterator < QByteArray, QString > it (parameters);
+      while (it.hasNext ())
       {
-        localPart->setDispositionParm (it.currentKey (),
-                                       *(it.current ()));
-        ++it;
+        it.next();
+        localPart->setDispositionParm (it.key (), it.value ());
       }
       parameters.clear ();
     }
@@ -1178,9 +1166,9 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
   if (inWords[0] == '(')
   {
     QByteArray subtype;
-    Q3AsciiDict < QString > parameters (17, false);
+    QHash< QByteArray, QString > parameters;
     QString outSection;
-    parameters.setAutoDelete (true);
+
     if (!localPart)
       localPart = new mimeHeader;
     else
@@ -1220,12 +1208,12 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
     // fetch parameters
     parameters = parseParameters (inWords);
     {
-      Q3AsciiDictIterator < QString > it (parameters);
+      QHashIterator < QByteArray, QString > it (parameters);
 
-      while (it.current ())
+      while (it.hasNext ())
       {
-        localPart->setTypeParm (it.currentKey (), *(it.current ()));
-        ++it;
+        it.next();
+        localPart->setTypeParm (it.key (), it.value ());
       }
       parameters.clear ();
     }
@@ -1233,17 +1221,14 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
     // body disposition
     parameters = parseDisposition (inWords);
     {
-      QString *disposition = parameters["content-disposition"];
+      QString disposition = parameters["content-disposition"];
 
-      if (disposition)
-        localPart->setDisposition (disposition->toAscii ());
-      parameters.remove ("content-disposition");
-      Q3AsciiDictIterator < QString > it (parameters);
-      while (it.current ())
+      localPart->setDisposition (disposition.toAscii ());
+      QHashIterator < QByteArray, QString > it (parameters);
+      while (it.hasNext ())
       {
-        localPart->setDispositionParm (it.currentKey (),
-                                       *(it.current ()));
-        ++it;
+        it.next();
+        localPart->setDispositionParm (it.key (), it.value ());
       }
       parameters.clear ();
     }
