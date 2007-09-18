@@ -65,7 +65,6 @@ class LDAPProtocol : public KIO::SlaveBase
       const KLDAP::LdapUrl &usrc, bool dir=false );
     int asyncSearch( KLDAP::LdapUrl &usrc, const QByteArray &cookie = "" );
 
-//    int parsePageControl( LDAPMessage *result, QByteArray &cookie );
     void LDAPErr( int err = KLDAP_SUCCESS );
     void changeCheck( KLDAP::LdapUrl &url );
 };

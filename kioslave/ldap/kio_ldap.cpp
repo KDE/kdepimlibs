@@ -453,8 +453,6 @@ void LDAPProtocol::get( const KUrl &_url )
 
   // tell we are finished
   data( QByteArray() );
-
-  // tell we are finished
   finished();
 }
 
