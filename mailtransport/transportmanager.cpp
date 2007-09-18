@@ -380,8 +380,8 @@ KWallet::Wallet * TransportManager::wallet()
   WId window = 0;
   if ( qApp->activeWindow() )
     window = qApp->activeWindow()->winId();
-  else if ( qApp->mainWidget() )
-    window = qApp->mainWidget()->topLevelWidget()->winId();
+  else if ( !QApplication::topLevelWidgets().isEmpty() )
+    window = qApp->topLevelWidgets().first()->winId();
 
   delete d->wallet;
   d->wallet = Wallet::openWallet( Wallet::NetworkWallet(), window );
@@ -438,8 +438,9 @@ void TransportManager::loadPasswordsAsync()
     WId window = 0;
     if ( qApp->activeWindow() )
       window = qApp->activeWindow()->winId();
-    else if ( qApp->mainWidget() )
-      window = qApp->mainWidget()->topLevelWidget()->winId();
+    else if ( !QApplication::topLevelWidgets().isEmpty() )
+      window = qApp->topLevelWidgets().first()->winId();
+    
     d->wallet = Wallet::openWallet( Wallet::NetworkWallet(), window,
                                   Wallet::Asynchronous );
     if ( d->wallet ) {
