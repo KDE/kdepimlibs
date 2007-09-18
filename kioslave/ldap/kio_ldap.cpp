@@ -30,9 +30,6 @@
 #include <kcomponentdata.h>
 #include <klocale.h>
 
-#include <sys/stat.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <netdb.h>
 #include <netinet/in.h>
 
@@ -48,7 +45,7 @@ int kdemain( int argc, char **argv )
 {
   KComponentData componentData( "kio_ldap" );
 
-  kDebug(7125) << "Starting " << getpid();
+  kDebug(7125) << "Starting kio_ldap instance";
 
   if ( argc != 4 ) {
     kError() << "Usage kio_ldap protocol pool app" << endl;
