@@ -26,7 +26,7 @@
 #include <kblog/kblog_export.h>
 
 #include <QtCore/QString>
-
+#include <QtAlgorithms>
 
 class KDateTime;
 class KUrl;
@@ -254,8 +254,13 @@ class KBLOG_EXPORT BlogComment
   */
   BlogComment& operator=(const BlogComment &comment );
 
+  /**
+    The swap operator.
+  */
+  void swap( BlogComment & other ) { qSwap( this->d_ptr, other.d_ptr ); }
+
   private:
-    BlogCommentPrivate * const d_ptr;
+    BlogCommentPrivate * d_ptr;
 };
 
 } //namespace KBlog

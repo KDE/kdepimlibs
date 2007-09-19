@@ -27,6 +27,8 @@
 
 #include <kurl.h>
 
+#include <QtAlgorithms>
+
 class QStringList;
 
 class KDateTime;
@@ -39,7 +41,7 @@ namespace KCal {
 namespace KBlog {
   class Blog;
   class BlogPostPrivate;
-  
+
 /**
   @brief
   A class that represents a blog post on the server.
@@ -415,10 +417,13 @@ public:
     */
     BlogPost& operator=( const BlogPost &post );
 
+    /**
+      The swap operator.
+    */
+    void swap( BlogPost & other ) { qSwap( this->d_ptr, other.d_ptr ); }
   private:
-    BlogPostPrivate * const d_ptr;
+    BlogPostPrivate * d_ptr;
 };
-
 
 } //namespace KBlog
 

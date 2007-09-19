@@ -25,6 +25,8 @@
 
 #include <kblog/kblog_export.h>
 
+#include <QtAlgorithms>
+
 class KUrl;
 
 namespace KBlog {
@@ -187,8 +189,12 @@ class KBLOG_EXPORT BlogMedia
     */
     BlogMedia& operator=(const BlogMedia &media );
 
+    /**
+      The swap operator.
+    */
+    void swap( BlogMedia & other ) { qSwap( this->d_ptr, other.d_ptr ); }
   private:
-    BlogMediaPrivate * const d_ptr;
+    BlogMediaPrivate * d_ptr;
 };
 
 } //namespace KBlog

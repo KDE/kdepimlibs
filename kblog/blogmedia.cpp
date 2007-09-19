@@ -48,7 +48,13 @@ BlogMedia::BlogMedia(): d_ptr( new BlogMediaPrivate )
 BlogMedia::BlogMedia( const BlogMedia& m ) :
 d_ptr( new BlogMediaPrivate )
 {
-  *this = m;
+  d_ptr->q_ptr=this;
+  d_ptr->mName=m.name();
+  d_ptr->mUrl=m.url();
+  d_ptr->mMimetype=m.mimetype();
+  d_ptr->mData=m.data();
+  d_ptr->mStatus=m.status();
+  d_ptr->mError=m.error();
 }
 
 BlogMedia::~BlogMedia()
@@ -118,14 +124,8 @@ void BlogMedia::setError( const QString &error )
 
 BlogMedia& BlogMedia::operator=(const BlogMedia &m)
 {
-  d_ptr->q_ptr=this;
-  d_ptr->mName=m.name();
-  d_ptr->mUrl=m.url();
-  d_ptr->mMimetype=m.mimetype();
-  d_ptr->mData=m.data();
-  d_ptr->mStatus=m.status();
-  d_ptr->mError=m.error();
-
+  BlogMedia copy( m );
+  swap( copy );
   return *this;
 }
 

@@ -34,7 +34,17 @@ BlogComment::BlogComment(
     const BlogComment& c ) :
     d_ptr( new BlogCommentPrivate )
 {
-  *this = c;
+  d_ptr->q_ptr=this;
+  d_ptr->mTitle=c.title();
+  d_ptr->mContent=c.content();
+  d_ptr->mEmail=c.email();
+  d_ptr->mName=c.name();
+  d_ptr->mCommentId=c.commentId();
+  d_ptr->mUrl=c.url();
+  d_ptr->mError=c.error();
+  d_ptr->mStatus=c.status();
+  d_ptr->mModificationDateTime=c.modificationDateTime();
+  d_ptr->mCreationDateTime=c.creationDateTime();
 }
 
 BlogComment::BlogComment(
@@ -153,18 +163,8 @@ void BlogComment::setError( const QString &error )
 
 BlogComment& BlogComment::operator=(const BlogComment &c)
 {
-  d_ptr->q_ptr=this;
-  d_ptr->mTitle=c.title();
-  d_ptr->mContent=c.content();
-  d_ptr->mEmail=c.email();
-  d_ptr->mName=c.name();
-  d_ptr->mCommentId=c.commentId();
-  d_ptr->mUrl=c.url();
-  d_ptr->mError=c.error();
-  d_ptr->mStatus=c.status();
-  d_ptr->mModificationDateTime=c.modificationDateTime();
-  d_ptr->mCreationDateTime=c.creationDateTime();
-
+  BlogComment copy( c );
+  swap( copy );
   return *this;
 }
 
