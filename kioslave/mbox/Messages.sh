@@ -1,2 +1,2 @@
 #! /bin/sh
-$XGETTEXT *.cc -o $podir/kio_mbox.pot
+$XGETTEXT *.cpp -o $podir/kio_mbox.pot
