@@ -84,16 +84,18 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
     QString interfaceName() const;
 
     /**
-      List recent posts on the server.
+      List recent posts on the server. The status of the posts will be Fetched.
 
       @param number The number of posts to fetch. Latest first.
 
       @see     void listedRecentPosts( QList\<KBlog::BlogPost\>& )
+      @see     BlogPost::Status
     */
     void listRecentPosts( int number );
 
     /**
-      List the categories of the blog.
+      List the categories of the blog. 
+
       @see listedCategories( const QList\<QMap\<QString,QString\> \>& )
     */
     virtual void listCategories();

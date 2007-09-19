@@ -107,11 +107,12 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     QString interfaceName() const;
 
     /**
-      List recent posts on the server.
+      List recent posts on the server. The status of the posts will be Fetched.
 
      @param number The number of posts to fetch. Latest first.
 
       @see     void listedRecentPosts( const QList\<KBlog::BlogPost\>& )
+      @see     BlogPost::Status
     */
     void listRecentPosts( int number );
 

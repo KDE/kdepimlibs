@@ -104,12 +104,13 @@ class KBLOG_EXPORT Blogger1 : public Blog
     virtual void listBlogs();
 
     /**
-      List recent posts on the server.
+      List recent posts on the server. The status of the posts will be Fetched.
 
      @param number The number of posts to fetch. Latest first.
 
       @see     void listedRecentPosts( QList\<KBlog::BlogPost> & )
       @see     void fetchPost( KBlog::BlogPost *post )
+      @see     BlogPost::Status
     */
     void listRecentPosts( int number );
 

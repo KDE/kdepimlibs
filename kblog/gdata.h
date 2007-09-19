@@ -158,12 +158,13 @@ class KBLOG_EXPORT GData : public Blog
     virtual void listAllComments();
 
     /**
-        List recent posts on the server.
+        List recent posts on the server. The status of the posts will be Fetched.
 
         @param number The number of posts to fetch. The order is newest first.
 
         @see     void listedPosts( const QList\<KBlog::BlogPost\>& )
         @see     void fetchPost( KBlog::BlogPost* )
+        @see     BlogPost::Status
     */
     void listRecentPosts( int number );
 

@@ -309,6 +309,7 @@ void Blogger1Private::slotListRecentPosts(
         kDebug(5323) << "Post with ID:"
                     << post.postId()
                     << "appended in fetchedPostList";
+        post.setStatus( BlogPost::Fetched );
         fetchedPostList.append( post );
       } else {
         kError(5323) << "readPostFromMap failed!";

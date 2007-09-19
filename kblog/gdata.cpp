@@ -701,6 +701,7 @@ void GDataPrivate::slotListRecentPosts(
   ( *it )->datePublished() ), KDateTime::Spec::UTC() ) );
       post.setModificationDateTime( KDateTime( QDateTime::fromTime_t(
   ( *it )->dateUpdated() ), KDateTime::Spec::UTC() ) );
+      post.setStatus( BlogPost::Fetched );
       postList.append( post );
       if( number-- == 0 )
         break;

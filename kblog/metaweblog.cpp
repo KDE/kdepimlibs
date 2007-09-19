@@ -281,8 +281,10 @@ void MetaWeblogPrivate::slotListRecentPosts( const QList<QVariant> &result,
       kDebug(5323) << "MIDDLE:" << ( *it ).typeName();
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
       if ( readPostFromMap( &post, postInfo ) ) {
-        kDebug(5323) << "Emitting listedPost( post.postId()="
-                     << post.postId() << ");";
+        kDebug(5323) << "Post with ID:"
+                    << post.postId()
+                    << "appended in fetchedPostList";
+        post.setStatus( BlogPost::Fetched );
         fetchedPostList << post;
       } else {
         kError(5323) << "readPostFromMap failed!";
