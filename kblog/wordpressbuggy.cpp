@@ -77,10 +77,10 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
   xmlMarkup += "</param>";
   xmlMarkup += "<param><struct>";
   xmlMarkup += "<member><name>description</name>";
-  xmlMarkup += "<value><string><![CDATA["+post->content().toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->content()+"]]></string></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>title</name>";
-  xmlMarkup += "<value><string><![CDATA["+post->title().toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->title()+"]]></string></value>";
   xmlMarkup += "</member><member>";
 
   QList<QString> catList = post->categories();
@@ -90,7 +90,7 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
     QList<QString>::ConstIterator it = catList.begin();
     QList<QString>::ConstIterator end = catList.end();
     for( ; it!=end; it++ ){
-      xmlMarkup += "<data><string><![CDATA[" + ( *it ).toUtf8() + "]]></string></data>";
+      xmlMarkup += "<data><string><![CDATA[" + ( *it ) + "]]></string></data>";
     }
     xmlMarkup += "</array></value>";
     xmlMarkup += "</member><member>";
@@ -110,10 +110,10 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
     arg( (int)post->isTrackBackAllowed() );
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_excerpt</name>";
-  xmlMarkup += "<value><string><![CDATA["+post->summary().toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->summary()+"]]></string></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_keywords</name>";
-  xmlMarkup += "<value><string><![CDATA["+post->tags().join(" ").toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->tags().join(" ")+"]]></string></value>";
   xmlMarkup += "</member></struct></param>";
   xmlMarkup += "<param><value><boolean>"+
     QString( "%1" ).arg( (int)(!post->isPrivate()) )+
@@ -169,10 +169,10 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
   xmlMarkup += "</param>";
   xmlMarkup += "<param><struct>";
   xmlMarkup += "<member><name>description</name>";
-  xmlMarkup += "<value><string><![CDATA["+post->content().toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->content()+"]]></string></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>title</name>";
-  xmlMarkup += "<value><string><![CDATA["+post->title().toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->title()+"]]></string></value>";
   xmlMarkup += "</member><member>";
 
   QList<QString> catList = post->categories();
@@ -182,7 +182,7 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
     QList<QString>::ConstIterator it = catList.begin();
     QList<QString>::ConstIterator end = catList.end();
     for( ; it!=end; it++ ){
-      xmlMarkup += "<data><string><![CDATA[" + ( *it ).toUtf8() + "]]></string></data>";
+      xmlMarkup += "<data><string><![CDATA[" + ( *it ) + "]]></string></data>";
     }
     xmlMarkup += "</array></value>";
     xmlMarkup += "</member><member>";
@@ -207,10 +207,10 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
     arg( (int)post->isTrackBackAllowed() );
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_excerpt</name>";
-  xmlMarkup += "<value><string><![CDATA["+post->summary().toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->summary()+"]]></string></value>";
   xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_keywords</name>";
-  xmlMarkup += "<value><string><![CDATA["+post->tags().join(" ").toUtf8()+"]]></string></value>";
+  xmlMarkup += "<value><string><![CDATA["+post->tags().join(" ")+"]]></string></value>";
   xmlMarkup += "</member></struct></param>";
   xmlMarkup += "<param><value><boolean>"+
     QString( "%1" ).arg( (int)(!post->isPrivate()) )+
