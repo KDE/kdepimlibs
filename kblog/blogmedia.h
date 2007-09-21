@@ -25,7 +25,7 @@
 
 #include <kblog/kblog_export.h>
 
-#include <QtAlgorithms>
+#include <QtCore/QtAlgorithms>
 
 class KUrl;
 
