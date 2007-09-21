@@ -2,6 +2,7 @@
   This file is part of the kblog library.
 
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007 Christian Weilbach <christian_weilbach@web.de>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -44,12 +45,29 @@ LiveJournal::~LiveJournal()
 void LiveJournal::addFriend( const QString &username, int group,
                                 const QColor &fgcolor, const QColor &bgcolor )
 {
-  Q_UNUSED( username );
-  Q_UNUSED( group );
-  Q_UNUSED( fgcolor );
-  Q_UNUSED( bgcolor );
-  //TODO
   // LJ.XMLRPC.editfriends
+  Q_D(LiveJournal); // Enable d-pointer access to the LiveJournalPrivate object
+  unsigned int i = d->mCallCounter++; // Add one to the call counter and assign it
+  d->mCallMapAddFriend[ i ] = username; // Put the post in the map at location i
+  kDebug(5323) << "LiveJournal::addFriend(): username: " << username; // Send a message to the console to state which method we have entered.
+  QList<QVariant> args; // Create the argument list, in this case will just contain the map.
+  QMap<QString,QVariant> map( d->defaultArgs() ); // Create the initial map from the default arguments.
+  QList<QVariant> users;
+  QMap<QString,QVariant> user;
+  user.insert( "username", username );
+  user.insert( "group", group );
+  user.insert( "fgcolor", fgcolor );
+  user.insert( "bgcolor", bgcolor );
+  users << user;
+  map.insert( "add", users );
+  args << map;
+  d->mXmlRpcClient->call("LJ.XMLRPC.editfriends", // The XML-RPC procedure to call.
+                         args, // A list containing all the arguments to pass to the procedure.
+                         this, // The object containing the slot to use on success.
+                         SLOT( slotAddFriend( const QList<QVariant>&, const QVariant& ) ), // The slot to call on success.
+                         this, // The object containing the slot to call on failure.
+                         SLOT( slotError( int, const QString&, const QVariant& ) ), // The slot to call on failure
+                         QVariant( i ) ); // The ID, as we haven't created a post, the location in the map.
 }
 
 void LiveJournal::assignFriendToCategory ( const QString &username,
@@ -65,7 +83,7 @@ void LiveJournal::createPost( KBlog::BlogPost *post )
 {
   Q_D(LiveJournal); // Enable d-pointer access to the LiveJournalPrivate object
   if ( !post ) { // Check if post has a valid memory address (>0)
-    kError(5323) << "Blogger1::createPost: post is null pointer"; // If it doesn't print an error to the console.
+    kError(5323) << "LiveJournal::createPost: post is null pointer"; // If it doesn't print an error to the console.
     return; // If it doesnt, exit the method
   }
   unsigned int i = d->mCallCounter++; // Add one to the call counter and assign it
@@ -73,6 +91,7 @@ void LiveJournal::createPost( KBlog::BlogPost *post )
   kDebug(5323) << "LiveJournal::createPost()"; // Send a message to the console to state which method we have entered.
   QList<QVariant> args; // Create the argument list, in this case will just contain the map.
   QMap<QString,QVariant> map( d->defaultArgs() ); // Create the initial map from the default arguments.
+  map.insert( "lineendings", "pc" ); // PC line endings
   map.insert( "event", post->content() ); // Insert the post's content into the struct.
   map.insert( "subject", post->title() ); // Insert the post's subject into the struct.
   // TODO map.insert( "allowmask", post->categories() ); // We want to use the allowmask to use categories/tags
@@ -104,19 +123,6 @@ void LiveJournal::deleteFriend( const QString &username )
   // LJ.XMLRPC.editfriends
 }
 
-void LiveJournal::expireCookie( const QString &cookie )
-{
-  Q_UNUSED( cookie );
-  //TODO
-  // LJ.XMLRPC.sessionexpire
-}
-
-void LiveJournal::expireAllCookies()
-{
-  //TODO
-  // LJ.XMLRPC.sessionexpire
-}
-
 void LiveJournal::fetchPost( KBlog::BlogPost *post )
 {
   Q_UNUSED( post );
@@ -127,13 +133,6 @@ void LiveJournal::fetchPost( KBlog::BlogPost *post )
 QString LiveJournal::fullName() const
 {
   return d_func()->mFullName;
-}
-
-void LiveJournal::generateCookie( const GenerateCookieOptions& options )
-{
-  Q_UNUSED( options );
-  //TODO
-  // LJ.XMLRPC.sessiongenerate
 }
 
 QString LiveJournal::interfaceName() const
@@ -185,9 +184,40 @@ void LiveJournal::listRecentPosts( int number )
 
 void LiveJournal::modifyPost( KBlog::BlogPost *post )
 {
-  Q_UNUSED( post );
-  //TODO
   // LJ.XMLRPC.editevent
+  Q_D(LiveJournal); // Enable d-pointer access to the LiveJournalPrivate object
+  if ( !post ) { // Check if post has a valid memory address (>0)
+    kError(5323) << "LiveJournal::modifyPost: post is null pointer"; // If it doesn't print an error to the console.
+    return; // If it doesnt, exit the method
+  }
+  unsigned int i = d->mCallCounter++; // Add one to the call counter and assign it
+  d->mCallMap[ i ] = post; // Put the post in the map at location i
+  kDebug(5323) << "LiveJournal::modifyPost()"; // Send a message to the console to state which method we have entered.
+  QList<QVariant> args; // Create the argument list, in this case will just contain the map.
+  QMap<QString,QVariant> map( d->defaultArgs() ); // Create the initial map from the default arguments.
+  map.insert( "lineendings", "pc" ); // PC line endings
+  map.insert( "event", post->content() ); // Insert the post's content into the struct.
+  map.insert( "subject", post->title() ); // Insert the post's subject into the struct.
+  // TODO map.insert( "allowmask", post->categories() ); // We want to use the allowmask to use categories/tags
+  KDateTime date = post->creationDateTime(); // Get the date of the post's creation
+  int year = date.toString( "%Y" ).toInt(); // Get the year from the date using a format string and converting string to an integer
+  int month = date.toString( "%m" ).toInt(); // Get the month from the date using a format string and converting string to an integer
+  int day = date.toString( "%d" ).toInt(); // Get the day from the date using a format string and converting string to an integer
+  int hour = date.toString( "%H" ).toInt(); // Get the hour from the date using a format string and converting string to an integer
+  int minute = date.toString( "%M" ).toInt(); // Get the minute from the date using a format string and converting string to an integer
+  map.insert( "year", year ); // Insert the year into the struct.
+  map.insert( "mon", month ); // Insert the month into the struct.
+  map.insert( "day", day ); // Insert the day into the struct.
+  map.insert( "hour", hour ); // Insert the hour into the struct.
+  map.insert( "min", minute ); // Insert the minute into the struct.
+  args << map ; // Add the map to the arguments list.
+  d->mXmlRpcClient->call("LJ.XMLRPC.editevent", // The XML-RPC procedure to call.
+                         args, // A list containing all the arguments to pass to the procedure.
+                         this, // The object containing the slot to use on success.
+                         SLOT( slotCreatePost( const QList<QVariant>&, const QVariant& ) ), // The slot to call on success.
+                         this, // The object containing the slot to call on failure.
+                         SLOT( slotError( int, const QString&, const QVariant& ) ), // The slot to call on failure
+                         QVariant( i ) ); // The ID, as we haven't created a post, the location in the map.
 }
 
 void LiveJournal::removePost( KBlog::BlogPost *post )
@@ -259,6 +289,22 @@ QMap<QString,QVariant> LiveJournalPrivate::defaultArgs()
   return args; // return the QMap.
 }
 
+void LiveJournalPrivate::generateCookie( const GenerateCookieOptions& options )
+{
+  Q_UNUSED( options );
+  //TODO
+  // LJ.XMLRPC.sessiongenerate
+}
+
+
+void LiveJournalPrivate::expireCookie( const QString &cookie, bool expireAll )
+{
+  Q_UNUSED( cookie );
+  Q_UNUSED( expireAll );
+  //TODO
+  // LJ.XMLRPC.sessionexpire
+}
+
 bool LiveJournalPrivate::readPostFromMap(
     BlogPost *post, const QMap<QString, QVariant> &postInfo )
 {
@@ -317,22 +363,13 @@ void LiveJournalPrivate::slotDeleteFriend(
   //TODO
 }
 
-void LiveJournalPrivate::slotExpireCookie(
-    const QList<QVariant> &result, const QVariant &id )
-{
-  Q_UNUSED( result );
-  Q_UNUSED( id );
-  //TODO
-}
-
-void LiveJournalPrivate::slotExpireAllCookies(
-    const QList<QVariant> &result, const QVariant &id )
-{
-  Q_UNUSED( result );
-  Q_UNUSED( id );
-  //TODO
-}
-
+// void LiveJournalPrivate::slotExpireCookie(
+//     const QList<QVariant> &result, const QVariant &id )
+// {
+//   Q_UNUSED( result );
+//   Q_UNUSED( id );
+//   //TODO
+// }
 
 void LiveJournalPrivate::slotError( int number,
     const QString &errorString, const QVariant &id )
@@ -357,14 +394,14 @@ void LiveJournalPrivate::slotFetchUserInfo(
   Q_UNUSED( id );
   //TODO
 }
-
+/*
 void LiveJournalPrivate::slotGenerateCookie(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
   Q_UNUSED( id );
   //TODO
-}
+}*/
 
 void LiveJournalPrivate::slotListCategories(
     const QList<QVariant> &result, const QVariant &id )

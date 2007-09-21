@@ -86,10 +86,6 @@ class KBLOG_EXPORT LiveJournal : public Blog
 
     virtual void deleteFriend( const QString &username );
 
-    virtual void expireCookie( const QString &cookie );
-
-    virtual void expireAllCookies();
-
     /**
       Fetch the Post with postId.
       @param postId is the id of the post on the server.
@@ -101,15 +97,6 @@ class KBLOG_EXPORT LiveJournal : public Blog
     virtual void fetchUserInfo();
 
     QString fullName() const;
-
-    enum GenerateCookieOption {
-      LongExpiriation = 0x01,
-      FixedIP = 0x02
-    };
-    Q_DECLARE_FLAGS(GenerateCookieOptions,
-                                        GenerateCookieOption)
-
-    virtual void generateCookie( const GenerateCookieOptions& options );
 
     /**
       Returns the  of the inherited object.
@@ -182,16 +169,14 @@ class KBLOG_EXPORT LiveJournal : public Blog
                     const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotDeleteFriend(
                     const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotExpireCookie(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotExpireAllCookies(
-                    const QList<QVariant>&, const QVariant& ))
+//     Q_PRIVATE_SLOT(d_func(), void slotExpireCookie(
+//                     const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotFetchPost(
                     const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotFetchUserInfo(
                     const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotGenerateCookie(
-                    const QList<QVariant>&, const QVariant& ))
+//     Q_PRIVATE_SLOT(d_func(), void slotGenerateCookie(
+//                     const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotListCategories(
                     const QList<QVariant>&, const QVariant& ))
     Q_PRIVATE_SLOT(d_func(), void slotListFriends(
@@ -211,7 +196,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
     Q_PRIVATE_SLOT(d_func(), void slotError( int ,
                     const QString&, const QVariant& ))
 };
-Q_DECLARE_OPERATORS_FOR_FLAGS(LiveJournal::GenerateCookieOptions)
+// Q_DECLARE_OPERATORS_FOR_FLAGS(LiveJournal::GenerateCookieOptions)
 
 } //namespace KBlog
 #endif

@@ -2,6 +2,7 @@
   This file is part of the kblog library.
 
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007 Christian Weilbach <christian_weilbach@web.de>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -36,6 +37,7 @@ class LiveJournalPrivate : public BlogPrivate
     QMap<QString,QString> mCategories;
     KXmlRpc::Client *mXmlRpcClient;
     QMap<unsigned int,KBlog::BlogPost*> mCallMap;
+    QMap<unsigned int,QString> mCallMapAddFriend;
     unsigned int mCallCounter;
     QString mServerMessage;
     QString mUserId;
@@ -43,6 +45,18 @@ class LiveJournalPrivate : public BlogPrivate
 
     LiveJournalPrivate();
     virtual ~LiveJournalPrivate();
+
+    enum GenerateCookieOption {
+      LongExpiriation = 0x01,
+      FixedIP = 0x02,
+    };
+    Q_DECLARE_FLAGS(GenerateCookieOptions,
+                                        GenerateCookieOption)
+
+    virtual void generateCookie( const GenerateCookieOptions& options );
+
+    virtual void expireCookie( const QString &cookie, bool expireAll );
+
     virtual QMap<QString,QVariant> defaultArgs();
 
     virtual void slotAddFriend( const QList<QVariant> &result,
@@ -53,17 +67,15 @@ class LiveJournalPrivate : public BlogPrivate
                                     const QVariant &id );
     virtual void slotDeleteFriend( const QList<QVariant> &result,
                                    const QVariant &id );
-    virtual void slotExpireCookie( const QList<QVariant> &result,
-                                   const QVariant &id );
-    virtual void slotExpireAllCookies( const QList<QVariant> &result,
-                               const QVariant &id );
+//     virtual void slotExpireCookie( const QList<QVariant> &result,
+//                                    const QVariant &id );
     virtual void slotError( int, const QString&, const QVariant& );
     virtual void slotFetchPost( const QList<QVariant> &result,
                                    const QVariant &id );
     virtual void slotFetchUserInfo( const QList<QVariant> &result,
                                     const QVariant &id );
-    virtual void slotGenerateCookie( const QList<QVariant> &result,
-                             const QVariant &id );
+//     virtual void slotGenerateCookie( const QList<QVariant> &result,
+//                              const QVariant &id );
     virtual void slotListCategories( const QList<QVariant> &result,
                              const QVariant &id );
     virtual void slotListFriends( const QList<QVariant> &result,
