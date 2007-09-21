@@ -48,7 +48,7 @@ class LiveJournalPrivate : public BlogPrivate
 
     enum GenerateCookieOption {
       LongExpiriation = 0x01,
-      FixedIP = 0x02,
+      FixedIP = 0x02
     };
     Q_DECLARE_FLAGS(GenerateCookieOptions,
                                         GenerateCookieOption)
