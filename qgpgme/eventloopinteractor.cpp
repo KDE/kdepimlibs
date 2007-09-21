@@ -66,7 +66,7 @@ namespace {
         const QPointer<T_Enableable> o;
         const bool wasEnabled;
     public:
-        explicit QDisabler( T_Enableable * t ) : o( t ), wasEnabled( o && o->isEnabled() ) { t->setEnabled( false ); }
+        explicit QDisabler( T_Enableable * t ) : o( t ), wasEnabled( o && o->isEnabled() ) { if ( t ) t->setEnabled( false ); }
         ~QDisabler() { if ( o ) o->setEnabled( wasEnabled ); }
     };
 }
