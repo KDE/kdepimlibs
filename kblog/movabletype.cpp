@@ -53,75 +53,6 @@ MovableType::~MovableType()
   kDebug(5323) << "~MovableType()";
 }
 
-void MovableType::createPost( KBlog::BlogPost *post )
-{
-  //TODO 3 new keys are:
-  // String mt_convert_breaks, the value for the convert_breaks field
-  // String mt_text_more, the value for the additional entry text
-  // array mt_tb_ping_urls, the list of TrackBack ping URLs for this entry
-  Q_D(MovableType);
-  if ( !post ) {
-    kError(5323) << "MovableType::createPost: post is a null pointer";
-    emit error ( Other, i18n( "Post is a null pointer." ) );
-    return;
-  }
-  unsigned int i = d->mCallCounter++;
-  d->mCallMap[ i ] = post;
-  kDebug(5323) << "Creating new Post with blogId" << blogId();
-  QList<QVariant> args( d->defaultArgs( blogId() ) );
-  QMap<QString, QVariant> map;
-  map["categories"] = post->categories();
-  map["description"] = post->content();
-  map["title"] = post->title();
-  map["dateCreated"] = post->creationDateTime().toUtc().dateTime();
-  map["mt_allow_comments"] = (int)post->isCommentAllowed();
-  map["mt_allow_pings"] = (int)post->isTrackBackAllowed();
-  map["mt_excerpt"] = post->summary();
-  map["mt_keywords"] = post->tags(); // TODO some convertion needed?
-  //map["mt_tb_ping_urls"] check for that, i think this should only be done on the server.
-  args << map;
-  args << QVariant( !post->isPrivate() );
-  d->mXmlRpcClient->call (
-    "metaWeblog.newPost", args,
-    this, SLOT( slotCreatePost( const QList<QVariant>&, const QVariant& ) ),
-    this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
-}
-
-void MovableType::modifyPost( KBlog::BlogPost *post )
-{
-  //TODO 3 new keys are:
-  // String mt_convert_breaks, the value for the convert_breaks field
-  // String mt_text_more, the value for the additional entry text
-  // array mt_tb_ping_urls, the list of TrackBack ping URLs for this entry
-  Q_D(MovableType);
-  if ( !post ) {
-    kError(5323) << "MovableType::modifyPost: post is a null pointer";
-    emit error ( Other, i18n( "Post is a null pointer." ) );
-    return;
-  }
-  unsigned int i = d->mCallCounter++;
-  d->mCallMap[ i ] = post;
-  kDebug(5323) << "Uploading Post with postId" << post->postId();
-
-  QList<QVariant> args( d->defaultArgs( post->postId() ) );
-  QMap<QString, QVariant> map;
-  map["categories"] = post->categories();
-  map["description"] = post->content();
-  map["title"] = post->title();
-  map["lastModified"] = post->modificationDateTime().toUtc().dateTime();
-  map["dateCreated"] = post->creationDateTime().toUtc().dateTime(); // this could be lastModified, too, which would be more correct, but is not used by the backends.
-  map["mt_allow_comments"] = (int)post->isCommentAllowed();
-  map["mt_allow_pings"] = (int)post->isTrackBackAllowed();
-  map["mt_excerpt"] = post->summary();
-  map["mt_keywords"] = post->tags(); // TODO some conversion needed?
-  args << map;
-  args << QVariant( !post->isPrivate() );
-  d->mXmlRpcClient->call(
-    "metaWeblog.editPost", args,
-     this, SLOT( slotModifyPost( const QList<QVariant>&, const QVariant& ) ),
-     this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
-}
-
 QString MovableType::interfaceName() const
 {
   return QLatin1String( "Movable Type" );
@@ -251,6 +182,32 @@ void MovableTypePrivate::slotListTrackBackPings(
   }
   kDebug(5323) << "Emitting listedTrackBackPings()";
   emit q->listedTrackBackPings( post, trackBackList );
+}
+
+
+bool MovableTypePrivate::readArgsFromPost(
+    QList<QVariant> *args, const BlogPost& post )
+{
+  //TODO 3 new keys are:
+  // String mt_convert_breaks, the value for the convert_breaks field
+  // String mt_text_more, the value for the additional entry text
+  // array mt_tb_ping_urls, the list of TrackBack ping URLs for this entry
+  if ( !args ) {
+    return false;
+  }
+  QMap<QString, QVariant> map;
+  map["categories"] = post.categories();
+  map["description"] = post.content();
+  map["title"] = post.title();
+  map["dateCreated"] = post.creationDateTime().toUtc().dateTime();
+  map["mt_allow_comments"] = (int)post.isCommentAllowed();
+  map["mt_allow_pings"] = (int)post.isTrackBackAllowed();
+  map["mt_excerpt"] = post.summary();
+  map["mt_keywords"] = post.tags(); // TODO some convertion needed?
+  //map["mt_tb_ping_urls"] check for that, i think this should only be done on the server.
+  *args << map;
+  *args << QVariant( !post.isPrivate() );
+  return true;
 }
 
 #include "movabletype.moc"

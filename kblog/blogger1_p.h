@@ -41,7 +41,6 @@ class Blogger1Private : public BlogPrivate
     QMap<unsigned int,KBlog::BlogPost*> mCallMap;
     Blogger1Private();
     virtual ~Blogger1Private();
-    QList<QVariant> defaultArgs( const QString &id = QString() );
 
     virtual void slotFetchUserInfo( const QList<QVariant> &result,
                                    const QVariant &id );
@@ -62,9 +61,19 @@ class Blogger1Private : public BlogPrivate
 
     Q_DECLARE_PUBLIC(KBlog::Blogger1)
 
-  private:
+//   private:
+    enum FunctionToCall {
+      GetRecentPosts,
+      CreatePost,
+      ModifyPost,
+      RemovePost,
+      FetchPost
+    };
+    virtual QList<QVariant> defaultArgs( const QString &id = QString() );
     virtual bool readPostFromMap( BlogPost *post,
                                      const QMap<QString, QVariant> &postInfo );
+    virtual bool readArgsFromPost( QList<QVariant> *args, const BlogPost& post );
+    virtual QString getCallFromFunction( FunctionToCall type );
 };
 
 }

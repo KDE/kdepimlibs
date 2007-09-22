@@ -99,7 +99,7 @@ void Blogger1::listRecentPosts( int number )
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     args << QVariant( number );
     d->mXmlRpcClient->call(
-      "blogger.getRecentPosts", args,
+      d->getCallFromFunction( Blogger1Private::GetRecentPosts ), args,
       this, SLOT( slotListRecentPosts( const QList<QVariant>&, const QVariant& ) ),
       this, SLOT( slotError( int, const QString&, const QVariant& ) ),
                QVariant( number ) );
@@ -117,7 +117,7 @@ void Blogger1::fetchPost( KBlog::BlogPost *post )
      unsigned int i= d->mCallCounter++; // multithreading problem? must be executed at once
      d->mCallMap[ i ] = post;
      d->mXmlRpcClient->call(
-       "blogger.getPost", args,
+       d->getCallFromFunction( Blogger1Private::FetchPost ), args,
        this, SLOT( slotFetchPost( const QList<QVariant>&, const QVariant& ) ),
        this, SLOT( slotError( int, const QString&, const QVariant& ) ),
                 QVariant( i ) );
@@ -135,17 +135,9 @@ void Blogger1::modifyPost( KBlog::BlogPost *post )
     unsigned int i= d->mCallCounter++;
     d->mCallMap[ i ] = post;
     QList<QVariant> args( d->defaultArgs( post->postId() ) );
-    QStringList categories = post->categories();
-    QString content = "<title>" + post->title() + "</title>";
-    QStringList::const_iterator it;
-    for ( it = categories.constBegin(); it != categories.constEnd(); ++it ) {
-      content += "<category>" + *it + "</category>";
-    }
-    content += post->content();
-    args << QVariant( content );
-    args << QVariant( !post->isPrivate() );
+    d->readArgsFromPost( &args, *post );
     d->mXmlRpcClient->call(
-      "blogger.editPost", args,
+      d->getCallFromFunction( Blogger1Private::ModifyPost ), args,
       this, SLOT( slotModifyPost( const QList<QVariant>&, const QVariant& ) ),
       this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
@@ -161,17 +153,9 @@ void Blogger1::createPost( KBlog::BlogPost *post )
     d->mCallMap[ i ] = post;
     kDebug(5323) << "Creating new Post with blogid" << blogId();
     QList<QVariant> args( d->defaultArgs( blogId() ) );
-    QStringList categories = post->categories();
-    QString content = "<title>" + post->title() + "</title>";
-    QStringList::const_iterator it;
-    for ( it = categories.constBegin(); it != categories.constEnd(); ++it ) {
-      content += "<category>" + *it + "</category>";
-    }
-    content += post->content();
-    args << QVariant( content );
-    args << QVariant( !post->isPrivate() );
+    d->readArgsFromPost( &args, *post );
     d->mXmlRpcClient->call(
-      "blogger.newPost", args,
+      d->getCallFromFunction( Blogger1Private::CreatePost ), args,
       this, SLOT( slotCreatePost( const QList<QVariant>&, const QVariant& ) ),
       this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
@@ -189,7 +173,7 @@ void Blogger1::removePost( KBlog::BlogPost *post )
  QList<QVariant> args( d->defaultArgs( post->postId() ) );
  args << QVariant( true ); // Publish must be set to remove post.
  d->mXmlRpcClient->call(
-   "blogger.deletePost", args,
+   d->getCallFromFunction( Blogger1Private::RemovePost ), args,
    this, SLOT( slotRemovePost( const QList<QVariant>&, const QVariant& ) ),
    this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
@@ -501,6 +485,36 @@ bool Blogger1Private::readPostFromMap(
   post->setContent( contents );
   post->setCategories( category );
   return true;
+}
+
+bool Blogger1Private::readArgsFromPost(
+    QList<QVariant> *args, const BlogPost& post )
+{
+  if ( !args ) {
+    return false;
+  }
+  QStringList categories = post.categories();
+  QString content = "<title>" + post.title() + "</title>";
+  QStringList::const_iterator it;
+  for ( it = categories.constBegin(); it != categories.constEnd(); ++it ) {
+    content += "<category>" + *it + "</category>";
+  }
+  content += post.content();
+  *args << QVariant( content );
+  *args << QVariant( !post.isPrivate() );
+  return true;
+}
+
+QString Blogger1Private::getCallFromFunction( FunctionToCall type )
+{
+  switch ( type ) {
+    case GetRecentPosts: return "blogger.getRecentPosts";
+    case CreatePost:        return "blogger.newPost";
+    case ModifyPost:       return "blogger.editPost";
+    case RemovePost:     return "blogger.deletePost";
+    case FetchPost:        return "blogger.getPost";
+    default: return QString::null;
+  }
 }
 
 #include "blogger1.moc"

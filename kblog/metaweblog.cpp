@@ -56,18 +56,6 @@ QString MetaWeblog::interfaceName() const
   return QLatin1String( "MetaWeblog" );
 }
 
-void MetaWeblog::listRecentPosts( int number )
-{
-    Q_D(MetaWeblog);
-    kDebug(5323) << "Fetching List of Posts...";
-    QList<QVariant> args( d->defaultArgs( blogId() ) );
-    args << QVariant( number );
-    d->mXmlRpcClient->call(
-      "metaWeblog.getRecentPosts", args,
-      this, SLOT( slotListRecentPosts( const QList<QVariant>&, const QVariant& ) ),
-      this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( number ) );
-}
-
 void MetaWeblog::listCategories()
 {
     Q_D(MetaWeblog);
@@ -77,76 +65,6 @@ void MetaWeblog::listCategories()
       "metaWeblog.getCategories", args,
       this, SLOT( slotListCategories( const QList<QVariant>&, const QVariant& ) ),
       this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
-}
-
-void MetaWeblog::fetchPost( KBlog::BlogPost *post )
-{
-  Q_D(MetaWeblog);
-  if ( !post ) {
-    kError(5323) << "MetaWeblog::fetchPost: post is a null pointer";
-    emit error ( Other, i18n( "Post is a null pointer." ) );
-    return;
-  }
-  unsigned int i = d->mCallCounter++;
-  d->mCallMap[ i ] = post;
-  kError(5323) << "Fetching Post with url" << post->postId();
-  QList<QVariant> args( d->defaultArgs( post->postId() ) );
-  d->mXmlRpcClient->call(
-    "metaWeblog.getPost", args,
-    this, SLOT( slotFetchPost( const QList<QVariant>&, const QVariant& ) ),
-    this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
-}
-
-void MetaWeblog::modifyPost( KBlog::BlogPost *post )
-{
-  Q_D(MetaWeblog);
-  if ( !post ) {
-    kError(5323) << "MetaWeblog::modifyPost: post is a null pointer";
-    emit error ( Other, i18n( "Post is a null pointer." ) );
-    return;
-  }
-  unsigned int i = d->mCallCounter++;
-  d->mCallMap[ i ] = post;
-  kDebug(5323) << "Uploading Post with postId" << post->postId();
-
-  QList<QVariant> args( d->defaultArgs( post->postId() ) );
-  QMap<QString, QVariant> map;
-  map["categories"] = post->categories();
-  map["description"] = post->content();
-  map["title"] = post->title();
-  map["lastModified"] = post->modificationDateTime().toUtc().dateTime();
-  map["dateCreated"] = post->creationDateTime().toUtc().dateTime(); // this could be lastModified, too, which would be more correct, but is not used by the backends.
-  args << map;
-  args << QVariant( !post->isPrivate() );
-  d->mXmlRpcClient->call(
-    "metaWeblog.editPost", args,
-     this, SLOT( slotModifyPost( const QList<QVariant>&, const QVariant& ) ),
-     this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
-}
-
-void MetaWeblog::createPost( KBlog::BlogPost *post )
-{
-  Q_D(MetaWeblog);
-  if ( !post ) {
-    kError(5323) << "MetaWeblog::createPost: post is a null pointer";
-    emit error ( Other, i18n( "Post is a null pointer." ) );
-    return;
-  }
-  unsigned int i = d->mCallCounter++;
-  d->mCallMap[ i ] = post;
-  kDebug(5323) << "Creating new Post with blogId" << blogId();
-  QList<QVariant> args( d->defaultArgs( blogId() ) );
-  QMap<QString, QVariant> map;
-  map["categories"] = post->categories();
-  map["description"] = post->content();
-  map["title"] = post->title();
-  map["dateCreated"] = post->creationDateTime().toUtc().dateTime();
-  args << map;
-  args << QVariant( !post->isPrivate() );
-  d->mXmlRpcClient->call (
-    "metaWeblog.newPost", args,
-    this, SLOT( slotCreatePost( const QList<QVariant>&, const QVariant& ) ),
-    this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
 void MetaWeblog::createMedia( KBlog::BlogMedia *media )
@@ -324,4 +242,32 @@ bool MetaWeblogPrivate::readPostFromMap( BlogPost *post,
   return true;
 }
 
+bool MetaWeblogPrivate::readArgsFromPost(
+    QList<QVariant> *args, const BlogPost& post )
+{
+  if ( !args ) {
+    return false;
+  }
+  QMap<QString, QVariant> map;
+  map["categories"] = post.categories();
+  map["description"] = post.content();
+  map["title"] = post.title();
+  map["lastModified"] = post.modificationDateTime().toUtc().dateTime();
+  map["dateCreated"] = post.creationDateTime().toUtc().dateTime();
+  *args << map;
+  *args << QVariant( !post.isPrivate() );
+  return true;
+}
+
+QString MetaWeblogPrivate::getCallFromFunction( FunctionToCall type )
+{
+  switch ( type ) {
+    case GetRecentPosts: return "metaWeblog.getRecentPosts";
+    case CreatePost:        return "metaWeblog.newPost";
+    case ModifyPost:       return "metaWeblog.editPost";
+    case RemovePost:     return "metaWeblog.deletePost";
+    case FetchPost:        return "metaWeblog.getPost";
+    default: return QString::null;
+  }
+}
 #include "metaweblog.moc"

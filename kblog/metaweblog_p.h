@@ -38,15 +38,17 @@ class MetaWeblogPrivate : public Blogger1Private
     QMap<unsigned int,KBlog::BlogMedia*> mCallMediaMap;
     MetaWeblogPrivate();
     ~MetaWeblogPrivate();
-    QList<QVariant> defaultArgs( const QString &id = QString() );
     virtual void slotListCategories( const QList<QVariant> &result,
                                      const QVariant &id );
     virtual void slotCreateMedia( const QList<QVariant> &result,
                                   const QVariant &id );
     Q_DECLARE_PUBLIC(MetaWeblog)
   private:
+    QList<QVariant> defaultArgs( const QString &id = QString() );
     bool readPostFromMap( BlogPost *post,
                              const QMap<QString, QVariant> &postInfo );
+    bool readArgsFromPost( QList<QVariant> *args, const BlogPost& post );
+    QString getCallFromFunction( FunctionToCall type );
 };
 
 }

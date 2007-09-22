@@ -84,50 +84,11 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
     QString interfaceName() const;
 
     /**
-      List recent posts on the server. The status of the posts will be Fetched.
-
-      @param number The number of posts to fetch. Latest first.
-
-      @see     void listedRecentPosts( QList\<KBlog::BlogPost\>& )
-      @see     BlogPost::Status
-    */
-    void listRecentPosts( int number );
-
-    /**
       List the categories of the blog. 
 
       @see listedCategories( const QList\<QMap\<QString,QString\> \>& )
     */
     virtual void listCategories();
-
-    /**
-      Fetch the Post with postId.
-      @param post is the post with its id set to get the corresponding
-      post. 
-
-      @see BlogPost::setPostId( const QString& )
-      @see fetchedPost( KBlog::BlogPost *post )
-    */
-    void fetchPost( KBlog::BlogPost *post );
-
-    /**
-      Modify a post on server.
-
-      @param post is used to send the modified post including the
-      correct postId from it to the server.
-
-      @see modifiedPost( KBlog::BlogPost *post )
-    */
-    void modifyPost( KBlog::BlogPost *post );
-
-    /**
-      Create a new post on server.
-
-      @param post This post to send.
-
-      @see createdPost( KBlog::BlogPost *post )
-    */
-    void createPost( KBlog::BlogPost *post );
 
     /**
       Create a new media object, e.g. picture, on server.

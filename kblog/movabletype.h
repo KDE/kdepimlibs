@@ -74,24 +74,6 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     virtual ~MovableType();
 
     /**
-      Create a new post on server.
-
-      @param post is send to the server.
-    */
-    void createPost( KBlog::BlogPost *post );
-
-    /**
-      Modify a post on server.
-
-      @param post The post to be modified on the
-      server. You need to set its id correctly.
-
-      @see BlogPost::setPostId( const QString& )
-      @see modifiedPost( KBlog::BlogPost* )
-    */
-    void modifyPost( KBlog::BlogPost *post );
-
-    /**
       Returns the  of the inherited object.
     */
     QString interfaceName() const;
