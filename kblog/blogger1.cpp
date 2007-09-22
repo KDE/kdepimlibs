@@ -376,17 +376,23 @@ void Blogger1Private::slotCreatePost(
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug (5323) << "TOP:" << result[0].typeName();
-  if ( result[0].type() != QVariant::String ) {
-    kError(5323) << "Could not read the postId, not a string.";
+  if ( result[0].type() != QVariant::String && result[0].type() != QVariant::Int ) {
+    kError(5323) << "Could not read the postId, not a string or an integer.";
     emit q->errorPost( Blogger1::ParsingError,
-                          i18n( "Could not read the postId, not a string." ),
+                          i18n( "Could not read the postId, not a string or an integer." ),
                           post );
   } else {
-    post->setPostId( result[0].toString() );
+    QString id;
+    if( result[0].type() == QVariant::String )
+      id = result[0].toString();
+    if( result[0].type() == QVariant::Int )
+      id = QString( "%1" ).arg( result[0].toInt() );
+    post->setPostId( id );
     post->setStatus( KBlog::BlogPost::Created );
     emit q->createdPost( post );
     kDebug(5323) << "emitting createdPost()" <<
-             "for" << result[0].toInt();
+             "for title: \"" << post->title() << 
+             "\" server id: " << id;
   }
 
 }
@@ -411,7 +417,8 @@ void Blogger1Private::slotModifyPost(
   } else {
     post->setStatus( KBlog::BlogPost::Modified );
     emit q->modifiedPost( post );
-    kDebug(5323) << "emitting modifiedPost()";
+    kDebug(5323) << "emitting modifiedPost() for title: \""
+                            << post->title() << "\"";
   }
 }
 
