@@ -122,24 +122,6 @@ void MovableType::modifyPost( KBlog::BlogPost *post )
      this, SLOT ( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
-void MovableType::fetchPost( KBlog::BlogPost *post )
-{
-  Q_D(MovableType);
-  if ( !post ) {
-    kError(5323) << "MovableType::fetchPost: post is a null pointer";
-    emit error ( Other, i18n( "Post is a null pointer." ) );
-    return;
-  }
-  unsigned int i = d->mCallCounter++;
-  d->mCallMap[ i ] = post;
-  kDebug(5323) << "Fetching Post with url" << post->postId();
-  QList<QVariant> args( d->defaultArgs( post->postId() ) );
-  d->mXmlRpcClient->call(
-    "metaWeblog.getPost", args,
-    this, SLOT( slotFetchPost( const QList<QVariant>&, const QVariant& ) ),
-    this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
-}
-
 QString MovableType::interfaceName() const
 {
   return QLatin1String( "Movable Type" );
@@ -195,6 +177,7 @@ bool MovableTypePrivate::readPostFromMap(
 {
 
   // FIXME: integrate error handling
+  kDebug(5323) << "readPostFromMap()";
   if ( !post ) {
     return false;
   }
@@ -238,118 +221,6 @@ bool MovableTypePrivate::readPostFromMap(
   return true;
 }
 
-void MovableTypePrivate::slotCreatePost(
-    const QList<QVariant> &result, const QVariant &id )
-{
-  Q_Q(MovableType);
-
-  KBlog::BlogPost* post = mCallMap[ id.toInt() ];
-  mCallMap.remove( id.toInt() );
-
-  kDebug(5323) << "MovableType::slotCreatePost";
-  //array of structs containing ISO.8601
-  // dateCreated, String userid, String postid, String content;
-  // TODO: Time zone for the dateCreated!
-  kDebug(5323) << "TOP:" << result[0].typeName();
-  if ( result[0].type() != QVariant::String ) {
-    kError(5323) << "Could not read the postId, not a string.";
-    emit q->errorPost( MovableType::ParsingError,
-                          i18n( "Could not read the postId, not a string." ),
-                          post );
-  } else {
-     post->setPostId( result[0].toString() );
-     post->setStatus( BlogPost::Created );
-     emit q->createdPost( post );
-    kDebug(5323) << "emitting createdPost(" << result[0].toString() << ")";
-  }
-}
-
-void MovableTypePrivate::slotError( int number,
-    const QString &errorString, const QVariant &id )
-{
-  Q_Q(MovableType);
-  Q_UNUSED( number );
-  BlogPost *post = mCallMap[ id.toInt() ];
-
-  emit q->errorPost( MovableType::XmlRpc, errorString, post );
-}
-
-void MovableTypePrivate::slotFetchPost(
-    const QList<QVariant> &result, const QVariant &id )
-{
-  Q_Q(MovableType);
-
-  KBlog::BlogPost* post = mCallMap[ id.toInt() ];
-  mCallMap.remove( id.toInt() );
-
-  kDebug(5323) << "MovableType::slotFetchPost";
-  //array of structs containing ISO.8601
-  // dateCreated, String userid, String postid, String content;
-  // TODO: Time zone for the dateCreated!
-  kDebug(5323) << "TOP:" << result[0].typeName();
-  if ( result[0].type() != QVariant::Map ) {
-    kError(5323) << "Could not fetch post out of the result from the server.";
-    emit q->errorPost( MovableType::ParsingError,
-                          i18n( "Could not fetch post out of the "
-                                "result from the server." ), post );
-  } else {
-    const QMap<QString, QVariant> postInfo = result[0].toMap();
-    if ( readPostFromMap( post, postInfo ) ) {
-      kDebug(5323) << "Emitting fetchedPost( post.postId()="
-                   << post->postId() << ");";
-      post->setStatus( BlogPost::Fetched );
-      emit q->fetchedPost( post );
-    } else {
-      kError(5323) << "readPostFromMap failed!";
-      emit q->errorPost( MovableType::ParsingError,
-                            i18n( "Could not read post." ), post );
-    }
-  }
-}
-
-void MovableTypePrivate::slotListRecentPosts(
-    const QList<QVariant> &result, const QVariant &id )
-{
-  Q_Q(MovableType);
-
-  int count = id.toInt();
-
-  QList <BlogPost> fetchedPostList;
-
-  kDebug(5323) << "MovableType::slotListRecentPosts";
-  kDebug(5323) << "TOP:" << result[0].typeName();
-  if ( result[0].type() != QVariant::List ) {
-    kError(5323) << "Could not fetch list of posts out of the"
-                 << "result from the server.";
-    emit q->error( MovableType::ParsingError,
-                   i18n( "Could not fetch list of posts out of the "
-                         "result from the server." ) );
-  } else {
-    const QList<QVariant> postReceived = result[0].toList();
-    QList<QVariant>::ConstIterator it = postReceived.begin();
-    QList<QVariant>::ConstIterator end = postReceived.end();
-    for ( ; it != end; ++it ) {
-      BlogPost post;
-      kDebug(5323) << "MIDDLE:" << ( *it ).typeName();
-      const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-      if ( readPostFromMap( &post, postInfo ) ) {
-        kDebug(5323) << "Post with ID:"
-                    << post.postId()
-                    << "appended in fetchedPostList";
-        post.setStatus( BlogPost::Fetched );
-        fetchedPostList << post;
-      } else {
-        kError(5323) << "readPostFromMap failed!";
-        emit q->error( MovableType::ParsingError,
-                       i18n( "Could not read post." ) );
-      }
-      if( --count == 0 ) break;
-    }
-  } //FIXME should we emit here? (see below, too)
-  kDebug(5323) << "Emitting listRecentPostsFinished()";
-  emit q->listedRecentPosts( fetchedPostList );
-}
-
 void MovableTypePrivate::slotListTrackBackPings(
     const QList<QVariant> &result, const QVariant &id )
 {
@@ -380,31 +251,6 @@ void MovableTypePrivate::slotListTrackBackPings(
   }
   kDebug(5323) << "Emitting listedTrackBackPings()";
   emit q->listedTrackBackPings( post, trackBackList );
-}
-
-void MovableTypePrivate::slotModifyPost(
-    const QList<QVariant> &result, const QVariant &id )
-{
-  Q_Q(MovableType);
-
-  KBlog::BlogPost* post = mCallMap[ id.toInt() ];
-  mCallMap.remove( id.toInt() );
-
-  kDebug(5323) << "MovableType::slotModifyPost";
-  //array of structs containing ISO.8601
-  // dateCreated, String userid, String postid, String content;
-  // TODO: Time zone for the dateCreated!
-  kDebug(5323) << "TOP:" << result[0].typeName();
-  if ( result[0].type() != QVariant::Bool ) {
-    kError(5323) << "Could not read the result, not a boolean.";
-    emit q->errorPost( MovableType::ParsingError,
-                          i18n( "Could not read the result, not a boolean." ),
-                          post );
-  } else {
-    post->setStatus( BlogPost::Modified );
-    emit q->modifiedPost( post );
-    kDebug(5323) << "emitting modifiedPost()";
-  }
 }
 
 #include "movabletype.moc"

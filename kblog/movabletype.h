@@ -81,16 +81,6 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     void createPost( KBlog::BlogPost *post );
 
     /**
-      Fetch the Post with postId.
-      @param post This is the post with its id set to the
-      corresponding post on the server.
-
-      @see BlogPost::setPostId( const QString& )
-      @see fetchedPost( KBlog::BlogPost* )
-    */
-    void fetchPost( KBlog::BlogPost *post );
-
-    /**
       Modify a post on server.
 
       @param post The post to be modified on the
