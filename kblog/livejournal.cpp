@@ -454,9 +454,26 @@ void LiveJournalPrivate::slotListRecentPosts(
 void LiveJournalPrivate::slotModifyPost(
     const QList<QVariant> &result, const QVariant &id )
 {
-  Q_UNUSED( result );
-  Q_UNUSED( id );
-  //TODO
+  kDebug(5323) << "LiveJournal::slotModifyPost: " << id; // Print method name and id to the console.
+  Q_Q(LiveJournal); // Get access to the q object which allows access to LiveJournal.* from LiveJournalPrivate
+  KBlog::BlogPost* post = mCallMap[ id.toInt() ]; // Retrieve the post from the calling map
+  mCallMap.remove( id.toInt() ); // Remove the post as it is now owned by the signal catcher
+
+  // struct containing String anum, String itemid
+  kDebug (5323) << "TOP:" << result[0].typeName(); // Print first return type to the console.
+  if ( result[0].type() != QVariant::Map ) { // Make sure the only return type is a struct.
+    kError(5323) << "Could not fetch post's ID out of the result from the server,"
+        << " not a map."; // If not a struct, print error.
+    emit q->errorPost( LiveJournal::ParsingError,
+                   i18n( "Could not read the post ID, result not a map." ), post ); // Emit an error signal if we can't get the post ID.
+  } else {
+    QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>(); // Get post ID from struct.
+    post->setPostId( itemid ); // Set the post ID to the anum value from the return struct.
+    post->setStatus( KBlog::BlogPost::Created ); // Set the post's status to indicate it has been successfully created.
+    emit q->createdPost( post ); // Emit the created post
+    kDebug(5323) << "emitting createdPost()" <<
+        "for" << itemid; // Notify emission to the console
+  }
 }
 
 void LiveJournalPrivate::slotRemovePost( const QList<QVariant> &result,
