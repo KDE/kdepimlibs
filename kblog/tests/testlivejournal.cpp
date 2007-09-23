@@ -49,7 +49,7 @@ class TestLiveJournal : public QObject
     void fetchPost( KBlog::BlogPost* post );
     void removePost( KBlog::BlogPost* post );
     // end chain
-    void error( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPost* );
+    void errorPost( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPost* );
   private Q_SLOTS:
     void testValidity();
     void testNetwork();
@@ -207,7 +207,7 @@ void TestLiveJournal::removePost( KBlog::BlogPost *post )
   eventLoop->quit();
 }
 
-void TestLiveJournal::error( KBlog::Blog::ErrorType type, const QString &errStr,
+void TestLiveJournal::errorPost( KBlog::Blog::ErrorType type, const QString &errStr,
         KBlog::BlogPost* post )
 {
   qDebug() << "############ error #############";
@@ -294,8 +294,8 @@ void TestLiveJournal::testNetwork()
   p->setCreationDateTime( mCDateTime );
   p->setModificationDateTime( mMDateTime );
 
-  connect( b, SIGNAL( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ),
-           this, SLOT( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ) );
+  connect( b, SIGNAL( errorPost( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ),
+           this, SLOT( errorPost( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ) );
 
   TestLiveJournalWarnings *warnings = new TestLiveJournalWarnings();
 

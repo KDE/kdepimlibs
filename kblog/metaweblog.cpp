@@ -265,7 +265,6 @@ QString MetaWeblogPrivate::getCallFromFunction( FunctionToCall type )
     case GetRecentPosts: return "metaWeblog.getRecentPosts";
     case CreatePost:        return "metaWeblog.newPost";
     case ModifyPost:       return "metaWeblog.editPost";
-    case RemovePost:     return "metaWeblog.deletePost";
     case FetchPost:        return "metaWeblog.getPost";
     default: return QString::null;
   }

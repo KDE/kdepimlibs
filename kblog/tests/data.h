@@ -28,15 +28,15 @@
 #include <ktimezone.h>
 #include <QtCore/QDateTime>
 
-  KUrl mUrl( "http://soctest.wordpress.com/xmlrpc.php" );
-  QString mUsername( "socapitest" );
-  QString mPassword( "k0nt4ctbl0g" );
-  QString mBlogId( "1" );
-
-//   KUrl mUrl( "http://sandbox2.monkey-corp.com/xmlrpc.php" );
+//   KUrl mUrl( "http://soctest.wordpress.com/xmlrpc.php" );
 //   QString mUsername( "socapitest" );
 //   QString mPassword( "k0nt4ctbl0g" );
-//   QString mBlogId( "blog" );
+//   QString mBlogId( "1" );
+
+  KUrl mUrl( "http://sandbox2.monkey-corp.com/xmlrpc.php" );
+  QString mUsername( "socapitest" );
+  QString mPassword( "k0nt4ctbl0g" );
+  QString mBlogId( "blog" );
 
   QDateTime mCreationDateTime( QDateTime::currentDateTime() );
   QDateTime mModificationDateTime( QDateTime::currentDateTime() );

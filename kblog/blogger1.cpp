@@ -74,7 +74,11 @@ void Blogger1::fetchUserInfo()
 {
     Q_D(Blogger1);
     kDebug(5323) << "Fetch user's info...";
-    QList<QVariant> args( d->defaultArgs() );
+    QList<QVariant> args; // reimplemenet defaultArgs, since we may not use
+                                         // it virtually here
+    args << QVariant( QString( "0123456789ABCDEF" ) );
+    args << QVariant( username() )
+          << QVariant( password() );
     d->mXmlRpcClient->call(
       "blogger.getUserInfo", args,
       this, SLOT( slotFetchUserInfo( const QList<QVariant>&, const QVariant& ) ),
@@ -85,7 +89,11 @@ void Blogger1::listBlogs()
 {
     Q_D(Blogger1);
     kDebug(5323) << "Fetch List of Blogs...";
-    QList<QVariant> args( d->defaultArgs() );
+    QList<QVariant> args; // reimplemenet defaultArgs, since we may not use
+                                         // it virtually here
+    args << QVariant( QString( "0123456789ABCDEF" ) );
+    args << QVariant( username() )
+          << QVariant( password() );
     d->mXmlRpcClient->call(
       "blogger.getUsersBlogs", args,
       this, SLOT( slotListBlogs( const QList<QVariant>&, const QVariant& ) ),
@@ -169,13 +177,18 @@ void Blogger1::removePost( KBlog::BlogPost *post )
   }
   unsigned int i = d->mCallCounter++;
   d->mCallMap[ i ] = post;
- kDebug(5323) << "Blogger1::removePost: postId=" << post->postId();
- QList<QVariant> args( d->defaultArgs( post->postId() ) );
- args << QVariant( true ); // Publish must be set to remove post.
- d->mXmlRpcClient->call(
-   d->getCallFromFunction( Blogger1Private::RemovePost ), args,
-   this, SLOT( slotRemovePost( const QList<QVariant>&, const QVariant& ) ),
-   this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
+  kDebug(5323) << "Blogger1::removePost: postId=" << post->postId();
+  QList<QVariant> args; // reimplemenet defaultArgs, since we may not use
+                                       // it virtually here
+  args << QVariant( QString( "0123456789ABCDEF" ) );
+  args << QVariant( post->postId() );
+  args << QVariant( username() )
+          << QVariant( password() );
+  args << QVariant( true ); // Publish must be set to remove post.
+  d->mXmlRpcClient->call(
+    "blogger.deletePost", args,
+    this, SLOT( slotRemovePost( const QList<QVariant>&, const QVariant& ) ),
+    this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
 }
 
 Blogger1Private::Blogger1Private() :
@@ -511,7 +524,6 @@ QString Blogger1Private::getCallFromFunction( FunctionToCall type )
     case GetRecentPosts: return "blogger.getRecentPosts";
     case CreatePost:        return "blogger.newPost";
     case ModifyPost:       return "blogger.editPost";
-    case RemovePost:     return "blogger.deletePost";
     case FetchPost:        return "blogger.getPost";
     default: return QString::null;
   }

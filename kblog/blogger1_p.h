@@ -66,7 +66,6 @@ class Blogger1Private : public BlogPrivate
       GetRecentPosts,
       CreatePost,
       ModifyPost,
-      RemovePost,
       FetchPost
     };
     virtual QList<QVariant> defaultArgs( const QString &id = QString() );

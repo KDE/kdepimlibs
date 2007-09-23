@@ -52,7 +52,7 @@ class TestMovableType : public QObject
     void fetchPost( KBlog::BlogPost* post );
     void removePost( KBlog::BlogPost* post );
     // end chain
-    void error( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPost* );
+    void errorPost( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPost* );
   private Q_SLOTS:
     void testValidity();
     void testNetwork();
@@ -253,7 +253,7 @@ void TestMovableType::removePost( KBlog::BlogPost *post )
   eventLoop->quit();
 }
 
-void TestMovableType::error( KBlog::Blog::ErrorType type, const QString &errStr,
+void TestMovableType::errorPost( KBlog::Blog::ErrorType type, const QString &errStr,
         KBlog::BlogPost* post )
 {
   qDebug() << "############ error #############";
@@ -357,8 +357,8 @@ void TestMovableType::testNetwork()
   QVERIFY( m->data() == QString( "YTM0NZomIzI2OTsmIzM0NTueYQ==" ).toAscii() );
   QVERIFY( m->name() == QString( "testMovableType.txt" ) );
 
-  connect( b, SIGNAL( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ),
-           this, SLOT( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ) );
+  connect( b, SIGNAL( errorPost( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ),
+           this, SLOT( errorPost( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ) );
 
   TestMovableTypeWarnings *warnings = new TestMovableTypeWarnings();
 

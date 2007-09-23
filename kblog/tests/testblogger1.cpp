@@ -50,7 +50,7 @@ class TestBlogger1 : public QObject
     void fetchPost( KBlog::BlogPost* post );
     void removePost( KBlog::BlogPost* post );
     // end chain
-    void error( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPost* );
+    void errorPost( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPost* );
   private Q_SLOTS:
     void testValidity();
     void testNetwork();
@@ -225,7 +225,7 @@ void TestBlogger1::removePost( KBlog::BlogPost *post )
   eventLoop->quit();
 }
 
-void TestBlogger1::error( KBlog::Blog::ErrorType type, const QString &errStr,
+void TestBlogger1::errorPost( KBlog::Blog::ErrorType type, const QString &errStr,
         KBlog::BlogPost* post )
 {
   qDebug() << "############ error #############";
@@ -312,8 +312,8 @@ void TestBlogger1::testNetwork()
   p->setCreationDateTime( mCDateTime );
   p->setModificationDateTime( mMDateTime );
 
-  connect( b, SIGNAL( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ),
-           this, SLOT( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ) );
+  connect( b, SIGNAL( errorPost( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ),
+           this, SLOT( errorPost( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ) );
 
   TestBlogger1Warnings *warnings = new TestBlogger1Warnings();
 
