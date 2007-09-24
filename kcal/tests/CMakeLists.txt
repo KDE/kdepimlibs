@@ -1,3 +1,4 @@
+set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include_directories(
  ${CMAKE_SOURCE_DIR}/kcal
@@ -13,7 +14,7 @@ ENDMACRO(KCAL_UNIT_TESTS)
 
 MACRO(KCAL_EXECUTABLE_TESTS)
   FOREACH(_testname ${ARGN})
-    kde4_add_test_executable(${_testname} ${_testname}.cpp)
+    kde4_add_executable(${_testname} TEST ${_testname}.cpp)
     target_link_libraries(${_testname} ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
   ENDFOREACH(_testname)
 ENDMACRO(KCAL_EXECUTABLE_TESTS)
@@ -64,7 +65,7 @@ set(srcfile "${CMAKE_SOURCE_DIR}/kcal/tests/data/test_pilot.ics")
 set_source_files_properties( ${testfields_SRCS} PROPERTIES 
 	COMPILE_FLAGS -DINPUT="\\"${srcfile}\\"" )
 
-kde4_add_test_executable(testfields ${testfields_SRCS})
+kde4_add_executable(testfields TEST ${testfields_SRCS})
 
 target_link_libraries(testfields  ${KDE4_KDECORE_LIBS} kcal )
 

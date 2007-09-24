@@ -1,3 +1,4 @@
+set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include_directories(${CMAKE_SOURCE_DIR}/kmime)
 
@@ -16,7 +17,7 @@ if(HAVE_GETOPT_H)
     set(test_kmime_header_parsing_SRCS test_kmime_header_parsing.cpp )
 
 
-    kde4_add_test_executable(test_kmime_header_parsing ${test_kmime_header_parsing_SRCS})
+    kde4_add_executable(test_kmime_header_parsing TEST ${test_kmime_header_parsing_SRCS})
 
     target_link_libraries(test_kmime_header_parsing  kmime ${KDE4_KDECORE_LIBS} )
 endif(HAVE_GETOPT_H)
@@ -26,7 +27,7 @@ endif(HAVE_GETOPT_H)
 set(test_charfreq_SRCS test_charfreq.cpp )
 
 
-kde4_add_test_executable(test_charfreq ${test_charfreq_SRCS})
+kde4_add_executable(test_charfreq TEST ${test_charfreq_SRCS})
 
 target_link_libraries(test_charfreq  kmime ${KDE4_KDECORE_LIBS} )
 
@@ -36,7 +37,7 @@ if(HAVE_GETOPT_H)
     set(test_mdn_SRCS test_mdn.cpp )
 
 
-    kde4_add_test_executable(test_mdn ${test_mdn_SRCS})
+    kde4_add_executable(test_mdn TEST ${test_mdn_SRCS})
 
     target_link_libraries(test_mdn  kmime ${KDE4_KDECORE_LIBS} )
 endif(HAVE_GETOPT_H)
@@ -46,7 +47,7 @@ endif(HAVE_GETOPT_H)
 set(test_dates_SRCS test_dates.cpp )
 
 
-kde4_add_test_executable(test_dates ${test_dates_SRCS})
+kde4_add_executable(test_dates TEST ${test_dates_SRCS})
 
 target_link_libraries(test_dates  kmime ${KDE4_KDECORE_LIBS} )
 
@@ -55,7 +56,7 @@ if(HAVE_GETOPT_H)
     set(test_kmime_codec_SRCS test_kmime_codec.cpp )
 
         
-    kde4_add_test_executable(test_kmime_codec ${test_kmime_codec_SRCS})
+    kde4_add_executable(test_kmime_codec TEST ${test_kmime_codec_SRCS})
         
     target_link_libraries(test_kmime_codec  kmime ${KDE4_KDECORE_LIBS} )
 endif(HAVE_GETOPT_H)
