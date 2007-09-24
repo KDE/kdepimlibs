@@ -265,8 +265,7 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
         }
       }
     } else {
-      result += "?B?" +
-                KCodecs::base64Encode( encoded8Bit.mid( start, end - start ), false );
+      result += "?B?" + encoded8Bit.mid( start, end - start ).toBase64();
     }
 
     result +="?=";

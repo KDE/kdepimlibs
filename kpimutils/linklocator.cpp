@@ -391,8 +391,7 @@ QString LinkLocator::pngToDataUrl( const QString &iconPath )
 
   QByteArray ba = pngFile.readAll();
   pngFile.close();
-  return QString::fromLatin1( "data:image/png;base64,%1" )
-    .arg( QString::fromAscii( KCodecs::base64Encode( ba ) ) );
+  return QString::fromLatin1( "data:image/png;base64,%1" ).arg( ba.toBase64().constData() );
 }
 
 QString LinkLocator::getEmoticon()
