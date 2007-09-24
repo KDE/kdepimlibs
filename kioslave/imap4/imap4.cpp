@@ -1353,7 +1353,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     QByteArray knownFlags = "\\SEEN \\ANSWERED \\FLAGGED \\DRAFT";
     const imapInfo info = getSelected();
     if ( info.permanentFlagsAvailable() && (info.permanentFlags() & imapInfo::User) ) {
-      knownFlags += " KMAILFORWARDED KMAILTODO KMAILWATCHED KMAILIGNORED";
+      knownFlags += " KMAILFORWARDED KMAILTODO KMAILWATCHED KMAILIGNORED $FORWARDED $TODO $WATCHED $IGNORED";
     }
 
     imapCommand *cmd = doCommand (imapCommand::
