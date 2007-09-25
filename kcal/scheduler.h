@@ -107,7 +107,7 @@ class KCAL_EXPORT ScheduleMessage
     QString error();
 
   private:
-    struct Private;
+    class Private;
     Private *const d;
 };
 
@@ -212,7 +212,7 @@ class KCAL_EXPORT Scheduler
     ICalFormat *mFormat;
 
   private:
-    struct Private;
+    class Private;
     Private *const d;
 };
 

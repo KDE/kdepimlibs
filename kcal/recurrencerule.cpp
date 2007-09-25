@@ -1406,7 +1406,7 @@ KDateTime RecurrenceRule::getPreviousDate( const KDateTime &afterDate ) const
 
   // Previous interval. As soon as we find an occurrence, we're done.
   while ( interval.intervalDateTime( recurrenceType() ) > startDt() ) {
-    interval.increase( recurrenceType(), -frequency() );
+    interval.increase( recurrenceType(), -int( frequency() ) );
     // The returned date list is sorted
     DateTimeList dts = d->datesForInterval( interval, recurrenceType() );
     // The list is sorted, so take the last one.
