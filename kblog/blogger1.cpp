@@ -74,11 +74,7 @@ void Blogger1::fetchUserInfo()
 {
     Q_D(Blogger1);
     kDebug(5323) << "Fetch user's info...";
-    QList<QVariant> args; // reimplemenet defaultArgs, since we may not use
-                                         // it virtually here
-    args << QVariant( QString( "0123456789ABCDEF" ) );
-    args << QVariant( username() )
-          << QVariant( password() );
+    QList<QVariant> args( d->blogger1Args() );
     d->mXmlRpcClient->call(
       "blogger.getUserInfo", args,
       this, SLOT( slotFetchUserInfo( const QList<QVariant>&, const QVariant& ) ),
@@ -89,11 +85,7 @@ void Blogger1::listBlogs()
 {
     Q_D(Blogger1);
     kDebug(5323) << "Fetch List of Blogs...";
-    QList<QVariant> args; // reimplemenet defaultArgs, since we may not use
-                                         // it virtually here
-    args << QVariant( QString( "0123456789ABCDEF" ) );
-    args << QVariant( username() )
-          << QVariant( password() );
+    QList<QVariant> args( d->blogger1Args() );
     d->mXmlRpcClient->call(
       "blogger.getUsersBlogs", args,
       this, SLOT( slotListBlogs( const QList<QVariant>&, const QVariant& ) ),
@@ -122,7 +114,7 @@ void Blogger1::fetchPost( KBlog::BlogPost *post )
      Q_D(Blogger1);
      kDebug(5323) << "Fetching Post with url" << post->postId();
      QList<QVariant> args( d->defaultArgs( post->postId() ) );
-     unsigned int i= d->mCallCounter++; // multithreading problem? must be executed at once
+     unsigned int i= d->mCallCounter++;
      d->mCallMap[ i ] = post;
      d->mXmlRpcClient->call(
        d->getCallFromFunction( Blogger1Private::FetchPost ), args,
@@ -178,12 +170,7 @@ void Blogger1::removePost( KBlog::BlogPost *post )
   unsigned int i = d->mCallCounter++;
   d->mCallMap[ i ] = post;
   kDebug(5323) << "Blogger1::removePost: postId=" << post->postId();
-  QList<QVariant> args; // reimplemenet defaultArgs, since we may not use
-                                       // it virtually here
-  args << QVariant( QString( "0123456789ABCDEF" ) );
-  args << QVariant( post->postId() );
-  args << QVariant( username() )
-          << QVariant( password() );
+  QList<QVariant> args( d->blogger1Args( post->postId() ) );
   args << QVariant( true ); // Publish must be set to remove post.
   d->mXmlRpcClient->call(
     "blogger.deletePost", args,
@@ -204,6 +191,19 @@ Blogger1Private::~Blogger1Private()
 }
 
 QList<QVariant> Blogger1Private::defaultArgs( const QString &id )
+{
+  Q_Q(Blogger1);
+  QList<QVariant> args;
+  args << QVariant( QString( "0123456789ABCDEF" ) );
+  if( !id.isEmpty() )
+    args << QVariant( id );
+  args << QVariant( q->username() )
+          << QVariant( q->password() );
+  return args;
+}
+
+// reimplemenet defaultArgs, since we may not use it virtually everywhere
+QList<QVariant> Blogger1Private::blogger1Args( const QString &id )
 {
   Q_Q(Blogger1);
   QList<QVariant> args;

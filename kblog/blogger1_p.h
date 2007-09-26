@@ -69,6 +69,7 @@ class Blogger1Private : public BlogPrivate
       FetchPost
     };
     virtual QList<QVariant> defaultArgs( const QString &id = QString() );
+    QList<QVariant> blogger1Args( const QString &id = QString() );
     virtual bool readPostFromMap( BlogPost *post,
                                      const QMap<QString, QVariant> &postInfo );
     virtual bool readArgsFromPost( QList<QVariant> *args, const BlogPost& post );
