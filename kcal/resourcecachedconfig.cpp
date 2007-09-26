@@ -163,6 +163,8 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent )
     new QRadioButton(
       i18nc( "@option:radio save the cache after every modification",
              "On every change" ), groupBox );
+  d->mGroup->addButton(delay,3);
+  d->mGroup->addButton(every,4);
 
   QVBoxLayout *vbox = new QVBoxLayout;
   vbox->addWidget(never);
