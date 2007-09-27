@@ -49,6 +49,7 @@ namespace QGpgME {
     void nextTrustItemEventSignal( GpgME::Context * context, const GpgME::TrustItem & item  );
     void nextKeyEventSignal( GpgME::Context * context, const GpgME::Key & key );
     void operationDoneEventSignal( GpgME::Context * context, const GpgME::Error & e );
+    void operationStartEventSignal( GpgME::Context * context );
 
     void aboutToDestroy();
 
@@ -74,6 +75,8 @@ namespace QGpgME {
     void nextTrustItemEvent( GpgME::Context * context, const GpgME::TrustItem & item );
     /*! \reimp */
     void nextKeyEvent( GpgME::Context * context, const GpgME::Key & key );
+    /*! \reimp */
+    void operationStartEvent( GpgME::Context * context );
     /*! \reimp */
     void operationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
 
