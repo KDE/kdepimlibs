@@ -55,6 +55,7 @@ void * QGpgME::EventLoopInteractor::registerWatcher( int fd, Direction dir, bool
         ok = false;
         return 0;
     }
+    iod->bytesAvailable(); //HACK: tell KDPipeIODevices to start it's threads
     if ( dir == Read ) {
         static QSignalMapper * rsm = setupReadSignalMapper( this );
         rsm->setMapping( iod, fd );
