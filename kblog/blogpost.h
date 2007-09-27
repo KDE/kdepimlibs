@@ -27,7 +27,7 @@
 
 #include <kurl.h>
 
-#include <QtAlgorithms>
+#include <QtCore/QtAlgorithms>
 
 class QStringList;
 

@@ -26,7 +26,7 @@
 #include <kblog/kblog_export.h>
 
 #include <QtCore/QString>
-#include <QtAlgorithms>
+#include <QtCore/QtAlgorithms>
 
 class KDateTime;
 class KUrl;
