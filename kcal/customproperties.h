@@ -146,6 +146,11 @@ class KCAL_EXPORT CustomProperties
     */
     QMap<QByteArray, QString> customProperties() const;
 
+    /**
+      Assignment operator.
+    */
+    CustomProperties &operator=( const CustomProperties &other );
+
   protected:
     /**
       Called when a custom property has been changed.

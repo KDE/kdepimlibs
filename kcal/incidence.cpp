@@ -95,8 +95,14 @@ Incidence::Incidence()
 }
 
 Incidence::Incidence( const Incidence &i )
-  : IncidenceBase( i ), Recurrence::RecurrenceObserver(),
+  : IncidenceBase( i ),
+    Recurrence::RecurrenceObserver(),
     d( new KCal::Incidence::Private )
+{
+  init( i );
+}
+
+void Incidence::init( const Incidence &i )
 {
 // TODO: reenable attributes currently commented out.
   d->mRevision = i.d->mRevision;
@@ -164,10 +170,16 @@ Incidence::~Incidence()
 // A string comparison that considers that null and empty are the same
 static bool stringCompare( const QString &s1, const QString &s2 )
 {
-  return
-    ( s1.isEmpty() && s2.isEmpty() ) || ( s1 == s2 );
+  return ( s1.isEmpty() && s2.isEmpty() ) || (s1 == s2);
 }
+
 //@endcond
+Incidence& Incidence::operator=( const Incidence &other )
+{
+  IncidenceBase::operator=( other );
+  init( other );
+  return *this;
+}
 
 bool Incidence::operator==( const Incidence &i2 ) const
 {

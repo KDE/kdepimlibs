@@ -1151,6 +1151,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
       if ( incBase->type() == "Todo" ) {
         html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
       } else {
+        html += "<td colspan=\"13\">";
         html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
       }
       html += "</td></tr><tr>";
@@ -1163,6 +1164,9 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     html += helper->makeLink( "accept_conditionally",
                               i18nc( "Accept conditionally", "[Accept cond.]" ) );
     html += "</td><td> &nbsp; </td><td>";
+        // counter proposal
+        html += helper->makeLink( "counter", i18n( "[Counter proposal]" ) );
+        html += "</td><td> &nbsp; </td><td>";
     // Decline
     html += helper->makeLink( "decline", i18nc( "decline to-do request", "[Decline]" ) );
     html += "</td><td> &nbsp; </td><td>";
@@ -1211,8 +1215,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
       html += string2HTML( sDescr ) + "</td></tr></table>";
     }
     QStringList comments = incidence->comments();
-    if ( ( msg->method() == iTIPRequest ||
-           msg->method() == iTIPCancel ) && !comments.isEmpty() ) {
+    if ( !comments.isEmpty() ) {
       html += "<br><u>" + i18n( "Comments:" ) +
               "</u><br><table border=\"0\"><tr><td>&nbsp;</td><td><ul>";
       for ( int i = 0; i < comments.count(); ++i ) {
