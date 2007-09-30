@@ -16,13 +16,10 @@
  ***************************************************************************/
 
 #include "mailheader.h"
-#include <Q3PtrList>
+#include <QList>
 
 mailHeader::mailHeader ()
 {
-  toAdr.setAutoDelete (true);
-  ccAdr.setAutoDelete (true);
-  bccAdr.setAutoDelete (true);
   setType ("text/plain");
   gmt_offset = 0;
 }
@@ -56,15 +53,15 @@ mailHeader::addHdrLine (mimeHdrLine * inLine)
 	goto out;
   }
   if (!qstricmp (label, "To")) {
-	mailHeader::parseAddressList (value, &toAdr);
+	mailHeader::parseAddressList (value, toAdr);
 	goto out;
   }
   if (!qstricmp (label, "CC")) {
-	mailHeader::parseAddressList (value, &ccAdr);
+	mailHeader::parseAddressList (value, ccAdr);
 	goto out;
   }
   if (!qstricmp (label, "BCC")) {
-	mailHeader::parseAddressList (value, &bccAdr);
+	mailHeader::parseAddressList (value, bccAdr);
 	goto out;
   }
   if (!qstricmp (label, "Subject")) {
@@ -133,13 +130,13 @@ mailHeader::outputHeader (mimeIO & useIO)
 
   if (toAdr.count())
     useIO.outputMimeLine(mimeHdrLine::truncateLine(__to +
-                                    mailHeader::getAddressStr(&toAdr)));
+                                    mailHeader::getAddressStr(toAdr)));
   if (ccAdr.count())
     useIO.outputMimeLine(mimeHdrLine::truncateLine(__cc +
-                                    mailHeader::getAddressStr(&ccAdr)));
+                                    mailHeader::getAddressStr(ccAdr)));
   if (bccAdr.count())
     useIO.outputMimeLine(mimeHdrLine::truncateLine(__bcc +
-                                    mailHeader::getAddressStr(&bccAdr)));
+                                    mailHeader::getAddressStr(bccAdr)));
   if (!_subject.isEmpty())
     useIO.outputMimeLine(mimeHdrLine::truncateLine(__subject + _subject));
   if (!messageID.isEmpty())
@@ -156,13 +153,13 @@ mailHeader::outputHeader (mimeIO & useIO)
 
 int
 mailHeader::parseAddressList (const char *inCStr,
-                              Q3PtrList < mailAddress > *aList)
+                              QList < mailAddress *> &aList)
 {
   int advance = 0;
   int skip = 1;
   char *aCStr = (char *) inCStr;
 
-  if (!aCStr || !aList)
+  if (!aCStr)
     return 0;
   while (skip > 0)
   {
@@ -175,7 +172,7 @@ mailHeader::parseAddressList (const char *inCStr,
         advance -= skip;
       else
         advance += skip;
-      aList->append (aAddress);
+      aList.append (aAddress);
     }
     else
     {
@@ -187,17 +184,20 @@ mailHeader::parseAddressList (const char *inCStr,
 }
 
 QByteArray
-mailHeader::getAddressStr (Q3PtrList < mailAddress > *aList)
+mailHeader::getAddressStr (QList < mailAddress *> &aList)
 {
   QByteArray retVal;
 
-  Q3PtrListIterator < mailAddress > it = Q3PtrListIterator < mailAddress > (*aList);
-  while (it.current ())
+  QListIterator < mailAddress *> it = QListIterator < mailAddress *>(aList);
+  mailAddress *addr;
+  while (it.hasNext())
   {
-    retVal += it.current ()->getStr ();
-    ++it;
-    if (it.current ())
+    addr = it.next();
+    retVal += addr->getStr ();
+    if (it.hasNext() )
       retVal += ", ";
   }
+
+
   return retVal;
 }

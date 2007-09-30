@@ -59,7 +59,6 @@ imap://server/folder/
 #include "imap4.h"
 
 #include <QByteArray>
-#include <Q3PtrList>
 #include <QList>
 
 #include <stdio.h>
@@ -198,7 +197,7 @@ IMAP4Protocol::get (const KUrl & _url)
   if (aSequence == "0:0" && getState() == ISTATE_SELECT)
   {
     imapCommand *cmd = doCommand (imapCommand::clientNoop());
-    completeQueue.removeRef(cmd);
+    completeQueue.removeAll(cmd);
   }
 
   if (aSequence.isEmpty ())
@@ -317,7 +316,7 @@ IMAP4Protocol::get (const KUrl & _url)
           while (!parseLoop ());
         }
         while (!cmd->isComplete ());
-        completeQueue.removeRef (cmd);
+        completeQueue.removeAll (cmd);
         // get the content encoding now because getLastHandled will be cleared
         if (getLastHandled() && getLastHandled()->getHeader())
           contentEncoding = getLastHandled()->getHeader()->getEncoding();
@@ -381,7 +380,7 @@ IMAP4Protocol::get (const KUrl & _url)
         outputLine ("--IMAPDIGEST--\r\n", 16);
       }
 
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
     }
   }
 
@@ -486,10 +485,10 @@ IMAP4Protocol::listDir (const KUrl & _url)
     else
     {
       error (ERR_CANNOT_ENTER_DIRECTORY, _url.prettyUrl());
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       return;
     }
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
   }
   if ((myType == ITYPE_BOX || myType == ITYPE_DIR_AND_BOX)
       && myLType != "LIST" && myLType != "LSUB" && myLType != "LSUBNOCHECK")
@@ -514,10 +513,10 @@ IMAP4Protocol::listDir (const KUrl & _url)
           if (cmd->result() != "OK")
           {
             error(ERR_UNSUPPORTED_ACTION, _url.prettyUrl());
-            completeQueue.removeRef (cmd);
+            completeQueue.removeAll (cmd);
             return;
           }
-          completeQueue.removeRef (cmd);
+          completeQueue.removeAll (cmd);
 
           QStringList list = getResults ();
           int stretch = 0;
@@ -791,14 +790,14 @@ IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
 
     if (cmd->result () != "OK") {
       error (ERR_COULD_NOT_WRITE, _url.prettyUrl());
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       return;
     }
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
   }
   else
   {
-    Q3PtrList < QByteArray > bufferList;
+    QList < QByteArray* > bufferList;
     int length = 0;
 
     int result;
@@ -835,10 +834,11 @@ IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
       ulong wrote = 0;
 
       QByteArray *buffer;
+      QListIterator<QByteArray *> it(bufferList);
       // send data to server
-      while (!bufferList.isEmpty () && sendOk)
+      while (it.hasNext() && sendOk)
       {
-        buffer = bufferList.take (0);
+        buffer = it.next();
 
         sendOk =
           (write (buffer->data (), buffer->size ()) ==
@@ -849,7 +849,7 @@ IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
         if (!sendOk)
         {
           error (ERR_CONNECTION_BROKEN, myHost);
-          completeQueue.removeRef (cmd);
+          completeQueue.removeAll (cmd);
           setState(ISTATE_CONNECT);
           closeConnection();
           return;
@@ -863,13 +863,13 @@ IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
         // TODO KDE4: pass cmd->resultInfo() as third argument.
         // ERR_CONNECTION_BROKEN expects a host, no way to pass details about the problem.
         error( ERR_CONNECTION_BROKEN, myHost );
-        completeQueue.removeRef (cmd);
+        completeQueue.removeAll (cmd);
         closeConnection();
         return;
       }
       else if (cmd->result () != "OK") {
         error( ERR_SLAVE_DEFINED, cmd->resultInfo() );
-        completeQueue.removeRef (cmd);
+        completeQueue.removeAll (cmd);
         return;
       }
       else
@@ -890,7 +890,7 @@ IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
           cmd =
             doCommand (imapCommand::
                        clientSelect (aBox, !selectInfo.readWrite ()));
-          completeQueue.removeRef (cmd);
+          completeQueue.removeAll (cmd);
         }
       }
     }
@@ -899,11 +899,11 @@ IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
       //error (ERR_COULD_NOT_WRITE, myHost);
       // Better ship the error message, e.g. "Over Quota"
       error (ERR_SLAVE_DEFINED, cmd->resultInfo());
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       return;
     }
 
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
   }
 
   finished ();
@@ -922,10 +922,10 @@ IMAP4Protocol::mkdir (const KUrl & _url, int)
   {
     kDebug(7116) <<"IMAP4::mkdir -" << cmd->resultInfo();
     error (ERR_COULD_NOT_MKDIR, _url.prettyUrl());
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
     return;
   }
-  completeQueue.removeRef (cmd);
+  completeQueue.removeAll (cmd);
 
   // start a new listing to find the type of the folder
   enum IMAP_TYPE type =
@@ -941,20 +941,20 @@ IMAP4Protocol::mkdir (const KUrl & _url, int)
           i18n("&Messages"), i18n("&Subfolders")) == KMessageBox::No )
     {
       cmd = doCommand(imapCommand::clientDelete(aBox));
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       cmd = doCommand(imapCommand::clientCreate(aBox + aDelimiter));
       if (cmd->result () != "OK")
       {
         error (ERR_COULD_NOT_MKDIR, _url.prettyUrl());
-        completeQueue.removeRef (cmd);
+        completeQueue.removeAll (cmd);
         return;
       }
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
     }
   }
 
   cmd = doCommand(imapCommand::clientSubscribe(aBox));
-  completeQueue.removeRef(cmd);
+  completeQueue.removeAll(cmd);
 
   finished ();
 }
@@ -1019,14 +1019,14 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
           }
           else
           {
-            completeQueue.removeRef (cmd);
+            completeQueue.removeAll (cmd);
             cmd = doCommand (imapCommand::clientCreate (dBox));
             if (cmd->result () == "OK")
               dType = ITYPE_BOX;
             else
               error (ERR_COULD_NOT_WRITE, dest.prettyUrl());
           }
-          completeQueue.removeRef (cmd);
+          completeQueue.removeAll (cmd);
         }
       }
 
@@ -1045,7 +1045,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
     {
       kError(5006) <<"IMAP4::copy -" << cmd->resultInfo();
       error (ERR_COULD_NOT_WRITE, dest.prettyUrl());
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       return;
     } else {
       if (hasCapability("UIDPLUS"))
@@ -1059,7 +1059,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
         }
       }
     }
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
   }
   else
   {
@@ -1089,10 +1089,10 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
         imapCommand *cmd = doCommand (imapCommand::clientExpunge ());
         if (cmd->result () != "OK") {
           error (ERR_CANNOT_DELETE, _url.prettyUrl());
-          completeQueue.removeRef (cmd);
+          completeQueue.removeAll (cmd);
           return;
         }
-        completeQueue.removeRef (cmd);
+        completeQueue.removeAll (cmd);
       }
       else
       {
@@ -1103,10 +1103,10 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
                      clientStore (aSequence, "+FLAGS.SILENT", "\\DELETED"));
         if (cmd->result () != "OK") {
           error (ERR_CANNOT_DELETE, _url.prettyUrl());
-          completeQueue.removeRef (cmd);
+          completeQueue.removeAll (cmd);
           return;
         }
-        completeQueue.removeRef (cmd);
+        completeQueue.removeAll (cmd);
       }
     }
     else
@@ -1114,17 +1114,17 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
       if (getCurrentBox() == aBox)
       {
         imapCommand *cmd = doCommand(imapCommand::clientClose());
-        completeQueue.removeRef(cmd);
+        completeQueue.removeAll(cmd);
         setState(ISTATE_LOGIN);
       }
       // We unsubscribe, otherwise we get ghost folders on UW-IMAP
       imapCommand *cmd = doCommand(imapCommand::clientUnsubscribe(aBox));
-      completeQueue.removeRef(cmd);
+      completeQueue.removeAll(cmd);
       cmd = doCommand(imapCommand::clientDelete (aBox));
       // If this doesn't work, we try to empty the mailbox first
       if (cmd->result () != "OK")
       {
-        completeQueue.removeRef(cmd);
+        completeQueue.removeAll(cmd);
         if (!assureBox(aBox, false)) return;
         bool stillOk = true;
         if (stillOk)
@@ -1132,20 +1132,20 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
           imapCommand *cmd = doCommand(
             imapCommand::clientStore("1:*", "+FLAGS.SILENT", "\\DELETED"));
           if (cmd->result () != "OK") stillOk = false;
-          completeQueue.removeRef(cmd);
+          completeQueue.removeAll(cmd);
         }
         if (stillOk)
         {
           imapCommand *cmd = doCommand(imapCommand::clientClose());
           if (cmd->result () != "OK") stillOk = false;
-          completeQueue.removeRef(cmd);
+          completeQueue.removeAll(cmd);
           setState(ISTATE_LOGIN);
         }
         if (stillOk)
         {
           imapCommand *cmd = doCommand (imapCommand::clientDelete(aBox));
           if (cmd->result () != "OK") stillOk = false;
-          completeQueue.removeRef(cmd);
+          completeQueue.removeAll(cmd);
         }
         if (!stillOk)
         {
@@ -1153,7 +1153,7 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
           return;
         }
       } else {
-        completeQueue.removeRef (cmd);
+        completeQueue.removeAll (cmd);
       }
     }
     break;
@@ -1163,10 +1163,10 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
       imapCommand *cmd = doCommand (imapCommand::clientDelete (aBox));
       if (cmd->result () != "OK") {
         error (ERR_COULD_NOT_RMDIR, _url.prettyUrl());
-        completeQueue.removeRef (cmd);
+        completeQueue.removeAll (cmd);
         return;
       }
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
     }
     break;
 
@@ -1179,10 +1179,10 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
                    clientStore (aSequence, "+FLAGS.SILENT", "\\DELETED"));
       if (cmd->result () != "OK") {
         error (ERR_CANNOT_DELETE, _url.prettyUrl());
-        completeQueue.removeRef (cmd);
+        completeQueue.removeAll (cmd);
         return;
       }
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
     }
     break;
 
@@ -1244,11 +1244,11 @@ IMAP4Protocol::special (const QByteArray & aData)
     if (cmd->result () != "OK")
     {
       kDebug(7116) <<"NOOP did not succeed - connection broken";
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       error (ERR_CONNECTION_BROKEN, myHost);
       return;
     }
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
     finished();
     break;
   }
@@ -1270,14 +1270,14 @@ IMAP4Protocol::special (const QByteArray & aData)
     imapCommand *cmd = doCommand(imapCommand::clientUnsubscribe(aBox));
     if (cmd->result () != "OK")
     {
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       error(ERR_SLAVE_DEFINED, i18n("Unsubscribe of folder %1 "
                                     "failed. The server returned: %2",
              _url.prettyUrl(),
              cmd->resultInfo()));
       return;
     }
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
     finished();
     break;
   }
@@ -1291,14 +1291,14 @@ IMAP4Protocol::special (const QByteArray & aData)
     imapCommand *cmd = doCommand(imapCommand::clientSubscribe(aBox));
     if (cmd->result () != "OK")
     {
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       error(ERR_SLAVE_DEFINED, i18n("Subscribe of folder %1 "
                                     "failed. The server returned: %2",
              _url.prettyUrl(),
              cmd->resultInfo()));
       return;
     }
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
     finished();
     break;
   }
@@ -1360,24 +1360,24 @@ IMAP4Protocol::special (const QByteArray & aData)
                                   clientStore (aSequence, "-FLAGS.SILENT", knownFlags));
     if (cmd->result () != "OK")
     {
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       error(ERR_SLAVE_DEFINED, i18n("Changing the flags of message %1 "
                                       "failed with %2.", _url.prettyUrl(), cmd->result()));
       return;
     }
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
     if (!newFlags.isEmpty())
     {
       cmd = doCommand (imapCommand::
                        clientStore (aSequence, "+FLAGS.SILENT", newFlags));
       if (cmd->result () != "OK")
       {
-        completeQueue.removeRef (cmd);
+        completeQueue.removeAll (cmd);
         error(ERR_SLAVE_DEFINED, i18n("Silent Changing the flags of message %1 "
                                         "failed with %2.", _url.prettyUrl(), cmd->result()));
         return;
       }
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
     }
     finished();
     break;
@@ -1403,12 +1403,12 @@ IMAP4Protocol::special (const QByteArray & aData)
 
     if (cmd->result () != "OK")
     {
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       error(ERR_COULD_NOT_WRITE,
             i18n( "Changing the flags of message %1 failed.", _url.prettyUrl() ) );
       return;
     }
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
     finished();
     break;
   }
@@ -1451,7 +1451,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
              cmd->resultInfo()));
       return;
     }
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
     finished();
     break;
   }
@@ -1470,7 +1470,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
              cmd->resultInfo()));
       return;
     }
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
     finished();
     break;
   }
@@ -1547,7 +1547,7 @@ IMAP4Protocol::specialSearchCommand( QDataStream& stream )
          cmd->resultInfo()));
     return;
   }
-  completeQueue.removeRef(cmd);
+  completeQueue.removeAll(cmd);
   QStringList lst = getResults();
   kDebug(7116) <<"IMAP4Protocol::specialSearchCommand '" << aSection <<
     "' returns" << lst;
@@ -1586,7 +1586,7 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
              cmd->resultInfo()));
       return;
     }
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
     finished();
     break;
   }
@@ -1693,7 +1693,7 @@ IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, bool overwrite)
           // mailbox can only be renamed if it is closed
           imapCommand *cmd = doCommand (imapCommand::clientClose());
           bool ok = cmd->result() == "OK";
-          completeQueue.removeRef(cmd);
+          completeQueue.removeAll(cmd);
           if (!ok)
           {
             error(ERR_CANNOT_RENAME, i18n("Unable to close mailbox."));
@@ -1704,10 +1704,10 @@ IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, bool overwrite)
         imapCommand *cmd = doCommand (imapCommand::clientRename (sBox, dBox));
         if (cmd->result () != "OK") {
           error (ERR_CANNOT_RENAME, cmd->result ());
-          completeQueue.removeRef (cmd);
+          completeQueue.removeAll (cmd);
           return;
         }
-        completeQueue.removeRef (cmd);
+        completeQueue.removeAll (cmd);
       }
       break;
 
@@ -1761,7 +1761,7 @@ IMAP4Protocol::stat (const KUrl & _url)
     {
       imapCommand *cmd = doCommand (imapCommand::clientClose());
       bool ok = cmd->result() == "OK";
-      completeQueue.removeRef(cmd);
+      completeQueue.removeAll(cmd);
       if (!ok)
       {
         error(ERR_COULD_NOT_STAT, i18n("Unable to close mailbox."));
@@ -1778,7 +1778,7 @@ IMAP4Protocol::stat (const KUrl & _url)
       imapCommand *cmd = doCommand(imapCommand::clientStatus(aBox, aSection));
       ok = cmd->result() == "OK";
       cmdInfo = cmd->resultInfo();
-      completeQueue.removeRef(cmd);
+      completeQueue.removeAll(cmd);
     }
     if (!ok)
     {
@@ -1792,7 +1792,7 @@ IMAP4Protocol::stat (const KUrl & _url)
           if (aBox == (*it).name ()) found = true;
         }
       }
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       if (found)
         error(ERR_COULD_NOT_STAT, i18n("Unable to get information about folder %1. The server replied: %2", aBox, cmdInfo));
       else
@@ -1820,7 +1820,7 @@ IMAP4Protocol::stat (const KUrl & _url)
       // the server might change the validity for new select/examine
       imapCommand *cmd =
         doCommand (imapCommand::clientStatus (aBox, "UIDVALIDITY"));
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       validity = getStatus ().uidValidity ();
     }
 #ifdef __GNUC__
@@ -1897,12 +1897,12 @@ void IMAP4Protocol::closeConnection()
   if (getState() == ISTATE_SELECT && metaData("expunge") == "auto")
   {
     imapCommand *cmd = doCommand (imapCommand::clientExpunge());
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
   }
   if (getState() != ISTATE_CONNECT)
   {
     imapCommand *cmd = doCommand (imapCommand::clientLogout());
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
   }
   closeDescriptor();
   setState(ISTATE_NO);
@@ -1947,7 +1947,7 @@ bool IMAP4Protocol::makeLogin ()
     {
       kDebug(7116) <<"'" << (*it) <<"'";
     }
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
 
     if (!hasCapability("IMAP4") && !hasCapability("IMAP4rev1"))
     {
@@ -1973,7 +1973,7 @@ bool IMAP4Protocol::makeLogin ()
       imapCommand *cmd = doCommand (imapCommand::clientStartTLS());
       if (cmd->result () == "OK")
       {
-        completeQueue.removeRef(cmd);
+        completeQueue.removeAll(cmd);
         int tlsrc = startTLS();
         if (tlsrc == 1)
         {
@@ -1984,14 +1984,14 @@ bool IMAP4Protocol::makeLogin ()
           {
             kDebug(7116) <<"'" << (*it) <<"'";
           }
-          completeQueue.removeRef (cmd2);
+          completeQueue.removeAll (cmd2);
         } else {
           kWarning(7116) <<"TLS mode setup has failed.  Aborting.";
           error (ERR_COULD_NOT_LOGIN, i18n("Starting TLS failed."));
           closeConnection();
           return false;
         }
-      } else completeQueue.removeRef(cmd);
+      } else completeQueue.removeAll(cmd);
     }
 
     if (!myAuth.isEmpty () && myAuth != "*"
@@ -2050,7 +2050,7 @@ bool IMAP4Protocol::makeLogin ()
       {
         kDebug(7116) <<"makeLogin - registered namespaces";
       }
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
     }
     // get the default delimiter (empty listing)
     cmd = doCommand( imapCommand::clientList("", "") );
@@ -2069,7 +2069,7 @@ bool IMAP4Protocol::makeLogin ()
         }
       }
     }
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
   } else {
     kDebug(7116) <<"makeLogin - NO login";
   }
@@ -2356,7 +2356,7 @@ IMAP4Protocol::parseURL (const KUrl & _url, QString & _box,
           } else {
             kDebug(7116) <<"IMAP4::parseURL - got error for" << _box;
           }
-          completeQueue.removeRef (cmd);
+          completeQueue.removeAll (cmd);
         } // cache
       }
       else // current == box
@@ -2506,7 +2506,7 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
     cmd = doCommand (imapCommand::clientSelect (aBox, readonly));
     bool ok = cmd->result() == "OK";
     QString cmdInfo = cmd->resultInfo();
-    completeQueue.removeRef (cmd);
+    completeQueue.removeAll (cmd);
 
     if (!ok)
     {
@@ -2520,7 +2520,7 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
           if (aBox == (*it).name ()) found = true;
         }
       }
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       if (found) {
         if ( cmdInfo.contains("permission", Qt::CaseInsensitive) ) {
           // not allowed to enter this folder
@@ -2542,7 +2542,7 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
     kDebug(7116) <<"IMAP4Protocol::assureBox - reusing box";
     if ( mTimeOfLastNoop.secsTo( QDateTime::currentDateTime() ) > 10 ) {
       cmd = doCommand (imapCommand::clientNoop ());
-      completeQueue.removeRef (cmd);
+      completeQueue.removeAll (cmd);
       mTimeOfLastNoop = QDateTime::currentDateTime();
       kDebug(7116) <<"IMAP4Protocol::assureBox - noop timer fired";
     }

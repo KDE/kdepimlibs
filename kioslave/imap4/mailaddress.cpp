@@ -26,7 +26,6 @@
 #include <kimap/rfccodecs.h>
 #include <kmime/kmime_util.h>
 #include <QByteArray>
-#include <Q3PtrList>
 
 using namespace KIMAP;
 
@@ -293,15 +292,14 @@ QString mailAddress::emailAddrAsAnchor (const mailAddress & adr, bool shortAdr)
   return retVal;
 }
 
-QString mailAddress::emailAddrAsAnchor (const Q3PtrList < mailAddress > &list, bool value)
+QString mailAddress::emailAddrAsAnchor (const QList < mailAddress *> &list, bool value)
 {
   QString retVal;
-  Q3PtrListIterator < mailAddress > it (list);
+  QListIterator < mailAddress *> it (list);
 
-  while (it.current ())
+  while (it.hasNext())
   {
-    retVal += emailAddrAsAnchor ((*it.current ()), value) + "<BR></BR>\n";
-    ++it;
+    retVal += emailAddrAsAnchor ((*it.next()), value) + "<BR></BR>\n";
   }
 
   return retVal;

@@ -38,9 +38,6 @@ mimeHeader::mimeHeader ()
       _contentDisposition(), _contentDescription()
 {
   // Case insensitive hashes are killing us.  Also are they too small?
-  originalHdrLines.setAutoDelete (true);
-  additionalHdrLines.setAutoDelete (false); // is also in original lines
-  nestedParts.setAutoDelete (true);
   nestedMessage = NULL;
   contentLength = 0;
 }
@@ -211,14 +208,14 @@ QHashIterator < QString, QString > mimeHeader::getTypeIterator ()
   return QHashIterator < QString, QString > (typeList);
 }
 
-Q3PtrListIterator < mimeHdrLine > mimeHeader::getOriginalIterator ()
+QListIterator < mimeHdrLine *> mimeHeader::getOriginalIterator ()
 {
-  return Q3PtrListIterator < mimeHdrLine > (originalHdrLines);
+  return QListIterator < mimeHdrLine *> (originalHdrLines);
 }
 
-Q3PtrListIterator < mimeHdrLine > mimeHeader::getAdditionalIterator ()
+QListIterator < mimeHdrLine *> mimeHeader::getAdditionalIterator ()
 {
-  return Q3PtrListIterator < mimeHdrLine > (additionalHdrLines);
+  return QListIterator < mimeHdrLine *> (additionalHdrLines);
 }
 
 void
@@ -247,12 +244,13 @@ mimeHeader::outputHeader (mimeIO & useIO)
     useIO.outputMimeLine (QByteArray ("Content-Transfer-Encoding: ") +
                           getEncoding ());
 
-  Q3PtrListIterator < mimeHdrLine > ait = getAdditionalIterator ();
-  while (ait.current ())
+  QListIterator < mimeHdrLine *> ait = getAdditionalIterator ();
+  mimeHdrLine *hdrline;
+  while (ait.hasNext ())
   {
-    useIO.outputMimeLine (ait.current ()->getLabel () + ": " +
-                          ait.current ()->getValue ());
-    ++ait;
+    hdrline = ait.next();
+    useIO.outputMimeLine (hdrline->getLabel () + ": " +
+                          hdrline->getValue ());
   }
   useIO.outputMimeLine (QByteArray (""));
 }
@@ -416,7 +414,7 @@ QByteArray mimeHeader::outputParameter (QHash < QString, QString > &aDict)
 void
 mimeHeader::outputPart (mimeIO & useIO)
 {
-  Q3PtrListIterator < mimeHeader > nestedParts = getNestedIterator ();
+  QListIterator < mimeHeader *> nestedParts = getNestedIterator ();
   QByteArray boundary;
   if (!getTypeParm ("boundary").isEmpty ())
     boundary = getTypeParm ("boundary").toLatin1 ();
@@ -426,12 +424,14 @@ mimeHeader::outputPart (mimeIO & useIO)
     useIO.outputMimeLine (getPreBody ());
   if (getNestedMessage ())
     getNestedMessage ()->outputPart (useIO);
-  while (nestedParts.current ())
+
+  mimeHeader *mimeline;
+  while (nestedParts.hasNext())
   {
+    mimeline = nestedParts.next();
     if (!boundary.isEmpty ())
       useIO.outputMimeLine ("--" + boundary);
-    nestedParts.current ()->outputPart (useIO);
-    ++nestedParts;
+    mimeline->outputPart (useIO);
   }
   if (!boundary.isEmpty ())
     useIO.outputMimeLine ("--" + boundary + "--");
@@ -623,12 +623,11 @@ void mimeHeader::serialize(QDataStream& stream)
   // serialize nested parts
   if (!nestedParts.isEmpty())
   {
-    Q3PtrListIterator < mimeHeader > it(nestedParts);
+    QListIterator < mimeHeader *> it(nestedParts);
     mimeHeader* part;
-    while ( (part = it.current()) != 0 )
-    {
-      ++it;
-      part->serialize(stream);
+    while ( it.hasNext() ) {
+      part = it.next();
+      part->serialize( stream );
     }
   }
 }

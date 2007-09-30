@@ -23,7 +23,7 @@
  *
  *********************************************************************/
 
-#include <q3ptrlist.h>
+#include <QList>
 #include <QString>
 
 class mailAddress
@@ -65,7 +65,7 @@ public:
   bool isEmpty () const;
 
   static QString emailAddrAsAnchor (const mailAddress &, bool);
-  static QString emailAddrAsAnchor (const Q3PtrList < mailAddress > &, bool);
+  static QString emailAddrAsAnchor (const QList < mailAddress *> &, bool);
 
   void clear();
 

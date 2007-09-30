@@ -34,8 +34,8 @@
 #include <kio/slavebase.h>
 
 #include <QHash>
+#include <QList>
 #include <QStringList>
-#include <q3ptrlist.h>
 #include <QByteArray>
 
 class KUrl;
@@ -291,7 +291,7 @@ public:
   /** read a envelope from imap and parse the addresses */
   mailHeader *parseEnvelope (parseString & inWords);
   /** @brief parse an address list and return a list of addresses */
-  void parseAddressList (parseString & inWords, Q3PtrList<mailAddress>& list);
+  void parseAddressList (parseString & inWords, QList<mailAddress *>& list);
   /** @brief parse an address and return the ref again */
   const mailAddress& parseAddress (parseString & inWords, mailAddress& buffer);
 
@@ -427,8 +427,8 @@ protected:
   QList < imapList > listResponses;
 
   /** @brief queues handling the running commands */
-  Q3PtrList < imapCommand > sentQueue;  // no autodelete
-  Q3PtrList < imapCommand > completeQueue;  // autodelete !!
+  QList < imapCommand *> sentQueue;  // no autodelete
+  QList < imapCommand *> completeQueue;  // autodelete !!
 
   /**
    * everything we didn't handle, everything but the greeting is bogus

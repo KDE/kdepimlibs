@@ -22,7 +22,7 @@
 #include "mailaddress.h"
 #include "mimeio.h"
 #include <kimap/rfccodecs.h>
-#include <Q3PtrList>
+#include <QList>
 
 using namespace KIMAP;
 
@@ -142,17 +142,17 @@ public:
     return mDate;
   }
 
-  static int parseAddressList (const char *, Q3PtrList < mailAddress > *);
-  static QByteArray getAddressStr (Q3PtrList < mailAddress > *);
-  Q3PtrList < mailAddress > &to ()
+  static int parseAddressList (const char *, QList < mailAddress *> &);
+  static QByteArray getAddressStr (QList < mailAddress *> &);
+  QList < mailAddress *> &to ()
   {
     return toAdr;
   }
-  Q3PtrList < mailAddress > &cc ()
+  QList < mailAddress *> &cc ()
   {
     return ccAdr;
   }
-  Q3PtrList < mailAddress > &bcc ()
+  QList < mailAddress *> &bcc ()
   {
     return bccAdr;
   }
@@ -175,9 +175,9 @@ public:
 #endif
 
 private:
-  Q3PtrList < mailAddress > toAdr;
-  Q3PtrList < mailAddress > ccAdr;
-  Q3PtrList < mailAddress > bccAdr;
+  QList < mailAddress *> toAdr;
+  QList < mailAddress *> ccAdr;
+  QList < mailAddress *> bccAdr;
   mailAddress fromAdr;
   mailAddress senderAdr;
   mailAddress returnpathAdr;

@@ -69,8 +69,6 @@ static sasl_callback_t callbacks[] = {
 
 imapParser::imapParser ()
 {
-  sentQueue.setAutoDelete (false);
-  completeQueue.setAutoDelete (true);
   currentState = ISTATE_NO;
   commandCounter = 0;
   lastHandled = 0;
@@ -155,7 +153,7 @@ imapParser::clientLogin (const QString & aUser, const QString & aPass,
     retVal = true;
   }
   resultInfo = cmd->resultInfo();
-  completeQueue.removeRef (cmd);
+  completeQueue.removeAll (cmd);
 
   return retVal;
 }
@@ -322,7 +320,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
     retVal = true;
   }
   resultInfo = cmd->resultInfo();
-  completeQueue.removeRef (cmd);
+  completeQueue.removeAll (cmd);
 
   sasl_dispose( &conn ); //we don't use sasl_en/decode(), so it's safe to dispose the connection.
 #endif //HAVE_LIBSASL2
@@ -840,7 +838,7 @@ void imapParser::parseExpunge (ulong value, parseString & result)
   Q_UNUSED(result);
 }
 
-void imapParser::parseAddressList (parseString & inWords, Q3PtrList<mailAddress>& list)
+void imapParser::parseAddressList (parseString & inWords, QList<mailAddress *>& list)
 {
   if (inWords[0] != '(')
   {
@@ -902,8 +900,7 @@ mailHeader * imapParser::parseEnvelope (parseString & inWords)
   //subject
   envelope->setSubject(parseLiteral(inWords));
 
-  Q3PtrList<mailAddress> list;
-  list.setAutoDelete(true);
+  QList<mailAddress *> list;
 
   //from
   parseAddressList(inWords, list);
@@ -1713,7 +1710,7 @@ int imapParser::parseLoop ()
           current->setResultInfo(result.cstr());
           current->setComplete ();
 
-          sentQueue.removeRef (current);
+          sentQueue.removeAll (current);
           completeQueue.append (current);
           if (result.length())
             parseResult (resultCode, result, current->command());
