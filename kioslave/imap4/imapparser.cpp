@@ -1013,7 +1013,7 @@ QHash < QByteArray, QString > imapParser::parseParameters (parseString & inWords
     {
       const QByteArray l1 = parseLiteral(inWords);
       const QByteArray l2 = parseLiteral(inWords);
-      retVal.insert (l1, QString(l2));
+      retVal.insert (l1.toLower(), QString(l2));
     }
 
     if (inWords[0] != ')')

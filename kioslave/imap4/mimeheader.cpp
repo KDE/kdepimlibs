@@ -33,7 +33,7 @@
 using namespace KIMAP;
 
 mimeHeader::mimeHeader ()
-    : typeList (17, false), dispositionList (17, false),
+    : typeList (), dispositionList (),
       _contentType("application/octet-stream"),
       _contentDisposition(), _contentDescription()
 {
@@ -41,8 +41,6 @@ mimeHeader::mimeHeader ()
   originalHdrLines.setAutoDelete (true);
   additionalHdrLines.setAutoDelete (false); // is also in original lines
   nestedParts.setAutoDelete (true);
-  typeList.setAutoDelete (true);
-  dispositionList.setAutoDelete (true);
   nestedMessage = NULL;
   contentLength = 0;
 }
@@ -87,7 +85,7 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
     {
       int skip;
       const char *aCStr = addLine->getValue ().data ();
-      Q3Dict < QString > *aList = 0;
+      QHash < QString, QString > aList;
 
       skip = mimeHdrLine::parseSeparator (';', aCStr);
       if (skip > 0)
@@ -109,12 +107,12 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
 
         if (!qstricmp (addLine->getLabel (), "Content-Disposition"))
         {
-          aList = &dispositionList;
+          aList = dispositionList;
           setDisposition( mimeValue );
         }
         else if (!qstricmp (addLine->getLabel (), "Content-Type"))
         {
-          aList = &typeList;
+          aList = typeList;
           setType( mimeValue );
         }
         else
@@ -163,58 +161,54 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
 }
 
 void
-mimeHeader::addParameter (const QByteArray& aParameter, Q3Dict < QString > *aList)
+mimeHeader::addParameter (const QByteArray& aParameter, QHash < QString, QString > &aList)
 {
-  if ( !aList )
-    return;
-
-  QString *aValue;
+  QString aValue;
   QByteArray aLabel;
   int pos = aParameter.indexOf ('=');
 //  cout << aParameter.left(pos).data();
-  aValue = new QString ();
-  aValue->fromLatin1 (aParameter.right (aParameter.length () - pos - 1));
+  aValue = QString::fromLatin1 (aParameter.right (aParameter.length () - pos - 1));
   aLabel = aParameter.left (pos);
-  if ((*aValue)[0] == '"')
-    *aValue = aValue->mid (1, aValue->length () - 2);
+  if (aValue[0] == '"')
+    aValue = aValue.mid (1, aValue.length () - 2);
 
-  aList->insert (aLabel, aValue);
+  aList.insert (aLabel.toLower(), aValue);
 //  cout << "=" << aValue->data() << endl;
 }
 
 QString
 mimeHeader::getDispositionParm (const QByteArray& aStr)
 {
-  return getParameter (aStr, &dispositionList);
+  return getParameter (aStr, dispositionList);
 }
 
 QString
 mimeHeader::getTypeParm (const QByteArray& aStr)
 {
-  return getParameter (aStr, &typeList);
+  return getParameter (aStr, typeList);
 }
 
 void
 mimeHeader::setDispositionParm (const QByteArray& aLabel, const QString& aValue)
 {
-  setParameter (aLabel, aValue, &dispositionList);
+  setParameter (aLabel, aValue, dispositionList);
   return;
 }
 
 void
 mimeHeader::setTypeParm (const QByteArray& aLabel, const QString& aValue)
 {
-  setParameter (aLabel, aValue, &typeList);
+  setParameter (aLabel, aValue, typeList);
 }
 
-Q3DictIterator < QString > mimeHeader::getDispositionIterator ()
+QHashIterator < QString, QString > mimeHeader::getDispositionIterator ()
 {
-  return Q3DictIterator < QString > (dispositionList);
+  return QHashIterator < QString, QString > (dispositionList);
 }
 
-Q3DictIterator < QString > mimeHeader::getTypeIterator ()
+QHashIterator < QString, QString > mimeHeader::getTypeIterator ()
 {
-  return Q3DictIterator < QString > (typeList);
+  return QHashIterator < QString, QString > (typeList);
 }
 
 Q3PtrListIterator < mimeHdrLine > mimeHeader::getOriginalIterator ()
@@ -234,13 +228,13 @@ mimeHeader::outputHeader (mimeIO & useIO)
   {
     useIO.outputMimeLine (QByteArray ("Content-Disposition: ")
                           + getDisposition ()
-                          + outputParameter (&dispositionList));
+                          + outputParameter (dispositionList));
   }
 
   if (!getType ().isEmpty ())
   {
     useIO.outputMimeLine (QByteArray ("Content-Type: ")
-                          + getType () + outputParameter (&typeList));
+                          + getType () + outputParameter (typeList));
   }
   if (!getDescription ().isEmpty ())
     useIO.outputMimeLine (QByteArray ("Content-Description: ") +
@@ -264,168 +258,158 @@ mimeHeader::outputHeader (mimeIO & useIO)
 }
 
 QString
-mimeHeader::getParameter (const QByteArray& aStr, Q3Dict < QString > *aDict)
+mimeHeader::getParameter (const QByteArray& aStr, QHash < QString, QString > &aDict)
 {
-  QString retVal, *found;
-  if (aDict)
+  QString retVal, found;
+  //see if it is a normal parameter
+  found = aDict.value ( aStr );
+  if ( found.isEmpty() )
   {
-    //see if it is a normal parameter
-    found = aDict->find (aStr);
-    if (!found)
+    //might be a continuated or encoded parameter
+    found = aDict.value ( aStr + '*' );
+    if ( found.isEmpty() )
     {
-      //might be a continuated or encoded parameter
-      found = aDict->find (aStr + '*');
-      if (!found)
-      {
-        //continuated parameter
-        QString decoded, encoded;
-        int part = 0;
+      //continuated parameter
+      QString decoded, encoded;
+      int part = 0;
 
-        do
+      do
+      {
+        QByteArray search;
+        search.setNum (part);
+        search = aStr + '*' + search;
+        found = aDict.value (search);
+        if ( found.isEmpty() )
         {
-          QByteArray search;
-          search.setNum (part);
-          search = aStr + '*' + search;
-          found = aDict->find (search);
-          if (!found)
-          {
-            found = aDict->find (search + '*');
-            if (found)
-              encoded += KIMAP::encodeRFC2231String (*found);
-          }
-          else
-          {
-            encoded += *found;
-          }
-          part++;
-        }
-        while (found);
-        if (encoded.contains ('\''))
-        {
-          retVal = KIMAP::decodeRFC2231String (encoded.toLocal8Bit ());
+          found = aDict.value (search + '*');
+          if ( !found.isEmpty() )
+            encoded += KIMAP::encodeRFC2231String (found);
         }
         else
         {
-          retVal =
-            KIMAP::decodeRFC2231String (QByteArray ("''") +
-                                        encoded.toLocal8Bit ());
+          encoded += found;
         }
+        part++;
+      }
+      while ( !found.isEmpty() );
+      if (encoded.contains ('\''))
+      {
+        retVal = KIMAP::decodeRFC2231String (encoded.toLocal8Bit ());
       }
       else
       {
-        //simple encoded parameter
-        retVal = KIMAP::decodeRFC2231String (found->toLocal8Bit ());
+        retVal =
+          KIMAP::decodeRFC2231String (QByteArray ("''") + encoded.toLocal8Bit ());
       }
     }
     else
     {
-      retVal = *found;
+      //simple encoded parameter
+      retVal = KIMAP::decodeRFC2231String (found.toLocal8Bit ());
     }
   }
+  else
+  {
+    retVal = found;
+  }
+
   return retVal;
 }
 
 void
 mimeHeader::setParameter (const QByteArray& aLabel, const QString& aValue,
-                          Q3Dict < QString > *aDict)
+                          QHash < QString, QString > &aDict)
 {
   bool encoded = true;
   uint vlen, llen;
   QString val = aValue;
 
-  if (aDict)
+  //see if it needs to get encoded
+  if (encoded && !aLabel.contains('*'))
   {
+    val = KIMAP::encodeRFC2231String (aValue);
+  }
+  //kDebug(7116) <<"mimeHeader::setParameter() - val = '" << val <<"'";
+  //see if it needs to be truncated
+  vlen = val.length();
+  llen = aLabel.length();
+  if (vlen + llen + 4 > 80 && llen < 80 - 8 - 2 )
+  {
+    const int limit = 80 - 8 - 2 - (int)llen;
+    // the -2 is there to allow extending the length of a part of val
+    // by 1 or 2 in order to prevent an encoded character from being
+    // split in half
+    int i = 0;
+    QString shortValue;
+    QByteArray shortLabel;
 
-    //see if it needs to get encoded
-    if (encoded && !aLabel.contains('*'))
+    while (!val.isEmpty ())
     {
-      val = KIMAP::encodeRFC2231String (aValue);
-    }
-     //kDebug(7116) <<"mimeHeader::setParameter() - val = '" << val <<"'";
-    //see if it needs to be truncated
-    vlen = val.length();
-    llen = aLabel.length();
-    if (vlen + llen + 4 > 80 && llen < 80 - 8 - 2 )
-    {
-      const int limit = 80 - 8 - 2 - (int)llen;
-      // the -2 is there to allow extending the length of a part of val
-      // by 1 or 2 in order to prevent an encoded character from being
-      // split in half
-      int i = 0;
-      QString shortValue;
-      QByteArray shortLabel;
-
-      while (!val.isEmpty ())
-      {
-        int partLen; // the length of the next part of the value
-        if ( limit >= int(vlen) ) {
-          // the rest of the value fits completely into one continued header
+      int partLen; // the length of the next part of the value
+      if ( limit >= int(vlen) ) {
+        // the rest of the value fits completely into one continued header
+        partLen = vlen;
+      }
+      else {
+        partLen = limit;
+        // make sure that we don't split an encoded char in half
+        if ( val[partLen-1] == '%' ) {
+          partLen += 2;
+        }
+        else if ( partLen > 1 && val[partLen-2] == '%' ) {
+          partLen += 1;
+        }
+        // make sure partLen does not exceed vlen (could happen in case of
+        // an incomplete encoded char)
+        if ( partLen > int(vlen) ) {
           partLen = vlen;
         }
-        else {
-          partLen = limit;
-          // make sure that we don't split an encoded char in half
-          if ( val[partLen-1] == '%' ) {
-            partLen += 2;
-          }
-          else if ( partLen > 1 && val[partLen-2] == '%' ) {
-            partLen += 1;
-          }
-          // make sure partLen does not exceed vlen (could happen in case of
-          // an incomplete encoded char)
-          if ( partLen > int(vlen) ) {
-            partLen = vlen;
-          }
-        }
-        shortValue = val.left( partLen );
-        shortLabel.setNum (i);
-        shortLabel = aLabel + '*' + shortLabel;
-        val = val.right( vlen - partLen );
-        vlen = vlen - partLen;
-        if (encoded)
-        {
-          if (i == 0)
-          {
-            shortValue = "''" + shortValue;
-          }
-          shortLabel += '*';
-        }
-        //kDebug(7116) <<"mimeHeader::setParameter() - shortLabel = '" << shortLabel <<"'";
-        //kDebug(7116) <<"mimeHeader::setParameter() - shortValue = '" << shortValue <<"'";
-        //kDebug(7116) <<"mimeHeader::setParameter() - val        = '" << val <<"'";
-        aDict->insert (shortLabel, new QString (shortValue));
-        i++;
       }
+      shortValue = val.left( partLen );
+      shortLabel.setNum (i);
+      shortLabel = aLabel + '*' + shortLabel;
+      val = val.right( vlen - partLen );
+      vlen = vlen - partLen;
+      if (encoded)
+      {
+        if (i == 0)
+        {
+          shortValue = "''" + shortValue;
+        }
+        shortLabel += '*';
+      }
+      //kDebug(7116) <<"mimeHeader::setParameter() - shortLabel = '" << shortLabel <<"'";
+      //kDebug(7116) <<"mimeHeader::setParameter() - shortValue = '" << shortValue <<"'";
+      //kDebug(7116) <<"mimeHeader::setParameter() - val        = '" << val <<"'";
+      aDict.insert (shortLabel.toLower(), shortValue);
+      i++;
     }
-    else
-    {
-      aDict->insert (aLabel, new QString (val));
-    }
+  }
+  else
+  {
+    aDict.insert (aLabel.toLower(), val);
   }
 }
 
-QByteArray mimeHeader::outputParameter (Q3Dict < QString > *aDict)
+QByteArray mimeHeader::outputParameter (QHash < QString, QString > &aDict)
 {
   QByteArray retVal;
-  if (aDict)
+  QHashIterator < QString, QString > it (aDict);
+  while (it.hasNext ())
   {
-    Q3DictIterator < QString > it (*aDict);
-    while (it.current ())
+    it.next();
+    retVal += (";\n\t" + it.key() + '=').toLatin1 ();
+    if (it.value().indexOf (' ') > 0 || it.value().indexOf (';') > 0)
     {
-      retVal += (";\n\t" + it.currentKey () + '=').toLatin1 ();
-      if (it.current ()->indexOf (' ') > 0 || it.current ()->indexOf (';') > 0)
-      {
-        retVal += '"' + it.current ()->toUtf8 () + '"';
-      }
-      else
-      {
-        retVal += it.current ()->toUtf8 ();
-      }
-      // << it.current()->toUtf8() << "'";
-      ++it;
+      retVal += '"' + it.value().toUtf8 () + '"';
     }
-    retVal += '\n';
+    else
+    {
+      retVal += it.value().toUtf8 ();
+    }
   }
+  retVal += '\n';
+
   return retVal;
 }
 

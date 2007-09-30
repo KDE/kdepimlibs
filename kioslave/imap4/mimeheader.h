@@ -19,7 +19,7 @@
 #define MIMEHEADER_H
 
 #include <q3ptrlist.h>
-#include <q3dict.h>
+#include <QHash>
 #include <QByteArray>
 
 #include "mimehdrline.h"
@@ -43,7 +43,7 @@ public:
   virtual void outputPart (mimeIO &);
 
 
-  QByteArray outputParameter (Q3Dict < QString > *);
+  QByteArray outputParameter (QHash < QString, QString > &);
 
 //  int parsePart (mimeIO &, const QString&);
 //  int parseBody (mimeIO &, QByteArray &, const QString&, bool mbox = false);
@@ -53,11 +53,11 @@ public:
 
   QString getDispositionParm (const QByteArray&);
   void setDispositionParm (const QByteArray&, const QString&);
-  Q3DictIterator < QString > getDispositionIterator ();
+  QHashIterator < QString, QString > getDispositionIterator ();
 
   QString getTypeParm (const QByteArray&);
   void setTypeParm (const QByteArray&, const QString&);
-  Q3DictIterator < QString > getTypeIterator ();
+  QHashIterator < QString, QString > getTypeIterator ();
 
   // recursively serialize all important contents to the QDataStream
   void serialize(QDataStream& stream);
@@ -311,16 +311,16 @@ public:
 #endif
 
 protected:
-  static void addParameter (const QByteArray&, Q3Dict < QString > *);
-  static QString getParameter (const QByteArray&, Q3Dict < QString > *);
-  static void setParameter (const QByteArray&, const QString&, Q3Dict < QString > *);
+  static void addParameter (const QByteArray&, QHash < QString, QString > &);
+  static QString getParameter (const QByteArray&, QHash < QString, QString > &);
+  static void setParameter (const QByteArray&, const QString&, QHash < QString, QString > &);
 
   Q3PtrList < mimeHdrLine > originalHdrLines;
 
 private:
   Q3PtrList < mimeHdrLine > additionalHdrLines;
-  Q3Dict < QString > typeList;
-  Q3Dict < QString > dispositionList;
+  QHash < QString, QString > typeList;
+  QHash < QString, QString > dispositionList;
   QByteArray _contentType;
   QByteArray _contentDisposition;
   QByteArray _contentEncoding;
