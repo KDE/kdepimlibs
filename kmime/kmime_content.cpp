@@ -1046,7 +1046,7 @@ Content * KMime::Content::content( const ContentIndex &index ) const
 ContentIndex KMime::Content::indexForContent( Content * content ) const
 {
   int i = d_ptr->contents.indexOf( content );
-  if ( i > 0 ) {
+  if ( i >= 0 ) {
     ContentIndex ci;
     ci.push( i + 1 ); // zero-based -> one-based index
     return ci;

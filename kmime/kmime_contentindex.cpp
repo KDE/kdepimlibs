@@ -29,6 +29,7 @@
 
 #include "kmime_contentindex.h"
 
+#include <QHash>
 #include <QSharedData>
 #include <QtCore/QStringList>
 
@@ -111,4 +112,9 @@ ContentIndex& ContentIndex::operator =(const ContentIndex & other)
   if ( this != &other )
     d = other.d;
   return *this;
+}
+
+uint qHash( const KMime::ContentIndex &index )
+{ 
+  return qHash( index.toString() );
 }
