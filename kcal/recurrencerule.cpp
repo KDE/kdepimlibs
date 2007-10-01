@@ -771,26 +771,26 @@ KDateTime RecurrenceRule::endDt( bool *result ) const
     return KDateTime();
   }
   if ( d->mDuration < 0 ) {
-    if ( result ) {
-      result = false;
-    }
     return KDateTime();
-  } else if ( d->mDuration == 0 ) {
-    return d->mDateEnd;
-  } else {
-    // N occurrences. Check if we have a full cache. If so, return the cached end date.
-    if ( ! d->mCached ) {
-      // If not enough occurrences can be found (i.e. inconsistent constraints)
-      if ( !d->buildCache() ) {
-        if ( result ) {
-          result = false;
-        }
-        return KDateTime();
-      }
-    }
-    return d->mCachedDateEnd;
   }
-  return KDateTime();
+  if ( d->mDuration == 0 ) {
+    if ( result ) {
+      *result = true;
+    }
+    return d->mDateEnd;
+  }
+
+  // N occurrences. Check if we have a full cache. If so, return the cached end date.
+  if ( !d->mCached ) {
+    // If not enough occurrences can be found (i.e. inconsistent constraints)
+    if ( !d->buildCache() ) {
+      return KDateTime();
+    }
+  }
+  if ( result ) {
+    *result = true;
+  }
+  return d->mCachedDateEnd;
 }
 
 void RecurrenceRule::setEndDt( const KDateTime &dateTime )

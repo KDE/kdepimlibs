@@ -49,6 +49,7 @@ KCAL_EXECUTABLE_TESTS(
   convertqtopia
   incidencestest
   loadcalendar
+  fbrecurring
   readandwrite
   testrecurprevious
   testrecurrence
