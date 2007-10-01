@@ -159,7 +159,7 @@ static QString eventViewerFormatAttendees( Incidence *event )
   Attendee::List attendees = event->attendees();
   if ( attendees.count() ) {
     KIconLoader *iconLoader = KIconLoader::global();
-    const QString iconPath = iconLoader->iconPath( "mail", K3Icon::Small );
+    const QString iconPath = iconLoader->iconPath( "mail", KIconLoader::Small );
 
     // Add organizer link
     tmpStr += eventViewerAddTag( "h3", i18n( "Organizer" ) );
@@ -221,7 +221,7 @@ static QString eventViewerFormatBirthday( Event *event )
   QString email_1= event->customProperty( "KABC", "EMAIL-1" );
 
   KIconLoader *iconLoader = KIconLoader::global();
-  const QString iconPath = iconLoader->iconPath( "mail", K3Icon::Small );
+  const QString iconPath = iconLoader->iconPath( "mail", KIconLoader::Small );
   //TODO: add a tart icon
   QString tmpString = "<ul>";
   tmpString += linkPerson( email_1, name_1, uid_1, iconPath );
@@ -247,16 +247,16 @@ static QString eventViewerFormatHeader( Incidence *incidence )
     tmpStr += "<td>";
 
     if ( incidence->type() == "Todo" ) {
-      tmpStr += "<img src=\"" + iconLoader->iconPath( "todo", K3Icon::Small ) + "\">";
+      tmpStr += "<img src=\"" + iconLoader->iconPath( "todo", KIconLoader::Small ) + "\">";
     }
     if ( incidence->isAlarmEnabled() ) {
-      tmpStr += "<img src=\"" + iconLoader->iconPath( "bell", K3Icon::Small ) + "\">";
+      tmpStr += "<img src=\"" + iconLoader->iconPath( "bell", KIconLoader::Small ) + "\">";
     }
     if ( incidence->recurs() ) {
-      tmpStr += "<img src=\"" + iconLoader->iconPath( "recur", K3Icon::Small ) + "\">";
+      tmpStr += "<img src=\"" + iconLoader->iconPath( "recur", KIconLoader::Small ) + "\">";
     }
     if ( incidence->isReadOnly() ) {
-      tmpStr += "<img src=\"" + iconLoader->iconPath( "readonlyevent", K3Icon::Small ) + "\">";
+      tmpStr += "<img src=\"" + iconLoader->iconPath( "readonlyevent", KIconLoader::Small ) + "\">";
     }
 
     tmpStr += "</td>";
