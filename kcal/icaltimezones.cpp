@@ -179,7 +179,9 @@ ICalTimeZoneBackend::ICalTimeZoneBackend(ICalTimeZoneSource *source, const QStri
 
 ICalTimeZoneBackend::ICalTimeZoneBackend(const KTimeZone &tz, const QDate &earliest)
   : KTimeZoneBackend(0, tz.name(), tz.countryCode(), tz.latitude(), tz.longitude(), tz.comment())
-{}
+{
+  Q_UNUSED(earliest)
+}
 
 ICalTimeZoneBackend::~ICalTimeZoneBackend()
 {}
