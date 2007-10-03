@@ -159,7 +159,7 @@ static QString eventViewerFormatAttendees( Incidence *event )
   Attendee::List attendees = event->attendees();
   if ( attendees.count() ) {
     KIconLoader *iconLoader = KIconLoader::global();
-    const QString iconPath = iconLoader->iconPath( "mail", K3Icon::Small );
+    const QString iconPath = iconLoader->iconPath( "mail", KIconLoader::Small );
 
     // Add organizer link
     tmpStr += eventViewerAddTag( "h3", i18n( "Organizer" ) );
@@ -221,7 +221,7 @@ static QString eventViewerFormatBirthday( Event *event )
   QString email_1= event->customProperty( "KABC", "EMAIL-1" );
 
   KIconLoader *iconLoader = KIconLoader::global();
-  const QString iconPath = iconLoader->iconPath( "mail", K3Icon::Small );
+  const QString iconPath = iconLoader->iconPath( "mail", KIconLoader::Small );
   //TODO: add a tart icon
   QString tmpString = "<ul>";
   tmpString += linkPerson( email_1, name_1, uid_1, iconPath );
@@ -247,16 +247,16 @@ static QString eventViewerFormatHeader( Incidence *incidence )
     tmpStr += "<td>";
 
     if ( incidence->type() == "Todo" ) {
-      tmpStr += "<img src=\"" + iconLoader->iconPath( "todo", K3Icon::Small ) + "\">";
+      tmpStr += "<img src=\"" + iconLoader->iconPath( "todo", KIconLoader::Small ) + "\">";
     }
     if ( incidence->isAlarmEnabled() ) {
-      tmpStr += "<img src=\"" + iconLoader->iconPath( "bell", K3Icon::Small ) + "\">";
+      tmpStr += "<img src=\"" + iconLoader->iconPath( "bell", KIconLoader::Small ) + "\">";
     }
     if ( incidence->recurs() ) {
-      tmpStr += "<img src=\"" + iconLoader->iconPath( "recur", K3Icon::Small ) + "\">";
+      tmpStr += "<img src=\"" + iconLoader->iconPath( "recur", KIconLoader::Small ) + "\">";
     }
     if ( incidence->isReadOnly() ) {
-      tmpStr += "<img src=\"" + iconLoader->iconPath( "readonlyevent", K3Icon::Small ) + "\">";
+      tmpStr += "<img src=\"" + iconLoader->iconPath( "readonlyevent", KIconLoader::Small ) + "\">";
     }
 
     tmpStr += "</td>";
@@ -1147,11 +1147,11 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   case iTIPAdd:
   {
     if ( incidence && incidence->revision() > 0 ) {
-      html += "<td colspan=\"9\">";
       if ( incBase->type() == "Todo" ) {
+        html += "<td colspan=\"13\">";
         html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
       } else {
-        html += "<td colspan=\"13\">";
+        html += "<td colspan=\"9\">";
         html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
       }
       html += "</td></tr><tr>";
@@ -1177,11 +1177,11 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
     // Forward
     html += helper->makeLink( "forward", i18nc( "forward request to another", "[Forward]" ) );
-#if 0
-    // TODO: implement this
-    html += "</b></a></td><td> &nbsp; </td><td>";
-    html += helper->makeLink( "check_calendar", i18n("[Check my calendar...]" ) );
-#endif
+
+    if ( incBase->type() == "Event" ) {
+      html += "</b></a></td><td> &nbsp; </td><td>";
+      html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+    }
     break;
   }
 

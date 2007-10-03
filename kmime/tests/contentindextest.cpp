@@ -73,6 +73,7 @@ void ContentIndexTest::testContent( )
   QCOMPARE( c1->content( ContentIndex( "2.1" ) ), (Content*)0 );
   QCOMPARE( c1->indexForContent( c1 ), ContentIndex() );
   QCOMPARE( c1->indexForContent( c11 ), ContentIndex( "2" ) );
+  QCOMPARE( c1->indexForContent( c1->contents().first() ), ContentIndex( "1" ) );
 
   Content *c12 = new Content();
   c1->addContent( c12 );

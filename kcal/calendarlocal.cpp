@@ -380,63 +380,50 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
   KDateTime::Spec ts = timespec.isValid() ? timespec : timeSpec();
   KDateTime st( start, ts );
   KDateTime nd( end, ts );
+  KDateTime yesterStart = st.addDays( -1 );
 
   // Get non-recurring events
   foreach ( Event *event, d->mEvents ) {
-    if ( event->recurs() ) {
-      KDateTime rStart = event->dtStart();
-      bool found = false;
-      if ( inclusive ) {
-        if ( rStart >= st && rStart <= nd ) {
-          // Start date of event is in range. Now check for end date.
-          // if duration is negative, event recurs forever, so do not include it.
-          if ( event->recurrence()->duration() == 0 ) {  // End date set
-            KDateTime rEnd = event->recurrence()->endDateTime();
-            if ( rEnd >= st && rEnd <= nd ) {  // End date within range
-              found = true;
-            }
-          } else if ( event->recurrence()->duration() > 0 ) {  // Duration set
-            // TODO: Calculate end date from duration. Should be done in Event
-            // For now exclude all events with a duration.
-          }
-        }
-      } else {
-        if ( rStart <= nd ) {  // Start date not after range
-          if ( rStart >= st ) {  // Start date within range
-            found = true;
-          } else if ( event->recurrence()->duration() == -1 ) {// Recurs forever
-            found = true;
-          } else if ( event->recurrence()->duration() == 0 ) { // End date set
-            KDateTime rEnd = event->recurrence()->endDateTime();
-            if ( rEnd >= st && rEnd <= nd ) {  // End date within range
-              found = true;
-            }
-          } else {  // Duration set
-            // TODO: Calculate end date from duration. Should be done in Event
-            // For now include all events with a duration.
-            found = true;
-          }
-        }
-      }
-
-      if ( found ) {
-        eventList.append( event );
-      }
-
-    } else {
-      KDateTime s = event->dtStart();
-      KDateTime e = event->dtEnd();
-
-      if ( inclusive ) {
-        if ( s >= st && e <= nd ) {
-          eventList.append( event );
-        }
-      } else {
-        if ( s <= nd && e >= st ) {
-          eventList.append( event );
-        }
-      }
+    KDateTime rStart = event->dtStart();
+    if ( nd < rStart ) {
+      continue;
     }
+    if ( inclusive && rStart < st ) {
+      continue;
+    }
+
+    if ( !event->recurs() ) { // non-recurring events
+      KDateTime rEnd = event->dtEnd();
+      if ( rEnd < st ) {
+        continue;
+      }
+      if ( inclusive && nd < rEnd ) {
+        continue;
+      }
+    } else { // recurring events
+      switch( event->recurrence()->duration() ) {
+      case -1: // infinite
+        if ( inclusive ) {
+          continue;
+        }
+        break;
+      case 0: // end date given
+      default: // count given
+        KDateTime rEnd( event->recurrence()->endDate(), ts );
+        if ( !rEnd.isValid() ) {
+          continue;
+        }
+        if ( rEnd < st ) {
+          continue;
+        }
+        if ( inclusive && nd < rEnd ) {
+          continue;
+        }
+        break;
+      } // switch(duration)
+    } //if(recurs)
+
+    eventList.append( event );
   }
 
   return eventList;

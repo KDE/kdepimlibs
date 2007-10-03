@@ -687,9 +687,9 @@ mimeHeader::iconName ()
   QString fileName =
     KMimeType::mimeType (contentType.toLower ())->icon (QString(), false);
   QString iconFileName =
-    KGlobal::mainComponent().iconLoader ()->iconPath (fileName, K3Icon::Desktop);
+    KGlobal::mainComponent().iconLoader ()->iconPath (fileName, KIconLoader::Desktop);
 //  if (iconFileName.isEmpty())
-//    iconFileName = KGlobal::mainComponent().iconLoader()->iconPath( "unknown", K3Icon::Desktop );
+//    iconFileName = KGlobal::mainComponent().iconLoader()->iconPath( "unknown", KIconLoader::Desktop );
   return iconFileName;
 }
 
