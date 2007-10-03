@@ -1147,10 +1147,11 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   case iTIPAdd:
   {
     if ( incidence && incidence->revision() > 0 ) {
-      html += "<td colspan=\"9\">";
       if ( incBase->type() == "Todo" ) {
+        html += "<td colspan=\"11\">";
         html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
       } else {
+        html += "<td colspan=\"9\">";
         html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
       }
       html += "</td></tr><tr>";
@@ -1173,11 +1174,11 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
     // Forward
     html += helper->makeLink( "forward", i18nc( "forward request to another", "[Forward]" ) );
-#if 0
-    // TODO: implement this
-    html += "</b></a></td><td> &nbsp; </td><td>";
-    html += helper->makeLink( "check_calendar", i18n("[Check my calendar...]" ) );
-#endif
+
+    if ( incBase->type() == "Event" ) {
+      html += "</b></a></td><td> &nbsp; </td><td>";
+      html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+    }
     break;
   }
 
