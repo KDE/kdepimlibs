@@ -34,7 +34,7 @@ class NNTPProtocol:public KIO::TCPSlaveBase
   virtual ~NNTPProtocol();
 
   virtual void get(const KUrl& url );
-  virtual void put( const KUrl& url, int permissions, bool overwrite, bool resume );
+  virtual void put( const KUrl& url, int permissions, KIO::JobFlags flags );
   virtual void stat(const KUrl& url );
   virtual void listDir(const KUrl& url );
   virtual void setHost(const QString& host, quint16 port,

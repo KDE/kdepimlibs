@@ -176,7 +176,7 @@ void NNTPProtocol::get( const KUrl& url )
   finished();
 }
 
-void NNTPProtocol::put( const KUrl &/*url*/, int /*permissions*/, bool /*overwrite*/, bool /*resume*/ )
+void NNTPProtocol::put( const KUrl &/*url*/, int /*permissions*/, KIO::JobFlags flags )
 {
   if ( !nntp_open() )
     return;

@@ -185,7 +185,7 @@ void SmtpJob::startSmtpJob()
     kDebug(5324) << "re-using existing slave";
   }
 
-  KIO::TransferJob *job = KIO::put( destination, -1, false, false, false );
+  KIO::TransferJob *job = KIO::put( destination, -1, KIO::HideProgressInfo );
   if ( !d->slave || !job ) {
     setError( UserDefinedError );
     setErrorText( i18n("Unable to create SMTP job.") );

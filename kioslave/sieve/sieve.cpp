@@ -494,7 +494,7 @@ static void append_lf2crlf( QByteArray & out, const QByteArray & in ) {
   out.resize( d - out.begin() );
 }
 
-void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, bool /*overwrite*/, bool /*resume*/)
+void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, KIO::JobFlags)
 {
 	changeCheck( url );
 	if (!connect())

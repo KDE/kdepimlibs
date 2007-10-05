@@ -197,7 +197,7 @@ void SMTPProtocol::special( const QByteArray & aData ) {
 // hostname=text (used in the HELO)
 // body={7bit,8bit} (default: 7bit; 8bit activates the use of the 8BITMIME SMTP extension)
 void SMTPProtocol::put(const KUrl & url, int /*permissions */ ,
-                       bool /*overwrite */ , bool /*resume */ )
+                       KIO::JobFlags)
 {
   Request request = Request::fromURL( url ); // parse settings from URL's query
 

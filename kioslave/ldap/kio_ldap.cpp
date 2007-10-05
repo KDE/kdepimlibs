@@ -544,7 +544,7 @@ void LDAPProtocol::del( const KUrl &_url, bool )
   finished();
 }
 
-void LDAPProtocol::put( const KUrl &_url, int, bool overwrite, bool )
+void LDAPProtocol::put( const KUrl &_url, int, KIO::JobFlags flags )
 {
   kDebug(7125) << "put(" << _url << ")";
 
@@ -622,7 +622,7 @@ void LDAPProtocol::put( const KUrl &_url, int, bool overwrite, bool )
               kDebug(7125) << "kio_ldap_add " << ldif.dn().toString();
               addObject.setDn( ldif.dn() );
               ldaperr = mOp.add_s(  addObject );
-              if ( ldaperr == KLDAP_ALREADY_EXISTS && overwrite ) {
+              if ( ldaperr == KLDAP_ALREADY_EXISTS && (flags & KIO::Overwrite) ) {
                 kDebug(7125) << ldif.dn().toString() << " already exists, delete first";
                 ldaperr = mOp.del_s( ldif.dn() );
                 if ( ldaperr == KLDAP_SUCCESS )

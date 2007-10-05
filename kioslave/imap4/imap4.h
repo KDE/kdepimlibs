@@ -97,11 +97,10 @@ public:
    * @brief create a mailbox
    */
   virtual void mkdir (const KUrl & url, int permissions);
-  virtual void put (const KUrl & url, int permissions, bool overwrite,
-    bool resume);
-  virtual void rename (const KUrl & src, const KUrl & dest, bool overwrite);
+  virtual void put (const KUrl & url, int permissions, KIO::JobFlags flags);
+  virtual void rename (const KUrl & src, const KUrl & dest, KIO::JobFlags flags);
   virtual void copy (const KUrl & src, const KUrl & dest, int permissions,
-    bool overwrite);
+    KIO::JobFlags flags);
 
   /** @brief reimplement the parser
    * relay hook to send the fetched data directly to an upper level

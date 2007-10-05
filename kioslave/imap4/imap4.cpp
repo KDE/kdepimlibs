@@ -773,10 +773,10 @@ IMAP4Protocol::setSubURL (const KUrl & _url)
 }
 
 void
-IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
+IMAP4Protocol::put (const KUrl & _url, int, KIO::JobFlags)
 {
   kDebug(7116) <<"IMAP4::put -" << _url.prettyUrl();
-//  KIO::TCPSlaveBase::put(_url,permissions,overwrite,resume);
+//  KIO::TCPSlaveBase::put(_url,permissions,flags)
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   enum IMAP_TYPE aType =
     parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
@@ -960,9 +960,9 @@ IMAP4Protocol::mkdir (const KUrl & _url, int)
 }
 
 void
-IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
+IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, KIO::JobFlags flags)
 {
-  kDebug(7116) <<"IMAP4::copy - [" << (overwrite ?"Overwrite" :"NoOverwrite") <<"]" << src.prettyUrl() <<" ->" << dest.prettyUrl();
+  kDebug(7116) <<"IMAP4::copy - [" << ((flags & KIO::Overwrite) ?"Overwrite" :"NoOverwrite") <<"]" << src.prettyUrl() <<" ->" << dest.prettyUrl();
   QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter, sInfo;
   QString dBox, dSequence, dLType, dSection, dValidity, dDelimiter, dInfo;
   enum IMAP_TYPE sType =
@@ -1669,9 +1669,9 @@ IMAP4Protocol::specialQuotaCommand( int command, QDataStream& stream )
 
 
 void
-IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, bool overwrite)
+IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, KIO::JobFlags flags)
 {
-  kDebug(7116) <<"IMAP4::rename - [" << (overwrite ?"Overwrite" :"NoOverwrite") <<"]" << src <<" ->" << dest;
+  kDebug(7116) <<"IMAP4::rename - [" << ((flags & KIO::Overwrite) ?"Overwrite" :"NoOverwrite") <<"]" << src <<" ->" << dest;
   QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter, sInfo;
   QString dBox, dSequence, dLType, dSection, dValidity, dDelimiter, dInfo;
   enum IMAP_TYPE sType =

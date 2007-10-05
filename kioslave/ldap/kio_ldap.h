@@ -48,7 +48,7 @@ class LDAPProtocol : public KIO::SlaveBase
     virtual void stat( const KUrl& url );
     virtual void listDir( const KUrl& url );
     virtual void del( const KUrl& url, bool isfile );
-    virtual void put( const KUrl& url, int permissions, bool overwrite, bool resume );
+    virtual void put( const KUrl& url, int permissions, KIO::JobFlags flags );
 
   private:
 
