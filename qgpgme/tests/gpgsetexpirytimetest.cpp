@@ -27,7 +27,7 @@
 
 #include <qgpgme/eventloopinteractor.h>
 
-#include <gpgme++/gpgsetexpirytime.h>
+#include <gpgme++/gpgsetexpirytimeeditinteractor.h>
 #include <gpgme++/context.h>
 #include <gpgme++/error.h>
 #include <gpgme++/data.h>
@@ -83,7 +83,7 @@ int main( int argc, char * argv[] ) {
         ctx->setManagedByEventLoopInteractor( true );
 
         Data data;
-        std::auto_ptr<EditInteractor> ei( new GpgSetExpiryTime( date ) );
+        std::auto_ptr<EditInteractor> ei( new GpgSetExpiryTimeEditInteractor( date ) );
 
         app.connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)), SLOT(quit()) );
 
