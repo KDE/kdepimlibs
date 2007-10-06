@@ -27,6 +27,7 @@
 
 #include <kurl.h>
 #include <kcomponentdata.h>
+#include <kconfiggroup.h>
 #include <kaboutdata.h>
 #include <kio/netaccess.h>
 #include <kio/job.h>
