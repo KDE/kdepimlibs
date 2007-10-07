@@ -24,6 +24,7 @@ Name[pt]=Recursos do KDE
 Name[sv]=KDE-resurser
 Name[uk]=Ресурси KDE
 Name[x-test]=xxKDE Resourcesxx
+Name[zh_CN]=KDE 资源
 Name[zh_TW]=KDE 資源
 
 Comment=Configure KDE Resources
@@ -42,6 +43,7 @@ Comment[pt]=Configurar os Recursos do KDE
 Comment[sv]=Anpassa KDE-resurser
 Comment[uk]=Налаштувати ресурси KDE
 Comment[x-test]=xxConfigure KDE Resourcesxx
+Comment[zh_CN]=配置 KDE 资源
 Comment[zh_TW]=設定 KDE 資源
 
 Keywords=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap
@@ -57,3 +59,4 @@ Keywords[pt]=recursos,recurso do konector,recurso de contactos,recurso de calend
 Keywords[sv]=resurser,konnector-resurs,kontaktresurs,kalenderresurs,anteckningsresurs,alarmresurs,IMAP
 Keywords[uk]=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap,ресурс календаря,ресурси
 Keywords[x-test]=xxresources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imapxx
+Keywords[zh_CN]=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap,资源,konnector 资源,联系人资源,日历资源,备忘资源,提醒资源

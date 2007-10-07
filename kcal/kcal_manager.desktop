@@ -18,6 +18,7 @@ Name[pt]=Calendário
 Name[sv]=Kalender
 Name[uk]=Календар
 Name[x-test]=xxCalendarxx
+Name[zh_CN]=日历
 Name[zh_TW]=行事曆
 Type=Service
 X-KDE-ServiceTypes=KResources/Manager

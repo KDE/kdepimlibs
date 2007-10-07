@@ -17,6 +17,7 @@ Comment[pt]=Gestor do KResource
 Comment[sv]=Resurshantering
 Comment[uk]=Менеджер KResource
 Comment[x-test]=xxKResource Managerxx
+Comment[zh_CN]=KResource 资源
 Comment[zh_TW]=KResource 管理者
 
 [PropertyDef::X-KDE-ResourceFamily]
