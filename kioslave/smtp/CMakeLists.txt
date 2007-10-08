@@ -2,8 +2,6 @@
 
 add_subdirectory(tests)
 
-add_definitions (-DQT3_SUPPORT)
-
 set(smtp_optional_includes)
 set(smtp_optional_libs)
 
