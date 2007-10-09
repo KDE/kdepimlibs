@@ -5,25 +5,16 @@ add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
 
 ########### next target ###############
 
-set(dataprovidertest_SRCS dataprovidertest.cpp )
-kde4_add_executable(dataprovidertest TEST ${dataprovidertest_SRCS})
-target_link_libraries(dataprovidertest  qgpgme ${QT_QTCORE_LIBRARY} )
+set( qgpgme_TESTS
+  dataprovidertest
+  installtest
+  gpgsetexpirytimetest
+  gpgsetownertrusttest )
 
-########### next target ###############
-
-set(installtest_SRCS installtest.cpp)
-kde4_add_executable(installtest TEST ${installtest_SRCS})
-target_link_libraries(installtest  qgpgme)
-
-########### next target ###############
-
-kde4_add_executable(gpgsetexpirytimetest TEST gpgsetexpirytimetest.cpp)
-target_link_libraries(gpgsetexpirytimetest  qgpgme ${QT_QTCORE_LIBRARY})
-
-########### next target ###############
-
-kde4_add_executable(gpgsetownertrusttest TEST gpgsetownertrusttest.cpp)
-target_link_libraries(gpgsetownertrusttest  qgpgme ${QT_QTCORE_LIBRARY})
+foreach( _qgpgme_test ${qgpgme_TESTS} )
+  kde4_add_executable( "${_qgpgme_test}" TEST "${_qgpgme_test}.cpp" )
+  target_link_libraries( "${_qgpgme_test}" qgpgme ${QT_QTCORE_LIBRARY} )
+endforeach( _qgpgme_test )
 
 ########### next target ###############
 
