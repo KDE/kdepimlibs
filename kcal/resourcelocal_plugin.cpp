@@ -25,10 +25,6 @@
 
 using namespace KCal;
 
-extern "C"
-{
-  KDE_EXPORT void *init_kcal_local()
-  {
-    return new KRES::PluginFactory<ResourceLocal,ResourceLocalConfig>();
-  }
-}
+typedef KRES::PluginFactory<ResourceLocal, ResourceLocalConfig> ResourceLocalFactory;
+
+K_EXPORT_PLUGIN(ResourceLocalFactory)

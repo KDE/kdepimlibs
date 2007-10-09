@@ -33,6 +33,7 @@
 #include <kurl.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
+#include <kconfiggroup.h>
 
 #include <QtCore/QString>
 #include <QtCore/QDir>

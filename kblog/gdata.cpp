@@ -84,7 +84,7 @@ void GData::fetchProfileId()
 {
   kDebug() << "fetchProfileId()";
   QByteArray data;
-  KIO::Job *job = KIO::get( url(), false, false );
+  KIO::Job *job = KIO::get( url(), KIO::NoReload, KIO::HideProgressInfo );
   KUrl blogUrl = url();
   connect( job, SIGNAL(data(KIO::Job*,const QByteArray&)),
                   this,SLOT(slotFetchProfileIdData(KIO::Job*,const QByteArray&)));
@@ -234,7 +234,7 @@ void GData::modifyPost( KBlog::BlogPost* post )
 
   KIO::TransferJob *job = KIO::http_post(
       KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default/"+post->postId() ),
-      postData, false );
+      postData, KIO::HideProgressInfo );
   d->mModifyPostMap[ job ] = post;
 
   if ( !job ) {
@@ -296,7 +296,7 @@ void GData::createPost( KBlog::BlogPost* post )
 
     KIO::TransferJob *job = KIO::http_post(
         KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default" ),
-        postData, false );
+        postData, KIO::HideProgressInfo );
 
     d->mCreatePostMap[ job ] = post;
 
@@ -337,7 +337,7 @@ void GData::removePost( KBlog::BlogPost *post )
 
     KIO::TransferJob *job = KIO::http_post(
         KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default/"+post->postId() ),
-        postData, false );
+        postData, KIO::HideProgressInfo );
 
     d->mRemovePostMap[ job ] = post;
 
@@ -392,7 +392,7 @@ void GData::createComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
 
     KIO::TransferJob *job = KIO::http_post(
         KUrl( "http://www.blogger.com/feeds/" + blogId() +"/"+ post->postId() +"/comments/default" ),
-        postData, false );
+        postData, KIO::HideProgressInfo );
 
     d->mCreateCommentMap[ job ][post] = comment;
 
@@ -441,7 +441,7 @@ void GData::removeComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
     KIO::TransferJob *job = KIO::http_post(
             KUrl( "http://www.blogger.com/feeds/" + blogId() +"/"+ post->postId() +
            "/comments/default/" + comment->commentId() ),
-            postData, false );
+            postData, KIO::HideProgressInfo );
 
     d->mRemoveCommentMap[ job ][ post ] = comment;
 
@@ -481,7 +481,7 @@ bool GDataPrivate::authenticate(){
   if( !mAuthenticationTime.isValid() ||
       QDateTime::currentDateTime().toTime_t() - mAuthenticationTime.toTime_t()
        > TIMEOUT || mAuthenticationString.isEmpty() ){
-    KIO::Job *job = KIO::http_post( authGateway, QByteArray(), false );
+    KIO::Job *job = KIO::http_post( authGateway, QByteArray(), KIO::HideProgressInfo );
     if ( KIO::NetAccess::synchronousRun(
          job, (QWidget*)0, &data, &authGateway ) ) {
       kDebug(5323) << "Fetched authentication result for" <<

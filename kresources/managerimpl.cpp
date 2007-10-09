@@ -27,6 +27,7 @@
 #include <kdebug.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
+#include <kconfiggroup.h>
 
 #include <QtDBus/QtDBus>
 

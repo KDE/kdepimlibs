@@ -124,7 +124,7 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
   QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
 
-  KIO::TransferJob *job = KIO::http_post( url(), postData, false );
+  KIO::TransferJob *job = KIO::http_post( url(), postData, KIO::HideProgressInfo );
 
   d->mCreatePostMap[ job ] = post;
 
@@ -221,7 +221,7 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
   QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
 
-  KIO::TransferJob *job = KIO::http_post( url(), postData, false );
+  KIO::TransferJob *job = KIO::http_post( url(), postData, KIO::HideProgressInfo );
 
   d->mModifyPostMap[ job ] = post;
 

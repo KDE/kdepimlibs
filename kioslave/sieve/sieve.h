@@ -71,7 +71,7 @@ public:
 
 	virtual void mimetype(const KUrl& url);
 	virtual void get(const KUrl& url);
-	virtual void put(const KUrl& url, int permissions, bool overwrite, bool resume);
+	virtual void put(const KUrl& url, int permissions, KIO::JobFlags flags);
 	virtual void del(const KUrl &url, bool isfile);
 
 	virtual void listDir(const KUrl& url);

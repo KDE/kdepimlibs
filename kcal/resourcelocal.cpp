@@ -50,6 +50,7 @@
 #include <klocale.h>
 #include <kurl.h>
 #include <kstandarddirs.h>
+#include <kconfiggroup.h>
 
 using namespace KCal;
 

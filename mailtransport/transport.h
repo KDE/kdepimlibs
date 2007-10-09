@@ -23,8 +23,6 @@
 #include <mailtransport/transportbase.h>
 #include <mailtransport/mailtransport_export.h>
 
-#include <kconfigbase.h>
-
 class TransportPrivate;
 
 namespace MailTransport {

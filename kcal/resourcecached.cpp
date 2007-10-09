@@ -34,6 +34,7 @@
 #include <klocale.h>
 #include <kurl.h>
 #include <kstandarddirs.h>
+#include <kconfiggroup.h>
 
 #include <QtCore/QDataStream>
 #include <QtCore/QFile>

@@ -13,7 +13,7 @@ blogcomment.cpp
 blogmedia.cpp
 blogger1.cpp
 gdata.cpp
-livejournal.cpp
+# livejournal.cpp
 metaweblog.cpp
 movabletype.cpp
 wordpressbuggy.cpp
@@ -30,4 +30,4 @@ install(TARGETS kblog  DESTINATION ${LIB_INSTALL_DIR} )
 
 ########### install files ##############
 
-install( FILES kblog_export.h blog.h blogpost.h blogcomment.h blogmedia.h blogger1.h gdata.h livejournal.h metaweblog.h movabletype.h wordpressbuggy.h DESTINATION ${INCLUDE_INSTALL_DIR}/kblog)
+install( FILES kblog_export.h blog.h blogpost.h blogcomment.h blogmedia.h blogger1.h gdata.h metaweblog.h movabletype.h wordpressbuggy.h DESTINATION ${INCLUDE_INSTALL_DIR}/kblog)

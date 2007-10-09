@@ -24,6 +24,7 @@
 #include "precommandjob.h"
 
 #include <klocale.h>
+#include <kdebug.h>
 #include <KProcess>
 
 using namespace MailTransport;

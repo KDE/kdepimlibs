@@ -49,12 +49,12 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 
 # ########### next target ###############
  
- set(testlivejournal_SRCS testlivejournal.cpp )
- 
- 
- kde4_add_unit_test(testlivejournal TESTNAME kabc-testlivejournal ${testlivejournal_SRCS})
- 
- target_link_libraries(testlivejournal ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+#  set(testlivejournal_SRCS testlivejournal.cpp )
+#  
+#  
+#  kde4_add_unit_test(testlivejournal TESTNAME kabc-testlivejournal ${testlivejournal_SRCS})
+#  
+#  target_link_libraries(testlivejournal ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 
 # ########### next target ###############
  
