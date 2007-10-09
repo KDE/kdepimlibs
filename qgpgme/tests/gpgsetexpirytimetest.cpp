@@ -84,6 +84,7 @@ int main( int argc, char * argv[] ) {
 
         Data data;
         std::auto_ptr<EditInteractor> ei( new GpgSetExpiryTimeEditInteractor( date ) );
+        ei->setDebugChannel( stderr );
 
         app.connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)), SLOT(quit()) );
 

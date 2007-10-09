@@ -286,6 +286,7 @@ int main( int argc, char * argv[] ) {
             QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)),
                               iei, SLOT(close()) );
             std::auto_ptr<EditInteractor> ei( iei );
+            ei->setDebugChannel( stderr );
             if ( Error err = ctx->startEditing( key, ei, data ) )
                 throw std::runtime_error( std::string( "startEditing: " ) + gpg_strerror( err ) );
             // ei released in passing to startEditing
