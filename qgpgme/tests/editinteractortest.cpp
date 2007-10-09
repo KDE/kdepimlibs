@@ -96,8 +96,8 @@ InteractiveEditInteractor::InteractiveEditInteractor( QWidget * p )
     connect( &sendButton, SIGNAL(clicked()), this, SLOT(slotSendButtonClicked()) );
     connect( &sendButton, SIGNAL(clicked()), &loop, SLOT(quit()) );
 
-    connect( &lineEdit, SIGNAL(returnPressed(QString)), this, SLOT(slotSendButtonClicked()) );
-    connect( &lineEdit, SIGNAL(returnPressed(QString)), &loop, SLOT(quit()) );
+    connect( &lineEdit, SIGNAL(returnPressed()), this, SLOT(slotSendButtonClicked()) );
+    connect( &lineEdit, SIGNAL(returnPressed()), &loop, SLOT(quit()) );
 
     connect( &ackButton, SIGNAL(clicked()), this, SLOT(slotAckButtonClicked()) );
     connect( &ackButton, SIGNAL(clicked()), &loop, SLOT(quit()) );
