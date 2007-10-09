@@ -15,7 +15,7 @@ macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.or
 macro_optional_find_package(Sasl2)
 macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins. IMAP and Sieve kioslaves will not be built.")
 
-endif (ONLY_KLEO)
+endif (NOT ONLY_KLEO)
 
 # gpgme is a hard dependency
 find_package(Gpgme REQUIRED)
