@@ -25,20 +25,10 @@
 // gpgsetexpirytimetest <key> <YYYY-MM-DD>
 //
 
-#include <qgpgme/eventloopinteractor.h>
+#include "test_editinteractor.h"
 
 #include <gpgme++/gpgsetexpirytimeeditinteractor.h>
-#include <gpgme++/context.h>
-#include <gpgme++/error.h>
-#include <gpgme++/data.h>
-#include <gpgme++/key.h>
-#include <gpgme++/keylistresult.h>
 
-#include <gpg-error.h>
-
-#include <QtCore>
-
-#include <memory>
 #include <iostream>
 #include <stdexcept>
 
@@ -48,51 +38,17 @@ int main( int argc, char * argv[] ) {
 
     QCoreApplication app( argc, argv );
 
-    (void)QGpgME::EventLoopInteractor::instance();
-
     if ( argc != 3 )
         return 1;
 
-    const Protocol proto = OpenPGP;
     const char * const keyid = argv[1];
     const char * const date = argv[2];
 
     try {
 
-        Key key;
-        {
-            const std::auto_ptr<Context> kl( Context::createForProtocol( proto ) );
-
-            if ( !kl.get() )
-                return 1;
-
-            if ( Error err = kl->startKeyListing( keyid ) )
-                throw std::runtime_error( std::string( "startKeyListing: " ) + gpg_strerror( err ) );
-
-            Error err;
-            key = kl->nextKey( err );
-            if ( err )
-                throw std::runtime_error( std::string( "nextKey: " ) + gpg_strerror( err ) );
-
-            (void)kl->endKeyListing();
-        }
-        
-
-        const std::auto_ptr<Context> ctx( Context::createForProtocol( proto ) );
-
-        ctx->setManagedByEventLoopInteractor( true );
-
-        Data data;
         std::auto_ptr<EditInteractor> ei( new GpgSetExpiryTimeEditInteractor( date ) );
-        ei->setDebugChannel( stderr );
 
-        app.connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)), SLOT(quit()) );
-
-        if ( Error err = ctx->startEditing( key, ei, data ) )
-            throw std::runtime_error( std::string( "startEditing: " ) + gpg_strerror( err ) );
-        // ei released in passing to startEditing
-
-        return app.exec();
+        return test_editinteractor( ei, keyid );
 
     } catch ( const std::exception & e ) {
         std::cerr << "Caught error: " << e.what() << std::endl;

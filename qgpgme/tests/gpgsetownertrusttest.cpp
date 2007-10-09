@@ -25,18 +25,9 @@
 // gpgsetexpirytimetest <key> <YYYY-MM-DD>
 //
 
-#include <qgpgme/eventloopinteractor.h>
+#include "test_editinteractor.h"
 
 #include <gpgme++/gpgsetownertrusteditinteractor.h>
-#include <gpgme++/context.h>
-#include <gpgme++/error.h>
-#include <gpgme++/data.h>
-#include <gpgme++/key.h>
-#include <gpgme++/keylistresult.h>
-
-#include <gpg-error.h>
-
-#include <QtCore>
 
 #include <boost/bind.hpp>
 #include <boost/range.hpp>
@@ -44,7 +35,6 @@
 #include <memory>
 #include <algorithm>
 #include <iostream>
-#include <stdexcept>
 
 using namespace GpgME;
 using namespace boost;
@@ -65,12 +55,9 @@ int main( int argc, char * argv[] ) {
 
     QCoreApplication app( argc, argv );
 
-    (void)QGpgME::EventLoopInteractor::instance();
-
     if ( argc != 3 )
         return 1;
 
-    const Protocol proto = OpenPGP;
     const char * const keyid = argv[1];
     const std::string ownertrust_string = argv[2];
 
@@ -81,41 +68,9 @@ int main( int argc, char * argv[] ) {
             throw std::runtime_error( "Not a valid ownertrust value: \"" + ownertrust_string + "\"" );
         const Key::OwnerTrust ownertrust = it->value;
 
-
-        Key key;
-        {
-            const std::auto_ptr<Context> kl( Context::createForProtocol( proto ) );
-
-            if ( !kl.get() )
-                return 1;
-
-            if ( Error err = kl->startKeyListing( keyid ) )
-                throw std::runtime_error( std::string( "startKeyListing: " ) + gpg_strerror( err ) );
-
-            Error err;
-            key = kl->nextKey( err );
-            if ( err )
-                throw std::runtime_error( std::string( "nextKey: " ) + gpg_strerror( err ) );
-
-            (void)kl->endKeyListing();
-        }
-        
-
-        const std::auto_ptr<Context> ctx( Context::createForProtocol( proto ) );
-
-        ctx->setManagedByEventLoopInteractor( true );
-
-        Data data;
         std::auto_ptr<EditInteractor> ei( new GpgSetOwnerTrustEditInteractor( ownertrust ) );
-        ei->setDebugChannel( stderr );
 
-        app.connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)), SLOT(quit()) );
-
-        if ( Error err = ctx->startEditing( key, ei, data ) )
-            throw std::runtime_error( std::string( "startEditing: " ) + gpg_strerror( err ) );
-        // ei released in passing to startEditing
-
-        return app.exec();
+        return test_editinteractor( ei, keyid );
 
     } catch ( const std::exception & e ) {
         std::cerr << "Caught error: " << e.what() << std::endl;
