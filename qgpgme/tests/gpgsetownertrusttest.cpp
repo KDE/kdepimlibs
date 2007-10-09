@@ -22,7 +22,7 @@
 
 //
 // usage:
-// gpgsetexpirytimetest <key> <YYYY-MM-DD>
+// gpgsetownertrusttest <key> {undefined|unknown|never|marginal|full|ultimate}
 //
 
 #include "test_editinteractor.h"
