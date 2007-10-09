@@ -22,5 +22,10 @@ target_link_libraries(gpgsetexpirytimetest  qgpgme ${QT_QTCORE_LIBRARY})
 
 ########### next target ###############
 
+kde4_add_executable(gpgsetownertrusttest TEST gpgsetownertrusttest.cpp)
+target_link_libraries(gpgsetownertrusttest  qgpgme ${QT_QTCORE_LIBRARY})
+
+########### next target ###############
+
 kde4_add_executable(editinteractortest TEST editinteractortest.cpp)
 target_link_libraries(editinteractortest  qgpgme ${QT_QTGUI_LIBRARY})
