@@ -1,6 +1,6 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${GPGME_INCLUDES} )
-
+include_directories( ${Boost_INCLUDE_DIR} )
 add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
 
 ########### next target ###############
