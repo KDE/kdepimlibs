@@ -55,20 +55,40 @@ void * QGpgME::EventLoopInteractor::registerWatcher( int fd, Direction dir, bool
         ok = false;
         return 0;
     }
-    iod->bytesAvailable(); //HACK: tell KDPipeIODevices to start it's threads
     if ( dir == Read ) {
         static QSignalMapper * rsm = setupReadSignalMapper( this );
-        rsm->setMapping( iod, fd );
-        connect( iod, SIGNAL(readyRead()), rsm, SLOT(map()) );
+	if ( !rsm->mapping( fd ) ) {
+            rsm->setMapping( iod, fd );
+            connect( iod, SIGNAL(readyRead()), rsm, SLOT(map()) );
+	} else {
+            // if this fd is already registered, gpgme registers an additional
+            // callback for the same fd.
+            // if there is already something to read when registering the new 
+	    // callback, gpgme expects the new callback to be called, so we
+            // trigger it"
+            QMetaObject::invokeMethod( this, "slotReadActivity", Qt::QueuedConnection, Q_ARG( int, fd ) );
+        }
     } else {
         static QSignalMapper * wsm = setupWriteSignalMapper( this );
-        wsm->setMapping( iod, fd );
-        connect( iod, SIGNAL(bytesWritten(qint64)), wsm, SLOT(map()) );
+	if ( !wsm->mapping( fd ) ) {
+            wsm->setMapping( iod, fd );
+            connect( iod, SIGNAL(bytesWritten(qint64)), wsm, SLOT(map()) );
+	} else {
+            // if this fd is already registered, gpgme registers an additional 
+            // callback for the same fd.
+            // if the device is writable when registering the new 
+	    // callback, gpgme expects the new callback to be called, so we
+            // trigger it:
+            QMetaObject::invokeMethod( this, "slotWriteActivity", Qt::QueuedConnection, Q_ARG( int, fd ) );            
+	}
     }
+
     ok = true;
     IO * const io = new IO;
     io->device = iod;
     io->direction = dir;
+    iod->bytesAvailable(); //HACK: tell KDPipeIODevices to start their threads
+    iod->bytesToWrite();
     return io;
 }
 
