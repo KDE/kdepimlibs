@@ -35,7 +35,11 @@ kde4_add_library(kmime SHARED ${kmime_LIB_SRCS})
 target_link_libraries(kmime  ${KDE4_KIO_LIBS} )
 
 set_target_properties(kmime PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
-install(TARGETS kmime  DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kmime  
+    RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+    LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+)
 
 install( FILES
         boolflags.h
