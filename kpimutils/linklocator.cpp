@@ -432,9 +432,13 @@ QString LinkLocator::getEmoticon()
   } else {
     const QString imageName = (*s_smileyEmoticonNameMap)[smiley];
 
+    QString emotIconTheme = EmotIcons::theme();
+    if (emotIconTheme == "Default")
+        emotIconTheme = "kde4";
+
     const QString iconPath =
       KStandardDirs::locate( "emoticons",
-                             EmotIcons::theme() +
+                             emotIconTheme +
                              QString::fromLatin1( "/" ) +
                              imageName + QString::fromLatin1( ".png" ) );
 
