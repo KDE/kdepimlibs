@@ -93,9 +93,9 @@ static QString eventViewerFormatCategories( Incidence *event )
   QString tmpStr;
   if ( !event->categoriesStr().isEmpty() ) {
     if ( event->categories().count() == 1 ) {
-      tmpStr = eventViewerAddTag( "h2", i18n( "Category" ) );
+      tmpStr = eventViewerAddTag( "h3", i18n( "Category" ) );
     } else {
-      tmpStr = eventViewerAddTag( "h2", i18n( "Categories" ) );
+      tmpStr = eventViewerAddTag( "h3", i18n( "Categories" ) );
     }
     tmpStr += eventViewerAddTag( "p", event->categoriesStr() );
   }
@@ -162,14 +162,14 @@ static QString eventViewerFormatAttendees( Incidence *event )
     const QString iconPath = iconLoader->iconPath( "mail", KIconLoader::Small );
 
     // Add organizer link
-    tmpStr += eventViewerAddTag( "h3", i18n( "Organizer" ) );
+    tmpStr += eventViewerAddTag( "h4", i18n( "Organizer" ) );
     tmpStr += "<ul>";
     tmpStr += linkPerson( event->organizer().email(), event->organizer().name(),
                           QString(), iconPath );
     tmpStr += "</ul>";
 
     // Add attendees links
-    tmpStr += eventViewerAddTag( "h3", i18n( "Attendees" ) );
+    tmpStr += eventViewerAddTag( "h4", i18n( "Attendees" ) );
     tmpStr += "<ul>";
     Attendee::List::ConstIterator it;
     for ( it = attendees.begin(); it != attendees.end(); ++it ) {
@@ -262,7 +262,7 @@ static QString eventViewerFormatHeader( Incidence *incidence )
     tmpStr += "</td>";
   }
 
-  tmpStr += "<td>" + eventViewerAddTag( "h1", incidence->summary() ) + "</td>";
+  tmpStr += "<td>" + eventViewerAddTag( "h2", incidence->summary() ) + "</td>";
   tmpStr += "</tr></table><br>";
 
   return tmpStr;
@@ -428,10 +428,10 @@ static QString eventViewerFormatJournal( Journal *journal )
 
   QString tmpStr;
   if ( !journal->summary().isEmpty() ) {
-    tmpStr+= eventViewerAddTag( "h1", journal->summary() );
+    tmpStr+= eventViewerAddTag( "h2", journal->summary() );
   }
   tmpStr += eventViewerAddTag(
-    "h2", i18n( "Journal for %1",
+    "h3", i18n( "Journal for %1",
                 journal->dtStartDateStr( false, journal->dtStart().timeSpec() ) ) );
   if ( !journal->description().isEmpty() ) {
     tmpStr += eventViewerAddTag( "p", journal->description() );
@@ -447,9 +447,9 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
 
   QString tmpStr(
     eventViewerAddTag(
-      "h1", i18n( "Free/Busy information for %1", fb->organizer().fullName() ) ) );
+      "h2", i18n( "Free/Busy information for %1", fb->organizer().fullName() ) ) );
   tmpStr += eventViewerAddTag(
-    "h3", i18n( "Busy times in date range %1 - %2:",
+    "h4", i18n( "Busy times in date range %1 - %2:",
                 KGlobal::locale()->formatDate( fb->dtStart().date(), KLocale::ShortDate ),
                 KGlobal::locale()->formatDate( fb->dtEnd().date(), KLocale::ShortDate ) ) );
 
@@ -755,7 +755,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     return i18n( "This event has been published" );
   case iTIPRequest:
     if ( event->revision() > 0 ) {
-      return i18n( "<h2>This meeting has been updated</h2>" );
+      return i18n( "<h3>This meeting has been updated</h3>" );
     } else {
       return i18n( "You have been invited to this meeting" );
     }
@@ -1120,7 +1120,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   if ( !headerVisitor.act( incBase, msg ) ) {
     return QString();
   }
-  html += "<h2>" + headerVisitor.result() + "</h2>";
+  html += "<h3>" + headerVisitor.result() + "</h3>";
 
   InvitationBodyVisitor bodyVisitor;
   if ( !bodyVisitor.act( incBase, msg ) ) {
