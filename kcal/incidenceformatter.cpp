@@ -342,7 +342,7 @@ static QString eventViewerFormatEvent( Event *event )
   if ( event->categories().count() > 0 ) {
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>";
-    tmpStr += i18np( "1 category", "%1 categories", event->categories().count() )+ "</b></td>";
+    tmpStr += i18np( "1&nbsp;category", "%1&nbsp;categories", event->categories().count() )+ "</b></td>";
     tmpStr += "<td>" + event->categoriesStr() + "</td>";
     tmpStr += "</tr>";
   }
@@ -364,7 +364,7 @@ static QString eventViewerFormatEvent( Event *event )
   if ( attachmentCount > 0 ) {
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>";
-    tmpStr += i18np( "1 attachment", "%1 attachments", attachmentCount )+ "</b></td>";
+    tmpStr += i18np( "1&nbsp;attachment", "%1&nbsp;attachments", attachmentCount )+ "</b></td>";
     tmpStr += "<td>" + eventViewerFormatAttachments( event ) + "</td>";
     tmpStr += "</tr>";
   }
