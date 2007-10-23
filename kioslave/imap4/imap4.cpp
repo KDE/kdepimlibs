@@ -313,7 +313,7 @@ IMAP4Protocol::get (const KUrl & _url)
         cmd = sendCommand (imapCommand::clientFetch (aSequence, mySection));
         do
         {
-          while (!parseLoop ());
+          while (!parseLoop ()) {}
         }
         while (!cmd->isComplete ());
         completeQueue.removeAll (cmd);
@@ -332,7 +332,7 @@ IMAP4Protocol::get (const KUrl & _url)
       aUpper = aSection.toUpper();
       do
       {
-        while (!(res = parseLoop()));
+        while (!(res = parseLoop())) {}
         if (res == -1) break;
 
         mailHeader *lastone = 0;
@@ -594,7 +594,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
         imapCache *cache;
         do
         {
-          while (!parseLoop ());
+          while (!parseLoop ()) {}
 
           cache = getLastHandled ();
 
@@ -825,7 +825,7 @@ IMAP4Protocol::put (const KUrl & _url, int, KIO::JobFlags)
 
     imapCommand *cmd =
       sendCommand (imapCommand::clientAppend (aBox, aSection, length));
-    while (!parseLoop ());
+    while (!parseLoop ()) {}
 
     // see if server is waiting
     if (!cmd->isComplete () && !getContinuation ().isEmpty ())
@@ -1935,7 +1935,7 @@ bool IMAP4Protocol::makeLogin ()
     imapCommand *cmd;
 
     unhandled.clear ();
-    if (!alreadyConnected) while (!parseLoop ());    //get greeting
+    if (!alreadyConnected) while (!parseLoop ()) {}   //get greeting
     QString greeting;
     if (!unhandled.isEmpty()) greeting = unhandled.first().trimmed();
     unhandled.clear ();       //get rid of it

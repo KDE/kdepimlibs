@@ -244,7 +244,11 @@ kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 target_link_libraries(kcal ${KDE4_KDEUI_LIBS} ${QT_QTXML_LIBRARY} kresources kabc kpimutils )
 
 set_target_properties(kcal PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
-install(TARGETS kcal DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kcal 
+    RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+    LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+)
 
 # hack to force ical[ss].h creation
 add_custom_target(ical-headers DEPENDS

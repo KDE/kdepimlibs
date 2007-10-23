@@ -270,7 +270,9 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   while ( true )
   {
     //read the next line
-    while (parseLoop() == 0);
+    while (parseLoop() == 0) {
+      ;
+    }
     if ( cmd->isComplete() ) break;
 
     if (!continuation.isEmpty())

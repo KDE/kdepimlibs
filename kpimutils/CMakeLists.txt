@@ -13,7 +13,11 @@ kde4_add_library(kpimutils SHARED ${kpimutils_LIB_SRCS})
 target_link_libraries(kpimutils ${KDE4_KDEUI_LIBS})
 
 set_target_properties(kpimutils PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kpimutils  DESTINATION ${LIB_INSTALL_DIR} )
+install(TARGETS kpimutils  
+    RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+    LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+)
 
 ########### install files ###############
 

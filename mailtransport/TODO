@@ -11,6 +11,7 @@ TransportManager
 - load passwords if another instance opens the wallet
 - load passwords if application opens wallet
 - add D-Bus interface for sending mails
+- test to see if there is always a default transport, by adding / deleting accounts
 
 Transport
 ---------
@@ -31,3 +32,5 @@ Precommand
 TransportManagementWidget
 -------------------------
 - support inline editing of transport names
+
+

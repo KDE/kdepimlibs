@@ -46,7 +46,11 @@ if ( _any_gpgme_found )
      SOVERSION 1.0.0
    )
 
-   install( TARGETS qgpgme  DESTINATION ${LIB_INSTALL_DIR} )
+   install( TARGETS qgpgme  
+     RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+     LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+     ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+   )
 
    install( FILES qgpgme_export.h eventloopinteractor.h dataprovider.h DESTINATION ${INCLUDE_INSTALL_DIR}/qgpgme )
 
