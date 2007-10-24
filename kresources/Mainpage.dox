@@ -56,7 +56,7 @@ ResourceExample::ResourceExample( const KConfig *config )
     : Resource( config )
 {
   if ( config ) {
-    mLocation = config->readPathEntry( "Location" );
+    mLocation = config->readPathEntry( "Location", QString() );
     mPassword = KStringHandler::obscure( config->readEntry( "Password" ) );
   } else {
     mLocation = ""; // Or some sensible default

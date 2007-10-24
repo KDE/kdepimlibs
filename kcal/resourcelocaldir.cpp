@@ -66,7 +66,7 @@ ResourceLocalDir::ResourceLocalDir( const QString &dirName )
 
 void ResourceLocalDir::readConfig( const KConfigGroup &group )
 {
-  QString url = group.readPathEntry( "CalendarURL" );
+  QString url = group.readPathEntry( "CalendarURL", QString() );
   d->mURL = KUrl( url );
 }
 
