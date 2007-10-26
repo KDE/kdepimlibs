@@ -10,7 +10,7 @@ include (MacroLibrary)
 #boost is a hard dependency
 if (NOT ONLY_KLEO)
 find_package(Boost)
-macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Needed by libsyndication")
+macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Needed by libsyndication and QGpgME")
 
 macro_optional_find_package(Sasl2)
 macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins. IMAP and Sieve kioslaves will not be built.")
@@ -27,7 +27,9 @@ add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
 
 add_subdirectory(gpgme++)
-add_subdirectory(qgpgme)
+if ( Boost_FOUND )
+  add_subdirectory(qgpgme)
+endif ( Boost_FOUND )
 
 if (NOT ONLY_KLEO)
 
