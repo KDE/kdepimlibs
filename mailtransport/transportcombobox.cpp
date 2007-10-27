@@ -46,6 +46,11 @@ TransportComboBox::TransportComboBox(QWidget * parent) :
            SLOT(fillComboBox()) );
 }
 
+TransportComboBox::~TransportComboBox()
+{
+   delete d;
+}
+
 int TransportComboBox::currentTransportId() const
 {
   if( currentIndex() >= 0 && currentIndex() < d->transports.count() )
