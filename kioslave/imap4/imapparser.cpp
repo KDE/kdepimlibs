@@ -154,7 +154,7 @@ imapParser::clientLogin (const QString & aUser, const QString & aPass,
   }
   resultInfo = cmd->resultInfo();
   completeQueue.removeAll (cmd);
-
+  delete cmd;
   return retVal;
 }
 

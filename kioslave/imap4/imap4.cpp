@@ -1249,6 +1249,7 @@ IMAP4Protocol::special (const QByteArray & aData)
       return;
     }
     completeQueue.removeAll (cmd);
+    delete cmd;
     finished();
     break;
   }
@@ -1948,6 +1949,7 @@ bool IMAP4Protocol::makeLogin ()
       kDebug(7116) <<"'" << (*it) <<"'";
     }
     completeQueue.removeAll (cmd);
+    delete cmd;
 
     if (!hasCapability("IMAP4") && !hasCapability("IMAP4rev1"))
     {
@@ -1989,9 +1991,11 @@ bool IMAP4Protocol::makeLogin ()
           kWarning(7116) <<"TLS mode setup has failed.  Aborting.";
           error (ERR_COULD_NOT_LOGIN, i18n("Starting TLS failed."));
           closeConnection();
+          delete cmd;
           return false;
         }
       } else completeQueue.removeAll(cmd);
+      delete cmd;
     }
 
     if (!myAuth.isEmpty () && myAuth != "*"
@@ -2051,6 +2055,7 @@ bool IMAP4Protocol::makeLogin ()
         kDebug(7116) <<"makeLogin - registered namespaces";
       }
       completeQueue.removeAll (cmd);
+      delete cmd;
     }
     // get the default delimiter (empty listing)
     cmd = doCommand( imapCommand::clientList("", "") );
@@ -2070,6 +2075,7 @@ bool IMAP4Protocol::makeLogin ()
       }
     }
     completeQueue.removeAll (cmd);
+    delete cmd;
   } else {
     kDebug(7116) <<"makeLogin - NO login";
   }
