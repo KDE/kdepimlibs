@@ -55,19 +55,12 @@ using KioSMTP::TransactionState;
 
 #include <kemailsettings.h>
 
-#ifdef __GNUC__
-#warning Port to QTcpSocket
-#endif
-#if 0
-#include <ksock.h>
-#endif
-
 #include <kdebug.h>
 #include <kcomponentdata.h>
 #include <kio/slaveinterface.h>
 #include <klocale.h>
 
-
+#include <QHostInfo>
 
 #include <memory>
 using std::auto_ptr;
@@ -77,21 +70,7 @@ using std::auto_ptr;
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
-
-#ifdef HAVE_SYS_TYPES_H
-# include <sys/types.h>
-#endif
-#ifdef HAVE_SYS_SOCKET_H
-# include <sys/socket.h>
-#endif
 #include <netdb.h>
-
-#ifndef NI_NAMEREQD
-// FIXME for KDE 3.3: fake defintion
-// API design flaw in KExtendedSocket::resolve
-# define NI_NAMEREQD	0
-#endif
-
 
 extern "C" {
   KDE_EXPORT int kdemain(int argc, char **argv);
@@ -130,20 +109,6 @@ SMTPProtocol::SMTPProtocol(const QByteArray & pool, const QByteArray & app,
    m_opened(false)
 {
   //kDebug(7112) << "SMTPProtocol::SMTPProtocol";
-}
-
-unsigned int SMTPProtocol::sendBufferSize() const {
-  // ### how much is eaten by SSL/TLS overhead?
-#ifdef __GNUC__
-#warning Port to QTcpSocket
-#endif
-  const int fd = 0L; //fileno( fp );
-  int value = -1;
-  socklen_t len = sizeof(value);
-  if ( fd < 0 || ::getsockopt( fd, SOL_SOCKET, SO_SNDBUF, (char*)&value, &len ) )
-    value = 1024; // let's be conservative
-  kDebug(7112) << "send buffer size seems to be " << value << " octets.";
-  return value > 0 ? value : 1024 ;
 }
 
 SMTPProtocol::~SMTPProtocol() {
@@ -409,12 +374,6 @@ QByteArray SMTPProtocol::collectPipelineCommands( TransactionState * ts ) {
 	return cmdLine;
       const unsigned int currentCmdLine_len = currentCmdLine.length();
 
-      if ( cmdLine_len && cmdLine_len + currentCmdLine_len > sendBufferSize() ) {
-	// must all fit into the send buffer, else connection deadlocks,
-	// but we need to have at least _one_ command to send
-	cmd->ungetCommandLine( currentCmdLine, ts );
-	return cmdLine;
-      }
       cmdLine_len += currentCmdLine_len;
       cmdLine += currentCmdLine;
     }
@@ -534,22 +493,7 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
   }
   else
   {
-    QString tmpPort;
-#ifdef __GNUC__
-#warning Port to QTcpSocket
-#endif
-#if 0
-    KSocketAddress* addr = KExtendedSocket::localAddress(m_iSock);
-    // perform name lookup. NI_NAMEREQD means: don't return a numeric
-    // value (we need to know when we get have the IP address, so we
-    // can enclose it in sqaure brackets (domain-literal). Failure to
-    // do so is normally harmless with IPv4, but fails for IPv6:
-    if (KExtendedSocket::resolve(addr, m_hostname, tmpPort, NI_NAMEREQD) != 0)
-      // FQDN resolution failed
-      // use the IP address as domain-literal
-      m_hostname = '[' + addr->nodeName() + ']';
-    delete addr;
-#endif
+    m_hostname = QHostInfo::localHostName();
     if(m_hostname.isEmpty())
     {
       m_hostname = "localhost.invalid";

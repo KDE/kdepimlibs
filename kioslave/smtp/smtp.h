@@ -112,9 +112,6 @@ protected:
     return haveCapability("PIPELINING") && metaData("pipelining") != "off" ;
   }
 
-  /** Wrapper around getsockopt(..., SO_SNDBUF,...) */
-  unsigned int sendBufferSize() const;
-
   /** This is a pure convenience wrapper around
       @ref KioSMTP::Capabilities::createSpecialResponse */
   QString createSpecialResponse() const {
