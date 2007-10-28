@@ -36,6 +36,7 @@
 #include <kstandarddirs.h>
 #include <kconfiggroup.h>
 
+#include <QtCore/QDateTime>
 #include <QtCore/QDataStream>
 #include <QtCore/QFile>
 #include <QtCore/QString>
@@ -197,9 +198,10 @@ void ResourceCached::readConfig( const KConfigGroup &group )
   d->mSaveInterval = group.readEntry( "SaveInterval", 10 );
   d->mSavePolicy = group.readEntry( "SavePolicy", int(SaveNever) );
 
-  QDateTime dt = group.readEntry( "LastLoad", QDateTime() );
+  QDateTime curDt = QDateTime::currentDateTime();
+  QDateTime dt = group.readEntry( "LastLoad", curDt );
   d->mLastLoad = KDateTime( dt, KDateTime::UTC );
-  dt = group.readEntry( "LastSave", QDateTime() );
+  dt = group.readEntry( "LastSave", curDt );
   d->mLastSave = KDateTime( dt, KDateTime::UTC );
 
   setupSaveTimer();
