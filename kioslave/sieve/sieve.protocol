@@ -13,6 +13,7 @@ moving=false
 Icon=remote
 Description=An ioslave for the Sieve mail filtering protocol
 Description[ca]=Un 'ioslave' pel protocol de filtrat de correu Sieve
+Description[de]=Ein Ein-/Ausgabemodul für das Mailfilter-Protokoll Sieve
 Description[el]=Ένα ioslave για το πρωτόκολλο φιλτραρίσματος αλληλογραφίας Sieve
 Description[es]=Un esclavo de E/S para el protocolo de filtrado de correo Sieve
 Description[fr]=Un ioslave pour le protocole de filtrage de messagerie Sieve
