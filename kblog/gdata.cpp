@@ -235,13 +235,10 @@ void GData::modifyPost( KBlog::BlogPost* post )
   KIO::TransferJob *job = KIO::http_post(
       KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default/"+post->postId() ),
       postData, KIO::HideProgressInfo );
+
+  Q_ASSERT( job );
+
   d->mModifyPostMap[ job ] = post;
-
-  if ( !job ) {
-    kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/"
-        << blogId() <<"/posts/default/" << post->postId();
-  }
-
 
   job->addMetaData( "content-type", "Content-Type: application/atom+xml; charset=utf-8" );
   job->addMetaData( "ConnectTimeout", "50" );

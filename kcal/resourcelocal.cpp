@@ -67,7 +67,7 @@ ResourceLocal::ResourceLocal( const KConfigGroup &group )
   : ResourceCached( group ), d( new ResourceLocal::Private() )
 {
   d->mLock = 0;
-  QString url = group.readPathEntry( "CalendarURL" );
+  QString url = group.readPathEntry( "CalendarURL", QString() );
   d->mURL = KUrl( url );
 
   QString format = group.readEntry( "Format" );

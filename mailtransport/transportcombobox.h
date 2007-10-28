@@ -42,6 +42,8 @@ class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
     */
     TransportComboBox( QWidget *parent = 0 );
 
+    ~TransportComboBox();
+
     /**
       Returns identifier of the currently selected mail transport.
     */
