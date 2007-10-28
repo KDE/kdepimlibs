@@ -1903,7 +1903,7 @@ QByteArray imapParser::parseOneWord (parseString & inWords, bool stopAtBracket)
       inWords.takeLeftNoResize(retVal, i - 1);
       len = i - 1;
       int offset = 0;
-      for (unsigned int j = 0; j <= len; j++) {
+      for (unsigned int j = 0; j < len; j++) {
         if (retVal[j] == '\\') {
           offset++;
           j++;
