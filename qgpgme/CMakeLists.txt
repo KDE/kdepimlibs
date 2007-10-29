@@ -27,7 +27,7 @@ endif ( NOT WIN32 AND GPGME_PTHREAD_FOUND )
 
 if ( _any_gpgme_found )
 
-   include_directories( ${GPGME_INCLUDES} ${CMAKE_SOURCE_DIR}/gpgme++ ${BOOST_INCLUDES} )
+   include_directories( ${GPGME_INCLUDES} ${CMAKE_SOURCE_DIR}/gpgme++ ${Boost_INCLUDE_DIR} )
 
    add_subdirectory( tests )
 
