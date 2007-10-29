@@ -82,6 +82,7 @@ SmtpJob::~SmtpJob()
       KIO::Scheduler::disconnectSlave( slave );
     slavePool.clear();
   }
+  delete d;
 }
 
 void SmtpJob::doStart()
