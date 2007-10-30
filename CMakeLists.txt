@@ -4,17 +4,16 @@ set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules )
 
 # search packages used by KDE
 find_package(KDE4 REQUIRED)
+find_package(Boost)
+
 include (KDE4Defaults)
 include (MacroLibrary)
 
+
 #boost is a hard dependency
 if (NOT ONLY_KLEO)
-find_package(Boost)
-macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Needed by libsyndication and QGpgME")
-
 macro_optional_find_package(Sasl2)
 macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins. IMAP and Sieve kioslaves will not be built.")
-
 endif (NOT ONLY_KLEO)
 
 # gpgme is a hard dependency
