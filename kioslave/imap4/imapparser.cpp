@@ -1840,8 +1840,7 @@ QByteArray imapParser::parseLiteral(parseString & inWords, bool relay, bool stop
     {
       bool proper;
       long runLenSave = runLen + 1;
-      QByteArray tmpstr;
-      tmpstr.resize(runLen);
+      QByteArray tmpstr(runLen, '\0');
       inWords.takeMidNoResize(tmpstr, 1, runLen - 1);
       runLen = tmpstr.toULong (&proper);
       inWords.pos += runLenSave;
