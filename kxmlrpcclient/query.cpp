@@ -443,6 +443,7 @@ Query::~Query()
   for ( it = d->mPendingJobs.begin(); it != d->mPendingJobs.end(); ++it ) {
     (*it)->kill();
   }
+  delete d;
 }
 
 #include "query.moc"

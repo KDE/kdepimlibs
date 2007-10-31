@@ -135,6 +135,7 @@ Socket::Socket( QObject* parent )
 Socket::~Socket()
 {
   kDebug( 5324 ) << objectName() ;
+  delete d;
 }
 
 void Socket::reconnect()

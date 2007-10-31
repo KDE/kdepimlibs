@@ -45,6 +45,11 @@ TransportTypeDialog::TransportTypeDialog(QWidget * parent) :
   d->buttonGroup = ui.kcfg_type;
 }
 
+TransportTypeDialog::~TransportTypeDialog()
+{
+   delete d;
+}
+
 int TransportTypeDialog::transportType() const
 {
   return d->buttonGroup->selected();
