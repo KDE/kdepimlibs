@@ -122,7 +122,10 @@ imapParser::sendCommand (imapCommand * aCmd)
            || command == "GETANNOTATION"
            || command == "NAMESPACE"
            || command == "GETQUOTAROOT"
-           || command == "GETQUOTA")
+           || command == "GETQUOTA"
+           || command == "X-GET-OTHER-USERS"
+           || command == "X-GET-DELEGATES"
+           || command == "X-GET-OUT-OF-OFFICE")
   {
     lastResults.clear ();
   }
@@ -372,6 +375,15 @@ imapParser::parseUntagged (parseString & result)
     if (what[1] == 'K' && what.size() == 2)
     {
       parseResult (what, result);
+    } else if (qstrncmp(what, "OTHER-USER", 10) == 0) { // X-GET-OTHER-USER
+      parseOtherUser (result);
+    } else if (qstrncmp(what, "OUT-OF-OFFICE", 13) == 0) { // X-GET-OUT-OF-OFFICE
+      parseOutOfOffice (result);
+    }
+    break;
+  case 'D':
+    if (qstrncmp(what, "DELEGATE", 8) == 0) { // X-GET-DELEGATES
+      parseDelegate (result);
     }
     break;
 
@@ -449,7 +461,12 @@ imapParser::parseUntagged (parseString & result)
     {
       parseQuota( result );
     }
-
+    break;
+  case 'X': // Custom command
+    {
+      parseCustom( result );
+    }
+    break;
   default:
     //better be a number
     {
@@ -773,6 +790,40 @@ void imapParser::parseQuotaRoot (parseString & result)
     roots.append (word);
   }
   lastResults.append( roots.join(" ") );
+}
+
+void imapParser::parseCustom (parseString & result)
+{
+  QByteArray word = parseLiteral (result, false, false);
+  lastResults.append( word );
+}
+
+void imapParser::parseOtherUser (parseString & result)
+{
+  lastResults.append( parseOneWord ( result ) );
+}
+
+void imapParser::parseDelegate (parseString & result)
+{
+  const QString email = parseOneWord ( result );
+
+  QStringList rights;
+  while ( !result.isEmpty() ) {
+    QByteArray word = parseLiteral ( result, false, false );
+    rights.append( word );
+  }
+
+  lastResults.append( email + ":" + rights.join( "," ) );
+}
+
+void imapParser::parseOutOfOffice (parseString & result)
+{
+  const QString state = parseOneWord (result);
+  parseOneWord (result); // skip encoding
+
+  QByteArray msg = parseLiteral (result, false, false);
+
+  lastResults.append( state + "^" + QString::fromUtf8( msg ) );
 }
 
 void imapParser::parseMyRights (parseString & result)
