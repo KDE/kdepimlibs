@@ -179,8 +179,10 @@ bool CalendarLocal::deleteEvent( Event *event )
 
 void CalendarLocal::deleteAllEvents()
 {
-  foreach ( Event *e, d->mEvents ) {
-    notifyIncidenceDeleted( e );
+  QHashIterator<QString, Event *>i( d->mEvents );
+  while ( i.hasNext() ) {
+    i.next();
+    notifyIncidenceDeleted( i.value() );
   }
   qDeleteAll( d->mEvents );
   d->mEvents.clear();
@@ -241,8 +243,10 @@ bool CalendarLocal::deleteTodo( Todo *todo )
 
 void CalendarLocal::deleteAllTodos()
 {
-  foreach ( Todo *t, d->mTodos ) {
-    notifyIncidenceDeleted( t );
+  QHashIterator<QString, Todo *>i( d->mTodos );
+  while ( i.hasNext() ) {
+    i.next();
+    notifyIncidenceDeleted( i.value() );
   }
   qDeleteAll( d->mTodos );
   d->mTodos.clear();
@@ -257,8 +261,10 @@ Todo::List CalendarLocal::rawTodos( TodoSortField sortField,
                                     SortDirection sortDirection )
 {
   Todo::List todoList;
-  foreach ( Todo *t, d->mTodos ) {
-    todoList.append( t );
+  QHashIterator<QString, Todo *>i( d->mTodos );
+  while ( i.hasNext() ) {
+    i.next();
+    todoList.append( i.value() );
   }
   return sortTodos( &todoList, sortField, sortDirection );
 }
@@ -266,7 +272,11 @@ Todo::List CalendarLocal::rawTodos( TodoSortField sortField,
 Todo::List CalendarLocal::rawTodosForDate( const QDate &date )
 {
   Todo::List todoList;
-  foreach ( Todo *t, d->mTodos ) {
+  Todo *t;
+  QHashIterator<QString, Todo *>i( d->mTodos );
+  while ( i.hasNext() ) {
+    i.next();
+    t = i.value();
     if ( t->hasDueDate() && t->dtDue().date() == date ) {
       todoList.append( t );
     }
@@ -281,22 +291,30 @@ Alarm::List CalendarLocal::alarmsTo( const KDateTime &to )
 
 Alarm::List CalendarLocal::alarms( const KDateTime &from, const KDateTime &to )
 {
-  Alarm::List alarms;
-  foreach ( Event *e, d->mEvents ) {
+  Alarm::List alarmList;
+  QHashIterator<QString, Event *>ie( d->mEvents );
+  Event *e;
+  while ( ie.hasNext() ) {
+    ie.next();
+    e = ie.value();
     if ( e->recurs() ) {
-      appendRecurringAlarms( alarms, e, from, to );
+      appendRecurringAlarms( alarmList, e, from, to );
     } else {
-      appendAlarms( alarms, e, from, to );
+      appendAlarms( alarmList, e, from, to );
     }
   }
 
-  foreach ( Todo *t, d->mTodos ) {
+  QHashIterator<QString, Todo *>it( d->mTodos );
+  Todo *t;
+  while ( it.hasNext() ) {
+    it.next();
+    t = it.value();
     if (! t->isCompleted() ) {
-      appendAlarms( alarms, t, from, to );
+      appendAlarms( alarmList, t, from, to );
     }
   }
 
-  return alarms;
+  return alarmList;
 }
 
 //@cond PRIVATE
@@ -337,8 +355,11 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
   Event::List eventList;
   KDateTime::Spec ts = timespec.isValid() ? timespec : timeSpec();
 
-  foreach ( Event *event, d->mEvents ) {
-
+  QHashIterator<QString, Event *>i( d->mEvents );
+  Event *event;
+  while ( i.hasNext() ) {
+    i.next();
+    event = i.value();
     if ( event->recurs() ) {
       if ( event->isMultiDay() ) {
         int extraDays = event->dtStart().date().daysTo( event->dtEnd().date() );
@@ -383,7 +404,11 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
   KDateTime yesterStart = st.addDays( -1 );
 
   // Get non-recurring events
-  foreach ( Event *event, d->mEvents ) {
+  QHashIterator<QString, Event *>i( d->mEvents );
+  Event *event;
+  while ( i.hasNext() ) {
+    i.next();
+    event = i.value();
     KDateTime rStart = event->dtStart();
     if ( nd < rStart ) {
       continue;
@@ -438,8 +463,10 @@ Event::List CalendarLocal::rawEvents( EventSortField sortField,
                                       SortDirection sortDirection )
 {
   Event::List eventList;
-  foreach ( Event *e, d->mEvents ) {
-    eventList.append( e );
+  QHashIterator<QString, Event *>i( d->mEvents );
+  while ( i.hasNext() ) {
+    i.next();
+    eventList.append( i.value() );
   }
   return sortEvents( &eventList, sortField, sortDirection );
 }
@@ -488,8 +515,10 @@ bool CalendarLocal::deleteJournal( Journal *journal )
 
 void CalendarLocal::deleteAllJournals()
 {
-  foreach ( Journal *j, d->mJournals ) {
-    notifyIncidenceDeleted( j );
+  QHashIterator<QString, Journal *>i( d->mJournals );
+  while ( i.hasNext() ) {
+    i.next();
+    notifyIncidenceDeleted( i.value() );
   }
   qDeleteAll( d->mJournals );
   d->mJournals.clear();
@@ -504,8 +533,10 @@ Journal::List CalendarLocal::rawJournals( JournalSortField sortField,
                                           SortDirection sortDirection )
 {
   Journal::List journalList;
-  foreach ( Journal *j, d->mJournals ) {
-    journalList.append( j );
+  QHashIterator<QString, Journal *>i( d->mJournals );
+  while ( i.hasNext() ) {
+    i.next();
+    journalList.append( i.value() );
   }
   return sortJournals( &journalList, sortField, sortDirection );
 }
@@ -513,7 +544,11 @@ Journal::List CalendarLocal::rawJournals( JournalSortField sortField,
 Journal::List CalendarLocal::rawJournalsForDate( const QDate &date )
 {
   Journal::List journalList;
-  foreach ( Journal *j, d->mJournals ) {
+  QHashIterator<QString, Journal *>i( d->mJournals );
+  Journal *j;
+  while ( i.hasNext() ) {
+    i.next();
+    j = i.value();
     if ( j->dtStart().date() == date ) {
       journalList.append( j );
     }
