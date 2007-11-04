@@ -212,7 +212,7 @@ class KCAL_EXPORT Scheduler
     ICalFormat *mFormat;
 
   private:
-    class Private;
+    struct Private;
     Private *const d;
 };
 
