@@ -2243,10 +2243,10 @@ IMAP4Protocol::doListEntry (const QString & encodedUrl, int stretch, imapCache *
     entry.clear ();
 
     const QString uid = QString::number(cache->getUid());
-	QString tmp;
+    QString tmp = uid;
     if (stretch > 0)
     {
-      tmp = "0000000000000000" + tmp;
+      tmp = "0000000000000000" + uid;
       tmp = tmp.right (stretch);
     }
     if (withSubject)
