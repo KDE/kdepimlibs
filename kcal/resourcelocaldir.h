@@ -114,7 +114,7 @@ class KCal::ResourceLocalDir::Private
 
     Private ( const QString &dirName )
     {
-      mURL = KUrl( dirName );
+      mURL = KUrl::fromPath( dirName );
     }
 
     void init( ResourceLocalDir *rdir );
