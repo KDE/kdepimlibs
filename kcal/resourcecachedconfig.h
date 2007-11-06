@@ -39,7 +39,7 @@ class KCAL_EXPORT ResourceCachedReloadConfig : public QWidget
   Q_OBJECT
   public:
     explicit ResourceCachedReloadConfig( QWidget *parent = 0 );
-
+    ~ResourceCachedReloadConfig();
   public Q_SLOTS:
     void loadSettings( ResourceCached *resource );
     void saveSettings( ResourceCached *resource );
@@ -64,6 +64,7 @@ class KCAL_EXPORT ResourceCachedSaveConfig : public QWidget
     Q_OBJECT
   public:
     explicit ResourceCachedSaveConfig( QWidget *parent = 0 );
+    ~ResourceCachedSaveConfig();
 
   public Q_SLOTS:
     void loadSettings( ResourceCached *resource );
