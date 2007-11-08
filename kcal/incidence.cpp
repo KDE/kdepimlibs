@@ -59,6 +59,29 @@ class KCal::Incidence::Private
         mRelatedTo( 0 )
     {}
 
+    Private(const Private &p)
+      : mCreated( p.mCreated ),
+        mRevision( p.mRevision ),
+        mDescription( p.mDescription ),
+        mDescriptionIsRich( p.mDescriptionIsRich ),
+        mSummary( p.mSummary ),
+        mSummaryIsRich( p.mSummaryIsRich ),
+        mLocation( p.mLocation ),
+        mLocationIsRich( p.mLocationIsRich ),
+        mCategories( p.mCategories ),
+        mResources( p.mResources ),
+        mStatus( p.mStatus ),
+        mStatusString( p.mStatusString ),
+        mSecrecy( p.mSecrecy ),
+        mPriority( p.mPriority ),
+        mSchedulingID( p.mSchedulingID ),
+        mRelatedTo( 0 ),
+        mRelatedToUid( p.mRelatedToUid )
+// TODO: reenable attributes currently commented out.
+//  Incidence *mRelatedTo;          Incidence *mRelatedTo;
+//  Incidence::List mRelations;    Incidence::List mRelations;
+    {}
+
     KDateTime mCreated;              // creation datetime
     int mRevision;                   // revision number
 
@@ -96,25 +119,8 @@ Incidence::Incidence()
 
 Incidence::Incidence( const Incidence &i )
   : IncidenceBase( i ), Recurrence::RecurrenceObserver(),
-    d( new KCal::Incidence::Private )
+    d( new KCal::Incidence::Private( *i.d ) )
 {
-// TODO: reenable attributes currently commented out.
-  d->mRevision = i.d->mRevision;
-  d->mCreated = i.d->mCreated;
-  d->mDescription = i.d->mDescription;
-  d->mSummary = i.d->mSummary;
-  d->mCategories = i.d->mCategories;
-//  Incidence *mRelatedTo;          Incidence *mRelatedTo;
-  d->mRelatedTo = 0;
-  d->mRelatedToUid = i.d->mRelatedToUid;
-//  Incidence::List mRelations;    Incidence::List mRelations;
-  d->mResources = i.d->mResources;
-  d->mStatusString = i.d->mStatusString;
-  d->mStatus = i.d->mStatus;
-  d->mSecrecy = i.d->mSecrecy;
-  d->mPriority = i.d->mPriority;
-  d->mLocation = i.d->mLocation;
-
   // Alarms and Attachments are stored in ListBase<...>, which is a QValueList<...*>.
   // We need to really duplicate the objects stored therein, otherwise deleting
   // i will also delete all attachments from this object (setAutoDelete...)
@@ -139,8 +145,6 @@ Incidence::Incidence( const Incidence &i )
   } else {
     d->mRecurrence = 0;
   }
-
-  d->mSchedulingID = i.d->mSchedulingID;
 }
 
 Incidence::~Incidence()
