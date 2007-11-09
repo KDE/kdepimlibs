@@ -576,18 +576,14 @@ void Recurrence::setStartDateTime( const KDateTime &start )
     return;
   }
   d->mStartDateTime = start;
-  if ( start.isDateOnly() ) {
-    setAllDay( true );
-  } else {
-    setAllDay( false );   // set all RRULEs and EXRULEs
+  setAllDay( start.isDateOnly() );   // set all RRULEs and EXRULEs
 
-    int i, end;
-    for ( i = 0, end = d->mRRules.count();  i < end;  ++i ) {
-      d->mRRules[i]->setStartDt( start );
-    }
-    for ( i = 0, end = d->mExRules.count();  i < end;  ++i ) {
-      d->mExRules[i]->setStartDt( start );
-    }
+  int i, end;
+  for ( i = 0, end = d->mRRules.count();  i < end;  ++i ) {
+    d->mRRules[i]->setStartDt( start );
+  }
+  for ( i = 0, end = d->mExRules.count();  i < end;  ++i ) {
+    d->mExRules[i]->setStartDt( start );
   }
   updated();
 }
