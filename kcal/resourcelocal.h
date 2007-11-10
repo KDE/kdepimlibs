@@ -179,6 +179,13 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
 
 }
 
+/**
+  Private class that helps to provide binary compatibility between releases.
+  Declared in the public header to allow ResourceLocalConfig access to the
+  private data.
+  @internal
+*/
+//@cond PRIVATE
 class KCal::ResourceLocal::Private
 {
   public:
@@ -188,5 +195,6 @@ class KCal::ResourceLocal::Private
     KABC::Lock *mLock;
     KDateTime mLastModified;
 };
+//@endcond
 
 #endif

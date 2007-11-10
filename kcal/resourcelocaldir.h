@@ -101,6 +101,8 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
 
 /**
   Private class that helps to provide binary compatibility between releases.
+  Declared in the public header to allow ResourceLocalDirConfig access to the
+  private data.
   @internal
 */
 //@cond PRIVATE
