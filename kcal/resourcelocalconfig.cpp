@@ -22,6 +22,7 @@
 
 #include "resourcelocalconfig.h"
 #include "resourcelocal.h"
+#include "resourcelocal_p.h"
 #include "vcalformat.h"
 #include "icalformat.h"
 

@@ -59,6 +59,29 @@ class KCal::Incidence::Private
         mRelatedTo( 0 )
     {}
 
+    Private(const Private &p)
+      : mCreated( p.mCreated ),
+        mRevision( p.mRevision ),
+        mDescription( p.mDescription ),
+        mDescriptionIsRich( p.mDescriptionIsRich ),
+        mSummary( p.mSummary ),
+        mSummaryIsRich( p.mSummaryIsRich ),
+        mLocation( p.mLocation ),
+        mLocationIsRich( p.mLocationIsRich ),
+        mCategories( p.mCategories ),
+        mResources( p.mResources ),
+        mStatus( p.mStatus ),
+        mStatusString( p.mStatusString ),
+        mSecrecy( p.mSecrecy ),
+        mPriority( p.mPriority ),
+        mSchedulingID( p.mSchedulingID ),
+        mRelatedTo( 0 ),
+        mRelatedToUid( p.mRelatedToUid )
+// TODO: reenable attributes currently commented out.
+//  Incidence *mRelatedTo;          Incidence *mRelatedTo;
+//  Incidence::List mRelations;    Incidence::List mRelations;
+    {}
+
     KDateTime mCreated;              // creation datetime
     int mRevision;                   // revision number
 
@@ -97,7 +120,7 @@ Incidence::Incidence()
 Incidence::Incidence( const Incidence &i )
   : IncidenceBase( i ),
     Recurrence::RecurrenceObserver(),
-    d( new KCal::Incidence::Private )
+    d( new KCal::Incidence::Private( *i.d ) )
 {
   init( i );
 }
@@ -145,8 +168,6 @@ void Incidence::init( const Incidence &i )
   } else {
     d->mRecurrence = 0;
   }
-
-  d->mSchedulingID = i.d->mSchedulingID;
 }
 
 Incidence::~Incidence()

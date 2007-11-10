@@ -24,16 +24,7 @@
 #include "kcal_export.h"
 #include "resourcecached.h"
 
-#include <kurl.h>
-#include <kdirwatch.h>
-
-class QString;
-class KConfig;
-
 namespace KCal {
-
-class CalendarLocal;
-class Incidence;
 
 /**
   @brief
@@ -98,32 +89,6 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
     Private *const d;
     //@endcond
 };
-
-/**
-  Private class that helps to provide binary compatibility between releases.
-  @internal
-*/
-//@cond PRIVATE
-class KCal::ResourceLocalDir::Private
-{
-  public:
-    Private()
-      : mLock( 0 )
-    {
-    }
-
-    Private ( const QString &dirName )
-    {
-      mURL = KUrl::fromPath( dirName );
-    }
-
-    void init( ResourceLocalDir *rdir );
-    bool deleteIncidenceFile( Incidence *incidence );
-    KABC::Lock *mLock;
-    KUrl mURL;
-    KDirWatch mDirWatch;
-};
-//@endcond
 
 }
 

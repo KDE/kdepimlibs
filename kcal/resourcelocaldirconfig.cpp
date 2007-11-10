@@ -21,6 +21,7 @@
 
 #include "resourcelocaldirconfig.h"
 #include "resourcelocaldir.h"
+#include "resourcelocaldir_p.h"
 
 #include <klocale.h>
 #include <kdebug.h>

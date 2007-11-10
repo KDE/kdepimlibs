@@ -29,10 +29,12 @@
 */
 
 #include "resourcelocal.moc"
+#include "resourcelocal_p.h"
 
 #include "resourcelocalconfig.h"
 #include "vcalformat.h"
 #include "icalformat.h"
+#include "calendarlocal.h"
 #include "exceptions.h"
 #include "incidence.h"
 #include "event.h"
@@ -49,6 +51,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kurl.h>
+#include <kdirwatch.h>
 #include <kstandarddirs.h>
 #include <kconfiggroup.h>
 

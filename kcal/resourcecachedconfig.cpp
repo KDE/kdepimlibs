@@ -101,6 +101,11 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent )
   groupBox->setLayout(vbox);
 }
 
+ResourceCachedReloadConfig::~ResourceCachedReloadConfig()
+{
+   delete d;
+}
+
 void ResourceCachedReloadConfig::loadSettings( ResourceCached *resource )
 {
   d->mGroup->button( resource->reloadPolicy() )->setChecked( true );
@@ -176,6 +181,11 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent )
   vbox->addStretch(1);
   groupBox->setLayout(vbox);
 
+}
+
+ResourceCachedSaveConfig::~ResourceCachedSaveConfig()
+{ 
+  delete d;
 }
 
 void ResourceCachedSaveConfig::loadSettings( ResourceCached *resource )

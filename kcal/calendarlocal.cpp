@@ -354,6 +354,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
 {
   Event::List eventList;
   KDateTime::Spec ts = timespec.isValid() ? timespec : timeSpec();
+  KDateTime kdt( qd, ts );
 
   QHashIterator<QString, Event *>i( d->mEvents );
   Event *event;
@@ -376,7 +377,6 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
         }
       }
     } else {
-      KDateTime kdt( qd, ts );
       if ( event->dtStart() <= kdt ) {
         KDateTime end( event->dtEnd().toTimeSpec( event->dtStart() ) );
         if ( event->allDay() ) {

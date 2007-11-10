@@ -34,16 +34,11 @@
 #include <QtCore/QString>
 
 #include <kdatetime.h>
-#include <kurl.h>
-#include <kdirwatch.h>
 
-#include "calendarlocal.h"
 #include "kcal_export.h"
 #include "resourcecached.h"
 
 namespace KCal {
-
-class CalFormat;
 
 /**
   @brief Provides a calendar resource stored as a local file.
@@ -178,15 +173,5 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
 };
 
 }
-
-class KCal::ResourceLocal::Private
-{
-  public:
-    KUrl mURL;
-    CalFormat *mFormat;
-    KDirWatch mDirWatch;
-    KABC::Lock *mLock;
-    KDateTime mLastModified;
-};
 
 #endif
