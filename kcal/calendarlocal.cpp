@@ -39,7 +39,9 @@
 #include "todo.h"
 #include "journal.h"
 #include "filestorage.h"
+#include <QtCore/QDate>
 #include <QtCore/QHash>
+#include <QtCore/QMultiHash>
 #include <QtCore/QString>
 
 #include <kdebug.h>
@@ -65,6 +67,7 @@ class KCal::CalendarLocal::Private
     CalFormat *mFormat;                // calendar format
 
     QHash<QString, Event *> mEvents;    // hash on uids of all calendar events
+    QMultiHash<QString, QString> mEventsForDate;
     QHash<QString, Todo *> mTodos;      // hash on uids of all calendar to-dos
     QHash<QString, Journal *> mJournals;// hash on uids of all calendar journals
     Incidence::List mDeletedIncidences; // list of all deleted incidences
@@ -166,10 +169,12 @@ bool CalendarLocal::addEvent( Event *event )
 
 bool CalendarLocal::deleteEvent( Event *event )
 {
-  if ( d->mEvents.remove( event->uid() ) ) {
+  QString uid = event->uid();
+  if ( d->mEvents.remove( uid ) ) {
     setModified( true );
     notifyIncidenceDeleted( event );
     d->mDeletedIncidences.append( event );
+    d->mEventsForDate.remove( event->dtStart().toUtc().date().toString(), uid );
     return true;
   } else {
     kWarning() << "CalendarLocal::deleteEvent(): Event not found.";
@@ -186,6 +191,7 @@ void CalendarLocal::deleteAllEvents()
   }
   qDeleteAll( d->mEvents );
   d->mEvents.clear();
+  d->mEventsForDate.clear();
 }
 
 Event *CalendarLocal::event( const QString &uid )
@@ -323,6 +329,7 @@ void CalendarLocal::Private::insertEvent( Event *event )
   QString uid = event->uid();
   if ( mEvents.value( uid ) == 0 ) {
     mEvents.insert( uid, event );
+    mEventsForDate.insert( event->dtStart().toUtc().date().toString(), uid );
   } else {
 #ifdef NDEBUG
     // if we already have an event with this UID, it must be the same event,
@@ -353,44 +360,47 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
                                              SortDirection sortDirection )
 {
   Event::List eventList;
+
+  // Find the hash for the specified date
+  KDateTime udate( qd, KDateTime::UTC );
+  QString udateStr = udate.date().toString();
+  QMultiHash<QString, QString>::iterator it = d->mEventsForDate.find( udateStr );
+  // Iterate over all events on this date
+  Event *ev;
   KDateTime::Spec ts = timespec.isValid() ? timespec : timeSpec();
   KDateTime kdt( qd, ts );
-
-  QHashIterator<QString, Event *>i( d->mEvents );
-  Event *event;
-  while ( i.hasNext() ) {
-    i.next();
-    event = i.value();
-    if ( event->recurs() ) {
-      if ( event->isMultiDay() ) {
-        int extraDays = event->dtStart().date().daysTo( event->dtEnd().date() );
+  while ( it != d->mEventsForDate.end() && it.key() == udateStr ) {
+    ev = event( it.value() ); // by uid
+    if ( ev->recurs() ) {
+      if ( ev->isMultiDay() ) {
+        int extraDays = ev->dtStart().date().daysTo( ev->dtEnd().date() );
         int i;
         for ( i = 0; i <= extraDays; i++ ) {
-          if ( event->recursOn( qd.addDays( -i ), ts ) ) {
-            eventList.append( event );
+          if ( ev->recursOn( qd.addDays( -i ), ts ) ) {
+            eventList.append( ev );
             break;
           }
         }
       } else {
-        if ( event->recursOn( qd, ts ) ) {
-          eventList.append( event );
+        if ( ev->recursOn( qd, ts ) ) {
+          eventList.append( ev );
         }
       }
     } else {
-      if ( event->dtStart() <= kdt ) {
-        KDateTime end( event->dtEnd().toTimeSpec( event->dtStart() ) );
-        if ( event->allDay() ) {
+      if ( ev->dtStart() <= kdt ) {
+        KDateTime end( ev->dtEnd().toTimeSpec( ev->dtStart() ) );
+        if ( ev->allDay() ) {
           end.setDateOnly( true );
         } else {
           end = end.addSecs(-1);
         }
         if ( end >= kdt ) {
-          eventList.append( event );
+          eventList.append( ev );
         }
       }
     }
+    ++it;
   }
-
   return sortEvents( &eventList, sortField, sortDirection );
 }
 
