@@ -70,6 +70,7 @@ class KCal::CalendarLocal::Private
     QMultiHash<QString, Event *> mEventsForDate; // multihash on dates of all non-recurring Events
     QHash<QString, Todo *> mTodos;      // hash on uids of all To-dos
     QHash<QString, Journal *> mJournals;// hash on uids of all Journals
+    QMultiHash<QString, Journal *>mJournalsForDate; // multihash on dates of all Journals
     Incidence::List mDeletedIncidences; // list of all deleted Incidences
 
     void insertEvent( Event *event );
@@ -508,6 +509,7 @@ void CalendarLocal::Private::insertJournal( Journal *journal )
   QString uid = journal->uid();
   if ( mJournals.value( uid ) == 0 ) {
     mJournals.insert( uid, journal );
+    mJournalsForDate.insert( journal->dtStart().date().toString(), journal );
   } else {
 #ifndef NDEBUG
     // if we already have an journal with this UID, it must be the same journal,
@@ -524,6 +526,7 @@ bool CalendarLocal::deleteJournal( Journal *journal )
     setModified( true );
     notifyIncidenceDeleted( journal );
     d->mDeletedIncidences.append( journal );
+    d->mJournalsForDate.remove( journal->dtStart().date().toString(), journal );
     return true;
   } else {
     kWarning() << "CalendarLocal::deleteJournal(): Journal not found.";
@@ -540,6 +543,7 @@ void CalendarLocal::deleteAllJournals()
   }
   qDeleteAll( d->mJournals );
   d->mJournals.clear();
+  d->mJournalsForDate.clear();
 }
 
 Journal *CalendarLocal::journal( const QString &uid )
@@ -562,14 +566,15 @@ Journal::List CalendarLocal::rawJournals( JournalSortField sortField,
 Journal::List CalendarLocal::rawJournalsForDate( const QDate &date )
 {
   Journal::List journalList;
-  QHashIterator<QString, Journal *>i( d->mJournals );
   Journal *j;
-  while ( i.hasNext() ) {
-    i.next();
-    j = i.value();
-    if ( j->dtStart().date() == date ) {
-      journalList.append( j );
-    }
+
+  QString dateStr = date.toString();
+  QMultiHash<QString, Journal *>::iterator it = d->mJournalsForDate.find( dateStr );
+
+  while ( it != d->mJournalsForDate.end() && it.key() == dateStr ) {
+    j = it.value();
+    journalList.append( j );
+    ++it;
   }
   return journalList;
 }
