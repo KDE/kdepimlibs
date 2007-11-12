@@ -63,16 +63,16 @@ class KCal::CalendarLocal::Private
     {
       mDeletedIncidences.setAutoDelete( true );
     }
-    QString mFileName;                     // filename where the calendar is stored
-    CalFormat *mFormat;                    // calendar format
+    QString mFileName;                      // filename where calendar is stored
+    CalFormat *mFormat;                     // calendar format
 
-    QHash<QString, Event *> mEvents;       // hash on uids of all Events
+    QHash<QString, Event *> mEvents;        // hash on uids of all Events
     QMultiHash<QString, Event *> mEventsForDate; // on start dates of all non-recurring Events
-    QHash<QString, Todo *> mTodos;         // hash on uids of all To-dos
-    QMultiHash<QString, Todo*>mTodosForDate; // on due dates for all Todos
-    QHash<QString, Journal *> mJournals;   // hash on uids of all Journals
+    QHash<QString, Todo *> mTodos;          // hash on uids of all To-dos
+    QMultiHash<QString, Todo*>mTodosForDate;// on due dates for all Todos
+    QHash<QString, Journal *> mJournals;    // hash on uids of all Journals
     QMultiHash<QString, Journal *>mJournalsForDate; // on dates of all Journals
-    Incidence::List mDeletedIncidences;    // list of all deleted Incidences
+    Incidence::List mDeletedIncidences;     // list of all deleted Incidences
 
     void insertEvent( Event *event );
     void insertTodo( Todo *todo );
@@ -368,7 +368,7 @@ void CalendarLocal::incidenceUpdated( IncidenceBase *incidence )
   setModified( true );
 }
 
-Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
+Event::List CalendarLocal::rawEventsForDate( const QDate &date,
                                              const KDateTime::Spec &timespec,
                                              EventSortField sortField,
                                              SortDirection sortDirection )
@@ -377,11 +377,11 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
   Event *ev;
 
   // Find the hash for the specified date
-  QString dateStr = qd.toString();
+  QString dateStr = date.toString();
   QMultiHash<QString, Event *>::iterator it = d->mEventsForDate.find( dateStr );
   // Iterate over all non-recurring events that start on this date
   KDateTime::Spec ts = timespec.isValid() ? timespec : timeSpec();
-  KDateTime kdt( qd, ts );
+  KDateTime kdt( date, ts );
   while ( it != d->mEventsForDate.end() && it.key() == dateStr ) {
     ev = it.value();
     KDateTime end( ev->dtEnd().toTimeSpec( ev->dtStart() ) );
@@ -406,13 +406,13 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
         int extraDays = ev->dtStart().date().daysTo( ev->dtEnd().date() );
         int i;
         for ( i = 0; i <= extraDays; i++ ) {
-          if ( ev->recursOn( qd.addDays( -i ), ts ) ) {
+          if ( ev->recursOn( date.addDays( -i ), ts ) ) {
             eventList.append( ev );
             break;
           }
         }
       } else {
-        if ( ev->recursOn( qd, ts ) ) {
+        if ( ev->recursOn( date, ts ) ) {
           eventList.append( ev );
         }
       }
