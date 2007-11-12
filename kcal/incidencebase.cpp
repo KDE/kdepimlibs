@@ -52,7 +52,7 @@ using namespace KCal;
 class KCal::IncidenceBase::Private
 {
   public:
-    Private() : mAllDay( true ), mHasDuration( false )
+    Private(): mUpdateGroupLevel( 0 ), mAllDay( true ), mHasDuration( false )
     { mAttendees.setAutoDelete( true ); }
 
     Private( const Private &other )
@@ -61,6 +61,7 @@ class KCal::IncidenceBase::Private
         mOrganizer( other.mOrganizer ),
         mUid( other.mUid ),
         mDuration( other.mDuration ),
+	mUpdateGroupLevel( 0 ),
         mAllDay( other.mAllDay ),
         mHasDuration( other.mHasDuration )
         //????? mComments
@@ -73,6 +74,7 @@ class KCal::IncidenceBase::Private
     Person mOrganizer;           // incidence person (owner)
     QString mUid;                // incidence unique id
     Duration mDuration;          // incidence duration
+    int mUpdateGroupLevel;       // if non-zero, suppresses update() calls
     bool mAllDay;                // true if the incidence is all-day
     bool mHasDuration;           // true if the incidence has a duration
 
@@ -434,8 +436,24 @@ void IncidenceBase::unRegisterObserver( IncidenceBase::IncidenceObserver *observ
 
 void IncidenceBase::updated()
 {
-  foreach ( IncidenceObserver *o, d->mObservers ) {
-    o->incidenceUpdated( this );
+  if ( !d->mUpdateGroupLevel ) {
+    foreach ( IncidenceObserver *o, d->mObservers ) {
+      o->incidenceUpdated( this );
+    }
+  }
+}
+
+void IncidenceBase::startUpdates()
+{
+  ++d->mUpdateGroupLevel;
+}
+
+void IncidenceBase::endUpdates()
+{
+  if ( d->mUpdateGroupLevel > 0 ) {
+    if ( --d->mUpdateGroupLevel == 0 ) {
+      updated();
+    }
   }
 }
 
