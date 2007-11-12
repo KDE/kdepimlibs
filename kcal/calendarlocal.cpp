@@ -63,15 +63,16 @@ class KCal::CalendarLocal::Private
     {
       mDeletedIncidences.setAutoDelete( true );
     }
-    QString mFileName;                 // filename where the calendar is stored
-    CalFormat *mFormat;                // calendar format
+    QString mFileName;                     // filename where the calendar is stored
+    CalFormat *mFormat;                    // calendar format
 
-    QHash<QString, Event *> mEvents;    // hash on uids of all Events
-    QMultiHash<QString, Event *> mEventsForDate; // multihash on dates of all non-recurring Events
-    QHash<QString, Todo *> mTodos;      // hash on uids of all To-dos
-    QHash<QString, Journal *> mJournals;// hash on uids of all Journals
-    QMultiHash<QString, Journal *>mJournalsForDate; // multihash on dates of all Journals
-    Incidence::List mDeletedIncidences; // list of all deleted Incidences
+    QHash<QString, Event *> mEvents;       // hash on uids of all Events
+    QMultiHash<QString, Event *> mEventsForDate; // on start dates of all non-recurring Events
+    QHash<QString, Todo *> mTodos;         // hash on uids of all To-dos
+    QMultiHash<QString, Todo*>mTodosForDate; // on due dates for all Todos
+    QHash<QString, Journal *> mJournals;   // hash on uids of all Journals
+    QMultiHash<QString, Journal *>mJournalsForDate; // on dates of all Journals
+    Incidence::List mDeletedIncidences;    // list of all deleted Incidences
 
     void insertEvent( Event *event );
     void insertTodo( Todo *todo );
@@ -224,6 +225,10 @@ void CalendarLocal::Private::insertTodo( Todo *todo )
   QString uid = todo->uid();
   if ( mTodos.value( uid ) == 0 ) {
     mTodos.insert( uid, todo );
+    if ( todo->hasDueDate() ) {
+      mTodosForDate.insert( todo->dtDue().date().toString(), todo );
+    }
+
   } else {
 #ifndef NDEBUG
     // if we already have an to-do with this UID, it must be the same to-do,
@@ -243,6 +248,9 @@ bool CalendarLocal::deleteTodo( Todo *todo )
     setModified( true );
     notifyIncidenceDeleted( todo );
     d->mDeletedIncidences.append( todo );
+    if ( todo->hasDueDate() ) {
+      d->mTodosForDate.remove( todo->dtDue().date().toString(), todo );
+    }
     return true;
   } else {
     kWarning() << "CalendarLocal::deleteTodo(): Todo not found.";
@@ -259,6 +267,7 @@ void CalendarLocal::deleteAllTodos()
   }
   qDeleteAll( d->mTodos );
   d->mTodos.clear();
+  d->mTodosForDate.clear();
 }
 
 Todo *CalendarLocal::todo( const QString &uid )
@@ -282,13 +291,13 @@ Todo::List CalendarLocal::rawTodosForDate( const QDate &date )
 {
   Todo::List todoList;
   Todo *t;
-  QHashIterator<QString, Todo *>i( d->mTodos );
-  while ( i.hasNext() ) {
-    i.next();
-    t = i.value();
-    if ( t->hasDueDate() && t->dtDue().date() == date ) {
-      todoList.append( t );
-    }
+
+  QString dateStr = date.toString();
+  QMultiHash<QString, Todo *>::iterator it = d->mTodosForDate.find( dateStr );
+  while ( it != d->mTodosForDate.end() && it.key() == dateStr ) {
+    t = it.value();
+    todoList.append( t );
+    ++it;
   }
   return todoList;
 }
