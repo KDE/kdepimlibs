@@ -52,7 +52,11 @@ using namespace KCal;
 class KCal::IncidenceBase::Private
 {
   public:
-    Private(): mUpdateGroupLevel( 0 ), mAllDay( true ), mHasDuration( false )
+    Private()
+      : mUpdateGroupLevel( 0 ),
+        mUpdatedPending( false ),
+        mAllDay( true ),
+        mHasDuration( false )
     { mAttendees.setAutoDelete( true ); }
 
     Private( const Private &other )
@@ -61,7 +65,8 @@ class KCal::IncidenceBase::Private
         mOrganizer( other.mOrganizer ),
         mUid( other.mUid ),
         mDuration( other.mDuration ),
-	mUpdateGroupLevel( 0 ),
+        mUpdateGroupLevel( 0 ),
+        mUpdatedPending( false ),
         mAllDay( other.mAllDay ),
         mHasDuration( other.mHasDuration )
         //????? mComments
@@ -75,6 +80,7 @@ class KCal::IncidenceBase::Private
     QString mUid;                // incidence unique id
     Duration mDuration;          // incidence duration
     int mUpdateGroupLevel;       // if non-zero, suppresses update() calls
+    bool mUpdatedPending;        // true if an update has occurred since startUpdates()
     bool mAllDay;                // true if the incidence is all-day
     bool mHasDuration;           // true if the incidence has a duration
 
@@ -436,7 +442,9 @@ void IncidenceBase::unRegisterObserver( IncidenceBase::IncidenceObserver *observ
 
 void IncidenceBase::updated()
 {
-  if ( !d->mUpdateGroupLevel ) {
+  if ( d->mUpdateGroupLevel ) {
+    d->mUpdatedPending = true;
+  } else {
     foreach ( IncidenceObserver *o, d->mObservers ) {
       o->incidenceUpdated( this );
     }
@@ -451,7 +459,8 @@ void IncidenceBase::startUpdates()
 void IncidenceBase::endUpdates()
 {
   if ( d->mUpdateGroupLevel > 0 ) {
-    if ( --d->mUpdateGroupLevel == 0 ) {
+    if ( --d->mUpdateGroupLevel == 0 && d->mUpdatedPending ) {
+      d->mUpdatedPending = false;
       updated();
     }
   }
