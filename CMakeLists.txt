@@ -30,6 +30,8 @@ if ( Boost_FOUND )
   add_subdirectory(qgpgme)
 endif ( Boost_FOUND )
 
+add_subdirectory(kmime)
+
 if (NOT ONLY_KLEO)
 
 # (gpgme++/qgpgme handle their conditions inside their own CMakeLists.txt files)
@@ -38,7 +40,6 @@ add_subdirectory(kblog)
 add_subdirectory(kcal)
 add_subdirectory(kimap)
 add_subdirectory(kldap)
-add_subdirectory(kmime)
 add_subdirectory(kpimidentities)
 add_subdirectory(kpimutils)
 add_subdirectory(kresources)
