@@ -525,6 +525,20 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     */
     void updated();
 
+    /**
+      Call this when a group of updates is going to be made. This suppresses
+      change notifications until endUpdates() is called, at which point
+      updated() will automatically be called.
+    */
+    void startUpdates();
+
+    /**
+      Call this when a group of updates is complete, to notify observers that
+      the instance has changed. This should be called in conjunction with
+      startUpdates().
+    */
+    void endUpdates();
+
   protected:
     /**
       @copydoc

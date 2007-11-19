@@ -273,10 +273,14 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * first and last. */
     void setDuration( int duration );
 
-    /** Returns the number of recurrences up to and including the date/time specified. */
+    /** Returns the number of recurrences up to and including the date/time specified.
+     *  @warning This function can be very time consuming - use it sparingly!
+     */
     int durationTo( const KDateTime &dt ) const;
 
-    /** Returns the number of recurrences up to and including the date specified. */
+    /** Returns the number of recurrences up to and including the date specified.
+     *  @warning This function can be very time consuming - use it sparingly!
+     */
     int durationTo( const QDate &date ) const;
 
     /** Returns the date/time of the last recurrence.

@@ -110,10 +110,11 @@ ConfigWidget *Factory::configWidget( const QString &type, QWidget *parent )
   }
 
   KService::Ptr ptr = d->mTypeMap[ type ];
-  KPluginFactory *factory = KPluginLoader( ptr->library().toLatin1() ).factory();
+  KPluginLoader loader( ptr->library() );
+  KPluginFactory *factory = loader.factory();
   if ( !factory ) {
     kDebug(5650) << "KRES::Factory::configWidget(): Factory creation failed"
-                 << KLibLoader::self()->lastErrorMessage();
+                 << loader.errorString();
     return 0;
   }
 
@@ -163,10 +164,11 @@ Resource *Factory::Private::resourceInternal( const QString &type, const KConfig
   }
 
   KService::Ptr ptr = mTypeMap[ type ];
-  KPluginFactory *factory = KPluginLoader( ptr->library().toLatin1() ).factory();
+  KPluginLoader loader( ptr->library() );
+  KPluginFactory *factory = loader.factory();
   if ( !factory ) {
     kDebug(5650) << "KRES::Factory::resource(): Factory creation failed"
-                 << KLibLoader::self()->lastErrorMessage();
+                 << loader.errorString();
     return 0;
   }
 
