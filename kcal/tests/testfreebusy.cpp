@@ -31,8 +31,10 @@ using namespace KCal;
 
 void FreeBusyTest::testValidity()
 {
+  const KDateTime firstDateTime( QDate( 2007, 7, 23 ), QTime( 7, 0, 0 ), KDateTime::UTC );
+
   FreeBusy fb1(
-    KDateTime( QDate( 2007, 7, 23 ), QTime( 7, 0, 0 ), KDateTime::UTC ),
+    firstDateTime,
     KDateTime( QDate( 2007, 7, 23 ), QTime( 8, 0, 0 ), KDateTime::UTC ) );
 
   QVERIFY( fb1.dtEnd() ==
@@ -42,34 +44,41 @@ void FreeBusyTest::testValidity()
 void FreeBusyTest::testAddSort()
 {
   Period::List periods;
+
+  const KDateTime firstq1DateTime( QDate( 2007, 7, 23 ), QTime( 7, 0, 0 ), KDateTime::UTC );
   Period q1(
-    KDateTime( QDate( 2007, 7, 23 ), QTime( 7, 0, 0 ), KDateTime::UTC ),
+    firstq1DateTime,
     KDateTime( QDate( 2007, 7, 23 ), QTime( 8, 0, 0 ), KDateTime::UTC ) );
   periods.append( q1 );
 
+  const KDateTime firstq2DateTime( QDate( 2007, 8, 23 ), QTime( 7, 0, 0 ), KDateTime::UTC );
   Period q2(
-    KDateTime( QDate( 2007, 8, 23 ), QTime( 7, 0, 0 ), KDateTime::UTC ),
+    firstq2DateTime,
     KDateTime( QDate( 2007, 8, 23 ), QTime( 8, 0, 0 ), KDateTime::UTC ) );
   periods.append( q2 );
 
+  const KDateTime firstq3DateTime( QDate( 2007, 9, 23 ), QTime( 7, 0, 0 ), KDateTime::UTC );
   Period q3(
-    KDateTime( QDate( 2007, 9, 23 ), QTime( 7, 0, 0 ), KDateTime::UTC ),
+    firstq3DateTime,
     KDateTime( QDate( 2007, 9, 23 ), QTime( 8, 0, 0 ), KDateTime::UTC ) );
   periods.append( q3 );
 
   FreeBusy fb1;
   fb1.addPeriods( periods );
 
+  const KDateTime firstfb1DateTime( QDate( 2007, 10, 27 ), QTime( 7, 0, 0 ), KDateTime::UTC );
   fb1.addPeriod(
-    KDateTime( QDate( 2007, 10, 27 ), QTime( 7, 0, 0 ), KDateTime::UTC ),
+    firstfb1DateTime,
     KDateTime( QDate( 2007, 10, 27 ), QTime( 8, 0, 0 ), KDateTime::UTC ) );
 
+  const KDateTime secondfb1DateTime( QDate( 2007, 8, 27 ), QTime( 7, 0, 0 ), KDateTime::UTC );
   fb1.addPeriod(
-    KDateTime( QDate( 2007, 8, 27 ), QTime( 7, 0, 0 ), KDateTime::UTC ),
+    secondfb1DateTime,
     KDateTime( QDate( 2007, 8, 27 ), QTime( 8, 0, 0 ), KDateTime::UTC ) );
 
+  const KDateTime thirdfb1DateTime( QDate( 2007, 6, 27 ), QTime( 7, 0, 0 ), KDateTime::UTC );
   fb1.addPeriod(
-    KDateTime( QDate( 2007, 6, 27 ), QTime( 7, 0, 0 ), KDateTime::UTC ),
+    thirdfb1DateTime,
     KDateTime( QDate( 2007, 6, 27 ), QTime( 8, 0, 0 ), KDateTime::UTC ) );
 
   QVERIFY( fb1.busyPeriods().last().end() ==
