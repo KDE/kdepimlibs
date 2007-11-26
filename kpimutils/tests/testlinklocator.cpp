@@ -31,7 +31,8 @@ using namespace KPIMUtils;
 void LinkLocatorTest::testGetEmailAddress()
 {
   // empty input
-  LinkLocator ll1( QString(), 0 );
+  const QString emptyQString;
+  LinkLocator ll1( emptyQString, 0 );
   QVERIFY( ll1.getEmailAddress() == QString() );
 
   // no '@' at scan position
