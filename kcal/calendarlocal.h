@@ -273,6 +273,8 @@ class KCAL_EXPORT CalendarLocal : public Calendar
     */
     void incidenceUpdated( IncidenceBase *incidenceBase );
 
+    using QObject::event;   // prevent warning about hidden virtual method
+
   private:
     //@cond PRIVATE
     class Private;

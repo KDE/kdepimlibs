@@ -526,6 +526,8 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     */
     bool noReadOnlyOnLoad() const;
 
+    using QObject::event;   // prevent warning about hidden virtual method
+
   private:
     //@cond PRIVATE
     class Private;

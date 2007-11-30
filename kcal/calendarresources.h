@@ -594,6 +594,8 @@ class KCAL_EXPORT CalendarResources
     */
     Alarm::List alarmsTo( const KDateTime &to );
 
+    using QObject::event;   // prevent warning about hidden virtual method
+
   Q_SIGNALS:
     /**
       Signals that the Resource has been modified.

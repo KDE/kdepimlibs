@@ -1,7 +1,7 @@
 /*
   This file is part of the kcal library.
 
-  Copyright (c) 2006 David Jarvie <software@astrojar.org.uk>
+  Copyright (c) 2006 David Jarvie <djarvie@kde.org>
   Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
   This library is free software; you can redistribute it and/or
@@ -415,6 +415,8 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       Returns a reference to the id mapper.
      */
     KRES::IdMapper &idMapper();
+
+    using QObject::event;   // prevent warning about hidden virtual method
 
   protected:
     CalendarLocal *calendar() const;
