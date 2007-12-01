@@ -1,7 +1,7 @@
 /*
     This file is part of the kcal library.
 
-    Copyright (c) 2005-2007 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2005-2007 David Jarvie <djarvie@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -414,6 +414,17 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
       // Found a phase combination which hasn't yet been processed
       int preOffset = (i > 0) ? transits[i-1].phase().utcOffset() : rhs.previousUtcOffset();
       KTimeZone::Phase phase = transits[i].phase();
+      if (phase.utcOffset() == preOffset) {
+        transitionsDone[i] = true;
+        while ( ++i < trcount ) {
+          if (transitionsDone[i]
+          ||  transits[i].phase() != phase
+          ||  transits[i-1].phase().utcOffset() != preOffset)
+            continue;
+          transitionsDone[i] = true;
+        }
+        continue;
+      }
       icalcomponent *phaseComp = icalcomponent_new( phase.isDst() ?
                                  ICAL_XDAYLIGHT_COMPONENT : ICAL_XSTANDARD_COMPONENT );
       QList<QByteArray> abbrevs = phase.abbreviations();
@@ -467,9 +478,11 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
           ||  transits[i].phase() != phase
           ||  transits[i-1].phase().utcOffset() != preOffset)
             continue;
-          newRule = rule;
           transitionsDone[i] = true;
           qdt = transits[i].time();
+          if (!qdt.isValid())
+            continue;
+          newRule = rule;
           times += qdt;
           date = qdt.date();
           if (qdt.time() != time
