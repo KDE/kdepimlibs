@@ -510,26 +510,26 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
           // Write all the times up to but not including the current one.
           // First check whether any of the last RDATE values fit this rule.
           int yr = times[0].date().year();
-	  while (!rdates.isEmpty()) {
+          while (!rdates.isEmpty()) {
             qdt = rdates.last();
-	    date = qdt.date();
-	    if (qdt.time() != time
+            date = qdt.date();
+            if (qdt.time() != time
             ||  date.month() != month
-	    ||  date.year() != --yr)
+            ||  date.year() != --yr)
               break;
-	    int day  = date.day();
+            int day  = date.day();
             if (rule & DAY_OF_MONTH) {
               if (day != dayOfMonth)
                 break;
-	    } else {
+            } else {
               if (date.dayOfWeek() != dayOfWeek
               ||  (rule & WEEKDAY_OF_MONTH)  &&  (day - 1)/7 + 1 != nthFromStart
               ||  (rule & LAST_WEEKDAY_OF_MONTH)  &&  (daysInMonth - day)/7 + 1 != nthFromEnd)
-		break;
-	    }
-	    times.prepend(qdt);
-	    rdates.pop_back();
-	  }
+                break;
+            }
+            times.prepend(qdt);
+            rdates.pop_back();
+          }
           if (times.count() > (useNewRRULE ? minPhaseCount : minRuleCount)) {
             // There are enough dates to combine into an RRULE
             icalrecurrencetype r;
