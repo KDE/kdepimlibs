@@ -26,7 +26,6 @@
 
 #include <syndication/loader.h>
 #include <syndication/item.h>
-#include <syndication/atom/entry.h>
 
 #include <kio/netaccess.h>
 #include <kio/http.h>
@@ -213,7 +212,7 @@ void GData::modifyPost( KBlog::BlogPost* post )
   atomMarkup += ".post-"+post->postId()+"</id>";
   atomMarkup += "<published>"+post->creationDateTime().toString() +"</published>";
   atomMarkup += "<updated>"+post->modificationDateTime().toString()+"</updated>";
-  atomMarkup += "<title type='text'>"+post->title().toUtf8() +"</title>";
+  atomMarkup += "<title type='text'>"+post->title() +"</title>";
   if( !post->isPrivate() )
   {
     atomMarkup += "<app:control xmlns:app=*http://purl.org/atom/app#'>";
@@ -221,11 +220,11 @@ void GData::modifyPost( KBlog::BlogPost* post )
   }
   atomMarkup += "<content type='xhtml'>";
   atomMarkup += "<div xmlns='http://www.w3.org/1999/xhtml'>";
-  atomMarkup += post->content().toUtf8();
+  atomMarkup += post->content();
   atomMarkup += "</div></content>";
   atomMarkup += "<author>";
-  atomMarkup += "<name>" + fullName().toUtf8() + "</name>";
-  atomMarkup += "<email>" + username().toUtf8() + "</email>";
+  atomMarkup += "<name>" + fullName() + "</name>";
+  atomMarkup += "<email>" + username() + "</email>";
   atomMarkup += "</author>";
   atomMarkup += "</entry>";
   QByteArray postData;
@@ -271,7 +270,7 @@ void GData::createPost( KBlog::BlogPost* post )
     }
 
     QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
-    atomMarkup += "<title type='text'>"+post->title().toUtf8() +"</title>";
+    atomMarkup += "<title type='text'>"+post->title() +"</title>";
     if( post->isPrivate() )
     {
       atomMarkup += "<app:control xmlns:app=*http://purl.org/atom/app#'>";
@@ -279,11 +278,11 @@ void GData::createPost( KBlog::BlogPost* post )
     }
     atomMarkup += "<content type='xhtml'>";
     atomMarkup += "<div xmlns='http://www.w3.org/1999/xhtml'>";
-    atomMarkup += post->content().toUtf8(); // FIXME check for Utf
+    atomMarkup += post->content(); // FIXME check for Utf
     atomMarkup += "</div></content>";
     atomMarkup += "<author>";
-    atomMarkup += "<name>" + fullName().toUtf8() + "</name>";
-    atomMarkup += "<email>" + username().toUtf8() + "</email>";
+    atomMarkup += "<name>" + fullName() + "</name>";
+    atomMarkup += "<email>" + username() + "</email>";
     atomMarkup += "</author>";
     atomMarkup += "</entry>";
 
@@ -376,14 +375,15 @@ void GData::createComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
       return;
     }
   QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
-  atomMarkup += "<title type=\"text\">"+comment->title().toUtf8()+"</title>";
-  atomMarkup += "<content type=\"html\">"+comment->content().toUtf8()+"</content>";
+  atomMarkup += "<title type=\"text\">"+comment->title()+"</title>";
+  atomMarkup += "<content type=\"html\">"+comment->content()+"</content>";
   atomMarkup += "<author>";
   atomMarkup += "<name>"+comment->name()+"</name>";
   atomMarkup += "<email>"+comment->email()+"</email>";
   atomMarkup += "</author></entry>";
 
     QByteArray postData;
+    kDebug()<< postData;
     QDataStream stream( &postData, QIODevice::WriteOnly );
     stream.writeRawData( atomMarkup.toUtf8(), atomMarkup.toUtf8().length() );
 
