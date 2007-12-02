@@ -213,9 +213,9 @@ void GData::modifyPost( KBlog::BlogPost* post )
   atomMarkup += "<published>"+post->creationDateTime().toString() +"</published>";
   atomMarkup += "<updated>"+post->modificationDateTime().toString()+"</updated>";
   atomMarkup += "<title type='text'>"+post->title() +"</title>";
-  if( !post->isPrivate() )
+  if( post->isPrivate() )
   {
-    atomMarkup += "<app:control xmlns:app=*http://purl.org/atom/app#'>";
+    atomMarkup += "<app:control xmlns:app='http://purl.org/atom/app#'>";
     atomMarkup += "<app:draft>yes</app:draft></app:control>";
   }
   atomMarkup += "<content type='xhtml'>";
@@ -273,7 +273,7 @@ void GData::createPost( KBlog::BlogPost* post )
     atomMarkup += "<title type='text'>"+post->title() +"</title>";
     if( post->isPrivate() )
     {
-      atomMarkup += "<app:control xmlns:app=*http://purl.org/atom/app#'>";
+      atomMarkup += "<app:control xmlns:app='http://purl.org/atom/app#'>";
       atomMarkup += "<app:draft>yes</app:draft></app:control>";
     }
     atomMarkup += "<content type='xhtml'>";
