@@ -171,6 +171,11 @@ bool ResourceLocal::doSave( bool )
   return success;
 }
 
+bool ResourceLocal::doSave( bool syncCache, Incidence * incidence )
+{
+  return ResourceCached::doSave( syncCache, incidence );
+}
+
 KABC::Lock *ResourceLocal::lock()
 {
   return d->mLock;

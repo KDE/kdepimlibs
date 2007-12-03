@@ -84,6 +84,10 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
     virtual bool doFileLoad( CalendarLocal &cal, const QString &fileName );
 
   private:
+    // Inherited virtual methods which should not be used by derived classes.
+    using ResourceCalendar::doLoad;
+    using ResourceCalendar::doSave;
+
     //@cond PRIVATE
     class Private;
     Private *const d;

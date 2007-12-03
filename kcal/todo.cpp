@@ -285,6 +285,11 @@ QString Todo::dtStartTimeStr( bool shortfmt, bool first, const KDateTime::Spec &
   }
 }
 
+QString Todo::dtStartTimeStr( bool shortfmt, const KDateTime::Spec &spec ) const
+{
+  return Incidence::dtStartTimeStr( shortfmt, spec );
+}
+
 QString Todo::dtStartDateStr( bool shortfmt, bool first, const KDateTime::Spec &spec ) const
 {
   if ( spec.isValid() ) {
@@ -305,6 +310,11 @@ QString Todo::dtStartDateStr( bool shortfmt, bool first, const KDateTime::Spec &
   }
 }
 
+QString Todo::dtStartDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
+{
+  return Incidence::dtStartDateStr( shortfmt, spec );
+}
+
 QString Todo::dtStartStr( bool shortfmt, bool first, const KDateTime::Spec &spec ) const
 {
   if ( spec.isValid() ) {
@@ -323,6 +333,11 @@ QString Todo::dtStartStr( bool shortfmt, bool first, const KDateTime::Spec &spec
       KGlobal::locale()->formatDateTime( dtStart( first ).dateTime(),
                                        ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
   }
+}
+
+QString Todo::dtStartStr( bool shortfmt, const KDateTime::Spec &spec ) const
+{
+  return Incidence::dtStartStr( shortfmt, spec );
 }
 
 bool Todo::isCompleted() const

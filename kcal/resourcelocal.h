@@ -134,6 +134,11 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
       Actually saves the data to the local file.
     **/
     virtual bool doSave( bool syncCache );
+    /**
+      @copydoc
+      ResourceCached::doSave(bool, Incidence*)
+    */
+    virtual bool doSave( bool syncCache, Incidence * );
 
     /**
       Called by reload() to reload the resource, if it is already open.
@@ -165,6 +170,10 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
     ResourceLocal &operator=( const ResourceLocal &other );
 
   private:
+    // Inherited virtual methods which should not be used by derived classes.
+    using ResourceCalendar::doLoad;
+    using ResourceCalendar::doSave;
+
     void init();
     //@cond PRIVATE
     class Private;

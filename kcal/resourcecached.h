@@ -509,6 +509,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     // Inherited virtual methods which should not be used by derived classes.
     virtual bool doLoad();
     virtual bool doSave();
+    virtual bool doSave( Incidence * ) { return 0; }
 
     //@cond PRIVATE
     class Private;
