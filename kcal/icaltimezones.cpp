@@ -658,7 +658,7 @@ QByteArray ICalTimeZoneSourcePrivate::icalTzidPrefix;
 //@endcond
 
 ICalTimeZoneSource::ICalTimeZoneSource()
-  : KTimeZoneSource(),
+  : KTimeZoneSource( false ),
     d( 0 )
 {
 }
