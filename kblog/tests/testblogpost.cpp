@@ -55,7 +55,7 @@ void testBlogPost::testValidity_data()
     QTest::addColumn<bool>( "isCommentAllowed" );
     QTest::addColumn<bool>( "isTrackBackAllowed" );
     QTest::addColumn<QString>( "summary" );
-    QTest::addColumn<QString>( "tags" );
+    QTest::addColumn<QStringList>( "tags" );
 //     QTest::addColumn<QList<KUrl> >( "trackBackUrls" );
     QTest::addColumn<QString>( "mood" );
     QTest::addColumn<QString>( "music" );
@@ -109,7 +109,6 @@ void testBlogPost::testValidity()
     QFETCH( KDateTime, modificationDateTime );
     QFETCH( BlogPost::Status, status );
     QFETCH( QString, error );
-
     p.setPostId( postId );
     p.setTitle( title );
     p.setContent( content );

@@ -209,7 +209,7 @@ void GData::modifyPost( KBlog::BlogPost* post )
 
   QString atomMarkup = "<entry xmlns='http://www.w3.org/2005/Atom'>";
   atomMarkup += "<id>tag:blogger.com,1999:blog-"+blogId();
-  atomMarkup += ".post-"+post->postId()+"</id>";
+  atomMarkup += ".post-"+post->postId()+"</id>"; 
   atomMarkup += "<published>"+post->creationDateTime().toString() +"</published>";
   atomMarkup += "<updated>"+post->modificationDateTime().toString()+"</updated>";
   atomMarkup += "<title type='text'>"+post->title() +"</title>";
