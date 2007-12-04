@@ -30,28 +30,26 @@
 
 namespace KBlog {
 
-BlogComment::BlogComment(
-    const BlogComment& c ) :
-    d_ptr( new BlogCommentPrivate )
+BlogComment::BlogComment( const BlogComment &c )
+  : d_ptr( new BlogCommentPrivate )
 {
-  d_ptr->q_ptr=this;
-  d_ptr->mTitle=c.title();
-  d_ptr->mContent=c.content();
-  d_ptr->mEmail=c.email();
-  d_ptr->mName=c.name();
-  d_ptr->mCommentId=c.commentId();
-  d_ptr->mUrl=c.url();
-  d_ptr->mError=c.error();
-  d_ptr->mStatus=c.status();
-  d_ptr->mModificationDateTime=c.modificationDateTime();
-  d_ptr->mCreationDateTime=c.creationDateTime();
+  d_ptr->q_ptr = this;
+  d_ptr->mTitle = c.title();
+  d_ptr->mContent = c.content();
+  d_ptr->mEmail = c.email();
+  d_ptr->mName = c.name();
+  d_ptr->mCommentId = c.commentId();
+  d_ptr->mUrl = c.url();
+  d_ptr->mError = c.error();
+  d_ptr->mStatus = c.status();
+  d_ptr->mModificationDateTime = c.modificationDateTime();
+  d_ptr->mCreationDateTime = c.creationDateTime();
 }
 
-BlogComment::BlogComment(
-    const QString &commentId ) :
-    d_ptr( new BlogCommentPrivate )
+BlogComment::BlogComment( const QString &commentId )
+  : d_ptr( new BlogCommentPrivate )
 {
-  d_ptr->q_ptr=this;
+  d_ptr->q_ptr = this;
   d_ptr->mStatus = New;
   d_ptr->mCommentId = commentId;
 }
@@ -140,7 +138,6 @@ void BlogComment::setCreationDateTime( const KDateTime &datetime )
   d_ptr->mCreationDateTime= datetime;
 }
 
-
 BlogComment::Status BlogComment::status() const
 {
   return d_ptr->mStatus;
@@ -161,7 +158,7 @@ void BlogComment::setError( const QString &error )
   d_ptr->mError = error;
 }
 
-BlogComment& BlogComment::operator=(const BlogComment &c)
+BlogComment &BlogComment::operator=( const BlogComment &c )
 {
   BlogComment copy( c );
   swap( copy );

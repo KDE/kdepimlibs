@@ -52,14 +52,12 @@ class KBLOG_EXPORT BlogComment
   public:
   /**
     Copy Constructor for list handling.
-
     @param comment The comment to copy.
   */
-  BlogComment( const BlogComment& comment );
+  BlogComment( const BlogComment &comment );
 
    /**
     Constructor.
-
     @param commentId The ID of the comment on the server.
   */
   explicit BlogComment( const QString &commentId = QString() );
@@ -71,128 +69,128 @@ class KBLOG_EXPORT BlogComment
 
   /**
     Returns the title.
-
     @return The title.
+
     @see setTitle( const QString& )
   */
   QString title() const;
 
   /**
     Sets the title.
-
     @param title This is the title.
+
     @see title()
   */
   void setTitle( const QString &title );
 
   /**
     Returns the content.
-
     @return The content.
+
     @see setContent( const QString& )
   */
   QString content() const;
 
   /**
     Sets the content.
-
     @param content This is the content.
+
     @see content()
   */
   void setContent( const QString &content );
 
   /**
     Returns the comment's id.
-
     @return The comment's id
+
     @see setCommentId( const QString& )
   */
   QString commentId() const;
 
   /**
     Sets the comment's id.
-
     @param id The comment's id.
+
     @see commentId()
   */
-  void setCommentId( const QString& id );
+  void setCommentId( const QString &id );
 
   /**
     Returns the E-Mail address of the commentator.
-
     @return The E-Mail.
+
     @see setEmail( const QString& )
   */
   QString email() const;
 
   /**
     Sets the E-Mail.
-
     @param email This is the E-Mail address of the commentator.
+
     @see email()
   */
   void setEmail( const QString &email );
 
   /**
     Returns the commentator's name.
-
     @return The name.
+
     @see setName()
   */
   QString name() const;
 
   /**
     Sets the name of the commentator.
-
     @param name This is the commenator's name.
+
     @see name()
   */
   void setName( const QString &name );
 
   /**
     Returns the commentator's homepage URL.
-
     @return The url of the commentator's homepage
+
     @see setUrl( const KUrl& )
   */
   KUrl url() const;
 
   /**
-  Sets the commentator's homepage URL.
-
+    Sets the commentator's homepage URL.
     @param url The commentator's homepage url.
+
     @see url()
   */
   void setUrl( const KUrl &url );
 
   /**
     Returns the modification date-time.
-
     @return The modification date-time.
+
     @see setModificationDateTime( const KDateTime& )
   */
   KDateTime modificationDateTime() const;
 
   /**
     Sets the modification date-time.
-
     @param datetime The date-time the comment has been modified.
+
     @see modificationDateTime( const KDateTime& )
   */
   void setModificationDateTime( const KDateTime &datetime );
 
   /**
     Returns the creation date-time.
-
     @return The creation date-time.
+
     @see setCreationDateTime( const KDateTime& )
   */
   KDateTime creationDateTime() const;
 
   /**
     Sets the creation date-time.
-
     @param datetime The date-time the comment has been created.
+
     @see creationDateTime()
   */
   void setCreationDateTime( const KDateTime &datetime );
@@ -206,61 +204,61 @@ class KBLOG_EXPORT BlogComment
     New,
     /** Status of a successfully fetched comment. */
     Fetched,
-    /** Status of a successfully created comment. 
+    /** Status of a successfully created comment.
     @see GData::createComment( BlogPost*, BlogComment* ) */
     Created,
-    /** Status of a successfully removed comment. 
+    /** Status of a successfully removed comment.
     @see GData::removeComment( BlogPost*, BlogComment* ) */
     Removed,
-    /** Status when an error has occured on the server side. 
+    /** Status when an error has occured on the server side.
     @see error() */
     Error
   };
 
   /**
     Returns the status on the server.
-
     @return The status.
+
     @see setStatus( Status ), Status
   */
   Status status() const;
 
   /**
     Sets the status.
-
     @param status The status on the server.
+
     @see status(), Status
   */
   void setStatus( Status status );
 
   /**
     Returns the last error.
-
     @returns The last error string.
+
     @see setError( const QString& ), Error
   */
   QString error() const;
 
   /**
     Sets the error.
-
     @param error The error string.
+
     @see error(), Error
   */
-  void setError( const QString& error );
+  void setError( const QString &error );
 
   /**
     Overloaded for QList handling.
   */
-  BlogComment& operator=(const BlogComment &comment );
+  BlogComment &operator=( const BlogComment &comment );
 
   /**
     The swap operator.
   */
-  void swap( BlogComment & other ) { qSwap( this->d_ptr, other.d_ptr ); }
+  void swap( BlogComment &other ) { qSwap( this->d_ptr, other.d_ptr ); }
 
   private:
-    BlogCommentPrivate * d_ptr;
+    BlogCommentPrivate *d_ptr;
 };
 
 } //namespace KBlog

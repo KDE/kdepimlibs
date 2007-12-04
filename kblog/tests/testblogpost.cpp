@@ -27,16 +27,16 @@
 #include "kurl.h"
 #include "kdatetime.h"
 
-Q_DECLARE_METATYPE(QList<KUrl>)
-Q_DECLARE_METATYPE(KDateTime)
-Q_DECLARE_METATYPE(KBlog::BlogPost::Status)
+Q_DECLARE_METATYPE( QList<KUrl> )
+Q_DECLARE_METATYPE( KDateTime )
+Q_DECLARE_METATYPE( KBlog::BlogPost::Status )
 
 using namespace KBlog;
 
 class testBlogPost: public QObject
 {
-    Q_OBJECT
-private slots:
+  Q_OBJECT
+  private slots:
     void testValidity();
     void testValidity_data();
 };
@@ -45,36 +45,44 @@ private slots:
 
 void testBlogPost::testValidity_data()
 {
-    QTest::addColumn<QString>("postId");
-    QTest::addColumn<QString>("title");
-    QTest::addColumn<QString>("content");
-    QTest::addColumn<bool>("isPrivate");
-//     QTest::addColumn<QString>("abbreviatedContent");
-    QTest::addColumn<KUrl>("link");
-    QTest::addColumn<KUrl>("permalink");
-    QTest::addColumn<bool>("isCommentAllowed");
-    QTest::addColumn<bool>("isTrackBackAllowed");
-    QTest::addColumn<QString>("summary");
-    QTest::addColumn<QString>("tags");
-//     QTest::addColumn<QList<KUrl> >("trackBackUrls");
-    QTest::addColumn<QString>("mood");
-    QTest::addColumn<QString>("music");
-    QTest::addColumn<QStringList>("categories");
-    QTest::addColumn<KDateTime>("creationDateTime");
-    QTest::addColumn<KDateTime>("modificationDateTime");
-    QTest::addColumn<BlogPost::Status>("status");
-    QTest::addColumn<QString>("error");
+    QTest::addColumn<QString>( "postId" );
+    QTest::addColumn<QString>( "title" );
+    QTest::addColumn<QString>( "content" );
+    QTest::addColumn<bool>( "isPrivate" );
+//     QTest::addColumn<QString>( "abbreviatedContent" );
+    QTest::addColumn<KUrl>( "link" );
+    QTest::addColumn<KUrl>( "permalink" );
+    QTest::addColumn<bool>( "isCommentAllowed" );
+    QTest::addColumn<bool>( "isTrackBackAllowed" );
+    QTest::addColumn<QString>( "summary" );
+    QTest::addColumn<QString>( "tags" );
+//     QTest::addColumn<QList<KUrl> >( "trackBackUrls" );
+    QTest::addColumn<QString>( "mood" );
+    QTest::addColumn<QString>( "music" );
+    QTest::addColumn<QStringList>( "categories" );
+    QTest::addColumn<KDateTime>( "creationDateTime" );
+    QTest::addColumn<KDateTime>( "modificationDateTime" );
+    QTest::addColumn<BlogPost::Status>( "status" );
+    QTest::addColumn<QString>( "error" );
 
 //     QList<KUrl> url;
 //     url.append( KUrl( "http://track.back.url/some/path" ) );
-    QTest::newRow("SimpleTest") << QString("123ABC") << QString("Title")
-      << QString("Content") << true //<< QString("Abbreviated Content")
-      << KUrl( "http://my.link/in/outer/space" ) << KUrl( "http://my.perma/link/space" )
-      << true << true << QString( "Summary" ) << QStringList( "Tags" ) //<< url  
+    QTest::newRow( "SimpleTest" )
+      << QString( "123ABC" )
+      << QString( "Title" )
+      << QString( "Content" )
+      << true //<< QString("Abbreviated Content")
+      << KUrl( "http://my.link/in/outer/space" )
+      << KUrl( "http://my.perma/link/space" )
+      << true
+      << true
+      << QString( "Summary" )
+      << QStringList( "Tags" ) //<< url
       << QString( "Mood" ) << QString( "Music" )
       << QStringList( "Category" )
       << KDateTime( QDateTime::currentDateTime() )
-      << KDateTime( QDateTime::currentDateTime() ) << BlogPost::New
+      << KDateTime( QDateTime::currentDateTime() )
+      << BlogPost::New
       << QString( "Error" );
 }
 
@@ -82,25 +90,25 @@ void testBlogPost::testValidity()
 {
     BlogPost p;
 
-    QFETCH(QString, postId);
-    QFETCH(QString, title);
-    QFETCH(QString, content);
-    QFETCH(bool, isPrivate);
-//     QFETCH(QString, abbreviatedContent);
-    QFETCH(KUrl, link);
-    QFETCH(KUrl, permalink);
-    QFETCH(bool, isCommentAllowed);
-    QFETCH(bool, isTrackBackAllowed);
-    QFETCH(QString, summary);
-    QFETCH(QStringList, tags);
-//     QFETCH(QList<KUrl>, trackBackUrls);
-    QFETCH(QString, mood);
-    QFETCH(QString, music);
-    QFETCH(QStringList, categories);
-    QFETCH(KDateTime, creationDateTime);
-    QFETCH(KDateTime, modificationDateTime);
-    QFETCH(BlogPost::Status, status);
-    QFETCH(QString, error);
+    QFETCH( QString, postId );
+    QFETCH( QString, title );
+    QFETCH( QString, content );
+    QFETCH( bool, isPrivate );
+//     QFETCH( QString, abbreviatedContent );
+    QFETCH( KUrl, link );
+    QFETCH( KUrl, permalink );
+    QFETCH( bool, isCommentAllowed );
+    QFETCH( bool, isTrackBackAllowed );
+    QFETCH( QString, summary );
+    QFETCH( QStringList, tags );
+//     QFETCH( QList<KUrl>, trackBackUrls );
+    QFETCH( QString, mood );
+    QFETCH( QString, music );
+    QFETCH( QStringList, categories );
+    QFETCH( KDateTime, creationDateTime );
+    QFETCH( KDateTime, modificationDateTime );
+    QFETCH( BlogPost::Status, status );
+    QFETCH( QString, error );
 
     p.setPostId( postId );
     p.setTitle( title );
@@ -122,26 +130,25 @@ void testBlogPost::testValidity()
     p.setStatus( status );
     p.setError( error );
 
-
-    QCOMPARE(p.postId(), postId );
-    QCOMPARE(p.title(), title );
-    QCOMPARE(p.content(), content );
-    QCOMPARE(p.isPrivate(), isPrivate );
-//     QCOMPARE(p.abbreviatedContent(), abbreviatedContent );
-    QCOMPARE(p.link(), link );
-    QCOMPARE(p.permaLink(), permalink );
-    QCOMPARE(p.isCommentAllowed(), isCommentAllowed );
-    QCOMPARE(p.isTrackBackAllowed(), isTrackBackAllowed );
-    QCOMPARE(p.summary(), summary );
-    QCOMPARE(p.tags(), tags );
-//     QCOMPARE(p.trackBackUrls(), trackBackUrls );
-    QCOMPARE(p.mood(), mood );
-    QCOMPARE(p.music(), music );
-    QCOMPARE(p.categories(), categories );
-    QCOMPARE(p.creationDateTime(), creationDateTime );
-    QCOMPARE(p.modificationDateTime(), modificationDateTime );
-    QCOMPARE(p.status(), status );
-    QCOMPARE(p.error(), error );
+    QCOMPARE( p.postId(), postId );
+    QCOMPARE( p.title(), title );
+    QCOMPARE( p.content(), content );
+    QCOMPARE( p.isPrivate(), isPrivate );
+//     QCOMPARE( p.abbreviatedContent(), abbreviatedContent );
+    QCOMPARE( p.link(), link );
+    QCOMPARE( p.permaLink(), permalink );
+    QCOMPARE( p.isCommentAllowed(), isCommentAllowed );
+    QCOMPARE( p.isTrackBackAllowed(), isTrackBackAllowed );
+    QCOMPARE( p.summary(), summary );
+    QCOMPARE( p.tags(), tags );
+//     QCOMPARE( p.trackBackUrls(), trackBackUrls );
+    QCOMPARE( p.mood(), mood );
+    QCOMPARE( p.music(), music );
+    QCOMPARE( p.categories(), categories );
+    QCOMPARE( p.creationDateTime(), creationDateTime );
+    QCOMPARE( p.modificationDateTime(), modificationDateTime );
+    QCOMPARE( p.status(), status );
+    QCOMPARE( p.error(), error );
 }
 
 QTEST_KDEMAIN_CORE(testBlogPost)

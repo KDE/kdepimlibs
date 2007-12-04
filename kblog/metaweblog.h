@@ -84,7 +84,7 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
     QString interfaceName() const;
 
     /**
-      List the categories of the blog. 
+      List the categories of the blog.
 
       @see listedCategories( const QList\<QMap\<QString,QString\> \>& )
     */
@@ -100,7 +100,7 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
   Q_SIGNALS:
 
     /**
-      This signal is emitted when a media has been created 
+      This signal is emitted when a media has been created
       on the server.
 
       @param media The created media.
@@ -113,7 +113,7 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
       This signal is emitted when the last category of the listCategories()
       job has been fetched.
 
-      @param categories This list contains the categories. Each map has the keys: 
+      @param categories This list contains the categories. Each map has the keys:
       name, description, htmlUrl, rssUrl.
 
       @see listCategories()
@@ -127,11 +127,11 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
     MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd, QObject *parent = 0 );
 
   private:
-    Q_DECLARE_PRIVATE(MetaWeblog)
-    Q_PRIVATE_SLOT(d_func(), 
-      void slotListCategories( const QList<QVariant>&, const QVariant& ) )
-    Q_PRIVATE_SLOT(d_func(),
-      void slotCreateMedia( const QList<QVariant>&, const QVariant& ))
+    Q_DECLARE_PRIVATE( MetaWeblog )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotListCategories( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotCreateMedia( const QList<QVariant> &, const QVariant & ) )
 };
 
 } //namespace KBlog

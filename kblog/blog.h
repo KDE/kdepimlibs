@@ -309,7 +309,7 @@ class KBLOG_EXPORT Blog : public QObject
       @see ErrorType
     */
     void errorPost( KBlog::Blog::ErrorType type,
-                       const QString &errorMessage, KBlog::BlogPost* post );
+                    const QString &errorMessage, KBlog::BlogPost *post );
 
     /**
       This signal is emitted when an error occurs with XML parsing or a
@@ -321,7 +321,7 @@ class KBLOG_EXPORT Blog : public QObject
       @see ErrorType
     */
     void errorMedia( KBlog::Blog::ErrorType type,
-                     const QString &errorMessage, KBlog::BlogMedia* media );
+                     const QString &errorMessage, KBlog::BlogMedia *media );
 
     /**
       This signal is emitted when an error occurs with XML parsing or a
@@ -334,12 +334,13 @@ class KBLOG_EXPORT Blog : public QObject
       @see ErrorType
     */
     void errorComment( KBlog::Blog::ErrorType type,
-                       const QString &errorMessage, KBlog::BlogPost* post,
-                       KBlog::BlogComment* comment );
+                       const QString &errorMessage, KBlog::BlogPost *post,
+                       KBlog::BlogComment *comment );
 
   protected:
     /** A pointer to the corresponding 'Private' class */
-    BlogPrivate* const d_ptr;
+    BlogPrivate *const d_ptr;
+
     /**
       Constructor needed to allow private inheritance of 'Private' classes.
 
@@ -367,7 +368,7 @@ class KBLOG_EXPORT Blog : public QObject
     */
     void setUserAgent( const QString &applicationName,
                        const QString &applicationVersion );
-    Q_DECLARE_PRIVATE(Blog)
+    Q_DECLARE_PRIVATE( Blog )
 };
 
 } //namespace KBlog

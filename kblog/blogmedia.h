@@ -31,7 +31,8 @@ class KUrl;
 
 namespace KBlog {
 
-  class BlogMediaPrivate;
+class BlogMediaPrivate;
+
 /**
   @brief
   A class that represents a media object on the server.
@@ -44,7 +45,6 @@ namespace KBlog {
 
   @author Christian Weilbach \<christian_weilbach\@web.de\>
 */
-
 class KBLOG_EXPORT BlogMedia
 {
 
@@ -57,7 +57,7 @@ class KBLOG_EXPORT BlogMedia
     /**
       Copy Constructor needed for list handling.
     */
-    BlogMedia( const BlogMedia& media );
+    BlogMedia( const BlogMedia &media );
 
     /**
       Virtual default destructor.
@@ -76,8 +76,8 @@ class KBLOG_EXPORT BlogMedia
     /**
       Sets the name. This will most likely be the filename on the server side
       (at least with wordpress).
-
       @param name The whished name for the object.
+
       @see name()
     */
     void setName( const QString &name );
@@ -93,8 +93,8 @@ class KBLOG_EXPORT BlogMedia
     /**
       Sets the url of the server side object. Note: You should *not* set this
       on your own normally. It is used internally in MetaWeblog.
-
       @param url The whished name for the object.
+
       @see url()
     */
     void setUrl( const KUrl &url );
@@ -109,24 +109,24 @@ class KBLOG_EXPORT BlogMedia
 
     /**
       Set the mimtype.
-
       @param mimetype This is the mimetype.
+
       @see mimetype()
     */
     void setMimetype( const QString &mimetype );
 
     /**
       Returns the data of the file.
-
       @return The data.
+
       @see setData( const QByteArray& )
     */
     QByteArray data() const;
 
     /**
        Set the data of the file.
-
        @param data This is the data stream.
+
        @see data()
     */
     void setData( const QByteArray &data );
@@ -135,66 +135,60 @@ class KBLOG_EXPORT BlogMedia
        The different possible status. At the moment you cannot do
        much with media objects.
     */
-    enum Status { 
+    enum Status {
        /** Status of freshly constructed media object on the client side. */
-       New, 
+       New,
        /** Status of a media object succesfully created on the server. */
-       Created, 
+       Created,
        /** Status when an error on uploading has occured. */
-       Error 
+       Error
     };
-
 
     /**
        Returns the status.
-
        @return This is the status.
+
        @see setStatus( Status )
     */
     Status status() const;
 
-
     /**
        Set the status. Note: You should *not* set this on your own
        it is used mostly internally.
-
        @param status This is the status.
+
        @see status()
     */
     void setStatus( Status status );
 
-
     /**
        Returns the error string.
-
        @return The error string.
        @see setError( const QString& )
     */
     QString error() const;
 
-
     /**
        Set the error of the object.
-
        @param error This is the error string.
+
        @see error()
     */
     void setError( const QString &error );
 
-
     /**
        Overloaded for QList handling.
-
        @param media The media file to copy.
     */
-    BlogMedia& operator=(const BlogMedia &media );
+    BlogMedia &operator=( const BlogMedia &media );
 
     /**
       The swap operator.
     */
-    void swap( BlogMedia & other ) { qSwap( this->d_ptr, other.d_ptr ); }
+    void swap( BlogMedia &other ) { qSwap( this->d_ptr, other.d_ptr ); }
+
   private:
-    BlogMediaPrivate * d_ptr;
+    BlogMediaPrivate *d_ptr;
 };
 
 } //namespace KBlog

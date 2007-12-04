@@ -57,20 +57,18 @@ Blog::~Blog()
 
 QString Blog::userAgent() const
 {
-  Q_D(const Blog);
+  Q_D( const Blog );
   return d->mUserAgent;
 }
 
 void Blog::setUserAgent( const QString &applicationName,
-                         const QString &applicationVersion)
+                         const QString &applicationVersion )
 {
-  Q_D(Blog);
+  Q_D( Blog );
   QString userAgent;
   if ( !applicationName.isEmpty() && !applicationVersion.isEmpty() ) {
-    userAgent = '(' + applicationName + '/' + applicationVersion
-        + ") KDE-KBlog/";
-  }
-  else {
+    userAgent = '(' + applicationName + '/' + applicationVersion + ") KDE-KBlog/";
+  } else {
     userAgent = "KDE-KBlog/";
   }
   userAgent += KDE_VERSION_STRING;
@@ -79,61 +77,61 @@ void Blog::setUserAgent( const QString &applicationName,
 
 void Blog::setPassword( const QString &pass )
 {
-  Q_D(Blog);
+  Q_D( Blog );
   d->mPassword = pass;
 }
 
 QString Blog::password() const
 {
-  Q_D(const Blog);
+  Q_D( const Blog );
   return d->mPassword;
 }
 
 QString Blog::username() const
 {
-  Q_D(const Blog);
+  Q_D( const Blog );
   return d->mUsername;
 }
 
 void Blog::setUsername( const QString &username )
 {
-  Q_D(Blog);
+  Q_D( Blog );
   d->mUsername = username;
 }
 
 void Blog::setBlogId( const QString &blogId )
 {
-  Q_D(Blog);
+  Q_D( Blog );
   d->mBlogId = blogId;
 }
 
 QString Blog::blogId() const
 {
-  Q_D(const Blog);
+  Q_D( const Blog );
   return d->mBlogId;
 }
 
 void Blog::setUrl( const KUrl &url )
 {
-  Q_D(Blog);
+  Q_D( Blog );
   d->mUrl = url;
 }
 
 KUrl Blog::url() const
 {
-  Q_D(const Blog);
+  Q_D( const Blog );
   return d->mUrl;
 }
 
 void Blog::setTimeZone( const KTimeZone &tz )
 {
-  Q_D(Blog);
+  Q_D( Blog );
   d->mTimeZone = tz;
 }
 
 KTimeZone Blog::timeZone()
 {
-  Q_D(const Blog);
+  Q_D( const Blog );
   return d->mTimeZone;
 }
 

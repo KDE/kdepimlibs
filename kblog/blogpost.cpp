@@ -33,24 +33,24 @@
 
 namespace KBlog {
 
-BlogPost::BlogPost( const KBlog::BlogPost& post ):
-    d_ptr( new BlogPostPrivate )
+BlogPost::BlogPost( const KBlog::BlogPost &post )
+  : d_ptr( new BlogPostPrivate )
 {
-  d_ptr->q_ptr=this;
-  d_ptr->mPrivate=post.isPrivate();
-  d_ptr->mPostId=post.postId();
-  d_ptr->mTitle=post.title();
-  d_ptr->mContent=post.content();
-  d_ptr->mCategories=post.categories();
-  d_ptr->mError=post.error();
-  d_ptr->mJournalId=post.journalId();
-  d_ptr->mStatus=post.status();
-  d_ptr->mCreationDateTime=post.creationDateTime();
-  d_ptr->mModificationDateTime=post.modificationDateTime();
+  d_ptr->q_ptr = this;
+  d_ptr->mPrivate = post.isPrivate();
+  d_ptr->mPostId = post.postId();
+  d_ptr->mTitle = post.title();
+  d_ptr->mContent = post.content();
+  d_ptr->mCategories = post.categories();
+  d_ptr->mError = post.error();
+  d_ptr->mJournalId = post.journalId();
+  d_ptr->mStatus = post.status();
+  d_ptr->mCreationDateTime = post.creationDateTime();
+  d_ptr->mModificationDateTime = post.modificationDateTime();
 }
 
-BlogPost::BlogPost( const QString &postId ) :
-    d_ptr( new BlogPostPrivate )
+BlogPost::BlogPost( const QString &postId )
+  : d_ptr( new BlogPostPrivate )
 {
   d_ptr->q_ptr = this;
   d_ptr->mPrivate = false;
@@ -58,8 +58,8 @@ BlogPost::BlogPost( const QString &postId ) :
   d_ptr->mStatus = New;
 }
 
-BlogPost::BlogPost( const KCal::Journal &journal ) :
-    d_ptr( new BlogPostPrivate )
+BlogPost::BlogPost( const KCal::Journal &journal )
+  : d_ptr( new BlogPostPrivate )
 {
   d_ptr->q_ptr = this;
   d_ptr->mPrivate = false;
@@ -91,7 +91,7 @@ BlogPost::~BlogPost()
   delete d_ptr;
 }
 
-KCal::Journal* BlogPost::journal( const Blog &blog ) const
+KCal::Journal *BlogPost::journal( const Blog &blog ) const
 {
   QString url = blog.url().url();
   QString username = blog.username();
@@ -162,7 +162,7 @@ void BlogPost::setContent( const QString &content )
 //   //TODO
 //   return 0;
 // }
-// 
+//
 // void BlogPost::setAbbreviatedContent( const QString &abbreviatedContent )
 // {
 //   Q_UNUSED( abbreviatedContent );
@@ -234,7 +234,7 @@ void BlogPost::setTags( const QStringList &tags )
 //   //TODO
 //   return QList<KUrl>();
 // }
-// 
+//
 // void BlogPost::setTrackBackUrls( const QList<KUrl> &trackBackUrls )
 // {
 //   Q_UNUSED( trackBackUrls );
@@ -311,7 +311,7 @@ void BlogPost::setError( const QString &error )
   d_ptr->mError = error;
 }
 
-BlogPost& BlogPost::operator=( const BlogPost &other )
+BlogPost &BlogPost::operator=( const BlogPost &other )
 {
   BlogPost copy( other );
   swap( copy );

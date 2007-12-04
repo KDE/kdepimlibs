@@ -35,13 +35,13 @@ class MovableTypePrivate : public MetaWeblogPrivate
     MovableTypePrivate();
     virtual ~MovableTypePrivate();
     virtual void slotListTrackBackPings( const QList<QVariant> &result,
-                                 const QVariant &id );
-    Q_DECLARE_PUBLIC(MovableType)
+                                         const QVariant &id );
+    Q_DECLARE_PUBLIC( MovableType )
+
   private:
     QList<QVariant> defaultArgs( const QString &id = QString() );
-    bool readPostFromMap( BlogPost *post,
-                             const QMap<QString, QVariant> &postInfo );
-    bool readArgsFromPost( QList<QVariant> *args, const BlogPost& post );
+    bool readPostFromMap( BlogPost *post, const QMap<QString, QVariant> &postInfo );
+    bool readArgsFromPost( QList<QVariant> *args, const BlogPost &post );
 };
 
 }

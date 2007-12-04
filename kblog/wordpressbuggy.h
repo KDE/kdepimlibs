@@ -39,12 +39,15 @@ namespace KBlog {
     class WordpressBuggyPrivate;
 /**
   @brief
-  A class that can be used for access to Wordpress blogs. This is needed because of an ugly
-  DateTime bug in Wordpress. Hopefully the bug will be fixed in the near feature. This class 
-  reimplements createPost and modifyPost from scratch to send the DateTime in a format 
-  like yyyyMMddThh:mm:ss which is not ISO conform. The date is not extended, where the time is extended.
-  The rest of the code is used from MovableType, as Wordpress implements MovableType. You should not use this
-  code on non-Wordpress blogs.
+  A class that can be used for access to Wordpress blogs. This is needed because
+  of an ugly DateTime bug in Wordpress. Hopefully the bug will be fixed in the
+  near feature. This class reimplements createPost and modifyPost from scratch
+  to send the DateTime in a format like yyyyMMddThh:mm:ss which is not ISO
+  conformant. The date is not extended, where the time is extended.
+
+  The rest of the code is used from MovableType, as Wordpress implements
+  MovableType. You should not use thiscode on non-Wordpress blogs.
+
   @code
   Blog* myblog = new WordpressBuggy("http://example.com/xmlrpc/gateway.php");
   myblog->setUsername( "some_user_id" );
@@ -62,8 +65,7 @@ class KBLOG_EXPORT WordpressBuggy : public MovableType
   Q_OBJECT
   public:
     /**
-      Create an object for WordpressBuggy 
-
+      Create an object for WordpressBuggy
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
     */
@@ -76,16 +78,14 @@ class KBLOG_EXPORT WordpressBuggy : public MovableType
 
     /**
       Create a new post on server.
-
       @param post is send to the server.
     */
     void createPost( KBlog::BlogPost *post );
 
     /**
       Modify a post on server.
-
-      @param post The post to be modified on the
-      server. You need to set its id correctly.
+      @param post The post to be modified on the server.
+      You need to set its id correctly.
 
       @see BlogPost::setPostId( const QString& )
       @see modifiedPost( KBlog::BlogPost* )
@@ -104,11 +104,11 @@ class KBLOG_EXPORT WordpressBuggy : public MovableType
     WordpressBuggy( const KUrl &server, WordpressBuggyPrivate &dd, QObject *parent = 0 );
 
   private:
-    Q_DECLARE_PRIVATE(WordpressBuggy)
-    Q_PRIVATE_SLOT(d_func(), void slotCreatePost(KJob*))
-    Q_PRIVATE_SLOT(d_func(), void slotCreatePostData(KIO::Job *,const QByteArray&))
-    Q_PRIVATE_SLOT(d_func(), void slotModifyPost(KJob*))
-    Q_PRIVATE_SLOT(d_func(), void slotModifyPostData(KIO::Job *,const QByteArray&))
+    Q_DECLARE_PRIVATE( WordpressBuggy )
+    Q_PRIVATE_SLOT( d_func(), void slotCreatePost( KJob * ) )
+    Q_PRIVATE_SLOT( d_func(), void slotCreatePostData( KIO::Job *,const QByteArray & ) )
+    Q_PRIVATE_SLOT( d_func(), void slotModifyPost( KJob * ) )
+    Q_PRIVATE_SLOT( d_func(), void slotModifyPostData( KIO::Job *,const QByteArray & ) )
 };
 
 } //namespace KBlog

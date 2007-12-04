@@ -43,7 +43,7 @@ class BlogPrivate
     QString mUserAgent;
     KUrl mUrl;
     KTimeZone mTimeZone;
-    Q_DECLARE_PUBLIC(Blog)
+    Q_DECLARE_PUBLIC( Blog )
 };
 
 } //namespace KBlog

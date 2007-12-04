@@ -45,16 +45,16 @@ BlogMedia::BlogMedia(): d_ptr( new BlogMediaPrivate )
   d_ptr->q_ptr=this;
 }
 
-BlogMedia::BlogMedia( const BlogMedia& m ) :
-d_ptr( new BlogMediaPrivate )
+BlogMedia::BlogMedia( const BlogMedia &m )
+  : d_ptr( new BlogMediaPrivate )
 {
-  d_ptr->q_ptr=this;
-  d_ptr->mName=m.name();
-  d_ptr->mUrl=m.url();
-  d_ptr->mMimetype=m.mimetype();
-  d_ptr->mData=m.data();
-  d_ptr->mStatus=m.status();
-  d_ptr->mError=m.error();
+  d_ptr->q_ptr = this;
+  d_ptr->mName = m.name();
+  d_ptr->mUrl = m.url();
+  d_ptr->mMimetype = m.mimetype();
+  d_ptr->mData = m.data();
+  d_ptr->mStatus = m.status();
+  d_ptr->mError = m.error();
 }
 
 BlogMedia::~BlogMedia()
@@ -122,7 +122,7 @@ void BlogMedia::setError( const QString &error )
   d_ptr->mError = error;
 }
 
-BlogMedia& BlogMedia::operator=(const BlogMedia &m)
+BlogMedia &BlogMedia::operator=( const BlogMedia &m )
 {
   BlogMedia copy( m );
   swap( copy );
@@ -130,5 +130,4 @@ BlogMedia& BlogMedia::operator=(const BlogMedia &m)
 }
 
 } //namespace KBlog
-
 

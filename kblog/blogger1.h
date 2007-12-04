@@ -45,7 +45,7 @@ class Blogger1Private;
    @brief
    A class that can be used for access to Blogger  1.0 blogs.
    Almost every blog server supports Blogger  1.0. Compared to
-   MetaWeblog  it is not as functional and is obsolete on blogspot.com 
+   MetaWeblog  it is not as functional and is obsolete on blogspot.com
    compared to GData which uses Atom instead of Xml-Rpc.
 
    @code
@@ -117,7 +117,7 @@ class KBLOG_EXPORT Blogger1 : public Blog
     /**
       Fetch a post from the server.
 
-      @param post is the post. Note: Its id has to be set 
+      @param post is the post. Note: Its id has to be set
       appropriately.
 
       @see BlogPost::setPostId( const QString& )
@@ -147,7 +147,7 @@ class KBLOG_EXPORT Blogger1 : public Blog
     /**
       Remove a post from the server.
 
-      @param post is the post. Note: Its id has to be set 
+      @param post is the post. Note: Its id has to be set
       appropriately.
 
       @see BlogPost::setPostId( const QString& )
@@ -161,7 +161,7 @@ class KBLOG_EXPORT Blogger1 : public Blog
       This signal is emitted when a listBlogs() job fetches the blog
       information from the blogging server.
 
-      @param blogsList The list of maps, in which each maps corresponds to 
+      @param blogsList The list of maps, in which each maps corresponds to
       a blog on the server. Each map has the keys id and name.
 
       @see listBlogs()
@@ -178,7 +178,7 @@ class KBLOG_EXPORT Blogger1 : public Blog
 
       @see fetchUserInfo()
     */
-    void fetchedUserInfo( const QMap<QString,QString>& userInfo );
+    void fetchedUserInfo( const QMap<QString,QString> &userInfo );
 
   protected:
     /**
@@ -187,23 +187,23 @@ class KBLOG_EXPORT Blogger1 : public Blog
     Blogger1( const KUrl &server, Blogger1Private &dd, QObject *parent = 0 );
 
   private:
-    Q_DECLARE_PRIVATE(Blogger1)
-    Q_PRIVATE_SLOT(d_func(), void slotFetchUserInfo(
-                   const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotListBlogs(
-                   const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotListRecentPosts(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotFetchPost(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotCreatePost(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotModifyPost(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotRemovePost(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotError( int ,
-                    const QString&, const QVariant& ))
+    Q_DECLARE_PRIVATE( Blogger1 )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotFetchUserInfo( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotListBlogs( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotListRecentPosts( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotFetchPost( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotCreatePost( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotModifyPost( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotRemovePost( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotError( int, const QString &, const QVariant & ) )
 };
 
 } //namespace KBlog
