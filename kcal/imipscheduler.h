@@ -44,6 +44,7 @@ class KCAL_EXPORT IMIPScheduler : public Scheduler
     QList<ScheduleMessage*> retrieveTransactions();
 
   private:
+    using Scheduler::performTransaction;
     class Private;
     Private *const d;
 };
