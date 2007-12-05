@@ -46,20 +46,20 @@ class TestGData : public QObject
     void fetchProfileId( const QString & );
     void listBlogs( const QList<QMap<QString,QString> >& );
     void listRecentPosts( const QList<KBlog::BlogPost>& posts );
-    void createPost( KBlog::BlogPost* post );
-    void createComment( const KBlog::BlogPost* post, const KBlog::BlogComment *comment );
-    void removeComment( const KBlog::BlogPost* post, const KBlog::BlogComment *comment );
-    void modifyPost( KBlog::BlogPost* post );
-    void fetchPost( KBlog::BlogPost* post );
-    void removePost( KBlog::BlogPost* post );
+    void createPost( KBlog::BlogPost *post );
+    void createComment( const KBlog::BlogPost *post, const KBlog::BlogComment *comment );
+    void removeComment( const KBlog::BlogPost *post, const KBlog::BlogComment *comment );
+    void modifyPost( KBlog::BlogPost *post );
+    void fetchPost( KBlog::BlogPost *post );
+    void removePost( KBlog::BlogPost *post );
     // end chain
-    void error( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPost* );
+    void error( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPost * );
   private Q_SLOTS:
     void testValidity();
     void testNetwork();
   private:
-    void dumpPost( const KBlog::BlogPost* );
-    void dumpComment( const KBlog::BlogComment* );
+    void dumpPost( const KBlog::BlogPost * );
+    void dumpComment( const KBlog::BlogComment * );
     KBlog::GData *b;
     KBlog::BlogPost *p;
     KBlog::BlogComment *c;
@@ -92,7 +92,7 @@ class TestGDataWarnings : public QObject
 
 #include "testGData.moc"
 
-void TestGData::dumpPost( const BlogPost* post )
+void TestGData::dumpPost( const BlogPost *post )
 {
   qDebug() << "########### post ############";
   qDebug() << "# postId: " << post->postId();
@@ -103,27 +103,33 @@ void TestGData::dumpPost( const BlogPost* post )
   qDebug() << "# error: " << post->error();
   qDebug() << "# journalId: " << post->journalId();
   switch ( post->status() ){
-    case BlogPost::New:
-      qDebug() << "# status: New"; break;
-    case BlogPost::Fetched:
-      qDebug() << "# status: Fetched"; break;
-    case BlogPost::Created:
-      qDebug() << "# status: Created"; break;
-    case BlogPost::Modified:
-      qDebug() << "# status: Modified"; break;
-    case BlogPost::Removed:
-      qDebug() << "# status: Removed"; break;
-    case BlogPost::Error:
-      qDebug() << "# status: Error"; break;
+  case BlogPost::New:
+    qDebug() << "# status: New";
+    break;
+  case BlogPost::Fetched:
+    qDebug() << "# status: Fetched";
+    break;
+  case BlogPost::Created:
+    qDebug() << "# status: Created";
+    break;
+  case BlogPost::Modified:
+    qDebug() << "# status: Modified";
+    break;
+  case BlogPost::Removed:
+    qDebug() << "# status: Removed";
+    break;
+  case BlogPost::Error:
+    qDebug() << "# status: Error";
+    break;
   };
-  qDebug() << "# creationDateTime(UTC): " <<
-      post->creationDateTime().toUtc().toString();
-  qDebug() << "# modificationDateTime(UTC): " <<
-      post->modificationDateTime().toUtc().toString();
+  qDebug() << "# creationDateTime(UTC): "
+           << post->creationDateTime().toUtc().toString();
+  qDebug() << "# modificationDateTime(UTC): "
+           << post->modificationDateTime().toUtc().toString();
   qDebug() << "###########################";
 }
 
-void TestGData::dumpComment( const BlogComment* comment )
+void TestGData::dumpComment( const BlogComment *comment )
 {
   qDebug() << "########### comment ############";
   qDebug() << "# commentId: " << comment->commentId();
@@ -134,21 +140,26 @@ void TestGData::dumpComment( const BlogComment* comment )
   qDebug() << "# url: " << comment->url().url();
   qDebug() << "# error: " << comment->error();
   switch ( comment->status() ){
-    case BlogComment::New:
-      qDebug() << "# status: New"; break;
-    case BlogComment::Fetched:
-      qDebug() << "# status: Fetched"; break;
-    case BlogComment::Created:
-      qDebug() << "# status: Created"; break;
-    case BlogComment::Removed:
-      qDebug() << "# status: Removed"; break;
-    case BlogComment::Error:
-      qDebug() << "# status: Error"; break;
+  case BlogComment::New:
+    qDebug() << "# status: New";
+    break;
+  case BlogComment::Fetched:
+    qDebug() << "# status: Fetched";
+    break;
+  case BlogComment::Created:
+    qDebug() << "# status: Created";
+    break;
+  case BlogComment::Removed:
+    qDebug() << "# status: Removed";
+    break;
+  case BlogComment::Error:
+    qDebug() << "# status: Error";
+    break;
   };
-  qDebug() << "# creationDateTime(UTC): " <<
-      comment->creationDateTime().toUtc().toString();
-  qDebug() << "# modificationDateTime(UTC): " <<
-      comment->modificationDateTime().toUtc().toString();
+  qDebug() << "# creationDateTime(UTC): "
+           << comment->creationDateTime().toUtc().toString();
+  qDebug() << "# modificationDateTime(UTC): "
+           << comment->modificationDateTime().toUtc().toString();
   qDebug() << "###########################";
 }
 
@@ -216,8 +227,7 @@ void TestGData::createPost( KBlog::BlogPost *post )
   createCommentTimer->start( TIMEOUT );
 }
 
-
-void TestGData::createComment( const KBlog::BlogPost* post, const KBlog::BlogComment *comment )
+void TestGData::createComment( const KBlog::BlogPost *post, const KBlog::BlogComment *comment )
 {
   createPostTimer->stop();
   qDebug() << "########### createComment ############";
@@ -232,8 +242,7 @@ void TestGData::createComment( const KBlog::BlogPost* post, const KBlog::BlogCom
   removeCommentTimer->start( TIMEOUT );
 }
 
-
-void TestGData::removeComment( const KBlog::BlogPost* post, const KBlog::BlogComment *comment )
+void TestGData::removeComment( const KBlog::BlogPost *post, const KBlog::BlogComment *comment )
 {
   createPostTimer->stop();
   qDebug() << "########### removeComment ############";
@@ -290,19 +299,33 @@ void TestGData::removePost( KBlog::BlogPost *post )
 }
 
 void TestGData::error( KBlog::Blog::ErrorType type, const QString &errStr,
-        KBlog::BlogPost* post )
+                       KBlog::BlogPost *post )
 {
   qDebug() << "############ error #############";
   switch ( type ){
-    case Blog::Atom: qDebug() << "type: Atom"; break;
-    case Blog::XmlRpc: qDebug() << "type: xmlRpc"; break;
-    case Blog::ParsingError: qDebug() << "type: ParsingError"; break;
-    case Blog::AuthenticationError: qDebug() << "type: AuthenticationError"; break;
-    case Blog::NotSupported: qDebug() << "type: NotSupported"; break;
-    case Blog::Other: qDebug() << "type: Other"; break;
+  case Blog::Atom:
+    qDebug() << "type: Atom";
+    break;
+  case Blog::XmlRpc:
+    qDebug() << "type: xmlRpc";
+    break;
+  case Blog::ParsingError:
+    qDebug() << "type: ParsingError";
+    break;
+  case Blog::AuthenticationError:
+    qDebug() << "type: AuthenticationError";
+    break;
+  case Blog::NotSupported:
+    qDebug() << "type: NotSupported";
+    break;
+  case Blog::Other:
+    qDebug() << "type: Other";
+    break;
   };
   qDebug() << "error: " << errStr;
-  if( post!=0 ) dumpPost( post );
+  if ( post != 0 ) {
+    dumpPost( post );
+  }
   qDebug() << "#############################\n";
 }
 
@@ -439,7 +462,6 @@ void TestGData::testNetwork()
   removeCommentTimer->setSingleShot( true );
   connect( removeCommentTimer, SIGNAL( timeout() ),
            warnings, SLOT( removeCommentTimeoutWarning() ) );
-
 
   removePostTimer = new QTimer( this );
   removePostTimer->setSingleShot( true );
