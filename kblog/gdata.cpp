@@ -223,7 +223,8 @@ void GData::modifyPost( KBlog::BlogPost* post )
   atomMarkup += post->content();
   atomMarkup += "</div></content>";
   atomMarkup += "<author>";
-  atomMarkup += "<name>" + fullName() + "</name>";
+  if( !fullName().isEmpty() )
+    atomMarkup += "<name>" + fullName() + "</name>";
   atomMarkup += "<email>" + username() + "</email>";
   atomMarkup += "</author>";
   atomMarkup += "</entry>";
@@ -281,7 +282,8 @@ void GData::createPost( KBlog::BlogPost* post )
     atomMarkup += post->content(); // FIXME check for Utf
     atomMarkup += "</div></content>";
     atomMarkup += "<author>";
-    atomMarkup += "<name>" + fullName() + "</name>";
+    if( !fullName().isEmpty() )
+      atomMarkup += "<name>" + fullName() + "</name>";
     atomMarkup += "<email>" + username() + "</email>";
     atomMarkup += "</author>";
     atomMarkup += "</entry>";
