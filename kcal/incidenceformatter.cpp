@@ -159,7 +159,7 @@ static QString eventViewerFormatAttendees( Incidence *event )
   Attendee::List attendees = event->attendees();
   if ( attendees.count() ) {
     KIconLoader *iconLoader = KIconLoader::global();
-    const QString iconPath = iconLoader->iconPath( "mail", KIconLoader::Small );
+    const QString iconPath = iconLoader->iconPath( "mail-message-new", KIconLoader::Small );
 
     // Add organizer link
     tmpStr += eventViewerAddTag( "h4", i18n( "Organizer" ) );
@@ -221,7 +221,7 @@ static QString eventViewerFormatBirthday( Event *event )
   QString email_1= event->customProperty( "KABC", "EMAIL-1" );
 
   KIconLoader *iconLoader = KIconLoader::global();
-  const QString iconPath = iconLoader->iconPath( "mail", KIconLoader::Small );
+  const QString iconPath = iconLoader->iconPath( "mail-message-new", KIconLoader::Small );
   //TODO: add a tart icon
   QString tmpString = "<ul>";
   tmpString += linkPerson( email_1, name_1, uid_1, iconPath );
@@ -242,6 +242,8 @@ static QString eventViewerFormatHeader( Incidence *incidence )
   QString tmpStr = "<table><tr>";
 
   // show icons
+  /* all of those icons currently don't exist, makes no sense currently
+     to load a set of "unknown" icons. re-enable when those are available.
   {
     KIconLoader *iconLoader = KIconLoader::global();
     tmpStr += "<td>";
@@ -261,6 +263,7 @@ static QString eventViewerFormatHeader( Incidence *incidence )
 
     tmpStr += "</td>";
   }
+  */
 
   tmpStr += "<td>" + eventViewerAddTag( "h2", incidence->summary() ) + "</td>";
   tmpStr += "</tr></table><br>";
