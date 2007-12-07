@@ -23,8 +23,11 @@ include (ConfigureChecks.cmake)
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
 
-add_subdirectory(gpgme++)
-add_subdirectory(qgpgme)
+# FIXME plz! gpgme-qt is currently not official released... :(
+if(NOT WIN32)
+  add_subdirectory(gpgme++)
+  add_subdirectory(qgpgme)
+endif(NOT WIN32)
 # (gpgme++/qgpgme handle their conditions inside their own CMakeLists.txt files)
 add_subdirectory(kabc)
 add_subdirectory(kblog)
