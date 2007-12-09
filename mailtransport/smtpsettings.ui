@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>425</width>
-    <height>472</height>
+    <width>436</width>
+    <height>509</height>
    </rect>
   </property>
   <layout class="QGridLayout" >
@@ -36,8 +36,8 @@
       <attribute name="title" >
        <string>&amp;General</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <item row="0" column="0" >
+      <layout class="QVBoxLayout" >
+       <item>
         <layout class="QGridLayout" >
          <item row="0" column="0" >
           <widget class="QLabel" name="nameLabel" >
@@ -87,8 +87,8 @@
          <item row="2" column="1" >
           <layout class="QHBoxLayout" >
            <item>
-            <widget class="KIntNumInput" name="kcfg_port" >
-             <property name="value" >
+            <widget class="KIntNumInput" native="1" name="kcfg_port" >
+             <property name="value" stdset="0" >
               <number>25</number>
              </property>
             </widget>
@@ -110,15 +110,15 @@
          </item>
         </layout>
        </item>
-       <item row="1" column="0" >
+       <item>
         <layout class="QHBoxLayout" >
          <item>
           <widget class="KButtonGroup" name="kcfg_encryption" >
            <property name="title" >
             <string>Encryption</string>
            </property>
-           <layout class="QGridLayout" >
-            <item row="0" column="0" >
+           <layout class="QVBoxLayout" >
+            <item>
              <layout class="QHBoxLayout" >
               <item>
                <widget class="QRadioButton" name="none" >
@@ -143,10 +143,17 @@
               </item>
              </layout>
             </item>
-            <item row="1" column="0" >
+            <item>
              <widget class="KPushButton" name="checkCapabilities" >
               <property name="text" >
                <string>Check &amp;What the Server Supports</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QProgressBar" name="checkCapabilitiesProgress" >
+              <property name="visible" >
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -160,55 +167,61 @@
            </property>
            <property name="sizeHint" >
             <size>
-             <width>40</width>
-             <height>20</height>
+             <width>81</width>
+             <height>149</height>
             </size>
            </property>
           </spacer>
          </item>
         </layout>
        </item>
-       <item row="2" column="0" >
+       <item>
         <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeHint" >
           <size>
-           <width>20</width>
-           <height>40</height>
+           <width>396</width>
+           <height>101</height>
           </size>
          </property>
         </spacer>
        </item>
       </layout>
-      <widget class="QProgressBar" name="checkCapabilitiesProgress" >
-       <property name="geometry" >
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>100</width>
-         <height>30</height>
-        </rect>
-       </property>
-       <property name="visible" >
-        <bool>false</bool>
-       </property>
-      </widget>
      </widget>
      <widget class="QWidget" name="advancedTab" >
       <attribute name="title" >
        <string>&amp;Advanced</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <item row="0" column="0" colspan="2" >
+      <layout class="QVBoxLayout" >
+       <item>
+        <widget class="QLabel" name="noAuthPossible" >
+         <property name="visible" >
+          <bool>false</bool>
+         </property>
+         <property name="frameShape" >
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow" >
+          <enum>QFrame::Raised</enum>
+         </property>
+         <property name="text" >
+          <string>This server does not support authentication</string>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QCheckBox" name="kcfg_requiresAuthentication" >
          <property name="text" >
           <string>Server &amp;requires authentication</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0" colspan="2" >
+       <item>
         <layout class="QGridLayout" >
          <item row="0" column="0" >
           <widget class="QLabel" name="usernameLabel" >
@@ -332,84 +345,64 @@
          </item>
         </layout>
        </item>
-       <item row="2" column="0" colspan="2" >
+       <item>
         <widget class="KSeparator" name="kseparator_3" />
        </item>
-       <item row="3" column="0" colspan="2" >
+       <item>
         <widget class="QCheckBox" name="kcfg_specifyHostname" >
          <property name="text" >
           <string>Sen&amp;d custom hostname to server</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="0" >
-        <widget class="QLabel" name="hostnameLabel" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <property name="text" >
-          <string>Hos&amp;tname:</string>
-         </property>
-         <property name="alignment" >
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy" >
-          <cstring>kcfg_localHostname</cstring>
-         </property>
-        </widget>
+       <item>
+        <layout class="QHBoxLayout" >
+         <item>
+          <widget class="QLabel" name="hostnameLabel" >
+           <property name="enabled" >
+            <bool>false</bool>
+           </property>
+           <property name="text" >
+            <string>Hos&amp;tname:</string>
+           </property>
+           <property name="alignment" >
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="buddy" >
+            <cstring>kcfg_localHostname</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="KLineEdit" name="kcfg_localHostname" >
+           <property name="enabled" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
-       <item row="4" column="1" >
-        <widget class="KLineEdit" name="kcfg_localHostname" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0" colspan="2" >
+       <item>
         <widget class="KSeparator" name="kseparator_2" />
        </item>
-       <item row="6" column="0" >
-        <widget class="QLabel" name="precommandLabel" >
-         <property name="text" >
-          <string>Precommand:</string>
-         </property>
-         <property name="alignment" >
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1" >
-        <widget class="KLineEdit" name="kcfg_precommand" />
+       <item>
+        <layout class="QHBoxLayout" >
+         <item>
+          <widget class="QLabel" name="precommandLabel" >
+           <property name="text" >
+            <string>Precommand:</string>
+           </property>
+           <property name="alignment" >
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="KLineEdit" name="kcfg_precommand" />
+         </item>
+        </layout>
        </item>
       </layout>
-      <widget class="QLabel" name="noAuthPossible" >
-       <property name="enabled" >
-        <bool>true</bool>
-       </property>
-       <property name="geometry" >
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>100</width>
-         <height>30</height>
-        </rect>
-       </property>
-       <property name="visible" >
-        <bool>false</bool>
-       </property>
-       <property name="frameShape" >
-        <enum>QFrame::Box</enum>
-       </property>
-       <property name="frameShadow" >
-        <enum>QFrame::Raised</enum>
-       </property>
-       <property name="text" >
-        <string>This server does not support authentication</string>
-       </property>
-       <property name="alignment" >
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
      </widget>
     </widget>
    </item>
@@ -442,6 +435,7 @@
    <class>KSeparator</class>
    <extends>QFrame</extends>
    <header>kseparator.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
