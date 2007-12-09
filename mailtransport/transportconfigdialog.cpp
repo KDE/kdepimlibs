@@ -179,8 +179,6 @@ void TransportConfigDialog::checkSmtpCapabilities()
 {
   Q_ASSERT( d->transport->type() == Transport::EnumType::SMTP );
 
-  delete d->serverTest;
-
   d->serverTest = new ServerTest( this );
   d->serverTest->setProtocol( SMTP_PROTOCOL );
   d->serverTest->setServer( d->smtp.kcfg_host->text() );
@@ -276,8 +274,7 @@ void TransportConfigDialog::slotFinished( QList<int> results )
   d->updateAuthCapbilities();
   checkHighestEnabledButton( d->authGroup );
 
-  delete d->serverTest;
-  d->serverTest = 0;
+  d->serverTest->deleteLater();
 }
 
 void TransportConfigDialog::hostNameChanged( const QString &text )
