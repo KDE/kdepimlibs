@@ -150,13 +150,6 @@
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QProgressBar" name="checkCapabilitiesProgress" >
-              <property name="visible" >
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
            </layout>
           </widget>
          </item>
@@ -167,13 +160,20 @@
            </property>
            <property name="sizeHint" >
             <size>
-             <width>81</width>
-             <height>149</height>
+             <width>166</width>
+             <height>81</height>
             </size>
            </property>
           </spacer>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QProgressBar" name="checkCapabilitiesProgress" >
+         <property name="visible" >
+          <bool>false</bool>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer>
