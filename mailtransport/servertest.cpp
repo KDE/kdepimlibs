@@ -169,9 +169,9 @@ void ServerTestPrivate::slotReadSecure( const QString& text )
 {
   static bool first = true;
   if ( first ) {
-    if ( testProtocol == IMAPS_PROTOCOL )
+    if ( testProtocol == IMAP_PROTOCOL )
       secureSocket->write( QLatin1String( "1 CAPABILITY" ) );
-    else if ( testProtocol == SMTPS_PROTOCOL )
+    else if ( testProtocol == SMTP_PROTOCOL )
       secureSocket->write( QLatin1String( "EHLO localhost" ) );
     first = false;
     return;
@@ -194,8 +194,6 @@ void ServerTestPrivate::slotSslPossible()
 {
   secureSocketTimer->stop();
   connectionResults << Transport::EnumEncryption::SSL;
-  secureSocketFinished = true;
-  finalResult();
 }
 
 void ServerTestPrivate::slotSslNotPossible()
