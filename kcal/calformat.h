@@ -171,6 +171,7 @@ class KCAL_EXPORT CalFormat
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( CalFormat )
     class Private;
     Private *const d;
     //@endcond

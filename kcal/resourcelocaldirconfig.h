@@ -49,6 +49,7 @@ class KCAL_EXPORT ResourceLocalDirConfig : public KRES::ConfigWidget
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( ResourceLocalDirConfig )
     class Private;
     Private *const d;
     //@endcond

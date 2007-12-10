@@ -89,6 +89,7 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
     using ResourceCalendar::doSave;
 
     //@cond PRIVATE
+    Q_DISABLE_COPY( ResourceLocalDir )
     class Private;
     Private *const d;
     //@endcond

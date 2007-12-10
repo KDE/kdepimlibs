@@ -28,9 +28,8 @@
   @author Cornelius Schumacher <schumacher@kde.org>
 */
 
-#include "resourcelocal.moc"
+#include "resourcelocal.h"
 #include "resourcelocal_p.h"
-
 #include "resourcelocalconfig.h"
 #include "vcalformat.h"
 #include "icalformat.h"
@@ -41,7 +40,7 @@
 #include "todo.h"
 #include "journal.h"
 
-#include "kresources/configwidget.h"
+#include <kresources/configwidget.h>
 
 #include <typeinfo>
 #include <stdlib.h>
@@ -54,6 +53,8 @@
 #include <kdirwatch.h>
 #include <kstandarddirs.h>
 #include <kconfiggroup.h>
+
+#include "resourcelocal.moc"
 
 using namespace KCal;
 

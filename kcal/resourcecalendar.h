@@ -530,6 +530,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( ResourceCalendar )
     class Private;
     Private *const d;
     //@endcond

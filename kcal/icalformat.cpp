@@ -522,8 +522,8 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   if ( !icalrestriction_check( message ) ) {
     kWarning(5800) << endl
                    << "kcal library reported a problem while parsing:";
-    kWarning(5800) << Scheduler::translatedMethodName( method ) << ":" <<
-      d->mImpl->extractErrorProperty( c );
+    kWarning(5800) << Scheduler::translatedMethodName( method ) << ":"
+                   << d->mImpl->extractErrorProperty( c );
   }
 
   Incidence *existingIncidence = cal->incidenceFromSchedulingID( incidence->uid() );

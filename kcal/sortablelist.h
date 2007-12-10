@@ -24,7 +24,7 @@
   defines the Sortable List class.
 
   @author David Jarvie \<software@astrojar.org.uk\>.
- */
+*/
 
 #ifndef KCAL_SORTABLELIST_H
 #define KCAL_SORTABLELIST_H

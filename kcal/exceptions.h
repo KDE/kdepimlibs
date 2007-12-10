@@ -70,6 +70,7 @@ class Exception
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( Exception )
     class Private;
     Private *d;
     //@endcond
@@ -122,6 +123,7 @@ class KCAL_EXPORT ErrorFormat : public Exception
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( ErrorFormat )
     class Private;
     Private *const d;
     //@endcond

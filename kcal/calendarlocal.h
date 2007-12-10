@@ -277,6 +277,7 @@ class KCAL_EXPORT CalendarLocal : public Calendar
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( CalendarLocal )
     class Private;
     Private *const d;
     //@endcond

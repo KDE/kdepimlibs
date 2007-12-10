@@ -18,8 +18,8 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-#ifndef KCAL_RESOURCELOCALDIRDIR_P_H
-#define KCAL_RESOURCELOCALDIRDIR_P_H
+#ifndef KCAL_RESOURCELOCALDIR_P_H
+#define KCAL_RESOURCELOCALDIR_P_H
 
 #include <kurl.h>
 #include <kdirwatch.h>

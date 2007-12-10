@@ -156,7 +156,8 @@ class KCAL_EXPORT Todo : public Incidence
       @copydoc
       IncidenceBase::dtStart()
     */
-    virtual KDateTime dtStart() const  { return dtStart( false ); }
+    virtual KDateTime dtStart() const;
+
     /**
       Returns the start date of the todo.
       @param first If true, the start date of the todo will be returned. If the

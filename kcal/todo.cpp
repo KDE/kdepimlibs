@@ -250,6 +250,11 @@ void Todo::setHasStartDate( bool f )
   updated();
 }
 
+KDateTime Todo::dtStart() const
+{
+  return dtStart( false );
+}
+
 KDateTime Todo::dtStart( bool first ) const
 {
   if ( recurs() && !first ) {

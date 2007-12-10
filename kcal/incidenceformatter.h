@@ -39,8 +39,11 @@ class KCAL_EXPORT InvitationFormatterHelper
     virtual QString makeLink( const QString &id, const QString &text );
 
   private:
+    //@cond PRIVATE
+    Q_DISABLE_COPY( InvitationFormatterHelper )
     class Private;
     Private *const d;
+    //@endcond
 };
 
 /**

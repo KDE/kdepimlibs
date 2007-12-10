@@ -24,7 +24,6 @@
 #include <QtGui/QWidget>
 #include "kcal_export.h"
 
-
 namespace KCal {
 
 class ResourceCached;
@@ -49,6 +48,7 @@ class KCAL_EXPORT ResourceCachedReloadConfig : public QWidget
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( ResourceCachedReloadConfig )
     class Private;
     Private *const d;
     //@endcond
@@ -75,6 +75,7 @@ class KCAL_EXPORT ResourceCachedSaveConfig : public QWidget
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( ResourceCachedSaveConfig )
     class Private;
     Private *const d;
     //@endcond

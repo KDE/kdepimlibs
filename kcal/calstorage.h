@@ -87,6 +87,7 @@ class KCAL_EXPORT CalStorage
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( CalStorage )
     class Private;
     Private *const d;
     //@endcond

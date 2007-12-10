@@ -36,6 +36,7 @@ class KCAL_EXPORT ConfirmSaveDialog : public KDialog
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( ConfirmSaveDialog )
     class Private;
     Private *const d;
     //@endcond

@@ -45,8 +45,12 @@ class KCAL_EXPORT IMIPScheduler : public Scheduler
 
   private:
     using Scheduler::performTransaction;
+
+    //@cond PRIVATE
+    Q_DISABLE_COPY( IMIPScheduler )
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }

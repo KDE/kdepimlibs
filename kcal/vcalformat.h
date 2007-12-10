@@ -161,6 +161,7 @@ class KCAL_EXPORT VCalFormat : public CalFormat
     };
 
     //@cond PRIVATE
+    Q_DISABLE_COPY( VCalFormat )
     class Private;
     Private *const d;
     //@endcond

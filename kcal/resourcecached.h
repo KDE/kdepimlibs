@@ -512,6 +512,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     virtual bool doSave( Incidence * ) { return 0; }
 
     //@cond PRIVATE
+    Q_DISABLE_COPY( ResourceCached )
     class Private;
     Private *const d;
     //@endcond

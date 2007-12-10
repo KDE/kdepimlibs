@@ -107,6 +107,7 @@ class KCAL_EXPORT ScheduleMessage
     QString error();
 
   private:
+    Q_DISABLE_COPY( ScheduleMessage )
     class Private;
     Private *const d;
 };
@@ -212,6 +213,7 @@ class KCAL_EXPORT Scheduler
     ICalFormat *mFormat;
 
   private:
+    Q_DISABLE_COPY( Scheduler )
     struct Private;
     Private *const d;
 };

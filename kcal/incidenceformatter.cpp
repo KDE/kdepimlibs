@@ -345,7 +345,8 @@ static QString eventViewerFormatEvent( Event *event )
   if ( event->categories().count() > 0 ) {
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>";
-    tmpStr += i18np( "1&nbsp;category", "%1&nbsp;categories", event->categories().count() )+ "</b></td>";
+    tmpStr += i18np( "1&nbsp;category", "%1&nbsp;categories", event->categories().count() ) +
+              "</b></td>";
     tmpStr += "<td>" + event->categoriesStr() + "</td>";
     tmpStr += "</tr>";
   }

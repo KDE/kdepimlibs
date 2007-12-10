@@ -57,7 +57,6 @@ sortablelist.h        |   D   |    D    |  n/a  |    D    |    D    | Allen
 todo                  |   D   |    D    |   D   |    D    |    D    | Allen
 == DONE ==
 
-TODO: Q_DISABLE_COPY() where needed (dpointer, no copy-ctor in base class)
 TODO: KUIT
 
 Qt4Port -> no deprecated warnings; thiago says do NO replace const iterator
