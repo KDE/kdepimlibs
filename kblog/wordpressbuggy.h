@@ -39,14 +39,18 @@ namespace KBlog {
     class WordpressBuggyPrivate;
 /**
   @brief
-  A class that can be used for access to Wordpress blogs. This is needed because
-  of an ugly DateTime bug in Wordpress. Hopefully the bug will be fixed in the
-  near feature. This class reimplements createPost and modifyPost from scratch
-  to send the DateTime in a format like yyyyMMddThh:mm:ss which is not ISO
-  conformant. The date is not extended, where the time is extended.
+  A class that can be used for access to blogs (Wordpress < 2.4, Drupal <= 5.5
+  and most likely many more) which simply use the yyyyMMddThh:mm:ss 
+  dateTime.iso8601 format stated on http://www.xmlrpc.com. This is only an example for
+  an ISO-8601 compatible format, but many blogs seem to assume exactly this format.
+  This class is needed because KXmlRpc::Client only has support for the extended 
+  format yyyy-MM-ddThh:mm:ss which is also standard conform and makes more sense than
+  the mixture above. This class reimplements createPost and modifyPost from scratch
+  to send the dateTime in a compatible format (yyyyMMddThh:mm:ss).
 
-  The rest of the code is used from MovableType, as Wordpress implements
-  MovableType. You should not use thiscode on non-Wordpress blogs.
+  The rest of the code is inherited from MovableType, as it does not use the dateTime
+  format.
+  The name is because this problem was first discovered with Wordpress.
 
   @code
   Blog* myblog = new WordpressBuggy("http://example.com/xmlrpc/gateway.php");
