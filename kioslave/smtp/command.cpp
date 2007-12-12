@@ -148,9 +148,9 @@ static sasl_callback_t callbacks[] = {
       return true;
     }
     mSMTP->error( KIO::ERR_UNKNOWN,
-		  i18n("Unexpected server response to %1 command.\n%2",
-		    QString::fromLatin1(mEHLONotSupported ? "HELO" : "EHLO") ,
-		    r.errorMessage() ) );
+                  i18n( "Unexpected server response to %1 command.\n%2",
+                        QString::fromLatin1( mEHLONotSupported ? "HELO" : "EHLO" ),
+                        r.errorMessage() ) );
     return false;
   }
 
@@ -168,9 +168,9 @@ static sasl_callback_t callbacks[] = {
     mNeedResponse = false;
     if ( r.code() != 220 ) {
       mSMTP->error( r.errorCode(),
-		    i18n("Your SMTP server does not support TLS. "
-			 "Disable TLS, if you want to connect "
-			 "without encryption.") );
+                    i18n("Your SMTP server does not support TLS. "
+                        "Disable TLS, if you want to connect "
+                        "without encryption.") );
       return false;
     }
 
@@ -181,13 +181,13 @@ static sasl_callback_t callbacks[] = {
 
     if ( tlsrc != -3 )
       //kDebug(7112) << "TLS negotiation failed!";
-      mSMTP->messageBox(KIO::SlaveBase::Information,
-			i18n("Your SMTP server claims to "
-			     "support TLS, but negotiation "
-			     "was unsuccessful.\nYou can "
-			     "disable TLS in KDE using the "
-			     "crypto settings module."),
-			i18n("Connection Failed"));
+      mSMTP->messageBox( KIO::SlaveBase::Information,
+                         i18n("Your SMTP server claims to "
+                             "support TLS, but negotiation "
+                             "was unsuccessful.\nYou can "
+                             "disable TLS in KDE using the "
+                             "crypto settings module."),
+                         i18n("Connection Failed") );
     return false;
   }
 
@@ -200,9 +200,9 @@ static sasl_callback_t callbacks[] = {
   // AUTH - rfc 2554
   //
   AuthCommand::AuthCommand( SMTPProtocol * smtp,
-			    const char *mechanisms,
-          const QString &aFQDN,
-			    KIO::AuthInfo &ai )
+                            const char *mechanisms,
+                            const QString &aFQDN,
+                            KIO::AuthInfo &ai )
     : Command( smtp, CloseConnectionOnError|OnlyLastInPipeline ),
       mAi( &ai ),
       mFirstTime( true )
@@ -362,19 +362,19 @@ static sasl_callback_t callbacks[] = {
   bool AuthCommand::processResponse( const Response & r, TransactionState * ) {
     if ( !r.isOk() ) {
       if ( mFirstTime )
-	      if ( haveCapability( "AUTH" ) )
+        if ( haveCapability( "AUTH" ) )
           mSMTP->error( KIO::ERR_COULD_NOT_LOGIN,
             i18n("Your SMTP server does not support %1.\nChoose a different authentication method.\n%2",
                 mMechusing ,  r.errorMessage() ) );
-	      else
-	        mSMTP->error( KIO::ERR_COULD_NOT_LOGIN,
-			      i18n("Your SMTP server does not support authentication.\n"
-			     "  %1",  r.errorMessage() ) );
+        else
+          mSMTP->error( KIO::ERR_COULD_NOT_LOGIN,
+                        i18n( "Your SMTP server does not support authentication.\n"
+                              "%1", r.errorMessage() ) );
       else
-	      mSMTP->error( KIO::ERR_COULD_NOT_LOGIN,
-		      i18n("Authentication failed.\n"
-			   "Most likely the password is wrong.\n"
-			   "%1",  r.errorMessage() ) );
+        mSMTP->error( KIO::ERR_COULD_NOT_LOGIN,
+                      i18n( "Authentication failed.\n"
+                            "Most likely the password is wrong.\n"
+                            "%1", r.errorMessage() ) );
       return false;
     }
     mFirstTime = false;
@@ -469,7 +469,7 @@ static sasl_callback_t callbacks[] = {
   void TransferCommand::ungetCommandLine( const QByteArray & cmd, TransactionState * ) {
     if ( cmd.isEmpty() )
       return; // don't change state when we can't detect the unget in
-	      // the next nextCommandLine !!
+              // the next nextCommandLine !!
     mWasComplete = mComplete;
     mComplete = false;
     mNeedResponse = false;
@@ -493,8 +493,8 @@ static sasl_callback_t callbacks[] = {
       const QByteArray ret = mUngetBuffer;
       mUngetBuffer = 0;
       if ( mWasComplete ) {
-	mComplete = true;
-	mNeedResponse = true;
+        mComplete = true;
+        mNeedResponse = true;
       }
       return ret; // don't prepare(), it's slave-generated or already prepare()d
     }
@@ -510,7 +510,7 @@ static sasl_callback_t callbacks[] = {
       return prepare( ba );
     else if ( result < 0 ) {
       ts->setFailedFatally( KIO::ERR_INTERNAL,
-			    i18n("Could not read data from application.") );
+                            i18n("Could not read data from application.") );
       mComplete = true;
       mNeedResponse = true;
       return 0;
@@ -527,8 +527,8 @@ static sasl_callback_t callbacks[] = {
     if ( !r.isOk() ) {
       ts->setFailed();
       mSMTP->error( r.errorCode(),
-		    i18n("The message content was not accepted.\n"
-			 "%1",  r.errorMessage() ) );
+                    i18n( "The message content was not accepted.\n"
+                          "%1", r.errorMessage() ) );
       return false;
     }
     return true;
@@ -543,9 +543,9 @@ static sasl_callback_t callbacks[] = {
     while ( s < send ) {
       const char ch = *s++;
       if ( ch == '\n' && last != '\r' )
-	*d++ = '\r'; // lf2crlf
+        *d++ = '\r'; // lf2crlf
       else if ( ch == '.' && last == '\n' )
-	*d++ = '.'; // dotstuff
+        *d++ = '.'; // dotstuff
       last = *d++ = ch;
     }
 
