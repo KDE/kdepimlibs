@@ -25,6 +25,12 @@ include (ConfigureChecks.cmake)
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
 
+# TODO(move to kdesupport scripts) temporary way to support gpgme-qt under win32
+if (EXISTS ${CMAKE_SOURCE_DIR}/gpgme-qt)
+  message(STATUS "gpgme-qt for Windows will be compiled: ${CMAKE_SOURCE_DIR}/gpgme-qt")
+  add_subdirectory(gpgme-qt)
+endif (EXISTS ${CMAKE_SOURCE_DIR}/gpgme-qt)
+
 add_subdirectory(gpgme++)
 if ( Boost_FOUND )
   add_subdirectory(qgpgme)
