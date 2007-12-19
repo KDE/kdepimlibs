@@ -123,7 +123,7 @@ static int test_editinteractor( std::auto_ptr<GpgME::EditInteractor> ei, const c
                       QCoreApplication::instance(), SLOT(quit()) );
 
     if ( Error err = ctx->startEditing( key, ei, data ) )
-        throw std::runtime_error( std::string( "startEditing: " ) + gpg_strerror( err ) );
+        throw std::runtime_error( std::string( "startEditing: " ) + gpg_strerror( err.encodedError() ) );
     // ei released in passing to startEditing
 
     return QCoreApplication::instance()->exec();

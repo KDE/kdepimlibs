@@ -264,12 +264,12 @@ int main( int argc, char * argv[] ) {
                 return 1;
 
             if ( Error err = kl->startKeyListing( keyid ) )
-                throw std::runtime_error( std::string( "startKeyListing: " ) + gpg_strerror( err ) );
+                throw std::runtime_error( std::string( "startKeyListing: " ) + gpg_strerror( err.encodedError() ) );
 
             Error err;
             key = kl->nextKey( err );
             if ( err )
-                throw std::runtime_error( std::string( "nextKey: " ) + gpg_strerror( err ) );
+                throw std::runtime_error( std::string( "nextKey: " ) + gpg_strerror( err.encodedError() ) );
 
             (void)kl->endKeyListing();
         }
@@ -288,7 +288,7 @@ int main( int argc, char * argv[] ) {
             std::auto_ptr<EditInteractor> ei( iei );
             ei->setDebugChannel( stderr );
             if ( Error err = ctx->startEditing( key, ei, data ) )
-                throw std::runtime_error( std::string( "startEditing: " ) + gpg_strerror( err ) );
+                throw std::runtime_error( std::string( "startEditing: " ) + gpg_strerror( err.encodedError() ) );
             // ei released in passing to startEditing
         }
 
