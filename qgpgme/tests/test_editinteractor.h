@@ -105,10 +105,10 @@ static int test_editinteractor( std::auto_ptr<GpgME::EditInteractor> ei, const c
 
     KeyResolveJob job( proto );
     if ( const GpgME::Error err = job.start( keyid ) )
-        throw std::runtime_error( std::string( "startKeyListing: " ) + gpg_strerror( err ) );
+        throw std::runtime_error( std::string( "startKeyListing: " ) + gpg_strerror( err.encodedError() ) );
 
     if ( const GpgME::Error err = job.waitForDone() )
-        throw std::runtime_error( std::string( "nextKey: " ) + gpg_strerror( err ) );
+        throw std::runtime_error( std::string( "nextKey: " ) + gpg_strerror( err.encodedError() ) );
 
     const Key key = job.keys().front();
 
