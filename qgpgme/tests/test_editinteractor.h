@@ -39,6 +39,7 @@
 #include <memory>
 #include <stdexcept>
 #include <cassert>
+#include <string>
 
 class KeyResolveJob : QObject {
     Q_OBJECT
