@@ -42,13 +42,8 @@ extern "C" {
 static const int debugArea = 7122;
 
 static inline
-#ifdef NDEBUG
   QDebug ksDebug() { return kDebug( debugArea ); }
   QDebug ksDebug( bool cond ) { return kDebug( cond, debugArea ); }
-#else
-  QDebug ksDebug() { return kDebug( debugArea ); }
-  QDebug ksDebug( bool cond ) { return kDebug( cond, debugArea ); }
-#endif
 
 #define SIEVE_DEFAULT_PORT 2000
 
