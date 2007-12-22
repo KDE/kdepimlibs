@@ -133,11 +133,11 @@ static sasl_callback_t callbacks[] = {
     // "command not {recognized,implemented}" response:
     if ( r.code() == 500 || r.code() == 502 ) {
       if ( mEHLONotSupported ) { // HELO failed...
-	mSMTP->error( KIO::ERR_INTERNAL_SERVER,
-		      i18n("The server rejected both EHLO and HELO commands "
-			   "as unknown or unimplemented.\n"
-			   "Please contact the server's system administrator.") );
-	return false;
+        mSMTP->error( KIO::ERR_INTERNAL_SERVER,
+                      i18n("The server rejected both EHLO and HELO commands "
+                           "as unknown or unimplemented.\n"
+                           "Please contact the server's system administrator.") );
+        return false;
       }
       mEHLONotSupported = true; // EHLO failed, but that's ok.
       return true;

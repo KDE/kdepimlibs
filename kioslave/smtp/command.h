@@ -114,14 +114,20 @@ namespace KioSMTP {
     virtual bool doNotExecute( const TransactionState * ) const { return false; }
 
     bool isComplete() const { return mComplete; }
-    /** @return whether the command expects a response now. Some
-	commands (most notably AUTH) may consist of a series of
-	commands and associated responses until they are
-	complete. Others (most notably @ref TransferCommand usually
-	send multiple "command lines" before expecting a response. */
+
+    /**
+     * @return whether the command expects a response now. Some
+     * commands (most notably AUTH) may consist of a series of
+     * commands and associated responses until they are
+     * complete. Others (most notably @ref TransferCommand usually
+     * send multiple "command lines" before expecting a response.
+     */
     bool needsResponse() const { return mNeedResponse; }
-    /** @return whether an error in executing this command is so fatal
-	that closing the connection is the only option */
+
+    /**
+     * @return whether an error in executing this command is so fatal
+     * that closing the connection is the only option
+     */
     bool closeConnectionOnError() const {
       return mFlags & CloseConnectionOnError;
     }
@@ -152,8 +158,8 @@ namespace KioSMTP {
   public:
     EHLOCommand( SMTPProtocol * smtp, const QString & hostname )
       : Command( smtp, CloseConnectionOnError|OnlyLastInPipeline ),
-	mEHLONotSupported( false ),
-	mHostname( hostname.trimmed() ) {}
+        mEHLONotSupported( false ),
+        mHostname( hostname.trimmed() ) {}
 
     QByteArray nextCommandLine( TransactionState * );
     bool processResponse( const Response & response, TransactionState * );
@@ -200,7 +206,7 @@ namespace KioSMTP {
   class MailFromCommand : public Command {
   public:
     MailFromCommand( SMTPProtocol * smtp, const QByteArray & addr,
-		     bool eightBit=false, unsigned int size=0  )
+                     bool eightBit=false, unsigned int size=0  )
       : Command( smtp ), mAddr( addr ), m8Bit( eightBit ), mSize( size ) {}
 
     QByteArray nextCommandLine( TransactionState * );
@@ -239,7 +245,7 @@ namespace KioSMTP {
   public:
     TransferCommand( SMTPProtocol * smtp, const QByteArray & initialBuffer )
       : Command( smtp, OnlyFirstInPipeline ),
-	mUngetBuffer( initialBuffer ), mLastChar( '\n' ), mWasComplete( false ) {}
+        mUngetBuffer( initialBuffer ), mLastChar( '\n' ), mWasComplete( false ) {}
 
     bool doNotExecute( const TransactionState * ts ) const;
     QByteArray nextCommandLine( TransactionState * );

@@ -140,8 +140,7 @@ void SMTPProtocol::special( const QByteArray & aData ) {
     if ( !execute( Command::NOOP ) )
       return;
   } else {
-    error( KIO::ERR_INTERNAL,
-	   i18n("The application sent an invalid request.") );
+    error( KIO::ERR_INTERNAL, i18n("The application sent an invalid request.") );
     return;
   }
   finished();
@@ -219,13 +218,13 @@ void SMTPProtocol::put(const KUrl & url, int /*permissions */ ,
   if ( request.is8BitBody()
        && !haveCapability("8BITMIME") && metaData("8bitmime") != "on" ) {
     error( KIO::ERR_SERVICE_NOT_AVAILABLE,
-	   i18n("Your server does not support sending of 8-bit messages.\n"
-		"Please use base64 or quoted-printable encoding.") );
+           i18n("Your server does not support sending of 8-bit messages.\n"
+                "Please use base64 or quoted-printable encoding.") );
     return;
   }
 
   queueCommand( new MailFromCommand( this, request.fromAddress().toLatin1(),
-				     request.is8BitBody(), request.size() ) );
+                                     request.is8BitBody(), request.size() ) );
 
   // Loop through our To and CC recipients, and send the proper
   // SMTP commands, for the benefit of the server.
@@ -329,8 +328,8 @@ bool SMTPProtocol::executeQueuedCommands( TransactionState * ts ) {
     if ( cmdline.isEmpty() )
       continue;
     if ( !sendCommandLine( cmdline ) ||
-	 !batchProcessResponses( ts ) ||
-	 ts->failedFatally() ) {
+         !batchProcessResponses( ts ) ||
+         ts->failedFatally() ) {
       smtp_close( false ); // _hard_ shutdown
       return false;
     }
@@ -357,9 +356,9 @@ QByteArray SMTPProtocol::collectPipelineCommands( TransactionState * ts ) {
     if ( cmd->doNotExecute( ts ) ) {
       delete mPendingCommandQueue.dequeue();
       if ( cmdLine_len )
-	break;
+        break;
       else
-	continue;
+        continue;
     }
 
     if ( cmdLine_len && cmd->mustBeFirstInPipeline() )
@@ -371,7 +370,7 @@ QByteArray SMTPProtocol::collectPipelineCommands( TransactionState * ts ) {
     while ( !cmd->isComplete() && !cmd->needsResponse() ) {
       const QByteArray currentCmdLine = cmd->nextCommandLine( ts );
       if ( ts->failedFatally() )
-	return cmdLine;
+        return cmdLine;
       const unsigned int currentCmdLine_len = currentCmdLine.length();
 
       cmdLine_len += currentCmdLine_len;
@@ -432,14 +431,14 @@ bool SMTPProtocol::execute( Command * cmd, TransactionState * ts ) {
     while ( !cmd->isComplete() && !cmd->needsResponse() ) {
       const QByteArray cmdLine = cmd->nextCommandLine( ts );
       if ( ts && ts->failedFatally() ) {
-	smtp_close( false );
-	return false;
+        smtp_close( false );
+        return false;
       }
       if ( cmdLine.isEmpty() )
-	continue;
+        continue;
       if ( !sendCommandLine( cmdLine ) ) {
-	smtp_close( false );
-	return false;
+        smtp_close( false );
+        return false;
       }
     }
 
@@ -451,9 +450,9 @@ bool SMTPProtocol::execute( Command * cmd, TransactionState * ts ) {
     }
     if ( !cmd->processResponse( r, ts ) ) {
       if ( ts && ts->failedFatally() ||
-	   cmd->closeConnectionOnError() ||
-	   !execute( Command::RSET ) )
-	smtp_close( false );
+           cmd->closeConnectionOnError() ||
+           !execute( Command::RSET ) )
+        smtp_close( false );
       return false;
     }
   } while ( !cmd->isComplete() );
@@ -482,7 +481,7 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
     if ( ok )
       error( KIO::ERR_COULD_NOT_LOGIN,
              i18n("The server did not accept the connection.\n"
-		  "%1",  greeting.errorMessage() ) );
+                  "%1",  greeting.errorMessage() ) );
     smtp_close();
     return false;
   }
@@ -569,9 +568,9 @@ void SMTPProtocol::parseFeatures( const Response & ehloResponse ) {
   setMetaData( category + " CAPABILITIES", mCapabilities.asMetaDataString() );
 #ifndef NDEBUG
   kDebug(7112) << "parseFeatures() " << category << " AUTH METHODS:"
-		<< '\n' + mCapabilities.authMethodMetaData() << endl
-		<< "parseFeatures() " << category << " CAPABILITIES:"
-		<< '\n' + mCapabilities.asMetaDataString() << endl;
+               << '\n' + mCapabilities.authMethodMetaData() << endl
+               << "parseFeatures() " << category << " CAPABILITIES:"
+               << '\n' + mCapabilities.asMetaDataString() << endl;
 #endif
 }
 

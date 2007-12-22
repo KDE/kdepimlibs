@@ -44,7 +44,7 @@ namespace KioSMTP {
   public:
     Request()
       : mSubject( "missing subject" ), mEmitHeaders( true ),
-	m8Bit( false ), mSize( 0 ) {}
+        m8Bit( false ), mSize( 0 ) {}
 
     static Request fromURL( const KUrl & url );
 
@@ -82,10 +82,12 @@ namespace KioSMTP {
     unsigned int size() const { return mSize; }
     void setSize( unsigned int size ) { mSize = size; }
 
-    /** If @ref #emitHeaders() is true, returns the rfc2822
-	serialization of the header fields "To", "Cc", "Subject" and
-	"From", as determined by the respective settings. If @ref
-	#emitHeaders() is false, returns a null string. */
+    /**
+     * If @ref #emitHeaders() is true, returns the rfc2822
+     * serialization of the header fields "To", "Cc", "Subject" and
+     * "From", as determined by the respective settings. If @ref
+     * #emitHeaders() is false, returns a null string.
+     */
     QByteArray headerFields( const QString & fromRealName=QString() ) const;
 
   private:

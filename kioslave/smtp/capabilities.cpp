@@ -39,8 +39,8 @@ namespace KioSMTP {
 
     // first, check whether the response was valid and indicates success:
     if ( !ehlo.isOk()
-	 || ehlo.code() / 10 != 25 // ### restrict to 250 only?
-	 || ehlo.lines().empty() )
+         || ehlo.code() / 10 != 25 // ### restrict to 250 only?
+         || ehlo.lines().empty() )
       return c;
 
     QCStringList l = ehlo.lines();
@@ -71,7 +71,7 @@ namespace KioSMTP {
     for ( QMap<QString,QStringList>::const_iterator it = mCapabilities.begin() ; it != mCapabilities.end() ; ++it ) {
       result += it.key();
       if ( !it.value().empty() )
-	result += ' ' + it.value().join( " " );
+        result += ' ' + it.value().join( " " );
       result += '\n';
     }
     return result;
