@@ -375,6 +375,23 @@ QByteArray SMTPProtocol::collectPipelineCommands( TransactionState * ts ) {
 
       cmdLine_len += currentCmdLine_len;
       cmdLine += currentCmdLine;
+
+      // If we are executing the transfer command, don't collect the whole
+      // command line (which may be several MBs) before sending it, but instead
+      // send the data each time we have collected 32 KB of the command line.
+      //
+      // This way, the progress information in clients like KMail works correctly,
+      // because otherwise, the TransferCommand would read the whole data from the
+      // job at once, then sending it. The progress update on the client however
+      // happens when sending data to the job, not when this slave writes the data
+      // to the socket. Therefore that progress update is incorrect.
+      //
+      // 32 KB seems to be a sensible limit. Additionally, a job can only transfer
+      // 32 KB at once anyway.
+      if ( dynamic_cast<TransferCommand *>( cmd ) != 0 &&
+           cmdLine_len >= 32 * 1024 ) {
+        return cmdLine;
+      }
     }
 
     mSentCommandQueue.enqueue( mPendingCommandQueue.dequeue() );
