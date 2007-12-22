@@ -214,6 +214,7 @@ bool SmtpJob::doKill()
     KIO::SimpleJob *job = static_cast<KIO::SimpleJob*>( subjobs().first() );
     clearSubjobs();
     KIO::Scheduler::cancelJob( job );
+    removeSlaveFromPool( d->slave );
     return true;
   }
   return false;
