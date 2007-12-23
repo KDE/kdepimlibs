@@ -19,6 +19,7 @@ Description[es]=Un esclavo de E/S para el protocolo de filtrado de correo Sieve
 Description[et]=Sieve kirjade filtreerimise protokolli IO-moodul
 Description[fr]=Un ioslave pour le protocole de filtrage de messagerie Sieve
 Description[ga]=ioslave le haghaidh prótacail scagtha ríomhphoist Sieve
+Description[gl]=Un ioslave para o protocolo de filtraxe de correo Sieve
 Description[hu]=KDE-protokoll a Sieve levélszűrő protokollhoz
 Description[ja]=Sieve メールフィルタリングプロトコルのための ioslave
 Description[nb]=En ioslave for Sieve e-postfiltrering
