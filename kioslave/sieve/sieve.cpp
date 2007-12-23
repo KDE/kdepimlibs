@@ -106,7 +106,7 @@ const uint& kio_sieveResponse::getType() const
 }
 
 /* ---------------------------------------------------------------------------------- */
-const uint kio_sieveResponse::getQuantity() const
+uint kio_sieveResponse::getQuantity() const
 {
 	return quantity;
 }
