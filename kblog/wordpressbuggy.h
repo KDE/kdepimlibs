@@ -40,10 +40,10 @@ namespace KBlog {
 /**
   @brief
   A class that can be used for access to blogs (Wordpress < 2.4, Drupal <= 5.5
-  and most likely many more) which simply use the yyyyMMddThh:mm:ss 
+  and most likely many more) which simply use the yyyyMMddThh:mm:ss
   dateTime.iso8601 format stated on http://www.xmlrpc.com. This is only an example for
   an ISO-8601 compatible format, but many blogs seem to assume exactly this format.
-  This class is needed because KXmlRpc::Client only has support for the extended 
+  This class is needed because KXmlRpc::Client only has support for the extended
   format yyyy-MM-ddThh:mm:ss which is also standard conform and makes more sense than
   the mixture above. This class reimplements createPost and modifyPost from scratch
   to send the dateTime in a compatible format (yyyyMMddThh:mm:ss).
