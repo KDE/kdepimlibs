@@ -159,7 +159,7 @@ sigchld_handler (int signo)
 }
 
 IMAP4Protocol::IMAP4Protocol (const QByteArray & pool, const QByteArray & app, bool isSSL)
-  :TCPSlaveBase ((isSSL ? 993 : 143), (isSSL ? IMAP_SSL_PROTOCOL : IMAP_PROTOCOL), pool, app, isSSL),
+  :TCPSlaveBase ((isSSL ? IMAP_SSL_PROTOCOL : IMAP_PROTOCOL), pool, app, isSSL),
    imapParser (),
    mimeIO (),
    mySSL( isSSL ),
@@ -177,7 +177,7 @@ IMAP4Protocol::IMAP4Protocol (const QByteArray & pool, const QByteArray & app, b
 
 IMAP4Protocol::~IMAP4Protocol ()
 {
-  closeDescriptor();
+  disconnectFromHost();
   kDebug(7116) <<"IMAP4: Finishing";
 }
 
@@ -738,7 +738,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
         memmove(readBuffer, &readBuffer[copyLen], readBufferLen);
       if (buffer[buffer.size() - 1] == '\n') return true;
     }
-    if (!isConnectionValid())
+    if (!isConnected())
     {
       kDebug(7116) <<"parseReadLine - connection broken";
       error (ERR_CONNECTION_BROKEN, myHost);
@@ -1816,7 +1816,7 @@ IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, KIO::JobFlags flags)
 void
 IMAP4Protocol::slave_status ()
 {
-  bool connected = (getState() != ISTATE_NO) && isConnectionValid();
+  bool connected = (getState() != ISTATE_NO) && isConnected();
   kDebug(7116) <<"IMAP4::slave_status" << connected;
   slaveStatus ( connected ? myHost : QString(), connected );
 }
@@ -1991,7 +1991,7 @@ void IMAP4Protocol::closeConnection()
     imapCommand *cmd = doCommand (imapCommand::clientLogout());
     completeQueue.removeAll (cmd);
   }
-  closeDescriptor();
+  disconnectFromHost();
   setState(ISTATE_NO);
   completeQueue.clear();
   sentQueue.clear();
@@ -2055,15 +2055,14 @@ bool IMAP4Protocol::makeLogin ()
       closeConnection();
       return false;
     }
-    if ((myTLS == "on" || (canUseTLS() && myTLS != "off")) &&
-      hasCapability(QString("STARTTLS")))
+    if ((myTLS == "on" /*###|| ( canUseTLS() && myTLS != "off")*/) &&
+        hasCapability(QString("STARTTLS")))
     {
       imapCommand *cmd = doCommand (imapCommand::clientStartTLS());
       if (cmd->result () == "OK")
       {
         completeQueue.removeAll(cmd);
-        int tlsrc = startTLS();
-        if (tlsrc == 1)
+        if (startSsl())
         {
           kDebug(7116) <<"TLS mode has been enabled.";
           imapCommand *cmd2 = doCommand (new imapCommand ("CAPABILITY", ""));
@@ -2578,7 +2577,7 @@ ssize_t IMAP4Protocol::myRead(void *data, ssize_t len)
     if (readBufferLen) memcpy(readBuffer, &readBuffer[copyLen], readBufferLen);
     return copyLen;
   }
-  if (!isConnectionValid()) return 0;
+  if (!isConnected()) return 0;
   waitForResponse( responseTimeout() );
   return read((char*)data, len);
 }

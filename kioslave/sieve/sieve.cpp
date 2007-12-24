@@ -178,7 +178,7 @@ void kio_sieveResponse::clear()
 
 /* ---------------------------------------------------------------------------------- */
 kio_sieveProtocol::kio_sieveProtocol(const QByteArray &pool_socket, const QByteArray &app_socket)
-	: TCPSlaveBase( SIEVE_DEFAULT_PORT, "sieve", pool_socket, app_socket, false)
+	: TCPSlaveBase("sieve", pool_socket, app_socket, false)
 	, m_connMode(NORMAL)
 	, m_supportsTLS(false)
 	, m_shouldBeConnected(false)
@@ -188,14 +188,14 @@ kio_sieveProtocol::kio_sieveProtocol(const QByteArray &pool_socket, const QByteA
 /* ---------------------------------------------------------------------------------- */
 kio_sieveProtocol::~kio_sieveProtocol()
 {
-	if ( isConnectionValid() )
+	if ( isConnected() )
 		disconnect();
 }
 
 /* ---------------------------------------------------------------------------------- */
 void kio_sieveProtocol::setHost (const QString &host, quint16 port, const QString &user, const QString &pass)
 {
-	if ( isConnectionValid() &&
+	if ( isConnected() &&
 			( m_sServer != host ||
 				m_sPort != QString::number( port ) ||
 				m_sUser != user ||
@@ -203,7 +203,7 @@ void kio_sieveProtocol::setHost (const QString &host, quint16 port, const QStrin
 		disconnect();
 	}
 	m_sServer = host;
-	m_sPort = QString::number( port ? port : defaultPort() );
+	m_sPort = QString::number( port ? port : SIEVE_DEFAULT_PORT );
 	m_sUser = user;
 	m_sPass = pass;
 	m_supportsTLS = false;
@@ -303,7 +303,7 @@ void kio_sieveProtocol::changeCheck( const KUrl &url )
 	ksDebug() << "auth: " << auth << " m_sAuth: " << m_sAuth << endl;
 	if ( m_sAuth != auth ) {
 		m_sAuth = auth;
-		if ( isConnectionValid() )
+		if ( isConnected() )
 			disconnect();
 	}
 }
@@ -317,7 +317,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 {
 	ksDebug() << endl;
 
-	if (isConnectionValid()) return true;
+	if (isConnected()) return true;
 
 	infoMessage(i18n("Connecting to %1...", m_sServer));
 
@@ -326,32 +326,32 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 		return false;
 	}
 
-	setBlockConnection(true);
+	setBlocking(true);
 
 	if (!connectToHost(m_sServer, m_sPort, true)) {
 		return false;
 	}
 
 	if (!parseCapabilities()) {
-		closeDescriptor();
+		disconnectFromHost();
 		error(ERR_UNSUPPORTED_PROTOCOL, i18n("Server identification failed."));
 		return false;
 	}
 
 	// Attempt to start TLS
 	// FIXME find a test server and test that this works
-	if (useTLSIfAvailable && m_supportsTLS && canUseTLS()) {
+	// TODO ask the system whether SSL is available
+	if (useTLSIfAvailable && m_supportsTLS) {
 		sendData("STARTTLS");
 		if (operationSuccessful()) {
 			ksDebug() << "TLS has been accepted. Starting TLS..." << endl
-				  << "WARNING this is untested and may fail." << endl;
-			int retval = startTLS();
-			if (retval == 1) {
+				      << "WARNING this is untested and may fail." << endl;
+			if (startSsl()) {
 				ksDebug() << "TLS enabled successfully." << endl;
 				// reparse capabilities:
 				parseCapabilities(false);
 			} else {
-				ksDebug() << "TLS initiation failed, code " << retval << endl;
+				ksDebug() << "TLS initiation failed." << endl;
 				disconnect(true);
 				return connect(false);
 				// error(ERR_INTERNAL, i18n("TLS initiation failed."));
@@ -389,14 +389,14 @@ void kio_sieveProtocol::disconnect(bool forcibly)
 			ksDebug() << "Server did not logout cleanly." << endl;
 	}
 
-	closeDescriptor();
+	disconnectFromHost();
 	m_shouldBeConnected = false;
 }
 
 /* ---------------------------------------------------------------------------------- */
 /*void kio_sieveProtocol::slave_status()
 {
-	slaveStatus(isConnectionValid() ? m_sServer : "", isConnectionValid());
+	slaveStatus(isConnected() ? m_sServer : "", isConnected());
 
 	finished();
 }*/
@@ -700,7 +700,7 @@ void kio_sieveProtocol::get(const KUrl& url)
 		  QByteArray dat( qMin( total_len - recv_len, ssize_t(64 * 1024 )), '\0' );
 		  ssize_t this_recv_len = read( dat.data(), dat.size() );
 
-		  if ( this_recv_len < 1 && !isConnectionValid() ) {
+		  if ( this_recv_len < 1 && !isConnected() ) {
 		    error( KIO::ERR_CONNECTION_BROKEN, m_sServer );
 		    disconnect( true );
 		    return;

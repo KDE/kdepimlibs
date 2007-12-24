@@ -101,16 +101,16 @@ static sasl_callback_t callbacks[] = {
     mSMTP->parseFeatures( r );
   }
 
-  int Command::startTLS() {
-    return mSMTP->startTLS();
+  int Command::startSsl() {
+    return mSMTP->startSsl();
   }
 
-  bool Command::usingSSL() const {
-    return mSMTP->usingSSL();
+  bool Command::isUsingSsl() const {
+    return mSMTP->isUsingSsl();
   }
 
-  bool Command::usingTLS() const {
-    return mSMTP->usingTLS();
+  bool Command::isAutoSsl() const {
+    return mSMTP->isAutoSsl();
   }
 
   bool Command::haveCapability( const char * cap ) const {
@@ -174,12 +174,9 @@ static sasl_callback_t callbacks[] = {
       return false;
     }
 
-    int tlsrc = startTLS();
-
-    if ( tlsrc == 1 )
+    if (startSsl()) {
       return true;
-
-    if ( tlsrc != -3 )
+    } else {
       //kDebug(7112) << "TLS negotiation failed!";
       mSMTP->messageBox( KIO::SlaveBase::Information,
                          i18n("Your SMTP server claims to "
@@ -188,7 +185,8 @@ static sasl_callback_t callbacks[] = {
                              "disable TLS in KDE using the "
                              "crypto settings module."),
                          i18n("Connection Failed") );
-    return false;
+      return false;
+    }
   }
 
 

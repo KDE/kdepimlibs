@@ -60,14 +60,13 @@ int kdemain(int argc, char **argv) {
 /****************** NNTPProtocol ************************/
 
 NNTPProtocol::NNTPProtocol ( const QByteArray & pool, const QByteArray & app, bool isSSL )
-  : TCPSlaveBase( (isSSL ? NNTPS_PORT : NNTP_PORT), (isSSL ? "nntps" : "nntp"), pool,
-                  app, isSSL )
+  : TCPSlaveBase((isSSL ? "nntps" : "nntp"), pool, app, isSSL )
 {
   DBG << "=============> NNTPProtocol::NNTPProtocol" << endl;
 
   readBufferLen = 0;
-  setDefaultPort( usingSSL() ? NNTPS_PORT : NNTP_PORT);
-  m_port = defaultPort();
+  m_defaultPort = isSSL ? NNTPS_PORT : NNTP_PORT;
+  m_port = m_defaultPort;
 }
 
 NNTPProtocol::~NNTPProtocol() {
@@ -81,14 +80,14 @@ void NNTPProtocol::setHost ( const QString & host, quint16 port, const QString &
                              const QString & pass )
 {
   DBG << "setHost: " << ( ! user.isEmpty() ? (user+'@') : QString(""))
-      << host << ":" << ( ( port == 0 ) ? defaultPort() : port  ) << endl;
+      << host << ":" << ( ( port == 0 ) ? m_defaultPort : port  ) << endl;
 
-  if ( isConnectionValid() && (mHost != host || m_port != port ||
+  if ( isConnected() && (mHost != host || m_port != port ||
        mUser != user || mPass != pass) )
     nntp_close();
 
   mHost = host;
-  m_port = ( ( port == 0 ) ? defaultPort() : port );
+  m_port = ( ( port == 0 ) ? m_defaultPort : port );
   mUser = user;
   mPass = pass;
 }
@@ -714,9 +713,9 @@ void NNTPProtocol::fillUDSEntry( UDSEntry& entry, const QString& name, long size
 }
 
 void NNTPProtocol::nntp_close () {
-  if ( isConnectionValid() ) {
+  if ( isConnected() ) {
     write( "QUIT\r\n", 6 );
-    closeDescriptor();
+    disconnectFromHost();
     opened = false;
   }
   mCurrentGroup.clear();
@@ -725,7 +724,7 @@ void NNTPProtocol::nntp_close () {
 bool NNTPProtocol::nntp_open()
 {
   // if still connected reuse connection
-  if ( isConnectionValid() ) {
+  if ( isConnected() ) {
     DBG << "reusing old connection" << endl;
     return true;
   }
@@ -733,7 +732,7 @@ bool NNTPProtocol::nntp_open()
   DBG << "  nntp_open -- creating a new connection to " << mHost << ":" << m_port << endl;
   // create a new connection (connectToHost() includes error handling)
   infoMessage( i18n("Connecting to server...") );
-  if ( connectToHost( (usingSSL() ? "nntps" : "nntp"), mHost.toLatin1(), m_port, true ) )
+  if ( connectToHost( (isAutoSsl() ? "nntps" : "nntp"), mHost.toLatin1(), m_port ) )
   {
     DBG << "  nntp_open -- connection is open " << endl;
 
@@ -771,8 +770,7 @@ bool NNTPProtocol::nntp_open()
         error( ERR_COULD_NOT_CONNECT, i18n("This server does not support TLS") );
         return false;
       }
-      int tlsrc = startTLS();
-      if ( tlsrc != 1 ) {
+      if ( !startSsl() ) {
         error( ERR_COULD_NOT_CONNECT, i18n("TLS negotiation failed") );
         return false;
       }

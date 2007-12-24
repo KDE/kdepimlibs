@@ -102,9 +102,7 @@ int kdemain(int argc, char **argv)
 
 SMTPProtocol::SMTPProtocol(const QByteArray & pool, const QByteArray & app,
                            bool useSSL)
-:  TCPSlaveBase(useSSL ? 465 : 25,
-                useSSL ? "smtps" : "smtp",
-                pool, app, useSSL),
+:  TCPSlaveBase(useSSL ? "smtps" : "smtp", pool, app, useSSL),
    m_sOldPort( 0 ),
    m_opened(false)
 {
@@ -288,7 +286,7 @@ Response SMTPProtocol::getResponse( bool * ok ) {
 
     // ...read data...
     recv_len = readLine( buf, sizeof(buf) - 1 );
-    if ( recv_len < 1 && !isConnectionValid() ) {
+    if ( recv_len < 1 && !isConnected() ) {
       error( KIO::ERR_CONNECTION_BROKEN, m_sServer );
       return response;
     }
@@ -487,7 +485,7 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
     return true;
 
   smtp_close();
-  if (!connectToHost(usingSSL() ? "smtps" : "smtp", m_sServer, m_port, true))
+  if (!connectToHost(isAutoSsl() ? "smtps" : "smtp", m_sServer, m_port))
     return false;             // connectToHost has already send an error message.
   m_opened = true;
 
@@ -522,7 +520,7 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
     return false;
   }
 
-  if ( ( haveCapability("STARTTLS") && canUseTLS() && metaData("tls") != "off" )
+  if ( ( haveCapability("STARTTLS") /*### && canUseTLS()*/ && metaData("tls") != "off" )
        || metaData("tls") == "on" ) {
     // For now we're gonna force it on.
 
@@ -580,7 +578,16 @@ bool SMTPProtocol::authenticate()
 void SMTPProtocol::parseFeatures( const Response & ehloResponse ) {
   mCapabilities = Capabilities::fromResponse( ehloResponse );
 
-  QString category = usingTLS() ? "TLS" : usingSSL() ? "SSL" : "PLAIN" ;
+  QString category;
+  if (isUsingSsl()) {
+    if (isAutoSsl()) {
+      category = "SSL";
+    } else {
+      category = "TLS";
+    }
+  } else {
+    category = "PLAIN";
+  }
   setMetaData( category + " AUTH METHODS", mCapabilities.authMethodMetaData() );
   setMetaData( category + " CAPABILITIES", mCapabilities.asMetaDataString() );
 #ifndef NDEBUG
@@ -598,7 +605,7 @@ void SMTPProtocol::smtp_close( bool nice ) {
   if ( nice )
     execute( Command::QUIT );
   kDebug( 7112 ) << "closing connection";
-  closeDescriptor();
+  disconnectFromHost();
   m_sOldServer.clear();
   m_sOldUser.clear();
   m_sOldPass.clear();

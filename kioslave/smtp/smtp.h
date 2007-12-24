@@ -115,7 +115,8 @@ protected:
   /** This is a pure convenience wrapper around
       @ref KioSMTP::Capabilities::createSpecialResponse */
   QString createSpecialResponse() const {
-    return mCapabilities.createSpecialResponse( usingTLS() || haveCapability( "STARTTLS" ) );
+    return mCapabilities.createSpecialResponse( ( isUsingSsl() && !isAutoSsl() ) ||
+                                                haveCapability( "STARTTLS" ) );
   }
 
   void queueCommand( KioSMTP::Command * command ) {

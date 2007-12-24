@@ -148,9 +148,9 @@ namespace KioSMTP {
     // only relay methods to enable access to slave-protected methods
     // for subclasses of Command:
     void parseFeatures( const Response & r );
-    int startTLS();
-    bool usingSSL() const;
-    bool usingTLS() const;
+    int startSsl();
+    bool isUsingSsl() const;
+    bool isAutoSsl() const;
     bool haveCapability( const char * cap ) const;
   };
 

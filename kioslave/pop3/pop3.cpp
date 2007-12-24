@@ -118,8 +118,7 @@ int kdemain(int argc, char **argv)
 
 POP3Protocol::POP3Protocol(const QByteArray & pool, const QByteArray & app,
                            bool isSSL)
-:  TCPSlaveBase((isSSL ? 995 : 110), (isSSL ? "pop3s" : "pop3"), pool, app,
-             isSSL)
+:  TCPSlaveBase((isSSL ? "pop3s" : "pop3"), pool, app, isSSL)
 {
   kDebug(7105);
   m_cmd = CMD_NONE;
@@ -281,7 +280,7 @@ bool POP3Protocol::sendCommand(const QByteArray &cmd)
    *   argument may be up to 40 characters long.
    */
 
-  if (!isConnectionValid())
+  if (!isConnected())
     return false;
 
   QByteArray cmdrn = cmd + "\r\n";
@@ -335,7 +334,7 @@ void POP3Protocol::closeConnection()
   }
 
   command("QUIT");
-  closeDescriptor();
+  disconnectFromHost();
   readBufferLen = 0;
   m_sOldUser = m_sOldPass = m_sOldServer = "";
   opened = false;
@@ -650,7 +649,7 @@ bool POP3Protocol::pop3_open()
   do {
     closeConnection();
 
-    if (!connectToHost((usingSSL() ? "pop3s" : "pop3"), m_sServer.toLatin1(), m_iPort, true)) {
+    if (!connectToHost((isAutoSsl() ? "pop3s" : "pop3"), m_sServer.toLatin1(), m_iPort)) {
       // error(ERR_COULD_NOT_CONNECT, m_sServer);
       // ConnectToHost has already send an error message.
       return false;
@@ -705,22 +704,19 @@ bool POP3Protocol::pop3_open()
     m_sOldServer = m_sServer;
 
     // Try to go into TLS mode
-    if ((metaData("tls") == "on" || (canUseTLS() &&
-                                     metaData("tls") != "off"))
+    if ((metaData("tls") == "on" /*### || (canUseTLS() &&
+                                     metaData("tls") != "off")*/)
         && command("STLS") == Ok ) {
-      int tlsrc = startTLS();
-      if (tlsrc == 1) {
+      if (startSsl()) {
         kDebug(7105) << "TLS mode has been enabled.";
       } else {
-        if (tlsrc != -3) {
-          kDebug(7105) << "TLS mode setup has failed. Aborting.";
-          error(ERR_COULD_NOT_CONNECT,
-                i18n("Your POP3 server claims to "
-                     "support TLS but negotiation "
-                     "was unsuccessful. You can "
-                     "disable TLS in KDE using the "
-                     "crypto settings module."));
-        }
+        kDebug(7105) << "TLS mode setup has failed. Aborting." << endl;
+        error(ERR_COULD_NOT_CONNECT,
+              i18n("Your POP3 server claims to "
+                   "support TLS but negotiation "
+                   "was unsuccessful. You can "
+                   "disable TLS in KDE using the "
+                   "crypto settings module."));
         closeConnection();
         return false;
       }
@@ -971,7 +967,7 @@ void POP3Protocol::get(const KUrl & url)
         while (true /* !AtEOF() */ ) {
           ssize_t readlen = myRead(buf, sizeof(buf) - 1);
           if (readlen <= 0) {
-            if (isConnectionValid())
+            if (isConnected())
               error(ERR_SERVER_TIMEOUT, m_sServer);
             else
               error(ERR_CONNECTION_BROKEN, m_sServer);
@@ -1129,7 +1125,7 @@ void POP3Protocol::listDir(const KUrl &)
     entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("text/plain"));
 
     KUrl uds_url;
-    if (usingSSL()) {
+    if (isAutoSsl()) {
       uds_url.setProtocol("pop3s");
     } else {
       uds_url.setProtocol("pop3");
