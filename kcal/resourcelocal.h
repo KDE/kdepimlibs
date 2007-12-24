@@ -134,6 +134,7 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
       Actually saves the data to the local file.
     **/
     virtual bool doSave( bool syncCache );
+
     /**
       @copydoc
       ResourceCached::doSave(bool, Incidence*)
