@@ -112,14 +112,14 @@ CalendarLocal *ResourceCached::calendar() const
   return &d->mCalendar;
 }
 
-bool ResourceCached::doLoad()
+bool ResourceCached::doLoad( bool syncCache )
 {
-  return doLoad( true );
+  return doLoad( syncCache );
 }
 
-bool ResourceCached::doSave()
+bool ResourceCached::doSave( bool syncCache )
 {
-  return doSave( true );
+  return doSave( syncCache );
 }
 
 bool ResourceCached::defaultReloadInhibited() const

@@ -164,7 +164,7 @@ bool ResourceCalendar::load()
     success = open();
   }
   if ( success ) {
-    success = doLoad();
+    success = doLoad( false );
   }
   if ( !success && !d->mReceivedLoadError ) {
     loadError();
@@ -221,13 +221,13 @@ bool ResourceCalendar::save( Incidence *incidence )
     d->mReceivedSaveError = false;
 
     if ( !isOpen() ) {
+      kDebug(5800) << "Trying to save into a closed resource" << resourceName();
       return true;
     }
-    bool success = incidence ? doSave(incidence) : doSave();
+    bool success = incidence ? doSave( false, incidence ) : doSave( false );
     if ( !success && !d->mReceivedSaveError ) {
       saveError();
     }
-
     return success;
   } else {
     // Read-only, just don't save...
@@ -241,10 +241,9 @@ bool ResourceCalendar::isSaving()
   return false;
 }
 
-bool ResourceCalendar::doSave( Incidence *incidence )
+bool ResourceCalendar::doSave( bool syncCache, Incidence *incidence )
 {
-  Q_UNUSED( incidence );
-  return doSave();
+  return doSave( syncCache, incidence );
 }
 
 void ResourceCalendar::saveError( const QString &err )
@@ -252,7 +251,6 @@ void ResourceCalendar::saveError( const QString &err )
   kDebug(5800) << "Error saving resource:" << err;
 
   d->mReceivedSaveError = true;
-
   QString msg = i18n( "Error while saving %1.\n", resourceName() );
   if ( !err.isEmpty() ) {
     msg += err;
