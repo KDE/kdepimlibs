@@ -431,6 +431,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       resource is closed
      */
     virtual void doClose();
+
     /**
       Opens the resource. Dummy implementation, so child classes don't have to
       reimplement this method. By default, this does not do anything, but can be
@@ -442,6 +443,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       Do the actual loading of the resource data. Called by load(CacheAction).
     */
     virtual bool doLoad( bool syncCache ) = 0;
+
     /**
       Set the cache-reloaded status. Non-local resources must set this true once
       the cache has been downloaded successfully.
@@ -449,6 +451,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       @param done the new cache-reloaded status
      */
     void setReloaded( bool done );
+
     /**
       Do the actual saving of the resource data. Called by save(CacheAction).
       Saves the resource data to the cache and optionally uploads (if a remote
@@ -458,6 +461,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       resource. If false, only the cache will be updated.
     */
     virtual bool doSave( bool syncCache ) = 0;
+
     /**
       Do the actual saving of the resource data. Called by save(CacheAction).
       Save one Incidence. The default implementation calls doSave(bool) to
@@ -472,6 +476,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       Check if reload required according to reload policy.
     */
     bool checkForReload();
+
     /**
       Check if save required according to save policy.
     */
