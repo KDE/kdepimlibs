@@ -14,4 +14,4 @@ deleting=true
 mimetype=text/plain
 determineMimetypeFromExtension=false
 DocPath=kioslave/ldap.html
-Icon=kaddressbook
+Icon=office-addressbook
