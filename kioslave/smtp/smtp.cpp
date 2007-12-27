@@ -507,6 +507,7 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
     m_hostname = fakeHostname;
   }
   else {
+   // FIXME: We need a way to find the FQDN again. Also change in servertest then.
     m_hostname = QHostInfo::localHostName();
     if( m_hostname.isEmpty() ) {
       m_hostname = "localhost.invalid";
