@@ -26,6 +26,7 @@
 #include <mailtransport/mailtransport_defs.h>
 
 // Qt
+#include <QHostInfo>
 #include <QProgressBar>
 #include <QTimer>
 
@@ -45,10 +46,11 @@ class ServerTestPrivate
 
     ServerTest* const q;
     QString                   server;
+    QString                   fakeHostname;
     QString                   testProtocol;
 
-    MailTransport::Socket*                   normalSocket;
-    MailTransport::Socket*                   secureSocket;
+    MailTransport::Socket*    normalSocket;
+    MailTransport::Socket*    secureSocket;
 
     QList< int >              connectionResults;
     QHash< int, QList<int> >  authenticationResults;
@@ -76,7 +78,8 @@ class ServerTestPrivate
 
 }
 
-ServerTestPrivate::ServerTestPrivate( ServerTest* test) : q( test )
+ServerTestPrivate::ServerTestPrivate( ServerTest* test)
+  : q( test )
 {
 }
 
@@ -147,10 +150,33 @@ void ServerTestPrivate::slotReadNormal( const QString& text )
 {
   static bool first = true;
   if ( first ) {
+
     if ( testProtocol == IMAP_PROTOCOL )
       normalSocket->write( QLatin1String( "1 CAPABILITY" ) );
-    else if ( testProtocol == SMTP_PROTOCOL )
-      normalSocket->write( QLatin1String( "EHLO localhost" ) );
+
+    else if ( testProtocol == SMTP_PROTOCOL ) {
+
+      // Detect the hostname which we send with the EHLO command.
+      // If there is a fake one set, use that, otherwise use the
+      // local host name (and make sure it contains a domain, so the
+      // server thinks it is valid).
+      QString hostname;
+      if ( !fakeHostname.isNull() ) {
+        hostname = fakeHostname;
+      }
+      else {
+        hostname = QHostInfo::localHostName();
+        if( hostname.isEmpty() ) {
+          hostname = QLatin1String( "localhost.invalid" );
+        }
+        else if ( !hostname.contains( QChar::fromAscii( '.'  )  ) ) {
+          hostname += QLatin1String( ".localnet" );
+        }
+      }
+      kDebug( 5324 ) << "Hostname for EHLO is" << hostname;
+
+      normalSocket->write( QLatin1String( "EHLO " ) + hostname );
+    }
     first = false;
     return;
   }
@@ -272,6 +298,16 @@ void ServerTest::start()
            SLOT( slotReadSecure( const QString& ) ) );
   d->secureSocket->reconnect();
   d->secureSocketTimer->start( 10000 );
+}
+
+void ServerTest::setFakeHostname( const QString& fakeHostname )
+{
+  d->fakeHostname = fakeHostname;
+}
+
+QString ServerTest::fakeHostname()
+{
+  return d->fakeHostname;
 }
 
 void ServerTest::setServer( const QString& server )

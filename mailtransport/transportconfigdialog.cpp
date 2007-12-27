@@ -182,8 +182,10 @@ void TransportConfigDialog::checkSmtpCapabilities()
   d->serverTest = new ServerTest( this );
   d->serverTest->setProtocol( SMTP_PROTOCOL );
   d->serverTest->setServer( d->smtp.kcfg_host->text() );
+  if ( d->smtp.kcfg_specifyHostname->isChecked() )
+    d->serverTest->setFakeHostname( d->smtp.kcfg_localHostname->text() );
   d->serverTest->setProgressBar( d->smtp.checkCapabilitiesProgress );
-  
+
   connect( d->serverTest, SIGNAL(finished( QList< int > )),
            SLOT(slotFinished( QList< int > )));
   d->smtp.checkCapabilities->setEnabled( false );

@@ -68,6 +68,23 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     QString server();
 
     /**
+     * Sets a fake hostname for the test. This is currently only used when
+     * testing a SMTP server; there, the command for testing the capabilities
+     * (called EHLO) needs to have the hostname of the client included.
+     * The user can however choose to send a fake hostname instead of the
+     * local hostname to work around various problems. This fake hostname needs
+     * to be set here.
+     *
+     * @param fakeHostname the fake hostname to send
+     */
+    void setFakeHostname( const QString& fakeHostname );
+
+    /**
+     * @return the fake hostname, as set before with @ref setFakeHostname
+     */
+    QString fakeHostname();
+
+    /**
       * Makes @p pb the progressbar to use. This class will call show()
       * and hide() and will count down. It does not take ownership of
       * the progressbar.
