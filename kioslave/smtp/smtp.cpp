@@ -115,10 +115,12 @@ SMTPProtocol::~SMTPProtocol() {
 }
 
 void SMTPProtocol::openConnection() {
-  if ( smtp_open() )
-    connected();
-  else
-    closeConnection();
+
+  // Don't actually call smtp_open() yet. Just pretend that we are connected.
+  // We can't call smtp_open() here, as that does EHLO, and the EHLO command
+  // needs the fake hostname. However, we only get the fake hostname in put(), so
+  // we call smtp_open() there.
+  connected();
 }
 
 void SMTPProtocol::closeConnection() {
@@ -501,16 +503,16 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
     return false;
   }
 
-  if (!fakeHostname.isNull())
-  {
+  if ( !fakeHostname.isNull() ) {
     m_hostname = fakeHostname;
   }
-  else
-  {
+  else {
     m_hostname = QHostInfo::localHostName();
-    if(m_hostname.isEmpty())
-    {
+    if( m_hostname.isEmpty() ) {
       m_hostname = "localhost.invalid";
+    }
+    else if ( !m_hostname.contains( '.' ) ) {
+      m_hostname += ".localnet";
     }
   }
 
