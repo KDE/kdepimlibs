@@ -61,6 +61,7 @@ class SmtpJobPrivate
     enum State {
       Idle, Precommand, Smtp
     } currentState;
+    bool finished;
 };
 
 SmtpJob::SmtpJob(Transport * transport, QObject * parent) :
@@ -68,6 +69,7 @@ SmtpJob::SmtpJob(Transport * transport, QObject * parent) :
 {
   d->currentState = SmtpJobPrivate::Idle;
   d->slave = 0;
+  d->finished = false;
   slavePoolRef++;
   KIO::Scheduler::connect( SIGNAL(slaveError(KIO::Slave*,int,QString)),
                            this, SLOT(slaveError(KIO::Slave*,int,QString)) );
@@ -222,6 +224,19 @@ bool SmtpJob::doKill()
 
 void SmtpJob::slotResult(KJob * job)
 {
+  // The job has finished, so we don't care about any further errors. Set
+  // d->finished to true, so slaveError() knows about this and doesn't call
+  // emitResult() anymore.
+  // Sometimes, the SMTP slave emits more than one error
+  //
+  // The first error causes slotResult() to be called, but not slaveError(), since
+  // the scheduler doesn't emit errors for connected slaves.
+  //
+  // The second error then causes slaveError() to be called (as the slave is no
+  // longer connected), which does emitResult() a second time, which is invalid
+  // (and triggers an assert in KMail).
+  d->finished = true;
+
   TransportJob::slotResult( job );
   if ( error() && d->currentState == SmtpJobPrivate::Smtp ) {
     removeSlaveFromPool( d->slave, error() != KIO::ERR_SLAVE_DIED );
@@ -250,7 +265,7 @@ void SmtpJob::slaveError(KIO::Slave * slave, int errorCode,
                          const QString & errorMsg)
 {
   removeSlaveFromPool( slave, errorCode != KIO::ERR_SLAVE_DIED );
-  if ( d->slave == slave ) {
+  if ( d->slave == slave && !d->finished ) {
     setError( errorCode );
     setErrorText( KIO::buildErrorString( errorCode, errorMsg ) );
     emitResult();
