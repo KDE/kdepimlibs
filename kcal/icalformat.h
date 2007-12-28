@@ -192,6 +192,7 @@ class KCAL_EXPORT ICalFormat : public CalFormat
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( ICalFormat )
     class Private;
     Private *const d;
     //@endcond

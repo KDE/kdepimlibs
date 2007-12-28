@@ -171,6 +171,7 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
     bool accept( Visitor &v ) { return v.visit( this ); }
 
     //@cond PRIVATE
+    Q_DISABLE_COPY( FreeBusy )
     class Private;
     Private *const d;
     //@endcond

@@ -325,6 +325,7 @@ class KCAL_EXPORT KResultError : public KResult
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( KResultError )
     class Private;
     Private *const d;
     //@endcond PRIVATE

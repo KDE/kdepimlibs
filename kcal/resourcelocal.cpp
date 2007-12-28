@@ -28,9 +28,8 @@
   @author Cornelius Schumacher <schumacher@kde.org>
 */
 
-#include "resourcelocal.moc"
+#include "resourcelocal.h"
 #include "resourcelocal_p.h"
-
 #include "resourcelocalconfig.h"
 #include "vcalformat.h"
 #include "icalformat.h"
@@ -41,7 +40,7 @@
 #include "todo.h"
 #include "journal.h"
 
-#include "kresources/configwidget.h"
+#include <kresources/configwidget.h>
 
 #include <typeinfo>
 #include <stdlib.h>
@@ -54,6 +53,8 @@
 #include <kdirwatch.h>
 #include <kstandarddirs.h>
 #include <kconfiggroup.h>
+
+#include "resourcelocal.moc"
 
 using namespace KCal;
 
@@ -94,7 +95,7 @@ ResourceLocal::ResourceLocal( const QString &fileName )
 
 void ResourceLocal::writeConfig( KConfigGroup &group )
 {
-  kDebug(5800) << "ResourceLocal::writeConfig()";
+  kDebug(5800);
 
   ResourceCalendar::writeConfig( group );
   group.writePathEntry( "CalendarURL", d->mURL.prettyUrl() );
@@ -131,11 +132,9 @@ void ResourceLocal::init()
 ResourceLocal::~ResourceLocal()
 {
   d->mDirWatch.stopScan();
-
   close();
 
   delete d->mLock;
-
   delete d;
 }
 
@@ -145,12 +144,13 @@ KDateTime ResourceLocal::readLastModified()
   return KDateTime( fi.lastModified() );  // use local time zone
 }
 
-bool ResourceLocal::doLoad( bool )
+bool ResourceLocal::doLoad( bool syncCache )
 {
-  bool success;
+  Q_UNUSED( syncCache );
 
+  bool success;
   if ( !KStandardDirs::exists( d->mURL.path() ) ) {
-    kDebug(5800) << "ResourceLocal::load(): File doesn't exist yet.";
+    kDebug(5800) << "File doesn't exist yet.";
     // Save the empty calendar, so the calendar file will be created.
     success = doSave( true );
   } else {
@@ -163,12 +163,19 @@ bool ResourceLocal::doLoad( bool )
   return success;
 }
 
-bool ResourceLocal::doSave( bool )
+bool ResourceLocal::doSave( bool syncCache )
 {
+  Q_UNUSED( syncCache );
   bool success = calendar()->save( d->mURL.path() );
+  kDebug(5800) << "Save of " << d->mURL.path() << "was " << success;
   d->mLastModified = readLastModified();
 
   return success;
+}
+
+bool ResourceLocal::doSave( bool syncCache, Incidence *incidence )
+{
+  return ResourceCached::doSave( syncCache, incidence );
 }
 
 KABC::Lock *ResourceLocal::lock()
@@ -178,14 +185,15 @@ KABC::Lock *ResourceLocal::lock()
 
 bool ResourceLocal::doReload()
 {
-  kDebug(5800) << "ResourceLocal::doReload()";
+  kDebug(5800);
 
   if ( !isOpen() ) {
+    kDebug(5800) << "trying to reload from a closed file";
     return false;
   }
 
   if ( d->mLastModified == readLastModified() ) {
-    kDebug(5800) << "ResourceLocal::reload(): file not modified since last read.";
+    kDebug(5800) << "file not modified since last read.";
     return false;
   }
 

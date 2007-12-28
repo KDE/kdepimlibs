@@ -38,7 +38,7 @@ public:
 	const uint& getType() const;
 
 	const QByteArray& getAction() const;
-	const uint getQuantity() const;
+	uint getQuantity() const;
 	const QByteArray& getKey() const;
 	const QByteArray& getVal() const;
 	const QByteArray& getExtra() const;

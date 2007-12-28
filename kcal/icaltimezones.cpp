@@ -1,7 +1,7 @@
 /*
     This file is part of the kcal library.
 
-    Copyright (c) 2005-2007 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2005-2007 David Jarvie <djarvie@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -414,6 +414,17 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
       // Found a phase combination which hasn't yet been processed
       int preOffset = (i > 0) ? transits[i-1].phase().utcOffset() : rhs.previousUtcOffset();
       KTimeZone::Phase phase = transits[i].phase();
+      if (phase.utcOffset() == preOffset) {
+        transitionsDone[i] = true;
+        while ( ++i < trcount ) {
+          if (transitionsDone[i]
+          ||  transits[i].phase() != phase
+          ||  transits[i-1].phase().utcOffset() != preOffset)
+            continue;
+          transitionsDone[i] = true;
+        }
+        continue;
+      }
       icalcomponent *phaseComp = icalcomponent_new( phase.isDst() ?
                                  ICAL_XDAYLIGHT_COMPONENT : ICAL_XSTANDARD_COMPONENT );
       QList<QByteArray> abbrevs = phase.abbreviations();
@@ -467,9 +478,11 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
           ||  transits[i].phase() != phase
           ||  transits[i-1].phase().utcOffset() != preOffset)
             continue;
-          newRule = rule;
           transitionsDone[i] = true;
           qdt = transits[i].time();
+          if (!qdt.isValid())
+            continue;
+          newRule = rule;
           times += qdt;
           date = qdt.date();
           if (qdt.time() != time
@@ -497,26 +510,26 @@ ICalTimeZoneData::ICalTimeZoneData(const KTimeZoneData &rhs, const KTimeZone &tz
           // Write all the times up to but not including the current one.
           // First check whether any of the last RDATE values fit this rule.
           int yr = times[0].date().year();
-	  while (!rdates.isEmpty()) {
+          while (!rdates.isEmpty()) {
             qdt = rdates.last();
-	    date = qdt.date();
-	    if (qdt.time() != time
+            date = qdt.date();
+            if (qdt.time() != time
             ||  date.month() != month
-	    ||  date.year() != --yr)
+            ||  date.year() != --yr)
               break;
-	    int day  = date.day();
+            int day  = date.day();
             if (rule & DAY_OF_MONTH) {
               if (day != dayOfMonth)
                 break;
-	    } else {
+            } else {
               if (date.dayOfWeek() != dayOfWeek
               ||  (rule & WEEKDAY_OF_MONTH)  &&  (day - 1)/7 + 1 != nthFromStart
               ||  (rule & LAST_WEEKDAY_OF_MONTH)  &&  (daysInMonth - day)/7 + 1 != nthFromEnd)
-		break;
-	    }
-	    times.prepend(qdt);
-	    rdates.pop_back();
-	  }
+                break;
+            }
+            times.prepend(qdt);
+            rdates.pop_back();
+          }
           if (times.count() > (useNewRRULE ? minPhaseCount : minRuleCount)) {
             // There are enough dates to combine into an RRULE
             icalrecurrencetype r;
@@ -644,7 +657,9 @@ class ICalTimeZoneSourcePrivate
 QByteArray ICalTimeZoneSourcePrivate::icalTzidPrefix;
 //@endcond
 
-ICalTimeZoneSource::ICalTimeZoneSource() : d( 0 )
+ICalTimeZoneSource::ICalTimeZoneSource()
+  : KTimeZoneSource( false ),
+    d( 0 )
 {
 }
 

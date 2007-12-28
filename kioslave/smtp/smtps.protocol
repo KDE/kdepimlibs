@@ -12,4 +12,4 @@ source=true
 makedir=false
 linking=false
 moving=false
-Icon=folder_outbox
+Icon=mail-outbox

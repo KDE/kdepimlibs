@@ -160,6 +160,18 @@ Duration &Duration::operator-=( const Duration &duration )
   return operator+=( -duration );
 }
 
+Duration &Duration::operator*=( int value )
+{
+  d->mDuration *= value;
+  return *this;
+}
+
+Duration &Duration::operator/=( int value )
+{
+  d->mDuration /= value;
+  return *this;
+}
+
 KDateTime Duration::end( const KDateTime &start ) const
 {
   return d->mDaily ? start.addDays( d->mDuration )

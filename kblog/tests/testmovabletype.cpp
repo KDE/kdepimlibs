@@ -40,24 +40,25 @@ using namespace KBlog;
 class TestMovableType : public QObject
 {
   Q_OBJECT
-
   public Q_SLOTS:
     // use this functions as a chain to go through network traffic.
     void fetchUserInfo( const QMap<QString,QString>& );
     void listBlogs( const QList<QMap<QString,QString> >& );
     void listCategories( const QList<QMap<QString,QString> >& categories );
     void listRecentPosts( const QList<KBlog::BlogPost>& posts );
-    void createPost( KBlog::BlogPost* post );
-    void modifyPost( KBlog::BlogPost* post );
-    void fetchPost( KBlog::BlogPost* post );
-    void removePost( KBlog::BlogPost* post );
+    void createPost( KBlog::BlogPost *post );
+    void modifyPost( KBlog::BlogPost *post );
+    void fetchPost( KBlog::BlogPost *post );
+    void removePost( KBlog::BlogPost *post );
     // end chain
-    void errorPost( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPost* );
+    void errorPost( KBlog::Blog::ErrorType type, const QString &errStr, KBlog::BlogPost * );
+
   private Q_SLOTS:
     void testValidity();
     void testNetwork();
+
   private:
-    void dumpPost( const KBlog::BlogPost* );
+    void dumpPost( const KBlog::BlogPost * );
     KBlog::MovableType *b;
     KBlog::BlogPost *p;
     QEventLoop *eventLoop;
@@ -88,7 +89,7 @@ class TestMovableTypeWarnings : public QObject
 
 #include "testmovabletype.moc"
 
-void TestMovableType::dumpPost( const BlogPost* post )
+void TestMovableType::dumpPost( const BlogPost *post )
 {
   qDebug() << "########### post ############";
   qDebug() << "# postId: " << post->postId();
@@ -104,24 +105,30 @@ void TestMovableType::dumpPost( const BlogPost* post )
   qDebug() << "# tags: " << post->tags();
   qDebug() << "# link: " << post->link().url();
   qDebug() << "# permalink: " << post->permaLink().url();
-  switch ( post->status() ){
-    case BlogPost::New:
-      qDebug() << "# status: New"; break;
-    case BlogPost::Fetched:
-      qDebug() << "# status: Fetched"; break;
-    case BlogPost::Created:
-      qDebug() << "# status: Created"; break;
-    case BlogPost::Modified:
-      qDebug() << "# status: Modified"; break;
-    case BlogPost::Removed:
-      qDebug() << "# status: Removed"; break;
-    case BlogPost::Error:
-      qDebug() << "# status: Error"; break;
+  switch ( post->status() ) {
+  case BlogPost::New:
+    qDebug() << "# status: New";
+    break;
+  case BlogPost::Fetched:
+    qDebug() << "# status: Fetched";
+    break;
+  case BlogPost::Created:
+    qDebug() << "# status: Created";
+    break;
+  case BlogPost::Modified:
+    qDebug() << "# status: Modified";
+    break;
+  case BlogPost::Removed:
+    qDebug() << "# status: Removed";
+    break;
+  case BlogPost::Error:
+    qDebug() << "# status: Error";
+    break;
   };
-  qDebug() << "# creationDateTime(UTC): " <<
-      post->creationDateTime().toUtc().toString();
-  qDebug() << "# modificationDateTime(UTC): " <<
-      post->modificationDateTime().toUtc().toString();
+  qDebug() << "# creationDateTime(UTC): "
+           << post->creationDateTime().toUtc().toString();
+  qDebug() << "# modificationDateTime(UTC): "
+           << post->modificationDateTime().toUtc().toString();
   qDebug() << "###########################";
 }
 
@@ -254,19 +261,33 @@ void TestMovableType::removePost( KBlog::BlogPost *post )
 }
 
 void TestMovableType::errorPost( KBlog::Blog::ErrorType type, const QString &errStr,
-        KBlog::BlogPost* post )
+                                 KBlog::BlogPost *post )
 {
   qDebug() << "############ error #############";
-  switch ( type ){
-    case Blog::Atom: qDebug() << "type: Atom"; break;
-    case Blog::XmlRpc: qDebug() << "type: xmlRpc"; break;
-    case Blog::ParsingError: qDebug() << "type: ParsingError"; break;
-    case Blog::AuthenticationError: qDebug() << "type: AuthenticationError"; break;
-    case Blog::NotSupported: qDebug() << "type: NotSupported"; break;
-    case Blog::Other: qDebug() << "type: Other"; break;
+  switch ( type ) {
+  case Blog::Atom:
+    qDebug() << "type: Atom";
+    break;
+  case Blog::XmlRpc:
+    qDebug() << "type: xmlRpc";
+    break;
+  case Blog::ParsingError:
+    qDebug() << "type: ParsingError";
+    break;
+  case Blog::AuthenticationError:
+    qDebug() << "type: AuthenticationError";
+    break;
+  case Blog::NotSupported:
+    qDebug() << "type: NotSupported";
+    break;
+  case Blog::Other:
+    qDebug() << "type: Other";
+    break;
   };
   qDebug() << "error: " << errStr;
-  if( post!=0 ) dumpPost( post );
+  if ( post != 0 ) {
+    dumpPost( post );
+  }
   qDebug() << "#############################\n";
 }
 

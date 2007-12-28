@@ -44,9 +44,9 @@ namespace KioSMTP {
   public:
     Response()
       : mCode(0),
-	mValid(true),
-	mSawLastLine(false),
-	mWellFormed(true) {}
+        mValid(true),
+        mSawLastLine(false),
+        mWellFormed(true) {}
 
     void parseLine( const char * line ) {
       parseLine( line, qstrlen( line ) );
@@ -54,7 +54,7 @@ namespace KioSMTP {
     void parseLine( const char * line, int len );
 
     /** Return an internationalized error message according to the
-	response's code. */
+     *  response's code. */
     QString errorMessage() const;
     /** Translate the SMTP error code into a KIO one */
     int errorCode() const;
@@ -91,13 +91,16 @@ namespace KioSMTP {
     bool isComplete() const { return mSawLastLine; }
 
     /** Shortcut method.
-	@return true iff the response is valid, complete and positive */
+     *  @return true iff the response is valid, complete and positive
+     */
     bool isOk() const { return isValid() && isComplete() && isPositive() ; }
+
     /** Indicates whether the response was well-formed, meaning it
-	obeyed the syntax of smtp responses. That the response
-	nevertheless is not valid may be caused by e.g. different
-	response codes in a multilie response. A non-well-formed
-	response is never valid. */
+     *  obeyed the syntax of smtp responses. That the response
+     *  nevertheless is not valid may be caused by e.g. different
+     *  response codes in a multilie response. A non-well-formed
+     *  response is never valid.
+     */
     bool isWellFormed() const { return mWellFormed; }
 
     void clear() { *this = Response(); }
@@ -105,10 +108,10 @@ namespace KioSMTP {
 #ifdef KIOSMTP_COMPARATORS
     bool operator==( const Response & other ) const {
       return mCode == other.mCode &&
-	mValid == other.mValid &&
-	mSawLastLine == other.mSawLastLine &&
-	mWellFormed == other.mWellFormed &&
-	mLines == other.mLines;
+             mValid == other.mValid &&
+             mSawLastLine == other.mSawLastLine &&
+             mWellFormed == other.mWellFormed &&
+             mLines == other.mLines;
     }
 #endif
 

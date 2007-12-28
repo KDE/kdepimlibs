@@ -100,6 +100,7 @@ class KCAL_EXPORT DndFactory
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( DndFactory )
     class Private;
     Private *const d;
     //@endcond

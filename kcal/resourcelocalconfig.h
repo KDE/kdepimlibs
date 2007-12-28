@@ -31,7 +31,6 @@
 
 #include <QtGui/QRadioButton>
 
-
 namespace KCal {
 
 /**
@@ -52,6 +51,7 @@ class KCAL_EXPORT ResourceLocalConfig : public KRES::ConfigWidget
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( ResourceLocalConfig )
     class Private;
     Private *const d;
     //@endcond

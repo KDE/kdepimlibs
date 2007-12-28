@@ -77,7 +77,7 @@ class NNTPProtocol:public KIO::TCPSlaveBase
 
  private:
    QString mHost, mUser, mPass;
-   quint16 m_port;
+   quint16 m_port, m_defaultPort;
    bool postingAllowed, opened;
    char readBuffer[MAX_PACKET_LEN];
    ssize_t readBufferLen;

@@ -45,9 +45,6 @@ namespace KCal {
 /**
   This class provides the interfaces for a calendar resource. It makes use of
   the kresources framework.
-
-  \warning This code is still under heavy development. Don't expect source or
-  binary compatibility in future versions.
 */
 class KCAL_EXPORT ResourceCalendar : public KRES::Resource
 {
@@ -72,14 +69,14 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       Load resource data. After calling this function all data is accessible by
       calling the incidence/event/todo/etc. accessor functions.
 
-      Whether data is actually loaded within this function or the loading is delayed
-      until it is accessed by another function depends on the implementation of
-      the resource.
+      Whether data is actually loaded within this function or the loading is
+      delayed until it is accessed by another function depends on the
+      implementation of the resource.
 
       If loading the data takes significant time, the resource should return
       cached values if available, and return the results via the resourceChanged
-      signal. When the resource has finished loading, the resourceLoaded() signal
-      is emitted.
+      signal. When the resource has finished loading, the resourceLoaded()
+      signal is emitted.
 
       Calling this function multiple times should have the same effect as
       calling it once, given that the data isn't changed between calls.
@@ -116,8 +113,8 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
 
     /**
       Inhibit or allow saves, overriding the save policy set by setSavePolicy().
-      Inhibiting saves has the same effect as making all resources read-only, except
-      that the inhibit status is not stored in the resource configuration.
+      Inhibiting saves has the same effect as making all resources read-only,
+      except that the inhibit status is not stored in the resource configuration.
 
       @param inhibit true to inhibit saves, false to allow them
     */
@@ -273,13 +270,13 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     void resourceSaveError( ResourceCalendar *, const QString &error );
 
     /**
-     This signal is emitted when a subresource is added.
+      This signal is emitted when a subresource is added.
     */
     void signalSubresourceAdded( ResourceCalendar *, const QString &type,
                                  const QString &subresource, const QString &label );
 
     /**
-     This signal is emitted when a subresource is removed.
+      This signal is emitted when a subresource is removed.
     */
     void signalSubresourceRemoved( ResourceCalendar *, const QString &,
                                    const QString & );
@@ -302,7 +299,6 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
 
     /**
       Searches todolist for an event with this unique id.
-
       @param uid the identifier of the todo to look for
 
       @return pointer to todo or 0 if todo wasn't found
@@ -478,19 +474,19 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Do the actual loading of the resource data. Called by load().
     */
-    virtual bool doLoad() = 0;
+    virtual bool doLoad( bool syncCache ) = 0;
 
     /**
       Do the actual saving of the resource data. Called by save().
     */
-    virtual bool doSave() = 0;
+    virtual bool doSave( bool syncCache ) = 0;
 
     /**
       Do the actual saving of the resource data. Called by save().
       Save one Incidence. The default implementation calls doSave()
       to save everything.
     */
-    virtual bool doSave( Incidence * );
+    virtual bool doSave( bool syncCache, Incidence * );
 
     /**
       Add info text for concrete resources. Called by infoText().
@@ -526,8 +522,11 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     */
     bool noReadOnlyOnLoad() const;
 
+    using QObject::event;   // prevent warning about hidden virtual method
+
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( ResourceCalendar )
     class Private;
     Private *const d;
     //@endcond

@@ -60,27 +60,30 @@ QString MovableType::interfaceName() const
 
 void MovableType::listRecentPosts( const int number )
 {
-    Q_D(MovableType);
+    Q_D( MovableType );
     kDebug(5323) << "Fetching List of Posts...";
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     args << QVariant( number );
     d->mXmlRpcClient->call(
       "metaWeblog.getRecentPosts", args,
-      this, SLOT( slotListRecentPosts( const QList<QVariant>&, const QVariant& ) ),
-      this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( number ) );
+      this, SLOT(slotListRecentPosts(const QList<QVariant>&,const QVariant&)),
+      this, SLOT(slotError(int,const QString&,const QVariant&)),
+      QVariant( number ) );
 }
 
-void MovableType::listTrackBackPings( KBlog::BlogPost *post ) {
-  Q_D(MovableType);
+void MovableType::listTrackBackPings( KBlog::BlogPost *post )
+{
+  Q_D( MovableType );
   kDebug(5323) << "List trackback pings...";
   QList<QVariant> args;
   args << QVariant( post->postId() );
   unsigned int i = d->mCallCounter++;
   d->mCallMap[ i ] = post;
-  d->mXmlRpcClient->call( "mt.getTracebackPings", args,
-    this, SLOT( slotListTrackbackPings(
-              const QList<QVariant>&, const QVariant& ) ),
-    this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
+  d->mXmlRpcClient->call(
+    "mt.getTracebackPings", args,
+    this, SLOT(slotListTrackbackPings(const QList<QVariant>&,const QVariant&)),
+    this, SLOT(slotError(int,const QString&,const QVariant&)),
+    QVariant( i ) );
 }
 
 MovableTypePrivate::MovableTypePrivate()
@@ -94,17 +97,17 @@ MovableTypePrivate::~MovableTypePrivate()
 
 QList<QVariant> MovableTypePrivate::defaultArgs( const QString &id )
 {
-  Q_Q(MovableType);
+  Q_Q( MovableType );
   QList<QVariant> args;
-  if( !id.isEmpty() )
+  if( !id.isEmpty() ) {
     args << QVariant( id );
+  }
   args << QVariant( q->username() )
-          << QVariant( q->password() );
+       << QVariant( q->password() );
   return args;
 }
 
-bool MovableTypePrivate::readPostFromMap(
-    BlogPost *post, const QMap<QString, QVariant> &postInfo )
+bool MovableTypePrivate::readPostFromMap( BlogPost *post, const QMap<QString, QVariant> &postInfo )
 {
 
   // FIXME: integrate error handling
@@ -155,7 +158,7 @@ bool MovableTypePrivate::readPostFromMap(
 void MovableTypePrivate::slotListTrackBackPings(
     const QList<QVariant> &result, const QVariant &id )
 {
-  Q_Q(MovableType);
+  Q_Q( MovableType );
   kDebug(5323) << "slotTrackbackPings()";
   BlogPost *post = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
@@ -184,9 +187,7 @@ void MovableTypePrivate::slotListTrackBackPings(
   emit q->listedTrackBackPings( post, trackBackList );
 }
 
-
-bool MovableTypePrivate::readArgsFromPost(
-    QList<QVariant> *args, const BlogPost& post )
+bool MovableTypePrivate::readArgsFromPost( QList<QVariant> *args, const BlogPost &post )
 {
   //TODO 3 new keys are:
   // String mt_convert_breaks, the value for the convert_breaks field

@@ -116,6 +116,7 @@ class Compat
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( Compat )
     class Private;
     Private *d;
     //@endcond
@@ -183,6 +184,7 @@ class CompatPre32 : public CompatPre34
 
   private:
     //@cond PRIVATE
+
     class Private;
     Private *d;
     //@endcond

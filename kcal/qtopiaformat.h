@@ -47,6 +47,7 @@ class KCAL_EXPORT QtopiaFormat : public CalFormat
     QString toString( Calendar *calendar );
 
   private:
+    Q_DISABLE_COPY( QtopiaFormat )
     class Private;
     Private *const d;
 };

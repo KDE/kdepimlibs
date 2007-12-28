@@ -77,7 +77,7 @@ void SocketPrivate::slotConnected()
 void SocketPrivate::slotStateChanged( QAbstractSocket::SocketState state )
 {
 #ifdef comm_debug
-  kDebug( 5324 ) << objectName() << "State is now:" << ( int ) state;
+  kDebug( 5324 ) << q->objectName() << "State is now:" << ( int ) state;
 #endif
   if ( state == QAbstractSocket::UnconnectedState )
     emit q->failed();
@@ -86,13 +86,13 @@ void SocketPrivate::slotStateChanged( QAbstractSocket::SocketState state )
 void SocketPrivate::slotModeChanged( QSslSocket::SslMode  state )
 {
 #ifdef comm_debug
-  kDebug( 5324 ) << objectName() << "Mode is now:" << state;
+  kDebug( 5324 ) << q->objectName() << "Mode is now:" << state;
 #endif
 }
 
 void SocketPrivate::slotSocketRead()
 {
-  // kDebug(5324) << objectName() ;
+  kDebug(5324) << q->objectName();
 
   if ( !socket )
     return;
@@ -104,7 +104,7 @@ void SocketPrivate::slotSocketRead()
     return;
 
 #ifdef comm_debug
-  kDebug( 5324 ) << socket->isEncrypted() << msg.trimmed();
+  kDebug( 5324 ) << q->objectName() << socket->isEncrypted() << msg.trimmed();
 #endif
 
   emit q->data( msg );

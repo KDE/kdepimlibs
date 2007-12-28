@@ -49,8 +49,11 @@ class KCAL_EXPORT FreeBusyUrlStore
   private:
     FreeBusyUrlStore();
 
+    //@cond PRIVATE
+    Q_DISABLE_COPY( FreeBusyUrlStore )
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }

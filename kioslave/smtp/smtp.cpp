@@ -102,9 +102,7 @@ int kdemain(int argc, char **argv)
 
 SMTPProtocol::SMTPProtocol(const QByteArray & pool, const QByteArray & app,
                            bool useSSL)
-:  TCPSlaveBase(useSSL ? 465 : 25,
-                useSSL ? "smtps" : "smtp",
-                pool, app, useSSL),
+:  TCPSlaveBase(useSSL ? "smtps" : "smtp", pool, app, useSSL),
    m_sOldPort( 0 ),
    m_opened(false)
 {
@@ -117,10 +115,12 @@ SMTPProtocol::~SMTPProtocol() {
 }
 
 void SMTPProtocol::openConnection() {
-  if ( smtp_open() )
-    connected();
-  else
-    closeConnection();
+
+  // Don't actually call smtp_open() yet. Just pretend that we are connected.
+  // We can't call smtp_open() here, as that does EHLO, and the EHLO command
+  // needs the fake hostname. However, we only get the fake hostname in put(), so
+  // we call smtp_open() there.
+  connected();
 }
 
 void SMTPProtocol::closeConnection() {
@@ -140,8 +140,7 @@ void SMTPProtocol::special( const QByteArray & aData ) {
     if ( !execute( Command::NOOP ) )
       return;
   } else {
-    error( KIO::ERR_INTERNAL,
-	   i18n("The application sent an invalid request.") );
+    error( KIO::ERR_INTERNAL, i18n("The application sent an invalid request.") );
     return;
   }
   finished();
@@ -219,13 +218,13 @@ void SMTPProtocol::put(const KUrl & url, int /*permissions */ ,
   if ( request.is8BitBody()
        && !haveCapability("8BITMIME") && metaData("8bitmime") != "on" ) {
     error( KIO::ERR_SERVICE_NOT_AVAILABLE,
-	   i18n("Your server does not support sending of 8-bit messages.\n"
-		"Please use base64 or quoted-printable encoding.") );
+           i18n("Your server does not support sending of 8-bit messages.\n"
+                "Please use base64 or quoted-printable encoding.") );
     return;
   }
 
   queueCommand( new MailFromCommand( this, request.fromAddress().toLatin1(),
-				     request.is8BitBody(), request.size() ) );
+                                     request.is8BitBody(), request.size() ) );
 
   // Loop through our To and CC recipients, and send the proper
   // SMTP commands, for the benefit of the server.
@@ -289,7 +288,7 @@ Response SMTPProtocol::getResponse( bool * ok ) {
 
     // ...read data...
     recv_len = readLine( buf, sizeof(buf) - 1 );
-    if ( recv_len < 1 && !isConnectionValid() ) {
+    if ( recv_len < 1 && !isConnected() ) {
       error( KIO::ERR_CONNECTION_BROKEN, m_sServer );
       return response;
     }
@@ -329,8 +328,8 @@ bool SMTPProtocol::executeQueuedCommands( TransactionState * ts ) {
     if ( cmdline.isEmpty() )
       continue;
     if ( !sendCommandLine( cmdline ) ||
-	 !batchProcessResponses( ts ) ||
-	 ts->failedFatally() ) {
+         !batchProcessResponses( ts ) ||
+         ts->failedFatally() ) {
       smtp_close( false ); // _hard_ shutdown
       return false;
     }
@@ -357,9 +356,9 @@ QByteArray SMTPProtocol::collectPipelineCommands( TransactionState * ts ) {
     if ( cmd->doNotExecute( ts ) ) {
       delete mPendingCommandQueue.dequeue();
       if ( cmdLine_len )
-	break;
+        break;
       else
-	continue;
+        continue;
     }
 
     if ( cmdLine_len && cmd->mustBeFirstInPipeline() )
@@ -371,11 +370,28 @@ QByteArray SMTPProtocol::collectPipelineCommands( TransactionState * ts ) {
     while ( !cmd->isComplete() && !cmd->needsResponse() ) {
       const QByteArray currentCmdLine = cmd->nextCommandLine( ts );
       if ( ts->failedFatally() )
-	return cmdLine;
+        return cmdLine;
       const unsigned int currentCmdLine_len = currentCmdLine.length();
 
       cmdLine_len += currentCmdLine_len;
       cmdLine += currentCmdLine;
+
+      // If we are executing the transfer command, don't collect the whole
+      // command line (which may be several MBs) before sending it, but instead
+      // send the data each time we have collected 32 KB of the command line.
+      //
+      // This way, the progress information in clients like KMail works correctly,
+      // because otherwise, the TransferCommand would read the whole data from the
+      // job at once, then sending it. The progress update on the client however
+      // happens when sending data to the job, not when this slave writes the data
+      // to the socket. Therefore that progress update is incorrect.
+      //
+      // 32 KB seems to be a sensible limit. Additionally, a job can only transfer
+      // 32 KB at once anyway.
+      if ( dynamic_cast<TransferCommand *>( cmd ) != 0 &&
+           cmdLine_len >= 32 * 1024 ) {
+        return cmdLine;
+      }
     }
 
     mSentCommandQueue.enqueue( mPendingCommandQueue.dequeue() );
@@ -432,14 +448,14 @@ bool SMTPProtocol::execute( Command * cmd, TransactionState * ts ) {
     while ( !cmd->isComplete() && !cmd->needsResponse() ) {
       const QByteArray cmdLine = cmd->nextCommandLine( ts );
       if ( ts && ts->failedFatally() ) {
-	smtp_close( false );
-	return false;
+        smtp_close( false );
+        return false;
       }
       if ( cmdLine.isEmpty() )
-	continue;
+        continue;
       if ( !sendCommandLine( cmdLine ) ) {
-	smtp_close( false );
-	return false;
+        smtp_close( false );
+        return false;
       }
     }
 
@@ -451,9 +467,9 @@ bool SMTPProtocol::execute( Command * cmd, TransactionState * ts ) {
     }
     if ( !cmd->processResponse( r, ts ) ) {
       if ( ts && ts->failedFatally() ||
-	   cmd->closeConnectionOnError() ||
-	   !execute( Command::RSET ) )
-	smtp_close( false );
+           cmd->closeConnectionOnError() ||
+           !execute( Command::RSET ) )
+        smtp_close( false );
       return false;
     }
   } while ( !cmd->isComplete() );
@@ -471,7 +487,7 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
     return true;
 
   smtp_close();
-  if (!connectToHost(usingSSL() ? "smtps" : "smtp", m_sServer, m_port, true))
+  if (!connectToHost(isAutoSsl() ? "smtps" : "smtp", m_sServer, m_port))
     return false;             // connectToHost has already send an error message.
   m_opened = true;
 
@@ -482,21 +498,22 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
     if ( ok )
       error( KIO::ERR_COULD_NOT_LOGIN,
              i18n("The server did not accept the connection.\n"
-		  "%1",  greeting.errorMessage() ) );
+                  "%1",  greeting.errorMessage() ) );
     smtp_close();
     return false;
   }
 
-  if (!fakeHostname.isNull())
-  {
+  if ( !fakeHostname.isNull() ) {
     m_hostname = fakeHostname;
   }
-  else
-  {
+  else {
+   // FIXME: We need a way to find the FQDN again. Also change in servertest then.
     m_hostname = QHostInfo::localHostName();
-    if(m_hostname.isEmpty())
-    {
+    if( m_hostname.isEmpty() ) {
       m_hostname = "localhost.invalid";
+    }
+    else if ( !m_hostname.contains( '.' ) ) {
+      m_hostname += ".localnet";
     }
   }
 
@@ -506,7 +523,7 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
     return false;
   }
 
-  if ( ( haveCapability("STARTTLS") && canUseTLS() && metaData("tls") != "off" )
+  if ( ( haveCapability("STARTTLS") /*### && canUseTLS()*/ && metaData("tls") != "off" )
        || metaData("tls") == "on" ) {
     // For now we're gonna force it on.
 
@@ -564,14 +581,23 @@ bool SMTPProtocol::authenticate()
 void SMTPProtocol::parseFeatures( const Response & ehloResponse ) {
   mCapabilities = Capabilities::fromResponse( ehloResponse );
 
-  QString category = usingTLS() ? "TLS" : usingSSL() ? "SSL" : "PLAIN" ;
+  QString category;
+  if (isUsingSsl()) {
+    if (isAutoSsl()) {
+      category = "SSL";
+    } else {
+      category = "TLS";
+    }
+  } else {
+    category = "PLAIN";
+  }
   setMetaData( category + " AUTH METHODS", mCapabilities.authMethodMetaData() );
   setMetaData( category + " CAPABILITIES", mCapabilities.asMetaDataString() );
 #ifndef NDEBUG
   kDebug(7112) << "parseFeatures() " << category << " AUTH METHODS:"
-		<< '\n' + mCapabilities.authMethodMetaData() << endl
-		<< "parseFeatures() " << category << " CAPABILITIES:"
-		<< '\n' + mCapabilities.asMetaDataString() << endl;
+               << '\n' + mCapabilities.authMethodMetaData() << endl
+               << "parseFeatures() " << category << " CAPABILITIES:"
+               << '\n' + mCapabilities.asMetaDataString() << endl;
 #endif
 }
 
@@ -582,7 +608,7 @@ void SMTPProtocol::smtp_close( bool nice ) {
   if ( nice )
     execute( Command::QUIT );
   kDebug( 7112 ) << "closing connection";
-  closeDescriptor();
+  disconnectFromHost();
   m_sOldServer.clear();
   m_sOldUser.clear();
   m_sOldPass.clear();

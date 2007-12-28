@@ -39,8 +39,7 @@ MetaWeblog::MetaWeblog( const KUrl &server, QObject *parent )
   kDebug(5323) << "MetaWeblog()";
 }
 
-MetaWeblog::MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd,
-                        QObject *parent )
+MetaWeblog::MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd, QObject *parent )
   : Blogger1( server, dd, parent )
 {
   kDebug(5323) << "MetaWeblog()";
@@ -58,18 +57,18 @@ QString MetaWeblog::interfaceName() const
 
 void MetaWeblog::listCategories()
 {
-    Q_D(MetaWeblog);
+    Q_D( MetaWeblog );
     kDebug(5323) << "Fetching List of Categories...";
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     d->mXmlRpcClient->call(
       "metaWeblog.getCategories", args,
-      this, SLOT( slotListCategories( const QList<QVariant>&, const QVariant& ) ),
-      this, SLOT ( slotError( int, const QString&, const QVariant& ) ) );
+      this, SLOT(slotListCategories(const QList<QVariant>&, const QVariant&)),
+      this, SLOT(slotError(int, const QString&, const QVariant&)) );
 }
 
 void MetaWeblog::createMedia( KBlog::BlogMedia *media )
 {
-  Q_D(MetaWeblog);
+  Q_D( MetaWeblog );
   if ( !media ) {
     kError(5323) << "MetaWeblog::createMedia: media is a null pointer";
     emit error ( Other, i18n( "Media is a null pointer." ) );
@@ -87,8 +86,9 @@ void MetaWeblog::createMedia( KBlog::BlogMedia *media )
   args << map;
   d->mXmlRpcClient->call(
     "metaWeblog.newMediaObject", args,
-    this, SLOT( slotCreateMedia( const QList<QVariant>&, const QVariant& ) ),
-    this, SLOT( slotError( int, const QString&, const QVariant& ) ), QVariant( i ) );
+    this, SLOT(slotCreateMedia(const QList<QVariant>&,const QVariant&)),
+    this, SLOT(slotError(int,const QString&,const QVariant&)),
+    QVariant( i ) );
 
 }
 
@@ -104,19 +104,20 @@ MetaWeblogPrivate::~MetaWeblogPrivate()
 
 QList<QVariant> MetaWeblogPrivate::defaultArgs( const QString &id )
 {
-  Q_Q(MetaWeblog);
+  Q_Q( MetaWeblog );
   QList<QVariant> args;
-  if( !id.isEmpty() )
+  if( !id.isEmpty() ) {
     args << QVariant( id );
+  }
   args << QVariant( q->username() )
-          << QVariant( q->password() );
+       << QVariant( q->password() );
   return args;
 }
 
 void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
-                                                              const QVariant &id )
+                                            const QVariant &id )
 {
-  Q_Q(MetaWeblog);
+  Q_Q( MetaWeblog );
   Q_UNUSED( id );
 
   QList<QMap<QString,QString> > categoriesList;
@@ -173,13 +174,12 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
     }
   }
 
-
 void MetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,
-                                                           const QVariant &id )
+                                         const QVariant &id )
 {
-  Q_Q(MetaWeblog);
+  Q_Q( MetaWeblog );
 
-  KBlog::BlogMedia* media = mCallMediaMap[ id.toInt() ];
+  KBlog::BlogMedia *media = mCallMediaMap[ id.toInt() ];
   mCallMediaMap.remove( id.toInt() );
 
   kDebug(5323) << "MetaWeblogPrivate::slotCreateMedia, no error!";
@@ -242,8 +242,7 @@ bool MetaWeblogPrivate::readPostFromMap( BlogPost *post,
   return true;
 }
 
-bool MetaWeblogPrivate::readArgsFromPost(
-    QList<QVariant> *args, const BlogPost& post )
+bool MetaWeblogPrivate::readArgsFromPost( QList<QVariant> *args, const BlogPost &post )
 {
   if ( !args ) {
     return false;

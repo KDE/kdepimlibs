@@ -64,13 +64,13 @@ namespace KioSMTP {
   public:
     struct RecipientRejection {
       RecipientRejection( const QString & who=QString(),
-			  const QString & why=QString() )
-	: recipient( who ), reason( why ) {}
+                          const QString & why=QString() )
+        : recipient( who ), reason( why ) {}
       QString recipient;
       QString reason;
 #ifdef KIOSMTP_COMPARATORS
       bool operator==( const RecipientRejection & other ) const {
-	return recipient == other.recipient && reason == other.reason;
+        return recipient == other.recipient && reason == other.reason;
       }
 #endif
     };
@@ -78,23 +78,27 @@ namespace KioSMTP {
 
     TransactionState( bool rcptToDenyIsFailure=true )
       : mErrorCode( 0 ),
-	mRcptToDenyIsFailure( rcptToDenyIsFailure ),
-	mAtLeastOneRecipientWasAccepted( false ),
-	mDataCommandIssued( false ),
-	mDataCommandSucceeded( false ),
-	mFailed( false ),
-	mFailedFatally( false ),
-	mComplete( false ) {}
+        mRcptToDenyIsFailure( rcptToDenyIsFailure ),
+        mAtLeastOneRecipientWasAccepted( false ),
+        mDataCommandIssued( false ),
+        mDataCommandSucceeded( false ),
+        mFailed( false ),
+        mFailedFatally( false ),
+        mComplete( false ) {}
 
-    /** @return whether the transaction failed (e.g. the server
-	rejected all recipients. Graceful failure is handled after
-	transaction ends. */
+    /**
+     * @return whether the transaction failed (e.g. the server
+     * rejected all recipients. Graceful failure is handled after
+     * transaction ends.
+     */
     bool failed() const { return mFailed || mFailedFatally; }
     void setFailed() { mFailed = true; }
 
-    /** @return whether the failure was so grave that an immediate
-	untidy connection shutdown is in order (ie. @ref
-	smtp_close(false)). Fatal failure is handled immediately */
+    /**
+     * @return whether the failure was so grave that an immediate
+     * untidy connection shutdown is in order (ie. @ref
+     * smtp_close(false)). Fatal failure is handled immediately
+     */
     bool failedFatally() const { return mFailedFatally; }
     void setFailedFatally( int code=0, const QString & msg=QString() );
 
@@ -102,11 +106,16 @@ namespace KioSMTP {
     bool complete() const { return mComplete; }
     void setComplete() { mComplete = true; }
 
-    /** @return an appropriate KIO error code in case the transaction
-	failed, or 0 otherwise */
+    /**
+     * @return an appropriate KIO error code in case the transaction
+     * failed, or 0 otherwise
+     */
     int errorCode() const;
-    /** @return an appropriate error message in case the transaction
-	failed or QString() otherwise */
+
+    /**
+     * @return an appropriate error message in case the transaction
+     * failed or QString() otherwise
+     */
     QString errorMessage() const;
 
     void setMailFromFailed( const QString & addr, const Response & r );
@@ -145,23 +154,23 @@ namespace KioSMTP {
       mRejectedRecipients.clear();
       mDataResponse.clear();
       mAtLeastOneRecipientWasAccepted
-	= mDataCommandIssued
-	= mDataCommandSucceeded
-	= mFailed = mFailedFatally
-	= mComplete = false;
+          = mDataCommandIssued
+          = mDataCommandSucceeded
+          = mFailed = mFailedFatally
+          = mComplete = false;
     }
 
 #ifdef KIOSMTP_COMPARATORS
     bool operator==( const TransactionState & other ) const {
       return
-	mAtLeastOneRecipientWasAccepted == other.mAtLeastOneRecipientWasAccepted &&
-	mDataCommandIssued == other.mDataCommandIssued &&
-	mDataCommandSucceeded == other.mDataCommandSucceeded &&
-	mFailed == other.mFailed &&
-	mFailedFatally == other.mFailedFatally &&
-	mComplete == other.mComplete &&
-	mDataResponse.code() == other.mDataResponse.code() &&
-	mRejectedRecipients == other.mRejectedRecipients;
+          mAtLeastOneRecipientWasAccepted == other.mAtLeastOneRecipientWasAccepted &&
+          mDataCommandIssued == other.mDataCommandIssued &&
+          mDataCommandSucceeded == other.mDataCommandSucceeded &&
+          mFailed == other.mFailed &&
+          mFailedFatally == other.mFailedFatally &&
+          mComplete == other.mComplete &&
+          mDataResponse.code() == other.mDataResponse.code() &&
+          mRejectedRecipients == other.mRejectedRecipients;
     }
 #endif
 

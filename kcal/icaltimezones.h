@@ -1,7 +1,7 @@
 /*
     This file is part of the kcal library.
 
-    Copyright (c) 2005-2007 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2005-2007 David Jarvie <djarvie@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -410,6 +410,8 @@ class KCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
      * @return prefix string
      */
     static QByteArray icalTzidPrefix();
+
+    using KTimeZoneSource::parse;   // prevent warning about hidden virtual method
 
   private:
     ICalTimeZoneSourcePrivate *const d;

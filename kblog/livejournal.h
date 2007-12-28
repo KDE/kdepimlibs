@@ -37,7 +37,7 @@ class KUrl;
 */
 namespace KBlog {
 
-    class LiveJournalPrivate;
+class LiveJournalPrivate;
 
 /**
   @brief
@@ -72,8 +72,8 @@ class KBLOG_EXPORT LiveJournal : public Blog
     virtual ~LiveJournal();
 
     virtual void addFriend( const QString &username, int group,
-                    const QColor &fgcolor = QColor( "#000000" ),
-                    const QColor &bgcolor = QColor( "#FFFFFF" ) );
+                            const QColor &fgcolor = QColor( "#000000" ),
+                            const QColor &bgcolor = QColor( "#FFFFFF" ) );
 
     virtual void assignFriendToCategory( const QString &username, int category );
 
@@ -160,43 +160,43 @@ class KBLOG_EXPORT LiveJournal : public Blog
     LiveJournal( const KUrl &server, LiveJournalPrivate &dd, QObject *parent = 0 );
 
   private:
-    Q_DECLARE_PRIVATE(LiveJournal)
-    Q_PRIVATE_SLOT(d_func(), void slotAddFriend(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotAssignFriendToCategory(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotCreatePost(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotDeleteFriend(
-                    const QList<QVariant>&, const QVariant& ))
-//     Q_PRIVATE_SLOT(d_func(), void slotExpireCookie(
-//                     const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotFetchPost(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotFetchUserInfo(
-                    const QList<QVariant>&, const QVariant& ))
-//     Q_PRIVATE_SLOT(d_func(), void slotGenerateCookie(
-//                     const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotListCategories(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotListFriends(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotListFriendsOf(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotListMoods(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotListPictureKeywords(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotListRecentPosts(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotModifyPost(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotRemovePost(
-                    const QList<QVariant>&, const QVariant& ))
-    Q_PRIVATE_SLOT(d_func(), void slotError( int ,
-                    const QString&, const QVariant& ))
+    Q_DECLARE_PRIVATE( LiveJournal )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotAddFriend( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotAssignFriendToCategory( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotCreatePost( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotDeleteFriend( const QList<QVariant> &, const QVariant & ) )
+//     Q_PRIVATE_SLOT( d_func(),
+//                     void slotExpireCookie( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotFetchPost( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotFetchUserInfo( const QList<QVariant> &, const QVariant & ) )
+//     Q_PRIVATE_SLOT( d_func(),
+//                     void slotGenerateCookie( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotListCategories( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotListFriends( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotListFriendsOf( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotListMoods( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotListPictureKeywords( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotListRecentPosts( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotModifyPost( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotRemovePost( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotError( int, const QString &, const QVariant & ) )
 };
-// Q_DECLARE_OPERATORS_FOR_FLAGS(LiveJournal::GenerateCookieOptions)
+// Q_DECLARE_OPERATORS_FOR_FLAGS( LiveJournal::GenerateCookieOptions )
 
 } //namespace KBlog
 #endif

@@ -62,7 +62,7 @@ public:
 
 protected:
 
-  bool smtp_open(const QString& fakeHostname = QString());
+  bool smtp_open( const QString & fakeHostName );
 
   /** Closes the connection. If @p nice is true (default), then QUIT
       is sent and it's reponse waited for. */
@@ -115,7 +115,8 @@ protected:
   /** This is a pure convenience wrapper around
       @ref KioSMTP::Capabilities::createSpecialResponse */
   QString createSpecialResponse() const {
-    return mCapabilities.createSpecialResponse( usingTLS() || haveCapability( "STARTTLS" ) );
+    return mCapabilities.createSpecialResponse( ( isUsingSsl() && !isAutoSsl() ) ||
+                                                haveCapability( "STARTTLS" ) );
   }
 
   void queueCommand( KioSMTP::Command * command ) {

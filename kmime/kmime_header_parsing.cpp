@@ -1663,7 +1663,7 @@ static bool parseDayName( const char* &scursor, const char * const send )
 
 static const char * stdMonthNames[] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dez"
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
 static const int stdMonthNamesLen =
                               sizeof stdMonthNames / sizeof *stdMonthNames;
@@ -1899,7 +1899,7 @@ bool parseDateTime( const char* &scursor, const char * const send,
   //
   // day-name    := "Mon" / "Tue" / "Wed" / "Thu" / "Fri" / "Sat" / "Sun"
   // month-name  := "Jan" / "Feb" / "Mar" / "Apr" / "May" / "Jun" /
-  //                "Jul" / "Aug" / "Sep" / "Oct" / "Nov" / "Dez"
+  //                "Jul" / "Aug" / "Sep" / "Oct" / "Nov" / "Dec"
 
   result = KDateTime();
   QDateTime maybeDateTime;

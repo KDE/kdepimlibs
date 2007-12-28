@@ -33,26 +33,26 @@
 //   QString mPassword( "k0nt4ctbl0g" );
 //   QString mBlogId( "1" );
 
-  KUrl mUrl( "http://sandbox2.monkey-corp.com/xmlrpc.php" );
-  QString mUsername( "socapitest" );
-  QString mPassword( "k0nt4ctbl0g" );
-  QString mBlogId( "blog" );
+KUrl mUrl( "http://sandbox2.monkey-corp.com/xmlrpc.php" );
+QString mUsername( "socapitest" );
+QString mPassword( "k0nt4ctbl0g" );
+QString mBlogId( "blog" );
 
-  QDateTime mCreationDateTime( QDateTime::currentDateTime() );
-  QDateTime mModificationDateTime( QDateTime::currentDateTime() );
-  QString mTitle( "TestBlog" );
-  QString mContent( "TestBlog: <strong>posted</strong> content." );
-  QString mModifiedContent( "TestBlog: <strong>modified</strong>content." );
-  bool mPrivate = false;
-  QString mPostId( QString( "113" ) );
+QDateTime mCreationDateTime( QDateTime::currentDateTime() );
+QDateTime mModificationDateTime( QDateTime::currentDateTime() );
+QString mTitle( "TestBlog" );
+QString mContent( "TestBlog: <strong>posted</strong> content." );
+QString mModifiedContent( "TestBlog: <strong>modified</strong>content." );
+bool mPrivate = false;
+QString mPostId( QString( "113" ) );
 
-  QString mCommentTitle( "TestBlog Comment" );
-  QString mCommentContent( "TestBlog: posted comment." );
-  QString mCommentEmail( QString( "fancy_mail@not.valid" ) );
-  bool mCommentAllowed = true;
-  bool mTrackBackAllowed = true;
-  QStringList mTags("funny");
-  QString mSummary ="A simple summary.";
+QString mCommentTitle( "TestBlog Comment" );
+QString mCommentContent( "TestBlog: posted comment." );
+QString mCommentEmail( QString( "fancy_mail@not.valid" ) );
+bool mCommentAllowed = true;
+bool mTrackBackAllowed = true;
+QStringList mTags( "funny" );
+QString mSummary = "A simple summary.";
 
 #endif
 

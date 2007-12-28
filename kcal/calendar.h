@@ -969,6 +969,8 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
      */
     void unregisterObserver( CalendarObserver *observer );
 
+    using QObject::event;   // prevent warning about hidden virtual method
+
   Q_SIGNALS:
     /**
       Signals that the calendar has been modified.

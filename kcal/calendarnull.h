@@ -249,8 +249,11 @@ class KCAL_EXPORT CalendarNull : public Calendar
     */
     void incidenceUpdated( IncidenceBase *incidenceBase );
 
+    using QObject::event;   // prevent warning about hidden virtual method
+
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( CalendarNull )
     class Private;
     Private *const d;
     //@endcond

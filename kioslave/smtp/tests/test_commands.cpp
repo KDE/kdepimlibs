@@ -534,7 +534,7 @@ int main( int, char** ) {
   };
   for ( unsigned int i = 0 ; i < EndOfOptions ; ++i )
     checkSuccessfulTransferCommand( i & Error, i & Preloading, i & UngetLast,
-				    i & PerformDotStuff, i & EndInLF );
+                                    i & PerformDotStuff, i & EndInLF );
 
   //
   // NOOP
@@ -636,13 +636,13 @@ int main( int, char** ) {
 }
 
 void checkSuccessfulTransferCommand( bool error, bool preload, bool ungetLast,
-				     bool slaveDotStuff, bool mailEndsInNewline ) {
+                                     bool slaveDotStuff, bool mailEndsInNewline ) {
   kDebug() << "   ===== checkTransferCommand( "
-	    << error << ", "
-	    << preload << ", "
-	    << ungetLast << ", "
-	    << slaveDotStuff << ", "
-	    << mailEndsInNewline << " ) =====" << endl;
+           << error << ", "
+           << preload << ", "
+           << ungetLast << ", "
+           << slaveDotStuff << ", "
+           << mailEndsInNewline << " ) =====" << endl;
 
   SMTPProtocol smtp;
   if ( slaveDotStuff )

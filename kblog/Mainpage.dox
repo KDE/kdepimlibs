@@ -32,3 +32,4 @@
  */
 
 // DOXYGEN_PROJECTNAME=KBlog Client Library
+// DOXYGEN_EXCLUDE=livejournal.*

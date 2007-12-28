@@ -26,14 +26,14 @@
 #include "kblog/blogmedia.h"
 #include "kurl.h"
 
-Q_DECLARE_METATYPE(KBlog::BlogMedia::Status)
+Q_DECLARE_METATYPE( KBlog::BlogMedia::Status )
 
 using namespace KBlog;
 
 class testBlogMedia: public QObject
 {
-    Q_OBJECT
-private slots:
+  Q_OBJECT
+  private slots:
     void testValidity();
     void testValidity_data();
 };
@@ -43,16 +43,19 @@ private slots:
 void testBlogMedia::testValidity_data()
 {
     QTest::addColumn<QString>( "name" );
-    QTest::addColumn<KUrl>("url");
-    QTest::addColumn<QString>("mimetype");
-    QTest::addColumn<QByteArray>("data");
-    QTest::addColumn<BlogMedia::Status>("status");
-    QTest::addColumn<QString>("error");
+    QTest::addColumn<KUrl>( "url" );
+    QTest::addColumn<QString>( "mimetype" );
+    QTest::addColumn<QByteArray>( "data" );
+    QTest::addColumn<BlogMedia::Status>( "status" );
+    QTest::addColumn<QString>( "error" );
 
-    QTest::newRow("SimpleTest") << QString("FancyMedia")
+    QTest::newRow( "SimpleTest" )
+      << QString( "FancyMedia" )
       << KUrl( "http://my.link/in/outer/space/fancyMedia.jpg" )
-      << QString( "text/xml" ) << QByteArray( "Tags 1 2" )
-      << BlogMedia::New << QString( "Error" );
+      << QString( "text/xml" )
+      << QByteArray( "Tags 1 2" )
+      << BlogMedia::New
+      << QString( "Error" );
 }
 
 void testBlogMedia::testValidity()

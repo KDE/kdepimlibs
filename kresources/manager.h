@@ -127,6 +127,11 @@ class Manager : private ManagerNotifier
     };
 
     /**
+      Typedef for STL style iterator
+     */
+    typedef Iterator iterator;
+
+    /**
       Return Iterator on first resource. If there is no resource returns end().
     */
     Iterator begin()

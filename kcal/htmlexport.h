@@ -89,6 +89,7 @@ class KCAL_EXPORT HtmlExport
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( HtmlExport )
     class Private;
     Private *const d;
     //@endcond

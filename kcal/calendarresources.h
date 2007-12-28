@@ -101,6 +101,7 @@ class KCAL_EXPORT CalendarResources
 
       private:
         //@cond PRIVATE
+        Q_DISABLE_COPY( DestinationPolicy )
         class Private;
         Private *d;
         //@endcond
@@ -132,6 +133,7 @@ class KCAL_EXPORT CalendarResources
 
       private:
         //@cond PRIVATE
+        Q_DISABLE_COPY( StandardDestinationPolicy )
         class Private;
         Private *d;
         //@endcond
@@ -163,6 +165,7 @@ class KCAL_EXPORT CalendarResources
 
       private:
         //@cond PRIVATE
+        Q_DISABLE_COPY( AskDestinationPolicy )
         class Private;
         Private *d;
         //@endcond
@@ -194,6 +197,7 @@ class KCAL_EXPORT CalendarResources
         Ticket( ResourceCalendar *resource );
 
         //@cond PRIVATE
+        Q_DISABLE_COPY( Ticket )
         class Private;
         Private *d;
         //@endcond
@@ -594,6 +598,8 @@ class KCAL_EXPORT CalendarResources
     */
     Alarm::List alarmsTo( const KDateTime &to );
 
+    using QObject::event;   // prevent warning about hidden virtual method
+
   Q_SIGNALS:
     /**
       Signals that the Resource has been modified.
@@ -694,6 +700,7 @@ class KCAL_EXPORT CalendarResources
 
   private:
     //@cond PRIVATE
+    Q_DISABLE_COPY( CalendarResources )
     class Private;
     Private *d;
     //@endcond

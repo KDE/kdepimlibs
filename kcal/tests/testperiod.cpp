@@ -32,7 +32,8 @@ using namespace KCal;
 
 void PeriodTest::testValidity()
 {
-  Period p1( KDateTime( QDate( 2006, 8, 30 ), QTime( 7, 0, 0 ), KDateTime::UTC ),
+  const KDateTime p1DateTime( QDate( 2006, 8, 30 ), QTime( 7, 0, 0 ), KDateTime::UTC );
+  Period p1( p1DateTime,
              Duration( 60 ) );
   Period p2;
 
@@ -49,8 +50,10 @@ void PeriodTest::testValidity()
 
 void PeriodTest::testCompare()
 {
-  Period p1( KDateTime( QDate( 2006, 8, 30 ) ), Duration( 24*60*60 ) );
-  Period p2( KDateTime( QDate( 2006, 8, 29 ) ), Duration( 23*60*60 ) );
+  const KDateTime p1DateTime( QDate( 2006, 8, 30 ) );
+  Period p1( p1DateTime, Duration( 24*60*60 ) );
+  const KDateTime p2DateTime( QDate( 2006, 8, 29 ) );
+  Period p2( p2DateTime, Duration( 23*60*60 ) );
   Period p1copy( p1 ); // test copy constructor
   Period p1assign = p1; // test operator=
 

@@ -154,13 +154,19 @@ class KCAL_EXPORT Todo : public Incidence
     void setHasStartDate( bool hasStartDate );
 
     /**
+      @copydoc
+      IncidenceBase::dtStart()
+    */
+    virtual KDateTime dtStart() const;
+
+    /**
       Returns the start date of the todo.
       @param first If true, the start date of the todo will be returned. If the
       todo recurs, the start date of the first occurrence will be returned.
       If false and the todo recurs, the relative start date will be returned,
       based on the date returned by dtRecurrence().
     */
-    KDateTime dtStart( bool first = false ) const;
+    KDateTime dtStart( bool first ) const;
 
     /**
       Sets the start date of the todo.
@@ -181,8 +187,15 @@ class KCAL_EXPORT Todo : public Incidence
       @param spec If set, returns the time in the given spec, else use the
       todo's current spec.
     */
-    QString dtStartTimeStr( bool shortfmt = true, bool first = false,
+    QString dtStartTimeStr( bool shortfmt, bool first,
                             const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+
+    /**
+      @copydoc
+      IncidenceBase::dtStartTimeStr()
+    */
+    virtual QString dtStartTimeStr( bool shortfmt = true,
+                                    const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns a todo's starting date as a string formatted according to the
@@ -196,8 +209,15 @@ class KCAL_EXPORT Todo : public Incidence
       @param spec If set, returns the date in the given spec, else use the
       todo's current spec.
     */
-    QString dtStartDateStr( bool shortfmt = true, bool first = false,
+    QString dtStartDateStr( bool shortfmt, bool first,
                             const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+
+    /**
+      @copydoc
+      IncidenceBase::dtStartDateStr()
+    */
+    virtual QString dtStartDateStr( bool shortfmt = true,
+                                    const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns a todo's starting date and time as a string formatted according
@@ -211,8 +231,15 @@ class KCAL_EXPORT Todo : public Incidence
       @param spec If set, returns the date and time in the given spec, else
       use the todo's current spec.
     */
-    QString dtStartStr( bool shortfmt = true, bool first = false,
+    QString dtStartStr( bool shortfmt, bool first,
                         const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+
+    /**
+      @copydoc
+      IncidenceBase::dtStartStr()
+    */
+    virtual QString dtStartStr( bool shortfmt = true,
+                                const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns true if the todo is 100% completed, otherwise return false.

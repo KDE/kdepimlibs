@@ -48,10 +48,10 @@ namespace KioSMTP {
     mErrorCode = KIO::ERR_NO_CONTENT;
     if ( addr.isEmpty() )
       mErrorMessage = i18n("The server did not accept a blank sender address.\n"
-			   "%1",  r.errorMessage() );
+                           "%1",  r.errorMessage() );
     else
       mErrorMessage = i18n("The server did not accept the sender address \"%1\".\n"
-			   "%2",  addr ,  r.errorMessage() );
+                           "%2",  addr ,  r.errorMessage() );
   }
 
   void TransactionState::addRejectedRecipient( const RecipientRejection & r ) {
@@ -93,15 +93,15 @@ namespace KioSMTP {
     if ( haveRejectedRecipients() ) {
       QStringList recip;
       for ( RejectedRecipientList::const_iterator it = mRejectedRecipients.begin() ;
-	    it != mRejectedRecipients.end() ; ++it )
-	recip.push_back( (*it).recipient + " (" + (*it).reason + ')' );
+            it != mRejectedRecipients.end() ; ++it )
+        recip.push_back( (*it).recipient + " (" + (*it).reason + ')' );
       return i18n("Message sending failed since the following recipients were rejected by the server:\n"
-		  "%1", recip.join("\n"));
+                  "%1", recip.join("\n"));
     }
 
     if ( !dataCommandSucceeded() )
       return i18n("The attempt to start sending the message content failed.\n"
-		  "%1", mDataResponse.errorMessage() );
+                  "%1", mDataResponse.errorMessage() );
 
     // ### what else?
     return i18n("Unhandled error condition. Please send a bug report.");

@@ -62,7 +62,7 @@ namespace KioSMTP {
       // not a number or number out of range
       mValid = false;
       if ( !ok || code < 100 )
-	mWellFormed = false;
+        mWellFormed = false;
       return;
     }
     if ( mCode && code != mCode ) {
@@ -100,14 +100,11 @@ namespace KioSMTP {
   QString Response::errorMessage() const {
     QString msg;
     if ( lines().count() > 1 )
-      msg = i18n("The server responded:\n%1",
-	  QString(join( '\n', lines() )) );
+      msg = i18n("The server responded:\n%1", QString(join( '\n', lines() )) );
     else
-      msg = i18n("The server responded: \"%1\"",
-	  QString(lines().front()) );
+      msg = i18n("The server responded: \"%1\"", QString(lines().front()) );
     if ( first() == 4 )
-      msg += '\n' + i18n("This is a temporary failure. "
-			 "You may try again later.");
+      msg += '\n' + i18n("This is a temporary failure. You may try again later.");
     return msg;
   }
 
@@ -124,7 +121,7 @@ namespace KioSMTP {
 
     case 452: // Requested action not taken: insufficient system storage
     case 552: // Requested mail action aborted: exceeded storage allocation
-	return KIO::ERR_DISK_FULL;
+      return KIO::ERR_DISK_FULL;
 
     case 500: // Syntax error, command unrecognized
     case 501: // Syntax error in parameters or arguments
@@ -149,9 +146,9 @@ namespace KioSMTP {
 
     default:
       if ( isPositive() )
-	return 0;
+        return 0;
       else
-	return KIO::ERR_UNKNOWN;
+        return KIO::ERR_UNKNOWN;
     }
   }
 

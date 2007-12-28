@@ -59,7 +59,7 @@ class KCal::Incidence::Private
         mRelatedTo( 0 )
     {}
 
-    Private(const Private &p)
+    Private( const Private &p )
       : mCreated( p.mCreated ),
         mRevision( p.mRevision ),
         mDescription( p.mDescription ),

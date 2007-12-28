@@ -51,8 +51,11 @@ class DummyScheduler : public Scheduler
     bool saveMessage( const QString &message );
 
   private:
+    //@cond PRIVATE
+    Q_DISABLE_COPY( DummyScheduler )
     class Private;
     Private *d;
+    //@endcond
 };
 
 }

@@ -43,13 +43,14 @@ LiveJournal::~LiveJournal()
 }
 
 void LiveJournal::addFriend( const QString &username, int group,
-                                const QColor &fgcolor, const QColor &bgcolor )
+                             const QColor &fgcolor, const QColor &bgcolor )
 {
   // LJ.XMLRPC.editfriends
-  Q_D(LiveJournal); // Enable d-pointer access to the LiveJournalPrivate object
+  Q_D( LiveJournal ); // Enable d-pointer access to the LiveJournalPrivate object
   unsigned int i = d->mCallCounter++; // Add one to the call counter and assign it
   d->mCallMapAddFriend[ i ] = username; // Put the post in the map at location i
-  kDebug(5323) << "LiveJournal::addFriend(): username: " << username; // Send a message to the console to state which method we have entered.
+  kDebug(5323) << "LiveJournal::addFriend(): username: "
+               << username; // Send a message to the console to state which method we have entered.
   QList<QVariant> args; // Create the argument list, in this case will just contain the map.
   QMap<QString,QVariant> map( d->defaultArgs() ); // Create the initial map from the default arguments.
   QList<QVariant> users;
@@ -61,17 +62,16 @@ void LiveJournal::addFriend( const QString &username, int group,
   users << user;
   map.insert( "add", users );
   args << map;
-  d->mXmlRpcClient->call("LJ.XMLRPC.editfriends", // The XML-RPC procedure to call.
-                         args, // A list containing all the arguments to pass to the procedure.
-                         this, // The object containing the slot to use on success.
-                         SLOT( slotAddFriend( const QList<QVariant>&, const QVariant& ) ), // The slot to call on success.
-                         this, // The object containing the slot to call on failure.
-                         SLOT( slotError( int, const QString&, const QVariant& ) ), // The slot to call on failure
-                         QVariant( i ) ); // The ID, as we haven't created a post, the location in the map.
+  d->mXmlRpcClient->call( "LJ.XMLRPC.editfriends", // The XML-RPC procedure to call.
+                          args, // A list containing all the arguments to pass to the procedure.
+                          this, // The object containing the slot to use on success.
+                          SLOT(slotAddFriend(const QList<QVariant>&,const QVariant&)), // The slot to call on success.
+                          this, // The object containing the slot to call on failure.
+                          SLOT(slotError(int,const QString&,const QVariant&)), // The slot to call on failure
+                          QVariant( i ) ); // The ID, as we haven't created a post, the location in the map.
 }
 
-void LiveJournal::assignFriendToCategory ( const QString &username,
-                                              int category )
+void LiveJournal::assignFriendToCategory ( const QString &username, int category )
 {
   Q_UNUSED( username );
   Q_UNUSED( category );
@@ -81,7 +81,7 @@ void LiveJournal::assignFriendToCategory ( const QString &username,
 
 void LiveJournal::createPost( KBlog::BlogPost *post )
 {
-  Q_D(LiveJournal); // Enable d-pointer access to the LiveJournalPrivate object
+  Q_D( LiveJournal ); // Enable d-pointer access to the LiveJournalPrivate object
   if ( !post ) { // Check if post has a valid memory address (>0)
     kError(5323) << "LiveJournal::createPost: post is null pointer"; // If it doesn't print an error to the console.
     return; // If it doesnt, exit the method
@@ -107,13 +107,13 @@ void LiveJournal::createPost( KBlog::BlogPost *post )
   map.insert( "hour", hour ); // Insert the hour into the struct.
   map.insert( "min", minute ); // Insert the minute into the struct.
   args << map ; // Add the map to the arguments list.
-  d->mXmlRpcClient->call("LJ.XMLRPC.postevent", // The XML-RPC procedure to call.
-                         args, // A list containing all the arguments to pass to the procedure.
-                         this, // The object containing the slot to use on success.
-                         SLOT( slotCreatePost( const QList<QVariant>&, const QVariant& ) ), // The slot to call on success.
-                         this, // The object containing the slot to call on failure.
-                         SLOT( slotError( int, const QString&, const QVariant& ) ), // The slot to call on failure
-                         QVariant( i ) ); // The ID, as we haven't created a post, the location in the map.
+  d->mXmlRpcClient->call( "LJ.XMLRPC.postevent", // The XML-RPC procedure to call.
+                          args, // A list containing all the arguments to pass to the procedure.
+                          this, // The object containing the slot to use on success.
+                          SLOT(slotCreatePost(const QList<QVariant>&,const QVariant&)), // The slot to call on success.
+                          this, // The object containing the slot to call on failure.
+                          SLOT(slotError(int,const QString&,const QVariant&)), // The slot to call on failure
+                          QVariant( i ) ); // The ID, as we haven't created a post, the location in the map.
 }
 
 void LiveJournal::deleteFriend( const QString &username )
@@ -185,7 +185,7 @@ void LiveJournal::listRecentPosts( int number )
 void LiveJournal::modifyPost( KBlog::BlogPost *post )
 {
   // LJ.XMLRPC.editevent
-  Q_D(LiveJournal); // Enable d-pointer access to the LiveJournalPrivate object
+  Q_D( LiveJournal ); // Enable d-pointer access to the LiveJournalPrivate object
   if ( !post ) { // Check if post has a valid memory address (>0)
     kError(5323) << "LiveJournal::modifyPost: post is null pointer"; // If it doesn't print an error to the console.
     return; // If it doesnt, exit the method
@@ -211,18 +211,18 @@ void LiveJournal::modifyPost( KBlog::BlogPost *post )
   map.insert( "hour", hour ); // Insert the hour into the struct.
   map.insert( "min", minute ); // Insert the minute into the struct.
   args << map ; // Add the map to the arguments list.
-  d->mXmlRpcClient->call("LJ.XMLRPC.editevent", // The XML-RPC procedure to call.
-                         args, // A list containing all the arguments to pass to the procedure.
-                         this, // The object containing the slot to use on success.
-                         SLOT( slotCreatePost( const QList<QVariant>&, const QVariant& ) ), // The slot to call on success.
-                         this, // The object containing the slot to call on failure.
-                         SLOT( slotError( int, const QString&, const QVariant& ) ), // The slot to call on failure
-                         QVariant( i ) ); // The ID, as we haven't created a post, the location in the map.
+  d->mXmlRpcClient->call( "LJ.XMLRPC.editevent", // The XML-RPC procedure to call.
+                          args, // A list containing all the arguments to pass to the procedure.
+                          this, // The object containing the slot to use on success.
+                          SLOT(slotCreatePost(const QList<QVariant>&,const QVariant&)), // The slot to call on success.
+                          this, // The object containing the slot to call on failure.
+                          SLOT(slotError(int,const QString&,const QVariant&)), // The slot to call on failure
+                          QVariant( i ) ); // The ID, as we haven't created a post, the location in the map.
 }
 
 void LiveJournal::removePost( KBlog::BlogPost *post )
 {
-  Q_D(LiveJournal); // Enable d-pointer access to the LiveJournalPrivate object
+  Q_D( LiveJournal ); // Enable d-pointer access to the LiveJournalPrivate object
   kDebug(5323) << "LiveJournal::removePost()"; // Send a message to the console to state which method we have entered.
   QList<QVariant> args; // Create the argument list, in this case will just contain the map.
   QMap<QString,QVariant> map( d->defaultArgs() ); // Create the initial map from the default arguments.
@@ -233,7 +233,7 @@ void LiveJournal::removePost( KBlog::BlogPost *post )
   KDateTime date = post->creationDateTime(); // Get the date of the post's creation
   int year = date.toString( "%Y" ).toInt(); // Get the year from the date using a format string and converting string to an integer
   int month = date.toString( "%m" ).toInt(); // Get the month from the date using a format string and converting string to an integer
-  int day = date.toString( "%d").toInt(); // Get the day from the date using a format string and converting string to an integer
+  int day = date.toString( "%d" ).toInt(); // Get the day from the date using a format string and converting string to an integer
   int hour = date.toString( "%H" ).toInt(); // Get the hour from the date using a format string and converting string to an integer
   int minute = date.toString( "%M" ).toInt(); // Get the minute from the date using a format string and converting string to an integer
   map.insert( "year", year ); // Insert the year into the struct.
@@ -242,29 +242,31 @@ void LiveJournal::removePost( KBlog::BlogPost *post )
   map.insert( "hour", hour ); // Insert the hour into the struct.
   map.insert( "min", minute ); // Insert the minute into the struct.
   args << QVariant( map ); // Add the map to the arguments list.
-  d->mXmlRpcClient->call("LJ.XMLRPC.editevent", // The XML-RPC procedure to call.
-                         args, // A list containing all the arguments to pass to the procedure.
-                         this, // The object containing the slot to use on success.
-                         SLOT( slotRemovePost( const QList<QVariant>&, const QVariant& ) ), // The slot to call on success.
-                         this, // The object containing the slot to call on failure.
-                         SLOT( slotError( int, const QString&, const QVariant& ) ) ); // The slot to call on failure.
+  d->mXmlRpcClient->call( "LJ.XMLRPC.editevent", // The XML-RPC procedure to call.
+                          args, // A list containing all the arguments to pass to the procedure.
+                          this, // The object containing the slot to use on success.
+                          SLOT(slotRemovePost(const QList<QVariant>&,const QVariant&)), // The slot to call on success.
+                          this, // The object containing the slot to call on failure.
+                          SLOT(slotError(int,const QString&,const QVariant&)) ); // The slot to call on failure.
 }
 
 void LiveJournal::setUrl( const KUrl &server )
 {
-  Q_D(LiveJournal);
+  Q_D( LiveJournal );
   Blog::setUrl( server );
   delete d->mXmlRpcClient;
   d->mXmlRpcClient = new KXmlRpc::Client( server );
   d->mXmlRpcClient->setUserAgent( userAgent() );
 }
 
-QString LiveJournal::serverMessage() const {
+QString LiveJournal::serverMessage() const
+{
   //TODO
   return d_func()->mServerMessage;
 }
 
-QString LiveJournal::userId() const {
+QString LiveJournal::userId() const
+{
   //TODO
   return d_func()->mUserId;
 }
@@ -281,7 +283,7 @@ LiveJournalPrivate::~LiveJournalPrivate()
 
 QMap<QString,QVariant> LiveJournalPrivate::defaultArgs()
 {
-  Q_Q(LiveJournal); // Get access to the q object which allows access to LiveJournal.* from LiveJournalPrivate
+  Q_Q( LiveJournal ); // Get access to the q object which allows access to LiveJournal.* from LiveJournalPrivate
   QMap<QString,QVariant> args; // Create a map which is converted to a struct on the XML-RPC send.
   args.insert( "username", q->username() ); // Add a username key with the username as it's value.
   args.insert( "password", q->password() ); // Add a password key with the password as it's value.
@@ -289,13 +291,12 @@ QMap<QString,QVariant> LiveJournalPrivate::defaultArgs()
   return args; // return the QMap.
 }
 
-void LiveJournalPrivate::generateCookie( const GenerateCookieOptions& options )
+void LiveJournalPrivate::generateCookie( const GenerateCookieOptions &options )
 {
   Q_UNUSED( options );
   //TODO
   // LJ.XMLRPC.sessiongenerate
 }
-
 
 void LiveJournalPrivate::expireCookie( const QString &cookie, bool expireAll )
 {
@@ -305,8 +306,7 @@ void LiveJournalPrivate::expireCookie( const QString &cookie, bool expireAll )
   // LJ.XMLRPC.sessionexpire
 }
 
-bool LiveJournalPrivate::readPostFromMap(
-    BlogPost *post, const QMap<QString, QVariant> &postInfo )
+bool LiveJournalPrivate::readPostFromMap( BlogPost *post, const QMap<QString, QVariant> &postInfo )
 {
   Q_UNUSED( post );
   Q_UNUSED( postInfo );
@@ -314,28 +314,25 @@ bool LiveJournalPrivate::readPostFromMap(
   return false;
 }
 
-void LiveJournalPrivate::slotAddFriend(
-    const QList<QVariant> &result, const QVariant &id )
+void LiveJournalPrivate::slotAddFriend( const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
   Q_UNUSED( id );
   //TODO
 }
 
-void LiveJournalPrivate::slotAssignFriendToCategory(
-    const QList<QVariant> &result, const QVariant &id )
+void LiveJournalPrivate::slotAssignFriendToCategory( const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
   Q_UNUSED( id );
   //TODO
 }
 
-void LiveJournalPrivate::slotCreatePost( const QList<QVariant> &result,
-                                            const QVariant &id )
+void LiveJournalPrivate::slotCreatePost( const QList<QVariant> &result, const QVariant &id )
 {
   kDebug(5323) << "LiveJournal::slotCreatePost: " << id; // Print method name and id to the console.
-  Q_Q(LiveJournal); // Get access to the q object which allows access to LiveJournal.* from LiveJournalPrivate
-  KBlog::BlogPost* post = mCallMap[ id.toInt() ]; // Retrieve the post from the calling map
+  Q_Q( LiveJournal ); // Get access to the q object which allows access to LiveJournal.* from LiveJournalPrivate
+  KBlog::BlogPost *post = mCallMap[ id.toInt() ]; // Retrieve the post from the calling map
   mCallMap.remove( id.toInt() ); // Remove the post as it is now owned by the signal catcher
 
   // struct containing String anum, String itemid
@@ -350,13 +347,12 @@ void LiveJournalPrivate::slotCreatePost( const QList<QVariant> &result,
     post->setPostId( itemid ); // Set the post ID to the anum value from the return struct.
     post->setStatus( KBlog::BlogPost::Created ); // Set the post's status to indicate it has been successfully created.
     emit q->createdPost( post ); // Emit the created post
-    kDebug(5323) << "emitting createdPost()" <<
-        "for" << itemid; // Notify emission to the console
+    kDebug(5323) << "emitting createdPost()"
+                 << "for" << itemid; // Notify emission to the console
   }
 }
 
-void LiveJournalPrivate::slotDeleteFriend(
-    const QList<QVariant> &result, const QVariant &id )
+void LiveJournalPrivate::slotDeleteFriend( const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
   Q_UNUSED( id );
@@ -371,117 +367,106 @@ void LiveJournalPrivate::slotDeleteFriend(
 //   //TODO
 // }
 
-void LiveJournalPrivate::slotError( int number,
-    const QString &errorString, const QVariant &id )
+void LiveJournalPrivate::slotError( int number, const QString &errorString, const QVariant &id )
 {
   Q_UNUSED( number );
   Q_UNUSED( errorString );
   kError(5323) << "XML-RPC error for " << id;
 }
 
-void LiveJournalPrivate::slotFetchPost(
-    const QList<QVariant> &result, const QVariant &id )
+void LiveJournalPrivate::slotFetchPost( const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
   Q_UNUSED( id );
   //TODO
 }
 
-void LiveJournalPrivate::slotFetchUserInfo(
-    const QList<QVariant> &result, const QVariant &id )
+void LiveJournalPrivate::slotFetchUserInfo( const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
   Q_UNUSED( id );
   //TODO
 }
 /*
-void LiveJournalPrivate::slotGenerateCookie(
-    const QList<QVariant> &result, const QVariant &id )
+void LiveJournalPrivate::slotGenerateCookie( const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
   Q_UNUSED( id );
   //TODO
 }*/
 
-void LiveJournalPrivate::slotListCategories(
-    const QList<QVariant> &result, const QVariant &id )
+void LiveJournalPrivate::slotListCategories( const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
   Q_UNUSED( id );
   //TODO
 }
 
-void LiveJournalPrivate::slotListFriends(
-    const QList<QVariant> &result, const QVariant &id )
+void LiveJournalPrivate::slotListFriends( const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
   Q_UNUSED( id );
   //TODO
 }
 
-void LiveJournalPrivate::slotListFriendsOf(
-    const QList<QVariant> &result, const QVariant &id )
+void LiveJournalPrivate::slotListFriendsOf( const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
   Q_UNUSED( id );
   //TODO
 }
 
-void LiveJournalPrivate::slotListMoods(
-    const QList<QVariant> &result, const QVariant &id )
+void LiveJournalPrivate::slotListMoods( const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
   Q_UNUSED( id );
   //TODO
 }
 
-void LiveJournalPrivate::slotListPictureKeywords(
-    const QList<QVariant> &result, const QVariant &id )
+void LiveJournalPrivate::slotListPictureKeywords( const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
   Q_UNUSED( id );
   //TODO
 }
 
-void LiveJournalPrivate::slotListRecentPosts(
-    const QList<QVariant> &result, const QVariant &id )
+void LiveJournalPrivate::slotListRecentPosts( const QList<QVariant> &result, const QVariant &id )
 {
   Q_UNUSED( result );
   Q_UNUSED( id );
   //TODO
 }
 
-void LiveJournalPrivate::slotModifyPost(
-    const QList<QVariant> &result, const QVariant &id )
+void LiveJournalPrivate::slotModifyPost( const QList<QVariant> &result, const QVariant &id )
 {
   kDebug(5323) << "LiveJournal::slotModifyPost: " << id; // Print method name and id to the console.
-  Q_Q(LiveJournal); // Get access to the q object which allows access to LiveJournal.* from LiveJournalPrivate
-  KBlog::BlogPost* post = mCallMap[ id.toInt() ]; // Retrieve the post from the calling map
+  Q_Q( LiveJournal ); // Get access to the q object which allows access to LiveJournal.* from LiveJournalPrivate
+  KBlog::BlogPost *post = mCallMap[ id.toInt() ]; // Retrieve the post from the calling map
   mCallMap.remove( id.toInt() ); // Remove the post as it is now owned by the signal catcher
 
   // struct containing String anum, String itemid
   kDebug (5323) << "TOP:" << result[0].typeName(); // Print first return type to the console.
   if ( result[0].type() != QVariant::Map ) { // Make sure the only return type is a struct.
     kError(5323) << "Could not fetch post's ID out of the result from the server,"
-        << " not a map."; // If not a struct, print error.
+                 << " not a map."; // If not a struct, print error.
     emit q->errorPost( LiveJournal::ParsingError,
-                   i18n( "Could not read the post ID, result not a map." ), post ); // Emit an error signal if we can't get the post ID.
+                       i18n( "Could not read the post ID, result not a map." ), post ); // Emit an error signal if we can't get the post ID.
   } else {
     QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>(); // Get post ID from struct.
     post->setPostId( itemid ); // Set the post ID to the anum value from the return struct.
     post->setStatus( KBlog::BlogPost::Created ); // Set the post's status to indicate it has been successfully created.
     emit q->createdPost( post ); // Emit the created post
-    kDebug(5323) << "emitting createdPost()" <<
-        "for" << itemid; // Notify emission to the console
+    kDebug(5323) << "emitting createdPost()"
+                 << "for" << itemid; // Notify emission to the console
   }
 }
 
 void LiveJournalPrivate::slotRemovePost( const QList<QVariant> &result,
-                                            const QVariant &id )
+                                         const QVariant &id )
 {
   kDebug(5323) << "LiveJournal::slotCreatePost: " << id; // Print method name and id to the console.
-  Q_Q(LiveJournal); // Get access to the q object which allows access to LiveJournal.* from LiveJournalPrivate
-  KBlog::BlogPost* post = mCallMap[ id.toInt() ]; // Retrieve the post from the calling map
+  Q_Q( LiveJournal ); // Get access to the q object which allows access to LiveJournal.* from LiveJournalPrivate
+  KBlog::BlogPost *post = mCallMap[ id.toInt() ]; // Retrieve the post from the calling map
   mCallMap.remove( id.toInt() ); // Remove the post as it is now owned by the signal catcher
 
   // struct containing String anum, String itemid
@@ -490,19 +475,18 @@ void LiveJournalPrivate::slotRemovePost( const QList<QVariant> &result,
     kError(5323) << "Could not fetch post's ID out of the result from the server,"
         << "not a map."; // If not a struct, print error.
     emit q->errorPost( LiveJournal::ParsingError,
-                   i18n( "Could not read the post ID, result not a map." ), post ); // Emit an error signal if we can't get the post ID.
+                       i18n( "Could not read the post ID, result not a map." ), post ); // Emit an error signal if we can't get the post ID.
   } else {
     QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>();
     if ( itemid == post->postId() ) { // Check the post ID matches the anum value from the return struct.
       post->setStatus( KBlog::BlogPost::Removed ); // Set the post's status to indicate it has been successfully removed.
       emit q->removedPost( post ); // Emit the removed post
-      kDebug(5323) << "emitting createdPost()" <<
-          "for" << itemid; // Notify emission to the console
-    }
-    else {
+      kDebug(5323) << "emitting createdPost()"
+                   << "for" << itemid; // Notify emission to the console
+    } else {
       kError(5323) << "The returned post ID did not match the sent one."; // If not matching, print error.
       emit q->errorPost( LiveJournal::ParsingError,
-                     i18n( "The returned post ID did not match the sent one: " ), post ); // Emit an error signal if the post IDs don't match.
+                         i18n( "The returned post ID did not match the sent one: " ), post ); // Emit an error signal if the post IDs don't match.
     }
   }
 }

@@ -61,7 +61,7 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
   Q_OBJECT
   public:
     /**
-      Create an object for Movable Type 
+      Create an object for Movable Type
 
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
@@ -118,9 +118,9 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     MovableType( const KUrl &server, MovableTypePrivate &dd, QObject *parent = 0 );
 
   private:
-    Q_DECLARE_PRIVATE(MovableType)
-    Q_PRIVATE_SLOT( d_func(), void slotListTrackBackPings(
-    const QList<QVariant>&, const QVariant& ))
+    Q_DECLARE_PRIVATE( MovableType )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotListTrackBackPings( const QList<QVariant> &, const QVariant & ) )
 };
 
 } //namespace KBlog

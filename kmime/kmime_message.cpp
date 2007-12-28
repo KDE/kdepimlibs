@@ -184,19 +184,21 @@ bool Message::removeHeader( const char *type )
   return true;
 }
 
-Headers::Subject* Message::subject(bool create)
+Headers::Subject *Message::subject( bool create )
 {
-  Q_D(Message);
-  if ( !create && d->subject.isEmpty() )
+  Q_D( Message );
+  if ( !create && d->subject.isEmpty() ) {
     return 0;
+  }
   return &d->subject;
 }
 
-Headers::Date* Message::date( bool create )
+Headers::Date *Message::date( bool create )
 {
-  Q_D(Message);
-  if ( !create && d->date.isEmpty() )
+  Q_D( Message );
+  if ( !create && d->date.isEmpty() ) {
     return 0;
+  }
   return &d->date;
 }
 
@@ -205,28 +207,32 @@ bool Message::isTopLevel() const
   return true;
 }
 
-Content* Message::mainBodyPart(const QByteArray & type)
+Content *Message::mainBodyPart( const QByteArray &type )
 {
   KMime::Content *c = this;
   while ( c ) {
     // not a multipart message
     if ( !c->contentType()->isMultipart() ) {
-      if( c->contentType()->mimeType() == type || type.isEmpty() )
+      if ( c->contentType()->mimeType() == type || type.isEmpty() ) {
         return c;
+      }
       return 0;
     }
 
     // empty multipart
-    if ( c->contents().count() == 0 )
+    if ( c->contents().count() == 0 ) {
       return 0;
+    }
 
     // multipart/alternative
     if ( c->contentType()->subType() == "alternative" ) {
-      if ( type.isEmpty() )
+      if ( type.isEmpty() ) {
         return c->contents().first();
-      foreach ( Content* c, c->contents() ) {
-        if ( c->contentType()->mimeType() == type )
-          return c;
+      }
+      foreach ( Content *c1, c->contents() ) {
+        if ( c1->contentType()->mimeType() == type ) {
+          return c1;
+        }
       }
       return 0;
     }
@@ -239,7 +245,7 @@ Content* Message::mainBodyPart(const QByteArray & type)
 
 // @cond PRIVATE
 #define kmime_mk_header_accessor( header, method ) \
-Headers::header* Message::method( bool create ) { \
+Headers::header *Message::method( bool create ) { \
   Headers::header *p = 0; \
   return getHeaderInstance( p, create ); \
 }

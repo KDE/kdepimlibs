@@ -50,36 +50,36 @@ namespace KioSMTP {
     for ( QStringList::const_iterator it = query.begin() ; it != query.end() ; ++it ) {
       int equalsPos = (*it).indexOf( '=' );
       if ( equalsPos <= 0 )
-	continue;
+        continue;
 
       const QString key = (*it).left( equalsPos ).toLower();
       const QString value = QUrl::fromPercentEncoding( (*it).mid( equalsPos + 1 ).toLatin1() );
 
       if ( key == "to" )
-	request.addTo( value );
+        request.addTo( value );
       else if ( key == "cc" )
-	request.addCc( value );
+        request.addCc( value );
       else if ( key == "bcc" )
-	request.addBcc( value );
+        request.addBcc( value );
       else if ( key == "headers" ) {
-	request.setEmitHeaders( value == "0" );
-	request.setEmitHeaders( false ); // ### ???
+        request.setEmitHeaders( value == "0" );
+        request.setEmitHeaders( false ); // ### ???
       }
       else if ( key == "subject" )
-	request.setSubject( value );
+        request.setSubject( value );
       else if ( key == "from" )
-	request.setFromAddress( value );
+        request.setFromAddress( value );
       else if ( key == "profile" )
-	request.setProfileName( value );
+        request.setProfileName( value );
       else if ( key == "hostname" )
-	request.setHeloHostname( value );
+        request.setHeloHostname( value );
       else if ( key == "body" )
-	request.set8BitBody( value.toUpper() == "8BIT" );
+        request.set8BitBody( value.toUpper() == "8BIT" );
       else if ( key == "size" )
-	request.setSize( value.toUInt() );
+        request.setSize( value.toUInt() );
       else
-	kWarning(7112) << "while parsing query: unknown query item \""
-			<< key << "\" with value \"" << value << "\"" << endl;
+        kWarning(7112) << "while parsing query: unknown query item \""
+                       << key << "\" with value \"" << value << "\"" << endl;
     }
 
     return request;
@@ -127,9 +127,9 @@ namespace KioSMTP {
     for ( int i = 0 ; i < s.length() ; ++i ) {
       char ch = s[i].toLatin1();
       if ( isSpecial( ch ) ) {
-	if ( needsQuoting( ch ) )
-	  r[j++] = '\\';
-	needsQuotes = true;
+        if ( needsQuoting( ch ) )
+          r[j++] = '\\';
+        needsQuotes = true;
       }
       r[j++] = ch;
     }
@@ -158,8 +158,8 @@ namespace KioSMTP {
   static QByteArray formatSubject( QString s ) {
     if ( isUsAscii( s ) )
       return s.remove( '\n' ).toLatin1(); // don't break header folding,
-					// so remove any line break
-					// that happen to be around
+                                          // so remove any line break
+                                          // that happen to be around
     else
       return rfc2047Encode( s );
   }
@@ -171,7 +171,7 @@ namespace KioSMTP {
       return 0;
 
     assert( hasFromAddress() ); // should have been checked for by
-				// caller (MAIL FROM comes before DATA)
+                                // caller (MAIL FROM comes before DATA)
 
     QByteArray result = "From: " + formatFromAddress( fromRealName, fromAddress() ) + "\r\n";
 

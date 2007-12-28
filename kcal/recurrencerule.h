@@ -313,8 +313,10 @@ class KCAL_EXPORT RecurrenceRule
     void dump() const;
 
   private:
+    //@cond PRIVATE
     class Private;
     Private *d;
+    //@endcond
 };
 
 }

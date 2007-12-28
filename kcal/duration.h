@@ -214,6 +214,36 @@ class KCAL_EXPORT Duration
     { return Duration( *this ) += other; }
 
     /**
+      Multiplies this duration by a value.
+      @param value value to multiply by
+    */
+    Duration &operator*=( int value );
+
+    /**
+      Multiplies a duration by a value.
+
+      @param value value to multiply by
+      @return resultant duration
+    */
+    Duration operator*( int value ) const
+    { return Duration( *this ) *= value; }
+
+    /**
+      Divides this duration by a value.
+      @param value value to divide by
+    */
+    Duration &operator/=( int value );
+
+    /**
+      Divides a duration by a value.
+
+      @param value value to divide by
+      @return resultant duration
+    */
+    Duration operator/( int value ) const
+    { return Duration( *this ) /= value; }
+
+    /**
       Computes a duration end time by adding the number of seconds or
       days in the duration to the specified @p start time.
 

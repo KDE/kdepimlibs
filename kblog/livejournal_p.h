@@ -50,10 +50,9 @@ class LiveJournalPrivate : public BlogPrivate
       LongExpiriation = 0x01,
       FixedIP = 0x02
     };
-    Q_DECLARE_FLAGS(GenerateCookieOptions,
-                                        GenerateCookieOption)
+    Q_DECLARE_FLAGS( GenerateCookieOptions, GenerateCookieOption )
 
-    virtual void generateCookie( const GenerateCookieOptions& options );
+    virtual void generateCookie( const GenerateCookieOptions &options );
 
     virtual void expireCookie( const QString &cookie, bool expireAll );
 
@@ -62,22 +61,22 @@ class LiveJournalPrivate : public BlogPrivate
     virtual void slotAddFriend( const QList<QVariant> &result,
                                 const QVariant &id );
     virtual void slotAssignFriendToCategory( const QList<QVariant> &result,
-                                     const QVariant &id );
+                                             const QVariant &id );
     virtual void slotCreatePost( const QList<QVariant> &result,
-                                    const QVariant &id );
+                                 const QVariant &id );
     virtual void slotDeleteFriend( const QList<QVariant> &result,
                                    const QVariant &id );
 //     virtual void slotExpireCookie( const QList<QVariant> &result,
 //                                    const QVariant &id );
-    virtual void slotError( int, const QString&, const QVariant& );
+    virtual void slotError( int, const QString &, const QVariant & );
     virtual void slotFetchPost( const QList<QVariant> &result,
-                                   const QVariant &id );
+                                const QVariant &id );
     virtual void slotFetchUserInfo( const QList<QVariant> &result,
                                     const QVariant &id );
 //     virtual void slotGenerateCookie( const QList<QVariant> &result,
-//                              const QVariant &id );
+//                                      const QVariant &id );
     virtual void slotListCategories( const QList<QVariant> &result,
-                             const QVariant &id );
+                                     const QVariant &id );
     virtual void slotListFriends( const QList<QVariant> &result,
                                   const QVariant &id );
     virtual void slotListFriendsOf( const QList<QVariant> &result,
@@ -85,18 +84,17 @@ class LiveJournalPrivate : public BlogPrivate
     virtual void slotListMoods( const QList<QVariant> &result,
                                 const QVariant &id );
     virtual void slotListPictureKeywords( const QList<QVariant> &result,
-                                  const QVariant &id );
+                                          const QVariant &id );
     virtual void slotListRecentPosts( const QList<QVariant> &result,
-                                 const QVariant &id );
+                                      const QVariant &id );
     virtual void slotModifyPost( const QList<QVariant> &result,
-                                    const QVariant &id );
+                                 const QVariant &id );
     virtual void slotRemovePost( const QList<QVariant> &result,
-                                    const QVariant &id );
-    Q_DECLARE_PUBLIC(LiveJournal)
+                                 const QVariant &id );
+    Q_DECLARE_PUBLIC( LiveJournal )
 
   private:
-    bool readPostFromMap( BlogPost *post,
-                             const QMap<QString, QVariant> &postInfo );
+    bool readPostFromMap( BlogPost *post, const QMap<QString, QVariant> &postInfo );
 };
 
 }
