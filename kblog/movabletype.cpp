@@ -58,7 +58,7 @@ QString MovableType::interfaceName() const
   return QLatin1String( "Movable Type" );
 }
 
-void MovableType::listRecentPosts( const int number )
+void MovableType::listRecentPosts( int number )
 {
     Q_D( MovableType );
     kDebug(5323) << "Fetching List of Posts...";
