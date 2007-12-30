@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Exec=kcmshell4 kresources
-Icon=date
+Icon=view-calendar-day
 Type=Service
 ServiceTypes=KCModule
 
