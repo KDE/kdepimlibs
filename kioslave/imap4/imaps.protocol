@@ -26,5 +26,5 @@ source=true
 # List of capabilities (e.g. special() commands)
 Capabilities=Subscription,ACL,Quota
 
-Icon=mail-inbox
+Icon=mail-folder-inbox
 DocPath=kioslave/imaps.html
