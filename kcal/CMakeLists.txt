@@ -163,8 +163,8 @@ add_custom_command(OUTPUT
    ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/ical.h 
    COMMAND 
    ${CMAKE_COMMAND} 
-   -DTOPS:FILEPATH="${CMAKE_SOURCE_DIR}"
-   -DTOPB:FILEPATH="${CMAKE_BINARY_DIR}"
+   -DTOPS:FILEPATH=${CMAKE_SOURCE_DIR}
+   -DTOPB:FILEPATH=${CMAKE_BINARY_DIR}
    -DKDE_FILE_H_FILE:FILEPATH=${CMAKE_BINARY_DIR}/kcal/libical/src/libical/ical.h
    -P ${CMAKE_SOURCE_DIR}/kcal/ical_file.cmake
    DEPENDS
@@ -179,7 +179,7 @@ add_custom_command(OUTPUT
    ${CMAKE_BINARY_DIR}/kcal/libical/src/libicalss/icalss.h 
    COMMAND 
    ${CMAKE_COMMAND} 
-   -DTOP:FILEPATH="${CMAKE_SOURCE_DIR}"
+   -DTOP:FILEPATH=${CMAKE_SOURCE_DIR}
    -DKDE_FILE_H_FILE:FILEPATH=${CMAKE_BINARY_DIR}/kcal/libical/src/libicalss/icalss.h
    -P ${CMAKE_SOURCE_DIR}/kcal/icalss_file.cmake
 )
