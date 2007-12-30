@@ -7,6 +7,7 @@ ServiceTypes=KCModule
 
 X-KDE-Library=kcm_kresources
 X-KDE-FactoryName=kcm_kresources
+X-KDE-System-Settings-Parent-Category=advanced-user-settings
 
 Name=KDE Resources
 Name[be]=Рэсурсы KDE
