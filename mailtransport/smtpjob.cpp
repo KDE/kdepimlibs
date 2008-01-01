@@ -256,8 +256,10 @@ void SmtpJob::dataRequest(KIO::Job * job, QByteArray & data)
   Q_ASSERT( job );
   if ( buffer()->atEnd() )
     data.clear();
-  else
+  else {
+    Q_ASSERT( buffer()->isOpen() );
     data = buffer()->read( 32*1024 );
+  }
   setProcessedAmount( KJob::Bytes, buffer()->pos() );
 }
 
