@@ -159,12 +159,19 @@ set(libicalss_SRCS
 
 macro_additional_clean_files(${CMAKE_BINARY_DIR}/kcal/libical/src/libical/ical.h)
 
+if(WIN32)
+  set(TOPS "\"${CMAKE_SOURCE_DIR}\"")
+  set(TOPB "\"${CMAKE_BINARY_DIR}\"")
+else(WIN32)
+  set(TOPS "${CMAKE_SOURCE_DIR}")
+  set(TOPB "${CMAKE_BINARY_DIR}")
+endif(WIN32)
 add_custom_command(OUTPUT
    ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/ical.h 
    COMMAND 
    ${CMAKE_COMMAND} 
-   -DTOPS:FILEPATH=${CMAKE_SOURCE_DIR}
-   -DTOPB:FILEPATH=${CMAKE_BINARY_DIR}
+   -DTOPS:FILEPATH=${TOPS}
+   -DTOPB:FILEPATH=${TOPB}
    -DKDE_FILE_H_FILE:FILEPATH=${CMAKE_BINARY_DIR}/kcal/libical/src/libical/ical.h
    -P ${CMAKE_SOURCE_DIR}/kcal/ical_file.cmake
    DEPENDS
@@ -179,7 +186,7 @@ add_custom_command(OUTPUT
    ${CMAKE_BINARY_DIR}/kcal/libical/src/libicalss/icalss.h 
    COMMAND 
    ${CMAKE_COMMAND} 
-   -DTOP:FILEPATH=${CMAKE_SOURCE_DIR}
+   -DTOP:FILEPATH=${TOPS}
    -DKDE_FILE_H_FILE:FILEPATH=${CMAKE_BINARY_DIR}/kcal/libical/src/libicalss/icalss.h
    -P ${CMAKE_SOURCE_DIR}/kcal/icalss_file.cmake
 )
