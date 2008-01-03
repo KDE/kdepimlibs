@@ -345,7 +345,7 @@ void Blogger1Private::slotFetchPost( const QList<QVariant> &result, const QVaria
     kError(5323) << "Could not fetch post out of the result from "
                   << "the server.";
     emit q->errorPost( Blogger1::ParsingError,
-                          i18n( "Could not fetch post out of the result"
+                          i18n( "Could not fetch post out of the result "
                                 "from the server." ), post );
     post->setError( i18n( "Could not fetch post out of the "
                               "result from the server." ) );
