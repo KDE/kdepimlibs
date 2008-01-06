@@ -702,6 +702,7 @@ void GDataPrivate::slotListRecentPosts( Syndication::Loader *loader,
     kDebug(5323) << "QRegExp rx( 'post-(\\d+)' matches" << rx.cap(1);
     post.setTitle( ( *it )->title() );
     post.setContent( ( *it )->content() );
+    post.setLink( ( *it )->link() );
 //  FIXME: assuming UTC for now
     post.setCreationDateTime(
       KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
@@ -749,6 +750,7 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
       post->setTitle( ( *it )->title() );
       post->setContent( ( *it )->content() );
       post->setStatus( BlogPost::Fetched );
+      post->setLink( ( *it )->link() );
 //    FIXME: assuming UTC for now
       post->setCreationDateTime(
         KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
