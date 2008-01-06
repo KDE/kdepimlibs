@@ -458,6 +458,9 @@ bool ResourceCached::loadFromCache()
 
 bool ResourceCached::save( CacheAction action, Incidence *incidence )
 {
+  if ( !incidence && ( d->mSavePolicy == SaveAlways || d->mSavePolicy == SaveDelayed ) ) {
+    d->mSaveTimer.stop();   // in case it's called manually while save is pending
+  }
   d->mSavePending = false;
   if ( saveInhibited() ) {
     return true;
