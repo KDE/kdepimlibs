@@ -46,25 +46,25 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
   Q_OBJECT
   public:
     /**
-      Reload policy.
+      Reload policy. Whether and when to automatically reload the resource.
       @see setReloadPolicy(), reloadPolicy()
     */
     enum {
-      ReloadNever,
-      ReloadOnStartup,
-      ReloadInterval
+      ReloadNever,     /**< never reload the resource automatically */
+      ReloadOnStartup, /**< reload when the resource is opened */
+      ReloadInterval   /**< reload at regular intervals set by setReloadInterval() */
     };
 
     /**
-      Save policy.
+      Save policy. Whether and when to automatically save the resource.
       @see setSavePolicy(), savePolicy()
     */
     enum {
-      SaveNever,
-      SaveOnExit,
-      SaveInterval,
-      SaveDelayed,
-      SaveAlways
+      SaveNever,    /**< never save the resource automatically */
+      SaveOnExit,   /**< save when the resource is closed */
+      SaveInterval, /**< save at regular intervals set by setSaveInterval() */
+      SaveDelayed,  /**< save after every change, after a 15 second delay */
+      SaveAlways    /**< save after every change, after a 1 second delay */
     };
 
     /**

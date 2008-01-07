@@ -497,6 +497,10 @@ bool GDataPrivate::authenticate()
 
 void GDataPrivate::slotFetchProfileIdData( KIO::Job *job, const QByteArray &data )
 {
+  if( !job ){
+    kError(5323) << "job is a null pointer.";
+    return;
+  }
   unsigned int oldSize = mFetchProfileIdBuffer[ job ].size();
   mFetchProfileIdBuffer[ job ].resize( oldSize + data.size() );
   memcpy( mFetchProfileIdBuffer[ job ].data() + oldSize, data.data(), data.size() );
@@ -504,6 +508,10 @@ void GDataPrivate::slotFetchProfileIdData( KIO::Job *job, const QByteArray &data
 
 void GDataPrivate::slotFetchProfileId( KJob *job )
 {
+  if( !job ){
+    kError(5323) << "job is a null pointer.";
+    return;
+  }
   Q_Q( GData );
   if ( !job->error() ) {
     QRegExp pid( "http://www.blogger.com/profile/(\\d+)" );
@@ -530,7 +538,10 @@ void GDataPrivate::slotListBlogs( Syndication::Loader *loader,
                                   Syndication::FeedPtr feed,
                                   Syndication::ErrorCode status ) {
   Q_Q( GData );
-  Q_UNUSED( loader );
+  if( !loader ) {
+    kError(5323) << "loader is a null pointer.";
+    return;
+  }
   if ( status != Syndication::Success ) {
     emit q->error( GData::Atom, i18n( "Could not get blogs." ) );
     return;
@@ -565,6 +576,10 @@ void GDataPrivate::slotListComments( Syndication::Loader *loader,
                                      Syndication::ErrorCode status )
 {
   Q_Q( GData );
+  if( !loader ) {
+    kError(5323) << "loader is a null pointer.";
+    return;
+  }
   BlogPost *post = mListCommentsMap[ loader ];
   mListCommentsMap.remove( loader );
 
@@ -599,7 +614,7 @@ void GDataPrivate::slotListComments( Syndication::Loader *loader,
                  KDateTime::Spec::UTC() ) );
     commentList.append( comment );
   }
-  kDebug(5323) << "Emitting listedRecentPosts()";
+  kDebug(5323) << "Emitting listedComments()";
   emit q->listedComments( post, commentList );
 }
 
@@ -608,7 +623,10 @@ void GDataPrivate::slotListAllComments( Syndication::Loader *loader,
                                         Syndication::ErrorCode status )
 {
   Q_Q( GData );
-  Q_UNUSED( loader );
+  if( !loader ) {
+    kError(5323) << "loader is a null pointer.";
+    return;
+  }
 
   if ( status != Syndication::Success ) {
     emit q->error( GData::Atom, i18n( "Could not get comments." ) );
@@ -642,7 +660,7 @@ void GDataPrivate::slotListAllComments( Syndication::Loader *loader,
                  KDateTime::Spec::UTC() ) );
     commentList.append( comment );
   }
-  kDebug(5323) << "Emitting listedRecentPosts()";
+  kDebug(5323) << "Emitting listedAllComments()";
   emit q->listedAllComments( commentList );
 }
 
@@ -650,7 +668,10 @@ void GDataPrivate::slotListRecentPosts( Syndication::Loader *loader,
                                         Syndication::FeedPtr feed,
                                         Syndication::ErrorCode status ) {
   Q_Q( GData );
-  Q_UNUSED( loader );
+  if( !loader ) {
+    kError(5323) << "loader is a null pointer.";
+    return;
+  }
 
   if ( status != Syndication::Success ) {
     emit q->error( GData::Atom, i18n( "Could not get posts." ) );
@@ -681,6 +702,7 @@ void GDataPrivate::slotListRecentPosts( Syndication::Loader *loader,
     kDebug(5323) << "QRegExp rx( 'post-(\\d+)' matches" << rx.cap(1);
     post.setTitle( ( *it )->title() );
     post.setContent( ( *it )->content() );
+    post.setLink( ( *it )->link() );
 //  FIXME: assuming UTC for now
     post.setCreationDateTime(
       KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
@@ -704,6 +726,10 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
 {
   kDebug(5323);
   Q_Q( GData );
+  if( !loader ) {
+    kError(5323) << "loader is a null pointer.";
+    return;
+  }
 
   bool success = false;
 
@@ -724,6 +750,7 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
       post->setTitle( ( *it )->title() );
       post->setContent( ( *it )->content() );
       post->setStatus( BlogPost::Fetched );
+      post->setLink( ( *it )->link() );
 //    FIXME: assuming UTC for now
       post->setCreationDateTime(
         KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
@@ -747,6 +774,10 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
 void GDataPrivate::slotCreatePostData( KIO::Job *job, const QByteArray &data )
 {
   kDebug(5323) << "slotCreatePostData()";
+  if( !job ) {
+    kError(5323) << "job is a null pointer.";
+    return;
+  }
   unsigned int oldSize = mCreatePostBuffer[ job ].size();
   mCreatePostBuffer[ job ].resize( oldSize + data.size() );
   memcpy( mCreatePostBuffer[ job ].data() + oldSize, data.data(), data.size() );
@@ -755,6 +786,10 @@ void GDataPrivate::slotCreatePostData( KIO::Job *job, const QByteArray &data )
 void GDataPrivate::slotCreatePost( KJob *job )
 {
   kDebug(5323) << "slotCreatePost()";
+  if( !job ) {
+    kError(5323) << "job is a null pointer.";
+    return;
+  }
   const QString data = QString::fromUtf8( mCreatePostBuffer[ job ].data(),
                                           mCreatePostBuffer[ job ].size() );
   mCreatePostBuffer[ job ].resize( 0 );
@@ -808,6 +843,10 @@ void GDataPrivate::slotCreatePost( KJob *job )
 void GDataPrivate::slotModifyPostData( KIO::Job *job, const QByteArray &data )
 {
   kDebug(5323);
+  if( !job ) {
+    kError(5323) << "job is a null pointer.";
+    return;
+  }
   unsigned int oldSize = mModifyPostBuffer[ job ].size();
   mModifyPostBuffer[ job ].resize( oldSize + data.size() );
   memcpy( mModifyPostBuffer[ job ].data() + oldSize, data.data(), data.size() );
@@ -816,6 +855,10 @@ void GDataPrivate::slotModifyPostData( KIO::Job *job, const QByteArray &data )
 void GDataPrivate::slotModifyPost( KJob *job )
 {
   kDebug(5323) << "slotModifyPost()";
+  if( !job ) {
+    kError(5323) << "job is a null pointer.";
+    return;
+  }
   const QString data = QString::fromUtf8( mModifyPostBuffer[ job ].data(),
                                           mModifyPostBuffer[ job ].size() );
   mModifyPostBuffer[ job ].resize( 0 );
@@ -865,6 +908,10 @@ void GDataPrivate::slotModifyPost( KJob *job )
 void GDataPrivate::slotRemovePostData( KIO::Job *job, const QByteArray &data )
 {
   kDebug(5323) << "slotRemovePostData()";
+  if( !job ) {
+    kError(5323) << "job is a null pointer.";
+    return;
+  }
   unsigned int oldSize = mRemovePostBuffer[ job ].size();
   mRemovePostBuffer[ job ].resize( oldSize + data.size() );
   memcpy( mRemovePostBuffer[ job ].data() + oldSize, data.data(), data.size() );
@@ -873,6 +920,10 @@ void GDataPrivate::slotRemovePostData( KIO::Job *job, const QByteArray &data )
 void GDataPrivate::slotRemovePost( KJob *job )
 {
   kDebug(5323) << "slotRemovePost()";
+  if( !job ) {
+    kError(5323) << "job is a null pointer.";
+    return;
+  }
   const QString data = QString::fromUtf8( mRemovePostBuffer[ job ].data(),
                                           mRemovePostBuffer[ job ].size() );
   mRemovePostBuffer[ job ].resize( 0 );
@@ -894,6 +945,10 @@ void GDataPrivate::slotRemovePost( KJob *job )
 void GDataPrivate::slotCreateCommentData( KIO::Job *job, const QByteArray &data )
 {
   kDebug(5323) << "slotCreateCommentData()";
+  if( !job ) {
+    kError(5323) << "job is a null pointer.";
+    return;
+  }
   unsigned int oldSize = mCreateCommentBuffer[ job ].size();
   mCreateCommentBuffer[ job ].resize( oldSize + data.size() );
   memcpy( mCreateCommentBuffer[ job ].data() + oldSize, data.data(), data.size() );
@@ -902,6 +957,10 @@ void GDataPrivate::slotCreateCommentData( KIO::Job *job, const QByteArray &data 
 void GDataPrivate::slotCreateComment( KJob *job )
 {
   kDebug(5323) << "slotCreateComment()";
+  if( !job ) {
+    kError(5323) << "job is a null pointer.";
+    return;
+  }
   const QString data = QString::fromUtf8( mCreateCommentBuffer[ job ].data(),
                                           mCreateCommentBuffer[ job ].size() );
   mCreateCommentBuffer[ job ].resize( 0 );
@@ -957,6 +1016,10 @@ void GDataPrivate::slotCreateComment( KJob *job )
 void GDataPrivate::slotRemoveCommentData( KIO::Job *job, const QByteArray &data )
 {
   kDebug(5323);
+  if( !job ) {
+    kError(5323) << "job is a null pointer.";
+    return;
+  }
   unsigned int oldSize = mRemoveCommentBuffer[ job ].size();
   mRemoveCommentBuffer[ job ].resize( oldSize + data.size() );
   memcpy( mRemoveCommentBuffer[ job ].data() + oldSize, data.data(), data.size() );
@@ -965,6 +1028,10 @@ void GDataPrivate::slotRemoveCommentData( KIO::Job *job, const QByteArray &data 
 void GDataPrivate::slotRemoveComment( KJob *job )
 {
   kDebug(5323);
+  if( !job ) {
+    kError(5323) << "job is a null pointer.";
+    return;
+  }
   const QString data = QString::fromUtf8( mRemoveCommentBuffer[ job ].data(),
                                           mRemoveCommentBuffer[ job ].size() );
   mRemoveCommentBuffer[ job ].resize( 0 );

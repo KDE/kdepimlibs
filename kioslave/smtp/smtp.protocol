@@ -13,4 +13,4 @@ makedir=false
 linking=false
 moving=false
 DocPath=kioslave/smtp.html
-Icon=mail-outbox
+Icon=mail-folder-outbox

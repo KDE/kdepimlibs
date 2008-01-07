@@ -13,4 +13,4 @@ makedir=false
 linking=false
 moving=false
 DocPath=kioslave/pop3s.html
-Icon=mail-inbox
+Icon=mail-folder-inbox

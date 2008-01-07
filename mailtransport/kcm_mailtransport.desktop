@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Icon=network
+Icon=network-workgroup
 Type=Service
 ServiceTypes=KCModule
 
@@ -24,6 +24,7 @@ Name[fr]=Transport de courrier
 Name[ga]=Iompar Ríomhphoist
 Name[gl]=Transporte de correo
 Name[hu]=Levéltovábbítás
+Name[it]=Trasporto della posta
 Name[ja]=メール送信手段
 Name[lv]=Pasta transports
 Name[nb]=E-post-transport
@@ -31,8 +32,11 @@ Name[nds]=Överdreegmetood
 Name[nl]=E-mailtransport
 Name[pl]=Przekazywanie poczty
 Name[pt]=Transporte de Correio
+Name[pt_BR]=Transporte de Correio
 Name[ru]=Метод отправки
 Name[sl]=Prenos pošte
+Name[sr]=Транспорт поште
+Name[sr@latin]=Transport pošte
 Name[sv]=E-postöverföring
 Name[uk]=Транспортування пошти
 Name[x-test]=xxMail Transportxx

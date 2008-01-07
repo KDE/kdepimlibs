@@ -112,7 +112,8 @@ QBuffer* TransportJob::buffer()
   if ( !d->buffer ) {
     d->buffer = new QBuffer( this );
     d->buffer->setData( d->data );
-    Q_ASSERT( d->buffer->open( QIODevice::ReadOnly ) );
+    d->buffer->open( QIODevice::ReadOnly );
+    Q_ASSERT( d->buffer->isOpen() );
   }
   return d->buffer;
 }
