@@ -124,7 +124,7 @@ IncidenceBase::~IncidenceBase()
   delete d;
 }
 
-IncidenceBase& IncidenceBase::operator=( const IncidenceBase& other )
+IncidenceBase &IncidenceBase::operator=( const IncidenceBase &other )
 {
   CustomProperties::operator=( other );
   d->init( *other.d );

@@ -61,7 +61,7 @@ class KCAL_EXPORT Todo : public Incidence
       Destroys a to-do.
     */
     ~Todo();
-    Todo& operator=( const Todo& );
+    Todo &operator=( const Todo & );
 
     /**
       @copydoc

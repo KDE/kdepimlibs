@@ -716,7 +716,7 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     /**
       Assignment operator.
      */
-    Incidence& operator=( const Incidence &other );
+    Incidence &operator=( const Incidence &other );
 
     /**
       Compare this with @p incidence for equality.

@@ -106,7 +106,7 @@ Todo *Todo::clone()
   return new Todo( *this );
 }
 
-Todo& Todo::operator=( const Todo &other )
+Todo &Todo::operator=( const Todo &other )
 {
   Incidence::operator=( other );
   d->init( *other.d );

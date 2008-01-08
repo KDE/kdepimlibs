@@ -191,11 +191,11 @@ Incidence::~Incidence()
 // A string comparison that considers that null and empty are the same
 static bool stringCompare( const QString &s1, const QString &s2 )
 {
-  return ( s1.isEmpty() && s2.isEmpty() ) || (s1 == s2);
+  return ( s1.isEmpty() && s2.isEmpty() ) || ( s1 == s2 );
 }
 
 //@endcond
-Incidence& Incidence::operator=( const Incidence &other )
+Incidence &Incidence::operator=( const Incidence &other )
 {
   IncidenceBase::operator=( other );
   init( other );

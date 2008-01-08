@@ -82,7 +82,7 @@ Event *Event::clone()
   return new Event( *this );
 }
 
-Event& Event::operator=( const Event &other )
+Event &Event::operator=( const Event &other )
 {
   Incidence::operator=( other );
   *d = *other.d;

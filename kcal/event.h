@@ -68,7 +68,7 @@ class KCAL_EXPORT Event : public Incidence
       Destroys the event.
     */
     ~Event();
-    Event& operator=( const Event &e );
+    Event &operator=( const Event &e );
 
     /**
       Compares two events for equality.

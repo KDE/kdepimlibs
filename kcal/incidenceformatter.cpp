@@ -1168,9 +1168,9 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     html += helper->makeLink( "accept_conditionally",
                               i18nc( "Accept conditionally", "[Accept cond.]" ) );
     html += "</td><td> &nbsp; </td><td>";
-        // counter proposal
-        html += helper->makeLink( "counter", i18n( "[Counter proposal]" ) );
-        html += "</td><td> &nbsp; </td><td>";
+    // counter proposal
+    html += helper->makeLink( "counter", i18n( "[Counter proposal]" ) );
+    html += "</td><td> &nbsp; </td><td>";
     // Decline
     html += helper->makeLink( "decline", i18nc( "decline to-do request", "[Decline]" ) );
     html += "</td><td> &nbsp; </td><td>";
