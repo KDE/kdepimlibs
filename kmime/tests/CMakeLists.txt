@@ -2,12 +2,12 @@ set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include_directories(${CMAKE_SOURCE_DIR}/kmime)
 
-# convenience macro to add libkmime qtestlib unit-tests
+# convenience macro to add libkmime qtestlib qtgui unit-tests
 macro(add_kmime_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_unit_test(${_name} TESTNAME kmime-${_name} ${_test})
-  target_link_libraries(${_name} kmime ${QT_QTTEST_LIBRARY})
+  target_link_libraries(${_name} kmime ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
 endmacro(add_kmime_test)
 
 

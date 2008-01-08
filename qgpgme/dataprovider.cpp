@@ -22,6 +22,8 @@
 
 #include <qgpgme/dataprovider.h>
 
+#include <QIODevice>
+
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -129,25 +131,14 @@ void QByteArrayDataProvider::release() {
 //
 //
 
-QIODeviceDataProvider::QIODeviceDataProvider( QIODevice * io )
+QIODeviceDataProvider::QIODeviceDataProvider( const boost::shared_ptr<QIODevice> & io )
   : GpgME::DataProvider(),
-    mIO( io ), mOwnsDevice( false )
+    mIO( io )
 {
   assert( mIO );
 }
 
-QIODeviceDataProvider::~QIODeviceDataProvider() {
-  if ( mOwnsDevice )
-    delete mIO;
-}
-
-void QIODeviceDataProvider::setOwnsDevice( bool ownz ) {
-  mOwnsDevice = ownz;
-}
-
-bool QIODeviceDataProvider::ownsDevice() const {
-  return mOwnsDevice;
-}
+QIODeviceDataProvider::~QIODeviceDataProvider() {}
 
 bool QIODeviceDataProvider::isSupported( Operation op ) const {
     switch ( op ) {

@@ -118,9 +118,32 @@ Incidence::Incidence()
 }
 
 Incidence::Incidence( const Incidence &i )
-  : IncidenceBase( i ), Recurrence::RecurrenceObserver(),
+  : IncidenceBase( i ),
+    Recurrence::RecurrenceObserver(),
     d( new KCal::Incidence::Private( *i.d ) )
 {
+  init( i );
+}
+
+void Incidence::init( const Incidence &i )
+{
+// TODO: reenable attributes currently commented out.
+  d->mRevision = i.d->mRevision;
+  d->mCreated = i.d->mCreated;
+  d->mDescription = i.d->mDescription;
+  d->mSummary = i.d->mSummary;
+  d->mCategories = i.d->mCategories;
+//  Incidence *mRelatedTo;          Incidence *mRelatedTo;
+  d->mRelatedTo = 0;
+  d->mRelatedToUid = i.d->mRelatedToUid;
+//  Incidence::List mRelations;    Incidence::List mRelations;
+  d->mResources = i.d->mResources;
+  d->mStatusString = i.d->mStatusString;
+  d->mStatus = i.d->mStatus;
+  d->mSecrecy = i.d->mSecrecy;
+  d->mPriority = i.d->mPriority;
+  d->mLocation = i.d->mLocation;
+
   // Alarms and Attachments are stored in ListBase<...>, which is a QValueList<...*>.
   // We need to really duplicate the objects stored therein, otherwise deleting
   // i will also delete all attachments from this object (setAutoDelete...)
@@ -168,10 +191,16 @@ Incidence::~Incidence()
 // A string comparison that considers that null and empty are the same
 static bool stringCompare( const QString &s1, const QString &s2 )
 {
-  return
-    ( s1.isEmpty() && s2.isEmpty() ) || ( s1 == s2 );
+  return ( s1.isEmpty() && s2.isEmpty() ) || (s1 == s2);
 }
+
 //@endcond
+Incidence& Incidence::operator=( const Incidence &other )
+{
+  IncidenceBase::operator=( other );
+  init( other );
+  return *this;
+}
 
 bool Incidence::operator==( const Incidence &i2 ) const
 {

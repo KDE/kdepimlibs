@@ -60,19 +60,9 @@ class KCal::IncidenceBase::Private
     { mAttendees.setAutoDelete( true ); }
 
     Private( const Private &other )
-      : mLastModified( other.mLastModified ),
-        mDtStart( other.mDtStart ),
-        mOrganizer( other.mOrganizer ),
-        mUid( other.mUid ),
-        mDuration( other.mDuration ),
-        mUpdateGroupLevel( 0 ),
-        mUpdatedPending( false ),
-        mAllDay( other.mAllDay ),
-        mHasDuration( other.mHasDuration )
-        //????? mComments
-        // mObservers: the copied object is a new one, so it isn't observed
-        // by the observer of the original object.
-      { mAttendees.setAutoDelete( true ); }
+    { init( other ); }
+
+    void init( const Private &other );
 
     KDateTime mLastModified;     // incidence last modified date
     KDateTime mDtStart;          // incidence start time
@@ -88,30 +78,58 @@ class KCal::IncidenceBase::Private
     QStringList mComments;       // list of incidence comments
     QList<IncidenceObserver*> mObservers; // list of incidence observers
 };
+
+void IncidenceBase::Private::init( const Private &other )
+{
+  mLastModified = other.mLastModified;
+  mDtStart = other.mDtStart;
+  mOrganizer = other.mOrganizer;
+  mUid = other.mUid;
+  mDuration = other.mDuration;
+  mAllDay = other.mAllDay;
+  mHasDuration = other.mHasDuration;
+  mComments = other.mComments;
+
+  mAttendees.setAutoDelete( true );
+  mAttendees.clear();
+  Attendee::List attendees = other.mAttendees;
+  Attendee::List::ConstIterator it;
+  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+    mAttendees.append( new Attendee( *(*it) ) );
+  }
+
+  // the copied object is a new one, so it isn't observed
+  // by the observer of the original object.
+  mObservers.clear();
+}
 //@endcond
 
-IncidenceBase::IncidenceBase() : d( new KCal::IncidenceBase::Private )
+IncidenceBase::IncidenceBase()
+ : d( new KCal::IncidenceBase::Private )
 {
   mReadOnly = false;
 
   setUid( CalFormat::createUniqueId() );
 }
 
-IncidenceBase::IncidenceBase( const IncidenceBase &i ) :
-  CustomProperties( i ), d( new KCal::IncidenceBase::Private( *i.d ) )
+IncidenceBase::IncidenceBase( const IncidenceBase &i )
+ : CustomProperties( i ),
+   d( new KCal::IncidenceBase::Private( *i.d ) )
 {
   mReadOnly = i.mReadOnly;
-
-  Attendee::List attendees = i.attendees();
-  Attendee::List::ConstIterator it;
-  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
-    d->mAttendees.append( new Attendee( *(*it) ) );
-  }
 }
 
 IncidenceBase::~IncidenceBase()
 {
   delete d;
+}
+
+IncidenceBase& IncidenceBase::operator=( const IncidenceBase& other )
+{
+  CustomProperties::operator=( other );
+  d->init( *other.d );
+  mReadOnly = other.mReadOnly;
+  return *this;
 }
 
 bool IncidenceBase::operator==( const IncidenceBase &i2 ) const
@@ -124,10 +142,10 @@ bool IncidenceBase::operator==( const IncidenceBase &i2 ) const
   Attendee::List al2 = i2.attendees();
   Attendee::List::ConstIterator a1 = al1.begin();
   Attendee::List::ConstIterator a2 = al2.begin();
+  //TODO Does the order of attendees in the list really matter?
+  //Please delete this comment if you know it's ok, kthx
   for ( ; a1 != al1.end() && a2 != al2.end(); ++a1, ++a2 ) {
-    if ( **a1 == **a2 ) {
-      continue;
-    } else {
+    if ( !( **a1 == **a2 ) ) {
       return false;
     }
   }

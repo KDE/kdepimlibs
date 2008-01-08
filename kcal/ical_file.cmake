@@ -9,11 +9,11 @@ set(COMBINEDHEADERSICAL
    ${TOPS}/kcal/libical/src/libical/icaltypes.h
    ${TOPS}/kcal/libical/src/libical/icalrecur.h
    ${TOPS}/kcal/libical/src/libical/icalattach.h
-   ${TOPB}/kcal/libical/src/libical/icalderivedvalue.h
-   ${TOPB}/kcal/libical/src/libical/icalderivedparameter.h
+   ${TOPB}/kcal/libical/icalderivedvalue.h
+   ${TOPB}/kcal/libical/icalderivedparameter.h
    ${TOPS}/kcal/libical/src/libical/icalvalue.h
    ${TOPS}/kcal/libical/src/libical/icalparameter.h
-   ${TOPB}/kcal/libical/src/libical/icalderivedproperty.h
+   ${TOPB}/kcal/libical/icalderivedproperty.h
    ${TOPS}/kcal/libical/src/libical/icalproperty.h
    ${TOPS}/kcal/libical/src/libical/pvl.h
    ${TOPS}/kcal/libical/src/libical/icalarray.h

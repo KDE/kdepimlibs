@@ -26,6 +26,8 @@
 #define ICALCLASSIFY_H
 
 #include "ical.h"
+#include "icalderivedvalue.h"
+#include "icalcomponent.h"
 
 icalproperty_xlicclass icalclassify(icalcomponent* c,icalcomponent* match, 
 			      const char* user);

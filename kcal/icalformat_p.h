@@ -36,9 +36,7 @@
 #include "freebusy.h"
 #include "scheduler.h"
 
-extern "C" {
-  #include <ical.h>
-}
+#include <ical.h>
 
 #include <kdatetime.h>
 

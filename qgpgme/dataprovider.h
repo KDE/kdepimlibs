@@ -26,8 +26,10 @@
 #include <gpgme++/interfaces/dataprovider.h>
 
 #include <QtCore/QByteArray>
-#include <QtCore/QPointer>
-#include <QtCore/QIODevice>
+
+#include <boost/shared_ptr.hpp>
+
+class QIODevice;
 
 namespace QGpgME {
 
@@ -60,13 +62,10 @@ namespace QGpgME {
 
   class QGPGME_EXPORT QIODeviceDataProvider : public GpgME::DataProvider {
   public:
-    explicit QIODeviceDataProvider( QIODevice * initialData );
+    explicit QIODeviceDataProvider( const boost::shared_ptr<QIODevice> & initialData );
     ~QIODeviceDataProvider();
 
-    void setOwnsDevice( bool ownz );
-    bool ownsDevice() const;
-
-    QIODevice * ioDevice() const { return mIO; }
+    const boost::shared_ptr<QIODevice> & ioDevice() const { return mIO; }
 
   private:
     // these shall only be accessed through the dataprovider
@@ -83,9 +82,7 @@ namespace QGpgME {
     void release();
 
   private:
-    QPointer<QIODevice> mIO;
-    bool mOwnsDevice      :  1;
-    unsigned int reserved : 31;
+    const boost::shared_ptr<QIODevice> mIO;
   };
 
 } // namespace QGpgME

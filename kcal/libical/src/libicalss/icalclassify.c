@@ -25,6 +25,7 @@
 #include "ical.h"
 #include "icalclassify.h"
 #include "icalmemory.h"
+#include "icalerror.h"
 
 #include <ctype.h>   /* For tolower() */
 #include <string.h> /* for index() */

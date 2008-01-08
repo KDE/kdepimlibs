@@ -1,17 +1,22 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${GPGME_INCLUDES} )
-
+include_directories( ${Boost_INCLUDE_DIR} )
+add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
 
 ########### next target ###############
-set(dataprovidertest_SRCS dataprovidertest.cpp )
 
+set( qgpgme_TESTS
+  dataprovidertest
+  installtest
+  gpgsetexpirytimetest
+  gpgsetownertrusttest )
 
-kde4_add_executable(dataprovidertest TEST ${dataprovidertest_SRCS})
+foreach( _qgpgme_test ${qgpgme_TESTS} )
+  kde4_add_executable( "${_qgpgme_test}" TEST "${_qgpgme_test}.cpp" )
+  target_link_libraries( "${_qgpgme_test}" qgpgme ${QT_QTCORE_LIBRARY} )
+endforeach( _qgpgme_test )
 
-target_link_libraries(dataprovidertest  qgpgme ${KDE4_KDECORE_LIBS} )
+########### next target ###############
 
-########### next target ############### 
-set(installtest_SRCS installtest.cpp)
-kde4_add_executable(installtest TEST ${installtest_SRCS})  
-
-target_link_libraries(installtest  qgpgme ${KDE4_KDECORE_LIBS} ) 
+kde4_add_executable(editinteractortest TEST editinteractortest.cpp)
+target_link_libraries(editinteractortest  qgpgme ${QT_QTGUI_LIBRARY})

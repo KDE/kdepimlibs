@@ -714,6 +714,11 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     virtual void recurrenceUpdated( Recurrence *recurrence );
 
     /**
+      Assignment operator.
+     */
+    Incidence& operator=( const Incidence &other );
+
+    /**
       Compare this with @p incidence for equality.
 
       @param incidence is the incidence to compare.
@@ -732,6 +737,7 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     }
 
   private:
+    void init( const Incidence &other );
     //@cond PRIVATE
     class Private;
     Private *const d;

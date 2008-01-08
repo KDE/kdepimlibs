@@ -191,6 +191,11 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     virtual ~IncidenceBase();
 
     /**
+      Assignment operator.
+     */
+    IncidenceBase& operator=( const IncidenceBase &i );
+
+    /**
       Compares this with IncidenceBase @p ib for equality.
 
       @param ib is the IncidenceBase to compare.

@@ -72,6 +72,12 @@ CustomProperties::CustomProperties( const CustomProperties &cp )
 {
 }
 
+CustomProperties &CustomProperties::operator=( const CustomProperties &other )
+{
+  *d = *other.d;
+  return *this;
+}
+
 CustomProperties::~CustomProperties()
 {
   delete d;

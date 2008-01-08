@@ -53,14 +53,9 @@ class KCal::Todo::Private
         mHasCompletedDate( false )
     {}
     Private( const KCal::Todo::Private &other )
-      : mDtDue( other.mDtDue ),
-        mDtRecurrence( other.mDtRecurrence ),
-        mCompleted( other.mCompleted ),
-        mPercentComplete( other.mPercentComplete ),
-        mHasDueDate( other.mHasDueDate ),
-        mHasStartDate( other.mHasStartDate ),
-        mHasCompletedDate( other.mHasCompletedDate )
-    {}
+    { init( other ); }
+
+    void init( const KCal::Todo::Private &other );
 
     KDateTime mDtDue;        // to-do due date (if there is one)
                              // ALSO the first occurrence of a recurring to-do
@@ -76,6 +71,18 @@ class KCal::Todo::Private
     */
     bool recurTodo( Todo *todo );
 };
+
+void KCal::Todo::Private::init( const KCal::Todo::Private &other )
+{
+  mDtDue = other.mDtDue;
+  mDtRecurrence = other.mDtRecurrence;
+  mCompleted = other.mCompleted;
+  mPercentComplete = other.mPercentComplete;
+  mHasDueDate = other.mHasDueDate;
+  mHasStartDate = other.mHasStartDate;
+  mHasCompletedDate = other.mHasCompletedDate;
+}
+
 //@endcond
 
 Todo::Todo()
@@ -84,7 +91,8 @@ Todo::Todo()
 }
 
 Todo::Todo( const Todo &other )
-  : Incidence( other ), d( new KCal::Todo::Private( *other.d ) )
+  : Incidence( other ),
+    d( new KCal::Todo::Private( *other.d ) )
 {
 }
 
@@ -96,6 +104,13 @@ Todo::~Todo()
 Todo *Todo::clone()
 {
   return new Todo( *this );
+}
+
+Todo& Todo::operator=( const Todo &other )
+{
+  Incidence::operator=( other );
+  d->init( *other.d );
+  return *this;
 }
 
 bool Todo::operator==( const Todo &t2 ) const
