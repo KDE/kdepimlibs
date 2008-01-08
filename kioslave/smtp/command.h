@@ -192,11 +192,12 @@ namespace KioSMTP {
 #ifdef HAVE_LIBSASL2
     sasl_conn_t *conn;
     sasl_interact_t *client_interact;
-#endif
-    const char *mOut, *mMechusing;
+    const char *mOut;
     uint mOutlen;
     bool mOneStep;
+#endif
 
+    const char *mMechusing;
     KIO::AuthInfo *mAi;
     QByteArray mLastChallenge;
     QByteArray mUngetSASLResponse;

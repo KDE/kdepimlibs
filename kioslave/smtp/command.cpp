@@ -205,9 +205,9 @@ static sasl_callback_t callbacks[] = {
       mAi( &ai ),
       mFirstTime( true )
   {
+    mMechusing = 0;
 #ifdef HAVE_LIBSASL2
     int result;
-    mMechusing = 0;
     conn = 0;
     client_interact = 0;
     mOut = 0; mOutlen = 0;
@@ -360,10 +360,13 @@ static sasl_callback_t callbacks[] = {
   bool AuthCommand::processResponse( const Response & r, TransactionState * ) {
     if ( !r.isOk() ) {
       if ( mFirstTime )
-        if ( haveCapability( "AUTH" ) )
+        if ( haveCapability( "AUTH" ) ) {
+          QString chooseADifferentMsg( i18n("Choose a different authentication method.") );
           mSMTP->error( KIO::ERR_COULD_NOT_LOGIN,
-            i18n("Your SMTP server does not support %1.\nChoose a different authentication method.\n%2",
-                mMechusing ,  r.errorMessage() ) );
+            ( mMechusing ? i18n("Your SMTP server does not support %1.", r.errorMessage() )
+              : i18n("Your SMTP server does not support (unspecified method).") )
+            + "\n" + chooseADifferentMsg + "\n" + r.errorMessage() );
+        }
         else
           mSMTP->error( KIO::ERR_COULD_NOT_LOGIN,
                         i18n( "Your SMTP server does not support authentication.\n"
