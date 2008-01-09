@@ -2,7 +2,7 @@
   This file is part of libkcal.
 
   Copyright (c) 2005 Reinhold Kainhofer <reinhold@kainhofe.com>
-  Copyright (c) 2006,2007 David Jarvie <djarvie@kde.org>
+  Copyright (c) 2006,2007 David Jarvie <software@astrojar.org.uk>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -53,19 +53,6 @@ class DateHelper
     static int weekNumbersInYear( int year, short weekstart = 1 );
     static int getWeekNumber( const QDate &date, short weekstart, int *year = 0 );
     static int getWeekNumberNeg( const QDate &date, short weekstart, int *year = 0 );
-    // Convert to QDate, allowing for day < 0.
-    static QDate getDate( int year, int month, int day )
-    {
-      if ( day > 0 ) {
-        return QDate( year, month, day );
-      } else {
-        if ( ++month > 12 ) {
-          month = 1;
-          ++year;
-        }
-        return QDate( year, month, 1 ).addDays( day );
-      }
-    }
 };
 
 #ifndef NDEBUG
@@ -114,30 +101,30 @@ QDate DateHelper::getNthWeek( int year, int weeknumber, short weekstart )
 
 int DateHelper::getWeekNumber( const QDate &date, short weekstart, int *year )
 {
-  int y = date.year();
-  QDate dt( y, 1, 4 ); // <= definitely in week #1
+  if ( year ) {
+    *year = date.year();
+  }
+  QDate dt( date.year(), 1, 4 ); // <= definitely in week #1
   dt = dt.addDays( -( 7 + dt.dayOfWeek() - weekstart ) % 7 ); // begin of week #1
+  QDate dtn( date.year()+1, 1, 4 ); // <= definitely first week of next year
+  dtn = dtn.addDays( -( 7 + dtn.dayOfWeek() - weekstart ) % 7 );
 
   int daysto = dt.daysTo( date );
+  int dayston = dtn.daysTo( date );
   if ( daysto < 0 ) {
-    // in first week of year
-    --y;
-    dt = QDate( y, 1, 4 );
+    if ( year ) {
+      *year = date.year()-1;
+    }
+    dt = QDate( date.year() - 1, 1, 4 );
     dt = dt.addDays( -( 7 + dt.dayOfWeek() - weekstart ) % 7 ); // begin of week #1
     daysto = dt.daysTo( date );
-  } else if ( daysto > 355 ) {
-    // near the end of the year - check if it's next year
-    QDate dtn( y+1, 1, 4 ); // <= definitely first week of next year
-    dtn = dtn.addDays( -( 7 + dtn.dayOfWeek() - weekstart ) % 7 );
-    int dayston = dtn.daysTo( date );
-    if ( dayston >= 0 ) {
-      // in first week of next year;
-      ++y;
-      daysto = dayston;
+  } else if ( dayston >= 0 ) {
+    // in first week of next year;
+    if ( year ) {
+      *year = date.year() + 1;
     }
-  }
-  if ( year ) {
-    *year = y;
+    dt = dtn;
+    daysto = dayston;
   }
   return daysto / 7 + 1;
 }
@@ -169,18 +156,6 @@ class Constraint
     explicit Constraint( KDateTime::Spec, int wkst = 1 );
     Constraint( const KDateTime &dt, RecurrenceRule::PeriodType type, int wkst );
     void clear();
-    void setYear(int n)             { year = n; useCachedDt = false; }
-    void setMonth(int n)            { month = n; useCachedDt = false; }
-    void setDay(int n)              { day = n; useCachedDt = false; }
-    void setHour(int n)             { hour = n; useCachedDt = false; }
-    void setMinute(int n)           { minute = n; useCachedDt = false; }
-    void setSecond(int n)           { second = n; useCachedDt = false; }
-    void setWeekday(int n)          { weekday = n; useCachedDt = false; }
-    void setWeekdaynr(int n)        { weekdaynr = n; useCachedDt = false; }
-    void setWeeknumber(int n)       { weeknumber = n; useCachedDt = false; }
-    void setYearday(int n)          { yearday = n; useCachedDt = false; }
-    void setWeekstart(int n)        { weekstart = n; useCachedDt = false; }
-    void setSecondOccurrence(int n) { secondOccurrence = n; useCachedDt = false; }
 
     int year;       // 0 means unspecified
     int month;      // 0 means unspecified
@@ -199,7 +174,6 @@ class Constraint
     bool readDateTime( const KDateTime &dt, RecurrenceRule::PeriodType type );
     bool matches( const QDate &dt, RecurrenceRule::PeriodType type ) const;
     bool matches( const KDateTime &dt, RecurrenceRule::PeriodType type ) const;
-    bool merge( const Constraint &interval );
     bool isConsistent() const;
     bool isConsistent( RecurrenceRule::PeriodType period ) const;
     bool increase( RecurrenceRule::PeriodType type, int freq );
@@ -207,16 +181,11 @@ class Constraint
     QList<KDateTime> dateTimes( RecurrenceRule::PeriodType type ) const;
     void appendDateTime( const QDate &date, const QTime &time, QList<KDateTime> &list ) const;
     void dump() const;
-
-  private:
-    mutable bool useCachedDt;
-    mutable KDateTime cachedDt;
 };
 
 Constraint::Constraint( KDateTime::Spec spec, int wkst )
   : weekstart( wkst ),
-    timespec( spec ),
-    useCachedDt( false )
+    timespec( spec )
 {
   clear();
 }
@@ -241,7 +210,6 @@ void Constraint::clear()
   weeknumber = 0;
   yearday = 0;
   secondOccurrence = false;
-  useCachedDt = false;
 }
 
 bool Constraint::matches( const QDate &dt, RecurrenceRule::PeriodType type ) const
@@ -284,27 +252,25 @@ bool Constraint::matches( const QDate &dt, RecurrenceRule::PeriodType type ) con
     if ( weekdaynr != 0 ) {
       // If it's a yearly recurrence and a month is given, the position is
       // still in the month, not in the year.
-      if ( ( type == RecurrenceRule::rMonthly ) ||
-           ( type == RecurrenceRule::rYearly && month > 0 ) ) {
-        // Monthly
-        if ( weekdaynr > 0 &&
-             weekdaynr != ( dt.day() - 1 ) / 7 + 1 ) {
-          return false;
-        }
-        if ( weekdaynr < 0 &&
-             weekdaynr != -( ( dt.daysInMonth() - dt.day() ) / 7 + 1 ) ) {
-          return false;
-        }
-      } else {
-        // Yearly
-        if ( weekdaynr > 0 &&
-             weekdaynr != ( dt.dayOfYear() - 1 ) / 7 + 1 ) {
-          return false;
-        }
-        if ( weekdaynr < 0 &&
-             weekdaynr != -( ( dt.daysInYear() - dt.dayOfYear() ) / 7 + 1 ) ) {
-          return false;
-        }
+      bool inMonth = ( type == RecurrenceRule::rMonthly ) ||
+                     ( type == RecurrenceRule::rYearly && month > 0 );
+      // Monthly
+      if ( weekdaynr > 0 && inMonth &&
+           weekdaynr != ( dt.day() - 1 ) / 7 + 1 ) {
+        return false;
+      }
+      if ( weekdaynr < 0 && inMonth &&
+           weekdaynr != -( ( dt.daysInMonth() - dt.day() ) / 7 + 1 ) ) {
+        return false;
+      }
+      // Yearly
+      if ( weekdaynr > 0 && !inMonth &&
+           weekdaynr != ( dt.dayOfYear() - 1 ) / 7 + 1 ) {
+        return false;
+      }
+      if ( weekdaynr < 0 && !inMonth &&
+           weekdaynr != -( ( dt.daysInYear() - dt.dayOfYear() ) / 7 + 1 ) ) {
+        return false;
       }
     }
   }
@@ -322,10 +288,16 @@ bool Constraint::matches( const QDate &dt, RecurrenceRule::PeriodType type ) con
  */
 bool Constraint::matches( const KDateTime &dt, RecurrenceRule::PeriodType type ) const
 {
-  if ( ( hour >= 0 && ( hour != dt.time().hour() || secondOccurrence != dt.isSecondOccurrence() ) )
-    || ( minute >= 0 && minute != dt.time().minute() )
-    || ( second >= 0 && second != dt.time().second() )
-    || !matches( dt.date(), type ) ) {
+  if ( !matches( dt.date(), type ) ) {
+    return false;
+  }
+  if ( hour >= 0 && ( hour != dt.time().hour() || secondOccurrence != dt.isSecondOccurrence() ) ) {
+    return false;
+  }
+  if ( minute >= 0 && minute != dt.time().minute() ) {
+    return false;
+  }
+  if ( second >= 0 && second != dt.time().second() ) {
     return false;
   }
   return true;
@@ -341,78 +313,40 @@ bool Constraint::isConsistent( RecurrenceRule::PeriodType /*period*/) const
 // significant than the given period type set to 1 (for dates) or 0 (for times).
 KDateTime Constraint::intervalDateTime( RecurrenceRule::PeriodType type ) const
 {
-  if ( useCachedDt ) {
-    return cachedDt;
-  }
-  QDate d;
   QTime t( 0, 0, 0 );
-  bool subdaily = true;
+  QDate d( year, (month>0)?month:1, (day>0)?day:1 );
+  if ( day < 0 ) {
+    d = d.addDays( d.daysInMonth() + day );
+  }
   switch ( type ) {
-    case RecurrenceRule::rSecondly:
-      t.setHMS( hour, minute, second );
-      break;
-    case RecurrenceRule::rMinutely:
-      t.setHMS( hour, minute, 0 );
-      break;
-    case RecurrenceRule::rHourly:
-      t.setHMS( hour, 0, 0 );
-      break;
-    case RecurrenceRule::rDaily:
-      subdaily = false;
-      break;
-    case RecurrenceRule::rWeekly:
-      d = DateHelper::getNthWeek( year, weeknumber, weekstart );
-      subdaily = false;
-      break;
-    case RecurrenceRule::rMonthly:
-      d.setYMD( year, month, 1 );
-      subdaily = false;
-      break;
-    case RecurrenceRule::rYearly:
-      d.setYMD( year, 1, 1 );
-      subdaily = false;
-      break;
-    default:
-      break;
+  case RecurrenceRule::rSecondly:
+    t.setHMS( hour, minute, second );
+    break;
+  case RecurrenceRule::rMinutely:
+    t.setHMS( hour, minute, 0 );
+    break;
+  case RecurrenceRule::rHourly:
+    t.setHMS( hour, 0, 0 );
+    break;
+  case RecurrenceRule::rDaily:
+    break;
+  case RecurrenceRule::rWeekly:
+    d = DateHelper::getNthWeek( year, weeknumber, weekstart );
+    break;
+  case RecurrenceRule::rMonthly:
+    d.setYMD( year, month, 1 );
+    break;
+  case RecurrenceRule::rYearly:
+    d.setYMD( year, 1, 1 );
+    break;
+  default:
+    break;
   }
-  if ( subdaily ) {
-    d = DateHelper::getDate( year, (month>0)?month:1, day?day:1 );
-  }
-  cachedDt = KDateTime( d, t, timespec );
+  KDateTime result( d, t, timespec );
   if ( secondOccurrence ) {
-    cachedDt.setSecondOccurrence( true );
+    result.setSecondOccurrence( true );
   }
-  useCachedDt = true;
-  return cachedDt;
-}
-
-bool Constraint::merge( const Constraint &interval )
-{
-#define mergeConstraint( name, cmparison ) \
-  if ( interval.name cmparison ) { \
-    if ( !(name cmparison) ) { \
-      name = interval.name; \
-    } else if ( name != interval.name ) { \
-      return false;\
-    } \
-  }
-
-  useCachedDt = false;
-
-  mergeConstraint( year, > 0 );
-  mergeConstraint( month, > 0 );
-  mergeConstraint( day, != 0 );
-  mergeConstraint( hour, >= 0 );
-  mergeConstraint( minute, >= 0 );
-  mergeConstraint( second, >= 0 );
-
-  mergeConstraint( weekday, != 0 );
-  mergeConstraint( weekdaynr, != 0 );
-  mergeConstraint( weeknumber, != 0 );
-  mergeConstraint( yearday, != 0 );
-
-#undef mergeConstraint
-  return true;
+  return result;
 }
 
 //           Y  M  D | H  Mn S | WD #WD | WN | YD
@@ -443,8 +377,13 @@ QList<KDateTime> Constraint::dateTimes( RecurrenceRule::PeriodType type ) const
   // TODO_Recurrence: Handle all-day
   QTime tm( hour, minute, second );
 
-  if ( !done && day && month > 0 ) {
-    appendDateTime( DateHelper::getDate( year, month, day ), tm, result );
+  if ( !done && day > 0 && month > 0 ) {
+    appendDateTime( QDate( year, month, day ), tm, result );
+    done = true;
+  }
+  if ( !done && day < 0 && month > 0 ) {
+    QDate d( year, month, 1 );
+    appendDateTime( d.addDays( d.daysInMonth() + day ), tm, result );
     done = true;
   }
 
@@ -464,12 +403,8 @@ QList<KDateTime> Constraint::dateTimes( RecurrenceRule::PeriodType type ) const
         dstart = 1;
         dend = date.daysInMonth();
       }
-      uint d = dstart;
-      for ( QDate dt( year, m, dstart ); ; dt = dt.addDays( 1 ) ) {
-        appendDateTime( dt, tm, result );
-        if ( ++d > dend ) {
-          break;
-        }
+      for ( uint d = dstart; d <= dend; ++d ) {
+        appendDateTime( QDate( year, m, d ), tm, result );
       }
     }
     done = true;
@@ -564,38 +499,37 @@ void Constraint::appendDateTime( const QDate &date, const QTime &time,
 
 bool Constraint::increase( RecurrenceRule::PeriodType type, int freq )
 {
-  // convert the first day of the interval to KDateTime
-  intervalDateTime( type );
+  // convert the first day of the interval to QDateTime
+  KDateTime dt( intervalDateTime( type ) );
 
   // Now add the intervals
   switch ( type ) {
-    case RecurrenceRule::rSecondly:
-      cachedDt = cachedDt.addSecs( freq );
-      break;
-    case RecurrenceRule::rMinutely:
-      cachedDt = cachedDt.addSecs( 60 * freq );
-      break;
-    case RecurrenceRule::rHourly:
-      cachedDt = cachedDt.addSecs( 3600 * freq );
-      break;
-    case RecurrenceRule::rDaily:
-      cachedDt = cachedDt.addDays( freq );
-      break;
-    case RecurrenceRule::rWeekly:
-      cachedDt = cachedDt.addDays( 7 * freq );
-      break;
-    case RecurrenceRule::rMonthly:
-      cachedDt = cachedDt.addMonths( freq );
-      break;
-    case RecurrenceRule::rYearly:
-      cachedDt = cachedDt.addYears( freq );
-      break;
-    default:
-      break;
+  case RecurrenceRule::rSecondly:
+    dt = dt.addSecs( freq );
+    break;
+  case RecurrenceRule::rMinutely:
+    dt = dt.addSecs( 60 * freq );
+    break;
+  case RecurrenceRule::rHourly:
+    dt = dt.addSecs( 3600 * freq );
+    break;
+  case RecurrenceRule::rDaily:
+    dt = dt.addDays( freq );
+    break;
+  case RecurrenceRule::rWeekly:
+    dt = dt.addDays( 7 * freq );
+    break;
+  case RecurrenceRule::rMonthly:
+    dt = dt.addMonths( freq );
+    break;
+  case RecurrenceRule::rYearly:
+    dt = dt.addYears( freq );
+    break;
+  default:
+    break;
   }
   // Convert back from KDateTime to the Constraint class
-  readDateTime( cachedDt, type );
-  useCachedDt = true;   // readDateTime() resets this
+  readDateTime( dt, type );
 
   return true;
 }
@@ -605,7 +539,7 @@ bool Constraint::readDateTime( const KDateTime &dt, RecurrenceRule::PeriodType t
 {
   clear();
   switch ( type ) {
-    // Really fall through! Only weekly needs to be treated differently!
+    // Really fall through! Only weekly needs to be treated differentely!
   case RecurrenceRule::rSecondly:
     second = dt.time().second();
   case RecurrenceRule::rMinutely:
@@ -627,7 +561,6 @@ bool Constraint::readDateTime( const KDateTime &dt, RecurrenceRule::PeriodType t
   default:
     break;
   }
-  useCachedDt = false;
   return true;
 }
 //@endcond
@@ -683,6 +616,8 @@ class KCal::RecurrenceRule::Private
     Constraint getNextValidDateInterval( const KDateTime &preDate, PeriodType type ) const;
     Constraint getPreviousValidDateInterval( const KDateTime &afterDate, PeriodType type ) const;
     DateTimeList datesForInterval( const Constraint &interval, PeriodType type ) const;
+    bool mergeIntervalConstraint( Constraint *merged, const Constraint &conit,
+                                  const Constraint &interval ) const;
 
     RecurrenceRule *mParent;
     QString mRRule;            // RRULE string
@@ -1077,7 +1012,7 @@ void RecurrenceRule::Private::buildConstraints()
   mConstraints.clear();
   Constraint con( mDateStart.timeSpec() );
   if ( mWeekStart > 0 ) {
-    con.setWeekstart( mWeekStart );
+    con.weekstart = mWeekStart;
   }
   mConstraints.append( con );
 
@@ -1085,12 +1020,12 @@ void RecurrenceRule::Private::buildConstraints()
   int i, iend;
   Constraint::List tmp;
 
-  #define intConstraint( list, setElement ) \
+  #define intConstraint( list, element ) \
   if ( !list.isEmpty() ) { \
     for ( c = 0, cend = mConstraints.count();  c < cend;  ++c ) { \
       for ( i = 0, iend = list.count();  i < iend;  ++i ) { \
         con = mConstraints[c]; \
-        con.setElement( list[i] ); \
+        con.element = list[i]; \
         tmp.append( con ); \
       } \
     } \
@@ -1098,21 +1033,21 @@ void RecurrenceRule::Private::buildConstraints()
     tmp.clear(); \
   }
 
-  intConstraint( mBySeconds, setSecond );
-  intConstraint( mByMinutes, setMinute );
-  intConstraint( mByHours, setHour );
-  intConstraint( mByMonthDays, setDay );
-  intConstraint( mByMonths, setMonth );
-  intConstraint( mByYearDays, setYearday );
-  intConstraint( mByWeekNumbers, setWeeknumber );
+  intConstraint( mBySeconds, second );
+  intConstraint( mByMinutes, minute );
+  intConstraint( mByHours, hour );
+  intConstraint( mByMonthDays, day );
+  intConstraint( mByMonths, month );
+  intConstraint( mByYearDays, yearday );
+  intConstraint( mByWeekNumbers, weeknumber );
   #undef intConstraint
 
   if ( !mByDays.isEmpty() ) {
     for ( c = 0, cend = mConstraints.count();  c < cend;  ++c ) {
       for ( i = 0, iend = mByDays.count();  i < iend;  ++i ) {
         con = mConstraints[c];
-        con.setWeekday( mByDays[i].day() );
-        con.setWeekdaynr( mByDays[i].pos() );
+        con.weekday = mByDays[i].day();
+        con.weekdaynr = mByDays[i].pos();
         tmp.append( con );
       }
     }
@@ -1120,12 +1055,12 @@ void RecurrenceRule::Private::buildConstraints()
     tmp.clear();
   }
 
-  #define fixConstraint( setElement, value ) \
+  #define fixConstraint( element, value ) \
   { \
     tmp.clear(); \
     for ( c = 0, cend = mConstraints.count();  c < cend;  ++c ) { \
       con = mConstraints[c];                                      \
-      con.setElement( value );                                    \
+      con.element = value;                                        \
       tmp.append( con );                                          \
     } \
     mConstraints = tmp; \
@@ -1135,7 +1070,7 @@ void RecurrenceRule::Private::buildConstraints()
 
   // TODO: Does RFC 2445 intend to restrict the weekday in all cases of weekly?
   if ( mPeriod == rWeekly && mByDays.isEmpty() ) {
-    fixConstraint( setWeekday, mDateStart.date().dayOfWeek() );
+    fixConstraint( weekday, mDateStart.date().dayOfWeek() );
   }
 
   // Really fall through in the cases, because all smaller time intervals are
@@ -1144,25 +1079,25 @@ void RecurrenceRule::Private::buildConstraints()
   case rYearly:
     if ( mByDays.isEmpty() && mByWeekNumbers.isEmpty() &&
          mByYearDays.isEmpty() && mByMonths.isEmpty() ) {
-      fixConstraint( setMonth, mDateStart.date().month() );
+      fixConstraint( month, mDateStart.date().month() );
     }
   case rMonthly:
     if ( mByDays.isEmpty() && mByWeekNumbers.isEmpty() &&
          mByYearDays.isEmpty() && mByMonthDays.isEmpty() ) {
-      fixConstraint( setDay, mDateStart.date().day() );
+      fixConstraint( day, mDateStart.date().day() );
     }
   case rWeekly:
   case rDaily:
     if ( mByHours.isEmpty() ) {
-      fixConstraint( setHour, mDateStart.time().hour() );
+      fixConstraint( hour, mDateStart.time().hour() );
     }
   case rHourly:
     if ( mByMinutes.isEmpty() ) {
-      fixConstraint( setMinute, mDateStart.time().minute() );
+      fixConstraint( minute, mDateStart.time().minute() );
     }
   case rMinutely:
     if ( mBySeconds.isEmpty() ) {
-      fixConstraint( setSecond, mDateStart.time().second() );
+      fixConstraint( second, mDateStart.time().second() );
     }
   case rSecondly:
   default:
@@ -1761,6 +1696,40 @@ Constraint RecurrenceRule::Private::getNextValidDateInterval( const KDateTime &d
   return Constraint( nextValid, type, mWeekStart );
 }
 
+bool RecurrenceRule::Private::mergeIntervalConstraint( Constraint *merged,
+                                                       const Constraint &conit,
+                                                       const Constraint &interval ) const
+{
+  Constraint result( interval );
+
+#define mergeConstraint( name, cmparison ) \
+  if ( conit.name cmparison ) { \
+    if ( !( result.name cmparison ) || result.name == conit.name ) { \
+      result.name = conit.name; \
+    } else {                    \
+      return false;             \
+    }                           \
+  }
+
+  mergeConstraint( year, > 0 );
+  mergeConstraint( month, > 0 );
+  mergeConstraint( day, != 0 );
+  mergeConstraint( hour, >= 0 );
+  mergeConstraint( minute, >= 0 );
+  mergeConstraint( second, >= 0 );
+
+  mergeConstraint( weekday, != 0 );
+  mergeConstraint( weekdaynr, != 0 );
+  mergeConstraint( weeknumber, != 0 );
+  mergeConstraint( yearday, != 0 );
+
+  #undef mergeConstraint
+  if ( merged ) {
+    *merged = result;
+  }
+  return true;
+}
+
 DateTimeList RecurrenceRule::Private::datesForInterval( const Constraint &interval,
                                                         PeriodType type ) const
 {
@@ -1772,15 +1741,17 @@ DateTimeList RecurrenceRule::Private::datesForInterval( const Constraint &interv
   */
   DateTimeList lst;
   for ( int i = 0, iend = mConstraints.count();  i < iend;  ++i ) {
-    Constraint merged( interval );
-    if ( merged.merge( mConstraints[i] ) ) {
-      // If the information is incomplete, we can't use this constraint
-      if ( merged.year > 0 && merged.hour >= 0 && merged.minute >= 0 && merged.second >= 0 ) {
-        // We have a valid constraint, so get all datetimes that match it andd
-        // append it to all date/times of this interval
-        QList<KDateTime> lstnew = merged.dateTimes( type );
-        lst += lstnew;
-      }
+    Constraint merged( mDateStart.timeSpec() );
+    bool mergeok = mergeIntervalConstraint( &merged, mConstraints[i], interval );
+    // If the information is incomplete, we can't use this constraint
+    if ( merged.year <= 0 || merged.hour < 0 || merged.minute < 0 || merged.second < 0 ) {
+      mergeok = false;
+    }
+    if ( mergeok ) {
+      // We have a valid constraint, so get all datetimes that match it andd
+      // append it to all date/times of this interval
+      QList<KDateTime> lstnew = merged.dateTimes( type );
+      lst += lstnew;
     }
   }
   // Sort it so we can apply the BySetPos. Also some logic relies on this being sorted
