@@ -26,7 +26,6 @@ networkstatus - will be moved by Bille into kdelibs and kdebase
 
 High Priority, but not ready until KDE 4.1
 ==========================================
-libkhalkhi - new, Friedrich W. H. Kossebau <kossebau kde org>
 libakonadi - being developed in kdepim, may not be ready until 4.1,
              API currently too unstable for anything with a freeze policy :)
 
@@ -58,3 +57,7 @@ syndication
 Candidates for kdepimlibs-gpl
 =============================
 kdgantt - May NOT be relicensed. MUST remain GPL (and therefore cannot be moved)
+
+Future Considerations
+=====================
+libkhalkhi - Friedrich W. H. Kossebau <kossebau kde org>
