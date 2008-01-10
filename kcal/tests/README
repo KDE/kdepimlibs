@@ -1,6 +1,8 @@
 To build these tests, build with the cmake option KDE4_BUILD_TESTS=ON.
 
 To run all these tests, enter the command 'ctest'.
+Details of failed tests are output to FAILED.log, and in the case of recurrence tests,
+to the .out files equivalent to the .ref files containing the expected results.
 
 To run a single test on a single test file, use the 'runsingletestcase.pl' script:
 
