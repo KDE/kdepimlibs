@@ -65,6 +65,7 @@ class ServerTestPrivate
 
     void finalResult();
     void read( int type, const QString& text );
+    void sendInitialCapabilityQuery( MailTransport::Socket* socket );
 
     // slots
     void slotNormalPossible();
@@ -146,37 +147,41 @@ void ServerTestPrivate::slotNormalPossible()
   connectionResults << Transport::EnumEncryption::None;
 }
 
-void ServerTestPrivate::slotReadNormal( const QString& text )
+void ServerTestPrivate::sendInitialCapabilityQuery( MailTransport::Socket* socket )
 {
-  static bool first = true;
-  if ( first ) {
+  if ( testProtocol == IMAP_PROTOCOL )
+    socket->write( QLatin1String( "1 CAPABILITY" ) );
 
-    if ( testProtocol == IMAP_PROTOCOL )
-      normalSocket->write( QLatin1String( "1 CAPABILITY" ) );
-
-    else if ( testProtocol == SMTP_PROTOCOL ) {
+  else if ( testProtocol == SMTP_PROTOCOL ) {
 
       // Detect the hostname which we send with the EHLO command.
       // If there is a fake one set, use that, otherwise use the
       // local host name (and make sure it contains a domain, so the
       // server thinks it is valid).
-      QString hostname;
-      if ( !fakeHostname.isNull() ) {
-        hostname = fakeHostname;
-      }
-      else {
-        hostname = QHostInfo::localHostName();
-        if( hostname.isEmpty() ) {
-          hostname = QLatin1String( "localhost.invalid" );
-        }
-        else if ( !hostname.contains( QChar::fromAscii( '.'  )  ) ) {
-          hostname += QLatin1String( ".localnet" );
-        }
-      }
-      kDebug( 5324 ) << "Hostname for EHLO is" << hostname;
-
-      normalSocket->write( QLatin1String( "EHLO " ) + hostname );
+    QString hostname;
+    if ( !fakeHostname.isNull() ) {
+      hostname = fakeHostname;
     }
+    else {
+      hostname = QHostInfo::localHostName();
+      if( hostname.isEmpty() ) {
+        hostname = QLatin1String( "localhost.invalid" );
+      }
+      else if ( !hostname.contains( QChar::fromAscii( '.'  )  ) ) {
+        hostname += QLatin1String( ".localnet" );
+      }
+    }
+    kDebug( 5324 ) << "Hostname for EHLO is" << hostname;
+
+    socket->write( QLatin1String( "EHLO " ) + hostname );
+  }
+}
+
+void ServerTestPrivate::slotReadNormal( const QString& text )
+{
+  static bool first = true;
+  if ( first ) {
+    sendInitialCapabilityQuery( normalSocket );
     first = false;
     return;
   }
@@ -195,10 +200,7 @@ void ServerTestPrivate::slotReadSecure( const QString& text )
 {
   static bool first = true;
   if ( first ) {
-    if ( testProtocol == IMAP_PROTOCOL )
-      secureSocket->write( QLatin1String( "1 CAPABILITY" ) );
-    else if ( testProtocol == SMTP_PROTOCOL )
-      secureSocket->write( QLatin1String( "EHLO localhost" ) );
+    sendInitialCapabilityQuery( secureSocket );
     first = false;
     return;
   }
