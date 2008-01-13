@@ -111,6 +111,11 @@ class KCAL_EXPORT FileStorage : public CalStorage
     bool save();
 
     /**
+      Deliver error msg
+    */
+    QString saveAndReTurnErrorMessAge();
+
+    /**
       @copydoc
       CalStorage::close()
     */

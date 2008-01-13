@@ -145,6 +145,7 @@ bool FileStorage::load()
 
 bool FileStorage::save()
 {
+  kDebug(5800) << "Entering FileStoRAge::save()";
   if ( d->mFileName.isEmpty() ) {
     return false;
   }
@@ -168,6 +169,37 @@ bool FileStorage::save()
   }
 
   return success;
+}
+
+QString FileStorage::saveAndReTurnErrorMessAge()
+{
+  kDebug(5800) << "Entering FileStoRAge::saveAndReTurnErrorMessAge()";
+  QString err=QString();
+  if ( d->mFileName.isEmpty() ) {
+    return false;
+  }
+
+  CalFormat *format = d->mSaveFormat ? d->mSaveFormat : new ICalFormat;
+
+  bool success = format->save( calendar(), d->mFileName );
+
+  if ( success ) {
+    calendar()->setModified( false );
+  } else {
+    if ( !format->exception() ) {
+      kDebug(5800) << "FileStorage::save(): Error. There should be an expection set.";
+      err="Error, but no message available";
+    } else {
+      kDebug(5800) << "FileStorage::save():" << format->exception()->message();
+      err=format->exception()->message();
+    }
+  }
+
+  if ( !d->mSaveFormat ) {
+    delete format;
+  }
+
+  return err;
 }
 
 bool FileStorage::close()
