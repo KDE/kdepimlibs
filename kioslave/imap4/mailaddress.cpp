@@ -197,14 +197,15 @@ int mailAddress::parseAddress (const char *aCStr)
   return retVal;
 }
 
-const QByteArray mailAddress::getStr ()
+const QByteArray mailAddress::getStr () const
 {
   QByteArray retVal(128, '\0' ); // Should be generally big enough
 
   if (!rawFullName.isEmpty ())
   {
-    KMime::addQuotes( rawFullName, false );
-    retVal = rawFullName + ' ';
+    QByteArray tmpName( rawFullName );
+    KMime::addQuotes( tmpName, false );
+    retVal = tmpName + ' ';
   }
   if (!user.isEmpty ())
   {

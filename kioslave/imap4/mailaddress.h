@@ -61,7 +61,7 @@ public:
   const QByteArray & getCommentRaw () const;
 
   int parseAddress (const char *);
-  const QByteArray getStr ();
+  const QByteArray getStr () const;
   bool isEmpty () const;
 
   static QString emailAddrAsAnchor (const mailAddress &, bool);
