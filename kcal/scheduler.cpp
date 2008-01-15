@@ -410,7 +410,9 @@ bool Scheduler::acceptReply( IncidenceBase *incidence,
                    "The organizer rejected your attendance at this meeting." ) );
         }
         performTransaction( cancel ? cancel : incidence, iTIPCancel, attNew->fullName() );
-        delete cancel;
+        // ### can't delete cancel here because it is aliased to incidence which
+        // is accessed in the next loop iteration (CID 4232)
+        // delete cancel;
         continue;
       }
 
