@@ -1,6 +1,6 @@
 /*
   This file is part of the kcal library.
-  Copyright (C) 2006 Allen Winter <winter@kde.org>
+  Copyright (C) 2006,2008 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -17,10 +17,9 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#include <qtest_kde.h>
-
 #include "testtodo.h"
 #include "testtodo.moc"
+#include <qtest_kde.h>
 
 QTEST_KDEMAIN( TodoTest, NoGUI )
 
@@ -84,4 +83,18 @@ void TodoTest::testClone()
   QVERIFY( todo1.description() == todo2->description() );
   QVERIFY( todo1.location( ) == todo2->location() );
   QVERIFY( todo1.isCompleted() == todo2->isCompleted() );
+}
+
+void TodoTest::testAssign()
+{
+  QDate dt = QDate::currentDate();
+  Todo todo1;
+  todo1.setDtStart( KDateTime( dt ) );
+  todo1.setDtDue( KDateTime( dt ).addDays( 1 ) );
+  todo1.setSummary( "Todo1 Summary" );
+  todo1.setDescription( "This is a description of the first todo" );
+  todo1.setLocation( "the place" );
+
+  Todo todo2 = todo1;
+  QVERIFY( todo1 == todo2 );
 }

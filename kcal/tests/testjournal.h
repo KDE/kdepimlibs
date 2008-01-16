@@ -1,6 +1,6 @@
 /*
   This file is part of the kcal library.
-  Copyright (c) 2007 Allen Winter <winter@kde.org>
+  Copyright (c) 2007-2008 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -18,8 +18,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef JOURNALTEST_H
-#define JOURNALTEST_H
+#ifndef TESTJOURNAL_H
+#define TESTJOURNAL_H
 
 #include <QtCore/QObject>
 
@@ -31,6 +31,7 @@ class JournalTest : public QObject
     void testCompare();
     void testClone();
     void testRich();
+    void testAssign();
 };
 
 #endif

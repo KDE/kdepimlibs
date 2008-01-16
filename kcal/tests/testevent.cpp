@@ -1,6 +1,6 @@
 /*
   This file is part of the kcal library.
-  Copyright (C) 2006 Allen Winter <winter@kde.org>
+  Copyright (C) 2006,2008 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -17,10 +17,9 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#include <qtest_kde.h>
-
 #include "testevent.h"
 #include "testevent.moc"
+#include <qtest_kde.h>
 
 QTEST_KDEMAIN( EventTest, NoGUI )
 
@@ -98,4 +97,19 @@ void EventTest::testCopy()
   QVERIFY( event1.dtEnd() == event2.dtEnd() );
   QVERIFY( event1.description() == event2.description() );
   QVERIFY( event1.location( ) == event2.location() );
+}
+
+void EventTest::testAssign()
+{
+  QDate dt = QDate::currentDate();
+  Event event1;
+  event1.setDtStart( KDateTime( dt ) );
+  event1.setDtEnd( KDateTime( dt ).addDays( 1 ) );
+  event1.setSummary( "Event1 Summary" );
+  event1.setDescription( "This is a description of the first event" );
+  event1.setLocation( "the place" );
+  event1.setTransparency( Event::Transparent );
+
+  Event event2 = event1;
+  QVERIFY( event1 == event2 );
 }

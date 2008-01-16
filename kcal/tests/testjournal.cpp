@@ -1,6 +1,6 @@
 /*
   This file is part of the kcal library.
-  Copyright (C) 2007 Allen Winter <winter@kde.org>
+  Copyright (C) 2007-2008 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -17,10 +17,9 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#include <qtest_kde.h>
-
 #include "testjournal.h"
 #include "testjournal.moc"
+#include <qtest_kde.h>
 
 QTEST_KDEMAIN( JournalTest, NoGUI )
 
@@ -85,4 +84,17 @@ void JournalTest::testRich()
   QVERIFY( journal1.summaryIsRich() );
   QVERIFY( journal1.descriptionIsRich() );
   QVERIFY( journal1.locationIsRich() );
+}
+
+void JournalTest::testAssign()
+{
+  QDate dt = QDate::currentDate();
+  Journal journal1;
+  journal1.setDtStart( KDateTime( dt ) );
+  journal1.setSummary( "Journal1 Summary" );
+  journal1.setDescription( "This is a description of the first journal" );
+  journal1.setLocation( "the place" );
+
+  Journal journal2 = journal1;
+  QVERIFY( journal1 == journal2 );
 }
