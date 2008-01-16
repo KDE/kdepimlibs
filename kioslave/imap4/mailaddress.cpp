@@ -171,7 +171,7 @@ int mailAddress::parseAddress (const char *aCStr)
         rawFullName.truncate(0);
       }
     }
-
+    
 #if 0
 // dead
     if (!rawFullName.isEmpty ())
@@ -199,7 +199,8 @@ int mailAddress::parseAddress (const char *aCStr)
 
 const QByteArray mailAddress::getStr () const
 {
-  QByteArray retVal(128, '\0' ); // Should be generally big enough
+  QByteArray retVal;
+  retVal.reserve(128); // Should be generally big enough
 
   if (!rawFullName.isEmpty ())
   {
@@ -219,9 +220,9 @@ const QByteArray mailAddress::getStr () const
   }
   if (!rawComment.isEmpty ())
   {
-    retVal = '(' + rawComment + ')';
+    retVal += " (" + rawComment + ')';
   }
-//  kDebug(7116) <<"mailAddress::getStr - '" << retVal <<"'";
+  //kDebug() << retVal;
   return retVal;
 }
 
