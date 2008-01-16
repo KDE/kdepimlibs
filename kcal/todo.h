@@ -61,7 +61,6 @@ class KCAL_EXPORT Todo : public Incidence
       Destroys a to-do.
     */
     ~Todo();
-    Todo &operator=( const Todo & );
 
     /**
       @copydoc
@@ -337,6 +336,11 @@ class KCAL_EXPORT Todo : public Incidence
       and not completed), else false.
      */
     bool isOverdue() const;
+
+    /**
+      Assignment operator.
+    */
+    Todo &operator=( const Todo &other );
 
     /**
       Compare this with @p todo for equality.

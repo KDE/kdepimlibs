@@ -193,7 +193,7 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     /**
       Assignment operator.
      */
-    IncidenceBase &operator=( const IncidenceBase &i );
+    IncidenceBase &operator=( const IncidenceBase &other );
 
     /**
       Compares this with IncidenceBase @p ib for equality.

@@ -68,13 +68,17 @@ class KCAL_EXPORT Event : public Incidence
       Destroys the event.
     */
     ~Event();
-    Event &operator=( const Event &e );
+
+    /**
+      Assignment operator.
+    */
+    Event &operator=( const Event &other );
 
     /**
       Compares two events for equality.
-      @param other is the comparison event.
+      @param event is the event to compare
     */
-    bool operator==( const Event &other ) const;
+    bool operator==( const Event &event ) const;
 
     /**
       Returns the Incidence type, as a QByteArray.

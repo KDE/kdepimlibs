@@ -51,9 +51,15 @@ Journal *Journal::clone()
   return new Journal( *this );
 }
 
-bool Journal::operator==( const Journal &j2 ) const
+Journal &Journal::operator=( const Journal &other )
+{
+  Incidence::operator=( other );
+  return *this;
+}
+
+bool Journal::operator==( const Journal &journal ) const
 {
     return
-      static_cast<const Incidence &>( *this ) == static_cast<const Incidence &>( j2 );
+      static_cast<const Incidence &>( *this ) == static_cast<const Incidence &>( journal );
 }
 

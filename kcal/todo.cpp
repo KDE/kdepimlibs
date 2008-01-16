@@ -113,16 +113,16 @@ Todo &Todo::operator=( const Todo &other )
   return *this;
 }
 
-bool Todo::operator==( const Todo &t2 ) const
+bool Todo::operator==( const Todo &todo ) const
 {
   return
-    static_cast<const Incidence &>( *this ) == static_cast<const Incidence &>( t2 ) &&
-    dtDue() == t2.dtDue() &&
-    hasDueDate() == t2.hasDueDate() &&
-    hasStartDate() == t2.hasStartDate() &&
-    completed() == t2.completed() &&
-    hasCompletedDate() == t2.hasCompletedDate() &&
-    percentComplete() == t2.percentComplete();
+    static_cast<const Incidence &>( *this ) == static_cast<const Incidence &>( todo ) &&
+    dtDue() == todo.dtDue() &&
+    hasDueDate() == todo.hasDueDate() &&
+    hasStartDate() == todo.hasStartDate() &&
+    completed() == todo.completed() &&
+    hasCompletedDate() == todo.hasCompletedDate() &&
+    percentComplete() == todo.percentComplete();
 }
 
 QByteArray Todo::type() const

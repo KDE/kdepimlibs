@@ -70,6 +70,11 @@ class KCAL_EXPORT Journal : public Incidence
     Journal *clone();
 
     /**
+      Assignment operator.
+    */
+    Journal &operator=( const Journal &other );
+
+    /**
       Compare this with @p journal for equality.
 
       @param journal is the journal to compare.

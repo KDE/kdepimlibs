@@ -89,13 +89,13 @@ Event &Event::operator=( const Event &other )
   return *this;
 }
 
-bool Event::operator==( const Event &other ) const
+bool Event::operator==( const Event &event ) const
 {
   return
-    static_cast<const Incidence &>( *this ) == static_cast<const Incidence &>( other ) &&
-    dtEnd() == other.dtEnd() &&
-    hasEndDate() == other.hasEndDate() &&
-    transparency() == other.transparency();
+    static_cast<const Incidence &>( *this ) == static_cast<const Incidence &>( event ) &&
+    dtEnd() == event.dtEnd() &&
+    hasEndDate() == event.hasEndDate() &&
+    transparency() == event.transparency();
 }
 
 QByteArray Event::type() const
