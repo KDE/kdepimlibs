@@ -48,9 +48,8 @@ class ICalTimeZoneDataPrivate;
  * The ICalTimeZones class represents a time zone database which consists of a
  * collection of individual iCalendar time zone definitions.
  *
- * Each individual time zone is defined in a ICalTimeZone instance.
- * The time zones in the collection are indexed by name, which must be unique
- * within the collection.
+ * Each individual time zone is defined in a ICalTimeZone instance. The time zones in the
+ * collection are indexed by name, which must be unique within the collection.
  *
  * Different calendars could define the same time zone differently. As a result,
  * to avoid conflicting definitions, each calendar should normally have its own
@@ -256,7 +255,7 @@ class KCAL_EXPORT ICalTimeZone : public KTimeZone  //krazy:exclude=dpointer
  * @ingroup timezones
  * @author David Jarvie <software@astrojar.org.uk>.
  */
-class KCAL_EXPORT ICalTimeZoneBackend : public KTimeZoneBackend  //krazy:exclude=dpointer
+class KCAL_EXPORT ICalTimeZoneBackend : public KTimeZoneBackend
 {
   public:
     /** Implements ICalTimeZone::ICalTimeZone(). */
@@ -311,7 +310,8 @@ class KCAL_EXPORT ICalTimeZoneBackend : public KTimeZoneBackend  //krazy:exclude
     virtual bool hasTransitions( const KTimeZone *caller ) const;
 
   private:
-    ICalTimeZonePrivate *d;   // non-const
+    ICalTimeZonePrivate *d; //krazy:exclude=dpointer
+                            //(non-const d-pointer for KTimeZoneBackend-derived classes)
 };
 
 /**
@@ -483,8 +483,8 @@ class KCAL_EXPORT ICalTimeZoneData : public KTimeZoneData
     virtual KTimeZoneData *clone() const;
 
     /**
-     * Returns the name of the city for this time zone, if any.
-     * There is no fixed format for the name.
+     * Returns the name of the city for this time zone, if any. There is no fixed
+     * format for the name.
      *
      * @return city name
      */
