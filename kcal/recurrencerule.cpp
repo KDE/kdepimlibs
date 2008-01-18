@@ -170,18 +170,66 @@ class Constraint
     explicit Constraint( KDateTime::Spec, int wkst = 1 );
     Constraint( const KDateTime &dt, RecurrenceRule::PeriodType type, int wkst );
     void clear();
-    void setYear(int n)             { year = n; useCachedDt = false; }
-    void setMonth(int n)            { month = n; useCachedDt = false; }
-    void setDay(int n)              { day = n; useCachedDt = false; }
-    void setHour(int n)             { hour = n; useCachedDt = false; }
-    void setMinute(int n)           { minute = n; useCachedDt = false; }
-    void setSecond(int n)           { second = n; useCachedDt = false; }
-    void setWeekday(int n)          { weekday = n; useCachedDt = false; }
-    void setWeekdaynr(int n)        { weekdaynr = n; useCachedDt = false; }
-    void setWeeknumber(int n)       { weeknumber = n; useCachedDt = false; }
-    void setYearday(int n)          { yearday = n; useCachedDt = false; }
-    void setWeekstart(int n)        { weekstart = n; useCachedDt = false; }
-    void setSecondOccurrence(int n) { secondOccurrence = n; useCachedDt = false; }
+    void setYear( int n )
+    {
+      year = n;
+      useCachedDt = false;
+    }
+    void setMonth( int n )
+    {
+      month = n;
+      useCachedDt = false;
+    }
+    void setDay( int n )
+    {
+      day = n;
+      useCachedDt = false;
+    }
+    void setHour( int n )
+    {
+      hour = n;
+      useCachedDt = false;
+    }
+    void setMinute( int n )
+    {
+      minute = n;
+      useCachedDt = false;
+    }
+    void setSecond( int n )
+    {
+      second = n;
+      useCachedDt = false;
+    }
+    void setWeekday( int n )
+    {
+      weekday = n;
+      useCachedDt = false;
+    }
+    void setWeekdaynr( int n )
+    {
+      weekdaynr = n;
+      useCachedDt = false;
+    }
+    void setWeeknumber( int n )
+    {
+      weeknumber = n;
+      useCachedDt = false;
+    }
+    void setYearday( int n )
+    {
+      yearday = n;
+      useCachedDt = false;
+    }
+    void setWeekstart( int n )
+    {
+      weekstart = n;
+      useCachedDt = false;
+    }
+    void setSecondOccurrence( int n )
+    {
+      secondOccurrence = n;
+      useCachedDt = false;
+    }
 
     int year;       // 0 means unspecified
     int month;      // 0 means unspecified
@@ -323,10 +371,11 @@ bool Constraint::matches( const QDate &dt, RecurrenceRule::PeriodType type ) con
  */
 bool Constraint::matches( const KDateTime &dt, RecurrenceRule::PeriodType type ) const
 {
-  if ( ( hour >= 0 && ( hour != dt.time().hour() || secondOccurrence != dt.isSecondOccurrence() ) )
-    || ( minute >= 0 && minute != dt.time().minute() )
-    || ( second >= 0 && second != dt.time().second() )
-    || !matches( dt.date(), type ) ) {
+  if ( ( hour >= 0 && ( hour != dt.time().hour() ||
+                        secondOccurrence != dt.isSecondOccurrence() ) ) ||
+       ( minute >= 0 && minute != dt.time().minute() ) ||
+       ( second >= 0 && second != dt.time().second() ) ||
+       !matches( dt.date(), type ) ) {
     return false;
   }
   return true;
@@ -390,7 +439,7 @@ bool Constraint::merge( const Constraint &interval )
 {
 #define mergeConstraint( name, cmparison ) \
   if ( interval.name cmparison ) { \
-    if ( !(name cmparison) ) { \
+    if ( !( name cmparison ) ) { \
       name = interval.name; \
     } else if ( name != interval.name ) { \
       return false;\
@@ -1820,7 +1869,7 @@ DateTimeList RecurrenceRule::Private::datesForInterval( const Constraint &interv
 void RecurrenceRule::dump() const
 {
 #ifndef NDEBUG
-  kDebug(5800) << "RecurrenceRule::dump():";
+  kDebug(5800);
   if ( !d->mRRule.isEmpty() ) {
     kDebug(5800) << "   RRULE=" << d->mRRule;
   }
