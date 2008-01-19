@@ -371,7 +371,7 @@ public:
       /** Status of a successfully removed post.
       @see Blog::removePost( KBlog::BlogPost* ) */
       Removed,
-      /** Status when an error on the server side occured.
+      /** Status when an error on the server side occurred.
       @see error() */
       Error
     };

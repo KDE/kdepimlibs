@@ -210,7 +210,7 @@ class KBLOG_EXPORT BlogComment
     /** Status of a successfully removed comment.
     @see GData::removeComment( BlogPost*, BlogComment* ) */
     Removed,
-    /** Status when an error has occured on the server side.
+    /** Status when an error has occurred on the server side.
     @see error() */
     Error
   };

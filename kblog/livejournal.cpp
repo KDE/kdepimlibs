@@ -84,7 +84,7 @@ void LiveJournal::createPost( KBlog::BlogPost *post )
   Q_D( LiveJournal ); // Enable d-pointer access to the LiveJournalPrivate object
   if ( !post ) { // Check if post has a valid memory address (>0)
     kError(5323) << "LiveJournal::createPost: post is null pointer"; // If it doesn't print an error to the console.
-    return; // If it doesnt, exit the method
+    return; // If it does not, exit the method
   }
   unsigned int i = d->mCallCounter++; // Add one to the call counter and assign it
   d->mCallMap[ i ] = post; // Put the post in the map at location i
@@ -188,7 +188,7 @@ void LiveJournal::modifyPost( KBlog::BlogPost *post )
   Q_D( LiveJournal ); // Enable d-pointer access to the LiveJournalPrivate object
   if ( !post ) { // Check if post has a valid memory address (>0)
     kError(5323) << "LiveJournal::modifyPost: post is null pointer"; // If it doesn't print an error to the console.
-    return; // If it doesnt, exit the method
+    return; // If it does not, exit the method
   }
   unsigned int i = d->mCallCounter++; // Add one to the call counter and assign it
   d->mCallMap[ i ] = post; // Put the post in the map at location i

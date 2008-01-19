@@ -138,9 +138,9 @@ class KBLOG_EXPORT BlogMedia
     enum Status {
        /** Status of freshly constructed media object on the client side. */
        New,
-       /** Status of a media object succesfully created on the server. */
+       /** Status of a media object successfully created on the server. */
        Created,
-       /** Status when an error on uploading has occured. */
+       /** Status when an error on uploading has occurred. */
        Error
     };
 
