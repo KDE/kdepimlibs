@@ -924,7 +924,7 @@ const mailAddress& imapParser::parseAddress (parseString & inWords, mailAddress&
   inWords.pos++;
   skipWS (inWords);
 
-  retVal.setFullName(KIMAP::quoteIMAP(parseLiteral(inWords)));
+  retVal.setFullName(parseLiteral(inWords));
   retVal.setCommentRaw(parseLiteral(inWords));
   retVal.setUser(parseLiteral(inWords));
   retVal.setHost(parseLiteral(inWords));
