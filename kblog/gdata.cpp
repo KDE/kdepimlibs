@@ -24,6 +24,9 @@
 #include "blogpost.h"
 #include "blogcomment.h"
 
+#include <syndication/loader.h>
+#include <syndication/item.h>
+
 #include <kio/netaccess.h>
 #include <kio/http.h>
 #include <kio/job.h>
@@ -91,11 +94,11 @@ void GData::fetchProfileId()
 void GData::listBlogs()
 {
   kDebug();
-  Loader *loader = Loader::create();
+  Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader,
-           SIGNAL(loadingComplete(Loader*,FeedPtr,ErrorCode)),
+           SIGNAL(loadingComplete(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)),
            this,
-           SLOT(slotListBlogs(Loader*,FeedPtr,ErrorCode)) );
+           SLOT(slotListBlogs(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)) );
   loader->loadFrom( "http://www.blogger.com/feeds/" + profileId() + "/blogs" );
 }
 
@@ -127,14 +130,14 @@ void GData::listRecentPosts( const QStringList &labels, int number,
     url.addQueryItem( "published-max", pubMaxTime.toString() );
   }
 
-  Loader *loader = Loader::create();
+  Syndication::Loader *loader = Syndication::Loader::create();
   if ( number > 0 ) {
     d->mListRecentPostsMap[ loader ] = number;
   }
   connect( loader,
-           SIGNAL(loadingComplete(Loader*,FeedPtr,ErrorCode)),
+           SIGNAL(loadingComplete(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)),
            this,
-           SLOT(slotListRecentPosts(Loader*,FeedPtr,ErrorCode)) );
+           SLOT(slotListRecentPosts(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)) );
   loader->loadFrom( url.url() );
 }
 
@@ -147,12 +150,12 @@ void GData::listComments( KBlog::BlogPost *post )
 {
   Q_D( GData );
   kDebug() << "listComments()";
-  Loader *loader = Loader::create();
+  Syndication::Loader *loader = Syndication::Loader::create();
   d->mListCommentsMap[ loader ] = post;
   connect( loader,
-           SIGNAL(loadingComplete(Loader*,FeedPtr,ErrorCode)),
+           SIGNAL(loadingComplete(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)),
            this,
-           SLOT(slotListComments(Loader*,FeedPtr,ErrorCode)) );
+           SLOT(slotListComments(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)) );
   loader->loadFrom( "http://www.blogger.com/feeds/" + blogId() + '/' +
                     post->postId() + "/comments/default" );
 }
@@ -160,11 +163,11 @@ void GData::listComments( KBlog::BlogPost *post )
 void GData::listAllComments()
 {
   kDebug();
-  Loader *loader = Loader::create();
+  Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader,
-           SIGNAL(loadingComplete(Loader*,FeedPtr,ErrorCode)),
+           SIGNAL(loadingComplete(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)),
            this,
-           SLOT(slotListAllComments(Loader*,FeedPtr,ErrorCode)) );
+           SLOT(slotListAllComments(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)) );
   loader->loadFrom( "http://www.blogger.com/feeds/" + blogId() + "/comments/default" );
 }
 
@@ -178,12 +181,12 @@ void GData::fetchPost( KBlog::BlogPost *post )
   }
 
   kDebug();
-  Loader *loader = Loader::create();
+  Syndication::Loader *loader = Syndication::Loader::create();
   d->mFetchPostMap[ loader ] = post;
   connect( loader,
-           SIGNAL(loadingComplete(Loader*,FeedPtr,ErrorCode)),
+           SIGNAL(loadingComplete(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)),
            this,
-           SLOT(slotFetchPost(Loader*,FeedPtr,ErrorCode)) );
+           SLOT(slotFetchPost(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)) );
   loader->loadFrom( "http://www.blogger.com/feeds/" + blogId() + "/posts/default" );
 }
 
@@ -531,22 +534,24 @@ void GDataPrivate::slotFetchProfileId( KJob *job )
   mFetchProfileIdBuffer.remove( job );
 }
 
-void GDataPrivate::slotListBlogs( Loader *loader, FeedPtr feed, ErrorCode status ) {
+void GDataPrivate::slotListBlogs( Syndication::Loader *loader,
+                                  Syndication::FeedPtr feed,
+                                  Syndication::ErrorCode status ) {
   Q_Q( GData );
   if( !loader ) {
     kError(5323) << "loader is a null pointer.";
     return;
   }
-  if ( status != Success ) {
+  if ( status != Syndication::Success ) {
     emit q->error( GData::Atom, i18n( "Could not get blogs." ) );
     return;
   }
 
   QList<QMap<QString,QString> > blogsList;
 
-  QList<ItemPtr> items = feed->items();
-  QList<ItemPtr>::ConstIterator it = items.begin();
-  QList<ItemPtr>::ConstIterator end = items.end();
+  QList<Syndication::ItemPtr> items = feed->items();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for ( ; it != end; ++it ) {
     QRegExp rx( "blog-(\\d+)" );
     QMap<QString,QString> blogInfo;
@@ -566,7 +571,9 @@ void GDataPrivate::slotListBlogs( Loader *loader, FeedPtr feed, ErrorCode status
   kDebug(5323) << "Emitting listedBlogs(); ";
 }
 
-void GDataPrivate::slotListComments( Loader *loader, FeedPtr feed, ErrorCode status )
+void GDataPrivate::slotListComments( Syndication::Loader *loader,
+                                     Syndication::FeedPtr feed,
+                                     Syndication::ErrorCode status )
 {
   Q_Q( GData );
   if( !loader ) {
@@ -576,16 +583,16 @@ void GDataPrivate::slotListComments( Loader *loader, FeedPtr feed, ErrorCode sta
   BlogPost *post = mListCommentsMap[ loader ];
   mListCommentsMap.remove( loader );
 
-  if ( status != Success ) {
+  if ( status != Syndication::Success ) {
     emit q->errorPost( GData::Atom, i18n( "Could not get comments." ), post );
     return;
   }
 
   QList<KBlog::BlogComment> commentList;
 
-  QList<ItemPtr> items = feed->items();
-  QList<ItemPtr>::ConstIterator it = items.begin();
-  QList<ItemPtr>::ConstIterator end = items.end();
+  QList<Syndication::ItemPtr> items = feed->items();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for ( ; it != end; ++it ) {
     BlogComment comment;
     QRegExp rx( "post-(\\d+)" );
@@ -611,7 +618,9 @@ void GDataPrivate::slotListComments( Loader *loader, FeedPtr feed, ErrorCode sta
   emit q->listedComments( post, commentList );
 }
 
-void GDataPrivate::slotListAllComments( Loader *loader, FeedPtr feed, ErrorCode status )
+void GDataPrivate::slotListAllComments( Syndication::Loader *loader,
+                                        Syndication::FeedPtr feed,
+                                        Syndication::ErrorCode status )
 {
   Q_Q( GData );
   if( !loader ) {
@@ -619,16 +628,16 @@ void GDataPrivate::slotListAllComments( Loader *loader, FeedPtr feed, ErrorCode 
     return;
   }
 
-  if ( status != Success ) {
+  if ( status != Syndication::Success ) {
     emit q->error( GData::Atom, i18n( "Could not get comments." ) );
     return;
   }
 
   QList<KBlog::BlogComment> commentList;
 
-  QList<ItemPtr> items = feed->items();
-  QList<ItemPtr>::ConstIterator it = items.begin();
-  QList<ItemPtr>::ConstIterator end = items.end();
+  QList<Syndication::ItemPtr> items = feed->items();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for ( ; it != end; ++it ) {
     BlogComment comment;
     QRegExp rx( "post-(\\d+)" );
@@ -655,14 +664,16 @@ void GDataPrivate::slotListAllComments( Loader *loader, FeedPtr feed, ErrorCode 
   emit q->listedAllComments( commentList );
 }
 
-void GDataPrivate::slotListRecentPosts( Loader *loader, FeedPtr feed, ErrorCode status ) {
+void GDataPrivate::slotListRecentPosts( Syndication::Loader *loader,
+                                        Syndication::FeedPtr feed,
+                                        Syndication::ErrorCode status ) {
   Q_Q( GData );
   if( !loader ) {
     kError(5323) << "loader is a null pointer.";
     return;
   }
 
-  if ( status != Success ) {
+  if ( status != Syndication::Success ) {
     emit q->error( GData::Atom, i18n( "Could not get posts." ) );
     return;
   }
@@ -675,9 +686,9 @@ void GDataPrivate::slotListRecentPosts( Loader *loader, FeedPtr feed, ErrorCode 
 
   QList<KBlog::BlogPost> postList;
 
-  QList<ItemPtr> items = feed->items();
-  QList<ItemPtr>::ConstIterator it = items.begin();
-  QList<ItemPtr>::ConstIterator end = items.end();
+  QList<Syndication::ItemPtr> items = feed->items();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for ( ; it != end; ++it ) {
     BlogPost post;
     QRegExp rx( "post-(\\d+)" );
@@ -709,7 +720,9 @@ void GDataPrivate::slotListRecentPosts( Loader *loader, FeedPtr feed, ErrorCode 
   emit q->listedRecentPosts( postList );
 }
 
-void GDataPrivate::slotFetchPost( Loader *loader, FeedPtr feed, ErrorCode status )
+void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
+                                  Syndication::FeedPtr feed,
+                                  Syndication::ErrorCode status )
 {
   kDebug(5323);
   Q_Q( GData );
@@ -722,13 +735,13 @@ void GDataPrivate::slotFetchPost( Loader *loader, FeedPtr feed, ErrorCode status
 
   BlogPost *post = mFetchPostMap[ loader ];
 
-  if ( status != Success ) {
+  if ( status != Syndication::Success ) {
     emit q->errorPost( GData::Atom, i18n( "Could not get posts." ), post );
     return;
   }
-  QList<ItemPtr> items = feed->items();
-  QList<ItemPtr>::ConstIterator it = items.begin();
-  QList<ItemPtr>::ConstIterator end = items.end();
+  QList<Syndication::ItemPtr> items = feed->items();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
   for ( ; it != end; ++it ) {
     QRegExp rx( "post-(\\d+)" );
     if ( rx.indexIn( ( *it )->id() ) != -1 && rx.cap(1) == post->postId() ){

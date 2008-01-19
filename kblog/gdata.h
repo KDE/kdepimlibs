@@ -23,11 +23,6 @@
 #define KBLOG_GDATA_H
 
 #include <kblog/blog.h>
-
-#include <syndication/loader.h>
-#include <syndication/item.h>
-using namespace Syndication;
-
 #include <kdatetime.h>
 
 #include <QtCore/QStringList>
@@ -308,15 +303,20 @@ class KBLOG_EXPORT GData : public Blog
     Q_PRIVATE_SLOT( d_func(),
                     void slotFetchProfileIdData( KIO::Job *, const QByteArray & ) )
     Q_PRIVATE_SLOT( d_func(),
-                    void slotListBlogs( Loader *, FeedPtr, ErrorCode ) )
+                    void slotListBlogs( Syndication::Loader *,
+                                        Syndication::FeedPtr, Syndication::ErrorCode ) )
     Q_PRIVATE_SLOT( d_func(),
-                    void slotListComments( Loader *, FeedPtr, ErrorCode ) )
+                    void slotListComments( Syndication::Loader *,
+                                           Syndication::FeedPtr, Syndication::ErrorCode ) )
     Q_PRIVATE_SLOT( d_func(),
-                    void slotListAllComments( Loader *, FeedPtr, ErrorCode ) )
+                    void slotListAllComments( Syndication::Loader *,
+                                              Syndication::FeedPtr, Syndication::ErrorCode ) )
     Q_PRIVATE_SLOT( d_func(),
-                    void slotListRecentPosts( Loader *, FeedPtr, ErrorCode ) )
+                    void slotListRecentPosts( Syndication::Loader *,
+                                              Syndication::FeedPtr, Syndication::ErrorCode ) )
     Q_PRIVATE_SLOT( d_func(),
-                    void slotFetchPost( Loader *, FeedPtr, ErrorCode ) )
+                    void slotFetchPost( Syndication::Loader *,
+                                        Syndication::FeedPtr, Syndication::ErrorCode ) )
     Q_PRIVATE_SLOT( d_func(),
                     void slotCreatePost( KJob * ) )
     Q_PRIVATE_SLOT( d_func(),
