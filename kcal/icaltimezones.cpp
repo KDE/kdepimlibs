@@ -88,10 +88,9 @@ namespace KCal {
 //@cond PRIVATE
 class ICalTimeZonesPrivate
 {
-public:
-  ICalTimeZonesPrivate() {}
-
-  ICalTimeZones::ZoneMap zones;
+  public:
+    ICalTimeZonesPrivate() {}
+    ICalTimeZones::ZoneMap zones;
 };
 //@endcond
 
@@ -310,7 +309,7 @@ class ICalTimeZoneDataPrivate
     QString       location;       // name of city for this time zone
     QByteArray    url;            // URL of published VTIMEZONE definition (optional)
     QDateTime     lastModified;   // time of last modification of the VTIMEZONE component (optional)
-private:
+  private:
     icalcomponent *icalComponent; // ical component representing this time zone
 };
 //@endcond

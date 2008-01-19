@@ -37,7 +37,7 @@ using namespace KCal;
 //@cond PRIVATE
 class FreeBusyUrlStore::Private
 {
-public:
+  public:
     Private()
      : mConfig(0)
     {}
