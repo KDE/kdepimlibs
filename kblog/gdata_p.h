@@ -26,6 +26,7 @@
 #include "blog_p.h"
 
 #include <syndication/loader.h>
+using namespace Syndication;
 
 class KJob;
 class QDateTime;
@@ -55,9 +56,9 @@ class GDataPrivate : public BlogPrivate
     QMap<KJob *,QByteArray> mRemovePostBuffer;
     QMap<KJob *,KBlog::BlogPost *> mRemovePostMap;
     QMap<KJob *,QByteArray> mFetchProfileIdBuffer;
-    QMap<Syndication::Loader *,KBlog::BlogPost *> mFetchPostMap;
-    QMap<Syndication::Loader *,KBlog::BlogPost *> mListCommentsMap;
-    QMap<Syndication::Loader *,int> mListRecentPostsMap;
+    QMap<Loader *,KBlog::BlogPost *> mFetchPostMap;
+    QMap<Loader *,KBlog::BlogPost *> mListCommentsMap;
+    QMap<Loader *,int> mListRecentPostsMap;
     QString mFullName;
     QString mProfileId;
     GDataPrivate();
@@ -65,16 +66,11 @@ class GDataPrivate : public BlogPrivate
     bool authenticate();
     virtual void slotFetchProfileIdData( KIO::Job *, const QByteArray & );
     virtual void slotFetchProfileId( KJob * );
-    virtual void slotListBlogs( Syndication::Loader *,
-                                Syndication::FeedPtr, Syndication::ErrorCode );
-    virtual void slotListComments( Syndication::Loader *,
-                                   Syndication::FeedPtr, Syndication::ErrorCode );
-    virtual void slotListAllComments( Syndication::Loader *,
-                                      Syndication::FeedPtr, Syndication::ErrorCode );
-    virtual void slotListRecentPosts( Syndication::Loader *,
-                                      Syndication::FeedPtr, Syndication::ErrorCode );
-    virtual void slotFetchPost( Syndication::Loader *,
-                                Syndication::FeedPtr, Syndication::ErrorCode );
+    virtual void slotListBlogs( Loader *, FeedPtr, ErrorCode );
+    virtual void slotListComments( Loader *, FeedPtr, ErrorCode );
+    virtual void slotListAllComments( Loader *, FeedPtr, ErrorCode );
+    virtual void slotListRecentPosts( Loader *, FeedPtr, ErrorCode );
+    virtual void slotFetchPost( Loader *, FeedPtr, ErrorCode );
     virtual void slotCreatePost( KJob * );
     virtual void slotCreatePostData( KIO::Job *, const QByteArray & );
     virtual void slotModifyPost( KJob * );
