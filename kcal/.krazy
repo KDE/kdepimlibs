@@ -1,2 +1,2 @@
 SKIP /libical/\|/versit/
-EXTRA style,null
+EXTRA style
