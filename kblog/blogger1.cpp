@@ -530,7 +530,7 @@ QString Blogger1Private::getCallFromFunction( FunctionToCall type )
     case CreatePost:        return "blogger.newPost";
     case ModifyPost:       return "blogger.editPost";
     case FetchPost:        return "blogger.getPost";
-    default: return QString::null;
+    default: return QString();
   }
 }
 
