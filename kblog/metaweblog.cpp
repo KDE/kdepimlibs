@@ -265,7 +265,7 @@ QString MetaWeblogPrivate::getCallFromFunction( FunctionToCall type )
     case CreatePost:        return "metaWeblog.newPost";
     case ModifyPost:       return "metaWeblog.editPost";
     case FetchPost:        return "metaWeblog.getPost";
-    default: return QString::null;
+    default: return QString();
   }
 }
 #include "metaweblog.moc"
