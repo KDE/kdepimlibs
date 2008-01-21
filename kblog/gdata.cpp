@@ -45,43 +45,50 @@ using namespace KBlog;
 GData::GData( const KUrl &server, QObject *parent )
   : Blog( server, *new GDataPrivate, parent )
 {
+  kDebug(5323);
   setUrl( server );
 }
 
 GData::~GData()
 {
+  kDebug(5323);
 }
 
 QString GData::interfaceName() const
 {
+  kDebug(5323);
   return QLatin1String( "Google Blogger Data" );
 }
 
 QString GData::fullName() const
 {
+  kDebug(5323);
   return d_func()->mFullName;
 }
 
 void GData::setFullName( const QString &fullName )
 {
+  kDebug(5323);
   Q_D( GData );
   d->mFullName = fullName;
 }
 
 QString GData::profileId() const
 {
+  kDebug(5323);
   return d_func()->mProfileId;
 }
 
 void GData::setProfileId( const QString &pid )
 {
+  kDebug(5323);
   Q_D( GData );
   d->mProfileId = pid;
 }
 
 void GData::fetchProfileId()
 {
-  kDebug() << "fetchProfileId()";
+  kDebug(5323);
   QByteArray data;
   KIO::Job *job = KIO::get( url(), KIO::NoReload, KIO::HideProgressInfo );
   KUrl blogUrl = url();
@@ -93,7 +100,7 @@ void GData::fetchProfileId()
 
 void GData::listBlogs()
 {
-  kDebug();
+  kDebug(5323);
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader,
            SIGNAL(loadingComplete(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)),
@@ -106,6 +113,7 @@ void GData::listRecentPosts( const QStringList &labels, int number,
                              const KDateTime &upMinTime, const KDateTime &upMaxTime,
                              const KDateTime &pubMinTime, const KDateTime &pubMaxTime )
 {
+  kDebug(5323);
   Q_D( GData );
   QString urlString( "http://www.blogger.com/feeds/" + blogId() + "/posts/default" );
   if ( ! labels.empty() ) {
@@ -143,13 +151,14 @@ void GData::listRecentPosts( const QStringList &labels, int number,
 
 void GData::listRecentPosts( int number )
 {
+  kDebug(5323);
   listRecentPosts( QStringList(), number );
 }
 
 void GData::listComments( KBlog::BlogPost *post )
 {
+  kDebug(5323);
   Q_D( GData );
-  kDebug() << "listComments()";
   Syndication::Loader *loader = Syndication::Loader::create();
   d->mListCommentsMap[ loader ] = post;
   connect( loader,
@@ -162,7 +171,7 @@ void GData::listComments( KBlog::BlogPost *post )
 
 void GData::listAllComments()
 {
-  kDebug();
+  kDebug(5323);
   Syndication::Loader *loader = Syndication::Loader::create();
   connect( loader,
            SIGNAL(loadingComplete(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)),
@@ -173,6 +182,7 @@ void GData::listAllComments()
 
 void GData::fetchPost( KBlog::BlogPost *post )
 {
+  kDebug(5323);
   Q_D( GData );
 
   if ( !post ) {
@@ -192,8 +202,8 @@ void GData::fetchPost( KBlog::BlogPost *post )
 
 void GData::modifyPost( KBlog::BlogPost *post )
 {
+  kDebug(5323);
   Q_D( GData );
-  kDebug();
 
   if ( !post ) {
     kError(5323) << "post is null pointer";
@@ -254,8 +264,8 @@ void GData::modifyPost( KBlog::BlogPost *post )
 
 void GData::createPost( KBlog::BlogPost *post )
 {
+  kDebug(5323);
   Q_D( GData );
-  kDebug();
 
   if ( !post ) {
     kError(5323) << "post is null pointer";
@@ -315,8 +325,8 @@ void GData::createPost( KBlog::BlogPost *post )
 
 void GData::removePost( KBlog::BlogPost *post )
 {
+  kDebug(5323);
   Q_D( GData );
-  kDebug();
 
   if ( !post ) {
     kError(5323) << "post is null pointer";
@@ -412,6 +422,7 @@ void GData::createComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
 
 void GData::removeComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
 {
+  kDebug(5323);
   Q_D( GData );
   kDebug();
 
@@ -459,14 +470,17 @@ void GData::removeComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
 
 GDataPrivate::GDataPrivate():mAuthenticationString(), mAuthenticationTime()
 {
+  kDebug(5323);
 }
 
 GDataPrivate::~GDataPrivate()
 {
+  kDebug(5323);
 }
 
 bool GDataPrivate::authenticate()
 {
+  kDebug(5323);
   Q_Q( GData );
   QByteArray data;
   KUrl authGateway( "https://www.google.com/accounts/ClientLogin" );
@@ -497,6 +511,7 @@ bool GDataPrivate::authenticate()
 
 void GDataPrivate::slotFetchProfileIdData( KIO::Job *job, const QByteArray &data )
 {
+  kDebug(5323);
   if( !job ){
     kError(5323) << "job is a null pointer.";
     return;
@@ -508,6 +523,7 @@ void GDataPrivate::slotFetchProfileIdData( KIO::Job *job, const QByteArray &data
 
 void GDataPrivate::slotFetchProfileId( KJob *job )
 {
+  kDebug(5323);
   if( !job ){
     kError(5323) << "job is a null pointer.";
     return;
@@ -537,6 +553,7 @@ void GDataPrivate::slotFetchProfileId( KJob *job )
 void GDataPrivate::slotListBlogs( Syndication::Loader *loader,
                                   Syndication::FeedPtr feed,
                                   Syndication::ErrorCode status ) {
+  kDebug(5323);
   Q_Q( GData );
   if( !loader ) {
     kError(5323) << "loader is a null pointer.";
@@ -575,6 +592,7 @@ void GDataPrivate::slotListComments( Syndication::Loader *loader,
                                      Syndication::FeedPtr feed,
                                      Syndication::ErrorCode status )
 {
+  kDebug(5323);
   Q_Q( GData );
   if( !loader ) {
     kError(5323) << "loader is a null pointer.";
@@ -622,6 +640,7 @@ void GDataPrivate::slotListAllComments( Syndication::Loader *loader,
                                         Syndication::FeedPtr feed,
                                         Syndication::ErrorCode status )
 {
+  kDebug(5323);
   Q_Q( GData );
   if( !loader ) {
     kError(5323) << "loader is a null pointer.";
@@ -667,6 +686,7 @@ void GDataPrivate::slotListAllComments( Syndication::Loader *loader,
 void GDataPrivate::slotListRecentPosts( Syndication::Loader *loader,
                                         Syndication::FeedPtr feed,
                                         Syndication::ErrorCode status ) {
+  kDebug(5323);
   Q_Q( GData );
   if( !loader ) {
     kError(5323) << "loader is a null pointer.";
@@ -773,7 +793,7 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
 
 void GDataPrivate::slotCreatePostData( KIO::Job *job, const QByteArray &data )
 {
-  kDebug(5323) << "slotCreatePostData()";
+  kDebug(5323);
   if( !job ) {
     kError(5323) << "job is a null pointer.";
     return;
@@ -785,7 +805,7 @@ void GDataPrivate::slotCreatePostData( KIO::Job *job, const QByteArray &data )
 
 void GDataPrivate::slotCreatePost( KJob *job )
 {
-  kDebug(5323) << "slotCreatePost()";
+  kDebug(5323);
   if( !job ) {
     kError(5323) << "job is a null pointer.";
     return;
@@ -854,7 +874,7 @@ void GDataPrivate::slotModifyPostData( KIO::Job *job, const QByteArray &data )
 
 void GDataPrivate::slotModifyPost( KJob *job )
 {
-  kDebug(5323) << "slotModifyPost()";
+  kDebug(5323);
   if( !job ) {
     kError(5323) << "job is a null pointer.";
     return;
@@ -907,7 +927,7 @@ void GDataPrivate::slotModifyPost( KJob *job )
 
 void GDataPrivate::slotRemovePostData( KIO::Job *job, const QByteArray &data )
 {
-  kDebug(5323) << "slotRemovePostData()";
+  kDebug(5323);
   if( !job ) {
     kError(5323) << "job is a null pointer.";
     return;
@@ -919,7 +939,7 @@ void GDataPrivate::slotRemovePostData( KIO::Job *job, const QByteArray &data )
 
 void GDataPrivate::slotRemovePost( KJob *job )
 {
-  kDebug(5323) << "slotRemovePost()";
+  kDebug(5323);
   if( !job ) {
     kError(5323) << "job is a null pointer.";
     return;
@@ -944,7 +964,7 @@ void GDataPrivate::slotRemovePost( KJob *job )
 
 void GDataPrivate::slotCreateCommentData( KIO::Job *job, const QByteArray &data )
 {
-  kDebug(5323) << "slotCreateCommentData()";
+  kDebug(5323);
   if( !job ) {
     kError(5323) << "job is a null pointer.";
     return;
@@ -956,7 +976,7 @@ void GDataPrivate::slotCreateCommentData( KIO::Job *job, const QByteArray &data 
 
 void GDataPrivate::slotCreateComment( KJob *job )
 {
-  kDebug(5323) << "slotCreateComment()";
+  kDebug(5323);
   if( !job ) {
     kError(5323) << "job is a null pointer.";
     return;
