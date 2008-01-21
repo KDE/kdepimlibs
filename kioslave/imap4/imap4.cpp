@@ -144,7 +144,7 @@ sigchld_handler (int signo)
 {
   int pid, status;
 
-  while (true && signo == SIGCHLD)
+  while (signo == SIGCHLD)
   {
     pid = waitpid (-1, &status, WNOHANG);
     if (pid <= 0)
