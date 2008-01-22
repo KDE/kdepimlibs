@@ -7,14 +7,14 @@ include_directories(
 
 MACRO(KCAL_UNIT_TESTS)
   FOREACH(_testname ${ARGN})
-    kde4_add_unit_test(${_testname} ${_testname}.cpp)
+    kde4_add_unit_test(${_testname} NOGUI ${_testname}.cpp)
     target_link_libraries(${_testname} ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
   ENDFOREACH(_testname)
 ENDMACRO(KCAL_UNIT_TESTS)
 
 MACRO(KCAL_EXECUTABLE_TESTS)
   FOREACH(_testname ${ARGN})
-    kde4_add_executable(${_testname} TEST ${_testname}.cpp)
+    kde4_add_executable(${_testname} NOGUI TEST ${_testname}.cpp)
     target_link_libraries(${_testname} ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
   ENDFOREACH(_testname)
 ENDMACRO(KCAL_EXECUTABLE_TESTS)
@@ -33,6 +33,7 @@ KCAL_UNIT_TESTS(
   testfilestorage
   testfreebusy
   testjournal
+  testkresult
   testperiod
   testperson
   testsortablelist

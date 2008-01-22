@@ -100,7 +100,7 @@ KResult::~KResult()
   delete d;
 }
 
-KResult::KResult( const KResult &o ) : d( 0 )
+KResult::KResult( const KResult &o ) : d( new KCal::KResult::Private )
 {
   d->mType = o.d->mType;
   d->mErrorType = o.d->mErrorType;
