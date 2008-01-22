@@ -52,6 +52,7 @@ class Blogger1Private;
    Blog* myblog = new Blogger1("http://example.com/xmlrpc/gateway.php");
    myblog->setUsername( "some_user_id" );
    myblog->setPassword( "YoUrFunnYPasSword" );
+   myblog->setBlogId( "1" ); // can be caught by listBlogs()
    KBlog::BlogPost *post = new BlogPost();
    post->setTitle( "This is the title." );
    post->setContent( "Here is some the content..." );

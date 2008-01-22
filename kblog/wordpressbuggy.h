@@ -56,6 +56,7 @@ namespace KBlog {
   Blog* myblog = new WordpressBuggy("http://example.com/xmlrpc/gateway.php");
   myblog->setUsername( "some_user_id" );
   myblog->setPassword( "YoURFunnyPAsSwoRD" );
+  myblog->setBlogId( "1" ); // can be caught by listBlogs()
   KBlog::BlogPost *post = new BlogPost();
   post->setTitle( "This is the title." );
   post->setContent( "Here is some the content..." );

@@ -55,6 +55,7 @@ namespace KBlog {
   @code
   Blog* myblog = new GData("http://myblogspot.account.com");
   myblog->setProfileId( "2039484587348593945823" ); // can be fetched via fetchProfileId()
+  myblog->setBlogId( "1" ); // can be caught by listBlogs()
   myblog->setUsername( "your_email@address.com" );
   myblog->setPassword( "yOuRFuNnYPasSword" );
   KBlog::BlogPost *post = new BlogPost();
