@@ -55,15 +55,16 @@ namespace KRES {
   Example:
 
   \code
-  KABC::Factory *factory = KABC::Factory::self( "contact" );
+  KRES::Factory *factory = KRES::Factory::self( "contact" );
 
   // to allow a transparent configuration of resources, we have
   // to use a kconfig object.
-  KConfigGroup group( "tst", "General" );
+  KConfig config;
+  KConfigGroup group( &config, "General" );
   group.writePathEntry( "FileName", "/home/foobar/test.vcf" );// resource dependent
   group.writeEntry( "FileFormat", "vcard" );                  // resource dependent
 
-  KABC::Resource *res = factory->resource( "file", group );
+  KRES::Resource *res = factory->resource( "file", group );
 
   // do something with resource
 
