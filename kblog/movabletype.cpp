@@ -38,19 +38,19 @@ using namespace KBlog;
 MovableType::MovableType( const KUrl &server, QObject *parent )
   : MetaWeblog( server, *new MovableTypePrivate, parent )
 {
-  kDebug(5323) << "MovableType()";
+  kDebug() << "MovableType()";
 }
 
 MovableType::MovableType( const KUrl &server, MovableTypePrivate &dd,
                         QObject *parent )
   : MetaWeblog( server, dd, parent )
 {
-  kDebug(5323) << "MovableType()";
+  kDebug() << "MovableType()";
 }
 
 MovableType::~MovableType()
 {
-  kDebug(5323) << "~MovableType()";
+  kDebug() << "~MovableType()";
 }
 
 QString MovableType::interfaceName() const
@@ -61,7 +61,7 @@ QString MovableType::interfaceName() const
 void MovableType::listRecentPosts( int number )
 {
     Q_D( MovableType );
-    kDebug(5323) << "Fetching List of Posts...";
+    kDebug() << "Fetching List of Posts...";
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     args << QVariant( number );
     d->mXmlRpcClient->call(
@@ -74,7 +74,7 @@ void MovableType::listRecentPosts( int number )
 void MovableType::listTrackBackPings( KBlog::BlogPost *post )
 {
   Q_D( MovableType );
-  kDebug(5323) << "List trackback pings...";
+  kDebug() << "List trackback pings...";
   QList<QVariant> args;
   args << QVariant( post->postId() );
   unsigned int i = d->mCallCounter++;
@@ -92,7 +92,7 @@ MovableTypePrivate::MovableTypePrivate()
 
 MovableTypePrivate::~MovableTypePrivate()
 {
-  kDebug(5323) << "~MovableTypePrivate()";
+  kDebug() << "~MovableTypePrivate()";
 }
 
 QList<QVariant> MovableTypePrivate::defaultArgs( const QString &id )
@@ -111,13 +111,13 @@ bool MovableTypePrivate::readPostFromMap( BlogPost *post, const QMap<QString, QV
 {
 
   // FIXME: integrate error handling
-  kDebug(5323) << "readPostFromMap()";
+  kDebug() << "readPostFromMap()";
   if ( !post ) {
     return false;
   }
   QStringList mapkeys = postInfo.keys();
-  kDebug(5323) << endl << "Keys:" << mapkeys.join( ", " );
-  kDebug(5323) << endl;
+  kDebug() << endl << "Keys:" << mapkeys.join( ", " );
+  kDebug() << endl;
 
   KDateTime dt =
     KDateTime( postInfo["dateCreated"].toDateTime(), KDateTime::UTC );
@@ -149,7 +149,7 @@ bool MovableTypePrivate::readPostFromMap( BlogPost *post, const QMap<QString, QV
   post->setPermaLink( postInfo["permaLink"].toString() );
 
   if ( !categories.isEmpty() ){
-    kDebug(5323) << "Categories:" << categories;
+    kDebug() << "Categories:" << categories;
     post->setCategories( categories );
   }
   return true;
@@ -159,12 +159,12 @@ void MovableTypePrivate::slotListTrackBackPings(
     const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q( MovableType );
-  kDebug(5323) << "slotTrackbackPings()";
+  kDebug() << "slotTrackbackPings()";
   BlogPost *post = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
   QList<QMap<QString,QString> > trackBackList;
   if ( result[0].type() != QVariant::List ) {
-    kError(5323) << "Could not fetch list of trackback pings out of the"
+    kError() << "Could not fetch list of trackback pings out of the"
                  << "result from the server.";
     emit q->error( MovableType::ParsingError,
                    i18n( "Could not fetch list of trackback pings out of the "
@@ -175,7 +175,7 @@ void MovableTypePrivate::slotListTrackBackPings(
     QList<QVariant>::ConstIterator end = trackBackReceived.end();
     for ( ; it != end; ++it ) {
       QMap<QString,QString> tping;
-      kDebug(5323) << "MIDDLE:" << ( *it ).typeName();
+      kDebug() << "MIDDLE:" << ( *it ).typeName();
       const QMap<QString, QVariant> trackBackInfo = ( *it ).toMap();
       tping[ "title" ] = trackBackInfo[ "pingTitle"].toString();
       tping[ "url" ] = trackBackInfo[ "pingURL"].toString();
@@ -183,7 +183,7 @@ void MovableTypePrivate::slotListTrackBackPings(
       trackBackList << tping;
     }
   }
-  kDebug(5323) << "Emitting listedTrackBackPings()";
+  kDebug() << "Emitting listedTrackBackPings()";
   emit q->listedTrackBackPings( post, trackBackList );
 }
 
