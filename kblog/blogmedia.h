@@ -188,7 +188,7 @@ class KBLOG_EXPORT BlogMedia
     void swap( BlogMedia &other ) { qSwap( this->d_ptr, other.d_ptr ); }
 
   private:
-    BlogMediaPrivate *d_ptr;
+    BlogMediaPrivate *d_ptr; //krazy:exclude=dpointer can't constify due to bic and swap being declared inline
 };
 
 } //namespace KBlog
