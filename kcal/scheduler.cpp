@@ -436,7 +436,7 @@ bool Scheduler::acceptReply( IncidenceBase *incidence,
         performTransaction( ev, iTIPRequest );
       }
       if ( to ) {
-        to->setRevision( ev->revision() + 1 );
+        to->setRevision( to->revision() + 1 );
         performTransaction( to, iTIPRequest );
       }
     }
