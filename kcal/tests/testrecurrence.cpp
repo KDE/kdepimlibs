@@ -60,7 +60,7 @@ int main( int argc, char **argv )
   }
 
   QString input = args->arg( 0 );
-  kDebug(5800) << "Input file:" << input;
+  kDebug() << "Input file:" << input;
 
   QTextStream *outstream;
   outstream = 0;
@@ -88,8 +88,8 @@ int main( int argc, char **argv )
 
   for ( Incidence::List::Iterator it = inc.begin(); it != inc.end(); ++it ) {
     Incidence *incidence = *it;
-    kDebug(5800) << "*+*+*+*+*+*+*+*+*+*";
-    kDebug(5800) << " ->" << incidence->summary() << "<-";
+    kDebug() << "*+*+*+*+*+*+*+*+*+*";
+    kDebug() << " ->" << incidence->summary() << "<-";
 
     incidence->recurrence()->dump();
 
@@ -112,10 +112,10 @@ int main( int argc, char **argv )
       // Output to konsole
       while ( dt.isValid() && i<10 ) {
         ++i;
-        kDebug(5800) << "-------------------------------------------";
+        kDebug() << "-------------------------------------------";
         dt = incidence->recurrence()->getNextDateTime( dt );
         if ( dt.isValid() )
-          kDebug(5800) << " *~*~*~*~ Next date is:" << dumpTime(dt, viewSpec);
+          kDebug() << " *~*~*~*~ Next date is:" << dumpTime(dt, viewSpec);
       }
     }
   }

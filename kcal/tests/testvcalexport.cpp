@@ -63,8 +63,8 @@ int main( int argc, char **argv )
   QFileInfo outputFileInfo( output );
   output = outputFileInfo.absoluteFilePath();
 
-  kDebug(5800) << "Input file:" << input;
-  kDebug(5800) << "Output file:" << output;
+  kDebug() << "Input file:" << input;
+  kDebug() << "Output file:" << output;
 
   CalendarLocal cal( KDateTime::UTC );
 

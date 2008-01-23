@@ -7,6 +7,8 @@ project(kcal)
 
 ADD_DEFINITIONS(-DPACKAGE_DATA_DIR=\\""${DATA_INSTALL_DIR}/libical"\\" ) # added manually
 
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5800)
+
 include (ConfigureChecks.cmake)
 configure_file (libical/config-libical.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libical/config-libical.h)
 

@@ -122,7 +122,7 @@ bool FileStorage::load()
       if ( iCal.exception() ) {
         if ( iCal.exception()->errorCode() == ErrorFormat::CalVersion1 ) {
           // Expected non vCalendar file, but detected vCalendar
-          kDebug(5800) << "FileStorage::load() Fallback to VCalFormat";
+          kDebug() << "Fallback to VCalFormat";
           VCalFormat vCal;
           success = vCal.load( calendar(), d->mFileName );
           calendar()->setProductId( vCal.productId() );
@@ -130,7 +130,7 @@ bool FileStorage::load()
           return false;
         }
       } else {
-        kDebug(5800) << "Warning! There should be an exception set.";
+        kDebug() << "Warning! There should be an exception set.";
         return false;
       }
     } else {
@@ -145,7 +145,7 @@ bool FileStorage::load()
 
 bool FileStorage::save()
 {
-  kDebug(5800) << "Entering FileStoRAge::save()";
+  kDebug();
   if ( d->mFileName.isEmpty() ) {
     return false;
   }
@@ -158,9 +158,9 @@ bool FileStorage::save()
     calendar()->setModified( false );
   } else {
     if ( !format->exception() ) {
-      kDebug(5800) << "FileStorage::save(): Error. There should be an expection set.";
+      kDebug() << "Error. There should be an expection set.";
     } else {
-      kDebug(5800) << "FileStorage::save():" << format->exception()->message();
+      kDebug() << format->exception()->message();
     }
   }
 
@@ -173,7 +173,7 @@ bool FileStorage::save()
 
 QString FileStorage::saveAndReTurnErrorMessAge()
 {
-  kDebug(5800) << "Entering FileStoRAge::saveAndReTurnErrorMessAge()";
+  kDebug();
   QString err=QString();
   if ( d->mFileName.isEmpty() ) {
     return false;
@@ -187,11 +187,11 @@ QString FileStorage::saveAndReTurnErrorMessAge()
     calendar()->setModified( false );
   } else {
     if ( !format->exception() ) {
-      kDebug(5800) << "FileStorage::save(): Error. There should be an expection set.";
-      err="Error, but no message available";
+      kDebug() << "Error. There should be an expection set.";
+      err = "Error, but no message available";
     } else {
-      kDebug(5800) << "FileStorage::save():" << format->exception()->message();
-      err=format->exception()->message();
+      kDebug() << format->exception()->message();
+      err = format->exception()->message();
     }
   }
 

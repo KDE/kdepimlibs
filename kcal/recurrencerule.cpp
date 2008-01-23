@@ -1266,7 +1266,7 @@ bool RecurrenceRule::Private::buildCache() const
 
 // it = dts.begin();
 // while ( it != dts.end() ) {
-//   kDebug(5800) << "            -=>" << dumpTime(*it);
+//   kDebug() << "            -=>" << dumpTime(*it);
 //   ++it;
 // }
   if ( int( dts.count() ) == mDuration ) {
@@ -1836,13 +1836,13 @@ DateTimeList RecurrenceRule::Private::datesForInterval( const Constraint &interv
   lst.sortUnique();
 
 /*if ( lst.isEmpty() ) {
-  kDebug(5800) << "         No Dates in Interval";
+  kDebug() << "         No Dates in Interval";
 } else {
-  kDebug(5800) << "         Dates:";
+  kDebug() << "         Dates:";
   for ( int i = 0, iend = lst.count();  i < iend;  ++i ) {
-    kDebug(5800)<< "              -)" << dumpTime(lst[i]);
+    kDebug()<< "              -)" << dumpTime(lst[i]);
   }
-  kDebug(5800) << "       ---------------------";
+  kDebug() << "       ---------------------";
 }*/
   if ( !mBySetPos.isEmpty() ) {
     DateTimeList tmplst = lst;
@@ -1869,18 +1869,18 @@ DateTimeList RecurrenceRule::Private::datesForInterval( const Constraint &interv
 void RecurrenceRule::dump() const
 {
 #ifndef NDEBUG
-  kDebug(5800);
+  kDebug();
   if ( !d->mRRule.isEmpty() ) {
-    kDebug(5800) << "   RRULE=" << d->mRRule;
+    kDebug() << "   RRULE=" << d->mRRule;
   }
-  kDebug(5800) << "   Read-Only:" << isReadOnly()
-               << ", dirty:" << d->mDirty;
+  kDebug() << "   Read-Only:" << isReadOnly()
+           << ", dirty:" << d->mDirty;
 
-  kDebug(5800) << "   Period type:" << recurrenceType()
-               << ", frequency:" << frequency();
-  kDebug(5800) << "   #occurrences:" << duration();
-  kDebug(5800) << "   start date:" << dumpTime( startDt() )
-               << ", end date:" << dumpTime( endDt() );
+  kDebug() << "   Period type:" << recurrenceType()
+           << ", frequency:" << frequency();
+  kDebug() << "   #occurrences:" << duration();
+  kDebug() << "   start date:" << dumpTime( startDt() )
+           << ", end date:" << dumpTime( endDt() );
 
 #define dumpByIntList(list,label) \
   if ( !list.isEmpty() ) {\
@@ -1888,7 +1888,7 @@ void RecurrenceRule::dump() const
     for ( int i = 0, iend = list.count();  i < iend;  ++i ) {\
       lst.append( QString::number( list[i] ) );\
     }\
-    kDebug(5800) << "  " << label << lst.join( ", " );\
+    kDebug() << "  " << label << lst.join( ", " );\
   }
   dumpByIntList( d->mBySeconds, "BySeconds:  " );
   dumpByIntList( d->mByMinutes, "ByMinutes:  " );
@@ -1899,7 +1899,7 @@ void RecurrenceRule::dump() const
       lst.append( ( d->mByDays[i].pos() ? QString::number( d->mByDays[i].pos() ) : "" ) +
                    DateHelper::dayName( d->mByDays[i].day() ) );
     }
-    kDebug(5800) << "   ByDays:    " << lst.join( ", " );
+    kDebug() << "   ByDays:    " << lst.join( ", " );
   }
   dumpByIntList( d->mByMonthDays, "ByMonthDays:" );
   dumpByIntList( d->mByYearDays, "ByYearDays: " );
@@ -1908,9 +1908,9 @@ void RecurrenceRule::dump() const
   dumpByIntList( d->mBySetPos, "BySetPos:   " );
   #undef dumpByIntList
 
-  kDebug(5800) << "   Week start:" << DateHelper::dayName( d->mWeekStart );
+  kDebug() << "   Week start:" << DateHelper::dayName( d->mWeekStart );
 
-  kDebug(5800) << "   Constraints:";
+  kDebug() << "   Constraints:";
   // dump constraints
   for ( int i = 0, iend = d->mConstraints.count();  i < iend;  ++i ) {
     d->mConstraints[i].dump();
@@ -1921,16 +1921,16 @@ void RecurrenceRule::dump() const
 //@cond PRIVATE
 void Constraint::dump() const
 {
-  kDebug(5800) << "     ~> Y=" << year
-               << ", M=" << month
-               << ", D=" << day
-               << ", H=" << hour
-               << ", m=" << minute
-               << ", S=" << second
-               << ", wd=" << weekday
-               << ",#wd=" << weekdaynr
-               << ", #w=" << weeknumber
-               << ", yd=" << yearday;
+  kDebug() << "     ~> Y=" << year
+           << ", M=" << month
+           << ", D=" << day
+           << ", H=" << hour
+           << ", m=" << minute
+           << ", S=" << second
+           << ", wd=" << weekday
+           << ",#wd=" << weekdaynr
+           << ", #w=" << weeknumber
+           << ", yd=" << yearday;
 }
 //@endcond
 

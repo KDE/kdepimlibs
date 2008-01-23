@@ -57,7 +57,7 @@ int main( int argc, char **argv )
   }
 
   QString input = args->arg( 0 );
-//   kDebug(5800) << "Input file:" << input;
+//   kDebug() << "Input file:" << input;
 
   QTextStream *outstream;
   outstream = 0;
@@ -84,8 +84,8 @@ int main( int argc, char **argv )
 
   for ( Incidence::List::Iterator it = inc.begin(); it != inc.end(); ++it ) {
     Incidence *incidence = *it;
-//     kDebug(5800) << "*+*+*+*+*+*+*+*+*+*";
-//     kDebug(5800) << " ->" << incidence->summary() << "<-";
+//     kDebug() << "*+*+*+*+*+*+*+*+*+*";
+//     kDebug() << " ->" << incidence->summary() << "<-";
 
 //     incidence->recurrence()->dump();
 
@@ -104,7 +104,7 @@ int main( int argc, char **argv )
       dt = QDate( 2005, 1, 1 );
       while ( dt.year() < 2007 ) {
         if ( incidence->recursOn( dt, cal.viewTimeSpec() ) )
-          kDebug(5800) << dt.toString( Qt::ISODate );
+          kDebug() << dt.toString( Qt::ISODate );
         dt = dt.addDays( 1 );
       }
     }

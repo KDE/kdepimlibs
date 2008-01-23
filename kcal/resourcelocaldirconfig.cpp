@@ -76,8 +76,7 @@ void ResourceLocalDirConfig::loadSettings( KRES::Resource *resource )
   if ( res ) {
     d->mURL->setUrl( res->d->mURL.prettyUrl() );
   } else {
-    kDebug(5800) << "ERROR: ResourceLocalDirConfig::loadSettings(): "
-                 << "no ResourceLocalDir, cast failed";
+    kDebug() << "ERROR: no ResourceLocalDir, cast failed";
   }
 }
 
@@ -87,7 +86,6 @@ void ResourceLocalDirConfig::saveSettings( KRES::Resource *resource )
   if (res) {
     res->d->mURL = d->mURL->url();
   } else {
-    kDebug(5800) << "ERROR: ResourceLocalDirConfig::saveSettings(): "
-                 << "no ResourceLocalDir, cast failed";
+    kDebug() << "ERROR: no ResourceLocalDir, cast failed";
   }
 }

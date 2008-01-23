@@ -122,7 +122,7 @@ static QString linkPerson( const QString &email, QString name, QString uid,
       uid.clear();
     }
   }
-  kDebug(5800) << "formatAttendees: uid =" << uid;
+  kDebug() << "formatAttendees: uid =" << uid;
 
   // Show the attendee
   QString tmpString = "<li>";
@@ -773,12 +773,12 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
   {
     Attendee::List attendees = event->attendees();
     if( attendees.count() == 0 ) {
-      kDebug(5800) << "No attendees in the iCal reply!";
+      kDebug() << "No attendees in the iCal reply!";
       return QString();
     }
     if ( attendees.count() != 1 ) {
-      kDebug(5800) << "Warning: attendeecount in the reply should be 1"
-                   << "but is" << attendees.count();
+      kDebug() << "Warning: attendeecount in the reply should be 1"
+               << "but is" << attendees.count();
     }
     Attendee *attendee = *attendees.begin();
     QString attendeeName = attendee->name();
@@ -872,12 +872,12 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
   {
     Attendee::List attendees = todo->attendees();
     if ( attendees.count() == 0 ) {
-      kDebug(5800) << "No attendees in the iCal reply!";
+      kDebug() << "No attendees in the iCal reply!";
       return QString();
     }
     if ( attendees.count() != 1 ) {
-      kDebug(5800) << "Warning: attendeecount in the reply should be 1"
-                   << "but is" << attendees.count();
+      kDebug() << "Warning: attendeecount in the reply should be 1"
+               << "but is" << attendees.count();
     }
     Attendee *attendee = *attendees.begin();
     switch( attendee->status() ) {
@@ -942,13 +942,13 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
   {
     Attendee::List attendees = journal->attendees();
     if ( attendees.count() == 0 ) {
-      kDebug(5800) << "No attendees in the iCal reply!";
+      kDebug() << "No attendees in the iCal reply!";
       return QString();
     }
 
     if( attendees.count() != 1 ) {
-      kDebug(5800) << "Warning: attendeecount in the reply should be 1"
-                   << "but is" << attendees.count();
+      kDebug() << "Warning: attendeecount in the reply should be 1"
+               << "but is" << attendees.count();
     }
 
     Attendee *attendee = *attendees.begin();
@@ -1100,9 +1100,9 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   ScheduleMessage *msg = format.parseScheduleMessage( mCalendar, invitation );
 
   if( !msg ) {
-    kDebug(5800) << "Failed to parse the scheduling message";
+    kDebug() << "Failed to parse the scheduling message";
     Q_ASSERT( format.exception() );
-    kDebug(5800) << format.exception()->message();
+    kDebug() << format.exception()->message();
     return QString();
   }
 

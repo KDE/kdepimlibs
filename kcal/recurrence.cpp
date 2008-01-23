@@ -871,7 +871,7 @@ void Recurrence::addYearlyMonth( short month )
 
 TimeList Recurrence::recurTimesOn( const QDate &date, const KDateTime::Spec &timeSpec ) const
 {
-// kDebug(5800) << "recurTimesOn(" << date << ")";
+// kDebug() << "recurTimesOn(" << date << ")";
   int i, end;
   TimeList times;
 
@@ -1293,40 +1293,40 @@ void Recurrence::recurrenceChanged( RecurrenceRule * )
 
 void Recurrence::dump() const
 {
-  kDebug(5800) << "Recurrence::dump():";
+  kDebug();
 
   int i;
   int count = d->mRRules.count();
-  kDebug(5800) << "  -)" << count << "RRULEs:";
+  kDebug() << "  -)" << count << "RRULEs:";
   for ( i = 0;  i < count;  ++i ) {
-    kDebug(5800) << "    -) RecurrenceRule: ";
+    kDebug() << "    -) RecurrenceRule: ";
     d->mRRules[i]->dump();
   }
   count = d->mExRules.count();
-  kDebug(5800) << "  -)" << count << "EXRULEs:";
+  kDebug() << "  -)" << count << "EXRULEs:";
   for ( i = 0;  i < count;  ++i ) {
-    kDebug(5800) << "    -) ExceptionRule :";
+    kDebug() << "    -) ExceptionRule :";
     d->mExRules[i]->dump();
   }
 
   count = d->mRDates.count();
-  kDebug(5800) << endl << "  -)" << count << "Recurrence Dates:";
+  kDebug() << endl << "  -)" << count << "Recurrence Dates:";
   for ( i = 0;  i < count;  ++i ) {
-    kDebug(5800) << "    " << d->mRDates[i];
+    kDebug() << "    " << d->mRDates[i];
   }
   count = d->mRDateTimes.count();
-  kDebug(5800) << endl << "  -)" << count << "Recurrence Date/Times:";
+  kDebug() << endl << "  -)" << count << "Recurrence Date/Times:";
   for ( i = 0;  i < count;  ++i ) {
-    kDebug(5800) << "    " << d->mRDateTimes[i].dateTime();
+    kDebug() << "    " << d->mRDateTimes[i].dateTime();
   }
   count = d->mExDates.count();
-  kDebug(5800) << endl << "  -)" << count << "Exceptions Dates:";
+  kDebug() << endl << "  -)" << count << "Exceptions Dates:";
   for ( i = 0;  i < count;  ++i ) {
-    kDebug(5800) << "    " << d->mExDates[i];
+    kDebug() << "    " << d->mExDates[i];
   }
   count = d->mExDateTimes.count();
-  kDebug(5800) << endl << "  -)" << count << "Exception Date/Times:";
+  kDebug() << endl << "  -)" << count << "Exception Date/Times:";
   for ( i = 0;  i < count;  ++i ) {
-    kDebug(5800) << "    " << d->mExDateTimes[i].dateTime();
+    kDebug() << "    " << d->mExDateTimes[i].dateTime();
   }
 }

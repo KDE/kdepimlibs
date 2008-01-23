@@ -138,7 +138,7 @@ FreeBusyCache *Scheduler::freeBusyCache() const
 bool Scheduler::acceptTransaction( IncidenceBase *incidence, iTIPMethod method,
                                    ScheduleMessage::Status status )
 {
-  kDebug(5800) << "Scheduler::acceptTransaction, method=" << methodName( method );
+  kDebug() << "method=" << methodName( method );
 
   switch ( method ) {
   case iTIPPublish:
@@ -228,8 +228,7 @@ bool Scheduler::acceptPublish( IncidenceBase *newIncBase,
 
   bool res = false;
 
-  kDebug(5800) << "Scheduler::acceptPublish, status="
-               << ScheduleMessage::statusName( status );
+  kDebug() << "status=" << ScheduleMessage::statusName( status );
 
   Incidence *newInc = static_cast<Incidence *>( newIncBase );
   Incidence *calInc = mCalendar->incidence( newIncBase->uid() );
@@ -354,7 +353,7 @@ bool Scheduler::acceptReply( IncidenceBase *incidence,
 
   if ( ev || to ) {
     //get matching attendee in calendar
-    kDebug(5800) << "Scheduler::acceptTransaction match found!";
+    kDebug() << "match found!";
     Attendee::List attendeesIn = incidence->attendees();
     Attendee::List attendeesEv;
     Attendee::List attendeesNew;
@@ -373,7 +372,7 @@ bool Scheduler::acceptReply( IncidenceBase *incidence,
         Attendee *attEv = *evIt;
         if ( attIn->email().toLower() == attEv->email().toLower() ) {
           //update attendee-info
-          kDebug(5800) << "Scheduler::acceptTransaction update attendee";
+          kDebug() << "update attendee";
           attEv->setStatus( attIn->status() );
           attEv->setDelegate( attIn->delegate() );
           attEv->setDelegator( attIn->delegator() );
@@ -494,7 +493,7 @@ bool Scheduler::acceptFreeBusy( IncidenceBase *incidence, iTIPMethod method )
 
   FreeBusy *freebusy = static_cast<FreeBusy *>(incidence);
 
-  kDebug(5800) << "acceptFreeBusy:: freeBusyDirName:" << freeBusyDir();
+  kDebug() << "freeBusyDirName:" << freeBusyDir();
 
   Person from;
   if( method == iTIPPublish ) {

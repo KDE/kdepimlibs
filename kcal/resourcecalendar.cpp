@@ -155,7 +155,7 @@ QString ResourceCalendar::subresourceType( const QString &resource )
 
 bool ResourceCalendar::load()
 {
-  kDebug(5800) << "Loading resource" << resourceName();
+  kDebug() << resourceName();
 
   d->mReceivedLoadError = false;
 
@@ -181,14 +181,14 @@ bool ResourceCalendar::load()
     }
   }
 
-  kDebug(5800) << "Done loading resource" << resourceName();
+  kDebug() << "Done loading resource" << resourceName();
 
   return success;
 }
 
 void ResourceCalendar::loadError( const QString &err )
 {
-  kDebug(5800) << "Error loading resource:" << err;
+  kDebug() << "Error loading resource:" << err;
 
   d->mReceivedLoadError = true;
 
@@ -216,12 +216,12 @@ bool ResourceCalendar::save( Incidence *incidence )
   }
 
   if ( !readOnly() ) {
-    kDebug(5800) << "Save resource" << resourceName();
+    kDebug() << resourceName();
 
     d->mReceivedSaveError = false;
 
     if ( !isOpen() ) {
-      kDebug(5800) << "Trying to save into a closed resource" << resourceName();
+      kDebug() << "Trying to save into a closed resource" << resourceName();
       return true;
     }
     bool success = incidence ? doSave( false, incidence ) : doSave( false );
@@ -231,7 +231,7 @@ bool ResourceCalendar::save( Incidence *incidence )
     return success;
   } else {
     // Read-only, just don't save...
-    kDebug(5800) << "Don't save read-only resource" << resourceName();
+    kDebug() << "Don't save read-only resource" << resourceName();
     return true;
   }
 }
@@ -248,7 +248,7 @@ bool ResourceCalendar::doSave( bool syncCache, Incidence *incidence )
 
 void ResourceCalendar::saveError( const QString &err )
 {
-  kDebug(5800) << "Error saving resource:" << err;
+  kDebug() << "Error saving resource:" << err;
 
   d->mReceivedSaveError = true;
   QString msg = i18n( "Error while saving %1.\n", resourceName() );

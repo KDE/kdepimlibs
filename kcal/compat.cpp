@@ -71,7 +71,7 @@ Compat *CompatFactory::createCompat( const QString &productId )
         } else if ( versionNum < 30200 ) {
           compat = new CompatPre32;
         } else if ( versionNum == 30200 && release == "pre" ) {
-          kDebug(5800) << "Generating compat for KOrganizer 3.2 pre";
+          kDebug() << "Generating compat for KOrganizer 3.2 pre";
           compat = new Compat32PrereleaseVersions;
         } else if ( versionNum < 30400 ) {
           compat = new CompatPre34;
@@ -81,7 +81,7 @@ Compat *CompatFactory::createCompat( const QString &productId )
       }
     }
   } else if ( outl9 >= 0 ) {
-    kDebug(5800) << "Generating compat for Outlook < 2000 (Outlook 9.0)";
+    kDebug() << "Generating compat for Outlook < 2000 (Outlook 9.0)";
     compat = new CompatOutlook9;
   }
 

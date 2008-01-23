@@ -69,7 +69,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start,
                     const KDateTime &end )
   : d( new Private )
 {
-  kDebug(5800) << "FreeBusy::FreeBusy";
+  kDebug();
   d->mCalendar = calendar;
 
   setDtStart( start );
@@ -96,7 +96,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start,
     Event *allDayEvent = 0;
     if ( event->allDay() ) {
       // addDay event. Do the hack
-      kDebug(5800) << "All-day event";
+      kDebug() << "All-day event";
       allDayEvent = new Event( *event );
 
       // Set the start and end times to be on midnight
@@ -108,7 +108,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start,
       allDayEvent->setDtStart( st );
       allDayEvent->setDtEnd( nd );
 
-      kDebug(5800) << "Use:" << st.toString() << "to" << nd.toString();
+      kDebug() << "Use:" << st.toString() << "to" << nd.toString();
       // Finally, use this event for the setting below
       event = allDayEvent;
     }

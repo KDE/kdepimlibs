@@ -239,7 +239,7 @@ void CalendarResources::readConfig( KConfig *config )
 void CalendarResources::load()
 {
   if ( !d->mManager->standardResource() ) {
-    kDebug(5800) << "Warning! No standard resource yet.";
+    kDebug() << "Warning! No standard resource yet.";
   }
 
   // set the timezone for all resources. Otherwise we'll have those terrible tz
@@ -401,7 +401,7 @@ bool CalendarResources::addIncidence( Incidence *incidence )
       d->mResourceMap.remove( incidence );
     }
   } else {
-    kDebug(5800) << "CalendarResources::addIncidence(): no resource";
+    kDebug() << "no resource";
   }
 
   return false;
@@ -828,7 +828,7 @@ bool CalendarResources::beginChange( Incidence *incidence )
   if ( count == 1 ) {
     Ticket *ticket = requestSaveTicket( r );
     if ( !ticket ) {
-      kDebug(5800) << "CalendarResources::beginChange(): unable to get ticket.";
+      kDebug() << "unable to get ticket.";
       decrementChangeCount( r );
       return false;
     } else {
