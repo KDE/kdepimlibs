@@ -30,11 +30,11 @@
 
 #include "kresources/idmapper.h"
 
+#include <kconfiggroup.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <kurl.h>
 #include <kstandarddirs.h>
-#include <kconfiggroup.h>
+#include <kurl.h>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QDataStream>
@@ -394,7 +394,7 @@ bool ResourceCached::load( CacheAction action )
 
   bool success = true;
   if ( !isOpen() ) {
-    success = open();
+    success = open(); //krazy:exclude=syscalls open is a class method
   }
   if ( success ) {
     bool update = false;

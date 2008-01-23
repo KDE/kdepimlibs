@@ -161,7 +161,7 @@ bool ResourceCalendar::load()
 
   bool success = true;
   if ( !isOpen() ) {
-    success = open();
+    success = open(); //krazy:exclude=syscalls open is a class method
   }
   if ( success ) {
     success = doLoad( false );
