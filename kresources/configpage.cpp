@@ -88,7 +88,7 @@ class ConfigViewItem : public QTreeWidgetItem
 
     void setStandard( bool value )
     {
-      setText( 2, ( value ? i18n( "Yes" ) : QString() ) );
+      setText( 2, ( value ? i18nc( "yes, a standard resource", "Yes" ) : QString() ) );
       mIsStandard = value;
     }
 
@@ -102,7 +102,7 @@ class ConfigViewItem : public QTreeWidgetItem
       setCheckState( 0, mResource->isActive() ? Qt::Checked : Qt::Unchecked );
       setText( 0, mResource->resourceName() );
       setText( 1, mResource->type() );
-      setText( 2, mIsStandard ? i18n( "Yes" ) : QString() );
+      setText( 2, mIsStandard ? i18nc( "yes, a standard resource", "Yes" ) : QString() );
     }
 
     bool isOn()
@@ -159,7 +159,9 @@ ConfigPage::ConfigPage( QWidget *parent )
   d->mListView = new QTreeWidget( groupBox );
   d->mListView->setColumnCount( 3 );
   QStringList headerLabels;
-  headerLabels << i18n( "Name" ) << i18n( "Type" ) << i18n( "Standard" );
+  headerLabels << i18nc( "@title:column resource name", "Name" )
+               << i18nc( "@title:column resource type", "Type" )
+               << i18nc( "@title:column a standard resource?", "Standard" );
   d->mListView->setHeaderItem( new QTreeWidgetItem( headerLabels ) );
 
   groupBoxLayout->addWidget( d->mListView, 1, 0 );

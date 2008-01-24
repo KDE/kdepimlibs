@@ -60,7 +60,7 @@ ConfigDialog::ConfigDialog( QWidget *parent, const QString &resourceFamily,
   : KDialog( parent ), d( new Private )
 {
   setModal( true );
-  setCaption( i18n( "Resource Configuration" ) );
+  setCaption( i18nc( "@title:window", "Resource Configuration" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
   showButtonSeparator( false );
@@ -80,14 +80,16 @@ ConfigDialog::ConfigDialog( QWidget *parent, const QString &resourceFamily,
   gbLayout->setSpacing( spacingHint() );
   generalGroupBox->setLayout( gbLayout );
 
-  generalGroupBox->setTitle( i18n( "General Settings" ) );
+  generalGroupBox->setTitle( i18nc( "@title:group", "General Settings" ) );
 
-  gbLayout->addWidget( new QLabel( i18n( "Name:" ), generalGroupBox ), 0, 0 );
+  gbLayout->addWidget( new QLabel( i18nc( "@label resource name", "Name:" ),
+                                   generalGroupBox ), 0, 0 );
 
   d->mName = new KLineEdit();
   gbLayout->addWidget( d->mName, 0, 1 );
 
-  d->mReadOnly = new QCheckBox( i18n( "Read-only" ), generalGroupBox );
+  d->mReadOnly =
+    new QCheckBox( i18nc( "@option:check if resource is read-only", "Read-only" ), generalGroupBox );
   gbLayout->addWidget( d->mReadOnly, 1, 0 );
 
   d->mName->setText( d->mResource->resourceName() );
@@ -101,7 +103,7 @@ ConfigDialog::ConfigDialog( QWidget *parent, const QString &resourceFamily,
   resourceLayout->setMargin( marginHint() );
   resourceGroupBox->setLayout( resourceLayout );
 
-  resourceGroupBox->setTitle( i18n( "%1 Resource Settings",
+  resourceGroupBox->setTitle( i18nc( "@title:group", "%1 Resource Settings",
                                     factory->typeName( resource->type() ) ) );
   mainLayout->addWidget( resourceGroupBox );
 
@@ -149,7 +151,7 @@ void ConfigDialog::setReadOnly( bool value )
 void ConfigDialog::accept()
 {
   if ( d->mName->text().isEmpty() ) {
-    KMessageBox::sorry( this, i18n( "Please enter a resource name." ) );
+    KMessageBox::sorry( this, i18nc( "@info", "Please enter a resource name." ) );
     return;
   }
 
