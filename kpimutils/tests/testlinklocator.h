@@ -19,8 +19,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef LINKLOCATORTEST_H
-#define LINKLOCATORTEST_H
+#ifndef TESTLINKLOCATOR_H
+#define TESTLINKLOCATOR_H
 
 #include <QtCore/QObject>
 

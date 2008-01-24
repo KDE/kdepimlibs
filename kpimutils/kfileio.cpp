@@ -328,9 +328,10 @@ bool removeDirAndContentsRecursively( const QString & path )
   QFileInfo fi;
 
   Q_FOREACH( fi, list ) {
-    if( fi.isDir() ) {
-      if ( fi.fileName() != "." && fi.fileName() != ".." )
+    if ( fi.isDir() ) {
+      if ( fi.fileName() != "." && fi.fileName() != ".." ) {
         success = success && removeDirAndContentsRecursively( fi.absoluteFilePath() );
+      }
     } else {
       success = success && d.remove( fi.absoluteFilePath() );
     }
@@ -341,7 +342,5 @@ bool removeDirAndContentsRecursively( const QString & path )
   }
   return success;
 }
-
-
 
 }

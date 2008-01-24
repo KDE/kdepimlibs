@@ -22,7 +22,6 @@
   This file is part of the KDEPIM Utilities library and provides
   static methods for email address validation.
 
-
   @author Matt Douhan \<matt@fruitsalad.org\>
  */
 
@@ -707,11 +706,12 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
     if( '(' == c ) commentstack++;
     if( ')' == c ) commentstack--;
     bInComment = commentstack != 0;
-    if( '"' == c && !bInComment )
-        bInQuotesOutsideOfEmail = !bInQuotesOutsideOfEmail;
+    if ( '"' == c && !bInComment ) {
+      bInQuotesOutsideOfEmail = !bInQuotesOutsideOfEmail;
+    }
 
     if( !bInComment && !bInQuotesOutsideOfEmail ) {
-      if( '@' == c ){
+      if ( '@' == c ) {
         iAd = i;
         break; // found it
       }
@@ -956,10 +956,10 @@ QString KPIMUtils::normalizeAddressesAndDecodeIdn( const QString &str )
       if ( splitAddress( (*it).toUtf8(),
                          displayName, addrSpec, comment ) == AddressOk ) {
 
-        normalizedAddressList <<
-          normalizedAddress( QString::fromUtf8( displayName ),
-                             fromIdn( QString::fromUtf8( addrSpec ) ),
-                             QString::fromUtf8( comment ) );
+        normalizedAddressList
+          << normalizedAddress( QString::fromUtf8( displayName ),
+                                fromIdn( QString::fromUtf8( addrSpec ) ),
+                                QString::fromUtf8( comment ) );
       } else {
         kDebug(5321) << "splitting address failed:" << *it;
       }
@@ -994,10 +994,9 @@ QString KPIMUtils::normalizeAddressesAndEncodeIdn( const QString &str )
       if ( splitAddress( (*it).toUtf8(),
                          displayName, addrSpec, comment ) == AddressOk ) {
 
-        normalizedAddressList <<
-          normalizedAddress( QString::fromUtf8( displayName ),
-                             toIdn( QString::fromUtf8( addrSpec ) ),
-                             QString::fromUtf8( comment ) );
+        normalizedAddressList << normalizedAddress( QString::fromUtf8( displayName ),
+                                                    toIdn( QString::fromUtf8( addrSpec ) ),
+                                                    QString::fromUtf8( comment ) );
       } else {
         kDebug(5321) << "splitting address failed:" << *it;
       }

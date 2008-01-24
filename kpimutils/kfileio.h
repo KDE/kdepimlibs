@@ -121,7 +121,6 @@ KPIMUTILS_EXPORT bool checkAndCorrectPermissionsIfPossibleWithErrorHandling( QWi
                                                             const bool wantItReadable,
                                                             const bool wantItWritable );
 
-
 /**
  * Removed a directory on the local filesystem whether it is empty or not. All
  * contents are irredeemably lost.

@@ -16,6 +16,7 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
+//krazy:excludeall=contractions
 
 #include "kpimutils/email.h"
 
@@ -220,7 +221,8 @@ int main( int argc, char *argv[] )
                         "Matt Douhan", "matt@[123.123.123.123]", true );
 
   // @ inside the comment
-  checkGetNameAndEmail( "\"Matt@Douhan\" <matt@fruitsalad.org>", "Matt@Douhan", "matt@fruitsalad.org", true );
+  checkGetNameAndEmail( "\"Matt@Douhan\" <matt@fruitsalad.org>",
+                        "Matt@Douhan", "matt@fruitsalad.org", true );
 
   // No '@'
   checkGetNameAndEmail( "foo <distlist>", "foo", "distlist", true );
