@@ -1,11 +1,10 @@
-
 project(kresources)
 
 add_subdirectory( tests )
 
 include_directories( ${KDE4_KIO_INCLUDES} )
 
-add_definitions(${QDBUS_DEFINITIONS})
+add_definitions(${QDBUS_DEFINITIONS} -DKDE_DEFAULT_DEBUG_AREA=5650)
 
 ########### next target ###############
 

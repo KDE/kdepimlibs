@@ -102,7 +102,7 @@ Resource::~Resource()
 
 void Resource::writeConfig( KConfigGroup &group )
 {
-  kDebug(5650) << "Resource::writeConfig()";
+  kDebug();
 
   group.writeEntry( "ResourceType", d->mType );
   group.writeEntry( "ResourceName", d->mName );
@@ -118,7 +118,7 @@ bool Resource::open()
   QMutexLocker guard( &(d->mMutex) );
 #endif
   if ( !d->mOpenCount ) {
-    kDebug(5650) << "Opening resource" << resourceName();
+    kDebug() << "Opening resource" << resourceName();
     d->mIsOpen = doOpen();
   }
   d->mOpenCount++;
@@ -131,18 +131,18 @@ void Resource::close()
   QMutexLocker guard( &(d->mMutex) );
 #endif
   if ( !d->mOpenCount ) {
-    kDebug(5650) << "ERROR: Resource" << resourceName()
-                 << "closed more times than previously opened";
+    kDebug() << "ERROR: Resource" << resourceName()
+             << " closed more times than previously opened";
     return;
   }
   d->mOpenCount--;
   if ( !d->mOpenCount ) {
-    kDebug(5650) << "Closing resource" << resourceName();
+    kDebug() << "Closing resource" << resourceName();
     doClose();
     d->mIsOpen = false;
   } else {
-    kDebug(5650) << "Not yet closing resource" << resourceName()
-                 << ", open count =" << d->mOpenCount;
+    kDebug() << "Not yet closing resource" << resourceName()
+             << ", open count =" << d->mOpenCount;
   }
 }
 
@@ -203,14 +203,14 @@ bool Resource::isActive() const
 
 void Resource::dump() const
 {
-  kDebug(5650) << "Resource:";
-  kDebug(5650) << "  Name:" << d->mName;
-  kDebug(5650) << "  Identifier:" << d->mIdentifier;
-  kDebug(5650) << "  Type:" << d->mType;
-  kDebug(5650) << "  OpenCount:" << d->mOpenCount;
-  kDebug(5650) << "  ReadOnly:" << ( d->mReadOnly ? "yes" : "no" );
-  kDebug(5650) << "  Active:" << ( d->mActive ? "yes" : "no" );
-  kDebug(5650) << "  IsOpen:" << ( d->mIsOpen ? "yes" : "no" );
+  kDebug() << "Resource:";
+  kDebug() << "  Name:" << d->mName;
+  kDebug() << "  Identifier:" << d->mIdentifier;
+  kDebug() << "  Type:" << d->mType;
+  kDebug() << "  OpenCount:" << d->mOpenCount;
+  kDebug() << "  ReadOnly:" << ( d->mReadOnly ? "yes" : "no" );
+  kDebug() << "  Active:" << ( d->mActive ? "yes" : "no" );
+  kDebug() << "  IsOpen:" << ( d->mIsOpen ? "yes" : "no" );
 }
 
 bool Resource::doOpen()

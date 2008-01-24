@@ -61,7 +61,7 @@ K_GLOBAL_STATIC( factoryMap, mSelves )
 
 Factory *Factory::self( const QString &resourceFamily )
 {
-  kDebug(5650) << "Factory::self()";
+  kDebug();
 
   Factory *factory = 0;
 
@@ -113,21 +113,20 @@ ConfigWidget *Factory::configWidget( const QString &type, QWidget *parent )
   KPluginLoader loader( ptr->library() );
   KPluginFactory *factory = loader.factory();
   if ( !factory ) {
-    kDebug(5650) << "KRES::Factory::configWidget(): Factory creation failed"
-                 << loader.errorString();
+    kDebug() << "Factory creation failed: " << loader.errorString();
     return 0;
   }
 
   PluginFactoryBase *pluginFactory = static_cast<PluginFactoryBase *>( factory );
 
   if ( !pluginFactory ) {
-    kDebug(5650) << "KRES::Factory::configWidget(): no plugin factory.";
+    kDebug() << "no plugin factory.";
     return 0;
   }
 
   ConfigWidget *wdg = pluginFactory->configWidget( parent );
   if ( !wdg ) {
-    kDebug(5650) << "'" << ptr->library() << "' doesn't provide a ConfigWidget";
+    kDebug() << "'" << ptr->library() << "' doesn't provide a ConfigWidget";
     return 0;
   }
 
@@ -156,10 +155,10 @@ QString Factory::typeDescription( const QString &type ) const
 
 Resource *Factory::Private::resourceInternal( const QString &type, const KConfigGroup *group )
 {
-  kDebug(5650) << "Factory::resource(" << type << ", config )";
+  kDebug() << "(" << type << ", config )";
 
   if ( type.isEmpty() || !mTypeMap.contains( type ) ) {
-    kDebug(5650) << "Factory::resource() no such type" << type;
+    kDebug() << "no such type" << type;
     return 0;
   }
 
@@ -167,15 +166,14 @@ Resource *Factory::Private::resourceInternal( const QString &type, const KConfig
   KPluginLoader loader( ptr->library() );
   KPluginFactory *factory = loader.factory();
   if ( !factory ) {
-    kDebug(5650) << "KRES::Factory::resource(): Factory creation failed"
-                 << loader.errorString();
+    kDebug() << "Factory creation failed" << loader.errorString();
     return 0;
   }
 
   PluginFactoryBase *pluginFactory = static_cast<PluginFactoryBase *>( factory );
 
   if ( !pluginFactory ) {
-    kDebug(5650) << "KRES::Factory::resource(): no plugin factory.";
+    kDebug() << "no plugin factory.";
     return 0;
   }
 
@@ -187,8 +185,8 @@ Resource *Factory::Private::resourceInternal( const QString &type, const KConfig
   }
 
   if ( !resource ) {
-    kDebug(5650) << "'" << ptr->library()
-                 << "' is not a" << mResourceFamily << "plugin.";
+    kDebug() << "'" << ptr->library()
+             << "' is not a" << mResourceFamily << "plugin.";
     return 0;
   }
 
