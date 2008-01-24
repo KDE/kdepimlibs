@@ -7,10 +7,10 @@ configpage            |   D   |         |   D   |         |    D    |
 configwidget          |   D   |         |   D   |   n/a   |    D    |
 factory               |   D   |         |   D   |         |    D    |
 idmapper              |   D   |         |   D   |    D    |    D    |
-kcmkresources         |       |         |       |         |         |
-manager               |       |         |       |         |         |
-resource              |       |         |       |         |         |
-selectdialog          |       |         |       |         |         |
+kcmkresources         |   D   |         |   D   |         |         |
+manager               |   D   |         |   D   |         |         |
+resource              |   D   |         |   D   |         |         |
+selectdialog          |   D   |         |   D   |         |         |
 
 
 Todo:

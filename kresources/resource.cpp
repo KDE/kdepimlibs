@@ -22,6 +22,7 @@
 */
 
 #include "resource.h"
+
 #include <kdebug.h>
 #include <krandom.h>
 #include <kconfig.h>
@@ -150,7 +151,7 @@ bool Resource::isOpen() const
   return d->mIsOpen;
 }
 
-void Resource::setIdentifier( const QString& identifier )
+void Resource::setIdentifier( const QString &identifier )
 {
   d->mIdentifier = identifier;
 }
@@ -160,7 +161,7 @@ QString Resource::identifier() const
   return d->mIdentifier;
 }
 
-void Resource::setType( const QString& type )
+void Resource::setType( const QString &type )
 {
   d->mType = type;
 }

@@ -23,9 +23,8 @@
 #ifndef KRESOURCES_MANAGERIMPL_H
 #define KRESOURCES_MANAGERIMPL_H
 
-#include <QtCore/QString>
-
 #include "resource.h"
+#include <QtCore/QString>
 
 class KConfig;
 
@@ -41,7 +40,7 @@ class ManagerNotifier;
 */
 class KRESOURCES_EXPORT ManagerImpl : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     ManagerImpl( ManagerNotifier *, const QString &family );
     ~ManagerImpl();
@@ -76,22 +75,22 @@ class KRESOURCES_EXPORT ManagerImpl : public QObject
 
   private Q_SLOTS:
     // dbus calls
-    void dbusKResourceAdded( const QString& managerId,
-                             const QString& resourceId );
-    void dbusKResourceModified( const QString& managerId,
-                                const QString& resourceId );
-    void dbusKResourceDeleted( const QString& managerId,
-                               const QString& resourceId );
+    void dbusKResourceAdded( const QString &managerId,
+                             const QString &resourceId );
+    void dbusKResourceModified( const QString &managerId,
+                                const QString &resourceId );
+    void dbusKResourceDeleted( const QString &managerId,
+                               const QString &resourceId );
 
   private:
     void createStandardConfig();
 
-    Resource *readResourceConfig( const QString& identifier, bool checkActive );
+    Resource *readResourceConfig( const QString &identifier, bool checkActive );
     void writeResourceConfig( Resource *resource, bool checkActive );
 
     void removeResource( Resource *resource );
     Resource *getResource( Resource *resource );
-    Resource *getResource( const QString& identifier );
+    Resource *getResource( const QString &identifier );
 
     class ManagerImplPrivate;
     ManagerImplPrivate *const d;

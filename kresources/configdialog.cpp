@@ -89,7 +89,8 @@ ConfigDialog::ConfigDialog( QWidget *parent, const QString &resourceFamily,
   gbLayout->addWidget( d->mName, 0, 1 );
 
   d->mReadOnly =
-    new QCheckBox( i18nc( "@option:check if resource is read-only", "Read-only" ), generalGroupBox );
+    new QCheckBox( i18nc( "@option:check if resource is read-only", "Read-only" ),
+                   generalGroupBox );
   gbLayout->addWidget( d->mReadOnly, 1, 0 );
 
   d->mName->setText( d->mResource->resourceName() );

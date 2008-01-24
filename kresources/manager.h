@@ -24,13 +24,13 @@
 #ifndef KRESOURCES_MANAGER_H
 #define KRESOURCES_MANAGER_H
 
-#include <QtCore/QList>
-#include <QtCore/QStringList>
+#include "managerimpl.h"
+#include "factory.h"
 
 #include <kdebug.h>
 
-#include "factory.h"
-#include "managerimpl.h"
+#include <QtCore/QList>
+#include <QtCore/QStringList>
 
 namespace KRES {
 
@@ -351,7 +351,7 @@ class Manager : private ManagerNotifier
       @param type   The type of the resource, one of those returned
                     by resourceTypeNames()
     */
-    T *createResource( const QString& type )
+    T *createResource( const QString &type )
     {
       return dynamic_cast<T *>( mFactory->resource( type ) );
     }

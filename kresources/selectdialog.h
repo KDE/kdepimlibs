@@ -26,12 +26,11 @@
 
 #include "kresources_export.h"
 
+#include <kdialog.h>
+
 #include <QtCore/QObject>
 #include <QtCore/QMap>
 #include <QtCore/QList>
-
-#include <kdialog.h>
-
 
 namespace KRES {
 

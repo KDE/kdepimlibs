@@ -279,8 +279,8 @@ void ManagerImpl::dbusKResourceModified( const QString &managerId,
   }
 }
 
-void ManagerImpl::dbusKResourceDeleted( const QString& managerId,
-                                        const QString& resourceId )
+void ManagerImpl::dbusKResourceDeleted( const QString &managerId,
+                                        const QString &resourceId )
 {
   if ( managerId == d->mId ) {
     kDebug(5650) << "Ignore D-Bus notification to myself";
