@@ -219,7 +219,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
   // check the access bit of a folder.
   if ( fiToCheck.isDir() ) {
     if ( stat( toCheckEnc,&statbuffer ) != 0 ) {
-      kDebug(5321) << "wantItA: Can't read perms of" << toCheck;
+      kDebug() << "wantItA: Can't read perms of" << toCheck;
     }
     QDir g( toCheck );
     if ( !g.isReadable() ) {
@@ -227,7 +227,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
         error.append( i18n( "%1 is not accessible and that is "
                             "unchangeable.", toCheck ) + '\n' );
       } else {
-        kDebug(5321) << "Changed access bit for" << toCheck;
+        kDebug() << "Changed access bit for" << toCheck;
       }
     }
   }
@@ -240,7 +240,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
       // Get the current permissions. No need to do anything with an
       // error, it will het added to errors anyhow, later on.
       if ( stat( toCheckEnc,&statbuffer ) != 0 ) {
-        kDebug(5321) << "wantItR: Can't read perms of" << toCheck;
+        kDebug() << "wantItR: Can't read perms of" << toCheck;
       }
 
       // Lets try changing it.
@@ -248,7 +248,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
         error.append( i18n( "%1 is not readable and that is unchangeable.",
                             toCheck ) + '\n' );
       } else {
-        kDebug(5321) << "Changed the read bit for" << toCheck;
+        kDebug() << "Changed the read bit for" << toCheck;
       }
     }
 
@@ -256,14 +256,14 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
       // Gets the current persmissions. Needed because it can be changed
       // curing previous operation.
       if ( stat( toCheckEnc,&statbuffer ) != 0 ) {
-        kDebug(5321) << "wantItW: Can't read perms of" << toCheck;
+        kDebug() << "wantItW: Can't read perms of" << toCheck;
       }
 
       // Lets try changing it.
       if ( chmod ( toCheckEnc, statbuffer.st_mode + S_IWUSR ) != 0 ) {
         error.append( i18n( "%1 is not writable and that is unchangeable.", toCheck ) + '\n' );
       } else {
-        kDebug(5321) << "Changed the write bit for" << toCheck;
+        kDebug() << "Changed the write bit for" << toCheck;
       }
     }
   }
@@ -304,7 +304,7 @@ bool checkAndCorrectPermissionsIfPossibleWithErrorHandling( QWidget *parent,
   // so, I can't provide a functionality to recheck. So it now
   // it is just a warning.
   if ( !error.isEmpty() ) {
-    kDebug(5321) << "checkPermissions found:" << error;
+    kDebug() << "checkPermissions found:" << error;
     KMessageBox::detailedSorry( parent,
                                 i18n( "Some files or folders do not have the "
                                       "necessary permissions, please correct "

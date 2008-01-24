@@ -77,7 +77,7 @@ QStringList KPIMUtils::splitAddressList( const QString &aStr )
         if ( commentlevel > 0 ) {
           commentlevel--;
         } else {
-          kDebug(5321) << "Error in address splitting: Unmatched ')'";
+          kDebug() << "Error in address splitting: Unmatched ')'";
           return list;
         }
       }
@@ -103,8 +103,7 @@ QStringList KPIMUtils::splitAddressList( const QString &aStr )
       list += addr.simplified();
     }
   } else {
-    kDebug(5321) << "Error in address splitting:"
-                 << "Unexpected end of address list";
+    kDebug() << "Error in address splitting: Unexpected end of address list";
   }
 
   return list;
@@ -118,7 +117,7 @@ KPIMUtils::EmailParseResult splitAddressInternal( const QByteArray  address,
                                                   QByteArray &comment,
                                                   bool allowMultipleAddresses )
 {
-  //  kDebug(5321) << "KMMessage::splitAddress(" << address << ")";
+  //  kDebug() << "address";
 
   displayName = "";
   addrSpec = "";
@@ -274,9 +273,9 @@ KPIMUtils::EmailParseResult splitAddressInternal( const QByteArray  address,
     }
   }
   /*
-    kDebug(5321) << "display-name : \"" << displayName << "\"";
-    kDebug(5321) << "comment      : \"" << comment << "\"";
-    kDebug(5321) << "addr-spec    : \"" << addrSpec << "\"";
+    kDebug() << "display-name : \"" << displayName << "\"";
+    kDebug() << "comment      : \"" << comment << "\"";
+    kDebug() << "addr-spec    : \"" << addrSpec << "\"";
   */
   return AddressOk;
 }
@@ -646,7 +645,7 @@ QByteArray KPIMUtils::extractEmailAddress( const QByteArray &address )
                           false/* don't allow multiple addresses */ );
   if ( result != AddressOk ) {
     addrSpec = QByteArray();
-    kDebug(5321) // << "\n"
+    kDebug() // << "\n"
       << "Input: aStr\nError:"
       << emailParseResultToString( result );
   }
@@ -669,7 +668,7 @@ QByteArray KPIMUtils::firstEmailAddress( const QByteArray &addresses )
                           true/* allow multiple addresses */ );
   if ( result != AddressOk ) {
     addrSpec = QByteArray();
-    kDebug(5321) // << "\n"
+    kDebug() // << "\n"
       << "Input: aStr\nError:"
       << emailParseResultToString( result );
   }
@@ -938,8 +937,7 @@ QString KPIMUtils::toIdn( const QString &addrSpec )
 //-----------------------------------------------------------------------------
 QString KPIMUtils::normalizeAddressesAndDecodeIdn( const QString &str )
 {
-  //  kDebug(5321) << "KPIMUtils::normalizeAddressesAndDecodeIDNs( \""
-  //                << str << "\" )";
+  //  kDebug() << str;
   if ( str.isEmpty() ) {
     return str;
   }
@@ -961,14 +959,14 @@ QString KPIMUtils::normalizeAddressesAndDecodeIdn( const QString &str )
                                 fromIdn( QString::fromUtf8( addrSpec ) ),
                                 QString::fromUtf8( comment ) );
       } else {
-        kDebug(5321) << "splitting address failed:" << *it;
+        kDebug() << "splitting address failed:" << *it;
       }
     }
   }
   /*
-    kDebug(5321) << "normalizedAddressList: \""
-    << normalizedAddressList.join( ", " )
-    << "\"";
+    kDebug() << "normalizedAddressList: \""
+             << normalizedAddressList.join( ", " )
+             << "\"";
   */
   return normalizedAddressList.join( ", " );
 }
@@ -976,8 +974,7 @@ QString KPIMUtils::normalizeAddressesAndDecodeIdn( const QString &str )
 //-----------------------------------------------------------------------------
 QString KPIMUtils::normalizeAddressesAndEncodeIdn( const QString &str )
 {
-  //kDebug(5321) << "KPIMUtils::normalizeAddressesAndEncodeIDNs( \""
-  //              << str << "\" )";
+  //kDebug() << str;
   if ( str.isEmpty() ) {
     return str;
   }
@@ -998,15 +995,15 @@ QString KPIMUtils::normalizeAddressesAndEncodeIdn( const QString &str )
                                                     toIdn( QString::fromUtf8( addrSpec ) ),
                                                     QString::fromUtf8( comment ) );
       } else {
-        kDebug(5321) << "splitting address failed:" << *it;
+        kDebug() << "splitting address failed:" << *it;
       }
     }
   }
 
   /*
-    kDebug(5321) << "normalizedAddressList: \""
-    << normalizedAddressList.join( ", " )
-    << "\"";
+    kDebug() << "normalizedAddressList: \""
+             << normalizedAddressList.join( ", " )
+             << "\"";
   */
   return normalizedAddressList.join( ", " );
 }

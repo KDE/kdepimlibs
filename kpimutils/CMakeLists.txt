@@ -1,4 +1,7 @@
 project(kpimutils)
+
+add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5321 )
+
 add_subdirectory( tests )
 
 ########### next target ###############
