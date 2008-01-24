@@ -1,5 +1,5 @@
 [Desktop Entry]
-Encoding=UTF-8
+Name=KResources Plugin
 Type=ServiceType
 X-KDE-ServiceType=KResources/Plugin
 Comment=KResource Framework Plugin
