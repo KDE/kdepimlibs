@@ -247,7 +247,9 @@ QString Query::Private::marshal( const QVariant &arg ) const
       return "<value><base64>" + arg.toByteArray().toBase64() + "</base64></value>\r\n";
     case QVariant::DateTime:
       {
-        return "<value><dateTime.iso8601>" + arg.toDateTime().toString( Qt::ISODate ) + "</dateTime.iso8601></value>\r\n";
+        return "<value><dateTime.iso8601>" +
+          arg.toDateTime().toString( Qt::ISODate ) +
+          "</dateTime.iso8601></value>\r\n";
       }
     case QVariant::List:
       {
@@ -399,7 +401,7 @@ Query *Query::create( const QVariant &id, QObject *parent )
 void Query::call( const QString &server,
                   const QString &method,
                   const QList<QVariant> &args,
-                  const QMap<QString, QString> &jobMetaData)
+                  const QMap<QString, QString> &jobMetaData )
 {
 
   const QString xmlMarkup = d->markupCall( method, args );

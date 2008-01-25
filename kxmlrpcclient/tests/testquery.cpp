@@ -1,7 +1,7 @@
 /*
     This file is part of the kxmlrpc library.
 
-    Copyright (c) 2006 Narayan Newton <narayannewton@gmail.com> 
+    Copyright (c) 2006 Narayan Newton <narayannewton@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -27,9 +27,9 @@
 QTEST_KDEMAIN( TestQuery, NoGUI )
 
 #include <kxmlrpcclient/query.h>
-using namespace KXmlRpc; 
+using namespace KXmlRpc;
 
-void TestQuery::testValidity() 
+void TestQuery::testValidity()
 {
   Query *q = Query::create();
   QVERIFY( q != NULL );

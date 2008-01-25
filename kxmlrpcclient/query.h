@@ -67,8 +67,7 @@ class KXMLRPCCLIENT_EXPORT Query : public QObject
      */
     void call( const QString &server, const QString &method,
                const QList<QVariant> &args,
-               const QMap<QString, QString> &jobMetaData
-	       );
+               const QMap<QString, QString> &jobMetaData );
 
   Q_SIGNALS:
     /**
@@ -79,7 +78,7 @@ class KXMLRPCCLIENT_EXPORT Query : public QObject
     /**
       A signal sent when we receive an error from the server.
      */
-    void fault( int, const QString&, const QVariant &id );
+    void fault( int, const QString &, const QVariant &id );
 
     /**
       A signal sent when a query finishes.

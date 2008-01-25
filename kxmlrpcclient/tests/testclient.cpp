@@ -1,7 +1,7 @@
 /*
     This file is part of the kxmlrpc library.
 
-    Copyright (c) 2006 Narayan Newton <narayannewton@gmail.com> 
+    Copyright (c) 2006 Narayan Newton <narayannewton@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -27,9 +27,9 @@
 QTEST_KDEMAIN( TestClient, NoGUI )
 
 #include <kxmlrpcclient/client.h>
-using namespace KXmlRpc; 
+using namespace KXmlRpc;
 
-void TestClient::testValidity() 
+void TestClient::testValidity()
 {
   Client *c = new Client();
   c->setUrl( KUrl( "http://test:pass@fake.com/rpc2" ) );

@@ -1,7 +1,7 @@
 /*
     This file is part of the kxmlrpc library.
 
-    Copyright (c) 2006 Narayan Newton <narayannewton@gmail.com> 
+    Copyright (c) 2006 Narayan Newton <narayannewton@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -24,11 +24,11 @@
 
 #include <QtCore/QObject>
 
-class TestClient : public QObject 
+class TestClient : public QObject
 {
   Q_OBJECT
-private Q_SLOTS:
-  void testValidity();
+  private Q_SLOTS:
+    void testValidity();
 };
 
 #endif

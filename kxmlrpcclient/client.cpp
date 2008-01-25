@@ -128,12 +128,12 @@ void Client::call( const QString &method, const QList<QVariant> &args,
   }
 
   Query *query = Query::create( id, this );
-  connect( query, SIGNAL( message( const QList<QVariant> &, const QVariant & ) ), msgObj, messageSlot );
-  connect( query, SIGNAL( fault( int, const QString &, const QVariant & ) ), faultObj, faultSlot );
-  connect( query, SIGNAL( finished( Query * ) ), this, SLOT( queryFinished( Query * ) ) );
+  connect( query, SIGNAL(message(const QList<QVariant> &,const QVariant &)), msgObj, messageSlot );
+  connect( query, SIGNAL(fault(int,const QString &,const QVariant &)), faultObj, faultSlot );
+  connect( query, SIGNAL(finished(Query *)), this, SLOT(queryFinished(Query *)) );
   d->mPendingQueries.append( query );
 
-  query->call( d->mUrl.url(), method, args, metaData  );
+  query->call( d->mUrl.url(), method, args, metaData );
 }
 
 void Client::call( const QString &method, const QVariant &arg,
@@ -166,7 +166,7 @@ void Client::call( const QString &method, bool arg,
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
-void Client::call( const QString &method, double arg ,
+void Client::call( const QString &method, double arg,
                    QObject *msgObj, const char *messageSlot,
                    QObject *faultObj, const char *faultSlot,
                    const QVariant &id )
@@ -176,7 +176,7 @@ void Client::call( const QString &method, double arg ,
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
-void Client::call( const QString &method, const QString &arg ,
+void Client::call( const QString &method, const QString &arg,
                    QObject *msgObj, const char *messageSlot,
                    QObject *faultObj, const char *faultSlot,
                    const QVariant &id )
@@ -186,7 +186,7 @@ void Client::call( const QString &method, const QString &arg ,
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
-void Client::call( const QString &method, const QByteArray &arg ,
+void Client::call( const QString &method, const QByteArray &arg,
                    QObject *msgObj, const char *messageSlot,
                    QObject *faultObj, const char *faultSlot,
                    const QVariant &id )
