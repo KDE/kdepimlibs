@@ -131,7 +131,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     void schedule( TransportJob* job );
 
     /**
-      Trys to create a transport based on KEMailSettings.
+      Tries to create a transport based on KEMailSettings.
       If the data in KEMailSettings is incomplete, no transport is created.
     */
     void createDefaultTransport();
