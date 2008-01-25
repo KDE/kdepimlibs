@@ -63,10 +63,9 @@ using namespace KTnef;
 //-----------------------------------------------------------------------------
 //@cond IGNORE
 static QString stringProp( KTNEFMessage *tnefMsg, const quint32 &key,
-                           const QString &fallback = QString())
+                           const QString &fallback = QString() )
 {
-  return tnefMsg->findProp( key < 0x10000 ? key & 0xFFFF : key >> 16,
-                            fallback );
+  return tnefMsg->findProp( key < 0x10000 ? key & 0xFFFF : key >> 16, fallback );
 }
 
 static QString sNamedProp( KTNEFMessage *tnefMsg, const QString &name,
@@ -124,7 +123,7 @@ static void unset_tz( struct save_tz old_tz )
     free( old_tz.old_tz );
   } else {
     /* clear TZ from env */
-    putenv( strdup("TZ") );
+    putenv( strdup( "TZ" ) );
   }
   tzset();
 
@@ -138,12 +137,12 @@ static KDateTime utc2Local( const KDateTime &utcdt )
 {
   struct tm tmL;
 
-  save_tz tmp_tz = set_tz("UTC");
+  save_tz tmp_tz = set_tz( "UTC" );
   time_t utc = utcdt.toTime_t();
   unset_tz( tmp_tz );
 
   localtime_r( &utc, &tmL );
-  return KDateTime( QDate( tmL.tm_year+1900, tmL.tm_mon+1, tmL.tm_mday ),
+  return KDateTime( QDate( tmL.tm_year + 1900, tmL.tm_mon + 1, tmL.tm_mday ),
                     QTime( tmL.tm_hour, tmL.tm_min, tmL.tm_sec ) );
 }
 
@@ -177,7 +176,7 @@ static KDateTime pureISOToLocalQDateTime( const QString &dtStr,
 
     if ( !bDateOnly ) {
       // correct for GMT ( == Zulu time == UTC )
-      if (dtStr.at(dtStr.length()-1) == 'Z') {
+      if ( dtStr.at( dtStr.length() - 1 ) == 'Z' ) {
         //dT = dT.addSecs( 60 * KRFCDate::localUTCOffset() );
         //localUTCOffset( dT ) );
         dT = utc2Local( dT );
@@ -208,8 +207,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
 
     // Everything depends from property PR_MESSAGE_CLASS
     // (this is added by KTNEFParser):
-    QString msgClass = tnefMsg->findProp( 0x001A, QString(), true )
-      .toUpper();
+    QString msgClass = tnefMsg->findProp( 0x001A, QString(), true ).toUpper();
     if ( !msgClass.isEmpty() ) {
       // Match the old class names that might be used by Outlook for
       // compatibility with Microsoft Mail for Windows for Workgroups 3.1.
@@ -221,16 +219,21 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
       bool bCompatMethodDeclined = false;
       if ( msgClass.startsWith( "IPM.MICROSOFT SCHEDULE." ) ) {
         bCompatClassAppointment = true;
-        if ( msgClass.endsWith( ".MTGREQ" ) )
+        if ( msgClass.endsWith( ".MTGREQ" ) ) {
           bCompatMethodRequest = true;
-        if ( msgClass.endsWith( ".MTGCNCL" ) )
+        }
+        if ( msgClass.endsWith( ".MTGCNCL" ) ) {
           bCompatMethodCancled = true;
-        if ( msgClass.endsWith( ".MTGRESPP" ) )
+        }
+        if ( msgClass.endsWith( ".MTGRESPP" ) ) {
           bCompatMethodAccepted = true;
-        if ( msgClass.endsWith( ".MTGRESPA" ) )
+        }
+        if ( msgClass.endsWith( ".MTGRESPA" ) ) {
           bCompatMethodAcceptedCond = true;
-        if ( msgClass.endsWith( ".MTGRESPN" ) )
+        }
+        if ( msgClass.endsWith( ".MTGRESPN" ) ) {
           bCompatMethodDeclined = true;
+        }
       }
       bool bCompatClassNote = ( msgClass == "IPM.MICROSOFT MAIL.NOTE" );
 
@@ -244,11 +247,11 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
         calFormat.setApplication( "Outlook", prodID );
 
         iTIPMethod method;
-        if ( bCompatMethodRequest )
+        if ( bCompatMethodRequest ) {
           method = iTIPRequest;
-        else if ( bCompatMethodCancled )
+        } else if ( bCompatMethodCancled ) {
           method = iTIPCancel;
-        else if ( bCompatMethodAccepted || bCompatMethodAcceptedCond ||
+        } else if ( bCompatMethodAccepted || bCompatMethodAcceptedCond ||
                  bCompatMethodDeclined ) {
           method = iTIPReply;
           bIsReply = true;
@@ -292,12 +295,15 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
 
               Attendee *attendee = new Attendee( s, s, true );
               if ( bIsReply ) {
-                if ( bCompatMethodAccepted )
+                if ( bCompatMethodAccepted ) {
                   attendee->setStatus( Attendee::Accepted );
-                if ( bCompatMethodDeclined )
+                }
+                if ( bCompatMethodDeclined ) {
                   attendee->setStatus( Attendee::Declined );
-                if ( bCompatMethodAcceptedCond )
+                }
+                if ( bCompatMethodAcceptedCond ) {
                   attendee->setStatus( Attendee::Tentative );
+                }
               } else {
                 attendee->setStatus( Attendee::NeedsAction );
                 attendee->setRole( Attendee::ReqParticipant );
@@ -312,12 +318,15 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           if ( !s.isEmpty() ) {
             Attendee *attendee = new Attendee( QString(), QString(), true );
             if ( bIsReply ) {
-              if ( bCompatMethodAccepted )
+              if ( bCompatMethodAccepted ) {
                 attendee->setStatus( Attendee::Accepted );
-              if ( bCompatMethodAcceptedCond )
+              }
+              if ( bCompatMethodAcceptedCond ) {
                 attendee->setStatus( Attendee::Declined );
-              if ( bCompatMethodDeclined )
+              }
+              if ( bCompatMethodDeclined ) {
                 attendee->setStatus( Attendee::Tentative );
+              }
             } else {
               attendee->setStatus( Attendee::NeedsAction );
               attendee->setRole( Attendee::ReqParticipant );
@@ -334,12 +343,12 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           event->setOrganizer( s );
         }
 
-        s = tnefMsg->findProp( 0x8516 ).replace( QChar( '-' ), QString() )
-          .replace( QChar( ':' ), QString() );
+        s = tnefMsg->findProp( 0x8516 ).replace( QChar( '-' ), QString() ).
+            replace( QChar( ':' ), QString() );
         event->setDtStart( KDateTime::fromString( s ) ); // ## Format??
 
-        s = tnefMsg->findProp( 0x8517 ).replace( QChar( '-' ), QString() )
-          .replace( QChar( ':' ), QString() );
+        s = tnefMsg->findProp( 0x8517 ).replace( QChar( '-' ), QString() ).
+            replace( QChar( ':' ), QString() );
         event->setDtEnd( KDateTime::fromString( s ) );
 
         s = tnefMsg->findProp( 0x8208 );
@@ -356,10 +365,10 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
         // PENDING(khz): is this value in local timezone? Must it be
         // adjusted? Most likely this is a bug in the server or in
         // Outlook - we ignore it for now.
-        s = tnefMsg->findProp( 0x8202 ).replace( QChar( '-' ), QString() )
-          .replace( QChar( ':' ), QString() );
+        s = tnefMsg->findProp( 0x8202 ).replace( QChar( '-' ), QString() ).
+            replace( QChar( ':' ), QString() );
         // ### kcal always uses currentDateTime()
-        // event->setDtStamp(QDateTime::fromString(s));
+        // event->setDtStamp( QDateTime::fromString( s ) );
 
         s = tnefMsg->findNamedProp( "Keywords" );
         event->setCategories( s );
@@ -374,23 +383,21 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
         event->setPriority( s.toInt() );
 
         // is reminder flag set ?
-        if (!tnefMsg->findProp(0x8503).isEmpty()) {
+        if ( !tnefMsg->findProp( 0x8503 ).isEmpty() ) {
           Alarm *alarm = new Alarm( event );
           KDateTime highNoonTime =
-            pureISOToLocalQDateTime( tnefMsg->findProp( 0x8502 )
-                                     .replace( QChar( '-' ), "" )
-                                     .replace( QChar( ':' ), "" ) );
+            pureISOToLocalQDateTime( tnefMsg->findProp( 0x8502 ).
+                                     replace( QChar( '-' ), "" ).replace( QChar( ':' ), "" ) );
           KDateTime wakeMeUpTime =
-            pureISOToLocalQDateTime( tnefMsg->findProp( 0x8560, "" )
-                                     .replace( QChar( '-' ), "" )
-                                     .replace( QChar( ':' ), "" ) );
+            pureISOToLocalQDateTime( tnefMsg->findProp( 0x8560, "" ).
+                                     replace( QChar( '-' ), "" ).replace( QChar( ':' ), "" ) );
           alarm->setTime( wakeMeUpTime );
 
           if ( highNoonTime.isValid() && wakeMeUpTime.isValid() ) {
             alarm->setStartOffset( Duration( highNoonTime, wakeMeUpTime ) );
           } else {
             // default: wake them up 15 minutes before the appointment
-            alarm->setStartOffset( Duration( 15*60 ) );
+            alarm->setStartOffset( Duration( 15 * 60 ) );
           }
           alarm->setDisplayAlarm( i18n( "Reminder" ) );
 
@@ -422,9 +429,8 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
         addressee.insertCustom( "KADDRESSBOOK", "X-Profession",
                                 stringProp( tnefMsg, MAPI_TAG_PR_PROFESSION ) );
 
-        QString s = tnefMsg->findProp( MAPI_TAG_PR_WEDDING_ANNIVERSARY )
-          .replace( QChar( '-' ), QString() )
-          .replace( QChar( ':' ), QString() );
+        QString s = tnefMsg->findProp( MAPI_TAG_PR_WEDDING_ANNIVERSARY ).
+                    replace( QChar( '-' ), QString() ).replace( QChar( ':' ), QString() );
         if ( !s.isEmpty() ) {
           addressee.insertCustom( "KADDRESSBOOK", "X-Anniversary", s );
         }
@@ -476,23 +482,29 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
 
         // problem: the 'other' address was stored by KOrganizer in
         //          a line looking like the following one:
-        // vPart += "\nADR;TYPE=dom;TYPE=intl;TYPE=parcel;TYPE=postal;TYPE=work;TYPE=home:other_pobox;;other_str1\nother_str2;other_loc;other_region;other_pocode;other_country
+        // vPart += "\nADR;\
+        // TYPE=dom;TYPE=intl;TYPE=parcel;TYPE=postal;TYPE=work;TYPE=home:other_pobox;;\
+        // other_str1\nother_str2;other_loc;other_region;other_pocode;other_country
 
         QString nr;
         nr = stringProp( tnefMsg, MAPI_TAG_PR_HOME_TELEPHONE_NUMBER );
-        addressee.insertPhoneNumber( KABC::PhoneNumber( nr, KABC::PhoneNumber::Home ) );
+        addressee.insertPhoneNumber(
+          KABC::PhoneNumber( nr, KABC::PhoneNumber::Home ) );
         nr = stringProp( tnefMsg, MAPI_TAG_PR_BUSINESS_TELEPHONE_NUMBER );
-        addressee.insertPhoneNumber( KABC::PhoneNumber( nr, KABC::PhoneNumber::Work ) );
+        addressee.insertPhoneNumber(
+          KABC::PhoneNumber( nr, KABC::PhoneNumber::Work ) );
         nr = stringProp( tnefMsg, MAPI_TAG_PR_MOBILE_TELEPHONE_NUMBER );
-        addressee.insertPhoneNumber( KABC::PhoneNumber( nr, KABC::PhoneNumber::Cell ) );
+        addressee.insertPhoneNumber(
+          KABC::PhoneNumber( nr, KABC::PhoneNumber::Cell ) );
         nr = stringProp( tnefMsg, MAPI_TAG_PR_HOME_FAX_NUMBER );
-        addressee.insertPhoneNumber( KABC::PhoneNumber( nr, KABC::PhoneNumber::Fax | KABC::PhoneNumber::Home ) );
+        addressee.insertPhoneNumber(
+          KABC::PhoneNumber( nr, KABC::PhoneNumber::Fax | KABC::PhoneNumber::Home ) );
         nr = stringProp( tnefMsg, MAPI_TAG_PR_BUSINESS_FAX_NUMBER );
-        addressee.insertPhoneNumber( KABC::PhoneNumber( nr, KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work ) );
+        addressee.insertPhoneNumber(
+          KABC::PhoneNumber( nr, KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work ) );
 
-        s = tnefMsg->findProp( MAPI_TAG_PR_BIRTHDAY )
-          .replace( QChar( '-' ), QString() )
-          .replace( QChar( ':' ), QString() );
+        s = tnefMsg->findProp( MAPI_TAG_PR_BIRTHDAY ).
+            replace( QChar( '-' ), QString() ).replace( QChar( ':' ), QString() );
         if ( !s.isEmpty() ) {
           addressee.setBirthday( QDateTime::fromString( s ) );
         }

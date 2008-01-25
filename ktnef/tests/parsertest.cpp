@@ -43,7 +43,7 @@ void ParserTest::testSingleAttachment()
   QList<KTNEFAttach*> atts = msg->attachmentList();
   QVERIFY( atts.count() == 1 );
 
-  KTNEFAttach* att = atts.first();
+  KTNEFAttach *att = atts.first();
   QVERIFY( att != 0 );
   QVERIFY( att->size() == 244 );
   QVERIFY( att->name() == QString( "AUTHORS" ) );
@@ -60,7 +60,7 @@ void ParserTest::testTwoAttachments()
   QList<KTNEFAttach*> atts = msg->attachmentList();
   QVERIFY( atts.count() == 2 );
 
-  KTNEFAttach* att = atts.takeFirst();
+  KTNEFAttach *att = atts.takeFirst();
   QVERIFY( att != 0 );
   QVERIFY( att->size() == 244 );
   QVERIFY( att->name() == QString( "AUTHORS" ) );
@@ -82,7 +82,7 @@ void ParserTest::testMAPIAttachments()
   QList<KTNEFAttach*> atts = msg->attachmentList();
   QVERIFY( atts.count() == 3 );
 
-  KTNEFAttach* att = atts.takeFirst();
+  KTNEFAttach *att = atts.takeFirst();
   QVERIFY( att != 0 );
   QVERIFY( att->size() == 61952 );
   QVERIFY( att->name() == QString( "VIA_Nytt_1402.doc" ) );

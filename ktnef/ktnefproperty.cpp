@@ -72,10 +72,11 @@ KTNEFProperty::~KTNEFProperty()
   delete d;
 }
 
-KTNEFProperty& KTNEFProperty::operator=( const KTNEFProperty &other )
+KTNEFProperty &KTNEFProperty::operator=( const KTNEFProperty &other )
 {
-  if ( this != &other )
+  if ( this != &other ) {
     *d = *other.d;
+  }
 
   return *this;
 }
@@ -151,5 +152,5 @@ QVariant KTNEFProperty::name() const
 
 bool KTNEFProperty::isVector() const
 {
-  return ( d->_value.type() == QVariant::List );
+  return d->_value.type() == QVariant::List;
 }

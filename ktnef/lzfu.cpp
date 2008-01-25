@@ -43,11 +43,11 @@
 #define LZFU_UNCOMPRESSED  0x414c454d
 
 #define LZFU_INITDICT   "{\\rtf1\\ansi\\mac\\deff0\\deftab720{\\fonttbl;}" \
-			"{\\f0\\fnil \\froman \\fswiss \\fmodern \\fscrip" \
-			"t \\fdecor MS Sans SerifSymbolArialTimes Ne" \
-			"w RomanCourier{\\colortbl\\red0\\green0\\blue0" \
-			"\r\n\\par \\pard\\plain\\f0\\fs20\\b\\i\\u\\tab" \
-			"\\tx"
+                        "{\\f0\\fnil \\froman \\fswiss \\fmodern \\fscrip" \
+                        "t \\fdecor MS Sans SerifSymbolArialTimes Ne" \
+                        "w RomanCourier{\\colortbl\\red0\\green0\\blue0" \
+                        "\r\n\\par \\pard\\plain\\f0\\fs20\\b\\i\\u\\tab" \
+                        "\\tx"
 #define LZFU_INITLENGTH 207
 //@endcond
 
@@ -85,7 +85,7 @@ int lzfu_decompress( QIODevice *input, QIODevice *output )
 
   memcpy( window, LZFU_INITDICT, LZFU_INITLENGTH );
   wlength = LZFU_INITLENGTH;
-  if ( input->read( (char*)&lzfuhdr, sizeof(lzfuhdr)) != sizeof(lzfuhdr) ) {
+  if ( input->read( (char *)&lzfuhdr, sizeof(lzfuhdr) ) != sizeof(lzfuhdr) ) {
     fprintf( stderr, "unexpected eof, cannot read LZFU header\n" );
     return -1;
   }
@@ -122,7 +122,7 @@ int lzfu_decompress( QIODevice *input, QIODevice *output )
         }
         blkhdr = c1;
         blkhdr <<= 8;
-        blkhdr |= (0xFF&c2);
+        blkhdr |= ( 0xFF & c2 );
         unsigned int offset = OFFSET( blkhdr ), length = LENGTH( blkhdr );
         cursor += 2;
 #ifdef DO_DEBUG

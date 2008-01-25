@@ -31,5 +31,4 @@ class ParserTest : public QObject
     void testMAPIAttachments();
 };
 
-
 #endif

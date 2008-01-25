@@ -81,7 +81,6 @@ KTNEFWriter::~KTNEFWriter()
   delete d;
 }
 
-
 void KTNEFWriter::addProperty( int tag, int type, const QVariant &value )
 {
   d->properties.addProperty( tag, type, value );
@@ -91,9 +90,9 @@ void KTNEFWriter::addProperty( int tag, int type, const QVariant &value )
 void addToChecksum( quint32 i, quint16 &checksum )
 {
   checksum += i & 0xff;
-  checksum += (i >> 8) & 0xff;
-  checksum += (i >> 16) & 0xff;
-  checksum += (i >> 24) & 0xff;
+  checksum += ( i >> 8 ) & 0xff;
+  checksum += ( i >> 16 ) & 0xff;
+  checksum += ( i >> 24 ) & 0xff;
 }
 
 void addToChecksum( QByteArray &cs, quint16 &checksum )
@@ -223,8 +222,8 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag ) cons
     list = property->value().toList();
     assert( list.count() == 2 );
 
-    cs = list[0].toString().toLocal8Bit();                       // Name
-    cs2 = (QString("smtp:") + list[1].toString()).toLocal8Bit(); // Email address
+    cs = list[0].toString().toLocal8Bit();                           // Name
+    cs2 = ( QString( "smtp:" ) + list[1].toString() ).toLocal8Bit(); // Email address
     i = 18 + cs.length() + cs2.length(); // 2 * sizof(TRP) + strings + 2x'\0'
 
     stream << (quint8)LVL_MESSAGE;
@@ -235,10 +234,10 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag ) cons
     // TODO: Or does it? Looks like Outlook doesn't do this
     // bytes += 17;
     // Write the first TRP structure
-    stream << (quint16)4;                 // trpidOneOff
-    stream << (quint16)i;                 // totalsize
-    stream << (quint16)(cs.length()+1);   // sizeof name
-    stream << (quint16)(cs2.length()+1);  // sizeof address
+    stream << (quint16)4;                   // trpidOneOff
+    stream << (quint16)i;                   // totalsize
+    stream << (quint16)( cs.length() + 1 ); // sizeof name
+    stream << (quint16)( cs2.length() + 1 );// sizeof address
 
     // if ( bytes % 4 != 0 )
       // Align the buffer
@@ -368,7 +367,6 @@ bool KTNEFWriter::writeFile( QDataStream &stream ) const
   return ok;
 }
 
-
 void KTNEFWriter::setSender( const QString &name, const QString &email )
 {
   assert( !name.isEmpty() );
@@ -424,26 +422,26 @@ void KTNEFWriter::setMessageType( MessageType m )
   addProperty( attMSGCLASS, atpWORD, v );
 }
 
-
 void KTNEFWriter::setMethod( Method )
 {
 
 }
-
 
 void KTNEFWriter::clearAttendees()
 {
 
 }
 
-
-void KTNEFWriter::addAttendee( const QString &/*cn*/, Role /*r*/,
-                               PartStat /*p*/, bool /*rsvp*/,
-                               const QString &/*mailto*/ )
+void KTNEFWriter::addAttendee( const QString &cn, Role r,
+                               PartStat p, bool rsvp,
+                               const QString &mailto )
 {
-
+  Q_UNUSED( cn );
+  Q_UNUSED( r );
+  Q_UNUSED( p );
+  Q_UNUSED( rsvp );
+  Q_UNUSED( mailto );
 }
-
 
 // I assume this is the same as the sender?
 // U also assume that this is like "Name <address>"
@@ -521,8 +519,11 @@ void KTNEFWriter::setPriority( Priority p )
   addProperty( attMSGPRIORITY, atpSHORT, v );
 }
 
-void KTNEFWriter::setAlarm( const QString &/*description*/,
-                            AlarmAction /*action*/,
-                            const QDateTime &/*wakeBefore*/ )
+void KTNEFWriter::setAlarm( const QString &description,
+                            AlarmAction action,
+                            const QDateTime &wakeBefore )
 {
+  Q_UNUSED( description );
+  Q_UNUSED( action );
+  Q_UNUSED( wakeBefore );
 }

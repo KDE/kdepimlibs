@@ -40,17 +40,17 @@ using namespace KTnef;
 //@cond PRIVATE
 class KTnef::KTNEFAttach::AttachPrivate
 {
-public:
-  int     state_;
-  int     size_;
-  int     offset_;
-  int     displaysize_;
-  QString name_;
-  int     index_;
-  QString filename_;
-  QString displayname_;
-  QString mimetag_;
-  QString extension_;
+  public:
+    int     state_;
+    int     size_;
+    int     offset_;
+    int     displaysize_;
+    QString name_;
+    int     index_;
+    QString filename_;
+    QString displayname_;
+    QString mimetag_;
+    QString extension_;
 };
 //@endcond
 
@@ -90,22 +90,22 @@ void KTNEFAttach::setInfoParsed()
 
 bool KTNEFAttach::titleParsed() const
 {
-  return ( d->state_ & TitleParsed );
+  return d->state_ & TitleParsed;
 }
 
 bool KTNEFAttach::dataParsed() const
 {
-  return ( d->state_ & DataParsed );
+  return d->state_ & DataParsed;
 }
 
 bool KTNEFAttach::infoParsed() const
 {
-  return ( d->state_ & InfoParsed );
+  return d->state_ & InfoParsed;
 }
 
 bool KTNEFAttach::checkState( int state ) const
 {
-  return ( d->state_ & state );
+  return d->state_ & state;
 }
 
 int KTNEFAttach::offset() const

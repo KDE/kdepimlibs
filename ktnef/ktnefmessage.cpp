@@ -44,13 +44,13 @@ using namespace KTnef;
 //@cond PRIVATE
 class KTnef::KTNEFMessage::MessagePrivate
 {
-public:
-  MessagePrivate() {}
-  ~MessagePrivate();
+  public:
+    MessagePrivate() {}
+    ~MessagePrivate();
 
-  void clearAttachments();
+    void clearAttachments();
 
-  QList<KTNEFAttach *>attachments_;
+    QList<KTNEFAttach *>attachments_;
 };
 
 KTNEFMessage::MessagePrivate::~MessagePrivate()
