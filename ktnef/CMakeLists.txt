@@ -1,5 +1,7 @@
 project(ktnef)
 
+add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5975 )
+
 add_subdirectory( tests )
 
 ########### next target ###############
