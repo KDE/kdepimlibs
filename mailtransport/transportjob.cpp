@@ -29,7 +29,7 @@ using namespace MailTransport;
 class MailTransport::TransportJob::Private
 {
   public:
-    Transport* transport;
+    Transport *transport;
     QString sender;
     QStringList to;
     QStringList cc;
@@ -38,9 +38,8 @@ class MailTransport::TransportJob::Private
     QBuffer *buffer;
 };
 
-TransportJob::TransportJob( Transport* transport, QObject * parent ) :
-    KCompositeJob( parent ),
-    d( new Private )
+TransportJob::TransportJob( Transport *transport, QObject *parent )
+  : KCompositeJob( parent ), d( new Private )
 {
   d->transport = transport;
   d->buffer = 0;
@@ -52,32 +51,32 @@ TransportJob::~ TransportJob()
   delete d;
 }
 
-void TransportJob::setSender(const QString & sender)
+void TransportJob::setSender( const QString &sender )
 {
   d->sender = sender;
 }
 
-void TransportJob::setTo(const QStringList &to)
+void TransportJob::setTo( const QStringList &to )
 {
   d->to = to;
 }
 
-void TransportJob::setCc(const QStringList &cc)
+void TransportJob::setCc( const QStringList &cc )
 {
   d->cc = cc;
 }
 
-void TransportJob::setBcc(const QStringList &bcc)
+void TransportJob::setBcc( const QStringList &bcc )
 {
   d->bcc = bcc;
 }
 
-void TransportJob::setData(const QByteArray & data)
+void TransportJob::setData( const QByteArray &data )
 {
   d->data = data;
 }
 
-Transport* TransportJob::transport() const
+Transport *TransportJob::transport() const
 {
   return d->transport;
 }
@@ -107,7 +106,7 @@ QByteArray TransportJob::data() const
   return d->data;
 }
 
-QBuffer* TransportJob::buffer()
+QBuffer *TransportJob::buffer()
 {
   if ( !d->buffer ) {
     d->buffer = new QBuffer( this );
@@ -122,8 +121,8 @@ void TransportJob::start()
 {
   if ( !transport()->isValid() ) {
     setError( UserDefinedError );
-    setErrorText( i18n("The mail transport \"%1\" is not correcty configured.",
-                  transport()->name() ) );
+    setErrorText( i18n( "The mail transport \"%1\" is not correcty configured.",
+                        transport()->name() ) );
     emitResult();
     return;
   }

@@ -47,11 +47,11 @@ class MailTransport::TransportConfigDialog::Private
     Ui::SMTPSettings smtp;
     Ui::SendmailSettings sendmail;
 
-    KConfigDialogManager* manager;
-    KLineEdit* passwordEdit;
-    ServerTest* serverTest;
-    QButtonGroup* encryptionGroup;
-    QButtonGroup* authGroup;
+    KConfigDialogManager *manager;
+    KLineEdit *passwordEdit;
+    ServerTest *serverTest;
+    QButtonGroup *encryptionGroup;
+    QButtonGroup *authGroup;
 
     // detected authentication capabilities
     QList<int> noEncCapa, sslCapa, tlsCapa;
@@ -66,8 +66,9 @@ class MailTransport::TransportConfigDialog::Private
                 << Transport::EnumAuthenticationType::NTLM
                 << Transport::EnumAuthenticationType::GSSAPI;
       sslCapa = tlsCapa = noEncCapa;
-      if ( authGroup )
+      if ( authGroup ) {
         updateAuthCapbilities();
+      }
     }
 
     void updateAuthCapbilities()
@@ -75,13 +76,15 @@ class MailTransport::TransportConfigDialog::Private
       Q_ASSERT( transport->type() == Transport::EnumType::SMTP );
 
       QList<int> capa = noEncCapa;
-      if ( smtp.ssl->isChecked() )
+      if ( smtp.ssl->isChecked() ) {
         capa = sslCapa;
-      else if ( smtp.tls->isChecked() )
+      } else if ( smtp.tls->isChecked() ) {
         capa = tlsCapa;
+      }
 
-      for ( int i = 0; i < authGroup->buttons().count(); ++i )
+      for ( int i = 0; i < authGroup->buttons().count(); ++i ) {
         authGroup->buttons().at( i )->setEnabled( capa.contains( i ) );
+      }
 
       if ( capa.count() == 0 ) {
         smtp.noAuthPossible->setVisible( true );
@@ -94,10 +97,8 @@ class MailTransport::TransportConfigDialog::Private
     }
 };
 
-TransportConfigDialog::TransportConfigDialog( Transport* transport,
-                                              QWidget * parent) :
-    KDialog( parent ),
-    d( new Private )
+TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *parent )
+  : KDialog( parent ), d( new Private )
 {
   Q_ASSERT( transport );
 
@@ -132,7 +133,7 @@ TransportConfigDialog::TransportConfigDialog( Transport* transport,
       d->authGroup->addButton( d->smtp.ntlm );
       d->authGroup->addButton( d->smtp.gssapi );
 
-      if ( KProtocolInfo::capabilities(SMTP_PROTOCOL).contains( QLatin1String("SASL") ) == 0 ) {
+      if ( KProtocolInfo::capabilities( SMTP_PROTOCOL ).contains( QLatin1String( "SASL" ) ) == 0 ) {
         d->smtp.ntlm->hide();
         d->smtp.gssapi->hide();
       }
@@ -158,11 +159,13 @@ TransportConfigDialog::TransportConfigDialog( Transport* transport,
 
   // load the password if necessary
   if ( d->passwordEdit ) {
-    if ( d->transport->isComplete() )
+    if ( d->transport->isComplete() ) {
       d->passwordEdit->setText( d->transport->password() );
-    else
-      if ( d->transport->requiresAuthentication() )
+    } else {
+      if ( d->transport->requiresAuthentication() ) {
         TransportManager::self()->loadPasswordsAsync();
+      }
+    }
   }
 
   d->manager = new KConfigDialogManager( this, transport );
@@ -182,8 +185,9 @@ void TransportConfigDialog::checkSmtpCapabilities()
   d->serverTest = new ServerTest( this );
   d->serverTest->setProtocol( SMTP_PROTOCOL );
   d->serverTest->setServer( d->smtp.kcfg_host->text() );
-  if ( d->smtp.kcfg_specifyHostname->isChecked() )
+  if ( d->smtp.kcfg_specifyHostname->isChecked() ) {
     d->serverTest->setFakeHostname( d->smtp.kcfg_localHostname->text() );
+  }
   d->serverTest->setProgressBar( d->smtp.checkCapabilitiesProgress );
 
   connect( d->serverTest, SIGNAL(finished( QList< int > )),
@@ -195,19 +199,22 @@ void TransportConfigDialog::checkSmtpCapabilities()
 void TransportConfigDialog::save()
 {
   d->manager->updateSettings();
-  if ( d->passwordEdit )
+  if ( d->passwordEdit ) {
     d->transport->setPassword( d->passwordEdit->text() );
+  }
 
   // enforce unique name
   QStringList existingNames;
-  foreach ( Transport *t, TransportManager::self()->transports() )
-    if ( t->id() != d->transport->id() )
+  foreach ( Transport *t, TransportManager::self()->transports() ) {
+    if ( t->id() != d->transport->id() ) {
       existingNames << t->name();
+    }
+  }
   int suffix = 1;
   QString origName = d->transport->name();
   while ( existingNames.contains( d->transport->name() ) ) {
-    d->transport->setName( i18nc("%1: name; %2: number appended to it to make "
-            "it unique among a list of names", "%1 %2", origName, suffix ) );
+    d->transport->setName( i18nc( "%1: name; %2: number appended to it to make "
+                                  "it unique among a list of names", "%1 %2", origName, suffix ) );
     ++suffix;
   }
 
@@ -218,13 +225,14 @@ void TransportConfigDialog::chooseSendmail()
 {
   Q_ASSERT( d->transport->type() == Transport::EnumType::Sendmail );
 
-  KFileDialog dialog( KUrl("/"), QString(), this );
-  dialog.setCaption( i18n("Choose sendmail Location") );
+  KFileDialog dialog( KUrl( "/" ), QString(), this );
+  dialog.setCaption( i18n( "Choose sendmail Location" ) );
 
   if ( dialog.exec() == QDialog::Accepted ) {
     KUrl url = dialog.selectedUrl();
-    if ( url.isEmpty() == true )
+    if ( url.isEmpty() == true ) {
       return;
+    }
     if ( !url.isLocalFile() ) {
       KMessageBox::sorry( this, i18n( "Only local files allowed." ) );
       return;
@@ -237,15 +245,16 @@ void TransportConfigDialog::passwordsLoaded()
 {
   Q_ASSERT( d->passwordEdit );
 
-  if ( d->passwordEdit->text().isEmpty() )
+  if ( d->passwordEdit->text().isEmpty() ) {
     d->passwordEdit->setText( d->transport->password() );
+  }
 }
 
 static void checkHighestEnabledButton( QButtonGroup *group )
 {
   Q_ASSERT( group );
 
-  for ( int i = group->buttons().count() - 1; i >= 0 ; --i ) {
+  for ( int i = group->buttons().count() - 1; i >= 0; --i ) {
     QAbstractButton *b = group->buttons().at( i );
     if ( b && b->isEnabled() ) {
       b->animateClick();
@@ -268,10 +277,11 @@ void TransportConfigDialog::slotFinished( QList<int> results )
   kDebug(5324) << "secure:" <<  d->serverTest->secureProtocols();
 
   d->noEncCapa = d->serverTest->normalProtocols();
-  if ( d->smtp.tls->isEnabled() )
+  if ( d->smtp.tls->isEnabled() ) {
     d->tlsCapa = d->noEncCapa;
-  else
+  } else {
     d->tlsCapa.clear();
+  }
   d->sslCapa = d->serverTest->secureProtocols();
   d->updateAuthCapbilities();
   checkHighestEnabledButton( d->authGroup );
@@ -283,28 +293,30 @@ void TransportConfigDialog::hostNameChanged( const QString &text )
 {
   d->resetAuthCapabilities();
   enableButton( Ok, !text.isEmpty() );
-  for ( int i = 0;
-        d->encryptionGroup && i < d->encryptionGroup->buttons().count(); i++ )
+  for ( int i = 0; d->encryptionGroup && i < d->encryptionGroup->buttons().count(); i++ ) {
     d->encryptionGroup->buttons().at( i )->setEnabled( true );
+  }
 }
 
-void TransportConfigDialog::encryptionChanged(int enc)
+void TransportConfigDialog::encryptionChanged( int enc )
 {
   Q_ASSERT( d->transport->type() == Transport::EnumType::SMTP );
   kDebug(5324) << enc;
 
   // adjust port
   if ( enc == Transport::EnumEncryption::SSL ) {
-    if ( d->smtp.kcfg_port->value() == SMTP_PORT )
+    if ( d->smtp.kcfg_port->value() == SMTP_PORT ) {
       d->smtp.kcfg_port->setValue( SMTPS_PORT );
+    }
   } else {
-    if ( d->smtp.kcfg_port->value() == SMTPS_PORT )
+    if ( d->smtp.kcfg_port->value() == SMTPS_PORT ) {
       d->smtp.kcfg_port->setValue( SMTP_PORT );
+    }
   }
 
   // adjust available authentication methods
   d->updateAuthCapbilities();
-  foreach ( QAbstractButton* b, d->authGroup->buttons() ) {
+  foreach ( QAbstractButton *b, d->authGroup->buttons() ) {
     if ( b->isChecked() && !b->isEnabled() ) {
       checkHighestEnabledButton( d->authGroup );
       break;

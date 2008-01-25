@@ -53,7 +53,7 @@ class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
       @param transport The transport settings.
       @param parent The parent object.
     */
-    explicit SmtpJob( Transport* transport, QObject* parent = 0 );
+    explicit SmtpJob( Transport *transport, QObject *parent = 0 );
 
     /**
       Deletes this job.
@@ -66,13 +66,13 @@ class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
 
   protected Q_SLOTS:
     virtual void slotResult( KJob *job );
-    void slaveError(KIO::Slave *slave, int errorCode, const QString &errorMsg);
+    void slaveError( KIO::Slave *slave, int errorCode, const QString &errorMsg );
 
   private:
     void startSmtpJob();
 
   private Q_SLOTS:
-    void dataRequest( KIO::Job* job, QByteArray &data );
+    void dataRequest( KIO::Job *job, QByteArray &data );
 
   private:
     SmtpJobPrivate *const d;

@@ -38,12 +38,12 @@ using namespace MailTransport;
 class SendMailJobPrivate
 {
   public:
-    QProcess* process;
+    QProcess *process;
     QString lastError;
 };
 
-SendmailJob::SendmailJob(Transport * transport, QObject * parent) :
-    TransportJob( transport, parent ), d( new SendMailJobPrivate )
+SendmailJob::SendmailJob( Transport *transport, QObject *parent )
+  : TransportJob( transport, parent ), d( new SendMailJobPrivate )
 {
   d->process = new QProcess( this );
   connect( d->process,
@@ -63,14 +63,13 @@ SendmailJob::~ SendmailJob()
 void SendmailJob::doStart()
 {
   QStringList arguments;
-  arguments << QLatin1String("-i") << QLatin1String("-f")
-      << sender() << to() << cc() << bcc();
-  d->process->start(transport()->host(), arguments);
-  
+  arguments << QLatin1String( "-i" ) << QLatin1String( "-f" )
+            << sender() << to() << cc() << bcc();
+  d->process->start( transport()->host(), arguments );
+
   if ( !d->process->waitForStarted() ) {
     setError( UserDefinedError );
-    setErrorText( i18n("Failed to execute mailer program %1",
-                  transport()->host()) );
+    setErrorText( i18n( "Failed to execute mailer program %1", transport()->host() ) );
     emitResult();
   } else {
     d->process->write( buffer()->readAll() );
@@ -80,12 +79,13 @@ void SendmailJob::doStart()
 
 void SendmailJob::sendmailExited( int exitCode, QProcess::ExitStatus exitStatus )
 {
-  if ( exitStatus != 0 || exitCode != 0) {
+  if ( exitStatus != 0 || exitCode != 0 ) {
     setError( UserDefinedError );
-    if (d->lastError.isEmpty())
-      setErrorText( i18n("Sendmail exited abnormally.") );
-    else
-      setErrorText( i18n("Sendmail exited abnormally: %1", d->lastError) );
+    if ( d->lastError.isEmpty() ) {
+      setErrorText( i18n( "Sendmail exited abnormally." ) );
+    } else {
+      setErrorText( i18n( "Sendmail exited abnormally: %1", d->lastError ) );
+    }
   }
   emitResult();
 }

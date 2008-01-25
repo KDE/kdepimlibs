@@ -40,9 +40,9 @@ namespace MailTransport
   class SocketPrivate
   {
     public:
-      SocketPrivate( Socket* s);
-      Socket* const       q;
-      QSslSocket*         socket;
+      SocketPrivate( Socket *s );
+      Socket             *const q;
+      QSslSocket         *socket;
       QString             server;
       QString             protocol;
       int                 port;
@@ -53,11 +53,11 @@ namespace MailTransport
       void slotStateChanged( QAbstractSocket::SocketState state );
       void slotModeChanged( QSslSocket::SslMode  state );
       void slotSocketRead();
-      void slotSslErrors( const QList<QSslError> & errors );
+      void slotSslErrors( const QList<QSslError> &errors );
   };
 }
 
-SocketPrivate::SocketPrivate( Socket* s) : q(s)
+SocketPrivate::SocketPrivate( Socket *s ) : q( s )
 {
 }
 
@@ -79,8 +79,9 @@ void SocketPrivate::slotStateChanged( QAbstractSocket::SocketState state )
 #ifdef comm_debug
   kDebug( 5324 ) << q->objectName() << "State is now:" << ( int ) state;
 #endif
-  if ( state == QAbstractSocket::UnconnectedState )
+  if ( state == QAbstractSocket::UnconnectedState ) {
     emit q->failed();
+  }
 }
 
 void SocketPrivate::slotModeChanged( QSslSocket::SslMode  state )
@@ -94,14 +95,16 @@ void SocketPrivate::slotSocketRead()
 {
   kDebug(5324) << q->objectName();
 
-  if ( !socket )
+  if ( !socket ) {
     return;
+  }
 
   static QString msg;
   msg += QLatin1String( socket->readAll() );
 
-  if ( !msg.endsWith( QLatin1Char( '\n' ) ) )
+  if ( !msg.endsWith( QLatin1Char( '\n' ) ) ) {
     return;
+  }
 
 #ifdef comm_debug
   kDebug( 5324 ) << q->objectName() << socket->isEncrypted() << msg.trimmed();
@@ -120,21 +123,20 @@ void SocketPrivate::slotSslErrors( const QList<QSslError> & )
   emit q->connected();
 }
 
-
 // ------------------ end private ---------------------------//
 
-Socket::Socket( QObject* parent )
+Socket::Socket( QObject *parent )
     : QObject( parent ), d( new SocketPrivate( this ) )
 {
   d->socket = 0;
   d->port = 0;
   d->secure = false;
-  kDebug( 5324 ) ;
+  kDebug( 5324 );
 }
 
 Socket::~Socket()
 {
-  kDebug( 5324 ) << objectName() ;
+  kDebug( 5324 ) << objectName();
   delete d;
 }
 
@@ -147,12 +149,13 @@ void Socket::reconnect()
   // kDebug(5324) << objectName() << d->protocol;
 #endif
 
-  if ( d->socket )
+  if ( d->socket ) {
     return;
+  }
 
-  d->socket = static_cast<QSslSocket*>
-             ( KSocketFactory::connectToHost( d->protocol, d->server, d->port, this
-                                            ) );
+  d->socket =
+    static_cast<QSslSocket *>( KSocketFactory::connectToHost( d->protocol, d->server,
+                                                              d->port, this ) );
 
   d->socket->setProtocol( QSsl::AnyProtocol );
 
@@ -167,13 +170,14 @@ void Socket::reconnect()
            SLOT( slotSslErrors( const QList<QSslError>& ) ) );
 }
 
-void Socket::write( const QString& text )
+void Socket::write( const QString &text )
 {
   // kDebug(5324) << objectName() ;
   // Eat things in the queue when there is no connection. We need
   // to get a connection first don't we...
-  if ( !d->socket || !available() )
+  if ( !d->socket || !available() ) {
     return;
+  }
 
   QByteArray cs = ( text + QLatin1String( "\r\n" ) ).toLatin1();
 
@@ -191,16 +195,16 @@ bool Socket::available()
   return ok;
 }
 
-void Socket::setProtocol( const QString& proto )
+void Socket::setProtocol( const QString &proto )
 {
   d->protocol = proto;
 }
 
-void Socket::setServer( const QString& server )
+void Socket::setServer( const QString &server )
 {
   d->server = server;
 }
-      
+
 void Socket::setPort( int port )
 {
   d->port = port;

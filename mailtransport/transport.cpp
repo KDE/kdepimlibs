@@ -36,7 +36,8 @@ using namespace KWallet;
  * Private class that helps to provide binary compatibility between releases.
  * @internal
  */
-class TransportPrivate {
+class TransportPrivate
+{
   public:
     QString password;
     bool passwordLoaded;
@@ -70,16 +71,18 @@ bool Transport::isValid() const
 QString Transport::password()
 {
   if ( !d->passwordLoaded && requiresAuthentication() && storePassword() &&
-       d->password.isEmpty() )
+       d->password.isEmpty() ) {
     TransportManager::self()->loadPasswords();
+  }
   return d->password;
 }
 
-void Transport::setPassword(const QString & passwd)
+void Transport::setPassword( const QString &passwd )
 {
   d->passwordLoaded = true;
-  if ( d->password == passwd )
+  if ( d->password == passwd ) {
     return;
+  }
   d->passwordDirty = true;
   d->password = passwd;
 }
@@ -92,12 +95,18 @@ bool Transport::isComplete() const
 QString Transport::authenticationTypeString() const
 {
   switch ( authenticationType() ) {
-    case EnumAuthenticationType::LOGIN: return QLatin1String( "LOGIN" );
-    case EnumAuthenticationType::PLAIN: return QLatin1String( "PLAIN" );
-    case EnumAuthenticationType::CRAM_MD5: return QLatin1String( "CRAM-MD5" );
-    case EnumAuthenticationType::DIGEST_MD5: return QLatin1String( "DIGEST-MD5" );
-    case EnumAuthenticationType::NTLM: return QLatin1String( "NTLM" );
-    case EnumAuthenticationType::GSSAPI: return QLatin1String( "GSSAPI" );
+  case EnumAuthenticationType::LOGIN:
+    return QLatin1String( "LOGIN" );
+  case EnumAuthenticationType::PLAIN:
+    return QLatin1String( "PLAIN" );
+  case EnumAuthenticationType::CRAM_MD5:
+    return QLatin1String( "CRAM-MD5" );
+  case EnumAuthenticationType::DIGEST_MD5:
+    return QLatin1String( "DIGEST-MD5" );
+  case EnumAuthenticationType::NTLM:
+    return QLatin1String( "NTLM" );
+  case EnumAuthenticationType::GSSAPI:
+    return QLatin1String( "GSSAPI" );
   }
   Q_ASSERT( false );
   return QString();
@@ -106,21 +115,24 @@ QString Transport::authenticationTypeString() const
 void Transport::usrReadConfig()
 {
   TransportBase::usrReadConfig();
-  if ( d->oldName.isEmpty() )
+  if ( d->oldName.isEmpty() ) {
     d->oldName = name();
+  }
 
   // we have everything we need
-  if ( !storePassword() || d->passwordLoaded )
+  if ( !storePassword() || d->passwordLoaded ) {
     return;
+  }
 
   // try to find a password in the config file otherwise
   KConfigGroup group( config(), currentGroup() );
-  if ( group.hasKey( "password" ) )
+  if ( group.hasKey( "password" ) ) {
     d->password = KStringHandler::obscure( group.readEntry( "password" ) );
-  else if ( group.hasKey( "password-kmail" ) )
+  } else if ( group.hasKey( "password-kmail" ) ) {
     d->password = Legacy::decryptKMail( group.readEntry( "password-kmail" ) );
-  else if ( group.hasKey( "password-knode" ) )
+  } else if ( group.hasKey( "password-knode" ) ) {
     d->password = Legacy::decryptKNode( group.readEntry( "password-knode" ) );
+  }
 
   if ( !d->password.isEmpty() ) {
     d->passwordLoaded = true;
@@ -131,8 +143,9 @@ void Transport::usrReadConfig()
     }
   } else {
     // read password if wallet is open, defer otherwise
-    if ( Wallet::isOpen( Wallet::NetworkWallet() ) )
+    if ( Wallet::isOpen( Wallet::NetworkWallet() ) ) {
       readPassword();
+    }
   }
 }
 
@@ -140,21 +153,21 @@ void Transport::usrWriteConfig()
 {
   if ( requiresAuthentication() && storePassword() && d->passwordDirty ) {
     Wallet *wallet = TransportManager::self()->wallet();
-    if ( !wallet || wallet->writePassword(QString::number(id()), d->password) != 0 ) {
+    if ( !wallet || wallet->writePassword( QString::number( id() ), d->password ) != 0 ) {
       // wallet saving failed, ask if we should store in the config file instead
-      if ( d->storePasswordInFile || KMessageBox::warningYesNo( 0,
-            i18n("KWallet is not available. It is strongly recommended to use "
-                "KWallet for managing your passwords.\n"
-                "However, the password can be stored in the configuration "
-                "file instead. The password is stored in an obfuscated format, "
-                "but should not be considered secure from decryption efforts "
-                "if access to the configuration file is obtained.\n"
-                "Do you want to store the password for server '%1' in the "
-                "configuration file?", name() ),
-            i18n("KWallet Not Available"),
-            KGuiItem( i18n("Store Password") ),
-            KGuiItem( i18n("Do Not Store Password") ) )
-            == KMessageBox::Yes ) {
+      if ( d->storePasswordInFile || KMessageBox::warningYesNo(
+             0,
+             i18n( "KWallet is not available. It is strongly recommended to use "
+                   "KWallet for managing your passwords.\n"
+                   "However, the password can be stored in the configuration "
+                   "file instead. The password is stored in an obfuscated format, "
+                   "but should not be considered secure from decryption efforts "
+                   "if access to the configuration file is obtained.\n"
+                   "Do you want to store the password for server '%1' in the "
+                   "configuration file?", name() ),
+             i18n( "KWallet Not Available" ),
+             KGuiItem( i18n( "Store Password" ) ),
+             KGuiItem( i18n( "Do Not Store Password" ) ) ) == KMessageBox::Yes ) {
         // write to config file
         KConfigGroup group( config(), currentGroup() );
         group.writeEntry( "password", KStringHandler::obscure( d->password ) );
@@ -175,27 +188,27 @@ void Transport::usrWriteConfig()
 void Transport::readPassword()
 {
   // no need to load a password if the account doesn't require auth
-  if ( !requiresAuthentication() )
+  if ( !requiresAuthentication() ) {
     return;
+  }
   d->passwordLoaded = true;
 
   // check wether there is a chance to find our password at all
-  if ( Wallet::folderDoesNotExist(Wallet::NetworkWallet(), WALLET_FOLDER) ||
-      Wallet::keyDoesNotExist(Wallet::NetworkWallet(), WALLET_FOLDER,
-                              QString::number(id())) )
-  {
+  if ( Wallet::folderDoesNotExist( Wallet::NetworkWallet(), WALLET_FOLDER ) ||
+       Wallet::keyDoesNotExist( Wallet::NetworkWallet(), WALLET_FOLDER,
+                                QString::number( id() ) ) ) {
     // try migrating password from kmail
-    if ( Wallet::folderDoesNotExist(Wallet::NetworkWallet(), KMAIL_WALLET_FOLDER ) ||
-         Wallet::keyDoesNotExist(Wallet::NetworkWallet(), KMAIL_WALLET_FOLDER,
-                                 QString::fromLatin1("transport-%1").arg( id() ) ) )
+    if ( Wallet::folderDoesNotExist( Wallet::NetworkWallet(), KMAIL_WALLET_FOLDER ) ||
+         Wallet::keyDoesNotExist( Wallet::NetworkWallet(), KMAIL_WALLET_FOLDER,
+                                  QString::fromLatin1( "transport-%1" ).arg( id() ) ) ) {
       return;
+    }
     kDebug(5324) << "migrating password from kmail wallet";
     KWallet::Wallet *wallet = TransportManager::self()->wallet();
     if ( wallet ) {
       wallet->setFolder( KMAIL_WALLET_FOLDER );
-      wallet->readPassword( QString::fromLatin1("transport-%1").arg( id() ),
-                            d->password );
-      wallet->removeEntry( QString::fromLatin1("transport-%1").arg( id() ) );
+      wallet->readPassword( QString::fromLatin1( "transport-%1" ).arg( id() ), d->password );
+      wallet->removeEntry( QString::fromLatin1( "transport-%1" ).arg( id() ) );
       wallet->setFolder( WALLET_FOLDER );
       d->passwordDirty = true;
       writeConfig();
@@ -205,8 +218,9 @@ void Transport::readPassword()
 
   // finally try to open the wallet and read the password
   KWallet::Wallet *wallet = TransportManager::self()->wallet();
-  if ( wallet )
-    wallet->readPassword( QString::number(id()), d->password );
+  if ( wallet ) {
+    wallet->readPassword( QString::number( id() ), d->password );
+  }
 }
 
 bool Transport::needsWalletMigration() const
@@ -225,7 +239,7 @@ void Transport::migrateToWallet()
   writeConfig();
 }
 
-Transport* Transport::clone() const
+Transport *Transport::clone() const
 {
   QString id = currentGroup().mid( 10 );
   return new Transport( id );

@@ -42,52 +42,53 @@ namespace MailTransport
 class ServerTestPrivate
 {
   public:
-    ServerTestPrivate( ServerTest* test);
+    ServerTestPrivate( ServerTest *test );
 
-    ServerTest* const q;
+    ServerTest *const q;
     QString                   server;
     QString                   fakeHostname;
     QString                   testProtocol;
 
-    MailTransport::Socket*    normalSocket;
-    MailTransport::Socket*    secureSocket;
+    MailTransport::Socket    *normalSocket;
+    MailTransport::Socket    *secureSocket;
 
     QList< int >              connectionResults;
     QHash< int, QList<int> >  authenticationResults;
-    QTimer*                   normalSocketTimer;
-    QTimer*                   secureSocketTimer;
-    QTimer*                   progressTimer;
+    QTimer                   *normalSocketTimer;
+    QTimer                   *secureSocketTimer;
+    QTimer                   *progressTimer;
 
-    QProgressBar*             testProgress;
+    QProgressBar             *testProgress;
 
     bool                      secureSocketFinished;
     bool                      normalSocketFinished;
 
     void finalResult();
-    void read( int type, const QString& text );
-    void sendInitialCapabilityQuery( MailTransport::Socket* socket );
+    void read( int type, const QString &text );
+    void sendInitialCapabilityQuery( MailTransport::Socket *socket );
 
     // slots
     void slotNormalPossible();
     void slotNormalNotPossible();
     void slotSslPossible();
     void slotSslNotPossible();
-    void slotReadNormal( const QString& text );
-    void slotReadSecure( const QString& text );
+    void slotReadNormal( const QString &text );
+    void slotReadSecure( const QString &text );
     void slotUpdateProgress();
 };
 
 }
 
-ServerTestPrivate::ServerTestPrivate( ServerTest* test)
+ServerTestPrivate::ServerTestPrivate( ServerTest *test )
   : q( test )
 {
 }
 
 void ServerTestPrivate::finalResult()
 {
-  if ( !secureSocketFinished || !normalSocketFinished )
+  if ( !secureSocketFinished || !normalSocketFinished ) {
     return;
+  }
 
   kDebug( 5324 ) << connectionResults;
 
@@ -97,46 +98,49 @@ void ServerTestPrivate::finalResult()
   emit q->finished( connectionResults );
 }
 
-void ServerTestPrivate::read( int type, const QString& text )
+void ServerTestPrivate::read( int type, const QString &text )
 {
   kDebug( 5324 ) << text;
 
-  if ( !text.contains( QLatin1String( "AUTH" ), Qt::CaseInsensitive ) )
+  if ( !text.contains( QLatin1String( "AUTH" ), Qt::CaseInsensitive ) ) {
     return;
+  }
 
   QStringList protocols;
   protocols << QLatin1String( "LOGIN" ) << QLatin1String( "PLAIN" )
-      << QLatin1String( "CRAM-MD5" ) << QLatin1String("DIGEST-MD5")
-      << QLatin1String( "NTLM" ) << QLatin1String( "GSSAPI" );
+            << QLatin1String( "CRAM-MD5" ) << QLatin1String( "DIGEST-MD5" )
+            << QLatin1String( "NTLM" ) << QLatin1String( "GSSAPI" );
 
   QStringList results;
-  for ( int i = 0 ; i < protocols.count(); ++i ) {
-    if ( text.contains( protocols.at( i ), Qt::CaseInsensitive ) )
+  for ( int i = 0; i < protocols.count(); ++i ) {
+    if ( text.contains( protocols.at( i ), Qt::CaseInsensitive ) ) {
       results.append( protocols.at( i ) );
+    }
   }
 
   QList<int> result;
-  for ( QStringList::ConstIterator it = results.begin() ;
-        it != results.end() ; ++it )  {
-    if (  *it == QLatin1String("LOGIN") )
+  for ( QStringList::ConstIterator it = results.begin(); it != results.end(); ++it )  {
+    if ( *it == QLatin1String( "LOGIN" ) ) {
       result << Transport::EnumAuthenticationType::LOGIN;
-    else if ( *it == QLatin1String("PLAIN") )
+    } else if ( *it == QLatin1String( "PLAIN" ) ) {
       result << Transport::EnumAuthenticationType::PLAIN;
-    else if ( *it == QLatin1String("CRAM-MD5") )
+    } else if ( *it == QLatin1String( "CRAM-MD5" ) ) {
       result << Transport::EnumAuthenticationType::CRAM_MD5;
-    else if ( *it == QLatin1String("DIGEST-MD5") )
+    } else if ( *it == QLatin1String( "DIGEST-MD5" ) ) {
       result << Transport::EnumAuthenticationType::DIGEST_MD5;
-    else if ( *it == QLatin1String("NTLM") )
+    } else if ( *it == QLatin1String( "NTLM" ) ) {
       result << Transport::EnumAuthenticationType::NTLM;
-    else if ( *it == QLatin1String("GSSAPI") )
+    } else if ( *it == QLatin1String( "GSSAPI" ) ) {
       result << Transport::EnumAuthenticationType::GSSAPI;
+    }
   }
 
   // LOGIN doesn't offer anything over PLAIN, requires more server
   // roundtrips and is not an official SASL mechanism, but a MS-ism,
   // so only enable it if PLAIN isn't available:
-  if ( result.contains( Transport::EnumAuthenticationType::PLAIN ) )
+  if ( result.contains( Transport::EnumAuthenticationType::PLAIN ) ) {
     result.removeAll( Transport::EnumAuthenticationType::LOGIN );
+  }
 
   authenticationResults[type] = result;
 }
@@ -147,10 +151,11 @@ void ServerTestPrivate::slotNormalPossible()
   connectionResults << Transport::EnumEncryption::None;
 }
 
-void ServerTestPrivate::sendInitialCapabilityQuery( MailTransport::Socket* socket )
+void ServerTestPrivate::sendInitialCapabilityQuery( MailTransport::Socket *socket )
 {
-  if ( testProtocol == IMAP_PROTOCOL )
+  if ( testProtocol == IMAP_PROTOCOL ) {
     socket->write( QLatin1String( "1 CAPABILITY" ) );
+  }
 
   else if ( testProtocol == SMTP_PROTOCOL ) {
 
@@ -161,13 +166,11 @@ void ServerTestPrivate::sendInitialCapabilityQuery( MailTransport::Socket* socke
     QString hostname;
     if ( !fakeHostname.isNull() ) {
       hostname = fakeHostname;
-    }
-    else {
+    } else {
       hostname = QHostInfo::localHostName();
       if( hostname.isEmpty() ) {
         hostname = QLatin1String( "localhost.invalid" );
-      }
-      else if ( !hostname.contains( QChar::fromAscii( '.'  )  ) ) {
+      } else if ( !hostname.contains( QChar::fromAscii( '.' ) ) ) {
         hostname += QLatin1String( ".localnet" );
       }
     }
@@ -177,7 +180,7 @@ void ServerTestPrivate::sendInitialCapabilityQuery( MailTransport::Socket* socke
   }
 }
 
-void ServerTestPrivate::slotReadNormal( const QString& text )
+void ServerTestPrivate::slotReadNormal( const QString &text )
 {
   static bool first = true;
   if ( first ) {
@@ -186,8 +189,9 @@ void ServerTestPrivate::slotReadNormal( const QString& text )
     return;
   }
 
-  if ( text.contains( QLatin1String("STARTTLS" ), Qt::CaseInsensitive) )
+  if ( text.contains( QLatin1String( "STARTTLS" ), Qt::CaseInsensitive ) ) {
     connectionResults << Transport::EnumEncryption::TLS;
+  }
 
   read( Transport::EnumEncryption::None, text );
 
@@ -196,7 +200,7 @@ void ServerTestPrivate::slotReadNormal( const QString& text )
   finalResult();
 }
 
-void ServerTestPrivate::slotReadSecure( const QString& text )
+void ServerTestPrivate::slotReadSecure( const QString &text )
 {
   static bool first = true;
   if ( first ) {
@@ -237,7 +241,7 @@ void ServerTestPrivate::slotUpdateProgress()
 
 //---------------------- end private class -----------------------//
 
-ServerTest::ServerTest( QWidget* parent )
+ServerTest::ServerTest( QWidget *parent )
   : QWidget( parent ), d( new ServerTestPrivate( this ) )
 {
   d->normalSocketTimer = new QTimer( this );
@@ -274,14 +278,15 @@ void ServerTest::start()
   d->normalSocket->setObjectName( QLatin1String( "normal" ) );
   d->normalSocket->setServer( d->server );
   d->normalSocket->setProtocol( d->testProtocol );
-  if ( d->testProtocol == IMAP_PROTOCOL )
+  if ( d->testProtocol == IMAP_PROTOCOL ) {
     d->normalSocket->setPort( IMAP_PORT );
-  else
+  } else {
     d->normalSocket->setPort( SMTP_PORT );
-  connect( d->normalSocket, SIGNAL( connected() ), SLOT( slotNormalPossible() ) );
-  connect( d->normalSocket, SIGNAL( failed() ), SLOT( slotNormalNotPossible() ) );
-  connect( d->normalSocket, SIGNAL( data( const QString& ) ),
-           SLOT( slotReadNormal( const QString& ) ) );
+  }
+  connect( d->normalSocket, SIGNAL(connected()), SLOT(slotNormalPossible()) );
+  connect( d->normalSocket, SIGNAL(failed()), SLOT(slotNormalNotPossible()) );
+  connect( d->normalSocket, SIGNAL(data(const QString&)),
+           SLOT(slotReadNormal(const QString&)) );
   d->normalSocket->reconnect();
   d->normalSocketTimer->start( 10000 );
 
@@ -289,20 +294,21 @@ void ServerTest::start()
   d->secureSocket->setObjectName( QLatin1String( "secure" ) );
   d->secureSocket->setServer( d->server );
   d->secureSocket->setProtocol( d->testProtocol + QLatin1Char( 's' ) );
-  if ( d->testProtocol == IMAP_PROTOCOL)
+  if ( d->testProtocol == IMAP_PROTOCOL ) {
     d->secureSocket->setPort( IMAPS_PORT );
-  else
+  } else {
     d->secureSocket->setPort( SMTPS_PORT );
+  }
   d->secureSocket->setSecure( true );
-  connect( d->secureSocket, SIGNAL( connected() ), SLOT( slotSslPossible() ) );
-  connect( d->secureSocket, SIGNAL( failed() ), SLOT( slotSslNotPossible() ) );
-  connect( d->secureSocket, SIGNAL( data( const QString& ) ),
-           SLOT( slotReadSecure( const QString& ) ) );
+  connect( d->secureSocket, SIGNAL(connected()), SLOT(slotSslPossible()) );
+  connect( d->secureSocket, SIGNAL(failed()), SLOT(slotSslNotPossible()) );
+  connect( d->secureSocket, SIGNAL(data(const QString&) ),
+           SLOT(slotReadSecure(const QString&)) );
   d->secureSocket->reconnect();
   d->secureSocketTimer->start( 10000 );
 }
 
-void ServerTest::setFakeHostname( const QString& fakeHostname )
+void ServerTest::setFakeHostname( const QString &fakeHostname )
 {
   d->fakeHostname = fakeHostname;
 }
@@ -312,17 +318,17 @@ QString ServerTest::fakeHostname()
   return d->fakeHostname;
 }
 
-void ServerTest::setServer( const QString& server )
+void ServerTest::setServer( const QString &server )
 {
   d->server = server;
 }
 
-void ServerTest::setProgressBar( QProgressBar* pb )
+void ServerTest::setProgressBar( QProgressBar *pb )
 {
   d->testProgress = pb;
 }
 
-void ServerTest::setProtocol( const QString& protocol )
+void ServerTest::setProtocol( const QString &protocol )
 {
   d->testProtocol = protocol;
 }
@@ -337,7 +343,7 @@ QString ServerTest::server()
   return d->server;
 }
 
-QProgressBar* ServerTest::progressBar()
+QProgressBar *ServerTest::progressBar()
 {
   return d->testProgress;
 }
@@ -351,6 +357,5 @@ QList< int > ServerTest::secureProtocols()
 {
   return d->authenticationResults[Transport::EnumEncryption::SSL];
 }
-
 
 #include "servertest.moc"

@@ -43,7 +43,7 @@ class TransportJob;
 class MAILTRANSPORT_EXPORT TransportManager : public QObject
 {
   Q_OBJECT
-  Q_CLASSINFO("D-Bus Interface", "org.kde.pim.TransportManager")
+  Q_CLASSINFO( "D-Bus Interface", "org.kde.pim.TransportManager" )
 
   friend class Transport;
 
@@ -56,7 +56,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     /**
       Returns the TransportManager instance.
     */
-    static TransportManager* self();
+    static TransportManager *self();
 
     /**
       Tries to load passwords asynchronously from KWallet if needed.
@@ -74,7 +74,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       soon as the event loop is entered again due to remote changes. If you need
       to store a Transport object, store the transport identifier instead.
     */
-    Transport* transportById( int id, bool def = true ) const;
+    Transport *transportById( int id, bool def = true ) const;
 
     /**
       Returns the transport object with the given name.
@@ -84,35 +84,35 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @returns A Transport object for immediate use, see transportById() for
       limitations.
     */
-    Transport* transportByName( const QString &name, bool def = true ) const;
+    Transport *transportByName( const QString &name, bool def = true ) const;
 
     /**
       Returns a list of all available transports.
       Note: The Transport objects become invalid as soon as a change occur, so
       they are only suitable for immediate use.
     */
-    QList<Transport*> transports() const;
+    QList<Transport *>transports() const;
 
     /**
       Creates a new, empty Transport object. The object is owned by the caller.
       If you want to add the Transport permanently (eg. after configuring it)
       call addTransport().
     */
-    Transport* createTransport() const;
+    Transport *createTransport() const;
 
     /**
       Adds the given transport. The object ownership is transferred to
       TransportMananger, ie. you must not delete @p transport.
       @param transport The Transport object to add.
     */
-    void addTransport( Transport* transport );
+    void addTransport( Transport *transport );
 
     /**
       Creates a mail transport job for the given transport identifier.
       Returns 0 if the specified transport is invalid.
       @param transportId The transport identifier.
     */
-    TransportJob* createTransportJob( int transportId );
+    TransportJob *createTransportJob( int transportId );
 
     /**
       Creates a mail transport job for the given transport identifer,
@@ -120,7 +120,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       Returns 0 if the specified transport is invalid.
       @param transport A string defining a mail transport.
     */
-    TransportJob* createTransportJob( const QString &transport );
+    TransportJob *createTransportJob( const QString &transport );
 
     /**
       Executes the given transport job. This is the preferred way to start
@@ -128,7 +128,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       KWallet if necessary.
       @param job The completely configured transport job to execute.
     */
-    void schedule( TransportJob* job );
+    void schedule( TransportJob *job );
 
     /**
       Tries to create a transport based on KEMailSettings.
@@ -214,7 +214,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       Returns a pointer to an open wallet if available, 0 otherwise.
       The wallet is opened synchronously if necessary.
     */
-    KWallet::Wallet* wallet();
+    KWallet::Wallet *wallet();
 
     /**
       Loads all passwords synchronously.
@@ -237,7 +237,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     void dbusServiceOwnerChanged( const QString &service,
                                   const QString &oldOwner,
                                   const QString &newOwner );
-    void jobResult( KJob* job );
+    void jobResult( KJob *job );
 
   private:
     class Private;

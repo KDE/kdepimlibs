@@ -43,7 +43,7 @@ class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
       @param transport The transport settings.
       @param parent The parent object.
     */
-    explicit SendmailJob( Transport* transport, QObject* parent = 0 );
+    explicit SendmailJob( Transport *transport, QObject *parent = 0 );
 
     /**
       Destroys this job.
@@ -55,7 +55,7 @@ class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
     virtual bool doKill();
 
   private Q_SLOTS:
-    void sendmailExited(int, QProcess::ExitStatus);
+    void sendmailExited( int, QProcess::ExitStatus );
     void receivedError();
     void receivedStdErr();
 

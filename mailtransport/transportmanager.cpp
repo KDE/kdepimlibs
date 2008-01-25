@@ -46,40 +46,41 @@ using namespace KWallet;
  * Private class that helps to provide binary compatibility between releases.
  * @internal
  */
-class TransportManager::Private {
+class TransportManager::Private
+{
   public:
     ~Private() {
         qRemovePostRoutine(cleanupTransportManager);
         cleanupTransportManager();
     }
     KConfig *config;
-    QList<Transport*> transports;
+    QList<Transport *> transports;
     bool myOwnChange;
     KWallet::Wallet *wallet;
     bool walletOpenFailed;
     bool walletAsyncOpen;
     int defaultTransportId;
     bool isMainInstance;
-    QList<TransportJob*> walletQueue;
+    QList<TransportJob *> walletQueue;
 
     static TransportManager *sSelf;
     static void cleanupTransportManager()
     {
-        delete sSelf;
-        sSelf = 0;
+      delete sSelf;
+      sSelf = 0;
     }
 };
 TransportManager *TransportManager::Private::sSelf = 0;
 
-TransportManager::TransportManager() :
-    QObject(), d( new Private )
+TransportManager::TransportManager()
+  : QObject(), d( new Private )
 {
   d->myOwnChange = false;
   d->wallet = 0;
   d->walletOpenFailed = false;
   d->walletAsyncOpen = false;
   d->defaultTransportId = -1;
-  d->config = new KConfig( QLatin1String("mailtransports") );
+  d->config = new KConfig( QLatin1String( "mailtransports" ) );
 
   QDBusConnection::sessionBus().registerObject( DBUS_OBJECT_PATH, this,
       QDBusConnection::ExportScriptableSlots |
@@ -102,35 +103,41 @@ TransportManager::~TransportManager()
   qDeleteAll( d->transports );
 }
 
-TransportManager* TransportManager::self()
+TransportManager *TransportManager::self()
 {
   static TransportManager::Private p;
-  if(!p.sSelf) {
+  if( !p.sSelf ) {
     p.sSelf = new TransportManager;
     p.sSelf->readConfig();
-    qAddPostRoutine(Private::cleanupTransportManager);
+    qAddPostRoutine( Private::cleanupTransportManager );
   }
   return p.sSelf;
 }
 
-Transport* TransportManager::transportById(int id, bool def) const
+Transport *TransportManager::transportById( int id, bool def ) const
 {
-  foreach ( Transport* t, d->transports )
-    if ( t->id() == id )
+  foreach ( Transport *t, d->transports ) {
+    if ( t->id() == id ) {
       return t;
+    }
+  }
 
-  if ( def || (id == 0 && d->defaultTransportId != id) )
+  if ( def || ( id == 0 && d->defaultTransportId != id ) ) {
     return transportById( d->defaultTransportId, false );
+  }
   return 0;
 }
 
-Transport* TransportManager::transportByName(const QString & name, bool def) const
+Transport *TransportManager::transportByName( const QString &name, bool def ) const
 {
-  foreach ( Transport* t, d->transports )
-    if ( t->name() == name )
+  foreach ( Transport *t, d->transports ) {
+    if ( t->name() == name ) {
       return t;
-  if ( def )
+    }
+  }
+  if ( def ) {
     return transportById( 0, false );
+  }
   return 0;
 }
 
@@ -139,7 +146,7 @@ QList< Transport * > TransportManager::transports() const
   return d->transports;
 }
 
-Transport* TransportManager::createTransport() const
+Transport *TransportManager::createTransport() const
 {
   int id = createId();
   Transport *t = new Transport( QString::number( id ) );
@@ -147,7 +154,7 @@ Transport* TransportManager::createTransport() const
   return t;
 }
 
-void TransportManager::addTransport(Transport * transport)
+void TransportManager::addTransport( Transport *transport )
 {
   Q_ASSERT( !d->transports.contains( transport ) );
   d->transports.append( transport );
@@ -155,7 +162,7 @@ void TransportManager::addTransport(Transport * transport)
   emitChangesCommitted();
 }
 
-void TransportManager::schedule(TransportJob * job)
+void TransportManager::schedule( TransportJob *job )
 {
   connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
 
@@ -174,45 +181,49 @@ void TransportManager::createDefaultTransport()
 {
   KEMailSettings kes;
   Transport *t = createTransport();
-  t->setName( i18n("Default Transport") );
+  t->setName( i18n( "Default Transport" ) );
   t->setHost( kes.getSetting( KEMailSettings::OutServer ) );
   if ( t->isValid() ) {
     t->writeConfig();
     addTransport( t );
-  } else
-    kWarning() 
-            << "KEMailSettings does not contain a valid transport.";
+  } else {
+    kWarning() << "KEMailSettings does not contain a valid transport.";
+  }
 }
 
-TransportJob* TransportManager::createTransportJob( int transportId )
+TransportJob *TransportManager::createTransportJob( int transportId )
 {
   Transport *t = transportById( transportId, false );
-  if ( !t )
+  if ( !t ) {
     return 0;
+  }
   switch ( t->type() ) {
-    case Transport::EnumType::SMTP:
-      return new SmtpJob( t->clone(), this );
-    case Transport::EnumType::Sendmail:
-      return new SendmailJob( t->clone(), this );
+  case Transport::EnumType::SMTP:
+    return new SmtpJob( t->clone(), this );
+  case Transport::EnumType::Sendmail:
+    return new SendmailJob( t->clone(), this );
   }
   Q_ASSERT( false );
   return 0;
 }
 
-TransportJob* TransportManager::createTransportJob(const QString & transport)
+TransportJob *TransportManager::createTransportJob( const QString &transport )
 {
   bool ok = false;
   Transport *t = 0;
 
   int transportId = transport.toInt( &ok );
-  if ( ok )
+  if ( ok ) {
     t = transportById( transportId );
+  }
 
-  if ( !t )
+  if ( !t ) {
     t = transportByName( transport, false );
+  }
 
-  if ( t )
+  if ( t ) {
     return createTransportJob( t->id() );
+  }
 
   Q_ASSERT( false );
   return 0;
@@ -226,24 +237,27 @@ bool TransportManager::isEmpty() const
 QList<int> TransportManager::transportIds() const
 {
   QList<int> rv;
-  foreach ( Transport *t, d->transports )
+  foreach ( Transport *t, d->transports ) {
     rv << t->id();
+  }
   return rv;
 }
 
 QStringList TransportManager::transportNames() const
 {
   QStringList rv;
-  foreach ( Transport *t, d->transports )
+  foreach ( Transport *t, d->transports ) {
     rv << t->name();
+  }
   return rv;
 }
 
 QString TransportManager::defaultTransportName() const
 {
-  Transport* t = transportById( d->defaultTransportId, false );
-  if ( t )
+  Transport *t = transportById( d->defaultTransportId, false );
+  if ( t ) {
     return t->name();
+  }
   return QString();
 }
 
@@ -252,19 +266,21 @@ int TransportManager::defaultTransportId() const
   return d->defaultTransportId;
 }
 
-void TransportManager::setDefaultTransport(int id)
+void TransportManager::setDefaultTransport( int id )
 {
-  if ( id == d->defaultTransportId || !transportById( id, false ) )
+  if ( id == d->defaultTransportId || !transportById( id, false ) ) {
     return;
+  }
   d->defaultTransportId = id;
   writeConfig();
 }
 
-void TransportManager::removeTransport(int id)
+void TransportManager::removeTransport( int id )
 {
   Transport *t = transportById( id, false );
-  if ( !t )
+  if ( !t ) {
     return;
+  }
   emit transportRemoved( t->id(), t->name() );
   d->transports.removeAll( t );
   validateDefault();
@@ -276,10 +292,10 @@ void TransportManager::removeTransport(int id)
 
 void TransportManager::readConfig()
 {
-  QList<Transport*> oldTransports = d->transports;
+  QList<Transport *> oldTransports = d->transports;
   d->transports.clear();
 
-  QRegExp re( QLatin1String("^Transport (.+)$") );
+  QRegExp re( QLatin1String( "^Transport (.+)$" ) );
   QStringList groups = d->config->groupList().filter( re );
   foreach ( QString s, groups ) {
     re.indexIn( s );
@@ -287,9 +303,8 @@ void TransportManager::readConfig()
 
     // see if we happen to have that one already
     foreach ( Transport *old, oldTransports ) {
-      if ( old->currentGroup() == QLatin1String("Transport ") + re.cap( 1 ) ) {
-        kDebug(5324) 
-                << "reloading existing transport:" << s;
+      if ( old->currentGroup() == QLatin1String( "Transport " ) + re.cap( 1 ) ) {
+        kDebug(5324) << "reloading existing transport:" << s;
         t = old;
         t->readConfig();
         oldTransports.removeAll( old );
@@ -297,8 +312,9 @@ void TransportManager::readConfig()
       }
     }
 
-    if ( !t )
+    if ( !t ) {
       t = new Transport( re.cap( 1 ) );
+    }
     if ( t->id() <= 0 ) {
       t->setId( createId() );
       t->writeConfig();
@@ -359,29 +375,33 @@ void TransportManager::slotTransportsChanged()
 int TransportManager::createId() const
 {
   QList<int> usedIds;
-  foreach ( Transport *t, d->transports )
+  foreach ( Transport *t, d->transports ) {
     usedIds << t->id();
+  }
   usedIds << 0; // 0 is default for unknown
   int newId;
   do {
       newId = KRandom::random();
-  } while ( usedIds.contains( newId )  );
+  } while ( usedIds.contains( newId ) );
   return newId;
 }
 
 KWallet::Wallet * TransportManager::wallet()
 {
-  if ( d->wallet && d->wallet->isOpen() )
+  if ( d->wallet && d->wallet->isOpen() ) {
     return d->wallet;
+  }
 
-  if ( !Wallet::isEnabled() || d->walletOpenFailed )
+  if ( !Wallet::isEnabled() || d->walletOpenFailed ) {
     return 0;
+  }
 
   WId window = 0;
-  if ( qApp->activeWindow() )
+  if ( qApp->activeWindow() ) {
     window = qApp->activeWindow()->winId();
-  else if ( !QApplication::topLevelWidgets().isEmpty() )
+  } else if ( !QApplication::topLevelWidgets().isEmpty() ) {
     window = qApp->topLevelWidgets().first()->winId();
+  }
 
   delete d->wallet;
   d->wallet = Wallet::openWallet( Wallet::NetworkWallet(), window );
@@ -397,17 +417,20 @@ KWallet::Wallet * TransportManager::wallet()
 
 void TransportManager::prepareWallet()
 {
-  if ( !d->wallet )
+  if ( !d->wallet ) {
     return;
-  if ( !d->wallet->hasFolder( WALLET_FOLDER ) )
+  }
+  if ( !d->wallet->hasFolder( WALLET_FOLDER ) ) {
     d->wallet->createFolder( WALLET_FOLDER );
+  }
   d->wallet->setFolder( WALLET_FOLDER );
 }
 
 void TransportManager::loadPasswords()
 {
-  foreach ( Transport *t, d->transports )
+  foreach ( Transport *t, d->transports ) {
     t->readPassword();
+  }
 
   // flush the wallet queue
   foreach ( TransportJob *job, d->walletQueue ) {
@@ -430,31 +453,33 @@ void TransportManager::loadPasswordsAsync()
       break;
     }
   }
-  if ( !found )
+  if ( !found ) {
     return;
+  }
 
   // async wallet opening
   if ( !d->wallet && !d->walletOpenFailed ) {
     WId window = 0;
-    if ( qApp->activeWindow() )
+    if ( qApp->activeWindow() ) {
       window = qApp->activeWindow()->winId();
-    else if ( !QApplication::topLevelWidgets().isEmpty() )
+    } else if ( !QApplication::topLevelWidgets().isEmpty() ) {
       window = qApp->topLevelWidgets().first()->winId();
-    
+    }
+
     d->wallet = Wallet::openWallet( Wallet::NetworkWallet(), window,
-                                  Wallet::Asynchronous );
+                                    Wallet::Asynchronous );
     if ( d->wallet ) {
       connect( d->wallet, SIGNAL(walletOpened(bool)), SLOT(slotWalletOpened(bool)) );
       d->walletAsyncOpen = true;
-    }
-    else {
+    } else {
       d->walletOpenFailed = true;
       loadPasswords();
     }
     return;
   }
-  if ( d->wallet && !d->walletAsyncOpen )
+  if ( d->wallet && !d->walletAsyncOpen ) {
     loadPasswords();
+  }
 }
 
 void TransportManager::slotWalletOpened( bool success )
@@ -487,48 +512,60 @@ void TransportManager::migrateToWallet()
 {
   // check if we tried this already
   static bool firstRun = true;
-  if ( !firstRun )
+  if ( !firstRun ) {
     return;
+  }
   firstRun = false;
 
   // check if we are the main instance
-  if ( !d->isMainInstance )
+  if ( !d->isMainInstance ) {
     return;
+  }
 
   // check if migration is needed
   QStringList names;
-  foreach ( Transport *t, d->transports )
-    if ( t->needsWalletMigration() )
+  foreach ( Transport *t, d->transports ) {
+    if ( t->needsWalletMigration() ) {
       names << t->name();
-  if ( names.isEmpty() )
+    }
+  }
+  if ( names.isEmpty() ) {
     return;
+  }
 
   // ask user if he wants to migrate
-  int result = KMessageBox::questionYesNoList( 0,
-    i18n("The following mail transports store passwords in the configuration "
-         "file instead in KWallet.\nIt is recommended to use KWallet for "
-         "password storage for security reasons.\n"
-         "Do you want to migrate your passwords to KWallet?"),
-    names, i18n("Question"),
+  int result = KMessageBox::questionYesNoList(
+    0,
+    i18n( "The following mail transports store passwords in the configuration "
+          "file instead in KWallet.\nIt is recommended to use KWallet for "
+          "password storage for security reasons.\n"
+          "Do you want to migrate your passwords to KWallet?" ),
+    names, i18n( "Question" ),
     KGuiItem( i18n( "Migrate" ) ), KGuiItem( i18n( "Keep" ) ),
     QString::fromAscii( "WalletMigrate" ) );
-  if ( result != KMessageBox::Yes )
+  if ( result != KMessageBox::Yes ) {
     return;
+  }
 
   // perform migration
-  foreach ( Transport *t, d->transports )
-    if ( t->needsWalletMigration() )
+  foreach ( Transport *t, d->transports ) {
+    if ( t->needsWalletMigration() ) {
       t->migrateToWallet();
+    }
+  }
 }
 
-void TransportManager::dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner)
+void TransportManager::dbusServiceOwnerChanged( const QString &service,
+                                                const QString &oldOwner,
+                                                const QString &newOwner )
 {
   Q_UNUSED( oldOwner );
-  if ( service == DBUS_SERVICE_NAME && newOwner.isEmpty() )
+  if ( service == DBUS_SERVICE_NAME && newOwner.isEmpty() ) {
     QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
+  }
 }
 
-void TransportManager::jobResult(KJob * job)
+void TransportManager::jobResult( KJob *job )
 {
   d->walletQueue.removeAll( static_cast<TransportJob*>( job ) );
 }

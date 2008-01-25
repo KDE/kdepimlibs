@@ -38,12 +38,12 @@ class TransportMgr : public KVBox
     void editBtnClicked();
     void sendBtnClicked();
     void cancelBtnClicked();
-    void jobResult( KJob* job );
-    void jobPercent( KJob* job, unsigned long percent );
-    void jobInfoMessage( KJob* job, const QString &info, const QString &info2 );
+    void jobResult( KJob *job );
+    void jobPercent( KJob *job, unsigned long percent );
+    void jobInfoMessage( KJob *job, const QString &info, const QString &info2 );
 
   private:
-    MailTransport::TransportComboBox* mComboBox;
+    MailTransport::TransportComboBox *mComboBox;
     KLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
     QTextEdit *mMailEdit;
     KJob *mCurrentJob;

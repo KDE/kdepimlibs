@@ -38,8 +38,8 @@ class TransportComboBoxPrivate
     QList<int> transports;
 };
 
-TransportComboBox::TransportComboBox(QWidget * parent) :
-    KComboBox( parent ), d( new TransportComboBoxPrivate )
+TransportComboBox::TransportComboBox( QWidget *parent )
+  : KComboBox( parent ), d( new TransportComboBoxPrivate )
 {
   fillComboBox();
   connect( TransportManager::self(), SIGNAL(transportsChanged()),
@@ -53,22 +53,24 @@ TransportComboBox::~TransportComboBox()
 
 int TransportComboBox::currentTransportId() const
 {
-  if( currentIndex() >= 0 && currentIndex() < d->transports.count() )
+  if ( currentIndex() >= 0 && currentIndex() < d->transports.count() ) {
     return d->transports.at( currentIndex() );
+  }
   return -1;
 }
 
-void TransportComboBox::setCurrentTransport(int transportId)
+void TransportComboBox::setCurrentTransport( int transportId )
 {
   int i = d->transports.indexOf( transportId );
-  if ( i >= 0 && i < count() )
+  if ( i >= 0 && i < count() ) {
     setCurrentIndex( i );
+  }
 }
 
 TransportBase::EnumType::type TransportComboBox::transportType() const
 {
   int transtype = TransportManager::self()->transportById( currentTransportId() )->type();
-  return (TransportBase::EnumType::type)transtype;
+  return static_cast<TransportBase::EnumType::type>( transtype );
 }
 
 void TransportComboBox::fillComboBox()
@@ -81,15 +83,16 @@ void TransportComboBox::fillComboBox()
   if ( !TransportManager::self()->isEmpty() ) {
     QStringList listNames = TransportManager::self()->transportNames();
     QList<int> listIds = TransportManager::self()->transportIds();
-        addItems( listNames );
-        d->transports << listIds;
+    addItems( listNames );
+    d->transports << listIds;
     defaultId = TransportManager::self()->defaultTransportId();
   }
 
-  if ( oldTransport != -1 )
+  if ( oldTransport != -1 ) {
     setCurrentTransport( oldTransport );
-  else
+  } else {
     setCurrentTransport( defaultId );
+  }
 }
 
 #include "transportcombobox.moc"

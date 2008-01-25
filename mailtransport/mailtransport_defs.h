@@ -48,5 +48,4 @@
 #define IMAP_PORT 143
 #define IMAPS_PORT 993
 
-
 #endif

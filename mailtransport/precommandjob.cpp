@@ -40,8 +40,8 @@ class PreCommandJobPrivate
     QString precommand;
 };
 
-PrecommandJob::PrecommandJob(const QString & precommand, QObject * parent) :
-    KJob( parent ), d( new PreCommandJobPrivate )
+PrecommandJob::PrecommandJob( const QString &precommand, QObject *parent )
+  : KJob( parent ), d( new PreCommandJobPrivate )
 {
   d->precommand = precommand;
   d->process = new KProcess( this );
@@ -65,14 +65,14 @@ void PrecommandJob::start()
 
 void PrecommandJob::slotStarted()
 {
-  emit infoMessage( this, i18n("Executing precommand"),
-                    i18n("Executing precommand '%1'.", d->precommand ) );
+  emit infoMessage( this, i18n( "Executing precommand" ),
+                    i18n( "Executing precommand '%1'.", d->precommand ) );
 }
 
-void PrecommandJob::slotError( QProcess::ProcessError error)
+void PrecommandJob::slotError( QProcess::ProcessError error )
 {
   setError( UserDefinedError );
-  setErrorText( i18n("Could not execute precommand '%1'.", d->precommand ) );
+  setErrorText( i18n( "Could not execute precommand '%1'.", d->precommand ) );
   kDebug(5324) << "Execution precommand has failed:" << error;
   emitResult();
 }
@@ -84,16 +84,15 @@ bool PrecommandJob::doKill()
   return true;
 }
 
-void PrecommandJob::slotFinished(int exitCode,
-                                 QProcess::ExitStatus exitStatus )
+void PrecommandJob::slotFinished( int exitCode, QProcess::ExitStatus exitStatus )
 {
   if ( exitStatus == QProcess::CrashExit ) {
     setError( UserDefinedError );
-    setErrorText( i18n("The precommand crashed." ));
+    setErrorText( i18n( "The precommand crashed." ) );
   } else if ( exitCode != 0 ) {
     setError( UserDefinedError );
-    setErrorText( i18n("The precommand exited with code %1.",
-                  d->process->exitStatus()) );
+    setErrorText( i18n( "The precommand exited with code %1.",
+                        d->process->exitStatus() ) );
   }
   emitResult();
 }

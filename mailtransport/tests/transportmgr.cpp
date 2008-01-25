@@ -60,7 +60,9 @@ TransportMgr::TransportMgr() :
 
 void TransportMgr::editBtnClicked()
 {
-  TransportConfigDialog *t = new TransportConfigDialog( TransportManager::self()->transportById( mComboBox->currentTransportId() ), this );
+  TransportConfigDialog *t =
+    new TransportConfigDialog(
+      TransportManager::self()->transportById( mComboBox->currentTransportId() ), this );
   t->exec();
   delete t;
 }
@@ -74,47 +76,53 @@ void TransportMgr::sendBtnClicked()
     return;
   }
   job->setSender( mSenderEdit->text() );
-  job->setTo( mToEdit->text().isEmpty() ? QStringList() : mToEdit->text().split(',') );
-  job->setCc( mCcEdit->text().isEmpty() ? QStringList() : mCcEdit->text().split(',') );
-  job->setBcc( mBccEdit->text().isEmpty() ? QStringList() : mBccEdit->text().split(',') );
+  job->setTo( mToEdit->text().isEmpty() ? QStringList() : mToEdit->text().split( ',' ) );
+  job->setCc( mCcEdit->text().isEmpty() ? QStringList() : mCcEdit->text().split( ',' ) );
+  job->setBcc( mBccEdit->text().isEmpty() ? QStringList() : mBccEdit->text().split( ',' ) );
   job->setData( mMailEdit->document()->toPlainText().toLatin1() );
-  connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
-  connect( job, SIGNAL(percent(KJob*,unsigned long)), SLOT(jobPercent(KJob*,unsigned long)) );
-  connect( job, SIGNAL(infoMessage(KJob*,QString,QString)), SLOT(jobInfoMessage(KJob*,QString,QString)) );
+  connect( job, SIGNAL(result(KJob*)),
+           SLOT(jobResult(KJob*)) );
+  connect( job, SIGNAL(percent(KJob*,unsigned long)),
+           SLOT(jobPercent(KJob*,unsigned long)) );
+  connect( job, SIGNAL(infoMessage(KJob*,QString,QString)),
+           SLOT(jobInfoMessage(KJob*,QString,QString)) );
   mCurrentJob = job;
   TransportManager::self()->schedule( job );
 }
 
 void TransportMgr::cancelBtnClicked()
 {
-  if ( mCurrentJob )
+  if ( mCurrentJob ) {
     kDebug() << "kill success:" << mCurrentJob->kill();
+  }
   mCurrentJob = 0;
 }
 
-int main( int argc, char** argv )
+int main( int argc, char **argv )
 {
-  KCmdLineArgs::init(argc, argv, "transportmgr", 0, ki18n("transportmgr"), "0" , ki18n("Mail Transport Manager Demo"));
+  KCmdLineArgs::init( argc, argv, "transportmgr", 0,
+                      ki18n( "transportmgr" ), "0",
+                      ki18n( "Mail Transport Manager Demo" ) );
   KApplication app;
-  TransportMgr* t = new TransportMgr();
+  TransportMgr *t = new TransportMgr();
   t->show();
   app.exec();
   delete t;
 }
 
-void TransportMgr::jobResult( KJob* job )
+void TransportMgr::jobResult( KJob *job )
 {
   kDebug() << job->error() << job->errorText();
   mCurrentJob = 0;
 }
 
-void TransportMgr::jobPercent(KJob * job, unsigned long percent)
+void TransportMgr::jobPercent( KJob *job, unsigned long percent )
 {
   Q_UNUSED( job );
   kDebug() << percent << "%";
 }
 
-void TransportMgr::jobInfoMessage(KJob * job, const QString & info, const QString & info2)
+void TransportMgr::jobInfoMessage( KJob *job, const QString &info, const QString &info2 )
 {
   Q_UNUSED( job );
   kDebug() << info;
@@ -122,4 +130,3 @@ void TransportMgr::jobInfoMessage(KJob * job, const QString & info, const QStrin
 }
 
 #include "transportmgr.moc"
-

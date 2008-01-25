@@ -80,7 +80,7 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
     /**
       Returns the Transport object containing the mail transport settings.
     */
-    Transport* transport() const;
+    Transport *transport() const;
 
   protected:
     /**
@@ -90,7 +90,7 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
       @param parent The parent object.
       @see TransportManager::createTransportJob()
     */
-    explicit TransportJob( Transport* transport, QObject* parent = 0 );
+    explicit TransportJob( Transport *transport, QObject *parent = 0 );
 
     /**
       Returns the sender of the mail.
@@ -121,7 +121,7 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
       Returns a QBuffer opened on the message data. This is useful for
       processing the data in smaller chunks.
     */
-    QBuffer* buffer();
+    QBuffer *buffer();
 
     /**
       Do the actual work, implement in your subclass.
@@ -130,9 +130,8 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
 
   private:
     class Private;
-    Private* const d;
+    Private *const d;
 };
-
 
 }
 

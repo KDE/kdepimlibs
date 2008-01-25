@@ -78,7 +78,7 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
       over a longer time. However it is recommended to store transport identifiers
       instead if possible.
     */
-    Transport* clone() const;
+    Transport *clone() const;
 
   protected:
     /**

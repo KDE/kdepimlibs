@@ -42,7 +42,7 @@ class MAILTRANSPORT_EXPORT TransportTypeDialog : public KDialog
     TransportTypeDialog( QWidget *parent = 0 );
 
     ~TransportTypeDialog();
-    
+
     /**
       Returns the selected transport type.
     */

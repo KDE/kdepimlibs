@@ -30,15 +30,15 @@
 class TransportTypeDialogPrivate
 {
   public:
-    KButtonGroup* buttonGroup;
+    KButtonGroup *buttonGroup;
 };
 
 using namespace MailTransport;
 
-TransportTypeDialog::TransportTypeDialog(QWidget * parent) :
-    KDialog( parent ), d( new TransportTypeDialogPrivate )
+TransportTypeDialog::TransportTypeDialog( QWidget *parent )
+  : KDialog( parent ), d( new TransportTypeDialogPrivate )
 {
-  setCaption( i18n("Add Transport") );
+  setCaption( i18n( "Add Transport" ) );
   setButtons( Ok|Cancel );
   Ui::TransportTypeDialog ui;
   ui.setupUi( mainWidget() );

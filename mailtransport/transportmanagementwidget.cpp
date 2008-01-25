@@ -35,16 +35,16 @@ class TransportManagementWidget::Private
     Ui::TransportManagementWidget ui;
 };
 
-TransportManagementWidget::TransportManagementWidget(QWidget * parent) :
-    QWidget( parent ),
-    d( new Private )
+TransportManagementWidget::TransportManagementWidget( QWidget *parent )
+  : QWidget( parent ), d( new Private )
 {
   d->ui.setupUi( this );
 
-  d->ui.transportList->setHeaderLabels(
-                           QStringList() << i18n("Name") << i18n("Type") );
-  connect( d->ui.transportList, SIGNAL(currentItemChanged(QTreeWidgetItem*,
-           QTreeWidgetItem*)), SLOT(updateButtonState()) );
+  d->ui.transportList->setHeaderLabels( QStringList()
+                                        << i18nc( "@title:column email transport name", "Name" )
+                                        << i18nc( "@title:column email transport type", "Type" ) );
+  connect( d->ui.transportList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+           SLOT(updateButtonState()) );
   connect( d->ui.transportList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
            SLOT(editClicked()) );
   connect( d->ui.addButton, SIGNAL(clicked()), SLOT(addClicked()) );
@@ -66,28 +66,31 @@ void TransportManagementWidget::fillTransportList()
 {
   // try to preserve the selection
   int selected = -1;
-  if ( d->ui.transportList->currentItem() )
+  if ( d->ui.transportList->currentItem() ) {
     selected = d->ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt();
+  }
 
   d->ui.transportList->clear();
-  foreach ( Transport* t, TransportManager::self()->transports() ) {
+  foreach ( Transport *t, TransportManager::self()->transports() ) {
     QTreeWidgetItem *item = new QTreeWidgetItem( d->ui.transportList );
     item->setData( 0, Qt::UserRole, t->id() );
     item->setText( 0, t->name() );
     QString type;
     switch ( t->type() ) {
-      case Transport::EnumType::SMTP:
-        type = i18n("SMTP");
-        break;
-      case Transport::EnumType::Sendmail:
-        type = i18n("Sendmail");
-        break;
+    case Transport::EnumType::SMTP:
+      type = i18nc( "@option SMTP transport", "SMTP" );
+      break;
+    case Transport::EnumType::Sendmail:
+      type = i18nc( "@option sendmail transport", "Sendmail" );
+      break;
     }
-    if ( TransportManager::self()->defaultTransportId() == t->id() )
-      type += i18n(" (Default)" );
+    if ( TransportManager::self()->defaultTransportId() == t->id() ) {
+      type += i18nc( "@label the default mail transport", " (Default)" );
+    }
     item->setText( 1, type );
-    if ( t->id() == selected )
+    if ( t->id() == selected ) {
       d->ui.transportList->setCurrentItem( item );
+    }
   }
 
   updateButtonState();
@@ -103,10 +106,11 @@ void TransportManagementWidget::updateButtonState()
     d->ui.editButton->setEnabled( true );
     d->ui.removeButton->setEnabled( true );
     if ( d->ui.transportList->currentItem()->data( 0, Qt::UserRole ) ==
-         TransportManager::self()->defaultTransportId() )
+         TransportManager::self()->defaultTransportId() ) {
       d->ui.defaultButton->setEnabled( false );
-    else
+    } else {
       d->ui.defaultButton->setEnabled( true );
+    }
   }
 }
 
@@ -114,18 +118,20 @@ void TransportManagementWidget::addClicked()
 {
   // get transport type
   TransportTypeDialog tdd( this );
-  if ( tdd.exec() != QDialog::Accepted )
+  if ( tdd.exec() != QDialog::Accepted ) {
     return;
+  }
 
   // initialize transport
   Transport *t = TransportManager::self()->createTransport();
   t->setType( tdd.transportType() );
-  if ( t->type() == Transport::EnumType::Sendmail )
-    t->setHost( QLatin1String("/usr/sbin/sendmail") );
+  if ( t->type() == Transport::EnumType::Sendmail ) {
+    t->setHost( QLatin1String( "/usr/sbin/sendmail" ) );
+  }
 
   // configure transport
   TransportConfigDialog tcd( t, this );
-  tcd.setCaption( i18n("Add Transport") );
+  tcd.setCaption( i18nc( "@title:window", "Add Transport" ) );
   if ( tcd.exec() == QDialog::Accepted ) {
     TransportManager::self()->addTransport( t );
   } else {
@@ -138,12 +144,13 @@ void TransportManagementWidget::editClicked()
   Q_ASSERT( d->ui.transportList->currentItem() );
 
   int currentId = d->ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt();
-  Transport* transport = TransportManager::self()->transportById( currentId );
-  if ( !transport )
+  Transport *transport = TransportManager::self()->transportById( currentId );
+  if ( !transport ) {
     return;
+  }
   transport = transport->clone();
   TransportConfigDialog t( transport, this );
-  t.setCaption( i18n("Modify Transport") );
+  t.setCaption( i18nc( "@title:window", "Modify Transport" ) );
   t.exec();
   delete transport;
 }

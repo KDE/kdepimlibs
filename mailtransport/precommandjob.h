@@ -61,9 +61,9 @@ class PrecommandJob : public KJob
     virtual bool doKill();
 
   private slots:
-    void slotFinished(int, QProcess::ExitStatus);
+    void slotFinished( int, QProcess::ExitStatus );
     void slotStarted();
-    void slotError( QProcess::ProcessError error);
+    void slotError( QProcess::ProcessError error );
 
   private:
     PreCommandJobPrivate *const d;

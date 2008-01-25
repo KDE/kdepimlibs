@@ -1,4 +1,4 @@
-/* 
+/*
     Copyright (C) 2007 KovoKs <info@kovoks.nl>
 
     This library is free software; you can redistribute it and/or modify it
@@ -27,8 +27,8 @@
 #include <QtCore/QHash>
 
 class QProgressBar;
-  
-namespace MailTransport 
+
+namespace MailTransport
 {
 
 class ServerTestPrivate;
@@ -43,14 +43,14 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     Q_OBJECT
     Q_PROPERTY( QString server READ server WRITE setServer )
     Q_PROPERTY( QString protocol READ protocol WRITE setProtocol )
-    Q_PROPERTY( QProgressBar* progressBar READ progressBar WRITE setProgressBar )
+    Q_PROPERTY( QProgressBar *progressBar READ progressBar WRITE setProgressBar )
 
   public:
     /**
       * Constructor
       * @param parent Parent Widget
       */
-    ServerTest( QWidget* parent = 0 );
+    ServerTest( QWidget *parent = 0 );
 
     /**
       * Destructor
@@ -60,7 +60,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     /**
       * Set the server to test.
       */
-    void setServer( const QString& server );
+    void setServer( const QString &server );
 
     /**
       * Get the server to test.
@@ -77,7 +77,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
      *
      * @param fakeHostname the fake hostname to send
      */
-    void setFakeHostname( const QString& fakeHostname );
+    void setFakeHostname( const QString &fakeHostname );
 
     /**
      * @return the fake hostname, as set before with @ref setFakeHostname
@@ -89,18 +89,18 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
       * and hide() and will count down. It does not take ownership of
       * the progressbar.
       */
-    void setProgressBar( QProgressBar* pb );
+    void setProgressBar( QProgressBar *pb );
 
     /**
       * returns the used progressBar
       */
-    QProgressBar* progressBar();
+    QProgressBar *progressBar();
 
     /**
       * Set @p proto the protocol to test, currently supported are
       * "smtp" and "imap". This will be an enum soon.
       */
-    void setProtocol( const QString& protocol );
+    void setProtocol( const QString &protocol );
 
     /**
       * returns the protocol
@@ -134,16 +134,16 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     void finished( QList< int > );
 
   private:
-    Q_DECLARE_PRIVATE(ServerTest)
+    Q_DECLARE_PRIVATE( ServerTest )
     ServerTestPrivate *const d;
 
-    Q_PRIVATE_SLOT(d, void slotNormalPossible() )
-    Q_PRIVATE_SLOT(d, void slotSslPossible())
-    Q_PRIVATE_SLOT(d, void slotReadNormal( const QString& text ))
-    Q_PRIVATE_SLOT(d, void slotReadSecure( const QString& text ))
-    Q_PRIVATE_SLOT(d, void slotNormalNotPossible())
-    Q_PRIVATE_SLOT(d, void slotSslNotPossible())
-    Q_PRIVATE_SLOT(d, void slotUpdateProgress())
+    Q_PRIVATE_SLOT( d, void slotNormalPossible() )
+    Q_PRIVATE_SLOT( d, void slotSslPossible() )
+    Q_PRIVATE_SLOT( d, void slotReadNormal( const QString &text ) )
+    Q_PRIVATE_SLOT( d, void slotReadSecure( const QString &text ) )
+    Q_PRIVATE_SLOT( d, void slotNormalNotPossible() )
+    Q_PRIVATE_SLOT( d, void slotSslNotPossible() )
+    Q_PRIVATE_SLOT( d, void slotUpdateProgress() )
 };
 
 }

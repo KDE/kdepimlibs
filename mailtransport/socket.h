@@ -1,4 +1,4 @@
-/* 
+/*
     Copyright (C) 2006-2007 KovoKs <info@kovoks.nl>
 
     This library is free software; you can redistribute it and/or modify it
@@ -45,7 +45,7 @@ namespace MailTransport
        * the parameters given.
        * @param parent the parent
        */
-      explicit Socket( QObject* parent );
+      explicit Socket( QObject *parent );
 
       /**
       * Destructor
@@ -61,7 +61,7 @@ namespace MailTransport
       /**
        * Write @p text to the socket
        */
-      virtual void write( const QString& text );
+      virtual void write( const QString &text );
 
       /**
        * @return true when the connection is live and kicking
@@ -71,12 +71,12 @@ namespace MailTransport
       /**
        * set the protocol to use
        */
-      void setProtocol( const QString& proto );
+      void setProtocol( const QString &proto );
 
       /**
        * set the server to use
        */
-      void setServer( const QString& server );
+      void setServer( const QString &server );
 
       /**
        * set the port to use. If not specified, it will use the default
@@ -93,17 +93,17 @@ namespace MailTransport
       Q_DECLARE_PRIVATE( Socket )
       SocketPrivate *const d;
 
-      Q_PRIVATE_SLOT(d, void slotConnected() )
-      Q_PRIVATE_SLOT(d, void slotStateChanged( QAbstractSocket::SocketState state ) )
-      Q_PRIVATE_SLOT(d, void slotModeChanged( QSslSocket::SslMode  state ) )
-      Q_PRIVATE_SLOT(d, void slotSocketRead() )
-      Q_PRIVATE_SLOT(d, void slotSslErrors( const QList<QSslError> & errors ) )
+      Q_PRIVATE_SLOT( d, void slotConnected() )
+      Q_PRIVATE_SLOT( d, void slotStateChanged( QAbstractSocket::SocketState state ) )
+      Q_PRIVATE_SLOT( d, void slotModeChanged( QSslSocket::SslMode  state ) )
+      Q_PRIVATE_SLOT( d, void slotSocketRead() )
+      Q_PRIVATE_SLOT( d, void slotSslErrors( const QList<QSslError> &errors ) )
 
     Q_SIGNALS:
       /**
        * emits the incoming data
        */
-      void data( const QString& );
+      void data( const QString & );
 
       /**
        * emitted when there is a connection (ready to send something)
