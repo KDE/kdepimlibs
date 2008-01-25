@@ -90,7 +90,7 @@ void ServerTestPrivate::finalResult()
     return;
   }
 
-  kDebug( 5324 ) << connectionResults;
+  kDebug() << connectionResults;
 
   testProgress->hide();
   progressTimer->stop();
@@ -100,7 +100,7 @@ void ServerTestPrivate::finalResult()
 
 void ServerTestPrivate::read( int type, const QString &text )
 {
-  kDebug( 5324 ) << text;
+  kDebug() << text;
 
   if ( !text.contains( QLatin1String( "AUTH" ), Qt::CaseInsensitive ) ) {
     return;
@@ -174,7 +174,7 @@ void ServerTestPrivate::sendInitialCapabilityQuery( MailTransport::Socket *socke
         hostname += QLatin1String( ".localnet" );
       }
     }
-    kDebug( 5324 ) << "Hostname for EHLO is" << hostname;
+    kDebug() << "Hostname for EHLO is" << hostname;
 
     socket->write( QLatin1String( "EHLO " ) + hostname );
   }
@@ -263,7 +263,7 @@ ServerTest::~ServerTest()
 
 void ServerTest::start()
 {
-  kDebug( 5324 ) << d;
+  kDebug() << d;
 
   d->connectionResults.clear();
   d->authenticationResults.clear();

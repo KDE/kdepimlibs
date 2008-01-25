@@ -168,7 +168,7 @@ void TransportManager::schedule( TransportJob *job )
 
   // check if the job is waiting for the wallet
   if ( !job->transport()->isComplete() ) {
-    kDebug(5324) << "job waits for wallet:" << job;
+    kDebug() << "job waits for wallet:" << job;
     d->walletQueue << job;
     loadPasswordsAsync();
     return;
@@ -304,7 +304,7 @@ void TransportManager::readConfig()
     // see if we happen to have that one already
     foreach ( Transport *old, oldTransports ) {
       if ( old->currentGroup() == QLatin1String( "Transport " ) + re.cap( 1 ) ) {
-        kDebug(5324) << "reloading existing transport:" << s;
+        kDebug() << "reloading existing transport:" << s;
         t = old;
         t->readConfig();
         oldTransports.removeAll( old );
@@ -365,7 +365,7 @@ void TransportManager::slotTransportsChanged()
     return;
   }
 
-  kDebug(5324) ;
+  kDebug();
   d->config->reparseConfiguration();
   // FIXME: this deletes existing transport objects!
   readConfig();
@@ -443,7 +443,7 @@ void TransportManager::loadPasswords()
 
 void TransportManager::loadPasswordsAsync()
 {
-  kDebug(5324) ;
+  kDebug();
 
   // check if there is anything to do at all
   bool found = false;
@@ -484,7 +484,7 @@ void TransportManager::loadPasswordsAsync()
 
 void TransportManager::slotWalletOpened( bool success )
 {
-  kDebug(5324) ;
+  kDebug();
   d->walletAsyncOpen = false;
   if ( !success ) {
     d->walletOpenFailed = true;

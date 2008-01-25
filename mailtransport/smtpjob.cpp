@@ -79,7 +79,7 @@ SmtpJob::~SmtpJob()
 {
   slavePoolRef--;
   if ( slavePoolRef == 0 ) {
-    kDebug(5324) << "clearing SMTP slave pool" << slavePool.count();
+    kDebug() << "clearing SMTP slave pool" << slavePool.count();
     foreach ( KIO::Slave *slave, slavePool.values() ) {
       KIO::Scheduler::disconnectSlave( slave );
     }
@@ -176,7 +176,7 @@ void SmtpJob::startSmtpJob()
 
   d->slave = slavePool.value( transport()->id() );
   if ( !d->slave ) {
-    kDebug(5324) << "creating new SMTP slave";
+    kDebug() << "creating new SMTP slave";
     KIO::MetaData slaveConfig;
     slaveConfig.insert( QLatin1String( "tls" ),
                         ( transport()->encryption() == Transport::EnumEncryption::TLS ) ?
@@ -187,7 +187,7 @@ void SmtpJob::startSmtpJob()
     d->slave = KIO::Scheduler::getConnectedSlave( destination, slaveConfig );
     slavePool.insert( transport()->id(), d->slave );
   } else {
-    kDebug(5324) << "re-using existing slave";
+    kDebug() << "re-using existing slave";
   }
 
   KIO::TransferJob *job = KIO::put( destination, -1, KIO::HideProgressInfo );

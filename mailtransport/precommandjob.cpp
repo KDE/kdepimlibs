@@ -73,7 +73,7 @@ void PrecommandJob::slotError( QProcess::ProcessError error )
 {
   setError( UserDefinedError );
   setErrorText( i18n( "Could not execute precommand '%1'.", d->precommand ) );
-  kDebug(5324) << "Execution precommand has failed:" << error;
+  kDebug() << "Execution precommand has failed:" << error;
   emitResult();
 }
 
