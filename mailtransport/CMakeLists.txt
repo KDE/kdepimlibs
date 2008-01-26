@@ -1,5 +1,4 @@
 
-# WARNING: This breaks KDE 3 kdepim.
 add_subdirectory( kconf_update )
 add_subdirectory( tests )
 
