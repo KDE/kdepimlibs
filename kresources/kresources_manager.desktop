@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=KResources Manager
+Name[ga]=Bainisteoir KResources
 Type=ServiceType
 X-KDE-ServiceType=KResources/Manager
 Comment=KResource Manager

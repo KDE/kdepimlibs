@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=KResources Plugin
+Name[ga]=Breiseán KResources
 Type=ServiceType
 X-KDE-ServiceType=KResources/Plugin
 Comment=KResource Framework Plugin
