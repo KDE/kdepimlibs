@@ -1,6 +1,6 @@
 
 # WARNING: This breaks KDE 3 kdepim.
-#add_subdirectory( kconf_update )
+add_subdirectory( kconf_update )
 add_subdirectory( tests )
 
 add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
