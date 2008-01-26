@@ -32,13 +32,15 @@ while (<STDIN>) {
     if ( /^\[(.+)\]$/ ) {
         $currentGroup = $1;
         if ( $source eq "kmail" && $currentGroup =~ /^Transport/ ) {
-            print "# DELETEGROUP [$currentGroup]\n";
+            # keep the old settings so that KMail from KDE 3 still works
+            #print "# DELETEGROUP [$currentGroup]\n";
             $groupid = $currentGroup;
             $groupid =~ s/^Transport //;
             print "[Transport kmail-$groupid]\n";
         }
         elsif ( $source eq "knode" && $currentGroup eq "MAILSERVER" ) {
-            print "# DELETEGROUP [$currentGroup]\n";
+            # keep the old settings so that KNode from KDE 3 still works
+            #print "# DELETEGROUP [$currentGroup]\n";
             print "[Transport knode-0]\n";
             print "name=KNode Mail Transport\n";
         }
