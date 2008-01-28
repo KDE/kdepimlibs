@@ -304,12 +304,8 @@ void GData::createPost( KBlog::BlogPost *post )
     KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default" ),
     postData, KIO::HideProgressInfo );
 
+  Q_ASSERT ( job );
   d->mCreatePostMap[ job ] = post;
-
-  if ( !job ) {
-    kWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/"
-               << blogId() << "/posts/default";
-  }
 
   job->addMetaData( "content-type", "Content-Type: application/atom+xml; charset=utf-8" );
   job->addMetaData( "ConnectTimeout", "50" );
