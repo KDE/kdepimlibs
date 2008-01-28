@@ -191,13 +191,13 @@ void kio_sieveProtocol::setHost (const QString &host, quint16 port, const QStrin
 {
 	if ( isConnected() &&
 			( m_sServer != host ||
-				m_sPort != QString::number( port ) ||
+				m_port != port ||
 				m_sUser != user ||
 				m_sPass != pass ) ) {
 		disconnect();
 	}
 	m_sServer = host;
-	m_sPort = QString::number( port ? port : SIEVE_DEFAULT_PORT );
+	m_port = port ? port : SIEVE_DEFAULT_PORT;
 	m_sUser = user;
 	m_sPass = pass;
 	m_supportsTLS = false;
@@ -322,7 +322,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 
 	setBlocking(true);
 
-	if (!connectToHost(m_sServer, m_sPort, true)) {
+	if (!connectToHost(QLatin1String("sieve"), m_sServer, m_port)) {
 		return false;
 	}
 
@@ -433,7 +433,7 @@ bool kio_sieveProtocol::activate(const KUrl& url)
 
 	infoMessage(i18n("Activating script..."));
 
-	QString filename = url.fileName(false);
+	QString filename = url.fileName( KUrl::ObeyTrailingSlash );
 
 	if (filename.isEmpty()) {
 		error(ERR_DOES_NOT_EXIST, url.prettyUrl());
@@ -495,7 +495,7 @@ void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, KIO::JobFlags)
 
 	infoMessage(i18n("Sending data..."));
 
-	QString filename = url.fileName(false);
+	QString filename = url.fileName( KUrl::ObeyTrailingSlash );
 
 	if (filename.isEmpty()) {
 		error(ERR_MALFORMED_URL, url.prettyUrl());
@@ -662,7 +662,7 @@ void kio_sieveProtocol::get(const KUrl& url)
 
 	infoMessage(i18n("Retrieving data..."));
 
-	QString filename = url.fileName(false);
+	QString filename = url.fileName( KUrl::ObeyTrailingSlash );
 
 	if (filename.isEmpty()) {
 		error(ERR_MALFORMED_URL, url.prettyUrl());
@@ -739,7 +739,7 @@ void kio_sieveProtocol::del(const KUrl &url, bool isfile)
 
 	infoMessage(i18n("Deleting file..."));
 
-	QString filename = url.fileName(false);
+	QString filename = url.fileName( KUrl::ObeyTrailingSlash );
 
 	if (filename.isEmpty()) {
 		error(ERR_MALFORMED_URL, url.prettyUrl());
@@ -786,7 +786,7 @@ void kio_sieveProtocol::urlStat(const KUrl& url)
 
 	UDSEntry entry;
 
-	QString filename = url.fileName(false);
+	QString filename = url.fileName( KUrl::ObeyTrailingSlash );
 
 	if (filename.isEmpty()) {
 		entry.insert(KIO::UDSEntry::UDS_NAME, QString::fromLatin1("/"));
@@ -944,7 +944,7 @@ bool kio_sieveProtocol::authenticate()
 	AuthInfo ai;
 	ai.url.setProtocol("sieve");
 	ai.url.setHost(m_sServer);
-	ai.url.setPort( m_sPort.toInt() );
+	ai.url.setPort( m_port );
 	ai.username = m_sUser;
 	ai.password = m_sPass;
 	ai.keepPassword = true;
@@ -1069,7 +1069,7 @@ void kio_sieveProtocol::mimetype(const KUrl & url)
 {
 	ksDebug << "Requesting mimetype for " << url.prettyUrl() << endl;
 
-	if (url.fileName(false).isEmpty())
+	if (url.fileName( KUrl::ObeyTrailingSlash ).isEmpty())
 		mimeType( "inode/directory" );
 	else
 		mimeType( "application/sieve" );
