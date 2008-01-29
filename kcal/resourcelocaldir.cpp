@@ -162,17 +162,22 @@ bool ResourceLocalDir::doFileLoad( CalendarLocal &cal, const QString &fileName )
   return true;
 }
 
-bool ResourceLocalDir::doSave( bool )
+bool ResourceLocalDir::doSave( bool syncCache )
 {
+  Q_UNUSED( syncCache );
   Incidence::List list;
+  bool success = true;
 
   list = addedIncidences();
   list += changedIncidences();
+
   for ( Incidence::List::iterator it = list.begin(); it != list.end(); ++it ) {
-    doSave( true, *it );
+    if ( !doSave( *it ) ) {
+      success = false;
+    }
   }
 
-  return true;
+  return success;
 }
 
 bool ResourceLocalDir::doSave( bool, Incidence *incidence )
@@ -184,11 +189,11 @@ bool ResourceLocalDir::doSave( bool, Incidence *incidence )
 
   CalendarLocal cal( calendar()->timeSpec() );
   cal.addIncidence( incidence->clone() );
-  cal.save( fileName );
+  const bool ret = cal.save( fileName );
 
   d->mDirWatch.startScan();
 
-  return true;
+  return ret;
 }
 
 KABC::Lock *ResourceLocalDir::lock()
