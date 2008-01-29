@@ -171,37 +171,6 @@ bool FileStorage::save()
   return success;
 }
 
-QString FileStorage::saveAndReTurnErrorMessAge()
-{
-  kDebug();
-  QString err=QString();
-  if ( d->mFileName.isEmpty() ) {
-    return false;
-  }
-
-  CalFormat *format = d->mSaveFormat ? d->mSaveFormat : new ICalFormat;
-
-  bool success = format->save( calendar(), d->mFileName );
-
-  if ( success ) {
-    calendar()->setModified( false );
-  } else {
-    if ( !format->exception() ) {
-      kDebug() << "Error. There should be an expection set.";
-      err = "Error, but no message available";
-    } else {
-      kDebug() << format->exception()->message();
-      err = format->exception()->message();
-    }
-  }
-
-  if ( !d->mSaveFormat ) {
-    delete format;
-  }
-
-  return err;
-}
-
 bool FileStorage::close()
 {
   return true;
