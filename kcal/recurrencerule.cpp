@@ -264,8 +264,7 @@ class Constraint
 
 Constraint::Constraint( KDateTime::Spec spec, int wkst )
   : weekstart( wkst ),
-    timespec( spec ),
-    useCachedDt( false )
+    timespec( spec )
 {
   clear();
 }
@@ -274,6 +273,7 @@ Constraint::Constraint( const KDateTime &dt, RecurrenceRule::PeriodType type, in
   : weekstart( wkst ),
     timespec( dt.timeSpec() )
 {
+  clear();
   readDateTime( dt, type );
 }
 
@@ -652,7 +652,6 @@ bool Constraint::increase( RecurrenceRule::PeriodType type, int freq )
 // Set the constraint's value appropriate to 'type', to the value contained in a date/time.
 bool Constraint::readDateTime( const KDateTime &dt, RecurrenceRule::PeriodType type )
 {
-  clear();
   switch ( type ) {
     // Really fall through! Only weekly needs to be treated differently!
   case RecurrenceRule::rSecondly:
@@ -1136,15 +1135,22 @@ void RecurrenceRule::Private::buildConstraints()
 
   #define intConstraint( list, setElement ) \
   if ( !list.isEmpty() ) { \
-    for ( c = 0, cend = mConstraints.count();  c < cend;  ++c ) { \
-      for ( i = 0, iend = list.count();  i < iend;  ++i ) { \
-        con = mConstraints[c]; \
-        con.setElement( list[i] ); \
-        tmp.append( con ); \
+    iend = list.count(); \
+    if ( iend == 1 ) { \
+      for ( c = 0, cend = mConstraints.count();  c < cend;  ++c ) { \
+        mConstraints[c].setElement( list[0] ); \
       } \
+    } else { \
+      for ( c = 0, cend = mConstraints.count();  c < cend;  ++c ) { \
+        for ( i = 0;  i < iend;  ++i ) { \
+          con = mConstraints[c]; \
+          con.setElement( list[i] ); \
+          tmp.append( con ); \
+        } \
+      } \
+      mConstraints = tmp; \
+      tmp.clear(); \
     } \
-    mConstraints = tmp; \
-    tmp.clear(); \
   }
 
   intConstraint( mBySeconds, setSecond );
@@ -1171,13 +1177,9 @@ void RecurrenceRule::Private::buildConstraints()
 
   #define fixConstraint( setElement, value ) \
   { \
-    tmp.clear(); \
     for ( c = 0, cend = mConstraints.count();  c < cend;  ++c ) { \
-      con = mConstraints[c];                                      \
-      con.setElement( value );                                    \
-      tmp.append( con );                                          \
+      mConstraints[c].setElement( value );                        \
     } \
-    mConstraints = tmp; \
   }
   // Now determine missing values from DTSTART. This can speed up things,
   // because we have more restrictions and save some loops.
@@ -1345,7 +1347,8 @@ bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec 
 
   // It's a date-time rule, so we need to take the time specification into account.
   KDateTime start( qd, QTime( 0, 0, 0 ), timeSpec );
-  KDateTime end = start.addDays( 1 );
+  KDateTime end = start.addDays( 1 ).toTimeSpec( d->mDateStart.timeSpec() );
+  start = start.toTimeSpec( d->mDateStart.timeSpec() );
   if ( end < startDt() ) {
     return false;
   }
@@ -1364,8 +1367,8 @@ bool RecurrenceRule::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec 
   }
 
   // Find the start and end dates in the time spec for the rule
-  QDate startDay = start.toTimeSpec( d->mDateStart.timeSpec() ).date();
-  QDate endDay = end.toTimeSpec( d->mDateStart.timeSpec() ).addSecs( -1 ).date();
+  QDate startDay = start.date();
+  QDate endDay = end.addSecs( -1 ).date();
   int dayCount = startDay.daysTo( endDay ) + 1;
 
   // The date must be in an appropriate interval (getNextValidDateInterval),
@@ -1592,8 +1595,10 @@ KDateTime RecurrenceRule::getNextDate( const KDateTime &preDate ) const
   return KDateTime();
 }
 
-DateTimeList RecurrenceRule::timesInInterval( const KDateTime &start, const KDateTime &end ) const
+DateTimeList RecurrenceRule::timesInInterval( const KDateTime &dtStart, const KDateTime &dtEnd ) const
 {
+  KDateTime start = dtStart.toTimeSpec( d->mDateStart.timeSpec() );
+  KDateTime end = dtEnd.toTimeSpec( d->mDateStart.timeSpec() );
   DateTimeList result;
   if ( end < startDt() ) {
     return result;    // before start of recurrence
