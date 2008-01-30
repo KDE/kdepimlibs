@@ -1595,7 +1595,8 @@ KDateTime RecurrenceRule::getNextDate( const KDateTime &preDate ) const
   return KDateTime();
 }
 
-DateTimeList RecurrenceRule::timesInInterval( const KDateTime &dtStart, const KDateTime &dtEnd ) const
+DateTimeList RecurrenceRule::timesInInterval( const KDateTime &dtStart,
+                                              const KDateTime &dtEnd ) const
 {
   KDateTime start = dtStart.toTimeSpec( d->mDateStart.timeSpec() );
   KDateTime end = dtEnd.toTimeSpec( d->mDateStart.timeSpec() );
