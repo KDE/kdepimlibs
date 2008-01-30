@@ -4,6 +4,7 @@ Type=ServiceType
 X-KDE-ServiceType=KResources/Plugin
 Comment=KResource Framework Plugin
 Comment[ca]=Connector del marc de treball pel KResource
+Comment[cs]=Modul rámce KResource
 Comment[de]=Modul für KResource-Framework
 Comment[el]=Μικροεφαρμογή πλαισίου εργασίας του KResource
 Comment[es]=Extensión de estructura KResource

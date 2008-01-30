@@ -77,6 +77,7 @@ Comment[zh_TW]=設定 KDE 資源
 
 Keywords=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap
 Keywords[ca]=recursos,recurs del konnector,recurs del contacte,recurs del calendari, recurs de les notes,recurs d'alarma,imap
+Keywords[cs]=zdroje,kontektor,kontakt,kalendář,poznámky,alarm,imap
 Keywords[de]=Ressourcen,Konnector-Ressource,Kontakt-Ressource,Kalender-Ressource,Notizen-Ressource,Alarm-Ressource,Imap
 Keywords[el]=πόροι,πόροι του konnector,πόρος επαφής,πόρος ημερολογίου,πόρος σημειώσεων,πόρος ειδοποίησης,imap
 Keywords[es]=recursos,recursos de konnector,recursos de contacto,recursos de calendario,recursos de notas,recurso de alarma,imap
