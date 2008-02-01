@@ -23,7 +23,7 @@
 #ifndef MAILTRANSPORT_LEGACYDECRYPT_H
 #define MAILTRANSPORT_LEGACYDECRYPT_H
 
-#include <qstring.h>
+#include <QString>
 
 namespace MailTransport {
 

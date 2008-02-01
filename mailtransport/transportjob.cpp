@@ -22,7 +22,7 @@
 
 #include <klocale.h>
 
-#include <qbuffer.h>
+#include <QBuffer>
 
 using namespace MailTransport;
 

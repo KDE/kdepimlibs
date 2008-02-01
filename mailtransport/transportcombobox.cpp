@@ -24,7 +24,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <qlineedit.h>
+#include <QLineEdit>
 
 using namespace MailTransport;
 

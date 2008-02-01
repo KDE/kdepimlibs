@@ -31,8 +31,8 @@
 #include <kio/scheduler.h>
 #include <kio/passworddialog.h>
 
-#include <qbuffer.h>
-#include <qhash.h>
+#include <QBuffer>
+#include <QHash>
 
 using namespace MailTransport;
 
