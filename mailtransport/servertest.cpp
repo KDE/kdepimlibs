@@ -62,6 +62,7 @@ class ServerTestPrivate
 
     bool                      secureSocketFinished;
     bool                      normalSocketFinished;
+    bool                      tlsFinished;
 
     void finalResult();
     void read( int type, const QString &text );
@@ -72,6 +73,7 @@ class ServerTestPrivate
     void slotNormalNotPossible();
     void slotSslPossible();
     void slotSslNotPossible();
+    void slotTlsDone();
     void slotReadNormal( const QString &text );
     void slotReadSecure( const QString &text );
     void slotUpdateProgress();
@@ -86,7 +88,7 @@ ServerTestPrivate::ServerTestPrivate( ServerTest *test )
 
 void ServerTestPrivate::finalResult()
 {
-  if ( !secureSocketFinished || !normalSocketFinished ) {
+  if ( !secureSocketFinished || !normalSocketFinished || !tlsFinished) {
     return;
   }
 
@@ -103,6 +105,7 @@ void ServerTestPrivate::read( int type, const QString &text )
   kDebug() << text;
 
   if ( !text.contains( QLatin1String( "AUTH" ), Qt::CaseInsensitive ) ) {
+    kDebug() << "No authentication possible";
     return;
   }
 
@@ -143,6 +146,8 @@ void ServerTestPrivate::read( int type, const QString &text )
   }
 
   authenticationResults[type] = result;
+
+  kDebug() << "For type:" << type << "We have:" << authenticationResults[type];
 }
 
 void ServerTestPrivate::slotNormalPossible()
@@ -153,6 +158,7 @@ void ServerTestPrivate::slotNormalPossible()
 
 void ServerTestPrivate::sendInitialCapabilityQuery( MailTransport::Socket *socket )
 {
+  kDebug();
   if ( testProtocol == IMAP_PROTOCOL ) {
     socket->write( QLatin1String( "1 CAPABILITY" ) );
   }
@@ -180,24 +186,52 @@ void ServerTestPrivate::sendInitialCapabilityQuery( MailTransport::Socket *socke
   }
 }
 
+void ServerTestPrivate::slotTlsDone()
+{
+  kDebug();
+  slotReadNormal( QString() );
+}
+
 void ServerTestPrivate::slotReadNormal( const QString &text )
 {
-  static bool first = true;
-  if ( first ) {
+  static int stage = 1;
+  static int mode = 0; /* normal = 0, tls = 1 */
+
+  kDebug() << "stage" << stage << "mode" << mode;
+
+  if ( (stage == 1  && mode == 0) || (stage == 2 && mode == 1)) {
+    stage++;
     sendInitialCapabilityQuery( normalSocket );
-    first = false;
     return;
   }
 
-  if ( text.contains( QLatin1String( "STARTTLS" ), Qt::CaseInsensitive ) ) {
-    connectionResults << Transport::EnumEncryption::TLS;
+  if (mode == 0) {
+    read( Transport::EnumEncryption::None, text );
+    normalSocketFinished = true;
+
+    if ( text.contains( QLatin1String( "STARTTLS" ), Qt::CaseInsensitive ) ) {
+      connectionResults << Transport::EnumEncryption::TLS;
+
+      // Now determine the TLS capabilities
+      stage = 1;
+      mode = 1;
+      normalSocket->write( QLatin1String( "STARTTLS" ) );
+    } else {
+      tlsFinished = true;
+      finalResult();
+    }
+  } else if ( mode == 1 ) {
+    if (stage == 1) {
+      kDebug() << "Now starting the shake.";
+      stage = 2;
+      normalSocket->startShake();
+    } else if (stage == 3) {
+      kDebug() << "Received the data for tls.";
+      read( Transport::EnumEncryption::TLS, text );  
+      tlsFinished = true;
+      finalResult();
+    }
   }
-
-  read( Transport::EnumEncryption::None, text );
-
-  normalSocketFinished = true;
-  first = true;
-  finalResult();
 }
 
 void ServerTestPrivate::slotReadSecure( const QString &text )
@@ -287,6 +321,7 @@ void ServerTest::start()
   connect( d->normalSocket, SIGNAL(failed()), SLOT(slotNormalNotPossible()) );
   connect( d->normalSocket, SIGNAL(data(const QString&)),
            SLOT(slotReadNormal(const QString&)) );
+  connect( d->normalSocket, SIGNAL(tlsDone()), SLOT(slotTlsDone())); 
   d->normalSocket->reconnect();
   d->normalSocketTimer->start( 10000 );
 
@@ -351,6 +386,11 @@ QProgressBar *ServerTest::progressBar()
 QList< int > ServerTest::normalProtocols()
 {
   return d->authenticationResults[TransportBase::EnumEncryption::None];
+}
+
+QList< int > ServerTest::tlsProtocols()
+{
+  return d->authenticationResults[TransportBase::EnumEncryption::TLS];
 }
 
 QList< int > ServerTest::secureProtocols()

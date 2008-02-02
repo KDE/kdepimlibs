@@ -120,6 +120,13 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     QList< int > normalProtocols();
 
     /**
+      * Get the protocols for the tls connections.. Call this only
+      * after the finished() signals has been sent.
+      * @return an enum of the type Transport::EnumAuthenticationType
+      */
+    QList< int > tlsProtocols();
+
+    /**
       * Get the protocols for the secure connections.. Call this only
       * after the finished() signals has been sent.
       * @return an enum of the type Transport::EnumAuthenticationType
@@ -138,6 +145,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     ServerTestPrivate *const d;
 
     Q_PRIVATE_SLOT( d, void slotNormalPossible() )
+    Q_PRIVATE_SLOT( d, void slotTlsDone() )
     Q_PRIVATE_SLOT( d, void slotSslPossible() )
     Q_PRIVATE_SLOT( d, void slotReadNormal( const QString &text ) )
     Q_PRIVATE_SLOT( d, void slotReadSecure( const QString &text ) )

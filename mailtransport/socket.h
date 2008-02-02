@@ -89,6 +89,11 @@ namespace MailTransport
        */
       void setSecure( bool what );
 
+      /**
+       * If you want to start encryption, call this. For example after the starttls command.
+       */
+      void startShake();
+
     private:
       Q_DECLARE_PRIVATE( Socket )
       SocketPrivate *const d;
@@ -106,7 +111,7 @@ namespace MailTransport
       void data( const QString & );
 
       /**
-       * emitted when there is a connection (ready to send something)
+       * emitted when there is a connection (ready to send something).
        */
       void connected();
 
@@ -114,6 +119,11 @@ namespace MailTransport
        * emitted when not connected.
        */
       void failed();
+
+      /**
+       * emitted when startShake() is completed.
+       */
+      void tlsDone();
   };
 }
 

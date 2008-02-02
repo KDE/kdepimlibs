@@ -89,6 +89,9 @@ void SocketPrivate::slotModeChanged( QSslSocket::SslMode  state )
 #ifdef comm_debug
   kDebug() << "Mode is now:" << state;
 #endif
+  if ( state == QSslSocket::SslClientMode ) {
+    emit q->tlsDone();
+  }
 }
 
 void SocketPrivate::slotSocketRead()
@@ -192,6 +195,12 @@ bool Socket::available()
   // kDebug();
   bool ok = d->socket && d->socket->state() == QAbstractSocket::ConnectedState;
   return ok;
+}
+
+void Socket::startShake()
+{
+  kDebug() << objectName() << endl;
+  d->socket->startClientEncryption();
 }
 
 void Socket::setProtocol( const QString &proto )

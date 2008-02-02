@@ -278,7 +278,7 @@ void TransportConfigDialog::slotFinished( QList<int> results )
 
   d->noEncCapa = d->serverTest->normalProtocols();
   if ( d->smtp.tls->isEnabled() ) {
-    d->tlsCapa = d->noEncCapa;
+    d->tlsCapa = d->serverTest->tlsProtocols();
   } else {
     d->tlsCapa.clear();
   }
