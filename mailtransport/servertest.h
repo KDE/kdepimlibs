@@ -123,6 +123,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
       * Get the protocols for the tls connections.. Call this only
       * after the finished() signals has been sent.
       * @return an enum of the type Transport::EnumAuthenticationType
+      * @since 4.1
       */
     QList< int > tlsProtocols();
 
