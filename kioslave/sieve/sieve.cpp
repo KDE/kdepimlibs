@@ -25,6 +25,7 @@
  */
 
 #include "sieve.h"
+#include "common.h"
 
 extern "C" {
 #include <sasl/sasl.h>
@@ -72,10 +73,8 @@ extern "C"
 			return -1;
 		}
 
-		if ( sasl_client_init( NULL ) != SASL_OK ) {
-			fprintf(stderr, "SASL library initialization failed!\n");
-			::exit (-1);
-		}
+		if (!initSASL())
+			::exit(-1);
 
 		kio_sieveProtocol slave(argv[2], argv[3]);
 		slave.dispatchLoop();

@@ -26,6 +26,7 @@
  *
  */
 #include "pop3.h"
+#include "common.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -88,18 +89,16 @@ int kdemain(int argc, char **argv)
     return -1;
   }
 
-#ifdef HAVE_LIBSASL2
-  if ( sasl_client_init( NULL ) != SASL_OK ) {
-    fprintf(stderr, "SASL library initialization failed!\n");
-    return -1;
-  }
-#endif
-
   QCoreApplication app( argc, argv ); // needed for QSocketNotifier
   KComponentData componentData("kio_pop3");
-  POP3Protocol *slave;
+
+#ifdef HAVE_LIBSASL2
+  if (!initSASL())
+    return -1;
+#endif
 
   // Are we looking to use SSL?
+  POP3Protocol *slave;
   if (strcasecmp(argv[1], "pop3s") == 0) {
     slave = new POP3Protocol(argv[2], argv[3], true);
   } else {

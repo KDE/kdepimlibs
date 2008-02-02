@@ -36,6 +36,7 @@ extern "C" {
 }
 #endif
 
+#include "common.h"
 #include "smtp.h"
 #include "request.h"
 #include "response.h"
@@ -87,10 +88,8 @@ int kdemain(int argc, char **argv)
   }
 
 #ifdef HAVE_LIBSASL2
-  if ( sasl_client_init( NULL ) != SASL_OK ) {
-    fprintf(stderr, "SASL library initialization failed!\n");
+  if (!initSASL())
     exit(-1);
-  }
 #endif
   SMTPProtocol slave( argv[2], argv[3], qstricmp( argv[1], "smtps" ) == 0 );
   slave.dispatchLoop();

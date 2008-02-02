@@ -88,6 +88,7 @@ extern "C" {
 #include <kmimetype.h>
 #include <kcodecs.h>
 
+#include "common.h"
 #include "kdemacros.h"
 
 #define IMAP_PROTOCOL "imap"
@@ -114,10 +115,8 @@ kdemain (int argc, char **argv)
   }
 
 #ifdef HAVE_LIBSASL2
-  if ( sasl_client_init( NULL ) != SASL_OK ) {
-    fprintf(stderr, "SASL library initialization failed!\n");
-    ::exit (-1);
-  }
+  if (!initSASL())
+    ::exit(-1);
 #endif
 
   //set debug handler
