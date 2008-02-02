@@ -66,25 +66,6 @@ namespace KioSMTP {
       mCapabilities[name] += args;
   }
 
-  QString Capabilities::asMetaDataString() const {
-    QString result;
-    for ( QMap<QString,QStringList>::const_iterator it = mCapabilities.begin() ; it != mCapabilities.end() ; ++it ) {
-      result += it.key();
-      if ( !it.value().empty() )
-        result += ' ' + it.value().join( " " );
-      result += '\n';
-    }
-    return result;
-  }
-
-  QString Capabilities::authMethodMetaData() const {
-    QStringList sl = saslMethodsQSL();
-    QString result;
-    for ( QStringList::const_iterator it = sl.begin() ; it != sl.end() ; ++it )
-      result += "SASL/" + *it + '\n';
-    return result;
-  }
-
   QString Capabilities::createSpecialResponse( bool tls ) const {
     QStringList result;
     if ( tls )

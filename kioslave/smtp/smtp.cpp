@@ -591,14 +591,6 @@ void SMTPProtocol::parseFeatures( const Response & ehloResponse ) {
   } else {
     category = "PLAIN";
   }
-  setMetaData( category + " AUTH METHODS", mCapabilities.authMethodMetaData() );
-  setMetaData( category + " CAPABILITIES", mCapabilities.asMetaDataString() );
-#ifndef NDEBUG
-  kDebug(7112) << "parseFeatures() " << category << " AUTH METHODS:"
-               << '\n' + mCapabilities.authMethodMetaData() << endl
-               << "parseFeatures() " << category << " CAPABILITIES:"
-               << '\n' + mCapabilities.asMetaDataString() << endl;
-#endif
 }
 
 void SMTPProtocol::smtp_close( bool nice ) {
