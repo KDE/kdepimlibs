@@ -372,18 +372,18 @@ void Blogger1Private::slotCreatePost( const QList<QVariant> &result, const QVari
                           post );
     return;
   }
-  QString id;
+  QString serverID;
   if ( result[0].type() == QVariant::String ) {
-    id = result[0].toString();
+    serverID = result[0].toString();
   }
   if ( result[0].type() == QVariant::Int ) {
-    id = QString( "%1" ).arg( result[0].toInt() );
+    serverID = QString( "%1" ).arg( result[0].toInt() );
   }
-  post->setPostId( id );
+  post->setPostId( serverID );
   post->setStatus( KBlog::BlogPost::Created );
   kDebug() << "emitting createdPost()"
                 << "for title: \"" << post->title()
-                << "\" server id: " << id;
+                << "\" server id: " << serverID;
   emit q->createdPost( post );
 }
 
