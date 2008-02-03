@@ -144,6 +144,8 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
                SLOT(hostNameChanged(QString)) );
       connect( d->smtp.kcfg_encryption, SIGNAL(clicked(int)),
                SLOT(encryptionChanged(int)) );
+      connect( d->smtp.kcfg_requiresAuthentication, SIGNAL( toggled(bool) ),
+               SLOT( ensureValidAuthSelection() ) );
       break;
     }
     case Transport::EnumType::Sendmail:
@@ -274,7 +276,8 @@ void TransportConfigDialog::slotFinished( QList<int> results )
   checkHighestEnabledButton( d->encryptionGroup );
 
   kDebug() << "normal:" <<  d->serverTest->normalProtocols();
-  kDebug() << "secure:" <<  d->serverTest->secureProtocols();
+  kDebug() << "ssl:" <<  d->serverTest->secureProtocols();
+  kDebug() << "tls:" <<  d->serverTest->tlsProtocols();
 
   d->noEncCapa = d->serverTest->normalProtocols();
   if ( d->smtp.tls->isEnabled() ) {
@@ -298,6 +301,18 @@ void TransportConfigDialog::hostNameChanged( const QString &text )
   }
 }
 
+void TransportConfigDialog::ensureValidAuthSelection()
+{
+  // adjust available authentication methods
+  d->updateAuthCapbilities();
+  foreach ( QAbstractButton *b, d->authGroup->buttons() ) {
+    if ( b->isChecked() && !b->isEnabled() ) {
+      checkHighestEnabledButton( d->authGroup );
+      break;
+    }
+  }
+}
+
 void TransportConfigDialog::encryptionChanged( int enc )
 {
   Q_ASSERT( d->transport->type() == Transport::EnumType::SMTP );
@@ -314,14 +329,7 @@ void TransportConfigDialog::encryptionChanged( int enc )
     }
   }
 
-  // adjust available authentication methods
-  d->updateAuthCapbilities();
-  foreach ( QAbstractButton *b, d->authGroup->buttons() ) {
-    if ( b->isChecked() && !b->isEnabled() ) {
-      checkHighestEnabledButton( d->authGroup );
-      break;
-    }
-  }
+  ensureValidAuthSelection();
 }
 
 #include "transportconfigdialog.moc"

@@ -46,6 +46,18 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     Q_PROPERTY( QProgressBar *progressBar READ progressBar WRITE setProgressBar )
 
   public:
+
+    /**
+     * This enumeration has the special capabilites a server might
+     * support. This covers only capabilites not related to authentication.
+     * @since 4.1
+     */
+    enum Capability {
+      Pipelining, ///< POP3 only. The server supports pipeplining of commands
+      Top,        ///< POP3 only. The server supports fetching only the headers
+      UIDL        ///< POP3 only. The server has support for unique identifiers
+    };
+
     /**
       * Constructor
       * @param parent Parent Widget
@@ -97,8 +109,8 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     QProgressBar *progressBar();
 
     /**
-      * Set @p proto the protocol to test, currently supported are
-      * "smtp" and "imap". This will be an enum soon.
+      * Set @p protocol the protocol to test, currently supported are
+      * "smtp", "pop" and "imap".
       */
     void setProtocol( const QString &protocol );
 
@@ -120,7 +132,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     QList< int > normalProtocols();
 
     /**
-      * Get the protocols for the tls connections.. Call this only
+      * Get the protocols for the TLS connections. Call this only
       * after the finished() signals has been sent.
       * @return an enum of the type Transport::EnumAuthenticationType
       * @since 4.1
@@ -128,11 +140,20 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     QList< int > tlsProtocols();
 
     /**
-      * Get the protocols for the secure connections.. Call this only
+      * Get the protocols for the SSL connections. Call this only
       * after the finished() signals has been sent.
       * @return an enum of the type Transport::EnumAuthenticationType
       */
     QList< int > secureProtocols();
+
+    /**
+     * Get the special capabilities of the server.
+     * Call this only after the finished() signals has been sent.
+     *
+     * @return the list of special capabilites of the server.
+     * @since 4.1
+     */
+    QList< Capability > capabilities() const;
 
   Q_SIGNALS:
     /**

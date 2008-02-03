@@ -45,7 +45,13 @@
 #define IMAP_PROTOCOL QLatin1String("imap")
 #define IMAPS_PROTOCOL QLatin1String("imaps")
 
+#define POP_PROTOCOL QLatin1String("pop")
+#define POPS_PROTOCOL QLatin1String("pops")
+
 #define IMAP_PORT 143
 #define IMAPS_PORT 993
+
+#define POP_PORT 110
+#define POPS_PORT 995
 
 #endif

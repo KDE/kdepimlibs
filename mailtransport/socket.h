@@ -90,9 +90,9 @@ namespace MailTransport
       void setSecure( bool what );
 
       /**
-       * If you want to start encryption, call this. For example after the starttls command.
+       * If you want to start TLS encryption, call this. For example after the starttls command.
        */
-      void startShake();
+      void startTLS();
 
     private:
       Q_DECLARE_PRIVATE( Socket )

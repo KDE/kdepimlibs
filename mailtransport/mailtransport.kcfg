@@ -92,6 +92,8 @@
         <choice name="DIGEST_MD5"/>
         <choice name="NTLM"/>
         <choice name="GSSAPI"/>
+        <choice name="APOP" />
+        <choice name="CLEAR" />
       </choices>
       <default>PLAIN</default>
     </entry>

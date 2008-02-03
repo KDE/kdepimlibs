@@ -61,6 +61,7 @@ class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
     void slotFinished( QList<int> results );
     void hostNameChanged( const QString &text );
     void encryptionChanged( int enc );
+    void ensureValidAuthSelection();
 
   private:
     class Private;

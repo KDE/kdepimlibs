@@ -197,9 +197,10 @@ bool Socket::available()
   return ok;
 }
 
-void Socket::startShake()
+void Socket::startTLS()
 {
-  kDebug() << objectName() << endl;
+  kDebug() << objectName();
+  d->socket->setProtocol( QSsl::TlsV1 );
   d->socket->startClientEncryption();
 }
 
