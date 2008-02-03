@@ -148,31 +148,31 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
         category["htmlUrl"] = serverCategory[ "htmlUrl" ].toString();
         category["rssUrl"] = serverCategory[ "rssUrl" ].toString();
         categoriesList.append( category );
-        }
-        emit q->listedCategories( categoriesList );
-        kDebug() << "Emitting listedCategories";
       }
-    }
-    if ( result[0].type() == QVariant::List ) {
-      // include fix for not metaweblog standard compatible apis with
-      // array of structs instead of struct of structs, e.g. wordpress
-      const QList<QVariant> serverList = result[0].toList();
-      QList<QVariant>::ConstIterator it = serverList.begin();
-      QList<QVariant>::ConstIterator end = serverList.end();
-      for ( ; it != end; ++it ) {
-        kDebug() << "MIDDLE:" << ( *it ).typeName();
-        QMap<QString,QString> category;
-        const QMap<QString, QVariant> serverCategory = ( *it ).toMap();
-        category[ "name" ] = serverCategory["categoryName"].toString();
-        category["description"] = serverCategory[ "description" ].toString();
-        category["htmlUrl"] = serverCategory[ "htmlUrl" ].toString();
-        category["rssUrl"] = serverCategory[ "rssUrl" ].toString();
-        categoriesList.append( category );
-      }
-      kDebug() << "Emitting listedCategories()";
+      kDebug() << "Emitting listedCategories";
       emit q->listedCategories( categoriesList );
     }
   }
+  if ( result[0].type() == QVariant::List ) {
+    // include fix for not metaweblog standard compatible apis with
+    // array of structs instead of struct of structs, e.g. wordpress
+    const QList<QVariant> serverList = result[0].toList();
+    QList<QVariant>::ConstIterator it = serverList.begin();
+    QList<QVariant>::ConstIterator end = serverList.end();
+    for ( ; it != end; ++it ) {
+      kDebug() << "MIDDLE:" << ( *it ).typeName();
+      QMap<QString,QString> category;
+      const QMap<QString, QVariant> serverCategory = ( *it ).toMap();
+      category[ "name" ] = serverCategory["categoryName"].toString();
+      category["description"] = serverCategory[ "description" ].toString();
+      category["htmlUrl"] = serverCategory[ "htmlUrl" ].toString();
+      category["rssUrl"] = serverCategory[ "rssUrl" ].toString();
+      categoriesList.append( category );
+    }
+    kDebug() << "Emitting listedCategories()";
+    emit q->listedCategories( categoriesList );
+  }
+}
 
 void MetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,
                                          const QVariant &id )
@@ -189,17 +189,17 @@ void MetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,
     emit q->errorMedia( MetaWeblog::ParsingError,
                         i18n( "Could not read the result, not a map." ),
                         media );
-  } else {
-    const QMap<QString, QVariant> resultStruct = result[0].toMap();
-    const QString url = resultStruct["url"].toString();
-    kDebug() << "MetaWeblog::slotCreateMedia url=" << url;
+    return;
+  }
+  const QMap<QString, QVariant> resultStruct = result[0].toMap();
+  const QString url = resultStruct["url"].toString();
+  kDebug() << "MetaWeblog::slotCreateMedia url=" << url;
 
-    if ( !url.isEmpty() ) {
-      media->setUrl( KUrl( url ) );
-      media->setStatus( BlogMedia::Created );
-      emit q->createdMedia( media );
-      kDebug() << "Emitting createdMedia( url=" << url  << ");";
-    }
+  if ( !url.isEmpty() ) {
+    media->setUrl( KUrl( url ) );
+    media->setStatus( BlogMedia::Created );
+    kDebug() << "Emitting createdMedia( url=" << url  << ");";
+    emit q->createdMedia( media );
   }
 }
 

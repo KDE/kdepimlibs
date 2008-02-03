@@ -313,8 +313,8 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
 
   post->setPostId( rxId.cap( 1 ) );
   post->setStatus( BlogPost::Created );
-  emit q->createdPost( post );
   kDebug() << "Emitting createdPost()";
+  emit q->createdPost( post );
 }
 
 void WordpressBuggyPrivate::slotModifyPostData( KIO::Job *job, const QByteArray &data )

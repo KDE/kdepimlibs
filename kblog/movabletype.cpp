@@ -3,7 +3,7 @@
 
   Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2006-2007 Christian Weilbach <christian_weilbach@web.de>
-  Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007-2008 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -169,19 +169,19 @@ void MovableTypePrivate::slotListTrackBackPings(
     emit q->error( MovableType::ParsingError,
                    i18n( "Could not fetch list of trackback pings out of the "
                          "result from the server." ) );
-  } else {
-    const QList<QVariant> trackBackReceived = result[0].toList();
-    QList<QVariant>::ConstIterator it = trackBackReceived.begin();
-    QList<QVariant>::ConstIterator end = trackBackReceived.end();
-    for ( ; it != end; ++it ) {
-      QMap<QString,QString> tping;
-      kDebug() << "MIDDLE:" << ( *it ).typeName();
-      const QMap<QString, QVariant> trackBackInfo = ( *it ).toMap();
-      tping[ "title" ] = trackBackInfo[ "pingTitle"].toString();
-      tping[ "url" ] = trackBackInfo[ "pingURL"].toString();
-      tping[ "ip" ] = trackBackInfo[ "pingIP"].toString();
-      trackBackList << tping;
-    }
+    return;
+  }
+  const QList<QVariant> trackBackReceived = result[0].toList();
+  QList<QVariant>::ConstIterator it = trackBackReceived.begin();
+  QList<QVariant>::ConstIterator end = trackBackReceived.end();
+  for ( ; it != end; ++it ) {
+    QMap<QString,QString> tping;
+    kDebug() << "MIDDLE:" << ( *it ).typeName();
+    const QMap<QString, QVariant> trackBackInfo = ( *it ).toMap();
+    tping[ "title" ] = trackBackInfo[ "pingTitle"].toString();
+    tping[ "url" ] = trackBackInfo[ "pingURL"].toString();
+    tping[ "ip" ] = trackBackInfo[ "pingIP"].toString();
+    trackBackList << tping;
   }
   kDebug() << "Emitting listedTrackBackPings()";
   emit q->listedTrackBackPings( post, trackBackList );
@@ -204,7 +204,7 @@ bool MovableTypePrivate::readArgsFromPost( QList<QVariant> *args, const BlogPost
   map["mt_allow_comments"] = (int)post.isCommentAllowed();
   map["mt_allow_pings"] = (int)post.isTrackBackAllowed();
   map["mt_excerpt"] = post.summary();
-  map["mt_keywords"] = post.tags(); // TODO some convertion needed?
+  map["mt_keywords"] = post.tags(); // TODO some conversion needed?
   //map["mt_tb_ping_urls"] check for that, i think this should only be done on the server.
   *args << map;
   *args << QVariant( !post.isPrivate() );

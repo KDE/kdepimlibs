@@ -529,8 +529,8 @@ void GDataPrivate::slotFetchProfileId( KJob *job )
     QRegExp pid( "http://www.blogger.com/profile/(\\d+)" );
     if ( pid.indexIn( mFetchProfileIdBuffer[ job ] ) != -1 ) {
       q->setProfileId( pid.cap(1) );
-      emit q->fetchedProfileId( pid.cap(1) );
       kDebug() << "QRegExp bid( 'http://www.blogger.com/profile/(\\d+)' matches" << pid.cap(1);
+      emit q->fetchedProfileId( pid.cap(1) );
     } else {
       kError() << "QRegExp bid( 'http://www.blogger.com/profile/(\\d+)' "
                    << " could not regexp the Profile ID";
@@ -575,13 +575,13 @@ void GDataPrivate::slotListBlogs( Syndication::Loader *loader,
       blogInfo["summary"] = ( *it )->description(); //TODO fix/add more
       blogsList << blogInfo;
     } else {
-      emit q->error( GData::Other, i18n( "Could not regexp the blog id path." ) );
       kError() << "QRegExp rx( 'blog-(\\d+)' does not match anything in:"
-                   << ( *it )->id();
+          << ( *it )->id();
+      emit q->error( GData::Other, i18n( "Could not regexp the blog id path." ) );
     }
   }
-  emit q->listedBlogs( blogsList );
   kDebug() << "Emitting listedBlogs(); ";
+  emit q->listedBlogs( blogsList );
 }
 
 void GDataPrivate::slotListComments( Syndication::Loader *loader,
@@ -774,15 +774,15 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
       post->setModificationDateTime(
         KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ),
                    KDateTime::Spec::UTC() ) );
-      emit q->fetchedPost( post );
-      success = true;
       kDebug() << "Emitting fetchedPost( postId=" << post->postId() << ");";
+      success = true;
+      emit q->fetchedPost( post );
     }
   }
   if ( !success ) {
-    emit q->errorPost( GData::Other, i18n( "Could not regexp the blog id path." ), post );
     kError() << "QRegExp rx( 'post-(\\d+)' does not match"
-                 << mFetchPostMap[ loader ]->postId() << ".";
+        << mFetchPostMap[ loader ]->postId() << ".";
+    emit q->errorPost( GData::Other, i18n( "Could not regexp the blog id path." ), post );
   }
   mFetchPostMap.remove( loader );
 }
@@ -852,8 +852,8 @@ void GDataPrivate::slotCreatePost( KJob *job )
   post->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
   post->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
   post->setStatus( BlogPost::Created );
-  emit q->createdPost( post );
   kDebug() << "Emitting createdPost()";
+  emit q->createdPost( post );
 }
 
 void GDataPrivate::slotModifyPostData( KIO::Job *job, const QByteArray &data )
@@ -954,8 +954,8 @@ void GDataPrivate::slotRemovePost( KJob *job )
   }
 
   post->setStatus( BlogPost::Removed );
-  emit q->removedPost( post );
   kDebug() << "Emitting removedPost()";
+  emit q->removedPost( post );
 }
 
 void GDataPrivate::slotCreateCommentData( KIO::Job *job, const QByteArray &data )
@@ -1025,8 +1025,8 @@ void GDataPrivate::slotCreateComment( KJob *job )
   comment->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
   comment->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
   comment->setStatus( BlogComment::Created );
-  emit q->createdComment( post, comment );
   kDebug() << "Emitting createdComment()";
+  emit q->createdComment( post, comment );
 }
 
 void GDataPrivate::slotRemoveCommentData( KIO::Job *job, const QByteArray &data )
@@ -1065,8 +1065,8 @@ void GDataPrivate::slotRemoveComment( KJob *job )
   }
 
   comment->setStatus( BlogComment::Created );
-  emit q->removedComment( post, comment );
   kDebug() << "Emitting removedComment()";
+  emit q->removedComment( post, comment );
 }
 
 #include "gdata.moc"

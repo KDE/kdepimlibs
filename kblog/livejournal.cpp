@@ -1,7 +1,7 @@
 /*
   This file is part of the kblog library.
 
-  Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007-2008 Mike Arthur <mike@mikearthur.co.uk>
   Copyright (c) 2007 Christian Weilbach <christian_weilbach@web.de>
 
   This library is free software; you can redistribute it and/or
@@ -342,14 +342,14 @@ void LiveJournalPrivate::slotCreatePost( const QList<QVariant> &result, const QV
         << "not a map."; // If not a struct, print error.
     emit q->errorPost( LiveJournal::ParsingError,
                    i18n( "Could not read the post ID, result not a map." ), post ); // Emit an error signal if we can't get the post ID.
-  } else {
-    QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>(); // Get post ID from struct.
-    post->setPostId( itemid ); // Set the post ID to the anum value from the return struct.
-    post->setStatus( KBlog::BlogPost::Created ); // Set the post's status to indicate it has been successfully created.
-    emit q->createdPost( post ); // Emit the created post
-    kDebug() << "emitting createdPost()"
-                 << "for" << itemid; // Notify emission to the console
+    return;
   }
+  QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>(); // Get post ID from struct.
+  post->setPostId( itemid ); // Set the post ID to the anum value from the return struct.
+  post->setStatus( KBlog::BlogPost::Created ); // Set the post's status to indicate it has been successfully created.
+  kDebug() << "emitting createdPost()"
+      << "for" << itemid; // Notify emission to the console
+  emit q->createdPost( post ); // Emit the created post
 }
 
 void LiveJournalPrivate::slotDeleteFriend( const QList<QVariant> &result, const QVariant &id )
@@ -451,14 +451,14 @@ void LiveJournalPrivate::slotModifyPost( const QList<QVariant> &result, const QV
                  << " not a map."; // If not a struct, print error.
     emit q->errorPost( LiveJournal::ParsingError,
                        i18n( "Could not read the post ID, result not a map." ), post ); // Emit an error signal if we can't get the post ID.
-  } else {
-    QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>(); // Get post ID from struct.
-    post->setPostId( itemid ); // Set the post ID to the anum value from the return struct.
-    post->setStatus( KBlog::BlogPost::Created ); // Set the post's status to indicate it has been successfully created.
-    emit q->createdPost( post ); // Emit the created post
-    kDebug() << "emitting createdPost()"
-                 << "for" << itemid; // Notify emission to the console
+    return;
   }
+  QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>(); // Get post ID from struct.
+  post->setPostId( itemid ); // Set the post ID to the anum value from the return struct.
+  post->setStatus( KBlog::BlogPost::Created ); // Set the post's status to indicate it has been successfully created.
+  kDebug() << "emitting createdPost()"
+      << "for" << itemid; // Notify emission to the console
+  emit q->createdPost( post ); // Emit the created post
 }
 
 void LiveJournalPrivate::slotRemovePost( const QList<QVariant> &result,
@@ -476,19 +476,19 @@ void LiveJournalPrivate::slotRemovePost( const QList<QVariant> &result,
         << "not a map."; // If not a struct, print error.
     emit q->errorPost( LiveJournal::ParsingError,
                        i18n( "Could not read the post ID, result not a map." ), post ); // Emit an error signal if we can't get the post ID.
-  } else {
-    QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>();
-    if ( itemid == post->postId() ) { // Check the post ID matches the anum value from the return struct.
-      post->setStatus( KBlog::BlogPost::Removed ); // Set the post's status to indicate it has been successfully removed.
-      emit q->removedPost( post ); // Emit the removed post
-      kDebug() << "emitting createdPost()"
-                   << "for" << itemid; // Notify emission to the console
-    } else {
-      kError() << "The returned post ID did not match the sent one."; // If not matching, print error.
-      emit q->errorPost( LiveJournal::ParsingError,
-                         i18n( "The returned post ID did not match the sent one: " ), post ); // Emit an error signal if the post IDs don't match.
-    }
+    return;
   }
+  QString itemid = result[0].value<QMap<QString,QVariant> >().value( "itemid" ).value<QString>();
+  if ( itemid == post->postId() ) { // Check the post ID matches the anum value from the return struct.
+    post->setStatus( KBlog::BlogPost::Removed ); // Set the post's status to indicate it has been successfully removed.
+    kDebug() << "emitting createdPost()"
+        << "for" << itemid; // Notify emission to the console
+    emit q->removedPost( post ); // Emit the removed post
+    return;
+  }
+  kError() << "The returned post ID did not match the sent one."; // If not matching, print error.
+  emit q->errorPost( LiveJournal::ParsingError,
+                      i18n( "The returned post ID did not match the sent one: " ), post ); // Emit an error signal if the post IDs don't match.
 }
 
 #include "livejournal.moc"
