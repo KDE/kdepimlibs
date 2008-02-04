@@ -2,6 +2,7 @@
 Name=KResources Plugin
 Name[el]=Πρόσθετο KResources
 Name[ga]=Breiseán KResources
+Name[km]=កម្មវិធី​ជំនួយ​របស់ KResources
 Name[nds]=KResources-Moduul
 Name[zh_TW]=KResource 外掛程式
 Type=ServiceType
@@ -18,6 +19,7 @@ Comment[gl]=Extensión do framework KResource
 Comment[hu]=Modul a KResource keretrendszerhez
 Comment[it]=Plugin di infrastruttura di KResource
 Comment[ja]=K リソース・フレームワーク・プラグイン
+Comment[km]=កម្មវិធី​ជំនួយ​គម្រោងការ​របស់ KResource
 Comment[lt]=KResource struktūros priedas
 Comment[lv]=KResource karkasa spraudnis
 Comment[nb]=Programtillegg for KResource-rammeverket

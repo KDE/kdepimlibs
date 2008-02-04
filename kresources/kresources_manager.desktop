@@ -2,6 +2,7 @@
 Name=KResources Manager
 Name[el]=Διαχειριστής KResources
 Name[ga]=Bainisteoir KResources
+Name[km]=កម្មវិធី​គ្រប់គ្រង KResources
 Name[nds]=KResources-Pleger
 Name[zh_TW]=KResource 管理者
 Type=ServiceType
@@ -19,6 +20,7 @@ Comment[gl]=Xestor de KResource
 Comment[hu]=Erőforráskezelő
 Comment[it]=Gestore di KResource
 Comment[ja]=K リソースマネージャ
+Comment[km]=កម្មវិធី​គ្រប់គ្រង KResource
 Comment[lt]=KResouse tvarkyklė
 Comment[lv]=KResource pārvaldnieks
 Comment[nb]=KResource-styring
