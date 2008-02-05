@@ -48,8 +48,8 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
   public:
 
     /**
-     * This enumeration has the special capabilites a server might
-     * support. This covers only capabilites not related to authentication.
+     * This enumeration has the special capabilities a server might
+     * support. This covers only capabilities not related to authentication.
      * @since 4.1
      */
     enum Capability {
@@ -150,7 +150,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
      * Get the special capabilities of the server.
      * Call this only after the finished() signals has been sent.
      *
-     * @return the list of special capabilites of the server.
+     * @return the list of special capabilities of the server.
      * @since 4.1
      */
     QList< Capability > capabilities() const;

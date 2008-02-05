@@ -95,7 +95,7 @@ ServerTestPrivate::ServerTestPrivate( ServerTest *test )
 
 void ServerTestPrivate::finalResult()
 {
-  if ( !secureSocketFinished || !normalSocketFinished || !tlsFinished) {
+  if ( !secureSocketFinished || !normalSocketFinished || !tlsFinished ) {
     return;
   }
 
@@ -218,7 +218,8 @@ bool ServerTestPrivate::handlePopConversation( MailTransport::Socket *socket, in
     //Regexp taken from POP3 ioslave
     QString responseWithoutCRLF = response;
     responseWithoutCRLF.chop( 2 );
-    QRegExp re( QLatin1String( "<[A-Za-z0-9\\.\\-_]+@[A-Za-z0-9\\.\\-_]+>$" ), Qt::CaseInsensitive );
+    QRegExp re( QLatin1String( "<[A-Za-z0-9\\.\\-_]+@[A-Za-z0-9\\.\\-_]+>$" ),
+                Qt::CaseInsensitive );
     if ( responseWithoutCRLF.indexOf( re ) != -1 ) {
       authenticationResults[type] << Transport::EnumAuthenticationType::APOP;
     }
@@ -226,13 +227,14 @@ bool ServerTestPrivate::handlePopConversation( MailTransport::Socket *socket, in
     //Each server is supposed to support clear text login
     authenticationResults[type] << Transport::EnumAuthenticationType::CLEAR;
 
-    // If we are in TLS stage, the server does not send the initial greeting. Just assume that the
-    // APOP availibility is the same as with an unsecured connection.
+    // If we are in TLS stage, the server does not send the initial greeting.
+    // Assume that the APOP availability is the same as with an unsecured connection.
     if ( type == Transport::EnumEncryption::TLS &&
-         authenticationResults[Transport::EnumEncryption::None]
-             .contains( Transport::EnumAuthenticationType::APOP ) )
+         authenticationResults[Transport::EnumEncryption::None].
+         contains( Transport::EnumAuthenticationType::APOP ) ) {
       authenticationResults[Transport::EnumEncryption::TLS]
-          << Transport::EnumAuthenticationType::APOP;
+        << Transport::EnumAuthenticationType::APOP;
+    }
 
     socket->write( QLatin1String( "CAPA" ) );
     return true;
@@ -249,12 +251,15 @@ bool ServerTestPrivate::handlePopConversation( MailTransport::Socket *socket, in
 //     UIDL
 //     RESP-CODES
 //     .
-    if ( response.contains( QLatin1String( "TOP" ) ) )
+    if ( response.contains( QLatin1String( "TOP" ) ) ) {
       capabilityResults += ServerTest::Top;
-    if ( response.contains( QLatin1String( "PIPELINING" ) ) )
+    }
+    if ( response.contains( QLatin1String( "PIPELINING" ) ) ) {
       capabilityResults += ServerTest::Pipelining;
-    if ( response.contains( QLatin1String( "UIDL" ) ) )
+    }
+    if ( response.contains( QLatin1String( "UIDL" ) ) ) {
       capabilityResults += ServerTest::UIDL;
+    }
     if ( response.contains( QLatin1String( "STLS" ) ) ) {
       connectionResults << Transport::EnumEncryption::TLS;
       popSupportsTLS = true;
@@ -279,10 +284,12 @@ bool ServerTestPrivate::handlePopConversation( MailTransport::Socket *socket, in
     // Get rid of the first +OK line
     formattedReply = formattedReply.right( formattedReply.size() -
                                            formattedReply.indexOf( QLatin1Char( '\n' ) ) - 1 );
-    formattedReply = formattedReply.replace( QLatin1Char( ' ' ), QLatin1Char( '-' ) )
-                                   .replace( QLatin1String( "\r\n" ), QLatin1String( " " ) );
+    formattedReply =
+      formattedReply.replace( QLatin1Char( ' ' ), QLatin1Char( '-' ) ).
+      replace( QLatin1String( "\r\n" ), QLatin1String( " " ) );
 
-    authenticationResults[type] += parseAuthenticationList( formattedReply.split( QLatin1Char( ' ' ) ) );
+    authenticationResults[type] +=
+      parseAuthenticationList( formattedReply.split( QLatin1Char( ' ' ) ) );
   }
 
   *shouldStartTLS = popSupportsTLS;
@@ -300,10 +307,10 @@ void ServerTestPrivate::slotReadNormal( const QString &text )
 
   kDebug() << "Stage" << normalStage + 1 << ", Mode" << encryptionMode;
 
-  // If we are in stage 42, we just do the handshake for TLS encryption and then reset the
-  // stage to -1, so that all authentication modes and capabilites are queried again for
-  // TLS encryption (some servers have different authentication  methods in normal and in
-  // TLS mode).
+  // If we are in stage 42, we just do the handshake for TLS encryption and
+  // then reset the stage to -1, so that all authentication modes and
+  // capabilities are queried again for TLS encryption (some servers have
+  // different authentication  methods in normal and in TLS mode).
   if ( normalStage == tlsHandshakeStage ) {
     Q_ASSERT( encryptionMode == Transport::EnumEncryption::TLS );
     normalStage = -1;
@@ -318,13 +325,12 @@ void ServerTestPrivate::slotReadNormal( const QString &text )
   // IMAP and SMTP
   if ( testProtocol == POP_PROTOCOL ) {
     if ( handlePopConversation( normalSocket, encryptionMode, normalStage, text,
-                                &shouldStartTLS ) )
+                                &shouldStartTLS ) ) {
       return;
-  }
-
-  // Handle the SMTP/IMAP conversation here. We just send the EHLO command in
-  // sendInitialCapabilityQuery.
-  else {
+    }
+  } else {
+    // Handle the SMTP/IMAP conversation here. We just send the EHLO command in
+    // sendInitialCapabilityQuery.
     if ( normalStage == 0 ) {
       sendInitialCapabilityQuery( normalSocket );
       return;
@@ -337,7 +343,7 @@ void ServerTestPrivate::slotReadNormal( const QString &text )
     handleSMTPIMAPResponse( encryptionMode, text );
   }
 
-  // If we reach here, the normal authentication/capabilites query is completed.
+  // If we reach here, the normal authentication/capabilities query is completed.
   // Now do the same for TLS.
   normalSocketFinished = true;
 
@@ -346,16 +352,17 @@ void ServerTestPrivate::slotReadNormal( const QString &text )
   if ( shouldStartTLS && encryptionMode == Transport::EnumEncryption::None ) {
     kDebug() << "Trying TLS...";
     connectionResults << Transport::EnumEncryption::TLS;
-    if ( testProtocol == POP_PROTOCOL )
+    if ( testProtocol == POP_PROTOCOL ) {
       normalSocket->write( QLatin1String( "STLS" ) );
-    else
+    } else {
       normalSocket->write( QLatin1String( "STARTTLS" ) );
+    }
     encryptionMode = Transport::EnumEncryption::TLS;
     normalStage = tlsHandshakeStage;
     return;
   }
 
-  // If we reach here, either the TLS authentication/capabilites query is finished
+  // If we reach here, either the TLS authentication/capabilities query is finished
   // or the server does not support the STARTTLS/STLS command.
   tlsFinished = true;
   finalResult();
@@ -367,10 +374,10 @@ void ServerTestPrivate::slotReadSecure( const QString &text )
   if ( testProtocol == POP_PROTOCOL ) {
     bool dummy;
     if ( handlePopConversation( secureSocket, Transport::EnumEncryption::SSL,
-                                secureStage, text, &dummy ) )
+                                secureStage, text, &dummy ) ) {
       return;
-  }
-  else {
+    }
+  } else {
     if ( secureStage == 0 ) {
       sendInitialCapabilityQuery( secureSocket );
       return;
@@ -463,7 +470,7 @@ void ServerTest::start()
   connect( d->normalSocket, SIGNAL(failed()), SLOT(slotNormalNotPossible()) );
   connect( d->normalSocket, SIGNAL(data(const QString&)),
            SLOT(slotReadNormal(const QString&)) );
-  connect( d->normalSocket, SIGNAL(tlsDone()), SLOT(slotTlsDone())); 
+  connect( d->normalSocket, SIGNAL(tlsDone()), SLOT(slotTlsDone()));
   d->normalSocket->reconnect();
   d->normalSocketTimer->start( 10000 );
 
