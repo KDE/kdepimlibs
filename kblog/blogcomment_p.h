@@ -20,8 +20,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef BLOGPOSTINGCOMMENT_P_H
-#define BLOGPOSTINGCOMMENT_P_H
+#ifndef BLOGCOMMENT_P_H
+#define BLOGCOMMENT_P_H
 
 #include "blogcomment.h"
 

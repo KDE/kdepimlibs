@@ -20,8 +20,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KBLOG_BLOGPOSTINGCOMMENT_H
-#define KBLOG_BLOGPOSTINGCOMMENT_H
+#ifndef KBLOG_BLOGCOMMENT_H
+#define KBLOG_BLOGCOMMENT_H
 
 #include <kblog/kblog_export.h>
 
