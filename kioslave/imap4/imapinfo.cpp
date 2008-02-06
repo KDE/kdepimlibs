@@ -191,17 +191,20 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
 
 }
 
-ulong imapInfo::_flags (const QByteArray & inFlags)
+ulong imapInfo::_flags( const QByteArray &inFlags )
 {
   ulong flags = 0;
   parseString flagsString;
   flagsString.data = inFlags;
+  if ( flagsString.isEmpty() ) {
+    return flags;
+  }
 
-  if (flagsString[0] == '(')
+  if ( flagsString[0] == '(' ) {
     flagsString.pos++;
+  }
 
-  while (!flagsString.isEmpty () && flagsString[0] != ')')
-  {
+  while( !flagsString.isEmpty () && flagsString[0] != ')' ) {
     QByteArray entry = imapParser::parseOneWord(flagsString).toUpper();
 
     if (entry.isEmpty ())
