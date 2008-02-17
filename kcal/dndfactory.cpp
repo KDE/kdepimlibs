@@ -110,9 +110,9 @@ QDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
   }
 
   if ( i->type() == "Event" ) {
-    drag->setPixmap( BarIcon( "appointment" ) );
+    drag->setPixmap( BarIcon( "view-calendar-day" ) );
   } else if ( i->type() == "Todo" ) {
-    drag->setPixmap( BarIcon( "todo" ) );
+    drag->setPixmap( BarIcon( "view-calendar-tasks" ) );
   }
 
   return drag;
