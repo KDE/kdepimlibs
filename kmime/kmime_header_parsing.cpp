@@ -343,7 +343,7 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
   //
 
   if ( !dec->decode( encodedTextStart, encodedTextEnd, bit, bend ) ) {
-    KMIME_WARN << codec->name() << "codec lies about it's maxDecodedSizeFor("
+    KMIME_WARN << codec->name() << "codec lies about its maxDecodedSizeFor("
                << encodedTextLength << ")\nresult may be truncated";
   }
 
@@ -1515,7 +1515,7 @@ static void decodeRFC2231Value( Codec* &rfc2231Codec,
 
   if ( !dec->decode( decCursor, decEnd, bit, bend ) ) {
     KMIME_WARN << rfc2231Codec->name()
-               << "codec lies about it's maxDecodedSizeFor()" << endl
+               << "codec lies about its maxDecodedSizeFor()" << endl
                << "result may be truncated";
   }
 

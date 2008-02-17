@@ -36,7 +36,7 @@ namespace KMime {
 extern int indexOfHeader( const QByteArray &src, const QByteArray &name, int &end, int &dataBegin, bool *folded = 0 );
 
 /**
-  Removes the first occurence of the @p name from @p head.
+  Removes the first occurrence of the @p name from @p head.
 */
 extern void removeHeader( QByteArray &head, const QByteArray &name );
 

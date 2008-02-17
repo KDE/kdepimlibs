@@ -33,7 +33,7 @@
 
 #include "kmime_dateformatter.h"
 
-#include "config-kmime.h"
+#include <config-kmime.h>
 
 #include <stdlib.h> // for abs()
 
@@ -222,7 +222,7 @@ QString DateFormatter::fancy( time_t t ) const
   KLocale *locale = KGlobal::locale();
 
   if ( t <= 0 ) {
-    return i18n( "unknown" );
+    return i18nc( "invalid time specified", "unknown" );
   }
 
   if ( !mCurrentTime ) {
