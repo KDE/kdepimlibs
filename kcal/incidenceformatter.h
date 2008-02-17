@@ -62,10 +62,10 @@ namespace IncidenceFormatter
                                             InvitationFormatterHelper *helper );
 
   // Format a TNEF attachment to an HTML mail
-  KCAL_EXPORT QString formatTNEFInvitation( const QByteArray& tnef, Calendar *mCalendar,
+  KCAL_EXPORT QString formatTNEFInvitation( const QByteArray &tnef, Calendar *mCalendar,
                                             InvitationFormatterHelper *helper );
   // Transform a TNEF attachment to an iCal or vCard
-  KCAL_EXPORT QString msTNEFToVPart( const QByteArray& tnef );
+  KCAL_EXPORT QString msTNEFToVPart( const QByteArray &tnef );
 
   KCAL_EXPORT QString recurrenceString( Incidence *incidence );
 

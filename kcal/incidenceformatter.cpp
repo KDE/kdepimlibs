@@ -1616,43 +1616,59 @@ static QString recurEnd( Incidence *incidence )
   return endstr;
 }
 
-QString IncidenceFormatter::recurrenceString(Incidence * incidence)
+QString IncidenceFormatter::recurrenceString( Incidence *incidence )
 {
-  if ( !incidence->recurs() )
+  if ( !incidence->recurs() ) {
     return i18n( "No recurrence" );
+  }
 
   Recurrence *recur = incidence->recurrence();
   switch ( recur->recurrenceType() ) {
-    case Recurrence::rNone:
-      return i18n( "No recurrence" );
-    case Recurrence::rMinutely:
-      if ( recur->duration() != -1 )
-        return i18np( "Recurs every minute until %1", "Recurs every %1 minutes until %2", recur->frequency(), recurEnd( incidence ) );
-      return i18np( "Recurs every minute", "Recurs every %1 minutes", recur->frequency() );
-    case Recurrence::rHourly:
-      if ( recur->duration() != -1 )
-        return i18np( "Recurs hourly until %1", "Recurs every %1 hours until %2", recur->frequency(), recurEnd( incidence ) );
-      return i18np( "Recurs hourly", "Recurs every %1 hours", recur->frequency() );
-    case Recurrence::rDaily:
-      if ( recur->duration() != -1 )
-        return i18np( "Recurs daily until %1", "Recurs every %1 days until %2", recur->frequency(), recurEnd( incidence ) );
-      return i18np( "Recurs daily", "Recurs every %1 days", recur->frequency() );
-    case Recurrence::rWeekly:
-      if ( recur->duration() != -1 )
-        return i18np( "Recurs weekly until %1", "Recurs every %1 weeks until %2", recur->frequency(), recurEnd( incidence ) );
-      return i18np( "Recurs weekly", "Recurs every %1 weeks", recur->frequency() );
-    case Recurrence::rMonthlyPos:
-    case Recurrence::rMonthlyDay:
-      if ( recur->duration() != -1 )
-        return i18n( "Recurs monthly until %1", recurEnd( incidence ) );
-      return i18n( "Recurs monthly" );
-    case Recurrence::rYearlyMonth:
-    case Recurrence::rYearlyDay:
-    case Recurrence::rYearlyPos:
-      if ( recur->duration() != -1 )
-        return i18n( "Recurs yearly until %1", recurEnd( incidence ) );
-      return i18n( "Recurs yearly" );
-    default:
-      return i18n( "Incidence recurs" );
+  case Recurrence::rNone:
+    return i18n( "No recurrence" );
+  case Recurrence::rMinutely:
+    if ( recur->duration() != -1 ) {
+      return i18np( "Recurs every minute until %1",
+                    "Recurs every %1 minutes until %2",
+                    recur->frequency(), recurEnd( incidence ) );
+    }
+    return i18np( "Recurs every minute",
+                  "Recurs every %1 minutes", recur->frequency() );
+  case Recurrence::rHourly:
+    if ( recur->duration() != -1 ) {
+      return i18np( "Recurs hourly until %1",
+                    "Recurs every %1 hours until %2",
+                    recur->frequency(), recurEnd( incidence ) );
+    }
+    return i18np( "Recurs hourly", "Recurs every %1 hours", recur->frequency() );
+  case Recurrence::rDaily:
+    if ( recur->duration() != -1 ) {
+      return i18np( "Recurs daily until %1",
+                    "Recurs every %1 days until %2",
+                    recur->frequency(), recurEnd( incidence ) );
+    }
+    return i18np( "Recurs daily", "Recurs every %1 days", recur->frequency() );
+  case Recurrence::rWeekly:
+    if ( recur->duration() != -1 ) {
+      return i18np( "Recurs weekly until %1",
+                    "Recurs every %1 weeks until %2",
+                    recur->frequency(), recurEnd( incidence ) );
+    }
+    return i18np( "Recurs weekly", "Recurs every %1 weeks", recur->frequency() );
+  case Recurrence::rMonthlyPos:
+  case Recurrence::rMonthlyDay:
+    if ( recur->duration() != -1 ) {
+      return i18n( "Recurs monthly until %1", recurEnd( incidence ) );
+    }
+    return i18n( "Recurs monthly" );
+  case Recurrence::rYearlyMonth:
+  case Recurrence::rYearlyDay:
+  case Recurrence::rYearlyPos:
+    if ( recur->duration() != -1 ) {
+      return i18n( "Recurs yearly until %1", recurEnd( incidence ) );
+    }
+    return i18n( "Recurs yearly" );
+  default:
+    return i18n( "Incidence recurs" );
   }
 }
