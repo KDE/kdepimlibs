@@ -21,9 +21,10 @@
 #include "kfileio.h"
 #include "kpimutils_export.h"
 
-#include <kmessagebox.h>
 #include <kdebug.h>
+#include <kde_file.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 #include <KStandardGuiItem>
 
 #include <QDir>
@@ -210,7 +211,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
   fiToCheck.setCaching(false);
   QByteArray toCheckEnc = QFile::encodeName( toCheck );
   QString error;
-  struct stat statbuffer;
+  KDE_struct_stat statbuffer;
 
   if ( !fiToCheck.exists() ) {
     error.append( i18n( "%1 does not exist", toCheck ) + '\n' );
@@ -218,7 +219,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
 
   // check the access bit of a folder.
   if ( fiToCheck.isDir() ) {
-    if ( stat( toCheckEnc,&statbuffer ) != 0 ) {
+    if ( KDE_stat( toCheckEnc,&statbuffer ) != 0 ) {
       kDebug() << "wantItA: Can't read perms of" << toCheck;
     }
     QDir g( toCheck );
@@ -239,7 +240,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
     if ( !fiToCheck.isReadable() && wantItReadable ) {
       // Get the current permissions. No need to do anything with an
       // error, it will het added to errors anyhow, later on.
-      if ( stat( toCheckEnc,&statbuffer ) != 0 ) {
+      if ( KDE_stat( toCheckEnc,&statbuffer ) != 0 ) {
         kDebug() << "wantItR: Can't read perms of" << toCheck;
       }
 
@@ -255,7 +256,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
     if ( !fiToCheck.isWritable() && wantItWritable ) {
       // Gets the current persmissions. Needed because it can be changed
       // curing previous operation.
-      if ( stat( toCheckEnc,&statbuffer ) != 0 ) {
+      if ( KDE_stat( toCheckEnc,&statbuffer ) != 0 ) {
         kDebug() << "wantItW: Can't read perms of" << toCheck;
       }
 
