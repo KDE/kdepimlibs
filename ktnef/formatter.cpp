@@ -92,8 +92,8 @@ static struct save_tz set_tz( const char *_tc )
   //kDebug() << "set_tz(), timezone before =" << timezone;
 
   char *tz_env = 0;
-  if ( getenv( "TZ" ) ) {
-    tz_env = strdup( getenv( "TZ" ) );
+  if ( !qgetenv( "TZ" ).isEmpty() ) {
+    tz_env = qstrdup( qgetenv( "TZ" ) );
     rv.old_tz = tz_env;
   }
   char *tmp_env = (char*)malloc( strlen( tc ) + 4 );
@@ -482,9 +482,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
 
         // problem: the 'other' address was stored by KOrganizer in
         //          a line looking like the following one:
-        // vPart += "\nADR;\
-        // TYPE=dom;TYPE=intl;TYPE=parcel;TYPE=postal;TYPE=work;TYPE=home:other_pobox;;\
-        // other_str1\nother_str2;other_loc;other_region;other_pocode;other_country
+        // vPart += "\nADR;TYPE=dom;TYPE=intl;TYPE=parcel;TYPE=postal;TYPE=work;TYPE=home:other_pobox;;other_str1\nother_str2;other_loc;other_region;other_pocode;other_country
 
         QString nr;
         nr = stringProp( tnefMsg, MAPI_TAG_PR_HOME_TELEPHONE_NUMBER );
