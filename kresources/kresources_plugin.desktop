@@ -1,11 +1,13 @@
 [Desktop Entry]
 Name=KResources Plugin
+Name[ca]=Connector pel KResources
 Name[el]=Πρόσθετο KResources
 Name[ga]=Breiseán KResources
 Name[km]=កម្មវិធី​ជំនួយ​របស់ KResources
 Name[nds]=KResources-Moduul
 Name[pt]='Plugin' do KResources
 Name[pt_BR]='Plugin' do KResources
+Name[zh_CN]=KResource 插件
 Name[zh_TW]=KResource 外掛程式
 Type=ServiceType
 X-KDE-ServiceType=KResources/Plugin
