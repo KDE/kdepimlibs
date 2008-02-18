@@ -52,7 +52,7 @@ class parseString
 {
 public:
   parseString() : pos(0) {}
-  char operator[](uint i) const { return data.length() > (i + pos) ? data[i + pos] : '\0'; }
+  char operator[](int i) const { return data.length() > (i + pos) ? data[i + pos] : '\0'; }
   bool isEmpty() const { return pos >= data.size(); }
   QByteArray cstr() const
   {

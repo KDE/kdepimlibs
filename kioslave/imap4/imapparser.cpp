@@ -893,6 +893,8 @@ void imapParser::parseExpunge (ulong value, parseString & result)
 
 void imapParser::parseAddressList (parseString & inWords, QList<mailAddress *>& list)
 {
+  if ( inWords.isEmpty() )
+    return;
   if (inWords[0] != '(')
   {
     parseOneWord (inWords);     // parse NIL
@@ -913,7 +915,7 @@ void imapParser::parseAddressList (parseString & inWords, QList<mailAddress *>& 
       }
     }
 
-    if (inWords[0] == ')')
+    if (!inWords.isEmpty() && inWords[0] == ')')
       inWords.pos++;
     skipWS (inWords);
   }
@@ -929,7 +931,7 @@ const mailAddress& imapParser::parseAddress (parseString & inWords, mailAddress&
   retVal.setUser(parseLiteral(inWords));
   retVal.setHost(parseLiteral(inWords));
 
-  if (inWords[0] == ')')
+  if (!inWords.isEmpty() && inWords[0] == ')')
     inWords.pos++;
   skipWS (inWords);
 
@@ -1001,7 +1003,7 @@ mailHeader * imapParser::parseEnvelope (parseString & inWords)
       parseLiteral (inWords);
   }
 
-  if (inWords[0] == ')')
+  if (!inWords.isEmpty() && inWords[0] == ')')
     inWords.pos++;
   skipWS (inWords);
 
@@ -1515,7 +1517,8 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
             parseBodyStructure (inWords, section, envelope);
           QByteArray data;
           QDataStream stream( &data, QIODevice::WriteOnly );
-          body->serialize(stream);
+          if ( body )
+            body->serialize(stream);
           parseRelay(data);
 
           delete body;
@@ -1597,7 +1600,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
       parseLiteral(inWords);
   }
 
-  if (inWords[0] != ')')
+  if (inWords.isEmpty() || inWords[0] != ')')
     return;
   inWords.pos++;
   skipWS (inWords);
@@ -1883,7 +1886,7 @@ imapParser::parseURL (const KUrl & _url, QString & _box, QString & _section,
 
 QByteArray imapParser::parseLiteral(parseString & inWords, bool relay, bool stopAtBracket) {
 
-  if (inWords[0] == '{')
+  if (!inWords.isEmpty() && inWords[0] == '{')
   {
     QByteArray retVal;
     int runLen = inWords.find ('}', 1);
