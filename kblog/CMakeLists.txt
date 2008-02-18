@@ -26,11 +26,7 @@ target_link_libraries(kblog kxmlrpcclient syndication ${KDE4_KIO_LIBS} kcal )
 
 set_target_properties(kblog PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
-install(TARGETS kblog  
-    RUNTIME DESTINATION ${BIN_INSTALL_DIR}
-    LIBRARY DESTINATION ${LIB_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
-)
+install(TARGETS kblog DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ##############
 
