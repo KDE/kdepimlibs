@@ -109,7 +109,10 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
   d->authGroup = 0;
   d->resetAuthCapabilities();
 
-  setButtons( Ok|Cancel );
+  setButtons( Ok|Cancel|User3 );
+  showButton( User3, false );
+  setButtonText( User3, i18n( "Use Sendmail" ) );
+  connect( this, SIGNAL( user3Clicked() ), SLOT( slotUser3() ) );
   connect( this, SIGNAL(okClicked()), SLOT(save()) );
   connect( TransportManager::self(), SIGNAL(passwordsChanged()),
            SLOT(passwordsLoaded()) );
@@ -117,6 +120,8 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
   switch ( transport->type() ) {
     case Transport::EnumType::SMTP:
     {
+      showButton( User3, true );
+
       d->smtp.setupUi( mainWidget() );
       d->passwordEdit = d->smtp.password;
 
@@ -221,6 +226,12 @@ void TransportConfigDialog::save()
   }
 
   d->transport->writeConfig();
+}
+
+void TransportConfigDialog::slotUser3()
+{
+  reject();
+  emit sendmailClicked();
 }
 
 void TransportConfigDialog::chooseSendmail()

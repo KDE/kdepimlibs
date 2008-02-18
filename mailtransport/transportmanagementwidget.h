@@ -54,6 +54,7 @@ class MAILTRANSPORT_EXPORT TransportManagementWidget : public QWidget
     void editClicked();
     void removeClicked();
     void defaultClicked();
+    void slotSendmail();
 
   private:
     class Private;

@@ -116,27 +116,33 @@ void TransportManagementWidget::updateButtonState()
 
 void TransportManagementWidget::addClicked()
 {
-  // get transport type
-  TransportTypeDialog tdd( this );
-  if ( tdd.exec() != QDialog::Accepted ) {
-    return;
-  }
-
   // initialize transport
   Transport *t = TransportManager::self()->createTransport();
-  t->setType( tdd.transportType() );
-  if ( t->type() == Transport::EnumType::Sendmail ) {
-    t->setHost( QLatin1String( "/usr/sbin/sendmail" ) );
-  }
+  t->setType( Transport::EnumType::SMTP );
 
-  // configure transport
-  TransportConfigDialog tcd( t, this );
-  tcd.setCaption( i18nc( "@title:window", "Add Transport" ) );
-  if ( tcd.exec() == QDialog::Accepted ) {
+  // configure transporr
+  TransportConfigDialog* tcd = new TransportConfigDialog( t, this );
+  connect( tcd, SIGNAL( sendmailClicked() ), SLOT( slotSendmail() ) );
+  tcd->setCaption( i18nc( "@title:window", "Add Transport" ) );
+  if ( tcd->exec() == KDialog::Accepted )
     TransportManager::self()->addTransport( t );
-  } else {
+  else 
     delete t;
-  }
+}
+
+void TransportManagementWidget::slotSendmail()
+{
+  // initialize transport
+  Transport *t = TransportManager::self()->createTransport();
+  t->setType( Transport::EnumType::Sendmail );
+  t->setHost( QLatin1String( "/usr/sbin/sendmail" ) );
+
+  TransportConfigDialog tcd(  t, this );
+  tcd.setCaption(  i18nc(  "@title:window", "Add Transport" ) );
+  if ( tcd.exec() == KDialog::Accepted )
+    TransportManager::self()->addTransport(  t );
+  else 
+    delete t;
 }
 
 void TransportManagementWidget::editClicked()

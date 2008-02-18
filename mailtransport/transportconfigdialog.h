@@ -58,6 +58,7 @@ class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
     void chooseSendmail();
     void passwordsLoaded();
     void save();
+    void slotUser3();
     void slotFinished( QList<int> results );
     void hostNameChanged( const QString &text );
     void encryptionChanged( int enc );
@@ -66,6 +67,9 @@ class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
   private:
     class Private;
     Private *const d;
+
+  signals:
+    void sendmailClicked();
 };
 
 }
