@@ -77,27 +77,31 @@ DndFactory::~DndFactory()
   delete d;
 }
 
-QDrag *DndFactory::createDrag( QWidget *owner )
+QMimeData *DndFactory::createMimeData()
 {
-  QDrag *drag = new QDrag( owner );
   QMimeData *mimeData = new QMimeData;
-  drag->setMimeData( mimeData );
 
   ICalDrag::populateMimeData( mimeData, d->mCalendar );
   VCalDrag::populateMimeData( mimeData, d->mCalendar );
+  
+  return mimeData;
+}
+
+QDrag *DndFactory::createDrag( QWidget *owner )
+{
+  QDrag *drag = new QDrag( owner );
+  drag->setMimeData( createMimeData() );
 
   return drag;
 }
 
-QDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
+QMimeData *DndFactory::createMimeData( Incidence *incidence )
 {
   CalendarLocal cal( d->mCalendar->timeSpec() );
   Incidence *i = incidence->clone();
   cal.addIncidence( i );
 
-  QDrag *drag = new QDrag( owner );
   QMimeData *mimeData = new QMimeData;
-  drag->setMimeData( mimeData );
 
   ICalDrag::populateMimeData( mimeData, &cal );
   VCalDrag::populateMimeData( mimeData, &cal );
@@ -108,13 +112,21 @@ QDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
     metadata["labels"] = KUrl::toPercentEncoding( i->summary() );
     uri.populateMimeData( mimeData, metadata );
   }
+  
+  return mimeData;
+}
 
-  if ( i->type() == "Event" ) {
+QDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
+{
+  QDrag *drag = new QDrag( owner );
+  drag->setMimeData( createMimeData( incidence ) );
+
+  if ( incidence->type() == "Event" ) {
     drag->setPixmap( BarIcon( "view-calendar-day" ) );
-  } else if ( i->type() == "Todo" ) {
+  } else if ( incidence->type() == "Todo" ) {
     drag->setPixmap( BarIcon( "view-calendar-tasks" ) );
   }
-
+  
   return drag;
 }
 
@@ -139,11 +151,11 @@ Calendar *DndFactory::createDropCalendar( QDropEvent *de )
   return 0;
 }
 
-Event *DndFactory::createDropEvent( QDropEvent *de )
+Event *DndFactory::createDropEvent( const QMimeData *md )
 {
   kDebug();
   Event *ev = 0;
-  Calendar *cal = createDropCalendar( de );
+  Calendar *cal = createDropCalendar( md );
 
   if ( cal ) {
     Event::List events = cal->events();
@@ -155,11 +167,22 @@ Event *DndFactory::createDropEvent( QDropEvent *de )
   return ev;
 }
 
-Todo *DndFactory::createDropTodo( QDropEvent *de )
+Event *DndFactory::createDropEvent( QDropEvent *de )
+{
+  Event *ev = createDropEvent( de->mimeData() );
+  
+  if ( ev ) {
+    de->accept();
+  }
+  
+  return ev;
+}
+
+Todo *DndFactory::createDropTodo( const QMimeData *md )
 {
   kDebug();
   Todo *todo = 0;
-  Calendar *cal = createDropCalendar( de );
+  Calendar *cal = createDropCalendar( md );
 
   if ( cal ) {
     Todo::List todos = cal->todos();
@@ -169,6 +192,17 @@ Todo *DndFactory::createDropTodo( QDropEvent *de )
     delete cal;
   }
 
+  return todo;
+}
+
+Todo *DndFactory::createDropTodo( QDropEvent *de )
+{
+  Todo *todo = createDropTodo( de->mimeData() );
+  
+  if ( todo ) {
+    de->accept();
+  }
+  
   return todo;
 }
 

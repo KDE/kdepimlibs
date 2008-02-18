@@ -74,21 +74,37 @@ class KCAL_EXPORT DndFactory
     Calendar *createDropCalendar( const QMimeData *md );
 
     /**
+    Create the mime data for the whole calendar.
+     */
+    QMimeData *createMimeData();
+    
+    /**
       Create a drag object for the whole calendar.
     */
     QDrag *createDrag( QWidget *owner );
 
     /**
+    Create the mime data for a single incidence.
+     */
+    QMimeData *createMimeData( Incidence *incidence );
+
+    /**
       Create a drag object for a single incidence.
     */
     QDrag *createDrag( Incidence *incidence, QWidget *owner );
+    
+    /** Create Todo object from mime data */
+    Todo *createDropTodo( const QMimeData *md );
 
     /** Create Todo object from drop event */
     Todo *createDropTodo( QDropEvent *de );
+    
+    /** Create Event object from mime data */
+    Event *createDropEvent( const QMimeData *md );
 
     /** Create Event object from drop event */
     Event *createDropEvent( QDropEvent *de );
-
+    
     /** cut incidence to clipboard */
     void cutIncidence( Incidence * );
 
