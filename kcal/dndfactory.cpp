@@ -83,7 +83,7 @@ QMimeData *DndFactory::createMimeData()
 
   ICalDrag::populateMimeData( mimeData, d->mCalendar );
   VCalDrag::populateMimeData( mimeData, d->mCalendar );
-  
+
   return mimeData;
 }
 
@@ -112,7 +112,7 @@ QMimeData *DndFactory::createMimeData( Incidence *incidence )
     metadata["labels"] = KUrl::toPercentEncoding( i->summary() );
     uri.populateMimeData( mimeData, metadata );
   }
-  
+
   return mimeData;
 }
 
@@ -126,7 +126,7 @@ QDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
   } else if ( incidence->type() == "Todo" ) {
     drag->setPixmap( BarIcon( "view-calendar-tasks" ) );
   }
-  
+
   return drag;
 }
 
@@ -170,11 +170,11 @@ Event *DndFactory::createDropEvent( const QMimeData *md )
 Event *DndFactory::createDropEvent( QDropEvent *de )
 {
   Event *ev = createDropEvent( de->mimeData() );
-  
+
   if ( ev ) {
     de->accept();
   }
-  
+
   return ev;
 }
 
@@ -198,11 +198,11 @@ Todo *DndFactory::createDropTodo( const QMimeData *md )
 Todo *DndFactory::createDropTodo( QDropEvent *de )
 {
   Todo *todo = createDropTodo( de->mimeData() );
-  
+
   if ( todo ) {
     de->accept();
   }
-  
+
   return todo;
 }
 

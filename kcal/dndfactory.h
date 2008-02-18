@@ -74,44 +74,58 @@ class KCAL_EXPORT DndFactory
     Calendar *createDropCalendar( const QMimeData *md );
 
     /**
-    Create the mime data for the whole calendar.
-     */
+      Create the mime data for the whole calendar.
+    */
     QMimeData *createMimeData();
-    
+
     /**
       Create a drag object for the whole calendar.
     */
     QDrag *createDrag( QWidget *owner );
 
     /**
-    Create the mime data for a single incidence.
-     */
+      Create the mime data for a single incidence.
+    */
     QMimeData *createMimeData( Incidence *incidence );
 
     /**
       Create a drag object for a single incidence.
     */
     QDrag *createDrag( Incidence *incidence, QWidget *owner );
-    
-    /** Create Todo object from mime data */
+
+    /**
+      Create Todo object from mime data.
+    */
     Todo *createDropTodo( const QMimeData *md );
 
-    /** Create Todo object from drop event */
+    /**
+      Create Todo object from drop event.
+    */
     Todo *createDropTodo( QDropEvent *de );
-    
-    /** Create Event object from mime data */
+
+    /**
+      Create Event object from mime data.
+    */
     Event *createDropEvent( const QMimeData *md );
 
-    /** Create Event object from drop event */
+    /**
+      Create Event object from drop event.
+    */
     Event *createDropEvent( QDropEvent *de );
-    
-    /** cut incidence to clipboard */
+
+    /**
+      Cut the incidence to the clipboard.
+    */
     void cutIncidence( Incidence * );
 
-    /** copy the incidence to clipboard */
+    /**
+      Copy the incidence to clipboard/
+    */
     bool copyIncidence( Incidence * );
 
-    /** pastes the event or todo and returns a pointer to the new incidence pasted. */
+    /**
+      Paste the event or todo and return a pointer to the new incidence pasted.
+    */
     Incidence *pasteIncidence( const QDate &, const QTime *newTime = 0 );
 
   private:
