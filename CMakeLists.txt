@@ -7,6 +7,13 @@ find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
 include (MacroLibrary)
 
+# Remove the following lines once we depend on kdelibs trunk again
+if (NOT DEFINED INSTALL_TARGETS_DEFAULT_ARGS)
+  set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
+                                    LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
+                                    ARCHIVE DESTINATION "${LIB_INSTALL_DIR}")
+endif (NOT DEFINED INSTALL_TARGETS_DEFAULT_ARGS)
+
 #boost is a hard dependency
 find_package(Boost)
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1_33_0" "Needed by several critical PIM libraries.")
