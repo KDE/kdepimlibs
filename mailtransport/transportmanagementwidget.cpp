@@ -121,13 +121,14 @@ void TransportManagementWidget::addClicked()
   t->setType( Transport::EnumType::SMTP );
 
   // configure transporr
-  TransportConfigDialog* tcd = new TransportConfigDialog( t, this );
-  connect( tcd, SIGNAL( sendmailClicked() ), SLOT( slotSendmail() ) );
+  TransportConfigDialog *tcd = new TransportConfigDialog( t, this );
+  connect( tcd, SIGNAL(sendmailClicked()), SLOT(slotSendmail()) );
   tcd->setCaption( i18nc( "@title:window", "Add Transport" ) );
-  if ( tcd->exec() == KDialog::Accepted )
+  if ( tcd->exec() == KDialog::Accepted ) {
     TransportManager::self()->addTransport( t );
-  else 
+  } else {
     delete t;
+  }
 }
 
 void TransportManagementWidget::slotSendmail()
@@ -137,12 +138,13 @@ void TransportManagementWidget::slotSendmail()
   t->setType( Transport::EnumType::Sendmail );
   t->setHost( QLatin1String( "/usr/sbin/sendmail" ) );
 
-  TransportConfigDialog tcd(  t, this );
-  tcd.setCaption(  i18nc(  "@title:window", "Add Transport" ) );
-  if ( tcd.exec() == KDialog::Accepted )
-    TransportManager::self()->addTransport(  t );
-  else 
+  TransportConfigDialog tcd( t, this );
+  tcd.setCaption( i18nc( "@title:window", "Add Transport" ) );
+  if ( tcd.exec() == KDialog::Accepted ) {
+    TransportManager::self()->addTransport( t );
+  } else {
     delete t;
+  }
 }
 
 void TransportManagementWidget::editClicked()
