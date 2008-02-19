@@ -68,7 +68,7 @@ class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
     class Private;
     Private *const d;
 
-  signals:
+  Q_SIGNALS:
     void sendmailClicked();
 };
 
