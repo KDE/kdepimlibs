@@ -35,3 +35,21 @@ kde4_add_library(kmime SHARED ${kmime_LIB_SRCS})
 target_link_libraries(kmime  ${KDE4_KDECORE_LIBS} )
 
 set_target_properties(kmime PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+
+install(TARGETS kmime ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+install( FILES
+         boolflags.h
+         kmime_export.h
+         kmime_charfreq.h
+         kmime_codecs.h
+         kmime_content.h
+         kmime_contentindex.h
+         kmime_header_parsing.h
+         kmime_headers.h
+         kmime_message.h
+         kmime_mdn.h
+         kmime_newsarticle.h
+         kmime_dateformatter.h
+         kmime_util.h
+         DESTINATION ${INCLUDE_INSTALL_DIR}/kmime)
