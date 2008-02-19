@@ -30,7 +30,7 @@ kde4_add_library(ktnef SHARED ${ktnef_LIB_SRCS})
 target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcal)
 
 set_target_properties(ktnef PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
-install(TARGETS ktnef DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS ktnef ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 
