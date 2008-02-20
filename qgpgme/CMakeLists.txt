@@ -48,6 +48,7 @@ if ( _any_gpgme_found )
 
    install( TARGETS qgpgme ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-   install( FILES qgpgme_export.h eventloopinteractor.h dataprovider.h DESTINATION ${INCLUDE_INSTALL_DIR}/qgpgme )
+   install( FILES qgpgme_export.h eventloopinteractor.h dataprovider.h 
+            DESTINATION ${INCLUDE_INSTALL_DIR}/qgpgme COMPONENT Devel )
 
 endif ( _any_gpgme_found )

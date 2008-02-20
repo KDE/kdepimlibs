@@ -55,7 +55,8 @@ install( FILES
   configdialog.h
   configpage.h
   idmapper.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/kresources)
+  DESTINATION ${INCLUDE_INSTALL_DIR}/kresources COMPONENT Devel)
+
 install( FILES org.kde.KResourcesManager.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 
 

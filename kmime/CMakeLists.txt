@@ -1,8 +1,6 @@
 add_subdirectory( tests )
 
-include_directories(
-	${CMAKE_SOURCE_DIR}/libkdepim/
-)
+include_directories( ${CMAKE_SOURCE_DIR}/libkdepim/ )
 
 include(CheckTimezone)
 configure_file (config-kmime.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kmime.h)
@@ -52,4 +50,4 @@ install( FILES
          kmime_newsarticle.h
          kmime_dateformatter.h
          kmime_util.h
-         DESTINATION ${INCLUDE_INSTALL_DIR}/kmime)
+         DESTINATION ${INCLUDE_INSTALL_DIR}/kmime COMPONENT Devel)

@@ -56,5 +56,5 @@ install( FILES
         transportmanager.h
         transporttypedialog.h
         servertest.h
-          DESTINATION ${INCLUDE_INSTALL_DIR}/mailtransport )
+        DESTINATION ${INCLUDE_INSTALL_DIR}/mailtransport COMPONENT Devel)
 

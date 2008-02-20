@@ -5,7 +5,7 @@ project(kcal)
 #  add_definitions(-DICAL_UNIX_NEWLINE=1)
 #endif (UNIX)
 
-ADD_DEFINITIONS(-DPACKAGE_DATA_DIR=\\""${DATA_INSTALL_DIR}/libical"\\" ) # added manually
+add_definitions(-DPACKAGE_DATA_DIR=\\""${DATA_INSTALL_DIR}/libical"\\" ) # added manually
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5800)
 
@@ -32,28 +32,27 @@ include_directories(
 set(ICALSCRIPTS ${CMAKE_SOURCE_DIR}/kcal/libical/scripts/ )
 
 set(PROPERTYDEPS 
-	${ICALSCRIPTS}/mkderivedproperties.pl 
-	${CMAKE_SOURCE_DIR}/kcal/libical/design-data/properties.csv	
-	${CMAKE_SOURCE_DIR}/kcal/libical/design-data/value-types.csv
-	${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedproperty.h.in 
-	${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedproperty.c.in 
+        ${ICALSCRIPTS}/mkderivedproperties.pl 
+        ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/properties.csv	
+        ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/value-types.csv
+        ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedproperty.h.in 
+        ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedproperty.c.in 
 )
 
-add_custom_command(OUTPUT
-${CMAKE_BINARY_DIR}/kcal/libical/icalderivedproperty.h
-COMMAND ${PERL_EXECUTABLE} ARGS -I ${ICALSCRIPTS}
-${ICALSCRIPTS}/mkderivedproperties.pl -i
-${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedproperty.h.in
--h  ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/properties.csv ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/value-types.csv > ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedproperty.h   DEPENDS  ${PROPERTYDEPS} )
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedproperty.h
+                   COMMAND ${PERL_EXECUTABLE} -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedproperties.pl -i
+                           ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedproperty.h.in
+                           -h  ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/properties.csv 
+                           ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/value-types.csv > ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedproperty.h
+                   DEPENDS  ${PROPERTYDEPS} )
 
 
-add_custom_command(OUTPUT
-${CMAKE_BINARY_DIR}/kcal/libical/icalderivedproperty.c
-COMMAND ${PERL_EXECUTABLE} ARGS -I${ICALSCRIPTS}
-${ICALSCRIPTS}/mkderivedproperties.pl -i
-${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedproperty.c.in
--c ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/properties.csv
-${CMAKE_SOURCE_DIR}/kcal/libical/design-data/value-types.csv > ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedproperty.c   DEPENDS  ${PROPERTYDEPS} ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedproperty.h )
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedproperty.c
+                   COMMAND ${PERL_EXECUTABLE} -I${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedproperties.pl -i
+                           ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedproperty.c.in
+                           -c ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/properties.csv
+                           ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/value-types.csv > ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedproperty.c
+                   DEPENDS  ${PROPERTYDEPS} ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedproperty.h )
 
 
 # files generated via add_custom_command are added automatically to the clean files, Alex
@@ -70,13 +69,15 @@ set(PARAMETERDEPS
 	${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedparameter.h.in
 )
 
-add_custom_command(OUTPUT
-${CMAKE_BINARY_DIR}/kcal/libical/icalderivedparameter.h
-COMMAND ${PERL_EXECUTABLE} ARGS -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedparameter.h.in -h ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/parameters.csv > ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedparameter.h   DEPENDS  ${PARAMETERDEPS} )
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedparameter.h
+                   COMMAND ${PERL_EXECUTABLE} -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedparameter.h.in 
+                           -h ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/parameters.csv > ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedparameter.h
+                   DEPENDS  ${PARAMETERDEPS} )
 
-add_custom_command(OUTPUT
-${CMAKE_BINARY_DIR}/kcal/libical/icalderivedparameter.c
-COMMAND ${PERL_EXECUTABLE} ARGS -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedparameter.c.in -c ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/parameters.csv > ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedparameter.c   DEPENDS  ${PARAMETERDEPS} ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedparameter.h )
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedparameter.c
+                   COMMAND ${PERL_EXECUTABLE} -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedparameter.c.in 
+                           -c ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/parameters.csv > ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedparameter.c
+                   DEPENDS  ${PARAMETERDEPS} ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedparameter.h )
 
 #files generated via add_custom_command are added automatically to the clean files, Alex
 #macro_additional_clean_files( 
@@ -91,9 +92,10 @@ set(RESTRICTIONDEPS
 	${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalrestriction.c.in
 )
 
-add_custom_command(OUTPUT
-${CMAKE_BINARY_DIR}/kcal/libical/src/libical/icalrestriction.c
-COMMAND ${PERL_EXECUTABLE} ARGS -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkrestrictiontable.pl -i ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalrestriction.c.in ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/restrictions.csv > ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/icalrestriction.c   DEPENDS  ${RESTRICTIONDEPS} )
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/icalrestriction.c
+                   COMMAND ${PERL_EXECUTABLE} -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkrestrictiontable.pl -i ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalrestriction.c.in 
+                           ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/restrictions.csv > ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/icalrestriction.c   
+                   DEPENDS  ${RESTRICTIONDEPS} )
 
 
 #files generated via add_custom_command are added automatically to the clean files, Alex
@@ -106,10 +108,14 @@ set(VALUEDEPS
 	${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedvalue.h.in
 )
 
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedvalue.h COMMAND ${PERL_EXECUTABLE} ARGS -I${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedvalues.pl -i ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedvalue.h.in -h ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/value-types.csv > ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedvalue.h   DEPENDS  ${VALUEDEPS} )
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedvalue.h 
+                   COMMAND ${PERL_EXECUTABLE} -I${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedvalues.pl -i ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedvalue.h.in -h ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/value-types.csv > ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedvalue.h   
+                   DEPENDS  ${VALUEDEPS} )
 
 
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedvalue.c COMMAND ${PERL_EXECUTABLE} ARGS -I${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedvalues.pl -i ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedvalue.c.in -c ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/value-types.csv > ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedvalue.c   DEPENDS  ${VALUEDEPS} ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedvalue.h )
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedvalue.c 
+                   COMMAND ${PERL_EXECUTABLE} -I${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedvalues.pl -i ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalderivedvalue.c.in -c ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/value-types.csv > ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedvalue.c   
+                   DEPENDS  ${VALUEDEPS} ${CMAKE_BINARY_DIR}/kcal/libical/icalderivedvalue.h )
 
 #files generated via add_custom_command are added automatically to the clean files, Alex
 #macro_additional_clean_files(
@@ -154,8 +160,8 @@ set(libical_SRCS
 )
 
 set(libicalss_SRCS
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalclassify.c      
-   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalclassify.h      
+   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalclassify.c
+   ${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss/icalclassify.h
 )
 
 
@@ -168,6 +174,7 @@ else(WIN32)
   set(TOPS "${CMAKE_SOURCE_DIR}")
   set(TOPB "${CMAKE_BINARY_DIR}")
 endif(WIN32)
+
 add_custom_command(OUTPUT
    ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/ical.h 
    COMMAND 
@@ -253,7 +260,7 @@ kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 target_link_libraries(kcal ${KDE4_KDEUI_LIBS} ${QT_QTXML_LIBRARY} kresources kabc kpimutils )
 
 set_target_properties(kcal PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
-install(TARGETS kcal ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kcal ${INSTALL_TARGETS_DEFAULT_ARGS} COMPONENT Devel)
 
 # hack to force ical[ss].h creation
 add_custom_target(ical-headers DEPENDS
@@ -295,56 +302,57 @@ add_subdirectory( tests )
 
 install( FILES local.desktop localdir.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
 install( FILES
-	alarm.h
-	attachment.h
-	attendee.h
-	calendar.h
-	calendarlocal.h
-	calendarnull.h
-	calendarresources.h
-	calfilter.h
-	calformat.h
-	calstorage.h
-	confirmsavedialog.h
-	customproperties.h
-	dndfactory.h
-	duration.h
-	event.h
-	exceptions.h
-	filestorage.h
-	freebusy.h
-	freebusycache.h
-	freebusyurlstore.h
-	${CMAKE_CURRENT_BINARY_DIR}/htmlexportsettings.h
-	htmlexport.h
-	icaldrag.h
-	icalformat.h
-	icaltimezones.h
-	imipscheduler.h
-	incidencebase.h
-	incidence.h
-	incidenceformatter.h
-	journal.h
-	kcal_export.h
-	kcalversion.h
-	listbase.h
-	period.h
-	person.h
-	qtopiaformat.h
-	recurrencerule.h
-	recurrence.h
-	resourcecached.h
-	resourcecachedconfig.h
-	resourcecalendar.h
-	resourcelocalconfig.h
-	resourcelocaldirconfig.h
-	resourcelocaldir.h
-	resourcelocal.h
-	scheduler.h
-	sortablelist.h
-	todo.h
-	vcaldrag.h
-	vcalformat.h
+        alarm.h
+        attachment.h
+        attendee.h
+        calendar.h
+        calendarlocal.h
+        calendarnull.h
+        calendarresources.h
+        calfilter.h
+        calformat.h
+        calstorage.h
+        confirmsavedialog.h
+        customproperties.h
+        dndfactory.h
+        duration.h
+        event.h
+        exceptions.h
+        filestorage.h
+        freebusy.h
+        freebusycache.h
+        freebusyurlstore.h
+        ${CMAKE_CURRENT_BINARY_DIR}/htmlexportsettings.h
+        htmlexport.h
+        icaldrag.h
+        icalformat.h
+        icaltimezones.h
+        imipscheduler.h
+        incidencebase.h
+        incidence.h
+        incidenceformatter.h
+        journal.h
+        kcal_export.h
+        kcalversion.h
+        listbase.h
+        period.h
+        person.h
+        qtopiaformat.h
+        recurrencerule.h
+        recurrence.h
+        resourcecached.h
+        resourcecachedconfig.h
+        resourcecalendar.h
+        resourcelocalconfig.h
+        resourcelocaldirconfig.h
+        resourcelocaldir.h
+        resourcelocal.h
+        scheduler.h
+        sortablelist.h
+        todo.h
+        vcaldrag.h
+        vcalformat.h
         kresult.h
-DESTINATION ${INCLUDE_INSTALL_DIR}/kcal)
+        DESTINATION ${INCLUDE_INSTALL_DIR}/kcal COMPONENT Devel)
+
 install( FILES kcal_manager.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources)

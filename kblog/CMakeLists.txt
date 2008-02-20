@@ -7,17 +7,17 @@ add_subdirectory( tests )
 ########### next target ###############
 
 set(kblog_LIB_SRCS
-blog.cpp
-blogpost.cpp
-blogcomment.cpp
-blogmedia.cpp
-blogger1.cpp
-gdata.cpp
-# livejournal.cpp
-metaweblog.cpp
-movabletype.cpp
-wordpressbuggy.cpp
-)
+   blog.cpp
+   blogpost.cpp
+   blogcomment.cpp
+   blogmedia.cpp
+   blogger1.cpp
+   gdata.cpp
+   # livejournal.cpp
+   metaweblog.cpp
+   movabletype.cpp
+   wordpressbuggy.cpp
+   )
 
 
 kde4_add_library(kblog SHARED ${kblog_LIB_SRCS})
@@ -26,8 +26,9 @@ target_link_libraries(kblog kxmlrpcclient syndication ${KDE4_KIO_LIBS} kcal )
 
 set_target_properties(kblog PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
-install(TARGETS kblog ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kblog ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ##############
 
-install( FILES kblog_export.h blog.h blogpost.h blogcomment.h blogmedia.h blogger1.h gdata.h metaweblog.h movabletype.h wordpressbuggy.h DESTINATION ${INCLUDE_INSTALL_DIR}/kblog)
+install( FILES kblog_export.h blog.h blogpost.h blogcomment.h blogmedia.h blogger1.h gdata.h metaweblog.h movabletype.h wordpressbuggy.h 
+         DESTINATION ${INCLUDE_INSTALL_DIR}/kblog COMPONENT Devel)

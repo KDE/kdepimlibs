@@ -17,4 +17,5 @@ install(TARGETS kxmlrpcclient ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 
-install( FILES kxmlrpcclient_export.h client.h DESTINATION ${INCLUDE_INSTALL_DIR}/kxmlrpcclient  )
+install( FILES kxmlrpcclient_export.h client.h 
+         DESTINATION ${INCLUDE_INSTALL_DIR}/kxmlrpcclient COMPONENT Devel)

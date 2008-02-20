@@ -36,6 +36,6 @@ install(TARGETS ktnef ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install( FILES ktnef_export.h ktnefparser.h ktnefattach.h ktnefproperty.h
          ktnefpropertyset.h ktnefmessage.h ktnefwriter.h ktnefdefs.h formatter.h
-         DESTINATION ${INCLUDE_INSTALL_DIR}/ktnef)
+         DESTINATION ${INCLUDE_INSTALL_DIR}/ktnef COMPONENT Devel)
 
 

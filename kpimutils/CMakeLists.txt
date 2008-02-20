@@ -4,7 +4,7 @@ add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5321 )
 
 add_subdirectory( tests )
 
-########### next target ###############
+
 
 set(kpimutils_LIB_SRCS
    email.cpp linklocator.cpp spellingfilter.cpp kfileio.cpp)
@@ -20,6 +20,7 @@ install(TARGETS kpimutils ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 
-install( FILES kpimutils_export.h email.h linklocator.h spellingfilter.h kfileio.h DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils  )
+install(FILES kpimutils_export.h email.h linklocator.h spellingfilter.h kfileio.h 
+        DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils  COMPONENT Devel)
 
 install(FILES pimemoticons.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
