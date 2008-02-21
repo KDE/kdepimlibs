@@ -103,6 +103,13 @@ class KCAL_EXPORT Attendee : public Person
               Role role = ReqParticipant, const QString &uid = QString() );
 
     /**
+      Constructs an attendee by copying another attendee.
+
+      @param attendee is the attendee to be copied.
+    */
+    Attendee( const Attendee &attendee );
+
+    /**
       Destroys the attendee.
     */
     virtual ~Attendee();
@@ -248,6 +255,13 @@ class KCAL_EXPORT Attendee : public Person
       @see setDelegator().
     */
     QString delegator() const;
+
+    /**
+      Sets this attendee equal to @p attendee.
+
+      @param attendee is the attendee to copy.
+    */
+    Attendee &operator=( const Attendee &attendee );
 
   private:
     //@cond PRIVATE

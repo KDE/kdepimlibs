@@ -67,6 +67,13 @@ Attendee::Attendee( const QString &name, const QString &email, bool rsvp,
   d->mUid = u;
 }
 
+Attendee::Attendee( const Attendee &attendee )
+  : d( new KCal::Attendee::Private( *attendee.d ) )
+{
+  setName( attendee.name() );
+  setEmail( attendee.email() );
+}
+
 Attendee::~Attendee()
 {
   delete d;
@@ -82,6 +89,14 @@ bool KCal::Attendee::operator==( const Attendee &attendee )
     d->mUid == attendee.d->mUid &&
     d->mDelegate == attendee.d->mDelegate &&
     d->mDelegator == attendee.d->mDelegator;
+}
+
+Attendee &KCal::Attendee::operator=( const Attendee &attendee )
+{
+  *d = *attendee.d;
+  setName( attendee.name() );
+  setEmail( attendee.email() );
+  return *this;
 }
 
 void Attendee::setRSVP( bool r )
