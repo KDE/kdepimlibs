@@ -56,6 +56,7 @@ extern "C" {
 #include <ktzfiletimezone.h>
 #include <ksystemtimezone.h>
 #include <klocale.h>
+#include <kcodecs.h>
 
 #include <cstdlib>
 
@@ -1177,13 +1178,19 @@ FreeBusy *ICalFormatImpl::readFreeBusy( icalcomponent *vfreebusy )
     {
       icalperiodtype icalperiod = icalproperty_get_freebusy( p );
       KDateTime period_start = readICalUtcDateTime( p, icalperiod.start );
+      Period period;
       if ( !icaltime_is_null_time( icalperiod.end ) ) {
         KDateTime period_end = readICalUtcDateTime( p, icalperiod.end );
-        periods.append( Period( period_start, period_end ) );
+        period = Period( period_start, period_end );
       } else {
         Duration duration ( readICalDuration( icalperiod.duration ) );
-        periods.append( Period( period_start, duration ) );
+        period = Period( period_start, duration );
       }
+      QByteArray param = icalproperty_get_parameter_as_string( p, "X-SUMMARY" );
+      period.setSummary( QString::fromUtf8( KCodecs::base64Decode( param ) ) );
+      param = icalproperty_get_parameter_as_string( p, "X-LOCATION" );
+      period.setLocation( QString::fromUtf8( KCodecs::base64Decode( param ) ) );
+      periods.append( period );
       break;
     }
 

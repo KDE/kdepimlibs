@@ -52,6 +52,7 @@ KCAL_EXECUTABLE_TESTS(
   loadcalendar
   fbrecurring
   readandwrite
+  testfb
   testrecurprevious
   testrecurrence
   testrecurrencetype
