@@ -2337,6 +2337,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
       Todo *old = cal->todo( todo->uid() );
       if ( old ) {
         cal->deleteTodo( old );
+        d->mTodosRelate.removeAll( old );
       }
       cal->addTodo( todo );
     }
@@ -2351,6 +2352,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
       Event *old = cal->event( event->uid() );
       if ( old ) {
         cal->deleteEvent( old );
+        d->mEventsRelate.removeAll( old );
       }
       cal->addEvent( event );
     }
