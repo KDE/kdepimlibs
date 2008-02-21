@@ -111,7 +111,7 @@ static QString linkPerson( const QString &email, QString name, QString uid,
   if ( !email.isEmpty() && ( name.isEmpty() || uid.isEmpty() ) ) {
     KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
     KABC::Addressee::List addressList = add_book->findByEmail( email );
-    KABC::Addressee o = addressList.first();
+    KABC::Addressee o = (!addressList.isEmpty() ? addressList.first() : KABC::Addressee());
     if ( !o.isEmpty() && addressList.size() < 2 ) {
       if ( name.isEmpty() ) {
         // No name set, so use the one from the addressbook
