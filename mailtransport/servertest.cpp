@@ -391,6 +391,7 @@ void ServerTestPrivate::slotReadSecure( const QString &text )
 void ServerTestPrivate::slotNormalNotPossible()
 {
   normalSocketFinished = true;
+  tlsFinished = true;
   finalResult();
 }
 
