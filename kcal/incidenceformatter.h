@@ -37,6 +37,7 @@ class KCAL_EXPORT InvitationFormatterHelper
     virtual ~InvitationFormatterHelper(){}
     virtual QString generateLinkURL( const QString &id );
     virtual QString makeLink( const QString &id, const QString &text );
+    virtual Calendar* calendar() const { return 0; }
 
   private:
     //@cond PRIVATE
@@ -84,6 +85,7 @@ namespace IncidenceFormatter
   class ScheduleMessageVisitor;
   class InvitationHeaderVisitor;
   class InvitationBodyVisitor;
+  class IncidenceCompareVisitor;
   class ToolTipVisitor;
   class MailBodyVisitor;
 }
