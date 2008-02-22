@@ -111,7 +111,7 @@ static QString linkPerson( const QString &email, QString name, QString uid,
   if ( !email.isEmpty() && ( name.isEmpty() || uid.isEmpty() ) ) {
     KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
     KABC::Addressee::List addressList = add_book->findByEmail( email );
-    KABC::Addressee o = (!addressList.isEmpty() ? addressList.first() : KABC::Addressee());
+    KABC::Addressee o = ( !addressList.isEmpty() ? addressList.first() : KABC::Addressee() );
     if ( !o.isEmpty() && addressList.size() < 2 ) {
       if ( name.isEmpty() ) {
         // No name set, so use the one from the addressbook
@@ -566,10 +566,10 @@ static QString eventStartTimeStr( Event *event )
 {
   QString tmp;
   if ( ! event->allDay() ) {
-    tmp =  i18nc("%1: Start Date, %2: Start Time", "%1 %2",
-                 event->dtStartDateStr(), event->dtStartTimeStr());
+    tmp =  i18nc( "%1: Start Date, %2: Start Time", "%1 %2",
+                  event->dtStartDateStr(), event->dtStartTimeStr() );
   } else {
-    tmp = i18nc("%1: Start Date", "%1 (time unspecified)", event->dtStartDateStr());
+    tmp = i18nc( "%1: Start Date", "%1 (time unspecified)", event->dtStartDateStr() );
   }
   return tmp;
 }
@@ -579,10 +579,10 @@ static QString eventEndTimeStr( Event *event )
   QString tmp;
   if ( event->hasEndDate() ) {
     if ( ! event->allDay() ) {
-      tmp =  i18nc("%1: End Date, %2: End Time", "%1 %2",
-                   event->dtEndDateStr(), event->dtEndTimeStr());
+      tmp =  i18nc( "%1: End Date, %2: End Time", "%1 %2",
+                    event->dtEndDateStr(), event->dtEndTimeStr() );
     } else {
-      tmp = i18nc("%1: End Date", "%1 (time unspecified)", event->dtEndDateStr());
+      tmp = i18nc( "%1: End Date", "%1 (time unspecified)", event->dtEndDateStr() );
     }
   } else {
     tmp = i18n( "Unspecified" );
@@ -600,16 +600,15 @@ static QString invitationsDetailsIncidence( Incidence *incidence )
   QString html;
   QString descr = incidence->description();
   if( !descr.isEmpty() ) {
-    html += "<br/><u>" + i18n("Description:")
-      + "</u><table border=\"0\"><tr><td>&nbsp;</td><td>";
-    html += string2HTML(descr) + "</td></tr></table>";
+    html += "<br/><u>" + i18n( "Description:" ) + "</u><table border=\"0\"><tr><td>&nbsp;</td><td>";
+    html += string2HTML( descr ) + "</td></tr></table>";
   }
   QStringList comments = incidence->comments();
   if ( !comments.isEmpty() ) {
-    html += "<br><u>" + i18n("Comments:")
-          + "</u><table border=\"0\"><tr><td>&nbsp;</td><td><ul>";
-    for ( int i = 0; i < comments.count(); ++i )
+    html += "<br><u>" + i18n( "Comments:" ) + "</u><table border=\"0\"><tr><td>&nbsp;</td><td><ul>";
+    for ( int i = 0; i < comments.count(); ++i ) {
       html += "<li>" + string2HTML( comments[i] ) + "</li>";
+    }
     html += "</ul></td></tr></table>";
   }
   return html;
@@ -1118,7 +1117,7 @@ class IncidenceFormatter::IncidenceCompareVisitor :
 {
   public:
     IncidenceCompareVisitor() : mExistingIncidence(0) {}
-    bool act( IncidenceBase *incidence, Incidence* existingIncidence )
+    bool act( IncidenceBase *incidence, Incidence *existingIncidence )
     {
       mExistingIncidence = existingIncidence;
       return incidence->accept( *this );
@@ -1126,8 +1125,9 @@ class IncidenceFormatter::IncidenceCompareVisitor :
 
     QString result() const
     {
-      if ( mChanges.isEmpty() )
+      if ( mChanges.isEmpty() ) {
         return QString();
+      }
       QString html = "<div align=\"left\"><ul><li>";
       html += mChanges.join( "</li><li>" );
       html += "</li><ul></div>";
@@ -1160,50 +1160,67 @@ class IncidenceFormatter::IncidenceCompareVisitor :
   private:
     void compareEvents( Event *newEvent, Event *oldEvent )
     {
-      if ( !oldEvent || !newEvent )
+      if ( !oldEvent || !newEvent ) {
         return;
-      if ( oldEvent->dtStart() != newEvent->dtStart() || oldEvent->allDay() != newEvent->allDay() )
+      }
+      if ( oldEvent->dtStart() != newEvent->dtStart() ||
+           oldEvent->allDay() != newEvent->allDay() ) {
         mChanges += i18n( "The begin of the meeting has been changed from %1 to %2",
                           eventStartTimeStr( oldEvent ), eventStartTimeStr( newEvent ) );
-      if ( oldEvent->dtEnd() != newEvent->dtEnd() || oldEvent->allDay() != newEvent->allDay() )
+      }
+      if ( oldEvent->dtEnd() != newEvent->dtEnd() ||
+           oldEvent->allDay() != newEvent->allDay() ) {
         mChanges += i18n( "The end of the meeting has been changed from %1 to %2",
                           eventEndTimeStr( oldEvent ), eventEndTimeStr( newEvent ) );
+      }
     }
 
     void compareIncidences( Incidence *newInc, Incidence *oldInc )
     {
-      if ( !oldInc || !newInc )
+      if ( !oldInc || !newInc ) {
         return;
-      if ( oldInc->summary() != newInc->summary() )
+      }
+
+      if ( oldInc->summary() != newInc->summary() ) {
         mChanges += i18n( "The summary has been changed to: \"%1\"", newInc->summary() );
-      if ( oldInc->location() != newInc->location() )
+      }
+
+      if ( oldInc->location() != newInc->location() ) {
         mChanges += i18n( "The location has been changed to: \"%1\"", newInc->location() );
-      if ( oldInc->description() != newInc->description() )
+      }
+
+      if ( oldInc->description() != newInc->description() ) {
         mChanges += i18n( "The description has been changed to: \"%1\"", newInc->description() );
+      }
+
       Attendee::List oldAttendees = oldInc->attendees();
       Attendee::List newAttendees = newInc->attendees();
-      for ( Attendee::List::ConstIterator it = newAttendees.constBegin(); it != newAttendees.constEnd(); ++it ) {
+      for ( Attendee::List::ConstIterator it = newAttendees.constBegin();
+            it != newAttendees.constEnd(); ++it ) {
         Attendee *oldAtt = oldInc->attendeeByMail( (*it)->email() );
         if ( !oldAtt ) {
           mChanges += i18n( "Attendee %1 has been added", (*it)->fullName() );
         } else {
-          if ( oldAtt->status() != (*it)->status() )
+          if ( oldAtt->status() != (*it)->status() ) {
             mChanges += i18n( "The status of attendee %1 has been changed to: %2",
                               (*it)->fullName(), (*it)->statusStr() );
+          }
         }
       }
-      for ( Attendee::List::ConstIterator it = oldAttendees.constBegin(); it != oldAttendees.constEnd(); ++it ) {
+
+      for ( Attendee::List::ConstIterator it = oldAttendees.constBegin();
+            it != oldAttendees.constEnd(); ++it ) {
         Attendee *newAtt = newInc->attendeeByMail( (*it)->email() );
-        if ( !newAtt )
+        if ( !newAtt ) {
           mChanges += i18n( "Attendee %1 has been removed", (*it)->fullName() );
+        }
       }
     }
 
   private:
-    Incidence* mExistingIncidence;
+    Incidence *mExistingIncidence;
     QStringList mChanges;
 };
-
 
 QString InvitationFormatterHelper::makeLink( const QString &id, const QString &text )
 {
@@ -1238,7 +1255,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
   IncidenceBase *incBase = msg->event();
 
-  Incidence* existingIncidence = 0;
+  Incidence *existingIncidence = 0;
   if ( helper->calendar() ) {
     existingIncidence = helper->calendar()->incidence( incBase->uid() );
     if ( !existingIncidence ) {
@@ -1279,7 +1296,8 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   if ( msg->method() == iTIPRequest ) { // ### Scheduler::Publish/Refresh/Add as well?
     IncidenceCompareVisitor compareVisitor;
     if ( compareVisitor.act( incBase, existingIncidence ) ) {
-      html += i18n("<p align=\"left\">The following changes have been made by the organizer:</p>");
+      html +=
+        i18n( "<p align=\"left\">The following changes have been made by the organizer:</p>" );
       html += compareVisitor.result();
     }
   }
@@ -1302,7 +1320,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   case iTIPRefresh:
   case iTIPAdd:
   {
-    if ( incidence && incidence->revision() > 0 && (existingIncidence || !helper->calendar()) ) {
+    if ( incidence && incidence->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
       if ( incBase->type() == "Todo" ) {
         html += "<td colspan=\"13\">";
         html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );

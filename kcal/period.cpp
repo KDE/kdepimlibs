@@ -144,7 +144,7 @@ QString Period::summary() const
   return d->mSummary;
 }
 
-void Period::setSummary(const QString & summary)
+void Period::setSummary( const QString &summary )
 {
   d->mSummary = summary;
 }
@@ -154,7 +154,7 @@ QString Period::location() const
   return d->mLocation;
 }
 
-void Period::setLocation(const QString & location)
+void Period::setLocation( const QString &location )
 {
   d->mLocation = location;
 }
