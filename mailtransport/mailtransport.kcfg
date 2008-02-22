@@ -94,6 +94,7 @@
         <choice name="GSSAPI"/>
         <choice name="APOP" />
         <choice name="CLEAR" />
+        <choice name="ANONYMOUS" />
       </choices>
       <default>PLAIN</default>
     </entry>

@@ -132,6 +132,8 @@ QList< int > ServerTestPrivate::parseAuthenticationList( const QStringList &auth
       result << Transport::EnumAuthenticationType::NTLM;
     } else if ( *it == QLatin1String( "GSSAPI" ) ) {
       result << Transport::EnumAuthenticationType::GSSAPI;
+    } else if ( *it == QLatin1String( "ANONYMOUS" ) ) {
+      result << Transport::EnumAuthenticationType::ANONYMOUS;
     }
     // APOP is handled by handlePopConversation()
   }
