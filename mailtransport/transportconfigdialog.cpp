@@ -286,10 +286,6 @@ void TransportConfigDialog::slotFinished( QList<int> results )
   d->smtp.tls->setEnabled( results.contains( Transport::EnumEncryption::TLS ) );
   checkHighestEnabledButton( d->encryptionGroup );
 
-  kDebug() << "normal:" <<  d->serverTest->normalProtocols();
-  kDebug() << "ssl:" <<  d->serverTest->secureProtocols();
-  kDebug() << "tls:" <<  d->serverTest->tlsProtocols();
-
   d->noEncCapa = d->serverTest->normalProtocols();
   if ( d->smtp.tls->isEnabled() ) {
     d->tlsCapa = d->serverTest->tlsProtocols();

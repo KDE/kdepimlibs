@@ -1,6 +1,7 @@
 /*
     Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
     Copyright (C) 2007 KovoKs <info@kovoks.nl>
+    Copyright (c) 2008 Thomas McGuire <thomas.mcguire@gmx.net>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -55,6 +56,7 @@ class ServerTestPrivate
     QSet< int >                    connectionResults;
     QHash< int, QList<int> >       authenticationResults;
     QSet< ServerTest::Capability > capabilityResults;
+    QHash< int, uint >             customPorts;
     QTimer                        *normalSocketTimer;
     QTimer                        *secureSocketTimer;
     QTimer                        *progressTimer;
@@ -89,7 +91,8 @@ class ServerTestPrivate
 }
 
 ServerTestPrivate::ServerTestPrivate( ServerTest *test )
-  : q( test )
+  : q( test ),
+    testProgress( 0 )
 {
 }
 
@@ -101,8 +104,12 @@ void ServerTestPrivate::finalResult()
 
   kDebug() << "Modes:" << connectionResults;
   kDebug() << "Capabilities:" << capabilityResults;
+  kDebug() << "Normal:" <<  q->normalProtocols();
+  kDebug() << "SSL:" <<  q->secureProtocols();
+  kDebug() << "TLS:" <<  q->tlsProtocols();
 
-  testProgress->hide();
+  if( testProgress )
+    testProgress->hide();
   progressTimer->stop();
 
   emit q->finished( connectionResults.toList() );
@@ -409,7 +416,8 @@ void ServerTestPrivate::slotSslNotPossible()
 
 void ServerTestPrivate::slotUpdateProgress()
 {
-  testProgress->setValue( testProgress->value() + 1 );
+  if( testProgress )
+    testProgress->setValue( testProgress->value() + 1 );
 }
 
 //---------------------- end private class -----------------------//
@@ -445,11 +453,13 @@ void ServerTest::start()
   d->normalStage = -1;
   d->secureStage = -1;
 
-  d->testProgress->setMaximum( 20 );
-  d->testProgress->setValue( 0 );
-  d->testProgress->setTextVisible( true );
-  d->testProgress->show();
-  d->progressTimer->start( 1000 );
+  if ( d->testProgress ) {
+    d->testProgress->setMaximum( 20 );
+    d->testProgress->setValue( 0 );
+    d->testProgress->setTextVisible( true );
+    d->testProgress->show();
+    d->progressTimer->start( 1000 );
+  }
 
   d->normalSocket = new MailTransport::Socket( this );
   d->secureSocket = new MailTransport::Socket( this );
@@ -465,6 +475,13 @@ void ServerTest::start()
   } else if ( d->testProtocol == POP_PROTOCOL ) {
     d->normalSocket->setPort( POP_PORT );
     d->secureSocket->setPort( POPS_PORT );
+  }
+
+  if ( d->customPorts.contains( Transport::EnumEncryption::None ) ) {
+    d->normalSocket->setPort( d->customPorts.value( Transport::EnumEncryption::None ) );
+  }
+  if ( d->customPorts.contains( Transport::EnumEncryption::SSL ) ) {
+    d->secureSocket->setPort( d->customPorts.value( Transport::EnumEncryption::SSL ) );
   }
 
   connect( d->normalSocket, SIGNAL(connected()), SLOT(slotNormalPossible()) );
@@ -502,9 +519,17 @@ void ServerTest::setServer( const QString &server )
   d->server = server;
 }
 
+void ServerTest::setPort( Transport::EnumEncryption::type encryptionMode, uint port )
+{
+  Q_ASSERT( encryptionMode == Transport::EnumEncryption::None ||
+            encryptionMode == Transport::EnumEncryption::SSL );
+  d->customPorts.insert( encryptionMode, port );
+}
+
 void ServerTest::setProgressBar( QProgressBar *pb )
 {
-  d->testProgress = pb;
+  if ( d->testProgress )
+    d->testProgress = pb;
 }
 
 void ServerTest::setProtocol( const QString &protocol )
@@ -520,6 +545,16 @@ QString ServerTest::protocol()
 QString ServerTest::server()
 {
   return d->server;
+}
+
+int ServerTest::port( Transport::EnumEncryption::type encryptionMode )
+{
+  Q_ASSERT( encryptionMode == Transport::EnumEncryption::None ||
+            encryptionMode == Transport::EnumEncryption::SSL );
+  if ( d->customPorts.contains( encryptionMode ) )
+    return d->customPorts.value( static_cast<int>( encryptionMode ) );
+  else
+    return -1;
 }
 
 QProgressBar *ServerTest::progressBar()

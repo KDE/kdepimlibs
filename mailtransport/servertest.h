@@ -1,5 +1,6 @@
 /*
     Copyright (C) 2007 KovoKs <info@kovoks.nl>
+    Copyright (c) 2008 Thomas McGuire <thomas.mcguire@gmx.net>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -78,6 +79,38 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
       * Get the server to test.
       */
     QString server();
+
+    /**
+     * Set a custom port to use.
+     *
+     * Each encryption mode (no encryption or SSL) has a different port.
+     * TLS uses the same port as no encryption, because TLS is invoked during
+     * a normal session.
+     *
+     * If this function is never called, the default port is used, which is:
+     * (normal first, then SSL)
+     * SMTP: 25, 465
+     * POP: 110, 995
+     * IMAP: 143, 993
+     *
+     * @param encryptionMode the port will only be used in this encryption mode.
+     *                       Valid values for this are only 'None' and 'SSL'.
+     * @param port the port to use
+     *
+     * @since 4.1
+     */
+    void setPort( Transport::EnumEncryption::type encryptionMode, uint port );
+
+    /**
+     * @param encryptionMode the port of this encryption mode is returned.
+     *                       Can only be 'None' and 'SSL'
+     *
+     * @return the port set by @ref setPort or -1 if @ref setPort() was never
+     *         called for this encryption mode.
+     *
+     * @since 4.1
+     */
+    int port( Transport::EnumEncryption::type encryptionMode );
 
     /**
      * Sets a fake hostname for the test. This is currently only used when
