@@ -608,7 +608,7 @@ static QString invitationsDetailsIncidence( Incidence *incidence )
   if ( !comments.isEmpty() ) {
     html += "<br><u>" + i18n("Comments:")
           + "</u><table border=\"0\"><tr><td>&nbsp;</td><td><ul>";
-    for ( uint i = 0; i < comments.count(); ++i )
+    for ( int i = 0; i < comments.count(); ++i )
       html += "<li>" + string2HTML( comments[i] ) + "</li>";
     html += "</ul></td></tr></table>";
   }
@@ -1210,6 +1210,11 @@ QString InvitationFormatterHelper::makeLink( const QString &id, const QString &t
   QString res( "<a href=\"%1\"><b>%2</b></a>" );
   return res.arg( generateLinkURL( id ) ).arg( text );
   return res;
+}
+
+Calendar *InvitationFormatterHelper::calendar() const
+{
+  return 0;
 }
 
 QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *mCalendar,
