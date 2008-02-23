@@ -46,7 +46,6 @@ public:
   virtual void setHost(const QString & host, quint16 port,
                        const QString & user, const QString & pass);
 
-  virtual void special(const QByteArray & aData);
   virtual void get(const KUrl & url);
   virtual void stat(const KUrl & url);
   virtual void del(const KUrl & url, bool isfile);

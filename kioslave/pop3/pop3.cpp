@@ -779,35 +779,6 @@ size_t POP3Protocol::realGetSize(unsigned int msg_num)
   return ret;
 }
 
-void POP3Protocol::special(const QByteArray & aData)
-{
-  QString result;
-  char buf[MAX_PACKET_LEN];
-  QDataStream stream(aData);
-  int tmp;
-  stream >> tmp;
-
-  if (tmp != 'c')
-    return;
-
-  for (int i = 0; i < 2; i++) {
-    QByteArray cmd = (i) ? "AUTH" : "CAPA";
-    if ( command(cmd) != Ok )
-      continue;
-    while (true) {
-      myReadLine(buf, MAX_PACKET_LEN - 1);
-      if (qstrcmp(buf, ".\r\n") == 0)
-        break;
-      result += ' ' + QString(buf).left(strlen(buf) - 2).replace(" ", "-");
-    }
-  }
-  if (supports_apop)
-    result += " APOP";
-  result = result.mid(1);
-  infoMessage(result);
-  finished();
-}
-
 void POP3Protocol::get(const KUrl & url)
 {
 // List of supported commands
