@@ -1230,6 +1230,13 @@ IMAP4Protocol::special (const QByteArray & aData)
     copy(src, dest, 0, false);
     break;
   }
+  case 'c':
+  {
+    // capabilities
+    infoMessage(imapCapabilities.join(" "));
+    finished();
+    break;
+  }
   case 'N':
   {
     // NOOP
