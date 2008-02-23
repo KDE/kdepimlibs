@@ -219,7 +219,7 @@ QList<QVariant> Blogger1Private::defaultArgs( const QString &id )
 // reimplemenet defaultArgs, since we may not use it virtually everywhere
 QList<QVariant> Blogger1Private::blogger1Args( const QString &id )
 {
-  defaultArgs( id );
+  return defaultArgs( id );
 }
 
 void Blogger1Private::slotFetchUserInfo( const QList<QVariant> &result, const QVariant &id )
