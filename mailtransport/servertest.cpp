@@ -108,8 +108,9 @@ void ServerTestPrivate::finalResult()
   kDebug() << "SSL:" <<  q->secureProtocols();
   kDebug() << "TLS:" <<  q->tlsProtocols();
 
-  if( testProgress )
+  if ( testProgress ) {
     testProgress->hide();
+  }
   progressTimer->stop();
 
   emit q->finished( connectionResults.toList() );
@@ -420,8 +421,9 @@ void ServerTestPrivate::slotSslNotPossible()
 
 void ServerTestPrivate::slotUpdateProgress()
 {
-  if( testProgress )
+  if ( testProgress ) {
     testProgress->setValue( testProgress->value() + 1 );
+  }
 }
 
 //---------------------- end private class -----------------------//
@@ -532,8 +534,9 @@ void ServerTest::setPort( Transport::EnumEncryption::type encryptionMode, uint p
 
 void ServerTest::setProgressBar( QProgressBar *pb )
 {
-  if ( d->testProgress )
+  if ( d->testProgress ) {
     d->testProgress = pb;
+  }
 }
 
 void ServerTest::setProtocol( const QString &protocol )
@@ -555,10 +558,11 @@ int ServerTest::port( Transport::EnumEncryption::type encryptionMode )
 {
   Q_ASSERT( encryptionMode == Transport::EnumEncryption::None ||
             encryptionMode == Transport::EnumEncryption::SSL );
-  if ( d->customPorts.contains( encryptionMode ) )
+  if ( d->customPorts.contains( encryptionMode ) ) {
     return d->customPorts.value( static_cast<int>( encryptionMode ) );
-  else
+  } else {
     return -1;
+  }
 }
 
 QProgressBar *ServerTest::progressBar()
