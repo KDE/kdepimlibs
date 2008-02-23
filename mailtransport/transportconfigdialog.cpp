@@ -56,6 +56,8 @@ class MailTransport::TransportConfigDialog::Private
     // detected authentication capabilities
     QList<int> noEncCapa, sslCapa, tlsCapa;
 
+    bool serverTestFailed;
+
     void resetAuthCapabilities()
     {
       noEncCapa.clear();
@@ -74,6 +76,9 @@ class MailTransport::TransportConfigDialog::Private
     void updateAuthCapbilities()
     {
       Q_ASSERT( transport->type() == Transport::EnumType::SMTP );
+
+      if ( serverTestFailed )
+        return;
 
       QList<int> capa = noEncCapa;
       if ( smtp.ssl->isChecked() ) {
@@ -201,6 +206,7 @@ void TransportConfigDialog::checkSmtpCapabilities()
            SLOT(slotFinished( QList< int > )));
   d->smtp.checkCapabilities->setEnabled( false );
   d->serverTest->start();
+  d->serverTestFailed = false;
 }
 
 void TransportConfigDialog::save()
@@ -279,6 +285,14 @@ static void checkHighestEnabledButton( QButtonGroup *group )
 void TransportConfigDialog::slotFinished( QList<int> results )
 {
   d->smtp.checkCapabilities->setEnabled( true );
+  d->serverTest->deleteLater();
+
+  // If the servertest did not find any useable authentication modes, assume the
+  // connection failed and don't disable any of the radioboxes.
+  if ( results.isEmpty() ) {
+    d->serverTestFailed = true;
+    return;
+  }
 
   // encryption method
   d->smtp.none->setEnabled( results.contains( Transport::EnumEncryption::None ) );
@@ -295,8 +309,6 @@ void TransportConfigDialog::slotFinished( QList<int> results )
   d->sslCapa = d->serverTest->secureProtocols();
   d->updateAuthCapbilities();
   checkHighestEnabledButton( d->authGroup );
-
-  d->serverTest->deleteLater();
 }
 
 void TransportConfigDialog::hostNameChanged( const QString &text )
