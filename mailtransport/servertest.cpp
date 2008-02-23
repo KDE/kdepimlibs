@@ -69,6 +69,7 @@ class ServerTestPrivate
     bool                           popSupportsTLS;
     int                            normalStage;
     int                            secureStage;
+    int                            encryptionMode;
 
     void finalResult();
     void handleSMTPIMAPResponse( int type, const QString &text );
@@ -314,8 +315,8 @@ bool ServerTestPrivate::handlePopConversation( MailTransport::Socket *socket, in
 // with TLS.
 void ServerTestPrivate::slotReadNormal( const QString &text )
 {
+  Q_ASSERT( encryptionMode != Transport::EnumEncryption::SSL );
   static const int tlsHandshakeStage = 42;
-  static int encryptionMode = Transport::EnumEncryption::None;
 
   kDebug() << "Stage" << normalStage + 1 << ", Mode" << encryptionMode;
 
@@ -458,6 +459,7 @@ void ServerTest::start()
   d->popSupportsTLS = false;
   d->normalStage = -1;
   d->secureStage = -1;
+  d->encryptionMode = Transport::EnumEncryption::None;
 
   if ( d->testProgress ) {
     d->testProgress->setMaximum( 20 );
