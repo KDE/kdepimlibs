@@ -120,19 +120,20 @@ QList< int > ServerTestPrivate::parseAuthenticationList( const QStringList &auth
   QList< int > result;
   for ( QStringList::ConstIterator it = authentications.begin();
         it != authentications.end(); ++it )  {
-    if ( *it == QLatin1String( "LOGIN" ) ) {
+    QString current = (*it).toUpper();
+    if ( current == QLatin1String( "LOGIN" ) ) {
       result << Transport::EnumAuthenticationType::LOGIN;
-    } else if ( *it == QLatin1String( "PLAIN" ) ) {
+    } else if ( current == QLatin1String( "PLAIN" ) ) {
       result << Transport::EnumAuthenticationType::PLAIN;
-    } else if ( *it == QLatin1String( "CRAM-MD5" ) ) {
+    } else if ( current == QLatin1String( "CRAM-MD5" ) ) {
       result << Transport::EnumAuthenticationType::CRAM_MD5;
-    } else if ( *it == QLatin1String( "DIGEST-MD5" ) ) {
+    } else if ( current == QLatin1String( "DIGEST-MD5" ) ) {
       result << Transport::EnumAuthenticationType::DIGEST_MD5;
-    } else if ( *it == QLatin1String( "NTLM" ) ) {
+    } else if ( current == QLatin1String( "NTLM" ) ) {
       result << Transport::EnumAuthenticationType::NTLM;
-    } else if ( *it == QLatin1String( "GSSAPI" ) ) {
+    } else if ( current == QLatin1String( "GSSAPI" ) ) {
       result << Transport::EnumAuthenticationType::GSSAPI;
-    } else if ( *it == QLatin1String( "ANONYMOUS" ) ) {
+    } else if ( current == QLatin1String( "ANONYMOUS" ) ) {
       result << Transport::EnumAuthenticationType::ANONYMOUS;
     }
     // APOP is handled by handlePopConversation()
@@ -158,7 +159,8 @@ void ServerTestPrivate::handleSMTPIMAPResponse( int type, const QString &text )
   QStringList protocols;
   protocols << QLatin1String( "LOGIN" ) << QLatin1String( "PLAIN" )
             << QLatin1String( "CRAM-MD5" ) << QLatin1String( "DIGEST-MD5" )
-            << QLatin1String( "NTLM" ) << QLatin1String( "GSSAPI" );
+            << QLatin1String( "NTLM" ) << QLatin1String( "GSSAPI" )
+            << QLatin1String( "ANONYMOUS" );
 
   QStringList results;
   for ( int i = 0; i < protocols.count(); ++i ) {
