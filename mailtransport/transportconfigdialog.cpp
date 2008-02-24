@@ -77,8 +77,9 @@ class MailTransport::TransportConfigDialog::Private
     {
       Q_ASSERT( transport->type() == Transport::EnumType::SMTP );
 
-      if ( serverTestFailed )
+      if ( serverTestFailed ) {
         return;
+      }
 
       QList<int> capa = noEncCapa;
       if ( smtp.ssl->isChecked() ) {
