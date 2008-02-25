@@ -1,5 +1,4 @@
 [Desktop Entry]
-Exec=kcmshell4 kresources
 Icon=view-calendar-day
 Type=Service
 X-KDE-ServiceTypes=KCModule
