@@ -702,8 +702,12 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
   // skipping all '@' inside "(...)" comments:
   while ( i < len ) {
     c = aStr[i];
-    if( '(' == c ) commentstack++;
-    if( ')' == c ) commentstack--;
+    if ( '(' == c ) {
+      commentstack++;
+    }
+    if ( ')' == c ) {
+      commentstack--;
+    }
     bInComment = commentstack != 0;
     if ( '"' == c && !bInComment ) {
       bInQuotesOutsideOfEmail = !bInQuotesOutsideOfEmail;
