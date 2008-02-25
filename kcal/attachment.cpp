@@ -43,24 +43,31 @@ using namespace KCal;
 class KCal::Attachment::Private
 {
   public:
-    Private( const QString &data, const QString &mime, bool binary )
+    Private( const QString &mime, bool binary )
       : mMimeType( mime ),
-        mData( data ),
+        mData( 0 ),
         mBinary( binary ),
         mShowInline( false )
     {}
     Private( const Private &other )
       : mMimeType( other.mMimeType ),
-        mData( other.mData ),
+        mUri( other.mUri ),
+        mData( qstrdup( other.mData ) ),
         mLabel( other.mLabel ),
         mBinary( other.mBinary ),
         mLocal( other.mLocal ),
         mShowInline( other.mShowInline )
     {}
+    ~Private()
+    {
+      delete[] mData;
+    }
+
     QByteArray mDataCache;
     uint mSize;
     QString mMimeType;
-    QString mData;
+    QString mUri;
+    char* mData;
     QString mLabel;
     bool mBinary;
     bool mLocal;
@@ -74,14 +81,16 @@ Attachment::Attachment( const Attachment &attachment )
 }
 
 Attachment::Attachment( const QString &uri, const QString &mime )
-  : d( new Attachment::Private( uri, mime, false ) )
+  : d( new Attachment::Private( mime, false ) )
 {
+  d->mUri = uri;
   d->mLocal = false;
 }
 
 Attachment::Attachment( const char *base64, const QString &mime )
-  : d( new Attachment::Private( QString::fromUtf8( base64 ), mime, true ) )
+  : d( new Attachment::Private( mime, true ) )
 {
+  d->mData = qstrdup( base64 );
 }
 
 Attachment::~Attachment()
@@ -97,7 +106,7 @@ bool Attachment::isUri() const
 QString Attachment::uri() const
 {
   if ( !d->mBinary ) {
-    return d->mData;
+    return d->mUri;
   } else {
     return QString();
   }
@@ -105,7 +114,7 @@ QString Attachment::uri() const
 
 void Attachment::setUri( const QString &uri )
 {
-  d->mData = uri;
+  d->mUri = uri;
   d->mBinary = false;
 }
 
@@ -117,7 +126,7 @@ bool Attachment::isBinary() const
 char *Attachment::data() const
 {
   if ( d->mBinary ) {
-    return d->mData.toUtf8().data();
+    return d->mData;
   } else {
     return 0;
   }
@@ -126,7 +135,7 @@ char *Attachment::data() const
 QByteArray &Attachment::decodedData() const
 {
   if ( d->mDataCache.isNull() ) {
-    d->mDataCache = QByteArray::fromBase64( d->mData.toUtf8() );
+    d->mDataCache = QByteArray::fromBase64( d->mData );
   }
 
   return d->mDataCache;
@@ -134,13 +143,14 @@ QByteArray &Attachment::decodedData() const
 
 void Attachment::setDecodedData( const QByteArray &data )
 {
-  setData( data.toBase64() );
+  setData( data.toBase64().constData() );
   d->mDataCache = data;
 }
 
 void Attachment::setData( const char *base64 )
 {
-  d->mData = QString::fromUtf8( base64 );
+  delete[] d->mData;
+  d->mData = qstrdup( base64 );
   d->mBinary = true;
   d->mDataCache = QByteArray();
   d->mSize = 0;

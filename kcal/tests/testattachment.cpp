@@ -31,5 +31,14 @@ using namespace KCal;
 void AttachmentTest::testValidity()
 {
   Attachment attachment( QString( "http://www.kde.org" ) );
-  QVERIFY( attachment.uri() == "http://www.kde.org" );
+  QCOMPARE( attachment.uri(), QString::fromLatin1("http://www.kde.org") );
+  QCOMPARE( attachment.data(), (char*)0 );
+  QVERIFY( attachment.decodedData().isEmpty() );
+  QVERIFY( !attachment.isBinary() );
+
+  attachment.setDecodedData( "foo" );
+  QVERIFY( attachment.isBinary() );
+  QCOMPARE( attachment.decodedData(), QByteArray("foo") );
+  QCOMPARE( attachment.data(), "Zm9v" );
+  QCOMPARE( attachment.size(), 3U );
 }
