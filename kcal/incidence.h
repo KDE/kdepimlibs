@@ -87,9 +87,12 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
         {
           return mResource->addJournal( j );
         }
+        bool visit( FreeBusy * )
+        {
+          return false;
+        }
 
       private:
-        bool visit( FreeBusy * ) { return false; }   // prevent warning about hidden virtual method
         T *mResource;
     };
     //@endcond
@@ -121,10 +124,12 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
           mResource->deleteJournal( j );
           return true;
         }
+        bool visit( FreeBusy * )
+        {
+          return false;
+        }
 
       private:
-        bool visit( FreeBusy * ) { return false; }   // prevent warning about hidden virtual method
-
         T *mResource;
     };
     //@endcond
