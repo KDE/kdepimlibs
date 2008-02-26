@@ -44,13 +44,15 @@ class KCal::Attachment::Private
 {
   public:
     Private( const QString &mime, bool binary )
-      : mMimeType( mime ),
+      : mSize( 0 ),
+        mMimeType( mime ),
         mData( 0 ),
         mBinary( binary ),
         mShowInline( false )
     {}
     Private( const Private &other )
-      : mMimeType( other.mMimeType ),
+      : mSize( other.mSize ),
+        mMimeType( other.mMimeType ),
         mUri( other.mUri ),
         mData( qstrdup( other.mData ) ),
         mLabel( other.mLabel ),
@@ -90,7 +92,7 @@ Attachment::Attachment( const QString &uri, const QString &mime )
 Attachment::Attachment( const char *base64, const QString &mime )
   : d( new Attachment::Private( mime, true ) )
 {
-  d->mData = qstrdup( base64 );
+  setData( base64 );
 }
 
 Attachment::~Attachment()
@@ -145,6 +147,7 @@ void Attachment::setDecodedData( const QByteArray &data )
 {
   setData( data.toBase64().constData() );
   d->mDataCache = data;
+  d->mSize = d->mDataCache.size();
 }
 
 void Attachment::setData( const char *base64 )

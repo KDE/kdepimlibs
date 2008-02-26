@@ -41,4 +41,13 @@ void AttachmentTest::testValidity()
   QCOMPARE( attachment.decodedData(), QByteArray("foo") );
   QCOMPARE( attachment.data(), "Zm9v" );
   QCOMPARE( attachment.size(), 3U );
+
+  Attachment attachment2 = Attachment( "Zm9v" );
+  QCOMPARE( attachment2.size(), 3U );
+  QCOMPARE( attachment2.decodedData(), QByteArray("foo") );
+  attachment2.setDecodedData( "123456" );
+  QCOMPARE( attachment2.size(), 6U );
+
+  Attachment attachment3( attachment2 );
+  QCOMPARE( attachment3.size(), attachment2.size() );
 }
