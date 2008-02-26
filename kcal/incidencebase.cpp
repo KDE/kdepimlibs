@@ -214,7 +214,7 @@ void IncidenceBase::setOrganizer( const QString &o )
   }
 
   // split the string into full name plus email.
-  Person organizer( mail );
+  const Person organizer = Person::fromFullName( mail );
   setOrganizer( organizer );
 }
 

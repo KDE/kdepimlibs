@@ -58,7 +58,7 @@ class KCAL_EXPORT Person
       @param fullName is the name and email of the person in
       the form FirstName LastName \<email\>.
     */
-    explicit Person( const QString &fullName );
+    static Person fromFullName( const QString &fullName );
 
     /**
       Constructs a person with the name @p name and email address @p email.
