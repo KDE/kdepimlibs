@@ -53,9 +53,14 @@ namespace KCal {
   (unique identifier) derived from a Calendar Incidence, Email Message,
   or any other thing you want.
 */
-class KCAL_EXPORT Attendee : public Person
+class KCAL_EXPORT Attendee : private Person
 {
   public:
+    using Person::setEmail;
+    using Person::email;
+    using Person::setName;
+    using Person::name;
+    using Person::fullName;
 
     /**
       The different types of participant status.
@@ -112,7 +117,7 @@ class KCAL_EXPORT Attendee : public Person
     /**
       Destroys the attendee.
     */
-    virtual ~Attendee();
+    ~Attendee();
 
     /**
       Sets the #Role of the attendee to @p role.
