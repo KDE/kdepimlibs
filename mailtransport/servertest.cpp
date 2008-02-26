@@ -536,9 +536,7 @@ void ServerTest::setPort( Transport::EnumEncryption::type encryptionMode, uint p
 
 void ServerTest::setProgressBar( QProgressBar *pb )
 {
-  if ( d->testProgress ) {
-    d->testProgress = pb;
-  }
+  d->testProgress = pb;
 }
 
 void ServerTest::setProtocol( const QString &protocol )
