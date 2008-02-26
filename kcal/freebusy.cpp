@@ -17,7 +17,7 @@
   You should have received a copy of the GNU Library General Public License
   along with this library; see the file COPYING.LIB.  If not, write to
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  Boston, MA 02110-1301, USA.
 */
 /**
   @file
@@ -42,32 +42,60 @@
 using namespace KCal;
 
 //@cond PRIVATE
-class FreeBusy::Private
+class KCal::FreeBusy::Private
 {
   public:
+    Private()
+      : mCalendar( 0 )
+    {}
+
+    Private( const KCal::FreeBusy::Private &other )
+    { init( other ); }
+
+    Private( const Period::List &busyPeriods )
+      : mBusyPeriods( busyPeriods ),
+        mCalendar( 0 )
+    {}
+
+    void init( const KCal::FreeBusy::Private &other );
+
+    KDateTime mDtEnd;         // end datetime
+    Period::List mBusyPeriods;// list of periods
+    Calendar *mCalendar;      // associated calendar, not owned by this instance
+
     //This is used for creating a freebusy object for the current user
     bool addLocalPeriod( FreeBusy *fb, const KDateTime &start, const KDateTime &end );
-    KDateTime mDtEnd;
-    Period::List mBusyPeriods;
-    Calendar *mCalendar;    // not owned by this instance
 };
+
+void KCal::FreeBusy::Private::init( const KCal::FreeBusy::Private &other )
+{
+  mDtEnd = other.mDtEnd;
+  mBusyPeriods = other.mBusyPeriods;
+  mCalendar = other.mCalendar;
+}
+
 //@endcond
 
 FreeBusy::FreeBusy()
-  : d( new Private )
+  : d( new KCal::FreeBusy::Private() )
+{
+}
+
+FreeBusy::FreeBusy( const FreeBusy &other )
+  : IncidenceBase( other ),
+    d( new KCal::FreeBusy::Private( *other.d ) )
 {
 }
 
 FreeBusy::FreeBusy( const KDateTime &start, const KDateTime &end )
-  : d( new Private )
+  : d( new KCal::FreeBusy::Private() )
 {
   setDtStart( start );
   setDtEnd( end );
 }
 
-FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start,
-                    const KDateTime &end )
-  : d( new Private )
+FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start, const KDateTime &end )
+  : d( new KCal::FreeBusy::Private() )
 {
   kDebug();
   d->mCalendar = calendar;
@@ -163,9 +191,8 @@ FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start,
 }
 
 FreeBusy::FreeBusy( const Period::List &busyPeriods )
-  : d( new Private )
+  : d( new KCal::FreeBusy::Private( busyPeriods ) )
 {
-  d->mBusyPeriods = busyPeriods;
 }
 
 FreeBusy::~FreeBusy()
@@ -249,6 +276,22 @@ void FreeBusy::shiftTimes( const KDateTime::Spec &oldSpec,
   for ( int i = 0, end = d->mBusyPeriods.count();  i < end;  ++end ) {
     d->mBusyPeriods[i].shiftTimes( oldSpec, newSpec );
   }
+}
+
+FreeBusy &FreeBusy::operator=( const FreeBusy &other )
+{
+  IncidenceBase::operator=( other );
+  d->init( *other.d );
+  return *this;
+}
+
+bool FreeBusy::operator==( const FreeBusy &freebusy ) const
+{
+  return
+    static_cast<const IncidenceBase &>( *this ) == static_cast<const IncidenceBase &>( freebusy ) &&
+    dtEnd() == freebusy.dtEnd() &&
+    d->mCalendar == freebusy.d->mCalendar &&
+    d->mBusyPeriods == freebusy.d->mBusyPeriods;
 }
 
 //@cond PRIVATE

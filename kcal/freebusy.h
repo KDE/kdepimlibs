@@ -55,6 +55,12 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
     FreeBusy();
 
     /**
+      Copy constructor.
+      @param other is the free/busy to copy.
+    */
+    FreeBusy( const FreeBusy &other );
+
+    /**
       Constructs a free/busy from a list of periods.
 
       @param busyPeriods is a QList of periods.
@@ -163,6 +169,18 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
     */
     void merge( FreeBusy *freebusy );
 
+    /**
+      Assignment operator.
+    */
+    FreeBusy &operator=( const FreeBusy &other );
+
+    /**
+      Compare this with @p freebusy for equality.
+
+      @param freebusy is the FreeBusy to compare.
+    */
+    bool operator==( const FreeBusy &freebusy ) const;
+
   private:
     /**
      @copydoc
@@ -171,7 +189,6 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
     bool accept( Visitor &v ) { return v.visit( this ); }
 
     //@cond PRIVATE
-    Q_DISABLE_COPY( FreeBusy )
     class Private;
     Private *const d;
     //@endcond

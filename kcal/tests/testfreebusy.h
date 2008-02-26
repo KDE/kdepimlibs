@@ -18,8 +18,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef FREEBUSY_TEST_H
-#define FREEBUSY_TEST_H
+#ifndef TESTFREEBUSY_H
+#define TESTFREEBUSY_H
 
 #include <QtCore/QObject>
 
@@ -29,6 +29,7 @@ class FreeBusyTest : public QObject
   private Q_SLOTS:
     void testValidity();
     void testAddSort();
+    void testAssign();
 };
 
 #endif

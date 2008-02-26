@@ -1,6 +1,6 @@
 /*
   This file is part of the kcal library.
-  Copyright (c) 2007 Allen Winter <winter@kde.org>
+  Copyright (c) 2007-2008 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -17,16 +17,13 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-
-#include <qtest_kde.h>
-
 #include "testfreebusy.h"
 #include "testfreebusy.moc"
+#include <qtest_kde.h>
 
 QTEST_KDEMAIN( FreeBusyTest, NoGUI )
 
 #include "kcal/freebusy.h"
-
 using namespace KCal;
 
 void FreeBusyTest::testValidity()
@@ -84,4 +81,28 @@ void FreeBusyTest::testAddSort()
   QVERIFY( fb1.busyPeriods().last().end() ==
            KDateTime( QDate( 2007, 10, 27 ), QTime( 8, 0, 0 ), KDateTime::UTC ) );
 
+}
+
+void FreeBusyTest::testAssign()
+{
+  const KDateTime firstDateTime( QDate( 2007, 7, 23 ), QTime( 7, 0, 0 ), KDateTime::UTC );
+
+  FreeBusy fb1(
+    firstDateTime,
+    KDateTime( QDate( 2007, 7, 23 ), QTime( 8, 0, 0 ), KDateTime::UTC ) );
+
+  FreeBusy fb2 = fb1;
+  QVERIFY( fb1 == fb2 );
+
+  fb1.setDtStart( firstDateTime.addDays( 1 ) );
+  fb2.setDtStart( firstDateTime.addDays( 2 ) );
+  QVERIFY( !( fb1 == fb2 ) );
+
+  FreeBusy fb3 = fb2;
+  QVERIFY( fb3 == fb2 );
+
+  KDateTime dt = fb3.dtEnd();
+  fb3.setDtEnd( dt.addDays( 1 ) );
+  fb2.setDtEnd( dt.addDays( 1 ) );
+  QVERIFY( fb2 == fb3 );
 }
