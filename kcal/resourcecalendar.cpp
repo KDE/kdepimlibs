@@ -46,6 +46,7 @@ class ResourceCalendar::Private
     bool mInhibitSave;     // true to prevent saves
     bool mReceivedLoadError;
     bool mReceivedSaveError;
+    QString mLastError;
 
 };
 //@endcond
@@ -236,6 +237,14 @@ bool ResourceCalendar::save( Incidence *incidence )
   }
 }
 
+bool ResourceCalendar::save( QString &err, Incidence *incidence )
+{
+  d->mLastError = QString();
+  bool ret = save( incidence );
+  err = d->mLastError;
+  return ret;
+}
+
 bool ResourceCalendar::isSaving()
 {
   return false;
@@ -255,6 +264,7 @@ void ResourceCalendar::saveError( const QString &err )
   if ( !err.isEmpty() ) {
     msg += err;
   }
+  d->mLastError = err;
   emit resourceSaveError( this, msg );
 }
 

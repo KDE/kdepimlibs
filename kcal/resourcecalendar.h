@@ -101,9 +101,20 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       to do the actual saving.
 
       @param incidence if given as 0, doSave() is called to save all incidences,
-             else doSave(incidence) is called to save only the given one
+             else doSave(incidence) is called to save only the given one.
     */
     bool save( Incidence *incidence = 0 );
+
+    /**
+      Save resource data and deliver error message.
+
+      This function calls save() and delivers the latest error msg.
+
+      @param err reference QString to hand over the error msg to the caller.
+      @param incidence if given as 0, doSave() is called to save all incidences,
+             else doSave(incidence) is called to save only the given one.
+    */
+    bool save( QString &err, Incidence *incidence = 0 );
 
     /**
       Return true if a save operation is still in progress, otherwise return
