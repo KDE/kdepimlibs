@@ -1,6 +1,6 @@
 /*
   This file is part of the kcal library.
-  Copyright (C) 2006 Allen Winter <winter@kde.org>
+  Copyright (C) 2006,2008 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -44,4 +44,17 @@ void AttendeeTest::testCompare()
   attendee2.setRole( Attendee::ReqParticipant );
   QVERIFY( ! ( attendee1 == attendee2 ) );
   QVERIFY( attendee1.name() == "fred" );
+}
+
+void AttendeeTest::testAssign()
+{
+  Attendee attendee1( "fred", "fred@flintstone.com" );
+  Attendee attendee2 = attendee1;
+  QVERIFY( attendee1 == attendee2 );
+
+  attendee2.setRole( Attendee::NonParticipant );
+  QVERIFY( !( attendee1 == attendee2 ) );
+
+  Attendee attendee3( attendee1 );
+  QVERIFY( attendee3 == attendee1 );
 }

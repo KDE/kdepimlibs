@@ -68,10 +68,9 @@ Attendee::Attendee( const QString &name, const QString &email, bool rsvp,
 }
 
 Attendee::Attendee( const Attendee &attendee )
-  : d( new KCal::Attendee::Private( *attendee.d ) )
+  : Person( attendee ),
+    d( new KCal::Attendee::Private( *attendee.d ) )
 {
-  setName( attendee.name() );
-  setEmail( attendee.email() );
 }
 
 Attendee::~Attendee()

@@ -1,6 +1,6 @@
 /*
   This file is part of the kcal library.
-  Copyright (c) 2006 Allen Winter <winter@kde.org>
+  Copyright (c) 2006,2008 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -29,6 +29,7 @@ class AttendeeTest : public QObject
   private Q_SLOTS:
     void testValidity();
     void testCompare();
+    void testAssign();
 };
 
 #endif
