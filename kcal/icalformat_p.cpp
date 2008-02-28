@@ -1161,7 +1161,7 @@ FreeBusy *ICalFormatImpl::readFreeBusy( icalcomponent *vfreebusy )
 
   icalproperty *p = icalcomponent_get_first_property( vfreebusy, ICAL_ANY_PROPERTY );
 
-  Period::List periods;
+  FreeBusyPeriod::List periods;
 
   while ( p ) {
     icalproperty_kind kind = icalproperty_isa( p );
@@ -1178,13 +1178,13 @@ FreeBusy *ICalFormatImpl::readFreeBusy( icalcomponent *vfreebusy )
     {
       icalperiodtype icalperiod = icalproperty_get_freebusy( p );
       KDateTime period_start = readICalUtcDateTime( p, icalperiod.start );
-      Period period;
+      FreeBusyPeriod period;
       if ( !icaltime_is_null_time( icalperiod.end ) ) {
         KDateTime period_end = readICalUtcDateTime( p, icalperiod.end );
-        period = Period( period_start, period_end );
+        period = FreeBusyPeriod( period_start, period_end );
       } else {
         Duration duration ( readICalDuration( icalperiod.duration ) );
-        period = Period( period_start, duration );
+        period = FreeBusyPeriod( period_start, duration );
       }
       QByteArray param = icalproperty_get_parameter_as_string( p, "X-SUMMARY" );
       period.setSummary( QString::fromUtf8( KCodecs::base64Decode( param ) ) );

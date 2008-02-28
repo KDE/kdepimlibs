@@ -31,7 +31,7 @@ using namespace KCal;
 int main( int, char ** )
 {
   const QString fbString =
-    "BEGIN:VCALENDAR\n" 
+    "BEGIN:VCALENDAR\n"
     "PRODID:-//proko2//freebusy 1.0//EN\n"
     "METHOD:PUBLISH\n"
     "VERSION:2.0\n"
@@ -52,9 +52,9 @@ int main( int, char ** )
 
   ICalFormat format;
   FreeBusy *fb = format.parseFreeBusy( fbString );
-  kDebug() << fb->busyPeriods().count() << " " << fb->dtStart() << endl;
-  const QList<Period> l = fb->busyPeriods();
-  for ( QList<Period>::ConstIterator it = l.begin(); it != l.end(); ++it )
+  kDebug() << fb->fullBusyPeriods().count() << " " << fb->dtStart() << endl;
+  const QList<FreeBusyPeriod> l = fb->fullBusyPeriods();
+  for ( QList<FreeBusyPeriod>::ConstIterator it = l.begin(); it != l.end(); ++it )
     kDebug() << (*it).start() << " " << (*it).end() << "+ " << (*it).summary() << ":" << (*it).location() << endl;
 
   typedef QMap<QByteArray, QString> FooMap;

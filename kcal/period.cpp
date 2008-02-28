@@ -51,8 +51,6 @@ class KCal::Period::Private
     KDateTime mEnd;      // period ending date/time
     bool mHasDuration;   // does period have a duration?
     bool mDailyDuration; // duration is defined as number of days, not seconds
-    QString mSummary;
-    QString mLocation;
 };
 //@endcond
 
@@ -137,24 +135,4 @@ void Period::shiftTimes( const KDateTime::Spec &oldSpec,
   d->mStart.setTimeSpec( newSpec );
   d->mEnd = d->mEnd.toTimeSpec( oldSpec );
   d->mEnd.setTimeSpec( newSpec );
-}
-
-QString Period::summary() const
-{
-  return d->mSummary;
-}
-
-void Period::setSummary( const QString &summary )
-{
-  d->mSummary = summary;
-}
-
-QString Period::location() const
-{
-  return d->mLocation;
-}
-
-void Period::setLocation( const QString &location )
-{
-  d->mLocation = location;
 }

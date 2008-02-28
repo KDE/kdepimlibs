@@ -32,7 +32,7 @@
 #define KCAL_FREEBUSY_H
 
 #include "incidencebase.h"
-#include "period.h"
+#include "freebusyperiod.h"
 
 #include <QtCore/QByteArray>
 
@@ -66,6 +66,13 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
       @param busyPeriods is a QList of periods.
     */
     explicit FreeBusy( const Period::List &busyPeriods );
+
+    /**
+      Constructs a free/busy from a list of periods.
+
+      @param busyPeriods is a QList of periods.
+    */
+    explicit FreeBusy( const FreeBusyPeriod::List &busyPeriods );
 
     /**
       Constructs a free/busy from a single period.
@@ -133,6 +140,11 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
     Period::List busyPeriods() const;
 
     /**
+      Returns the list of all periods within the free/busy.
+    */
+    FreeBusyPeriod::List fullBusyPeriods() const;
+
+    /**
       Adds a period to the freebusy list and sorts the list.
 
       @param start is the start datetime of the period.
@@ -156,6 +168,15 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
       @param list is a QList of Period objects.
     */
     void addPeriods( const Period::List &list );
+
+    /**
+      Adds a list of periods to the freebusy object and then sorts that list.
+      Use this if you are adding many items, instead of the addPeriod method,
+      to avoid sorting repeatedly.
+
+      @param list is a QList of FreeBusyPeriod objects.
+    */
+    void addPeriods( const FreeBusyPeriod::List &list );
 
     /**
       Sorts the list of free/busy periods into ascending order.

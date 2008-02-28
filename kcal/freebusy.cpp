@@ -52,7 +52,7 @@ class KCal::FreeBusy::Private
     Private( const KCal::FreeBusy::Private &other )
     { init( other ); }
 
-    Private( const Period::List &busyPeriods )
+    Private( const FreeBusyPeriod::List &busyPeriods )
       : mBusyPeriods( busyPeriods ),
         mCalendar( 0 )
     {}
@@ -60,7 +60,7 @@ class KCal::FreeBusy::Private
     void init( const KCal::FreeBusy::Private &other );
 
     KDateTime mDtEnd;         // end datetime
-    Period::List mBusyPeriods;// list of periods
+    FreeBusyPeriod::List mBusyPeriods;// list of periods
     Calendar *mCalendar;      // associated calendar, not owned by this instance
 
     //This is used for creating a freebusy object for the current user
@@ -191,6 +191,12 @@ FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start, const KDateTime 
 }
 
 FreeBusy::FreeBusy( const Period::List &busyPeriods )
+  : d( new KCal::FreeBusy::Private() )
+{
+  addPeriods(busyPeriods);
+}
+
+FreeBusy::FreeBusy( const FreeBusyPeriod::List &busyPeriods )
   : d( new KCal::FreeBusy::Private( busyPeriods ) )
 {
 }
@@ -223,6 +229,17 @@ KDateTime FreeBusy::dtEnd() const
 
 Period::List FreeBusy::busyPeriods() const
 {
+  Period::List res;
+
+  foreach ( const FreeBusyPeriod &p, d->mBusyPeriods ) {
+    res << p;
+  }
+
+  return res;
+}
+
+FreeBusyPeriod::List FreeBusy::fullBusyPeriods() const
+{
   return d->mBusyPeriods;
 }
 
@@ -234,19 +251,27 @@ void FreeBusy::sortList()
 
 void FreeBusy::addPeriods( const Period::List &list )
 {
+  foreach ( const Period &p, list ) {
+    d->mBusyPeriods << FreeBusyPeriod(p);
+  }
+  sortList();
+}
+
+void FreeBusy::addPeriods( const FreeBusyPeriod::List &list )
+{
   d->mBusyPeriods += list;
   sortList();
 }
 
 void FreeBusy::addPeriod( const KDateTime &start, const KDateTime &end )
 {
-  d->mBusyPeriods.append( Period( start, end ) );
+  d->mBusyPeriods.append( FreeBusyPeriod( start, end ) );
   sortList();
 }
 
 void FreeBusy::addPeriod( const KDateTime &start, const Duration &duration )
 {
-  d->mBusyPeriods.append( Period( start, duration ) );
+  d->mBusyPeriods.append( FreeBusyPeriod( start, duration ) );
   sortList();
 }
 
@@ -324,7 +349,7 @@ bool FreeBusy::Private::addLocalPeriod( FreeBusy *fb,
     tmpEnd = eventEnd;
   }
 
-  Period p( tmpStart, tmpEnd );
+  FreeBusyPeriod p( tmpStart, tmpEnd );
   mBusyPeriods.append( p );
 
   return true;

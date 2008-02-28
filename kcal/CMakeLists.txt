@@ -210,6 +210,7 @@ set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS} ${libicalss_SRCS}
    todo.cpp
    event.cpp
    freebusy.cpp
+   freebusyperiod.cpp
    attendee.cpp
    attachment.cpp
    recurrencerule.cpp
@@ -321,6 +322,7 @@ install( FILES
         filestorage.h
         freebusy.h
         freebusycache.h
+        freebusyperiod.h
         freebusyurlstore.h
         ${CMAKE_CURRENT_BINARY_DIR}/htmlexportsettings.h
         htmlexport.h

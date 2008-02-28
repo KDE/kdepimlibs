@@ -187,11 +187,6 @@ class KCAL_EXPORT Period
     void shiftTimes( const KDateTime::Spec &oldSpec,
                      const KDateTime::Spec &newSpec );
 
-    QString summary() const;
-    void setSummary( const QString &summary );
-    QString location() const;
-    void setLocation( const QString &location );
-
   private:
     //@cond PRIVATE
     class Private;
