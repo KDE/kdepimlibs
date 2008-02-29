@@ -223,7 +223,7 @@ bool CalendarLocal::addTodo( Todo *todo )
 void CalendarLocal::Private::insertTodo( Todo *todo )
 {
   QString uid = todo->uid();
-  if ( mTodos.value( uid ) == 0 ) {
+  if ( !mTodos.contains( uid ) ) {
     mTodos.insert( uid, todo );
     if ( todo->hasDueDate() ) {
       mTodosForDate.insert( todo->dtDue().date().toString(), todo );
@@ -339,7 +339,7 @@ Alarm::List CalendarLocal::alarms( const KDateTime &from, const KDateTime &to )
 void CalendarLocal::Private::insertEvent( Event *event )
 {
   QString uid = event->uid();
-  if ( mEvents.value( uid ) == 0 ) {
+  if ( !mEvents.contains( uid ) ) {
     mEvents.insert( uid, event );
     if ( !event->recurs() ) {
       mEventsForDate.insert( event->dtStart().date().toString(), event );
@@ -516,7 +516,7 @@ bool CalendarLocal::addJournal( Journal *journal )
 void CalendarLocal::Private::insertJournal( Journal *journal )
 {
   QString uid = journal->uid();
-  if ( mJournals.value( uid ) == 0 ) {
+  if ( !mJournals.contains( uid ) ) {
     mJournals.insert( uid, journal );
     mJournalsForDate.insert( journal->dtStart().date().toString(), journal );
   } else {
