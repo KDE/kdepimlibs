@@ -14,6 +14,7 @@ Icon=view-filter
 Description=An ioslave for the Sieve mail filtering protocol
 Description[ca]=Un 'ioslave' pel protocol de filtrat de correu Sieve
 Description[cs]=Protokol pro filtrování pošty Sieve
+Description[da]=En ioslave til mail-filtreringsprotokollen Sieve
 Description[de]=Ein Ein-/Ausgabemodul für das Mailfilter-Protokoll Sieve
 Description[el]=Ένα ioslave για το πρωτόκολλο φιλτραρίσματος αλληλογραφίας Sieve
 Description[es]=Un esclavo de E/S para el protocolo de filtrado de correo Sieve
