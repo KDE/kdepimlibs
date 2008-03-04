@@ -59,6 +59,12 @@ Person::Person() : d( new KCal::Person::Private )
 {
 }
 
+Person::Person( const QString &fullName )
+    : d( new Private )
+{
+    KPIMUtils::extractEmailAddressAndName( fullName, d->mEmail, d->mName );
+}
+
 Person Person::fromFullName( const QString &fullName )
 {
   QString email, name;

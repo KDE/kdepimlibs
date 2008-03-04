@@ -61,6 +61,12 @@ class KCAL_EXPORT Person
     static Person fromFullName( const QString &fullName );
 
     /**
+       \deprecated
+       Use fromFullName() instead.
+    */
+    KDE_CONSTRUCTOR_DEPRECATED explicit Person( const QString &fullName );
+
+    /**
       Constructs a person with the name @p name and email address @p email.
 
       @param name is the name of this person.
