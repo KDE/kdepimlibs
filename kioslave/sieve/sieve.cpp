@@ -31,6 +31,7 @@ extern "C" {
 #include <sasl/sasl.h>
 }
 
+#include <qregexp.h>
 #include <kdemacros.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
@@ -235,6 +236,7 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
 				ksDebug << "Connected to Sieve server: " << r.getVal() << endl;
 				ret = true;
 				setMetaData("implementation", r.getVal());
+				m_implementation = r.getVal();
 			}
 
 		} else if (r.getKey() == "SASL") {
@@ -342,7 +344,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 			if (startSsl()) {
 				ksDebug << "TLS enabled successfully." << endl;
 				// reparse capabilities:
-				parseCapabilities(false);
+				parseCapabilities( requestCapabilitiesAfterStartTLS() );
 			} else {
 				ksDebug << "TLS initiation failed." << endl;
 				disconnect(true);
@@ -1127,7 +1129,10 @@ bool kio_sieveProtocol::receiveData(bool waitForData, const QByteArray &reparse)
 		  {
 			// expecting {quantity}
 			start = 0;
-			end = interpret.indexOf('}', start + 1) - 1;
+			end = interpret.indexOf("+}", start + 1);
+			// some older versions of Cyrus enclose the literal size just in { } instead of { +}
+			if ( end == -1 )
+				end = interpret.indexOf('}', start + 1);
 
 			bool ok = false;
 			r.setQuantity(interpret.mid(start + 1, end - start - 1).toUInt( &ok ));
@@ -1208,4 +1213,22 @@ int kio_sieveProtocol::operationResult()
 	}
 
 	return OTHER;
+}
+
+bool kio_sieveProtocol::requestCapabilitiesAfterStartTLS() const
+{
+  // Cyrus didn't send CAPABILITIES after STARTTLS until 2.3.11, which is
+  // not standard conform, but we need to support that anyway.
+  // m_implementation looks like this 'Cyrus timsieved v2.2.12' for Cyrus btw.
+  QRegExp regExp( "Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)", Qt::CaseInsensitive );
+  if ( regExp.indexIn( m_implementation ) >= 0 ) {
+    const int major = regExp.cap( 1 ).toInt();
+    const int minor = regExp.cap( 2 ).toInt();
+    const int patch = regExp.cap( 3 ).toInt();
+    if ( major < 2 || (major == 2 && (minor < 3 || (major == 3 && patch < 11))) ) {
+      ksDebug << "Enabling compat mode for Cyrus < 2.3.11";
+      return true;
+    }
+  }
+  return false;
 }
