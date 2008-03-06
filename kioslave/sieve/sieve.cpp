@@ -1186,7 +1186,7 @@ bool kio_sieveProtocol::receiveData(bool waitForData, const QByteArray &reparse)
 
 bool kio_sieveProtocol::operationSuccessful()
 {
-	while (receiveData(false)) {
+	while (receiveData(true)) {
 		if (r.getType() == kio_sieveResponse::ACTION) {
 			QByteArray response = r.getAction().left(2);
 			if (response == "OK") {
