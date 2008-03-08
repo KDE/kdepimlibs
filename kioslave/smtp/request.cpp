@@ -53,7 +53,7 @@ namespace KioSMTP {
         continue;
 
       const QString key = (*it).left( equalsPos ).toLower();
-      const QString value = QUrl::fromPercentEncoding( (*it).mid( equalsPos + 1 ).toLatin1() );
+      const QString value = QUrl::fromPercentEncoding( (*it).mid( equalsPos + 1 ).toLatin1() ); //krazy:exclude=qclasses
 
       if ( key == "to" )
         request.addTo( value );
@@ -86,7 +86,7 @@ namespace KioSMTP {
   }
 
   QByteArray Request::heloHostnameCString() const {
-    return QUrl::toAce( heloHostname() );
+    return QUrl::toAce( heloHostname() ); //krazy:exclude=qclasses
   }
 
   static bool isUsAscii( const QString & s ) {

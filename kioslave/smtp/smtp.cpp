@@ -28,6 +28,7 @@
  *
  */
 
+#include "smtp.h"
 #include "smtp-config.h"
 
 #ifdef HAVE_LIBSASL2
@@ -37,7 +38,6 @@ extern "C" {
 #endif
 
 #include "common.h"
-#include "smtp.h"
 #include "request.h"
 #include "response.h"
 #include "transactionstate.h"

@@ -29,18 +29,18 @@
     your version.
 */
 
-#include "smtp-config.h"
 #include "command.h"
 
 #include "smtp.h"
 #include "response.h"
 #include "transactionstate.h"
 
-#include <QtCore/QUrl>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kcodecs.h>
 #include <kio/slavebase.h> // for test_commands, where SMTPProtocol is not derived from TCPSlaveBase
+
+#include <QtCore/QUrl>
 
 #include <assert.h>
 
@@ -125,7 +125,7 @@ static sasl_callback_t callbacks[] = {
     mNeedResponse = true;
     mComplete = mEHLONotSupported;
     const char * cmd = mEHLONotSupported ? "HELO " : "EHLO " ;
-    return cmd + QUrl::toAce( mHostname ) + "\r\n";
+    return cmd + QUrl::toAce( mHostname ) + "\r\n"; //krazy:exclude=qclasses
   }
 
   bool EHLOCommand::processResponse( const Response & r, TransactionState * ) {
@@ -365,7 +365,7 @@ static sasl_callback_t callbacks[] = {
           mSMTP->error( KIO::ERR_COULD_NOT_LOGIN,
             ( mMechusing ? i18n("Your SMTP server does not support %1.", r.errorMessage() )
               : i18n("Your SMTP server does not support (unspecified method).") )
-            + "\n" + chooseADifferentMsg + "\n" + r.errorMessage() );
+                        + '\n' + chooseADifferentMsg + '\n' + r.errorMessage() );
         }
         else
           mSMTP->error( KIO::ERR_COULD_NOT_LOGIN,
