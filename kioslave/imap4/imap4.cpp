@@ -87,6 +87,7 @@ extern "C" {
 #include <klocale.h>
 #include <kmimetype.h>
 #include <kcodecs.h>
+#include <kde_file.h>
 
 #include "common.h"
 #include "kdemacros.h"
@@ -151,7 +152,7 @@ sigchld_handler (int signo)
       // Reinstall signal handler, since Linux resets to default after
       // the signal occurred ( BSD handles it different, but it should do
       // no harm ).
-      signal (SIGCHLD, sigchld_handler);
+      KDE_signal (SIGCHLD, sigchld_handler);
       return;
     }
   }
@@ -1582,11 +1583,9 @@ IMAP4Protocol::specialCustomCommand( QDataStream& stream )
     imapCommand *cmd = doCommand (imapCommand::clientCustom( command, arguments ));
     if (cmd->result () != "OK")
     {
-      error(ERR_SLAVE_DEFINED, i18n("Custom command %1:%2 "
-            "failed. The server returned: %3")
-          .arg(command)
-          .arg(arguments)
-          .arg(cmd->resultInfo()));
+      error( ERR_SLAVE_DEFINED,
+             i18n( "Custom command %1:%2 failed. The server returned: %3",
+                  command, arguments, cmd->resultInfo() ) );
       return;
     }
     completeQueue.removeAll(cmd);
