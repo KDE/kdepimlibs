@@ -813,7 +813,7 @@ void imapParser::parseDelegate (parseString & result)
     rights.append( word );
   }
 
-  lastResults.append( email + ":" + rights.join( "," ) );
+  lastResults.append( email + ':' + rights.join( "," ) );
 }
 
 void imapParser::parseOutOfOffice (parseString & result)
@@ -823,7 +823,7 @@ void imapParser::parseOutOfOffice (parseString & result)
 
   QByteArray msg = parseLiteral (result, false, false);
 
-  lastResults.append( state + "^" + QString::fromUtf8( msg ) );
+  lastResults.append( state + '^' + QString::fromUtf8( msg ) );
 }
 
 void imapParser::parseMyRights (parseString & result)
