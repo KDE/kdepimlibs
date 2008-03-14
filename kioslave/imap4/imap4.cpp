@@ -57,6 +57,7 @@ imap://server/folder/
  */
 
 #include "imap4.h"
+#include <kdepimlibs-compat.h> // for KDE_signal, remove in KDEPIM 4.2
 
 #include <QByteArray>
 #include <QList>
