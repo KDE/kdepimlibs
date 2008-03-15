@@ -98,7 +98,7 @@ mimeHdrLine::setStr (const char *aCStr)
         retVal = 0;
       else
       {
-        mimeLabel = QByteArray (aCStr, label);  //length including zero
+        mimeLabel = QByteArray (aCStr, label-1);
         retVal += label;
         aCStr += label;
       }
