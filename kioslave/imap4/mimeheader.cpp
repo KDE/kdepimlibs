@@ -82,7 +82,7 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
     {
       int skip;
       const char *aCStr = addLine->getValue ().data ();
-      QHash < QString, QString > *aList;
+      QHash < QString, QString > *aList = 0;
 
       skip = mimeHdrLine::parseSeparator (';', aCStr);
       if (skip > 0)
@@ -143,8 +143,8 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
         {
           if (skip > 0)
           {
-            addParameter (QByteArray (aCStr, skip).simplified(), aList);
-//            cout << "-- '" << aParm.data() << "'" << endl;
+            if (aList)
+              addParameter (QByteArray (aCStr, skip).simplified(), *aList);
             mimeValue = QByteArray (addLine->getValue ().data (), skip);
             aCStr += skip;
           }
@@ -157,7 +157,7 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
 }
 
 void
-mimeHeader::addParameter (const QByteArray& aParameter, QHash < QString, QString > *aList)
+mimeHeader::addParameter (const QByteArray& aParameter, QHash < QString, QString > &aList)
 {
   QString aValue;
   QByteArray aLabel;
@@ -168,7 +168,7 @@ mimeHeader::addParameter (const QByteArray& aParameter, QHash < QString, QString
   if (aValue[0] == '"')
     aValue = aValue.mid (1, aValue.length () - 2);
 
-  aList->insert (aLabel.toLower(), aValue);
+  aList.insert (aLabel.toLower(), aValue);
 //  cout << "=" << aValue->data() << endl;
 }
 

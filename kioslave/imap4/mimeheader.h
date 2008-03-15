@@ -311,7 +311,7 @@ public:
 #endif
 
 protected:
-  static void addParameter (const QByteArray&, QHash < QString, QString > *);
+  static void addParameter (const QByteArray&, QHash < QString, QString > &);
   static QString getParameter (const QByteArray&, QHash < QString, QString > &);
   static void setParameter (const QByteArray&, const QString&, QHash < QString, QString > &);
 
