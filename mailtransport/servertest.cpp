@@ -92,8 +92,7 @@ class ServerTestPrivate
 }
 
 ServerTestPrivate::ServerTestPrivate( ServerTest *test )
-  : q( test ),
-    testProgress( 0 )
+  : q( test ), testProgress( 0 ), secureSocketFinished( false ), normalSocketFinished( false ), tlsFinished( false )
 {
 }
 
@@ -113,6 +112,9 @@ void ServerTestPrivate::finalResult()
     testProgress->hide();
   }
   progressTimer->stop();
+  secureSocketFinished =  false;
+  normalSocketFinished =  false;
+  tlsFinished = false ;
 
   emit q->finished( connectionResults.toList() );
 }
@@ -140,6 +142,7 @@ QList< int > ServerTestPrivate::parseAuthenticationList( const QStringList &auth
     }
     // APOP is handled by handlePopConversation()
   }
+  kDebug() << authentications << result;
 
   // LOGIN doesn't offer anything over PLAIN, requires more server
   // roundtrips and is not an official SASL mechanism, but a MS-ism,
