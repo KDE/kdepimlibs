@@ -32,6 +32,7 @@ Description[nn]=Ein IO-slave for e-postfiltreringsprotokollen Sieve
 Description[pl]=Moduł ioslave dla protokołu filtrowania poczty Sieve
 Description[pt]=Um 'ioslave' para o protocolo de filtragem de correio Sieve
 Description[pt_BR]=Um ioslave para o protocolo de filtragem de correio Sieve
+Description[ro]=Un „ioslave” pentru protocolul de filtrare a poștei Sieve
 Description[sr]=У/И‑захват за сито, протокол филтрирања поште
 Description[sr@latin]=U/I‑zahvat za sito, protokol filtriranja pošte
 Description[sv]=En I/O-slav för brevfiltreringsprotokollet Sieve
