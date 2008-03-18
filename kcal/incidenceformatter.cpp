@@ -1782,7 +1782,7 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
     return i18n( "No recurrence" );
   case Recurrence::rMinutely:
     if ( recur->duration() != -1 ) {
-      return i18np( "Recurs every minute until %1",
+      return i18np( "Recurs every minute until %2",
                     "Recurs every %1 minutes until %2",
                     recur->frequency(), recurEnd( incidence ) );
     }
@@ -1790,21 +1790,21 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
                   "Recurs every %1 minutes", recur->frequency() );
   case Recurrence::rHourly:
     if ( recur->duration() != -1 ) {
-      return i18np( "Recurs hourly until %1",
+      return i18np( "Recurs hourly until %2",
                     "Recurs every %1 hours until %2",
                     recur->frequency(), recurEnd( incidence ) );
     }
     return i18np( "Recurs hourly", "Recurs every %1 hours", recur->frequency() );
   case Recurrence::rDaily:
     if ( recur->duration() != -1 ) {
-      return i18np( "Recurs daily until %1",
+      return i18np( "Recurs daily until %2",
                     "Recurs every %1 days until %2",
                     recur->frequency(), recurEnd( incidence ) );
     }
     return i18np( "Recurs daily", "Recurs every %1 days", recur->frequency() );
   case Recurrence::rWeekly:
     if ( recur->duration() != -1 ) {
-      return i18np( "Recurs weekly until %1",
+      return i18np( "Recurs weekly until %2",
                     "Recurs every %1 weeks until %2",
                     recur->frequency(), recurEnd( incidence ) );
     }
