@@ -4,6 +4,7 @@
 #  AKONADI_FOUND - system has Akonadi libraries
 #  AKONADI_INCLUDE_DIR - the Akonadi include directory
 #  AKONADI_LIBRARY - the KDE4 Akonadi client library
+#  AKONADI_LIBS - the KDE4 Akonadi client library and all depending libraries
 #  AKONADI_KMIME_LIBRARY - the Akonadi mail library
 
 # Copyright (c) 2008, Volker Krause, <vkrause@kde.org>
