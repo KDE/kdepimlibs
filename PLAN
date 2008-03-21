@@ -22,12 +22,10 @@ High Priority for KDE 4.0
 =========================
 kpimutils - done, but we want to move email.h into kmime, as some if its
             functions are already in kmime. vkrause.
-networkstatus - will be moved by Bille into kdelibs and kdebase
 
 High Priority, but not ready until KDE 4.1
 ==========================================
-libakonadi - being developed in kdepim, may not be ready until 4.1,
-             API currently too unstable for anything with a freeze policy :)
+none.
 
 Low Priority (KDE 4.1)
 ======================
