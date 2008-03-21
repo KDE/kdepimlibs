@@ -40,7 +40,7 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
       /**
         Destructor
        */
-    ~Transport();
+    virtual ~Transport();
 
     typedef QList<Transport*> List;
 
