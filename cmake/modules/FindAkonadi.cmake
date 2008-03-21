@@ -42,3 +42,22 @@ else (AKONADI_FOUND)
    endif (Akonadi_FIND_REQUIRED)
 endif (AKONADI_FOUND)
 
+#### custom macros ####
+
+macro_optional_find_package(LibXslt)
+if (XSLTPROC_EXECUTABLE)
+
+  # generates a D-Bus interface description from a KConfigXT file
+  macro( kcfg_generate_dbus_interface _kcfg _name )
+    add_custom_command(
+      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
+      COMMAND ${XSLTPROC_EXECUTABLE} --stringparam interfaceName ${_name}
+              ${CMAKE_INSTALL_PREFIX}/share/apps/akonadi-kde/kcfg2dbus.xsl
+              ${_kcfg}
+              > ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
+      DEPENDS ${CMAKE_INSTALL_PREFIX}/share/apps/akonadi-kde/kcfg2dbus.xsl
+              ${_kcfg}
+    )
+  endmacro( kcfg_generate_dbus_interface )
+
+endif (XSLTPROC_EXECUTABLE)
