@@ -7,6 +7,9 @@
  *
  * The libraries available in this KDE module are:
  *
+ * - <a href="akonadi/html/index.html"><b>Akonadi</b></a>.
+ *   <i>A client access library for using the Akonadi PIM data server.</i>
+ *
  * - <a href="kpimutils/html/index.html"><b>kpimutils</b></a>.
  *   <i>A library for general purpose PIM utilities.</i>
  *
