@@ -70,3 +70,37 @@ export_library_dependencies(${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.c
 install( FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
 
 macro_display_feature_log()
+
+# taken from kdelibs/CMakeLists.txt, needed for having different install prefixes
+# for kdepimlibs and kdelibs
+# TODO: we probably need all the other variables here as well
+
+
+# we need the absolute directories where stuff will be installed too
+# but since the variables which contain the destinations can be relative
+# or absolute paths, we need this macro to make them all absoulte, Alex
+macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
+   if (UNIX)
+      if ("${in}" MATCHES "^/.*")
+         set(${out} "${in}")
+      else ("${in}" MATCHES "^/.*")
+         set(${out} "\${KDE4_INSTALL_DIR}/${in}")
+      endif ("${in}" MATCHES "^/.*")
+   else (UNIX)
+      if ("${in}" MATCHES "^[a-zA-Z]:.*")
+        set(${out} "${in}")
+      else ("${in}" MATCHES "^[a-zA-Z]:.*")
+         set(${out} "\${KDE4_INSTALL_DIR}/${in}")
+      endif ("${in}" MATCHES "^[a-zA-Z]:.*")
+   endif (UNIX)
+endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
+
+make_install_path_absolute(KDEPIMLIBS4_DBUS_INTERFACES_DIR ${DBUS_INTERFACES_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS4_DBUS_SERVICES_DIR   ${DBUS_SERVICES_INSTALL_DIR})
+
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake " 
+
+set(KDEPIMLIBS4_DBUS_INTERFACES_DIR \"${KDEPIMLIBS4_DBUS_INTERFACES_DIR}\")
+set(KDEPIMLIBS4_DBUS_SERVICES_DIR   \"${KDEPIMLIBS4_DBUS_SERVICES_DIR}\")
+
+\n")
