@@ -79,6 +79,7 @@ FreeBusyPeriod::~FreeBusyPeriod()
 
 FreeBusyPeriod &FreeBusyPeriod::operator=( const FreeBusyPeriod &other )
 {
+  Period::operator=(other);
   *d = *other.d;
   return *this;
 }
