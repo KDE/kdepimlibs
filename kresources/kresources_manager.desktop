@@ -10,6 +10,7 @@ Name[pt_BR]=Gestor do KResources
 Name[ro]=Administrator KResurse
 Name[th]=ตัวจัดการทรัพยากร
 Name[tr]=KResources Yöneticisi
+Name[x-test]=xxKResources Managerxx
 Name[zh_CN]=KResource 管理器
 Name[zh_TW]=KResource 管理者
 Type=ServiceType

@@ -10,6 +10,7 @@ Name[pt_BR]='Plugin' do KResources
 Name[ro]=Modul KResurse
 Name[th]=ส่วนเสริมการจัดการทรัพยากร
 Name[tr]=KResources Eklentisi
+Name[x-test]=xxKResources Pluginxx
 Name[zh_CN]=KResource 插件
 Name[zh_TW]=KResource 外掛程式
 Type=ServiceType
