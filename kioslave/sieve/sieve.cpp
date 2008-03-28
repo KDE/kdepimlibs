@@ -680,7 +680,7 @@ void kio_sieveProtocol::get(const KUrl& url)
 		ssize_t total_len = r.getQuantity();
 		totalSize( total_len );
 
-		int recv_len = 0;
+		ssize_t recv_len = 0;
 		do {
 		  // wait for data...
 		  if ( !waitForResponse( 600 ) ) {
