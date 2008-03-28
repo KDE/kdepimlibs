@@ -57,7 +57,10 @@ class KCal::Incidence::Private
         mSecrecy( SecrecyPublic ),
         mPriority( 0 ),
         mRelatedTo( 0 )
-    {}
+    {
+      mAlarms.setAutoDelete( true );
+      mAttachments.setAutoDelete( true );
+    }
 
     Private( const Private &p )
       : mCreated( p.mCreated ),
@@ -80,7 +83,24 @@ class KCal::Incidence::Private
 // TODO: reenable attributes currently commented out.
 //  Incidence *mRelatedTo;          Incidence *mRelatedTo;
 //  Incidence::List mRelations;    Incidence::List mRelations;
-    {}
+    {
+      mAlarms.setAutoDelete( true );
+      mAttachments.setAutoDelete( true );
+    }
+
+    void clear()
+    {
+      int i, end;
+      for ( i = 0, end = mAlarms.count(); i < end; ++i ) {
+        delete mAlarms[ i ];
+      }
+      mAlarms.clear();
+      for ( i = 0, end = mAttachments.count(); i < end; ++i ) {
+        delete mAttachments[ i ];
+      }
+      mAttachments.clear();
+      delete mRecurrence;
+    }
 
     KDateTime mCreated;              // creation datetime
     int mRevision;                   // revision number
@@ -112,9 +132,6 @@ Incidence::Incidence()
   : IncidenceBase(), d( new KCal::Incidence::Private )
 {
   recreate();
-
-  d->mAlarms.setAutoDelete( true );
-  d->mAttachments.setAutoDelete( true );
 }
 
 Incidence::Incidence( const Incidence &i )
@@ -153,14 +170,12 @@ void Incidence::init( const Incidence &i )
     b->setParent( this );
     d->mAlarms.append( b );
   }
-  d->mAlarms.setAutoDelete( true );
 
   Attachment::List::ConstIterator it1;
   for ( it1 = i.d->mAttachments.begin(); it1 != i.d->mAttachments.end(); ++it1 ) {
     Attachment *a = new Attachment( **it1 );
     d->mAttachments.append( a );
   }
-  d->mAttachments.setAutoDelete( true );
 
   if ( i.d->mRecurrence ) {
     d->mRecurrence = new Recurrence( *( i.d->mRecurrence ) );
@@ -197,6 +212,8 @@ static bool stringCompare( const QString &s1, const QString &s2 )
 //@endcond
 Incidence &Incidence::operator=( const Incidence &other )
 {
+  d->clear();
+  //TODO: should relations be cleared out, as in destructor???
   IncidenceBase::operator=( other );
   init( other );
   return *this;
