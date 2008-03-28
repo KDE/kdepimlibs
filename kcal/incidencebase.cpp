@@ -60,7 +60,10 @@ class KCal::IncidenceBase::Private
     { mAttendees.setAutoDelete( true ); }
 
     Private( const Private &other )
-    { init( other ); }
+    {
+      mAttendees.setAutoDelete( true );
+      init( other );
+    }
 
     void init( const Private &other );
 
@@ -90,7 +93,9 @@ void IncidenceBase::Private::init( const Private &other )
   mHasDuration = other.mHasDuration;
   mComments = other.mComments;
 
-  mAttendees.setAutoDelete( true );
+  for ( int i = 0, end = mAttendees.count(); i < end; ++i ) {
+    delete mAttendees[ i ];
+  }
   mAttendees.clear();
   Attendee::List attendees = other.mAttendees;
   Attendee::List::ConstIterator it;
