@@ -93,9 +93,7 @@ void IncidenceBase::Private::init( const Private &other )
   mHasDuration = other.mHasDuration;
   mComments = other.mComments;
 
-  for ( int i = 0, end = mAttendees.count(); i < end; ++i ) {
-    delete mAttendees[ i ];
-  }
+  qDeleteAll( mAttendees );
   mAttendees.clear();
   Attendee::List attendees = other.mAttendees;
   Attendee::List::ConstIterator it;
@@ -382,6 +380,7 @@ void IncidenceBase::clearAttendees()
   if ( mReadOnly ) {
     return;
   }
+  qDeleteAll( d->mAttendees );
   d->mAttendees.clear();
 }
 

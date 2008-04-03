@@ -90,14 +90,9 @@ class KCal::Incidence::Private
 
     void clear()
     {
-      int i, end;
-      for ( i = 0, end = mAlarms.count(); i < end; ++i ) {
-        delete mAlarms[ i ];
-      }
+      qDeleteAll( mAlarms );
       mAlarms.clear();
-      for ( i = 0, end = mAttachments.count(); i < end; ++i ) {
-        delete mAttachments[ i ];
-      }
+      qDeleteAll( mAttachments );
       mAttachments.clear();
       delete mRecurrence;
     }
@@ -685,6 +680,7 @@ Attachment::List Incidence::attachments( const QString &mime ) const
 
 void Incidence::clearAttachments()
 {
+  qDeleteAll( d->mAttachments );
   d->mAttachments.clear();
 }
 
@@ -850,6 +846,7 @@ void Incidence::removeAlarm( Alarm *alarm )
 
 void Incidence::clearAlarms()
 {
+  qDeleteAll( d->mAlarms );
   d->mAlarms.clear();
   updated();
 }
