@@ -40,6 +40,7 @@ void KMimeUtilTest::testUnfoldHeader()
   // multiple folding
   QCOMPARE( KMime::unfoldHeader( "bla\nbla\nblub" ), QByteArray( "bla bla blub" ) );
   QCOMPARE( KMime::unfoldHeader( "bla  \r\n   bla  \r\n  blub" ), QByteArray( "bla bla blub" ) );
+  QCOMPARE( KMime::unfoldHeader( "bla\n" ), QByteArray( "bla" ) );
 }
 
 void KMimeUtilTest::testExtractHeader()

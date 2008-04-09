@@ -323,14 +323,15 @@ QByteArray unfoldHeader( const QByteArray &header )
       --foldBegin;
     }
     // find the first non-space after the line-break
-    while ( foldEnd < header.length() - 1 ) {
+    while ( foldEnd <= header.length() - 1 ) {
       if ( !QChar( header[foldEnd] ).isSpace() ) {
         break;
       }
       ++foldEnd;
     }
     result += header.mid( pos, foldBegin - pos );
-    result += ' ';
+    if ( foldEnd < header.length() -1 )
+      result += ' ';
     pos = foldEnd;
   }
   result += header.mid( pos, header.length() - pos );
