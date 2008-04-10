@@ -394,8 +394,8 @@ static QString eventViewerFormatTodo( Todo *todo )
     tmpStr += "<br>";
   }
 
-  if ( todo->hasDueDate() ) {
-    tmpStr += i18n( "<b>Due on:</b> %1", todo->dtDueStr( true, todo->dtStart().timeSpec() ) );
+  if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
+    tmpStr += i18n( "<b>Due on:</b> %1", todo->dtDueStr( true, todo->dtDue().timeSpec() ) );
   }
 
   if ( !todo->description().isEmpty() ) {
@@ -577,7 +577,7 @@ static QString eventStartTimeStr( Event *event )
 static QString eventEndTimeStr( Event *event )
 {
   QString tmp;
-  if ( event->hasEndDate() ) {
+  if ( event->hasEndDate() && event->dtEnd().isValid() ) {
     if ( ! event->allDay() ) {
       tmp =  i18nc( "%1: End Date, %2: End Time", "%1 %2",
                     event->dtEndDateStr(), event->dtEndTimeStr() );
@@ -649,7 +649,7 @@ static QString invitationDetailsEvent( Event *event )
   html += invitationRow( i18n( "End Time:" ), eventEndTimeStr( event ) );
 
   // Meeting Duration Row
-  if ( !event->allDay() && event->hasEndDate() ) {
+  if ( !event->allDay() && event->hasEndDate() && event->dtEnd().isValid() ) {
     tmp.clear();
     QTime sDuration( 0, 0, 0 ), t;
     int secs = event->dtStart().secsTo( event->dtEnd() );
@@ -1477,7 +1477,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
 {
   QString ret;
   bool allDay( todo->allDay() );
-  if ( todo->hasStartDate() ) {
+  if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
     // No need to add <i> here. This is separated issue and each line
     // is very visible on its own. On the other hand... Yes, I like it
     // italics here :)
@@ -1488,7 +1488,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
                           ( todo->dtStartStr(
                             true, false, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) ) ;
   }
-  if ( todo->hasDueDate() ) {
+  if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
     ret += "<br>" + i18n( "<i>Due:</i>&nbsp;%1",
                           ( allDay ) ?
                           ( todo->dtDueDateStr(
@@ -1709,7 +1709,7 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Todo *todo )
 {
   mResult = mailBodyIncidence( todo );
 
-  if ( todo->hasStartDate() ) {
+  if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
     mResult += i18n( "Start Date: %1\n",
                      todo->dtStartDateStr( true, false, todo->dtStart().timeSpec() ) );
     if ( !todo->allDay() ) {
@@ -1717,12 +1717,12 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Todo *todo )
                        todo->dtStartTimeStr( true, false, todo->dtStart().timeSpec() ) );
     }
   }
-  if ( todo->hasDueDate() ) {
+  if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
     mResult += i18n( "Due Date: %1\n",
-                     todo->dtDueDateStr( true, todo->dtStart().timeSpec() ) );
+                     todo->dtDueDateStr( true, todo->dtDue().timeSpec() ) );
     if ( !todo->allDay() ) {
       mResult += i18n( "Due Time: %1\n",
-                       todo->dtDueTimeStr( true, todo->dtStart().timeSpec() ) );
+                       todo->dtDueTimeStr( true, todo->dtDue().timeSpec() ) );
     }
   }
   QString details = todo->description();
