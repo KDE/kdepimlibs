@@ -1492,7 +1492,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
     ret += "<br>" + i18n( "<i>Due:</i>&nbsp;%1",
                           ( allDay ) ?
                           ( todo->dtDueDateStr(
-                            true, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) :
+                            true, todo->dtDue().timeSpec() ).replace( " ", "&nbsp;" ) ) :
                           ( todo->dtDueStr(
                             true, todo->dtDue().timeSpec() ).replace( " ", "&nbsp;" ) ) );
   }
