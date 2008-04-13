@@ -193,7 +193,7 @@ void Transport::readPassword()
   }
   d->passwordLoaded = true;
 
-  // check wether there is a chance to find our password at all
+  // check whether there is a chance to find our password at all
   if ( Wallet::folderDoesNotExist( Wallet::NetworkWallet(), WALLET_FOLDER ) ||
        Wallet::keyDoesNotExist( Wallet::NetworkWallet(), WALLET_FOLDER,
                                 QString::number( id() ) ) ) {
