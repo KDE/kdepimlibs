@@ -116,22 +116,22 @@ if ( WIN32 )
         ${CMAKE_INSTALL_PREFIX}/lib
     )
 
-    set( GPGME_INCLUDES ${GPGME_INCLUDES} CACHE INTERNAL "The gpgme include paths" )
+    set( GPGME_INCLUDES ${GPGME_INCLUDES} )
 
     if ( _gpgme_vanilla_library AND _gpg_error_library )
-      set( GPGME_VANILLA_LIBRARIES ${_gpgme_vanilla_library} ${_gpg_error_library} CACHE INTERNAL "The gpgme (vanilla) libraries" )
+      set( GPGME_VANILLA_LIBRARIES ${_gpgme_vanilla_library} ${_gpg_error_library} )
       set( GPGME_VANILLA_FOUND     true )
       set( GPGME_FOUND             true )
     endif()
 
     if ( _gpgme_glib_library AND _gpg_error_library )
-      set( GPGME_GLIB_LIBRARIES    ${_gpgme_glib_library}    ${_gpg_error_library} CACHE INTERNAL "The gpgme-glib libraries" )
+      set( GPGME_GLIB_LIBRARIES    ${_gpgme_glib_library}    ${_gpg_error_library} )
       set( GPGME_GLIB_FOUND        true )
       set( GPGME_FOUND             true )
     endif()
 
     if ( _gpgme_qt_library AND _gpg_error_library )
-      set( GPGME_QT_LIBRARIES      ${_gpgme_qt_library}      ${_gpg_error_library} CACHE INTERNAL "The gpgme-qt libraries" )
+      set( GPGME_QT_LIBRARIES      ${_gpgme_qt_library}      ${_gpg_error_library} )
       set( GPGME_QT_FOUND          true )
       set( GPGME_FOUND             true )
     endif()
@@ -290,10 +290,10 @@ else() # not WIN32
           endforeach( _flavour )
 
           # ensure that they are cached
-          set( GPGME_INCLUDES          ${GPGME_INCLUDES}          CACHE INTERNAL "The gpgme include paths" )
-          set( GPGME_VANILLA_LIBRARIES ${GPGME_VANILLA_LIBRARIES} CACHE INTERNAL "The gpgme (vanilla) libraries" )
-          set( GPGME_PTHREAD_LIBRARIES ${GPGME_PTHREAD_LIBRARIES} CACHE INTERNAL "The gpgme-pthread libraries" )
-          set( GPGME_PTH_LIBRARIES     ${GPGME_PTH_LIBRARIES}     CACHE INTERNAL "The gpgme-pth libraries" )
+          set( GPGME_INCLUDES          ${GPGME_INCLUDES} )
+          set( GPGME_VANILLA_LIBRARIES ${GPGME_VANILLA_LIBRARIES} )
+          set( GPGME_PTHREAD_LIBRARIES ${GPGME_PTHREAD_LIBRARIES} )
+          set( GPGME_PTH_LIBRARIES     ${GPGME_PTH_LIBRARIES} )
 
           if ( GPGME_VANILLA_FOUND OR GPGME_PTHREAD_FOUND OR GPGME_PTH_FOUND )
             set( GPGME_FOUND true )
