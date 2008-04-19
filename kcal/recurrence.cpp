@@ -684,7 +684,7 @@ RecurrenceRule *Recurrence::setNewRecurrenceType( RecurrenceRule::PeriodType typ
     return 0;
   }
 
-  d->mRRules.clear();
+  d->mRRules.clearAll();
   updated();
   RecurrenceRule *rrule = defaultRRule( true );
   if ( !rrule ) {
