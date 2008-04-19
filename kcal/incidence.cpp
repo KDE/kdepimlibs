@@ -90,10 +90,8 @@ class KCal::Incidence::Private
 
     void clear()
     {
-      qDeleteAll( mAlarms );
-      mAlarms.clear();
-      qDeleteAll( mAttachments );
-      mAttachments.clear();
+      mAlarms.clearAll();
+      mAttachments.clearAll();
       delete mRecurrence;
     }
 
@@ -654,7 +652,7 @@ void Incidence::deleteAttachments( const QString &mime )
   Attachment::List::Iterator it = d->mAttachments.begin();
   while ( it != d->mAttachments.end() ) {
     if ( (*it)->mimeType() == mime ) {
-      d->mAttachments.erase( it );
+      d->mAttachments.removeRef( it );
     } else {
       ++it;
     }
@@ -680,8 +678,7 @@ Attachment::List Incidence::attachments( const QString &mime ) const
 
 void Incidence::clearAttachments()
 {
-  qDeleteAll( d->mAttachments );
-  d->mAttachments.clear();
+  d->mAttachments.clearAll();
 }
 
 void Incidence::setResources( const QStringList &resources )
@@ -846,8 +843,7 @@ void Incidence::removeAlarm( Alarm *alarm )
 
 void Incidence::clearAlarms()
 {
-  qDeleteAll( d->mAlarms );
-  d->mAlarms.clear();
+  d->mAlarms.clearAll();
   updated();
 }
 

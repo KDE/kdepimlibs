@@ -67,10 +67,7 @@ class ListBase : public QList<T *>
     ~ListBase()
     {
       if ( mAutoDelete ) {
-        typename QList<T *>::Iterator it;
-        for ( it = QList<T*>::begin(); it != QList<T*>::end(); ++it ) {
-          delete *it;
-        }
+        qDeleteAll( *this );
       }
     }
 
@@ -99,6 +96,18 @@ class ListBase : public QList<T *>
     }
 
     /**
+      Clears the list.
+      Memory is also freed if the list is set to "auto-delete" mode.
+    */
+    void clearAll()
+    {
+      if ( mAutoDelete ) {
+        qDeleteAll( *this );
+      }
+      QList<T*>::clear();
+    }
+
+    /**
       Removes all the members from the list with the specified address.
       Memory is also freed if the list is set to "auto-delete" mode.
       @param t is the pointer to remove from the list.
@@ -115,6 +124,19 @@ class ListBase : public QList<T *>
         this->removeAll( t );
         return true;
       }
+    }
+
+    /**
+      Removes the specified member from the list.
+      Memory is also freed if the list is set to "auto-delete" mode.
+      @param it the iterator to remove from the list.
+    */
+    void removeRef( typename QList<T*>::iterator it )
+    {
+      if ( mAutoDelete ) {
+        delete *it;
+      }
+      QList<T*>::erase( it );
     }
 
   private:

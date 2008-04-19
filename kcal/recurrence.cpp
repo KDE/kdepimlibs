@@ -545,8 +545,8 @@ void Recurrence::clear()
   if ( d->mRecurReadOnly ) {
     return;
   }
-  d->mRRules.clear();
-  d->mExRules.clear();
+  d->mRRules.clearAll();
+  d->mExRules.clearAll();
   d->mRDates.clear();
   d->mRDateTimes.clear();
   d->mExDates.clear();
@@ -1153,6 +1153,17 @@ void Recurrence::removeRRule( RecurrenceRule *rrule )
   updated();
 }
 
+void Recurrence::deleteRRule( RecurrenceRule *rrule )
+{
+  if (d->mRecurReadOnly) {
+    return;
+  }
+
+  d->mRRules.removeAll( rrule );
+  delete rrule;
+  updated();
+}
+
 RecurrenceRule::List Recurrence::exRules() const
 {
   return d->mExRules;
@@ -1178,6 +1189,17 @@ void Recurrence::removeExRule( RecurrenceRule *exrule )
 
   d->mExRules.removeAll( exrule );
   exrule->removeObserver( this );
+  updated();
+}
+
+void Recurrence::deleteExRule( RecurrenceRule *exrule )
+{
+  if ( d->mRecurReadOnly ) {
+    return;
+  }
+
+  d->mExRules.removeAll( exrule );
+  delete exrule;
   updated();
 }
 

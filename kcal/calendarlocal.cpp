@@ -150,7 +150,7 @@ void CalendarLocal::close()
   deleteAllTodos();
   deleteAllJournals();
 
-  d->mDeletedIncidences.clear();
+  d->mDeletedIncidences.clearAll();
   setModified( false );
 
   setObserversEnabled( true );

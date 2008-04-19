@@ -553,12 +553,48 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
 
     // RRULE
     RecurrenceRule::List rRules() const;
+    /**
+      Add a recurrence rule to the recurrence.
+      @param rrule the recurrence rule to add
+     */
     void addRRule( RecurrenceRule *rrule );
+
+    /**
+      Remove a recurrence rule from the recurrence.
+      @p rrule is not deleted; it is the responsibility of the caller
+      to ensure that it is deleted.
+      @param rrule the recurrence rule to remove
+     */
     void removeRRule( RecurrenceRule *rrule );
+
+    /**
+      Remove a recurrence rule from the recurrence and delete it.
+      @param rrule the recurrence rule to remove
+     */
+    void deleteRRule( RecurrenceRule *rrule );
+
     // EXRULE
     RecurrenceRule::List exRules() const;
+
+    /**
+      Add an exception rule to the recurrence.
+      @param exrule the exception rule to add
+     */
     void addExRule( RecurrenceRule *exrule );
+
+    /**
+      Remove an exception rule from the recurrence.
+      @p exrule is not deleted; it is the responsibility of the caller
+      to ensure that it is deleted.
+      @param exrule the exception rule to remove
+     */
     void removeExRule( RecurrenceRule *exrule );
+
+    /**
+      Remove an exception rule from the recurrence and delete it.
+      @param exrule the exception rule to remove
+     */
+    void deleteExRule( RecurrenceRule *exrule );
 
     // RDATE
     DateTimeList rDateTimes() const;
