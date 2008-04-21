@@ -52,8 +52,8 @@ public:
     explicit InteractiveEditInteractor( QWidget * parent=0 );
     ~InteractiveEditInteractor();
 
-    const char * action() const;
-    unsigned int nextState( unsigned int status, const char * args ) const;
+    const char * action( Error & err ) const;
+    unsigned int nextState( unsigned int status, const char * args, Error & err ) const;
 
 private Q_SLOTS:    
     void slotAckButtonClicked() {
@@ -109,7 +109,7 @@ InteractiveEditInteractor::~InteractiveEditInteractor() {
         std::free( lastAction );
 }
 
-const char * InteractiveEditInteractor::action() const {
+const char * InteractiveEditInteractor::action( Error & ) const {
     const_cast<InteractiveEditInteractor*>(this)->setEnabled( true );
 
     lineEdit.setFocus();
@@ -222,7 +222,7 @@ static const char * status_strings[] = {
 };
 static const unsigned int num_status_strings = sizeof status_strings / sizeof *status_strings ;
 
-unsigned int InteractiveEditInteractor::nextState( unsigned int s, const char * args ) const {
+unsigned int InteractiveEditInteractor::nextState( unsigned int s, const char * args, Error & err ) const {
     const char * const state_string = s < num_status_strings ? status_strings[s] : "<unknown state>" ;
     if ( needsNoResponse( s ) ) {
         textEdit.append( tr( "%1: %2 (auto-ack'ed)" ).arg( state_string, QString::fromUtf8( args ) ) );
