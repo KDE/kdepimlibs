@@ -30,6 +30,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kurl.h>
+#include <kmime_util.h>
 
 #include <QtCore/QRegExp>
 #include <QtCore/QByteArray>
@@ -897,7 +898,7 @@ QString KPIMUtils::normalizedAddress( const QString &displayName,
   if ( displayName.isEmpty() && comment.isEmpty() ) {
     return addrSpec;
   } else if ( comment.isEmpty() ) {
-    return displayName + " <" + addrSpec + '>';
+    return quoteNameIfNecessary( displayName ) + " <" + addrSpec + '>';
   } else if ( displayName.isEmpty() ) {
     QString commentStr = comment;
     return quoteNameIfNecessary( commentStr ) + " <" + addrSpec + '>';
@@ -957,6 +958,9 @@ QString KPIMUtils::normalizeAddressesAndDecodeIdn( const QString &str )
     if ( !(*it).isEmpty() ) {
       if ( splitAddress( (*it).toUtf8(),
                          displayName, addrSpec, comment ) == AddressOk ) {
+
+        displayName = KMime::decodeRFC2047String(displayName).toUtf8();
+        comment = KMime::decodeRFC2047String(comment).toUtf8();
 
         normalizedAddressList
           << normalizedAddress( QString::fromUtf8( displayName ),

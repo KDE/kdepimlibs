@@ -174,6 +174,12 @@ QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
   return result;
 }
 
+QString decodeRFC2047String( const QByteArray &src )
+{
+  QByteArray usedCS;
+  return decodeRFC2047String( src, usedCS, "utf-8", false );
+}
+
 QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
                                 bool addressHeader, bool allow8BitHeaders )
 {
