@@ -44,7 +44,8 @@ add_subdirectory(kmime)
 
 if (NOT ONLY_KLEO)
 
-find_package(Akonadi)
+find_package(Akonadi REQUIRED)
+macro_log_feature(Akonadi_FOUND "akonadi" "Akonadi shared libraries" "http://pim.kde.org/akonadi" FALSE "" "Needed to support Akonadi KDE client libraries. These are an essential part of the platform.")
 if(Akonadi_FOUND)
    add_subdirectory(akonadi)
 endif(Akonadi_FOUND)
