@@ -40,13 +40,16 @@
 
   if(AKONADI_INCLUDE_DIR AND AKONADI_COMMON_LIBRARIES)
     set(Akonadi_FOUND TRUE)
+    get_filename_component(AKONADI_PREFIX ${AKONADI_INCLUDE_DIR} PATH)
+    set(AKONADI_DBUS_INTERFACES_DIR ${AKONADI_PREFIX}/share/dbus-1/interfaces)
+    set(AKONADI_DBUS_SERVICES_DIR ${AKONADI_PREFIX}/share/dbus-1/services)
   endif(AKONADI_INCLUDE_DIR AND AKONADI_COMMON_LIBRARIES)
 
   # check Akonadi version
 
   # We set a default for the minimum required version to be backwards compatible
   IF(NOT AKONADI_MIN_VERSION)
-    SET(AKONADI_MIN_VERSION "1.99")
+    SET(AKONADI_MIN_VERSION "0.80")
   ENDIF(NOT AKONADI_MIN_VERSION)
 
   #if(Akonadi_FOUND)
@@ -73,6 +76,7 @@
       message(STATUS "Found Akonadi: ${AKONADI_COMMON_LIBRARIES}")
       message(STATUS "Found Akonadi includes: ${AKONADI_INCLUDE_DIR}")
       message(STATUS "Found Akonadi common libraries: ${AKONADI_COMMON_LIBRARIES}")
+      message(STATUS "Found Akonadi dbus-interfaces: ${AKONADI_DBUS_INTERFACES_DIR}")
     endif(NOT Akonadi_FIND_QUIETLY)
   else(Akonadi_FOUND)
     if(Akonadi_FIND_REQUIRED)

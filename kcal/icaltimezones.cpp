@@ -417,7 +417,9 @@ ICalTimeZoneData::ICalTimeZoneData( const KTimeZoneData &rhs,
     dtperiod.period = icalperiodtype_null_period();
     for ( ; ; ) {
       int i = 0;
-      for ( ;  i < trcount && transitionsDone[i];  ++i );
+      for ( ;  i < trcount && transitionsDone[i];  ++i ) {
+        ;
+      }
       if ( i >= trcount ) {
         break;
       }
