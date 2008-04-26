@@ -18,9 +18,23 @@ endif (NOT DEFINED INSTALL_TARGETS_DEFAULT_ARGS)
 find_package(Boost)
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1_33_0" "Needed by several critical PIM libraries.")
 
+# FindBoost.cmake from cmake 2.6.0RC9 is slightly broken, in that it changes the policy settings
+# readjust them here until cmake 2.6.0 or 2.6.0RC10 is released, Alex
+if(COMMAND CMAKE_POLICY)
+   # CMP0000: don't require cmake_minimum_version() directly in the top level CMakeLists.txt, FindKDE4Internal.cmake is good enough
+   cmake_policy(SET CMP0000 OLD)
+   # CMP0002: in KDE4 we have multiple targets with the same name for the unit tests
+   cmake_policy(SET CMP0002 OLD)
+   # CMP0003: add the link paths to the link command as with cmake 2.4
+   cmake_policy(SET CMP0003 OLD)
+   # CMP0005: keep escaping behaviour for definitions added via add_definitions()
+   cmake_policy(SET CMP0005 OLD)
+endif(COMMAND CMAKE_POLICY)
+
+
 if (NOT ONLY_KLEO)
-macro_optional_find_package(Sasl2)
-macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins. IMAP and Sieve kioslaves will not be built.")
+   macro_optional_find_package(Sasl2)
+   macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins. IMAP and Sieve kioslaves will not be built.")
 endif (NOT ONLY_KLEO)
 
 # gpgme is a hard dependency
