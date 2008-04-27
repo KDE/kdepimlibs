@@ -1,2 +1,2 @@
-SKIP /libical/\|/versit/
+SKIP /libical.*/\|/versit/\|/tests/
 EXTRA style
