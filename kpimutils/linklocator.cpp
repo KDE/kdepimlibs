@@ -168,9 +168,9 @@ bool LinkLocator::atUrl() const
                      mText.mid( mPos, 6 ) == "smb://" ) ) ||
     ( ch == 'm' && mText.mid( mPos, 7 ) == "mailto:" ) ||
     ( ch == 'w' && mText.mid( mPos, 4 ) == "www." ) ||
-    ( ch == 'f' && mText.mid( mPos, 4 ) == "ftp." ) ||
+    ( ch == 'f' && ( mText.mid( mPos, 4 ) == "ftp." ||
+                     mText.mid( mPos, 7 ) == "file://" ) ) ||
     ( ch == 'n' && mText.mid( mPos, 5 ) == "news:" );
-  // note: no "file:" for security reasons
 }
 
 bool LinkLocator::isEmptyUrl( const QString &url ) const

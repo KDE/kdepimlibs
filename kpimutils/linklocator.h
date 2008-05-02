@@ -42,6 +42,10 @@ namespace KPIMUtils {
   be converted in hyperlinks in HTML. It is intended to be used in two ways:
   either by calling convertToHtml() to convert a plaintext string into HTML,
   or to be derived from where more control is needed.
+
+  please note that you are responsible for handling the links. That means you
+  should not execute the link directly but instead open it for example. See
+  the KRun documentation about this parameter if applicable.
 */
 class KPIMUTILS_EXPORT LinkLocator
 {
