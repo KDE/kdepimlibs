@@ -304,7 +304,7 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
       }
     }
     if ( ch == '\n' ) {
-      result += "<br />";
+      result += "<br />\n";
       startOfLine = true;
       x = -1;
       continue;
