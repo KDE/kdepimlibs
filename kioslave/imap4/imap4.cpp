@@ -95,6 +95,8 @@ extern "C" {
 
 #define IMAP_PROTOCOL "imap"
 #define IMAP_SSL_PROTOCOL "imaps"
+#define IMAP_PORT 143
+#define IMAPS_PORT 993
 
 using namespace KIO;
 
@@ -631,7 +633,10 @@ IMAP4Protocol::setHost (const QString & _host, quint16 _port,
     if (!myHost.isEmpty ())
       closeConnection ();
     myHost = _host;
-    myPort = _port;
+    if (_port == 0) 
+        myPort = (mySSL) ? IMAPS_PORT : IMAP_PORT;
+    else 
+        myPort = _port;
     myUser = _user;
     myPass = _pass;
   }
