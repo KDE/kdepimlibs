@@ -128,7 +128,7 @@ const uchar eTextMap[16] = {
 QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
                              const QByteArray &defaultCS, bool forceCS )
 {
-  QString result;
+  QByteArray result;
   QByteArray spaceBuffer;
   const char *scursor = src.constData();
   const char *send = scursor + src.length();
@@ -148,30 +148,30 @@ QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
       ++scursor;
       const char *start = scursor;
       if ( HeaderParsing::parseEncodedWord( scursor, send, decoded, language, usedCS, defaultCS, forceCS ) ) {
-        result += decoded;
+        result += decoded.toUtf8();
         onlySpacesSinceLastWord = true;
         spaceBuffer.clear();
       } else {
         if ( onlySpacesSinceLastWord ) {
-          result += QString::fromLatin1( spaceBuffer );
+          result += spaceBuffer;
           onlySpacesSinceLastWord = false;
         }
-        result += QLatin1Char( '=' );
+        result += '=';
         scursor = start; // reset cursor after parsing failure
       }
       continue;
     } else {
       // unencoded data
       if ( onlySpacesSinceLastWord ) {
-        result += QString::fromLatin1( spaceBuffer );
+        result += spaceBuffer;
         onlySpacesSinceLastWord = false;
       }
-      result += QLatin1Char( *scursor );
+      result += *scursor;
       ++scursor;
     }
   }
 
-  return result;
+  return QString::fromUtf8(result);
 }
 
 QString decodeRFC2047String( const QByteArray &src )

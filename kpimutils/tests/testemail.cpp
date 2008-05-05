@@ -512,6 +512,7 @@ int main( int argc, char *argv[] )
   // check checkNormalizeAddressesAndDecodeIDNs
   checkNormalizeAddressesAndDecodeIDNs( "=?us-ascii?Q?Surname=2C=20Name?= <nobody@example.org>", "\"Surname, Name\" <nobody@example.org>" );
   checkNormalizeAddressesAndDecodeIDNs( "=?iso-8859-1?B?5Hf8b2xmLPZBbmRyZWFz?= <nobody@example.org>", QString::fromUtf8("\"äwüolf,öAndreas\" <nobody@example.org>") );
+  checkNormalizeAddressesAndDecodeIDNs( QString::fromUtf8("\"Andreas Straß\" <nobody@example.org>"), QString::fromUtf8("\"Andreas Straß\" <nobody@example.org>") );
 
   // check the "quote if necessary" method
   checkQuoteIfNecessary( "Matt Douhan", "Matt Douhan" );
