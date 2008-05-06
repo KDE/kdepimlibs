@@ -304,7 +304,7 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
       }
     }
     if ( ch == '\n' ) {
-      result += "<br />\n";
+      result += "<br />\n"; // Keep the \n, so apps can figure out the quoting levels correctly.
       startOfLine = true;
       x = -1;
       continue;
