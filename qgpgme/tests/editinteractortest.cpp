@@ -222,7 +222,7 @@ static const char * status_strings[] = {
 };
 static const unsigned int num_status_strings = sizeof status_strings / sizeof *status_strings ;
 
-unsigned int InteractiveEditInteractor::nextState( unsigned int s, const char * args, Error & err ) const {
+unsigned int InteractiveEditInteractor::nextState( unsigned int s, const char * args, Error & ) const {
     const char * const state_string = s < num_status_strings ? status_strings[s] : "<unknown state>" ;
     if ( needsNoResponse( s ) ) {
         textEdit.append( tr( "%1: %2 (auto-ack'ed)" ).arg( state_string, QString::fromUtf8( args ) ) );
