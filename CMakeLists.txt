@@ -14,8 +14,7 @@ if (NOT DEFINED INSTALL_TARGETS_DEFAULT_ARGS)
                                     ARCHIVE DESTINATION "${LIB_INSTALL_DIR}")
 endif (NOT DEFINED INSTALL_TARGETS_DEFAULT_ARGS)
 
-#boost is a hard dependency
-find_package(Boost)
+find_package(Boost REQUIRED)
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1_33_0" "Needed by several critical PIM libraries.")
 
 
