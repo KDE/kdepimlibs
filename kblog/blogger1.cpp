@@ -201,6 +201,7 @@ Blogger1Private::~Blogger1Private()
 
 QList<QVariant> Blogger1Private::defaultArgs( const QString &id )
 {
+  kDebug();
   Q_Q ( Blogger1 );
   QList<QVariant> args;
   args << QVariant( QString( "0123456789ABCDEF" ) );
@@ -215,7 +216,16 @@ QList<QVariant> Blogger1Private::defaultArgs( const QString &id )
 // reimplemenet defaultArgs, since we may not use it virtually everywhere
 QList<QVariant> Blogger1Private::blogger1Args( const QString &id )
 {
-  return defaultArgs( id );
+  kDebug();
+  Q_Q ( Blogger1 );
+  QList<QVariant> args;
+  args << QVariant( QString( "0123456789ABCDEF" ) );
+  if( !id.isEmpty() ) {
+    args << QVariant( id );
+  }
+  args << QVariant( q->username() )
+       << QVariant( q->password() );
+  return args;
 }
 
 void Blogger1Private::slotFetchUserInfo( const QList<QVariant> &result, const QVariant &id )

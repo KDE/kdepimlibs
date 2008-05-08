@@ -109,10 +109,6 @@ QList<QVariant> MetaWeblogPrivate::defaultArgs( const QString &id )
   if( !id.isEmpty() ) {
     args << QVariant( id );
   }
-  else {
-    //Blog ID is a required parameter, guess at a default value
-    args << QVariant( "0" );
-  }
   args << QVariant( q->username() )
        << QVariant( q->password() );
   return args;
