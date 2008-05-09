@@ -165,6 +165,9 @@ void Todo::setDtDue( const KDateTime &dtDue, bool first )
 
 KDateTime Todo::dtDue( bool first ) const
 {
+  if ( !hasDueDate() ) {
+    return KDateTime();
+  }
   if ( recurs() && !first && d->mDtRecurrence.isValid() ) {
     return d->mDtRecurrence;
   }
@@ -276,6 +279,9 @@ KDateTime Todo::dtStart() const
 
 KDateTime Todo::dtStart( bool first ) const
 {
+  if ( !hasStartDate() ) {
+    return KDateTime();
+  }
   if ( recurs() && !first ) {
     return d->mDtRecurrence.addDays( dtDue( first ).daysTo( IncidenceBase::dtStart() ) );
   } else {
