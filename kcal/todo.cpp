@@ -210,6 +210,10 @@ QString Todo::dtDueDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
 
 QString Todo::dtDueStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
+  if ( allDay() ) {
+    return dtDueDateStr( shortfmt, spec);
+  }
+
   if ( spec.isValid() ) {
 
     QString timeZone;
@@ -337,6 +341,10 @@ QString Todo::dtStartDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
 
 QString Todo::dtStartStr( bool shortfmt, bool first, const KDateTime::Spec &spec ) const
 {
+  if ( allDay() ) {
+    return dtStartDateStr( shortfmt, spec);
+  }
+
   if ( spec.isValid() ) {
 
     QString timeZone;
