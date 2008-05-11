@@ -101,6 +101,7 @@ TransportManager::~TransportManager()
 {
   delete d->config;
   qDeleteAll( d->transports );
+  delete d;
 }
 
 TransportManager *TransportManager::self()
