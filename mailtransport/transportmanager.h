@@ -222,7 +222,8 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     void loadPasswords();
 
   private:
-    TransportManager();
+    class Private;
+    TransportManager(Private *priv);
     void readConfig();
     void writeConfig();
     void emitChangesCommitted();
@@ -240,7 +241,6 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     void jobResult( KJob *job );
 
   private:
-    class Private;
     Private *const d;
 };
 

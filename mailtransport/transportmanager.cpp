@@ -50,7 +50,6 @@ class TransportManager::Private
 {
   public:
     ~Private() {
-        qRemovePostRoutine(cleanupTransportManager);
         cleanupTransportManager();
     }
     KConfig *config;
@@ -72,8 +71,8 @@ class TransportManager::Private
 };
 TransportManager *TransportManager::Private::sSelf = 0;
 
-TransportManager::TransportManager()
-  : QObject(), d( new Private )
+TransportManager::TransportManager(Private *priv)
+  : QObject(), d( priv )
 {
   d->myOwnChange = false;
   d->wallet = 0;
@@ -101,16 +100,14 @@ TransportManager::~TransportManager()
 {
   delete d->config;
   qDeleteAll( d->transports );
-  delete d;
 }
 
 TransportManager *TransportManager::self()
 {
   static TransportManager::Private p;
   if( !p.sSelf ) {
-    p.sSelf = new TransportManager;
+    p.sSelf = new TransportManager( &p );
     p.sSelf->readConfig();
-    qAddPostRoutine( Private::cleanupTransportManager );
   }
   return p.sSelf;
 }
