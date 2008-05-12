@@ -33,6 +33,7 @@ Here is an alphabetical list:
 * kimap: C++ API for IMAP support
 * kldap: C++ API for LDAP access
 * kmime: C++ API for MIME handling
+* kontactinterfaces: The glue for embedding KParts into Kontact
 * kpimidentities: C++ API for shared identities for mail applications
 * kpimutils: A library for general purpose PIM utilities
 * ktnef: C++ API for the handling of TNEF data
