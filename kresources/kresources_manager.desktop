@@ -7,6 +7,7 @@ Name[el]=Διαχειριστής KResources
 Name[es]=Administrador KResource
 Name[ga]=Bainisteoir KResources
 Name[km]=កម្មវិធី​គ្រប់គ្រង KResources
+Name[lv]=KResources pārvaldnieks
 Name[nds]=KResources-Pleger
 Name[pt]=Gestor do KResources
 Name[pt_BR]=Gestor do KResources
@@ -21,7 +22,6 @@ Name[zh_TW]=KResource 管理者
 Type=ServiceType
 X-KDE-ServiceType=KResources/Manager
 Comment=KResources Manager
-Comment[x-test]=xxKResources Managerxx
 
 [PropertyDef::X-KDE-ResourceFamily]
 Type=QString

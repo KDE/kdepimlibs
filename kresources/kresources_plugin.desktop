@@ -7,6 +7,7 @@ Name[el]=Πρόσθετο KResources
 Name[es]=Complemento KResource
 Name[ga]=Breiseán KResources
 Name[km]=កម្មវិធី​ជំនួយ​របស់ KResources
+Name[lv]=KResources spraudnis
 Name[nds]=KResources-Moduul
 Name[pt]='Plugin' do KResources
 Name[pt_BR]='Plugin' do KResources
@@ -21,7 +22,6 @@ Name[zh_TW]=KResource 外掛程式
 Type=ServiceType
 X-KDE-ServiceType=KResources/Plugin
 Comment=KResources Framework Plugin
-Comment[x-test]=xxKResources Framework Pluginxx
 
 [PropertyDef::X-KDE-ResourceFamily]
 Type=QString
