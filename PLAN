@@ -18,16 +18,16 @@ To-Be-Determined
 ================
 libkholidays - must stay in kdepim due to licensing. ask the 'plan' author.
 
-High Priority for KDE 4.0
+High Priority for KDE 4.x
 =========================
 kpimutils - done, but we want to move email.h into kmime, as some if its
             functions are already in kmime. vkrause.
 
-High Priority, but not ready until KDE 4.1
+High Priority, but not ready until KDE 4.2
 ==========================================
-none.
+re-enable kontactinterfaces
 
-Low Priority (KDE 4.1)
+Low Priority (KDE 4.x)
 ======================
 libkdepim - needs a class-by-class review
 libksieve - ??
