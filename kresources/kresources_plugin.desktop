@@ -22,6 +22,12 @@ Name[zh_TW]=KResource 外掛程式
 Type=ServiceType
 X-KDE-ServiceType=KResources/Plugin
 Comment=KResources Framework Plugin
+Comment[ga]=Breiseán Creatlaí KResources
+Comment[km]=កម្មវិធី​ជំនួយ​គ្រោងការ​របស់ KResources
+Comment[pt]='Plugin' da Plataforma do KResources
+Comment[pt_BR]='Plugin' da Plataforma do KResources
+Comment[sv]=Insticksprogram för resursramverk
+Comment[uk]=Втулок платформи KResource
 
 [PropertyDef::X-KDE-ResourceFamily]
 Type=QString

@@ -22,6 +22,12 @@ Name[zh_TW]=KResource 管理者
 Type=ServiceType
 X-KDE-ServiceType=KResources/Manager
 Comment=KResources Manager
+Comment[ga]=Bainisteoir KResources
+Comment[km]=កម្មវិធី​គ្រប់គ្រង KResources
+Comment[pt]=Gestor do KResources
+Comment[pt_BR]=Gestor do KResources
+Comment[sv]=Resurshantering
+Comment[uk]=Менеджер KResource-ів
 
 [PropertyDef::X-KDE-ResourceFamily]
 Type=QString
