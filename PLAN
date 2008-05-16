@@ -25,7 +25,7 @@ kpimutils - done, but we want to move email.h into kmime, as some if its
 
 High Priority, but not ready until KDE 4.2
 ==========================================
-re-enable kontactinterfaces
+move kontactinterfaces from kdepim
 
 Low Priority (KDE 4.x)
 ======================

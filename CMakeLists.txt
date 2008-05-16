@@ -55,8 +55,6 @@ add_subdirectory(kblog)
 add_subdirectory(kcal)
 add_subdirectory(kimap)
 add_subdirectory(kldap)
-# do NOT re-enable kontactinterfaces until 4.2
-#add_subdirectory(kontactinterfaces)
 add_subdirectory(kpimidentities)
 add_subdirectory(kpimutils)
 add_subdirectory(kresources)
