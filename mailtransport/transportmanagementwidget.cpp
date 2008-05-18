@@ -43,6 +43,7 @@ TransportManagementWidget::TransportManagementWidget( QWidget *parent )
   d->ui.transportList->setHeaderLabels( QStringList()
                                         << i18nc( "@title:column email transport name", "Name" )
                                         << i18nc( "@title:column email transport type", "Type" ) );
+  d->ui.transportList->sortItems( 0, Qt::AscendingOrder );
   connect( d->ui.transportList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
            SLOT(updateButtonState()) );
   connect( d->ui.transportList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
