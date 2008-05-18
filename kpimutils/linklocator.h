@@ -172,14 +172,6 @@ class KPIMUTILS_EXPORT LinkLocator
     bool isEmptyUrl( const QString &url ) const;
 
     /**
-      Replaces smiley text with an <img> tag containing the relevant image.
-      For an emoticon text to be recognized it has to match
-      "(^|\s+)text(\s+|$)"
-      @return An HTML String with <img> for an emoticon
-    */
-    QString getEmoticon();
-
-    /**
       Highlight text according to *bold*, /italic/ and _underlined_ markup.
       @return A HTML string.
     */
@@ -192,20 +184,6 @@ class KPIMUTILS_EXPORT LinkLocator
     Private *const d;
     //@endcond
 
-    /**
-      Maps the smiley text to the corresponding emoticon name
-    */
-    static QMap<QString, QString> *s_smileyEmoticonNameMap;
-
-    /**
-      Cache for the HTML representation of a smiley.
-    */
-    static QMap<QString, QString> *s_smileyEmoticonHTMLCache;
-
-    /**
-      Cleanup the smiley map and HTML cache on exit.
-    */
-    static void cleanupLinkLocator();
 };
 
 }
