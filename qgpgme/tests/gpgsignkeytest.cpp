@@ -63,7 +63,7 @@ int main( int argc, char * argv[] ) {
     const GpgSignKeyEditInteractor::SigningOption signing_mode = it->value;
 
     try {
-        std::auto_ptr<EditInteractor> ei( new GpgSignKeyEditInteractor( signing_mode ) );
+        std::auto_ptr<EditInteractor> ei( new GpgSignKeyEditInteractor( std::vector<UserID>(), Key(), 0, signing_mode ) );
 
         return test_editinteractor( ei, keyid );
     } catch ( const std::exception & e ) {
