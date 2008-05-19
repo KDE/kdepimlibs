@@ -54,12 +54,11 @@ class KPIMUtils::LinkLocator::Private
   public:
     int mMaxUrlLen;
     int mMaxAddressLen;
-    static KEmoticonsTheme sEmoticonsTheme;
 };
 //@endcond
 
 // Use a static for this as calls to KEmoticons::theme() are expensive
-static KEmoticonsTheme sEmoticonsTheme;
+K_GLOBAL_STATIC( KEmoticons, sEmoticons );
 
 LinkLocator::LinkLocator( const QString &text, int pos )
   : mText( text ), mPos( pos ), d( new KPIMUtils::LinkLocator::Private )
@@ -361,11 +360,9 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
     exclude << "(O)" << "(o)" << "(D)" << "(d)" << "(E)" << "(e)" << "(K)" << "(k)" << "(I)" << "(i)";
     exclude << "(L)" << "(l)" << "(8)" << "(T)" << "(t)" << "(G)" << "(g)" << "(F)" << "(f)" << "(H)";
     exclude << "8)" << "(N)" << "(n)" << "(Y)" << "(y)" << "(U)" << "(u)" << "(W)" << "(w)";
-    if ( sEmoticonsTheme.isNull() )
-      sEmoticonsTheme = KEmoticons().theme();
-    result = sEmoticonsTheme.parseEmoticons( result, KEmoticonsTheme::StrictParse |
-                                                     KEmoticonsTheme::SkipHTML,
-                                             exclude );
+    result = sEmoticons->theme().parseEmoticons( result, KEmoticonsTheme::StrictParse |
+                                                         KEmoticonsTheme::SkipHTML,
+                                                 exclude );
   }
 
   return result;
