@@ -33,7 +33,10 @@
 #include <kstandarddirs.h>
 #include <kcodecs.h>
 #include <kdebug.h>
+#include <kdeversion.h>
+#if KDE_IS_VERSION( 4, 0, 95 )
 #include <kemoticons.h>
+#endif
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
@@ -57,8 +60,10 @@ class KPIMUtils::LinkLocator::Private
 };
 //@endcond
 
+#if KDE_IS_VERSION( 4, 0, 95 )
 // Use a static for this as calls to KEmoticons::theme() are expensive
 K_GLOBAL_STATIC( KEmoticons, sEmoticons )
+#endif
 
 LinkLocator::LinkLocator( const QString &text, int pos )
   : mText( text ), mPos( pos ), d( new KPIMUtils::LinkLocator::Private )
@@ -354,6 +359,7 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
     }
   }
 
+#if KDE_IS_VERSION( 4, 0, 95 )
   if ( flags & ReplaceSmileys ) {
     QStringList exclude;
     exclude << "(c)" << "(C)" << "&gt;:-(" << "&gt;:(" << "(B)" << "(b)" << "(P)" << "(p)";
@@ -364,6 +370,7 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
                                                          KEmoticonsTheme::SkipHTML,
                                                  exclude );
   }
+#endif
 
   return result;
 }
