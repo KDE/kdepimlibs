@@ -10,7 +10,9 @@ set( qgpgme_TESTS
   installtest
   gpgsetexpirytimetest
   gpgsetownertrusttest
-  gpgsignkeytest )
+  gpgsignkeytest
+  gpgadduseridtest
+  )
 
 foreach( _qgpgme_test ${qgpgme_TESTS} )
   kde4_add_executable( "${_qgpgme_test}" TEST "${_qgpgme_test}.cpp" )
