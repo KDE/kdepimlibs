@@ -36,22 +36,23 @@
 
 using namespace MailTransport;
 
-struct SlavePool
+class SlavePool
 {
-  SlavePool() : ref( 0 ) {}
-  int ref;
-  QHash<int,KIO::Slave*> slaves;
+  public:
+    SlavePool() : ref( 0 ) {}
+    int ref;
+    QHash<int,KIO::Slave*> slaves;
 
-  void removeSlave( KIO::Slave *slave, bool disconnect = false )
-  {
-    const int slaveKey = slaves.key( slave );
-    if ( slaveKey > 0 ) {
-      slaves.remove( slaveKey );
-      if ( disconnect ) {
-        KIO::Scheduler::disconnectSlave( slave );
+    void removeSlave( KIO::Slave *slave, bool disconnect = false )
+    {
+      const int slaveKey = slaves.key( slave );
+      if ( slaveKey > 0 ) {
+        slaves.remove( slaveKey );
+        if ( disconnect ) {
+          KIO::Scheduler::disconnectSlave( slave );
+        }
       }
     }
-  }
 };
 
 K_GLOBAL_STATIC( SlavePool, s_slavePool )
