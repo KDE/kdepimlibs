@@ -54,6 +54,8 @@ namespace MailTransport
       void slotModeChanged( QSslSocket::SslMode  state );
       void slotSocketRead();
       void slotSslErrors( const QList<QSslError> &errors );
+    private:
+      QString m_msg;
   };
 }
 
@@ -102,19 +104,18 @@ void SocketPrivate::slotSocketRead()
     return;
   }
 
-  static QString msg;
-  msg += QLatin1String( socket->readAll() );
+  m_msg += QLatin1String( socket->readAll() );
 
-  if ( !msg.endsWith( QLatin1Char( '\n' ) ) ) {
+  if ( !m_msg.endsWith( QLatin1Char( '\n' ) ) ) {
     return;
   }
 
 #ifdef comm_debug
-  kDebug() << socket->isEncrypted() << msg.trimmed();
+  kDebug() << socket->isEncrypted() << m_msg.trimmed();
 #endif
 
-  emit q->data( msg );
-  msg.clear();
+  emit q->data( m_msg );
+  m_msg.clear();
 }
 
 void SocketPrivate::slotSslErrors( const QList<QSslError> & )
