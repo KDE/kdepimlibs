@@ -46,8 +46,11 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
   Q_CLASSINFO( "D-Bus Interface", "org.kde.pim.TransportManager" )
 
   friend class Transport;
+  friend class Private;
 
   public:
+    class Private;
+
     /**
       Destructor.
     */
@@ -221,9 +224,9 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     */
     void loadPasswords();
 
+    TransportManager();
+
   private:
-    class Private;
-    TransportManager(Private *priv);
     void readConfig();
     void writeConfig();
     void emitChangesCommitted();
