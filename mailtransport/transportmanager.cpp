@@ -49,9 +49,12 @@ using namespace KWallet;
 class TransportManager::Private
 {
   public:
+    Private() {}
     ~Private() {
-        cleanupTransportManager();
+      delete config;
+      qDeleteAll( transports );
     }
+
     KConfig *config;
     QList<Transport *> transports;
     bool myOwnChange;
@@ -61,19 +64,21 @@ class TransportManager::Private
     int defaultTransportId;
     bool isMainInstance;
     QList<TransportJob *> walletQueue;
-
-    static TransportManager *sSelf;
-    static void cleanupTransportManager()
-    {
-      delete sSelf;
-      sSelf = 0;
-    }
 };
-TransportManager *TransportManager::Private::sSelf = 0;
 
-TransportManager::TransportManager(Private *priv)
-  : QObject(), d( priv )
+class StaticTransportManager : public TransportManager
 {
+  public:
+    StaticTransportManager() : TransportManager() {}
+};
+
+K_GLOBAL_STATIC( StaticTransportManager, sSelf )
+
+
+TransportManager::TransportManager()
+  : QObject(), d( new Private )
+{
+  qAddPostRoutine( sSelf.destroy );
   d->myOwnChange = false;
   d->wallet = 0;
   d->walletOpenFailed = false;
@@ -94,22 +99,18 @@ TransportManager::TransportManager(Private *priv)
   connect( QDBusConnection::sessionBus().interface(),
            SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
+  readConfig();
 }
 
 TransportManager::~TransportManager()
 {
-  delete d->config;
-  qDeleteAll( d->transports );
+  qRemovePostRoutine( sSelf.destroy );
+  delete d;
 }
 
 TransportManager *TransportManager::self()
 {
-  static TransportManager::Private p;
-  if( !p.sSelf ) {
-    p.sSelf = new TransportManager( &p );
-    p.sSelf->readConfig();
-  }
-  return p.sSelf;
+  return sSelf;
 }
 
 Transport *TransportManager::transportById( int id, bool def ) const

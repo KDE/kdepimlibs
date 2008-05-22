@@ -36,19 +36,27 @@
 
 using namespace MailTransport;
 
-static int slavePoolRef = 0;
-static QHash<int,KIO::Slave*> slavePool;
-
-static void removeSlaveFromPool( KIO::Slave *slave, bool disconnect = false )
+class SlavePool
 {
-  const int slaveKey = slavePool.key( slave );
-  if ( slaveKey > 0 ) {
-    slavePool.remove( slaveKey );
-    if ( disconnect ) {
-      KIO::Scheduler::disconnectSlave( slave );
+  public:
+    SlavePool() : ref( 0 ) {}
+    int ref;
+    QHash<int,KIO::Slave*> slaves;
+
+    void removeSlave( KIO::Slave *slave, bool disconnect = false )
+    {
+      const int slaveKey = slaves.key( slave );
+      if ( slaveKey > 0 ) {
+        slaves.remove( slaveKey );
+        if ( disconnect ) {
+          KIO::Scheduler::disconnectSlave( slave );
+        }
+      }
     }
-  }
-}
+};
+
+K_GLOBAL_STATIC( SlavePool, s_slavePool )
+
 
 /**
  * Private class that helps to provide binary compatibility between releases.
@@ -70,27 +78,33 @@ SmtpJob::SmtpJob( Transport *transport, QObject *parent )
   d->currentState = SmtpJobPrivate::Idle;
   d->slave = 0;
   d->finished = false;
-  slavePoolRef++;
+  if ( !s_slavePool.isDestroyed() )
+    s_slavePool->ref++;
   KIO::Scheduler::connect( SIGNAL(slaveError(KIO::Slave*,int,QString)),
                            this, SLOT(slaveError(KIO::Slave*,int,QString)) );
 }
 
 SmtpJob::~SmtpJob()
 {
-  slavePoolRef--;
-  if ( slavePoolRef == 0 ) {
-    kDebug() << "clearing SMTP slave pool" << slavePool.count();
-    foreach ( KIO::Slave *slave, slavePool.values() ) {
-      KIO::Scheduler::disconnectSlave( slave );
+  if ( !s_slavePool.isDestroyed() ) {
+    s_slavePool->ref--;
+    if ( s_slavePool->ref == 0 ) {
+      kDebug() << "clearing SMTP slave pool" << s_slavePool->slaves.count();
+      foreach ( KIO::Slave *slave, s_slavePool->slaves.values() ) {
+        KIO::Scheduler::disconnectSlave( slave );
+      }
+      s_slavePool->slaves.clear();
     }
-    slavePool.clear();
   }
   delete d;
 }
 
 void SmtpJob::doStart()
 {
-  if ( slavePool.contains( transport()->id() ) ||
+  if ( s_slavePool.isDestroyed() )
+    return;
+
+  if ( s_slavePool->slaves.contains( transport()->id() ) ||
        transport()->precommand().isEmpty() ) {
     d->currentState = SmtpJobPrivate::Smtp;
     startSmtpJob();
@@ -104,6 +118,9 @@ void SmtpJob::doStart()
 
 void SmtpJob::startSmtpJob()
 {
+  if ( s_slavePool.isDestroyed() )
+    return;
+
   KUrl destination;
   destination.setProtocol( ( transport()->encryption() == Transport::EnumEncryption::SSL ) ?
                            SMTPS_PROTOCOL : SMTP_PROTOCOL );
@@ -174,7 +191,7 @@ void SmtpJob::startSmtpJob()
 
   destination.setPath( QLatin1String( "/send" ) );
 
-  d->slave = slavePool.value( transport()->id() );
+  d->slave = s_slavePool->slaves.value( transport()->id() );
   if ( !d->slave ) {
     kDebug() << "creating new SMTP slave";
     KIO::MetaData slaveConfig;
@@ -185,7 +202,7 @@ void SmtpJob::startSmtpJob()
       slaveConfig.insert( QLatin1String( "sasl" ), transport()->authenticationTypeString() );
     }
     d->slave = KIO::Scheduler::getConnectedSlave( destination, slaveConfig );
-    slavePool.insert( transport()->id(), d->slave );
+    s_slavePool->slaves.insert( transport()->id(), d->slave );
   } else {
     kDebug() << "re-using existing slave";
   }
@@ -210,6 +227,9 @@ void SmtpJob::startSmtpJob()
 
 bool SmtpJob::doKill()
 {
+  if ( s_slavePool.isDestroyed() )
+    return false;
+
   if ( !hasSubjobs() ) {
     return true;
   }
@@ -219,7 +239,7 @@ bool SmtpJob::doKill()
     KIO::SimpleJob *job = static_cast<KIO::SimpleJob*>( subjobs().first() );
     clearSubjobs();
     KIO::Scheduler::cancelJob( job );
-    removeSlaveFromPool( d->slave );
+    s_slavePool->removeSlave( d->slave );
     return true;
   }
   return false;
@@ -227,6 +247,9 @@ bool SmtpJob::doKill()
 
 void SmtpJob::slotResult( KJob *job )
 {
+  if ( s_slavePool.isDestroyed() )
+    return;
+
   // The job has finished, so we don't care about any further errors. Set
   // d->finished to true, so slaveError() knows about this and doesn't call
   // emitResult() anymore.
@@ -242,7 +265,7 @@ void SmtpJob::slotResult( KJob *job )
 
   TransportJob::slotResult( job );
   if ( error() && d->currentState == SmtpJobPrivate::Smtp ) {
-    removeSlaveFromPool( d->slave, error() != KIO::ERR_SLAVE_DIED );
+    s_slavePool->removeSlave( d->slave, error() != KIO::ERR_SLAVE_DIED );
     return;
   }
   if ( !error() && d->currentState == SmtpJobPrivate::Precommand ) {
@@ -257,6 +280,9 @@ void SmtpJob::slotResult( KJob *job )
 
 void SmtpJob::dataRequest( KIO::Job *job, QByteArray &data )
 {
+  if ( s_slavePool.isDestroyed() )
+    return;
+
   Q_ASSERT( job );
   if ( buffer()->atEnd() ) {
     data.clear();
@@ -269,7 +295,10 @@ void SmtpJob::dataRequest( KIO::Job *job, QByteArray &data )
 
 void SmtpJob::slaveError( KIO::Slave *slave, int errorCode, const QString &errorMsg )
 {
-  removeSlaveFromPool( slave, errorCode != KIO::ERR_SLAVE_DIED );
+  if ( s_slavePool.isDestroyed() )
+    return;
+
+  s_slavePool->removeSlave( slave, errorCode != KIO::ERR_SLAVE_DIED );
   if ( d->slave == slave && !d->finished ) {
     setError( errorCode );
     setErrorText( KIO::buildErrorString( errorCode, errorMsg ) );
