@@ -99,7 +99,6 @@ TransportManager::TransportManager()
   connect( QDBusConnection::sessionBus().interface(),
            SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
-  readConfig();
 }
 
 TransportManager::~TransportManager()
@@ -110,6 +109,9 @@ TransportManager::~TransportManager()
 
 TransportManager *TransportManager::self()
 {
+  if ( !sSelf.exists() ) {
+    sSelf->readConfig();
+  }
   return sSelf;
 }
 
