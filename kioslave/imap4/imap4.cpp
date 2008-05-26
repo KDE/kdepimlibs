@@ -95,8 +95,8 @@ extern "C" {
 
 #define IMAP_PROTOCOL "imap"
 #define IMAP_SSL_PROTOCOL "imaps"
-static const int ImapPort = 143;
-static const int ImapsPort = 993;
+const int ImapPort = 143;
+const int ImapsPort = 993;
 
 using namespace KIO;
 
