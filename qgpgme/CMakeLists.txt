@@ -42,8 +42,8 @@ if ( _any_gpgme_found )
    target_link_libraries( qgpgme ${QT_QTCORE_LIBRARY} ${_qgpgme_libgpgme} )
 
    set_target_properties( qgpgme PROPERTIES
-     VERSION   1.0.0
-     SOVERSION 1.0.0
+     VERSION   1.0.1
+     SOVERSION 1.0.1
    )
 
    install( TARGETS qgpgme ${INSTALL_TARGETS_DEFAULT_ARGS})
