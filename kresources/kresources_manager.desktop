@@ -1,9 +1,46 @@
 [Desktop Entry]
 Name=KResources Manager
+Name[ca]=Gestor del KResources
+Name[da]=KResources-håndtering
 Name[de]=KResourcen-Manager
+Name[el]=Διαχειριστής KResources
+Name[es]=Administrador de KResource
+Name[ga]=Bainisteoir KResources
+Name[gl]=Xestor de KResources
+Name[hu]=KResources-kezelő
+Name[km]=កម្មវិធី​គ្រប់គ្រង KResources
+Name[lv]=KResources pārvaldnieks
+Name[nds]=KResources-Pleger
+Name[pt]=Gestor do KResources
+Name[pt_BR]=Gestor do KResources
+Name[ro]=Administrator KResurse
+Name[sr]=Менаџер к‑ресурса
+Name[sr@latin]=Menadžer k‑resursa
+Name[sv]=Resurshantering
+Name[th]=ตัวจัดการทรัพยากร
+Name[tr]=KResources Yöneticisi
+Name[uk]=Менеджер KResource-ів
+Name[x-test]=xxKResources Managerxx
+Name[zh_CN]=KResource 管理器
+Name[zh_TW]=KResources 管理者
 Type=ServiceType
 X-KDE-ServiceType=KResources/Manager
 Comment=KResources Manager
+Comment[ca]=Gestor del KResources
+Comment[el]=Διαχειριστής KResources
+Comment[es]=Administrador de KResource
+Comment[ga]=Bainisteoir KResources
+Comment[gl]=Xestor de KResources
+Comment[hu]=KResources-kezelő
+Comment[km]=កម្មវិធី​គ្រប់គ្រង KResources
+Comment[pt]=Gestor do KResources
+Comment[pt_BR]=Gestor do KResources
+Comment[sr]=Менаџер к‑ресурса
+Comment[sr@latin]=Menadžer k‑resursa
+Comment[sv]=Resurshantering
+Comment[uk]=Менеджер KResource-ів
+Comment[zh_CN]=KResource 管理器
+Comment[zh_TW]=KResources 管理者
 
 [PropertyDef::X-KDE-ResourceFamily]
 Type=QString
