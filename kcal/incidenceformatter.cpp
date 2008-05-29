@@ -1426,6 +1426,7 @@ class KCal::IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
 {
+  //FIXME: support mRichText==false
   QString ret;
   QString tmp;
   if ( event->isMultiDay() ) {
@@ -1475,6 +1476,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
 {
+  //FIXME: support mRichText==false
   QString ret;
   bool allDay( todo->allDay() );
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
@@ -1508,6 +1510,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal *journal )
 {
+  //FIXME: support mRichText==false
   QString ret;
   if ( journal->dtStart().isValid() ) {
     ret += "<br>" +
@@ -1519,6 +1522,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal *journal )
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( FreeBusy *fb )
 {
+  //FIXME: support mRichText==false
   QString ret;
   ret = "<br>" +
         i18n( "<i>Period start:</i>&nbsp;%1",
@@ -1549,6 +1553,7 @@ bool IncidenceFormatter::ToolTipVisitor::visit( Journal *journal )
 
 bool IncidenceFormatter::ToolTipVisitor::visit( FreeBusy *fb )
 {
+  //FIXME: support mRichText==false
   mResult = "<qt><b>" + i18n( "Free/Busy information for %1", fb->organizer().fullName() ) + "</b>";
   mResult += dateRangeText( fb );
   mResult += "</qt>";
@@ -1558,6 +1563,8 @@ bool IncidenceFormatter::ToolTipVisitor::visit( FreeBusy *fb )
 QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidence,
                                                              QString dtRangeText )
 {
+  //FIXME: support mRichText==false
+
   if ( !incidence ) {
     return QString();
   }
