@@ -1485,27 +1485,24 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
     // italics here :)
     ret += "<br>" + i18n( "<i>Start:</i>&nbsp;%1",
                           ( allDay ) ?
-                          ( todo->dtStartDateStr(
-                            true, false, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) :
-                          ( todo->dtStartStr(
-                            true, false, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) ) ;
+                          ( todo->dtStartDateStr( true, false, todo->dtStart().timeSpec() ) ) :
+                          ( todo->dtStartStr( true, false, todo->dtStart().timeSpec() ) ) ) ;
   }
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
     ret += "<br>" + i18n( "<i>Due:</i>&nbsp;%1",
                           ( allDay ) ?
-                          ( todo->dtDueDateStr(
-                            true, todo->dtDue().timeSpec() ).replace( " ", "&nbsp;" ) ) :
-                          ( todo->dtDueStr(
-                            true, todo->dtDue().timeSpec() ).replace( " ", "&nbsp;" ) ) );
+                          ( todo->dtDueDateStr( true, todo->dtDue().timeSpec() ) ) :
+                          ( todo->dtDueStr( true, todo->dtDue().timeSpec() ) ) );
   }
   if ( todo->isCompleted() ) {
     ret += "<br>" +
-           i18n( "<i>Completed:</i>&nbsp;%1", todo->completedStr().replace( " ", "&nbsp;" ) );
+           i18n( "<i>Completed:</i>&nbsp;%1", todo->completedStr() );
   } else {
-    ret += "<br>" + i18nc( "percent complete", "%1 % completed", todo->percentComplete() );
+    ret += "<br>" +
+           i18nc( "percent complete", "%1 % completed", todo->percentComplete() );
   }
 
-  return ret;
+  return ret.replace( " ", "&nbsp;" );
 }
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal *journal )
