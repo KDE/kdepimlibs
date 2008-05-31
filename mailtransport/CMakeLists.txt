@@ -52,7 +52,6 @@ install( FILES
         transportjob.h
         transportmanagementwidget.h
         transportmanager.h
-        transporttypedialog.h
         servertest.h
         DESTINATION ${INCLUDE_INSTALL_DIR}/mailtransport COMPONENT Devel)
 
