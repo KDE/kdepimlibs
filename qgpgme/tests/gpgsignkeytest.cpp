@@ -29,8 +29,8 @@
 
 #include <gpgme++/gpgsignkeyeditinteractor.h>
 
-#include <boost/bind.hpp>
-#include <boost/range.hpp>
+
+#include <QByteArray>
 
 #include <memory>
 #include <algorithm>
@@ -38,14 +38,6 @@
 
 using namespace GpgME;
 using namespace boost;
-
-static const struct _Values {
-    const char * name;
-    GpgSignKeyEditInteractor::SigningOption value;
-} values[] = {
-    { "sign", GpgSignKeyEditInteractor::LocalSignature },
-    { "lsign", GpgSignKeyEditInteractor::ExportableSignature }
-};
 
 int main( int argc, char * argv[] ) {
 
@@ -55,16 +47,21 @@ int main( int argc, char * argv[] ) {
         return 1;
 
     const char * const keyid = argv[1];
-    const std::string signing_mode_string = argv[2];
-
-    const _Values * const it = std::find_if( begin( values ), end( values ), bind( &_Values::name, _1 ) == signing_mode_string );
-    if ( it == end( values ) )
-        throw std::runtime_error( "Not a signing mode value: \"" + signing_mode_string + "\"" );
-    const GpgSignKeyEditInteractor::SigningOption signing_mode = it->value;
-
+     QByteArray signing_mode_string = argv[2];
+    if ( !signing_mode_string.endsWith( "sign" ) )
+        throw std::runtime_error( std::string( "Not a valid signing mode: " ) + argv[2] );
+    signing_mode_string.chop( 4 );
+    int options = 0;
+    if ( !signing_mode_string.contains( 'l' ) )
+        options |= GpgSignKeyEditInteractor::Exportable;
+    if ( signing_mode_string.contains( "nr" ) )
+        options |= GpgSignKeyEditInteractor::NonRevocable;
+    if ( signing_mode_string.contains( 't' ) )
+        options |= GpgSignKeyEditInteractor::Trust;
     try {
-        std::auto_ptr<EditInteractor> ei( new GpgSignKeyEditInteractor( std::vector<UserID>(), Key(), 0, signing_mode ) );
-
+        GpgSignKeyEditInteractor * const skei = new GpgSignKeyEditInteractor;
+        skei->setSigningOptions( options );
+        std::auto_ptr<EditInteractor> ei( skei );
         return test_editinteractor( ei, keyid );
     } catch ( const std::exception & e ) {
         std::cerr << "Caught error: " << e.what() << std::endl;
