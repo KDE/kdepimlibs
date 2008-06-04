@@ -11,10 +11,10 @@ set( QGPGME_FOUND false )
 
 find_package(Gpgme)
 
-if ( WIN32 AND GPGME_QT_FOUND )
+if ( WIN32 AND GPGME_VANILLA_FOUND )
    set( QGPGME_FOUND true )
-   set( QGPGME_LIBRARIES "qgpgme;gpgme++-qt;${GPGME_QT_LIBRARIES}" )
-endif( WIN32 AND GPGME_QT_FOUND )
+   set( QGPGME_LIBRARIES "qgpgme;gpgme++;${GPGME_VANILLA_LIBRARIES}" )
+endif( WIN32 AND GPGME_VANILLA_FOUND )
 
 if ( NOT WIN32 AND GPGME_PTHREAD_FOUND )
    set( QGPGME_FOUND true )
