@@ -387,10 +387,10 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           Alarm *alarm = new Alarm( event );
           KDateTime highNoonTime =
             pureISOToLocalQDateTime( tnefMsg->findProp( 0x8502 ).
-                                     replace( QChar( '-' ), "" ).replace( QChar( ':' ), "" ) );
+                                     remove( QChar( '-' ) ).remove( QChar( ':' ) ) );
           KDateTime wakeMeUpTime =
             pureISOToLocalQDateTime( tnefMsg->findProp( 0x8560, "" ).
-                                     replace( QChar( '-' ), "" ).replace( QChar( ':' ), "" ) );
+                                     remove( QChar( '-' ) ).remove( QChar( ':' ) ) );
           alarm->setTime( wakeMeUpTime );
 
           if ( highNoonTime.isValid() && wakeMeUpTime.isValid() ) {

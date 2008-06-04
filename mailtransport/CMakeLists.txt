@@ -12,7 +12,6 @@ set(mailtransport_lib_srcs
   transportjob.cpp
   transportmanager.cpp
   transportmanagementwidget.cpp
-  transporttypedialog.cpp
   sendmailjob.cpp
   smtpjob.cpp
   precommandjob.cpp
@@ -26,7 +25,6 @@ kde4_add_ui_files(mailtransport_lib_srcs
   smtpsettings.ui
   sendmailsettings.ui
   transportmanagementwidget.ui
-  transporttypedialog.ui
 )
 kde4_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
 
@@ -54,7 +52,6 @@ install( FILES
         transportjob.h
         transportmanagementwidget.h
         transportmanager.h
-        transporttypedialog.h
         servertest.h
         DESTINATION ${INCLUDE_INSTALL_DIR}/mailtransport COMPONENT Devel)
 

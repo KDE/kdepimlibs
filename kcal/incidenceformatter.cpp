@@ -1426,6 +1426,7 @@ class KCal::IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
 {
+  //FIXME: support mRichText==false
   QString ret;
   QString tmp;
   if ( event->isMultiDay() ) {
@@ -1475,6 +1476,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
 {
+  //FIXME: support mRichText==false
   QString ret;
   bool allDay( todo->allDay() );
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
@@ -1483,31 +1485,29 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
     // italics here :)
     ret += "<br>" + i18n( "<i>Start:</i>&nbsp;%1",
                           ( allDay ) ?
-                          ( todo->dtStartDateStr(
-                            true, false, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) :
-                          ( todo->dtStartStr(
-                            true, false, todo->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) ) ) ;
+                          ( todo->dtStartDateStr( true, false, todo->dtStart().timeSpec() ) ) :
+                          ( todo->dtStartStr( true, false, todo->dtStart().timeSpec() ) ) ) ;
   }
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
     ret += "<br>" + i18n( "<i>Due:</i>&nbsp;%1",
                           ( allDay ) ?
-                          ( todo->dtDueDateStr(
-                            true, todo->dtDue().timeSpec() ).replace( " ", "&nbsp;" ) ) :
-                          ( todo->dtDueStr(
-                            true, todo->dtDue().timeSpec() ).replace( " ", "&nbsp;" ) ) );
+                          ( todo->dtDueDateStr( true, todo->dtDue().timeSpec() ) ) :
+                          ( todo->dtDueStr( true, todo->dtDue().timeSpec() ) ) );
   }
   if ( todo->isCompleted() ) {
     ret += "<br>" +
-           i18n( "<i>Completed:</i>&nbsp;%1", todo->completedStr().replace( " ", "&nbsp;" ) );
+           i18n( "<i>Completed:</i>&nbsp;%1", todo->completedStr() );
   } else {
-    ret += "<br>" + i18nc( "percent complete", "%1 % completed", todo->percentComplete() );
+    ret += "<br>" +
+           i18nc( "percent complete", "%1 % completed", todo->percentComplete() );
   }
 
-  return ret;
+  return ret.replace( " ", "&nbsp;" );
 }
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal *journal )
 {
+  //FIXME: support mRichText==false
   QString ret;
   if ( journal->dtStart().isValid() ) {
     ret += "<br>" +
@@ -1519,6 +1519,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal *journal )
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( FreeBusy *fb )
 {
+  //FIXME: support mRichText==false
   QString ret;
   ret = "<br>" +
         i18n( "<i>Period start:</i>&nbsp;%1",
@@ -1549,6 +1550,7 @@ bool IncidenceFormatter::ToolTipVisitor::visit( Journal *journal )
 
 bool IncidenceFormatter::ToolTipVisitor::visit( FreeBusy *fb )
 {
+  //FIXME: support mRichText==false
   mResult = "<qt><b>" + i18n( "Free/Busy information for %1", fb->organizer().fullName() ) + "</b>";
   mResult += dateRangeText( fb );
   mResult += "</qt>";
@@ -1558,6 +1560,8 @@ bool IncidenceFormatter::ToolTipVisitor::visit( FreeBusy *fb )
 QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidence,
                                                              QString dtRangeText )
 {
+  //FIXME: support mRichText==false
+
   if ( !incidence ) {
     return QString();
   }

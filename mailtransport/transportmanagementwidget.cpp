@@ -25,7 +25,6 @@
 #include "transportmanager.h"
 #include "transport.h"
 #include "transportconfigdialog.h"
-#include "transporttypedialog.h"
 
 using namespace MailTransport;
 

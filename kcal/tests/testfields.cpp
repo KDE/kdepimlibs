@@ -47,8 +47,7 @@ int main(int argc,char **argv)
   Q_UNUSED(args)
 
   CalendarLocal cal( QLatin1String("UTC") );
-
-  QString file = QLatin1String( INPUT );
+  QString file = QLatin1String( _TESTINPUT );
   if (!cal.load( file ) ) {
     kError() << "Can't load" << file;
     return 1;

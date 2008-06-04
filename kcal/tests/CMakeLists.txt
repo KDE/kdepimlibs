@@ -65,8 +65,7 @@ KCAL_EXECUTABLE_TESTS(
 ########### next target ###############
 set(testfields_SRCS testfields.cpp)
 set(srcfile "${CMAKE_SOURCE_DIR}/kcal/tests/data/test_pilot.ics")
-set_source_files_properties( ${testfields_SRCS} PROPERTIES 
-	COMPILE_FLAGS -DINPUT="\\"${srcfile}\\"" )
+add_definitions( -D_TESTINPUT="\\"${srcfile}\\"" )
 
 kde4_add_executable(testfields TEST ${testfields_SRCS})
 
