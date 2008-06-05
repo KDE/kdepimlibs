@@ -1350,7 +1350,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     }
     html += "<td>";
 
-    if ( helper->calendar() && !existingIncidence ) {
+    if ( !existingIncidence ) {
       // Accept
       html += helper->makeLink( "accept", i18nc( "accept to-do request", "[Accept]" ) );
       html += "</td><td> &nbsp; </td><td>";
