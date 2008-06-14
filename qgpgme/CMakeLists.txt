@@ -3,7 +3,8 @@ set( _any_gpgme_found false )
 
 if ( WIN32 AND GPGME_VANILLA_FOUND )
 
-   # on Windows, we require gpgme(-vanilla), which is thread-safe
+   # on Windows, we require gpgme(-vanilla), which is thread-safe,
+   # and we don't provide gpgme-qt support
 
    set( _any_gpgme_found true )
    set( _qgpgme_libgpgme gpgmepp )
@@ -19,7 +20,8 @@ if ( NOT WIN32 AND GPGME_PTHREAD_FOUND )
 
    set( _any_gpgme_found true )
    set( _qgpgme_libgpgme gpgmepp-pthread )
-   #set( _qgpgme_extra_src eventloopinteractor_unix.cpp )
+   set( _qgpgme_extra_src eventloopinteractor.cpp eventloopinteractor_unix.cpp )
+   set( _qgpgme_extra_headers eventloopinteractor.h )
 
 endif ( NOT WIN32 AND GPGME_PTHREAD_FOUND )
 
@@ -33,7 +35,6 @@ if ( _any_gpgme_found )
 
    set( qgpgme_LIB_SRCS
         dataprovider.cpp
-        #eventloopinteractor.cpp
         ${_qgpgme_extra_src}
    )
 
@@ -50,7 +51,7 @@ if ( _any_gpgme_found )
 
    install( FILES
      qgpgme_export.h
-     #eventloopinteractor.h
+     ${_qgpgme_extra_headers}
      dataprovider.h 
      DESTINATION ${INCLUDE_INSTALL_DIR}/qgpgme COMPONENT Devel )
 
