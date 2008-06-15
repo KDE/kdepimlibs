@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=KResources Manager
 Name[ca]=Gestor del KResources
+Name[cs]=KResource správce
 Name[da]=KResources-håndtering
 Name[de]=Ressourcenverwaltung
 Name[el]=Διαχειριστής KResources
@@ -29,6 +30,7 @@ Type=ServiceType
 X-KDE-ServiceType=KResources/Manager
 Comment=KResources Manager
 Comment[ca]=Gestor del KResources
+Comment[cs]=KResource správce
 Comment[de]=Ressourcenverwaltung
 Comment[el]=Διαχειριστής KResources
 Comment[es]=Administrador de KResource
@@ -46,6 +48,7 @@ Comment[sr]=Менаџер к‑ресурса
 Comment[sr@latin]=Menadžer k‑resursa
 Comment[sv]=Resurshantering
 Comment[uk]=Менеджер KResource-ів
+Comment[x-test]=xxKResources Managerxx
 Comment[zh_CN]=KResource 管理器
 Comment[zh_TW]=KResources 管理者
 
