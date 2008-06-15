@@ -1110,7 +1110,9 @@ bool kio_sieveProtocol::receiveData(bool waitForData, const QByteArray &reparse)
 
 		// read data from the server
 		char buffer[SIEVE_DEFAULT_RECIEVE_BUFFER];
-		readLine(buffer, SIEVE_DEFAULT_RECIEVE_BUFFER - 1);
+		const ssize_t numRead = readLine(buffer, SIEVE_DEFAULT_RECIEVE_BUFFER - 1);
+		if ( numRead < 0 )
+		    return false;
 		buffer[SIEVE_DEFAULT_RECIEVE_BUFFER-1] = '\0';
 
 		// strip LF/CR
