@@ -275,6 +275,10 @@ QString IncidenceBase::dtStartDateStr( bool shortfmt, const KDateTime::Spec &spe
 
 QString IncidenceBase::dtStartStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
+  if ( allDay() ) {
+    return dtStartDateStr( shortfmt, spec );
+  }
+
   if ( spec.isValid() ) {
 
     QString timeZone;

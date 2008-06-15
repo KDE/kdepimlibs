@@ -178,6 +178,10 @@ QString Event::dtEndDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
 
 QString Event::dtEndStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
+  if ( allDay() ) {
+    return dtEndDateStr( shortfmt, spec );
+  }
+
   if ( spec.isValid() ) {
 
     QString timeZone;

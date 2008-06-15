@@ -266,7 +266,7 @@ static QString eventViewerFormatHeader( Incidence *incidence )
   }
   */
 
-  tmpStr += "<td>" + eventViewerAddTag( "h2", incidence->summary() ) + "</td>";
+  tmpStr += "<td>" + eventViewerAddTag( "h2", incidence->richSummary() ) + "</td>";
   tmpStr += "</tr></table><br>";
 
   return tmpStr;
@@ -284,7 +284,7 @@ static QString eventViewerFormatEvent( Event *event )
   if ( !event->location().isEmpty() ) {
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>" + i18n( "Location" ) + "</b></td>";
-    tmpStr += "<td>" + event->location() + "</td>";
+    tmpStr += "<td>" + event->richLocation() + "</td>";
     tmpStr += "</tr>";
   }
 
@@ -339,7 +339,7 @@ static QString eventViewerFormatEvent( Event *event )
   if ( !event->description().isEmpty() ) {
     tmpStr += "<tr>";
     tmpStr += "<td></td>";
-    tmpStr += "<td>" + eventViewerAddTag( "p", event->description() ) + "</td>";
+    tmpStr += "<td>" + eventViewerAddTag( "p", event->richDescription() ) + "</td>";
     tmpStr += "</tr>";
   }
 
@@ -390,7 +390,7 @@ static QString eventViewerFormatTodo( Todo *todo )
   QString tmpStr = eventViewerFormatHeader( todo );
 
   if ( !todo->location().isEmpty() ) {
-    tmpStr += eventViewerAddTag( "b", i18n(" Location: %1", todo->location() ) );
+    tmpStr += eventViewerAddTag( "b", i18n(" Location: %1", todo->richLocation() ) );
     tmpStr += "<br>";
   }
 
@@ -399,7 +399,7 @@ static QString eventViewerFormatTodo( Todo *todo )
   }
 
   if ( !todo->description().isEmpty() ) {
-    tmpStr += eventViewerAddTag( "p", todo->description() );
+    tmpStr += eventViewerAddTag( "p", todo->richDescription() );
   }
 
   tmpStr += eventViewerFormatCategories( todo );
@@ -433,13 +433,13 @@ static QString eventViewerFormatJournal( Journal *journal )
 
   QString tmpStr;
   if ( !journal->summary().isEmpty() ) {
-    tmpStr+= eventViewerAddTag( "h2", journal->summary() );
+    tmpStr+= eventViewerAddTag( "h2", journal->richSummary() );
   }
   tmpStr += eventViewerAddTag(
     "h3", i18n( "Journal for %1",
                 journal->dtStartDateStr( false, journal->dtStart().timeSpec() ) ) );
   if ( !journal->description().isEmpty() ) {
-    tmpStr += eventViewerAddTag( "p", journal->description() );
+    tmpStr += eventViewerAddTag( "p", journal->richDescription() );
   }
   return tmpStr;
 }
@@ -598,10 +598,15 @@ static QString invitationRow( const QString &cell1, const QString &cell2 )
 static QString invitationsDetailsIncidence( Incidence *incidence )
 {
   QString html;
-  QString descr = incidence->description();
+  QString descr;
+  if ( !incidence->descriptionIsRich() ) {
+    descr = string2HTML( incidence->description() );
+  } else {
+    descr = eventViewerAddTag( "p", incidence->richDescription() );
+  }
   if( !descr.isEmpty() ) {
     html += "<br/><u>" + i18n( "Description:" ) + "</u><table border=\"0\"><tr><td>&nbsp;</td><td>";
-    html += string2HTML( descr ) + "</td></tr></table>";
+    html += descr + "</td></tr></table>";
   }
   QStringList comments = incidence->comments();
   if ( !comments.isEmpty() ) {
@@ -626,12 +631,20 @@ static QString invitationDetailsEvent( Event *event )
 
   QString sSummary = i18n( "Summary unspecified" );
   if ( ! event->summary().isEmpty() ) {
-    sSummary = string2HTML( event->summary() );
+    if ( !event->summaryIsRich() ) {
+      sSummary = string2HTML( event->summary() );
+    } else {
+      sSummary = eventViewerAddTag( "p", event->richSummary() );
+    }
   }
 
   QString sLocation = i18n( "Location unspecified" );
   if ( ! event->location().isEmpty() ) {
-    sLocation = string2HTML( event->location() );
+    if ( !event->locationIsRich() ) {
+      sLocation = string2HTML( event->location() );
+    } else {
+      sLocation = eventViewerAddTag( "p", event->richLocation() );
+    }
   }
 
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
@@ -681,7 +694,7 @@ static QString invitationDetailsTodo( Todo *todo )
   QString sSummary = i18n( "Summary unspecified" );
   QString sDescr = i18n( "Description unspecified" );
   if ( ! todo->summary().isEmpty() ) {
-    sSummary = todo->summary();
+    sSummary = todo->richSummary();
   }
   if ( ! todo->description().isEmpty() ) {
     sDescr = todo->description();
@@ -704,10 +717,10 @@ static QString invitationDetailsJournal( Journal *journal )
   QString sSummary = i18n( "Summary unspecified" );
   QString sDescr = i18n( "Description unspecified" );
   if ( ! journal->summary().isEmpty() ) {
-    sSummary = journal->summary();
+    sSummary = journal->richSummary();
   }
   if ( ! journal->description().isEmpty() ) {
-    sDescr = journal->description();
+    sDescr = journal->richDescription();
   }
   QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
   html += invitationRow( i18n( "Summary:" ), sSummary );
@@ -1182,15 +1195,15 @@ class IncidenceFormatter::IncidenceCompareVisitor :
       }
 
       if ( oldInc->summary() != newInc->summary() ) {
-        mChanges += i18n( "The summary has been changed to: \"%1\"", newInc->summary() );
+        mChanges += i18n( "The summary has been changed to: \"%1\"", newInc->richSummary() );
       }
 
       if ( oldInc->location() != newInc->location() ) {
-        mChanges += i18n( "The location has been changed to: \"%1\"", newInc->location() );
+        mChanges += i18n( "The location has been changed to: \"%1\"", newInc->richLocation() );
       }
 
       if ( oldInc->description() != newInc->description() ) {
-        mChanges += i18n( "The description has been changed to: \"%1\"", newInc->description() );
+        mChanges += i18n( "The description has been changed to: \"%1\"", newInc->richDescription() );
       }
 
       Attendee::List oldAttendees = oldInc->attendees();
@@ -1427,22 +1440,16 @@ class KCal::IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
 {
   //FIXME: support mRichText==false
+  //TODO: the &nbsp; in the strings are obsolete, they should be removed
+  //      (couldn't do that because of the string freeze)
   QString ret;
   QString tmp;
   if ( event->isMultiDay() ) {
 
-    if ( event->allDay() ) {
-      tmp = event->dtStartDateStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" );
-    } else {
-      tmp = event->dtStartStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" );
-    }
+    tmp = event->dtStartStr( true, event->dtStart().timeSpec() );
     ret += "<br>" + i18nc( "Event start", "<i>From:</i>&nbsp;%1", tmp );
 
-    if ( event->allDay() ) {
-      tmp = event->dtEndDateStr( true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" );
-    } else {
-      tmp = event->dtEndStr( true, event->dtEnd().timeSpec() ).replace( " ", "&nbsp;" );
-    }
+    tmp = event->dtEndStr( true, event->dtEnd().timeSpec() );
     ret += "<br>" + i18nc( "Event end","<i>To:</i>&nbsp;%1", tmp );
 
   } else {
@@ -1450,49 +1457,52 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
     ret += "<br>" +
            i18n( "<i>Date:</i>&nbsp;%1",
                  event->dtStartDateStr(
-                   true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) );
+                   true, event->dtStart().timeSpec() ) );
     if ( !event->allDay() ) {
       if ( event->dtStartTimeStr( true, event->dtStart().timeSpec() ) ==
            event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) ) {
         // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" +
+              // TODO: the comment is no longer true, &nbsp; is not needed anymore, I leave 
+              // because of the string freeze
               i18nc( "time for event, &nbsp; to prevent ugly line breaks", "<i>Time:</i>&nbsp;%1",
                      event->dtStartTimeStr(
-                       true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ) );
+                       true, event->dtStart().timeSpec() ) );
       } else {
         tmp = "<br>" +
+              // TODO: the comment is no longer true, &nbsp; is not needed anymore, I leave 
+              // because of the string freeze
               i18nc( "time range for event, &nbsp; to prevent ugly line breaks",
                      "<i>Time:</i>&nbsp;%1&nbsp;-&nbsp;%2",
                      event->dtStartTimeStr(
-                       true, event->dtStart().timeSpec() ).replace( " ", "&nbsp;" ),
+                       true, event->dtStart().timeSpec() ),
                      event->dtEndTimeStr(
-                       true, event->dtEnd().timeSpec() ).replace( " ", "&nbsp;" ) );
+                       true, event->dtEnd().timeSpec() ) );
       }
       ret += tmp;
     }
   }
-  return ret;
+  return ret.replace( " ", "&nbsp;" ); 
 }
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
 {
   //FIXME: support mRichText==false
+  //TODO: the &nbsp; in the strings are obsolete, they should be removed
+  //      (couldn't do that because of the string freeze)
   QString ret;
-  bool allDay( todo->allDay() );
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
     // No need to add <i> here. This is separated issue and each line
     // is very visible on its own. On the other hand... Yes, I like it
     // italics here :)
     ret += "<br>" + i18n( "<i>Start:</i>&nbsp;%1",
-                          ( allDay ) ?
-                          ( todo->dtStartDateStr( true, false, todo->dtStart().timeSpec() ) ) :
-                          ( todo->dtStartStr( true, false, todo->dtStart().timeSpec() ) ) ) ;
+                            todo->dtStartStr(
+                            true, false, todo->dtStart().timeSpec() ) ) ;
   }
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
     ret += "<br>" + i18n( "<i>Due:</i>&nbsp;%1",
-                          ( allDay ) ?
-                          ( todo->dtDueDateStr( true, todo->dtDue().timeSpec() ) ) :
-                          ( todo->dtDueStr( true, todo->dtDue().timeSpec() ) ) );
+                            todo->dtDueStr(
+                            true, todo->dtDue().timeSpec() ) );
   }
   if ( todo->isCompleted() ) {
     ret += "<br>" +
@@ -1508,18 +1518,22 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal *journal )
 {
   //FIXME: support mRichText==false
+  //TODO: the &nbsp; in the strings are obsolete, they should be removed
+  //      (couldn't do that because of the string freeze)
   QString ret;
   if ( journal->dtStart().isValid() ) {
     ret += "<br>" +
            i18n( "<i>Date:</i>&nbsp;%1",
                  journal->dtStartDateStr( false, journal->dtStart().timeSpec() ) );
   }
-  return ret;
+  return ret.replace( " ", "&nbsp;" );
 }
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( FreeBusy *fb )
 {
   //FIXME: support mRichText==false
+  //TODO: the &nbsp; in the strings are obsolete, they should be removed
+  //      (couldn't do that because of the string freeze)
   QString ret;
   ret = "<br>" +
         i18n( "<i>Period start:</i>&nbsp;%1",
@@ -1527,7 +1541,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( FreeBusy *fb )
   ret += "<br>" +
          i18n( "<i>Period start:</i>&nbsp;%1",
                KGlobal::locale()->formatDateTime( fb->dtEnd().dateTime() ) );
-  return ret;
+  return ret.replace( " ", "&nbsp;" );
 }
 
 bool IncidenceFormatter::ToolTipVisitor::visit( Event *event )
@@ -1566,23 +1580,27 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
     return QString();
   }
 
-  QString tmp = "<qt><b>"+ incidence->summary().replace( "\n", "<br>" ) + "</b>";
+  QString tmp = "<qt><b>"+ incidence->richSummary() + "</b>";
 
   tmp += dtRangeText;
 
   if ( !incidence->location().isEmpty() ) {
     // Put Location: in italics
     tmp += "<br>" +
-           i18n( "<i>Location:</i>&nbsp;%1", incidence->location().replace( "\n", "<br>" ) );
+           i18n( "<i>Location:</i>&nbsp;%1", incidence->richLocation() );
   }
 
   if ( !incidence->description().isEmpty() ) {
     QString desc( incidence->description() );
-    if ( desc.length() > 120 ) {
-      desc = desc.left( 120 ) + "...";
+    if ( !incidence->descriptionIsRich() ) {
+      if ( desc.length() > 120 ) {
+        desc = desc.left( 120 ) + "...";
+      }
+      desc = Qt::escape( desc ).replace( "\n", "<br>" );
+    } else {
+      // TODO: truncate the description when it's rich text
     }
-    tmp += "<br>----------<br>" + i18n( "<i>Description:</i>" ) + "<br>" +
-           desc.replace( "\n", "<br>" );
+    tmp += "<br>----------<br>" + i18n( "<i>Description:</i>" ) + "<br>" + desc;
   }
   tmp += "</qt>";
   return tmp;
@@ -1607,13 +1625,13 @@ static QString mailBodyIncidence( Incidence *incidence )
 {
   QString body;
   if ( !incidence->summary().isEmpty() ) {
-    body += i18n( "Summary: %1\n", incidence->summary() );
+    body += i18n( "Summary: %1\n", incidence->richSummary() );
   }
   if ( !incidence->organizer().isEmpty() ) {
     body += i18n( "Organizer: %1\n", incidence->organizer().fullName() );
   }
   if ( !incidence->location().isEmpty() ) {
-    body += i18n( "Location: %1\n", incidence->location() );
+    body += i18n( "Location: %1\n", incidence->richLocation() );
   }
   return body;
 }
@@ -1702,7 +1720,7 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Event *event )
     }
   }
 
-  QString details = event->description();
+  QString details = event->richDescription();
   if ( !details.isEmpty() ) {
     mResult += i18n( "Details:\n%1\n", details );
   }
@@ -1729,7 +1747,7 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Todo *todo )
                        todo->dtDueTimeStr( true, todo->dtDue().timeSpec() ) );
     }
   }
-  QString details = todo->description();
+  QString details = todo->richDescription();
   if ( !details.isEmpty() ) {
     mResult += i18n( "Details:\n%1\n", details );
   }
@@ -1744,7 +1762,7 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Journal *journal )
     mResult += i18n( "Time: %1\n", journal->dtStartTimeStr( true, journal->dtStart().timeSpec() ) );
   }
   if ( !journal->description().isEmpty() ) {
-    mResult += i18n( "Text of the journal:\n%1\n", journal->description() );
+    mResult += i18n( "Text of the journal:\n%1\n", journal->richDescription() );
   }
   return !mResult.isEmpty();
 }

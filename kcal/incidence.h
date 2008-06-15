@@ -264,13 +264,32 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
       @param isRich if true indicates the description string contains richtext.
       @see description().
     */
-    void setDescription( const QString &description, bool isRich=false );
+    void setDescription( const QString &description, bool isRich );
+
+    /**
+      Sets the incidence description and tries to guess if the description
+      is rich text.
+
+      @param description is the incidence description string.
+      @see description().
+      @since 4.1
+    */
+    void setDescription( const QString &description );
 
     /**
       Returns the incidence description.
       @see setDescription().
+      @see richDescription().
     */
     QString description() const;
+
+    /**
+      Returns the incidence description in rich text format.
+      @see setDescription().
+      @see description().
+      @since 4.1
+    */
+    QString richDescription() const;
 
     /**
       Returns true if incidence description contains RichText; false otherwise.
@@ -285,13 +304,31 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
       @param isRich if true indicates the summary string contains richtext.
       @see summary().
     */
-    void setSummary( const QString &summary, bool isRich=false );
+    void setSummary( const QString &summary, bool isRich );
+
+    /**
+      Sets the incidence summary and tries to guess if the summary is richtext..
+
+      @param summary is the incidence summary string.
+      @see summary().
+      @since 4.1
+    */
+    void setSummary( const QString &summary );
 
     /**
       Returns the incidence summary.
       @see setSummary().
+      @see richSummary().
     */
     QString summary() const;
+
+    /**
+      Returns the incidence summary in rich text format.
+      @see setSummary().
+      @see summary().
+      @since 4.1
+    */
+    QString richSummary() const;
 
     /**
       Returns true if incidence summary contains RichText; false otherwise.
@@ -306,13 +343,34 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
       @param isRich if true indicates the location string contains richtext.
       @see location().
     */
-    void setLocation( const QString &location, bool isRich=false );
+    void setLocation( const QString &location, bool isRich );
+
+    /**
+      Sets the incidence location and tries to guess if the location is
+      richtext. Do _not_ use with journals.
+
+      @param location is the incidence location string.
+      @param isRich if true indicates the location string contains richtext.
+      @see location().
+      @since 4.1
+    */
+    void setLocation( const QString &location );
 
     /**
       Returns the incidence location. Do _not_ use with journals.
       @see setLocation().
+      @see richLocation().
     */
     QString location() const;
+
+    /**
+      Returns the incidence location in rich text format.
+      @see setLocation().
+      @see location().
+      @since 4.1
+    */
+    QString richLocation() const;
+
 
     /**
       Returns true if incidence location contains RichText; false otherwise.
