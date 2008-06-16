@@ -40,6 +40,7 @@
 #include <kdebug.h>
 
 #include <QtCore/QList>
+#include <QTextDocument> // for Qt::escape() and Qt::mightBeRichText()
 
 using namespace KCal;
 
@@ -360,9 +361,23 @@ void Incidence::setDescription( const QString &description, bool isRich )
   updated();
 }
 
+void Incidence::setDescription( const QString &description )
+{
+  setDescription( description, Qt::mightBeRichText( description ) );
+}
+
 QString Incidence::description() const
 {
   return d->mDescription;
+}
+
+QString Incidence::richDescription() const
+{
+  if ( descriptionIsRich() ) {
+    return d->mDescription;
+  } else {
+    return Qt::escape( d->mDescription ).replace( "\n", "<br/>" );
+  }
 }
 
 bool Incidence::descriptionIsRich() const
@@ -380,9 +395,23 @@ void Incidence::setSummary( const QString &summary, bool isRich )
   updated();
 }
 
+void Incidence::setSummary( const QString &summary )
+{
+  setSummary( summary, Qt::mightBeRichText( summary ) );
+}
+
 QString Incidence::summary() const
 {
   return d->mSummary;
+}
+
+QString Incidence::richSummary() const
+{
+  if ( summaryIsRich() ) {
+    return d->mSummary;
+  } else {
+    return Qt::escape( d->mSummary ).replace( "\n", "<br/>" );
+  }
 }
 
 bool Incidence::summaryIsRich() const
@@ -869,9 +898,23 @@ void Incidence::setLocation( const QString &location, bool isRich )
   updated();
 }
 
+void Incidence::setLocation( const QString &location )
+{
+  setLocation( location, Qt::mightBeRichText( location ) );
+}
+
 QString Incidence::location() const
 {
   return d->mLocation;
+}
+
+QString Incidence::richLocation() const
+{
+  if ( locationIsRich() ) {
+    return d->mLocation;
+  } else {
+    return Qt::escape( d->mLocation ).replace( "\n", "<br/>" );
+  }
 }
 
 bool Incidence::locationIsRich() const
