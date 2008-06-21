@@ -46,6 +46,8 @@ struct KMIME_EXPORT QStringOrQPair {
 
 struct KMIME_EXPORT AddrSpec {
   QString asString() const;
+  /*! This is the same as asString(), except it decodes IDNs for display */
+  QString asPrettyString() const;
   bool isEmpty() const;
   QString localPart;
   QString domain;

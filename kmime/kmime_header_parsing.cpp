@@ -33,6 +33,7 @@
 #include <QtCore/QTextCodec>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
+#include <QtCore/QUrl>
 
 #include <ctype.h> // for isdigit
 #include <cassert>
@@ -44,12 +45,14 @@ namespace KMime {
 
 namespace Types {
 
-QString AddrSpec::asString() const
+static QString addr_spec_as_string( const AddrSpec & as, bool pretty )
 {
   bool needsQuotes = false;
   QString result;
-  for ( int i = 0 ; i < localPart.length() ; ++i ) {
-    const char ch = localPart[i].toLatin1();
+  if ( as.isEmpty() )
+      return QString();
+  for ( int i = 0 ; i < as.localPart.length() ; ++i ) {
+    const char ch = as.localPart[i].toLatin1();
     if ( ch == '.' || isAText( ch ) ) {
       result += ch;
     } else {
@@ -60,11 +63,22 @@ QString AddrSpec::asString() const
       result += ch;
     }
   }
+  const QString dom = pretty ? QUrl::fromAce( as.domain.toLatin1() ) : as.domain ;
   if ( needsQuotes ) {
-    return '"' + result + "\"@" + domain;
+    return '"' + result + "\"@" + dom;
   } else {
-    return result + '@' + domain;
+    return result + '@' + dom;
   }
+}
+
+QString AddrSpec::asString() const
+{
+    return addr_spec_as_string( *this, false );
+}
+
+QString AddrSpec::asPrettyString() const
+{
+    return addr_spec_as_string( *this, true );
 }
 
 bool AddrSpec::isEmpty() const
