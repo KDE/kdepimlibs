@@ -72,13 +72,16 @@ class StaticTransportManager : public TransportManager
     StaticTransportManager() : TransportManager() {}
 };
 
-K_GLOBAL_STATIC( StaticTransportManager, sSelf )
+StaticTransportManager *sSelf = 0;
 
+static void destroyStaticTransportManager() {
+  delete sSelf;
+}
 
 TransportManager::TransportManager()
   : QObject(), d( new Private )
 {
-  qAddPostRoutine( sSelf.destroy );
+  qAddPostRoutine( destroyStaticTransportManager );
   d->myOwnChange = false;
   d->wallet = 0;
   d->walletOpenFailed = false;
@@ -103,13 +106,14 @@ TransportManager::TransportManager()
 
 TransportManager::~TransportManager()
 {
-  qRemovePostRoutine( sSelf.destroy );
+  qRemovePostRoutine( destroyStaticTransportManager );
   delete d;
 }
 
 TransportManager *TransportManager::self()
 {
-  if ( !sSelf.exists() ) {
+  if ( !sSelf ) {
+    sSelf = new StaticTransportManager;
     sSelf->readConfig();
   }
   return sSelf;
