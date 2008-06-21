@@ -35,5 +35,5 @@ void * QGpgME::EventLoopInteractor::registerWatcher( int fd, Direction dir, bool
 }
 
 void QGpgME::EventLoopInteractor::unregisterWatcher( void * tag ) {
-    delete static_cast<QSocketNotifier*>( tag );
+    static_cast<QSocketNotifier*>( tag )->deleteLater();
 }
