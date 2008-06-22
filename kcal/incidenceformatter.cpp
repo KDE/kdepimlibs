@@ -1195,15 +1195,18 @@ class IncidenceFormatter::IncidenceCompareVisitor :
       }
 
       if ( oldInc->summary() != newInc->summary() ) {
-        mChanges += i18n( "The summary has been changed to: \"%1\"", newInc->richSummary() );
+        mChanges += i18n( "The summary has been changed to: \"%1\"",
+                          newInc->richSummary() );
       }
 
       if ( oldInc->location() != newInc->location() ) {
-        mChanges += i18n( "The location has been changed to: \"%1\"", newInc->richLocation() );
+        mChanges += i18n( "The location has been changed to: \"%1\"",
+                          newInc->richLocation() );
       }
 
       if ( oldInc->description() != newInc->description() ) {
-        mChanges += i18n( "The description has been changed to: \"%1\"", newInc->richDescription() );
+        mChanges += i18n( "The description has been changed to: \"%1\"",
+                          newInc->richDescription() );
       }
 
       Attendee::List oldAttendees = oldInc->attendees();
@@ -1249,17 +1252,22 @@ Calendar *InvitationFormatterHelper::calendar() const
 
 // Check if the given incidence is likely one that we own instead one from
 // a shared calendar (Kolab-specific)
-static bool incidenceOwnedByMe( Calendar* calendar, Incidence *incidence )
+static bool incidenceOwnedByMe( Calendar *calendar, Incidence *incidence )
 {
   CalendarResources* cal = dynamic_cast<CalendarResources*>( calendar );
-  if ( !cal || !incidence )
+  if ( !cal || !incidence ) {
     return true;
-  ResourceCalendar* res = cal->resource( incidence );
-  if ( !res )
+  }
+
+  ResourceCalendar *res = cal->resource( incidence );
+  if ( !res ) {
     return true;
+  }
+
   const QString subRes = res->subresourceIdentifier( incidence );
-  if ( !subRes.contains( "/.INBOX.directory/" ) )
+  if ( !subRes.contains( "/.INBOX.directory/" ) ) {
     return false;
+  }
   return true;
 }
 
@@ -1287,12 +1295,14 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   Incidence *existingIncidence = 0;
   if ( helper->calendar() ) {
     existingIncidence = helper->calendar()->incidence( incBase->uid() );
-    if ( !incidenceOwnedByMe( helper->calendar(), existingIncidence ) )
+    if ( !incidenceOwnedByMe( helper->calendar(), existingIncidence ) ) {
       existingIncidence = 0;
+    }
     if ( !existingIncidence ) {
       const Incidence::List list = helper->calendar()->incidences();
       for ( Incidence::List::ConstIterator it = list.begin(), end = list.end(); it != end; ++it ) {
-        if ( (*it)->schedulingID() == incBase->uid() && incidenceOwnedByMe( helper->calendar(), *it ) ) {
+        if ( (*it)->schedulingID() == incBase->uid() &&
+             incidenceOwnedByMe( helper->calendar(), *it ) ) {
           existingIncidence = *it;
           break;
         }
@@ -1481,14 +1491,14 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
            event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) ) {
         // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" +
-              // TODO: the comment is no longer true, &nbsp; is not needed anymore, I leave 
+              // TODO: the comment is no longer true, &nbsp; is not needed anymore, I leave
               // because of the string freeze
               i18nc( "time for event, &nbsp; to prevent ugly line breaks", "<i>Time:</i>&nbsp;%1",
                      event->dtStartTimeStr(
                        true, event->dtStart().timeSpec() ) );
       } else {
         tmp = "<br>" +
-              // TODO: the comment is no longer true, &nbsp; is not needed anymore, I leave 
+              // TODO: the comment is no longer true, &nbsp; is not needed anymore, I leave
               // because of the string freeze
               i18nc( "time range for event, &nbsp; to prevent ugly line breaks",
                      "<i>Time:</i>&nbsp;%1&nbsp;-&nbsp;%2",
@@ -1500,7 +1510,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
       ret += tmp;
     }
   }
-  return ret.replace( " ", "&nbsp;" ); 
+  return ret.replace( " ", "&nbsp;" );
 }
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
