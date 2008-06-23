@@ -83,6 +83,7 @@ namespace QGpgME {
 
   private:
     const boost::shared_ptr<QIODevice> mIO;
+    bool mErrorOccurred;
   };
 
 } // namespace QGpgME
