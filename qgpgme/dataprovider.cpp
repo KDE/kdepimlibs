@@ -160,6 +160,9 @@ ssize_t QIODeviceDataProvider::read( void * buffer, size_t bufSize ) {
     errno = EINVAL;
     return -1;
   }
+
+  if ( mIO->atEnd() ) //eof
+      return 0;
   return mIO->read( static_cast<char*>(buffer), bufSize );
 }
 
