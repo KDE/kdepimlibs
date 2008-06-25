@@ -256,7 +256,6 @@ QString ICalFormat::toString( Calendar *cal )
   Journal::List journals = cal->journals();
   Journal::List::ConstIterator it3;
   for ( it3 = journals.begin(); it3 != journals.end(); ++it3 ) {
-    kDebug() << "write journal" << (*it3)->uid();
     component = d->mImpl->writeJournal( *it3, tzlist, &tzUsedList );
     icalcomponent_add_component( calendar, component );
   }
