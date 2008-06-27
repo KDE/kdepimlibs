@@ -1,6 +1,9 @@
 
 set( _any_gpgme_found false )
 
+set( _qgpgme_version 1.0.1 )
+set( _qgpgme_soversion 1 )
+
 if ( WIN32 AND GPGME_VANILLA_FOUND )
 
    # on Windows, we require gpgme(-vanilla), which is thread-safe,
@@ -43,8 +46,8 @@ if ( _any_gpgme_found )
    target_link_libraries( qgpgme ${QT_QTCORE_LIBRARY} ${_qgpgme_libgpgme} )
 
    set_target_properties( qgpgme PROPERTIES
-     VERSION   1.0.1
-     SOVERSION 1.0.1
+     VERSION ${_qgpgme_version}
+     SOVERSION ${_qgpgme_soversion}
    )
 
    install( TARGETS qgpgme ${INSTALL_TARGETS_DEFAULT_ARGS})
