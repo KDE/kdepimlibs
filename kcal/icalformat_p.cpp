@@ -1134,17 +1134,13 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, ICalTimeZones *tzlist )
   // start date. so assign one equal to start date.
   if ( !dtEndProcessed && !event->hasDuration() ) {
     event->setDtEnd( event->dtStart() );
-    event->setHasEndDate(false);
+    event->setHasEndDate( false );
   }
 
   QString msade = event->nonKDECustomProperty( "X-MICROSOFT-CDO-ALLDAYEVENT" );
-  if ( !msade.isNull() ) {
+  if ( !msade.isEmpty() ) {
     bool allDay = ( msade == QLatin1String( "TRUE" ) );
     event->setAllDay( allDay );
-    if ( allDay ) {
-      KDateTime endDate = event->dtEnd();
-      event->setDtEnd( endDate.addDays( -1 ) );
-    }
   }
 
   if ( d->mCompat ) {
