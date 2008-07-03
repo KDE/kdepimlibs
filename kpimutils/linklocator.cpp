@@ -155,7 +155,7 @@ bool LinkLocator::atUrl() const
     ( ch == 'v' && mText.mid( mPos, 6 ) == "vnc://" ) ||
     ( ch == 'f' && ( mText.mid( mPos, 7 ) == "fish://" ||
                      mText.mid( mPos, 6 ) == "ftp://" ||
-                     mText.mid( mPos, 7 ) == "ftps://") ) ||
+                     mText.mid( mPos, 7 ) == "ftps://" ) ) ||
     ( ch == 's' && ( mText.mid( mPos, 7 ) == "sftp://" ||
                      mText.mid( mPos, 6 ) == "smb://" ) ) ||
     ( ch == 'm' && mText.mid( mPos, 7 ) == "mailto:" ) ||
@@ -363,8 +363,9 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
   if ( flags & ReplaceSmileys ) {
     QStringList exclude;
     exclude << "(c)" << "(C)" << "&gt;:-(" << "&gt;:(" << "(B)" << "(b)" << "(P)" << "(p)";
-    exclude << "(O)" << "(o)" << "(D)" << "(d)" << "(E)" << "(e)" << "(K)" << "(k)" << "(I)" << "(i)";
-    exclude << "(L)" << "(l)" << "(8)" << "(T)" << "(t)" << "(G)" << "(g)" << "(F)" << "(f)" << "(H)";
+    exclude << "(O)" << "(o)" << "(D)" << "(d)" << "(E)" << "(e)" << "(K)" << "(k)";
+    exclude << "(I)" << "(i)" << "(L)" << "(l)" << "(8)" << "(T)" << "(t)" << "(G)";
+    exclude << "(g)" << "(F)" << "(f)" << "(H)";
     exclude << "8)" << "(N)" << "(n)" << "(Y)" << "(y)" << "(U)" << "(u)" << "(W)" << "(w)";
     result = sEmoticons->theme().parseEmoticons( result, KEmoticonsTheme::StrictParse |
                                                          KEmoticonsTheme::SkipHTML,
