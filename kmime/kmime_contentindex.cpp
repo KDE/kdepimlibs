@@ -53,8 +53,8 @@ KMime::ContentIndex::ContentIndex() : d( new Private )
 
 KMime::ContentIndex::ContentIndex( const QString &index ) : d( new Private )
 {
-  QStringList l = index.split( '.' );
-  foreach ( QString s, l ) {
+  const QStringList l = index.split( '.' );
+  foreach ( const QString &s, l ) {
     bool ok;
     unsigned int i = s.toUInt( &ok );
     if ( !ok ) {

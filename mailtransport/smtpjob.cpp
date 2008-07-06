@@ -132,13 +132,13 @@ void SmtpJob::startSmtpJob()
   destination.addQueryItem( QLatin1String( "headers" ), QLatin1String( "0" ) );
   destination.addQueryItem( QLatin1String( "from" ), sender() );
 
-  foreach ( QString str, to() ) {
+  foreach ( const QString& str, to() ) {
     destination.addQueryItem( QLatin1String( "to" ), str );
   }
-  foreach ( QString str, cc() ) {
+  foreach ( const QString& str, cc() ) {
     destination.addQueryItem( QLatin1String( "cc" ), str );
   }
-  foreach ( QString str, bcc() ) {
+  foreach ( const QString& str, bcc() ) {
     destination.addQueryItem( QLatin1String( "bcc" ), str );
   }
 

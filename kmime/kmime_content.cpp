@@ -95,7 +95,7 @@ void Content::setContent( const QList<QByteArray> &l )
   bts.setCodec( "ISO 8859-1" );
 
   bool isHead = true;
-  foreach ( QByteArray line, l ) {
+  foreach ( const QByteArray& line, l ) {
     if ( isHead && line.isEmpty() ) {
       isHead = false;
       continue;

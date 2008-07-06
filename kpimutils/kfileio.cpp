@@ -278,7 +278,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
     if ( !g.isReadable() ){
       error.append( i18n( "Folder %1 is inaccessible.", toCheck ) + '\n' );
     } else {
-      foreach ( QFileInfo fi, g.entryInfoList() ) {
+      foreach ( const QFileInfo &fi, g.entryInfoList() ) {
         QString newToCheck = toCheck + '/' + fi.fileName();
         QFileInfo fiNewToCheck(newToCheck);
         if ( fi.fileName() != "." && fi.fileName() != ".." ) {
