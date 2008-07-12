@@ -181,7 +181,9 @@ void ServerTestPrivate::handleSMTPIMAPResponse( int type, const QString &text )
 
 void ServerTestPrivate::slotNormalPossible()
 {
-  normalSocketTimer->stop();
+  if (tlsFinished && normalSocketFinished) {
+    normalSocketTimer->stop();
+  }
   connectionResults << Transport::EnumEncryption::None;
 }
 
