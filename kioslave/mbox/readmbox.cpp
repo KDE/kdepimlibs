@@ -79,7 +79,7 @@ bool ReadMBox::nextLine()
 	m_atend = m_current_line.isNull();
 	if( m_atend ) // Cursor was at EOF
 	{
-		m_current_id = QString();
+		m_current_id.clear();
 		m_prev_status = m_status;
 		return true;
 	}
