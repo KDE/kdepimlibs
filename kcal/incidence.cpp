@@ -158,16 +158,14 @@ void Incidence::init( const Incidence &i )
   // Alarms and Attachments are stored in ListBase<...>, which is a QValueList<...*>.
   // We need to really duplicate the objects stored therein, otherwise deleting
   // i will also delete all attachments from this object (setAutoDelete...)
-  Alarm::List::ConstIterator it;
-  for ( it = i.d->mAlarms.begin(); it != i.d->mAlarms.end(); ++it ) {
-    Alarm *b = new Alarm( **it );
+  foreach ( Alarm* alarm, i.d->mAlarms ) {
+    Alarm *b = new Alarm( *alarm );
     b->setParent( this );
     d->mAlarms.append( b );
   }
 
-  Attachment::List::ConstIterator it1;
-  for ( it1 = i.d->mAttachments.begin(); it1 != i.d->mAttachments.end(); ++it1 ) {
-    Attachment *a = new Attachment( **it1 );
+  foreach ( Attachment* attachment, i.d->mAttachments ) {
+    Attachment *a = new Attachment( *attachment );
     d->mAttachments.append( a );
   }
 
@@ -181,11 +179,11 @@ void Incidence::init( const Incidence &i )
 
 Incidence::~Incidence()
 {
-  Incidence::List Relations = d->mRelations;
-  List::ConstIterator it;
-  for ( it = Relations.begin(); it != Relations.end(); ++it ) {
-    if ( (*it)->relatedTo() == this ) {
-      (*it)->d->mRelatedTo = 0;
+  kDebug() << this;
+  Incidence::List relations = d->mRelations;
+  foreach ( Incidence* incidence, relations ) {
+    if ( incidence->relatedTo() == this ) {
+      incidence->d->mRelatedTo = 0;
     }
   }
 
@@ -216,9 +214,11 @@ bool Incidence::operator==( const Incidence &i2 ) const
     return false; // no need to check further
   }
 
-  Alarm::List::ConstIterator a1 = alarms().begin();
+  Alarm::List::ConstIterator a1 = alarms().constBegin();
+  Alarm::List::ConstIterator a1end = alarms().constEnd();
   Alarm::List::ConstIterator a2 = i2.alarms().begin();
-  for ( ; a1 != alarms().end() && a2 != i2.alarms().end(); ++a1, ++a2 ) {
+  Alarm::List::ConstIterator a2end = i2.alarms().constEnd();
+  for ( ; a1 != a1end && a2 != a2end; ++a1, ++a2 ) {
     if ( **a1 == **a2 ) {
       continue;
     } else {
@@ -592,8 +592,8 @@ QList<KDateTime> Incidence::startDateTimesForDate( const QDate &date,
   while ( tmpday <= date ) {
     if ( recurrence()->recursOn( tmpday, timeSpec ) ) {
       QList<QTime> times = recurrence()->recurTimesOn( tmpday, timeSpec );
-      for ( QList<QTime>::ConstIterator it = times.begin(); it != times.end(); ++it ) {
-        tmp = KDateTime( tmpday, *it, start.timeSpec() );
+      foreach ( const QTime& time, times ) {
+        tmp = KDateTime( tmpday, time, start.timeSpec() );
         if ( endDateForStart( tmp ) >= kdate ) {
           result << tmp;
         }
@@ -632,8 +632,8 @@ QList<KDateTime> Incidence::startDateTimesForDateTime( const KDateTime &datetime
     if ( recurrence()->recursOn( tmpday, datetime.timeSpec() ) ) {
       // Get the times during the day (in start date's time zone) when recurrences happen
       QList<QTime> times = recurrence()->recurTimesOn( tmpday, start.timeSpec() );
-      for ( QList<QTime>::ConstIterator it = times.begin(); it != times.end(); ++it ) {
-        tmp = KDateTime( tmpday, *it, start.timeSpec() );
+      foreach ( const QTime& time, times ) {
+        tmp = KDateTime( tmpday, time, start.timeSpec() );
         if ( !( tmp > datetime || endDateForStart( tmp ) < datetime ) ) {
           result << tmp;
         }
@@ -694,9 +694,9 @@ Attachment::List Incidence::attachments( const QString &mime ) const
 {
   Attachment::List attachments;
   Attachment::List::ConstIterator it;
-  for ( it = d->mAttachments.begin(); it != d->mAttachments.end(); ++it ) {
-    if ( (*it)->mimeType() == mime ) {
-      attachments.append( *it );
+  foreach ( Attachment* attachment, d->mAttachments ) {
+    if ( attachment->mimeType() == mime ) {
+      attachments.append( attachment );
     }
   }
   return attachments;
@@ -875,9 +875,8 @@ void Incidence::clearAlarms()
 
 bool Incidence::isAlarmEnabled() const
 {
-  Alarm::List::ConstIterator it;
-  for ( it = d->mAlarms.begin(); it != d->mAlarms.end(); ++it ) {
-    if ( (*it)->enabled() ) {
+  foreach ( Alarm* alarm, d->mAlarms ) {
+    if ( alarm->enabled() ) {
       return true;
     }
   }
