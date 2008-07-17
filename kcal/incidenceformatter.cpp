@@ -677,6 +677,9 @@ static QString invitationDetailsEvent( Event *event )
     html += invitationRow( i18n( "Duration:" ), tmp );
   }
 
+  if ( event->recurs() )
+    html += invitationRow( i18n( "Recurrence:" ), IncidenceFormatter::recurrenceString( event ) );
+
   html += "</table>\n";
   html += invitationsDetailsIncidence( event );
   html += "</div>\n";
@@ -1869,16 +1872,18 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
   case Recurrence::rMonthlyPos:
   case Recurrence::rMonthlyDay:
     if ( recur->duration() != -1 ) {
-      return i18n( "Recurs monthly until %1", recurEnd( incidence ) );
+      return i18np( "Recurs monthly until %2", "Recurs every %1 month until %2",
+                    recur->frequency(), recurEnd( incidence ) );
     }
-    return i18n( "Recurs monthly" );
+    return i18np( "Recurs monthly", "Recurs every %1 month", recur->frequency() );
   case Recurrence::rYearlyMonth:
   case Recurrence::rYearlyDay:
   case Recurrence::rYearlyPos:
     if ( recur->duration() != -1 ) {
-      return i18n( "Recurs yearly until %1", recurEnd( incidence ) );
+      return i18np( "Recurs yearly until %2", "Recurs every %1 years until %2",
+                    recur->frequency(), recurEnd( incidence ) );
     }
-    return i18n( "Recurs yearly" );
+    return i18np( "Recurs yearly", "Recurs every %1 years", recur->frequency() );
   default:
     return i18n( "Incidence recurs" );
   }
