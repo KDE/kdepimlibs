@@ -186,9 +186,6 @@ Incidence::~Incidence()
       incidence->d->mRelatedTo = 0;
     }
   }
-  if ( relatedTo() ) {
-    relatedTo()->removeRelation( this );
-  }
 
   delete d->mRecurrence;
   delete d;
@@ -198,7 +195,7 @@ Incidence::~Incidence()
 // A string comparison that considers that null and empty are the same
 static bool stringCompare( const QString &s1, const QString &s2 )
 {
-  return s1.isEmpty() && s2.isEmpty() || s1 == s2;
+  return ( s1.isEmpty() && s2.isEmpty() ) || ( s1 == s2 );
 }
 
 //@endcond
