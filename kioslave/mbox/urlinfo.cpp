@@ -101,9 +101,9 @@ bool UrlInfo::isDirectory( const KUrl& url )
 
 	//Setting parameters
 	*m_filename = filename;
-	*m_id = QString();
+	(*m_id).clear();
 	m_type = directory;
-	kDebug() <<"urlInfo::isDirectory(" << url <<" )";
+	kDebug() << "urlInfo::isDirectory(" << url << " )";
 	return true;
 }
 
