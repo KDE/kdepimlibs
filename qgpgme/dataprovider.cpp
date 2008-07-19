@@ -175,11 +175,12 @@ ssize_t QIODeviceDataProvider::read( void * buffer, size_t bufSize ) {
   const qint64 numRead = mIO->read( static_cast<char*>(buffer), bufSize );
 
   Enabler en( numRead < 0 ? &mErrorOccurred : 0 );
-  if ( numRead < 0 && errno == 0 )
+  if ( numRead < 0 && errno == 0 ) {
       if ( mErrorOccurred )
           errno = EIO;
       else
           return 0;
+  }
   return numRead;
 }
 
