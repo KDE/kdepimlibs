@@ -1221,7 +1221,7 @@ Attendee *ICalFormatImpl::readAttendee( icalproperty *attendee )
   }
 
   QString name;
-  QString uid = QString();
+  QString uid;
   p = icalproperty_get_first_parameter( attendee, ICAL_CN_PARAMETER );
   if ( p ) {
     name = QString::fromUtf8( icalparameter_get_cn( p ) );
@@ -1676,7 +1676,7 @@ void ICalFormatImpl::Private::readCustomProperties( icalcomponent *parent,
                                                     CustomProperties *properties )
 {
   QMap<QByteArray, QString> customProperties;
-  QString lastProperty = QString();
+  QString lastProperty;
 
   icalproperty *p = icalcomponent_get_first_property( parent, ICAL_X_PROPERTY );
   while ( p ) {

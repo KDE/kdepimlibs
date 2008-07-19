@@ -239,8 +239,8 @@ bool ResourceCalendar::save( Incidence *incidence )
 
 bool ResourceCalendar::save( QString &err, Incidence *incidence )
 {
-  d->mLastError = QString();
-  bool ret = save( incidence );
+  d->mLastError.clear();
+  bool ret = save( incidence ); // a new mLastError may be set in here
   err = d->mLastError;
   return ret;
 }
