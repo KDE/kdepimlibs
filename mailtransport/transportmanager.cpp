@@ -230,7 +230,6 @@ TransportJob *TransportManager::createTransportJob( const QString &transport )
     return createTransportJob( t->id() );
   }
 
-  Q_ASSERT( false );
   return 0;
 }
 
