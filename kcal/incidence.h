@@ -371,7 +371,6 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     */
     QString richLocation() const;
 
-
     /**
       Returns true if incidence location contains RichText; false otherwise.
       @see setLocation(), location().
