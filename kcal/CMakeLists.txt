@@ -258,7 +258,7 @@ kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
 kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 
-target_link_libraries(kcal ${KDE4_KDEUI_LIBS} ${QT_QTXML_LIBRARY} kresources kabc kpimutils )
+target_link_libraries(kcal ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_QTXML_LIBRARY} kresources kabc kpimutils )
 
 set_target_properties(kcal PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS kcal ${INSTALL_TARGETS_DEFAULT_ARGS} COMPONENT Devel)
@@ -278,7 +278,7 @@ set(kcal_local_PART_SRCS resourcelocal_plugin.cpp )
 kde4_add_plugin(kcal_local ${kcal_local_PART_SRCS})
 
 
-target_link_libraries(kcal_local  ${KDE4_KDECORE_LIBS} kcal )
+target_link_libraries(kcal_local  ${KDE4_KDECORE_LIBS} kcal kresources )
 
 install(TARGETS kcal_local  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -291,7 +291,7 @@ set(kcal_localdir_PART_SRCS resourcelocaldir_plugin.cpp )
 kde4_add_plugin(kcal_localdir ${kcal_localdir_PART_SRCS})
 
 
-target_link_libraries(kcal_localdir  ${KDE4_KDECORE_LIBS} kcal )
+target_link_libraries(kcal_localdir  ${KDE4_KDECORE_LIBS} kcal kresources)
 
 install(TARGETS kcal_localdir  DESTINATION ${PLUGIN_INSTALL_DIR})
 
