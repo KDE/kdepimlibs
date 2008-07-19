@@ -50,7 +50,7 @@ QList<QByteArray> l_anguageCache;
 
 QByteArray cachedCharset( const QByteArray &name )
 {
-  foreach ( QByteArray charset, c_harsetCache ) {
+  foreach ( const QByteArray& charset, c_harsetCache ) {
     if ( qstricmp( name.data(), charset.data() ) == 0 ) {
       return charset;
     }
@@ -63,7 +63,7 @@ QByteArray cachedCharset( const QByteArray &name )
 
 QByteArray cachedLanguage( const QByteArray &name )
 {
-  foreach ( QByteArray language, l_anguageCache ) {
+  foreach ( const QByteArray& language, l_anguageCache ) {
     if ( qstricmp( name.data(), language.data() ) == 0 ) {
       return language;
     }
