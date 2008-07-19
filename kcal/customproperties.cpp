@@ -172,9 +172,9 @@ bool checkName( const QByteArray &name )
   }
   for ( int i = 2;  i < len;  ++i ) {
     char ch = n[i];
-    if ( ch >= 'A' && ch <= 'Z' ||
-         ch >= 'a' && ch <= 'z' ||
-         ch >= '0' && ch <= '9' ||
+    if ( ( ch >= 'A' && ch <= 'Z' ) ||
+         ( ch >= 'a' && ch <= 'z' ) ||
+         ( ch >= '0' && ch <= '9' ) ||
          ch == '-' ) {
       continue;
     }
