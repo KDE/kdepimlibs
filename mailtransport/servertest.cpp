@@ -92,7 +92,8 @@ class ServerTestPrivate
 }
 
 ServerTestPrivate::ServerTestPrivate( ServerTest *test )
-  : q( test ), testProgress( 0 ), secureSocketFinished( false ), normalSocketFinished( false ), tlsFinished( false )
+  : q( test ), testProgress( 0 ), secureSocketFinished( false ),
+    normalSocketFinished( false ), tlsFinished( false )
 {
 }
 

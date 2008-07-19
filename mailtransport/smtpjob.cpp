@@ -57,7 +57,6 @@ class SlavePool
 
 K_GLOBAL_STATIC( SlavePool, s_slavePool )
 
-
 /**
  * Private class that helps to provide binary compatibility between releases.
  * @internal
@@ -78,8 +77,9 @@ SmtpJob::SmtpJob( Transport *transport, QObject *parent )
   d->currentState = SmtpJobPrivate::Idle;
   d->slave = 0;
   d->finished = false;
-  if ( !s_slavePool.isDestroyed() )
+  if ( !s_slavePool.isDestroyed() ) {
     s_slavePool->ref++;
+  }
   KIO::Scheduler::connect( SIGNAL(slaveError(KIO::Slave*,int,QString)),
                            this, SLOT(slaveError(KIO::Slave*,int,QString)) );
 }
@@ -101,8 +101,9 @@ SmtpJob::~SmtpJob()
 
 void SmtpJob::doStart()
 {
-  if ( s_slavePool.isDestroyed() )
+  if ( s_slavePool.isDestroyed() ) {
     return;
+  }
 
   if ( s_slavePool->slaves.contains( transport()->id() ) ||
        transport()->precommand().isEmpty() ) {
@@ -118,8 +119,9 @@ void SmtpJob::doStart()
 
 void SmtpJob::startSmtpJob()
 {
-  if ( s_slavePool.isDestroyed() )
+  if ( s_slavePool.isDestroyed() ) {
     return;
+  }
 
   KUrl destination;
   destination.setProtocol( ( transport()->encryption() == Transport::EnumEncryption::SSL ) ?
@@ -227,8 +229,9 @@ void SmtpJob::startSmtpJob()
 
 bool SmtpJob::doKill()
 {
-  if ( s_slavePool.isDestroyed() )
+  if ( s_slavePool.isDestroyed() ) {
     return false;
+  }
 
   if ( !hasSubjobs() ) {
     return true;
@@ -247,8 +250,9 @@ bool SmtpJob::doKill()
 
 void SmtpJob::slotResult( KJob *job )
 {
-  if ( s_slavePool.isDestroyed() )
+  if ( s_slavePool.isDestroyed() ) {
     return;
+  }
 
   // The job has finished, so we don't care about any further errors. Set
   // d->finished to true, so slaveError() knows about this and doesn't call
@@ -280,8 +284,9 @@ void SmtpJob::slotResult( KJob *job )
 
 void SmtpJob::dataRequest( KIO::Job *job, QByteArray &data )
 {
-  if ( s_slavePool.isDestroyed() )
+  if ( s_slavePool.isDestroyed() ) {
     return;
+  }
 
   Q_ASSERT( job );
   if ( buffer()->atEnd() ) {
@@ -295,8 +300,9 @@ void SmtpJob::dataRequest( KIO::Job *job, QByteArray &data )
 
 void SmtpJob::slaveError( KIO::Slave *slave, int errorCode, const QString &errorMsg )
 {
-  if ( s_slavePool.isDestroyed() )
+  if ( s_slavePool.isDestroyed() ) {
     return;
+  }
 
   s_slavePool->removeSlave( slave, errorCode != KIO::ERR_SLAVE_DIED );
   if ( d->slave == slave && !d->finished ) {
