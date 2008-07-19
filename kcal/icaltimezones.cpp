@@ -552,10 +552,10 @@ ICalTimeZoneData::ICalTimeZoneData( const KTimeZoneData &rhs,
               }
             } else {
               if ( date.dayOfWeek() != dayOfWeek ||
-                   ( rule & WEEKDAY_OF_MONTH ) &&
-                   ( day - 1 ) / 7 + 1 != nthFromStart ||
-                   ( rule & LAST_WEEKDAY_OF_MONTH ) &&
-                   ( daysInMonth - day ) / 7 + 1 != nthFromEnd ) {
+                   ( ( rule & WEEKDAY_OF_MONTH ) &&
+                     ( day - 1 ) / 7 + 1 != nthFromStart ) ||
+                   ( ( rule & LAST_WEEKDAY_OF_MONTH ) &&
+                     ( daysInMonth - day ) / 7 + 1 != nthFromEnd ) ) {
                 break;
               }
             }
@@ -916,8 +916,8 @@ QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase( icalcomponent *c,
       QByteArray tzname = icalproperty_get_tzname( p );
       // Outlook (2000) places "Standard Time" and "Daylight Time" in the TZNAME
       // strings, which is totally useless. So ignore those.
-      if ( !daylight && tzname == "Standard Time" ||
-           daylight && tzname == "Daylight Time" ) {
+      if ( ( !daylight && tzname == "Standard Time" ) ||
+           ( daylight && tzname == "Daylight Time" ) ) {
         break;
       }
       if ( !abbrevs.contains( tzname ) ) {
