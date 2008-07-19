@@ -39,7 +39,7 @@ namespace KBlog {
     class WordpressBuggyPrivate;
 /**
   @brief
-  A class that can be used for access to blogs (Wordpress < 2.4, Drupal <= 5.5
+  A class that can be used for access to blogs (Wordpress, Drupal <5.6
   and most likely many more) which simply use the yyyyMMddThh:mm:ss
   dateTime.iso8601 format stated on http://www.xmlrpc.com. This is only an example for
   an ISO-8601 compatible format, but many blogs seem to assume exactly this format.
