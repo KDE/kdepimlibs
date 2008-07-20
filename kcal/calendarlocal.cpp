@@ -82,7 +82,7 @@ class KCal::CalendarLocal::Private
 // helper
 namespace {
 template <typename T>
-void removeIncidenceFromMultiHashByUID( QMultiHash< QString, T > container,
+void removeIncidenceFromMultiHashByUID( QMultiHash< QString, T >& container,
                                         const QString& key,
                                         const QString& uid )
 {
