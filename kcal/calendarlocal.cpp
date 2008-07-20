@@ -78,6 +78,23 @@ class KCal::CalendarLocal::Private
     void insertTodo( Todo *todo );
     void insertJournal( Journal *journal );
 };
+
+// helper
+namespace {
+template <typename T>
+void removeIncidenceFromMultiHashByUID( QMultiHash< QString, T > container,
+                                        const QString& key,
+                                        const QString& uid )
+{
+  const QList<T> values = container.values( key );
+  QListIterator<T> it(values);
+  while ( it.hasNext() ) {
+    T const inc = it.next();
+    if ( inc->uid() == uid )
+      container.remove( key, inc );
+  }
+}
+};
 //@endcond
 
 CalendarLocal::CalendarLocal( const KDateTime::Spec &timeSpec )
@@ -171,13 +188,13 @@ bool CalendarLocal::addEvent( Event *event )
 
 bool CalendarLocal::deleteEvent( Event *event )
 {
-  QString uid = event->uid();
+  const QString uid = event->uid();
   if ( d->mEvents.remove( uid ) ) {
     setModified( true );
     notifyIncidenceDeleted( event );
     d->mDeletedIncidences.append( event );
     if ( !event->recurs() ) {
-      d->mEventsForDate.remove( event->dtStart().date().toString(), event );
+      removeIncidenceFromMultiHashByUID<Event*>( d->mEventsForDate, event->dtStart().date().toString(), event->uid() );
     }
     return true;
   } else {
@@ -249,7 +266,7 @@ bool CalendarLocal::deleteTodo( Todo *todo )
     notifyIncidenceDeleted( todo );
     d->mDeletedIncidences.append( todo );
     if ( todo->hasDueDate() ) {
-      d->mTodosForDate.remove( todo->dtDue().date().toString(), todo );
+      removeIncidenceFromMultiHashByUID( d->mTodosForDate, todo->dtDue().date().toString(), todo->uid() );
     }
     return true;
   } else {
@@ -535,7 +552,7 @@ bool CalendarLocal::deleteJournal( Journal *journal )
     setModified( true );
     notifyIncidenceDeleted( journal );
     d->mDeletedIncidences.append( journal );
-    d->mJournalsForDate.remove( journal->dtStart().date().toString(), journal );
+    removeIncidenceFromMultiHashByUID<Journal*>( d->mJournalsForDate, journal->dtStart().date().toString(), journal->uid() );
     return true;
   } else {
     kWarning() << "CalendarLocal::deleteJournal(): Journal not found.";
