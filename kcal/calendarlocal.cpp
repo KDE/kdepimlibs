@@ -94,7 +94,7 @@ void removeIncidenceFromMultiHashByUID( QMultiHash< QString, T >& container,
       container.remove( key, inc );
   }
 }
-};
+}
 //@endcond
 
 CalendarLocal::CalendarLocal( const KDateTime::Spec &timeSpec )
