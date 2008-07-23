@@ -92,6 +92,7 @@ set(RESTRICTIONDEPS
 	${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalrestriction.c.in
 )
 
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/)
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/icalrestriction.c
                    COMMAND ${PERL_EXECUTABLE} -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkrestrictiontable.pl -i ${CMAKE_SOURCE_DIR}/kcal/libical/src/libical/icalrestriction.c.in 
                            ${CMAKE_SOURCE_DIR}/kcal/libical/design-data/restrictions.csv > ${CMAKE_BINARY_DIR}/kcal/libical/src/libical/icalrestriction.c   
