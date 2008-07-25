@@ -478,6 +478,7 @@ bool Todo::recursOn( const QDate &date, const KDateTime::Spec &timeSpec ) const
 
 bool Todo::isOverdue() const
 {
+  if ( !dtDue().isValid() ) return false; // if it's never due, it can't be overdue
   bool inPast = allDay() ?
                 dtDue().date() < QDate::currentDate() :
                 dtDue() < KDateTime::currentUtcDateTime();
