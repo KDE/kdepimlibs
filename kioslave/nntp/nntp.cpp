@@ -647,7 +647,7 @@ bool NNTPProtocol::fetchGroupXOVER( unsigned long first, bool &notSupported )
       return true;
     }
 
-    fields = line.split( "\t", QString::KeepEmptyParts);
+    fields = line.split( '\t', QString::KeepEmptyParts);
     msgSize = 0;
     entry.clear();
     udsType = KIO::UDSEntry::UDS_EXTRA;

@@ -252,7 +252,7 @@ class QtopiaParser : public QXmlDefaultHandler
 
     QStringList lookupCategories( const QString &categoryList )
     {
-      QStringList categoryIds = categoryList.split( ";" );
+      QStringList categoryIds = categoryList.split( ';' );
       QStringList categories;
       QStringList::ConstIterator it;
       for ( it = categoryIds.begin(); it != categoryIds.end(); ++it ) {

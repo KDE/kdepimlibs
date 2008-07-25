@@ -285,7 +285,7 @@ void kio_sieveProtocol::changeCheck( const KUrl &url )
 	// ... and if not found, check the x-mech=AUTH query part of the url.
 		QString query = url.query();
 		if ( query.startsWith('?') ) query.remove( 0, 1 );
-		QStringList q = query.split( "," );
+		QStringList q = query.split( ',' );
 		QStringList::iterator it;
 
 		for ( it = q.begin(); it != q.end(); ++it ) {

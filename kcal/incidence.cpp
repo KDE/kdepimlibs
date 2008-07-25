@@ -436,7 +436,7 @@ void Incidence::setCategories( const QString &catStr )
     return;
   }
 
-  d->mCategories = catStr.split( "," );
+  d->mCategories = catStr.split( ',' );
 
   QStringList::Iterator it;
   for ( it = d->mCategories.begin();it != d->mCategories.end(); ++it ) {

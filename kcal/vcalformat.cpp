@@ -1204,7 +1204,7 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
   // recurrence exceptions
   if ( ( vo = isAPropertyOf( vevent, VCExDateProp ) ) != 0 ) {
     s = fakeCString( vObjectUStringZValue( vo ) );
-    QStringList exDates = QString::fromLocal8Bit( s ).split( "," );
+    QStringList exDates = QString::fromLocal8Bit( s ).split( ',' );
     QStringList::ConstIterator it;
     for ( it = exDates.begin(); it != exDates.end(); ++it ) {
       anEvent->recurrence()->addExDate( ISOToQDate(*it) );
