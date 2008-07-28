@@ -301,7 +301,7 @@ void TransportManager::readConfig()
 
   QRegExp re( QLatin1String( "^Transport (.+)$" ) );
   QStringList groups = d->config->groupList().filter( re );
-  foreach ( QString s, groups ) {
+  foreach ( const QString &s, groups ) {
     re.indexIn( s );
     Transport *t = 0;
 

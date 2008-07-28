@@ -326,9 +326,8 @@ bool removeDirAndContentsRecursively( const QString & path )
   d.setFilter( QDir::Files | QDir::Dirs | QDir::Hidden | QDir::NoSymLinks );
 
   QFileInfoList list = d.entryInfoList();
-  QFileInfo fi;
 
-  Q_FOREACH( fi, list ) {
+  Q_FOREACH( const QFileInfo &fi, list ) {
     if ( fi.isDir() ) {
       if ( fi.fileName() != "." && fi.fileName() != ".." ) {
         success = success && removeDirAndContentsRecursively( fi.absoluteFilePath() );
