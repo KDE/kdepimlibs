@@ -789,7 +789,7 @@ void imapParser::parseQuotaRoot (parseString & result)
       break;
     roots.append (word);
   }
-  lastResults.append( roots.join(" ") );
+  lastResults.append( roots.isEmpty() ? "" : roots.join( " " ) );
 }
 
 void imapParser::parseCustom (parseString & result)
