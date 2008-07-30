@@ -24,7 +24,7 @@ qt4_add_dbus_adaptor( kresources_LIB_SRCS org.kde.KResourcesManager.xml manageri
 
 kde4_add_library(kresources SHARED ${kresources_LIB_SRCS})
 
-target_link_libraries(kresources  ${KDE4_KIO_LIBS} )
+target_link_libraries(kresources ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} )
 
 set_target_properties(kresources PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kresources ${INSTALL_TARGETS_DEFAULT_ARGS})
