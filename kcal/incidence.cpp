@@ -158,13 +158,13 @@ void Incidence::init( const Incidence &i )
   // Alarms and Attachments are stored in ListBase<...>, which is a QValueList<...*>.
   // We need to really duplicate the objects stored therein, otherwise deleting
   // i will also delete all attachments from this object (setAutoDelete...)
-  foreach ( Alarm* alarm, i.d->mAlarms ) {
+  foreach ( Alarm *alarm, i.d->mAlarms ) {
     Alarm *b = new Alarm( *alarm );
     b->setParent( this );
     d->mAlarms.append( b );
   }
 
-  foreach ( Attachment* attachment, i.d->mAttachments ) {
+  foreach ( Attachment *attachment, i.d->mAttachments ) {
     Attachment *a = new Attachment( *attachment );
     d->mAttachments.append( a );
   }
@@ -179,14 +179,16 @@ void Incidence::init( const Incidence &i )
 
 Incidence::~Incidence()
 {
-  kDebug() << this;
   Incidence::List relations = d->mRelations;
-  foreach ( Incidence* incidence, relations ) {
+  foreach ( Incidence *incidence, relations ) {
     if ( incidence->relatedTo() == this ) {
-      incidence->d->mRelatedTo = 0;
+      incidence->setRelatedTo( 0 );
     }
   }
 
+  if ( relatedTo() ) {
+    relatedTo()->removeRelation( this );
+  }
   delete d->mRecurrence;
   delete d;
 }
@@ -373,7 +375,7 @@ QString Incidence::richDescription() const
   if ( descriptionIsRich() ) {
     return d->mDescription;
   } else {
-    return Qt::escape( d->mDescription ).replace( "\n", "<br/>" );
+    return Qt::escape( d->mDescription ).replace( '\n', "<br/>" );
   }
 }
 
@@ -407,7 +409,7 @@ QString Incidence::richSummary() const
   if ( summaryIsRich() ) {
     return d->mSummary;
   } else {
-    return Qt::escape( d->mSummary ).replace( "\n", "<br/>" );
+    return Qt::escape( d->mSummary ).replace( '\n', "<br/>" );
   }
 }
 
@@ -592,7 +594,7 @@ QList<KDateTime> Incidence::startDateTimesForDate( const QDate &date,
   while ( tmpday <= date ) {
     if ( recurrence()->recursOn( tmpday, timeSpec ) ) {
       QList<QTime> times = recurrence()->recurTimesOn( tmpday, timeSpec );
-      foreach ( const QTime& time, times ) {
+      foreach ( const QTime &time, times ) {
         tmp = KDateTime( tmpday, time, start.timeSpec() );
         if ( endDateForStart( tmp ) >= kdate ) {
           result << tmp;
@@ -632,7 +634,7 @@ QList<KDateTime> Incidence::startDateTimesForDateTime( const KDateTime &datetime
     if ( recurrence()->recursOn( tmpday, datetime.timeSpec() ) ) {
       // Get the times during the day (in start date's time zone) when recurrences happen
       QList<QTime> times = recurrence()->recurTimesOn( tmpday, start.timeSpec() );
-      foreach ( const QTime& time, times ) {
+      foreach ( const QTime &time, times ) {
         tmp = KDateTime( tmpday, time, start.timeSpec() );
         if ( !( tmp > datetime || endDateForStart( tmp ) < datetime ) ) {
           result << tmp;
@@ -694,7 +696,7 @@ Attachment::List Incidence::attachments( const QString &mime ) const
 {
   Attachment::List attachments;
   Attachment::List::ConstIterator it;
-  foreach ( Attachment* attachment, d->mAttachments ) {
+  foreach ( Attachment *attachment, d->mAttachments ) {
     if ( attachment->mimeType() == mime ) {
       attachments.append( attachment );
     }
@@ -875,7 +877,7 @@ void Incidence::clearAlarms()
 
 bool Incidence::isAlarmEnabled() const
 {
-  foreach ( Alarm* alarm, d->mAlarms ) {
+  foreach ( Alarm *alarm, d->mAlarms ) {
     if ( alarm->enabled() ) {
       return true;
     }
@@ -909,7 +911,7 @@ QString Incidence::richLocation() const
   if ( locationIsRich() ) {
     return d->mLocation;
   } else {
-    return Qt::escape( d->mLocation ).replace( "\n", "<br/>" );
+    return Qt::escape( d->mLocation ).replace( '\n', "<br/>" );
   }
 }
 
