@@ -61,7 +61,7 @@ class KPIMUtils::LinkLocator::Private
 //@endcond
 
 #if KDE_IS_VERSION( 4, 0, 95 )
-// Use a static for this as calls to KEmoticons::theme() are expensive
+// Use a static for this as calls to the KEmoticons constructor are expensive.
 K_GLOBAL_STATIC( KEmoticons, sEmoticons )
 #endif
 
@@ -367,9 +367,13 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
     exclude << "(I)" << "(i)" << "(L)" << "(l)" << "(8)" << "(T)" << "(t)" << "(G)";
     exclude << "(g)" << "(F)" << "(f)" << "(H)";
     exclude << "8)" << "(N)" << "(n)" << "(Y)" << "(y)" << "(U)" << "(u)" << "(W)" << "(w)";
-    result = sEmoticons->theme().parseEmoticons( result, KEmoticonsTheme::StrictParse |
-                                                         KEmoticonsTheme::SkipHTML,
-                                                 exclude );
+    static QString cachedEmoticonsThemeName;
+    if ( cachedEmoticonsThemeName.isEmpty() ) {
+      cachedEmoticonsThemeName = KEmoticons::currentThemeName();
+    }
+    result = sEmoticons->theme( cachedEmoticonsThemeName).
+                 parseEmoticons( result, KEmoticonsTheme::StrictParse |
+                                 KEmoticonsTheme::SkipHTML, exclude );
   }
 #endif
 
