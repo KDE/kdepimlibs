@@ -187,6 +187,9 @@ Incidence::~Incidence()
     }
   }
 
+  if ( relatedTo() ) {
+    relatedTo()->removeRelation( this );
+  }
   delete d->mRecurrence;
   delete d;
 }
@@ -373,7 +376,7 @@ QString Incidence::richDescription() const
   if ( descriptionIsRich() ) {
     return d->mDescription;
   } else {
-    return Qt::escape( d->mDescription ).replace( "\n", "<br/>" );
+    return Qt::escape( d->mDescription ).replace( '\n', "<br/>" );
   }
 }
 
@@ -407,7 +410,7 @@ QString Incidence::richSummary() const
   if ( summaryIsRich() ) {
     return d->mSummary;
   } else {
-    return Qt::escape( d->mSummary ).replace( "\n", "<br/>" );
+    return Qt::escape( d->mSummary ).replace( '\n', "<br/>" );
   }
 }
 
@@ -436,7 +439,7 @@ void Incidence::setCategories( const QString &catStr )
     return;
   }
 
-  d->mCategories = catStr.split( "," );
+  d->mCategories = catStr.split( ',' );
 
   QStringList::Iterator it;
   for ( it = d->mCategories.begin();it != d->mCategories.end(); ++it ) {
@@ -909,7 +912,7 @@ QString Incidence::richLocation() const
   if ( locationIsRich() ) {
     return d->mLocation;
   } else {
-    return Qt::escape( d->mLocation ).replace( "\n", "<br/>" );
+    return Qt::escape( d->mLocation ).replace( '\n', "<br/>" );
   }
 }
 
