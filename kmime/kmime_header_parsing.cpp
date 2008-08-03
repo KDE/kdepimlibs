@@ -47,10 +47,13 @@ namespace Types {
 
 static QString addr_spec_as_string( const AddrSpec & as, bool pretty )
 {
+  if ( as.isEmpty() ) {
+    return QString();
+  }
+
   bool needsQuotes = false;
   QString result;
-  if ( as.isEmpty() )
-      return QString();
+  result.reserve( as.localPart.length() + as.domain.length() + 1 );
   for ( int i = 0 ; i < as.localPart.length() ; ++i ) {
     const char ch = as.localPart[i].toLatin1();
     if ( ch == '.' || isAText( ch ) ) {
