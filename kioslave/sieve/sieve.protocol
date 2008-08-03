@@ -22,6 +22,7 @@ Description[et]=Sieve kirjade filtreerimise protokolli IO-moodul
 Description[fr]=Un module d'entrée / sortie pour le protocole de filtrage de messagerie Sieve
 Description[ga]=ioslave le haghaidh prótacail scagtha ríomhphoist Sieve
 Description[gl]=Un ioslave para o protocolo de filtraxe de correo Sieve
+Description[hr]=Modul ioslave za protokol filtriranja pošte Sieve
 Description[hu]=KDE-protokoll a Sieve levélszűrő protokollhoz
 Description[it]=Un IOSlave per il protocollo di filtraggio della posta Sieve
 Description[ja]=Sieve メールフィルタリングプロトコルのための ioslave
