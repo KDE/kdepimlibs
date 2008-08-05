@@ -81,6 +81,7 @@ static void destroyStaticTransportManager() {
 TransportManager::TransportManager()
   : QObject(), d( new Private )
 {
+  KGlobal::locale()->insertCatalog( QLatin1String("libmailtransport") );
   qAddPostRoutine( destroyStaticTransportManager );
   d->myOwnChange = false;
   d->wallet = 0;
