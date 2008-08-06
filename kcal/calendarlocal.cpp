@@ -313,8 +313,8 @@ Todo::List CalendarLocal::rawTodosForDate( const QDate &date )
   Todo *t;
 
   QString dateStr = date.toString();
-  QMultiHash<QString, Todo *>::iterator it = d->mTodosForDate.find( dateStr );
-  while ( it != d->mTodosForDate.end() && it.key() == dateStr ) {
+  QMultiHash<QString, Todo *>::const_iterator it = d->mTodosForDate.constFind( dateStr );
+  while ( it != d->mTodosForDate.constEnd() && it.key() == dateStr ) {
     t = it.value();
     todoList.append( t );
     ++it;
@@ -398,11 +398,11 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &date,
 
   // Find the hash for the specified date
   QString dateStr = date.toString();
-  QMultiHash<QString, Event *>::iterator it = d->mEventsForDate.find( dateStr );
+  QMultiHash<QString, Event *>::const_iterator it = d->mEventsForDate.constFind( dateStr );
   // Iterate over all non-recurring, single-day events that start on this date
   KDateTime::Spec ts = timespec.isValid() ? timespec : timeSpec();
   KDateTime kdt( date, ts );
-  while ( it != d->mEventsForDate.end() && it.key() == dateStr ) {
+  while ( it != d->mEventsForDate.constEnd() && it.key() == dateStr ) {
     ev = it.value();
     KDateTime end( ev->dtEnd().toTimeSpec( ev->dtStart() ) );
     if ( ev->allDay() ) {
@@ -604,9 +604,9 @@ Journal::List CalendarLocal::rawJournalsForDate( const QDate &date )
   Journal *j;
 
   QString dateStr = date.toString();
-  QMultiHash<QString, Journal *>::iterator it = d->mJournalsForDate.find( dateStr );
+  QMultiHash<QString, Journal *>::const_iterator it = d->mJournalsForDate.constFind( dateStr );
 
-  while ( it != d->mJournalsForDate.end() && it.key() == dateStr ) {
+  while ( it != d->mJournalsForDate.constEnd() && it.key() == dateStr ) {
     j = it.value();
     journalList.append( j );
     ++it;
