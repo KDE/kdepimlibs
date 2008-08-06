@@ -540,6 +540,7 @@ void ResourceCached::cleanUpEventCache( const Event::List &eventList )
     for ( it = eventList.begin(); it != eventList.end(); ++it ) {
       if ( (*it)->uid() == (*cacheIt)->uid() ) {
         found = true;
+        break;
       }
     }
 
