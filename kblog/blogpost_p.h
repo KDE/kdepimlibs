@@ -52,6 +52,7 @@ class BlogPostPrivate
     BlogPost::Status mStatus;
     KDateTime mCreationDateTime;
     KDateTime mModificationDateTime;
+    QString cleanRichText(QString richText) const;
 };
 
 } // namespace
