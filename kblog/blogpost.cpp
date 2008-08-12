@@ -67,7 +67,12 @@ BlogPost::BlogPost( const KCal::Journal &journal )
   d_ptr->mJournalId = journal.uid();
   d_ptr->mStatus = New;
   d_ptr->mTitle = journal.summary();
-  d_ptr->mContent = journal.description();
+  if (journal.descriptionIsRich()) {
+    d_ptr->mContent = d_ptr->cleanRichText(journal.description());
+  }
+  else {
+    d_ptr->mContent = journal.description();
+  }
   d_ptr->mCategories = journal.categories();
   d_ptr->mCreationDateTime = journal.dtStart();
 }
@@ -316,6 +321,27 @@ BlogPost &BlogPost::operator=( const BlogPost &other )
   BlogPost copy( other );
   swap( copy );
   return *this;
+}
+
+QString BlogPostPrivate::cleanRichText( QString richText ) const
+{
+  QRegExp getBodyContents("<body[^>]*>(.*)</body>");
+  if ( getBodyContents.indexIn( richText ) )
+  {
+    // Get anything inside but excluding the body tags
+    richText = getBodyContents.cap(1);
+    // Get rid of any whitespace
+    richText.replace(QRegExp("^\\s+"),"");
+  }
+  // Get rid of styled paragraphs
+  richText.replace(QRegExp("<p style=\"[^\"]*\">"),"<p>");
+
+  // If we're left with empty content then return a clean empty string
+  if ( richText == "<p></p>" ) {
+    richText = QString();
+  }
+
+  return richText;
 }
 
 } // namespace KBlog
