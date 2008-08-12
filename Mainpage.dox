@@ -46,9 +46,8 @@
  * - <a href="mailtransport/html/index.html"><b>mailtransport</b></a>.
  *   <i>An API and support code for managing mail transport.</i>
  *
+ * - <a href="qgpgme/html/index.html"><b>QGpgME</b></a>.
  *   <i>A C++ wrapper for gpgme.</i>
- * - <a href="qgpgme/html/index.html"><b>QGpgME</b></a>
- *   (<a href="qgpgme/html/classes.html">classes</a>)\n
  *
  * - <a href="syndication/html/index.html"><b>syndication</b></a>.
  *   <i>An RSS feed handling library.</i>
