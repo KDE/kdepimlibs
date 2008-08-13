@@ -37,6 +37,25 @@
 
 #include <QButtonGroup>
 
+namespace {
+
+class BusyCursorHelper : public QObject
+{
+public:
+  inline BusyCursorHelper( QObject *parent )
+         : QObject( parent )
+  {
+    qApp->setOverrideCursor( Qt::BusyCursor );
+  }
+
+  inline ~BusyCursorHelper()
+  {
+    qApp->restoreOverrideCursor();
+  }
+};
+
+}
+
 using namespace MailTransport;
 
 class MailTransport::TransportConfigDialog::Private
@@ -202,9 +221,12 @@ void TransportConfigDialog::checkSmtpCapabilities()
     d->serverTest->setFakeHostname( d->smtp.kcfg_localHostname->text() );
   }
   d->serverTest->setProgressBar( d->smtp.checkCapabilitiesProgress );
+  BusyCursorHelper *busyCursorHelper = new BusyCursorHelper( d->serverTest );
 
   connect( d->serverTest, SIGNAL(finished( QList< int > )),
            SLOT(slotFinished( QList< int > )));
+  connect( d->serverTest, SIGNAL(finished( QList< int > )),
+           busyCursorHelper, SLOT(deleteLater()) );
   d->smtp.checkCapabilities->setEnabled( false );
   d->serverTest->start();
   d->serverTestFailed = false;
