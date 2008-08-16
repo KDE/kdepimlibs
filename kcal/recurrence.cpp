@@ -259,8 +259,8 @@ ushort Recurrence::recurrenceType( const RecurrenceRule *rrule )
   // BYMONTHDAY: with MONTHLY, YEARLY
   // BYMONTH: with YEARLY
   // BYYEARDAY: with YEARLY
-  if ( !rrule->byYearDays().isEmpty() && type != RecurrenceRule::rYearly ||
-       !rrule->byMonths().isEmpty() && type != RecurrenceRule::rYearly ) {
+  if ( ( !rrule->byYearDays().isEmpty() && type != RecurrenceRule::rYearly ) ||
+       ( !rrule->byMonths().isEmpty() && type != RecurrenceRule::rYearly ) ) {
     return rOther;
   }
   if ( !rrule->byDays().isEmpty() ) {
