@@ -152,8 +152,8 @@ bool CalFilter::filterIncidence( Incidence *incidence ) const
     }
 
     if ( ( d->mCriteria & HideInactiveTodos ) &&
-         ( todo->hasStartDate() &&
-           ( KDateTime::currentUtcDateTime() < todo->dtStart() ) ||
+         ( ( todo->hasStartDate() &&
+             KDateTime::currentUtcDateTime() < todo->dtStart() ) ||
            todo->isCompleted() ) ) {
       return false;
     }

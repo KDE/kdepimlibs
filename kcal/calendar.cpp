@@ -1133,9 +1133,9 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
             if ( a->snoozeTime().isDaily() ) {
               Duration toFromDuration( dt, base );
               int toFrom = toFromDuration.asDays();
-              if ( ( a->snoozeTime().end( from ) <= to ) ||
+              if ( a->snoozeTime().end( from ) <= to ||
                    ( toFromDuration.isDaily() && toFrom % snooze == 0 ) ||
-                   ( ( toFrom / snooze + 1 ) * snooze <= toFrom + period.asDays() ) ) {
+                   ( toFrom / snooze + 1 ) * snooze <= toFrom + period.asDays() ) {
                 found = true;
 #ifndef NDEBUG
                 // for debug output
