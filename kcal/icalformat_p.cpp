@@ -1289,7 +1289,9 @@ Attendee *ICalFormatImpl::readAttendee( icalproperty *attendee )
   }
 
   p = icalproperty_get_first_parameter( attendee, ICAL_X_PARAMETER );
-  uid = icalparameter_get_xvalue( p );
+  if ( p ) {
+    uid = icalparameter_get_xvalue( p );
+  }
   // This should be added, but there seems to be a libical bug here.
   // TODO: does this work now in libical-0.24 or greater?
   /*while (p) {
@@ -2367,7 +2369,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
   c = icalcomponent_get_first_component( calendar, ICAL_VEVENT_COMPONENT );
   while ( c ) {
     Event *event = readEvent( c, tzlist );
-    if (event) {
+    if ( event ) {
       Event *old = cal->event( event->uid() );
       if ( old ) {
         cal->deleteEvent( old );
