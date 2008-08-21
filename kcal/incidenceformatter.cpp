@@ -1478,22 +1478,20 @@ class KCal::IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
 {
   //FIXME: support mRichText==false
-  //TODO: the &nbsp; in the strings are obsolete, they should be removed
-  //      (couldn't do that because of the string freeze)
   QString ret;
   QString tmp;
   if ( event->isMultiDay() ) {
 
     tmp = event->dtStartStr( true, event->dtStart().timeSpec() );
-    ret += "<br>" + i18nc( "Event start", "<i>From:</i>&nbsp;%1", tmp );
+    ret += "<br>" + i18nc( "Event start", "<i>From:</i> %1", tmp );
 
     tmp = event->dtEndStr( true, event->dtEnd().timeSpec() );
-    ret += "<br>" + i18nc( "Event end","<i>To:</i>&nbsp;%1", tmp );
+    ret += "<br>" + i18nc( "Event end","<i>To:</i> %1", tmp );
 
   } else {
 
     ret += "<br>" +
-           i18n( "<i>Date:</i>&nbsp;%1",
+           i18n( "<i>Date:</i> %1",
                  event->dtStartDateStr(
                    true, event->dtStart().timeSpec() ) );
     if ( !event->allDay() ) {
@@ -1501,17 +1499,13 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
            event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) ) {
         // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" +
-              // TODO: the comment is no longer true, &nbsp; is not needed anymore, I leave
-              // because of the string freeze
-              i18nc( "time for event, &nbsp; to prevent ugly line breaks", "<i>Time:</i>&nbsp;%1",
+              i18nc( "time for event", "<i>Time:</i> %1",
                      event->dtStartTimeStr(
                        true, event->dtStart().timeSpec() ) );
       } else {
         tmp = "<br>" +
-              // TODO: the comment is no longer true, &nbsp; is not needed anymore, I leave
-              // because of the string freeze
-              i18nc( "time range for event, &nbsp; to prevent ugly line breaks",
-                     "<i>Time:</i>&nbsp;%1&nbsp;-&nbsp;%2",
+              i18nc( "time range for event",
+                     "<i>Time:</i> %1 - %2",
                      event->dtStartTimeStr(
                        true, event->dtStart().timeSpec() ),
                      event->dtEndTimeStr(
@@ -1526,25 +1520,23 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
 {
   //FIXME: support mRichText==false
-  //TODO: the &nbsp; in the strings are obsolete, they should be removed
-  //      (couldn't do that because of the string freeze)
   QString ret;
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
     // No need to add <i> here. This is separated issue and each line
     // is very visible on its own. On the other hand... Yes, I like it
     // italics here :)
-    ret += "<br>" + i18n( "<i>Start:</i>&nbsp;%1",
+    ret += "<br>" + i18n( "<i>Start:</i> %1",
                             todo->dtStartStr(
                             true, false, todo->dtStart().timeSpec() ) ) ;
   }
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
-    ret += "<br>" + i18n( "<i>Due:</i>&nbsp;%1",
+    ret += "<br>" + i18n( "<i>Due:</i> %1",
                             todo->dtDueStr(
                             true, todo->dtDue().timeSpec() ) );
   }
   if ( todo->isCompleted() ) {
     ret += "<br>" +
-           i18n( "<i>Completed:</i>&nbsp;%1", todo->completedStr() );
+           i18n( "<i>Completed:</i> %1", todo->completedStr() );
   } else {
     ret += "<br>" +
            i18nc( "percent complete", "%1 % completed", todo->percentComplete() );
@@ -1556,12 +1548,10 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal *journal )
 {
   //FIXME: support mRichText==false
-  //TODO: the &nbsp; in the strings are obsolete, they should be removed
-  //      (couldn't do that because of the string freeze)
   QString ret;
   if ( journal->dtStart().isValid() ) {
     ret += "<br>" +
-           i18n( "<i>Date:</i>&nbsp;%1",
+           i18n( "<i>Date:</i> %1",
                  journal->dtStartDateStr( false, journal->dtStart().timeSpec() ) );
   }
   return ret.replace( " ", "&nbsp;" );
@@ -1570,14 +1560,12 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal *journal )
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( FreeBusy *fb )
 {
   //FIXME: support mRichText==false
-  //TODO: the &nbsp; in the strings are obsolete, they should be removed
-  //      (couldn't do that because of the string freeze)
   QString ret;
   ret = "<br>" +
-        i18n( "<i>Period start:</i>&nbsp;%1",
+        i18n( "<i>Period start:</i> %1",
               KGlobal::locale()->formatDateTime( fb->dtStart().dateTime() ) );
   ret += "<br>" +
-         i18n( "<i>Period start:</i>&nbsp;%1",
+         i18n( "<i>Period start:</i> %1",
                KGlobal::locale()->formatDateTime( fb->dtEnd().dateTime() ) );
   return ret.replace( " ", "&nbsp;" );
 }
