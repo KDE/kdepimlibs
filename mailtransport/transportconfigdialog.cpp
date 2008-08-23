@@ -160,8 +160,8 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
       d->authGroup->addButton( d->smtp.plain );
       d->authGroup->addButton( d->smtp.crammd5 );
       d->authGroup->addButton( d->smtp.digestmd5 );
-      d->authGroup->addButton( d->smtp.ntlm );
       d->authGroup->addButton( d->smtp.gssapi );
+      d->authGroup->addButton( d->smtp.ntlm );
 
       if ( KProtocolInfo::capabilities( SMTP_PROTOCOL ).contains( QLatin1String( "SASL" ) ) == 0 ) {
         d->smtp.ntlm->hide();
