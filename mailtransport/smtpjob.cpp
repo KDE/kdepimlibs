@@ -45,6 +45,7 @@ class SlavePool
 
     void removeSlave( KIO::Slave *slave, bool disconnect = false )
     {
+      kDebug() << "Removing slave" << slave << "from pool";
       const int slaveKey = slaves.key( slave );
       if ( slaveKey > 0 ) {
         slaves.remove( slaveKey );
@@ -195,7 +196,6 @@ void SmtpJob::startSmtpJob()
 
   d->slave = s_slavePool->slaves.value( transport()->id() );
   if ( !d->slave ) {
-    kDebug() << "creating new SMTP slave";
     KIO::MetaData slaveConfig;
     slaveConfig.insert( QLatin1String( "tls" ),
                         ( transport()->encryption() == Transport::EnumEncryption::TLS ) ?
@@ -204,9 +204,10 @@ void SmtpJob::startSmtpJob()
       slaveConfig.insert( QLatin1String( "sasl" ), transport()->authenticationTypeString() );
     }
     d->slave = KIO::Scheduler::getConnectedSlave( destination, slaveConfig );
+    kDebug() << "Created new SMTP slave" << d->slave;
     s_slavePool->slaves.insert( transport()->id(), d->slave );
   } else {
-    kDebug() << "re-using existing slave";
+    kDebug() << "Re-using existing slave" << d->slave;
   }
 
   KIO::TransferJob *job = KIO::put( destination, -1, KIO::HideProgressInfo );
@@ -267,11 +268,25 @@ void SmtpJob::slotResult( KJob *job )
   // (and triggers an assert in KMail).
   d->finished = true;
 
-  TransportJob::slotResult( job );
-  if ( error() && d->currentState == SmtpJobPrivate::Smtp ) {
-    s_slavePool->removeSlave( d->slave, error() != KIO::ERR_SLAVE_DIED );
+  // Normally, calling TransportJob::slotResult() whould set the proper error code
+  // for error() via KComposite::slotResult(). However, we can't call that here,
+  // since that also emits the result signal.
+  // In KMail, when there are multiple mails in the outbox, KMail tries to send
+  // the next mail when it gets the result signal, which then would reuse the
+  // old broken slave from the slave pool if there was an error.
+  // To prevent that, we call TransportJob::slotResult() only after removing the
+  // slave from the pool and calculate the error code ourselves.
+  int errorCode = error();
+  if ( !errorCode )
+    errorCode = job->error();
+
+  if ( errorCode && d->currentState == SmtpJobPrivate::Smtp ) {
+    s_slavePool->removeSlave( d->slave, errorCode != KIO::ERR_SLAVE_DIED );
+    TransportJob::slotResult( job );
     return;
   }
+
+  TransportJob::slotResult( job );
   if ( !error() && d->currentState == SmtpJobPrivate::Precommand ) {
     d->currentState = SmtpJobPrivate::Smtp;
     startSmtpJob();
