@@ -90,8 +90,8 @@
         <choice name="PLAIN"/>
         <choice name="CRAM_MD5"/>
         <choice name="DIGEST_MD5"/>
-        <choice name="NTLM"/>
         <choice name="GSSAPI"/>
+        <choice name="NTLM"/>
         <choice name="APOP" />
         <choice name="CLEAR" />
         <choice name="ANONYMOUS" />
