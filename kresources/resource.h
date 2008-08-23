@@ -212,9 +212,14 @@ class KRESOURCES_EXPORT Resource : public QObject
     ResourcePrivate *const d;
 };
 
-class KRESOURCES_EXPORT PluginFactoryBase : public KLibFactory
+class KRESOURCES_EXPORT PluginFactoryBase : public KPluginFactory
 {
   public:
+    explicit PluginFactoryBase(const char* componentName = 0, const char *catalogName = 0, QObject *parent = 0)
+      : KPluginFactory(componentName, catalogName, parent) {}
+    explicit PluginFactoryBase(const KAboutData &aboutData, QObject *parent = 0)
+      : KPluginFactory(aboutData, parent) {}
+
     virtual Resource *resource( const KConfigGroup &group ) = 0;
     virtual Resource *resource() = 0;
 
@@ -229,6 +234,11 @@ template<class TR,class TC>
 class PluginFactory : public PluginFactoryBase
 {
   public:
+    explicit PluginFactory(const char* componentName = 0, const char *catalogName = 0, QObject *parent = 0)
+      : PluginFactoryBase(componentName, catalogName, parent) {}
+    explicit PluginFactory(const KAboutData &aboutData, QObject *parent = 0)
+      : PluginFactoryBase(aboutData, parent) {}
+
     virtual Resource *resource( const KConfigGroup &group )
     {
       return new TR( group );
