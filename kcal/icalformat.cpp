@@ -96,14 +96,14 @@ bool ICalFormat::load( Calendar *calendar, const QString &fileName )
   }
   QTextStream ts( &file );
   ts.setCodec( "ISO 8859-1" );
-  QString text = ts.readAll();
+  QByteArray text = ts.readAll().trimmed().toLatin1();
   file.close();
 
-  if ( text.trimmed().isEmpty() ) {
+  if ( text.isEmpty() ) {
     // empty files are valid
     return true;
   } else {
-    return fromRawString( calendar, text.toLatin1() );
+    return fromRawString( calendar, text );
   }
 }
 
