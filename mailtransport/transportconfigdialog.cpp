@@ -250,7 +250,7 @@ void TransportConfigDialog::save()
   QString origName = d->transport->name();
   while ( existingNames.contains( d->transport->name() ) ) {
     d->transport->setName( i18nc( "%1: name; %2: number appended to it to make "
-                                  "it unique among a list of names", "%1 %2", origName, suffix ) );
+                                  "it unique among a list of names", "%1 #%2", origName, suffix ) );
     ++suffix;
   }
 
