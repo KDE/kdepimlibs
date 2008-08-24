@@ -81,7 +81,7 @@ static void destroyStaticTransportManager() {
 TransportManager::TransportManager()
   : QObject(), d( new Private )
 {
-  KGlobal::locale()->insertCatalog( QLatin1String("libmailtransport") );
+  KGlobal::locale()->insertCatalog( QLatin1String( "libmailtransport" ) );
   qAddPostRoutine( destroyStaticTransportManager );
   d->myOwnChange = false;
   d->wallet = 0;
@@ -541,9 +541,11 @@ void TransportManager::migrateToWallet()
   // ask user if he wants to migrate
   int result = KMessageBox::questionYesNoList(
     0,
-    i18n( "The following mail transports store passwords in the configuration "
-          "file instead of in KWallet.\nIt is recommended to use KWallet for "
-          "password storage for security reasons.\n"
+    i18n( "The following mail transports store their passwords in an "
+          "unencrypted configuration file.\nFor security reasons, "
+          "please consider migrating these passwords to KWallet, the "
+          "KDE Wallet management tool,\nwhich stores sensitive data "
+          "for you in a strongly encrypted file.\n"
           "Do you want to migrate your passwords to KWallet?" ),
     names, i18n( "Question" ),
     KGuiItem( i18n( "Migrate" ) ), KGuiItem( i18n( "Keep" ) ),
