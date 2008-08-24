@@ -542,7 +542,7 @@ void TransportManager::migrateToWallet()
   int result = KMessageBox::questionYesNoList(
     0,
     i18n( "The following mail transports store passwords in the configuration "
-          "file instead in KWallet.\nIt is recommended to use KWallet for "
+          "file instead of in KWallet.\nIt is recommended to use KWallet for "
           "password storage for security reasons.\n"
           "Do you want to migrate your passwords to KWallet?" ),
     names, i18n( "Question" ),
