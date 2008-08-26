@@ -1,3 +1,11 @@
+if ( WIN32 AND GPGME_VANILLA_FOUND )
+   set( _qgpgme_libgpgme gpgmepp )
+endif ( WIN32 AND GPGME_VANILLA_FOUND )
+
+if ( NOT WIN32 AND GPGME_PTHREAD_FOUND )
+   set( _qgpgme_libgpgme gpgmepp-pthread )
+endif ( NOT WIN32 AND GPGME_PTHREAD_FOUND )
+
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${GPGME_INCLUDES} )
 include_directories( ${Boost_INCLUDE_DIR} )
@@ -17,7 +25,7 @@ set( qgpgme_TESTS
 
 foreach( _qgpgme_test ${qgpgme_TESTS} )
   kde4_add_executable( "${_qgpgme_test}" TEST "${_qgpgme_test}.cpp" )
-  target_link_libraries( "${_qgpgme_test}" qgpgme ${QT_QTCORE_LIBRARY} )
+  target_link_libraries( "${_qgpgme_test}" qgpgme ${_qgpgme_libgpgme} gpgme gpg-error ${QT_QTCORE_LIBRARY} )
 endforeach( _qgpgme_test )
 
 ########### next target ###############

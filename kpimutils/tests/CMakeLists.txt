@@ -17,4 +17,4 @@ set(testlinklocator_SRCS testlinklocator.cpp )
 
 kde4_add_unit_test(testlinklocator TESTNAME kpimutils-testlinklocator  ${testlinklocator_SRCS})
 
-target_link_libraries(testlinklocator ${KDE4_KDECORE_LIBS} kpimutils ${QT_QTTEST_LIBRARY})
+target_link_libraries(testlinklocator ${KDE4_KDECORE_LIBS} kpimutils ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
