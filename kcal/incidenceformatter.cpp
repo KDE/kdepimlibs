@@ -677,8 +677,9 @@ static QString invitationDetailsEvent( Event *event )
     html += invitationRow( i18n( "Duration:" ), tmp );
   }
 
-  if ( event->recurs() )
+  if ( event->recurs() ) {
     html += invitationRow( i18n( "Recurrence:" ), IncidenceFormatter::recurrenceString( event ) );
+  }
 
   html += "</table>\n";
   html += invitationsDetailsIncidence( event );
@@ -1424,11 +1425,11 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     break;
 
   case iTIPCounter:
-    html += helper->makeLink( "accept_counter", i18n("[Accept]") );
+    html += helper->makeLink( "accept_counter", i18n( "[Accept]" ) );
     html += "&nbsp;";
-    html += helper->makeLink( "decline_counter", i18n("[Decline]") );
+    html += helper->makeLink( "decline_counter", i18n( "[Decline]" ) );
     html += "&nbsp;";
-    html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+    html += helper->makeLink( "check_calendar", i18n( "[Check my calendar]" ) );
     break;
 
   case iTIPDeclineCounter:
@@ -1518,7 +1519,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
       ret += tmp;
     }
   }
-  return ret.replace( " ", "&nbsp;" );
+  return ret.replace( ' ', "&nbsp;" );
 }
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
@@ -1546,7 +1547,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
            i18nc( "percent complete", "%1 % completed", todo->percentComplete() );
   }
 
-  return ret.replace( " ", "&nbsp;" );
+  return ret.replace( ' ', "&nbsp;" );
 }
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal *journal )
@@ -1558,7 +1559,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal *journal )
            i18n( "<i>Date:</i> %1",
                  journal->dtStartDateStr( false, journal->dtStart().timeSpec() ) );
   }
-  return ret.replace( " ", "&nbsp;" );
+  return ret.replace( ' ', "&nbsp;" );
 }
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( FreeBusy *fb )
@@ -1571,7 +1572,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( FreeBusy *fb )
   ret += "<br>" +
          i18n( "<i>Period start:</i> %1",
                KGlobal::locale()->formatDateTime( fb->dtEnd().dateTime() ) );
-  return ret.replace( " ", "&nbsp;" );
+  return ret.replace( ' ', "&nbsp;" );
 }
 
 bool IncidenceFormatter::ToolTipVisitor::visit( Event *event )
@@ -1605,7 +1606,6 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
                                                              QString dtRangeText )
 {
   //FIXME: support mRichText==false
-
   if ( !incidence ) {
     return QString();
   }
@@ -1626,7 +1626,7 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
       if ( desc.length() > 120 ) {
         desc = desc.left( 120 ) + "...";
       }
-      desc = Qt::escape( desc ).replace( "\n", "<br>" );
+      desc = Qt::escape( desc ).replace( '\n', "<br>" );
     } else {
       // TODO: truncate the description when it's rich text
     }
