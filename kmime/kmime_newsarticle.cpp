@@ -111,6 +111,11 @@ void NewsArticle::clear()
 
 Headers::Base * NewsArticle::getHeaderByType( const char *type )
 {
+    return headerByType( type );
+}
+
+Headers::Base * NewsArticle::headerByType( const char *type )
+{
   Q_D(NewsArticle);
   if ( strcasecmp( "Lines", type ) == 0 ) {
     if ( d->lines.isEmpty() ) {
@@ -119,7 +124,7 @@ Headers::Base * NewsArticle::getHeaderByType( const char *type )
       return &d->lines;
     }
   } else {
-    return Message::getHeaderByType( type );
+    return Message::headerByType( type );
   }
 }
 
@@ -161,7 +166,7 @@ Headers::Lines* NewsArticle::lines(bool create)
 #define kmime_mk_header_accessor( header, method ) \
 Headers::header* NewsArticle::method( bool create ) { \
   Headers::header *p = 0; \
-  return getHeaderInstance( p, create ); \
+  return headerInstance( p, create ); \
 }
 
 kmime_mk_header_accessor( Control, control )

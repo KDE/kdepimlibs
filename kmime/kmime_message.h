@@ -49,7 +49,10 @@ class KMIME_EXPORT Message : public Content
     virtual void clear();
 
     //header access
-    virtual KMime::Headers::Base *getHeaderByType( const char *type );
+    /** @deprecated Use headerByType( const char * ) */
+    virtual KDE_DEPRECATED KMime::Headers::Base *getHeaderByType( const char *type );
+    /** @since 4.2 */
+    virtual KMime::Headers::Base *headerByType( const char *type );
     virtual void setHeader( KMime::Headers::Base *h );
     virtual bool removeHeader( const char *type );
 

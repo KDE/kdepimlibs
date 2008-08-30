@@ -751,6 +751,11 @@ void Content::toStream( QTextStream &ts, bool scrambleFromLines )
 
 Headers::Generic *Content::getNextHeader( QByteArray &head )
 {
+    return nextHeader( head );
+}
+
+Headers::Generic *Content::nextHeader( QByteArray &head )
+{
   int pos1=-1, pos2=0, len=head.length()-1;
   bool folded( false );
   Headers::Generic *header=0;
@@ -793,6 +798,11 @@ Headers::Generic *Content::getNextHeader( QByteArray &head )
 }
 
 Headers::Base *Content::getHeaderByType( const char *type )
+{
+  return headerByType( type );
+}
+
+Headers::Base *Content::headerByType( const char *type )
 {
   if ( !type ) {
     return 0;
@@ -858,7 +868,7 @@ Headers::Base *Content::getHeaderByType( const char *type )
   }
 }
 
-QList<Headers::Base*> Content::getHeadersByType( const char *type )
+QList<Headers::Base*> Content::headersByType( const char *type )
 {
   QList<Headers::Base*> result;
 
@@ -896,31 +906,31 @@ bool Content::removeHeader( const char *type )
 
 bool Content::hasHeader( const char *type )
 {
-  return getHeaderByType( type ) != 0;
+  return headerByType( type ) != 0;
 }
 
 Headers::ContentType *Content::contentType( bool create )
 {
   Headers::ContentType *p=0;
-  return getHeaderInstance( p, create );
+  return headerInstance( p, create );
 }
 
 Headers::ContentTransferEncoding *Content::contentTransferEncoding( bool create )
 {
   Headers::ContentTransferEncoding *p=0;
-  return getHeaderInstance( p, create );
+  return headerInstance( p, create );
 }
 
 Headers::ContentDisposition *Content::contentDisposition( bool create )
 {
   Headers::ContentDisposition *p=0;
-  return getHeaderInstance( p, create );
+  return headerInstance( p, create );
 }
 
 Headers::ContentDescription *Content::contentDescription( bool create )
 {
   Headers::ContentDescription *p=0;
-  return getHeaderInstance( p, create );
+  return headerInstance( p, create );
 }
 
 int Content::size()

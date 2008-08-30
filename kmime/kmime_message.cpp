@@ -135,6 +135,11 @@ void Message::clear()
 
 Headers::Base *Message::getHeaderByType( const char *type )
 {
+    return headerByType( type );
+}
+
+Headers::Base *Message::headerByType( const char *type )
+{
   Q_D(Message);
   if ( strcasecmp( "Subject", type ) == 0 ) {
     if ( d->subject.isEmpty() ) {
@@ -150,7 +155,7 @@ Headers::Base *Message::getHeaderByType( const char *type )
       return &d->date;
     }
   } else {
-    return Content::getHeaderByType( type );
+    return Content::headerByType( type );
   }
 }
 
@@ -247,7 +252,7 @@ Content *Message::mainBodyPart( const QByteArray &type )
 #define kmime_mk_header_accessor( header, method ) \
 Headers::header *Message::method( bool create ) { \
   Headers::header *p = 0; \
-  return getHeaderInstance( p, create ); \
+  return headerInstance( p, create ); \
 }
 
 kmime_mk_header_accessor( MessageID, messageID )

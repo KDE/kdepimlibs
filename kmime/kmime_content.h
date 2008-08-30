@@ -145,21 +145,38 @@ class KMIME_EXPORT Content
       Extracts and removes the next header from @p head.
       The caller is responsible for deleting the returned header.
 
+      @deprecated Use nextHeader( QByteArray )
       @param head is a QByteArray containing the header data.
     */
-    Headers::Generic *getNextHeader( QByteArray &head );
+
+    KDE_DEPRECATED Headers::Generic *getNextHeader( QByteArray &head );
+    
+    /**
+      Extracts and removes the next header from @p head.
+      The caller is responsible for deleting the returned header.
+      @since 4.2
+      @param head is a QByteArray containing the header data.
+    */
+    Headers::Generic *nextHeader( QByteArray &head );
 
     /**
       Tries to find a @p type header in the message and returns it.
+      @deprecated Use headerByType( const char * )
     */
-    virtual Headers::Base *getHeaderByType( const char *type );
+    KDE_DEPRECATED virtual Headers::Base *getHeaderByType( const char *type );
+    
+    /**
+      Tries to find a @p type header in the message and returns it.
+      @since 4.2
+    */
+    virtual Headers::Base *headerByType( const char *type );
     
     /**
       Tries to find all the @p type headers in the message and returns it.
       Take care that this result is not cached, so could be slow.
       @since 4.2
     */
-    virtual QList<Headers::Base*> getHeadersByType( const char *type );
+    virtual QList<Headers::Base*> headersByType( const char *type );
 
     virtual void setHeader( Headers::Base *h );
 
@@ -382,7 +399,7 @@ class KMIME_EXPORT Content
     QByteArray rawHeader( const char *name ) const;
     QList<QByteArray> rawHeaders( const char *name ) const;
     bool decodeText();
-    template <class T> T *getHeaderInstance( T *ptr, bool create );
+    template <class T> T *headerInstance( T *ptr, bool create );
 
     Headers::Base::List h_eaders;
 
@@ -399,11 +416,11 @@ class KMIME_EXPORT Content
 // some compilers (for instance Compaq C++) need template inline functions
 // here rather than in the *.cpp file
 
-template <class T> T *Content::getHeaderInstance( T *ptr, bool create )
+template <class T> T *Content::headerInstance( T *ptr, bool create )
 {
   T dummy; //needed to access virtual member T::type()
 
-  ptr=static_cast <T*> ( getHeaderByType( dummy.type() ) );
+  ptr=static_cast <T*> ( headerByType( dummy.type() ) );
   if ( !ptr && create ) { //no such header found, but we need one => create it
     ptr = new T( this );
     h_eaders.append( ptr );
