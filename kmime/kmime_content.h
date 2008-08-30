@@ -149,7 +149,17 @@ class KMIME_EXPORT Content
     */
     Headers::Generic *getNextHeader( QByteArray &head );
 
+    /**
+      Tries to find a @p type header in the message and returns it.
+    */
     virtual Headers::Base *getHeaderByType( const char *type );
+    
+    /**
+      Tries to find all the @p type headers in the message and returns it.
+      Take care that this result is not cached, so could be slow.
+      @since 4.2
+    */
+    virtual QList<Headers::Base*> getHeadersByType( const char *type );
 
     virtual void setHeader( Headers::Base *h );
 
@@ -370,6 +380,7 @@ class KMIME_EXPORT Content
     virtual QByteArray assembleHeaders();
 
     QByteArray rawHeader( const char *name ) const;
+    QList<QByteArray> rawHeaders( const char *name ) const;
     bool decodeText();
     template <class T> T *getHeaderInstance( T *ptr, bool create );
 

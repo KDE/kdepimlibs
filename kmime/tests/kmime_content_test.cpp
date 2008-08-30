@@ -94,6 +94,32 @@ void KMimeContentTest::testSetContent()
   QVERIFY( c->body().isEmpty() );
 }
 
+void KMimeContentTest::testMultipleHeaderExtraction()
+{
+  QByteArray data =
+    "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
+    "To: Ned Freed <ned@innosoft.com>\n"
+    "Date: Sun, 21 Mar 1993 23:56:48 -0800 (PST)\n"
+    "Subject: Sample message\n"
+    "Received: from ktown.kde.org ([192.168.100.1])\n"
+    "Received: from dev1.kde.org ([192.168.100.2])\n"
+    "\t by ktown.kde.org ([192.168.100.1])\n"
+    "Received: from dev2.kde.org ([192.168.100.3])\n"
+    "           by ktown.kde.org ([192.168.100.1])\n";
+
+  Message *msg = new Message();
+  msg->setContent( data );
+    // FAILS identically to KMimeContentTest::testMultipartMixed
+    //  QCOMPARE( msg->encodedContent(), data );
+  msg->parse();
+
+  QList<KMime::Headers::Base*> result = msg->getHeadersByType( "Received" );
+  QCOMPARE( result.count(), 3 );
+  QCOMPARE( result[0]->asUnicodeString(),  QString("from ktown.kde.org ([192.168.100.1])") );
+  QCOMPARE( result[1]->asUnicodeString(),  QString("from dev1.kde.org ([192.168.100.2]) by ktown.kde.org ([192.168.100.1])") );
+  QCOMPARE( result[2]->asUnicodeString(),  QString("from dev2.kde.org ([192.168.100.3]) by ktown.kde.org ([192.168.100.1])") );
+}
+
 void KMimeContentTest::testMultipartMixed()
 {
   // example taken from RFC 2046, section 5.1.1.

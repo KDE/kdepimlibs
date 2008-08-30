@@ -161,6 +161,20 @@ KMIME_EXPORT extern QByteArray extractHeader( const QByteArray &src,
                                  const QByteArray &name );
 
 /**
+  Tries to extract the headers with name @p name from the string
+  @p src, unfolding it if necessary.
+
+  @param src  the source string.
+  @param name the name of the header to search for.
+
+  @return all instances of the header @p name in @p src
+
+  @since 4.2
+*/
+KMIME_EXPORT extern QList<QByteArray> extractHeaders( const QByteArray &src,
+                                 const QByteArray &name );
+
+/**
   Converts all occurrences of "\r\n" (CRLF) in @p s to "\n" (LF).
 
   This function is expensive and should be used only if the mail

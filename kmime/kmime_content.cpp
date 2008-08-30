@@ -858,6 +858,20 @@ Headers::Base *Content::getHeaderByType( const char *type )
   }
 }
 
+QList<Headers::Base*> Content::getHeadersByType( const char *type )
+{
+  QList<Headers::Base*> result;
+
+  if ( !type ) {
+    return result;
+  }
+
+  QList<QByteArray> raw=rawHeaders( type );
+  foreach( QByteArray header, raw )
+      result.append( new Headers::Generic( type, this, header ) );
+  return result;
+}
+
 void Content::setHeader( Headers::Base *h )
 {
   if ( !h ) {
@@ -955,6 +969,11 @@ int Content::lineCount() const
 QByteArray Content::rawHeader( const char *name ) const
 {
   return KMime::extractHeader( d_ptr->head, name );
+}
+
+QList<QByteArray> Content::rawHeaders( const char *name ) const
+{
+  return KMime::extractHeaders( d_ptr->head, name );
 }
 
 bool Content::decodeText()
