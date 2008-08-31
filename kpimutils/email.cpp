@@ -898,7 +898,11 @@ QString KPIMUtils::normalizedAddress( const QString &displayName,
   if ( displayName.isEmpty() && comment.isEmpty() ) {
     return addrSpec;
   } else if ( comment.isEmpty() ) {
-    return quoteNameIfNecessary( displayName ) + " <" + addrSpec + '>';
+    if ( !displayName.startsWith('\"') ) {
+      return quoteNameIfNecessary( displayName ) + " <" + addrSpec + '>';
+    } else {
+      return displayName + " <" + addrSpec + '>';
+    }
   } else if ( displayName.isEmpty() ) {
     QString commentStr = comment;
     return quoteNameIfNecessary( commentStr ) + " <" + addrSpec + '>';
