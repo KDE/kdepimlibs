@@ -30,6 +30,7 @@
 #define KCAL_ATTENDEE_H
 
 #include <QtCore/QString>
+#include <QtCore/QStringList>
 
 #include "listbase.h"
 #include "person.h"
