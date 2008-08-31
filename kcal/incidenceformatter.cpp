@@ -1500,21 +1500,18 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
                  event->dtStartDateStr(
                    true, event->dtStart().timeSpec() ) );
     if ( !event->allDay() ) {
-      if ( event->dtStartTimeStr( true, event->dtStart().timeSpec() ) ==
-           event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) ) {
+      const QString dtStartTime = event->dtStartTimeStr( true, event->dtStart().timeSpec() );
+      const QString dtEndTime = event->dtEndTimeStr( true, event->dtEnd().timeSpec() );
+      if ( dtStartTime == dtEndTime ) {
         // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" +
               i18nc( "time for event", "<i>Time:</i> %1",
-                     event->dtStartTimeStr(
-                       true, event->dtStart().timeSpec() ) );
+                     dtStartTime );
       } else {
         tmp = "<br>" +
               i18nc( "time range for event",
                      "<i>Time:</i> %1 - %2",
-                     event->dtStartTimeStr(
-                       true, event->dtStart().timeSpec() ),
-                     event->dtEndTimeStr(
-                       true, event->dtEnd().timeSpec() ) );
+                     dtStartTime, dtEndTime );
       }
       ret += tmp;
     }
