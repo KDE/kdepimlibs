@@ -1491,25 +1491,22 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
                  event->dtStartDateStr(
                    true, event->dtStart().timeSpec() ) );
     if ( !event->allDay() ) {
-      if ( event->dtStartTimeStr( true, event->dtStart().timeSpec() ) ==
-           event->dtEndTimeStr( true, event->dtEnd().timeSpec() ) ) {
+      const QString dtStartTime = event->dtStartTimeStr( true, event->dtStart().timeSpec() );
+      const QString dtEndTime = event->dtEndTimeStr( true, event->dtEnd().timeSpec() );
+      if ( dtStartTime == dtEndTime ) {
         // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" +
               // TODO: the comment is no longer true, &nbsp; is not needed anymore, I leave
               // because of the string freeze
               i18nc( "time for event, &nbsp; to prevent ugly line breaks", "<i>Time:</i>&nbsp;%1",
-                     event->dtStartTimeStr(
-                       true, event->dtStart().timeSpec() ) );
+                     dtStartTime );
       } else {
         tmp = "<br>" +
               // TODO: the comment is no longer true, &nbsp; is not needed anymore, I leave
               // because of the string freeze
               i18nc( "time range for event, &nbsp; to prevent ugly line breaks",
                      "<i>Time:</i>&nbsp;%1&nbsp;-&nbsp;%2",
-                     event->dtStartTimeStr(
-                       true, event->dtStart().timeSpec() ),
-                     event->dtEndTimeStr(
-                       true, event->dtEnd().timeSpec() ) );
+                     dtStartTime, dtEndTime );
       }
       ret += tmp;
     }
