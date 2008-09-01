@@ -1136,6 +1136,9 @@ class IncidenceFormatter::IncidenceCompareVisitor :
     IncidenceCompareVisitor() : mExistingIncidence( 0 ) {}
     bool act( IncidenceBase *incidence, Incidence *existingIncidence )
     {
+      if (!existingIncidence) {
+        return false;
+      }
       Incidence *inc = dynamic_cast<Incidence *>( incidence );
       if ( inc && inc->revision() <= existingIncidence->revision() ) {
         return false;
