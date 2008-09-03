@@ -26,7 +26,7 @@ set( qgpgme_TESTS
 
 foreach( _qgpgme_test ${qgpgme_TESTS} )
   kde4_add_executable( "${_qgpgme_test}" TEST "${_qgpgme_test}.cpp" )
-  target_link_libraries( "${_qgpgme_test}" qgpgme ${_qgpgme_libgpgme} gpgme gpg-error ${QT_QTCORE_LIBRARY} )
+  target_link_libraries( "${_qgpgme_test}" qgpgme ${_qgpgme_libgpgme} ${_gpg_error_library} ${QT_QTCORE_LIBRARY} )
 endforeach( _qgpgme_test )
 
 ########### next target ###############
