@@ -425,6 +425,9 @@ bool ResourceCached::load( CacheAction action )
 
   kDebug() << "Done loading resource" << resourceName();
 
+  if ( success )
+    emit resourceLoaded( this );
+
   return success;
 }
 
@@ -483,7 +486,8 @@ bool ResourceCached::save( CacheAction action, Incidence *incidence )
     bool success = incidence ? doSave( upload, incidence ) : doSave( upload );
     if ( !success && !receivedSaveError() ) {
       saveError();
-    }
+    } else
+      emit resourceSaved( this );
     return success;
   } else {
     // Read-only, just don't save...
