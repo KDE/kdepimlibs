@@ -78,6 +78,7 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
     void reload( const QString &file );
 
   protected:
+    bool doOpen();
     virtual bool doLoad( bool syncCache );
     virtual bool doSave( bool syncCache );
     bool doSave( bool syncCache, Incidence *incidence );

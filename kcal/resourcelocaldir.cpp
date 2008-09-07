@@ -37,6 +37,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QDir>
+#include <QtCore/QFileInfo>
 
 #include <typeinfo>
 #include <stdlib.h>
@@ -106,13 +107,19 @@ ResourceLocalDir::~ResourceLocalDir()
   delete d;
 }
 
+bool ResourceLocalDir::doOpen()
+{
+  QFileInfo dirInfo( d->mURL.path() );
+  return dirInfo.isDir() && dirInfo.isReadable() &&
+    ( dirInfo.isWritable() || readOnly() );
+}
+
 bool ResourceLocalDir::doLoad( bool )
 {
   kDebug();
 
   calendar()->close();
   QString dirName = d->mURL.path();
-  bool success = true;
 
   if ( !( KStandardDirs::exists( dirName ) || KStandardDirs::exists( dirName + '/' ) ) ) {
     kDebug() << "Directory '" << dirName << "' doesn't exist yet. Creating it.";
@@ -120,26 +127,31 @@ bool ResourceLocalDir::doLoad( bool )
     // Create the directory. Use 0775 to allow group-writable if the umask
     // allows it (permissions will be 0775 & ~umask). This is desired e.g. for
     // group-shared directories!
-    success = KStandardDirs::makeDir( dirName, 0775 );
-  } else {
+    return KStandardDirs::makeDir( dirName, 0775 );
+  }
 
-    kDebug() << dirName;
-    QDir dir( dirName );
+  // The directory exists. Now try to open (the files in) it.
+  kDebug() << dirName;
+  QFileInfo dirInfo( dirName );
+  if ( !( dirInfo.isDir() && dirInfo.isReadable() && 
+          ( dirInfo.isWritable() || readOnly() ) ) )
+    return false;
 
-    QStringList entries = dir.entryList( QDir::Files | QDir::Readable );
+  QDir dir( dirName );
+  const QStringList entries = dir.entryList( QDir::Files | QDir::Readable );
 
-    QStringList::ConstIterator it;
-    for ( it = entries.begin(); it != entries.end(); ++it ) {
-      if ( (*it).endsWith( '~' ) ) { // is backup file, ignore it
-        continue;
-      }
+  bool success = true;
+  QStringList::ConstIterator it;
+  for ( it = entries.begin(); it != entries.end(); ++it ) {
+    if ( (*it).endsWith( '~' ) ) { // is backup file, ignore it
+      continue;
+    }
 
-      QString fileName = dirName + '/' + *it;
-      kDebug() << " read '" << fileName << "'";
-      CalendarLocal cal( calendar()->timeSpec() );
-      if ( !doFileLoad( cal, fileName ) ) {
-        success = false;
-      }
+    const QString fileName = dirName + '/' + *it;
+    kDebug() << " read '" << fileName << "'";
+    CalendarLocal cal( calendar()->timeSpec() );
+    if ( !doFileLoad( cal, fileName ) ) {
+      success = false;
     }
   }
 
