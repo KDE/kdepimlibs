@@ -79,6 +79,19 @@ class KRESOURCES_EXPORT Factory
     */
     static Factory *self( const QString &resourceFamily );
 
+    /**
+     * Deletes the factory for the given resource family and then
+     * recreates it.
+     * This can be useful when re-reading the configuration.
+     *
+     * All pointers to previous factories of the same family returned by self()
+     * will become invalid.
+     *
+     * @return the new factory which was just created-
+     * @since 4.2
+     */
+    static Factory *recreateSelf( const QString &resourceFamily );
+
     ~Factory();
 
     /**
