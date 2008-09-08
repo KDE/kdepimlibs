@@ -75,23 +75,16 @@ Factory *Factory::self( const QString &resourceFamily )
   return factory;
 }
 
-Factory *Factory::recreateSelf( const QString &resourceFamily )
-{
-  kDebug();
-  Factory *factory = 0;
-  factory = mSelves->value( resourceFamily, 0 );
-  if ( factory ) {
-    delete factory;
-    mSelves->remove( resourceFamily );
-  }
-
-  return self( resourceFamily );
-}
-
 Factory::Factory( const QString &resourceFamily ) :
   d( new KRES::Factory::Private )
 {
   d->mResourceFamily = resourceFamily;
+  reloadConfig();
+}
+
+void Factory::reloadConfig()
+{
+  d->mTypeMap.clear();
   const KService::List plugins =
     KServiceTypeTrader::self()->query(
       "KResources/Plugin",
