@@ -66,8 +66,7 @@ sub checkfile()
   my $file = shift;
   my $outfile = shift;
 
-  
-  $cmd = 'diff -u -B -I "^DTSTAMP:[0-9ZT]*$" -I "^LAST-MODIFIED:[0-9ZT]*$" -I "^CREATED:[0-9ZT]*$" '."$file.$id.ref $outfile";
+  $cmd = 'diff -u -B -I "^DTSTAMP:[0-9ZT]*" -I "^LAST-MODIFIED:[0-9ZT]*" -I "^CREATED:[0-9ZT]*" '."$file.$id.ref $outfile";
   if ( !open( DIFF, "$cmd|" ) ) {
     print STDERR "Unable to run diff command on the files $file.$id.ref and $outfile\n";
     exit 1;
