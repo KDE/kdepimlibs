@@ -382,6 +382,29 @@ void CalendarLocal::incidenceUpdated( IncidenceBase *incidence )
   // or internally in the Event itself when certain things change.
   // need to verify with ical documentation.
 
+  if ( incidence->type() == "Event" ) {
+    Event *event = static_cast<Event*>( incidence );
+    removeIncidenceFromMultiHashByUID<Event *>(
+      d->mEventsForDate, event->dtStart().date().toString(), event->uid() );
+    if ( !event->recurs() && !event->isMultiDay() ) {
+      d->mEventsForDate.insert( event->dtStart().date().toString(), event );
+    }
+  } else if ( incidence->type() == "Todo" ) {
+    Todo *todo = static_cast<Todo*>( incidence );
+    removeIncidenceFromMultiHashByUID<Todo *>(
+      d->mTodosForDate, todo->dtDue().date().toString(), todo->uid() );
+    if ( todo->hasDueDate() ) {
+      d->mTodosForDate.insert( todo->dtDue().date().toString(), todo );
+    }
+  } else if ( incidence->type() == "Journal" ) {
+    Journal *journal = static_cast<Journal*>( incidence );
+    removeIncidenceFromMultiHashByUID<Journal *>(
+      d->mJournalsForDate, journal->dtStart().date().toString(), journal->uid() );
+    d->mJournalsForDate.insert( journal->dtStart().date().toString(), journal );
+  } else {
+    Q_ASSERT( false );
+  }
+
   // The static_cast is ok as the CalendarLocal only observes Incidence objects
   notifyIncidenceChanged( static_cast<Incidence *>( incidence ) );
 
