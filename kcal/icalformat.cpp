@@ -580,7 +580,6 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   icalcomponent_free( message );
   icalcomponent_free( calendarComponent );
-  incidence->shiftTimes( cal->timeSpec(), KDateTime::Spec::LocalZone() );
   return new ScheduleMessage( incidence, method, status );
 }
 
