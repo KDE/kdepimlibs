@@ -702,10 +702,10 @@ void HtmlExport::createFooter( QTextStream *ts )
 QString cleanChars( const QString &text )
 {
   QString txt = text;
-  txt = txt.replace( "&", "&amp;" );
-  txt = txt.replace( "<", "&lt;" );
-  txt = txt.replace( ">", "&gt;" );
-  txt = txt.replace( "\"", "&quot;" );
+  txt = txt.replace( '&', "&amp;" );
+  txt = txt.replace( '<', "&lt;" );
+  txt = txt.replace( '>', "&gt;" );
+  txt = txt.replace( '\"', "&quot;" );
   txt = txt.replace( QString::fromUtf8( "ä" ), "&auml;" );
   txt = txt.replace( QString::fromUtf8( "Ä" ), "&Auml;" );
   txt = txt.replace( QString::fromUtf8( "ö" ), "&ouml;" );
