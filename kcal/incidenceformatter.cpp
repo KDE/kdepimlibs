@@ -1294,7 +1294,6 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   // no need to set it manually here for the format!
   ScheduleMessage *msg = format.parseScheduleMessage( mCalendar, invitation );
 
-  msg->event()->shiftTimes( mCalendar->timeSpec(), KDateTime::Spec::LocalZone());
   if( !msg ) {
     kDebug() << "Failed to parse the scheduling message";
     Q_ASSERT( format.exception() );
@@ -1303,6 +1302,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   }
 
   IncidenceBase *incBase = msg->event();
+  incBase->shiftTimes( mCalendar->timeSpec(), KDateTime::Spec::LocalZone());
 
   Incidence *existingIncidence = 0;
   if ( helper->calendar() ) {
