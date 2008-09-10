@@ -76,6 +76,8 @@ sub checkfile()
   $errorstr = "";
   while ( <DIFF> ) {
     $line = $_;
+    next if ($line =~ m/^+-\s*$/);
+    next if ($line =~ m/No newline at end of file/);
     if ( $line =~ /^[+-][^+-]/ ) {
       # it's an added/deleted/modified line. Register it as an error
       $errors++;
