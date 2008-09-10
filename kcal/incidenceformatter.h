@@ -59,6 +59,11 @@ namespace IncidenceFormatter
   KCAL_EXPORT QString toolTipString( IncidenceBase *incidence, bool richText = true );
   KCAL_EXPORT QString mailBodyString( IncidenceBase *incidencebase );
   KCAL_EXPORT QString extensiveDisplayString( IncidenceBase *incidence );
+
+  /**
+    Deliver an HTML formatted string displaying an invitation.
+    Use the time zone from mCalendar.
+  */
   KCAL_EXPORT QString formatICalInvitation( QString invitation, Calendar *mCalendar,
                                             InvitationFormatterHelper *helper );
 
