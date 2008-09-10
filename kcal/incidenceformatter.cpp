@@ -1136,7 +1136,7 @@ class IncidenceFormatter::IncidenceCompareVisitor :
     IncidenceCompareVisitor() : mExistingIncidence( 0 ) {}
     bool act( IncidenceBase *incidence, Incidence *existingIncidence )
     {
-      if (!existingIncidence) {
+      if ( !existingIncidence ) {
         return false;
       }
       Incidence *inc = dynamic_cast<Incidence *>( incidence );
@@ -1302,7 +1302,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   }
 
   IncidenceBase *incBase = msg->event();
-  incBase->shiftTimes( mCalendar->timeSpec(), KDateTime::Spec::LocalZone());
+  incBase->shiftTimes( mCalendar->timeSpec(), KDateTime::Spec::LocalZone() );
 
   Incidence *existingIncidence = 0;
   if ( helper->calendar() ) {

@@ -133,9 +133,10 @@ bool ResourceLocalDir::doLoad( bool )
   // The directory exists. Now try to open (the files in) it.
   kDebug() << dirName;
   QFileInfo dirInfo( dirName );
-  if ( !( dirInfo.isDir() && dirInfo.isReadable() && 
-          ( dirInfo.isWritable() || readOnly() ) ) )
+  if ( !( dirInfo.isDir() && dirInfo.isReadable() &&
+          ( dirInfo.isWritable() || readOnly() ) ) ) {
     return false;
+  }
 
   QDir dir( dirName );
   const QStringList entries = dir.entryList( QDir::Files | QDir::Readable );
