@@ -1,22 +1,22 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #include "kcal/calendarlocal.h"
@@ -39,9 +39,9 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData );
 
   KCmdLineOptions options;
-  options.add("verbose", ki18n("Verbose output"));
-  options.add("+input", ki18n("Name of input file"));
-  options.add("+output", ki18n("Name of output file"));
+  options.add( "verbose", ki18n( "Verbose output" ) );
+  options.add( "+input", ki18n( "Name of input file" ) );
+  options.add( "+output", ki18n( "Name of output file" ) );
   KCmdLineArgs::addCmdLineOptions( options );
 
   KComponentData componentData( &aboutData ); // needed by KConfig used by KSaveFile
@@ -64,15 +64,18 @@ int main( int argc, char **argv )
   kDebug() << "Input file:" << input;
   kDebug() << "Output file:" << output;
 
-
   CalendarLocal cal( KDateTime::UTC );
 
-  if ( !cal.load( input ) ) return 1;
+  if ( !cal.load( input ) ) {
+    return 1;
+  }
   QString tz = cal.nonKDECustomProperty( "X-LibKCal-Testsuite-OutTZ" );
   if ( !tz.isEmpty() ) {
     cal.setViewTimeZoneId( tz );
   }
-  if ( !cal.save( output ) ) return 1;
+  if ( !cal.save( output ) ) {
+    return 1;
+  }
 
   return 0;
 }
