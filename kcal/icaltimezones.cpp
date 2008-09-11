@@ -624,6 +624,10 @@ ICalTimeZoneData::~ICalTimeZoneData()
 
 ICalTimeZoneData &ICalTimeZoneData::operator=( const ICalTimeZoneData &rhs )
 {
+  // check for self assignment
+  if ( &rhs == this )
+    return *this;
+
   KTimeZoneData::operator=( rhs );
   d->location = rhs.d->location;
   d->url = rhs.d->url;

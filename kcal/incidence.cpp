@@ -203,6 +203,10 @@ static bool stringCompare( const QString &s1, const QString &s2 )
 //@endcond
 Incidence &Incidence::operator=( const Incidence &other )
 {
+  // check for self assignment
+  if ( &other == this )
+    return *this;
+
   d->clear();
   //TODO: should relations be cleared out, as in destructor???
   IncidenceBase::operator=( other );
