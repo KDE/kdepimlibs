@@ -61,6 +61,10 @@ class KCal::IncidenceBase::Private
     { mAttendees.setAutoDelete( true ); }
 
     Private( const Private &other )
+      : mUpdateGroupLevel( 0 ),
+        mUpdatedPending( false ),
+        mAllDay( true ),
+        mHasDuration( false )
     {
       mAttendees.setAutoDelete( true );
       init( other );
