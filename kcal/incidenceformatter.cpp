@@ -1298,6 +1298,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   }
 
   IncidenceBase *incBase = msg->event();
+  incBase->shiftTimes( mCalendar->timeSpec(), KDateTime::Spec::LocalZone() );
 
   Incidence *existingIncidence = 0;
   if ( helper->calendar() ) {
