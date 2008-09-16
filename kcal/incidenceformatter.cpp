@@ -1371,10 +1371,10 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   {
     if ( incidence && incidence->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
       if ( incBase->type() == "Todo" ) {
-        html += "<td colspan=\"13\">";
+        html += "<td colspan=\"11\">";
         html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
       } else {
-        html += "<td colspan=\"9\">";
+        html += "<td colspan=\"13\">";
         html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
       }
       html += "</td></tr><tr>";
