@@ -211,6 +211,9 @@ void CalendarLocal::deleteAllEvents()
   while ( i.hasNext() ) {
     i.next();
     notifyIncidenceDeleted( i.value() );
+    // suppress update notifications for the relation removal triggered
+    // by the following deletions
+    i.value()->startUpdates();
   }
   qDeleteAll( d->mEvents );
   d->mEvents.clear();
@@ -284,6 +287,9 @@ void CalendarLocal::deleteAllTodos()
   while ( i.hasNext() ) {
     i.next();
     notifyIncidenceDeleted( i.value() );
+    // suppress update notifications for the relation removal triggered
+    // by the following deletions
+    i.value()->startUpdates();
   }
   qDeleteAll( d->mTodos );
   d->mTodos.clear();
@@ -598,6 +604,9 @@ void CalendarLocal::deleteAllJournals()
   while ( i.hasNext() ) {
     i.next();
     notifyIncidenceDeleted( i.value() );
+    // suppress update notifications for the relation removal triggered
+    // by the following deletions
+    i.value()->startUpdates();
   }
   qDeleteAll( d->mJournals );
   d->mJournals.clear();
