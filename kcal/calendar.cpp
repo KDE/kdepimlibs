@@ -860,7 +860,7 @@ void Calendar::removeRelations( Incidence *incidence )
     }
 
     // now go through all uids that have one entry that point to the incidence
-    for ( QStringList::Iterator uidit = relatedToUids.begin();
+    for ( QStringList::const_iterator uidit = relatedToUids.begin();
           uidit != relatedToUids.end(); ++uidit ) {
       Incidence::List tempList;
       // Remove all to get access to the remaining entries

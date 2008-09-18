@@ -127,7 +127,7 @@ void ManagerImpl::readConfig( KConfig *cfg )
 
   QString standardKey = group.readEntry( "Standard" );
 
-  for ( QStringList::Iterator it = keys.begin(); it != keys.end(); ++it ) {
+  for ( QStringList::const_iterator it = keys.begin(); it != keys.end(); ++it ) {
     readResourceConfig( *it, false );
   }
 

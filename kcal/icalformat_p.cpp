@@ -486,7 +486,7 @@ void ICalFormatImpl::writeIncidence( icalcomponent *parent,
 
   // categories
   QStringList categories = incidence->categories();
-  QStringList::Iterator it;
+  QStringList::const_iterator it;
   for ( it = categories.begin(); it != categories.end(); ++it ) {
     icalcomponent_add_property(
       parent, icalproperty_new_categories( (*it).toUtf8() ) );
@@ -588,7 +588,7 @@ void ICalFormatImpl::Private::writeIncidenceBase( icalcomponent *parent,
 
   // comments
   QStringList comments = incidenceBase->comments();
-  for ( QStringList::Iterator it = comments.begin(); it != comments.end(); ++it ) {
+  for ( QStringList::const_iterator it = comments.begin(); it != comments.end(); ++it ) {
     icalcomponent_add_property(
       parent, icalproperty_new_comment( (*it).toUtf8() ) );
   }
@@ -945,7 +945,7 @@ icalcomponent *ICalFormatImpl::writeAlarm( Alarm *alarm )
       a, icalproperty_new_description( alarm->mailText().toUtf8() ) );
     QStringList attachments = alarm->mailAttachments();
     if ( attachments.count() > 0 ) {
-      for ( QStringList::Iterator at = attachments.begin();
+      for ( QStringList::const_iterator at = attachments.begin();
             at != attachments.end();  ++at ) {
         attach = icalattach_new_from_url( QFile::encodeName( *at ).data() );
         icalcomponent_add_property( a, icalproperty_new_attach( attach ) );

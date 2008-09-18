@@ -409,7 +409,7 @@ Attendee *IncidenceBase::attendeeByMails( const QStringList &emails,
 
   Attendee::List::ConstIterator itA;
   for ( itA = d->mAttendees.begin(); itA != d->mAttendees.end(); ++itA ) {
-    for ( QStringList::Iterator it = mails.begin(); it != mails.end(); ++it ) {
+    for ( QStringList::const_iterator it = mails.begin(); it != mails.end(); ++it ) {
       if ( (*itA)->email() == (*it) ) {
         return *itA;
       }

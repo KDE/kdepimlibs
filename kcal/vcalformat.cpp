@@ -603,7 +603,7 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
   QStringList tmpStrList = anEvent->categories();
   tmpStr = "";
   QString catStr;
-  for ( QStringList::Iterator it = tmpStrList.begin(); it != tmpStrList.end();
+  for ( QStringList::const_iterator it = tmpStrList.begin(); it != tmpStrList.end();
         ++it ) {
     catStr = *it;
     if ( catStr[0] == ' ' ) {

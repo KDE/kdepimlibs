@@ -2033,7 +2033,7 @@ bool IMAP4Protocol::makeLogin ()
     cmd = doCommand (new imapCommand ("CAPABILITY", ""));
 
     kDebug(7116) <<"IMAP4: setHost: capability";
-    for (QStringList::Iterator it = imapCapabilities.begin ();
+    for (QStringList::const_iterator it = imapCapabilities.begin ();
          it != imapCapabilities.end (); ++it)
     {
       kDebug(7116) <<"'" << (*it) <<"'";
@@ -2070,7 +2070,7 @@ bool IMAP4Protocol::makeLogin ()
         {
           kDebug(7116) <<"TLS mode has been enabled.";
           imapCommand *cmd2 = doCommand (new imapCommand ("CAPABILITY", ""));
-          for (QStringList::Iterator it = imapCapabilities.begin ();
+          for (QStringList::const_iterator it = imapCapabilities.begin ();
                                      it != imapCapabilities.end (); ++it)
           {
             kDebug(7116) <<"'" << (*it) <<"'";
