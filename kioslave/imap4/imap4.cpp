@@ -2033,8 +2033,8 @@ bool IMAP4Protocol::makeLogin ()
     cmd = doCommand (new imapCommand ("CAPABILITY", ""));
 
     kDebug(7116) <<"IMAP4: setHost: capability";
-    for (QStringList::const_iterator it = imapCapabilities.begin ();
-         it != imapCapabilities.end (); ++it)
+    for (QStringList::const_iterator it = imapCapabilities.constBegin ();
+         it != imapCapabilities.constEnd (); ++it)
     {
       kDebug(7116) <<"'" << (*it) <<"'";
     }

@@ -284,7 +284,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
         }
 
         QString s( tnefMsg->findProp( 0x0e04 ) );
-        QStringList attendees = s.split( ';' );
+        const QStringList attendees = s.split( ';' );
         if ( attendees.count() ) {
           for ( QStringList::const_iterator it = attendees.begin();
                it != attendees.end(); ++it ) {

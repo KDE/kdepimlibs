@@ -509,7 +509,7 @@ KPIMUtils::EmailParseResult KPIMUtils::isValidAddressList( const QString &aStr,
     return AddressEmpty;
   }
 
-  QStringList list = splitAddressList( aStr );
+  const QStringList list = splitAddressList( aStr );
 
   QStringList::const_iterator it = list.begin();
   EmailParseResult errorCode = AddressOk;

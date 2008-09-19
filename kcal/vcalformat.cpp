@@ -331,7 +331,7 @@ VObject *VCalFormat::eventToVTodo( const Todo *anEvent )
   }
 
   // categories
-  QStringList tmpStrList = anEvent->categories();
+  const QStringList tmpStrList = anEvent->categories();
   tmpStr = "";
   QString catStr;
   QStringList::const_iterator its;

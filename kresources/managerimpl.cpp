@@ -125,7 +125,7 @@ void ManagerImpl::readConfig( KConfig *cfg )
   QStringList keys = group.readEntry( "ResourceKeys", QStringList() );
   keys += group.readEntry( "PassiveResourceKeys", QStringList() );
 
-  QString standardKey = group.readEntry( "Standard" );
+  const QString standardKey = group.readEntry( "Standard" );
 
   for ( QStringList::const_iterator it = keys.begin(); it != keys.end(); ++it ) {
     readResourceConfig( *it, false );
