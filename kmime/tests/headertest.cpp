@@ -247,6 +247,12 @@ void HeaderTest::testMailboxListHeader()
   QCOMPARE( h->prettyAddresses().count(), 1 );
   QCOMPARE( h->prettyAddresses().first(), QString("joe_smith@where.test") );
 
+  // https://bugzilla.novell.com/show_bug.cgi?id=421057 (but apparently this was not the cause of the bug)
+  h->from7BitString( "fr...@ce.sco (Francesco)" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->mailboxes().count(), 1 );
+  QCOMPARE( h->prettyAddresses().first(), QString("Francesco <fr...@ce.sco>") );
+
   delete h;
 }
 
