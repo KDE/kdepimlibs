@@ -61,6 +61,9 @@ namespace IncidenceFormatter
   KCAL_EXPORT QString extensiveDisplayString( IncidenceBase *incidence );
   KCAL_EXPORT QString formatICalInvitation( QString invitation, Calendar *mCalendar,
                                             InvitationFormatterHelper *helper );
+  /**
+    @since 4.2
+  */
   KCAL_EXPORT QString formatICalInvitationNoHtml( QString invitation, Calendar *mCalendar,
                                                   InvitationFormatterHelper *helper );
 
