@@ -61,6 +61,8 @@ namespace IncidenceFormatter
   KCAL_EXPORT QString extensiveDisplayString( IncidenceBase *incidence );
   KCAL_EXPORT QString formatICalInvitation( QString invitation, Calendar *mCalendar,
                                             InvitationFormatterHelper *helper );
+  KCAL_EXPORT QString formatICalInvitationNoHtml( QString invitation, Calendar *mCalendar,
+                                                  InvitationFormatterHelper *helper );
 
   /**
     Format a TNEF attachment to an HTML mail

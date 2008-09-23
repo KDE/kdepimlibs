@@ -562,6 +562,16 @@ static QString string2HTML( const QString &str )
   return Qt::convertFromPlainText( str, Qt::WhiteSpaceNormal );
 }
 
+static QString cleanHtml( const QString &html )
+{
+  QRegExp rx( "<body[^>]*>(.*)</body>",
+              Qt::CaseInsensitive );
+  rx.indexIn( html );
+  QString body = rx.cap( 1 );
+
+  return body.replace( QRegExp("<[^>]*>"), "" ).trimmed();
+}
+
 static QString eventStartTimeStr( Event *event )
 {
   QString tmp;
@@ -595,14 +605,18 @@ static QString invitationRow( const QString &cell1, const QString &cell2 )
   return "<tr><td>" + cell1 + "</td><td>" + cell2 + "</td></tr>\n";
 }
 
-static QString invitationsDetailsIncidence( Incidence *incidence )
+static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMode )
 {
   QString html;
   QString descr;
   if ( !incidence->descriptionIsRich() ) {
     descr = string2HTML( incidence->description() );
   } else {
-    descr = eventViewerAddTag( "p", incidence->richDescription() );
+    descr = incidence->richDescription();
+    if ( noHtmlMode ) {
+      descr = cleanHtml( descr );
+    }
+    descr = eventViewerAddTag( "p", descr );
   }
   if( !descr.isEmpty() ) {
     html += "<br/><u>" + i18n( "Description:" ) + "</u><table border=\"0\"><tr><td>&nbsp;</td><td>";
@@ -619,7 +633,7 @@ static QString invitationsDetailsIncidence( Incidence *incidence )
   return html;
 }
 
-static QString invitationDetailsEvent( Event *event )
+static QString invitationDetailsEvent( Event *event, bool noHtmlMode )
 {
   // Meeting details are formatted into an HTML table
   if ( !event ) {
@@ -634,7 +648,11 @@ static QString invitationDetailsEvent( Event *event )
     if ( !event->summaryIsRich() ) {
       sSummary = string2HTML( event->summary() );
     } else {
-      sSummary = eventViewerAddTag( "p", event->richSummary() );
+      sSummary = event->richSummary();
+      if ( noHtmlMode ) {
+        sSummary = cleanHtml( sSummary );
+      }
+      sSummary = eventViewerAddTag( "p", sSummary );
     }
   }
 
@@ -643,7 +661,11 @@ static QString invitationDetailsEvent( Event *event )
     if ( !event->locationIsRich() ) {
       sLocation = string2HTML( event->location() );
     } else {
-      sLocation = eventViewerAddTag( "p", event->richLocation() );
+      sLocation = event->richLocation();
+      if ( noHtmlMode ) {
+        sLocation = cleanHtml( sLocation );
+      }
+      sLocation = eventViewerAddTag( "p", sLocation );
     }
   }
 
@@ -681,13 +703,13 @@ static QString invitationDetailsEvent( Event *event )
     html += invitationRow( i18n( "Recurrence:" ), IncidenceFormatter::recurrenceString( event ) );
 
   html += "</table>\n";
-  html += invitationsDetailsIncidence( event );
+  html += invitationsDetailsIncidence( event, noHtmlMode );
   html += "</div>\n";
 
   return html;
 }
 
-static QString invitationDetailsTodo( Todo *todo )
+static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode )
 {
   // To-do details are formatted into an HTML table
   if ( !todo ) {
@@ -698,20 +720,26 @@ static QString invitationDetailsTodo( Todo *todo )
   QString sDescr = i18n( "Description unspecified" );
   if ( ! todo->summary().isEmpty() ) {
     sSummary = todo->richSummary();
+    if ( noHtmlMode ) {
+      sSummary = cleanHtml( sSummary );
+    }
   }
   if ( ! todo->description().isEmpty() ) {
     sDescr = todo->description();
+    if ( noHtmlMode ) {
+      sDescr = cleanHtml( sDescr );
+    }
   }
   QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
   html += invitationRow( i18n( "Summary:" ), sSummary );
   html += invitationRow( i18n( "Description:" ), sDescr );
   html += "</table>\n";
-  html += invitationsDetailsIncidence( todo );
+  html += invitationsDetailsIncidence( todo, noHtmlMode );
 
   return html;
 }
 
-static QString invitationDetailsJournal( Journal *journal )
+static QString invitationDetailsJournal( Journal *journal, bool noHtmlMode )
 {
   if ( !journal ) {
     return QString();
@@ -721,9 +749,15 @@ static QString invitationDetailsJournal( Journal *journal )
   QString sDescr = i18n( "Description unspecified" );
   if ( ! journal->summary().isEmpty() ) {
     sSummary = journal->richSummary();
+    if ( noHtmlMode ) {
+      sSummary = cleanHtml( sSummary );
+    }
   }
   if ( ! journal->description().isEmpty() ) {
     sDescr = journal->richDescription();
+    if ( noHtmlMode ) {
+      sDescr = cleanHtml( sDescr );
+    }
   }
   QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
   html += invitationRow( i18n( "Summary:" ), sSummary );
@@ -731,7 +765,7 @@ static QString invitationDetailsJournal( Journal *journal )
                          journal->dtStartDateStr( false, journal->dtStart().timeSpec() ) );
   html += invitationRow( i18n( "Description:" ), sDescr );
   html += "</table>\n";
-  html += invitationsDetailsIncidence( journal );
+  html += invitationsDetailsIncidence( journal, noHtmlMode );
 
   return html;
 }
@@ -1099,20 +1133,24 @@ class KCal::IncidenceFormatter::InvitationHeaderVisitor :
 class KCal::IncidenceFormatter::InvitationBodyVisitor
   : public IncidenceFormatter::ScheduleMessageVisitor
 {
+  public:
+    InvitationBodyVisitor( bool noHtmlMode )
+      : ScheduleMessageVisitor(), mNoHtmlMode( noHtmlMode ) { }
+
   protected:
     bool visit( Event *event )
     {
-      mResult = invitationDetailsEvent( event );
+      mResult = invitationDetailsEvent( event, mNoHtmlMode );
       return !mResult.isEmpty();
     }
     bool visit( Todo *todo )
     {
-      mResult = invitationDetailsTodo( todo );
+      mResult = invitationDetailsTodo( todo, mNoHtmlMode );
       return !mResult.isEmpty();
     }
     bool visit( Journal *journal )
     {
-      mResult = invitationDetailsJournal( journal );
+      mResult = invitationDetailsJournal( journal, mNoHtmlMode );
       return !mResult.isEmpty();
     }
     bool visit( FreeBusy *fb )
@@ -1120,6 +1158,9 @@ class KCal::IncidenceFormatter::InvitationBodyVisitor
       mResult = invitationDetailsFreeBusy( fb );
       return !mResult.isEmpty();
     }
+
+  private:
+    bool mNoHtmlMode;
 };
 //@endcond
 
@@ -1278,8 +1319,8 @@ static bool incidenceOwnedByMe( Calendar *calendar, Incidence *incidence )
   return true;
 }
 
-QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *mCalendar,
-    InvitationFormatterHelper *helper )
+static QString formatICalInvitationHelper( QString invitation, Calendar *mCalendar,
+    InvitationFormatterHelper *helper, bool noHtmlMode )
 {
   if ( invitation.isEmpty() ) {
     return QString();
@@ -1329,21 +1370,21 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     "<tr><td>" ).arg( tableStyle );
 
   html += tableHead;
-  InvitationHeaderVisitor headerVisitor;
+  IncidenceFormatter::InvitationHeaderVisitor headerVisitor;
   // The InvitationHeaderVisitor returns false if the incidence is somehow invalid, or not handled
   if ( !headerVisitor.act( incBase, msg ) ) {
     return QString();
   }
   html += "<h3>" + headerVisitor.result() + "</h3>";
 
-  InvitationBodyVisitor bodyVisitor;
+  IncidenceFormatter::InvitationBodyVisitor bodyVisitor( noHtmlMode );
   if ( !bodyVisitor.act( incBase, msg ) ) {
     return QString();
   }
   html += bodyVisitor.result();
 
   if ( msg->method() == iTIPRequest ) { // ### Scheduler::Publish/Refresh/Add as well?
-    IncidenceCompareVisitor compareVisitor;
+    IncidenceFormatter::IncidenceCompareVisitor compareVisitor;
     if ( compareVisitor.act( incBase, existingIncidence ) ) {
       html +=
         i18n( "<p align=\"left\">The following changes have been made by the organizer:</p>" );
@@ -1443,6 +1484,19 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
   return html;
 }
+
+QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *mCalendar,
+    InvitationFormatterHelper *helper )
+{
+  return formatICalInvitationHelper( invitation, mCalendar, helper, false );
+}
+
+QString IncidenceFormatter::formatICalInvitationNoHtml( QString invitation, Calendar *mCalendar,
+    InvitationFormatterHelper *helper )
+{
+  return formatICalInvitationHelper( invitation, mCalendar, helper, true );
+}
+
 
 /*******************************************************************
  *  Helper functions for the Incidence tooltips
