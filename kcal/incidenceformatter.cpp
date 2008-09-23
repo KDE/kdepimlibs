@@ -2045,7 +2045,7 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
   case Recurrence::rYearlyDay:
     if ( recur->duration() != -1 ) {
       txt = i18ncp("Recurs every N years on day N until end-date",
-                   "Recurs every year on on day <numid>%2</numid> until %3",
+                   "Recurs every year on day <numid>%2</numid> until %3",
                    "Recurs every <numid>%1</numid> years"
                    " on day <numid>%2</numid> until %3",
                    recur->frequency(), 
