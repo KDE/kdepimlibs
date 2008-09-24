@@ -2058,7 +2058,7 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
       return txt;
     }
     return i18ncp("Recurs every N YEAR[S] on day N",
-                  "Recurs every year on on day <numid>%2</numid>",
+                  "Recurs every year on day <numid>%2</numid>",
                   "Recurs every <numid>%1</numid> years"
                   " on day <numid>%2</numid>",
                   recur->frequency(), recur->yearDays()[0] );
