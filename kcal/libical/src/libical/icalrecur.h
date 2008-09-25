@@ -148,7 +148,7 @@ struct icalrecurrencetype
 	 * value more than once. 
 	 
 	 * Each of the lists is terminated with the value
-	 * ICAL_RECURRENCE_ARRAY_MAX unless the the list is full.
+	 * ICAL_RECURRENCE_ARRAY_MAX unless the list is full.
 	 */
 
 	short by_second[ICAL_BY_SECOND_SIZE];
