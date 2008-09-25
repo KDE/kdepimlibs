@@ -75,7 +75,7 @@ static QString eventViewerAddTag( const QString &tag, const QString &text )
     if ( numLineBreaks > 0 ) {
       int pos = 0;
       QString tmp;
-      for ( int i = 0; i <= numLineBreaks; i++ ) {
+      for ( int i = 0; i <= numLineBreaks; ++i ) {
         pos = tmpText.indexOf( "\n" );
         tmp = tmpText.left( pos );
         tmpText = tmpText.right( tmpText.length() - pos - 1 );

@@ -651,7 +651,7 @@ QString HtmlExport::breakString( const QString &text )
     QString tmpText = text;
     int pos = 0;
     QString tmp;
-    for ( int i=0; i<=number; i++ ) {
+    for ( int i = 0; i <= number; ++i ) {
       pos = tmpText.indexOf( "\n" );
       tmp = tmpText.left( pos );
       tmpText = tmpText.right( tmpText.length() - pos - 1 );

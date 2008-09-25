@@ -459,7 +459,7 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
       break;
     case Recurrence::rWeekly:
       tmpStr.sprintf( "W%i ", recur->frequency() );
-      for ( int i = 0; i < 7; i++ ) {
+      for ( int i = 0; i < 7; ++i ) {
         QBitArray days ( recur->days() );
         if ( days.testBit(i) ) {
           tmpStr += dayFromNum( i );

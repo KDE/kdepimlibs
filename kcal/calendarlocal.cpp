@@ -453,7 +453,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &date,
     if ( ev->recurs() ) {
       if ( ev->isMultiDay() ) {
         int extraDays = ev->dtStart().date().daysTo( ev->dtEnd().date() );
-        for ( int i = 0; i <= extraDays; i++ ) {
+        for ( int i = 0; i <= extraDays; ++i ) {
           if ( ev->recursOn( date.addDays( -i ), ts ) ) {
             eventList.append( ev );
             break;
