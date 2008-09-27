@@ -2220,20 +2220,27 @@ icaldurationtype ICalFormatImpl::writeICalDuration( const Duration &duration )
   if ( value < 0 ) {
     value = -value;
   }
+  // RFC2445 states that an ical duration value must be
+  // EITHER weeks OR days/time, not both.
   if ( duration.isDaily() ) {
-    d.weeks = value / 7;
-    d.days  = value % 7;
-    d.hours = d.minutes = d.seconds = 0;
+    if ( !( value % 7 ) ) {
+      d.weeks = value / 7;
+    } else {
+      d.days  = value;
+      d.hours = d.minutes = d.seconds = 0;
+    }
   } else {
-    d.weeks   = value / gSecondsPerWeek;
-    value    %= gSecondsPerWeek;
-    d.days    = value / gSecondsPerDay;
-    value    %= gSecondsPerDay;
-    d.hours   = value / gSecondsPerHour;
-    value    %= gSecondsPerHour;
-    d.minutes = value / gSecondsPerMinute;
-    value    %= gSecondsPerMinute;
-    d.seconds = value;
+    if ( !( value % gSecondsPerWeek ) ) {
+      d.weeks = value / gSecondsPerWeek;
+    } else {
+      d.days    = value / gSecondsPerDay;
+      value    %= gSecondsPerDay;
+      d.hours   = value / gSecondsPerHour;
+      value    %= gSecondsPerHour;
+      d.minutes = value / gSecondsPerMinute;
+      value    %= gSecondsPerMinute;
+      d.seconds = value;
+    }
   }
 
   return d;
