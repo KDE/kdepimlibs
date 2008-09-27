@@ -346,16 +346,12 @@ void Blogger1Private::slotFetchPost( const QList<QVariant> &result, const QVaria
   if ( result[0].type() == QVariant::Map && readPostFromMap( post, result[0].toMap() ) ) {
     kDebug() << "Emitting fetchedPost()";
     emit q->fetchedPost( post );
-  }
-  else {
-    kError() << "Could not fetch post out of the result from "
-                  << "the server.";
-    post->setError( i18n( "Could not fetch post out of the "
-                              "result from the server." ) );
+  } else {
+    kError() << "Could not fetch post out of the result from the server.";
+    post->setError( i18n( "Could not fetch post out of the result from the server." ) );
     post->setStatus( BlogPost::Error );
     emit q->errorPost( Blogger1::ParsingError,
-                       i18n( "Could not fetch post out of the result "
-                           "from the server." ), post );
+                       i18n( "Could not fetch post out of the result from the server." ), post );
   }
 }
 

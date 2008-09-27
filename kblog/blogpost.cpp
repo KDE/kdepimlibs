@@ -67,10 +67,9 @@ BlogPost::BlogPost( const KCal::Journal &journal )
   d_ptr->mJournalId = journal.uid();
   d_ptr->mStatus = New;
   d_ptr->mTitle = journal.summary();
-  if (journal.descriptionIsRich()) {
-    d_ptr->mContent = d_ptr->cleanRichText(journal.description());
-  }
-  else {
+  if ( journal.descriptionIsRich() ) {
+    d_ptr->mContent = d_ptr->cleanRichText( journal.description() );
+  } else {
     d_ptr->mContent = journal.description();
   }
   d_ptr->mCategories = journal.categories();
