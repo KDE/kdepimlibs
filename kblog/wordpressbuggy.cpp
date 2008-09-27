@@ -89,7 +89,7 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
     xmlMarkup += "<value><array>";
     QList<QString>::ConstIterator it = catList.begin();
     QList<QString>::ConstIterator end = catList.end();
-    for ( ; it != end; it++ ){
+    for ( ; it != end; ++it ){
       xmlMarkup += "<data><string><![CDATA[" + ( *it ) + "]]></string></data>";
     }
     xmlMarkup += "</array></value>";
@@ -180,7 +180,7 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
     xmlMarkup += "<value><array>";
     QList<QString>::ConstIterator it = catList.begin();
     QList<QString>::ConstIterator end = catList.end();
-    for ( ; it != end; it++ ){
+    for ( ; it != end; ++it ){
       xmlMarkup += "<data><string><![CDATA[" + ( *it ) + "]]></string></data>";
     }
     xmlMarkup += "</array></value>";

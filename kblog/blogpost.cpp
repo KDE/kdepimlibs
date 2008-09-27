@@ -325,20 +325,19 @@ BlogPost &BlogPost::operator=( const BlogPost &other )
 
 QString BlogPostPrivate::cleanRichText( QString richText ) const
 {
-  QRegExp getBodyContents("<body[^>]*>(.*)</body>");
-  if ( getBodyContents.indexIn( richText ) )
-  {
+  QRegExp getBodyContents( "<body[^>]*>(.*)</body>" );
+  if ( getBodyContents.indexIn( richText ) ) {
     // Get anything inside but excluding the body tags
-    richText = getBodyContents.cap(1);
+    richText = getBodyContents.cap( 1 );
     // Get rid of any whitespace
-    richText.replace(QRegExp("^\\s+"),"");
+    richText.remove( QRegExp( "^\\s+" ) );
   }
   // Get rid of styled paragraphs
-  richText.replace(QRegExp("<p style=\"[^\"]*\">"),"<p>");
+  richText.replace( QRegExp( "<p style=\"[^\"]*\">" ), "<p>" );
 
   // If we're left with empty content then return a clean empty string
   if ( richText == "<p></p>" ) {
-    richText = QString();
+    richText.clear();
   }
 
   return richText;
