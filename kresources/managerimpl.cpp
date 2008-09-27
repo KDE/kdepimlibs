@@ -108,10 +108,11 @@ void ManagerImpl::readConfig( KConfig *cfg )
 {
   kDebug();
 
-  if ( d->mFactory )
+  if ( d->mFactory ) {
     d->mFactory->reloadConfig();
-  else
+  } else {
     d->mFactory = Factory::self( d->mFamily );
+  }
 
   if ( !cfg ) {
     createStandardConfig();
