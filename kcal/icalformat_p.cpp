@@ -2225,14 +2225,18 @@ icaldurationtype ICalFormatImpl::writeICalDuration( const Duration &duration )
   if ( duration.isDaily() ) {
     if ( !( value % 7 ) ) {
       d.weeks = value / 7;
+      d.days  = 0;
     } else {
+      d.weeks = 0;
       d.days  = value;
       d.hours = d.minutes = d.seconds = 0;
     }
   } else {
     if ( !( value % gSecondsPerWeek ) ) {
       d.weeks = value / gSecondsPerWeek;
+      d.days = d.hours = d.minutes = d.seconds = 0;
     } else {
+      d.weeks   = 0;
       d.days    = value / gSecondsPerDay;
       value    %= gSecondsPerDay;
       d.hours   = value / gSecondsPerHour;
