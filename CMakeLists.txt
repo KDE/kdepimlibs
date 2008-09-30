@@ -32,6 +32,7 @@ if (EXISTS ${CMAKE_SOURCE_DIR}/gpgme-qt)
   add_subdirectory(gpgme-qt)
 endif (EXISTS ${CMAKE_SOURCE_DIR}/gpgme-qt)
 
+add_subdirectory(doc)
 add_subdirectory(gpgme++)
 add_subdirectory(qgpgme)
 add_subdirectory(kmime)

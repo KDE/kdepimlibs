@@ -1,0 +1,95 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
+"dtd/kdex.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % English "INCLUDE" > <!-- change language only here -->
+]>
+	
+<article lang="&language;">
+<articleinfo>
+
+<authorgroup>
+<author><personname><firstname>Burkhard</firstname><surname>Lück</surname></personname></author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<date>2009-09-24</date>
+<releaseinfo>4.1.3</releaseinfo>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>System Settings</keyword>
+<keyword>resources</keyword>
+<keyword>address</keyword>
+<keyword>alarm</keyword>
+<keyword>calendar</keyword>
+<keyword>notes</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="kde-resources">
+<title>&kde; Resources</title>
+
+<para>This module is a configuration tool for managing the resources used by different &kde; applications.
+It allows you to add, deleted or modify the resources for <guilabel>Alarms</guilabel>, 
+<guilabel>Calendar</guilabel>, <guilabel>Notes</guilabel> and <guilabel>Contacts</guilabel>.</para>
+
+<para>Select a resource type from the drop down box at the top of the <guilabel>Resources</guilabel> section.
+The list box now displays names and types of available resources of this type. 
+One of these resources is marked as the standard resource.</para>
+
+<para>Use the buttons on the right side of the listbox to add, remove or edit resources.</para>
+
+<para>Detailed informations about resource types and options you find in the links provided in the following table:</para>
+
+<para>
+<table>
+<title>Available Resources</title>
+<tgroup cols="3">
+<tbody>
+<row>
+<entry>Resource Type</entry>
+<entry>Used by</entry>
+<entry>Additional information</entry>
+</row>
+<row>
+<entry>Alarms</entry>
+<entry><simplelist><member>&kalarm;</member></simplelist></entry>
+<entry><ulink url="help:/kalarm/index.html#resources">&kalarm; resources</ulink></entry>
+</row>
+<row>
+<entry>Calendar</entry>
+<entry><simplelist><member>&korganizer;</member> 
+<member>iCal invitation plugin in &kmail;</member></simplelist></entry>
+<entry><ulink url="help:/korganizer/index.html#managing-resources">&korganizer; resources</ulink></entry>
+</row>
+<row>
+<entry>Notes</entry>
+<entry><simplelist><member>&knotes;</member></simplelist></entry>
+<entry><ulink url="help:/knotes/index.html#configure-resources">&knotes; resources</ulink></entry>
+</row>
+<row>
+<entry>Contacs</entry>
+<entry><simplelist>
+<member>&kaddressbook;</member> 
+<member>Address completion in &kmail;, &knode; and &korganizer;</member>
+<member>Addressbook integration in &kopete;</member>
+<member> &konversation;</member>
+<member>Contacts &krunner; plugin</member>
+<member>KonsoleKalendar</member></simplelist> </entry>
+<entry><ulink url="help:/kaddressbook/index.html#configure-resources">&kaddressbook; resources</ulink></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+<para>Every resource type needs a standard resource, where all data should be
+saved if no other resource is specified. If you want to change the standard resource, use the
+<guibutton>Use as Standard</guibutton> button to select it.  You must have
+both read and write access to the new standard resource, otherwise you
+will not be able to select it.
+</para>
+
+</sect1>
+
+</article>
