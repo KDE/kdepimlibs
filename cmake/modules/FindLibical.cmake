@@ -10,6 +10,15 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+if(NOT LIBICAL_MIN_VERSION)
+  set(LIBICAL_MIN_VERSION "0.33")
+endif(NOT LIBICAL_MIN_VERSION)
+
+if (WIN32)
+  file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
+  string(REPLACE "\\" "/" _program_FILES_DIR "${_program_FILES_DIR}")
+endif(WIN32)
+
 set(LIBICAL_FIND_REQUIRED ${Libical_FIND_REQUIRED})
 if(LIBICAL_INCLUDE_DIRS AND LIBICAL_LIBRARIES)
 
@@ -18,10 +27,22 @@ if(LIBICAL_INCLUDE_DIRS AND LIBICAL_LIBRARIES)
 
 endif(LIBICAL_INCLUDE_DIRS AND LIBICAL_LIBRARIES)
 
-find_path(LIBICAL_INCLUDE_DIRS NAMES ical.h PATH_SUFFIXES libical)
+string(REPLACE "\\" "/" libical_root "$ENV{LIBICAL_BASE}")
 
-find_library(LIBICAL_LIBRARY NAMES ical)
-find_library(LIBICALSS_LIBRARY NAMES icalss)
+find_path(LIBICAL_INCLUDE_DIRS NAMES ical.h
+  PATH_SUFFIXES libical
+  PATHS ${libical_root}/include ${_program_FILES_DIR}/libical/include /usr/local/include /usr/include
+  NO_DEFAULT_PATH
+)
+
+find_library(LIBICAL_LIBRARY NAMES ical
+  PATHS ${libical_root}/lib ${_program_FILES_DIR}/libical/lib /usr/local/lib /usr/lib
+  NO_DEFAULT_PATH
+)
+find_library(LIBICALSS_LIBRARY NAMES icalss
+  PATHS ${libical_root}/lib ${_program_FILES_DIR}/libical/lib /usr/local/lib /usr/lib
+  NO_DEFAULT_PATH
+)
 set(LIBICAL_LIBRARIES ${LIBICAL_LIBRARY} ${LIBICALSS_LIBRARY})
 
 if(LIBICAL_INCLUDE_DIRS AND LIBICAL_LIBRARIES)
@@ -41,9 +62,9 @@ if(LIBICAL_INCLUDE_DIRS AND LIBICAL_LIBRARIES)
 
   if(COMPILE_RESULT AND RUN_RESULT EQUAL 1)
     message(STATUS "Found Libical version ${LIBICAL_VERSION}")
-    macro_ensure_version("0.32" ${LIBICAL_VERSION} LIBICAL_VERSION_OK)
+    macro_ensure_version(${LIBICAL_MIN_VERSION} ${LIBICAL_VERSION} LIBICAL_VERSION_OK)
     if(NOT LIBICAL_VERSION_OK)
-      message(STATUS "Libcal version ${LIBICAL_VERSION} is too low. At least version 0.32 is needed.")
+      message(STATUS "Libcal version ${LIBICAL_VERSION} is too low. At least version ${LIBICAL_MIN_VERSION} is needed.")
       set(LIBICAL_INCLUDE_DIRS "")
       set(LIBICAL_LIBRARIES "")
     endif(NOT LIBICAL_VERSION_OK)
