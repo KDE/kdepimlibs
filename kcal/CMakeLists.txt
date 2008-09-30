@@ -1,5 +1,13 @@
 project(kcal)
 
+#enable the following code on Monday 13 Oct 2008
+#find_package(Libical REQUIRED)
+#macro_log_feature(LIBICAL_FOUND "libical" "Reference implementation of the iCalendar data type and serialization format" "http://freeassociation.sourceforge.net" TRUE "0.33" "Required for the critical PIM kcal library.")
+
+#disable the following code on Monday 13 Oct 2008
+find_package(Libical)
+macro_log_feature(LIBICAL_FOUND "libical" "Reference implementation of the iCalendar data type and serialization format" "http://freeassociation.sourceforge.net" FALSE "0.33" "\nNOTICE: Starting Monday 13 October 2008, Libical v0.33 will be required\nNOTICE: to build kdepimlibs. Please install Libical v0.33 from source\nNOTICE: or as a binary package from your distribution as soon as possible.\nNOTICE: If you have multiple versions of the library, please set the\nNOTICE: LIBICAL_BASE variable to indicate where Libical v0.33 is installed.\n")
+
 # was used by libical, but not anymore
 #if (UNIX)
 #  add_definitions(-DICAL_UNIX_NEWLINE=1)
