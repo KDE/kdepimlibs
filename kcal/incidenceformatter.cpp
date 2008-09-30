@@ -569,7 +569,7 @@ static QString cleanHtml( const QString &html )
   rx.indexIn( html );
   QString body = rx.cap( 1 );
 
-  return body.replace( QRegExp("<[^>]*>"), "" ).trimmed();
+  return Qt::escape( body.replace( QRegExp("<[^>]*>"), "" ).trimmed() );
 }
 
 static QString eventStartTimeStr( Event *event )
