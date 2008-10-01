@@ -69,7 +69,10 @@ if(LIBICAL_INCLUDE_DIRS AND LIBICAL_LIBRARIES)
       set(LIBICAL_LIBRARIES "")
     endif(NOT LIBICAL_VERSION_OK)
   else(COMPILE_RESULT AND RUN_RESULT EQ 1)
-    message(FATAL_ERROR "Unable to compile or run the libical version detection program.")
+    #Enable this line the 13 october
+    #message(FATAL_ERROR "Unable to compile or run the libical version detection program.")
+    #Delete this line the 13 october
+    message(STATUS "Unable to compile or run the libical version detection program.")
   endif(COMPILE_RESULT AND RUN_RESULT EQUAL 1)
 
 endif(LIBICAL_INCLUDE_DIRS AND LIBICAL_LIBRARIES)
