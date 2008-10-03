@@ -68,7 +68,7 @@ One of these resources is marked as the standard resource.</para>
 <entry><ulink url="help:/knotes/index.html#configure-resources">&knotes; resources</ulink></entry>
 </row>
 <row>
-<entry>Contacs</entry>
+<entry>Contacts</entry>
 <entry><simplelist>
 <member>&kaddressbook;</member> 
 <member>Address completion in &kmail;, &knode; and &korganizer;</member>
