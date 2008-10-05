@@ -68,6 +68,7 @@ imap://server/folder/
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 #ifdef HAVE_LIBSASL2
 extern "C" {
@@ -145,6 +146,10 @@ kdemain (int argc, char **argv)
 void
 sigchld_handler (int signo)
 {
+  // A signal handler that calls for example waitpid has to save errno
+  // before and restore it afterwards.
+  // (cf. https://www.securecoding.cert.org/confluence/display/cplusplus/ERR32-CPP.+Do+not+rely+on+indeterminate+values+of+errno)
+  const int save_errno = errno;
   int pid, status;
 
   while (signo == SIGCHLD)
@@ -156,9 +161,11 @@ sigchld_handler (int signo)
       // the signal occurred ( BSD handles it different, but it should do
       // no harm ).
       KDE_signal (SIGCHLD, sigchld_handler);
-      return;
+      break;
     }
   }
+
+  errno = save_errno;
 }
 
 IMAP4Protocol::IMAP4Protocol (const QByteArray & pool, const QByteArray & app, bool isSSL)
