@@ -737,12 +737,9 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
       }
       // append to buffer
       {
-        QBuffer stream (&buffer);
-
-        stream.open (QIODevice::WriteOnly);
-        stream.seek (buffer.size ());
-        stream.write (readBuffer, copyLen);
-        stream.close ();
+        int oldsize = buffer.size();
+        buffer.resize(oldsize + copyLen);
+        memcpy(buffer.data() + oldsize, readBuffer, copyLen);
 //        kDebug(7116) <<"appended" << copyLen <<"d got now" << buffer.size();
       }
 
