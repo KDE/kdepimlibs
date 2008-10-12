@@ -867,9 +867,9 @@ void POP3Protocol::get(const KUrl & url)
     data(QByteArray());
     finished();
   } else if (cmd == "remove") {
-    QStringList waitingCommands = path.split(',');
+    const QStringList waitingCommands = path.split(',');
     int activeCommands = 0;
-    QStringList::Iterator it = waitingCommands.begin();
+    QStringList::ConstIterator it = waitingCommands.begin();
     while (it != waitingCommands.end() || activeCommands > 0) {
       while (activeCommands < maxCommands && it != waitingCommands.end()) {
         sendCommand(("DELE " + *it).toLatin1());
@@ -882,7 +882,7 @@ void POP3Protocol::get(const KUrl & url)
     finished();
     m_cmd = CMD_NONE;
   } else if (cmd == "download" || cmd == "headers") {
-    QStringList waitingCommands = path.split(',', QString::SkipEmptyParts);
+    const QStringList waitingCommands = path.split(',', QString::SkipEmptyParts);
     bool noProgress = (metaData("progress") == "off"
                        || waitingCommands.count() > 1);
     int p_size = 0;
@@ -917,7 +917,7 @@ void POP3Protocol::get(const KUrl & url)
     }
 
     int activeCommands = 0;
-    QStringList::Iterator it = waitingCommands.begin();
+    QStringList::ConstIterator it = waitingCommands.begin();
     while (it != waitingCommands.end() || activeCommands > 0) {
       while (activeCommands < maxCommands && it != waitingCommands.end()) {
         sendCommand(((cmd ==

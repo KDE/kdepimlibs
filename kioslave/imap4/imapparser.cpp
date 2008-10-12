@@ -2035,9 +2035,9 @@ QString imapParser::namespaceForBox( const QString & box )
   QString myNamespace;
   if ( !box.isEmpty() )
   {
-    QList<QString> list = namespaceToDelimiter.keys();
+    const QList<QString> list = namespaceToDelimiter.keys();
     QString cleanPrefix;
-    for ( QList<QString>::Iterator it = list.begin(); it != list.end(); ++it )
+    for ( QList<QString>::ConstIterator it = list.begin(); it != list.end(); ++it )
     {
       if ( !(*it).isEmpty() && box.contains( *it ) )
         return (*it);

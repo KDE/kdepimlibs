@@ -600,8 +600,8 @@ void ICalFormatImpl::Private::writeIncidenceBase( icalcomponent *parent,
 void ICalFormatImpl::Private::writeCustomProperties( icalcomponent *parent,
                                                      CustomProperties *properties )
 {
-  QMap<QByteArray, QString> custom = properties->customProperties();
-  for ( QMap<QByteArray, QString>::Iterator c = custom.begin();  c != custom.end();  ++c ) {
+  const QMap<QByteArray, QString> custom = properties->customProperties();
+  for ( QMap<QByteArray, QString>::ConstIterator c = custom.begin();  c != custom.end();  ++c ) {
     icalproperty *p = icalproperty_new_x( c.value().toUtf8() );
     icalproperty_set_x_name( p, c.key() );
     icalcomponent_add_property( parent, p );
@@ -928,8 +928,8 @@ icalcomponent *ICalFormatImpl::writeAlarm( Alarm *alarm )
   case Alarm::Email:
   {
     action = ICAL_ACTION_EMAIL;
-    QList<Person> addresses = alarm->mailAddresses();
-    for ( QList<Person>::Iterator ad = addresses.begin();
+    const QList<Person> addresses = alarm->mailAddresses();
+    for ( QList<Person>::ConstIterator ad = addresses.begin();
           ad != addresses.end();  ++ad ) {
       icalproperty *p = icalproperty_new_attendee(
         "MAILTO:" + (*ad).email().toUtf8() );
@@ -996,8 +996,8 @@ icalcomponent *ICalFormatImpl::writeAlarm( Alarm *alarm )
   }
 
   // Custom properties
-  QMap<QByteArray, QString> custom = alarm->customProperties();
-  for ( QMap<QByteArray, QString>::Iterator c = custom.begin();  c != custom.end();  ++c ) {
+  const QMap<QByteArray, QString> custom = alarm->customProperties();
+  for ( QMap<QByteArray, QString>::ConstIterator c = custom.begin();  c != custom.end();  ++c ) {
     icalproperty *p = icalproperty_new_x( c.value().toUtf8() );
     icalproperty_set_x_name( p, c.key() );
     icalcomponent_add_property( a, p );

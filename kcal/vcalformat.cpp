@@ -489,8 +489,8 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
     {
       tmpStr.sprintf( "MD%i ", recur->frequency() );
       // write out all rMonthDays;
-      QList<int> tmpDays = recur->monthDays();
-      for ( QList<int>::Iterator tmpDay = tmpDays.begin();
+      const QList<int> tmpDays = recur->monthDays();
+      for ( QList<int>::ConstIterator tmpDay = tmpDays.begin();
             tmpDay != tmpDays.end(); ++tmpDay ) {
         tmpStr2.sprintf( "%i ", *tmpDay );
         tmpStr += tmpStr2;
@@ -502,8 +502,8 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
       tmpStr.sprintf( "YM%i ", recur->frequency() );
       // write out all the months;'
       // TODO: Any way to write out the day within the month???
-      QList<int> months = recur->yearMonths();
-      for ( QList<int>::Iterator mit = months.begin();
+      const QList<int> months = recur->yearMonths();
+      for ( QList<int>::ConstIterator mit = months.begin();
             mit != months.end(); ++mit ) {
         tmpStr2.sprintf( "%i ", *mit );
         tmpStr += tmpStr2;
@@ -514,8 +514,8 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
     {
       tmpStr.sprintf( "YD%i ", recur->frequency() );
       // write out all the rYearNums;
-      QList<int> tmpDays = recur->yearDays();
-      for ( QList<int>::Iterator tmpDay = tmpDays.begin();
+      const QList<int> tmpDays = recur->yearDays();
+      for ( QList<int>::ConstIterator tmpDay = tmpDays.begin();
             tmpDay != tmpDays.end(); ++tmpDay ) {
         tmpStr2.sprintf( "%i ", *tmpDay );
         tmpStr += tmpStr2;

@@ -535,8 +535,8 @@ Incidence *Calendar::incidence( const QString &uid )
 Incidence::List Calendar::incidencesFromSchedulingID( const QString &sid )
 {
   Incidence::List result;
-  Incidence::List incidences = rawIncidences();
-  Incidence::List::iterator it = incidences.begin();
+  const Incidence::List incidences = rawIncidences();
+  Incidence::List::const_iterator it = incidences.begin();
   for ( ; it != incidences.end(); ++it ) {
     if ( (*it)->schedulingID() == sid ) {
       result.append( *it );
@@ -547,8 +547,8 @@ Incidence::List Calendar::incidencesFromSchedulingID( const QString &sid )
 
 Incidence *Calendar::incidenceFromSchedulingID( const QString &UID )
 {
-  Incidence::List incidences = rawIncidences();
-  Incidence::List::iterator it = incidences.begin();
+  const Incidence::List incidences = rawIncidences();
+  Incidence::List::const_iterator it = incidences.begin();
   for ( ; it != incidences.end(); ++it ) {
     if ( (*it)->schedulingID() == UID ) {
       // Touchdown, and the crowd goes wild
