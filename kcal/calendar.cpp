@@ -308,7 +308,7 @@ Event::List Calendar::sortEvents( Event::List *eventList,
     alphaList = sortEvents( eventList, EventSortSummary, sortDirection );
     for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
       if ( (*eit)->dtStart().isDateOnly() ) {
-        tempList.append( *eit );        
+        tempList.append( *eit );
         continue;
       }
       sortIt = eventListSorted.begin();
@@ -332,7 +332,7 @@ Event::List Calendar::sortEvents( Event::List *eventList,
     } else {
       // Append the list of Events without End DateTimes
       eventListSorted += tempList;
-    }    
+    }
     break;
 
   case EventSortEndDate:
