@@ -30,7 +30,7 @@
   @authors Marc Mutz \<mutz@kde.org\>
 
   @glossary @anchor Eight-Bit @anchor eight-bit @b 8-bit:
-  Data that contains bytes with at least one value greater then 127.
+  Data that contains bytes with at least one value greater than 127.
 
   @glossary @anchor Eight-Bit-Binary @anchor eight-bit-binary @b 8-bit-binary:
   Eight-bit data that contains a high percentage of non-ascii values.
@@ -39,7 +39,7 @@
   Eight-bit data that contains a high percentage of non-ascii values.
 
   @glossary @anchor Seven-Bit @anchor seven-bit @b 7-Bit:
-  Data that contains bytes with all values less then 128.
+  Data that contains bytes with all values less than 128.
 
   @glossary @anchor Seven-Bit-Binary @anchor seven-bit-binary @b 7-bit-binary:
   Seven-bit data that contains a high percentage of non-ascii values.
