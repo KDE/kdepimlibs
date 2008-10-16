@@ -603,7 +603,7 @@
 2000-11-21  Eric Busboom  <eric@softwarestudio.org>
 
 	* icalrecur.c Fixed a bug in the increment_* routines that made
- 	incrementing by more then 1 insensible. Thanks to Martin Neimeier
+ 	incrementing by more than 1 insensible. Thanks to Martin Neimeier
 
 2000-11-20  Eric Busboom  <eric@softwarestudio.org>
 
