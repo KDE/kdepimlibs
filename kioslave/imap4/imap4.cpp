@@ -14,9 +14,9 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *   You should have received a copy of the GNU General Public License along
+ *   with this program; if not, write to the Free Software Foundation, Inc.,
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
  *   Send comments and bug fixes to jcorey@fruity.ath.cx
  *
@@ -56,8 +56,8 @@ imap://server/folder/
  *  ERR_DOES_NOT_EXIST is reserved for folders.
  */
 
-#include "imap4.h"
 #include <kdepimlibs-compat.h> // for KDE_signal, remove in KDEPIM 4.2
+#include "imap4.h"
 
 #include <QByteArray>
 #include <QList>
@@ -319,7 +319,7 @@ IMAP4Protocol::get (const KUrl & _url)
       {
         // get the MIME header and fill getLastHandled()
         QString mySection = aSection;
-        mySection.replace("]", ".MIME]");
+        mySection.replace(']', ".MIME]");
         cmd = sendCommand (imapCommand::clientFetch (aSequence, mySection));
         do
         {
@@ -640,9 +640,9 @@ IMAP4Protocol::setHost (const QString & _host, quint16 _port,
     if (!myHost.isEmpty ())
       closeConnection ();
     myHost = _host;
-    if (_port == 0) 
+    if (_port == 0)
         myPort = (mySSL) ? ImapsPort : ImapPort;
-    else 
+    else
         myPort = _port;
     myUser = _user;
     myPass = _pass;
@@ -1614,7 +1614,7 @@ IMAP4Protocol::specialCustomCommand( QDataStream& stream )
   if ( type == 'E' ) {
     kDebug(7116) << "IMAP4Protocol::specialCustomCommand: extended mode" << endl;
     imapCommand *cmd = sendCommand (imapCommand::clientCustom( command, QString() ));
-    while ( !parseLoop () );
+    while ( !parseLoop () ) {};
 
     // see if server is waiting
     if (!cmd->isComplete () && !getContinuation ().isEmpty ())
@@ -1637,7 +1637,7 @@ IMAP4Protocol::specialCustomCommand( QDataStream& stream )
 
     do
     {
-      while (!parseLoop ());
+      while (!parseLoop ()) {};
     }
     while (!cmd->isComplete ());
 
