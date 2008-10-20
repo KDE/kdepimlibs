@@ -373,7 +373,7 @@ void ServerTestPrivate::slotReadNormal( const QString &text )
       normalSocket->write( QLatin1String( "STLS" ) );
     } else if ( testProtocol == IMAP_PROTOCOL ) {
       normalSocket->write( QLatin1String( "2 STARTTLS" ) );
-    } else  {
+    } else {
       normalSocket->write( QLatin1String( "STARTTLS" ) );
     }
     encryptionMode = Transport::EnumEncryption::TLS;

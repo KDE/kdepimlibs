@@ -41,17 +41,16 @@ namespace {
 
 class BusyCursorHelper : public QObject
 {
-public:
-  inline BusyCursorHelper( QObject *parent )
-         : QObject( parent )
-  {
-    qApp->setOverrideCursor( Qt::BusyCursor );
-  }
+  public:
+    inline BusyCursorHelper( QObject *parent ) : QObject( parent )
+    {
+      qApp->setOverrideCursor( Qt::BusyCursor );
+    }
 
-  inline ~BusyCursorHelper()
-  {
-    qApp->restoreOverrideCursor();
-  }
+    inline ~BusyCursorHelper()
+    {
+      qApp->restoreOverrideCursor();
+    }
 };
 
 }

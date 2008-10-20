@@ -133,13 +133,13 @@ void SmtpJob::startSmtpJob()
   destination.addQueryItem( QLatin1String( "headers" ), QLatin1String( "0" ) );
   destination.addQueryItem( QLatin1String( "from" ), sender() );
 
-  foreach ( const QString& str, to() ) {
+  foreach ( const QString &str, to() ) {
     destination.addQueryItem( QLatin1String( "to" ), str );
   }
-  foreach ( const QString& str, cc() ) {
+  foreach ( const QString &str, cc() ) {
     destination.addQueryItem( QLatin1String( "cc" ), str );
   }
-  foreach ( const QString& str, bcc() ) {
+  foreach ( const QString &str, bcc() ) {
     destination.addQueryItem( QLatin1String( "bcc" ), str );
   }
 
@@ -277,8 +277,9 @@ void SmtpJob::slotResult( KJob *job )
   // To prevent that, we call TransportJob::slotResult() only after removing the
   // slave from the pool and calculate the error code ourselves.
   int errorCode = error();
-  if ( !errorCode )
+  if ( !errorCode ) {
     errorCode = job->error();
+  }
 
   if ( errorCode && d->currentState == SmtpJobPrivate::Smtp ) {
     s_slavePool->removeSlave( d->slave, errorCode != KIO::ERR_SLAVE_DIED );
