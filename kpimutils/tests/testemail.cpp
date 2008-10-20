@@ -150,7 +150,7 @@ static bool checkNormalizeAddressesAndEncodeIDNs( const QString &input, const QS
   return true;
 }
 
-static bool checkNormalizeAddressesAndDecodeIDNs( const QString& input, const QString& expResult )
+static bool checkNormalizeAddressesAndDecodeIDNs( const QString &input, const QString &expResult )
 {
   QString result = normalizeAddressesAndDecodeIdn( input );
   check( "normalizeAddressesAndDecodeIDNs( \"" + input + "\" ) result ", result, expResult );
@@ -510,10 +510,21 @@ int main( int argc, char *argv[] )
                                         "\"jongel,fibbel\" <matt@fruitsalad.org>" );
 
   // check checkNormalizeAddressesAndDecodeIDNs
-  checkNormalizeAddressesAndDecodeIDNs( "=?us-ascii?Q?Surname=2C=20Name?= <nobody@example.org>", "\"Surname, Name\" <nobody@example.org>" );
-  checkNormalizeAddressesAndDecodeIDNs( "=?iso-8859-1?B?5Hf8b2xmLPZBbmRyZWFz?= <nobody@example.org>", QString::fromUtf8("\"äwüolf,öAndreas\" <nobody@example.org>") );
-  checkNormalizeAddressesAndDecodeIDNs( QString::fromUtf8("\"Andreas Straß\" <nobody@example.org>"), QString::fromUtf8("\"Andreas Straß\" <nobody@example.org>") );
-  checkNormalizeAddressesAndDecodeIDNs( QString::fromUtf8("\"András\" \"Manţia\" <amantia@kde.org>"), QString::fromUtf8("\"András\" \"Manţia\" <amantia@kde.org>") );
+  checkNormalizeAddressesAndDecodeIDNs(
+    "=?us-ascii?Q?Surname=2C=20Name?= <nobody@example.org>",
+    "\"Surname, Name\" <nobody@example.org>" );
+
+  checkNormalizeAddressesAndDecodeIDNs(
+    "=?iso-8859-1?B?5Hf8b2xmLPZBbmRyZWFz?= <nobody@example.org>",
+    QString::fromUtf8( "\"äwüolf,öAndreas\" <nobody@example.org>" ) );
+
+  checkNormalizeAddressesAndDecodeIDNs(
+    QString::fromUtf8( "\"Andreas Straß\" <nobody@example.org>" ),
+    QString::fromUtf8( "\"Andreas Straß\" <nobody@example.org>" ) );
+
+  checkNormalizeAddressesAndDecodeIDNs(
+    QString::fromUtf8( "\"András\" \"Manţia\" <amantia@kde.org>" ),
+    QString::fromUtf8( "\"András\" \"Manţia\" <amantia@kde.org>" ) );
 
   // check the "quote if necessary" method
   checkQuoteIfNecessary( "Matt Douhan", "Matt Douhan" );

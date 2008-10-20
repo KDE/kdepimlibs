@@ -33,26 +33,26 @@ void LinkLocatorTest::testGetEmailAddress()
   // empty input
   const QString emptyQString;
   LinkLocator ll1( emptyQString, 0 );
-  QVERIFY( ll1.getEmailAddress() == QString() );
+  QVERIFY( ll1.getEmailAddress().isEmpty() );
 
   // no '@' at scan position
   LinkLocator ll2( "foo@bar.baz", 0 );
-  QVERIFY( ll2.getEmailAddress() == QString() );
+  QVERIFY( ll2.getEmailAddress().isEmpty() );
 
   // '@' in local part
   LinkLocator ll3( "foo@bar@bar.baz", 7 );
-  QVERIFY( ll3.getEmailAddress() == QString() );
+  QVERIFY( ll3.getEmailAddress().isEmpty() );
 
   // empty local part
   LinkLocator ll4( "@bar.baz", 0 );
-  QVERIFY( ll4.getEmailAddress() == QString() );
+  QVERIFY( ll4.getEmailAddress().isEmpty() );
   LinkLocator ll5( ".@bar.baz", 1 );
-  QVERIFY( ll5.getEmailAddress() == QString() );
+  QVERIFY( ll5.getEmailAddress().isEmpty() );
   LinkLocator ll6( " @bar.baz", 1 );
-  QVERIFY( ll6.getEmailAddress() == QString() );
+  QVERIFY( ll6.getEmailAddress().isEmpty() );
   LinkLocator ll7( ".!#$%&'*+-/=?^_`{|}~@bar.baz",
                    strlen( ".!#$%&'*+-/=?^_`{|}~" ) );
-  QVERIFY( ll7.getEmailAddress() == QString() );
+  QVERIFY( ll7.getEmailAddress().isEmpty() );
 
   // allowed special chars in local part of address
   LinkLocator ll8( "a.!#$%&'*+-/=?^_`{|}~@bar.baz",
@@ -61,29 +61,29 @@ void LinkLocatorTest::testGetEmailAddress()
 
   // '@' in domain part
   LinkLocator ll9 ( "foo@bar@bar.baz", 3 );
-  QVERIFY( ll9.getEmailAddress() == QString() );
+  QVERIFY( ll9.getEmailAddress().isEmpty() );
 
   // domain part without dot
   LinkLocator lla( "foo@bar", 3 );
-  QVERIFY( lla.getEmailAddress() == QString() );
+  QVERIFY( lla.getEmailAddress().isEmpty() );
   LinkLocator llb( "foo@bar.", 3 );
-  QVERIFY( llb.getEmailAddress() == QString() );
+  QVERIFY( llb.getEmailAddress().isEmpty() );
   LinkLocator llc( ".foo@bar", 4 );
-  QVERIFY( llc.getEmailAddress() == QString() );
+  QVERIFY( llc.getEmailAddress().isEmpty() );
   LinkLocator lld( "foo@bar ", 3 );
-  QVERIFY( lld.getEmailAddress() == QString() );
+  QVERIFY( lld.getEmailAddress().isEmpty() );
   LinkLocator lle( " foo@bar", 4 );
-  QVERIFY( lle.getEmailAddress() == QString() );
+  QVERIFY( lle.getEmailAddress().isEmpty() );
   LinkLocator llf( "foo@bar-bar", 3 );
-  QVERIFY( llf.getEmailAddress() == QString() );
+  QVERIFY( llf.getEmailAddress().isEmpty() );
 
   // empty domain part
   LinkLocator llg( "foo@", 3 );
-  QVERIFY( llg.getEmailAddress() == QString() );
+  QVERIFY( llg.getEmailAddress().isEmpty() );
   LinkLocator llh( "foo@.", 3 );
-  QVERIFY( llh.getEmailAddress() == QString() );
+  QVERIFY( llh.getEmailAddress().isEmpty() );
   LinkLocator lli( "foo@-", 3 );
-  QVERIFY( lli.getEmailAddress() == QString() );
+  QVERIFY( lli.getEmailAddress().isEmpty() );
 
   // simple address
   LinkLocator llj( "foo@bar.baz", 3 );
