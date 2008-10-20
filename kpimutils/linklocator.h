@@ -27,8 +27,8 @@
   @author Dave Corrie \<kde@davecorrie.com\>
 */
 
-#ifndef KPIMUTILS_LINKLOCATOR_H_
-#define KPIMUTILS_LINKLOCATOR_H_
+#ifndef KPIMUTILS_LINKLOCATOR_H
+#define KPIMUTILS_LINKLOCATOR_H
 
 #include "kpimutils_export.h"
 
