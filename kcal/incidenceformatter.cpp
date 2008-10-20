@@ -564,12 +564,11 @@ static QString string2HTML( const QString &str )
 
 static QString cleanHtml( const QString &html )
 {
-  QRegExp rx( "<body[^>]*>(.*)</body>",
-              Qt::CaseInsensitive );
+  QRegExp rx( "<body[^>]*>(.*)</body>", Qt::CaseInsensitive );
   rx.indexIn( html );
   QString body = rx.cap( 1 );
 
-  return Qt::escape( body.replace( QRegExp("<[^>]*>"), "" ).trimmed() );
+  return Qt::escape( body.remove( QRegExp( "<[^>]*>" ) ).trimmed() );
 }
 
 static QString eventStartTimeStr( Event *event )
@@ -1500,7 +1499,6 @@ QString IncidenceFormatter::formatICalInvitationNoHtml( QString invitation, Cale
 {
   return formatICalInvitationHelper( invitation, mCalendar, helper, true );
 }
-
 
 /*******************************************************************
  *  Helper functions for the Incidence tooltips
