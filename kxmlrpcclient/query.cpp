@@ -421,7 +421,7 @@ void Query::call( const QString &server,
   job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
   job->addMetaData( "ConnectTimeout", "50" );
 
-  for ( mapIter = jobMetaData.begin(); mapIter != jobMetaData.end(); mapIter++ ) {
+  for ( mapIter = jobMetaData.begin(); mapIter != jobMetaData.end(); ++mapIter ) {
     job->addMetaData( mapIter.key(), mapIter.value() );
   }
 
