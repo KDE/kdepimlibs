@@ -371,9 +371,9 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
     if ( cachedEmoticonsThemeName.isEmpty() ) {
       cachedEmoticonsThemeName = KEmoticons::currentThemeName();
     }
-    result = sEmoticons->theme( cachedEmoticonsThemeName).
-                 parseEmoticons( result, KEmoticonsTheme::StrictParse |
-                                 KEmoticonsTheme::SkipHTML, exclude );
+    result =
+      sEmoticons->theme( cachedEmoticonsThemeName ).parseEmoticons(
+        result, KEmoticonsTheme::StrictParse | KEmoticonsTheme::SkipHTML, exclude );
   }
 #endif
 
