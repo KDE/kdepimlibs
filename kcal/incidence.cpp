@@ -465,7 +465,7 @@ QString Incidence::categoriesStr() const
 
 void Incidence::setRelatedToUid( const QString &relatedToUid )
 {
-  if ( mReadOnly || d->mRelatedToUid == relatedToUid ) {
+  if ( d->mRelatedToUid == relatedToUid ) {
     return;
   }
   d->mRelatedToUid = relatedToUid;
@@ -479,7 +479,7 @@ QString Incidence::relatedToUid() const
 
 void Incidence::setRelatedTo( Incidence *incidence )
 {
-  if ( mReadOnly || d->mRelatedTo == incidence ) {
+  if ( d->mRelatedTo == incidence ) {
     return;
   }
   if ( d->mRelatedTo ) {
