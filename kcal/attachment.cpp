@@ -48,6 +48,7 @@ class KCal::Attachment::Private
         mMimeType( mime ),
         mData( 0 ),
         mBinary( binary ),
+        mLocal( false ),
         mShowInline( false )
     {}
     Private( const Private &other )
@@ -86,7 +87,6 @@ Attachment::Attachment( const QString &uri, const QString &mime )
   : d( new Attachment::Private( mime, false ) )
 {
   d->mUri = uri;
-  d->mLocal = false;
 }
 
 Attachment::Attachment( const char *base64, const QString &mime )
