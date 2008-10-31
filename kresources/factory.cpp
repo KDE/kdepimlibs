@@ -40,6 +40,8 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kconfig.h>
+#include <kconfiggroup.h>
+#include <kprocess.h>
 #include <kstandarddirs.h>
 #include <kservicetypetrader.h>
 #include <kpluginloader.h>
@@ -47,6 +49,9 @@
 #include "resource.h"
 
 using namespace KRES;
+
+static int akonadiMigratorVersion = 1;
+static bool akonadiMigrationEnabled = false; // flip this switch if you dare ;-)
 
 class Factory::Private
 {
@@ -70,6 +75,33 @@ Factory *Factory::self( const QString &resourceFamily )
   if ( !factory ) {
     factory = new Factory( resourceFamily );
     mSelves->insert( resourceFamily, factory );
+
+    // Akonadi migration
+    const QString cfgFileName = KStandardDirs::locateLocal( "config", QString( "kres-migratorrc" ) );
+    KConfig *config = new KConfig( cfgFileName );
+    KConfigGroup migrationCfg( config, "Migration" );
+    const bool enabled = migrationCfg.readEntry( "Enabled", akonadiMigrationEnabled );
+    const int version = migrationCfg.readEntry( "Version-" + resourceFamily, 0 );
+    if ( enabled && version < akonadiMigratorVersion ) {
+      kDebug() << "Performing Akonadi migration. Good luck!";
+      KProcess proc;
+      proc.setProgram( "kres-migrator", QStringList() << "--interactive-on-change" << "--type" << resourceFamily );
+      proc.start();
+      bool result = proc.waitForStarted();
+      if ( result )
+        result = proc.waitForFinished();
+      if ( result && proc.exitCode() == 0 ) {
+        migrationCfg.writeEntry( "Version-" + resourceFamily, akonadiMigratorVersion );
+        migrationCfg.sync();
+      } else if ( !result || proc.exitCode() != 1 ) { // exit code 1 means it is already running, so we are probably called by a migrator instance
+        kError() << "Akonadi migration failed!";
+        kError() << "command was: " << proc.program();
+        kError() << "exit code: " << proc.exitCode();
+        kError() << "stdout: " << proc.readAllStandardOutput();
+        kError() << "stderr: " << proc.readAllStandardError();
+      }
+    }
+
   }
 
   return factory;
