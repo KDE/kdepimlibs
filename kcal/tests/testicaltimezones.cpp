@@ -33,7 +33,7 @@
 QTEST_KDEMAIN( ICalTimeZonesTest, NoGUI )
 
 extern "C" {
-  #include "kcal/libical/src/libical/ical.h"
+  #include <ical.h>
 }
 #include "kcal/icaltimezones.h"
 using namespace KCal;
@@ -72,22 +72,22 @@ static const char *VTZ_Western =
   "TZOFFSETFROM:-0400\r\n"
   "TZOFFSETTO:-0500\r\n"
   "TZNAME:WST\r\n"
-  "END:STANDARD\r\n\r\n"
+  "END:STANDARD\r\n"
   "BEGIN:DAYLIGHT\r\n"
   "DTSTART:19870405T020000\r\n"
   "RRULE:FREQ=YEARLY;UNTIL=19970406T070000Z;BYDAY=1SU;BYMONTH=4\r\n"
   "TZOFFSETFROM:-0500\r\n"
   "TZOFFSETTO:-0400\r\n"
   "TZNAME:WDT1\r\n"
-  "END:DAYLIGHT\r\n\r\n"
+  "END:DAYLIGHT\r\n"
   "BEGIN:DAYLIGHT\r\n"
   "DTSTART:19990425T020000\r\n"
   "RDATE;VALUE=DATE-TIME:20000430T020000\r\n"
   "TZOFFSETFROM:-0500\r\n"
   "TZOFFSETTO:-0400\r\n"
   "TZNAME:WDT2\r\n"
-  "END:DAYLIGHT\r\n\r\n"
-  "END:VTIMEZONE\r\n\r\n";
+  "END:DAYLIGHT\r\n"
+  "END:VTIMEZONE\r\n";
 
 // Standard time only
 static const char *VTZ_other =
@@ -101,8 +101,8 @@ static const char *VTZ_other =
   "TZOFFSETFROM:+0000\r\n"
   "TZOFFSETTO:+0300\r\n"
   "TZNAME:OST\r\n"
-  "END:STANDARD\r\n\r\n"
-  "END:VTIMEZONE\r\n\r\n";
+  "END:STANDARD\r\n"
+  "END:VTIMEZONE\r\n";
 
 // CALENDAR component header and footer
 static const char *calendarHeader =
