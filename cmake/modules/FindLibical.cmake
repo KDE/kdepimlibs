@@ -36,16 +36,16 @@ endif(DEFINED LIBICAL_BASE)
 
 find_path(LIBICAL_INCLUDE_DIRS NAMES ical.h
   PATH_SUFFIXES libical
-  PATHS ${libical_root}/include ${_program_FILES_DIR}/libical/include /usr/local/include /usr/include
+  PATHS ${libical_root}/include ${_program_FILES_DIR}/libical/include /usr/local/include /usr/include ${KDE4_INCLUDE_DIR}
   NO_CMAKE_SYSTEM_PATH
 )
 
 find_library(LIBICAL_LIBRARY NAMES ical libical
-  PATHS ${libical_root}/lib ${_program_FILES_DIR}/libical/lib /usr/local/lib /usr/lib
+  PATHS ${libical_root}/lib ${_program_FILES_DIR}/libical/lib /usr/local/lib /usr/lib ${KDE4_LIB_DIR}
   NO_CMAKE_SYSTEM_PATH
 )
 find_library(LIBICALSS_LIBRARY NAMES icalss libicalss
-  PATHS ${libical_root}/lib ${_program_FILES_DIR}/libical/lib /usr/local/lib /usr/lib
+  PATHS ${libical_root}/lib ${_program_FILES_DIR}/libical/lib /usr/local/lib /usr/lib ${KDE4_LIB_DIR}
   NO_CMAKE_SYSTEM_PATH
 )
 set(LIBICAL_LIBRARIES ${LIBICAL_LIBRARY} ${LIBICALSS_LIBRARY})
