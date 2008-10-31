@@ -37,6 +37,7 @@ Name[uk]=Календар в локальній теці
 Name[x-test]=xxCalendar in Local Directoryxx
 Name[zh_CN]=本地目录中的日历
 Name[zh_TW]=本地端目錄裡的行事曆
+Comment=Provides access to calendar items, each stored in a single file, in a given directory
 X-KDE-Library=kcal_localdir
 Type=Service
 X-KDE-ServiceTypes=KResources/Plugin
