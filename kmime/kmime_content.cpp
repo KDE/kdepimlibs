@@ -200,7 +200,7 @@ void Content::parse()
       Parser::MultiPart mpp( d->body, tmp );
       if ( mpp.parse() ) { //at least one part found
 
-        if ( ct->isSubtype( "alternative") ) { //examine category for the sub-parts
+        if ( ct->isSubtype( "alternative" ) ) { //examine category for the sub-parts
           cat = Headers::CCalternativePart;
         } else {
           cat = Headers::CCmixedPart;  //default to "mixed"
@@ -648,7 +648,7 @@ void Content::addContent( Content *c, bool prepend )
     //now we can copy the body and append the new content;
     main->setBody( d->body );
     d->contents.append( main );
-    d->body.clear(); //not longer needed
+    d->body.clear(); //no longer needed
 
     //finally we have to convert this article to "multipart/mixed"
     Headers::ContentType *ct=contentType();
@@ -856,6 +856,8 @@ Headers::Base *Content::headerByType( const char *type )
       h = new Headers::ContentDisposition( this, raw );
     } else if ( strcasecmp( "Content-Description", type ) == 0 ) {
       h = new Headers::ContentDescription( this, raw );
+    } else if ( strcasecmp( "Content-Location", type ) == 0 ) {
+      h = new Headers::ContentLocation( this, raw );
     } else if ( strcasecmp( "Sender", type ) == 0 ) {
       h = new Headers::Sender( this, raw );
     } else {
@@ -930,6 +932,12 @@ Headers::ContentDisposition *Content::contentDisposition( bool create )
 Headers::ContentDescription *Content::contentDescription( bool create )
 {
   Headers::ContentDescription *p=0;
+  return headerInstance( p, create );
+}
+
+Headers::ContentLocation *Content::contentLocation( bool create )
+{
+  Headers::ContentLocation *p=0;
   return headerInstance( p, create );
 }
 

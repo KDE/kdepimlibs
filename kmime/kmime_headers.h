@@ -1254,6 +1254,14 @@ class KMIME_EXPORT ContentDescription : public Generics::Unstructured
   kmime_mk_trivial_ctor_with_name( ContentDescription )
 };
 
+/**
+  Represents a "Content-Location" header.
+  @since 4.2
+*/
+class KMIME_EXPORT ContentLocation : public Generics::Unstructured
+{
+  kmime_mk_trivial_ctor_with_name( ContentLocation )
+};
 
 class ControlPrivate;
 

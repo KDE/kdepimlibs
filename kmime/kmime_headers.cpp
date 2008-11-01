@@ -2101,6 +2101,8 @@ bool Subject::isReply() const
 //@cond PRIVATE
 kmime_mk_trivial_ctor_with_name( ContentDescription,
                                  Generics::Unstructured, Content-Description )
+kmime_mk_trivial_ctor_with_name( ContentLocation,
+                                Generics::Unstructured, Content-Location )
 kmime_mk_trivial_ctor_with_name( From, Generics::MailboxList, From )
 kmime_mk_trivial_ctor_with_name( Sender, Generics::SingleMailbox, Sender )
 kmime_mk_trivial_ctor_with_name( To, Generics::AddressList, To )

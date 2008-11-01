@@ -150,7 +150,7 @@ class KMIME_EXPORT Content
     */
 
     KDE_DEPRECATED Headers::Generic *getNextHeader( QByteArray &head );
-    
+
     /**
       Extracts and removes the next header from @p head.
       The caller is responsible for deleting the returned header.
@@ -164,13 +164,13 @@ class KMIME_EXPORT Content
       @deprecated Use headerByType( const char * )
     */
     KDE_DEPRECATED virtual Headers::Base *getHeaderByType( const char *type );
-    
+
     /**
       Tries to find a @p type header in the message and returns it.
       @since 4.2
     */
     virtual Headers::Base *headerByType( const char *type );
-    
+
     /**
       Tries to find all the @p type headers in the message and returns it.
       Take care that this result is not cached, so could be slow.
@@ -211,6 +211,15 @@ class KMIME_EXPORT Content
       @param create if true, create the header if it doesn't exist yet.
     */
     Headers::ContentDescription *contentDescription( bool create=true );
+
+    /**
+      Returns the Content location.
+
+      @param create if true, create the header if it doesn't exist yet.
+      @since 4.2
+    */
+    Headers::ContentLocation *contentLocation( bool create=true );
+
 
     /**
       Returns the size of the Content body after encoding.
@@ -368,7 +377,7 @@ class KMIME_EXPORT Content
 
     /**
       Returns the Content specified by the given index.
-      If the index doesn't point to an Content, 0 is returned, if the index
+      If the index doesn't point to a Content, 0 is returned, if the index
       is invalid (empty), this Content is returned.
 
       @param index the Content index

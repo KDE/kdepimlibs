@@ -166,7 +166,7 @@ void Message::setHeader( Headers::Base *h )
   if ( h->is( "Subject" ) ) {
     d->subject.fromUnicodeString( h->asUnicodeString(), h->rfc2047Charset() );
   } else if ( h->is( "Date" ) ) {
-    d->date.setDateTime( (static_cast<Headers::Date*>( h))->dateTime() );
+    d->date.setDateTime( ( static_cast<Headers::Date*>( h ) )->dateTime() );
   } else {
     del = false;
     Content::setHeader( h );
