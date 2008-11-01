@@ -1,7 +1,10 @@
 project(kcal)
 
-find_package(Libical REQUIRED)
+find_package(Libical)
 macro_log_feature(LIBICAL_FOUND "libical" "Reference implementation of the iCalendar data type and serialization format" "http://sourceforge.net/projects/freeassociation" TRUE "0.33" "Required for the critical PIM kcal library.")
+if(NOT LIBICAL_FOUND)
+  macro_display_feature_log()
+endif(NOT LIBICAL_FOUND)
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5800)
 
