@@ -366,7 +366,7 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
 
   result = textCodec->toUnicode( buffer.begin(), bit - buffer.begin() );
 
-  kDebug(5320) << "result now: \"" << result << "\"";
+  // kDebug(5320) << "result now: \"" << result << "\"";
   // cleanup:
   delete dec;
   language = maybeLanguage;
