@@ -8,7 +8,7 @@ include_directories(
 MACRO(KCAL_UNIT_TESTS)
   FOREACH(_testname ${ARGN})
     kde4_add_unit_test(${_testname} NOGUI ${_testname}.cpp)
-    target_link_libraries(${_testname} ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
+    target_link_libraries(${_testname} ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} ${LIBICAL_LIBRARIES})
   ENDFOREACH(_testname)
 ENDMACRO(KCAL_UNIT_TESTS)
 
