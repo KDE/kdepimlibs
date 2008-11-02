@@ -883,7 +883,7 @@ ICalTimeZone ICalTimeZoneSource::parse( icaltimezone *tz )
    * This is both easier and provides more complete information than
    * extracting already parsed data from icaltimezone.
    */
-  return parse( icaltimezone_get_component( tz ) );
+  return tz ? parse( icaltimezone_get_component( tz ) ) : ICalTimeZone();
 }
 
 //@cond PRIVATE
