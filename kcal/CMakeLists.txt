@@ -16,6 +16,7 @@ endif(KDE4_BUILD_TESTS)
 
 include_directories(
   ${LIBICAL_INCLUDE_DIRS}
+  ${LIBICAL_INCLUDE_DIRS}/libical
   ${CMAKE_CURRENT_SOURCE_DIR}/versit
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/kabc
