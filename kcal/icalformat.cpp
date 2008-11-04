@@ -525,7 +525,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   Incidence *existingIncidence = cal->incidenceFromSchedulingID( incidence->uid() );
 
-  icalcomponent *calendarComponent;
+  icalcomponent *calendarComponent = 0;
   if ( existingIncidence ) {
     calendarComponent = d->mImpl->createCalendarComponent( cal );
 
@@ -541,8 +541,6 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
       icalcomponent_add_component( calendarComponent,
                                    d->mImpl->writeEvent( event ) );
     }
-  } else {
-    calendarComponent = 0;
   }
 
   kDebug() << "classify...";
@@ -579,7 +577,8 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   kDebug() << "status =" << status;
 
   icalcomponent_free( message );
-  icalcomponent_free( calendarComponent );
+  if ( calendarComponent )
+    icalcomponent_free( calendarComponent );
   return new ScheduleMessage( incidence, method, status );
 }
 
