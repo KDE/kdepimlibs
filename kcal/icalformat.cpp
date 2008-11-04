@@ -24,7 +24,7 @@
   defines the ICalFormat class.
 
   @brief
-  iCalendar format implementation.
+  iCalendar format implementation: a layer of abstraction for libical.
 
   @author Cornelius Schumacher \<schumacher@kde.org\>
 */
@@ -576,8 +576,9 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   kDebug() << "status =" << status;
 
   icalcomponent_free( message );
-  if ( calendarComponent )
+  if ( calendarComponent ) {
     icalcomponent_free( calendarComponent );
+  }
   return new ScheduleMessage( incidence, method, status );
 }
 
