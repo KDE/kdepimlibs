@@ -38,7 +38,9 @@ Name[x-test]=xxCalendar in Local Directoryxx
 Name[zh_CN]=本地目录中的日历
 Name[zh_TW]=本地端目錄裡的行事曆
 Comment=Provides access to calendar items, each stored in a single file, in a given directory
+Comment[el]=Προσφέρει πρόσβαση σε αντικείμενα ημερολογίου, αποθηκευμένα σε ξεχωριστά αρχεία, σε ένα δοσμένο κατάλογο
 Comment[es]=Provee acceso a elementos de un calendario, cada uno almacenado en un archivo diferente, dentro de un directorio determinado
+Comment[nds]=Stellt Togriep op Kalennerindrääg praat, elkeen binnen een Datei binnen en angeven Orner.
 Comment[pt]=Oferece o acesso aos itens do calendário, estando cada um guardado num único ficheiro de uma dada pasta
 Comment[pt_BR]=Fornece acesso aos itens do calendário, cada um armazenado em um único arquivo na pasta indicada
 Comment[sv]=Ger tillgång till kalenderobjekt, vart och ett lagrat i en enskild lokal fil, i en given katalog
