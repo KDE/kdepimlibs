@@ -1,6 +1,4 @@
 
-add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
-
 set(imap4_optional_includes)
 set(imap4_optional_libs)
 
@@ -32,7 +30,7 @@ set(kio_imap4_PART_SRCS
 
 kde4_add_plugin(kio_imap4 ${kio_imap4_PART_SRCS})
 
-target_link_libraries(kio_imap4 ${KDE4_KDE3SUPPORT_LIBS} kmime kimap)
+target_link_libraries(kio_imap4 kmime kimap ${KDE4_KIO_LIBS})
 if (SASL2_FOUND)
 	target_link_libraries(kio_imap4 ${SASL2_LIBRARIES} )
 endif(SASL2_FOUND)
