@@ -1344,7 +1344,7 @@ Attachment *ICalFormatImpl::readAttachment( icalproperty *attach )
   case ICAL_ATTACH_VALUE:
   {
     icalattach *a = icalproperty_get_attach( attach );
-    if ( icalattach_get_is_url( a ) == 0 ) {
+    if ( !icalattach_get_is_url( a ) ) {
       p = (const char *)icalattach_get_data( a );
       if ( p ) {
         attachment = new Attachment( p );
@@ -1902,9 +1902,8 @@ void ICalFormatImpl::readAlarm( icalcomponent *alarm,
       ialarm->setRepeatCount( icalproperty_get_repeat( p ) );
       break;
 
-      // Only in DISPLAY and EMAIL and PROCEDURE alarms
     case ICAL_DESCRIPTION_PROPERTY:
-    {
+    { // Only in DISPLAY and EMAIL and PROCEDURE alarms
       QString description = QString::fromUtf8( icalproperty_get_description( p ) );
       switch ( action ) {
       case ICAL_ACTION_DISPLAY:

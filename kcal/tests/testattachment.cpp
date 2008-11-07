@@ -50,4 +50,12 @@ void AttachmentTest::testValidity()
 
   Attachment attachment3( attachment2 );
   QCOMPARE( attachment3.size(), attachment2.size() );
+
+  const char *fred = "jkajskldfasjfklasjfaskfaskfasfkasfjdasfkasjf";
+  Attachment attachment4( fred, "image/nonsense" );
+  QCOMPARE( fred, attachment4.data() );
+  QVERIFY( attachment4.isBinary() );
+  const char *ethel = "a9fafafjafkasmfasfasffksjklfjau";
+  attachment4.setData( ethel );
+  QCOMPARE( ethel, attachment4.data() );
 }
