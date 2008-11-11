@@ -59,8 +59,8 @@ KTNEFPropertySet::~KTNEFPropertySet()
 void KTNEFPropertySet::addProperty( int key, int type, const QVariant &value,
                                     const QVariant &name, bool overwrite )
 {
-  QMap<int,KTNEFProperty*>::ConstIterator it = d->properties_.find( key );
-  if ( it != d->properties_.end() ) {
+  QMap<int,KTNEFProperty*>::ConstIterator it = d->properties_.constFind( key );
+  if ( it != d->properties_.constEnd() ) {
     if ( overwrite ) {
       delete ( *it );
     } else {
@@ -104,8 +104,8 @@ QString KTNEFPropertySet::findNamedProp( const QString &name,
         if ( value.type() == QVariant::List ) {
           QList<QVariant> l = value.toList();
           s = "";
-          for ( QList<QVariant>::ConstIterator lit = l.begin();
-                lit != l.end();
+          for ( QList<QVariant>::ConstIterator lit = l.constBegin();
+                lit != l.constEnd();
                 ++lit ) {
             if ( !s.isEmpty() ) {
               s += ',';
@@ -134,8 +134,8 @@ const QMap<int,KTNEFProperty*>& KTNEFPropertySet::properties() const
 
 QVariant KTNEFPropertySet::property( int key ) const
 {
-  QMap<int,KTNEFProperty*>::ConstIterator it = d->properties_.find( key );
-  if ( it == d->properties_.end() ) {
+  QMap<int,KTNEFProperty*>::ConstIterator it = d->properties_.constFind( key );
+  if ( it == d->properties_.constEnd() ) {
     return QVariant();
   } else {
     return ( *it )->value();
@@ -145,12 +145,12 @@ QVariant KTNEFPropertySet::property( int key ) const
 void KTNEFPropertySet::clear( bool deleteAll )
 {
   if ( deleteAll ) {
-    for ( QMap<int,KTNEFProperty*>::ConstIterator it=d->properties_.begin();
-          it != d->properties_.end();
+    for ( QMap<int,KTNEFProperty*>::ConstIterator it=d->properties_.constBegin();
+          it != d->properties_.constEnd();
           ++it )
       delete ( *it );
-    for ( QMap<int,KTNEFProperty*>::ConstIterator it=d->attributes_.begin();
-          it != d->attributes_.end();
+    for ( QMap<int,KTNEFProperty*>::ConstIterator it=d->attributes_.constBegin();
+          it != d->attributes_.constEnd();
           ++it )
       delete ( *it );
   }
@@ -161,8 +161,8 @@ void KTNEFPropertySet::clear( bool deleteAll )
 void KTNEFPropertySet::addAttribute( int key, int type, const QVariant &value,
                                      bool overwrite )
 {
-  QMap<int,KTNEFProperty*>::ConstIterator it = d->attributes_.find( key );
-  if ( it != d->attributes_.end() ) {
+  QMap<int,KTNEFProperty*>::ConstIterator it = d->attributes_.constFind( key );
+  if ( it != d->attributes_.constEnd() ) {
     if ( overwrite ) {
       delete ( *it );
     } else {
@@ -185,8 +185,8 @@ const QMap<int,KTNEFProperty*>& KTNEFPropertySet::attributes() const
 
 QVariant KTNEFPropertySet::attribute( int key ) const
 {
-  QMap<int,KTNEFProperty*>::ConstIterator it = d->attributes_.find( key );
-  if ( it == d->attributes_.end() ) {
+  QMap<int,KTNEFProperty*>::ConstIterator it = d->attributes_.constFind( key );
+  if ( it == d->attributes_.constEnd() ) {
     return QVariant();
   } else {
     return ( *it )->value();

@@ -82,8 +82,8 @@ const QList<KTNEFAttach *> &KTNEFMessage::attachmentList() const
 
 KTNEFAttach *KTNEFMessage::attachment( const QString &filename ) const
 {
-  QList<KTNEFAttach *>::const_iterator it = d->attachments_.begin();
-  for ( ; it != d->attachments_.end(); ++it ) {
+  QList<KTNEFAttach *>::const_iterator it = d->attachments_.constBegin();
+  for ( ; it != d->attachments_.constEnd(); ++it ) {
     if ( (*it)->name() == filename ) {
       return *it;
     }

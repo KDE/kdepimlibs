@@ -213,8 +213,8 @@ QString mapiTagString( int key )
         i18n( MAPI_TagStrings[ i ].str );
     }
   }
-  QMap<int,QString>::ConstIterator it = MAPI_TagMap.find( key );
-  if ( it == MAPI_TagMap.end() ) {
+  QMap<int,QString>::ConstIterator it = MAPI_TagMap.constFind( key );
+  if ( it == MAPI_TagMap.constEnd() ) {
     return QString().sprintf( "0x%04X", key );
   } else {
     return QString().sprintf( "0x%04X ________: ", key ) + *it;
@@ -229,8 +229,8 @@ QString mapiNamedTagString( int key, int tag )
         i18n( MAPI_NamedTagStrings[ i ].str );
     }
   }
-  QMap<int,QString>::ConstIterator it = MAPI_NamedTagMap.find( key );
-  if ( it == MAPI_NamedTagMap.end() ) {
+  QMap<int,QString>::ConstIterator it = MAPI_NamedTagMap.constFind( key );
+  if ( it == MAPI_NamedTagMap.constEnd() ) {
     if ( tag >= 0 ) {
       return QString().sprintf( "0x%04X [0x%04X]: ", tag, key ) + *it;
     } else {

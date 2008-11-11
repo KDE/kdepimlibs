@@ -266,7 +266,7 @@ void CalendarResources::load()
   }
 
   QList<ResourceCalendar *>::ConstIterator it2;
-  for ( it2 = failed.begin(); it2 != failed.end(); ++it2 ) {
+  for ( it2 = failed.constBegin(); it2 != failed.constEnd(); ++it2 ) {
     (*it2)->setActive( false );
     emit signalResourceModified( *it2 );
   }

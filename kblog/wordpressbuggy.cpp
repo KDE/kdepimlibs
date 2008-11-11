@@ -87,8 +87,8 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
   if ( !catList.empty() ){
     xmlMarkup += "<name>categories</name>";
     xmlMarkup += "<value><array>";
-    QList<QString>::ConstIterator it = catList.begin();
-    QList<QString>::ConstIterator end = catList.end();
+    QList<QString>::ConstIterator it = catList.constBegin();
+    QList<QString>::ConstIterator end = catList.constEnd();
     for ( ; it != end; ++it ){
       xmlMarkup += "<data><string><![CDATA[" + ( *it ) + "]]></string></data>";
     }
@@ -178,8 +178,8 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
   if ( !catList.empty() ){
     xmlMarkup += "<name>categories</name>";
     xmlMarkup += "<value><array>";
-    QList<QString>::ConstIterator it = catList.begin();
-    QList<QString>::ConstIterator end = catList.end();
+    QList<QString>::ConstIterator it = catList.constBegin();
+    QList<QString>::ConstIterator end = catList.constEnd();
     for ( ; it != end; ++it ){
       xmlMarkup += "<data><string><![CDATA[" + ( *it ) + "]]></string></data>";
     }

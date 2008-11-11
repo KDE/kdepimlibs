@@ -483,8 +483,8 @@ bool KTNEFParser::ParserPrivate::extractAttachmentTo( KTNEFAttach *att,
 bool KTNEFParser::extractAll()
 {
   QList<KTNEFAttach*> l = d->message_->attachmentList();
-  QList<KTNEFAttach*>::const_iterator it = l.begin();
-  for ( ; it != l.end(); ++it ) {
+  QList<KTNEFAttach*>::const_iterator it = l.constBegin();
+  for ( ; it != l.constEnd(); ++it ) {
     if ( !d->extractAttachmentTo( *it, d->defaultdir_ ) ) {
       return false;
     }
@@ -952,7 +952,7 @@ bool KTNEFParser::ParserPrivate::readMAPIProperties( QMap<int,KTNEFProperty*> & 
     break;
     }
     // do not remove potential existing similar entry
-    if ( ( it = props.find( key ) ) == props.end() ) {
+    if ( ( it = props.constFind( key ) ) == props.constEnd() ) {
       p = new KTNEFProperty( key, ( mapi.type & 0x0FFF ),
                              mapi.value, mapi.name.value );
       props[ p->key() ] = p;

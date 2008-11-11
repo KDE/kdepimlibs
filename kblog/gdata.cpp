@@ -563,8 +563,8 @@ void GDataPrivate::slotListBlogs( Syndication::Loader *loader,
   QList<QMap<QString,QString> > blogsList;
 
   QList<Syndication::ItemPtr> items = feed->items();
-  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
-  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.constBegin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.constEnd();
   for ( ; it != end; ++it ) {
     QRegExp rx( "blog-(\\d+)" );
     QMap<QString,QString> blogInfo;
@@ -605,8 +605,8 @@ void GDataPrivate::slotListComments( Syndication::Loader *loader,
   QList<KBlog::BlogComment> commentList;
 
   QList<Syndication::ItemPtr> items = feed->items();
-  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
-  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.constBegin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.constEnd();
   for ( ; it != end; ++it ) {
     BlogComment comment;
     QRegExp rx( "post-(\\d+)" );
@@ -651,8 +651,8 @@ void GDataPrivate::slotListAllComments( Syndication::Loader *loader,
   QList<KBlog::BlogComment> commentList;
 
   QList<Syndication::ItemPtr> items = feed->items();
-  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
-  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.constBegin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.constEnd();
   for ( ; it != end; ++it ) {
     BlogComment comment;
     QRegExp rx( "post-(\\d+)" );
@@ -703,8 +703,8 @@ void GDataPrivate::slotListRecentPosts( Syndication::Loader *loader,
   QList<KBlog::BlogPost> postList;
 
   QList<Syndication::ItemPtr> items = feed->items();
-  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
-  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.constBegin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.constEnd();
   for ( ; it != end; ++it ) {
     BlogPost post;
     QRegExp rx( "post-(\\d+)" );
@@ -756,8 +756,8 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
     return;
   }
   QList<Syndication::ItemPtr> items = feed->items();
-  QList<Syndication::ItemPtr>::ConstIterator it = items.begin();
-  QList<Syndication::ItemPtr>::ConstIterator end = items.end();
+  QList<Syndication::ItemPtr>::ConstIterator it = items.constBegin();
+  QList<Syndication::ItemPtr>::ConstIterator end = items.constEnd();
   for ( ; it != end; ++it ) {
     QRegExp rx( "post-(\\d+)" );
     if ( rx.indexIn( ( *it )->id() ) != -1 && rx.cap(1) == post->postId() ){

@@ -252,10 +252,10 @@ class QtopiaParser : public QXmlDefaultHandler
 
     QStringList lookupCategories( const QString &categoryList )
     {
-      QStringList categoryIds = categoryList.split( ';' );
+      const QStringList categoryIds = categoryList.split( ';' );
       QStringList categories;
       QStringList::ConstIterator it;
-      for ( it = categoryIds.begin(); it != categoryIds.end(); ++it ) {
+      for ( it = categoryIds.constBegin(); it != categoryIds.constEnd(); ++it ) {
         categories.append( category( *it ) );
       }
       return categories;
@@ -266,8 +266,8 @@ class QtopiaParser : public QXmlDefaultHandler
 
     static QString category( const QString &id )
     {
-      QMap<QString,QString>::ConstIterator it = mCategoriesMap.find( id );
-      if ( it == mCategoriesMap.end() ) {
+      QMap<QString,QString>::ConstIterator it = mCategoriesMap.constFind( id );
+      if ( it == mCategoriesMap.constEnd() ) {
         return id;
       } else {
         return *it;

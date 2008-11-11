@@ -541,7 +541,7 @@ void ResourceCached::cleanUpEventCache( const Event::List &eventList )
 
   Event::List list = calendar.events();
   Event::List::ConstIterator cacheIt, it;
-  for ( cacheIt = list.begin(); cacheIt != list.end(); ++cacheIt ) {
+  for ( cacheIt = list.constBegin(); cacheIt != list.constEnd(); ++cacheIt ) {
     bool found = false;
     for ( it = eventList.begin(); it != eventList.end(); ++it ) {
       if ( (*it)->uid() == (*cacheIt)->uid() ) {
@@ -574,10 +574,10 @@ void ResourceCached::cleanUpTodoCache( const Todo::List &todoList )
 
   Todo::List list = calendar.todos();
   Todo::List::ConstIterator cacheIt, it;
-  for ( cacheIt = list.begin(); cacheIt != list.end(); ++cacheIt ) {
+  for ( cacheIt = list.constBegin(); cacheIt != list.constEnd(); ++cacheIt ) {
 
     bool found = false;
-    for ( it = todoList.begin(); it != todoList.end(); ++it ) {
+    for ( it = todoList.constBegin(); it != todoList.constEnd(); ++it ) {
       if ( (*it)->uid() == (*cacheIt)->uid() ) {
         found = true;
       }
@@ -669,8 +669,8 @@ void ResourceCached::calendarIncidenceAdded( Incidence *i )
   kDebug() << i->uid();
 
   QMap<Incidence *,bool>::ConstIterator it;
-  it = d->mAddedIncidences.find( i );
-  if ( it == d->mAddedIncidences.end() ) {
+  it = d->mAddedIncidences.constFind( i );
+  if ( it == d->mAddedIncidences.constEnd() ) {
     d->mAddedIncidences.insert( i, true );
   }
 
@@ -682,9 +682,9 @@ void ResourceCached::calendarIncidenceChanged( Incidence *i )
   kDebug() << i->uid();
 
   QMap<Incidence *,bool>::ConstIterator it;
-  it = d->mChangedIncidences.find( i );
+  it = d->mChangedIncidences.constFind( i );
   // FIXME: If you modify an added incidence, there's no need to add it to d->mChangedIncidences!
-  if ( it == d->mChangedIncidences.end() ) {
+  if ( it == d->mChangedIncidences.constEnd() ) {
     d->mChangedIncidences.insert( i, true );
   }
 
@@ -696,8 +696,8 @@ void ResourceCached::calendarIncidenceDeleted( Incidence *i )
   kDebug() << i->uid();
 
   QMap<Incidence *,bool>::ConstIterator it;
-  it = d->mDeletedIncidences.find( i );
-  if ( it == d->mDeletedIncidences.end() ) {
+  it = d->mDeletedIncidences.constFind( i );
+  if ( it == d->mDeletedIncidences.constEnd() ) {
     d->mDeletedIncidences.insert( i, true );
   }
 
@@ -708,7 +708,7 @@ Incidence::List ResourceCached::addedIncidences() const
 {
   Incidence::List added;
   QMap<Incidence *,bool>::ConstIterator it;
-  for ( it = d->mAddedIncidences.begin(); it != d->mAddedIncidences.end(); ++it ) {
+  for ( it = d->mAddedIncidences.constBegin(); it != d->mAddedIncidences.constEnd(); ++it ) {
     added.append( it.key() );
   }
   return added;
@@ -718,7 +718,7 @@ Incidence::List ResourceCached::changedIncidences() const
 {
   Incidence::List changed;
   QMap<Incidence *,bool>::ConstIterator it;
-  for ( it = d->mChangedIncidences.begin(); it != d->mChangedIncidences.end(); ++it ) {
+  for ( it = d->mChangedIncidences.constBegin(); it != d->mChangedIncidences.constEnd(); ++it ) {
     changed.append( it.key() );
   }
   return changed;
@@ -728,7 +728,7 @@ Incidence::List ResourceCached::deletedIncidences() const
 {
   Incidence::List deleted;
   QMap<Incidence *,bool>::ConstIterator it;
-  for ( it = d->mDeletedIncidences.begin(); it != d->mDeletedIncidences.end(); ++it ) {
+  for ( it = d->mDeletedIncidences.constBegin(); it != d->mDeletedIncidences.constEnd(); ++it ) {
     deleted.append( it.key() );
   }
   return deleted;
@@ -738,13 +738,13 @@ Incidence::List ResourceCached::allChanges() const
 {
   Incidence::List changes;
   QMap<Incidence *,bool>::ConstIterator it;
-  for ( it = d->mAddedIncidences.begin(); it != d->mAddedIncidences.end(); ++it ) {
+  for ( it = d->mAddedIncidences.constBegin(); it != d->mAddedIncidences.constEnd(); ++it ) {
     changes.append( it.key() );
   }
-  for ( it = d->mChangedIncidences.begin(); it != d->mChangedIncidences.end(); ++it ) {
+  for ( it = d->mChangedIncidences.constBegin(); it != d->mChangedIncidences.constEnd(); ++it ) {
     changes.append( it.key() );
   }
-  for ( it = d->mDeletedIncidences.begin(); it != d->mDeletedIncidences.end(); ++it ) {
+  for ( it = d->mDeletedIncidences.constBegin(); it != d->mDeletedIncidences.constEnd(); ++it ) {
     changes.append( it.key() );
   }
   return changes;

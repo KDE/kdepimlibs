@@ -223,7 +223,7 @@ void HtmlExport::createMonthView( QTextStream *ts )
         if ( events.count() ) {
           *ts << "<table>";
           Event::List::ConstIterator it;
-          for ( it = events.begin(); it != events.end(); ++it ) {
+          for ( it = events.constBegin(); it != events.constEnd(); ++it ) {
             if ( checkSecrecy( *it ) ) {
               createEvent( ts, *it, start, false );
             }
@@ -290,7 +290,7 @@ void HtmlExport::createEventList( QTextStream *ts )
           << "</i></td></tr>\n";
 
       Event::List::ConstIterator it;
-      for ( it = events.begin(); it != events.end(); ++it ) {
+      for ( it = events.constBegin(); it != events.constEnd(); ++it ) {
         if ( checkSecrecy( *it ) ) {
           createEvent( ts, *it, dt );
         }
@@ -376,13 +376,13 @@ void HtmlExport::createTodoList ( QTextStream *ts )
   Todo::List todoList;
   Todo::List::ConstIterator it;
   for ( int i = 1; i <= 9; ++i ) {
-    for ( it = rawTodoList.begin(); it != rawTodoList.end(); ++it ) {
+    for ( it = rawTodoList.constBegin(); it != rawTodoList.constEnd(); ++it ) {
       if ( (*it)->priority() == i && checkSecrecy( *it ) ) {
         todoList.append( *it );
       }
     }
   }
-  for ( it = rawTodoList.begin(); it != rawTodoList.end(); ++it ) {
+  for ( it = rawTodoList.constBegin(); it != rawTodoList.constEnd(); ++it ) {
     if ( (*it)->priority() == 0 && checkSecrecy( *it ) ) {
       todoList.append( *it );
     }
@@ -413,14 +413,14 @@ void HtmlExport::createTodoList ( QTextStream *ts )
   *ts << "  </tr>\n";
 
   // Create top-level list.
-  for ( it = todoList.begin(); it != todoList.end(); ++it ) {
+  for ( it = todoList.constBegin(); it != todoList.constEnd(); ++it ) {
     if ( !(*it)->relatedTo() ) {
       createTodo( ts, *it );
     }
   }
 
   // Create sub-level lists
-  for ( it = todoList.begin(); it != todoList.end(); ++it ) {
+  for ( it = todoList.constBegin(); it != todoList.constEnd(); ++it ) {
     Incidence::List relations = (*it)->relations();
     if ( relations.count() ) {
       // Generate sub-to-do list
@@ -439,7 +439,7 @@ void HtmlExport::createTodoList ( QTextStream *ts )
       // replaced by a real sorting algorithm.
       for ( int i = 1; i <= 9; ++i ) {
         Incidence::List::ConstIterator it2;
-        for ( it2 = relations.begin(); it2 != relations.end(); ++it2 ) {
+        for ( it2 = relations.constBegin(); it2 != relations.constEnd(); ++it2 ) {
           Todo *ev3 = dynamic_cast<Todo *>( *it2 );
           if ( ev3 && ev3->priority() == i ) {
             sortedList.append( ev3 );
@@ -447,7 +447,7 @@ void HtmlExport::createTodoList ( QTextStream *ts )
         }
       }
       Incidence::List::ConstIterator it2;
-      for ( it2 = relations.begin(); it2 != relations.end(); ++it2 ) {
+      for ( it2 = relations.constBegin(); it2 != relations.constEnd(); ++it2 ) {
         Todo *ev3 = dynamic_cast<Todo *>( *it2 );
         if ( ev3 && ev3->priority() == 0 ) {
           sortedList.append( ev3 );
@@ -455,7 +455,7 @@ void HtmlExport::createTodoList ( QTextStream *ts )
       }
 
       Todo::List::ConstIterator it3;
-      for ( it3 = sortedList.begin(); it3 != sortedList.end(); ++it3 ) {
+      for ( it3 = sortedList.constBegin(); it3 != sortedList.constEnd(); ++it3 ) {
         createTodo( ts, *it3 );
       }
     }
@@ -626,7 +626,7 @@ void HtmlExport::formatAttendees( QTextStream *ts, Incidence *incidence )
 #endif
     *ts << "</em><br />";
     Attendee::List::ConstIterator it;
-    for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+    for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
       Attendee *a = *it;
       if ( !a->email().isEmpty() ) {
         *ts << "<a href=\"mailto:" << a->email();
