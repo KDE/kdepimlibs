@@ -132,8 +132,8 @@ void CustomProperties::removeNonKDECustomProperty( const QByteArray &name )
 
 QString CustomProperties::nonKDECustomProperty( const QByteArray &name ) const
 {
-  QMap<QByteArray, QString>::ConstIterator it = d->mProperties.find( name );
-  if ( it == d->mProperties.end() ) {
+  QMap<QByteArray, QString>::ConstIterator it = d->mProperties.constFind( name );
+  if ( it == d->mProperties.constEnd() ) {
     return QString();
   }
   return it.value();

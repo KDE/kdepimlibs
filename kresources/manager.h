@@ -370,9 +370,9 @@ class Manager : private ManagerNotifier
     QStringList resourceTypeDescriptions() const
     {
       QStringList typeDescs;
-      QStringList types = mFactory->typeNames();
+      const QStringList types = mFactory->typeNames();
 
-      for ( QStringList::ConstIterator it = types.begin(); it != types.end(); ++it ) {
+      for ( QStringList::ConstIterator it = types.constBegin(); it != types.constEnd(); ++it ) {
         QString desc = mFactory->typeName( *it );
         if ( !mFactory->typeDescription( *it ).isEmpty() ) {
             desc += QLatin1String( " (" ) + mFactory->typeDescription( *it ) + QLatin1Char( ')' );

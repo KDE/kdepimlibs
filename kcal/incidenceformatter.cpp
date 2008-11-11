@@ -185,7 +185,7 @@ static QString eventViewerFormatAttendees( Incidence *event )
     tmpStr += eventViewerAddTag( "h4", i18n( "Attendees" ) );
     tmpStr += "<ul>";
     Attendee::List::ConstIterator it;
-    for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+    for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
       Attendee *a = *it;
       tmpStr += linkPerson( a->email(), a->name(), a->uid(), iconPath );
       if ( !a->delegator().isEmpty() ) {
@@ -206,7 +206,7 @@ static QString eventViewerFormatAttachments( Incidence *i )
   Attachment::List as = i->attachments();
   if ( as.count() > 0 ) {
     Attachment::List::ConstIterator it;
-    for ( it = as.begin(); it != as.end(); ++it ) {
+    for ( it = as.constBegin(); it != as.constEnd(); ++it ) {
       if ( (*it)->isUri() ) {
         tmpStr += eventViewerAddLink( (*it)->uri(), (*it)->label() );
         tmpStr += "<br>";

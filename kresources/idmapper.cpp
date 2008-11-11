@@ -175,9 +175,9 @@ void IdMapper::removeRemoteId( const QString &remoteId )
 QString IdMapper::remoteId( const QString &localId ) const
 {
   QMap<QString, QVariant>::ConstIterator it;
-  it = d->idMap.find( localId );
+  it = d->idMap.constFind( localId );
 
-  if ( it != d->idMap.end() ) {
+  if ( it != d->idMap.constEnd() ) {
     return it.value().toString();
   } else {
     return QString();
@@ -187,7 +187,7 @@ QString IdMapper::remoteId( const QString &localId ) const
 QString IdMapper::localId( const QString &remoteId ) const
 {
   QMap<QString, QVariant>::ConstIterator it;
-  for ( it = d->idMap.begin(); it != d->idMap.end(); ++it ) {
+  for ( it = d->idMap.constBegin(); it != d->idMap.constEnd(); ++it ) {
     if ( it.value().toString() == remoteId ) {
       return it.key();
     }
@@ -201,7 +201,7 @@ QString IdMapper::asString() const
   QString content;
 
   QMap<QString, QVariant>::ConstIterator it;
-  for ( it = d->idMap.begin(); it != d->idMap.end(); ++it ) {
+  for ( it = d->idMap.constBegin(); it != d->idMap.constEnd(); ++it ) {
     QString fp;
     if ( d->fingerprintMap.contains( it.key() ) ) {
       fp = d->fingerprintMap[ it.key() ];
@@ -230,7 +230,7 @@ QMap<QString, QString> IdMapper::remoteIdMap() const
 {
   QMap<QString, QString> reverseMap;
   QMap<QString, QVariant>::ConstIterator it;
-  for ( it = d->idMap.begin(); it != d->idMap.end(); ++it ) {
+  for ( it = d->idMap.constBegin(); it != d->idMap.constEnd(); ++it ) {
     reverseMap.insert( it.value().toString(), it.key() );
   }
   return reverseMap;

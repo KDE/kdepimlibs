@@ -267,8 +267,8 @@ QString Query::Private::marshal( const QVariant &arg ) const
       {
         QString markup = "<value><struct>\r\n";
         QMap<QString, QVariant> map = arg.toMap();
-        QMap<QString, QVariant>::ConstIterator it = map.begin();
-        QMap<QString, QVariant>::ConstIterator end = map.end();
+        QMap<QString, QVariant>::ConstIterator it = map.constBegin();
+        QMap<QString, QVariant>::ConstIterator end = map.constEnd();
         for ( ; it != end; ++it ) {
           markup += "<member>\r\n";
           markup += "<name>" + it.key() + "</name>\r\n";

@@ -114,7 +114,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start, const KDateTime 
 
   // Loops through every event in the calendar
   Event::List::ConstIterator it;
-  for ( it = eventList.begin(); it != eventList.end(); ++it ) {
+  for ( it = eventList.constBegin(); it != eventList.constEnd(); ++it ) {
     Event *event = *it;
 
     // The code below can not handle all-dayevents. Fixing this resulted
@@ -287,7 +287,7 @@ void FreeBusy::merge( FreeBusy *freeBusy )
 
   Period::List periods = freeBusy->busyPeriods();
   Period::List::ConstIterator it;
-  for ( it = periods.begin(); it != periods.end(); ++it ) {
+  for ( it = periods.constBegin(); it != periods.constEnd(); ++it ) {
     addPeriod( (*it).start(), (*it).end() );
   }
 }

@@ -128,7 +128,7 @@ void ManagerImpl::readConfig( KConfig *cfg )
 
   const QString standardKey = group.readEntry( "Standard" );
 
-  for ( QStringList::const_iterator it = keys.begin(); it != keys.end(); ++it ) {
+  for ( QStringList::const_iterator it = keys.constBegin(); it != keys.constEnd(); ++it ) {
     readResourceConfig( *it, false );
   }
 
@@ -312,7 +312,7 @@ QStringList ManagerImpl::resourceNames()
   QStringList result;
 
   Resource::List::ConstIterator it;
-  for ( it = d->mResources.begin(); it != d->mResources.end(); ++it ) {
+  for ( it = d->mResources.constBegin(); it != d->mResources.constEnd(); ++it ) {
     result.append( (*it)->resourceName() );
   }
   return result;
@@ -460,7 +460,7 @@ void ManagerImpl::removeResource( Resource *resource )
 Resource *ManagerImpl::getResource( const QString &identifier )
 {
   Resource::List::ConstIterator it;
-  for ( it = d->mResources.begin(); it != d->mResources.end(); ++it ) {
+  for ( it = d->mResources.constBegin(); it != d->mResources.constEnd(); ++it ) {
     if ( (*it)->identifier() == identifier ) {
       return *it;
     }

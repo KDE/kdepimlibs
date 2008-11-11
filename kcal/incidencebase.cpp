@@ -142,11 +142,11 @@ bool IncidenceBase::operator==( const IncidenceBase &i2 ) const
 
   Attendee::List al1 = attendees();
   Attendee::List al2 = i2.attendees();
-  Attendee::List::ConstIterator a1 = al1.begin();
-  Attendee::List::ConstIterator a2 = al2.begin();
+  Attendee::List::ConstIterator a1 = al1.constBegin();
+  Attendee::List::ConstIterator a2 = al2.constBegin();
   //TODO Does the order of attendees in the list really matter?
   //Please delete this comment if you know it's ok, kthx
-  for ( ; a1 != al1.end() && a2 != al2.end(); ++a1, ++a2 ) {
+  for ( ; a1 != al1.constEnd() && a2 != al2.constEnd(); ++a1, ++a2 ) {
     if ( !( **a1 == **a2 ) ) {
       return false;
     }
@@ -390,7 +390,7 @@ void IncidenceBase::clearAttendees()
 Attendee *IncidenceBase::attendeeByMail( const QString &email ) const
 {
   Attendee::List::ConstIterator it;
-  for ( it = d->mAttendees.begin(); it != d->mAttendees.end(); ++it ) {
+  for ( it = d->mAttendees.constBegin(); it != d->mAttendees.constEnd(); ++it ) {
     if ( (*it)->email() == email ) {
       return *it;
     }
@@ -408,7 +408,7 @@ Attendee *IncidenceBase::attendeeByMails( const QStringList &emails,
   }
 
   Attendee::List::ConstIterator itA;
-  for ( itA = d->mAttendees.begin(); itA != d->mAttendees.end(); ++itA ) {
+  for ( itA = d->mAttendees.constBegin(); itA != d->mAttendees.constEnd(); ++itA ) {
     for ( QStringList::const_iterator it = mails.constBegin(); it != mails.constEnd(); ++it ) {
       if ( (*itA)->email() == (*it) ) {
         return *itA;
@@ -422,7 +422,7 @@ Attendee *IncidenceBase::attendeeByMails( const QStringList &emails,
 Attendee *IncidenceBase::attendeeByUid( const QString &uid ) const
 {
   Attendee::List::ConstIterator it;
-  for ( it = d->mAttendees.begin(); it != d->mAttendees.end(); ++it ) {
+  for ( it = d->mAttendees.constBegin(); it != d->mAttendees.constEnd(); ++it ) {
     if ( (*it)->uid() == uid ) {
       return *it;
     }

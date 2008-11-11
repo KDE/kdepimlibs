@@ -45,7 +45,7 @@ namespace KioSMTP {
 
     QCStringList l = ehlo.lines();
 
-    for ( QCStringList::const_iterator it = ++l.begin() ; it != l.end() ; ++it )
+    for ( QCStringList::const_iterator it = ++l.constBegin() ; it != l.constEnd() ; ++it )
       c.add( *it );
 
     return c;

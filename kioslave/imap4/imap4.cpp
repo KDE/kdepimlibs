@@ -536,7 +536,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
           UDSEntry entry;
           imapCache fake;
 
-          for (QStringList::ConstIterator it = list.begin(); it != list.end();
+          for (QStringList::ConstIterator it = list.constBegin(); it != list.constEnd();
                ++it)
           {
             fake.setUid((*it).toULong());
@@ -2074,8 +2074,8 @@ bool IMAP4Protocol::makeLogin ()
         {
           kDebug(7116) <<"TLS mode has been enabled.";
           imapCommand *cmd2 = doCommand (new imapCommand ("CAPABILITY", ""));
-          for (QStringList::const_iterator it = imapCapabilities.begin ();
-                                     it != imapCapabilities.end (); ++it)
+          for (QStringList::const_iterator it = imapCapabilities.constBegin ();
+                                     it != imapCapabilities.constEnd (); ++it)
           {
             kDebug(7116) <<"'" << (*it) <<"'";
           }

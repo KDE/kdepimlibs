@@ -256,8 +256,8 @@ void ConfigPage::load()
   }
 
   // Rest of the kde-3.3 compat code
-  QStringList::ConstIterator cfit = compatFamilyNames.begin();
-  for ( ; cfit != compatFamilyNames.end(); ++cfit ) {
+  QStringList::ConstIterator cfit = compatFamilyNames.constBegin();
+  for ( ; cfit != compatFamilyNames.constEnd(); ++cfit ) {
     d->mFamilyMap.append( *cfit );
     familyDisplayNames.append( *cfit );
     d->loadManager( *cfit, this );

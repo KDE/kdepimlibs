@@ -1846,8 +1846,8 @@ imapParser::parseURL (const KUrl & _url, QString & _box, QString & _section,
     _box.truncate( paramStart ); // strip parameters
   }
   // extract parameters
-  for (QStringList::ConstIterator it (parameters.begin ());
-       it != parameters.end (); ++it)
+  for (QStringList::ConstIterator it (parameters.constBegin ());
+       it != parameters.constEnd (); ++it)
   {
     QString temp = (*it);
 
@@ -2012,8 +2012,8 @@ bool imapParser::hasCapability (const QString & cap)
 {
   QString c = cap.toLower();
 //  kDebug(7116) <<"imapParser::hasCapability - Looking for '" << cap <<"'";
-  for (QStringList::ConstIterator it = imapCapabilities.begin ();
-       it != imapCapabilities.end (); ++it)
+  for (QStringList::ConstIterator it = imapCapabilities.constBegin ();
+       it != imapCapabilities.constEnd (); ++it)
   {
 //    kDebug(7116) <<"imapParser::hasCapability - Examining '" << (*it) <<"'";
     if ( !(kasciistricmp(c.toAscii(), (*it).toAscii())) )

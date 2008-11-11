@@ -124,7 +124,7 @@ bool VCalFormat::save( Calendar *calendar, const QString &fileName )
   // TODO STUFF
   Todo::List todoList = d->mCalendar->rawTodos();
   Todo::List::ConstIterator it;
-  for ( it = todoList.begin(); it != todoList.end(); ++it ) {
+  for ( it = todoList.constBegin(); it != todoList.constEnd(); ++it ) {
     vo = eventToVTodo( *it );
     addVObjectProp( vcal, vo );
   }
@@ -132,7 +132,7 @@ bool VCalFormat::save( Calendar *calendar, const QString &fileName )
   // EVENT STUFF
   Event::List events = d->mCalendar->rawEvents();
   Event::List::ConstIterator it2;
-  for ( it2 = events.begin(); it2 != events.end(); ++it2 ) {
+  for ( it2 = events.constBegin(); it2 != events.constEnd(); ++it2 ) {
     vo = eventToVEvent( *it2 );
     addVObjectProp( vcal, vo );
   }
@@ -430,7 +430,7 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
   // TODO: Put this functionality into Attendee class
   if ( anEvent->attendeeCount() > 0 ) {
     Attendee::List::ConstIterator it;
-    for ( it = anEvent->attendees().begin(); it != anEvent->attendees().end();
+    for ( it = anEvent->attendees().constBegin(); it != anEvent->attendees().constEnd();
           ++it ) {
       Attendee *curAttendee = *it;
       if ( !curAttendee->email().isEmpty() && !curAttendee->name().isEmpty() ) {
@@ -471,8 +471,8 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
       tmpStr.sprintf( "MP%i ", recur->frequency() );
       // write out all rMonthPos's
       QList<RecurrenceRule::WDayPos> tmpPositions = recur->monthPositions();
-      for ( QList<RecurrenceRule::WDayPos>::ConstIterator posit = tmpPositions.begin();
-            posit != tmpPositions.end(); ++posit ) {
+      for ( QList<RecurrenceRule::WDayPos>::ConstIterator posit = tmpPositions.constBegin();
+            posit != tmpPositions.constEnd(); ++posit ) {
         int pos = (*posit).pos();
         tmpStr2.sprintf( "%i", ( pos > 0 ) ? pos : (-pos) );
         if ( pos < 0 ) {
@@ -490,8 +490,8 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
       tmpStr.sprintf( "MD%i ", recur->frequency() );
       // write out all rMonthDays;
       const QList<int> tmpDays = recur->monthDays();
-      for ( QList<int>::ConstIterator tmpDay = tmpDays.begin();
-            tmpDay != tmpDays.end(); ++tmpDay ) {
+      for ( QList<int>::ConstIterator tmpDay = tmpDays.constBegin();
+            tmpDay != tmpDays.constEnd(); ++tmpDay ) {
         tmpStr2.sprintf( "%i ", *tmpDay );
         tmpStr += tmpStr2;
       }
@@ -503,8 +503,8 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
       // write out all the months;'
       // TODO: Any way to write out the day within the month???
       const QList<int> months = recur->yearMonths();
-      for ( QList<int>::ConstIterator mit = months.begin();
-            mit != months.end(); ++mit ) {
+      for ( QList<int>::ConstIterator mit = months.constBegin();
+            mit != months.constEnd(); ++mit ) {
         tmpStr2.sprintf( "%i ", *mit );
         tmpStr += tmpStr2;
       }
@@ -550,7 +550,7 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
   DateList::ConstIterator it;
   QString tmpStr2;
 
-  for ( it = dateList.begin(); it != dateList.end(); ++it ) {
+  for ( it = dateList.constBegin(); it != dateList.constEnd(); ++it ) {
     tmpStr = qDateToISO(*it) + ';';
     tmpStr2 += tmpStr;
   }
@@ -603,7 +603,7 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
   QStringList tmpStrList = anEvent->categories();
   tmpStr = "";
   QString catStr;
-  for ( QStringList::const_iterator it = tmpStrList.begin(); it != tmpStrList.end();
+  for ( QStringList::const_iterator it = tmpStrList.constBegin(); it != tmpStrList.constEnd();
         ++it ) {
     catStr = *it;
     if ( catStr[0] == ' ' ) {
@@ -625,7 +625,7 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
   // TODO: handle binary attachments!
   Attachment::List attachments = anEvent->attachments();
   Attachment::List::ConstIterator atIt;
-  for ( atIt = attachments.begin(); atIt != attachments.end(); ++atIt ) {
+  for ( atIt = attachments.constBegin(); atIt != attachments.constEnd(); ++atIt ) {
     addPropValue( vevent, VCAttachProp, (*atIt)->uri().toLocal8Bit() );
   }
 
@@ -638,7 +638,7 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
 
   // alarm stuff
   Alarm::List::ConstIterator it2;
-  for ( it2 = anEvent->alarms().begin(); it2 != anEvent->alarms().end(); ++it2 ) {
+  for ( it2 = anEvent->alarms().constBegin(); it2 != anEvent->alarms().constEnd(); ++it2 ) {
     Alarm *alarm = *it2;
     if ( alarm->enabled() ) {
       VObject *a = addProp( vevent, VCDAlarmProp );
@@ -1206,7 +1206,7 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
     s = fakeCString( vObjectUStringZValue( vo ) );
     QStringList exDates = QString::fromLocal8Bit( s ).split( ',' );
     QStringList::ConstIterator it;
-    for ( it = exDates.begin(); it != exDates.end(); ++it ) {
+    for ( it = exDates.constBegin(); it != exDates.constEnd(); ++it ) {
       anEvent->recurrence()->addExDate( ISOToQDate(*it) );
     }
     deleteStr( s );
@@ -1559,11 +1559,11 @@ void VCalFormat::populate( VObject *vcal )
 
   // Post-Process list of events with relations, put Event objects in relation
   Event::List::ConstIterator eIt;
-  for ( eIt = d->mEventsRelate.begin(); eIt != d->mEventsRelate.end(); ++eIt ) {
+  for ( eIt = d->mEventsRelate.constBegin(); eIt != d->mEventsRelate.constEnd(); ++eIt ) {
     (*eIt)->setRelatedTo( d->mCalendar->incidence( (*eIt)->relatedToUid() ) );
   }
   Todo::List::ConstIterator tIt;
-  for ( tIt = d->mTodosRelate.begin(); tIt != d->mTodosRelate.end(); ++tIt ) {
+  for ( tIt = d->mTodosRelate.constBegin(); tIt != d->mTodosRelate.constEnd(); ++tIt ) {
     (*tIt)->setRelatedTo( d->mCalendar->incidence( (*tIt)->relatedToUid() ) );
    }
 }

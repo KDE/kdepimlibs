@@ -487,7 +487,7 @@ void ICalFormatImpl::writeIncidence( icalcomponent *parent,
   // categories
   QStringList categories = incidence->categories();
   QStringList::const_iterator it;
-  for ( it = categories.begin(); it != categories.end(); ++it ) {
+  for ( it = categories.constBegin(); it != categories.constEnd(); ++it ) {
     icalcomponent_add_property(
       parent, icalproperty_new_categories( (*it).toUtf8() ) );
   }
@@ -500,41 +500,41 @@ void ICalFormatImpl::writeIncidence( icalcomponent *parent,
 
   RecurrenceRule::List rrules( incidence->recurrence()->rRules() );
   RecurrenceRule::List::ConstIterator rit;
-  for ( rit = rrules.begin(); rit != rrules.end(); ++rit ) {
+  for ( rit = rrules.constBegin(); rit != rrules.constEnd(); ++rit ) {
     icalcomponent_add_property(
       parent, icalproperty_new_rrule( writeRecurrenceRule( (*rit) ) ) );
   }
 
   RecurrenceRule::List exrules( incidence->recurrence()->exRules() );
   RecurrenceRule::List::ConstIterator exit;
-  for ( exit = exrules.begin(); exit != exrules.end(); ++exit ) {
+  for ( exit = exrules.constBegin(); exit != exrules.constEnd(); ++exit ) {
     icalcomponent_add_property(
       parent, icalproperty_new_rrule( writeRecurrenceRule( (*exit) ) ) );
   }
 
   DateList dateList = incidence->recurrence()->exDates();
   DateList::ConstIterator exIt;
-  for ( exIt = dateList.begin(); exIt != dateList.end(); ++exIt ) {
+  for ( exIt = dateList.constBegin(); exIt != dateList.constEnd(); ++exIt ) {
     icalcomponent_add_property(
       parent, icalproperty_new_exdate( writeICalDate(*exIt) ) );
   }
 
   DateTimeList dateTimeList = incidence->recurrence()->exDateTimes();
   DateTimeList::ConstIterator extIt;
-  for ( extIt = dateTimeList.begin(); extIt != dateTimeList.end(); ++extIt ) {
+  for ( extIt = dateTimeList.constBegin(); extIt != dateTimeList.constEnd(); ++extIt ) {
     icalcomponent_add_property(
       parent, writeICalDateTimeProperty( ICAL_EXDATE_PROPERTY, *extIt, tzlist, tzUsedList ) );
   }
 
   dateList = incidence->recurrence()->rDates();
   DateList::ConstIterator rdIt;
-  for ( rdIt = dateList.begin(); rdIt != dateList.end(); ++rdIt ) {
+  for ( rdIt = dateList.constBegin(); rdIt != dateList.constEnd(); ++rdIt ) {
     icalcomponent_add_property(
       parent, icalproperty_new_rdate( writeICalDatePeriod(*rdIt) ) );
   }
   dateTimeList = incidence->recurrence()->rDateTimes();
   DateTimeList::ConstIterator rdtIt;
-  for ( rdtIt = dateTimeList.begin(); rdtIt != dateTimeList.end(); ++rdtIt ) {
+  for ( rdtIt = dateTimeList.constBegin(); rdtIt != dateTimeList.constEnd(); ++rdtIt ) {
     icalcomponent_add_property(
       parent, writeICalDateTimeProperty( ICAL_RDATE_PROPERTY, *rdtIt, tzlist, tzUsedList ) );
   }
@@ -542,14 +542,14 @@ void ICalFormatImpl::writeIncidence( icalcomponent *parent,
   // attachments
   Attachment::List attachments = incidence->attachments();
   Attachment::List::ConstIterator atIt;
-  for ( atIt = attachments.begin(); atIt != attachments.end(); ++atIt ) {
+  for ( atIt = attachments.constBegin(); atIt != attachments.constEnd(); ++atIt ) {
     icalcomponent_add_property( parent, writeAttachment( *atIt ) );
   }
 
   // alarms
   Alarm::List::ConstIterator alarmIt;
-  for ( alarmIt = incidence->alarms().begin();
-        alarmIt != incidence->alarms().end(); ++alarmIt ) {
+  for ( alarmIt = incidence->alarms().constBegin();
+        alarmIt != incidence->alarms().constEnd(); ++alarmIt ) {
     if ( (*alarmIt)->enabled() ) {
       icalcomponent_add_component( parent, writeAlarm( *alarmIt ) );
     }
@@ -580,15 +580,15 @@ void ICalFormatImpl::Private::writeIncidenceBase( icalcomponent *parent,
   // attendees
   if ( incidenceBase->attendeeCount() > 0 ) {
     Attendee::List::ConstIterator it;
-    for ( it = incidenceBase->attendees().begin();
-          it != incidenceBase->attendees().end(); ++it ) {
+    for ( it = incidenceBase->attendees().constBegin();
+          it != incidenceBase->attendees().constEnd(); ++it ) {
       icalcomponent_add_property( parent, mImpl->writeAttendee( *it ) );
     }
   }
 
   // comments
   QStringList comments = incidenceBase->comments();
-  for ( QStringList::const_iterator it = comments.begin(); it != comments.end(); ++it ) {
+  for ( QStringList::const_iterator it = comments.constBegin(); it != comments.constEnd(); ++it ) {
     icalcomponent_add_property(
       parent, icalproperty_new_comment( (*it).toUtf8() ) );
   }
@@ -815,57 +815,57 @@ icalrecurrencetype ICalFormatImpl::writeRecurrenceRule( RecurrenceRule *recur )
   // Now write out the BY* parts:
   bys = recur->bySeconds();
   index = 0;
-  for ( it = bys.begin(); it != bys.end(); ++it ) {
+  for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
     r.by_second[index++] = *it;
   }
 
   bys = recur->byMinutes();
   index = 0;
-  for ( it = bys.begin(); it != bys.end(); ++it ) {
+  for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
     r.by_minute[index++] = *it;
   }
 
   bys = recur->byHours();
   index = 0;
-  for ( it = bys.begin(); it != bys.end(); ++it ) {
+  for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
     r.by_hour[index++] = *it;
   }
 
   bys = recur->byMonthDays();
   index = 0;
-  for ( it = bys.begin(); it != bys.end(); ++it ) {
+  for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
     r.by_month_day[index++] = icalrecurrencetype_day_position( (*it) * 8 );
   }
 
   bys = recur->byYearDays();
   index = 0;
-  for ( it = bys.begin(); it != bys.end(); ++it ) {
+  for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
     r.by_year_day[index++] = *it;
   }
 
   bys = recur->byWeekNumbers();
   index = 0;
-  for ( it = bys.begin(); it != bys.end(); ++it ) {
+  for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
     r.by_week_no[index++] = *it;
   }
 
   bys = recur->byMonths();
   index = 0;
-  for ( it = bys.begin(); it != bys.end(); ++it ) {
+  for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
     r.by_month[index++] = *it;
   }
 
   bys = recur->bySetPos();
   index = 0;
-  for ( it = bys.begin(); it != bys.end(); ++it ) {
+  for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
     r.by_set_pos[index++] = *it;
   }
 
   QList<RecurrenceRule::WDayPos> byd = recur->byDays();
   int day;
   index = 0;
-  for ( QList<RecurrenceRule::WDayPos>::ConstIterator dit = byd.begin();
-        dit != byd.end(); ++dit ) {
+  for ( QList<RecurrenceRule::WDayPos>::ConstIterator dit = byd.constBegin();
+        dit != byd.constEnd(); ++dit ) {
     day = (*dit).day() % 7 + 1;     // convert from Monday=1 to Sunday=1
     if ( (*dit).pos() < 0 ) {
       day += ( -(*dit).pos() ) * 8;
@@ -929,8 +929,8 @@ icalcomponent *ICalFormatImpl::writeAlarm( Alarm *alarm )
   {
     action = ICAL_ACTION_EMAIL;
     const QList<Person> addresses = alarm->mailAddresses();
-    for ( QList<Person>::ConstIterator ad = addresses.begin();
-          ad != addresses.end();  ++ad ) {
+    for ( QList<Person>::ConstIterator ad = addresses.constBegin();
+          ad != addresses.constEnd();  ++ad ) {
       icalproperty *p = icalproperty_new_attendee(
         "MAILTO:" + (*ad).email().toUtf8() );
       if ( !(*ad).name().isEmpty() ) {
@@ -945,8 +945,8 @@ icalcomponent *ICalFormatImpl::writeAlarm( Alarm *alarm )
       a, icalproperty_new_description( alarm->mailText().toUtf8() ) );
     QStringList attachments = alarm->mailAttachments();
     if ( attachments.count() > 0 ) {
-      for ( QStringList::const_iterator at = attachments.begin();
-            at != attachments.end();  ++at ) {
+      for ( QStringList::const_iterator at = attachments.constBegin();
+            at != attachments.constEnd();  ++at ) {
         attach = icalattach_new_from_url( QFile::encodeName( *at ).data() );
         icalcomponent_add_property( a, icalproperty_new_attach( attach ) );
       }
@@ -2409,11 +2409,11 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
 
   // Post-Process list of events with relations, put Event objects in relation
   Event::List::ConstIterator eIt;
-  for ( eIt = d->mEventsRelate.begin(); eIt != d->mEventsRelate.end(); ++eIt ) {
+  for ( eIt = d->mEventsRelate.constBegin(); eIt != d->mEventsRelate.constEnd(); ++eIt ) {
     (*eIt)->setRelatedTo( cal->incidence( (*eIt)->relatedToUid() ) );
   }
   Todo::List::ConstIterator tIt;
-  for ( tIt = d->mTodosRelate.begin(); tIt != d->mTodosRelate.end(); ++tIt ) {
+  for ( tIt = d->mTodosRelate.constBegin(); tIt != d->mTodosRelate.constEnd(); ++tIt ) {
     (*tIt)->setRelatedTo( cal->incidence( (*tIt)->relatedToUid() ) );
   }
 
