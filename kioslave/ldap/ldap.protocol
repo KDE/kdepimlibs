@@ -13,5 +13,5 @@ deleting=true
 #moving=true
 mimetype=text/plain
 determineMimetypeFromExtension=false
-DocPath=kioslave/ldap.html
+X-DocPath=kioslave/ldap/index.html
 Icon=office-address-book

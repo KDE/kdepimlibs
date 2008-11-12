@@ -12,5 +12,5 @@ source=true
 makedir=false
 linking=false
 moving=false
-DocPath=kioslave/smtp.html
+X-DocPath=kioslave/smtp/index.html
 Icon=mail-folder-outbox

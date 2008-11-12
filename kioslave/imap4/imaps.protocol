@@ -27,4 +27,4 @@ source=true
 Capabilities=Subscription,ACL,Quota
 
 Icon=mail-folder-inbox
-DocPath=kioslave/imaps.html
+X-DocPath=kioslave/imap/index.html
