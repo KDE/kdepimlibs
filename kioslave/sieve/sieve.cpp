@@ -891,7 +891,10 @@ bool kio_sieveProtocol::saslInteract( void *in, AuthInfo &ai )
 
 			if (m_sUser.isEmpty() || m_sPass.isEmpty()) {
 				if (!openPasswordDialog(ai)) {
-					error(ERR_ABORTED, i18n("No authentication details supplied."));
+				  // calling error() below is wrong for two reasons:
+				  // - ERR_ABORTED is too harsh
+				  // - higher layers already call error() and that can't happen twice.
+					//error(ERR_ABORTED, i18n("No authentication details supplied."));
 					return false;
 				}
 				m_sUser = ai.username;
