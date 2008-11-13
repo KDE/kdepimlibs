@@ -34,6 +34,8 @@ class BasePrivate
   public:
     BasePrivate() : parent( 0 ) {}
 
+    virtual ~BasePrivate() {}
+
     KMime::Content *parent;
     QByteArray encCS;
 };

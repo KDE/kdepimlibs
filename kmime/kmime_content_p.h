@@ -32,7 +32,7 @@ class ContentPrivate
       defaultCS = KMime::cachedCharset( "ISO-8859-1" );
     }
 
-    ~ContentPrivate()
+    virtual ~ContentPrivate()
     {
       qDeleteAll( contents );
       contents.clear();

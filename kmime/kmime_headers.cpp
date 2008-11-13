@@ -1190,9 +1190,6 @@ Generic::Generic( const char *t, Content *p, const QString &s, const QByteArray 
 
 Generic::~Generic()
 {
-  Q_D(Generic);
-  delete[] d->type;
-  d->type = 0;
 }
 
 void Generic::clear()
