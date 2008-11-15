@@ -78,7 +78,6 @@ QStringList KPIMUtils::splitAddressList( const QString &aStr )
         if ( commentlevel > 0 ) {
           commentlevel--;
         } else {
-          kDebug() << "Error in address splitting: Unmatched ')'";
           return list;
         }
       }
@@ -103,8 +102,6 @@ QStringList KPIMUtils::splitAddressList( const QString &aStr )
     if ( !addr.isEmpty() ) {
       list += addr.simplified();
     }
-  } else {
-    kDebug() << "Error in address splitting: Unexpected end of address list";
   }
 
   return list;
@@ -119,7 +116,6 @@ KPIMUtils::EmailParseResult splitAddressInternal( const QByteArray  address,
                                                   bool allowMultipleAddresses )
 {
   //  kDebug() << "address";
-
   displayName = "";
   addrSpec = "";
   comment = "";
@@ -646,9 +642,11 @@ QByteArray KPIMUtils::extractEmailAddress( const QByteArray &address )
                           false/* don't allow multiple addresses */ );
   if ( result != AddressOk ) {
     addrSpec = QByteArray();
-    kDebug() // << "\n"
-      << "Input: aStr\nError:"
-      << emailParseResultToString( result );
+    if ( result != AddressEmpty ) {
+      kDebug()
+        << "Input: aStr\nError:"
+        << emailParseResultToString( result );
+    }
   }
 
   return addrSpec;
@@ -669,9 +667,11 @@ QByteArray KPIMUtils::firstEmailAddress( const QByteArray &addresses )
                           true/* allow multiple addresses */ );
   if ( result != AddressOk ) {
     addrSpec = QByteArray();
-    kDebug() // << "\n"
-      << "Input: aStr\nError:"
-      << emailParseResultToString( result );
+    if ( result != AddressEmpty ) {
+      kDebug()
+        << "Input: aStr\nError:"
+        << emailParseResultToString( result );
+    }
   }
 
   return addrSpec;
@@ -970,8 +970,6 @@ QString KPIMUtils::normalizeAddressesAndDecodeIdn( const QString &str )
           << normalizedAddress( QString::fromUtf8( displayName ),
                                 fromIdn( QString::fromUtf8( addrSpec ) ),
                                 QString::fromUtf8( comment ) );
-      } else {
-        kDebug() << "splitting address failed:" << *it;
       }
     }
   }
@@ -1006,8 +1004,6 @@ QString KPIMUtils::normalizeAddressesAndEncodeIdn( const QString &str )
         normalizedAddressList << normalizedAddress( QString::fromUtf8( displayName ),
                                                     toIdn( QString::fromUtf8( addrSpec ) ),
                                                     QString::fromUtf8( comment ) );
-      } else {
-        kDebug() << "splitting address failed:" << *it;
       }
     }
   }
