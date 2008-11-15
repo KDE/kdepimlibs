@@ -96,7 +96,6 @@ void NNTPProtocol::get( const KUrl& url )
 {
   DBG << "get " << url.prettyUrl() << endl;
   QString path = QDir::cleanPath(url.path());
-  path = KUrl::fromPercentEncoding( path.toLatin1() );
 
   // path should be like: /group/<msg_id> or /group/<serial number>
   if ( path.startsWith( QDir::separator() ) )
