@@ -49,6 +49,7 @@ Comment[pt]=Oferece o acesso a um calendário guardado num único ficheiro local
 Comment[pt_BR]=Fornece acesso a um calendário armazenado em um único arquivo local
 Comment[sv]=Ger tillgång till en kalender lagrad i en enda lokal fil
 Comment[uk]=Надає доступ до календаря, що зберігається у окремому локальному файлі
+Comment[x-test]=xxProvides access to a calendar stored in a single local filexx
 Comment[zh_TW]=提供存取儲存在本地檔案中的行事曆的功能
 X-KDE-Library=kcal_local
 Type=Service
