@@ -204,7 +204,7 @@ bool MovableTypePrivate::readArgsFromPost( QList<QVariant> *args, const BlogPost
   map["mt_allow_comments"] = (int)post.isCommentAllowed();
   map["mt_allow_pings"] = (int)post.isTrackBackAllowed();
   map["mt_excerpt"] = post.summary();
-  map["mt_keywords"] = post.tags(); // TODO some conversion needed?
+  map["mt_keywords"] = post.tags().join(",");
   //map["mt_tb_ping_urls"] check for that, i think this should only be done on the server.
   *args << map;
   *args << QVariant( !post.isPrivate() );
