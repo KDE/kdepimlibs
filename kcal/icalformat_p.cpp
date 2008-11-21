@@ -1289,16 +1289,14 @@ Attendee *ICalFormatImpl::readAttendee( icalproperty *attendee )
   }
 
   p = icalproperty_get_first_parameter( attendee, ICAL_X_PARAMETER );
-  if ( p ) {
-    uid = icalparameter_get_xvalue( p );
+  while ( p ) {
+    QString xname = QString( icalparameter_get_xname( p ) ).toUpper();
+    QString xvalue = QString::fromUtf8( icalparameter_get_xvalue( p ) );
+    if ( xname == "X-UID" ) {
+      uid = xvalue;
+    }
+    p = icalproperty_get_next_parameter( attendee, ICAL_X_PARAMETER );
   }
-  // This should be added, but there seems to be a libical bug here.
-  // TODO: does this work now in libical-0.24 or greater?
-  /*while (p) {
-  // if (icalparameter_get_xname(p) == "X-UID") {
-  uid = icalparameter_get_xvalue(p);
-  p = icalproperty_get_next_parameter(attendee, ICAL_X_PARAMETER);
-  } */
 
   Attendee *a = new Attendee( name, email, rsvp, status, role, uid );
 
