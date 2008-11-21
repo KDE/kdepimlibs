@@ -25,7 +25,7 @@ KCAL_UNIT_TESTS(
   testattendee
   testcalendarlocal
   testcalendarnull
-  testcalendarresources
+#  testcalendarresources  disable for now because it cause akonadi to start
   testcalfilter
   testduration
   testerrorformat
