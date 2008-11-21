@@ -262,7 +262,8 @@ QString ICalFormat::toString( Calendar *cal )
 
   // time zones
   const ICalTimeZones::ZoneMap zones = tzUsedList.zones();
-  for ( ICalTimeZones::ZoneMap::ConstIterator it = zones.constBegin();  it != zones.constEnd();  ++it ) {
+  for ( ICalTimeZones::ZoneMap::ConstIterator it=zones.constBegin();
+        it != zones.constEnd(); ++it ) {
     icaltimezone *tz = (*it).icalTimezone();
     if ( !tz ) {
       kError() << "bad time zone";
@@ -477,8 +478,6 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
     return 0;
   }
 
-  kDebug() << "getting method...";
-
   icalproperty_method icalmethod = icalproperty_get_method( m );
   iTIPMethod method;
 
@@ -513,8 +512,6 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
     break;
   }
 
-  kDebug() << "restriction...";
-
   if ( !icalrestriction_check( message ) ) {
     kWarning() << endl
                << "kcal library reported a problem while parsing:";
@@ -522,7 +519,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
                << d->mImpl->extractErrorProperty( c );
   }
 
-  Incidence *existingIncidence = cal->incidenceFromSchedulingID( incidence->uid() );
+  Incidence *existingIncidence = cal->incidence( incidence->uid() );
 
   icalcomponent *calendarComponent = 0;
   if ( existingIncidence ) {
@@ -540,14 +537,13 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
       icalcomponent_add_component( calendarComponent,
                                    d->mImpl->writeEvent( event ) );
     }
+  } else {
+    icalcomponent_free( message );
+    return new ScheduleMessage( incidence, method, ScheduleMessage::Unknown );
   }
-
-  kDebug() << "classify...";
 
   icalproperty_xlicclass result =
     icalclassify( message, calendarComponent, (char *)"" );
-
-  kDebug() << "returning with result = " << result;
 
   ScheduleMessage::Status status;
 
@@ -573,12 +569,9 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
     break;
   }
 
-  kDebug() << "status =" << status;
-
   icalcomponent_free( message );
-  if ( calendarComponent ) {
-    icalcomponent_free( calendarComponent );
-  }
+  icalcomponent_free( calendarComponent );
+
   return new ScheduleMessage( incidence, method, status );
 }
 
