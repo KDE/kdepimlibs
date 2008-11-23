@@ -65,7 +65,8 @@ class KCal::CalendarResources::Private
       : mManager( new CalendarResourceManager( family ) ),
         mStandardPolicy( new StandardDestinationPolicy( mManager ) ),
         mDestinationPolicy( mStandardPolicy ),
-        mAskPolicy( new AskDestinationPolicy( mManager ) )
+        mAskPolicy( new AskDestinationPolicy( mManager ) ),
+        mException( 0 )
     {}
     ~Private()
     {
@@ -84,6 +85,8 @@ class KCal::CalendarResources::Private
 
     QMap<ResourceCalendar *, Ticket *> mTickets;
     QMap<ResourceCalendar *, int> mChangeCounts;
+
+    ErrorFormat *mException;
 
     template< class IncidenceList >
     void appendIncidences( IncidenceList &result, const IncidenceList &extra,
@@ -223,7 +226,19 @@ CalendarResources::CalendarResources( const QString &timeZoneId,
 CalendarResources::~CalendarResources()
 {
   close();
+  clearException();
   delete d;
+}
+
+void CalendarResources::clearException()
+{
+  delete d->mException;
+  d->mException = 0;
+}
+
+ErrorFormat *CalendarResources::exception()
+{
+  return d->mException;
 }
 
 void CalendarResources::readConfig( KConfig *config )
@@ -384,6 +399,7 @@ bool CalendarResources::addIncidence( Incidence *incidence,
 
 bool CalendarResources::addIncidence( Incidence *incidence )
 {
+  clearException();
   ResourceCalendar *resource = d->mDestinationPolicy->destination( incidence );
 
   if ( resource ) {
@@ -401,7 +417,7 @@ bool CalendarResources::addIncidence( Incidence *incidence )
       d->mResourceMap.remove( incidence );
     }
   } else {
-    kDebug() << "no resource";
+    d->mException = new ErrorFormat( ErrorFormat::UserCancel );
   }
 
   return false;

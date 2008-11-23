@@ -34,6 +34,7 @@
 #include <QtCore/QMap>
 
 #include "calendar.h"
+#include "exceptions.h"
 #include "resourcecalendar.h"
 
 #include "kcal_export.h"
@@ -236,6 +237,19 @@ class KCAL_EXPORT CalendarResources
     ~CalendarResources();
 
     /**
+      Clears the exception status.
+      @since 4.2
+    */
+    void clearException();
+
+    /**
+      Returns an exception, if there is any, containing information about the
+      last error that occurred.
+      @since 4.2
+    */
+    ErrorFormat *exception();
+
+    /**
       Loads all Incidences from the Resources.  The Resources must be added
       first using either readConfig(KConfig *config), which adds the system
       Resources, or manually using resourceAdded(ResourceCalendar *resource).
@@ -378,8 +392,12 @@ class KCAL_EXPORT CalendarResources
   // Incidence Specific Methods //
 
     /**
-      @copydoc
-      Calendar::addIncidence()
+      Inserts an Incidence into the calendar.
+      @param incidence is a pointer to the Incidence to insert.
+      @return true if the Incidence was successfully inserted; false otherwise.
+      @return Will also return false if there are multiple writable resources
+      and the user declines to select one to those resources in which to save
+      the Incidence.
     */
     bool addIncidence( Incidence *incidence );
 
