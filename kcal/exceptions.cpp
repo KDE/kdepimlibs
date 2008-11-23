@@ -113,6 +113,9 @@ QString ErrorFormat::message()
   case Restriction:
     message = i18n( "Restriction violation" );
     break;
+  case UserCancel:
+    // no real error; the user canceled the operation
+    break;
   }
 
   if ( !mMessage.isEmpty() ) {

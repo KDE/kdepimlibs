@@ -94,7 +94,8 @@ class KCAL_EXPORT ErrorFormat : public Exception
       CalVersion1,       /**< vCalendar v1.0 detected */
       CalVersion2,       /**< iCalendar v2.0 detected */
       CalVersionUnknown, /**< Unknown calendar format detected */
-      Restriction        /**< Restriction violation */
+      Restriction,       /**< Restriction violation */
+      UserCancel         /**< User canceled the operation */
     };
 
     /**
