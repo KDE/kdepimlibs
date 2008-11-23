@@ -99,7 +99,7 @@ set(kcal_local_PART_SRCS resourcelocal_plugin.cpp )
 kde4_add_plugin(kcal_local ${kcal_local_PART_SRCS})
 
 
-target_link_libraries(kcal_local  ${KDE4_KDECORE_LIBS} kcal kresources )
+target_link_libraries(kcal_local ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} kcal kresources )
 
 install(TARGETS kcal_local  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -112,7 +112,7 @@ set(kcal_localdir_PART_SRCS resourcelocaldir_plugin.cpp )
 kde4_add_plugin(kcal_localdir ${kcal_localdir_PART_SRCS})
 
 
-target_link_libraries(kcal_localdir  ${KDE4_KDECORE_LIBS} kcal kresources)
+target_link_libraries(kcal_localdir ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} kcal kresources)
 
 install(TARGETS kcal_localdir  DESTINATION ${PLUGIN_INSTALL_DIR})
 
