@@ -142,10 +142,8 @@ bool VCalFormat::save( Calendar *calendar, const QString &fileName )
   cleanStrTbl();
 
   if ( QFile::exists( fileName ) ) {
-    kDebug() << "No error";
     return true;
   } else {
-    kDebug() << "Error";
     return false; // error
   }
 
@@ -353,7 +351,6 @@ VObject *VCalFormat::eventToVTodo( const Todo *anEvent )
   }
 
   // alarm stuff
-  kDebug();
   Alarm::List::ConstIterator it;
   for ( it = anEvent->alarms().begin(); it != anEvent->alarms().end(); ++it ) {
     Alarm *alarm = *it;
@@ -1025,7 +1022,6 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
     deleteStr( s );
     tmpStr.simplified();
     tmpStr = tmpStr.toUpper();
-// kDebug() <<" We have a recurrence rule:" << tmpStr;
 
     // first, read the type of the recurrence
     int typelen = 1;
@@ -1048,7 +1044,6 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
     }
 
     if ( type != Recurrence::rNone ) {
-// kDebug() << " It's a supported type";
 
       // Immediately after the type is the frequency
       int index = tmpStr.indexOf( ' ' );
@@ -1366,7 +1361,9 @@ QString VCalFormat::qDateToISO( const QDate &qd )
 {
   QString tmpStr;
 
-  Q_ASSERT( qd.isValid() );
+  if ( !qd.isValid() ) {
+    return QString();
+  }
 
   tmpStr.sprintf( "%.2d%.2d%.2d", qd.year(), qd.month(), qd.day() );
   return tmpStr;
@@ -1377,7 +1374,10 @@ QString VCalFormat::kDateTimeToISO( const KDateTime &dt, bool zulu )
 {
   QString tmpStr;
 
-  Q_ASSERT( dt.isValid() );
+  if ( !dt.isValid() ) {
+    return QString();
+  }
+
   QDateTime tmpDT;
   if ( zulu ) {
     tmpDT = dt.toUtc().dateTime();
@@ -1411,13 +1411,15 @@ KDateTime VCalFormat::ISOToKDateTime( const QString &dtStr )
   tmpDate.setYMD( year, month, day );
   tmpTime.setHMS( hour, minute, second );
 
-  Q_ASSERT( tmpDate.isValid() );
-  Q_ASSERT( tmpTime.isValid() );
-  // correct for GMT if string is in Zulu format
-  if ( dtStr.at( dtStr.length() - 1 ) == 'Z' ) {
-    return KDateTime( tmpDate, tmpTime, KDateTime::UTC );
+  if ( tmpDate.isValid() && tmpTime.isValid() ) {
+    // correct for GMT if string is in Zulu format
+    if ( dtStr.at( dtStr.length() - 1 ) == 'Z' ) {
+      return KDateTime( tmpDate, tmpTime, KDateTime::UTC );
+    } else {
+      return KDateTime( tmpDate, tmpTime, d->mCalendar->timeSpec() );
+    }
   } else {
-    return KDateTime( tmpDate, tmpTime, d->mCalendar->timeSpec() );
+    return KDateTime();
   }
 }
 
@@ -1532,9 +1534,7 @@ void VCalFormat::populate( VObject *vcal )
       // we now use addEvent instead of insertEvent so that the
       // signal/slot get connected.
       if ( anEvent ) {
-        if ( !anEvent->dtStart().isValid() || !anEvent->dtEnd().isValid() ) {
-          kDebug() << "Event has invalid dates.";
-        } else {
+        if ( anEvent->dtStart().isValid() && anEvent->dtEnd().isValid() ) {
           d->mCalendar->addEvent( anEvent );
         }
       } else {
