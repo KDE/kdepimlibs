@@ -127,7 +127,7 @@ void SmtpJob::startSmtpJob()
   KUrl destination;
   destination.setProtocol( ( transport()->encryption() == Transport::EnumEncryption::SSL ) ?
                            SMTPS_PROTOCOL : SMTP_PROTOCOL );
-  destination.setHost( transport()->host() );
+  destination.setHost( transport()->host().trimmed() );
   destination.setPort( transport()->port() );
 
   destination.addQueryItem( QLatin1String( "headers" ), QLatin1String( "0" ) );

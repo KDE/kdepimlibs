@@ -116,6 +116,9 @@ QString Transport::authenticationTypeString() const
 void Transport::usrReadConfig()
 {
   TransportBase::usrReadConfig();
+
+  setHost( host().trimmed() );
+
   if ( d->oldName.isEmpty() ) {
     d->oldName = name();
   }
