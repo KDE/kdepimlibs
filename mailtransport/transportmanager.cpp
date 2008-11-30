@@ -162,7 +162,9 @@ Transport *TransportManager::createTransport() const
 
 void TransportManager::addTransport( Transport *transport )
 {
-  Q_ASSERT( !d->transports.contains( transport ) );
+  if ( d->transports.contains( transport ) )
+    return;
+
   d->transports.append( transport );
   validateDefault();
   emitChangesCommitted();
