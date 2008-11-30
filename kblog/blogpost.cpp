@@ -42,6 +42,14 @@ BlogPost::BlogPost( const KBlog::BlogPost &post )
   d_ptr->mTitle = post.title();
   d_ptr->mContent = post.content();
   d_ptr->mCategories = post.categories();
+  d_ptr->mTags = post.tags();
+  d_ptr->mMood = post.mood();
+  d_ptr->mPermaLink = post.permaLink();
+  d_ptr->mSummary = post.summary();
+  d_ptr->mLink = post.link();
+  d_ptr->mMusic = post.music();
+  d_ptr->mTrackBackAllowed = post.isTrackBackAllowed();
+  d_ptr->mCommentAllowed = post.isCommentAllowed();
   d_ptr->mError = post.error();
   d_ptr->mJournalId = post.journalId();
   d_ptr->mStatus = post.status();
