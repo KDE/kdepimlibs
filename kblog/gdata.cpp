@@ -288,6 +288,11 @@ void GData::createPost( KBlog::BlogPost *post )
   atomMarkup += "<div xmlns='http://www.w3.org/1999/xhtml'>";
   atomMarkup += post->content(); // FIXME check for Utf
   atomMarkup += "</div></content>";
+  QList<QString>::ConstIterator it = post->tags().constBegin();
+  QList<QString>::ConstIterator end = post->tags().constEnd();
+  for( ; it != end; ++it ){
+    atomMarkup += "<category scheme='http://www.blogger.com/atom/ns#' term='" + ( *it ) + "' />";
+  }
   atomMarkup += "<author>";
   if ( !fullName().isEmpty() ) {
     atomMarkup += "<name>" + fullName() + "</name>";
