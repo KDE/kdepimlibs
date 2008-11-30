@@ -20,9 +20,7 @@
 #ifndef MAILTRANSPORT_CONFIGMODULE_H
 #define MAILTRANSPORT_CONFIGMODULE_H
 
-#define KDE3_SUPPORT
 #include <kcmodule.h>
-#undef KDE3_SUPPORT
 
 namespace MailTransport {
 
