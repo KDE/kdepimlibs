@@ -32,7 +32,7 @@ kde4_add_library(mailtransport SHARED ${mailtransport_lib_srcs})
 target_link_libraries(mailtransport ${KDE4_KIO_LIBS})
 set_target_properties(mailtransport PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
-install(TARGETS mailtransport ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS mailtransport EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES mailtransport.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 
 set(mailtransport_kcm_srcs configmodule.cpp)

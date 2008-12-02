@@ -63,11 +63,6 @@ endif (NOT ONLY_KLEO)
 
 add_subdirectory(cmake)
 
-# ...and append all library dependencies
-string(REGEX REPLACE "gpgmepp" "gpgme++" qgpgme_LIB_DEPENDS "${qgpgme_LIB_DEPENDS}")
-export_library_dependencies(${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake APPEND)
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
-
 macro_display_feature_log()
 
 # taken from kdelibs/CMakeLists.txt, needed for having different install prefixes
@@ -79,27 +74,42 @@ macro_display_feature_log()
 # but since the variables which contain the destinations can be relative
 # or absolute paths, we need this macro to make them all absoulte, Alex
 macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
-   if (UNIX)
-      if ("${in}" MATCHES "^/.*")
-         set(${out} "${in}")
-      else ("${in}" MATCHES "^/.*")
-         set(${out} "\${KDE4_INSTALL_DIR}/${in}")
-      endif ("${in}" MATCHES "^/.*")
-   else (UNIX)
-      if ("${in}" MATCHES "^[a-zA-Z]:.*")
-        set(${out} "${in}")
-      else ("${in}" MATCHES "^[a-zA-Z]:.*")
-         set(${out} "\${KDE4_INSTALL_DIR}/${in}")
-      endif ("${in}" MATCHES "^[a-zA-Z]:.*")
-   endif (UNIX)
+   if (IS_ABSOLUTE "${in}")    # IS_ABSOLUTE is new since cmake 2.4.8
+      set(${out} "${in}")
+   else (IS_ABSOLUTE "${in}")
+      set(${out} "\${KDEPIMLIBS_INSTALL_DIR}/${in}")
+   endif (IS_ABSOLUTE "${in}")
 endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
 
-make_install_path_absolute(KDEPIMLIBS4_DBUS_INTERFACES_DIR ${DBUS_INTERFACES_INSTALL_DIR})
-make_install_path_absolute(KDEPIMLIBS4_DBUS_SERVICES_DIR   ${DBUS_SERVICES_INSTALL_DIR})
 
-file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake " 
+make_install_path_absolute(KDEPIMLIBS_DBUS_INTERFACES_DIR ${DBUS_INTERFACES_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_DBUS_SERVICES_DIR   ${DBUS_SERVICES_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_DATA_DIR    ${DATA_INSTALL_DIR})
 
-set(KDEPIMLIBS4_DBUS_INTERFACES_DIR \"${KDEPIMLIBS4_DBUS_INTERFACES_DIR}\")
-set(KDEPIMLIBS4_DBUS_SERVICES_DIR   \"${KDEPIMLIBS4_DBUS_SERVICES_DIR}\")
+# This file will be picked up by "old" FindKdepimLibs.cmake from kdelibs,
+# so write a message there to inform the developer that he should update kdelibs. Alex
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake " 
+message(FATAL_ERROR "For using this version of kdepimlibs you need a newer version of kdelibs, please update.")
+")
+
+# current FindKdepimLibs.cmake loads these two files, now the libraries from
+# KdepimLibs are "exported" and then "imported" again when using FindKdepimLibs.cmake
+# Alex.
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsInformation.cmake " 
+if(NOT KDEPIMLIBS_INSTALL_DIR)
+   set(KDEPIMLIBS_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")
+endif(NOT KDEPIMLIBS_INSTALL_DIR)
+
+set(KDEPIMLIBS_DATA_DIR \"${KDEPIMLIBS_DATA_DIR}\")
+set(KDEPIMLIBS_DBUS_INTERFACES_DIR \"${KDEPIMLIBS_DBUS_INTERFACES_DIR}\")
+set(KDEPIMLIBS_DBUS_SERVICES_DIR   \"${KDEPIMLIBS_DBUS_SERVICES_DIR}\")
+# These two are just for compatibility with KDE 4.[01]
+set(KDEPIMLIBS4_DBUS_INTERFACES_DIR \"\${KDEPIMLIBS_DBUS_INTERFACES_DIR}\")
+set(KDEPIMLIBS4_DBUS_SERVICES_DIR   \"\${KDEPIMLIBS_DBUS_SERVICES_DIR}\")
 
 \n")
+
+install(EXPORT kdepimlibsLibraryTargets DESTINATION ${DATA_INSTALL_DIR}/cmake/modules FILE KDEPimLibsLibraryTargets.cmake )
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsInformation.cmake ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake 
+        DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
+

@@ -50,7 +50,7 @@ if ( _any_gpgme_found )
      SOVERSION ${_qgpgme_soversion}
    )
 
-   install( TARGETS qgpgme ${INSTALL_TARGETS_DEFAULT_ARGS})
+   install( TARGETS qgpgme EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
    install( FILES
      qgpgme_export.h

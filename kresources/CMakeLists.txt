@@ -27,7 +27,7 @@ kde4_add_library(kresources SHARED ${kresources_LIB_SRCS})
 target_link_libraries(kresources  ${KDE4_KIO_LIBS} )
 
 set_target_properties(kresources PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kresources ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kresources EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### next target ###############
 

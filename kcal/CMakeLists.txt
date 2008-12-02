@@ -87,9 +87,10 @@ kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 
 target_link_libraries(kcal ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_QTXML_LIBRARY} kresources kabc kpimutils ${LIBICAL_LIBRARIES})
+target_link_libraries(kcal LINK_INTERFACE_LIBRARIES kresources kabc)
 
 set_target_properties(kcal PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
-install(TARGETS kcal ${INSTALL_TARGETS_DEFAULT_ARGS} COMPONENT Devel)
+install(TARGETS kcal EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### next target ###############
 

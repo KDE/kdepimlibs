@@ -34,7 +34,7 @@ target_link_libraries(kmime  ${KDE4_KDECORE_LIBS} )
 
 set_target_properties(kmime PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
-install(TARGETS kmime ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kmime EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install( FILES
          boolflags.h
