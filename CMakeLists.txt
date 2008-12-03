@@ -107,9 +107,22 @@ set(KDEPIMLIBS_DBUS_SERVICES_DIR   \"${KDEPIMLIBS_DBUS_SERVICES_DIR}\")
 set(KDEPIMLIBS4_DBUS_INTERFACES_DIR \"\${KDEPIMLIBS_DBUS_INTERFACES_DIR}\")
 set(KDEPIMLIBS4_DBUS_SERVICES_DIR   \"\${KDEPIMLIBS_DBUS_SERVICES_DIR}\")
 
+set(KDEPIMLIBS_TARGET_PREFIX \"KDEPIMLibs::\")
+
 \n")
 
-install(EXPORT kdepimlibsLibraryTargets DESTINATION ${DATA_INSTALL_DIR}/cmake/modules FILE KDEPimLibsLibraryTargets.cmake )
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsInformation.cmake ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake 
         DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
+
+# from next monday on only the version with prefix will be installed, to keep it working
+# in all cases until then now install two versions, one with and one without prefix. Alex
+install(EXPORT kdepimlibsLibraryTargets 
+        NAMESPACE "KDEPIMLibs::"
+        DESTINATION ${DATA_INSTALL_DIR}/cmake/modules 
+        FILE KDEPimLibsLibraryTargetsWithPrefix.cmake )
+
+install(EXPORT kdepimlibsLibraryTargets 
+        DESTINATION ${DATA_INSTALL_DIR}/cmake/modules 
+        FILE KDEPimLibsLibraryTargets.cmake )
+
 
