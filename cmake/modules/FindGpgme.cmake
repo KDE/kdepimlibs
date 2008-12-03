@@ -20,6 +20,7 @@
 #    - GPGME_INCLUDES is the same for all of the above
 #    - GPGME_FOUND is set if any of the above was found
 #
+#  GPGME_LIBRARY_DIR - the directory where the libraries are located
 
 #
 # THIS IS ALMOST A 1:1 COPY OF FindAssuan.cmake in kdepim.
@@ -53,6 +54,8 @@ if ( WIN32 )
   # in cmake, AND and OR have the same precedence, there's no
   # subexpressions, and expressions are evaluated short-circuit'ed
   # IOW: CMake if() suxx.
+  # Starting with CMake 2.6.3 you can group if expressions with (), but we 
+  # don't require 2.6.3 but 2.6.2, we can't use it. Alex
   set( _seem_to_have_cached_gpgme false )
   if ( GPGME_INCLUDES )
     if ( GPGME_VANILLA_LIBRARIES OR GPGME_QT_LIBRARIES OR GPGME_GLIB_LIBRARIES )
@@ -290,6 +293,7 @@ else() # not WIN32
           endforeach( _flavour )
 
           # ensure that they are cached
+          # This comment above doesn't make sense, the four following lines seem to do nothing. Alex
           set( GPGME_INCLUDES          ${GPGME_INCLUDES} )
           set( GPGME_VANILLA_LIBRARIES ${GPGME_VANILLA_LIBRARIES} )
           set( GPGME_PTHREAD_LIBRARIES ${GPGME_PTHREAD_LIBRARIES} )
@@ -345,6 +349,12 @@ if ( GPGME_PTH_FOUND )
   set( _gpgme_flavours "${_gpgme_flavours} pth" )
 endif()
 
+# determine the library in one of the found flavours, can be reused e.g. by FindQgpgme.cmake, Alex
+foreach(_currentFlavour vanilla glib qt pth pthread)
+   if(NOT GPGME_LIBRARY_DIR)
+      get_filename_component(GPGME_LIBRARY_DIR "${_gpgme_${_currentFlavour}_lib}" PATH)
+   endif()
+endforeach()
 
 if ( NOT Gpgme_FIND_QUIETLY )
 
@@ -375,7 +385,7 @@ if ( NOT Gpgme_FIND_QUIETLY )
 else()
 
   if ( Gpgme_FIND_REQUIRED AND NOT GPGME_FOUND )
-    message( FATAL_ERROR "" )
+    message( FATAL_ERROR "Did not find GPGME" )
   endif()
 
 endif()

@@ -3,33 +3,40 @@
 #
 # QGPGME_FOUND
 # QGPGME_LIBRARIES
+# QGPGME_INCLUDE_DIR
 
 # What we do here is a bit simplictic, but it's no worse than what
 # people were using in kdepim up to now...
 
-set( QGPGME_FOUND false )
-
 find_package(Gpgme)
 
-if ( WIN32 AND GPGME_VANILLA_FOUND )
-   set( QGPGME_FOUND true )
-   set( QGPGME_LIBRARIES "qgpgme;gpgme++;${GPGME_VANILLA_LIBRARIES}" )
-endif( WIN32 AND GPGME_VANILLA_FOUND )
+if(GPGME_FOUND)
 
-if ( NOT WIN32 AND GPGME_PTHREAD_FOUND )
-   set( QGPGME_FOUND true )
-   set( QGPGME_LIBRARIES "qgpgme;gpgme++-pthread;${GPGME_PTHREAD_LIBRARIES}" )
-endif( NOT WIN32 AND GPGME_PTHREAD_FOUND )
+   if ( WIN32 )
+      find_library(_QGPGME_EXTRA_LIBRARY gpgme++
+                   HINTS ${GPGME_LIBRARY_DIR})
+   else ( WIN32 )
+      find_library(_QGPGME_EXTRA_LIBRARY gpgme++-pthread
+                   HINTS ${GPGME_LIBRARY_DIR})
+   endif ( WIN32 )
 
-if ( QGPGME_FOUND )
-   if( NOT QGpgme_FIND_QUIETLY) 
-      message( STATUS "Found qgpgme: libraries: ${QGPGME_LIBRARIES}" )
-   endif( NOT QGpgme_FIND_QUIETLY )
-else( QGPGME_FOUND )
-   if( QGpgme_FIND_REQUIRED )
-      message( FATAL_ERROR "Did NOT find qgpgme" )
-   else( QGpgme_FIND_REQUIRED )
-      message( STATUS "Did NOT find qgpgme" )
-   endif( QGpgme_FIND_REQUIRED )
-endif( QGPGME_FOUND )
+   find_library(QGPGME_LIBRARY qgpgme
+                HINTS ${GPGME_LIBRARY_DIR})
 
+   if (QGPGME_LIBRARY)
+      # get the libdirectory and then go one up
+      get_filename_component(_QGPGME_PREFIX "${QGPGME_LIBRARY}" PATH)
+      get_filename_component(_QGPGME_PREFIX "${_QGPGME_PREFIX}" PATH)
+      find_path(QGPGME_INCLUDE_DIR qgpgme/qgpgme_export.h 
+                HINTS "${_QGPGME_PREFIX}/include" )
+   endif (QGPGME_LIBRARY)
+
+   set(QGPGME_LIBRARIES ${QGPGME_LIBRARY} ${_QGPGME_EXTRA_LIBRARY} ${GPGME_PTHREAD_LIBRARIES})
+
+endif(GPGME_FOUND)
+
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(QGpgme  DEFAULT_MSG  QGPGME_LIBRARY QGPGME_INCLUDE_DIR _QGPGME_EXTRA_LIBRARY)
+
+mark_as_advanced(QGPGME_LIBRARY _QGPGME_EXTRA_LIBRARY QGPGME_INCLUDE_DIR)
