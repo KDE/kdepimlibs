@@ -33,9 +33,6 @@ void IdMapperTest::testIdMapper()
   KRES::IdMapper mapper( "test.uidmap" );
   mapper.setIdentifier( "testidentifier" );
 
-//  mapper.load();
-  //qDebug() << "Loaded.";
-
   mapper.setRemoteId( "foo", "bar" );
   mapper.setRemoteId( "yes", "klar" );
   mapper.setRemoteId( "no", "nee" );
