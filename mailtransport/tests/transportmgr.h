@@ -35,6 +35,7 @@ class TransportMgr : public KVBox
     TransportMgr();
 
   private slots:
+    void removeAllBtnClicked();
     void editBtnClicked();
     void sendBtnClicked();
     void cancelBtnClicked();

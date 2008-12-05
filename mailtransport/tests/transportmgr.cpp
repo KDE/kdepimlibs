@@ -23,6 +23,7 @@
 #include <mailtransport/transportmanager.h>
 #include <mailtransport/transportmanagementwidget.h>
 #include <mailtransport/transportjob.h>
+#include <mailtransport/transport.h>
 
 #include <KApplication>
 #include <KCmdLineArgs>
@@ -41,6 +42,8 @@ TransportMgr::TransportMgr() :
   mComboBox->setEditable( true );
   QPushButton *b = new QPushButton( "&Edit", this );
   connect( b, SIGNAL(clicked(bool)), SLOT(editBtnClicked()) );
+  b = new QPushButton( "&Remove all transports", this );
+  connect( b, SIGNAL(clicked(bool)), SLOT(removeAllBtnClicked()) );
   mSenderEdit = new KLineEdit( this );
   mSenderEdit->setClickMessage( "Sender" );
   mToEdit = new KLineEdit( this );
@@ -56,6 +59,17 @@ TransportMgr::TransportMgr() :
   connect( b, SIGNAL(clicked(bool)), SLOT(sendBtnClicked()) );
   b = new QPushButton( "&Cancel", this );
   connect( b, SIGNAL(clicked(bool)), SLOT(cancelBtnClicked()) );
+}
+
+void TransportMgr::removeAllBtnClicked() 
+{
+    MailTransport::TransportManager* manager =  MailTransport::TransportManager::self();
+    QList< Transport *> transports = manager->transports();
+    for( int i; i < transports.count(); i++ ) {
+        MailTransport::Transport* transport = transports.at( i );
+        kDebug() << transport->host();
+        manager->removeTransport( transport->id() );
+    }
 }
 
 void TransportMgr::editBtnClicked()
