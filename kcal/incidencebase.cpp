@@ -354,7 +354,7 @@ QStringList IncidenceBase::comments() const
 
 void IncidenceBase::addAttendee( Attendee *a, bool doupdate )
 {
-  if ( mReadOnly ) {
+  if ( !a || mReadOnly ) {
     return;
   }
 
