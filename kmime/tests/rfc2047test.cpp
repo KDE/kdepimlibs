@@ -75,6 +75,11 @@ void RFC2047Test::testRFC2047decode()
   QCOMPARE( decodeRFC2047String( "Subject: =?iso-8859-1?Q?Belangrijk=3a=20Verhuizing=20FTP=20server?=", encCharset ),
             QString::fromUtf8( "Subject: Belangrijk: Verhuizing FTP server" ) );
   QCOMPARE( encCharset, QByteArray( "ISO-8859-1" ) );
+
+  // mixed charsets, based on bug 125542 but pasted from above instead since I'm unable to enter those asian symbols
+  QCOMPARE( decodeRFC2047String( "Subject: =?utf-8?q?Ingo=20Kl=C3=B6cker?= unencoded words =?iso-8859-9?Q?S=2E=C7a=F0lar?=", encCharset ),
+            QString::fromUtf8( "Subject: Ingo Klöcker unencoded words S.Çağlar" ) );
+  QCOMPARE( encCharset, QByteArray( "ISO-8859-9" ) );
 }
 
 void RFC2047Test::testInvalidDecode()
