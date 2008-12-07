@@ -92,7 +92,7 @@ Attachment::Attachment( const QString &uri, const QString &mime )
 Attachment::Attachment( const char *base64, const QString &mime )
   : d( new Attachment::Private( mime, true ) )
 {
-  setData( base64 );
+  d->mData = qstrdup( base64 );
 }
 
 Attachment::~Attachment()
