@@ -114,7 +114,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   clearException();
 
   QString text = toString( calendar );
-  if ( text.isNull() ) {
+  if ( text.isEmpty() ) {
     return false;
   }
 
@@ -278,10 +278,9 @@ QString ICalFormat::toString( Calendar *cal )
   icalcomponent_free( calendar );
   icalmemory_free_ring();
 
-  if ( text.isNull() ) {
+  if ( text.isEmpty() ) {
     setException( new ErrorFormat( ErrorFormat::SaveError,
                                    i18n( "libical error" ) ) );
-    return QString();
   }
 
   return text;
