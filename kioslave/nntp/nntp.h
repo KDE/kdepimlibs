@@ -78,7 +78,7 @@ class NNTPProtocol:public KIO::TCPSlaveBase
  private:
    QString mHost, mUser, mPass;
    quint16 m_port, m_defaultPort;
-   bool postingAllowed, opened;
+   bool postingAllowed, opened, isAuthenticated;
    char readBuffer[MAX_PACKET_LEN];
    ssize_t readBufferLen;
    /// Current selected newsgroup
@@ -130,6 +130,12 @@ class NNTPProtocol:public KIO::TCPSlaveBase
      * the "\r\n" terminator.
      */
    int evalResponse ( char *data, ssize_t &len );
+   /**
+    * Try to authenticate to the server.
+    * @return the response code from the server if the mUser/mPassword
+    * are available; 281 (successfull authentication) otherwise.
+    */
+   int authenticate();
 };
 
 #endif
