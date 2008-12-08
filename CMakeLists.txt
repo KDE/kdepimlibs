@@ -65,10 +65,10 @@ add_subdirectory(cmake)
 
 macro_display_feature_log()
 
-# taken from kdelibs/CMakeLists.txt, needed for having different install prefixes
-# for kdepimlibs and kdelibs
-# TODO: we probably need all the other variables here as well
 
+# now create the KdepimLibsConfig.cmake file, which will be loaded by 
+# kdelibs/cmake/modules/FindKdepimLibs.cmake and which has to contain all information
+# about the installed kdepimlibs anybody would like to have. Alex
 
 # we need the absolute directories where stuff will be installed too
 # but since the variables which contain the destinations can be relative
@@ -81,48 +81,58 @@ macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
    endif (IS_ABSOLUTE "${in}")
 endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
 
-
+# all the following variables are put into KdepimLibsConfig.cmake, so
+# they are usable by projects using kdepimlibs. Alex
+make_install_path_absolute(KDEPIMLIBS_DATA_DIR            ${DATA_INSTALL_DIR})
 make_install_path_absolute(KDEPIMLIBS_DBUS_INTERFACES_DIR ${DBUS_INTERFACES_INSTALL_DIR})
 make_install_path_absolute(KDEPIMLIBS_DBUS_SERVICES_DIR   ${DBUS_SERVICES_INSTALL_DIR})
-make_install_path_absolute(KDEPIMLIBS_DATA_DIR    ${DATA_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_INCLUDE_DIR         ${INCLUDE_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_LIB_DIR             ${LIB_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_BIN_DIR             ${BIN_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_LIBEXEC_DIR         ${LIBEXEC_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_SBIN_DIR            ${SBIN_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_HTML_DIR            ${HTML_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_CONFIG_DIR          ${CONFIG_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_ICON_DIR            ${ICON_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_KCFG_DIR            ${KCFG_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_LOCALE_DIR          ${LOCALE_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_MIME_DIR            ${MIME_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_SOUND_DIR           ${SOUND_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_TEMPLATES_DIR       ${TEMPLATES_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_WALLPAPER_DIR       ${WALLPAPER_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_KCONF_UPDATE_DIR    ${KCONF_UPDATE_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_AUTOSTART_DIR       ${AUTOSTART_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_XDG_APPS_DIR        ${XDG_APPS_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_XDG_DIRECTORY_DIR   ${XDG_DIRECTORY_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_SYSCONF_DIR         ${SYSCONF_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_MAN_DIR             ${MAN_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_INFO_DIR            ${INFO_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_SERVICES_DIR        ${SERVICES_INSTALL_DIR})
+make_install_path_absolute(KDEPIMLIBS_SERVICETYPES_DIR    ${SERVICETYPES_INSTALL_DIR})
+set(KDEPIMLIBS_TARGET_PREFIX KDEPIMLibs__)
 
-# This file will be picked up by "old" FindKdepimLibs.cmake from kdelibs,
+configure_file(KdepimLibsConfig.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfig.cmake" @ONLY)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfig.cmake  # ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake 
+        DESTINATION ${LIB_INSTALL_DIR}/KdepimLibs/cmake)
+
+# from next monday on only the version with prefix will be installed, to keep it working
+# in all cases until then now install two versions, one with and one without prefix. Alex
+install(EXPORT kdepimlibsLibraryTargets 
+        NAMESPACE ${KDEPIMLIBS_TARGET_PREFIX}
+        DESTINATION ${LIB_INSTALL_DIR}/KdepimLibs/cmake
+        FILE KDEPimLibsLibraryTargetsWithPrefix.cmake )
+
+
+# These files will be picked up by older FindKdepimLibs.cmake from kdelibs,
 # so write a message there to inform the developer that he should update kdelibs. Alex
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake " 
 message(FATAL_ERROR "For using this version of kdepimlibs you need a newer version of kdelibs, please update.")
 ")
 
-# current FindKdepimLibs.cmake loads these two files, now the libraries from
-# KdepimLibs are "exported" and then "imported" again when using FindKdepimLibs.cmake
-# Alex.
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsInformation.cmake " 
-if(NOT KDEPIMLIBS_INSTALL_DIR)
-   set(KDEPIMLIBS_INSTALL_DIR \"${CMAKE_INSTALL_PREFIX}\")
-endif(NOT KDEPIMLIBS_INSTALL_DIR)
-
-set(KDEPIMLIBS_DATA_DIR \"${KDEPIMLIBS_DATA_DIR}\")
-set(KDEPIMLIBS_DBUS_INTERFACES_DIR \"${KDEPIMLIBS_DBUS_INTERFACES_DIR}\")
-set(KDEPIMLIBS_DBUS_SERVICES_DIR   \"${KDEPIMLIBS_DBUS_SERVICES_DIR}\")
-# These two are just for compatibility with KDE 4.[01]
-set(KDEPIMLIBS4_DBUS_INTERFACES_DIR \"\${KDEPIMLIBS_DBUS_INTERFACES_DIR}\")
-set(KDEPIMLIBS4_DBUS_SERVICES_DIR   \"\${KDEPIMLIBS_DBUS_SERVICES_DIR}\")
-
-set(KDEPIMLIBS_TARGET_PREFIX \"KDEPIMLibs::\")
-
-\n")
+message(FATAL_ERROR "For using this version of kdepimlibs you need a newer version of kdelibs, please update.")
+")
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsInformation.cmake ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake 
         DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
-
-# from next monday on only the version with prefix will be installed, to keep it working
-# in all cases until then now install two versions, one with and one without prefix. Alex
-install(EXPORT kdepimlibsLibraryTargets 
-        NAMESPACE "KDEPIMLibs::"
-        DESTINATION ${DATA_INSTALL_DIR}/cmake/modules 
-        FILE KDEPimLibsLibraryTargetsWithPrefix.cmake )
-
-install(EXPORT kdepimlibsLibraryTargets 
-        DESTINATION ${DATA_INSTALL_DIR}/cmake/modules 
-        FILE KDEPimLibsLibraryTargets.cmake )
-
-
