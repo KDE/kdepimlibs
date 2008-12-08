@@ -2,6 +2,11 @@ project(kdepimlibs)
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules )
 
+# Used e.g. in KdepimLibsConfig.cmake, Alex
+set(KDEPIMLIBS_VERSION_MAJOR 4)
+set(KDEPIMLIBS_VERSION_MINOR 2)
+set(KDEPIMLIBS_VERSION_PATCH 0)
+
 # search packages used by KDE
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
