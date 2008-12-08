@@ -61,21 +61,21 @@ class KCal::Calendar::Private
         mModified( false ),
         mNewObserver( false ),
         mObserversEnabled( true ),
-        mDefaultFilter( new CalFilter ),
-        mFilter( mDefaultFilter )
+        mDefaultFilter( new CalFilter )
     {
-        // Setup default filter, which does nothing
-        mFilter->setEnabled( false );
+      // Setup default filter, which does nothing
+      mFilter = mDefaultFilter;
+      mFilter->setEnabled( false );
 
-        // user information...
-        mOwner.setName( i18n( "Unknown Name" ) );
-        mOwner.setEmail( i18n( "unknown@nowhere" ) );
+      // user information...
+      mOwner.setName( i18n( "Unknown Name" ) );
+      mOwner.setEmail( i18n( "unknown@nowhere" ) );
     }
 
     ~Private()
     {
-        delete mTimeZones;
-        delete mDefaultFilter;
+      delete mTimeZones;
+      delete mDefaultFilter;
     }
     KDateTime::Spec timeZoneIdSpec( const QString &timeZoneId, bool view );
 
