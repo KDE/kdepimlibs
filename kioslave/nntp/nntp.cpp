@@ -60,7 +60,8 @@ int kdemain(int argc, char **argv) {
 /****************** NNTPProtocol ************************/
 
 NNTPProtocol::NNTPProtocol ( const QByteArray & pool, const QByteArray & app, bool isSSL )
-  : TCPSlaveBase((isSSL ? "nntps" : "nntp"), pool, app, isSSL )
+  : TCPSlaveBase((isSSL ? "nntps" : "nntp"), pool, app, isSSL ),
+    isAuthenticated( false )
 {
   DBG << "=============> NNTPProtocol::NNTPProtocol" << endl;
 
@@ -716,6 +717,7 @@ void NNTPProtocol::nntp_close () {
     write( "QUIT\r\n", 6 );
     disconnectFromHost();
     opened = false;
+    isAuthenticated = false;
   }
   mCurrentGroup.clear();
 }
@@ -775,6 +777,9 @@ bool NNTPProtocol::nntp_open()
       }
     }
 
+    // *try* to authenticate now (see bug#167718)
+    authenticate();
+
     return true;
   }
 
@@ -814,23 +819,7 @@ int NNTPProtocol::sendCommand( const QString &cmd )
     if ( mUser.isEmpty() || mPass.isEmpty() )
       return res_code;
 
-    // send username to server and confirm response
-    write( "AUTHINFO USER ", 14 );
-    write( mUser.toLatin1(), mUser.length() );
-    write( "\r\n", 2 );
-    res_code = evalResponse( readBuffer, readBufferLen );
-
-    if (res_code != 381) {
-      // error should be handled by invoking function
-      return res_code;
-    }
-
-    // send password
-    write( "AUTHINFO PASS ", 14 );
-    write( mPass.toLatin1(), mPass.length() );
-    write( "\r\n", 2 );
-    res_code = evalResponse( readBuffer, readBufferLen );
-
+    res_code = authenticate();
     if (res_code != 281) {
       // error should be handled by invoking function
       return res_code;
@@ -841,6 +830,47 @@ int NNTPProtocol::sendCommand( const QString &cmd )
     if ( !cmd.endsWith( "\r\n" ) )
       write( "\r\n", 2 );
     res_code = evalResponse( readBuffer, readBufferLen );
+  }
+
+  return res_code;
+}
+
+int NNTPProtocol::authenticate()
+{
+  int res_code = 0;
+
+  if( isAuthenticated ) {
+    // already authenticated
+    return 281;
+  }
+
+  if( mUser.isEmpty() || mPass.isEmpty() ) {
+    return 281; // failsafe : maybe add a "relax" mode to optionally ask user/pwd.
+  }
+
+  // send username to server and confirm response
+  write( "AUTHINFO USER ", 14 );
+  write( mUser.toLatin1(), mUser.length() );
+  write( "\r\n", 2 );
+  res_code = evalResponse( readBuffer, readBufferLen );
+
+  if( res_code == 281 ) {
+    // no password needed (RFC 2980 3.1.1 does not required one)
+    return res_code;
+  }
+  if (res_code != 381) {
+    // error should be handled by invoking function
+    return res_code;
+  }
+
+  // send password
+  write( "AUTHINFO PASS ", 14 );
+  write( mPass.toLatin1(), mPass.length() );
+  write( "\r\n", 2 );
+  res_code = evalResponse( readBuffer, readBufferLen );
+
+  if( res_code == 281 ) {
+    isAuthenticated = true;
   }
 
   return res_code;
