@@ -2243,8 +2243,8 @@ icaldurationtype ICalFormatImpl::writeICalDuration( const Duration &duration )
     } else {
       d.weeks = 0;
       d.days  = value;
-      d.hours = d.minutes = d.seconds = 0;
     }
+    d.hours = d.minutes = d.seconds = 0;
   } else {
     if ( !( value % gSecondsPerWeek ) ) {
       d.weeks = value / gSecondsPerWeek;
