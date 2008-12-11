@@ -1028,13 +1028,9 @@ Todo *ICalFormatImpl::readTodo( icalcomponent *vtodo, ICalTimeZones *tzlist )
     case ICAL_DUE_PROPERTY:
     { // due date/time
       KDateTime kdt = readICalDateTimeProperty( p, tzlist );
-      if ( kdt.isDateOnly() ) {
-        todo->setDtDue( KDateTime( kdt.date(), todo->dtStart().timeSpec() ), true );
-      } else {
-        todo->setDtDue( kdt, true );
-        todo->setAllDay( false );
-      }
+      todo->setDtDue( kdt, true );
       todo->setHasDueDate( true );
+      todo->setAllDay( kdt.isDateOnly() );
       break;
     }
     case ICAL_COMPLETED_PROPERTY:  // completion date/time
