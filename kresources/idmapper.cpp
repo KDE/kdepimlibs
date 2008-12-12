@@ -172,8 +172,11 @@ void IdMapper::removeRemoteId( const QString &remoteId )
     QMap<QString, QVariant>::Iterator it;
     for ( it = d->idMap.begin(); it != d->idMap.end(); ++it ) {
       if ( it.value().toString() == remoteId ) {
-        d->idMap.remove( it.key() );
-        d->fingerprintMap.remove( it.key() );
+
+        QString key = it.key();
+
+        d->idMap.remove( key );
+        d->fingerprintMap.remove( key );
         return;
       }
     }
