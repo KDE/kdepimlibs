@@ -164,7 +164,7 @@ void SmtpJob::startSmtpJob()
 #warning yet another KMail specific thing
 #endif
 //       KCursorSaver idle( KBusyPtr::idle() );
-      bool keep = true;
+      bool keep = transport()->storePassword();
       result = KIO::PasswordDialog::getNameAndPassword(
         user, passwd, &keep,
         i18n( "You need to supply a username and a password to use this SMTP server." ),
