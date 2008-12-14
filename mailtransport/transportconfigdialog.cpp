@@ -216,7 +216,7 @@ void TransportConfigDialog::checkSmtpCapabilities()
 
   d->serverTest = new ServerTest( this );
   d->serverTest->setProtocol( SMTP_PROTOCOL );
-  d->serverTest->setServer( d->smtp.kcfg_host->text() );
+  d->serverTest->setServer( d->smtp.kcfg_host->text().trimmed() );
   if ( d->smtp.kcfg_specifyHostname->isChecked() ) {
     d->serverTest->setFakeHostname( d->smtp.kcfg_localHostname->text() );
   }
@@ -336,6 +336,17 @@ void TransportConfigDialog::slotFinished( QList<int> results )
 
 void TransportConfigDialog::hostNameChanged( const QString &text )
 {
+  // sanitize hostname...
+  if ( d->transport->type() == Transport::EnumType::Sendmail ) {
+    d->sendmail.kcfg_host->blockSignals( true );
+    d->sendmail.kcfg_host->setText( text.trimmed() );
+    d->sendmail.kcfg_host->blockSignals( false );
+  } else if ( d->transport->type() == Transport::EnumType::SMTP ) {
+    d->smtp.kcfg_host->blockSignals( true );
+    d->smtp.kcfg_host->setText( text.trimmed() );
+    d->smtp.kcfg_host->blockSignals( false );
+  }
+
   d->resetAuthCapabilities();
   enableButton( Ok, !text.isEmpty() );
   for ( int i = 0; d->encryptionGroup && i < d->encryptionGroup->buttons().count(); i++ ) {
