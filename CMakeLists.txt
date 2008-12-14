@@ -6,6 +6,7 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules )
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 2)
 set(KDEPIMLIBS_VERSION_PATCH 0)
+set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH} )
 
 # search packages used by KDE
 find_package(KDE4 REQUIRED)
@@ -118,14 +119,33 @@ set(KDEPIMLIBS_TARGET_PREFIX KDEPIMLibs__)
 
 configure_file(KdepimLibsConfig.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfig.cmake" @ONLY)
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfig.cmake  # ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake 
-        DESTINATION ${LIB_INSTALL_DIR}/KdepimLibs/cmake)
+
+set(_KdepimLibsConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/KdepimLibs-${KDEPIMLIBS_VERSION}/cmake)
+
+# places where find_package() looks for FooConfig.cmake files:
+# CMake >= 2.6.0 looks in lib/Foo*/cmake/, CMake >= 2.6.3 also looks in
+# lib/cmake/Foo*/, which packagers prefer. So they can set the KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR
+# option to have kdepimlibs install its Config file there. Alex
+if(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
+   set(_KdepimLibsConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/KdepimLibs-${KDEPIMLIBS_VERSION} )
+endif(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfig.cmake
+        DESTINATION ${_KdepimLibsConfig_INSTALL_DIR} )
+
+# this requires kdelibs >= Dec. 15th, will remove the test soon, Alex
+if(COMMAND KDE4_WRITE_BASIC_CMAKE_VERSION_FILE)
+   kde4_write_basic_cmake_version_file(${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfigVersion.cmake 
+                                  ${KDEPIMLIBS_VERSION_MAJOR} ${KDEPIMLIBS_VERSION_MINOR} ${KDEPIMLIBS_VERSION_PATCH})
+   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfigVersion.cmake
+           DESTINATION ${_KdepimLibsConfig_INSTALL_DIR} )
+endif(COMMAND KDE4_WRITE_BASIC_CMAKE_VERSION_FILE)
 
 # from next monday on only the version with prefix will be installed, to keep it working
 # in all cases until then now install two versions, one with and one without prefix. Alex
 install(EXPORT kdepimlibsLibraryTargets 
         NAMESPACE ${KDEPIMLIBS_TARGET_PREFIX}
-        DESTINATION ${LIB_INSTALL_DIR}/KdepimLibs/cmake
+        DESTINATION ${_KdepimLibsConfig_INSTALL_DIR}
         FILE KDEPimLibsLibraryTargetsWithPrefix.cmake )
 
 
