@@ -134,12 +134,12 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfig.cmake
         DESTINATION ${_KdepimLibsConfig_INSTALL_DIR} )
 
 # this requires kdelibs >= Dec. 15th, will remove the test soon, Alex
-if(COMMAND KDE4_WRITE_BASIC_CMAKE_VERSION_FILE)
-   kde4_write_basic_cmake_version_file(${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfigVersion.cmake 
+if(COMMAND MACRO_WRITE_BASIC_CMAKE_VERSION_FILE)
+   macro_write_basic_cmake_version_file(${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfigVersion.cmake 
                                   ${KDEPIMLIBS_VERSION_MAJOR} ${KDEPIMLIBS_VERSION_MINOR} ${KDEPIMLIBS_VERSION_PATCH})
    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfigVersion.cmake
            DESTINATION ${_KdepimLibsConfig_INSTALL_DIR} )
-endif(COMMAND KDE4_WRITE_BASIC_CMAKE_VERSION_FILE)
+endif(COMMAND MACRO_WRITE_BASIC_CMAKE_VERSION_FILE)
 
 # from next monday on only the version with prefix will be installed, to keep it working
 # in all cases until then now install two versions, one with and one without prefix. Alex
