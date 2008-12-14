@@ -1883,21 +1883,24 @@ void ICalFormatImpl::readAlarm( icalcomponent *alarm,
     case ICAL_TRIGGER_PROPERTY:
     {
       icaltriggertype trigger = icalproperty_get_trigger( p );
-      if ( icaltime_is_null_time( trigger.time ) ) {
-        if ( icaldurationtype_is_null_duration( trigger.duration ) ) {
-          kDebug() << "Trigger has no time and no duration.";
-        } else {
+      if ( !icaltime_is_null_time( trigger.time ) ) {
+        //set the trigger to a specific time (which is not in rfc2445, btw)
+        ialarm->setTime( readICalUtcDateTime( p, trigger.time, tzlist ) );
+      } else {
+        //set the trigger to an offset from the incidence start or end time.
+        if ( !icaldurationtype_is_bad_duration( trigger.duration ) ) {
           Duration duration( readICalDuration( trigger.duration ) );
           icalparameter *param =
             icalproperty_get_first_parameter( p, ICAL_RELATED_PARAMETER );
           if ( param && icalparameter_get_related( param ) == ICAL_RELATED_END ) {
-            ialarm->setEndOffset(duration);
+            ialarm->setEndOffset( duration );
           } else {
             ialarm->setStartOffset( duration );
           }
+        } else {
+          // a bad duration was encountered, just set a 0 duration from start
+          ialarm->setStartOffset( Duration( 0 ) );
         }
-      } else {
-        ialarm->setTime( readICalUtcDateTime( p, trigger.time, tzlist ) );
       }
       break;
     }
