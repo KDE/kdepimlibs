@@ -1219,6 +1219,12 @@ Journal *ICalFormatImpl::readJournal( icalcomponent *vjournal,
 
 Attendee *ICalFormatImpl::readAttendee( icalproperty *attendee )
 {
+  // the following is a hack to support broken calendars (like WebCalendar 1.0.x)
+  // that include non-RFC-compliant attendees.  Otherwise libical 0.42 asserts.
+  if ( !icalproperty_get_value( attendee ) ) {
+    return 0;
+  }
+
   icalparameter *p = 0;
 
   QString email = QString::fromUtf8( icalproperty_get_attendee( attendee ) );
