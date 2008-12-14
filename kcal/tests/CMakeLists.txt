@@ -82,32 +82,32 @@ FILE( GLOB_RECURSE vCalFiles       data/vCalendar/*.vcs )
 
 FOREACH( file ${testFiles} )
   GET_FILENAME_COMPONENT( fn ${file} NAME)
-  ADD_TEST( RecurNext-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/testrecurrence.shell "next" ${file} )
+  ADD_TEST( RecurNext-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/testrecurrence "next" ${file} )
 ENDFOREACH(file)
 
 FOREACH( file ${testFiles} )
   GET_FILENAME_COMPONENT( fn ${file} NAME)
-  ADD_TEST( RecurPrev-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/testrecurprevious.shell "prev" ${file} )
+  ADD_TEST( RecurPrev-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/testrecurprevious "prev" ${file} )
 ENDFOREACH(file)
 
 FOREACH( file ${testFiles} )
   GET_FILENAME_COMPONENT( fn ${file} NAME)
-  ADD_TEST( RecursOn-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/testrecurson.shell "recurson" ${file} )
+  ADD_TEST( RecursOn-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/testrecurson "recurson" ${file} )
 ENDFOREACH(file)
 
 FOREACH( file ${compatFiles} )
   GET_FILENAME_COMPONENT( fn ${file} NAME)
-  ADD_TEST( Compat-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/readandwrite.shell "ical" ${file} )
+  ADD_TEST( Compat-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/readandwrite "ical" ${file} )
 ENDFOREACH(file)
 
 FOREACH( file ${vCalFilesAsIcal} )
   GET_FILENAME_COMPONENT( fn ${file} NAME)
-  ADD_TEST( VCalOut-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/testvcalexport.shell "vcal" ${file} )
+  ADD_TEST( VCalOut-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/testvcalexport "vcal" ${file} )
 ENDFOREACH(file)
 
 FOREACH( file ${vCalFiles} )
   GET_FILENAME_COMPONENT( fn ${file} NAME)
-  ADD_TEST( VCalIn-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/readandwrite.shell "ical" ${file} )
+  ADD_TEST( VCalIn-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/readandwrite "ical" ${file} )
 ENDFOREACH(file)
 
 # ADD_TEST( TestRecurrence  runtestcase.pl testrecurrence    "next" ${CMAKE_CURRENT_SOURCE_DIR} data/RecurrenceRule/ "*.ics" )

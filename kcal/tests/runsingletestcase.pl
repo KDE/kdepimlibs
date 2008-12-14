@@ -66,7 +66,8 @@ sub checkfile()
   my $file = shift;
   my $outfile = shift;
 
-  $cmd = 'diff -u -w -B -I "^DTSTAMP:[0-9ZT]*" -I "^LAST-MODIFIED:[0-9ZT]*" -I "^CREATED:[0-9ZT]*" '."$file.$id.ref $outfile";
+  
+  $cmd = 'diff -u -B -I "^DTSTAMP:[0-9ZT]*$" -I "^LAST-MODIFIED:[0-9ZT]*$" -I "^CREATED:[0-9ZT]*$" '."$file.$id.ref $outfile";
   if ( !open( DIFF, "$cmd|" ) ) {
     print STDERR "Unable to run diff command on the files $file.$id.ref and $outfile\n";
     exit 1;
@@ -76,10 +77,6 @@ sub checkfile()
   $errorstr = "";
   while ( <DIFF> ) {
     $line = $_;
-    next if ($line =~ m/^[+-](DTSTAMP|LAST-MODIFIED|CREATED)/);
-    next if ($line =~ m/^[+-]\s*$/);
-    next if ($line =~ m/No newline at end of file/);
-    next if ($outfile =~ m+/Compat/+ && $line =~ m/^[+-](SEQUENCE|PRIORITY|ORGANIZER:MAILTO):/);
     if ( $line =~ /^[+-][^+-]/ ) {
       # it's an added/deleted/modified line. Register it as an error
       $errors++;
