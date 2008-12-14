@@ -1405,6 +1405,9 @@ wchar_t* fakeUnicode(const char *ps, int *bytes)
 unsigned int uStrLen(const wchar_t *u)
 {
     int i = 0;
+    if(u == NULL)
+      return 0;
+
     while (*u != (wchar_t)0) { u++; i++; }
     return i;
 }
@@ -1412,7 +1415,12 @@ unsigned int uStrLen(const wchar_t *u)
 char* fakeCString(const wchar_t *u)
 {
     char *s, *t;
-    unsigned int len = uStrLen(u) + 1;
+    unsigned int len;
+
+    if(u == NULL)
+      return NULL;
+
+    len = uStrLen(u) + 1;
     t = s = (char*)malloc(len+1);
     while (*u) {
 	if (*u == (wchar_t)0x2028)
