@@ -36,6 +36,7 @@ void IdMapperTest::testIdMapper()
   mapper.setRemoteId( "foo", "bar" );
   mapper.setRemoteId( "yes", "klar" );
   mapper.setRemoteId( "no", "nee" );
+  mapper.setRemoteId( QString(), QString() );
 
   QString mapperAsString = "foo\tbar\t\r\nno\tnee\t\r\nyes\tklar\t\r\n";
 

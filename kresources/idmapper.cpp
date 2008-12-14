@@ -115,8 +115,12 @@ bool IdMapper::load()
   while ( !ts.atEnd() ) {
     line = ts.readLine( 1024 );
     QStringList parts = line.split( "\x02\x02", QString::KeepEmptyParts );
-    d->idMap.insert( parts[ 0 ], parts[ 1 ] );
-    d->fingerprintMap.insert( parts[ 0 ], parts[ 2 ] );
+    // sanity check; the uidmap file could be corrupted and
+    // QList doesn't like accessing invalid indexes
+    if ( parts.count() == 3 ) {
+      d->idMap.insert( parts[ 0 ], parts[ 1 ] );
+      d->fingerprintMap.insert( parts[ 0 ], parts[ 2 ] );
+    }
   }
 
   file.close();
@@ -157,17 +161,21 @@ void IdMapper::clear()
 
 void IdMapper::setRemoteId( const QString &localId, const QString &remoteId )
 {
-  d->idMap.insert( localId, remoteId );
+  if ( !( localId.isEmpty() || remoteId.isEmpty() ) ) {
+    d->idMap.insert( localId, remoteId );
+  }
 }
 
 void IdMapper::removeRemoteId( const QString &remoteId )
 {
-  QMap<QString, QVariant>::Iterator it;
-  for ( it = d->idMap.begin(); it != d->idMap.end(); ++it ) {
-    if ( it.value().toString() == remoteId ) {
-      d->idMap.remove( it.key() );
-      d->fingerprintMap.remove( it.key() );
-      return;
+  if ( !remoteId.isEmpty( ) ) {
+    QMap<QString, QVariant>::Iterator it;
+    for ( it = d->idMap.begin(); it != d->idMap.end(); ++it ) {
+      if ( it.value().toString() == remoteId ) {
+        d->idMap.remove( it.key() );
+        d->fingerprintMap.remove( it.key() );
+        return;
+      }
     }
   }
 }
@@ -214,7 +222,9 @@ QString IdMapper::asString() const
 
 void IdMapper::setFingerprint( const QString &localId, const QString &fingerprint )
 {
-  d->fingerprintMap.insert( localId, fingerprint );
+  if ( !( localId.isEmpty() || fingerprint.isEmpty() ) ) {
+    d->fingerprintMap.insert( localId, fingerprint );
+  }
 }
 
 QString IdMapper::fingerprint( const QString &localId ) const
