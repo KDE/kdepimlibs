@@ -39,6 +39,7 @@ Name[zh_CN]=本地文件中的日历
 Name[zh_TW]=本地端檔案裡的行事曆
 Comment=Provides access to a calendar stored in a single local file
 Comment[ca]=Proporciona l'accés a un calendari emmagatzemat en un fitxer local individual
+Comment[da]=Giver adgang til en kalender lagret i en enkelt lokal fil
 Comment[de]=Ermöglicht Zugriff auf einen Kalender, der in einer einzigen Dateien lokal gespeichert ist
 Comment[el]=Προσφέρει πρόσβαση σε ένα ημερολόγιο αποθηκευμένο σε ένα τοπικό αρχείο
 Comment[es]=Provee acceso a un calendario almacenado en un único archivo local
