@@ -621,11 +621,11 @@ static QString cleanHtml( const QString &html )
 static QString eventStartTimeStr( Event *event )
 {
   QString tmp;
-  if ( ! event->allDay() ) {
+  if ( !event->allDay() ) {
     tmp =  i18nc( "%1: Start Date, %2: Start Time", "%1 %2",
                   event->dtStartDateStr(), event->dtStartTimeStr() );
   } else {
-    tmp = i18nc( "%1: Start Date", "%1 (time unspecified)", event->dtStartDateStr() );
+    tmp = i18nc( "%1: Start Date", "%1 (all day)", event->dtStartDateStr() );
   }
   return tmp;
 }
@@ -634,11 +634,11 @@ static QString eventEndTimeStr( Event *event )
 {
   QString tmp;
   if ( event->hasEndDate() && event->dtEnd().isValid() ) {
-    if ( ! event->allDay() ) {
+    if ( !event->allDay() ) {
       tmp =  i18nc( "%1: End Date, %2: End Time", "%1 %2",
                     event->dtEndDateStr(), event->dtEndTimeStr() );
     } else {
-      tmp = i18nc( "%1: End Date", "%1 (time unspecified)", event->dtEndDateStr() );
+      tmp = i18nc( "%1: End Date", "%1 (all day)", event->dtEndDateStr() );
     }
   } else {
     tmp = i18n( "Unspecified" );
@@ -2155,12 +2155,29 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
       }
       return txt;
     }
-    return i18ncp( "Recurs Every N years on month-name [1st|2nd|...]",
-                   "Recurs yearly on %2 %3",
-                   "Recurs every %1 years on %2 %3",
-                   recur->frequency(),
-                   calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ),
-                   dayList[ recur->yearDates()[0] + 31 ] );
+    if ( !recur->yearDates().isEmpty() ) {
+      return i18ncp( "Recurs Every N years on month-name [1st|2nd|...]",
+                     "Recurs yearly on %2 %3",
+                     "Recurs every %1 years on %2 %3",
+                     recur->frequency(),
+                     calSys->monthName( recur->yearMonths()[0],
+                                        recur->startDate().year() ),
+                     dayList[ recur->yearDates()[0] + 31 ] );
+    } else {
+      if (!recur->yearMonths().isEmpty() ) {
+        return i18nc( "Recurs Every year on month-name [1st|2nd|...]",
+                      "Recurs yearly on %1 %2",
+                      calSys->monthName( recur->yearMonths()[0],
+                                         recur->startDate().year() ),
+                      dayList[ recur->startDate().day() + 31 ] );
+      } else {
+        return i18nc( "Recurs Every year on month-name [1st|2nd|...]",
+                      "Recurs yearly on %1 %2",
+                      calSys->monthName( recur->startDate().month(),
+                                         recur->startDate().year() ),
+                      dayList[ recur->startDate().day() + 31 ] );
+      }
+    }
   }
   case Recurrence::rYearlyDay:
     if ( recur->duration() != -1 ) {
