@@ -1543,6 +1543,13 @@ void VCalFormat::populate( VObject *vcal )
       }
     } else if ( strcmp( vObjectName( curVO ), VCTodoProp ) == 0 ) {
       Todo *aTodo = VTodoToEvent( curVO );
+
+      Todo *old = d->mCalendar->todo( aTodo->uid() );
+      if ( old ) {
+        d->mCalendar->deleteTodo( old );
+        d->mTodosRelate.removeAll( old );
+      }
+
       d->mCalendar->addTodo( aTodo );
     } else if ( ( strcmp( vObjectName( curVO ), VCVersionProp ) == 0 ) ||
                 ( strcmp( vObjectName( curVO ), VCProdIdProp ) == 0 ) ||
