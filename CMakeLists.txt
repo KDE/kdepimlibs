@@ -15,12 +15,12 @@ include (MacroLibrary)
 
 
 find_package(Boost REQUIRED)
-macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1_33_0" "Needed by several critical PIM libraries.")
+macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1.33.1" "Needed by several critical PIM libraries.")
 
 
 if (NOT ONLY_KLEO)
    macro_optional_find_package(Sasl2)
-   macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins. IMAP and Sieve kioslaves will not be built.")
+   macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "STRONGLY RECOMMENDED: Needed to support authentication of logins. IMAP and Sieve kioslaves will not be built.")
 endif (NOT ONLY_KLEO)
 
 # gpgme is a hard dependency
