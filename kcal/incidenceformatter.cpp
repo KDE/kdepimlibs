@@ -123,7 +123,6 @@ static QString linkPerson( const QString &email, QString name, QString uid,
       uid.clear();
     }
   }
-  kDebug() << "formatAttendees: uid =" << uid;
 
   // Show the attendee
   QString tmpString = "<li>";
@@ -143,10 +142,9 @@ static QString linkPerson( const QString &email, QString name, QString uid,
 
   // Make the mailto link
   if ( !email.isEmpty() && !iconPath.isNull() ) {
-    KCal::Person person( name, email );
     KUrl mailto;
     mailto.setProtocol( "mailto" );
-    mailto.setPath( person.fullName() );
+    mailto.setPath( email );
     tmpString += eventViewerAddLink( mailto.url(), "<img src=\"" + iconPath + "\">" );
   }
   tmpString += "</li>\n";
