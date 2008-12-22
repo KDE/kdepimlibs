@@ -115,13 +115,18 @@ make_install_path_absolute(KDEPIMLIBS_MAN_DIR             ${MAN_INSTALL_DIR})
 make_install_path_absolute(KDEPIMLIBS_INFO_DIR            ${INFO_INSTALL_DIR})
 make_install_path_absolute(KDEPIMLIBS_SERVICES_DIR        ${SERVICES_INSTALL_DIR})
 make_install_path_absolute(KDEPIMLIBS_SERVICETYPES_DIR    ${SERVICETYPES_INSTALL_DIR})
+
+# Used in configure_file() and install(EXPORT)
 set(KDEPIMLIBS_TARGET_PREFIX KDEPIMLibs__)
 
+# this file is installed and contains all necessary information about the installed kdepimibs, it also loads the file with the exported targets
 configure_file(KdepimLibsConfig.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfig.cmake" @ONLY)
 
+# this file will be installed too and will be used by cmake when searching for the Config.cmake file to check the version of kdepimlibs, Alex
+macro_write_basic_cmake_version_file(${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfigVersion.cmake 
+                                     ${KDEPIMLIBS_VERSION_MAJOR} ${KDEPIMLIBS_VERSION_MINOR} ${KDEPIMLIBS_VERSION_PATCH})
 
 set(_KdepimLibsConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/KdepimLibs-${KDEPIMLIBS_VERSION}/cmake)
-
 # places where find_package() looks for FooConfig.cmake files:
 # CMake >= 2.6.0 looks in lib/Foo*/cmake/, CMake >= 2.6.3 also looks in
 # lib/cmake/Foo*/, which packagers prefer. So they can set the KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR
@@ -130,34 +135,17 @@ if(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
    set(_KdepimLibsConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/KdepimLibs-${KDEPIMLIBS_VERSION} )
 endif(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfig.cmake
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfigVersion.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfig.cmake
         DESTINATION ${_KdepimLibsConfig_INSTALL_DIR} )
 
-# this requires kdelibs >= Dec. 15th, will remove the test soon, Alex
-if(COMMAND MACRO_WRITE_BASIC_CMAKE_VERSION_FILE)
-   macro_write_basic_cmake_version_file(${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfigVersion.cmake 
-                                  ${KDEPIMLIBS_VERSION_MAJOR} ${KDEPIMLIBS_VERSION_MINOR} ${KDEPIMLIBS_VERSION_PATCH})
-   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfigVersion.cmake
-           DESTINATION ${_KdepimLibsConfig_INSTALL_DIR} )
-endif(COMMAND MACRO_WRITE_BASIC_CMAKE_VERSION_FILE)
-
-# from next monday on only the version with prefix will be installed, to keep it working
-# in all cases until then now install two versions, one with and one without prefix. Alex
+# Install the file with the exported targets, use ${KDEPIMLIBS_TARGET_PREFIX} as prefix for the names of these targets, Alex
 install(EXPORT kdepimlibsLibraryTargets 
         NAMESPACE ${KDEPIMLIBS_TARGET_PREFIX}
         DESTINATION ${_KdepimLibsConfig_INSTALL_DIR}
         FILE KDEPimLibsLibraryTargetsWithPrefix.cmake )
 
-
-# These files will be picked up by older FindKdepimLibs.cmake from kdelibs,
-# so write a message there to inform the developer that he should update kdelibs. Alex
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake " 
-message(FATAL_ERROR "For using this version of kdepimlibs you need a newer version of kdelibs, please update.")
-")
-
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsInformation.cmake " 
-message(FATAL_ERROR "For using this version of kdepimlibs you need a newer version of kdelibs, please update.")
-")
-
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsInformation.cmake ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake 
+# Install a KDEPimLibsDependencies.cmake so people using kdepimlibs 4.2 with kdelibs < 4.2 get a useful error message, Alex
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake "\n message(FATAL_ERROR \"For using this version of kdepimlibs (${KDEPIMLIBS_VERSION}) you need a newer version of kdelibs, please update.\")\n")
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake
         DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
