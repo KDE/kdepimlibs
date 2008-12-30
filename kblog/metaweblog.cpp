@@ -146,7 +146,9 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
         category["name"]= ( *it );
         category["description"] = serverCategory[ "description" ].toString();
         category["htmlUrl"] = serverCategory[ "htmlUrl" ].toString();
-        category["rssUrl"] = serverCategory[ "rssUrl" ].toString();
+		category["rssUrl"] = serverCategory[ "rssUrl" ].toString();
+		category["categoryId"] = serverCategory[ "categoryId" ].toString();
+		category["parentId"] = serverCategory[ "parentId" ].toString();
         categoriesList.append( category );
       }
       kDebug() << "Emitting listedCategories";
@@ -167,6 +169,8 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
       category["description"] = serverCategory[ "description" ].toString();
       category["htmlUrl"] = serverCategory[ "htmlUrl" ].toString();
       category["rssUrl"] = serverCategory[ "rssUrl" ].toString();
+	  category["categoryId"] = serverCategory[ "categoryId" ].toString();
+	  category["parentId"] = serverCategory[ "parentId" ].toString();
       categoriesList.append( category );
     }
     kDebug() << "Emitting listedCategories()";
