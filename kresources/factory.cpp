@@ -81,16 +81,19 @@ Factory *Factory::self( const QString &resourceFamily )
     if ( enabled && currentVersion < targetVersion ) {
       kDebug() << "Performing Akonadi migration. Good luck!";
       KProcess proc;
-      proc.setProgram( "kres-migrator", QStringList() << "--interactive-on-change" << "--type" << resourceFamily );
+      proc.setProgram( "kres-migrator",
+                       QStringList() << "--interactive-on-change" << "--type" << resourceFamily );
       proc.start();
       bool result = proc.waitForStarted();
-      if ( result )
+      if ( result ) {
         result = proc.waitForFinished();
+      }
       if ( result && proc.exitCode() == 0 ) {
         kDebug() << "Akonadi migration has been successful";
         migrationCfg.writeEntry( "Version-" + resourceFamily, targetVersion );
         migrationCfg.sync();
-      } else if ( !result || proc.exitCode() != 1 ) { // exit code 1 means it is already running, so we are probably called by a migrator instance
+      } else if ( !result || proc.exitCode() != 1 ) {
+        // exit code 1 means it is already running, so we are probably called by a migrator instance
         kError() << "Akonadi migration failed!";
         kError() << "command was: " << proc.program();
         kError() << "exit code: " << proc.exitCode();
