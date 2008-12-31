@@ -162,8 +162,9 @@ Transport *TransportManager::createTransport() const
 
 void TransportManager::addTransport( Transport *transport )
 {
-  if ( d->transports.contains( transport ) )
+  if ( d->transports.contains( transport ) ) {
     return;
+  }
 
   d->transports.append( transport );
   validateDefault();

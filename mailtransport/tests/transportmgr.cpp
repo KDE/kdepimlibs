@@ -61,12 +61,12 @@ TransportMgr::TransportMgr() :
   connect( b, SIGNAL(clicked(bool)), SLOT(cancelBtnClicked()) );
 }
 
-void TransportMgr::removeAllBtnClicked() 
+void TransportMgr::removeAllBtnClicked()
 {
-    MailTransport::TransportManager* manager =  MailTransport::TransportManager::self();
-    QList< Transport *> transports = manager->transports();
-    for( int i=0; i < transports.count(); i++ ) {
-        MailTransport::Transport* transport = transports.at( i );
+    MailTransport::TransportManager *manager =  MailTransport::TransportManager::self();
+    QList<Transport *> transports = manager->transports();
+    for ( int i=0; i < transports.count(); i++ ) {
+        MailTransport::Transport *transport = transports.at( i );
         kDebug() << transport->host();
         manager->removeTransport( transport->id() );
     }
