@@ -343,12 +343,10 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           event->setOrganizer( s );
         }
 
-        s = tnefMsg->findProp( 0x8516 ).replace( QChar( '-' ), QString() ).
-            replace( QChar( ':' ), QString() );
+        s = tnefMsg->findProp( 0x8516 ).remove( QChar( '-' ) ).remove( QChar( ':' ) );
         event->setDtStart( KDateTime::fromString( s ) ); // ## Format??
 
-        s = tnefMsg->findProp( 0x8517 ).replace( QChar( '-' ), QString() ).
-            replace( QChar( ':' ), QString() );
+        s = tnefMsg->findProp( 0x8517 ).remove( QChar( '-' ) ).remove( QChar( ':' ) );
         event->setDtEnd( KDateTime::fromString( s ) );
 
         s = tnefMsg->findProp( 0x8208 );
@@ -365,8 +363,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
         // PENDING(khz): is this value in local timezone? Must it be
         // adjusted? Most likely this is a bug in the server or in
         // Outlook - we ignore it for now.
-        s = tnefMsg->findProp( 0x8202 ).replace( QChar( '-' ), QString() ).
-            replace( QChar( ':' ), QString() );
+        s = tnefMsg->findProp( 0x8202 ).remove( QChar( '-' ) ).remove( QChar( ':' ) );
         // ### kcal always uses currentDateTime()
         // event->setDtStamp( QDateTime::fromString( s ) );
 
@@ -430,7 +427,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
                                 stringProp( tnefMsg, MAPI_TAG_PR_PROFESSION ) );
 
         QString s = tnefMsg->findProp( MAPI_TAG_PR_WEDDING_ANNIVERSARY ).
-                    replace( QChar( '-' ), QString() ).replace( QChar( ':' ), QString() );
+                    remove( QChar( '-' ) ).remove( QChar( ':' ) );
         if ( !s.isEmpty() ) {
           addressee.insertCustom( "KADDRESSBOOK", "X-Anniversary", s );
         }
@@ -502,7 +499,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           KABC::PhoneNumber( nr, KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work ) );
 
         s = tnefMsg->findProp( MAPI_TAG_PR_BIRTHDAY ).
-            replace( QChar( '-' ), QString() ).replace( QChar( ':' ), QString() );
+            remove( QChar( '-' ) ).remove( QChar( ':' ) );
         if ( !s.isEmpty() ) {
           addressee.setBirthday( QDateTime::fromString( s ) );
         }
