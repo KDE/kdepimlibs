@@ -342,7 +342,8 @@ bool Scheduler::acceptReply( IncidenceBase *incidence,
   // try harder to find the correct incidence
   if ( !ev && !to ) {
     const Incidence::List list = mCalendar->incidences();
-    for ( Incidence::List::ConstIterator it = list.constBegin(), end = list.constEnd(); it != end; ++it ) {
+    for ( Incidence::List::ConstIterator it=list.constBegin(), end=list.constEnd();
+          it != end; ++it ) {
       if ( (*it)->schedulingID() == incidence->uid() ) {
         ev = dynamic_cast<Event*>( *it );
         to = dynamic_cast<Todo*>( *it );
