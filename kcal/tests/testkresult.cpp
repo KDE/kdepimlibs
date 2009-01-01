@@ -32,6 +32,7 @@ void KResultTest::testValidity()
   QVERIFY( res1.isOk() == true );
   KResult *res2 = new KResult( KResult::Ok );
   QVERIFY( res1.isOk() == res2->isOk() );
+  delete res2;
 }
 
 void KResultTest::testCopy()
