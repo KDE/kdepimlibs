@@ -271,7 +271,8 @@ bool ICalTimeZone::update( const ICalTimeZone &other )
     return false;
   }
 
-  setData( other.data()->clone(), other.source() );
+  KTimeZoneData* otherData = other.data() ? other.data()->clone() : 0;
+  setData( otherData, other.source() );
   return true;
 }
 
