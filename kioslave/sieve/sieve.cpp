@@ -232,12 +232,10 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
 				ksDebug << "Unknown action " << r.getAction() << "." << endl;
 
 		} else if (r.getKey() == "IMPLEMENTATION") {
-			if (r.getVal().toLower().contains("sieve") ) {
-				ksDebug << "Connected to Sieve server: " << r.getVal() << endl;
-				ret = true;
-				setMetaData("implementation", r.getVal());
-				m_implementation = r.getVal();
-			}
+			ksDebug << "Connected to Sieve server: " << r.getVal() << endl;
+			ret = true;
+			setMetaData("implementation", r.getVal());
+			m_implementation = r.getVal();
 
 		} else if (r.getKey() == "SASL") {
 			// Save list of available SASL methods
