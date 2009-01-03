@@ -133,7 +133,7 @@ void CharFreq::count( const char *it, size_t len )
     default:
     {
       uchar c = *it;
-      if ( c == '\t' || c >= ' ' && c <= '~' ) {
+      if ( c == '\t' || ( c >= ' ' && c <= '~' ) ) {
         ++mPrintable;
       } else if ( c == 127 || c < ' ' ) {
         ++mCTL;
