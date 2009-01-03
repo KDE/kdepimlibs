@@ -86,7 +86,7 @@ static inline uchar lowNibble( uchar ch )
 static inline bool keep( uchar ch )
 {
   // no CTLs, except HT and not '?'
-  return !( ch < ' ' && ch != '\t' || ch == '?' );
+  return !( ( ch < ' ' && ch != '\t' ) || ch == '?' );
 }
 
 //
@@ -117,7 +117,7 @@ class QuotedPrintableEncoder : public Encoder
       mFinished( false ) {}
 
   bool needsEncoding( uchar ch )
-    { return ch > '~' || ch < ' ' && ch != '\t' || ch == '='; }
+    { return ch > '~' || ( ch < ' ' && ch != '\t' ) || ch == '='; }
   bool needsEncodingAtEOL( uchar ch )
     { return ch == ' ' || ch == '\t'; }
   bool needsEncodingAtBOL( uchar ch )
@@ -404,7 +404,7 @@ bool QuotedPrintableDecoder::decode( const char* &scursor,
         mLastChar = ch;
       }
     } else { // not mInsideHexChar
-      if ( ch <= '~' && ch >= ' ' || ch == '\t' ) {
+      if ( ( ch <= '~' && ch >= ' ' ) || ch == '\t' ) {
         if ( ch == mEscapeChar ) {
           mInsideHexChar = true;
         } else if ( mQEncoding && ch == '_' ) {
@@ -569,7 +569,7 @@ void QuotedPrintableEncoder::createOutputBuffer( char* &dcursor,
   }
 
   if ( Never == mAccuNeedsEncoding ||
-       AtBOL == mAccuNeedsEncoding && mCurrentLineLength != 0 ) {
+       ( AtBOL == mAccuNeedsEncoding && mCurrentLineLength != 0 ) ) {
     write( mAccu, dcursor, dend );
     mCurrentLineLength++;
   } else {
