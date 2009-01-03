@@ -256,9 +256,14 @@ static QString eventViewerFormatHeader( Incidence *incidence )
   KIconLoader *iconLoader = KIconLoader::global();
   tmpStr += "<td>";
   if ( incidence->type() == "Todo" ) {
-    tmpStr += "<img src=\"" +
-              iconLoader->iconPath( "view-calendar-tasks", KIconLoader::Small ) +
-              "\">";
+    tmpStr += "<img src=\"";
+    Todo *todo = static_cast<Todo *>( incidence );
+    if ( !todo->isCompleted() ) {
+      tmpStr += iconLoader->iconPath( "view-calendar-tasks", KIconLoader::Small );
+    } else {
+      tmpStr += iconLoader->iconPath( "task-complete", KIconLoader::Small );
+    }
+    tmpStr += "\">";
   }
   if ( incidence->type() == "Event" ) {
     tmpStr += "<img src=\"" +
