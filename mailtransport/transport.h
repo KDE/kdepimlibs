@@ -68,6 +68,7 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
       TransportManager::loadPasswords().
 
       @sa clone()
+      @since 4.2
     */
     void updatePasswordState();
 
