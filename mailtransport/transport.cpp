@@ -88,6 +88,22 @@ void Transport::setPassword( const QString &passwd )
   d->password = passwd;
 }
 
+void Transport::updatePasswordState()
+{
+  Transport *original = TransportManager::self()->transportById( id(), false );
+  if ( original == this ) {
+    kWarning() << "Tried to update password state of non-cloned transport.";
+    return;
+  }
+  if ( original ) {
+    d->password = original->d->password;
+    d->passwordLoaded = original->d->passwordLoaded;
+    d->passwordDirty = original->d->passwordDirty;
+  }
+  else
+    kWarning() << "Transport with this ID not managed by transport manager.";
+}
+
 bool Transport::isComplete() const
 {
   return !requiresAuthentication() || !storePassword() || d->passwordLoaded;
