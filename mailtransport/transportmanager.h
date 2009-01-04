@@ -194,6 +194,8 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
 
     /**
       Emitted when passwords have been loaded from the wallet.
+      If you made a deep copy of a transport, you should call updatePasswordState()
+      for the cloned transport to ensure its password is updated as well.
     */
     void passwordsChanged();
 
