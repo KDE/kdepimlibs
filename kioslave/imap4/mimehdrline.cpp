@@ -307,6 +307,7 @@ int mimeHdrLine::skipWS (const char *aCStr)
       retVal++;
     }
     if (*aCStr++ == '\n')
+    {
       if (*aCStr == '\t' || *aCStr == ' ')
       {
         int skip = mimeHdrLine::skipWS (aCStr);
@@ -318,6 +319,7 @@ int mimeHdrLine::skipWS (const char *aCStr)
       {
         retVal = -retVal - 1;
       }
+    }
   }
   else
   {
