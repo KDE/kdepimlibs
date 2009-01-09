@@ -340,13 +340,17 @@ void TransportConfigDialog::hostNameChanged( const QString &text )
 {
   // sanitize hostname...
   if ( d->transport->type() == Transport::EnumType::Sendmail ) {
+    int pos = d->sendmail.kcfg_host->cursorPosition();
     d->sendmail.kcfg_host->blockSignals( true );
     d->sendmail.kcfg_host->setText( text.trimmed() );
     d->sendmail.kcfg_host->blockSignals( false );
+    d->sendmail.kcfg_host->setCursorPosition( pos );
   } else if ( d->transport->type() == Transport::EnumType::SMTP ) {
+    int pos = d->smtp.kcfg_host->cursorPosition();
     d->smtp.kcfg_host->blockSignals( true );
     d->smtp.kcfg_host->setText( text.trimmed() );
     d->smtp.kcfg_host->blockSignals( false );
+    d->smtp.kcfg_host->setCursorPosition( pos );
   }
 
   d->resetAuthCapabilities();
