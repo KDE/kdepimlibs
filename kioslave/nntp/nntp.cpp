@@ -63,7 +63,7 @@ NNTPProtocol::NNTPProtocol ( const QByteArray & pool, const QByteArray & app, bo
   : TCPSlaveBase((isSSL ? "nntps" : "nntp"), pool, app, isSSL ),
     isAuthenticated( false )
 {
-  DBG << "=============> NNTPProtocol::NNTPProtocol" << endl;
+  DBG << "=============> NNTPProtocol::NNTPProtocol";
 
   readBufferLen = 0;
   m_defaultPort = isSSL ? NNTPS_PORT : NNTP_PORT;
@@ -71,7 +71,7 @@ NNTPProtocol::NNTPProtocol ( const QByteArray & pool, const QByteArray & app, bo
 }
 
 NNTPProtocol::~NNTPProtocol() {
-  DBG << "<============= NNTPProtocol::~NNTPProtocol" << endl;
+  DBG << "<============= NNTPProtocol::~NNTPProtocol";
 
   // close connection
   nntp_close();
@@ -80,8 +80,8 @@ NNTPProtocol::~NNTPProtocol() {
 void NNTPProtocol::setHost ( const QString & host, quint16 port, const QString & user,
                              const QString & pass )
 {
-  DBG << "setHost: " << ( ! user.isEmpty() ? (user+'@') : QString(""))
-      << host << ":" << ( ( port == 0 ) ? m_defaultPort : port  ) << endl;
+  DBG << ( ! user.isEmpty() ? (user+'@') : QString(""))
+      << host << ":" << ( ( port == 0 ) ? m_defaultPort : port  );
 
   if ( isConnected() && (mHost != host || m_port != port ||
        mUser != user || mPass != pass) )
@@ -95,7 +95,7 @@ void NNTPProtocol::setHost ( const QString & host, quint16 port, const QString &
 
 void NNTPProtocol::get( const KUrl& url )
 {
-  DBG << "get " << url.prettyUrl() << endl;
+  DBG << url.prettyUrl();
   QString path = QDir::cleanPath(url.path());
 
   // path should be like: /group/<msg_id> or /group/<serial number>
@@ -115,7 +115,7 @@ void NNTPProtocol::get( const KUrl& url )
   }
 
   int res_code;
-  DBG << "get group: " << group << " msg: " << msg_id << endl;
+  DBG << "group:" << group << "msg:" << msg_id;
 
   if ( !nntp_open() )
     return;
@@ -200,7 +200,7 @@ void NNTPProtocol::special(const QByteArray& data) {
 }
 
 bool NNTPProtocol::post_article() {
-  DBG << "post article " << endl;
+  DBG;
 
   // send post command
   infoMessage( i18n("Sending article...") );
@@ -220,7 +220,7 @@ bool NNTPProtocol::post_article() {
     QByteArray buffer;
     dataReq();
     result = readData( buffer );
-    DBG << "receiving data: " << QString(buffer) << endl;
+    DBG << "receiving data:" << buffer;
     // treat the buffer data
     if ( result > 0 ) {
       // translate "\r\n." to "\r\n.."
@@ -237,13 +237,13 @@ bool NNTPProtocol::post_article() {
 
       // send data to socket, write() doesn't send the terminating 0
       write( buffer, buffer.length() );
-      DBG << "writing: " << QString( buffer ) << endl;
+      DBG << "writing:" << buffer;
     }
   } while ( result > 0 );
 
   // error occurred?
   if (result<0) {
-    ERR << "error while getting article data for posting" << endl;
+    ERR << "error while getting article data for posting";
     nntp_close();
     return false;
   }
@@ -266,7 +266,7 @@ bool NNTPProtocol::post_article() {
 
 
 void NNTPProtocol::stat( const KUrl& url ) {
-  DBG << "stat " << url.prettyUrl() << endl;
+  DBG << url.prettyUrl();
   UDSEntry entry;
   QString path = QDir::cleanPath(url.path());
   QRegExp regGroup = QRegExp("^\\/?[a-z0-9\\.\\-_]+\\/?$",Qt::CaseInsensitive);
@@ -277,7 +277,7 @@ void NNTPProtocol::stat( const KUrl& url ) {
 
   // / = group list
   if (path.isEmpty() || path == "/") {
-    DBG << "stat root" << endl;
+    DBG << "root";
     fillUDSEntry( entry, QString(), 0, false, ( S_IWUSR | S_IWGRP | S_IWOTH ) );
 
   // /group = message list
@@ -285,7 +285,7 @@ void NNTPProtocol::stat( const KUrl& url ) {
     if ( path.startsWith( '/' ) ) path.remove(0,1);
     if ((pos = path.indexOf('/')) > 0) group = path.left(pos);
     else group = path;
-    DBG << "stat group: " << group << endl;
+    DBG << "group:" << group;
     // postingAllowed should be ored here with "group not moderated" flag
     // as size the num of messages (GROUP cmd) could be given
     fillUDSEntry( entry, group, 0, false, ( S_IWUSR | S_IWGRP | S_IWOTH ) );
@@ -298,7 +298,7 @@ void NNTPProtocol::stat( const KUrl& url ) {
     if ( group.startsWith( '/' ) )
       group.remove( 0, 1 );
     if ((pos = group.indexOf('/')) > 0) group = group.left(pos);
-    DBG << "stat group: " << group << " msg: " << msg_id << endl;
+    DBG << "group:" << group << "msg:" << msg_id;
     fillUDSEntry( entry, msg_id, 0, true );
 
   // invalid url
@@ -312,7 +312,7 @@ void NNTPProtocol::stat( const KUrl& url ) {
 }
 
 void NNTPProtocol::listDir( const KUrl& url ) {
-  DBG << "listDir " << url.prettyUrl() << endl;
+  DBG << url.prettyUrl();
   if ( !nntp_open() )
     return;
 
@@ -322,7 +322,7 @@ void NNTPProtocol::listDir( const KUrl& url ) {
   {
     KUrl newURL(url);
     newURL.setPath("/");
-    DBG << "listDir redirecting to " << newURL.prettyUrl() << endl;
+    DBG << "redirecting to" << newURL.prettyUrl();
     redirection(newURL);
     finished();
     return;
@@ -459,7 +459,7 @@ void NNTPProtocol::fetchGroups( const QString &since, bool desc )
       if ( line == ".\r\n" )
         break;
 
-      //DBG << "  fetching group description: " << QString( line ).trimmed() << endl;
+      //DBG << "  fetching group description: " << QString( line ).trimmed();
       int pos = line.indexOf( ' ' );
       pos = pos < 0 ? line.indexOf( '\t' ) : qMin( pos, line.indexOf( '\t' ) );
       group = line.left( pos );
@@ -521,7 +521,7 @@ bool NNTPProtocol::fetchGroup( QString &group, unsigned long first, unsigned lon
   if ( max > 0 && lastSerNum - first > max )
     first = lastSerNum - max + 1;
 
-  DBG << "Starting from serial number: " << first << " of " << firstSerNum << " - " << lastSerNum << endl;
+  DBG << "Starting from serial number: " << first << " of " << firstSerNum << " - " << lastSerNum;
   setMetaData( "FirstSerialNumber", QString::number( firstSerNum ) );
   setMetaData( "LastSerialNumber", QString::number( lastSerNum ) );
 
@@ -611,7 +611,7 @@ bool NNTPProtocol::fetchGroupXOVER( unsigned long first, bool &notSupported )
       if ( line == ".\r\n" )
         break;
       headers << line.trimmed();
-      DBG << "OVERVIEW.FMT: " << line.trimmed() << endl;
+      DBG << "OVERVIEW.FMT:" << line.trimmed();
     }
   } else {
     // fallback to defaults
@@ -726,16 +726,16 @@ bool NNTPProtocol::nntp_open()
 {
   // if still connected reuse connection
   if ( isConnected() ) {
-    DBG << "reusing old connection" << endl;
+    DBG << "reusing old connection";
     return true;
   }
 
-  DBG << "  nntp_open -- creating a new connection to " << mHost << ":" << m_port << endl;
+  DBG << "  nntp_open -- creating a new connection to" << mHost << ":" << m_port;
   // create a new connection (connectToHost() includes error handling)
   infoMessage( i18n("Connecting to server...") );
   if ( connectToHost( (isAutoSsl() ? "nntps" : "nntp"), mHost.toLatin1(), m_port ) )
   {
-    DBG << "  nntp_open -- connection is open " << endl;
+    DBG << "  nntp_open -- connection is open";
 
     // read greeting
     int res_code = evalResponse( readBuffer, readBufferLen );
@@ -750,7 +750,7 @@ bool NNTPProtocol::nntp_open()
       return false;
     }
 
-    DBG << "  nntp_open -- greating was read res_code : " << res_code << endl;
+    DBG << "  nntp_open -- greating was read res_code :" << res_code;
     // let local class know that we are connected
     opened = true;
 
@@ -791,11 +791,11 @@ int NNTPProtocol::sendCommand( const QString &cmd )
   int res_code = 0;
 
   if ( !opened ) {
-    ERR << "NOT CONNECTED, cannot send cmd " << cmd << endl;
+    ERR << "NOT CONNECTED, cannot send cmd" << cmd;
     return 0;
   }
 
-  DBG << "sending cmd " << cmd << endl;
+  DBG << "cmd:" << cmd;
 
   write( cmd.toLatin1(), cmd.length() );
   // check the command for proper termination
@@ -805,7 +805,7 @@ int NNTPProtocol::sendCommand( const QString &cmd )
 
   // if authorization needed send user info
   if (res_code == 480) {
-    DBG << "auth needed, sending user info" << endl;
+    DBG << "auth needed, sending user info";
 
     if ( mUser.isEmpty() || mPass.isEmpty() ) {
       KIO::AuthInfo authInfo;
@@ -878,8 +878,8 @@ int NNTPProtocol::authenticate()
 
 void NNTPProtocol::unexpected_response( int res_code, const QString &command )
 {
-  ERR << "Unexpected response to " << command << " command: (" << res_code << ") "
-      << readBuffer << endl;
+  ERR << "Unexpected response to" << command << "command: (" << res_code << ")"
+      << readBuffer;
 
   KIO::Error errCode;
   switch ( res_code ) {
@@ -908,7 +908,7 @@ int NNTPProtocol::evalResponse ( char *data, ssize_t &len )
   // get the first three characters. should be the response code
   int respCode = ( ( data[0] - 48 ) * 100 ) + ( ( data[1] - 48 ) * 10 ) + ( ( data[2] - 48 ) );
 
-  DBG << "evalResponse - got: " << respCode << endl;
+  DBG << "got:" << respCode;
 
   return respCode;
 }
