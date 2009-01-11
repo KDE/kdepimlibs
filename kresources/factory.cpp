@@ -76,13 +76,16 @@ Factory *Factory::self( const QString &resourceFamily )
     KConfig *config = new KConfig( "kres-migratorrc" );
     KConfigGroup migrationCfg( config, "Migration" );
     const bool enabled = migrationCfg.readEntry( "Enabled", false );
+    const bool setupClientBrige = migrationCfg.readEntry( "SetupClientBridge", true );
     const int currentVersion = migrationCfg.readEntry( "Version-" + resourceFamily, 0 );
     const int targetVersion = migrationCfg.readEntry( "TargetVersion", 0 );
     if ( enabled && currentVersion < targetVersion ) {
       kDebug() << "Performing Akonadi migration. Good luck!";
       KProcess proc;
-      proc.setProgram( "kres-migrator",
-                       QStringList() << "--interactive-on-change" << "--type" << resourceFamily );
+      QStringList args = QStringList() << "--interactive-on-change" << "--type" << resourceFamily;
+      if ( !setupClientBrige )
+        args << "--omit-client-bridge";
+      proc.setProgram( "kres-migrator", args );
       proc.start();
       bool result = proc.waitForStarted();
       if ( result ) {
