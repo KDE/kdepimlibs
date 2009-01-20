@@ -287,6 +287,9 @@ void TransportConfigDialog::passwordsLoaded()
 {
   Q_ASSERT( d->passwordEdit );
 
+  // Load the password from the original to our cloned copy
+  d->transport->updatePasswordState();
+
   if ( d->passwordEdit->text().isEmpty() ) {
     d->passwordEdit->setText( d->transport->password() );
   }
