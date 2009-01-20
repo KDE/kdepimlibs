@@ -92,7 +92,9 @@ SmtpJob::~SmtpJob()
     if ( s_slavePool->ref == 0 ) {
       kDebug() << "clearing SMTP slave pool" << s_slavePool->slaves.count();
       foreach ( KIO::Slave *slave, s_slavePool->slaves.values() ) {
-        KIO::Scheduler::disconnectSlave( slave );
+        if ( slave ) {
+          KIO::Scheduler::disconnectSlave( slave );
+        }
       }
       s_slavePool->slaves.clear();
     }
