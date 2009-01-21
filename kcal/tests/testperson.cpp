@@ -1,6 +1,6 @@
 /*
   This file is part of the kcal library.
-  Copyright (C) 2006 Allen Winter <winter@kde.org>
+  Copyright (C) 2006-2009 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -49,4 +49,17 @@ void PersonTest::testCompare()
   QVERIFY( person2.email() == "wilma@flintstone.com" );
   QVERIFY( person3.name() == "fred" );
   QVERIFY( person3.email() == "fred@flintstone.com" );
+}
+
+void PersonTest::testStringify()
+{
+  Person person1( "fred", "fred@flintstone.com" );
+  Person person2( "wilma", "wilma@flintstone.com" );
+  QVERIFY( person1.fullName() == "fred <fred@flintstone.com>" );
+  QVERIFY( person2.fullName() == "wilma <wilma@flintstone.com>" );
+
+  person1.setName( "" );
+  QVERIFY( person1.fullName() == "fred@flintstone.com" );
+  person1.setEmail( QString() );
+  QVERIFY( person1.fullName() == QString() );
 }
