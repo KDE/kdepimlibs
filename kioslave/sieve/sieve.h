@@ -123,6 +123,7 @@ protected:
 	QString				m_sPass;
 	QString				m_sAuth;
 	bool				m_shouldBeConnected;
+        bool                            m_allowUnencrypted;
 	quint16				m_port;
 
 private:
