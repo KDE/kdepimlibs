@@ -32,6 +32,8 @@ extern "C" {
 }
 
 #include <qregexp.h>
+#include <QSslSocket>
+
 #include <kdemacros.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
@@ -40,6 +42,7 @@ extern "C" {
 #include <kglobal.h>
 
 #include <sys/stat.h>
+#include <cassert>
 
 static const int debugArea = 7122;
 
@@ -176,6 +179,7 @@ kio_sieveProtocol::kio_sieveProtocol(const QByteArray &pool_socket, const QByteA
 	, m_connMode(NORMAL)
 	, m_supportsTLS(false)
 	, m_shouldBeConnected(false)
+        , m_allowUnencrypted(false)
 {
 }
 
@@ -269,7 +273,7 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
 
 /* ---------------------------------------------------------------------------------- */
 /**
- * Checks if connection parameters (currently - auth method) have changed.
+ * Checks if connection parameters have changed.
  * If it it, close the current connection
  */
 void kio_sieveProtocol::changeCheck( const KUrl &url )
@@ -299,6 +303,14 @@ void kio_sieveProtocol::changeCheck( const KUrl &url )
 		if ( isConnected() )
 			disconnect();
 	}
+
+        // For TLS, only disconnect if we are unencrypted and are
+        // no longer allowed (otherwise, it's still fine):
+        const bool allowUnencryptedNow = url.queryItem("x-allow-unencrypted") == "true" ;
+        if ( m_allowUnencrypted && !allowUnencryptedNow )
+            if ( isConnected() )
+                disconnect();
+        m_allowUnencrypted = allowUnencryptedNow;
 }
 
 /* ---------------------------------------------------------------------------------- */
@@ -331,28 +343,49 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 		return false;
 	}
 
+        if ( !m_allowUnencrypted && !QSslSocket::supportsSsl() ) {
+            error( ERR_SLAVE_DEFINED, i18n("Can not use TLS since the underlying Qt library does not support it.") );
+            disconnect();
+            return false;
+        }
+
 	// Attempt to start TLS
 	// FIXME find a test server and test that this works
 	// TODO ask the system whether SSL is available
-	if (useTLSIfAvailable && m_supportsTLS) {
+	if (useTLSIfAvailable && QSslSocket::supportsSsl()) {
 		sendData("STARTTLS");
 		if (operationSuccessful()) {
 			ksDebug << "TLS has been accepted. Starting TLS..." << endl
-				      << "WARNING this is untested and may fail." << endl;
+                                << "WARNING this is untested and may fail.";
 			if (startSsl()) {
 				ksDebug << "TLS enabled successfully." << endl;
 				// reparse capabilities:
 				parseCapabilities( requestCapabilitiesAfterStartTLS() );
 			} else {
-				ksDebug << "TLS initiation failed." << endl;
-				disconnect(true);
-				return connect(false);
-				// error(ERR_INTERNAL, i18n("TLS initiation failed."));
+				ksDebug << "TLS initiation failed.";
+				if ( m_allowUnencrypted ) {
+                                    disconnect(true);
+                                    return connect(false);
+                                }
+                                messageBox( Information,
+                                            i18n("Your Sieve server claims to support TLS, "
+                                                 "but negotiation was unsuccessful."),
+                                            i18n("Connection Failed") );
+                                disconnect(true);
+                                return false;
 			}
+		} else if ( !m_allowUnencrypted ) {
+			ksDebug << "Server incapable of TLS.";
+			disconnect();
+			error( ERR_SLAVE_DEFINED, i18n("The server does not seem to support TLS. "
+                                                       "Disable TLS if you want to connect without encryption.") );
+			return false;
 		} else
 			ksDebug << "Server incapable of TLS. Transmitted documents will be unencrypted." << endl;
 	} else
 		ksDebug << "We are incapable of TLS. Transmitted documents will be unencrypted." << endl;
+
+        assert( m_allowUnencrypted || isUsingSsl() );
 
 	infoMessage(i18n("Authenticating user..."));
 	if (!authenticate()) {
