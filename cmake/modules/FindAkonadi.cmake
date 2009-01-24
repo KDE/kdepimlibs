@@ -4,7 +4,7 @@
 # Sets the following variables:
 #  Akonadi_FOUND            - true if Akonadi has been found
 #  AKONADI_INCLUDE_DIR      - The include directory
-#  AKONADI_COMMON_LIBRARIES - The Akonadi core library to link to (libsoprano)
+#  AKONADI_COMMON_LIBRARIES - The Akonadi core library to link to
 #  AKONADI_VERSION          - The Akonadi version (string value)
 #
 # Options:
