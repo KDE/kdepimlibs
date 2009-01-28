@@ -8,9 +8,7 @@ set(KDEPIMLIBS_VERSION_MINOR 2)
 set(KDEPIMLIBS_VERSION_PATCH 0)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH} )
 
-# search packages used by KDE
-# Adjust the version of kdelibs which is required as needed (should be 4.2.0 once KDE 4.2 is released), Alex
-find_package(KDE4  4.1.80  REQUIRED)
+find_package(KDE4  4.2.0  REQUIRED)
 
 include (KDE4Defaults)
 include (MacroLibrary)
