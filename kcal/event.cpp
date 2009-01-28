@@ -121,8 +121,18 @@ KDateTime Event::dtEnd() const
   if ( hasEndDate() ) {
     return d->mDtEnd;
   }
+
   if ( hasDuration() ) {
-    return duration().end( dtStart() );
+    if ( allDay() ) {
+      // For all day events, dtEnd is always inclusive
+      KDateTime end = duration().end( dtStart() ).addDays( -1 );
+
+      if ( end < dtStart() ) {
+        end = dtStart();
+      }
+    } else {
+      return duration().end( dtStart() );
+    }
   }
 
   kDebug() << "Warning! Event '" << summary()
