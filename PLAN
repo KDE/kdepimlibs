@@ -14,16 +14,12 @@ but the library name will still be libfoo.so.
 Each library foo will have its own foo.h that includes all the
 visibility macros  (no separate foo_export_win.h)
 
-To-Be-Determined
-================
-libkholidays - must stay in kdepim due to licensing. ask the 'plan' author.
-
 High Priority for KDE 4.x
 =========================
 kpimutils - done, but we want to move email.h into kmime, as some if its
             functions are already in kmime. vkrause.
 
-High Priority, but not ready until KDE 4.2
+High Priority, but not ready until KDE 4.x
 ==========================================
 move kontactinterfaces from kdepim
 
@@ -44,6 +40,7 @@ akonadi
 gpgme++
 kblog
 kcal
+kholidays
 kimap
 kleo (GPL)
 kmime

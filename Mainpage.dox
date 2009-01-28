@@ -19,6 +19,9 @@
  * - <a href="kcal/html/index.html"><b>kcal</b></a>.
  *   <i>An API for the iCalendar and vCalendar formats.</i>
  *
+ * - <a href="kholidays/html/index.html"><b>kholidays</b></a>.
+ *   <i>A library for calendar holidays.</i>
+ *
  * - <a href="kimap/html/index.html"><b>kimap</b></a>.
  *   <i>An API for IMAP support.</i>
  *
