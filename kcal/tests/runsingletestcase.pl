@@ -20,14 +20,14 @@
 #    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 #    Boston, MA 02110-1301, USA.
 
-# This little script runs a test program on a given (calendar) file and
-# compares the output to a reference file. All discrepancies are shown
+# This little script runs a test program on a given (calendar) file and 
+# compares the output to a reference file. All discrepancies are shown 
 # to the user. Usage:
-#      runsingletestcase.pl appname testfile.ics
+#      runtestcase.pl appname testfile.ics
 # The application/script appname is required to take two arguments:
 #      appname inputfile outputfile
 # where inputfile is the file to be used as input data, and the output of the
-# program will go to outputfile (=testfile.ics.out if called through
+# program will go to outputfile (=testfile.ics.out if called through 
 # runtestcase.pl). That outputfile is then compared to the reference file
 # testfile.ics.ref.
 
@@ -49,7 +49,6 @@ $outfile =~ /\/([^\/]*)$/;
 $outfile = "$file.$id.out";
 
 $testcmd = "$app $file $outfile 2> /dev/null";
-#$testcmd = "valgrind --log-file=$outfile.log $app $file $outfile 2> /dev/null";
 
 #print "CMD $testcmd\n";
 
@@ -65,19 +64,11 @@ exit 0;
 sub checkfile()
 {
   my $file = shift;
-  if (! -f $file) {
-    print STDOUT "No such file $file for $app";
-    exit 1;
-  }
   my $outfile = shift;
-  if (! -f $file) {
-    print STDOUT "No such outfile $outfile for $app";
-    exit 1;
-  }
 
   $cmd = 'diff -u -w -B -I "^DTSTAMP:[0-9ZT]*" -I "^LAST-MODIFIED:[0-9ZT]*" -I "^CREATED:[0-9ZT]*" '."$file.$id.ref $outfile";
   if ( !open( DIFF, "$cmd|" ) ) {
-    print STDOUT "Unable to run diff command on the files $file.$id.ref and $outfile\n";
+    print STDERR "Unable to run diff command on the files $file.$id.ref and $outfile\n";
     exit 1;
   }
 
@@ -101,8 +92,8 @@ sub checkfile()
     print "Checking '$outfile':\n";
     print $errorstr;
     print "Encountered $errors errors\n";
-
-
+    
+    
     if ( !open( ERRLOG, ">>FAILED.log" ) ) {
       print "Unable to open FAILED.log";
     };
@@ -110,10 +101,10 @@ sub checkfile()
     print ERRLOG "Checking '$outfile':\n";
     print ERRLOG "Command: $testcmd\n";
     print ERRLOG $errorstr;
-
+    
     if ( -e "$file.$id.fixme" ) {
       if ( !open( FIXME, "$file.$id.fixme" ) ) {
-        print STDOUT "Unable to open $file.fixme\n";
+        print STDERR "Unable to open $file.fixme\n";
         exit 1;
       }
       my $firstline = <FIXME>;
@@ -136,6 +127,6 @@ sub checkfile()
       exit 1;
     }
   } else {
-#     unlink($outfile);
+     unlink($outfile);
   }
 }
