@@ -1,3 +1,2 @@
 SKIP /libical.*/\|/versit/\|/tests/
 EXTRA style
-OUTPUT brief
