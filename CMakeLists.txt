@@ -150,3 +150,5 @@ install(EXPORT kdepimlibsLibraryTargets
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake "\n message(FATAL_ERROR \"For using this version of kdepimlibs (${KDEPIMLIBS_VERSION}) you need a newer version of kdelibs, please update.\")\n")
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake
         DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
+
+add_subdirectory(includes)
