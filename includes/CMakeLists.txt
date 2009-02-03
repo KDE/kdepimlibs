@@ -65,6 +65,60 @@ DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Akonadi COMPONENT Devel)
 endif(Akonadi_FOUND)
 
 install(FILES
+  KCal/ResourceCached
+  KCal/KCalVersion
+  KCal/Exceptions
+  KCal/Event
+  KCal/ResourceCalendar
+  KCal/Period
+  KCal/FreeBusyUrlStore
+  KCal/CalendarLocal
+  KCal/RecurrenceRule
+  KCal/HtmlExportSettings
+  KCal/ResourceLocalDirConfig
+  KCal/DndFactory
+  KCal/VCalFormat
+  KCal/ResourceLocal
+  KCal/Todo
+  KCal/ResourceCachedConfig
+  KCal/QtopiaFormat
+  KCal/Person
+  KCal/ListBase
+  KCal/HtmlExport
+  KCal/ICalTimeZones
+  KCal/Calendar
+  KCal/Journal
+  KCal/Scheduler
+  KCal/ICalFormat
+  KCal/Incidence
+  KCal/VCalDrag
+  KCal/CalStorage
+  KCal/FreeBusy
+  KCal/Duration
+  KCal/FreeBusyPeriod
+  KCal/CustomProperties
+  KCal/Attachment
+  KCal/ResourceLocalConfig
+  KCal/Attendee
+  KCal/KResult
+  KCal/Alarm
+  KCal/ConfirmSaveDialog
+  KCal/IMIPScheduler
+  KCal/Recurrence
+  KCal/ResourceLocalDir
+  KCal/FileStorage
+  KCal/CalendarNull
+  KCal/CalendarResources
+  KCal/IncidenceFormatter
+  KCal/CalFilter
+  KCal/ICalDrag
+  KCal/SortableList
+  KCal/FreeBusyCache
+  KCal/CalFormat
+  KCal/IncidenceBase
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KCal COMPONENT Devel)
+
+install(FILES
   KABC/ResourceCached
   KABC/LockNull
   KABC/Field
