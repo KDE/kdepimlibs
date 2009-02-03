@@ -101,6 +101,18 @@ install(FILES
 DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KABC COMPONENT Devel)
 
 install(FILES
+  KBlog/GData
+  KBlog/Blogger1
+  KBlog/Blog
+  KBlog/BlogMedia
+  KBlog/BlogComment
+  KBlog/MetaWeblog
+  KBlog/WordpressBuggy
+  KBlog/MovableType
+  KBlog/BlogPost
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KBlog COMPONENT Devel)
+
+install(FILES
   KHolidays/AstroSeasons
   KHolidays/Holidays
   KHolidays/LunarPhase
