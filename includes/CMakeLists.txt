@@ -1,5 +1,69 @@
 if (NOT ONLY_KLEO)
 
+if(Akonadi_FOUND)
+install(FILES
+  Akonadi/AgentBase
+  Akonadi/AgentFilterProxyModel
+  Akonadi/AgentInstance
+  Akonadi/AgentInstanceCreateJob
+  Akonadi/AgentInstanceModel
+  Akonadi/AgentInstanceWidget
+  Akonadi/AgentManager
+  Akonadi/AgentType
+  Akonadi/AgentTypeDialog
+  Akonadi/AgentTypeModel
+  Akonadi/AgentTypeWidget
+  Akonadi/Attribute
+  Akonadi/AttributeFactory
+  Akonadi/CachePolicy
+  Akonadi/ChangeRecorder
+  Akonadi/Collection
+  Akonadi/CollectionCopyJob
+  Akonadi/CollectionCreateJob
+  Akonadi/CollectionDeleteJob
+  Akonadi/CollectionDialog
+  Akonadi/CollectionFetchJob
+  Akonadi/CollectionFilterProxyModel
+  Akonadi/CollectionModel
+  Akonadi/CollectionModifyJob
+  Akonadi/CollectionPropertiesDialog
+  Akonadi/CollectionPropertiesPage
+  Akonadi/CollectionRequester
+  Akonadi/CollectionStatistics
+  Akonadi/CollectionStatisticsDelegate
+  Akonadi/CollectionStatisticsJob
+  Akonadi/CollectionStatisticsModel
+  Akonadi/CollectionView
+  Akonadi/Control
+  Akonadi/Entity
+  Akonadi/EntityDisplayAttribute
+  Akonadi/Item
+  Akonadi/ItemCopyJob
+  Akonadi/ItemCreateJob
+  Akonadi/ItemDeleteJob
+  Akonadi/ItemFetchJob
+  Akonadi/ItemFetchScope
+  Akonadi/ItemModel
+  Akonadi/ItemModifyJob
+  Akonadi/ItemMonitor
+  Akonadi/ItemMoveJob
+  Akonadi/ItemSerializerPlugin
+  Akonadi/ItemSync
+  Akonadi/ItemView
+  Akonadi/Job
+  Akonadi/LinkJob
+  Akonadi/Monitor
+  Akonadi/ResourceBase
+  Akonadi/SearchCreateJob
+  Akonadi/ServerManager
+  Akonadi/Session
+  Akonadi/StandardActionManager
+  Akonadi/TransactionJobs
+  Akonadi/TransactionSequence
+  Akonadi/UnlinkJob
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Akonadi COMPONENT Devel)
+endif(Akonadi_FOUND)
+
 install(FILES
   KHolidays/AstroSeasons
   KHolidays/Holidays
