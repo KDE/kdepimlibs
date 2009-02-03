@@ -1,1 +1,1 @@
-#include "akonadi/servermanager.h"
+#include "../../akonadi/servermanager.h"

@@ -1,1 +1,1 @@
-#include "akonadi/collectionstatistics.h"
+#include "../../akonadi/collectionstatistics.h"

@@ -1,1 +1,1 @@
-#include "akonadi/itemmodel.h"
+#include "../../akonadi/itemmodel.h"

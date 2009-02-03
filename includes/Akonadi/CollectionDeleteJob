@@ -1,1 +1,1 @@
-#include "akonadi/collectiondeletejob.h"
+#include "../../akonadi/collectiondeletejob.h"

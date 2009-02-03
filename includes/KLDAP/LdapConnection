@@ -1,1 +1,1 @@
-#include <kldap/ldapconnection.h>
+#include "../../kldap/ldapconnection.h"

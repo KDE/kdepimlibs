@@ -1,1 +1,1 @@
-#include "akonadi/resourcebase.h"
+#include "../../akonadi/resourcebase.h"

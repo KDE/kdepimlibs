@@ -1,1 +1,1 @@
-#include <kresources/resource.h>
+#include "../../kresources/resource.h"

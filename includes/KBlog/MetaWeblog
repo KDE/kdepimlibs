@@ -1,1 +1,1 @@
-#include <kblog/metaweblog.h>
+#include "../../kblog/metaweblog.h"

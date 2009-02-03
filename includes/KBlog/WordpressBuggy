@@ -1,1 +1,1 @@
-#include <kblog/wordpressbuggy.h>
+#include "../../kblog/wordpressbuggy.h"

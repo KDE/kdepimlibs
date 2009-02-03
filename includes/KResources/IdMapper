@@ -1,1 +1,1 @@
-#include <kresources/idmapper.h>
+#include "../../kresources/idmapper.h"

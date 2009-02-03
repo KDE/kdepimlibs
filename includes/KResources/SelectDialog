@@ -1,1 +1,1 @@
-#include <kresources/selectdialog.h>
+#include "../../kresources/selectdialog.h"

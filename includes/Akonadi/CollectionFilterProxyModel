@@ -1,1 +1,1 @@
-#include "akonadi/collectionfilterproxymodel.h"
+#include "../../akonadi/collectionfilterproxymodel.h"

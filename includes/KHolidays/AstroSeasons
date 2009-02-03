@@ -1,1 +1,1 @@
-#include <kholidays/astroseasons.h>
+#include "../../kholidays/astroseasons.h"

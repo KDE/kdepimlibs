@@ -1,1 +1,1 @@
-#include <kresources/managerimpl.h>
+#include "../../kresources/managerimpl.h"

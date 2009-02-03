@@ -1,1 +1,1 @@
-#include <kresources/factory.h>
+#include "../../kresources/factory.h"

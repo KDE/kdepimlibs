@@ -1,1 +1,1 @@
-#include "akonadi/itemsync.h"
+#include "../../akonadi/itemsync.h"

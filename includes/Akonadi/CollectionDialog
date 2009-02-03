@@ -1,1 +1,1 @@
-#include "akonadi/collectiondialog.h"
+#include "../../akonadi/collectiondialog.h"

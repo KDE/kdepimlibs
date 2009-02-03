@@ -1,1 +1,1 @@
-#include "akonadi/agentinstance.h"
+#include "../../akonadi/agentinstance.h"

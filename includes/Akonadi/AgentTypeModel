@@ -1,1 +1,1 @@
-#include "akonadi/agenttypemodel.h"
+#include "../../akonadi/agenttypemodel.h"

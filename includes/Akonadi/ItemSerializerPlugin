@@ -1,1 +1,1 @@
-#include "akonadi/itemserializerplugin.h"
+#include "../../akonadi/itemserializerplugin.h"

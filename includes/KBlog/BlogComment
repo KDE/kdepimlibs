@@ -1,1 +1,1 @@
-#include <kblog/blogcomment.h> 
+#include "../../kblog/blogcomment.h" 

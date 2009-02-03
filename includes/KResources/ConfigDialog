@@ -1,2 +1,2 @@
-#include <kresources/configdialog.h>
+#include "../../kresources/configdialog.h"
  
