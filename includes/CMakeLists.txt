@@ -174,6 +174,24 @@ install(FILES
 DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KHolidays COMPONENT Devel)
 
 install(FILES
+  KLDAP/LdapControl
+  KLDAP/LdapDefs
+  KLDAP/LdapStructureProxyModel
+  KLDAP/LdapAttributeProxyModel
+  KLDAP/LdapConnection
+  KLDAP/LdapOperation
+  KLDAP/LdapModel
+  KLDAP/LdapDN
+  KLDAP/LdapUrl
+  KLDAP/LdapSearch
+  KLDAP/LdapServer
+  KLDAP/LdapObject
+  KLDAP/Ber
+  KLDAP/LdapConfigWidget
+  KLDAP/Ldif
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KLDAP COMPONENT Devel)
+
+install(FILES
   KResources/Resource
   KResources/ConfigWidget
   KResources/Factory
