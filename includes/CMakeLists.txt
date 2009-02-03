@@ -65,6 +65,42 @@ DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Akonadi COMPONENT Devel)
 endif(Akonadi_FOUND)
 
 install(FILES
+  KABC/ResourceCached
+  KABC/LockNull
+  KABC/Field
+  KABC/Key
+  KABC/Format
+  KABC/TimeZone
+  KABC/AddresseeList
+  KABC/DistributionListDialog
+  KABC/Secrecy
+  KABC/Addressee
+  KABC/AddressBook
+  KABC/LDIFConverter
+  KABC/EmailSelectDialog
+  KABC/StdAddressBook
+  KABC/AddresseeDialog
+  KABC/FormatFactory
+  KABC/PhoneNumber
+  KABC/Address
+  KABC/VCardConverter
+  KABC/ErrorHandler
+  KABC/Resource
+  KABC/Lock
+  KABC/Sound
+  KABC/SortMode
+  KABC/ResourceABC
+  KABC/Plugin
+  KABC/AddressLineEdit
+  KABC/ContactGroupTool
+  KABC/VCardFormat
+  KABC/ContactGroup
+  KABC/Geo
+  KABC/Picture
+  KABC/DistributionList
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KABC COMPONENT Devel)
+
+install(FILES
   KHolidays/AstroSeasons
   KHolidays/Holidays
   KHolidays/LunarPhase
