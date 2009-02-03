@@ -173,4 +173,16 @@ install(FILES
   KHolidays/Zodiac
 DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KHolidays COMPONENT Devel)
 
+install(FILES
+  KResources/Resource
+  KResources/ConfigWidget
+  KResources/Factory
+  KResources/ManagerImpl
+  KResources/Manager
+  KResources/SelectDialog
+  KResources/ConfigDialog
+  KResources/ConfigPage
+  KResources/IdMapper
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KResources COMPONENT Devel)
+
 endif (NOT ONLY_KLEO)
