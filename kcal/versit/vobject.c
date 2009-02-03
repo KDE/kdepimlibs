@@ -684,7 +684,7 @@ struct PreDefProp {
 #define PD_BEGIN	0x1
 #define PD_INTERNAL	0x2
 
-static const char *adrFields[] = {
+static const char * const adrFields[] = {
     VCPostalBoxProp,
     VCExtAddressProp,
     VCStreetAddressProp,
@@ -695,7 +695,7 @@ static const char *adrFields[] = {
     0
 };
 
-static const char *nameFields[] = {
+static const char * const nameFields[] = {
     VCFamilyNameProp,
     VCGivenNameProp,
     VCAdditionalNamesProp,
@@ -704,7 +704,7 @@ static const char *nameFields[] = {
     NULL
     };
 
-static const char *orgFields[] = {
+static const char * const orgFields[] = {
     VCOrgNameProp,
     VCOrgUnitProp,
     VCOrgUnit2Prop,
@@ -713,7 +713,7 @@ static const char *orgFields[] = {
     NULL
     };
 
-static const char *AAlarmFields[] = {
+static const char * const AAlarmFields[] = {
     VCRunTimeProp,
     VCSnoozeTimeProp,
     VCRepeatCountProp,
@@ -724,7 +724,7 @@ static const char *AAlarmFields[] = {
 /* ExDate -- has unnamed fields */
 /* RDate -- has unnamed fields */
 
-static const char *DAlarmFields[] = {
+static const char * const DAlarmFields[] = {
     VCRunTimeProp,
     VCSnoozeTimeProp,
     VCRepeatCountProp,
@@ -732,7 +732,7 @@ static const char *DAlarmFields[] = {
     0
     };
 
-static const char *MAlarmFields[] = {
+static const char * const MAlarmFields[] = {
     VCRunTimeProp,
     VCSnoozeTimeProp,
     VCRepeatCountProp,
@@ -741,7 +741,7 @@ static const char *MAlarmFields[] = {
     0
     };
 
-static const char *PAlarmFields[] = {
+static const char * const PAlarmFields[] = {
     VCRunTimeProp,
     VCSnoozeTimeProp,
     VCRepeatCountProp,
@@ -749,7 +749,7 @@ static const char *PAlarmFields[] = {
     0
     };
 
-static struct PreDefProp propNames[] = {
+static const struct PreDefProp propNames[] = {
     { VC7bitProp, 0, 0, 0 },
     { VC8bitProp, 0, 0, 0 },
     { VCAAlarmProp, 0, AAlarmFields, 0 },

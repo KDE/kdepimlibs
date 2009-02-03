@@ -1655,7 +1655,7 @@ bool parseParameterList( const char* &scursor, const char * const send,
   return true;
 }
 
-static const char * stdDayNames[] = {
+static const char * const stdDayNames[] = {
   "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
 };
 static const int stdDayNamesLen = sizeof stdDayNames / sizeof *stdDayNames;
@@ -1678,7 +1678,7 @@ static bool parseDayName( const char* &scursor, const char * const send )
   return false;
 }
 
-static const char * stdMonthNames[] = {
+static const char * const stdMonthNames[] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
