@@ -131,7 +131,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
 
   // Convert to UTF8 and save
   QByteArray textUtf8 = text.toUtf8();
-  file.write( textUtf8.data(), textUtf8.size() - 1 );
+  file.write( textUtf8.data(), textUtf8.size() );
 
   if ( !file.finalize() ) {
     kDebug() << "err:" << file.errorString();
