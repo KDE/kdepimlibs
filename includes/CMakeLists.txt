@@ -15,6 +15,7 @@ install_headers( KABC )
 install_headers( KBlog )
 install_headers( KCal )
 install_headers( KLDAP )
+install_headers( KPIMIdentities )
 install_headers( KResources )
 
 endif (NOT ONLY_KLEO)
