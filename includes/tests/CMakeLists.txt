@@ -28,6 +28,7 @@ add_includes( KPIMIdentities )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII -DQT_NO_KEYWORDS )
 kde4_add_executable( headertest header_compile.cpp )
+add_dependencies( headertest kabc ) # ensure addressee.h is generated in parallel builds
 
 endif (KDE4_BUILD_TESTS)
 
