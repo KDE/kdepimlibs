@@ -16,6 +16,7 @@ install_headers( KBlog )
 install_headers( KCal )
 install_headers( KLDAP )
 install_headers( KPIMIdentities )
+install_headers( KPIMUtils )
 install_headers( KResources )
 install_headers( Syndication )
 
