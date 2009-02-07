@@ -26,6 +26,7 @@ add_includes( KLDAP )
 add_includes( KResources )
 add_includes( KPIMIdentities )
 add_includes( Syndication )
+add_includes( KPIMUtils )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII -DQT_NO_KEYWORDS )
 kde4_add_executable( headertest header_compile.cpp )
