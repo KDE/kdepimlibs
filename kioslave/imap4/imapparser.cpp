@@ -1242,7 +1242,7 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
       localPart->setPartSpecifier(inSection);
     }
 
-    // is multipart (otherwise its a simplepart and handled later)
+    // is multipart (otherwise it is a simplepart and handled later)
     while (inWords[0] == '(')
     {
       outSection = QString::number(++section);
