@@ -271,7 +271,7 @@ bool ICalTimeZone::update( const ICalTimeZone &other )
     return false;
   }
 
-  KTimeZoneData* otherData = other.data() ? other.data()->clone() : 0;
+  KTimeZoneData *otherData = other.data() ? other.data()->clone() : 0;
   setData( otherData, other.source() );
   return true;
 }
@@ -916,9 +916,8 @@ QList<QDateTime> ICalTimeZoneSourcePrivate::parsePhase( icalcomponent *c,
     {
       // TZNAME can appear multiple times in order to provide language
       // translations of the time zone offset name.
-#ifdef __GNUC__
-#warning Does this cope with multiple language specifications?
-#endif
+
+      // TODO: Does this cope with multiple language specifications?
       QByteArray tzname = icalproperty_get_tzname( p );
       // Outlook (2000) places "Standard Time" and "Daylight Time" in the TZNAME
       // strings, which is totally useless. So ignore those.
@@ -1065,7 +1064,7 @@ ICalTimeZone ICalTimeZoneSource::standardZone( const QString &zone, bool icalBui
     if ( ktz.isValid() ) {
       if ( ktz.data( true ) ) {
         ICalTimeZone icaltz( ktz );
-        kDebug() << zone << " read from system database";
+        //kDebug() << zone << " read from system database";
         return icaltz;
       }
     }
