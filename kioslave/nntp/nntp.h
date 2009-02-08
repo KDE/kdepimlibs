@@ -15,7 +15,7 @@
 #include <kio/global.h>
 #include <kio/tcpslavebase.h>
 
-#define MAX_PACKET_LEN 4096
+#define MAX_PACKET_LEN 8192
 
 /* TODO:
   - test special post command
