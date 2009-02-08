@@ -132,8 +132,8 @@ KDateTime Event::dtEnd() const
     }
   }
 
-  kDebug() << "Warning! Event '" << summary()
-           << "' has neither end date nor duration.";
+  // It is valid for a VEVENT to be without a DTEND. See RFC2445, Sect4.6.1.
+  // Be careful to use Event::dateEnd() as appropriate due to this possibility.
   return dtStart();
 }
 
