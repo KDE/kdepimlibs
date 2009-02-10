@@ -1059,24 +1059,11 @@ void Calendar::appendAlarms( Alarm::List &alarms, Incidence *incidence,
 
   Alarm::List alarmlist = incidence->alarms();
   for ( int i = 0, iend = alarmlist.count();  i < iend;  ++i ) {
-    Alarm *alarm = alarmlist[i];
-    if ( alarm->enabled() ) {
-
-      // First, check if the alarm has any repetition, and use the date
-      // of the next repetition.
-      KDateTime dt = alarm->nextRepetition( preTime );
-
-      // If the alarm doesn't have a repetition, simply use its normal time.
-      if ( !dt.isValid() && alarm->repeatCount() == 0 &&
-           ( alarm->hasStartOffset() || alarm->hasEndOffset() ) ) {
-        if ( alarm->time() >= preTime ) {
-          dt = alarm->time();
-        }
-      }
-
+    if ( alarmlist[i]->enabled() ) {
+      KDateTime dt = alarmlist[i]->nextRepetition( preTime );
       if ( dt.isValid() && dt <= to ) {
         kDebug() << incidence->summary() << "':" << dt.toString();
-        alarms.append( alarm );
+        alarms.append( alarmlist[i] );
       }
     }
   }
