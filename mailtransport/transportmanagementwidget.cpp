@@ -37,6 +37,7 @@ class TransportManagementWidget::Private
 TransportManagementWidget::TransportManagementWidget( QWidget *parent )
   : QWidget( parent ), d( new Private )
 {
+  KGlobal::locale()->insertCatalog(QString::fromLatin1("libmailtransport"));
   d->ui.setupUi( this );
 
   d->ui.transportList->setHeaderLabels( QStringList()
