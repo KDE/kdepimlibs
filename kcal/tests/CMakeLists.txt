@@ -21,6 +21,7 @@ ENDMACRO(KCAL_EXECUTABLE_TESTS)
 
 KCAL_UNIT_TESTS(
   testalarm
+  testassignmentvisitor
   testattachment
   testattendee
   testcalendarlocal

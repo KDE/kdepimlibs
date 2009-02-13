@@ -24,9 +24,9 @@ include_directories(
   ${KDE4_INCLUDE_DIR}
 )
 
-set(libversit_SRCS 
-   ${CMAKE_SOURCE_DIR}/kcal/versit/vcc.c 
-   ${CMAKE_SOURCE_DIR}/kcal/versit/vobject.c 
+set(libversit_SRCS
+   ${CMAKE_SOURCE_DIR}/kcal/versit/vcc.c
+   ${CMAKE_SOURCE_DIR}/kcal/versit/vobject.c
 )
 
 ########### next target ###############
@@ -80,7 +80,9 @@ set(kcal_LIB_SRCS ${libversit_SRCS}
   freebusyurlstore.cpp
   confirmsavedialog.cpp
   icaltimezones.cpp
-  kresult.cpp )
+  kresult.cpp
+  assignmentvisitor.cpp
+)
 
 kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
@@ -125,6 +127,7 @@ add_subdirectory( tests )
 install( FILES local.desktop localdir.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
 install( FILES
         alarm.h
+        assignmentvisitor.h
         attachment.h
         attendee.h
         calendar.h
