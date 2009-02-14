@@ -38,11 +38,6 @@ add_subdirectory(kmime)
 
 if (NOT ONLY_KLEO)
 
-find_package(Akonadi REQUIRED)
-if(Akonadi_FOUND)
-   add_subdirectory(akonadi)
-endif(Akonadi_FOUND)
-
 # (gpgme++/qgpgme handle their conditions inside their own CMakeLists.txt files)
 add_subdirectory(kabc)
 add_subdirectory(kblog)
