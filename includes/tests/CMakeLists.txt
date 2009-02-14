@@ -13,6 +13,7 @@ endmacro(add_includes)
 include_directories(
   ${CMAKE_SOURCE_DIR}/kabc
   ${CMAKE_BINARY_DIR}/kabc
+  ${CMAKE_BINARY_DIR}/kcal
 )
 
 if ( Akonadi_FOUND )
@@ -31,6 +32,7 @@ add_includes( KPIMUtils )
 add_definitions( -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII -DQT_NO_KEYWORDS )
 kde4_add_executable( headertest header_compile.cpp )
 add_dependencies( headertest kabc ) # ensure addressee.h is generated in parallel builds
+add_dependencies( headertest kcal )
 
 endif (KDE4_BUILD_TESTS)
 
