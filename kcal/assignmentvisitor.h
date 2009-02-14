@@ -27,7 +27,12 @@
 namespace KCal {
 
 /**
-  Helper for type correct assignment of incidence pointers.
+  Helper for type correct assignment of incidences via pointers.
+
+  This class provides a way of correctly assigning one incidence to another,
+  given two IncidenceBase derived pointers. It effectively provides a virtual
+  assignment method which first type checks the two pointers to ensure they
+  reference the same incidence type, before performing the assignment.
 
   Usage example:
   @code
@@ -55,50 +60,56 @@ class KCAL_EXPORT AssignmentVisitor : public IncidenceBase::Visitor
     AssignmentVisitor();
 
     /**
-      Destroys the instance
+      Destroys the instance.
      */
     virtual ~AssignmentVisitor();
 
     /**
-      Assigns the @p source to the @p target
+      Assigns the incidence referenced by @p source to the incidence referenced
+      by @p target, first ensuring that the @p source incidence can be cast to
+      the same class as the @p target incidence.
 
-      Basically the sub type equivalent of
+      Basically it is a virtual equivalent of
       @code
       *target = *source
       @endcode
 
-      @param target the instance to assign to
-      @param source the instance to assign from
+      @param target pointer to the instance to assign to
+      @param source pointer to the instance to assign from
 
       @return @c false if the two objects are of different type
      */
     bool assign( IncidenceBase *target, const IncidenceBase *source );
 
     /**
-      Tries to assign to the given @p event
+      Tries to assign to the given @p event, using the source passed to
+      assign().
 
-      @return @c false if the source passed to assign() is of a different type
+      @return @c false if the source passed to assign() is not an Event
      */
     virtual bool visit( Event *event );
 
     /**
-      Tries to assign to the given @p todo
+      Tries to assign to the given @p todo, using the source passed to
+      assign().
 
-      @return @c false if the source passed to assign() is of a different type
+      @return @c false if the source passed to assign() is not a Todo
      */
     virtual bool visit( Todo *todo );
 
     /**
-      Tries to assign to the given @p journal
+      Tries to assign to the given @p journal, using the source passed to
+      assign().
 
-      @return @c false if the source passed to assign() is of a different type
+      @return @c false if the source passed to assign() is not a Journal
      */
     virtual bool visit( Journal *journal );
 
     /**
-      Tries to assign to the given @p freebusy^
+      Tries to assign to the given @p freebusy, using the source passed to
+      assign().
 
-      @return @c false if the source passed to assign() is of a different type
+      @return @c false if the source passed to assign() is not a FreeBusy
      */
     virtual bool visit( FreeBusy *freebusy );
 
