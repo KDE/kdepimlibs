@@ -34,7 +34,7 @@
      </property>
      <widget class="QWidget" name="smptTab" >
       <attribute name="title" >
-       <string context="general smtp settings">General</string>
+       <string comment="general smtp settings">General</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout" >
        <item row="0" column="0" >
@@ -188,7 +188,7 @@
      </widget>
      <widget class="QWidget" name="advancedTab" >
       <attribute name="title" >
-       <string context="advanced smtp settings">Advanced</string>
+       <string comment="advanced smtp settings">Advanced</string>
       </attribute>
       <layout class="QVBoxLayout" >
        <item>
