@@ -100,10 +100,7 @@
     </entry>
     <entry name="specifyHostname" type="Bool">
       <label><!-- TODO --></label>
-      <whatsthis>
-        Check this option to use a custom hostname when identifying to the mail server.
-        <p/>This is useful when your system's hostname may not be set correctly or to mask your system's true hostname.
-      </whatsthis>
+      <whatsthis>Check this option to use a custom hostname when identifying to the mail server. This is useful when your system's hostname may not be set correctly or to mask your system's true hostname.</whatsthis>
       <default>false</default>
     </entry>
     <entry name="localHostname" type="String">
