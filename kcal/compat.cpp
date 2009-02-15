@@ -58,9 +58,9 @@ Compat *CompatFactory::createCompat( const QString &productId )
         QString version = productId.mid( versionStart + 1,
                                          versionStop - versionStart - 1 );
 
-        int versionNum = version.section( ".", 0, 0 ).toInt() * 10000 +
-                         version.section( ".", 1, 1 ).toInt() * 100 +
-                         version.section( ".", 2, 2 ).toInt();
+        int versionNum = version.section( '.', 0, 0 ).toInt() * 10000 +
+                         version.section( '.', 1, 1 ).toInt() * 100 +
+                         version.section( '.', 2, 2 ).toInt();
         int releaseStop = productId.indexOf( "/", versionStop );
         QString release;
         if ( releaseStop > versionStop ) {
