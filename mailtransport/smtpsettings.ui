@@ -28,16 +28,16 @@
     <widget class="KSeparator" name="kseparator" />
    </item>
    <item row="2" column="0" colspan="2" >
-    <widget class="QTabWidget" name="tabWidget" >
+    <widget class="KTabWidget" name="tabWidget" >
      <property name="currentIndex" >
       <number>0</number>
      </property>
      <widget class="QWidget" name="smptTab" >
       <attribute name="title" >
-       <string>&amp;General</string>
+       <string context="general smtp settings">General</string>
       </attribute>
-      <layout class="QVBoxLayout" >
-       <item>
+      <layout class="QFormLayout" name="formLayout" >
+       <item row="0" column="0" >
         <layout class="QGridLayout" >
          <item row="0" column="0" >
           <widget class="QLabel" name="nameLabel" >
@@ -113,7 +113,7 @@
          </item>
         </layout>
        </item>
-       <item>
+       <item row="1" column="0" >
         <layout class="QHBoxLayout" >
          <item>
           <widget class="KButtonGroup" name="kcfg_encryption" >
@@ -171,31 +171,24 @@
          </item>
         </layout>
        </item>
-       <item>
-        <widget class="QProgressBar" name="checkCapabilitiesProgress" >
-         <property name="visible" >
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0" >
-          <size>
-           <width>396</width>
-           <height>101</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
       </layout>
+      <widget class="QProgressBar" name="checkCapabilitiesProgress" >
+       <property name="geometry" >
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>100</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="visible" >
+        <bool>false</bool>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="advancedTab" >
       <attribute name="title" >
-       <string>&amp;Advanced</string>
+       <string context="advanced smtp settings">Advanced</string>
       </attribute>
       <layout class="QVBoxLayout" >
        <item>
@@ -438,6 +431,12 @@
    <class>KSeparator</class>
    <extends>QFrame</extends>
    <header>kseparator.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>ktabwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
