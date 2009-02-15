@@ -149,7 +149,7 @@ void Person::setName( const QString &name )
 
 void Person::setEmail( const QString &email )
 {
-  if ( email.startsWith( "mailto:", Qt::CaseInsensitive ) ) {
+  if ( email.startsWith( QLatin1String( "mailto:" ), Qt::CaseInsensitive ) ) {
     d->mEmail = email.mid( 7 );
   } else {
     d->mEmail = email;
