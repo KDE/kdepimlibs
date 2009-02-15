@@ -61,11 +61,11 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     void setPassword( const QString &passwd );
 
     /**
-      This function syncronizes the password of this transport with the password of the
-      transport with the same ID that is managed by the transport manager.
-      This is only useful for cloned transports, since their passwords don't automatically
-      get updated when calling TransportManager::loadPasswordsAsync() or
-      TransportManager::loadPasswords().
+      This function synchronizes the password of this transport with the
+      password of the transport with the same ID that is managed by the
+      transport manager. This is only useful for cloned transports, since
+      their passwords don't automatically get updated when calling
+      TransportManager::loadPasswordsAsync() or TransportManager::loadPasswords().
 
       @sa clone()
       @since 4.2

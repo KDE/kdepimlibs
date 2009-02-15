@@ -99,9 +99,9 @@ void Transport::updatePasswordState()
     d->password = original->d->password;
     d->passwordLoaded = original->d->passwordLoaded;
     d->passwordDirty = original->d->passwordDirty;
-  }
-  else
+  } else {
     kWarning() << "Transport with this ID not managed by transport manager.";
+  }
 }
 
 bool Transport::isComplete() const
