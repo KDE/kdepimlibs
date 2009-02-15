@@ -83,8 +83,9 @@ Factory *Factory::self( const QString &resourceFamily )
       kDebug() << "Performing Akonadi migration. Good luck!";
       KProcess proc;
       QStringList args = QStringList() << "--interactive-on-change" << "--type" << resourceFamily;
-      if ( !setupClientBrige )
+      if ( !setupClientBrige ) {
         args << "--omit-client-bridge";
+      }
       proc.setProgram( "kres-migrator", args );
       proc.start();
       bool result = proc.waitForStarted();
