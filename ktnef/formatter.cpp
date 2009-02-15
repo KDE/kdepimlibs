@@ -217,21 +217,21 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
       bool bCompatMethodAccepted = false;
       bool bCompatMethodAcceptedCond = false;
       bool bCompatMethodDeclined = false;
-      if ( msgClass.startsWith( "IPM.MICROSOFT SCHEDULE." ) ) {
+      if ( msgClass.startsWith( QLatin1String( "IPM.MICROSOFT SCHEDULE." ) ) ) {
         bCompatClassAppointment = true;
-        if ( msgClass.endsWith( ".MTGREQ" ) ) {
+        if ( msgClass.endsWith( QLatin1String( ".MTGREQ" ) ) ) {
           bCompatMethodRequest = true;
         }
-        if ( msgClass.endsWith( ".MTGCNCL" ) ) {
+        if ( msgClass.endsWith( QLatin1String( ".MTGCNCL" ) ) ) {
           bCompatMethodCancled = true;
         }
-        if ( msgClass.endsWith( ".MTGRESPP" ) ) {
+        if ( msgClass.endsWith( QLatin1String( ".MTGRESPP" ) ) ) {
           bCompatMethodAccepted = true;
         }
-        if ( msgClass.endsWith( ".MTGRESPA" ) ) {
+        if ( msgClass.endsWith( QLatin1String( ".MTGRESPA" ) ) ) {
           bCompatMethodAcceptedCond = true;
         }
-        if ( msgClass.endsWith( ".MTGRESPN" ) ) {
+        if ( msgClass.endsWith( QLatin1String( ".MTGRESPN" ) ) ) {
           bCompatMethodDeclined = true;
         }
       }
