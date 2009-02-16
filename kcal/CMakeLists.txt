@@ -1,7 +1,8 @@
 project(kcal)
 
+set(LIBICAL_MIN_VERSION "0.42")
 macro_optional_find_package(Libical)
-macro_log_feature(LIBICAL_FOUND "libical" "Reference implementation of the iCalendar data type and serialization format" "http://sourceforge.net/projects/freeassociation" TRUE "0.33" "Required for the critical PIM kcal library.")
+macro_log_feature(LIBICAL_FOUND "libical" "Reference implementation of the iCalendar data type and serialization format" "http://sourceforge.net/projects/freeassociation" TRUE ${LIBICAL_MIN_VERSION} "Required for the critical PIM kcal library.")
 if(NOT LIBICAL_FOUND)
   macro_display_feature_log()
 endif(NOT LIBICAL_FOUND)
