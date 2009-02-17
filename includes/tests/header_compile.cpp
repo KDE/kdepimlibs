@@ -1,9 +1,7 @@
 #include "all_includes.h"
 
-int main( int argc, char** argv )
+int main( int , char** )
 {
-  Q_UNUSED( argc );
-  Q_UNUSED( argv );
   return 0;
 }
 
