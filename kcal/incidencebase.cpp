@@ -252,10 +252,10 @@ QString IncidenceBase::dtStartTimeStr( bool shortfmt, const KDateTime::Spec &spe
       timeZone = ' ' + spec.timeZone().name();
     }
 
-    return KGlobal::locale()->formatTime( dtStart().toTimeSpec( spec ).time(), shortfmt )
+    return KGlobal::locale()->formatTime( dtStart().toTimeSpec( spec ).time(), !shortfmt )
       + timeZone;
   } else {
-    return KGlobal::locale()->formatTime( dtStart().time(), shortfmt );
+    return KGlobal::locale()->formatTime( dtStart().time(), !shortfmt );
   }
 }
 
