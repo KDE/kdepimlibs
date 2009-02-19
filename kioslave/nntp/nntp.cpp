@@ -154,6 +154,7 @@ void NNTPProtocol::get( const KUrl& url )
   while ( true ) {
     if ( !waitForResponse( readTimeout() ) ) {
       error( ERR_SERVER_TIMEOUT, mHost );
+      nntp_close();
       return;
     }
     memset( tmp, 0, MAX_PACKET_LEN );
@@ -380,6 +381,7 @@ void NNTPProtocol::fetchGroups( const QString &since, bool desc )
   while ( true ) {
     if ( ! waitForResponse( readTimeout() ) ) {
       error( ERR_SERVER_TIMEOUT, mHost );
+      nntp_close();
       return;
     }
     memset( readBuffer, 0, MAX_PACKET_LEN );
@@ -451,6 +453,7 @@ void NNTPProtocol::fetchGroups( const QString &since, bool desc )
     while ( true ) {
       if ( ! waitForResponse( readTimeout() ) ) {
         error( ERR_SERVER_TIMEOUT, mHost );
+        nntp_close();
         return;
       }
       memset( readBuffer, 0, MAX_PACKET_LEN );
@@ -603,6 +606,7 @@ bool NNTPProtocol::fetchGroupXOVER( unsigned long first, bool &notSupported )
     while ( true ) {
       if ( ! waitForResponse( readTimeout() ) ) {
         error( ERR_SERVER_TIMEOUT, mHost );
+        nntp_close();
         return false;
       }
       memset( readBuffer, 0, MAX_PACKET_LEN );
@@ -636,6 +640,7 @@ bool NNTPProtocol::fetchGroupXOVER( unsigned long first, bool &notSupported )
   while ( true ) {
     if ( ! waitForResponse( readTimeout() ) ) {
       error( ERR_SERVER_TIMEOUT, mHost );
+      nntp_close();
       return false;
     }
     memset( readBuffer, 0, MAX_PACKET_LEN );
@@ -716,7 +721,6 @@ void NNTPProtocol::nntp_close () {
   if ( isConnected() ) {
     write( "QUIT\r\n", 6 );
     disconnectFromHost();
-    opened = false;
     isAuthenticated = false;
   }
   mCurrentGroup.clear();
@@ -751,8 +755,6 @@ bool NNTPProtocol::nntp_open()
     }
 
     DBG << "  nntp_open -- greating was read res_code :" << res_code;
-    // let local class know that we are connected
-    opened = true;
 
     res_code = sendCommand("MODE READER");
 
@@ -790,7 +792,7 @@ int NNTPProtocol::sendCommand( const QString &cmd )
 {
   int res_code = 0;
 
-  if ( !opened ) {
+  if ( !nntp_open() ) {
     ERR << "NOT CONNECTED, cannot send cmd" << cmd;
     return 0;
   }
@@ -897,6 +899,7 @@ int NNTPProtocol::evalResponse ( char *data, ssize_t &len )
 {
   if ( !waitForResponse( responseTimeout() ) ) {
     error( ERR_SERVER_TIMEOUT , mHost );
+    nntp_close();
     return -1;
   }
   memset( data, 0, MAX_PACKET_LEN );
