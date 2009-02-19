@@ -184,10 +184,10 @@ QString Todo::dtDueTimeStr( bool shortfmt, const KDateTime::Spec &spec ) const
       timeZone = ' ' + spec.timeZone().name();
     }
 
-    return KGlobal::locale()->formatTime( dtDue( !recurs() ).toTimeSpec( spec ).time(), shortfmt )
+    return KGlobal::locale()->formatTime( dtDue( !recurs() ).toTimeSpec( spec ).time(), !shortfmt )
       + timeZone;
   } else {
-    return KGlobal::locale()->formatTime( dtDue( !recurs() ).time(), shortfmt );
+    return KGlobal::locale()->formatTime( dtDue( !recurs() ).time(), !shortfmt );
   }
 }
 
@@ -308,10 +308,10 @@ QString Todo::dtStartTimeStr( bool shortfmt, bool first, const KDateTime::Spec &
       timeZone = ' ' + spec.timeZone().name();
     }
 
-    return KGlobal::locale()->formatTime( dtStart( first ).toTimeSpec( spec ).time(), shortfmt )
+    return KGlobal::locale()->formatTime( dtStart( first ).toTimeSpec( spec ).time(), !shortfmt )
       + timeZone;
   } else {
-    return KGlobal::locale()->formatTime( dtStart( first ).time(), shortfmt );
+    return KGlobal::locale()->formatTime( dtStart( first ).time(), !shortfmt );
   }
 }
 

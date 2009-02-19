@@ -156,10 +156,10 @@ QString Event::dtEndTimeStr( bool shortfmt, const KDateTime::Spec &spec ) const
       timeZone = ' ' + spec.timeZone().name();
     }
 
-    return KGlobal::locale()->formatTime( dtEnd().toTimeSpec( spec ).time(), shortfmt )
+    return KGlobal::locale()->formatTime( dtEnd().toTimeSpec( spec ).time(), !shortfmt )
       + timeZone;
   } else {
-    return KGlobal::locale()->formatTime( dtEnd().time(), shortfmt );
+    return KGlobal::locale()->formatTime( dtEnd().time(), !shortfmt );
   }
 }
 
