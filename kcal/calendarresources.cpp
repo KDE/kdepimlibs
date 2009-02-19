@@ -272,6 +272,7 @@ void CalendarResources::load()
   }
 
   d->mOpen = true;
+  emit calendarLoaded();
 }
 
 bool CalendarResources::reload()
