@@ -252,7 +252,8 @@ bool ResourceCalendar::isSaving()
 
 bool ResourceCalendar::doSave( bool syncCache, Incidence *incidence )
 {
-  return doSave( syncCache, incidence );
+  Q_UNUSED( incidence );
+  return doSave( syncCache );
 }
 
 void ResourceCalendar::saveError( const QString &err )
