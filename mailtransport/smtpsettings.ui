@@ -1,8 +1,9 @@
-<ui version="4.0" >
- <author>Volker Krause &lt;vkrause@kde.org>, KovoKs &lt;tomalbers@kde.nl></author>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Volker Krause &lt;vkrause@kde.org&gt;, KovoKs &lt;tomalbers@kde.nl&gt;</author>
  <class>SMTPSettings</class>
- <widget class="QWidget" name="SMTPSettings" >
-  <property name="geometry" >
+ <widget class="QWidget" name="SMTPSettings">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -10,98 +11,98 @@
     <height>509</height>
    </rect>
   </property>
-  <layout class="QGridLayout" >
-   <item row="0" column="0" >
-    <widget class="QLabel" name="titleLabel" >
-     <property name="font" >
+  <layout class="QGridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="titleLabel">
+     <property name="font">
       <font>
        <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Transport: SMTP</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" >
-    <widget class="KSeparator" name="kseparator" />
+   <item row="1" column="0">
+    <widget class="KSeparator" name="kseparator"/>
    </item>
-   <item row="2" column="0" colspan="2" >
-    <widget class="KTabWidget" name="tabWidget" >
-     <property name="currentIndex" >
+   <item row="2" column="0" colspan="2">
+    <widget class="KTabWidget" name="tabWidget">
+     <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="smptTab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="smptTab">
+      <attribute name="title">
        <string comment="general smtp settings">General</string>
       </attribute>
-      <layout class="QFormLayout" name="formLayout" >
-       <item row="0" column="0" >
-        <layout class="QGridLayout" >
-         <item row="0" column="0" >
-          <widget class="QLabel" name="nameLabel" >
-           <property name="text" >
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <layout class="QGridLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="nameLabel">
+           <property name="text">
             <string>&amp;Name:</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="buddy" >
+           <property name="buddy">
             <cstring>kcfg_name</cstring>
            </property>
           </widget>
          </item>
-         <item row="0" column="1" >
-          <widget class="KLineEdit" name="kcfg_name" />
+         <item row="0" column="1">
+          <widget class="KLineEdit" name="kcfg_name"/>
          </item>
-         <item row="1" column="0" >
-          <widget class="QLabel" name="hostLabel" >
-           <property name="text" >
+         <item row="1" column="0">
+          <widget class="QLabel" name="hostLabel">
+           <property name="text">
             <string>&amp;Host:</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="buddy" >
+           <property name="buddy">
             <cstring>kcfg_host</cstring>
            </property>
           </widget>
          </item>
-         <item row="1" column="1" >
-          <widget class="KLineEdit" name="kcfg_host" />
+         <item row="1" column="1">
+          <widget class="KLineEdit" name="kcfg_host"/>
          </item>
-         <item row="2" column="0" >
-          <widget class="QLabel" name="portLabel" >
-           <property name="text" >
+         <item row="2" column="0">
+          <widget class="QLabel" name="portLabel">
+           <property name="text">
             <string>&amp;Port:</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="buddy" >
+           <property name="buddy">
             <cstring>kcfg_port</cstring>
            </property>
           </widget>
          </item>
-         <item row="2" column="1" >
-          <layout class="QHBoxLayout" >
+         <item row="2" column="1">
+          <layout class="QHBoxLayout">
            <item>
-            <widget class="KIntNumInput" name="kcfg_port" >
-             <property name="value" >
+            <widget class="KIntNumInput" name="kcfg_port">
+             <property name="value">
               <number>25</number>
              </property>
-             <property name="minimum" >
+             <property name="minimum">
               <number>1</number>
              </property>
             </widget>
            </item>
            <item>
             <spacer>
-             <property name="orientation" >
+             <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
-             <property name="sizeHint" stdset="0" >
+             <property name="sizeHint" stdset="0">
               <size>
                <width>231</width>
                <height>23</height>
@@ -113,33 +114,33 @@
          </item>
         </layout>
        </item>
-       <item row="1" column="0" >
-        <layout class="QHBoxLayout" >
+       <item row="1" column="0">
+        <layout class="QHBoxLayout">
          <item>
-          <widget class="KButtonGroup" name="kcfg_encryption" >
-           <property name="title" >
+          <widget class="KButtonGroup" name="kcfg_encryption">
+           <property name="title">
             <string>Encryption</string>
            </property>
-           <layout class="QVBoxLayout" >
+           <layout class="QVBoxLayout">
             <item>
-             <layout class="QHBoxLayout" >
+             <layout class="QHBoxLayout">
               <item>
-               <widget class="QRadioButton" name="none" >
-                <property name="text" >
+               <widget class="QRadioButton" name="none">
+                <property name="text">
                  <string>&amp;None</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QRadioButton" name="ssl" >
-                <property name="text" >
+               <widget class="QRadioButton" name="ssl">
+                <property name="text">
                  <string>&amp;SSL</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QRadioButton" name="tls" >
-                <property name="text" >
+               <widget class="QRadioButton" name="tls">
+                <property name="text">
                  <string>&amp;TLS</string>
                 </property>
                </widget>
@@ -147,9 +148,16 @@
              </layout>
             </item>
             <item>
-             <widget class="KPushButton" name="checkCapabilities" >
-              <property name="text" >
+             <widget class="KPushButton" name="checkCapabilities">
+              <property name="text">
                <string>Check &amp;What the Server Supports</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QProgressBar" name="checkCapabilitiesProgress">
+              <property name="visible">
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -158,10 +166,10 @@
          </item>
          <item>
           <spacer>
-           <property name="orientation" >
+           <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <property name="sizeHint" stdset="0" >
+           <property name="sizeHint" stdset="0">
             <size>
              <width>166</width>
              <height>81</height>
@@ -172,164 +180,151 @@
         </layout>
        </item>
       </layout>
-      <widget class="QProgressBar" name="checkCapabilitiesProgress" >
-       <property name="geometry" >
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>100</width>
-         <height>30</height>
-        </rect>
-       </property>
-       <property name="visible" >
-        <bool>false</bool>
-       </property>
-      </widget>
      </widget>
-     <widget class="QWidget" name="advancedTab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="advancedTab">
+      <attribute name="title">
        <string comment="advanced smtp settings">Advanced</string>
       </attribute>
-      <layout class="QVBoxLayout" >
+      <layout class="QVBoxLayout">
        <item>
-        <widget class="QLabel" name="noAuthPossible" >
-         <property name="visible" >
+        <widget class="QLabel" name="noAuthPossible">
+         <property name="visible">
           <bool>false</bool>
          </property>
-         <property name="frameShape" >
+         <property name="frameShape">
           <enum>QFrame::Box</enum>
          </property>
-         <property name="frameShadow" >
+         <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>This server does not support authentication</string>
          </property>
-         <property name="alignment" >
+         <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="kcfg_requiresAuthentication" >
-         <property name="text" >
+        <widget class="QCheckBox" name="kcfg_requiresAuthentication">
+         <property name="text">
           <string>Server &amp;requires authentication</string>
          </property>
         </widget>
        </item>
        <item>
-        <layout class="QGridLayout" >
-         <item row="0" column="0" >
-          <widget class="QLabel" name="usernameLabel" >
-           <property name="enabled" >
+        <layout class="QGridLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="usernameLabel">
+           <property name="enabled">
             <bool>false</bool>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>&amp;Login:</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="buddy" >
+           <property name="buddy">
             <cstring>kcfg_userName</cstring>
            </property>
           </widget>
          </item>
-         <item row="0" column="1" >
-          <widget class="KLineEdit" name="kcfg_userName" >
-           <property name="enabled" >
+         <item row="0" column="1">
+          <widget class="KLineEdit" name="kcfg_userName">
+           <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="1" column="0" >
-          <widget class="QLabel" name="passwordLabel" >
-           <property name="enabled" >
+         <item row="1" column="0">
+          <widget class="QLabel" name="passwordLabel">
+           <property name="enabled">
             <bool>false</bool>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>P&amp;assword:</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="buddy" >
+           <property name="buddy">
             <cstring>password</cstring>
            </property>
           </widget>
          </item>
-         <item row="1" column="1" >
-          <widget class="KLineEdit" name="password" >
-           <property name="enabled" >
+         <item row="1" column="1">
+          <widget class="KLineEdit" name="password">
+           <property name="enabled">
             <bool>false</bool>
            </property>
-           <property name="whatsThis" >
+           <property name="whatsThis">
             <string>The password to send to the server for authorization.</string>
            </property>
-           <property name="echoMode" >
+           <property name="echoMode">
             <enum>QLineEdit::Password</enum>
            </property>
           </widget>
          </item>
-         <item row="2" column="1" >
-          <widget class="QCheckBox" name="kcfg_storePassword" >
-           <property name="enabled" >
+         <item row="2" column="1">
+          <widget class="QCheckBox" name="kcfg_storePassword">
+           <property name="enabled">
             <bool>false</bool>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>&amp;Store SMTP password</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="1" >
-          <widget class="KButtonGroup" name="kcfg_authenticationType" >
-           <property name="enabled" >
+         <item row="3" column="1">
+          <widget class="KButtonGroup" name="kcfg_authenticationType">
+           <property name="enabled">
             <bool>false</bool>
            </property>
-           <property name="title" >
+           <property name="title">
             <string>Authentication Method</string>
            </property>
-           <layout class="QGridLayout" >
-            <item row="0" column="0" >
-             <layout class="QGridLayout" >
-              <item row="0" column="0" >
-               <widget class="QRadioButton" name="login" >
-                <property name="text" >
+           <layout class="QGridLayout">
+            <item row="0" column="0">
+             <layout class="QGridLayout">
+              <item row="0" column="0">
+               <widget class="QRadioButton" name="login">
+                <property name="text">
                  <string>&amp;LOGIN</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="1" >
-               <widget class="QRadioButton" name="plain" >
-                <property name="text" >
+              <item row="0" column="1">
+               <widget class="QRadioButton" name="plain">
+                <property name="text">
                  <string>&amp;PLAIN</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="0" >
-               <widget class="QRadioButton" name="crammd5" >
-                <property name="text" >
+              <item row="1" column="0">
+               <widget class="QRadioButton" name="crammd5">
+                <property name="text">
                  <string>CRAM-MD&amp;5</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="1" >
-               <widget class="QRadioButton" name="digestmd5" >
-                <property name="text" >
+              <item row="1" column="1">
+               <widget class="QRadioButton" name="digestmd5">
+                <property name="text">
                  <string>&amp;DIGEST-MD5</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="0" >
-               <widget class="QRadioButton" name="gssapi" >
-                <property name="text" >
+              <item row="2" column="0">
+               <widget class="QRadioButton" name="gssapi">
+                <property name="text">
                  <string>&amp;GSSAPI</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="1" >
-               <widget class="QRadioButton" name="ntlm" >
-                <property name="text" >
+              <item row="2" column="1">
+               <widget class="QRadioButton" name="ntlm">
+                <property name="text">
                  <string>&amp;NTLM</string>
                 </property>
                </widget>
@@ -342,36 +337,36 @@
         </layout>
        </item>
        <item>
-        <widget class="KSeparator" name="kseparator_3" />
+        <widget class="KSeparator" name="kseparator_3"/>
        </item>
        <item>
-        <widget class="QCheckBox" name="kcfg_specifyHostname" >
-         <property name="text" >
+        <widget class="QCheckBox" name="kcfg_specifyHostname">
+         <property name="text">
           <string>Sen&amp;d custom hostname to server</string>
          </property>
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" >
+        <layout class="QHBoxLayout">
          <item>
-          <widget class="QLabel" name="hostnameLabel" >
-           <property name="enabled" >
+          <widget class="QLabel" name="hostnameLabel">
+           <property name="enabled">
             <bool>false</bool>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>Hos&amp;tname:</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="buddy" >
+           <property name="buddy">
             <cstring>kcfg_localHostname</cstring>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="KLineEdit" name="kcfg_localHostname" >
-           <property name="enabled" >
+          <widget class="KLineEdit" name="kcfg_localHostname">
+           <property name="enabled">
             <bool>false</bool>
            </property>
           </widget>
@@ -379,22 +374,22 @@
         </layout>
        </item>
        <item>
-        <widget class="KSeparator" name="kseparator_2" />
+        <widget class="KSeparator" name="kseparator_2"/>
        </item>
        <item>
-        <layout class="QHBoxLayout" >
+        <layout class="QHBoxLayout">
          <item>
-          <widget class="QLabel" name="precommandLabel" >
-           <property name="text" >
+          <widget class="QLabel" name="precommandLabel">
+           <property name="text">
             <string>Precommand:</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="KLineEdit" name="kcfg_precommand" />
+          <widget class="KLineEdit" name="kcfg_precommand"/>
          </item>
         </layout>
        </item>
@@ -404,7 +399,7 @@
    </item>
   </layout>
  </widget>
- <layoutfunction spacing="KDialog::spacingHint" margin="KDialog::marginHint" />
+ <layoutfunction spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
  <customwidgets>
   <customwidget>
    <class>KButtonGroup</class>
@@ -453,11 +448,11 @@
    <receiver>usernameLabel</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>29</x>
      <y>88</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>112</x>
      <y>117</y>
     </hint>
@@ -469,11 +464,11 @@
    <receiver>kcfg_userName</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>35</x>
      <y>85</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>186</x>
      <y>115</y>
     </hint>
@@ -485,11 +480,11 @@
    <receiver>passwordLabel</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>49</x>
      <y>88</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>61</x>
      <y>142</y>
     </hint>
@@ -501,11 +496,11 @@
    <receiver>password</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>43</x>
      <y>89</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>140</x>
      <y>142</y>
     </hint>
@@ -517,11 +512,11 @@
    <receiver>kcfg_storePassword</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>75</x>
      <y>86</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>62</x>
      <y>176</y>
     </hint>
@@ -533,11 +528,11 @@
    <receiver>kcfg_authenticationType</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>82</x>
      <y>89</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>78</x>
      <y>202</y>
     </hint>
@@ -549,11 +544,11 @@
    <receiver>hostnameLabel</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>90</x>
      <y>334</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>81</x>
      <y>357</y>
     </hint>
@@ -565,11 +560,11 @@
    <receiver>kcfg_localHostname</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>185</x>
      <y>327</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>179</x>
      <y>360</y>
     </hint>
