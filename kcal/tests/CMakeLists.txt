@@ -33,6 +33,7 @@ KCAL_UNIT_TESTS(
   testevent
   testfilestorage
   testfreebusy
+  testincidencerelation
   testjournal
   testkresult
   testperiod
