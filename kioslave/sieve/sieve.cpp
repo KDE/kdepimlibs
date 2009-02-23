@@ -1043,7 +1043,7 @@ bool kio_sieveProtocol::authenticate()
 
 		if (r.getType() != kio_sieveResponse::QUANTITY) {
 			sasl_dispose( &conn );
-			error(ERR_UNSUPPORTED_PROTOCOL, mechusing);
+			error(ERR_UNSUPPORTED_PROTOCOL, QString::fromLatin1(mechusing));
 			return false;
 		}
 
