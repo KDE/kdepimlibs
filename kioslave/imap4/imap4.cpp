@@ -1322,7 +1322,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     if ( hasCapability( "ACL" ) ) {
       specialACLCommand( cmd, stream );
     } else {
-      error( ERR_UNSUPPORTED_ACTION, "ACL" );
+      error( ERR_UNSUPPORTED_ACTION, QString::fromLatin1("ACL") );
     }
     break;
   }
@@ -1334,7 +1334,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     if ( hasCapability( "ANNOTATEMORE" ) ) {
       specialAnnotateMoreCommand( cmd, stream );
     } else {
-      error( ERR_UNSUPPORTED_ACTION, "ANNOTATEMORE" );
+      error( ERR_UNSUPPORTED_ACTION, QString::fromLatin1("ANNOTATEMORE") );
     }
     break;
   }
@@ -1346,7 +1346,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     if ( hasCapability( "QUOTA" ) ) {
       specialQuotaCommand( cmd, stream );
     } else {
-      error( ERR_UNSUPPORTED_ACTION, "QUOTA" );
+      error( ERR_UNSUPPORTED_ACTION, QString::fromLatin1("QUOTA") );
     }
     break;
   }
