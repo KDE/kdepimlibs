@@ -46,6 +46,7 @@ Comment[el]=Προσφέρει πρόσβαση σε αντικείμενα ημ
 Comment[es]=Provee acceso a elementos de un calendario, cada uno almacenado en un archivo diferente, dentro de un directorio determinado
 Comment[et]=Võimaldab kasutada eraldi failidesse salvestatud kalendrielemente määratud kataloogis
 Comment[fr]=Fourni l'accès à des entrées d'agenda, chaque élément étant représenté par un fichier dans le dossier indiqué
+Comment[ga]=Soláthraíonn sé seo rochtain ar mhíreanna féilire, gach ceann stóráilte i gcomhad aonair, i gcomhadlann sonraithe
 Comment[gl]=Dá aceso aos obxectos do calendario, cada un gardado nun ficheiro nun cartafol dado
 Comment[hu]=Helyi mappában tárolt naptérbejegyzések elérését biztosítja. Minden bejegyzés külön fájlban található.
 Comment[it]=Fornisce accesso a voci di calendario, ciascuna memorizzata in un singolo file in una data cartella
