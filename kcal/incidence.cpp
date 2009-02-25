@@ -516,7 +516,9 @@ void Incidence::addRelation( Incidence *incidence )
 void Incidence::removeRelation( Incidence *incidence )
 {
   d->mRelations.removeRef( incidence );
-  d->mRelatedToUid.clear();
+  if ( d->mRelatedToUid == incidence->uid() ) {
+    d->mRelatedToUid.clear();
+  }
 //  if (incidence->getRelatedTo() == this) incidence->setRelatedTo(0);
 }
 
