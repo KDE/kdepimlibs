@@ -553,7 +553,7 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
   }
   if ( !tmpStr2.isEmpty() ) {
     tmpStr2.truncate( tmpStr2.length() - 1 );
-    addPropValue( vevent, VCExDateProp, tmpStr2.toLocal8Bit() );
+    addPropValue( vevent, VCExpDateProp, tmpStr2.toLocal8Bit() );
   }
 
   // description
@@ -1197,7 +1197,7 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
   } // repeats
 
   // recurrence exceptions
-  if ( ( vo = isAPropertyOf( vevent, VCExDateProp ) ) != 0 ) {
+  if ( ( vo = isAPropertyOf( vevent, VCExpDateProp ) ) != 0 ) {
     s = fakeCString( vObjectUStringZValue( vo ) );
     QStringList exDates = QString::fromLocal8Bit( s ).split( ',' );
     QStringList::ConstIterator it;
