@@ -57,8 +57,7 @@ extern const uchar eTextMap[16];
 
 inline bool isOfSet( const uchar map[16], unsigned char ch )
 {
-  Q_ASSERT( ch < 128 );
-  return map[ ch/8 ] & 0x80 >> ch%8;
+  return ( ch < 128 ) && ( map[ ch/8 ] & 0x80 >> ch%8 );
 }
 inline bool isSpecial( char ch )
 {
