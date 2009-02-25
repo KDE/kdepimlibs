@@ -45,6 +45,16 @@ namespace KMime {
 
 namespace Types {
 
+// QUrl::fromAce is extremely expensive, so only use it when necessary.
+// Fortunately, the presence of IDNA is readily detected with a substring match...
+static inline QString QUrl_fromAce_wrapper( const QString & domain )
+{
+    if ( domain.contains( QLatin1String( "xn--" ) ) )
+        return QUrl::fromAce( domain.toLatin1() );
+    else
+        return domain;
+}
+
 static QString addr_spec_as_string( const AddrSpec & as, bool pretty )
 {
   if ( as.isEmpty() ) {
@@ -66,7 +76,7 @@ static QString addr_spec_as_string( const AddrSpec & as, bool pretty )
       result += ch;
     }
   }
-  const QString dom = pretty ? QUrl::fromAce( as.domain.toLatin1() ) : as.domain ;
+  const QString dom = pretty ? QUrl_fromAce_wrapper( as.domain ) : as.domain ;
   if ( needsQuotes ) {
     return '"' + result + "\"@" + dom;
   } else {
