@@ -86,13 +86,13 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
   QList<QString> catList = post->categories();
   if ( !catList.empty() ){
     xmlMarkup += "<name>categories</name>";
-    xmlMarkup += "<value><array>";
+    xmlMarkup += "<value><array><data>";
     QList<QString>::ConstIterator it = catList.constBegin();
     QList<QString>::ConstIterator end = catList.constEnd();
     for ( ; it != end; ++it ){
-      xmlMarkup += "<data><string><![CDATA[" + ( *it ) + "]]></string></data>";
+      xmlMarkup += "<value><string><![CDATA[" + ( *it ) + "]]></string></value>";
     }
-    xmlMarkup += "</array></value>";
+    xmlMarkup += "</data></array></value>";
     xmlMarkup += "</member><member>";
   }
 
@@ -177,13 +177,13 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
   QList<QString> catList = post->categories();
   if ( !catList.empty() ){
     xmlMarkup += "<name>categories</name>";
-    xmlMarkup += "<value><array>";
+    xmlMarkup += "<value><array><data>";
     QList<QString>::ConstIterator it = catList.constBegin();
     QList<QString>::ConstIterator end = catList.constEnd();
     for ( ; it != end; ++it ){
-      xmlMarkup += "<data><string><![CDATA[" + ( *it ) + "]]></string></data>";
+      xmlMarkup += "<value><string><![CDATA[" + ( *it ) + "]]></string></value>";
     }
-    xmlMarkup += "</array></value>";
+    xmlMarkup += "</data></array></value>";
     xmlMarkup += "</member><member>";
   }
 
