@@ -3,7 +3,7 @@ if (NOT ONLY_KLEO)
 add_subdirectory( tests )
 
 macro(install_headers _dir)
-  file(GLOB _includes "${CMAKE_CURRENT_SOURCE_DIR}/${_dir}/[A-Z]*")
+  file(GLOB _includes "${CMAKE_CURRENT_SOURCE_DIR}/${_dir}/[A-Za-z]*")
   install(FILES ${_includes} DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/${_dir} COMPONENT Devel)
 endmacro(install_headers)
 
