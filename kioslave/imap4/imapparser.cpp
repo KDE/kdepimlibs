@@ -80,8 +80,8 @@ imapParser::~imapParser ()
   lastHandled = 0;
 }
 
-imapCommand *
-imapParser::doCommand (imapCommand * aCmd)
+CommandPtr
+imapParser::doCommand (CommandPtr aCmd)
 {
   int pl = 0;
   sendCommand (aCmd);
@@ -93,8 +93,8 @@ imapParser::doCommand (imapCommand * aCmd)
   return aCmd;
 }
 
-imapCommand *
-imapParser::sendCommand (imapCommand * aCmd)
+CommandPtr
+imapParser::sendCommand (CommandPtr aCmd)
 {
   aCmd->setId (QString::number(commandCounter++));
   sentQueue.append (aCmd);
@@ -142,13 +142,13 @@ bool
 imapParser::clientLogin (const QString & aUser, const QString & aPass,
   QString & resultInfo)
 {
-  imapCommand *cmd;
+  CommandPtr cmd;
   bool retVal = false;
 
   cmd =
-    doCommand (new
-               imapCommand ("LOGIN", "\"" + KIMAP::quoteIMAP(aUser)
-               + "\" \"" + KIMAP::quoteIMAP(aPass) + "\""));
+    doCommand ( CommandPtr( new
+                            imapCommand ("LOGIN", "\"" + KIMAP::quoteIMAP(aUser)
+                                         + "\" \"" + KIMAP::quoteIMAP(aPass) + "\"")) );
 
   if (cmd->result () == "OK")
   {
@@ -157,7 +157,6 @@ imapParser::clientLogin (const QString & aUser, const QString & aPass,
   }
   resultInfo = cmd->resultInfo();
   completeQueue.removeAll (cmd);
-  delete cmd;
   return retVal;
 }
 
@@ -257,7 +256,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
     sasl_dispose( &conn );
     return false;
   }
-  imapCommand *cmd;
+  CommandPtr cmd;
 
   tmp = QByteArray::fromRawData( out, outlen );
   challenge = tmp.toBase64();
@@ -268,7 +267,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
     firstCommand += ' ';
     firstCommand += QString::fromLatin1( challenge.data(), challenge.size() );
   }
-  cmd = sendCommand (new imapCommand ("AUTHENTICATE", firstCommand.toLatin1()));
+  cmd = sendCommand (CommandPtr(new imapCommand ("AUTHENTICATE", firstCommand.toLatin1())));
 
   while ( true )
   {
@@ -353,7 +352,7 @@ imapParser::parseUntagged (parseString & result)
       parseResult (what, result);
       if ( sentQueue.count() ) {
         // BYE that interrupts a command -> copy the reason for it
-        imapCommand *current = sentQueue.at (0);
+        CommandPtr current = sentQueue.at (0);
         current->setResultInfo(result.cstr());
       }
       currentState = ISTATE_NO;
@@ -1745,7 +1744,7 @@ int imapParser::parseLoop ()
   }
   else
   {
-    imapCommand *current = sentQueue.at (0);
+    CommandPtr current = sentQueue.at (0);
     switch (result[0])
     {
     case '*':
