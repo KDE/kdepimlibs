@@ -26,6 +26,7 @@
 
 #include <syndication/loader.h>
 #include <syndication/item.h>
+#include <syndication/category.h>
 
 #include <kio/netaccess.h>
 #include <kio/http.h>
@@ -724,6 +725,17 @@ void GDataPrivate::slotListRecentPosts( Syndication::Loader *loader,
     post.setTitle( ( *it )->title() );
     post.setContent( ( *it )->content() );
     post.setLink( ( *it )->link() );
+    QStringList labels;
+    int catCount = ( *it )->categories().count();
+    QList< Syndication::CategoryPtr > cats = ( *it )->categories();
+    for(int i=0; i < catCount; ++i) {
+        if(cats[i].get()->label().isEmpty()){
+            labels.append(cats[i].get()->term());
+        } else {
+            labels.append(cats[i].get()->label());
+        }
+    }
+    post.setTags(labels);
 //  FIXME: assuming UTC for now
     post.setCreationDateTime(
       KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
