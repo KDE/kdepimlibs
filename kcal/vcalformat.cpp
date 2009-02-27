@@ -263,8 +263,10 @@ VObject *VCalFormat::eventToVTodo( const Todo *anEvent )
 
   // organizer stuff
   // @TODO: How about the common name?
-  tmpStr = "MAILTO:" + anEvent->organizer().email();
-  addPropValue( vtodo, ICOrganizerProp, tmpStr.toLocal8Bit() );
+  if ( !anEvent->organizer().email().isEmpty() ) {
+    tmpStr = "MAILTO:" + anEvent->organizer().email();
+    addPropValue( vtodo, ICOrganizerProp, tmpStr.toLocal8Bit() );
+  }
 
   // attendees
   if ( anEvent->attendeeCount() > 0 ) {
@@ -421,8 +423,10 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
 
   // attendee and organizer stuff
   // TODO: What to do with the common name?
-  tmpStr = "MAILTO:" + anEvent->organizer().email();
-  addPropValue( vevent, ICOrganizerProp, tmpStr.toLocal8Bit() );
+  if ( !anEvent->organizer().email().isEmpty() ) {
+    tmpStr = "MAILTO:" + anEvent->organizer().email();
+    addPropValue( vevent, ICOrganizerProp, tmpStr.toLocal8Bit() );
+  }
 
   // TODO: Put this functionality into Attendee class
   if ( anEvent->attendeeCount() > 0 ) {
