@@ -98,3 +98,24 @@ void TodoTest::testAssign()
   Todo todo2 = todo1;
   QVERIFY( todo1 == todo2 );
 }
+
+void TodoTest::testSetCompleted() {
+
+  Todo todo1, todo2;
+  todo1.setSummary( "Todo Summary" );
+  todo2.setSummary( "Todo Summary" );
+  KDateTime today = KDateTime::currentUtcDateTime();
+
+  // due yesterday
+  KDateTime originalDueDate = today.addDays( -1 );
+ 
+  todo1.setDtDue( originalDueDate );
+  todo1.recurrence()->setDaily( 1 );
+  todo1.setCompleted( today );
+
+  todo2.setCompleted( true );
+
+  QVERIFY( originalDueDate != todo1.dtDue() );
+  QVERIFY( !todo1.isCompleted() );
+  QVERIFY( todo2.isCompleted() );
+}
