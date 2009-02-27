@@ -804,7 +804,7 @@ static struct PreDefProp propNames[] = {
     { VCEventProp, 0, 0, PD_BEGIN },
     { VCEWorldProp, 0, 0, 0 },
     { VCExNumProp, 0, 0, 0 },
-    { VCExDateProp, 0, 0, 0 },
+    { VCExpDateProp, 0, 0, 0 },
     { VCExpectProp, 0, 0, 0 },
     { VCExtAddressProp, 0, 0, 0 },
     { VCFamilyNameProp, 0, 0, 0 },
