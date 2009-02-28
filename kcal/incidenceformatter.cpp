@@ -389,7 +389,9 @@ static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>" + i18n( "Next Occurrence" )+ "</b></td>";
     tmpStr += "<td>" +
-              KGlobal::locale()->formatDateTime( dt.dateTime(), KLocale::ShortDate ) + "</td>";
+              ( dt.isValid() ? KGlobal::locale()->formatDateTime( dt.dateTime(),
+                                                                  KLocale::ShortDate )
+                             : i18n( "none" ) ) + "</td>";
     tmpStr += "</tr>";
   }
 
