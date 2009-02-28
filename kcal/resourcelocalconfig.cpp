@@ -66,6 +66,7 @@ ResourceLocalConfig::ResourceLocalConfig( QWidget *parent )
 
   QLabel *label = new QLabel( i18n( "Location:" ), this );
   d->mURL = new KUrlRequester( this );
+  d->mURL->setFilter( i18n( "*.ics *.vcs|Calendar Files" ) );
   mainLayout->addWidget( label, 1, 0 );
   mainLayout->addWidget( d->mURL, 1, 1 );
 
