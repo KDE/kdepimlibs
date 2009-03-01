@@ -283,7 +283,7 @@ KDateTime Todo::dtStart( bool first ) const
     return KDateTime();
   }
   if ( recurs() && !first ) {
-    return d->mDtRecurrence.addDays( dtDue( first ).daysTo( IncidenceBase::dtStart() ) );
+    return d->mDtRecurrence.addDays( dtDue( true ).daysTo( IncidenceBase::dtStart() ) );
   } else {
     return IncidenceBase::dtStart();
   }
