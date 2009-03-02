@@ -412,11 +412,17 @@ KDateTime Alarm::time() const
   if ( hasTime() ) {
     return d->mAlarmTime;
   } else if ( d->mParent ) {
+    KDateTime end;
+
     if ( d->mParent->type() == "Todo" ) {
       Todo *t = static_cast<Todo*>( d->mParent );
-      return d->mOffset.end( t->dtDue() );
-    } else if ( d->mEndOffset ) {
-      return d->mOffset.end( d->mParent->dtEnd() );
+      end = t->dtDue();
+    } else {
+      end = d->mParent->dtEnd();
+    }
+
+    if ( d->mEndOffset ) {
+      return d->mOffset.end( end );
     } else {
       return d->mOffset.end( d->mParent->dtStart() );
     }
