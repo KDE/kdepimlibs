@@ -84,6 +84,11 @@ Event *Event::clone()
 
 Event &Event::operator=( const Event &other )
 {
+  // check for self assignment
+  if ( &other == this ) {
+    return *this;
+  }
+
   Incidence::operator=( other );
   *d = *other.d;
   return *this;

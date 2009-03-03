@@ -74,6 +74,11 @@ CustomProperties::CustomProperties( const CustomProperties &cp )
 
 CustomProperties &CustomProperties::operator=( const CustomProperties &other )
 {
+  // check for self assignment
+  if ( &other == this ) {
+    return *this;
+  }
+
   *d = *other.d;
   return *this;
 }

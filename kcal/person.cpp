@@ -98,6 +98,11 @@ bool KCal::Person::operator==( const Person &person )
 
 Person &KCal::Person::operator=( const Person &person )
 {
+  // check for self assignment
+  if ( &person == this ) {
+    return *this;
+  }
+
   *d = *person.d;
   return *this;
 }

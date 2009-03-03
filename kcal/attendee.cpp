@@ -92,6 +92,11 @@ bool KCal::Attendee::operator==( const Attendee &attendee )
 
 Attendee &KCal::Attendee::operator=( const Attendee &attendee )
 {
+  // check for self assignment
+  if ( &attendee == this ) {
+    return *this;
+  }
+
   *d = *attendee.d;
   setName( attendee.name() );
   setEmail( attendee.email() );

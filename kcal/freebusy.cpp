@@ -305,6 +305,11 @@ void FreeBusy::shiftTimes( const KDateTime::Spec &oldSpec,
 
 FreeBusy &FreeBusy::operator=( const FreeBusy &other )
 {
+  // check for self assignment
+  if ( &other == this ) {
+    return *this;
+  }
+
   IncidenceBase::operator=( other );
   d->init( *other.d );
   return *this;

@@ -94,6 +94,11 @@ bool Period::operator==( const Period &other ) const
 
 Period &Period::operator=( const Period &other )
 {
+  // check for self assignment
+  if ( &other == this ) {
+    return *this;
+  }
+
   *d = *other.d;
   return *this;
 }

@@ -254,6 +254,11 @@ bool ResourceLocal::operator==( const ResourceLocal &other )
 
 ResourceLocal &ResourceLocal::operator=( const ResourceLocal &other )
 {
+  // check for self assignment
+  if ( &other == this ) {
+    return *this;
+  }
+
   d->mURL = other.d->mURL;
   d->mLastModified = other.d->mLastModified;
   return *this;

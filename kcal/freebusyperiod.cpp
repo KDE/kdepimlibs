@@ -79,6 +79,11 @@ FreeBusyPeriod::~FreeBusyPeriod()
 
 FreeBusyPeriod &FreeBusyPeriod::operator=( const FreeBusyPeriod &other )
 {
+  // check for self assignment
+  if ( &other == this ) {
+    return *this;
+  }
+
   Period::operator=(other);
   *d = *other.d;
   return *this;

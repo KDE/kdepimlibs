@@ -108,6 +108,11 @@ Todo *Todo::clone()
 
 Todo &Todo::operator=( const Todo &other )
 {
+  // check for self assignment
+  if ( &other == this ) {
+    return *this;
+  }
+
   Incidence::operator=( other );
   d->init( *other.d );
   return *this;

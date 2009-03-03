@@ -128,6 +128,11 @@ IncidenceBase::~IncidenceBase()
 
 IncidenceBase &IncidenceBase::operator=( const IncidenceBase &other )
 {
+  // check for self assignment
+  if ( &other == this ) {
+    return *this;
+  }
+
   CustomProperties::operator=( other );
   d->init( *other.d );
   mReadOnly = other.mReadOnly;

@@ -53,6 +53,11 @@ Journal *Journal::clone()
 
 Journal &Journal::operator=( const Journal &other )
 {
+  // check for self assignment
+  if ( &other == this ) {
+    return *this;
+  }
+
   Incidence::operator=( other );
   return *this;
 }

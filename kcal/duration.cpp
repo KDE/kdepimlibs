@@ -112,6 +112,11 @@ Duration::~Duration()
 
 Duration &Duration::operator=( const Duration &duration )
 {
+  // check for self assignment
+  if ( &duration == this ) {
+    return *this;
+  }
+
   *d = *duration.d;
   return *this;
 }
