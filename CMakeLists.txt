@@ -65,6 +65,7 @@ add_subdirectory(kxmlrpcclient)
 add_subdirectory(mailtransport)
 add_subdirectory(syndication)
 add_subdirectory(kioslave)
+add_subdirectory(pimtextedit)
 
 endif (NOT ONLY_KLEO)
 
