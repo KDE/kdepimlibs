@@ -22,6 +22,7 @@
 
 #include "htmlexport.h"
 #include "htmlexportsettings.h"
+#include "incidenceformatter.h"
 #include "calendar.h"
 #include "event.h"
 #include "todo.h"
@@ -312,13 +313,15 @@ void HtmlExport::createEvent ( QTextStream *ts, Event *event,
       *ts << "    <td>&nbsp;</td>\n";
     } else {
       *ts << "    <td valign=\"top\">"
-          << event->dtStartTimeStr( true, d->mCalendar->timeSpec() ) << "</td>\n";
+          << IncidenceFormatter::timeToString( event->dtStart(), true, d->mCalendar->timeSpec() )
+          << "</td>\n";
     }
     if ( event->isMultiDay( d->mCalendar->timeSpec() ) && ( event->dtEnd().date() != date ) ) {
       *ts << "    <td>&nbsp;</td>\n";
     } else {
       *ts << "    <td valign=\"top\">"
-          << event->dtEndTimeStr( true, d->mCalendar->timeSpec() ) << "</td>\n";
+          << IncidenceFormatter::timeToString( event->dtEnd(), true, d->mCalendar->timeSpec() )
+          << "</td>\n";
     }
   } else {
     *ts << "    <td>&nbsp;</td><td>&nbsp;</td>\n";
@@ -512,7 +515,7 @@ void HtmlExport::createTodo( QTextStream *ts, Todo *todo )
     }
     *ts << ">\n";
     if ( todo->hasDueDate() ) {
-      *ts << "    " << todo->dtDueDateStr() << "\n";
+      *ts << "    " << IncidenceFormatter::dateToString(todo->dtDue(true)) << "\n";
     } else {
       *ts << "    &nbsp;\n";
     }
