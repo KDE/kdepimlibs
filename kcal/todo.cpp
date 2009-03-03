@@ -30,6 +30,7 @@
 */
 
 #include "todo.h"
+#include "incidenceformatter.h"
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -159,8 +160,6 @@ void Todo::setDtDue( const KDateTime &dtDue, bool first )
     setDtStart( dtDue );
   }
 
-  //kDebug() << "setDtDue says date is" << d->mDtDue.toString();
-
   /*const Alarm::List& alarms = alarms();
   for (Alarm *alarm = alarms.first(); alarm; alarm = alarms.next())
     alarm->setAlarmStart(d->mDtDue);*/
@@ -189,10 +188,11 @@ QString Todo::dtDueTimeStr( bool shortfmt, const KDateTime::Spec &spec ) const
       timeZone = ' ' + spec.timeZone().name();
     }
 
-    return KGlobal::locale()->formatTime( dtDue( !recurs() ).toTimeSpec( spec ).time(), !shortfmt )
-      + timeZone;
+    return KGlobal::locale()->formatTime(
+      dtDue( !recurs() ).toTimeSpec( spec ).time(), !shortfmt ) + timeZone;
   } else {
-    return KGlobal::locale()->formatTime( dtDue( !recurs() ).time(), !shortfmt );
+    return KGlobal::locale()->formatTime(
+      dtDue( !recurs() ).time(), !shortfmt );
   }
 }
 
@@ -207,8 +207,7 @@ QString Todo::dtDueDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
 
     return KGlobal::locale()->formatDate(
       dtDue( !recurs() ).toTimeSpec( spec ).date(),
-      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) )
-      + timeZone;
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) ) + timeZone;
   } else {
     return KGlobal::locale()->formatDate(
       dtDue( !recurs() ).date(),
@@ -219,7 +218,7 @@ QString Todo::dtDueDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
 QString Todo::dtDueStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
   if ( allDay() ) {
-    return dtDueDateStr( shortfmt, spec );
+    return IncidenceFormatter::dateToString( dtDue(), shortfmt, spec );
   }
 
   if ( spec.isValid() ) {
@@ -231,8 +230,7 @@ QString Todo::dtDueStr( bool shortfmt, const KDateTime::Spec &spec ) const
 
     return KGlobal::locale()->formatDateTime(
       dtDue( !recurs() ).toTimeSpec( spec ).dateTime(),
-      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) )
-      + timeZone;
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) ) + timeZone;
   } else {
     return  KGlobal::locale()->formatDateTime(
       dtDue( !recurs() ).dateTime(),
@@ -313,16 +311,17 @@ QString Todo::dtStartTimeStr( bool shortfmt, bool first, const KDateTime::Spec &
       timeZone = ' ' + spec.timeZone().name();
     }
 
-    return KGlobal::locale()->formatTime( dtStart( first ).toTimeSpec( spec ).time(), !shortfmt )
-      + timeZone;
+    return KGlobal::locale()->formatTime(
+      dtStart( first ).toTimeSpec( spec ).time(), !shortfmt ) + timeZone;
   } else {
-    return KGlobal::locale()->formatTime( dtStart( first ).time(), !shortfmt );
+    return KGlobal::locale()->formatTime(
+      dtStart( first ).time(), !shortfmt );
   }
 }
 
 QString Todo::dtStartTimeStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
-  return Incidence::dtStartTimeStr( shortfmt, spec );
+  return IncidenceFormatter::timeToString( dtStart(), shortfmt, spec );
 }
 
 QString Todo::dtStartDateStr( bool shortfmt, bool first, const KDateTime::Spec &spec ) const
@@ -334,26 +333,25 @@ QString Todo::dtStartDateStr( bool shortfmt, bool first, const KDateTime::Spec &
       timeZone = ' ' + spec.timeZone().name();
     }
 
-    return
-      KGlobal::locale()->formatDate( dtStart( first ).toTimeSpec( spec ).date(),
-                                   ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) )
-      + timeZone;
+    return KGlobal::locale()->formatDate(
+      dtStart( first ).toTimeSpec( spec ).date(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) ) + timeZone;
   } else {
-    return
-      KGlobal::locale()->formatDate( dtStart( first ).date(),
-                                   ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+    return KGlobal::locale()->formatDate(
+      dtStart( first ).date(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
   }
 }
 
 QString Todo::dtStartDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
-  return Incidence::dtStartDateStr( shortfmt, spec );
+  return IncidenceFormatter::dateToString( dtStart(), shortfmt, spec );
 }
 
 QString Todo::dtStartStr( bool shortfmt, bool first, const KDateTime::Spec &spec ) const
 {
   if ( allDay() ) {
-    return dtStartDateStr( shortfmt, spec );
+    return IncidenceFormatter::dateToString( dtStart(), shortfmt, spec );
   }
 
   if ( spec.isValid() ) {
@@ -363,20 +361,37 @@ QString Todo::dtStartStr( bool shortfmt, bool first, const KDateTime::Spec &spec
       timeZone = ' ' + spec.timeZone().name();
     }
 
-    return
-      KGlobal::locale()->formatDateTime( dtStart( first ).toTimeSpec( spec ).dateTime(),
-                                       ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) )
-      + timeZone;
+    return KGlobal::locale()->formatDateTime(
+      dtStart( first ).toTimeSpec( spec ).dateTime(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) ) + timeZone;
   } else {
-    return
-      KGlobal::locale()->formatDateTime( dtStart( first ).dateTime(),
-                                       ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+    return KGlobal::locale()->formatDateTime(
+      dtStart( first ).dateTime(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
   }
 }
 
 QString Todo::dtStartStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
-  return Incidence::dtStartStr( shortfmt, spec );
+  if ( allDay() ) {
+    return IncidenceFormatter::dateToString( dtStart(), shortfmt, spec );
+  }
+
+  if ( spec.isValid() ) {
+
+    QString timeZone;
+    if ( spec.timeZone() != KSystemTimeZones::local() ) {
+      timeZone = ' ' + spec.timeZone().name();
+    }
+
+    return KGlobal::locale()->formatDateTime(
+      dtStart().toTimeSpec( spec ).dateTime(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) ) + timeZone;
+  } else {
+    return KGlobal::locale()->formatDateTime(
+      dtStart().dateTime(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
+  }
 }
 
 bool Todo::isCompleted() const
@@ -514,7 +529,7 @@ bool Todo::Private::recurTodo( Todo *todo )
               nextDate <= KDateTime::currentUtcDateTime() ) {
 
         if ( !nextDate.isValid() ||
-	        ( nextDate > endDateTime && r->duration() != -1 ) ) {
+             ( nextDate > endDateTime && r->duration() != -1 ) ) {
 
           return false;
         }

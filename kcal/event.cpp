@@ -30,6 +30,7 @@
 */
 
 #include "event.h"
+#include "incidenceformatter.h"
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -161,8 +162,8 @@ QString Event::dtEndTimeStr( bool shortfmt, const KDateTime::Spec &spec ) const
       timeZone = ' ' + spec.timeZone().name();
     }
 
-    return KGlobal::locale()->formatTime( dtEnd().toTimeSpec( spec ).time(), !shortfmt )
-      + timeZone;
+    return KGlobal::locale()->formatTime(
+      dtEnd().toTimeSpec( spec ).time(), !shortfmt ) + timeZone;
   } else {
     return KGlobal::locale()->formatTime( dtEnd().time(), !shortfmt );
   }
@@ -179,8 +180,7 @@ QString Event::dtEndDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
 
     return KGlobal::locale()->formatDate(
       dtEnd().toTimeSpec( spec ).date(),
-      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) )
-      + timeZone;
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) ) + timeZone;
   } else {
     return KGlobal::locale()->formatDate(
       dtEnd().date(),
@@ -191,7 +191,7 @@ QString Event::dtEndDateStr( bool shortfmt, const KDateTime::Spec &spec ) const
 QString Event::dtEndStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
   if ( allDay() ) {
-    return dtEndDateStr( shortfmt, spec );
+    return IncidenceFormatter::dateToString( dtEnd(), shortfmt, spec );
   }
 
   if ( spec.isValid() ) {
@@ -203,8 +203,7 @@ QString Event::dtEndStr( bool shortfmt, const KDateTime::Spec &spec ) const
 
     return KGlobal::locale()->formatDateTime(
       dtEnd().toTimeSpec( spec ).dateTime(),
-      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) )
-      + timeZone;
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) ) + timeZone;
   } else {
     return KGlobal::locale()->formatDateTime(
       dtEnd().dateTime(),

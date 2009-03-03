@@ -191,12 +191,12 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
 
     /**
       Assignment operator.
+      @param other is the IncidenceBase to assign.
      */
     IncidenceBase &operator=( const IncidenceBase &other );
 
     /**
       Compares this with IncidenceBase @p ib for equality.
-
       @param ib is the IncidenceBase to compare.
     */
     bool operator==( const IncidenceBase &ib ) const;
@@ -321,9 +321,11 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       long format.
       @param spec If set, return the time in the given spec, else use the
       incidence's current spec.
+
+      @deprecated use IncidenceFormatter::timeToString()
     */
-    virtual QString dtStartTimeStr( bool shortfmt = true,
-                                    const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    virtual KDE_DEPRECATED QString dtStartTimeStr(
+      bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns an incidence's starting date as a string formatted according
@@ -333,9 +335,11 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       long format.
       @param spec If set, return the date in the given spec, else use the
       incidence's current spec.
+
+      @deprecated use IncidenceFormatter::dateToString()
     */
-    virtual QString dtStartDateStr( bool shortfmt = true,
-                                    const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    virtual KDE_DEPRECATED QString dtStartDateStr(
+      bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns an incidence's starting date and time as a string formatted
@@ -345,9 +349,11 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
       long format.
       @param spec If set, return the date and time in the given spec, else use
       the incidence's current spec.
+
+      @deprecated use IncidenceFormatter::dateTimeToString()
     */
-    virtual QString dtStartStr( bool shortfmt = true,
-                                const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    virtual KDE_DEPRECATED QString dtStartStr(
+      bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Sets the incidence duration.

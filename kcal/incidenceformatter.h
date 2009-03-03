@@ -184,7 +184,7 @@ namespace IncidenceFormatter
 
   /**
     Build a QString date/time representation of a KDateTime object.
-    @param datetime The date to be formatted.
+    @param date The date to be formatted.
     @param dateOnly If true, don't print the time fields; print the date fields only.
     @param shortfmt If true, display info in short format.
     @param spec Time spec to use.

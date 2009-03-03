@@ -71,12 +71,13 @@ class KCAL_EXPORT Event : public Incidence
 
     /**
       Assignment operator.
+      @param other is the event to assign.
     */
     Event &operator=( const Event &other );
 
     /**
       Compares two events for equality.
-      @param event is the event to compare
+      @param event is the event to compare.
     */
     bool operator==( const Event &event ) const;
 
@@ -117,9 +118,11 @@ class KCAL_EXPORT Event : public Incidence
       @param shortfmt If set, use short date format; else use long format.
       @param spec If set, return the time in the given spec, else use the
       event's current spec.
+
+      @deprecated use IncidenceFormatter::timeToString()
     */
-    QString dtEndTimeStr( bool shortfmt = true,
-                          const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    KDE_DEPRECATED QString dtEndTimeStr(
+      bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns the event end date as a string formatted according to the
@@ -128,9 +131,11 @@ class KCAL_EXPORT Event : public Incidence
       @param shortfmt If set, use short date format; else use long format.
       @param spec If set, return the date in the given spec, else use the
       event's current spec.
+
+      @deprecated use IncidenceFormatter::dateToString()
     */
-    QString dtEndDateStr( bool shortfmt = true,
-                          const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    KDE_DEPRECATED QString dtEndDateStr(
+      bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns the event end date/time as string formatted according to the
@@ -139,9 +144,11 @@ class KCAL_EXPORT Event : public Incidence
       @param shortfmt If set, use short date format; else use long format.
       @param spec If set, return the date/time in the given spec, else use
       the event's current spec.
+
+      @deprecated use IncidenceFormatter::dateTimeToString()
     */
-    QString dtEndStr( bool shortfmt = true,
-                      const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    KDE_DEPRECATED QString dtEndStr(
+      bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Sets whether the event has an end date/time.

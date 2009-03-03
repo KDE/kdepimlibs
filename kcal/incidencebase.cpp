@@ -34,6 +34,7 @@
 
 #include "incidencebase.h"
 #include "calformat.h"
+#include "incidenceformatter.h"
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -257,8 +258,8 @@ QString IncidenceBase::dtStartTimeStr( bool shortfmt, const KDateTime::Spec &spe
       timeZone = ' ' + spec.timeZone().name();
     }
 
-    return KGlobal::locale()->formatTime( dtStart().toTimeSpec( spec ).time(), !shortfmt )
-      + timeZone;
+    return KGlobal::locale()->formatTime(
+      dtStart().toTimeSpec( spec ).time(), !shortfmt ) + timeZone;
   } else {
     return KGlobal::locale()->formatTime( dtStart().time(), !shortfmt );
   }
@@ -274,8 +275,8 @@ QString IncidenceBase::dtStartDateStr( bool shortfmt, const KDateTime::Spec &spe
     }
 
     return KGlobal::locale()->formatDate(
-      dtStart().toTimeSpec( spec ).date(), ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) )
-      + timeZone;
+      dtStart().toTimeSpec( spec ).date(),
+      ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) ) + timeZone;
   } else {
     return KGlobal::locale()->formatDate(
       dtStart().date(), ( shortfmt ? KLocale::ShortDate : KLocale::LongDate ) );
@@ -285,7 +286,7 @@ QString IncidenceBase::dtStartDateStr( bool shortfmt, const KDateTime::Spec &spe
 QString IncidenceBase::dtStartStr( bool shortfmt, const KDateTime::Spec &spec ) const
 {
   if ( allDay() ) {
-    return dtStartDateStr( shortfmt, spec );
+    return IncidenceFormatter::dateToString( dtStart(), shortfmt, spec );
   }
 
   if ( spec.isValid() ) {

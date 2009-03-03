@@ -102,9 +102,11 @@ class KCAL_EXPORT Todo : public Incidence
       @param shortfmt If set, use short date format; else use long format.
       @param spec If set, return the time in the given spec, else use the
       todo's current spec.
+
+      @deprecated use IncidenceFormatter::timeToString()
     */
-    QString dtDueTimeStr( bool shortfmt = true,
-                          const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    KDE_DEPRECATED QString dtDueTimeStr(
+      bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns due date as string formatted according to the user's locale
@@ -113,9 +115,11 @@ class KCAL_EXPORT Todo : public Incidence
       @param shortfmt If set, use short date format; else use long format.
       @param spec If set, return the date in the given spec, else use the
       todo's current spec.
+
+      @deprecated use IncidenceFormatter::dateToString()
     */
-    QString dtDueDateStr( bool shortfmt = true,
-                          const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    KDE_DEPRECATED QString dtDueDateStr(
+      bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns due date and time as string formatted according to the user's
@@ -124,9 +128,11 @@ class KCAL_EXPORT Todo : public Incidence
       @param shortfmt If set, use short date format; else use long format.
       @param spec If set, return the date/time in the given spec, else use
       the todo's current spec.
+
+      @deprecated use IncidenceFormatter::dateTimeToString()
     */
-    QString dtDueStr( bool shortfmt = true,
-                      const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    KDE_DEPRECATED QString dtDueStr(
+      bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns true if the todo has a due date, otherwise return false.
@@ -185,16 +191,18 @@ class KCAL_EXPORT Todo : public Incidence
       based on the date returned by dtRecurrence().
       @param spec If set, returns the time in the given spec, else use the
       todo's current spec.
+
+      @deprecated use IncidenceFormatter::timeToString()
     */
-    QString dtStartTimeStr( bool shortfmt, bool first,
-                            const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    KDE_DEPRECATED QString dtStartTimeStr(
+      bool shortfmt, bool first, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       @copydoc
       IncidenceBase::dtStartTimeStr()
     */
-    virtual QString dtStartTimeStr( bool shortfmt = true,
-                                    const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    virtual KDE_DEPRECATED QString dtStartTimeStr(
+      bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns a todo's starting date as a string formatted according to the
@@ -207,16 +215,18 @@ class KCAL_EXPORT Todo : public Incidence
       based on the date returned by dtRecurrence().
       @param spec If set, returns the date in the given spec, else use the
       todo's current spec.
+
+      @deprecated use IncidenceFormatter::dateToString()
     */
-    QString dtStartDateStr( bool shortfmt, bool first,
-                            const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    KDE_DEPRECATED QString dtStartDateStr(
+      bool shortfmt, bool first, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       @copydoc
       IncidenceBase::dtStartDateStr()
     */
-    virtual QString dtStartDateStr( bool shortfmt = true,
-                                    const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    virtual KDE_DEPRECATED QString dtStartDateStr(
+      bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns a todo's starting date and time as a string formatted according
@@ -229,16 +239,18 @@ class KCAL_EXPORT Todo : public Incidence
       based on the date returned by dtRecurrence().
       @param spec If set, returns the date and time in the given spec, else
       use the todo's current spec.
+
+      @deprecated use IncidenceFormatter::dateTimeToString()
     */
-    QString dtStartStr( bool shortfmt, bool first,
-                        const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    KDE_DEPRECATED QString dtStartStr(
+      bool shortfmt, bool first, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       @copydoc
       IncidenceBase::dtStartStr()
     */
-    virtual QString dtStartStr( bool shortfmt = true,
-                                const KDateTime::Spec &spec = KDateTime::Spec() ) const;
+    virtual KDE_DEPRECATED QString dtStartStr(
+      bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       Returns true if the todo is 100% completed, otherwise return false.
@@ -339,12 +351,12 @@ class KCAL_EXPORT Todo : public Incidence
 
     /**
       Assignment operator.
+      @param other is the to-do to assign.
     */
     Todo &operator=( const Todo &other );
 
     /**
       Compare this with @p todo for equality.
-
       @param todo is the to-do to compare.
     */
     bool operator==( const Todo &todo ) const;
