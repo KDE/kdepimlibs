@@ -160,6 +160,42 @@ namespace IncidenceFormatter
   */
   KCAL_EXPORT QString recurrenceString( Incidence *incidence );
 
+  /**
+    Build a QString time representation of a KDateTime object.
+    @param date The date to be formatted.
+    @param shortfmt If true, display info in short format.
+    @param spec Time spec to use.
+    @see dateToString(), dateTimeToString().
+    @since 4.3
+  */
+  KCAL_EXPORT QString timeToString( const KDateTime &date, bool shortfmt = true,
+                                    const KDateTime::Spec &spec = KDateTime::Spec() );
+
+  /**
+    Build a QString date representation of a KDateTime object.
+    @param date The date to be formatted.
+    @param shortfmt If true, display info in short format.
+    @param spec Time spec to use.
+    @see dateToString(), dateTimeToString().
+    @since 4.3
+  */
+  KCAL_EXPORT QString dateToString( const KDateTime &date, bool shortfmt = true,
+                                    const KDateTime::Spec &spec = KDateTime::Spec() );
+
+  /**
+    Build a QString date/time representation of a KDateTime object.
+    @param datetime The date to be formatted.
+    @param dateOnly If true, don't print the time fields; print the date fields only.
+    @param shortfmt If true, display info in short format.
+    @param spec Time spec to use.
+    @see dateToString(), timeToString().
+    @since 4.3
+  */
+  KCAL_EXPORT QString dateTimeToString( const KDateTime &date,
+                                        bool dateOnly = false,
+                                        bool shortfmt = true,
+                                        const KDateTime::Spec &spec = KDateTime::Spec() );
+
   class EventViewerVisitor;
   class ScheduleMessageVisitor;
   class InvitationHeaderVisitor;
