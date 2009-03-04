@@ -52,7 +52,8 @@ struct EmbeddedImage
 
 // TODO:
 
-// APIDOX
+// APIDOX - Also mainpage.dox!
+// messages.sh
 // Proofreading
 // coding style
 // FIXMEs (!!)
