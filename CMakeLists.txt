@@ -13,7 +13,6 @@ find_package(KDE4  4.2.0  REQUIRED)
 include (KDE4Defaults)
 include (MacroLibrary)
 
-
 find_package(Boost REQUIRED)
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1.33.1" "Needed by several critical PIM libraries.")
 
@@ -31,12 +30,6 @@ include (ConfigureChecks.cmake)
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
-
-# TODO(move to kdesupport scripts) temporary way to support gpgme-qt under win32
-if (EXISTS ${CMAKE_SOURCE_DIR}/gpgme-qt)
-  message(STATUS "gpgme-qt for Windows will be compiled: ${CMAKE_SOURCE_DIR}/gpgme-qt")
-  add_subdirectory(gpgme-qt)
-endif (EXISTS ${CMAKE_SOURCE_DIR}/gpgme-qt)
 
 macro_optional_add_subdirectory(doc)
 add_subdirectory(gpgme++)
