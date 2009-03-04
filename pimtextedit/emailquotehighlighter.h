@@ -22,7 +22,7 @@
 
 #include "pimtextedit_export.h"
 
-#include <KDE/Sonnet/Highlighter>
+#include <Sonnet/Highlighter>
 
 #include <memory>
 
