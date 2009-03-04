@@ -205,13 +205,13 @@ public:
    * @param aCmd The command to perform
    * @return The completed command
    */
-  imapCommand *sendCommand (imapCommand * aCmd);
+  CommandPtr sendCommand (CommandPtr aCmd);
   /**
    * @brief perform a command and wait to parse the result
    * @param aCmd The command to perform
    * @return The completed command
    */
-  imapCommand *doCommand (imapCommand * aCmd);
+  CommandPtr doCommand (CommandPtr aCmd);
 
 
   /**
@@ -435,8 +435,8 @@ protected:
   QList < imapList > listResponses;
 
   /** @brief queues handling the running commands */
-  QList < imapCommand *> sentQueue;  // no autodelete
-  QList < imapCommand *> completeQueue;  // autodelete !!
+  QList <CommandPtr> sentQueue;
+  QList <CommandPtr> completeQueue;
 
   /**
    * everything we didn't handle, everything but the greeting is bogus

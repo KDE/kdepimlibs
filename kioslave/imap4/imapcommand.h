@@ -27,6 +27,11 @@
 #include <QString>
 #include <QMap>
 
+#include <boost/shared_ptr.hpp>
+
+class imapCommand;
+typedef boost::shared_ptr<imapCommand> CommandPtr;
+
 /**
  *  @brief encapulate a IMAP command
  *  @author Svenn Carstens
@@ -143,7 +148,7 @@ public:
    * @brief Create a NOOP command
    * @return a NOOP imapCommand
    */
-  static imapCommand *clientNoop ();
+  static CommandPtr clientNoop ();
   /**
    * @fn static imapCommand *clientFetch (ulong uid, const QString & fields, bool nouid = false);
    * @brief Create a FETCH command
@@ -153,8 +158,8 @@ public:
    * @return a FETCH imapCommand
    * Fetch a single uid
    */
-  static imapCommand *clientFetch (ulong uid, const QString & fields,
-                                   bool nouid = false);
+  static CommandPtr clientFetch (ulong uid, const QString & fields,
+                                 bool nouid = false);
   /**
    * @fn static imapCommand *clientFetch (ulong fromUid, ulong toUid, const QString & fields, bool nouid = false);
    * @brief Create a FETCH command
@@ -165,9 +170,9 @@ public:
    * @return a FETCH imapCommand
    * Fetch a range of uids
    */
-  static imapCommand *clientFetch (ulong fromUid, ulong toUid,
-                                   const QString & fields, bool nouid =
-                                   false);
+  static CommandPtr clientFetch (ulong fromUid, ulong toUid,
+                                 const QString & fields, bool nouid =
+                                 false);
   /**
    * @fn static imapCommand *clientFetch (const QString & sequence, const QString & fields, bool nouid = false);
    * @brief Create a FETCH command
@@ -178,9 +183,9 @@ public:
    * Fetch a range of uids. The other clientFetch functions are just
    * wrappers around this function.
    */
-  static imapCommand *clientFetch (const QString & sequence,
-                                   const QString & fields, bool nouid =
-                                   false);
+  static CommandPtr clientFetch (const QString & sequence,
+                                 const QString & fields, bool nouid =
+                                 false);
   /**
    * @fn static imapCommand *clientList (const QString & reference, const QString & path, bool lsub = false);
    * @brief Create a LIST command
@@ -189,8 +194,8 @@ public:
    * @param lsub Perform a LIST or a LSUB command
    * @return a LIST imapCommand
    */
-  static imapCommand *clientList (const QString & reference,
-                                  const QString & path, bool lsub = false);
+  static CommandPtr clientList (const QString & reference,
+                                const QString & path, bool lsub = false);
   /**
    * @fn static imapCommand *clientSelect (const QString & path, bool examine = false);
    * @brief Create a SELECT command
@@ -198,22 +203,22 @@ public:
    * @param lsub Perform a SELECT or a EXAMINE command
    * @return a SELECT imapCommand
    */
-  static imapCommand *clientSelect (const QString & path, bool examine =
-                                    false);
+  static CommandPtr clientSelect (const QString & path, bool examine =
+                                  false);
   /**
    * @fn static imapCommand *clientClose();
    * @brief Create a CLOSE command
    * @return a CLOSE imapCommand
    */
-  static imapCommand *clientClose();
+  static CommandPtr clientClose();
   /**
    * @brief Create a STATUS command
    * @param path
    * @param parameters
    * @return a STATUS imapCommand
    */
-  static imapCommand *clientStatus (const QString & path,
-                                    const QString & parameters);
+  static CommandPtr clientStatus (const QString & path,
+                                  const QString & parameters);
   /**
    * @brief Create a COPY command
    * @param box
@@ -221,9 +226,9 @@ public:
    * @param nouid Perform a COPY or UID COPY command
    * @return a COPY imapCommand
    */
-  static imapCommand *clientCopy (const QString & box,
-                                  const QString & sequence, bool nouid =
-                                  false);
+  static CommandPtr clientCopy (const QString & box,
+                                const QString & sequence, bool nouid =
+                                false);
   /**
    * @brief Create a APPEND command
    * @param box
@@ -231,53 +236,53 @@ public:
    * @param size
    * @return a APPEND imapCommand
    */
-  static imapCommand *clientAppend (const QString & box,
-                                    const QString & flags, ulong size);
+  static CommandPtr clientAppend (const QString & box,
+                                  const QString & flags, ulong size);
   /**
    * @brief Create a CREATE command
    * @param path
    * @return a CREATE imapCommand
    */
-  static imapCommand *clientCreate (const QString & path);
+  static CommandPtr clientCreate (const QString & path);
   /**
    * @brief Create a DELETE command
    * @param path
    * @return a DELETE imapCommand
    */
-  static imapCommand *clientDelete (const QString & path);
+  static CommandPtr clientDelete (const QString & path);
   /**
    * @brief Create a SUBSCRIBE command
    * @param path
    * @return a SUBSCRIBE imapCommand
    */
-  static imapCommand *clientSubscribe (const QString & path);
+  static CommandPtr clientSubscribe (const QString & path);
   /**
    * @brief Create a UNSUBSCRIBE command
    * @param path
    * @return a UNSUBSCRIBE imapCommand
    */
-  static imapCommand *clientUnsubscribe (const QString & path);
+  static CommandPtr clientUnsubscribe (const QString & path);
   /**
    * @brief Create a EXPUNGE command
    * @return a EXPUNGE imapCommand
    */
-  static imapCommand *clientExpunge ();
+  static CommandPtr clientExpunge ();
   /**
    * @brief Create a RENAME command
    * @param src Source
    * @param dest Destination
    * @return a RENAME imapCommand
    */
-  static imapCommand *clientRename (const QString & src,
-                                    const QString & dest);
+  static CommandPtr clientRename (const QString & src,
+                                  const QString & dest);
   /**
    * @brief Create a SEARCH command
    * @param search
    * @param nouid Perform a UID SEARCH or a SEARCH command
    * @return a SEARCH imapCommand
    */
-  static imapCommand *clientSearch (const QString & search, bool nouid =
-                                    false);
+  static CommandPtr clientSearch (const QString & search, bool nouid =
+                                  false);
   /**
    * @brief Create a STORE command
    * @param set
@@ -286,18 +291,18 @@ public:
    * @param nouid Perform a UID STORE or a STORE command
    * @return a STORE imapCommand
    */
-  static imapCommand *clientStore (const QString & set, const QString & item,
-                                   const QString & data, bool nouid = false);
+  static CommandPtr clientStore (const QString & set, const QString & item,
+                                 const QString & data, bool nouid = false);
   /**
    * @brief Create a LOGOUT command
    * @return a LOGOUT imapCommand
    */
-  static imapCommand *clientLogout ();
+  static CommandPtr clientLogout ();
   /**
    * @brief Create a STARTTLS command
    * @return a STARTTLS imapCommand
    */
-  static imapCommand *clientStartTLS ();
+  static CommandPtr clientStartTLS ();
 
   //////////// ACL support (RFC 2086) /////////////
   /**
@@ -307,7 +312,7 @@ public:
    * @param acl access right modification (starting with optional +/-)
    * @return a SETACL imapCommand
    */
-  static imapCommand *clientSetACL ( const QString& box, const QString& user, const QString& acl );
+  static CommandPtr clientSetACL ( const QString& box, const QString& user, const QString& acl );
 
   /**
    * @brief Create a DELETEACL command
@@ -315,14 +320,14 @@ public:
    * @param user authentication identifier
    * @return a DELETEACL imapCommand
    */
-  static imapCommand *clientDeleteACL ( const QString& box, const QString& user );
+  static CommandPtr clientDeleteACL ( const QString& box, const QString& user );
 
   /**
    * @brief Create a GETACL command
    * @param box mailbox name
    * @return a GETACL imapCommand
    */
-  static imapCommand *clientGetACL ( const QString& box );
+  static CommandPtr clientGetACL ( const QString& box );
 
   /**
    * @brief Create a LISTRIGHTS command
@@ -330,14 +335,14 @@ public:
    * @param user authentication identifier
    * @return a LISTRIGHTS imapCommand
    */
-  static imapCommand *clientListRights ( const QString& box, const QString& user );
+  static CommandPtr clientListRights ( const QString& box, const QString& user );
 
   /**
    * @brief Create a MYRIGHTS command
    * @param box mailbox name
    * @return a MYRIGHTS imapCommand
    */
-  static imapCommand *clientMyRights ( const QString& box );
+  static CommandPtr clientMyRights ( const QString& box );
 
   //////////// ANNOTATEMORE support /////////////
   /**
@@ -347,7 +352,7 @@ public:
    * @param attributes map of attribute names + values
    * @return a SETANNOTATION imapCommand
    */
-  static imapCommand *clientSetAnnotation ( const QString& box, const QString& entry, const QMap<QString, QString>& attributes );
+  static CommandPtr clientSetAnnotation ( const QString& box, const QString& entry, const QMap<QString, QString>& attributes );
 
   /**
    * @brief Create a GETANNOTATION command
@@ -356,20 +361,20 @@ public:
    * @param attributeNames attribute specifier
    * @return a GETANNOTATION imapCommand
    */
-  static imapCommand *clientGetAnnotation ( const QString& box, const QString& entry, const QStringList& attributeNames );
+  static CommandPtr clientGetAnnotation ( const QString& box, const QString& entry, const QStringList& attributeNames );
 
   /**
    * @brief Create a NAMESPACE command
    * @return a NAMESPACE imapCommand
    */
-  static imapCommand *clientNamespace ();
+  static CommandPtr clientNamespace ();
 
   /**
    * @brief Create a GETQUOTAROOT command
    * @param box mailbox name
    * @return a GETQUOTAROOT imapCommand
    */
-  static imapCommand *clientGetQuotaroot ( const QString& box );
+  static CommandPtr clientGetQuotaroot ( const QString& box );
 
   /**
    * @brief Create a custom command
@@ -377,7 +382,7 @@ public:
    * @param arguments The custom arguments
    * @return a custom imapCommand
    */
-  static imapCommand *clientCustom ( const QString& command, const QString& arguments );
+  static CommandPtr clientCustom ( const QString& command, const QString& arguments );
 
 protected:
   QString aCommand;
