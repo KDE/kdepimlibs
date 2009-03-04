@@ -245,7 +245,7 @@ class PIMTEXTEDIT_EXPORT TextEdit : public KRichTextWidget,
 
     std::auto_ptr<TextEditPrivate> const d;
     friend class TextEditPrivate;
-    Q_PRIVATE_SLOT( d, void _k_slotAddImage() );
+    Q_PRIVATE_SLOT( d, void _k_slotAddImage() )
 };
 
 } // namespace
