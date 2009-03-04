@@ -74,7 +74,8 @@ class KCAL_EXPORT Attendee : private Person
       Tentative,       /**< Event or to-do tentatively accepted */
       Delegated,       /**< Event or to-do delegated */
       Completed,       /**< To-do completed */
-      InProcess        /**< To-do in process of being completed */
+      InProcess,       /**< To-do in process of being completed */
+      None
     };
 
     /**
@@ -105,7 +106,7 @@ class KCAL_EXPORT Attendee : private Person
       @param uid is the @acronym UID of the attendee.
     */
     Attendee( const QString &name, const QString &email,
-              bool rsvp = false, PartStat status = NeedsAction,
+              bool rsvp = false, PartStat status = None,
               Role role = ReqParticipant, const QString &uid = QString() );
 
     /**
