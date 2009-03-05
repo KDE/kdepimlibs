@@ -1,4 +1,4 @@
-if (NOT ONLY_KLEO)
+if (NOT KDEPIM_ONLY_KLEO)
 
 add_subdirectory( tests )
 
@@ -21,4 +21,4 @@ install_headers( KResources )
 install_headers( Syndication )
 install_headers( PimTextEdit )
 
-endif (NOT ONLY_KLEO)
+endif (NOT KDEPIM_ONLY_KLEO)
