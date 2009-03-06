@@ -580,8 +580,10 @@ void ICalFormatImpl::Private::writeIncidenceBase( icalcomponent *parent,
 
   // organizer stuff
   if ( !incidenceBase->organizer().isEmpty() ) {
-    icalcomponent_add_property(
-      parent, mImpl->writeOrganizer( incidenceBase->organizer() ) );
+    icalproperty *p = mImpl->writeOrganizer( incidenceBase->organizer() );
+    if ( p ) {
+      icalcomponent_add_property( parent, p );
+    }
   }
 
   // attendees
@@ -589,7 +591,10 @@ void ICalFormatImpl::Private::writeIncidenceBase( icalcomponent *parent,
     Attendee::List::ConstIterator it;
     for ( it = incidenceBase->attendees().begin();
           it != incidenceBase->attendees().end(); ++it ) {
-      icalcomponent_add_property( parent, mImpl->writeAttendee( *it ) );
+      icalproperty *p = mImpl->writeAttendee( *it );
+      if ( p ) {
+        icalcomponent_add_property( parent, p );
+      }
     }
   }
 
@@ -617,8 +622,11 @@ void ICalFormatImpl::Private::writeCustomProperties( icalcomponent *parent,
 
 icalproperty *ICalFormatImpl::writeOrganizer( const Person &organizer )
 {
-  icalproperty *p =
-    icalproperty_new_organizer( "MAILTO:" + organizer.email().toUtf8() );
+  if ( organizer.email().isEmpty() ) {
+    return 0;
+  }
+
+  icalproperty *p = icalproperty_new_organizer( "MAILTO:" + organizer.email().toUtf8() );
 
   if ( !organizer.name().isEmpty() ) {
     icalproperty_add_parameter(
@@ -658,6 +666,10 @@ icalproperty *ICalFormatImpl::writeLocation( const QString &location, bool isRic
 
 icalproperty *ICalFormatImpl::writeAttendee( Attendee *attendee )
 {
+  if ( attendee->email().isEmpty() ) {
+    return 0;
+  }
+
   icalproperty *p =
     icalproperty_new_attendee( "mailto:" + attendee->email().toUtf8() );
 
@@ -937,13 +949,14 @@ icalcomponent *ICalFormatImpl::writeAlarm( Alarm *alarm )
     QList<Person> addresses = alarm->mailAddresses();
     for ( QList<Person>::Iterator ad = addresses.begin();
           ad != addresses.end();  ++ad ) {
-      icalproperty *p = icalproperty_new_attendee(
-        "MAILTO:" + (*ad).email().toUtf8() );
-      if ( !(*ad).name().isEmpty() ) {
-        icalproperty_add_parameter(
-          p, icalparameter_new_cn( quoteForParam( (*ad).name() ).toUtf8() ) );
+      if ( !(*ad).email().isEmpty() ) {
+        icalproperty *p = icalproperty_new_attendee( "MAILTO:" + (*ad).email().toUtf8() );
+        if ( !(*ad).name().isEmpty() ) {
+          icalproperty_add_parameter(
+            p, icalparameter_new_cn( quoteForParam( (*ad).name() ).toUtf8() ) );
+        }
+        icalcomponent_add_property( a, p );
       }
-      icalcomponent_add_property( a, p );
     }
     icalcomponent_add_property(
       a, icalproperty_new_summary( alarm->mailSubject().toUtf8() ) );
