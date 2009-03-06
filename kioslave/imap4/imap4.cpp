@@ -206,7 +206,7 @@ IMAP4Protocol::get (const KUrl & _url)
 
   if (aSequence == "0:0" && getState() == ISTATE_SELECT)
   {
-    imapCommand *cmd = doCommand (imapCommand::clientNoop());
+    CommandPtr cmd = doCommand (imapCommand::clientNoop());
     completeQueue.removeAll(cmd);
   }
 
@@ -216,7 +216,7 @@ IMAP4Protocol::get (const KUrl & _url)
   }
 
   mProcessedSize = 0;
-  imapCommand *cmd = NULL;
+  CommandPtr cmd;
   if (!assureBox (aBox, true)) return;
 
 #ifdef USE_VALIDITY
@@ -428,7 +428,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
   if (myType == ITYPE_DIR || myType == ITYPE_DIR_AND_BOX)
   {
     QString listStr = myBox;
-    imapCommand *cmd;
+    CommandPtr cmd;
 
     if (!listStr.isEmpty () && !listStr.endsWith(myDelimiter) &&
         mySection != "FOLDERONLY")
@@ -513,7 +513,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
       query = query.right (query.length () - 1);
       if (!query.isEmpty())
       {
-        imapCommand *cmd = NULL;
+        CommandPtr cmd;
 
         if (!assureBox (myBox, true)) return;
 
@@ -598,7 +598,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
         if (mySection.isEmpty()) mySection = "UID RFC822.SIZE ENVELOPE";
 
         bool withFlags = mySection.toUpper().contains("FLAGS") ;
-        imapCommand *fetch =
+        CommandPtr fetch =
           sendCommand (imapCommand::
                        clientFetch (mySequence, mySection));
         imapCache *cache;
@@ -799,7 +799,7 @@ IMAP4Protocol::put (const KUrl & _url, int, KIO::JobFlags)
   {
     if (aBox[aBox.length () - 1] == '/')
       aBox = aBox.right (aBox.length () - 1);
-    imapCommand *cmd = doCommand (imapCommand::clientCreate (aBox));
+    CommandPtr cmd = doCommand (imapCommand::clientCreate (aBox));
 
     if (cmd->result () != "OK") {
       error (ERR_COULD_NOT_WRITE, _url.prettyUrl());
@@ -836,7 +836,7 @@ IMAP4Protocol::put (const KUrl & _url, int, KIO::JobFlags)
       return;
     }
 
-    imapCommand *cmd =
+    CommandPtr cmd =
       sendCommand (imapCommand::clientAppend (aBox, aSection, length));
     while (!parseLoop ()) {}
 
@@ -929,7 +929,7 @@ IMAP4Protocol::mkdir (const KUrl & _url, int)
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   parseURL(_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
   kDebug(7116) <<"IMAP4::mkdir - create" << aBox;
-  imapCommand *cmd = doCommand (imapCommand::clientCreate(aBox));
+  CommandPtr cmd = doCommand (imapCommand::clientCreate(aBox));
 
   if (cmd->result () != "OK")
   {
@@ -1021,7 +1021,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, KIO::JobFlags fla
         if (dType != ITYPE_BOX && dType != ITYPE_DIR_AND_BOX)
         {
           // ok then we'll create a mailbox
-          imapCommand *cmd = doCommand (imapCommand::clientCreate (topDir));
+          CommandPtr cmd = doCommand (imapCommand::clientCreate (topDir));
 
           // on success we'll use it, else we'll just try to create the given dir
           if (cmd->result () == "OK")
@@ -1052,7 +1052,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, KIO::JobFlags fla
     kDebug(7116) <<"IMAP4::copy -" << sBox <<" ->" << dBox;
 
     //issue copy command
-    imapCommand *cmd =
+    CommandPtr cmd =
       doCommand (imapCommand::clientCopy (dBox, sSequence));
     if (cmd->result () != "OK")
     {
@@ -1099,7 +1099,7 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
       if (aSequence == "*")
       {
         if (!assureBox (aBox, false)) return;
-        imapCommand *cmd = doCommand (imapCommand::clientExpunge ());
+        CommandPtr cmd = doCommand (imapCommand::clientExpunge ());
         if (cmd->result () != "OK") {
           error (ERR_CANNOT_DELETE, _url.prettyUrl());
           completeQueue.removeAll (cmd);
@@ -1111,7 +1111,7 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
       {
         // if open for read/write
         if (!assureBox (aBox, false)) return;
-        imapCommand *cmd =
+        CommandPtr cmd =
           doCommand (imapCommand::
                      clientStore (aSequence, "+FLAGS.SILENT", "\\DELETED"));
         if (cmd->result () != "OK") {
@@ -1126,12 +1126,12 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
     {
       if (getCurrentBox() == aBox)
       {
-        imapCommand *cmd = doCommand(imapCommand::clientClose());
+        CommandPtr cmd = doCommand(imapCommand::clientClose());
         completeQueue.removeAll(cmd);
         setState(ISTATE_LOGIN);
       }
       // We unsubscribe, otherwise we get ghost folders on UW-IMAP
-      imapCommand *cmd = doCommand(imapCommand::clientUnsubscribe(aBox));
+      CommandPtr cmd = doCommand(imapCommand::clientUnsubscribe(aBox));
       completeQueue.removeAll(cmd);
       cmd = doCommand(imapCommand::clientDelete (aBox));
       // If this doesn't work, we try to empty the mailbox first
@@ -1142,21 +1142,21 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
         bool stillOk = true;
         if (stillOk)
         {
-          imapCommand *cmd = doCommand(
+          CommandPtr cmd = doCommand(
             imapCommand::clientStore("1:*", "+FLAGS.SILENT", "\\DELETED"));
           if (cmd->result () != "OK") stillOk = false;
           completeQueue.removeAll(cmd);
         }
         if (stillOk)
         {
-          imapCommand *cmd = doCommand(imapCommand::clientClose());
+          CommandPtr cmd = doCommand(imapCommand::clientClose());
           if (cmd->result () != "OK") stillOk = false;
           completeQueue.removeAll(cmd);
           setState(ISTATE_LOGIN);
         }
         if (stillOk)
         {
-          imapCommand *cmd = doCommand (imapCommand::clientDelete(aBox));
+          CommandPtr cmd = doCommand (imapCommand::clientDelete(aBox));
           if (cmd->result () != "OK") stillOk = false;
           completeQueue.removeAll(cmd);
         }
@@ -1173,7 +1173,7 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
 
   case ITYPE_DIR:
     {
-      imapCommand *cmd = doCommand (imapCommand::clientDelete (aBox));
+      CommandPtr cmd = doCommand (imapCommand::clientDelete (aBox));
       if (cmd->result () != "OK") {
         error (ERR_COULD_NOT_RMDIR, _url.prettyUrl());
         completeQueue.removeAll (cmd);
@@ -1187,7 +1187,7 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
     {
       // if open for read/write
       if (!assureBox (aBox, false)) return;
-      imapCommand *cmd =
+      CommandPtr cmd =
         doCommand (imapCommand::
                    clientStore (aSequence, "+FLAGS.SILENT", "\\DELETED"));
       if (cmd->result () != "OK") {
@@ -1254,7 +1254,7 @@ IMAP4Protocol::special (const QByteArray & aData)
   case 'N':
   {
     // NOOP
-    imapCommand *cmd = doCommand(imapCommand::clientNoop());
+    CommandPtr cmd = doCommand(imapCommand::clientNoop());
     if (cmd->result () != "OK")
     {
       kDebug(7116) <<"NOOP did not succeed - connection broken";
@@ -1263,7 +1263,6 @@ IMAP4Protocol::special (const QByteArray & aData)
       return;
     }
     completeQueue.removeAll (cmd);
-    delete cmd;
     finished();
     break;
   }
@@ -1282,7 +1281,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     stream >> _url;
     QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
     parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
-    imapCommand *cmd = doCommand(imapCommand::clientUnsubscribe(aBox));
+    CommandPtr cmd = doCommand(imapCommand::clientUnsubscribe(aBox));
     if (cmd->result () != "OK")
     {
       completeQueue.removeAll (cmd);
@@ -1303,7 +1302,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     stream >> _url;
     QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
     parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
-    imapCommand *cmd = doCommand(imapCommand::clientSubscribe(aBox));
+    CommandPtr cmd = doCommand(imapCommand::clientSubscribe(aBox));
     if (cmd->result () != "OK")
     {
       completeQueue.removeAll (cmd);
@@ -1371,8 +1370,8 @@ IMAP4Protocol::special (const QByteArray & aData)
       knownFlags += " KMAILFORWARDED KMAILTODO KMAILWATCHED KMAILIGNORED $FORWARDED $TODO $WATCHED $IGNORED";
     }
 
-    imapCommand *cmd = doCommand (imapCommand::
-                                  clientStore (aSequence, "-FLAGS.SILENT", knownFlags));
+    CommandPtr cmd = doCommand (imapCommand::
+                                clientStore (aSequence, "-FLAGS.SILENT", knownFlags));
     if (cmd->result () != "OK")
     {
       completeQueue.removeAll (cmd);
@@ -1410,7 +1409,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     if ( !assureBox(aBox, true) ) // read-only because changing SEEN should be possible even then
       return;
 
-    imapCommand *cmd;
+    CommandPtr cmd;
     if ( seen )
       cmd = doCommand( imapCommand::clientStore( aSequence, "+FLAGS.SILENT", "\\SEEN" ) );
     else
@@ -1462,7 +1461,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     QString user, acl;
     stream >> user >> acl;
     kDebug(7116) <<"SETACL" << aBox << user << acl;
-    imapCommand *cmd = doCommand(imapCommand::clientSetACL(aBox, user, acl));
+    CommandPtr cmd = doCommand(imapCommand::clientSetACL(aBox, user, acl));
     if (cmd->result () != "OK")
     {
       error(ERR_SLAVE_DEFINED, i18n("Setting the Access Control List on folder %1 "
@@ -1481,7 +1480,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     QString user;
     stream >> user;
     kDebug(7116) <<"DELETEACL" << aBox << user;
-    imapCommand *cmd = doCommand(imapCommand::clientDeleteACL(aBox, user));
+    CommandPtr cmd = doCommand(imapCommand::clientDeleteACL(aBox, user));
     if (cmd->result () != "OK")
     {
       error(ERR_SLAVE_DEFINED, i18n("Deleting the Access Control List on folder %1 "
@@ -1498,7 +1497,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
   case 'G': // GETACL
   {
     kDebug(7116) <<"GETACL" << aBox;
-    imapCommand *cmd = doCommand(imapCommand::clientGetACL(aBox));
+    CommandPtr cmd = doCommand(imapCommand::clientGetACL(aBox));
     if (cmd->result () != "OK")
     {
       error(ERR_SLAVE_DEFINED, i18n("Retrieving the Access Control List on folder %1 "
@@ -1525,7 +1524,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
   case 'M': // MYRIGHTS
   {
     kDebug(7116) <<"MYRIGHTS" << aBox;
-    imapCommand *cmd = doCommand(imapCommand::clientMyRights(aBox));
+    CommandPtr cmd = doCommand(imapCommand::clientMyRights(aBox));
     if (cmd->result () != "OK")
     {
       error(ERR_SLAVE_DEFINED, i18n("Retrieving the Access Control List on folder %1 "
@@ -1559,7 +1558,7 @@ IMAP4Protocol::specialSearchCommand( QDataStream& stream )
   parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
   if (!assureBox(aBox, false)) return;
 
-  imapCommand *cmd = doCommand (imapCommand::clientSearch( aSection ));
+  CommandPtr cmd = doCommand (imapCommand::clientSearch( aSection ));
   if (cmd->result () != "OK")
   {
     error(ERR_SLAVE_DEFINED, i18n("Searching of folder %1 "
@@ -1593,7 +1592,7 @@ IMAP4Protocol::specialCustomCommand( QDataStream& stream )
    */
   if ( type == 'N' ) {
     kDebug(7116) << "IMAP4Protocol::specialCustomCommand: normal mode" << endl;
-    imapCommand *cmd = doCommand (imapCommand::clientCustom( command, arguments ));
+    CommandPtr cmd = doCommand (imapCommand::clientCustom( command, arguments ));
     if (cmd->result () != "OK")
     {
       error( ERR_SLAVE_DEFINED,
@@ -1616,7 +1615,7 @@ IMAP4Protocol::specialCustomCommand( QDataStream& stream )
    */
   if ( type == 'E' ) {
     kDebug(7116) << "IMAP4Protocol::specialCustomCommand: extended mode" << endl;
-    imapCommand *cmd = sendCommand (imapCommand::clientCustom( command, QString() ));
+    CommandPtr cmd = sendCommand (imapCommand::clientCustom( command, QString() ));
     while ( !parseLoop () );
 
     // see if server is waiting
@@ -1674,7 +1673,7 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
     QMap<QString, QString> attributes;
     stream >> entry >> attributes;
     kDebug(7116) <<"SETANNOTATION" << aBox << entry << attributes.count() <<" attributes";
-    imapCommand *cmd = doCommand(imapCommand::clientSetAnnotation(aBox, entry, attributes));
+    CommandPtr cmd = doCommand(imapCommand::clientSetAnnotation(aBox, entry, attributes));
     if (cmd->result () != "OK")
     {
       error(ERR_SLAVE_DEFINED, i18n("Setting the annotation %1 on folder %2 "
@@ -1698,7 +1697,7 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
     QStringList attributeNames;
     stream >> entry >> attributeNames;
     kDebug(7116) <<"GETANNOTATION" << aBox << entry << attributeNames;
-    imapCommand *cmd = doCommand(imapCommand::clientGetAnnotation(aBox, entry, attributeNames));
+    CommandPtr cmd = doCommand(imapCommand::clientGetAnnotation(aBox, entry, attributeNames));
     if (cmd->result () != "OK")
     {
       error(ERR_SLAVE_DEFINED, i18n("Retrieving the annotation %1 on folder %2 "
@@ -1735,7 +1734,7 @@ IMAP4Protocol::specialQuotaCommand( int command, QDataStream& stream )
     case 'R': // GETQUOTAROOT
       {
         kDebug(7116) <<"QUOTAROOT" << aBox;
-        imapCommand *cmd = doCommand(imapCommand::clientGetQuotaroot( aBox ) );
+        CommandPtr cmd = doCommand(imapCommand::clientGetQuotaroot( aBox ) );
         if (cmd->result () != "OK")
         {
           error(ERR_SLAVE_DEFINED, i18n("Retrieving the quota root information on folder %1 "
@@ -1789,7 +1788,7 @@ IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, KIO::JobFlags flags)
         {
           kDebug(7116) <<"IMAP4::rename - close" << getCurrentBox();
           // mailbox can only be renamed if it is closed
-          imapCommand *cmd = doCommand (imapCommand::clientClose());
+          CommandPtr cmd = doCommand (imapCommand::clientClose());
           bool ok = cmd->result() == "OK";
           completeQueue.removeAll(cmd);
           if (!ok)
@@ -1799,7 +1798,7 @@ IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, KIO::JobFlags flags)
           }
           setState(ISTATE_LOGIN);
         }
-        imapCommand *cmd = doCommand (imapCommand::clientRename (sBox, dBox));
+        CommandPtr cmd = doCommand (imapCommand::clientRename (sBox, dBox));
         if (cmd->result () != "OK") {
           error (ERR_CANNOT_RENAME, cmd->result ());
           completeQueue.removeAll (cmd);
@@ -1857,7 +1856,7 @@ IMAP4Protocol::stat (const KUrl & _url)
   {
     if (getState() == ISTATE_SELECT && aBox == getCurrentBox())
     {
-      imapCommand *cmd = doCommand (imapCommand::clientClose());
+      CommandPtr cmd = doCommand (imapCommand::clientClose());
       bool ok = cmd->result() == "OK";
       completeQueue.removeAll(cmd);
       if (!ok)
@@ -1873,7 +1872,7 @@ IMAP4Protocol::stat (const KUrl & _url)
       ok = true;
     else
     {
-      imapCommand *cmd = doCommand(imapCommand::clientStatus(aBox, aSection));
+      CommandPtr cmd = doCommand(imapCommand::clientStatus(aBox, aSection));
       ok = cmd->result() == "OK";
       cmdInfo = cmd->resultInfo();
       completeQueue.removeAll(cmd);
@@ -1881,7 +1880,7 @@ IMAP4Protocol::stat (const KUrl & _url)
     if (!ok)
     {
       bool found = false;
-      imapCommand *cmd = doCommand (imapCommand::clientList ("", aBox));
+      CommandPtr cmd = doCommand (imapCommand::clientList ("", aBox));
       if (cmd->result () == "OK")
       {
         for (QList< imapList >::Iterator it = listResponses.begin ();
@@ -1916,7 +1915,7 @@ IMAP4Protocol::stat (const KUrl & _url)
       // do a status lookup on the box
       // only do this if the box is not selected
       // the server might change the validity for new select/examine
-      imapCommand *cmd =
+      CommandPtr cmd =
         doCommand (imapCommand::clientStatus (aBox, "UIDVALIDITY"));
       completeQueue.removeAll (cmd);
       validity = getStatus ().uidValidity ();
@@ -1994,12 +1993,12 @@ void IMAP4Protocol::closeConnection()
   if (getState() == ISTATE_NO) return;
   if (getState() == ISTATE_SELECT && metaData("expunge") == "auto")
   {
-    imapCommand *cmd = doCommand (imapCommand::clientExpunge());
+    CommandPtr cmd = doCommand (imapCommand::clientExpunge());
     completeQueue.removeAll (cmd);
   }
   if (getState() != ISTATE_CONNECT)
   {
-    imapCommand *cmd = doCommand (imapCommand::clientLogout());
+    CommandPtr cmd = doCommand (imapCommand::clientLogout());
     completeQueue.removeAll (cmd);
   }
   disconnectFromHost();
@@ -2030,14 +2029,14 @@ bool IMAP4Protocol::makeLogin ()
     myTLS  = metaData("tls");
     kDebug(7116) <<"myAuth:" << myAuth;
 
-    imapCommand *cmd;
+    CommandPtr cmd;
 
     unhandled.clear ();
     if (!alreadyConnected) while (!parseLoop ()) {}   //get greeting
     QString greeting;
     if (!unhandled.isEmpty()) greeting = unhandled.first().trimmed();
     unhandled.clear ();       //get rid of it
-    cmd = doCommand (new imapCommand ("CAPABILITY", ""));
+    cmd = doCommand (CommandPtr(new imapCommand ("CAPABILITY", "")));
 
     kDebug(7116) <<"IMAP4: setHost: capability";
     for (QStringList::Iterator it = imapCapabilities.begin ();
@@ -2046,7 +2045,6 @@ bool IMAP4Protocol::makeLogin ()
       kDebug(7116) <<"'" << (*it) <<"'";
     }
     completeQueue.removeAll (cmd);
-    delete cmd;
 
     if (!hasCapability("IMAP4") && !hasCapability("IMAP4rev1"))
     {
@@ -2069,14 +2067,14 @@ bool IMAP4Protocol::makeLogin ()
     if ((myTLS == "on" /*###|| ( canUseTLS() && myTLS != "off")*/) &&
         hasCapability(QString("STARTTLS")))
     {
-      imapCommand *cmd = doCommand (imapCommand::clientStartTLS());
+      CommandPtr cmd = doCommand (imapCommand::clientStartTLS());
       if (cmd->result () == "OK")
       {
         completeQueue.removeAll(cmd);
         if (startSsl())
         {
           kDebug(7116) <<"TLS mode has been enabled.";
-          imapCommand *cmd2 = doCommand (new imapCommand ("CAPABILITY", ""));
+          CommandPtr cmd2 = doCommand (CommandPtr(new imapCommand ("CAPABILITY", "")));
           for (QStringList::Iterator it = imapCapabilities.begin ();
                                      it != imapCapabilities.end (); ++it)
           {
@@ -2087,11 +2085,9 @@ bool IMAP4Protocol::makeLogin ()
           kWarning(7116) <<"TLS mode setup has failed.  Aborting.";
           error (ERR_COULD_NOT_LOGIN, i18n("Starting TLS failed."));
           closeConnection();
-          delete cmd;
           return false;
         }
       } else completeQueue.removeAll(cmd);
-      delete cmd;
     }
 
     if (!myAuth.isEmpty () && myAuth != "*"
@@ -2163,7 +2159,6 @@ bool IMAP4Protocol::makeLogin ()
         kDebug(7116) <<"makeLogin - registered namespaces";
       }
       completeQueue.removeAll (cmd);
-      delete cmd;
     }
     // get the default delimiter (empty listing)
     cmd = doCommand( imapCommand::clientList("", "") );
@@ -2183,7 +2178,6 @@ bool IMAP4Protocol::makeLogin ()
       }
     }
     completeQueue.removeAll (cmd);
-    delete cmd;
   } else {
     kDebug(7116) <<"makeLogin - NO login";
   }
@@ -2435,7 +2429,7 @@ IMAP4Protocol::parseURL (const KUrl & _url, QString & _box,
         } else
         {
           // start a listing for the box to get the type
-          imapCommand *cmd;
+          CommandPtr cmd;
 
           cmd = doCommand (imapCommand::clientList ("", _box));
           if (cmd->result () == "OK")
@@ -2610,7 +2604,7 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
 {
   if (aBox.isEmpty()) return false;
 
-  imapCommand *cmd = 0;
+  CommandPtr cmd;
 
   if (aBox != getCurrentBox () || (!getSelected().readWrite() && !readonly))
   {
