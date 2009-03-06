@@ -505,7 +505,9 @@ bool Todo::Private::recurTodo( Todo *todo )
       while ( !todo->recursAt( nextDate ) ||
               nextDate <= KDateTime::currentUtcDateTime() ) {
 
-        if ( !nextDate.isValid() || nextDate > endDateTime ) {
+        if ( !nextDate.isValid() ||
+	        ( nextDate > endDateTime && r->duration() != -1 ) ) {
+
           return false;
         }
 
