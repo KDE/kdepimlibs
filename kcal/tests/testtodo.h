@@ -31,6 +31,7 @@ class TodoTest : public QObject
     void testCompare();
     void testClone();
     void testAssign();
+    void testSetCompleted();
 };
 
 #endif
