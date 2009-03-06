@@ -142,7 +142,7 @@ extern "C" {
 #define VCEventProp				"VEVENT"
 #define VCEWorldProp			"EWORLD"
 #define VCExNumProp				"EXNUM"
-#define VCExDateProp			"EXDATE"
+#define VCExpDateProp			"EXDATE"
 #define VCExpectProp			"EXPECT"
 #define VCExtAddressProp		"EXT ADD"
 #define VCFamilyNameProp		"F"
