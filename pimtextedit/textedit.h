@@ -198,6 +198,7 @@ class PIMTEXTEDIT_EXPORT TextEdit : public KRichTextWidget,
     }
     virtual bool canInsertFromMimeData( const QMimeData *source ) const {
       // FIXME
+      return false;
     }
     virtual void insertFromMimeData( const QMimeData *source );
     virtual bool eventFilter( QObject*o, QEvent* e );
