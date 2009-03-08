@@ -13,7 +13,7 @@
       <default>0</default>
     </entry>
     <entry name="name" type="String">
-      <label>User visible transport name</label>
+      <label>User-visible transport name</label>
       <whatsthis>The name that will be used when referring to this server.</whatsthis>
       <default code="true">i18n("Unnamed")</default>
     </entry>

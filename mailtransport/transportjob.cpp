@@ -121,7 +121,7 @@ void TransportJob::start()
 {
   if ( !transport()->isValid() ) {
     setError( UserDefinedError );
-    setErrorText( i18n( "The mail transport \"%1\" is not correcty configured.",
+    setErrorText( i18n( "The mail transport \"%1\" is not correctly configured.",
                         transport()->name() ) );
     emitResult();
     return;
