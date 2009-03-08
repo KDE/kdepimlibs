@@ -548,16 +548,16 @@ QString KPIMUtils::emailParseResultToString( EmailParseResult errorCode )
     return i18n( "The email address you entered is valid." );
   case UnclosedAngleAddr :
     return i18n( "The email address you entered is not valid because it "
-                 "contains an unclosed anglebracket." );
+                 "contains an unclosed angle bracket." );
   case UnopenedAngleAddr :
     return i18n( "The email address you entered is not valid because it "
-                 "contains an unopened anglebracket." );
+                 "contains too many opening angle brackets." );
   case UnexpectedComma :
     return i18n( "The email address you have entered is not valid because it "
                  "contains an unexpected comma." );
   case UnexpectedEnd :
     return i18n( "The email address you entered is not valid because it ended "
-                 "unexpectedly, this probably means you have used an escaping "
+                 "unexpectedly. This probably means you have used an escaping "
                  "type character like an \\  as the last character in your "
                  "email address." );
   case UnbalancedQuote :
@@ -572,7 +572,7 @@ QString KPIMUtils::emailParseResultToString( EmailParseResult errorCode )
                  "contains an illegal character." );
   case InvalidDisplayName :
     return i18n( "The email address you have entered is not valid because it "
-                 "contains an invalid displayname." );
+                 "contains an invalid display name." );
   }
   return i18n( "Unknown problem with email address" );
 }

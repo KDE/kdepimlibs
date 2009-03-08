@@ -1074,7 +1074,7 @@ void POP3Protocol::listDir(const KUrl &)
   kDebug(7105) << "The stat buf is :" << q_buf << ":";
   if (q_buf.indexOf(" ") == -1) {
     error(ERR_INTERNAL,
-          i18n("Invalid POP3 response, we should have at least one space!"));
+          i18n("Invalid POP3 response, should have at least one space."));
     closeConnection();
     return;
   }
@@ -1082,7 +1082,7 @@ void POP3Protocol::listDir(const KUrl &)
 
   num_messages = q_buf.toUInt(&isINT);
   if (!isINT) {
-    error(ERR_INTERNAL, i18n("Invalid POP3 STAT response!"));
+    error(ERR_INTERNAL, i18n("Invalid POP3 STAT response."));
     closeConnection();
     return;
   }
