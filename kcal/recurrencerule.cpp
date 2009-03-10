@@ -709,32 +709,9 @@ class KCal::RecurrenceRule::Private
         mAllDay( false )
     {}
 
-    Private( RecurrenceRule *parent, const Private &p )
-      : mParent( parent ),
-        mRRule( p.mRRule ),
-        mPeriod( p.mPeriod ),
-        mDateStart( p.mDateStart ),
-        mFrequency( p.mFrequency ),
-        mDuration( p.mDuration ),
-        mDateEnd( p.mDateEnd ),
+    Private( RecurrenceRule *parent, const Private &p );
 
-        mBySeconds( p.mBySeconds ),
-        mByMinutes( p.mByMinutes ),
-        mByHours( p.mByHours ),
-        mByDays( p.mByDays ),
-        mByMonthDays( p.mByMonthDays ),
-        mByYearDays( p.mByYearDays ),
-        mByWeekNumbers( p.mByWeekNumbers ),
-        mByMonths( p.mByMonths ),
-        mBySetPos( p.mBySetPos ),
-        mWeekStart( p.mWeekStart ),
-
-        mIsReadOnly( p.mIsReadOnly ),
-        mAllDay( p.mAllDay )
-    {
-        setDirty();
-    }
-
+    Private &operator=( const Private &other );
     bool operator==( const Private &other ) const;
     void clear();
     void setDirty();
@@ -783,6 +760,65 @@ class KCal::RecurrenceRule::Private
     bool mNoByRules;        // no BySeconds, ByMinutes, ... rules exist
     uint mTimedRepetition;  // repeats at a regular number of seconds interval, or 0
 };
+
+RecurrenceRule::Private::Private( RecurrenceRule *parent, const Private &p )
+  : mParent( parent ),
+    mRRule( p.mRRule ),
+    mPeriod( p.mPeriod ),
+    mDateStart( p.mDateStart ),
+    mFrequency( p.mFrequency ),
+    mDuration( p.mDuration ),
+    mDateEnd( p.mDateEnd ),
+
+    mBySeconds( p.mBySeconds ),
+    mByMinutes( p.mByMinutes ),
+    mByHours( p.mByHours ),
+    mByDays( p.mByDays ),
+    mByMonthDays( p.mByMonthDays ),
+    mByYearDays( p.mByYearDays ),
+    mByWeekNumbers( p.mByWeekNumbers ),
+    mByMonths( p.mByMonths ),
+    mBySetPos( p.mBySetPos ),
+    mWeekStart( p.mWeekStart ),
+
+    mIsReadOnly( p.mIsReadOnly ),
+    mAllDay( p.mAllDay )
+{
+    setDirty();
+}
+
+RecurrenceRule::Private &RecurrenceRule::Private::operator=( const Private &p )
+{
+  // check for self assignment
+  if ( &p == this ) {
+    return *this;
+  }
+
+  mRRule = p.mRRule;
+  mPeriod = p.mPeriod;
+  mDateStart = p.mDateStart;
+  mFrequency = p.mFrequency;
+  mDuration = p.mDuration;
+  mDateEnd = p.mDateEnd;
+
+  mBySeconds = p.mBySeconds;
+  mByMinutes = p.mByMinutes;
+  mByHours = p.mByHours;
+  mByDays = p.mByDays;
+  mByMonthDays = p.mByMonthDays;
+  mByYearDays = p.mByYearDays;
+  mByWeekNumbers = p.mByWeekNumbers;
+  mByMonths = p.mByMonths;
+  mBySetPos = p.mBySetPos;
+  mWeekStart = p.mWeekStart;
+
+  mIsReadOnly = p.mIsReadOnly;
+  mAllDay = p.mAllDay;
+
+  setDirty();
+
+  return *this;
+}
 
 bool RecurrenceRule::Private::operator==( const Private &r ) const
 {
@@ -861,6 +897,18 @@ RecurrenceRule::~RecurrenceRule()
 bool RecurrenceRule::operator==( const RecurrenceRule &r ) const
 {
   return *d == *r.d;
+}
+
+RecurrenceRule &RecurrenceRule::operator=( const RecurrenceRule &r )
+{
+  // check for self assignment
+  if ( &r == this ) {
+    return *this;
+  }
+
+  *d = *r.d;
+
+  return *this;
 }
 
 void RecurrenceRule::addObserver( RuleObserver *observer )
