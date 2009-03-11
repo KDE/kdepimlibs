@@ -60,6 +60,7 @@ struct EmbeddedImage
 // GUI test app
 // clean up mime insert/paste mess
 // clean up quoting mess
+// bugzilla entry
 
 // Unittests:
 // inssert signature at various places
