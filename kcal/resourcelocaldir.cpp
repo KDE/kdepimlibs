@@ -142,13 +142,13 @@ bool ResourceLocalDir::doLoad( bool )
   const QStringList entries = dir.entryList( QDir::Files | QDir::Readable );
 
   bool success = true;
-  QStringList::ConstIterator it;
-  for ( it = entries.begin(); it != entries.end(); ++it ) {
-    if ( (*it).endsWith( '~' ) ) { // is backup file, ignore it
-      continue;
+  for ( int i = 0, count = entries.count(); i < count; ++i ) {
+    if ( entries[i].contains( QRegExp( "(~|\\.new|\\.tmp)$" ) ) ||
+         entries[i].startsWith( d->mURL.path() + "/qt_temp." ) ) {
+      continue;  // backup or temporary file, ignore it
     }
 
-    const QString fileName = dirName + '/' + *it;
+    const QString fileName = dirName + '/' + entries[i];
     kDebug() << " read '" << fileName << "'";
     CalendarLocal cal( calendar()->timeSpec() );
     if ( !doFileLoad( cal, fileName ) ) {
@@ -224,10 +224,8 @@ void ResourceLocalDir::reload( const QString &file )
   kDebug();
 
   if ( !isOpen() ||
-       file.endsWith( "~" ) ||
-       file.startsWith( d->mURL.path() + "/qt_temp." ) ||
-       file.endsWith( ".new" )   ||
-       file.endsWith( ".tmp" ) ) {
+       file.contains( QRegExp( "(~|\\.new|\\.tmp)$" ) ) ||
+       file.startsWith( d->mURL.path() + "/qt_temp." ) ) {
     return;
   }
 
