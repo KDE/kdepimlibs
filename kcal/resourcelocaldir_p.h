@@ -56,6 +56,7 @@ class ResourceLocalDir::Private
     KABC::Lock *mLock;
     KUrl mURL;
     KDirWatch mDirWatch;
+    QList<Incidence *> mDeletedIncidences;
 };
 //@endcond
 
