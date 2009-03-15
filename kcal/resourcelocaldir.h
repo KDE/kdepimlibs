@@ -89,6 +89,8 @@ class KCAL_EXPORT ResourceLocalDir : public ResourceCached
     using ResourceCalendar::doLoad;
     using ResourceCalendar::doSave;
 
+    QList<Incidence *> mDeletedIncidences;
+
     //@cond PRIVATE
     Q_DISABLE_COPY( ResourceLocalDir )
     class Private;
