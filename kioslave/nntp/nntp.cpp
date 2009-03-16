@@ -23,8 +23,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 
-#define NNTP_PORT 119
-#define NNTPS_PORT 563
+#include <kio/ioslave_defaults.h>
 
 #define DBG_AREA 7114
 #define DBG kDebug(DBG_AREA)
@@ -66,7 +65,7 @@ NNTPProtocol::NNTPProtocol ( const QByteArray & pool, const QByteArray & app, bo
   DBG << "=============> NNTPProtocol::NNTPProtocol";
 
   readBufferLen = 0;
-  m_defaultPort = isSSL ? NNTPS_PORT : NNTP_PORT;
+  m_defaultPort = isSSL ? DEFAULT_NNTPS_PORT : DEFAULT_NNTP_PORT;
   m_port = m_defaultPort;
 }
 
