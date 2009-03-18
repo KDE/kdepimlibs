@@ -194,6 +194,11 @@ bool ResourceLocalDir::doSave( bool syncCache )
 
 bool ResourceLocalDir::doSave( bool, Incidence *incidence )
 {
+  if ( mDeletedIncidences.contains( incidence ) ) {
+    mDeletedIncidences.removeAll( incidence );
+    return true;
+  }
+
   d->mDirWatch.stopScan();  // do prohibit the dirty() signal and a following reload()
 
   QString fileName = d->mURL.path() + '/' + incidence->uid();
@@ -233,7 +238,12 @@ bool ResourceLocalDir::deleteEvent( Event *event )
 {
   kDebug();
   if ( d->deleteIncidenceFile( event ) ) {
-    return calendar()->deleteEvent( event );
+    if ( calendar()->deleteEvent( event ) ) {
+      mDeletedIncidences.append( event );
+      return true;
+    } else {
+      return false;
+    }
   } else {
     return false;
   }
@@ -247,7 +257,12 @@ void ResourceLocalDir::deleteAllEvents()
 bool ResourceLocalDir::deleteTodo( Todo *todo )
 {
   if ( d->deleteIncidenceFile( todo ) ) {
-    return calendar()->deleteTodo( todo );
+    if ( calendar()->deleteTodo( todo ) ) {
+      mDeletedIncidences.append( todo );
+      return true;
+    } else {
+      return false;
+    }
   } else {
     return false;
   }
@@ -261,7 +276,12 @@ void ResourceLocalDir::deleteAllTodos()
 bool ResourceLocalDir::deleteJournal( Journal *journal )
 {
   if ( d->deleteIncidenceFile( journal ) ) {
-    return calendar()->deleteJournal( journal );
+    if ( calendar()->deleteJournal( journal ) ) {
+      mDeletedIncidences.append( journal );
+      return true;
+    } else {
+      return false;
+    }
   } else {
     return false;
   }
