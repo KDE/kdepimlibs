@@ -222,7 +222,11 @@ void ResourceLocalDir::reload( const QString &file )
 {
   kDebug();
 
-  if ( !isOpen() ) {
+  if ( !isOpen() ||
+       file.endsWith( "~" ) ||
+       file.startsWith( d->mURL.path() + "/qt_temp." ) ||
+       file.endsWith( ".new" )   ||
+       file.endsWith( ".tmp" ) ) {
     return;
   }
 
