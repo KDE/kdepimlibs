@@ -40,6 +40,7 @@ extern "C" {
 #include <klocale.h>
 #include <kurl.h>
 #include <kglobal.h>
+#include <kmessagebox.h>
 
 #include <sys/stat.h>
 #include <cassert>
@@ -343,13 +344,25 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 		return false;
 	}
 
+
+        // Attempt to start TLS
         if ( !m_allowUnencrypted && !QSslSocket::supportsSsl() ) {
             error( ERR_SLAVE_DEFINED, i18n("Can not use TLS since the underlying Qt library does not support it.") );
             disconnect();
             return false;
         }
 
-	// Attempt to start TLS
+        if ( !m_allowUnencrypted && useTLSIfAvailable && QSslSocket::supportsSsl() && !m_supportsTLS &&
+             messageBox( WarningContinueCancel,
+                         i18n("TLS encryption was requested, but your Sieve server does not advertise TLS in its capabilities.\n"
+                              "You can choose to try to initiate TLS negotiations nonetheless, or cancel the operation."),
+                         i18n("Server Does Not Advertise TLS"), i18n("&Start TLS nonetheless"), i18n("&Cancel") ) != KMessageBox::Continue )
+        {
+            error( ERR_USER_CANCELED, i18n("TLS encryption requested, but not supported by server.") );
+            disconnect();
+            return false;
+        }
+
 	// FIXME find a test server and test that this works
 	// TODO ask the system whether SSL is available
 	if (useTLSIfAvailable && QSslSocket::supportsSsl()) {
