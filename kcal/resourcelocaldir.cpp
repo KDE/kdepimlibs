@@ -194,8 +194,8 @@ bool ResourceLocalDir::doSave( bool syncCache )
 
 bool ResourceLocalDir::doSave( bool, Incidence *incidence )
 {
-  if ( mDeletedIncidences.contains( incidence ) ) {
-    mDeletedIncidences.removeAll( incidence );
+  if ( d->mDeletedIncidences.contains( incidence ) ) {
+    d->mDeletedIncidences.removeAll( incidence );
     return true;
   }
 
@@ -241,7 +241,7 @@ bool ResourceLocalDir::deleteEvent( Event *event )
   kDebug();
   if ( d->deleteIncidenceFile( event ) ) {
     if ( calendar()->deleteEvent( event ) ) {
-      mDeletedIncidences.append( event );
+      d->mDeletedIncidences.append( event );
       return true;
     } else {
       return false;
@@ -260,7 +260,7 @@ bool ResourceLocalDir::deleteTodo( Todo *todo )
 {
   if ( d->deleteIncidenceFile( todo ) ) {
     if ( calendar()->deleteTodo( todo ) ) {
-      mDeletedIncidences.append( todo );
+      d->mDeletedIncidences.append( todo );
       return true;
     } else {
       return false;
@@ -279,7 +279,7 @@ bool ResourceLocalDir::deleteJournal( Journal *journal )
 {
   if ( d->deleteIncidenceFile( journal ) ) {
     if ( calendar()->deleteJournal( journal ) ) {
-      mDeletedIncidences.append( journal );
+      d->mDeletedIncidences.append( journal );
       return true;
     } else {
       return false;
