@@ -101,7 +101,7 @@ void IncidenceBase::Private::init( const Private &other )
 
   mAttendees.clearAll();
   Attendee::List::ConstIterator it;
-  for ( it = other.mAttendees.begin(); it != other.mAttendees.end(); ++it ) {
+  for ( it = other.mAttendees.constBegin(); it != other.mAttendees.constEnd(); ++it ) {
     mAttendees.append( new Attendee( *(*it) ) );
   }
 }
