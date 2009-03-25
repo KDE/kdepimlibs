@@ -703,7 +703,6 @@ class KCAL_EXPORT CalendarResources
     Q_DISABLE_COPY( CalendarResources )
     class Private;
     Private *d;
-    bool mPendingDeleteFromResourceMap;
     //@endcond
 };
 

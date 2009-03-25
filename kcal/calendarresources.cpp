@@ -65,7 +65,8 @@ class KCal::CalendarResources::Private
       : mManager( new CalendarResourceManager( family ) ),
         mStandardPolicy( new StandardDestinationPolicy( mManager ) ),
         mDestinationPolicy( mStandardPolicy ),
-        mAskPolicy( new AskDestinationPolicy( mManager ) )
+        mAskPolicy( new AskDestinationPolicy( mManager ) ),
+        mPendingDeleteFromResourceMap( false )
     {}
     ~Private()
     {
@@ -84,6 +85,8 @@ class KCal::CalendarResources::Private
 
     QMap<ResourceCalendar *, Ticket *> mTickets;
     QMap<ResourceCalendar *, int> mChangeCounts;
+
+    bool mPendingDeleteFromResourceMap;
 
     template< class IncidenceList >
     void appendIncidences( IncidenceList &result, const IncidenceList &extra,
@@ -209,7 +212,6 @@ CalendarResources::CalendarResources( const KDateTime::Spec &timeSpec,
   : Calendar( timeSpec ),
     d( new KCal::CalendarResources::Private( family ) )
 {
-  mPendingDeleteFromResourceMap = false;
   d->mManager->addObserver( this );
 }
 
@@ -218,7 +220,6 @@ CalendarResources::CalendarResources( const QString &timeZoneId,
   : Calendar( timeZoneId ),
     d( new KCal::CalendarResources::Private( family ) )
 {
-  mPendingDeleteFromResourceMap = false;
   d->mManager->addObserver( this );
 }
 
@@ -426,7 +427,7 @@ bool CalendarResources::deleteEvent( Event *event )
   if ( d->mResourceMap.find( event ) != d->mResourceMap.end() ) {
     status = d->mResourceMap[event]->deleteEvent( event );
     if ( status ) {
-      mPendingDeleteFromResourceMap = true;
+      d->mPendingDeleteFromResourceMap = true;
     }
   } else {
     status = false;
@@ -482,7 +483,7 @@ bool CalendarResources::deleteTodo( Todo *todo )
   if ( d->mResourceMap.find( todo ) != d->mResourceMap.end() ) {
     status = d->mResourceMap[todo]->deleteTodo( todo );
     if ( status ) {
-      mPendingDeleteFromResourceMap = true;
+      d->mPendingDeleteFromResourceMap = true;
     }
   } else {
     CalendarResourceManager::ActiveIterator it;
@@ -628,7 +629,7 @@ bool CalendarResources::deleteJournal( Journal *journal )
   if ( d->mResourceMap.find( journal ) != d->mResourceMap.end() ) {
     status = d->mResourceMap[journal]->deleteJournal( journal );
     if ( status ) {
-      mPendingDeleteFromResourceMap = true;
+      d->mPendingDeleteFromResourceMap = true;
     }
   } else {
     CalendarResourceManager::ActiveIterator it;
@@ -829,7 +830,7 @@ bool CalendarResources::beginChange( Incidence *incidence )
     }
     d->mResourceMap[ incidence ] = r;
   }
-  mPendingDeleteFromResourceMap = false;
+  d->mPendingDeleteFromResourceMap = false;
 
   int count = incrementChangeCount( r );
   if ( count == 1 ) {
@@ -855,9 +856,9 @@ bool CalendarResources::endChange( Incidence *incidence )
 
   int count = decrementChangeCount( r );
 
-  if ( mPendingDeleteFromResourceMap ) {
+  if ( d->mPendingDeleteFromResourceMap ) {
     d->mResourceMap.remove( incidence );
-    mPendingDeleteFromResourceMap = false;
+    d->mPendingDeleteFromResourceMap = false;
   }
 
   if ( count == 0 ) {
