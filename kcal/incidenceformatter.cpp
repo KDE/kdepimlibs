@@ -275,14 +275,11 @@ static QString eventViewerFormatHeader( Incidence *incidence )
               iconLoader->iconPath( "preferences-desktop-notification-bell", KIconLoader::Small ) +
               "\">";
   }
-  //TODO: re-enable this code when we have the icons available
-#if 0
   if ( incidence->recurs() ) {
     tmpStr += "<img src=\"" +
-              iconLoader->iconPath( "appointment-recurring", KIconLoader::Small ) +
+              iconLoader->iconPath( "edit-redo", KIconLoader::Small ) +
               "\">";
   }
-#endif
   if ( incidence->isReadOnly() ) {
     tmpStr += "<img src=\"" +
               iconLoader->iconPath( "object-locked", KIconLoader::Small ) +
