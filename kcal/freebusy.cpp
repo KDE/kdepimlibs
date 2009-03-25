@@ -295,11 +295,13 @@ void FreeBusy::merge( FreeBusy *freeBusy )
 void FreeBusy::shiftTimes( const KDateTime::Spec &oldSpec,
                            const KDateTime::Spec &newSpec )
 {
-  IncidenceBase::shiftTimes( oldSpec, newSpec );
-  d->mDtEnd = d->mDtEnd.toTimeSpec( oldSpec );
-  d->mDtEnd.setTimeSpec( newSpec );
-  for ( int i = 0, end = d->mBusyPeriods.count();  i < end;  ++end ) {
-    d->mBusyPeriods[i].shiftTimes( oldSpec, newSpec );
+  if ( oldSpec.isValid() && newSpec.isValid() && oldSpec != newSpec ) {
+    IncidenceBase::shiftTimes( oldSpec, newSpec );
+    d->mDtEnd = d->mDtEnd.toTimeSpec( oldSpec );
+    d->mDtEnd.setTimeSpec( newSpec );
+    for ( int i = 0, end = d->mBusyPeriods.count();  i < end;  ++end ) {
+      d->mBusyPeriods[i].shiftTimes( oldSpec, newSpec );
+    }
   }
 }
 
