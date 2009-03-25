@@ -131,8 +131,10 @@ bool Period::hasDuration() const
 void Period::shiftTimes( const KDateTime::Spec &oldSpec,
                          const KDateTime::Spec &newSpec )
 {
-  d->mStart = d->mStart.toTimeSpec( oldSpec );
-  d->mStart.setTimeSpec( newSpec );
-  d->mEnd = d->mEnd.toTimeSpec( oldSpec );
-  d->mEnd.setTimeSpec( newSpec );
+  if ( oldSpec.isValid() && newSpec.isValid() && oldSpec != newSpec ) {
+    d->mStart = d->mStart.toTimeSpec( oldSpec );
+    d->mStart.setTimeSpec( newSpec );
+    d->mEnd = d->mEnd.toTimeSpec( oldSpec );
+    d->mEnd.setTimeSpec( newSpec );
+  }
 }
