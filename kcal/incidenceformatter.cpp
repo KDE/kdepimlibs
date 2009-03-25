@@ -270,13 +270,13 @@ static QString eventViewerFormatHeader( Incidence *incidence )
               iconLoader->iconPath( "view-calendar-day", KIconLoader::Small ) +
               "\">";
   }
-  //TODO: re-enable this code when we have the icons available
-#if 0
   if ( incidence->isAlarmEnabled() ) {
     tmpStr += "<img src=\"" +
-              iconLoader->iconPath( "task-reminder", KIconLoader::Small ) +
+              iconLoader->iconPath( "preferences-desktop-notification-bell", KIconLoader::Small ) +
               "\">";
   }
+  //TODO: re-enable this code when we have the icons available
+#if 0
   if ( incidence->recurs() ) {
     tmpStr += "<img src=\"" +
               iconLoader->iconPath( "appointment-recurring", KIconLoader::Small ) +
