@@ -252,7 +252,7 @@ void FreeBusy::sortList()
 void FreeBusy::addPeriods( const Period::List &list )
 {
   foreach ( const Period &p, list ) {
-    d->mBusyPeriods << FreeBusyPeriod(p);
+    d->mBusyPeriods << FreeBusyPeriod( p );
   }
   sortList();
 }
@@ -299,8 +299,8 @@ void FreeBusy::shiftTimes( const KDateTime::Spec &oldSpec,
     IncidenceBase::shiftTimes( oldSpec, newSpec );
     d->mDtEnd = d->mDtEnd.toTimeSpec( oldSpec );
     d->mDtEnd.setTimeSpec( newSpec );
-    for ( int i = 0, end = d->mBusyPeriods.count();  i < end;  ++end ) {
-      d->mBusyPeriods[i].shiftTimes( oldSpec, newSpec );
+    foreach ( FreeBusyPeriod p, d->mBusyPeriods ) { //krazy:exclude=foreach
+      p.shiftTimes( oldSpec, newSpec );
     }
   }
 }
