@@ -2238,6 +2238,10 @@ KDateTime ICalFormatImpl::readICalDateTimeProperty( icalproperty *p,
 
 icaldurationtype ICalFormatImpl::writeICalDuration( const Duration &duration )
 {
+  // should be able to use icaldurationtype_from_int(), except we know
+  // that some older tools do not properly support weeks. So we never
+  // set a week duration, only days
+
   icaldurationtype d;
 
   int value = duration.value();
@@ -2245,32 +2249,15 @@ icaldurationtype ICalFormatImpl::writeICalDuration( const Duration &duration )
   if ( value < 0 ) {
     value = -value;
   }
-  // RFC2445 states that an ical duration value must be
-  // EITHER weeks OR days/time, not both.
-  if ( duration.isDaily() ) {
-    if ( !( value % 7 ) ) {
-      d.weeks = value / 7;
-      d.days  = 0;
-    } else {
-      d.weeks = 0;
-      d.days  = value;
-    }
-    d.hours = d.minutes = d.seconds = 0;
-  } else {
-    if ( !( value % gSecondsPerWeek ) ) {
-      d.weeks = value / gSecondsPerWeek;
-      d.days = d.hours = d.minutes = d.seconds = 0;
-    } else {
-      d.weeks   = 0;
-      d.days    = value / gSecondsPerDay;
-      value    %= gSecondsPerDay;
-      d.hours   = value / gSecondsPerHour;
-      value    %= gSecondsPerHour;
-      d.minutes = value / gSecondsPerMinute;
-      value    %= gSecondsPerMinute;
-      d.seconds = value;
-    }
-  }
+
+  d.weeks   = 0;
+  d.days    = value / gSecondsPerDay;
+  value    %= gSecondsPerDay;
+  d.hours   = value / gSecondsPerHour;
+  value    %= gSecondsPerHour;
+  d.minutes = value / gSecondsPerMinute;
+  value    %= gSecondsPerMinute;
+  d.seconds = value;
 
   return d;
 }
