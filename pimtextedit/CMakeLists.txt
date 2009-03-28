@@ -18,6 +18,7 @@ set_target_properties(pimtextedit PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVE
 
 install(TARGETS pimtextedit EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
+  pimtextedit_export.h
   textedit.h
   emailquotehighlighter.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/pimtextedit COMPONENT Devel
