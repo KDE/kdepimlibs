@@ -551,14 +551,14 @@ QString KPIMUtils::emailParseResultToString( EmailParseResult errorCode )
                  "contains an unclosed angle bracket." );
   case UnopenedAngleAddr :
     return i18n( "The email address you entered is not valid because it "
-                 "contains too many opening angle brackets." );
+                 "contains too many closing angle brackets." );
   case UnexpectedComma :
     return i18n( "The email address you have entered is not valid because it "
                  "contains an unexpected comma." );
   case UnexpectedEnd :
     return i18n( "The email address you entered is not valid because it ended "
                  "unexpectedly. This probably means you have used an escaping "
-                 "type character like an \\  as the last character in your "
+                 "type character like a '\\' as the last character in your "
                  "email address." );
   case UnbalancedQuote :
     return i18n( "The email address you entered is not valid because it "
