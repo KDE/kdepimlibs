@@ -22,10 +22,9 @@
 
 #include "microblog_export.h"
 
-#include <QSharedDataPointer>
-#include <QByteArray>
-#include <QHash>
-#include <QDateTime>
+#include <QtCore/QSharedDataPointer>
+#include <QtCore/QByteArray>
+#include <QtCore/QDateTime>
 
 namespace Microblog {
 

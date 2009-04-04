@@ -22,6 +22,7 @@
 
 #include <QDateTime>
 #include <QDomElement>
+#include <QHash>
 #include <QStringList>
 
 #include <kpimutils/linklocator.h>
