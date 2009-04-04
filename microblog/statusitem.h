@@ -35,6 +35,7 @@ namespace Microblog {
  * This class is a representation of one Dent or Tweet. It is filled with 
  * xml which the REST API from ident.ca or Teitter and parses it and gives
  * back the values. There are also some convenience functions like 
+ * @since 4.3
  */
 class MICROBLOG_EXPORT StatusItem
 {
@@ -45,7 +46,7 @@ public:
     /** Constructor which takes the XML as argument. The data is parsed 
       * instantly, so the other methods of the class are instantly usuable
       */
-    StatusItem( const QByteArray& );
+    explicit StatusItem( const QByteArray& );
 
     /** Copy constructor */
     StatusItem( const StatusItem& );
