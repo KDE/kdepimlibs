@@ -35,6 +35,7 @@ macro_optional_add_subdirectory(doc)
 add_subdirectory(gpgme++)
 add_subdirectory(qgpgme)
 add_subdirectory(kmime)
+add_subdirectory(microblog)
 
 if (NOT KDEPIM_ONLY_KLEO)
 
