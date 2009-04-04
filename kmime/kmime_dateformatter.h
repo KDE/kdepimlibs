@@ -160,7 +160,8 @@ class KMIME_EXPORT DateFormatter
     QString customFormat() const;
 
     /**
-      Resets the internal clock.
+      Resets the cached current date used for calculating the fancy date.
+      This should be called whenever the current date changed, i.e. on midnight.
     */
     void reset();
 
@@ -281,8 +282,8 @@ class KMIME_EXPORT DateFormatter
   private:
     //@cond PRIVATE
     FormatType          mFormat;
-    mutable time_t      mCurrentTime;
-    mutable QDateTime   mDate;
+    mutable time_t      mTodayOneSecondBeforeMidnight;
+    mutable QDateTime   mUnused; // KDE5: remove
     QString             mCustomFormat;
     static int          mDaylight;
     //@endcond

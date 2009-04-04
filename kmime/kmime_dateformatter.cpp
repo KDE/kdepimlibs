@@ -49,7 +49,7 @@ using namespace KMime;
 int DateFormatter::mDaylight = -1;
 //@endcond
 DateFormatter::DateFormatter( FormatType ftype )
-  : mFormat( ftype ), mCurrentTime( 0 )
+  : mFormat( ftype ), mTodayOneSecondBeforeMidnight( 0 )
 {
 }
 
@@ -225,45 +225,37 @@ QString DateFormatter::fancy( time_t t ) const
     return i18nc( "invalid time specified", "unknown" );
   }
 
-  if ( !mCurrentTime ) {
-    time( &mCurrentTime );
-    mDate.setTime_t( mCurrentTime );
+  if ( mTodayOneSecondBeforeMidnight == 0 ) {
+    // determine time_t value of today 23:59:59
+    const QDateTime today( QDate::currentDate(), QTime( 23, 59, 59 ) );
+    mTodayOneSecondBeforeMidnight = today.toTime_t();
   }
 
   QDateTime old;
   old.setTime_t( t );
 
-  // not more than an hour in the future
-  if ( mCurrentTime + 60 * 60 >= t ) {
-    time_t diff = mCurrentTime - t;
-
-    if ( diff < 24 * 60 * 60 ) {
-      if ( old.date().year() == mDate.date().year() &&
-           old.date().dayOfYear() == mDate.date().dayOfYear() )
-        return i18n( "Today %1", locale->
-                     formatTime( old.time(), true ) );
-    }
-    if ( diff < 2 * 24 * 60 * 60 ) {
-      QDateTime yesterday( mDate.addDays( -1 ) );
-      if ( old.date().year() == yesterday.date().year() &&
-           old.date().dayOfYear() == yesterday.date().dayOfYear() )
-        return i18n( "Yesterday %1", locale->
-                     formatTime( old.time(), true) );
-    }
-    for ( int i = 3; i < 7; i++ ) {
-      if ( diff < i * 24 * 60 * 60 ) {
-        QDateTime weekday( mDate.addDays( -i + 1 ) );
-        if ( old.date().year() == weekday.date().year() &&
-             old.date().dayOfYear() == weekday.date().dayOfYear() )
+  if ( mTodayOneSecondBeforeMidnight >= t ) {
+    const time_t diff = mTodayOneSecondBeforeMidnight - t;
+    if ( diff < 7 * 24 * 60 * 60 ) {
+      if ( diff < 24 * 60 * 60 ) {
+        return i18n( "Today %1",
+                     locale->formatTime( old.time(), true ) );
+      }
+      if ( diff < 2 * 24 * 60 * 60 ) {
+        return i18n( "Yesterday %1",
+                     locale->formatTime( old.time(), true ) );
+      }
+      for ( int i = 3; i < 8; i++ ) {
+        if ( diff < i * 24 * 60 * 60 ) {
           return i18nc( "1. weekday, 2. time", "%1 %2" ,
                         locale->calendar()->weekDayName( old.date() ) ,
-                        locale->formatTime( old.time(), true) );
+                        locale->formatTime( old.time(), true ) );
+        }
       }
     }
   }
 
   return locale->formatDateTime( old );
-
 }
 
 QString DateFormatter::localized( time_t t, bool shortFormat, bool includeSecs,
@@ -300,7 +292,7 @@ QString DateFormatter::isoDate( time_t t ) const
 
 void DateFormatter::reset()
 {
-  mCurrentTime = 0;
+  mTodayOneSecondBeforeMidnight = 0;
 }
 
 QString DateFormatter::formatDate( FormatType ftype, time_t t,
