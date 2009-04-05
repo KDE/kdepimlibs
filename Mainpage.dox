@@ -34,6 +34,9 @@
  * - <a href="kpimidentities/html/index.html"><b>kpimidentities</b></a>
  *   <i>Library for shared identities between mail applications.</i>
  *
+ * - <a href="kpimtextedit/html/index.html"><b>kpimtextedit</b></a>.
+ *   <i>A library for PIM-specific text editing utilities.</i>
+ *
  * - <a href="kpimutils/html/index.html"><b>kpimutils</b></a>.
  *   <i>A library for general purpose PIM utilities.</i>
  *
