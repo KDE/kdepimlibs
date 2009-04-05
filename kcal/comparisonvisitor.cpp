@@ -1,24 +1,23 @@
 /*
-    Copyright 2009 Ingo Klöcker <kloecker@kde.org>
+  Copyright 2009 Ingo Klöcker <kloecker@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "comparisonvisitor.h"
-
 #include "event.h"
 #include "freebusy.h"
 #include "journal.h"
@@ -44,7 +43,7 @@ ComparisonVisitor::~ComparisonVisitor()
   delete d;
 }
 
-bool ComparisonVisitor::compare( IncidenceBase* incidence, const IncidenceBase* reference )
+bool ComparisonVisitor::compare( IncidenceBase *incidence, const IncidenceBase *reference )
 {
   d->mReference = reference;
 
@@ -55,7 +54,7 @@ bool ComparisonVisitor::compare( IncidenceBase* incidence, const IncidenceBase* 
   return result;
 }
 
-bool ComparisonVisitor::visit( Event* event )
+bool ComparisonVisitor::visit( Event *event )
 {
   Q_ASSERT( event != 0 );
 
@@ -68,7 +67,7 @@ bool ComparisonVisitor::visit( Event* event )
   }
 }
 
-bool ComparisonVisitor::visit( Todo* todo )
+bool ComparisonVisitor::visit( Todo *todo )
 {
   Q_ASSERT( todo != 0 );
 
@@ -81,7 +80,7 @@ bool ComparisonVisitor::visit( Todo* todo )
   }
 }
 
-bool ComparisonVisitor::visit( Journal* journal )
+bool ComparisonVisitor::visit( Journal *journal )
 {
   Q_ASSERT( journal != 0 );
 
@@ -94,7 +93,7 @@ bool ComparisonVisitor::visit( Journal* journal )
   }
 }
 
-bool ComparisonVisitor::visit( FreeBusy* freebusy )
+bool ComparisonVisitor::visit( FreeBusy *freebusy )
 {
   Q_ASSERT( freebusy != 0 );
 
