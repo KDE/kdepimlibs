@@ -1,3 +1,7 @@
+project(microblog)
+
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5328)
+
 include_directories (${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIR} ${QT_INCLUDES})
 
 set(microblog_LIB_SRCS
