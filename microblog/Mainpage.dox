@@ -1,0 +1,23 @@
+/*!
+ * @mainpage Microblog - a microblogging library for KDE.
+ *
+ * @section purpose Purpose
+ *
+ * Microblog provides...
+ *
+ * @section desc Description
+ *
+ * Microblog is a library for ...
+ *
+ * @authors
+ *  The major authors of this library are:\n
+ *  Tom Albers \<tomalbers@kde.nl\>
+ *
+ * @maintainers Tom Albers \<tomalbers@kde.nl\>
+ *
+ * @licenses
+ * @lgpl
+ *
+ */
+
+// DOXYGEN_PROJECTNAME=Microblog Library
