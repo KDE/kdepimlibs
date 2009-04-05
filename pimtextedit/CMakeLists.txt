@@ -1,3 +1,7 @@
+project(kpimtextedit)
+
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5329)
+
 add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
 set(pimtextedit_lib_srcs
