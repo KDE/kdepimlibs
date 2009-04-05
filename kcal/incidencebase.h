@@ -89,11 +89,11 @@ class FreeBusy;
   so they are not in IncidenceBase. The hierarchy is:
 
   IncidenceBase
-  - FreeBusy
-  - Incidence
-  - Event
-  - Todo
-  - Journal
+  + FreeBusy
+  + Incidence
+    + Event
+    + Todo
+    + Journal
 
   So IncidenceBase contains all properties that are common to all classes,
   and Incidence contains all additional properties that are common to
@@ -191,15 +191,28 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
 
     /**
       Assignment operator.
+
+      @warning Not polymorphic. Use AssignmentVisitor for correct
+      assignment of an instance of type IncidenceBase to another
+      instance of type IncidenceBase.
+
       @param other is the IncidenceBase to assign.
+
+      @see AssignmentVisitor
      */
-    IncidenceBase &operator=( const IncidenceBase &other );
+    IncidenceBase &operator=( const IncidenceBase &other ); // KDE5: make protected to prevent accidental usage
 
     /**
       Compares this with IncidenceBase @p ib for equality.
+
+      @warning Not polymorphic. Use ComparisonVisitor for correct
+      comparison of two instances of type IncidenceBase.
+
       @param ib is the IncidenceBase to compare.
+
+      @see ComparisonVisitor
     */
-    bool operator==( const IncidenceBase &ib ) const;
+    bool operator==( const IncidenceBase &ib ) const; // KDE5: make protected to prevent accidental usage
 
     /**
       Accept IncidenceVisitor. A class taking part in the visitor mechanism

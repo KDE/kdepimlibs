@@ -320,7 +320,7 @@ FreeBusy &FreeBusy::operator=( const FreeBusy &other )
 bool FreeBusy::operator==( const FreeBusy &freebusy ) const
 {
   return
-    static_cast<const IncidenceBase &>( *this ) == static_cast<const IncidenceBase &>( freebusy ) &&
+    IncidenceBase::operator==( freebusy ) &&
     dtEnd() == freebusy.dtEnd() &&
     d->mCalendar == freebusy.d->mCalendar &&
     d->mBusyPeriods == freebusy.d->mBusyPeriods;

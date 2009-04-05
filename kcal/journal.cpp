@@ -65,6 +65,6 @@ Journal &Journal::operator=( const Journal &other )
 bool Journal::operator==( const Journal &journal ) const
 {
     return
-      static_cast<const Incidence &>( *this ) == static_cast<const Incidence &>( journal );
+      Incidence::operator==( journal );
 }
 

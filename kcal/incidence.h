@@ -50,11 +50,11 @@ namespace KCal {
   so they are not in IncidenceBase. The hierarchy is:
 
   IncidenceBase
-  - FreeBusy
-  - Incidence
-  - Event
-  - Todo
-  - Journal
+  + FreeBusy
+  + Incidence
+    + Event
+    + Todo
+    + Journal
 
   So IncidenceBase contains all properties that are common to all classes,
   and Incidence contains all additional properties that are common to
@@ -777,15 +777,28 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
 
     /**
       Assignment operator.
+
+      @warning Not polymorphic. Use AssignmentVisitor for correct
+      assignment of an instance of type IncidenceBase to another
+      instance of type Incidence.
+
+      @param other is the Incidence to assign.
+
+      @see AssignmentVisitor
      */
-    Incidence &operator=( const Incidence &other );
+    Incidence &operator=( const Incidence &other ); // KDE5: make protected to prevent accidental usage
 
     /**
-      Compare this with @p incidence for equality.
+      Compares this with Incidence @p ib for equality.
 
-      @param incidence is the incidence to compare.
+      @warning Not polymorphic. Use ComparisonVisitor for correct
+      comparison of two instances of type Incidence.
+
+      @param incidence is the Incidence to compare.
+
+      @see ComparisonVisitor
     */
-    bool operator==( const Incidence &incidence ) const;
+    bool operator==( const Incidence &incidence ) const; // KDE5: make protected to prevent accidental usage
 
   protected:
     /**

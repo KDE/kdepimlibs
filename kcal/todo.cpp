@@ -122,7 +122,7 @@ Todo &Todo::operator=( const Todo &other )
 bool Todo::operator==( const Todo &todo ) const
 {
   return
-    static_cast<const Incidence &>( *this ) == static_cast<const Incidence &>( todo ) &&
+    Incidence::operator==( todo ) &&
     dtDue() == todo.dtDue() &&
     hasDueDate() == todo.hasDueDate() &&
     hasStartDate() == todo.hasStartDate() &&

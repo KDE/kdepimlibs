@@ -98,7 +98,7 @@ Event &Event::operator=( const Event &other )
 bool Event::operator==( const Event &event ) const
 {
   return
-    static_cast<const Incidence &>( *this ) == static_cast<const Incidence &>( event ) &&
+    Incidence::operator==( event ) &&
     dtEnd() == event.dtEnd() &&
     hasEndDate() == event.hasEndDate() &&
     transparency() == event.transparency();

@@ -80,6 +80,7 @@ set(kcal_LIB_SRCS ${libversit_SRCS}
   icaltimezones.cpp
   kresult.cpp
   assignmentvisitor.cpp
+  comparisonvisitor.cpp
 )
 
 kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
@@ -135,6 +136,7 @@ install( FILES
         calfilter.h
         calformat.h
         calstorage.h
+        comparisonvisitor.h
         confirmsavedialog.h
         customproperties.h
         dndfactory.h
