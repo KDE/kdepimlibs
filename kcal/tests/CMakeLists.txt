@@ -28,6 +28,7 @@ KCAL_UNIT_TESTS(
   testcalendarnull
 #  testcalendarresources  disable for now because it cause akonadi to start
   testcalfilter
+  testcomparisonvisitor
   testduration
   testerrorformat
   testevent
