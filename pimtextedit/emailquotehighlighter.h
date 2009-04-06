@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301  USA
  */
-#ifndef KDEPIM_KEMAILQUOTINGHIGHTER_H
-#define KDEPIM_KEMAILQUOTINGHIGHTER_H
+#ifndef PIMTEXTEDIT_EMAILQUOTEHIGHLIGHTER_H
+#define PIMTEXTEDIT_EMAILQUOTEHIGHLIGHTER_H
 
 #include "pimtextedit_export.h"
 
