@@ -26,7 +26,8 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QDateTime>
 
-namespace Microblog {
+namespace Microblog
+{
 
 /**
  * @class StatusItem
@@ -34,11 +35,21 @@ namespace Microblog {
  * This class is a representation of one Dent or Tweet. It is filled with
  * xml which the REST API from ident.ca or Teitter and parses it and gives
  * back the values. Also include ares some convenience functions.
+ *
+ * For example to get from an Akonadi::Item to the date of a tweet:
+ * @code
+ * Akonadi::Item item = itemForIndex( index );
+ * if ( item.hasPayload<Akonadi::StatusItem>() ) {
+ *    Microblog::StatusItem msg = item.payload<Akonadi::StatusItem>();
+ *    return msg.date();
+ * }
+ * @endcode
+ *
  * @since 4.3
  */
 class MICROBLOG_EXPORT StatusItem
 {
-  public:
+public:
     /** Constructor */
     StatusItem();
 
@@ -82,7 +93,7 @@ class MICROBLOG_EXPORT StatusItem
     /** Gives the raw xml data of the tweet or dent */
     QByteArray data() const;
 
-  private:
+private:
     class Private;
     QSharedDataPointer<Private> d;
 };

@@ -3,11 +3,14 @@
  *
  * @section purpose Purpose
  *
- * Microblog provides...
+ * Microblog provides some helper functions for the Microblog Akonadi Resource.
  *
  * @section desc Description
  *
- * Microblog is a library for ...
+ * Microblog is a library for using the Microblog Akonadi Resource. The Microblog
+ * Akonadi resource stores the payload in Akonadi as a StatusItem. Each application
+ * that wants to use this payload needs to use the StatusItem to get to the single
+ * representation of tweets and dents.
  *
  * @authors
  *  The major authors of this library are:\n
