@@ -1476,8 +1476,7 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
       html += "</td></tr><tr>";
     }
     html += "<td>";
-
-    if ( !existingIncidence ) {
+    if ( incidence && !existingIncidence ) {
       // Accept
       html += helper->makeLink( "accept", i18nc( "accept to-do request", "[Accept]" ) );
       html += "</td><td> &nbsp; </td><td>";
