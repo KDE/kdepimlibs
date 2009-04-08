@@ -87,6 +87,8 @@ class KCAL_EXPORT CalendarResources
         */
         virtual void setParent( QWidget *parent );
 
+        bool hasCalendarResources();
+
         /**
           Returns the destination ResourceCalendar for the specified incidence.
           @param incidence is a pointer to a valid Incidence object.
@@ -599,6 +601,8 @@ class KCAL_EXPORT CalendarResources
     Alarm::List alarmsTo( const KDateTime &to );
 
     using QObject::event;   // prevent warning about hidden virtual method
+
+    bool hasCalendarResources();
 
   Q_SIGNALS:
     /**

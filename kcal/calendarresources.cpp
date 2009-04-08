@@ -93,6 +93,23 @@ class KCal::CalendarResources::Private
                            ResourceCalendar * );
 };
 
+bool CalendarResources::DestinationPolicy::hasCalendarResources(  )
+{
+  CalendarResourceManager::ActiveIterator it;
+  for ( it = resourceManager()->activeBegin();
+        it != resourceManager()->activeEnd(); ++it ) {
+    if ( !(*it)->readOnly() ) {
+      //Insert the first the Standard resource to get be the default selected.
+      if ( resourceManager()->standardResource() == *it ) {
+        return true;
+      } else {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 class KCal::CalendarResources::DestinationPolicy::Private
 {
   public:
@@ -564,6 +581,11 @@ Alarm::List CalendarResources::alarms( const KDateTime &from,
     result += (*it)->alarms( from, to );
   }
   return result;
+}
+
+bool CalendarResources::hasCalendarResources()
+{
+  return d->mDestinationPolicy->hasCalendarResources();
 }
 
 /****************************** PROTECTED METHODS ****************************/
