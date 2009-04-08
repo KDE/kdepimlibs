@@ -95,6 +95,7 @@ class KCAL_EXPORT CalendarResources
         virtual ResourceCalendar *destination( Incidence *incidence ) = 0;
 
         /**
+	   Return true if we have resources configure. Otherwise returns false.
            @since 4.3
         */
         bool hasCalendarResources();
@@ -334,6 +335,7 @@ class KCAL_EXPORT CalendarResources
     void setAskDestinationPolicy();
 
     /**
+      Return true if we have resources configure. Otherwise returns false.
       @since 4.3
     */
     bool hasCalendarResources();

@@ -163,7 +163,6 @@ bool CalendarResources::DestinationPolicy::hasCalendarResources()
   for ( it = resourceManager()->activeBegin();
         it != resourceManager()->activeEnd(); ++it ) {
     if ( !(*it)->readOnly() ) {
-      //Insert the first the Standard resource to get be the default selected.
       if ( resourceManager()->standardResource() == *it ) {
         return true;
       } else {
