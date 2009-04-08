@@ -157,6 +157,24 @@ CalendarResourceManager *CalendarResources::DestinationPolicy::resourceManager()
   return d->mManager;
 }
 
+bool CalendarResources::DestinationPolicy::hasCalendarResources()
+{
+  CalendarResourceManager::ActiveIterator it;
+  for ( it = resourceManager()->activeBegin();
+        it != resourceManager()->activeEnd(); ++it ) {
+    if ( !(*it)->readOnly() ) {
+      //Insert the first the Standard resource to get be the default selected.
+      if ( resourceManager()->standardResource() == *it ) {
+        return true;
+      } else {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+
 CalendarResources::StandardDestinationPolicy::StandardDestinationPolicy(
   CalendarResourceManager *manager, QWidget *parent )
   : DestinationPolicy( manager, parent ),
@@ -186,6 +204,7 @@ CalendarResources::AskDestinationPolicy::~AskDestinationPolicy()
 {
   delete d;
 }
+
 
 ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidence *incidence )
 {
@@ -399,6 +418,11 @@ bool CalendarResources::addIncidence( Incidence *incidence,
   }
 
   return false;
+}
+
+bool CalendarResources::hasCalendarResources()
+{
+   return d->mDestinationPolicy->hasCalendarResources();
 }
 
 bool CalendarResources::addIncidence( Incidence *incidence )

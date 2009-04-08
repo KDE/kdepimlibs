@@ -94,6 +94,10 @@ class KCAL_EXPORT CalendarResources
         */
         virtual ResourceCalendar *destination( Incidence *incidence ) = 0;
 
+        /**
+           @since 4.3
+        */
+        bool hasCalendarResources();
       protected:
         /**
           Returns the CalendarResourceManager used by this calendar.
@@ -163,7 +167,6 @@ class KCAL_EXPORT CalendarResources
           @param incidence is a pointer to a valid Incidence object.
         */
         ResourceCalendar *destination( Incidence *incidence );
-
       private:
         //@cond PRIVATE
         Q_DISABLE_COPY( AskDestinationPolicy )
@@ -329,6 +332,11 @@ class KCAL_EXPORT CalendarResources
       Resource which is queried.
     */
     void setAskDestinationPolicy();
+
+    /**
+      @since 4.3
+    */
+    bool hasCalendarResources();
 
     /**
       Returns the current parent for new dialogs. This is a bad hack, but we
