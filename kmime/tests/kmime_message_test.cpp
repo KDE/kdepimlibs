@@ -143,3 +143,32 @@ void MessageTest::testWillsAndTillsCrash()
   delete msg;
 }
 
+void MessageTest::missingHeadersTest()
+{
+  // Test that the message body is OK even though some headers are missing
+  KMime::Message msg;
+  QString body = "Hi Donald, look at those nice pictures I found!\n";
+  QString content = "From: georgebush@whitehouse.org\n"
+    "To: donaldrumsfeld@whitehouse.org\n"
+    "Subject: Cute Kittens\n"
+    "\n" + body;
+  msg.setContent( content.toAscii() );
+  msg.parse();
+  msg.assemble();
+
+  QCOMPARE( body, QString::fromAscii( msg.body() ) );
+
+  // Now create a new message, based on the content of the first one.
+  // The body of the new message should still be the same.
+  // (there was a bug that caused missing mandatory headers to be
+  //  added as a empty newline, which caused parts of the header to
+  //  leak into the body)
+  KMime::Message msg2;
+  qDebug() << msg.encodedContent();
+  msg2.setContent( msg.encodedContent() );
+  msg2.parse();
+  msg2.assemble();
+
+  QCOMPARE( body, QString::fromAscii( msg2.body() ) );
+}
+
