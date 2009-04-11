@@ -184,13 +184,8 @@ void Content::parse()
     ct->setMimeType( "invalid/invalid" );
   }
 
-  if ( ct->isText() ) {
+  if ( ct->isText() || ct->isEmpty() ) { // default is text/plain
     return; //nothing to do
-  }
-  if ( ct->isEmpty() ) {
-    // default is text/plain
-    ct->setMimeType( "text/plain" );
-    return;
   }
 
   if ( ct->isMultipart() ) {   //this is a multipart message
