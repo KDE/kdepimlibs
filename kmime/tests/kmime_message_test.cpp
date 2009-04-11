@@ -164,7 +164,6 @@ void MessageTest::missingHeadersTest()
   //  added as a empty newline, which caused parts of the header to
   //  leak into the body)
   KMime::Message msg2;
-  qDebug() << msg.encodedContent();
   msg2.setContent( msg.encodedContent() );
   msg2.parse();
   msg2.assemble();
