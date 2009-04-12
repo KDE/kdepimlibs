@@ -1,74 +1,93 @@
 project(kdepimlibs)
 
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules )
+# where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
-# Used e.g. in KdepimLibsConfig.cmake, Alex
+############### Build Options ###############
+
+option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
+
+
+############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 3)
 set(KDEPIMLIBS_VERSION_PATCH 0)
-set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH} )
+set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
-find_package(KDE4  4.2.69  REQUIRED)
+############### search packages used by KDE ###############
 
-include (KDE4Defaults)
-include (MacroLibrary)
-
-find_package(Boost REQUIRED)
-macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1.33.1" "Needed by several critical PIM libraries.")
+find_package(KDE4 4.2.69 REQUIRED) # see SVN rev. 949055
+include(KDE4Defaults)
+include(MacroLibrary)
 
 
-if (NOT KDEPIM_ONLY_KLEO)
-   find_package(Sasl2 REQUIRED)
-   macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" TRUE "" "Required to support authentication of logins in the IMAP and Sieve kioslaves.")
-endif (NOT KDEPIM_ONLY_KLEO)
-
-# gpgme is a hard dependency
-find_package(Gpgme REQUIRED)
-
-include (gpgme++/ConfigureChecks.cmake)
-include (ConfigureChecks.cmake)
+############### Needed commands before building anything ###############
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
 
-macro_optional_add_subdirectory(doc)
-add_subdirectory(gpgme++)
-add_subdirectory(qgpgme)
-add_subdirectory(kmime)
-add_subdirectory(microblog)
+
+############### Find the stuff we need ###############
+
+set(Boost_MINIMUM_VERSION "1.33.1")
+find_package(Boost)
+macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "" "Required by several critical KDEPIM apps.")
+
+#FindGpgme.cmake already handles the log message but we must ensure it is required.
+find_package(Gpgme REQUIRED)
+# configure macros
+if (GPGME_FOUND)
+  include (gpgme++/ConfigureChecks.cmake)
+endif (GPGME_FOUND)
 
 if (NOT KDEPIM_ONLY_KLEO)
+  find_package(Akonadi 1.1.80)
+  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KdepimLibs.")
 
-find_package(Akonadi REQUIRED)
-if(Akonadi_FOUND)
-   add_subdirectory(akonadi)
-endif(Akonadi_FOUND)
-
-# (gpgme++/qgpgme handle their conditions inside their own CMakeLists.txt files)
-add_subdirectory(kabc)
-add_subdirectory(kblog)
-add_subdirectory(kcal)
-add_subdirectory(kholidays)
-add_subdirectory(kimap)
-add_subdirectory(kldap)
-add_subdirectory(kpimidentities)
-add_subdirectory(kpimutils)
-add_subdirectory(kresources)
-add_subdirectory(ktnef)
-add_subdirectory(kxmlrpcclient)
-add_subdirectory(mailtransport)
-add_subdirectory(syndication)
-add_subdirectory(kioslave)
-add_subdirectory(pimtextedit)
-
+  find_package(Sasl2)
+  macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" TRUE "" "Required to support authentication of logins in the IMAP and Sieve kioslaves.")
+  include (ConfigureChecks.cmake)
 endif (NOT KDEPIM_ONLY_KLEO)
 
-add_subdirectory(cmake)
 
+############### Now, we add the KDEPIMLibs components ###############
+# These targets will always be built
+add_subdirectory(cmake)
+add_subdirectory(gpgme++)
+add_subdirectory(qgpgme)
+
+if (NOT KDEPIM_ONLY_KLEO)
+  add_subdirectory(akonadi)
+  add_subdirectory(kabc)
+  add_subdirectory(kblog)
+  add_subdirectory(kcal)
+  add_subdirectory(kholidays)
+  add_subdirectory(kimap)
+  add_subdirectory(kioslave)
+  add_subdirectory(kldap)
+  add_subdirectory(kmime)
+  add_subdirectory(kpimidentities)
+  add_subdirectory(kpimutils)
+  add_subdirectory(kresources)
+  add_subdirectory(ktnef)
+  add_subdirectory(kxmlrpcclient)
+  add_subdirectory(mailtransport)
+  add_subdirectory(microblog)
+  add_subdirectory(pimtextedit)
+  add_subdirectory(syndication)
+  # Build the CamelCase headers
+  add_subdirectory(includes)
+endif (NOT KDEPIM_ONLY_KLEO)
+
+
+# doc must be a subdir of kdepimlibs
+macro_optional_add_subdirectory(doc)
+
+# All done, let's display what we found...
 macro_display_feature_log()
 
 
-# now create the KdepimLibsConfig.cmake file, which will be loaded by 
+# now create the KdepimLibsConfig.cmake file, which will be loaded by
 # kdelibs/cmake/modules/FindKdepimLibs.cmake and which has to contain all information
 # about the installed kdepimlibs anybody would like to have. Alex
 
@@ -115,11 +134,11 @@ make_install_path_absolute(KDEPIMLIBS_SERVICETYPES_DIR    ${SERVICETYPES_INSTALL
 # Used in configure_file() and install(EXPORT)
 set(KDEPIMLIBS_TARGET_PREFIX KDEPIMLibs__)
 
-# this file is installed and contains all necessary information about the installed kdepimibs, it also loads the file with the exported targets
+# this file is installed and contains all necessary information about the installed kdepimlibs, it also loads the file with the exported targets
 configure_file(KdepimLibsConfig.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfig.cmake" @ONLY)
 
 # this file will be installed too and will be used by cmake when searching for the Config.cmake file to check the version of kdepimlibs, Alex
-macro_write_basic_cmake_version_file(${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfigVersion.cmake 
+macro_write_basic_cmake_version_file(${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfigVersion.cmake
                                      ${KDEPIMLIBS_VERSION_MAJOR} ${KDEPIMLIBS_VERSION_MINOR} ${KDEPIMLIBS_VERSION_PATCH})
 
 set(_KdepimLibsConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/KdepimLibs-${KDEPIMLIBS_VERSION}/cmake)
@@ -136,7 +155,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfigVersion.cmake
         DESTINATION ${_KdepimLibsConfig_INSTALL_DIR} )
 
 # Install the file with the exported targets, use ${KDEPIMLIBS_TARGET_PREFIX} as prefix for the names of these targets, Alex
-install(EXPORT kdepimlibsLibraryTargets 
+install(EXPORT kdepimlibsLibraryTargets
         NAMESPACE ${KDEPIMLIBS_TARGET_PREFIX}
         DESTINATION ${_KdepimLibsConfig_INSTALL_DIR}
         FILE KDEPimLibsLibraryTargetsWithPrefix.cmake )
@@ -145,5 +164,3 @@ install(EXPORT kdepimlibsLibraryTargets
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake "\n message(FATAL_ERROR \"For using this version of kdepimlibs (${KDEPIMLIBS_VERSION}) you need a newer version of kdelibs, please update.\")\n")
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake
         DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
-
-add_subdirectory(includes)
