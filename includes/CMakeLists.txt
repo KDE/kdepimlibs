@@ -19,6 +19,6 @@ install_headers( KPIMIdentities )
 install_headers( KPIMUtils )
 install_headers( KResources )
 install_headers( Syndication )
-install_headers( PimTextEdit )
+install_headers( KPIMTextEdit )
 
 endif (NOT KDEPIM_ONLY_KLEO)

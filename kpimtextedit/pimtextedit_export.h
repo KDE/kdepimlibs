@@ -17,18 +17,18 @@
     02110-1301, USA.
 */
 
-#ifndef PIMTEXTEDIT_PIMTEXTEDIT_EXPORT_H
-#define PIMTEXTEDIT_PIMTEXTEDIT_EXPORT_H
+#ifndef KPIMTEXTEDIT_KPIMTEXTEDIT_EXPORT_H
+#define KPIMTEXTEDIT_KPIMTEXTEDIT_EXPORT_H
 
 #include <kdemacros.h>
 
-#ifndef PIMTEXTEDIT_EXPORT
-# if defined(MAKE_PIMTEXTEDIT_LIB)
+#ifndef KPIMTEXTEDIT_EXPORT
+# if defined(MAKE_KPIMTEXTEDIT_LIB)
    /* We are building this library */
-#  define PIMTEXTEDIT_EXPORT KDE_EXPORT
+#  define KPIMTEXTEDIT_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define PIMTEXTEDIT_EXPORT KDE_IMPORT
+#  define KPIMTEXTEDIT_EXPORT KDE_IMPORT
 # endif
 #endif
 

@@ -19,10 +19,10 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#ifndef PIMTEXTEDIT_TEXTEDIT_H
-#define PIMTEXTEDIT_TEXTEDIT_H
+#ifndef KPIMTEXTEDIT_TEXTEDIT_H
+#define KPIMTEXTEDIT_TEXTEDIT_H
 
-#include "pimtextedit_export.h"
+#include "kpimtextedit_export.h"
 
 #include <kpimidentities/signature.h>
 
@@ -34,7 +34,7 @@
 
 class KUrl;
 
-namespace PimTextEdit {
+namespace KPIMTextEdit {
 
 class TextEditPrivate;
 class EMailQuoteHighlighter;
@@ -72,7 +72,7 @@ struct EmbeddedImage
 // toCleanPlainText()
 // enter key: normal + in quote
 
-class PIMTEXTEDIT_EXPORT TextEdit : public KRichTextWidget,
+class KPIMTEXTEDIT_EXPORT TextEdit : public KRichTextWidget,
                                     protected KTextEditSpellInterface // TODO: KDE5: get rid of the spell interface
 {
   Q_OBJECT

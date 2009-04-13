@@ -17,10 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301  USA
  */
-#ifndef PIMTEXTEDIT_EMAILQUOTEHIGHLIGHTER_H
-#define PIMTEXTEDIT_EMAILQUOTEHIGHLIGHTER_H
+#ifndef KPIMTEXTEDIT_EMAILQUOTEHIGHLIGHTER_H
+#define KPIMTEXTEDIT_EMAILQUOTEHIGHLIGHTER_H
 
-#include "pimtextedit_export.h"
+#include "kpimtextedit_export.h"
 
 #include <sonnet/highlighter.h>
 
@@ -28,7 +28,7 @@
 
 // TODO: fix include
 
-namespace PimTextEdit
+namespace KPIMTextEdit
 {
   class TextEdit;
 
@@ -41,7 +41,7 @@ namespace PimTextEdit
    *
    * Spell highlighting is disabled by default but can be toggled.
    */
-  class PIMTEXTEDIT_EXPORT EMailQuoteHighlighter : public Sonnet::Highlighter
+  class KPIMTEXTEDIT_EXPORT EMailQuoteHighlighter : public Sonnet::Highlighter
     {
     public:
 

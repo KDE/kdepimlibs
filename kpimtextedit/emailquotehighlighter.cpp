@@ -22,7 +22,7 @@
 
 #include "textedit.h"
 
-namespace PimTextEdit {
+namespace KPIMTextEdit {
 
 class EMailQuoteHighlighter::EMailQuoteHighlighterPrivate
 {

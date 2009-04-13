@@ -43,8 +43,8 @@ Here is an alphabetical list:
 * syndication: An RSS/Atom feed parser library
 * qgpgme: A C++ wrapper for gpgme
 * kioslaves/sieve: Sieve kioslave
-* pimtextedit: Provides a textedit with PIM-specific features and
-               can convert the textedit content to various markup formats
+* kpimtextedit: Provides a textedit with PIM-specific features and
+                can convert the textedit content to various markup formats
 
 Licensing
 ---------

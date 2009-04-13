@@ -41,7 +41,7 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QTextLayout>
 
-namespace PimTextEdit {
+namespace KPIMTextEdit {
 
 class TextEditPrivate
 {
@@ -104,7 +104,7 @@ class TextEditPrivate
 
 } // namespace
 
-using namespace PimTextEdit;
+using namespace KPIMTextEdit;
 
 void TextEditPrivate::fixupTextEditString( QString &text ) const
 {
