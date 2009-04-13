@@ -110,7 +110,9 @@ QByteArray kFileToByteArray( const QString &aFileName, bool aEnsureNL,
   }
 
   if ( readLen < len ) {
-    QString msg = i18np( "Could only read 1 byte of %2.", "Could only read %1 bytes of %2.", readLen, len );
+    QString msg = i18np( "Could only read 1 byte of %2.",
+                         "Could only read %1 bytes of %2.",
+                         readLen, len );
     msgDialog( msg );
     result.truncate( readLen );
   }
@@ -189,7 +191,9 @@ bool kByteArrayToFile( const QByteArray &aBuffer, const QString &aFileName,
     }
     return false;
   } else if ( writeLen < aBuffer.size() ) {
-    QString msg = i18np( "Could only write 1 byte of %2.", "Could only write %1 bytes of %2.", writeLen, aBuffer.size() );
+    QString msg = i18np( "Could only write 1 byte of %2.",
+                         "Could only write %1 bytes of %2.",
+                         writeLen, aBuffer.size() );
     if ( aVerbose ) {
       msgDialog( msg );
     }
