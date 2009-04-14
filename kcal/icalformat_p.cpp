@@ -615,7 +615,18 @@ void ICalFormatImpl::Private::writeCustomProperties( icalcomponent *parent,
 {
   QMap<QByteArray, QString> custom = properties->customProperties();
   for ( QMap<QByteArray, QString>::Iterator c = custom.begin();  c != custom.end();  ++c ) {
+
     icalproperty *p = icalproperty_new_x( c.value().toUtf8() );
+    if ( !c.key().startsWith( "X-KDE" ) &&          //krazy:exclude=strings
+         !c.key().startsWith( "X-LibKCal" ) &&      //krazy:exclude=strings
+         !c.key().startsWith( "X-MICROSOFT" ) &&    //krazy:exclude=strings
+         !c.key().startsWith( "X-MOZILLA" ) &&      //krazy:exclude=strings
+         !c.key().startsWith( "X-PILOT" ) ) {       //krazy:exclude=strings
+      // use text values for the typical X-FOO property.
+      // except for vendor specific X-FOO properties.
+      icalvalue *text = icalvalue_new_text( c.value().toUtf8().data() );
+      icalproperty_set_value( p, text );
+    }
     icalproperty_set_x_name( p, c.key() );
     icalcomponent_add_property( parent, p );
   }
