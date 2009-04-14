@@ -241,28 +241,25 @@ static QString eventViewerFormatHeader( Incidence *incidence )
   QString tmpStr = "<table><tr>";
 
   // show icons
-  /* all of those icons currently don't exist, makes no sense currently
-     to load a set of "unknown" icons. re-enable when those are available.
   {
     KIconLoader *iconLoader = KIconLoader::global();
     tmpStr += "<td>";
 
-    if ( incidence->type() == "Todo" ) {
+    /*if ( incidence->type() == "Todo" ) {
       tmpStr += "<img src=\"" + iconLoader->iconPath( "todo", KIconLoader::Small ) + "\">";
-    }
+    }*/
     if ( incidence->isAlarmEnabled() ) {
-      tmpStr += "<img src=\"" + iconLoader->iconPath( "bell", KIconLoader::Small ) + "\">";
+      tmpStr += "<img src=\"" + iconLoader->iconPath( "preferences-desktop-notification-bell", KIconLoader::Small ) + "\">";
     }
     if ( incidence->recurs() ) {
-      tmpStr += "<img src=\"" + iconLoader->iconPath( "recur", KIconLoader::Small ) + "\">";
+      tmpStr += "<img src=\"" + iconLoader->iconPath( "edit-redo", KIconLoader::Small ) + "\">";
     }
-    if ( incidence->isReadOnly() ) {
+    /*if ( incidence->isReadOnly() ) {
       tmpStr += "<img src=\"" + iconLoader->iconPath( "readonlyevent", KIconLoader::Small ) + "\">";
-    }
+    }*/
 
     tmpStr += "</td>";
   }
-  */
 
   tmpStr += "<td>" + eventViewerAddTag( "h2", incidence->richSummary() ) + "</td>";
   tmpStr += "</tr></table><br>";
