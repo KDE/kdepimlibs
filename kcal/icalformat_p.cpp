@@ -78,8 +78,9 @@ static QString quoteForParam( const QString &text )
 {
   QString tmp = text;
   tmp.remove( '"' );
-  if ( tmp.contains( ';' ) || tmp.contains( ':' ) || tmp.contains( ',' ) )
+  if ( tmp.contains( ';' ) || tmp.contains( ':' ) || tmp.contains( ',' ) ) {
     return tmp; // libical quotes in this case already, see icalparameter_as_ical_string()
+  }
   return QString::fromLatin1( "\"" ) + tmp + QString::fromLatin1( "\"" );
 }
 
@@ -485,6 +486,14 @@ void ICalFormatImpl::writeIncidence( icalcomponent *parent,
   }
   if ( secClass != ICAL_CLASS_PUBLIC ) {
     icalcomponent_add_property( parent, icalproperty_new_class( secClass ) );
+  }
+
+  // geo
+  if ( incidence->hasGeo() ) {
+    icalgeotype geo;
+    geo.lat = incidence->geoLatitude();
+    geo.lon = incidence->geoLongitude();
+    icalcomponent_add_property( parent, icalproperty_new_geo( geo ) );
   }
 
   // priority
@@ -1569,6 +1578,15 @@ void ICalFormatImpl::readIncidence( icalcomponent *parent,
       if ( stat != Incidence::StatusX ) {
         incidence->setStatus( stat );
       }
+      break;
+    }
+
+    case ICAL_GEO_PROPERTY:  // geo
+    {
+      icalgeotype geo = icalproperty_get_geo( p );
+      incidence->setGeoLatitude( geo.lat );
+      incidence->setGeoLongitude( geo.lon );
+      incidence->setHasGeo( true );
       break;
     }
 

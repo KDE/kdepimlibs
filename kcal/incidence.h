@@ -700,6 +700,53 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     */
     int priority() const;
 
+    /**
+      Returns true if the incidence has geo data, otherwise return false.
+      @see setHasGeo(), setGeoLatitude(float), setGeoLongitude(float).
+      @since 4.3
+    */
+    bool hasGeo() const;
+
+    /**
+      Sets if the incidence has geo data.
+      @param hasGeo true if incidence has geo data, otherwise false
+      @see hasGeo(), geoLatitude(), geoLongitude().
+      @since 4.3
+    */
+    void setHasGeo( bool hasGeo );
+
+    /**
+      Set the incidences geoLatitude.
+      @param geolatitude is the incidence geolatitude to set
+      @see geoLatitude().
+      @since 4.3
+    */
+    void setGeoLatitude( float geolatitude );
+
+    /**
+      Returns the incidence geoLatidude.
+      @return incidences geolatitude value
+      @see setGeoLatitude().
+      @since 4.3
+    */
+    float &geoLatitude() const;
+
+    /**
+      Set the incidencesgeoLongitude.
+      @param geolongitude is the incidence geolongitude to set
+      @see geoLongitude().
+      @since 4.3
+    */
+    void setGeoLongitude( float geolongitude );
+
+    /**
+      Returns the incidence geoLongitude.
+      @return incidences geolongitude value
+      @see setGeoLongitude().
+      @since 4.3
+    */
+    float &geoLongitude() const;
+
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%  Alarm-related methods
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -786,7 +833,8 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
 
       @see AssignmentVisitor
      */
-    Incidence &operator=( const Incidence &other ); // KDE5: make protected to prevent accidental usage
+    Incidence &operator=( const Incidence &other ); // KDE5: make protected to
+                                                    // prevent accidental usage
 
     /**
       Compares this with Incidence @p ib for equality.
@@ -798,7 +846,8 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
 
       @see ComparisonVisitor
     */
-    bool operator==( const Incidence &incidence ) const; // KDE5: make protected to prevent accidental usage
+    bool operator==( const Incidence &incidence ) const; // KDE5: make protected to
+                                                         // prevent accidental usage
 
   protected:
     /**

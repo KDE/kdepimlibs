@@ -57,7 +57,10 @@ class KCal::Incidence::Private
         mStatus( StatusNone ),
         mSecrecy( SecrecyPublic ),
         mPriority( 0 ),
-        mRelatedTo( 0 )
+        mRelatedTo( 0 ),
+        mGeoLatitude( 0 ),
+        mGeoLongitude( 0 ),
+        mHasGeo( false )
     {
       mAlarms.setAutoDelete( true );
       mAttachments.setAutoDelete( true );
@@ -80,7 +83,10 @@ class KCal::Incidence::Private
         mPriority( p.mPriority ),
         mSchedulingID( p.mSchedulingID ),
         mRelatedTo( 0 ),
-        mRelatedToUid( p.mRelatedToUid )
+        mRelatedToUid( p.mRelatedToUid ),
+        mGeoLatitude( p.mGeoLatitude ),
+        mGeoLongitude( p.mGeoLongitude ),
+        mHasGeo( p.mHasGeo )
 // TODO: reenable attributes currently commented out.
 //  Incidence *mRelatedTo;          Incidence *mRelatedTo;
 //  Incidence::List mRelations;    Incidence::List mRelations;
@@ -119,6 +125,9 @@ class KCal::Incidence::Private
     Incidence *mRelatedTo;           // incidence this is related to
     QString mRelatedToUid;           // incidence (by Uid) this is related to
     Incidence::List mRelations;      // a list of incidences this is related to
+    float mGeoLatitude;              // Specifies latitude in decimal degrees
+    float mGeoLongitude;             // Specifies longitude in decimal degrees
+    bool mHasGeo;                    // if incidence has geo data
 };
 //@endcond
 
@@ -154,6 +163,9 @@ void Incidence::init( const Incidence &i )
   d->mSecrecy = i.d->mSecrecy;
   d->mPriority = i.d->mPriority;
   d->mLocation = i.d->mLocation;
+  d->mGeoLatitude = i.d->mGeoLatitude;
+  d->mGeoLongitude = i.d->mGeoLongitude;
+  d->mHasGeo = i.d->mHasGeo;
 
   // Alarms and Attachments are stored in ListBase<...>, which is a QValueList<...*>.
   // We need to really duplicate the objects stored therein, otherwise deleting
@@ -939,6 +951,51 @@ QString Incidence::schedulingID() const
     return uid();
   }
   return d->mSchedulingID;
+}
+
+bool Incidence::hasGeo() const
+{
+  return d->mHasGeo;
+}
+
+void Incidence::setHasGeo( bool hasGeo )
+{
+  if ( mReadOnly ) {
+    return;
+  }
+
+  d->mHasGeo = hasGeo;
+  updated();
+}
+
+float &Incidence::geoLatitude() const
+{
+  return d->mGeoLatitude;
+}
+
+void Incidence::setGeoLatitude( float geolatitude )
+{
+  if ( mReadOnly ) {
+    return;
+  }
+
+  d->mGeoLatitude = geolatitude;
+  updated();
+}
+
+float &Incidence::geoLongitude() const
+{
+  return d->mGeoLongitude;
+}
+
+void Incidence::setGeoLongitude( float geolongitude )
+{
+  if ( mReadOnly ) {
+    return;
+  }
+
+  d->mGeoLongitude = geolongitude;
+  updated();
 }
 
 /** Observer interface for the recurrence class. If the recurrence is changed,
