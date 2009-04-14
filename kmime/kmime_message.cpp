@@ -63,13 +63,17 @@ QByteArray Message::assembleHeaders()
 
   //From
   h = from(); // "From" is mandatory
-  newHead += h->as7BitString() + '\n';
-  KMime::removeHeader( d->head, h->type() );
+  if ( !h->isEmpty() ) {
+    newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //Subject
   h = subject(); // "Subject" is mandatory
-  newHead += h->as7BitString() + '\n';
-  KMime::removeHeader( d->head, h->type() );
+  if ( !h->isEmpty() ) {
+    newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //To
   if ( ( h = to( false )) != 0 && !h->isEmpty() ) {
@@ -91,8 +95,10 @@ QByteArray Message::assembleHeaders()
 
   //Date
   h = date(); // "Date" is mandatory
-  newHead += h->as7BitString() + '\n';
-  KMime::removeHeader( d->head, h->type() );
+  if ( !h->isEmpty() ) {
+    newHead += h->as7BitString() + '\n';
+    KMime::removeHeader( d->head, h->type() );
+  }
 
   //References
   if ( ( h = references( false )) != 0 && !h->isEmpty() ) {
