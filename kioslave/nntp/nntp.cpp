@@ -148,35 +148,34 @@ void NNTPProtocol::get( const KUrl& url )
   }
 
   // read and send data
-  QByteArray buffer;
   char tmp[MAX_PACKET_LEN];
-  int len = 0;
   while ( true ) {
     if ( !waitForResponse( readTimeout() ) ) {
       error( ERR_SERVER_TIMEOUT, mHost );
       nntp_close();
       return;
     }
-    memset( tmp, 0, MAX_PACKET_LEN );
-    len = readLine( tmp, MAX_PACKET_LEN );
-    buffer = QByteArray( tmp, len );
+    int len = readLine( tmp, MAX_PACKET_LEN );
+    const char* buffer = tmp;
     if ( len <= 0 )
       break;
-    if ( buffer == ".\r\n" )
+    if ( len == 3 && tmp[0] == '.' && tmp[1] == '\r' && tmp[2] == '\n')
       break;
-    if ( buffer.startsWith( ".." ) )
-      buffer.remove( 0, 1 );
-    data( buffer );
+    if ( len > 1 && tmp[0] == '.' && tmp[1] == '.' ) {
+      ++buffer;
+      --len;
+    }
+    data( QByteArray::fromRawData( buffer, len ) );
   }
+
   // end of data
-  buffer.resize(0);
-  data(buffer);
+  data(QByteArray());
 
   // finish
   finished();
 }
 
-void NNTPProtocol::put( const KUrl &/*url*/, int /*permissions*/, KIO::JobFlags flags )
+void NNTPProtocol::put( const KUrl &/*url*/, int /*permissions*/, KIO::JobFlags /*flags*/ )
 {
   if ( !nntp_open() )
     return;
@@ -384,7 +383,6 @@ void NNTPProtocol::fetchGroups( const QString &since, bool desc )
       nntp_close();
       return;
     }
-    memset( readBuffer, 0, MAX_PACKET_LEN );
     readBufferLen = readLine ( readBuffer, MAX_PACKET_LEN );
     line = QByteArray( readBuffer, readBufferLen );
     if ( line == ".\r\n" )
@@ -456,7 +454,6 @@ void NNTPProtocol::fetchGroups( const QString &since, bool desc )
         nntp_close();
         return;
       }
-      memset( readBuffer, 0, MAX_PACKET_LEN );
       readBufferLen = readLine ( readBuffer, MAX_PACKET_LEN );
       line = QByteArray( readBuffer, readBufferLen );
       if ( line == ".\r\n" )
@@ -609,7 +606,6 @@ bool NNTPProtocol::fetchGroupXOVER( unsigned long first, bool &notSupported )
         nntp_close();
         return false;
       }
-      memset( readBuffer, 0, MAX_PACKET_LEN );
       readBufferLen = readLine ( readBuffer, MAX_PACKET_LEN );
       line = QString::fromLatin1( readBuffer, readBufferLen );
       if ( line == ".\r\n" )
@@ -643,7 +639,6 @@ bool NNTPProtocol::fetchGroupXOVER( unsigned long first, bool &notSupported )
       nntp_close();
       return false;
     }
-    memset( readBuffer, 0, MAX_PACKET_LEN );
     readBufferLen = readLine ( readBuffer, MAX_PACKET_LEN );
     line = QString::fromLatin1( readBuffer, readBufferLen );
     if ( line == ".\r\n" ) {
@@ -902,7 +897,6 @@ int NNTPProtocol::evalResponse ( char *data, ssize_t &len )
     nntp_close();
     return -1;
   }
-  memset( data, 0, MAX_PACKET_LEN );
   len = readLine( data, MAX_PACKET_LEN );
 
   if ( len < 3 )
