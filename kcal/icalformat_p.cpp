@@ -203,7 +203,7 @@ icalcomponent *ICalFormatImpl::writeTodo( Todo *todo, ICalTimeZones *tzlist,
   }
 
   // start time
-  if ( todo->hasStartDate() || todo->recurs() ) {
+  if ( todo->hasStartDate() ) {
     icaltimetype start;
     if ( todo->allDay() ) {
       start = writeICalDate( todo->dtStart( true ).date() );
