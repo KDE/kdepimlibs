@@ -883,7 +883,7 @@ void Calendar::removeRelations( Incidence *incidence )
           tempList.append( i );
         }
       }
-      // Readd those that point to a different orphan incidence
+      // Read those that point to a different orphan incidence
       for ( Incidence::List::Iterator incit = tempList.begin();
             incit != tempList.end(); ++incit ) {
         d->mOrphans.insert( *uidit, *incit );
