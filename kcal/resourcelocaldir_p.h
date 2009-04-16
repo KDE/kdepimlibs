@@ -41,7 +41,7 @@ class ResourceLocalDir::Private : QObject
 {
   Q_OBJECT
   public:
-    Private( ResourceLocalDir *resource)
+    Private( ResourceLocalDir *resource )
       : mLock( 0 ), mResource( resource )
     {
       init();

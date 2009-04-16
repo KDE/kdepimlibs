@@ -214,7 +214,9 @@ KABC::Lock *ResourceLocalDir::lock()
 {
   return d->mLock;
 }
-void ResourceLocalDir::reload( const QString &file ) {
+
+void ResourceLocalDir::reload( const QString &file )
+{
   Q_UNUSED( file );
 }
 
@@ -297,9 +299,10 @@ bool ResourceLocalDir::Private::deleteIncidenceFile( Incidence *incidence )
 
 bool ResourceLocalDir::Private::isTempFile( const QString &fileName ) const
 {
-  return fileName.contains( QRegExp( "(~|\\.new|\\.tmp)$" ) )       ||
-         QFileInfo( fileName ).fileName().startsWith( "qt_temp." )  ||
-         fileName == mURL.path();
+  return
+    fileName.contains( QRegExp( "(~|\\.new|\\.tmp)$" ) ) ||
+    QFileInfo( fileName ).fileName().startsWith( QLatin1String( "qt_temp." ) ) ||
+    fileName == mURL.path();
 }
 
 void ResourceLocalDir::Private::addIncidenceToCalendar( const QString &file )
@@ -378,9 +381,9 @@ bool ResourceLocalDir::Private::doFileLoad( CalendarLocal &cal,
             inc->endUpdates();
           } else {
             inc->endUpdates();
-            kWarning( 5800 ) << "Incidence (uid=" << inc->uid()
-                             << ", summary=" << inc->summary()
-                             << ") changed type. Replacing it.";
+            kWarning() << "Incidence (uid=" << inc->uid()
+                       << ", summary=" << inc->summary()
+                       << ") changed type. Replacing it.";
 
             mResource->calendar()->deleteIncidence( inc );
             delete inc;
