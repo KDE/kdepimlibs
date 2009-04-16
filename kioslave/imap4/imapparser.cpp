@@ -34,11 +34,9 @@
 #include <unistd.h>
 #include <QList>
 
-#ifdef HAVE_LIBSASL2
 extern "C" {
 #include <sasl/sasl.h>
 }
-#endif
 
 #include <QRegExp>
 #include <QBuffer>
@@ -54,7 +52,6 @@ extern "C" {
 #include <kimap/rfccodecs.h>
 using namespace KIMAP;
 
-#ifdef HAVE_LIBSASL2
 static sasl_callback_t callbacks[] = {
     { SASL_CB_ECHOPROMPT, NULL, NULL },
     { SASL_CB_NOECHOPROMPT, NULL, NULL },
@@ -65,7 +62,6 @@ static sasl_callback_t callbacks[] = {
     { SASL_CB_CANON_USER, NULL, NULL },
     { SASL_CB_LIST_END, NULL, NULL }
 };
-#endif
 
 imapParser::imapParser ()
 {
@@ -160,7 +156,6 @@ imapParser::clientLogin (const QString & aUser, const QString & aPass,
   return retVal;
 }
 
-#ifdef HAVE_LIBSASL2
 static bool sasl_interact( KIO::SlaveBase *slave, KIO::AuthInfo &ai, void *in )
 {
   kDebug(7116) <<"sasl_interact";
@@ -204,14 +199,12 @@ static bool sasl_interact( KIO::SlaveBase *slave, KIO::AuthInfo &ai, void *in )
   }
   return true;
 }
-#endif
 
 bool
 imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   const QString & aFQDN, const QString & aAuth, bool isSSL, QString & resultInfo)
 {
   bool retVal = false;
-#ifdef HAVE_LIBSASL2
   int result;
   sasl_conn_t *conn = 0;
   sasl_interact_t *client_interact = 0;
@@ -327,7 +320,6 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   completeQueue.removeAll (cmd);
 
   sasl_dispose( &conn ); //we don't use sasl_en/decode(), so it's safe to dispose the connection.
-#endif //HAVE_LIBSASL2
   return retVal;
 }
 

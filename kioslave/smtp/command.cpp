@@ -46,7 +46,6 @@
 
 namespace KioSMTP {
 
-#ifdef HAVE_LIBSASL2
 static sasl_callback_t callbacks[] = {
     { SASL_CB_ECHOPROMPT, NULL, NULL },
     { SASL_CB_NOECHOPROMPT, NULL, NULL },
@@ -57,7 +56,6 @@ static sasl_callback_t callbacks[] = {
     { SASL_CB_CANON_USER, NULL, NULL },
     { SASL_CB_LIST_END, NULL, NULL }
 };
-#endif
 
   //
   // Command (base class)
@@ -206,7 +204,6 @@ static sasl_callback_t callbacks[] = {
       mFirstTime( true )
   {
     mMechusing = 0;
-#ifdef HAVE_LIBSASL2
     int result;
     conn = 0;
     client_interact = 0;
@@ -234,26 +231,19 @@ static sasl_callback_t callbacks[] = {
     }
     if ( result == SASL_OK ) mOneStep = true;
     kDebug(7112) << "Mechanism: " << mMechusing << " one step: " << mOneStep;
-#else
-  mSMTP->error(KIO::ERR_COULD_NOT_AUTHENTICATE,
-      i18n("Authentication support is not compiled into kio_smtp."));
-#endif
   }
 
   AuthCommand::~AuthCommand()
   {
-#ifdef HAVE_LIBSASL2
     if ( conn ) {
       kDebug(7112) << "dispose sasl connection";
       sasl_dispose( &conn );
       conn = 0;
     }
-#endif
   }
 
   bool AuthCommand::saslInteract( void *in )
   {
-#ifdef HAVE_LIBSASL2
     kDebug(7112) << "saslInteract: ";
     sasl_interact_t *interact = ( sasl_interact_t * ) in;
 
@@ -294,9 +284,6 @@ static sasl_callback_t callbacks[] = {
       interact++;
     }
     return true;
-#else
-    return false;
-#endif
   }
 
   bool AuthCommand::doNotExecute( const TransactionState * ) const {
@@ -311,7 +298,7 @@ static sasl_callback_t callbacks[] = {
   QByteArray AuthCommand::nextCommandLine( TransactionState * ) {
     mNeedResponse = true;
     QByteArray cmd;
-#ifdef HAVE_LIBSASL2
+
     QByteArray challenge;
     if ( !mUngetSASLResponse.isNull() ) {
       // implement un-ungetCommandLine
@@ -352,7 +339,6 @@ static sasl_callback_t callbacks[] = {
 //      kDebug(7112) << "CC: '" << cmd << "'";
       mComplete = ( result == SASL_OK );
     }
-#endif //HAVE_LIBSASL2
     cmd += "\r\n";
     return cmd;
   }

@@ -20,7 +20,6 @@
 #ifndef _KIOSLAVE_COMMON_H
 #define _KIOSLAVE_COMMON_H
 
-#ifdef HAVE_LIBSASL2
 
 #include <stdio.h>
 #include <QFile>
@@ -51,6 +50,5 @@ inline bool initSASL()
   return true;
 }
 
-#endif // HAVE_LIBSASL2
 
 #endif

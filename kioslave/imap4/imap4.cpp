@@ -70,11 +70,9 @@ imap://server/folder/
 #include <sys/wait.h>
 #include <errno.h>
 
-#ifdef HAVE_LIBSASL2
 extern "C" {
 #include <sasl/sasl.h>
 }
-#endif
 
 #include <qbuffer.h>
 #include <qdatetime.h>
@@ -119,10 +117,8 @@ kdemain (int argc, char **argv)
     ::exit (-1);
   }
 
-#ifdef HAVE_LIBSASL2
   if (!initSASL())
     ::exit(-1);
-#endif
 
   //set debug handler
 
@@ -136,9 +132,7 @@ kdemain (int argc, char **argv)
   slave->dispatchLoop ();
   delete slave;
 
-#ifdef HAVE_LIBSASL2
   sasl_done();
-#endif
 
   return 0;
 }
@@ -2136,16 +2130,12 @@ bool IMAP4Protocol::makeLogin ()
     }
     else
     {
-#ifdef HAVE_LIBSASL2
       if (!clientAuthenticate (this, authInfo, myHost, myAuth, mySSL, resultInfo))
         error(KIO::ERR_COULD_NOT_AUTHENTICATE, i18n("Unable to authenticate via %1.\n"	"The server %2 replied:\n%3", myAuth, myHost, resultInfo));
       else {
         myUser = authInfo.username;
         myPass = authInfo.password;
       }
-#else
-      error(KIO::ERR_COULD_NOT_LOGIN, i18n("SASL authentication is not compiled into kio_imap4."));
-#endif
     }
     if ( hasCapability("NAMESPACE") )
     {

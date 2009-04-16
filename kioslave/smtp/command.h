@@ -35,11 +35,9 @@
 
 #include "smtp-config.h"
 
-#ifdef HAVE_LIBSASL2
 extern "C" {
 #include <sasl/sasl.h>
 }
-#endif
 
 #include <kio/authinfo.h>
 
@@ -189,13 +187,11 @@ namespace KioSMTP {
   private:
     bool saslInteract( void *in );
 
-#ifdef HAVE_LIBSASL2
     sasl_conn_t *conn;
     sasl_interact_t *client_interact;
     const char *mOut;
     uint mOutlen;
     bool mOneStep;
-#endif
 
     const char *mMechusing;
     KIO::AuthInfo *mAi;

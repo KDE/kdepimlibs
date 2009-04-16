@@ -31,11 +31,9 @@
 #include "smtp.h"
 #include "smtp-config.h"
 
-#ifdef HAVE_LIBSASL2
 extern "C" {
 #include <sasl/sasl.h>
 }
-#endif
 
 #include "common.h"
 #include "request.h"
@@ -87,15 +85,11 @@ int kdemain(int argc, char **argv)
     exit(-1);
   }
 
-#ifdef HAVE_LIBSASL2
   if (!initSASL())
     exit(-1);
-#endif
   SMTPProtocol slave( argv[2], argv[3], qstricmp( argv[1], "smtps" ) == 0 );
   slave.dispatchLoop();
-#ifdef HAVE_LIBSASL2
   sasl_done();
-#endif
   return 0;
 }
 

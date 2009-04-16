@@ -39,11 +39,9 @@
 #include <errno.h>
 #include <stdio.h>
 
-#ifdef HAVE_LIBSASL2
 extern "C" {
 #include <sasl/sasl.h>
 }
-#endif
 
 #include <QtCore/QBool>
 #include <QCoreApplication>
@@ -68,7 +66,6 @@ extern "C" {
 
 using namespace KIO;
 
-#ifdef HAVE_LIBSASL2
 static sasl_callback_t callbacks[] = {
     { SASL_CB_ECHOPROMPT, NULL, NULL },
     { SASL_CB_NOECHOPROMPT, NULL, NULL },
@@ -79,7 +76,6 @@ static sasl_callback_t callbacks[] = {
     { SASL_CB_CANON_USER, NULL, NULL },
     { SASL_CB_LIST_END, NULL, NULL }
 };
-#endif
 
 int kdemain(int argc, char **argv)
 {
@@ -92,10 +88,8 @@ int kdemain(int argc, char **argv)
   QCoreApplication app( argc, argv ); // needed for QSocketNotifier
   KComponentData componentData("kio_pop3");
 
-#ifdef HAVE_LIBSASL2
   if (!initSASL())
     return -1;
-#endif
 
   // Are we looking to use SSL?
   POP3Protocol *slave;
@@ -108,9 +102,7 @@ int kdemain(int argc, char **argv)
   slave->dispatchLoop();
   delete slave;
 
-#ifdef HAVE_LIBSASL2
   sasl_done();
-#endif
 
   return 0;
 }
@@ -393,7 +385,6 @@ int POP3Protocol::loginAPOP( char *challenge, KIO::AuthInfo &ai )
 
 bool POP3Protocol::saslInteract( void *in, AuthInfo &ai )
 {
-#ifdef HAVE_LIBSASL2
   kDebug(7105);
   sasl_interact_t *interact = ( sasl_interact_t * ) in;
 
@@ -437,9 +428,6 @@ bool POP3Protocol::saslInteract( void *in, AuthInfo &ai )
     interact++;
   }
   return true;
-#else
-  return false;
-#endif
 }
 
 #define SASLERROR  closeConnection(); \
@@ -448,7 +436,6 @@ error(ERR_COULD_NOT_AUTHENTICATE, i18n("An error occurred during authentication:
 
 int POP3Protocol::loginSASL( KIO::AuthInfo &ai )
 {
-#ifdef HAVE_LIBSASL2
   char buf[512];
   QString sasl_buffer = QString::fromLatin1("AUTH");
 
@@ -577,14 +564,6 @@ int POP3Protocol::loginSASL( KIO::AuthInfo &ai )
     return -1;
   }
   return 1;
-#else
-  if (metaData("auth") == "SASL") {
-    closeConnection();
-    error(ERR_COULD_NOT_LOGIN, i18n("SASL authentication is not compiled into kio_pop3."));
-    return -1;
-  }
-  return 1; //if SASL not explicitly required, try another method (USER/PASS)
-#endif
 }
 
 bool POP3Protocol::loginPASS( KIO::AuthInfo &ai )
