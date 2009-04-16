@@ -1,5 +1,4 @@
 include(CheckIncludeFiles)
-include(MacroBoolTo01)
 
 check_include_files(sys/select.h  HAVE_SYS_SELECT_H)
 check_include_files(sys/socket.h  HAVE_SYS_SOCKET_H)
