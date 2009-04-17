@@ -1547,7 +1547,7 @@ IMAP4Protocol::specialSearchCommand( QDataStream& stream )
   stream >> _url;
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
-  if (!assureBox(aBox, false)) return;
+  if (!assureBox(aBox, true)) return;
 
   CommandPtr cmd = doCommand (imapCommand::clientSearch( aSection ));
   if (cmd->result () != "OK")
