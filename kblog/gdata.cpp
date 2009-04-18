@@ -233,7 +233,7 @@ void GData::modifyPost( KBlog::BlogPost *post )
   QList<QString>::ConstIterator it = post->tags().constBegin();
   QList<QString>::ConstIterator end = post->tags().constEnd();
   for( ; it != end; ++it ){
-      atomMarkup += "<category scheme='http://www.blogger.com/atom/ns#' term='" + ( *it ) + "' />";
+    atomMarkup += "<category scheme='http://www.blogger.com/atom/ns#' term='" + ( *it ) + "' />";
   }
   atomMarkup += "<author>";
   if ( !fullName().isEmpty() ) {
