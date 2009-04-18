@@ -231,6 +231,11 @@ void GData::modifyPost( KBlog::BlogPost *post )
   atomMarkup += "<div xmlns='http://www.w3.org/1999/xhtml'>";
   atomMarkup += post->content();
   atomMarkup += "</div></content>";
+  QList<QString>::ConstIterator it = post->tags().constBegin();
+  QList<QString>::ConstIterator end = post->tags().constEnd();
+  for( ; it != end; ++it ){
+      atomMarkup += "<category scheme='http://www.blogger.com/atom/ns#' term='" + ( *it ) + "' />";
+  }
   atomMarkup += "<author>";
   if ( !fullName().isEmpty() ) {
     atomMarkup += "<name>" + fullName() + "</name>";
@@ -495,9 +500,6 @@ bool GDataPrivate::authenticate()
        mAuthenticationString.isEmpty() ) {
     KIO::Job *job = KIO::http_post( authGateway, QByteArray(), KIO::HideProgressInfo );
     if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &authGateway ) ) {
-      kDebug() << "Fetched authentication result for"
-                   << authGateway.prettyUrl() << ".";
-      kDebug() << "Authentication response:" << data;
       QRegExp rx( "Auth=(.+)" );
       if ( rx.indexIn( data ) != -1 ) {
         kDebug() << "RegExp got authentication string:" << rx.cap(1);
