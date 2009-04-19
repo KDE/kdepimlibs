@@ -122,7 +122,7 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
   QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
 
-  KIO::TransferJob *job = KIO::http_post( url(), postData, KIO::HideProgressInfo );
+  KIO::StoredTransferJob *job = KIO::storedHttpPost( postData, url(), KIO::HideProgressInfo );
 
   d->mCreatePostMap[ job ] = post;
 
@@ -137,8 +137,6 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
   job->addMetaData( "ConnectTimeout", "50" );
   job->addMetaData( "UserAgent", userAgent() );
 
-  connect( job, SIGNAL(data(KIO::Job *,const QByteArray &)),
-           this, SLOT(slotCreatePostData(KIO::Job *,const QByteArray &)) );
   connect( job, SIGNAL(result(KJob *)),
            this, SLOT(slotCreatePost(KJob *)) );
 }
@@ -218,7 +216,7 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
   QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
 
-  KIO::TransferJob *job = KIO::http_post( url(), postData, KIO::HideProgressInfo );
+  KIO::StoredTransferJob *job = KIO::storedHttpPost( postData, url(), KIO::HideProgressInfo );
 
   d->mModifyPostMap[ job ] = post;
 
@@ -233,8 +231,6 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
   job->addMetaData( "ConnectTimeout", "50" );
   job->addMetaData( "UserAgent", userAgent() );
 
-  connect( job, SIGNAL(data(KIO::Job*,const QByteArray&)),
-           this, SLOT(slotModifyPostData(KIO::Job*,const QByteArray&)) );
   connect( job, SIGNAL(result(KJob*)),
            this, SLOT(slotModifyPost(KJob*)) );
 }
@@ -265,20 +261,12 @@ QList<QVariant> WordpressBuggyPrivate::defaultArgs( const QString &id )
   return args;
 }
 
-void WordpressBuggyPrivate::slotCreatePostData( KIO::Job *job, const QByteArray &data )
-{
-  kDebug() << "slotCreatePostData()";
-  unsigned int oldSize = mCreatePostBuffer[ job ].size();
-  mCreatePostBuffer[ job ].resize( oldSize + data.size() );
-  memcpy( mCreatePostBuffer[ job ].data() + oldSize, data.data(), data.size() );
-}
-
 void WordpressBuggyPrivate::slotCreatePost( KJob *job )
 {
   kDebug() << "slotCreatePost()";
-  const QString data = QString::fromUtf8( mCreatePostBuffer[ job ].data(),
-                                          mCreatePostBuffer[ job ].size() );
-  mCreatePostBuffer[ job ].resize( 0 );
+
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
 
   Q_Q( WordpressBuggy );
 
@@ -317,20 +305,12 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
   emit q->createdPost( post );
 }
 
-void WordpressBuggyPrivate::slotModifyPostData( KIO::Job *job, const QByteArray &data )
-{
-  kDebug() << "slotModifyPostData()";
-  unsigned int oldSize = mModifyPostBuffer[ job ].size();
-  mModifyPostBuffer[ job ].resize( oldSize + data.size() );
-  memcpy( mModifyPostBuffer[ job ].data() + oldSize, data.data(), data.size() );
-}
-
 void WordpressBuggyPrivate::slotModifyPost( KJob *job )
 {
   kDebug() << "slotModifyPost()";
-  const QString data = QString::fromUtf8( mModifyPostBuffer[ job ].data(),
-                                          mModifyPostBuffer[ job ].size() );
-  mModifyPostBuffer[ job ].resize( 0 );
+  
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
 
   KBlog::BlogPost *post = mModifyPostMap[ job ];
   mModifyPostMap.remove( job );

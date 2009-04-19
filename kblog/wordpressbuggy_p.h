@@ -41,18 +41,14 @@ namespace KBlog {
 class WordpressBuggyPrivate : public MovableTypePrivate
 {
   public:
-    QMap<KJob *,QByteArray> mCreatePostBuffer;
     QMap<KJob *,KBlog::BlogPost *> mCreatePostMap;
-    QMap<KJob *,QByteArray> mModifyPostBuffer;
     QMap<KJob *,KBlog::BlogPost *> mModifyPostMap;
     WordpressBuggyPrivate();
     virtual ~WordpressBuggyPrivate();
     virtual QList<QVariant> defaultArgs( const QString &id = QString() );
 
     virtual void slotCreatePost( KJob * );
-    virtual void slotCreatePostData( KIO::Job *, const QByteArray & );
     virtual void slotModifyPost( KJob * );
-    virtual void slotModifyPostData( KIO::Job *, const QByteArray & );
     Q_DECLARE_PUBLIC( WordpressBuggy )
 };
 
