@@ -345,6 +345,7 @@ void Blogger1Private::slotFetchPost( const QList<QVariant> &result, const QVaria
   kDebug () << "TOP:" << result[0].typeName();
   if ( result[0].type() == QVariant::Map && readPostFromMap( post, result[0].toMap() ) ) {
     kDebug() << "Emitting fetchedPost()";
+    post->setStatus( KBlog::BlogPost::Fetched );
     emit q->fetchedPost( post );
   } else {
     kError() << "Could not fetch post out of the result from the server.";

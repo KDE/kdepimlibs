@@ -44,17 +44,11 @@ class GDataPrivate : public BlogPrivate
   public:
     QString mAuthenticationString;
     QDateTime mAuthenticationTime;
-    QMap<KJob *,QByteArray> mCreatePostBuffer;
     QMap<KJob *,KBlog::BlogPost*> mCreatePostMap;
-    QMap<KJob *,QByteArray> mCreateCommentBuffer;
     QMap<KJob *,QMap<KBlog::BlogPost *,KBlog::BlogComment *> > mCreateCommentMap;
-    QMap<KJob *,QByteArray> mRemoveCommentBuffer;
     QMap<KJob *,QMap<KBlog::BlogPost *,KBlog::BlogComment *> > mRemoveCommentMap;
-    QMap<KJob *,QByteArray> mModifyPostBuffer;
     QMap<KJob *,KBlog::BlogPost *> mModifyPostMap;
-    QMap<KJob *,QByteArray> mRemovePostBuffer;
     QMap<KJob *,KBlog::BlogPost *> mRemovePostMap;
-    QMap<KJob *,QByteArray> mFetchProfileIdBuffer;
     QMap<Syndication::Loader *,KBlog::BlogPost *> mFetchPostMap;
     QMap<Syndication::Loader *,KBlog::BlogPost *> mListCommentsMap;
     QMap<Syndication::Loader *,int> mListRecentPostsMap;
@@ -63,7 +57,6 @@ class GDataPrivate : public BlogPrivate
     GDataPrivate();
     ~GDataPrivate();
     bool authenticate();
-    virtual void slotFetchProfileIdData( KIO::Job *, const QByteArray & );
     virtual void slotFetchProfileId( KJob * );
     virtual void slotListBlogs( Syndication::Loader *,
                                 Syndication::FeedPtr, Syndication::ErrorCode );
@@ -76,15 +69,10 @@ class GDataPrivate : public BlogPrivate
     virtual void slotFetchPost( Syndication::Loader *,
                                 Syndication::FeedPtr, Syndication::ErrorCode );
     virtual void slotCreatePost( KJob * );
-    virtual void slotCreatePostData( KIO::Job *, const QByteArray & );
     virtual void slotModifyPost( KJob * );
-    virtual void slotModifyPostData( KIO::Job *, const QByteArray & );
     virtual void slotRemovePost( KJob * );
-    virtual void slotRemovePostData( KIO::Job *, const QByteArray & );
     virtual void slotCreateComment( KJob * );
-    virtual void slotCreateCommentData( KIO::Job *, const QByteArray & );
     virtual void slotRemoveComment( KJob * );
-    virtual void slotRemoveCommentData( KIO::Job *, const QByteArray & );
     Q_DECLARE_PUBLIC( GData )
 };
 

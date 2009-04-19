@@ -302,8 +302,6 @@ class KBLOG_EXPORT GData : public Blog
     Q_PRIVATE_SLOT( d_func(),
                     void slotFetchProfileId( KJob * ) )
     Q_PRIVATE_SLOT( d_func(),
-                    void slotFetchProfileIdData( KIO::Job *, const QByteArray & ) )
-    Q_PRIVATE_SLOT( d_func(),
                     void slotListBlogs( Syndication::Loader *,
                                         Syndication::FeedPtr, Syndication::ErrorCode ) )
     Q_PRIVATE_SLOT( d_func(),
@@ -321,23 +319,13 @@ class KBLOG_EXPORT GData : public Blog
     Q_PRIVATE_SLOT( d_func(),
                     void slotCreatePost( KJob * ) )
     Q_PRIVATE_SLOT( d_func(),
-                    void slotCreatePostData( KIO::Job *, const QByteArray & ) )
-    Q_PRIVATE_SLOT( d_func(),
                     void slotModifyPost( KJob * ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotModifyPostData( KIO::Job *, const QByteArray & ) )
     Q_PRIVATE_SLOT( d_func(),
                     void slotRemovePost( KJob * ) )
     Q_PRIVATE_SLOT( d_func(),
-                    void slotRemovePostData( KIO::Job *, const QByteArray & ) )
-    Q_PRIVATE_SLOT( d_func(),
                     void slotCreateComment( KJob * ) )
     Q_PRIVATE_SLOT( d_func(),
-                    void slotCreateCommentData( KIO::Job *, const QByteArray & ) )
-    Q_PRIVATE_SLOT( d_func(),
                     void slotRemoveComment( KJob * ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotRemoveCommentData( KIO::Job *, const QByteArray & ) )
 };
 
 } //namespace KBlog

@@ -91,10 +91,8 @@ void GData::fetchProfileId()
 {
   kDebug();
   QByteArray data;
-  KIO::Job *job = KIO::get( url(), KIO::NoReload, KIO::HideProgressInfo );
+  KIO::StoredTransferJob *job = KIO::storedGet( url(), KIO::NoReload, KIO::HideProgressInfo );
   KUrl blogUrl = url();
-  connect( job, SIGNAL(data(KIO::Job*,const QByteArray&)),
-           this, SLOT(slotFetchProfileIdData(KIO::Job*,const QByteArray&)) );
   connect( job, SIGNAL(result(KJob*)),
            this, SLOT(slotFetchProfileId(KJob*)) );
 }
@@ -247,9 +245,9 @@ void GData::modifyPost( KBlog::BlogPost *post )
   QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawData( atomMarkup.toUtf8(), atomMarkup.toUtf8().length() );
 
-  KIO::TransferJob *job = KIO::http_post(
+  KIO::StoredTransferJob *job = KIO::storedHttpPost( postData,
       KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default/" + post->postId() ),
-      postData, KIO::HideProgressInfo );
+      KIO::HideProgressInfo );
 
   Q_ASSERT( job );
 
@@ -262,8 +260,6 @@ void GData::modifyPost( KBlog::BlogPost *post )
                     "Authorization: GoogleLogin auth=" + d->mAuthenticationString +
                     "\r\nX-HTTP-Method-Override: PUT" );
 
-  connect( job, SIGNAL(data(KIO::Job*,const QByteArray&)),
-           this, SLOT(slotModifyPostData(KIO::Job*,const QByteArray&)) );
   connect( job, SIGNAL(result(KJob*)),
            this, SLOT(slotModifyPost(KJob*)) );
 }
@@ -311,9 +307,9 @@ void GData::createPost( KBlog::BlogPost *post )
   QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawData( atomMarkup.toUtf8(), atomMarkup.toUtf8().length() );
 
-  KIO::TransferJob *job = KIO::http_post(
+  KIO::StoredTransferJob *job = KIO::storedHttpPost( postData,
     KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default" ),
-    postData, KIO::HideProgressInfo );
+    KIO::HideProgressInfo );
 
   Q_ASSERT ( job );
   d->mCreatePostMap[ job ] = post;
@@ -324,8 +320,6 @@ void GData::createPost( KBlog::BlogPost *post )
   job->addMetaData( "customHTTPHeader",
                     "Authorization: GoogleLogin auth=" + d->mAuthenticationString );
 
-  connect( job, SIGNAL(data(KIO::Job*,const QByteArray&)),
-           this, SLOT(slotCreatePostData(KIO::Job*,const QByteArray&)) );
   connect( job, SIGNAL(result(KJob*)),
            this, SLOT(slotCreatePost(KJob*)) );
 }
@@ -348,9 +342,9 @@ void GData::removePost( KBlog::BlogPost *post )
 
   QByteArray postData;
 
-  KIO::TransferJob *job = KIO::http_post(
+  KIO::StoredTransferJob *job = KIO::storedHttpPost( postData,
     KUrl( "http://www.blogger.com/feeds/" + blogId() + "/posts/default/" + post->postId() ),
-    postData, KIO::HideProgressInfo );
+    KIO::HideProgressInfo );
 
   d->mRemovePostMap[ job ] = post;
 
@@ -365,8 +359,6 @@ void GData::removePost( KBlog::BlogPost *post )
                     "Authorization: GoogleLogin auth=" + d->mAuthenticationString +
                     "\r\nX-HTTP-Method-Override: DELETE" );
 
-  connect( job, SIGNAL(data(KIO::Job*,const QByteArray&)),
-           this, SLOT(slotRemovePostData(KIO::Job*,const QByteArray&)) );
   connect( job, SIGNAL(result(KJob*)),
            this, SLOT(slotRemovePost(KJob*)) );
 }
@@ -404,9 +396,9 @@ void GData::createComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
   QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawData( atomMarkup.toUtf8(), atomMarkup.toUtf8().length() );
 
-  KIO::TransferJob *job = KIO::http_post(
+  KIO::StoredTransferJob *job = KIO::storedHttpPost( postData,
     KUrl( "http://www.blogger.com/feeds/" + blogId() + "/" + post->postId() + "/comments/default" ),
-    postData, KIO::HideProgressInfo );
+    KIO::HideProgressInfo );
 
   d->mCreateCommentMap[ job ][post] = comment;
 
@@ -421,8 +413,6 @@ void GData::createComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
                     "Authorization: GoogleLogin auth=" + d->mAuthenticationString );
   job->addMetaData( "UserAgent", userAgent() );
 
-  connect( job, SIGNAL(data(KIO::Job*,const QByteArray&)),
-           this, SLOT(slotCreateCommentData(KIO::Job*,const QByteArray&)) );
   connect( job, SIGNAL(result(KJob*)),
            this, SLOT(slotCreateComment(KJob*)) );
 }
@@ -451,10 +441,9 @@ void GData::removeComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
 
   QByteArray postData;
 
-  KIO::TransferJob *job = KIO::http_post(
+  KIO::StoredTransferJob *job = KIO::storedHttpPost(postData,
     KUrl( "http://www.blogger.com/feeds/" + blogId() + "/" + post->postId() +
-          "/comments/default/" + comment->commentId() ),
-    postData, KIO::HideProgressInfo );
+          "/comments/default/" + comment->commentId() ), KIO::HideProgressInfo );
   d->mRemoveCommentMap[ job ][ post ] = comment;
 
   if ( !job ) {
@@ -469,8 +458,6 @@ void GData::removeComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
                     "Authorization: GoogleLogin auth=" +
                     d->mAuthenticationString + "\r\nX-HTTP-Method-Override: DELETE" );
 
-  connect( job, SIGNAL(data(KIO::Job*,const QByteArray&)),
-           this, SLOT(slotRemoveCommentData(KIO::Job*,const QByteArray&)) );
   connect( job, SIGNAL(result(KJob*)),
            this, SLOT(slotRemoveComment(KJob*)) );
 }
@@ -513,18 +500,6 @@ bool GDataPrivate::authenticate()
   return true;
 }
 
-void GDataPrivate::slotFetchProfileIdData( KIO::Job *job, const QByteArray &data )
-{
-  kDebug();
-  if( !job ){
-    kError() << "job is a null pointer.";
-    return;
-  }
-  unsigned int oldSize = mFetchProfileIdBuffer[ job ].size();
-  mFetchProfileIdBuffer[ job ].resize( oldSize + data.size() );
-  memcpy( mFetchProfileIdBuffer[ job ].data() + oldSize, data.data(), data.size() );
-}
-
 void GDataPrivate::slotFetchProfileId( KJob *job )
 {
   kDebug();
@@ -533,9 +508,11 @@ void GDataPrivate::slotFetchProfileId( KJob *job )
     return;
   }
   Q_Q( GData );
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
   if ( !job->error() ) {
     QRegExp pid( "http://www.blogger.com/profile/(\\d+)" );
-    if ( pid.indexIn( mFetchProfileIdBuffer[ job ] ) != -1 ) {
+    if ( pid.indexIn( data ) != -1 ) {
       q->setProfileId( pid.cap(1) );
       kDebug() << "QRegExp bid( 'http://www.blogger.com/profile/(\\d+)' matches" << pid.cap(1);
       emit q->fetchedProfileId( pid.cap(1) );
@@ -550,8 +527,6 @@ void GDataPrivate::slotFetchProfileId( KJob *job )
     emit q->error( GData::Other, i18n( "Could not fetch the homepage data." ) );
     emit q->fetchedProfileId( QString() );
   }
-  mFetchProfileIdBuffer[ job ].resize( 0 );
-  mFetchProfileIdBuffer.remove( job );
 }
 
 void GDataPrivate::slotListBlogs( Syndication::Loader *loader,
@@ -806,18 +781,6 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
   mFetchPostMap.remove( loader );
 }
 
-void GDataPrivate::slotCreatePostData( KIO::Job *job, const QByteArray &data )
-{
-  kDebug();
-  if( !job ) {
-    kError() << "job is a null pointer.";
-    return;
-  }
-  unsigned int oldSize = mCreatePostBuffer[ job ].size();
-  mCreatePostBuffer[ job ].resize( oldSize + data.size() );
-  memcpy( mCreatePostBuffer[ job ].data() + oldSize, data.data(), data.size() );
-}
-
 void GDataPrivate::slotCreatePost( KJob *job )
 {
   kDebug();
@@ -825,9 +788,8 @@ void GDataPrivate::slotCreatePost( KJob *job )
     kError() << "job is a null pointer.";
     return;
   }
-  const QString data = QString::fromUtf8( mCreatePostBuffer[ job ].data(),
-                                          mCreatePostBuffer[ job ].size() );
-  mCreatePostBuffer[ job ].resize( 0 );
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
 
   Q_Q( GData );
 
@@ -875,18 +837,6 @@ void GDataPrivate::slotCreatePost( KJob *job )
   emit q->createdPost( post );
 }
 
-void GDataPrivate::slotModifyPostData( KIO::Job *job, const QByteArray &data )
-{
-  kDebug();
-  if( !job ) {
-    kError() << "job is a null pointer.";
-    return;
-  }
-  unsigned int oldSize = mModifyPostBuffer[ job ].size();
-  mModifyPostBuffer[ job ].resize( oldSize + data.size() );
-  memcpy( mModifyPostBuffer[ job ].data() + oldSize, data.data(), data.size() );
-}
-
 void GDataPrivate::slotModifyPost( KJob *job )
 {
   kDebug();
@@ -894,9 +844,8 @@ void GDataPrivate::slotModifyPost( KJob *job )
     kError() << "job is a null pointer.";
     return;
   }
-  const QString data = QString::fromUtf8( mModifyPostBuffer[ job ].data(),
-                                          mModifyPostBuffer[ job ].size() );
-  mModifyPostBuffer[ job ].resize( 0 );
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
 
   KBlog::BlogPost *post = mModifyPostMap[ job ];
   mModifyPostMap.remove( job );
@@ -940,18 +889,6 @@ void GDataPrivate::slotModifyPost( KJob *job )
   emit q->modifiedPost( post );
 }
 
-void GDataPrivate::slotRemovePostData( KIO::Job *job, const QByteArray &data )
-{
-  kDebug();
-  if( !job ) {
-    kError() << "job is a null pointer.";
-    return;
-  }
-  unsigned int oldSize = mRemovePostBuffer[ job ].size();
-  mRemovePostBuffer[ job ].resize( oldSize + data.size() );
-  memcpy( mRemovePostBuffer[ job ].data() + oldSize, data.data(), data.size() );
-}
-
 void GDataPrivate::slotRemovePost( KJob *job )
 {
   kDebug();
@@ -959,9 +896,8 @@ void GDataPrivate::slotRemovePost( KJob *job )
     kError() << "job is a null pointer.";
     return;
   }
-  const QString data = QString::fromUtf8( mRemovePostBuffer[ job ].data(),
-                                          mRemovePostBuffer[ job ].size() );
-  mRemovePostBuffer[ job ].resize( 0 );
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
 
   KBlog::BlogPost *post = mRemovePostMap[ job ];
   mRemovePostMap.remove( job );
@@ -977,18 +913,6 @@ void GDataPrivate::slotRemovePost( KJob *job )
   emit q->removedPost( post );
 }
 
-void GDataPrivate::slotCreateCommentData( KIO::Job *job, const QByteArray &data )
-{
-  kDebug();
-  if( !job ) {
-    kError() << "job is a null pointer.";
-    return;
-  }
-  unsigned int oldSize = mCreateCommentBuffer[ job ].size();
-  mCreateCommentBuffer[ job ].resize( oldSize + data.size() );
-  memcpy( mCreateCommentBuffer[ job ].data() + oldSize, data.data(), data.size() );
-}
-
 void GDataPrivate::slotCreateComment( KJob *job )
 {
   kDebug();
@@ -996,9 +920,8 @@ void GDataPrivate::slotCreateComment( KJob *job )
     kError() << "job is a null pointer.";
     return;
   }
-  const QString data = QString::fromUtf8( mCreateCommentBuffer[ job ].data(),
-                                          mCreateCommentBuffer[ job ].size() );
-  mCreateCommentBuffer[ job ].resize( 0 );
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
   kDebug() << "Dump data: " << data;
 
   Q_Q( GData );
@@ -1048,18 +971,6 @@ void GDataPrivate::slotCreateComment( KJob *job )
   emit q->createdComment( post, comment );
 }
 
-void GDataPrivate::slotRemoveCommentData( KIO::Job *job, const QByteArray &data )
-{
-  kDebug();
-  if( !job ) {
-    kError() << "job is a null pointer.";
-    return;
-  }
-  unsigned int oldSize = mRemoveCommentBuffer[ job ].size();
-  mRemoveCommentBuffer[ job ].resize( oldSize + data.size() );
-  memcpy( mRemoveCommentBuffer[ job ].data() + oldSize, data.data(), data.size() );
-}
-
 void GDataPrivate::slotRemoveComment( KJob *job )
 {
   kDebug();
@@ -1067,9 +978,8 @@ void GDataPrivate::slotRemoveComment( KJob *job )
     kError() << "job is a null pointer.";
     return;
   }
-  const QString data = QString::fromUtf8( mRemoveCommentBuffer[ job ].data(),
-                                          mRemoveCommentBuffer[ job ].size() );
-  mRemoveCommentBuffer[ job ].resize( 0 );
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
 
   Q_Q( GData );
 

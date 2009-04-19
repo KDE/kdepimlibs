@@ -111,9 +111,7 @@ class KBLOG_EXPORT WordpressBuggy : public MovableType
   private:
     Q_DECLARE_PRIVATE( WordpressBuggy )
     Q_PRIVATE_SLOT( d_func(), void slotCreatePost( KJob * ) )
-    Q_PRIVATE_SLOT( d_func(), void slotCreatePostData( KIO::Job *,const QByteArray & ) )
     Q_PRIVATE_SLOT( d_func(), void slotModifyPost( KJob * ) )
-    Q_PRIVATE_SLOT( d_func(), void slotModifyPostData( KIO::Job *,const QByteArray & ) )
 };
 
 } //namespace KBlog
