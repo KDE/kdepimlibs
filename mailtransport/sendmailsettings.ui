@@ -81,7 +81,6 @@
    </item>
   </layout>
  </widget>
- <layoutfunction spacing="KDialog::spacingHint()" margin="KDialog::marginHint()" />
  <customwidgets>
   <customwidget>
    <class>KSeparator</class>
