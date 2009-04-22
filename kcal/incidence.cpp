@@ -53,7 +53,10 @@ class KCal::Incidence::Private
 {
   public:
     Private()
-      : mRecurrence( 0 ),
+      : mDescriptionIsRich( false ),
+        mSummaryIsRich( false ),
+        mLocationIsRich( false ),
+        mRecurrence( 0 ),
         mStatus( StatusNone ),
         mSecrecy( SecrecyPublic ),
         mPriority( 0 ),
