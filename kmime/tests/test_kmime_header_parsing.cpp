@@ -250,8 +250,8 @@ int main( int argc, char * argv[] ) {
 
       cout << ( ok ? "OK" : "BAD" ) << endl
 	   << "result: " << result.count() << " domains:" << endl;
-      for ( QStringList::ConstIterator it = result.begin() ;
-	    it != result.end() ; ++it )
+      for ( QStringList::ConstIterator it = result.constBegin() ;
+	    it != result.constEnd() ; ++it )
 	cout << (*it) << endl;
     }
     break;
@@ -295,8 +295,8 @@ int main( int argc, char * argv[] ) {
 	   << "result.displayName:\n" << result.displayName << endl;
       int i = 0;
       for ( QList<KMime::Types::Mailbox>::ConstIterator
-	      it = result.mailboxList.begin();
-	    it != result.mailboxList.end() ; ++it, ++i )
+	      it = result.mailboxList.constBegin();
+	    it != result.mailboxList.constEnd() ; ++it, ++i )
 	cout << "result.mailboxList[" << i << "].displayName:\n"
 	     << (*it).name() << endl
 	     << "result.mailboxList[" << i << "].addrSpec.localPart:\n"
@@ -314,8 +314,8 @@ int main( int argc, char * argv[] ) {
 	   << "result.displayName:\n" << endl;
       int i = 0;
       for ( QList<KMime::Types::Mailbox>::ConstIterator
-	      it = result.mailboxList.begin();
-	    it != result.mailboxList.end() ; ++it, ++i )
+	      it = result.mailboxList.constBegin();
+	    it != result.mailboxList.constEnd() ; ++it, ++i )
 	cout << "result.mailboxList[" << i << "].displayName:\n"
 	     << (*it).name() << endl
 	     << "result.mailboxList[" << i << "].addrSpec.localPart:\n"
@@ -332,7 +332,7 @@ int main( int argc, char * argv[] ) {
       cout << ( ok ? "OK" : "BAD" ) << endl;
       int j = 0;
       for ( QList<KMime::Types::Address>::ConstIterator
-	      jt = result.begin() ; jt != result.end() ; ++jt, ++j ) {
+	      jt = result.constBegin() ; jt != result.constEnd() ; ++jt, ++j ) {
 	cout << "result[" << j << "].displayName:\n"
 	     << (*jt).displayName << endl;
 	int i = 0;
@@ -370,7 +370,7 @@ int main( int argc, char * argv[] ) {
 	   << "result: " << result.count() << " raw parameters:" << endl;
       int i = 0;
       for ( QMap<QString,KMime::Types::QStringOrQPair>::ConstIterator
-	      it = result.begin() ; it != result.end() ; ++it, ++i )
+	      it = result.constBegin() ; it != result.constEnd() ; ++it, ++i )
 	cout << "result[" << i << "].key() (attribute):\n"
 	     << it.key() << endl
 	     << "result[" << i << "].data().qstring (value):\n"
