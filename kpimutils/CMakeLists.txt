@@ -15,7 +15,7 @@ kde4_add_library(kpimutils SHARED ${kpimutils_LIB_SRCS})
 target_link_libraries(kpimutils ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS} kmime)
 
 set_target_properties(kpimutils PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kpimutils ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kpimutils EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 
