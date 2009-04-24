@@ -31,6 +31,12 @@ class KMimeContentTest : public QObject
     void testImplicitMultipartGeneration();
     void testExplicitMultipartGeneration();
     void testMultipleHeaderExtraction();
+    /**
+      Tests that a message with uuencoded content
+      is parsed correctly and if a corresponding
+      MIME structure is created.
+    */
+    void testParsingUuencoded();
 };
 
 #endif

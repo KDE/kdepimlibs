@@ -1720,12 +1720,14 @@ bool ContentType::isSubtype( const char *subtype ) const
 
 bool ContentType::isText() const
 {
-  return strncasecmp( mediaType().constData(), "text", 4 ) == 0;
+  return ( strncasecmp( mediaType().constData(), "text", 4 ) == 0
+          || isEmpty() );
 }
 
 bool ContentType::isPlainText() const
 {
-  return strcasecmp( mimeType().constData(), "text/plain" ) == 0;
+  return ( strcasecmp( mimeType().constData(), "text/plain" ) == 0
+          || isEmpty() );
 }
 
 bool ContentType::isHTMLText() const

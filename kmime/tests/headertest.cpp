@@ -404,6 +404,10 @@ void HeaderTest::testContentTypeHeader()
   h = new ContentType();
   QVERIFY( h->isEmpty() );
 
+  // Empty content-type means text/plain (RFC 2045 §5.2)
+  QVERIFY( h->isPlainText() );
+  QVERIFY( h->isText() );
+
   // set a mimetype
   h->setMimeType( "text/plain" );
   QVERIFY( !h->isEmpty() );
