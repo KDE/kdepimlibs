@@ -33,7 +33,7 @@
 QTEST_KDEMAIN( ICalTimeZonesTest, NoGUI )
 
 extern "C" {
-  #include <ical.h>
+  #include <libical/ical.h>
 }
 #include "kcal/icaltimezones.h"
 using namespace KCal;
