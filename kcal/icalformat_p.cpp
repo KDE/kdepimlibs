@@ -2261,14 +2261,20 @@ icaldurationtype ICalFormatImpl::writeICalDuration( const Duration &duration )
     value = -value;
   }
 
-  d.weeks   = 0;
-  d.days    = value / gSecondsPerDay;
-  value    %= gSecondsPerDay;
-  d.hours   = value / gSecondsPerHour;
-  value    %= gSecondsPerHour;
-  d.minutes = value / gSecondsPerMinute;
-  value    %= gSecondsPerMinute;
-  d.seconds = value;
+  if ( duration.isDaily() ) {
+    d.weeks = 0;
+    d.days  = value;
+    d.hours = d.minutes = d.seconds = 0;
+  } else {
+    d.weeks   = 0;
+    d.days    = value / gSecondsPerDay;
+    value    %= gSecondsPerDay;
+    d.hours   = value / gSecondsPerHour;
+    value    %= gSecondsPerHour;
+    d.minutes = value / gSecondsPerMinute;
+    value    %= gSecondsPerMinute;
+    d.seconds = value;
+  }
 
   return d;
 }
