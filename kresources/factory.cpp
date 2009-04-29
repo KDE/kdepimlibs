@@ -73,8 +73,8 @@ Factory *Factory::self( const QString &resourceFamily )
     mSelves->insert( resourceFamily, factory );
 
     // Akonadi migration
-    KConfig *config = new KConfig( "kres-migratorrc" );
-    KConfigGroup migrationCfg( config, "Migration" );
+    const KConfig config( "kres-migratorrc" );
+    KConfigGroup migrationCfg( &config, "Migration" );
     const bool enabled = migrationCfg.readEntry( "Enabled", false );
     const bool setupClientBrige = migrationCfg.readEntry( "SetupClientBridge", true );
     const int currentVersion = migrationCfg.readEntry( "Version-" + resourceFamily, 0 );
