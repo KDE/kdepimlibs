@@ -37,26 +37,43 @@ class Incidence;
   @internal
 */
 //@cond PRIVATE
-class ResourceLocalDir::Private
+class ResourceLocalDir::Private : QObject
 {
+  Q_OBJECT
   public:
-    Private()
-      : mLock( 0 )
+    Private( ResourceLocalDir *resource )
+      : mLock( 0 ), mResource( resource )
     {
+      init();
     }
 
-    Private ( const QString &dirName )
+    Private ( const QString &dirName, ResourceLocalDir *resource )
       : mLock( 0 ),
-        mURL( KUrl::fromPath( dirName ) )
+        mURL( KUrl::fromPath( dirName ) ),
+        mResource( resource )
     {
     }
 
-    void init( ResourceLocalDir *rdir );
+    void init();
     bool deleteIncidenceFile( Incidence *incidence );
+    static QString getUidFromFileName( const QString &fileName );
+    bool isTempFile( const QString &fileName ) const;
+    bool doFileLoad( CalendarLocal &cal, const QString &fileName, bool replace );
+
     KABC::Lock *mLock;
     KUrl mURL;
     KDirWatch mDirWatch;
     QList<Incidence *> mDeletedIncidences;
+    ResourceLocalDir *mResource;
+
+  signals:
+    void resourceChanged( ResourceCalendar * );
+
+  protected Q_SLOTS:
+    void updateIncidenceInCalendar( const QString &file );
+    void addIncidenceToCalendar( const QString &file );
+    void deleteIncidenceFromCalendar( const QString &file );
+
 };
 //@endcond
 
