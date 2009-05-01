@@ -31,6 +31,7 @@
 #define KCAL_JOURNAL_H
 
 #include "incidence.h"
+#include <kpimutils/supertrait.h>
 #include <QtCore/QByteArray>
 
 namespace KCal {
@@ -46,6 +47,11 @@ class KCAL_EXPORT Journal : public Incidence
       List of journals.
     */
     typedef ListBase<Journal> List;
+
+    /**
+      A shared pointer to a Journal object.
+    */
+    typedef boost::shared_ptr<Journal> Ptr;
 
     /**
       Constructs an empty journal.
@@ -95,5 +101,12 @@ class KCAL_EXPORT Journal : public Incidence
 };
 
 }
+
+//@cond PRIVATE
+// super class trait specialization
+namespace KPIMUtils {
+  template <> struct SuperClass<KCal::Journal> : public SuperClassTrait<KCal::Incidence>{};
+}
+//@endcond
 
 #endif

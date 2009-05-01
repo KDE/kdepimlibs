@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Till Adam <adam@kde.org>
+    Copyright (c) 2009 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,28 +17,34 @@
     02110-1301, USA.
 */
 
-#ifndef ITEMHYDRA_H
-#define ITEMHYDRA_H
+#ifndef KPIMUTILS_SUPERTRAIT_H
+#define KPIMUTILS_SUPERTRAIT_H
 
-#include <QObject>
-
-class ItemHydra: public QObject
+namespace KPIMUtils
 {
-  Q_OBJECT
-  public:
-    ItemHydra();
-    virtual ~ItemHydra() { }
-  private Q_SLOTS:
-    void initTestCase();
-    void testItemValuePayload();
-    void testItemPointerPayload();
-    void testItemCopy();
-    void testEmptyPayload();
-    void testPointerPayload();
-    void testPolymorphicPayload();
-    void testNullPointerPayload();
-    void testQSharedPointerPayload();
-    void testHasPayload();
-};
+  /**
+    @internal
+    @see super_class
+  */
+  template <typename Super>
+  struct SuperClassTrait
+  {
+    typedef Super Type;
+  };
+
+  /**
+    Type trait to provide information about a base class for a given class.
+    Used eg. for the Akonadi payload mechanism.
+
+    To provide base class introspection for own types, extend this trait as follows:
+    @code
+    namespace KPIMUtils
+    {
+      template <> struct SuperClass<MyClass> : public SuperClassTrait<MyBaseClass>{};
+    }
+    @endcode
+  */
+  template <typename Class> struct SuperClass : public SuperClassTrait<Class>{};
+}
 
 #endif

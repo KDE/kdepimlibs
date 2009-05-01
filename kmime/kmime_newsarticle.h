@@ -25,6 +25,7 @@
 
 #include "kmime_export.h"
 #include "kmime_message.h"
+#include <kpimutils/supertrait.h>
 
 namespace KMime {
 
@@ -33,6 +34,10 @@ class NewsArticlePrivate;
 class KMIME_EXPORT NewsArticle : public Message
 {
   public:
+    /**
+      A shared pointer to a news article.
+    */
+    typedef boost::shared_ptr<NewsArticle> Ptr;
 
     NewsArticle();
     ~NewsArticle();
@@ -63,5 +68,13 @@ class KMIME_EXPORT NewsArticle : public Message
 }; // class NewsArticle
 
 } // namespace KMime
+
+
+//@cond PRIVATE
+// super class trait specialization
+namespace KPIMUtils {
+  template <> struct SuperClass<KMime::NewsArticle> : public SuperClassTrait<KMime::Message>{};
+}
+//@endcond
 
 #endif // __KMIME_NEWSARTICLE_H__

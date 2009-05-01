@@ -29,6 +29,7 @@
 #define KCAL_EVENT_H
 
 #include "incidence.h"
+#include <kpimutils/supertrait.h>
 #include <QtCore/QByteArray>
 
 namespace KCal {
@@ -52,6 +53,11 @@ class KCAL_EXPORT Event : public Incidence
       List of events.
     */
     typedef ListBase<Event> List;
+
+    /**
+      A shared pointer to an Event object.
+    */
+    typedef boost::shared_ptr<Event> Ptr;
 
     /**
       Constructs an event.
@@ -213,5 +219,12 @@ class KCAL_EXPORT Event : public Incidence
 };
 
 }
+
+//@cond PRIVATE
+// super class trait specialization
+namespace KPIMUtils {
+  template <> struct SuperClass<KCal::Event> : public SuperClassTrait<KCal::Incidence>{};
+}
+//@endcond
 
 #endif

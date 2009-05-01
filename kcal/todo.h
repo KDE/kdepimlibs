@@ -30,6 +30,7 @@
 #define KCAL_TODO_H
 
 #include "incidence.h"
+#include <kpimutils/supertrait.h>
 #include <QtCore/QByteArray>
 
 namespace KCal {
@@ -45,6 +46,11 @@ class KCAL_EXPORT Todo : public Incidence
       List of to-dos.
     */
     typedef ListBase<Todo> List;
+
+    /**
+      A shared pointer to a Todo object.
+    */
+    typedef boost::shared_ptr<Todo> Ptr;
 
     /**
       Constructs an empty to-do.
@@ -381,5 +387,12 @@ class KCAL_EXPORT Todo : public Incidence
 };
 
 }
+
+//@cond PRIVATE
+// super class trait specialization
+namespace KPIMUtils {
+  template <> struct SuperClass<KCal::Todo> : public SuperClassTrait<KCal::Incidence>{};
+}
+//@endcond
 
 #endif

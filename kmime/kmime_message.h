@@ -28,6 +28,10 @@
 #include "kmime_headers.h"
 #include "boolflags.h"
 
+namespace boost {
+  template <typename T> class shared_ptr;
+}
+
 namespace KMime {
 
 class MessagePrivate;
@@ -38,7 +42,15 @@ class MessagePrivate;
 class KMIME_EXPORT Message : public Content
 {
   public:
+    /**
+      A list of messages.
+    */
     typedef QList<KMime::Message*> List;
+
+    /**
+      A shared pointer to a message object.
+    */
+    typedef boost::shared_ptr<Message> Ptr;
 
     /** Constructor. Creates an empty message. */
     Message();

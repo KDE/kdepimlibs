@@ -39,6 +39,10 @@
 
 #include <QtCore/QList>
 
+namespace boost {
+  template <typename T> class shared_ptr;
+}
+
 namespace KCal {
 
 /**
@@ -164,6 +168,11 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
       List of incidences.
     */
     typedef ListBase<Incidence> List;
+
+    /**
+      A shared pointer to an Incidence.
+    */
+    typedef boost::shared_ptr<Incidence> Ptr;
 
     /**
       Constructs an empty incidence.*

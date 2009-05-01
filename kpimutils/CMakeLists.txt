@@ -19,5 +19,11 @@ install(TARGETS kpimutils EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFA
 
 ########### install files ###############
 
-install(FILES kpimutils_export.h email.h linklocator.h spellingfilter.h kfileio.h 
-        DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils  COMPONENT Devel)
+install(FILES
+  kpimutils_export.h
+  email.h
+  linklocator.h
+  spellingfilter.h
+  kfileio.h
+  supertrait.h
+DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils  COMPONENT Devel)
