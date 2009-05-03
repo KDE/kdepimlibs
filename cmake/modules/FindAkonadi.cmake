@@ -1,101 +1,40 @@
+# Find if Akonadi was installed
+# Once done this will define:
 #
-# Find an installation of Akonadi
-#
-# Sets the following variables:
-#  Akonadi_FOUND            - true if Akonadi has been found
-#  AKONADI_INCLUDE_DIR      - The include directory
-#  AKONADI_COMMON_LIBRARIES - The Akonadi core library to link to
-#  AKONADI_VERSION          - The Akonadi version (string value)
+# Akonadi_FOUND - system has KDE PIM Libraries
+# AKONADI_INCLUDE_DIR - the KDE PIM Libraries include directory
+# AKONADI_VERSION - The Akonadi version (short string, eg. 1.1.85)
+# AKONADI_VERSION_STRING - The Akonadi version (including the SVN revision if available)
 #
 # Options:
-#  Set AKONADI_MIN_VERSION to set the minimum required Akonadi version (default: 0.80)
+#  Use AKONADI_MIN_VERSION to set the minimum required Akonadi version
 #
+# The following variables are set:
+# AKONADI_BIN_DIR
+# AKONADI_CONFIG_DIR
+# AKONADI_DBUS_INTERFACES_DIR
+# AKONADI_DBUS_SERVICES_DIR
+# AKONADI_INCLUDE_DIR
+# AKONADI_INSTALL_DIR
+# AKONADI_LIB_DIR
+# AKONADI_SHARE_DIR
+# AKONADI_XDG_MIME_INSTALL_DIR
 
-#if(AKONADI_INCLUDE_DIR AND AKONADI_COMMON_LIBRARIES)
 
-  # read from cache
-#  set(Akonadi_FOUND TRUE)
+# Copyright (c) 2009, Christophe Giboudeaux, <cgiboudeaux@gmail.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-#else(AKONADI_INCLUDE_DIR AND AKONADI_COMMON_LIBRARIES)
-  INCLUDE(FindLibraryWithDebug)
 
-  FIND_PATH(AKONADI_INCLUDE_DIR
-    NAMES
-    akonadi/private/akonadiprotocolinternals_export.h
-    PATHS
-    ${KDE4_INCLUDE_DIR}
-    ${INCLUDE_INSTALL_DIR}
-    )
+# AKONADI_MIN_VERSION did exist before KDE 4.3. Let's keep this option
+if ( NOT Akonadi_FIND_VERSION AND AKONADI_MIN_VERSION )
+  set ( Akonadi_FIND_VERSION ${AKONADI_MIN_VERSION} )
+endif ( NOT Akonadi_FIND_VERSION AND AKONADI_MIN_VERSION )
 
-  FIND_LIBRARY_WITH_DEBUG(AKONADI_COMMON_LIBRARIES
-    WIN32_DEBUG_POSTFIX d
-    NAMES
-    akonadiprotocolinternals
-    PATHS
-    ${KDE4_LIB_DIR}
-    ${LIB_INSTALL_DIR}
-    )
+set( _Akonadi_FIND_QUIETLY  ${Akonadi_FIND_QUIETLY} )
+find_package( Akonadi ${Akonadi_FIND_VERSION} QUIET NO_MODULE PATHS ${LIB_INSTALL_DIR}/Akonadi/cmake )
+set( Akonadi_FIND_QUIETLY ${_Akonadi_FIND_QUIETLY} )
 
-  # check for all the libs as required to make sure that we do not try to compile with an old version
-
-  if(AKONADI_INCLUDE_DIR AND AKONADI_COMMON_LIBRARIES)
-    set(Akonadi_FOUND TRUE)
-    get_filename_component(AKONADI_PREFIX ${AKONADI_INCLUDE_DIR} PATH)
-    set(AKONADI_DBUS_INTERFACES_DIR ${AKONADI_PREFIX}/share/dbus-1/interfaces)
-    set(AKONADI_DBUS_SERVICES_DIR ${AKONADI_PREFIX}/share/dbus-1/services)
-  endif(AKONADI_INCLUDE_DIR AND AKONADI_COMMON_LIBRARIES)
-
-  # check Akonadi version
-
-  # We set a default for the minimum required version to be backwards compatible
-  IF(NOT AKONADI_MIN_VERSION)
-    SET(AKONADI_MIN_VERSION "0.80")
-  ENDIF(NOT AKONADI_MIN_VERSION)
-
-  #if(Akonadi_FOUND)
-  if(FALSE)
-    FILE(READ ${AKONADI_INCLUDE_DIR}/akonadi/version.h AKONADI_VERSION_CONTENT)
-    STRING(REGEX MATCH "AKONADI_VERSION_STRING \".*\"\n" AKONADI_VERSION_MATCH ${AKONADI_VERSION_CONTENT})
-    IF (AKONADI_VERSION_MATCH)
-      STRING(REGEX REPLACE "AKONADI_VERSION_STRING \"(.*)\"\n" "\\1" AKONADI_VERSION ${AKONADI_VERSION_MATCH})
-      if(AKONADI_VERSION STRLESS "${AKONADI_MIN_VERSION}")
-        set(Akonadi_FOUND FALSE)
-        if(Akonadi_FIND_REQUIRED)
-          message(FATAL_ERROR "Akonadi version ${AKONADI_VERSION} is too old. Please install ${AKONADI_MIN_VERSION} or newer")
-        else(Akonadi_FIND_REQUIRED)
-          message(STATUS "Akonadi version ${AKONADI_VERSION} is too old. Please install ${AKONADI_MIN_VERSION} or newer")
-        endif(Akonadi_FIND_REQUIRED)
-      endif(AKONADI_VERSION STRLESS "${AKONADI_MIN_VERSION}")
-    ENDIF (AKONADI_VERSION_MATCH)
-  endif(FALSE)
-
-  set(AKONADI_VERSION "0.80.0")
-
-  if(Akonadi_FOUND)
-    if(NOT Akonadi_FIND_QUIETLY)
-      message(STATUS "Found Akonadi: ${AKONADI_COMMON_LIBRARIES}")
-      message(STATUS "Found Akonadi includes: ${AKONADI_INCLUDE_DIR}")
-      message(STATUS "Found Akonadi common libraries: ${AKONADI_COMMON_LIBRARIES}")
-      message(STATUS "Found Akonadi dbus-interfaces: ${AKONADI_DBUS_INTERFACES_DIR}")
-    endif(NOT Akonadi_FIND_QUIETLY)
-  else(Akonadi_FOUND)
-    if(Akonadi_FIND_REQUIRED)
-      if(NOT AKONADI_INCLUDE_DIR)
-	message(FATAL_ERROR "Could not find Akonadi includes.")
-      endif(NOT AKONADI_INCLUDE_DIR)
-      if(NOT AKONADI_COMMON_LIBRARIES)
-	message(FATAL_ERROR "Could not find Akonadi library.")
-      endif(NOT AKONADI_COMMON_LIBRARIES)
-    else(Akonadi_FIND_REQUIRED)
-      if(NOT AKONADI_INCLUDE_DIR)
-        message(STATUS "Could not find Akonadi includes.")
-      endif(NOT AKONADI_INCLUDE_DIR)
-      if(NOT AKONADI_COMMON_LIBRARIES)
-        message(STATUS "Could not find Akonadi library.")
-      endif(NOT AKONADI_COMMON_LIBRARIES)
-    endif(Akonadi_FIND_REQUIRED)
-  endif(Akonadi_FOUND)
-
-mark_as_advanced(AKONADI_COMMON_LIBRARIES AKONADI_INCLUDE_DIR )
-
-#endif(AKONADI_INCLUDE_DIR AND AKONADI_COMMON_LIBRARIES)
+include( FindPackageHandleStandardArgs )
+find_package_handle_standard_args( Akonadi DEFAULT_MSG Akonadi_CONFIG )
