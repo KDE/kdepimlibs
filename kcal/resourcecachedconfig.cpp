@@ -87,7 +87,7 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent )
            SLOT( slotIntervalToggled( bool ) ) );
 
   KHBox *intervalBox = new KHBox;
-  new QLabel( i18nc( "@label:spinbox", "Interval in minutes" ), intervalBox );
+  new QLabel( i18nc( "@label:spinbox", "Interval in minutes:" ), intervalBox );
   d->mIntervalSpin = new QSpinBox( intervalBox );
   d->mIntervalSpin->setRange( 1, 900 );
   d->mIntervalSpin->setEnabled( false );
@@ -155,7 +155,7 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent )
            SLOT( slotIntervalToggled( bool ) ) );
 
   KHBox *intervalBox = new KHBox;
-  new QLabel( i18nc( "@label:spinbox", "Interval in minutes" ), intervalBox );
+  new QLabel( i18nc( "@label:spinbox", "Interval in minutes:" ), intervalBox );
   d->mIntervalSpin = new QSpinBox( intervalBox );
   d->mIntervalSpin->setRange( 1, 900 );
   d->mIntervalSpin->setEnabled( false );
