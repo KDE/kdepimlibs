@@ -941,12 +941,35 @@ DateTimeList Recurrence::timesInInterval( const KDateTime &start, const KDateTim
   for ( i = 0, count = d->mRRules.count();  i < count;  ++i ) {
     times += d->mRRules[i]->timesInInterval( start, end );
   }
-  times += d->mRDateTimes;
-  KDateTime kdt( startDateTime() );
+
+  // add rdatetimes that fit in the interval
+  for ( i = 0, count = d->mRDateTimes.count();  i < count;  ++i ) {
+    if ( d->mRDateTimes[i] >= start && d->mRDateTimes[i] <= end ) {
+      times += d->mRDateTimes[i];
+    }
+  }
+
+  // add rdates that fit in the interval
+  KDateTime kdt( d->mStartDateTime );
   for ( i = 0, count = d->mRDates.count();  i < count;  ++i ) {
     kdt.setDate( d->mRDates[i] );
-    times += kdt;
+    if ( kdt >= start && kdt <= end ) {
+      times += kdt;
+    }
   }
+
+  // Recurrence::timesInInterval(...) doesn't explicitly add mStartDateTime to the list
+  // of times to be returned. It calls mRRules[i]->timesInInterval(...) which include
+  // mStartDateTime.
+  // So, If we have rdates/rdatetimes but don't have any rrule we must explicitly
+  // add mStartDateTime to the list, otherwise we won't see the first occurrence.
+  if ( ( !d->mRDates.isEmpty() || !d->mRDateTimes.isEmpty() ) &&
+       d->mRRules.isEmpty() &&
+       start <= d->mStartDateTime &&
+       end >= d->mStartDateTime ) {
+    times += d->mStartDateTime;
+  }
+
   times.sortUnique();
 
   // Remove excluded times
