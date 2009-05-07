@@ -92,7 +92,7 @@ void ItemFetchJobPrivate::startFetchJob()
   //TODO: detect somehow if server supports external payload attribute
   command += " " AKONADI_PARAM_EXTERNALPAYLOAD;
 
-  command += " (UID REMOTEID COLLECTIONID FLAGS SIZE DATETIME";
+  command += " (UID REMOTEID FLAGS SIZE DATETIME";
   foreach ( const QByteArray &part, mFetchScope.payloadParts() )
     command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, part );
   foreach ( const QByteArray &part, mFetchScope.attributes() )
@@ -176,7 +176,6 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       int rev = -1;
       QString rid;
       QString mimeType;
-      Entity::Id cid = -1;
 
       for ( int i = 0; i < fetchResponse.count() - 1; i += 2 ) {
         const QByteArray key = fetchResponse.value( i );
@@ -191,9 +190,8 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
             rid = QString::fromUtf8( value );
           else
             rid = QString();
-        } else if ( key == "COLLECTIONID" ) {
-          cid = value.toInt();
-        } else if ( key == "MIMETYPE" )
+        }
+        else if ( key == "MIMETYPE" )
           mimeType = QString::fromLatin1( value );
       }
 
@@ -206,7 +204,6 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       item.setRemoteId( rid );
       item.setRevision( rev );
       item.setMimeType( mimeType );
-      item.setCollectionId( cid );
       if ( !item.isValid() )
         return;
 
@@ -214,7 +211,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       for ( int i = 0; i < fetchResponse.count() - 1; i += 2 ) {
         const QByteArray key = fetchResponse.value( i );
         // skip stuff we dealt with already
-        if ( key == "UID" || key == "REV" || key == "REMOTEID" || key == "MIMETYPE"  || key == "COLLECTIONID")
+        if ( key == "UID" || key == "REV" || key == "REMOTEID" || key == "MIMETYPE" )
           continue;
         // flags
         if ( key == "FLAGS" ) {
