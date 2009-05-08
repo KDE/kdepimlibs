@@ -604,6 +604,7 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
 {
   QString html;
   QString descr;
+  QStringList comments;
   if ( !incidence->descriptionIsRich() ) {
     descr = string2HTML( incidence->description() );
   } else {
@@ -613,17 +614,29 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
     }
     descr = eventViewerAddTag( "p", descr );
   }
+
+  if ( incidence->comments().isEmpty() && !descr.isEmpty() ) {
+    comments << descr;
+  } else {
+    comments = incidence->comments();
+  }
+
   if( !descr.isEmpty() ) {
     html += "<br/><u>" + i18n( "Description:" ) + "</u><table border=\"0\"><tr><td>&nbsp;</td><td>";
     html += descr + "</td></tr></table>";
   }
-  QStringList comments = incidence->comments();
   if ( !comments.isEmpty() ) {
-    html += "<br><u>" + i18n( "Comments:" ) + "</u><table border=\"0\"><tr><td>&nbsp;</td><td><ul>";
-    for ( int i = 0; i < comments.count(); ++i ) {
-      html += "<li>" + string2HTML( comments[i] ) + "</li>";
+    html += "<br><u>" + i18n( "Comments:" ) + "</u><table border=\"0\"><tr><td>&nbsp;</td><td>";
+    if ( comments.count() > 1 ) {
+      html += "<ul>";
+      for ( int i = 0; i < comments.count(); ++i ) {
+        html += "<li>" + string2HTML( comments[i] ) + "</li>";
+      }
+      html += "</ul>";
+    } else {
+      html += string2HTML( comments[0] );
     }
-    html += "</ul></td></tr></table>";
+    html += "</td></tr></table>";
   }
   return html;
 }
