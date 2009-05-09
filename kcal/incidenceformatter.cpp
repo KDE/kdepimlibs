@@ -408,11 +408,12 @@ static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
     tmpStr += "<td>" + eventViewerFormatAttachments( event ) + "</td>";
     tmpStr += "</tr>";
   }
-
+  KDateTime kdt = event->created().toTimeSpec( spec );
   tmpStr += "</table>";
   tmpStr += "<p><em>" +
             i18n( "Creation date: %1", KGlobal::locale()->formatDateTime(
-                    event->created().dateTime(), KLocale::ShortDate ) ) + "</em>";
+                    kdt.dateTime(),
+                    KLocale::ShortDate ) ) + "</em>";
   return tmpStr;
 }
 
@@ -458,8 +459,10 @@ static QString eventViewerFormatTodo( Todo *todo, KDateTime::Spec spec )
   }
   tmpStr += eventViewerFormatAttendees( todo );
   tmpStr += eventViewerFormatAttachments( todo );
+
+  KDateTime kdt = todo->created().toTimeSpec( spec );
   tmpStr += "<p><em>" + i18n( "Creation date: %1",
-    KGlobal::locale()->formatDateTime( todo->created().dateTime(), KLocale::ShortDate ) ) + "</em>";
+    KGlobal::locale()->formatDateTime( kdt.dateTime(), KLocale::ShortDate ) ) + "</em>";
   return tmpStr;
 }
 
