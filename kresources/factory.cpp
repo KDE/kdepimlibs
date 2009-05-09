@@ -57,8 +57,14 @@ class Factory::Private
     QMap<QString, KService::Ptr> mTypeMap;
 };
 
-typedef QMap<QString, Factory*> factoryMap;
-K_GLOBAL_STATIC( factoryMap, mSelves )
+class FactoryMap : public QMap<QString, Factory*>
+{
+public:
+
+    ~FactoryMap() { qDeleteAll(*this); }
+};
+
+K_GLOBAL_STATIC( FactoryMap, mSelves )
 
 Factory *Factory::self( const QString &resourceFamily )
 {
