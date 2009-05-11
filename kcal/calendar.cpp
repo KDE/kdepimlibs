@@ -457,6 +457,10 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence,
 
   Incidence *newInc = incidence->clone();
   newInc->recreate();
+  // Do not call setRelatedTo() when dissociating recurring to-dos, otherwise the new to-do
+  // will appear as a child.  Originally, we planned to set a relation with reltype SIBLING
+  // when dissociating to-dos, but currently kcal only supports reltype PARENT.
+  // We can uncomment the following line when we support the PARENT reltype.
   //newInc->setRelatedTo( incidence );
   Recurrence *recur = newInc->recurrence();
   if ( single ) {
