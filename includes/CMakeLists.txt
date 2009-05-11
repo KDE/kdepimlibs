@@ -4,7 +4,7 @@ add_subdirectory( tests )
 
 macro(install_headers _dir)
   file(GLOB _includes "${CMAKE_CURRENT_SOURCE_DIR}/${_dir}/[A-Za-z]*")
-  install(FILES ${_includes} DESTINATION ${INCLUDE_INSTALL_DIR}/KDEPIMLIBS/${_dir} COMPONENT Devel)
+  install(FILES ${_includes} DESTINATION ${INCLUDE_INSTALL_DIR}/KDEPIMLibs/${_dir} COMPONENT Devel)
 endmacro(install_headers)
 
 if(Akonadi_FOUND)
