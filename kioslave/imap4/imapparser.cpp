@@ -685,7 +685,7 @@ void imapParser::parseList (parseString & result)
   skipWS (result);
 
   this_one.setHierarchyDelimiter(parseLiteral(result));
-  this_one.setName (KIMAP::decodeImapFolderName( parseLiteral(result)));  // decode modified UTF7
+  this_one.setName(QString::fromUtf8(KIMAP::decodeImapFolderName( parseLiteral(result))));  // decode modified UTF7
 
   listResponses.append (this_one);
 }

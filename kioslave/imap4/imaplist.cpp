@@ -102,10 +102,10 @@ hasNoChildren_ (false)
   s.pos++;  // tie off )
   parser_->skipWS (s);
 
-  hierarchyDelimiter_ = parser_->parseOneWord(s);
+  hierarchyDelimiter_ = QString::fromLatin1 (parser_->parseOneWord(s));
   if (hierarchyDelimiter_ == "NIL")
     hierarchyDelimiter_.clear();
-  name_ = KIMAP::decodeImapFolderName (parser_->parseLiteral (s));  // decode modified UTF7
+  name_ = QString::fromUtf8 (KIMAP::decodeImapFolderName (parser_->parseLiteral (s)));  // decode modified UTF7
 }
 
 void imapList::parseAttributes( parseString & str )
