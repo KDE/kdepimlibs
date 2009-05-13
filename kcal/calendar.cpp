@@ -445,7 +445,7 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence,
 
   Incidence *newInc = incidence->clone();
   newInc->recreate();
-  newInc->setRelatedTo( incidence );
+  //newInc->setRelatedTo( incidence );
   Recurrence *recur = newInc->recurrence();
   if ( single ) {
     recur->clear();
