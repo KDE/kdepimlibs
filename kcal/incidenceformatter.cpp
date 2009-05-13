@@ -605,14 +605,16 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
   QString html;
   QString descr;
   QStringList comments;
-  if ( !incidence->descriptionIsRich() ) {
-    descr = string2HTML( incidence->description() );
-  } else {
-    descr = incidence->richDescription();
-    if ( noHtmlMode ) {
-      descr = cleanHtml( descr );
+  if ( !incidence->description().isEmpty() ) {
+    if ( !incidence->descriptionIsRich() ) {
+      descr = string2HTML( incidence->description() );
+    } else {
+      descr = incidence->richDescription();
+      if ( noHtmlMode ) {
+        descr = cleanHtml( descr );
+      }
+      descr = eventViewerAddTag( "p", descr );
     }
-    descr = eventViewerAddTag( "p", descr );
   }
 
   if ( incidence->comments().isEmpty() && !descr.isEmpty() ) {
