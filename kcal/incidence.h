@@ -316,7 +316,7 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     void setSummary( const QString &summary, bool isRich );
 
     /**
-      Sets the incidence summary and tries to guess if the summary is richtext..
+      Sets the incidence summary and tries to guess if the summary is richtext.
 
       @param summary is the incidence summary string.
       @see summary().
@@ -359,7 +359,6 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
       richtext. Do _not_ use with journals.
 
       @param location is the incidence location string.
-      @param isRich if true indicates the location string contains richtext.
       @see location().
       @since 4.1
     */

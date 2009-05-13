@@ -75,7 +75,7 @@ class KCAL_EXPORT VCalFormat : public CalFormat
       @copydoc
       CalFormat::fromString()
     */
-    bool fromString( Calendar *calendar, const QString &text );
+    bool fromString( Calendar *calendar, const QString &string );
 
     /**
       @copydoc

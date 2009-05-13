@@ -608,7 +608,7 @@ Alarm::List CalendarResources::alarms( const KDateTime &from,
 /****************************** PROTECTED METHODS ****************************/
 
 Event::List CalendarResources::rawEventsForDate( const QDate &date,
-                                                 const KDateTime::Spec &timespec,
+                                                 const KDateTime::Spec &timeSpec,
                                                  EventSortField sortField,
                                                  SortDirection sortDirection )
 {
@@ -616,19 +616,19 @@ Event::List CalendarResources::rawEventsForDate( const QDate &date,
   CalendarResourceManager::ActiveIterator it;
   for ( it = d->mManager->activeBegin(); it != d->mManager->activeEnd(); ++it ) {
     d->appendIncidences<Event::List>( result,
-                                      (*it)->rawEventsForDate( date, timespec ), *it );
+                                      (*it)->rawEventsForDate( date, timeSpec ), *it );
   }
   return sortEvents( &result, sortField, sortDirection );
 }
 
 Event::List CalendarResources::rawEvents( const QDate &start, const QDate &end,
-                                          const KDateTime::Spec &timespec, bool inclusive )
+                                          const KDateTime::Spec &timeSpec, bool inclusive )
 {
   Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = d->mManager->activeBegin(); it != d->mManager->activeEnd(); ++it ) {
     d->appendIncidences<Event::List>( result,
-                                      (*it)->rawEvents( start, end, timespec, inclusive ), *it );
+                                      (*it)->rawEvents( start, end, timeSpec, inclusive ), *it );
   }
   return result;
 }

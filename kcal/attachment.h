@@ -148,7 +148,7 @@ class KCAL_EXPORT Attachment
     void setDecodedData( const QByteArray &data );
 
     /**
-      Returns a #QByteArray containing the decoded base64 binary data of the
+      Returns a QByteArray containing the decoded base64 binary data of the
       attachment.
 
       @see setDecodedData(), setData()

@@ -195,13 +195,13 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       date specified. Useful for dayView, etc. etc.
 
       @param date date for which to get the events
-      @param timespec the time specification of the date
+      @param timeSpec the time specification of the date
       @param sortField field used as the sort key for the result list
       @param sortDirection direction of sorting according to @p sortField
     */
     virtual Event::List rawEventsForDate(
       const QDate &date,
-      const KDateTime::Spec &timespec = KDateTime::Spec(),
+      const KDateTime::Spec &timeSpec = KDateTime::Spec(),
       EventSortField sortField = EventSortUnsorted,
       SortDirection sortDirection = SortDirectionAscending ) = 0;
 
@@ -222,7 +222,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     */
     virtual Event::List rawEvents(
       const QDate &start, const QDate &end,
-      const KDateTime::Spec &timespec = KDateTime::Spec(),
+      const KDateTime::Spec &timeSpec = KDateTime::Spec(),
       bool inclusive = false ) = 0;
 
     /**

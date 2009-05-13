@@ -168,8 +168,10 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Load resource data, specifying whether to refresh the cache file first.
       For a non-cached resource, this method has the same effect as load().
+
+      @param action is the type of #CacheAction for this data loading.
      */
-    bool load( CacheAction );
+    bool load( CacheAction action );
 
     /**
       Load resource data.
@@ -181,11 +183,12 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       afterwards. For a non-cached resource, this method has the same effect
       as save().
 
+      @param action is the type of #CacheAction for this data saving.
       @param incidence if given as 0, doSave(bool) is called to save all
       incidences, else doSave(bool, incidence) is called to save only the
       given one.
     */
-    bool save( CacheAction, Incidence *incidence = 0 );
+    bool save( CacheAction action, Incidence *incidence = 0 );
 
     /**
       Save resource data.
@@ -228,12 +231,12 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       date specified. useful for dayView, etc. etc.
 
       @param date date for which to get the events
-      @param timespec the time specification of the date
+      @param timeSpec the time specification of the date
       @param sortField field used as the sort key for the result list
       @param sortDirection direction of sorting according to @p sortField
     */
     Event::List rawEventsForDate( const QDate &date,
-                                  const KDateTime::Spec &timespec = KDateTime::Spec(),
+                                  const KDateTime::Spec &timeSpec = KDateTime::Spec(),
                                   EventSortField sortField = EventSortUnsorted,
                                   SortDirection sortDirection = SortDirectionAscending );
 
@@ -253,7 +256,7 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
              the specified range
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
-                           const KDateTime::Spec &timespec = KDateTime::Spec(),
+                           const KDateTime::Spec &timeSpec = KDateTime::Spec(),
                            bool inclusive = false );
 
     /**
@@ -469,8 +472,9 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
 
       @param syncCache if @c true, the cache will be uploaded to the remote
              resource. If @c false, only the cache will be updated
+      @param incidence The incidence to be saved.
     */
-    virtual bool doSave( bool syncCache, Incidence * );
+    virtual bool doSave( bool syncCache, Incidence *incidence );
 
     /**
       Check if reload required according to reload policy.

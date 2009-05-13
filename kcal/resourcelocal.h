@@ -139,7 +139,7 @@ class KCAL_EXPORT ResourceLocal : public ResourceCached
       @copydoc
       ResourceCached::doSave(bool, Incidence*)
     */
-    virtual bool doSave( bool syncCache, Incidence * );
+    virtual bool doSave( bool syncCache, Incidence *incidence );
 
     /**
       Called by reload() to reload the resource, if it is already open.

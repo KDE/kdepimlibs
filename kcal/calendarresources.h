@@ -485,18 +485,24 @@ class KCAL_EXPORT CalendarResources
       Calendar::rawEvents(const QDate &, const QDate &, const KDateTime::Spec &, bool)
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
-                           const KDateTime::Spec &timespec = KDateTime::Spec(),
+                           const KDateTime::Spec &timeSpec = KDateTime::Spec(),
                            bool inclusive = false );
 
     /**
-      @copydoc
-      Calendar::rawEventsForDate(const QDate &,const KDateTime::Spec &,EventSortField,SortDirection)
+      Returns an unfiltered list of all Events which occur on the given date.
+
+      @param date request unfiltered Event list for this QDate only.
+      @param timeSpec time zone etc. to interpret @p date, or the calendar's
+                      default time spec if none is specified
+      @param sortField specifies the EventSortField.
+      @param sortDirection specifies the SortDirection.
+
+      @return the list of unfiltered Events occurring on the specified QDate.
     */
-    Event::List rawEventsForDate(
-      const QDate &date,
-      const KDateTime::Spec &timespec = KDateTime::Spec(),
-      EventSortField sortField = EventSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending );
+    Event::List rawEventsForDate( const QDate &date,
+                                  const KDateTime::Spec &timeSpec = KDateTime::Spec(),
+                                  EventSortField sortField = EventSortUnsorted,
+                                  SortDirection sortDirection = SortDirectionAscending );
 
     /**
       @copydoc

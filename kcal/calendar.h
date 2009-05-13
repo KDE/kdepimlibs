@@ -562,7 +562,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @param start is the starting date.
       @param end is the ending date.
-      @param timespec time zone etc. to interpret @p start and @p end,
+      @param timeSpec time zone etc. to interpret @p start and @p end,
                       or the calendar's default time spec if none is specified
       @param inclusive if true only Events which are completely included
       within the date range are returned.
@@ -571,7 +571,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       date range.
     */
     Event::List events( const QDate &start, const QDate &end,
-                        const KDateTime::Spec &timespec = KDateTime::Spec(),
+                        const KDateTime::Spec &timeSpec = KDateTime::Spec(),
                         bool inclusive = false );
 
     /**
@@ -580,7 +580,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       @a sortDirection.
 
       @param date request filtered Event list for this QDate only.
-      @param timespec time zone etc. to interpret @p start and @p end,
+      @param timeSpec time zone etc. to interpret @p start and @p end,
                       or the calendar's default time spec if none is specified
       @param sortField specifies the EventSortField.
       @param sortDirection specifies the SortDirection.
@@ -589,7 +589,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     Event::List events(
       const QDate &date,
-      const KDateTime::Spec &timespec = KDateTime::Spec(),
+      const KDateTime::Spec &timeSpec = KDateTime::Spec(),
       EventSortField sortField = EventSortUnsorted,
       SortDirection sortDirection = SortDirectionAscending );
 
@@ -621,7 +621,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
       @param start is the starting date
       @param end is the ending date
-      @param timespec time zone etc. to interpret @p start and @p end,
+      @param timeSpec time zone etc. to interpret @p start and @p end,
                       or the calendar's default time spec if none is specified
       @param inclusive if true only Events which are completely included
       within the date range are returned.
@@ -630,7 +630,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       date range.
     */
     virtual Event::List rawEvents( const QDate &start, const QDate &end,
-                                   const KDateTime::Spec &timespec = KDateTime::Spec(),
+                                   const KDateTime::Spec &timeSpec = KDateTime::Spec(),
                                    bool inclusive = false ) = 0;
 
     /**
@@ -639,7 +639,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       @a sortDirection.
 
       @param date request unfiltered Event list for this QDate only
-      @param timespec time zone etc. to interpret @p date,
+      @param timeSpec time zone etc. to interpret @p date,
                       or the calendar's default time spec if none is specified
       @param sortField specifies the EventSortField
       @param sortDirection specifies the SortDirection
@@ -647,7 +647,7 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       @return the list of sorted, unfiltered Events occurring on @p date
     */
     virtual Event::List rawEventsForDate(
-      const QDate &date, const KDateTime::Spec &timespec = KDateTime::Spec(),
+      const QDate &date, const KDateTime::Spec &timeSpec = KDateTime::Spec(),
       EventSortField sortField = EventSortUnsorted,
       SortDirection sortDirection = SortDirectionAscending ) = 0;
 

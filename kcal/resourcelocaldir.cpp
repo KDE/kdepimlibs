@@ -84,7 +84,8 @@ void ResourceLocalDir::writeConfig( KConfigGroup &group )
   group.writePathEntry( "CalendarURL", d->mURL.prettyUrl() );
 }
 
-void ResourceLocalDir::Private::init( )
+//@cond PRIVATE
+void ResourceLocalDir::Private::init()
 {
   mResource->setType( "dir" );
 
@@ -105,6 +106,7 @@ void ResourceLocalDir::Private::init( )
   mDirWatch.addDir( mURL.path(), KDirWatch::WatchFiles );
   mDirWatch.startScan();
 }
+//@endcond
 
 ResourceLocalDir::~ResourceLocalDir()
 {
@@ -284,6 +286,7 @@ void ResourceLocalDir::dump() const
   kDebug() << "  Url:" << d->mURL.url();
 }
 
+//@cond PRIVATE
 bool ResourceLocalDir::Private::deleteIncidenceFile( Incidence *incidence )
 {
   QFile file( mURL.path() + '/' + incidence->uid() );
@@ -397,3 +400,4 @@ bool ResourceLocalDir::Private::doFileLoad( CalendarLocal &cal,
   }
   return true;
 }
+//@endcond

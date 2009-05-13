@@ -253,19 +253,19 @@ Event *ResourceCached::event( const QString &uid )
   return d->mCalendar.event( uid );
 }
 
-Event::List ResourceCached::rawEventsForDate( const QDate &qd, const KDateTime::Spec &timespec,
+Event::List ResourceCached::rawEventsForDate( const QDate &qd, const KDateTime::Spec &timeSpec,
                                               EventSortField sortField,
                                               SortDirection sortDirection )
 {
-  Event::List list = d->mCalendar.rawEventsForDate( qd, timespec, sortField, sortDirection );
+  Event::List list = d->mCalendar.rawEventsForDate( qd, timeSpec, sortField, sortDirection );
 
   return list;
 }
 
 Event::List ResourceCached::rawEvents( const QDate &start, const QDate &end,
-                                       const KDateTime::Spec &timespec, bool inclusive )
+                                       const KDateTime::Spec &timeSpec, bool inclusive )
 {
-  return d->mCalendar.rawEvents( start, end, timespec, inclusive );
+  return d->mCalendar.rawEvents( start, end, timeSpec, inclusive );
 }
 
 Event::List ResourceCached::rawEventsForDate( const KDateTime &kdt )

@@ -150,9 +150,9 @@ bool VCalFormat::save( Calendar *calendar, const QString &fileName )
   return false;
 }
 
-bool VCalFormat::fromString( Calendar *calendar, const QString &text )
+bool VCalFormat::fromString( Calendar *calendar, const QString &string )
 {
-  return fromRawString( calendar, text.toUtf8() );
+  return fromRawString( calendar, string.toUtf8() );
 }
 
 bool VCalFormat::fromRawString( Calendar *calendar, const QByteArray &string )

@@ -165,10 +165,11 @@ class KCAL_EXPORT Scheduler
       processing a iTIP message with the current calendar and specifies the
       action to be taken for this incidence.
 
+      @param incidence the incidence for the transaction.
       @param method iTIP transaction method to check.
       @param status scheduling status.
     */
-    bool acceptTransaction( IncidenceBase *, iTIPMethod method,
+    bool acceptTransaction( IncidenceBase *incidence, iTIPMethod method,
                             ScheduleMessage::Status status );
 
     /**

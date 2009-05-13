@@ -122,23 +122,23 @@ class KCAL_EXPORT Attendee : private Person
     ~Attendee();
 
     /**
-      Sets the #Role of the attendee to @p role.
+      Sets the Role of the attendee to @p role.
 
-      @param role is the #Role to use for the attendee.
+      @param role is the Role to use for the attendee.
 
       @see role()
     */
     void setRole( Role role );
 
     /**
-      Returns the #Role of the attendee.
+      Returns the Role of the attendee.
 
       @see setRole()
     */
     Role role() const;
 
     /**
-      Returns the attendee #Role as a text string.
+      Returns the attendee Role as a text string.
 
       @see role(), roleName()
     */

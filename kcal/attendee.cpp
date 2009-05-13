@@ -56,20 +56,20 @@ class KCal::Attendee::Private
 //@endcond
 
 Attendee::Attendee( const QString &name, const QString &email, bool rsvp,
-                    Attendee::PartStat s, Attendee::Role r, const QString &u )
-  : d( new KCal::Attendee::Private )
+                    Attendee::PartStat status, Attendee::Role role, const QString &uid )
+  : d( new Attendee::Private )
 {
   setName( name );
   setEmail( email );
   d->mRSVP = rsvp;
-  d->mStatus = s;
-  d->mRole = r;
-  d->mUid = u;
+  d->mStatus = status;
+  d->mRole = role;
+  d->mUid = uid;
 }
 
 Attendee::Attendee( const Attendee &attendee )
   : Person( attendee ),
-    d( new KCal::Attendee::Private( *attendee.d ) )
+    d( new Attendee::Private( *attendee.d ) )
 {
 }
 
@@ -113,9 +113,9 @@ bool Attendee::RSVP() const
   return d->mRSVP;
 }
 
-void Attendee::setStatus( Attendee::PartStat s )
+void Attendee::setStatus( Attendee::PartStat status )
 {
-  d->mStatus = s;
+  d->mStatus = status;
 }
 
 Attendee::PartStat Attendee::status() const
@@ -170,9 +170,9 @@ QStringList Attendee::statusList()
   return list;
 }
 
-void Attendee::setRole( Attendee::Role r )
+void Attendee::setRole( Attendee::Role role )
 {
-  d->mRole = r;
+  d->mRole = role;
 }
 
 Attendee::Role Attendee::role() const
