@@ -49,8 +49,8 @@ class KCal::CalStorage::Private
 };
 //@endcond
 
-CalStorage::CalStorage( Calendar *cal )
-  : d( new KCal::CalStorage::Private ( cal ) )
+CalStorage::CalStorage( Calendar *calendar )
+  : d( new KCal::CalStorage::Private ( calendar ) )
 {
 }
 
