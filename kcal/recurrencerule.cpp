@@ -2098,6 +2098,7 @@ QString dumpTime( const KDateTime &dt )
   }
   return result;
 #else
+  Q_UNUSED( dt );
   return QString();
 #endif
 }
