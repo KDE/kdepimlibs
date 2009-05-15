@@ -14,6 +14,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/kabc
   ${CMAKE_BINARY_DIR}/kabc
   ${CMAKE_BINARY_DIR}/kcal
+  ${Boost_INCLUDE_DIR}
 )
 
 if ( Akonadi_FOUND )
