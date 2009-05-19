@@ -42,7 +42,8 @@ endif (GPGME_FOUND)
 
 if (NOT KDEPIM_ONLY_KLEO)
   find_package(Akonadi 1.1.85)
-  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KdepimLibs.")
+  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KdepimLibs.
+  AKONADI_INCLUDE_DIR=${AKONADI_INCLUDE_DIR} AKONADI_VERSION=${AKONADI_VERSION} Akonadi_FIND_VERSION=${Akonadi_FIND_VERSION} Akonadi_DIR=${Akonadi_DIR} ")
 
   find_package(Sasl2)
   macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" TRUE "" "Required to support authentication of logins in the IMAP and Sieve kioslaves.")
