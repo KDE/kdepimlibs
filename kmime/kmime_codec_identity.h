@@ -60,6 +60,9 @@ class KMIME_EXPORT IdentityCodec : public Codec
     */
     ~IdentityCodec() {}
 
+    using Codec::encode;
+    using Codec::decode;
+
     /**
       @copydoc
       QByteArray Codec::encode()
