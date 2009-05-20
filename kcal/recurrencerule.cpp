@@ -751,7 +751,6 @@ class KCal::RecurrenceRule::Private
                                // unless it matches the rule)
     uint mFrequency;
     /** how often it recurs:
-          -1 means infinitely,
            0 means an explicit end date,
            positive values give the number of occurrences */
     int mDuration;
@@ -1789,7 +1788,9 @@ Constraint RecurrenceRule::Private::getPreviousValidDateInterval( const KDateTim
   case rSecondly:
     periods = static_cast<int>( start.secsTo_long( toDate ) / modifier );
     // round it down to the next lower multiple of frequency:
-    periods = ( periods / mFrequency ) * mFrequency;
+    if ( mFrequency > 0 ) {
+      periods = ( periods / mFrequency ) * mFrequency;
+    }
     nextValid = start.addSecs( modifier * periods );
     break;
   case rWeekly:
@@ -1799,7 +1800,9 @@ Constraint RecurrenceRule::Private::getPreviousValidDateInterval( const KDateTim
   case rDaily:
     periods = start.daysTo( toDate ) / modifier;
     // round it down to the next lower multiple of frequency:
-    periods = ( periods / mFrequency ) * mFrequency;
+    if ( mFrequency > 0 ) {
+      periods = ( periods / mFrequency ) * mFrequency;
+    }
     nextValid = start.addDays( modifier * periods );
     break;
   case rMonthly:
@@ -1807,7 +1810,9 @@ Constraint RecurrenceRule::Private::getPreviousValidDateInterval( const KDateTim
     periods = 12 * ( toDate.date().year() - start.date().year() ) +
               ( toDate.date().month() - start.date().month() );
     // round it down to the next lower multiple of frequency:
-    periods = ( periods / mFrequency ) * mFrequency;
+    if ( mFrequency > 0 ) {
+      periods = ( periods / mFrequency ) * mFrequency;
+    }
     // set the day to the first day of the month, so we don't have problems
     // with non-existent days like Feb 30 or April 31
     start.setDate( QDate( start.date().year(), start.date().month(), 1 ) );
@@ -1816,7 +1821,9 @@ Constraint RecurrenceRule::Private::getPreviousValidDateInterval( const KDateTim
   case rYearly:
     periods = ( toDate.date().year() - start.date().year() );
     // round it down to the next lower multiple of frequency:
-    periods = ( periods / mFrequency ) * mFrequency;
+    if ( mFrequency > 0 ) {
+      periods = ( periods / mFrequency ) * mFrequency;
+    }
     nextValid.setDate( start.date().addYears( periods ) );
     break;
   default:
@@ -1853,7 +1860,7 @@ Constraint RecurrenceRule::Private::getNextValidDateInterval( const KDateTime &d
   case rSecondly:
     periods = static_cast<int>( start.secsTo_long( toDate ) / modifier );
     periods = qMax( 0L, periods );
-    if ( periods > 0 ) {
+    if ( periods > 0 && mFrequency > 0 ) {
       periods += ( mFrequency - 1 - ( ( periods - 1 ) % mFrequency ) );
     }
     nextValid = start.addSecs( modifier * periods );
@@ -1866,7 +1873,7 @@ Constraint RecurrenceRule::Private::getNextValidDateInterval( const KDateTime &d
   case rDaily:
     periods = start.daysTo( toDate ) / modifier;
     periods = qMax( 0L, periods );
-    if ( periods > 0 ) {
+    if ( periods > 0 && mFrequency > 0 ) {
       periods += ( mFrequency - 1 - ( ( periods - 1 ) % mFrequency ) );
     }
     nextValid = start.addDays( modifier * periods );
@@ -1876,7 +1883,7 @@ Constraint RecurrenceRule::Private::getNextValidDateInterval( const KDateTime &d
     periods = 12 * ( toDate.date().year() - start.date().year() ) +
               ( toDate.date().month() - start.date().month() );
     periods = qMax( 0L, periods );
-    if ( periods > 0 ) {
+    if ( periods > 0 && mFrequency > 0 ) {
       periods += ( mFrequency - 1 - ( ( periods - 1 ) % mFrequency ) );
     }
     // set the day to the first day of the month, so we don't have problems
@@ -1888,7 +1895,7 @@ Constraint RecurrenceRule::Private::getNextValidDateInterval( const KDateTime &d
   case rYearly:
     periods = ( toDate.date().year() - start.date().year() );
     periods = qMax( 0L, periods );
-    if ( periods > 0 ) {
+    if ( periods > 0 && mFrequency > 0 ) {
       periods += ( mFrequency - 1 - ( ( periods - 1 ) % mFrequency ) );
     }
     nextValid.setDate( start.date().addYears( periods ) );
