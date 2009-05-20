@@ -126,9 +126,6 @@ void SMTPProtocol::special( const QByteArray & aData ) {
   s >> what;
   if ( what == 'c' ) {
     infoMessage( createSpecialResponse() );
-#ifndef NDEBUG
-    kDebug(7112) << "special('c') returns \"" << createSpecialResponse() << "\"";
-#endif
   } else if ( what == 'N' ) {
     if ( !execute( Command::NOOP ) )
       return;
