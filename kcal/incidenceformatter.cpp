@@ -266,11 +266,19 @@ static QString eventViewerFormatHeader( Incidence *incidence )
     }
     tmpStr += "\">";
   }
+
   if ( incidence->type() == "Event" ) {
     tmpStr += "<img src=\"" +
               iconLoader->iconPath( "view-calendar-day", KIconLoader::Small ) +
               "\">";
   }
+
+  if ( incidence->type() == "Journal" ) {
+    tmpStr += "<img src=\"" +
+              iconLoader->iconPath( "view-pim-journal", KIconLoader::Small ) +
+              "\">";
+  }
+
   if ( incidence->isAlarmEnabled() ) {
     tmpStr += "<img src=\"" +
               iconLoader->iconPath( "preferences-desktop-notification-bell", KIconLoader::Small ) +
@@ -472,10 +480,8 @@ static QString eventViewerFormatJournal( Journal *journal, KDateTime::Spec spec 
     return QString();
   }
 
-  QString tmpStr;
-  if ( !journal->summary().isEmpty() ) {
-    tmpStr += eventViewerAddTag( "h2", journal->richSummary() );
-  }
+  QString tmpStr = eventViewerFormatHeader( journal );
+
   tmpStr += eventViewerAddTag(
     "h3", i18n( "Journal for %1", IncidenceFormatter::dateToString( journal->dtStart(), false,
                                                                     spec ) ) );
