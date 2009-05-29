@@ -256,6 +256,10 @@ static QString eventViewerFormatHeader( Incidence *incidence )
   // show icons
   KIconLoader *iconLoader = KIconLoader::global();
   tmpStr += "<td>";
+
+  // TODO: KDE5. Make the function QString Incidence::getPixmap() so we don't
+  // need downcasting.
+
   if ( incidence->type() == "Todo" ) {
     tmpStr += "<img src=\"";
     Todo *todo = static_cast<Todo *>( incidence );
