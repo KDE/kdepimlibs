@@ -262,7 +262,7 @@ Incidence *DndFactory::pasteIncidence( const QDate &newDate, const QTime *newTim
         anEvent->dtEnd().date() );
       // new end date if event starts at the same time on the new day
       KDateTime endDate( anEvent->dtEnd() );
-      endDate.setDate( newDate.addDays(daysOffset) );
+      endDate.setDate( newDate.addDays( daysOffset ) );
 
       KDateTime startDate( anEvent->dtStart() );
       startDate.setDate( newDate );
