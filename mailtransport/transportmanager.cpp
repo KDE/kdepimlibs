@@ -58,6 +58,7 @@ class TransportManager::Private
     KConfig *config;
     QList<Transport *> transports;
     bool myOwnChange;
+    bool appliedChange;
     KWallet::Wallet *wallet;
     bool walletOpenFailed;
     bool walletAsyncOpen;
@@ -84,6 +85,7 @@ TransportManager::TransportManager()
   KGlobal::locale()->insertCatalog( QLatin1String( "libmailtransport" ) );
   qAddPostRoutine( destroyStaticTransportManager );
   d->myOwnChange = false;
+  d->appliedChange = false;
   d->wallet = 0;
   d->walletOpenFailed = false;
   d->walletAsyncOpen = false;
@@ -362,14 +364,16 @@ void TransportManager::writeConfig()
 void TransportManager::emitChangesCommitted()
 {
   d->myOwnChange = true; // prevent us from reading our changes again
+  d->appliedChange = false; // but we have to read them at least once
   emit transportsChanged();
   emit changesCommitted();
 }
 
 void TransportManager::slotTransportsChanged()
 {
-  if ( d->myOwnChange ) {
+  if ( d->myOwnChange && d->appliedChange ) {
     d->myOwnChange = false;
+    d->appliedChange = false;
     return;
   }
 
@@ -377,6 +381,7 @@ void TransportManager::slotTransportsChanged()
   d->config->reparseConfiguration();
   // FIXME: this deletes existing transport objects!
   readConfig();
+  d->appliedChange = true; // to prevent recursion
   emit transportsChanged();
 }
 
