@@ -53,10 +53,9 @@ class KCal::CalFormat::Private
     ErrorFormat *mException;
 };
 
-//TODO: change strings to use "kcal" instead of "libkcal"?
 QString CalFormat::Private::mApplication = QLatin1String( "libkcal" );
 QString CalFormat::Private::mProductId =
-  QLatin1String( "-//K Desktop Environment//NONSGML libkcal 3.5//EN" );
+  QLatin1String( "-//K Desktop Environment//NONSGML libkcal 4.3//EN" );
 //@endcond
 
 CalFormat::CalFormat()
