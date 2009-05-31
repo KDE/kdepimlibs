@@ -22,6 +22,7 @@
 #include "mailtransport_defs.h"
 #include "legacydecrypt.h"
 
+#include <QTimer>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -164,7 +165,11 @@ void Transport::usrReadConfig()
   } else {
     // read password if wallet is open, defer otherwise
     if ( Wallet::isOpen( Wallet::NetworkWallet() ) ) {
-      readPassword();
+      // Don't read the password right away because this can lead
+      // to reentrancy problems in KDBusServiceStarter when an application
+      // run in Kontact creates the transports (due to a QEventLoop in the
+      // synchronous KWallet openWallet call).
+      QTimer::singleShot(0, this, SLOT(readPassword()));
     }
   }
 }
@@ -264,3 +269,5 @@ Transport *Transport::clone() const
   QString id = currentGroup().mid( 10 );
   return new Transport( id );
 }
+
+#include "transport.moc"
