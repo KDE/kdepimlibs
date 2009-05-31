@@ -1524,6 +1524,12 @@ void ICalFormatImpl::readIncidence( icalcomponent *parent,
 
     case ICAL_LOCATION_PROPERTY:  // location
     {
+      if ( !icalproperty_get_value( p ) ) {
+        //Fix for #191472. This is a pre-crash guard in case libical was
+        //compiled in superstrict mode (--enable-icalerrors-are-fatal)
+        //TODO: pre-crash guard other property getters too.
+        break;
+      }
       QString textStr = QString::fromUtf8( icalproperty_get_location( p ) );
       if ( !textStr.isEmpty() ) {
         QString valStr = QString::fromUtf8(
