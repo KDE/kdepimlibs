@@ -11,7 +11,7 @@ option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 2)
-set(KDEPIMLIBS_VERSION_PATCH 89)
+set(KDEPIMLIBS_VERSION_PATCH 90)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 ############### search packages used by KDE ###############
@@ -41,7 +41,7 @@ if (GPGME_FOUND)
 endif (GPGME_FOUND)
 
 if (NOT KDEPIM_ONLY_KLEO)
-  find_package(Akonadi 1.1.86)
+  find_package(Akonadi 1.1.90)
   macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KdepimLibs.")
 
   find_package(Sasl2)
