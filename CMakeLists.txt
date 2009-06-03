@@ -41,7 +41,7 @@ if (GPGME_FOUND)
 endif (GPGME_FOUND)
 
 if (NOT KDEPIM_ONLY_KLEO)
-  find_package(Akonadi 1.1.85)
+  find_package(Akonadi 1.1.90)
   macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KdepimLibs.")
 
   find_package(Sasl2)
