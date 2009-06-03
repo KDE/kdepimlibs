@@ -62,7 +62,7 @@
       <label>Store password</label>
       <whatsthis>
         Check this option to have your password stored.
-        \nIf KWallet is available the password will be stored there which is considered safe.\n
+        If KWallet is available the password will be stored there which is considered safe.
         However, if KWallet is not available, the password will be stored in the configuration file.
         The password is stored in an obfuscated format, but should not be considered secure from decryption efforts if access to the configuration file is obtained.
       </whatsthis>
