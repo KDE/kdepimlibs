@@ -1,4 +1,4 @@
-include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/.. ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS})
+#include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS})
 
 # TODO: 5324 is mailtransport. we need one of our own!
 add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5324 )
@@ -24,7 +24,7 @@ kde4_add_kcfg_files(outboxinterface_lib_srcs settings.kcfgc)
 install(FILES outboxinterface.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 
 kde4_add_library(outboxinterface SHARED ${outboxinterface_lib_srcs})
-target_link_libraries(outboxinterface ${KDE4_AKONADI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_MAILTRANSPORT_LIBS} ${KDE4_KMIME_LIBS} )
+target_link_libraries(outboxinterface ${KDE4_KIO_LIBS} akonadi-kde kmime mailtransport )
 set_target_properties(outboxinterface PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
 
