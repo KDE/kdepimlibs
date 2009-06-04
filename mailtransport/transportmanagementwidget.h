@@ -48,13 +48,12 @@ class MAILTRANSPORT_EXPORT TransportManagementWidget : public QWidget
     virtual ~TransportManagementWidget();
 
   private Q_SLOTS:
-    void fillTransportList();
     void updateButtonState();
     void addClicked();
     void editClicked();
+    void renameClicked();
     void removeClicked();
     void defaultClicked();
-    void slotSendmail();
 
   private:
     class Private;

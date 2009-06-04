@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,37 +17,46 @@
     02110-1301, USA.
 */
 
-#ifndef TRANSPORTMGR_H
-#define TRANSPORTMGR_H
+#ifndef MAILTRANSPORT_AKONADICONFIGWIDGET_H
+#define MAILTRANSPORT_AKONADICONFIGWIDGET_H
 
-#include <KVBox>
-#include <mailtransport/transportcombobox.h>
+#include "transportconfigwidget.h"
 
-class KJob;
-class KLineEdit;
-class KTextEdit;
+namespace MailTransport {
 
-class TransportMgr : public KVBox
+class Transport;
+
+/**
+  @internal
+*/
+class AkonadiConfigWidgetPrivate;
+
+/**
+  @internal
+  Configuration widget for an Akonadi transport.
+*/
+class AkonadiConfigWidget : public TransportConfigWidget
 {
   Q_OBJECT
 
   public:
-    TransportMgr();
+    explicit AkonadiConfigWidget( Transport *transport, QWidget *parent = 0 );
+    //virtual ~AkonadiConfigWidget();
 
-  private slots:
-    void removeAllBtnClicked();
-    void editBtnClicked();
-    void sendBtnClicked();
-    void cancelBtnClicked();
-    void jobResult( KJob *job );
-    void jobPercent( KJob *job, unsigned long percent );
-    void jobInfoMessage( KJob *job, const QString &info, const QString &info2 );
+  public Q_SLOTS:
+    /** reimpl */
+    virtual void apply();
+
+  protected:
+    AkonadiConfigWidget( AkonadiConfigWidgetPrivate &dd, Transport *transport, QWidget *parent );
 
   private:
-    MailTransport::TransportComboBox *mComboBox;
-    KLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
-    KTextEdit *mMailEdit;
-    KJob *mCurrentJob;
+    Q_DECLARE_PRIVATE( AkonadiConfigWidget )
+
+    void init();
+
 };
+
+}
 
 #endif

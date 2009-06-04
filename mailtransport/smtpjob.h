@@ -49,7 +49,7 @@ class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
   Q_OBJECT
   public:
     /**
-      Creates a SendmailJob.
+      Creates a SmtpJob.
       @param transport The transport settings.
       @param parent The parent object.
     */

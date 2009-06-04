@@ -1,5 +1,7 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+
+    Based on code from Kopete (addaccountwizard)
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,37 +19,48 @@
     02110-1301, USA.
 */
 
-#ifndef TRANSPORTMGR_H
-#define TRANSPORTMGR_H
+#ifndef MAILTRANSPORT_ADDTRANSPORTASSISTANT_H
+#define MAILTRANSPORT_ADDTRANSPORTASSISTANT_H
 
-#include <KVBox>
-#include <mailtransport/transportcombobox.h>
+#include <mailtransport/mailtransport_export.h>
 
-class KJob;
-class KLineEdit;
-class KTextEdit;
+#include <KDE/KAssistantDialog>
 
-class TransportMgr : public KVBox
+
+namespace MailTransport
+{
+
+
+/**
+  Assistant to help the user set up a new transport.
+*/
+class MAILTRANSPORT_EXPORT AddTransportAssistant : public KAssistantDialog
 {
   Q_OBJECT
 
-  public:
-    TransportMgr();
+public:
+  // TODO docu
+  explicit AddTransportAssistant( QWidget *parent = 0 );
+  ~AddTransportAssistant();
 
-  private slots:
-    void removeAllBtnClicked();
-    void editBtnClicked();
-    void sendBtnClicked();
-    void cancelBtnClicked();
-    void jobResult( KJob *job );
-    void jobPercent( KJob *job, unsigned long percent );
-    void jobInfoMessage( KJob *job, const QString &info, const QString &info2 );
+private slots:
+  void typeListClicked();
+  void typeListDoubleClicked();
 
-  private:
-    MailTransport::TransportComboBox *mComboBox;
-    KLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
-    KTextEdit *mMailEdit;
-    KJob *mCurrentJob;
+protected slots:
+  virtual void accept();
+  virtual void next();
+  virtual void reject();
+
+private:
+  class Private;
+  Private * const d;
+
 };
 
+
+}
+
+
 #endif
+
