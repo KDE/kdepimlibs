@@ -680,25 +680,45 @@ static QString invitationRow( const QString &cell1, const QString &cell2 )
 
 static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMode )
 {
+  // if description and comment -> use both
+  // if description, but no comment -> use the desc as the comment (and no desc)
+  // if comment, but no description -> use the comment and no description
+
   QString html;
   QString descr;
   QStringList comments;
-  if ( !incidence->description().isEmpty() ) {
-    if ( !incidence->descriptionIsRich() ) {
-      descr = string2HTML( incidence->description() );
-    } else {
-      descr = incidence->richDescription();
-      if ( noHtmlMode ) {
-        descr = cleanHtml( descr );
-      }
-      descr = eventViewerAddTag( "p", descr );
-    }
-  }
 
-  if ( incidence->comments().isEmpty() && !descr.isEmpty() ) {
-    comments << descr;
+  if ( incidence->comments().isEmpty() ) {
+    if ( !incidence->description().isEmpty() ) {
+      // use description as comments
+      if ( !incidence->descriptionIsRich() ) {
+        comments << string2HTML( incidence->description() );
+      } else {
+        comments << incidence->richDescription();
+        if ( noHtmlMode ) {
+          comments[0] = cleanHtml( comments[0] );
+        }
+        comments[0] = eventViewerAddTag( "p", comments[0] );
+      }
+    }
+    //else desc and comments are empty
   } else {
-    comments = incidence->comments();
+    // non-empty comments
+    for ( int i=0; i < incidence->comments().count(); ++i ) {
+      comments[i] = string2HTML( incidence->comments()[i] );
+    }
+    if ( !incidence->description().isEmpty() ) {
+      // use description too
+      if ( !incidence->descriptionIsRich() ) {
+        descr = string2HTML( incidence->description() );
+      } else {
+        descr = incidence->richDescription();
+        if ( noHtmlMode ) {
+          descr = cleanHtml( descr );
+        }
+        descr = eventViewerAddTag( "p", descr );
+      }
+    }
   }
 
   if( !descr.isEmpty() ) {
@@ -709,12 +729,12 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
     html += "<br><u>" + i18n( "Comments:" ) + "</u><table border=\"0\"><tr><td>&nbsp;</td><td>";
     if ( comments.count() > 1 ) {
       html += "<ul>";
-      for ( int i = 0; i < comments.count(); ++i ) {
-        html += "<li>" + string2HTML( comments[i] ) + "</li>";
+      for ( int i=0; i < comments.count(); ++i ) {
+        html += "<li>" + comments[i] + "</li>";
       }
       html += "</ul>";
     } else {
-      html += string2HTML( comments[0] );
+      html += comments[0];
     }
     html += "</td></tr></table>";
   }
