@@ -24,6 +24,7 @@
 #include "transportlistview.h"
 #include "transport.h"
 #include "transportmanager.h"
+#include "transporttypeinfo.h"
 
 #include <QHeaderView>
 #include <QLineEdit>
@@ -100,19 +101,7 @@ void TransportListView::fillTransportList()
     QTreeWidgetItem *item = new QTreeWidgetItem( this );
     item->setData( 0, Qt::UserRole, t->id() );
     item->setText( 0, t->name() );
-    QString type;
-    // TODO: perhaps Transport or TransportManager should have nameForType()?
-    switch ( t->type() ) {
-    case Transport::EnumType::SMTP:
-      type = i18nc( "@option SMTP transport", "SMTP" );
-      break;
-    case Transport::EnumType::Sendmail:
-      type = i18nc( "@option sendmail transport", "Sendmail" );
-      break;
-    case Transport::EnumType::Akonadi:
-      type = i18nc( "@option Akonadi Resource transport", "Akonadi Resource" );
-      break;
-    }
+    QString type = TransportTypeInfo::nameForType( t->type() );
     if ( TransportManager::self()->defaultTransportId() == t->id() ) {
       type += i18nc( "@label the default mail transport", " (Default)" );
     }
@@ -121,8 +110,6 @@ void TransportListView::fillTransportList()
       setCurrentItem( item );
     }
   }
-
-  // updateButtonState(); //TODO see comment in TransportManagementWidget
 }
 
 

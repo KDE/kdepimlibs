@@ -20,13 +20,9 @@
 #include "transportmanager.h"
 #include "mailtransport_defs.h"
 #include "transport.h"
-#include "akonadijob.h"
-#include "sendmailjob.h"
-#include "smtpjob.h"
 #include "transportconfigwidget.h"
-#include "sendmailconfigwidget.h"
-#include "akonadiconfigwidget.h"
-#include "smtpconfigwidget.h"
+#include "transportjob.h"
+#include "transporttypeinfo.h"
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -213,16 +209,7 @@ TransportJob *TransportManager::createTransportJob( int transportId )
   if ( !t ) {
     return 0;
   }
-  switch ( t->type() ) {
-  case Transport::EnumType::SMTP:
-    return new SmtpJob( t->clone(), this );
-  case Transport::EnumType::Sendmail:
-    return new SendmailJob( t->clone(), this );
-  case Transport::EnumType::Akonadi:
-    return new AkonadiJob( t->clone(), this );
-  }
-  Q_ASSERT( false );
-  return 0;
+  return TransportTypeInfo::jobForTransport( t->clone(), this );
 }
 
 TransportJob *TransportManager::createTransportJob( const QString &transport )
@@ -245,23 +232,6 @@ TransportJob *TransportManager::createTransportJob( const QString &transport )
 
   return 0;
 }
-
-TransportConfigWidget *TransportManager::configWidgetForTransport( Transport *transport, QWidget *parent )
-{
-  Q_ASSERT( transport );
-
-  switch( transport->type() ) {
-    case Transport::EnumType::SMTP:
-      return new SMTPConfigWidget( transport, parent );
-    case Transport::EnumType::Sendmail:
-      return new SendmailConfigWidget( transport, parent );
-    case Transport::EnumType::Akonadi:
-      return new AkonadiConfigWidget( transport, parent );
-  }
-  Q_ASSERT( false );
-  return 0;
-}
-
 
 bool TransportManager::isEmpty() const
 {
