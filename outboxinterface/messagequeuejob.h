@@ -30,7 +30,7 @@
 
 #include <KDE/KCompositeJob>
 
-#include <Akonadi/Collection>
+#include <akonadi/collection.h>
 
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>

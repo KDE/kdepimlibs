@@ -22,8 +22,8 @@
 
 #include <outboxinterface/outboxinterface_export.h>
 
-#include <Akonadi/Attribute>
-#include <Akonadi/Collection>
+#include <akonadi/attribute.h>
+#include <akonadi/collection.h>
 
 
 namespace OutboxInterface

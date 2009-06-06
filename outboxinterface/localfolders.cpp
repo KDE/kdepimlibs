@@ -39,14 +39,14 @@
 #include <KLocalizedString>
 #include <KStandardDirs>
 
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentInstanceCreateJob>
-#include <Akonadi/AgentManager>
-#include <Akonadi/AttributeFactory>
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionCreateJob>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/Monitor>
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentinstancecreatejob.h>
+#include <akonadi/agentmanager.h>
+#include <akonadi/attributefactory.h>
+#include <akonadi/collection.h>
+#include <akonadi/collectioncreatejob.h>
+#include <akonadi/collectionfetchjob.h>
+#include <akonadi/monitor.h>
 
 #include <resourcetester/resourcesynchronizationjob.h> // svn:external from playground/pim/akonaditest
 

@@ -23,8 +23,8 @@
 #include <KCmdLineArgs>
 #include <KDebug>
 
-#include <Akonadi/Collection>
-#include <Akonadi/Control>
+#include <akonadi/collection.h>
+#include <akonadi/control.h>
 
 #include <outboxinterface/localfolders.h>
 
