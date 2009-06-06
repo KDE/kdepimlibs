@@ -27,8 +27,6 @@
 
 #include <KLocalizedString>
 
-#include <Akonadi/Item>
-
 using namespace Akonadi;
 using namespace MailTransport;
 
