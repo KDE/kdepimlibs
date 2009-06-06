@@ -626,10 +626,12 @@ QString IncidenceFormatter::extensiveDisplayStr( IncidenceBase *incidence, KDate
  *  Helper functions for the body part formatter of kmail
  *******************************************************************/
 
+//TODO: 4.4: remove "meeting" from the invitation strings
+
 //@cond PRIVATE
 static QString string2HTML( const QString &str )
 {
-  return Qt::convertFromPlainText( str, Qt::WhiteSpaceNormal );
+  return Qt::escape( str );
 }
 
 static QString cleanHtml( const QString &html )
@@ -698,7 +700,6 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
         if ( noHtmlMode ) {
           comments[0] = cleanHtml( comments[0] );
         }
-        comments[0] = eventViewerAddTag( "p", comments[0] );
       }
     }
     //else desc and comments are empty
@@ -716,27 +717,38 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
         if ( noHtmlMode ) {
           descr = cleanHtml( descr );
         }
-        descr = eventViewerAddTag( "p", descr );
       }
     }
   }
 
   if( !descr.isEmpty() ) {
-    html += "<br/><u>" + i18n( "Description:" ) + "</u><table border=\"0\"><tr><td>&nbsp;</td><td>";
-    html += descr + "</td></tr></table>";
+    html += "<p>";
+    html += "<table border=\"0\" style=\"margin-top:4px;\">";
+    html += "<tr><td><center>" +
+            eventViewerAddTag( "u", i18n( "Description:" ) ) +
+            "</center></td></tr>";
+    html += "<tr><td>" + descr + "</td></tr>";
+    html += "</table>";
   }
+
   if ( !comments.isEmpty() ) {
-    html += "<br><u>" + i18n( "Comments:" ) + "</u><table border=\"0\"><tr><td>&nbsp;</td><td>";
+    html += "<p>";
+    html += "<table border=\"0\" style=\"margin-top:4px;\">";
+    html += "<tr><td><center>" +
+            eventViewerAddTag( "u", i18n( "Comments:" ) ) +
+            "</center></td></tr>";
+    html += "<tr>";
     if ( comments.count() > 1 ) {
-      html += "<ul>";
+      html += "<td><ul>";
       for ( int i=0; i < comments.count(); ++i ) {
         html += "<li>" + comments[i] + "</li>";
       }
-      html += "</ul>";
+      html += "</ul></td>";
     } else {
-      html += comments[0];
+      html += "<td>" + comments[0] + "</td>";
     }
-    html += "</td></tr></table>";
+    html += "</tr>";
+    html += "</table>";
   }
   return html;
 }
@@ -748,11 +760,8 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode )
     return QString();
   }
 
-  QString html;
-  QString tmp;
-
   QString sSummary = i18n( "Summary unspecified" );
-  if ( ! event->summary().isEmpty() ) {
+  if ( !event->summary().isEmpty() ) {
     if ( !event->summaryIsRich() ) {
       sSummary = string2HTML( event->summary() );
     } else {
@@ -760,12 +769,11 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode )
       if ( noHtmlMode ) {
         sSummary = cleanHtml( sSummary );
       }
-      sSummary = eventViewerAddTag( "p", sSummary );
     }
   }
 
   QString sLocation = i18n( "Location unspecified" );
-  if ( ! event->location().isEmpty() ) {
+  if ( !event->location().isEmpty() ) {
     if ( !event->locationIsRich() ) {
       sLocation = string2HTML( event->location() );
     } else {
@@ -773,13 +781,11 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode )
       if ( noHtmlMode ) {
         sLocation = cleanHtml( sLocation );
       }
-      sLocation = eventViewerAddTag( "p", sLocation );
     }
   }
 
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
-  html = QString( "<div dir=\"%1\">\n" ).arg( dir );
-  html += "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n";
+  QString html = QString( "<div dir=\"%1\">\n" ).arg( dir );
 
   // Meeting summary & location rows
   html += invitationRow( i18n( "What:" ), sSummary );
@@ -793,7 +799,7 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode )
 
   // Meeting Duration Row
   if ( !event->allDay() && event->hasEndDate() && event->dtEnd().isValid() ) {
-    tmp.clear();
+    QString tmp;
     QTime sDuration( 0, 0, 0 ), t;
     int secs = event->dtStart().secsTo( event->dtEnd() );
     t = sDuration.addSecs( secs );
@@ -811,9 +817,8 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode )
     html += invitationRow( i18n( "Recurrence:" ), IncidenceFormatter::recurrenceString( event ) );
   }
 
-  html += "</table>\n";
+  html += "</div>";
   html += invitationsDetailsIncidence( event, noHtmlMode );
-  html += "</div>\n";
 
   return html;
 }
@@ -839,7 +844,8 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode )
       sDescr = cleanHtml( sDescr );
     }
   }
-  QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
+  QString html = "<table border=\"0\" width=\"80%\" align=\"center\" "
+                 "cellpadding=\"1\" cellspacing=\"1\">";
   html += invitationRow( i18n( "Summary:" ), sSummary );
   html += invitationRow( i18n( "Description:" ), sDescr );
   html += "</table>\n";
@@ -868,7 +874,8 @@ static QString invitationDetailsJournal( Journal *journal, bool noHtmlMode )
       sDescr = cleanHtml( sDescr );
     }
   }
-  QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
+  QString html = "<table border=\"0\" width=\"80%\" align=\"center\" "
+                 "cellpadding=\"1\" cellspacing=\"1\">";
   html += invitationRow( i18n( "Summary:" ), sSummary );
   html += invitationRow( i18n( "Date:" ),
                          IncidenceFormatter::dateToString( journal->dtStart(), false,
@@ -886,7 +893,8 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
     return QString();
   }
 
-  QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
+  QString html = "<table border=\"0\" width=\"80%\" align=\"center\" "
+                 "cellpadding=\"1\" cellspacing=\"1\">";
   html += invitationRow( i18n( "Person:" ), fb->organizer().fullName() );
   html += invitationRow( i18n( "Start date:" ),
                          IncidenceFormatter::dateToString( fb->dtStart(),
@@ -953,6 +961,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     return i18n( "This event has been published" );
   case iTIPRequest:
     if ( event->revision() > 0 ) {
+      //TODO: 4.4, remove the h3 tag
       return i18n( "<h3>This meeting has been updated</h3>" );
     } else {
       return i18n( "You have been invited to this meeting" );
@@ -1481,21 +1490,15 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
 
   // First make the text of the message
   QString html;
+  html += "<div align=\"center\" style=\"border:solid 1px; width:80%;\">";
+  html += "<table cellspacing=\"4\" style=\"border-width:4px; border-style:groove\">";
 
-  QString tableStyle = QString::fromLatin1(
-    "style=\"border: solid 1px; margin: 0em;\"" );
-  QString tableHead = QString::fromLatin1(
-    "<div align=\"center\">"
-    "<table width=\"80%\" cellpadding=\"1\" cellspacing=\"0\" %1>"
-    "<tr><td>" ).arg( tableStyle );
-
-  html += tableHead;
   IncidenceFormatter::InvitationHeaderVisitor headerVisitor;
   // The InvitationHeaderVisitor returns false if the incidence is somehow invalid, or not handled
   if ( !headerVisitor.act( incBase, msg ) ) {
     return QString();
   }
-  html += "<h3>" + headerVisitor.result() + "</h3>";
+  html += "<tr>" + eventViewerAddTag( "h3", headerVisitor.result() ) + "</tr>";
 
   IncidenceFormatter::InvitationBodyVisitor bodyVisitor( noHtmlMode );
   if ( !bodyVisitor.act( incBase, msg ) ) {
@@ -1512,17 +1515,15 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
     }
   }
 
-  html += "<br/>";
-  html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr><tr>";
-
-#if 0
-  // TODO: implement this
-  html += helper->makeLinkURL( "accept", i18n( "[Enter this into my calendar]" ) );
-  html += "</td><td> &nbsp; </td><td>";
-#endif
-
   // Add groupware links
 
+  html += "<p>";
+  html += "<table border=\"0\" align=\"center\" cellspacing=\"4\"><tr>";
+
+  //TODO: 4.4, in tdOpen, change border-width:0px to border-width:2px and also
+  //remove the [] on the button strings: "Accept", "Decline", "Counter", etc.
+  const QString tdOpen = "<td style=\"border-width:0px;border-style:outset\">";
+  const QString tdClose = "</td>";
   Incidence *incidence = dynamic_cast<Incidence*>( incBase );
   switch ( msg->method() ) {
   case iTIPPublish:
@@ -1531,40 +1532,61 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
   case iTIPAdd:
   {
     if ( incidence && incidence->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
+      html += tdOpen;
       if ( incBase->type() == "Todo" ) {
-        html += "<td colspan=\"11\">";
+        //TODO: 4.4, remove the []
         html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
       } else {
-        html += "<td colspan=\"13\">";
         html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
       }
-      html += "</td></tr><tr>";
+      html += tdClose;
     }
-    html += "<td>";
+
     if ( incidence && !existingIncidence ) {
       // Accept
+      html += tdOpen;
+        //TODO: 4.4, remove the []
       html += helper->makeLink( "accept", i18nc( "accept to-do request", "[Accept]" ) );
-      html += "</td><td> &nbsp; </td><td>";
+      html += tdClose;
+
+      // Accept conditionally
+      html += tdOpen;
+      //TODO: 4.4, remove the []
       html += helper->makeLink( "accept_conditionally",
-                              i18nc( "Accept conditionally", "[Accept cond.]" ) );
-      html += "</td><td> &nbsp; </td><td>";
-      // counter proposal
+                                i18nc( "Accept conditionally", "[Accept cond.]" ) );
+      html += tdClose;
+
+      // Counter proposal
+      html += tdOpen;
+      //TODO: 4.4, remove the []
       html += helper->makeLink( "counter", i18n( "[Counter proposal]" ) );
-      html += "</td><td> &nbsp; </td><td>";
+      html += tdClose;
+
       // Decline
+      html += tdOpen;
+      //TODO: 4.4, remove the []
       html += helper->makeLink( "decline", i18nc( "decline to-do request", "[Decline]" ) );
-      html += "</td><td> &nbsp; </td><td>";
+      html += tdClose;
 
       // Delegate
+      html += tdOpen;
+      //TODO: 4.4, remove the []
       html += helper->makeLink( "delegate", i18nc( "delegate to-do to another", "[Delegate]" ) );
-      html += "</td><td> &nbsp; </td><td>";
+      html += tdClose;
 
       // Forward
+      html += tdOpen;
+      //TODO: 4.4, remove the []
       html += helper->makeLink( "forward", i18nc( "forward request to another", "[Forward]" ) );
+      html += tdClose;
 
+      // Check in calendar
       if ( incBase->type() == "Event" ) {
-        html += "</b></a></td><td> &nbsp; </td><td>";
+        html += tdOpen;
+        //TODO: 4.4, remove the []
+        //TODO: 4.4, change to "Check calendar"
         html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+        html += tdClose;
       }
     }
     break;
@@ -1572,24 +1594,41 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
 
   case iTIPCancel:
     // Cancel event from my calendar
+    html += tdOpen;
+    //TODO: 4.4, remove the []
     html += helper->makeLink( "cancel", i18n( "[Remove this from my calendar]" ) );
+    html += tdClose;
     break;
 
   case iTIPReply:
     // Enter this into my calendar
+    html += tdOpen;
+    //TODO: 4.4, remove the []
+    //TODO: 4.4, change string to "Enter this response into my..."
     if ( incBase->type() == "Todo" ) {
       html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
     } else {
       html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
     }
+    html += tdClose;
     break;
 
   case iTIPCounter:
+    html += tdOpen;
+    //TODO: 4.4, remove the []
     html += helper->makeLink( "accept_counter", i18n( "[Accept]" ) );
-    html += "&nbsp;";
+    html += tdClose;
+
+    html += tdOpen;
+    //TODO: 4.4, remove the []
     html += helper->makeLink( "decline_counter", i18n( "[Decline]" ) );
-    html += "&nbsp;";
+    html += tdClose;
+
+    html += tdOpen;
+    //TODO: 4.4, remove the []
+    //TODO: 4.4, change string to "Check calendar"
     html += helper->makeLink( "check_calendar", i18n( "[Check my calendar]" ) );
+    html += tdClose;
     break;
 
   case iTIPDeclineCounter:
@@ -1597,10 +1636,12 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
     break;
   }
 
-  html += "</td></tr></table>";
+  // close the groupware table
+  html += "</tr></table>";
 
-  html += "</td></tr></table><br></div>";
-
+  // close the top-level table
+  html += "</table></div>";
+  kDebug() << html;
   return html;
 }
 //@endcond
