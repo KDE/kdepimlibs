@@ -648,11 +648,14 @@ static QString eventStartTimeStr( Event *event )
   QString tmp;
   if ( !event->allDay() ) {
     tmp =  i18nc( "%1: Start Date, %2: Start Time", "%1 %2",
-                  IncidenceFormatter::dateToString( event->dtStart() ),
-                  IncidenceFormatter::timeToString( event->dtStart() ) );
+                  IncidenceFormatter::dateToString( event->dtStart(), true,
+                                                    KSystemTimeZones::local() ),
+                  IncidenceFormatter::timeToString( event->dtStart(), true,
+                                                    KSystemTimeZones::local() ) );
   } else {
     tmp = i18nc( "%1: Start Date", "%1 (all day)",
-                 IncidenceFormatter::dateToString( event->dtStart() ) );
+                 IncidenceFormatter::dateToString( event->dtStart(), true,
+                                                   KSystemTimeZones::local() ) );
   }
   return tmp;
 }
@@ -663,11 +666,14 @@ static QString eventEndTimeStr( Event *event )
   if ( event->hasEndDate() && event->dtEnd().isValid() ) {
     if ( !event->allDay() ) {
       tmp =  i18nc( "%1: End Date, %2: End Time", "%1 %2",
-                    IncidenceFormatter::dateToString( event->dtEnd() ),
-                    IncidenceFormatter::timeToString( event->dtEnd() ) );
+                    IncidenceFormatter::dateToString( event->dtEnd(), true,
+                                                      KSystemTimeZones::local() ),
+                    IncidenceFormatter::timeToString( event->dtEnd(), true,
+                                                      KSystemTimeZones::local() ) );
     } else {
       tmp = i18nc( "%1: End Date", "%1 (all day)",
-                   IncidenceFormatter::dateToString( event->dtEnd() ) );
+                   IncidenceFormatter::dateToString( event->dtEnd(), true,
+                                                     KSystemTimeZones::local() ) );
     }
   } else {
     tmp = i18n( "Unspecified" );
