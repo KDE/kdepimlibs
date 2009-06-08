@@ -1045,8 +1045,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     return i18n( "This event has been published" );
   case iTIPRequest:
     if ( event->revision() > 0 ) {
-    //TODO: 4.4, remove the h3 tag
-      return i18n( "<h3>This invitation has been updated</h3>" );
+      return i18n( "This invitation has been updated" );
     }
     if ( iamOrganizer( event ) ) {
       return i18n( "I sent this invitation" );
@@ -1663,9 +1662,7 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
   html += "<p>";
   html += "<table border=\"0\" align=\"center\" cellspacing=\"4\"><tr>";
 
-  //TODO: 4.4, in tdOpen, change border-width:0px to border-width:2px and also
-  //remove the [] on the button strings: "Accept", "Decline", "Counter", etc.
-  const QString tdOpen = "<td style=\"border-width:0px;border-style:outset\">";
+  const QString tdOpen = "<td style=\"border-width:2px;border-style:outset\">";
   const QString tdClose = "</td>";
   switch ( msg->method() ) {
     case iTIPPublish:
@@ -1687,66 +1684,58 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
         if ( rsvpReq ) {
           // Accept
           html += tdOpen;
-          //TODO: 4.4, remove the []
           html += helper->makeLink( "accept",
                                     i18nc( "accept invitation",
-                                           "[Accept]" ) );
+                                           "Accept" ) );
           html += tdClose;
 
           // Accept conditionally
           html += tdOpen;
-          //TODO: 4.4, remove the []
           html += helper->makeLink( "accept_conditionally",
                                     i18nc( "Accept invitation conditionally",
-                                           "[Accept cond.]" ) );
+                                           "Accept cond." ) );
           html += tdClose;
         }
 
         if ( rsvpReq ) {
           // Counter proposal
           html += tdOpen;
-          //TODO: 4.4, remove the []
           html += helper->makeLink( "counter",
                                     i18nc( "invitation counter proposal",
-                                           "[Counter proposal]" ) );
+                                           "Counter proposal" ) );
           html += tdClose;
         }
 
         if ( rsvpReq ) {
           // Decline
           html += tdOpen;
-          //TODO: 4.4, remove the []
           html += helper->makeLink( "decline",
                                     i18nc( "decline invitation",
-                                           "[Decline]" ) );
+                                           "Decline" ) );
           html += tdClose;
         }
 
         if ( !rsvpRec ) {
           // Delegate
           html += tdOpen;
-          //TODO: 4.4, remove the []
           html += helper->makeLink( "delegate",
                                     i18nc( "delegate inviation to another",
-                                           "[Delegate]" ) );
+                                           "Delegate" ) );
           html += tdClose;
 
           // Forward
           html += tdOpen;
-          //TODO: 4.4, remove the []
           html += helper->makeLink( "forward",
                                     i18nc( "forward request to another",
-                                           "[Forward]" ) );
+                                           "Forward" ) );
           html += tdClose;
 
           // Check calendar
           if ( incBase->type() == "Event" ) {
             html += tdOpen;
-            //TODO: 4.4, remove the []
-            //TODO: 4.4, change to "Check calendar"
             html += helper->makeLink( "check_calendar",
                                       i18nc( "look for scheduling conflicts",
-                                             "[Check my calendar]" ) );
+                                             "Check my calendar" ) );
             html += tdClose;
           }
         }
@@ -1758,13 +1747,12 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
       // Remove invitation
       if ( existingIncidence ) {
         html += tdOpen;
-        //TODO: 4.4, remove the []
         if ( inc->type() == "Todo" ) {
           html += helper->makeLink( "cancel",
-                                    i18n( "[Remove invitation from my task list]" ) );
+                                    i18n( "Remove invitation from my task list" ) );
         } else {
           html += helper->makeLink( "cancel",
-                                    i18n( "[Remove invitation from my calendar]" ) );
+                                    i18n( "Remove invitation from my calendar" ) );
         }
         html += tdClose;
       }
@@ -1783,7 +1771,6 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
       }
       if ( ea && ( ea->status() != Attendee::NeedsAction ) && ( ea->status() == a->status() ) ) {
         html += tdOpen;
-        //TODO: 4.4, remove the []
         html += eventViewerAddTag( "i", i18n( "The response has already been recorded" ) );
       } else {
         if ( inc->type() == "Todo" ) {
@@ -1799,19 +1786,15 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
     case iTIPCounter:
       // Counter proposal
       html += tdOpen;
-      //TODO: 4.4, remove the []
-      html += helper->makeLink( "accept_counter", i18n( "[Accept]" ) );
+      html += helper->makeLink( "accept_counter", i18n( "Accept" ) );
       html += tdClose;
 
       html += tdOpen;
-      //TODO: 4.4, remove the []
-      html += helper->makeLink( "decline_counter", i18n( "[Decline]" ) );
+      html += helper->makeLink( "decline_counter", i18n( "Decline" ) );
       html += tdClose;
 
       html += tdOpen;
-      //TODO: 4.4, remove the []
-      //TODO: 4.4, change string to "Check calendar"
-      html += helper->makeLink( "check_calendar", i18n( "[Check my calendar]" ) );
+      html += helper->makeLink( "check_calendar", i18n( "Check my calendar" ) );
       html += tdClose;
       break;
 
