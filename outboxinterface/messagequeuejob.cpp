@@ -148,13 +148,15 @@ bool MessageQueueJob::Private::validate()
 
 void MessageQueueJob::Private::doStart()
 {
+  LocalFolders::self()->disconnect( q );
+  kDebug() << q << "starting";
+  Q_ASSERT( !started );
+  started = true;
+
   if( !validate() ) {
     // The error has been set; the result has been emitted.
     return;
   }
-
-  Q_ASSERT( !started );
-  started = true;
 
   // create item
   Item item;
@@ -188,10 +190,12 @@ MessageQueueJob::MessageQueueJob( QObject *parent )
   : KCompositeJob( parent )
   , d( new Private( this ) )
 {
+  kDebug() << this << "created";
 }
 
 MessageQueueJob::~MessageQueueJob()
 {
+  kDebug() << this << "destroyed";
   delete d;
 }
 
