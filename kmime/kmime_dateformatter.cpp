@@ -225,7 +225,7 @@ QString DateFormatter::fancy( time_t t ) const
     return i18nc( "invalid time specified", "unknown" );
   }
 
-  if ( mTodayOneSecondBeforeMidnight == 0 ) {
+  if ( mTodayOneSecondBeforeMidnight < time( 0 ) ) {
     // determine time_t value of today 23:59:59
     const QDateTime today( QDate::currentDate(), QTime( 23, 59, 59 ) );
     mTodayOneSecondBeforeMidnight = today.toTime_t();

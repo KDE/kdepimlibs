@@ -162,6 +162,7 @@ class KMIME_EXPORT DateFormatter
     /**
       Resets the cached current date used for calculating the fancy date.
       This should be called whenever the current date changed, i.e. on midnight.
+      @deprecated Can be safely removed. The date change is taken care of internally (as of 4.3).
     */
     void reset();
 
