@@ -610,6 +610,10 @@ static bool iamOrganizer( Incidence *incidence )
 {
   // Check if I'm the organizer for this incidence
 
+  if ( !incidence ) {
+    return false;
+  }
+
   bool iam = false;
   KEMailSettings settings;
   QStringList profiles = settings.profiles();
@@ -1828,7 +1832,7 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
   html += "</tr></table>";
 
   // Add the attendee list if I am the organizer
-  if ( myInc ) {
+  if ( myInc && helper->calendar() ) {
     html += invitationAttendees( helper->calendar()->incidence( inc->uid() ) );
   }
 
