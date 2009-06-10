@@ -4,7 +4,7 @@
   Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
-  Copyright (c) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2009 Klarï¿½lvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -768,24 +768,45 @@ static QString invitationPerson( const QString &email, QString name, QString uid
 
 static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMode )
 {
+  // if description and comment -> use both
+  // if description, but no comment -> use the desc as the comment (and no desc)
+  // if comment, but no description -> use the comment and no description
+
   QString html;
   QString descr;
   QStringList comments;
-  if ( !incidence->description().isEmpty() ) {
-    if ( !incidence->descriptionIsRich() ) {
-      descr = string2HTML( incidence->description() );
-    } else {
-      descr = incidence->richDescription();
-      if ( noHtmlMode ) {
-        descr = cleanHtml( descr );
+
+  if ( incidence->comments().isEmpty() ) {
+    if ( !incidence->description().isEmpty() ) {
+      // use description as comments
+      if ( !incidence->descriptionIsRich() ) {
+        comments << string2HTML( incidence->description() );
+      } else {
+        comments << incidence->richDescription();
+        if ( noHtmlMode ) {
+          comments[0] = cleanHtml( comments[0] );
+        }
+        comments[0] = eventViewerAddTag( "p", comments[0] );
       }
     }
-  }
-
-  if ( incidence->comments().isEmpty() && !descr.isEmpty() ) {
-    comments << descr;
+    //else desc and comments are empty
   } else {
-    comments = incidence->comments();
+    // non-empty comments
+    for ( int i=0; i < incidence->comments().count(); ++i ) {
+      comments[i] = string2HTML( incidence->comments()[i] );
+    }
+    if ( !incidence->description().isEmpty() ) {
+      // use description too
+      if ( !incidence->descriptionIsRich() ) {
+        descr = string2HTML( incidence->description() );
+      } else {
+        descr = incidence->richDescription();
+        if ( noHtmlMode ) {
+          descr = cleanHtml( descr );
+        }
+        descr = eventViewerAddTag( "p", descr );
+      }
+    }
   }
 
   if( !descr.isEmpty() ) {
@@ -806,12 +827,12 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
     html += "<tr>";
     if ( comments.count() > 1 ) {
       html += "<td><ul>";
-      for ( int i = 0; i < comments.count(); ++i ) {
-        html += "<li>" + string2HTML( comments[i] ) + "</li>";
+      for ( int i=0; i < comments.count(); ++i ) {
+        html += "<li>" + comments[i] + "</li>";
       }
       html += "</ul></td>";
     } else {
-      html += "<td>" + string2HTML( comments[0] ) + "</td>";
+      html += "<td>" + comments[0] + "</td>";
     }
     html += "</tr>";
     html += "</table>";
