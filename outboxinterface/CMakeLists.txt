@@ -8,6 +8,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 add_subdirectory( tests )
 
 set(outboxinterface_lib_srcs
+  dispatcherinterface.cpp
   localfolders.cpp
   messagequeuejob.cpp
 
@@ -19,6 +20,9 @@ set(outboxinterface_lib_srcs
 
   resourcetester/resourcesynchronizationjob.cpp
 )
+
+qt4_add_dbus_interface( outboxinterface_lib_srcs interfaces/org.kde.Akonadi.MailDispatcher.xml mdainterface )
+install( FILES interfaces/org.kde.Akonadi.MailDispatcher.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 
 kde4_add_kcfg_files(outboxinterface_lib_srcs settings.kcfgc)
 install(FILES outboxinterface.kcfg DESTINATION ${KCFG_INSTALL_DIR})
@@ -32,6 +36,7 @@ install(TARGETS outboxinterface ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install( FILES 
         outboxinterface_export.h
+        dispatcherinterface.h
         localfolders.h
         messagequeuejob.h
 
