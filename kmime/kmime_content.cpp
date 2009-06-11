@@ -57,11 +57,25 @@ Content::Content()
 {
 }
 
+Content::Content( Content *parent )
+  : d_ptr( new ContentPrivate( this ) )
+{
+  d_ptr->parent = parent;
+}
+
 Content::Content( const QByteArray &h, const QByteArray &b )
   : d_ptr( new ContentPrivate( this ) )
 {
   d_ptr->head = h;
   d_ptr->body = b;
+}
+
+Content::Content( const QByteArray &h, const QByteArray &b, Content *parent )
+  : d_ptr( new ContentPrivate( this ) )
+{
+  d_ptr->head = h;
+  d_ptr->body = b;
+  d_ptr->parent = parent;
 }
 
 Content::Content( ContentPrivate *d ) :
@@ -202,7 +216,7 @@ void Content::parse()
 
         //binary parts
         for ( int i = 0; i < uup.binaryParts().count(); ++i ) {
-          c = new Content();
+          c = new Content( this );
           //generate content with mime-compliant headers
           tmp = "Content-Type: ";
           tmp += uup.mimeTypes().at( i );
@@ -242,7 +256,7 @@ void Content::parse()
 
           //binary parts
           for ( int i=0; i<yenc.binaryParts().count(); i++ ) {
-            c = new Content();
+            c = new Content( this );
             //generate content with mime-compliant headers
             tmp = "Content-Type: ";
             tmp += yenc.mimeTypes().at( i );
@@ -294,7 +308,7 @@ void Content::parse()
         QList<QByteArray>::Iterator it;
         for ( it=parts.begin(); it != parts.end(); ++it ) {
           //create a new Content for every part
-          c = new Content();
+          c = new Content( this );
           c->setContent( *it );
           c->parse();
           c->contentType()->setCategory( cat ); //set category of the sub-part
@@ -510,7 +524,7 @@ QByteArray Content::decodedContent()
     }
   }
 
-  if ( removeTrailingNewline && (ret.size() > 0 ) && ( ret[ret.size()-1] == '\n') ) {
+  if ( removeTrailingNewline && ( ret.size() > 0 ) && ( ret[ret.size()-1] == '\n') ) {
     ret.resize( ret.size() - 1 );
   }
 
@@ -616,7 +630,7 @@ void Content::addContent( Content *c, bool prepend )
     // this message is not multipart yet
 
     // first we convert the body to a content
-    Content *main = new Content();
+    Content *main = new Content( this );
 
     //the Mime-Headers are needed, so we move them to the new content
     for ( Headers::Base::List::iterator it = h_eaders.begin();
@@ -650,12 +664,16 @@ void Content::addContent( Content *c, bool prepend )
     contentTransferEncoding()->clear();  // 7Bit, decoded
 
   }
+
   //here we actually add the content
   if ( prepend ) {
     d->contents.insert( 0, c );
   } else {
     d->contents.append( c );
   }
+
+  if ( c->parent() != this )
+    c->setParent(this);
 }
 
 void Content::removeContent( Content *c, bool del )
@@ -668,6 +686,8 @@ void Content::removeContent( Content *c, bool del )
   d->contents.removeAll( c );
   if ( del ) {
     delete c;
+  } else {
+    c->setParent( 0 );
   }
 
   //only one content left => turn this message in a single-part
@@ -1096,5 +1116,48 @@ bool Content::isTopLevel() const
 {
   return false;
 }
+
+void Content::setParent( Content* parent )
+{
+  //make sure the Content is only in the contents list of one parent object
+  Content *oldParent = d_ptr->parent;
+  if ( oldParent && oldParent->contents().contains( this ) ) {
+    oldParent->removeContent( this );
+  }
+
+  d_ptr->parent = parent;
+  if ( parent && !parent->contents().contains( this ) ) {
+    parent->addContent( this );
+  }
+}
+
+Content* Content::parent() const
+{
+  return d_ptr->parent;
+}
+
+Content* Content::topLevel() const
+{
+  Content *top = 0;
+  Content *c = parent();
+  while ( c ) {
+    top = c;
+    c = c->parent();
+  }
+
+  return top;
+}
+
+ContentIndex Content::index() const
+{
+  Content* top = topLevel();
+  if ( top ) {
+    return top->indexForContent( const_cast<Content*>(this) );
+  }
+
+  return indexForContent( const_cast<Content*>(this)  );
+}
+
+
 
 } // namespace KMime

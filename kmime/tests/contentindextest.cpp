@@ -83,6 +83,7 @@ void ContentIndexTest::testContent( )
   QCOMPARE( c1->content( ContentIndex( "3" ) ), c12 );
   QCOMPARE( c1->content( ContentIndex( "3.2" ) ), c121 );
   QCOMPARE( c1->indexForContent( c121 ), ContentIndex( "3.2" ) );
+  QCOMPARE( c121->index(), ContentIndex( "3.2" ) );
 
   QCOMPARE( c1->indexForContent( (Content*)0 ), ContentIndex() );
 }

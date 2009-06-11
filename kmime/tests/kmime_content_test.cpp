@@ -359,6 +359,88 @@ void KMimeContentTest::testParsingUuencoded()
   delete msg;
 }
 
+void KMimeContentTest::testParent()
+{
+  Content *c1 = new Content();
+  c1->contentType()->from7BitString( "multipart/mixed" );
+
+  Content *c2 = new Content();
+  c2->contentType()->from7BitString( "text/plain" );
+  c2->setBody( "textpart" );
+
+  Content *c3 = new Content();
+  c3->contentType()->from7BitString( "text/html" );
+  c3->setBody( "htmlpart" );
+
+  Content *c4 = new Content();
+  c4->contentType()->from7BitString( "text/html" );
+  c4->setBody( "htmlpart2" );
+
+  Content *c5 = new Content();
+  c5->contentType()->from7BitString( "multipart/mixed" );
+
+//c2 doesn't have a parent yet
+  QCOMPARE(c2->parent(), (Content*)(0L));
+
+  c1->addContent( c2 );
+  c1->addContent( c3 );
+  c1->addContent( c4 );
+
+  // c1 is the parent of those
+  QCOMPARE( c2->parent(), c1 );
+  QCOMPARE( c3->parent(), c1 );
+
+  //test removal
+  c1->removeContent(c2, false);
+  QCOMPARE(c2->parent(), (Content*)(0L));
+  QCOMPARE(c1->contents().at( 0 ), c3 );
+
+ //check if the content is moved correctly to another parent
+  c5->addContent( c4 );
+  QCOMPARE(c4->parent(), c5);
+  QCOMPARE(c1->contents().count(), 0); //yes, it should be 0
+  QCOMPARE(c5->contents().at( 0 ), c4);
+
+
+
+  // example taken from RFC 2046, section 5.1.1.
+  QByteArray data =
+    "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
+    "To: Ned Freed <ned@innosoft.com>\n"
+    "Date: Sun, 21 Mar 1993 23:56:48 -0800 (PST)\n"
+    "Subject: Sample message\n"
+    "MIME-Version: 1.0\n"
+    "Content-type: multipart/mixed; boundary=\"simple boundary\"\n"
+    "\n"
+    "This is the preamble.  It is to be ignored, though it\n"
+    "is a handy place for composition agents to include an\n"
+    "explanatory note to non-MIME conformant readers.\n"
+    "\n"
+    "--simple boundary\n"
+    "\n"
+    "This is implicitly typed plain US-ASCII text.\n"
+    "It does NOT end with a linebreak.\n"
+    "--simple boundary\n"
+    "Content-type: text/plain; charset=us-ascii\n"
+    "\n"
+    "This is explicitly typed plain US-ASCII text.\n"
+    "It DOES end with a linebreak.\n"
+    "\n"
+    "--simple boundary--\n"
+    "\n"
+    "This is the epilogue.  It is also to be ignored.\n";
+
+  // test parsing
+  Message *msg = new Message();
+  msg->setContent( data );
+  msg->parse();
+  QCOMPARE( msg->parent(),  (Content*)(0L));
+  QCOMPARE( msg->contents().at( 0 )->parent(), msg);
+  QCOMPARE( msg->contents().at( 1 )->parent(), msg);
+  delete msg;
+
+}
+
 
 #include "kmime_content_test.moc"
 

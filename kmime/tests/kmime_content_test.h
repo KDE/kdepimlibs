@@ -37,6 +37,7 @@ class KMimeContentTest : public QObject
       MIME structure is created.
     */
     void testParsingUuencoded();
+    void testParent();
 };
 
 #endif

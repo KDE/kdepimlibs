@@ -77,12 +77,29 @@ class KMIME_EXPORT Content
     Content();
 
     /**
+      Creates an empty Content object with a specified parent.
+      @param parent the parent Content object
+      @since 4.3
+    */
+    explicit Content( Content* parent ); //TODO: Merge with the above
+
+    /**
       Creates a Content object containing the given raw data.
 
       @param head is a QByteArray containing the header data.
       @param body is a QByteArray containing the body data.
     */
     Content( const QByteArray &head, const QByteArray &body );
+
+    /**
+      Creates a Content object containing the given raw data.
+
+      @param head is a QByteArray containing the header data.
+      @param body is a QByteArray containing the body data.
+      @param parent the parent Content object
+      @since 4.3
+    */
+    Content( const QByteArray &head, const QByteArray &body, Content *parent ); //TODO: merge with the above
 
     /**
       Destroys this Content object.
@@ -307,7 +324,9 @@ class KMIME_EXPORT Content
 
     /**
       Adds a new sub-Content, the current Content object is converted into a
-      multipart/mixed Content node if it has been a single-part Content.
+      multipart/mixed Content node if it has been a single-part Content. If the sub-Content
+      is already in another Content object, it is removed from there and its parent is
+      updated.
 
       @param c The new sub-Content.
       @param prepend if true, prepend to the Content list; else append
@@ -322,7 +341,7 @@ class KMIME_EXPORT Content
       into a single-port Content if only one sub-Content is left.
 
       @param c The Content to remove.
-      @param del if true, delete the removed Content object.
+      @param del if true, delete the removed Content object. Otherwise its parent is set to NULL.
 
       @see addContent().
     */
@@ -396,6 +415,32 @@ class KMIME_EXPORT Content
       is actually a message or news article.
     */
     virtual bool isTopLevel() const;
+
+    /**
+     * Sets a new parent to the Content and add to its contents list. If it already had a parent, it is removed from the
+     * old parents contents list.
+     * @param parent the new parent
+     * @since 4.3
+     */
+    void setParent( Content *parent );
+
+    /**
+     * Returns the parent content object, or NULL if the content doesn't have a parent.
+     * @since 4.3
+     */
+    Content* parent() const;
+
+    /**
+     * Returns the toplevel content object, NULL if there is no such object.
+     * @since 4.3
+     */
+    Content* topLevel() const;
+
+    /**
+     * Returns the index of this Content based on the topLevel() object.
+     * @since 4.3
+     */
+    ContentIndex index() const;
 
   protected:
     /**
