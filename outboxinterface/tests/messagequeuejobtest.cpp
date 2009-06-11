@@ -43,7 +43,7 @@
 #include <outboxinterface/addressattribute.h>
 #include <outboxinterface/dispatchmodeattribute.h>
 #include <outboxinterface/errorattribute.h>
-#include <outboxinterface/sentcollectionattribute.h>
+#include <outboxinterface/sentbehaviourattribute.h>
 #include <outboxinterface/transportattribute.h>
 
 #define SPAM_ADDRESS ( QStringList() << "idanoka@gmail.com" )
@@ -113,9 +113,9 @@ void MessageQueueJobTest::testValidMessages()
   DispatchModeAttribute *dA = item.attribute<DispatchModeAttribute>();
   QVERIFY( dA );
   QCOMPARE( dA->dispatchMode(), DispatchModeAttribute::Immediately ); // default mode
-  SentCollectionAttribute *sA = item.attribute<SentCollectionAttribute>();
+  SentBehaviourAttribute *sA = item.attribute<SentBehaviourAttribute>();
   QVERIFY( sA );
-  QCOMPARE( sA->sentCollection(), LocalFolders::self()->sentMail().id() ); // default sent collection
+  QCOMPARE( sA->sentBehaviour(), SentBehaviourAttribute::MoveToDefaultSentCollection ); // default sent collection
   TransportAttribute *tA = item.attribute<TransportAttribute>();
   QVERIFY( tA );
   QCOMPARE( tA->transportId(), tid );
@@ -172,13 +172,13 @@ void MessageQueueJobTest::testInvalidMessages()
   job->setDispatchMode( DispatchModeAttribute::AfterDueDate );
   QVERIFY( !job->exec() );
 
-  // with invalid sent-mail folder
+  // with MoveToCollection and no sent-mail folder
   job = new MessageQueueJob;
   msg = Message::Ptr( new Message );
   msg->setContent( "\nThis is a message sent from the MessageQueueJobTest unittest. This shouldn't have been sent.\n" );
   job->setMessage( msg );
   job->setTo( SPAM_ADDRESS );
-  job->setSentMailCollection( -1 );
+  job->setSentBehaviour( SentBehaviourAttribute::MoveToCollection );
   QVERIFY( !job->exec() );
 }
 

@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef OUTBOXINTERFACE_SENTCOLLECTIONATTRIBUTE_H
-#define OUTBOXINTERFACE_SENTCOLLECTIONATTRIBUTE_H
+#ifndef OUTBOXINTERFACE_SENTBEHAVIOURATTRIBUTE_H
+#define OUTBOXINTERFACE_SENTBEHAVIOURATTRIBUTE_H
 
 #include <outboxinterface/outboxinterface_export.h>
 
@@ -34,22 +34,41 @@ namespace OutboxInterface
  * Attribute storing the id of the sent-mail collection for a message.  The
  * dispatcher agent will move the item to that collection after it is sent.
  */
-class OUTBOXINTERFACE_EXPORT SentCollectionAttribute : public Akonadi::Attribute
+class OUTBOXINTERFACE_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
 {
   public:
-    explicit SentCollectionAttribute( Akonadi::Collection::Id id = -1 );
-    virtual ~SentCollectionAttribute();
+    /**
+      What to do with the item in the outbox after it has been sent successfully.
+    */
+    enum SentBehaviour
+    {
+      Delete,
+      MoveToCollection,
+      MoveToDefaultSentCollection
+    };
 
-    virtual SentCollectionAttribute* clone() const;
+    explicit SentBehaviourAttribute( SentBehaviour beh = MoveToDefaultSentCollection,
+        Akonadi::Collection::Id moveToCollection = -1 );
+    virtual ~SentBehaviourAttribute();
+
+    virtual SentBehaviourAttribute* clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );
 
-    Akonadi::Collection::Id sentCollection() const;
-    void setSentCollection( Akonadi::Collection::Id id );
+    SentBehaviour sentBehaviour() const;
+    void setSentBehaviour( SentBehaviour beh );
+
+    /**
+      The collection to move the item to after it is sent.
+      Only valid if sentBehaviour() is MoveToCollection.
+    */
+    Akonadi::Collection::Id moveToCollection() const;
+    void setMoveToCollection( Akonadi::Collection::Id moveToCollection );
 
   private:
-    Akonadi::Collection::Id mId;
+    SentBehaviour mBehaviour;
+    Akonadi::Collection::Id mMoveToCollection;
 
 };
 

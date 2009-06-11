@@ -35,8 +35,6 @@ class DispatcherInterfacePrivate;
   It connects to the MDA via D-Bus and provides info about queued messages
   and progress, and methods such as abort or retry sending.
 
-  TODO should this class provide a progress widget?
-
   TODO dispatchManually and retryDispatching functions should be offered on a
   per-item basis as well, I imagine when the user will have a messageView of
   the outbox.  Then do we need global ones here (i.e. for all items in the

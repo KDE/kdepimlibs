@@ -21,8 +21,6 @@
 
 #include "localfolders.h"
 #include "addressattribute.h"
-#include "dispatchmodeattribute.h"
-#include "sentcollectionattribute.h"
 #include "transportattribute.h"
 
 #include <QTimer>
@@ -55,9 +53,9 @@ class OutboxInterface::MessageQueueJob::Private
       : q( qq )
     {
       transport = -1;
-      mode = DispatchModeAttribute::Immediately;
-      useDefaultSentMail = true;
-      sentMail = -1;
+      dispatchMode = DispatchModeAttribute::Immediately;
+      sentBehaviour = SentBehaviourAttribute::MoveToDefaultSentCollection;
+      moveToCollection = -1;
       started = false;
     }
 
@@ -65,10 +63,10 @@ class OutboxInterface::MessageQueueJob::Private
 
     Message::Ptr message;
     int transport;
-    DispatchModeAttribute::DispatchMode mode;
+    DispatchModeAttribute::DispatchMode dispatchMode;
     QDateTime dueDate;
-    bool useDefaultSentMail;
-    Collection::Id sentMail;
+    SentBehaviourAttribute::SentBehaviour sentBehaviour;
+    Collection::Id moveToCollection;
     QString from;
     QStringList to;
     QStringList cc;
@@ -113,7 +111,7 @@ bool MessageQueueJob::Private::validate()
     return false;
   }
 
-  if( mode == DispatchModeAttribute::AfterDueDate && !dueDate.isValid() ) {
+  if( dispatchMode == DispatchModeAttribute::AfterDueDate && !dueDate.isValid() ) {
     q->setError( UserDefinedError );
     q->setErrorText( i18n( "Message has invalid due date." ) );
     q->emitResult();
@@ -127,20 +125,14 @@ bool MessageQueueJob::Private::validate()
     return false;
   }
 
-  if( useDefaultSentMail ) {
-    Q_ASSERT( LocalFolders::self()->isReady() );
-    sentMail = LocalFolders::self()->sentMail().id();
-    // Can't do this in the constructor because LocalFolders is not ready.
-
-    // TODO: add support for DefaultSentMailCollection and DeleteAfterSending
-    // in SentCollectionAttribute
-  }
-
-  if( sentMail < 0 ) {
+  if( sentBehaviour == SentBehaviourAttribute::MoveToCollection && moveToCollection < 0 ) {
     q->setError( UserDefinedError );
     q->setErrorText( i18n( "Message has invalid sent-mail folder." ) );
     q->emitResult();
     return false;
+  } else if( sentBehaviour == SentBehaviourAttribute::MoveToDefaultSentCollection ) {
+    Q_ASSERT( LocalFolders::self()->isReady() );
+    Q_ASSERT( LocalFolders::self()->sentMail().isValid() );
   }
 
   return true; // all ok
@@ -166,8 +158,8 @@ void MessageQueueJob::Private::doStart()
 
   // set attributes
   AddressAttribute *addrA = new AddressAttribute( from, to, cc, bcc );
-  DispatchModeAttribute *dmA = new DispatchModeAttribute( mode );
-  SentCollectionAttribute *sA = new SentCollectionAttribute( sentMail );
+  DispatchModeAttribute *dmA = new DispatchModeAttribute( dispatchMode, dueDate );
+  SentBehaviourAttribute *sA = new SentBehaviourAttribute( sentBehaviour, moveToCollection );
   TransportAttribute *tA = new TransportAttribute( transport );
   item.addAttribute( addrA );
   item.addAttribute( dmA );
@@ -212,20 +204,23 @@ int MessageQueueJob::transportId() const
 
 DispatchModeAttribute::DispatchMode MessageQueueJob::dispatchMode() const
 {
-  return d->mode;
+  return d->dispatchMode;
 }
 
 QDateTime MessageQueueJob::sendDueDate() const
 {
-  if( d->mode != DispatchModeAttribute::AfterDueDate ) {
-    kWarning() << "called when mode is not AfterDueDate";
+  if( d->dispatchMode != DispatchModeAttribute::AfterDueDate ) {
+    kWarning() << "Called when dispatchMode is not AfterDueDate.";
   }
   return d->dueDate;
 }
 
-Collection::Id MessageQueueJob::sentMailCollection() const
+Collection::Id MessageQueueJob::moveToCollection() const
 {
-  return d->sentMail;
+  if( d->sentBehaviour != SentBehaviourAttribute::MoveToCollection ) {
+    kWarning() << "Called when sentBehaviour is not MoveToCollection.";
+  }
+  return d->moveToCollection;
 }
 
 QString MessageQueueJob::from() const
@@ -260,7 +255,7 @@ void MessageQueueJob::setTransportId( int id )
 
 void MessageQueueJob::setDispatchMode( DispatchModeAttribute::DispatchMode mode )
 {
-  d->mode = mode;
+  d->dispatchMode = mode;
 }
 
 void MessageQueueJob::setDueDate( const QDateTime &date )
@@ -268,10 +263,14 @@ void MessageQueueJob::setDueDate( const QDateTime &date )
   d->dueDate = date;
 }
 
-void MessageQueueJob::setSentMailCollection( Collection::Id id )
+void MessageQueueJob::setSentBehaviour( SentBehaviourAttribute::SentBehaviour beh )
 {
-  d->useDefaultSentMail = false;
-  d->sentMail = id;
+  d->sentBehaviour = beh;
+}
+
+void MessageQueueJob::setMoveToCollection( Collection::Id cid )
+{
+  d->moveToCollection = cid;
 }
 
 void MessageQueueJob::setFrom( const QString &from )

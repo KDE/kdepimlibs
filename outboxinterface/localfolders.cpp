@@ -23,7 +23,7 @@
 #include "addressattribute.h"
 #include "dispatchmodeattribute.h"
 #include "errorattribute.h"
-#include "sentcollectionattribute.h"
+#include "sentbehaviourattribute.h"
 #include "transportattribute.h"
 
 #include <QApplication>
@@ -138,7 +138,7 @@ LocalFolders::LocalFolders( LocalFoldersPrivate *dd )
   AttributeFactory::registerAttribute<AddressAttribute>();
   AttributeFactory::registerAttribute<DispatchModeAttribute>();
   AttributeFactory::registerAttribute<ErrorAttribute>();
-  AttributeFactory::registerAttribute<SentCollectionAttribute>();
+  AttributeFactory::registerAttribute<SentBehaviourAttribute>();
   AttributeFactory::registerAttribute<TransportAttribute>();
 }
 

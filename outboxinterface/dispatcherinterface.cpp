@@ -19,12 +19,6 @@
 
 #include "dispatcherinterface.h"
 
-#include "localfolders.h"
-#include "addressattribute.h"
-#include "dispatchmodeattribute.h"
-#include "sentcollectionattribute.h"
-#include "transportattribute.h"
-
 #include "mdainterface.h"
 
 #include <KDebug>

@@ -15,7 +15,7 @@ set(outboxinterface_lib_srcs
   addressattribute.cpp
   dispatchmodeattribute.cpp
   errorattribute.cpp
-  sentcollectionattribute.cpp
+  sentbehaviourattribute.cpp
   transportattribute.cpp
 
   resourcetester/resourcesynchronizationjob.cpp
@@ -43,7 +43,7 @@ install( FILES
         addressattribute.h
         dispatchmodeattribute.h
         errorattribute.h
-        sentcollectionattribute.h
+        sentbehaviourattribute.h
         transportattribute.h
 
         DESTINATION ${INCLUDE_INSTALL_DIR}/outboxinterface COMPONENT Devel)
