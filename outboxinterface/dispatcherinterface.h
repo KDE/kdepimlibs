@@ -82,7 +82,7 @@ class OUTBOXINTERFACE_EXPORT DispatcherInterface : public QObject
     DispatcherInterface( DispatcherInterfacePrivate *dd );
 
     Q_PRIVATE_SLOT( d, void connectToAgent() )
-    Q_PRIVATE_SLOT( d, void dbusServiceOwnerChanged( const QString&, const QString&, const QString& ) )
+    //Q_PRIVATE_SLOT( d, void dbusServiceOwnerChanged( const QString&, const QString&, const QString& ) )
     Q_PRIVATE_SLOT( d, void agentInstanceRemoved( const Akonadi::AgentInstance& ) )
     Q_PRIVATE_SLOT( d, void agentInstanceChanged( const Akonadi::AgentInstance& ) )
 
