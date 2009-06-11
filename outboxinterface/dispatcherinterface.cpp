@@ -166,6 +166,16 @@ bool DispatcherInterface::isReady() const
   return d->connected;
 }
 
+AgentInstance DispatcherInterface::dispatcherInstance() const
+{
+  if( !d->connected ) {
+    kWarning() << "Not connected to the MDA.";
+    return AgentInstance();
+  }
+ 
+  return d->agent;
+}
+
 bool DispatcherInterface::dispatcherOnline() const
 {
   if( !d->connected ) {
