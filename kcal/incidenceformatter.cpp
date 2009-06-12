@@ -1646,13 +1646,13 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
   if ( !myInc ) {
     html += "<br/>";
     html += "<i><u>";
-    if ( rsvpRec ) {
+    if ( rsvpRec && ( inc && inc->revision() == 0 ) ) {
       html += i18n( "Your response has already been recorded [%1]", ea->statusStr() );
       rsvpReq = false;
     } else {
       html += rsvpRequestedStr( rsvpReq );
     }
-    html += "</u></i>";
+    html += "</u></i><br>";
   }
 
   html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr><tr>";
@@ -1665,7 +1665,7 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
     case iTIPRefresh:
     case iTIPAdd:
     {
-      if ( !existingIncidence ) {
+      if (  inc && inc->revision() > 0 && existingIncidence ) {
         if ( inc->type() == "Todo" ) {
           html += "<td colspan=\"9\">";
           html += helper->makeLink( "reply", i18n( "[Record invitation to my task list]" ) );
@@ -1707,7 +1707,7 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
           html += "</td><td> &nbsp; </td><td>";
         }
 
-        if ( !rsvpRec ) {
+        if (  !rsvpRec || ( inc && inc->revision() > 0 ) ) {
           // Delegate
           html += helper->makeLink( "delegate",
                                     i18nc( "delegate inviation to another",
