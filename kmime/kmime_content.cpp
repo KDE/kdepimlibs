@@ -1138,7 +1138,7 @@ Content* Content::parent() const
 
 Content* Content::topLevel() const
 {
-  Content *top = this;
+  Content *top = const_cast<Content*>(this);
   Content *c = parent();
   while ( c ) {
     top = c;
