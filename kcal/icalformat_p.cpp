@@ -2335,11 +2335,25 @@ icalcomponent *ICalFormatImpl::createCalendarComponent( Calendar *cal )
   p = icalproperty_new_prodid( CalFormat::productId().toUtf8() );
   icalcomponent_add_property( calendar, p );
 
-  // TODO: Add time zone
-
   // iCalendar version (2.0)
   p = icalproperty_new_version( const_cast<char *>(_ICAL_VERSION) );
   icalcomponent_add_property( calendar, p );
+
+  // Add time zone
+  if ( cal && cal->timeZones() ) {
+    const ICalTimeZones::ZoneMap zmaps = cal->timeZones()->zones();
+    for ( ICalTimeZones::ZoneMap::ConstIterator it=zmaps.constBegin();
+          it != zmaps.constEnd(); ++it ) {
+      icaltimezone *icaltz = (*it).icalTimezone();
+      if ( !icaltz ) {
+        kError() << "bad time zone";
+      } else {
+        icalcomponent *tz = icalcomponent_new_clone( icaltimezone_get_component( icaltz ) );
+        icalcomponent_add_component( calendar, tz );
+        icaltimezone_free( icaltz, 1 );
+      }
+    }
+  }
 
   // Custom properties
   if( cal != 0 ) {
@@ -2540,6 +2554,51 @@ icalcomponent *ICalFormatImpl::createScheduleComponent( IncidenceBase *incidence
                                                         iTIPMethod method )
 {
   icalcomponent *message = createCalendarComponent();
+
+  // Create VTIMEZONE components for this incidence
+  ICalTimeZones zones;
+  if ( incidence ) {
+    if ( incidence->type() == "Event" ) {
+      Event *ev = static_cast<Event *>( incidence );
+      if ( ev ) {
+        if ( ev->dtStart().isValid() ) {
+          zones.add( ICalTimeZone( ev->dtStart().timeZone() ) );
+        }
+        if ( ev->hasEndDate() && ev->dtEnd().isValid() ) {
+          zones.add( ICalTimeZone( ev->dtEnd().timeZone() ) );
+        }
+      }
+    } else if ( incidence->type() == "Todo" ) {
+      Todo *t = static_cast<Todo *>( incidence );
+      if ( t ) {
+        if ( t->hasStartDate() && t->dtStart().isValid() ) {
+          zones.add( ICalTimeZone( t->dtStart( true ).timeZone() ) );
+        }
+        if ( t->hasDueDate() && t->dtDue().isValid() ) {
+          zones.add( ICalTimeZone( t->dtDue().timeZone() ) );
+        }
+      }
+    } else if ( incidence->type() == "Journal" ) {
+      Journal *j = static_cast<Journal *>( incidence );
+      if ( j ) {
+        if ( j->dtStart().isValid() ) {
+          zones.add( ICalTimeZone( j->dtStart().timeZone() ) );
+        }
+      }
+    }
+    const ICalTimeZones::ZoneMap zmaps = zones.zones();
+    for ( ICalTimeZones::ZoneMap::ConstIterator it=zmaps.constBegin();
+          it != zmaps.constEnd(); ++it ) {
+      icaltimezone *icaltz = (*it).icalTimezone();
+      if ( !icaltz ) {
+        kError() << "bad time zone";
+      } else {
+        icalcomponent *tz = icalcomponent_new_clone( icaltimezone_get_component( icaltz ) );
+        icalcomponent_add_component( message, tz );
+        icaltimezone_free( icaltz, 1 );
+      }
+    }
+  }
 
   icalproperty_method icalmethod = ICAL_METHOD_NONE;
 
