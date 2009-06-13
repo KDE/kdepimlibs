@@ -58,4 +58,15 @@ void AttachmentTest::testValidity()
   const char *ethel = "a9fafafjafkasmfasfasffksjklfjau";
   attachment4.setData( ethel );
   QCOMPARE( ethel, attachment4.data() );
+
+  Attachment attachment5( QString( "http://www.kde.org" ) );
+  Attachment attachment6( QString( "http://www.kde.org" ) );
+  QVERIFY( attachment5 == attachment6 );
+  attachment5.setUri( "http://bugs.kde.org" );
+  QVERIFY( attachment5 != attachment6 );
+  attachment5.setDecodedData( "123456" );
+  attachment6.setDecodedData( "123456" );
+  QVERIFY( attachment5 == attachment6 );
+  attachment6.setDecodedData( "12345" );
+  QVERIFY( attachment5 != attachment6 );
 }
