@@ -173,7 +173,6 @@ bool CalendarResources::DestinationPolicy::hasCalendarResources()
   return false;
 }
 
-
 CalendarResources::StandardDestinationPolicy::StandardDestinationPolicy(
   CalendarResourceManager *manager, QWidget *parent )
   : DestinationPolicy( manager, parent ),
@@ -203,7 +202,6 @@ CalendarResources::AskDestinationPolicy::~AskDestinationPolicy()
 {
   delete d;
 }
-
 
 ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidence *incidence )
 {

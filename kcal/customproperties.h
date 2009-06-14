@@ -74,7 +74,8 @@ class KCAL_EXPORT CustomProperties
 
       @warning The comparison is not polymorphic.
     */
-    bool operator==( const CustomProperties &properties ) const; // KDE5: make protected to prevent accidental usage
+    // KDE5: make protected to prevent accidental usage
+    bool operator==( const CustomProperties &properties ) const;
 
     /**
       Create or modify a custom calendar property.
@@ -153,7 +154,8 @@ class KCAL_EXPORT CustomProperties
 
       @warning The assignment is not polymorphic.
     */
-    CustomProperties &operator=( const CustomProperties &other ); // KDE5: make protected to prevent accidental usage
+    // KDE5: make protected to prevent accidental usage
+    CustomProperties &operator=( const CustomProperties &other );
 
   protected:
     /**

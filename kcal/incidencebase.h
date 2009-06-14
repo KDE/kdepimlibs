@@ -200,7 +200,8 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
 
       @see AssignmentVisitor
      */
-    IncidenceBase &operator=( const IncidenceBase &other ); // KDE5: make protected to prevent accidental usage
+    // KDE5: make protected to prevent accidental usage
+    IncidenceBase &operator=( const IncidenceBase &other );
 
     /**
       Compares this with IncidenceBase @p ib for equality.
@@ -212,7 +213,8 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
 
       @see ComparisonVisitor
     */
-    bool operator==( const IncidenceBase &ib ) const; // KDE5: make protected to prevent accidental usage
+    // KDE5: make protected to prevent accidental usage
+    bool operator==( const IncidenceBase &ib ) const;
 
     /**
       Accept IncidenceVisitor. A class taking part in the visitor mechanism
