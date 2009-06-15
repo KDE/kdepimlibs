@@ -30,8 +30,6 @@ include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
 ############### Find the stuff we need ###############
 
 set(Boost_MINIMUM_VERSION "1.33.1")
-set(Akonadi_MINIMUM_VERSION "1.1.91")
-
 find_package(Boost)
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "" "Required by several critical KDEPIM apps.")
 
@@ -43,8 +41,8 @@ if (GPGME_FOUND)
 endif (GPGME_FOUND)
 
 if (NOT KDEPIM_ONLY_KLEO)
-  find_package(Akonadi ${Akonadi_MINIMUM_VERSION})
-  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server (from kdesupport)" "http://pim.kde.org/akonadi" TRUE ${Akonadi_MINIMUM_VERSION} "Akonadi is required to build KdepimLibs.")
+  find_package(Akonadi 1.1.91)
+  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KdepimLibs.")
 
   find_package(Sasl2)
   macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" TRUE "" "Required to support authentication of logins in the IMAP and Sieve kioslaves.")
