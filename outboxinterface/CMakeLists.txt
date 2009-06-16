@@ -10,6 +10,7 @@ add_subdirectory( tests )
 set(outboxinterface_lib_srcs
   dispatcherinterface.cpp
   localfolders.cpp
+  outboxactions.cpp
   messagequeuejob.cpp
 
   addressattribute.cpp

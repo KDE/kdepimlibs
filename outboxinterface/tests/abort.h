@@ -1,5 +1,4 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
     Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it
@@ -18,39 +17,25 @@
     02110-1301, USA.
 */
 
-#ifndef MESSAGEQUEUER_H
-#define MESSAGEQUEUER_H
+#ifndef ABORT_H
+#define ABORT_H
 
-#include <KVBox>
-#include <mailtransport/transportcombobox.h>
+#include <QObject>
 
-class QCheckBox;
 class KJob;
-class KLineEdit;
-class KTextEdit;
-
 
 /**
-  This is stolen from kdepimlibs/mailtransport/tests/transportmgr.{h,cpp}
+  This class uses the DispatcherInterface to send an abort() signal th the MDA.
 */
-class MessageQueuer : public KVBox
+class Runner : public QObject
 {
   Q_OBJECT
 
   public:
-    MessageQueuer();
+    Runner();
 
   private slots:
-    void sendBtnClicked();
-    void jobResult( KJob *job );
-    void jobPercent( KJob *job, unsigned long percent );
-    void jobInfoMessage( KJob *job, const QString &info, const QString &info2 );
-
-  private:
-    MailTransport::TransportComboBox *mComboBox;
-    KLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
-    KTextEdit *mMailEdit;
-    QCheckBox *mQueued;
+    void sendAbort();
 
 };
 

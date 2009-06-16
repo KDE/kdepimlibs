@@ -8,9 +8,21 @@ target_link_libraries(queuer ${KDE4_KDEUI_LIBS} ${KDE4_MAILTRANSPORT_LIBS} ${KDE
 
 set( requester_srcs foldersrequester.cpp )
 kde4_add_executable( requester TEST ${requester_srcs} )
-target_link_libraries( requester ${KDE4_KDEUI_LIBS} outboxinterface )
+target_link_libraries( requester outboxinterface )
 # for racetest
 add_definitions( -DREQUESTER_EXE=\\"${CMAKE_CURRENT_BINARY_DIR}/requester\\" )
+
+set( sendqueued_srcs sendqueued.cpp )
+kde4_add_executable( sendqueued TEST ${sendqueued_srcs} )
+target_link_libraries( sendqueued outboxinterface )
+
+set( clearerror_srcs clearerror.cpp )
+kde4_add_executable( clearerror TEST ${clearerror_srcs} )
+target_link_libraries( clearerror outboxinterface )
+
+set( abort_srcs abort.cpp )
+kde4_add_executable( abort TEST ${abort_srcs} )
+target_link_libraries( abort outboxinterface )
 
 
 

@@ -25,6 +25,7 @@
 #include <KLineEdit>
 #include <KTextEdit>
 
+#include <QCheckBox>
 #include <QPushButton>
 
 #include <akonadi/control.h>
@@ -32,6 +33,7 @@
 #include <mailtransport/transportmanager.h>
 #include <mailtransport/transport.h>
 
+#include <outboxinterface/dispatchmodeattribute.h>
 #include <outboxinterface/messagequeuejob.h>
 
 
@@ -63,6 +65,7 @@ MessageQueuer::MessageQueuer()
   mMailEdit->setLineWrapMode( QTextEdit::NoWrap );
   QPushButton *b = new QPushButton( "&Send", this );
   connect( b, SIGNAL(clicked(bool)), SLOT(sendBtnClicked()) );
+  mQueued = new QCheckBox( "&Queue instead of sending immediately", this );
 }
 
 void MessageQueuer::sendBtnClicked()
@@ -76,7 +79,10 @@ void MessageQueuer::sendBtnClicked()
   MessageQueueJob *job = new MessageQueueJob();
   job->setMessage( msg );
   job->setTransportId( mComboBox->currentTransportId() );
-  // default dispatch mode
+  if( mQueued->isChecked() ) {
+    job->setDispatchMode( DispatchModeAttribute::Never );
+    kDebug() << "DispatchMode: Never";
+  }
   // default sent-mail collection
   job->setFrom( mSenderEdit->text() );
   job->setTo( mToEdit->text().isEmpty() ? QStringList() : mToEdit->text().split( ',' ) );
