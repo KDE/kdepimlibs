@@ -617,12 +617,14 @@ void HtmlExport::formatAttendees( QTextStream *ts, Incidence *incidence )
     KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
     KABC::Addressee::List addressList;
     addressList = add_book->findByEmail( incidence->organizer().email() );
-    KABC::Addressee o = addressList.first();
-    if ( !o.isEmpty() && addressList.size() < 2 ) {
-      *ts << "<a href=\"mailto:" << incidence->organizer().email() << "\">";
-      *ts << cleanChars( o.formattedName() ) << "</a>\n";
-    } else {
-      *ts << incidence->organizer().fullName();
+    if ( !addressList.isEmpty() ) {
+      KABC::Addressee o = addressList.first();
+      if ( !o.isEmpty() && addressList.size() < 2 ) {
+        *ts << "<a href=\"mailto:" << incidence->organizer().email() << "\">";
+        *ts << cleanChars( o.formattedName() ) << "</a>\n";
+      } else {
+        *ts << incidence->organizer().fullName();
+      }
     }
 #else
     *ts << incidence->organizer().fullName();
