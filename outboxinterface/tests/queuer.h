@@ -24,10 +24,13 @@
 #include <KVBox>
 #include <mailtransport/transportcombobox.h>
 
-class QCheckBox;
 class KJob;
 class KLineEdit;
 class KTextEdit;
+
+namespace OutboxInterface {
+  class MessageQueueJob;
+}
 
 
 /**
@@ -41,7 +44,9 @@ class MessageQueuer : public KVBox
     MessageQueuer();
 
   private slots:
-    void sendBtnClicked();
+    void sendNowClicked();
+    void sendQueuedClicked();
+    void sendOnDateClicked();
     void jobResult( KJob *job );
     void jobPercent( KJob *job, unsigned long percent );
     void jobInfoMessage( KJob *job, const QString &info, const QString &info2 );
@@ -50,7 +55,8 @@ class MessageQueuer : public KVBox
     MailTransport::TransportComboBox *mComboBox;
     KLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
     KTextEdit *mMailEdit;
-    QCheckBox *mQueued;
+
+    OutboxInterface::MessageQueueJob *createQueueJob();
 
 };
 
