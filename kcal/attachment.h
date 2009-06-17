@@ -227,6 +227,18 @@ class KCAL_EXPORT Attachment
     */
     bool isLocal() const;
 
+    /**
+      Returns true if two attachments are equal
+      @since 4.3
+     */
+    bool operator==( const Attachment &a2 ) const;
+
+    /**
+      Returns true if two attachments aren't equal
+      @since 4.3
+     */
+    bool operator!=( const Attachment &a2 ) const;
+
   private:
     //@cond PRIVATE
     class Private;

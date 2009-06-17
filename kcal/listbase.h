@@ -139,6 +139,22 @@ class ListBase : public QList<T *>
       QList<T*>::erase( it );
     }
 
+    bool operator==( const ListBase &l2 )
+    {
+      int sz = QList<T*>::size();
+
+      if ( sz != l2.size() ) {
+        return false;
+      } else {
+        for ( int i=0; i<sz; ++i ) {
+          if ( !( *QList<T*>::value( i ) == *l2.value( i ) ) ) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
   private:
     //@cond PRIVATE
     bool mAutoDelete;
