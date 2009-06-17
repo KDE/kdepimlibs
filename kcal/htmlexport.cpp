@@ -177,9 +177,11 @@ void HtmlExport::createMonthView( QTextStream *ts )
 
   while ( start < toDate() ) {
     // Write header
+    QDate hDate( start.year(), start.month(), 1 );
+    QString hMon = hDate.toString( "MMMM" );
+    QString hYear = hDate.toString( "yyyy" );
     *ts << "<h2>"
-        << i18nc( "@title month and year", "%1 %2",
-                  KGlobal::locale()->calendar()->monthName( start ), start.year() )
+        << i18nc( "@title month and year", "%1 %2", hMon, hYear )
         << "</h2>\n";
     if ( KGlobal::locale()->weekStartDay() == 1 ) {
       start = start.addDays( 1 - start.dayOfWeek() );
