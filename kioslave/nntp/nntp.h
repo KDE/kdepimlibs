@@ -1,7 +1,7 @@
 /* This file is part of KDE
    Copyright (C) 2000 by Wolfram Diestel <wolfram@steloj.de>
    Copyright (C) 2005 by Tim Way <tim@way.hrcoxmail.com>
-   Copyright (C) 2005 by Volker Krause <volker.krause@rwth-aachen.de>
+   Copyright (C) 2005 by Volker Krause <vkrause@kde.org>
 
    This is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
