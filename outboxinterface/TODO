@@ -12,3 +12,5 @@
 * provide a job to modify items in the outbox such as
   - remove error attribute and re-queue
   - change Never dispatch mode to Immediately
+* Currently apps have to call DispatcherInterface::self() for the attributes to
+  be registered.  Find a way to do this automatically.
