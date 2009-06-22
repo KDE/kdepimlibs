@@ -723,16 +723,18 @@ static QString invitationPerson( const QString &email, QString name, QString uid
   if ( !email.isEmpty() && ( name.isEmpty() || uid.isEmpty() ) ) {
     KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
     KABC::Addressee::List addressList = add_book->findByEmail( email );
-    KABC::Addressee o = addressList.first();
-    if ( !o.isEmpty() && addressList.size() < 2 ) {
-      if ( name.isEmpty() ) {
-        // No name set, so use the one from the addressbook
-        name = o.formattedName();
+    if ( !addressList.isEmpty() ) {
+      KABC::Addressee o = addressList.first();
+      if ( !o.isEmpty() && addressList.size() < 2 ) {
+        if ( name.isEmpty() ) {
+          // No name set, so use the one from the addressbook
+          name = o.formattedName();
+        }
+        uid = o.uid();
+      } else {
+        // Email not found in the addressbook. Don't make a link
+        uid.clear();
       }
-      uid = o.uid();
-    } else {
-      // Email not found in the addressbook. Don't make a link
-      uid.clear();
     }
   }
 
