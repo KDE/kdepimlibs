@@ -48,6 +48,11 @@ if (NOT KDEPIM_ONLY_KLEO)
   find_package(Sasl2)
   macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" TRUE "" "Required to support authentication of logins in the IMAP and Sieve kioslaves.")
   include (ConfigureChecks.cmake)
+
+  set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
+  find_package(SharedMimeInfo)
+  macro_log_feature(SHARED_MIME_INFO_FOUND "SMI" "SharedMimeInfo" "http://freedesktop.org/wiki/Software/shared-mime-info" TRUE "0.30" "SharedMimeInfo is required.")
+
 endif (NOT KDEPIM_ONLY_KLEO)
 
 
@@ -86,6 +91,14 @@ macro_optional_add_subdirectory(doc)
 
 # All done, let's display what we found...
 macro_display_feature_log()
+
+
+############### Here we install some extra stuff  ###############
+
+if (NOT KDEPIM_ONLY_KLEO)
+  install(FILES kdepimlibs-mime.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
+  update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
+endif (NOT KDEPIM_ONLY_KLEO)
 
 
 # now create the KdepimLibsConfig.cmake file, which will be loaded by
@@ -165,12 +178,3 @@ install(EXPORT kdepimlibsLibraryTargets
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake "\n message(FATAL_ERROR \"For using this version of kdepimlibs (${KDEPIMLIBS_VERSION}) you need a newer version of kdelibs, please update.\")\n")
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake
         DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
-
-############### Here we install some extra stuff  ###############
-
-## install the MIME type spec file for KDEPIMLIBS specific MIME types
-set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
-find_package(SharedMimeInfo REQUIRED)
-
-install(FILES kdepimlibs-mime.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
-update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
