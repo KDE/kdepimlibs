@@ -39,13 +39,13 @@ AddressAttribute::~AddressAttribute()
 
 AddressAttribute* AddressAttribute::clone() const
 {
-    return new AddressAttribute( mFrom, mTo, mCc, mBcc );
+  return new AddressAttribute( mFrom, mTo, mCc, mBcc );
 }
 
 QByteArray AddressAttribute::type() const
 {
-    static const QByteArray sType( "AddressAttribute" );
-    return sType;
+  static const QByteArray sType( "AddressAttribute" );
+  return sType;
 }
 
 QByteArray AddressAttribute::serialized() const
@@ -63,7 +63,6 @@ QByteArray AddressAttribute::serialized() const
 void AddressAttribute::deserialize( const QByteArray &data )
 {
   QDataStream deserializer( data );
-  // TODO: is this enough to make sure new versions won't trick us?
   deserializer.setVersion( QDataStream::Qt_4_5 );
   deserializer >> mFrom;
   deserializer >> mTo;

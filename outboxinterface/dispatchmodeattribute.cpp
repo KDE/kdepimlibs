@@ -24,10 +24,9 @@
 using namespace Akonadi;
 using namespace OutboxInterface;
 
-
 DispatchModeAttribute::DispatchModeAttribute( DispatchMode mode, const QDateTime &date )
-  : mMode(mode)
-  , mDueDate(date)
+  : mMode( mode )
+  , mDueDate( date )
 {
 }
 
@@ -37,25 +36,24 @@ DispatchModeAttribute::~DispatchModeAttribute()
 
 DispatchModeAttribute* DispatchModeAttribute::clone() const
 {
-    return new DispatchModeAttribute( mMode, mDueDate );
+  return new DispatchModeAttribute( mMode, mDueDate );
 }
 
 QByteArray DispatchModeAttribute::type() const
 {
-    static const QByteArray sType( "DispatchModeAttribute" );
-    return sType;
+  static const QByteArray sType( "DispatchModeAttribute" );
+  return sType;
 }
 
 QByteArray DispatchModeAttribute::serialized() const
 {
-  switch ( mMode )
-  {
+  switch( mMode ) {
     case Immediately: return "immediately";
     case AfterDueDate: return "after" + mDueDate.toString(Qt::ISODate).toLatin1();
     case Never: return "never";
   }
 
-  Q_ASSERT(false);
+  Q_ASSERT( false );
   return QByteArray(); // suppress control-reaches-end-of-non-void-function warning
 }
 
@@ -69,7 +67,7 @@ void DispatchModeAttribute::deserialize( const QByteArray &data )
   } else if ( data.startsWith( QByteArray( "after" ) ) ) {
     mMode = AfterDueDate;
     mDueDate = QDateTime::fromString( data.mid(5), Qt::ISODate );
-    // NOTE: 5 is the strlen of "after". Not very maintenance-friendly.
+    // NOTE: 5 is the strlen of "after".
   } else {
     kWarning() << "Failed to deserialize data [" << data << "]";
   }

@@ -26,18 +26,23 @@
 #include <akonadi/job.h>
 #include <akonadi/filteractionjob.h>
 
-namespace OutboxInterface
-{
+namespace OutboxInterface {
 
 /**
-  FilterActionJob functor that finds all messages with a DispatchMode of Never
+  FilterAction that finds all messages with a DispatchMode of Never
   and assigns them a DispatchMode of Immediately.
 
   This is used to send "queued" messages on demand.
+
+  @see FilterActionJob
+
+  @author Constantin Berzan <exit3219@gmail.com>
+  @since 4.4
 */
 class OUTBOXINTERFACE_EXPORT SendQueuedAction : public Akonadi::FilterAction
 {
   public:
+    /* reimpl */
     virtual Akonadi::ItemFetchScope fetchScope() const;
     virtual bool itemAccepted( const Akonadi::Item &item ) const;
     virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const;
@@ -45,19 +50,25 @@ class OUTBOXINTERFACE_EXPORT SendQueuedAction : public Akonadi::FilterAction
 
 
 /**
-  FilterActionJob functor that finds all messages with an ErrorAttribute,
+  FilterAction that finds all messages with an ErrorAttribute,
   removes the attribute, and sets the "queued" flag.
 
-  This is used to send failed messages again.
+  This is used to retry sending messages that failed.
+
+  @see FilterActionJob
+
+  @author Constantin Berzan <exit3219@gmail.com>
+  @since 4.4
 */
 class OUTBOXINTERFACE_EXPORT ClearErrorAction : public Akonadi::FilterAction
 {
   public:
+    /* reimpl */
     virtual Akonadi::ItemFetchScope fetchScope() const;
     virtual bool itemAccepted( const Akonadi::Item &item ) const;
     virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const;
 };
 
-}
+} // namespace OutboxInterface
 
-#endif
+#endif // OUTBOXINTERFACE_OUTBOXACTIONS_H

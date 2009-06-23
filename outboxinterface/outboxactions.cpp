@@ -27,7 +27,6 @@
 using namespace Akonadi;
 using namespace OutboxInterface;
 
-
 ItemFetchScope SendQueuedAction::fetchScope() const
 {
   ItemFetchScope scope;

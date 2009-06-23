@@ -27,7 +27,6 @@ using namespace Akonadi;
 using namespace MailTransport;
 using namespace OutboxInterface;
 
-
 TransportAttribute::TransportAttribute( int id )
   : mId( id )
 {
@@ -39,13 +38,13 @@ TransportAttribute::~TransportAttribute()
 
 TransportAttribute* TransportAttribute::clone() const
 {
-    return new TransportAttribute( mId );
+  return new TransportAttribute( mId );
 }
 
 QByteArray TransportAttribute::type() const
 {
-    static const QByteArray sType( "TransportAttribute" );
-    return sType;
+  static const QByteArray sType( "TransportAttribute" );
+  return sType;
 }
 
 QByteArray TransportAttribute::serialized() const

@@ -17,10 +17,6 @@
     02110-1301, USA.
 */
 
-
-// stolen from kdepimlibs/mailtransport/mailtransport_export.h
-
-
 #ifndef OUTBOXINTERFACE_OUTBOXINTERFACE_EXPORT_H
 #define OUTBOXINTERFACE_OUTBOXINTERFACE_EXPORT_H
 
