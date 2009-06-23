@@ -456,7 +456,7 @@ bool SMTPProtocol::execute( Command * cmd, TransactionState * ts ) {
       return false;
     }
     if ( !cmd->processResponse( r, ts ) ) {
-      if ( ts && ts->failedFatally() ||
+      if ( (ts && ts->failedFatally()) ||
            cmd->closeConnectionOnError() ||
            !execute( Command::RSET ) )
         smtp_close( false );
