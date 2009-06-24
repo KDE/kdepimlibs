@@ -39,6 +39,8 @@ class QIODevice;
 
 namespace GpgME {
 
+    void initializeLibrary();
+
     enum Protocol { OpenPGP, CMS, UnknownProtocol };
 
     enum Engine { GpgEngine, GpgSMEngine, GpgConfEngine, UnknownEngine };
