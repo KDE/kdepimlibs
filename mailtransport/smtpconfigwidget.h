@@ -1,6 +1,8 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
     Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+
+    Based on MailTransport code by:
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     Based on KMail code by:
     Copyright (c) 2001-2002 Michael Haeckel <haeckel@kde.org>
@@ -21,47 +23,52 @@
     02110-1301, USA.
 */
 
-#ifndef MAILTRANSPORT_TRANSPORTCONFIGDIALOG_H
-#define MAILTRANSPORT_TRANSPORTCONFIGDIALOG_H
+#ifndef MAILTRANSPORT_SMTPCONFIGWIDGET_H
+#define MAILTRANSPORT_SMTPCONFIGWIDGET_H
 
-#include <mailtransport/mailtransport_export.h>
-
-#include <KDialog>
+#include "transportconfigwidget.h"
 
 namespace MailTransport {
 
 class Transport;
 
 /**
-  Configuration dialog for a mail transport.
+  @internal
 */
+class SMTPConfigWidgetPrivate;
 
-class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
+/**
+  @internal
+  Configuration widget for a SMTP transport.
+*/
+class SMTPConfigWidget : public TransportConfigWidget
 {
   Q_OBJECT
 
   public:
-    /**
-      Creates a new mail transport configuration dialog for the given
-      Transport object.
-      The config dialog does not delete @p transport, you have to delete it
-      yourself.
+    explicit SMTPConfigWidget( Transport *transport, QWidget *parent = 0 );
+    //virtual ~SMTPConfigWidget();
 
-      @param transport The Transport object to configure. This must be a deep
-      copy of a Transport object or a newly created one, which hasn't been
-      added to the TransportManager yet.
-      @param parent The parent widget.
-    */
-    explicit TransportConfigDialog( Transport *transport, QWidget *parent = 0 );
+  public Q_SLOTS:
+    /** reimpl */
+    virtual void apply();
 
-    /**
-      Destroys the dialog.
-    */
-    virtual ~TransportConfigDialog();
+  protected:
+    // TODO probably not needed since no one will inherit from us
+    SMTPConfigWidget( SMTPConfigWidgetPrivate &dd, Transport *transport, QWidget *parent );
+
+  private Q_SLOTS:
+    void checkSmtpCapabilities();
+    void passwordsLoaded();
+    void slotFinished( QList<int> results );
+    void hostNameChanged( const QString &text );
+    void encryptionChanged( int enc );
+    void ensureValidAuthSelection();
 
   private:
-    class Private;
-    Private *const d;
+    Q_DECLARE_PRIVATE( SMTPConfigWidget )
+
+    void init();
 
 };
 

@@ -62,6 +62,12 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     void setPassword( const QString &passwd );
 
     /**
+      Makes sure the transport has a unique name.  Adds #1, #2, #3 etc. if
+      necessary.
+    */
+    void forceUniqueName();
+
+    /**
       This function synchronizes the password of this transport with the
       password of the transport with the same ID that is managed by the
       transport manager. This is only useful for cloned transports, since

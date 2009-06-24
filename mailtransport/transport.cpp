@@ -22,13 +22,14 @@
 #include "mailtransport_defs.h"
 #include "legacydecrypt.h"
 
-#include <QTimer>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstringhandler.h>
 #include <kwallet.h>
 #include <kconfiggroup.h>
+
+#include <QTimer>
 
 using namespace MailTransport;
 using namespace KWallet;
@@ -87,6 +88,24 @@ void Transport::setPassword( const QString &passwd )
   }
   d->passwordDirty = true;
   d->password = passwd;
+}
+
+void Transport::forceUniqueName()
+{
+  QStringList existingNames;
+  foreach ( Transport *t, TransportManager::self()->transports() ) {
+    if ( t->id() != id() ) {
+      existingNames << t->name();
+    }
+  }
+  int suffix = 1;
+  QString origName = name();
+  while ( existingNames.contains( name() ) ) {
+    setName( i18nc( "%1: name; %2: number appended to it to make "
+                    "it unique among a list of names", "%1 #%2", origName, suffix ) );
+    ++suffix;
+  }
+
 }
 
 void Transport::updatePasswordState()

@@ -7,14 +7,25 @@ add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5324 )
 
 set(mailtransport_lib_srcs
   transport.cpp
-  transportcombobox.cpp
-  transportconfigdialog.cpp
-  transportjob.cpp
   transportmanager.cpp
+
+  transportcombobox.cpp
+  transportlistview.cpp
   transportmanagementwidget.cpp
+
+  addtransportassistant.cpp
+  transportconfigdialog.cpp
+  transportconfigwidget.cpp
+  akonadiconfigwidget.cpp
+  sendmailconfigwidget.cpp
+  smtpconfigwidget.cpp
+
+  transportjob.cpp
+  akonadijob.cpp
   sendmailjob.cpp
   smtpjob.cpp
   precommandjob.cpp
+
   legacydecrypt.cpp
   socket.cpp
   servertest.cpp
@@ -22,14 +33,19 @@ set(mailtransport_lib_srcs
 
 
 kde4_add_ui_files(mailtransport_lib_srcs
-  smtpsettings.ui
+  addtransportassistanttypepage.ui
+  addtransportassistantnamepage.ui
+
+  akonadisettings.ui
   sendmailsettings.ui
+  smtpsettings.ui
+
   transportmanagementwidget.ui
 )
 kde4_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
 
 kde4_add_library(mailtransport SHARED ${mailtransport_lib_srcs})
-target_link_libraries(mailtransport ${KDE4_KIO_LIBS})
+target_link_libraries(mailtransport ${KDE4_KIO_LIBS} akonadi-kde)
 set_target_properties(mailtransport PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
 install(TARGETS mailtransport EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -43,15 +59,20 @@ install(TARGETS kcm_mailtransport  DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES kcm_mailtransport.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
 install( FILES 
         mailtransport_export.h
+
+        transportjob.h
+        akonadijob.h
         sendmailjob.h
         smtpjob.h
-        transport.h
+
         ${CMAKE_CURRENT_BINARY_DIR}/transportbase.h
-        transportcombobox.h
-        transportconfigdialog.h
-        transportjob.h
-        transportmanagementwidget.h
+        transport.h
         transportmanager.h
         servertest.h
+
+        transportcombobox.h
+        transportconfigdialog.h
+        transportmanagementwidget.h
+
         DESTINATION ${INCLUDE_INSTALL_DIR}/mailtransport COMPONENT Devel)
 

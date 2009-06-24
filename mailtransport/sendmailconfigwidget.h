@@ -1,6 +1,8 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
     Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+
+    Based on MailTransport code by:
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     Based on KMail code by:
     Copyright (c) 2001-2002 Michael Haeckel <haeckel@kde.org>
@@ -21,47 +23,39 @@
     02110-1301, USA.
 */
 
-#ifndef MAILTRANSPORT_TRANSPORTCONFIGDIALOG_H
-#define MAILTRANSPORT_TRANSPORTCONFIGDIALOG_H
+#ifndef MAILTRANSPORT_SENDMAILCONFIGWIDGET_H
+#define MAILTRANSPORT_SENDMAILCONFIGWIDGET_H
 
-#include <mailtransport/mailtransport_export.h>
-
-#include <KDialog>
+#include "transportconfigwidget.h"
 
 namespace MailTransport {
 
 class Transport;
 
 /**
-  Configuration dialog for a mail transport.
+  @internal
 */
+class SendmailConfigWidgetPrivate;
 
-class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
+/**
+  @internal
+  Configuration widget for a Sendmail transport.
+*/
+class SendmailConfigWidget : public TransportConfigWidget
 {
   Q_OBJECT
 
   public:
-    /**
-      Creates a new mail transport configuration dialog for the given
-      Transport object.
-      The config dialog does not delete @p transport, you have to delete it
-      yourself.
+    explicit SendmailConfigWidget( Transport *transport, QWidget *parent = 0 );
+    //virtual ~SendmailConfigWidget();
 
-      @param transport The Transport object to configure. This must be a deep
-      copy of a Transport object or a newly created one, which hasn't been
-      added to the TransportManager yet.
-      @param parent The parent widget.
-    */
-    explicit TransportConfigDialog( Transport *transport, QWidget *parent = 0 );
-
-    /**
-      Destroys the dialog.
-    */
-    virtual ~TransportConfigDialog();
+  protected:
+    SendmailConfigWidget( SendmailConfigWidgetPrivate &dd, Transport *transport, QWidget *parent );
 
   private:
-    class Private;
-    Private *const d;
+    Q_DECLARE_PRIVATE( SendmailConfigWidget )
+
+    void init();
 
 };
 

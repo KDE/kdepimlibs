@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,37 +17,40 @@
     02110-1301, USA.
 */
 
-#ifndef TRANSPORTMGR_H
-#define TRANSPORTMGR_H
+#ifndef MAILTRANSPORT_TRANSPORTLISTVIEW_H
+#define MAILTRANSPORT_TRANSPORTLISTVIEW_H
 
-#include <KVBox>
-#include <mailtransport/transportcombobox.h>
 
-class KJob;
-class KLineEdit;
-class KTextEdit;
+#include <QtGui/QTreeWidget>
 
-class TransportMgr : public KVBox
+namespace MailTransport
+{
+
+/**
+  @internal
+  A QTreeWidget for transports.
+*/
+class TransportListView : public QTreeWidget
 {
   Q_OBJECT
 
   public:
-    TransportMgr();
+    TransportListView( QWidget *parent = 0 );
+    //virtual ~TransportListView() {}
+
+    // overloaded from QTreeWidget
+    void editItem( QTreeWidgetItem *item, int column = 0 );
+
+  protected slots:
+    virtual void commitData( QWidget *editor );
 
   private slots:
-    void removeAllBtnClicked();
-    void editBtnClicked();
-    void sendBtnClicked();
-    void cancelBtnClicked();
-    void jobResult( KJob *job );
-    void jobPercent( KJob *job, unsigned long percent );
-    void jobInfoMessage( KJob *job, const QString &info, const QString &info2 );
+    void fillTransportList(); // TODO rename?
 
-  private:
-    MailTransport::TransportComboBox *mComboBox;
-    KLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
-    KTextEdit *mMailEdit;
-    KJob *mCurrentJob;
 };
+
+
+}
+
 
 #endif

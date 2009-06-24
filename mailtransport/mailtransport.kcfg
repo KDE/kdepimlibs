@@ -21,9 +21,15 @@
       <choices>
         <choice name="SMTP">
           <label>SMTP Server</label>
+          <whatsthis>TODO smtp description</whatsthis>
         </choice>
         <choice name="Sendmail">
           <label>Local sendmail</label>
+          <whatsthis>TODO sendmail description</whatsthis>
+        </choice>
+        <choice name="Akonadi">
+          <label>Akonadi Resource</label>
+          <whatsthis>TODO Akonadi description</whatsthis>
         </choice>
       </choices>
       <label>Transport type</label>
