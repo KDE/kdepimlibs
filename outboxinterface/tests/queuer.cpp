@@ -27,7 +27,7 @@
 
 #include <QPushButton>
 
-#include <Akonadi/Control>
+#include <akonadi/control.h>
 
 #include <mailtransport/transportmanager.h>
 #include <mailtransport/transport.h>

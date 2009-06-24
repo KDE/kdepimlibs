@@ -22,7 +22,7 @@
 
 #include <outboxinterface/outboxinterface_export.h>
 
-#include <Akonadi/Attribute>
+#include <akonadi/attribute.h>
 
 
 namespace MailTransport

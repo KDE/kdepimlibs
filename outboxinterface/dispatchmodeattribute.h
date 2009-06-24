@@ -24,7 +24,7 @@
 
 #include <QtCore/QDateTime>
 
-#include <Akonadi/Attribute>
+#include <akonadi/attribute.h>
 
 
 namespace OutboxInterface

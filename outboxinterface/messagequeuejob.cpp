@@ -30,9 +30,9 @@
 #include <KDebug>
 #include <KLocalizedString>
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
-#include <Akonadi/ItemCreateJob>
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
+#include <akonadi/itemcreatejob.h>
 
 #include <mailtransport/transport.h>
 #include <mailtransport/transportmanager.h>

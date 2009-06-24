@@ -22,11 +22,11 @@
 #include <KDebug>
 #include <KProcess>
 
-#include <Akonadi/Control>
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentInstanceCreateJob>
-#include <Akonadi/AgentType>
-#include <Akonadi/AgentManager>
+#include <akonadi/control.h>
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentinstancecreatejob.h>
+#include <akonadi/agenttype.h>
+#include <akonadi/agentmanager.h>
 #include <akonadi/qtest_akonadi.h>
 
 #include <outboxinterface/localfolders.h>

@@ -21,15 +21,15 @@
 
 #include <QStringList>
 
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentManager>
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionStatistics>
-#include <Akonadi/CollectionStatisticsJob>
-#include <Akonadi/Control>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemDeleteJob>
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentmanager.h>
+#include <akonadi/collection.h>
+#include <akonadi/collectionstatistics.h>
+#include <akonadi/collectionstatisticsjob.h>
+#include <akonadi/control.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/itemdeletejob.h>
 #include <akonadi/qtest_akonadi.h>
 
 #include <mailtransport/transportmanager.h>

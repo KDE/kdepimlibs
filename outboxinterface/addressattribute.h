@@ -25,7 +25,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-#include <Akonadi/Attribute>
+#include <akonadi/attribute.h>
 
 
 namespace MailTransport
