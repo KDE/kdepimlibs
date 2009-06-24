@@ -139,6 +139,14 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     */
     void createDefaultTransport();
 
+    /**
+      Check for an existing transport, and show a configuration dialog if not.
+      Returns true if transport exists or user creates one. Otherwise false.
+      @param parent Parent widget of the dialog
+      @since 4.4
+    */
+    bool checkTransport( QWidget *parent );
+
   public Q_SLOTS:
     /**
       Returns true if there are no mail transports at all.
