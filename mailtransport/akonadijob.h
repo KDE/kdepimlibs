@@ -22,7 +22,7 @@
 
 #include <mailtransport/transportjob.h>
 
-#include <Akonadi/Item>
+#include <akonadi/item.h>
 
 class AkonadiJobPrivate;
 

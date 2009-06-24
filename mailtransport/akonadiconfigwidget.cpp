@@ -23,8 +23,8 @@
 
 #include <KStandardDirs>
 
-#include <Akonadi/AgentFilterProxyModel>
-#include <Akonadi/AgentInstance>
+#include <akonadi/agentfilterproxymodel.h>
+#include <akonadi/agentinstance.h>
 
 using namespace Akonadi;
 using namespace MailTransport;
