@@ -19,7 +19,6 @@
 
 #include "messagequeuejob.h"
 
-#include "localfolders.h"
 #include "addressattribute.h"
 #include "transportattribute.h"
 
@@ -31,6 +30,7 @@
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
+#include <akonadi/kmime/localfolders.h>
 
 #include <mailtransport/transport.h>
 #include <mailtransport/transportmanager.h>

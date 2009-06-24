@@ -6,12 +6,6 @@ kde4_add_executable(queuer TEST ${queuer_srcs})
 target_link_libraries(queuer ${KDE4_KDEUI_LIBS} ${KDE4_MAILTRANSPORT_LIBS} ${KDE4_KMIME_LIBS} outboxinterface)
 
 
-set( requester_srcs foldersrequester.cpp )
-kde4_add_executable( requester TEST ${requester_srcs} )
-target_link_libraries( requester outboxinterface )
-# for racetest
-add_definitions( -DREQUESTER_EXE=\\"${CMAKE_CURRENT_BINARY_DIR}/requester\\" )
-
 set( sendqueued_srcs sendqueued.cpp )
 kde4_add_executable( sendqueued TEST ${sendqueued_srcs} )
 target_link_libraries( sendqueued outboxinterface )
@@ -64,5 +58,4 @@ endmacro(add_akonadi_isolated_test)
 
 
 add_akonadi_isolated_test( messagequeuejobtest.cpp )
-add_akonadi_isolated_test( racetest.cpp )
 

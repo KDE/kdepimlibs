@@ -9,7 +9,6 @@ add_subdirectory( tests )
 
 set(outboxinterface_lib_srcs
   dispatcherinterface.cpp
-  localfolders.cpp
   outboxactions.cpp
   messagequeuejob.cpp
 
@@ -18,18 +17,13 @@ set(outboxinterface_lib_srcs
   errorattribute.cpp
   sentbehaviourattribute.cpp
   transportattribute.cpp
-
-  resourcetester/resourcesynchronizationjob.cpp
 )
 
 # qt4_add_dbus_interface( outboxinterface_lib_srcs interfaces/org.kde.Akonadi.MailDispatcher.xml mdainterface )
 # install( FILES interfaces/org.kde.Akonadi.MailDispatcher.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 
-kde4_add_kcfg_files(outboxinterface_lib_srcs settings.kcfgc)
-install(FILES outboxinterface.kcfg DESTINATION ${KCFG_INSTALL_DIR})
-
 kde4_add_library(outboxinterface SHARED ${outboxinterface_lib_srcs})
-target_link_libraries(outboxinterface ${KDE4_KIO_LIBS} akonadi-kde kmime mailtransport )
+target_link_libraries( outboxinterface ${KDE4_KIO_LIBS} akonadi-kde akonadi-kmime kmime mailtransport )
 set_target_properties(outboxinterface PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
 
@@ -38,7 +32,6 @@ install(TARGETS outboxinterface ${INSTALL_TARGETS_DEFAULT_ARGS})
 install( FILES 
         outboxinterface_export.h
         dispatcherinterface.h
-        localfolders.h
         messagequeuejob.h
 
         addressattribute.h

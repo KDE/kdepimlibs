@@ -27,8 +27,8 @@
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
 #include <akonadi/filteractionjob.h>
+#include <akonadi/kmime/localfolders.h>
 
-#include <outboxinterface/localfolders.h>
 #include <outboxinterface/outboxactions.h>
 
 using namespace Akonadi;
