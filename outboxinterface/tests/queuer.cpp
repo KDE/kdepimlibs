@@ -20,13 +20,17 @@
 
 #include "queuer.h"
 
+#include <QDateTime>
+#include <QTimeEdit>
+#include <QPointer>
+#include <QPushButton>
+
 #include <KApplication>
 #include <KCmdLineArgs>
+#include <KDateTimeWidget>
+#include <KDialog>
 #include <KLineEdit>
 #include <KTextEdit>
-
-#include <QCheckBox>
-#include <QPushButton>
 
 #include <akonadi/control.h>
 
@@ -63,12 +67,53 @@ MessageQueuer::MessageQueuer()
   mMailEdit->setText( "test from queuer!" );
   mMailEdit->setAcceptRichText( false );
   mMailEdit->setLineWrapMode( QTextEdit::NoWrap );
-  QPushButton *b = new QPushButton( "&Send", this );
-  connect( b, SIGNAL(clicked(bool)), SLOT(sendBtnClicked()) );
-  mQueued = new QCheckBox( "&Queue instead of sending immediately", this );
+  QPushButton *b = new QPushButton( "&Send Now", this );
+  connect( b, SIGNAL(clicked(bool)), SLOT(sendNowClicked()) );
+  b = new QPushButton( "Send &Queued", this );
+  connect( b, SIGNAL(clicked(bool)), SLOT(sendQueuedClicked()) );
+  b = new QPushButton( "Send on &Date...", this );
+  connect( b, SIGNAL(clicked(bool)), SLOT(sendOnDateClicked()) );
 }
 
-void MessageQueuer::sendBtnClicked()
+void MessageQueuer::sendNowClicked()
+{
+  MessageQueueJob *qjob = createQueueJob();
+  kDebug() << "DispatchMode default (Immediately).";
+  qjob->start();
+}
+
+void MessageQueuer::sendQueuedClicked()
+{
+  MessageQueueJob *qjob = createQueueJob();
+  kDebug() << "DispatchMode Never.";
+  qjob->setDispatchMode( DispatchModeAttribute::Never );
+  qjob->start();
+}
+
+void MessageQueuer::sendOnDateClicked()
+{
+  QPointer<KDialog> dialog = new KDialog( this );
+  KDateTimeWidget *dt = new KDateTimeWidget( dialog );
+  dt->setDateTime( QDateTime::currentDateTime() );
+  // HACK:
+  QTimeEdit *te = dt->findChild<QTimeEdit*>();
+  Q_ASSERT( te );
+  te->setDisplayFormat( "hh:mm:ss" );
+  dialog->setMainWidget( dt );
+  dialog->enableButtonCancel( false );
+  dialog->exec();
+  if( !dialog ) {
+    return;
+  }
+  kDebug() << "DispatchMode AfterDueDate" << dt->dateTime();
+  MessageQueueJob *qjob = createQueueJob();
+  qjob->setDispatchMode( DispatchModeAttribute::AfterDueDate );
+  qjob->setDueDate( dt->dateTime() );
+  qjob->start();
+  delete dialog;
+}
+
+MessageQueueJob *MessageQueuer::createQueueJob()
 {
   Message::Ptr msg = Message::Ptr( new Message );
   // No headers; need a '\n' to separate headers from body.
@@ -79,10 +124,7 @@ void MessageQueuer::sendBtnClicked()
   MessageQueueJob *job = new MessageQueueJob();
   job->setMessage( msg );
   job->setTransportId( mComboBox->currentTransportId() );
-  if( mQueued->isChecked() ) {
-    job->setDispatchMode( DispatchModeAttribute::Never );
-    kDebug() << "DispatchMode: Never";
-  }
+  // default dispatch mode
   // default sent-mail collection
   job->setFrom( mSenderEdit->text() );
   job->setTo( mToEdit->text().isEmpty() ? QStringList() : mToEdit->text().split( ',' ) );
@@ -96,8 +138,7 @@ void MessageQueuer::sendBtnClicked()
   connect( job, SIGNAL(infoMessage(KJob*,QString,QString)),
            SLOT(jobInfoMessage(KJob*,QString,QString)) );
 
-  kDebug() << "MessageQueueJob started.";
-  job->start();
+  return job;
 }
 
 int main( int argc, char **argv )
