@@ -19,7 +19,9 @@
 
 #include "dispatcherinterface.h"
 
-#include "mdainterface.h"
+//#include "mdainterface.h"
+
+#include <QTimer>
 
 #include <KDebug>
 #include <KGlobal>
@@ -44,12 +46,12 @@ class OutboxInterface::DispatcherInterfacePrivate
     DispatcherInterface *instance;
 
     bool connected;
-    org::kde::Akonadi::MailDispatcher *iface;
+    //org::kde::Akonadi::MailDispatcher *iface;
     AgentInstance agent;
 
     // slots
     void connectToAgent();
-    void dbusServiceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
+    //void dbusServiceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
     void agentInstanceRemoved( const AgentInstance &a );
     void agentInstanceChanged( const AgentInstance &a );
 
@@ -59,11 +61,12 @@ K_GLOBAL_STATIC( DispatcherInterfacePrivate, sInstance )
 
 DispatcherInterfacePrivate::DispatcherInterfacePrivate()
   : instance( new DispatcherInterface( this ) )
-  , iface( 0 )
+  //, iface( 0 )
 {
-  QDBusConnection bus = QDBusConnection::sessionBus();
-  QObject::connect( bus.interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-      instance, SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
+  // QDBusConnection bus = QDBusConnection::sessionBus();
+  // QObject::connect( bus.interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+  //     instance, SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
+
   // AgentInstance objects are not updated automatically, so we need to watch
   // for AgentManager's signals:
   QObject::connect( AgentManager::self(), SIGNAL(instanceOnline(Akonadi::AgentInstance,bool)),
@@ -90,6 +93,7 @@ void DispatcherInterfacePrivate::connectToAgent()
     return;
   }
 
+#if 0
   delete iface;
   iface = new org::kde::Akonadi::MailDispatcher( QLatin1String( "org.freedesktop.Akonadi.Agent.akonadi_maildispatcher_agent" ),
       QLatin1String( "/" ), QDBusConnection::sessionBus(), instance );
@@ -98,6 +102,7 @@ void DispatcherInterfacePrivate::connectToAgent()
     QTimer::singleShot( 1000, instance, SLOT(connectToAgent()) );
     return;
   }
+#endif
 
   agent = AgentManager::self()->instance( QLatin1String( "akonadi_maildispatcher_agent" ) );
   if( !agent.isValid() ) {
@@ -110,6 +115,7 @@ void DispatcherInterfacePrivate::connectToAgent()
   connected = true;
 }
 
+#if 0
 void DispatcherInterfacePrivate::dbusServiceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )
 {
   Q_UNUSED( oldOwner );
@@ -121,6 +127,7 @@ void DispatcherInterfacePrivate::dbusServiceOwnerChanged( const QString &name, c
     }
   }
 }
+#endif
 
 void DispatcherInterfacePrivate::agentInstanceRemoved( const AgentInstance &a )
 {
@@ -196,7 +203,7 @@ void DispatcherInterface::abortDispatching()
     return;
   }
 
-  d->iface->abort();
+  d->agent.abort();
 }
 
 void DispatcherInterface::dispatchManually()
