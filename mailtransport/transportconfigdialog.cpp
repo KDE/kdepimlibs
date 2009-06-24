@@ -27,6 +27,7 @@
 #include "transport.h"
 #include "transportconfigwidget.h"
 #include "transportmanager.h"
+#include "transporttypeinfo.h"
 
 #include <QString>
 
@@ -47,7 +48,7 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
 {
   Q_ASSERT( transport );
 
-  d->configWidget = TransportManager::self()->configWidgetForTransport( transport );
+  d->configWidget = TransportTypeInfo::configWidgetForTransport( transport );
   kDebug() << "transport" << transport->id() << "config widget" << d->configWidget;
   Q_ASSERT( d->configWidget );
   setMainWidget( d->configWidget );

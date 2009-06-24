@@ -140,17 +140,6 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     */
     void createDefaultTransport();
 
-    /**
-      Creates an appropriate configuration widget for the transport, depending
-      on its type.
-
-      @param transport The transport
-      @param parent The parent passed to the widget's constructor
-
-      TODO should this be public?
-    */
-    TransportConfigWidget *configWidgetForTransport( Transport *transport, QWidget *parent = 0 );
-
   public Q_SLOTS:
     /**
       Returns true if there are no mail transports at all.

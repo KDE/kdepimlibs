@@ -21,15 +21,15 @@
 
 #include "addtransportassistant.h"
 
+#include "transport.h"
+#include "transportconfigwidget.h"
+#include "transportmanager.h"
+#include "transporttypeinfo.h"
+
 #include <KConfigDialogManager>
 #include <KConfigSkeleton>
 #include <KDebug>
 #include <KVBox>
-
-#include "transportconfigwidget.h"
-#include "transport.h"
-#include "transportbase.h"
-#include "transportmanager.h"
 
 #include "ui_addtransportassistanttypepage.h"
 #include "ui_addtransportassistantnamepage.h"
@@ -74,6 +74,9 @@ AddTransportAssistant::AddTransportAssistant( QWidget *parent )
   : KAssistantDialog( parent )
   , d( new Private )
 {
+  d->transport = TransportManager::self()->createTransport();
+  Q_ASSERT( d->transport );
+
   // type page
   d->typePage = new QWidget( this );
   d->uiTypePage.setupUi( d->typePage );
@@ -86,19 +89,11 @@ AddTransportAssistant::AddTransportAssistant( QWidget *parent )
   setValid( d->typeItem, false );
 
   // populate type list
-  // TODO: HACKish way to get transport descriptions...
-  // TODO TransportManagementWidget has i18ns for transport types -> share?
-  Q_ASSERT( d->transport == 0 );
-  d->transport = TransportManager::self()->createTransport();
-  Q_ASSERT( d->transport );
-  int enumid = 0;
-  const KConfigSkeleton::ItemEnum *const item = d->transport->typeItem();
-  foreach( const KConfigSkeleton::ItemEnum::Choice2 &choice, item->choices2() ) {
+  for( int i = 0; i < TransportTypeInfo::typeCount(); i++ ) {
     QTreeWidgetItem *treeItem = new QTreeWidgetItem( d->uiTypePage.typeListView );
-    treeItem->setData( 0, Qt::UserRole, enumid ); // the transport type
-    enumid++;
-    treeItem->setText( 0, choice.label );
-    treeItem->setText( 1, choice.whatsThis );
+    treeItem->setData( 0, Qt::UserRole, i ); // the transport type
+    treeItem->setText( 0, TransportTypeInfo::nameForType( i ) );
+    treeItem->setText( 1, TransportTypeInfo::descriptionForType( i ) );
   }
   d->uiTypePage.typeListView->resizeColumnToContents( 0 );
   d->uiTypePage.typeListView->setFocus();
@@ -168,7 +163,7 @@ void AddTransportAssistant::next()
       d->transport->setType( type );
       d->lastType = type;
       delete d->configPageContents;
-      d->configPageContents = TransportManager::self()->configWidgetForTransport( d->transport, d->configPage );
+      d->configPageContents = TransportTypeInfo::configWidgetForTransport( d->transport, d->configPage );
 
       // let the configWidget's KConfigDialogManager handle kcfg_name:
       KConfigDialogManager *mgr = d->configPageContents->configManager();

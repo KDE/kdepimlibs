@@ -8,6 +8,7 @@ add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5324 )
 set(mailtransport_lib_srcs
   transport.cpp
   transportmanager.cpp
+  transporttypeinfo.cpp
 
   transportcombobox.cpp
   transportlistview.cpp
