@@ -56,6 +56,11 @@ class OUTBOXINTERFACE_EXPORT DispatchModeAttribute : public Akonadi::Attribute
 
     DispatchMode dispatchMode() const;
     void setDispatchMode( DispatchMode mode );
+
+    /**
+      The due date for sending the message.
+      Only valid if dispatchMode() is AfterDueDate.
+    */
     QDateTime dueDate() const;
     void setDueDate( const QDateTime &date );
 

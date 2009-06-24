@@ -23,6 +23,7 @@
 #include <outboxinterface/outboxinterface_export.h>
 
 #include "dispatchmodeattribute.h"
+#include "sentbehaviourattribute.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QString>
@@ -64,7 +65,8 @@ class OUTBOXINTERFACE_EXPORT MessageQueueJob : public KCompositeJob
     int transportId() const;
     DispatchModeAttribute::DispatchMode dispatchMode() const;
     QDateTime sendDueDate() const;
-    Akonadi::Collection::Id sentMailCollection() const;
+    SentBehaviourAttribute::SentBehaviour sentBehaviour() const;
+    Akonadi::Collection::Id moveToCollection() const;
     QString from() const;
     QStringList to() const;
     QStringList cc() const;
@@ -74,7 +76,8 @@ class OUTBOXINTERFACE_EXPORT MessageQueueJob : public KCompositeJob
     void setTransportId( int id );
     void setDispatchMode( DispatchModeAttribute::DispatchMode mode );
     void setDueDate( const QDateTime &date );
-    void setSentMailCollection( Akonadi::Collection::Id id );
+    void setSentBehaviour( SentBehaviourAttribute::SentBehaviour beh );
+    void setMoveToCollection( Akonadi::Collection::Id cid );
     void setFrom( const QString &from );
     void setTo( const QStringList &to );
     void setCc( const QStringList &cc );

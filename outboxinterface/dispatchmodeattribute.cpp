@@ -56,24 +56,23 @@ QByteArray DispatchModeAttribute::serialized() const
   }
 
   Q_ASSERT(false);
-  return ""; // suppress control-reaches-end-of-non-void-function warning
+  return QByteArray(); // suppress control-reaches-end-of-non-void-function warning
 }
 
 void DispatchModeAttribute::deserialize( const QByteArray &data )
 {
   mDueDate = QDateTime();
-  if ( data == "immediately" )
+  if ( data == "immediately" ) {
     mMode = Immediately;
-  else if ( data == "never" )
+  } else if ( data == "never" ) {
     mMode = Never;
-  else if ( data.startsWith( QByteArray( "after" ) ) )
-  {
+  } else if ( data.startsWith( QByteArray( "after" ) ) ) {
     mMode = AfterDueDate;
     mDueDate = QDateTime::fromString( data.mid(5), Qt::ISODate );
     // NOTE: 5 is the strlen of "after". Not very maintenance-friendly.
-  }
-  else
+  } else {
     kWarning() << "Failed to deserialize data [" << data << "]";
+  }
 }
 
 DispatchModeAttribute::DispatchMode DispatchModeAttribute::dispatchMode() const

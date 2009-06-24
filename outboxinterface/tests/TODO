@@ -5,4 +5,8 @@ LocalFolders:
 - one or both collections have been removed
 
 MessageQueueJob:
+- see source
+
+Attributes:
+- add test for serialization and common mistakes such as forgetting to setDueDate
 
