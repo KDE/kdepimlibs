@@ -149,7 +149,7 @@ bool MessageQueueJob::Private::validate()
 void MessageQueueJob::Private::doStart()
 {
   LocalFolders::self()->disconnect( q );
-  kDebug() << q << "starting";
+  //kDebug() << q << "starting";
   Q_ASSERT( !started );
   started = true;
 
@@ -162,7 +162,7 @@ void MessageQueueJob::Private::doStart()
   Item item;
   item.setMimeType( "message/rfc822" );
   item.setPayload<Message::Ptr>( message );
-  kDebug() << "message:" << message->encodedContent( true );
+  //kDebug() << "message:" << message->encodedContent( true );
 
   // set attributes
   AddressAttribute *addrA = new AddressAttribute( from, to, cc, bcc );
@@ -190,12 +190,12 @@ MessageQueueJob::MessageQueueJob( QObject *parent )
   : KCompositeJob( parent )
   , d( new Private( this ) )
 {
-  kDebug() << this << "created";
+  //kDebug() << this << "created";
 }
 
 MessageQueueJob::~MessageQueueJob()
 {
-  kDebug() << this << "destroyed";
+  //kDebug() << this << "destroyed";
   delete d;
 }
 
@@ -313,7 +313,7 @@ void MessageQueueJob::slotResult( KJob *job )
   KCompositeJob::slotResult( job );
 
   if( !error() ) {
-    kDebug() << "item created ok. emitting result.";
+    //kDebug() << "item created ok. emitting result.";
     emitResult();
   }
 }
