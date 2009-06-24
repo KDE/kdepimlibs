@@ -10,21 +10,21 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-gpgme++.h.cmake ${CMAKE_CURREN
 ##     Unix: gpgme, gpgme-pthread, gpgme-pth
 ## We're building corresponding gpgme++ flavours
 
-set(gpgme_LIB_SRCS 
+set(gpgme_LIB_SRCS
         exception.cpp
-        context.cpp key.cpp 
-        trustitem.cpp 
-        data.cpp 
-        callbacks.cpp 
-        eventloopinteractor.cpp 
+        context.cpp key.cpp
+        trustitem.cpp
+        data.cpp
+        callbacks.cpp
+        eventloopinteractor.cpp
         editinteractor.cpp
         keylistresult.cpp
-        keygenerationresult.cpp 
+        keygenerationresult.cpp
         importresult.cpp
-        decryptionresult.cpp 
-        verificationresult.cpp 
-        signingresult.cpp 
-        encryptionresult.cpp 
+        decryptionresult.cpp
+        verificationresult.cpp
+        signingresult.cpp
+        encryptionresult.cpp
         engineinfo.cpp
         gpgsetexpirytimeeditinteractor.cpp
         gpgsetownertrusteditinteractor.cpp
@@ -32,7 +32,7 @@ set(gpgme_LIB_SRCS
         gpgadduserideditinteractor.cpp
 )
 
-set( _gpgmepp_version 2.0.2 )
+set( _gpgmepp_version 2.2.2 )
 set( _gpgmepp_soversion 2 )
 
 set( GPGMEPP_INCLUDE ${INCLUDE_INSTALL_DIR} ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR} )
@@ -116,16 +116,16 @@ if ( GPGME_FOUND )
    add_subdirectory( interfaces )
 
    install(FILES
-        global.h error.h exception.h context.h key.h trustitem.h 
+        global.h error.h exception.h context.h key.h trustitem.h
         eventloopinteractor.h editinteractor.h data.h gpgmefw.h result.h
-        keylistresult.h keygenerationresult.h 
+        keylistresult.h keygenerationresult.h
         importresult.h decryptionresult.h verificationresult.h
         signingresult.h encryptionresult.h notation.h engineinfo.h
         gpgsetexpirytimeeditinteractor.h
         gpgsetownertrusteditinteractor.h
         gpgsignkeyeditinteractor.h
         gpgadduserideditinteractor.h
-        gpgme++_export.h 
+        gpgme++_export.h
         DESTINATION ${INCLUDE_INSTALL_DIR}/gpgme++ COMPONENT Devel
    )
 

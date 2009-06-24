@@ -38,6 +38,7 @@ typedef struct _GIOChannel      GIOChannel;
 class QIODevice;
 
 namespace GpgME {
+    void initializeLibrary();
 
     enum Protocol { OpenPGP, CMS, UnknownProtocol };
 
