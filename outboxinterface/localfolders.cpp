@@ -193,7 +193,7 @@ LocalFoldersPrivate::~LocalFoldersPrivate()
 void LocalFoldersPrivate::prepare()
 {
   if( ready ) {
-    kDebug() << "Already ready.  Emitting foldersReady().";
+    //kDebug() << "Already ready.  Emitting foldersReady().";
     emit instance->foldersReady();
     return;
   }
