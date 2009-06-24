@@ -26,7 +26,6 @@
 using namespace Akonadi;
 using namespace OutboxInterface;
 
-
 ErrorAttribute::ErrorAttribute( const QString &msg )
   : mMessage( msg )
 {
@@ -38,23 +37,23 @@ ErrorAttribute::~ErrorAttribute()
 
 ErrorAttribute* ErrorAttribute::clone() const
 {
-    return new ErrorAttribute( mMessage );
+  return new ErrorAttribute( mMessage );
 }
 
 QByteArray ErrorAttribute::type() const
 {
-    static const QByteArray sType( "ErrorAttribute" );
-    return sType;
+  static const QByteArray sType( "ErrorAttribute" );
+  return sType;
 }
 
 QByteArray ErrorAttribute::serialized() const
 {
-  return mMessage.toLocal8Bit();
+  return mMessage.toUtf8();
 }
 
 void ErrorAttribute::deserialize( const QByteArray &data )
 {
-  mMessage = QString::fromLocal8Bit( data );
+  mMessage = QString::fromUtf8( data );
 }
 
 QString ErrorAttribute::message() const

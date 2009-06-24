@@ -25,15 +25,16 @@
 #include <akonadi/attribute.h>
 #include <akonadi/collection.h>
 
-
-namespace OutboxInterface
-{
-
+namespace OutboxInterface {
 
 /**
- * Attribute storing the id of the sent-mail collection for a message.  The
- * dispatcher agent will move the item to that collection after it is sent.
- */
+  Attribute determining what will happen to a message after it is sent.  The
+  message can be deleted from the Outbox, moved to the default sent-mail
+  collection, or moved to a custom collection.
+
+  @author Constantin Berzan <exit3219@gmail.com>
+  @since 4.4
+*/
 class OUTBOXINTERFACE_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
 {
   public:
@@ -42,28 +43,51 @@ class OUTBOXINTERFACE_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
     */
     enum SentBehaviour
     {
-      Delete,
-      MoveToCollection,
-      MoveToDefaultSentCollection
+      Delete,                      ///< Delete the item from the outbox.
+      MoveToCollection,            ///< Move the item to the default sent-mail collection.
+      MoveToDefaultSentCollection  ///< Move the item to a custom collection.
     };
 
+    /**
+      Creates a new SentBehaviourAttribute.
+    */
     explicit SentBehaviourAttribute( SentBehaviour beh = MoveToDefaultSentCollection,
         Akonadi::Collection::Id moveToCollection = -1 );
+
+    /**
+      Destroys the SentBehaviourAttribute.
+    */
     virtual ~SentBehaviourAttribute();
 
+    /* reimpl */
     virtual SentBehaviourAttribute* clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );
 
+    /**
+      Returns the sent-behaviour of the message.
+      @see SentBehaviour.
+    */
     SentBehaviour sentBehaviour() const;
+
+    /**
+      Sets the sent-behaviour of the message.
+      @see SentBehaviour.
+    */
     void setSentBehaviour( SentBehaviour beh );
 
     /**
-      The collection to move the item to after it is sent.
+      Returns the collection to which the item should be moved after it is sent.
       Only valid if sentBehaviour() is MoveToCollection.
     */
     Akonadi::Collection::Id moveToCollection() const;
+    
+    /**
+      Sets the collection to which the item should be moved after it is sent.
+      Make sure you set the SentBehaviour to MoveToCollection first.
+      @see setSentBehaviour.
+    */
     void setMoveToCollection( Akonadi::Collection::Id moveToCollection );
 
   private:
@@ -72,8 +96,6 @@ class OUTBOXINTERFACE_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
 
 };
 
+} // namespace OutboxInterface
 
-}
-
-
-#endif
+#endif // OUTBOXINTERFACE_SENTBEHAVIOURATTRIBUTE_H

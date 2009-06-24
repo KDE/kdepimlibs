@@ -26,42 +26,68 @@
 
 #include <akonadi/attribute.h>
 
-
-namespace OutboxInterface
-{
-
+namespace OutboxInterface {
 
 /**
- * Attribute determining how and when a message from the outbox is dispatched.
- *
- * TODO: name: SendPolicy? SendingPolicy?
- */
+  Attribute determining how and when a message from the outbox should be
+  dispatched.  Messages can be sent immediately, sent only when the user
+  explicitly requests it, or sent automatically at a certain date and time.
+
+  @author Constantin Berzan <exit3219@gmail.com>
+  @since 4.4
+*/
 class OUTBOXINTERFACE_EXPORT DispatchModeAttribute : public Akonadi::Attribute
 {
   public:
+    /**
+      Determines how the message is sent.
+    */
     enum DispatchMode
     {
-      Immediately,
-      AfterDueDate,
-      Never
+      Immediately,  ///< Send message as soon as possible.
+      AfterDueDate, ///< Send message at a certain date/time.
+      Never         ///< Send message only when the user requests so.
     };
 
+    /**
+      Creates a new DispatchModeAttribute.
+    */
     explicit DispatchModeAttribute( DispatchMode mode = Immediately, const QDateTime &date = QDateTime() );
+
+    /**
+      Destroys the DispatchModeAttribute.
+    */
     virtual ~DispatchModeAttribute();
 
+    /* reimpl */
     virtual DispatchModeAttribute* clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );
 
+    /**
+      Returns the dispatch mode for the message.
+      @see DispatchMode.
+    */
     DispatchMode dispatchMode() const;
+
+    /**
+      Sets the dispatch mode for the message.
+      @see DispatchMode.
+    */
     void setDispatchMode( DispatchMode mode );
 
     /**
-      The due date for sending the message.
+      Returns the date and time when the message should be sent.
       Only valid if dispatchMode() is AfterDueDate.
     */
     QDateTime dueDate() const;
+
+    /**
+      Sets the date and time when the message should be sent.
+      Make sure you set the DispatchMode to AfterDueDate first.
+      @see setDispatchMode.
+    */
     void setDueDate( const QDateTime &date );
 
   private:
@@ -70,8 +96,6 @@ class OUTBOXINTERFACE_EXPORT DispatchModeAttribute : public Akonadi::Attribute
 
 };
 
+} // namespace OutboxInterface
 
-}
-
-
-#endif
+#endif // OUTBOXINTERFACE_DISPATCHMODEATTRIBUTE_H

@@ -24,34 +24,56 @@
 
 #include <akonadi/attribute.h>
 
-
-namespace MailTransport
-{
+namespace MailTransport {
   class Transport;
 }
 
+namespace OutboxInterface {
 
-namespace OutboxInterface
-{
+/** 
+  Attribute determining which transport to use for sending a message.
 
+  @see mailtransport
+  @see TransportManager.
 
-/**
- * Attribute determining which transport to use for sending a message.
- * @see mailtransport
- */
+  @author Constantin Berzan <exit3219@gmail.com>
+  @since 4.4
+*/
 class OUTBOXINTERFACE_EXPORT TransportAttribute : public Akonadi::Attribute
 {
   public:
+    /**
+      Creates a new TransportAttribute.
+    */
     TransportAttribute( int id = -1 );
+
+    /**
+      Destroys this TransportAttribute.
+    */
     virtual ~TransportAttribute();
 
+    /* reimpl */
     virtual TransportAttribute* clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );
 
+    /**
+      Returns the transport id to use for sending this message.
+      @see TransportManager.
+    */
     int transportId() const;
+
+    /**
+      Returns the transport object corresponding to the transport id contained
+      in this attribute.
+      @see Transport.
+    */
     MailTransport::Transport* transport() const;
+
+    /**
+      Sets the transport id to use for sending this message.
+    */
     void setTransportId( int id );
 
   private:
@@ -59,8 +81,6 @@ class OUTBOXINTERFACE_EXPORT TransportAttribute : public Akonadi::Attribute
 
 };
 
+} // namespace OutboxInterface
 
-}
-
-
-#endif
+#endif // OUTBOXINTERFACE_TRANSPORTATTRIBUTE_H

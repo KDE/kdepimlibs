@@ -22,8 +22,6 @@
 #include "addressattribute.h"
 #include "transportattribute.h"
 
-#include <QTimer>
-
 #include <KDebug>
 #include <KLocalizedString>
 
@@ -35,17 +33,14 @@
 #include <mailtransport/transport.h>
 #include <mailtransport/transportmanager.h>
 
-
 using namespace Akonadi;
 using namespace KMime;
 using namespace MailTransport;
 using namespace OutboxInterface;
 
-
 /**
- * Private class that helps to provide binary compatibility between releases.
- * @internal
- */
+  @internal
+*/
 class OutboxInterface::MessageQueueJob::Private
 {
   public:
@@ -73,11 +68,9 @@ class OutboxInterface::MessageQueueJob::Private
     QStringList bcc;
     bool started;
 
-
-    void readAddressesFromMime();
-
     /**
-      Checks that this message has everything it needs and is ready to be sent.
+      Returns true if this message has everything it needs and is ready to be
+      sent.
     */
     bool validate();
 
@@ -86,13 +79,6 @@ class OutboxInterface::MessageQueueJob::Private
 
 };
 
-
-void MessageQueueJob::Private::readAddressesFromMime()
-{
-  kDebug() << "implement me";
-  // big TODO
-}
-
 bool MessageQueueJob::Private::validate()
 {
   if( !message ) {
@@ -100,8 +86,6 @@ bool MessageQueueJob::Private::validate()
     q->setErrorText( i18n( "Empty message." ) );
     q->emitResult();
     return false;
-
-    // NOTE: the MDA also asserts that msg->encodedContent(true) is non-empty.
   }
 
   if( to.count() + cc.count() + bcc.count() == 0 ) {
@@ -141,7 +125,6 @@ bool MessageQueueJob::Private::validate()
 void MessageQueueJob::Private::doStart()
 {
   LocalFolders::self()->disconnect( q );
-  //kDebug() << q << "starting";
   Q_ASSERT( !started );
   started = true;
 
@@ -150,13 +133,12 @@ void MessageQueueJob::Private::doStart()
     return;
   }
 
-  // create item
+  // Create item.
   Item item;
   item.setMimeType( "message/rfc822" );
   item.setPayload<Message::Ptr>( message );
-  //kDebug() << "message:" << message->encodedContent( true );
 
-  // set attributes
+  // Set attributes.
   AddressAttribute *addrA = new AddressAttribute( from, to, cc, bcc );
   DispatchModeAttribute *dmA = new DispatchModeAttribute( dispatchMode, dueDate );
   SentBehaviourAttribute *sA = new SentBehaviourAttribute( sentBehaviour, moveToCollection );
@@ -166,10 +148,10 @@ void MessageQueueJob::Private::doStart()
   item.addAttribute( sA );
   item.addAttribute( tA );
 
-  // set flags
+  // Set flags.
   item.setFlag( "queued" );
 
-  // put item in Akonadi storage
+  // Store the item in the outbox.
   Q_ASSERT( LocalFolders::self()->isReady() );
   Collection col = LocalFolders::self()->outbox();
   ItemCreateJob *job = new ItemCreateJob( item, col ); // job autostarts
@@ -182,15 +164,12 @@ MessageQueueJob::MessageQueueJob( QObject *parent )
   : KCompositeJob( parent )
   , d( new Private( this ) )
 {
-  //kDebug() << this << "created";
 }
 
 MessageQueueJob::~MessageQueueJob()
 {
-  //kDebug() << this << "destroyed";
   delete d;
 }
-
 
 Message::Ptr MessageQueueJob::message() const
 {
@@ -293,16 +272,10 @@ void MessageQueueJob::setBcc( const QStringList &bcc )
   d->bcc = bcc;
 }
 
-void MessageQueueJob::readAddressesFromMime()
-{
-  d->readAddressesFromMime();
-}
-
 void MessageQueueJob::start()
 {
   LocalFolders *folders = LocalFolders::self();
-  connect( folders, SIGNAL( foldersReady() ),
-      this, SLOT( doStart() ) );
+  connect( folders, SIGNAL( foldersReady() ), this, SLOT( doStart() ) );
   folders->fetch(); // will emit foldersReady()
 }
 
@@ -312,7 +285,6 @@ void MessageQueueJob::slotResult( KJob *job )
   KCompositeJob::slotResult( job );
 
   if( !error() ) {
-    //kDebug() << "item created ok. emitting result.";
     emitResult();
   }
 }

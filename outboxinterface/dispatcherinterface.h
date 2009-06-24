@@ -31,13 +31,17 @@ namespace OutboxInterface {
 class DispatcherInterfacePrivate;
 
 /**
-  An interface for apps to interact with the MDA.
-  Provides methods such as send queued messages and retry sending.
+  @short An interface for applications to interact with the dispatcher agent.
 
-  TODO dispatchManually and retryDispatching functions should be offered on a
-  per-item basis as well, I imagine when the user will have a messageView of
-  the outbox.  Then do we need global ones here (i.e. for all items in the
-  outbox)?
+  This class provides methods such as send queued messages (@see
+  dispatchManually) and retry sending (@see retryDispatching).
+
+  This class also takes care of registering the attributes that the MDA and
+  OutboxInterface use.  The attributes are registered the first time you call
+  self(), so do that early in your application.
+
+  @author Constantin Berzan <exit3219@gmail.com>
+  @since 4.4
 */
 class OUTBOXINTERFACE_EXPORT DispatcherInterface : public QObject
 {
@@ -78,8 +82,6 @@ class OUTBOXINTERFACE_EXPORT DispatcherInterface : public QObject
 
 };
 
+} // namespace OutboxInterface
 
-}
-
-
-#endif
+#endif // OUTBOXINTERFACE_DISPATCHERINTERFACE_H

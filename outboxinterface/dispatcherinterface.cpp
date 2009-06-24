@@ -26,8 +26,6 @@
 #include "sentbehaviourattribute.h"
 #include "transportattribute.h"
 
-#include <QTimer>
-
 #include <KDebug>
 #include <KGlobal>
 #include <KLocalizedString>
@@ -41,11 +39,9 @@
 using namespace Akonadi;
 using namespace OutboxInterface;
 
-
 /**
- * Private class that helps to provide binary compatibility between releases.
- * @internal
- */
+  @internal
+*/
 class OutboxInterface::DispatcherInterfacePrivate
 {
   public:
@@ -130,7 +126,5 @@ void DispatcherInterface::retryDispatching()
   FilterActionJob *mjob = new FilterActionJob( LocalFolders::self()->outbox(), new ClearErrorAction, this );
   connect( mjob, SIGNAL(result(KJob*)), this, SLOT(massModifyResult(KJob*)) );
 }
-
-
 
 #include "dispatcherinterface.moc"

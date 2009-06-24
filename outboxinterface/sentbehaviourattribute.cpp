@@ -26,7 +26,6 @@
 using namespace Akonadi;
 using namespace OutboxInterface;
 
-
 SentBehaviourAttribute::SentBehaviourAttribute( SentBehaviour beh, Collection::Id moveToCollection )
   : mBehaviour( beh )
   , mMoveToCollection( moveToCollection )

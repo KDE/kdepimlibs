@@ -26,29 +26,42 @@
 
 #include <akonadi/attribute.h>
 
-
-namespace OutboxInterface
-{
-
+namespace OutboxInterface {
 
 /**
- * Attribute storing the status of a message in the outbox.
- */
+  Attribute given to the messages that failed to be sent.  Contains the error
+  message encountered.
+
+  @author Constantin Berzan <exit3219@gmail.com>
+  @since 4.4
+*/
 class OUTBOXINTERFACE_EXPORT ErrorAttribute : public Akonadi::Attribute
 {
   public:
+    /**
+      Creates a new ErrorAttribute.
+    */
     ErrorAttribute( const QString &msg = QString() );
+
+    /**
+      Destroys this ErrorAttribute.
+    */
     virtual ~ErrorAttribute();
 
+    /* reimpl */
     virtual ErrorAttribute* clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );
 
     /**
-      Textual explanation of error.
+      Returns the i18n'ed error message.
     */
     QString message() const;
+
+    /**
+      Sets the error message.
+    */
     void setMessage( const QString &msg );
 
   private:
@@ -56,8 +69,6 @@ class OUTBOXINTERFACE_EXPORT ErrorAttribute : public Akonadi::Attribute
 
 };
 
+} // namespace OutboxInterface
 
-}
-
-
-#endif
+#endif // OUTBOXINTERFACE_ERRORATTRIBUTE_H
