@@ -51,6 +51,8 @@ class OUTBOXINTERFACE_EXPORT DispatcherInterface : public QObject
     static DispatcherInterface *self();
 
     bool isReady() const;
+    Akonadi::AgentInstance dispatcherInstance() const;
+    // TODO ^ probably makes the following unnecessary -----------------
     bool dispatcherOnline() const;
     Akonadi::AgentInstance::Status dispatcherStatus() const;
     int dispatcherProgress() const;
@@ -60,6 +62,7 @@ class OUTBOXINTERFACE_EXPORT DispatcherInterface : public QObject
       as DispatchMode::Never.
     */
     void abortDispatching();
+    // ---------------------------------------------- until here
 
     /**
       Looks for messages in the outbox with DispatchMode::Never and marks them

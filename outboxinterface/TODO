@@ -4,4 +4,11 @@
 * Figure out a better way to configure the resource via D-Bus.
 * Krazy wants me to use private d-pointers in the attributes -- probably a good
   idea since this is a library?...
-
+* if stuff like dispatchManually (stuff that modifies the outbox in general)
+  stays in DispatcherInterface, then it should really be called OutboxInterface
+  (too bad that's a conflict).
+* provide a dispatcherReady() signal in DispatcherInterface, and think of what
+  should happen if it is not ready...
+* provide a job to modify items in the outbox such as
+  - remove error attribute and re-queue
+  - change Never dispatch mode to Immediately
