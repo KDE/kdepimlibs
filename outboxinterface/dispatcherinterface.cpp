@@ -19,7 +19,8 @@
 
 #include "dispatcherinterface.h"
 
-//#include "mdainterface.h"
+#include "localfolders.h"
+#include "outboxactions.h"
 
 #include <QTimer>
 
@@ -28,6 +29,8 @@
 #include <KLocalizedString>
 
 #include <akonadi/agentmanager.h>
+#include <akonadi/collection.h>
+#include <akonadi/filteractionjob.h>
 
 using namespace Akonadi;
 using namespace OutboxInterface;
@@ -45,15 +48,8 @@ class OutboxInterface::DispatcherInterfacePrivate
 
     DispatcherInterface *instance;
 
-    bool connected;
-    //org::kde::Akonadi::MailDispatcher *iface;
-    AgentInstance agent;
-
     // slots
-    void connectToAgent();
-    //void dbusServiceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
-    void agentInstanceRemoved( const AgentInstance &a );
-    void agentInstanceChanged( const AgentInstance &a );
+    void massModifyResult( KJob *job );
 
 };
 
@@ -61,24 +57,7 @@ K_GLOBAL_STATIC( DispatcherInterfacePrivate, sInstance )
 
 DispatcherInterfacePrivate::DispatcherInterfacePrivate()
   : instance( new DispatcherInterface( this ) )
-  //, iface( 0 )
 {
-  // QDBusConnection bus = QDBusConnection::sessionBus();
-  // QObject::connect( bus.interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-  //     instance, SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
-
-  // AgentInstance objects are not updated automatically, so we need to watch
-  // for AgentManager's signals:
-  QObject::connect( AgentManager::self(), SIGNAL(instanceOnline(Akonadi::AgentInstance,bool)),
-      instance, SLOT(agentInstanceChanged(Akonadi::AgentInstance)) );
-  QObject::connect( AgentManager::self(), SIGNAL(instanceProgressChanged(Akonadi::AgentInstance)),
-      instance, SLOT(agentInstanceChanged(Akonadi::AgentInstance)) );
-  QObject::connect( AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)),
-      instance, SLOT(agentInstanceChanged(Akonadi::AgentInstance)) );
-  QObject::connect( AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)),
-      instance, SLOT(agentInstanceRemoved(Akonadi::AgentInstance)) );
-  connected = false;
-  connectToAgent();
 }
 
 DispatcherInterfacePrivate::~DispatcherInterfacePrivate()
@@ -86,65 +65,13 @@ DispatcherInterfacePrivate::~DispatcherInterfacePrivate()
   delete instance;
 }
 
-void DispatcherInterfacePrivate::connectToAgent()
+void DispatcherInterfacePrivate::massModifyResult( KJob *job )
 {
-  if( connected ) {
-    kDebug() << "Already connected to MDA.";
-    return;
-  }
-
-#if 0
-  delete iface;
-  iface = new org::kde::Akonadi::MailDispatcher( QLatin1String( "org.freedesktop.Akonadi.Agent.akonadi_maildispatcher_agent" ),
-      QLatin1String( "/" ), QDBusConnection::sessionBus(), instance );
-  if( !iface->isValid() ) {
-    kDebug() << "Couldn't get D-Bus interface of MDA. Retrying in 1s.";
-    QTimer::singleShot( 1000, instance, SLOT(connectToAgent()) );
-    return;
-  }
-#endif
-
-  agent = AgentManager::self()->instance( QLatin1String( "akonadi_maildispatcher_agent" ) );
-  if( !agent.isValid() ) {
-    kDebug() << "Could not get agent instance of MDA. Retrying in 1s.";
-    QTimer::singleShot( 1000, instance, SLOT(connectToAgent()) );
-    return;
-  }
-
-  kDebug() << "Connected to the MDA.";
-  connected = true;
-}
-
-#if 0
-void DispatcherInterfacePrivate::dbusServiceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )
-{
-  Q_UNUSED( oldOwner );
-  if( name == QLatin1String( "org.freedesktop.Akonadi.Agent.akonad_maildispatcher_agent" ) ) {
-    if( newOwner.isEmpty() ) {
-      kDebug() << "MDA disappeared from D-Bus.";
-      connected = false;
-      QTimer::singleShot( 0, instance, SLOT(connectToAgent()) );
-    }
-  }
-}
-#endif
-
-void DispatcherInterfacePrivate::agentInstanceRemoved( const AgentInstance &a )
-{
-  if( agent == a ) {
-    kDebug() << "MDA agent disappeared.";
-    connected = false;
-    QTimer::singleShot( 0, instance, SLOT(connectToAgent()) );
-  }
-}
-
-void DispatcherInterfacePrivate::agentInstanceChanged( const AgentInstance &a )
-{
-  if( agent == a ) {
-    kDebug() << "Updating instance.";
-    agent = a;
-    // This is not as weird as it looks :) operator== checks the id only, but
-    // operator= copies everything (like status, progress etc.)
+  // Nothing to do here, really.  If the job fails, the user can retry it.
+  if( job->error() ) {
+    kDebug() << "failed" << job->errorString();
+  } else {
+    kDebug() << "succeeded.";
   }
 }
 
@@ -161,79 +88,35 @@ DispatcherInterface *DispatcherInterface::self()
   return sInstance->instance;
 }
 
-bool DispatcherInterface::isReady() const
-{
-  return d->connected;
-}
-
 AgentInstance DispatcherInterface::dispatcherInstance() const
 {
-  if( !d->connected ) {
-    kWarning() << "Not connected to the MDA.";
-    return AgentInstance();
+  AgentInstance a = AgentManager::self()->instance( QLatin1String( "akonadi_maildispatcher_agent" ) );
+  if( !a.isValid() ) {
+    kWarning() << "Could not get MDA instance.";
   }
- 
-  return d->agent;
-}
-
-bool DispatcherInterface::dispatcherOnline() const
-{
-  if( !d->connected ) {
-    kWarning() << "Not connected to the MDA.";
-    return false;
-  }
- 
-  return d->agent.isOnline();
-}
-
-AgentInstance::Status DispatcherInterface::dispatcherStatus() const
-{
-  if( !d->connected ) {
-    kWarning() << "Not connected to the MDA.";
-    return AgentInstance::Broken;
-  }
-
-  return d->agent.status();
-}
-
-int DispatcherInterface::dispatcherProgress() const
-{
-  if( !d->connected ) {
-    kWarning() << "Not connected to the MDA.";
-    return -1;
-  }
-
-  return d->agent.progress();
-}
-
-void DispatcherInterface::abortDispatching()
-{
-  if( !d->connected ) {
-    kWarning() << "Not connected to the MDA.";
-    return;
-  }
-
-  d->agent.abort();
+  return a;
 }
 
 void DispatcherInterface::dispatchManually()
 {
-  if( !d->connected ) {
-    kWarning() << "Not connected to the MDA.";
+  if( !LocalFolders::self()->isReady() ) {
+    kWarning() << "LocalFolders not ready.";
     return;
   }
 
-  kDebug() << "implement me"; //TODO
+  FilterActionJob *mjob = new FilterActionJob( LocalFolders::self()->outbox(), new SendQueuedAction, this );
+  connect( mjob, SIGNAL(result(KJob*)), this, SLOT(massModifyResult(KJob*)) );
 }
 
 void DispatcherInterface::retryDispatching()
 {
-  if( !d->connected ) {
-    kWarning() << "Not connected to the MDA.";
+  if( !LocalFolders::self()->isReady() ) {
+    kWarning() << "LocalFolders not ready.";
     return;
   }
 
-  kDebug() << "implement me"; //TODO
+  FilterActionJob *mjob = new FilterActionJob( LocalFolders::self()->outbox(), new ClearErrorAction, this );
+  connect( mjob, SIGNAL(result(KJob*)), this, SLOT(massModifyResult(KJob*)) );
 }
 
 

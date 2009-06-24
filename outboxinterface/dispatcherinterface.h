@@ -32,8 +32,7 @@ class DispatcherInterfacePrivate;
 
 /**
   An interface for apps to interact with the MDA.
-  It connects to the MDA via D-Bus and provides info about queued messages
-  and progress, and methods such as abort or retry sending.
+  Provides methods such as send queued messages and retry sending.
 
   TODO dispatchManually and retryDispatching functions should be offered on a
   per-item basis as well, I imagine when the user will have a messageView of
@@ -50,19 +49,11 @@ class OUTBOXINTERFACE_EXPORT DispatcherInterface : public QObject
     */
     static DispatcherInterface *self();
 
-    bool isReady() const;
-    Akonadi::AgentInstance dispatcherInstance() const;
-    // TODO ^ probably makes the following unnecessary -----------------
-    bool dispatcherOnline() const;
-    Akonadi::AgentInstance::Status dispatcherStatus() const;
-    int dispatcherProgress() const;
-
     /**
-      Aborts sending the current message, and marks all messages in the queue
-      as DispatchMode::Never.
+      Returns the current instance of the MDA.  May return an invalid
+      AgentInstance in case it cannot find the MDA.
     */
-    void abortDispatching();
-    // ---------------------------------------------- until here
+    Akonadi::AgentInstance dispatcherInstance() const;
 
     /**
       Looks for messages in the outbox with DispatchMode::Never and marks them
@@ -76,7 +67,6 @@ class OUTBOXINTERFACE_EXPORT DispatcherInterface : public QObject
     */
     void retryDispatching();
 
-
   private:
     friend class DispatcherInterfacePrivate;
     DispatcherInterfacePrivate *const d;
@@ -84,10 +74,7 @@ class OUTBOXINTERFACE_EXPORT DispatcherInterface : public QObject
     // singleton class; the only instance resides in sInstance->instance
     DispatcherInterface( DispatcherInterfacePrivate *dd );
 
-    Q_PRIVATE_SLOT( d, void connectToAgent() )
-    //Q_PRIVATE_SLOT( d, void dbusServiceOwnerChanged( const QString&, const QString&, const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceRemoved( const Akonadi::AgentInstance& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceChanged( const Akonadi::AgentInstance& ) )
+    Q_PRIVATE_SLOT( d, void massModifyResult( KJob* ) )
 
 };
 
