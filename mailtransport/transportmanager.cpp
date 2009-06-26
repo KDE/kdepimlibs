@@ -499,6 +499,12 @@ void TransportManager::fillTypes()
         kDebug() << "Found Akonadi type" << atype.name();
       }
     }
+
+    // Watch for appearing and disappearing types.
+    connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)),
+        this, SLOT(agentTypeAdded(Akonadi::AgentType)) );
+    connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)),
+        this, SLOT(agentTypeRemoved(Akonadi::AgentType)) );
   }
 
   kDebug() << "Have SMTP, Sendmail, and" << d->types.count() - 2 << "Akonadi types.";
@@ -720,6 +726,32 @@ void TransportManager::dbusServiceOwnerChanged( const QString &service,
   Q_UNUSED( oldOwner );
   if ( service == DBUS_SERVICE_NAME && newOwner.isEmpty() ) {
     QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
+  }
+}
+
+void TransportManager::agentTypeAdded( const Akonadi::AgentType &atype )
+{
+  using namespace Akonadi;
+  if( atype.capabilities().contains( QLatin1String( "MailTransport" ) ) ) {
+    TransportType type;
+    type.d->mType = Transport::EnumType::Akonadi;
+    type.d->mAgentType = atype;
+    type.d->mName = atype.name();
+    type.d->mDescription = atype.description();
+    d->types << type;
+    kDebug() << "Added new Akonadi type" << atype.name();
+  }
+}
+
+void TransportManager::agentTypeRemoved( const Akonadi::AgentType &atype )
+{
+  using namespace Akonadi;
+  foreach( const TransportType &type, d->types ) {
+    if( type.type() == Transport::EnumType::Akonadi &&
+        type.agentType() == atype ) {
+      d->types.removeAll( type );
+      kDebug() << "Removed Akonadi type" << atype.name();
+    }
   }
 }
 

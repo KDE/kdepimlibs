@@ -26,6 +26,8 @@
 #include <QtCore/QList>
 #include <QtCore/QObject>
 
+#include <akonadi/agenttype.h>
+
 class KJob;
 
 namespace KWallet {
@@ -270,6 +272,8 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     void dbusServiceOwnerChanged( const QString &service,
                                   const QString &oldOwner,
                                   const QString &newOwner );
+    void agentTypeAdded( const Akonadi::AgentType &atype );
+    void agentTypeRemoved( const Akonadi::AgentType &atype );
     void jobResult( KJob *job );
 
   private:
