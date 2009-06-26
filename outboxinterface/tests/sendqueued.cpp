@@ -29,6 +29,7 @@
 #include <akonadi/filteractionjob.h>
 #include <akonadi/kmime/localfolders.h>
 
+#include <outboxinterface/dispatcherinterface.h>
 #include <outboxinterface/outboxactions.h>
 
 using namespace Akonadi;
@@ -42,6 +43,9 @@ Runner::Runner()
   connect( LocalFolders::self(), SIGNAL( foldersReady() ),
       this, SLOT( checkFolders() ) );
   LocalFolders::self()->fetch();
+
+  // HACK: Register attributes.
+  DispatcherInterface::self();
 }
 
 void Runner::checkFolders()
