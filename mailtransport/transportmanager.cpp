@@ -294,6 +294,7 @@ TransportJob *TransportManager::createTransportJob( int transportId )
   if ( !t ) {
     return 0;
   }
+  t = t->clone(); // Jobs delete their transports.
   switch ( t->type() ) {
     case Transport::EnumType::SMTP:
       return new SmtpJob( t, this );
@@ -545,6 +546,7 @@ int TransportManager::createId() const
   do {
       newId = KRandom::random();
   } while ( usedIds.contains( newId ) );
+  kDebug() << "id" << newId;
   return newId;
 }
 
