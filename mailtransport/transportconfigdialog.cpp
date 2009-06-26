@@ -23,41 +23,80 @@
 */
 
 #include "transportconfigdialog.h"
-
 #include "transport.h"
 #include "transportconfigwidget.h"
 #include "transportmanager.h"
-#include "transporttypeinfo.h"
+#include "transporttype.h"
+#include "sendmailconfigwidget.h"
+#include "smtpconfigwidget.h"
 
+#include <QLabel>
 #include <QString>
 
 #include <KDebug>
+#include <KLocalizedString>
 
 using namespace MailTransport;
 
 class MailTransport::TransportConfigDialog::Private
 {
   public:
-    TransportConfigWidget *configWidget;
-    // TODO not really necessary right now; used only in constructor
+    Transport *transport;
+    QWidget *configWidget;
 
+    // slots
+    void okClicked();
 };
 
+void TransportConfigDialog::Private::okClicked()
+{
+  if( TransportConfigWidget *w = dynamic_cast<TransportConfigWidget*>( configWidget ) ) {
+    // It is not an Akonadi transport.
+    w->apply();
+    transport->writeConfig();
+  }
+}
+
+
+
 TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *parent )
-  : KDialog( parent ), d( new Private )
+  : KDialog( parent )
+  , d( new Private )
 {
   Q_ASSERT( transport );
+  d->transport = transport;
 
-  d->configWidget = TransportTypeInfo::configWidgetForTransport( transport );
-  kDebug() << "transport" << transport->id() << "config widget" << d->configWidget;
-  Q_ASSERT( d->configWidget );
+  switch( transport->type() ) {
+    case Transport::EnumType::SMTP:
+      {
+        d->configWidget = new SMTPConfigWidget( transport, this );
+        break;
+      }
+    case Transport::EnumType::Sendmail:
+      {
+        d->configWidget = new SendmailConfigWidget( transport, this );
+        break;
+      }
+    case Transport::EnumType::Akonadi:
+      {
+        kWarning() << "Tried to configure an Akonadi transport.";
+        d->configWidget = new QLabel( i18n( "This transport cannot be configured." ), this );
+        break;
+      }
+    default:
+      {
+        Q_ASSERT( false );
+        d->configWidget = 0;
+        break;
+      }
+  }
   setMainWidget( d->configWidget );
 
   setButtons( Ok|Cancel );
-  connect( this, SIGNAL( okClicked() ), d->configWidget, SLOT( apply() ) );
+  connect( this, SIGNAL(okClicked()), this, SLOT(okClicked()) );
 }
 
-TransportConfigDialog::~ TransportConfigDialog()
+TransportConfigDialog::~TransportConfigDialog()
 {
   delete d;
 }

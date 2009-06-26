@@ -1,4 +1,3 @@
-
 add_subdirectory( kconf_update )
 add_subdirectory( tests )
 
@@ -8,16 +7,15 @@ add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5324 )
 set(mailtransport_lib_srcs
   transport.cpp
   transportmanager.cpp
-  transporttypeinfo.cpp
+  transporttype.cpp
 
   transportcombobox.cpp
   transportlistview.cpp
   transportmanagementwidget.cpp
 
-  addtransportassistant.cpp
+  addtransportdialog.cpp
   transportconfigdialog.cpp
   transportconfigwidget.cpp
-  akonadiconfigwidget.cpp
   sendmailconfigwidget.cpp
   smtpconfigwidget.cpp
 
@@ -34,13 +32,10 @@ set(mailtransport_lib_srcs
 
 
 kde4_add_ui_files(mailtransport_lib_srcs
-  addtransportassistanttypepage.ui
-  addtransportassistantnamepage.ui
-
-  akonadisettings.ui
   sendmailsettings.ui
   smtpsettings.ui
 
+  addtransportdialog.ui
   transportmanagementwidget.ui
 )
 kde4_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
@@ -69,6 +64,7 @@ install( FILES
         ${CMAKE_CURRENT_BINARY_DIR}/transportbase.h
         transport.h
         transportmanager.h
+        transporttype.h
         servertest.h
 
         transportcombobox.h

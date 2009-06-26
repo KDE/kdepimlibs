@@ -18,12 +18,19 @@
 */
 
 #include "transportmanager.h"
+#include "addtransportdialog.h"
+#include "akonadijob.h"
 #include "mailtransport_defs.h"
 #include "transport.h"
 #include "transportconfigwidget.h"
 #include "transportjob.h"
-#include "transporttypeinfo.h"
+#include "transporttype.h"
+#include "transporttype_p.h"
 #include "transportconfigdialog.h"
+#include "sendmailconfigwidget.h"
+#include "sendmailjob.h"
+#include "smtpconfigwidget.h"
+#include "smtpjob.h"
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -38,8 +45,12 @@
 #include <QApplication>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
+#include <QPointer>
 #include <QRegExp>
 #include <QStringList>
+
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentmanager.h>
 
 using namespace MailTransport;
 using namespace KWallet;
@@ -59,6 +70,7 @@ class TransportManager::Private
 
     KConfig *config;
     QList<Transport *> transports;
+    TransportType::List types;
     bool myOwnChange;
     bool appliedChange;
     KWallet::Wallet *wallet;
@@ -107,6 +119,8 @@ TransportManager::TransportManager()
   connect( QDBusConnection::sessionBus().interface(),
            SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
+
+  fillTypes();
 }
 
 TransportManager::~TransportManager()
@@ -156,6 +170,11 @@ QList< Transport * > TransportManager::transports() const
   return d->transports;
 }
 
+const TransportType::List &TransportManager::types() const
+{
+  return d->types;
+}
+
 Transport *TransportManager::createTransport() const
 {
   int id = createId();
@@ -167,9 +186,11 @@ Transport *TransportManager::createTransport() const
 void TransportManager::addTransport( Transport *transport )
 {
   if ( d->transports.contains( transport ) ) {
+    kDebug() << "Already have this transport.";
     return;
   }
 
+  kDebug() << "Added transport" << transport;
   d->transports.append( transport );
   validateDefault();
   emitChangesCommitted();
@@ -204,7 +225,7 @@ void TransportManager::createDefaultTransport()
   }
 }
 
-bool TransportManager::checkTransport( QWidget *parent )
+bool TransportManager::promptCreateTransportIfNoneExists( QWidget *parent )
 {
   if ( !isEmpty() )
     return true;
@@ -215,18 +236,56 @@ bool TransportManager::checkTransport( QWidget *parent )
                    i18n("Create Account Now?"),
                    KGuiItem( i18n("Create Account Now") ) );
   if ( response == KMessageBox::Continue ) {
-    Transport* transport = createTransport();
-    TransportConfigDialog* dialog = new TransportConfigDialog( transport, parent );
-    dialog->setAttribute( Qt::WA_DeleteOnClose );
-    dialog->setWindowModality( Qt::WindowModal );
-    if ( ( dialog->exec() == QDialog::Accepted ) && transport->isValid() ) {
-      addTransport( transport );
-      return true;
-    } else {
-      delete transport;
-    }
+    QPointer<AddTransportDialog> dialog = new AddTransportDialog( parent );
+    dialog->exec();
+    delete dialog;
+    return !isEmpty(); // The user has created and configured a transport.
   }
   return false;
+}
+
+bool TransportManager::configureTransport( Transport *transport, QWidget *parent )
+{
+  if( transport->type() == Transport::EnumType::Akonadi ) {
+    using namespace Akonadi;
+    AgentInstance instance = AgentManager::self()->instance( transport->host() );
+    if( !instance.isValid() ) {
+      kWarning() << "Invalid resource instance" << transport->host();
+    }
+    instance.configure( parent ); // Async...
+    transport->writeConfig();
+    return true; // No way to know here if the user cancelled or not.
+  }
+
+  QPointer<KDialog> dialog = new KDialog( parent );
+  TransportConfigWidget *configWidget = 0;
+  switch( transport->type() ) {
+    case Transport::EnumType::SMTP:
+      {
+        configWidget = new SMTPConfigWidget( transport, dialog );
+        break;
+      }
+    case Transport::EnumType::Sendmail:
+      {
+        configWidget =  new SendmailConfigWidget( transport, dialog );
+        break;
+      }
+    default:
+      {
+        Q_ASSERT( false );
+        delete dialog;
+        return false;
+      }
+  }
+  dialog->setMainWidget( configWidget );
+  dialog->setCaption( i18n( "Configure account" ) );
+  dialog->setButtons( KDialog::Ok | KDialog::Cancel );
+  bool okClicked = ( dialog->exec() == QDialog::Accepted );
+  if( okClicked ) {
+    configWidget->apply(); // calls transport->writeConfig()
+  }
+  delete dialog;
+  return okClicked;
 }
 
 TransportJob *TransportManager::createTransportJob( int transportId )
@@ -235,7 +294,16 @@ TransportJob *TransportManager::createTransportJob( int transportId )
   if ( !t ) {
     return 0;
   }
-  return TransportTypeInfo::jobForTransport( t->clone(), this );
+  switch ( t->type() ) {
+    case Transport::EnumType::SMTP:
+      return new SmtpJob( t, this );
+    case Transport::EnumType::Sendmail:
+      return new SendmailJob( t, this );
+    case Transport::EnumType::Akonadi:
+      return new AkonadiJob( t, this );
+  }
+  Q_ASSERT( false );
+  return 0;
 }
 
 TransportJob *TransportManager::createTransportJob( const QString &transport )
@@ -312,12 +380,24 @@ void TransportManager::removeTransport( int id )
     return;
   }
   emit transportRemoved( t->id(), t->name() );
+
+  // Kill the resource, if Akonadi-type transport.
+  if( t->type() == Transport::EnumType::Akonadi ) {
+    using namespace Akonadi;
+    const AgentInstance instance = AgentManager::self()->instance( t->host() );
+    if( !instance.isValid() ) {
+      kWarning() << "Could not find resource instance.";
+    }
+    AgentManager::self()->removeInstance( instance );
+  }
+
   d->transports.removeAll( t );
   validateDefault();
   QString group = t->currentGroup();
   delete t;
   d->config->deleteGroup( group );
   writeConfig();
+
 }
 
 void TransportManager::readConfig()
@@ -379,6 +459,49 @@ void TransportManager::writeConfig()
   group.writeEntry( "default-transport", d->defaultTransportId );
   d->config->sync();
   emitChangesCommitted();
+}
+
+void TransportManager::fillTypes()
+{
+  Q_ASSERT( d->types.isEmpty() );
+
+  // SMTP.
+  {
+    TransportType type;
+    type.d->mType = Transport::EnumType::SMTP;
+    type.d->mName = i18nc( "@option SMTP transport", "SMTP" );
+    type.d->mDescription = i18n( "An SMTP server on the internet" );
+    d->types << type;
+  }
+
+  // Sendmail.
+  {
+    TransportType type;
+    type.d->mType = Transport::EnumType::Sendmail;
+    type.d->mName = i18nc( "@option sendmail transport", "Sendmail" );
+    type.d->mDescription = i18n( "A local sendmail installation" );
+    d->types << type;
+  }
+  
+  // All Akonadi resources with MailTransport capability.
+  {
+    using namespace Akonadi;
+    foreach( const AgentType &atype, AgentManager::self()->types() ) {
+      // TODO probably the string "MailTransport" should be #defined somewhere
+      // and used like that in the resources (?)
+      if( atype.capabilities().contains( QLatin1String( "MailTransport" ) ) ) {
+        TransportType type;
+        type.d->mType = Transport::EnumType::Akonadi;
+        type.d->mAgentType = atype;
+        type.d->mName = atype.name();
+        type.d->mDescription = atype.description();
+        d->types << type;
+        kDebug() << "Found Akonadi type" << atype.name();
+      }
+    }
+  }
+
+  kDebug() << "Have SMTP, Sendmail, and" << d->types.count() - 2 << "Akonadi types.";
 }
 
 void TransportManager::emitChangesCommitted()

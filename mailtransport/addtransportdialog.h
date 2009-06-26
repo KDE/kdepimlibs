@@ -17,46 +17,41 @@
     02110-1301, USA.
 */
 
-#ifndef MAILTRANSPORT_AKONADICONFIGWIDGET_H
-#define MAILTRANSPORT_AKONADICONFIGWIDGET_H
+#ifndef MAILTRANSPORT_ADDTRANSPORTDIALOG_H
+#define MAILTRANSPORT_ADDTRANSPORTDIALOG_H
 
-#include "transportconfigwidget.h"
+#include <mailtransport/mailtransport_export.h>
+
+#include <KDE/KDialog>
 
 namespace MailTransport {
 
-class Transport;
-
 /**
-  @internal
+  A dialog for creating a new transport.  It asks the user for the transport
+  type and name, and then proceeds to configure the new transport.
 */
-class AkonadiConfigWidgetPrivate;
-
-/**
-  @internal
-  Configuration widget for an Akonadi transport.
-*/
-class AkonadiConfigWidget : public TransportConfigWidget
+class AddTransportDialog : public KDialog
 {
   Q_OBJECT
 
-  public:
-    explicit AkonadiConfigWidget( Transport *transport, QWidget *parent = 0 );
-    //virtual ~AkonadiConfigWidget();
+public:
+  explicit AddTransportDialog( QWidget *parent = 0 );
+  virtual ~AddTransportDialog();
 
-  public Q_SLOTS:
-    /** reimpl */
-    virtual void apply();
+  /* reimpl */
+  virtual void accept();
 
-  protected:
-    AkonadiConfigWidget( AkonadiConfigWidgetPrivate &dd, Transport *transport, QWidget *parent );
+private:
+  class Private;
+  Private *const d;
 
-  private:
-    Q_DECLARE_PRIVATE( AkonadiConfigWidget )
-
-    void init();
+  Q_PRIVATE_SLOT( d, void typeListClicked() )
 
 };
 
+
 }
 
+
 #endif
+

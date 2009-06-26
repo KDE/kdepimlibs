@@ -24,7 +24,7 @@
 #include "transportlistview.h"
 #include "transport.h"
 #include "transportmanager.h"
-#include "transporttypeinfo.h"
+#include "transporttype.h"
 
 #include <QHeaderView>
 #include <QLineEdit>
@@ -101,7 +101,7 @@ void TransportListView::fillTransportList()
     QTreeWidgetItem *item = new QTreeWidgetItem( this );
     item->setData( 0, Qt::UserRole, t->id() );
     item->setText( 0, t->name() );
-    QString type = TransportTypeInfo::nameForType( t->type() );
+    QString type = t->transportType().name();
     if ( TransportManager::self()->defaultTransportId() == t->id() ) {
       type += i18nc( "@label the default mail transport", " (Default)" );
     }

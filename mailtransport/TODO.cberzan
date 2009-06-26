@@ -1,12 +1,12 @@
-* TransportConfigDialog needs validate()
 * all CamelCase...
 * smtpsettings.ui has hidden widgets... test those... and why can't I set/see the 'visible' property in designer?
 * why is identitylistview in kmail instead of kpimidentities?
 * figure out what needs to be exported and what not (add .hs to CMakeLists afterwards)
 * include KLocale or KLocalizedString??
-
-Design:
-* is there a way to make KConfig XT give me separate settings for SMTP, Sendmail, Akonadi?  Currently all of the settings are for SMTP, and Sendmail and Akonadi just use the 'host' setting for storing the sendmail path or Akonadi resource id, respectively.
+* SMTPJob (and probably others) give empty errorString when killed
 
 Bugs:
 * modify -> change password -> ok. password is saved in wallet and seen ok on restart, but clicking modify again shows old password
+* Type=Akonadi and Type=Sendmail appear in the config file, but no Type=SMTP (probably because SMTP == 0 == default)
+* cancel doesn't work in transportmgr, apparently
+

@@ -20,27 +20,36 @@
 #ifndef MAILTRANSPORT_TRANSPORT_H
 #define MAILTRANSPORT_TRANSPORT_H
 
-#include <mailtransport/transportbase.h>
 #include <mailtransport/mailtransport_export.h>
+#include <mailtransport/transportbase.h>
+#include <mailtransport/transporttype.h>
 
 class TransportPrivate;
 
 namespace MailTransport {
+
+class TransportType;
 
 /**
   Represents the settings of a specific mail transport.
 
   To create a new empty Transport object, use TransportManager::createTransport().
 */
+// TODO KDE5: Do something about the kcfg-generated TransportBase.
+// Currently it has the config stuff as private members, which means it is
+// utterly inextensible.  Also the sendmail and akonadi-type transports use
+// the "host" setting for keeping the location of the sendmail executable and
+// the resource id, respectively.  This is a hack; they should have separate
+// config options... (cberzan)
 class MAILTRANSPORT_EXPORT Transport : public TransportBase
 {
   Q_OBJECT
   friend class TransportManager;
 
   public:
-      /**
-        Destructor
-       */
+    /**
+      Destructor
+    */
     virtual ~Transport();
 
     typedef QList<Transport*> List;
@@ -100,6 +109,18 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
       @sa updatePasswordState()
     */
     Transport *clone() const;
+
+    /**
+      Returns the type of this transport.
+      @see TransportType.
+    */
+    TransportType transportType() const;
+
+    /**
+      Sets the type of this transport.
+      @see TransportType.
+    */
+    void setTransportType( const TransportType &type );
 
   protected:
     /**

@@ -21,7 +21,7 @@
 */
 
 #include "transportmanagementwidget.h"
-#include "addtransportassistant.h"
+#include "addtransportdialog.h"
 #include "ui_transportmanagementwidget.h"
 #include "transportmanager.h"
 #include "transport.h"
@@ -62,7 +62,7 @@ TransportManagementWidget::~TransportManagementWidget()
 
 void TransportManagementWidget::updateButtonState()
 {
-  // TODO figure out current item vs. selected item -> using both ATM
+  // TODO figure out current item vs. selected item (in almost every function)
   if ( !d->ui.transportList->currentItem() ) {
     d->ui.editButton->setEnabled( false );
     d->ui.renameButton->setEnabled( false );
@@ -83,37 +83,36 @@ void TransportManagementWidget::updateButtonState()
 
 void TransportManagementWidget::addClicked()
 {
-  QPointer<AddTransportAssistant> ass = new AddTransportAssistant( this );
-  ass->exec();
-  delete ass;
+  QPointer<AddTransportDialog> dialog = new AddTransportDialog( this );
+  dialog->exec();
+  delete dialog;
 }
 
 void TransportManagementWidget::editClicked()
 {
-  Q_ASSERT( d->ui.transportList->currentItem() );
+  if( !d->ui.transportList->currentItem() ) {
+    return;
+  }
 
   int currentId = d->ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt();
   Transport *transport = TransportManager::self()->transportById( currentId );
-  Q_ASSERT( transport );
-  transport = transport->clone();
-  QPointer<TransportConfigDialog> dlg = new TransportConfigDialog( transport, this );
-  dlg->setCaption( i18nc( "@title:window", "Modify Transport" ) );
-  dlg->exec();
-  delete dlg;
-  delete transport;
+  TransportManager::self()->configureTransport( transport, this );
 }
 
 void TransportManagementWidget::renameClicked()
 {
-  // TODO test all of these for cases when the transport is removed from outside
-  Q_ASSERT( d->ui.transportList->currentItem() );
+  if( !d->ui.transportList->currentItem() ) {
+    return;
+  }
 
   d->ui.transportList->editItem( d->ui.transportList->currentItem(), 0 );
 }
 
 void TransportManagementWidget::removeClicked()
 {
-  Q_ASSERT( d->ui.transportList->currentItem() );
+  if( !d->ui.transportList->currentItem() ) {
+    return;
+  }
 
   TransportManager::self()->removeTransport(
         d->ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt() );
@@ -121,7 +120,9 @@ void TransportManagementWidget::removeClicked()
 
 void TransportManagementWidget::defaultClicked()
 {
-  Q_ASSERT( d->ui.transportList->currentItem() );
+  if( !d->ui.transportList->currentItem() ) {
+    return;
+  }
 
   TransportManager::self()->setDefaultTransport(
         d->ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt() );

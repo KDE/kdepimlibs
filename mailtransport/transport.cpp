@@ -18,9 +18,10 @@
 */
 
 #include "transport.h"
-#include "transportmanager.h"
-#include "mailtransport_defs.h"
 #include "legacydecrypt.h"
+#include "mailtransport_defs.h"
+#include "transportmanager.h"
+#include "transporttype_p.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -30,6 +31,9 @@
 #include <kconfiggroup.h>
 
 #include <QTimer>
+
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentmanager.h>
 
 using namespace MailTransport;
 using namespace KWallet;
@@ -41,6 +45,7 @@ using namespace KWallet;
 class TransportPrivate
 {
   public:
+    TransportType transportType;
     QString password;
     bool passwordLoaded;
     bool passwordDirty;
@@ -157,6 +162,31 @@ void Transport::usrReadConfig()
 
   if ( d->oldName.isEmpty() ) {
     d->oldName = name();
+  }
+
+  // Set TransportType.
+  {
+    using namespace Akonadi;
+    d->transportType = TransportType();
+    d->transportType.d->mType = type();
+    kDebug() << "type" << type();
+    if( type() == EnumType::Akonadi ) {
+      const AgentInstance instance = AgentManager::self()->instance( host() );
+      if( !instance.isValid() ) {
+        kWarning() << "Akonadi transport with invalid resource instance.";
+      }
+      d->transportType.d->mAgentType = instance.type();
+      kDebug() << "agent type" << instance.type().name() << "id" << instance.type().identifier();
+    }
+    // Now we have the type and possibly agentType.  Get the name, description
+    // etc. from TransportManager.
+    const TransportType::List &types = TransportManager::self()->types();
+    int index = types.indexOf( d->transportType );
+    if( index != -1 ) {
+      d->transportType = types[ index ];
+    } else {
+      kWarning() << "Type unknown to manager.";
+    }
   }
 
   // we have everything we need
@@ -287,6 +317,21 @@ Transport *Transport::clone() const
 {
   QString id = currentGroup().mid( 10 );
   return new Transport( id );
+}
+
+TransportType Transport::transportType() const
+{
+  if( !d->transportType.isValid() ) {
+    kWarning() << "Invalid transport type.";
+  }
+  return d->transportType;
+}
+
+void Transport::setTransportType( const TransportType &type )
+{
+  Q_ASSERT( type.isValid() );
+  d->transportType = type;
+  setType( type.type() );
 }
 
 #include "transport.moc"

@@ -1,8 +1,6 @@
 /*
     Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
-    Based on code from Kopete (addaccountwizard)
-
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
     the Free Software Foundation; either version 2 of the License, or (at your
@@ -19,48 +17,43 @@
     02110-1301, USA.
 */
 
-#ifndef MAILTRANSPORT_ADDTRANSPORTASSISTANT_H
-#define MAILTRANSPORT_ADDTRANSPORTASSISTANT_H
+#ifndef MAILTRANSPORT_TRANSPORTTYPE_P_H
+#define MAILTRANSPORT_TRANSPORTTYPE_P_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <QtCore/QSharedData>
+#include <QtCore/QString>
 
-#include <KDE/KAssistantDialog>
-
+#include <akonadi/agenttype.h>
 
 namespace MailTransport
 {
 
-
 /**
-  Assistant to help the user set up a new transport.
+  @internal
 */
-class MAILTRANSPORT_EXPORT AddTransportAssistant : public KAssistantDialog
+class TransportType::Private : public QSharedData
 {
-  Q_OBJECT
+  public:
+    Private()
+    {
+      mType = -1;
+    }
 
-public:
-  // TODO docu
-  explicit AddTransportAssistant( QWidget *parent = 0 );
-  ~AddTransportAssistant();
+    Private( const Private &other )
+      : QSharedData( other )
+    {
+      mType = other.mType;
+      mName = other.mName;
+      mDescription = other.mDescription;
+      mAgentType = other.mAgentType;
+    }
 
-private slots:
-  void typeListClicked();
-  void typeListDoubleClicked();
-
-protected slots:
-  virtual void accept();
-  virtual void next();
-  virtual void reject();
-
-private:
-  class Private;
-  Private * const d;
-
+    int mType;
+    QString mName;
+    QString mDescription;
+    Akonadi::AgentType mAgentType;
 };
-
 
 }
 
-
 #endif
-

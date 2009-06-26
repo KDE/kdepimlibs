@@ -26,7 +26,7 @@
 
 #include <mailtransport/mailtransport_export.h>
 
-#include <KDialog>
+#include <KDE/KDialog>
 
 namespace MailTransport {
 
@@ -34,9 +34,12 @@ class Transport;
 
 /**
   Configuration dialog for a mail transport.
-*/
 
-class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
+  @deprecated Use TransportManager::configureTransport() instead.
+*/
+// KDE5: this class should not be exported.
+// FIXME how to avoid deprecated warning from its own moc?
+class MAILTRANSPORT_EXPORT_DEPRECATED TransportConfigDialog : public KDialog
 {
   Q_OBJECT
 
@@ -46,6 +49,10 @@ class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
       Transport object.
       The config dialog does not delete @p transport, you have to delete it
       yourself.
+
+      Note that this class only works for transports that are handled directly
+      by MailTransport, i.e. SMTP and Sendmail.  This class cannot be used to
+      configure an Akonadi transport.
 
       @param transport The Transport object to configure. This must be a deep
       copy of a Transport object or a newly created one, which hasn't been
@@ -62,6 +69,8 @@ class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
   private:
     class Private;
     Private *const d;
+
+    Q_PRIVATE_SLOT( d, void okClicked() )
 
 };
 

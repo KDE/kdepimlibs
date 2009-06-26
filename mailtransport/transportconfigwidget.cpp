@@ -78,6 +78,7 @@ void TransportConfigWidget::apply()
   d->manager->updateSettings();
   d->transport->forceUniqueName();
   d->transport->writeConfig();
+  kDebug() << "Config written.";
 }
 
 

@@ -21,6 +21,7 @@
 #define MAILTRANSPORT_TRANSPORTMANAGER_H
 
 #include <mailtransport/mailtransport_export.h>
+#include <mailtransport/transporttype.h>
 
 #include <QtCore/QList>
 #include <QtCore/QObject>
@@ -98,6 +99,11 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     QList<Transport *>transports() const;
 
     /**
+      Returns a list of all available transport types.
+    */
+    const TransportType::List &types() const;
+
+    /**
       Creates a new, empty Transport object. The object is owned by the caller.
       If you want to add the Transport permanently (eg. after configuring it)
       call addTransport().
@@ -141,12 +147,23 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     void createDefaultTransport();
 
     /**
-      Check for an existing transport, and show a configuration dialog if not.
-      Returns true if transport exists or user creates one. Otherwise false.
-      @param parent Parent widget of the dialog
+      If no transport exists, asks the user to create and configure one.
+      Returns true if a transport exists or the user created one. Otherwise
+      returns false.
+      @param parent Parent widget of the dialog.
       @since 4.4
     */
-    bool checkTransport( QWidget *parent );
+    bool promptCreateTransportIfNoneExists( QWidget *parent );
+
+    /**
+      Open a configuration dialog for an existing transport.
+      @param transport The transport to configure.  It can be a new transport,
+                       or one already managed by TransportManager.
+      @param parent The parent widget for the dialog.
+      @return True if the user clicked Ok, false if the user cancelled.
+      @since 4.4
+    */
+    bool configureTransport( Transport *transport, QWidget *parent );
 
   public Q_SLOTS:
     /**
@@ -240,6 +257,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
   private:
     void readConfig();
     void writeConfig();
+    void fillTypes();
     void emitChangesCommitted();
     int createId() const;
     void prepareWallet();
