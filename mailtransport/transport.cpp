@@ -186,6 +186,7 @@ void Transport::usrReadConfig()
       d->transportType = types[ index ];
     } else {
       kWarning() << "Type unknown to manager.";
+      d->transportType.d->mName = i18n( "Unknown" );
     }
   }
 
