@@ -21,8 +21,10 @@
 #define MAILTRANSPORT_TRANSPORTJOB_H
 
 #include <mailtransport/mailtransport_export.h>
-#include <kcompositejob.h>
+
 #include <QtCore/QStringList>
+
+#include <KDE/KCompositeJob>
 
 class QBuffer;
 
@@ -133,6 +135,6 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
     Private *const d;
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_TRANSPORTJOB_H

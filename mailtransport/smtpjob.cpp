@@ -25,14 +25,14 @@
 #include "mailtransport_defs.h"
 #include "precommandjob.h"
 
-#include <klocale.h>
-#include <kurl.h>
-#include <kio/job.h>
-#include <kio/scheduler.h>
-#include <kio/passworddialog.h>
-
 #include <QBuffer>
 #include <QHash>
+
+#include <KLocalizedString>
+#include <KUrl>
+#include <KIO/Job>
+#include <KIO/Scheduler>
+#include <KIO/PasswordDialog>
 
 using namespace MailTransport;
 

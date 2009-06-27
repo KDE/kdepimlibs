@@ -29,9 +29,9 @@
 #include <QSslSocket>
 
 // KDE
-#include <kdebug.h>
+#include <KDebug>
+#include <KLocalizedString>
 #include <ksocketfactory.h>
-#include <klocale.h>
 
 using namespace MailTransport;
 

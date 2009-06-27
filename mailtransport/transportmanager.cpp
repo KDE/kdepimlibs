@@ -21,26 +21,16 @@
 #include "addtransportdialog.h"
 #include "akonadijob.h"
 #include "mailtransport_defs.h"
+#include "sendmailconfigwidget.h"
+#include "sendmailjob.h"
+#include "smtpconfigwidget.h"
+#include "smtpjob.h"
 #include "transport.h"
 #include "transportconfigwidget.h"
 #include "transportjob.h"
 #include "transporttype.h"
 #include "transporttype_p.h"
 #include "transportconfigdialog.h"
-#include "sendmailconfigwidget.h"
-#include "sendmailjob.h"
-#include "smtpconfigwidget.h"
-#include "smtpjob.h"
-
-#include <kconfig.h>
-#include <kdebug.h>
-#include <kemailsettings.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <krandom.h>
-#include <kurl.h>
-#include <kwallet.h>
-#include <kconfiggroup.h>
 
 #include <QApplication>
 #include <QtDBus/QDBusConnection>
@@ -48,6 +38,16 @@
 #include <QPointer>
 #include <QRegExp>
 #include <QStringList>
+
+#include <KConfig>
+#include <KConfigGroup>
+#include <KDebug>
+#include <kemailsettings.h>
+#include <KLocale>
+#include <KMessageBox>
+#include <KRandom>
+#include <KUrl>
+#include <KWallet/Wallet>
 
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentmanager.h>
@@ -225,6 +225,14 @@ void TransportManager::createDefaultTransport()
   }
 }
 
+bool TransportManager::showNewTransportDialog( QWidget *parent )
+{
+  QPointer<AddTransportDialog> dialog = new AddTransportDialog( parent );
+  bool accepted = ( dialog->exec() == QDialog::Accepted );
+  delete dialog;
+  return accepted;
+}
+
 bool TransportManager::promptCreateTransportIfNoneExists( QWidget *parent )
 {
   if ( !isEmpty() )
@@ -236,10 +244,7 @@ bool TransportManager::promptCreateTransportIfNoneExists( QWidget *parent )
                    i18n("Create Account Now?"),
                    KGuiItem( i18n("Create Account Now") ) );
   if ( response == KMessageBox::Continue ) {
-    QPointer<AddTransportDialog> dialog = new AddTransportDialog( parent );
-    dialog->exec();
-    delete dialog;
-    return !isEmpty(); // The user has created and configured a transport.
+    return showNewTransportDialog( parent );
   }
   return false;
 }
@@ -546,7 +551,6 @@ int TransportManager::createId() const
   do {
       newId = KRandom::random();
   } while ( usedIds.contains( newId ) );
-  kDebug() << "id" << newId;
   return newId;
 }
 

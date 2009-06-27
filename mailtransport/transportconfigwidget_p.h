@@ -24,9 +24,11 @@
 
 #include <KDE/KConfigDialogManager>
 
-namespace MailTransport
-{
+namespace MailTransport {
 
+/**
+  @internal
+*/
 class TransportConfigWidgetPrivate
 {
   public:
@@ -39,6 +41,6 @@ class TransportConfigWidgetPrivate
 
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_TRANSPORTCONFIGWIDGET_P_H

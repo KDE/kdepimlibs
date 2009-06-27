@@ -1,8 +1,6 @@
 /*
     Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
-    Based on code from Kopete (addaccountwizard)
-
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
     the Free Software Foundation; either version 2 of the License, or (at your
@@ -26,8 +24,6 @@
 #include "transporttype.h"
 #include "ui_addtransportdialog.h"
 
-#include <KConfigDialogManager>
-#include <KConfigSkeleton>
 #include <KDebug>
 
 #include <akonadi/agentinstance.h>
@@ -46,10 +42,16 @@ class AddTransportDialog::Private
     {
     }
 
+    /**
+      Returns the currently selected type in the type selection widget, or
+      an invalid type if none is selected.
+    */
     TransportType selectedType() const;
 
-    // slots
-    void typeListClicked();
+    /**
+      Enables the OK button if a type is selected.
+    */
+    void typeListClicked(); // slot
 
     AddTransportDialog *const q;
     Ui::AddTransportDialog ui;
@@ -107,6 +109,7 @@ AddTransportDialog::AddTransportDialog( QWidget *parent )
 
 AddTransportDialog::~AddTransportDialog()
 {
+  delete d;
 }
 
 void AddTransportDialog::accept()

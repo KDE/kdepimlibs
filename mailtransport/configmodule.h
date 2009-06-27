@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_CONFIGMODULE_H
 #define MAILTRANSPORT_CONFIGMODULE_H
 
-#include <kcmodule.h>
+#include <KDE/KCModule>
 
 namespace MailTransport {
 
@@ -34,6 +34,6 @@ class ConfigModule : public KCModule
                            const QVariantList &args = QVariantList() );
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_CONFIGMODULE_H

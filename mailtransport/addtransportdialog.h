@@ -20,38 +20,48 @@
 #ifndef MAILTRANSPORT_ADDTRANSPORTDIALOG_H
 #define MAILTRANSPORT_ADDTRANSPORTDIALOG_H
 
-#include <mailtransport/mailtransport_export.h>
-
 #include <KDE/KDialog>
 
 namespace MailTransport {
 
 /**
+  @internal
+
   A dialog for creating a new transport.  It asks the user for the transport
   type and name, and then proceeds to configure the new transport.
+
+  To create a new transport from applications, use
+  TransportManager::showNewTransportDialog().
+
+  @author Constantin Berzan <exit3219@gmail.com>
+  @since 4.4
 */
 class AddTransportDialog : public KDialog
 {
   Q_OBJECT
 
-public:
-  explicit AddTransportDialog( QWidget *parent = 0 );
-  virtual ~AddTransportDialog();
+  public:
+    /**
+      Creates a new AddTransportDialog.
+    */
+    explicit AddTransportDialog( QWidget *parent = 0 );
 
-  /* reimpl */
-  virtual void accept();
+    /**
+      Destroys the AddTransportDialog.
+    */
+    virtual ~AddTransportDialog();
 
-private:
-  class Private;
-  Private *const d;
+    /* reimpl */
+    virtual void accept();
 
-  Q_PRIVATE_SLOT( d, void typeListClicked() )
+  private:
+    class Private;
+    Private *const d;
+
+    Q_PRIVATE_SLOT( d, void typeListClicked() )
 
 };
 
+} // namespace MailTransport
 
-}
-
-
-#endif
-
+#endif // MAILTRANSPORT_ADDTRANSPORTDIALOG_H

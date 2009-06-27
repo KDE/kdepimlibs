@@ -22,7 +22,7 @@
 
 #include <mailtransport/mailtransport_export.h>
 
-#include <QSslSocket>
+#include <QtNetwork/QSslSocket>
 
 namespace MailTransport
 {
@@ -125,7 +125,7 @@ namespace MailTransport
        */
       void tlsDone();
   };
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_SOCKET_H
 

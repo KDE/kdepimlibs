@@ -31,7 +31,6 @@
 
 #include <KConfigDialogManager>
 #include <KDebug>
-#include <KLocalizedString>
 
 using namespace MailTransport;
 
@@ -62,7 +61,7 @@ void TransportConfigWidget::init( Transport *transport )
   d->transport = transport;
 
   d->manager = new KConfigDialogManager( this, transport );
-  //d->manager->updateWidgets(); // no use; ui is set up in subclasses.
+  //d->manager->updateWidgets(); // no-op; ui is set up in subclasses.
 }
 
 KConfigDialogManager *TransportConfigWidget::configManager() const
@@ -80,6 +79,5 @@ void TransportConfigWidget::apply()
   d->transport->writeConfig();
   kDebug() << "Config written.";
 }
-
 
 #include "transportconfigwidget.moc"

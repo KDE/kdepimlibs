@@ -33,9 +33,20 @@ class AddTransportDialog;
 class TransportManager;
 
 /**
-  A representation of a transport type.
+  @short A representation of a transport type.
 
-  TODO docu look at Akonadi::AgentType
+  Represents an available transport type.  SMTP and Sendmail are available,
+  as well as a number of Akonadi-based types.  Each Akonadi-based type
+  corresponds to an Akonadi resource type that supports sending messages.
+
+  This class provides information about the type, such as name and
+  description.  Additionally, for Akonadi types, it provides the corresponding
+  Akonadi AgentType.
+
+  All available transport types can be retrieved via TransportManager::types().
+
+  @author Constantin Berzan <exit3219@gmail.com>
+  @since 4.4
 */
 class MAILTRANSPORT_EXPORT TransportType
 {
@@ -44,21 +55,64 @@ class MAILTRANSPORT_EXPORT TransportType
   friend class TransportManager;
 
   public:
+    /**
+      Describes a list of transport types.
+    */
     typedef QList<TransportType> List;
 
+    /**
+      Constructs a new TransportType.
+    */
     TransportType();
+
+    /**
+      Creates a copy of the @p other TransportType.
+    */
     TransportType( const TransportType &other );
+
+    /**
+      Destroys the TransportType.
+    */
     ~TransportType();
+
+    /**
+      @internal
+    */
+    TransportType& operator=( const TransportType &other );
+    
+    /**
+      @internal
+      Compares two transport types.
+    */
     bool operator==( const TransportType &other ) const;
 
+    /**
+      Returns whether the transport type is valid.
+    */
     bool isValid() const;
 
+    /**
+      @internal
+      Returns the numeric type of the transport.  This corresponds to
+      Transport::EnumType::type.
+    */
     // TODO should this be Transport::EnumType::type instead of int?
     int type() const;
+
+    /**
+      Returns the i18n'ed name of the transport type.
+    */
     QString name() const;
+
+    /**
+      Returns a description of the transport type.
+    */
     QString description() const;
 
-    /// only valid if this is an Akonadi transport
+    /**
+      Returns the corresponding Akonadi::AgentType that this transport type
+      represents.  Only valid if type() is Transport::EnumType::Akonadi.
+    */
     Akonadi::AgentType agentType() const;
 
   private:
@@ -67,8 +121,8 @@ class MAILTRANSPORT_EXPORT TransportType
 
 };
 
-}
+} // namespace MailTransport
 
 Q_DECLARE_METATYPE( MailTransport::TransportType )
 
-#endif
+#endif // MAILTRANSPORT_TRANSPORTTYPE_H

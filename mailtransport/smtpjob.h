@@ -26,8 +26,8 @@
 #include <mailtransport/transportjob.h>
 
 namespace KIO {
-class Job;
-class Slave;
+  class Job;
+  class Slave;
 }
 
 class SmtpJobPrivate;
@@ -78,6 +78,6 @@ class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
     SmtpJobPrivate *const d;
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_SMTPJOB_H

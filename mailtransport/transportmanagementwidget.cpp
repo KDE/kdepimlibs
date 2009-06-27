@@ -21,13 +21,9 @@
 */
 
 #include "transportmanagementwidget.h"
-#include "addtransportdialog.h"
 #include "ui_transportmanagementwidget.h"
 #include "transportmanager.h"
 #include "transport.h"
-#include "transportconfigdialog.h"
-
-#include <QPointer>
 
 using namespace MailTransport;
 
@@ -83,9 +79,7 @@ void TransportManagementWidget::updateButtonState()
 
 void TransportManagementWidget::addClicked()
 {
-  QPointer<AddTransportDialog> dialog = new AddTransportDialog( this );
-  dialog->exec();
-  delete dialog;
+  TransportManager::self()->showNewTransportDialog( this );
 }
 
 void TransportManagementWidget::editClicked()

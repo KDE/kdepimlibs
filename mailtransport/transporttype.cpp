@@ -39,6 +39,14 @@ TransportType::~TransportType()
 {
 }
 
+TransportType& TransportType::operator=( const TransportType &other )
+{
+  if( this != &other ) {
+    d = other.d;
+  }
+  return *this;
+}
+
 bool TransportType::operator==( const TransportType &other ) const
 {
   if( d->mType == Transport::EnumType::Akonadi &&

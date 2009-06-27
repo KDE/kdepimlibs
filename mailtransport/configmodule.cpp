@@ -20,9 +20,10 @@
 #include "configmodule.h"
 #include "transportmanagementwidget.h"
 
-#include <kpluginfactory.h>
-#include <kpluginloader.h>
-#include <qboxlayout.h>
+#include <QBoxLayout>
+
+#include <KPluginFactory>
+#include <KPluginLoader>
 
 using namespace MailTransport;
 

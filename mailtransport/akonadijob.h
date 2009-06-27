@@ -29,9 +29,16 @@ class AkonadiJobPrivate;
 namespace MailTransport {
 
 /**
-  Mail transport job for an Akonadi resource.
+  Mail transport job for an Akonadi-based transport.
+  Unlike SmtpJob and SendmailJob, you also need to call setItemId() before
+  starting this job.  In other words, the item you want to send has to be
+  created in advance.
 
-  TODO docu... apps need to call setItem if it's an Akonadi job...
+  TODO API:
+  * Should we provide setItem or let the job assemble the item out of data()?
+  * What to do about from, to, cc, bcc? Should there be some kind of standard
+    attribute containing these?  Currently data(), from(), to() etc. are
+    completely ignored.
 */
 class MAILTRANSPORT_EXPORT AkonadiJob : public TransportJob
 {
@@ -39,7 +46,7 @@ class MAILTRANSPORT_EXPORT AkonadiJob : public TransportJob
   public:
     /**
       Creates an AkonadiJob.
-      @param transport The transport settings.
+      @param transport The transport object to use.
       @param parent The parent object.
     */
     explicit AkonadiJob( Transport *transport, QObject *parent = 0 );
@@ -49,7 +56,6 @@ class MAILTRANSPORT_EXPORT AkonadiJob : public TransportJob
     */
     virtual ~AkonadiJob();
 
-    // TODO have these here or in TransportJob?  They are useless in {SMTP,Sendmail}Job...
     /**
       The id of the item to send.
     */
@@ -62,16 +68,17 @@ class MAILTRANSPORT_EXPORT AkonadiJob : public TransportJob
     void setItemId( Akonadi::Item::Id id );
 
   protected:
+    /** reimpl */
     virtual void doStart();
 
   private Q_SLOTS:
-    void resourceResult( bool success, const QString &message );
+    void resourceResult( qlonglong itemId, bool success, const QString &message );
 
   private:
     AkonadiJobPrivate *const d;
 
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_AKONADIJOB_H

@@ -37,7 +37,7 @@ class Transport;
 
   @deprecated Use TransportManager::configureTransport() instead.
 */
-// KDE5: this class should not be exported.
+// TODO KDE5: this class should not be exported.
 // FIXME how to avoid deprecated warning from its own moc?
 class MAILTRANSPORT_EXPORT_DEPRECATED TransportConfigDialog : public KDialog
 {
@@ -74,6 +74,6 @@ class MAILTRANSPORT_EXPORT_DEPRECATED TransportConfigDialog : public KDialog
 
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_TRANSPORTCONFIGDIALOG_H

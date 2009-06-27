@@ -12,6 +12,9 @@ TransportManager
 - load passwords if application opens wallet
 - add D-Bus interface for sending mails
 - test to see if there is always a default transport, by adding / deleting accounts
+- it would be nice to make showNewTransportDialog,
+  promptCreateTransportIfNoneExists, and configureTransport visible on D-Bus,
+  but how to handle QWidget *parent?
 
 Transport
 ---------

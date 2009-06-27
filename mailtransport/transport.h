@@ -73,6 +73,7 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     /**
       Makes sure the transport has a unique name.  Adds #1, #2, #3 etc. if
       necessary.
+      @since 4.4
     */
     void forceUniqueName();
 
@@ -113,12 +114,14 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     /**
       Returns the type of this transport.
       @see TransportType.
+      @since 4.4
     */
     TransportType transportType() const;
 
     /**
       Sets the type of this transport.
       @see TransportType.
+      @since 4.4
     */
     void setTransportType( const TransportType &type );
 
@@ -149,6 +152,6 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     TransportPrivate *const d;
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_TRANSPORT_H

@@ -20,11 +20,9 @@
 #ifndef MAILTRANSPORT_TRANSPORTLISTVIEW_H
 #define MAILTRANSPORT_TRANSPORTLISTVIEW_H
 
-
 #include <QtGui/QTreeWidget>
 
-namespace MailTransport
-{
+namespace MailTransport {
 
 /**
   @internal
@@ -45,12 +43,10 @@ class TransportListView : public QTreeWidget
     virtual void commitData( QWidget *editor );
 
   private slots:
-    void fillTransportList(); // TODO rename?
+    void fillTransportList();
 
 };
 
+} // namespace MailTransport
 
-}
-
-
-#endif
+#endif // MAILTRANSPORT_TRANSPORTLISTVIEW_H

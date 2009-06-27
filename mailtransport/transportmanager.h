@@ -41,8 +41,11 @@ class TransportConfigWidget;
 class TransportJob;
 
 /**
-  Takes care of loading and storing mail transport settings and
-  creating of transport jobs.
+  @short Central transport management interface.
+
+  This class manages the creation, configuration, and removal of mail
+  transports, as well as the loading and storing of mail transport settings,
+  and creation of transport jobs.
 */
 class MAILTRANSPORT_EXPORT TransportManager : public QObject
 {
@@ -147,6 +150,14 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       If the data in KEMailSettings is incomplete, no transport is created.
     */
     void createDefaultTransport();
+
+    /**
+      Shows a dialog for creating and configuring a new transport.
+      @param parent Parent widget of the dialog.
+      @return True if a new transport has been created and configured.
+      @since 4.4
+    */
+    bool showNewTransportDialog( QWidget *parent );
 
     /**
       If no transport exists, asks the user to create and configure one.
@@ -254,6 +265,9 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     */
     void loadPasswords();
 
+    /**
+      Singleton class, the only instance resides in the static object sSelf.
+    */
     TransportManager();
 
   private:
@@ -280,6 +294,6 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     Private *const d;
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_TRANSPORTMANAGER_H

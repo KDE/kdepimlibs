@@ -83,8 +83,8 @@ void AkonadiJob::doStart()
     return;
   }
 
-  connect( d->iface, SIGNAL( transportResult( bool, const QString & ) ),
-      this, SLOT( resourceResult( bool, const QString & ) ) );
+  connect( d->iface, SIGNAL(transportResult(qlonglong,bool,QString)),
+      this, SLOT(resourceResult(qlonglong,bool,QString)) );
 
   // What TODO about timeouts?  It is quite possible that the result D-Bus signal
   // will get lost, and then what?
@@ -98,8 +98,9 @@ void AkonadiJob::doStart()
   }
 }
 
-void AkonadiJob::resourceResult( bool success, const QString &message )
+void AkonadiJob::resourceResult( qlonglong itemId, bool success, const QString &message )
 {
+  Q_ASSERT( itemId == d->itemId );
   if( !success ) {
     setError( UserDefinedError );
     setErrorText( message );

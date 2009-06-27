@@ -23,14 +23,14 @@
 #include "transportmanager.h"
 #include "transporttype_p.h"
 
-#include <kdebug.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kstringhandler.h>
-#include <kwallet.h>
-#include <kconfiggroup.h>
-
 #include <QTimer>
+
+#include <KConfigGroup>
+#include <KDebug>
+#include <KLocalizedString>
+#include <KMessageBox>
+#include <KStringHandler>
+#include <KWallet/Wallet>
 
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentmanager.h>

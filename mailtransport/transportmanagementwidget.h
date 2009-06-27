@@ -24,6 +24,7 @@
 #define MAILTRANSPORT_TRANSPORTMANAGEMENTWIDGET_H
 
 #include <mailtransport/mailtransport_export.h>
+
 #include <QtGui/QWidget>
 
 namespace MailTransport {
@@ -60,6 +61,6 @@ class MAILTRANSPORT_EXPORT TransportManagementWidget : public QWidget
     Private * const d;
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_TRANSPORTMANAGEMENTWIDGET_H

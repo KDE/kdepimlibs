@@ -72,6 +72,6 @@ class SMTPConfigWidget : public TransportConfigWidget
 
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_SMTPCONFIGWIDGET_H

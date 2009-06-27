@@ -32,7 +32,6 @@
 #include <KDebug>
 #include <KLocalizedString>
 
-
 using namespace MailTransport;
 
 TransportListView::TransportListView( QWidget *parent )
@@ -111,6 +110,5 @@ void TransportListView::fillTransportList()
     }
   }
 }
-
 
 #include "transportlistview.moc"

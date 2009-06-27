@@ -25,8 +25,7 @@
 
 #include <akonadi/agenttype.h>
 
-namespace MailTransport
-{
+namespace MailTransport {
 
 /**
   @internal
@@ -54,6 +53,6 @@ class TransportType::Private : public QSharedData
     Akonadi::AgentType mAgentType;
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif //MAILTRANSPORT_TRANSPORTTYPE_P_H

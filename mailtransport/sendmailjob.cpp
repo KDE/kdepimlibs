@@ -24,7 +24,7 @@
 #include "sendmailjob.h"
 #include "transport.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QtCore/QProcess>
 #include <QtCore/QBuffer>

@@ -32,8 +32,8 @@
 #include <QTimer>
 
 // KDE
-#include <klocale.h>
-#include <kdebug.h>
+#include <KLocalizedString>
+#include <KDebug>
 
 using namespace MailTransport;
 

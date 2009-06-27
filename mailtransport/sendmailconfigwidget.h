@@ -59,6 +59,6 @@ class SendmailConfigWidget : public TransportConfigWidget
 
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_SENDMAILCONFIGWIDGET_H

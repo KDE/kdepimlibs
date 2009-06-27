@@ -27,6 +27,7 @@
 #include <mailtransport/transportjob.h>
 
 #include <QtCore/QProcess>
+
 class SendMailJobPrivate;
 
 namespace MailTransport {
@@ -63,6 +64,6 @@ class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
     SendMailJobPrivate *const d;
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_SENDMAILJOB_H

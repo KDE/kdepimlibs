@@ -22,7 +22,7 @@
 
 #include "legacydecrypt.h"
 
-#include <kstringhandler.h>
+#include <KStringHandler>
 
 using namespace MailTransport;
 

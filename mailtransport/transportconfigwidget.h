@@ -37,8 +37,24 @@ class TransportConfigWidgetPrivate;
 
 /**
   @internal
-  Abstract configuration widget for a mail transport.
-  There is a derived class for each transport, such as SMTPConfigWidget etc.
+
+  Abstract configuration widget for a mail transport.  It makes sure that
+  the configured transport has a unique name, and takes care of writing its
+  settings to the config file.  If it is a new transport, the caller must
+  still call TransportManager::addTransport() to register the transport.
+
+  Concrete configuration is done in subclasses SMTPConfigWidget and
+  SendmailConfigWidget.  Akonadi-type transports are not configured by
+  MailTransport directly, instead the configure() method of their agent
+  instance is called.
+
+  To configure a transport from applications, use
+  TransportManager::configureTransport().  You still need to call
+  TransportManager::addTransport() if this is a new transport, not registered
+  with TransportManager.
+
+  @author Constantin Berzan <exit3219@gmail.com>
+  @since 4.4
 */
 class TransportConfigWidget : public QWidget
 {
@@ -48,9 +64,7 @@ class TransportConfigWidget : public QWidget
     /**
       Creates a new mail transport configuration widget for the given
       Transport object.
-      @param transport The Transport object to configure. This must be a deep
-      copy of a Transport object or a newly created one, which hasn't been
-      added to the TransportManager yet.
+      @param transport The Transport object to configure.
       @param parent The parent widget.
     */
     explicit TransportConfigWidget( Transport *transport, QWidget *parent = 0 );
@@ -88,6 +102,6 @@ class TransportConfigWidget : public QWidget
 
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_TRANSPORTCONFIGWIDGET_H
