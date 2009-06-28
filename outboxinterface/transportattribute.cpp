@@ -27,18 +27,26 @@ using namespace Akonadi;
 using namespace MailTransport;
 using namespace OutboxInterface;
 
-TransportAttribute::TransportAttribute( int id )
-  : mId( id )
+class TransportAttribute::Private
 {
+  public:
+    int mId;
+};
+
+TransportAttribute::TransportAttribute( int id )
+  : d( new Private )
+{
+  d->mId = id;
 }
 
 TransportAttribute::~TransportAttribute()
 {
+  delete d;
 }
 
 TransportAttribute* TransportAttribute::clone() const
 {
-  return new TransportAttribute( mId );
+  return new TransportAttribute( d->mId );
 }
 
 QByteArray TransportAttribute::type() const
@@ -49,26 +57,26 @@ QByteArray TransportAttribute::type() const
 
 QByteArray TransportAttribute::serialized() const
 {
-  return QByteArray::number( mId );
+  return QByteArray::number( d->mId );
 }
 
 void TransportAttribute::deserialize( const QByteArray &data )
 {
-  mId = data.toInt();
+  d->mId = data.toInt();
 }
 
 int TransportAttribute::transportId() const
 {
-  return mId;
+  return d->mId;
 }
 
 Transport* TransportAttribute::transport() const
 {
-  return TransportManager::self()->transportById( mId, false );
+  return TransportManager::self()->transportById( d->mId, false );
 }
 
 void TransportAttribute::setTransportId( int id )
 {
-  mId = id;
+  d->mId = id;
 }
 

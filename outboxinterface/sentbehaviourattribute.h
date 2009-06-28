@@ -91,8 +91,8 @@ class OUTBOXINTERFACE_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
     void setMoveToCollection( Akonadi::Collection::Id moveToCollection );
 
   private:
-    SentBehaviour mBehaviour;
-    Akonadi::Collection::Id mMoveToCollection;
+    class Private;
+    Private *const d;
 
 };
 

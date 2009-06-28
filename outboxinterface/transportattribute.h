@@ -77,7 +77,8 @@ class OUTBOXINTERFACE_EXPORT TransportAttribute : public Akonadi::Attribute
     void setTransportId( int id );
 
   private:
-    int mId;
+    class Private;
+    Private *const d;
 
 };
 

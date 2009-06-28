@@ -64,6 +64,76 @@ void AttributeTest::testRegistrar()
   }
 }
 
+void AttributeTest::testSerialization()
+{
+  {
+    QString from( "from@me.org" );
+    QStringList to( "to1@me.org" );
+    to << "to2@me.org";
+    QStringList cc( "cc1@me.org" );
+    cc << "cc2@me.org";
+    QStringList bcc( "bcc1@me.org" );
+    bcc << "bcc2@me.org";
+    AddressAttribute *a = new AddressAttribute( from, to, cc, bcc );
+    QByteArray data = a->serialized();
+    delete a;
+    a = new AddressAttribute;
+    a->deserialize( data );
+    QCOMPARE( from, a->from() );
+    QCOMPARE( to, a->to() );
+    QCOMPARE( cc, a->cc() );
+    QCOMPARE( bcc, a->bcc() );
+  }
+
+  {
+    DispatchModeAttribute::DispatchMode mode = DispatchModeAttribute::AfterDueDate;
+    QDateTime date = QDateTime::currentDateTime();
+    // The serializer does not keep track of milliseconds, so forget them.
+    kDebug() << "ms" << date.toString( "z" );
+    int ms = date.toString( "z" ).toInt();
+    date = date.addMSecs( -ms );
+    DispatchModeAttribute *a = new DispatchModeAttribute( mode, date );
+    QByteArray data = a->serialized();
+    delete a;
+    a = new DispatchModeAttribute;
+    a->deserialize( data );
+    QCOMPARE( mode, a->dispatchMode() );
+    QCOMPARE( date, a->dueDate() );
+  }
+
+  {
+    QString msg( "The #!@$ing thing failed!" );
+    ErrorAttribute *a = new ErrorAttribute( msg );
+    QByteArray data = a->serialized();
+    delete a;
+    a = new ErrorAttribute;
+    a->deserialize( data );
+    QCOMPARE( msg, a->message() );
+  }
+
+  {
+    SentBehaviourAttribute::SentBehaviour beh = SentBehaviourAttribute::MoveToCollection;
+    Collection::Id id = 123456789012345ll;
+    SentBehaviourAttribute *a = new SentBehaviourAttribute( beh, id );
+    QByteArray data = a->serialized();
+    delete a;
+    a = new SentBehaviourAttribute;
+    a->deserialize( data );
+    QCOMPARE( beh, a->sentBehaviour() );
+    QCOMPARE( id, a->moveToCollection() );
+  }
+
+  {
+    int id = 3219;
+    TransportAttribute *a = new TransportAttribute( id );
+    QByteArray data = a->serialized();
+    delete a;
+    a = new TransportAttribute;
+    a->deserialize( data );
+    QCOMPARE( id, a->transportId() );
+  }
+}
+
 QTEST_AKONADIMAIN( AttributeTest, NoGUI )
 
 #include "attributetest.moc"

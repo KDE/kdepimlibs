@@ -26,20 +26,36 @@
 using namespace Akonadi;
 using namespace OutboxInterface;
 
+/**
+  @internal
+*/
+class AddressAttribute::Private
+{
+  public:
+    QString mFrom;
+    QStringList mTo;
+    QStringList mCc;
+    QStringList mBcc;
+};
 
 AddressAttribute::AddressAttribute( const QString &from, const QStringList &to,
                                     const QStringList &cc, const QStringList &bcc )
-  : mFrom( from ), mTo( to ), mCc( cc ), mBcc( bcc )
+  : d( new Private )
 {
+  d->mFrom = from;
+  d->mTo = to;
+  d->mCc = cc;
+  d->mBcc = bcc;
 }
 
 AddressAttribute::~AddressAttribute()
 {
+  delete d;
 }
 
 AddressAttribute* AddressAttribute::clone() const
 {
-  return new AddressAttribute( mFrom, mTo, mCc, mBcc );
+  return new AddressAttribute( d->mFrom, d->mTo, d->mCc, d->mBcc );
 }
 
 QByteArray AddressAttribute::type() const
@@ -53,10 +69,10 @@ QByteArray AddressAttribute::serialized() const
   QByteArray serializedData;
   QDataStream serializer( &serializedData, QIODevice::WriteOnly );
   serializer.setVersion( QDataStream::Qt_4_5 );
-  serializer << mFrom;
-  serializer << mTo;
-  serializer << mCc;
-  serializer << mBcc;
+  serializer << d->mFrom;
+  serializer << d->mTo;
+  serializer << d->mCc;
+  serializer << d->mBcc;
   return serializedData;
 }
 
@@ -64,49 +80,49 @@ void AddressAttribute::deserialize( const QByteArray &data )
 {
   QDataStream deserializer( data );
   deserializer.setVersion( QDataStream::Qt_4_5 );
-  deserializer >> mFrom;
-  deserializer >> mTo;
-  deserializer >> mCc;
-  deserializer >> mBcc;
+  deserializer >> d->mFrom;
+  deserializer >> d->mTo;
+  deserializer >> d->mCc;
+  deserializer >> d->mBcc;
 }
 
 QString AddressAttribute::from() const
 {
-  return mFrom;
+  return d->mFrom;
 }
 
 void AddressAttribute::setFrom( const QString &from )
 {
-  mFrom = from;
+  d->mFrom = from;
 }
 
 QStringList AddressAttribute::to() const
 {
-  return mTo;
+  return d->mTo;
 }
 
 void AddressAttribute::setTo( const QStringList &to )
 {
-  mTo = to;
+  d->mTo = to;
 }
 
 QStringList AddressAttribute::cc() const
 {
-  return mCc;
+  return d->mCc;
 }
 
 void AddressAttribute::setCc( const QStringList &cc )
 {
-  mCc = cc;
+  d->mCc = cc;
 }
 
 QStringList AddressAttribute::bcc() const
 {
-  return mBcc;
+  return d->mBcc;
 }
 
 void AddressAttribute::setBcc( const QStringList &bcc )
 {
-  mBcc = bcc;
+  d->mBcc = bcc;
 }
 

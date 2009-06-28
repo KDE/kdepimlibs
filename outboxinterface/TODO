@@ -1,6 +1,4 @@
 Design:
-* Use d-pointers for the attributes?  Or rely on having SomeAttrV2 in case
-  something needs to be added?
 
 Future:
 * Support volatile outbox (not stored on disk).

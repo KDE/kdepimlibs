@@ -65,7 +65,8 @@ class OUTBOXINTERFACE_EXPORT ErrorAttribute : public Akonadi::Attribute
     void setMessage( const QString &msg );
 
   private:
-    QString mMessage;
+    class Private;
+    Private *const d;
 
 };
 

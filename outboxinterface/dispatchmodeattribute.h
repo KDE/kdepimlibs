@@ -91,8 +91,8 @@ class OUTBOXINTERFACE_EXPORT DispatchModeAttribute : public Akonadi::Attribute
     void setDueDate( const QDateTime &date );
 
   private:
-    DispatchMode mMode;
-    QDateTime mDueDate;
+    class Private;
+    Private *const d;
 
 };
 

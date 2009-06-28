@@ -26,19 +26,28 @@
 using namespace Akonadi;
 using namespace OutboxInterface;
 
-SentBehaviourAttribute::SentBehaviourAttribute( SentBehaviour beh, Collection::Id moveToCollection )
-  : mBehaviour( beh )
-  , mMoveToCollection( moveToCollection )
+class SentBehaviourAttribute::Private
 {
+  public:
+    SentBehaviour mBehaviour;
+    Akonadi::Collection::Id mMoveToCollection;
+};
+
+SentBehaviourAttribute::SentBehaviourAttribute( SentBehaviour beh, Collection::Id moveToCollection )
+  : d( new Private )
+{
+  d->mBehaviour = beh;
+  d->mMoveToCollection = moveToCollection;
 }
 
 SentBehaviourAttribute::~SentBehaviourAttribute()
 {
+  delete d;
 }
 
 SentBehaviourAttribute* SentBehaviourAttribute::clone() const
 {
-  return new SentBehaviourAttribute( mBehaviour, mMoveToCollection );
+  return new SentBehaviourAttribute( d->mBehaviour, d->mMoveToCollection );
 }
 
 QByteArray SentBehaviourAttribute::type() const
@@ -49,9 +58,9 @@ QByteArray SentBehaviourAttribute::type() const
 
 QByteArray SentBehaviourAttribute::serialized() const
 {
-  switch( mBehaviour ) {
+  switch( d->mBehaviour ) {
     case Delete: return "delete";
-    case MoveToCollection: return "moveTo" + QByteArray::number( mMoveToCollection );
+    case MoveToCollection: return "moveTo" + QByteArray::number( d->mMoveToCollection );
     case MoveToDefaultSentCollection: return "moveToDefault";
   }
 
@@ -61,14 +70,14 @@ QByteArray SentBehaviourAttribute::serialized() const
 
 void SentBehaviourAttribute::deserialize( const QByteArray &data )
 {
-  mMoveToCollection = -1;
+  d->mMoveToCollection = -1;
   if ( data == "delete" ) {
-    mBehaviour = Delete;
+    d->mBehaviour = Delete;
   } else if ( data == "moveToDefault" ) {
-    mBehaviour = MoveToDefaultSentCollection;
+    d->mBehaviour = MoveToDefaultSentCollection;
   } else if ( data.startsWith( QByteArray( "moveTo" ) ) ) {
-    mBehaviour = MoveToCollection;
-    mMoveToCollection = data.mid(6).toLongLong();
+    d->mBehaviour = MoveToCollection;
+    d->mMoveToCollection = data.mid(6).toLongLong();
     // NOTE: 6 is the strlen of "moveTo".
   } else {
     Q_ASSERT( false );
@@ -77,21 +86,21 @@ void SentBehaviourAttribute::deserialize( const QByteArray &data )
 
 SentBehaviourAttribute::SentBehaviour SentBehaviourAttribute::sentBehaviour() const
 {
-  return mBehaviour;
+  return d->mBehaviour;
 }
 
 void SentBehaviourAttribute::setSentBehaviour( SentBehaviour beh )
 {
-  mBehaviour = beh;
+  d->mBehaviour = beh;
 }
 
 Collection::Id SentBehaviourAttribute::moveToCollection() const
 {
-  return mMoveToCollection;
+  return d->mMoveToCollection;
 }
 
 void SentBehaviourAttribute::setMoveToCollection( Collection::Id moveToCollection )
 {
-  mMoveToCollection = moveToCollection;
+  d->mMoveToCollection = moveToCollection;
 }
 

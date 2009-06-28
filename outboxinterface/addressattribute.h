@@ -102,10 +102,8 @@ class OUTBOXINTERFACE_EXPORT AddressAttribute : public Akonadi::Attribute
     void setBcc( const QStringList &bcc );
 
   private:
-    QString mFrom;
-    QStringList mTo;
-    QStringList mCc;
-    QStringList mBcc;
+    class Private;
+    Private *const d;
 
 };
 

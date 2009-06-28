@@ -32,8 +32,7 @@ class AttributeTest : public QObject
   private Q_SLOTS:
     void initTestCase();
     void testRegistrar();
-
-    // TODO test serialization / deserialization
+    void testSerialization();
 
 };
 
