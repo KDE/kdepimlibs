@@ -32,6 +32,7 @@
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/kmime/localfolders.h>
+#include <akonadi/kmime/addressattribute.h>
 
 #include <mailtransport/transportmanager.h>
 #include <mailtransport/transport.h>
@@ -39,7 +40,6 @@
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
-#include <outboxinterface/addressattribute.h>
 #include <outboxinterface/dispatchmodeattribute.h>
 #include <outboxinterface/errorattribute.h>
 #include <outboxinterface/messagequeuejob.h>

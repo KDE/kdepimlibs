@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-#include "addressattribute.h"
 #include "dispatchmodeattribute.h"
 #include "errorattribute.h"
 #include "sentbehaviourattribute.h"
@@ -32,7 +31,6 @@ bool dummy()
 {
   using namespace Akonadi;
   using namespace OutboxInterface;
-  AttributeFactory::registerAttribute<AddressAttribute>();
   AttributeFactory::registerAttribute<DispatchModeAttribute>();
   AttributeFactory::registerAttribute<ErrorAttribute>();
   AttributeFactory::registerAttribute<SentBehaviourAttribute>();

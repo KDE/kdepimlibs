@@ -9,7 +9,6 @@ set( outboxinterface_lib_srcs
      messagequeuejob.cpp
      outboxactions.cpp
 
-     addressattribute.cpp
      dispatchmodeattribute.cpp
      errorattribute.cpp
      sentbehaviourattribute.cpp
@@ -30,7 +29,6 @@ install( FILES
          messagequeuejob.h
          outboxactions.h
 
-         addressattribute.h
          dispatchmodeattribute.h
          errorattribute.h
          sentbehaviourattribute.h

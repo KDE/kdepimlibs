@@ -21,8 +21,8 @@
 
 #include <akonadi/attributefactory.h>
 #include <akonadi/qtest_akonadi.h>
+#include <akonadi/kmime/addressattribute.h>
 
-#include <outboxinterface/addressattribute.h>
 #include <outboxinterface/dispatchmodeattribute.h>
 #include <outboxinterface/errorattribute.h>
 #include <outboxinterface/sentbehaviourattribute.h>
