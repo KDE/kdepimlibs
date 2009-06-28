@@ -57,11 +57,8 @@ void TransportConfigDialog::Private::okClicked()
   }
 }
 
-
-
 TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *parent )
-  : KDialog( parent )
-  , d( new Private )
+  : KDialog( parent ), d( new Private )
 {
   Q_ASSERT( transport );
   d->transport = transport;

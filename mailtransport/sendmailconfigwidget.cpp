@@ -32,7 +32,6 @@
 
 using namespace MailTransport;
 
-
 class MailTransport::SendmailConfigWidgetPrivate : public TransportConfigWidgetPrivate
 {
   public:
@@ -46,7 +45,8 @@ SendmailConfigWidget::SendmailConfigWidget( Transport *transport, QWidget *paren
   init();
 }
 
-SendmailConfigWidget::SendmailConfigWidget( SendmailConfigWidgetPrivate &dd, Transport *transport, QWidget *parent )
+SendmailConfigWidget::SendmailConfigWidget( SendmailConfigWidgetPrivate &dd,
+                                            Transport *transport, QWidget *parent )
   : TransportConfigWidget( dd, transport, parent )
 {
   init();
@@ -68,6 +68,5 @@ void SendmailConfigWidget::init()
     d->ui.kcfg_host->setText( KStandardDirs::findExe( QLatin1String( "sendmail" ) ) );
   }
 }
-
 
 #include "sendmailconfigwidget.moc"

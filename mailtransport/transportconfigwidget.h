@@ -93,7 +93,8 @@ class TransportConfigWidget : public QWidget
 
   protected:
     TransportConfigWidgetPrivate *const d_ptr;
-    TransportConfigWidget( TransportConfigWidgetPrivate &dd, Transport *transport, QWidget *parent );
+    TransportConfigWidget( TransportConfigWidgetPrivate &dd,
+                           Transport *transport, QWidget *parent );
 
   private:
     Q_DECLARE_PRIVATE( TransportConfigWidget )

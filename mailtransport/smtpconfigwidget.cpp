@@ -122,7 +122,8 @@ SMTPConfigWidget::SMTPConfigWidget( Transport *transport, QWidget *parent )
   init();
 }
 
-SMTPConfigWidget::SMTPConfigWidget( SMTPConfigWidgetPrivate &dd, Transport *transport, QWidget *parent )
+SMTPConfigWidget::SMTPConfigWidget( SMTPConfigWidgetPrivate &dd,
+                                    Transport *transport, QWidget *parent )
   : TransportConfigWidget( dd, transport, parent )
 {
   init();

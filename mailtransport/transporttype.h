@@ -78,8 +78,8 @@ class MAILTRANSPORT_EXPORT TransportType
     /**
       @internal
     */
-    TransportType& operator=( const TransportType &other );
-    
+    TransportType &operator=( const TransportType &other );
+
     /**
       @internal
       Compares two transport types.

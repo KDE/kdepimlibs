@@ -170,7 +170,7 @@ QList< Transport * > TransportManager::transports() const
   return d->transports;
 }
 
-const TransportType::List &TransportManager::types() const
+TransportType::List TransportManager::types() const
 {
   return d->types;
 }
@@ -235,14 +235,15 @@ bool TransportManager::showNewTransportDialog( QWidget *parent )
 
 bool TransportManager::promptCreateTransportIfNoneExists( QWidget *parent )
 {
-  if ( !isEmpty() )
+  if ( !isEmpty() ) {
     return true;
+  }
 
   const int response = KMessageBox::messageBox( parent,
                    KMessageBox::WarningContinueCancel,
-                   i18n("You must create an outgoing account before sending."),
-                   i18n("Create Account Now?"),
-                   KGuiItem( i18n("Create Account Now") ) );
+                   i18n( "You must create an outgoing account before sending." ),
+                   i18n( "Create Account Now?" ),
+                   KGuiItem( i18n( "Create Account Now" ) ) );
   if ( response == KMessageBox::Continue ) {
     return showNewTransportDialog( parent );
   }
@@ -488,11 +489,11 @@ void TransportManager::fillTypes()
     type.d->mDescription = i18n( "A local sendmail installation" );
     d->types << type;
   }
-  
+
   // All Akonadi resources with MailTransport capability.
   {
     using namespace Akonadi;
-    foreach( const AgentType &atype, AgentManager::self()->types() ) {
+    foreach ( const AgentType &atype, AgentManager::self()->types() ) {
       // TODO probably the string "MailTransport" should be #defined somewhere
       // and used like that in the resources (?)
       if( atype.capabilities().contains( QLatin1String( "MailTransport" ) ) ) {
@@ -752,7 +753,7 @@ void TransportManager::agentTypeAdded( const Akonadi::AgentType &atype )
 void TransportManager::agentTypeRemoved( const Akonadi::AgentType &atype )
 {
   using namespace Akonadi;
-  foreach( const TransportType &type, d->types ) {
+  foreach ( const TransportType &type, d->types ) {
     if( type.type() == Transport::EnumType::Akonadi &&
         type.agentType() == atype ) {
       d->types.removeAll( type );

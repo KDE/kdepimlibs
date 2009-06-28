@@ -60,7 +60,7 @@ class AddTransportDialog::Private
 TransportType AddTransportDialog::Private::selectedType() const
 {
   QList<QTreeWidgetItem*> sel = ui.typeListView->selectedItems();
-  if( !sel.empty() ) {
+  if ( !sel.empty() ) {
     return sel.first()->data( 0, Qt::UserRole ).value<TransportType>();
   }
   return TransportType();
@@ -72,11 +72,8 @@ void AddTransportDialog::Private::typeListClicked()
   q->enableButtonOk( selectedType().isValid() );
 }
 
-
-
 AddTransportDialog::AddTransportDialog( QWidget *parent )
-  : KDialog( parent )
-  , d( new Private( this ) )
+  : KDialog( parent ), d( new Private( this ) )
 {
   // Setup UI.
   {
@@ -90,7 +87,7 @@ AddTransportDialog::AddTransportDialog( QWidget *parent )
   }
 
   // Populate type list.
-  foreach( const TransportType &type, TransportManager::self()->types() ) {
+  foreach ( const TransportType &type, TransportManager::self()->types() ) {
     QTreeWidgetItem *treeItem = new QTreeWidgetItem( d->ui.typeListView );
     treeItem->setText( 0, type.name() );
     treeItem->setText( 1, type.description() );

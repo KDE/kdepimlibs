@@ -73,9 +73,10 @@ void AkonadiJob::doStart()
     return;
   }
 
-  d->iface = new QDBusInterface( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + transport()->host(),
-                                 QLatin1String( "/" ), QLatin1String( "org.freedesktop.Akonadi.Resource.Transport" ),
-                                 QDBusConnection::sessionBus(), this );
+  d->iface = new QDBusInterface(
+      QLatin1String( "org.freedesktop.Akonadi.Resource." ) + transport()->host(),
+      QLatin1String( "/" ), QLatin1String( "org.freedesktop.Akonadi.Resource.Transport" ),
+      QDBusConnection::sessionBus(), this );
   if( !d->iface->isValid() ) {
     setError( UserDefinedError );
     setErrorText( i18n( "Failed to get D-Bus interface of resource %1.", transport()->host() ) );

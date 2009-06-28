@@ -39,7 +39,7 @@ TransportType::~TransportType()
 {
 }
 
-TransportType& TransportType::operator=( const TransportType &other )
+TransportType &TransportType::operator=( const TransportType &other )
 {
   if( this != &other ) {
     d = other.d;

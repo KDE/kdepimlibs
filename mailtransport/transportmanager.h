@@ -106,7 +106,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     /**
       Returns a list of all available transport types.
     */
-    const TransportType::List &types() const;
+    TransportType::List types() const;
 
     /**
       Creates a new, empty Transport object. The object is owned by the caller.
