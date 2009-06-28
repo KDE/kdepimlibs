@@ -57,5 +57,6 @@ endmacro(add_akonadi_isolated_test)
 
 
 
+add_akonadi_isolated_test( attributetest.cpp )
 add_akonadi_isolated_test( messagequeuejobtest.cpp )
 

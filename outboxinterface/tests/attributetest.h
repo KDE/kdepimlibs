@@ -17,30 +17,24 @@
     02110-1301, USA.
 */
 
-#ifndef MESSAGEQUEUEJOBTEST_H
-#define MESSAGEQUEUEJOBTEST_H
+#ifndef ATTRIBUTETEST_H
+#define ATTRIBUTETEST_H
 
 #include <QtCore/QObject>
 
-
 /**
-  This tests the ability to queue messages (MessageQueueJob class).
-  Note that the actual sending of messages is the MDA's job, and is not tested
-  here.
- */
-class MessageQueueJobTest : public QObject
+  This is a test of the various attributes.
+*/
+class AttributeTest : public QObject
 {
   Q_OBJECT
 
   private Q_SLOTS:
     void initTestCase();
-    void testValidMessages();
-    void testInvalidMessages();
+    void testRegistrar();
 
-  private:
-    void verifyOutboxContents( qlonglong count );
+    // TODO test serialization / deserialization
 
 };
-
 
 #endif

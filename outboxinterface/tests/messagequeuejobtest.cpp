@@ -40,7 +40,6 @@
 #include <boost/shared_ptr.hpp>
 
 #include <outboxinterface/addressattribute.h>
-#include <outboxinterface/dispatcherinterface.h>
 #include <outboxinterface/dispatchmodeattribute.h>
 #include <outboxinterface/errorattribute.h>
 #include <outboxinterface/messagequeuejob.h>
@@ -61,9 +60,6 @@ void MessageQueueJobTest::initTestCase()
   // HACK: Otherwise the MDA is not switched offline soon enough apparently...
   QTest::qWait( 1000 );
 
-  // HACK: Register attributes.
-  DispatcherInterface::self();
-
   // Switch MDA offline to avoid spam.
   AgentInstance mda = AgentManager::self()->instance( "akonadi_maildispatcher_agent" );
   QVERIFY( mda.isValid() );
@@ -73,11 +69,6 @@ void MessageQueueJobTest::initTestCase()
   LocalFolders::self()->fetch();
   QTest::kWaitForSignal( LocalFolders::self(), SIGNAL( foldersReady() ) );
   verifyOutboxContents( 0 );
-}
-
-void MessageQueueJobTest::testAddressesFromMime()
-{
-  // TODO
 }
 
 void MessageQueueJobTest::testValidMessages()

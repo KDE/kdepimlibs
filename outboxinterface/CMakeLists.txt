@@ -14,6 +14,7 @@ set( outboxinterface_lib_srcs
      errorattribute.cpp
      sentbehaviourattribute.cpp
      transportattribute.cpp
+     attributeregistrar.cpp
 )
 
 kde4_add_library( outboxinterface SHARED ${outboxinterface_lib_srcs} )

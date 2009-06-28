@@ -19,19 +19,13 @@
 
 #include "dispatcherinterface.h"
 
-#include "addressattribute.h"
-#include "dispatchmodeattribute.h"
-#include "errorattribute.h"
 #include "outboxactions.h"
-#include "sentbehaviourattribute.h"
-#include "transportattribute.h"
 
 #include <KDebug>
 #include <KGlobal>
 #include <KLocalizedString>
 
 #include <akonadi/agentmanager.h>
-#include <akonadi/attributefactory.h>
 #include <akonadi/collection.h>
 #include <akonadi/filteractionjob.h>
 #include <akonadi/kmime/localfolders.h>
@@ -83,12 +77,6 @@ DispatcherInterface::DispatcherInterface( DispatcherInterfacePrivate *dd )
   : QObject()
   , d( dd )
 {
-  // register attributes
-  AttributeFactory::registerAttribute<AddressAttribute>();
-  AttributeFactory::registerAttribute<DispatchModeAttribute>();
-  AttributeFactory::registerAttribute<ErrorAttribute>();
-  AttributeFactory::registerAttribute<SentBehaviourAttribute>();
-  AttributeFactory::registerAttribute<TransportAttribute>();
 }
 
 DispatcherInterface *DispatcherInterface::self()

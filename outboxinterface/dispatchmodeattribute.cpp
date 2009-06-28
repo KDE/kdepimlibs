@@ -21,6 +21,8 @@
 
 #include <KDebug>
 
+#include "akonadi/attributefactory.h"
+
 using namespace Akonadi;
 using namespace OutboxInterface;
 
