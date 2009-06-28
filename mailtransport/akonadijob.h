@@ -30,15 +30,16 @@ namespace MailTransport {
 
 /**
   Mail transport job for an Akonadi-based transport.
-  Unlike SmtpJob and SendmailJob, you also need to call setItemId() before
-  starting this job.  In other words, the item you want to send has to be
-  created in advance.
 
-  TODO API:
-  * Should we provide setItem or let the job assemble the item out of data()?
-  * What to do about from, to, cc, bcc? Should there be some kind of standard
-    attribute containing these?  Currently data(), from(), to() etc. are
-    completely ignored.
+  This job can be used in two ways:
+  1) If you already have an Akonadi::Item containing the item you want to
+     send, use the setItem() method.  Your item needs to have an
+     AddressAttribute.  You do not need to call setData(), setSender(),
+     setTo() etc., in fact they are ignored.
+  2) If you do not have a ready-made item, call the usual TransportJob methods
+     setData(), setSender(), setTo() etc.  Then AkonadiJob will create a new
+     Akonadi::Item for you, and give it an AddressAttribute.
+     FIXME This does not work yet.  See comments in doStart().
 */
 class MAILTRANSPORT_EXPORT AkonadiJob : public TransportJob
 {
@@ -75,7 +76,11 @@ class MAILTRANSPORT_EXPORT AkonadiJob : public TransportJob
     void resourceResult( qlonglong itemId, bool success, const QString &message );
 
   private:
+    friend class ::AkonadiJobPrivate;
     AkonadiJobPrivate *const d;
+
+    Q_PRIVATE_SLOT( d, void itemCreateResult( KJob* ) )
+    Q_PRIVATE_SLOT( d, void itemFetchResult( KJob* ) )
 
 };
 

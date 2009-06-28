@@ -1,3 +1,5 @@
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+
 add_subdirectory( kconf_update )
 add_subdirectory( tests )
 
@@ -41,7 +43,7 @@ kde4_add_ui_files(mailtransport_lib_srcs
 kde4_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
 
 kde4_add_library(mailtransport SHARED ${mailtransport_lib_srcs})
-target_link_libraries(mailtransport ${KDE4_KIO_LIBS} akonadi-kde)
+target_link_libraries(mailtransport ${KDE4_KIO_LIBS} akonadi-kde akonadi-kmime kmime )
 set_target_properties(mailtransport PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
 install(TARGETS mailtransport EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
