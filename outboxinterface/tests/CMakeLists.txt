@@ -5,19 +5,17 @@ set(queuer_srcs queuer.cpp)
 kde4_add_executable(queuer TEST ${queuer_srcs})
 target_link_libraries(queuer ${KDE4_KDEUI_LIBS} ${KDE4_MAILTRANSPORT_LIBS} ${KDE4_KMIME_LIBS} outboxinterface)
 
-
 set( sendqueued_srcs sendqueued.cpp )
 kde4_add_executable( sendqueued TEST ${sendqueued_srcs} )
-target_link_libraries( sendqueued outboxinterface )
+target_link_libraries( sendqueued outboxinterface ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 
 set( clearerror_srcs clearerror.cpp )
 kde4_add_executable( clearerror TEST ${clearerror_srcs} )
-target_link_libraries( clearerror outboxinterface )
+target_link_libraries( clearerror outboxinterface ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 
 set( abort_srcs abort.cpp )
 kde4_add_executable( abort TEST ${abort_srcs} )
-target_link_libraries( abort outboxinterface )
-
+target_link_libraries( abort outboxinterface ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 
 
 # Stolen from kdepimlibs/akonadi/tests
