@@ -832,13 +832,13 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
             "</center></td></tr>";
     html += "<tr>";
     if ( comments.count() > 1 ) {
-      html += "<td><ul>";
+      html += "<ul>";
       for ( int i=0; i < comments.count(); ++i ) {
         html += "<li>" + comments[i] + "</li>";
       }
-      html += "</ul></td>";
+      html += "</ul>";
     } else {
-      html += "<td>" + comments[0] + "</td>";
+      html += comments[0];
     }
     html += "</tr>";
     html += "</table>";
