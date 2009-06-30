@@ -626,8 +626,6 @@ QString IncidenceFormatter::extensiveDisplayStr( IncidenceBase *incidence, KDate
  *  Helper functions for the body part formatter of kmail
  *******************************************************************/
 
-//TODO: 4.4: remove "meeting" from the invitation strings
-
 //@cond PRIVATE
 static QString string2HTML( const QString &str )
 {
@@ -761,7 +759,7 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
 
 static QString invitationDetailsEvent( Event *event, bool noHtmlMode )
 {
-  // Meeting details are formatted into an HTML table
+  // Invitation details are formatted into an HTML table
   if ( !event ) {
     return QString();
   }
@@ -793,17 +791,17 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode )
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
   QString html = QString( "<div dir=\"%1\">\n" ).arg( dir );
 
-  // Meeting summary & location rows
+  // Invitation summary & location rows
   html += invitationRow( i18n( "What:" ), sSummary );
   html += invitationRow( i18n( "Where:" ), sLocation );
 
-  // Meeting Start Time Row
+  // Invitation Start Time Row
   html += invitationRow( i18n( "Start Time:" ), eventStartTimeStr( event ) );
 
-  // Meeting End Time Row
+  // Invitation End Time Row
   html += invitationRow( i18n( "End Time:" ), eventEndTimeStr( event ) );
 
-  // Meeting Duration Row
+  // Invitation Duration Row
   if ( !event->allDay() && event->hasEndDate() && event->dtEnd().isValid() ) {
     QString tmp;
     QTime sDuration( 0, 0, 0 ), t;
@@ -967,17 +965,16 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     return i18n( "This event has been published" );
   case iTIPRequest:
     if ( event->revision() > 0 ) {
-      //TODO: 4.4, remove the h3 tag
-      return i18n( "<h3>This meeting has been updated</h3>" );
+      return i18n( "This invitation has been updated" );
     } else {
-      return i18n( "You have been invited to this meeting" );
+      return i18n( "You received an invitation" );
     }
   case iTIPRefresh:
     return i18n( "This invitation was refreshed" );
   case iTIPCancel:
-    return i18n( "This meeting has been canceled" );
+    return i18n( "This invitation has been canceled" );
   case iTIPAdd:
-    return i18n( "Addition to the meeting invitation" );
+    return i18n( "Addition to the invitation" );
   case iTIPReply:
   {
     Attendee::List attendees = event->attendees();
@@ -1009,21 +1006,21 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
       return i18n( "%1 indicates this invitation still needs some action", attendeeName );
     case Attendee::Accepted:
       if ( delegatorName.isEmpty() ) {
-        return i18n( "%1 accepts this meeting invitation", attendeeName );
+        return i18n( "%1 accepts this invitation", attendeeName );
       }
-      return i18n( "%1 accepts this meeting invitation on behalf of %2",
+      return i18n( "%1 accepts this invitation on behalf of %2",
                    attendeeName, delegatorName );
     case Attendee::Tentative:
       if ( delegatorName.isEmpty() ) {
-        return i18n( "%1 tentatively accepts this meeting invitation", attendeeName );
+        return i18n( "%1 tentatively accepts this invitation", attendeeName );
       }
-      return i18n( "%1 tentatively accepts this meeting invitation on behalf of %2",
+      return i18n( "%1 tentatively accepts this invitation on behalf of %2",
                    attendeeName, delegatorName );
     case Attendee::Declined:
       if ( delegatorName.isEmpty() ) {
-        return i18n( "%1 declines this meeting invitation", attendeeName );
+        return i18n( "%1 declines this invitation", attendeeName );
       }
-      return i18n( "%1 declines this meeting invitation on behalf of %2",
+      return i18n( "%1 declines this invitation on behalf of %2",
                    attendeeName, delegatorName );
     case Attendee::Delegated:
     {
@@ -1033,16 +1030,16 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
         delegate = attendee->delegate();
       }
       if ( !delegate.isEmpty() ) {
-        return i18n( "%1 has delegated this meeting invitation to %2", attendeeName, delegate );
+        return i18n( "%1 has delegated this invitation to %2", attendeeName, delegate );
       }
-      return i18n( "%1 has delegated this meeting invitation", attendeeName );
+      return i18n( "%1 has delegated this invitation", attendeeName );
     }
     case Attendee::Completed:
-      return i18n( "This meeting invitation is now completed" );
+      return i18n( "This invitation is now completed" );
     case Attendee::InProcess:
       return i18n( "%1 is still processing the invitation", attendeeName );
     default:
-      return i18n( "Unknown response to this meeting invitation" );
+      return i18n( "Unknown response to this invitation" );
     }
     break;
   }
@@ -1359,12 +1356,12 @@ class IncidenceFormatter::IncidenceCompareVisitor
       }
       if ( oldEvent->dtStart() != newEvent->dtStart() ||
            oldEvent->allDay() != newEvent->allDay() ) {
-        mChanges += i18n( "The begin of the meeting has been changed from %1 to %2",
+        mChanges += i18n( "The invitation starting time has been changed from %1 to %2",
                           eventStartTimeStr( oldEvent ), eventStartTimeStr( newEvent ) );
       }
       if ( oldEvent->dtEnd() != newEvent->dtEnd() ||
            oldEvent->allDay() != newEvent->allDay() ) {
-        mChanges += i18n( "The end of the meeting has been changed from %1 to %2",
+        mChanges += i18n( "The invitation ending time has been changed from %1 to %2",
                           eventEndTimeStr( oldEvent ), eventEndTimeStr( newEvent ) );
       }
     }
