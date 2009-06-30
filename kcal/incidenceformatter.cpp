@@ -1523,9 +1523,7 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
   html += "<p>";
   html += "<table border=\"0\" align=\"center\" cellspacing=\"4\"><tr>";
 
-  //TODO: 4.4, in tdOpen, change border-width:0px to border-width:2px and also
-  //remove the [] on the button strings: "Accept", "Decline", "Counter", etc.
-  const QString tdOpen = "<td style=\"border-width:0px;border-style:outset\">";
+  const QString tdOpen = "<td style=\"border-width:2px;border-style:outset\">";
   const QString tdClose = "</td>";
   Incidence *incidence = dynamic_cast<Incidence*>( incBase );
   switch ( msg->method() ) {
@@ -1537,10 +1535,9 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
     if ( incidence && incidence->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
       html += tdOpen;
       if ( incBase->type() == "Todo" ) {
-        //TODO: 4.4, remove the []
-        html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
+        html += helper->makeLink( "reply", i18n( "Enter this into my to-do list" ) );
       } else {
-        html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
+        html += helper->makeLink( "reply", i18n( "Enter this into my calendar" ) );
       }
       html += tdClose;
     }
@@ -1548,47 +1545,39 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
     if ( incidence && !existingIncidence ) {
       // Accept
       html += tdOpen;
-        //TODO: 4.4, remove the []
-      html += helper->makeLink( "accept", i18nc( "accept to-do request", "[Accept]" ) );
+      html += helper->makeLink( "accept", i18nc( "accept to-do request", "Accept" ) );
       html += tdClose;
 
       // Accept conditionally
       html += tdOpen;
-      //TODO: 4.4, remove the []
       html += helper->makeLink( "accept_conditionally",
-                                i18nc( "Accept conditionally", "[Accept cond.]" ) );
+                                i18nc( "Accept conditionally", "Accept cond." ) );
       html += tdClose;
 
       // Counter proposal
       html += tdOpen;
-      //TODO: 4.4, remove the []
-      html += helper->makeLink( "counter", i18n( "[Counter proposal]" ) );
+      html += helper->makeLink( "counter", i18n( "Counter proposal" ) );
       html += tdClose;
 
       // Decline
       html += tdOpen;
-      //TODO: 4.4, remove the []
-      html += helper->makeLink( "decline", i18nc( "decline to-do request", "[Decline]" ) );
+      html += helper->makeLink( "decline", i18nc( "decline to-do request", "Decline" ) );
       html += tdClose;
 
       // Delegate
       html += tdOpen;
-      //TODO: 4.4, remove the []
-      html += helper->makeLink( "delegate", i18nc( "delegate to-do to another", "[Delegate]" ) );
+      html += helper->makeLink( "delegate", i18nc( "delegate to-do to another", "Delegate" ) );
       html += tdClose;
 
       // Forward
       html += tdOpen;
-      //TODO: 4.4, remove the []
-      html += helper->makeLink( "forward", i18nc( "forward request to another", "[Forward]" ) );
+      html += helper->makeLink( "forward", i18nc( "forward request to another", "Forward" ) );
       html += tdClose;
 
       // Check in calendar
       if ( incBase->type() == "Event" ) {
         html += tdOpen;
-        //TODO: 4.4, remove the []
-        //TODO: 4.4, change to "Check calendar"
-        html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+        html += helper->makeLink( "check_calendar", i18n("Check my calendar" ) );
         html += tdClose;
       }
     }
@@ -1598,39 +1587,32 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
   case iTIPCancel:
     // Cancel event from my calendar
     html += tdOpen;
-    //TODO: 4.4, remove the []
-    html += helper->makeLink( "cancel", i18n( "[Remove this from my calendar]" ) );
+    html += helper->makeLink( "cancel", i18n( "Remove this from my calendar" ) );
     html += tdClose;
     break;
 
   case iTIPReply:
     // Enter this into my calendar
     html += tdOpen;
-    //TODO: 4.4, remove the []
-    //TODO: 4.4, change string to "Enter this response into my..."
     if ( incBase->type() == "Todo" ) {
-      html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
+      html += helper->makeLink( "reply", i18n( "Record response into my to-do list" ) );
     } else {
-      html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
+      html += helper->makeLink( "reply", i18n( "Record response into my calendar" ) );
     }
     html += tdClose;
     break;
 
   case iTIPCounter:
     html += tdOpen;
-    //TODO: 4.4, remove the []
-    html += helper->makeLink( "accept_counter", i18n( "[Accept]" ) );
+    html += helper->makeLink( "accept_counter", i18n( "Accept" ) );
     html += tdClose;
 
     html += tdOpen;
-    //TODO: 4.4, remove the []
-    html += helper->makeLink( "decline_counter", i18n( "[Decline]" ) );
+    html += helper->makeLink( "decline_counter", i18n( "Decline" ) );
     html += tdClose;
 
     html += tdOpen;
-    //TODO: 4.4, remove the []
-    //TODO: 4.4, change string to "Check calendar"
-    html += helper->makeLink( "check_calendar", i18n( "[Check my calendar]" ) );
+    html += helper->makeLink( "check_calendar", i18n( "Check my calendar" ) );
     html += tdClose;
     break;
 
