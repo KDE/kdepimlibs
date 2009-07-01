@@ -487,8 +487,10 @@ static QString eventViewerFormatJournal( Journal *journal, KDateTime::Spec spec 
     return QString();
   }
 
-  QString tmpStr = eventViewerFormatHeader( journal );
-
+  QString tmpStr;
+  if ( !journal->summary().isEmpty() ) {
+    tmpStr+= eventViewerAddTag( "h2", journal->richSummary() );
+  }
   tmpStr += eventViewerAddTag(
     "h3", i18n( "Journal for %1", IncidenceFormatter::dateToString( journal->dtStart(), false,
                                                                     spec ) ) );
@@ -1555,7 +1557,7 @@ class IncidenceFormatter::IncidenceCompareVisitor
         return false;
       }
       Incidence *inc = dynamic_cast<Incidence *>( incidence );
-      if ( inc && inc->revision() <= existingIncidence->revision() ) {
+      if ( !inc || !existingIncidence || inc->revision() <= existingIncidence->revision() ) {
         return false;
       }
       mExistingIncidence = existingIncidence;
@@ -1797,7 +1799,7 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
           // Accept
           html += tdOpen;
           html += helper->makeLink( "accept",
-                                    i18nc( "accept invitataion",
+                                    i18nc( "accept invitation",
                                            "Accept" ) );
           html += tdClose;
 
@@ -1997,7 +1999,8 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
   } else {
 
     ret += "<br>" +
-      i18n( "<i>Date:</i> %1", IncidenceFormatter::dateToString( event->dtStart(), true, mSpec ) );
+           i18n( "<i>Date:</i> %1",
+                 IncidenceFormatter::dateToString( event->dtStart(), true, mSpec ) );
     if ( !event->allDay() ) {
       const QString dtStartTime = IncidenceFormatter::timeToString( event->dtStart(), true, mSpec );
       const QString dtEndTime = IncidenceFormatter::timeToString( event->dtEnd(), true, mSpec );
@@ -2113,7 +2116,7 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
   if ( !incidence->location().isEmpty() ) {
     // Put Location: in italics
     tmp += "<br>" +
-           i18n( "<i>Location:</i>&nbsp;%1", incidence->richLocation() );
+           i18n( "<i>Location:</i> %1", incidence->richLocation() );
   }
 
   if ( !incidence->description().isEmpty() ) {
