@@ -741,7 +741,7 @@ static Attendee *findMyAttendee( Incidence *incidence )
 
     Attendee::List attendees = incidence->attendees();
     Attendee::List::ConstIterator it2;
-    for ( it2 = attendees.begin(); it2 != attendees.end(); ++it2 ) {
+    for ( it2 = attendees.constBegin(); it2 != attendees.constEnd(); ++it2 ) {
       Attendee *a = *it2;
       if ( settings.getSetting( KEMailSettings::EmailAddress ) == a->email() ) {
         attendee = a;
@@ -763,7 +763,7 @@ static Attendee *findAttendee( Incidence *incidence, const QString &email )
 
   Attendee::List attendees = incidence->attendees();
   Attendee::List::ConstIterator it;
-  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
     Attendee *a = *it;
     if ( email == a->email() ) {
       attendee = a;
@@ -780,8 +780,8 @@ static bool rsvpRequested( Incidence *incidence )
   bool rsvp = true; // better send superfluously than not at all
   Attendee::List attendees = incidence->attendees();
   Attendee::List::ConstIterator it;
-  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
-    if ( it == attendees.begin() ) {
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+    if ( it == attendees.constBegin() ) {
       rsvp = (*it)->RSVP(); // use what the first one has
     } else {
       if ( (*it)->RSVP() != rsvp ) {
@@ -1431,7 +1431,7 @@ static QString invitationAttendees( Incidence *incidence )
   if ( !attendees.isEmpty() ) {
 
     Attendee::List::ConstIterator it;
-    for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+    for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
       Attendee *a = *it;
       if ( !iamAttendee( a ) ) {
         count++;
