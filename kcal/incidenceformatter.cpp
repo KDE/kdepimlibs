@@ -21,6 +21,17 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
+/**
+  @file
+  This file is part of the API for handling calendar data and provides
+  static functions for formatting Incidences for various purposes.
+
+  @brief
+  Provides methods to format Incidences in various ways for display purposes.
+
+  @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
+*/
 
 #include "incidenceformatter.h"
 #include "attachment.h"
@@ -58,6 +69,7 @@ using namespace KCal;
  *  Helper functions for the extensive display (event viewer)
  *******************************************************************/
 
+//@cond PRIVATE
 static QString eventViewerAddLink( const QString &ref, const QString &text,
                                    bool newline = true )
 {
@@ -78,7 +90,7 @@ static QString eventViewerAddTag( const QString &tag, const QString &text )
     if ( numLineBreaks > 0 ) {
       int pos = 0;
       QString tmp;
-      for ( int i = 0; i <= numLineBreaks; i++ ) {
+      for ( int i = 0; i <= numLineBreaks; ++i ) {
         pos = tmpText.indexOf( "\n" );
         tmp = tmpText.left( pos );
         tmpText = tmpText.right( tmpText.length() - pos - 1 );
@@ -174,7 +186,7 @@ static QString eventViewerFormatAttendees( Incidence *event )
     tmpStr += eventViewerAddTag( "h4", i18n( "Attendees" ) );
     tmpStr += "<ul>";
     Attendee::List::ConstIterator it;
-    for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+    for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
       Attendee *a = *it;
       tmpStr += linkPerson( a->email(), a->name(), a->uid(), iconPath );
       if ( !a->delegator().isEmpty() ) {
@@ -195,7 +207,7 @@ static QString eventViewerFormatAttachments( Incidence *i )
   Attachment::List as = i->attachments();
   if ( as.count() > 0 ) {
     Attachment::List::ConstIterator it;
-    for ( it = as.begin(); it != as.end(); ++it ) {
+    for ( it = as.constBegin(); it != as.constEnd(); ++it ) {
       if ( (*it)->isUri() ) {
         tmpStr += eventViewerAddLink( (*it)->uri(), (*it)->label() );
         tmpStr += "<br>";
@@ -265,7 +277,9 @@ static QString eventViewerFormatHeader( Incidence *incidence )
     tmpStr += "</td>";
   }
 
-  tmpStr += "<td>" + eventViewerAddTag( "h2", incidence->richSummary() ) + "</td>";
+  tmpStr += "<td>" +
+            eventViewerAddTag( "h2", incidence->richSummary() ) +
+            "</td>";
   tmpStr += "</tr></table><br>";
 
   return tmpStr;
@@ -372,7 +386,6 @@ static QString eventViewerFormatEvent( Event *event )
     tmpStr += "<td>" + eventViewerFormatAttachments( event ) + "</td>";
     tmpStr += "</tr>";
   }
-
   tmpStr += "</table>";
   tmpStr += "<p><em>" +
             i18n( "Creation date: %1", KGlobal::locale()->formatDateTime(
@@ -503,9 +516,11 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
   tmpStr += eventViewerAddTag( "p", text );
   return tmpStr;
 }
+//@endcond
 
 //@cond PRIVATE
-class KCal::IncidenceFormatter::EventViewerVisitor : public IncidenceBase::Visitor
+class KCal::IncidenceFormatter::EventViewerVisitor
+  : public IncidenceBase::Visitor
 {
   public:
     EventViewerVisitor() { mResult = ""; }
@@ -556,6 +571,7 @@ QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
  *  Helper functions for the body part formatter of kmail
  *******************************************************************/
 
+//@cond PRIVATE
 static QString string2HTML( const QString &str )
 {
   return Qt::escape( str );
@@ -563,8 +579,7 @@ static QString string2HTML( const QString &str )
 
 static QString cleanHtml( const QString &html )
 {
-  QRegExp rx( "<body[^>]*>(.*)</body>",
-              Qt::CaseInsensitive );
+  QRegExp rx( "<body[^>]*>(.*)</body>", Qt::CaseInsensitive );
   rx.indexIn( html );
   QString body = rx.cap( 1 );
 
@@ -765,7 +780,9 @@ static QString invitationPerson( const QString &email, QString name, QString uid
     KUrl mailto;
     mailto.setProtocol( "mailto" );
     mailto.setPath( person.fullName() );
-    tmpString += eventViewerAddLink( mailto.url(), QString() );
+    const QString iconPath =
+      KIconLoader::global()->iconPath( "mail-message-new", KIconLoader::Small );
+    tmpString += eventViewerAddLink( mailto.url(), "<img src=\"" + iconPath + "\">" );
   }
   tmpString += '\n';
 
@@ -824,13 +841,14 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
     html += "<tr><td>" + descr + "</td></tr>";
     html += "</table>";
   }
+
   if ( !comments.isEmpty() ) {
     html += "<p>";
     html += "<table border=\"0\" style=\"margin-top:4px;\">";
     html += "<tr><td><center>" +
             eventViewerAddTag( "u", i18n( "Comments:" ) ) +
             "</center></td></tr>";
-    html += "<tr>";
+    html += "<tr><td>";
     if ( comments.count() > 1 ) {
       html += "<ul>";
       for ( int i=0; i < comments.count(); ++i ) {
@@ -840,7 +858,7 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
     } else {
       html += comments[0];
     }
-    html += "</tr>";
+    html += "</td></tr>";
     html += "</table>";
   }
   return html;
@@ -879,6 +897,7 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode )
 
   QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
   QString html = QString( "<div dir=\"%1\">\n" ).arg( dir );
+  html += "<table cellspacing=\"4\" style=\"border-width:4px; border-style:groove\">";
 
   // Invitation summary & location rows
   html += invitationRow( i18n( "What:" ), sSummary );
@@ -931,7 +950,7 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode )
     html += invitationRow( i18n( "Recurrence:" ), IncidenceFormatter::recurrenceString( event ) );
   }
 
-  html += "</div>\n";
+  html += "</table></div>\n";
   html += invitationsDetailsIncidence( event, noHtmlMode );
 
   return html;
@@ -958,9 +977,7 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode )
       sDescr = cleanHtml( sDescr );
     }
   }
-
-  QString html = "<table border=\"0\" width=\"80%\" align=\"center\" "
-                 "cellpadding=\"1\" cellspacing=\"1\">";
+  QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
   html += invitationRow( i18n( "Summary:" ), sSummary );
   html += invitationRow( i18n( "Description:" ), sDescr );
   html += "</table>\n";
@@ -989,8 +1006,7 @@ static QString invitationDetailsJournal( Journal *journal, bool noHtmlMode )
       sDescr = cleanHtml( sDescr );
     }
   }
-  QString html = "<table border=\"0\" width=\"80%\" align=\"center\" "
-                 "cellpadding=\"1\" cellspacing=\"1\">";
+  QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
   html += invitationRow( i18n( "Summary:" ), sSummary );
   html += invitationRow( i18n( "Date:" ),
                          journal->dtStartDateStr( false, journal->dtStart().timeSpec() ) );
@@ -1330,6 +1346,7 @@ static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
     return i18n( "Error: Free/Busy iMIP message with unknown method: '%1'", msg->method() );
   }
 }
+//@endcond
 
 static QString invitationAttendees( Incidence *incidence )
 {
@@ -1338,9 +1355,7 @@ static QString invitationAttendees( Incidence *incidence )
     return tmpStr;
   }
 
-  tmpStr += "<p>";
-  tmpStr += eventViewerAddTag( "u", i18n( "Attendee List" ) );
-  tmpStr += "<br/>";
+  tmpStr += i18n( "Invitation List" );
 
   int count=0;
   Attendee::List attendees = incidence->attendees();
@@ -1352,7 +1367,7 @@ static QString invitationAttendees( Incidence *incidence )
       if ( !iamAttendee( a ) ) {
         count++;
         if ( count == 1 ) {
-          tmpStr += "<table border=\"1\" cellpadding=\"1\" cellspacing=\"0\" columns=\"2\">";
+          tmpStr += "<table border=\"1\" cellpadding=\"1\" cellspacing=\"0\">";
         }
         tmpStr += "<tr>";
         tmpStr += "<td>";
@@ -1379,7 +1394,8 @@ static QString invitationAttendees( Incidence *incidence )
 }
 
 //@cond PRIVATE
-class KCal::IncidenceFormatter::ScheduleMessageVisitor : public IncidenceBase::Visitor
+class KCal::IncidenceFormatter::ScheduleMessageVisitor
+  : public IncidenceBase::Visitor
 {
   public:
     ScheduleMessageVisitor() : mMessage(0) { mResult = ""; }
@@ -1460,13 +1476,17 @@ QString InvitationFormatterHelper::generateLinkURL( const QString &id )
   return id;
 }
 
-class IncidenceFormatter::IncidenceCompareVisitor :
-  public IncidenceBase::Visitor
+//@cond PRIVATE
+class IncidenceFormatter::IncidenceCompareVisitor
+  : public IncidenceBase::Visitor
 {
   public:
     IncidenceCompareVisitor() : mExistingIncidence( 0 ) {}
     bool act( IncidenceBase *incidence, Incidence *existingIncidence )
     {
+      if ( !existingIncidence ) {
+        return false;
+      }
       Incidence *inc = dynamic_cast<Incidence *>( incidence );
       if ( !inc || !existingIncidence || inc->revision() <= existingIncidence->revision() ) {
         return false;
@@ -1576,6 +1596,7 @@ class IncidenceFormatter::IncidenceCompareVisitor :
     Incidence *mExistingIncidence;
     QStringList mChanges;
 };
+//@endcond
 
 QString InvitationFormatterHelper::makeLink( const QString &id, const QString &text )
 {
@@ -1628,15 +1649,14 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
 
   // First make the text of the message
   QString html;
-  html += "<div align=\"center\" style=\"border:solid 1px; width:80%;\">";
-  html += "<table cellspacing=\"4\" style=\"border-width:4px; border-style:groove\">";
+  html += "<div align=\"center\" style=\"border:solid 1px;\">";
 
   IncidenceFormatter::InvitationHeaderVisitor headerVisitor;
   // The InvitationHeaderVisitor returns false if the incidence is somehow invalid, or not handled
   if ( !headerVisitor.act( incBase, msg ) ) {
     return QString();
   }
-  html += "<tr>" + eventViewerAddTag( "h3", headerVisitor.result() ) + "</tr>";
+  html += eventViewerAddTag( "h3", headerVisitor.result() );
 
   IncidenceFormatter::InvitationBodyVisitor bodyVisitor( noHtmlMode );
   if ( !bodyVisitor.act( incBase, msg ) ) {
@@ -1697,14 +1717,12 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
     case iTIPRefresh:
     case iTIPAdd:
     {
-      if (  inc && inc->revision() > 0 && existingIncidence ) {
-        html += "<br>";
+      if ( inc && inc->revision() > 0 && existingIncidence ) {
         if ( inc->type() == "Todo" ) {
-          html += helper->makeLink( "reply", i18n( "[Record invitation to my task list]" ) );
+          html += helper->makeLink( "reply", i18n( "[Record invitation into my to-do list]" ) );
         } else {
-          html += helper->makeLink( "reply", i18n( "[Record invitation to my calendar]" ) );
+          html += helper->makeLink( "reply", i18n( "[Record invitation into my calendar]" ) );
         }
-        html += "</tr><tr>";
       }
 
       if ( !myInc ) {
@@ -1742,7 +1760,7 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
           html += tdClose;
         }
 
-        if (  !rsvpRec || ( inc && inc->revision() > 0 ) ) {
+        if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
           // Delegate
           html += tdOpen;
           html += helper->makeLink( "delegate",
@@ -1799,13 +1817,13 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
       if ( ea && ( ea->status() != Attendee::NeedsAction ) && ( ea->status() == a->status() ) ) {
         html += tdOpen;
         html += eventViewerAddTag( "i", i18n( "The response has already been recorded" ) );
+        html += tdClose;
       } else {
         if ( inc->type() == "Todo" ) {
-          html += helper->makeLink( "reply", i18n( "[Record response into my task list]" ) );
+          html += helper->makeLink( "reply", i18n( "[Record response into my to-do list]" ) );
         } else {
           html += helper->makeLink( "reply", i18n( "[Record response into my calendar]" ) );
         }
-        html += tdClose;
       }
       break;
     }
@@ -1838,10 +1856,11 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
     html += invitationAttendees( helper->calendar()->incidence( inc->uid() ) );
   }
 
-  // close the top-level table
-  html += "</table></div>";
+  // close the top-level
+  html += "</div>";
   return html;
 }
+//@endcond
 
 QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *mCalendar,
     InvitationFormatterHelper *helper )
@@ -1860,7 +1879,8 @@ QString IncidenceFormatter::formatICalInvitationNoHtml( QString invitation, Cale
  *******************************************************************/
 
 //@cond PRIVATE
-class KCal::IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
+class KCal::IncidenceFormatter::ToolTipVisitor
+  : public IncidenceBase::Visitor
 {
   public:
     ToolTipVisitor() : mRichText( true ), mResult( "" ) {}
@@ -1894,40 +1914,32 @@ class KCal::IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
 {
   //FIXME: support mRichText==false
-  //TODO: the &nbsp; in the strings are obsolete, they should be removed
-  //      (couldn't do that because of the string freeze)
   QString ret;
   QString tmp;
   if ( event->isMultiDay() ) {
 
     tmp = event->dtStartStr( true, event->dtStart().timeSpec() );
-    ret += "<br>" + i18nc( "Event start", "<i>From:</i>&nbsp;%1", tmp );
+    ret += "<br>" + i18nc( "Event start", "<i>From:</i> %1", tmp );
 
     tmp = event->dtEndStr( true, event->dtEnd().timeSpec() );
-    ret += "<br>" + i18nc( "Event end","<i>To:</i>&nbsp;%1", tmp );
+    ret += "<br>" + i18nc( "Event end","<i>To:</i> %1", tmp );
 
   } else {
 
     ret += "<br>" +
-           i18n( "<i>Date:</i>&nbsp;%1",
-                 event->dtStartDateStr(
-                   true, event->dtStart().timeSpec() ) );
+           i18n( "<i>Date:</i> %1", event->dtStartDateStr( true, event->dtStart().timeSpec() ) );
     if ( !event->allDay() ) {
       const QString dtStartTime = event->dtStartTimeStr( true, event->dtStart().timeSpec() );
       const QString dtEndTime = event->dtEndTimeStr( true, event->dtEnd().timeSpec() );
       if ( dtStartTime == dtEndTime ) {
         // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" +
-              // TODO: the comment is no longer true, &nbsp; is not needed anymore, I leave
-              // because of the string freeze
-              i18nc( "time for event, &nbsp; to prevent ugly line breaks", "<i>Time:</i>&nbsp;%1",
+              i18nc( "time for event, to prevent ugly line breaks", "<i>Time:</i> %1",
                      dtStartTime );
       } else {
         tmp = "<br>" +
-              // TODO: the comment is no longer true, &nbsp; is not needed anymore, I leave
-              // because of the string freeze
-              i18nc( "time range for event, &nbsp; to prevent ugly line breaks",
-                     "<i>Time:</i>&nbsp;%1&nbsp;-&nbsp;%2",
+              i18nc( "time range for event, to prevent ugly line breaks",
+                     "<i>Time:</i> %1 - %2",
                      dtStartTime, dtEndTime );
       }
       ret += tmp;
@@ -1939,25 +1951,23 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
 {
   //FIXME: support mRichText==false
-  //TODO: the &nbsp; in the strings are obsolete, they should be removed
-  //      (couldn't do that because of the string freeze)
   QString ret;
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
     // No need to add <i> here. This is separated issue and each line
     // is very visible on its own. On the other hand... Yes, I like it
     // italics here :)
-    ret += "<br>" + i18n( "<i>Start:</i>&nbsp;%1",
+    ret += "<br>" + i18n( "<i>Start:</i> %1",
                             todo->dtStartStr(
                             true, false, todo->dtStart().timeSpec() ) ) ;
   }
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
-    ret += "<br>" + i18n( "<i>Due:</i>&nbsp;%1",
+    ret += "<br>" + i18n( "<i>Due:</i> %1",
                             todo->dtDueStr(
                             true, todo->dtDue().timeSpec() ) );
   }
   if ( todo->isCompleted() ) {
     ret += "<br>" +
-           i18n( "<i>Completed:</i>&nbsp;%1", todo->completedStr() );
+           i18n( "<i>Completed:</i> %1", todo->completedStr() );
   } else {
     ret += "<br>" +
            i18nc( "percent complete", "%1 % completed", todo->percentComplete() );
@@ -1969,12 +1979,10 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal *journal )
 {
   //FIXME: support mRichText==false
-  //TODO: the &nbsp; in the strings are obsolete, they should be removed
-  //      (couldn't do that because of the string freeze)
   QString ret;
   if ( journal->dtStart().isValid() ) {
     ret += "<br>" +
-           i18n( "<i>Date:</i>&nbsp;%1",
+           i18n( "<i>Date:</i> %1",
                  journal->dtStartDateStr( false, journal->dtStart().timeSpec() ) );
   }
   return ret.replace( ' ', "&nbsp;" );
@@ -1983,14 +1991,12 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal *journal )
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( FreeBusy *fb )
 {
   //FIXME: support mRichText==false
-  //TODO: the &nbsp; in the strings are obsolete, they should be removed
-  //      (couldn't do that because of the string freeze)
   QString ret;
   ret = "<br>" +
-        i18n( "<i>Period start:</i>&nbsp;%1",
+        i18n( "<i>Period start:</i> %1",
               KGlobal::locale()->formatDateTime( fb->dtStart().dateTime() ) );
   ret += "<br>" +
-         i18n( "<i>Period start:</i>&nbsp;%1",
+         i18n( "<i>Period start:</i> %1",
                KGlobal::locale()->formatDateTime( fb->dtEnd().dateTime() ) );
   return ret.replace( ' ', "&nbsp;" );
 }
@@ -2038,7 +2044,7 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
   if ( !incidence->location().isEmpty() ) {
     // Put Location: in italics
     tmp += "<br>" +
-           i18n( "<i>Location:</i>&nbsp;%1", incidence->richLocation() );
+           i18n( "<i>Location:</i> %1", incidence->richLocation() );
   }
 
   if ( !incidence->description().isEmpty() ) {
@@ -2072,6 +2078,7 @@ QString IncidenceFormatter::toolTipString( IncidenceBase *incidence, bool richTe
  *  Helper functions for the Incidence tooltips
  *******************************************************************/
 
+//@cond PRIVATE
 static QString mailBodyIncidence( Incidence *incidence )
 {
   QString body;
@@ -2086,6 +2093,7 @@ static QString mailBodyIncidence( Incidence *incidence )
   }
   return body;
 }
+//@endcond
 
 //@cond PRIVATE
 class KCal::IncidenceFormatter::MailBodyVisitor : public IncidenceBase::Visitor
@@ -2232,6 +2240,7 @@ QString IncidenceFormatter::mailBodyString( IncidenceBase *incidence )
   return QString();
 }
 
+//@cond PRIVATE
 static QString recurEnd( Incidence *incidence )
 {
   QString endstr;
@@ -2242,6 +2251,7 @@ static QString recurEnd( Incidence *incidence )
   }
   return endstr;
 }
+//@endcond
 
 QString IncidenceFormatter::recurrenceString( Incidence *incidence )
 {
