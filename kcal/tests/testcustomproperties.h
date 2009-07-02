@@ -31,6 +31,7 @@ class CustomPropertiesTest : public QObject
     void testCompare();
     void testMapValidity();
     void testMapCompare();
+    void testEmpty();
 };
 
 #endif

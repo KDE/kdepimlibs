@@ -66,6 +66,10 @@ void CustomPropertiesTest::testCompare()
   cp3.setCustomProperty( app, key, cp1.customProperty( app, key ) );
   QVERIFY( cp1 == cp3 );
 
+  QVERIFY( cp1.customProperty( app, key ) == QString( "rich" ) );
+  QVERIFY( cp1.customProperty( app, "foo" ) == QString() );
+  QVERIFY( cp1.customProperty( app, QByteArray() ) == QString() );
+
   key = "X-TEXT";
   cp1.setNonKDECustomProperty( key, "rich" );
   cp2 = cp1;
@@ -73,6 +77,10 @@ void CustomPropertiesTest::testCompare()
 
   cp3.setNonKDECustomProperty( key, cp1.nonKDECustomProperty( key ) );
   QVERIFY( cp1 == cp3 );
+
+  QVERIFY( cp1.nonKDECustomProperty( key ) == QString( "rich" ) );
+  QVERIFY( cp1.nonKDECustomProperty( "foo" ) == QString() );
+  QVERIFY( cp1.nonKDECustomProperty( QByteArray() ) == QString() );
 }
 
 void CustomPropertiesTest::testMapValidity()
@@ -107,4 +115,28 @@ void CustomPropertiesTest::testMapCompare()
   CustomProperties cp3;
   cp3.setCustomProperties( cp1.customProperties() );
   QVERIFY( cp1 == cp3 );
+}
+
+void CustomPropertiesTest::testEmpty()
+{
+  CustomProperties cp;
+
+  QByteArray app( "KORG" );
+  QByteArray key( "TEXT" );
+  QString empty;
+
+  cp.setCustomProperty( app, key, empty );
+  QCOMPARE( cp.customProperty( app, key ), empty );
+
+  cp.removeCustomProperty( app, key );
+  cp.setCustomProperty( app, key, empty );
+  QCOMPARE( cp.customProperty( app, key ), empty );
+
+  key = "X-TEXT";
+  cp.setNonKDECustomProperty( key, empty );
+  QCOMPARE( cp.nonKDECustomProperty( key ), empty );
+
+  cp.removeNonKDECustomProperty( key );
+  cp.setNonKDECustomProperty( key, empty );
+  QCOMPARE( cp.nonKDECustomProperty( key ), empty );
 }
