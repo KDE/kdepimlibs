@@ -2397,7 +2397,12 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
     return false;
   } else {
     const char *version = icalproperty_get_version( p );
-
+    if ( !version ) {
+      kDebug() << "No VERSION property found";
+      d->mParent->setException( new ErrorFormat(
+                                  ErrorFormat::CalVersionUnknown ) );
+      return false;
+    }
     if ( strcmp( version, "1.0" ) == 0 ) {
       kDebug() << "Expected iCalendar, got vCalendar";
       d->mParent->setException(
