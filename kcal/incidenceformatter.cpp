@@ -476,8 +476,10 @@ static QString eventViewerFormatTodo( Todo *todo, KDateTime::Spec spec )
   tmpStr += eventViewerFormatAttachments( todo );
 
   KDateTime kdt = todo->created().toTimeSpec( spec );
-  tmpStr += "<p><em>" + i18n( "Creation date: %1",
-    KGlobal::locale()->formatDateTime( kdt.dateTime(), KLocale::ShortDate ) ) + "</em>";
+  tmpStr += "<p><em>" +
+            i18n( "Creation date: %1",
+                  KGlobal::locale()->formatDateTime( kdt.dateTime(), KLocale::ShortDate ) ) +
+            "</em>";
   return tmpStr;
 }
 
@@ -2332,13 +2334,11 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Todo *todo )
 bool IncidenceFormatter::MailBodyVisitor::visit( Journal *journal )
 {
   mResult = mailBodyIncidence( journal );
-  mResult += i18n( "Date: %1\n", IncidenceFormatter::dateToString( journal->dtStart(), true,
-                                                                mSpec ) );
-
+  mResult += i18n( "Date: %1\n",
+                   IncidenceFormatter::dateToString( journal->dtStart(), true, mSpec ) );
   if ( !journal->allDay() ) {
     mResult += i18n( "Time: %1\n",
                      IncidenceFormatter::timeToString( journal->dtStart(), true, mSpec ) );
-
   }
   if ( !journal->description().isEmpty() ) {
     mResult += i18n( "Text of the journal:\n%1\n", journal->richDescription() );
