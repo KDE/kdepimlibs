@@ -23,6 +23,7 @@
 #define KCAL_INCIDENCEFORMATTER_H
 
 #include "kcal_export.h"
+#include <KDE/KDateTime>
 #include <QtCore/QString>
 
 namespace KCal {
@@ -56,9 +57,68 @@ class KCAL_EXPORT InvitationFormatterHelper
 */
 namespace IncidenceFormatter
 {
-  KCAL_EXPORT QString toolTipString( IncidenceBase *incidence, bool richText = true );
-  KCAL_EXPORT QString mailBodyString( IncidenceBase *incidencebase );
-  KCAL_EXPORT QString extensiveDisplayString( IncidenceBase *incidence );
+  /**
+    Create a QString representation of an Incidence in a nice format
+    suitable for using in a tooltip.
+    @param incidence is a pointer to the Incidence to be formatted.
+    @param richText if yes, the QString will be created as RichText.
+    @param spec is an optional time specification which, when specified,
+    will shift the Incidence times to different timezones.
+    @since 4.2
+  */
+  KCAL_EXPORT QString toolTipStr( IncidenceBase *incidence,
+                                  bool richText=true,
+                                  KDateTime::Spec spec=KDateTime::Spec() );
+
+  /**
+    Create a QString representation of an Incidence in a nice format
+    suitable for using in a tooltip.
+    @param incidence is a pointer to the Incidence to be formatted.
+    @param richText if yes, the QString will be created as RichText.
+    @deprecated use toolTipStr( IncidenceBase *, bool, KDateTime::Spec)
+  */
+  KCAL_EXPORT KDE_DEPRECATED QString toolTipString( IncidenceBase *incidence,
+                                                    bool richText=true );
+
+  /**
+    Create a RichText QString representation of an Incidence in a nice format
+    suitable for using in a viewer widget.
+    @param incidence is a pointer to the Incidence to be formatted.
+    @param spec is an optional time specification which, when specified,
+    will shift the Incidence times to different timezones.
+    @since 4.2
+  */
+  KCAL_EXPORT QString extensiveDisplayStr( IncidenceBase *incidence,
+                                           KDateTime::Spec spec=KDateTime::Spec() );
+
+  /**
+    Create a RichText QString representation of an Incidence in a nice format
+    suitable for using in a viewer widget.
+    @param incidence is a pointer to the Incidence to be formatted.
+    @deprecated use extensiveDisplayStr( IncidenceBase *, KDateTime::Spec )
+  */
+  KCAL_EXPORT KDE_DEPRECATED QString extensiveDisplayString( IncidenceBase *incidence
+ );
+
+  /**
+    Create a QString representation of an Incidence in format suitable for
+    including inside a mail message.
+    @param incidence is a pointer to the Incidence to be formatted.
+    @param spec is an optional time specification which, when specified,
+    will shift the Incidence times to different timezones.
+    @since 4.2
+  */
+  KCAL_EXPORT QString mailBodyStr( IncidenceBase *incidence,
+                                   KDateTime::Spec spec=KDateTime::Spec() );
+
+/**
+    Create a QString representation of an Incidence in format suitable for
+    including inside a mail message.
+    @param incidence is a pointer to the Incidence to be formatted.
+    @deprecated use mailBodyStr( IncidenceBase *, KDateTime::Spec )
+  */
+  KCAL_EXPORT KDE_DEPRECATED QString mailBodyString( IncidenceBase *incidence );
+
   KCAL_EXPORT QString formatICalInvitation( QString invitation, Calendar *mCalendar,
                                             InvitationFormatterHelper *helper );
   /**
@@ -83,6 +143,43 @@ namespace IncidenceFormatter
     @since 4.1
   */
   KCAL_EXPORT QString recurrenceString( Incidence *incidence );
+
+  /**
+    Build a QString time representation of a KDateTime object.
+    @param date The date to be formatted.
+    @param shortfmt If true, display info in short format.
+    @param spec Time spec to use.
+    @see dateToString(), dateTimeToString().
+    @since 4.3
+  */
+  KCAL_EXPORT QString timeToString( const KDateTime &date, bool shortfmt = true,
+                                    const KDateTime::Spec &spec = KDateTime::Spec() );
+
+  /**
+    Build a QString date representation of a KDateTime object.
+    @param date The date to be formatted.
+    @param shortfmt If true, display info in short format.
+    @param spec Time spec to use.
+    @see dateToString(), dateTimeToString().
+    @since 4.3
+  */
+  KCAL_EXPORT QString dateToString( const KDateTime &date, bool shortfmt = true,
+                                    const KDateTime::Spec &spec = KDateTime::Spec() );
+
+  /**
+    Build a QString date/time representation of a KDateTime object.
+    @param date The date to be formatted.
+    @param dateOnly If true, don't print the time fields; print the date fields only.
+    @param shortfmt If true, display info in short format.
+    @param spec Time spec to use.
+    @see dateToString(), timeToString().
+    @since 4.3
+  */
+  KCAL_EXPORT QString dateTimeToString( const KDateTime &date,
+                                        bool dateOnly = false,
+                                        bool shortfmt = true,
+                                        const KDateTime::Spec &spec = KDateTime::Spec() );
+
 
   class EventViewerVisitor;
   class ScheduleMessageVisitor;
