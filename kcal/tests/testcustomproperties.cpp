@@ -70,6 +70,11 @@ void CustomPropertiesTest::testCompare()
   QVERIFY( cp1.customProperty( app, "foo" ) == QString() );
   QVERIFY( cp1.customProperty( app, QByteArray() ) == QString() );
 
+  CustomProperties cp4;
+  QVERIFY( cp4.customProperty( app, key ) == QString() );
+  QVERIFY( cp4.customProperty( app, "foo" ) == QString() );
+  QVERIFY( cp4.customProperty( app, QByteArray() ) == QString() );
+
   key = "X-TEXT";
   cp1.setNonKDECustomProperty( key, "rich" );
   cp2 = cp1;
@@ -81,6 +86,11 @@ void CustomPropertiesTest::testCompare()
   QVERIFY( cp1.nonKDECustomProperty( key ) == QString( "rich" ) );
   QVERIFY( cp1.nonKDECustomProperty( "foo" ) == QString() );
   QVERIFY( cp1.nonKDECustomProperty( QByteArray() ) == QString() );
+
+  CustomProperties cp5;
+  QVERIFY( cp5.nonKDECustomProperty( key ) == QString() );
+  QVERIFY( cp5.nonKDECustomProperty( "foo" ) == QString() );
+  QVERIFY( cp5.nonKDECustomProperty( QByteArray() ) == QString() );
 }
 
 void CustomPropertiesTest::testMapValidity()
