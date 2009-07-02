@@ -2397,16 +2397,24 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
     return false;
   } else {
     const char *version = icalproperty_get_version( p );
-
+    if ( !version ) {
+      kDebug() << "No VERSION property found";
+      d->mParent->setException( new ErrorFormat(
+                                  ErrorFormat::CalVersionUnknown,
+                                  i18n( "No VERSION property found" ) ) );
+      return false;
+    }
     if ( strcmp( version, "1.0" ) == 0 ) {
       kDebug() << "Expected iCalendar, got vCalendar";
-      d->mParent->setException(
-        new ErrorFormat( ErrorFormat::CalVersion1,
-                         i18n( "Expected iCalendar format" ) ) );
+      d->mParent->setException( new ErrorFormat(
+                                  ErrorFormat::CalVersion1,
+                                  i18n( "Expected iCalendar, got vCalendar format" ) ) );
       return false;
     } else if ( strcmp( version, "2.0" ) != 0 ) {
       kDebug() << "Expected iCalendar, got unknown format";
-      d->mParent->setException( new ErrorFormat( ErrorFormat::CalVersionUnknown ) );
+      d->mParent->setException( new ErrorFormat(
+                                  ErrorFormat::CalVersionUnknown,
+                                  i18n( "Expected iCalendar, got unknown format" ) ) );
       return false;
     }
   }
