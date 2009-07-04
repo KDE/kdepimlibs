@@ -6,7 +6,6 @@
   <kcfgfile name="mailtransports">
     <parameter name="transportId" />
   </kcfgfile>
-  <include>KLocale</include>
 
   <group name="Transport $(transportId)">
     <entry name="id" type="Int">
