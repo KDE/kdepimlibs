@@ -4,6 +4,7 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <include>kcal/kcal_export.h</include>
+  <include>klocale.h</include>
   <kcfgfile name="libkcal_htmlexportrc">
     <parameter name="application" />
   </kcfgfile>
