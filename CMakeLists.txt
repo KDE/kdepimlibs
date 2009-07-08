@@ -11,12 +11,12 @@ option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 2)
-set(KDEPIMLIBS_VERSION_PATCH 95)
+set(KDEPIMLIBS_VERSION_PATCH 96)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 ############### search packages used by KDE ###############
 
-find_package(KDE4 4.2.95 REQUIRED) # see SVN rev. 952875/954493
+find_package(KDE4 4.2.96 REQUIRED) # see SVN rev. 952875/954493
 include(KDE4Defaults)
 include(MacroLibrary)
 
