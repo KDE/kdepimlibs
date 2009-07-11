@@ -88,6 +88,7 @@ Content::~Content()
   qDeleteAll( h_eaders );
   h_eaders.clear();
   delete d_ptr;
+  d_ptr = 0;
 }
 
 bool Content::hasContent() const
@@ -385,10 +386,18 @@ void Content::clear()
   Q_D(Content);
   qDeleteAll( h_eaders );
   h_eaders.clear();
-  qDeleteAll( d->contents );
-  d->contents.clear();
+  clearContents();
   d->head.clear();
   d->body.clear();
+}
+
+void Content::clearContents( bool del )
+{
+  Q_D(Content);
+  if( del ) {
+    qDeleteAll( d->contents );
+  }
+  d->contents.clear();
 }
 
 QByteArray Content::encodedContent( bool useCrLf )

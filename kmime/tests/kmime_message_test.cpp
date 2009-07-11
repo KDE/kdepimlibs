@@ -56,6 +56,11 @@ void MessageTest::testMainBodyPart()
   QCOMPARE( msg2->mainBodyPart( "text/plain" ), text );
   QCOMPARE( msg2->mainBodyPart( "text/html" ), (Content*)0 );
 
+  // Careful with removing content here.  If we remove one of the two contents
+  // (by adding it to another message), the multipart will automatically be
+  // converted to a single-part, deleting the other content!
+  msg2->clearContents( false );
+
   // mulitpart/alternative
   msg->contentType()->setMimeType( "multipart/alternative" );
   msg->addContent( html );
