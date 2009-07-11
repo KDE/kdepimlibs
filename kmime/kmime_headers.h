@@ -68,13 +68,16 @@ enum contentCategory {
   CCalternativePart
 };
 
+/**
+  Various possible values for the "Content-Transfer-Encoding" header.
+*/
 enum contentEncoding {
-  CE7Bit,
-  CE8Bit,
-  CEquPr,
-  CEbase64,
-  CEuuenc,
-  CEbinary
+  CE7Bit,              ///< 7bit
+  CE8Bit,              ///< 8bit
+  CEquPr,              ///< quoted-printable
+  CEbase64,            ///< base64
+  CEuuenc,             ///< uuencode
+  CEbinary             ///< binary
 };
 
 enum contentDisposition {
