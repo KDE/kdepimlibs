@@ -24,7 +24,7 @@
 #include <KDebug>
 
 using namespace Akonadi;
-using namespace OutboxInterface;
+using namespace MailTransport;
 
 class SentBehaviourAttribute::Private
 {

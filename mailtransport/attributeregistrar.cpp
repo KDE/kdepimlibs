@@ -30,7 +30,7 @@ namespace {
 bool dummy()
 {
   using namespace Akonadi;
-  using namespace OutboxInterface;
+  using namespace MailTransport;
   AttributeFactory::registerAttribute<DispatchModeAttribute>();
   AttributeFactory::registerAttribute<ErrorAttribute>();
   AttributeFactory::registerAttribute<SentBehaviourAttribute>();

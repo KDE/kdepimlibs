@@ -17,60 +17,65 @@
     02110-1301, USA.
 */
 
-#include "errorattribute.h"
+#include "transportattribute.h"
 
-#include <QDataStream>
+#include "transportmanager.h"
 
 #include <KDebug>
 
 using namespace Akonadi;
-using namespace OutboxInterface;
+using namespace MailTransport;
 
-class ErrorAttribute::Private
+class TransportAttribute::Private
 {
   public:
-    QString mMessage;
+    int mId;
 };
 
-ErrorAttribute::ErrorAttribute( const QString &msg )
+TransportAttribute::TransportAttribute( int id )
   : d( new Private )
 {
-  d->mMessage = msg;
+  d->mId = id;
 }
 
-ErrorAttribute::~ErrorAttribute()
+TransportAttribute::~TransportAttribute()
 {
   delete d;
 }
 
-ErrorAttribute* ErrorAttribute::clone() const
+TransportAttribute* TransportAttribute::clone() const
 {
-  return new ErrorAttribute( d->mMessage );
+  return new TransportAttribute( d->mId );
 }
 
-QByteArray ErrorAttribute::type() const
+QByteArray TransportAttribute::type() const
 {
-  static const QByteArray sType( "ErrorAttribute" );
+  static const QByteArray sType( "TransportAttribute" );
   return sType;
 }
 
-QByteArray ErrorAttribute::serialized() const
+QByteArray TransportAttribute::serialized() const
 {
-  return d->mMessage.toUtf8();
+  return QByteArray::number( d->mId );
 }
 
-void ErrorAttribute::deserialize( const QByteArray &data )
+void TransportAttribute::deserialize( const QByteArray &data )
 {
-  d->mMessage = QString::fromUtf8( data );
+  d->mId = data.toInt();
 }
 
-QString ErrorAttribute::message() const
+int TransportAttribute::transportId() const
 {
-  return d->mMessage;
+  return d->mId;
 }
 
-void ErrorAttribute::setMessage( const QString &msg )
+Transport* TransportAttribute::transport() const
 {
-  d->mMessage = msg;
+  return TransportManager::self()->transportById( d->mId, false );
+}
+
+void TransportAttribute::setTransportId( int id )
+{
+  d->mId = id;
 }
 

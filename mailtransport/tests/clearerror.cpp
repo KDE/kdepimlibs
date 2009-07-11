@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "sendqueued.h"
+#include "clearerror.h"
 
 #include <KApplication>
 #include <KCmdLineArgs>
@@ -29,10 +29,10 @@
 #include <akonadi/filteractionjob.h>
 #include <akonadi/kmime/localfolders.h>
 
-#include <outboxinterface/outboxactions.h>
+#include <mailtransport/outboxactions.h>
 
 using namespace Akonadi;
-using namespace OutboxInterface;
+using namespace MailTransport;
 
 
 Runner::Runner()
@@ -53,7 +53,7 @@ void Runner::checkFolders()
     KApplication::exit( 1 );
   }
 
-  FilterActionJob *fjob = new FilterActionJob( outbox, new SendQueuedAction, this );
+  FilterActionJob *fjob = new FilterActionJob( outbox, new ClearErrorAction, this );
   connect( fjob, SIGNAL(result(KJob*)), this, SLOT(jobResult(KJob*)) );
 }
 
@@ -70,13 +70,13 @@ void Runner::jobResult( KJob *job )
 
 int main( int argc, char **argv )
 {
-  KCmdLineArgs::init( argc, argv, "sendqueued", 0,
-                      ki18n( "sendqueued" ), "0",
-                      ki18n( "An app that sends all queued messages" ) );
+  KCmdLineArgs::init( argc, argv, "clearerror", 0,
+                      ki18n( "clearerror" ), "0",
+                      ki18n( "An app that re-queues failed items from the outbox" ) );
   KApplication app;
   new Runner();
   return app.exec();
 }
 
 
-#include "sendqueued.moc"
+#include "clearerror.moc"

@@ -19,7 +19,9 @@
 
 #include "messagequeuejob.h"
 
+#include "transport.h"
 #include "transportattribute.h"
+#include "transportmanager.h"
 
 #include <KDebug>
 #include <KLocalizedString>
@@ -30,18 +32,14 @@
 #include <akonadi/kmime/addressattribute.h>
 #include <akonadi/kmime/localfolders.h>
 
-#include <mailtransport/transport.h>
-#include <mailtransport/transportmanager.h>
-
 using namespace Akonadi;
 using namespace KMime;
 using namespace MailTransport;
-using namespace OutboxInterface;
 
 /**
   @internal
 */
-class OutboxInterface::MessageQueueJob::Private
+class MailTransport::MessageQueueJob::Private
 {
   public:
     Private( MessageQueueJob *qq )
@@ -135,7 +133,7 @@ void MessageQueueJob::Private::doStart()
 
   // Create item.
   Item item;
-  item.setMimeType( "message/rfc822" );
+  item.setMimeType( QLatin1String( "message/rfc822" ) );
   item.setPayload<Message::Ptr>( message );
 
   // Set attributes.

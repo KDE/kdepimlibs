@@ -1,6 +1,0 @@
-MessageQueueJob:
-- see source
-
-Attributes:
-- add test for serialization and common mistakes such as forgetting to setDueDate
-

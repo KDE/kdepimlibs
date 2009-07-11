@@ -24,7 +24,7 @@
 #include "akonadi/attributefactory.h"
 
 using namespace Akonadi;
-using namespace OutboxInterface;
+using namespace MailTransport;
 
 class DispatchModeAttribute::Private
 {
@@ -77,7 +77,7 @@ void DispatchModeAttribute::deserialize( const QByteArray &data )
     d->mMode = Never;
   } else if ( data.startsWith( QByteArray( "after" ) ) ) {
     d->mMode = AfterDueDate;
-    d->mDueDate = QDateTime::fromString( data.mid(5), Qt::ISODate );
+    d->mDueDate = QDateTime::fromString( QString::fromLatin1( data.mid(5) ), Qt::ISODate );
     // NOTE: 5 is the strlen of "after".
   } else {
     kWarning() << "Failed to deserialize data [" << data << "]";

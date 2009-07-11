@@ -17,10 +17,10 @@
     02110-1301, USA.
 */
 
-#ifndef OUTBOXINTERFACE_MESSAGEQUEUEJOB_H
-#define OUTBOXINTERFACE_MESSAGEQUEUEJOB_H
+#ifndef MAILTRANSPORT_MESSAGEQUEUEJOB_H
+#define MAILTRANSPORT_MESSAGEQUEUEJOB_H
 
-#include <outboxinterface/outboxinterface_export.h>
+#include <mailtransport/mailtransport_export.h>
 
 #include "dispatchmodeattribute.h"
 #include "sentbehaviourattribute.h"
@@ -36,7 +36,7 @@
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
-namespace OutboxInterface {
+namespace MailTransport {
 
 /**
   @short Provides an interface for sending email.
@@ -72,7 +72,7 @@ namespace OutboxInterface {
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class OUTBOXINTERFACE_EXPORT MessageQueueJob : public KCompositeJob
+class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
 {
   Q_OBJECT
 
@@ -250,6 +250,6 @@ class OUTBOXINTERFACE_EXPORT MessageQueueJob : public KCompositeJob
 
 };
 
-} // namespace OutboxInterface
+} // namespace MailTransport
 
-#endif // OUTBOXINTERFACE_MESSAGEQUEUEJOB_H
+#endif // MAILTRANSPORT_MESSAGEQUEUEJOB_H

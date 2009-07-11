@@ -20,6 +20,8 @@
 #ifndef TRANSPORTMGR_H
 #define TRANSPORTMGR_H
 
+#define USES_DEPRECATED_MAILTRANSPORT_API
+
 #include <KVBox>
 #include <mailtransport/transportcombobox.h>
 

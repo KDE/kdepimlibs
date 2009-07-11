@@ -23,13 +23,13 @@
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/kmime/addressattribute.h>
 
-#include <outboxinterface/dispatchmodeattribute.h>
-#include <outboxinterface/errorattribute.h>
-#include <outboxinterface/sentbehaviourattribute.h>
-#include <outboxinterface/transportattribute.h>
+#include <mailtransport/dispatchmodeattribute.h>
+#include <mailtransport/errorattribute.h>
+#include <mailtransport/sentbehaviourattribute.h>
+#include <mailtransport/transportattribute.h>
 
 using namespace Akonadi;
-using namespace OutboxInterface;
+using namespace MailTransport;
 
 void AttributeTest::initTestCase()
 {

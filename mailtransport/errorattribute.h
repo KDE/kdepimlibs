@@ -17,64 +17,52 @@
     02110-1301, USA.
 */
 
-#ifndef OUTBOXINTERFACE_TRANSPORTATTRIBUTE_H
-#define OUTBOXINTERFACE_TRANSPORTATTRIBUTE_H
+#ifndef MAILTRANSPORT_ERRORATTRIBUTE_H
+#define MAILTRANSPORT_ERRORATTRIBUTE_H
 
-#include <outboxinterface/outboxinterface_export.h>
+#include <mailtransport/mailtransport_export.h>
+
+#include <QtCore/QString>
 
 #include <akonadi/attribute.h>
 
 namespace MailTransport {
-  class Transport;
-}
 
-namespace OutboxInterface {
-
-/** 
-  Attribute determining which transport to use for sending a message.
-
-  @see mailtransport
-  @see TransportManager.
+/**
+  Attribute given to the messages that failed to be sent.  Contains the error
+  message encountered.
 
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class OUTBOXINTERFACE_EXPORT TransportAttribute : public Akonadi::Attribute
+class MAILTRANSPORT_EXPORT ErrorAttribute : public Akonadi::Attribute
 {
   public:
     /**
-      Creates a new TransportAttribute.
+      Creates a new ErrorAttribute.
     */
-    TransportAttribute( int id = -1 );
+    ErrorAttribute( const QString &msg = QString() );
 
     /**
-      Destroys this TransportAttribute.
+      Destroys this ErrorAttribute.
     */
-    virtual ~TransportAttribute();
+    virtual ~ErrorAttribute();
 
     /* reimpl */
-    virtual TransportAttribute* clone() const;
+    virtual ErrorAttribute* clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );
 
     /**
-      Returns the transport id to use for sending this message.
-      @see TransportManager.
+      Returns the i18n'ed error message.
     */
-    int transportId() const;
+    QString message() const;
 
     /**
-      Returns the transport object corresponding to the transport id contained
-      in this attribute.
-      @see Transport.
+      Sets the error message.
     */
-    MailTransport::Transport* transport() const;
-
-    /**
-      Sets the transport id to use for sending this message.
-    */
-    void setTransportId( int id );
+    void setMessage( const QString &msg );
 
   private:
     class Private;
@@ -82,6 +70,6 @@ class OUTBOXINTERFACE_EXPORT TransportAttribute : public Akonadi::Attribute
 
 };
 
-} // namespace OutboxInterface
+} // namespace MailTransport
 
-#endif // OUTBOXINTERFACE_TRANSPORTATTRIBUTE_H
+#endif // MAILTRANSPORT_ERRORATTRIBUTE_H

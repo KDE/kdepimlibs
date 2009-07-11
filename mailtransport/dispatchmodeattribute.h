@@ -17,16 +17,16 @@
     02110-1301, USA.
 */
 
-#ifndef OUTBOXINTERFACE_DISPATCHMODEATTRIBUTE_H
-#define OUTBOXINTERFACE_DISPATCHMODEATTRIBUTE_H
+#ifndef MAILTRANSPORT_DISPATCHMODEATTRIBUTE_H
+#define MAILTRANSPORT_DISPATCHMODEATTRIBUTE_H
 
-#include <outboxinterface/outboxinterface_export.h>
+#include <mailtransport/mailtransport_export.h>
 
 #include <QtCore/QDateTime>
 
 #include <akonadi/attribute.h>
 
-namespace OutboxInterface {
+namespace MailTransport {
 
 /**
   Attribute determining how and when a message from the outbox should be
@@ -36,7 +36,7 @@ namespace OutboxInterface {
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class OUTBOXINTERFACE_EXPORT DispatchModeAttribute : public Akonadi::Attribute
+class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
 {
   public:
     /**
@@ -96,6 +96,6 @@ class OUTBOXINTERFACE_EXPORT DispatchModeAttribute : public Akonadi::Attribute
 
 };
 
-} // namespace OutboxInterface
+} // namespace MailTransport
 
-#endif // OUTBOXINTERFACE_DISPATCHMODEATTRIBUTE_H
+#endif // MAILTRANSPORT_DISPATCHMODEATTRIBUTE_H

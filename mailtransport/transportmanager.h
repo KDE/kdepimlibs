@@ -44,8 +44,12 @@ class TransportJob;
   @short Central transport management interface.
 
   This class manages the creation, configuration, and removal of mail
-  transports, as well as the loading and storing of mail transport settings,
-  and creation of transport jobs.
+  transports, as well as the loading and storing of mail transport settings.
+
+  It also handles the creation of transport jobs, although that behaviour is
+  deprecated and you are encouraged to use MessageQueueJob.
+
+  @see MessageQueueJob.
 */
 class MAILTRANSPORT_EXPORT TransportManager : public QObject
 {
@@ -126,24 +130,33 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       Creates a mail transport job for the given transport identifier.
       Returns 0 if the specified transport is invalid.
       @param transportId The transport identifier.
+
+      @deprecated use MessageQueueJob to queue messages
+                  and rely on the Dispatcher Agent to send them.
     */
-    TransportJob *createTransportJob( int transportId );
+    MAILTRANSPORT_DEPRECATED TransportJob *createTransportJob( int transportId );
 
     /**
       Creates a mail transport job for the given transport identifer,
       or transport name.
       Returns 0 if the specified transport is invalid.
       @param transport A string defining a mail transport.
+
+      @deprecated use MessageQueueJob to queue messages
+                  and rely on the Dispatcher Agent to send them.
     */
-    TransportJob *createTransportJob( const QString &transport );
+    MAILTRANSPORT_DEPRECATED TransportJob *createTransportJob( const QString &transport );
 
     /**
       Executes the given transport job. This is the preferred way to start
       transport jobs. It takes care of asynchronously loading passwords from
       KWallet if necessary.
       @param job The completely configured transport job to execute.
+
+      @deprecated use MessageQueueJob to queue messages
+                  and rely on the Dispatcher Agent to send them.
     */
-    void schedule( TransportJob *job );
+    MAILTRANSPORT_DEPRECATED void schedule( TransportJob *job );
 
     /**
       Tries to create a transport based on KEMailSettings.

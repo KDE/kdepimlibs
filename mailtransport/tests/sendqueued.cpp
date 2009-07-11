@@ -17,52 +17,66 @@
     02110-1301, USA.
 */
 
-#include "abort.h"
-
-#include <QTimer>
+#include "sendqueued.h"
 
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KDebug>
+#include <KJob>
 
+#include <akonadi/collection.h>
 #include <akonadi/control.h>
+#include <akonadi/filteractionjob.h>
+#include <akonadi/kmime/localfolders.h>
 
-#include <outboxinterface/dispatcherinterface.h>
+#include <mailtransport/outboxactions.h>
 
 using namespace Akonadi;
-using namespace OutboxInterface;
+using namespace MailTransport;
 
 
 Runner::Runner()
 {
   Control::start();
 
-  QTimer::singleShot( 0, this, SLOT(sendAbort()) );
+  connect( LocalFolders::self(), SIGNAL( foldersReady() ),
+      this, SLOT( checkFolders() ) );
+  LocalFolders::self()->fetch();
 }
 
-void Runner::sendAbort()
+void Runner::checkFolders()
 {
-  const AgentInstance mda = DispatcherInterface::self()->dispatcherInstance();
-  if( !mda.isValid() ) {
-    kDebug() << "Invalid instance; waiting.";
-    QTimer::singleShot( 1000, this, SLOT(sendAbort()) );
-    return;
+  Collection outbox = LocalFolders::self()->outbox();
+  kDebug() << "Got outbox" << outbox.id();
+
+  if( !outbox.isValid() ) {
+    KApplication::exit( 1 );
   }
 
-  mda.abort();
-  kDebug() << "Told the MDA to abort.";
-  KApplication::exit( 0 );
+  FilterActionJob *fjob = new FilterActionJob( outbox, new SendQueuedAction, this );
+  connect( fjob, SIGNAL(result(KJob*)), this, SLOT(jobResult(KJob*)) );
+}
+
+void Runner::jobResult( KJob *job )
+{
+  if( job->error() ) {
+    kDebug() << "Job error:" << job->errorString();
+    KApplication::exit( 2 );
+  } else {
+    kDebug() << "Job success.";
+    KApplication::exit( 0 );
+  }
 }
 
 int main( int argc, char **argv )
 {
-  KCmdLineArgs::init( argc, argv, "abort", 0,
-                      ki18n( "abort" ), "0",
-                      ki18n( "An app that sends an abort signal to the MDA" ) );
+  KCmdLineArgs::init( argc, argv, "sendqueued", 0,
+                      ki18n( "sendqueued" ), "0",
+                      ki18n( "An app that sends all queued messages" ) );
   KApplication app;
   new Runner();
   return app.exec();
 }
 
 
-#include "abort.moc"
+#include "sendqueued.moc"

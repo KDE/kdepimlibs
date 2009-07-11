@@ -9,6 +9,7 @@ add_subdirectory( tests )
 
 add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5324 )
+add_definitions( -DUSES_DEPRECATED_MAILTRANSPORT_API ) # for transportmanager
 
 set(mailtransport_lib_srcs
   transport.cpp
@@ -26,7 +27,7 @@ set(mailtransport_lib_srcs
   smtpconfigwidget.cpp
 
   transportjob.cpp
-  akonadijob.cpp
+  resourcesendjob.cpp
   sendmailjob.cpp
   smtpjob.cpp
   precommandjob.cpp
@@ -34,6 +35,16 @@ set(mailtransport_lib_srcs
   legacydecrypt.cpp
   socket.cpp
   servertest.cpp
+
+  dispatcherinterface.cpp
+  messagequeuejob.cpp
+  outboxactions.cpp
+
+  attributeregistrar.cpp
+  dispatchmodeattribute.cpp
+  errorattribute.cpp
+  sentbehaviourattribute.cpp
+  transportattribute.cpp
 )
 
 
@@ -63,7 +74,7 @@ install( FILES
         mailtransport_export.h
 
         transportjob.h
-        akonadijob.h
+        resourcesendjob.h
         sendmailjob.h
         smtpjob.h
 
@@ -76,6 +87,15 @@ install( FILES
         transportcombobox.h
         transportconfigdialog.h
         transportmanagementwidget.h
+
+        dispatcherinterface.h
+        messagequeuejob.h
+        outboxactions.h
+
+        dispatchmodeattribute.h
+        errorattribute.h
+        sentbehaviourattribute.h
+        transportattribute.h
 
         DESTINATION ${INCLUDE_INSTALL_DIR}/mailtransport COMPONENT Devel)
 

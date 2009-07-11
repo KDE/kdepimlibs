@@ -32,8 +32,20 @@
 # endif
 #endif
 
-#ifndef MAILTRANSPORT_EXPORT_DEPRECATED
-# define MAILTRANSPORT_EXPORT_DEPRECATED KDE_DEPRECATED MAILTRANSPORT_EXPORT
+// TODO KDE5: Get rid of all this.
+#ifndef MAILTRANSPORT_DEPRECATED
+# if defined( USES_DEPRECATED_MAILTRANSPORT_API )
+   /* Avoid deprecated warnings from ourselves and the MDA. */
+#  define MAILTRANSPORT_DEPRECATED
+# else
+   /* Show deprecated warnings for anyone else. */
+#  define MAILTRANSPORT_DEPRECATED KDE_DEPRECATED
+# endif
 #endif
+
+#ifndef MAILTRANSPORT_EXPORT_DEPRECATED
+# define MAILTRANSPORT_EXPORT_DEPRECATED MAILTRANSPORT_DEPRECATED MAILTRANSPORT_EXPORT
+#endif
+
 
 #endif

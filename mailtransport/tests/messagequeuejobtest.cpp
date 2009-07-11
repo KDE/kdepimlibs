@@ -34,24 +34,22 @@
 #include <akonadi/kmime/localfolders.h>
 #include <akonadi/kmime/addressattribute.h>
 
-#include <mailtransport/transportmanager.h>
-#include <mailtransport/transport.h>
-
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
-#include <outboxinterface/dispatchmodeattribute.h>
-#include <outboxinterface/errorattribute.h>
-#include <outboxinterface/messagequeuejob.h>
-#include <outboxinterface/sentbehaviourattribute.h>
-#include <outboxinterface/transportattribute.h>
+#include <mailtransport/dispatchmodeattribute.h>
+#include <mailtransport/errorattribute.h>
+#include <mailtransport/messagequeuejob.h>
+#include <mailtransport/sentbehaviourattribute.h>
+#include <mailtransport/transport.h>
+#include <mailtransport/transportattribute.h>
+#include <mailtransport/transportmanager.h>
 
 #define SPAM_ADDRESS ( QStringList() << "idanoka@gmail.com" )
 
 using namespace Akonadi;
 using namespace KMime;
 using namespace MailTransport;
-using namespace OutboxInterface;
 
 
 void MessageQueueJobTest::initTestCase()

@@ -25,7 +25,7 @@
 #include <akonadi/itemmodifyjob.h>
 
 using namespace Akonadi;
-using namespace OutboxInterface;
+using namespace MailTransport;
 
 ItemFetchScope SendQueuedAction::fetchScope() const
 {

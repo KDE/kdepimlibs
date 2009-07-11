@@ -17,16 +17,16 @@
     02110-1301, USA.
 */
 
-#ifndef OUTBOXINTERFACE_OUTBOXACTIONS_H
-#define OUTBOXINTERFACE_OUTBOXACTIONS_H
+#ifndef MAILTRANSPORT_OUTBOXACTIONS_H
+#define MAILTRANSPORT_OUTBOXACTIONS_H
 
-#include <outboxinterface/outboxinterface_export.h>
+#include <mailtransport/mailtransport_export.h>
 
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/job.h>
 #include <akonadi/filteractionjob.h>
 
-namespace OutboxInterface {
+namespace MailTransport {
 
 /**
   FilterAction that finds all messages with a DispatchMode of Never
@@ -39,7 +39,7 @@ namespace OutboxInterface {
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class OUTBOXINTERFACE_EXPORT SendQueuedAction : public Akonadi::FilterAction
+class MAILTRANSPORT_EXPORT SendQueuedAction : public Akonadi::FilterAction
 {
   public:
     /* reimpl */
@@ -60,7 +60,7 @@ class OUTBOXINTERFACE_EXPORT SendQueuedAction : public Akonadi::FilterAction
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class OUTBOXINTERFACE_EXPORT ClearErrorAction : public Akonadi::FilterAction
+class MAILTRANSPORT_EXPORT ClearErrorAction : public Akonadi::FilterAction
 {
   public:
     /* reimpl */
@@ -69,6 +69,6 @@ class OUTBOXINTERFACE_EXPORT ClearErrorAction : public Akonadi::FilterAction
     virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const;
 };
 
-} // namespace OutboxInterface
+} // namespace MailTransport
 
-#endif // OUTBOXINTERFACE_OUTBOXACTIONS_H
+#endif // MAILTRANSPORT_OUTBOXACTIONS_H

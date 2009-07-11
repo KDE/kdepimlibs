@@ -43,8 +43,10 @@ namespace MailTransport {
 
   Precommands are automatically executed, once per opening a connection to the
   server (not necessarily once per message).
+
+  @deprecated Use MessageQueueJob for sending e-mail.
 */
-class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
+class MAILTRANSPORT_EXPORT_DEPRECATED SmtpJob : public TransportJob
 {
   Q_OBJECT
   public:

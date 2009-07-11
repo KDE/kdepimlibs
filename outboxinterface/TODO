@@ -1,9 +1,0 @@
-Design:
-
-Future:
-* Support volatile outbox (not stored on disk).
-* Support optional default folders (e.g. no sent-mail for IMAP users).
-
-Build:
-* Get our own debug area.
-

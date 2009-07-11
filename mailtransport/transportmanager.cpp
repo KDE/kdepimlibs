@@ -19,7 +19,7 @@
 
 #include "transportmanager.h"
 #include "addtransportdialog.h"
-#include "akonadijob.h"
+#include "resourcesendjob.h"
 #include "mailtransport_defs.h"
 #include "sendmailconfigwidget.h"
 #include "sendmailjob.h"
@@ -301,13 +301,14 @@ TransportJob *TransportManager::createTransportJob( int transportId )
     return 0;
   }
   t = t->clone(); // Jobs delete their transports.
+  t->updatePasswordState();
   switch ( t->type() ) {
     case Transport::EnumType::SMTP:
       return new SmtpJob( t, this );
     case Transport::EnumType::Sendmail:
       return new SendmailJob( t, this );
     case Transport::EnumType::Akonadi:
-      return new AkonadiJob( t, this );
+      return new ResourceSendJob( t, this );
   }
   Q_ASSERT( false );
   return 0;

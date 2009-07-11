@@ -17,15 +17,15 @@
     02110-1301, USA.
 */
 
-#ifndef OUTBOXINTERFACE_SENTBEHAVIOURATTRIBUTE_H
-#define OUTBOXINTERFACE_SENTBEHAVIOURATTRIBUTE_H
+#ifndef MAILTRANSPORT_SENTBEHAVIOURATTRIBUTE_H
+#define MAILTRANSPORT_SENTBEHAVIOURATTRIBUTE_H
 
-#include <outboxinterface/outboxinterface_export.h>
+#include <mailtransport/mailtransport_export.h>
 
 #include <akonadi/attribute.h>
 #include <akonadi/collection.h>
 
-namespace OutboxInterface {
+namespace MailTransport {
 
 /**
   Attribute determining what will happen to a message after it is sent.  The
@@ -35,7 +35,7 @@ namespace OutboxInterface {
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class OUTBOXINTERFACE_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
+class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
 {
   public:
     /**
@@ -96,6 +96,6 @@ class OUTBOXINTERFACE_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
 
 };
 
-} // namespace OutboxInterface
+} // namespace MailTransport
 
-#endif // OUTBOXINTERFACE_SENTBEHAVIOURATTRIBUTE_H
+#endif // MAILTRANSPORT_SENTBEHAVIOURATTRIBUTE_H

@@ -17,16 +17,16 @@
     02110-1301, USA.
 */
 
-#ifndef OUTBOXINTERFACE_DISPATCHERINTERFACE_H
-#define OUTBOXINTERFACE_DISPATCHERINTERFACE_H
+#ifndef MAILTRANSPORT_DISPATCHERINTERFACE_H
+#define MAILTRANSPORT_DISPATCHERINTERFACE_H
 
-#include <outboxinterface/outboxinterface_export.h>
+#include <mailtransport/mailtransport_export.h>
 
 #include <QtCore/QObject>
 
 #include <akonadi/agentinstance.h>
 
-namespace OutboxInterface {
+namespace MailTransport {
 
 class DispatcherInterfacePrivate;
 
@@ -37,13 +37,13 @@ class DispatcherInterfacePrivate;
   dispatchManually) and retry sending (@see retryDispatching).
 
   This class also takes care of registering the attributes that the MDA and
-  OutboxInterface use.  The attributes are registered the first time you call
+  MailTransport use.  The attributes are registered the first time you call
   self(), so do that early in your application.
 
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class OUTBOXINTERFACE_EXPORT DispatcherInterface : public QObject
+class MAILTRANSPORT_EXPORT DispatcherInterface : public QObject
 {
   Q_OBJECT
 
@@ -82,6 +82,6 @@ class OUTBOXINTERFACE_EXPORT DispatcherInterface : public QObject
 
 };
 
-} // namespace OutboxInterface
+} // namespace MailTransport
 
-#endif // OUTBOXINTERFACE_DISPATCHERINTERFACE_H
+#endif // MAILTRANSPORT_DISPATCHERINTERFACE_H

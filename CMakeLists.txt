@@ -80,7 +80,6 @@ if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(kxmlrpcclient)
   add_subdirectory(mailtransport)
   add_subdirectory(microblog)
-  add_subdirectory(outboxinterface)
   add_subdirectory(syndication)
   # Build the CamelCase headers
   add_subdirectory(includes)

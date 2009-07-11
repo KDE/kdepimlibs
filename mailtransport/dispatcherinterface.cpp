@@ -31,12 +31,12 @@
 #include <akonadi/kmime/localfolders.h>
 
 using namespace Akonadi;
-using namespace OutboxInterface;
+using namespace MailTransport;
 
 /**
   @internal
 */
-class OutboxInterface::DispatcherInterfacePrivate
+class MailTransport::DispatcherInterfacePrivate
 {
   public:
     DispatcherInterfacePrivate();

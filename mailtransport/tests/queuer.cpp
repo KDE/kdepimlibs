@@ -34,16 +34,13 @@
 
 #include <akonadi/control.h>
 
+#include <mailtransport/dispatchmodeattribute.h>
+#include <mailtransport/messagequeuejob.h>
 #include <mailtransport/transportmanager.h>
 #include <mailtransport/transport.h>
 
-#include <outboxinterface/dispatchmodeattribute.h>
-#include <outboxinterface/messagequeuejob.h>
-
-
 using namespace KMime;
 using namespace MailTransport;
-using namespace OutboxInterface;
 
 
 MessageQueuer::MessageQueuer()

@@ -28,13 +28,13 @@ class KJob;
 class KLineEdit;
 class KTextEdit;
 
-namespace OutboxInterface {
+namespace MailTransport {
   class MessageQueueJob;
 }
 
 
 /**
-  This is stolen from kdepimlibs/mailtransport/tests/transportmgr.{h,cpp}
+  Mostly stolen from transportmgr.{h,cpp}
 */
 class MessageQueuer : public KVBox
 {
@@ -56,7 +56,7 @@ class MessageQueuer : public KVBox
     KLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
     KTextEdit *mMailEdit;
 
-    OutboxInterface::MessageQueueJob *createQueueJob();
+    MailTransport::MessageQueueJob *createQueueJob();
 
 };
 

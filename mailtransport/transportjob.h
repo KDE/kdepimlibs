@@ -35,8 +35,10 @@ class Transport;
 /**
   Abstract base class for all mail transport jobs.
   This is a job that is supposed to send exactly one mail.
+
+  @deprecated Use MessageQueueJob for sending e-mail.
 */
-class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
+class MAILTRANSPORT_EXPORT_DEPRECATED TransportJob : public KCompositeJob
 {
   friend class TransportManager;
 
