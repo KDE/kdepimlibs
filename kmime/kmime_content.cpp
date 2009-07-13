@@ -327,18 +327,28 @@ void Content::parse()
   }
 }
 
+
 void Content::assemble()
 {
   Q_D(Content);
   QByteArray newHead = assembleHeaders();
+  KMime::Content m;
+  m.setContent( d->fullContent() );
+  m.parse();
+
   foreach ( Headers::Base *h, h_eaders ) {
     if ( h->isXHeader() ) {
-      newHead += h->as7BitString() + '\n';
-      KMime::removeHeader( d->head, h->type() );
+      Headers::Base *oldH = m.headerByType( h->type() );
+      if ( !oldH || ( oldH && oldH->as7BitString() != h->as7BitString() ) ) {
+        newHead += h->as7BitString() + '\n';
+        KMime::removeHeader( d->head, h->type() );
+      }
     }
   }
-  newHead += d->head; // keep unparsed headers
-  d->head = newHead;
+  if ( newHead != d->head ) {//the headers were modified
+    newHead += d->head; // keep unparsed headers
+    d->head = newHead;
+  }
 
   foreach ( Content *c, contents() ) {
     c->assemble();
@@ -349,33 +359,41 @@ QByteArray Content::assembleHeaders()
 {
   Q_D(Content);
   QByteArray newHead;
+  KMime::Content m;
+  m.setContent( d->fullContent() );
+  m.parse();
 
   //Content-Type
   Headers::Base *h = contentType( false );
-  if ( h && !h->isEmpty() ) {
+  if ( h && !h->isEmpty() && h->as7BitString() != m.contentType()->as7BitString() ) {
     newHead += contentType()->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   //Content-Transfer-Encoding
   h = contentTransferEncoding( false );
-  if ( h && !h->isEmpty() ) {
+  if ( h && !h->isEmpty() && h->as7BitString() != m.contentTransferEncoding()->as7BitString() ) {
     newHead += contentTransferEncoding()->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   //Content-Description
   h = contentDescription( false );
-  if ( h ) {
+  if ( h && h->as7BitString() != m.contentDescription()->as7BitString() ) {
     newHead += h->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   //Content-Disposition
   h = contentDisposition( false );
-  if ( h ) {
+  if ( h && h->as7BitString() != m.contentDisposition()->as7BitString() ) {
     newHead += h->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
+  }
+
+  if ( newHead.isEmpty() ) {
+    newHead = d->head;
+  } else {
   }
 
   return newHead;
@@ -1167,6 +1185,25 @@ ContentIndex Content::index() const
   return indexForContent( const_cast<Content*>(this)  );
 }
 
+
+QByteArray ContentPrivate::fullContent() const
+{
+  QByteArray content = head + "\n\n" + body;
+  if ( !contents.isEmpty() ) { //this is a multipart message
+      const Headers::ContentType *ct = const_cast<Content*>(q_ptr)->contentType();
+      QByteArray boundary = "\n--" + ct->boundary();
+
+      //add all (encoded) contents separated by boundaries
+      foreach ( Content *c, contents ) {
+        content += boundary + '\n';
+        content += c->d_ptr->fullContent();
+      }
+      //finally append the closing boundary
+      content += boundary + "--\n";
+  };
+
+  return content;
+}
 
 
 } // namespace KMime
