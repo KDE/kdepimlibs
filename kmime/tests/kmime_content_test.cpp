@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+#include <qdebug.h>
+
 #include "kmime_content_test.h"
 #include <qtest_kde.h>
 
@@ -160,11 +162,11 @@ void KMimeContentTest::testMultipartMixed()
   // slightly diffrent from original data
   QByteArray assembled =
     "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
-    "Subject: Sample message\n"
     "To: Ned Freed <ned@innosoft.com>\n"
-    "Date: Sun, 21 Mar 1993 23:56:48 -0800\n"
+    "Date: Sun, 21 Mar 1993 23:56:48 -0800 (PST)\n"
+    "Subject: Sample message\n"
     "MIME-Version: 1.0\n"
-    "Content-Type: multipart/mixed; boundary=\"simple boundary\"\n"
+    "Content-type: multipart/mixed; boundary=\"simple boundary\"\n"
     "\n"
     "\n"
     "--simple boundary\n"
@@ -172,7 +174,7 @@ void KMimeContentTest::testMultipartMixed()
     "This is implicitly typed plain US-ASCII text.\n"
     "It does NOT end with a linebreak.\n"
     "--simple boundary\n"
-    "Content-Type: text/plain; charset=\"us-ascii\"\n"
+    "Content-type: text/plain; charset=us-ascii\n"
     "\n"
     "This is explicitly typed plain US-ASCII text.\n"
     "It DOES end with a linebreak.\n"
@@ -199,6 +201,28 @@ void KMimeContentTest::testMultipartMixed()
   delete msg;
 
   // assembling from scratch
+  // slightly diffrent from original data
+  QByteArray assembled2 =
+    "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
+    "Subject: Sample message\n"
+    "To: Ned Freed <ned@innosoft.com>\n"
+    "Date: Sun, 21 Mar 1993 23:56:48 -0800\n"
+    "MIME-Version: 1.0\n"
+    "Content-Type: multipart/mixed; boundary=\"simple boundary\"\n"
+    "\n"
+    "\n"
+    "--simple boundary\n"
+    "\n"
+    "This is implicitly typed plain US-ASCII text.\n"
+    "It does NOT end with a linebreak.\n"
+    "--simple boundary\n"
+    "Content-Type: text/plain; charset=\"us-ascii\"\n"
+    "\n"
+    "This is explicitly typed plain US-ASCII text.\n"
+    "It DOES end with a linebreak.\n"
+    "\n"
+    "--simple boundary--\n";
+
   msg = new Message();
   msg->from()->from7BitString( "Nathaniel Borenstein <nsb@bellcore.com>" );
   msg->to()->from7BitString( "Ned Freed <ned@innosoft.com>" );
@@ -220,7 +244,7 @@ void KMimeContentTest::testMultipartMixed()
   QCOMPARE( c->body(), part2 );
 
   msg->assemble();
-  QCOMPARE( msg->encodedContent(), assembled );
+  QCOMPARE( msg->encodedContent(), assembled2 );
 }
 
 void KMimeContentTest::testImplicitMultipartGeneration()

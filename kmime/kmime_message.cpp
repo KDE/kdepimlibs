@@ -54,81 +54,96 @@ QByteArray Message::assembleHeaders()
   Q_D(Message);
   Headers::Base *h;
   QByteArray newHead;
+  KMime::Message m;
+  m.setContent( d->fullContent()  );
+  m.parse();
 
   //Message-ID
-  if ( ( h = messageID( false ) ) != 0 && !h->isEmpty() ) {
+  if ( ( h = messageID( false ) ) != 0 && !h->isEmpty() && h->as7BitString() != m.messageID()->as7BitString() ) {
     newHead += h->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   //From
   h = from(); // "From" is mandatory
-  if ( !h->isEmpty() ) {
+  if ( !h->isEmpty() && h->as7BitString() != m.from()->as7BitString() ) {
     newHead += h->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   //Subject
   h = subject(); // "Subject" is mandatory
-  if ( !h->isEmpty() ) {
+  if ( !h->isEmpty() && h->as7BitString() != m.subject()->as7BitString() ) {
     newHead += h->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   //To
-  if ( ( h = to( false )) != 0 && !h->isEmpty() ) {
+  if ( ( h = to( false )) != 0 && !h->isEmpty() && h->as7BitString() != m.to()->as7BitString() ) {
     newHead += h->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   //Cc
-  if ( ( h = cc( false )) != 0 && !h->isEmpty() ) {
+  if ( ( h = cc( false )) != 0 && !h->isEmpty() && h->as7BitString() != m.cc()->as7BitString() ) {
     newHead += h->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   //Reply-To
-  if ( ( h = replyTo( false )) != 0 && !h->isEmpty() ) {
+  if ( ( h = replyTo( false )) != 0 && !h->isEmpty() && h->as7BitString() != m.replyTo()->as7BitString() ) {
     newHead += h->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   //Date
   h = date(); // "Date" is mandatory
-  if ( !h->isEmpty() ) {
+  if ( !h->isEmpty() && h->as7BitString() != m.date()->as7BitString() ) {
     newHead += h->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   //References
-  if ( ( h = references( false )) != 0 && !h->isEmpty() ) {
+  if ( ( h = references( false )) != 0 && !h->isEmpty() && h->as7BitString() != m.references()->as7BitString() ) {
     newHead += h->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   //Organization
-  if ( ( h = organization( false )) != 0 && !h->isEmpty() ) {
+  if ( ( h = organization( false )) != 0 && !h->isEmpty() && h->as7BitString() != m.organization()->as7BitString() ) {
     newHead += h->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   //UserAgent
-  if ( ( h = userAgent( false )) != 0 && !h->isEmpty() ) {
+  if ( ( h = userAgent( false )) != 0 && !h->isEmpty() && h->as7BitString() != m.userAgent()->as7BitString() ) {
     newHead += h->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   // In-Reply-To
-  if ( ( h = inReplyTo( false ) ) != 0 && !h->isEmpty() ) {
+  if ( ( h = inReplyTo( false ) ) != 0 && !h->isEmpty() && h->as7BitString() != m.inReplyTo()->as7BitString() ) {
     newHead += h->as7BitString() + '\n';
     KMime::removeHeader( d->head, h->type() );
   }
 
   //Mime-Version
-  newHead += "MIME-Version: 1.0\n";
-  KMime::removeHeader( d->head, "MIME-Version" );
+  Headers::Base *mimeHeader = m.headerByType("MIME-Version");
+  QByteArray oldMimeVersion;
+  if ( mimeHeader )
+   oldMimeVersion = mimeHeader->as7BitString();
+  if ( oldMimeVersion != "MIME-Version: 1.0" ) {
+    newHead += "MIME-Version: 1.0\n";
+    KMime::removeHeader( d->head, "MIME-Version" );
+  }
 
-  return newHead + Content::assembleHeaders();
+  QByteArray newContentHead = Content::assembleHeaders();
+
+  if ( newHead.isEmpty() && newContentHead == d->head ) { //no header was changed
+    return d->head;
+  } else {
+    return newHead + newContentHead;
+  }
 }
 
 void Message::clear()

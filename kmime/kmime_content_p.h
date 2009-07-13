@@ -38,6 +38,9 @@ class ContentPrivate
       contents.clear();
     }
 
+    /** Returns the reconstructed content (header + body) for the content and sub-contents */
+    QByteArray fullContent() const;
+
     QByteArray head;
     QByteArray body;
     Content::List contents;
