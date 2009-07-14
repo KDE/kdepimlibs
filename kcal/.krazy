@@ -1,3 +1,2 @@
 SKIP /libical.*/\|/versit/\|/tests/
-EXTRA style,kdebug,tipsandthis,defines,qenums,null
-OUTPUT brief
+EXTRA style
