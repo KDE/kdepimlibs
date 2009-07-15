@@ -30,22 +30,27 @@
   @authors Marc Mutz \<mutz@kde.org\>
 
   @glossary @anchor Eight-Bit @anchor eight-bit @b 8-bit:
-  Data that contains bytes with at least one value greater than 127.
+  Data that contains bytes with at least one value greater than 127, or at
+  least one NUL byte.
 
   @glossary @anchor Eight-Bit-Binary @anchor eight-bit-binary @b 8-bit-binary:
-  Eight-bit data that contains a high percentage of non-ascii values.
+  Eight-bit data that contains a high percentage of non-ascii values,
+  or lines longer than 998 characters, or stray CRs or LFs, or NULs.
 
   @glossary @anchor Eight-Bit-Text @anchor eight-bit-text @b 8-bit-text:
-  Eight-bit data that contains a high percentage of non-ascii values.
+  Eight-bit data that contains a high percentage of ascii values,
+  no lines longer than 998 characters, no stray CRs or LFs, and no NULs.
 
   @glossary @anchor Seven-Bit @anchor seven-bit @b 7-Bit:
-  Data that contains bytes with all values less than 128.
+  Data that contains bytes with all values less than 128, and no NULs.
 
   @glossary @anchor Seven-Bit-Binary @anchor seven-bit-binary @b 7-bit-binary:
-  Seven-bit data that contains a high percentage of non-ascii values.
+  Seven-bit data that contains a high percentage of non-ascii values,
+  or lines longer than 998 characters, or stray CRs or LFs.
 
   @glossary @anchor Seven-Bit-Text @anchor seven-bit-text @b 7-bit-text:
-  Seven-bit data that contains a high percentage of ascii values.
+  Seven-bit data that contains a high percentage of ascii values,
+  no lines longer than 998 characters, no stray CRs or LFs.
 */
 
 #ifndef __KMIME_CHARFREQ_H__
