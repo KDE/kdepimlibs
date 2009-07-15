@@ -792,7 +792,7 @@ Todo *VCalFormat::VTodoToEvent( VObject *vtodo )
   // was: status
   if ( ( vo = isAPropertyOf( vtodo, VCStatusProp ) ) != 0 ) {
     s = fakeCString( vObjectUStringZValue( vo ) );
-    if ( strcmp( s, "COMPLETED" ) == 0 ) {
+    if ( s && strcmp( s, "COMPLETED" ) == 0 ) {
       anEvent->setCompleted( true );
     } else {
       anEvent->setCompleted( false );
@@ -810,8 +810,11 @@ Todo *VCalFormat::VTodoToEvent( VObject *vtodo )
 
   // priority
   if ( ( vo = isAPropertyOf( vtodo, VCPriorityProp ) ) ) {
-    anEvent->setPriority( atoi( s = fakeCString( vObjectUStringZValue( vo ) ) ) );
-    deleteStr( s );
+    s = fakeCString( vObjectUStringZValue( vo ) );
+    if ( s ) {
+      anEvent->setPriority( atoi( s ) );
+      deleteStr( s );
+    }
   }
 
   // due date
@@ -915,11 +918,13 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
 
   // revision
   // again NSCAL doesn't give us much to work with, so we improvise...
+  anEvent->setRevision( 0 );
   if ( ( vo = isAPropertyOf( vevent, VCSequenceProp ) ) != 0 ) {
-    anEvent->setRevision( atoi( s = fakeCString( vObjectUStringZValue( vo ) ) ) );
-    deleteStr( s );
-  } else {
-    anEvent->setRevision( 0 );
+    s = fakeCString( vObjectUStringZValue( vo ) );
+    if ( s ) {
+      anEvent->setRevision( atoi( s ) );
+      deleteStr( s );
+    }
   }
 
   // last modification date
@@ -1073,7 +1078,9 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
           while ( index < last ) {
             dayStr = tmpStr.mid( index, 3 );
             int dayNum = numFromDay( dayStr );
-            qba.setBit( dayNum );
+            if ( dayNum >= 0 ) {
+              qba.setBit( dayNum );
+            }
             index += 3; // advance to next day, or possibly "#"
           }
         }
@@ -1262,9 +1269,9 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
   Incidence::Secrecy secrecy = Incidence::SecrecyPublic;
   if ( ( vo = isAPropertyOf( vevent, VCClassProp ) ) != 0 ) {
     s = fakeCString( vObjectUStringZValue( vo ) );
-    if ( strcmp( s, "PRIVATE" ) == 0 ) {
+    if ( s && strcmp( s, "PRIVATE" ) == 0 ) {
       secrecy = Incidence::SecrecyPrivate;
-    } else if ( strcmp( s, "CONFIDENTIAL" ) == 0 ) {
+    } else if ( s && strcmp( s, "CONFIDENTIAL" ) == 0 ) {
       secrecy = Incidence::SecrecyConfidential;
     }
     deleteStr( s );
@@ -1326,15 +1333,21 @@ Event *VCalFormat::VEventToEvent( VObject *vevent )
 
   // priority
   if ( ( vo = isAPropertyOf( vevent, VCPriorityProp ) ) ) {
-    anEvent->setPriority( atoi( s = fakeCString( vObjectUStringZValue( vo ) ) ) );
-    deleteStr( s );
+    s = fakeCString( vObjectUStringZValue( vo ) );
+    if ( s ) {
+      anEvent->setPriority( atoi( s ) );
+      deleteStr( s );
+    }
   }
 
   // transparency
   if ( ( vo = isAPropertyOf( vevent, VCTranspProp ) ) != 0 ) {
-    int i = atoi( s = fakeCString( vObjectUStringZValue( vo ) ) );
-    anEvent->setTransparency( i == 1 ? Event::Transparent : Event::Opaque );
-    deleteStr( s );
+    s = fakeCString( vObjectUStringZValue( vo ) );
+    if ( s ) {
+      int i = atoi( s );
+      anEvent->setTransparency( i == 1 ? Event::Transparent : Event::Opaque );
+      deleteStr( s );
+    }
   }
 
   // related event
@@ -1461,7 +1474,7 @@ void VCalFormat::populate( VObject *vcal )
   // warn the user that we might have trouble reading non-known calendar.
   if ( ( curVO = isAPropertyOf( vcal, VCProdIdProp ) ) != 0 ) {
     char *s = fakeCString( vObjectUStringZValue( curVO ) );
-    if ( strcmp( productId().toLocal8Bit(), s ) != 0 ) {
+    if ( !s || strcmp( productId().toLocal8Bit(), s ) != 0 ) {
       kDebug() << "This vCalendar file was not created by KOrganizer or"
                << "any other product we support. Loading anyway...";
     }
@@ -1472,7 +1485,7 @@ void VCalFormat::populate( VObject *vcal )
   // warn the user we might have trouble reading this unknown version.
   if ( ( curVO = isAPropertyOf( vcal, VCVersionProp ) ) != 0 ) {
     char *s = fakeCString( vObjectUStringZValue( curVO ) );
-    if ( strcmp( _VCAL_VERSION, s ) != 0 ) {
+    if ( !s || strcmp( _VCAL_VERSION, s ) != 0 ) {
       kDebug() << "This vCalendar file has version" << s
                << "We only support" << _VCAL_VERSION;
     }
@@ -1507,12 +1520,14 @@ void VCalFormat::populate( VObject *vcal )
         char *s;
         s = fakeCString( vObjectUStringZValue( curVOProp ) );
         // check to see if event was deleted by the kpilot conduit
-        if ( atoi( s ) == SYNCDEL ) {
+        if ( s ) {
+          if ( atoi( s ) == SYNCDEL ) {
+            deleteStr( s );
+            kDebug() << "skipping pilot-deleted event";
+            goto SKIP;
+          }
           deleteStr( s );
-          kDebug() << "skipping pilot-deleted event";
-          goto SKIP;
         }
-        deleteStr( s );
       }
 
       // this code checks to see if we are trying to read in an event
