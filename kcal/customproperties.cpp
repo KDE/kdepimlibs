@@ -123,20 +123,14 @@ void CustomProperties::setNonKDECustomProperty( const QByteArray &name, const QS
 
 void CustomProperties::removeNonKDECustomProperty( const QByteArray &name )
 {
-  QMap<QByteArray, QString>::Iterator it = d->mProperties.find( name );
-  if ( it != d->mProperties.end() ) {
-    d->mProperties.erase( it );
+  if ( d->mProperties.remove( name ) ) {
     customPropertyUpdated();
   }
 }
 
 QString CustomProperties::nonKDECustomProperty( const QByteArray &name ) const
 {
-  QMap<QByteArray, QString>::ConstIterator it = d->mProperties.find( name );
-  if ( it == d->mProperties.end() ) {
-    return QString();
-  }
-  return it.value();
+  return d->mProperties.value( name );
 }
 
 void CustomProperties::setCustomProperties( const QMap<QByteArray, QString> &properties )
