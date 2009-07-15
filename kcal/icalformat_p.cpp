@@ -494,11 +494,10 @@ void ICalFormatImpl::writeIncidence( icalcomponent *parent,
   }
 
   // categories
-  QStringList categories = incidence->categories();
-  QStringList::Iterator it;
-  for ( it = categories.begin(); it != categories.end(); ++it ) {
+  QString categories = incidence->categories().join( "," );
+  if ( !categories.isEmpty() ) {
     icalcomponent_add_property(
-      parent, icalproperty_new_categories( (*it).toUtf8() ) );
+      parent, icalproperty_new_categories( categories.toUtf8() ) );
   }
 
   // related event
@@ -1046,8 +1045,6 @@ Todo *ICalFormatImpl::readTodo( icalcomponent *vtodo, ICalTimeZones *tzlist )
 
   icalproperty *p = icalcomponent_get_first_property( vtodo, ICAL_ANY_PROPERTY );
 
-  QStringList categories;
-
   while ( p ) {
     icalproperty_kind kind = icalproperty_isa(p);
     switch ( kind ) {
@@ -1108,9 +1105,6 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, ICalTimeZones *tzlist )
 
   icalproperty *p = icalcomponent_get_first_property( vevent, ICAL_ANY_PROPERTY );
 
-  QStringList categories;
-  icalproperty_transp transparency;
-
   bool dtEndProcessed = false;
 
   while ( p ) {
@@ -1142,13 +1136,15 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, ICalTimeZones *tzlist )
       break;
 
     case ICAL_TRANSP_PROPERTY:  // Transparency
-      transparency = icalproperty_get_transp( p );
+    {
+      icalproperty_transp transparency = icalproperty_get_transp( p );
       if ( transparency == ICAL_TRANSP_TRANSPARENT ) {
         event->setTransparency( Event::Transparent );
       } else {
         event->setTransparency( Event::Opaque );
       }
       break;
+    }
 
     default:
       // TODO: do something about unknown properties?
@@ -1583,9 +1579,20 @@ void ICalFormatImpl::readIncidence( icalcomponent *parent,
       break;
 
     case ICAL_CATEGORIES_PROPERTY:  // categories
+    {
+      // We have always supported multiple CATEGORIES properties per component
+      // even though the RFC seems to indicate only 1 is permitted.
+      // We can't change that -- in order to retain backwards compatibility.
       text = icalproperty_get_categories( p );
-      categories.append( QString::fromUtf8( text ) );
+      const QString val = QString::fromUtf8( text );
+      foreach ( const QString &cat, val.split( ',', QString::SkipEmptyParts ) ) {
+        // ensure no duplicates
+        if ( !categories.contains( cat ) ) {
+          categories.append( cat );
+        }
+      }
       break;
+    }
 
     case ICAL_RRULE_PROPERTY:
       readRecurrenceRule( p, incidence );
