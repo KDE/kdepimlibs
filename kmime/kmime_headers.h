@@ -80,11 +80,14 @@ enum contentEncoding {
   CEbinary             ///< binary
 };
 
+/**
+  Various possible values for the "Content-Disposition" header.
+*/
 enum contentDisposition {
-  CDInvalid,
-  CDinline,
-  CDattachment,
-  CDparallel
+  CDInvalid,           ///< Default, invalid value
+  CDinline,            ///< inline
+  CDattachment,        ///< attachment
+  CDparallel           ///< parallel (invalid, do not use)
 };
 
 //often used charset
