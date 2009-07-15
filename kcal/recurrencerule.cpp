@@ -1693,6 +1693,8 @@ DateTimeList RecurrenceRule::timesInInterval( const KDateTime &dtStart,
     KDateTime dt = start.addSecs( d->mTimedRepetition - n );
     if ( dt < enddt ) {
       n = static_cast<int>( ( dt.secsTo_long( enddt ) - 1 ) / d->mTimedRepetition ) + 1;
+      // limit n by a sane value else we can "explode".
+      n = qMin( n, LOOP_LIMIT );
       for ( int i = 0;  i < n;  dt = dt.addSecs( d->mTimedRepetition ), ++i ) {
         result += dt;
       }
