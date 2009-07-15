@@ -879,8 +879,10 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
     //else desc and comments are empty
   } else {
     // non-empty comments
-    for ( int i=0; i < incidence->comments().count(); ++i ) {
-      comments[i] = string2HTML( incidence->comments()[i] );
+    foreach ( const QString &c, incidence->comments() ) {
+      if ( !c.isEmpty() ) {
+        comments += string2HTML( c );
+      }
     }
     if ( !incidence->description().isEmpty() ) {
       // use description too
