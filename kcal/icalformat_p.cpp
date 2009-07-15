@@ -518,7 +518,7 @@ void ICalFormatImpl::writeIncidence( icalcomponent *parent,
   RecurrenceRule::List::ConstIterator exit;
   for ( exit = exrules.begin(); exit != exrules.end(); ++exit ) {
     icalcomponent_add_property(
-      parent, icalproperty_new_rrule( writeRecurrenceRule( (*exit) ) ) );
+      parent, icalproperty_new_exrule( writeRecurrenceRule( (*exit) ) ) );
   }
 
   DateList dateList = incidence->recurrence()->exDates();
