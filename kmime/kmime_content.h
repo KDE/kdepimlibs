@@ -143,6 +143,19 @@ class KMIME_EXPORT Content
     virtual void clear();
 
     /**
+      Removes all sub-Contents from this message.  Deletes them if @p del is true.
+      This is different from calling removeContent() on each sub-Content, because
+      removeContent() will convert this to a single-part Content if only one
+      sub-Content is left.  Calling clearContents() does NOT make this Content
+      single-part.
+
+      @param del Whether to delete the sub-Contents.
+      @see removeContent()
+      @since 4.4
+    */
+    void clearContents( bool del = true );
+
+    /**
       Returns the Content header raw data.
 
       @see setHead().
@@ -337,13 +350,14 @@ class KMIME_EXPORT Content
     void addContent( Content *c, bool prepend = false );
 
     /**
-      Removes the given sub-Content, the current Content object is converted
-      into a single-port Content if only one sub-Content is left.
+      Removes the given sub-Content. The current Content object is converted
+      into a single-part Content if only one sub-Content is left.
 
       @param c The Content to remove.
       @param del if true, delete the removed Content object. Otherwise its parent is set to NULL.
 
       @see addContent().
+      @see clearContents().
     */
     void removeContent( Content *c, bool del = false );
 
