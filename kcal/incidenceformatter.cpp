@@ -1037,29 +1037,42 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode, KDateTime::Sp
   }
 
   QString sSummary = i18n( "Summary unspecified" );
-  QString sDescr = i18n( "Description unspecified" );
-  if ( ! todo->summary().isEmpty() ) {
-    sSummary = todo->richSummary();
-    if ( noHtmlMode ) {
-      sSummary = cleanHtml( sSummary );
+  if ( !todo->summary().isEmpty() ) {
+    if ( !todo->summaryIsRich() ) {
+      sSummary = string2HTML( todo->summary() );
+    } else {
+      sSummary = todo->richSummary();
+      if ( noHtmlMode ) {
+        sSummary = cleanHtml( sSummary );
+      }
     }
   }
-  if ( ! todo->description().isEmpty() ) {
-    sDescr = todo->description();
-    if ( noHtmlMode ) {
-      sDescr = cleanHtml( sDescr );
+
+  QString sLocation = i18n( "Location unspecified" );
+  if ( !todo->location().isEmpty() ) {
+    if ( !todo->locationIsRich() ) {
+      sLocation = string2HTML( todo->location() );
+    } else {
+      sLocation = todo->richLocation();
+      if ( noHtmlMode ) {
+        sLocation = cleanHtml( sLocation );
+      }
     }
   }
-  QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
-  html += invitationRow( i18n( "Summary:" ), sSummary );
+
+  QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
+  QString html = QString( "<div dir=\"%1\">\n" ).arg( dir );
+  html += "<table cellspacing=\"4\" style=\"border-width:4px; border-style:groove\">";
+
+  // Invitation summary & location rows
+  html += invitationRow( i18n( "What:" ), sSummary );
+  html += invitationRow( i18n( "Where:" ), sLocation );
+
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
     html += invitationRow( i18n( "Start Date:" ),
                            IncidenceFormatter::dateToString( todo->dtStart(),
                                                              false,
                                                              spec ) );
-  } else {
-    html += invitationRow( i18n( "Start Date:" ),
-                           i18nc( "no to-do start date", "None" ) );
   }
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
     html += invitationRow( i18n( "Due Date:" ),
@@ -1070,8 +1083,8 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode, KDateTime::Sp
     html += invitationRow( i18n( "Due Date:" ),
                            i18nc( "no to-do due date", "None" ) );
   }
-  html += invitationRow( i18n( "Description:" ), sDescr );
-  html += "</table>\n";
+
+  html += "</table></div>\n";
   html += invitationsDetailsIncidence( todo, noHtmlMode );
 
   return html;
