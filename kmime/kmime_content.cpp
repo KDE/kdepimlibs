@@ -153,6 +153,8 @@ QByteArray Content::head() const
 void Content::setHead( const QByteArray &head )
 {
   d_ptr->head = head;
+  if ( !head.endsWith( '\n' ) )
+    d_ptr->head += '\n';
 }
 
 QByteArray Content::body() const
