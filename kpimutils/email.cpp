@@ -87,6 +87,7 @@ QStringList KPIMUtils::splitAddressList( const QString &aStr )
       index++; // ignore the quoted character
       break;
     case ',' :
+    case ';' :
       if ( !insidequote && ( commentlevel == 0 ) ) {
         addr = aStr.mid( addrstart, index - addrstart );
         if ( !addr.isEmpty() ) {
