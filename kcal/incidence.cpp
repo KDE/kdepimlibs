@@ -76,6 +76,7 @@ class KCal::Incidence::Private
         mLocation( p.mLocation ),
         mLocationIsRich( p.mLocationIsRich ),
         mCategories( p.mCategories ),
+        mRecurrence( p.mRecurrence ),
         mResources( p.mResources ),
         mStatus( p.mStatus ),
         mStatusString( p.mStatusString ),
