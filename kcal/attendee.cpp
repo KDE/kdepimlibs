@@ -148,6 +148,9 @@ QString Attendee::statusName( Attendee::PartStat status )
   case InProcess:
     return i18nc( "@item to-do in process of being completed", "In Process" );
     break;
+  case None:
+    return i18nc( "@item event or to-do status unknown", "Unknown" );
+    break;
   }
 }
 
