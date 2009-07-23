@@ -165,11 +165,16 @@ class KCAL_EXPORT Scheduler
       processing a iTIP message with the current calendar and specifies the
       action to be taken for this incidence.
 
+      @param incidence the incidence for the transaction.
       @param method iTIP transaction method to check.
       @param status scheduling status.
+      @param email the email address of the person for whom this
+      transaction is to be performed.
     */
-    bool acceptTransaction( IncidenceBase *, iTIPMethod method,
-                            ScheduleMessage::Status status );
+    bool acceptTransaction( IncidenceBase *incidence,
+                            iTIPMethod method,
+                            ScheduleMessage::Status status,
+                            const QString &email = QString() );
 
     /**
       Returns a machine-readable name for a iTIP method.
@@ -200,7 +205,8 @@ class KCAL_EXPORT Scheduler
 
   protected:
     bool acceptPublish( IncidenceBase *, ScheduleMessage::Status status, iTIPMethod method );
-    bool acceptRequest( IncidenceBase *, ScheduleMessage::Status status );
+    bool acceptRequest( IncidenceBase *, ScheduleMessage::Status status,
+                        const QString &email );
     bool acceptAdd( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptDeclineCounter( IncidenceBase *, ScheduleMessage::Status status );
