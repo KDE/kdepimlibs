@@ -9,19 +9,18 @@ kcal/libical      Allen Winter <winter@kde.org>
                   Reinhold Kainhofer <reinhold@kainhofer.com>
 kholidays         Allen Winter <winter@kde.org>
 kimap             Allen Winter <winter@kde.org>
-                  Tom Albers <tomalbers@kde.nl>
                   Volker Krause <vkrause@kde.org>
 kioslave          various
 kldap             Szombathelyi György <gyurco@freemail.hu>
 kmime             Volker Krause <vkrause@kde.org>
                   Marc Mutz <mutz@kde.org>
-kpimidenties      Tom Albers <tomalbers@kde.nl>
+kpimidenties      -
 kpimutils         Matt Douhan <matt@fruitsalad.org>
 kresources        Cornelius Schumacher <schumacher@kde.org>
                   Tobias Koenig <tokoe@kde.org>
 ktnef             Michael Goffioul <goffioul@imec.be>
 kxmlrpcclient     Narayan Newton <narayannewton@gmail.com>
-mailtransport     Tom Albers <tomalbers@kde.nl>
+mailtransport     -
 microblog         Tom Albers <tomalbers@kde.nl>
 qgpgme            Marc Mutz <mutz@kde.org>
 syndication       Frank Osterfeld <frank.osterfeld@kdemail.net>
