@@ -343,8 +343,8 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
          i18nc( "@info",
                 "The event, to-do or journal to be updated could not be found. "
                 "Maybe it has already been deleted, or the calendar that "
-                "contains it is disabled. Press continue to create a new "
-                "one or 'throw away' to discard this update." ),
+                "contains it is disabled. Press 'Store' to create a new "
+                "one or 'Throw away' to discard this update." ),
          i18nc( "@title", "Discard this update?" ),
          KGuiItem( i18nc( "@option", "Store" ) ),
          KGuiItem( i18nc( "@option", "Throw away" ) ) ) == KMessageBox::Yes ) {
