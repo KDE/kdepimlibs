@@ -34,7 +34,6 @@ void KMimeCharFreqTest::test8bitData()
     QByteArray data( "123" );
     data += char( 0 );
     data += "test";
-    kDebug() << data;
     CharFreq cf( data );
     QCOMPARE( cf.type(), CharFreq::Binary );
   }
@@ -45,7 +44,6 @@ void KMimeCharFreqTest::test8bitData()
     for( int i = 0; i < 999; i++ ) {
       data += char( 169 );
     }
-    kDebug() << data;
     CharFreq cf( data );
     QCOMPARE( cf.type(), CharFreq::EightBitData );
   }
@@ -53,7 +51,6 @@ void KMimeCharFreqTest::test8bitData()
   {
     // If #CR != #CRLF then it's EightBitData.
     QByteArray data( "©line1\r\nline2\r" );
-    kDebug() << data;
     CharFreq cf( data );
     QCOMPARE( cf.type(), CharFreq::EightBitData );
   }
@@ -61,7 +58,6 @@ void KMimeCharFreqTest::test8bitData()
   {
     // If #LF != #CRLF then it's EightBitData.
     QByteArray data( "©line1\r\nline2\n" );
-    kDebug() << data;
     CharFreq cf( data );
     QCOMPARE( cf.type(), CharFreq::EightBitData );
   }
@@ -69,7 +65,6 @@ void KMimeCharFreqTest::test8bitData()
   {
     // If it has a lot of control chars, it's EightBitData.
     QByteArray data( "©test\a\a\a\a\a\a\a" );
-    kDebug() << data;
     CharFreq cf( data );
     QCOMPARE( cf.type(), CharFreq::EightBitData );
   }
@@ -80,7 +75,6 @@ void KMimeCharFreqTest::test8bitText()
   {
     // If it has no NULs, few CTLs, no stray CRs or LFs, it's EightBitText.
     QByteArray data( "©beware the beast but enjoy the feast he offers...\r\n" );
-    kDebug() << data;
     CharFreq cf( data );
     QCOMPARE( cf.type(), CharFreq::EightBitText );
   }
@@ -94,7 +88,6 @@ void KMimeCharFreqTest::test7bitData()
     for( int i = 0; i < 999; i++ ) {
       data += 'a';
     }
-    kDebug() << data;
     CharFreq cf( data );
     QCOMPARE( cf.type(), CharFreq::SevenBitData );
   }
@@ -102,7 +95,6 @@ void KMimeCharFreqTest::test7bitData()
   {
     // If #CR != #CRLF then it's SevenBitData.
     QByteArray data( "line1\r\nline2\r" );
-    kDebug() << data;
     CharFreq cf( data );
     QCOMPARE( cf.type(), CharFreq::SevenBitData );
   }
@@ -110,7 +102,6 @@ void KMimeCharFreqTest::test7bitData()
   {
     // If #LF != #CRLF then it's SevenBitData.
     QByteArray data( "line1\r\nline2\n" );
-    kDebug() << data;
     CharFreq cf( data );
     QCOMPARE( cf.type(), CharFreq::SevenBitData );
   }
@@ -123,9 +114,15 @@ void KMimeCharFreqTest::test7bitData()
   }
 
   {
+    // If the text only contains newlines and some random accented chars, then it is EightBitText
+    QByteArray data( "asdfasdfasdfasdfasdfasdfäöü\n" );
+    CharFreq cf( data );
+    QCOMPARE( cf.type(), CharFreq::EightBitText );
+  }
+
+  {
     // If it has a lot of control chars, it's SevenBitData.
     QByteArray data( "test\a\a\a\a\a\a\a" );
-    kDebug() << data;
     CharFreq cf( data );
     QCOMPARE( cf.type(), CharFreq::SevenBitData );
   }
@@ -136,7 +133,6 @@ void KMimeCharFreqTest::test7bitText()
   {
     // If it has no NULs, few CTLs, no stray CRs or LFs, it's SevenBitText.
     QByteArray data( "beware the beast but enjoy the feast he offers...\r\n" );
-    kDebug() << data;
     CharFreq cf( data );
     QCOMPARE( cf.type(), CharFreq::SevenBitText );
   }
@@ -145,7 +141,6 @@ void KMimeCharFreqTest::test7bitText()
 void KMimeCharFreqTest::testTrailingWhitespace()
 {
   QByteArray data( "test " );
-  kDebug() << data;
   CharFreq cf( data );
   QVERIFY( cf.hasTrailingWhitespace() );
 }
@@ -153,7 +148,6 @@ void KMimeCharFreqTest::testTrailingWhitespace()
 void KMimeCharFreqTest::testLeadingFrom()
 {
   QByteArray data( "From here thither" );
-  kDebug() << data;
   CharFreq cf( data );
   QVERIFY( cf.hasLeadingFrom() );
 }

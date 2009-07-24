@@ -214,7 +214,7 @@ CharFreq::Type CharFreq::type() const
     if ( mLineMax > 988 ) {
       return EightBitData; // not allowed in 8bit
     }
-    if ( mLF != mCRLF || mCR != mCRLF || controlCodesRatio() > 0.2 ) {
+    if ( ( mLF != mCRLF && mCRLF > 0 ) || mCR != mCRLF || controlCodesRatio() > 0.2 ) {
       return EightBitData;
     }
     return EightBitText;
