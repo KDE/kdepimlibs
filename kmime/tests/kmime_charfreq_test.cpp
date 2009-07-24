@@ -116,6 +116,13 @@ void KMimeCharFreqTest::test7bitData()
   }
 
   {
+    // If the text only contains newlines, then it is SevenBitText
+    QByteArray data( "line1\nline2\n" );
+    CharFreq cf( data );
+    QCOMPARE( cf.type(), CharFreq::SevenBitText );
+  }
+
+  {
     // If it has a lot of control chars, it's SevenBitData.
     QByteArray data( "test\a\a\a\a\a\a\a" );
     kDebug() << data;

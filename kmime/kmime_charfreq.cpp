@@ -224,7 +224,7 @@ CharFreq::Type CharFreq::type() const
   if ( mLineMax > 988 ) {
     return SevenBitData;
   }
-  if ( mLF != mCRLF || mCR != mCRLF || controlCodesRatio() > 0.2 ) {
+  if ( ( mLF != mCRLF && mCRLF > 0 ) || mCR != mCRLF || controlCodesRatio() > 0.2 ) {
     return SevenBitData;
   }
 
