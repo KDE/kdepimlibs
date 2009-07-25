@@ -291,28 +291,31 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
   scursor++;
   const char * encodedTextStart = scursor;
 
-  // find next '?' (ending the encoded-text):
+  // find the '?=' sequence (ending the encoded-text):
   for ( ; scursor != send ; scursor++ ) {
     if ( *scursor == '?' ) {
-      break;
+      if ( scursor + 1 != send ) {
+        if ( *( scursor + 1 ) != '=' ) { // We expect a '=' after the '?', but we got something else; ignore
+          KMIME_WARN << "Stray '?' in q-encoded word, ignoring this.";
+          continue;
+        }
+        else { // yep, found a '?=' sequence
+          scursor += 2;
+          break;
+        }
+      }
+      else { // The '?' is the last char, but we need a '=' after it!
+        KMIME_WARN_PREMATURE_END_OF( EncodedWord );
+        return false;
+      }
     }
   }
 
-  // not found? Can't be an encoded-word!
-  // ### maybe evaluate it nonetheless if the rest is OK?
-  if ( scursor == send || *scursor != '?' ) {
-    // kDebug(5320) << "fourth";
+  if ( *( scursor - 2 ) != '?' || *( scursor - 1 ) != '=' ||
+       scursor < encodedTextStart + 2 ) {
     KMIME_WARN_PREMATURE_END_OF( EncodedWord );
     return false;
   }
-  scursor++;
-  // check for trailing '=':
-  if ( scursor == send || *scursor != '=' ) {
-    // kDebug(5320) << "fifth";
-    KMIME_WARN_PREMATURE_END_OF( EncodedWord );
-    return false;
-  }
-  scursor++;
 
   // set end sentinel for encoded-text:
   const char * const encodedTextEnd = scursor - 2;

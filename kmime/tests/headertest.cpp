@@ -721,4 +721,36 @@ void HeaderTest::noAbstractHeaders()
   UserAgent* h24 = new UserAgent(); delete h24;
 }
 
+void HeaderTest::testInvalidButOkQEncoding()
+{
+  // A stray '?' should not confuse the parser
+  Subject subject;
+  subject.from7BitString( "=?us-ascii?q?Why?_Why_do_some_clients_violate_the_RFC?" "?=" );
+  QCOMPARE( subject.as7BitString( false ), QByteArray( "Why? Why do some clients violate the RFC?" ) );
+}
+
+void HeaderTest::testInvalidQEncoding_data()
+{
+  QTest::addColumn<QString>("encodedWord");
+
+  // All examples below should not be treated as invalid encoded strings, since the '?=' is missing
+  QTest::newRow("") << QString( "=?us-ascii?q?Why?_Why_do_some_clients_violate_the_RFC??" );
+  QTest::newRow("") << QString( "=?us-ascii?q?Why?_Why_do_some_clients_violate_the_RFC?" );
+  QTest::newRow("") << QString( "=?us-ascii?q?Why?_Why_do_some_clients_violate_the_RFC" );
+}
+
+void HeaderTest::testInvalidQEncoding()
+{
+  using namespace HeaderParsing;
+  QFETCH( QString,encodedWord );
+
+  const char *data = encodedWord.toAscii().data();
+  const char *start = data + 1;
+  const char *end = data + strlen( data );
+  QString result;
+  QByteArray language;
+  QByteArray usedCS;
+  QVERIFY( !parseEncodedWord( start, end, result, language, usedCS ) );
+}
+
 #include "headertest.moc"
