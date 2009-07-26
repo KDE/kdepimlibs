@@ -2442,6 +2442,8 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
   icalcomponent *c;
 
   // Iterate through all todos
+  cal->beginBatchAdding();
+
   c = icalcomponent_get_first_component( calendar, ICAL_VTODO_COMPONENT );
   while ( c ) {
     Todo *todo = readTodo( c, tzlist );
@@ -2484,6 +2486,8 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar )
     }
     c = icalcomponent_get_next_component( calendar, ICAL_VJOURNAL_COMPONENT );
   }
+
+  cal->endBatchAdding();
 
   // Post-Process list of events with relations, put Event objects in relation
   Event::List::ConstIterator eIt;

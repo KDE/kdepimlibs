@@ -732,6 +732,20 @@ class KCAL_EXPORT CalendarResources
     */
     void slotSaveError( ResourceCalendar *resource, const QString &err );
 
+    /**
+      All addIncidence( Incidence * ), addTodo( Todo * ) addEvent( Event * )
+      and addJournal( Journal * ) calls made between beginAddingIncidences()
+      and endAddingIncidences() will only ask the user to choose a resource once.
+      @since 4.4
+    */
+    void beginAddingIncidences();
+
+    /**
+      @see beginAddingIncidences()
+      @since 4.4
+    */
+    void endAddingIncidences();
+
   private:
     //@cond PRIVATE
     Q_DISABLE_COPY( CalendarResources )

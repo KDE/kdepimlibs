@@ -790,6 +790,16 @@ Journal::List Calendar::journals( const QDate &date )
   return el;
 }
 
+void Calendar::beginBatchAdding()
+{
+  emit batchAddingBegins();
+}
+
+void Calendar::endBatchAdding()
+{
+  emit batchAddingEnds();
+}
+
 // When this is called, the to-dos have already been added to the calendar.
 // This method is only about linking related to-dos.
 void Calendar::setupRelations( Incidence *forincidence )
