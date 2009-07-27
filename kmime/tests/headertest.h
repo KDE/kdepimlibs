@@ -43,6 +43,9 @@ class HeaderTest : public QObject
     void testNewsgroupsHeader();
     void testControlHeader();
     void testReturnPath();
+    void testInvalidButOkQEncoding();
+    void testInvalidQEncoding();
+    void testInvalidQEncoding_data();
 
     // makes sure we don't accidently have an abstract header class that's not
     // meant to be abstract

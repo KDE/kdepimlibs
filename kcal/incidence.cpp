@@ -40,7 +40,7 @@
 #include <kdebug.h>
 
 #include <QtCore/QList>
-#include <QTextDocument> // for Qt::escape() and Qt::mightBeRichText()
+#include <QtGui/QTextDocument> // for Qt::escape() and Qt::mightBeRichText()
 
 using namespace KCal;
 
@@ -79,20 +79,18 @@ class KCal::Incidence::Private
         mLocation( p.mLocation ),
         mLocationIsRich( p.mLocationIsRich ),
         mCategories( p.mCategories ),
+        mRecurrence( p.mRecurrence ),
         mResources( p.mResources ),
         mStatus( p.mStatus ),
         mStatusString( p.mStatusString ),
         mSecrecy( p.mSecrecy ),
         mPriority( p.mPriority ),
         mSchedulingID( p.mSchedulingID ),
-        mRelatedTo( 0 ),
+        mRelatedTo( p.mRelatedTo ),
         mRelatedToUid( p.mRelatedToUid ),
         mGeoLatitude( p.mGeoLatitude ),
         mGeoLongitude( p.mGeoLongitude ),
         mHasGeo( p.mHasGeo )
-// TODO: reenable attributes currently commented out.
-//  Incidence *mRelatedTo;          Incidence *mRelatedTo;
-//  Incidence::List mRelations;    Incidence::List mRelations;
     {
       mAlarms.setAutoDelete( true );
       mAttachments.setAutoDelete( true );
@@ -127,7 +125,7 @@ class KCal::Incidence::Private
 
     Incidence *mRelatedTo;           // incidence this is related to
     QString mRelatedToUid;           // incidence (by Uid) this is related to
-    Incidence::List mRelations;      // a list of incidences this is related to
+    Incidence::List mRelations;      // a list of incidences related to this
     float mGeoLatitude;              // Specifies latitude in decimal degrees
     float mGeoLongitude;             // Specifies longitude in decimal degrees
     bool mHasGeo;                    // if incidence has geo data
@@ -150,16 +148,14 @@ Incidence::Incidence( const Incidence &i )
 
 void Incidence::init( const Incidence &i )
 {
-// TODO: reenable attributes currently commented out.
   d->mRevision = i.d->mRevision;
   d->mCreated = i.d->mCreated;
   d->mDescription = i.d->mDescription;
   d->mSummary = i.d->mSummary;
   d->mCategories = i.d->mCategories;
-//  Incidence *mRelatedTo;          Incidence *mRelatedTo;
-  d->mRelatedTo = 0;
+  d->mRelatedTo = i.d->mRelatedTo;
   d->mRelatedToUid = i.d->mRelatedToUid;
-//  Incidence::List mRelations;    Incidence::List mRelations;
+  d->mRelations = i.d->mRelations;
   d->mResources = i.d->mResources;
   d->mStatusString = i.d->mStatusString;
   d->mStatus = i.d->mStatus;

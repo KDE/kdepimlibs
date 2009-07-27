@@ -80,6 +80,9 @@ void RFC2047Test::testRFC2047decode()
   QCOMPARE( decodeRFC2047String( "Subject: =?utf-8?q?Ingo=20Kl=C3=B6cker?= unencoded words =?iso-8859-9?Q?S=2E=C7a=F0lar?=", encCharset ),
             QString::fromUtf8( "Subject: Ingo Klöcker unencoded words S.Çağlar" ) );
   QCOMPARE( encCharset, QByteArray( "ISO-8859-9" ) );
+
+  // Small data
+  QCOMPARE( decodeRFC2047String( "=?iso-8859-1?Q?c?=", encCharset ), QString::fromUtf8("c") );
 }
 
 void RFC2047Test::testInvalidDecode()

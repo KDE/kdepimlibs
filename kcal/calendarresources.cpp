@@ -62,7 +62,9 @@ class KCal::CalendarResources::Private
 {
   public:
     Private( const QString &family )
-      : mManager( new CalendarResourceManager( family ) ),
+      : mAddingInProgress( false ),
+        mLastUsedResource( 0 ),
+        mManager( new CalendarResourceManager( family ) ),
         mStandardPolicy( new StandardDestinationPolicy( mManager ) ),
         mDestinationPolicy( mStandardPolicy ),
         mAskPolicy( new AskDestinationPolicy( mManager ) ),
@@ -75,6 +77,9 @@ class KCal::CalendarResources::Private
       delete mStandardPolicy;
       delete mAskPolicy;
     }
+    bool mAddingInProgress;
+    ResourceCalendar *mLastUsedResource;
+
     bool mOpen;  //flag that indicates if the resources are "open"
 
     KRES::Manager<ResourceCalendar>* mManager;
@@ -231,6 +236,10 @@ CalendarResources::CalendarResources( const KDateTime::Spec &timeSpec,
   : Calendar( timeSpec ),
     d( new KCal::CalendarResources::Private( family ) )
 {
+
+  connect( this, SIGNAL(batchAddingBegins()), this, SLOT(beginAddingIncidences()) );
+  connect( this, SIGNAL(batchAddingEnds()), this, SLOT(endAddingIncidences()) );
+
   d->mManager->addObserver( this );
 }
 
@@ -239,6 +248,9 @@ CalendarResources::CalendarResources( const QString &timeZoneId,
   : Calendar( timeZoneId ),
     d( new KCal::CalendarResources::Private( family ) )
 {
+  connect( this, SIGNAL(batchAddingBegins()), this, SLOT(beginAddingIncidences()) );
+  connect( this, SIGNAL(batchAddingEnds()), this, SLOT(endAddingIncidences()) );
+
   d->mManager->addObserver( this );
 }
 
@@ -425,7 +437,13 @@ bool CalendarResources::hasCalendarResources()
 bool CalendarResources::addIncidence( Incidence *incidence )
 {
   clearException();
-  ResourceCalendar *resource = d->mDestinationPolicy->destination( incidence );
+
+  ResourceCalendar *resource = d->mLastUsedResource;
+
+  if ( !d->mAddingInProgress || d->mLastUsedResource == 0 ) {
+    resource = d->mDestinationPolicy->destination( incidence );
+    d->mLastUsedResource = resource;
+  }
 
   if ( resource ) {
     d->mResourceMap[ incidence ] = resource;
@@ -908,6 +926,17 @@ bool CalendarResources::endChange( Incidence *incidence )
   }
 
   return true;
+}
+
+void CalendarResources::beginAddingIncidences()
+{
+  d->mAddingInProgress = true;
+}
+
+void CalendarResources::endAddingIncidences()
+{
+  d->mAddingInProgress = false;
+  d->mLastUsedResource = 0;
 }
 
 int CalendarResources::incrementChangeCount( ResourceCalendar *r )
