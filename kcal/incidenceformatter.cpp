@@ -632,7 +632,7 @@ QString IncidenceFormatter::extensiveDisplayStr( IncidenceBase *incidence, KDate
 //@cond PRIVATE
 static QString string2HTML( const QString &str )
 {
-  return Qt::escape( str );
+  return Qt::convertFromPlainText( str, Qt::WhiteSpaceNormal );
 }
 
 static QString cleanHtml( const QString &html )
@@ -944,7 +944,7 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode, KDateTime:
   QString sSummary = i18n( "Summary unspecified" );
   if ( !event->summary().isEmpty() ) {
     if ( !event->summaryIsRich() ) {
-      sSummary = string2HTML( event->summary() );
+      sSummary = Qt::escape( event->summary() );
     } else {
       sSummary = event->richSummary();
       if ( noHtmlMode ) {
@@ -956,7 +956,7 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode, KDateTime:
   QString sLocation = i18n( "Location unspecified" );
   if ( !event->location().isEmpty() ) {
     if ( !event->locationIsRich() ) {
-      sLocation = string2HTML( event->location() );
+      sLocation = Qt::escape( event->location() );
     } else {
       sLocation = event->richLocation();
       if ( noHtmlMode ) {
@@ -1039,7 +1039,7 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode, KDateTime::Sp
   QString sSummary = i18n( "Summary unspecified" );
   if ( !todo->summary().isEmpty() ) {
     if ( !todo->summaryIsRich() ) {
-      sSummary = string2HTML( todo->summary() );
+      sSummary = Qt::escape( todo->summary() );
     } else {
       sSummary = todo->richSummary();
       if ( noHtmlMode ) {
@@ -1051,7 +1051,7 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode, KDateTime::Sp
   QString sLocation = i18n( "Location unspecified" );
   if ( !todo->location().isEmpty() ) {
     if ( !todo->locationIsRich() ) {
-      sLocation = string2HTML( todo->location() );
+      sLocation = Qt::escape( todo->location() );
     } else {
       sLocation = todo->richLocation();
       if ( noHtmlMode ) {
