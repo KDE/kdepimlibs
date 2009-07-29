@@ -42,8 +42,8 @@ endif (GPGME_FOUND)
 
 if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
-  find_package(Akonadi 1.1.91 QUIET NO_MODULE)
-  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "1.1.95" "Akonadi is required to build KdepimLibs.")
+  find_package(Akonadi 1.2.0 QUIET NO_MODULE)
+  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "1.2.0" "Akonadi is required to build KdepimLibs.")
 
   find_package(Sasl2)
   macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" TRUE "" "Required to support authentication of logins in the IMAP and Sieve kioslaves.")
