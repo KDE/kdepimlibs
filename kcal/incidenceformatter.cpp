@@ -1895,7 +1895,7 @@ static QString formatICalInvitationHelper( QString invitation,
           html += tdClose;
 
           // Check calendar
-          if ( incBase->type() == "Event" ) {
+          if ( incBase && incBase->type() == "Event" ) {
             html += tdOpen;
             html += helper->makeLink( "check_calendar",
                                       i18nc( "look for scheduling conflicts",
@@ -1909,7 +1909,7 @@ static QString formatICalInvitationHelper( QString invitation,
 
     case iTIPCancel:
       // Remove invitation
-      if ( existingIncidence ) {
+      if ( inc && existingIncidence ) {
         html += tdOpen;
         if ( inc->type() == "Todo" ) {
           html += helper->makeLink( "cancel",
@@ -1938,10 +1938,12 @@ static QString formatICalInvitationHelper( QString invitation,
         html += eventViewerAddTag( "i", i18n( "The response has already been recorded" ) );
         html += tdClose;
       } else {
-        if ( inc->type() == "Todo" ) {
-          html += helper->makeLink( "reply", i18n( "[Record response into my to-do list]" ) );
-        } else {
-          html += helper->makeLink( "reply", i18n( "[Record response into my calendar]" ) );
+        if ( inc ) {
+          if ( inc->type() == "Todo" ) {
+            html += helper->makeLink( "reply", i18n( "[Record response into my to-do list]" ) );
+          } else {
+            html += helper->makeLink( "reply", i18n( "[Record response into my calendar]" ) );
+          }
         }
       }
       break;
