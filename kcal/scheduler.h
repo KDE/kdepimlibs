@@ -160,6 +160,13 @@ class KCAL_EXPORT Scheduler
     virtual QList<ScheduleMessage*> retrieveTransactions() = 0;
 
     /**
+      @deprecated: Use the other acceptTransaction() instead
+      KDE5: Remove me, make email an optional argument in the other overload
+     */
+    bool KDE_DEPRECATED acceptTransaction( IncidenceBase *incidence, iTIPMethod method,
+                                           ScheduleMessage::Status status );
+
+    /**
       Accepts the transaction. The incidence argument specifies the iCal
       component on which the transaction acts. The status is the result of
       processing a iTIP message with the current calendar and specifies the
@@ -168,9 +175,13 @@ class KCAL_EXPORT Scheduler
       @param incidence the incidence for the transaction.
       @param method iTIP transaction method to check.
       @param status scheduling status.
+      @param email the email address of the person for whom this
+      transaction is to be performed.
     */
-    bool acceptTransaction( IncidenceBase *incidence, iTIPMethod method,
-                            ScheduleMessage::Status status );
+    bool acceptTransaction( IncidenceBase *incidence,
+                            iTIPMethod method,
+                            ScheduleMessage::Status status,
+                            const QString &email );
 
     /**
       Returns a machine-readable name for a iTIP method.
@@ -201,7 +212,13 @@ class KCAL_EXPORT Scheduler
 
   protected:
     bool acceptPublish( IncidenceBase *, ScheduleMessage::Status status, iTIPMethod method );
-    bool acceptRequest( IncidenceBase *, ScheduleMessage::Status status );
+    /**
+      @deprecated: Use the other overload instead
+      KDE5: remove me
+     */
+    bool KDE_DEPRECATED acceptRequest( IncidenceBase *, ScheduleMessage::Status status );
+    bool acceptRequest( IncidenceBase *, ScheduleMessage::Status status,
+                        const QString &email );
     bool acceptAdd( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptDeclineCounter( IncidenceBase *, ScheduleMessage::Status status );
