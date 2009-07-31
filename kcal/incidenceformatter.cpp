@@ -1541,11 +1541,13 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
   {
     if ( incidence && incidence->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
       html += tdOpen;
-      if ( incBase->type() == "Todo" ) {
-        //TODO: 4.4, remove the []
-        html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
-      } else {
-        html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
+      if ( incBase ) {
+        if ( incBase->type() == "Todo" ) {
+          //TODO: 4.4, remove the []
+          html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
+        } else {
+          html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
+        }
       }
       html += tdClose;
     }
@@ -1589,7 +1591,7 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
       html += tdClose;
 
       // Check in calendar
-      if ( incBase->type() == "Event" ) {
+      if ( incBase && incBase->type() == "Event" ) {
         html += tdOpen;
         //TODO: 4.4, remove the []
         //TODO: 4.4, change to "Check calendar"
@@ -1613,10 +1615,12 @@ static QString formatICalInvitationHelper( QString invitation, Calendar *mCalend
     html += tdOpen;
     //TODO: 4.4, remove the []
     //TODO: 4.4, change string to "Enter this response into my..."
-    if ( incBase->type() == "Todo" ) {
-      html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
-    } else {
-      html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
+    if ( incBase ) {
+      if ( incBase->type() == "Todo" ) {
+        html += helper->makeLink( "reply", i18n( "[Enter this into my to-do list]" ) );
+      } else {
+        html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
+      }
     }
     html += tdClose;
     break;
