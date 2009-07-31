@@ -1817,6 +1817,10 @@ static QString formatICalInvitationHelper( QString invitation,
     if ( rsvpRec && ( inc && inc->revision() == 0 ) ) {
       html += i18n( "Your response has already been recorded [%1]", ea->statusStr() );
       rsvpReq = false;
+    } else if ( msg->method() == iTIPCancel ) {
+      html += i18n( "Declined the invitation" );
+    } else if ( msg->method() == iTIPAdd ) {
+      html += i18n( "Accepted the invitation" );
     } else {
       html += rsvpRequestedStr( rsvpReq );
     }
