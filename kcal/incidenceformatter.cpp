@@ -1814,8 +1814,15 @@ static QString formatICalInvitationHelper( QString invitation,
   if ( !myInc ) {
     html += "<br/>";
     html += "<i><u>";
-    if ( rsvpRec && ( inc && inc->revision() == 0 ) ) {
-      html += i18n( "Your response has already been recorded [%1]", ea->statusStr() );
+    if ( rsvpRec ) {
+      if ( inc && inc->revision() == 0 ) {
+        html += i18n( "Your response has already been recorded [%1]",
+                      ea->statusStr() );
+      }
+      if ( inc && inc->revision() > 0 ) {
+        html += i18n( "Your response to the update has already been recorded [%1]",
+                      ea->statusStr() );
+      }
       rsvpReq = false;
     } else if ( msg->method() == iTIPCancel ) {
       html += i18n( "Declined the invitation" );
@@ -1840,7 +1847,7 @@ static QString formatICalInvitationHelper( QString invitation,
     case iTIPRefresh:
     case iTIPAdd:
     {
-      if ( inc && inc->revision() > 0 && existingIncidence ) {
+      if ( !existingIncidence && !rsvpReq ) {
         if ( inc->type() == "Todo" ) {
           html += helper->makeLink( "reply", i18n( "[Record invitation into my to-do list]" ) );
         } else {
@@ -1883,7 +1890,7 @@ static QString formatICalInvitationHelper( QString invitation,
           html += tdClose;
         }
 
-        if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
+        if ( !existingIncidence && !rsvpReq ) {
           // Delegate
           html += tdOpen;
           html += helper->makeLink( "delegate",
