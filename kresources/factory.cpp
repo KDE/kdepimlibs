@@ -59,8 +59,7 @@ class Factory::Private
 
 class FactoryMap : public QMap<QString, Factory*>
 {
-public:
-
+  public:
     ~FactoryMap() { qDeleteAll(*this); }
 };
 
