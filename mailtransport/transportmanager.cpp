@@ -205,17 +205,19 @@ void TransportManager::createDefaultTransport()
 
 bool TransportManager::checkTransport( QWidget *parent )
 {
-  if ( !isEmpty() )
+  if ( !isEmpty() ) {
     return true;
+  }
 
-  const int response = KMessageBox::messageBox( parent,
-                   KMessageBox::WarningContinueCancel,
-                   i18n("You must create an outgoing account before sending."),
-                   i18n("Create Account Now?"),
-                   KGuiItem( i18n("Create Account Now") ) );
+  const int response = KMessageBox::messageBox(
+    parent,
+    KMessageBox::WarningContinueCancel,
+    i18n( "You must create an outgoing account before sending." ),
+    i18n( "Create Account Now?" ),
+    KGuiItem( i18n( "Create Account Now" ) ) );
   if ( response == KMessageBox::Continue ) {
-    Transport* transport = createTransport();
-    TransportConfigDialog* dialog = new TransportConfigDialog( transport, parent );
+    Transport *transport = createTransport();
+    TransportConfigDialog *dialog = new TransportConfigDialog( transport, parent );
     dialog->setAttribute( Qt::WA_DeleteOnClose );
     dialog->setWindowModality( Qt::WindowModal );
     if ( ( dialog->exec() == QDialog::Accepted ) && transport->isValid() ) {
