@@ -283,7 +283,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
   if ( !inc ) {
     return false;
   }
-   if ( inc->type() == "FreeBusy" ) {
+  if ( inc->type() == "FreeBusy" ) {
     // reply to this request is handled in korganizer's incomingdialog
     return true;
   }
