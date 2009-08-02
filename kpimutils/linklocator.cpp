@@ -107,15 +107,19 @@ QString LinkLocator::getUrl()
 {
   QString url;
   if ( atUrl() ) {
-    // handle cases like this: <link>http://foobar.org/</link>
+    // for reference: rfc1738:
+    // Thus, only alphanumerics, the special characters "$-_.+!*'(),", and
+    // reserved characters used for their reserved purposes may be used
+    // unencoded within a URL.
+    // NOTE: this implementation is not RFC conforming
     int start = mPos;
     while ( mPos < (int)mText.length() &&
             mText[mPos] > ' ' && mText[mPos] != '"' &&
-            QString( "<>()[]" ).indexOf( mText[mPos] ) == -1 ) {
+            QString( "<>[]" ).indexOf( mText[mPos] ) == -1 ) {
       ++mPos;
     }
 
-    /* some URLs really end with:  # / & - _    */
+    // some URLs really end with:  # / & - _
     const QString allowedSpecialChars = QString( "#/&-_" );
     while ( mPos > start && mText[mPos-1].isPunct() &&
             allowedSpecialChars.indexOf( mText[mPos-1] ) == -1 ) {
