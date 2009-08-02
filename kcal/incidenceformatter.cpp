@@ -636,7 +636,7 @@ QString IncidenceFormatter::extensiveDisplayStr( IncidenceBase *incidence, KDate
 //@cond PRIVATE
 static QString string2HTML( const QString &str )
 {
-  return Qt::escape( str );
+  return Qt::convertFromPlainText( str, Qt::WhiteSpaceNormal );
 }
 
 static QString cleanHtml( const QString &html )
@@ -948,7 +948,7 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode, KDateTime:
   QString sSummary = i18n( "Summary unspecified" );
   if ( !event->summary().isEmpty() ) {
     if ( !event->summaryIsRich() ) {
-      sSummary = string2HTML( event->summary() );
+      sSummary = Qt::escape( event->summary() );
     } else {
       sSummary = event->richSummary();
       if ( noHtmlMode ) {
@@ -960,7 +960,7 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode, KDateTime:
   QString sLocation = i18n( "Location unspecified" );
   if ( !event->location().isEmpty() ) {
     if ( !event->locationIsRich() ) {
-      sLocation = string2HTML( event->location() );
+      sLocation = Qt::escape( event->location() );
     } else {
       sLocation = event->richLocation();
       if ( noHtmlMode ) {
@@ -1043,7 +1043,7 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode, KDateTime::Sp
   QString sSummary = i18n( "Summary unspecified" );
   if ( !todo->summary().isEmpty() ) {
     if ( !todo->summaryIsRich() ) {
-      sSummary = string2HTML( todo->summary() );
+      sSummary = Qt::escape( todo->summary() );
     } else {
       sSummary = todo->richSummary();
       if ( noHtmlMode ) {
@@ -1055,7 +1055,7 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode, KDateTime::Sp
   QString sLocation = i18n( "Location unspecified" );
   if ( !todo->location().isEmpty() ) {
     if ( !todo->locationIsRich() ) {
-      sLocation = string2HTML( todo->location() );
+      sLocation = Qt::escape( todo->location() );
     } else {
       sLocation = todo->richLocation();
       if ( noHtmlMode ) {
@@ -1721,6 +1721,25 @@ QString InvitationFormatterHelper::makeLink( const QString &id, const QString &t
   return res;
 }
 
+// Check if the given incidence is likely one that we own instead one from
+// a shared calendar (Kolab-specific)
+static bool incidenceOwnedByMe( Calendar *calendar, Incidence *incidence )
+{
+  CalendarResources *cal = dynamic_cast<CalendarResources*>( calendar );
+  if ( !cal || !incidence ) {
+    return true;
+  }
+  ResourceCalendar *res = cal->resource( incidence );
+  if ( !res ) {
+    return true;
+  }
+  const QString subRes = res->subresourceIdentifier( incidence );
+  if ( !subRes.contains( "/.INBOX.directory/" ) ) {
+    return false;
+  }
+  return true;
+}
+
 Calendar *InvitationFormatterHelper::calendar() const
 {
   return 0;
@@ -1751,14 +1770,18 @@ static QString formatICalInvitationHelper( QString invitation,
   IncidenceBase *incBase = msg->event();
   incBase->shiftTimes( mCalendar->timeSpec(), KDateTime::Spec::LocalZone() );
 
-  // Determine if this incidence is in my calendar
+  // Determine if this incidence is in my calendar (and owned by me)
   Incidence *existingIncidence = 0;
   if ( incBase && helper->calendar() ) {
     existingIncidence = helper->calendar()->incidence( incBase->uid() );
+    if ( !incidenceOwnedByMe( helper->calendar(), existingIncidence ) ) {
+      existingIncidence = 0;
+    }
     if ( !existingIncidence ) {
       const Incidence::List list = helper->calendar()->incidences();
       for ( Incidence::List::ConstIterator it = list.begin(), end = list.end(); it != end; ++it ) {
-        if ( (*it)->schedulingID() == incBase->uid() ) {
+        if ( (*it)->schedulingID() == incBase->uid() &&
+             incidenceOwnedByMe( helper->calendar(), *it ) ) {
           existingIncidence = *it;
           break;
         }
@@ -1814,9 +1837,20 @@ static QString formatICalInvitationHelper( QString invitation,
   if ( !myInc ) {
     html += "<br/>";
     html += "<i><u>";
-    if ( rsvpRec && ( inc && inc->revision() == 0 ) ) {
-      html += i18n( "Your response has already been recorded [%1]", ea->statusStr() );
+    if ( rsvpRec ) {
+      if ( inc && inc->revision() == 0 ) {
+        html += i18n( "Your response has already been recorded [%1]",
+                      ea->statusStr() );
+      }
+      if ( inc && inc->revision() > 0 ) {
+        html += i18n( "Your response to the update has already been recorded [%1]",
+                      ea->statusStr() );
+      }
       rsvpReq = false;
+    } else if ( msg->method() == iTIPCancel ) {
+      html += i18n( "Declined the invitation" );
+    } else if ( msg->method() == iTIPAdd ) {
+      html += i18n( "Accepted the invitation" );
     } else {
       html += rsvpRequestedStr( rsvpReq );
     }
@@ -1836,7 +1870,7 @@ static QString formatICalInvitationHelper( QString invitation,
     case iTIPRefresh:
     case iTIPAdd:
     {
-      if ( inc && inc->revision() > 0 && existingIncidence ) {
+      if ( !existingIncidence && !rsvpReq ) {
         if ( inc->type() == "Todo" ) {
           html += helper->makeLink( "reply", i18n( "[Record invitation into my to-do list]" ) );
         } else {
@@ -1879,7 +1913,7 @@ static QString formatICalInvitationHelper( QString invitation,
           html += tdClose;
         }
 
-        if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
+        if ( !existingIncidence && !rsvpReq ) {
           // Delegate
           html += tdOpen;
           html += helper->makeLink( "delegate",
@@ -1895,7 +1929,7 @@ static QString formatICalInvitationHelper( QString invitation,
           html += tdClose;
 
           // Check calendar
-          if ( incBase->type() == "Event" ) {
+          if ( incBase && incBase->type() == "Event" ) {
             html += tdOpen;
             html += helper->makeLink( "check_calendar",
                                       i18nc( "look for scheduling conflicts",
@@ -1909,7 +1943,7 @@ static QString formatICalInvitationHelper( QString invitation,
 
     case iTIPCancel:
       // Remove invitation
-      if ( existingIncidence ) {
+      if ( inc && existingIncidence ) {
         html += tdOpen;
         if ( inc->type() == "Todo" ) {
           html += helper->makeLink( "cancel",
@@ -1938,10 +1972,12 @@ static QString formatICalInvitationHelper( QString invitation,
         html += eventViewerAddTag( "i", i18n( "The response has already been recorded" ) );
         html += tdClose;
       } else {
-        if ( inc->type() == "Todo" ) {
-          html += helper->makeLink( "reply", i18n( "[Record response into my to-do list]" ) );
-        } else {
-          html += helper->makeLink( "reply", i18n( "[Record response into my calendar]" ) );
+        if ( inc ) {
+          if ( inc->type() == "Todo" ) {
+            html += helper->makeLink( "reply", i18n( "[Record response into my to-do list]" ) );
+          } else {
+            html += helper->makeLink( "reply", i18n( "[Record response into my calendar]" ) );
+          }
         }
       }
       break;
