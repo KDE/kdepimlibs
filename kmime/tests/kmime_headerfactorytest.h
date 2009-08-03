@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -16,33 +16,21 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#ifndef KMIME_CONTENT_TEST_H
-#define KMIME_CONTENT_TEST_H
+
+#ifndef KMIME_HEADERFACTORYTEST_H
+#define KMIME_HEADERFACTORYTEST_H
 
 #include <QtCore/QObject>
 
-class KMimeContentTest : public QObject
+class HeaderFactoryTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
-    void testGetHeaderInstance();
-    void testHeaderAddRemove();
-    void testHeaderAppendPrepend();
-    void testImplicitMultipartGeneration();
-    void testExplicitMultipartGeneration();
-    void testSetContent();
-    void testEncodedContent();
-    void testMultipartMixed();
-    void testMultipleHeaderExtraction();
-    /**
-      Tests that a message with uuencoded content
-      is parsed correctly and if a corresponding
-      MIME structure is created.
-    */
-    void testParsingUuencoded();
-    // TODO: grab samples from http://www.yenc.org/develop.htm and make a Yenc test
-    void testParent();
-    void testFreezing();
+    void testBuiltInHeaders();
+    void testCustomHeaders();
+    void testErrors();
+
+    // TODO test how unregistered headers are handled by Content.
 };
 
 #endif

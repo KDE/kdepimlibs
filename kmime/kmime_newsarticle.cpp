@@ -34,142 +34,73 @@ class NewsArticlePrivate : public MessagePrivate
   public:
     NewsArticlePrivate( NewsArticle *q ) : MessagePrivate( q )
     {
-      lines.setParent( q );
     }
-
-    KMime::Headers::Lines lines;
 
     Q_DECLARE_PUBLIC(NewsArticle)
 };
 
-NewsArticle::NewsArticle() : Message( new NewsArticlePrivate( this ) ) {}
+NewsArticle::NewsArticle()
+  : Message( new NewsArticlePrivate( this ) )
+{
+}
 
-NewsArticle::~NewsArticle() {}
+NewsArticle::~NewsArticle()
+{
+}
 
 void NewsArticle::parse()
 {
-  Q_D(NewsArticle);
+  // KDE5: remove this virtual reimplementation.
   Message::parse();
-
-  QByteArray raw;
-
-  if ( !( raw = rawHeader( d->lines.type() ) ).isEmpty() )
-    d->lines.from7BitString( raw );
 }
 
 QByteArray NewsArticle::assembleHeaders()
 {
-  Q_D(NewsArticle);
-  Headers::Base *h;
-  QByteArray newHead;
+  // Create the mandatory Lines: field.
+  lines( true );
 
-  //Control
-  if ( ( h = control( false ) ) != 0 && !h->isEmpty() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //Supersedes
-  if ( ( h = supersedes( false ) ) != 0 && !h->isEmpty() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //Newsgroups
-  if ( ( h = newsgroups( false ) ) != 0 && !h->isEmpty() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //Followup-To
-  if ( ( h = followUpTo( false ) ) != 0 && !h->isEmpty() ) {
-    newHead+=h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //Mail-Copies-To
-  if ( ( h = mailCopiesTo( false ) ) != 0 && !h->isEmpty() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //Lines
-  h = lines(); // "Lines" is mandatory
-  newHead += h->as7BitString() + '\n';
-  KMime::removeHeader( d->head, h->type() );
-
-  newHead += Message::assembleHeaders();
-  return newHead;
+  // Assemble all header fields.
+  return Message::assembleHeaders();
 }
 
 void NewsArticle::clear()
 {
-  Q_D(NewsArticle);
-  d->lines.clear();
+  // KDE5: remove this virtual reimplementation.
   Message::clear();
 }
 
 Headers::Base * NewsArticle::getHeaderByType( const char *type )
 {
-    return headerByType( type );
+  // KDE5: remove this virtual reimplementation.
+  return headerByType( type );
 }
 
 Headers::Base * NewsArticle::headerByType( const char *type )
 {
-  Q_D(NewsArticle);
-  if ( strcasecmp( "Lines", type ) == 0 ) {
-    if ( d->lines.isEmpty() ) {
-      return 0;
-    } else {
-      return &d->lines;
-    }
-  } else {
-    return Message::headerByType( type );
-  }
+  // KDE5: remove this virtual reimplementation.
+  return Message::headerByType( type );
 }
 
 void NewsArticle::setHeader( Headers::Base *h )
 {
-  Q_D(NewsArticle);
-  bool del = true;
-  if ( h->is( "Lines" ) ) {
-    d->lines.setNumberOfLines( (static_cast<Headers::Lines*>(h))->numberOfLines() );
-  } else {
-    del = false;
-    Message::setHeader( h );
-  }
-
-  if ( del ) delete h;
+  // KDE5: remove this virtual reimplementation.
+  Message::setHeader( h );
 }
 
 bool NewsArticle::removeHeader( const char *type )
 {
-  Q_D(NewsArticle);
-  if ( strcasecmp( "Lines", type ) == 0 ) {
-    d->lines.clear();
-  } else {
-    return Message::removeHeader( type );
-  }
-
-  return true;
-}
-
-Headers::Lines* NewsArticle::lines(bool create)
-{
-  Q_D(NewsArticle);
-  if ( !create && d->lines.isEmpty() )
-    return 0;
-  return &d->lines;
+  // KDE5: remove this virtual reimplementation.
+  return Message::removeHeader( type );
 }
 
 // @cond PRIVATE
-#define kmime_mk_header_accessor( header, method ) \
-Headers::header* NewsArticle::method( bool create ) { \
-  Headers::header *p = 0; \
-  return headerInstance( p, create ); \
+#define kmime_mk_header_accessor( type, method ) \
+Headers::type* NewsArticle::method( bool create ) { \
+  return header<Headers::type>( create ); \
 }
 
 kmime_mk_header_accessor( Control, control )
+kmime_mk_header_accessor( Lines, lines )
 kmime_mk_header_accessor( Supersedes, supersedes )
 kmime_mk_header_accessor( MailCopiesTo, mailCopiesTo )
 kmime_mk_header_accessor( Newsgroups, newsgroups )

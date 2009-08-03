@@ -23,6 +23,8 @@
 #include "kmime_header_parsing.h"
 
 #include "kmime_codecs.h"
+#include "kmime_headerfactory.h"
+#include "kmime_headers.h"
 #include "kmime_util.h"
 #include "kmime_dateformatter.h"
 #include "kmime_warning.h"
@@ -2031,6 +2033,67 @@ bool parseDateTime( const char* &scursor, const char * const send,
   if ( !result.isValid() )
     return false;
   return true;
+}
+
+Headers::Base *extractFirstHeader( QByteArray &head )
+{
+  int pos1=-1, pos2=0, len=head.length()-1;
+  bool folded( false );
+  Headers::Base *header=0;
+
+  pos1 = head.indexOf( ": " );
+
+  if ( pos1 > -1 ) {    //there is another header
+    pos2 = pos1 += 2; //skip the name
+
+    if ( head[pos2] != '\n' ) {  // check if the header is not empty
+      while ( 1 ) {
+        pos2 = head.indexOf( '\n', pos2 + 1 );
+        if ( pos2 == -1 || pos2 == len ||
+             ( head[pos2+1] != ' ' && head[pos2+1] != '\t' ) ) {
+          //break if we reach the end of the string, honor folded lines
+          break;
+        } else {
+          folded = true;
+        }
+      }
+    }
+
+    if ( pos2 < 0 ) {
+      pos2 = len + 1; //take the rest of the string
+    }
+
+    QByteArray rawType = head.left( pos1 - 2 );
+    QByteArray rawData = head.mid( pos1, pos2 - pos1 );
+    if( folded ) {
+      rawData = unfoldHeader( rawData );
+    }
+    header = HeaderFactory::self()->createHeader( rawType );
+    if( !header ) {
+      kWarning() << "Returning Generic header of type" << rawType;
+      header = new Headers::Generic( rawType );
+    }
+    header->from7BitString( rawData );
+
+    head.remove( 0, pos2 + 1 );
+  } else {
+    head = "";
+  }
+
+  return header;
+}
+
+Headers::Base::List parseHeaders( const QByteArray &head )
+{
+  Headers::Base::List ret;
+  Headers::Base *h;
+
+  QByteArray copy = head;
+  while( ( h = extractFirstHeader( copy ) ) ) {
+    ret << h;
+  }
+
+  return ret;
 }
 
 } // namespace HeaderParsing

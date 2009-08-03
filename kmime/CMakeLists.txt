@@ -18,6 +18,7 @@ set(kmime_LIB_SRCS
    kmime_codec_identity.cpp
    kmime_parsers.cpp
    kmime_header_parsing.cpp
+   kmime_headerfactory.cpp
    kmime_content.cpp
    kmime_contentindex.cpp
    kmime_headers.cpp
@@ -44,6 +45,7 @@ install( FILES
          kmime_content.h
          kmime_contentindex.h
          kmime_header_parsing.h
+         kmime_headerfactory.h
          kmime_headers.h
          kmime_message.h
          kmime_mdn.h

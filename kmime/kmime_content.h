@@ -5,6 +5,7 @@
     Copyright (c) 2001 the KMime authors.
     See file AUTHORS for details
     Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -65,10 +66,19 @@ class ContentPrivate;
   It parses the given data and creates a tree-like structure that
   represents the structure of the message.
 */
+/*
+  KDE5:
+  * Do not convert singlepart <-> multipart automatically.
+  * A bunch of methods probably don't need to be virtual (since they're not needed
+    in either Message or NewsArticle).
+*/
 class KMIME_EXPORT Content
 {
   public:
 
+    /**
+      Describes a list of Content objects.
+    */
     typedef QList<KMime::Content*> List;
 
     /**
@@ -81,7 +91,7 @@ class KMIME_EXPORT Content
       @param parent the parent Content object
       @since 4.3
     */
-    explicit Content( Content* parent ); //TODO: Merge with the above
+    explicit Content( Content* parent ); // KDE5: Merge with the above.
 
     /**
       Creates a Content object containing the given raw data.
@@ -99,7 +109,8 @@ class KMIME_EXPORT Content
       @param parent the parent Content object
       @since 4.3
     */
-    Content( const QByteArray &head, const QByteArray &body, Content *parent ); //TODO: merge with the above
+    // KDE5: Merge with the above.
+    Content( const QByteArray &head, const QByteArray &body, Content *parent );
 
     /**
       Destroys this Content object.
@@ -128,18 +139,54 @@ class KMIME_EXPORT Content
     void setContent( const QByteArray &s );
 
     /**
-      Parses the Contents, splitting into multiple sub-Contents.
+      Parses the Content.
+      This means the broken-down object representation of the Content is
+      updated from the string representation of the Content.
+      Call this if you want to access or change headers or sub-Contents.
     */
     virtual void parse();
 
     /**
-      Call to generate the MIME structure of the message.
+      Returns whether this Content is frozen.
+      A frozen content is immutable, i.e. calling assemble() will never modify
+      its head or body, and encodedContent() will return the same data before
+      and after parsing.
+
+      @since 4.4.
+      @see setFrozen().
+    */
+    bool isFrozen() const;
+
+    /**
+      Freezes this Content if @p frozen is true; otherwise unfreezes it.
+
+      @since 4.4
+      @see isFrozen().
+    */
+    void setFrozen( bool frozen = true );
+
+    /**
+      Generates the MIME message.
+      This means the string representation of this Content is updated from the
+      broken-down object representation.
+      Call this if you have made changes to the message, and want
+      encodedContent() to reflect those changes.
+
+      @note assemble() has no effect if the Content isFrozen().  You may want
+      to freeze, for instance, signed sub-Contents, to make sure they are kept
+      unmodified.
+
+      @warning assemble() may change the order of the headers, and other
+      details such as where folding occurs.  This may break things like
+      signature verification, so you should *ONLY* call assemble() when you
+      have actually modified the message.
     */
     virtual void assemble();
 
     /**
       Clears the complete message and deletes all sub-Contents.
     */
+    // KDE5: make non-virtual.
     virtual void clear();
 
     /**
@@ -178,28 +225,42 @@ class KMIME_EXPORT Content
       @deprecated Use nextHeader( QByteArray )
       @param head is a QByteArray containing the header data.
     */
-
     KDE_DEPRECATED Headers::Generic *getNextHeader( QByteArray &head );
 
     /**
       Extracts and removes the next header from @p head.
       The caller is responsible for deleting the returned header.
       @since 4.2
+      @deprecated Use KMime::extractFirstHeader().
       @param head is a QByteArray containing the header data.
     */
-    Headers::Generic *nextHeader( QByteArray &head );
+    // KDE5: Remove this. This method has nothing to do with *this object.
+    KDE_DEPRECATED Headers::Generic *nextHeader( QByteArray &head );
 
     /**
       Tries to find a @p type header in the message and returns it.
       @deprecated Use headerByType( const char * )
     */
+    // KDE5: Make non-virtual.
     KDE_DEPRECATED virtual Headers::Base *getHeaderByType( const char *type );
 
     /**
-      Tries to find a @p type header in the message and returns it.
+      Returns the first header of type @p type, if it exists.  Otherwise returns 0.
+      Note that the returned header may be empty.
       @since 4.2
     */
+    // KDE5: Make non-virtual.
     virtual Headers::Base *headerByType( const char *type );
+
+    /**
+      Returns the first header of type T, if it exists.
+      If the header does not exist and @p create is true, creates an empty header
+      and returns it. Otherwise returns 0.
+      Note that the returned header may be empty.
+      @param create Whether to create the header if it does not exist.
+      @since 4.4.
+    */
+    template <typename T> T *header( bool create = false );
 
     /**
       Tries to find all the @p type headers in the message and returns it.
@@ -208,10 +269,49 @@ class KMIME_EXPORT Content
     */
     virtual QList<Headers::Base*> headersByType( const char *type );
 
+    /**
+      Sets the specified header to this Content.
+      Any previous header of the same type is removed.
+      If you need multiple headers of the same type, use appendHeader() or
+      prependHeader().
+
+      @param h The header to set.
+      @see appendHeader()
+      @see removeHeader()
+      @since 4.4
+    */
+    // KDE5: make non-virtual.
     virtual void setHeader( Headers::Base *h );
 
+    /**
+      Appends the specified header to the headers of this Content.
+      @param h The header to append.
+      @since 4.4
+    */
+    void appendHeader( Headers::Base *h );
+
+    /**
+      Prepends the specified header to the headers of this Content.
+      @param h The header to prepend.
+      @since 4.4
+    */
+    void prependHeader( Headers::Base *h );
+
+    /**
+      Searches for the first header of type @p type, and deletes it, removing
+      it from this Content.
+      @param type The type of the header to look for.
+      @return true if a header was found and removed.
+    */
+    // TODO probably provide removeHeader<T>() too.
+    // KDE5: make non-virtual.
     virtual bool removeHeader( const char *type );
 
+    /**
+      @return true if this Content has a header of type @p type.
+      @param type The type of the header to look for.
+    */
+    // TODO probably provide hasHeader<T>() too.
     bool hasHeader( const char *type );
 
     /**
@@ -250,9 +350,16 @@ class KMIME_EXPORT Content
     */
     Headers::ContentLocation *contentLocation( bool create=true );
 
+    /**
+      Returns the Content ID.
+      @param create If true, create the header if it does not exist yet.
+      @since 4.4
+    */
+    Headers::ContentID *contentID( bool create = true );
 
     /**
       Returns the size of the Content body after encoding.
+      (If the encoding is quoted-printable, this is only an approximate size.)
     */
     int size();
 
@@ -336,31 +443,49 @@ class KMIME_EXPORT Content
     List contents() const;
 
     /**
-      Adds a new sub-Content, the current Content object is converted into a
-      multipart/mixed Content node if it has been a single-part Content. If the sub-Content
-      is already in another Content object, it is removed from there and its parent is
-      updated.
+      Adds a new sub-Content. If the sub-Content is already part of another
+      Content object, it is removed from there and its parent is updated.
+      If the current Content object is single-part, it is converted to
+      multipart/mixed first.
 
-      @param c The new sub-Content.
-      @param prepend if true, prepend to the Content list; else append
+      @warning If the single-part to multipart conversion happens, all
+      pointers you may have into this object (such as headers) will become
+      invalid!
+
+      @param content The new sub-Content.
+      @param prepend If true, prepend to the Content list; otherwise append.
       to the Content list.
 
       @see removeContent().
     */
-    void addContent( Content *c, bool prepend = false );
+    // KDE5: Do not convert single-part->multipart automatically.
+    void addContent( Content *content, bool prepend = false );
 
     /**
-      Removes the given sub-Content. The current Content object is converted
-      into a single-part Content if only one sub-Content is left.
+      Removes the given sub-Content. If only one sub-Content is left, the
+      current Content object is converted into a single-part Content.
 
-      @param c The Content to remove.
-      @param del if true, delete the removed Content object. Otherwise its parent is set to NULL.
+      @warning If the multipart to single-part conversion happens, the head
+      and body of the single remaining sub-Content are copied over, and the
+      sub-Content is deleted.  All pointers to it or into it (such as headers)
+      will become invalid!
+
+      @param content The Content to remove.
+      @param del If true, delete the removed Content object. Otherwise set its
+      parent to 0.
 
       @see addContent().
       @see clearContents().
     */
-    void removeContent( Content *c, bool del = false );
+    // KDE5: Do not convert multipart->single-part automatically.
+    void removeContent( Content *content, bool del = false );
 
+    /**
+      Changes the encoding of this Content to @p e.  If the Content is binary,
+      this actually re-encodes the data to use the new encoding.
+
+      @param e The new encoding to use.
+    */
     void changeEncoding( Headers::contentEncoding e );
 
     /**
@@ -371,6 +496,9 @@ class KMIME_EXPORT Content
       in the stream. This is needed to avoid problem with mbox-files
     */
     void toStream( QTextStream &ts, bool scrambleFromLines = false );
+
+    // NOTE: The charset methods below are accessed by the headers which
+    // have this Content as a parent.
 
     /**
       Returns the charset that is used for all headers and the body
@@ -410,22 +538,22 @@ class KMIME_EXPORT Content
 
     /**
       Returns the Content specified by the given index.
-      If the index doesn't point to a Content, 0 is returned, if the index
+      If the index does not point to a Content, 0 is returned. If the index
       is invalid (empty), this Content is returned.
 
-      @param index the Content index
+      @param index The Content index.
     */
     Content *content( const ContentIndex &index ) const;
 
     /**
-      Returns the ContentIndex for the given Content, an invalid index
-      if the Content is not found withing the hierarchy.
+      Returns the ContentIndex for the given Content, or an invalid index
+      if the Content is not found within the hierarchy.
       @param content the Content object to search.
     */
     ContentIndex indexForContent( Content *content ) const;
 
     /**
-      Returns true if this is the top-level node in the MIME tree, ie. if this
+      Returns true if this is the top-level node in the MIME tree, i.e. if this
       is actually a message or news article.
     */
     virtual bool isTopLevel() const;
@@ -464,11 +592,30 @@ class KMIME_EXPORT Content
     */
     virtual QByteArray assembleHeaders();
 
-    QByteArray rawHeader( const char *name ) const;
-    QList<QByteArray> rawHeaders( const char *name ) const;
-    bool decodeText();
-    template <class T> T *headerInstance( T *ptr, bool create );
+    /**
+      Returns the raw string representing the header of type @p name.
+      @deprecated Use KMime::extractHeader() directly instead.
+    */
+    KDE_DEPRECATED QByteArray rawHeader( const char *name ) const;
 
+    /**
+      Returns a list of raw strings representing all header of type @p name.
+      @deprecated Use KMime::extractHeaders() directly instead.
+    */
+    KDE_DEPRECATED QList<QByteArray> rawHeaders( const char *name ) const;
+
+    /**
+      Returns whether this object holds text content.
+    */
+    // KDE5: Not needed outside. Move to Private class.
+    bool decodeText();
+
+    /**
+      @deprecated Use header() instead.
+    */
+    template <class T> KDE_DEPRECATED T *headerInstance( T *ptr, bool create );
+
+    // KDE5: Move to Private class.
     Headers::Base::List h_eaders;
 
     //@cond PRIVATE
@@ -486,15 +633,21 @@ class KMIME_EXPORT Content
 
 template <class T> T *Content::headerInstance( T *ptr, bool create )
 {
-  T dummy; //needed to access virtual member T::type()
+  return header<T>( create );
+}
 
-  ptr=static_cast <T*> ( headerByType( dummy.type() ) );
-  if ( !ptr && create ) { //no such header found, but we need one => create it
-    ptr = new T( this );
-    h_eaders.append( ptr );
+template <typename T> T *Content::header( bool create )
+{
+  T dummy;
+  Headers::Base *h = headerByType( dummy.type() );
+  if( h ) {
+    // Make sure the header is actually of the right type.
+    Q_ASSERT( dynamic_cast<T*>( h ) );
+  } else if( create ) {
+    h = new T( this );
+    setHeader( h );
   }
-
-  return ptr;
+  return static_cast<T*>( h );
 }
 
 } // namespace KMime

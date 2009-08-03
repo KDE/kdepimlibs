@@ -44,6 +44,7 @@
 #include "kmime_content.h"
 #include "kmime_codecs.h"
 #include "kmime_header_parsing.h"
+#include "kmime_headerfactory.h"
 #include "kmime_warning.h"
 
 #include <QtCore/QTextCodec>
@@ -55,6 +56,21 @@
 
 #include <assert.h>
 #include <ctype.h>
+
+template <typename T>
+bool registerHeaderHelper()
+{
+  const T dummy;
+  if( QByteArray( dummy.type() ).isEmpty() ) {
+    // This is a generic header.
+    return false;
+  }
+  return KMime::HeaderFactory::self()->registerHeader<T>();
+}
+
+// macro to register a header with HeaderFactory
+#define kmime_register_header( subclass )                             \
+namespace { const bool dummyForRegistering##subclass = registerHeaderHelper<subclass>(); }
 
 // macro to generate a default constructor implementation
 #define kmime_mk_trivial_ctor( subclass, baseclass )                  \
@@ -74,7 +90,17 @@ subclass::subclass( Content *parent, const QString &s, const QByteArray &charset
   fromUnicodeString( s, charset );                                    \
 }                                                                     \
                                                                       \
-subclass::~subclass() {}
+Base *subclass::clone() const                                         \
+{                                                                     \
+  subclass *ret = new subclass;                                       \
+  ret->from7BitString( as7BitString( false ) );                       \
+  return ret;                                                         \
+}                                                                     \
+                                                                      \
+subclass::~subclass() {}                                              \
+                                                                      \
+kmime_register_header( subclass )
+// end kmime_mk_trivial_ctor
 
 
 #define kmime_mk_trivial_ctor_with_dptr( subclass, baseclass ) \
@@ -94,7 +120,18 @@ subclass::subclass( Content *parent, const QString &s, const QByteArray &charset
   fromUnicodeString( s, charset );                                    \
 }                                                                     \
                                                                       \
-subclass::~subclass() {}
+Base *subclass::clone() const                                         \
+{                                                                     \
+  subclass *ret = new subclass;                                       \
+  ret->from7BitString( as7BitString( false ) );                       \
+  return ret;                                                         \
+}                                                                     \
+                                                                      \
+subclass::~subclass() {}                                              \
+                                                                      \
+kmime_register_header( subclass )
+// end kmime_mk_trivial_ctor_with_dptr
+
 
 #define kmime_mk_trivial_ctor_with_name( subclass, baseclass, name )  \
 kmime_mk_trivial_ctor( subclass, baseclass )                          \
@@ -136,6 +173,7 @@ Base::Base( BasePrivate *dd, KMime::Content *parent ) :
 Base::~Base()
 {
   delete d_ptr;
+  d_ptr = 0;
 }
 
 KMime::Content *Base::parent() const
@@ -1159,6 +1197,8 @@ bool ReturnPath::parse( const char* &scursor, const char * const send,
 
 //-----<Generic>-------------------------------
 
+// NOTE: Do *not* register Generic with HeaderFactory, since its type() is changeable.
+
 Generic::Generic() : Generics::Unstructured( new GenericPrivate )
 {
 }
@@ -1198,6 +1238,14 @@ void Generic::clear()
   delete[] d->type;
   d->type = 0;
   Unstructured::clear();
+}
+
+Base *Generic::clone() const
+{
+  Q_D( const Generic );
+  Generic *ret = new Generic( d->type );
+  ret->from7BitString( as7BitString( false ) );
+  return ret;
 }
 
 bool Generic::isEmpty() const

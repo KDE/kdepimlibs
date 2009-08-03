@@ -18,6 +18,8 @@
 */
 
 #include "headertest.h"
+
+#include <KDebug>
 #include <qtest_kde.h>
 
 #include <kmime_headers.h>
@@ -719,6 +721,70 @@ void HeaderTest::noAbstractHeaders()
   ContentDescription* h18 = new ContentDescription(); delete h18;
   FollowUpTo* h22 = new FollowUpTo(); delete h22;
   UserAgent* h24 = new UserAgent(); delete h24;
+}
+
+void HeaderTest::testClone()
+{
+  // Clone a simple header.
+  {
+    Subject *h = new Subject;
+    h->from7BitString( "our fortress is burning" );
+    Subject *c = dynamic_cast<Subject*>( h->clone() );
+    QVERIFY( c );
+    h->from7BitString( "against the grain of the shattered sky" );
+    QCOMPARE( c->as7BitString( false ), QByteArray( "our fortress is burning" ) );
+    delete h;
+    delete c;
+  }
+
+  // Clone a more complex header.
+  {
+    ContentType *h = new ContentType;
+    h->setMimeType( "some/x-type" );
+    h->setCharset( "ancient-runes" );
+    ContentType *c = dynamic_cast<ContentType*>( h->clone() );
+    QVERIFY( c );
+    h->clear();
+    QCOMPARE( c->mimeType(), QByteArray( "some/x-type" ) );
+    QCOMPARE( c->charset(), QByteArray( "ancient-runes" ) );
+    delete h;
+    delete c;
+  }
+
+  // Clone an even more complex header.
+  {
+    const QString address1( "Me <me@me.me>" );
+    const QString address2( "You <you@you.you>" );
+    To *h = new To;
+    Types::Mailbox box;
+    box.fromUnicodeString( address1 );
+    h->addAddress( box );
+    box.fromUnicodeString( address2 );
+    h->addAddress( box );
+    To *c = dynamic_cast<To*>( h->clone() );
+    QVERIFY( c );
+    h->clear();
+    QCOMPARE( c->prettyAddresses().count(), 2 );
+    QCOMPARE( c->prettyAddresses().at( 0 ), address1 );
+    QCOMPARE( c->prettyAddresses().at( 1 ), address2 );
+    delete h;
+    delete c;
+  }
+
+  // Special test for Generic since it has a special clone() implementation.
+  {
+    Generic *h = new Generic;
+    h->setType( "type" );
+    h->from7BitString( "beforecataracts" );
+    Generic *c = dynamic_cast<Generic*>( h->clone() );
+    QVERIFY( c );
+    h->setType( "newtype" );
+    h->from7BitString( "aftercataracts" );
+    QCOMPARE( c->type(), "type" );
+    QCOMPARE( c->as7BitString( false ), QByteArray( "beforecataracts" ) );
+    delete h;
+    delete c;
+  }
 }
 
 void HeaderTest::testInvalidButOkQEncoding()
