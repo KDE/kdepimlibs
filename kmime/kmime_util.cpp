@@ -85,6 +85,19 @@ bool isUsAscii( const QString &s )
   return true;
 }
 
+QString nameForEncoding( Headers::contentEncoding enc )
+{
+  switch( enc ) {
+    case Headers::CE7Bit: return QString::fromLatin1( "7bit" );
+    case Headers::CE8Bit: return QString::fromLatin1( "8bit" );
+    case Headers::CEquPr: return QString::fromLatin1( "quoted-printable" );
+    case Headers::CEbase64: return QString::fromLatin1( "base64" );
+    case Headers::CEuuenc: return QString::fromLatin1( "uuencode" );
+    case Headers::CEbinary: return QString::fromLatin1( "binary" );
+    default: return QString::fromLatin1( "unknown" );
+  }
+}
+
 // "(),.:;<>@[\]
 const uchar specialsMap[16] = {
   0x00, 0x00, 0x00, 0x00, // CTLs

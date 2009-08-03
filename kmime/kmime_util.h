@@ -25,6 +25,7 @@
 
 #include <QtCore/QString>
 #include "kmime_export.h"
+#include "kmime_headers.h"
 
 namespace KMime {
 
@@ -47,6 +48,13 @@ KMIME_EXPORT extern QByteArray cachedLanguage( const QByteArray &name );
   @param s
 */
 KMIME_EXPORT extern bool isUsAscii( const QString &s );
+
+/**
+  Returns a user-visible string for a contentEncoding, for example
+  "quoted-printable" for CEquPr.
+  TODO should they be i18n'ed?
+*/
+KMIME_EXPORT extern QString nameForEncoding( KMime::Headers::contentEncoding enc );
 
 //@cond PRIVATE
 extern const uchar specialsMap[16];

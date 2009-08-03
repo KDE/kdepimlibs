@@ -38,6 +38,7 @@ extern int indexOfHeader( const QByteArray &src, const QByteArray &name, int &en
 /**
   Removes the first occurrence of the @p name from @p head.
 */
+// This is used in zero places at the moment.
 extern void removeHeader( QByteArray &head, const QByteArray &name );
 
 }
