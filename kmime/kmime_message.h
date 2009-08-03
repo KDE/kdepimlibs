@@ -52,39 +52,114 @@ class KMIME_EXPORT Message : public Content
     */
     typedef boost::shared_ptr<Message> Ptr;
 
-    /** Constructor. Creates an empty message. */
+    /**
+      Creates an empty Message.
+    */
     Message();
-    ~Message();
-
-    //content handling
-    virtual void parse();
-    virtual void clear();
-
-    //header access
-    /** @deprecated Use headerByType( const char * ) */
-    virtual KDE_DEPRECATED KMime::Headers::Base *getHeaderByType( const char *type );
-    /** @since 4.2 */
-    virtual KMime::Headers::Base *headerByType( const char *type );
-    virtual void setHeader( KMime::Headers::Base *h );
-    virtual bool removeHeader( const char *type );
 
     /**
-      Returns the message MessageID
+      Destroys this Message.
+    */
+    ~Message();
+
+    /* reimpl */
+    virtual void parse();
+
+    /* reimpl */
+    virtual void clear();
+
+    /* reimpl */
+    virtual KDE_DEPRECATED KMime::Headers::Base *getHeaderByType( const char *type );
+
+    /* reimpl */
+    virtual KMime::Headers::Base *headerByType( const char *type );
+
+    /* reimpl */
+    virtual void setHeader( KMime::Headers::Base *h );
+
+    /* reimpl */
+    virtual bool removeHeader( const char *type );
+
+    // KDE5: Why are these virtual?
+    /**
+      Returns the Message-ID header.
+      @param create If true, create the header if it doesn't exist yet.
     */
     virtual KMime::Headers::MessageID *messageID( bool create = true );
+
+    /**
+      Returns the Subject header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::Subject *subject( bool create = true );
+
+    /**
+      Returns the Date header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::Date *date( bool create = true );
+
+    /**
+      Returns the From header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::From *from( bool create = true );
+
+    /**
+      Returns the Organization header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::Organization *organization( bool create = true );
+
+    /**
+      Returns the Reply-To header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::ReplyTo *replyTo( bool create = true );
+
+    /**
+      Returns the To header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::To *to( bool create = true );
+
+    /**
+      Returns the Cc header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::Cc *cc( bool create = true );
+
+    /**
+      Returns the Bcc header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::Bcc *bcc( bool create = true );
+
+    /**
+      Returns the References header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::References *references( bool create = true );
+
+    /**
+      Returns the User-Agent header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::UserAgent *userAgent( bool create = true );
+
+    /**
+      Returns the In-Reply-To header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::InReplyTo *inReplyTo( bool create = true );
+
+    /**
+      Returns the Sender header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::Sender *sender( bool create = true );
 
+    /* reimpl */
     virtual bool isTopLevel() const;
 
     /**
@@ -99,6 +174,7 @@ class KMIME_EXPORT Message : public Content
     Content* mainBodyPart( const QByteArray &type = QByteArray() );
 
   protected:
+    /* reimpl */
     virtual QByteArray assembleHeaders();
 
     // @cond PRIVATE

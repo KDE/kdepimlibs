@@ -41,6 +41,8 @@ TODO: possible glossary terms:
  attachment
  charset
  article
+ string representation
+ broken-down object representation
 */
 
 #ifndef __KMIME_CONTENT_H__
@@ -63,8 +65,18 @@ class ContentPrivate;
   @brief
   A class that encapsulates @ref MIME encoded Content.
 
-  It parses the given data and creates a tree-like structure that
-  represents the structure of the message.
+  A Content object holds two representations of a content:
+  - the string representation: This is the content encoded as a string ready
+    for transport.  Accessible through the encodedContent() method.
+  - the broken-down representation: This is the tree of objects (headers,
+    sub-Contents) that this Content is made of.  Accessible through methods
+    like header() and contents().
+  The parse() function updates the broken-down representation of the Content
+  from its string representation.  Calling it is necessary to access the
+  headers or sub-Contents of this Content.
+  The assemble() function updates the string representation of the Content
+  from its broken-down representation.  Calling it is necessary for
+  encodedContent() to reflect any changes made to the Content.
 */
 /*
   KDE5:
@@ -126,6 +138,9 @@ class KMIME_EXPORT Content
       Sets the Content to the given raw data, containing the Content head and
       body separated by two linefeeds.
 
+      This method operates on the string representation of the Content. Call
+      parse() if you want to access individual headers or sub-Contents.
+
       @param l is a line-splitted list of the raw Content data.
     */
     void setContent( const QList<QByteArray> &l );
@@ -133,6 +148,9 @@ class KMIME_EXPORT Content
     /**
       Sets the Content to the given raw data, containing the Content head and
       body separated by two linefeeds.
+
+      This method operates on the string representation of the Content. Call
+      parse() if you want to access individual headers or sub-Contents.
 
       @param s is a QByteArray containing the raw Content data.
     */
@@ -166,10 +184,10 @@ class KMIME_EXPORT Content
     void setFrozen( bool frozen = true );
 
     /**
-      Generates the MIME message.
+      Generates the MIME content.
       This means the string representation of this Content is updated from the
       broken-down object representation.
-      Call this if you have made changes to the message, and want
+      Call this if you have made changes to the content, and want
       encodedContent() to reflect those changes.
 
       @note assemble() has no effect if the Content isFrozen().  You may want
@@ -179,18 +197,18 @@ class KMIME_EXPORT Content
       @warning assemble() may change the order of the headers, and other
       details such as where folding occurs.  This may break things like
       signature verification, so you should *ONLY* call assemble() when you
-      have actually modified the message.
+      have actually modified the content.
     */
     virtual void assemble();
 
     /**
-      Clears the complete message and deletes all sub-Contents.
+      Clears the content, deleting all headers and sub-Contents.
     */
     // KDE5: make non-virtual.
     virtual void clear();
 
     /**
-      Removes all sub-Contents from this message.  Deletes them if @p del is true.
+      Removes all sub-Contents from this content.  Deletes them if @p del is true.
       This is different from calling removeContent() on each sub-Content, because
       removeContent() will convert this to a single-part Content if only one
       sub-Content is left.  Calling clearContents() does NOT make this Content
@@ -211,6 +229,9 @@ class KMIME_EXPORT Content
 
     /**
       Sets the Content header raw data.
+
+      This method operates on the string representation of the Content. Call
+      parse() if you want to access individual headers.
 
       @param head is a QByteArray containing the header data.
 
@@ -238,7 +259,7 @@ class KMIME_EXPORT Content
     KDE_DEPRECATED Headers::Generic *nextHeader( QByteArray &head );
 
     /**
-      Tries to find a @p type header in the message and returns it.
+      Tries to find a @p type header in the Content and returns it.
       @deprecated Use headerByType( const char * )
     */
     // KDE5: Make non-virtual.
@@ -263,7 +284,7 @@ class KMIME_EXPORT Content
     template <typename T> T *header( bool create = false );
 
     /**
-      Tries to find all the @p type headers in the message and returns it.
+      Returns all @p type headers in the Content.
       Take care that this result is not cached, so could be slow.
       @since 4.2
     */
@@ -315,44 +336,44 @@ class KMIME_EXPORT Content
     bool hasHeader( const char *type );
 
     /**
-      Returns the Content type header.
+      Returns the Content-Type header.
 
-      @param create if true, create the header if it doesn't exist yet.
+      @param create If true, create the header if it doesn't exist yet.
     */
-    Headers::ContentType *contentType( bool create=true );
+    Headers::ContentType *contentType( bool create = true );
 
     /**
-      Returns the Content transfer encoding.
+      Returns the Content-Transfer-Encoding header.
 
-      @param create if true, create the header if it doesn't exist yet.
+      @param create If true, create the header if it doesn't exist yet.
     */
-    Headers::ContentTransferEncoding *contentTransferEncoding( bool create=true );
+    Headers::ContentTransferEncoding *contentTransferEncoding( bool create = true );
 
     /**
-      Returns the Content disposition.
+      Returns the Content-Disposition header.
 
-      @param create if true, create the header if it doesn't exist yet.
+      @param create If true, create the header if it doesn't exist yet.
     */
-    Headers::ContentDisposition *contentDisposition( bool create=true );
+    Headers::ContentDisposition *contentDisposition( bool create = true );
 
     /**
-      Returns the Content description.
+      Returns the Content-Description header.
 
-      @param create if true, create the header if it doesn't exist yet.
+      @param create If true, create the header if it doesn't exist yet.
     */
-    Headers::ContentDescription *contentDescription( bool create=true );
+    Headers::ContentDescription *contentDescription( bool create = true );
 
     /**
-      Returns the Content location.
+      Returns the Content-Location header.
 
-      @param create if true, create the header if it doesn't exist yet.
+      @param create If true, create the header if it doesn't exist yet.
       @since 4.2
     */
-    Headers::ContentLocation *contentLocation( bool create=true );
+    Headers::ContentLocation *contentLocation( bool create = true );
 
     /**
-      Returns the Content ID.
-      @param create If true, create the header if it does not exist yet.
+      Returns the Content-ID header.
+      @param create if true, create the header if it does not exist yet.
       @since 4.4
     */
     Headers::ContentID *contentID( bool create = true );
@@ -383,6 +404,9 @@ class KMIME_EXPORT Content
     /**
       Sets the Content body raw data.
 
+      This method operates on the string representation of the Content. Call
+      parse() if you want to access individual sub-Contents.
+
       @param body is a QByteArray containing the body data.
 
       @see body().
@@ -393,7 +417,7 @@ class KMIME_EXPORT Content
       Returns a QByteArray containing the encoded Content, including the
       Content header and all sub-Contents.
 
-      @param useCrLf if true, use @ref CRLF instead of @ref LF for linefeeds.
+      @param useCrLf If true, use @ref CRLF instead of @ref LF for linefeeds.
     */
     QByteArray encodedContent( bool useCrLf = false );
 
@@ -407,9 +431,9 @@ class KMIME_EXPORT Content
       applies charset decoding. If this is not a text Content, decodedText()
       returns an empty QString.
 
-      @param trimText if true, then the decoded text will have all trailing
+      @param trimText If true, then the decoded text will have all trailing
       whitespace removed.
-      @param removeTrailingNewlines if true, then the decoded text will have
+      @param removeTrailingNewlines If true, then the decoded text will have
       all consecutive trailing newlines removed.
 
       The last trailing new line of the decoded text is always removed.
@@ -433,7 +457,7 @@ class KMIME_EXPORT Content
     /**
       Returns a list of attachments.
 
-      @param incAlternatives if true, include multipart/alternative parts.
+      @param incAlternatives If true, include multipart/alternative parts.
     */
     List attachments( bool incAlternatives = false );
 
@@ -492,7 +516,7 @@ class KMIME_EXPORT Content
       Saves the encoded Content to the given textstream
 
       @param ts is the stream where the Content should be written to.
-      @param scrambleFromLines: if true, replace "\nFrom " with "\n>From "
+      @param scrambleFromLines: If true, replace "\nFrom " with "\n>From "
       in the stream. This is needed to avoid problem with mbox-files
     */
     void toStream( QTextStream &ts, bool scrambleFromLines = false );
@@ -530,7 +554,7 @@ class KMIME_EXPORT Content
       works correctly only when the article is completely empty or
       completely loaded.
 
-      @param b if true, force the default charset to be used.
+      @param b If true, force the default charset to be used.
 
       @see forceDefaultCharset().
     */
@@ -554,7 +578,7 @@ class KMIME_EXPORT Content
 
     /**
       Returns true if this is the top-level node in the MIME tree, i.e. if this
-      is actually a message or news article.
+      is actually a Message or NewsArticle.
     */
     virtual bool isTopLevel() const;
 
@@ -567,13 +591,13 @@ class KMIME_EXPORT Content
     void setParent( Content *parent );
 
     /**
-     * Returns the parent content object, or NULL if the content doesn't have a parent.
+     * Returns the parent content object, or 0 if the content doesn't have a parent.
      * @since 4.3
      */
     Content* parent() const;
 
     /**
-     * Returns the toplevel content object, NULL if there is no such object.
+     * Returns the toplevel content object, 0 if there is no such object.
      * @since 4.3
      */
     Content* topLevel() const;
@@ -611,11 +635,16 @@ class KMIME_EXPORT Content
     bool decodeText();
 
     /**
+      Returns the first header of type T, if it exists.
       @deprecated Use header() instead.
     */
     template <class T> KDE_DEPRECATED T *headerInstance( T *ptr, bool create );
 
-    // KDE5: Move to Private class.
+    /**
+      The list of headers in this Content.
+      Do not use this directly.
+    */
+    // KDE5: Not needed outside. Move to Private class.
     Headers::Base::List h_eaders;
 
     //@cond PRIVATE
