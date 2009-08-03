@@ -1844,9 +1844,9 @@ static QString formatICalInvitationHelper( QString invitation,
       }
       rsvpReq = false;
     } else if ( msg->method() == iTIPCancel ) {
-      html += i18n( "Declined the invitation" );
+      html += i18n( "This invitation was declined" );
     } else if ( msg->method() == iTIPAdd ) {
-      html += i18n( "Accepted the invitation" );
+      html += i18n( "This invitation was accepted" );
     } else {
       html += rsvpRequestedStr( rsvpReq );
     }
