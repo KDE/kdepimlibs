@@ -101,8 +101,7 @@ static const QByteArray Latin1( "ISO-8859-1" );
     explicit subclass( Content *parent = 0 );                           \
     subclass( Content *parent, const QByteArray &s );                   \
     subclass( Content *parent, const QString &s, const QByteArray &charset ); \
-    ~subclass();                                                        \
-    virtual Base *clone() const;
+    ~subclass();
 
 #define kmime_mk_dptr_ctor( subclass ) \
   protected: \
@@ -198,12 +197,6 @@ class KMIME_EXPORT Base
       Deletes.
     */
     virtual void clear() = 0;
-
-    /**
-      Makes a copy of this header.
-      This function does not set the parent of the header it returns.
-    */
-    virtual Base *clone() const = 0;
 
     /**
       Checks if this header contains any data.
@@ -1239,8 +1232,6 @@ class KMIME_EXPORT Generic : public Generics::Unstructured
     ~Generic();
 
     virtual void clear();
-
-    virtual Base *clone() const;
 
     virtual bool isEmpty() const;
 

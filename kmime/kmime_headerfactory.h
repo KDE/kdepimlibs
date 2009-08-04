@@ -43,6 +43,23 @@ namespace Headers {
   class Base;
 }
 
+class HeaderMakerBase
+{
+  public:
+    virtual ~HeaderMakerBase() {}
+    virtual Headers::Base *create() const = 0;
+};
+
+template <typename T>
+class HeaderMaker : public HeaderMakerBase
+{
+  public:
+    virtual Headers::Base *create() const
+    {
+      return new T;
+    }
+};
+
 class HeaderFactoryPrivate;
 
 /**
@@ -55,7 +72,8 @@ class KMIME_EXPORT HeaderFactory
 
     template<typename T> inline bool registerHeader()
     {
-      return registerHeader( new T );
+      T dummy;
+      return registerHeaderMaker( QByteArray( dummy.type() ), new HeaderMaker<T>() );
     }
 
     Headers::Base *createHeader( const QByteArray &type );
@@ -66,7 +84,7 @@ class KMIME_EXPORT HeaderFactory
     HeaderFactory& operator=( const HeaderFactory &other ); // undefined
     ~HeaderFactory();
 
-    bool registerHeader( Headers::Base *header );
+    bool registerHeaderMaker( const QByteArray &type, HeaderMakerBase *maker );
 
     friend class HeaderFactoryPrivate;
     HeaderFactoryPrivate *const d;

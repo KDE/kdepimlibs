@@ -8,13 +8,13 @@
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
-    License assert published by the Free Software Foundation; either
+    License as published by the Free Software Foundation; either
     version 2 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for morbe details.
+    Library General Public License for more details.
 
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
@@ -90,13 +90,6 @@ subclass::subclass( Content *parent, const QString &s, const QByteArray &charset
   fromUnicodeString( s, charset );                                    \
 }                                                                     \
                                                                       \
-Base *subclass::clone() const                                         \
-{                                                                     \
-  subclass *ret = new subclass;                                       \
-  ret->from7BitString( as7BitString( false ) );                       \
-  return ret;                                                         \
-}                                                                     \
-                                                                      \
 subclass::~subclass() {}                                              \
                                                                       \
 kmime_register_header( subclass )
@@ -118,13 +111,6 @@ subclass::subclass( Content *parent, const QString &s, const QByteArray &charset
   baseclass( new subclass##Private, parent )                          \
 {                                                                     \
   fromUnicodeString( s, charset );                                    \
-}                                                                     \
-                                                                      \
-Base *subclass::clone() const                                         \
-{                                                                     \
-  subclass *ret = new subclass;                                       \
-  ret->from7BitString( as7BitString( false ) );                       \
-  return ret;                                                         \
 }                                                                     \
                                                                       \
 subclass::~subclass() {}                                              \
@@ -1238,14 +1224,6 @@ void Generic::clear()
   delete[] d->type;
   d->type = 0;
   Unstructured::clear();
-}
-
-Base *Generic::clone() const
-{
-  Q_D( const Generic );
-  Generic *ret = new Generic( d->type );
-  ret->from7BitString( as7BitString( false ) );
-  return ret;
 }
 
 bool Generic::isEmpty() const

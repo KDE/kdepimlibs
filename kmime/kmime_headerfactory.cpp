@@ -52,7 +52,7 @@ class KMime::HeaderFactoryPrivate
     ~HeaderFactoryPrivate();
 
     HeaderFactory *const instance;
-    QHash<QByteArray, Headers::Base*> headers; // Type->obj mapping; with lower-case type.
+    QHash<QByteArray, HeaderMakerBase*> headerMakers; // Type->obj mapping; with lower-case type.
 };
 
 K_GLOBAL_STATIC( HeaderFactoryPrivate, sInstance )
@@ -64,7 +64,7 @@ HeaderFactoryPrivate::HeaderFactoryPrivate()
 
 HeaderFactoryPrivate::~HeaderFactoryPrivate()
 {
-  qDeleteAll( headers.values() );
+  qDeleteAll( headerMakers.values() );
   delete instance;
 }
 
@@ -78,9 +78,9 @@ HeaderFactory* HeaderFactory::self()
 Headers::Base *HeaderFactory::createHeader( const QByteArray &type )
 {
   Q_ASSERT( !type.isEmpty() );
-  Headers::Base *h = d->headers.value( type.toLower() );
-  if( h ) {
-    return h->clone();
+  const HeaderMakerBase *maker = d->headerMakers.value( type.toLower() );
+  if( maker ) {
+    return maker->create();
   } else {
     kError() << "Unknown header type" << type;
     //return new Headers::Generic;
@@ -97,22 +97,22 @@ HeaderFactory::~HeaderFactory()
 {
 }
 
-bool HeaderFactory::registerHeader( Headers::Base *header )
+bool HeaderFactory::registerHeaderMaker( const QByteArray &type, HeaderMakerBase *maker )
 {
-  if( QByteArray( header->type() ).isEmpty() ) {
+  if( type.isEmpty() ) {
     // This is probably a generic (but not abstract) header,
     // like Address or MailboxList.  We cannot register those.
     kWarning() << "Tried to register header with empty type.";
     return false;
   }
-  QByteArray ltype = QByteArray( header->type() ).toLower();
-  if( d->headers.contains( ltype ) ) {
-    kWarning() << "Header of type" << header->type() << "already registered.";
+  const QByteArray ltype = type.toLower();
+  if( d->headerMakers.contains( ltype ) ) {
+    kWarning() << "Header of type" << type << "already registered.";
     // TODO should we make this an error?
     return false;
   }
-  d->headers.insert( ltype, header );
-  kDebug() << "registered type" << header->type();
+  d->headerMakers.insert( ltype, maker );
+  kDebug() << "Registered type" << type;
   return true;
 }
 

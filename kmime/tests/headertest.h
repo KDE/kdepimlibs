@@ -50,8 +50,6 @@ class HeaderTest : public QObject
     // makes sure we don't accidently have an abstract header class that's not
     // meant to be abstract
     void noAbstractHeaders();
-
-    void testClone();
 };
 
 
