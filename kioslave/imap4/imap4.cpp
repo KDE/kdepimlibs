@@ -56,7 +56,6 @@ imap://server/folder/
  *  ERR_DOES_NOT_EXIST is reserved for folders.
  */
 
-#include <kdepimlibs-compat.h> // for KDE_signal, remove in KDEPIM 4.2
 #include "imap4.h"
 
 #include <QByteArray>
