@@ -29,6 +29,10 @@ class LinkLocatorTest : public QObject
   Q_OBJECT
   private Q_SLOTS:
     void testGetEmailAddress();
+    void testGetUrl();
+
+  private:
+    void testGetUrl2(const QString &left, const QString &right);
 };
 
 #endif
