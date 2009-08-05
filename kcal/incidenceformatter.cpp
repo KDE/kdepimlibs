@@ -1940,7 +1940,7 @@ static QString formatICalInvitationHelper( QString invitation,
       html += tdOpen;
       if ( inc->type() == "Todo" ) {
         html += helper->makeLink( "cancel",
-                                  i18n( "Remove invitation from my task list" ) );
+                                  i18n( "Remove invitation from my to-do list" ) );
       } else {
         html += helper->makeLink( "cancel",
                                   i18n( "Remove invitation from my calendar" ) );
