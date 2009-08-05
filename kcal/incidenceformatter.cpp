@@ -1864,7 +1864,7 @@ static QString formatICalInvitationHelper( QString invitation,
     case iTIPRefresh:
     case iTIPAdd:
     {
-      if ( !existingIncidence && !rsvpReq ) {
+      if ( inc && inc->revision() > 0 && existingIncidence ) {
         if ( inc->type() == "Todo" ) {
           html += helper->makeLink( "reply", i18n( "[Record invitation into my to-do list]" ) );
         } else {
@@ -1907,7 +1907,7 @@ static QString formatICalInvitationHelper( QString invitation,
           html += tdClose;
         }
 
-        if ( !existingIncidence && !rsvpReq ) {
+        if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
           // Delegate
           html += tdOpen;
           html += helper->makeLink( "delegate",
