@@ -1837,20 +1837,14 @@ static QString formatICalInvitationHelper( QString invitation,
   if ( !myInc ) {
     html += "<br/>";
     html += "<i><u>";
-    if ( rsvpRec ) {
-      if ( inc && inc->revision() == 0 ) {
-        html += i18n( "Your response has already been recorded [%1]",
-                      ea->statusStr() );
-      }
-      if ( inc && inc->revision() > 0 ) {
-        html += i18n( "Your response to the update has already been recorded [%1]",
-                      ea->statusStr() );
-      }
+    if ( rsvpRec && ( inc && inc->revision() == 0 ) ) {
+      html += i18n( "Your response has already been recorded [%1]",
+                    ea->statusStr() );
       rsvpReq = false;
     } else if ( msg->method() == iTIPCancel ) {
-      html += i18n( "Declined the invitation" );
+      html += i18n( "This invitation was declined" );
     } else if ( msg->method() == iTIPAdd ) {
-      html += i18n( "Accepted the invitation" );
+      html += i18n( "This invitation was accepted" );
     } else {
       html += rsvpRequestedStr( rsvpReq );
     }
@@ -1870,7 +1864,7 @@ static QString formatICalInvitationHelper( QString invitation,
     case iTIPRefresh:
     case iTIPAdd:
     {
-      if ( !existingIncidence && !rsvpReq ) {
+      if ( inc && inc->revision() > 0 && existingIncidence ) {
         if ( inc->type() == "Todo" ) {
           html += helper->makeLink( "reply", i18n( "[Record invitation into my to-do list]" ) );
         } else {
@@ -1913,7 +1907,7 @@ static QString formatICalInvitationHelper( QString invitation,
           html += tdClose;
         }
 
-        if ( !existingIncidence && !rsvpReq ) {
+        if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
           // Delegate
           html += tdOpen;
           html += helper->makeLink( "delegate",
@@ -1943,17 +1937,15 @@ static QString formatICalInvitationHelper( QString invitation,
 
     case iTIPCancel:
       // Remove invitation
-      if ( inc && existingIncidence ) {
-        html += tdOpen;
-        if ( inc->type() == "Todo" ) {
-          html += helper->makeLink( "cancel",
-                                    i18n( "Remove invitation from my task list" ) );
-        } else {
-          html += helper->makeLink( "cancel",
-                                    i18n( "Remove invitation from my calendar" ) );
-        }
-        html += tdClose;
+      html += tdOpen;
+      if ( inc->type() == "Todo" ) {
+        html += helper->makeLink( "cancel",
+                                  i18n( "Remove invitation from my to-do list" ) );
+      } else {
+        html += helper->makeLink( "cancel",
+                                  i18n( "Remove invitation from my calendar" ) );
       }
+      html += tdClose;
       break;
 
     case iTIPReply:
