@@ -56,6 +56,12 @@ KMIME_EXPORT extern bool isUsAscii( const QString &s );
 */
 KMIME_EXPORT extern QString nameForEncoding( KMime::Headers::contentEncoding enc );
 
+/**
+  Returns a list of encodings that can correctly encode the @p data.
+  @author Based on KMail code by Thomas McGuire <mcguire@kde.org>
+*/
+KMIME_EXPORT QList<KMime::Headers::contentEncoding> encodingsForData(
+                                                       const QByteArray &data );
 //@cond PRIVATE
 extern const uchar specialsMap[16];
 extern const uchar tSpecialsMap[16];

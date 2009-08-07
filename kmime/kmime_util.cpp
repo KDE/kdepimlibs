@@ -24,6 +24,7 @@
 #include "kmime_util.h"
 #include "kmime_util_p.h"
 #include "kmime_header_parsing.h"
+#include "kmime_charfreq.h"
 
 #include <config-kmime.h>
 #include <kdefakes.h> // for strcasestr
@@ -96,6 +97,39 @@ QString nameForEncoding( Headers::contentEncoding enc )
     case Headers::CEbinary: return QString::fromLatin1( "binary" );
     default: return QString::fromLatin1( "unknown" );
   }
+}
+
+QList<Headers::contentEncoding> encodingsForData( const QByteArray &data )
+{
+  QList<Headers::contentEncoding> allowed;
+  CharFreq cf( data );
+
+  switch ( cf.type() ) {
+    case CharFreq::SevenBitText:
+      allowed << Headers::CE7Bit;
+    case CharFreq::EightBitText:
+      allowed << Headers::CE8Bit;
+    case CharFreq::SevenBitData:
+      if ( cf.printableRatio() > 5.0/6.0 ) {
+        // let n the length of data and p the number of printable chars.
+        // Then base64 \approx 4n/3; qp \approx p + 3(n-p)
+        // => qp < base64 iff p > 5n/6.
+        allowed << Headers::CEquPr;
+        allowed << Headers::CEbase64;
+      } else {
+        allowed << Headers::CEbase64;
+        allowed << Headers::CEquPr;
+      }
+      break;
+    case CharFreq::EightBitData:
+      allowed << Headers::CEbase64;
+      break;
+    case CharFreq::None:
+    default:
+      Q_ASSERT( false );
+  }
+
+  return allowed;
 }
 
 // "(),.:;<>@[\]
