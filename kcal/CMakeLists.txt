@@ -252,7 +252,10 @@ set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS} ${libicalss_SRCS}
    freebusyurlstore.cpp
    confirmsavedialog.cpp
    icaltimezones.cpp
-   kresult.cpp )
+   kresult.cpp
+   assignmentvisitor.cpp
+   comparisonvisitor.cpp
+)
 
 kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 

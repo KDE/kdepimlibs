@@ -22,17 +22,16 @@
 
 #include "resourcelocaldir.h"
 #include "resourcelocaldir_p.h"
+#include "assignmentvisitor.h"
+#include "comparisonvisitor.h"
 #include "calendarlocal.h"
 #include "incidence.h"
 #include "event.h"
 #include "todo.h"
 #include "journal.h"
-#include "freebusy.h"
 
 #include "kresources/configwidget.h"
 
-#include "assignmentvisitor_p.h"
-#include "comparisonvisitor_p.h"
 #include <kdebug.h>
 #include <klocale.h>
 #include <kconfig.h>
@@ -85,7 +84,8 @@ void ResourceLocalDir::writeConfig( KConfigGroup &group )
   group.writePathEntry( "CalendarURL", d->mURL.prettyUrl() );
 }
 
-void ResourceLocalDir::Private::init( )
+//@cond PRIVATE
+void ResourceLocalDir::Private::init()
 {
   mResource->setType( "dir" );
 
@@ -106,6 +106,7 @@ void ResourceLocalDir::Private::init( )
   mDirWatch.addDir( mURL.path(), KDirWatch::WatchFiles );
   mDirWatch.startScan();
 }
+//@endcond
 
 ResourceLocalDir::~ResourceLocalDir()
 {
@@ -141,9 +142,10 @@ bool ResourceLocalDir::doLoad( bool )
   // The directory exists. Now try to open (the files in) it.
   kDebug() << dirName;
   QFileInfo dirInfo( dirName );
-  if ( !( dirInfo.isDir() && dirInfo.isReadable() && 
-          ( dirInfo.isWritable() || readOnly() ) ) )
+  if ( !( dirInfo.isDir() && dirInfo.isReadable() &&
+          ( dirInfo.isWritable() || readOnly() ) ) ) {
     return false;
+  }
 
   QDir dir( dirName );
   const QStringList entries = dir.entryList( QDir::Files | QDir::Readable );
@@ -284,6 +286,7 @@ void ResourceLocalDir::dump() const
   kDebug() << "  Url:" << d->mURL.url();
 }
 
+//@cond PRIVATE
 bool ResourceLocalDir::Private::deleteIncidenceFile( Incidence *incidence )
 {
   QFile file( mURL.path() + '/' + incidence->uid() );
@@ -397,177 +400,4 @@ bool ResourceLocalDir::Private::doFileLoad( CalendarLocal &cal,
   }
   return true;
 }
-
-class AssignmentVisitor::Private
-{
-  public:
-    Private() : mSource( 0 ) {}
-
-  public:
-    const IncidenceBase *mSource;
-};
-
-AssignmentVisitor::AssignmentVisitor() : d( new Private() )
-{
-}
-
-AssignmentVisitor::~AssignmentVisitor()
-{
-  delete d;
-}
-
-bool AssignmentVisitor::assign( IncidenceBase *target, const IncidenceBase *source )
-{
-  Q_ASSERT( target != 0 );
-  Q_ASSERT( source != 0 );
-
-  d->mSource = source;
-
-  bool result = target->accept( *this );
-
-  d->mSource = 0;
-
-  return result;
-}
-
-bool AssignmentVisitor::visit( Event *event )
-{
-  Q_ASSERT( event != 0 );
-
-  const Event *source = dynamic_cast<const Event*>( d->mSource );
-  if ( source == 0 ) {
-    kError(5800) << "Type mismatch: source is" << d->mSource->type()
-                 << "target is" << event->type();
-    return false;
-  }
-
-  *event = *source;
-  return true;
-}
-
-bool AssignmentVisitor::visit( Todo *todo )
-{
-  Q_ASSERT( todo != 0 );
-
-  const Todo *source = dynamic_cast<const Todo*>( d->mSource );
-  if ( source == 0 ) {
-    kError(5800) << "Type mismatch: source is" << d->mSource->type()
-                 << "target is" << todo->type();
-    return false;
-  }
-
-  *todo = *source;
-  return true;
-}
-
-bool AssignmentVisitor::visit( Journal *journal )
-{
-  Q_ASSERT( journal != 0 );
-
-  const Journal *source = dynamic_cast<const Journal*>( d->mSource );
-  if ( source == 0 ) {
-    kError(5800) << "Type mismatch: source is" << d->mSource->type()
-                 << "target is" << journal->type();
-    return false;
-  }
-
-  *journal = *source;
-  return true;
-}
-
-bool AssignmentVisitor::visit( FreeBusy *freebusy )
-{
-  Q_ASSERT( freebusy != 0 );
-
-  const FreeBusy *source = dynamic_cast<const FreeBusy*>( d->mSource );
-  if ( source == 0 ) {
-    kError(5800) << "Type mismatch: source is" << d->mSource->type()
-                 << "target is" << freebusy->type();
-    return false;
-  }
-
-  *freebusy = *source;
-  return true;
-}
-
-class ComparisonVisitor::Private
-{
-  public:
-    Private() : mReference( 0 ) {}
-
-  public:
-    const IncidenceBase *mReference;
-};
-
-ComparisonVisitor::ComparisonVisitor() : d( new Private() )
-{
-}
-
-ComparisonVisitor::~ComparisonVisitor()
-{
-  delete d;
-}
-
-bool ComparisonVisitor::compare( IncidenceBase *incidence, const IncidenceBase *reference )
-{
-  d->mReference = reference;
-
-  const bool result = incidence ? incidence->accept( *this ) : reference == 0;
-
-  d->mReference = 0;
-
-  return result;
-}
-
-bool ComparisonVisitor::visit( Event *event )
-{
-  Q_ASSERT( event != 0 );
-
-  const Event *refEvent = dynamic_cast<const Event*>( d->mReference );
-  if ( refEvent ) {
-    return *event == *refEvent;
-  } else {
-    // refEvent is no Event and thus cannot be equal to event
-    return false;
-  }
-}
-
-bool ComparisonVisitor::visit( Todo *todo )
-{
-  Q_ASSERT( todo != 0 );
-
-  const Todo *refTodo = dynamic_cast<const Todo*>( d->mReference );
-  if ( refTodo ) {
-    return *todo == *refTodo;
-  } else {
-    // refTodo is no Todo and thus cannot be equal to todo
-    return false;
-  }
-}
-
-bool ComparisonVisitor::visit( Journal *journal )
-{
-  Q_ASSERT( journal != 0 );
-
-  const Journal *refJournal = dynamic_cast<const Journal*>( d->mReference );
-  if ( refJournal ) {
-    return *journal == *refJournal;
-  } else {
-    // refJournal is no Journal and thus cannot be equal to journal
-    return false;
-  }
-}
-
-bool ComparisonVisitor::visit( FreeBusy *freebusy )
-{
-  Q_ASSERT( freebusy != 0 );
-
-  const FreeBusy *refFreeBusy = dynamic_cast<const FreeBusy*>( d->mReference );
-  if ( refFreeBusy ) {
-    return *freebusy == *refFreeBusy;
-  } else {
-    // refFreeBusy is no FreeBusy and thus cannot be equal to freebusy
-    return false;
-  }
-}
-
+//@endcond
