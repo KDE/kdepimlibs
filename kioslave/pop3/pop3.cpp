@@ -470,7 +470,7 @@ int POP3Protocol::loginSASL( KIO::AuthInfo &ai )
         myReadLine(buf, sizeof(buf) - 1);
 
         // HACK: This assumes fread stops at the first \n and not \r
-        if (strcmp(buf, ".\r\n") == 0) {
+        if ( (buf[0] == 0) || (strcmp(buf, ".\r\n") == 0) ) {
           break;              // End of data
         }
         // sanders, changed -2 to -1 below
@@ -831,7 +831,7 @@ void POP3Protocol::get(const KUrl & url)
         myReadLine(buf, sizeof(buf) - 1);
 
         // HACK: This assumes fread stops at the first \n and not \r
-        if (strcmp(buf, ".\r\n") == 0) {
+        if ( (buf[0] == 0) || (strcmp(buf, ".\r\n") == 0) ) {
           break;                // End of data
         }
         // sanders, changed -2 to -1 below
