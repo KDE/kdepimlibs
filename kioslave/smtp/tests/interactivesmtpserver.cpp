@@ -133,7 +133,6 @@ InteractiveSMTPServerWindow::InteractiveSMTPServerWindow( QTcpSocket * socket, Q
   Q_ASSERT( socket );
 
   QVBoxLayout * vlay = new QVBoxLayout( this );
-  vlay->setSpacing( 6 );
 
   mTextEdit = new QTextEdit( this );
   vlay->addWidget( mTextEdit, 1 );

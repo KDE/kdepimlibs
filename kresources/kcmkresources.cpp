@@ -38,6 +38,7 @@ KCMKResources::KCMKResources( QWidget *parent, const QVariantList &l )
   Q_UNUSED( l );
   KGlobal::locale()->insertCatalog( "libkresources" );
   QVBoxLayout *layout = new QVBoxLayout( this );
+  layout->setMargin( 0 );
   mConfigPage = new KRES::ConfigPage( this );
   layout->addWidget( mConfigPage );
   connect( mConfigPage, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );

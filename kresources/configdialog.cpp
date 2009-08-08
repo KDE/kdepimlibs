@@ -72,12 +72,10 @@ ConfigDialog::ConfigDialog( QWidget *parent, const QString &resourceFamily,
   setMainWidget( main );
 
   QVBoxLayout *mainLayout = new QVBoxLayout( main );
-  mainLayout->setSpacing( spacingHint() );
   mainLayout->setMargin( 0 );
 
   QGroupBox *generalGroupBox = new QGroupBox( main );
   QGridLayout *gbLayout = new QGridLayout;
-  gbLayout->setSpacing( spacingHint() );
   generalGroupBox->setLayout( gbLayout );
 
   generalGroupBox->setTitle( i18nc( "@title:group", "General Settings" ) );
@@ -100,8 +98,6 @@ ConfigDialog::ConfigDialog( QWidget *parent, const QString &resourceFamily,
 
   QGroupBox *resourceGroupBox = new QGroupBox( main );
   QGridLayout *resourceLayout = new QGridLayout;
-  resourceLayout->setSpacing( spacingHint() );
-  resourceLayout->setMargin( marginHint() );
   resourceGroupBox->setLayout( resourceLayout );
 
   resourceGroupBox->setTitle( i18nc( "@title:group", "%1 Resource Settings",
