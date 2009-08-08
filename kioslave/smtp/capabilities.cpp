@@ -92,18 +92,20 @@ namespace KioSMTP {
 
   QStringList Capabilities::saslMethodsQSL() const {
     QStringList result;
-    for ( QMap<QString,QStringList>::const_iterator it = mCapabilities.begin() ; it != mCapabilities.end() ; ++it ) {
-      if ( it.key() == "AUTH" )
+    for ( QMap<QString,QStringList>::const_iterator it = mCapabilities.begin();
+          it != mCapabilities.end(); ++it ) {
+      if ( it.key() == "AUTH" ) {
         result += it.value();
-      else if ( it.key().startsWith( "AUTH=" ) ) {
+      } else if ( it.key().startsWith( QLatin1String( "AUTH=" ) ) ) {
         result.push_back( it.key().mid( qstrlen("AUTH=") ) );
         result += it.value();
       }
     }
     result.sort();
     for (int i = 0, j = 1; j < result.count(); i = j++ ) {
-      if ( result.at(i) == result.at(j) )
+      if ( result.at(i) == result.at(j) ) {
         result.removeAt( j-- );
+      }
     }
     return result;
   }

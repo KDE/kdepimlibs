@@ -882,7 +882,7 @@ IMAP4Protocol::put (const KUrl & _url, int, KIO::JobFlags)
           QString uid = cmd->resultInfo();
           if ( uid.contains("APPENDUID") )
           {
-            uid = uid.section(" ", 2, 2);
+            uid = uid.section(' ', 2, 2);
             uid.truncate(uid.length()-1);
             infoMessage("UID "+uid);
           }
@@ -1056,7 +1056,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, KIO::JobFlags fla
         QString uid = cmd->resultInfo();
         if ( uid.contains("COPYUID") )
         {
-          uid = uid.section(" ", 2, 3);
+          uid = uid.section(' ', 2, 3);
           uid.truncate(uid.length()-1);
           infoMessage("UID "+uid);
         }
@@ -2500,7 +2500,7 @@ IMAP4Protocol::parseURL (const KUrl & _url, QString & _box,
         << "from URL" << _url.path();
     }
     if (_hierarchyDelimiter.isEmpty())
-      _hierarchyDelimiter = "/";
+      _hierarchyDelimiter = '/';
   }
   kDebug(7116) <<"IMAP4::parseURL - return" << retVal;
 
@@ -2548,9 +2548,9 @@ void IMAP4Protocol::flushOutput(const QString &contentEncoding)
   {
     // get the coding from the MIME header
     QByteArray decoded;
-    if ( contentEncoding.startsWith("quoted-printable", Qt::CaseInsensitive) )
+    if ( contentEncoding.startsWith(QLatin1String("quoted-printable"), Qt::CaseInsensitive) )
       decoded = KCodecs::quotedPrintableDecode(outputCache);
-    else if ( contentEncoding.startsWith("base64", Qt::CaseInsensitive) )
+    else if ( contentEncoding.startsWith(QLatin1String("base64"), Qt::CaseInsensitive) )
       decoded = QByteArray::fromBase64( outputCache );
     else
       decoded = outputCache;

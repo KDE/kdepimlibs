@@ -228,7 +228,7 @@ bool NNTPProtocol::post_article() {
         buffer.insert( 0, '.' );
         pos += 2;
       }
-      last_chunk_had_line_ending = ( buffer.endsWith( "\r\n" ) );
+      last_chunk_had_line_ending = ( buffer.endsWith( "\r\n" ) ); //krazy:exclude=strings
       while ( (pos = buffer.indexOf( "\r\n.", pos )) > 0) {
         buffer.insert( pos + 2, '.' );
         pos += 4;
@@ -661,7 +661,7 @@ bool NNTPProtocol::fetchGroupXOVER( unsigned long first, bool &notSupported )
         continue;
       }
       QString atomStr;
-      if ( (*it).endsWith( "full" ) )
+      if ( (*it).endsWith( QLatin1String( "full" ) ) )
         if ( (*it2).trimmed().isEmpty() )
           atomStr = (*it).left( (*it).indexOf( ':' ) + 1 ); // strip of the 'full' suffix
         else
@@ -795,7 +795,7 @@ int NNTPProtocol::sendCommand( const QString &cmd )
 
   write( cmd.toLatin1(), cmd.length() );
   // check the command for proper termination
-  if ( !cmd.endsWith( "\r\n" ) )
+  if ( !cmd.endsWith( QLatin1String( "\r\n" ) ) )
     write( "\r\n", 2 );
   res_code =  evalResponse( readBuffer, readBufferLen );
 
@@ -823,7 +823,7 @@ int NNTPProtocol::sendCommand( const QString &cmd )
 
     // ok now, resend command
     write( cmd.toLatin1(), cmd.length() );
-    if ( !cmd.endsWith( "\r\n" ) )
+    if ( !cmd.endsWith( QLatin1String( "\r\n" ) ) )
       write( "\r\n", 2 );
     res_code = evalResponse( readBuffer, readBufferLen );
   }

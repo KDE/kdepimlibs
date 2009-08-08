@@ -41,11 +41,11 @@ namespace KioSMTP {
 
   /**
      @short A class modelling an SMTP transaction's state
-     
+
      This class models SMTP transaction state, ie. the collective
      result of the MAIL FROM:, RCPT TO: and DATA commands. This is
      needed since e.g. a single failed RCPT TO: command does not
-     neccessarily fail the whole transaction (servers are free to
+     necessarily fail the whole transaction (servers are free to
      accept delivery for some recipients, but not for others).
 
      The class can operate in two modes, which differ in the way

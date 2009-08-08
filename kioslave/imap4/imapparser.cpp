@@ -1193,7 +1193,7 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
     // first run
     init = true;
     // assume one part
-    inSection = "1";
+    inSection = '1';
   }
   int section = 0;
 
@@ -1224,7 +1224,7 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
       outSection = inSection + ".HEADER";
     }
     if (inWords[0] == '(' && init)
-      inSection = "0";
+      inSection = '0';
 
     // set the section
     if ( !outSection.isEmpty() ) {
@@ -1549,7 +1549,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
           if (!lastHandled) lastHandled = new imapCache();
           lastHandled->setSize (size);
         }
-        else if (word.startsWith("RFC822"))
+        else if (word.startsWith("RFC822")) //krazy:exclude=strings
         {
           // might be RFC822 RFC822.TEXT RFC822.HEADER
           parseLiteral(inWords, true);
@@ -1846,15 +1846,15 @@ imapParser::parseURL (const KUrl & _url, QString & _box, QString & _section,
     int pt = temp.indexOf ('/');
     if (pt > 0)
       temp.truncate(pt);
-    if (temp.startsWith("section=", Qt::CaseInsensitive))
+    if (temp.startsWith(QLatin1String("section="), Qt::CaseInsensitive))
       _section = temp.right (temp.length () - 8);
-    else if (temp.startsWith("type=", Qt::CaseInsensitive))
+    else if (temp.startsWith(QLatin1String("type="), Qt::CaseInsensitive))
       _type = temp.right (temp.length () - 5);
-    else if (temp.startsWith("uid=", Qt::CaseInsensitive))
+    else if (temp.startsWith(QLatin1String("uid="), Qt::CaseInsensitive))
       _uid = temp.right (temp.length () - 4);
-    else if (temp.startsWith("uidvalidity=", Qt::CaseInsensitive))
+    else if (temp.startsWith(QLatin1String("uidvalidity="), Qt::CaseInsensitive))
       _validity = temp.right (temp.length () - 12);
-    else if (temp.startsWith("info=", Qt::CaseInsensitive))
+    else if (temp.startsWith(QLatin1String("info="), Qt::CaseInsensitive))
       _info = temp.right (temp.length () - 5);
   }
 //  kDebug(7116) <<"URL: section=" << _section <<", type=" << _type <<", uid=" << _uid;

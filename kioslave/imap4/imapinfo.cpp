@@ -224,7 +224,7 @@ ulong imapInfo::_flags( const QByteArray &inFlags )
     else if (0 != entry.contains ("\\*"))
       flags ^= User;
 
-    // non standard kmail falgs
+    // non standard kmail flags
     else if ( entry.contains( "KMAILFORWARDED" ) || entry.contains( "$FORWARDED" ) )
       flags = flags | Forwarded;
     else if ( entry.contains( "KMAILTODO" ) || entry.contains( "$TODO" ) )
