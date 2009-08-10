@@ -51,10 +51,13 @@
 
 #include <kdatetime.h>
 #include <kemailsettings.h>
+
+#include <kio/netaccess.h>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <ksystemtimezone.h>
+#include <kmimetype.h>
 
 #include <QtCore/QBuffer>
 #include <QtCore/QList>
@@ -1499,6 +1502,54 @@ static QString invitationAttendees( Incidence *incidence )
     tmpStr += "</table>";
   } else {
     tmpStr += "<i>" + i18nc( "no attendees", "None" ) + "</i>";
+  }
+
+  return tmpStr;
+}
+
+static QString invitationAttachments( InvitationFormatterHelper *helper, Incidence *incidence )
+{
+  QString tmpStr;
+  if ( !incidence ) {
+    return tmpStr;
+  }
+
+  tmpStr += "<u>" + i18n( "Attached documents" ) + "</u>";
+  tmpStr += "<br/>";
+
+  int count=0;
+  Attachment::List attachments = incidence->attachments();
+  if ( !attachments.isEmpty() ) {
+    Attachment::List::ConstIterator it;
+    for( it = attachments.begin(); it != attachments.end(); ++it ) {
+      Attachment *a = *it;
+      count++;
+      if ( count == 1 ) {
+        tmpStr += "<table border=\"0\" cellpadding=\"1\" cellspacing=\"0\" columns=\"1\">";
+      }
+      tmpStr += "<tr><td>";
+      // Attachment icon
+      KMimeType::Ptr mimeType = KMimeType::mimeType( a->mimeType() );
+      QString iconStr = mimeType->iconName( a->uri() );
+      QString iconPath = KIconLoader::global()->iconPath( iconStr, KIconLoader::Small );
+      if ( !iconPath.isEmpty() ) {
+        tmpStr += "<img src=\"" + iconPath + "\" align=\"top\">";
+      }
+      if ( a->isUri() ) {
+        if ( KIO::NetAccess::exists( KUrl( a->uri() ), KIO::NetAccess::SourceSide, 0 ) ) {
+          tmpStr += "<a href=\"" + a->uri() + "\">" + a->label() + "</a>";
+        } else {
+          tmpStr += i18n( "%1 (inaccessible link)", a->label() );
+        }
+      } else {
+        tmpStr += helper->makeLink( "ATTACH:" + a->label(), a->label() );
+      }
+      tmpStr += "</td>";
+      tmpStr += "</tr>";
+    }
+  }
+  if ( count ) {
+    tmpStr += "</table>";
   }
 
   return tmpStr;
