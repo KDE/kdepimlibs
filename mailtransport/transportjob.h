@@ -46,21 +46,25 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
 
     /**
       Sets the sender of the mail.
+      @p sender must be the plain email address, not including display name.
     */
     void setSender( const QString &sender );
 
     /**
       Sets the "To" receiver(s) of the mail.
+      @p to must be the plain email address(es), not including display name.
     */
     void setTo( const QStringList &to );
 
     /**
       Sets the "Cc" receiver(s) of the mail.
+      @p cc must be the plain email address(es), not including display name.
     */
     void setCc( const QStringList &cc );
 
     /**
       Sets the "Bcc" receiver(s) of the mail.
+      @p bcc must be the plain email address(es), not including display name.
     */
     void setBcc( const QStringList &bcc );
 
