@@ -133,7 +133,7 @@ class NNTPProtocol:public KIO::TCPSlaveBase
    /**
     * Try to authenticate to the server.
     * @return the response code from the server if the mUser/mPassword
-    * are available; 281 (successfull authentication) otherwise.
+    * are available; 281 (successful authentication) otherwise.
     */
    int authenticate();
 };

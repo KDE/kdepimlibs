@@ -56,7 +56,6 @@ ConfirmSaveDialog::ConfirmSaveDialog( const QString &destination,
   setMainWidget( topFrame );
 
   QBoxLayout *topLayout = new QVBoxLayout( topFrame );
-  topLayout->setSpacing( spacingHint() );
 
   QLabel *label = new QLabel(
       i18n( "You have requested to save the following objects to '%1':",

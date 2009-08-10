@@ -144,12 +144,11 @@ ConfigPage::ConfigPage( QWidget *parent )
   setWindowTitle( i18n( "Resource Configuration" ) );
 
   QVBoxLayout *mainLayout = new QVBoxLayout( this );
+  mainLayout->setMargin( 0 );
 
   QGroupBox *groupBox = new QGroupBox( i18n( "Resources" ), this );
   QGridLayout *groupBoxLayout = new QGridLayout();
   groupBox->setLayout( groupBoxLayout );
-  groupBoxLayout->setSpacing( 6 );
-  groupBoxLayout->setMargin( 11 );
 
   d->mFamilyCombo = new KComboBox( false, groupBox );
   groupBoxLayout->addWidget( d->mFamilyCombo, 0, 0, 1, 2 );

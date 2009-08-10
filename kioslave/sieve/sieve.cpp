@@ -424,8 +424,9 @@ void kio_sieveProtocol::disconnect(bool forcibly)
 	if (!forcibly) {
 		sendData("LOGOUT");
 
-		if (!operationSuccessful())
+		if (!operationSuccessful()) {
 			ksDebug << "Server did not logout cleanly." << endl;
+                }
 	}
 
 	disconnectFromHost();
@@ -575,17 +576,6 @@ void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, KIO::JobFlags)
 	// C: NO "Number expected"
 	// => broken, we can't use it :-(
 	// (will be fixed in Cyrus 2.1.10)
-#ifndef HAVE_BROKEN_TIMSIEVED
-	// first, check quota (it's a SHOULD in draft std)
-	if (!sendData("HAVESPACE \"" + filename.toUtf8() + "\" "
-		      + QByteArray::number( bufLen )))
-		return;
-
-	if (!operationSuccessful()) {
-		error(ERR_DISK_FULL, i18n("Quota exceeded"));
-		return;
-	}
-#endif
 
 	if (!sendData("PUTSCRIPT \"" + filename.toUtf8() + "\" {"
 		      + QByteArray::number( bufLen ) + "+}"))

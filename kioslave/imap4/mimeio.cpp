@@ -52,9 +52,11 @@ int mimeIO::outputLine (const QByteArray & aLine, int len)
     len = aLine.length();
   }
   int start = len;
-  for (i = 0; i < start; i++)
-    if (!outputChar (aLine[i]))
+  for (i = 0; i < start; ++i) {
+    if (!outputChar (aLine[i])) {
       break;
+    }
+  }
   return i;
 }
 
