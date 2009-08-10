@@ -35,6 +35,7 @@
 #define KCAL_PERSON_H
 
 #include <QtCore/QString>
+#include <QtCore/QHash>
 
 #include "kcal_export.h"
 
@@ -133,7 +134,7 @@ class KCAL_EXPORT Person
 
       @param person is the person to compare.
     */
-    bool operator==( const Person &person );
+    bool operator==( const Person &person ) const;
 
     /**
       Sets this person equal to @p person.
@@ -149,6 +150,11 @@ class KCAL_EXPORT Person
    //@endcond
 };
 
+}
+
+inline uint qHash(const KCal::Person &key)
+{
+    return qHash(key.fullName());
 }
 
 #endif
