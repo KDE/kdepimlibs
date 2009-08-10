@@ -1255,6 +1255,7 @@ class KMIME_EXPORT Subject : public Generics::Unstructured
   //@endcond
   public:
     bool isReply() const;
+    QString stripOffPrefixes() const;
 };
 
 /**
