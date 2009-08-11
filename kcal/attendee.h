@@ -233,7 +233,8 @@ class KCAL_EXPORT Attendee : private Person
 
       @param attendee the attendee to compare.
     */
-    bool operator==( const Attendee &attendee );
+    //KDE5: make const
+    bool operator==( const Attendee &attendee ); //krazy:exclude=operators
 
     /**
       Sets the delegate.

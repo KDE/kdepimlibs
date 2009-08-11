@@ -213,7 +213,8 @@ class KCAL_EXPORT CalFilter
 
       @param filter the CalFilter to compare.
     */
-    bool operator==( const CalFilter &filter );
+    //KDE5: make const
+    bool operator==( const CalFilter &filter ); //krazy:exclude=operators
 
   private:
     //@cond PRIVATE
