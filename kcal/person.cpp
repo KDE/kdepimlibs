@@ -89,7 +89,7 @@ Person::~Person()
   delete d;
 }
 
-bool KCal::Person::operator==( const Person &person )
+bool KCal::Person::operator==( const Person &person ) const
 {
   return
     d->mName == person.d->mName &&
