@@ -24,9 +24,9 @@
 #ifndef MAILTRANSPORT_PRECOMMANDJOB_H
 #define MAILTRANSPORT_PRECOMMANDJOB_H
 
-#include <kjob.h>
+#include <QtCore/QProcess>
 
-#include <QProcess>
+#include <KDE/KJob>
 
 class PreCommandJobPrivate;
 
@@ -69,6 +69,6 @@ class PrecommandJob : public KJob
     PreCommandJobPrivate *const d;
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_PRECOMMANDJOB_H

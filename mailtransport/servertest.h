@@ -209,6 +209,6 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     Q_PRIVATE_SLOT( d, void slotUpdateProgress() )
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_SERVERTEST_H

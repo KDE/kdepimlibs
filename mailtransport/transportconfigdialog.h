@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
     Based on KMail code by:
     Copyright (c) 2001-2002 Michael Haeckel <haeckel@kde.org>
@@ -24,7 +25,8 @@
 #define MAILTRANSPORT_TRANSPORTCONFIGDIALOG_H
 
 #include <mailtransport/mailtransport_export.h>
-#include <kdialog.h>
+
+#include <KDE/KDialog>
 
 namespace MailTransport {
 
@@ -32,8 +34,12 @@ class Transport;
 
 /**
   Configuration dialog for a mail transport.
+
+  @deprecated Use TransportManager::configureTransport() instead.
 */
-class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
+// TODO KDE5: this class should not be exported.
+// FIXME how to avoid deprecated warning from its own moc?
+class MAILTRANSPORT_EXPORT_DEPRECATED TransportConfigDialog : public KDialog
 {
   Q_OBJECT
 
@@ -41,6 +47,13 @@ class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
     /**
       Creates a new mail transport configuration dialog for the given
       Transport object.
+      The config dialog does not delete @p transport, you have to delete it
+      yourself.
+
+      Note that this class only works for transports that are handled directly
+      by MailTransport, i.e. SMTP and Sendmail.  This class cannot be used to
+      configure an Akonadi transport.
+
       @param transport The Transport object to configure. This must be a deep
       copy of a Transport object or a newly created one, which hasn't been
       added to the TransportManager yet.
@@ -53,25 +66,14 @@ class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
     */
     virtual ~TransportConfigDialog();
 
-  private Q_SLOTS:
-    void checkSmtpCapabilities();
-    void chooseSendmail();
-    void passwordsLoaded();
-    void save();
-    void slotUser3();
-    void slotFinished( QList<int> results );
-    void hostNameChanged( const QString &text );
-    void encryptionChanged( int enc );
-    void ensureValidAuthSelection();
-
   private:
     class Private;
     Private *const d;
 
-  Q_SIGNALS:
-    void sendmailClicked();
+    Q_PRIVATE_SLOT( d, void okClicked() )
+
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_TRANSPORTCONFIGDIALOG_H

@@ -20,9 +20,9 @@
 #include "transportjob.h"
 #include "transport.h"
 
-#include <klocale.h>
-
 #include <QBuffer>
+
+#include <KLocalizedString>
 
 using namespace MailTransport;
 

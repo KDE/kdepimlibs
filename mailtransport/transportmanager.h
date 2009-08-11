@@ -21,9 +21,12 @@
 #define MAILTRANSPORT_TRANSPORTMANAGER_H
 
 #include <mailtransport/mailtransport_export.h>
+#include <mailtransport/transporttype.h>
 
 #include <QtCore/QList>
 #include <QtCore/QObject>
+
+#include <akonadi/agenttype.h>
 
 class KJob;
 
@@ -34,11 +37,19 @@ namespace KWallet {
 namespace MailTransport {
 
 class Transport;
+class TransportConfigWidget;
 class TransportJob;
 
 /**
-  Takes care of loading and storing mail transport settings and
-  creating of transport jobs.
+  @short Central transport management interface.
+
+  This class manages the creation, configuration, and removal of mail
+  transports, as well as the loading and storing of mail transport settings.
+
+  It also handles the creation of transport jobs, although that behaviour is
+  deprecated and you are encouraged to use MessageQueueJob.
+
+  @see MessageQueueJob.
 */
 class MAILTRANSPORT_EXPORT TransportManager : public QObject
 {
@@ -97,6 +108,11 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     QList<Transport *>transports() const;
 
     /**
+      Returns a list of all available transport types.
+    */
+    TransportType::List types() const;
+
+    /**
       Creates a new, empty Transport object. The object is owned by the caller.
       If you want to add the Transport permanently (eg. after configuring it)
       call addTransport().
@@ -114,24 +130,33 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       Creates a mail transport job for the given transport identifier.
       Returns 0 if the specified transport is invalid.
       @param transportId The transport identifier.
+
+      @deprecated use MessageQueueJob to queue messages
+                  and rely on the Dispatcher Agent to send them.
     */
-    TransportJob *createTransportJob( int transportId );
+    MAILTRANSPORT_DEPRECATED TransportJob *createTransportJob( int transportId );
 
     /**
       Creates a mail transport job for the given transport identifer,
       or transport name.
       Returns 0 if the specified transport is invalid.
       @param transport A string defining a mail transport.
+
+      @deprecated use MessageQueueJob to queue messages
+                  and rely on the Dispatcher Agent to send them.
     */
-    TransportJob *createTransportJob( const QString &transport );
+    MAILTRANSPORT_DEPRECATED TransportJob *createTransportJob( const QString &transport );
 
     /**
       Executes the given transport job. This is the preferred way to start
       transport jobs. It takes care of asynchronously loading passwords from
       KWallet if necessary.
       @param job The completely configured transport job to execute.
+
+      @deprecated use MessageQueueJob to queue messages
+                  and rely on the Dispatcher Agent to send them.
     */
-    void schedule( TransportJob *job );
+    MAILTRANSPORT_DEPRECATED void schedule( TransportJob *job );
 
     /**
       Tries to create a transport based on KEMailSettings.
@@ -140,12 +165,31 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     void createDefaultTransport();
 
     /**
-      Check for an existing transport, and show a configuration dialog if not.
-      Returns true if transport exists or user creates one. Otherwise false.
-      @param parent Parent widget of the dialog
+      Shows a dialog for creating and configuring a new transport.
+      @param parent Parent widget of the dialog.
+      @return True if a new transport has been created and configured.
       @since 4.4
     */
-    bool checkTransport( QWidget *parent );
+    bool showNewTransportDialog( QWidget *parent );
+
+    /**
+      If no transport exists, asks the user to create and configure one.
+      Returns true if a transport exists or the user created one. Otherwise
+      returns false.
+      @param parent Parent widget of the dialog.
+      @since 4.4
+    */
+    bool promptCreateTransportIfNoneExists( QWidget *parent );
+
+    /**
+      Open a configuration dialog for an existing transport.
+      @param transport The transport to configure.  It can be a new transport,
+                       or one already managed by TransportManager.
+      @param parent The parent widget for the dialog.
+      @return True if the user clicked Ok, false if the user cancelled.
+      @since 4.4
+    */
+    bool configureTransport( Transport *transport, QWidget *parent );
 
   public Q_SLOTS:
     /**
@@ -234,11 +278,15 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     */
     void loadPasswords();
 
+    /**
+      Singleton class, the only instance resides in the static object sSelf.
+    */
     TransportManager();
 
   private:
     void readConfig();
     void writeConfig();
+    void fillTypes();
     void emitChangesCommitted();
     int createId() const;
     void prepareWallet();
@@ -251,12 +299,14 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     void dbusServiceOwnerChanged( const QString &service,
                                   const QString &oldOwner,
                                   const QString &newOwner );
+    void agentTypeAdded( const Akonadi::AgentType &atype );
+    void agentTypeRemoved( const Akonadi::AgentType &atype );
     void jobResult( KJob *job );
 
   private:
     Private *const d;
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_TRANSPORTMANAGER_H

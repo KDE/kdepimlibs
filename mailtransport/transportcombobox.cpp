@@ -21,10 +21,8 @@
 #include "transport.h"
 #include "transportmanager.h"
 
-#include <kdebug.h>
-#include <klocale.h>
-
-#include <QLineEdit>
+#include <KDebug>
+#include <KLocale>
 
 using namespace MailTransport;
 

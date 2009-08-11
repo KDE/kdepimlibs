@@ -23,8 +23,8 @@
 
 #include "precommandjob.h"
 
-#include <klocale.h>
-#include <kdebug.h>
+#include <KDebug>
+#include <KLocalizedString>
 #include <KProcess>
 
 using namespace MailTransport;

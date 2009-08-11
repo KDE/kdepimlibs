@@ -27,14 +27,17 @@
 #include <mailtransport/transportjob.h>
 
 #include <QtCore/QProcess>
+
 class SendMailJobPrivate;
 
 namespace MailTransport {
 
 /**
   Mail transport job for sendmail.
+
+  @deprecated Use MessageQueueJob for sending e-mail.
 */
-class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
+class MAILTRANSPORT_EXPORT_DEPRECATED SendmailJob : public TransportJob
 {
   Q_OBJECT
   public:
@@ -63,6 +66,6 @@ class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
     SendMailJobPrivate *const d;
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_SENDMAILJOB_H

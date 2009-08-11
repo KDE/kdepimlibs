@@ -1,6 +1,64 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
+macro(add_akonadi_isolated_test _source)
+  get_filename_component(_targetName ${_source} NAME_WE)
+  set(_srcList ${_source} )
+
+  kde4_add_executable(${_targetName} TEST ${_srcList})
+  target_link_libraries(${_targetName}
+    ${QT_QTTEST_LIBRARY}
+    ${QT_QTGUI_LIBRARY}
+    ${KDE4_AKONADI_LIBS}
+    ${KDE4_AKONADI_KMIME_LIBS}
+    ${KDE4_KDECORE_LIBS}
+    mailtransport
+    ${KDE4_KMIME_LIBS}
+    ${QT_QTCORE_LIBRARY}
+    ${QT_QTDBUS_LIBRARY}
+  )
+
+  # based on kde4_add_unit_test
+  if (WIN32)
+    get_target_property( _loc ${_targetName} LOCATION )
+    set(_executable ${_loc}.bat)
+  else (WIN32)
+    set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_targetName})
+  endif (WIN32)
+  if (UNIX)
+    set(_executable ${_executable}.shell)
+  endif (UNIX)
+
+  find_program(_testrunner akonaditest)
+
+  add_test( mailtransport-${_targetName} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config.xml ${_executable} )
+endmacro(add_akonadi_isolated_test)
+
+
+
+# Independent executables:
+
 set(tm_srcs transportmgr.cpp)
 kde4_add_executable(transportmgr TEST ${tm_srcs})
 target_link_libraries(transportmgr ${KDE4_KDEUI_LIBS} mailtransport)
 
+set(queuer_srcs queuer.cpp)
+kde4_add_executable(queuer TEST ${queuer_srcs})
+target_link_libraries(queuer ${KDE4_KDEUI_LIBS} ${KDE4_MAILTRANSPORT_LIBS} ${KDE4_KMIME_LIBS} mailtransport)
+
+set( sendqueued_srcs sendqueued.cpp )
+kde4_add_executable( sendqueued TEST ${sendqueued_srcs} )
+target_link_libraries( sendqueued mailtransport ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+
+set( clearerror_srcs clearerror.cpp )
+kde4_add_executable( clearerror TEST ${clearerror_srcs} )
+target_link_libraries( clearerror mailtransport ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+
+set( abort_srcs abort.cpp )
+kde4_add_executable( abort TEST ${abort_srcs} )
+target_link_libraries( abort mailtransport ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+
+
+# Akonadi testrunner-based tests:
+
+add_akonadi_isolated_test( attributetest.cpp )
+add_akonadi_isolated_test( messagequeuejobtest.cpp )

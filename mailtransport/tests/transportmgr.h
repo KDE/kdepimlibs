@@ -20,12 +20,14 @@
 #ifndef TRANSPORTMGR_H
 #define TRANSPORTMGR_H
 
+#define USES_DEPRECATED_MAILTRANSPORT_API
+
 #include <KVBox>
 #include <mailtransport/transportcombobox.h>
 
 class KJob;
 class KLineEdit;
-class QTextEdit;
+class KTextEdit;
 
 class TransportMgr : public KVBox
 {
@@ -46,7 +48,7 @@ class TransportMgr : public KVBox
   private:
     MailTransport::TransportComboBox *mComboBox;
     KLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
-    QTextEdit *mMailEdit;
+    KTextEdit *mMailEdit;
     KJob *mCurrentJob;
 };
 

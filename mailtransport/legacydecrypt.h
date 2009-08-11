@@ -23,7 +23,7 @@
 #ifndef MAILTRANSPORT_LEGACYDECRYPT_H
 #define MAILTRANSPORT_LEGACYDECRYPT_H
 
-#include <QString>
+#include <QtCore/QString>
 
 namespace MailTransport {
 
@@ -44,6 +44,6 @@ class Legacy
     static QString decryptKNode( const QString &data );
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_LEGACYDECRYPT_H

@@ -25,6 +25,9 @@
         <choice name="Sendmail">
           <label>Local sendmail</label>
         </choice>
+        <choice name="Akonadi">
+          <label>Akonadi Resource</label>
+        </choice>
       </choices>
       <label>Transport type</label>
       <default>SMTP</default>

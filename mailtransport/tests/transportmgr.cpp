@@ -28,9 +28,9 @@
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KLineEdit>
+#include <KTextEdit>
 
 #include <QPushButton>
-#include <QTextEdit>
 
 using namespace MailTransport;
 
@@ -52,7 +52,7 @@ TransportMgr::TransportMgr() :
   mCcEdit->setClickMessage( "Cc" );
   mBccEdit = new KLineEdit( this );
   mBccEdit->setClickMessage( "Bcc" );
-  mMailEdit = new QTextEdit( this );
+  mMailEdit = new KTextEdit( this );
   mMailEdit->setAcceptRichText( false );
   mMailEdit->setLineWrapMode( QTextEdit::NoWrap );
   b = new QPushButton( "&Send", this );
@@ -74,6 +74,8 @@ void TransportMgr::removeAllBtnClicked()
 
 void TransportMgr::editBtnClicked()
 {
+  // NOTE: Using deprecated TransportConfigDialog here for testing purposes.
+  // The TransportManagementWidget uses the non-deprecated method instead.
   TransportConfigDialog *t =
     new TransportConfigDialog(
       TransportManager::self()->transportById( mComboBox->currentTransportId() ), this );

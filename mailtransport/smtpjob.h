@@ -26,8 +26,8 @@
 #include <mailtransport/transportjob.h>
 
 namespace KIO {
-class Job;
-class Slave;
+  class Job;
+  class Slave;
 }
 
 class SmtpJobPrivate;
@@ -43,13 +43,15 @@ namespace MailTransport {
 
   Precommands are automatically executed, once per opening a connection to the
   server (not necessarily once per message).
+
+  @deprecated Use MessageQueueJob for sending e-mail.
 */
-class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
+class MAILTRANSPORT_EXPORT_DEPRECATED SmtpJob : public TransportJob
 {
   Q_OBJECT
   public:
     /**
-      Creates a SendmailJob.
+      Creates a SmtpJob.
       @param transport The transport settings.
       @param parent The parent object.
     */
@@ -78,6 +80,6 @@ class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
     SmtpJobPrivate *const d;
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_SMTPJOB_H

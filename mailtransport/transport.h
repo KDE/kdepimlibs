@@ -20,27 +20,36 @@
 #ifndef MAILTRANSPORT_TRANSPORT_H
 #define MAILTRANSPORT_TRANSPORT_H
 
-#include <mailtransport/transportbase.h>
 #include <mailtransport/mailtransport_export.h>
+#include <mailtransport/transportbase.h>
+#include <mailtransport/transporttype.h>
 
 class TransportPrivate;
 
 namespace MailTransport {
+
+class TransportType;
 
 /**
   Represents the settings of a specific mail transport.
 
   To create a new empty Transport object, use TransportManager::createTransport().
 */
+// TODO KDE5: Do something about the kcfg-generated TransportBase.
+// Currently it has the config stuff as private members, which means it is
+// utterly inextensible.  Also the sendmail and akonadi-type transports use
+// the "host" setting for keeping the location of the sendmail executable and
+// the resource id, respectively.  This is a hack; they should have separate
+// config options... (cberzan)
 class MAILTRANSPORT_EXPORT Transport : public TransportBase
 {
   Q_OBJECT
   friend class TransportManager;
 
   public:
-      /**
-        Destructor
-       */
+    /**
+      Destructor
+    */
     virtual ~Transport();
 
     typedef QList<Transport*> List;
@@ -60,6 +69,13 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
       @param passwd The new password.
     */
     void setPassword( const QString &passwd );
+
+    /**
+      Makes sure the transport has a unique name.  Adds #1, #2, #3 etc. if
+      necessary.
+      @since 4.4
+    */
+    void forceUniqueName();
 
     /**
       This function synchronizes the password of this transport with the
@@ -95,6 +111,20 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     */
     Transport *clone() const;
 
+    /**
+      Returns the type of this transport.
+      @see TransportType.
+      @since 4.4
+    */
+    TransportType transportType() const;
+
+    /**
+      Sets the type of this transport.
+      @see TransportType.
+      @since 4.4
+    */
+    void setTransportType( const TransportType &type );
+
   protected:
     /**
       Creates a Transport object. Should only be used by TransportManager.
@@ -122,6 +152,6 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     TransportPrivate *const d;
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_TRANSPORT_H

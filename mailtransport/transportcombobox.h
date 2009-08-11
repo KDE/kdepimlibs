@@ -20,9 +20,10 @@
 #ifndef MAILTRANSPORT_TRANSPORTCOMBOBOX_H
 #define MAILTRANSPORT_TRANSPORTCOMBOBOX_H
 
-#include <mailtransport/transportbase.h>
 #include <mailtransport/mailtransport_export.h>
-#include <kcombobox.h>
+#include <mailtransport/transportbase.h>
+
+#include <KDE/KComboBox>
 
 class TransportComboBoxPrivate;
 
@@ -30,6 +31,7 @@ namespace MailTransport {
 
 /**
   A combo-box for selecting a mail transport.
+  It is updated automatically when transports are added, changed, or removed.
 */
 class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
 {
@@ -67,6 +69,6 @@ class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
     TransportComboBoxPrivate *const d;
 };
 
-}
+} // namespace MailTransport
 
-#endif
+#endif // MAILTRANSPORT_TRANSPORTCOMBOBOX_H
