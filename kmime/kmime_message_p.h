@@ -31,12 +31,7 @@ class MessagePrivate : public ContentPrivate
   public:
     MessagePrivate( Message *q ) : ContentPrivate( q )
     {
-      subject.setParent( q );
-      date.setParent( q );
     }
-
-    KMime::Headers::Subject subject;
-    KMime::Headers::Date date;
 
     Q_DECLARE_PUBLIC(Message)
 };

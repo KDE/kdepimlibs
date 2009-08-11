@@ -900,10 +900,23 @@ class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
     */
     void setEncoding( contentEncoding e );
 
+    /**
+      Returns whether the Content containing this header is already decoded.
+    */
+    // KDE5: rename to isDecoded().
     bool decoded() const;
 
+    /**
+      Set whether the Content containing this header is already decoded.
+      For instance, if you fill your Content with already-encoded base64 data,
+      you will want to setDecoded( false ).
+    */
     void setDecoded( bool decoded = true );
 
+    /**
+      Returns whether the Content containing this header needs to be encoded
+      (i.e., if decoded() is true and encoding() is base64 or quoted-printable).
+    */
     bool needToEncode() const;
 
   protected:

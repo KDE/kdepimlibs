@@ -27,7 +27,9 @@ namespace KMime {
 class ContentPrivate
 {
   public:
-    ContentPrivate( Content *q ) : forceDefaultCS( false ), parent( 0 ), q_ptr( q )
+    ContentPrivate( Content *q )
+      : forceDefaultCS( false ), parent( 0 ), frozen( false )
+      , q_ptr( q )
     {
       defaultCS = KMime::cachedCharset( "ISO-8859-1" );
     }
@@ -38,15 +40,18 @@ class ContentPrivate
       contents.clear();
     }
 
-    /** Returns the reconstructed content (header + body) for the content and sub-contents */
-    QByteArray fullContent() const;
+    bool parseUuencoded();
+    bool parseYenc();
+    bool parseMultipart();
 
     QByteArray head;
     QByteArray body;
+    QByteArray frozenBody;
     Content::List contents;
     QByteArray defaultCS;
     bool forceDefaultCS;
     Content *parent;
+    bool frozen;
 
     Content* q_ptr;
     Q_DECLARE_PUBLIC( Content )

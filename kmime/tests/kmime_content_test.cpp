@@ -17,9 +17,9 @@
     02110-1301, USA.
 */
 
-#include <qdebug.h>
-
 #include "kmime_content_test.h"
+
+#include <KDebug>
 #include <qtest_kde.h>
 
 #include <kmime_content.h>
@@ -43,6 +43,146 @@ void KMimeContentTest::testGetHeaderInstance( )
   Headers::From *f2 = c->from( true );
   QCOMPARE( f1, f2 );
   delete c;
+}
+
+void KMimeContentTest::testHeaderAddRemove()
+{
+  // Add a Content-Description header to a content.
+  Content *c = new Content;
+  QVERIFY( !c->contentDescription( false ) );
+  c->contentDescription()->from7BitString( "description" );
+
+  // The content must now have the header.
+  QVERIFY( c->contentDescription( false ) );
+  QCOMPARE( c->contentDescription()->as7BitString( false ), QByteArray( "description" ) );
+
+  // The content's head must also have the header.  Save the head.
+  c->assemble();
+  QByteArray head = c->head();
+
+  // Clear the content.  It must now forget the cached header.
+  c->clear();
+  QVERIFY( c->head().isEmpty() );
+  QVERIFY( !c->contentDescription( false ) );
+
+  // Put the head back.  It must now remember the header.
+  c->setHead( head );
+  QVERIFY( !c->contentDescription( false ) );
+  c->parse();
+  QVERIFY( c->contentDescription( false ) );
+  c->contentDescription()->from7BitString( "description" );
+
+  // Now remove the header explicitly.
+  bool ret = c->removeHeader( "Content-Description" );
+  QVERIFY( ret );
+
+  // The content must have forgotten the header now.
+  QVERIFY( !c->contentDescription( false ) );
+
+  // And after assembly the header should stay gone.
+  c->assemble();
+  QVERIFY( c->head().isEmpty() );
+  QVERIFY( !c->contentDescription( false ) );
+}
+
+void KMimeContentTest::testHeaderAppendPrepend()
+{
+  Content *c = new Content;
+  QByteArray d1( "Resent-From: test1@example.com" );
+  QByteArray d2( "Resent-From: test2@example.com" );
+  Headers::Generic *h1 = new Headers::Generic( "Resent-From", 0, "test1@example.com" );
+  Headers::Generic *h2 = new Headers::Generic( "Resent-From", 0, "test2@example.com" );
+  c->appendHeader( h1 );
+  c->appendHeader( h2 );
+  c->assemble();
+  QByteArray head = d1 + '\n' + d2 + '\n';
+  QCOMPARE( c->head(), head );
+
+  QByteArray d3( "Resent-From: test3@example.com" );
+  Headers::Generic *h3 = new Headers::Generic( "Resent-From", 0, "test3@example.com" );
+  c->prependHeader( h3 );
+  c->assemble();
+  head.prepend( d3 + '\n' );
+  QCOMPARE( c->head(), head );
+}
+
+void KMimeContentTest::testImplicitMultipartGeneration()
+{
+  Content *c1 = new Content();
+  c1->contentType()->from7BitString( "text/plain" );
+  c1->setBody( "textpart" );
+
+  Content *c2 = new Content();
+  c2->contentType()->from7BitString( "text/html" );
+  c2->setBody( "htmlpart" );
+
+  c1->addContent( c2 );
+
+  // c1 implicitly converted into a multipart/mixed node.
+  QVERIFY( c1->contentType( false ) );
+  QCOMPARE( c1->contentType()->mimeType(), QByteArray("multipart/mixed") );
+  QVERIFY( c1->body().isEmpty() );
+
+  QCOMPARE( c1->contents().count(), 2 );
+  Content *c = c1->contents().at( 0 ); // Former c1.
+  QVERIFY( c->contentType( false ) );
+  QCOMPARE( c->contentType()->mimeType(), QByteArray("text/plain") );
+  QCOMPARE( c->body(), QByteArray("textpart") );
+
+  QCOMPARE( c1->contents().at( 1 ), c2 );
+
+  // Now remove c2. c1 should be converted back to a text/plain content.
+  c1->removeContent( c2, false );
+  QVERIFY( c1->contents().isEmpty() );
+  QVERIFY( c1->contentType( false ) );
+  QCOMPARE( c1->contentType()->mimeType(), QByteArray( "text/plain" ) );
+  QCOMPARE( c1->body(), QByteArray( "textpart" ) );
+
+  // c2 should not have been touched.
+  QVERIFY( c2->contents().isEmpty() );
+  QVERIFY( c2->contentType( false ) );
+  QCOMPARE( c2->contentType()->mimeType(), QByteArray( "text/html" ) );
+  QCOMPARE( c2->body(), QByteArray( "htmlpart" ) );
+
+  // Clean up.
+  delete c1;
+  delete c2;
+}
+
+void KMimeContentTest::testExplicitMultipartGeneration()
+{
+  Content *c1 = new Content();
+  c1->contentType()->from7BitString( "multipart/mixed" );
+
+  Content *c2 = new Content();
+  c2->contentType()->from7BitString( "text/plain" );
+  c2->setBody( "textpart" );
+
+  Content *c3 = new Content();
+  c3->contentType()->from7BitString( "text/html" );
+  c3->setBody( "htmlpart" );
+
+  c1->addContent( c2 );
+  c1->addContent( c3 );
+
+  // c1 should not have been changed.
+  QCOMPARE( c1->contentType()->mimeType(), QByteArray("multipart/mixed") );
+  QVERIFY( c1->body().isEmpty() );
+
+  QCOMPARE( c1->contents().count(), 2 );
+  QCOMPARE( c1->contents().at( 0 ), c2 );
+  QCOMPARE( c1->contents().at( 1 ), c3 );
+
+  // Removing c3 should turn c1 into a single-part content containing the data of c2.
+  c1->removeContent( c3, false );
+  QCOMPARE( c1->contentType()->mimeType(), QByteArray( "text/plain" ) );
+  QCOMPARE( c1->contents().count(), 0 );
+  QCOMPARE( c1->body(), QByteArray( "textpart" ) );
+
+  // Clean up.
+  delete c1;
+  // c2 was deleted when c1 turned itself single-part.
+  delete c3;
 }
 
 void KMimeContentTest::testSetContent()
@@ -94,6 +234,44 @@ void KMimeContentTest::testSetContent()
   QVERIFY( c->hasContent() );
   QCOMPARE( c->head(), QByteArray( "head1\nhead2\n" ) );
   QVERIFY( c->body().isEmpty() );
+}
+
+void KMimeContentTest::testEncodedContent()
+{
+  // Example taken from RFC 2046, section 5.1.1.
+  // Removed "preamble" and "epilogue", which KMime loses.
+  QByteArray data =
+    "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
+    "To: Ned Freed <ned@innosoft.com>\n"
+    "Date: Sun, 21 Mar 1993 23:56:48 -0800 (PST)\n"
+    "Subject: Sample message\n"
+    "MIME-Version: 1.0\n"
+    "Content-type: multipart/mixed; boundary=\"simple boundary\"\n"
+    "\n"
+    "\n"
+    "--simple boundary\n"
+    "\n"
+    "This is implicitly typed plain US-ASCII text.\n"
+    "It does NOT end with a linebreak.\n"
+    "--simple boundary\n"
+    "Content-type: text/plain; charset=us-ascii\n"
+    "\n"
+    "This is explicitly typed plain US-ASCII text.\n"
+    "It DOES end with a linebreak.\n"
+    "\n"
+    "--simple boundary--\n";
+
+  Message *msg = new Message;
+  msg->setContent( data );
+  msg->parse();
+
+  // Test that multiple calls do not corrupt anything.
+  QByteArray encc = msg->encodedContent();
+  //kDebug() << "original data" << data;
+  //kDebug() << "encodedContent" << encc;
+  QCOMPARE( msg->encodedContent(), data );
+  QCOMPARE( msg->encodedContent(), data );
+  QCOMPARE( msg->encodedContent(), data );
 }
 
 void KMimeContentTest::testMultipleHeaderExtraction()
@@ -159,14 +337,14 @@ void KMimeContentTest::testMultipartMixed()
     "This is explicitly typed plain US-ASCII text.\n"
     "It DOES end with a linebreak.\n";
 
-  // slightly diffrent from original data
+  // What we expect KMime to assemble the above data into.
   QByteArray assembled =
     "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
     "To: Ned Freed <ned@innosoft.com>\n"
-    "Date: Sun, 21 Mar 1993 23:56:48 -0800 (PST)\n"
+    "Date: Sun, 21 Mar 1993 23:56:48 -0800\n"
     "Subject: Sample message\n"
     "MIME-Version: 1.0\n"
-    "Content-type: multipart/mixed; boundary=\"simple boundary\"\n"
+    "Content-Type: multipart/mixed; boundary=\"simple boundary\"\n"
     "\n"
     "\n"
     "--simple boundary\n"
@@ -174,7 +352,7 @@ void KMimeContentTest::testMultipartMixed()
     "This is implicitly typed plain US-ASCII text.\n"
     "It does NOT end with a linebreak.\n"
     "--simple boundary\n"
-    "Content-type: text/plain; charset=us-ascii\n"
+    "Content-Type: text/plain; charset=\"us-ascii\"\n"
     "\n"
     "This is explicitly typed plain US-ASCII text.\n"
     "It DOES end with a linebreak.\n"
@@ -197,37 +375,20 @@ void KMimeContentTest::testMultipartMixed()
 
   // assemble again
   msg->assemble();
+  //kDebug() << "expected assembled content" << assembled;
+  //kDebug() << "actual new encoded content" << msg->encodedContent();
   QCOMPARE( msg->encodedContent(), assembled );
   delete msg;
 
   // assembling from scratch
-  // slightly diffrent from original data
-  QByteArray assembled2 =
-    "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
-    "Subject: Sample message\n"
-    "To: Ned Freed <ned@innosoft.com>\n"
-    "Date: Sun, 21 Mar 1993 23:56:48 -0800\n"
-    "MIME-Version: 1.0\n"
-    "Content-Type: multipart/mixed; boundary=\"simple boundary\"\n"
-    "\n"
-    "\n"
-    "--simple boundary\n"
-    "\n"
-    "This is implicitly typed plain US-ASCII text.\n"
-    "It does NOT end with a linebreak.\n"
-    "--simple boundary\n"
-    "Content-Type: text/plain; charset=\"us-ascii\"\n"
-    "\n"
-    "This is explicitly typed plain US-ASCII text.\n"
-    "It DOES end with a linebreak.\n"
-    "\n"
-    "--simple boundary--\n";
-
+  // (The headers have to be in the same order, as we compare with the above assembled.)
   msg = new Message();
   msg->from()->from7BitString( "Nathaniel Borenstein <nsb@bellcore.com>" );
   msg->to()->from7BitString( "Ned Freed <ned@innosoft.com>" );
-  msg->subject()->from7BitString( "Sample message" );
   msg->date()->from7BitString( "Sun, 21 Mar 1993 23:56:48 -0800 (PST)" );
+  msg->subject()->from7BitString( "Sample message" );
+  // HACK to make MIME-Version appear before Content-Type, as in the expected message.
+  msg->setHeader( new Headers::MIMEVersion( msg, "1.234" ) );
   msg->setBody( part1 );
   c = new Content();
   c->setBody( part2 );
@@ -244,54 +405,10 @@ void KMimeContentTest::testMultipartMixed()
   QCOMPARE( c->body(), part2 );
 
   msg->assemble();
-  QCOMPARE( msg->encodedContent(), assembled2 );
-}
-
-void KMimeContentTest::testImplicitMultipartGeneration()
-{
-  Content *c1 = new Content();
-  c1->contentType()->from7BitString( "text/plain" );
-  c1->setBody( "textpart" );
-
-  Content *c2 = new Content();
-  c2->contentType()->from7BitString( "text/html" );
-  c2->setBody( "htmlpart" );
-
-  c1->addContent( c2 );
-
-  // c1 implicitly converted into a multipart/mixed node
-  QCOMPARE( c1->contentType()->mimeType(), QByteArray("multipart/mixed") );
-  QVERIFY( c1->body().isEmpty() );
-
-  Content *c = c1->contents().at( 0 ); // former c1
-  QCOMPARE( c->contentType()->mimeType(), QByteArray("text/plain") );
-  QCOMPARE( c->body(), QByteArray("textpart") );
-
-  QCOMPARE( c1->contents().at( 1 ), c2 );
-}
-
-void KMimeContentTest::testExplicitMultipartGeneration()
-{
-  Content *c1 = new Content();
-  c1->contentType()->from7BitString( "multipart/mixed" );
-
-  Content *c2 = new Content();
-  c2->contentType()->from7BitString( "text/plain" );
-  c2->setBody( "textpart" );
-
-  Content *c3 = new Content();
-  c3->contentType()->from7BitString( "text/html" );
-  c3->setBody( "htmlpart" );
-
-  c1->addContent( c2 );
-  c1->addContent( c3 );
-
-  // c1 should not be changed
-  QCOMPARE( c1->contentType()->mimeType(), QByteArray("multipart/mixed") );
-  QVERIFY( c1->body().isEmpty() );
-
-  QCOMPARE( c1->contents().at( 0 ), c2 );
-  QCOMPARE( c1->contents().at( 1 ), c3 );
+  QByteArray encc = msg->encodedContent();
+  //kDebug() << "expected assembled content" << assembled;
+  //kDebug() << "actual encoded content" << encc;
+  QCOMPARE( msg->encodedContent(), assembled );
 }
 
 void KMimeContentTest::testParsingUuencoded()
@@ -403,7 +520,7 @@ void KMimeContentTest::testParent()
   Content *c5 = new Content();
   c5->contentType()->from7BitString( "multipart/mixed" );
 
-//c2 doesn't have a parent yet
+  //c2 doesn't have a parent yet
   QCOMPARE(c2->parent(), (Content*)(0L));
 
   c1->addContent( c2 );
@@ -465,6 +582,54 @@ void KMimeContentTest::testParent()
 
 }
 
+void KMimeContentTest::testFreezing()
+{
+  // Example taken from RFC 2046, section 5.1.1.
+  QByteArray data =
+    "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
+    "To: Ned Freed <ned@innosoft.com>\n"
+    "Date: Sun, 21 Mar 1993 23:56:48 -0800 (PST)\n"
+    "Subject: Sample message\n"
+    "MIME-Version: 1.0\n"
+    "Content-type: multipart/mixed; boundary=\"simple boundary\"\n"
+    "\n"
+    "This is the preamble.  It is to be ignored, though it\n"
+    "is a handy place for composition agents to include an\n"
+    "explanatory note to non-MIME conformant readers.\n"
+    "\n"
+    "--simple boundary\n"
+    "\n"
+    "This is implicitly typed plain US-ASCII text.\n"
+    "It does NOT end with a linebreak.\n"
+    "--simple boundary\n"
+    "Content-type: text/plain; charset=us-ascii\n"
+    "\n"
+    "This is explicitly typed plain US-ASCII text.\n"
+    "It DOES end with a linebreak.\n"
+    "\n"
+    "--simple boundary--\n"
+    "\n"
+    "This is the epilogue.  It is also to be ignored.\n";
+
+  Message *msg = new Message;
+  msg->setContent( data );
+  msg->setFrozen( true );
+
+  // The data should be untouched before parsing.
+  //kDebug() << "original data" << data;
+  //kDebug() << "data from message" << msg->encodedContent();
+  QCOMPARE( msg->encodedContent(), data );
+
+  // The data should remain untouched after parsing.
+  msg->parse();
+  QVERIFY( msg->contentType()->isMultipart() );
+  QCOMPARE( msg->contents().count(), 2 );
+  QCOMPARE( msg->encodedContent(), data );
+
+  // Calling assemble() should not alter the data.
+  msg->assemble();
+  QCOMPARE( msg->encodedContent(), data );
+}
 
 #include "kmime_content_test.moc"
 

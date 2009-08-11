@@ -39,27 +39,72 @@ class KMIME_EXPORT NewsArticle : public Message
     */
     typedef boost::shared_ptr<NewsArticle> Ptr;
 
+    /**
+      Creates a NewsArticle object.
+    */
     NewsArticle();
+
+    /**
+      Destroys this NewsArticle.
+    */
     ~NewsArticle();
 
+    /* reimpl */
     virtual void parse();
+
+    /* reimpl */
     virtual void clear();
 
-    /** @deprecated use headerByType( const char * ) */
+    /* reimpl */
     virtual KDE_DEPRECATED KMime::Headers::Base * getHeaderByType( const char *type );
-    /** @since 4.2 */
+
+    /* reimpl */
     virtual KMime::Headers::Base * headerByType( const char *type );
+
+    /* reimpl */
     virtual void setHeader( KMime::Headers::Base *h );
+
+    /* reimpl */
     virtual bool removeHeader( const char *type );
 
+    /**
+      Returns the Control header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::Control *control( bool create = true );
+
+    /**
+      Returns the Supersedes header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::Supersedes *supersedes( bool create = true );
+
+    /**
+      Returns the Mail-Copies-To header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::MailCopiesTo *mailCopiesTo( bool create = true );
+
+    /**
+      Returns the Newsgroups header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::Newsgroups *newsgroups( bool create = true );
+
+    /**
+      Returns the Follow-Up-To header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::FollowUpTo *followUpTo( bool create = true );
+
+    /**
+      Returns the Lines header.
+      @param create If true, create the header if it doesn't exist yet.
+    */
     virtual KMime::Headers::Lines *lines( bool create = true );
 
   protected:
+    /* reimpl */
     virtual QByteArray assembleHeaders();
 
   private:

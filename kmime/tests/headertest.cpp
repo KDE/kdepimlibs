@@ -18,6 +18,8 @@
 */
 
 #include "headertest.h"
+
+#include <KDebug>
 #include <qtest_kde.h>
 
 #include <kmime_headers.h>

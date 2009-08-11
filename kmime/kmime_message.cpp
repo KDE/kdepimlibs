@@ -29,203 +29,68 @@ using namespace KMime;
 
 namespace KMime {
 
-Message::Message() : Content( new MessagePrivate( this ) ) {}
+Message::Message()
+  : Content( new MessagePrivate( this ) )
+{
+}
 
-Message::Message(MessagePrivate * d) : Content( d ) {}
+Message::Message(MessagePrivate * d)
+  : Content( d )
+{
+}
 
 Message::~Message()
-{}
+{
+}
 
 void Message::parse()
 {
-  Q_D(Message);
+  // KDE5: remove this virtual reimplementation.
   Content::parse();
-
-  QByteArray raw;
-  if ( !( raw = rawHeader( d->subject.type() ) ).isEmpty() )
-    d->subject.from7BitString( raw );
-
-  if ( !( raw = rawHeader( d->date.type() ) ).isEmpty() )
-    d->date.from7BitString( raw );
 }
 
 QByteArray Message::assembleHeaders()
 {
-  Q_D(Message);
-  Headers::Base *h;
-  QByteArray newHead;
-  KMime::Message m;
-  m.setContent( d->fullContent()  );
-  m.parse();
+  // Create the mandatory fields (RFC5322) if they do not exist already.
+  date( true );
+  from( true );
 
-  //Message-ID
-  if ( ( h = messageID( false ) ) != 0 && !h->isEmpty() && h->as7BitString() != m.messageID()->as7BitString() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
+  // Make sure the mandatory MIME-Version field (RFC2045) is present and valid.
+  Headers::MIMEVersion *mimeVersion = header<Headers::MIMEVersion>( true );
+  mimeVersion->from7BitString( "1.0" );
 
-  //From
-  h = from(); // "From" is mandatory
-  if ( !h->isEmpty() && h->as7BitString() != m.from()->as7BitString() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //Subject
-  h = subject(); // "Subject" is mandatory
-  if ( !h->isEmpty() && h->as7BitString() != m.subject()->as7BitString() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //To
-  if ( ( h = to( false )) != 0 && !h->isEmpty() && h->as7BitString() != m.to()->as7BitString() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //Cc
-  if ( ( h = cc( false )) != 0 && !h->isEmpty() && h->as7BitString() != m.cc()->as7BitString() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //Reply-To
-  if ( ( h = replyTo( false )) != 0 && !h->isEmpty() && h->as7BitString() != m.replyTo()->as7BitString() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //Date
-  h = date(); // "Date" is mandatory
-  if ( !h->isEmpty() && h->as7BitString() != m.date()->as7BitString() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //References
-  if ( ( h = references( false )) != 0 && !h->isEmpty() && h->as7BitString() != m.references()->as7BitString() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //Organization
-  if ( ( h = organization( false )) != 0 && !h->isEmpty() && h->as7BitString() != m.organization()->as7BitString() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //UserAgent
-  if ( ( h = userAgent( false )) != 0 && !h->isEmpty() && h->as7BitString() != m.userAgent()->as7BitString() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  // In-Reply-To
-  if ( ( h = inReplyTo( false ) ) != 0 && !h->isEmpty() && h->as7BitString() != m.inReplyTo()->as7BitString() ) {
-    newHead += h->as7BitString() + '\n';
-    KMime::removeHeader( d->head, h->type() );
-  }
-
-  //Mime-Version
-  Headers::Base *mimeHeader = m.headerByType("MIME-Version");
-  QByteArray oldMimeVersion;
-  if ( mimeHeader )
-   oldMimeVersion = mimeHeader->as7BitString();
-  if ( oldMimeVersion != "MIME-Version: 1.0" ) {
-    newHead += "MIME-Version: 1.0\n";
-    KMime::removeHeader( d->head, "MIME-Version" );
-  }
-
-  QByteArray newContentHead = Content::assembleHeaders();
-
-  if ( newHead.isEmpty() && newContentHead == d->head ) { //no header was changed
-    return d->head;
-  } else {
-    return newHead + newContentHead;
-  }
+  // Assemble all header fields.
+  return Content::assembleHeaders();
 }
 
 void Message::clear()
 {
-  Q_D(Message);
-  d->subject.clear();
-  d->date.clear();
+  // KDE5: remove this virtual reimplementation.
   Content::clear();
 }
 
 Headers::Base *Message::getHeaderByType( const char *type )
 {
-    return headerByType( type );
+  // KDE5: remove this virtual reimplementation.
+  return headerByType( type );
 }
 
 Headers::Base *Message::headerByType( const char *type )
 {
-  Q_D(Message);
-  if ( strcasecmp( "Subject", type ) == 0 ) {
-    if ( d->subject.isEmpty() ) {
-      return 0;
-    } else {
-      return &d->subject;
-    }
-  }
-  else if ( strcasecmp("Date", type ) == 0 ){
-    if ( d->date.isEmpty() ) {
-      return 0;
-    } else {
-      return &d->date;
-    }
-  } else {
-    return Content::headerByType( type );
-  }
+  // KDE5: remove this virtual reimplementation.
+  return Content::headerByType( type );
 }
 
 void Message::setHeader( Headers::Base *h )
 {
-  Q_D(Message);
-  bool del = true;
-  if ( h->is( "Subject" ) ) {
-    d->subject.fromUnicodeString( h->asUnicodeString(), h->rfc2047Charset() );
-  } else if ( h->is( "Date" ) ) {
-    d->date.setDateTime( ( static_cast<Headers::Date*>( h ) )->dateTime() );
-  } else {
-    del = false;
-    Content::setHeader( h );
-  }
-
-  if ( del ) delete h;
+  // KDE5: remove this virtual reimplementation.
+  Content::setHeader( h );
 }
 
 bool Message::removeHeader( const char *type )
 {
-  Q_D(Message);
-  if ( strcasecmp( "Subject", type ) == 0 ) {
-    d->subject.clear();
-  } else if ( strcasecmp( "Date", type ) == 0 ) {
-    d->date.clear();
-  } else {
-    return Content::removeHeader( type );
-  }
-
-  return true;
-}
-
-Headers::Subject *Message::subject( bool create )
-{
-  Q_D( Message );
-  if ( !create && d->subject.isEmpty() ) {
-    return 0;
-  }
-  return &d->subject;
-}
-
-Headers::Date *Message::date( bool create )
-{
-  Q_D( Message );
-  if ( !create && d->date.isEmpty() ) {
-    return 0;
-  }
-  return &d->date;
+  // KDE5: remove this virtual reimplementation.
+  return Content::removeHeader( type );
 }
 
 bool Message::isTopLevel() const
@@ -270,13 +135,14 @@ Content *Message::mainBodyPart( const QByteArray &type )
 }
 
 // @cond PRIVATE
-#define kmime_mk_header_accessor( header, method ) \
-Headers::header *Message::method( bool create ) { \
-  Headers::header *p = 0; \
-  return headerInstance( p, create ); \
+#define kmime_mk_header_accessor( type, method ) \
+Headers::type *Message::method( bool create ) { \
+  return header<Headers::type>( create ); \
 }
 
 kmime_mk_header_accessor( MessageID, messageID )
+kmime_mk_header_accessor( Subject, subject )
+kmime_mk_header_accessor( Date, date )
 kmime_mk_header_accessor( Organization, organization )
 kmime_mk_header_accessor( From, from )
 kmime_mk_header_accessor( ReplyTo, replyTo )

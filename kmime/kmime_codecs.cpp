@@ -95,7 +95,7 @@ Codec *Codec::codecForName( const QByteArray &name )
   }
   QByteArray lowerName = name;
   kAsciiToLower( lowerName.data() );
-  Codec *codec = (*all)[ lowerName ];
+  Codec *codec = (*all)[ lowerName ]; // FIXME: operator[] adds an entry into the hash
   dictLock->unlock();
 
   if ( !codec ) {

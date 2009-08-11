@@ -8,13 +8,13 @@
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
-    License assert published by the Free Software Foundation; either
+    License as published by the Free Software Foundation; either
     version 2 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for morbe details.
+    Library General Public License for more details.
 
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
@@ -44,6 +44,7 @@
 #include "kmime_content.h"
 #include "kmime_codecs.h"
 #include "kmime_header_parsing.h"
+#include "kmime_headerfactory.h"
 #include "kmime_warning.h"
 
 #include <QtCore/QTextCodec>
@@ -55,6 +56,21 @@
 
 #include <assert.h>
 #include <ctype.h>
+
+template <typename T>
+bool registerHeaderHelper()
+{
+  const T dummy;
+  if( QByteArray( dummy.type() ).isEmpty() ) {
+    // This is a generic header.
+    return false;
+  }
+  return KMime::HeaderFactory::self()->registerHeader<T>();
+}
+
+// macro to register a header with HeaderFactory
+#define kmime_register_header( subclass )                             \
+namespace { const bool dummyForRegistering##subclass = registerHeaderHelper<subclass>(); }
 
 // macro to generate a default constructor implementation
 #define kmime_mk_trivial_ctor( subclass, baseclass )                  \
@@ -74,7 +90,10 @@ subclass::subclass( Content *parent, const QString &s, const QByteArray &charset
   fromUnicodeString( s, charset );                                    \
 }                                                                     \
                                                                       \
-subclass::~subclass() {}
+subclass::~subclass() {}                                              \
+                                                                      \
+kmime_register_header( subclass )
+// end kmime_mk_trivial_ctor
 
 
 #define kmime_mk_trivial_ctor_with_dptr( subclass, baseclass ) \
@@ -94,7 +113,11 @@ subclass::subclass( Content *parent, const QString &s, const QByteArray &charset
   fromUnicodeString( s, charset );                                    \
 }                                                                     \
                                                                       \
-subclass::~subclass() {}
+subclass::~subclass() {}                                              \
+                                                                      \
+kmime_register_header( subclass )
+// end kmime_mk_trivial_ctor_with_dptr
+
 
 #define kmime_mk_trivial_ctor_with_name( subclass, baseclass, name )  \
 kmime_mk_trivial_ctor( subclass, baseclass )                          \
@@ -136,6 +159,7 @@ Base::Base( BasePrivate *dd, KMime::Content *parent ) :
 Base::~Base()
 {
   delete d_ptr;
+  d_ptr = 0;
 }
 
 KMime::Content *Base::parent() const
@@ -1158,6 +1182,8 @@ bool ReturnPath::parse( const char* &scursor, const char * const send,
 //-----</ReturnPath>-------------------------
 
 //-----<Generic>-------------------------------
+
+// NOTE: Do *not* register Generic with HeaderFactory, since its type() is changeable.
 
 Generic::Generic() : Generics::Unstructured( new GenericPrivate )
 {
