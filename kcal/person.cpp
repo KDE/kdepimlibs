@@ -89,7 +89,11 @@ Person::~Person()
   delete d;
 }
 
+#if defined(Q_CC_MSVC)
 bool KCal::Person::operator==( const Person &person ) const
+#else
+bool KCal::Person::operator==( const Person &person )
+#endif
 {
   return
     d->mName == person.d->mName &&
@@ -159,4 +163,9 @@ void Person::setEmail( const QString &email )
   } else {
     d->mEmail = email;
   }
+}
+
+static inline uint qHash( const Person &key )
+{
+  return qHash( key.fullName() );
 }

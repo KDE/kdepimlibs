@@ -134,8 +134,12 @@ class KCAL_EXPORT Person
 
       @param person is the person to compare.
     */
+    //KDE5: make const for all
+#if defined(Q_CC_MSVC)
     bool operator==( const Person &person ) const;
-
+#else
+    bool operator==( const Person &person ); //krazy:exclude=operators
+#endif
     /**
       Sets this person equal to @p person.
 
@@ -150,11 +154,6 @@ class KCAL_EXPORT Person
    //@endcond
 };
 
-}
-
-inline uint qHash(const KCal::Person &key)
-{
-    return qHash(key.fullName());
 }
 
 #endif
