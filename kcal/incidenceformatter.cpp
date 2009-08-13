@@ -52,7 +52,6 @@
 #include <kdatetime.h>
 #include <kemailsettings.h>
 
-#include <kio/netaccess.h>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <klocale.h>
@@ -1523,14 +1522,12 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
 
   Attachment::List attachments = incidence->attachments();
   if ( !attachments.isEmpty() ) {
-    tmpStr += "<u>" + i18n( "Attached documents" ) + "</u>";
-    tmpStr += "<br/>";
-    tmpStr += "<table border=\"0\" cellpadding=\"1\" cellspacing=\"0\" columns=\"1\">";
+    tmpStr += i18n( "Attached Documents:" ) + "<ol>";
 
     Attachment::List::ConstIterator it;
     for( it = attachments.begin(); it != attachments.end(); ++it ) {
       Attachment *a = *it;
-      tmpStr += "<tr><td>";
+      tmpStr += "<li>";
       // Attachment icon
       KMimeType::Ptr mimeType = KMimeType::mimeType( a->mimeType() );
       QString iconStr = mimeType->iconName( a->uri() );
@@ -1538,19 +1535,10 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
       if ( !iconPath.isEmpty() ) {
         tmpStr += "<img src=\"" + iconPath + "\" align=\"top\">";
       }
-      if ( a->isUri() ) {
-        if ( KIO::NetAccess::exists( KUrl( a->uri() ), KIO::NetAccess::SourceSide, 0 ) ) {
-          tmpStr += "<a href=\"" + a->uri() + "\">" + a->label() + "</a>";
-        } else {
-          tmpStr += i18n( "%1 (inaccessible link)", a->label() );
-        }
-      } else {
-        tmpStr += helper->makeLink( "ATTACH:" + a->label(), a->label() );
-      }
-      tmpStr += "</td>";
-      tmpStr += "</tr>";
+      tmpStr += helper->makeLink( "ATTACH:" + a->label(), a->label() );
+      tmpStr += "</li>";
     }
-    tmpStr += "</table>";
+    tmpStr += "</ol>";
   }
 
   return tmpStr;
@@ -1764,9 +1752,14 @@ class IncidenceFormatter::IncidenceCompareVisitor
 
 QString InvitationFormatterHelper::makeLink( const QString &id, const QString &text )
 {
-  QString res( "<a href=\"%1\"><b>%2</b></a>" );
-  return res.arg( generateLinkURL( id ) ).arg( text );
-  return res;
+  if ( !id.startsWith( QLatin1String( "ATTACH:" ) ) ) {
+    QString res( "<a href=\"%1\"><b>%2</b></a>" );
+    return res.arg( generateLinkURL( id ) ).arg( text );
+  } else {
+    // draw the attachment links in non-bold face
+    QString res( "<a href=\"%1\">%2</a>" );
+    return res.arg( generateLinkURL( id ) ).arg( text );
+  }
 }
 
 // Check if the given incidence is likely one that we own instead one from
@@ -2053,6 +2046,10 @@ static QString formatICalInvitationHelper( QString invitation,
 
   // close the top-level
   html += "</div>";
+
+  // Add the attachment list
+  html += invitationAttachments( helper, inc );
+
   return html;
 }
 //@endcond
