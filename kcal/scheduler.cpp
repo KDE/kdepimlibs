@@ -336,11 +336,14 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
         kDebug() << "replacing existing incidence " << i->uid();
         bool res = true;
         AssignmentVisitor visitor;
+        const QString oldUid = i->uid();
         if ( !visitor.assign( i, inc ) ) {
           kError() << "assigning different incidence types";
           res = false;
         }
-        deleteTransaction( i );
+        i->setUid( oldUid );
+        i->setSchedulingID( inc->uid() );
+        deleteTransaction( incidence );
         return res;
       }
     } else {
