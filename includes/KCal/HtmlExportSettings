@@ -1,4 +1,0 @@
-#ifdef __GNUC__
-#warning HtmlExportSettings is deprecated. Use HTMLExportSettings instead.
-#endif
-#include "../../kcal/htmlexportsettings.h"
