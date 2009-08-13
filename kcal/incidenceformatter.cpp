@@ -1525,7 +1525,7 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
     tmpStr += i18n( "Attached Documents:" ) + "<ol>";
 
     Attachment::List::ConstIterator it;
-    for( it = attachments.begin(); it != attachments.end(); ++it ) {
+    for( it = attachments.constBegin(); it != attachments.constEnd(); ++it ) {
       Attachment *a = *it;
       tmpStr += "<li>";
       // Attachment icon
