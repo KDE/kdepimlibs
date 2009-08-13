@@ -19,6 +19,7 @@
   Boston, MA 02110-1301, USA.
 */
 #include <qtest_kde.h>
+#include <kdebug.h>
 
 #include "testlinklocator.h"
 #include "testlinklocator.moc"
@@ -104,3 +105,92 @@ void LinkLocatorTest::testGetEmailAddress()
   QVERIFY( llq.getEmailAddress() == "foo@bar-bar.baz" );
 }
 
+void LinkLocatorTest::testGetUrl()
+{
+  QStringList brackets;
+  brackets << "" << "";   // no brackets
+  brackets << "(" << ")";
+  brackets << "<" << ">";
+  brackets << "[" << "]";
+  brackets << "<link>" << "</link>";
+
+  for (int i = 0; i < brackets.count(); i += 2)
+    testGetUrl2(brackets[i], brackets[i+1]);
+}
+
+void LinkLocatorTest::testGetUrl2(const QString &left, const QString &right)
+{
+  QStringList schemas;
+  schemas << "http://";
+  schemas << "https://";
+  schemas << "vnc://";
+  schemas << "fish://";
+  schemas << "ftp://";
+  schemas << "ftps://";
+  schemas << "sftp://";
+  schemas << "smb://";
+  schemas << "file://";
+
+  QStringList urls;
+  urls << "www.kde.org";
+  urls << "user@www.kde.org";
+  urls << "user:pass@www.kde.org";
+  urls << "user:pass@www.kde.org:1234";
+  urls << "user:pass@www.kde.org:1234/sub/path";
+  urls << "user:pass@www.kde.org:1234/sub/path?a=1";
+  urls << "user:pass@www.kde.org:1234/sub/path?a=1#anchor";
+  urls << "user:pass@www.kde.org:1234/sub/path/special(123)?a=1#anchor";
+  urls << "user:pass@www.kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor";
+
+  foreach (QString schema, schemas)
+  {
+    foreach (QString url, urls)
+    {
+      QString test(left + schema + url + right);
+      LinkLocator ll(test, left.length());
+      QString gotUrl = ll.getUrl();
+
+      bool ok = ( gotUrl == (schema + url) );
+      qDebug() << "check:" << (ok ? "OK" : "NOK") << test << "=>" << (schema + url);
+      QVERIFY2( ok, qPrintable(test) );
+    }
+  }
+
+  QStringList urlsWithoutSchema;
+  urlsWithoutSchema << ".kde.org";
+  urlsWithoutSchema << ".kde.org:1234/sub/path";
+  urlsWithoutSchema << ".kde.org:1234/sub/path?a=1";
+  urlsWithoutSchema << ".kde.org:1234/sub/path?a=1#anchor";
+  urlsWithoutSchema << ".kde.org:1234/sub/path/special(123)?a=1#anchor";
+  urlsWithoutSchema << ".kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor";
+
+  QStringList starts;
+  starts << "www" << "ftp" << "news:www";
+
+  foreach (QString start, starts)
+  {
+    foreach (QString url, urlsWithoutSchema)
+    {
+      QString test(left + start + url + right);
+      LinkLocator ll(test, left.length());
+      QString gotUrl = ll.getUrl();
+
+      bool ok = ( gotUrl == (start + url) );
+      qDebug() << "check:" << (ok ? "OK" : "NOK") << test << "=>" << (start + url);
+      QVERIFY2( ok, qPrintable(test) );
+    }
+  }
+
+  // mailto
+  {
+    QString addr = "mailto:test@kde.org";
+    QString test(left + addr + right);
+    LinkLocator ll(test, left.length());
+
+    QString gotUrl = ll.getUrl();
+
+    bool ok = ( gotUrl == addr );
+    qDebug() << "check:" << (ok ? "OK" : "NOK") << test << "=>" << addr;
+    QVERIFY2( ok, qPrintable(test) );
+  }
+}
