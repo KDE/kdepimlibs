@@ -112,7 +112,6 @@ bool HeaderFactory::registerHeaderMaker( const QByteArray &type, HeaderMakerBase
     return false;
   }
   d->headerMakers.insert( ltype, maker );
-  kDebug() << "Registered type" << type;
   return true;
 }
 
