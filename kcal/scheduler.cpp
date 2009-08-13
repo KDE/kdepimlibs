@@ -27,6 +27,7 @@
 #include "freebusy.h"
 #include "freebusycache.h"
 #include "icalformat.h"
+#include "assignmentvisitor.h"
 
 #include <klocale.h>
 #include <kdebug.h>
@@ -245,18 +246,17 @@ bool Scheduler::acceptPublish( IncidenceBase *newIncBase,
     case ScheduleMessage::Unknown:
     case ScheduleMessage::PublishNew:
     case ScheduleMessage::PublishUpdate:
-      res = true;
-      if ( calInc ) {
+      if ( calInc && newInc ) {
         if ( ( newInc->revision() > calInc->revision() ) ||
              ( newInc->revision() == calInc->revision() &&
                newInc->lastModified() > calInc->lastModified() ) ) {
-          mCalendar->deleteIncidence( calInc );
-        } else {
-          res = false;
+          AssignmentVisitor visitor;
+          if ( !visitor.assign( calInc, newInc ) ) {
+            kError() << "assigning different incidence types";
+          } else {
+            res = true;
+          }
         }
-      }
-      if ( res ) {
-        mCalendar->addIncidence( newInc );
       }
       break;
     case ScheduleMessage::Obsolete:
@@ -334,8 +334,14 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
           return false;
         }
         kDebug() << "replacing existing incidence " << i->uid();
-        mCalendar->deleteIncidence( i );
-        break; // replacing one is enough
+        bool res = true;
+        AssignmentVisitor visitor;
+        if ( !visitor.assign( i, inc ) ) {
+          kError() << "assigning different incidence types";
+          res = false;
+        }
+        deleteTransaction( i );
+        return res;
       }
     } else {
       // This isn't an update - the found incidence has a bigger revision number
