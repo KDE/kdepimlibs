@@ -36,7 +36,6 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/kmime/addressattribute.h>
 
-
 using namespace Akonadi;
 using namespace KMime;
 using namespace MailTransport;

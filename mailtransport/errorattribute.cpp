@@ -43,7 +43,7 @@ ErrorAttribute::~ErrorAttribute()
   delete d;
 }
 
-ErrorAttribute* ErrorAttribute::clone() const
+ErrorAttribute *ErrorAttribute::clone() const
 {
   return new ErrorAttribute( d->mMessage );
 }

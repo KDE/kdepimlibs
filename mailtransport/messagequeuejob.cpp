@@ -156,11 +156,8 @@ void MessageQueueJob::Private::doStart()
   q->addSubjob( job );
 }
 
-
-
 MessageQueueJob::MessageQueueJob( QObject *parent )
-  : KCompositeJob( parent )
-  , d( new Private( this ) )
+  : KCompositeJob( parent ), d( new Private( this ) )
 {
 }
 

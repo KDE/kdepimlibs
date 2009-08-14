@@ -52,8 +52,6 @@ Job *SendQueuedAction::itemAction( const Item &item ) const
   return new ItemModifyJob( cp );
 }
 
-
-
 ItemFetchScope ClearErrorAction::fetchScope() const
 {
   ItemFetchScope scope;

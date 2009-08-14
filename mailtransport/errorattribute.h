@@ -49,7 +49,7 @@ class MAILTRANSPORT_EXPORT ErrorAttribute : public Akonadi::Attribute
     virtual ~ErrorAttribute();
 
     /* reimpl */
-    virtual ErrorAttribute* clone() const;
+    virtual ErrorAttribute *clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );

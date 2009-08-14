@@ -42,8 +42,7 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
     /**
       Determines how the message is sent.
     */
-    enum DispatchMode
-    {
+    enum DispatchMode {
       Immediately,  ///< Send message as soon as possible.
       AfterDueDate, ///< Send message at a certain date/time.
       Never         ///< Send message only when the user requests so.
@@ -52,7 +51,8 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
     /**
       Creates a new DispatchModeAttribute.
     */
-    explicit DispatchModeAttribute( DispatchMode mode = Immediately, const QDateTime &date = QDateTime() );
+    explicit DispatchModeAttribute( DispatchMode mode = Immediately,
+                                    const QDateTime &date = QDateTime() );
 
     /**
       Destroys the DispatchModeAttribute.
@@ -60,7 +60,7 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
     virtual ~DispatchModeAttribute();
 
     /* reimpl */
-    virtual DispatchModeAttribute* clone() const;
+    virtual DispatchModeAttribute *clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );

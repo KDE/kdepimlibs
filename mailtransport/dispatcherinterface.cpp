@@ -71,11 +71,8 @@ void DispatcherInterfacePrivate::massModifyResult( KJob *job )
   }
 }
 
-
-
 DispatcherInterface::DispatcherInterface( DispatcherInterfacePrivate *dd )
-  : QObject()
-  , d( dd )
+  : QObject(), d( dd )
 {
 }
 
@@ -86,7 +83,8 @@ DispatcherInterface *DispatcherInterface::self()
 
 AgentInstance DispatcherInterface::dispatcherInstance() const
 {
-  AgentInstance a = AgentManager::self()->instance( QLatin1String( "akonadi_maildispatcher_agent" ) );
+  AgentInstance a =
+    AgentManager::self()->instance( QLatin1String( "akonadi_maildispatcher_agent" ) );
   if( !a.isValid() ) {
     kWarning() << "Could not get MDA instance.";
   }
@@ -100,7 +98,8 @@ void DispatcherInterface::dispatchManually()
     return;
   }
 
-  FilterActionJob *mjob = new FilterActionJob( LocalFolders::self()->outbox(), new SendQueuedAction, this );
+  FilterActionJob *mjob =
+    new FilterActionJob( LocalFolders::self()->outbox(), new SendQueuedAction, this );
   connect( mjob, SIGNAL(result(KJob*)), this, SLOT(massModifyResult(KJob*)) );
 }
 
@@ -111,7 +110,8 @@ void DispatcherInterface::retryDispatching()
     return;
   }
 
-  FilterActionJob *mjob = new FilterActionJob( LocalFolders::self()->outbox(), new ClearErrorAction, this );
+  FilterActionJob *mjob =
+    new FilterActionJob( LocalFolders::self()->outbox(), new ClearErrorAction, this );
   connect( mjob, SIGNAL(result(KJob*)), this, SLOT(massModifyResult(KJob*)) );
 }
 

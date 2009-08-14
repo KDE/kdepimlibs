@@ -48,7 +48,6 @@ class MAILTRANSPORT_EXPORT SendQueuedAction : public Akonadi::FilterAction
     virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const;
 };
 
-
 /**
   FilterAction that finds all messages with an ErrorAttribute,
   removes the attribute, and sets the "queued" flag.
