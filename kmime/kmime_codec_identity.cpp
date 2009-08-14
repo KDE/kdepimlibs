@@ -1,7 +1,7 @@
 /*  -*- c++ -*-
     kmime_codec_identity.cpp
 
-    KMime, the KDE internet mail/usenet news message library.
+    KMime, the KDE Internet mail/usenet news message library.
     Copyright (c) 2004 Marc Mutz <mutz@kde.org>
 
     This library is free software; you can redistribute it and/or

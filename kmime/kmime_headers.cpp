@@ -1,7 +1,7 @@
 /*  -*- c++ -*-
     kmime_headers.cpp
 
-    KMime, the KDE internet mail/usenet news message library.
+    KMime, the KDE Internet mail/usenet news message library.
     Copyright (c) 2001-2002 the KMime authors.
     See file AUTHORS for details
     Copyright (c) 2006 Volker Krause <vkrause@kde.org>

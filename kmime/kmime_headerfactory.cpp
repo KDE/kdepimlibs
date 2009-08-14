@@ -1,7 +1,7 @@
 /*
     kmime_header_factory.cpp
 
-    KMime, the KDE internet mail/usenet news message library.
+    KMime, the KDE Internet mail/usenet news message library.
     Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
     This library is free software; you can redistribute it and/or

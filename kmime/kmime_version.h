@@ -1,7 +1,7 @@
 /*
     kmime_version.h
 
-    KMime, the KDE internet mail/usenet news message library.
+    KMime, the KDE Internet mail/usenet news message library.
     Copyright (c) 2001-2002 Marc Mutz <mutz@kde.org>
     See file AUTHORS for details
 
