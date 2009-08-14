@@ -507,7 +507,7 @@ QByteArray CRLFtoLF( const QByteArray &s )
 QByteArray LFtoCRLF( const QByteArray &s )
 {
   QByteArray ret = s;
-  ret.replace( "\n", "\r\n" );
+  ret.replace( '\n', "\r\n" );
   return ret;
 }
 
