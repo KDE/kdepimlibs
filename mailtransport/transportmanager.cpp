@@ -478,7 +478,7 @@ void TransportManager::fillTypes()
     TransportType type;
     type.d->mType = Transport::EnumType::SMTP;
     type.d->mName = i18nc( "@option SMTP transport", "SMTP" );
-    type.d->mDescription = i18n( "An SMTP server on the internet" );
+    type.d->mDescription = i18n( "An SMTP server on the Internet" );
     d->types << type;
   }
 
