@@ -459,6 +459,9 @@ int main( int argc, char *argv[] )
   checkIsValidSimpleEmailAddress( "matt\"@fruitsalad.org", "false" );
   checkIsValidSimpleEmailAddress( QString(), "false" );
 
+  // BUG 203881
+  checkIsValidSimpleEmailAddress( "2advance@my-site.com", "true" );
+
   // and here some insane but still valid cases
   checkIsValidSimpleEmailAddress( "\"m@tt\"@fruitsalad.org", "true" );
 
