@@ -2631,7 +2631,7 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
                     "Recurs every <numid>%1</numid> months on the %2 %3 until %4",
                     recur->frequency(),
                     dayList[rule.pos() + 31],
-                    calSys->weekDayName( rule.day(),KCalendarSystem::LongDayName ),
+                    calSys->weekDayName( rule.day(), KCalendarSystem::LongDayName ),
                     recurEnd( incidence ) );
       if ( recur->duration() >  0 ) {
         txt += i18nc( "number of occurrences",
@@ -2673,20 +2673,22 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
   case Recurrence::rYearlyMonth:
   {
     if ( recur->duration() != -1 ) {
-      txt = i18ncp( "Recurs Every N years on month-name [1st|2nd|...]"
-                    " until end-date",
-                    "Recurs yearly on %2 %3 until %4",
-                    "Recurs every %1 years on %2 %3 until %4",
-                    recur->frequency(),
-                    calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ),
-                    dayList[ recur->yearDates()[0] + 31 ],
-                    recurEnd( incidence ) );
-      if ( recur->duration() >  0 ) {
-        txt += i18nc( "number of occurrences",
-                      " (<numid>%1</numid> occurrences)",
-                      recur->duration() );
+      if ( !recur->yearDates().isEmpty() ) {
+        txt = i18ncp( "Recurs Every N years on month-name [1st|2nd|...]"
+                      " until end-date",
+                      "Recurs yearly on %2 %3 until %4",
+                      "Recurs every %1 years on %2 %3 until %4",
+                      recur->frequency(),
+                      calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ),
+                      dayList[ recur->yearDates()[0] + 31 ],
+                      recurEnd( incidence ) );
+        if ( recur->duration() >  0 ) {
+          txt += i18nc( "number of occurrences",
+                        " (<numid>%1</numid> occurrences)",
+                        recur->duration() );
+        }
+        return txt;
       }
-      return txt;
     }
     if ( !recur->yearDates().isEmpty() ) {
       return i18ncp( "Recurs Every N years on month-name [1st|2nd|...]",
