@@ -629,7 +629,7 @@ void ICalFormatImpl::Private::writeCustomProperties( icalcomponent *parent,
     if ( !c.key().startsWith( "X-KDE" ) &&          //krazy:exclude=strings
          !c.key().startsWith( "X-LibKCal" ) &&      //krazy:exclude=strings
          !c.key().startsWith( "X-MICROSOFT" ) &&    //krazy:exclude=strings
-         !c.key().startsWith( "X-MOZILLA" ) &&      //krazy:exclude=strings
+         !c.key().startsWith( "X-MOZ" ) &&          //krazy:exclude=strings
          !c.key().startsWith( "X-PILOT" ) ) {       //krazy:exclude=strings
       // use text values for the typical X-FOO property.
       // except for vendor specific X-FOO properties.
