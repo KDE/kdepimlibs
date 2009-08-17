@@ -73,7 +73,14 @@ void KMimeCharFreqTest::test8bitData()
 void KMimeCharFreqTest::test8bitText()
 {
   {
-    // If it has no NULs, few CTLs, no stray CRs or LFs, it's EightBitText.
+    // If the text only contains newlines and some random accented chars, then it is EightBitText
+    QByteArray data( "asdfasdfasdfasdfasdfasdfäöü\n" );
+    CharFreq cf( data );
+    QCOMPARE( cf.type(), CharFreq::EightBitText );
+  }
+
+  {
+    // If it has no NULs, few CTLs, and only CRLFs, it's EightBitText.
     QByteArray data( "©beware the beast but enjoy the feast he offers...\r\n" );
     CharFreq cf( data );
     QCOMPARE( cf.type(), CharFreq::EightBitText );
@@ -107,20 +114,6 @@ void KMimeCharFreqTest::test7bitData()
   }
 
   {
-    // If the text only contains newlines, then it is SevenBitText
-    QByteArray data( "line1\nline2\n" );
-    CharFreq cf( data );
-    QCOMPARE( cf.type(), CharFreq::SevenBitText );
-  }
-
-  {
-    // If the text only contains newlines and some random accented chars, then it is EightBitText
-    QByteArray data( "asdfasdfasdfasdfasdfasdfäöü\n" );
-    CharFreq cf( data );
-    QCOMPARE( cf.type(), CharFreq::EightBitText );
-  }
-
-  {
     // If it has a lot of control chars, it's SevenBitData.
     QByteArray data( "test\a\a\a\a\a\a\a" );
     CharFreq cf( data );
@@ -131,7 +124,14 @@ void KMimeCharFreqTest::test7bitData()
 void KMimeCharFreqTest::test7bitText()
 {
   {
-    // If it has no NULs, few CTLs, no stray CRs or LFs, it's SevenBitText.
+    // If the text only contains newlines, then it is SevenBitText
+    QByteArray data( "line1\nline2\n" );
+    CharFreq cf( data );
+    QCOMPARE( cf.type(), CharFreq::SevenBitText );
+  }
+
+  {
+    // If it has no NULs, few CTLs, and only CRLFs, it's SevenBitText.
     QByteArray data( "beware the beast but enjoy the feast he offers...\r\n" );
     CharFreq cf( data );
     QCOMPARE( cf.type(), CharFreq::SevenBitText );

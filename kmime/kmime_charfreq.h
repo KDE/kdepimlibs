@@ -35,22 +35,23 @@
 
   @glossary @anchor Eight-Bit-Binary @anchor eight-bit-binary @b 8-bit-binary:
   Eight-bit data that contains a high percentage of non-ascii values,
-  or lines longer than 998 characters, or stray CRs or LFs, or NULs.
+  or lines longer than 998 characters, or stray CRs, or NULs.
 
   @glossary @anchor Eight-Bit-Text @anchor eight-bit-text @b 8-bit-text:
   Eight-bit data that contains a high percentage of ascii values,
-  no lines longer than 998 characters, no stray CRs or LFs, and no NULs.
+  no lines longer than 998 characters, no NULs, and either only LFs or
+  only CRLFs.
 
   @glossary @anchor Seven-Bit @anchor seven-bit @b 7-Bit:
   Data that contains bytes with all values less than 128, and no NULs.
 
   @glossary @anchor Seven-Bit-Binary @anchor seven-bit-binary @b 7-bit-binary:
   Seven-bit data that contains a high percentage of non-ascii values,
-  or lines longer than 998 characters, or stray CRs or LFs.
+  or lines longer than 998 characters, or stray CRs.
 
   @glossary @anchor Seven-Bit-Text @anchor seven-bit-text @b 7-bit-text:
   Seven-bit data that contains a high percentage of ascii values,
-  no lines longer than 998 characters, no stray CRs or LFs.
+  no lines longer than 998 characters, and either only LFs, or only CRLFs.
 */
 
 #ifndef __KMIME_CHARFREQ_H__
