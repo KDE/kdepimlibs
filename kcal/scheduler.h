@@ -208,7 +208,9 @@ class KCAL_EXPORT Scheduler
     bool acceptRequest( IncidenceBase *, ScheduleMessage::Status status,
                         const QString &email );
     bool acceptAdd( IncidenceBase *, ScheduleMessage::Status status );
-    bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
+    KDE_DEPRECATED bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
+    bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status,
+                       const QString & attendee );
     bool acceptDeclineCounter( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptReply( IncidenceBase *, ScheduleMessage::Status status, iTIPMethod method );
     bool acceptRefresh( IncidenceBase *, ScheduleMessage::Status status );
