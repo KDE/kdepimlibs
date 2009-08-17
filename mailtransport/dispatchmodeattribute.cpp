@@ -45,7 +45,7 @@ DispatchModeAttribute::~DispatchModeAttribute()
   delete d;
 }
 
-DispatchModeAttribute* DispatchModeAttribute::clone() const
+DispatchModeAttribute *DispatchModeAttribute::clone() const
 {
   return new DispatchModeAttribute( d->mMode, d->mDueDate );
 }
@@ -93,7 +93,7 @@ void DispatchModeAttribute::setDispatchMode( DispatchMode mode )
 {
   d->mMode = mode;
 }
-  
+
 QDateTime DispatchModeAttribute::dueDate() const
 {
   return d->mDueDate;

@@ -1,7 +1,7 @@
 /*
     kmime_parsers.cpp
 
-    KMime, the KDE internet mail/usenet news message library.
+    KMime, the KDE Internet mail/usenet news message library.
     Copyright (c) 2001 the KMime authors.
     See file AUTHORS for details
 
@@ -86,7 +86,7 @@ bool MultiPart::parse()
       } else {
         part = s_rc.mid( pos1, pos2 - pos1 - 1 ); // pos2 - 1 (\n) is part of the boundary (see RFC 2046, section 5.1.1)
         p_arts.append( part );
-        pos2 += blen; //pos2 points now to the first charakter after the boundary
+        pos2 += blen; //pos2 points now to the first character after the boundary
         if ( s_rc[pos2] == '-' && s_rc[pos2+1] == '-' ) { //end-boundary
           pos1 = pos2 + 2; //pos1 points now to the character directly after the end-boundary
 

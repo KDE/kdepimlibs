@@ -66,8 +66,6 @@ Job *SendQueuedAction::itemAction( const Item &item ) const
   return new ItemModifyJob( cp );
 }
 
-
-
 class MailTransport::ClearErrorAction::Private
 {
 };

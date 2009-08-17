@@ -43,7 +43,7 @@ TransportAttribute::~TransportAttribute()
   delete d;
 }
 
-TransportAttribute* TransportAttribute::clone() const
+TransportAttribute *TransportAttribute::clone() const
 {
   return new TransportAttribute( d->mId );
 }
@@ -69,7 +69,7 @@ int TransportAttribute::transportId() const
   return d->mId;
 }
 
-Transport* TransportAttribute::transport() const
+Transport *TransportAttribute::transport() const
 {
   return TransportManager::self()->transportById( d->mId, false );
 }

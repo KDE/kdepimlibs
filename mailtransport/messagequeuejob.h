@@ -82,7 +82,7 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
       This is not an autostarting job; you need to call start() yourself.
     */
     explicit MessageQueueJob( QObject *parent = 0 );
-    
+
     /**
       Destroys the MessageQueueJob.
       This job deletes itself after finishing.

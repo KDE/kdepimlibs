@@ -41,8 +41,7 @@ class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
     /**
       What to do with the item in the outbox after it has been sent successfully.
     */
-    enum SentBehaviour
-    {
+    enum SentBehaviour {
       Delete,                      ///< Delete the item from the outbox.
       MoveToCollection,            ///< Move the item to the default sent-mail collection.
       MoveToDefaultSentCollection  ///< Move the item to a custom collection.
@@ -60,7 +59,7 @@ class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
     virtual ~SentBehaviourAttribute();
 
     /* reimpl */
-    virtual SentBehaviourAttribute* clone() const;
+    virtual SentBehaviourAttribute *clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );
@@ -82,7 +81,7 @@ class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
       Only valid if sentBehaviour() is MoveToCollection.
     */
     Akonadi::Collection::Id moveToCollection() const;
-    
+
     /**
       Sets the collection to which the item should be moved after it is sent.
       Make sure you set the SentBehaviour to MoveToCollection first.

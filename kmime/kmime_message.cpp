@@ -1,7 +1,7 @@
 /*
     kmime_message.cpp
 
-    KMime, the KDE internet mail/usenet news message library.
+    KMime, the KDE Internet mail/usenet news message library.
     Copyright (c) 2001 the KMime authors.
     See file AUTHORS for details
 

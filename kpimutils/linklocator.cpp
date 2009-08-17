@@ -273,19 +273,9 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
     if ( flags & PreserveSpaces ) {
       if ( ch == ' ' ) {
         if ( startOfLine ) {
-          result += "&nbsp;";
-          locator.mPos++, x++;
           startOfLine = false;
         }
-        while ( locator.mText[locator.mPos] == ' ' ) {
-          result += ' ';
-          locator.mPos++, x++;
-          if ( locator.mText[locator.mPos] == ' ' ) {
-            result += "&nbsp;";
-            locator.mPos++, x++;
-          }
-        }
-        locator.mPos--, x--;
+        result += "&nbsp;";
         continue;
       } else if ( ch == '\t' ) {
         do

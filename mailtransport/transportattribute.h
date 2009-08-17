@@ -28,7 +28,7 @@ namespace MailTransport {
 
 class Transport;
 
-/** 
+/**
   Attribute determining which transport to use for sending a message.
 
   @see mailtransport
@@ -51,7 +51,7 @@ class MAILTRANSPORT_EXPORT TransportAttribute : public Akonadi::Attribute
     virtual ~TransportAttribute();
 
     /* reimpl */
-    virtual TransportAttribute* clone() const;
+    virtual TransportAttribute *clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );
@@ -67,7 +67,7 @@ class MAILTRANSPORT_EXPORT TransportAttribute : public Akonadi::Attribute
       in this attribute.
       @see Transport.
     */
-    Transport* transport() const;
+    Transport *transport() const;
 
     /**
       Sets the transport id to use for sending this message.

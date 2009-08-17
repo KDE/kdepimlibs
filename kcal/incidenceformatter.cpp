@@ -51,11 +51,13 @@
 
 #include <kdatetime.h>
 #include <kemailsettings.h>
+
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kcalendarsystem.h>
 #include <ksystemtimezone.h>
+#include <kmimetype.h>
 
 #include <QtCore/QBuffer>
 #include <QtCore/QList>
@@ -1508,6 +1510,40 @@ static QString invitationAttendees( Incidence *incidence )
   return tmpStr;
 }
 
+static QString invitationAttachments( InvitationFormatterHelper *helper, Incidence *incidence )
+{
+  QString tmpStr;
+  if ( !incidence ) {
+    return tmpStr;
+  }
+
+  tmpStr += "<u>" + i18n( "Attached documents" ) + "</u>";
+  tmpStr += "<br/>";
+
+  Attachment::List attachments = incidence->attachments();
+  if ( !attachments.isEmpty() ) {
+    tmpStr += i18n( "Attached Documents:" ) + "<ol>";
+
+    Attachment::List::ConstIterator it;
+    for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it ) {
+      Attachment *a = *it;
+      tmpStr += "<li>";
+      // Attachment icon
+      KMimeType::Ptr mimeType = KMimeType::mimeType( a->mimeType() );
+      QString iconStr = mimeType->iconName( a->uri() );
+      QString iconPath = KIconLoader::global()->iconPath( iconStr, KIconLoader::Small );
+      if ( !iconPath.isEmpty() ) {
+        tmpStr += "<img src=\"" + iconPath + "\" align=\"top\">";
+      }
+      tmpStr += helper->makeLink( "ATTACH:" + a->label(), a->label() );
+      tmpStr += "</li>";
+    }
+    tmpStr += "</ol>";
+  }
+
+  return tmpStr;
+}
+
 //@cond PRIVATE
 class KCal::IncidenceFormatter::ScheduleMessageVisitor
   : public IncidenceBase::Visitor
@@ -1716,9 +1752,14 @@ class IncidenceFormatter::IncidenceCompareVisitor
 
 QString InvitationFormatterHelper::makeLink( const QString &id, const QString &text )
 {
-  QString res( "<a href=\"%1\"><b>%2</b></a>" );
-  return res.arg( generateLinkURL( id ) ).arg( text );
-  return res;
+  if ( !id.startsWith( QLatin1String( "ATTACH:" ) ) ) {
+    QString res( "<a href=\"%1\"><b>%2</b></a>" );
+    return res.arg( generateLinkURL( id ) ).arg( text );
+  } else {
+    // draw the attachment links in non-bold face
+    QString res( "<a href=\"%1\">%2</a>" );
+    return res.arg( generateLinkURL( id ) ).arg( text );
+  }
 }
 
 // Check if the given incidence is likely one that we own instead one from
@@ -2005,6 +2046,10 @@ static QString formatICalInvitationHelper( QString invitation,
 
   // close the top-level
   html += "</div>";
+
+  // Add the attachment list
+  html += invitationAttachments( helper, inc );
+
   return html;
 }
 //@endcond
@@ -2586,7 +2631,7 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
                     "Recurs every <numid>%1</numid> months on the %2 %3 until %4",
                     recur->frequency(),
                     dayList[rule.pos() + 31],
-                    calSys->weekDayName( rule.day(),KCalendarSystem::LongDayName ),
+                    calSys->weekDayName( rule.day(), KCalendarSystem::LongDayName ),
                     recurEnd( incidence ) );
       if ( recur->duration() >  0 ) {
         txt += i18nc( "number of occurrences",
@@ -2628,20 +2673,22 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
   case Recurrence::rYearlyMonth:
   {
     if ( recur->duration() != -1 ) {
-      txt = i18ncp( "Recurs Every N years on month-name [1st|2nd|...]"
-                    " until end-date",
-                    "Recurs yearly on %2 %3 until %4",
-                    "Recurs every %1 years on %2 %3 until %4",
-                    recur->frequency(),
-                    calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ),
-                    dayList[ recur->yearDates()[0] + 31 ],
-                    recurEnd( incidence ) );
-      if ( recur->duration() >  0 ) {
-        txt += i18nc( "number of occurrences",
-                      " (<numid>%1</numid> occurrences)",
-                      recur->duration() );
+      if ( !recur->yearDates().isEmpty() ) {
+        txt = i18ncp( "Recurs Every N years on month-name [1st|2nd|...]"
+                      " until end-date",
+                      "Recurs yearly on %2 %3 until %4",
+                      "Recurs every %1 years on %2 %3 until %4",
+                      recur->frequency(),
+                      calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ),
+                      dayList[ recur->yearDates()[0] + 31 ],
+                      recurEnd( incidence ) );
+        if ( recur->duration() >  0 ) {
+          txt += i18nc( "number of occurrences",
+                        " (<numid>%1</numid> occurrences)",
+                        recur->duration() );
+        }
+        return txt;
       }
-      return txt;
     }
     if ( !recur->yearDates().isEmpty() ) {
       return i18ncp( "Recurs Every N years on month-name [1st|2nd|...]",

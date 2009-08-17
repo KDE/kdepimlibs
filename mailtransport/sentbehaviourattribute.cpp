@@ -45,7 +45,7 @@ SentBehaviourAttribute::~SentBehaviourAttribute()
   delete d;
 }
 
-SentBehaviourAttribute* SentBehaviourAttribute::clone() const
+SentBehaviourAttribute *SentBehaviourAttribute::clone() const
 {
   return new SentBehaviourAttribute( d->mBehaviour, d->mMoveToCollection );
 }
