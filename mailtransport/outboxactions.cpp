@@ -27,6 +27,20 @@
 using namespace Akonadi;
 using namespace MailTransport;
 
+class MailTransport::SendQueuedAction::Private
+{
+};
+
+SendQueuedAction::SendQueuedAction()
+  : d( new Private )
+{
+}
+
+SendQueuedAction::~SendQueuedAction()
+{
+  delete d;
+}
+
 ItemFetchScope SendQueuedAction::fetchScope() const
 {
   ItemFetchScope scope;
@@ -50,6 +64,20 @@ Job *SendQueuedAction::itemAction( const Item &item ) const
   Item cp = item;
   cp.addAttribute( new DispatchModeAttribute ); // defaults to Immediately
   return new ItemModifyJob( cp );
+}
+
+class MailTransport::ClearErrorAction::Private
+{
+};
+
+ClearErrorAction::ClearErrorAction()
+  : d( new Private )
+{
+}
+
+ClearErrorAction::~ClearErrorAction()
+{
+  delete d;
 }
 
 ItemFetchScope ClearErrorAction::fetchScope() const

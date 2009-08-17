@@ -42,10 +42,24 @@ namespace MailTransport {
 class MAILTRANSPORT_EXPORT SendQueuedAction : public Akonadi::FilterAction
 {
   public:
+    /** Creates a SendQueuedAction. */
+    SendQueuedAction();
+
+    /** Destroys this object. */
+    virtual ~SendQueuedAction();
+
     /* reimpl */
     virtual Akonadi::ItemFetchScope fetchScope() const;
+
+    /* reimpl */
     virtual bool itemAccepted( const Akonadi::Item &item ) const;
+
+    /* reimpl */
     virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const;
+
+  private:
+    class Private;
+    Private *const d;
 };
 
 /**
@@ -62,10 +76,24 @@ class MAILTRANSPORT_EXPORT SendQueuedAction : public Akonadi::FilterAction
 class MAILTRANSPORT_EXPORT ClearErrorAction : public Akonadi::FilterAction
 {
   public:
+    /** Creates a ClearErrorAction. */
+    ClearErrorAction();
+
+    /** Destroys this object. */
+    virtual ~ClearErrorAction();
+
     /* reimpl */
     virtual Akonadi::ItemFetchScope fetchScope() const;
+
+    /* reimpl */
     virtual bool itemAccepted( const Akonadi::Item &item ) const;
+
+    /* reimpl */
     virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const;
+
+  private:
+    class Private;
+    Private *const d;
 };
 
 } // namespace MailTransport
