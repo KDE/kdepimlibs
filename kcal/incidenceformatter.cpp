@@ -374,7 +374,11 @@ static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
 
   if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Birthday" ) + "</b></td>";
+    if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Anniversary" ) + "</b></td>";
+    } else {
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Birthday" ) + "</b></td>";
+    }
     tmpStr += "<td>" + eventViewerFormatBirthday( event ) + "</td>";
     tmpStr += "</tr>";
     tmpStr += "</table>";
