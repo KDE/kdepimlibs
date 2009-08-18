@@ -2128,7 +2128,12 @@ bool Subject::isReply() const
 
 QString Subject::stripOffPrefixes() const
 {
-  QString str = asUnicodeString();
+  return stripOffPrefixes( asUnicodeString() );
+}
+
+QString Subject::stripOffPrefixes( const QString &subject )
+{
+  QString str = subject;
   QStringList prefixRegExps;
   prefixRegExps << "Re\\s*:" << "Re\\[\\d+\\]:" << "Re\\d+:"
                 << "Fwd:" << "FW:";
