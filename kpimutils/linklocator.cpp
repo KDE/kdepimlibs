@@ -275,7 +275,41 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
         if ( startOfLine ) {
           startOfLine = false;
         }
-        result += "&nbsp;";
+
+        // The first space gets replaced by a normal space, the following ones by non-breaking spaces.
+        // The exception is if the first space is also the last character in this line, then we want
+        // a non-breaking space only (bug 204101)
+        // We can't make all spaces non-breaking, as then wordwrap wouldn't work anymore.
+        if ( locator.mPos + 1 < locator.mText.length() ) {
+          if ( locator.mText[locator.mPos + 1] == '\n' ) {
+            // The first space in the sequence is the last space in the line, make in
+            // non-breaking or KHTML will not show it
+            result += "&nbsp;";
+          }
+          else {
+            // This is the first space in a sequence of at least one, make it breaking
+            result += ' ';
+          }
+        }
+        else {
+          // Space is the last char in the whole text, so it will be non-breaking
+          result += "&nbsp;";
+        }
+
+        // Ok, we dealt with the first space now, all following spaces will be handled here
+        // and converted to non-breaking spaces
+        locator.mPos++;
+        x++;
+        while( locator.mPos < locator.mText.length() && locator.mText[locator.mPos] == ' ' ) {
+          result += "&nbsp;";
+          locator.mPos++;
+          x++;
+        }
+
+        // We incremented mPos and x once too much, so reverse that here
+        locator.mPos--;
+        x--;
+
         continue;
       } else if ( ch == '\t' ) {
         do
