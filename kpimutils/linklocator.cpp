@@ -272,10 +272,38 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
     ch = locator.mText[locator.mPos];
     if ( flags & PreserveSpaces ) {
       if ( ch == ' ' ) {
+        if ( locator.mPos + 1 < locator.mText.length() ) {
+          if ( locator.mText[locator.mPos + 1] != ' ' ) {
+
+            // A single space, make it breaking if not at the start or end of the line
+            const bool endOfLine = locator.mText[locator.mPos + 1] == '\n';
+            if ( !startOfLine && !endOfLine )
+              result += ' ';
+            else
+              result += "&nbsp;";
+          }
+          else {
+
+            // Whitespace of more than one space, make it all non-breaking
+            while( locator.mPos < locator.mText.length() && locator.mText[locator.mPos] == ' ' ) {
+              result += "&nbsp;";
+              locator.mPos++;
+              x++;
+            }
+
+            // We incremented once to often, undo that
+            locator.mPos--;
+            x--;
+          }
+        }
+        else {
+          // Last space in the text, it is non-breaking
+          result += "&nbsp;";
+        }
+
         if ( startOfLine ) {
           startOfLine = false;
         }
-        result += "&nbsp;";
         continue;
       } else if ( ch == '\t' ) {
         do
