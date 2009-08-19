@@ -194,3 +194,29 @@ void LinkLocatorTest::testGetUrl2(const QString &left, const QString &right)
     QVERIFY2( ok, qPrintable(test) );
   }
 }
+
+void LinkLocatorTest::testHtmlConvert_data()
+{
+  QTest::addColumn<QString>("plainText");
+  QTest::addColumn<int>("flags");
+  QTest::addColumn<QString>("htmlText");
+
+  QTest::newRow( "" ) << "foo" << 0 << "foo";
+  QTest::newRow( "" ) << "  foo " << 0 << "  foo ";
+  // Linker error when using PreserveSpaces, therefore the hardcoded 0x01
+  QTest::newRow( "" ) << " foo" << 0x01 << "&nbsp;foo";
+  QTest::newRow( "" ) << "  foo" << 0x01 << "&nbsp;&nbsp;foo";
+  QTest::newRow( "" ) << "  foo  " << 0x01 << "&nbsp;&nbsp;foo&nbsp;&nbsp;";
+}
+
+void LinkLocatorTest::testHtmlConvert()
+{
+  QFETCH(QString, plainText);
+  QFETCH(int, flags);
+  QFETCH(QString, htmlText);
+
+  QString actualHtml = LinkLocator::convertToHtml( plainText, flags );
+  QCOMPARE( actualHtml, htmlText );
+}
+
+
