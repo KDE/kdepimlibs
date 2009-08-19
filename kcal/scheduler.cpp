@@ -251,9 +251,12 @@ bool Scheduler::acceptPublish( IncidenceBase *newIncBase,
              ( newInc->revision() == calInc->revision() &&
                newInc->lastModified() > calInc->lastModified() ) ) {
           AssignmentVisitor visitor;
+          const QString oldUid = calInc->uid();
           if ( !visitor.assign( calInc, newInc ) ) {
             kError() << "assigning different incidence types";
           } else {
+            calInc->setUid( oldUid );
+            calInc->setSchedulingID( newInc->uid() );
             res = true;
           }
         }
@@ -340,9 +343,10 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
         if ( !visitor.assign( i, inc ) ) {
           kError() << "assigning different incidence types";
           res = false;
+        } else {
+          i->setUid( oldUid );
+          i->setSchedulingID( inc->uid() );
         }
-        i->setUid( oldUid );
-        i->setSchedulingID( inc->uid() );
         deleteTransaction( incidence );
         return res;
       }
