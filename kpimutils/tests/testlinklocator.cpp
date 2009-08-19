@@ -201,16 +201,20 @@ void LinkLocatorTest::testHtmlConvert_data()
   QTest::addColumn<int>("flags");
   QTest::addColumn<QString>("htmlText");
 
-  QTest::newRow( "" ) << "foo" << 0 << "foo";
-  QTest::newRow( "" ) << "  foo " << 0 << "  foo ";
+  //QTest::newRow( "" ) << "foo" << 0 << "foo";
+  //QTest::newRow( "" ) << "  foo " << 0 << "  foo ";
   // Linker error when using PreserveSpaces, therefore the hardcoded 0x01
-  QTest::newRow( "" ) << " foo" << 0x01 << " foo";
-  QTest::newRow( "" ) << "  foo" << 0x01 << " &nbsp;foo";
-  QTest::newRow( "" ) << "  foo  " << 0x01 << " &nbsp;foo &nbsp;";
-  QTest::newRow( "" ) << "  foo " << 0x01 << " &nbsp;foo&nbsp;";
+  QTest::newRow( "" ) << " foo" << 0x01 << "&nbsp;foo";
+  QTest::newRow( "" ) << "  foo" << 0x01 << "&nbsp;&nbsp;foo";
+  QTest::newRow( "" ) << "  foo  " << 0x01 << "&nbsp;&nbsp;foo&nbsp;&nbsp;";
+  QTest::newRow( "" ) << "  foo " << 0x01 << "&nbsp;&nbsp;foo&nbsp;";
   QTest::newRow( "" ) << "bla bla bla bla bla" << 0x01 << "bla bla bla bla bla";
   QTest::newRow( "" ) << "bla bla bla \n  bla bla bla " << 0x01
-                      << "bla bla bla&nbsp;<br />\n &nbsp;bla bla bla&nbsp;";
+                      << "bla bla bla&nbsp;<br />\n&nbsp;&nbsp;bla bla bla&nbsp;";
+  QTest::newRow( "" ) << "bla bla  bla" << 0x01
+                      << "bla bla&nbsp;&nbsp;bla";
+  QTest::newRow( "" ) << " bla bla \n bla bla a\n  bla bla " << 0x01
+                      << "&nbsp;bla bla&nbsp;<br />\n&nbsp;bla bla a<br />\n&nbsp;&nbsp;bla bla&nbsp;";
 }
 
 void LinkLocatorTest::testHtmlConvert()

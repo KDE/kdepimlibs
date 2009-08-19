@@ -272,44 +272,38 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
     ch = locator.mText[locator.mPos];
     if ( flags & PreserveSpaces ) {
       if ( ch == ' ' ) {
-        if ( startOfLine ) {
-          startOfLine = false;
-        }
-
-        // The first space gets replaced by a normal space, the following ones by non-breaking spaces.
-        // The exception is if the first space is also the last character in this line, then we want
-        // a non-breaking space only (bug 204101)
-        // We can't make all spaces non-breaking, as then wordwrap wouldn't work anymore.
         if ( locator.mPos + 1 < locator.mText.length() ) {
-          if ( locator.mText[locator.mPos + 1] == '\n' ) {
-            // The first space in the sequence is the last space in the line, make in
-            // non-breaking or KHTML will not show it
-            result += "&nbsp;";
+          if ( locator.mText[locator.mPos + 1] != ' ' ) {
+
+            // A single space, make it breaking if not at the start or end of the line
+            const bool endOfLine = locator.mText[locator.mPos + 1] == '\n';
+            if ( !startOfLine && !endOfLine )
+              result += ' ';
+            else
+              result += "&nbsp;";
           }
           else {
-            // This is the first space in a sequence of at least one, make it breaking
-            result += ' ';
+
+            // Whitespace of more than one space, make it all non-breaking
+            while( locator.mPos < locator.mText.length() && locator.mText[locator.mPos] == ' ' ) {
+              result += "&nbsp;";
+              locator.mPos++;
+              x++;
+            }
+
+            // We incremented once to often, undo that
+            locator.mPos--;
+            x--;
           }
         }
         else {
-          // Space is the last char in the whole text, so it will be non-breaking
+          // Last space in the text, it is non-breaking
           result += "&nbsp;";
         }
 
-        // Ok, we dealt with the first space now, all following spaces will be handled here
-        // and converted to non-breaking spaces
-        locator.mPos++;
-        x++;
-        while( locator.mPos < locator.mText.length() && locator.mText[locator.mPos] == ' ' ) {
-          result += "&nbsp;";
-          locator.mPos++;
-          x++;
+        if ( startOfLine ) {
+          startOfLine = false;
         }
-
-        // We incremented mPos and x once too much, so reverse that here
-        locator.mPos--;
-        x--;
-
         continue;
       } else if ( ch == '\t' ) {
         do
