@@ -158,7 +158,7 @@ bool Scheduler::acceptTransaction( IncidenceBase *incidence,
   case iTIPAdd:
     return acceptAdd( incidence, status );
   case iTIPCancel:
-    return acceptCancel( incidence, status );
+    return acceptCancel( incidence, status, email );
   case iTIPDeclineCounter:
     return acceptDeclineCounter( incidence, status );
   case iTIPReply:
@@ -388,7 +388,94 @@ bool Scheduler::acceptAdd( IncidenceBase *incidence, ScheduleMessage::Status /* 
   return false;
 }
 
-bool Scheduler::acceptCancel( IncidenceBase *incidence, ScheduleMessage::Status /* status */)
+bool Scheduler::acceptCancel( IncidenceBase *incidence,
+                              ScheduleMessage::Status status,
+                              const QString &attendee )
+{
+  Incidence *inc = static_cast<Incidence *>( incidence );
+  if ( !inc ) {
+    return false;
+  }
+
+  if ( inc->type() == "FreeBusy" ) {
+    // reply to this request is handled in korganizer's incomingdialog
+    return true;
+  }
+
+  const Incidence::List existingIncidences = mCalendar->incidencesFromSchedulingID( inc->uid() );
+  kDebug() << "Scheduler::acceptCancel="
+           << ScheduleMessage::statusName( status )
+           << ": found " << existingIncidences.count()
+           << " incidences with schedulingID " << inc->schedulingID()
+           << endl;
+
+  bool ret = false;
+  Incidence::List::ConstIterator incit = existingIncidences.begin();
+  for ( ; incit != existingIncidences.end() ; ++incit ) {
+    Incidence *i = *incit;
+    kDebug() << "Considering this found event ("
+             << ( i->isReadOnly() ? "readonly" : "readwrite" )
+             << ") :" << mFormat->toString( i ) << endl;
+
+    // If it's readonly, we can't possible remove it.
+    if ( i->isReadOnly() ) {
+      continue;
+    }
+
+    // Code for new invitations:
+    // We cannot check the value of "status" to be RequestNew because
+    // "status" comes from a similar check inside libical, where the event
+    // is compared to other events in the calendar. But if we have another
+    // version of the event around (e.g. shared folder for a group), the
+    // status could be RequestNew, Obsolete or Updated.
+    kDebug() << "looking in " << i->uid() << "'s attendees" << endl;
+
+    // This is supposed to be a new request, not an update - however we want
+    // to update the existing one to handle the "clicking more than once
+    // on the invitation" case. So check the attendee status of the attendee.
+    bool isMine = true;
+    const KCal::Attendee::List attendees = i->attendees();
+    KCal::Attendee::List::ConstIterator ait;
+    for ( ait = attendees.begin(); ait != attendees.end(); ++ait ) {
+      if ( (*ait)->email() == attendee &&
+           (*ait)->status() == Attendee::NeedsAction ) {
+        // This incidence wasn't created by me - it's probably in a shared
+        // folder and meant for someone else, ignore it.
+        kDebug() << "ignoring " << i->uid()
+                 << " since I'm still NeedsAction there" << endl;
+        isMine = false;
+        break;
+      }
+    }
+
+    if ( isMine ) {
+      kDebug() << "removing existing incidence " << i->uid() << endl;
+      if ( i->type() == "Event" ) {
+        Event *event = mCalendar->event( i->uid() );
+        ret = ( event && mCalendar->deleteEvent( event ) );
+      } else if ( i->type() == "Todo" ) {
+        Todo *todo = mCalendar->todo( i->uid() );
+        ret = ( todo && mCalendar->deleteTodo( todo ) );
+      }
+      deleteTransaction( incidence );
+      return ret;
+    }
+  }
+
+  // in case we didn't find the to-be-removed incidence
+  if ( inc->revision() > 0 ) {
+    KMessageBox::error(
+      0,
+      i18nc( "@info",
+             "The event or task could not be removed from your calendar. "
+             "Maybe it has already been deleted or is not owned by you. "
+             "Or it might belong to a read-only or disabled calendar." ) );
+  }
+  deleteTransaction( incidence );
+  return ret;
+}
+
+bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
 {
   const IncidenceBase *toDelete = mCalendar->incidenceFromSchedulingID( incidence->uid() );
 
@@ -413,9 +500,10 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence, ScheduleMessage::Status 
   if ( !ret ) {
     KMessageBox::error(
       0,
-      i18n( "The event or task to be canceled could not be removed from your calendar. "
-            "Maybe it has already been deleted, or the calendar that "
-            "contains it is disabled." ) );
+      i18nc( "@info",
+             "The event or task to be canceled could not be removed from your calendar. "
+             "Maybe it has already been deleted, or the calendar that "
+             "contains it is disabled." ) );
   }
   deleteTransaction(incidence);
   return ret;
