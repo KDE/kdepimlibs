@@ -1905,7 +1905,7 @@ static QString formatICalInvitationHelper( QString invitation,
     case iTIPRefresh:
     case iTIPAdd:
     {
-      if ( inc && inc->revision() > 0 && existingIncidence ) {
+      if ( inc && inc->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
         if ( inc->type() == "Todo" ) {
           html += helper->makeLink( "reply", i18n( "[Record invitation into my to-do list]" ) );
         } else {
