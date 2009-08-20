@@ -1521,9 +1521,6 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
     return tmpStr;
   }
 
-  tmpStr += "<u>" + i18n( "Attached documents" ) + "</u>";
-  tmpStr += "<br/>";
-
   Attachment::List attachments = incidence->attachments();
   if ( !attachments.isEmpty() ) {
     tmpStr += i18n( "Attached Documents:" ) + "<ol>";
