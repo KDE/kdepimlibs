@@ -82,7 +82,7 @@ Headers::Base *HeaderFactory::createHeader( const QByteArray &type )
   if( maker ) {
     return maker->create();
   } else {
-    kError() << "Unknown header type" << type;
+    //kError() << "Unknown header type" << type;
     //return new Headers::Generic;
     return 0;
   }
