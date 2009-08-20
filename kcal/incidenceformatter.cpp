@@ -378,7 +378,11 @@ static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
 
   if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Birthday" ) + "</b></td>";
+    if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Anniversary" ) + "</b></td>";
+    } else {
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Birthday" ) + "</b></td>";
+    }
     tmpStr += "<td>" + eventViewerFormatBirthday( event ) + "</td>";
     tmpStr += "</tr>";
     tmpStr += "</table>";
@@ -1535,7 +1539,8 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
       if ( !iconPath.isEmpty() ) {
         tmpStr += "<img src=\"" + iconPath + "\" align=\"top\">";
       }
-      tmpStr += helper->makeLink( "ATTACH:" + a->label(), a->label() );
+      tmpStr += helper->makeLink( "ATTACH:" + a->label(),
+                                  QString::fromUtf8( a->label().toLatin1() ) );
       tmpStr += "</li>";
     }
     tmpStr += "</ol>";
@@ -1753,12 +1758,14 @@ class IncidenceFormatter::IncidenceCompareVisitor
 QString InvitationFormatterHelper::makeLink( const QString &id, const QString &text )
 {
   if ( !id.startsWith( QLatin1String( "ATTACH:" ) ) ) {
-    QString res( "<a href=\"%1\"><b>%2</b></a>" );
-    return res.arg( generateLinkURL( id ) ).arg( text );
+    QString res = QString( "<a href=\"%1\"><b>%2</b></a>" ).
+                  arg( generateLinkURL( id ), text );
+    return res;
   } else {
     // draw the attachment links in non-bold face
-    QString res( "<a href=\"%1\">%2</a>" );
-    return res.arg( generateLinkURL( id ) ).arg( text );
+    QString res = QString( "<a href=\"%1\">%2</a>" ).
+                  arg( generateLinkURL( id ), text );
+    return res;
   }
 }
 
@@ -1905,7 +1912,7 @@ static QString formatICalInvitationHelper( QString invitation,
     case iTIPRefresh:
     case iTIPAdd:
     {
-      if ( inc && inc->revision() > 0 && existingIncidence ) {
+      if ( inc && inc->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
         if ( inc->type() == "Todo" ) {
           html += helper->makeLink( "reply", i18n( "[Record invitation into my to-do list]" ) );
         } else {
