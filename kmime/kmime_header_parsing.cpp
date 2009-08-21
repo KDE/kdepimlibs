@@ -2070,7 +2070,7 @@ Headers::Base *extractFirstHeader( QByteArray &head )
     }
     header = HeaderFactory::self()->createHeader( rawType );
     if( !header ) {
-      kWarning() << "Returning Generic header of type" << rawType;
+      //kWarning() << "Returning Generic header of type" << rawType;
       header = new Headers::Generic( rawType );
     }
     header->from7BitString( rawData );

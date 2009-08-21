@@ -1521,9 +1521,6 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
     return tmpStr;
   }
 
-  tmpStr += "<u>" + i18n( "Attached documents" ) + "</u>";
-  tmpStr += "<br/>";
-
   Attachment::List attachments = incidence->attachments();
   if ( !attachments.isEmpty() ) {
     tmpStr += i18n( "Attached Documents:" ) + "<ol>";
@@ -1539,8 +1536,7 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
       if ( !iconPath.isEmpty() ) {
         tmpStr += "<img src=\"" + iconPath + "\" align=\"top\">";
       }
-      tmpStr += helper->makeLink( "ATTACH:" + a->label(),
-                                  QString::fromUtf8( a->label().toLatin1() ) );
+      tmpStr += helper->makeLink( "ATTACH:" + a->label(), a->label() );
       tmpStr += "</li>";
     }
     tmpStr += "</ol>";
