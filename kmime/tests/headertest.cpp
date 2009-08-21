@@ -589,6 +589,14 @@ void HeaderTest::testDateHeader()
   QCOMPARE( h->dateTime().time(), QTime( 9, 55, 6 ) );
   QCOMPARE( h->dateTime().utcOffset(), -6 * 3600 );
   delete h;
+
+  // Make sure uppercase OCT is parsed correctly - bug 150620
+  h = new Date( 0, "08 OCT 08 16:54:05 +0000" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->dateTime().date(), QDate( 2008, 10, 8 ) );
+  QCOMPARE( h->dateTime().time(), QTime( 16, 54, 05 ) );
+  QCOMPARE( h->dateTime().utcOffset(), 0 );
+  delete h;
 }
 
 void HeaderTest::testLinesHeader()
