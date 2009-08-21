@@ -1,31 +1,28 @@
 /*
-    This file is part of the kcal library.
+  This file is part of the kcal library.
 
-    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 /**
   @file
   This file is part of the API for handling calendar data and
   defines the Person class.
-
-  @brief
-  Represents a person, by name ane email address.
 
   @author Cornelius Schumacher \<schumacher@kde.org\>
   @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
@@ -42,8 +39,11 @@
 namespace KCal {
 
 /**
+  @brief
+  Represents a person, by name ane email address.
+
   This class represents a person, with a name and an email address.
-  It supports the "FirstName LastName <emailaddress>" format.
+  It supports the "FirstName LastName\ <mail@domain\>" format.
 */
 class KCAL_EXPORT Person
 {
@@ -57,13 +57,17 @@ class KCAL_EXPORT Person
       Constructs a person with name and email address taken from @p fullName.
 
       @param fullName is the name and email of the person in
-      the form FirstName LastName \<email\>.
+      the form "FirstName LastName \<mail@domain\>".
     */
     static Person fromFullName( const QString &fullName );
 
     /**
-       \deprecated
-       Use fromFullName() instead.
+      Constructs a person with name and email address taken from @p fullName.
+
+      @param fullName is the name and email of the person in
+      the form "FirstName LastName \<mail@domain\>".
+
+      @deprecated use fromFullName() instead.
     */
     KDE_CONSTRUCTOR_DEPRECATED explicit Person( const QString &fullName );
 
