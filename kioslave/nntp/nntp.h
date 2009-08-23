@@ -22,7 +22,15 @@
   - progress information in get, and maybe post
   - remove unnecessary debug stuff
 */
+/**
+  @brief NNTP KIO slave
 
+  @par References
+    - RFC 850: Standard for interchange of USENET messages
+    - RFC 2980: Common NNTP Extensions (updated by RFC 3977)
+    - RFC 3977: Network News Transfer Protocol
+    - RFC 4643: Network News Transfer Protocol (NNTP) Extension for Authentication
+*/
 class NNTPProtocol:public KIO::TCPSlaveBase
 {
 
