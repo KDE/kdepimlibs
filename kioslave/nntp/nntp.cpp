@@ -731,7 +731,7 @@ bool NNTPProtocol::nntp_open()
   DBG << "  nntp_open -- creating a new connection to" << mHost << ":" << m_port;
   // create a new connection (connectToHost() includes error handling)
   infoMessage( i18n("Connecting to server...") );
-  if ( connectToHost( (isAutoSsl() ? "nntps" : "nntp"), mHost.toLatin1(), m_port ) )
+  if ( connectToHost( (isAutoSsl() ? "nntps" : "nntp"), mHost, m_port ) )
   {
     DBG << "  nntp_open -- connection is open";
 
@@ -877,14 +877,28 @@ void NNTPProtocol::unexpected_response( int res_code, const QString &command )
   ERR << "Unexpected response to" << command << "command: (" << res_code << ")"
       << readBuffer;
 
-  KIO::Error errCode;
+  // See RFC 3977 appendix C "Summary of Response Codes"
   switch ( res_code ) {
-    case 480: errCode = ERR_COULD_NOT_LOGIN; break;
-    default: errCode = ERR_INTERNAL;
+    case 205: // connection closed by the server: this can happens, e.g. if the session timeout on the server side
+      // Not the same thing, but use the same message as code 400 anyway.
+    case 400: // temporary issue on the server
+      error( ERR_INTERNAL_SERVER,
+             i18n( "The server %1 could not handle your request.\n"
+                   "Please try again now or latter if the problem persists.", mHost ) );
+      break;
+    case 480: // credential request
+      error( ERR_COULD_NOT_LOGIN,
+             i18n( "You need to authenticate to access the requested resource." ) );
+    case 481: // wrong credential (TODO: place a specific message for this case)
+      error( ERR_COULD_NOT_LOGIN,
+             i18n( "The supplied login and/or password are incorrect." ) );
+      break;
+    case 502:
+      error( ERR_ACCESS_DENIED, mHost );
+      break;
+    default:
+      error( ERR_INTERNAL, i18n( "Unexpected server response to %1 command:\n%2", command, readBuffer ) );
   }
-
-  error( errCode, i18n("Unexpected server response to %1 command:\n%2",
-     command, readBuffer ) );
 
   nntp_close();
 }
