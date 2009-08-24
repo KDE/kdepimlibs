@@ -31,7 +31,11 @@ include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
 ############### Find the stuff we need ###############
 
 set(Boost_MINIMUM_VERSION "1.33.1")
-find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS graph)
+if (WIN32)
+  find_package(Boost ${Boost_MINIMUM_VERSION}) # (jstaniek) temp. fix unless we have graph library, not just headers
+else (WIN32)
+  find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS graph)
+endif (WIN32)
 macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org" TRUE ${Boost_MINIMUM_VERSION} "The Boost libraries boost and boost-graph are required by several critical KDEPIM apps.")
 
 #FindGpgme.cmake already handles the log message but we must ensure it is required.
