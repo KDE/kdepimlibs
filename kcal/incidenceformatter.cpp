@@ -1294,7 +1294,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
       return i18n( "This invitation is now completed" );
     case Attendee::InProcess:
       return i18n( "%1 is still processing the invitation", attendeeName );
-    default:
+    case Attendee::None:
       return i18n( "Unknown response to this invitation" );
     }
     break;
@@ -1304,8 +1304,9 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
   case iTIPDeclineCounter:
     return i18n( "Sender declines the counter proposal" );
   case iTIPNoMethod:
-    return i18n( "Error: iMIP message with unknown method: '%1'", msg->method() );
+    return i18n( "Error: Event iTIP message with unknown method" );
   }
+  kError() << "encountered an iTIP method that we do not support";
   return QString();
 }
 
@@ -1369,7 +1370,7 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
       return i18n( "The request for this to-do is now completed" );
     case Attendee::InProcess:
       return i18n( "Sender is still processing the invitation" );
-    default:
+    case Attendee::None:
       return i18n( "Unknown response to this to-do" );
     }
     break;
@@ -1379,8 +1380,9 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
   case iTIPDeclineCounter:
     return i18n( "Sender declines the counter proposal" );
   case iTIPNoMethod:
-    return i18n( "Error: iMIP message with unknown method: '%1'", msg->method() );
+    return i18n( "Error: To-do iTIP message with unknown method" );
   }
+  kError() << "encountered an iTIP method that we do not support";
   return QString();
 }
 
@@ -1430,7 +1432,7 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
       return i18n( "The request for this journal is now completed" );
     case Attendee::InProcess:
       return i18n( "Sender is still processing the invitation" );
-    default:
+    case Attendee::None:
       return i18n( "Unknown response to this journal" );
     }
     break;
@@ -1440,8 +1442,9 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
   case iTIPDeclineCounter:
     return i18n( "Sender declines the counter proposal" );
   case iTIPNoMethod:
-    return i18n( "Error: iMIP message with unknown method: '%1'", msg->method() );
+    return i18n( "Error: Journal iTIP message with unknown method" );
   }
+  kError() << "encountered an iTIP method that we do not support";
   return QString();
 }
 
@@ -1462,10 +1465,17 @@ static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
     return i18n( "This free/busy list was canceled" );
   case iTIPAdd:
     return i18n( "Addition to the free/busy list" );
+  case iTIPReply:
+    return i18n( "Reply to the free/busy list" );
+  case iTIPCounter:
+    return i18n( "Send makes this counter proposal" );
+  case iTIPDeclineCounter:
+    return i18n( "Sender decliness the counter proposal" );
   case iTIPNoMethod:
-  default:
-    return i18n( "Error: Free/Busy iMIP message with unknown method: '%1'", msg->method() );
+    return i18n( "Error: Free/Busy iTIP message with unknown method" );
   }
+  kError() << "encountered an iTIP method that we do not support";
+  return QString();
 }
 //@endcond
 
