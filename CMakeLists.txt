@@ -1,4 +1,4 @@
-project(kdepimlibs)
+project(kdepimlibs) 
 
 # where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
@@ -11,7 +11,7 @@ option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 3)
-set(KDEPIMLIBS_VERSION_PATCH 62)
+set(KDEPIMLIBS_VERSION_PATCH 63)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 ############### search packages used by KDE ###############
@@ -47,8 +47,8 @@ endif (GPGME_FOUND)
 
 if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
-  find_package(Akonadi 1.2.60 QUIET NO_MODULE)
-  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "1.2.60" "Akonadi is required to build KdepimLibs.")
+  find_package(Akonadi 1.2.61 QUIET NO_MODULE)
+  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "1.2.61" "Akonadi is required to build KdepimLibs.")
 
   find_package(Sasl2)
   macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" TRUE "" "Required to support authentication of logins in the IMAP and Sieve kioslaves.")

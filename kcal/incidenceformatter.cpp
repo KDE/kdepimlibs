@@ -179,14 +179,14 @@ static QString eventViewerFormatAttendees( Incidence *event )
     const QString iconPath = iconLoader->iconPath( "mail-message-new", KIconLoader::Small );
 
     // Add organizer link
-    tmpStr += eventViewerAddTag( "h4", i18n( "Organizer" ) );
+    tmpStr += eventViewerAddTag( "h4", i18n( "Organizer:" ) );
     tmpStr += "<ul>";
     tmpStr += linkPerson( event->organizer().email(), event->organizer().name(),
                           QString(), iconPath );
     tmpStr += "</ul>";
 
     // Add attendees links
-    tmpStr += eventViewerAddTag( "h4", i18n( "Attendees" ) );
+    tmpStr += eventViewerAddTag( "h4", i18n( "Attendees:" ) );
     tmpStr += "<ul>";
     Attendee::List::ConstIterator it;
     for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
@@ -324,7 +324,7 @@ static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
   tmpStr += "<table>";
   if ( !event->location().isEmpty() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Location" ) + "</b></td>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Location:" ) + "</b></td>";
     tmpStr += "<td>" + event->richLocation() + "</td>";
     tmpStr += "</tr>";
   }
@@ -332,29 +332,29 @@ static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
   tmpStr += "<tr>";
   if ( event->allDay() ) {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Time:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18nc( "<beginTime> - <endTime>","%1 - %2",
-                       IncidenceFormatter::dateToString( event->dtStart(), true, spec ),
-                       IncidenceFormatter::dateToString( event->dtEnd(), true, spec ) ) +
+                       IncidenceFormatter::dateToString( event->dtStart(), false, spec ),
+                       IncidenceFormatter::dateToString( event->dtEnd(), false, spec ) ) +
                 "</td>";
     } else {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Date" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18nc( "date as string","%1",
-                       IncidenceFormatter::dateToString( event->dtStart(), true, spec ) ) +
+                       IncidenceFormatter::dateToString( event->dtStart(), false, spec ) ) +
                 "</td>";
     }
   } else {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Time:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18nc( "<beginTime> - <endTime>","%1 - %2",
-                       IncidenceFormatter::dateToString( event->dtStart(), true, spec ),
-                       IncidenceFormatter::dateToString( event->dtEnd(), true, spec ) ) +
+                       IncidenceFormatter::dateToString( event->dtStart(), false, spec ),
+                       IncidenceFormatter::dateToString( event->dtEnd(), false, spec ) ) +
                 "</td>";
     } else {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Time:" ) + "</b></td>";
       if ( event->hasEndDate() && event->dtStart() != event->dtEnd() ) {
         tmpStr += "<td>" +
                   i18nc( "<beginTime> - <endTime>","%1 - %2",
@@ -367,10 +367,10 @@ static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
                   "</td>";
       }
       tmpStr += "</tr><tr>";
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Date" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18nc( "date as string","%1",
-                       IncidenceFormatter::dateToString( event->dtStart(), true, spec ) ) +
+                       IncidenceFormatter::dateToString( event->dtStart(), false, spec ) ) +
                 "</td>";
     }
   }
@@ -455,7 +455,7 @@ static QString eventViewerFormatTodo( Todo *todo, KDateTime::Spec spec )
     tmpStr += i18n( "<b>Due on:</b> %1",
                     IncidenceFormatter::dateTimeToString( todo->dtDue(),
                                                           todo->allDay(),
-                                                          true, spec ) );
+                                                          false, spec ) );
   }
 
   if ( !todo->description().isEmpty() ) {
@@ -2130,10 +2130,12 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
 
     ret += "<br>" +
            i18n( "<i>Date:</i> %1",
-                 IncidenceFormatter::dateToString( event->dtStart(), true, mSpec ) );
+                 IncidenceFormatter::dateToString( event->dtStart(), false, mSpec ) );
     if ( !event->allDay() ) {
-      const QString dtStartTime = IncidenceFormatter::timeToString( event->dtStart(), true, mSpec );
-      const QString dtEndTime = IncidenceFormatter::timeToString( event->dtEnd(), true, mSpec );
+      const QString dtStartTime =
+        IncidenceFormatter::timeToString( event->dtStart(), false, mSpec );
+      const QString dtEndTime =
+        IncidenceFormatter::timeToString( event->dtEnd(), false, mSpec );
       if ( dtStartTime == dtEndTime ) {
         // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" +
@@ -2159,14 +2161,15 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
     // No need to add <i> here. This is separated issue and each line
     // is very visible on its own. On the other hand... Yes, I like it
     // italics here :)
-    ret += "<br>" + i18n( "<i>Start:</i> %1",
-                          IncidenceFormatter::dateToString( todo->dtStart( false ), true, mSpec ) );
+    ret += "<br>" +
+           i18n( "<i>Start:</i> %1",
+                 IncidenceFormatter::dateToString( todo->dtStart( false ), false, mSpec ) );
   }
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
     ret += "<br>" + i18n( "<i>Due:</i> %1",
                           IncidenceFormatter::dateTimeToString( todo->dtDue(),
                                                                 todo->allDay(),
-                                                                true, mSpec ) );
+                                                                false, mSpec ) );
   }
   if ( todo->isCompleted() ) {
     ret += "<br>" +
