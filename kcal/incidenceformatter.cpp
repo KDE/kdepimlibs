@@ -178,14 +178,14 @@ static QString eventViewerFormatAttendees( Incidence *event )
     const QString iconPath = iconLoader->iconPath( "mail-message-new", KIconLoader::Small );
 
     // Add organizer link
-    tmpStr += eventViewerAddTag( "h4", i18n( "Organizer" ) );
+    tmpStr += eventViewerAddTag( "h4", i18n( "Organizer:" ) );
     tmpStr += "<ul>";
     tmpStr += linkPerson( event->organizer().email(), event->organizer().name(),
                           QString(), iconPath );
     tmpStr += "</ul>";
 
     // Add attendees links
-    tmpStr += eventViewerAddTag( "h4", i18n( "Attendees" ) );
+    tmpStr += eventViewerAddTag( "h4", i18n( "Attendees:" ) );
     tmpStr += "<ul>";
     Attendee::List::ConstIterator it;
     for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
@@ -328,14 +328,14 @@ static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
   tmpStr += "<tr>";
   if ( event->allDay() ) {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Time:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18nc( "<beginTime> - <endTime>","%1 - %2",
                        IncidenceFormatter::dateToString( event->dtStart(), false, spec ),
                        IncidenceFormatter::dateToString( event->dtEnd(), false, spec ) ) +
                 "</td>";
     } else {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Date" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18nc( "date as string","%1",
                        IncidenceFormatter::dateToString( event->dtStart(), false, spec ) ) +
@@ -343,14 +343,14 @@ static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
     }
   } else {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Time:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18nc( "<beginTime> - <endTime>","%1 - %2",
                        IncidenceFormatter::dateToString( event->dtStart(), false, spec ),
                        IncidenceFormatter::dateToString( event->dtEnd(), false, spec ) ) +
                 "</td>";
     } else {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Time:" ) + "</b></td>";
       if ( event->hasEndDate() && event->dtStart() != event->dtEnd() ) {
         tmpStr += "<td>" +
                   i18nc( "<beginTime> - <endTime>","%1 - %2",
@@ -363,7 +363,7 @@ static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
                   "</td>";
       }
       tmpStr += "</tr><tr>";
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Date" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18nc( "date as string","%1",
                        IncidenceFormatter::dateToString( event->dtStart(), false, spec ) ) +
