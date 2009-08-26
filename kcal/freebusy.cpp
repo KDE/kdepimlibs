@@ -104,7 +104,10 @@ FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start, const KDateTime 
   setDtEnd( end );
 
   // Get all the events in the calendar
-  Event::List eventList = d->mCalendar->rawEvents( start.date(), end.date() );
+  Event::List eventList;
+  if ( d->mCalendar ) {
+    eventList = d->mCalendar->rawEvents( start.date(), end.date() );
+  }
 
   int extraDays, i, x, duration;
   duration = start.daysTo( end );
