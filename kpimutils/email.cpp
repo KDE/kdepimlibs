@@ -458,6 +458,9 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
           }
           break;
         case '>' :
+          if ( aStr.at( index - 1 ) == '.' ) {
+            return DisallowedChar;
+          }
           if ( !inQuotedString ) {
             context = TopLevel;
             break;
@@ -493,6 +496,10 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
 
   if ( tooManyAtsFlag ) {
     return TooManyAts;
+  }
+
+  if ( context == TopLevel && aStr.at( strlen - 1 ) == '.' ) {
+    return DisallowedChar;
   }
 
   return AddressOk;
