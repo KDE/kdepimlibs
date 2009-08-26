@@ -112,6 +112,7 @@ void LinkLocatorTest::testGetUrl()
   brackets << "(" << ")";
   brackets << "<" << ">";
   brackets << "[" << "]";
+  brackets << "\"" << "\"";
   brackets << "<link>" << "</link>";
 
   for (int i = 0; i < brackets.count(); i += 2)
@@ -139,19 +140,40 @@ void LinkLocatorTest::testGetUrl2(const QString &left, const QString &right)
   urls << "user:pass@www.kde.org:1234/sub/path";
   urls << "user:pass@www.kde.org:1234/sub/path?a=1";
   urls << "user:pass@www.kde.org:1234/sub/path?a=1#anchor";
+  urls << "user:pass@www.kde.org:1234/sub/\npath  \n /long/  path \t  ?a=1#anchor";
   urls << "user:pass@www.kde.org:1234/sub/path/special(123)?a=1#anchor";
   urls << "user:pass@www.kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor";
+  urls << "user:pass@www.kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla";
+  urls << "user:pass@www.kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla]";
+  urls << "user:pass@www.kde.org:1234/\nsub/path:with:colon/\nspecial(123)?\na=1#anchor[bla]";
+  urls << "user:pass@www.kde.org:1234/  \n  sub/path:with:colon/  \n\t   \t   special(123)?\n\t  \n\t   a=1#anchor[bla]";
 
   foreach (QString schema, schemas)
   {
     foreach (QString url, urls)
     {
+      // by defintion: if the URL is enclosed in brackets, the URL itself is not allowed
+      // to contain the closing bracket, as this would be detected as the end of the URL
+      if ( ( left.length() == 1 ) && ( url.contains( right[0] ) ) )
+        continue;
+
+      // if the url contains a whitespace, it must be enclosed with brackets
+      if ( (url.contains('\n') || url.contains('\t') || url.contains(' ')) &&
+           left.isEmpty() )
+        continue;
+
       QString test(left + schema + url + right);
       LinkLocator ll(test, left.length());
       QString gotUrl = ll.getUrl();
 
+      // we want to have the url without whitespace
+      url.remove(' ');
+      url.remove('\n');
+      url.remove('\t');
+
       bool ok = ( gotUrl == (schema + url) );
       //qDebug() << "check:" << (ok ? "OK" : "NOK") << test << "=>" << (schema + url);
+      if ( !ok ) qDebug() << "got:" << gotUrl;
       QVERIFY2( ok, qPrintable(test) );
     }
   }
@@ -163,6 +185,10 @@ void LinkLocatorTest::testGetUrl2(const QString &left, const QString &right)
   urlsWithoutSchema << ".kde.org:1234/sub/path?a=1#anchor";
   urlsWithoutSchema << ".kde.org:1234/sub/path/special(123)?a=1#anchor";
   urlsWithoutSchema << ".kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor";
+  urlsWithoutSchema << ".kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla";
+  urlsWithoutSchema << ".kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla]";
+  urlsWithoutSchema << ".kde.org:1234/\nsub/path:with:colon/\nspecial(123)?\na=1#anchor[bla]";
+  urlsWithoutSchema << ".kde.org:1234/  \n  sub/path:with:colon/  \n\t   \t   special(123)?\n\t  \n\t   a=1#anchor[bla]";
 
   QStringList starts;
   starts << "www" << "ftp" << "news:www";
@@ -171,14 +197,53 @@ void LinkLocatorTest::testGetUrl2(const QString &left, const QString &right)
   {
     foreach (QString url, urlsWithoutSchema)
     {
+      // by defintion: if the URL is enclosed in brackets, the URL itself is not allowed
+      // to contain the closing bracket, as this would be detected as the end of the URL
+      if ( ( left.length() == 1 ) && ( url.contains( right[0] ) ) )
+        continue;
+
+      // if the url contains a whitespace, it must be enclosed with brackets
+      if ( (url.contains('\n') || url.contains('\t') || url.contains(' ')) &&
+           left.isEmpty() )
+        continue;
+
       QString test(left + start + url + right);
       LinkLocator ll(test, left.length());
       QString gotUrl = ll.getUrl();
 
+      // we want to have the url without whitespace
+      url.remove(' ');
+      url.remove('\n');
+      url.remove('\t');
+
       bool ok = ( gotUrl == (start + url) );
       //qDebug() << "check:" << (ok ? "OK" : "NOK") << test << "=>" << (start + url);
-      QVERIFY2( ok, qPrintable(test) );
+      if ( !ok ) qDebug() << "got:" << gotUrl;
+      QVERIFY2( ok, qPrintable(gotUrl) );
     }
+  }
+
+  // test max url length
+  QString url = "http://www.kde.org/this/is/a_very_loooooong_url/test/test/test";
+  {
+    LinkLocator ll(url);
+    ll.setMaxUrlLen(10);
+    QVERIFY( ll.getUrl().isEmpty() );  // url too long
+  }
+  {
+    LinkLocator ll(url);
+    ll.setMaxUrlLen(url.length() - 1);
+    QVERIFY( ll.getUrl().isEmpty() );  // url too long
+  }
+  {
+    LinkLocator ll(url);
+    ll.setMaxUrlLen(url.length());
+    QVERIFY( ll.getUrl() == url );
+  }
+  {
+    LinkLocator ll(url);
+    ll.setMaxUrlLen(url.length() + 1);
+    QVERIFY( ll.getUrl() == url );
   }
 
   // mailto
@@ -191,7 +256,8 @@ void LinkLocatorTest::testGetUrl2(const QString &left, const QString &right)
 
     bool ok = ( gotUrl == addr );
     //qDebug() << "check:" << (ok ? "OK" : "NOK") << test << "=>" << addr;
-    QVERIFY2( ok, qPrintable(test) );
+    if ( !ok ) qDebug() << "got:" << gotUrl;
+    QVERIFY2( ok, qPrintable(gotUrl) );
   }
 }
 

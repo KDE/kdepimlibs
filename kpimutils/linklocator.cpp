@@ -107,27 +107,52 @@ QString LinkLocator::getUrl()
 {
   QString url;
   if ( atUrl() ) {
-    // for reference: rfc1738:
-    // Thus, only alphanumerics, the special characters "$-_.+!*'(),", and
-    // reserved characters used for their reserved purposes may be used
-    // unencoded within a URL.
-    // NOTE: this implementation is not RFC conforming
+    // NOTE: see http://tools.ietf.org/html/rfc3986#appendix-A and especially appendix-C
+    // Appendix-C mainly says, that when extracting URLs from plain text, line breaks shall
+    // be allowed and should be ignored when the URI is extracted.
+
+    // This implementation follows this recommendation and
+    // allows the URL to be enclosed within different kind of brackets/quotes
+    // If an URL is enclosed, whitespace characters are allowed and removed, otherwise
+    // the URL ends with the first whitespace
+    // Also, if the URL is enclosed in brackets, the URL itself is not allowed
+    // to contain the closing bracket, as this would be detected as the end of the URL
+
+    QChar beforeUrl, afterUrl;
+
+    // detect if the url has been surrounded by brackets or quotes
+    if ( mPos > 0 ) {
+      beforeUrl = mText[mPos - 1];
+
+      if ( beforeUrl == '(' )
+        afterUrl = ')';
+      else if ( beforeUrl == '[' )
+        afterUrl = ']';
+      else if ( beforeUrl == '<' )
+        afterUrl = '>';
+      else if ( beforeUrl == '>' )    // for e.g. <link>http://.....</link>
+        afterUrl = '<';
+      else if ( beforeUrl == '"' )
+        afterUrl = '"';
+    }
+
+    url.reserve( maxUrlLen() );  // avoid allocs
     int start = mPos;
-    while ( mPos < (int)mText.length() &&
-            mText[mPos] > ' ' && mText[mPos] != '"' &&
-            QString( "<>[]" ).indexOf( mText[mPos] ) == -1 ) {
-      ++mPos;
+    while ( ( mPos < (int)mText.length() ) &&
+            ( mText[mPos].isPrint() || mText[mPos].isSpace() ) &&
+            ( ( afterUrl.isNull() && !mText[mPos].isSpace() ) ||
+              ( !afterUrl.isNull() && mText[mPos] != afterUrl ) )
+          ) {
+      if ( !mText[mPos].isSpace() ) {   // skip whitespace
+        url.append( mText[mPos] );
+        if ( url.length() > maxUrlLen() )
+          break;
+      }
+
+      mPos++;
     }
 
-    // some URLs really end with:  # / & - _
-    const QString allowedSpecialChars = QString( "#/&-_" );
-    while ( mPos > start && mText[mPos-1].isPunct() &&
-            allowedSpecialChars.indexOf( mText[mPos-1] ) == -1 ) {
-      --mPos;
-    }
-
-    url = mText.mid( start, mPos - start );
-    if ( isEmptyUrl(url) || mPos - start > maxUrlLen() ) {
+    if ( isEmptyUrl(url) || ( url.length() > maxUrlLen() ) ) {
       mPos = start;
       url = "";
     } else {
