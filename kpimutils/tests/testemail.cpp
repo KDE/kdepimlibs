@@ -120,6 +120,15 @@ static bool checkIsValidEmailAddress( const QString &input, const QString & expE
   return true;
 }
 
+static bool checkIsValidAddressList( const QString &list, const QString &expErrorCode )
+{
+  QString badAddress;
+  EmailParseResult realErrorCode = isValidAddressList( list, badAddress );
+  QString errorCode = emailTestParseResultToString(  realErrorCode );
+  check( "isValidAddressList " + list + " errorCode ", errorCode, expErrorCode );
+  return true;
+}
+
 static bool checkIsValidSimpleEmailAddress( const QString &input, const QString &expResult )
 {
   bool validEmail = isValidSimpleAddress( input );
@@ -406,6 +415,14 @@ int main( int argc, char *argv[] )
   checkIsValidEmailAddress( "matt \"[foobar]\" Douhan <matt@fruitsalad.org>", "AddressOk" );
 
   checkIsValidEmailAddress( "Matt Douhan <matt\"@@\"fruitsalad.org>", "TooFewAts" );
+
+  //bug  139477
+  checkIsValidAddressList( "martin.schulte@guug.de, msadmin@guug.de, msnewsletter@guug.de", "AddressOk" );
+  checkIsValidAddressList( "martin.schulte@guug.de; msadmin@guug.de; msnewsletter@guug.de", "AddressOk" );
+  checkIsValidAddressList( "martin.schulte@guug.de, msadmin@guug.de., msnewsletter@guug.de", "DisallowedChar" );
+  checkIsValidAddressList( "Martin Schulte <martin.schulte@guug.de>, MS Admin <msadmin@guug.de>, MS News <msnewsletter@guug.de>", "AddressOk" );
+  checkIsValidAddressList( "Martin Schulte <martin.schulte@guug.de>; MS Admin <msadmin@guug.de>; MS News <msnewsletter@guug.de>", "AddressOk" );
+  checkIsValidAddressList( "Martin Schulte <martin.schulte@guug.de.>, MS Admin <msadmin@guug.de>, MS News <msnewsletter@guug.de>", "DisallowedChar" );
 
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
