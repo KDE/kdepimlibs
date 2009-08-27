@@ -419,10 +419,10 @@ int main( int argc, char *argv[] )
   //bug  139477
   checkIsValidAddressList( "martin.schulte@guug.de, msadmin@guug.de, msnewsletter@guug.de", "AddressOk" );
   checkIsValidAddressList( "martin.schulte@guug.de; msadmin@guug.de; msnewsletter@guug.de", "AddressOk" );
-  checkIsValidAddressList( "martin.schulte@guug.de, msadmin@guug.de., msnewsletter@guug.de", "DisallowedChar" );
+  checkIsValidAddressList( "martin.schulte@guug.de, msadmin@guug.de., msnewsletter@guug.de", "AddressOk" );
   checkIsValidAddressList( "Martin Schulte <martin.schulte@guug.de>, MS Admin <msadmin@guug.de>, MS News <msnewsletter@guug.de>", "AddressOk" );
   checkIsValidAddressList( "Martin Schulte <martin.schulte@guug.de>; MS Admin <msadmin@guug.de>; MS News <msnewsletter@guug.de>", "AddressOk" );
-  checkIsValidAddressList( "Martin Schulte <martin.schulte@guug.de.>, MS Admin <msadmin@guug.de>, MS News <msnewsletter@guug.de>", "DisallowedChar" );
+  checkIsValidAddressList( "Martin Schulte <martin.schulte@guug.de.>, MS Admin <msadmin@guug.de>, MS News <msnewsletter@guug.de>", "AddressOk" );
 
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
