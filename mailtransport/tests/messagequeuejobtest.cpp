@@ -32,6 +32,7 @@
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/kmime/localfolders.h>
+#include <akonadi/kmime/localfoldersrequestjob.h>
 #include <akonadi/kmime/addressattribute.h>
 
 #include <kmime/kmime_message.h>
@@ -64,8 +65,9 @@ void MessageQueueJobTest::initTestCase()
   mda.setIsOnline( false );
 
   // check that outbox is empty
-  LocalFolders::self()->fetch();
-  QTest::kWaitForSignal( LocalFolders::self(), SIGNAL( foldersReady() ) );
+  LocalFoldersRequestJob *rjob = new LocalFoldersRequestJob( this );
+  rjob->requestDefaultFolder( LocalFolders::Outbox );
+  QTest::kWaitForSignal( rjob, SIGNAL(result(KJob*)) );
   verifyOutboxContents( 0 );
 }
 
@@ -88,7 +90,7 @@ void MessageQueueJobTest::testValidMessages()
   // fetch the message and verify it
   QTest::qWait( 1000 );
   verifyOutboxContents( 1 );
-  ItemFetchJob *fjob = new ItemFetchJob( LocalFolders::self()->outbox() );
+  ItemFetchJob *fjob = new ItemFetchJob( LocalFolders::self()->defaultFolder( LocalFolders::Outbox ) );
   fjob->fetchScope().fetchFullPayload();
   fjob->fetchScope().fetchAllAttributes();
   AKVERIFYEXEC( fjob );
@@ -177,8 +179,8 @@ void MessageQueueJobTest::testInvalidMessages()
 
 void MessageQueueJobTest::verifyOutboxContents( qlonglong count )
 {
-  QVERIFY( LocalFolders::self()->isReady() );
-  Collection outbox = LocalFolders::self()->outbox();
+  QVERIFY( LocalFolders::self()->hasDefaultFolder( LocalFolders::Outbox ) );
+  Collection outbox = LocalFolders::self()->defaultFolder( LocalFolders::Outbox );
   QVERIFY( outbox.isValid() );
   CollectionStatisticsJob *job = new CollectionStatisticsJob( outbox );
   AKVERIFYEXEC( job );

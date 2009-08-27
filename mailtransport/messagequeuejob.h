@@ -246,7 +246,7 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
     friend class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void doStart() )
+    Q_PRIVATE_SLOT( d, void outboxRequestResult( KJob* ) )
 
 };
 
