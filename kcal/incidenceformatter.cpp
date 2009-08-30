@@ -229,7 +229,8 @@ static QString displayViewFormatAttendees( Incidence *incidence )
   Attendee::List::ConstIterator it;
   for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
     Attendee *a = *it;
-    if ( iamAttendee( a ) && iamOrganizer( incidence ) ) {
+    if ( a->email() == incidence->organizer().email() ) {
+      // skip attendee that is also the organizer
       continue;
     }
     tmpStr += displayViewLinkPerson( a->email(), a->name(), a->uid(), iconPath );
@@ -298,19 +299,18 @@ static QString displayViewFormatBirthday( Event *event )
 
   KIconLoader *iconLoader = KIconLoader::global();
   const QString iconPath = iconLoader->iconPath( "mail-message-new", KIconLoader::Small );
-  //TODO: add a tart icon
-  QString tmpString = "<ul>";
-  tmpString += displayViewLinkPerson( email_1, name_1, uid_1, iconPath );
+  //TODO: add a birthday cake icon
+  QString tmpStr = displayViewLinkPerson( email_1, name_1, uid_1, iconPath );
 
   if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
     QString uid_2 = event->customProperty( "KABC", "UID-2" );
     QString name_2 = event->customProperty( "KABC", "NAME-2" );
     QString email_2= event->customProperty( "KABC", "EMAIL-2" );
-    tmpString += displayViewLinkPerson( email_2, name_2, uid_2, iconPath );
+    tmpStr += "<br>";
+    tmpStr += displayViewLinkPerson( email_2, name_2, uid_2, iconPath );
   }
 
-  tmpString += "</ul>";
-  return tmpString;
+  return tmpStr;
 }
 
 static QString displayViewFormatHeader( Incidence *incidence )
