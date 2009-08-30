@@ -475,8 +475,11 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
   return ret;
 }
 
-bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
+bool Scheduler::acceptCancel( IncidenceBase *incidence,
+                              ScheduleMessage::Status status )
 {
+  Q_UNUSED( status );
+
   const IncidenceBase *toDelete = mCalendar->incidenceFromSchedulingID( incidence->uid() );
 
   bool ret = true;

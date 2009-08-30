@@ -165,7 +165,6 @@ void Person::setEmail( const QString &email )
   }
 }
 
-
 /*
   Return a hash value for a Person argument.
   @param key is a Person.

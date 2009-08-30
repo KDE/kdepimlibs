@@ -486,7 +486,7 @@ static QString displayViewFormatEvent( Event *event, KDateTime::Spec spec )
   if ( attachmentCount > 0 ) {
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>";
-    tmpStr += i18np( "Attachment:", "Attachments:", attachmentCount )+ "</b></td>";
+    tmpStr += i18np( "Attachment:", "Attachments:", attachmentCount ) + "</b></td>";
     tmpStr += "<td>" + displayViewFormatAttachments( event ) + "</td>";
     tmpStr += "</tr>";
   }
