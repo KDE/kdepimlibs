@@ -74,9 +74,10 @@ namespace IncidenceFormatter
     @param richText if yes, the QString will be created as RichText.
     @param spec is an optional time specification which, when specified,
     will shift the Incidence times to different timezones.
-    @since 4.2
+    @since 4.4
   */
-  KCAL_EXPORT QString toolTipStr( IncidenceBase *incidence,
+  KCAL_EXPORT QString toolTipStr( Calendar *calendar,
+                                  IncidenceBase *incidence,
                                   bool richText=true,
                                   KDateTime::Spec spec=KDateTime::Spec() );
 
@@ -85,7 +86,21 @@ namespace IncidenceFormatter
     suitable for using in a tooltip.
     @param incidence is a pointer to the Incidence to be formatted.
     @param richText if yes, the QString will be created as RichText.
-    @deprecated use toolTipStr( IncidenceBase *, bool, KDateTime::Spec)
+    @param spec is an optional time specification which, when specified,
+    will shift the Incidence times to different timezones.
+    @since 4.2
+    @deprecated use toolTipStr( Calendar *, IncidenceBase *, bool, KDateTime::Spec)
+  */
+  KCAL_EXPORT KDE_DEPRECATED QString toolTipStr( IncidenceBase *incidence,
+                                                 bool richText=true,
+                                                 KDateTime::Spec spec=KDateTime::Spec() );
+
+  /**
+    Create a QString representation of an Incidence in a nice format
+    suitable for using in a tooltip.
+    @param incidence is a pointer to the Incidence to be formatted.
+    @param richText if yes, the QString will be created as RichText.
+    @deprecated use toolTipStr( Calendar *, IncidenceBase *, bool, KDateTime::Spec)
   */
   KCAL_EXPORT KDE_DEPRECATED QString toolTipString( IncidenceBase *incidence,
                                                     bool richText=true );
@@ -96,16 +111,29 @@ namespace IncidenceFormatter
     @param incidence is a pointer to the Incidence to be formatted.
     @param spec is an optional time specification which, when specified,
     will shift the Incidence times to different timezones.
-    @since 4.2
+    @since 4.4
   */
-  KCAL_EXPORT QString extensiveDisplayStr( IncidenceBase *incidence,
+  KCAL_EXPORT QString extensiveDisplayStr( Calendar *calendar,
+                                           IncidenceBase *incidence,
                                            KDateTime::Spec spec=KDateTime::Spec() );
 
   /**
     Create a RichText QString representation of an Incidence in a nice format
     suitable for using in a viewer widget.
     @param incidence is a pointer to the Incidence to be formatted.
-    @deprecated use extensiveDisplayStr( IncidenceBase *, KDateTime::Spec )
+    @param spec is an optional time specification which, when specified,
+    will shift the Incidence times to different timezones.
+    @since 4.2
+    @deprecated use extensiveDisplayStr( Calendar *, IncidenceBase *, KDateTime::Spec )
+  */
+  KCAL_EXPORT KDE_DEPRECATED QString extensiveDisplayStr( IncidenceBase *incidence,
+                                                          KDateTime::Spec spec=KDateTime::Spec() );
+
+  /**
+    Create a RichText QString representation of an Incidence in a nice format
+    suitable for using in a viewer widget.
+    @param incidence is a pointer to the Incidence to be formatted.
+    @deprecated use extensiveDisplayStr( Calendar *, IncidenceBase *, KDateTime::Spec )
   */
   KCAL_EXPORT KDE_DEPRECATED QString extensiveDisplayString( IncidenceBase *incidence );
 
@@ -195,6 +223,14 @@ namespace IncidenceFormatter
                                         bool dateOnly = false,
                                         bool shortfmt = true,
                                         const KDateTime::Spec &spec = KDateTime::Spec() );
+
+  /**
+    Returns a Calendar Resource label name for the specified Incidence.
+    @param calendar is a pointer to the Calendar.
+    @param incidence is a pointer to the Incidence.
+    @since 4.4
+  */
+  KCAL_EXPORT QString resourceString( Calendar *calendar, Incidence *incidence );
 
   class EventViewerVisitor;
   class ScheduleMessageVisitor;
