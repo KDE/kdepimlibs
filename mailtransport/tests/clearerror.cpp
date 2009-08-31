@@ -28,6 +28,7 @@
 #include <akonadi/control.h>
 #include <akonadi/filteractionjob.h>
 #include <akonadi/kmime/localfolders.h>
+#include <akonadi/kmime/localfoldersrequestjob.h>
 
 #include <mailtransport/outboxactions.h>
 
@@ -39,17 +40,19 @@ Runner::Runner()
 {
   Control::start();
 
-  connect( LocalFolders::self(), SIGNAL( foldersReady() ),
-      this, SLOT( checkFolders() ) );
-  LocalFolders::self()->fetch();
+  LocalFoldersRequestJob *rjob = new LocalFoldersRequestJob( this );
+  rjob->requestDefaultFolder( LocalFolders::Outbox );
+  connect( rjob, SIGNAL(result(KJob*)), this, SLOT(checkFolders()) );
+  rjob->start();
 }
 
 void Runner::checkFolders()
 {
-  Collection outbox = LocalFolders::self()->outbox();
+  Collection outbox = LocalFolders::self()->defaultFolder( LocalFolders::Outbox );
   kDebug() << "Got outbox" << outbox.id();
 
   if( !outbox.isValid() ) {
+    kError() << "Failed to get outbox folder.";
     KApplication::exit( 1 );
   }
 

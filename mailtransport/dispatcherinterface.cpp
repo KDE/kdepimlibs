@@ -93,25 +93,25 @@ AgentInstance DispatcherInterface::dispatcherInstance() const
 
 void DispatcherInterface::dispatchManually()
 {
-  if( !LocalFolders::self()->isReady() ) {
-    kWarning() << "LocalFolders not ready.";
+  Collection outbox = LocalFolders::self()->defaultFolder( LocalFolders::Outbox );
+  if( !outbox.isValid() ) {
+    kError() << "Could not access Outbox.";
     return;
   }
 
-  FilterActionJob *mjob =
-    new FilterActionJob( LocalFolders::self()->outbox(), new SendQueuedAction, this );
+  FilterActionJob *mjob = new FilterActionJob( outbox, new SendQueuedAction, this );
   connect( mjob, SIGNAL(result(KJob*)), this, SLOT(massModifyResult(KJob*)) );
 }
 
 void DispatcherInterface::retryDispatching()
 {
-  if( !LocalFolders::self()->isReady() ) {
-    kWarning() << "LocalFolders not ready.";
+  Collection outbox = LocalFolders::self()->defaultFolder( LocalFolders::Outbox );
+  if( !outbox.isValid() ) {
+    kError() << "Could not access Outbox.";
     return;
   }
 
-  FilterActionJob *mjob =
-    new FilterActionJob( LocalFolders::self()->outbox(), new ClearErrorAction, this );
+  FilterActionJob *mjob = new FilterActionJob( outbox, new ClearErrorAction, this );
   connect( mjob, SIGNAL(result(KJob*)), this, SLOT(massModifyResult(KJob*)) );
 }
 

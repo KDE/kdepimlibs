@@ -31,6 +31,7 @@
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/kmime/addressattribute.h>
 #include <akonadi/kmime/localfolders.h>
+#include <akonadi/kmime/localfoldersrequestjob.h>
 
 using namespace Akonadi;
 using namespace KMime;
@@ -73,7 +74,7 @@ class MailTransport::MessageQueueJob::Private
     bool validate();
 
     // slot
-    void doStart();
+    void outboxRequestResult( KJob *job );
 
 };
 
@@ -113,18 +114,21 @@ bool MessageQueueJob::Private::validate()
     q->emitResult();
     return false;
   } else if( sentBehaviour == SentBehaviourAttribute::MoveToDefaultSentCollection ) {
-    Q_ASSERT( LocalFolders::self()->isReady() );
-    Q_ASSERT( LocalFolders::self()->sentMail().isValid() );
+    // TODO require LocalFolders::SentMail here?
   }
 
   return true; // all ok
 }
 
-void MessageQueueJob::Private::doStart()
+void MessageQueueJob::Private::outboxRequestResult( KJob *job )
 {
-  LocalFolders::self()->disconnect( q );
   Q_ASSERT( !started );
   started = true;
+
+  if( job->error() ) {
+    kError() << "Failed to get the Outbox folder:" << job->error();
+    return;
+  }
 
   if( !validate() ) {
     // The error has been set; the result has been emitted.
@@ -150,10 +154,10 @@ void MessageQueueJob::Private::doStart()
   item.setFlag( "queued" );
 
   // Store the item in the outbox.
-  Q_ASSERT( LocalFolders::self()->isReady() );
-  Collection col = LocalFolders::self()->outbox();
-  ItemCreateJob *job = new ItemCreateJob( item, col ); // job autostarts
-  q->addSubjob( job );
+  Collection col = LocalFolders::self()->defaultFolder( LocalFolders::Outbox );
+  Q_ASSERT( col.isValid() );
+  ItemCreateJob *cjob = new ItemCreateJob( item, col ); // job autostarts
+  q->addSubjob( cjob );
 }
 
 MessageQueueJob::MessageQueueJob( QObject *parent )
@@ -269,9 +273,10 @@ void MessageQueueJob::setBcc( const QStringList &bcc )
 
 void MessageQueueJob::start()
 {
-  LocalFolders *folders = LocalFolders::self();
-  connect( folders, SIGNAL( foldersReady() ), this, SLOT( doStart() ) );
-  folders->fetch(); // will emit foldersReady()
+  LocalFoldersRequestJob *rjob = new LocalFoldersRequestJob( this );
+  rjob->requestDefaultFolder( LocalFolders::Outbox );
+  connect( rjob, SIGNAL(result(KJob*)), this, SLOT(outboxRequestResult(KJob*)) );
+  rjob->start();
 }
 
 void MessageQueueJob::slotResult( KJob *job )
