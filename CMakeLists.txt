@@ -67,10 +67,10 @@ add_subdirectory(gpgme++)
 add_subdirectory(qgpgme)
 
 if (NOT KDEPIM_ONLY_KLEO)
-  add_subdirectory(akonadi)
   add_subdirectory(kabc)
   add_subdirectory(kblog)
   add_subdirectory(kcal)
+  add_subdirectory(akonadi) # depends on kabc is build
   add_subdirectory(kholidays)
   add_subdirectory(kimap)
   add_subdirectory(kioslave)
