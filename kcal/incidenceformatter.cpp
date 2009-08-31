@@ -63,17 +63,15 @@
 #include <QtGui/QTextDocument>
 #include <QtGui/QApplication>
 
-#include <time.h>
-
 using namespace KCal;
 
-/*******************************************************************
- *  Helper functions for the extensive display (event viewer)
- *******************************************************************/
+/*******************
+ *  General helpers
+ *******************/
 
 //@cond PRIVATE
-static QString eventViewerAddLink( const QString &ref, const QString &text,
-                                   bool newline = true )
+static QString htmlAddLink( const QString &ref, const QString &text,
+                            bool newline = true )
 {
   QString tmpStr( "<a href=\"" + ref + "\">" + text + "</a>" );
   if ( newline ) {
@@ -82,7 +80,7 @@ static QString eventViewerAddLink( const QString &ref, const QString &text,
   return tmpStr;
 }
 
-static QString eventViewerAddTag( const QString &tag, const QString &text )
+static QString htmlAddTag( const QString &tag, const QString &text )
 {
   int numLineBreaks = text.count( "\n" );
   QString str = '<' + tag + '>';
@@ -106,22 +104,52 @@ static QString eventViewerAddTag( const QString &tag, const QString &text )
   return tmpStr;
 }
 
-static QString eventViewerFormatCategories( Incidence *event )
+static bool iamAttendee( Attendee *attendee )
 {
-  QString tmpStr;
-  if ( !event->categoriesStr().isEmpty() ) {
-    if ( event->categories().count() == 1 ) {
-      tmpStr = eventViewerAddTag( "h3", i18n( "Category" ) );
-    } else {
-      tmpStr = eventViewerAddTag( "h3", i18n( "Categories" ) );
+  // Check if I'm this attendee
+
+  bool iam = false;
+  KEMailSettings settings;
+  QStringList profiles = settings.profiles();
+  for ( QStringList::Iterator it=profiles.begin(); it != profiles.end(); ++it ) {
+    settings.setProfile( *it );
+    if ( settings.getSetting( KEMailSettings::EmailAddress ) == attendee->email() ) {
+      iam = true;
+      break;
     }
-    tmpStr += eventViewerAddTag( "p", event->categoriesStr() );
   }
-  return tmpStr;
+  return iam;
 }
 
-static QString linkPerson( const QString &email, QString name, QString uid,
-                           const QString &iconPath )
+static bool iamOrganizer( Incidence *incidence )
+{
+  // Check if I'm the organizer for this incidence
+
+  if ( !incidence ) {
+    return false;
+  }
+
+  bool iam = false;
+  KEMailSettings settings;
+  QStringList profiles = settings.profiles();
+  for ( QStringList::Iterator it=profiles.begin(); it != profiles.end(); ++it ) {
+    settings.setProfile( *it );
+    if ( settings.getSetting( KEMailSettings::EmailAddress ) == incidence->organizer().email() ) {
+      iam = true;
+      break;
+    }
+  }
+  return iam;
+}
+//@endcond
+
+/*******************************************************************
+ *  Helper functions for the extensive display (display viewer)
+ *******************************************************************/
+
+//@cond PRIVATE
+static QString displayViewLinkPerson( const QString &email, QString name,
+                                      QString uid, const QString &iconPath )
 {
   // Make the search, if there is an email address to search on,
   // and either name or uid is missing
@@ -142,88 +170,112 @@ static QString linkPerson( const QString &email, QString name, QString uid,
   }
 
   // Show the attendee
-  QString tmpString = "<li>";
+  QString tmpString;
   if ( !uid.isEmpty() ) {
     // There is a UID, so make a link to the addressbook
     if ( name.isEmpty() ) {
       // Use the email address for text
-      tmpString += eventViewerAddLink( "uid:" + uid, email );
+      tmpString += htmlAddLink( "uid:" + uid, email );
     } else {
-      tmpString += eventViewerAddLink( "uid:" + uid, name );
+      tmpString += htmlAddLink( "uid:" + uid, name );
     }
   } else {
     // No UID, just show some text
     tmpString += ( name.isEmpty() ? email : name );
   }
-  tmpString += '\n';
 
   // Make the mailto link
   if ( !email.isEmpty() && !iconPath.isNull() ) {
     KUrl mailto;
     mailto.setProtocol( "mailto" );
     mailto.setPath( email );
-    tmpString += eventViewerAddLink( mailto.url(), "<img src=\"" + iconPath + "\">" );
+    tmpString += htmlAddLink( mailto.url(),
+                              "<img valign=\"top\" src=\"" + iconPath + "\">" );
   }
-  tmpString += "</li>\n";
 
   return tmpString;
 }
 
-static QString eventViewerFormatAttendees( Incidence *event )
+static QString displayViewFormatAttendees( Incidence *incidence )
 {
   QString tmpStr;
-  Attendee::List attendees = event->attendees();
-  if ( attendees.count() ) {
-    KIconLoader *iconLoader = KIconLoader::global();
-    const QString iconPath = iconLoader->iconPath( "mail-message-new", KIconLoader::Small );
+  Attendee::List attendees = incidence->attendees();
+  KIconLoader *iconLoader = KIconLoader::global();
+  const QString iconPath = iconLoader->iconPath( "mail-message-new", KIconLoader::Small );
 
-    // Add organizer link
-    tmpStr += eventViewerAddTag( "h4", i18n( "Organizer:" ) );
-    tmpStr += "<ul>";
-    tmpStr += linkPerson( event->organizer().email(), event->organizer().name(),
-                          QString(), iconPath );
-    tmpStr += "</ul>";
+  // Add organizer link
+  tmpStr += "<tr>";
+  tmpStr += "<td align=\"right\"><b>" + i18n( "Organizer:" ) + "</b></td>";
+  tmpStr += "<td>" +
+            displayViewLinkPerson( incidence->organizer().email(),
+                                   incidence->organizer().name(),
+                                   QString(), iconPath ) +
+            "</td>";
+  tmpStr += "</tr>";
 
-    // Add attendees links
-    tmpStr += eventViewerAddTag( "h4", i18n( "Attendees:" ) );
-    tmpStr += "<ul>";
-    Attendee::List::ConstIterator it;
-    for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
-      Attendee *a = *it;
-      tmpStr += linkPerson( a->email(), a->name(), a->uid(), iconPath );
-      if ( !a->delegator().isEmpty() ) {
-        tmpStr += i18n( " (delegated by %1)", a->delegator() );
-      }
-      if ( !a->delegate().isEmpty() ) {
-        tmpStr += i18n( " (delegated to %1)", a->delegate() );
-      }
+  // Add attendees links
+  tmpStr += "<tr>";
+  tmpStr += "<td align=\"right\"><b>" + i18n( "Attendees:" ) + "</b></td>";
+  tmpStr += "<td>";
+  Attendee::List::ConstIterator it;
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+    Attendee *a = *it;
+    if ( a->email() == incidence->organizer().email() ) {
+      // skip attendee that is also the organizer
+      continue;
     }
-    tmpStr += "</ul>";
+    tmpStr += displayViewLinkPerson( a->email(), a->name(), a->uid(), iconPath );
+    if ( !a->delegator().isEmpty() ) {
+      tmpStr += i18n( " (delegated by %1)", a->delegator() );
+    }
+    if ( !a->delegate().isEmpty() ) {
+      tmpStr += i18n( " (delegated to %1)", a->delegate() );
+    }
+    tmpStr += "<br>";
   }
+  if ( tmpStr.endsWith( QLatin1String( "<br>" ) ) ) {
+    tmpStr.chop( 4 );
+  }
+
+  tmpStr += "</td>";
+  tmpStr += "</tr>";
   return tmpStr;
 }
 
-static QString eventViewerFormatAttachments( Incidence *i )
+static QString displayViewFormatAttachments( Incidence *incidence )
 {
   QString tmpStr;
-  Attachment::List as = i->attachments();
+  Attachment::List as = incidence->attachments();
   if ( as.count() > 0 ) {
     Attachment::List::ConstIterator it;
+    int count = 0;
     for ( it = as.constBegin(); it != as.constEnd(); ++it ) {
+      count++;
       if ( (*it)->isUri() ) {
-        tmpStr += eventViewerAddLink( (*it)->uri(), (*it)->label() );
-        tmpStr += "<br>";
+        tmpStr += htmlAddLink( (*it)->uri(), (*it)->label() );
+        if ( count < as.count() ) {
+          tmpStr += "<br>";
+        }
       }
     }
   }
   return tmpStr;
 }
 
-/*
-  FIXME:This function depends of kaddressbook. Is necessary a new
-  type of event?
-*/
-static QString eventViewerFormatBirthday( Event *event )
+static QString displayViewFormatCategories( Incidence *incidence )
+{
+  return incidence->categoriesStr();
+}
+
+static QString displayViewFormatCreationDate( Incidence *incidence, KDateTime::Spec spec )
+{
+  KDateTime kdt = incidence->created().toTimeSpec( spec );
+  return i18n( "Creation date: %1",
+               KGlobal::locale()->formatDateTime( kdt.dateTime(),
+                                                  KLocale::ShortDate ) );
+}
+
+static QString displayViewFormatBirthday( Event *event )
 {
   if ( !event ) {
     return QString();
@@ -238,22 +290,21 @@ static QString eventViewerFormatBirthday( Event *event )
 
   KIconLoader *iconLoader = KIconLoader::global();
   const QString iconPath = iconLoader->iconPath( "mail-message-new", KIconLoader::Small );
-  //TODO: add a tart icon
-  QString tmpString = "<ul>";
-  tmpString += linkPerson( email_1, name_1, uid_1, iconPath );
+  //TODO: add a birthday cake icon
+  QString tmpStr = displayViewLinkPerson( email_1, name_1, uid_1, iconPath );
 
   if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
     QString uid_2 = event->customProperty( "KABC", "UID-2" );
     QString name_2 = event->customProperty( "KABC", "NAME-2" );
     QString email_2= event->customProperty( "KABC", "EMAIL-2" );
-    tmpString += linkPerson( email_2, name_2, uid_2, iconPath );
+    tmpStr += "<br>";
+    tmpStr += displayViewLinkPerson( email_2, name_2, uid_2, iconPath );
   }
 
-  tmpString += "</ul>";
-  return tmpString;
+  return tmpStr;
 }
 
-static QString eventViewerFormatHeader( Incidence *incidence )
+static QString displayViewFormatHeader( Incidence *incidence )
 {
   QString tmpStr = "<table><tr>";
 
@@ -261,8 +312,11 @@ static QString eventViewerFormatHeader( Incidence *incidence )
   KIconLoader *iconLoader = KIconLoader::global();
   tmpStr += "<td>";
 
+  // TODO: KDE5. Make the function QString Incidence::getPixmap() so we don't
+  // need downcasting.
+
   if ( incidence->type() == "Todo" ) {
-    tmpStr += "<img src=\"";
+    tmpStr += "<img valign=\"top\" src=\"";
     Todo *todo = static_cast<Todo *>( incidence );
     if ( !todo->isCompleted() ) {
       tmpStr += iconLoader->iconPath( "view-calendar-tasks", KIconLoader::Small );
@@ -273,54 +327,55 @@ static QString eventViewerFormatHeader( Incidence *incidence )
   }
 
   if ( incidence->type() == "Event" ) {
-    tmpStr += "<img src=\"" +
+    tmpStr += "<img valign=\"top\" src=\"" +
               iconLoader->iconPath( "view-calendar-day", KIconLoader::Small ) +
               "\">";
   }
 
   if ( incidence->type() == "Journal" ) {
-    tmpStr += "<img src=\"" +
+    tmpStr += "<img valign=\"top\" src=\"" +
               iconLoader->iconPath( "view-pim-journal", KIconLoader::Small ) +
               "\">";
   }
 
   if ( incidence->isAlarmEnabled() ) {
-    tmpStr += "<img src=\"" +
+    tmpStr += "<img valign=\"top\" src=\"" +
               iconLoader->iconPath( "preferences-desktop-notification-bell", KIconLoader::Small ) +
               "\">";
   }
   if ( incidence->recurs() ) {
-    tmpStr += "<img src=\"" +
+    tmpStr += "<img valign=\"top\" src=\"" +
               iconLoader->iconPath( "edit-redo", KIconLoader::Small ) +
               "\">";
   }
   if ( incidence->isReadOnly() ) {
-    tmpStr += "<img src=\"" +
+    tmpStr += "<img valign=\"top\" src=\"" +
               iconLoader->iconPath( "object-locked", KIconLoader::Small ) +
               "\">";
   }
   tmpStr += "</td>";
 
-  tmpStr += "<td>" +
-            eventViewerAddTag( "h2", incidence->richSummary() ) +
-            "</td>";
+  tmpStr += "<td>";
+  tmpStr += "<b><u>" + incidence->richSummary() + "</u></b>";
+  tmpStr += "</td>";
+
   tmpStr += "</tr></table>";
 
   return tmpStr;
 }
 
-static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
+static QString displayViewFormatEvent( Event *event, KDateTime::Spec spec )
 {
   if ( !event ) {
     return QString();
   }
 
-  QString tmpStr = eventViewerFormatHeader( event );
+  QString tmpStr = displayViewFormatHeader( event );
 
   tmpStr += "<table>";
   if ( !event->location().isEmpty() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Location" ) + "</b></td>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Location:" ) + "</b></td>";
     tmpStr += "<td>" + event->richLocation() + "</td>";
     tmpStr += "</tr>";
   }
@@ -375,11 +430,11 @@ static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
   if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
     tmpStr += "<tr>";
     if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Anniversary" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Anniversary:" ) + "</b></td>";
     } else {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Birthday" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Birthday:" ) + "</b></td>";
     }
-    tmpStr += "<td>" + eventViewerFormatBirthday( event ) + "</td>";
+    tmpStr += "<td>" + displayViewFormatBirthday( event ) + "</td>";
     tmpStr += "</tr>";
     tmpStr += "</table>";
     return tmpStr;
@@ -387,17 +442,18 @@ static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
 
   if ( !event->description().isEmpty() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td></td>";
-    tmpStr += "<td>" + eventViewerAddTag( "p", event->richDescription() ) + "</td>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Description:" ) + "</b></td>";
+    tmpStr += "<td>" + event->richDescription() + "</td>";
     tmpStr += "</tr>";
   }
 
-  if ( event->categories().count() > 0 ) {
+  int categoryCount = event->categories().count();
+  if ( categoryCount > 0 ) {
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>";
-    tmpStr += i18np( "1&nbsp;category", "%1&nbsp;categories", event->categories().count() ) +
+    tmpStr += i18np( "Category:", "Categories:", categoryCount ) +
               "</b></td>";
-    tmpStr += "<td>" + event->categoriesStr() + "</td>";
+    tmpStr += "<td>" + displayViewFormatCategories( event ) + "</td>";
     tmpStr += "</tr>";
   }
 
@@ -413,98 +469,177 @@ static QString eventViewerFormatEvent( Event *event, KDateTime::Spec spec )
     tmpStr += "</tr>";
   }
 
-  tmpStr += "<tr><td colspan=\"2\">";
-  tmpStr += eventViewerFormatAttendees( event );
-  tmpStr += "</td></tr>";
+  if ( event->attendees().count() > 1 ) {
+    tmpStr += displayViewFormatAttendees( event );
+  }
 
   int attachmentCount = event->attachments().count();
   if ( attachmentCount > 0 ) {
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>";
-    tmpStr += i18np( "1&nbsp;attachment", "%1&nbsp;attachments", attachmentCount )+ "</b></td>";
-    tmpStr += "<td>" + eventViewerFormatAttachments( event ) + "</td>";
+    tmpStr += i18np( "Attachment:", "Attachments:", attachmentCount )+ "</b></td>";
+    tmpStr += "<td>" + displayViewFormatAttachments( event ) + "</td>";
     tmpStr += "</tr>";
   }
-  KDateTime kdt = event->created().toTimeSpec( spec );
   tmpStr += "</table>";
-  tmpStr += "<p><em>" +
-            i18n( "Creation date: %1", KGlobal::locale()->formatDateTime(
-                    kdt.dateTime(),
-                    KLocale::ShortDate ) ) + "</em>";
+
+  tmpStr += "<p><em>" + displayViewFormatCreationDate( event, spec ) + "</em>";
+
   return tmpStr;
 }
 
-static QString eventViewerFormatTodo( Todo *todo, KDateTime::Spec spec )
+static QString displayViewFormatTodo( Todo *todo, KDateTime::Spec spec )
 {
   if ( !todo ) {
     return QString();
   }
 
-  QString tmpStr = eventViewerFormatHeader( todo );
+  QString tmpStr = displayViewFormatHeader( todo );
 
+  tmpStr += "<table>";
   if ( !todo->location().isEmpty() ) {
-    tmpStr += eventViewerAddTag( "b", i18n(" Location: %1", todo->richLocation() ) );
-    tmpStr += "<br>";
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Location:" ) + "</b></td>";
+    tmpStr += "<td>" + todo->richLocation() + "</td>";
+    tmpStr += "</tr>";
+  }
+
+  if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>" +
+              i18nc( "to-do start date/time", "Start:" ) +
+              "</b></td>";
+    tmpStr += "<td>" +
+              IncidenceFormatter::dateTimeToString( todo->dtStart(),
+                                                    todo->allDay(),
+                                                    false, spec ) +
+              "</td>";
+    tmpStr += "</tr>";
   }
 
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
-    tmpStr += i18n( "<b>Due on:</b> %1",
-                    IncidenceFormatter::dateTimeToString( todo->dtDue(),
-                                                          todo->allDay(),
-                                                          false, spec ) );
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>" +
+              i18nc( "to-do due date/time", "Due:" ) +
+              "</b></td>";
+    tmpStr += "<td>" +
+              IncidenceFormatter::dateTimeToString( todo->dtDue(),
+                                                    todo->allDay(),
+                                                    false, spec ) +
+              "</td>";
+    tmpStr += "</tr>";
   }
 
   if ( !todo->description().isEmpty() ) {
-    tmpStr += eventViewerAddTag( "p", todo->richDescription() );
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Description:" ) + "</b></td>";
+    tmpStr += "<td>" + todo->richDescription() + "</td>";
+    tmpStr += "</tr>";
   }
 
-  tmpStr += eventViewerFormatCategories( todo );
+  int categoryCount = todo->categories().count();
+  if ( categoryCount > 0 ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>" +
+              i18np( "Category:", "Categories:", categoryCount ) +
+              "</b></td>";
+    tmpStr += "<td>" + displayViewFormatCategories( todo ) + "</td>";
+    tmpStr += "</tr>";
+  }
 
+  tmpStr += "<tr>";
+  tmpStr += "<td align=\"right\"><b>" + i18n( "Priority:" ) + "</b></td>";
+  tmpStr += "<td>";
   if ( todo->priority() > 0 ) {
-    tmpStr += i18n( "<p><b>Priority:</b> %1</p>", todo->priority() );
+    tmpStr += QString::number( todo->priority() );
   } else {
-    tmpStr += i18n( "<p><b>Priority:</b> %1</p>", i18n( "Unspecified" ) );
+    tmpStr += i18n( "Unspecified" );
   }
+  tmpStr += "</td>";
+  tmpStr += "</tr>";
 
-  tmpStr += i18n( "<p><i>%1 % completed</i></p>", todo->percentComplete() );
+  tmpStr += "<tr>";
+  tmpStr += "<td align=\"right\"><b>" +
+            i18nc( "percent completed", "Completed:" ) + "</b></td>";
+  tmpStr += "<td>" + i18n( "%1%", todo->percentComplete() ) + "</td>";
+  tmpStr += "</tr>";
 
   if ( todo->recurs() ) {
     KDateTime dt = todo->recurrence()->getNextDateTime( KDateTime::currentUtcDateTime() );
-    tmpStr += eventViewerAddTag( "p", "<em>" +
-      i18n( "This is a recurring to-do. The next occurrence will be on %1.",
-            KGlobal::locale()->formatDateTime( dt.dateTime(), KLocale::ShortDate ) ) + "</em>" );
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>" +
+              i18n( "Next Occurrence" ) +
+              "</b></td>";
+    tmpStr += "<td>" +
+              ( dt.isValid() ?
+                KGlobal::locale()->formatDateTime( dt.dateTime(), KLocale::ShortDate ) :
+                i18nc( "no date", "none" ) ) +
+              "</td>";
+    tmpStr += "</tr>";
   }
-  tmpStr += eventViewerFormatAttendees( todo );
-  tmpStr += eventViewerFormatAttachments( todo );
 
-  KDateTime kdt = todo->created().toTimeSpec( spec );
-  tmpStr += "<p><em>" +
-            i18n( "Creation date: %1",
-                  KGlobal::locale()->formatDateTime( kdt.dateTime(), KLocale::ShortDate ) ) +
-            "</em>";
+  if ( todo->attendees().count() > 1 ) {
+    tmpStr += displayViewFormatAttendees( todo );
+  }
+
+  int attachmentCount = todo->attachments().count();
+  if ( attachmentCount > 0 ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>" +
+              i18np( "Attachment:", "Attachments:", attachmentCount ) +
+              "</b></td>";
+    tmpStr += "<td>" + displayViewFormatAttachments( todo ) + "</td>";
+    tmpStr += "</tr>";
+  }
+  tmpStr += "</table>";
+
+  tmpStr += "<p><em>" + displayViewFormatCreationDate( todo, spec ) + "</em>";
+
   return tmpStr;
 }
 
-static QString eventViewerFormatJournal( Journal *journal, KDateTime::Spec spec )
+static QString displayViewFormatJournal( Journal *journal, KDateTime::Spec spec )
 {
   if ( !journal ) {
     return QString();
   }
 
-  QString tmpStr;
-  if ( !journal->summary().isEmpty() ) {
-    tmpStr+= eventViewerAddTag( "h2", journal->richSummary() );
-  }
-  tmpStr += eventViewerAddTag(
-    "h3", i18n( "Journal for %1", IncidenceFormatter::dateToString( journal->dtStart(), false,
-                                                                    spec ) ) );
+  QString tmpStr = displayViewFormatHeader( journal );
+
+  tmpStr += "<table>";
+
+  tmpStr += "<tr>";
+  tmpStr += "<td align=\"right\"><b>" + i18n( "Date:" ) + "</b></td>";
+  tmpStr += "<td>" +
+            IncidenceFormatter::dateToString( journal->dtStart(), false, spec ) +
+            "</td>";
+  tmpStr += "</tr>";
+
   if ( !journal->description().isEmpty() ) {
-    tmpStr += eventViewerAddTag( "p", journal->richDescription() );
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Description:" ) + "</b></td>";
+    tmpStr += "<td>" + journal->richDescription() + "</td>";
+    tmpStr += "</tr>";
   }
+
+  int categoryCount = journal->categories().count();
+  if ( categoryCount > 0 ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td align=\"right\"><b>" +
+              i18np( "Category:", "Categories:", categoryCount ) +
+              "</b></td>";
+    tmpStr += "<td>" + displayViewFormatCategories( journal ) + "</td>";
+    tmpStr += "</tr>";
+  }
+
+  tmpStr += "</table>";
+
+  tmpStr += "<p><em>" + displayViewFormatCreationDate( journal, spec ) + "</em>";
+
   return tmpStr;
 }
 
-static QString eventViewerFormatFreeBusy( FreeBusy *fb, KDateTime::Spec spec )
+static QString displayViewFormatFreeBusy( FreeBusy *fb, KDateTime::Spec spec )
 {
   Q_UNUSED( spec );
 
@@ -513,9 +648,9 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb, KDateTime::Spec spec )
   }
 
   QString tmpStr(
-    eventViewerAddTag(
+    htmlAddTag(
       "h2", i18n( "Free/Busy information for %1", fb->organizer().fullName() ) ) );
-  tmpStr += eventViewerAddTag(
+  tmpStr += htmlAddTag(
     "h4", i18n( "Busy times in date range %1 - %2:",
                 KGlobal::locale()->formatDate( fb->dtStart().date(), KLocale::ShortDate ),
                 KGlobal::locale()->formatDate( fb->dtEnd().date(), KLocale::ShortDate ) ) );
@@ -523,8 +658,8 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb, KDateTime::Spec spec )
   QList<Period> periods = fb->busyPeriods();
 
   QString text =
-    eventViewerAddTag( "em",
-                       eventViewerAddTag( "b", i18nc( "tag for busy periods list", "Busy:" ) ) );
+    htmlAddTag( "em",
+                htmlAddTag( "b", i18nc( "tag for busy periods list", "Busy:" ) ) );
 
   QList<Period>::iterator it;
   for ( it = periods.begin(); it != periods.end(); ++it ) {
@@ -563,7 +698,7 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb, KDateTime::Spec spec )
       text += "<br>";
     }
   }
-  tmpStr += eventViewerAddTag( "p", text );
+  tmpStr += htmlAddTag( "p", text );
   return tmpStr;
 }
 //@endcond
@@ -587,22 +722,22 @@ class KCal::IncidenceFormatter::EventViewerVisitor
   protected:
     bool visit( Event *event )
     {
-      mResult = eventViewerFormatEvent( event, mSpec );
+      mResult = displayViewFormatEvent( event, mSpec );
       return !mResult.isEmpty();
     }
     bool visit( Todo *todo )
     {
-      mResult = eventViewerFormatTodo( todo, mSpec );
+      mResult = displayViewFormatTodo( todo, mSpec );
       return !mResult.isEmpty();
     }
     bool visit( Journal *journal )
     {
-      mResult = eventViewerFormatJournal( journal, mSpec );
+      mResult = displayViewFormatJournal( journal, mSpec );
       return !mResult.isEmpty();
     }
     bool visit( FreeBusy *fb )
     {
-      mResult = eventViewerFormatFreeBusy( fb, mSpec );
+      mResult = displayViewFormatFreeBusy( fb, mSpec );
       return !mResult.isEmpty();
     }
 
@@ -631,9 +766,9 @@ QString IncidenceFormatter::extensiveDisplayStr( IncidenceBase *incidence, KDate
   }
 }
 
-/*******************************************************************
- *  Helper functions for the body part formatter of kmail
- *******************************************************************/
+/***********************************************************************
+ *  Helper functions for the body part formatter of kmail (Invitations)
+ ***********************************************************************/
 
 //@cond PRIVATE
 static QString string2HTML( const QString &str )
@@ -689,44 +824,6 @@ static QString eventEndTimeStr( Event *event )
 static QString invitationRow( const QString &cell1, const QString &cell2 )
 {
   return "<tr><td>" + cell1 + "</td><td>" + cell2 + "</td></tr>\n";
-}
-
-static bool iamOrganizer( Incidence *incidence )
-{
-  // Check if I'm the organizer for this incidence
-
-  if ( !incidence ) {
-    return false;
-  }
-
-  bool iam = false;
-  KEMailSettings settings;
-  QStringList profiles = settings.profiles();
-  for ( QStringList::Iterator it=profiles.begin(); it != profiles.end(); ++it ) {
-    settings.setProfile( *it );
-    if ( settings.getSetting( KEMailSettings::EmailAddress ) == incidence->organizer().email() ) {
-      iam = true;
-      break;
-    }
-  }
-  return iam;
-}
-
-static bool iamAttendee( Attendee *attendee )
-{
-  // Check if I'm this attendee
-
-  bool iam = false;
-  KEMailSettings settings;
-  QStringList profiles = settings.profiles();
-  for ( QStringList::Iterator it=profiles.begin(); it != profiles.end(); ++it ) {
-    settings.setProfile( *it );
-    if ( settings.getSetting( KEMailSettings::EmailAddress ) == attendee->email() ) {
-      iam = true;
-      break;
-    }
-  }
-  return iam;
 }
 
 static Attendee *findMyAttendee( Incidence *incidence )
@@ -838,9 +935,9 @@ static QString invitationPerson( const QString &email, QString name, QString uid
     // There is a UID, so make a link to the addressbook
     if ( name.isEmpty() ) {
       // Use the email address for text
-      tmpString += eventViewerAddLink( "uid:" + uid, email );
+      tmpString += htmlAddLink( "uid:" + uid, email );
     } else {
-      tmpString += eventViewerAddLink( "uid:" + uid, name );
+      tmpString += htmlAddLink( "uid:" + uid, name );
     }
   } else {
     // No UID, just show some text
@@ -856,7 +953,8 @@ static QString invitationPerson( const QString &email, QString name, QString uid
     mailto.setPath( person.fullName() );
     const QString iconPath =
       KIconLoader::global()->iconPath( "mail-message-new", KIconLoader::Small );
-    tmpString += eventViewerAddLink( mailto.url(), "<img src=\"" + iconPath + "\">" );
+    tmpString += htmlAddLink( mailto.url(),
+                              "<img valign=\"top\" src=\"" + iconPath + "\">" );
   }
   tmpString += '\n';
 
@@ -883,7 +981,7 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
         if ( noHtmlMode ) {
           comments[0] = cleanHtml( comments[0] );
         }
-        comments[0] = eventViewerAddTag( "p", comments[0] );
+        comments[0] = htmlAddTag( "p", comments[0] );
       }
     }
     //else desc and comments are empty
@@ -903,7 +1001,7 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
         if ( noHtmlMode ) {
           descr = cleanHtml( descr );
         }
-        descr = eventViewerAddTag( "p", descr );
+        descr = htmlAddTag( "p", descr );
       }
     }
   }
@@ -912,7 +1010,7 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
     html += "<p>";
     html += "<table border=\"0\" style=\"margin-top:4px;\">";
     html += "<tr><td><center>" +
-            eventViewerAddTag( "u", i18n( "Description:" ) ) +
+            htmlAddTag( "u", i18n( "Description:" ) ) +
             "</center></td></tr>";
     html += "<tr><td>" + descr + "</td></tr>";
     html += "</table>";
@@ -922,7 +1020,7 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
     html += "<p>";
     html += "<table border=\"0\" style=\"margin-top:4px;\">";
     html += "<tr><td><center>" +
-            eventViewerAddTag( "u", i18n( "Comments:" ) ) +
+            htmlAddTag( "u", i18n( "Comments:" ) ) +
             "</center></td></tr>";
     html += "<tr><td>";
     if ( comments.count() > 1 ) {
@@ -1290,7 +1388,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
       return i18n( "This invitation is now completed" );
     case Attendee::InProcess:
       return i18n( "%1 is still processing the invitation", attendeeName );
-    default:
+    case Attendee::None:
       return i18n( "Unknown response to this invitation" );
     }
     break;
@@ -1300,8 +1398,9 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
   case iTIPDeclineCounter:
     return i18n( "Sender declines the counter proposal" );
   case iTIPNoMethod:
-    return i18n( "Error: iMIP message with unknown method: '%1'", msg->method() );
+    return i18n( "Error: Event iTIP message with unknown method" );
   }
+  kError() << "encountered an iTIP method that we do not support";
   return QString();
 }
 
@@ -1365,7 +1464,7 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
       return i18n( "The request for this to-do is now completed" );
     case Attendee::InProcess:
       return i18n( "Sender is still processing the invitation" );
-    default:
+    case Attendee::None:
       return i18n( "Unknown response to this to-do" );
     }
     break;
@@ -1375,14 +1474,14 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
   case iTIPDeclineCounter:
     return i18n( "Sender declines the counter proposal" );
   case iTIPNoMethod:
-    return i18n( "Error: iMIP message with unknown method: '%1'", msg->method() );
+    return i18n( "Error: To-do iTIP message with unknown method" );
   }
+  kError() << "encountered an iTIP method that we do not support";
   return QString();
 }
 
 static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
 {
-  // TODO: Several of the methods are not allowed for journals, so remove them.
   if ( !msg || !journal ) {
     return QString();
   }
@@ -1426,7 +1525,7 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
       return i18n( "The request for this journal is now completed" );
     case Attendee::InProcess:
       return i18n( "Sender is still processing the invitation" );
-    default:
+    case Attendee::None:
       return i18n( "Unknown response to this journal" );
     }
     break;
@@ -1436,8 +1535,9 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
   case iTIPDeclineCounter:
     return i18n( "Sender declines the counter proposal" );
   case iTIPNoMethod:
-    return i18n( "Error: iMIP message with unknown method: '%1'", msg->method() );
+    return i18n( "Error: Journal iTIP message with unknown method" );
   }
+  kError() << "encountered an iTIP method that we do not support";
   return QString();
 }
 
@@ -1458,10 +1558,17 @@ static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
     return i18n( "This free/busy list was canceled" );
   case iTIPAdd:
     return i18n( "Addition to the free/busy list" );
+  case iTIPReply:
+    return i18n( "Reply to the free/busy list" );
+  case iTIPCounter:
+    return i18n( "Send makes this counter proposal" );
+  case iTIPDeclineCounter:
+    return i18n( "Sender decliness the counter proposal" );
   case iTIPNoMethod:
-  default:
-    return i18n( "Error: Free/Busy iMIP message with unknown method: '%1'", msg->method() );
+    return i18n( "Error: Free/Busy iTIP message with unknown method" );
   }
+  kError() << "encountered an iTIP method that we do not support";
+  return QString();
 }
 //@endcond
 
@@ -1522,7 +1629,7 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
     tmpStr += i18n( "Attached Documents:" ) + "<ol>";
 
     Attachment::List::ConstIterator it;
-    for ( it = attachments.begin(); it != attachments.end(); ++it ) {
+    for ( it = attachments.constBegin(); it != attachments.constEnd(); ++it ) {
       Attachment *a = *it;
       tmpStr += "<li>";
       // Attachment icon
@@ -1530,7 +1637,7 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
       QString iconStr = mimeType->iconName( a->uri() );
       QString iconPath = KIconLoader::global()->iconPath( iconStr, KIconLoader::Small );
       if ( !iconPath.isEmpty() ) {
-        tmpStr += "<img src=\"" + iconPath + "\" align=\"top\">";
+        tmpStr += "<img valign=\"top\" src=\"" + iconPath + "\">";
       }
       tmpStr += helper->makeLink( "ATTACH:" + a->label(), a->label() );
       tmpStr += "</li>";
@@ -1838,7 +1945,7 @@ static QString formatICalInvitationHelper( QString invitation,
   if ( !headerVisitor.act( incBase, msg ) ) {
     return QString();
   }
-  html += eventViewerAddTag( "h3", headerVisitor.result() );
+  html += htmlAddTag( "h3", headerVisitor.result() );
 
   IncidenceFormatter::InvitationBodyVisitor bodyVisitor( noHtmlMode, spec );
   if ( !bodyVisitor.act( incBase, msg ) ) {
@@ -1980,7 +2087,7 @@ static QString formatICalInvitationHelper( QString invitation,
       html += tdOpen;
       if ( inc->type() == "Todo" ) {
         html += helper->makeLink( "cancel",
-                                  i18n( "Remove invitation from my task list" ) );
+                                  i18n( "Remove invitation from my to-do list" ) );
       } else {
         html += helper->makeLink( "cancel",
                                   i18n( "Remove invitation from my calendar" ) );
@@ -2001,7 +2108,7 @@ static QString formatICalInvitationHelper( QString invitation,
       }
       if ( ea && ( ea->status() != Attendee::NeedsAction ) && ( ea->status() == a->status() ) ) {
         html += tdOpen;
-        html += eventViewerAddTag( "i", i18n( "The response has already been recorded" ) );
+        html += htmlAddTag( "i", i18n( "The response has already been recorded" ) );
         html += tdClose;
       } else {
         if ( inc ) {
@@ -2159,20 +2266,22 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo )
     // italics here :)
     ret += "<br>" +
            i18n( "<i>Start:</i> %1",
-                 IncidenceFormatter::dateToString( todo->dtStart( false ), false, mSpec ) );
+                 IncidenceFormatter::dateToString( todo->dtStart( false ),
+                                                   false, mSpec ) );
   }
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
-    ret += "<br>" + i18n( "<i>Due:</i> %1",
-                          IncidenceFormatter::dateTimeToString( todo->dtDue(),
-                                                                todo->allDay(),
-                                                                false, mSpec ) );
+    ret += "<br>" +
+           i18n( "<i>Due:</i> %1",
+                 IncidenceFormatter::dateTimeToString( todo->dtDue(),
+                                                       todo->allDay(),
+                                                       false, mSpec ) );
   }
   if ( todo->isCompleted() ) {
     ret += "<br>" +
            i18n( "<i>Completed:</i> %1", todo->completedStr() );
   } else {
     ret += "<br>" +
-           i18nc( "percent complete", "%1 % completed", todo->percentComplete() );
+           i18nc( "percent complete", "%1% completed", todo->percentComplete() );
   }
 
   return ret.replace( ' ', "&nbsp;" );
@@ -2478,7 +2587,6 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
   if ( !incidence->recurs() ) {
     return i18n( "No recurrence" );
   }
-
   Recurrence *recur = incidence->recurrence();
   switch ( recur->recurrenceType() ) {
   case Recurrence::rNone:
