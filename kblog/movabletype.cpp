@@ -117,7 +117,7 @@ void MovableType::createPost( BlogPost *post )
 
   // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
   // names later, but we need to map them to categoryId of the blog
-  if(d->mCategoriesList.isEmpty()){
+  if(d->mCategoriesList.isEmpty()&&!post->categories().isEmpty()){
     kDebug() << "No categories in the cache yet. Have to fetch them first.";
     d->mCreatePostCache << post;
     connect(this,SIGNAL(listedCategories(const QList<QMap<QString,QString> >&)),
@@ -137,6 +137,27 @@ void MovableType::createPost( BlogPost *post )
   }
 }
 
+void MovableType::modifyPost( BlogPost *post )
+{
+  // reimplemented because we do this:
+  // http://comox.textdrive.com/pipermail/wp-testers/2005-July/000284.html
+  kDebug();
+  Q_D( MovableType );
+
+  // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
+  // names later, but we need to map them to categoryId of the blog
+  if(d->mCategoriesList.isEmpty() && !post->categories().isEmpty()){
+    kDebug() << "No categories in the cache yet. Have to fetch them first.";
+    d->mModifyPostCache << post;
+    connect(this,SIGNAL(listedCategories(const QList<QMap<QString,QString> >&)),
+            this,SLOT(slotTriggerModifyPost()));
+    listCategories();
+  }
+  else {
+    MetaWeblog::modifyPost( post );
+  }
+}
+
 void MovableTypePrivate::slotTriggerCreatePost()
 {
   kDebug();
@@ -145,10 +166,28 @@ void MovableTypePrivate::slotTriggerCreatePost()
   q->disconnect(q,SIGNAL(listedCategories(const QList<QMap<QString,QString> >&)),
           q,SLOT(slotTriggerCreatePost()));
   // now we can recall createPost with the posts from the cache
-  for(int i=0;i<mCreatePostCache.count();i++){
-    q->createPost(mCreatePostCache[i]);
+  QList<BlogPost*>::Iterator it = mCreatePostCache.begin();
+  QList<BlogPost*>::Iterator end = mCreatePostCache.end();
+  for ( ; it!=end; it++ ) {
+    q->createPost( *it );
   }
   mCreatePostCache.clear();
+}
+
+void MovableTypePrivate::slotTriggerModifyPost()
+{
+  kDebug();
+  Q_Q( MovableType );
+
+  q->disconnect(q,SIGNAL(listedCategories(const QList<QMap<QString,QString> >&)),
+          q,SLOT(slotTriggerModifyPost()));
+  // now we can recall createPost with the posts from the cache
+  QList<BlogPost*>::Iterator it = mModifyPostCache.begin();
+  QList<BlogPost*>::Iterator end = mModifyPostCache.end();
+  for ( ; it!=end; it++ ) {
+    q->modifyPost( *it );
+  }
+  mModifyPostCache.clear();
 }
 
 void MovableTypePrivate::slotTriggerFetchPost()
@@ -183,8 +222,8 @@ void MovableTypePrivate::slotCreatePost( const QList<QVariant> &result, const QV
   KBlog::BlogPost *post = mCallMap[ id.toInt() ];
   MetaWeblogPrivate::slotCreatePost( result, id );
   // set the categories and publish afterwards
-  if( post->categories().count() > 1 ){
-    setPostCategories( post, true );
+  if( !post->categories().isEmpty() ){
+    setPostCategories( post, !post->isPrivate() );
   }
 }
 
@@ -193,7 +232,7 @@ void MovableTypePrivate::slotModifyPost( const QList<QVariant> &result, const QV
   kDebug();
   KBlog::BlogPost *post = mCallMap[ id.toInt() ];
   MetaWeblogPrivate::slotModifyPost( result, id );
-  if( post->categories().count() > 1 ){
+  if( !post->categories().isEmpty() ){
     setPostCategories( post, false );
   }
 }
@@ -393,105 +432,5 @@ bool MovableTypePrivate::readArgsFromPost( QList<QVariant> *args, const BlogPost
   *args << QVariant( !post.isPrivate() );
   return true;
 }
-
-// void MovableType::setPostCategories(const QString &postId, const QMap<QString, bool> &categoriesList)
-// {
-//   Q_D( MovableType );
-//   kDebug();
-//   int count = categoriesList.count();
-//   if(count < 1){
-//     kError() << "MovableType::setPostCategories: the category list is empty";
-//     emit error ( Other, i18n( "The category list is empty" ) );
-//     return;
-//   }
-// 
-//   kDebug() << "Setting"<< count<<"Categories to Post "<< postId<<" with blogId" << blogId();
-// 
-//   QString xmlMarkup = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
-//   xmlMarkup += "<methodCall>";
-//   xmlMarkup += "<methodName>mt.setPostCategories</methodName>";
-//   xmlMarkup += "<params><param>";
-//   xmlMarkup += "<value><string><![CDATA["+postId+"]]></string></value>";
-//   xmlMarkup += "</param>";
-//   xmlMarkup += "<param>";
-//   xmlMarkup += "<value><string><![CDATA["+username()+"]]></string></value>";
-//   xmlMarkup += "</param><param>";
-//   xmlMarkup += "<value><string><![CDATA["+password()+"]]></string></value>";
-//   xmlMarkup += "</param>";
-//   xmlMarkup += "<param><value><array><data>";
-// 
-//   QMap<QString, bool>::ConstIterator it = categoriesList.constBegin();
-//   QMap<QString, bool>::ConstIterator end = categoriesList.constEnd();
-//   for ( ; it != end; ++it ){
-//     xmlMarkup += "<value><struct><member><name>categoryId</name><value><string><![CDATA[" +
-//     ( it.key() ) + "]]></string></value></member>";
-//     xmlMarkup += "<member><name>isPrimary</name><value><boolean><![CDATA[" +
-//     ( QString::number(QVariant(it.value()).toInt()) ) +
-//                  "]]></boolean></value></member>""</struct></value>";
-//   }
-// 
-//   xmlMarkup += "</data></array></value></param></params></methodCall>";
-// 
-//   QByteArray postData;
-//   QDataStream stream( &postData, QIODevice::WriteOnly );
-//   stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
-// 
-//   KIO::TransferJob *job = KIO::http_post( url(), postData, KIO::HideProgressInfo );
-// 
-//   d->mSetPostCategoriesMap[ job ] = postId;
-// 
-//   if ( !job ) {
-//     kWarning() << "Failed to create job for: " << url().url();
-//   }
-// 
-//   job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
-//   job->addMetaData( "ConnectTimeout", "50" );
-//   job->addMetaData( "UserAgent", userAgent() );
-// 
-//   connect( job, SIGNAL(result(KJob *)),
-//            this, SLOT(slotSetPostCategories(KJob *)) );
-//   connect( job, SIGNAL(data(KIO::Job *,const QByteArray &)),
-//            this, SLOT(slotSetPostCategoriesData(KIO::Job *,const QByteArray &)) );
-// }
-// 
-// void MovableTypePrivate::slotSetPostCategories(KJob *job)
-// {
-//   kDebug();
-//   const QString data = QString::fromUtf8( mSetPostCategoriesBuffer[ job ].data(),
-//                                           mSetPostCategoriesBuffer[ job ].size() );
-//   mSetPostCategoriesBuffer[ job ].resize( 0 );
-// 
-//   Q_Q( MovableType );
-// 
-//   QString postId = mSetPostCategoriesMap[ job ];
-//   mSetPostCategoriesMap.remove( job );
-// 
-//   if ( job->error() != 0 ) {
-//     kError() << "slotSetPostCategories error:" << job->errorString();
-//     emit q->error( MovableType::Other, job->errorString());
-//     return;
-//   }
-// 
-//   QRegExp rxId( "<boolean>(.+)</boolean>" );
-//   if ( rxId.indexIn( data ) == -1 ){
-//     kError() << "Could not regexp the result out of the result:" << data;
-//     emit q->error( MovableType::XmlRpc, i18n( "Could not regexp the result out of the result." ));
-//     return;
-//   }
-//   kDebug() << "QRegExp rx( \"<boolean>(.+)</boolean>\" ) matches " << rxId.cap( 1 );
-// 
-//   if( rxId.cap( 1 ) == "1" ){
-//     kDebug() << "Emitting settedPostCategories(const QString &postId)";
-//     emit q->settedPostCategories( postId );
-//   } else {
-//     emit q->error( MovableType::Other, i18n( "Error on server, Post categories couldn't sets" ));
-//   }
-// }
-// 
-// void MovableTypePrivate::slotSetPostCategoriesData(KIO::Job *job,const QByteArray &data)
-// {
-//   kDebug();
-//   mSetPostCategoriesBuffer[ job ].append( data );
-// }
 
 #include "movabletype.moc"

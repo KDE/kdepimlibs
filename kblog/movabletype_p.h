@@ -1,6 +1,7 @@
 /*
   This file is part of the kblog library.
 
+  Copyright (c) 2007-2009 Christian Weilbach <christian_weilbach@web.de>
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
@@ -43,14 +44,13 @@ class MovableTypePrivate : public MetaWeblogPrivate
     QMap<KJob *, QString> mSetPostCategoriesMap;
     MovableTypePrivate();
     virtual ~MovableTypePrivate();
-//     void slotSetPostCategories(KJob *job);//BCI: This could be virtual! -Momeny
-//     void slotSetPostCategoriesData(KIO::Job *job,const QByteArray &data);//BCI: This could be virtual! -Momeny
     virtual void slotListTrackBackPings( const QList<QVariant> &result,
                                          const QVariant &id );
     void slotCreatePost( const QList<QVariant> &, const QVariant & );
     void slotModifyPost( const QList<QVariant> &, const QVariant & );
     void slotSetPostCategories(const QList<QVariant>&,const QVariant&);
     void slotTriggerCreatePost();
+    void slotTriggerModifyPost();
     void slotTriggerFetchPost();
     Q_DECLARE_PUBLIC( MovableType )
 
@@ -60,6 +60,7 @@ class MovableTypePrivate : public MetaWeblogPrivate
     bool readArgsFromPost( QList<QVariant> *args, const BlogPost &post );
     QMap<int,bool> mPublishAfterCategories;
     QList<BlogPost*> mCreatePostCache;
+    QList<BlogPost*> mModifyPostCache;
     QList<BlogPost*> mFetchPostCache;
 };
 
