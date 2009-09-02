@@ -90,6 +90,18 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     void listRecentPosts( int number );
 
     /**
+    Sets the categories of a post.
+
+    @param postId This is the id of the post to set categories for.
+    You need to set postId correctly.
+    @param categoriesList The list of categoryies in this way: categoryId (QString), and isPrimary(bool)
+    Note: This is the categoryId not category name, as returned by movableTypes metaWeblog.listCategories method
+
+    @see settedPostCategories(const QString &postId)
+     */
+// 	void setPostCategories(const QString &postId, const QMap<QString, bool> &categoriesList);//BCI: This could be virtual! -Momeny
+
+    /**
       Get the list of trackback pings from the server.
 
       @param post This is the post to get the trackback pings from.
@@ -100,6 +112,8 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
     */
     virtual void listTrackBackPings( KBlog::BlogPost *post );
+
+    void createPost( KBlog::BlogPost *post );
 
   Q_SIGNALS:
     /**
@@ -112,6 +126,17 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     */
     void listedTrackBackPings( KBlog::BlogPost *post, const QList<QMap<QString,QString> > &pings );
 
+    /**
+    This signal is emitted when the post categories seted correctly.
+    On failure the error signal will be emitted with Other reason.
+
+    @param postId The Id of post
+
+    @see error( KBlog::Blog::ErrorType type, const QString &errorMessage )
+    @see setPostCategories(const QString postId, const QMap\<QString, bool\> &categoriesList)
+    */
+//     void settedPostCategories(const QString &postId);
+
   protected:
     /**
       Constructor needed for private inheritance.
@@ -120,8 +145,18 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
   private:
     Q_DECLARE_PRIVATE( MovableType )
+//     Q_PRIVATE_SLOT( d_func(), void slotSetPostCategories(KJob *) )
+//     Q_PRIVATE_SLOT( d_func(), void slotSetPostCategoriesData(KIO::Job *,const QByteArray &) )
     Q_PRIVATE_SLOT( d_func(),
                     void slotListTrackBackPings( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotCreatePost( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotModifyPost( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotSetPostCategories(const QList<QVariant>&,const QVariant&) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotTriggerCreatePost() )
 };
 
 } //namespace KBlog

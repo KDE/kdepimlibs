@@ -34,6 +34,7 @@ class MetaWeblogPrivate : public Blogger1Private
 {
   public:
     QMap<QString,QString> mCategories;
+    QList<QMap<QString,QString> > mCategoriesList;
     unsigned int mCallMediaCounter;
     QMap<unsigned int,KBlog::BlogMedia*> mCallMediaMap;
     MetaWeblogPrivate();
@@ -44,7 +45,6 @@ class MetaWeblogPrivate : public Blogger1Private
                                   const QVariant &id );
     Q_DECLARE_PUBLIC( MetaWeblog )
 
-  private:
     QList<QVariant> defaultArgs( const QString &id = QString() );
     bool readPostFromMap( BlogPost *post, const QMap<QString, QVariant> &postInfo );
     bool readArgsFromPost( QList<QVariant> *args, const BlogPost &post );

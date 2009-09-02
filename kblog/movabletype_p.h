@@ -26,22 +26,39 @@
 #include "metaweblog_p.h"
 
 #include <kxmlrpcclient/client.h>
+class KJob;
+class QByteArray;
+
+namespace KIO
+{
+  class Job;
+}
 
 namespace KBlog {
 
 class MovableTypePrivate : public MetaWeblogPrivate
 {
   public:
+    QMap<KJob *,QByteArray> mSetPostCategoriesBuffer;
+    QMap<KJob *, QString> mSetPostCategoriesMap;
     MovableTypePrivate();
     virtual ~MovableTypePrivate();
+//     void slotSetPostCategories(KJob *job);//BCI: This could be virtual! -Momeny
+//     void slotSetPostCategoriesData(KIO::Job *job,const QByteArray &data);//BCI: This could be virtual! -Momeny
     virtual void slotListTrackBackPings( const QList<QVariant> &result,
                                          const QVariant &id );
+    void slotCreatePost( const QList<QVariant> &, const QVariant & );
+    void slotModifyPost( const QList<QVariant> &, const QVariant & );
+    void slotSetPostCategories(const QList<QVariant>&,const QVariant&);
+    void slotTriggerCreatePost();
     Q_DECLARE_PUBLIC( MovableType )
 
-  private:
     QList<QVariant> defaultArgs( const QString &id = QString() );
+    virtual void setPostCategories( BlogPost *post, bool publishAfterCategories );
     bool readPostFromMap( BlogPost *post, const QMap<QString, QVariant> &postInfo );
     bool readArgsFromPost( QList<QVariant> *args, const BlogPost &post );
+    QMap<int,bool> mPublishAfterCategories;
+    QList<BlogPost*> mCreatePostCache;
 };
 
 }

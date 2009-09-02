@@ -107,6 +107,14 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
   xmlMarkup += "<name>mt_allow_pings</name>";
   xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isTrackBackAllowed() );
   xmlMarkup += "</member><member>";
+  if( !post->additionalContent().isEmpty() ) {
+    xmlMarkup += "<name>mt_text_more</name>";
+    xmlMarkup += "<value><string><![CDATA[" + post->additionalContent() + "]]></string></value>";
+    xmlMarkup += "</member><member>";
+  }
+  xmlMarkup += "<name>wp_slug</name>";
+  xmlMarkup += "<value><string><![CDATA[" + post->slug() + "]]></string></value>";
+  xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_excerpt</name>";
   xmlMarkup += "<value><string><![CDATA[" + post->summary() + "]]></string></value>";
   xmlMarkup += "</member><member>";
@@ -201,6 +209,14 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
   xmlMarkup += "<name>mt_allow_pings</name>";
   xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isTrackBackAllowed() );
   xmlMarkup += "</member><member>";
+  if( !post->additionalContent().isEmpty() ) {
+      xmlMarkup += "<name>mt_text_more</name>";
+      xmlMarkup += "<value><string><![CDATA[" + post->additionalContent() + "]]></string></value>";
+      xmlMarkup += "</member><member>";
+  }
+  xmlMarkup += "<name>wp_slug</name>";
+  xmlMarkup += "<value><string><![CDATA[" + post->slug() + "]]></string></value>";
+  xmlMarkup += "</member><member>";
   xmlMarkup += "<name>mt_excerpt</name>";
   xmlMarkup += "<value><string><![CDATA[" + post->summary() + "]]></string></value>";
   xmlMarkup += "</member><member>";
@@ -275,7 +291,7 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
 
   if ( job->error() != 0 ) {
     kError() << "slotCreatePost error:" << job->errorString();
-    emit q->errorPost( WordpressBuggy::Atom, job->errorString(), post );
+    emit q->errorPost( WordpressBuggy::XmlRpc, job->errorString(), post );
     return;
   }
 
@@ -317,7 +333,7 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
   Q_Q( WordpressBuggy );
   if ( job->error() != 0 ) {
     kError() << "slotModifyPost error:" << job->errorString();
-    emit q->errorPost( WordpressBuggy::Atom, job->errorString(), post );
+    emit q->errorPost( WordpressBuggy::XmlRpc, job->errorString(), post );
     return;
   }
 

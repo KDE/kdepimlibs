@@ -40,20 +40,20 @@ using namespace KBlog;
 Blogger1::Blogger1( const KUrl &server, QObject *parent )
   : Blog( server, *new Blogger1Private, parent )
 {
-  kDebug() << "Blogger1()";
+  kDebug();
   setUrl( server );
 }
 
 Blogger1::Blogger1( const KUrl &server, Blogger1Private &dd, QObject *parent )
   : Blog( server, dd, parent )
 {
-  kDebug() << "Blogger1()";
+  kDebug();
   setUrl( server );
 }
 
 Blogger1::~Blogger1()
 {
-  kDebug() << "~Blogger1()";
+  kDebug();
 }
 
 QString Blogger1::interfaceName() const
@@ -190,12 +190,13 @@ void Blogger1::removePost( KBlog::BlogPost *post )
 Blogger1Private::Blogger1Private() :
 mXmlRpcClient(0)
 {
+  kDebug();
   mCallCounter = 1;
 }
 
 Blogger1Private::~Blogger1Private()
 {
-  kDebug() << "~Blogger1Private()";
+  kDebug();
   delete mXmlRpcClient;
 }
 
@@ -233,7 +234,7 @@ void Blogger1Private::slotFetchUserInfo( const QList<QVariant> &result, const QV
   Q_Q( Blogger1 );
   Q_UNUSED( id );
 
-  kDebug() << "Blog::slotFetchUserInfo";
+  kDebug();
   kDebug() << "TOP:" << result[0].typeName();
   QMap<QString,QString> userInfo;
   if ( result[0].type() != QVariant::Map ) {
@@ -260,7 +261,7 @@ void Blogger1Private::slotListBlogs( const QList<QVariant> &result, const QVaria
   Q_Q( Blogger1 );
   Q_UNUSED( id );
 
-  kDebug() << "Blog::slotListBlogs";
+  kDebug();
   kDebug() << "TOP:" << result[0].typeName();
   QList<QMap<QString,QString> > blogsList;
   if ( result[0].type() != QVariant::List ) {
@@ -279,6 +280,7 @@ void Blogger1Private::slotListBlogs( const QList<QVariant> &result, const QVaria
     const QMap<QString, QVariant> postInfo = ( *it ).toMap();
     QMap<QString,QString> blogInfo;
     blogInfo[ "id" ] = postInfo["blogid"].toString();
+    blogInfo[ "url" ] = postInfo["url"].toString();
     blogInfo[ "name" ] = postInfo["blogName"].toString();
     kDebug() << "Blog information retrieved: ID =" << blogInfo["id"]
         << ", Name =" << blogInfo["name"];
@@ -293,7 +295,7 @@ void Blogger1Private::slotListRecentPosts( const QList<QVariant> &result, const 
   int count = id.toInt(); // not sure if needed, actually the API should
 // not give more posts
 
-  kDebug() << "Blog::slotListRecentPosts";
+  kDebug();
   kDebug() << "TOP:" << result[0].typeName();
 
   QList <BlogPost> fetchedPostList;
@@ -334,7 +336,7 @@ void Blogger1Private::slotListRecentPosts( const QList<QVariant> &result, const 
 void Blogger1Private::slotFetchPost( const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q( Blogger1 );
-  kDebug() << "Blog::slotFetchPost";
+  kDebug();
 
   KBlog::BlogPost *post = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
@@ -362,7 +364,7 @@ void Blogger1Private::slotCreatePost( const QList<QVariant> &result, const QVari
   KBlog::BlogPost *post = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
-  kDebug() << "Blog::slotCreatePost";
+  kDebug();
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
@@ -395,7 +397,7 @@ void Blogger1Private::slotModifyPost( const QList<QVariant> &result, const QVari
   KBlog::BlogPost *post = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
-  kDebug() << "Blog::slotModifyPost";
+  kDebug();
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
@@ -419,7 +421,7 @@ void Blogger1Private::slotRemovePost( const QList<QVariant> &result, const QVari
   KBlog::BlogPost *post = mCallMap[ id.toInt() ];
   mCallMap.remove( id.toInt() );
 
-  kDebug() << "Blog::slotRemovePost";
+  kDebug() << "slotRemovePost";
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
@@ -460,11 +462,11 @@ bool Blogger1Private::readPostFromMap(
 
   KDateTime dt( postInfo["dateCreated"].toDateTime(), KDateTime::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
-    post->setCreationDateTime( dt );
+    post->setCreationDateTime( dt.toLocalZone() );
   }
   dt = KDateTime ( postInfo["lastModified"].toDateTime(), KDateTime::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
-    post->setModificationDateTime( dt );
+    post->setModificationDateTime( dt.toLocalZone() );
   }
   post->setPostId( postInfo["postid"].toString() );
 

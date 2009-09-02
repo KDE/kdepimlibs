@@ -523,8 +523,8 @@ void GDataPrivate::slotFetchProfileId( KJob *job )
       emit q->fetchedProfileId( QString() );
     }
   } else {
-    kError() << "Could not fetch the homepage data.";
-    emit q->error( GData::Other, i18n( "Could not fetch the homepage data." ) );
+    kError() << "Job Error: "<<job->errorString();
+    emit q->error( GData::Other, job->errorString() );
     emit q->fetchedProfileId( QString() );
   }
 }
@@ -716,10 +716,10 @@ void GDataPrivate::slotListRecentPosts( Syndication::Loader *loader,
 //  FIXME: assuming UTC for now
     post.setCreationDateTime(
       KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
-                 KDateTime::Spec::UTC() ) );
+                 KDateTime::Spec::UTC() ).toLocalZone() );
     post.setModificationDateTime(
       KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ),
-                 KDateTime::Spec::UTC() ) );
+                 KDateTime::Spec::UTC() ).toLocalZone() );
     post.setStatus( BlogPost::Fetched );
     postList.append( post );
     if ( number-- == 0 ) {
@@ -764,10 +764,10 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
 //    FIXME: assuming UTC for now
       post->setCreationDateTime(
         KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
-                   KDateTime::Spec::UTC() ) );
+                   KDateTime::Spec::UTC() ).toLocalZone() );
       post->setModificationDateTime(
         KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ),
-                   KDateTime::Spec::UTC() ) );
+                   KDateTime::Spec::UTC() ).toLocalZone() );
       kDebug() << "Emitting fetchedPost( postId=" << post->postId() << ");";
       success = true;
       emit q->fetchedPost( post );
@@ -830,7 +830,7 @@ void GDataPrivate::slotCreatePost( KJob *job )
   kDebug() << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
 
   post->setPostId( rxId.cap(1) );
-  post->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
+  post->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ).toLocalZone() );
   post->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
   post->setStatus( BlogPost::Created );
   kDebug() << "Emitting createdPost()";
