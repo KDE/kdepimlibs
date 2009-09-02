@@ -115,6 +115,8 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
     void createPost( KBlog::BlogPost *post );
 
+    void fetchPost( KBlog::BlogPost *post );
+
   Q_SIGNALS:
     /**
       This signal is emitted when the trackback pings are fetched completely.
@@ -157,6 +159,8 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
                     void slotSetPostCategories(const QList<QVariant>&,const QVariant&) )
     Q_PRIVATE_SLOT( d_func(),
                     void slotTriggerCreatePost() )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotTriggerFetchPost() )
 };
 
 } //namespace KBlog

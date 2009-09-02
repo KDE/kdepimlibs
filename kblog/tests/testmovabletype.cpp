@@ -44,7 +44,7 @@ class TestMovableType : public QObject
     // use this functions as a chain to go through network traffic.
     void fetchUserInfo( const QMap<QString,QString>& );
     void listBlogs( const QList<QMap<QString,QString> >& );
-//    void listCategories( const QList<QMap<QString,QString> >& categories );
+    void listCategories( const QList<QMap<QString,QString> >& categories );
     void listRecentPosts( const QList<KBlog::BlogPost>& posts );
     void createPost( KBlog::BlogPost *post );
     void modifyPost( KBlog::BlogPost *post );
@@ -181,7 +181,7 @@ void TestMovableType::listRecentPosts(
   }
   qDebug() << "#################################\n";
 
-/*  connect( b, SIGNAL( listedCategories( const QList<QMap<QString,QString> >& ) ),
+  connect( b, SIGNAL( listedCategories( const QList<QMap<QString,QString> >& ) ),
            this, SLOT( listCategories( const QList<QMap<QString,QString> >&) ) );
   b->listCategories(); // start chain
   listCategoriesTimer->start( TIMEOUT );
@@ -198,7 +198,7 @@ void TestMovableType::listCategories(
     qDebug() << "# category name: " << ( *it )["name"];
   }
   qDebug() << "###############################\n";
-*/
+
   connect( b, SIGNAL( createdPost( KBlog::BlogPost* ) ),
            this, SLOT( createPost( KBlog::BlogPost* ) ) );
   b->createPost( p ); // start chain
@@ -369,6 +369,7 @@ void TestMovableType::testNetwork()
   p->setTrackBackAllowed( mTrackBackAllowed );
   p->setSummary( mSummary );
   p->setTags( mTags );
+  p->setCategories( mCategories << "Blogroll"  );
 
   BlogMedia *m = new BlogMedia();
   m->setName( "testMovableType.txt" );

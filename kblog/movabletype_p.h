@@ -51,6 +51,7 @@ class MovableTypePrivate : public MetaWeblogPrivate
     void slotModifyPost( const QList<QVariant> &, const QVariant & );
     void slotSetPostCategories(const QList<QVariant>&,const QVariant&);
     void slotTriggerCreatePost();
+    void slotTriggerFetchPost();
     Q_DECLARE_PUBLIC( MovableType )
 
     QList<QVariant> defaultArgs( const QString &id = QString() );
@@ -59,6 +60,7 @@ class MovableTypePrivate : public MetaWeblogPrivate
     bool readArgsFromPost( QList<QVariant> *args, const BlogPost &post );
     QMap<int,bool> mPublishAfterCategories;
     QList<BlogPost*> mCreatePostCache;
+    QList<BlogPost*> mFetchPostCache;
 };
 
 }

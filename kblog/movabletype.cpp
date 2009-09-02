@@ -88,6 +88,26 @@ void MovableType::listTrackBackPings( KBlog::BlogPost *post )
     QVariant( i ) );
 }
 
+void MovableType::fetchPost( BlogPost *post )
+{
+  Q_D( MovableType );
+  kDebug();
+  if ( d->mCategoriesList.isEmpty() && post->categories( ).count() ) {
+    d->mFetchPostCache << post;
+    if ( d->mFetchPostCache.count() ) {
+      // we are already trying to fetch another post, so we don't need to start
+      // another listCategories() job
+      return;
+    }
+
+    connect( this, SIGNAL( listedCategories( const QList<QMap<QString,QString> >& ) )
+        , this, SLOT( slotTriggerFetchPost() ) );
+    listCategories();
+  } else {
+    MetaWeblog::fetchPost( post );
+  }
+}
+
 void MovableType::createPost( BlogPost *post )
 {
   // reimplemented because we do this:
@@ -130,6 +150,22 @@ void MovableTypePrivate::slotTriggerCreatePost()
   }
   mCreatePostCache.clear();
 }
+
+void MovableTypePrivate::slotTriggerFetchPost()
+{
+  kDebug();
+  Q_Q( MovableType );
+
+  q->disconnect( q,SIGNAL( listedCategories( const QList<QMap<QString,QString> >& ) ),
+      q,SLOT( slotTriggerFetchPost() ) );
+  QList<BlogPost*>::Iterator it = mFetchPostCache.begin();
+  QList<BlogPost*>::Iterator end = mFetchPostCache.end();
+  for ( ; it!=end; it++ ) {
+    q->fetchPost( *it );
+  }
+  mFetchPostCache.clear();
+}
+
 
 MovableTypePrivate::MovableTypePrivate()
 {
@@ -174,8 +210,8 @@ void MovableTypePrivate::setPostCategories( BlogPost *post, bool publishAfterCat
 
   // map the categoryId of the server to the name
   QStringList categories = post->categories();
-  for( int j=0; j<=categories.count(); j++ ){
-     for( int k=0; k<=mCategoriesList.count(); k++ ){
+  for( int j=0; j<categories.count(); j++ ){
+     for( int k=0; k<mCategoriesList.count(); k++ ){
        if(mCategoriesList[k]["name"]==categories[j]){
          kDebug() << "Matched category with name: " << categories[ j ];
          QMap<QString,QVariant> category;
@@ -263,7 +299,16 @@ bool MovableTypePrivate::readPostFromMap( BlogPost *post, const QMap<QString, QV
 
   QString title( postInfo["title"].toString() );
   QString description( postInfo["description"].toString() );
-  QStringList categories( postInfo["categories"].toStringList() );
+  QStringList categoryIdList = postInfo["categories"].toStringList();
+  QStringList categories;
+  for ( int i=0; i<categoryIdList.count(); i++ ) {
+    for ( int k=0; k<mCategoriesList.count(); k++ ) {
+      if ( mCategoriesList[ k ][ "categoryId" ]==categoryIdList[ i ]) {
+        categories << mCategoriesList[ k ][ "name" ];
+      }
+    }
+  }
+
   //TODO 2 new keys are:
   // String mt_convert_breaks, the value for the convert_breaks field
   post->setSlug( postInfo["wp_slug"].toString() );

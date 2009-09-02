@@ -444,6 +444,7 @@ void Blogger1Private::slotError( int number,
 {
   Q_Q( Blogger1 );
   Q_UNUSED( number );
+  kDebug() << "An error occured: " << errorString;
   BlogPost *post = mCallMap[ id.toInt() ];
 
   emit q->errorPost( Blogger1::XmlRpc, errorString, post );

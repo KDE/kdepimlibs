@@ -83,7 +83,7 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
   xmlMarkup += "<value><string><![CDATA["+post->title()+"]]></string></value>";
   xmlMarkup += "</member><member>";
 
-  QList<QString> catList = post->categories();
+/*  QList<QString> catList = post->categories();
   if ( !catList.empty() ){
     xmlMarkup += "<name>categories</name>";
     xmlMarkup += "<value><array><data>";
@@ -94,7 +94,7 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
     }
     xmlMarkup += "</data></array></value>";
     xmlMarkup += "</member><member>";
-  }
+  }*/
 
   xmlMarkup += "<name>dateCreated</name>";
   xmlMarkup += "<value><dateTime.iso8601>" +
@@ -180,7 +180,7 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
   xmlMarkup += "<value><string><![CDATA["+post->title()+"]]></string></value>";
   xmlMarkup += "</member><member>";
 
-  QList<QString> catList = post->categories();
+/*  QList<QString> catList = post->categories();
   if ( !catList.empty() ){
     xmlMarkup += "<name>categories</name>";
     xmlMarkup += "<value><array><data>";
@@ -191,7 +191,7 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
     }
     xmlMarkup += "</data></array></value>";
     xmlMarkup += "</member><member>";
-  }
+  }*/
 
   xmlMarkup += "<name>lastModified</name>";
   xmlMarkup += "<value><dateTime.iso8601>" +
@@ -317,6 +317,10 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
 
   post->setPostId( rxId.cap( 1 ) );
   post->setStatus( BlogPost::Created );
+
+  if ( !post->categories().isEmpty() ) {
+    MovableTypePrivate::setPostCategories( post, !post->isPrivate() );
+  }
   kDebug() << "Emitting createdPost()";
   emit q->createdPost( post );
 }
@@ -356,6 +360,10 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
     return;
   }
   kDebug() << "QRegExp rx( \"<boolean>(.+)</boolean>\" ) matches" << rxId.cap( 1 );
+
+  if ( !post->categories().isEmpty() ) {
+    MovableTypePrivate::setPostCategories( post, !post->isPrivate() );
+  }
 
   if ( rxId.cap( 1 ).toInt() == 1 ) {
     kDebug() << "Post successfully updated.";

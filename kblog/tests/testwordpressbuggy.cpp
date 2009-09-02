@@ -369,6 +369,7 @@ void TestWordpressBuggy::testNetwork()
   p->setTrackBackAllowed( mTrackBackAllowed );
   p->setSummary( mSummary );
   p->setTags( mTags );
+  p->setCategories( mCategories << "Blogroll" );
 
   BlogMedia *m = new BlogMedia();
   m->setName( "testWordpressBuggy.txt" );
