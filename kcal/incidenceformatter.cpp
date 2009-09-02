@@ -33,14 +33,6 @@
   @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
 */
 
-/*
-TODO
-+ Event View:
-  : put the incidence's resource name in the display
-+ Tooltips:
-  : put the incidence's resource name on the tooltip #183799
-*/
-
 #include "incidenceformatter.h"
 #include "attachment.h"
 #include "event.h"
