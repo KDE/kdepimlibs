@@ -1,6 +1,7 @@
 /*
   This file is part of the kblog library.
 
+  Copyright (c) 2007-2009 Christian Weilbach <christian_weilbach@web.de>
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
@@ -26,22 +27,41 @@
 #include "metaweblog_p.h"
 
 #include <kxmlrpcclient/client.h>
+class KJob;
+class QByteArray;
+
+namespace KIO
+{
+  class Job;
+}
 
 namespace KBlog {
 
 class MovableTypePrivate : public MetaWeblogPrivate
 {
   public:
+    QMap<KJob *,QByteArray> mSetPostCategoriesBuffer;
+    QMap<KJob *, QString> mSetPostCategoriesMap;
     MovableTypePrivate();
     virtual ~MovableTypePrivate();
     virtual void slotListTrackBackPings( const QList<QVariant> &result,
                                          const QVariant &id );
+    void slotCreatePost( const QList<QVariant> &, const QVariant & );
+    void slotModifyPost( const QList<QVariant> &, const QVariant & );
+    void slotSetPostCategories(const QList<QVariant>&,const QVariant&);
+    void slotTriggerCreatePost();
+    void slotTriggerModifyPost();
+    void slotTriggerFetchPost();
     Q_DECLARE_PUBLIC( MovableType )
 
-  private:
     QList<QVariant> defaultArgs( const QString &id = QString() );
+    virtual void setPostCategories( BlogPost *post, bool publishAfterCategories );
     bool readPostFromMap( BlogPost *post, const QMap<QString, QVariant> &postInfo );
     bool readArgsFromPost( QList<QVariant> *args, const BlogPost &post );
+    QMap<int,bool> mPublishAfterCategories;
+    QList<BlogPost*> mCreatePostCache;
+    QList<BlogPost*> mModifyPostCache;
+    QList<BlogPost*> mFetchPostCache;
 };
 
 }

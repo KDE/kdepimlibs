@@ -1,7 +1,7 @@
 /*
   This file is part of the kblog library.
 
-  Copyright (c) 2006-2007 Christian Weilbach <christian_weilbach@web.de>
+  Copyright (c) 2006-2009 Christian Weilbach <christian_weilbach@web.de>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -55,184 +55,211 @@ WordpressBuggy::~WordpressBuggy()
 
 void WordpressBuggy::createPost( KBlog::BlogPost *post )
 {
-  kDebug() << "createPost()";
+  // reimplemented because we do this:
+  // http://comox.textdrive.com/pipermail/wp-testers/2005-July/000284.html
+  kDebug();
   Q_D( WordpressBuggy );
-  if ( !post ) {
-    kError() << "WordpressBuggy::createPost: post is a null pointer";
-    emit error ( Other, i18n( "Post is a null pointer." ) );
-    return;
+
+  // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
+  // names later, but we need to map them to categoryId of the blog
+  if(d->mCategoriesList.isEmpty()){
+    kDebug() << "No categories in the cache yet. Have to fetch them first.";
+    d->mCreatePostCache << post;
+    connect(this,SIGNAL(listedCategories(const QList<QMap<QString,QString> >&)),
+            this,SLOT(slotTriggerCreatePost()));
+    listCategories();
   }
-  kDebug() << "Creating new Post with blogId" << blogId();
-
-  QString xmlMarkup = "<?xml version=\"1.0\"?>";
-  xmlMarkup += "<methodCall>";
-  xmlMarkup += "<methodName>metaWeblog.newPost</methodName>";
-  xmlMarkup += "<params><param>";
-  xmlMarkup += "<value><string><![CDATA["+blogId()+"]]></string></value>";
-  xmlMarkup += "</param>";
-  xmlMarkup += "<param>";
-  xmlMarkup += "<value><string><![CDATA["+username()+"]]></string></value>";
-  xmlMarkup += "</param><param>";
-  xmlMarkup += "<value><string><![CDATA["+password()+"]]></string></value>";
-  xmlMarkup += "</param>";
-  xmlMarkup += "<param><struct>";
-  xmlMarkup += "<member><name>description</name>";
-  xmlMarkup += "<value><string><![CDATA["+post->content()+"]]></string></value>";
-  xmlMarkup += "</member><member>";
-  xmlMarkup += "<name>title</name>";
-  xmlMarkup += "<value><string><![CDATA["+post->title()+"]]></string></value>";
-  xmlMarkup += "</member><member>";
-
-  QList<QString> catList = post->categories();
-  if ( !catList.empty() ){
-    xmlMarkup += "<name>categories</name>";
-    xmlMarkup += "<value><array><data>";
-    QList<QString>::ConstIterator it = catList.constBegin();
-    QList<QString>::ConstIterator end = catList.constEnd();
-    for ( ; it != end; ++it ){
-      xmlMarkup += "<value><string><![CDATA[" + ( *it ) + "]]></string></value>";
+  else {
+    bool publish = post->isPrivate();
+    // If we do setPostCategories() later than we disable publishing first.
+    if( !post->categories().isEmpty()){
+      post->setPrivate( true );
     }
-    xmlMarkup += "</data></array></value>";
+    kDebug() << "createPost()";
+    if ( !post ) {
+      kError() << "WordpressBuggy::createPost: post is a null pointer";
+      emit error ( Other, i18n( "Post is a null pointer." ) );
+      return;
+    }
+    kDebug() << "Creating new Post with blogId" << blogId();
+  
+    QString xmlMarkup = "<?xml version=\"1.0\"?>";
+    xmlMarkup += "<methodCall>";
+    xmlMarkup += "<methodName>metaWeblog.newPost</methodName>";
+    xmlMarkup += "<params><param>";
+    xmlMarkup += "<value><string><![CDATA["+blogId()+"]]></string></value>";
+    xmlMarkup += "</param>";
+    xmlMarkup += "<param>";
+    xmlMarkup += "<value><string><![CDATA["+username()+"]]></string></value>";
+    xmlMarkup += "</param><param>";
+    xmlMarkup += "<value><string><![CDATA["+password()+"]]></string></value>";
+    xmlMarkup += "</param>";
+    xmlMarkup += "<param><struct>";
+    xmlMarkup += "<member><name>description</name>";
+    xmlMarkup += "<value><string><![CDATA["+post->content()+"]]></string></value>";
     xmlMarkup += "</member><member>";
+    xmlMarkup += "<name>title</name>";
+    xmlMarkup += "<value><string><![CDATA["+post->title()+"]]></string></value>";
+    xmlMarkup += "</member><member>";
+  
+    xmlMarkup += "<name>dateCreated</name>";
+    xmlMarkup += "<value><dateTime.iso8601>" +
+                 post->creationDateTime().toUtc().dateTime().toString( "yyyyMMddThh:mm:ss" ) +
+                 "</dateTime.iso8601></value>";
+    xmlMarkup += "</member><member>";
+    xmlMarkup += "<name>mt_allow_comments</name>";
+    xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isCommentAllowed() );
+    xmlMarkup += "</member><member>";
+    xmlMarkup += "<name>mt_allow_pings</name>";
+    xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isTrackBackAllowed() );
+    xmlMarkup += "</member><member>";
+    if( !post->additionalContent().isEmpty() ) {
+      xmlMarkup += "<name>mt_text_more</name>";
+      xmlMarkup += "<value><string><![CDATA[" + post->additionalContent() + "]]></string></value>";
+      xmlMarkup += "</member><member>";
+    }
+    xmlMarkup += "<name>wp_slug</name>";
+    xmlMarkup += "<value><string><![CDATA[" + post->slug() + "]]></string></value>";
+    xmlMarkup += "</member><member>";
+    xmlMarkup += "<name>mt_excerpt</name>";
+    xmlMarkup += "<value><string><![CDATA[" + post->summary() + "]]></string></value>";
+    xmlMarkup += "</member><member>";
+    xmlMarkup += "<name>mt_keywords</name>";
+    xmlMarkup += "<value><string><![CDATA[" + post->tags().join(",") + "]]></string></value>";
+    xmlMarkup += "</member></struct></param>";
+    xmlMarkup += "<param><value><boolean>" +
+                 QString( "%1" ).arg( (int)(!post->isPrivate() ) ) +
+                 "</boolean></value></param>";
+    xmlMarkup += "</params></methodCall>";
+  
+    QByteArray postData;
+    QDataStream stream( &postData, QIODevice::WriteOnly );
+    stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
+  
+    KIO::StoredTransferJob *job = KIO::storedHttpPost( postData, url(), KIO::HideProgressInfo );
+  
+    d->mCreatePostMap[ job ] = post;
+  
+    if ( !job ) {
+      kWarning() << "Failed to create job for: " << url().url();
+    }
+  
+    job->addMetaData(
+      "customHTTPHeader", "X-hacker: Shame on you Wordpress, " + QString() +
+      "you took another 4 hours of my life to work around the stupid dateTime bug." );
+    job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
+    job->addMetaData( "ConnectTimeout", "50" );
+    job->addMetaData( "UserAgent", userAgent() );
+  
+    connect( job, SIGNAL(result(KJob *)),
+             this, SLOT(slotCreatePost(KJob *)) );
+    // HACK: uuh this a bit ugly now... reenable the original publish argument,
+    // since createPost should have parsed now
+    post->setPrivate(publish);
   }
-
-  xmlMarkup += "<name>dateCreated</name>";
-  xmlMarkup += "<value><dateTime.iso8601>" +
-               post->creationDateTime().toUtc().dateTime().toString( "yyyyMMddThh:mm:ss" ) +
-               "</dateTime.iso8601></value>";
-  xmlMarkup += "</member><member>";
-  xmlMarkup += "<name>mt_allow_comments</name>";
-  xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isCommentAllowed() );
-  xmlMarkup += "</member><member>";
-  xmlMarkup += "<name>mt_allow_pings</name>";
-  xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isTrackBackAllowed() );
-  xmlMarkup += "</member><member>";
-  xmlMarkup += "<name>mt_excerpt</name>";
-  xmlMarkup += "<value><string><![CDATA[" + post->summary() + "]]></string></value>";
-  xmlMarkup += "</member><member>";
-  xmlMarkup += "<name>mt_keywords</name>";
-  xmlMarkup += "<value><string><![CDATA[" + post->tags().join(",") + "]]></string></value>";
-  xmlMarkup += "</member></struct></param>";
-  xmlMarkup += "<param><value><boolean>" +
-               QString( "%1" ).arg( (int)(!post->isPrivate() ) ) +
-               "</boolean></value></param>";
-  xmlMarkup += "</params></methodCall>";
-
-  QByteArray postData;
-  QDataStream stream( &postData, QIODevice::WriteOnly );
-  stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
-
-  KIO::StoredTransferJob *job = KIO::storedHttpPost( postData, url(), KIO::HideProgressInfo );
-
-  d->mCreatePostMap[ job ] = post;
-
-  if ( !job ) {
-    kWarning() << "Failed to create job for: " << url().url();
-  }
-
-  job->addMetaData(
-    "customHTTPHeader", "X-hacker: Shame on you Wordpress, " + QString() +
-    "you took another 4 hours of my life to work around the stupid dateTime bug." );
-  job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
-  job->addMetaData( "ConnectTimeout", "50" );
-  job->addMetaData( "UserAgent", userAgent() );
-
-  connect( job, SIGNAL(result(KJob *)),
-           this, SLOT(slotCreatePost(KJob *)) );
 }
 
 void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
 {
-  kDebug() << "modifyPost()";
+  // reimplemented because we do this:
+  // http://comox.textdrive.com/pipermail/wp-testers/2005-July/000284.html
+  kDebug();
   Q_D( WordpressBuggy );
-  if ( !post ) {
-    kError() << "WordpressBuggy::modifyPost: post is a null pointer";
-    emit error ( Other, i18n( "Post is a null pointer." ) );
-    return;
+
+  // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
+  // names later, but we need to map them to categoryId of the blog
+  if(d->mCategoriesList.isEmpty()){
+    kDebug() << "No categories in the cache yet. Have to fetch them first.";
+    d->mModifyPostCache << post;
+    connect(this,SIGNAL(listedCategories(const QList<QMap<QString,QString> >&)),
+            this,SLOT(slotTriggerModifyPost()));
+    listCategories();
   }
-
-  kDebug() << "Uploading Post with postId" << post->postId();
-
-  QString xmlMarkup = "<?xml version=\"1.0\"?>";
-  xmlMarkup += "<methodCall>";
-  xmlMarkup += "<methodName>metaWeblog.editPost</methodName>";
-  xmlMarkup += "<params><param>";
-  xmlMarkup += "<value><string><![CDATA["+post->postId()+"]]></string></value>";
-  xmlMarkup += "</param>";
-  xmlMarkup += "<param>";
-  xmlMarkup += "<value><string><![CDATA["+username()+"]]></string></value>";
-  xmlMarkup += "</param><param>";
-  xmlMarkup += "<value><string><![CDATA["+password()+"]]></string></value>";
-  xmlMarkup += "</param>";
-  xmlMarkup += "<param><struct>";
-  xmlMarkup += "<member><name>description</name>";
-  xmlMarkup += "<value><string><![CDATA["+post->content()+"]]></string></value>";
-  xmlMarkup += "</member><member>";
-  xmlMarkup += "<name>title</name>";
-  xmlMarkup += "<value><string><![CDATA["+post->title()+"]]></string></value>";
-  xmlMarkup += "</member><member>";
-
-  QList<QString> catList = post->categories();
-  if ( !catList.empty() ){
-    xmlMarkup += "<name>categories</name>";
-    xmlMarkup += "<value><array><data>";
-    QList<QString>::ConstIterator it = catList.constBegin();
-    QList<QString>::ConstIterator end = catList.constEnd();
-    for ( ; it != end; ++it ){
-      xmlMarkup += "<value><string><![CDATA[" + ( *it ) + "]]></string></value>";
+  else {
+    if ( !post ) {
+      kError() << "WordpressBuggy::modifyPost: post is a null pointer";
+      emit error ( Other, i18n( "Post is a null pointer." ) );
+      return;
     }
-    xmlMarkup += "</data></array></value>";
+  
+    kDebug() << "Uploading Post with postId" << post->postId();
+  
+    QString xmlMarkup = "<?xml version=\"1.0\"?>";
+    xmlMarkup += "<methodCall>";
+    xmlMarkup += "<methodName>metaWeblog.editPost</methodName>";
+    xmlMarkup += "<params><param>";
+    xmlMarkup += "<value><string><![CDATA["+post->postId()+"]]></string></value>";
+    xmlMarkup += "</param>";
+    xmlMarkup += "<param>";
+    xmlMarkup += "<value><string><![CDATA["+username()+"]]></string></value>";
+    xmlMarkup += "</param><param>";
+    xmlMarkup += "<value><string><![CDATA["+password()+"]]></string></value>";
+    xmlMarkup += "</param>";
+    xmlMarkup += "<param><struct>";
+    xmlMarkup += "<member><name>description</name>";
+    xmlMarkup += "<value><string><![CDATA["+post->content()+"]]></string></value>";
     xmlMarkup += "</member><member>";
+    xmlMarkup += "<name>title</name>";
+    xmlMarkup += "<value><string><![CDATA["+post->title()+"]]></string></value>";
+    xmlMarkup += "</member><member>";
+  
+    xmlMarkup += "<name>lastModified</name>";
+    xmlMarkup += "<value><dateTime.iso8601>" +
+                 post->modificationDateTime().toUtc().dateTime().toString( "yyyyMMddThh:mm:ss" ) +
+                 "</dateTime.iso8601></value>";
+    xmlMarkup += "</member><member>";
+    xmlMarkup += "<name>dateCreated</name>";
+    xmlMarkup += "<value><dateTime.iso8601>" +
+                 post->creationDateTime().toUtc().dateTime().toString( "yyyyMMddThh:mm:ss" ) +
+                 "</dateTime.iso8601></value>";
+    xmlMarkup += "</member><member>";
+    xmlMarkup += "<name>mt_allow_comments</name>";
+    xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isCommentAllowed() );
+    xmlMarkup += "</member><member>";
+    xmlMarkup += "<name>mt_allow_pings</name>";
+    xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isTrackBackAllowed() );
+    xmlMarkup += "</member><member>";
+    if( !post->additionalContent().isEmpty() ) {
+        xmlMarkup += "<name>mt_text_more</name>";
+        xmlMarkup += "<value><string><![CDATA[" + post->additionalContent() + "]]></string></value>";
+        xmlMarkup += "</member><member>";
+    }
+    xmlMarkup += "<name>wp_slug</name>";
+    xmlMarkup += "<value><string><![CDATA[" + post->slug() + "]]></string></value>";
+    xmlMarkup += "</member><member>";
+    xmlMarkup += "<name>mt_excerpt</name>";
+    xmlMarkup += "<value><string><![CDATA[" + post->summary() + "]]></string></value>";
+    xmlMarkup += "</member><member>";
+    xmlMarkup += "<name>mt_keywords</name>";
+    xmlMarkup += "<value><string><![CDATA[" + post->tags().join( "," ) + "]]></string></value>";
+    xmlMarkup += "</member></struct></param>";
+    xmlMarkup += "<param><value><boolean>" +
+                 QString( "%1" ).arg( (int)( !post->isPrivate() ) ) +
+                 "</boolean></value></param>";
+    xmlMarkup += "</params></methodCall>";
+  
+    QByteArray postData;
+    QDataStream stream( &postData, QIODevice::WriteOnly );
+    stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
+  
+    KIO::StoredTransferJob *job = KIO::storedHttpPost( postData, url(), KIO::HideProgressInfo );
+  
+    d->mModifyPostMap[ job ] = post;
+  
+    if ( !job ) {
+      kWarning() << "Failed to create job for: " << url().url();
+    }
+  
+    job->addMetaData(
+      "customHTTPHeader", "X-hacker: Shame on you Wordpress, " + QString() +
+      "you took another 4 hours of my life to work around the stupid dateTime bug." );
+    job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
+    job->addMetaData( "ConnectTimeout", "50" );
+    job->addMetaData( "UserAgent", userAgent() );
+  
+    connect( job, SIGNAL(result(KJob*)),
+             this, SLOT(slotModifyPost(KJob*)) );
   }
-
-  xmlMarkup += "<name>lastModified</name>";
-  xmlMarkup += "<value><dateTime.iso8601>" +
-               post->modificationDateTime().toUtc().dateTime().toString( "yyyyMMddThh:mm:ss" ) +
-               "</dateTime.iso8601></value>";
-  xmlMarkup += "</member><member>";
-  xmlMarkup += "<name>dateCreated</name>";
-  xmlMarkup += "<value><dateTime.iso8601>" +
-               post->creationDateTime().toUtc().dateTime().toString( "yyyyMMddThh:mm:ss" ) +
-               "</dateTime.iso8601></value>";
-  xmlMarkup += "</member><member>";
-  xmlMarkup += "<name>mt_allow_comments</name>";
-  xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isCommentAllowed() );
-  xmlMarkup += "</member><member>";
-  xmlMarkup += "<name>mt_allow_pings</name>";
-  xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isTrackBackAllowed() );
-  xmlMarkup += "</member><member>";
-  xmlMarkup += "<name>mt_excerpt</name>";
-  xmlMarkup += "<value><string><![CDATA[" + post->summary() + "]]></string></value>";
-  xmlMarkup += "</member><member>";
-  xmlMarkup += "<name>mt_keywords</name>";
-  xmlMarkup += "<value><string><![CDATA[" + post->tags().join( "," ) + "]]></string></value>";
-  xmlMarkup += "</member></struct></param>";
-  xmlMarkup += "<param><value><boolean>" +
-               QString( "%1" ).arg( (int)( !post->isPrivate() ) ) +
-               "</boolean></value></param>";
-  xmlMarkup += "</params></methodCall>";
-
-  QByteArray postData;
-  QDataStream stream( &postData, QIODevice::WriteOnly );
-  stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
-
-  KIO::StoredTransferJob *job = KIO::storedHttpPost( postData, url(), KIO::HideProgressInfo );
-
-  d->mModifyPostMap[ job ] = post;
-
-  if ( !job ) {
-    kWarning() << "Failed to create job for: " << url().url();
-  }
-
-  job->addMetaData(
-    "customHTTPHeader", "X-hacker: Shame on you Wordpress, " + QString() +
-    "you took another 4 hours of my life to work around the stupid dateTime bug." );
-  job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
-  job->addMetaData( "ConnectTimeout", "50" );
-  job->addMetaData( "UserAgent", userAgent() );
-
-  connect( job, SIGNAL(result(KJob*)),
-           this, SLOT(slotModifyPost(KJob*)) );
 }
 
 QString WordpressBuggy::interfaceName() const
@@ -275,7 +302,7 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
 
   if ( job->error() != 0 ) {
     kError() << "slotCreatePost error:" << job->errorString();
-    emit q->errorPost( WordpressBuggy::Atom, job->errorString(), post );
+    emit q->errorPost( WordpressBuggy::XmlRpc, job->errorString(), post );
     return;
   }
 
@@ -301,6 +328,12 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
 
   post->setPostId( rxId.cap( 1 ) );
   post->setStatus( BlogPost::Created );
+
+  // set the categories and publish afterwards
+  if( !post->categories().isEmpty() ){
+    setPostCategories( post, !post->isPrivate() );
+  }
+
   kDebug() << "Emitting createdPost()";
   emit q->createdPost( post );
 }
@@ -317,7 +350,7 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
   Q_Q( WordpressBuggy );
   if ( job->error() != 0 ) {
     kError() << "slotModifyPost error:" << job->errorString();
-    emit q->errorPost( WordpressBuggy::Atom, job->errorString(), post );
+    emit q->errorPost( WordpressBuggy::XmlRpc, job->errorString(), post );
     return;
   }
 
@@ -345,6 +378,10 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
     kDebug() << "Post successfully updated.";
     post->setStatus( BlogPost::Modified );
     emit q->modifiedPost( post );
+  }
+
+  if( !post->categories().isEmpty() ){
+    setPostCategories( post, false );
   }
 }
 

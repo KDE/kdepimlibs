@@ -53,7 +53,6 @@ class Blogger1Private : public BlogPrivate
 
     Q_DECLARE_PUBLIC( KBlog::Blogger1 )
 
-//   private:
     enum FunctionToCall {
       GetRecentPosts,
       CreatePost,

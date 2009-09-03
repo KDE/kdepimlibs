@@ -1,7 +1,7 @@
 /*
   This file is part of the kblog library.
 
-  Copyright (c) 2007 Christian Weilbach <christian_weilbach@web.de>
+  Copyright (c) 2007-2009 Christian Weilbach <christian_weilbach@web.de>
   Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
@@ -101,6 +101,12 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     */
     virtual void listTrackBackPings( KBlog::BlogPost *post );
 
+    void createPost( KBlog::BlogPost *post );
+
+    void modifyPost( KBlog::BlogPost *post );
+
+    void fetchPost( KBlog::BlogPost *post );
+
   Q_SIGNALS:
     /**
       This signal is emitted when the trackback pings are fetched completely.
@@ -122,6 +128,18 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     Q_DECLARE_PRIVATE( MovableType )
     Q_PRIVATE_SLOT( d_func(),
                     void slotListTrackBackPings( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotCreatePost( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotModifyPost( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotSetPostCategories(const QList<QVariant>&,const QVariant&) )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotTriggerCreatePost() )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotTriggerModifyPost() )
+    Q_PRIVATE_SLOT( d_func(),
+                    void slotTriggerFetchPost() )
 };
 
 } //namespace KBlog

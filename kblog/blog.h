@@ -115,6 +115,18 @@ class KBLOG_EXPORT Blog : public QObject
     QString userAgent() const;
 
     /**
+    Sets the HTTP user agent string used to make the HTTP requests.
+
+    @param applicationName the client application's name to use in the
+    HTTP user agent string.
+    @param applicationVersion the client application's version to use in the
+    HTTP user agent string.
+    @see userAgent()
+    */
+    void setUserAgent( const QString &applicationName,
+                       const QString &applicationVersion );
+
+    /**
       Returns the name of the blogging API this object implements.
     */
     virtual QString interfaceName() const = 0;
@@ -357,17 +369,6 @@ class KBLOG_EXPORT Blog : public QObject
           const QString &applicationVersion = QString() );
 
   private:
-    /**
-      Sets the HTTP user agent string used to make the HTTP requests.
-
-      @param applicationName the client application's name to use in the
-      HTTP user agent string.
-      @param applicationVersion the client application's version to use in the
-      HTTP user agent string.
-      @see userAgent()
-    */
-    void setUserAgent( const QString &applicationName,
-                       const QString &applicationVersion );
     Q_DECLARE_PRIVATE( Blog )
 };
 

@@ -41,6 +41,8 @@ BlogPost::BlogPost( const KBlog::BlogPost &post )
   d_ptr->mPostId = post.postId();
   d_ptr->mTitle = post.title();
   d_ptr->mContent = post.content();
+  d_ptr->mAdditionalContent = post.additionalContent();
+  d_ptr->mWpSlug = post.slug();
   d_ptr->mCategories = post.categories();
   d_ptr->mTags = post.tags();
   d_ptr->mMood = post.mood();
@@ -180,6 +182,26 @@ void BlogPost::setContent( const QString &content )
 //   Q_UNUSED( abbreviatedContent );
 //   //TODO
 // }
+
+QString BlogPost::additionalContent() const
+{
+    return d_ptr->mAdditionalContent;
+}
+
+void BlogPost::setAdditionalContent( const QString &additionalContent )
+{
+  d_ptr->mAdditionalContent = additionalContent;
+}
+
+QString BlogPost::slug() const
+{
+    return d_ptr->mWpSlug;
+}
+
+void BlogPost::setSlug( const QString &slug )
+{
+    d_ptr->mWpSlug = slug;
+}
 
 KUrl BlogPost::link() const
 {

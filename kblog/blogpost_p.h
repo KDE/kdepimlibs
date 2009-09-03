@@ -39,6 +39,8 @@ class BlogPostPrivate
     QString mPostId;
     QString mTitle;
     QString mContent;
+    QString mAdditionalContent;
+    QString mWpSlug;
     QStringList mCategories;
     QString mError;
     QString mJournalId;

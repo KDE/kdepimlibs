@@ -369,6 +369,7 @@ void TestMovableType::testNetwork()
   p->setTrackBackAllowed( mTrackBackAllowed );
   p->setSummary( mSummary );
   p->setTags( mTags );
+  p->setCategories( mCategories << "Blogroll"  );
 
   BlogMedia *m = new BlogMedia();
   m->setName( "testMovableType.txt" );

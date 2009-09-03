@@ -94,12 +94,13 @@ void MetaWeblog::createMedia( KBlog::BlogMedia *media )
 
 MetaWeblogPrivate::MetaWeblogPrivate()
 {
+  kDebug();
   mCallMediaCounter=1;
 }
 
 MetaWeblogPrivate::~MetaWeblogPrivate()
 {
-  kDebug() << "~MetaWeblogPrivate()";
+  kDebug();
 }
 
 QList<QVariant> MetaWeblogPrivate::defaultArgs( const QString &id )
@@ -119,8 +120,6 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
 {
   Q_Q( MetaWeblog );
   Q_UNUSED( id );
-
-  QList<QMap<QString,QString> > categoriesList;
 
   kDebug() << "MetaWeblogPrivate::slotListCategories";
   kDebug() << "TOP:" << result[0].typeName();
@@ -149,10 +148,10 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
         category["rssUrl"] = serverCategory[ "rssUrl" ].toString();
         category["categoryId"] = serverCategory[ "categoryId" ].toString();
         category["parentId"] = serverCategory[ "parentId" ].toString();
-        categoriesList.append( category );
+        mCategoriesList.append( category );
       }
       kDebug() << "Emitting listedCategories";
-      emit q->listedCategories( categoriesList );
+      emit q->listedCategories( mCategoriesList );
     }
   }
   if ( result[0].type() == QVariant::List ) {
@@ -171,10 +170,10 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
       category["rssUrl"] = serverCategory[ "rssUrl" ].toString();
       category["categoryId"] = serverCategory[ "categoryId" ].toString();
       category["parentId"] = serverCategory[ "parentId" ].toString();
-      categoriesList.append( category );
+      mCategoriesList.append( category );
     }
     kDebug() << "Emitting listedCategories()";
-    emit q->listedCategories( categoriesList );
+    emit q->listedCategories( mCategoriesList );
   }
 }
 
@@ -222,13 +221,13 @@ bool MetaWeblogPrivate::readPostFromMap( BlogPost *post,
   KDateTime dt =
     KDateTime( postInfo["dateCreated"].toDateTime(), KDateTime::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
-    post->setCreationDateTime( dt );
+    post->setCreationDateTime( dt.toLocalZone() );
   }
 
   dt =
     KDateTime( postInfo["lastModified"].toDateTime(), KDateTime::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
-    post->setModificationDateTime( dt );
+    post->setModificationDateTime( dt.toLocalZone() );
   }
 
   post->setPostId( postInfo["postid"].toString() );

@@ -173,6 +173,39 @@ public:
 //     void setAbbreviatedContent( const QString &abbreviatedContent );
 
     /**
+    Returns the additional content, (mt_text_more of MovableType API)
+     @return additional content
+
+     @see setAdditionalContent()
+    */
+    QString additionalContent() const;
+
+    /**
+     Sets the additional content, (mt_text_more of MovableType API)
+     @param additionalContent set the additional content
+
+     @see additionalContent()
+    */
+    void setAdditionalContent( const QString &additionalContent );
+
+    /**
+     Returns the Wordpress posts Slug (or permalink will use for post)
+     Currently just wordpress supports this!
+     @return wordpress slug
+
+     @see setSlug()
+    */
+    QString slug() const;
+
+    /**
+     Sets the Wordpress slug property! (will use to set post's permalink)
+     Currently just wordpress supports this!
+     @param slug wordpress slug
+
+     @see slug()
+    */
+    void setSlug( const QString &slug );
+    /**
       Returns the link path.
       @return link
 
@@ -312,7 +345,8 @@ public:
     QStringList categories() const;
 
     /**
-      Sets the categories.
+      Sets the categories. The first one is used as the primary
+      category if possible.
       @param categories set the categories.
 
       @see categories()
