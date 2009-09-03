@@ -246,17 +246,23 @@ static QString displayViewFormatAttachments( Incidence *incidence )
 {
   QString tmpStr;
   Attachment::List as = incidence->attachments();
-  if ( as.count() > 0 ) {
-    Attachment::List::ConstIterator it;
-    int count = 0;
-    for ( it = as.constBegin(); it != as.constEnd(); ++it ) {
-      count++;
-      if ( (*it)->isUri() ) {
-        tmpStr += htmlAddLink( (*it)->uri(), (*it)->label() );
-        if ( count < as.count() ) {
-          tmpStr += "<br>";
-        }
+  Attachment::List::ConstIterator it;
+  int count = 0;
+  for ( it = as.constBegin(); it != as.constEnd(); ++it ) {
+    count++;
+    if ( (*it)->isUri() ) {
+      QString name;
+      if ( (*it)->uri().startsWith( QLatin1String( "kmail:" ) ) ) {
+        name = i18n( "Show mail" );
+      } else {
+        name = (*it)->label();
       }
+      tmpStr += htmlAddLink( (*it)->uri(), name );
+    } else {
+      tmpStr += (*it)->label();
+    }
+    if ( count < as.count() ) {
+      tmpStr += "<br>";
     }
   }
   return tmpStr;
@@ -304,7 +310,7 @@ static QString displayViewFormatBirthday( Event *event )
   return tmpStr;
 }
 
-static QString displayViewFormatHeader( Calendar *calendar, Incidence *incidence )
+static QString displayViewFormatHeader( Incidence *incidence )
 {
   QString tmpStr = "<table><tr>";
 
@@ -359,16 +365,6 @@ static QString displayViewFormatHeader( Calendar *calendar, Incidence *incidence
   tmpStr += "<b><u>" + incidence->richSummary() + "</u></b>";
   tmpStr += "</td>";
 
-  if ( calendar ) {
-    QString calStr = IncidenceFormatter::resourceString( calendar, incidence );
-    if ( !calStr.isEmpty() ) {
-      tmpStr += "<tr>";
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Calendar:" ) + "</b></td>";
-      tmpStr += "<td>" + calStr + "</td>";
-      tmpStr += "</tr>";
-    }
-  }
-
   tmpStr += "</tr></table>";
 
   return tmpStr;
@@ -381,9 +377,20 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event,
     return QString();
   }
 
-  QString tmpStr = displayViewFormatHeader( calendar, event );
+  QString tmpStr = displayViewFormatHeader( event );
 
   tmpStr += "<table>";
+
+  if ( calendar ) {
+    QString calStr = IncidenceFormatter::resourceString( calendar, event );
+    if ( !calStr.isEmpty() ) {
+      tmpStr += "<tr>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Calendar:" ) + "</b></td>";
+      tmpStr += "<td>" + calStr + "</td>";
+      tmpStr += "</tr>";
+    }
+  }
+
   if ( !event->location().isEmpty() ) {
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>" + i18n( "Location:" ) + "</b></td>";
@@ -487,8 +494,9 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event,
   int attachmentCount = event->attachments().count();
   if ( attachmentCount > 0 ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>";
-    tmpStr += i18np( "Attachment:", "Attachments:", attachmentCount )+ "</b></td>";
+    tmpStr += "<td align=\"right\"><b>" +
+              i18np( "Attachment:", "Attachments:", attachmentCount ) +
+              "</b></td>";
     tmpStr += "<td>" + displayViewFormatAttachments( event ) + "</td>";
     tmpStr += "</tr>";
   }
@@ -506,9 +514,20 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
     return QString();
   }
 
-  QString tmpStr = displayViewFormatHeader( calendar, todo );
+  QString tmpStr = displayViewFormatHeader( todo );
 
   tmpStr += "<table>";
+
+  if ( calendar ) {
+    QString calStr = IncidenceFormatter::resourceString( calendar, todo );
+    if ( !calStr.isEmpty() ) {
+      tmpStr += "<tr>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Calendar:" ) + "</b></td>";
+      tmpStr += "<td>" + calStr + "</td>";
+      tmpStr += "</tr>";
+    }
+  }
+
   if ( !todo->location().isEmpty() ) {
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>" + i18n( "Location:" ) + "</b></td>";
@@ -617,9 +636,19 @@ static QString displayViewFormatJournal( Calendar *calendar, Journal *journal,
     return QString();
   }
 
-  QString tmpStr = displayViewFormatHeader( calendar, journal );
+  QString tmpStr = displayViewFormatHeader( journal );
 
   tmpStr += "<table>";
+
+  if ( calendar ) {
+    QString calStr = IncidenceFormatter::resourceString( calendar, journal );
+    if ( !calStr.isEmpty() ) {
+      tmpStr += "<tr>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Calendar:" ) + "</b></td>";
+      tmpStr += "<td>" + calStr + "</td>";
+      tmpStr += "</tr>";
+    }
+  }
 
   tmpStr += "<tr>";
   tmpStr += "<td align=\"right\"><b>" + i18n( "Date:" ) + "</b></td>";
@@ -2635,6 +2664,10 @@ static QString recurEnd( Incidence *incidence )
   return endstr;
 }
 //@endcond
+
+/************************************
+ *  More static formatting functions
+ ************************************/
 
 QString IncidenceFormatter::recurrenceString( Incidence *incidence )
 {
