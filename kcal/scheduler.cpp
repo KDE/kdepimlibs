@@ -428,7 +428,7 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
     // is compared to other events in the calendar. But if we have another
     // version of the event around (e.g. shared folder for a group), the
     // status could be RequestNew, Obsolete or Updated.
-    kDebug() << "looking in " << i->uid() << "'s attendees" << endl;
+    kDebug() << "looking in " << i->uid() << "'s attendees";
 
     // This is supposed to be a new request, not an update - however we want
     // to update the existing one to handle the "clicking more than once
@@ -449,7 +449,7 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
     }
 
     if ( isMine ) {
-      kDebug() << "removing existing incidence " << i->uid() << endl;
+      kDebug() << "removing existing incidence " << i->uid();
       if ( i->type() == "Event" ) {
         Event *event = mCalendar->event( i->uid() );
         ret = ( event && mCalendar->deleteEvent( event ) );
@@ -654,7 +654,7 @@ bool Scheduler::acceptReply( IncidenceBase *incidence,
       }
     }
   } else {
-    kError(5800) << "No incidence for scheduling\n";
+    kError() << "No incidence for scheduling.";
   }
 
   if ( ret ) {

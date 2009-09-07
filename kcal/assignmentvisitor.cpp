@@ -66,8 +66,8 @@ bool AssignmentVisitor::visit( Event *event )
 
   const Event *source = dynamic_cast<const Event*>( d->mSource );
   if ( source == 0 ) {
-    kError(5800) << "Type mismatch: source is" << d->mSource->type()
-                 << "target is" << event->type();
+    kError() << "Type mismatch: source is" << d->mSource->type()
+             << "target is" << event->type();
     return false;
   }
 
@@ -81,8 +81,8 @@ bool AssignmentVisitor::visit( Todo *todo )
 
   const Todo *source = dynamic_cast<const Todo*>( d->mSource );
   if ( source == 0 ) {
-    kError(5800) << "Type mismatch: source is" << d->mSource->type()
-                 << "target is" << todo->type();
+    kError() << "Type mismatch: source is" << d->mSource->type()
+             << "target is" << todo->type();
     return false;
   }
 
@@ -96,8 +96,8 @@ bool AssignmentVisitor::visit( Journal *journal )
 
   const Journal *source = dynamic_cast<const Journal*>( d->mSource );
   if ( source == 0 ) {
-    kError(5800) << "Type mismatch: source is" << d->mSource->type()
-                 << "target is" << journal->type();
+    kError() << "Type mismatch: source is" << d->mSource->type()
+             << "target is" << journal->type();
     return false;
   }
 
@@ -111,8 +111,8 @@ bool AssignmentVisitor::visit( FreeBusy *freebusy )
 
   const FreeBusy *source = dynamic_cast<const FreeBusy*>( d->mSource );
   if ( source == 0 ) {
-    kError(5800) << "Type mismatch: source is" << d->mSource->type()
-                 << "target is" << freebusy->type();
+    kError() << "Type mismatch: source is" << d->mSource->type()
+             << "target is" << freebusy->type();
     return false;
   }
 
