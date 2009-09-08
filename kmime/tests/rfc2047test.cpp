@@ -81,6 +81,13 @@ void RFC2047Test::testRFC2047decode()
             QString::fromUtf8( "Subject: Ingo Klöcker unencoded words S.Çağlar" ) );
   QCOMPARE( encCharset, QByteArray( "ISO-8859-9" ) );
 
+  // illegal characters which are already encoded in the given encoding but are not ASCII (bug 206417)
+  QCOMPARE( decodeRFC2047String( "Subject: =?utf-8?Q?пиѿилл,=20=D0=B4=D0=BE=D0=B1=D1=80=D1=8B=D0=B9=20=D0=B4=D0=B5=D0=BD=D1=8C?=", encCharset ),
+            QString::fromUtf8( "Subject: пиѿилл, добрый день" ) );
+  QCOMPARE( decodeRFC2047String( "Subject: =?iso-8859-1?Q?������?=" ),
+            QString::fromLatin1( "Subject: ������" ) );
+                                                               
+
   // Small data
   QCOMPARE( decodeRFC2047String( "=?iso-8859-1?Q?c?=", encCharset ), QString::fromUtf8("c") );
 }
