@@ -124,16 +124,17 @@ QString LinkLocator::getUrl()
     if ( mPos > 0 ) {
       beforeUrl = mText[mPos - 1];
 
-      if ( beforeUrl == '(' )
+      if ( beforeUrl == '(' ) {
         afterUrl = ')';
-      else if ( beforeUrl == '[' )
+      } else if ( beforeUrl == '[' ) {
         afterUrl = ']';
-      else if ( beforeUrl == '<' )
+      } else if ( beforeUrl == '<' ) {
         afterUrl = '>';
-      else if ( beforeUrl == '>' )    // for e.g. <link>http://.....</link>
+      } else if ( beforeUrl == '>' ) { // for e.g. <link>http://.....</link>
         afterUrl = '<';
-      else if ( beforeUrl == '"' )
+      } else if ( beforeUrl == '"' ) {
         afterUrl = '"';
+      }
     }
 
     url.reserve( maxUrlLen() );  // avoid allocs
@@ -141,12 +142,12 @@ QString LinkLocator::getUrl()
     while ( ( mPos < (int)mText.length() ) &&
             ( mText[mPos].isPrint() || mText[mPos].isSpace() ) &&
             ( ( afterUrl.isNull() && !mText[mPos].isSpace() ) ||
-              ( !afterUrl.isNull() && mText[mPos] != afterUrl ) )
-          ) {
+              ( !afterUrl.isNull() && mText[mPos] != afterUrl ) ) ) {
       if ( !mText[mPos].isSpace() ) {   // skip whitespace
         url.append( mText[mPos] );
-        if ( url.length() > maxUrlLen() )
+        if ( url.length() > maxUrlLen() ) {
           break;
+        }
       }
 
       mPos++;
@@ -302,15 +303,15 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
 
             // A single space, make it breaking if not at the start or end of the line
             const bool endOfLine = locator.mText[locator.mPos + 1] == '\n';
-            if ( !startOfLine && !endOfLine )
+            if ( !startOfLine && !endOfLine ) {
               result += ' ';
-            else
+            } else {
               result += "&nbsp;";
-          }
-          else {
+            }
+          } else {
 
             // Whitespace of more than one space, make it all non-breaking
-            while( locator.mPos < locator.mText.length() && locator.mText[locator.mPos] == ' ' ) {
+            while ( locator.mPos < locator.mText.length() && locator.mText[locator.mPos] == ' ' ) {
               result += "&nbsp;";
               locator.mPos++;
               x++;
@@ -320,8 +321,7 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
             locator.mPos--;
             x--;
           }
-        }
-        else {
+        } else {
           // Last space in the text, it is non-breaking
           result += "&nbsp;";
         }
