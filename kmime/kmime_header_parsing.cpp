@@ -361,20 +361,20 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
   int encodedTextLength = encodedTextEnd - encodedTextStart;
   QByteArray buffer;
   buffer.resize( codec->maxDecodedSizeFor( encodedTextLength ) );
-  QByteArray::Iterator bit = buffer.begin();
-  QByteArray::ConstIterator bend = buffer.end();
+  char *bbegin = buffer.data();
+  char *bend = bbegin + buffer.length();
 
   //
   // STEP 5:
   // do the actual decoding
   //
 
-  if ( !dec->decode( encodedTextStart, encodedTextEnd, bit, bend ) ) {
+  if ( !dec->decode( encodedTextStart, encodedTextEnd, bbegin, bend ) ) {
     KMIME_WARN << codec->name() << "codec lies about its maxDecodedSizeFor("
                << encodedTextLength << ")\nresult may be truncated";
   }
 
-  result = textCodec->toUnicode( buffer.begin(), bit - buffer.begin() );
+  result = textCodec->toUnicode( buffer.data(), bbegin - buffer.data() );
 
   // kDebug(5320) << "result now: \"" << result << "\"";
   // cleanup:

@@ -419,7 +419,8 @@ bool QuotedPrintableDecoder::decode( const char* &scursor,
         mExpectLF = true;
       } else {
         kWarning() << "QuotedPrintableDecoder:" << ch <<
-          "illegal character in input stream! Ignoring.";
+          "illegal character in input stream!";
+        *dcursor++ = char( ch );
       }
     }
   }
