@@ -200,7 +200,7 @@ bool CalendarLocal::deleteEvent( Event *event )
     }
     return true;
   } else {
-    kWarning() << "CalendarLocal::deleteEvent(): Event not found.";
+    kWarning() << "Event not found.";
     return false;
   }
 }
@@ -276,7 +276,7 @@ bool CalendarLocal::deleteTodo( Todo *todo )
     }
     return true;
   } else {
-    kWarning() << "CalendarLocal::deleteTodo(): Todo not found.";
+    kWarning() << "Todo not found.";
     return false;
   }
 }
@@ -593,7 +593,7 @@ bool CalendarLocal::deleteJournal( Journal *journal )
       d->mJournalsForDate, journal->dtStart().date().toString(), journal->uid() );
     return true;
   } else {
-    kWarning() << "CalendarLocal::deleteJournal(): Journal not found.";
+    kWarning() << "Journal not found.";
     return false;
   }
 }
