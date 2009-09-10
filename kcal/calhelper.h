@@ -1,7 +1,7 @@
 /*
   This file is part of libkcal.
 
-  Copyright (c) 2009 Klar‰lvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2009 Klar√§lvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -29,6 +29,7 @@
 #ifndef KCAL_CALHELPER_H
 #define KCAL_CALHELPER_H
 
+#include "kcal_export.h"
 #include <QtCore/QString>
 
 namespace KCal {
@@ -52,7 +53,7 @@ namespace CalHelper {
     to the user in their Kolab resource; false otherwise.
     @since 4.4
   */
-  bool isMyKolabIncidence( Calendar *calendar, Incidence *incidence );
+  KCAL_EXPORT bool isMyKolabIncidence( Calendar *calendar, Incidence *incidence );
 
   /**
     Determine if the specified incidence is likely owned by the the user,
@@ -65,7 +66,7 @@ namespace CalHelper {
     to the user; false otherwise.
     @since 4.4
   */
-  bool isMyCalendarIncidence( Calendar *calendar, Incidence *incidence );
+  KCAL_EXPORT bool isMyCalendarIncidence( Calendar *calendar, Incidence *incidence );
 
   /**
     Searches for the specified Incidence by UID, returning an Incidence pointer
@@ -78,7 +79,7 @@ namespace CalHelper {
     or the Incidence is found but is not owned by the user.
     @since 4.4
   */
-  Incidence *findMyCalendarIncidenceByUid( Calendar *calendar, const QString &uid );
+  KCAL_EXPORT Incidence *findMyCalendarIncidenceByUid( Calendar *calendar, const QString &uid );
 }
 
 }
