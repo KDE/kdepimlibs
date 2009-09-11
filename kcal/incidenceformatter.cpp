@@ -3035,8 +3035,12 @@ QString IncidenceFormatter::dateTimeToString( const KDateTime &date,
 
 QString IncidenceFormatter::resourceString( Calendar *calendar, Incidence *incidence )
 {
+  if ( !calendar || !incidence ) {
+    return QString();
+  }
+
   CalendarResources *calendarResource = dynamic_cast<CalendarResources*>( calendar );
-  if ( !calendarResource || ! incidence ) {
+  if ( !calendarResource ) {
     return QString();
   }
 
