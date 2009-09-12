@@ -30,7 +30,8 @@
 #define KCAL_CALHELPER_H
 
 #include "kcal_export.h"
-#include <QtCore/QString>
+
+class QString;
 
 namespace KCal {
 class Calendar;
