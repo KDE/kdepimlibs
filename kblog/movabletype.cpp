@@ -334,7 +334,8 @@ bool MovableTypePrivate::readPostFromMap( BlogPost *post, const QMap<QString, QV
     post->setModificationDateTime( dt.toLocalZone() );
   }
 
-  post->setPostId( postInfo["postid"].toString() );
+  post->setPostId( postInfo["postid"].toString().isEmpty() ? postInfo["postId"].toString() :
+                   postInfo["postid"].toString() );
 
   QString title( postInfo["title"].toString() );
   QString description( postInfo["description"].toString() );
@@ -422,7 +423,7 @@ bool MovableTypePrivate::readArgsFromPost( QList<QVariant> *args, const BlogPost
   if( !post.additionalContent().isEmpty() )
     map["mt_text_more"] = post.additionalContent();
   map["title"] = post.title();
-  map["dateCreated"] = post.creationDateTime().toUtc().dateTime();
+  map["dateCreated"] = post.creationDateTime().dateTime().toUTC();
   map["mt_allow_comments"] = (int)post.isCommentAllowed();
   map["mt_allow_pings"] = (int)post.isTrackBackAllowed();
   map["mt_excerpt"] = post.summary();

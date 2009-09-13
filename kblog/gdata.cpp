@@ -555,6 +555,7 @@ void GDataPrivate::slotListBlogs( Syndication::Loader *loader,
       kDebug() << "QRegExp rx( 'blog-(\\d+)' matches" << rx.cap(1);
       blogInfo["id"] = rx.cap(1);
       blogInfo["title"] = ( *it )->title();
+      blogInfo["url"] = ( *it )->link();
       blogInfo["summary"] = ( *it )->description(); //TODO fix/add more
       blogsList << blogInfo;
     } else {

@@ -281,9 +281,10 @@ void Blogger1Private::slotListBlogs( const QList<QVariant> &result, const QVaria
     QMap<QString,QString> blogInfo;
     blogInfo[ "id" ] = postInfo["blogid"].toString();
     blogInfo[ "url" ] = postInfo["url"].toString();
-    blogInfo[ "name" ] = postInfo["blogName"].toString();
+    blogInfo[ "apiUrl" ] = postInfo["xmlrpc"].toString();
+    blogInfo[ "title" ] = postInfo["blogName"].toString();
     kDebug() << "Blog information retrieved: ID =" << blogInfo["id"]
-        << ", Name =" << blogInfo["name"];
+        << ", Name =" << blogInfo["title"];
     blogsList << blogInfo;
   }
   emit q->listedBlogs( blogsList );
@@ -402,7 +403,7 @@ void Blogger1Private::slotModifyPost( const QList<QVariant> &result, const QVari
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug() << "TOP:" << result[0].typeName();
-  if ( result[0].type() != QVariant::Bool ) {
+  if ( result[0].type() != QVariant::Bool && result[0].type() != QVariant::Int ) {
     kError() << "Could not read the result, not a boolean.";
     emit q->errorPost( Blogger1::ParsingError,
                           i18n( "Could not read the result, not a boolean." ),
@@ -426,7 +427,7 @@ void Blogger1Private::slotRemovePost( const QList<QVariant> &result, const QVari
   // dateCreated, String userid, String postid, String content;
   // TODO: Time zone for the dateCreated!
   kDebug() << "TOP:" << result[0].typeName();
-  if ( result[0].type() != QVariant::Bool ) {
+  if ( result[0].type() != QVariant::Bool && result[0].type() != QVariant::Int ) {
     kError() << "Could not read the result, not a boolean.";
     emit q->errorPost( Blogger1::ParsingError,
                           i18n( "Could not read the result, not a boolean." ),
@@ -447,7 +448,10 @@ void Blogger1Private::slotError( int number,
   kDebug() << "An error occured: " << errorString;
   BlogPost *post = mCallMap[ id.toInt() ];
 
-  emit q->errorPost( Blogger1::XmlRpc, errorString, post );
+  if(post)
+    emit q->errorPost( Blogger1::XmlRpc, errorString, post );
+  else
+    emit q->error( Blogger1::XmlRpc, errorString );
 }
 
 bool Blogger1Private::readPostFromMap(
@@ -469,26 +473,33 @@ bool Blogger1Private::readPostFromMap(
   if ( dt.isValid() && !dt.isNull() ) {
     post->setModificationDateTime( dt.toLocalZone() );
   }
-  post->setPostId( postInfo["postid"].toString() );
+  post->setPostId( postInfo["postid"].toString().isEmpty() ? postInfo["postId"].toString() :
+                   postInfo["postid"].toString() );
 
   QString title( postInfo["title"].toString() );
   QString description( postInfo["description"].toString() );
-  QString contents( postInfo["content"].toString() );
+  QString contents;
+  if( postInfo["content"].type() == QVariant::ByteArray ) {
+    QByteArray tmpContent = postInfo["content"].toByteArray();
+    contents = QString::fromUtf8(tmpContent.data(), tmpContent.size());
+  } else {
+    contents = postInfo["content"].toString();
+  }
   QStringList category;
 
   // Check for hacked title/category support (e.g. in Wordpress)
   QRegExp titleMatch = QRegExp( "<title>([^<]*)</title>" );
   QRegExp categoryMatch = QRegExp( "<category>([^<]*)</category>" );
-  contents.remove( titleMatch );
-  if ( titleMatch.numCaptures() > 0 ) {
+  if(contents.indexOf(titleMatch) != -1) {
     // Get the title value from the regular expression match
     title = titleMatch.cap( 1 );
   }
-  contents.remove( categoryMatch );
-  if ( categoryMatch.numCaptures() > 0 ) {
-    // Get the category value from the regular expression match
-    category = categoryMatch.capturedTexts();
+  if ( contents.indexOf(categoryMatch) != -1 ) {
+      // Get the category value from the regular expression match
+      category = categoryMatch.capturedTexts();
   }
+  contents.remove( titleMatch );
+  contents.remove( categoryMatch );
 
   post->setTitle( title );
   post->setContent( contents );
