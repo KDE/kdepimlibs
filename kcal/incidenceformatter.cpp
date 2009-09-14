@@ -482,7 +482,9 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event,
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18nc( "next occurrence", "Next:" )+ "</b></td>";
     tmpStr += "<td>" +
-              ( dt.isValid() ? dateToString( dt, false, spec ) : i18nc( "no date", "none" ) ) +
+              ( dt.isValid() ?
+                dateTimeToString( dt, event->allDay(), false, spec ) :
+                i18nc( "no date", "none" ) ) +
               "</td>";
     tmpStr += "</tr>";
   }
@@ -596,11 +598,10 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
   if ( todo->recurs() ) {
     KDateTime dt = todo->recurrence()->getNextDateTime( KDateTime::currentUtcDateTime() );
     tmpStr += "<tr>";
-    tmpStr += "<td><b>" +
-              i18nc( "next occurrrence", "Next:" ) +
-              "</b></td>";
-    tmpStr += "<td>" +
-              ( dt.isValid() ? dateToString( dt, false, spec ) : i18nc( "no date", "none" ) ) +
+    tmpStr += "<td><b>" + i18nc( "next occurrence", "Next:" ) + "</b></td>";
+    tmpStr += ( dt.isValid() ?
+                dateTimeToString( dt, todo->allDay(), false, spec ) :
+                i18nc( "no date", "none" ) ) +
               "</td>";
     tmpStr += "</tr>";
   }
