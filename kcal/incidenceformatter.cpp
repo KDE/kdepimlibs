@@ -728,8 +728,8 @@ static QString displayViewFormatFreeBusy( Calendar *calendar, FreeBusy *fb,
       if ( per.start().date() == per.end().date() ) {
         text += i18nc( "date, fromTime - toTime ", "%1, %2 - %3",
                        dateToString( per.start(), true, spec ),
-                       timeToString( per.start(), false, spec ),
-                       timeToString( per.end(), false, spec ) );
+                       timeToString( per.start(), true, spec ),
+                       timeToString( per.end(), true, spec ) );
       } else {
         text += i18nc( "fromDateTime - toDateTime", "%1 - %2",
                        dateTimeToString( per.start(), false, true, spec ),
@@ -1135,23 +1135,23 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode, KDateTime:
     html += invitationRow( i18n( "Date:" ), dateToString( event->dtStart(), false, spec ) );
     if ( !event->allDay() ) {
       html += invitationRow( i18n( "Time:" ),
-                             timeToString( event->dtStart(), false, spec ) +
+                             timeToString( event->dtStart(), true, spec ) +
                              " - " +
-                             timeToString( event->dtEnd(), false, spec ) );
+                             timeToString( event->dtEnd(), true, spec ) );
     }
   } else {
     html += invitationRow( i18nc( "starting date", "From:" ),
                            dateToString( event->dtStart(), false, spec ) );
     if ( !event->allDay() ) {
       html += invitationRow( i18nc( "starting time", "At:" ),
-                             timeToString( event->dtStart(), false, spec ) );
+                             timeToString( event->dtStart(), true, spec ) );
     }
     if ( event->hasEndDate() ) {
       html += invitationRow( i18nc( "ending date", "To:" ),
                              dateToString( event->dtEnd(), false, spec ) );
       if ( !event->allDay() ) {
         html += invitationRow( i18nc( "ending time", "At:" ),
-                               timeToString( event->dtEnd(), false, spec ) );
+                               timeToString( event->dtEnd(), true, spec ) );
       }
     } else {
       html += invitationRow( i18nc( "ending date", "To:" ),
@@ -1162,16 +1162,21 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode, KDateTime:
   // Invitation Duration Row
   if ( !event->allDay() && event->hasEndDate() && event->dtEnd().isValid() ) {
     QString tmp;
-    QTime sDuration( 0, 0, 0 ), t;
     int secs = event->dtStart().secsTo( event->dtEnd() );
-    t = sDuration.addSecs( secs );
-    if ( t.hour() > 0 ) {
-      tmp += i18np( "1 hour ", "%1 hours ", t.hour() );
+    int days = secs / 86400;
+    if ( days > 0 ) {
+      tmp += i18np( "1 day ", "%1 days ", days );
+      secs -= ( days * 86400 );
     }
-    if ( t.minute() > 0 ) {
-      tmp += i18np( "1 minute ", "%1 minutes ", t.minute() );
+    int hours = secs / 3600;
+    if ( hours > 0 ) {
+      tmp += i18np( "1 hour ", "%1 hours ", hours );
+      secs -= ( hours * 3600 );
     }
-
+    int mins = secs / 60;
+    if ( mins > 0 ) {
+      tmp += i18np( "1 minute ", "%1 minutes ",  mins );
+    }
     html += invitationRow( i18n( "Duration:" ), tmp );
   }
 
@@ -2275,8 +2280,8 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event )
     ret += "<br>" +
            i18n( "<i>Date:</i> %1", dateToString( event->dtStart(), false, mSpec ) );
     if ( !event->allDay() ) {
-      const QString dtStartTime = timeToString( event->dtStart(), false, mSpec );
-      const QString dtEndTime = timeToString( event->dtEnd(), false, mSpec );
+      const QString dtStartTime = timeToString( event->dtStart(), true, mSpec );
+      const QString dtEndTime = timeToString( event->dtEnd(), true, mSpec );
       if ( dtStartTime == dtEndTime ) {
         // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" +
