@@ -245,6 +245,7 @@ void MovableTypePrivate::setPostCategories( BlogPost *post, bool publishAfterCat
   unsigned int i = mCallCounter++;
   mCallMap[ i ] = post;
   mPublishAfterCategories[ i ] = publishAfterCategories;
+  QList<QVariant> catList;
   QList<QVariant> args( defaultArgs( post->postId() ) );
 
   // map the categoryId of the server to the name
@@ -252,12 +253,12 @@ void MovableTypePrivate::setPostCategories( BlogPost *post, bool publishAfterCat
   for( int j=0; j<categories.count(); j++ ){
      for( int k=0; k<mCategoriesList.count(); k++ ){
        if(mCategoriesList[k]["name"]==categories[j]){
-         kDebug() << "Matched category with name: " << categories[ j ];
+         kDebug() << "Matched category with name: " << categories[ j ] << " and id: " << mCategoriesList[ k ][ "categoryId" ];
          QMap<QString,QVariant> category;
          //the first in the QStringList of post->categories()
          // is the primary category
-         category["categoryId"]=mCategoriesList[k]["categoryId"];
-         args<<QVariant(category);
+         category["categoryId"]=mCategoriesList[k]["categoryId"].toInt();
+         catList<<QVariant( category );
          break;
        }
        if(k==mCategoriesList.count()){
@@ -265,6 +266,7 @@ void MovableTypePrivate::setPostCategories( BlogPost *post, bool publishAfterCat
        }
      }
   }
+  args<<QVariant( catList );
 
   mXmlRpcClient->call(
     "mt.setPostCategories", args,
@@ -334,7 +336,8 @@ bool MovableTypePrivate::readPostFromMap( BlogPost *post, const QMap<QString, QV
     post->setModificationDateTime( dt.toLocalZone() );
   }
 
-  post->setPostId( postInfo["postid"].toString() );
+  post->setPostId( postInfo["postid"].toString().isEmpty() ? postInfo["postId"].toString() :
+                   postInfo["postid"].toString() );
 
   QString title( postInfo["title"].toString() );
   QString description( postInfo["description"].toString() );
@@ -422,7 +425,7 @@ bool MovableTypePrivate::readArgsFromPost( QList<QVariant> *args, const BlogPost
   if( !post.additionalContent().isEmpty() )
     map["mt_text_more"] = post.additionalContent();
   map["title"] = post.title();
-  map["dateCreated"] = post.creationDateTime().toUtc().dateTime();
+  map["dateCreated"] = post.creationDateTime().dateTime().toUTC();
   map["mt_allow_comments"] = (int)post.isCommentAllowed();
   map["mt_allow_pings"] = (int)post.isTrackBackAllowed();
   map["mt_excerpt"] = post.summary();
