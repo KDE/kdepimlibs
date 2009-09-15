@@ -129,6 +129,11 @@ void MovableType::createPost( BlogPost *post )
     // If we do setPostCategories() later than we disable publishing first.
     if( post->categories().count()>1 ){
       post->setPrivate( true );
+      if ( d->mSilentCreationList.contains( post ) ) {
+        kDebug()<< "Post already in mSilentCreationList, this *should* never happen!";
+      } else {
+        d->mSilentCreationList << post;
+      }
     }
     MetaWeblog::createPost( post );
     // HACK: uuh this a bit ugly now... reenable the original publish argument,
@@ -218,22 +223,69 @@ MovableTypePrivate::~MovableTypePrivate()
 
 void MovableTypePrivate::slotCreatePost( const QList<QVariant> &result, const QVariant &id )
 {
+  Q_Q( MovableType );
+  // reimplement from Blogger1 to chainload the categories stuff before emit()
   kDebug();
   KBlog::BlogPost *post = mCallMap[ id.toInt() ];
-  MetaWeblogPrivate::slotCreatePost( result, id );
-  // set the categories and publish afterwards
-  if( !post->categories().isEmpty() ){
+  mCallMap.remove( id.toInt() );
+
+  kDebug();
+  //array of structs containing ISO.8601
+  // dateCreated, String userid, String postid, String content;
+  kDebug () << "TOP:" << result[0].typeName();
+  if ( result[0].type() != QVariant::String && result[0].type() != QVariant::Int ) {
+    kError() << "Could not read the postId, not a string or an integer.";
+    emit q->errorPost( Blogger1::ParsingError,
+                          i18n( "Could not read the postId, not a string or an integer." ),
+                          post );
+    return;
+  }
+  QString serverID;
+  if ( result[0].type() == QVariant::String ) {
+    serverID = result[0].toString();
+  }
+  if ( result[0].type() == QVariant::Int ) {
+    serverID = QString( "%1" ).arg( result[0].toInt() );
+  }
+  post->setPostId( serverID );
+  if ( mSilentCreationList.contains(  post ) )
+  {
+    // set the categories and publish afterwards
     setPostCategories( post, !post->isPrivate() );
+  } else {
+    kDebug() << "emitting createdPost()"
+                << "for title: \"" << post->title()
+                << "\" server id: " << serverID;
+    emit q->createdPost( post );
+    post->setStatus( KBlog::BlogPost::Created );
   }
 }
 
 void MovableTypePrivate::slotModifyPost( const QList<QVariant> &result, const QVariant &id )
 {
+  Q_Q( MovableType );
+  // reimplement from Blogger1
   kDebug();
   KBlog::BlogPost *post = mCallMap[ id.toInt() ];
-  MetaWeblogPrivate::slotModifyPost( result, id );
-  if( !post->categories().isEmpty() ){
-    setPostCategories( post, false );
+  mCallMap.remove( id.toInt() );
+
+  //array of structs containing ISO.8601
+  // dateCreated, String userid, String postid, String content;
+  kDebug() << "TOP:" << result[0].typeName();
+  if ( result[0].type() != QVariant::Bool && result[0].type() != QVariant::Int ) {
+    kError() << "Could not read the result, not a boolean.";
+    emit q->errorPost( Blogger1::ParsingError,
+                          i18n( "Could not read the result, not a boolean." ),
+                          post );
+    return;
+  }
+  if ( mSilentCreationList.contains( post ) ) {
+    emit q->createdPost( post );
+    mSilentCreationList.removeOne( post );
+  } else {
+    if( !post->categories().isEmpty() ){
+      setPostCategories( post, false );
+    }
   }
 }
 
@@ -297,6 +349,22 @@ void MovableTypePrivate::slotSetPostCategories(const QList<QVariant>& result,con
   // modified.
   if( publish && !post->isPrivate() ){
     q->modifyPost( post );
+  }
+
+  // this is the end of the chain then
+  if ( !publish ) {
+    if ( mSilentCreationList.contains( post ) ) {
+      kDebug() << "emitting createdPost() for title: \""
+              << post->title() << "\"";
+      emit q->createdPost( post );
+      post->setStatus( KBlog::BlogPost::Created );
+      mSilentCreationList.removeOne( post );
+    } else {
+      kDebug() << "emitting modifiedPost() for title: \""
+              << post->title() << "\"";
+      emit q->modifiedPost( post );
+      post->setStatus( KBlog::BlogPost::Modified );
+    }
   }
 }
 

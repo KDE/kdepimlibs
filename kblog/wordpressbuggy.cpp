@@ -70,11 +70,6 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
     listCategories();
   }
   else {
-    bool publish = post->isPrivate();
-    // If we do setPostCategories() later than we disable publishing first.
-    if( !post->categories().isEmpty()){
-      post->setPrivate( true );
-    }
     kDebug() << "createPost()";
     if ( !post ) {
       kError() << "WordpressBuggy::createPost: post is a null pointer";
@@ -82,7 +77,18 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
       return;
     }
     kDebug() << "Creating new Post with blogId" << blogId();
-  
+
+    bool publish = post->isPrivate();
+    // If we do setPostCategories() later than we disable publishing first.
+    if( post->categories().count()>1 ){
+      post->setPrivate( true );
+      if ( d->mSilentCreationList.contains( post ) ) {
+        kDebug()<< "Post already in mSilentCreationList, this *should* never happen!";
+      } else {
+        d->mSilentCreationList << post;
+      }
+    }
+
     QString xmlMarkup = "<?xml version=\"1.0\"?>";
     xmlMarkup += "<methodCall>";
     xmlMarkup += "<methodName>metaWeblog.newPost</methodName>";
@@ -327,15 +333,16 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
   kDebug() << "QRegExp rx( \"<string>(.+)</string>\" ) matches" << rxId.cap( 1 );
 
   post->setPostId( rxId.cap( 1 ) );
-  post->setStatus( BlogPost::Created );
-
-  // set the categories and publish afterwards
-  if( !post->categories().isEmpty() ){
+  if ( mSilentCreationList.contains(  post ) )
+  {
+    // set the categories and publish afterwards
     setPostCategories( post, !post->isPrivate() );
+  } else {
+    kDebug() << "emitting createdPost()"
+                << "for title: \"" << post->title();
+    emit q->createdPost( post );
+    post->setStatus( KBlog::BlogPost::Created );
   }
-
-  kDebug() << "Emitting createdPost()";
-  emit q->createdPost( post );
 }
 
 void WordpressBuggyPrivate::slotModifyPost( KJob *job )
@@ -376,12 +383,14 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
 
   if ( rxId.cap( 1 ).toInt() == 1 ) {
     kDebug() << "Post successfully updated.";
-    post->setStatus( BlogPost::Modified );
-    emit q->modifiedPost( post );
-  }
-
-  if( !post->categories().isEmpty() ){
-    setPostCategories( post, false );
+    if ( mSilentCreationList.contains( post ) ) {
+      emit q->createdPost( post );
+      mSilentCreationList.removeOne( post );
+    } else {
+      if( !post->categories().isEmpty() ){
+        setPostCategories( post, false );
+      }
+    }
   }
 }
 

@@ -62,6 +62,7 @@ class MovableTypePrivate : public MetaWeblogPrivate
     QList<BlogPost*> mCreatePostCache;
     QList<BlogPost*> mModifyPostCache;
     QList<BlogPost*> mFetchPostCache;
+    QList<BlogPost*> mSilentCreationList;
 };
 
 }
