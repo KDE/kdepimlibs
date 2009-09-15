@@ -2126,38 +2126,6 @@ bool Subject::isReply() const
   return asUnicodeString().indexOf( QLatin1String( "Re:" ), 0, Qt::CaseInsensitive ) == 0;
 }
 
-QString Subject::stripOffPrefixes() const
-{
-  return stripOffPrefixes( asUnicodeString() );
-}
-
-QString Subject::stripOffPrefixes( const QString &subject )
-{
-  QString str = subject;
-  QStringList prefixRegExps;
-  prefixRegExps << "Re\\s*:" << "Re\\[\\d+\\]:" << "Re\\d+:"
-                << "Fwd:" << "FW:";
-
-  // construct a big regexp that
-  // 1. is anchored to the beginning of str (sans whitespace)
-  // 2. matches at least one of the part regexps in prefixRegExps
-  QString bigRegExp = QString::fromLatin1("^(?:\\s+|(?:%1))+\\s*")
-                      .arg( prefixRegExps.join(")|(?:") );
-  QRegExp rx( bigRegExp, Qt::CaseInsensitive );
-  if ( !rx.isValid() ) {
-    kWarning() << "bigRegExp = \""
-               << bigRegExp << "\"\n"
-               << "prefix regexp is invalid!";
-  } else { // valid rx
-    QString tmp = str;
-    if ( rx.indexIn( tmp ) == 0 ) {
-      return tmp.replace( 0, rx.matchedLength(), QString() );
-    }
-  }
-
-  return str;
-}
-
 
 //@cond PRIVATE
 kmime_mk_trivial_ctor_with_name( ContentDescription,
