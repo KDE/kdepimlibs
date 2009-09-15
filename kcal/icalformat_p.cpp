@@ -2545,6 +2545,12 @@ icalcomponent *ICalFormatImpl::createScheduleComponent( IncidenceBase *incidence
 {
   icalcomponent *message = createCalendarComponent();
 
+#if 0
+  //
+  // Old versions of Outlook 2003 cannot handle TZIDs. So rely on UTC times.
+  // Keep the code here in case we ever need it.
+  //
+
   // Create VTIMEZONE components for this incidence
   ICalTimeZones zones;
   if ( incidence ) {
@@ -2589,10 +2595,41 @@ icalcomponent *ICalFormatImpl::createScheduleComponent( IncidenceBase *incidence
       }
     }
   }
-
+#else
+  if ( incidence ) {
+    if ( incidence->type() == "Event" ) {
+      Event *ev = static_cast<Event *>( incidence );
+      if ( ev ) {
+        if ( ev->dtStart().isValid() ) {
+          ev->setDtStart( ev->dtStart().toUtc() );
+        }
+        if ( ev->hasEndDate() && ev->dtEnd().isValid() ) {
+          ev->setDtEnd( ev->dtEnd().toUtc() );
+        }
+      }
+    } else if ( incidence->type() == "Todo" ) {
+      Todo *t = static_cast<Todo *>( incidence );
+      if ( t ) {
+        if ( t->hasStartDate() && t->dtStart().isValid() ) {
+          t->setDtStart( t->dtStart().toUtc() );
+        }
+        if ( t->hasDueDate() && t->dtDue().isValid() ) {
+          t->setDtDue( t->dtDue().toUtc() );
+        }
+      }
+    } else if ( incidence->type() == "Journal" ) {
+      Journal *j = static_cast<Journal *>( incidence );
+      if ( j ) {
+        if ( j->dtStart().isValid() ) {
+          j->setDtStart( j->dtStart().toUtc() );
+        }
+      }
+    }
+  }
+#endif
   icalproperty_method icalmethod = ICAL_METHOD_NONE;
 
-  switch (method) {
+  switch ( method ) {
   case iTIPPublish:
     icalmethod = ICAL_METHOD_PUBLISH;
     break;
