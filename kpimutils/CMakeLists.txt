@@ -8,7 +8,7 @@ add_subdirectory( tests )
 include_directories( ../kmime )
 
 set(kpimutils_LIB_SRCS
-   email.cpp linklocator.cpp spellingfilter.cpp kfileio.cpp)
+   email.cpp linklocator.cpp spellingfilter.cpp kfileio.cpp processes.cpp)
 
 kde4_add_library(kpimutils SHARED ${kpimutils_LIB_SRCS})
 
@@ -26,4 +26,5 @@ install(FILES
   spellingfilter.h
   kfileio.h
   supertrait.h
+  processes.h
 DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils  COMPONENT Devel)
