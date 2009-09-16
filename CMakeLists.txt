@@ -85,6 +85,7 @@ if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(mailtransport)
   add_subdirectory(microblog)
   add_subdirectory(syndication)
+  add_subdirectory(kontactinterface)
   # Build the CamelCase headers
   add_subdirectory(includes)
 endif (NOT KDEPIM_ONLY_KLEO)
