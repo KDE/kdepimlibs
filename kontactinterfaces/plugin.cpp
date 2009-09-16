@@ -23,6 +23,8 @@
 #include "plugin.h"
 #include "core.h"
 
+#include <kpimutils/processes.h>
+
 #include <kparts/componentfactory.h>
 #include <kxmlguifactory.h>
 #include <kaboutdata.h>
@@ -288,7 +290,7 @@ void Plugin::bringToForeground()
     return;
   }
 #ifdef Q_WS_WIN
-  KPIM::Utils::activateWindowForProcess( d->executableName );
+  KPIMUtils::activateWindowForProcess( d->executableName );
 #else
   KRun::runCommand( d->executableName, 0 );
 #endif

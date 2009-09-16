@@ -2,6 +2,8 @@ project(kontactinterfaces)
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5601)
 
+include_directories(${CMAKE_SOURCE_DIR}/kpimutils)
+
 set(kontactinterfaces_LIB_SRCS
     core.cpp
     plugin.cpp
@@ -10,7 +12,7 @@ set(kontactinterfaces_LIB_SRCS
 
 kde4_add_library(kontactinterfaces SHARED ${kontactinterfaces_LIB_SRCS})
 
-target_link_libraries(kontactinterfaces kdepim ${KDE4_KPARTS_LIBS})
+target_link_libraries(kontactinterfaces kpimutils ${KDE4_KPARTS_LIBS})
 
 set_target_properties(kontactinterfaces PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
