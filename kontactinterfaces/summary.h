@@ -30,7 +30,7 @@ class QMouseEvent;
 class QDragEnterEvent;
 class QDropEvent;
 
-namespace Kontact
+namespace KontactInterface
 {
 
 /**

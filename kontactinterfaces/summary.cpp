@@ -36,10 +36,10 @@
 #include <KIconLoader>
 #include <KDialog>
 
-using namespace Kontact;
+using namespace KontactInterface;
 
 //@cond PRIVATE
-namespace Kontact {
+namespace KontactInterface {
 class SummaryMimeData : public QMimeData
 {
   public:

@@ -38,7 +38,7 @@
 
 #include <unistd.h>
 
-using namespace Kontact;
+using namespace KontactInterface;
 
 /**
   Private class that helps to provide binary compatibility between releases.

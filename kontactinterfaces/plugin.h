@@ -52,7 +52,7 @@ class Instance                                           \
 {                                                        \
   public:                                                \
     static QObject *createInstance( QWidget *, QObject *parent, const QVariantList &list ) \
-    { return new pluginclass( static_cast<Kontact::Core*>( parent ), list ); } \
+    { return new pluginclass( static_cast<KontactInterface::Core*>( parent ), list ); } \
 };                                                                    \
 K_PLUGIN_FACTORY( KontactPluginFactory, registerPlugin< pluginclass >   \
                   ( QString(), Instance::createInstance ); )            \
@@ -63,7 +63,7 @@ K_EXPORT_PLUGIN( KontactPluginFactory( "kontact_" #pluginname "plugin" ) )
  */
 #define KONTACT_PLUGIN_VERSION 7
 
-namespace Kontact
+namespace KontactInterface
 {
 
 class Core;

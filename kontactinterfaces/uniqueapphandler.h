@@ -25,7 +25,7 @@
 #include "kontactinterfaces_export.h"
 #include "plugin.h"
 
-namespace Kontact
+namespace KontactInterface
 {
 
 /**

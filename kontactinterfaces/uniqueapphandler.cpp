@@ -84,7 +84,7 @@
 
 */
 
-using namespace Kontact;
+using namespace KontactInterface;
 
 //@cond PRIVATE
 class UniqueAppHandler::Private
@@ -132,7 +132,7 @@ int UniqueAppHandler::newInstance( const QByteArray &asn_id, const QByteArray &a
 static QWidget *s_mainWidget = 0;
 
 // Plugin-specific newInstance implementation, called by above method
-int Kontact::UniqueAppHandler::newInstance()
+int KontactInterface::UniqueAppHandler::newInstance()
 {
   if ( s_mainWidget ) {
     s_mainWidget->show();
@@ -150,7 +150,7 @@ Plugin *UniqueAppHandler::plugin() const
   return d->mPlugin;
 }
 
-bool Kontact::UniqueAppHandler::load()
+bool KontactInterface::UniqueAppHandler::load()
 {
   (void)d->mPlugin->part(); // load the part without bringing it to front
   return true;
@@ -221,9 +221,9 @@ bool UniqueAppWatcher::isRunningStandalone() const
   return d->mRunningStandalone;
 }
 
-void Kontact::UniqueAppWatcher::slotApplicationRemoved( const QString &name,
-                                                        const QString &oldOwner,
-                                                        const QString &newOwner )
+void KontactInterface::UniqueAppWatcher::slotApplicationRemoved( const QString &name,
+                                                                 const QString &oldOwner,
+                                                                 const QString &newOwner )
 {
   if ( oldOwner.isEmpty() || !newOwner.isEmpty() ) {
     return;
@@ -236,7 +236,7 @@ void Kontact::UniqueAppWatcher::slotApplicationRemoved( const QString &name,
   }
 }
 
-void Kontact::UniqueAppHandler::setMainWidget( QWidget *widget )
+void KontactInterface::UniqueAppHandler::setMainWidget( QWidget *widget )
 {
   s_mainWidget = widget;
 }
