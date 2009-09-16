@@ -22,7 +22,6 @@
 #include "uniqueapphandler.h"
 #include <qdbusabstractadaptor.h>
 #include "core.h"
-#include "libkdepim/utils.h"
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>

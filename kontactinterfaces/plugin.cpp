@@ -23,8 +23,6 @@
 #include "plugin.h"
 #include "core.h"
 
-#include <libkdepim/utils.h>
-
 #include <kparts/componentfactory.h>
 #include <kxmlguifactory.h>
 #include <kaboutdata.h>
@@ -138,7 +136,7 @@ bool Plugin::createDBUSInterface( const QString &serviceType )
   return false;
 }
 
-bool Plugin::isRunningStandalone()
+bool Plugin::isRunningStandalone() const
 {
   return false;
 }
@@ -148,7 +146,7 @@ KParts::ReadOnlyPart *Plugin::loadPart()
   return core()->createPart( d->partLibraryName );
 }
 
-const KAboutData *Plugin::aboutData()
+const KAboutData *Plugin::aboutData() const
 {
   KPluginLoader loader( d->partLibraryName );
   KPluginFactory *factory = loader.factory();
@@ -241,10 +239,22 @@ QStringList Plugin::invisibleToolbarActions() const
   return QStringList();
 }
 
-bool Plugin::canDecodeMimeData( const QMimeData *data )
+bool Plugin::canDecodeMimeData( const QMimeData *data ) const
 {
   Q_UNUSED( data );
   return false;
+}
+
+void Plugin::processDropEvent( QDropEvent * )
+{
+}
+
+void Plugin::readProperties( const KConfigGroup & )
+{
+}
+
+void Plugin::saveProperties( KConfigGroup & )
+{
 }
 
 Core *Plugin::core() const

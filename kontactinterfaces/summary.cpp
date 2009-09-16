@@ -113,6 +113,10 @@ QStringList Summary::configModules() const
   return QStringList();
 }
 
+void Summary::configChanged()
+{
+}
+
 void Summary::updateSummary( bool force )
 {
   Q_UNUSED( force );
