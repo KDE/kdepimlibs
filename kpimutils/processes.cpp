@@ -217,7 +217,7 @@ BOOL CALLBACK EnumWindowsProc( HWND hwnd, LPARAM lParam )
 void KPIMUtils::activateWindowForProcess( const QString &executableName )
 {
   QList<int> pids;
-  KPIM::KPIMUtils::getProcessesIdForName( executableName, pids );
+  KPIMUtils::getProcessesIdForName( executableName, pids );
   int myPid = getpid();
   int foundPid = 0;
   foreach ( int pid, pids ) {
