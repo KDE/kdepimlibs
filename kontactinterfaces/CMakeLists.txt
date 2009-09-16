@@ -15,6 +15,8 @@ kde4_add_library(kontactinterfaces SHARED ${kontactinterfaces_LIB_SRCS})
 target_link_libraries(kontactinterfaces kpimutils ${KDE4_KPARTS_LIBS})
 
 set_target_properties(kontactinterfaces PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+install(TARGETS kontactinterfaces EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+
 
 ########### install files ###############
 
