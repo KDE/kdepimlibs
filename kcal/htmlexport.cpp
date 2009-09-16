@@ -219,20 +219,23 @@ void HtmlExport::createMonthView( QTextStream *ts )
 
         *ts << "</td></tr><tr><td valign=\"top\">";
 
-        Event::List events = d->mCalendar->events( start, d->mCalendar->timeSpec(),
-                                                   EventSortStartDate,
-                                                   SortDirectionAscending );
-        if ( events.count() ) {
-          *ts << "<table>";
-          Event::List::ConstIterator it;
-          for ( it = events.constBegin(); it != events.constEnd(); ++it ) {
-            if ( checkSecrecy( *it ) ) {
-              createEvent( ts, *it, start, false );
+        // Only print events within the from-to range
+        if ( start >= fromDate() && start <= toDate() ) {
+          Event::List events = d->mCalendar->events( start, d->mCalendar->timeSpec(),
+                                                     EventSortStartDate,
+                                                     SortDirectionAscending );
+          if ( events.count() ) {
+            *ts << "<table>";
+            Event::List::ConstIterator it;
+            for ( it = events.constBegin(); it != events.constEnd(); ++it ) {
+              if ( checkSecrecy( *it ) ) {
+                createEvent( ts, *it, start, false );
+              }
             }
+            *ts << "</table>";
+          } else {
+            *ts << "&nbsp;";
           }
-          *ts << "</table>";
-        } else {
-          *ts << "&nbsp;";
         }
 
         *ts << "</td></tr></table></td>"<<endl;
