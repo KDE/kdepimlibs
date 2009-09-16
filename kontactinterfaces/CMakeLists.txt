@@ -20,4 +20,12 @@ set_target_properties(kontactinterfaces PROPERTIES VERSION ${GENERIC_LIB_VERSION
 
 install(TARGETS kontactinterfaces ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+install(FILES
+  kontactinterfaces_export.h
+  core.h
+  plugin.h
+  summary.h
+  uniqueapphandler.h
+DESTINATION ${INCLUDE_INSTALL_DIR}/kontactinterfaces COMPONENT Devel)
+
 install(FILES kontactplugin.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
