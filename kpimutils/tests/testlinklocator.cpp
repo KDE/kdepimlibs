@@ -24,7 +24,8 @@
 #include "testlinklocator.h"
 #include "testlinklocator.moc"
 
-QTEST_KDEMAIN( LinkLocatorTest, NoGUI )
+// GUI test, since the smileys use GUI stuff
+QTEST_KDEMAIN( LinkLocatorTest, GUI )
 
 #include "kpimutils/linklocator.h"
 using namespace KPIMUtils;
@@ -292,6 +293,10 @@ void LinkLocatorTest::testHtmlConvert_data()
 
   // This test has problems with the encoding, apparently.
   //QTest::newRow( "" ) << "*Ça fait plaisir de pouvoir utiliser des lettres accentuées dans du texte mis en forme*." << 0x09 << "<b>Ça fait plaisir de pouvoir utiliser des lettres accentuées dans du texte mis en forme</b>";
+
+  // Bug reported by dfaure, the <hostname> would get lost
+  QTest::newRow( "" ) << "KUrl url(\"http://strange<hostname>/\");" << (0x08 | 0x02)
+                      << "KUrl url(&quot;<a href=\"http://strange<hostname>/\">http://strange&lt;hostname&gt;/</a>&quot;);";
 }
 
 void LinkLocatorTest::testHtmlConvert()
