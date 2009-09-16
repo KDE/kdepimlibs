@@ -318,14 +318,14 @@ void HtmlExport::createEvent ( QTextStream *ts, Event *event,
     } else {
       *ts << "    <td valign=\"top\">"
           << IncidenceFormatter::timeToString( event->dtStart(), true, d->mCalendar->timeSpec() )
-          << endl;
+          << "</td>" << endl;
     }
     if ( event->isMultiDay( d->mCalendar->timeSpec() ) && ( event->dtEnd().date() != date ) ) {
       *ts << "    <td>&nbsp;</td>" << endl;
     } else {
       *ts << "    <td valign=\"top\">"
           << IncidenceFormatter::timeToString( event->dtEnd(), true, d->mCalendar->timeSpec() )
-          << endl;
+          << "</td>" << endl;
     }
   } else {
     *ts << "    <td>&nbsp;</td><td>&nbsp;</td>" << endl;
