@@ -24,7 +24,8 @@
 #include "testlinklocator.h"
 #include "testlinklocator.moc"
 
-QTEST_KDEMAIN( LinkLocatorTest, NoGUI )
+// GUI test, since the smileys use GUI stuff
+QTEST_KDEMAIN( LinkLocatorTest, GUI )
 
 #include "kpimutils/linklocator.h"
 using namespace KPIMUtils;
@@ -281,6 +282,10 @@ void LinkLocatorTest::testHtmlConvert_data()
                       << "bla bla&nbsp;&nbsp;bla";
   QTest::newRow( "" ) << " bla bla \n bla bla a\n  bla bla " << 0x01
                       << "&nbsp;bla bla&nbsp;<br />\n&nbsp;bla bla a<br />\n&nbsp;&nbsp;bla bla&nbsp;";
+
+  // Bug reported by dfaure, the <hostname> would get lost
+  QTest::newRow( "" ) << "KUrl url(\"http://strange<hostname>/\");" << (0x08 | 0x02)
+                      << "KUrl url(&quot;<a href=\"http://strange<hostname>/\">http://strange&lt;hostname&gt;/</a>&quot;);";
 }
 
 void LinkLocatorTest::testHtmlConvert()
