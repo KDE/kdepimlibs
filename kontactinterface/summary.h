@@ -18,10 +18,10 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef KONTACTINTERFACES_SUMMARY_H
-#define KONTACTINTERFACES_SUMMARY_H
+#ifndef KONTACTINTERFACE_SUMMARY_H
+#define KONTACTINTERFACE_SUMMARY_H
 
-#include "kontactinterfaces_export.h"
+#include "kontactinterface_export.h"
 
 #include <QtGui/QWidget>
 
@@ -30,7 +30,7 @@ class QMouseEvent;
 class QDragEnterEvent;
 class QDropEvent;
 
-namespace Kontact
+namespace KontactInterface
 {
 
 /**
@@ -39,7 +39,7 @@ namespace Kontact
  * This class should be used as base class when creating new
  * summary widgets for the Summary View plugin in Kontact.
  */
-class KONTACTINTERFACES_EXPORT Summary : public QWidget
+class KONTACTINTERFACE_EXPORT Summary : public QWidget
 {
   Q_OBJECT
 

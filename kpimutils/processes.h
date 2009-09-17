@@ -34,6 +34,8 @@
 
 #include "kpimutils_export.h"
 
+#include <QtCore/QList>
+
 class QString;
 
 namespace KPIMUtils {
@@ -56,7 +58,7 @@ namespace KPIMUtils {
    * @return true on successful termination of all processes or false if at least
    *         one process failed to terminate.
    */
-  KPIMUTILS_EXPORT killProcesses( const QString &processName );
+  KPIMUTILS_EXPORT bool killProcesses( const QString &processName );
 
   /**
    * Activates window for first found process with executable @a executableName

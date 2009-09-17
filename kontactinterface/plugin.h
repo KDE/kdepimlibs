@@ -21,10 +21,10 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KONTACTINTERFACES_PLUGIN_H
-#define KONTACTINTERFACES_PLUGIN_H
+#ifndef KONTACTINTERFACE_PLUGIN_H
+#define KONTACTINTERFACE_PLUGIN_H
 
-#include "kontactinterfaces_export.h"
+#include "kontactinterface_export.h"
 
 #include <kpluginfactory.h>
 #include <kxmlguiclient.h>
@@ -52,7 +52,7 @@ class Instance                                           \
 {                                                        \
   public:                                                \
     static QObject *createInstance( QWidget *, QObject *parent, const QVariantList &list ) \
-    { return new pluginclass( static_cast<Kontact::Core*>( parent ), list ); } \
+    { return new pluginclass( static_cast<KontactInterface::Core*>( parent ), list ); } \
 };                                                                    \
 K_PLUGIN_FACTORY( KontactPluginFactory, registerPlugin< pluginclass >   \
                   ( QString(), Instance::createInstance ); )            \
@@ -63,7 +63,7 @@ K_EXPORT_PLUGIN( KontactPluginFactory( "kontact_" #pluginname "plugin" ) )
  */
 #define KONTACT_PLUGIN_VERSION 7
 
-namespace Kontact
+namespace KontactInterface
 {
 
 class Core;
@@ -75,7 +75,7 @@ class Summary;
  * Inherit from it to get a plugin. It can insert an icon into the sidepane,
  * add widgets to the widgetstack and add menu items via XMLGUI.
  */
-class KONTACTINTERFACES_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
+class KONTACTINTERFACE_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
 {
   Q_OBJECT
 

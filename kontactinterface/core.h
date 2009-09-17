@@ -20,14 +20,14 @@
   Boston, MA 02110-1301, USA.
 
 */
-#ifndef KONTACTINTERFACES_CORE_H
-#define KONTACTINTERFACES_CORE_H
+#ifndef KONTACTINTERFACE_CORE_H
+#define KONTACTINTERFACE_CORE_H
 
-#include "kontactinterfaces_export.h"
+#include "kontactinterface_export.h"
 #include <kparts/mainwindow.h>
 #include <kparts/part.h>
 
-namespace Kontact
+namespace KontactInterface
 {
 
 class Plugin;
@@ -37,7 +37,7 @@ class Plugin;
  *
  * This class provides the interface to the Kontact core for the plugins.
  */
-class KONTACTINTERFACES_EXPORT Core : public KParts::MainWindow
+class KONTACTINTERFACE_EXPORT Core : public KParts::MainWindow
 {
   Q_OBJECT
 
@@ -53,11 +53,11 @@ class KONTACTINTERFACES_EXPORT Core : public KParts::MainWindow
      *
      * @param plugin is a pointer to the Kontact Plugin to select.
      */
-    virtual void selectPlugin( Kontact::Plugin *plugin ) = 0;
+    virtual void selectPlugin( KontactInterface::Plugin *plugin ) = 0;
 
     /**
      * This is an overloaded member function
-     * @see selectPlugin(Kontact::Plugin *)
+     * @see selectPlugin(KontactInterface::Plugin *)
      *
      * @param plugin is the name of the Kontact Plugin select.
      */
@@ -66,7 +66,7 @@ class KONTACTINTERFACES_EXPORT Core : public KParts::MainWindow
     /**
      * Returns the pointer list of available plugins.
      */
-    virtual QList<Kontact::Plugin*> pluginList() const = 0;
+    virtual QList<KontactInterface::Plugin*> pluginList() const = 0;
 
     /**
      * @internal (for Plugin)

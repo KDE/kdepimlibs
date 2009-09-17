@@ -1,4 +1,4 @@
-project(kdepimlibs) 
+project(kdepimlibs)
 
 # where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
@@ -11,7 +11,7 @@ option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 3)
-set(KDEPIMLIBS_VERSION_PATCH 64)
+set(KDEPIMLIBS_VERSION_PATCH 65)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 ############### search packages used by KDE ###############
@@ -86,6 +86,7 @@ if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(mailtransport)
   add_subdirectory(microblog)
   add_subdirectory(syndication)
+  add_subdirectory(kontactinterface)
   # Build the CamelCase headers
   add_subdirectory(includes)
 endif (NOT KDEPIM_ONLY_KLEO)
