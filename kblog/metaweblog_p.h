@@ -39,6 +39,8 @@ class MetaWeblogPrivate : public Blogger1Private
     QMap<unsigned int,KBlog::BlogMedia*> mCallMediaMap;
     MetaWeblogPrivate();
     ~MetaWeblogPrivate();
+    virtual void loadCategories();
+    virtual void saveCategories();
     virtual void slotListCategories( const QList<QVariant> &result,
                                      const QVariant &id );
     virtual void slotCreateMedia( const QList<QVariant> &result,
@@ -49,6 +51,7 @@ class MetaWeblogPrivate : public Blogger1Private
     bool readPostFromMap( BlogPost *post, const QMap<QString, QVariant> &postInfo );
     bool readArgsFromPost( QList<QVariant> *args, const BlogPost &post );
     QString getCallFromFunction( FunctionToCall type );
+    bool mCatLoaded;
 };
 
 }
