@@ -597,6 +597,14 @@ void HeaderTest::testDateHeader()
   QCOMPARE( h->dateTime().time(), QTime( 16, 54, 05 ) );
   QCOMPARE( h->dateTime().utcOffset(), 0 );
   delete h;
+
+  // Test for bug 207766
+  h = new Date( 0, "Fri, 18 Sep 2009 04:44:55 -0400" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->dateTime().date(), QDate( 2009, 9, 18 ) );
+  QCOMPARE( h->dateTime().time(), QTime( 4, 44, 55 ) );
+  QCOMPARE( h->dateTime().utcOffset(), -4 * 3600 );
+  delete h;
 }
 
 void HeaderTest::testLinesHeader()
