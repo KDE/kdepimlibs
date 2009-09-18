@@ -38,19 +38,19 @@ using namespace KBlog;
 WordpressBuggy::WordpressBuggy( const KUrl &server, QObject *parent )
   : MovableType( server, *new WordpressBuggyPrivate, parent )
 {
-  kDebug() << "WordpressBuggy()";
+  kDebug();
 }
 
 WordpressBuggy::WordpressBuggy( const KUrl &server, WordpressBuggyPrivate &dd,
                                 QObject *parent )
   : MovableType( server, dd, parent )
 {
-  kDebug() << "WordpressBuggy()";
+  kDebug();
 }
 
 WordpressBuggy::~WordpressBuggy()
 {
-  kDebug() << "~WordpressBuggy()";
+  kDebug();
 }
 
 void WordpressBuggy::createPost( KBlog::BlogPost *post )
@@ -62,6 +62,7 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
 
   // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
   // names later, but we need to map them to categoryId of the blog
+  d->loadCategories();
   if(d->mCategoriesList.isEmpty()){
     kDebug() << "No categories in the cache yet. Have to fetch them first.";
     d->mCreatePostCache << post;
@@ -174,6 +175,7 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
 
   // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
   // names later, but we need to map them to categoryId of the blog
+  d->loadCategories();
   if(d->mCategoriesList.isEmpty()){
     kDebug() << "No categories in the cache yet. Have to fetch them first.";
     d->mModifyPostCache << post;
@@ -279,7 +281,7 @@ WordpressBuggyPrivate::WordpressBuggyPrivate()
 
 WordpressBuggyPrivate::~WordpressBuggyPrivate()
 {
-  kDebug() << "~WordpressBuggyPrivate()";
+  kDebug();
 }
 
 QList<QVariant> WordpressBuggyPrivate::defaultArgs( const QString &id )
@@ -296,7 +298,7 @@ QList<QVariant> WordpressBuggyPrivate::defaultArgs( const QString &id )
 
 void WordpressBuggyPrivate::slotCreatePost( KJob *job )
 {
-  kDebug() << "slotCreatePost()";
+  kDebug();
 
   KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
   const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
@@ -347,8 +349,8 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
 
 void WordpressBuggyPrivate::slotModifyPost( KJob *job )
 {
-  kDebug() << "slotModifyPost()";
-  
+  kDebug();
+
   KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
   const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
 

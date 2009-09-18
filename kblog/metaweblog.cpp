@@ -30,24 +30,28 @@
 #include <KDebug>
 #include <KLocale>
 #include <KDateTime>
+#include <kstandarddirs.h>
+
+#include <QtCore/QFile>
+#include <QtCore/QDataStream>
 
 using namespace KBlog;
 
 MetaWeblog::MetaWeblog( const KUrl &server, QObject *parent )
   : Blogger1( server, *new MetaWeblogPrivate, parent )
 {
-  kDebug() << "MetaWeblog()";
+  kDebug();
 }
 
 MetaWeblog::MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd, QObject *parent )
   : Blogger1( server, dd, parent )
 {
-  kDebug() << "MetaWeblog()";
+  kDebug();
 }
 
 MetaWeblog::~MetaWeblog()
 {
-  kDebug() << "~MetaWeblog()";
+  kDebug();
 }
 
 QString MetaWeblog::interfaceName() const
@@ -96,6 +100,7 @@ MetaWeblogPrivate::MetaWeblogPrivate()
 {
   kDebug();
   mCallMediaCounter=1;
+  mCatLoaded=false;
 }
 
 MetaWeblogPrivate::~MetaWeblogPrivate()
@@ -114,6 +119,57 @@ QList<QVariant> MetaWeblogPrivate::defaultArgs( const QString &id )
        << QVariant( q->password() );
   return args;
 }
+
+void MetaWeblogPrivate::loadCategories()
+{
+  kDebug();
+
+  if ( mCatLoaded ) {
+    return;
+  }
+  mCatLoaded = true;
+
+  if ( mUrl.isEmpty() || mBlogId.isEmpty() || mUsername.isEmpty() ) {
+    kDebug() << "We need at least url, blogId and the username to create a unique filename.";
+    return;
+  }
+
+  QString filename = "kblog/"+mUrl.host()+"_"+mBlogId+"_"+mUsername;
+  filename = KStandardDirs::locateLocal( "data", filename, true );
+
+  QFile file( filename );
+  if ( !file.open( QIODevice::ReadOnly ) ) {
+    kDebug() << "Cannot open cached categories file: " << filename;
+    return;
+  }
+
+  QDataStream stream( &file );
+  stream >> mCategoriesList;
+  file.close();
+}
+
+void MetaWeblogPrivate::saveCategories()
+{
+  kDebug();
+  if ( mUrl.isEmpty() || mBlogId.isEmpty() || mUsername.isEmpty() ) {
+    kDebug() << "We need at least url, blogId and the username to create a unique filename.";
+    return;
+  }
+
+  QString filename = "kblog/"+mUrl.host()+"_"+mBlogId+"_"+mUsername;
+  filename = KStandardDirs::locateLocal( "data", filename, true );
+
+  QFile file( filename );
+  if ( !file.open( QIODevice::WriteOnly ) ) {
+    kDebug() << "Cannot open cached categories file: " << filename;
+    return;
+  }
+
+  QDataStream stream( &file );
+  stream << mCategoriesList;
+  file.close();
+}
+
 
 void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
                                             const QVariant &id )
@@ -175,6 +231,7 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
     kDebug() << "Emitting listedCategories()";
     emit q->listedCategories( mCategoriesList );
   }
+  saveCategories();
 }
 
 void MetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,

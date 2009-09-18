@@ -47,7 +47,6 @@ MovableType::MovableType( const KUrl &server, MovableTypePrivate &dd,
   : MetaWeblog( server, dd, parent )
 {
   kDebug();
-  listCategories();
 }
 
 MovableType::~MovableType()
@@ -92,6 +91,7 @@ void MovableType::fetchPost( BlogPost *post )
 {
   Q_D( MovableType );
   kDebug();
+  d->loadCategories();
   if ( d->mCategoriesList.isEmpty() && post->categories( ).count() ) {
     d->mFetchPostCache << post;
     if ( d->mFetchPostCache.count() ) {
@@ -117,6 +117,7 @@ void MovableType::createPost( BlogPost *post )
 
   // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
   // names later, but we need to map them to categoryId of the blog
+  d->loadCategories();
   if(d->mCategoriesList.isEmpty()&&!post->categories().isEmpty()){
     kDebug() << "No categories in the cache yet. Have to fetch them first.";
     d->mCreatePostCache << post;
@@ -151,6 +152,7 @@ void MovableType::modifyPost( BlogPost *post )
 
   // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
   // names later, but we need to map them to categoryId of the blog
+  d->loadCategories();
   if(d->mCategoriesList.isEmpty() && !post->categories().isEmpty()){
     kDebug() << "No categories in the cache yet. Have to fetch them first.";
     d->mModifyPostCache << post;
@@ -256,8 +258,8 @@ void MovableTypePrivate::slotCreatePost( const QList<QVariant> &result, const QV
     kDebug() << "emitting createdPost()"
                 << "for title: \"" << post->title()
                 << "\" server id: " << serverID;
-    emit q->createdPost( post );
     post->setStatus( KBlog::BlogPost::Created );
+    emit q->createdPost( post );
   }
 }
 
@@ -280,8 +282,9 @@ void MovableTypePrivate::slotModifyPost( const QList<QVariant> &result, const QV
     return;
   }
   if ( mSilentCreationList.contains( post ) ) {
-    emit q->createdPost( post );
+    post->setStatus( KBlog::BlogPost::Created );
     mSilentCreationList.removeOne( post );
+    emit q->createdPost( post );
   } else {
     if( !post->categories().isEmpty() ){
       setPostCategories( post, false );
@@ -356,14 +359,14 @@ void MovableTypePrivate::slotSetPostCategories(const QList<QVariant>& result,con
     if ( mSilentCreationList.contains( post ) ) {
       kDebug() << "emitting createdPost() for title: \""
               << post->title() << "\"";
-      emit q->createdPost( post );
       post->setStatus( KBlog::BlogPost::Created );
       mSilentCreationList.removeOne( post );
+      emit q->createdPost( post );
     } else {
       kDebug() << "emitting modifiedPost() for title: \""
               << post->title() << "\"";
-      emit q->modifiedPost( post );
       post->setStatus( KBlog::BlogPost::Modified );
+      emit q->modifiedPost( post );
     }
   }
 }
