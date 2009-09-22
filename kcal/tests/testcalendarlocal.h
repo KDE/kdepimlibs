@@ -32,6 +32,7 @@ class CalendarLocalTest : public QObject
     void testSaveLoadSave();
     void testEvents();
     void testIncidences();
+    void testRelationsCrash();
 };
 
 #endif
