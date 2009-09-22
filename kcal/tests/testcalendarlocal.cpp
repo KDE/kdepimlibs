@@ -151,12 +151,34 @@ void CalendarLocalTest::testIncidences()
 
 void CalendarLocalTest::testRelationsCrash()
 {
-  // Currently, there is a crash that occurs only when reloading a calendar in which
-  // the incidences have special relations.
+  // Before, there was a crash that occured only when reloading a calendar in which
+  // the incidences had special relations.
   // This test tests that scenario, and will crash if it fails.
   CalendarLocal cal( KDateTime::UTC );
   cal.load( ICALTESTDATADIR "test_relations.ics" );
+  Todo::List oldTodos = cal.todos();
   cal.load( ICALTESTDATADIR "test_relations.ics" );
+  Todo::List newTodos = cal.todos();
+
+  // We can saftely access the old deleted todos here, since they are not really deleted
+  // and are still kept in a map of deleted items somewhere.
+  //
+  // Here we make sure that non of the old items have connections to the new items, and
+  // the other way around.
+  foreach ( Todo * oldTodo, oldTodos ) {
+    foreach ( Todo *newTodo, newTodos ) {
+      QVERIFY( oldTodo != newTodo );
+
+      // Make sure that none of the new todos point to an old, deleted todo
+      QVERIFY( newTodo->relatedTo() != oldTodo );
+      QVERIFY( !newTodo->relations().contains( oldTodo ) );
+
+      // Make sure that none of the old todos point to a new todo
+      QVERIFY( oldTodo->relatedTo() != newTodo );
+      QVERIFY( !oldTodo->relations().contains( newTodo ) );
+    }
+  }
+
   cal.close();
 }
 
