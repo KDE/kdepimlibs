@@ -148,3 +148,15 @@ void CalendarLocalTest::testIncidences()
   cal.close();
   unlink( "foo.ics" );
 }
+
+void CalendarLocalTest::testRelationsCrash()
+{
+  // Currently, there is a crash that occurs only when reloading a calendar in which
+  // the incidences have special relations.
+  // This test tests that scenario, and will crash if it fails.
+  CalendarLocal cal( KDateTime::UTC );
+  cal.load( ICALTESTDATADIR "test_relations.ics" );
+  cal.load( ICALTESTDATADIR "test_relations.ics" );
+  cal.close();
+}
+
