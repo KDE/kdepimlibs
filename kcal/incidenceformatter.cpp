@@ -333,9 +333,17 @@ static QString displayViewFormatHeader( Incidence *incidence )
   }
 
   if ( incidence->type() == "Event" ) {
-    tmpStr += "<img valign=\"top\" src=\"" +
-              iconLoader->iconPath( "view-calendar-day", KIconLoader::Small ) +
-              "\">";
+    QString iconPath;
+    if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+      if ( incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+        iconPath = iconLoader->iconPath( "view-calendar-anniversary", KIconLoader::Small );
+      } else {
+        iconPath = iconLoader->iconPath( "view-calendar-birthday", KIconLoader::Small );
+      }
+    } else {
+      iconPath = iconLoader->iconPath( "view-calendar-day", KIconLoader::Small );
+    }
+    tmpStr += "<img valign=\"top\" src=\"" + iconPath + "\">";
   }
 
   if ( incidence->type() == "Journal" ) {
