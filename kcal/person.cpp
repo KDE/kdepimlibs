@@ -164,12 +164,3 @@ void Person::setEmail( const QString &email )
     d->mEmail = email;
   }
 }
-
-/*
-  Return a hash value for a Person argument.
-  @param key is a Person.
-*/
-static inline uint qHash( const Person &key )
-{
-  return qHash( key.fullName() );
-}
