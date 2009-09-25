@@ -160,4 +160,14 @@ class KCAL_EXPORT Person
 
 }
 
+/*
+  Return a hash value for a Person argument.
+  @param key is a Person.
+  @since 4.4
+*/
+inline uint qHash( const KCal::Person &key ) //krazy:exclude=inline
+{
+  return qHash( key.fullName() );
+}
+
 #endif
