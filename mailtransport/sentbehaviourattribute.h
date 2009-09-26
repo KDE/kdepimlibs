@@ -43,8 +43,8 @@ class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
     */
     enum SentBehaviour {
       Delete,                      ///< Delete the item from the outbox.
-      MoveToCollection,            ///< Move the item to the default sent-mail collection.
-      MoveToDefaultSentCollection  ///< Move the item to a custom collection.
+      MoveToCollection,            ///< Move the item to a custom collection.
+      MoveToDefaultSentCollection  ///< Move the item to the default sent-mail collection.
     };
 
     /**
