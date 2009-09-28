@@ -921,6 +921,11 @@ bool parseDomain( const char* &scursor, const char * const send,
     QString maybeDotAtom;
     if ( parseDotAtom( scursor, send, maybeDotAtom, isCRLF ) ) {
       result = maybeDotAtom;
+      // Domain may end with '.', if so preserve it'
+      if ( scursor != send && *scursor == '.' ) {
+        result += QChar('.');
+        scursor++;
+      }
       return true;
     }
   }
