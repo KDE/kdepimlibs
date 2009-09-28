@@ -150,8 +150,8 @@ void MessageTest::testHeaderFieldWithoutSpace()
   QString mail = "From:\n"
                  "To: heinz@test.de\n"
                  "Cc:moritz@test.de\n"
-                 "Subject: Test\n";
-                 //"BLa:" //Leer
+                 "Subject: Test\n"
+                 "X-Mailer:";
   KMime::Message msg;
   msg.setContent( mail.toAscii() );
   msg.parse();
@@ -160,6 +160,8 @@ void MessageTest::testHeaderFieldWithoutSpace()
   QCOMPARE( msg.from()->asUnicodeString(), QString() );
   QCOMPARE( msg.cc()->asUnicodeString(), QString( "moritz@test.de" ) );
   QCOMPARE( msg.subject()->asUnicodeString(), QString( "Test" ) );
+  QVERIFY( msg.hasHeader( "X-Mailer" ) );
+  QVERIFY( msg.headerByType( "X-Mailer" )->asUnicodeString().isEmpty() );
 }
 
 void MessageTest::testWronglyFoldedHeaders()
