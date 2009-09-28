@@ -127,11 +127,6 @@ void MessageTest::testWillsAndTillsCrash()
       "X-KMail-SignatureState:\n"
       "X-KMail-MDN-Sent:\n\n";
 
-//   QByteArray deadlyMail;
-//   QFile f( "deadlymail" );
-//   f.open( QFile::ReadOnly );
-//   deadlyMail = f.readAll();
-
   KMime::Message *msg = new KMime::Message;
   msg->setContent( deadlyMail );
   msg->parse();
@@ -146,6 +141,44 @@ void MessageTest::testWillsAndTillsCrash()
   QCOMPARE( msg->inReplyTo()->identifiers().count(), 0 );
   QCOMPARE( msg->messageID()->identifiers().count(), 0 );
   delete msg;
+}
+
+void MessageTest::testHeaderFieldWithoutSpace()
+{
+  // Headers without a space, like the CC header here, are allowed according to
+  // the examples in RFC2822, Appendix A5
+  QString mail = "From:\n"
+                 "To: heinz@test.de\n"
+                 "Cc:moritz@test.de\n"
+                 "Subject: Test\n";
+                 //"BLa:" //Leer
+  KMime::Message msg;
+  msg.setContent( mail.toAscii() );
+  msg.parse();
+
+  QCOMPARE( msg.to()->asUnicodeString(), QString( "heinz@test.de" ) );
+  QCOMPARE( msg.from()->asUnicodeString(), QString() );
+  QCOMPARE( msg.cc()->asUnicodeString(), QString( "moritz@test.de" ) );
+  QCOMPARE( msg.subject()->asUnicodeString(), QString( "Test" ) );
+}
+
+void MessageTest::testWronglyFoldedHeaders()
+{
+  // The first subject line here doesn't contain anything. This is invalid,
+  // however there are some mailers out there that produce those messages.
+  QString mail = "Subject:\n"
+                 " Hello\n"
+                 " World\n"
+                 "To: \n"
+                 " test@test.de\n\n"
+                 "<Body>";
+  KMime::Message msg;
+  msg.setContent( mail.toAscii() );
+  msg.parse();
+
+  QCOMPARE( msg.subject()->asUnicodeString(), QString( "Hello World" ) );
+  QCOMPARE( msg.body().data(), "<Body>" );
+  QCOMPARE( msg.to()->asUnicodeString(), QString( "test@test.de" ) );
 }
 
 void MessageTest::missingHeadersTest()
