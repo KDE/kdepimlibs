@@ -2,6 +2,7 @@
   This file is part of the kcal library.
 
   Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2009 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -27,6 +28,7 @@
   Provides a To-do in the sense of RFC2445.
 
   @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Allen Winter \<winter@kde.org\>
 */
 
 #include "todo.h"
@@ -459,6 +461,64 @@ void Todo::setPercentComplete( int percent )
     d->mHasCompletedDate = false;
   }
   updated();
+}
+
+bool Todo::isInProgress( bool first ) const
+{
+  if ( isOverdue() ) {
+    return false;
+  }
+
+  if ( d->mPercentComplete > 0 ) {
+    return true;
+  }
+
+  if ( d->mHasStartDate && d->mHasDueDate ) {
+    if ( allDay() ) {
+      QDate currDate = QDate::currentDate();
+      if ( dtStart( first ).date() <= currDate && currDate < dtDue( first ).date() ) {
+        return true;
+      }
+    } else {
+      KDateTime currDate = KDateTime::currentUtcDateTime();
+      if ( dtStart( first ) <= currDate && currDate < dtDue( first ) ) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+bool Todo::isOpenEnded() const
+{
+  if ( !d->mHasDueDate && !isCompleted() ) {
+    return true;
+  }
+  return false;
+
+}
+
+bool Todo::isNotStarted( bool first ) const
+{
+  if ( d->mPercentComplete > 0 ) {
+    return false;
+  }
+
+  if ( !d->mHasStartDate ) {
+    return false;
+  }
+
+  if ( allDay() ) {
+    if ( dtStart( first ).date() >= QDate::currentDate() ) {
+      return false;
+    }
+  } else {
+    if ( dtStart( first ) >= KDateTime::currentUtcDateTime() ) {
+      return false;
+    }
+  }
+  return true;
 }
 
 void Todo::shiftTimes( const KDateTime::Spec &oldSpec,

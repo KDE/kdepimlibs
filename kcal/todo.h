@@ -2,6 +2,7 @@
   This file is part of the kcal library.
 
   Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2009 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -24,6 +25,7 @@
   defines the Todo class.
 
   @author Cornelius Schumacher \<schumacher@kde.org\>
+  @author Allen Winter \<winter@kde.org\>
 */
 
 #ifndef KCAL_TODO_H
@@ -172,8 +174,9 @@ class KCAL_EXPORT Todo : public Incidence
 
     /**
       Returns the start date of the todo.
-      @param first If true, the start date of the todo will be returned. If the
-      todo recurs, the start date of the first occurrence will be returned.
+      @param first If true, the start date of the todo will be returned;
+      also, if the todo recurs, the start date of the first occurrence
+      will be returned.
       If false and the todo recurs, the relative start date will be returned,
       based on the date returned by dtRecurrence().
     */
@@ -191,8 +194,9 @@ class KCAL_EXPORT Todo : public Incidence
       user's locale settings.
 
       @param shortfmt If set, use short date format; else use long format.
-      @param first If true, the start date of the todo will be returned. If the
-      todo recurs, the start date of the first occurrence will be returned.
+      @param first If true, the start date of the todo will be returned;
+      also, if the todo recurs, the start date of the first occurrence
+      will be returned.
       If false and the todo recurs, the relative start date will be returned,
       based on the date returned by dtRecurrence().
       @param spec If set, returns the time in the given spec, else use the
@@ -215,8 +219,9 @@ class KCAL_EXPORT Todo : public Incidence
       user's locale settings.
 
       @param shortfmt If set, use short date format; else use long format.
-      @param first If true, the start date of the todo will be returned. If the
-      todo recurs, the start date of the first occurrence will be returned.
+      @param first If true, the start date of the todo will be returned;
+      also, if the todo recurs, the start date of the first occurrence
+      will be returned.
       If false and the todo recurs, the relative start date will be returned,
       based on the date returned by dtRecurrence().
       @param spec If set, returns the date in the given spec, else use the
@@ -239,8 +244,9 @@ class KCAL_EXPORT Todo : public Incidence
       to the user's locale settings.
 
       @param shortfmt If set, use short date format; else use long format.
-      @param first If true, the start date of the todo will be returned. If the
-      todo recurs, the start date of the first occurrence will be returned.
+      @param first If true, the start date of the todo will be returned;
+      also, if the todo recurs, the start date of the first occurrence
+      will be returned.
       If false and the todo recurs, the relative start date will be returned,
       based on the date returned by dtRecurrence().
       @param spec If set, returns the date and time in the given spec, else
@@ -260,8 +266,8 @@ class KCAL_EXPORT Todo : public Incidence
 
     /**
       Returns true if the todo is 100% completed, otherwise return false.
-
-      @see setCompleted(), percentComplete()
+      @see isOverdue, isInProgress(), isOpenEnded(), isNotStarted(bool),
+      setCompleted(), percentComplete()
     */
     bool isCompleted() const;
 
@@ -313,10 +319,46 @@ class KCAL_EXPORT Todo : public Incidence
     void setCompleted( const KDateTime &completeDate );
 
     /**
-      Returns true, if todo has a date associated with completion, otherwise
-      return false.
+      Returns true, if the to-do has a date associated with completion,
+      otherwise return false.
     */
     bool hasCompletedDate() const;
+
+    /**
+      Returns true, if the to-do is in-progress (started, or >0% completed);
+      otherwise return false. If the to-do is overdue, then it is not
+      considered to be in-progress.
+
+      @param first If true, the start and due dates of the todo will be used;
+      also, if the todo recurs, the start date and due date of the first
+      occurrence will be used.
+      If false and the todo recurs, the relative start and due dates will be
+      used, based on the date returned by dtRecurrence().
+      @see isOverdue(), isCompleted(), isOpenEnded(), isNotStarted(bool)
+      @since 4.4
+    */
+    bool isInProgress( bool first ) const;
+
+    /**
+      Returns true, if the to-do is open-ended (no due date); false otherwise.
+      @see isOverdue(), isCompleted(), isInProgress(), isNotStarted(bool)
+      @since 4.4
+    */
+    bool isOpenEnded() const;
+
+    /**
+      Returns true, if the to-do has yet to be started (no start date and 0%
+      completed); otherwise return false.
+
+      @param first If true, the start date of the todo will be used;
+      also, if the todo recurs, the start date of the first occurrence
+      will be used.
+      If false and the todo recurs, the relative start date will be used,
+      based on the date returned by dtRecurrence().
+      @see isOverdue(), isCompleted(), isInProgress(), isOpenEnded()
+      @since 4.4
+    */
+    bool isNotStarted( bool first ) const;
 
     /**
       @copydoc
@@ -352,6 +394,7 @@ class KCAL_EXPORT Todo : public Incidence
     /**
       Returns true if this todo is overdue (e.g. due date is lower than today
       and not completed), else false.
+      @see isCompleted(), isInProgress(), isOpenEnded(), isNotStarted(bool)
      */
     bool isOverdue() const;
 

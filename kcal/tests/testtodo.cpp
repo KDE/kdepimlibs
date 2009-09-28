@@ -108,7 +108,7 @@ void TodoTest::testSetCompleted() {
 
   // due yesterday
   KDateTime originalDueDate = today.addDays( -1 );
- 
+
   todo1.setDtDue( originalDueDate );
   todo1.recurrence()->setDaily( 1 );
   todo1.setCompleted( today );
@@ -118,4 +118,24 @@ void TodoTest::testSetCompleted() {
   QVERIFY( originalDueDate != todo1.dtDue() );
   QVERIFY( !todo1.isCompleted() );
   QVERIFY( todo2.isCompleted() );
+}
+
+void TodoTest::testStatus() {
+  KDateTime today = KDateTime::currentUtcDateTime();
+  KDateTime yesterday = today.addDays( -1 );
+
+  Todo todo1;
+  todo1.setDtStart( yesterday );
+  todo1.setDtDue( today );
+  todo1.setPercentComplete( 50 );
+  QVERIFY( todo1.isInProgress( false ) );
+  QVERIFY( !todo1.isNotStarted( false ) );
+  QVERIFY( !todo1.isOverdue() );
+  todo1.setPercentComplete( 100 );
+  QVERIFY( todo1.isCompleted() );
+
+  Todo todo2 = todo1;
+  todo2.setPercentComplete( 33 );
+  todo2.setHasDueDate( false );
+  QVERIFY( todo2.isOpenEnded() );
 }

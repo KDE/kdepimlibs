@@ -3,6 +3,7 @@
 
   Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -26,6 +27,7 @@
 
   @author Cornelius Schumacher \<schumacher@kde.org\>
   @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
+  @author Allen Winter \<allen@kdab.net\>
 */
 #ifndef KCAL_INCIDENCEFORMATTER_H
 #define KCAL_INCIDENCEFORMATTER_H
@@ -71,6 +73,8 @@ namespace IncidenceFormatter
     Create a QString representation of an Incidence in a nice format
     suitable for using in a tooltip.
     @param incidence is a pointer to the Incidence to be formatted.
+    @param date is the QDate for which the toolTip should be computed; used
+    mainly for recurring incidences.
     @param richText if yes, the QString will be created as RichText.
     @param spec is an optional time specification which, when specified,
     will shift the Incidence times to different timezones.
@@ -78,6 +82,7 @@ namespace IncidenceFormatter
   */
   KCAL_EXPORT QString toolTipStr( Calendar *calendar,
                                   IncidenceBase *incidence,
+                                  const QDate &date=QDate(),
                                   bool richText=true,
                                   KDateTime::Spec spec=KDateTime::Spec() );
 
@@ -108,13 +113,17 @@ namespace IncidenceFormatter
   /**
     Create a RichText QString representation of an Incidence in a nice format
     suitable for using in a viewer widget.
+    @parma calendar is a pointer to the Calendar that owns the specified Incidence.
     @param incidence is a pointer to the Incidence to be formatted.
+    @param date is the QDate for which the string representation should be computed;
+    used mainly for recurring incidences.
     @param spec is an optional time specification which, when specified,
     will shift the Incidence times to different timezones.
     @since 4.4
   */
   KCAL_EXPORT QString extensiveDisplayStr( Calendar *calendar,
                                            IncidenceBase *incidence,
+                                           const QDate &date=QDate(),
                                            KDateTime::Spec spec=KDateTime::Spec() );
 
   /**
