@@ -921,6 +921,11 @@ bool parseDomain( const char* &scursor, const char * const send,
     QString maybeDotAtom;
     if ( parseDotAtom( scursor, send, maybeDotAtom, isCRLF ) ) {
       result = maybeDotAtom;
+      // Domain may end with '.', if so preserve it'
+      if ( scursor != send && *scursor == '.' ) {
+        result += QChar('.');
+        scursor++;
+      }
       return true;
     }
   }
@@ -2037,20 +2042,39 @@ bool parseDateTime( const char* &scursor, const char * const send,
 
 Headers::Base *extractFirstHeader( QByteArray &head )
 {
-  int pos1=-1, pos2=0, len=head.length()-1;
-  bool folded( false );
-  Headers::Base *header=0;
+  int endOfFieldBody = 0;
+  int len = head.length() - 1;
+  bool folded = false;
+  Headers::Base *header = 0;
 
-  pos1 = head.indexOf( ": " );
+  int startOfFieldBody = head.indexOf( ":" );
+  const int endOfFieldHeader = startOfFieldBody;
 
-  if ( pos1 > -1 ) {    //there is another header
-    pos2 = pos1 += 2; //skip the name
+  if ( startOfFieldBody > -1 ) {    //there is another header
+    startOfFieldBody++; //skip the ':'
+    if ( head[startOfFieldBody] == ' ' ) { // skip the space after the ':', if there
+      startOfFieldBody++;
+    }
+    endOfFieldBody = startOfFieldBody;
 
-    if ( head[pos2] != '\n' ) {  // check if the header is not empty
+    // If the first line contains nothing, but the next line starts with a space
+    // or a tab, that means a stupid mail client has made the first header field line
+    // entirely empty, and has folded the rest to the next line(s).
+    if ( head[endOfFieldBody] == '\n' && endOfFieldBody + 1 < len &&
+         ( head[endOfFieldBody + 1] == ' ' ||
+           head[endOfFieldBody + 1] == '\t' ) ) {
+
+      // Skip \n and first whitespace
+      startOfFieldBody += 2;
+      endOfFieldBody += 2;
+    }
+    
+    if ( head[endOfFieldBody] != '\n' ) {  // check if the header is not empty
       while ( 1 ) {
-        pos2 = head.indexOf( '\n', pos2 + 1 );
-        if ( pos2 == -1 || pos2 == len ||
-             ( head[pos2+1] != ' ' && head[pos2+1] != '\t' ) ) {
+        endOfFieldBody = head.indexOf( '\n', endOfFieldBody + 1 );
+        if ( endOfFieldBody == -1 || endOfFieldBody == len ||
+              ( head[endOfFieldBody+1] != ' ' &&
+                head[endOfFieldBody+1] != '\t' ) ) {
           //break if we reach the end of the string, honor folded lines
           break;
         } else {
@@ -2059,25 +2083,25 @@ Headers::Base *extractFirstHeader( QByteArray &head )
       }
     }
 
-    if ( pos2 < 0 ) {
-      pos2 = len + 1; //take the rest of the string
+    if ( endOfFieldBody < 0 ) {
+      endOfFieldBody = len + 1; //take the rest of the string
     }
 
-    QByteArray rawType = head.left( pos1 - 2 );
-    QByteArray rawData = head.mid( pos1, pos2 - pos1 );
-    if( folded ) {
-      rawData = unfoldHeader( rawData );
+    QByteArray rawType = head.left( endOfFieldHeader );
+    QByteArray rawFieldBody = head.mid( startOfFieldBody, endOfFieldBody - startOfFieldBody );
+    if ( folded ) {
+      rawFieldBody = unfoldHeader( rawFieldBody );
     }
     header = HeaderFactory::self()->createHeader( rawType );
     if( !header ) {
       //kWarning() << "Returning Generic header of type" << rawType;
       header = new Headers::Generic( rawType );
     }
-    header->from7BitString( rawData );
+    header->from7BitString( rawFieldBody );
 
-    head.remove( 0, pos2 + 1 );
+    head.remove( 0, endOfFieldBody + 1 );
   } else {
-    head = "";
+    head.clear();
   }
 
   return header;

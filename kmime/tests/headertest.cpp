@@ -233,18 +233,24 @@ void HeaderTest::testAddressListHeader()
 
   // based on bug #139477, trailing '.' in domain name (RFC 3696, section 2 - http://tools.ietf.org/html/rfc3696#page-4)
   h = new Headers::Generics::AddressList();
+  h->from7BitString( "joe@where.test." );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first(), QByteArray("joe@where.test.") );
+  QCOMPARE( h->displayNames().count(), 1 );
+  QCOMPARE( h->displayNames().first(), QString() );
+  QCOMPARE( h->prettyAddresses().count(), 1 );
+  QCOMPARE( h->prettyAddresses().first(), QString("joe@where.test.") );
+  delete h;
+
+  h = new Headers::Generics::AddressList();
   h->from7BitString( "Mary Smith <mary@x.test>, jdoe@example.org., Who? <one@y.test>" );
-  QEXPECT_FAIL( "", "Currently a trailing '.' terminates the list of recipients", Continue );
   QCOMPARE( h->addresses().count(), 3 );
-  // Enable below when above is fixed
-  //names = h->displayNames();
-  //QCOMPARE( names.takeFirst(), QString("Mary Smith") );
-  //QEXPECT_FAIL( "", "Currently a trailing '.' terminates the list of recipients", Continue );
-  //QCOMPARE( names.takeFirst(), QString() );
-  //QEXPECT_FAIL( "", "Currently a trailing '.' terminates the list of recipients", Continue );
-  //QCOMPARE( names.takeFirst(), QString("Who?") );
-  //QEXPECT_FAIL( "", "Currently a trailing '.' terminates the list of recipients", Continue );
-  //QCOMPARE( h->as7BitString( false ), QByteArray("Mary Smith <mary@x.test>, jdoe@example.org., Who? <one@y.test>") );
+  names = h->displayNames();
+  QCOMPARE( names.takeFirst(), QString("Mary Smith") );
+  QCOMPARE( names.takeFirst(), QString() );
+  QCOMPARE( names.takeFirst(), QString("Who?") );
+  QCOMPARE( h->as7BitString( false ), QByteArray("Mary Smith <mary@x.test>, jdoe@example.org., Who? <one@y.test>") );
   delete h;
 }
 
