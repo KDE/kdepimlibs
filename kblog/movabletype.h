@@ -133,6 +133,8 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     Q_PRIVATE_SLOT( d_func(),
                     void slotModifyPost( const QList<QVariant> &, const QVariant & ) )
     Q_PRIVATE_SLOT( d_func(),
+                    void slotGetPostCategories(const QList<QVariant>&,const QVariant&) )
+    Q_PRIVATE_SLOT( d_func(),
                     void slotSetPostCategories(const QList<QVariant>&,const QVariant&) )
     Q_PRIVATE_SLOT( d_func(),
                     void slotTriggerCreatePost() )

@@ -263,6 +263,41 @@ void MovableTypePrivate::slotCreatePost( const QList<QVariant> &result, const QV
   }
 }
 
+void MovableTypePrivate::slotFetchPost( const QList<QVariant> &result, const QVariant &id )
+{
+  Q_Q( MovableType );
+  kDebug();
+
+  KBlog::BlogPost *post = mCallMap[ id.toInt() ];
+  mCallMap.remove( id.toInt() );
+
+  //array of structs containing ISO.8601
+  // dateCreated, String userid, String postid, String content;
+  kDebug () << "TOP:" << result[0].typeName();
+  if ( result[0].type() == QVariant::Map && readPostFromMap( post, result[0].toMap() ) ) {
+  } else {
+    kError() << "Could not fetch post out of the result from the server.";
+    post->setError( i18n( "Could not fetch post out of the result from the server." ) );
+    post->setStatus( BlogPost::Error );
+    emit q->errorPost( Blogger1::ParsingError,
+                       i18n( "Could not fetch post out of the result from the server." ), post );
+  }
+  if ( post->categories().isEmpty() ) {
+    QList<QVariant> args( defaultArgs( post->postId() ) );
+    unsigned int i= mCallCounter++;
+    mCallMap[ i ] = post;
+    mXmlRpcClient->call(
+      "mt.getPostCategories", args,
+      q, SLOT(slotGetPostCategories(const QList<QVariant>&,const QVariant&)),
+      q, SLOT(slotError(int, const QString&,const QVariant&)),
+      QVariant( i ) );
+  } else {
+    kDebug() << "Emitting fetchedPost()";
+    post->setStatus( KBlog::BlogPost::Fetched );
+    emit q->fetchedPost( post );
+  }
+}
+
 void MovableTypePrivate::slotModifyPost( const QList<QVariant> &result, const QVariant &id )
 {
   Q_Q( MovableType );
@@ -328,6 +363,37 @@ void MovableTypePrivate::setPostCategories( BlogPost *post, bool publishAfterCat
     q, SLOT(slotSetPostCategories(const QList<QVariant>&,const QVariant&)),
     q, SLOT(slotError(int, const QString&,const QVariant&)),
     QVariant( i ) );
+}
+
+void MovableTypePrivate::slotGetPostCategories(const QList<QVariant>& result,const QVariant& id)
+{
+  kDebug();
+  Q_Q( MovableType );
+
+  int i = id.toInt();
+  BlogPost* post = mCallMap[ i ];
+  mCallMap.remove(i);
+
+  if ( result[ 0 ].type() != QVariant::List ) {
+    kError() << "Could not read the result, not a list. Category fetching failed! We will still emit fetched post now.";
+    emit q->errorPost( Blogger1::ParsingError,
+        i18n( "Could not read the result, not a list. Category fetching failed!" ), post );
+
+    post->setStatus( KBlog::BlogPost::Fetched );
+    emit q->fetchedPost( post );
+  } else {
+    QList<QVariant> categoryList = result[ 0 ].toList();
+    QList<QString> newCatList;
+    QList<QVariant>::ConstIterator it = categoryList.begin();
+    QList<QVariant>::ConstIterator end = categoryList.end();
+    for ( ;it!=end;it++ ) {
+      newCatList << ( *it ).toMap()[ "categoryName" ].toString();
+    }
+    kDebug()<< "categories list: " << newCatList;
+    post->setCategories( newCatList );
+    post->setStatus( KBlog::BlogPost::Fetched );
+    emit q->fetchedPost( post );
+  }
 }
 
 void MovableTypePrivate::slotSetPostCategories(const QList<QVariant>& result,const QVariant& id)
@@ -414,11 +480,15 @@ bool MovableTypePrivate::readPostFromMap( BlogPost *post, const QMap<QString, QV
   QString description( postInfo["description"].toString() );
   QStringList categoryIdList = postInfo["categories"].toStringList();
   QStringList categories;
+  // since the metaweblog definition is ambigious, we try different
+  // category mappings
   for ( int i=0; i<categoryIdList.count(); i++ ) {
     for ( int k=0; k<mCategoriesList.count(); k++ ) {
-      if ( mCategoriesList[ k ][ "categoryId" ]==categoryIdList[ i ]) {
+      if ( mCategoriesList[ k ][ "name" ]==categoryIdList[ i ] ){
         categories << mCategoriesList[ k ][ "name" ];
-      }
+      } else if ( mCategoriesList[ k ][ "categoryId" ]==categoryIdList[ i ]) {
+        categories << mCategoriesList[ k ][ "name" ];
+      } 
     }
   }
 
