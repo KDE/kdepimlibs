@@ -128,7 +128,7 @@ void MovableType::createPost( BlogPost *post )
   else {
     bool publish = post->isPrivate();
     // If we do setPostCategories() later than we disable publishing first.
-    if( post->categories().count()>1 ){
+    if( !post->categories().isEmpty() ){
       post->setPrivate( true );
       if ( d->mSilentCreationList.contains( post ) ) {
         kDebug()<< "Post already in mSilentCreationList, this *should* never happen!";
