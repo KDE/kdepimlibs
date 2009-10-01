@@ -47,8 +47,10 @@ class MovableTypePrivate : public MetaWeblogPrivate
     virtual void slotListTrackBackPings( const QList<QVariant> &result,
                                          const QVariant &id );
     void slotCreatePost( const QList<QVariant> &, const QVariant & );
+    void slotFetchPost( const QList<QVariant> &, const QVariant & );
     void slotModifyPost( const QList<QVariant> &, const QVariant & );
     void slotSetPostCategories(const QList<QVariant>&,const QVariant&);
+    void slotGetPostCategories(const QList<QVariant>&,const QVariant&);
     void slotTriggerCreatePost();
     void slotTriggerModifyPost();
     void slotTriggerFetchPost();

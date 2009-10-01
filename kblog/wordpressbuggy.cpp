@@ -81,7 +81,7 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
 
     bool publish = post->isPrivate();
     // If we do setPostCategories() later than we disable publishing first.
-    if( post->categories().count()>1 ){
+    if( !post->categories().isEmpty() ){
       post->setPrivate( true );
       if ( d->mSilentCreationList.contains( post ) ) {
         kDebug()<< "Post already in mSilentCreationList, this *should* never happen!";
@@ -386,6 +386,7 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
   if ( rxId.cap( 1 ).toInt() == 1 ) {
     kDebug() << "Post successfully updated.";
     if ( mSilentCreationList.contains( post ) ) {
+      post->setStatus( KBlog::BlogPost::Created );
       emit q->createdPost( post );
       mSilentCreationList.removeOne( post );
     } else {
