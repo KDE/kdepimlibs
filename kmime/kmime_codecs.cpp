@@ -99,7 +99,7 @@ Codec *Codec::codecForName( const QByteArray &name )
   dictLock->unlock();
 
   if ( !codec ) {
-    kDebug(5320) << "Unknown codec \"" << name << "\" requested!";
+    kDebug() << "Unknown codec \"" << name << "\" requested!";
   }
 
   return codec;
