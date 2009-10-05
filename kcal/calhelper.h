@@ -81,6 +81,16 @@ namespace CalHelper {
     @since 4.4
   */
   KCAL_EXPORT Incidence *findMyCalendarIncidenceByUid( Calendar *calendar, const QString &uid );
+
+  /**
+    Determines if the Calendar is using a Groupware resource type.
+    @param calendar is a pointer to a valid Calendar object.
+
+    @return true if the Calendar is using a known Groupware resource type;
+    false otherwise.
+    @since 4.4
+  */
+  KCAL_EXPORT bool usingGroupware( Calendar *calendar );
 }
 
 }
