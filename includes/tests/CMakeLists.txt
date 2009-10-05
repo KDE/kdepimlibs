@@ -39,6 +39,7 @@ kde4_add_executable( headertest header_compile.cpp )
 target_link_libraries( headertest ${QT_QTCORE_LIBRARY} )
 add_dependencies( headertest kabc ) # ensure addressee.h is generated in parallel builds
 add_dependencies( headertest kcal )
+add_dependencies( headertest mailtransport ) # ensure transportbase.h is generated in parallel builds
 
 endif (KDE4_BUILD_TESTS)
 
