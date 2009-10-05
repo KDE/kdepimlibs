@@ -1,4 +1,7 @@
-add_subdirectory( tests )
+if(NOT WIN32)
+  #tests don't build on Windows at this time
+  add_subdirectory( tests )
+endif(NOT WIN32)
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkdepim/ )
 
