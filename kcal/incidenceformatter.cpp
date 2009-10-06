@@ -876,6 +876,23 @@ QString IncidenceFormatter::extensiveDisplayStr( Calendar *calendar,
   }
 }
 
+
+QString IncidenceFormatter::extensiveDisplayStr( const QString &location,
+                                                 IncidenceBase *incidence,
+                                                 const QDate &date,
+                                                 KDateTime::Spec spec )
+{
+  if ( !incidence ) {
+    return QString();
+  }
+
+  EventViewerVisitor v;
+  if ( v.act( location, incidence, date, spec ) ) {
+    return v.result();
+  } else {
+    return QString();
+  }
+}
 /***********************************************************************
  *  Helper functions for the body part formatter of kmail (Invitations)
  ***********************************************************************/

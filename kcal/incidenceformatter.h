@@ -147,6 +147,22 @@ namespace IncidenceFormatter
   /**
     Create a RichText QString representation of an Incidence in a nice format
     suitable for using in a viewer widget.
+    @param location where the incidence is from (e.g., resource name)
+    @param incidence is a pointer to the Incidence to be formatted.
+    @param date is the QDate for which the string representation should be computed;
+    used mainly for recurring incidences.
+    @param spec is an optional time specification which, when specified,
+    will shift the Incidence times to different timezones.
+    @since 4.4
+  */
+  KCAL_EXPORT QString extensiveDisplayStr( const QString &location,
+                                           IncidenceBase *incidence,
+                                           const QDate &date=QDate(),
+                                           KDateTime::Spec spec=KDateTime::Spec() );
+
+  /**
+    Create a RichText QString representation of an Incidence in a nice format
+    suitable for using in a viewer widget.
     @param incidence is a pointer to the Incidence to be formatted.
     @param spec is an optional time specification which, when specified,
     will shift the Incidence times to different timezones.
