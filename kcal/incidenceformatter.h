@@ -131,7 +131,7 @@ namespace IncidenceFormatter
   /**
     Create a RichText QString representation of an Incidence in a nice format
     suitable for using in a viewer widget.
-    @parma calendar is a pointer to the Calendar that owns the specified Incidence.
+    @param calendar is a pointer to the Calendar that owns the specified Incidence.
     @param incidence is a pointer to the Incidence to be formatted.
     @param date is the QDate for which the string representation should be computed;
     used mainly for recurring incidences.
