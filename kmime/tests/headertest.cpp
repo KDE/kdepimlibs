@@ -228,6 +228,28 @@ void HeaderTest::testAddressListHeader()
   QCOMPARE( h->mailboxes().count(), 1 );
   QCOMPARE( h->asUnicodeString(), QString::fromUtf8( "Ingo =?iso-8859-15?q?Kl=F6cker?= <kloecker@kde.org>" ) );
   delete h;
+
+  // based on bug #139477, trailing '.' in domain name (RFC 3696, section 2 - http://tools.ietf.org/html/rfc3696#page-4)
+  h = new Headers::Generics::AddressList();
+  h->from7BitString( "joe@where.test." );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first(), QByteArray("joe@where.test.") );
+  QCOMPARE( h->displayNames().count(), 1 );
+  QCOMPARE( h->displayNames().first(), QString() );
+  QCOMPARE( h->prettyAddresses().count(), 1 );
+  QCOMPARE( h->prettyAddresses().first(), QString("joe@where.test.") );
+  delete h;
+
+  h = new Headers::Generics::AddressList();
+  h->from7BitString( "Mary Smith <mary@x.test>, jdoe@example.org., Who? <one@y.test>" );
+  QCOMPARE( h->addresses().count(), 3 );
+  names = h->displayNames();
+  QCOMPARE( names.takeFirst(), QString("Mary Smith") );
+  QCOMPARE( names.takeFirst(), QString() );
+  QCOMPARE( names.takeFirst(), QString("Who?") );
+  QCOMPARE( h->as7BitString( false ), QByteArray("Mary Smith <mary@x.test>, jdoe@example.org., Who? <one@y.test>") );
+  delete h;
 }
 
 void HeaderTest::testMailboxListHeader()
