@@ -16,7 +16,7 @@ set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.$
 
 ############### search packages used by KDE ###############
 
-find_package(KDE4 4.3.62 REQUIRED)
+find_package(KDE4 4.3.71 REQUIRED) # rev. 1031601 is required.
 
 include(KDE4Defaults)
 include(MacroLibrary)
