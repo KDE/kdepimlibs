@@ -420,6 +420,35 @@ void KMimeContentTest::testParsingUuencoded()
       "\n";
 
   const QString imageName = "Name of the encoded file (oxygen 22x22 kde.png)";
+  const QByteArray imageBase64 =
+      "\n"
+      "iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABHNCSVQICAgIfAhkiAAAAAlwSFlz\n"
+      "AAADdgAAA3YBfdWCzAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAU4SURB\n"
+      "VBgZjcFbiF1XGcDx/7fW2pdznTOXNJlJc4WWVK3RqiC2FOyTiGCs+lKkohWTIl5QWrAp9ckLKpYi\n"
+      "KFjwodgXoRDMk1VECj7UpkIqUZuCTUycyWXOzJxz9tnXtdfnxNqnvvj7iaryNhGxgPBOAh/gLa+y\n"
+      "S3kn3dXyP6KqyEe+1Rm6tSc6nYVHO+loOXYR1hisFYRAIOBljtecyPaItEMkXeK4S2QTVAxVOZ1t\n"
+      "TzaeG6//9fTWuR9MnOxyx7/xzaWjB548cvgAUeyJbGDYj9mzPGJl1GdpocOwlxCCMs1qtrKSrZ2c\n"
+      "ze0Z126O2ZkWSJoO0rDylUabREROOsCoG3z58JEDrK4NIFQMBz0WBl2G3ZReGiNi+debO6gKC3sH\n"
+      "DAcxNu6QpF1GiwtsTzMm04wrVyeY7upngEcdYIy4pSgVJtmMYb+HmBiVGE9Eo47ZdsHJj3eJnOHp\n"
+      "M3P6exbIJxmffr/ibMK58zN+M4nwlGCTPmAMu8QYKasCFYd1CWoSgkT4YGmCoWggTRLiOKH0UFTK\n"
+      "A8csdx0ZcnBfl/PXIuJ+j253gBED3CEGDluxVtqgGBcTJCKIZboxJq9bssozLxqiKMJZS1G3LIct\n"
+      "7nvfAs5FvPDSjHlnEbER3f4AsUZYG1rD2t3GGIu4GIhosUSzCd9/5HZOvKtldnmd7evbRM7hnEOz\n"
+      "CV/8xCrOWv52qeKVGx0CBpUIF3cwxsLwdmtYPGSMtaLW0WIIKuStIXLCh9+9wE++fgfWV4jwX489\n"
+      "fJQkMswr5ee/26EMgaaFVoW6VsRaGXWWrFnqWyPWSV0rrULlA7M45dd/uEHZwOlfvMGW6yAiiAhr\n"
+      "KwkgGIEiL8jrmryuqWpPWbWItYTlNWvauGeNs8xLT9W2FFXDdGPMwb0pz569wsUqpqgbQADhmecu\n"
+      "IgK91HHqY7cxz0um85zxrKAVMNYSbGKNtqkIhtB6xptTvntiyJnv3MVH71niT3+fUHvQ1vC2F1+v\n"
+      "efHPm9xy33sXubtXsj3NaJqKNjSA0KePEVsqKEE9dZWTOBCUtg1sZoamhrYFVQWUphV+dPYml67l\n"
+      "3PLtz99Jr8zxdYn3NSJKRoYxhQZ2+aZCteWhZy7yydOvceHNOXeuWNRbQmMIIaCqGGJcOuL0s5fJ\n"
+      "S8+gY3j8U4fQ2hPqEg0BqQnCsUcGg7XjNxZXV1MbJQx6I1ZW9vPge4QHPrjM47/cwXZ6VFmBaEsy\n"
+      "6GPqgqEtqJqWsmq4OpmT+Sl1XTHdHIemeG3ZML3RBu+1rkp8mROahqiYceL+RQ7eZvnewwusyoRh\n"
+      "f8hgtMywmfPUQ0Oe+sI+WlJ0tIrrJjR1SdMUBO/Z2fhn61g/68PRe7UqC4JraDo1h3oVsW1440rD\n"
+      "718uOfXgiL1LEIKiOsI5IY0CT36uzxO/KvF1TV3MqX1D8F6Z/8U7QEPr1WCpyzlVVXJuo+WrP7xE\n"
+      "ke5neeUA55+/ytNfSxAnPPazEnVdPntvweV/52R5oK4KqiqnqhtQr1y50jpAQ1PmvbTfG493mE62\n"
+      "oYV/+CWGgzFN8EQm5vo4RxWmLKBty09/65nPC6bZDjuTLeZZhrMJWs8rdjkghOmlF3x57NTy4hrX\n"
+      "b65T5zl1WVAWc7LuhDTpcvLHFcYY6E7xTUNZ5eT5jFm2w3S6RWRT9oz2cXX9lT8Cragqsv9DK93F\n"
+      "48/3995zf7e/J41dhDMWawQkoNriTYbXnMj2ibRLJF3iuEtkE1SEfL7VXLv00qs3Xz/zpWp84YKo\n"
+      "KreIiANGwH5AAOH/o7xlE7gOeN31H1IDp2dl3tAoAAAAAElFTkSuQmCC\n"
+      ;
 
   const QByteArray uuencodedMsg =
       "Path: news.example.net!not-for-mail\n"
@@ -495,7 +524,8 @@ void KMimeContentTest::testParsingUuencoded()
   c = contents.at( 1 );
   QVERIFY( !c->contentType()->isText() );
   QCOMPARE( c->contentType()->name(), imageName );
-
+  // The uuencoded content as been recoded as base64
+  QCOMPARE( c->encodedContent(), imageBase64 );
 
   delete msg;
 }
