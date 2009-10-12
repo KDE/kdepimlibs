@@ -199,7 +199,7 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
       Returns an exact copy of this incidence. The returned object is owned
       by the caller.
     */
-    virtual Incidence *clone() = 0;
+    virtual Incidence *clone() = 0; //TODO KDE5: make this const
 
     /**
       Set readonly state of incidence.
