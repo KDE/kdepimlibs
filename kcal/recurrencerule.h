@@ -137,6 +137,9 @@ class KCAL_EXPORT RecurrenceRule
       on that date/time, it simply sets a lower limit to when the recurrences
       take place.
 
+      Note that setting @p start to a date-only value does not make an all-day
+      recurrence: to do this, call setAllDay(true).
+
       @param start the recurrence's start date and time
     */
     void setStartDt( const KDateTime &start );

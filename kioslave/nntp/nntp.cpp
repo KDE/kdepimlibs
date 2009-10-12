@@ -884,7 +884,7 @@ void NNTPProtocol::unexpected_response( int res_code, const QString &command )
     case 400: // temporary issue on the server
       error( ERR_INTERNAL_SERVER,
              i18n( "The server %1 could not handle your request.\n"
-                   "Please try again now or latter if the problem persists.", mHost ) );
+                   "Please try again now, or later if the problem persists.", mHost ) );
       break;
     case 480: // credential request
       error( ERR_COULD_NOT_LOGIN,

@@ -377,7 +377,7 @@ void MovableTypePrivate::slotGetPostCategories(const QList<QVariant>& result,con
   if ( result[ 0 ].type() != QVariant::List ) {
     kError() << "Could not read the result, not a list. Category fetching failed! We will still emit fetched post now.";
     emit q->errorPost( Blogger1::ParsingError,
-        i18n( "Could not read the result, not a list. Category fetching failed!" ), post );
+        i18n( "Could not read the result - is not a list. Category fetching failed." ), post );
 
     post->setStatus( KBlog::BlogPost::Fetched );
     emit q->fetchedPost( post );
@@ -410,7 +410,7 @@ void MovableTypePrivate::slotSetPostCategories(const QList<QVariant>& result,con
   if ( result[0].type() != QVariant::Bool ) {
     kError() << "Could not read the result, not a boolean. Category setting failed! We will still publish if now if necessary. ";
     emit q->errorPost( Blogger1::ParsingError,
-                          i18n( "Could not read the result, not a boolean. Category setting failed! We will still publish now if necessary." ),
+                          i18n( "Could not read the result - is not a boolean value. Category setting failed.  Will still publish now if necessary." ),
                           post );
   }
   // Finally publish now, if the post was meant to be published in the beginning.

@@ -945,6 +945,7 @@ bool ContentPrivate::parseUuencoded()
       c->contentType()->setMimeType( uup.mimeTypes().at( i ) );
       c->contentType()->setName( uup.filenames().at( i ), QByteArray( /*charset*/ ) );
       c->contentTransferEncoding()->setEncoding( Headers::CEuuenc );
+      c->contentTransferEncoding()->setDecoded( false );
       c->contentDisposition()->setDisposition( Headers::CDattachment );
       c->contentDisposition()->setFilename( uup.filenames().at( i ) );
       c->setBody( uup.binaryParts().at( i ) );

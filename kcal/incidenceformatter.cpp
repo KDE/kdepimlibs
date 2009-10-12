@@ -1674,7 +1674,7 @@ static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
   case iTIPCounter:
     return i18n( "Sender makes this counter proposal" );
   case iTIPDeclineCounter:
-    return i18n( "Sender decliness the counter proposal" );
+    return i18n( "Sender declines the counter proposal" );
   case iTIPNoMethod:
     return i18n( "Error: Free/Busy iTIP message with unknown method" );
   }
