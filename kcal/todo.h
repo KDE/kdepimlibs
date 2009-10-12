@@ -55,6 +55,11 @@ class KCAL_EXPORT Todo : public Incidence
     typedef boost::shared_ptr<Todo> Ptr;
 
     /**
+      A shared pointer to a non-mutable Todo object.
+    */
+    typedef boost::shared_ptr<const Todo> ConstPtr;
+
+    /**
       Constructs an empty to-do.
     */
     Todo();

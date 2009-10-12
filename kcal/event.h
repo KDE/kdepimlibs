@@ -60,6 +60,11 @@ class KCAL_EXPORT Event : public Incidence
     typedef boost::shared_ptr<Event> Ptr;
 
     /**
+      A shared pointer to a non-mutable Event.
+    */
+    typedef boost::shared_ptr<const Event> ConstPtr;
+
+    /**
       Constructs an event.
     */
     Event();
