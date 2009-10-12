@@ -144,6 +144,7 @@ Calendar *DndFactory::createDropCalendar( const QMimeData *md, const KDateTime::
        VCalDrag::fromMimeData( md, cal ) ){
     return cal;
   }
+  delete cal;
   return 0;
 }
 
