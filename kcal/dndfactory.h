@@ -36,6 +36,8 @@
 
 #include "kcal_export.h"
 
+#include <KDateTime>
+
 class QDate;
 class QTime;
 class QDrag;
@@ -73,6 +75,11 @@ class KCAL_EXPORT DndFactory
       Create the calendar that is contained in the mime data.
      */
     Calendar *createDropCalendar( const QMimeData *md );
+
+     /**
+      Create the calendar that is contained in the mime data.
+     */
+    static Calendar *createDropCalendar( const QMimeData *md, const KDateTime::Spec &timeSpec );
 
     /**
       Create the mime data for the whole calendar.
