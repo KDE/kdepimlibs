@@ -14,8 +14,10 @@ set(KDEPIMLIBS_VERSION_MINOR 3)
 set(KDEPIMLIBS_VERSION_PATCH 66)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
+
 ############### search packages used by KDE ###############
 
+set (QT_MIN_VERSION "4.6.0")
 find_package(KDE4 4.3.71 REQUIRED) # rev. 1031601 is required.
 
 include(KDE4Defaults)
