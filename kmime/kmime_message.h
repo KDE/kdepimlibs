@@ -173,6 +173,11 @@ class KMIME_EXPORT Message : public Content
     */
     Content* mainBodyPart( const QByteArray &type = QByteArray() );
 
+    /**
+      Returns the MIME type used for Messages
+    */
+    static QString mimeType();
+
   protected:
     /* reimpl */
     virtual QByteArray assembleHeaders();
