@@ -134,6 +134,12 @@ Content *Message::mainBodyPart( const QByteArray &type )
   return 0;
 }
 
+QString Message::mimeType()
+{
+  return QLatin1String( "message/rfc822" );
+}
+
+
 // @cond PRIVATE
 #define kmime_mk_header_accessor( type, method ) \
 Headers::type *Message::method( bool create ) { \
