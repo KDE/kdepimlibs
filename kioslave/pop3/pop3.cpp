@@ -191,7 +191,7 @@ POP3Protocol::Resp POP3Protocol::getResponse(char *r_buf, unsigned int r_len)
   // Clear out the buffer
   memset(buf, 0, r_len);
   myReadLine(buf, r_len - 1);
-  kDebug(7105) << "S:" << buf;
+  //kDebug(7105) << "S:" << buf;
 
   // This is really a funky crash waiting to happen if something isn't
   // null terminated.
@@ -281,7 +281,7 @@ bool POP3Protocol::sendCommand(const QByteArray &cmd)
   QByteArray debugCommand = cmd;
   if (!m_sPass.isEmpty())
     debugCommand.replace(m_sPass.toAscii(),"<password>");
-  kDebug(7105) << "C:" << debugCommand;
+  //kDebug(7105) << "C:" << debugCommand;
 
   // Now actually write the command to the socket
   if (write(cmdrn.data(), cmdrn.size()) != static_cast < ssize_t >
@@ -897,6 +897,7 @@ void POP3Protocol::get(const KUrl & url)
 
     int activeCommands = 0;
     QStringList::ConstIterator it = waitingCommands.begin();
+    bool firstCommand = true;
     while (it != waitingCommands.end() || activeCommands > 0) {
       while (activeCommands < maxCommands && it != waitingCommands.end()) {
         sendCommand(((cmd ==
@@ -907,7 +908,10 @@ void POP3Protocol::get(const KUrl & url)
       }
       if ( getResponse(buf, sizeof(buf) - 1) == Ok ) {
         activeCommands--;
-        mimeType("message/rfc822");
+        if ( firstCommand ) {
+          firstCommand = false;
+          mimeType("message/rfc822");
+        }
         totalSize(msg_len);
         memset(buf, 0, sizeof(buf));
         char ending = '\n';
