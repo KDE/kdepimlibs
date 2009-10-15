@@ -309,6 +309,8 @@ void Transport::migrateToWallet()
   d->needsWalletMigration = false;
   KConfigGroup group( config(), currentGroup() );
   group.deleteEntry( "password" );
+  group.deleteEntry( "password-kmail" );
+  group.deleteEntry( "password-knode" );
   d->passwordDirty = true;
   d->storePasswordInFile = false;
   writeConfig();
