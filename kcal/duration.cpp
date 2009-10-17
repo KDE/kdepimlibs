@@ -2,7 +2,7 @@
     This file is part of the kcal library.
 
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2007 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2007 David Jarvie <djarvie@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -137,6 +137,9 @@ bool Duration::operator<( const Duration &other ) const
 
 bool Duration::operator==( const Duration &other ) const
 {
+  // Note: daily and non-daily durations are always unequal, since a day's
+  // duration may differ from 24 hours if it happens to span a daylight saving
+  // time change.
   return
     d->mDuration == other.d->mDuration &&
     d->mDaily == other.d->mDaily;

@@ -2,7 +2,7 @@
     This file is part of the kcal library.
 
     Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2007 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2007 David Jarvie <djarvie@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -157,13 +157,18 @@ class KCAL_EXPORT Duration
 
     /**
       Returns true if this duration is equal to the @p other.
-      A daily and non-daily duration are considered unequal.
+      Daily and non-daily durations are always considered unequal, since a
+      day's duration may differ from 24 hours if it happens to span a daylight
+      saving time change.
       @param other the other duration to compare
     */
     bool operator==( const Duration &other ) const;
 
     /**
       Returns true if this duration is not equal to the @p other.
+      Daily and non-daily durations are always considered unequal, since a
+      day's duration may differ from 24 hours if it happens to span a daylight
+      saving time change.
       @param other is the other duration to compare.
     */
     bool operator!=( const Duration &other ) const
