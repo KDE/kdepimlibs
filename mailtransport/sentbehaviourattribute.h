@@ -52,6 +52,7 @@ class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
     */
     explicit SentBehaviourAttribute( SentBehaviour beh = MoveToDefaultSentCollection,
         Akonadi::Collection::Id moveToCollection = -1 );
+//TODO_AKONADI_REVIEW: pass AkonadiCollection instead of id
 
     /**
       Destroys the SentBehaviourAttribute.
@@ -81,6 +82,7 @@ class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
       Only valid if sentBehaviour() is MoveToCollection.
     */
     Akonadi::Collection::Id moveToCollection() const;
+//TODO_AKONADI_REVIEW: use AkonadiCollection instead of id
 
     /**
       Sets the collection to which the item should be moved after it is sent.
@@ -88,6 +90,7 @@ class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
       @see setSentBehaviour.
     */
     void setMoveToCollection( Akonadi::Collection::Id moveToCollection );
+//TODO_AKONADI_REVIEW: pass AkonadiCollection instead of id
 
   private:
     class Private;

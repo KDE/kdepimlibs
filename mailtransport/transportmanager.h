@@ -171,6 +171,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @since 4.4
     */
     bool showNewTransportDialog( QWidget *parent );
+    //TODO_AKONADI_REVIEW: rename to showTransportCreationDialog()
 
     /**
       If no transport exists, asks the user to create and configure one.
@@ -180,6 +181,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @since 4.4
     */
     bool promptCreateTransportIfNoneExists( QWidget *parent );
+    //TODO_AKONADI_REVIEW: merge the above methods, add enum 'Always' and 'IfNoneExists'
 
     /**
       Open a configuration dialog for an existing transport.
@@ -283,6 +285,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     */
     TransportManager();
 
+  //TODO_AKONADI_REVIEW: move private methods and slots to private class
   private:
     void readConfig();
     void writeConfig();

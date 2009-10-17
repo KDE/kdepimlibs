@@ -137,8 +137,10 @@ class MAILTRANSPORT_EXPORT_DEPRECATED TransportJob : public KCompositeJob
     virtual void doStart() = 0;
 
   private:
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 } // namespace MailTransport

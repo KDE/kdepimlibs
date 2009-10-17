@@ -28,6 +28,7 @@ namespace MailTransport {
 
 class ResourceSendJobPrivate;
 
+//TODO_AKONADI_REVIEW: make this class private api
 /**
   Mail transport job for an Akonadi resource-based transport.
 

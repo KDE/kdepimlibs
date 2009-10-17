@@ -47,6 +47,9 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
       AfterDueDate, ///< Send message at a certain date/time.
       Never         ///< Send message only when the user requests so.
     };
+    //TODO_AKONADI_REVIEW: rename Immediately to Automatic
+    //TODO_AKONADI_REVIEW: rename Never to Manual
+    //TODO_AKONADI_REVIEW: remove AfterDueDate 
 
     /**
       Creates a new DispatchModeAttribute.
@@ -77,12 +80,14 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
     */
     void setDispatchMode( DispatchMode mode );
 
+    //TODO_AKONADI_REVIEW: Rename to sendAfter
     /**
       Returns the date and time when the message should be sent.
       Only valid if dispatchMode() is AfterDueDate.
     */
     QDateTime dueDate() const;
 
+    //TODO_AKONADI_REVIEW: Rename to setSendAfter
     /**
       Sets the date and time when the message should be sent.
       Make sure you set the DispatchMode to AfterDueDate first.
