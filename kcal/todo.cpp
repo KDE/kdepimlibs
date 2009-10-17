@@ -149,6 +149,8 @@ void Todo::setDtDue( const KDateTime &dtDue, bool first )
       alarm->setTime(alarm->time().addSecs(diffsecs));
     }
   }*/
+
+  d->mHasDueDate = true;
   if ( recurs() && !first ) {
     d->mDtRecurrence = dtDue;
   } else {
@@ -301,6 +303,7 @@ void Todo::setDtStart( const KDateTime &dtStart )
     recurrence()->setStartDateTime( d->mDtDue );
     recurrence()->setAllDay( allDay() );
   }
+  d->mHasStartDate = true;
   IncidenceBase::setDtStart( dtStart );
 }
 
