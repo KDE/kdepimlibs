@@ -49,7 +49,7 @@ void Runner::sendAbort()
     return;
   }
 
-  mda.abort();
+  mda.abortCurrentTask();
   kDebug() << "Told the MDA to abort.";
   KApplication::exit( 0 );
 }
