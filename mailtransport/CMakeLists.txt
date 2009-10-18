@@ -77,6 +77,7 @@ install( FILES
         resourcesendjob.h
         sendmailjob.h
         smtpjob.h
+        precommandjob.h
 
         ${CMAKE_CURRENT_BINARY_DIR}/transportbase.h
         transport.h
