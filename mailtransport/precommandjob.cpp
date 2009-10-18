@@ -25,7 +25,8 @@
 
 #include <KDebug>
 #include <KLocalizedString>
-#include <KProcess>
+
+#include <QProcess>
 
 using namespace MailTransport;
 
@@ -37,7 +38,7 @@ class PreCommandJobPrivate
 {
   public:
     PreCommandJobPrivate( PrecommandJob *parent );
-    KProcess *process;
+    QProcess *process;
     QString precommand;
     PrecommandJob *q;
 
@@ -56,10 +57,10 @@ PrecommandJob::PrecommandJob( const QString &precommand, QObject *parent )
   : KJob( parent ), d( new PreCommandJobPrivate( this ) )
 {
   d->precommand = precommand;
-  d->process = new KProcess( this );
+  d->process = new QProcess( this );
   connect( d->process, SIGNAL(started()), SLOT(slotStarted()) );
-  connect( d->process, SIGNAL(error(QProcess::ProcessError error)),
-           SLOT(slotError(QProcess::ProcessError error)));
+  connect( d->process, SIGNAL(error(QProcess::ProcessError)),
+           SLOT(slotError(QProcess::ProcessError)) );
   connect( d->process, SIGNAL(finished(int, QProcess::ExitStatus)),
            SLOT(slotFinished(int, QProcess::ExitStatus)) );
 }
@@ -71,8 +72,7 @@ PrecommandJob::~ PrecommandJob()
 
 void PrecommandJob::start()
 {
-  d->process->setShellCommand( d->precommand );
-  d->process->start();
+  d->process->start( d->precommand );
 }
 
 void PreCommandJobPrivate::slotStarted()
@@ -84,8 +84,10 @@ void PreCommandJobPrivate::slotStarted()
 void PreCommandJobPrivate::slotError( QProcess::ProcessError error )
 {
   q->setError( KJob::UserDefinedError );
-  q->setErrorText( i18n( "Could not execute precommand '%1'.", precommand ) );
-  kDebug() << "Execution precommand has failed:" << error;
+  if ( error == QProcess::FailedToStart )
+    q->setErrorText( i18n( "Unable to start precommand '%1'.", precommand ) );
+  else
+    q->setErrorText( i18n( "Error while executing precommand '%1'.", precommand ) );
   q->emitResult();
 }
 
