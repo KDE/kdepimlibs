@@ -24,7 +24,7 @@
 #include <KDebug>
 #include <qtest_kde.h>
 
-#include <kmime_headerfactory.h>
+#include <kmime_headerfactory_p.h>
 #include <kmime_headers.h>
 
 using namespace KMime;

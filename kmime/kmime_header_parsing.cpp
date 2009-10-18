@@ -23,7 +23,7 @@
 #include "kmime_header_parsing.h"
 
 #include "kmime_codecs.h"
-#include "kmime_headerfactory.h"
+#include "kmime_headerfactory_p.h"
 #include "kmime_headers.h"
 #include "kmime_util.h"
 #include "kmime_dateformatter.h"
