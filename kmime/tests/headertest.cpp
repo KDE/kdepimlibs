@@ -76,6 +76,15 @@ void HeaderTest::testIdentHeader()
 
   // assemble the final header
   QCOMPARE( h->as7BitString( false ), QByteArray("<1234@local.machine.example> <3456@example.net> <abcd.1234@local.machine.tld> <78910@example.net>") );
+  delete h;
+
+  // parsing of ident with literal domain
+  h = new Headers::Generics::Ident();
+  const QByteArray ident = QByteArray( "<O55F3Y9E5MmKFwBN@[127.0.0.1]>" );
+  h->appendIdentifier( ident );
+  QEXPECT_FAIL( "", "Parsing strips angle brackets.", Continue );
+  QCOMPARE( h->as7BitString( false ), QByteArray( ident ) );
+  delete h;
 }
 
 void HeaderTest::testAddressListHeader()
