@@ -59,10 +59,7 @@ using namespace KCal;
 class KCal::CalendarLocal::Private
 {
   public:
-    Private()
-    {
-      mDeletedIncidences.setAutoDelete( true );
-    }
+    Private() {}
     QString mFileName;                     // filename where calendar is stored
     CalFormat *mFormat;                    // calendar format
 
@@ -72,7 +69,6 @@ class KCal::CalendarLocal::Private
     QMultiHash<QString, Todo*>mTodosForDate;// on due dates for all Todos
     QHash<QString, Journal *>mJournals;    // hash on uids of all Journals
     QMultiHash<QString, Journal *>mJournalsForDate; // on dates of all Journals
-    Incidence::List mDeletedIncidences;    // list of all deleted Incidences
 
     void insertEvent( Event *event );
     void insertTodo( Todo *todo );
@@ -168,7 +164,6 @@ void CalendarLocal::close()
   deleteAllTodos();
   deleteAllJournals();
 
-  d->mDeletedIncidences.clearAll();
   setModified( false );
 
   setObserversEnabled( true );
@@ -193,7 +188,6 @@ bool CalendarLocal::deleteEvent( Event *event )
   if ( d->mEvents.remove( uid ) ) {
     setModified( true );
     notifyIncidenceDeleted( event );
-    d->mDeletedIncidences.append( event );
     if ( !event->recurs() ) {
       removeIncidenceFromMultiHashByUID<Event *>(
         d->mEventsForDate, event->dtStart().date().toString(), event->uid() );
@@ -269,7 +263,6 @@ bool CalendarLocal::deleteTodo( Todo *todo )
   if ( d->mTodos.remove( todo->uid() ) ) {
     setModified( true );
     notifyIncidenceDeleted( todo );
-    d->mDeletedIncidences.append( todo );
     if ( todo->hasDueDate() ) {
       removeIncidenceFromMultiHashByUID<Todo *>(
         d->mTodosForDate, todo->dtDue().date().toString(), todo->uid() );
@@ -588,7 +581,6 @@ bool CalendarLocal::deleteJournal( Journal *journal )
   if ( d->mJournals.remove( journal->uid() ) ) {
     setModified( true );
     notifyIncidenceDeleted( journal );
-    d->mDeletedIncidences.append( journal );
     removeIncidenceFromMultiHashByUID<Journal *>(
       d->mJournalsForDate, journal->dtStart().date().toString(), journal->uid() );
     return true;
