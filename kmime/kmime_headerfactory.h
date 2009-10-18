@@ -65,7 +65,7 @@ class HeaderFactoryPrivate;
 /**
   docu TODO
 */
-class KMIME_EXPORT HeaderFactory
+class HeaderFactory
 {
   public:
     static HeaderFactory* self();

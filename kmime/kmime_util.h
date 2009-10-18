@@ -52,13 +52,14 @@ KMIME_EXPORT extern bool isUsAscii( const QString &s );
 /**
   Returns a user-visible string for a contentEncoding, for example
   "quoted-printable" for CEquPr.
+  @ since 4.4
   TODO should they be i18n'ed?
 */
 KMIME_EXPORT extern QString nameForEncoding( KMime::Headers::contentEncoding enc );
 
 /**
   Returns a list of encodings that can correctly encode the @p data.
-  @author Based on KMail code by Thomas McGuire <mcguire@kde.org>
+  @ since 4.4
 */
 KMIME_EXPORT QList<KMime::Headers::contentEncoding> encodingsForData(
                                                        const QByteArray &data );

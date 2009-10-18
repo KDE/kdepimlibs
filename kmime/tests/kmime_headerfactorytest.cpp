@@ -63,6 +63,11 @@ bool isHeaderRegistered()
   return false;
 }
 
+void HeaderFactoryTest::initTestCase()
+{
+  HeaderFactory::self();
+}
+
 void HeaderFactoryTest::testBuiltInHeaders()
 {
   // Abstract headers have pure virtual methods.
