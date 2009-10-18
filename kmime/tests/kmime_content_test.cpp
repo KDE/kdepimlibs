@@ -272,6 +272,49 @@ void KMimeContentTest::testEncodedContent()
   QCOMPARE( msg->encodedContent(), data );
   QCOMPARE( msg->encodedContent(), data );
   QCOMPARE( msg->encodedContent(), data );
+  delete msg;
+
+
+  // RFC 2822 3.5: lines are limited to 1000 characters (998 + CRLF)
+  // (bug #187345)
+  msg = new Message();
+  data =
+      "Subject:"
+        "test test test test test test test test test test test test test test test test test test test test "
+        "test test test test test test test test test test test test test test test test test test test test "
+        "test test test test test test test test test test test test test test test test test test test test "
+        "test test test test test test test test test test test test test test test test test test test test "
+        "test test test test test test test test test test test test test test test test test test test test "
+        "test test test test test test test test test test test test test test test test test test test test "
+        "test test test test test test test test test test test test test test test test test test test test "
+        "test test test test test test test test test test test test test test test test test test test test "
+        "test test test test test test test test test test test test test test test test test test test test "
+        "test test test test test test test test test test test test test test test test test test test test"
+      "\n"
+      "References: "
+        "<test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> "
+        "<test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> "
+        "<test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> "
+        "<test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> "
+        "<test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> "
+        "<test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> "
+        "<test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> "
+        "<test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> "
+        "<test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> "
+        "<test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com> <test1@example.com>"
+      "\n\n"
+      "body\n";
+  msg->setContent( data );
+  QByteArray content = msg->encodedContent( true /* use CRLF */ );
+  QStringList lines = QString::fromLatin1( content ).split( "\r\n" );
+  foreach ( const QString &line, lines ) {
+    QEXPECT_FAIL( "", "KMime does not fold lines longer than 998 characters", Continue );
+    QVERIFY( line.length() < 998 && !line.isEmpty() && line != "body" );
+    // The test should be (after the expected failure disappears):
+    //QVERIFY( line.length() < 998 );
+  }
+  delete msg;
+
 }
 
 void KMimeContentTest::testMultipleHeaderExtraction()
