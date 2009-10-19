@@ -24,7 +24,7 @@
 #ifndef MAILTRANSPORT_PRECOMMANDJOB_H
 #define MAILTRANSPORT_PRECOMMANDJOB_H
 
-#include <QtCore/QProcess>
+#include "mailtransport/mailtransport_export.h"
 
 #include <KDE/KJob>
 
@@ -33,9 +33,14 @@ class PreCommandJobPrivate;
 namespace MailTransport {
 
 /**
-  Job to execute commands before connecting to an account.
-*/
-class PrecommandJob : public KJob
+  Job to execute a command.
+  This is used often for sending or receiving mails, for example to set up
+  a tunnel of VPN connection.
+  Basically this is just a KJob wrapper around a QProcess.
+
+  @since 4.4
+ */
+class MAILTRANSPORT_EXPORT PrecommandJob : public KJob
 {
   Q_OBJECT
 
@@ -54,19 +59,23 @@ class PrecommandJob : public KJob
 
     /**
       Executes the precommand.
+      Reimplemented from KJob.
     */
     virtual void start();
 
   protected:
+
+    /**
+      Reimplemented from KJob.
+    */
     virtual bool doKill();
 
-  private slots:
-    void slotFinished( int, QProcess::ExitStatus );
-    void slotStarted();
-    void slotError( QProcess::ProcessError error );
-
   private:
+    friend class ::PreCommandJobPrivate;
     PreCommandJobPrivate *const d;
+    Q_PRIVATE_SLOT( d, void slotFinished( int, QProcess::ExitStatus ) )
+    Q_PRIVATE_SLOT( d, void slotStarted() )
+    Q_PRIVATE_SLOT( d, void slotError( QProcess::ProcessError error ) )
 };
 
 } // namespace MailTransport

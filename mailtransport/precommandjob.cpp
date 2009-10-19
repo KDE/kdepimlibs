@@ -25,7 +25,8 @@
 
 #include <KDebug>
 #include <KLocalizedString>
-#include <KProcess>
+
+#include <QProcess>
 
 using namespace MailTransport;
 
@@ -36,18 +37,30 @@ using namespace MailTransport;
 class PreCommandJobPrivate
 {
   public:
-    KProcess *process;
+    PreCommandJobPrivate( PrecommandJob *parent );
+    QProcess *process;
     QString precommand;
+    PrecommandJob *q;
+
+    // Slots
+    void slotFinished( int, QProcess::ExitStatus );
+    void slotStarted();
+    void slotError( QProcess::ProcessError error );
 };
 
+PreCommandJobPrivate::PreCommandJobPrivate( PrecommandJob *parent )
+  : q( parent )
+{
+}
+
 PrecommandJob::PrecommandJob( const QString &precommand, QObject *parent )
-  : KJob( parent ), d( new PreCommandJobPrivate )
+  : KJob( parent ), d( new PreCommandJobPrivate( this ) )
 {
   d->precommand = precommand;
-  d->process = new KProcess( this );
+  d->process = new QProcess( this );
   connect( d->process, SIGNAL(started()), SLOT(slotStarted()) );
-  connect( d->process, SIGNAL(error(QProcess::ProcessError error)),
-           SLOT(slotError(QProcess::ProcessError error)));
+  connect( d->process, SIGNAL(error(QProcess::ProcessError)),
+           SLOT(slotError(QProcess::ProcessError)) );
   connect( d->process, SIGNAL(finished(int, QProcess::ExitStatus)),
            SLOT(slotFinished(int, QProcess::ExitStatus)) );
 }
@@ -59,22 +72,23 @@ PrecommandJob::~ PrecommandJob()
 
 void PrecommandJob::start()
 {
-  d->process->setShellCommand( d->precommand );
-  d->process->start();
+  d->process->start( d->precommand );
 }
 
-void PrecommandJob::slotStarted()
+void PreCommandJobPrivate::slotStarted()
 {
-  emit infoMessage( this, i18n( "Executing precommand" ),
-                    i18n( "Executing precommand '%1'.", d->precommand ) );
+  emit q->infoMessage( q, i18n( "Executing precommand" ),
+                       i18n( "Executing precommand '%1'.", precommand ) );
 }
 
-void PrecommandJob::slotError( QProcess::ProcessError error )
+void PreCommandJobPrivate::slotError( QProcess::ProcessError error )
 {
-  setError( UserDefinedError );
-  setErrorText( i18n( "Could not execute precommand '%1'.", d->precommand ) );
-  kDebug() << "Execution precommand has failed:" << error;
-  emitResult();
+  q->setError( KJob::UserDefinedError );
+  if ( error == QProcess::FailedToStart )
+    q->setErrorText( i18n( "Unable to start precommand '%1'.", precommand ) );
+  else
+    q->setErrorText( i18n( "Error while executing precommand '%1'.", precommand ) );
+  q->emitResult();
 }
 
 bool PrecommandJob::doKill()
@@ -84,17 +98,17 @@ bool PrecommandJob::doKill()
   return true;
 }
 
-void PrecommandJob::slotFinished( int exitCode, QProcess::ExitStatus exitStatus )
+void PreCommandJobPrivate::slotFinished( int exitCode, QProcess::ExitStatus exitStatus )
 {
   if ( exitStatus == QProcess::CrashExit ) {
-    setError( UserDefinedError );
-    setErrorText( i18n( "The precommand crashed." ) );
+    q->setError( KJob::UserDefinedError );
+    q->setErrorText( i18n( "The precommand crashed." ) );
   } else if ( exitCode != 0 ) {
-    setError( UserDefinedError );
-    setErrorText( i18n( "The precommand exited with code %1.",
-                        d->process->exitStatus() ) );
+    q->setError( KJob::UserDefinedError );
+    q->setErrorText( i18n( "The precommand exited with code %1.",
+                           process->exitStatus() ) );
   }
-  emitResult();
+  q->emitResult();
 }
 
 #include "precommandjob.moc"
