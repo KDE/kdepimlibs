@@ -73,9 +73,9 @@ class MAILTRANSPORT_EXPORT PrecommandJob : public KJob
   private:
     friend class ::PreCommandJobPrivate;
     PreCommandJobPrivate *const d;
-    Q_PRIVATE_SLOT( d, void slotFinished( int, QProcess::ExitStatus ) );
-    Q_PRIVATE_SLOT( d, void slotStarted() );
-    Q_PRIVATE_SLOT( d, void slotError( QProcess::ProcessError error ) );
+    Q_PRIVATE_SLOT( d, void slotFinished( int, QProcess::ExitStatus ) )
+    Q_PRIVATE_SLOT( d, void slotStarted() )
+    Q_PRIVATE_SLOT( d, void slotError( QProcess::ProcessError error ) )
 };
 
 } // namespace MailTransport
