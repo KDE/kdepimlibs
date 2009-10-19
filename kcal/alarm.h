@@ -42,6 +42,12 @@
 #include "listbase.h"
 #include "kcal_export.h"
 
+#include <kpimutils/supertrait.h>
+
+namespace boost {
+  template <typename T> class shared_ptr;
+}
+
 namespace KCal {
 
 class Incidence;
@@ -74,6 +80,11 @@ class KCAL_EXPORT Alarm : public CustomProperties
       List of alarms.
     */
     typedef ListBase<Alarm> List;
+
+    /**
+      A shared pointer to a Alarm object.
+    */
+    typedef boost::shared_ptr<Alarm> Ptr;
 
     /**
       Constructs an alarm belonging to the @p parent Incidence.

@@ -54,6 +54,11 @@ class KCAL_EXPORT Journal : public Incidence
     typedef boost::shared_ptr<Journal> Ptr;
 
     /**
+      A shared pointer to a non-mutable Journal object.
+    */
+    typedef boost::shared_ptr<const Journal> ConstPtr;
+
+    /**
       Constructs an empty journal.
     */
     Journal();
