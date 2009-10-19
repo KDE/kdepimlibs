@@ -133,7 +133,12 @@ QDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
 
 Calendar *DndFactory::createDropCalendar( const QMimeData *md )
 {
-  Calendar *cal = new CalendarLocal( d->mCalendar->timeSpec() );
+  return createDropCalendar( md, d->mCalendar->timeSpec() );
+}
+
+Calendar *DndFactory::createDropCalendar( const QMimeData *md, const KDateTime::Spec &timeSpec )
+{
+  Calendar *cal = new CalendarLocal( timeSpec );
 
   if ( ICalDrag::fromMimeData( md, cal ) ||
        VCalDrag::fromMimeData( md, cal ) ){

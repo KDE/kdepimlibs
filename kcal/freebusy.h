@@ -32,6 +32,7 @@
 #define KCAL_FREEBUSY_H
 
 #include "incidencebase.h"
+#include "event.h"
 #include "freebusyperiod.h"
 
 #include <QtCore/QByteArray>
@@ -90,6 +91,16 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
       @param end is the end datetime of the period.
     */
     FreeBusy( Calendar *calendar, const KDateTime &start, const KDateTime &end );
+
+    /**
+      Constructs a freebusy for a specified list of events given a single period.
+
+      @param events list of events.
+      @param start is the start datetime of the period.
+      @param end is the end datetime of the period.
+      @since 4.4
+    */
+    FreeBusy( const Event::List& events, const KDateTime &start, const KDateTime &end );
 
     /**
       Destroys a free/busy.
