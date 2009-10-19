@@ -43,7 +43,6 @@ install( FILES
          kmime_content.h
          kmime_contentindex.h
          kmime_header_parsing.h
-         kmime_headerfactory.h
          kmime_headers.h
          kmime_message.h
          kmime_mdn.h

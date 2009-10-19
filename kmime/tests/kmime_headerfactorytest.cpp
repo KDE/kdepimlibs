@@ -24,7 +24,7 @@
 #include <KDebug>
 #include <qtest_kde.h>
 
-#include <kmime_headerfactory.h>
+#include <kmime_headerfactory_p.h>
 #include <kmime_headers.h>
 
 using namespace KMime;
@@ -61,6 +61,11 @@ bool isHeaderRegistered()
     return true;
   }
   return false;
+}
+
+void HeaderFactoryTest::initTestCase()
+{
+  HeaderFactory::self();
 }
 
 void HeaderFactoryTest::testBuiltInHeaders()

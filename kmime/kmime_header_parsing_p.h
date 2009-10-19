@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+    Copyright (c) 2009 Thomas McGuire <mcguire@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -16,22 +16,25 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+#ifndef KMIME_HEADER_PARSING_P_H
+#define KMIME_HEADER_PARSING_P_H
 
-#ifndef KMIME_HEADERFACTORYTEST_H
-#define KMIME_HEADERFACTORYTEST_H
+#include <QList>
 
-#include <QtCore/QObject>
+class QByteArray;
 
-class HeaderFactoryTest : public QObject
-{
-  Q_OBJECT
-  public Q_SLOTS:
-    void initTestCase();
-    void testBuiltInHeaders();
-    void testCustomHeaders();
-    void testErrors();
+namespace KMime {
 
-    // TODO test how unregistered headers are handled by Content.
-};
+namespace Headers {
+  class Base;
+}
+namespace HeaderParsing {
+
+KMime::Headers::Base *extractFirstHeader( QByteArray &head );
+QList<KMime::Headers::Base*> parseHeaders( const QByteArray &head );
+
+}
+
+}
 
 #endif

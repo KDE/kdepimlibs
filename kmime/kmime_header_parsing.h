@@ -331,10 +331,6 @@ KMIME_EXPORT bool parseTime( const char* &scursor, const char * const send,
 KMIME_EXPORT bool parseDateTime( const char* &scursor, const char * const send,
                                  KDateTime &result, bool isCRLF=false );
 
-KMIME_EXPORT KMime::Headers::Base *extractFirstHeader( QByteArray &head );
-
-KMIME_EXPORT QList<KMime::Headers::Base*> parseHeaders( const QByteArray &head );
-
 } // namespace HeaderParsing
 
 } // namespace KMime
