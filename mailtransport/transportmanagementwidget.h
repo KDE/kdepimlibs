@@ -48,6 +48,7 @@ class MAILTRANSPORT_EXPORT TransportManagementWidget : public QWidget
     */
     virtual ~TransportManagementWidget();
 
+    //TODO_AKONADI_REVIEW: move private slots to private class
   private Q_SLOTS:
     void updateButtonState();
     void addClicked();

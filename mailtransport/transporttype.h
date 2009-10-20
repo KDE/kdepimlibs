@@ -76,14 +76,13 @@ class MAILTRANSPORT_EXPORT TransportType
     ~TransportType();
 
     /**
-      @internal
-    */
+     * Replaces the transport type by the @p other.
+     */
     TransportType &operator=( const TransportType &other );
 
     /**
-      @internal
-      Compares two transport types.
-    */
+     * Compares the transport type with the @p other.
+     */
     bool operator==( const TransportType &other ) const;
 
     /**
@@ -96,7 +95,7 @@ class MAILTRANSPORT_EXPORT TransportType
       Returns the numeric type of the transport.  This corresponds to
       Transport::EnumType::type.
     */
-    // TODO should this be Transport::EnumType::type instead of int?
+    //TODO_AKONADI_REVIEW: should this be Transport::EnumType::type instead of int?
     int type() const;
 
     /**
@@ -116,9 +115,10 @@ class MAILTRANSPORT_EXPORT TransportType
     Akonadi::AgentType agentType() const;
 
   private:
+    //@cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
-
+    //@endcond
 };
 
 } // namespace MailTransport

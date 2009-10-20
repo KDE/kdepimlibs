@@ -30,8 +30,8 @@
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/kmime/addressattribute.h>
-#include <akonadi/kmime/localfolders.h>
-#include <akonadi/kmime/localfoldersrequestjob.h>
+#include <akonadi/kmime/specialcollections.h>
+#include <akonadi/kmime/specialcollectionsrequestjob.h>
 
 using namespace Akonadi;
 using namespace KMime;
@@ -114,7 +114,7 @@ bool MessageQueueJob::Private::validate()
     q->emitResult();
     return false;
   } else if( sentBehaviour == SentBehaviourAttribute::MoveToDefaultSentCollection ) {
-    // TODO require LocalFolders::SentMail here?
+    // TODO require SpecialCollections::SentMail here?
   }
 
   return true; // all ok
@@ -135,6 +135,10 @@ void MessageQueueJob::Private::outboxRequestResult( KJob *job )
     return;
   }
 
+  SpecialCollectionsRequestJob *requestJob = qobject_cast<SpecialCollectionsRequestJob*>( job );
+  if ( !requestJob )
+    return;
+
   // Create item.
   Item item;
   item.setMimeType( QLatin1String( "message/rfc822" ) );
@@ -154,9 +158,9 @@ void MessageQueueJob::Private::outboxRequestResult( KJob *job )
   item.setFlag( "queued" );
 
   // Store the item in the outbox.
-  Collection col = LocalFolders::self()->defaultFolder( LocalFolders::Outbox );
-  Q_ASSERT( col.isValid() );
-  ItemCreateJob *cjob = new ItemCreateJob( item, col ); // job autostarts
+  const Collection collection = requestJob->collection();
+  Q_ASSERT( collection.isValid() );
+  ItemCreateJob *cjob = new ItemCreateJob( item, collection ); // job autostarts
   q->addSubjob( cjob );
 }
 
@@ -273,8 +277,8 @@ void MessageQueueJob::setBcc( const QStringList &bcc )
 
 void MessageQueueJob::start()
 {
-  LocalFoldersRequestJob *rjob = new LocalFoldersRequestJob( this );
-  rjob->requestDefaultFolder( LocalFolders::Outbox );
+  SpecialCollectionsRequestJob *rjob = new SpecialCollectionsRequestJob( this );
+  rjob->requestDefaultCollection( SpecialCollections::Outbox );
   connect( rjob, SIGNAL(result(KJob*)), this, SLOT(outboxRequestResult(KJob*)) );
   rjob->start();
 }

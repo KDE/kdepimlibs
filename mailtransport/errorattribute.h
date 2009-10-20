@@ -29,24 +29,38 @@
 namespace MailTransport {
 
 /**
-  Attribute given to the messages that failed to be sent.  Contains the error
-  message encountered.
-
-  @author Constantin Berzan <exit3219@gmail.com>
-  @since 4.4
-*/
+ * @short An Attribute to mark messages that failed to be sent.
+ *
+ * This attributeContains the error
+ * message encountered.
+ *
+ * @author Constantin Berzan <exit3219@gmail.com>
+ * @since 4.4
+ */
 class MAILTRANSPORT_EXPORT ErrorAttribute : public Akonadi::Attribute
 {
   public:
     /**
-      Creates a new ErrorAttribute.
-    */
-    ErrorAttribute( const QString &msg = QString() );
+     * Creates a new error attribute.
+     *
+     * @param msg The i18n'ed error message.
+     */
+    explicit ErrorAttribute( const QString &msg = QString() );
 
     /**
-      Destroys this ErrorAttribute.
-    */
+     * Destroys the error attribute.
+     */
     virtual ~ErrorAttribute();
+
+    /**
+     * Returns the i18n'ed error message.
+     */
+    QString message() const;
+
+    /**
+     * Sets the i18n'ed error message.
+     */
+    void setMessage( const QString &msg );
 
     /* reimpl */
     virtual ErrorAttribute *clone() const;
@@ -54,22 +68,13 @@ class MAILTRANSPORT_EXPORT ErrorAttribute : public Akonadi::Attribute
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );
 
-    /**
-      Returns the i18n'ed error message.
-    */
-    QString message() const;
-
-    /**
-      Sets the error message.
-    */
-    void setMessage( const QString &msg );
-
   private:
+    //@cond PRIVATE
     class Private;
     Private *const d;
-
+    //@endcond
 };
 
-} // namespace MailTransport
+}
 
-#endif // MAILTRANSPORT_ERRORATTRIBUTE_H
+#endif

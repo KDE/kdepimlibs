@@ -43,6 +43,7 @@ class DispatcherInterfacePrivate;
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
+//TODO_AKONADI_REVIEW: make private class a QObject based singleton, MDA->MailDispatcherAgent, make class value based
 class MAILTRANSPORT_EXPORT DispatcherInterface : public QObject
 {
   Q_OBJECT

@@ -28,6 +28,7 @@
 
 namespace MailTransport {
 
+//TODO_AKONADI_REVIEW: both classes private to mailtransport
 /**
   FilterAction that finds all messages with a DispatchMode of Never
   and assigns them a DispatchMode of Immediately.

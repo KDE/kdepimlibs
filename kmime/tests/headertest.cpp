@@ -76,6 +76,15 @@ void HeaderTest::testIdentHeader()
 
   // assemble the final header
   QCOMPARE( h->as7BitString( false ), QByteArray("<1234@local.machine.example> <3456@example.net> <abcd.1234@local.machine.tld> <78910@example.net>") );
+  delete h;
+
+  // parsing of ident with literal domain
+  h = new Headers::Generics::Ident();
+  const QByteArray ident = QByteArray( "<O55F3Y9E5MmKFwBN@[127.0.0.1]>" );
+  h->appendIdentifier( ident );
+  QEXPECT_FAIL( "", "Parsing strips angle brackets.", Continue );
+  QCOMPARE( h->as7BitString( false ), QByteArray( ident ) );
+  delete h;
 }
 
 void HeaderTest::testAddressListHeader()
@@ -224,10 +233,14 @@ void HeaderTest::testAddressListHeader()
   QCOMPARE( h->as7BitString( false ), QByteArray("\"first name (nickname)\" <first.name@domain.tld>") );
   delete h;
 
-  // rfc 2047 encoding in quoted name (which is not allowed there)
+  // rfc 2047 encoding in quoted name (it is not allowed there as per the RFC, but it happens)
   h = new Headers::Generics::AddressList();
   h->from7BitString( QByteArray( "\"Ingo =?iso-8859-15?q?Kl=F6cker?=\" <kloecker@kde.org>" ) );
   QCOMPARE( h->mailboxes().count(), 1 );
+  QEXPECT_FAIL( "", "RFC2047-encoded words in quoted string are not parsed (conformant with the RFC, but not with some software)", Continue );
+  // some software == current KMail (v1.12.90) ...
+  QCOMPARE( h->asUnicodeString(), QString::fromUtf8( "\"Ingo Klöcker\" <kloecker@kde.org>" ) );
+  // The following test is the "conformant" version of the test (kept to catch regression as long as the previous test doesn't pass).
   QCOMPARE( h->asUnicodeString(), QString::fromUtf8( "Ingo =?iso-8859-15?q?Kl=F6cker?= <kloecker@kde.org>" ) );
   delete h;
 
@@ -466,6 +479,12 @@ void HeaderTest::testContentTypeHeader()
   h = new ContentType( 0, "text/plain;\n name*0=\"PIN_Brief_box1@xx.xxx.censored_Konfigkarte.confi\";\n name*1=\"guration.txt\"" );
   QVERIFY( h->isPlainText() );
   QCOMPARE( h->name(), QString( "PIN_Brief_box1@xx.xxx.censored_Konfigkarte.configuration.txt" ) );
+  delete h;
+
+  // bug #197958 (name of Content-Type sent by Mozilla Thunderbird are not parsed -- test case generated with v2.0.0.22)
+  h = new ContentType( 0, "text/plain;\n name=\"=?ISO-8859-1?Q?lor=E9m_ipsum=2Etxt?=\"" );
+  QEXPECT_FAIL( "", "Name of attachment send by Mozilla Thunderbird are not parsed.", Continue );
+  QCOMPARE( h->name(), QString::fromUtf8( "lorém ipsum.txt" ) );
   delete h;
 }
 

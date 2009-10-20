@@ -43,7 +43,7 @@ class MAILTRANSPORT_EXPORT TransportAttribute : public Akonadi::Attribute
     /**
       Creates a new TransportAttribute.
     */
-    TransportAttribute( int id = -1 );
+    explicit TransportAttribute( int id = -1 );
 
     /**
       Destroys this TransportAttribute.

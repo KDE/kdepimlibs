@@ -33,45 +33,44 @@ namespace MailTransport {
 class Transport;
 
 /**
-  Configuration dialog for a mail transport.
-
-  @deprecated Use TransportManager::configureTransport() instead.
-*/
-// TODO KDE5: this class should not be exported.
-// FIXME how to avoid deprecated warning from its own moc?
+ * @short Configuration dialog for a mail transport.
+ *
+ * @deprecated Use TransportManager::configureTransport() instead.
+ */
 class MAILTRANSPORT_EXPORT_DEPRECATED TransportConfigDialog : public KDialog
 {
   Q_OBJECT
 
   public:
     /**
-      Creates a new mail transport configuration dialog for the given
-      Transport object.
-      The config dialog does not delete @p transport, you have to delete it
-      yourself.
-
-      Note that this class only works for transports that are handled directly
-      by MailTransport, i.e. SMTP and Sendmail.  This class cannot be used to
-      configure an Akonadi transport.
-
-      @param transport The Transport object to configure. This must be a deep
-      copy of a Transport object or a newly created one, which hasn't been
-      added to the TransportManager yet.
-      @param parent The parent widget.
-    */
+     * Creates a new mail transport configuration dialog for the given
+     * Transport object.
+     * The config dialog does not delete @p transport, you have to delete it
+     * yourself.
+     *
+     * Note that this class only works for transports that are handled directly
+     * by MailTransport, i.e. SMTP and Sendmail.  This class cannot be used to
+     * configure an Akonadi transport.
+     *
+     * @param transport The Transport object to configure. This must be a deep
+     * copy of a Transport object or a newly created one, which hasn't been
+     * added to the TransportManager yet.
+     * @param parent The parent widget.
+     */
     explicit TransportConfigDialog( Transport *transport, QWidget *parent = 0 );
 
     /**
-      Destroys the dialog.
-    */
+     * Destroys the transport config dialog.
+     */
     virtual ~TransportConfigDialog();
 
   private:
+    //@cond PRIVATE
     class Private;
     Private *const d;
 
     Q_PRIVATE_SLOT( d, void okClicked() )
-
+    //@endcond
 };
 
 } // namespace MailTransport

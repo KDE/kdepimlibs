@@ -106,6 +106,7 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
     */
     DispatchModeAttribute::DispatchMode dispatchMode() const;
 
+    //TODO_AKONADI_REVIEW: replace the sendDueDate, dispatchMode and from/to methods by getters of the attributes
     /**
       Returns the date and time when this message should be sent.
       Only valid if dispatchMode() is AfterDueDate.
