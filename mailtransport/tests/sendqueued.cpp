@@ -26,7 +26,7 @@
 
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
-#include <akonadi/filteractionjob.h>
+#include <mailtransport/filteractionjob.h>
 #include <akonadi/kmime/specialcollections.h>
 #include <akonadi/kmime/specialcollectionsrequestjob.h>
 

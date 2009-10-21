@@ -20,8 +20,8 @@
 #ifndef AKONADI_FILTERACTIONJOB_H
 #define AKONADI_FILTERACTIONJOB_H
 
-#include "item.h"
-#include "transactionsequence.h"
+#include <akonadi/item.h>
+#include <akonadi/transactionsequence.h>
 
 namespace Akonadi {
 

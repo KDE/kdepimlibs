@@ -26,6 +26,7 @@ set(mailtransport_lib_srcs
   sendmailconfigwidget.cpp
   smtpconfigwidget.cpp
 
+  filteractionjob.cpp
   transportjob.cpp
   resourcesendjob.cpp
   sendmailjob.cpp
@@ -70,7 +71,7 @@ target_link_libraries(kcm_mailtransport  ${KDE4_KDEUI_LIBS} mailtransport)
 
 install(TARGETS kcm_mailtransport  DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES kcm_mailtransport.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
-install( FILES 
+install( FILES
         mailtransport_export.h
 
         transportjob.h
