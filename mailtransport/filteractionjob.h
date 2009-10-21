@@ -20,10 +20,10 @@
 #ifndef AKONADI_FILTERACTIONJOB_H
 #define AKONADI_FILTERACTIONJOB_H
 
+#include <mailtransport/mailtransport_export.h>
+
 #include <akonadi/item.h>
 #include <akonadi/transactionsequence.h>$=
-
-#include "mailtransport_export.h"
 
 namespace Akonadi {
 
