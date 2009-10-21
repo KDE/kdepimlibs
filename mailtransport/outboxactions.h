@@ -21,10 +21,10 @@
 #define MAILTRANSPORT_OUTBOXACTIONS_H
 
 #include <mailtransport/mailtransport_export.h>
+#include <mailtransport/filteractionjob.h>
 
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/job.h>
-#include <akonadi/filteractionjob.h>
 
 namespace MailTransport {
 
