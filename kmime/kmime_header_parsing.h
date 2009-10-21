@@ -331,6 +331,14 @@ KMIME_EXPORT bool parseTime( const char* &scursor, const char * const send,
 KMIME_EXPORT bool parseDateTime( const char* &scursor, const char * const send,
                                  KDateTime &result, bool isCRLF=false );
 
+/**
+ * Extracts and returns the first header that is contained in the given byte array.
+ * The header will also be removed from the passed-in byte array head.
+ *
+ * @since 4.4
+ */
+KMIME_EXPORT KMime::Headers::Base *extractFirstHeader( QByteArray &head );
+
 } // namespace HeaderParsing
 
 } // namespace KMime
