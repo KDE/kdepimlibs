@@ -452,7 +452,14 @@ bool SMTPProtocol::execute( Command * cmd, TransactionState * ts ) {
     bool ok = false;
     Response r = getResponse( &ok );
     if ( !ok ) {
-      smtp_close( false );
+      // Only close without sending QUIT if the responce was incomplete
+      // rfc5321 forbidds a client from closing a connection without sending
+      // QUIT (section 4.1.1.10)
+      if ( r.isComplete() ) {
+        smtp_close();
+      } else {
+        smtp_close( false );
+      }
       return false;
     }
     if ( !cmd->processResponse( r, ts ) ) {
