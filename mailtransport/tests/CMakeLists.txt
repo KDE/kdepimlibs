@@ -1,6 +1,6 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
-macro(add_akonadi_isolated_test _source)
+macro(add_akonadi_isolated_test _source _path)
   get_filename_component(_targetName ${_source} NAME_WE)
   set(_srcList ${_source} )
 
@@ -29,7 +29,7 @@ macro(add_akonadi_isolated_test _source)
 
   find_program(_testrunner akonaditest)
 
-  add_test( mailtransport-${_targetName} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config.xml ${_executable} )
+  add_test( mailtransport-${_targetName} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/${_path}/config.xml ${_executable} )
 endmacro(add_akonadi_isolated_test)
 
 
@@ -59,5 +59,6 @@ target_link_libraries( abort ${KDE4_KDEUI_LIBS} mailtransport akonadi-kde)
 
 # Akonadi testrunner-based tests:
 
-add_akonadi_isolated_test( attributetest.cpp )
-add_akonadi_isolated_test( messagequeuejobtest.cpp )
+add_akonadi_isolated_test( attributetest.cpp unittestenv )
+add_akonadi_isolated_test( messagequeuejobtest.cpp unittestenv )
+add_akonadi_isolated_test( filteractiontest.cpp unittestenv_akonadi )

@@ -19,9 +19,9 @@
 
 #include "filteractionjob.h"
 
-#include "collection.h"
-#include "itemfetchjob.h"
-#include "itemfetchscope.h"
+#include <akonadi/collection.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 
 #include <KDebug>
 
@@ -35,7 +35,7 @@ class Akonadi::FilterActionJob::Private
       , functor( 0 )
     {
     }
-    
+
     ~Private()
     {
       delete functor;

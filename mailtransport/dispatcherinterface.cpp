@@ -27,7 +27,7 @@
 
 #include <akonadi/agentmanager.h>
 #include <akonadi/collection.h>
-#include <akonadi/filteractionjob.h>
+#include "filteractionjob.h"
 #include <akonadi/kmime/specialcollections.h>
 
 using namespace Akonadi;

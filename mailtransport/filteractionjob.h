@@ -20,8 +20,10 @@
 #ifndef AKONADI_FILTERACTIONJOB_H
 #define AKONADI_FILTERACTIONJOB_H
 
-#include "item.h"
-#include "transactionsequence.h"
+#include <mailtransport/mailtransport_export.h>
+
+#include <akonadi/item.h>
+#include <akonadi/transactionsequence.h>
 
 namespace Akonadi {
 
@@ -67,7 +69,7 @@ class Job;
  * @author Constantin Berzan <exit3219@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT FilterAction
+class MAILTRANSPORT_EXPORT FilterAction
 {
   public:
     /**
@@ -120,7 +122,7 @@ class AKONADI_EXPORT FilterAction
  * @author Constantin Berzan <exit3219@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT FilterActionJob : public TransactionSequence
+class MAILTRANSPORT_EXPORT FilterActionJob : public TransactionSequence
 {
   Q_OBJECT
 

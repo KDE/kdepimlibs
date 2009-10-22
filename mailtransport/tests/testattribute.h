@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2008 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,32 +17,20 @@
     02110-1301, USA.
 */
 
-#ifndef IMAPPARSER_TEST_H
-#define IMAPPARSER_TEST_H
+#ifndef TESTATTRIBUTE_H
+#define TESTATTRIBUTE_H
 
-#include <QtCore/QObject>
+#include <akonadi/attribute.h>
 
-class ImapParserTest : public QObject
+/* Attribute used for testing by various unit tests. */
+class TestAttribute : public Akonadi::Attribute
 {
-  Q_OBJECT
-  private Q_SLOTS:
-    void testStripLeadingSpaces();
-    void testParseQuotedString();
-    void testParseString();
-    void testParseParenthesizedList_data();
-    void testParseParenthesizedList();
-    void testParseNumber();
-    void testQuote_data();
-    void testQuote();
-    void testMessageParser_data();
-    void testMessageParser();
-    void testParseSequenceSet_data();
-    void testParseSequenceSet();
-    void testParseDateTime_data();
-    void testParseDateTime();
-    void testBulkParser_data();
-    void testBulkParser();
+  public:
+    QByteArray type() const { return "EXTRA"; }
+    QByteArray serialized() const { return data; }
+    void deserialize( const QByteArray &ba ) { data = ba; }
+    TestAttribute* clone() const { TestAttribute* a = new TestAttribute; a->data = data; return a; }
+    QByteArray data;
 };
-
 
 #endif

@@ -601,6 +601,9 @@ Headers::Generic *Content::getNextHeader( QByteArray &head )
 Headers::Generic *Content::nextHeader( QByteArray &head )
 {
   Headers::Base *header = HeaderParsing::extractFirstHeader( head );
+  if ( !header ) {
+    return 0;
+  }
   // Convert it from the real class to Generic.
   Headers::Generic *ret = new Headers::Generic( header->type(), this );
   ret->from7BitString( header->as7BitString() );
