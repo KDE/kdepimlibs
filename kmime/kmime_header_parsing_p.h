@@ -30,7 +30,6 @@ namespace Headers {
 }
 namespace HeaderParsing {
 
-KMime::Headers::Base *extractFirstHeader( QByteArray &head );
 QList<KMime::Headers::Base*> parseHeaders( const QByteArray &head );
 
 }
