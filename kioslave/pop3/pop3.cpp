@@ -559,8 +559,8 @@ int POP3Protocol::loginSASL( KIO::AuthInfo &ai )
   if (metaData("auth") == "SASL") {
     closeConnection();
     error(ERR_COULD_NOT_LOGIN,
-          i18n("Your POP3 server does not support SASL.\n"
-               "Choose a different authentication method."));
+          i18n("Your POP3 server (%1) does not support SASL.\n"
+               "Choose a different authentication method.", m_sServer));
     return -1;
   }
   return 1;
@@ -672,8 +672,8 @@ bool POP3Protocol::pop3_open()
 
     if (metaData("auth") == "APOP" && !supports_apop) {
       error(ERR_COULD_NOT_LOGIN,
-          i18n("Your POP3 server does not support APOP.\n"
-               "Choose a different authentication method."));
+          i18n("Your POP3 server (%1) does not support APOP.\n"
+               "Choose a different authentication method.", m_sServer));
       closeConnection();
       return false;
     }
@@ -689,7 +689,7 @@ bool POP3Protocol::pop3_open()
         kDebug(7105) << "TLS mode has been enabled.";
       } else {
         kDebug(7105) << "TLS mode setup has failed. Aborting." << endl;
-        error(ERR_COULD_NOT_CONNECT,
+        error(ERR_SLAVE_DEFINED,
               i18n("Your POP3 server claims to "
                    "support TLS but negotiation "
                    "was unsuccessful. You can "
@@ -699,9 +699,9 @@ bool POP3Protocol::pop3_open()
         return false;
       }
     } else if (metaData("tls") == "on") {
-      error(ERR_COULD_NOT_CONNECT,
-            i18n("Your POP3 server does not support TLS. Disable "
-                 "TLS, if you want to connect without encryption."));
+      error(ERR_SLAVE_DEFINED,
+            i18n("Your POP3 server (%1) does not support TLS. Disable "
+                 "TLS, if you want to connect without encryption.", m_sServer));
       closeConnection();
       return false;
     }
