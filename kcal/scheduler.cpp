@@ -93,7 +93,7 @@ QString ScheduleMessage::statusName( ScheduleMessage::Status status )
   case RequestUpdate:
     return i18nc( "@item request updated posting", "Request Updated Message" );
   default:
-    return i18nc( "@item unknown status", "Unknown Status: %1", status );
+    return i18nc( "@item unknown status", "Unknown Status: %1", int( status ) );
   }
 }
 
@@ -406,8 +406,7 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
   kDebug() << "Scheduler::acceptCancel="
            << ScheduleMessage::statusName( status )
            << ": found " << existingIncidences.count()
-           << " incidences with schedulingID " << inc->schedulingID()
-           << endl;
+           << " incidences with schedulingID " << inc->schedulingID();
 
   bool ret = false;
   Incidence::List::ConstIterator incit = existingIncidences.begin();
@@ -415,7 +414,7 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
     Incidence *i = *incit;
     kDebug() << "Considering this found event ("
              << ( i->isReadOnly() ? "readonly" : "readwrite" )
-             << ") :" << mFormat->toString( i ) << endl;
+             << ") :" << mFormat->toString( i );
 
     // If it's readonly, we can't possible remove it.
     if ( i->isReadOnly() ) {
@@ -442,7 +441,7 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
         // This incidence wasn't created by me - it's probably in a shared
         // folder and meant for someone else, ignore it.
         kDebug() << "ignoring " << i->uid()
-                 << " since I'm still NeedsAction there" << endl;
+                 << " since I'm still NeedsAction there";
         isMine = false;
         break;
       }
