@@ -415,7 +415,7 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
     // is compared to other events in the calendar. But if we have another
     // version of the event around (e.g. shared folder for a group), the
     // status could be RequestNew, Obsolete or Updated.
-    kDebug() << "looking in " << i->uid() << "'s attendees" << endl;
+    kDebug() << "looking in " << i->uid() << "'s attendees";
 
     // This is supposed to be a new request, not an update - however we want
     // to update the existing one to handle the "clicking more than once
@@ -436,7 +436,7 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
     }
 
     if ( isMine ) {
-      kDebug() << "removing existing incidence " << i->uid() << endl;
+      kDebug() << "removing existing incidence " << i->uid();
       if ( i->type() == "Event" ) {
         Event *event = mCalendar->event( i->uid() );
         ret = ( event && mCalendar->deleteEvent( event ) );
@@ -450,8 +450,8 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
   }
 
   // in case we didn't find the to-be-removed incidence
-  if ( inc->revision() > 0 ) {
-    KMessageBox::error(
+  if ( existingIncidences.count() > 0 && inc->revision() > 0 ) {
+    KMessageBox::information(
       0,
       i18nc( "@info",
              "The event or task could not be removed from your calendar. "
@@ -462,8 +462,11 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
   return ret;
 }
 
-bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
+bool Scheduler::acceptCancel( IncidenceBase *incidence,
+                              ScheduleMessage::Status status )
 {
+  Q_UNUSED( status );
+
   const IncidenceBase *toDelete = mCalendar->incidenceFromSchedulingID( incidence->uid() );
 
   bool ret = true;
@@ -485,12 +488,12 @@ bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /*
   }
 
   if ( !ret ) {
-    KMessageBox::error(
+    KMessageBox::information(
       0,
       i18nc( "@info",
              "The event or task to be canceled could not be removed from your calendar. "
-             "Maybe it has already been deleted, or the calendar that "
-             "contains it is disabled." ) );
+             "Maybe it has already been deleted or is not owned by you. "
+             "Or it might belong to a read-only or disabled calendar." ) );
   }
   deleteTransaction(incidence);
   return ret;
@@ -637,7 +640,7 @@ bool Scheduler::acceptReply( IncidenceBase *incidence,
       }
     }
   } else {
-    kError(5800) << "No incidence for scheduling\n";
+    kError() << "No incidence for scheduling.";
   }
 
   if ( ret ) {
