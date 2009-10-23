@@ -1408,7 +1408,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     if (cmd->result () != "OK")
     {
       completeQueue.removeAll (cmd);
-      error(ERR_COULD_NOT_WRITE,
+      error(ERR_SLAVE_DEFINED,
             i18n( "Changing the flags of message %1 failed.", _url.prettyUrl() ) );
       return;
     }
@@ -1783,7 +1783,7 @@ IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, KIO::JobFlags flags)
           completeQueue.removeAll(cmd);
           if (!ok)
           {
-            error(ERR_CANNOT_RENAME, i18n("Unable to close mailbox."));
+            error(ERR_SLAVE_DEFINED, i18n("Unable to close mailbox."));
             return;
           }
           setState(ISTATE_LOGIN);
@@ -1851,7 +1851,7 @@ IMAP4Protocol::stat (const KUrl & _url)
       completeQueue.removeAll(cmd);
       if (!ok)
       {
-        error(ERR_COULD_NOT_STAT, i18n("Unable to close mailbox."));
+        error(ERR_SLAVE_DEFINED, i18n("Unable to close mailbox."));
         return;
       }
       setState(ISTATE_LOGIN);
@@ -1881,7 +1881,7 @@ IMAP4Protocol::stat (const KUrl & _url)
       }
       completeQueue.removeAll (cmd);
       if (found)
-        error(ERR_COULD_NOT_STAT, i18n("Unable to get information about folder %1. The server replied: %2", aBox, cmdInfo));
+        error(ERR_SLAVE_DEFINED, i18n("Unable to get information about folder %1. The server replied: %2", aBox, cmdInfo));
       else
         error(KIO::ERR_DOES_NOT_EXIST, aBox);
       return;
@@ -2124,13 +2124,13 @@ bool IMAP4Protocol::makeLogin ()
         }
       }
       if (!clientLogin (myUser, myPass, resultInfo))
-        error(KIO::ERR_COULD_NOT_AUTHENTICATE, i18n("Unable to login. Probably the "
+        error(ERR_SLAVE_DEFINED, i18n("Unable to login. Probably the "
         "password is wrong.\nThe server %1 replied:\n%2", myHost, resultInfo));
     }
     else
     {
       if (!clientAuthenticate (this, authInfo, myHost, myAuth, mySSL, resultInfo))
-        error(KIO::ERR_COULD_NOT_AUTHENTICATE, i18n("Unable to authenticate via %1.\n"	"The server %2 replied:\n%3", myAuth, myHost, resultInfo));
+        error(ERR_SLAVE_DEFINED, i18n("Unable to authenticate via %1.\n"	"The server %2 replied:\n%3", myAuth, myHost, resultInfo));
       else {
         myUser = authInfo.username;
         myPass = authInfo.password;
