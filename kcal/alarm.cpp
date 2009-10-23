@@ -159,9 +159,6 @@ void Alarm::setType( Alarm::Type type )
     return;
   }
 
-  if ( d->mParent ) {
-    d->mParent->update();
-  }
   switch ( type ) {
     case Display:
       d->mDescription = "";
@@ -180,9 +177,6 @@ void Alarm::setType( Alarm::Type type )
     case Invalid:
       break;
     default:
-      if ( d->mParent ) {
-        d->mParent->updated(); // not really
-      }
       return;
   }
   d->mType = type;
@@ -198,9 +192,6 @@ Alarm::Type Alarm::type() const
 
 void Alarm::setAudioAlarm( const QString &audioFile )
 {
-  if ( d->mParent ) {
-    d->mParent->update();
-  }
   d->mType = Audio;
   d->mFile = audioFile;
   if ( d->mParent ) {
@@ -211,9 +202,6 @@ void Alarm::setAudioAlarm( const QString &audioFile )
 void Alarm::setAudioFile( const QString &audioFile )
 {
   if ( d->mType == Audio ) {
-    if ( d->mParent ) {
-      d->mParent->update();
-    }
     d->mFile = audioFile;
     if ( d->mParent ) {
       d->mParent->updated();
@@ -229,9 +217,6 @@ QString Alarm::audioFile() const
 void Alarm::setProcedureAlarm( const QString &programFile,
                                const QString &arguments )
 {
-  if ( d->mParent ) {
-    d->mParent->update();
-  }
   d->mType = Procedure;
   d->mFile = programFile;
   d->mDescription = arguments;
@@ -243,9 +228,6 @@ void Alarm::setProcedureAlarm( const QString &programFile,
 void Alarm::setProgramFile( const QString &programFile )
 {
   if ( d->mType == Procedure ) {
-    if ( d->mParent ) {
-      d->mParent->update();
-    }
     d->mFile = programFile;
     if ( d->mParent ) {
       d->mParent->updated();
@@ -261,9 +243,6 @@ QString Alarm::programFile() const
 void Alarm::setProgramArguments( const QString &arguments )
 {
   if ( d->mType == Procedure ) {
-    if ( d->mParent ) {
-      d->mParent->update();
-    }
     d->mDescription = arguments;
     if ( d->mParent ) {
       d->mParent->updated();
@@ -280,9 +259,6 @@ void Alarm::setEmailAlarm( const QString &subject, const QString &text,
                            const QList<Person> &addressees,
                            const QStringList &attachments )
 {
-  if ( d->mParent ) {
-    d->mParent->update();
-  }
   d->mType = Email;
   d->mMailSubject = subject;
   d->mDescription = text;
@@ -296,9 +272,6 @@ void Alarm::setEmailAlarm( const QString &subject, const QString &text,
 void Alarm::setMailAddress( const Person &mailAddress )
 {
   if ( d->mType == Email ) {
-    if ( d->mParent ) {
-      d->mParent->update();
-    }
     d->mMailAddresses.clear();
     d->mMailAddresses += mailAddress;
     if ( d->mParent ) {
@@ -310,9 +283,6 @@ void Alarm::setMailAddress( const Person &mailAddress )
 void Alarm::setMailAddresses( const QList<Person> &mailAddresses )
 {
   if ( d->mType == Email ) {
-    if ( d->mParent ) {
-      d->mParent->update();
-    }
     d->mMailAddresses = mailAddresses;
     if ( d->mParent ) {
       d->mParent->updated();
@@ -323,9 +293,6 @@ void Alarm::setMailAddresses( const QList<Person> &mailAddresses )
 void Alarm::addMailAddress( const Person &mailAddress )
 {
   if ( d->mType == Email ) {
-    if ( d->mParent ) {
-      d->mParent->update();
-    }
     d->mMailAddresses += mailAddress;
     if ( d->mParent ) {
       d->mParent->updated();
@@ -341,9 +308,6 @@ QList<Person> Alarm::mailAddresses() const
 void Alarm::setMailSubject( const QString &mailAlarmSubject )
 {
   if ( d->mType == Email ) {
-    if ( d->mParent ) {
-      d->mParent->update();
-    }
     d->mMailSubject = mailAlarmSubject;
     if ( d->mParent ) {
       d->mParent->updated();
@@ -359,9 +323,6 @@ QString Alarm::mailSubject() const
 void Alarm::setMailAttachment( const QString &mailAttachFile )
 {
   if ( d->mType == Email ) {
-    if ( d->mParent ) {
-      d->mParent->update();
-    }
     d->mMailAttachFiles.clear();
     d->mMailAttachFiles += mailAttachFile;
     if ( d->mParent ) {
@@ -373,9 +334,6 @@ void Alarm::setMailAttachment( const QString &mailAttachFile )
 void Alarm::setMailAttachments( const QStringList &mailAttachFiles )
 {
   if ( d->mType == Email ) {
-    if ( d->mParent ) {
-      d->mParent->update();
-    }
     d->mMailAttachFiles = mailAttachFiles;
     if ( d->mParent ) {
       d->mParent->updated();
@@ -386,9 +344,6 @@ void Alarm::setMailAttachments( const QStringList &mailAttachFiles )
 void Alarm::addMailAttachment( const QString &mailAttachFile )
 {
   if ( d->mType == Email ) {
-    if ( d->mParent ) {
-      d->mParent->update();
-    }
     d->mMailAttachFiles += mailAttachFile;
     if ( d->mParent ) {
       d->mParent->updated();
@@ -404,9 +359,6 @@ QStringList Alarm::mailAttachments() const
 void Alarm::setMailText( const QString &text )
 {
   if ( d->mType == Email ) {
-    if ( d->mParent ) {
-      d->mParent->update();
-    }
     d->mDescription = text;
     if ( d->mParent ) {
       d->mParent->updated();
@@ -421,9 +373,6 @@ QString Alarm::mailText() const
 
 void Alarm::setDisplayAlarm( const QString &text )
 {
-  if ( d->mParent ) {
-    d->mParent->update();
-  }
   d->mType = Display;
   if ( !text.isNull() ) {
     d->mDescription = text;
@@ -436,9 +385,6 @@ void Alarm::setDisplayAlarm( const QString &text )
 void Alarm::setText( const QString &text )
 {
   if ( d->mType == Display ) {
-    if ( d->mParent ) {
-      d->mParent->update();
-    }
     d->mDescription = text;
     if ( d->mParent ) {
       d->mParent->updated();
@@ -453,9 +399,6 @@ QString Alarm::text() const
 
 void Alarm::setTime( const KDateTime &alarmTime )
 {
-  if ( d->mParent ) {
-    d->mParent->update();
-  }
   d->mAlarmTime = alarmTime;
   d->mHasTime = true;
 
@@ -492,9 +435,6 @@ bool Alarm::hasTime() const
 void Alarm::shiftTimes( const KDateTime::Spec &oldSpec,
                         const KDateTime::Spec &newSpec )
 {
-  if ( d->mParent ) {
-    d->mParent->update();
-  }
   d->mAlarmTime = d->mAlarmTime.toTimeSpec( oldSpec );
   d->mAlarmTime.setTimeSpec( newSpec );
   if ( d->mParent ) {
@@ -505,9 +445,6 @@ void Alarm::shiftTimes( const KDateTime::Spec &oldSpec,
 void Alarm::setSnoozeTime( const Duration &alarmSnoozeTime )
 {
   if ( alarmSnoozeTime.value() > 0 ) {
-    if ( d->mParent ) {
-      d->mParent->update();
-    }
     d->mAlarmSnoozeTime = alarmSnoozeTime;
     if ( d->mParent ) {
       d->mParent->updated();
@@ -522,9 +459,6 @@ Duration Alarm::snoozeTime() const
 
 void Alarm::setRepeatCount( int alarmRepeatCount )
 {
-  if ( d->mParent ) {
-    d->mParent->update();
-  }
   d->mAlarmRepeatCount = alarmRepeatCount;
   if ( d->mParent ) {
     d->mParent->updated();
@@ -552,7 +486,7 @@ KDateTime Alarm::nextRepetition( const KDateTime &preTime ) const
     // there isn't an occurrence after the specified time
     return KDateTime();
   }
-  qint64 repetition;
+  int repetition;
   int interval = d->mAlarmSnoozeTime.value();
   bool daily = d->mAlarmSnoozeTime.isDaily();
   if ( daily ) {
@@ -568,7 +502,7 @@ KDateTime Alarm::nextRepetition( const KDateTime &preTime ) const
     // all repetitions have finished before the specified time
     return KDateTime();
   }
-  return daily ? at.addDays( int( repetition * interval ) )
+  return daily ? at.addDays( repetition * interval )
                : at.addSecs( repetition * interval );
 }
 
@@ -582,7 +516,7 @@ KDateTime Alarm::previousRepetition( const KDateTime &afterTime ) const
   if ( !d->mAlarmRepeatCount ) {
     return at;
   }
-  qint64 repetition;
+  int repetition;
   int interval = d->mAlarmSnoozeTime.value();
   bool daily = d->mAlarmSnoozeTime.isDaily();
   if ( daily ) {
@@ -597,7 +531,7 @@ KDateTime Alarm::previousRepetition( const KDateTime &afterTime ) const
   if ( repetition > d->mAlarmRepeatCount ) {
     repetition = d->mAlarmRepeatCount;
   }
-  return daily ? at.addDays( int( repetition * interval ) )
+  return daily ? at.addDays( repetition * interval )
                : at.addSecs( repetition * interval );
 }
 
@@ -615,9 +549,6 @@ KDateTime Alarm::endTime() const
 
 void Alarm::toggleAlarm()
 {
-  if ( d->mParent ) {
-    d->mParent->update();
-  }
   d->mAlarmEnabled = !d->mAlarmEnabled;
   if ( d->mParent ) {
     d->mParent->updated();
@@ -626,9 +557,6 @@ void Alarm::toggleAlarm()
 
 void Alarm::setEnabled( bool enable )
 {
-  if ( d->mParent ) {
-    d->mParent->update();
-  }
   d->mAlarmEnabled = enable;
   if ( d->mParent ) {
     d->mParent->updated();
@@ -642,9 +570,6 @@ bool Alarm::enabled() const
 
 void Alarm::setStartOffset( const Duration &offset )
 {
-  if ( d->mParent ) {
-    d->mParent->update();
-  }
   d->mOffset = offset;
   d->mEndOffset = false;
   d->mHasTime = false;
@@ -670,9 +595,6 @@ bool Alarm::hasEndOffset() const
 
 void Alarm::setEndOffset( const Duration &offset )
 {
-  if ( d->mParent ) {
-    d->mParent->update();
-  }
   d->mOffset = offset;
   d->mEndOffset = true;
   d->mHasTime = false;
@@ -699,7 +621,6 @@ Incidence *Alarm::parent() const
 void Alarm::customPropertyUpdated()
 {
   if ( d->mParent ) {
-    d->mParent->update();
     d->mParent->updated();
   }
 }
