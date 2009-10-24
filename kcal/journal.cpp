@@ -30,6 +30,7 @@
 */
 
 #include "journal.h"
+#include <klocale.h>
 
 using namespace KCal;
 
@@ -44,6 +45,11 @@ Journal::~Journal()
 QByteArray Journal::type() const
 {
   return "Journal";
+}
+
+QString Journal::typeStr() const
+{
+  return i18nc( "incidence type is journal", "journal" );
 }
 
 Journal *Journal::clone()

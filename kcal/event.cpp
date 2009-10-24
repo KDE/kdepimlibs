@@ -109,6 +109,11 @@ QByteArray Event::type() const
   return "Event";
 }
 
+QString Event::typeStr() const
+{
+  return i18nc( "incidence type is event", "event" );
+}
+
 void Event::setDtEnd( const KDateTime &dtEnd )
 {
   if ( mReadOnly ) {

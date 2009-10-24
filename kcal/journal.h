@@ -75,6 +75,12 @@ class KCAL_EXPORT Journal : public Incidence
     QByteArray type() const;
 
     /**
+      @copydoc
+      IncidenceBase::typeStr()
+    */
+    QString typeStr() const;
+
+    /**
       Returns an exact copy of this journal. The returned object is owned
       by the caller.
     */

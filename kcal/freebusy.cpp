@@ -36,8 +36,7 @@
 #include "event.h"
 
 #include <kdebug.h>
-
-#include <QtCore/QList>
+#include <klocale.h>
 
 using namespace KCal;
 
@@ -45,25 +44,25 @@ using namespace KCal;
 class KCal::FreeBusy::Private
 {
   private:
-    FreeBusy* const q;
+    FreeBusy *const q;
   public:
-    Private( FreeBusy* qq ) : q( qq )
+    Private( FreeBusy *qq ) : q( qq )
     {}
 
-    Private( const KCal::FreeBusy::Private &other, FreeBusy* qq ) : q( qq )
+    Private( const KCal::FreeBusy::Private &other, FreeBusy *qq ) : q( qq )
     { init( other ); }
 
-    Private( const FreeBusyPeriod::List &busyPeriods, FreeBusy* qq )
+    Private( const FreeBusyPeriod::List &busyPeriods, FreeBusy *qq )
       : q( qq ), mBusyPeriods( busyPeriods )
     {}
 
     void init( const KCal::FreeBusy::Private &other );
     void init( const Event::List &events, const KDateTime &start, const KDateTime &end );
 
-    KDateTime mDtEnd;         // end datetime
-    FreeBusyPeriod::List mBusyPeriods;// list of periods
+    KDateTime mDtEnd;                  // end datetime
+    FreeBusyPeriod::List mBusyPeriods; // list of periods
 
-    //This is used for creating a freebusy object for the current user
+    // This is used for creating a freebusy object for the current user
     bool addLocalPeriod( FreeBusy *fb, const KDateTime &start, const KDateTime &end );
 };
 
@@ -72,7 +71,6 @@ void KCal::FreeBusy::Private::init( const KCal::FreeBusy::Private &other )
   mDtEnd = other.mDtEnd;
   mBusyPeriods = other.mBusyPeriods;
 }
-
 //@endcond
 
 FreeBusy::FreeBusy()
@@ -93,7 +91,7 @@ FreeBusy::FreeBusy( const KDateTime &start, const KDateTime &end )
   setDtEnd( end );
 }
 
-FreeBusy::FreeBusy( const Event::List& events, const KDateTime &start, const KDateTime &end )
+FreeBusy::FreeBusy( const Event::List &events, const KDateTime &start, const KDateTime &end )
   : d( new KCal::FreeBusy::Private( this ) )
 {
   setDtStart( start );
@@ -102,91 +100,91 @@ FreeBusy::FreeBusy( const Event::List& events, const KDateTime &start, const KDa
   d->init( events, start, end );
 }
 
-void FreeBusy::Private::init( const Event::List &eventList, const KDateTime &start, const KDateTime &end )
+void FreeBusy::Private::init( const Event::List &eventList,
+                              const KDateTime &start, const KDateTime &end )
 {
+  int extraDays, i, x, duration;
+  duration = start.daysTo( end );
+  QDate day;
+  KDateTime tmpStart;
+  KDateTime tmpEnd;
 
-    int extraDays, i, x, duration;
-    duration = start.daysTo( end );
-    QDate day;
-    KDateTime tmpStart;
-    KDateTime tmpEnd;
+  // Loops through every event in the calendar
+  Event::List::ConstIterator it;
+  for ( it = eventList.constBegin(); it != eventList.constEnd(); ++it ) {
+    Event *event = *it;
 
-    // Loops through every event in the calendar
-    Event::List::ConstIterator it;
-    for ( it = eventList.constBegin(); it != eventList.constEnd(); ++it ) {
-      Event *event = *it;
+    // The code below can not handle all-day events. Fixing this resulted
+    // in a lot of duplicated code. Instead, make a copy of the event and
+    // set the period to the full day(s). This trick works for recurring,
+    // multiday, and single day all-day events.
+    Event *allDayEvent = 0;
+    if ( event->allDay() ) {
+      // addDay event. Do the hack
+      kDebug() << "All-day event";
+      allDayEvent = new Event( *event );
 
-      // The code below can not handle all-dayevents. Fixing this resulted
-      // in a lot of duplicated code. Instead, make a copy of the event and
-      // set the period to the full day(s). This trick works for recurring,
-      // multiday, and single day all-day events.
-      Event *allDayEvent = 0;
-      if ( event->allDay() ) {
-        // addDay event. Do the hack
-        kDebug() << "All-day event";
-        allDayEvent = new Event( *event );
+      // Set the start and end times to be on midnight
+      KDateTime st = allDayEvent->dtStart();
+      st.setTime( QTime( 0, 0 ) );
+      KDateTime nd = allDayEvent->dtEnd();
+      nd.setTime( QTime( 23, 59, 59, 999 ) );
+      allDayEvent->setAllDay( false );
+      allDayEvent->setDtStart( st );
+      allDayEvent->setDtEnd( nd );
 
-        // Set the start and end times to be on midnight
-        KDateTime st = allDayEvent->dtStart();
-        st.setTime( QTime( 0, 0 ) );
-        KDateTime nd = allDayEvent->dtEnd();
-        nd.setTime( QTime( 23, 59, 59, 999 ) );
-        allDayEvent->setAllDay( false );
-        allDayEvent->setDtStart( st );
-        allDayEvent->setDtEnd( nd );
-
-        kDebug() << "Use:" << st.toString() << "to" << nd.toString();
-        // Finally, use this event for the setting below
-        event = allDayEvent;
-      }
-
-      // This whole for loop is for recurring events, it loops through
-      // each of the days of the freebusy request
-
-      // If this event is transparent it shouldn't be in the freebusy list.
-      if ( event->transparency() == Event::Transparent ) {
-        continue;
-      }
-
-      for ( i = 0; i <= duration; ++i ) {
-        day = start.addDays(i).date();
-        tmpStart.setDate( day );
-        tmpEnd.setDate( day );
-
-        if ( event->recurs() ) {
-          if ( event->isMultiDay() ) {
-  // FIXME: This doesn't work for sub-daily recurrences or recurrences with
-  //        a different time than the original event.
-            extraDays = event->dtStart().daysTo( event->dtEnd() );
-            for ( x = 0; x <= extraDays; ++x ) {
-              if ( event->recursOn( day.addDays(-x), start.timeSpec() ) ) {
-                tmpStart.setDate( day.addDays(-x) );
-                tmpStart.setTime( event->dtStart().time() );
-                tmpEnd = event->duration().end( tmpStart );
-
-                addLocalPeriod( q, tmpStart, tmpEnd );
-                break;
-              }
-            }
-          } else {
-            if ( event->recursOn( day, start.timeSpec() ) ) {
-              tmpStart.setTime( event->dtStart().time() );
-              tmpEnd.setTime( event->dtEnd().time() );
-
-              addLocalPeriod ( q, tmpStart, tmpEnd );
-            }
-          }
-        }
-
-      }
-      // Non-recurring events
-      addLocalPeriod( q, event->dtStart(), event->dtEnd() );
-
-      // Clean up
-      delete allDayEvent;
+      kDebug() << "Use:" << st.toString() << "to" << nd.toString();
+      // Finally, use this event for the setting below
+      event = allDayEvent;
     }
 
-    q->sortList();
+    // This whole for loop is for recurring events, it loops through
+    // each of the days of the freebusy request
+
+    // If this event is transparent it shouldn't be in the freebusy list.
+    if ( event->transparency() == Event::Transparent ) {
+      continue;
+    }
+
+    for ( i = 0; i <= duration; ++i ) {
+      day = start.addDays(i).date();
+      tmpStart.setDate( day );
+      tmpEnd.setDate( day );
+
+      if ( event->recurs() ) {
+        if ( event->isMultiDay() ) {
+  // FIXME: This doesn't work for sub-daily recurrences or recurrences with
+  //        a different time than the original event.
+          extraDays = event->dtStart().daysTo( event->dtEnd() );
+          for ( x = 0; x <= extraDays; ++x ) {
+            if ( event->recursOn( day.addDays(-x), start.timeSpec() ) ) {
+              tmpStart.setDate( day.addDays(-x) );
+              tmpStart.setTime( event->dtStart().time() );
+              tmpEnd = event->duration().end( tmpStart );
+
+              addLocalPeriod( q, tmpStart, tmpEnd );
+              break;
+            }
+          }
+        } else {
+          if ( event->recursOn( day, start.timeSpec() ) ) {
+            tmpStart.setTime( event->dtStart().time() );
+            tmpEnd.setTime( event->dtEnd().time() );
+
+            addLocalPeriod ( q, tmpStart, tmpEnd );
+          }
+        }
+      }
+
+    }
+    // Non-recurring events
+    addLocalPeriod( q, event->dtStart(), event->dtEnd() );
+
+    // Clean up
+    delete allDayEvent;
+  }
+
+  q->sortList();
 }
 
 FreeBusy::FreeBusy( Calendar *calendar, const KDateTime &start, const KDateTime &end )
@@ -219,6 +217,11 @@ FreeBusy::~FreeBusy()
 QByteArray FreeBusy::type() const
 {
   return "FreeBusy";
+}
+
+QString FreeBusy::typeStr() const
+{
+  return i18nc( "incidence type is freebusy", "free/busy" );
 }
 
 void FreeBusy::setDtStart( const KDateTime &start )
