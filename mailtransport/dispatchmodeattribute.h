@@ -49,7 +49,7 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
     };
     //TODO_AKONADI_REVIEW: rename Immediately to Automatic
     //TODO_AKONADI_REVIEW: rename Never to Manual
-    //TODO_AKONADI_REVIEW: remove AfterDueDate 
+    //TODO_AKONADI_REVIEW: remove AfterDueDate
 
     /**
       Creates a new DispatchModeAttribute.

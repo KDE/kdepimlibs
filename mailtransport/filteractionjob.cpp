@@ -31,8 +31,7 @@ class Akonadi::FilterActionJob::Private
 {
   public:
     Private( FilterActionJob *qq )
-      : q( qq )
-      , functor( 0 )
+      : q( qq ), functor( 0 )
     {
     }
 
@@ -71,13 +70,13 @@ void FilterActionJob::Private::traverseItems()
 {
   Q_ASSERT( functor );
   kDebug() << "Traversing" << items.count() << "items.";
-  foreach( const Item &item, items ) {
-    if( functor->itemAccepted( item ) ) {
+  foreach ( const Item &item, items ) {
+    if ( functor->itemAccepted( item ) ) {
       q->addSubjob( functor->itemAction( item ) );
       kDebug() << "Added subjob for item" << item.id();
     }
   }
-  if( q->subjobs().isEmpty() ) {
+  if ( q->subjobs().isEmpty() ) {
     kDebug() << "No subjobs; I am done.";
     q->emitResult();
   } else {
@@ -86,33 +85,27 @@ void FilterActionJob::Private::traverseItems()
   }
 }
 
-
-
 FilterAction::~FilterAction()
 {
 }
 
-
-
 FilterActionJob::FilterActionJob( const Item &item, FilterAction *functor, QObject *parent )
-  : TransactionSequence( parent )
-  , d( new Private( this ) )
+  : TransactionSequence( parent ), d( new Private( this ) )
 {
   d->functor = functor;
   d->items << item;
 }
 
 FilterActionJob::FilterActionJob( const Item::List &items, FilterAction *functor, QObject *parent )
-  : TransactionSequence( parent )
-  , d( new Private( this ) )
+  : TransactionSequence( parent ), d( new Private( this ) )
 {
   d->functor = functor;
   d->items = items;
 }
 
-FilterActionJob::FilterActionJob( const Collection &collection, FilterAction *functor, QObject *parent )
-  : TransactionSequence( parent )
-  , d( new Private( this ) )
+FilterActionJob::FilterActionJob( const Collection &collection,
+                                  FilterAction *functor, QObject *parent )
+  : TransactionSequence( parent ), d( new Private( this ) )
 {
   d->functor = functor;
   Q_ASSERT( collection.isValid() );
