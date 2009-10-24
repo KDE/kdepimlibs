@@ -543,7 +543,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   }
 
   icalproperty_xlicclass result =
-    icalclassify( message, calendarComponent, (char *)"" );
+    icalclassify( message, calendarComponent, (const char *)"" );
 
   ScheduleMessage::Status status;
 

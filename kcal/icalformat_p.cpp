@@ -855,49 +855,50 @@ icalrecurrencetype ICalFormatImpl::writeRecurrenceRule( RecurrenceRule *recur )
   bys = recur->bySeconds();
   index = 0;
   for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
-    r.by_second[index++] = *it;
+    r.by_second[index++] = static_cast<short>( *it );
   }
 
   bys = recur->byMinutes();
   index = 0;
   for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
-    r.by_minute[index++] = *it;
+    r.by_minute[index++] = static_cast<short>( *it );
   }
 
   bys = recur->byHours();
   index = 0;
   for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
-    r.by_hour[index++] = *it;
+    r.by_hour[index++] = static_cast<short>( *it );
   }
 
   bys = recur->byMonthDays();
   index = 0;
   for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
-    r.by_month_day[index++] = icalrecurrencetype_day_position( (*it) * 8 );
+    short d = static_cast<short>( ( *it ) * 8 );
+    r.by_month_day[index++] = static_cast<short>( icalrecurrencetype_day_position( d ) );
   }
 
   bys = recur->byYearDays();
   index = 0;
   for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
-    r.by_year_day[index++] = *it;
+    r.by_year_day[index++] = static_cast<short>( *it );
   }
 
   bys = recur->byWeekNumbers();
   index = 0;
   for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
-    r.by_week_no[index++] = *it;
+    r.by_week_no[index++] = static_cast<short>( *it );
   }
 
   bys = recur->byMonths();
   index = 0;
   for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
-    r.by_month[index++] = *it;
+    r.by_month[index++] = static_cast<short>( *it );
   }
 
   bys = recur->bySetPos();
   index = 0;
   for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
-    r.by_set_pos[index++] = *it;
+    r.by_set_pos[index++] = static_cast<short>( *it );
   }
 
   QList<RecurrenceRule::WDayPos> byd = recur->byDays();
@@ -912,7 +913,7 @@ icalrecurrencetype ICalFormatImpl::writeRecurrenceRule( RecurrenceRule *recur )
     } else {
       day += (*dit).pos() * 8;
     }
-    r.by_day[index++] = day;
+    r.by_day[index++] = static_cast<short>( day );
   }
 
   r.week_start =
@@ -920,7 +921,7 @@ icalrecurrencetype ICalFormatImpl::writeRecurrenceRule( RecurrenceRule *recur )
 
   if ( recur->frequency() > 1 ) {
     // Dont' write out INTERVAL=1, because that's the default anyway
-    r.interval = recur->frequency();
+    r.interval = static_cast<short>( recur->frequency() );
   }
 
   if ( recur->duration() > 0 ) {
@@ -1837,7 +1838,7 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r,
   }
 
   // Week start setting
-  int wkst = ( r.week_start + 5 ) % 7 + 1;
+  short wkst = static_cast<short>( ( r.week_start + 5 ) % 7 + 1 );
   recur->setWeekStart( wkst );
 
   // And now all BY*
@@ -1873,10 +1874,10 @@ void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r,
   // BYDAY is a special case, since it's not an int list
   QList<RecurrenceRule::WDayPos> wdlst;
   short day;
-  index=0;
+  index = 0;
   while ( ( day = r.by_day[index++] ) != ICAL_RECURRENCE_ARRAY_MAX ) {
     RecurrenceRule::WDayPos pos;
-    pos.setDay( ( icalrecurrencetype_day_day_of_week( day ) + 5 ) % 7 + 1 );
+    pos.setDay( static_cast<short>( ( icalrecurrencetype_day_day_of_week( day ) + 5 ) % 7 + 1 ) );
     pos.setPos( icalrecurrencetype_day_position( day ) );
     wdlst.append( pos );
   }
@@ -2523,7 +2524,7 @@ void ICalFormatImpl::dumpIcalRecurrence( icalrecurrencetype r )
 {
   int i;
 
-  kDebug() << " Freq:" << r.freq;
+  kDebug() << " Freq:" << int( r.freq );
   kDebug() << " Until:" << icaltime_as_ical_string( r.until );
   kDebug() << " Count:" << r.count;
   if ( r.by_day[0] != ICAL_RECURRENCE_ARRAY_MAX ) {
