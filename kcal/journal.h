@@ -78,7 +78,7 @@ class KCAL_EXPORT Journal : public Incidence
       @copydoc
       IncidenceBase::typeStr()
     */
-    QString typeStr() const;
+    //KDE5: QString typeStr() const;
 
     /**
       Returns an exact copy of this journal. The returned object is owned

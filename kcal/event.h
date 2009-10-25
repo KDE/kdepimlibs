@@ -102,7 +102,7 @@ class KCAL_EXPORT Event : public Incidence
       @copydoc
       IncidenceBase::typeStr()
     */
-    QString typeStr() const;
+    //KDE5: QString typeStr() const;
 
     /**
       Returns an exact copy of this Event. The caller owns the returned object.

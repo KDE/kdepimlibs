@@ -219,10 +219,11 @@ QByteArray FreeBusy::type() const
   return "FreeBusy";
 }
 
-QString FreeBusy::typeStr() const
-{
-  return i18nc( "incidence type is freebusy", "free/busy" );
-}
+//KDE5:
+//QString FreeBusy::typeStr() const
+//{
+//  return i18nc( "incidence type is freebusy", "free/busy" );
+//}
 
 void FreeBusy::setDtStart( const KDateTime &start )
 {

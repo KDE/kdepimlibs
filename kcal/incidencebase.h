@@ -238,9 +238,8 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
 
     /**
       Returns the type of Incidence as a translated string.
-      @since 4.4
     */
-    virtual QString typeStr() const = 0;
+    //KDE5: virtual QString typeStr() const = 0;
 
     /**
       Sets the unique id for the incidence to @p uid.

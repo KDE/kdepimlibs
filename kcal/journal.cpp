@@ -47,10 +47,11 @@ QByteArray Journal::type() const
   return "Journal";
 }
 
-QString Journal::typeStr() const
-{
-  return i18nc( "incidence type is journal", "journal" );
-}
+//KDE5:
+//QString Journal::typeStr() const
+//{
+//  return i18nc( "incidence type is journal", "journal" );
+//}
 
 Journal *Journal::clone()
 {

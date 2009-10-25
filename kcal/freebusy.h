@@ -117,7 +117,7 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
       @copydoc
       IncidenceBase::typeStr()
     */
-    QString typeStr() const;
+    //KDE5: QString typeStr() const;
 
     /**
       Sets the start datetime for the free/busy. Note that this datetime

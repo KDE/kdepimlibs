@@ -36,7 +36,7 @@ void TodoTest::testValidity()
   todo->setDescription( "This is a description of the first to-do" );
   todo->setLocation( "the place" );
   todo->setPercentComplete( 5 );
-  QVERIFY( todo->typeStr() == i18n( "to-do" ) );
+  //KDE5: QVERIFY( todo->typeStr() == i18n( "to-do" ) );
   QVERIFY( todo->summary() == "To-do1 Summary" );
   QVERIFY( todo->location() == "the place" );
   QVERIFY( todo->percentComplete() == 5 );
