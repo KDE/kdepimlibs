@@ -138,6 +138,12 @@ QByteArray Todo::type() const
   return "Todo";
 }
 
+//KDE5:
+//QString Todo::typeStr() const
+//{
+//  return i18nc( "incidence type is to-do/task", "to-do" );
+//}
+
 void Todo::setDtDue( const KDateTime &dtDue, bool first )
 {
   //int diffsecs = d->mDtDue.secsTo(dtDue);

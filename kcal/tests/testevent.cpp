@@ -35,6 +35,7 @@ void EventTest::testValidity()
   event->setSummary( "Event1 Summary" );
   event->setDescription( "This is a description of the first event" );
   event->setLocation( "the place" );
+  //KDE5: QVERIFY( event->typeStr() == i18n( "event" ) );
   QVERIFY( event->summary() == "Event1 Summary" );
   QVERIFY( event->location() == "the place" );
   QVERIFY( event->type() == "Event" );

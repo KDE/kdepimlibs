@@ -237,6 +237,11 @@ class KCAL_EXPORT IncidenceBase : public CustomProperties
     virtual QByteArray type() const = 0;
 
     /**
+      Returns the type of Incidence as a translated string.
+    */
+    //KDE5: virtual QString typeStr() const = 0;
+
+    /**
       Sets the unique id for the incidence to @p uid.
 
       @param uid is the string containing the incidence @ref uid.

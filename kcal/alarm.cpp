@@ -486,7 +486,7 @@ KDateTime Alarm::nextRepetition( const KDateTime &preTime ) const
     // there isn't an occurrence after the specified time
     return KDateTime();
   }
-  int repetition;
+  qint64 repetition;
   int interval = d->mAlarmSnoozeTime.value();
   bool daily = d->mAlarmSnoozeTime.isDaily();
   if ( daily ) {
@@ -502,7 +502,7 @@ KDateTime Alarm::nextRepetition( const KDateTime &preTime ) const
     // all repetitions have finished before the specified time
     return KDateTime();
   }
-  return daily ? at.addDays( repetition * interval )
+  return daily ? at.addDays( int( repetition * interval ) )
                : at.addSecs( repetition * interval );
 }
 
@@ -516,7 +516,7 @@ KDateTime Alarm::previousRepetition( const KDateTime &afterTime ) const
   if ( !d->mAlarmRepeatCount ) {
     return at;
   }
-  int repetition;
+  qint64 repetition;
   int interval = d->mAlarmSnoozeTime.value();
   bool daily = d->mAlarmSnoozeTime.isDaily();
   if ( daily ) {
@@ -531,7 +531,7 @@ KDateTime Alarm::previousRepetition( const KDateTime &afterTime ) const
   if ( repetition > d->mAlarmRepeatCount ) {
     repetition = d->mAlarmRepeatCount;
   }
-  return daily ? at.addDays( repetition * interval )
+  return daily ? at.addDays( int( repetition * interval ) )
                : at.addSecs( repetition * interval );
 }
 

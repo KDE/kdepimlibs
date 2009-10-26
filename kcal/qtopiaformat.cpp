@@ -115,7 +115,7 @@ class QtopiaParser : public QXmlDefaultHandler
             if ( hasEndDate ) {
               r->setEndDate( endDate );
             }
-            r->addMonthlyDate( startDate.day() );
+            r->addMonthlyDate( static_cast<short>( startDate.day() ) );
           } else if ( rtype == "MonthlyDay" ) {
             r->setMonthly( freq );
             if ( hasEndDate ) {
@@ -124,7 +124,7 @@ class QtopiaParser : public QXmlDefaultHandler
             QBitArray days( 7 );
             days.fill( false );
             days.setBit( startDate.dayOfWeek() - 1 );
-            r->addMonthlyPos( pos, days );
+            r->addMonthlyPos( static_cast<short>( pos ), days );
           } else if ( rtype == "Yearly" ) {
             r->setYearly( freq );
             if ( hasEndDate ) {

@@ -109,6 +109,12 @@ QByteArray Event::type() const
   return "Event";
 }
 
+//KDE5:
+//QString Event::typeStr() const
+//{
+//  return i18nc( "incidence type is event", "event" );
+//}
+
 void Event::setDtEnd( const KDateTime &dtEnd )
 {
   if ( mReadOnly ) {

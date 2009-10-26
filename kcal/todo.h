@@ -82,6 +82,12 @@ class KCAL_EXPORT Todo : public Incidence
     QByteArray type() const;
 
     /**
+      @copydoc
+      IncidenceBase::typeStr()
+    */
+    //KDE5: QString typeStr() const;
+
+    /**
       Returns an exact copy of this todo. The returned object is owned by the
       caller.
     */

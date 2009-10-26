@@ -84,10 +84,11 @@ void PreCommandJobPrivate::slotStarted()
 void PreCommandJobPrivate::slotError( QProcess::ProcessError error )
 {
   q->setError( KJob::UserDefinedError );
-  if ( error == QProcess::FailedToStart )
+  if ( error == QProcess::FailedToStart ) {
     q->setErrorText( i18n( "Unable to start precommand '%1'.", precommand ) );
-  else
+  } else {
     q->setErrorText( i18n( "Error while executing precommand '%1'.", precommand ) );
+  }
   q->emitResult();
 }
 

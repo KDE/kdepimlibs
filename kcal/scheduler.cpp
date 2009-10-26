@@ -93,7 +93,7 @@ QString ScheduleMessage::statusName( ScheduleMessage::Status status )
   case RequestUpdate:
     return i18nc( "@item request updated posting", "Request Updated Message" );
   default:
-    return i18nc( "@item unknown status", "Unknown Status: %1", status );
+    return i18nc( "@item unknown status", "Unknown Status: %1", int( status ) );
   }
 }
 
@@ -223,7 +223,7 @@ QString Scheduler::translatedMethodName( iTIPMethod method )
   }
 }
 
-bool Scheduler::deleteTransaction(IncidenceBase *)
+bool Scheduler::deleteTransaction( IncidenceBase * )
 {
   return true;
 }
@@ -353,7 +353,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
     } else {
       // This isn't an update - the found incidence has a bigger revision number
       kDebug() << "This isn't an update - the found incidence has a bigger revision number";
-      deleteTransaction(incidence);
+      deleteTransaction( incidence );
       return false;
     }
   }
@@ -378,13 +378,13 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
              << " and uid=" << inc->uid();
     mCalendar->addIncidence( inc );
   }
-  deleteTransaction(incidence);
+  deleteTransaction( incidence );
   return true;
 }
 
 bool Scheduler::acceptAdd( IncidenceBase *incidence, ScheduleMessage::Status /* status */)
 {
-  deleteTransaction(incidence);
+  deleteTransaction( incidence );
   return false;
 }
 
@@ -406,8 +406,7 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
   kDebug() << "Scheduler::acceptCancel="
            << ScheduleMessage::statusName( status )
            << ": found " << existingIncidences.count()
-           << " incidences with schedulingID " << inc->schedulingID()
-           << endl;
+           << " incidences with schedulingID " << inc->schedulingID();
 
   bool ret = false;
   Incidence::List::ConstIterator incit = existingIncidences.begin();
@@ -415,7 +414,7 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
     Incidence *i = *incit;
     kDebug() << "Considering this found event ("
              << ( i->isReadOnly() ? "readonly" : "readwrite" )
-             << ") :" << mFormat->toString( i ) << endl;
+             << ") :" << mFormat->toString( i );
 
     // If it's readonly, we can't possible remove it.
     if ( i->isReadOnly() ) {
@@ -442,7 +441,7 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
         // This incidence wasn't created by me - it's probably in a shared
         // folder and meant for someone else, ignore it.
         kDebug() << "ignoring " << i->uid()
-                 << " since I'm still NeedsAction there" << endl;
+                 << " since I'm still NeedsAction there";
         isMine = false;
         break;
       }
@@ -463,8 +462,8 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
   }
 
   // in case we didn't find the to-be-removed incidence
-  if ( inc->revision() > 0 ) {
-    KMessageBox::error(
+  if ( existingIncidences.count() > 0 && inc->revision() > 0 ) {
+    KMessageBox::information(
       0,
       i18nc( "@info",
              "The event or task could not be removed from your calendar. "
@@ -501,14 +500,14 @@ bool Scheduler::acceptCancel( IncidenceBase *incidence,
   }
 
   if ( !ret ) {
-    KMessageBox::error(
+    KMessageBox::information(
       0,
       i18nc( "@info",
              "The event or task to be canceled could not be removed from your calendar. "
-             "Maybe it has already been deleted, or the calendar that "
-             "contains it is disabled." ) );
+             "Maybe it has already been deleted or is not owned by you. "
+             "Or it might belong to a read-only or disabled calendar." ) );
   }
-  deleteTransaction(incidence);
+  deleteTransaction( incidence );
   return ret;
 }
 

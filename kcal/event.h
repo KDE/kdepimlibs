@@ -93,9 +93,16 @@ class KCAL_EXPORT Event : public Incidence
     bool operator==( const Event &event ) const;
 
     /**
-      Returns the Incidence type, as a QByteArray.
+      @copydoc
+      IncidenceBase::type()
     */
     QByteArray type() const;
+
+    /**
+      @copydoc
+      IncidenceBase::typeStr()
+    */
+    //KDE5: QString typeStr() const;
 
     /**
       Returns an exact copy of this Event. The caller owns the returned object.

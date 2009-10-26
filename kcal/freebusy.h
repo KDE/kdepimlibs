@@ -100,7 +100,7 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
       @param end is the end datetime of the period.
       @since 4.4
     */
-    FreeBusy( const Event::List& events, const KDateTime &start, const KDateTime &end );
+    FreeBusy( const Event::List &events, const KDateTime &start, const KDateTime &end );
 
     /**
       Destroys a free/busy.
@@ -112,6 +112,12 @@ class KCAL_EXPORT FreeBusy : public IncidenceBase
       IncidenceBase::type()
     */
     QByteArray type() const;
+
+    /**
+      @copydoc
+      IncidenceBase::typeStr()
+    */
+    //KDE5: QString typeStr() const;
 
     /**
       Sets the start datetime for the free/busy. Note that this datetime

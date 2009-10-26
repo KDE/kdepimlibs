@@ -136,8 +136,9 @@ void MessageQueueJob::Private::outboxRequestResult( KJob *job )
   }
 
   SpecialCollectionsRequestJob *requestJob = qobject_cast<SpecialCollectionsRequestJob*>( job );
-  if ( !requestJob )
+  if ( !requestJob ) {
     return;
+  }
 
   // Create item.
   Item item;

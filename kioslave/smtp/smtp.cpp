@@ -208,8 +208,8 @@ void SMTPProtocol::put(const KUrl & url, int /*permissions */ ,
   if ( request.is8BitBody()
        && !haveCapability("8BITMIME") && metaData("8bitmime") != "on" ) {
     error( KIO::ERR_SERVICE_NOT_AVAILABLE,
-           i18n("Your server does not support sending of 8-bit messages.\n"
-                "Please use base64 or quoted-printable encoding.") );
+           i18n("Your server (%1) does not support sending of 8-bit messages.\n"
+                "Please use base64 or quoted-printable encoding.", m_sServer) );
     return;
   }
 
@@ -254,7 +254,7 @@ bool SMTPProtocol::sendCommandLine( const QByteArray & cmdline ) {
   if ( (numWritten = write( cmdline.data(), cmdline_len ) )!= cmdline_len ) {
     kDebug(7112) << "Tried to write " << cmdline_len << " bytes, but only "
                  << numWritten << " were written!" << endl;
-    error( KIO::ERR_COULD_NOT_WRITE, i18n ("Writing to socket failed.") );
+    error( KIO::ERR_SLAVE_DEFINED, i18n ("Writing to socket failed.") );
     return false;
   }
   return true;
@@ -494,8 +494,8 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
   {
     if ( ok )
       error( KIO::ERR_COULD_NOT_LOGIN,
-             i18n("The server did not accept the connection.\n"
-                  "%1",  greeting.errorMessage() ) );
+             i18n("The server (%1) did not accept the connection.\n"
+                  "%2", m_sServer,  greeting.errorMessage() ) );
     smtp_close();
     return false;
   }
