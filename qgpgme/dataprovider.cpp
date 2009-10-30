@@ -23,6 +23,7 @@
 #include <qgpgme/dataprovider.h>
 
 #include <QIODevice>
+#include <QProcess>
 
 #include <stdio.h>
 #include <string.h>
@@ -162,7 +163,14 @@ namespace {
 static qint64 blocking_read( const boost::shared_ptr<QIODevice> & io, char * buffer, qint64 maxSize ) {
     while ( !io->bytesAvailable() )
         if ( !io->waitForReadyRead( -1 ) )
-            return 0; // assume EOF (loses error cases :/ )
+            if ( const QProcess * const p = qobject_cast<QProcess*>( io.get() ) )
+                return p->error() == QProcess::UnknownError
+                    && p->exitStatus() == QProcess::NormalExit
+                    && p->exitCode() == 0
+                    ? 0
+                    : errno = EIO, -1 ;
+            else
+                return 0; // assume EOF (loses error cases :/ )
 
     return io->read( buffer, maxSize );
 }
@@ -194,7 +202,7 @@ ssize_t QIODeviceDataProvider::read( void * buffer, size_t bufSize ) {
 
 ssize_t QIODeviceDataProvider::write( const void * buffer, size_t bufSize ) {
 #ifndef NDEBUG
-  qDebug( "QIODeviceDataProvider::write( %p, %lu )", buffer, static_cast<unsigned long>( bufSize ) );
+  //qDebug( "QIODeviceDataProvider::write( %p, %lu )", buffer, static_cast<unsigned long>( bufSize ) );
 #endif
   if ( bufSize == 0 )
     return 0;
