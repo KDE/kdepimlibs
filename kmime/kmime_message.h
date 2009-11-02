@@ -37,8 +37,45 @@ namespace KMime {
 class MessagePrivate;
 
 /**
-  Represents a (email) message.
-*/
+ * Represents a (email) message.
+ *
+ * Sample how to create a multipart message:
+ * \code
+ * // Set the multipart message.
+ * Message *m = new Message;
+ * Headers::ContentType *ct = m->contentType();
+ * ct->setMimeType( "multipart/mixed" );
+ * ct->setBoundary( multiPartBoundary() );
+ * ct->setCategory( Headers::CCcontainer );
+ * m->contentTransferEncoding()->clear();
+ *
+ * // Set the headers.
+ * m->from()->fromUnicodeString( "some@mailaddy.com", "utf-8" );
+ * m->to()->fromUnicodeString( "someother@mailaddy.com", "utf-8" );
+ * m->cc()->fromUnicodeString( "some@mailaddy.com", "utf-8" );
+ * m->date()->setDateTime( KDateTime::currentLocalDateTime() );
+ * m->subject()->fromUnicodeString( "My Subject", "utf-8" );
+ *
+ * // Set the first multipart, the body message.
+ * KMime::Content *b = new KMime::Content;
+ * b->contentType()->setMimeType( "text/plain" );
+ * b->setBody( "Some text..." );
+ *
+ * // Set the sedcond multipart, the attachment.
+ * KMime::Content *a = new KMime::Content;
+ * KMime::Headers::ContentDisposition *d = new KMime::Headers::ContentDisposition( attachMessage );
+ * d->setFilename( "cal.ics" );
+ * d->setDisposition( KMime::Headers::CDattachment );
+ * a->contentType()->setMimeType( "text/plain" );
+ * a->setHeader( d );
+ * a->setBody( "Some text in the attachment..." );
+ *
+ * // Attach the both multiparts and assemble the message.
+ * m->addContent( b );
+ * m->addContent( a );
+ * m->assemble();
+ * \endcode
+ */
 class KMIME_EXPORT Message : public Content
 {
   public:
