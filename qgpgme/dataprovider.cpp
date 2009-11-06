@@ -164,11 +164,12 @@ static qint64 blocking_read( const boost::shared_ptr<QIODevice> & io, char * buf
     while ( !io->bytesAvailable() )
         if ( !io->waitForReadyRead( -1 ) )
             if ( const QProcess * const p = qobject_cast<QProcess*>( io.get() ) )
-                return p->error() == QProcess::UnknownError
-                    && p->exitStatus() == QProcess::NormalExit
-                    && p->exitCode() == 0
-                    ? 0
-                    : errno = EIO, -1 ;
+                if ( p->error() == QProcess::UnknownError &&
+                     p->exitStatus() == QProcess::NormalExit &&
+                     p->exitCode() == 0 )
+                    return 0;
+                else
+                    return errno = EIO, -1;
             else
                 return 0; // assume EOF (loses error cases :/ )
 
