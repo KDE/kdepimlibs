@@ -1207,17 +1207,20 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode, KDateTime:
     int secs = event->dtStart().secsTo( event->dtEnd() );
     int days = secs / 86400;
     if ( days > 0 ) {
-      tmp += i18np( "1 day ", "%1 days ", days );
+      tmp += i18np( "1 day", "%1 days", days );
+      tmp += ' ';
       secs -= ( days * 86400 );
     }
     int hours = secs / 3600;
     if ( hours > 0 ) {
-      tmp += i18np( "1 hour ", "%1 hours ", hours );
+      tmp += i18np( "1 hour", "%1 hours", hours );
+      tmp += ' ';
       secs -= ( hours * 3600 );
     }
     int mins = secs / 60;
     if ( mins > 0 ) {
-      tmp += i18np( "1 minute ", "%1 minutes ", mins );
+      tmp += i18np( "1 minute", "%1 minutes", mins );
+      tmp += ' ';
     }
     html += invitationRow( i18n( "Duration:" ), tmp );
   }
