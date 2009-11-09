@@ -11,6 +11,7 @@ deleting=true
 linking=false
 moving=false
 Icon=view-filter
+X-DocPath=kioslave/sieve/index.html
 Description=An ioslave for the Sieve mail filtering protocol
 Description[ca]=Un «ioslave» pel protocol de filtrat de correu Sieve
 Description[cs]=Protokol pro filtrování pošty Sieve

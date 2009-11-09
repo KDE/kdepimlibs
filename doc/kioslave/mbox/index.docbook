@@ -25,6 +25,4 @@ messages. All messages are appended after each other in the same file
 separated by a special separator line. This gets especially expensive when 
 you have many emails in the same file.</para> 
 
-<para>This resource is provided mostly for backwards compatibility.</para>
-
 </article>

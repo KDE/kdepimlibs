@@ -23,6 +23,7 @@
 #include <qgpgme/dataprovider.h>
 
 #include <QIODevice>
+#include <QProcess>
 
 #include <stdio.h>
 #include <string.h>
@@ -159,9 +160,25 @@ namespace {
     };
 }
 
+static qint64 blocking_read( const boost::shared_ptr<QIODevice> & io, char * buffer, qint64 maxSize ) {
+    while ( !io->bytesAvailable() )
+        if ( !io->waitForReadyRead( -1 ) )
+            if ( const QProcess * const p = qobject_cast<QProcess*>( io.get() ) )
+                if ( p->error() == QProcess::UnknownError &&
+                     p->exitStatus() == QProcess::NormalExit &&
+                     p->exitCode() == 0 )
+                    return 0;
+                else
+                    return errno = EIO, -1;
+            else
+                return 0; // assume EOF (loses error cases :/ )
+
+    return io->read( buffer, maxSize );
+}
+
 ssize_t QIODeviceDataProvider::read( void * buffer, size_t bufSize ) {
 #ifndef NDEBUG
-  //qDebug( "QIODeviceDataProvider::read( %p, %d )", buffer, bufSize );
+  //qDebug( "QIODeviceDataProvider::read( %p, %lu )", buffer, bufSize );
 #endif
   if ( bufSize == 0 )
     return 0;
@@ -172,7 +189,7 @@ ssize_t QIODeviceDataProvider::read( void * buffer, size_t bufSize ) {
   //workaround: some QIODevices (known example: QProcess) might not return 0 (EOF), but immediately -1 when finished. If no
   //errno is set, gpgme doesn't detect the error and loops forever. So return 0 on the very first -1 in case errno is 0
 
-  const qint64 numRead = mIO->read( static_cast<char*>(buffer), bufSize );
+  const qint64 numRead = blocking_read( mIO, static_cast<char*>(buffer), bufSize );
 
   Enabler en( numRead < 0 ? &mErrorOccurred : 0 );
   if ( numRead < 0 && errno == 0 ) {
@@ -186,7 +203,7 @@ ssize_t QIODeviceDataProvider::read( void * buffer, size_t bufSize ) {
 
 ssize_t QIODeviceDataProvider::write( const void * buffer, size_t bufSize ) {
 #ifndef NDEBUG
-  qDebug( "QIODeviceDataProvider::write( %p, %lu )", buffer, static_cast<unsigned long>( bufSize ) );
+  //qDebug( "QIODeviceDataProvider::write( %p, %lu )", buffer, static_cast<unsigned long>( bufSize ) );
 #endif
   if ( bufSize == 0 )
     return 0;
