@@ -766,6 +766,14 @@ icalproperty *ICalFormatImpl::writeAttendee( Attendee *attendee )
       icalparameter_new_delegatedfrom( attendee->delegator().toUtf8() );
     icalproperty_add_parameter( p, icalparameter_delegator );
   }
+  
+  QMap<QByteArray, QString> customMap = attendee->customProperties().customProperties();
+  for( QMap<QByteArray, QString>::ConstIterator cit = customMap.begin();
+        cit != customMap.end(); ++cit ) {
+    icalparameter *icalparameter_x = icalparameter_new_x( cit.value().toUtf8() );
+    icalparameter_set_xname( icalparameter_x, cit.key() );
+    icalproperty_add_parameter( p, icalparameter_x );
+  }
 
   return p;
 }
@@ -1329,16 +1337,20 @@ Attendee *ICalFormatImpl::readAttendee( icalproperty *attendee )
   }
 
   p = icalproperty_get_first_parameter( attendee, ICAL_X_PARAMETER );
+  QMap<QByteArray, QString> custom;
   while ( p ) {
     QString xname = QString( icalparameter_get_xname( p ) ).toUpper();
     QString xvalue = QString::fromUtf8( icalparameter_get_xvalue( p ) );
     if ( xname == "X-UID" ) {
       uid = xvalue;
+    } else {
+      custom[xname.toUtf8()] = xvalue;
     }
     p = icalproperty_get_next_parameter( attendee, ICAL_X_PARAMETER );
   }
 
   Attendee *a = new Attendee( name, email, rsvp, status, role, uid );
+  a->customProperties().setCustomProperties( custom );
 
   p = icalproperty_get_first_parameter( attendee, ICAL_DELEGATEDTO_PARAMETER );
   if ( p ) {
