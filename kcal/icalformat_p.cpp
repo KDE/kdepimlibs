@@ -768,8 +768,8 @@ icalproperty *ICalFormatImpl::writeAttendee( Attendee *attendee )
   }
   
   QMap<QByteArray, QString> customMap = attendee->customProperties().customProperties();
-  for( QMap<QByteArray, QString>::ConstIterator cit = customMap.begin();
-        cit != customMap.end(); ++cit ) {
+  for( QMap<QByteArray, QString>::ConstIterator cit = customMap.constBegin();
+        cit != customMap.constEnd(); ++cit ) {
     icalparameter *icalparameter_x = icalparameter_new_x( cit.value().toUtf8() );
     icalparameter_set_xname( icalparameter_x, cit.key() );
     icalproperty_add_parameter( p, icalparameter_x );
@@ -1201,7 +1201,7 @@ FreeBusy *ICalFormatImpl::readFreeBusy( icalcomponent *vfreebusy )
   icalproperty *p = icalcomponent_get_first_property( vfreebusy, ICAL_ANY_PROPERTY );
 
   FreeBusyPeriod::List periods;
-
+  qDebug()<<" FreeBusy *ICalFormatImpl::readFreeBusy( icalcomponent *vfreebusy )";
   while ( p ) {
     icalproperty_kind kind = icalproperty_isa( p );
     switch ( kind ) {
@@ -1225,10 +1225,11 @@ FreeBusy *ICalFormatImpl::readFreeBusy( icalcomponent *vfreebusy )
         Duration duration ( readICalDuration( icalperiod.duration ) );
         period = FreeBusyPeriod( period_start, duration );
       }
+      qDebug()<<" A1111111AAAAAAAAAAAAAAAAAAAAA";
       QByteArray param = icalproperty_get_parameter_as_string( p, "X-SUMMARY" );
-      period.setSummary( QString::fromUtf8( KCodecs::base64Decode( param ) ) );
+      period.setSummary( "loooo " );//QString::fromUtf8( KCodecs::base64Decode( param ) ) );
       param = icalproperty_get_parameter_as_string( p, "X-LOCATION" );
-      period.setLocation( QString::fromUtf8( KCodecs::base64Decode( param ) ) );
+      period.setLocation( "trtttt" );//QString::fromUtf8( KCodecs::base64Decode( param ) ) );
       periods.append( period );
       break;
     }
