@@ -2100,9 +2100,9 @@ static QString formatICalInvitationHelper( QString invitation,
     {
       if ( inc && inc->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
         if ( inc->type() == "Todo" ) {
-          html += helper->makeLink( "reply", i18n( "[Record invitation into my to-do list]" ) );
+          html += helper->makeLink( "reply", i18n( "[Record invitation in my to-do list]" ) );
         } else {
-          html += helper->makeLink( "reply", i18n( "[Record invitation into my calendar]" ) );
+          html += helper->makeLink( "reply", i18n( "[Record invitation in my calendar]" ) );
         }
       }
 
@@ -2200,9 +2200,9 @@ static QString formatICalInvitationHelper( QString invitation,
       } else {
         if ( inc ) {
           if ( inc->type() == "Todo" ) {
-            html += helper->makeLink( "reply", i18n( "[Record response into my to-do list]" ) );
+            html += helper->makeLink( "reply", i18n( "[Record response in my to-do list]" ) );
           } else {
-            html += helper->makeLink( "reply", i18n( "[Record response into my calendar]" ) );
+            html += helper->makeLink( "reply", i18n( "[Record response in my calendar]" ) );
           }
         }
       }
