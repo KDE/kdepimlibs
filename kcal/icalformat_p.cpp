@@ -1201,7 +1201,6 @@ FreeBusy *ICalFormatImpl::readFreeBusy( icalcomponent *vfreebusy )
   icalproperty *p = icalcomponent_get_first_property( vfreebusy, ICAL_ANY_PROPERTY );
 
   FreeBusyPeriod::List periods;
-  qDebug()<<" FreeBusy *ICalFormatImpl::readFreeBusy( icalcomponent *vfreebusy )";
   while ( p ) {
     icalproperty_kind kind = icalproperty_isa( p );
     switch ( kind ) {
@@ -1225,11 +1224,10 @@ FreeBusy *ICalFormatImpl::readFreeBusy( icalcomponent *vfreebusy )
         Duration duration ( readICalDuration( icalperiod.duration ) );
         period = FreeBusyPeriod( period_start, duration );
       }
-      qDebug()<<" A1111111AAAAAAAAAAAAAAAAAAAAA";
       QByteArray param = icalproperty_get_parameter_as_string( p, "X-SUMMARY" );
-      period.setSummary( "loooo " );//QString::fromUtf8( KCodecs::base64Decode( param ) ) );
+      period.setSummary( QString::fromUtf8( KCodecs::base64Decode( param ) ) );
       param = icalproperty_get_parameter_as_string( p, "X-LOCATION" );
-      period.setLocation( "trtttt" );//QString::fromUtf8( KCodecs::base64Decode( param ) ) );
+      period.setLocation( QString::fromUtf8( KCodecs::base64Decode( param ) ) );
       periods.append( period );
       break;
     }
