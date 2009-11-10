@@ -52,6 +52,7 @@ class KCal::Attendee::Private
     QString mUid;
     QString mDelegate;
     QString mDelegator;
+    CustomProperties mCustomProperties;
 };
 //@endcond
 
@@ -246,4 +247,14 @@ void Attendee::setDelegator( const QString &delegator )
 QString Attendee::delegator() const
 {
   return d->mDelegator;
+}
+
+void Attendee::setCustomProperty( const QByteArray &xname, const QString &xvalue )
+{
+  d->mCustomProperties.setNonKDECustomProperty( xname, xvalue );
+}
+
+CustomProperties& Attendee::customProperties()
+{
+  return d->mCustomProperties;
 }

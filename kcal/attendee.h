@@ -34,6 +34,7 @@
 
 #include "listbase.h"
 #include "person.h"
+#include "customproperties.h"
 
 namespace KCal {
 
@@ -263,6 +264,20 @@ class KCAL_EXPORT Attendee : private Person
       @see setDelegator().
     */
     QString delegator() const;
+
+    /**
+      Adds a custom property. If the property already exists it will be overwritten.
+      @param xname is the name of the property.
+      @param xvalue is its value.
+      @since 4.4
+    */
+    void setCustomProperty( const QByteArray &xname, const QString &xvalue );
+    
+    /**
+      Returns a reference to the CustomProperties object
+      @since 4.4
+    */
+    CustomProperties& customProperties();
 
     /**
       Sets this attendee equal to @p attendee.
