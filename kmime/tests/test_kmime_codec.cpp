@@ -411,23 +411,23 @@ void encode_decode_chunkwise( bool encode, const Codec * codec,
   // Now finish the encoding/decoding:
   // (same loops as above, just s/encode|decode/finish())
   //
-  if ( withFinish )
+  if ( withFinish ) {
     if ( encode ) {
       while ( !enc->finish( oit, oend ) ) {
-	report_finish_status( false );
-	if ( oit == oend )
-	  write_full_outdata_then_reset;
+	    report_finish_status( false );
+	    if ( oit == oend )
+	      write_full_outdata_then_reset;
       }
       report_finish_status( true );
     } else {
       while ( !dec->finish( oit, oend ) ) {
-	report_finish_status( false );
-	if ( oit == oend )
-	  write_full_outdata_then_reset;
+	    report_finish_status( false );
+	    if ( oit == oend )
+	      write_full_outdata_then_reset;
       }
       report_finish_status( true );
     }
-
+  }
   //
   // Write out last (partial) output chunk:
   //
