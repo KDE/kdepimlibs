@@ -27,7 +27,7 @@ set( qgpgme_TESTS
 foreach( _qgpgme_test ${qgpgme_TESTS} )
   kde4_add_executable( "${_qgpgme_test}" TEST "${_qgpgme_test}.cpp" )
   if (WIN32) # what's up?
-    target_link_libraries( "${_qgpgme_test}" qgpgme ${_qgpgme_libgpgme} ${_gpg_error_library} ${QT_QTCORE_LIBRARY} )
+    target_link_libraries( "${_qgpgme_test}" qgpgme ${_qgpgme_libgpgme} ${_gpgme_vanilla_library} ${_gpg_error_library} ${QT_QTCORE_LIBRARY} )
   else(WIN32)
     target_link_libraries( "${_qgpgme_test}" qgpgme ${_qgpgme_libgpgme} gpgme gpg-error ${QT_QTCORE_LIBRARY} )
   endif(WIN32)
