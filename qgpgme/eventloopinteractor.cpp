@@ -49,13 +49,14 @@ QGpgME::EventLoopInteractor::~EventLoopInteractor() {
 QGpgME::EventLoopInteractor * QGpgME::EventLoopInteractor::mSelf = 0;
 
 QGpgME::EventLoopInteractor * QGpgME::EventLoopInteractor::instance() {
-  if ( !mSelf )
+  if ( !mSelf ) {
 #ifndef NDEBUG
     if ( !QCoreApplication::instance() )
       qWarning( "QGpgME::EventLoopInteractor: Need a Q(Core)Application object before calling instance()!" );
     else
 #endif
      (void)new EventLoopInteractor;
+  }
   return mSelf;
 }
 
