@@ -220,7 +220,7 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
 
   if ( ch != '?' ) {
     // kDebug() << "first";
-    KMIME_WARN_PREMATURE_END_OF( EncodedWord );
+    //KMIME_WARN_PREMATURE_END_OF( EncodedWord );
     return false;
   }
 
