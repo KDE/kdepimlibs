@@ -278,6 +278,12 @@ class KCAL_EXPORT Attendee : private Person
       @since 4.4
     */
     CustomProperties& customProperties();
+    
+    /**
+      Returns a const reference to the CustomProperties object
+      @since 4.4
+    */
+    const CustomProperties& customProperties() const;
 
     /**
       Sets this attendee equal to @p attendee.

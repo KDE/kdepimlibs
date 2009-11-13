@@ -258,3 +258,8 @@ CustomProperties& Attendee::customProperties()
 {
   return d->mCustomProperties;
 }
+
+const CustomProperties& Attendee::customProperties() const
+{
+  return d->mCustomProperties;
+}

@@ -767,7 +767,7 @@ icalproperty *ICalFormatImpl::writeAttendee( Attendee *attendee )
     icalproperty_add_parameter( p, icalparameter_delegator );
   }
   
-  QMap<QByteArray, QString> customMap = attendee->customProperties().customProperties();
+  const QMap<QByteArray, QString> customMap = attendee->customProperties().customProperties();
   for( QMap<QByteArray, QString>::ConstIterator cit = customMap.constBegin();
         cit != customMap.constEnd(); ++cit ) {
     icalparameter *icalparameter_x = icalparameter_new_x( cit.value().toUtf8() );
