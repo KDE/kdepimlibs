@@ -254,12 +254,12 @@ void Attendee::setCustomProperty( const QByteArray &xname, const QString &xvalue
   d->mCustomProperties.setNonKDECustomProperty( xname, xvalue );
 }
 
-CustomProperties& Attendee::customProperties()
+CustomProperties &Attendee::customProperties()
 {
   return d->mCustomProperties;
 }
 
-const CustomProperties& Attendee::customProperties() const
+const CustomProperties &Attendee::customProperties() const
 {
   return d->mCustomProperties;
 }
