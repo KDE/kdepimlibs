@@ -75,6 +75,8 @@ class KCal::Calendar::Private
     ~Private()
     {
       delete mTimeZones;
+      if (mFilter != mDefaultFilter)
+          delete mFilter;
       delete mDefaultFilter;
     }
     KDateTime::Spec timeZoneIdSpec( const QString &timeZoneId, bool view );

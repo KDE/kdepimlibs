@@ -660,7 +660,9 @@ QDateTime ICalTimeZoneData::lastModified() const
 
 QByteArray ICalTimeZoneData::vtimezone() const
 {
-  return icalcomponent_as_ical_string( d->component() );
+  QByteArray result( icalcomponent_as_ical_string( d->component() ) );
+  icalmemory_free_ring();
+  return result;
 }
 
 icaltimezone *ICalTimeZoneData::icalTimezone() const

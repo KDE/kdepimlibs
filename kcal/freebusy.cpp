@@ -114,6 +114,11 @@ void FreeBusy::Private::init( const Event::List &eventList,
   for ( it = eventList.constBegin(); it != eventList.constEnd(); ++it ) {
     Event *event = *it;
 
+    // If this event is transparent it shouldn't be in the freebusy list.
+    if ( event->transparency() == Event::Transparent ) {
+      continue;
+    }
+
     // The code below can not handle all-day events. Fixing this resulted
     // in a lot of duplicated code. Instead, make a copy of the event and
     // set the period to the full day(s). This trick works for recurring,
@@ -140,11 +145,6 @@ void FreeBusy::Private::init( const Event::List &eventList,
 
     // This whole for loop is for recurring events, it loops through
     // each of the days of the freebusy request
-
-    // If this event is transparent it shouldn't be in the freebusy list.
-    if ( event->transparency() == Event::Transparent ) {
-      continue;
-    }
 
     for ( i = 0; i <= duration; ++i ) {
       day = start.addDays(i).date();
@@ -302,8 +302,9 @@ void FreeBusy::merge( FreeBusy *freeBusy )
   Period::List periods = freeBusy->busyPeriods();
   Period::List::ConstIterator it;
   for ( it = periods.constBegin(); it != periods.constEnd(); ++it ) {
-    addPeriod( (*it).start(), (*it).end() );
+    d->mBusyPeriods.append( FreeBusyPeriod( (*it).start(), (*it).end() ) );
   }
+  sortList();
 }
 
 void FreeBusy::shiftTimes( const KDateTime::Spec &oldSpec,
