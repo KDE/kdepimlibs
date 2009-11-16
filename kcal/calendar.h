@@ -898,7 +898,8 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
       Sets the calendar filter.
 
       @param filter a pointer to a CalFilter object which will be
-      used to filter Calendar Incidences.
+      used to filter Calendar Incidences. The Calendar takes
+      ownership of @p filter.
 
       @see filter()
     */
