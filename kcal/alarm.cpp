@@ -48,7 +48,8 @@ class KCal::Alarm::Private
 {
   public:
     Private()
-      : mType( Alarm::Invalid ),
+      : mParent( 0 ),
+        mType( Alarm::Invalid ),
         mAlarmSnoozeTime( 5 ),
         mAlarmRepeatCount( 0 ),
         mEndOffset( false ),
