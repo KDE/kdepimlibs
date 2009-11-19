@@ -27,8 +27,8 @@
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
 #include <mailtransport/filteractionjob.h>
-#include <akonadi/kmime/specialcollections.h>
-#include <akonadi/kmime/specialcollectionsrequestjob.h>
+#include <akonadi/kmime/specialmailcollections.h>
+#include <akonadi/kmime/specialmailcollectionsrequestjob.h>
 
 #include <mailtransport/outboxactions.h>
 
@@ -40,15 +40,15 @@ Runner::Runner()
 {
   Control::start();
 
-  SpecialCollectionsRequestJob *rjob = new SpecialCollectionsRequestJob( this );
-  rjob->requestDefaultCollection( SpecialCollections::Outbox );
+  SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob( this );
+  rjob->requestDefaultCollection( SpecialMailCollections::Outbox );
   connect( rjob, SIGNAL(result(KJob*)), this, SLOT(checkFolders()) );
   rjob->start();
 }
 
 void Runner::checkFolders()
 {
-  Collection outbox = SpecialCollections::self()->defaultCollection( SpecialCollections::Outbox );
+  Collection outbox = SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
   kDebug() << "Got outbox" << outbox.id();
 
   if( !outbox.isValid() ) {

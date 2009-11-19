@@ -31,8 +31,8 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/qtest_akonadi.h>
-#include <akonadi/kmime/specialcollections.h>
-#include <akonadi/kmime/specialcollectionsrequestjob.h>
+#include <akonadi/kmime/specialmailcollections.h>
+#include <akonadi/kmime/specialmailcollectionsrequestjob.h>
 #include <akonadi/kmime/addressattribute.h>
 
 #include <kmime/kmime_message.h>
@@ -65,8 +65,8 @@ void MessageQueueJobTest::initTestCase()
   mda.setIsOnline( false );
 
   // check that outbox is empty
-  SpecialCollectionsRequestJob *rjob = new SpecialCollectionsRequestJob( this );
-  rjob->requestDefaultCollection( SpecialCollections::Outbox );
+  SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob( this );
+  rjob->requestDefaultCollection( SpecialMailCollections::Outbox );
   QTest::kWaitForSignal( rjob, SIGNAL(result(KJob*)) );
   verifyOutboxContents( 0 );
 }
@@ -90,7 +90,7 @@ void MessageQueueJobTest::testValidMessages()
   // fetch the message and verify it
   QTest::qWait( 1000 );
   verifyOutboxContents( 1 );
-  ItemFetchJob *fjob = new ItemFetchJob( SpecialCollections::self()->defaultCollection( SpecialCollections::Outbox ) );
+  ItemFetchJob *fjob = new ItemFetchJob( SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox ) );
   fjob->fetchScope().fetchFullPayload();
   fjob->fetchScope().fetchAllAttributes();
   AKVERIFYEXEC( fjob );
@@ -179,8 +179,8 @@ void MessageQueueJobTest::testInvalidMessages()
 
 void MessageQueueJobTest::verifyOutboxContents( qlonglong count )
 {
-  QVERIFY( SpecialCollections::self()->hasDefaultCollection( SpecialCollections::Outbox ) );
-  Collection outbox = SpecialCollections::self()->defaultCollection( SpecialCollections::Outbox );
+  QVERIFY( SpecialMailCollections::self()->hasDefaultCollection( SpecialMailCollections::Outbox ) );
+  Collection outbox = SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
   QVERIFY( outbox.isValid() );
   CollectionStatisticsJob *job = new CollectionStatisticsJob( outbox );
   AKVERIFYEXEC( job );
