@@ -28,7 +28,7 @@
 #include <akonadi/agentmanager.h>
 #include <akonadi/collection.h>
 #include "filteractionjob.h"
-#include <akonadi/kmime/specialcollections.h>
+#include <akonadi/kmime/specialmailcollections.h>
 
 using namespace Akonadi;
 using namespace MailTransport;
@@ -93,7 +93,7 @@ AgentInstance DispatcherInterface::dispatcherInstance() const
 
 void DispatcherInterface::dispatchManually()
 {
-  Collection outbox = SpecialCollections::self()->defaultCollection( SpecialCollections::Outbox );
+  Collection outbox = SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
   if( !outbox.isValid() ) {
     kError() << "Could not access Outbox.";
     return;
@@ -105,7 +105,7 @@ void DispatcherInterface::dispatchManually()
 
 void DispatcherInterface::retryDispatching()
 {
-  Collection outbox = SpecialCollections::self()->defaultCollection( SpecialCollections::Outbox );
+  Collection outbox = SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
   if( !outbox.isValid() ) {
     kError() << "Could not access Outbox.";
     return;

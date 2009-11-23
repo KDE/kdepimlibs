@@ -30,8 +30,8 @@
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/kmime/addressattribute.h>
-#include <akonadi/kmime/specialcollections.h>
-#include <akonadi/kmime/specialcollectionsrequestjob.h>
+#include <akonadi/kmime/specialmailcollections.h>
+#include <akonadi/kmime/specialmailcollectionsrequestjob.h>
 
 using namespace Akonadi;
 using namespace KMime;
@@ -114,7 +114,7 @@ bool MessageQueueJob::Private::validate()
     q->emitResult();
     return false;
   } else if( sentBehaviour == SentBehaviourAttribute::MoveToDefaultSentCollection ) {
-    // TODO require SpecialCollections::SentMail here?
+    // TODO require SpecialMailCollections::SentMail here?
   }
 
   return true; // all ok
@@ -135,7 +135,7 @@ void MessageQueueJob::Private::outboxRequestResult( KJob *job )
     return;
   }
 
-  SpecialCollectionsRequestJob *requestJob = qobject_cast<SpecialCollectionsRequestJob*>( job );
+  SpecialMailCollectionsRequestJob *requestJob = qobject_cast<SpecialMailCollectionsRequestJob*>( job );
   if ( !requestJob ) {
     return;
   }
@@ -278,8 +278,8 @@ void MessageQueueJob::setBcc( const QStringList &bcc )
 
 void MessageQueueJob::start()
 {
-  SpecialCollectionsRequestJob *rjob = new SpecialCollectionsRequestJob( this );
-  rjob->requestDefaultCollection( SpecialCollections::Outbox );
+  SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob( this );
+  rjob->requestDefaultCollection( SpecialMailCollections::Outbox );
   connect( rjob, SIGNAL(result(KJob*)), this, SLOT(outboxRequestResult(KJob*)) );
   rjob->start();
 }
