@@ -2107,6 +2107,12 @@ static QString formatICalInvitationHelper( QString invitation,
       }
 
       if ( !myInc ) {
+        if ( !rsvpReq ) {
+          // Record only
+          html += helper->makeLink( "record", i18n( "[Record]" ) );
+          html += "</td><td> &nbsp; </td><td>";
+        }
+
         if ( rsvpReq ) {
           // Accept
           html += tdOpen;
