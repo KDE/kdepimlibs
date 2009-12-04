@@ -41,6 +41,11 @@ class SelectDialog::SelectDialogPrivate
     QMap<int, Resource*> mResourceMap;
 };
 
+static bool resourceNameLessThan( Resource* a, Resource *b )
+{
+  return a->resourceName() < b->resourceName();
+}
+
 SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent )
   : KDialog( parent ), d( new SelectDialogPrivate )
 {
@@ -65,6 +70,9 @@ SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent )
   grid->addWidget( d->mResourceId, 0, 0 );
 
   mainLayout->addWidget( groupBox );
+
+  // sort resources by name
+  qSort( list.begin(), list.end(), resourceNameLessThan );
 
   // setup listbox
   uint counter = 0;
