@@ -349,7 +349,7 @@ static sasl_callback_t callbacks[] = {
         if ( haveCapability( "AUTH" ) ) {
           QString chooseADifferentMsg( i18n("Choose a different authentication method.") );
           mSMTP->error( KIO::ERR_COULD_NOT_LOGIN,
-            ( mMechusing ? i18n("Your SMTP server does not support %1.", r.errorMessage() )
+              ( mMechusing ? i18n("Your SMTP server does not support %1.", QString::fromLatin1( mMechusing ) )
               : i18n("Your SMTP server does not support (unspecified method).") )
                         + '\n' + chooseADifferentMsg + '\n' + r.errorMessage() );
         }
