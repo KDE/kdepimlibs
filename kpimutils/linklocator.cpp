@@ -461,7 +461,7 @@ QString LinkLocator::highlightedText()
   if ( re.indexIn( mText, mPos ) == mPos ) {
     int length = re.matchedLength();
     // there must be a whitespace or a punctuation mark after the closing formating symbol
-    if ( mPos + length < mText.length() && !mText[mPos + length].isSpace() &&  !mText[mPos + length].isPunct() ) {
+    if ( mPos + length < mText.length() && !mText[mPos + length].isSpace() && !mText[mPos + length].isPunct() ) {
       return QString();
     }
     mPos += length - 1;
