@@ -134,7 +134,7 @@ void MetaWeblogPrivate::loadCategories()
     return;
   }
 
-  QString filename = "kblog/"+mUrl.host()+"_"+mBlogId+"_"+mUsername;
+  QString filename = "kblog/" + mUrl.host() + '_' + mBlogId + '_' + mUsername;
   filename = KStandardDirs::locateLocal( "data", filename, true );
 
   QFile file( filename );
@@ -156,7 +156,7 @@ void MetaWeblogPrivate::saveCategories()
     return;
   }
 
-  QString filename = "kblog/"+mUrl.host()+"_"+mBlogId+"_"+mUsername;
+  QString filename = "kblog/" + mUrl.host() + '_' + mBlogId + '_' + mUsername;
   filename = KStandardDirs::locateLocal( "data", filename, true );
 
   QFile file( filename );

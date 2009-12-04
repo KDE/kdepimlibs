@@ -445,7 +445,7 @@ void Blogger1Private::slotError( int number,
 {
   Q_Q( Blogger1 );
   Q_UNUSED( number );
-  kDebug() << "An error occured: " << errorString;
+  kDebug() << "An error occurred: " << errorString;
   BlogPost *post = mCallMap[ id.toInt() ];
 
   if(post)
