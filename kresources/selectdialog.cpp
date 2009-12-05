@@ -41,7 +41,7 @@ class SelectDialog::SelectDialogPrivate
     QMap<int, Resource*> mResourceMap;
 };
 
-static bool resourceNameLessThan( Resource* a, Resource *b )
+static bool resourceNameLessThan( Resource *a, Resource *b )
 {
   return a->resourceName() < b->resourceName();
 }
