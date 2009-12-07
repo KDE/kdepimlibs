@@ -31,7 +31,7 @@ include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
 
 ############### Find the stuff we need ###############
 
-set(Boost_MINIMUM_VERSION "1.33.1")
+set(Boost_MINIMUM_VERSION "1.34.0")
 if (WIN32)
   find_package(Boost ${Boost_MINIMUM_VERSION}) # (jstaniek) temp. fix unless we have graph library, not just headers
 else (WIN32)
