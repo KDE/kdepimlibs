@@ -477,7 +477,9 @@ void IncidenceBase::updated()
     d->mUpdatedPending = true;
   } else {
     foreach ( IncidenceObserver *o, d->mObservers ) {
-      o->incidenceUpdated( this );
+      if ( o ) {
+        o->incidenceUpdated( this );
+      }
     }
   }
 }
