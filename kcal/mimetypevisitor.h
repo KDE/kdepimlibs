@@ -1,20 +1,20 @@
 /*
-    Copyright (c) 2008-2009 Kevin Krammer <kevin.krammer@gmx.at>
+  Copyright (c) 2008-2009 Kevin Krammer <kevin.krammer@gmx.at>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #ifndef KCAL_MIMETYPEVISITOR_H
@@ -50,7 +50,7 @@ namespace KCal {
  */
 class KCAL_EXPORT MimeTypeVisitor : public KCal::IncidenceBase::Visitor
 {
-public:
+  public:
     /**
       Creates a visitor instance.
 
@@ -96,8 +96,8 @@ public:
     /**
       Sets the MIME type to "application/x-vnd.akonadi.calendar.freebusy"
 
-      @param freebusy The FreeBusy to visit. Not used since the MIME type does not
-                      depend on instance specific properties.
+      @param freebusy The FreeBusy to visit. Not used since the MIME type does
+                      not depend on instance specific properties.
 
       @return always returns @c true
      */
@@ -118,7 +118,8 @@ public:
     QStringList allMimeTypes() const;
 
     /**
-      Returns the Akonadi specific @c text/calendar sub MIME type of the given @p incidence.
+      Returns the Akonadi specific @c text/calendar sub MIME type of the given
+      @p incidence.
 
       This is a convenience method, equivalent to
       @code

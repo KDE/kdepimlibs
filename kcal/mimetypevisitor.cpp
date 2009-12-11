@@ -1,20 +1,20 @@
 /*
-    Copyright (c) 2008-2009 Kevin Krammer <kevin.krammer@gmx.at>
+  Copyright (c) 2008-2009 Kevin Krammer <kevin.krammer@gmx.at>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "mimetypevisitor.h"
@@ -43,40 +43,40 @@ MimeTypeVisitor::~MimeTypeVisitor()
 
 bool MimeTypeVisitor::visit( Event *event )
 {
-    Q_UNUSED( event );
-    d->mType = sEventType;
-    return true;
+  Q_UNUSED( event );
+  d->mType = sEventType;
+  return true;
 }
 
 bool MimeTypeVisitor::visit( Todo *todo )
 {
-    Q_UNUSED( todo );
-    d->mType = sTodoType;
-    return true;
+  Q_UNUSED( todo );
+  d->mType = sTodoType;
+  return true;
 }
 
 bool MimeTypeVisitor::visit( Journal *journal )
 {
-    Q_UNUSED( journal );
-    d->mType = sJournalType;
-    return true;
+  Q_UNUSED( journal );
+  d->mType = sJournalType;
+  return true;
 }
 
 bool MimeTypeVisitor::visit( FreeBusy *freebusy )
 {
-    Q_UNUSED( freebusy );
-    d->mType = sFreeBusyType;
-    return true;
+  Q_UNUSED( freebusy );
+  d->mType = sFreeBusyType;
+  return true;
 }
 
 QString MimeTypeVisitor::mimeType() const
 {
-    return d->mType;
+  return d->mType;
 }
 
 QStringList MimeTypeVisitor::allMimeTypes() const
 {
-    return QStringList() << sEventType << sTodoType << sJournalType << sFreeBusyType;
+  return QStringList() << sEventType << sTodoType << sJournalType << sFreeBusyType;
 }
 
 QString MimeTypeVisitor::mimeType( IncidenceBase *incidence )
