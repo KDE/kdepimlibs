@@ -517,6 +517,11 @@ bool NNTPProtocol::fetchGroup( QString &group, unsigned long first, unsigned lon
   if (firstSerNum == 0)
     return true;
   first = qMax( first, firstSerNum );
+  if ( lastSerNum < first ) { // No need to fetch anything
+    // note: this also ensure that "lastSerNum - first" is not negative
+    // in the next test (in "unsigned long" computation this leads to an overflow
+    return true;
+  }
   if ( max > 0 && lastSerNum - first > max )
     first = lastSerNum - max + 1;
 
