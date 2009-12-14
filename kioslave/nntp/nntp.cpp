@@ -628,8 +628,10 @@ bool NNTPProtocol::fetchGroupXOVER( unsigned long first, bool &notSupported )
     return true; // no articles selected
   if ( res == 500 )
     notSupported = true; // unknwon command
-  if ( res != 224 )
+  if ( res != 224 ) {
+    unexpected_response( res, "XOVER" );
     return false;
+  }
 
   long msgSize;
   QString name;
