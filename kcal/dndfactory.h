@@ -36,7 +36,7 @@
 
 #include "kcal_export.h"
 
-#include <KDateTime>
+#include <KDE/KDateTime>
 
 class QDate;
 class QTime;
