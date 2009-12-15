@@ -728,6 +728,7 @@ class KCal::RecurrenceRule::Private
                                // unless it matches the rule)
     uint mFrequency;
     /** how often it recurs:
+           < 0 means no end date,
            0 means an explicit end date,
            positive values give the number of occurrences */
     int mDuration;
