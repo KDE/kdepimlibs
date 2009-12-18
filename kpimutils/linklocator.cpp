@@ -460,8 +460,8 @@ QString LinkLocator::highlightedText()
   re.setMinimal(true);
   if ( re.indexIn( mText, mPos ) == mPos ) {
     int length = re.matchedLength();
-    // there must be a whitespace or a punctuation mark after the closing formating symbol
-    if ( mPos + length < mText.length() && !mText[mPos + length].isSpace() && !mText[mPos + length].isPunct() ) {
+    // there must be a whitespace after the closing formating symbol
+    if ( mPos + length < mText.length() && !mText[mPos + length].isSpace() ) {
       return QString();
     }
     mPos += length - 1;

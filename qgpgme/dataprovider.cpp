@@ -135,7 +135,8 @@ void QByteArrayDataProvider::release() {
 QIODeviceDataProvider::QIODeviceDataProvider( const boost::shared_ptr<QIODevice> & io )
   : GpgME::DataProvider(),
     mIO( io ),
-    mErrorOccurred( false )
+    mErrorOccurred( false ),
+    mHaveQProcess( qobject_cast<QProcess*>( io.get() ) )
 {
   assert( mIO );
 }
@@ -150,14 +151,6 @@ bool QIODeviceDataProvider::isSupported( Operation op ) const {
     case Release: return true;
     default:      return false;
     }
-}
-
-namespace {
-    struct Enabler {
-        explicit Enabler( bool* b_ ) : b( b_) {}
-        ~Enabler() { if ( b ) *b = true; }
-        bool* const b;
-    };
 }
 
 static qint64 blocking_read( const boost::shared_ptr<QIODevice> & io, char * buffer, qint64 maxSize ) {
@@ -186,19 +179,23 @@ ssize_t QIODeviceDataProvider::read( void * buffer, size_t bufSize ) {
     errno = EINVAL;
     return -1;
   }
+  const qint64 numRead = mHaveQProcess
+      ? blocking_read( mIO, static_cast<char*>(buffer), bufSize )
+      : mIO->read( static_cast<char*>(buffer), bufSize ) ;
+
   //workaround: some QIODevices (known example: QProcess) might not return 0 (EOF), but immediately -1 when finished. If no
   //errno is set, gpgme doesn't detect the error and loops forever. So return 0 on the very first -1 in case errno is 0
 
-  const qint64 numRead = blocking_read( mIO, static_cast<char*>(buffer), bufSize );
-
-  Enabler en( numRead < 0 ? &mErrorOccurred : 0 );
+  ssize_t rc = numRead;
   if ( numRead < 0 && errno == 0 ) {
       if ( mErrorOccurred )
           errno = EIO;
       else
-          return 0;
+          rc = 0;
   }
-  return numRead;
+  if ( numRead < 0 )
+      mErrorOccurred = true;
+  return rc;
 }
 
 ssize_t QIODeviceDataProvider::write( const void * buffer, size_t bufSize ) {
