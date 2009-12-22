@@ -1411,7 +1411,7 @@ bool MailCopiesTo::parse( const char *& scursor, const char * const send,
       return true;
     }
     if ( qstrnicmp( "nobody", scursor, 6 ) == 0 ) {
-      d->alwaysCopy = true;
+      d->neverCopy = true;
       return true;
     }
   }
