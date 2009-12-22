@@ -211,3 +211,36 @@ void MessageTest::missingHeadersTest()
   QCOMPARE( body, QString::fromAscii( msg2.body() ) );
 }
 
+void MessageTest::testBug219749()
+{
+  // Test that the message body is OK even though some headers are missing
+  KMime::Message msg;
+  const QString content =
+      "Content-Type: MULTIPART/MIXED;\n"
+      " BOUNDARY=\"0-1804289383-1260384639=:52580\"\n"
+      "\n"
+      "--0-1804289383-1260384639=:52580\n"
+      "Content-Type: TEXT/plain; CHARSET=UTF-8\n"
+      "\n"
+      "--0-1804289383-1260384639=:52580\n"
+      "Content-Type: APPLICATION/octet-stream\n"
+      "Content-Transfer-Encoding: BASE64\n"
+      "Content-ID: <jaselka1.docx4AECA1F9@9230725.3CDBB752>\n"
+      "Content-Disposition: ATTACHMENT; FILENAME=\"jaselka 1.docx\"\n"
+      "\n"
+      "UEsDBBQABgAIAAAAIQDd/JU3ZgEAACAFAAATAAgCW0NvbnRlbnRfVHlwZXNd\n"
+      "SUwAAAAA\n"
+      "\n"
+      "--0-1804289383-1260384639=:52580--\n";
+
+  msg.setContent( content.toAscii() );
+  msg.parse();
+
+  QCOMPARE( msg.contents().size(), 2 );
+  KMime::Content *attachment = msg.contents()[1];
+  QCOMPARE( attachment->contentType( false )->mediaType().data(), "application" );
+  QCOMPARE( attachment->contentType( false )->subType().data(), "octet-stream" );
+  Headers::ContentDisposition *cd = attachment->contentDisposition( false );
+  QVERIFY( cd );
+  QCOMPARE( cd->filename(), QString( "jaselka 1.docx" ) );
+}
