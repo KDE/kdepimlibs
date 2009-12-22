@@ -98,9 +98,9 @@ void NNTPProtocol::get( const KUrl& url )
   QString path = QDir::cleanPath(url.path());
 
   // path should be like: /group/<msg_id> or /group/<serial number>
-  if ( path.startsWith( QDir::separator() ) )
+  if ( path.startsWith( '/' ) )
     path.remove( 0, 1 );
-  int pos = path.indexOf( QDir::separator() );
+  int pos = path.indexOf( '/' );
   QString group;
   QString msg_id;
   if ( pos > 0 ) {
