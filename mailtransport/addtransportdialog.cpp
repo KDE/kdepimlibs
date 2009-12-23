@@ -54,7 +54,7 @@ class AddTransportDialog::Private
     void typeListClicked(); // slot
 
     AddTransportDialog *const q;
-    Ui::AddTransportDialog ui;
+    ::Ui::AddTransportDialog ui;
 };
 
 TransportType AddTransportDialog::Private::selectedType() const
