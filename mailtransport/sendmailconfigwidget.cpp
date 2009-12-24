@@ -35,7 +35,7 @@ using namespace MailTransport;
 class MailTransport::SendmailConfigWidgetPrivate : public TransportConfigWidgetPrivate
 {
   public:
-    Ui::SendmailSettings ui;
+    ::Ui::SendmailSettings ui;
 
 };
 

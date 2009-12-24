@@ -62,7 +62,7 @@ using namespace MailTransport;
 class MailTransport::SMTPConfigWidgetPrivate : public TransportConfigWidgetPrivate
 {
   public:
-    Ui::SMTPSettings ui;
+    ::Ui::SMTPSettings ui;
 
     ServerTest *serverTest;
     QButtonGroup *encryptionGroup;

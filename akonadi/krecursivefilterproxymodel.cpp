@@ -21,18 +21,67 @@
 
 #include <kdebug.h>
 
-class RecursiveFilterProxyModelPrivate
+class KRecursiveFilterProxyModelPrivate
 {
   Q_DECLARE_PUBLIC(KRecursiveFilterProxyModel)
   KRecursiveFilterProxyModel *q_ptr;
 public:
-  RecursiveFilterProxyModelPrivate(KRecursiveFilterProxyModel *model)
+  KRecursiveFilterProxyModelPrivate(KRecursiveFilterProxyModel *model)
     : q_ptr(model),
       ignoreRemove(false),
       completeInsert(false),
       completeRemove(false)
   {
     qRegisterMetaType<QModelIndex>("QModelIndex");
+  }
+
+  inline void invokeDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+  {
+    Q_Q(KRecursiveFilterProxyModel);
+    bool success = QMetaObject::invokeMethod(q, "_q_sourceDataChanged", Qt::DirectConnection,
+        Q_ARG(QModelIndex, topLeft),
+        Q_ARG(QModelIndex, bottomRight));
+    Q_ASSERT(success);
+  }
+
+  inline void invokeRowsInserted(const QModelIndex &source_parent, int start, int end)
+  {
+    Q_Q(KRecursiveFilterProxyModel);
+    bool success = QMetaObject::invokeMethod(q, "_q_sourceRowsInserted", Qt::DirectConnection,
+        Q_ARG(QModelIndex, source_parent),
+        Q_ARG(int, start),
+        Q_ARG(int, end));
+   Q_ASSERT(success);
+  }
+
+  inline void invokeRowsAboutToBeInserted(const QModelIndex &source_parent, int start, int end)
+  {
+    Q_Q(KRecursiveFilterProxyModel);
+    bool success = QMetaObject::invokeMethod(q, "_q_sourceRowsAboutToBeInserted", Qt::DirectConnection,
+        Q_ARG(QModelIndex, source_parent),
+        Q_ARG(int, start),
+        Q_ARG(int, end));
+    Q_ASSERT(success);
+  }
+
+  inline void invokeRowsRemoved(const QModelIndex &source_parent, int start, int end)
+  {
+    Q_Q(KRecursiveFilterProxyModel);
+    bool success = QMetaObject::invokeMethod(q, "_q_sourceRowsRemoved", Qt::DirectConnection,
+        Q_ARG(QModelIndex, source_parent),
+        Q_ARG(int, start),
+        Q_ARG(int, end));
+    Q_ASSERT(success);
+  }
+
+  inline void invokeRowsAboutToBeRemoved(const QModelIndex &source_parent, int start, int end)
+  {
+    Q_Q(KRecursiveFilterProxyModel);
+    bool success = QMetaObject::invokeMethod(q, "_q_sourceRowsAboutToBeRemoved", Qt::DirectConnection,
+        Q_ARG(QModelIndex, source_parent),
+        Q_ARG(int, start),
+        Q_ARG(int, end));
+    Q_ASSERT(success);
   }
 
   void sourceDataChanged(const QModelIndex &source_top_left, const QModelIndex &source_bottom_right);
@@ -54,7 +103,7 @@ public:
   bool completeRemove;
 };
 
-void RecursiveFilterProxyModelPrivate::sourceDataChanged(const QModelIndex &source_top_left, const QModelIndex &source_bottom_right)
+void KRecursiveFilterProxyModelPrivate::sourceDataChanged(const QModelIndex &source_top_left, const QModelIndex &source_bottom_right)
 {
   Q_Q(KRecursiveFilterProxyModel);
 
@@ -62,7 +111,7 @@ void RecursiveFilterProxyModelPrivate::sourceDataChanged(const QModelIndex &sour
 
   if (!source_parent.isValid() || q->filterAcceptsRow(source_parent.row(), source_parent.parent()))
   {
-    QMetaObject::invokeMethod(q, "_q_sourceDataChanged", Qt::DirectConnection, Q_ARG(QModelIndex, source_top_left), Q_ARG(QModelIndex, source_bottom_right));
+    invokeDataChanged(source_top_left, source_bottom_right);
     return;
   }
 
@@ -79,11 +128,10 @@ void RecursiveFilterProxyModelPrivate::sourceDataChanged(const QModelIndex &sour
   if (!requireRow) // None of the changed rows are now required in the model.
     return;
 
-  refreshAscendantMapping( source_parent );
+  refreshAscendantMapping(source_parent);
 }
 
-
-void RecursiveFilterProxyModelPrivate::refreshAscendantMapping(const QModelIndex &index, bool refreshAll)
+void KRecursiveFilterProxyModelPrivate::refreshAscendantMapping(const QModelIndex &index, bool refreshAll)
 {
   Q_Q(KRecursiveFilterProxyModel);
 
@@ -97,41 +145,36 @@ void RecursiveFilterProxyModelPrivate::refreshAscendantMapping(const QModelIndex
   while(sourceAscendant.isValid() && !q->acceptRow(sourceAscendant.row(), sourceAscendant.parent()))
   {
     if (refreshAll)
-      QMetaObject::invokeMethod(q, "_q_sourceDataChanged", Qt::DirectConnection,
-        Q_ARG(QModelIndex, sourceAscendant),
-        Q_ARG(QModelIndex, sourceAscendant));
+      invokeDataChanged(sourceAscendant, sourceAscendant);
 
     lastAscendant = sourceAscendant;
     sourceAscendant = sourceAscendant.parent();
   }
 
   // Inform the model that its data changed so that it creates new mappings and finds the rows which now match the filter.
-  QMetaObject::invokeMethod(q, "_q_sourceDataChanged", Qt::DirectConnection,
-      Q_ARG(QModelIndex, lastAscendant),
-      Q_ARG(QModelIndex, lastAscendant));
-
+  invokeDataChanged(lastAscendant, lastAscendant);
 }
 
-void RecursiveFilterProxyModelPrivate::sourceRowsAboutToBeInserted(const QModelIndex &source_parent, int start, int end)
+void KRecursiveFilterProxyModelPrivate::sourceRowsAboutToBeInserted(const QModelIndex &source_parent, int start, int end)
 {
   Q_Q(KRecursiveFilterProxyModel);
 
   if (!source_parent.isValid() || q->filterAcceptsRow(source_parent.row(), source_parent.parent()))
   {
-    QMetaObject::invokeMethod(q, "_q_sourceRowsAboutToBeInserted", Qt::DirectConnection, Q_ARG(QModelIndex, source_parent), Q_ARG(int, start), Q_ARG(int, end));
+    invokeRowsAboutToBeInserted(source_parent, start, end);
     completeInsert = true;
   }
 }
 
-void RecursiveFilterProxyModelPrivate::sourceRowsInserted(const QModelIndex &source_parent, int start, int end)
+void KRecursiveFilterProxyModelPrivate::sourceRowsInserted(const QModelIndex &source_parent, int start, int end)
 {
   Q_Q(KRecursiveFilterProxyModel);
 
   if (completeInsert)
   {
     completeInsert = false;
+    invokeRowsInserted(source_parent, start, end);
     // If the parent is already in the model, we can just pass on the signal.
-    QMetaObject::invokeMethod(q, "_q_sourceRowsInserted", Qt::DirectConnection, Q_ARG(QModelIndex, source_parent), Q_ARG(int, start), Q_ARG(int, end));
     return;
   }
 
@@ -144,6 +187,7 @@ void RecursiveFilterProxyModelPrivate::sourceRowsInserted(const QModelIndex &sou
       break;
     }
   }
+
   if (!requireRow)
   {
     // The row doesn't have descendants that match the filter. Filter it out.
@@ -153,13 +197,13 @@ void RecursiveFilterProxyModelPrivate::sourceRowsInserted(const QModelIndex &sou
   refreshAscendantMapping(source_parent);
 }
 
-void RecursiveFilterProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex &source_parent, int start, int end)
+void KRecursiveFilterProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex &source_parent, int start, int end)
 {
   Q_Q(KRecursiveFilterProxyModel);
 
   if (q->filterAcceptsRow(source_parent.row(), source_parent.parent()))
   {
-    QMetaObject::invokeMethod(q, "_q_sourceRowsAboutToBeRemoved", Qt::DirectConnection, Q_ARG(QModelIndex, source_parent), Q_ARG(int, start), Q_ARG(int, end));
+    invokeRowsAboutToBeRemoved(source_parent, start, end);
     completeRemove = true;
     return;
   }
@@ -180,7 +224,7 @@ void RecursiveFilterProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIn
   }
 }
 
-void RecursiveFilterProxyModelPrivate::sourceRowsRemoved(const QModelIndex &source_parent, int start, int end)
+void KRecursiveFilterProxyModelPrivate::sourceRowsRemoved(const QModelIndex &source_parent, int start, int end)
 {
   Q_Q(KRecursiveFilterProxyModel);
 
@@ -188,7 +232,7 @@ void RecursiveFilterProxyModelPrivate::sourceRowsRemoved(const QModelIndex &sour
   {
     completeRemove = false;
     // Source parent is already in the model.
-    QMetaObject::invokeMethod(q, "_q_sourceRowsRemoved", Qt::DirectConnection, Q_ARG(QModelIndex, source_parent), Q_ARG(int, start), Q_ARG(int, end));
+    invokeRowsRemoved(source_parent, start, end);
     // fall through. After removing rows, we need to refresh things so that intermediates will be removed too if necessary.
   }
 
@@ -201,11 +245,11 @@ void RecursiveFilterProxyModelPrivate::sourceRowsRemoved(const QModelIndex &sour
   // Refresh intermediate rows too.
   // This is needed because QSFPM only invalidates the mapping for the
   // index range given to dataChanged, not its children.
-  refreshAscendantMapping( source_parent, true );
+  refreshAscendantMapping(source_parent, true);
 }
 
 KRecursiveFilterProxyModel::KRecursiveFilterProxyModel(QObject* parent)
-    : QSortFilterProxyModel(parent), d_ptr(new RecursiveFilterProxyModelPrivate(this))
+    : QSortFilterProxyModel(parent), d_ptr(new KRecursiveFilterProxyModelPrivate(this))
 {
   setDynamicSortFilter(true);
 }
@@ -221,12 +265,12 @@ bool KRecursiveFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelInd
   QVariant da = sourceModel()->index(sourceRow, 0, sourceParent).data();
 
   if (acceptRow(sourceRow, sourceParent))
-  {
     return true;
-  }
 
   QModelIndex source_index = sourceModel()->index(sourceRow, 0, sourceParent);
+  Q_ASSERT(source_index.isValid());
   bool accepted = false;
+
   for (int row = 0 ; row < sourceModel()->rowCount(source_index); ++row)
     if (filterAcceptsRow(row, source_index))
       accepted = true; // Need to do this in a loop so that all siblings in a parent get processed, not just the first.
@@ -236,12 +280,12 @@ bool KRecursiveFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelInd
 
 bool KRecursiveFilterProxyModel::acceptRow(int sourceRow, const QModelIndex& sourceParent) const
 {
-    return QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
+  return QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
 }
 
 void KRecursiveFilterProxyModel::setSourceModel(QAbstractItemModel* model)
 {
-  Q_D(RecursiveFilterProxyModel);
+  Q_D(KRecursiveFilterProxyModel);
 
   // Standard disconnect.
   disconnect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),

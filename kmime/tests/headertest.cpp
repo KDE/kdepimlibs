@@ -348,11 +348,28 @@ void HeaderTest::testMailCopiesToHeader()
   QVERIFY( h->alwaysCopy() );
   delete h;
 
+  h = new MailCopiesTo( 0, "poster" );
+  QVERIFY( h->addresses().isEmpty() );
+  QVERIFY( !h->isEmpty() );
+  QVERIFY( h->alwaysCopy() );
+  delete h;
+
   // parse never copy
   h = new MailCopiesTo( 0, "never" );
   QVERIFY( h->addresses().isEmpty() );
   QVERIFY( !h->isEmpty() );
   QVERIFY( h->neverCopy() );
+  delete h;
+
+  h = new MailCopiesTo( 0, "nobody" );
+  QVERIFY( h->addresses().isEmpty() );
+  QVERIFY( !h->isEmpty() );
+  QVERIFY( h->neverCopy() );
+  delete h;
+
+  // parsing is case-insensitive
+  h = new MailCopiesTo( 0, "AlWays" );
+  QVERIFY( h->alwaysCopy() );
   delete h;
 
   // parse address

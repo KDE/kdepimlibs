@@ -32,6 +32,7 @@ class MessageTest : public QObject
     void testHeaderFieldWithoutSpace();
     void testWronglyFoldedHeaders();
     void missingHeadersTest();
+    void testBug219749();
 };
 
 
