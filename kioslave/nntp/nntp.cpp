@@ -98,9 +98,9 @@ void NNTPProtocol::get( const KUrl& url )
   QString path = QDir::cleanPath(url.path());
 
   // path should be like: /group/<msg_id> or /group/<serial number>
-  if ( path.startsWith( QDir::separator() ) )
+  if ( path.startsWith( '/' ) )
     path.remove( 0, 1 );
-  int pos = path.indexOf( QDir::separator() );
+  int pos = path.indexOf( '/' );
   QString group;
   QString msg_id;
   if ( pos > 0 ) {
@@ -517,6 +517,11 @@ bool NNTPProtocol::fetchGroup( QString &group, unsigned long first, unsigned lon
   if (firstSerNum == 0)
     return true;
   first = qMax( first, firstSerNum );
+  if ( lastSerNum < first ) { // No need to fetch anything
+    // note: this also ensure that "lastSerNum - first" is not negative
+    // in the next test (in "unsigned long" computation this leads to an overflow
+    return true;
+  }
   if ( max > 0 && lastSerNum - first > max )
     first = lastSerNum - max + 1;
 
