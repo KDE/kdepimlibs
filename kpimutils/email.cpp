@@ -645,7 +645,7 @@ QByteArray KPIMUtils::extractEmailAddress( const QByteArray &address )
     addrSpec = QByteArray();
     if ( result != AddressEmpty ) {
       kDebug()
-        << "Input: aStr\nError:"
+        << "Input:" << address << "\nError:"
         << emailParseResultToString( result );
     }
   }
