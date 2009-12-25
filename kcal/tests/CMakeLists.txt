@@ -39,6 +39,7 @@ KCAL_UNIT_TESTS(
   testperson
   testsortablelist
   testtodo
+  testtzmapping
 )
 # this test cannot work with msvc because libical should not be altered
 # and therefore we can't add KCAL_EXPORT there
