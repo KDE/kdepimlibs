@@ -65,14 +65,6 @@ static QString emailTestParseResultToString( EmailParseResult errorCode )
   return "unknown error code";
 }
 
-static QString simpleEmailTestParseResultToString( bool validEmail )
-{
-  if ( validEmail ) {
-    return "true";
-  }
-  return "false";
-}
-
 void EMailTest::testGetNameAndEmail()
 {
   QFETCH( QString, input );
@@ -354,76 +346,75 @@ void EMailTest::testIsValidAddressList_data()
 void EMailTest::testIsValidSimpleEmailAddress()
 {
   QFETCH( QString, input );
-  QFETCH( QString, expResult );
+  QFETCH( bool, expResult );
 
-  const bool validEmail = isValidSimpleAddress( input );
-  QCOMPARE( simpleEmailTestParseResultToString( validEmail ), expResult );
+  QCOMPARE( isValidSimpleAddress( input ), expResult );
 }
 
 void EMailTest::testIsValidSimpleEmailAddress_data()
 {
   QTest::addColumn<QString>( "input" );
-  QTest::addColumn<QString>( "expResult" );
+  QTest::addColumn<bool>( "expResult" );
 
   // checks for "pure" email addresses in the form of xxx@yyy.tld
-  QTest::newRow( "" ) << "matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << QString::fromUtf8( "test@täst.invalid" ) << "true";
+  QTest::newRow( "" ) << "matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << QString::fromUtf8( "test@täst.invalid" ) << true;
   // non-ASCII char as first char of IDN
-  QTest::newRow( "" ) << QString::fromUtf8( "i_want@øl.invalid" ) << "true";
-  QTest::newRow( "" ) << "matt@[123.123.123.123]" << "true";
-  QTest::newRow( "" ) << "matt@[3.3.3.3]" << "true";
-  QTest::newRow( "" ) << "matt@[4.4.4.4]" << "true";
-  QTest::newRow( "" ) << "matt@[192.168.254.254]" << "true";
-  QTest::newRow( "" ) << "\"matt\"@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "-matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "\"-matt\"@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "matt@jongel.fibbel.com" << "true";
-  QTest::newRow( "" ) << "Matt Douhan <matt@fruitsalad.org>" << "false";
+  QTest::newRow( "" ) << QString::fromUtf8( "i_want@øl.invalid" ) << true;
+  QTest::newRow( "" ) << "matt@[123.123.123.123]" << true;
+  QTest::newRow( "" ) << "matt@[3.3.3.3]" << true;
+  QTest::newRow( "" ) << "matt@[4.4.4.4]" << true;
+  QTest::newRow( "" ) << "matt@[192.168.254.254]" << true;
+  QTest::newRow( "" ) << "\"matt\"@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "-matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "\"-matt\"@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "matt@jongel.fibbel.com" << true;
+  QTest::newRow( "" ) << "Matt Douhan <matt@fruitsalad.org>" << false;
   // BUG 105705
-  QTest::newRow( "" ) << "matt-@fibbel.com" << "true";
-  QTest::newRow( "" ) << "matt@fibbel-is-a-geek.com" << "true";
-  QTest::newRow( "" ) << "matt_@fibbel.com" << "true";
+  QTest::newRow( "" ) << "matt-@fibbel.com" << true;
+  QTest::newRow( "" ) << "matt@fibbel-is-a-geek.com" << true;
+  QTest::newRow( "" ) << "matt_@fibbel.com" << true;
   // Check the defined chars for atext according to rfc2822
-  QTest::newRow( "" ) << "!matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "#matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "$matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "%matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "&matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "'matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "*matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "+matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "/matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "=matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "?matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "^matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "_matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "-matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "`matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "{matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "|matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "}matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "~matt@fruitsalad.org" << "true";
+  QTest::newRow( "" ) << "!matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "#matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "$matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "%matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "&matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "'matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "*matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "+matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "/matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "=matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "?matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "^matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "_matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "-matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "`matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "{matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "|matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "}matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "~matt@fruitsalad.org" << true;
   // BUG 108476
-  QTest::newRow( "" ) << "foo+matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "bar=matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "jongel-matt@fruitsalad.org" << "true";
-  QTest::newRow( "" ) << "matt-@fruitsalad.org" << "true";
+  QTest::newRow( "" ) << "foo+matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "bar=matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "jongel-matt@fruitsalad.org" << true;
+  QTest::newRow( "" ) << "matt-@fruitsalad.org" << true;
 
   // check if the pure email address is wrong
-  QTest::newRow( "" ) << "mattfruitsalad.org" << "false";
-  QTest::newRow( "" ) << "matt@[123.123.123.123" << "false";
-  QTest::newRow( "" ) << "matt@123.123.123.123]" << "false";
-  QTest::newRow( "" ) << "\"matt@fruitsalad.org" << "false";
-  QTest::newRow( "" ) << "matt\"@fruitsalad.org" << "false";
-  QTest::newRow( "" ) << QString() << "false";
+  QTest::newRow( "" ) << "mattfruitsalad.org" << false;
+  QTest::newRow( "" ) << "matt@[123.123.123.123" << false;
+  QTest::newRow( "" ) << "matt@123.123.123.123]" << false;
+  QTest::newRow( "" ) << "\"matt@fruitsalad.org" << false;
+  QTest::newRow( "" ) << "matt\"@fruitsalad.org" << false;
+  QTest::newRow( "" ) << QString() << false;
 
   // BUG 203881
-  QTest::newRow( "" ) << "2advance@my-site.com" << "true";
+  QTest::newRow( "" ) << "2advance@my-site.com" << true;
 
   // and here some insane but still valid cases
-  QTest::newRow( "" ) << "\"m@tt\"@fruitsalad.org" << "true";
+  QTest::newRow( "" ) << "\"m@tt\"@fruitsalad.org" << true;
 
-  QTest::newRow( "" ) << "matt\"@@\"fruitsalad.org" << "false";
+  QTest::newRow( "" ) << "matt\"@@\"fruitsalad.org" << false;
 }
 
 void EMailTest::testGetEmailAddress()
