@@ -301,6 +301,14 @@ KMIME_EXPORT extern void addQuotes( QByteArray &str, bool forceQuotes );
  */
 KMIME_EXPORT QString balanceBidiState( const QString &input );
 
+/**
+ * Similar to the above function. Instead of trying to balance the Bidi chars, it outright
+ * removes them from the string.
+ * 
+ * Reason: KHTML seems to ignore the PDF character, so adding them doesn't fix things :(
+ */
+KMIME_EXPORT QString removeBidiControlChars( const QString &input );
+
 } // namespace KMime
 
 #endif /* __KMIME_UTIL_H__ */

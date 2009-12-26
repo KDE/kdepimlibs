@@ -263,7 +263,10 @@ void MessageTest::testBidiSpoofing()
   msg.setContent( data );
   msg.parse();
 
-  const QString expectedDisplayName = "\"Sender" + RLO + PDF + "\"";
+  // Test adjusted for taking into account that KMIME now removes bidi control chars
+  // instead of adding PDF chars, because of broken KHTML.
+  //const QString expectedDisplayName = "\"Sender" + RLO + PDF + "\"";
+  const QString expectedDisplayName = "\"Sender\"";
   const QString expectedMailbox = expectedDisplayName + " <sender@test.org>";
   QCOMPARE( msg.from()->addresses().count(), 1 );
   QCOMPARE( msg.from()->asUnicodeString(), expectedMailbox );
