@@ -30,6 +30,7 @@ class MessageTest : public QObject
     void testBrunosMultiAssembleBug();
     void testWillsAndTillsCrash();
     void missingHeadersTest();
+    void testBidiSpoofing();
 };
 
 
