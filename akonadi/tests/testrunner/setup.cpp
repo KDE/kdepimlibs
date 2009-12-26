@@ -159,12 +159,13 @@ bool SetupTest::startAkonadiDaemon()
   mAkonadiDaemonProcess->setProgram( QLatin1String( "akonadi_control" ) );
   mAkonadiDaemonProcess->start();
   const bool started = mAkonadiDaemonProcess->waitForStarted( 5000 );
-  kDebug() << mAkonadiDaemonProcess->pid();
+  kDebug() << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->pid();
   return started;
 }
 
 bool SetupTest::stopAkonadiDaemon()
 {
+  disconnect( mAkonadiDaemonProcess, SIGNAL( finished(int) ) );
   mAkonadiDaemonProcess->terminate();
   const bool finished = mAkonadiDaemonProcess->waitForFinished( 5000 );
   if ( !finished ) {
@@ -363,6 +364,8 @@ SetupTest::SetupTest() :
 #endif
 
   mAkonadiDaemonProcess = new KProcess( this );
+  connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
+           this, SLOT(slotAkonadiDaemonProcessFinished()));
 
   connect( mSyncMapper, SIGNAL(mapped(QString)), SLOT(resourceSynchronized(QString)) );
 }
@@ -421,4 +424,10 @@ QString SetupTest::basePath() const
   if ( !QDir::temp().exists( tempDir ) )
     QDir::temp().mkdir( tempDir );
   return QDir::tempPath() + QDir::separator() + tempDir + QDir::separator();
+}
+
+void SetupTest::slotAkonadiDaemonProcessFinished()
+{
+  // any outside termination of the akonadi process is considered a failure, in this context
+  exit( 1 );
 }

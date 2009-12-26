@@ -49,6 +49,7 @@ class SetupTest : public QObject
   private Q_SLOTS:
     void dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
     void resourceSynchronized( const QString &agentId );
+    void slotAkonadiDaemonProcessFinished();
 
   private:
     bool clearEnvironment();
