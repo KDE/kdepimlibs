@@ -31,6 +31,7 @@
 #include <klocale.h>
 #include <kcharsets.h>
 #include <kcodecs.h>
+#include <kdebug.h>
 
 #include <QtCore/QList>
 #include <QtCore/QString>
@@ -485,6 +486,20 @@ void addQuotes( QByteArray &str, bool forceQuotes )
     str.insert( 0, '\"' );
     str.append( "\"" );
   }
+}
+
+QString removeBidiControlChars( const QString &input )
+{
+  const int LRO = 0x202D;
+  const int RLO = 0x202E;
+  const int LRE = 0x202A;
+  const int RLE = 0x202B;
+  QString result = input;
+  result.remove( LRO );
+  result.remove( RLO );
+  result.remove( LRE );
+  result.remove( RLE );
+  return result;
 }
 
 } // namespace KMime

@@ -172,3 +172,32 @@ void MessageTest::missingHeadersTest()
   QCOMPARE( body, QString::fromAscii( msg2.body() ) );
 }
 
+void MessageTest::testBidiSpoofing()
+{
+  const QString RLO( QChar( 0x202E ) );
+  const QString PDF( QChar( 0x202C ) );
+
+  const QByteArray senderAndRLO =
+      encodeRFC2047String( "\"Sender" + RLO + "\" <sender@test.org>", "utf-8" );
+
+  // The display name of the "From" has an RLO, make sure the KMime parser balances it
+  QByteArray data =
+    "From: " + senderAndRLO + "\n"
+    "\n"
+    "Body";
+
+  KMime::Message msg;
+  msg.setContent( data );
+  msg.parse();
+
+  // Test adjusted for taking into account that KMIME now removes bidi control chars
+  // instead of adding PDF chars, because of broken KHTML.
+  //const QString expectedDisplayName = "\"Sender" + RLO + PDF + "\"";
+  const QString expectedDisplayName = "\"Sender\"";
+  const QString expectedMailbox = expectedDisplayName + " <sender@test.org>";
+  QCOMPARE( msg.from()->addresses().count(), 1 );
+  QCOMPARE( msg.from()->asUnicodeString(), expectedMailbox );
+  QCOMPARE( msg.from()->displayNames().first(), expectedDisplayName );
+  QCOMPARE( msg.from()->mailboxes().first().name(), expectedDisplayName );
+  QCOMPARE( msg.from()->mailboxes().first().address().data(), "sender@test.org" );
+}
