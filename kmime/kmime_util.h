@@ -258,6 +258,49 @@ KMIME_EXPORT extern void removeQuots( QString &str );
 */
 KMIME_EXPORT extern void addQuotes( QByteArray &str, bool forceQuotes );
 
+/**
+ * Makes sure that the bidirectional state at the end of the string is the
+ * same as at the beginning of the string.
+ *
+ * This is useful so that Unicode control characters that can change the text
+ * direction can not spill over to following strings.
+ *
+ * As an example, consider a mailbox in the form "display name" <local@domain.com>.
+ * If the display name here contains unbalanced control characters that change the
+ * text direction, it would also have an effect on the addrspec, which could lead to
+ * spoofing.
+ *
+ * By passing the display name to this function, one can make sure that no change of
+ * the bidi state can spill over to the next strings, in this case the addrspec.
+ *
+ * Example: The string "Hello <RLO>World" is unbalanced, as it contains a right-to-left
+ *          override character, which is never followed by a <PDF>, the "pop directional
+ *          formatting" character. This function adds the missing <PDF> at the end, and
+ *          the output of this function would be "Hello <RLO>World<PDF>".
+ *
+ * Example of spoofing:
+ *   Consider "Firstname Lastname<RLO>" <moc.mitciv@attacker.com>. Because of the RLO,
+ *   it is displayed as "Firstname Lastname <moc.rekcatta@victim.com>", which spoofs the
+ *   domain name.
+ *   By passing "Firstname Lastname<RLO>" to this function, one can balance the <RLO>,
+ *   leading to "Firstname Lastname<RLO><PDF>", so the whole mailbox is displayed
+ *   correctly as "Firstname Lastname" <moc.mitciv@attacker.com> again.
+ *
+ * See http://unicode.org/reports/tr9 for more information on bidi control chars.
+ *
+ * @param input the display name of a mailbox, which is checked for unbalanced Unicode
+ *              direction control characters
+ * @return the display name which now contains a balanced state of direction control
+ *         characters
+ *
+ * Note that this function does not do any parsing related to mailboxes, it only works
+ * on plain strings. Therefore, passing the complete mailbox will not lead to any results,
+ * only the display name should be passed.
+ *
+ * @since 4.5
+ */
+KMIME_EXPORT QString balanceBidiState( const QString &input );
+
 } // namespace KMime
 
 #endif /* __KMIME_UTIL_H__ */

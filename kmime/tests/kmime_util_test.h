@@ -27,6 +27,8 @@ class KMimeUtilTest : public QObject
   private Q_SLOTS:
     void testUnfoldHeader();
     void testExtractHeader();
+    void testBalanceBidiState();
+    void testBalanceBidiState_data();
 };
 
 #endif

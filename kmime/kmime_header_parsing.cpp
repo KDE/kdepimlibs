@@ -136,14 +136,14 @@ void Mailbox::setAddress( const QByteArray &addr )
 
 void Mailbox::setName( const QString &name )
 {
-  mDisplayName = name;
+  mDisplayName = balanceBidiState( name );
 }
 
 void Mailbox::setNameFrom7Bit( const QByteArray &name,
                                const QByteArray &defaultCharset )
 {
   QByteArray cs;
-  mDisplayName = decodeRFC2047String( name, cs, defaultCharset, false );
+  setName( decodeRFC2047String( name, cs, defaultCharset, false ) );
 }
 
 bool Mailbox::hasAddress() const
@@ -1194,7 +1194,9 @@ bool parseGroup( const char* &scursor, const char * const send,
     return false;
   }
 
-  result.displayName = maybeDisplayName;
+  // KDE5 TODO: Don't expose displayName as public, but rather add setter for it that
+  //            automatically calls balanceBidiState
+  result.displayName = balanceBidiState( maybeDisplayName );
 
   // get obs-mbox-list (may contain empty entries):
   scursor++;

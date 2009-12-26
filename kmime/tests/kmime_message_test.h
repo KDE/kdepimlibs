@@ -33,6 +33,7 @@ class MessageTest : public QObject
     void testWronglyFoldedHeaders();
     void missingHeadersTest();
     void testBug219749();
+    void testBidiSpoofing();
 };
 
 
