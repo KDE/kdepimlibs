@@ -61,7 +61,7 @@ class MessagePrivate;
  * b->contentType()->setMimeType( "text/plain" );
  * b->setBody( "Some text..." );
  *
- * // Set the sedcond multipart, the attachment.
+ * // Set the second multipart, the attachment.
  * KMime::Content *a = new KMime::Content;
  * KMime::Headers::ContentDisposition *d = new KMime::Headers::ContentDisposition( attachMessage );
  * d->setFilename( "cal.ics" );
