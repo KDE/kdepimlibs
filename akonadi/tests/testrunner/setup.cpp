@@ -140,7 +140,7 @@ int SetupTest::startDBusDaemon()
 {
   const QString dbusConfigFilePath = basePath() + QDir::separator() + QLatin1String("dbus-session.conf");
   generateDBusConfigFile( dbusConfigFilePath );
-  Q_ASSERT( QDir::exists( dbusConfigFilePath ) );
+  Q_ASSERT( QFile::exists( dbusConfigFilePath ) );
 
   QStringList dbusargs;
   dbusargs << QString::fromLatin1("--config-file=%1").arg( dbusConfigFilePath );
