@@ -419,11 +419,21 @@ void SetupTest::shutdownHarder()
 
 QString SetupTest::basePath() const
 {
+  QString sysTempDirPath = QDir::tempPath();
+#ifdef Q_OS_UNIX
+  // QDir::tempPath() makes sure to use the fully sym-link exploded
+  // absolute path to the temp dir. That is nice, but on OSX it makes
+  // that path really long. MySQL chokes on this, for it's socket path,
+  // so work around that
+  sysTempDirPath = QLatin1String("/tmp");
+#endif
+
+  const QDir sysTempDir(sysTempDirPath);
   const QString tempDir = QString::fromLatin1( "akonadi_testrunner-%1" )
     .arg( QCoreApplication::instance()->applicationPid() );
-  if ( !QDir::temp().exists( tempDir ) )
-    QDir::temp().mkdir( tempDir );
-  return QDir::tempPath() + QDir::separator() + tempDir + QDir::separator();
+  if ( !sysTempDir.exists( tempDir ) )
+    sysTempDir.mkdir( tempDir );
+  return sysTempDirPath + QDir::separator() + tempDir + QDir::separator();
 }
 
 void SetupTest::slotAkonadiDaemonProcessFinished()
