@@ -337,7 +337,7 @@ void SetupTest::createTempEnvironment()
 
 void SetupTest::deleteDirectory( const QString &dirName )
 {
-  Q_ASSERT( dirName.startsWith( QDir::tempPath() ) ); // just to be sure we don't run amok anywhere
+  Q_ASSERT( dirName.startsWith( QDir::tempPath() ) || dirName.startsWith(QLatin1String("/tmp") ) ); // just to be sure we don't run amok anywhere
   QDir dir( dirName );
   dir.setFilter( QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden );
 
