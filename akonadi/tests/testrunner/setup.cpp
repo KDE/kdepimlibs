@@ -110,17 +110,48 @@ int SetupTest::addDBusToEnvironment( QIODevice& io )
   return pid;
 }
 
+void SetupTest::generateDBusConfigFile( const QString& path )
+{
+    static const char* configFileContents =
+        "<!DOCTYPE busconfig PUBLIC \"-//freedesktop//DTD D-Bus Bus Configuration 1.0//EN\"\n"
+        "\"http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd\">\n"
+        "<busconfig>\n"
+        "<type>session</type>"
+        "<keep_umask/>\n"
+        "<listen>unix:path=%1</listen>\n"
+        "<standard_session_servicedirs />\n"
+        "<policy context=\"default\">\n"
+        "<allow send_destination=\"*\" eavesdrop=\"true\"/>\n"
+        "<allow eavesdrop=\"true\"/>\n"
+        "<allow own=\"*\"/>\n"
+        "</policy>\n"
+        "</busconfig>\n";
+
+    QFile confFile(path);
+    if ( confFile.open( QIODevice::WriteOnly ) ) {
+        const QString socketPath = basePath() + QDir::separator() + QLatin1String("dbus.socket");
+        const QString data = QString::fromLatin1( configFileContents ).arg( socketPath );
+        const qint64 bytes = confFile.write( data.toUtf8() );
+        Q_ASSERT( bytes > 0 );
+    }
+}
+
 int SetupTest::startDBusDaemon()
 {
-  QProcess dbusprocess;
-  QStringList dbusargs;
+  const QString dbusConfigFilePath = basePath() + QDir::separator() + QLatin1String("dbus-session.conf");
+  generateDBusConfigFile( dbusConfigFilePath );
+  Q_ASSERT( QDir::exists( dbusConfigFilePath ) );
 
-  dbusprocess.start( "/usr/bin/dbus-launch", dbusargs );
+  QStringList dbusargs;
+  dbusargs << QString::fromLatin1("--config-file=%1").arg( dbusConfigFilePath );
+
+  QProcess dbusprocess;
+  dbusprocess.start( QLatin1String("dbus-launch"), dbusargs );
   bool ok = dbusprocess.waitForStarted() && dbusprocess.waitForFinished();
   if ( !ok ) {
-    kDebug() << "error starting dbus-launch";
+    kWarning() << "error starting dbus-launch";
     dbusprocess.kill();
-    return -1;
+    exit(1); // failure to start an internal dbus must be considered a fatal unit test error
   }
 
   int dbuspid = addDBusToEnvironment( dbusprocess );
@@ -149,8 +180,7 @@ void SetupTest::registerWithInternalDBus( const QString &address )
                                 QDBusConnection::ExportAdaptors );
   mInternalBus->registerObject( QLatin1String( "/" ), this, QDBusConnection::ExportScriptableSlots );
 
-  QDBusConnectionInterface *busInterface = mInternalBus->interface();
-  connect( busInterface, SIGNAL( serviceOwnerChanged( QString, QString, QString ) ),
+  connect( mInternalBus->interface(), SIGNAL( serviceOwnerChanged( QString, QString, QString ) ),
            this, SLOT( dbusNameOwnerChanged( QString, QString, QString ) ) );
 }
 
