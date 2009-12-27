@@ -433,6 +433,13 @@ void SetupTest::shutdown()
       if ( !reply.isValid() )
         kDebug() << reply.error();
     }
+    if ( mInternalBus->interface()->isServiceRegistered( "org.kde.kded" ) ) {
+      QDBusInterface klauncherIface( QLatin1String( "org.kde.kded" ), QLatin1String( "/kded" ),
+                                   QLatin1String( "org.kde.kded" ), *mInternalBus );
+      QDBusReply<void> reply = klauncherIface.call( "quit" );
+      if ( !reply.isValid() )
+        kDebug() << reply.error();
+    }
   } else {
     shutdownHarder();
   }
