@@ -195,7 +195,7 @@ bool SetupTest::startAkonadiDaemon()
 
 bool SetupTest::stopAkonadiDaemon()
 {
-  disconnect( mAkonadiDaemonProcess, SIGNAL( finished(int) ) );
+  disconnect( mAkonadiDaemonProcess, SIGNAL( finished(int) ), this, 0 );
   mAkonadiDaemonProcess->terminate();
   const bool finished = mAkonadiDaemonProcess->waitForFinished( 5000 );
   if ( !finished ) {
