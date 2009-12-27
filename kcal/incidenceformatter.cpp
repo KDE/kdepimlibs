@@ -2035,7 +2035,14 @@ static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
     html += tdOpen;
     html += helper->makeLink( "record", i18n( "[Record]" ) );
     html += tdClose;
+
+    // Move to trash
+    html += tdOpen;
+    html += helper->makeLink( "delete", i18n( "[Move to Trash]" ) );
+    html += tdClose;
+
   } else {
+
     // Accept
     html += tdOpen;
     html += helper->makeLink( "accept", i18nc( "accept invitation", "Accept" ) );
