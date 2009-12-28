@@ -30,6 +30,34 @@ using namespace KCal;
 #include <KDebug>
 #include <KTimeZone>
 
+void TZMappingTest::testWinStandardToDisplay()
+{
+  QCOMPARE( TZMaps::winZoneStandardToDisplay( "NO-SUCH-ZONE" ),
+            QString() );
+  QCOMPARE( TZMaps::winZoneStandardToDisplay( "US Mountain Standard Time" ),
+            QString( "Arizona" ) );
+  QCOMPARE( TZMaps::winZoneStandardToDisplay( "US mountain time" ),
+            QString() );
+  QCOMPARE( TZMaps::winZoneStandardToDisplay( "Romance Standard Time" ),
+            QString( "Brussels, Copenhagen, Madrid, Paris" ) );
+  QCOMPARE( TZMaps::winZoneStandardToDisplay( QString() ),
+            QString() );
+}
+
+void TZMappingTest::testWinDisplayToStandard()
+{
+  QCOMPARE( TZMaps::winZoneDisplayToStandard( "NO-SUCH-ZONE" ),
+            QString() );
+  QCOMPARE( TZMaps::winZoneDisplayToStandard( "Arizona" ),
+            QString( "US Mountain Standard Time" ) );
+  QCOMPARE( TZMaps::winZoneDisplayToStandard( "ariZona" ),
+            QString() );
+  QCOMPARE( TZMaps::winZoneDisplayToStandard( "Brussels, Copenhagen, Madrid, Paris" ),
+            QString( "Romance Standard Time" ) );
+  QCOMPARE( TZMaps::winZoneDisplayToStandard( QString() ),
+            QString() );
+}
+
 void TZMappingTest::testWinToOlson()
 {
   QCOMPARE( TZMaps::winZoneToOlson( "NO-SUCH-ZONE" ),
@@ -111,7 +139,7 @@ void TZMappingTest::testOlsonToWin()
   QCOMPARE( TZMaps::olsonToWinZone( "Asia/Kolkata" ),
             QString( "Chennai, Kolkata, Mumbai, New Delhi" ) );
   QCOMPARE( TZMaps::olsonToWinZone( "Pacific/Chatham" ),
-            QString( "Unknown" ) );
+            QString() );
 }
 
 void TZMappingTest::testOlsonToUtcOffset()

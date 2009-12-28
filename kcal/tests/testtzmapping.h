@@ -27,6 +27,8 @@ class TZMappingTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
+    void testWinStandardToDisplay();
+    void testWinDisplayToStandard();
     void testWinToOlson();
     void testWinToUtcOffset();
     void testUtcOffsetToWin();

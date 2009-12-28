@@ -38,10 +38,30 @@ namespace KCal {
 namespace TZMaps
 {
   /**
+    Maps a Windows standard timezone name to a Windows display timezone name.
+    @param standardName is a string containing a valid Windows standard
+    timezone name.
+    @return a QString containing the corresponding Windows display timezone
+    name or empty if an invalid Windows standard timezone name was provided.
+    @since 4.4
+  */
+  KCAL_EXPORT QString winZoneStandardToDisplay( const QString &standardName );
+
+  /**
+    Maps a Windows display timezone name to a Windows standard timezone name.
+    @param displayName is a string containing a valid Windows display
+    timezone name.
+    @return a QString containing the corresponding Windows standard timezone
+    name or empty if an invalid Windows display timezone name was provided.
+    @since 4.4
+  */
+  KCAL_EXPORT QString winZoneDisplayToStandard( const QString &displayName );
+
+  /**
     Maps a Windows timezone display name to an Olson zoneinfo name.
-    @param windowsZone is a string containing a valid Window timezone name.
+    @param windowsZone is a string containing a valid Windows timezone name.
     @return a QString containing the corresponding Olson zoneinfo name
-    or empty if an invalid Window timezone name was provided.
+    or empty if an invalid Windows timezone name was provided.
     @since 4.4
   */
   KCAL_EXPORT QString winZoneToOlson( const QString &windowsZone );
@@ -57,9 +77,9 @@ namespace TZMaps
 
   /**
     Maps a Windows timezone display name to a UTC offset string.
-    @param windowsZone is a string containing a valid Window timezone name.
+    @param windowsZone is a string containing a valid Windows timezone name.
     @return a QString containing the corresponding UTC offset
-    or empty if an invalid Window timezone name was provided.
+    or empty if an invalid Windows timezone name was provided.
     A valid return string has the format "UTC(+,-)HH[:MM]"
     @since 4.4
   */
@@ -79,7 +99,7 @@ namespace TZMaps
     Maps an Olson zoneinfo name to a UTC offset string.
     @param olsonZone is a string containing a valid Olson zoneinfo name.
     @return a QString containing the corresponding UTC offset
-    or empty if an invalid Window timezone name was provided.
+    or empty if an invalid Windows timezone name was provided.
     A valid return string has the format "UTC(+,-)HH[:MM]"
     @since 4.4
   */

@@ -34,6 +34,555 @@
 
 using namespace KCal;
 
+QString TZMaps::winZoneStandardToDisplay( const QString &standardName )
+{
+  static QHash<QString,QString> standardToDisplay;
+
+  if ( standardToDisplay.isEmpty() ) {
+    standardToDisplay["Dateline Standard Time"] =
+      "International Date Line West"; //UTC-12
+
+    standardToDisplay["Samoa Standard Time"] =
+      "Midway Island, Samoa"; //UTC-11
+
+    standardToDisplay["Hawaiian Standard Time"] =
+      "Hawaii"; //UTC-10
+
+    standardToDisplay["Alaskan Standard Time"] =
+      "Alaska"; //UTC-9
+
+    standardToDisplay["Pacific Standard Time (Mexico)"] =
+      "Tijuana, Baja California"; //UTC-8
+
+    standardToDisplay["Pacific Standard Time"] =
+      "Pacific Time (US & Canada)"; //UTC-8
+
+    standardToDisplay["Mountain Standard Time"] =
+      "Mountain Time (US & Canada)"; //UTC-7
+
+    standardToDisplay["Mountain Standard Time (Mexico)"] =
+      "Chihuahua, La Paz, Mazatlan"; //UTC-7
+
+    standardToDisplay["US Mountain Standard Time"] =
+      "Arizona"; //UTC-7
+
+    standardToDisplay["Canada Central Standard Time"] =
+      "Saskatchewan"; //UTC-6
+
+    standardToDisplay["Central Standard Time (Mexico)"] =
+      "Guadalajara, Mexico City, Monterrey"; //UTC-6
+
+    standardToDisplay["Central Standard Time"] =
+      "Central Time (US & Canada)"; //UTC-6
+
+    standardToDisplay["Central America Standard Time"] =
+      "Central America"; //UTC-6
+
+    standardToDisplay["US Eastern Standard Time"] =
+      "Indiana (East)"; //UTC-5
+
+    standardToDisplay["Eastern Standard Time"] =
+      "Eastern Time (US & Canada)"; //UTC-5
+
+    standardToDisplay["SA Pacific Standard Time"] =
+      "Bogota, Lima, Quito, Rio Branco"; //UTC-5
+
+    standardToDisplay["Venezuela Standard Time"] =
+      "Caracas"; //UTC-4
+
+    standardToDisplay["Pacific SA Standard Time"] =
+      "Santiago"; //UTC-4
+
+    standardToDisplay["Central Brazilian Standard Time"] =
+      "Manaus"; //UTC-4
+
+    standardToDisplay["SA Western Standard Time"] =
+      "La Paz"; //UTC-4
+
+    standardToDisplay["Atlantic Standard Time"] =
+      "Atlantic Time (Canada)"; //UTC-4
+
+    standardToDisplay["Newfoundland Standard Time"] =
+      "Newfoundland"; //UTC-3
+
+    standardToDisplay["Montevideo Standard Time"] =
+      "Montevideo"; //UTC-3
+
+    standardToDisplay["Greenland Standard Time"] =
+      "Greenland"; //UTC-3
+
+    standardToDisplay["SA Eastern Standard Time"] =
+      "Georgetown"; //UTC-3
+
+    standardToDisplay["Argentina Standard Time"] =
+      "Buenos Aires"; //UTC-3
+
+    standardToDisplay["E. South America Standard Time"] =
+      "Brasilia"; //UTC-3
+
+    standardToDisplay["Mid-Atlantic Standard Time"] =
+      "Mid-Atlantic"; //UTC-2
+
+    standardToDisplay["Cape Verde Standard Time"] =
+      "Cape Verde Is."; //UTC-1
+
+    standardToDisplay["Azores Standard Time"] =
+      "Azores"; //UTC-1
+
+    standardToDisplay["Tonga Standard Time"] =
+      "Nuku'alofa"; //UTC+13
+
+    standardToDisplay["Fiji Standard Time"] =
+      "Fiji, Kamchatka, Marshall Is."; //UTC+12
+
+    standardToDisplay["New Zealand Standard Time"] =
+      "Auckland, Wellington"; //UTC+12
+
+    standardToDisplay["Central Pacific Standard Time"] =
+      "Magadan, Solomon Is., New Caledonia"; //UTC+11
+
+    standardToDisplay["Vladivostok Standard Time"] =
+      "Vladivostok"; //UTC+10
+
+    standardToDisplay["Tasmania Standard Time"] =
+      "Hobart"; //UTC+10
+
+    standardToDisplay["West Pacific Standard Time"] =
+      "Guam, Port Moresby"; //UTC+10
+
+    standardToDisplay["AUS Eastern Standard Time"] =
+      "Canberra, Melbourne, Sydney"; //UTC+10
+
+    standardToDisplay["E. Australia Standard Time"] =
+      "Brisbane"; //UTC+10
+
+    standardToDisplay["AUS Central Standard Time"] =
+      "Darwin"; //UTC+9
+
+    standardToDisplay["Cen. Australia Standard Time"] =
+      "Adelaide"; //UTC+9
+
+    standardToDisplay["Yakutsk Standard Time"] =
+      "Yakutsk"; //UTC+9
+
+    standardToDisplay["Korea Standard Time"] =
+      "Seoul"; //UTC+9
+
+    standardToDisplay["Tokyo Standard Time"] =
+      "Osaka, Sapporo, Tokyo"; //UTC+9
+
+    standardToDisplay["Taipei Standard Time"] =
+      "Taipei"; //UTC+8
+
+    standardToDisplay["W. Australia Standard Time"] =
+      "Perth"; //UTC+8
+
+    standardToDisplay["Malay Peninsula Standard Time"] =
+      "Kuala Lumpur, Singapore"; //UTC+8
+
+    standardToDisplay["North Asia East Standard Time"] =
+      "Irkutsk, Ulaan Bataar"; //UTC+8
+
+    standardToDisplay["China Standard Time"] =
+      "Beijing, Chongqing, Hong Kong, Urumqi"; //UTC+8
+
+    standardToDisplay["North Asia Standard Time"] =
+      "Krasnoyarsk"; //UTC+7
+
+    standardToDisplay["SE Asia Standard Time"] =
+      "Bangkok, Hanoi, Jakarta"; //UTC+7
+
+    standardToDisplay["Myanmar Standard Time"] =
+      "Yangon (Rangoon)"; //UTC+6
+
+    standardToDisplay["Central Asia Standard Time"] =
+      "Astana, Dhaka"; //UTC+6
+
+    standardToDisplay["N. Central Asia Standard Time"] =
+      "Almaty, Novosibirsk"; //UTC+6
+
+    standardToDisplay["Nepal Standard Time"] =
+      "Kathmandu"; //UTC+5
+
+    standardToDisplay["Sri Lanka Standard Time"] =
+      "Sri Jayawardenepura"; //UTC+5
+
+    standardToDisplay["India Standard Time"] =
+      "Chennai, Kolkata, Mumbai, New Delhi"; //UTC+5
+
+    standardToDisplay["West Asia Standard Time"] =
+      "Tashkent"; //UTC+5
+
+    standardToDisplay["Pakistan Standard Time"] =
+      "Islamabad, Karachi"; //UTC+5
+
+    standardToDisplay["Ekaterinburg Standard Time"] =
+      "Ekaterinburg"; //UTC+5
+
+    standardToDisplay["Afghanistan Standard Time"] =
+      "Kabul"; //UTC+4
+
+    standardToDisplay["Caucasus Standard Time"] =
+      "Yerevan"; //UTC+4
+
+    standardToDisplay["Azerbaijan Standard Time"] =
+      "Baku"; //UTC+4
+
+    standardToDisplay["Arabian Standard Time"] =
+      "Abu Dhabi, Muscat"; //UTC+4
+
+    standardToDisplay["Iran Standard Time"] =
+      "Tehran"; //UTC+3
+
+    standardToDisplay["Georgian Standard Time"] =
+      "Tbilisi"; //UTC+3
+
+    standardToDisplay["E. Africa Standard Time"] =
+      "Nairobi"; //UTC+3
+
+    standardToDisplay["Russian Standard Time"] =
+      "Moscow, St. Petersburg, Volgograd"; //UTC+3
+
+    standardToDisplay["Arab Standard Time"] =
+      "Kuwait, Riyadh"; //UTC+3
+
+    standardToDisplay["Arabic Standard Time"] =
+      "Baghdad"; //UTC+3
+
+    standardToDisplay["Namibia Standard Time"] =
+      "Windhoek"; //UTC+2
+
+    standardToDisplay["E. Europe Standard Time"] =
+      "Minsk"; //UTC+2
+
+    standardToDisplay["Jerusalem Standard Time"] =
+      "Jerusalem"; //UTC+2
+
+    standardToDisplay["FLE Standard Time"] =
+      "Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius"; //UTC+2
+
+    standardToDisplay["South Africa Standard Time"] =
+      "Harare, Pretoria"; //UTC+2
+
+    standardToDisplay["Egypt Standard Time"] =
+      "Cairo"; //UTC+2
+
+    standardToDisplay["Middle East Standard Time"] =
+      "Beirut"; //UTC+2
+
+    standardToDisplay["GTB Standard Time"] =
+      "Athens, Bucharest, Istanbul"; //UTC+2
+
+    standardToDisplay["Jordan Standard Time"] =
+      "Amman"; //UTC+2
+
+    standardToDisplay["W. Central Africa Standard Time"] =
+      "West Central Africa"; //UTC+1
+
+    standardToDisplay["Central European Standard Time"] =
+      "Sarajevo, Skopje, Warsaw, Zagreb"; //UTC+1
+
+    standardToDisplay["Romance Standard Time"] =
+      "Brussels, Copenhagen, Madrid, Paris"; //UTC+1
+
+    standardToDisplay["Central Europe Standard Time"] =
+      "Belgrade, Bratislava, Budapest, Ljubljana, Prague"; //UTC+1
+
+    standardToDisplay["W. Europe Standard Time"] =
+      "Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"; //UTC+1
+
+    standardToDisplay["Greenwich Standard Time"] =
+      "Monrovia, Reykjavik"; //UTC
+
+    standardToDisplay["GMT Standard Time"] =
+      "Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London"; //UTC
+
+    standardToDisplay["Morocco Standard Time"] =
+      "Casablanca"; //UTC
+  }
+
+  QString displayStr = standardToDisplay[standardName];
+  if ( displayStr.isEmpty() ) {
+    kWarning() << "Unknown/invalid standardName specified:" << standardName;
+  }
+  return displayStr;
+}
+
+QString TZMaps::winZoneDisplayToStandard( const QString &displayName )
+{
+  static QHash<QString,QString> displayToStandard;
+
+  if ( displayToStandard.isEmpty() ) {
+    displayToStandard["International Date Line West"] =
+      "Dateline Standard Time"; //UTC-12
+
+    displayToStandard["Midway Island, Samoa"] =
+      "Samoa Standard Time"; //UTC-11
+
+    displayToStandard["Hawaii"] =
+      "Hawaiian Standard Time"; //UTC-10
+
+    displayToStandard["Alaska"] =
+      "Alaskan Standard Time"; //UTC-9
+
+    displayToStandard["Tijuana, Baja California"] =
+      "Pacific Standard Time (Mexico)"; //UTC-8
+
+    displayToStandard["Pacific Time (US & Canada)"] =
+      "Pacific Standard Time"; //UTC-8
+
+    displayToStandard["Mountain Time (US & Canada)"] =
+      "Mountain Standard Time"; //UTC-7
+
+    displayToStandard["Chihuahua, La Paz, Mazatlan"] =
+      "Mountain Standard Time (Mexico)"; //UTC-7
+
+    displayToStandard["Arizona"] =
+      "US Mountain Standard Time"; //UTC-7
+
+    displayToStandard["Saskatchewan"] =
+      "Canada Central Standard Time"; //UTC-6
+
+    displayToStandard["Guadalajara, Mexico City, Monterrey"] =
+      "Central Standard Time (Mexico)"; //UTC-6
+
+    displayToStandard["Central Time (US & Canada)"] =
+      "Central Standard Time"; //UTC-6
+
+    displayToStandard["Central America"] =
+      "Central America Standard Time"; //UTC-6
+
+    displayToStandard["Indiana (East)"] =
+      "US Eastern Standard Time"; //UTC-5
+
+    displayToStandard["Eastern Time (US & Canada)"] =
+      "Eastern Standard Time"; //UTC-5
+
+    displayToStandard["Bogota, Lima, Quito, Rio Branco"] =
+      "SA Pacific Standard Time"; //UTC-5
+
+    displayToStandard["Caracas"] =
+      "Venezuela Standard Time"; //UTC-4
+
+    displayToStandard["Santiago"] =
+      "Pacific SA Standard Time"; //UTC-4
+
+    displayToStandard["Manaus"] =
+      "Central Brazilian Standard Time"; //UTC-4
+
+    displayToStandard["La Paz"] =
+      "SA Western Standard Time"; //UTC-4
+
+    displayToStandard["Atlantic Time (Canada)"] =
+      "Atlantic Standard Time"; //UTC-4
+
+    displayToStandard["Newfoundland"] =
+      "Newfoundland Standard Time"; //UTC-3
+
+    displayToStandard["Montevideo"] =
+      "Montevideo Standard Time"; //UTC-3
+
+    displayToStandard["Greenland"] =
+      "Greenland Standard Time"; //UTC-3
+
+    displayToStandard["Georgetown"] =
+      "SA Eastern Standard Time"; //UTC-3
+
+    displayToStandard["Buenos Aires"] =
+      "Argentina Standard Time"; //UTC-3
+
+    displayToStandard["Brasilia"] =
+      "E. South America Standard Time"; //UTC-3
+
+    displayToStandard["Mid-Atlantic"] =
+      "Mid-Atlantic Standard Time"; //UTC-2
+
+    displayToStandard["Cape Verde Is."] =
+      "Cape Verde Standard Time"; //UTC-1
+
+    displayToStandard["Azores"] =
+      "Azores Standard Time"; //UTC-1
+
+    displayToStandard["Nuku'alofa"] =
+      "Tonga Standard Time"; //UTC+13
+
+    displayToStandard["Fiji, Kamchatka, Marshall Is."] =
+      "Fiji Standard Time"; //UTC+12
+
+    displayToStandard["Auckland, Wellington"] =
+      "New Zealand Standard Time"; //UTC+12
+
+    displayToStandard["Magadan, Solomon Is., New Caledonia"] =
+      "Central Pacific Standard Time"; //UTC+11
+
+    displayToStandard["Vladivostok"] =
+      "Vladivostok Standard Time"; //UTC+10
+
+    displayToStandard["Hobart"] =
+      "Tasmania Standard Time"; //UTC+10
+
+    displayToStandard["Guam, Port Moresby"] =
+      "West Pacific Standard Time"; //UTC+10
+
+    displayToStandard["Canberra, Melbourne, Sydney"] =
+      "AUS Eastern Standard Time"; //UTC+10
+
+    displayToStandard["Brisbane"] =
+      "E. Australia Standard Time"; //UTC+10
+
+    displayToStandard["Darwin"] =
+      "AUS Central Standard Time"; //UTC+9
+
+    displayToStandard["Adelaide"] =
+      "Cen. Australia Standard Time"; //UTC+9
+
+    displayToStandard["Yakutsk"] =
+      "Yakutsk Standard Time"; //UTC+9
+
+    displayToStandard["Seoul"] =
+      "Korea Standard Time"; //UTC+9
+
+    displayToStandard["Osaka, Sapporo, Tokyo"] =
+      "Tokyo Standard Time"; //UTC+9
+
+    displayToStandard["Taipei"] =
+      "Taipei Standard Time"; //UTC+8
+
+    displayToStandard["Perth"] =
+      "W. Australia Standard Time"; //UTC+8
+
+    displayToStandard["Kuala Lumpur, Singapore"] =
+      "Malay Peninsula Standard Time"; //UTC+8
+
+    displayToStandard["Irkutsk, Ulaan Bataar"] =
+      "North Asia East Standard Time"; //UTC+8
+
+    displayToStandard["Beijing, Chongqing, Hong Kong, Urumqi"] =
+      "China Standard Time"; //UTC+8
+
+    displayToStandard["Krasnoyarsk"] =
+      "North Asia Standard Time"; //UTC+7
+
+    displayToStandard["Bangkok, Hanoi, Jakarta"] =
+      "SE Asia Standard Time"; //UTC+7
+
+    displayToStandard["Yangon (Rangoon)"] =
+      "Myanmar Standard Time"; //UTC+6
+
+    displayToStandard["Astana, Dhaka"] =
+      "Central Asia Standard Time"; //UTC+6
+
+    displayToStandard["Almaty, Novosibirsk"] =
+      "N. Central Asia Standard Time"; //UTC+6
+
+    displayToStandard["Kathmandu"] =
+      "Nepal Standard Time"; //UTC+5
+
+    displayToStandard["Sri Jayawardenepura"] =
+      "Sri Lanka Standard Time"; //UTC+5
+
+    displayToStandard["Chennai, Kolkata, Mumbai, New Delhi"] =
+      "India Standard Time"; //UTC+5
+
+    displayToStandard["Tashkent"] =
+      "West Asia Standard Time"; //UTC+5
+
+    displayToStandard["Islamabad, Karachi"] =
+      "Pakistan Standard Time"; //UTC+5
+
+    displayToStandard["Ekaterinburg"] =
+      "Ekaterinburg Standard Time"; //UTC+5
+
+    displayToStandard["Kabul"] =
+      "Afghanistan Standard Time"; //UTC+4
+
+    displayToStandard["Yerevan"] =
+      "Caucasus Standard Time"; //UTC+4
+
+    displayToStandard["Baku"] =
+      "Azerbaijan Standard Time"; //UTC+4
+
+    displayToStandard["Abu Dhabi, Muscat"] =
+      "Arabian Standard Time"; //UTC+4
+
+    displayToStandard["Tehran"] =
+      "Iran Standard Time"; //UTC+3
+
+    displayToStandard["Tbilisi"] =
+      "Georgian Standard Time"; //UTC+3
+
+    displayToStandard["Nairobi"] =
+      "E. Africa Standard Time"; //UTC+3
+
+    displayToStandard["Moscow, St. Petersburg, Volgograd"] =
+      "Russian Standard Time"; //UTC+3
+
+    displayToStandard["Kuwait, Riyadh"] =
+      "Arab Standard Time"; //UTC+3
+
+    displayToStandard["Baghdad"] =
+      "Arabic Standard Time"; //UTC+3
+
+    displayToStandard["Windhoek"] =
+      "Namibia Standard Time"; //UTC+2
+
+    displayToStandard["Minsk"] =
+      "E. Europe Standard Time"; //UTC+2
+
+    displayToStandard["Jerusalem"] =
+      "Jerusalem Standard Time"; //UTC+2
+
+    displayToStandard["Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius"] =
+      "FLE Standard Time"; //UTC+2
+
+    displayToStandard["Harare, Pretoria"] =
+      "South Africa Standard Time"; //UTC+2
+
+    displayToStandard["Cairo"] =
+      "Egypt Standard Time"; //UTC+2
+
+    displayToStandard["Beirut"] =
+      "Middle East Standard Time"; //UTC+2
+
+    displayToStandard["Athens, Bucharest, Istanbul"] =
+      "GTB Standard Time"; //UTC+2
+
+    displayToStandard["Amman"] =
+      "Jordan Standard Time"; //UTC+2
+
+    displayToStandard["West Central Africa"] =
+      "W. Central Africa Standard Time"; //UTC+1
+
+    displayToStandard["Sarajevo, Skopje, Warsaw, Zagreb"] =
+      "Central European Standard Time"; //UTC+1
+
+    displayToStandard["Brussels, Copenhagen, Madrid, Paris"] =
+      "Romance Standard Time"; //UTC+1
+
+    displayToStandard["Belgrade, Bratislava, Budapest, Ljubljana, Prague"] =
+      "Central Europe Standard Time"; //UTC+1
+
+    displayToStandard["Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"] =
+      "W. Europe Standard Time"; //UTC+1
+
+    displayToStandard["Monrovia, Reykjavik"] =
+      "Greenwich Standard Time"; //UTC
+
+    displayToStandard["Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London"] =
+      "GMT Standard Time"; //UTC
+
+    displayToStandard["Casablanca"] =
+      "Morocco Standard Time"; //UTC
+  }
+
+  QString standardStr = displayToStandard[displayName];
+  if ( standardStr.isEmpty() ) {
+    kWarning() << "Unknown/invalid displayName specified:" << displayName;
+  }
+  return standardStr;
+}
+
+
 QString TZMaps::winZoneToOlson( const QString &windowsZone )
 {
   static QHash<QString,QString> winToOlson;
@@ -1127,9 +1676,6 @@ QString TZMaps::olsonToWinZone( const QString &olsonZone )
     kWarning() << "Unknown/invalid olsonZone specified:" << olsonZone;
   } else {
     winzone = utcOffsetToWinZone( offsetStr );
-    if ( winzone.isEmpty() ) {
-      winzone = i18nc( "unknown timezone", "Unknown" );
-    }
   }
   return winzone;
 }
