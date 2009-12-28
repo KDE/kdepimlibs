@@ -48,7 +48,7 @@ void TZMappingTest::testWinDisplayToStandard()
 {
   QCOMPARE( TZMaps::winZoneDisplayToStandard( "NO-SUCH-ZONE" ),
             QString() );
-  QCOMPARE( TZMaps::winZoneDisplayToStandard( "Arizona" ),
+  QCOMPARE( TZMaps::winZoneDisplayToStandard( "(GMT-07:00) Arizona" ),
             QString( "US Mountain Standard Time" ) );
   QCOMPARE( TZMaps::winZoneDisplayToStandard( "ariZona" ),
             QString() );
@@ -63,6 +63,8 @@ void TZMappingTest::testWinToOlson()
   QCOMPARE( TZMaps::winZoneToOlson( "NO-SUCH-ZONE" ),
             QString() );
   QCOMPARE( TZMaps::winZoneToOlson( "Hawaii" ),
+            QString( "Pacific/Honolulu" ) );
+  QCOMPARE( TZMaps::winZoneToOlson( "(GMT-09:00) Hawaii" ),
             QString( "Pacific/Honolulu" ) );
   QCOMPARE( TZMaps::winZoneToOlson( "hawaii" ),
             QString() );

@@ -32,7 +32,15 @@
 #include <KDebug>
 #include <KLocale>
 
+#include <QRegExp>
+
 using namespace KCal;
+
+static QString removeGMTPrefix( const QString &displayStr )
+{
+  QString cleanStr = displayStr;
+  return cleanStr.remove( QRegExp( "^\\(GMT.*\\)\\s" ) );
+}
 
 QString TZMaps::winZoneStandardToDisplay( const QString &standardName )
 {
@@ -575,7 +583,7 @@ QString TZMaps::winZoneDisplayToStandard( const QString &displayName )
       "Morocco Standard Time"; //UTC
   }
 
-  QString standardStr = displayToStandard[displayName];
+  QString standardStr = displayToStandard[removeGMTPrefix( displayName )];
   if ( standardStr.isEmpty() ) {
     kWarning() << "Unknown/invalid displayName specified:" << displayName;
   }
@@ -853,7 +861,7 @@ QString TZMaps::winZoneToOlson( const QString &windowsZone )
       "Pacific/Tongatapu"; //UTC+13
   }
 
-  QString olsonStr = winToOlson[windowsZone];
+  QString olsonStr = winToOlson[removeGMTPrefix( windowsZone )];
   if ( olsonStr.isEmpty() ) {
     kWarning() << "Unknown/invalid windowsZone specified:" << windowsZone;
   }
@@ -1042,7 +1050,7 @@ QString TZMaps::winZoneToUtcOffset( const QString &windowsZone )
     winToUtcOffset["Nuku'alofa"] = "UTC+13";
   }
 
-  QString utcOffset = winToUtcOffset[windowsZone];
+  QString utcOffset = winToUtcOffset[removeGMTPrefix( windowsZone )];
   if ( utcOffset.isEmpty() ) {
     kWarning() << "Unknown/invalid windowsZone specified:" << windowsZone;
   }
