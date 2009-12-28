@@ -309,11 +309,7 @@ QString TZMaps::winZoneStandardToDisplay( const QString &standardName )
       "Casablanca"; //UTC
   }
 
-  QString displayStr = standardToDisplay[standardName];
-  if ( displayStr.isEmpty() ) {
-    kWarning() << "Unknown/invalid standardName specified:" << standardName;
-  }
-  return displayStr;
+  return standardToDisplay[standardName];
 }
 
 QString TZMaps::winZoneDisplayToStandard( const QString &displayName )
@@ -583,11 +579,7 @@ QString TZMaps::winZoneDisplayToStandard( const QString &displayName )
       "Morocco Standard Time"; //UTC
   }
 
-  QString standardStr = displayToStandard[removeGMTPrefix( displayName )];
-  if ( standardStr.isEmpty() ) {
-    kWarning() << "Unknown/invalid displayName specified:" << displayName;
-  }
-  return standardStr;
+  return displayToStandard[removeGMTPrefix( displayName )];
 }
 
 
@@ -863,7 +855,8 @@ QString TZMaps::winZoneToOlson( const QString &windowsZone )
 
   QString olsonStr = winToOlson[removeGMTPrefix( windowsZone )];
   if ( olsonStr.isEmpty() ) {
-    kWarning() << "Unknown/invalid windowsZone specified:" << windowsZone;
+    // so check against Windows standard names
+    olsonStr = winToOlson[winZoneStandardToDisplay( windowsZone )];
   }
   return olsonStr;
 }
@@ -1052,7 +1045,8 @@ QString TZMaps::winZoneToUtcOffset( const QString &windowsZone )
 
   QString utcOffset = winToUtcOffset[removeGMTPrefix( windowsZone )];
   if ( utcOffset.isEmpty() ) {
-    kWarning() << "Unknown/invalid windowsZone specified:" << windowsZone;
+    // so check against Windows standard names
+    utcOffset = winToUtcOffset[winZoneStandardToDisplay( windowsZone )];
   }
   return utcOffset;
 }
@@ -1131,11 +1125,7 @@ QString TZMaps::utcOffsetToWinZone( const QString &utcOffset )
     utcOffsetToWin["UTC+13"] = "Nuku'alofa";
   }
 
-  QString windowsZone = utcOffsetToWin[utcOffset.toUpper()];
-  if ( windowsZone.isEmpty() ) {
-    kWarning() << "Unknown/invalid UTC offset specified:" << utcOffset;
-  }
-  return windowsZone;
+  return utcOffsetToWin[utcOffset.toUpper()];
 }
 
 QString TZMaps::olsonToUtcOffset( const QString &olsonZone )
@@ -1572,11 +1562,7 @@ QString TZMaps::olsonToUtcOffset( const QString &olsonZone )
     olsonToUtcOffset["Pacific/Wallis"] = "UTC+12";
   }
 
-  QString utcOffset = olsonToUtcOffset[olsonZone];
-  if ( utcOffset.isEmpty() ) {
-    kWarning() << "Unknown/invalid olsonZone specified:" << olsonZone;
-  }
-  return utcOffset;
+  return olsonToUtcOffset[olsonZone];
 }
 
 QString TZMaps::utcOffsetToOlson( const QString &utcOffset )
@@ -1669,23 +1655,12 @@ QString TZMaps::utcOffsetToOlson( const QString &utcOffset )
     utcOffsetToOlson["UTC+14"] = "Pacific/Kiritimati";
   }
 
-  QString olsonStr = utcOffsetToOlson[utcOffset.toUpper()];
-  if ( olsonStr.isEmpty() ) {
-    kWarning() << "Unknown/invalid UTC offset specified:" << utcOffset;
-  }
-  return olsonStr;
+  return utcOffsetToOlson[utcOffset.toUpper()];
 }
 
 QString TZMaps::olsonToWinZone( const QString &olsonZone )
 {
-  QString winzone;
-  QString offsetStr = olsonToUtcOffset( olsonZone );
-  if ( offsetStr.isEmpty() ) {
-    kWarning() << "Unknown/invalid olsonZone specified:" << olsonZone;
-  } else {
-    winzone = utcOffsetToWinZone( offsetStr );
-  }
-  return winzone;
+  return utcOffsetToWinZone( olsonToUtcOffset( olsonZone ) );
 }
 
 QList<QByteArray> TZMaps::utcOffsetToAbbreviation( const QString &utcOffset )
@@ -1780,7 +1755,6 @@ QList<QByteArray> TZMaps::utcOffsetToAbbreviation( const QString &utcOffset )
 
   QByteArray abbrev = utcOffsetToAbbrev[utcOffset.toUpper()];
   if ( abbrev.isEmpty() ) {
-    kWarning() << "Unknown/invalid UTC offset specified:" << utcOffset;
     return QList<QByteArray>();
   } else {
     return abbrev.split( ',' );

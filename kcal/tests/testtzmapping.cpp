@@ -70,6 +70,8 @@ void TZMappingTest::testWinToOlson()
             QString() );
   QCOMPARE( TZMaps::winZoneToOlson( "Moscow, St. Petersburg, Volgograd" ),
             QString( "Europe/Moscow" ) );
+  QCOMPARE( TZMaps::winZoneToOlson( "Central European Standard Time" ),
+            QString( "Europe/Warsaw" ) );
   QCOMPARE( TZMaps::winZoneToOlson( QString() ),
             QString() );
 }

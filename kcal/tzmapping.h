@@ -58,7 +58,7 @@ namespace TZMaps
   KCAL_EXPORT QString winZoneDisplayToStandard( const QString &displayName );
 
   /**
-    Maps a Windows timezone display name to an Olson zoneinfo name.
+    Maps a Windows timezone display or standard name to an Olson zoneinfo name.
     @param windowsZone is a string containing a valid Windows timezone display name.
     @return a QString containing the corresponding Olson zoneinfo name
     or empty if an invalid Windows timezone display name was provided.
@@ -76,7 +76,7 @@ namespace TZMaps
   KCAL_EXPORT QString olsonToWinZone( const QString &olsonZone );
 
   /**
-    Maps a Windows timezone display name to a UTC offset string.
+    Maps a Windows timezone display or standard name to a UTC offset string.
     @param windowsZone is a string containing a valid Windows timezone display name.
     @return a QString containing the corresponding UTC offset
     or empty if an invalid Windows timezone display name was provided.
