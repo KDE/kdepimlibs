@@ -1779,3 +1779,22 @@ QList<QByteArray> TZMaps::utcOffsetToAbbreviation( const QString &utcOffset )
   }
 }
 
+
+QString TZMaps::timezoneToUtcOffset( const QString &zone )
+{
+#if defined(Q_OS_WIN32) //krazy:exclude=cpp
+  return winZoneToUtcOffset( zone );
+#else
+  return olsonToUtcOffset( zone );
+#endif
+}
+
+
+QString TZMaps::utcOffsetToTimeZone( const QString &utcOffset )
+{
+#if defined(Q_OS_WIN32) //krazy:exclude=cpp
+  return utcOffsetToWinZone( utcOffset );
+#else
+  return utcOffsetToOlson( utcOffset );
+#endif
+}
