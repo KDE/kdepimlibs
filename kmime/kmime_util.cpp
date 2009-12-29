@@ -231,18 +231,24 @@ QString decodeRFC2047String( const QByteArray &src )
 QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
                                 bool addressHeader, bool allow8BitHeaders )
 {
-  QByteArray encoded8Bit, result, usedCS;
+  QByteArray encoded8Bit, result;
   int start=0, end=0;
   bool nonAscii=false, ok=true, useQEncoding=false;
-  QTextCodec *codec=0;
 
-  usedCS = charset;
-  codec = KGlobal::charsets()->codecForName( usedCS, ok );
+  const QTextCodec *codec = KGlobal::charsets()->codecForName( charset, ok );
 
+  QByteArray usedCS;
   if ( !ok ) {
     //no codec available => try local8Bit and hope the best ;-)
     usedCS = KGlobal::locale()->encoding();
     codec = KGlobal::charsets()->codecForName( usedCS, ok );
+  }
+  else {
+    Q_ASSERT( codec );
+    if ( charset.isEmpty() )
+      usedCS = codec->name();
+    else
+      usedCS = charset;
   }
 
   if ( usedCS.contains( "8859-" ) ) { // use "B"-Encoding for non iso-8859-x charsets
