@@ -142,7 +142,7 @@ class EntityTreeModelPrivate;
  * entityTreeModel->setItemPopulationStrategy( EntityTreeModel::LazyPopulation );
  * @endcode
  *
- * This will typically be used with a MimeTypeFilterProxyModel in a configuration such as KMail4.5 or AkonadiConsole.
+ * This will typically be used with a EntityMimeTypeFilterModel in a configuration such as KMail4.5 or AkonadiConsole.
  *
  * The CollectionFetchStrategy determines how the model will be populated with Collections. That is, if FetchNoCollections is set,
  * no collections beyond the root of the model will be fetched. This can be used in combination with setting a particular Collection to monitor.
@@ -187,7 +187,7 @@ class EntityTreeModelPrivate;
  * @code
  * // ... create an EntityTreeModel
  *
- * collectionTree = new MimeTypeFilterProxyModel(this);
+ * collectionTree = new EntityMimeTypeFilterModel(this);
  * collectionTree->setSourceModel(entityTreeModel);
  *
  * // Include only collections in this proxy model.
@@ -202,7 +202,7 @@ class EntityTreeModelPrivate;
  * SelectionProxyModel *selProxy = new SelectionProxyModel( treeview->selectionModel(), this );
  * selProxy->setSourceModel( entityTreeModel );
  *
- * itemList = new MimeTypeFilterProxyModel( this );
+ * itemList = new EntityMimeTypeFilterModel( this );
  * itemList->setSourceModel( selProxy );
  *
  * // Filter out collections. Show only items.
@@ -227,7 +227,7 @@ class EntityTreeModelPrivate;
  * A KDescendantsProxyModel can be used to represent all descendants of a model as a flat list.
  * For example, to show all descendant items in a selected Collection in a list:
  * @code
- * collectionTree = new MimeTypeFilterProxyModel( this );
+ * collectionTree = new EntityMimeTypeFilterModel( this );
  * collectionTree->setSourceModel( entityTreeModel );
  *
  * // Include only collections in this proxy model.
@@ -242,7 +242,7 @@ class EntityTreeModelPrivate;
  * descendedList = new DescendantEntitiesProxyModel( this );
  * descendedList->setSourceModel( selProxy );
  *
- * itemList = new MimeTypeFilterProxyModel( this );
+ * itemList = new EntityMimeTypeFilterModel( this );
  * itemList->setSourceModel( descendedList );
  *
  * // Exclude collections from the list view.
@@ -254,7 +254,7 @@ class EntityTreeModelPrivate;
  * @endcode
  *
  *
- * Note that it is important in this case to use the DescendantEntitesProxyModel before the MimeTypeFilterProxyModel.
+ * Note that it is important in this case to use the DescendantEntitesProxyModel before the EntityMimeTypeFilterModel.
  * Otherwise, by filtering out the collections first, you would also be filtering out their child items.
  *
  * This pattern is used in KAddressBook.
@@ -276,7 +276,7 @@ class EntityTreeModelPrivate;
  * In summary, it must be possible to have different numbers of columns, different data in hte rows of those columns, and different
  * titles for each column depending on the contents of the view.
  *
- * The way this is accomplished is by using the MimeTypeFilterProxyModel for splitting the model into a "CollectionTree" and an "Item List"
+ * The way this is accomplished is by using the EntityMimeTypeFilterModel for splitting the model into a "CollectionTree" and an "Item List"
  * as in the above example, and using a type-specific EntityTreeModel subclass to return the type-specific data, typically for only one type (for example, contacts or emails).
  *
  * The following protected virtual methods should be implemented in the subclass:

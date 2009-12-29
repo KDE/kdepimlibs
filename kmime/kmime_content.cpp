@@ -387,11 +387,18 @@ QString Content::decodedText( bool trimText, bool removeTrailingNewlines )
 
   QString s = codec->toUnicode( d_ptr->body.data(), d_ptr->body.length() );
 
-  if ( trimText && removeTrailingNewlines ) {
+  if ( trimText || removeTrailingNewlines ) {
     int i;
     for ( i = s.length() - 1; i >= 0; --i ) {
-      if ( !s[i].isSpace() ) {
-        break;
+      if ( trimText ) {
+        if ( !s[i].isSpace() ) {
+          break;
+        }
+      }
+      else {
+        if ( s[i] != '\n' ) {
+          break;
+        }
       }
     }
     s.truncate( i + 1 );

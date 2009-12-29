@@ -8,7 +8,7 @@ set(testemail_SRCS testemail.cpp )
 
 kde4_add_unit_test(testemail TESTNAME kpimutils-testemail  ${testemail_SRCS})
 
-target_link_libraries(testemail ${KDE4_KDECORE_LIBS} kpimutils ${QT_QTTEST_LIBRARY} )
+target_link_libraries(testemail ${KDE4_KDECORE_LIBS} kpimutils ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
 
 ########### next target ###############
 

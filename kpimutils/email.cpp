@@ -645,7 +645,7 @@ QByteArray KPIMUtils::extractEmailAddress( const QByteArray &address )
     addrSpec = QByteArray();
     if ( result != AddressEmpty ) {
       kDebug()
-        << "Input: aStr\nError:"
+        << "Input:" << address << "\nError:"
         << emailParseResultToString( result );
     }
   }
@@ -896,19 +896,20 @@ QString KPIMUtils::normalizedAddress( const QString &displayName,
                                       const QString &addrSpec,
                                       const QString &comment )
 {
-  if ( displayName.isEmpty() && comment.isEmpty() ) {
+  const QString realDisplayName = KMime::removeBidiControlChars( displayName );
+  if ( realDisplayName.isEmpty() && comment.isEmpty() ) {
     return addrSpec;
   } else if ( comment.isEmpty() ) {
-    if ( !displayName.startsWith( '\"' ) ) {
-      return quoteNameIfNecessary( displayName ) + " <" + addrSpec + '>';
+    if ( !realDisplayName.startsWith( '\"' ) ) {
+      return quoteNameIfNecessary( realDisplayName ) + " <" + addrSpec + '>';
     } else {
-      return displayName + " <" + addrSpec + '>';
+      return realDisplayName + " <" + addrSpec + '>';
     }
-  } else if ( displayName.isEmpty() ) {
+  } else if ( realDisplayName.isEmpty() ) {
     QString commentStr = comment;
     return quoteNameIfNecessary( commentStr ) + " <" + addrSpec + '>';
   } else {
-    return displayName + " (" + comment + ") <" + addrSpec + '>';
+    return realDisplayName + " (" + comment + ") <" + addrSpec + '>';
   }
 }
 

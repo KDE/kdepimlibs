@@ -424,6 +424,9 @@ class KMIME_EXPORT Content
     /**
       Returns the decoded Content body.
     */
+    // TODO: KDE5: BIC: Rename this to decodedBody(), since only the body is returned.
+    // In contrast, setContent() sets the head and the body!
+    // Also, try to make this const.
     QByteArray decodedContent();
 
     /**
@@ -439,6 +442,8 @@ class KMIME_EXPORT Content
       The last trailing new line of the decoded text is always removed.
 
     */
+    // TODO: KDE5: BIC: Convert to enums. Also, what if trimText = true but removeTrailingNewlines
+    //                  is false?
     QString decodedText( bool trimText = false,
                          bool removeTrailingNewlines = false );
 

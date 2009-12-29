@@ -32,6 +32,7 @@
 #include <klocale.h>
 #include <kcharsets.h>
 #include <kcodecs.h>
+#include <kdebug.h>
 
 #include <QtCore/QList>
 #include <QtCore/QString>
@@ -230,18 +231,24 @@ QString decodeRFC2047String( const QByteArray &src )
 QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
                                 bool addressHeader, bool allow8BitHeaders )
 {
-  QByteArray encoded8Bit, result, usedCS;
+  QByteArray encoded8Bit, result;
   int start=0, end=0;
   bool nonAscii=false, ok=true, useQEncoding=false;
-  QTextCodec *codec=0;
 
-  usedCS = charset;
-  codec = KGlobal::charsets()->codecForName( usedCS, ok );
+  const QTextCodec *codec = KGlobal::charsets()->codecForName( charset, ok );
 
+  QByteArray usedCS;
   if ( !ok ) {
     //no codec available => try local8Bit and hope the best ;-)
     usedCS = KGlobal::locale()->encoding();
     codec = KGlobal::charsets()->codecForName( usedCS, ok );
+  }
+  else {
+    Q_ASSERT( codec );
+    if ( charset.isEmpty() )
+      usedCS = codec->name();
+    else
+      usedCS = charset;
   }
 
   if ( usedCS.contains( "8859-" ) ) { // use "B"-Encoding for non iso-8859-x charsets
@@ -556,6 +563,67 @@ void addQuotes( QByteArray &str, bool forceQuotes )
     str.insert( 0, '\"' );
     str.append( "\"" );
   }
+}
+
+KMIME_EXPORT QString balanceBidiState( const QString &input )
+{
+  const int LRO = 0x202D;
+  const int RLO = 0x202E;
+  const int LRE = 0x202A;
+  const int RLE = 0x202B;
+  const int PDF = 0x202C;
+
+  QString result = input;
+
+  int openDirChangers = 0;
+  int numPDFsRemoved = 0;
+  for ( int i = 0; i < input.length(); i++ ) {
+    const ushort &code = input.at( i ).unicode();
+    if ( code == LRO || code == RLO || code == LRE || code == RLE ) {
+      openDirChangers++;
+    }
+    else if ( code == PDF ) {
+      if ( openDirChangers > 0 ) {
+        openDirChangers--;
+      }
+      else {
+        // One PDF too much, remove it
+        kWarning() << "Possible Unicode spoofing (unexpected PDF) detected in" << input;
+        result.remove( i - numPDFsRemoved, 1 );
+        numPDFsRemoved++;
+      }
+    }
+  }
+
+  if ( openDirChangers > 0 ) {
+    kWarning() << "Possible Unicode spoofing detected in" << input;
+
+    // At PDF chars to the end until the correct state is restored.
+    // As a special exception, when encountering quoted strings, place the PDF before
+    // the last quote.
+    for ( int i = openDirChangers; i > 0; i-- ) {
+      if ( result.endsWith( '"' ) )
+        result.insert( result.length() - 1, QChar( PDF ) );
+      else
+        result += QChar( PDF );
+    }
+  }
+
+  return result;
+}
+
+QString removeBidiControlChars( const QString &input )
+{
+  const int LRO = 0x202D;
+  const int RLO = 0x202E;
+  const int LRE = 0x202A;
+  const int RLE = 0x202B;
+  QString result = input;
+  result.remove( LRO );
+  result.remove( RLO );
+  result.remove( LRE );
+  result.remove( RLE );
+  return result;
 }
 
 } // namespace KMime

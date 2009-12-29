@@ -244,3 +244,107 @@ void MessageTest::testBug219749()
   QVERIFY( cd );
   QCOMPARE( cd->filename(), QString( "jaselka 1.docx" ) );
 }
+
+void MessageTest::testBidiSpoofing()
+{
+  const QString RLO( QChar( 0x202E ) );
+  const QString PDF( QChar( 0x202C ) );
+
+  const QByteArray senderAndRLO =
+      encodeRFC2047String( "\"Sender" + RLO + "\" <sender@test.org>", "utf-8" );
+
+  // The display name of the "From" has an RLO, make sure the KMime parser balances it
+  QByteArray data =
+    "From: " + senderAndRLO + "\n"
+    "\n"
+    "Body";
+
+  KMime::Message msg;
+  msg.setContent( data );
+  msg.parse();
+
+  // Test adjusted for taking into account that KMIME now removes bidi control chars
+  // instead of adding PDF chars, because of broken KHTML.
+  //const QString expectedDisplayName = "\"Sender" + RLO + PDF + "\"";
+  const QString expectedDisplayName = "\"Sender\"";
+  const QString expectedMailbox = expectedDisplayName + " <sender@test.org>";
+  QCOMPARE( msg.from()->addresses().count(), 1 );
+  QCOMPARE( msg.from()->asUnicodeString(), expectedMailbox );
+  QCOMPARE( msg.from()->displayNames().first(), expectedDisplayName );
+  QCOMPARE( msg.from()->mailboxes().first().name(), expectedDisplayName );
+  QCOMPARE( msg.from()->mailboxes().first().address().data(), "sender@test.org" );
+}
+
+// Test to see if header fields of mails with an UTF-16 body are properly read
+// and written.
+// See also https://issues.kolab.org/issue3707
+void MessageTest::testUtf16()
+{
+  QByteArray data =
+    "From: foo@bar.com\n"
+    "Subject: UTF-16 Test\n"
+    "MIME-Version: 1.0\n"
+    "Content-Type: Text/Plain;\n"
+    "  charset=\"utf-16\"\n"
+    "Content-Transfer-Encoding: base64\n"
+    "\n"
+    "//5UAGgAaQBzACAAaQBzACAAVQBUAEYALQAxADYAIABUAGUAeAB0AC4ACgAKAAo";
+
+  KMime::Message msg;
+  msg.setContent( data );
+  msg.parse();
+
+  QCOMPARE( msg.from()->asUnicodeString(), QString( "foo@bar.com" ) );
+  QCOMPARE( msg.subject()->asUnicodeString(), QString( "UTF-16 Test" ) );
+  QCOMPARE( msg.decodedText( false, true ), QString( "This is UTF-16 Text." ) );
+
+  // Add a new To header, for testings
+  KMime::Headers::To *to = new KMime::Headers::To( &msg );
+  KMime::Types::Mailbox address;
+  address.setAddress( "test@test.de" );
+  address.setName( "Fränz Töster" );
+  to->addAddress( address );
+  msg.appendHeader( to );
+  msg.assemble();
+
+  QByteArray newData =
+    "From: foo@bar.com\n"
+    "Subject: UTF-16 Test\n"
+    "MIME-Version: 1.0\n"
+    "Content-Type: text/plain; charset=\"utf-16\"\n"
+    "Content-Transfer-Encoding: base64\n"
+    "To: =?ISO-8859-1?Q?Fr=C3=A4nz_T=C3=B6ster?= <test@test.de>\n"
+    "\n"
+    "//5UAGgAaQBzACAAaQBzACAAVQBUAEYALQAxADYAIABUAGUAeAB0AC4ACgAKAAoACg==\n";
+
+  QCOMPARE( msg.encodedContent().data(), newData.data() );
+}
+
+void MessageTest::testDecodedText()
+{
+  QByteArray data =
+    "Subject: Test\n"
+    "\n"
+    "Testing Whitespace   \n  \n \n\n\n";
+
+  KMime::Message msg;
+  msg.setContent( data );
+  msg.parse();
+
+  QCOMPARE( msg.decodedText( true, false ), QString( "Testing Whitespace" ) );
+  QCOMPARE( msg.decodedText( true, true ), QString( "Testing Whitespace" ) );
+  QCOMPARE( msg.decodedText( false, true ), QString( "Testing Whitespace   \n  \n " ) );
+
+  QByteArray data2 =
+    "Subject: Test\n"
+    "\n"
+    "Testing Whitespace   \n  \n \n\n\n ";
+
+  KMime::Message msg2;
+  msg2.setContent( data2 );
+  msg2.parse();
+
+  QCOMPARE( msg2.decodedText( true, false ), QString( "Testing Whitespace" ) );
+  QCOMPARE( msg2.decodedText( true, true ), QString( "Testing Whitespace" ) );
+  QCOMPARE( msg2.decodedText( false, true ), QString( "Testing Whitespace   \n  \n \n\n\n " ) );
+}

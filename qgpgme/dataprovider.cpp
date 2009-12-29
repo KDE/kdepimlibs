@@ -76,7 +76,7 @@ ssize_t QByteArrayDataProvider::read( void * buffer, size_t bufSize ) {
 
 ssize_t QByteArrayDataProvider::write( const void * buffer, size_t bufSize ) {
 #ifndef NDEBUG
-    qDebug( "QByteArrayDataProvider::write( %p, %lu )", buffer, static_cast<unsigned long>( bufSize ) );
+  //qDebug( "QByteArrayDataProvider::write( %p, %lu )", buffer, static_cast<unsigned long>( bufSize ) );
 #endif
   if ( bufSize == 0 )
     return 0;
@@ -98,7 +98,7 @@ ssize_t QByteArrayDataProvider::write( const void * buffer, size_t bufSize ) {
 
 off_t QByteArrayDataProvider::seek( off_t offset, int whence ) {
 #ifndef NDEBUG
-  qDebug( "QByteArrayDataProvider::seek( %d, %d )", int(offset), whence );
+  //qDebug( "QByteArrayDataProvider::seek( %d, %d )", int(offset), whence );
 #endif
   int newOffset = mOff;
   switch ( whence ) {
@@ -120,7 +120,7 @@ off_t QByteArrayDataProvider::seek( off_t offset, int whence ) {
 
 void QByteArrayDataProvider::release() {
 #ifndef NDEBUG
-  qDebug( "QByteArrayDataProvider::release()" );
+  //qDebug( "QByteArrayDataProvider::release()" );
 #endif
   mArray = QByteArray();
 }
@@ -214,7 +214,7 @@ ssize_t QIODeviceDataProvider::write( const void * buffer, size_t bufSize ) {
 
 off_t QIODeviceDataProvider::seek( off_t offset, int whence ) {
 #ifndef NDEBUG
-  qDebug( "QIODeviceDataProvider::seek( %d, %d )", int(offset), whence );
+  //qDebug( "QIODeviceDataProvider::seek( %d, %d )", int(offset), whence );
 #endif
   if ( mIO->isSequential() ) {
     errno = ESPIPE;
@@ -244,7 +244,7 @@ off_t QIODeviceDataProvider::seek( off_t offset, int whence ) {
 
 void QIODeviceDataProvider::release() {
 #ifndef NDEBUG
-  qDebug( "QIODeviceDataProvider::release()" );
+  //qDebug( "QIODeviceDataProvider::release()" );
 #endif
   mIO->close();
 }

@@ -61,3 +61,42 @@ void KMimeUtilTest::testExtractHeader()
   // missing space after ':'
   QCOMPARE( extractHeader( "From:<toma@kovoks.nl>", "From" ), QByteArray( "<toma@kovoks.nl>" ) );
 }
+
+void KMimeUtilTest::testBalanceBidiState()
+{
+  QFETCH( QString, input );
+  QFETCH( QString, expResult );
+
+  QCOMPARE( balanceBidiState( input ), expResult );
+}
+
+void KMimeUtilTest::testBalanceBidiState_data()
+{
+  QTest::addColumn<QString>( "input" );
+  QTest::addColumn<QString>( "expResult" );
+
+  const QString LRO( QChar( 0x202D ) );
+  const QString RLO( QChar( 0x202E ) );
+  const QString LRE( QChar( 0x202A ) );
+  const QString RLE( QChar( 0x202B ) );
+  const QString PDF( QChar( 0x202C ) );
+
+  QTest::newRow( "" ) << "Normal" << "Normal";
+  QTest::newRow( "" ) << RLO + "Balanced" + PDF << RLO + "Balanced" + PDF;
+  QTest::newRow( "" ) << RLO + "MissingPDF1" << RLO + "MissingPDF1" + PDF;
+  QTest::newRow( "" ) << "\"" + RLO + "Quote\"" << "\"" + RLO + "Quote" + PDF + "\"";
+  QTest::newRow( "" ) << "MissingPDF2" + RLO << "MissingPDF2" + RLO + PDF;
+  QTest::newRow( "" ) << RLO + "MultipleRLO" + RLO << RLO + "MultipleRLO" + RLO + PDF + PDF;
+  QTest::newRow( "" ) << LRO + "Mixed" + LRE + RLE + RLO + "Bla"
+                      << LRO + "Mixed" + LRE + RLE + RLO + "Bla" + PDF.repeated( 4 );
+  QTest::newRow( "" ) << RLO + "TooManyPDF" + PDF + RLO + PDF + PDF
+                      << RLO + "TooManyPDF" + PDF + RLO + PDF;
+  QTest::newRow( "" ) << PDF + "WrongOrder" + RLO
+                      << "WrongOrder" + RLO + PDF;
+  QTest::newRow( "" ) << "ComplexOrder" + RLO + PDF + PDF + RLO
+                      << "ComplexOrder" + RLO + PDF + RLO + PDF;
+  QTest::newRow( "" ) << "ComplexOrder2" + RLO + PDF + PDF + PDF + RLO + PDF + PDF + PDF
+                      << "ComplexOrder2" + RLO + PDF + RLO + PDF;
+  QTest::newRow( "" ) << PDF + PDF + PDF + "ComplexOrder3" + PDF + PDF + RLO + PDF + PDF + PDF
+                      << "ComplexOrder3" + RLO + PDF;
+}

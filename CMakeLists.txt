@@ -18,7 +18,7 @@ set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.$
 ############### search packages used by KDE ###############
 
 set (QT_MIN_VERSION "4.6.0")
-find_package(KDE4 4.3.80 REQUIRED) # rev. 1031601 is required.
+find_package(KDE4 4.3.80 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 
