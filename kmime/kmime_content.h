@@ -424,6 +424,9 @@ class KMIME_EXPORT Content
     /**
       Returns the decoded Content body.
     */
+    // TODO: KDE5: BIC: Rename this to decodedBody(), since only the body is returned.
+    // In contrast, setContent() sets the head and the body!
+    // Also, try to make this const.
     QByteArray decodedContent();
 
     /**
