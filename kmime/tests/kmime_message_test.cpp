@@ -296,7 +296,6 @@ void MessageTest::testUtf16()
 
   QCOMPARE( msg.from()->asUnicodeString(), QString( "foo@bar.com" ) );
   QCOMPARE( msg.subject()->asUnicodeString(), QString( "UTF-16 Test" ) );
-  QEXPECT_FAIL( "", "fails to remove newlines", Continue );
   QCOMPARE( msg.decodedText( false, true ), QString( "This is UTF-16 Text." ) );
 
   // Add a new To header, for testings
@@ -319,4 +318,33 @@ void MessageTest::testUtf16()
     "//5UAGgAaQBzACAAaQBzACAAVQBUAEYALQAxADYAIABUAGUAeAB0AC4ACgAKAAoACg==\n";
 
   QCOMPARE( msg.encodedContent().data(), newData.data() );
+}
+
+void MessageTest::testDecodedText()
+{
+  QByteArray data =
+    "Subject: Test\n"
+    "\n"
+    "Testing Whitespace   \n  \n \n\n\n";
+
+  KMime::Message msg;
+  msg.setContent( data );
+  msg.parse();
+
+  QCOMPARE( msg.decodedText( true, false ), QString( "Testing Whitespace" ) );
+  QCOMPARE( msg.decodedText( true, true ), QString( "Testing Whitespace" ) );
+  QCOMPARE( msg.decodedText( false, true ), QString( "Testing Whitespace   \n  \n " ) );
+
+  QByteArray data2 =
+    "Subject: Test\n"
+    "\n"
+    "Testing Whitespace   \n  \n \n\n\n ";
+
+  KMime::Message msg2;
+  msg2.setContent( data2 );
+  msg2.parse();
+
+  QCOMPARE( msg2.decodedText( true, false ), QString( "Testing Whitespace" ) );
+  QCOMPARE( msg2.decodedText( true, true ), QString( "Testing Whitespace" ) );
+  QCOMPARE( msg2.decodedText( false, true ), QString( "Testing Whitespace   \n  \n \n\n\n " ) );
 }

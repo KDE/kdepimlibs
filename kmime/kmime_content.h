@@ -442,6 +442,8 @@ class KMIME_EXPORT Content
       The last trailing new line of the decoded text is always removed.
 
     */
+    // TODO: KDE5: BIC: Convert to enums. Also, what if trimText = true but removeTrailingNewlines
+    //                  is false?
     QString decodedText( bool trimText = false,
                          bool removeTrailingNewlines = false );
 

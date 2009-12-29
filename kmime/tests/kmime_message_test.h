@@ -35,6 +35,7 @@ class MessageTest : public QObject
     void testBug219749();
     void testBidiSpoofing();
     void testUtf16();
+    void testDecodedText();
 };
 
 
