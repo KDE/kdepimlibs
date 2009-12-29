@@ -274,3 +274,49 @@ void MessageTest::testBidiSpoofing()
   QCOMPARE( msg.from()->mailboxes().first().name(), expectedDisplayName );
   QCOMPARE( msg.from()->mailboxes().first().address().data(), "sender@test.org" );
 }
+
+// Test to see if header fields of mails with an UTF-16 body are properly read
+// and written.
+// See also https://issues.kolab.org/issue3707
+void MessageTest::testUtf16()
+{
+  QByteArray data =
+    "From: foo@bar.com\n"
+    "Subject: UTF-16 Test\n"
+    "MIME-Version: 1.0\n"
+    "Content-Type: Text/Plain;\n"
+    "  charset=\"utf-16\"\n"
+    "Content-Transfer-Encoding: base64\n"
+    "\n"
+    "//5UAGgAaQBzACAAaQBzACAAVQBUAEYALQAxADYAIABUAGUAeAB0AC4ACgAKAAo";
+
+  KMime::Message msg;
+  msg.setContent( data );
+  msg.parse();
+
+  QCOMPARE( msg.from()->asUnicodeString(), QString( "foo@bar.com" ) );
+  QCOMPARE( msg.subject()->asUnicodeString(), QString( "UTF-16 Test" ) );
+  QEXPECT_FAIL( "", "fails to remove newlines", Continue );
+  QCOMPARE( msg.decodedText( false, true ), QString( "This is UTF-16 Text." ) );
+
+  // Add a new To header, for testings
+  KMime::Headers::To *to = new KMime::Headers::To( &msg );
+  KMime::Types::Mailbox address;
+  address.setAddress( "test@test.de" );
+  address.setName( "Fränz Töster" );
+  to->addAddress( address );
+  msg.appendHeader( to );
+  msg.assemble();
+
+  QByteArray newData =
+    "From: foo@bar.com\n"
+    "Subject: UTF-16 Test\n"
+    "MIME-Version: 1.0\n"
+    "Content-Type: text/plain; charset=\"utf-16\"\n"
+    "Content-Transfer-Encoding: base64\n"
+    "To: =?ISO-8859-1?Q?Fr=C3=A4nz_T=C3=B6ster?= <test@test.de>\n"
+    "\n"
+    "//5UAGgAaQBzACAAaQBzACAAVQBUAEYALQAxADYAIABUAGUAeAB0AC4ACgAKAAoACg==\n";
+
+  QCOMPARE( msg.encodedContent().data(), newData.data() );
+}
