@@ -1042,7 +1042,8 @@ static QString myStatusStr( Incidence *incidence )
 {
   QString ret;
   Attendee *a = findMyAttendee( incidence );
-  if ( a && a->status() != Attendee::NeedsAction ) {
+  if ( a &&
+       a->status() != Attendee::NeedsAction && a->status() != Attendee::Delegated ) {
     ret = i18n( "(<b>Note</b>: the Organizer preset your response to <b>%1</b>)",
           Attendee::statusName( a->status() ) );
   }
@@ -2030,6 +2031,10 @@ static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
                                 InvitationFormatterHelper *helper )
 {
   QString html;
+  if ( !helper ) {
+    return html;
+  }
+
   if ( !rsvpReq ) {
     // Record only
     html += tdOpen;
@@ -2087,6 +2092,33 @@ static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
                                 i18nc( "look for scheduling conflicts", "Check my calendar" ) );
       html += tdClose;
     }
+  }
+  return html;
+}
+
+static QString counterButtons( Incidence *incidence,
+                               InvitationFormatterHelper *helper )
+{
+  QString html;
+  if ( !helper ) {
+    return html;
+  }
+
+  // Accept proposal
+  html += tdOpen;
+  html += helper->makeLink( "accept_counter", i18n("[Accept]") );
+  html += tdClose;
+
+  // Decline proposal
+  html += tdOpen;
+  html += helper->makeLink( "decline_counter", i18n("[Decline]") );
+  html += tdClose;
+
+  // Check calendar
+  if ( incidence && incidence->type() == "Event" ) {
+    html += tdOpen;
+    html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+    html += tdClose;
   }
   return html;
 }
@@ -2192,11 +2224,13 @@ static QString formatICalInvitationHelper( QString invitation,
 
   // determine invitation role
   QString role;
+  bool isDelegated = false;
   Attendee *a = findMyAttendee( inc );
   if ( !a && inc ) {
     a = inc->attendees().first();
   }
   if ( a ) {
+    isDelegated = ( a->status() == Attendee::Delegated );
     role = Attendee::roleName( a->role() );
   }
 
@@ -2217,7 +2251,11 @@ static QString formatICalInvitationHelper( QString invitation,
     } else if ( msg->method() == iTIPAdd ) {
       html += i18n( "This invitation was accepted" );
     } else {
-      html += rsvpRequestedStr( rsvpReq, role );
+      if ( !isDelegated ) {
+        html += rsvpRequestedStr( rsvpReq, role );
+      } else {
+        html += i18n( "Awaiting delegation response" );
+      }
     }
     html += "</u></i>";
   }
@@ -2280,9 +2318,9 @@ static QString formatICalInvitationHelper( QString invitation,
       Attendee *ea = 0;
       if ( inc ) {
         // find first attendee who is delegated-from me
-        // look a their PARTSTAT response
-        // if the response is declined, then we need to start over which means putting
-        // all the action buttons and NOT putting on the [Record response..] button
+        // look a their PARTSTAT response, if the response is declined,
+        // then we need to start over which means putting all the action
+        // buttons and NOT putting on the [Record response..] button
         a = findDelegatedFromMyAttendee( inc );
         if ( a ) {
           if ( a->status() != Attendee::Accepted ||
@@ -2316,17 +2354,7 @@ static QString formatICalInvitationHelper( QString invitation,
 
     case iTIPCounter:
       // Counter proposal
-      html += tdOpen;
-      html += helper->makeLink( "accept_counter", i18n( "Accept" ) );
-      html += tdClose;
-
-      html += tdOpen;
-      html += helper->makeLink( "decline_counter", i18n( "Decline" ) );
-      html += tdClose;
-
-      html += tdOpen;
-      html += helper->makeLink( "check_calendar", i18n( "Check my calendar" ) );
-      html += tdClose;
+      html += counterButtons( inc, helper );
       break;
 
     case iTIPDeclineCounter:
