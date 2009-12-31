@@ -142,7 +142,7 @@ void MessageQueueJob::Private::outboxRequestResult( KJob *job )
   AddressAttribute *addrA = new AddressAttribute( from, to, cc, bcc );
   DispatchModeAttribute *dmA = new DispatchModeAttribute( dispatchMode );
   if ( dueDate.isValid() )
-    dmA->setDueDate( dueDate );
+    dmA->setSendAfter( dueDate );
   SentBehaviourAttribute *sA = new SentBehaviourAttribute( sentBehaviour, moveToCollection );
   TransportAttribute *tA = new TransportAttribute( transport );
   item.addAttribute( addrA );

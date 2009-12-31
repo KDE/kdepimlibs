@@ -93,13 +93,13 @@ void AttributeTest::testSerialization()
     int ms = date.toString( "z" ).toInt();
     date = date.addMSecs( -ms );
     DispatchModeAttribute *a = new DispatchModeAttribute( mode );
-    a->setDueDate( date );
+    a->setSendAfter( date );
     QByteArray data = a->serialized();
     delete a;
     a = new DispatchModeAttribute;
     a->deserialize( data );
     QCOMPARE( mode, a->dispatchMode() );
-    QCOMPARE( date, a->dueDate() );
+    QCOMPARE( date, a->sendAfter() );
   }
 
   {

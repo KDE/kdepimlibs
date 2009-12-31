@@ -76,19 +76,17 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
     */
     void setDispatchMode( DispatchMode mode );
 
-    //TODO_AKONADI_REVIEW: Rename to sendAfter
     /**
       Returns the date and time when the message should be sent.
-      Only valid if dispatchMode() is AfterDueDate.
+      Only valid if dispatchMode() is Automatic.
     */
-    QDateTime dueDate() const;
+    QDateTime sendAfter() const;
 
-    //TODO_AKONADI_REVIEW: Rename to setSendAfter
     /**
       Sets the date and time when the message should be sent.
       @see setDispatchMode.
     */
-    void setDueDate( const QDateTime &date );
+    void setSendAfter( const QDateTime &date );
 
   private:
     class Private;
