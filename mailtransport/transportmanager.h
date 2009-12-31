@@ -282,29 +282,22 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     */
     TransportManager();
 
-  //TODO_AKONADI_REVIEW: move private methods and slots to private class
   private:
-    void readConfig();
-    void writeConfig();
-    void fillTypes();
-    void emitChangesCommitted();
-    int createId() const;
-    void prepareWallet();
-    void validateDefault();
-    void migrateToWallet();
 
-  private Q_SLOTS:
-    void slotTransportsChanged();
-    void slotWalletOpened( bool success );
-    void dbusServiceOwnerChanged( const QString &service,
-                                  const QString &oldOwner,
-                                  const QString &newOwner );
-    void agentTypeAdded( const Akonadi::AgentType &atype );
-    void agentTypeRemoved( const Akonadi::AgentType &atype );
-    void jobResult( KJob *job );
+    // These are used by our friend, Transport
+    void emitChangesCommitted();
 
   private:
     Private *const d;
+
+    Q_PRIVATE_SLOT( d, void slotTransportsChanged() )
+    Q_PRIVATE_SLOT( d, void slotWalletOpened( bool success ) )
+    Q_PRIVATE_SLOT( d, void dbusServiceOwnerChanged( const QString &service,
+                                                     const QString &oldOwner,
+                                                     const QString &newOwner ) )
+    Q_PRIVATE_SLOT( d, void agentTypeAdded( const Akonadi::AgentType &atype ) )
+    Q_PRIVATE_SLOT( d, void agentTypeRemoved( const Akonadi::AgentType &atype ) )
+    Q_PRIVATE_SLOT( d, void jobResult( KJob *job ) )
 };
 
 } // namespace MailTransport
