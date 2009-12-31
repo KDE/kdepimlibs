@@ -107,7 +107,7 @@ void MessageQueueJobTest::testValidMessages()
   QCOMPARE( addrA->bcc().count(), 0 );
   DispatchModeAttribute *dA = item.attribute<DispatchModeAttribute>();
   QVERIFY( dA );
-  QCOMPARE( dA->dispatchMode(), DispatchModeAttribute::Immediately ); // default mode
+  QCOMPARE( dA->dispatchMode(), DispatchModeAttribute::Automatic ); // default mode
   SentBehaviourAttribute *sA = item.attribute<SentBehaviourAttribute>();
   QVERIFY( sA );
   QCOMPARE( sA->sentBehaviour(), SentBehaviourAttribute::MoveToDefaultSentCollection ); // default sent collection
@@ -156,15 +156,6 @@ void MessageQueueJobTest::testInvalidMessages()
   msg->setContent( "\nThis is a message sent from the MessageQueueJobTest unittest. This shouldn't have been sent.\n" );
   job->setMessage( msg );
   job->setTo( SPAM_ADDRESS );
-  QVERIFY( !job->exec() );
-
-  // with AfterDueDate and no due date
-  job = new MessageQueueJob;
-  msg = Message::Ptr( new Message );
-  msg->setContent( "\nThis is a message sent from the MessageQueueJobTest unittest. This shouldn't have been sent.\n" );
-  job->setMessage( msg );
-  job->setTo( SPAM_ADDRESS );
-  job->setDispatchMode( DispatchModeAttribute::AfterDueDate );
   QVERIFY( !job->exec() );
 
   // with MoveToCollection and no sent-mail folder

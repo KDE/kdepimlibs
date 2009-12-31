@@ -47,7 +47,7 @@ class MailTransport::MessageQueueJob::Private
       : q( qq )
     {
       transport = -1;
-      dispatchMode = DispatchModeAttribute::Immediately;
+      dispatchMode = DispatchModeAttribute::Automatic;
       sentBehaviour = SentBehaviourAttribute::MoveToDefaultSentCollection;
       moveToCollection = Akonadi::Collection( -1 );
       started = false;
@@ -90,13 +90,6 @@ bool MessageQueueJob::Private::validate()
   if( to.count() + cc.count() + bcc.count() == 0 ) {
     q->setError( UserDefinedError );
     q->setErrorText( i18n( "Message has no recipients." ) );
-    q->emitResult();
-    return false;
-  }
-
-  if( dispatchMode == DispatchModeAttribute::AfterDueDate && !dueDate.isValid() ) {
-    q->setError( UserDefinedError );
-    q->setErrorText( i18n( "Message has invalid due date." ) );
     q->emitResult();
     return false;
   }
@@ -147,7 +140,9 @@ void MessageQueueJob::Private::outboxRequestResult( KJob *job )
 
   // Set attributes.
   AddressAttribute *addrA = new AddressAttribute( from, to, cc, bcc );
-  DispatchModeAttribute *dmA = new DispatchModeAttribute( dispatchMode, dueDate );
+  DispatchModeAttribute *dmA = new DispatchModeAttribute( dispatchMode );
+  if ( dueDate.isValid() )
+    dmA->setDueDate( dueDate );
   SentBehaviourAttribute *sA = new SentBehaviourAttribute( sentBehaviour, moveToCollection );
   TransportAttribute *tA = new TransportAttribute( transport );
   item.addAttribute( addrA );
@@ -192,8 +187,8 @@ DispatchModeAttribute::DispatchMode MessageQueueJob::dispatchMode() const
 
 QDateTime MessageQueueJob::sendDueDate() const
 {
-  if( d->dispatchMode != DispatchModeAttribute::AfterDueDate ) {
-    kWarning() << "Called when dispatchMode is not AfterDueDate.";
+  if( d->dispatchMode != DispatchModeAttribute::Automatic ) {
+    kWarning() << "Called when dispatchMode is not Automatic.";
   }
   return d->dueDate;
 }

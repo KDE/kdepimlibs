@@ -29,7 +29,7 @@
 namespace MailTransport {
 
 /**
-  FilterAction that finds all messages with a DispatchMode of Never
+  FilterAction that finds all messages with a DispatchMode of Manual
   and assigns them a DispatchMode of Immediately.
 
   This is used to send "queued" messages on demand.

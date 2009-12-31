@@ -109,7 +109,7 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
     //TODO_AKONADI_REVIEW: replace the sendDueDate, dispatchMode and from/to methods by getters of the attributes
     /**
       Returns the date and time when this message should be sent.
-      Only valid if dispatchMode() is AfterDueDate.
+      Only valid if dispatchMode() is Automatic.
       @see DispatchModeAttribute.
     */
     QDateTime sendDueDate() const;
@@ -168,7 +168,7 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
 
     /**
       Sets the dispatch mode for this message.
-      The default dispatch mode is Immediately (meaning the message will be
+      The default dispatch mode is Automatic (meaning the message will be
       sent as soon as possible).
       @see DispatchModeAttribute.
     */
@@ -178,7 +178,7 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
       Sets the date and time when this message should be sent.
 
       @code
-      job->setDispatchMode( DispatchModeAttribute::AfterDueDate );
+      job->setDispatchMode( DispatchModeAttribute::Automatic );
       job->setDueDate( ... );
       @endcode
 

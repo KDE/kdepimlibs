@@ -54,8 +54,8 @@ class MAILTRANSPORT_EXPORT DispatcherInterface
     Akonadi::AgentInstance dispatcherInstance() const;
 
     /**
-      Looks for messages in the outbox with DispatchMode::Never and marks them
-      DispatchMode::Immediately for sending.
+      Looks for messages in the outbox with DispatchMode::Manual and marks them
+      DispatchMode::Automatic for sending.
     */
     void dispatchManually();
 

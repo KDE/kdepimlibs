@@ -43,19 +43,15 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
       Determines how the message is sent.
     */
     enum DispatchMode {
-      Immediately,  ///< Send message as soon as possible.
-      AfterDueDate, ///< Send message at a certain date/time.
-      Never         ///< Send message only when the user requests so.
+      Automatic,    ///< Send message as soon as possible, but no earlier than
+                    ///  specified by setSendAfter()
+      Manual        ///< Send message only when the user requests so.
     };
-    //TODO_AKONADI_REVIEW: rename Immediately to Automatic
-    //TODO_AKONADI_REVIEW: rename Never to Manual
-    //TODO_AKONADI_REVIEW: remove AfterDueDate
 
     /**
       Creates a new DispatchModeAttribute.
     */
-    explicit DispatchModeAttribute( DispatchMode mode = Immediately,
-                                    const QDateTime &date = QDateTime() );
+    explicit DispatchModeAttribute( DispatchMode mode = Automatic );
 
     /**
       Destroys the DispatchModeAttribute.
@@ -90,7 +86,6 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
     //TODO_AKONADI_REVIEW: Rename to setSendAfter
     /**
       Sets the date and time when the message should be sent.
-      Make sure you set the DispatchMode to AfterDueDate first.
       @see setDispatchMode.
     */
     void setDueDate( const QDateTime &date );

@@ -75,15 +75,15 @@ MessageQueuer::MessageQueuer()
 void MessageQueuer::sendNowClicked()
 {
   MessageQueueJob *qjob = createQueueJob();
-  kDebug() << "DispatchMode default (Immediately).";
+  kDebug() << "DispatchMode default (Automatic).";
   qjob->start();
 }
 
 void MessageQueuer::sendQueuedClicked()
 {
   MessageQueueJob *qjob = createQueueJob();
-  kDebug() << "DispatchMode Never.";
-  qjob->setDispatchMode( DispatchModeAttribute::Never );
+  kDebug() << "DispatchMode Manual.";
+  qjob->setDispatchMode( DispatchModeAttribute::Manual );
   qjob->start();
 }
 
@@ -104,7 +104,7 @@ void MessageQueuer::sendOnDateClicked()
   }
   kDebug() << "DispatchMode AfterDueDate" << dt->dateTime();
   MessageQueueJob *qjob = createQueueJob();
-  qjob->setDispatchMode( DispatchModeAttribute::AfterDueDate );
+  qjob->setDispatchMode( DispatchModeAttribute::Automatic );
   qjob->setDueDate( dt->dateTime() );
   qjob->start();
   delete dialog;
