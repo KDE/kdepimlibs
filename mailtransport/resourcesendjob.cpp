@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "resourcesendjob.h"
+#include "resourcesendjob_p.h"
 #include "messagequeuejob.h"
 #include "transport.h"
 
@@ -92,4 +92,4 @@ void ResourceSendJob::doStart()
   job->start();
 }
 
-#include "resourcesendjob.moc"
+#include "resourcesendjob_p.moc"

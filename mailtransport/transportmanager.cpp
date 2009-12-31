@@ -19,7 +19,7 @@
 
 #include "transportmanager.h"
 #include "addtransportdialog.h"
-#include "resourcesendjob.h"
+#include "resourcesendjob_p.h"
 #include "mailtransport_defs.h"
 #include "sendmailconfigwidget.h"
 #include "sendmailjob.h"

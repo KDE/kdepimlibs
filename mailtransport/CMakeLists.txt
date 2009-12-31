@@ -75,7 +75,6 @@ install( FILES
         mailtransport_export.h
 
         transportjob.h
-        resourcesendjob.h
         sendmailjob.h
         smtpjob.h
         precommandjob.h
