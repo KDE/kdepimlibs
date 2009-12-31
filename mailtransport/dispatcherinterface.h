@@ -22,13 +22,9 @@
 
 #include <mailtransport/mailtransport_export.h>
 
-#include <QtCore/QObject>
-
-#include <akonadi/agentinstance.h>
+#include <Akonadi/AgentInstance>
 
 namespace MailTransport {
-
-class DispatcherInterfacePrivate;
 
 /**
   @short An interface for applications to interact with the dispatcher agent.
@@ -43,12 +39,10 @@ class DispatcherInterfacePrivate;
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-//TODO_AKONADI_REVIEW: make private class a QObject based singleton, make class value based
-class MAILTRANSPORT_EXPORT DispatcherInterface : public QObject
+class MAILTRANSPORT_EXPORT DispatcherInterface
 {
-  Q_OBJECT
-
   public:
+
     /**
       Returns the DispatcherInterface instance.
     */
@@ -73,14 +67,10 @@ class MAILTRANSPORT_EXPORT DispatcherInterface : public QObject
     void retryDispatching();
 
   private:
+
+    DispatcherInterface();
     friend class DispatcherInterfacePrivate;
-    DispatcherInterfacePrivate *const d;
-
-    // singleton class; the only instance resides in sInstance->instance
-    DispatcherInterface( DispatcherInterfacePrivate *dd );
-
-    Q_PRIVATE_SLOT( d, void massModifyResult( KJob* ) )
-
+    Q_DISABLE_COPY( DispatcherInterface )
 };
 
 } // namespace MailTransport
