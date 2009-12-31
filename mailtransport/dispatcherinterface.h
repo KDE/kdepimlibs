@@ -42,6 +42,9 @@ class MAILTRANSPORT_EXPORT DispatcherInterface
 {
   public:
 
+    /**
+      Creates a new dispatcher interface.
+    */
     DispatcherInterface();
 
     /**
