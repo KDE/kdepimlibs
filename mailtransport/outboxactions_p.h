@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef MAILTRANSPORT_OUTBOXACTIONS_H
-#define MAILTRANSPORT_OUTBOXACTIONS_H
+#ifndef MAILTRANSPORT_OUTBOXACTIONS_P_H
+#define MAILTRANSPORT_OUTBOXACTIONS_P_H
 
 #include <mailtransport/mailtransport_export.h>
 #include <mailtransport/filteractionjob.h>
@@ -28,7 +28,6 @@
 
 namespace MailTransport {
 
-//TODO_AKONADI_REVIEW: both classes private to mailtransport
 /**
   FilterAction that finds all messages with a DispatchMode of Never
   and assigns them a DispatchMode of Immediately.
@@ -40,7 +39,7 @@ namespace MailTransport {
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class MAILTRANSPORT_EXPORT SendQueuedAction : public Akonadi::FilterAction
+class SendQueuedAction : public Akonadi::FilterAction
 {
   public:
     /** Creates a SendQueuedAction. */
@@ -74,7 +73,7 @@ class MAILTRANSPORT_EXPORT SendQueuedAction : public Akonadi::FilterAction
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class MAILTRANSPORT_EXPORT ClearErrorAction : public Akonadi::FilterAction
+class ClearErrorAction : public Akonadi::FilterAction
 {
   public:
     /** Creates a ClearErrorAction. */
@@ -99,4 +98,4 @@ class MAILTRANSPORT_EXPORT ClearErrorAction : public Akonadi::FilterAction
 
 } // namespace MailTransport
 
-#endif // MAILTRANSPORT_OUTBOXACTIONS_H
+#endif // MAILTRANSPORT_OUTBOXACTIONS_P_H

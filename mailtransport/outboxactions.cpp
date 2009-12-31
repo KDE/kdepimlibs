@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "outboxactions.h"
+#include "outboxactions_p.h"
 
 #include "dispatchmodeattribute.h"
 #include "errorattribute.h"

@@ -37,7 +37,6 @@ class Runner : public QObject
 
   private slots:
     void checkFolders();
-    void jobResult( KJob *job );
 
 };
 

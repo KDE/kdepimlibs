@@ -91,7 +91,6 @@ install( FILES
 
         dispatcherinterface.h
         messagequeuejob.h
-        outboxactions.h
 
         dispatchmodeattribute.h
         errorattribute.h

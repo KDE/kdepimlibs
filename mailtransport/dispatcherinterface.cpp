@@ -20,7 +20,7 @@
 #include "dispatcherinterface.h"
 #include "dispatcherinterface_p.h"
 
-#include "outboxactions.h"
+#include "outboxactions_p.h"
 
 #include <KDebug>
 #include <KGlobal>
