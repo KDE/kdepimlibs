@@ -48,18 +48,15 @@ class MAILTRANSPORT_EXPORT TransportManagementWidget : public QWidget
     */
     virtual ~TransportManagementWidget();
 
-    //TODO_AKONADI_REVIEW: move private slots to private class
-  private Q_SLOTS:
-    void updateButtonState();
-    void addClicked();
-    void editClicked();
-    void renameClicked();
-    void removeClicked();
-    void defaultClicked();
-
   private:
     class Private;
     Private * const d;
+    Q_PRIVATE_SLOT( d, void defaultClicked() )
+    Q_PRIVATE_SLOT( d, void removeClicked() )
+    Q_PRIVATE_SLOT( d, void renameClicked() )
+    Q_PRIVATE_SLOT( d, void editClicked() )
+    Q_PRIVATE_SLOT( d, void addClicked() )
+    Q_PRIVATE_SLOT( d, void updateButtonState() )
 };
 
 } // namespace MailTransport
