@@ -75,7 +75,6 @@ install( FILES
         mailtransport_export.h
 
         transportjob.h
-        resourcesendjob.h
         sendmailjob.h
         smtpjob.h
         precommandjob.h
@@ -92,7 +91,6 @@ install( FILES
 
         dispatcherinterface.h
         messagequeuejob.h
-        outboxactions.h
 
         dispatchmodeattribute.h
         errorattribute.h

@@ -46,25 +46,16 @@ class MailTransport::MessageQueueJob::Private
     Private( MessageQueueJob *qq )
       : q( qq )
     {
-      transport = -1;
-      dispatchMode = DispatchModeAttribute::Immediately;
-      sentBehaviour = SentBehaviourAttribute::MoveToDefaultSentCollection;
-      moveToCollection = -1;
       started = false;
     }
 
     MessageQueueJob *const q;
 
     Message::Ptr message;
-    int transport;
-    DispatchModeAttribute::DispatchMode dispatchMode;
-    QDateTime dueDate;
-    SentBehaviourAttribute::SentBehaviour sentBehaviour;
-    Collection::Id moveToCollection;
-    QString from;
-    QStringList to;
-    QStringList cc;
-    QStringList bcc;
+    TransportAttribute transportAttribute;
+    DispatchModeAttribute dispatchModeAttribute;
+    SentBehaviourAttribute sentBehaviourAttribute;
+    AddressAttribute addressAttribute;
     bool started;
 
     /**
@@ -87,20 +78,15 @@ bool MessageQueueJob::Private::validate()
     return false;
   }
 
-  if( to.count() + cc.count() + bcc.count() == 0 ) {
+  if( addressAttribute.to().count() + addressAttribute.cc().count() +
+      addressAttribute.bcc().count() == 0 ) {
     q->setError( UserDefinedError );
     q->setErrorText( i18n( "Message has no recipients." ) );
     q->emitResult();
     return false;
   }
 
-  if( dispatchMode == DispatchModeAttribute::AfterDueDate && !dueDate.isValid() ) {
-    q->setError( UserDefinedError );
-    q->setErrorText( i18n( "Message has invalid due date." ) );
-    q->emitResult();
-    return false;
-  }
-
+  const int transport = transportAttribute.transportId();
   if( TransportManager::self()->transportById( transport, false ) == 0 ) {
     q->setError( UserDefinedError );
     q->setErrorText( i18n( "Message has invalid transport." ) );
@@ -108,12 +94,13 @@ bool MessageQueueJob::Private::validate()
     return false;
   }
 
-  if( sentBehaviour == SentBehaviourAttribute::MoveToCollection && moveToCollection < 0 ) {
+  if( sentBehaviourAttribute.sentBehaviour() == SentBehaviourAttribute::MoveToCollection &&
+      !( sentBehaviourAttribute.moveToCollection().isValid() ) ) {
     q->setError( UserDefinedError );
     q->setErrorText( i18n( "Message has invalid sent-mail folder." ) );
     q->emitResult();
     return false;
-  } else if( sentBehaviour == SentBehaviourAttribute::MoveToDefaultSentCollection ) {
+  } else if( sentBehaviourAttribute.sentBehaviour() == SentBehaviourAttribute::MoveToDefaultSentCollection ) {
     // TODO require SpecialMailCollections::SentMail here?
   }
 
@@ -146,14 +133,10 @@ void MessageQueueJob::Private::outboxRequestResult( KJob *job )
   item.setPayload<Message::Ptr>( message );
 
   // Set attributes.
-  AddressAttribute *addrA = new AddressAttribute( from, to, cc, bcc );
-  DispatchModeAttribute *dmA = new DispatchModeAttribute( dispatchMode, dueDate );
-  SentBehaviourAttribute *sA = new SentBehaviourAttribute( sentBehaviour, moveToCollection );
-  TransportAttribute *tA = new TransportAttribute( transport );
-  item.addAttribute( addrA );
-  item.addAttribute( dmA );
-  item.addAttribute( sA );
-  item.addAttribute( tA );
+  item.addAttribute( addressAttribute.clone() );
+  item.addAttribute( dispatchModeAttribute.clone() );
+  item.addAttribute( sentBehaviourAttribute.clone() );
+  item.addAttribute( transportAttribute.clone() );
 
   // Set flags.
   item.setFlag( "queued" );
@@ -180,101 +163,30 @@ Message::Ptr MessageQueueJob::message() const
   return d->message;
 }
 
-int MessageQueueJob::transportId() const
+DispatchModeAttribute& MessageQueueJob::dispatchModeAttribute()
 {
-  return d->transport;
+  return d->dispatchModeAttribute;
 }
 
-DispatchModeAttribute::DispatchMode MessageQueueJob::dispatchMode() const
+AddressAttribute& MessageQueueJob::addressAttribute()
 {
-  return d->dispatchMode;
+  return d->addressAttribute;
 }
 
-QDateTime MessageQueueJob::sendDueDate() const
+TransportAttribute& MessageQueueJob::transportAttribute()
 {
-  if( d->dispatchMode != DispatchModeAttribute::AfterDueDate ) {
-    kWarning() << "Called when dispatchMode is not AfterDueDate.";
-  }
-  return d->dueDate;
+  return d->transportAttribute;
 }
 
-Collection::Id MessageQueueJob::moveToCollection() const
+SentBehaviourAttribute& MessageQueueJob::sentBehaviourAttribute()
 {
-  if( d->sentBehaviour != SentBehaviourAttribute::MoveToCollection ) {
-    kWarning() << "Called when sentBehaviour is not MoveToCollection.";
-  }
-  return d->moveToCollection;
-}
-
-QString MessageQueueJob::from() const
-{
-  return d->from;
-}
-
-QStringList MessageQueueJob::to() const
-{
-  return d->to;
-}
-
-QStringList MessageQueueJob::cc() const
-{
-  return d->cc;
-}
-
-QStringList MessageQueueJob::bcc() const
-{
-  return d->bcc;
+  return d->sentBehaviourAttribute;
 }
 
 void MessageQueueJob::setMessage( Message::Ptr message )
-{
+{                                                                                                             
   d->message = message;
-}
-
-void MessageQueueJob::setTransportId( int id )
-{
-  d->transport = id;
-}
-
-void MessageQueueJob::setDispatchMode( DispatchModeAttribute::DispatchMode mode )
-{
-  d->dispatchMode = mode;
-}
-
-void MessageQueueJob::setDueDate( const QDateTime &date )
-{
-  d->dueDate = date;
-}
-
-void MessageQueueJob::setSentBehaviour( SentBehaviourAttribute::SentBehaviour beh )
-{
-  d->sentBehaviour = beh;
-}
-
-void MessageQueueJob::setMoveToCollection( Collection::Id cid )
-{
-  d->moveToCollection = cid;
-}
-
-void MessageQueueJob::setFrom( const QString &from )
-{
-  d->from = from;
-}
-
-void MessageQueueJob::setTo( const QStringList &to )
-{
-  d->to = to;
-}
-
-void MessageQueueJob::setCc( const QStringList &cc )
-{
-  d->cc = cc;
-}
-
-void MessageQueueJob::setBcc( const QStringList &bcc )
-{
-  d->bcc = bcc;
-}
+}     
 
 void MessageQueueJob::start()
 {

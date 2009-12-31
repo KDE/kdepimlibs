@@ -164,24 +164,21 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     */
     void createDefaultTransport();
 
+    /// Describes when to show the transport creation dialog
+    enum ShowCondition {
+      Always,              ///< Show the transport creation dialog unconditionally
+      IfNoTransportExists  ///< Only show the transport creation dialog if no transport currently
+                           ///  exists. Ask the user if he wants to add a transport in the other case.
+    };
+
     /**
       Shows a dialog for creating and configuring a new transport.
       @param parent Parent widget of the dialog.
+      @param showCondition the condition under which the dialog is shown at all
       @return True if a new transport has been created and configured.
       @since 4.4
     */
-    bool showNewTransportDialog( QWidget *parent );
-    //TODO_AKONADI_REVIEW: rename to showTransportCreationDialog()
-
-    /**
-      If no transport exists, asks the user to create and configure one.
-      Returns true if a transport exists or the user created one. Otherwise
-      returns false.
-      @param parent Parent widget of the dialog.
-      @since 4.4
-    */
-    bool promptCreateTransportIfNoneExists( QWidget *parent );
-    //TODO_AKONADI_REVIEW: merge the above methods, add enum 'Always' and 'IfNoneExists'
+    bool showTransportCreationDialog( QWidget *parent, ShowCondition showCondition = Always );
 
     /**
       Open a configuration dialog for an existing transport.
@@ -285,29 +282,22 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     */
     TransportManager();
 
-  //TODO_AKONADI_REVIEW: move private methods and slots to private class
   private:
-    void readConfig();
-    void writeConfig();
-    void fillTypes();
-    void emitChangesCommitted();
-    int createId() const;
-    void prepareWallet();
-    void validateDefault();
-    void migrateToWallet();
 
-  private Q_SLOTS:
-    void slotTransportsChanged();
-    void slotWalletOpened( bool success );
-    void dbusServiceOwnerChanged( const QString &service,
-                                  const QString &oldOwner,
-                                  const QString &newOwner );
-    void agentTypeAdded( const Akonadi::AgentType &atype );
-    void agentTypeRemoved( const Akonadi::AgentType &atype );
-    void jobResult( KJob *job );
+    // These are used by our friend, Transport
+    void emitChangesCommitted();
 
   private:
     Private *const d;
+
+    Q_PRIVATE_SLOT( d, void slotTransportsChanged() )
+    Q_PRIVATE_SLOT( d, void slotWalletOpened( bool success ) )
+    Q_PRIVATE_SLOT( d, void dbusServiceOwnerChanged( const QString &service,
+                                                     const QString &oldOwner,
+                                                     const QString &newOwner ) )
+    Q_PRIVATE_SLOT( d, void agentTypeAdded( const Akonadi::AgentType &atype ) )
+    Q_PRIVATE_SLOT( d, void agentTypeRemoved( const Akonadi::AgentType &atype ) )
+    Q_PRIVATE_SLOT( d, void jobResult( KJob *job ) )
 };
 
 } // namespace MailTransport

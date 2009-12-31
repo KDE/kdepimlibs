@@ -68,9 +68,9 @@ bool TransportType::isValid() const
   }
 }
 
-int TransportType::type() const
+TransportBase::EnumType::type TransportType::type() const
 {
-  return d->mType;
+  return static_cast<TransportBase::EnumType::type>( d->mType );
 }
 
 QString TransportType::name() const

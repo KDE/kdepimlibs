@@ -33,11 +33,10 @@ class DispatchModeAttribute::Private
     QDateTime mDueDate;
 };
 
-DispatchModeAttribute::DispatchModeAttribute( DispatchMode mode, const QDateTime &date )
+DispatchModeAttribute::DispatchModeAttribute( DispatchMode mode )
   : d( new Private )
 {
   d->mMode = mode;
-  d->mDueDate = date;
 }
 
 DispatchModeAttribute::~DispatchModeAttribute()
@@ -47,7 +46,9 @@ DispatchModeAttribute::~DispatchModeAttribute()
 
 DispatchModeAttribute *DispatchModeAttribute::clone() const
 {
-  return new DispatchModeAttribute( d->mMode, d->mDueDate );
+  DispatchModeAttribute * const cloned = new DispatchModeAttribute( d->mMode );
+  cloned->setSendAfter( d->mDueDate );
+  return cloned;
 }
 
 QByteArray DispatchModeAttribute::type() const
@@ -59,9 +60,16 @@ QByteArray DispatchModeAttribute::type() const
 QByteArray DispatchModeAttribute::serialized() const
 {
   switch( d->mMode ) {
-    case Immediately: return "immediately";
-    case AfterDueDate: return "after" + d->mDueDate.toString(Qt::ISODate).toLatin1();
-    case Never: return "never";
+    case Automatic:
+    {
+      if ( !d->mDueDate.isValid() ) {
+        return "immediately";
+      }
+      else {
+        return "after" + d->mDueDate.toString( Qt::ISODate ).toLatin1();
+      }
+    }
+    case Manual: return "never";
   }
 
   Q_ASSERT( false );
@@ -72,11 +80,11 @@ void DispatchModeAttribute::deserialize( const QByteArray &data )
 {
   d->mDueDate = QDateTime();
   if ( data == "immediately" ) {
-    d->mMode = Immediately;
+    d->mMode = Automatic;
   } else if ( data == "never" ) {
-    d->mMode = Never;
+    d->mMode = Manual;
   } else if ( data.startsWith( QByteArray( "after" ) ) ) {
-    d->mMode = AfterDueDate;
+    d->mMode = Automatic;
     d->mDueDate = QDateTime::fromString( QString::fromLatin1( data.mid(5) ), Qt::ISODate );
     // NOTE: 5 is the strlen of "after".
   } else {
@@ -94,12 +102,12 @@ void DispatchModeAttribute::setDispatchMode( DispatchMode mode )
   d->mMode = mode;
 }
 
-QDateTime DispatchModeAttribute::dueDate() const
+QDateTime DispatchModeAttribute::sendAfter() const
 {
   return d->mDueDate;
 }
 
-void DispatchModeAttribute::setDueDate( const QDateTime &date )
+void DispatchModeAttribute::setSendAfter( const QDateTime &date )
 {
   d->mDueDate = date;
 }

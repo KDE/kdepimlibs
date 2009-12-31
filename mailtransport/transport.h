@@ -145,8 +145,9 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     */
     void migrateToWallet();
 
-    //TODO_AKONADI_REVIEW: move to private class
   private Q_SLOTS:
+
+    // Used by our friend, TransportManager
     void readPassword();
 
   private:

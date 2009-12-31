@@ -18,8 +18,9 @@
 */
 
 #include "dispatcherinterface.h"
+#include "dispatcherinterface_p.h"
 
-#include "outboxactions.h"
+#include "outboxactions_p.h"
 
 #include <KDebug>
 #include <KGlobal>
@@ -33,33 +34,7 @@
 using namespace Akonadi;
 using namespace MailTransport;
 
-/**
-  @internal
-*/
-class MailTransport::DispatcherInterfacePrivate
-{
-  public:
-    DispatcherInterfacePrivate();
-    ~DispatcherInterfacePrivate();
-
-    DispatcherInterface *instance;
-
-    // slots
-    void massModifyResult( KJob *job );
-
-};
-
 K_GLOBAL_STATIC( DispatcherInterfacePrivate, sInstance )
-
-DispatcherInterfacePrivate::DispatcherInterfacePrivate()
-  : instance( new DispatcherInterface( this ) )
-{
-}
-
-DispatcherInterfacePrivate::~DispatcherInterfacePrivate()
-{
-  delete instance;
-}
 
 void DispatcherInterfacePrivate::massModifyResult( KJob *job )
 {
@@ -71,14 +46,8 @@ void DispatcherInterfacePrivate::massModifyResult( KJob *job )
   }
 }
 
-DispatcherInterface::DispatcherInterface( DispatcherInterfacePrivate *dd )
-  : QObject(), d( dd )
+DispatcherInterface::DispatcherInterface()
 {
-}
-
-DispatcherInterface *DispatcherInterface::self()
-{
-  return sInstance->instance;
 }
 
 AgentInstance DispatcherInterface::dispatcherInstance() const
@@ -99,8 +68,8 @@ void DispatcherInterface::dispatchManually()
     return;
   }
 
-  FilterActionJob *mjob = new FilterActionJob( outbox, new SendQueuedAction, this );
-  connect( mjob, SIGNAL(result(KJob*)), this, SLOT(massModifyResult(KJob*)) );
+  FilterActionJob *mjob = new FilterActionJob( outbox, new SendQueuedAction, sInstance );
+  QObject::connect( mjob, SIGNAL(result(KJob*)), sInstance, SLOT(massModifyResult(KJob*)) );
 }
 
 void DispatcherInterface::retryDispatching()
@@ -111,8 +80,8 @@ void DispatcherInterface::retryDispatching()
     return;
   }
 
-  FilterActionJob *mjob = new FilterActionJob( outbox, new ClearErrorAction, this );
-  connect( mjob, SIGNAL(result(KJob*)), this, SLOT(massModifyResult(KJob*)) );
+  FilterActionJob *mjob = new FilterActionJob( outbox, new ClearErrorAction, sInstance );
+  QObject::connect( mjob, SIGNAL(result(KJob*)), sInstance, SLOT(massModifyResult(KJob*)) );
 }
 
-#include "dispatcherinterface.moc"
+#include "dispatcherinterface_p.moc"

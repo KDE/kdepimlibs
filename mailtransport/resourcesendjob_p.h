@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef MAILTRANSPORT_RESOURCESENDJOB_H
-#define MAILTRANSPORT_RESOURCESENDJOB_H
+#ifndef MAILTRANSPORT_RESOURCESENDJOB_P_H
+#define MAILTRANSPORT_RESOURCESENDJOB_P_H
 
 #include <mailtransport/transportjob.h>
 
@@ -28,7 +28,6 @@ namespace MailTransport {
 
 class ResourceSendJobPrivate;
 
-//TODO_AKONADI_REVIEW: make this class private api
 /**
   Mail transport job for an Akonadi resource-based transport.
 
@@ -42,7 +41,7 @@ class ResourceSendJobPrivate;
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class MAILTRANSPORT_EXPORT_DEPRECATED ResourceSendJob : public TransportJob
+class MAILTRANSPORT_DEPRECATED ResourceSendJob : public TransportJob
 {
   Q_OBJECT
   public:

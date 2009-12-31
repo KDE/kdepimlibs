@@ -75,15 +75,15 @@ MessageQueuer::MessageQueuer()
 void MessageQueuer::sendNowClicked()
 {
   MessageQueueJob *qjob = createQueueJob();
-  kDebug() << "DispatchMode default (Immediately).";
+  kDebug() << "DispatchMode default (Automatic).";
   qjob->start();
 }
 
 void MessageQueuer::sendQueuedClicked()
 {
   MessageQueueJob *qjob = createQueueJob();
-  kDebug() << "DispatchMode Never.";
-  qjob->setDispatchMode( DispatchModeAttribute::Never );
+  kDebug() << "DispatchMode Manual.";
+  qjob->dispatchModeAttribute().setDispatchMode( DispatchModeAttribute::Manual );
   qjob->start();
 }
 
@@ -104,8 +104,8 @@ void MessageQueuer::sendOnDateClicked()
   }
   kDebug() << "DispatchMode AfterDueDate" << dt->dateTime();
   MessageQueueJob *qjob = createQueueJob();
-  qjob->setDispatchMode( DispatchModeAttribute::AfterDueDate );
-  qjob->setDueDate( dt->dateTime() );
+  qjob->dispatchModeAttribute().setDispatchMode( DispatchModeAttribute::Automatic );
+  qjob->dispatchModeAttribute().setSendAfter( dt->dateTime() );
   qjob->start();
   delete dialog;
 }
@@ -120,13 +120,13 @@ MessageQueueJob *MessageQueuer::createQueueJob()
 
   MessageQueueJob *job = new MessageQueueJob();
   job->setMessage( msg );
-  job->setTransportId( mComboBox->currentTransportId() );
+  job->transportAttribute().setTransportId( mComboBox->currentTransportId() );
   // default dispatch mode
   // default sent-mail collection
-  job->setFrom( mSenderEdit->text() );
-  job->setTo( mToEdit->text().isEmpty() ? QStringList() : mToEdit->text().split( ',' ) );
-  job->setCc( mCcEdit->text().isEmpty() ? QStringList() : mCcEdit->text().split( ',' ) );
-  job->setBcc( mBccEdit->text().isEmpty() ? QStringList() : mBccEdit->text().split( ',' ) );
+  job->addressAttribute().setFrom( mSenderEdit->text() );
+  job->addressAttribute().setTo( mToEdit->text().isEmpty() ? QStringList() : mToEdit->text().split( ',' ) );
+  job->addressAttribute().setCc( mCcEdit->text().isEmpty() ? QStringList() : mCcEdit->text().split( ',' ) );
+  job->addressAttribute().setBcc( mBccEdit->text().isEmpty() ? QStringList() : mBccEdit->text().split( ',' ) );
 
   connect( job, SIGNAL(result(KJob*)),
            SLOT(jobResult(KJob*)) );

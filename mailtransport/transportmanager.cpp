@@ -19,7 +19,7 @@
 
 #include "transportmanager.h"
 #include "addtransportdialog.h"
-#include "resourcesendjob.h"
+#include "resourcesendjob_p.h"
 #include "mailtransport_defs.h"
 #include "sendmailconfigwidget.h"
 #include "sendmailjob.h"
@@ -79,6 +79,24 @@ class TransportManager::Private
     int defaultTransportId;
     bool isMainInstance;
     QList<TransportJob *> walletQueue;
+
+    void readConfig();
+    void writeConfig();
+    void fillTypes();
+    int createId() const;
+    void prepareWallet();
+    void validateDefault();
+    void migrateToWallet();
+
+    // Slots
+    void slotTransportsChanged();
+    void slotWalletOpened( bool success );
+    void dbusServiceOwnerChanged( const QString &service,
+                                  const QString &oldOwner,
+                                  const QString &newOwner );
+    void agentTypeAdded( const Akonadi::AgentType &atype );
+    void agentTypeRemoved( const Akonadi::AgentType &atype );
+    void jobResult( KJob *job );
 };
 
 class StaticTransportManager : public TransportManager
@@ -120,7 +138,7 @@ TransportManager::TransportManager()
            SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
 
-  fillTypes();
+  d->fillTypes();
 }
 
 TransportManager::~TransportManager()
@@ -133,7 +151,7 @@ TransportManager *TransportManager::self()
 {
   if ( !sSelf ) {
     sSelf = new StaticTransportManager;
-    sSelf->readConfig();
+    sSelf->d->readConfig();
   }
   return sSelf;
 }
@@ -177,7 +195,7 @@ TransportType::List TransportManager::types() const
 
 Transport *TransportManager::createTransport() const
 {
-  int id = createId();
+  int id = d->createId();
   Transport *t = new Transport( QString::number( id ) );
   t->setId( id );
   return t;
@@ -192,7 +210,7 @@ void TransportManager::addTransport( Transport *transport )
 
   kDebug() << "Added transport" << transport;
   d->transports.append( transport );
-  validateDefault();
+  d->validateDefault();
   emitChangesCommitted();
 }
 
@@ -225,29 +243,28 @@ void TransportManager::createDefaultTransport()
   }
 }
 
-bool TransportManager::showNewTransportDialog( QWidget *parent )
+bool TransportManager::showTransportCreationDialog( QWidget *parent,
+                                                    ShowCondition showCondition )
 {
-  QPointer<AddTransportDialog> dialog = new AddTransportDialog( parent );
-  bool accepted = ( dialog->exec() == QDialog::Accepted );
-  delete dialog;
-  return accepted;
-}
+  if ( showCondition == IfNoTransportExists ) {
+    if ( !isEmpty() ) {
+      return true;
+    }
 
-bool TransportManager::promptCreateTransportIfNoneExists( QWidget *parent )
-{
-  if ( !isEmpty() ) {
-    return true;
-  }
-
-  const int response = KMessageBox::messageBox( parent,
+    const int response = KMessageBox::messageBox( parent,
                    KMessageBox::WarningContinueCancel,
                    i18n( "You must create an outgoing account before sending." ),
                    i18n( "Create Account Now?" ),
                    KGuiItem( i18n( "Create Account Now" ) ) );
-  if ( response == KMessageBox::Continue ) {
-    return showNewTransportDialog( parent );
+    if ( response != KMessageBox::Continue ) {
+      return false;
+    }
   }
-  return false;
+
+  QPointer<AddTransportDialog> dialog = new AddTransportDialog( parent );
+  const bool accepted = ( dialog->exec() == QDialog::Accepted );
+  delete dialog;
+  return accepted;
 }
 
 bool TransportManager::configureTransport( Transport *transport, QWidget *parent )
@@ -378,7 +395,7 @@ void TransportManager::setDefaultTransport( int id )
     return;
   }
   d->defaultTransportId = id;
-  writeConfig();
+  d->writeConfig();
 }
 
 void TransportManager::removeTransport( int id )
@@ -400,21 +417,21 @@ void TransportManager::removeTransport( int id )
   }
 
   d->transports.removeAll( t );
-  validateDefault();
+  d->validateDefault();
   QString group = t->currentGroup();
   delete t;
   d->config->deleteGroup( group );
-  writeConfig();
+  d->writeConfig();
 
 }
 
-void TransportManager::readConfig()
+void TransportManager::Private::readConfig()
 {
-  QList<Transport *> oldTransports = d->transports;
-  d->transports.clear();
+  QList<Transport *> oldTransports = transports;
+  transports.clear();
 
   QRegExp re( QLatin1String( "^Transport (.+)$" ) );
-  QStringList groups = d->config->groupList().filter( re );
+  QStringList groups = config->groupList().filter( re );
   foreach ( const QString &s, groups ) {
     re.indexIn( s );
     Transport *t = 0;
@@ -437,22 +454,22 @@ void TransportManager::readConfig()
       t->setId( createId() );
       t->writeConfig();
     }
-    d->transports.append( t );
+    transports.append( t );
   }
 
   qDeleteAll( oldTransports );
   oldTransports.clear();
 
   // read default transport
-  KConfigGroup group( d->config, "General" );
-  d->defaultTransportId = group.readEntry( "default-transport", 0 );
-  if ( d->defaultTransportId == 0 ) {
+  KConfigGroup group( config, "General" );
+  defaultTransportId = group.readEntry( "default-transport", 0 );
+  if ( defaultTransportId == 0 ) {
     // migrated default transport contains the name instead
     QString name = group.readEntry( "default-transport", QString() );
     if ( !name.isEmpty() ) {
-      Transport *t = transportByName( name, false );
+      Transport *t = TransportManager::self()->transportByName( name, false );
       if ( t ) {
-        d->defaultTransportId = t->id();
+        defaultTransportId = t->id();
         writeConfig();
       }
     }
@@ -461,17 +478,17 @@ void TransportManager::readConfig()
   migrateToWallet();
 }
 
-void TransportManager::writeConfig()
+void TransportManager::Private::writeConfig()
 {
-  KConfigGroup group( d->config, "General" );
-  group.writeEntry( "default-transport", d->defaultTransportId );
-  d->config->sync();
-  emitChangesCommitted();
+  KConfigGroup group( config, "General" );
+  group.writeEntry( "default-transport", defaultTransportId );
+  config->sync();
+  TransportManager::self()->emitChangesCommitted();
 }
 
-void TransportManager::fillTypes()
+void TransportManager::Private::fillTypes()
 {
-  Q_ASSERT( d->types.isEmpty() );
+  Q_ASSERT( types.isEmpty() );
 
   // SMTP.
   {
@@ -479,7 +496,7 @@ void TransportManager::fillTypes()
     type.d->mType = Transport::EnumType::SMTP;
     type.d->mName = i18nc( "@option SMTP transport", "SMTP" );
     type.d->mDescription = i18n( "An SMTP server on the Internet" );
-    d->types << type;
+    types << type;
   }
 
   // Sendmail.
@@ -488,7 +505,7 @@ void TransportManager::fillTypes()
     type.d->mType = Transport::EnumType::Sendmail;
     type.d->mName = i18nc( "@option sendmail transport", "Sendmail" );
     type.d->mDescription = i18n( "A local sendmail installation" );
-    d->types << type;
+    types << type;
   }
 
   // All Akonadi resources with MailTransport capability.
@@ -503,19 +520,19 @@ void TransportManager::fillTypes()
         type.d->mAgentType = atype;
         type.d->mName = atype.name();
         type.d->mDescription = atype.description();
-        d->types << type;
+        types << type;
         kDebug() << "Found Akonadi type" << atype.name();
       }
     }
 
     // Watch for appearing and disappearing types.
     connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)),
-        this, SLOT(agentTypeAdded(Akonadi::AgentType)) );
+        TransportManager::self(), SLOT(agentTypeAdded(Akonadi::AgentType)) );
     connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)),
-        this, SLOT(agentTypeRemoved(Akonadi::AgentType)) );
+        TransportManager::self(), SLOT(agentTypeRemoved(Akonadi::AgentType)) );
   }
 
-  kDebug() << "Have SMTP, Sendmail, and" << d->types.count() - 2 << "Akonadi types.";
+  kDebug() << "Have SMTP, Sendmail, and" << types.count() - 2 << "Akonadi types.";
 }
 
 void TransportManager::emitChangesCommitted()
@@ -526,26 +543,26 @@ void TransportManager::emitChangesCommitted()
   emit changesCommitted();
 }
 
-void TransportManager::slotTransportsChanged()
+void TransportManager::Private::slotTransportsChanged()
 {
-  if ( d->myOwnChange && d->appliedChange ) {
-    d->myOwnChange = false;
-    d->appliedChange = false;
+  if ( myOwnChange && appliedChange ) {
+    myOwnChange = false;
+    appliedChange = false;
     return;
   }
 
   kDebug();
-  d->config->reparseConfiguration();
+  config->reparseConfiguration();
   // FIXME: this deletes existing transport objects!
   readConfig();
-  d->appliedChange = true; // to prevent recursion
-  emit transportsChanged();
+  appliedChange = true; // to prevent recursion
+  emit TransportManager::self()->transportsChanged();
 }
 
-int TransportManager::createId() const
+int TransportManager::Private::createId() const
 {
   QList<int> usedIds;
-  foreach ( Transport *t, d->transports ) {
+  foreach ( Transport *t, transports ) {
     usedIds << t->id();
   }
   usedIds << 0; // 0 is default for unknown
@@ -581,19 +598,19 @@ KWallet::Wallet * TransportManager::wallet()
     return 0;
   }
 
-  prepareWallet();
+  d->prepareWallet();
   return d->wallet;
 }
 
-void TransportManager::prepareWallet()
+void TransportManager::Private::prepareWallet()
 {
-  if ( !d->wallet ) {
+  if ( !wallet ) {
     return;
   }
-  if ( !d->wallet->hasFolder( WALLET_FOLDER ) ) {
-    d->wallet->createFolder( WALLET_FOLDER );
+  if ( !wallet->hasFolder( WALLET_FOLDER ) ) {
+    wallet->createFolder( WALLET_FOLDER );
   }
-  d->wallet->setFolder( WALLET_FOLDER );
+  wallet->setFolder( WALLET_FOLDER );
 }
 
 void TransportManager::loadPasswords()
@@ -652,33 +669,33 @@ void TransportManager::loadPasswordsAsync()
   }
 }
 
-void TransportManager::slotWalletOpened( bool success )
+void TransportManager::Private::slotWalletOpened( bool success )
 {
   kDebug();
-  d->walletAsyncOpen = false;
+  walletAsyncOpen = false;
   if ( !success ) {
-    d->walletOpenFailed = true;
-    delete d->wallet;
-    d->wallet = 0;
+    walletOpenFailed = true;
+    delete wallet;
+    wallet = 0;
   } else {
     prepareWallet();
   }
-  loadPasswords();
+  TransportManager::self()->loadPasswords();
 }
 
-void TransportManager::validateDefault()
+void TransportManager::Private::validateDefault()
 {
-  if ( !transportById( d->defaultTransportId, false ) ) {
-    if ( isEmpty() ) {
-      d->defaultTransportId = -1;
+  if ( !TransportManager::self()->transportById( defaultTransportId, false ) ) {
+    if ( TransportManager::self()->isEmpty() ) {
+      defaultTransportId = -1;
     } else {
-      d->defaultTransportId = d->transports.first()->id();
+      defaultTransportId = transports.first()->id();
       writeConfig();
     }
   }
 }
 
-void TransportManager::migrateToWallet()
+void TransportManager::Private::migrateToWallet()
 {
   // check if we tried this already
   static bool firstRun = true;
@@ -688,13 +705,13 @@ void TransportManager::migrateToWallet()
   firstRun = false;
 
   // check if we are the main instance
-  if ( !d->isMainInstance ) {
+  if ( !isMainInstance ) {
     return;
   }
 
   // check if migration is needed
   QStringList names;
-  foreach ( Transport *t, d->transports ) {
+  foreach ( Transport *t, transports ) {
     if ( t->needsWalletMigration() ) {
       names << t->name();
     }
@@ -720,16 +737,16 @@ void TransportManager::migrateToWallet()
   }
 
   // perform migration
-  foreach ( Transport *t, d->transports ) {
+  foreach ( Transport *t, transports ) {
     if ( t->needsWalletMigration() ) {
       t->migrateToWallet();
     }
   }
 }
 
-void TransportManager::dbusServiceOwnerChanged( const QString &service,
-                                                const QString &oldOwner,
-                                                const QString &newOwner )
+void TransportManager::Private::dbusServiceOwnerChanged( const QString &service,
+                                                         const QString &oldOwner,
+                                                         const QString &newOwner )
 {
   Q_UNUSED( oldOwner );
   if ( service == DBUS_SERVICE_NAME && newOwner.isEmpty() ) {
@@ -737,7 +754,7 @@ void TransportManager::dbusServiceOwnerChanged( const QString &service,
   }
 }
 
-void TransportManager::agentTypeAdded( const Akonadi::AgentType &atype )
+void TransportManager::Private::agentTypeAdded( const Akonadi::AgentType &atype )
 {
   using namespace Akonadi;
   if( atype.capabilities().contains( QLatin1String( "MailTransport" ) ) ) {
@@ -746,26 +763,26 @@ void TransportManager::agentTypeAdded( const Akonadi::AgentType &atype )
     type.d->mAgentType = atype;
     type.d->mName = atype.name();
     type.d->mDescription = atype.description();
-    d->types << type;
+    types << type;
     kDebug() << "Added new Akonadi type" << atype.name();
   }
 }
 
-void TransportManager::agentTypeRemoved( const Akonadi::AgentType &atype )
+void TransportManager::Private::agentTypeRemoved( const Akonadi::AgentType &atype )
 {
   using namespace Akonadi;
-  foreach ( const TransportType &type, d->types ) {
+  foreach ( const TransportType &type, types ) {
     if( type.type() == Transport::EnumType::Akonadi &&
         type.agentType() == atype ) {
-      d->types.removeAll( type );
+      types.removeAll( type );
       kDebug() << "Removed Akonadi type" << atype.name();
     }
   }
 }
 
-void TransportManager::jobResult( KJob *job )
+void TransportManager::Private::jobResult( KJob *job )
 {
-  d->walletQueue.removeAll( static_cast<TransportJob*>( job ) );
+  walletQueue.removeAll( static_cast<TransportJob*>( job ) );
 }
 
 #include "transportmanager.moc"

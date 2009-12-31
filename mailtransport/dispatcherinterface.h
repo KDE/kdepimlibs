@@ -22,13 +22,9 @@
 
 #include <mailtransport/mailtransport_export.h>
 
-#include <QtCore/QObject>
-
 #include <akonadi/agentinstance.h>
 
 namespace MailTransport {
-
-class DispatcherInterfacePrivate;
 
 /**
   @short An interface for applications to interact with the dispatcher agent.
@@ -36,33 +32,30 @@ class DispatcherInterfacePrivate;
   This class provides methods such as send queued messages (@see
   dispatchManually) and retry sending (@see retryDispatching).
 
-  This class also takes care of registering the attributes that the MDA and
-  MailTransport use.  The attributes are registered the first time you call
-  self(), so do that early in your application.
+  This class also takes care of registering the attributes that the mail
+  dispatcher agent and MailTransport use.
 
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-//TODO_AKONADI_REVIEW: make private class a QObject based singleton, MDA->MailDispatcherAgent, make class value based
-class MAILTRANSPORT_EXPORT DispatcherInterface : public QObject
+class MAILTRANSPORT_EXPORT DispatcherInterface
 {
-  Q_OBJECT
-
   public:
-    /**
-      Returns the DispatcherInterface instance.
-    */
-    static DispatcherInterface *self();
 
     /**
-      Returns the current instance of the MDA.  May return an invalid
-      AgentInstance in case it cannot find the MDA.
+      Creates a new dispatcher interface.
+    */
+    DispatcherInterface();
+
+    /**
+      Returns the current instance of the mail dispatcher agent. May return an invalid
+      AgentInstance in case it cannot find the mail dispatcher agent.
     */
     Akonadi::AgentInstance dispatcherInstance() const;
 
     /**
-      Looks for messages in the outbox with DispatchMode::Never and marks them
-      DispatchMode::Immediately for sending.
+      Looks for messages in the outbox with DispatchMode::Manual and marks them
+      DispatchMode::Automatic for sending.
     */
     void dispatchManually();
 
@@ -71,16 +64,6 @@ class MAILTRANSPORT_EXPORT DispatcherInterface : public QObject
       queues them again for sending.
     */
     void retryDispatching();
-
-  private:
-    friend class DispatcherInterfacePrivate;
-    DispatcherInterfacePrivate *const d;
-
-    // singleton class; the only instance resides in sInstance->instance
-    DispatcherInterface( DispatcherInterfacePrivate *dd );
-
-    Q_PRIVATE_SLOT( d, void massModifyResult( KJob* ) )
-
 };
 
 } // namespace MailTransport

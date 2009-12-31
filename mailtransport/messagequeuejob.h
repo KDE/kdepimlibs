@@ -24,6 +24,7 @@
 
 #include "dispatchmodeattribute.h"
 #include "sentbehaviourattribute.h"
+#include "transportattribute.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QString>
@@ -32,6 +33,7 @@
 #include <KDE/KCompositeJob>
 
 #include <akonadi/collection.h>
+#include <akonadi/kmime/addressattribute.h>
 
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
@@ -47,20 +49,25 @@ namespace MailTransport {
 
   This is the preferred way for applications to send email.
 
-  This job requires some options to be set before being started.  These are
-  setMessage, setTransportId, setFrom, and one of setTo, setCc, or setBcc.
-  Other settings are optional: setDispatchMode, setSentBehaviour.
+  This job requires some options to be set before being started.  Modify the
+  attributes of this job to change these options.
+ 
+  You need to set the transport of the transport attribute, the from address of
+  the address attribute and one of the to, cc or bcc addresses of the address
+  attribute. Also, you need to call setMessage().
+  Optionally, you can change the dispatch mode attribute or the sent behaviour
+  attribute. 
 
   Example:
   @code
 
   MessageQueueJob *job = new MessageQueueJob( this );
   job->setMessage( msg ); // msg is a Message::Ptr
-  job->setTransportId( TransportManager::self()->defaultTransportId() );
+  job->transportAttribute().setTransportId( TransportManager::self()->defaultTransportId() );
   // Use the default dispatch mode.
   // Use the default sent-behaviour.
-  job->setFrom( from ); // from is a QString
-  job->setTo( to ); // to is a QStringList
+  job->addressAttribute().setFrom( from ); // from is a QString
+  job->addressAttribute().setTo( to ); // to is a QStringList
   connect( job, SIGNAL(result(KJob*)), this, SLOT(jobResult(KJob*)) );
   job->start();
 
@@ -68,6 +75,8 @@ namespace MailTransport {
 
   @see DispatchModeAttribute
   @see SentBehaviourAttribute
+  @see TransportAttribute
+  @see AddressAttribute
 
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
@@ -95,138 +104,35 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
     KMime::Message::Ptr message() const;
 
     /**
-      Returns the transport id to use for sending the message.
-      @see TransportManager.
+      Returns a reference to the dispatch mode attribue for this message.
+      Modify the returned attribute to change the dispatch mode.
     */
-    int transportId() const;
+    DispatchModeAttribute& dispatchModeAttribute();
 
     /**
-      Returns the dispatch mode for this message.
-      @see DispatchModeAttribute.
+      Returns a reference to the address attribue for this message.
+      Modify the returned attribute to change the receivers or the from
+      address.
     */
-    DispatchModeAttribute::DispatchMode dispatchMode() const;
-
-    //TODO_AKONADI_REVIEW: replace the sendDueDate, dispatchMode and from/to methods by getters of the attributes
-    /**
-      Returns the date and time when this message should be sent.
-      Only valid if dispatchMode() is AfterDueDate.
-      @see DispatchModeAttribute.
-    */
-    QDateTime sendDueDate() const;
+    Akonadi::AddressAttribute& addressAttribute();
 
     /**
-      Returns the sent-behaviour of this message.
-      This determines what will happen to the message after it is sent.
-      @see SentBehaviourAttribute.
+      Returns a reference to the transport attribue for this message.
+      Modify the returned attribute to change the transport used for
+      sending the mail.
     */
-    SentBehaviourAttribute::SentBehaviour sentBehaviour() const;
+    TransportAttribute& transportAttribute();
 
     /**
-      Returns the collection to which the message will be moved after it is
-      sent.
-      Only valid if sentBehaviour() is MoveToCollection.
-      @see SentBehaviourAttribute.
+      Returns a reference to the sent behaviour attribue for this message.
+      Modify the returned attribute to change the sent behaviour.
     */
-    Akonadi::Collection::Id moveToCollection() const;
-
-    /**
-      Returns the address of the sender.
-    */
-    QString from() const;
-
-    /**
-      Returns the addresses of the "To:" receivers.
-    */
-    QStringList to() const;
-
-    /**
-      Returns the addresses of the "Cc:" receivers.
-    */
-    QStringList cc() const;
-
-    /**
-      Returns the addresses of the "Bcc:" receivers.
-    */
-    QStringList bcc() const;
+    SentBehaviourAttribute& sentBehaviourAttribute();
 
     /**
       Sets the message to be sent.
     */
     void setMessage( KMime::Message::Ptr message );
-
-    /**
-      Sets the transport id to use for sending the message.  If you want to
-      use the default transport, you must specify so explicitly:
-
-      @code
-      job->setTransportId( TransportManager::self()->defaultTransportId() );
-      @endcode
-
-      @see TransportManager.
-    */
-    void setTransportId( int id );
-
-    /**
-      Sets the dispatch mode for this message.
-      The default dispatch mode is Immediately (meaning the message will be
-      sent as soon as possible).
-      @see DispatchModeAttribute.
-    */
-    void setDispatchMode( DispatchModeAttribute::DispatchMode mode );
-
-    /**
-      Sets the date and time when this message should be sent.
-
-      @code
-      job->setDispatchMode( DispatchModeAttribute::AfterDueDate );
-      job->setDueDate( ... );
-      @endcode
-
-      @see DispatchModeAttribute.
-    */
-    void setDueDate( const QDateTime &date );
-
-    /**
-      Sets the sent-behaviour of this message.
-      This determines what will happen to the message after it is sent.
-      The default sent-behaviour is MoveToDefaultSentCollection, which moves
-      the message to the default sent-mail collection.
-      @see SentBehaviourAttribute.
-    */
-    void setSentBehaviour( SentBehaviourAttribute::SentBehaviour beh );
-
-    /**
-      Sets the collection to which the message will be moved after it is
-      sent.
-
-      @code
-      job->setSentBehaviour( SentBehaviourAttribute::MoveToCollection );
-      job->setMoveToCollection( ... );
-      @endcode
-
-      @see SentBehaviourAttribute.
-    */
-    void setMoveToCollection( Akonadi::Collection::Id cid );
-
-    /**
-      Sets the address of the sender.
-    */
-    void setFrom( const QString &from );
-
-    /**
-      Sets the addresses of the "To:" receivers."
-    */
-    void setTo( const QStringList &to );
-
-    /**
-      Sets the addresses of the "Cc:" receivers."
-    */
-    void setCc( const QStringList &cc );
-
-    /**
-      Sets the addresses of the "Bcc:" receivers."
-    */
-    void setBcc( const QStringList &bcc );
 
     /**
       Creates the item and places it in the outbox.

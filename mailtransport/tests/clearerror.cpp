@@ -27,10 +27,9 @@
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
 #include <mailtransport/filteractionjob.h>
+#include <mailtransport/dispatcherinterface.h>
 #include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/kmime/specialmailcollectionsrequestjob.h>
-
-#include <mailtransport/outboxactions.h>
 
 using namespace Akonadi;
 using namespace MailTransport;
@@ -48,27 +47,7 @@ Runner::Runner()
 
 void Runner::checkFolders()
 {
-  Collection outbox = SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
-  kDebug() << "Got outbox" << outbox.id();
-
-  if( !outbox.isValid() ) {
-    kError() << "Failed to get outbox folder.";
-    KApplication::exit( 1 );
-  }
-
-  FilterActionJob *fjob = new FilterActionJob( outbox, new ClearErrorAction, this );
-  connect( fjob, SIGNAL(result(KJob*)), this, SLOT(jobResult(KJob*)) );
-}
-
-void Runner::jobResult( KJob *job )
-{
-  if( job->error() ) {
-    kDebug() << "Job error:" << job->errorString();
-    KApplication::exit( 2 );
-  } else {
-    kDebug() << "Job success.";
-    KApplication::exit( 0 );
-  }
+  DispatcherInterface().retryDispatching();
 }
 
 int main( int argc, char **argv )

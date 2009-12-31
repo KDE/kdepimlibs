@@ -16,29 +16,29 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+#ifndef MAILTRANSPORT_DISPATCHERINTERFACE_P_H
+#define MAILTRANSPORT_DISPATCHERINTERFACE_P_H
 
-#ifndef SENDQUEUED_H
-#define SENDQUEUED_H
-
-#include <QObject>
+#include <QtCore/QObject>
 
 class KJob;
 
+namespace MailTransport {
+
 /**
-  This class uses the SendQueuedAction to mark all queued messages in the
-  outbox for immediate sending.
+  @internal
 */
-class Runner : public QObject
+class DispatcherInterfacePrivate : public QObject
 {
   Q_OBJECT
 
   public:
-    Runner();
 
-  private slots:
-    void checkFolders();
+  public Q_SLOTS:
+    void massModifyResult( KJob *job );
 
 };
 
+}
 
 #endif

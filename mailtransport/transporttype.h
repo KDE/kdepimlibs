@@ -92,11 +92,9 @@ class MAILTRANSPORT_EXPORT TransportType
 
     /**
       @internal
-      Returns the numeric type of the transport.  This corresponds to
-      Transport::EnumType::type.
+      Returns the type of the transport.
     */
-    //TODO_AKONADI_REVIEW: should this be Transport::EnumType::type instead of int?
-    int type() const;
+    TransportBase::EnumType::type type() const;
 
     /**
       Returns the i18n'ed name of the transport type.

@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "outboxactions.h"
+#include "outboxactions_p.h"
 
 #include "dispatchmodeattribute.h"
 #include "errorattribute.h"
@@ -56,13 +56,13 @@ bool SendQueuedAction::itemAccepted( const Item &item ) const
     return false;
   }
 
-  return item.attribute<DispatchModeAttribute>()->dispatchMode() == DispatchModeAttribute::Never;
+  return item.attribute<DispatchModeAttribute>()->dispatchMode() == DispatchModeAttribute::Manual;
 }
 
 Job *SendQueuedAction::itemAction( const Item &item ) const
 {
   Item cp = item;
-  cp.addAttribute( new DispatchModeAttribute ); // defaults to Immediately
+  cp.addAttribute( new DispatchModeAttribute ); // defaults to Automatic
   return new ItemModifyJob( cp );
 }
 

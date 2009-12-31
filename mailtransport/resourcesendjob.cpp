@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "resourcesendjob.h"
+#include "resourcesendjob_p.h"
 #include "messagequeuejob.h"
 #include "transport.h"
 
@@ -79,17 +79,17 @@ void ResourceSendJob::doStart()
   msg->setContent( data() );
   MessageQueueJob *job = new MessageQueueJob;
   job->setMessage( msg );
-  job->setTransportId( transport()->id() );
+  job->transportAttribute().setTransportId( transport()->id() );
   // Default dispatch mode (send now).
   // Move to default sent-mail collection.
-  job->setFrom( sender() );
-  job->setTo( to() );
-  job->setCc( cc() );
-  job->setBcc( bcc() );
+  job->addressAttribute().setFrom( sender() );
+  job->addressAttribute().setTo( to() );
+  job->addressAttribute().setCc( cc() );
+  job->addressAttribute().setBcc( bcc() );
   addSubjob( job );
   // Once the item is in the outbox, there is nothing more we can do.
   connect( job, SIGNAL(result(KJob*)), this, SLOT(slotEmitResult()) );
   job->start();
 }
 
-#include "resourcesendjob.moc"
+#include "resourcesendjob_p.moc"
