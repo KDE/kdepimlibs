@@ -96,7 +96,7 @@ void TransportManagementWidget::Private::updateButtonState()
 
 void TransportManagementWidget::Private::addClicked()
 {
-  TransportManager::self()->showNewTransportDialog( q );
+  TransportManager::self()->showTransportCreationDialog( q );
 }
 
 void TransportManagementWidget::Private::editClicked()

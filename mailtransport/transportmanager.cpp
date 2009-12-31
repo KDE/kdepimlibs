@@ -225,29 +225,28 @@ void TransportManager::createDefaultTransport()
   }
 }
 
-bool TransportManager::showNewTransportDialog( QWidget *parent )
+bool TransportManager::showTransportCreationDialog( QWidget *parent,
+                                                    ShowCondition showCondition )
 {
-  QPointer<AddTransportDialog> dialog = new AddTransportDialog( parent );
-  bool accepted = ( dialog->exec() == QDialog::Accepted );
-  delete dialog;
-  return accepted;
-}
+  if ( showCondition == IfNoTransportExists ) {
+    if ( !isEmpty() ) {
+      return true;
+    }
 
-bool TransportManager::promptCreateTransportIfNoneExists( QWidget *parent )
-{
-  if ( !isEmpty() ) {
-    return true;
-  }
-
-  const int response = KMessageBox::messageBox( parent,
+    const int response = KMessageBox::messageBox( parent,
                    KMessageBox::WarningContinueCancel,
                    i18n( "You must create an outgoing account before sending." ),
                    i18n( "Create Account Now?" ),
                    KGuiItem( i18n( "Create Account Now" ) ) );
-  if ( response == KMessageBox::Continue ) {
-    return showNewTransportDialog( parent );
+    if ( response != KMessageBox::Continue ) {
+      return false;
+    }
   }
-  return false;
+
+  QPointer<AddTransportDialog> dialog = new AddTransportDialog( parent );
+  const bool accepted = ( dialog->exec() == QDialog::Accepted );
+  delete dialog;
+  return accepted;
 }
 
 bool TransportManager::configureTransport( Transport *transport, QWidget *parent )
