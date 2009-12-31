@@ -79,11 +79,11 @@ void MessageQueueJobTest::testValidMessages()
 
   // send a valid message using the default transport
   MessageQueueJob *qjob = new MessageQueueJob;
-  qjob->setTransportId( tid );
+  qjob->transportAttribute().setTransportId( tid );
   Message::Ptr msg = Message::Ptr( new Message );
   msg->setContent( "\nThis is message #1 from the MessageQueueJobTest unit test.\n" );
   qjob->setMessage( msg );
-  qjob->setTo( SPAM_ADDRESS );
+  qjob->addressAttribute().setTo( SPAM_ADDRESS );
   verifyOutboxContents( 0 );
   AKVERIFYEXEC( qjob );
 
@@ -138,8 +138,8 @@ void MessageQueueJobTest::testInvalidMessages()
 
   // without message
   job = new MessageQueueJob;
-  job->setTransportId( TransportManager::self()->defaultTransportId() );
-  job->setTo( SPAM_ADDRESS );
+  job->transportAttribute().setTransportId( TransportManager::self()->defaultTransportId() );
+  job->addressAttribute().setTo( SPAM_ADDRESS );
   QVERIFY( !job->exec() );
 
   // without recipients
@@ -147,7 +147,7 @@ void MessageQueueJobTest::testInvalidMessages()
   msg = Message::Ptr( new Message );
   msg->setContent( "\nThis is a message sent from the MessageQueueJobTest unittest. This shouldn't have been sent.\n" );
   job->setMessage( msg );
-  job->setTransportId( TransportManager::self()->defaultTransportId() );
+  job->transportAttribute().setTransportId( TransportManager::self()->defaultTransportId() );
   QVERIFY( !job->exec() );
 
   // without transport
@@ -155,7 +155,7 @@ void MessageQueueJobTest::testInvalidMessages()
   msg = Message::Ptr( new Message );
   msg->setContent( "\nThis is a message sent from the MessageQueueJobTest unittest. This shouldn't have been sent.\n" );
   job->setMessage( msg );
-  job->setTo( SPAM_ADDRESS );
+  job->addressAttribute().setTo( SPAM_ADDRESS );
   QVERIFY( !job->exec() );
 
   // with MoveToCollection and no sent-mail folder
@@ -163,8 +163,8 @@ void MessageQueueJobTest::testInvalidMessages()
   msg = Message::Ptr( new Message );
   msg->setContent( "\nThis is a message sent from the MessageQueueJobTest unittest. This shouldn't have been sent.\n" );
   job->setMessage( msg );
-  job->setTo( SPAM_ADDRESS );
-  job->setSentBehaviour( SentBehaviourAttribute::MoveToCollection );
+  job->addressAttribute().setTo( SPAM_ADDRESS );
+  job->sentBehaviourAttribute().setSentBehaviour( SentBehaviourAttribute::MoveToCollection );
   QVERIFY( !job->exec() );
 }
 
