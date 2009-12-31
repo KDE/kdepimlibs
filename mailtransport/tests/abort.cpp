@@ -42,7 +42,7 @@ Runner::Runner()
 
 void Runner::sendAbort()
 {
-  const AgentInstance mda = DispatcherInterface::self()->dispatcherInstance();
+  const AgentInstance mda = DispatcherInterface().dispatcherInstance();
   if( !mda.isValid() ) {
     kDebug() << "Invalid instance; waiting.";
     QTimer::singleShot( 1000, this, SLOT(sendAbort()) );

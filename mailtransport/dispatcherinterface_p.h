@@ -34,11 +34,6 @@ class DispatcherInterfacePrivate : public QObject
 
   public:
 
-    DispatcherInterfacePrivate();
-    ~DispatcherInterfacePrivate();
-
-    DispatcherInterface *instance;
-
   public Q_SLOTS:
     void massModifyResult( KJob *job );
 

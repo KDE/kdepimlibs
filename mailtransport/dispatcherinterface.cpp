@@ -36,16 +36,6 @@ using namespace MailTransport;
 
 K_GLOBAL_STATIC( DispatcherInterfacePrivate, sInstance )
 
-DispatcherInterfacePrivate::DispatcherInterfacePrivate()
-  : instance( new DispatcherInterface() )
-{
-}
-
-DispatcherInterfacePrivate::~DispatcherInterfacePrivate()
-{
-  delete instance;
-}
-
 void DispatcherInterfacePrivate::massModifyResult( KJob *job )
 {
   // Nothing to do here, really.  If the job fails, the user can retry it.
@@ -58,11 +48,6 @@ void DispatcherInterfacePrivate::massModifyResult( KJob *job )
 
 DispatcherInterface::DispatcherInterface()
 {
-}
-
-DispatcherInterface *DispatcherInterface::self()
-{
-  return sInstance->instance;
 }
 
 AgentInstance DispatcherInterface::dispatcherInstance() const

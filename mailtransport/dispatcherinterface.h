@@ -33,8 +33,7 @@ namespace MailTransport {
   dispatchManually) and retry sending (@see retryDispatching).
 
   This class also takes care of registering the attributes that the mail
-  dispatcher agent and MailTransport use.  The attributes are registered
-  the first time you call self(), so do that early in your application.
+  dispatcher agent and MailTransport use.
 
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
@@ -43,10 +42,7 @@ class MAILTRANSPORT_EXPORT DispatcherInterface
 {
   public:
 
-    /**
-      Returns the DispatcherInterface instance.
-    */
-    static DispatcherInterface *self();
+    DispatcherInterface();
 
     /**
       Returns the current instance of the mail dispatcher agent. May return an invalid
@@ -65,12 +61,6 @@ class MAILTRANSPORT_EXPORT DispatcherInterface
       queues them again for sending.
     */
     void retryDispatching();
-
-  private:
-
-    DispatcherInterface();
-    friend class DispatcherInterfacePrivate;
-    Q_DISABLE_COPY( DispatcherInterface )
 };
 
 } // namespace MailTransport

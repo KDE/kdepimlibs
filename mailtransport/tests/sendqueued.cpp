@@ -47,7 +47,7 @@ Runner::Runner()
 
 void Runner::checkFolders()
 {
-  DispatcherInterface::self()->dispatchManually();
+  DispatcherInterface().dispatchManually();
 }
 
 int main( int argc, char **argv )
