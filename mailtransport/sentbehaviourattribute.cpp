@@ -30,10 +30,10 @@ class SentBehaviourAttribute::Private
 {
   public:
     SentBehaviour mBehaviour;
-    Akonadi::Collection::Id mMoveToCollection;
+    Akonadi::Collection mMoveToCollection;
 };
 
-SentBehaviourAttribute::SentBehaviourAttribute( SentBehaviour beh, Collection::Id moveToCollection )
+SentBehaviourAttribute::SentBehaviourAttribute( SentBehaviour beh, Collection moveToCollection )
   : d( new Private )
 {
   d->mBehaviour = beh;
@@ -60,7 +60,7 @@ QByteArray SentBehaviourAttribute::serialized() const
 {
   switch( d->mBehaviour ) {
     case Delete: return "delete";
-    case MoveToCollection: return "moveTo" + QByteArray::number( d->mMoveToCollection );
+    case MoveToCollection: return "moveTo" + QByteArray::number( d->mMoveToCollection.id() );
     case MoveToDefaultSentCollection: return "moveToDefault";
   }
 
@@ -70,14 +70,14 @@ QByteArray SentBehaviourAttribute::serialized() const
 
 void SentBehaviourAttribute::deserialize( const QByteArray &data )
 {
-  d->mMoveToCollection = -1;
+  d->mMoveToCollection = Akonadi::Collection( -1 );
   if ( data == "delete" ) {
     d->mBehaviour = Delete;
   } else if ( data == "moveToDefault" ) {
     d->mBehaviour = MoveToDefaultSentCollection;
   } else if ( data.startsWith( QByteArray( "moveTo" ) ) ) {
     d->mBehaviour = MoveToCollection;
-    d->mMoveToCollection = data.mid(6).toLongLong();
+    d->mMoveToCollection = Akonadi::Collection( data.mid( 6 ).toLongLong() );
     // NOTE: 6 is the strlen of "moveTo".
   } else {
     Q_ASSERT( false );
@@ -94,12 +94,12 @@ void SentBehaviourAttribute::setSentBehaviour( SentBehaviour beh )
   d->mBehaviour = beh;
 }
 
-Collection::Id SentBehaviourAttribute::moveToCollection() const
+Collection SentBehaviourAttribute::moveToCollection() const
 {
   return d->mMoveToCollection;
 }
 
-void SentBehaviourAttribute::setMoveToCollection( Collection::Id moveToCollection )
+void SentBehaviourAttribute::setMoveToCollection( Collection moveToCollection )
 {
   d->mMoveToCollection = moveToCollection;
 }

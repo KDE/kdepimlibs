@@ -114,13 +114,13 @@ void AttributeTest::testSerialization()
   {
     SentBehaviourAttribute::SentBehaviour beh = SentBehaviourAttribute::MoveToCollection;
     Collection::Id id = 123456789012345ll;
-    SentBehaviourAttribute *a = new SentBehaviourAttribute( beh, id );
+    SentBehaviourAttribute *a = new SentBehaviourAttribute( beh, Collection( id ) );
     QByteArray data = a->serialized();
     delete a;
     a = new SentBehaviourAttribute;
     a->deserialize( data );
     QCOMPARE( beh, a->sentBehaviour() );
-    QCOMPARE( id, a->moveToCollection() );
+    QCOMPARE( id, a->moveToCollection().id() );
   }
 
   {

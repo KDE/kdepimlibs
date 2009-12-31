@@ -127,7 +127,7 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
       Only valid if sentBehaviour() is MoveToCollection.
       @see SentBehaviourAttribute.
     */
-    Akonadi::Collection::Id moveToCollection() const;
+    Akonadi::Collection moveToCollection() const;
 
     /**
       Returns the address of the sender.
@@ -206,7 +206,7 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
 
       @see SentBehaviourAttribute.
     */
-    void setMoveToCollection( Akonadi::Collection::Id cid );
+    void setMoveToCollection( Akonadi::Collection collection );
 
     /**
       Sets the address of the sender.

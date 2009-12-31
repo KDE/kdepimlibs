@@ -49,7 +49,7 @@ class MailTransport::MessageQueueJob::Private
       transport = -1;
       dispatchMode = DispatchModeAttribute::Immediately;
       sentBehaviour = SentBehaviourAttribute::MoveToDefaultSentCollection;
-      moveToCollection = -1;
+      moveToCollection = Akonadi::Collection( -1 );
       started = false;
     }
 
@@ -60,7 +60,7 @@ class MailTransport::MessageQueueJob::Private
     DispatchModeAttribute::DispatchMode dispatchMode;
     QDateTime dueDate;
     SentBehaviourAttribute::SentBehaviour sentBehaviour;
-    Collection::Id moveToCollection;
+    Collection moveToCollection;
     QString from;
     QStringList to;
     QStringList cc;
@@ -108,7 +108,7 @@ bool MessageQueueJob::Private::validate()
     return false;
   }
 
-  if( sentBehaviour == SentBehaviourAttribute::MoveToCollection && moveToCollection < 0 ) {
+  if( sentBehaviour == SentBehaviourAttribute::MoveToCollection && !moveToCollection.isValid() ) {
     q->setError( UserDefinedError );
     q->setErrorText( i18n( "Message has invalid sent-mail folder." ) );
     q->emitResult();
@@ -198,7 +198,7 @@ QDateTime MessageQueueJob::sendDueDate() const
   return d->dueDate;
 }
 
-Collection::Id MessageQueueJob::moveToCollection() const
+Collection MessageQueueJob::moveToCollection() const
 {
   if( d->sentBehaviour != SentBehaviourAttribute::MoveToCollection ) {
     kWarning() << "Called when sentBehaviour is not MoveToCollection.";
@@ -251,9 +251,9 @@ void MessageQueueJob::setSentBehaviour( SentBehaviourAttribute::SentBehaviour be
   d->sentBehaviour = beh;
 }
 
-void MessageQueueJob::setMoveToCollection( Collection::Id cid )
+void MessageQueueJob::setMoveToCollection( Collection collection )
 {
-  d->moveToCollection = cid;
+  d->moveToCollection = collection;
 }
 
 void MessageQueueJob::setFrom( const QString &from )
