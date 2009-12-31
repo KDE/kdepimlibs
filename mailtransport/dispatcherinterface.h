@@ -22,7 +22,7 @@
 
 #include <mailtransport/mailtransport_export.h>
 
-#include <Akonadi/AgentInstance>
+#include <akonadi/agentinstance.h>
 
 namespace MailTransport {
 
