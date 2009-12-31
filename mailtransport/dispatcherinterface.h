@@ -36,14 +36,14 @@ class DispatcherInterfacePrivate;
   This class provides methods such as send queued messages (@see
   dispatchManually) and retry sending (@see retryDispatching).
 
-  This class also takes care of registering the attributes that the MDA and
-  MailTransport use.  The attributes are registered the first time you call
-  self(), so do that early in your application.
+  This class also takes care of registering the attributes that the mail
+  dispatcher agent and MailTransport use.  The attributes are registered
+  the first time you call self(), so do that early in your application.
 
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-//TODO_AKONADI_REVIEW: make private class a QObject based singleton, MDA->MailDispatcherAgent, make class value based
+//TODO_AKONADI_REVIEW: make private class a QObject based singleton, make class value based
 class MAILTRANSPORT_EXPORT DispatcherInterface : public QObject
 {
   Q_OBJECT
@@ -55,8 +55,8 @@ class MAILTRANSPORT_EXPORT DispatcherInterface : public QObject
     static DispatcherInterface *self();
 
     /**
-      Returns the current instance of the MDA.  May return an invalid
-      AgentInstance in case it cannot find the MDA.
+      Returns the current instance of the mail dispatcher agent. May return an invalid
+      AgentInstance in case it cannot find the mail dispatcher agent.
     */
     Akonadi::AgentInstance dispatcherInstance() const;
 
