@@ -62,7 +62,11 @@ using namespace KWallet;
 class TransportManager::Private
 {
   public:
-    Private() {}
+    Private( TransportManager *parent )
+      : q( parent )
+    {
+    }
+
     ~Private() {
       delete config;
       qDeleteAll( transports );
@@ -79,6 +83,7 @@ class TransportManager::Private
     int defaultTransportId;
     bool isMainInstance;
     QList<TransportJob *> walletQueue;
+    TransportManager *q;
 
     void readConfig();
     void writeConfig();
@@ -112,7 +117,7 @@ static void destroyStaticTransportManager() {
 }
 
 TransportManager::TransportManager()
-  : QObject(), d( new Private )
+  : QObject(), d( new Private( this ) )
 {
   KGlobal::locale()->insertCatalog( QLatin1String( "libmailtransport" ) );
   qAddPostRoutine( destroyStaticTransportManager );
@@ -467,7 +472,7 @@ void TransportManager::Private::readConfig()
     // migrated default transport contains the name instead
     QString name = group.readEntry( "default-transport", QString() );
     if ( !name.isEmpty() ) {
-      Transport *t = TransportManager::self()->transportByName( name, false );
+      Transport *t = q->transportByName( name, false );
       if ( t ) {
         defaultTransportId = t->id();
         writeConfig();
@@ -483,7 +488,7 @@ void TransportManager::Private::writeConfig()
   KConfigGroup group( config, "General" );
   group.writeEntry( "default-transport", defaultTransportId );
   config->sync();
-  TransportManager::self()->emitChangesCommitted();
+  q->emitChangesCommitted();
 }
 
 void TransportManager::Private::fillTypes()
@@ -527,9 +532,9 @@ void TransportManager::Private::fillTypes()
 
     // Watch for appearing and disappearing types.
     connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)),
-        TransportManager::self(), SLOT(agentTypeAdded(Akonadi::AgentType)) );
+        q, SLOT(agentTypeAdded(Akonadi::AgentType)) );
     connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)),
-        TransportManager::self(), SLOT(agentTypeRemoved(Akonadi::AgentType)) );
+        q, SLOT(agentTypeRemoved(Akonadi::AgentType)) );
   }
 
   kDebug() << "Have SMTP, Sendmail, and" << types.count() - 2 << "Akonadi types.";
@@ -556,7 +561,7 @@ void TransportManager::Private::slotTransportsChanged()
   // FIXME: this deletes existing transport objects!
   readConfig();
   appliedChange = true; // to prevent recursion
-  emit TransportManager::self()->transportsChanged();
+  emit q->transportsChanged();
 }
 
 int TransportManager::Private::createId() const
@@ -680,13 +685,13 @@ void TransportManager::Private::slotWalletOpened( bool success )
   } else {
     prepareWallet();
   }
-  TransportManager::self()->loadPasswords();
+  q->loadPasswords();
 }
 
 void TransportManager::Private::validateDefault()
 {
-  if ( !TransportManager::self()->transportById( defaultTransportId, false ) ) {
-    if ( TransportManager::self()->isEmpty() ) {
+  if ( !q->transportById( defaultTransportId, false ) ) {
+    if ( q->isEmpty() ) {
       defaultTransportId = -1;
     } else {
       defaultTransportId = transports.first()->id();
