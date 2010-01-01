@@ -61,7 +61,7 @@ AgentBase::Observer::~Observer()
 
 void AgentBase::Observer::itemAdded( const Item &item, const Collection &collection )
 {
-  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  kDebug(5267) << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( item );
   Q_UNUSED( collection );
   if ( sAgentBase != 0 )
@@ -70,7 +70,7 @@ void AgentBase::Observer::itemAdded( const Item &item, const Collection &collect
 
 void AgentBase::Observer::itemChanged( const Item &item, const QSet<QByteArray> &partIdentifiers )
 {
-  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  kDebug(5267) << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( item );
   Q_UNUSED( partIdentifiers );
   if ( sAgentBase != 0 )
@@ -79,7 +79,7 @@ void AgentBase::Observer::itemChanged( const Item &item, const QSet<QByteArray> 
 
 void AgentBase::Observer::itemRemoved( const Item &item )
 {
-  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  kDebug(5267) << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( item );
   if ( sAgentBase != 0 )
     sAgentBase->d_ptr->changeProcessed();
@@ -87,7 +87,7 @@ void AgentBase::Observer::itemRemoved( const Item &item )
 
 void AgentBase::Observer::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
 {
-  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  kDebug(5267) << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( collection );
   Q_UNUSED( parent );
   if ( sAgentBase != 0 )
@@ -96,7 +96,7 @@ void AgentBase::Observer::collectionAdded( const Akonadi::Collection &collection
 
 void AgentBase::Observer::collectionChanged( const Collection &collection )
 {
-  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  kDebug(5267) << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( collection );
   if ( sAgentBase != 0 )
     sAgentBase->d_ptr->changeProcessed();
@@ -104,7 +104,7 @@ void AgentBase::Observer::collectionChanged( const Collection &collection )
 
 void AgentBase::Observer::collectionRemoved( const Collection &collection )
 {
-  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  kDebug(5267) << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( collection );
   if ( sAgentBase != 0 )
     sAgentBase->d_ptr->changeProcessed();
@@ -112,7 +112,7 @@ void AgentBase::Observer::collectionRemoved( const Collection &collection )
 
 void AgentBase::ObserverV2::itemMoved( const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &dest )
 {
-  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  kDebug(5267) << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( item );
   Q_UNUSED( source );
   Q_UNUSED( dest );
@@ -122,7 +122,7 @@ void AgentBase::ObserverV2::itemMoved( const Akonadi::Item &item, const Akonadi:
 
 void AgentBase::ObserverV2::itemLinked( const Akonadi::Item& item, const Akonadi::Collection& collection )
 {
-  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  kDebug(5267) << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( item );
   Q_UNUSED( collection );
   if ( sAgentBase != 0 )
@@ -131,7 +131,7 @@ void AgentBase::ObserverV2::itemLinked( const Akonadi::Item& item, const Akonadi
 
 void AgentBase::ObserverV2::itemUnlinked( const Akonadi::Item& item, const Akonadi::Collection& collection )
 {
-  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  kDebug(5267) << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( item );
   Q_UNUSED( collection );
   if ( sAgentBase != 0 )
@@ -140,7 +140,7 @@ void AgentBase::ObserverV2::itemUnlinked( const Akonadi::Item& item, const Akona
 
 void AgentBase::ObserverV2::collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest )
 {
-  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  kDebug(5267) << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( collection );
   Q_UNUSED( source );
   Q_UNUSED( dest );
@@ -150,7 +150,7 @@ void AgentBase::ObserverV2::collectionMoved( const Akonadi::Collection &collecti
 
 void AgentBase::ObserverV2::collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers )
 {
-  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  kDebug(5267) << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( partIdentifiers );
   collectionChanged( collection );
 }
@@ -255,21 +255,21 @@ void AgentBasePrivate::delayedInit()
 
 void AgentBasePrivate::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
-  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  kDebug(5267) << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   if ( mObserver != 0 )
     mObserver->itemAdded( item, collection );
 }
 
 void AgentBasePrivate::itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers )
 {
-  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  kDebug(5267) << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   if ( mObserver != 0 )
     mObserver->itemChanged( item, partIdentifiers );
 }
 
 void AgentBasePrivate::itemMoved( const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &dest )
 {
-  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  kDebug(5267) << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
   if ( mObserver ) {
     // inter-resource moves, requires we know which resources the source and destination are in though
@@ -302,14 +302,14 @@ void AgentBasePrivate::itemMoved( const Akonadi::Item &item, const Akonadi::Coll
 
 void AgentBasePrivate::itemRemoved( const Akonadi::Item &item )
 {
-  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  kDebug(5267) << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   if ( mObserver != 0 )
     mObserver->itemRemoved( item );
 }
 
 void AgentBasePrivate::itemLinked( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
-  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  kDebug(5267) << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
   if ( observer2 )
     observer2->itemLinked( item, collection );
@@ -319,7 +319,7 @@ void AgentBasePrivate::itemLinked( const Akonadi::Item &item, const Akonadi::Col
 
 void AgentBasePrivate::itemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
-  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  kDebug(5267) << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
   if ( observer2 )
     observer2->itemUnlinked( item, collection );
@@ -329,14 +329,14 @@ void AgentBasePrivate::itemUnlinked( const Akonadi::Item &item, const Akonadi::C
 
 void AgentBasePrivate::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
 {
-  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  kDebug(5267) << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   if ( mObserver != 0 )
     mObserver->collectionAdded( collection, parent );
 }
 
 void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection )
 {
-  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  kDebug(5267) << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
   if ( mObserver != 0 && observer2 == 0 ) // For ObserverV2 we use the variant with the part identifiers
     mObserver->collectionChanged( collection );
@@ -344,7 +344,7 @@ void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection 
 
 void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers )
 {
-  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  kDebug(5267) << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
   if ( observer2 != 0 )
     observer2->collectionChanged( collection, partIdentifiers );
@@ -352,7 +352,7 @@ void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection,
 
 void AgentBasePrivate::collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest )
 {
-  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  kDebug(5267) << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
   if ( mObserver ) {
     // inter-resource moves, requires we know which resources the source and destination are in though
@@ -383,7 +383,7 @@ void AgentBasePrivate::collectionMoved( const Akonadi::Collection &collection, c
 
 void AgentBasePrivate::collectionRemoved( const Akonadi::Collection &collection )
 {
-  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  kDebug(5267) << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   if ( mObserver != 0 )
     mObserver->collectionRemoved( collection );
 }
@@ -661,7 +661,7 @@ void AgentBase::cleanup()
 
 void AgentBase::registerObserver( Observer *observer )
 {
-  kDebug() << "observer=" << (void*) observer << "this=" << (void*) this;
+  kDebug(5267) << "observer=" << (void*) observer << "this=" << (void*) this;
   d_ptr->mObserver = observer;
 }
 
