@@ -41,7 +41,6 @@ kblog
 kcal
 kholidays
 kimap
-kleo (GPL)
 kmime
 kpimidentities 
 ktnef
@@ -51,6 +50,7 @@ syndication
 
 Candidates for kdepimlibs-gpl
 =============================
+kleo
 kdgantt - May NOT be relicensed. MUST remain GPL (and therefore cannot be moved)
 
 Future Considerations
