@@ -17,13 +17,14 @@
   02110-1301, USA.
 */
 
-#ifndef KCAL_MIMETYPEVISITOR_H
-#define KCAL_MIMETYPEVISITOR_H
+#ifndef AKONADI_KCAL_INCIDENCEMIMETYPEVISITOR_H
+#define AKONADI_KCAL_INCIDENCEMIMETYPEVISITOR_H
 
-#include "kcal_export.h"
-#include "incidencebase.h"
+#include "akonadi-kcal_export.h"
 
-namespace KCal {
+#include <kcal/incidencebase.h>
+
+namespace Akonadi {
 
 /**
   Helper for getting the Akonadi specific sub MIME type of a KCal::IncidenceBase
@@ -34,7 +35,7 @@ namespace KCal {
   @code
   KCal::Incidence::List incidences; // assume it is filled somewhere else
 
-  KCalMimeTypeVisitor visitor;
+  IncidenceMimeTypeVisitor visitor;
   Akonadi::Item::List items;
   foreach ( Incidence *incidence, incidences ) {
     incidence->accept( visitor );
@@ -48,7 +49,7 @@ namespace KCal {
 
   @since 4.4
  */
-class KCAL_EXPORT MimeTypeVisitor : public KCal::IncidenceBase::Visitor
+class AKONADI_KCAL_EXPORT IncidenceMimeTypeVisitor : public KCal::IncidenceBase::Visitor
 {
   public:
     /**
@@ -56,12 +57,12 @@ class KCAL_EXPORT MimeTypeVisitor : public KCal::IncidenceBase::Visitor
 
       Until its first visit mimeType() will return @c QString()
      */
-    MimeTypeVisitor();
+    IncidenceMimeTypeVisitor();
 
     /**
       Destroys the instance
      */
-    virtual ~MimeTypeVisitor();
+    virtual ~IncidenceMimeTypeVisitor();
 
     /**
       Sets the MIME type to "application/x-vnd.akonadi.calendar.event"
@@ -155,7 +156,7 @@ class KCAL_EXPORT MimeTypeVisitor : public KCal::IncidenceBase::Visitor
     Private *const d;
     //@endcond
 
-    Q_DISABLE_COPY( MimeTypeVisitor )
+    Q_DISABLE_COPY( IncidenceMimeTypeVisitor )
 };
 
 }

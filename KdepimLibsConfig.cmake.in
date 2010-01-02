@@ -17,12 +17,12 @@ set(KDEPIMLIBS_DBUS_SERVICES_DIR   "@KDEPIMLIBS_DBUS_SERVICES_DIR@")
 set(KDEPIMLIBS_INCLUDE_DIR         "@KDEPIMLIBS_INCLUDE_DIR@")
 set(KDEPIMLIBS_INCLUDE_DIRS        "@KDEPIMLIBS_INCLUDE_DIR@" "@KDEPIMLIBS_INCLUDE_DIR@/KDE")
 set(KDEPIMLIBS_LIB_DIR             "@KDEPIMLIBS_LIB_DIR@")
-set(KDEPIMLIBS_BIN_DIR             "@KDEPIMLIBS_BIN_DIR@") 
+set(KDEPIMLIBS_BIN_DIR             "@KDEPIMLIBS_BIN_DIR@")
 set(KDEPIMLIBS_LIBEXEC_DIR         "@KDEPIMLIBS_LIBEXEC_DIR@")
 set(KDEPIMLIBS_SBIN_DIR            "@KDEPIMLIBS_SBIN_DIR@")
 set(KDEPIMLIBS_HTML_DIR            "@KDEPIMLIBS_HTML_DIR@")
 set(KDEPIMLIBS_CONFIG_DIR          "@KDEPIMLIBS_CONFIG_DIR@")
-set(KDEPIMLIBS_ICON_DIR            "@KDEPIMLIBS_ICON_DIR@") 
+set(KDEPIMLIBS_ICON_DIR            "@KDEPIMLIBS_ICON_DIR@")
 set(KDEPIMLIBS_KCFG_DIR            "@KDEPIMLIBS_KCFG_DIR@")
 set(KDEPIMLIBS_LOCALE_DIR          "@KDEPIMLIBS_LOCALE_DIR@")
 set(KDEPIMLIBS_MIME_DIR            "@KDEPIMLIBS_MIME_DIR@")
@@ -44,7 +44,7 @@ set(KDEPIMLIBS4_DBUS_SERVICES_DIR   "${KDEPIMLIBS_DBUS_SERVICES_DIR}")
 
 set(CMAKE_MODULE_PATH "${KDEPIMLIBS_DATA_DIR}/cmake/modules" "${CMAKE_MODULE_PATH}" )
 
-# the exports file exports 
+# the exports file exports
 set(KDEPIMLIBS_TARGET_PREFIX @KDEPIMLIBS_TARGET_PREFIX@)
 
 # Make sure to load the exported targets only once
@@ -67,6 +67,7 @@ _kdepimlibs_set_lib_vars(AKONADI        akonadi-kde)
 _kdepimlibs_set_lib_vars(AKONADI_CONTACT  akonadi-contact)
 _kdepimlibs_set_lib_vars(AKONADI_KMIME  akonadi-kmime)
 _kdepimlibs_set_lib_vars(AKONADI_KABC   akonadi-kabc)
+_kdepimlibs_set_lib_vars(AKONADI_KCAL   akonadi-kcal)
 _kdepimlibs_set_lib_vars(GPGMEPP        gpgmepp)
 _kdepimlibs_set_lib_vars(KABC           kabc)
 _kdepimlibs_set_lib_vars(KBLOG          kblog)
