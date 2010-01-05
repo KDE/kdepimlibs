@@ -36,6 +36,7 @@ class MessageTest : public QObject
     void testBidiSpoofing();
     void testUtf16();
     void testDecodedText();
+    void testInlineImages();
 };
 
 

@@ -586,6 +586,7 @@ class KMIME_EXPORT SingleIdent : public Ident
 {
   //@cond PRIVATE
   kmime_mk_trivial_ctor( SingleIdent )
+  kmime_mk_dptr_ctor( SingleIdent )
   //@endcond
   public:
     /**
@@ -968,12 +969,22 @@ class KMIME_EXPORT MessageID : public Generics::SingleIdent
     void generate( const QByteArray &fqdn );
 };
 
+class ContentIDPrivate;
+
 /**
   Represents a "Content-ID" header.
 */
 class KMIME_EXPORT ContentID : public Generics::SingleIdent
 {
+  //@cond PRIVATE
   kmime_mk_trivial_ctor_with_name( ContentID )
+  kmime_mk_dptr_ctor( ContentID )
+  //@endcond
+
+  protected:
+    bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
+  private:
+    Q_DECLARE_PRIVATE(ContentID)
 };
 
 /**
