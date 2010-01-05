@@ -17,69 +17,69 @@
   02110-1301, USA.
 */
 
-#include "mimetypevisitor.h"
+#include "incidencemimetypevisitor.h"
 
 static QLatin1String sEventType( "application/x-vnd.akonadi.calendar.event" );
 static QLatin1String sTodoType( "application/x-vnd.akonadi.calendar.todo" );
 static QLatin1String sJournalType( "application/x-vnd.akonadi.calendar.journal" );
 static QLatin1String sFreeBusyType( "application/x-vnd.akonadi.calendar.freebusy" );
 
-using namespace KCal;
+using namespace Akonadi;
 
-class MimeTypeVisitor::Private
+class IncidenceMimeTypeVisitor::Private
 {
   public:
     QString mType;
 };
 
-MimeTypeVisitor::MimeTypeVisitor() : d( new Private() )
+IncidenceMimeTypeVisitor::IncidenceMimeTypeVisitor() : d( new Private() )
 {
 }
 
-MimeTypeVisitor::~MimeTypeVisitor()
+IncidenceMimeTypeVisitor::~IncidenceMimeTypeVisitor()
 {
   delete d;
 }
 
-bool MimeTypeVisitor::visit( Event *event )
+bool IncidenceMimeTypeVisitor::visit( KCal::Event *event )
 {
   Q_UNUSED( event );
   d->mType = sEventType;
   return true;
 }
 
-bool MimeTypeVisitor::visit( Todo *todo )
+bool IncidenceMimeTypeVisitor::visit( KCal::Todo *todo )
 {
   Q_UNUSED( todo );
   d->mType = sTodoType;
   return true;
 }
 
-bool MimeTypeVisitor::visit( Journal *journal )
+bool IncidenceMimeTypeVisitor::visit( KCal::Journal *journal )
 {
   Q_UNUSED( journal );
   d->mType = sJournalType;
   return true;
 }
 
-bool MimeTypeVisitor::visit( FreeBusy *freebusy )
+bool IncidenceMimeTypeVisitor::visit( KCal::FreeBusy *freebusy )
 {
   Q_UNUSED( freebusy );
   d->mType = sFreeBusyType;
   return true;
 }
 
-QString MimeTypeVisitor::mimeType() const
+QString IncidenceMimeTypeVisitor::mimeType() const
 {
   return d->mType;
 }
 
-QStringList MimeTypeVisitor::allMimeTypes() const
+QStringList IncidenceMimeTypeVisitor::allMimeTypes() const
 {
   return QStringList() << sEventType << sTodoType << sJournalType << sFreeBusyType;
 }
 
-QString MimeTypeVisitor::mimeType( IncidenceBase *incidence )
+QString IncidenceMimeTypeVisitor::mimeType( KCal::IncidenceBase *incidence )
 {
   Q_ASSERT( incidence != 0 );
 
@@ -87,22 +87,22 @@ QString MimeTypeVisitor::mimeType( IncidenceBase *incidence )
   return mimeType();
 }
 
-QString MimeTypeVisitor::eventMimeType()
+QString IncidenceMimeTypeVisitor::eventMimeType()
 {
   return sEventType;
 }
 
-QString MimeTypeVisitor::todoMimeType()
+QString IncidenceMimeTypeVisitor::todoMimeType()
 {
   return sTodoType;
 }
 
-QString MimeTypeVisitor::journalMimeType()
+QString IncidenceMimeTypeVisitor::journalMimeType()
 {
   return sJournalType;
 }
 
-QString MimeTypeVisitor::freeBusyMimeType()
+QString IncidenceMimeTypeVisitor::freeBusyMimeType()
 {
   return sFreeBusyType;
 }

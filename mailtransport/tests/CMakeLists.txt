@@ -42,7 +42,7 @@ target_link_libraries(transportmgr ${KDE4_KDEUI_LIBS} mailtransport)
 
 set(queuer_srcs queuer.cpp)
 kde4_add_executable(queuer TEST ${queuer_srcs})
-target_link_libraries(queuer ${KDE4_KDEUI_LIBS} mailtransport kmime akonadi-kde)
+target_link_libraries(queuer ${KDE4_KDEUI_LIBS} mailtransport kmime akonadi-kde akonadi-kmime)
 
 set( sendqueued_srcs sendqueued.cpp )
 kde4_add_executable( sendqueued TEST ${sendqueued_srcs} )

@@ -82,8 +82,6 @@ set(kcal_LIB_SRCS ${libversit_SRCS}
   assignmentvisitor.cpp
   comparisonvisitor.cpp
   calhelper.cpp
-  mimetypevisitor.cpp
-   tzmapping.cpp
 )
 
 kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
@@ -183,8 +181,6 @@ install( FILES
         vcalformat.h
         kresult.h
         calhelper.h
-        mimetypevisitor.h
-        tzmapping.h
         DESTINATION ${INCLUDE_INSTALL_DIR}/kcal COMPONENT Devel)
 
 install( FILES kcal_manager.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources)
