@@ -45,6 +45,7 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
 {
   Q_OBJECT
   friend class TransportManager;
+  friend class TransportManagerPrivate;
 
   public:
     /**
