@@ -39,6 +39,7 @@ namespace MailTransport {
 class Transport;
 class TransportConfigWidget;
 class TransportJob;
+class TransportManagerPrivate;
 
 /**
   @short Central transport management interface.
@@ -57,10 +58,9 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
   Q_CLASSINFO( "D-Bus Interface", "org.kde.pim.TransportManager" )
 
   friend class Transport;
-  friend class Private;
+  friend class TransportManagerPrivate;
 
   public:
-    class Private;
 
     /**
       Destructor.
@@ -288,7 +288,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     void emitChangesCommitted();
 
   private:
-    Private *const d;
+    TransportManagerPrivate *const d;
 
     Q_PRIVATE_SLOT( d, void slotTransportsChanged() )
     Q_PRIVATE_SLOT( d, void slotWalletOpened( bool success ) )

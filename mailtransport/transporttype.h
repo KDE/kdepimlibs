@@ -53,6 +53,7 @@ class MAILTRANSPORT_EXPORT TransportType
   friend class AddTransportDialog;
   friend class Transport;
   friend class TransportManager;
+  friend class TransportManagerPrivate;
 
   public:
     /**
