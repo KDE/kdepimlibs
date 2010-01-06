@@ -80,7 +80,10 @@ static QString addr_spec_as_string( const AddrSpec & as, bool pretty )
   }
   const QString dom = pretty ? QUrl_fromAce_wrapper( as.domain ) : as.domain ;
   if ( needsQuotes ) {
-    return '"' + result + "\"@" + dom;
+    result = '"' + result + "\"";
+  }
+  if( dom.isEmpty() ) {
+    return result;
   } else {
     return result + '@' + dom;
   }

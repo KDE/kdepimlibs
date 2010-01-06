@@ -240,6 +240,8 @@ void MessageTest::testBug219749()
   KMime::Content *attachment = msg.contents()[1];
   QCOMPARE( attachment->contentType( false )->mediaType().data(), "application" );
   QCOMPARE( attachment->contentType( false )->subType().data(), "octet-stream" );
+  QCOMPARE( attachment->contentID()->identifier().data(), "jaselka1.docx4AECA1F9@9230725.3CDBB752" );
+  QCOMPARE( attachment->contentID()->as7BitString( false ).data(), "<jaselka1.docx4AECA1F9@9230725.3CDBB752>" );
   Headers::ContentDisposition *cd = attachment->contentDisposition( false );
   QVERIFY( cd );
   QCOMPARE( cd->filename(), QString( "jaselka 1.docx" ) );
@@ -347,4 +349,69 @@ void MessageTest::testDecodedText()
   QCOMPARE( msg2.decodedText( true, false ), QString( "Testing Whitespace" ) );
   QCOMPARE( msg2.decodedText( true, true ), QString( "Testing Whitespace" ) );
   QCOMPARE( msg2.decodedText( false, true ), QString( "Testing Whitespace   \n  \n \n\n\n " ) );
+}
+
+void MessageTest::testInlineImages()
+{
+  QByteArray data =
+  "From: <kde@kde.org>\n"
+  "To: kde@kde.org\n"
+  "Subject: Inline Image (unsigned)\n"
+  "Date: Wed, 23 Dec 2009 14:00:59 +0100\n"
+  "MIME-Version: 1.0\n"
+  "Content-Type: multipart/related;\n"
+  "  boundary=\"Boundary-02=_LShMLJyjC7zqmVP\"\n"
+  "Content-Transfer-Encoding: 7bit\n"
+  "\n"
+  "\n"
+  "--Boundary-02=_LShMLJyjC7zqmVP\n"
+  "Content-Type: multipart/alternative;\n"
+  "  boundary=\"Boundary-01=_LShMLzAUPqE38S8\"\n"
+  "Content-Transfer-Encoding: 7bit\n"
+  "Content-Disposition: inline\n"
+  "\n"
+  "--Boundary-01=_LShMLzAUPqE38S8\n"
+  "Content-Type: text/plain;\n"
+  "  charset=\"us-ascii\"\n"
+  "Content-Transfer-Encoding: 7bit\n"
+  "\n"
+  "First line\n"
+  "\n"
+  "\n"
+  "Image above\n"
+  "\n"
+  "Last line\n"
+  "\n"
+  "--Boundary-01=_LShMLzAUPqE38S8\n"
+  "Content-Type: text/html;\n"
+  "  charset=\"us-ascii\"\n"
+  "Content-Transfer-Encoding: 7bit\n"
+  "\n"
+  "Line 1\n"
+  "--Boundary-01=_LShMLzAUPqE38S8--\n"
+  "\n"
+  "--Boundary-02=_LShMLJyjC7zqmVP\n"
+  "Content-Type: image/png;\n"
+  "  name=\"inlineimage.png\"\n"
+  "Content-Transfer-Encoding: base64\n"
+  "Content-Id: <740439759>\n"
+  "\n"
+  "jxrG/ha/VB+rODav6/d5i1US6Za/YEMvtm2SgJC/CXVFiD3UFSH2UFeE2ENdEWIPdUWIPdQVIfZQ\n"
+  "V4TYQ10RYg91RYg91BUh9lBXhNhDXRFiD3VFiD3UFSH2UFeE2ENdEWIPdUWIPdQVIfZQV4TYQ10R\n"
+  "Yg91RYg91BUh9lBX5E+Tz6Vty1HSx+NR++UuCOqKEHv+Ax0Y5U59+AHBAAAAAElFTkSuQmCC\n"
+  "\n"
+  "--Boundary-02=_LShMLJyjC7zqmVP--";
+
+  KMime::Message msg;
+  msg.setContent( data );
+  msg.parse();
+
+  QCOMPARE( msg.contents().size(), 2);
+  QCOMPARE( msg.contents()[0]->contentType()->isMultipart(), true );
+  QCOMPARE( msg.contents()[0]->contentType()->subType().data(), "alternative" );
+
+  QCOMPARE( msg.contents()[1]->contentType()->isImage(), true );
+  QCOMPARE( msg.contents()[1]->contentType()->name(), QString( "inlineimage.png" ) );
+  QCOMPARE( msg.contents()[1]->contentID()->identifier().data(), "740439759" );
+  QCOMPARE( msg.contents()[1]->contentID()->as7BitString( false ).data(), "<740439759>" );
 }

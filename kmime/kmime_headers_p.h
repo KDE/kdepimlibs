@@ -170,6 +170,7 @@ class LinesPrivate : public Generics::StructuredPrivate
     int lines;
 };
 
+kmime_mk_empty_private( ContentID, Generics::SingleIdent )
 }
 
 }

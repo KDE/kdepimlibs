@@ -1063,6 +1063,7 @@ void Ident::appendIdentifier( const QByteArray &id )
 
 //@cond PRIVATE
 kmime_mk_trivial_ctor_with_dptr( SingleIdent, Ident )
+kmime_mk_dptr_ctor( SingleIdent, Ident )
 //@endcond
 
 QByteArray SingleIdent::identifier() const
@@ -1923,6 +1924,91 @@ success:
 
 //-----</Content-Type>-------------------------
 
+//-----<ContentID>----------------------
+
+kmime_mk_trivial_ctor_with_name_and_dptr( ContentID, SingleIdent, Content-ID )
+kmime_mk_dptr_ctor( ContentID, SingleIdent )
+
+bool ContentID::parse( const char* &scursor, const char *const send, bool isCRLF )
+{
+  Q_D ( ContentID );
+  // Content-id := "<" contentid ">"
+  // contentid := now whitespaces
+
+  const char* origscursor = scursor;
+  if ( !SingleIdent::parse ( scursor, send, isCRLF ) )
+  {
+    scursor = origscursor;
+    d->msgIdList.clear();
+
+    while ( scursor != send )
+    {
+      eatCFWS ( scursor, send, isCRLF );
+      // empty entry ending the list: OK.
+      if ( scursor == send )
+      {
+        return true;
+      }
+      // empty entry: ignore.
+      if ( *scursor == ',' )
+      {
+        scursor++;
+        continue;
+      }
+
+      AddrSpec maybeContentId;
+      // Almost parseAngleAddr
+      if ( scursor == send || *scursor != '<' )
+      {
+        return false;
+      }
+      scursor++; // eat '<'
+
+      eatCFWS ( scursor, send, isCRLF );
+      if ( scursor == send )
+      {
+        return false;
+      }
+
+      // Save chars untill '>''
+      QString result = "";
+      if( !parseAtom(scursor, send, result, false) ) {
+        return false;
+      }
+
+      eatCFWS ( scursor, send, isCRLF );
+      if ( scursor == send || *scursor != '>' )
+      {
+        return false;
+      }
+      scursor++;
+      // /Almost parseAngleAddr
+
+      maybeContentId.localPart = result;
+      d->msgIdList.append ( maybeContentId );
+
+      eatCFWS ( scursor, send, isCRLF );
+      // header end ending the list: OK.
+      if ( scursor == send )
+      {
+        return true;
+      }
+      // regular item separator: eat it.
+      if ( *scursor == ',' )
+      {
+        scursor++;
+      }
+    }
+    return true;
+  }
+  else
+  {
+    return true;
+  }
+}
+
+//-----</ContentID>----------------------
+
 //-----<ContentTransferEncoding>----------------------------
 
 //@cond PRIVATE
@@ -2139,7 +2225,6 @@ kmime_mk_trivial_ctor_with_name( Bcc, Generics::AddressList, Bcc )
 kmime_mk_trivial_ctor_with_name( ReplyTo, Generics::AddressList, Reply-To )
 kmime_mk_trivial_ctor_with_name( Keywords, Generics::PhraseList, Keywords )
 kmime_mk_trivial_ctor_with_name( MIMEVersion, Generics::DotAtom, MIME-Version )
-kmime_mk_trivial_ctor_with_name( ContentID, Generics::SingleIdent, Content-ID )
 kmime_mk_trivial_ctor_with_name( Supersedes, Generics::SingleIdent, Supersedes )
 kmime_mk_trivial_ctor_with_name( InReplyTo, Generics::Ident, In-Reply-To )
 kmime_mk_trivial_ctor_with_name( References, Generics::Ident, References )
