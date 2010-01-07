@@ -623,13 +623,31 @@ bool Scheduler::acceptReply( IncidenceBase *incidence,
 
     // send update about new participants
     if ( attendeeAdded ) {
+      bool sendMail = false;
+      if ( ev || to ) {
+        if ( KMessageBox::questionYesNo(
+               0,
+               i18nc( "@info",
+                      "An attendee was added to the incidence. "
+                      "Do you want to email the attendees an update message?" ),
+               i18nc( "@title", "Attendee Added" ),
+               KGuiItem( i18nc( "@option", "Send Messages" ) ),
+               KGuiItem( i18nc( "@option", "Do Not Send" ) ) ) == KMessageBox::Yes ) {
+          sendMail = true;
+        }
+      }
+
       if ( ev ) {
         ev->setRevision( ev->revision() + 1 );
-        performTransaction( ev, iTIPRequest );
+        if ( sendMail ) {
+          performTransaction( ev, iTIPRequest );
+        }
       }
       if ( to ) {
         to->setRevision( to->revision() + 1 );
-        performTransaction( to, iTIPRequest );
+        if ( sendMail ) {
+          performTransaction( to, iTIPRequest );
+        }
       }
     }
 
