@@ -144,6 +144,27 @@ static bool iamOrganizer( Incidence *incidence )
   }
   return iam;
 }
+
+static QString firstAttendeeName( Incidence *incidence, const QString &defName )
+{
+  QString name;
+  if ( !incidence ) {
+    return name;
+  }
+
+  Attendee::List attendees = incidence->attendees();
+  if( attendees.count() > 0 ) {
+    Attendee *attendee = *attendees.begin();
+    name = attendee->name();
+    if ( name.isEmpty() ) {
+      name = attendee->email();
+    }
+    if ( name.isEmpty() ) {
+      name = defName;
+    }
+  }
+  return name;
+}
 //@endcond
 
 /*******************************************************************
@@ -1469,16 +1490,10 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
       kDebug() << "Warning: attendeecount in the reply should be 1"
                << "but is" << attendees.count();
     }
-    Attendee *attendee = *attendees.begin();
-    QString attendeeName = attendee->name();
-    if ( attendeeName.isEmpty() ) {
-      attendeeName = attendee->email();
-    }
-    if ( attendeeName.isEmpty() ) {
-      attendeeName = i18n( "Sender" );
-    }
+    QString attendeeName = firstAttendeeName( event, i18n( "Sender" ) );
 
     QString delegatorName, dummy;
+    Attendee* attendee = *attendees.begin();
     KPIMUtils::extractEmailAddressAndName( attendee->delegator(), dummy, delegatorName );
     if ( delegatorName.isEmpty() ) {
       delegatorName = attendee->delegator();
@@ -1531,9 +1546,13 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     break;
   }
   case iTIPCounter:
-    return i18n( "Sender makes this counter proposal" );
+    return i18n( "%1 makes this counter proposal",
+                 firstAttendeeName( event, i18n( "Sender" ) ) );
+
   case iTIPDeclineCounter:
-    return i18n( "Sender declines the counter proposal" );
+    return i18n( "%1 declines the counter proposal",
+                 firstAttendeeName( event, i18n( "Sender" ) ) );
+
   case iTIPNoMethod:
     return i18n( "Error: Event iTIP message with unknown method" );
   }
@@ -1573,17 +1592,40 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
       kDebug() << "Warning: attendeecount in the reply should be 1"
                << "but is" << attendees.count();
     }
+    QString attendeeName = firstAttendeeName( todo, i18n( "Sender" ) );
+
+    QString delegatorName, dummy;
     Attendee *attendee = *attendees.begin();
+    KPIMUtils::extractEmailAddressAndName( attendee->delegate(), dummy, delegatorName );
+    if ( delegatorName.isEmpty() ) {
+      delegatorName = attendee->delegator();
+    }
 
     switch( attendee->status() ) {
     case Attendee::NeedsAction:
-      return i18n( "Sender indicates this to-do assignment still needs some action" );
+      return i18n( "%1 indicates this to-do assignment still needs some action",
+                   attendeeName );
     case Attendee::Accepted:
-      return i18n( "Sender accepts this to-do" );
+      if ( delegatorName.isEmpty() ) {
+        return i18n( "%1 accepts this to-do", attendeeName );
+      } else {
+        return i18n( "%1 accepts this to-do on behalf of %2",
+                     attendeeName, delegatorName );
+      }
     case Attendee::Tentative:
-      return i18n( "Sender tentatively accepts this to-do" );
+      if ( delegatorName.isEmpty() ) {
+        return i18n( "%1 tentatively accepts this to-do", attendeeName );
+      } else {
+        return i18n( "%1 tentatively accepts this to-do on behalf of %2",
+                     attendeeName, delegatorName );
+      }
     case Attendee::Declined:
-      return i18n( "Sender declines this to-do" );
+      if ( delegatorName.isEmpty() ) {
+        return i18n( "%1 declines this to-do", attendeeName );
+      } else {
+        return i18n( "%1 declines this to-do on behalf of %2",
+                     attendeeName, delegatorName );
+      }
     case Attendee::Delegated:
     {
       QString delegate, dummy;
@@ -1592,24 +1634,28 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
         delegate = attendee->delegate();
       }
       if ( !delegate.isEmpty() ) {
-        return i18n( "Sender has delegated this request for the to-do to %1", delegate );
+        return i18n( "%1 has delegated this to-do to %2", attendeeName, delegate );
       } else {
-        return i18n( "Sender has delegated this request for the to-do " );
+        return i18n( "%1 has delegated this to-do", attendeeName );
       }
     }
     case Attendee::Completed:
       return i18n( "The request for this to-do is now completed" );
     case Attendee::InProcess:
-      return i18n( "Sender is still processing the invitation" );
+      return i18n( "%1 is still processing the to-do", attendeeName );
     case Attendee::None:
       return i18n( "Unknown response to this to-do" );
     }
     break;
   }
   case iTIPCounter:
-    return i18n( "Sender makes this counter proposal" );
+    return i18n( "%1 makes this counter proposal",
+                 firstAttendeeName( todo, i18n( "Sender" ) ) );
+
   case iTIPDeclineCounter:
-    return i18n( "Sender declines the counter proposal" );
+    return i18n( "%1 declines the counter proposal",
+                 firstAttendeeName( todo, i18n( "Sender" ) ) );
+
   case iTIPNoMethod:
     return i18n( "Error: To-do iTIP message with unknown method" );
   }
@@ -2332,6 +2378,11 @@ static QString formatICalInvitationHelper( QString invitation,
             break;
           }
         }
+
+        if ( !inc->nonKDECustomProperty( "X-MICROSOFT-CDO-IMPORTANCE" ).isEmpty() ) {
+          // we might have a counter proposal
+        }
+
 
         // record
         a = inc->attendees().first();
