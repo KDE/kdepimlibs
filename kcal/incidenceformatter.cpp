@@ -993,12 +993,20 @@ static bool rsvpRequested( Incidence *incidence )
   return rsvp;
 }
 
-static QString rsvpRequestedStr( bool rsvpRequested )
+static QString rsvpRequestedStr( bool rsvpRequested, const QString &role )
 {
   if ( rsvpRequested ) {
-    return i18n( "Your response is requested" );
+    if ( role.isEmpty() ) {
+      return i18n( "Your response is requested" );
+    } else {
+      return i18n( "Your response as <b>%1</b> is requested", role );
+    }
   } else {
-    return i18n( "A response is not necessary" );
+    if ( role.isEmpty() ) {
+      return i18n( "A response is not necessary" );
+    } else {
+      return i18n( "A response as <b>%1</b> is not necessary", role );
+    }
   }
 }
 
@@ -1388,7 +1396,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
 
   switch ( msg->method() ) {
   case iTIPPublish:
-    return i18n( "This event has been published" );
+    return i18n( "This invitation has been published" );
   case iTIPRequest:
     if ( event->revision() > 0 ) {
       return i18n( "This invitation has been updated" );
@@ -2069,6 +2077,16 @@ static QString formatICalInvitationHelper( QString invitation,
     }
   }
 
+  // determine invitation role
+  QString role;
+  Attendee *a = findMyAttendee( inc );
+  if ( !a && inc ) {
+    a = inc->attendees().first();
+  }
+  if ( a ) {
+    role = Attendee::roleName( a->role() );
+  }
+
   // Print if RSVP needed, not-needed, or response already recorded
   bool rsvpReq = rsvpRequested( inc );
   if ( !myInc ) {
@@ -2083,9 +2101,9 @@ static QString formatICalInvitationHelper( QString invitation,
     } else if ( msg->method() == iTIPAdd ) {
       html += i18n( "This invitation was accepted" );
     } else {
-      html += rsvpRequestedStr( rsvpReq );
+      html += rsvpRequestedStr( rsvpReq, role );
     }
-    html += "</u></i><br>";
+    html += "</u></i>";
   }
 
   // Add groupware links
