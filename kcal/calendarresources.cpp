@@ -634,7 +634,7 @@ Event::List CalendarResources::rawEventsForDate( const QDate &date,
     d->appendIncidences<Event::List>( result,
                                       (*it)->rawEventsForDate( date, timeSpec ), *it );
   }
-  return sortEvents( &result, sortField, sortDirection );
+  return sortEventsForDate( &result, date, timeSpec, sortField, sortDirection );
 }
 
 Event::List CalendarResources::rawEvents( const QDate &start, const QDate &end,

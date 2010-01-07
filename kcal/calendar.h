@@ -536,6 +536,26 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     static Event::List sortEvents( Event::List *eventList,
                                    EventSortField sortField,
                                    SortDirection sortDirection );
+
+    /**
+       Sort a list of Events that occur on a specified date.
+
+       @param eventList is a pointer to a list of Events occurring on @p date.
+       @param date is the date.
+       @param timeSpec time specification for @p date.
+       @param sortField specifies the EventSortField.
+       @param sortDirection specifies the SortDirection.
+
+       @return a list of Events sorted as specified.
+
+       @since 4.5
+    */
+    static Event::List sortEventsForDate( Event::List *eventList,
+                                          const QDate &date,
+                                          const KDateTime::Spec &timeSpec,
+                                          EventSortField sortField,
+                                          SortDirection sortDirection );
+
     /**
       Returns a sorted, filtered list of all Events for this Calendar.
 

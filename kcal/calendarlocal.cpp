@@ -466,7 +466,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &date,
     }
   }
 
-  return sortEvents( &eventList, sortField, sortDirection );
+  return sortEventsForDate( &eventList, date, timespec, sortField, sortDirection );
 }
 
 Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,

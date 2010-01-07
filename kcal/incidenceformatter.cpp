@@ -144,6 +144,27 @@ static bool iamOrganizer( Incidence *incidence )
   }
   return iam;
 }
+
+static QString firstAttendeeName( Incidence *incidence, const QString &defName )
+{
+  QString name;
+  if ( !incidence ) {
+    return name;
+  }
+
+  Attendee::List attendees = incidence->attendees();
+  if( attendees.count() > 0 ) {
+    Attendee *attendee = *attendees.begin();
+    name = attendee->name();
+    if ( name.isEmpty() ) {
+      name = attendee->email();
+    }
+    if ( name.isEmpty() ) {
+      name = defName;
+    }
+  }
+  return name;
+}
 //@endcond
 
 /*******************************************************************
@@ -947,6 +968,35 @@ static QString invitationRow( const QString &cell1, const QString &cell2 )
   return "<tr><td>" + cell1 + "</td><td>" + cell2 + "</td></tr>\n";
 }
 
+static Attendee *findDelegatedFromMyAttendee( Incidence *incidence )
+{
+  // Return the first attendee that was delegated-from me
+
+  Attendee *attendee = 0;
+  if ( !incidence ) {
+    return attendee;
+  }
+
+  KEMailSettings settings;
+  QStringList profiles = settings.profiles();
+  for( QStringList::Iterator it=profiles.begin(); it!=profiles.end(); ++it ) {
+    settings.setProfile( *it );
+
+    QString delegatorName, delegatorEmail;
+    Attendee::List attendees = incidence->attendees();
+    Attendee::List::ConstIterator it2;
+    for ( it2 = attendees.begin(); it2 != attendees.end(); ++it2 ) {
+      Attendee *a = *it2;
+      KPIMUtils::extractEmailAddressAndName( a->delegator(), delegatorEmail, delegatorName );
+      if ( settings.getSetting( KEMailSettings::EmailAddress ) == delegatorEmail ) {
+        attendee = a;
+        break;
+      }
+    }
+  }
+  return attendee;
+}
+
 static Attendee *findMyAttendee( Incidence *incidence )
 {
   // Return the attendee for the incidence that is probably me
@@ -1019,13 +1069,33 @@ static bool rsvpRequested( Incidence *incidence )
   return rsvp;
 }
 
-static QString rsvpRequestedStr( bool rsvpRequested )
+static QString rsvpRequestedStr( bool rsvpRequested, const QString &role )
 {
   if ( rsvpRequested ) {
-    return i18n( "Your response is requested" );
+    if ( role.isEmpty() ) {
+      return i18n( "Your response is requested" );
+    } else {
+      return i18n( "Your response as <b>%1</b> is requested", role );
+    }
   } else {
-    return i18n( "A response is not necessary" );
+    if ( role.isEmpty() ) {
+      return i18n( "No response is necessary" );
+    } else {
+      return i18n( "No response as <b>%1</b> is necessary", role );
+    }
   }
+}
+
+static QString myStatusStr( Incidence *incidence )
+{
+  QString ret;
+  Attendee *a = findMyAttendee( incidence );
+  if ( a &&
+       a->status() != Attendee::NeedsAction && a->status() != Attendee::Delegated ) {
+    ret = i18n( "(<b>Note</b>: the Organizer preset your response to <b>%1</b>)",
+          Attendee::statusName( a->status() ) );
+  }
+  return ret;
 }
 
 static QString invitationPerson( const QString &email, QString name, QString uid )
@@ -1406,6 +1476,25 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb, bool noHtmlMode, KDateTi
   return html;
 }
 
+static bool replyMeansCounter( Incidence */*incidence*/ )
+{
+  return false;
+/**
+  see kolab/issue 3665 for an example of when we might use this for something
+
+  bool status = false;
+  if ( incidence ) {
+    // put code here that looks at the incidence and determines that
+    // the reply is meant to be a counter proposal.  We think this happens
+    // with Outlook counter proposals, but we aren't sure how yet.
+    if ( condition ) {
+      status = true;
+    }
+  }
+  return status;
+*/
+}
+
 static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
 {
   if ( !msg || !event ) {
@@ -1414,7 +1503,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
 
   switch ( msg->method() ) {
   case iTIPPublish:
-    return i18n( "This event has been published" );
+    return i18n( "This invitation has been published" );
   case iTIPRequest:
     if ( event->revision() > 0 ) {
       return i18n( "This invitation has been updated" );
@@ -1437,6 +1526,11 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     return i18n( "Addition to the invitation" );
   case iTIPReply:
   {
+    if ( replyMeansCounter( event ) ) {
+      return i18n( "%1 makes this counter proposal",
+                   firstAttendeeName( event, i18n( "Sender" ) ) );
+    }
+
     Attendee::List attendees = event->attendees();
     if( attendees.count() == 0 ) {
       kDebug() << "No attendees in the iCal reply!";
@@ -1446,16 +1540,10 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
       kDebug() << "Warning: attendeecount in the reply should be 1"
                << "but is" << attendees.count();
     }
-    Attendee *attendee = *attendees.begin();
-    QString attendeeName = attendee->name();
-    if ( attendeeName.isEmpty() ) {
-      attendeeName = attendee->email();
-    }
-    if ( attendeeName.isEmpty() ) {
-      attendeeName = i18n( "Sender" );
-    }
+    QString attendeeName = firstAttendeeName( event, i18n( "Sender" ) );
 
     QString delegatorName, dummy;
+    Attendee* attendee = *attendees.begin();
     KPIMUtils::extractEmailAddressAndName( attendee->delegator(), dummy, delegatorName );
     if ( delegatorName.isEmpty() ) {
       delegatorName = attendee->delegator();
@@ -1508,9 +1596,13 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     break;
   }
   case iTIPCounter:
-    return i18n( "Sender makes this counter proposal" );
+    return i18n( "%1 makes this counter proposal",
+                 firstAttendeeName( event, i18n( "Sender" ) ) );
+
   case iTIPDeclineCounter:
-    return i18n( "Sender declines the counter proposal" );
+    return i18n( "%1 declines the counter proposal",
+                 firstAttendeeName( event, i18n( "Sender" ) ) );
+
   case iTIPNoMethod:
     return i18n( "Error: Event iTIP message with unknown method" );
   }
@@ -1541,6 +1633,11 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
     return i18n( "Addition to the to-do" );
   case iTIPReply:
   {
+    if ( replyMeansCounter( todo ) ) {
+      return i18n( "%1 makes this counter proposal",
+                   firstAttendeeName( todo, i18n( "Sender" ) ) );
+    }
+
     Attendee::List attendees = todo->attendees();
     if ( attendees.count() == 0 ) {
       kDebug() << "No attendees in the iCal reply!";
@@ -1550,17 +1647,40 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
       kDebug() << "Warning: attendeecount in the reply should be 1"
                << "but is" << attendees.count();
     }
+    QString attendeeName = firstAttendeeName( todo, i18n( "Sender" ) );
+
+    QString delegatorName, dummy;
     Attendee *attendee = *attendees.begin();
+    KPIMUtils::extractEmailAddressAndName( attendee->delegate(), dummy, delegatorName );
+    if ( delegatorName.isEmpty() ) {
+      delegatorName = attendee->delegator();
+    }
 
     switch( attendee->status() ) {
     case Attendee::NeedsAction:
-      return i18n( "Sender indicates this to-do assignment still needs some action" );
+      return i18n( "%1 indicates this to-do assignment still needs some action",
+                   attendeeName );
     case Attendee::Accepted:
-      return i18n( "Sender accepts this to-do" );
+      if ( delegatorName.isEmpty() ) {
+        return i18n( "%1 accepts this to-do", attendeeName );
+      } else {
+        return i18n( "%1 accepts this to-do on behalf of %2",
+                     attendeeName, delegatorName );
+      }
     case Attendee::Tentative:
-      return i18n( "Sender tentatively accepts this to-do" );
+      if ( delegatorName.isEmpty() ) {
+        return i18n( "%1 tentatively accepts this to-do", attendeeName );
+      } else {
+        return i18n( "%1 tentatively accepts this to-do on behalf of %2",
+                     attendeeName, delegatorName );
+      }
     case Attendee::Declined:
-      return i18n( "Sender declines this to-do" );
+      if ( delegatorName.isEmpty() ) {
+        return i18n( "%1 declines this to-do", attendeeName );
+      } else {
+        return i18n( "%1 declines this to-do on behalf of %2",
+                     attendeeName, delegatorName );
+      }
     case Attendee::Delegated:
     {
       QString delegate, dummy;
@@ -1569,24 +1689,28 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
         delegate = attendee->delegate();
       }
       if ( !delegate.isEmpty() ) {
-        return i18n( "Sender has delegated this request for the to-do to %1", delegate );
+        return i18n( "%1 has delegated this to-do to %2", attendeeName, delegate );
       } else {
-        return i18n( "Sender has delegated this request for the to-do " );
+        return i18n( "%1 has delegated this to-do", attendeeName );
       }
     }
     case Attendee::Completed:
       return i18n( "The request for this to-do is now completed" );
     case Attendee::InProcess:
-      return i18n( "Sender is still processing the invitation" );
+      return i18n( "%1 is still processing the to-do", attendeeName );
     case Attendee::None:
       return i18n( "Unknown response to this to-do" );
     }
     break;
   }
   case iTIPCounter:
-    return i18n( "Sender makes this counter proposal" );
+    return i18n( "%1 makes this counter proposal",
+                 firstAttendeeName( todo, i18n( "Sender" ) ) );
+
   case iTIPDeclineCounter:
-    return i18n( "Sender declines the counter proposal" );
+    return i18n( "%1 declines the counter proposal",
+                 firstAttendeeName( todo, i18n( "Sender" ) ) );
+
   case iTIPNoMethod:
     return i18n( "Error: To-do iTIP message with unknown method" );
   }
@@ -1613,6 +1737,10 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
     return i18n( "Addition to the journal" );
   case iTIPReply:
   {
+    if ( replyMeansCounter( journal ) ) {
+      return i18n( "Sender makes this counter proposal" );
+    }
+
     Attendee::List attendees = journal->attendees();
     if ( attendees.count() == 0 ) {
       kDebug() << "No attendees in the iCal reply!";
@@ -2003,6 +2131,106 @@ static bool incidenceOwnedByMe( Calendar *calendar, Incidence *incidence )
   return true;
 }
 
+// The open & close table cell tags for the invitation buttons
+static QString tdOpen = "<td style=\"border-width:2px;border-style:outset\">";
+static QString tdClose = "</td>";
+
+static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
+                                InvitationFormatterHelper *helper )
+{
+  QString html;
+  if ( !helper ) {
+    return html;
+  }
+
+  if ( !rsvpReq ) {
+    // Record only
+    html += tdOpen;
+    html += helper->makeLink( "record", i18n( "[Record]" ) );
+    html += tdClose;
+
+    // Move to trash
+    html += tdOpen;
+    html += helper->makeLink( "delete", i18n( "[Move to Trash]" ) );
+    html += tdClose;
+
+  } else {
+
+    // Accept
+    html += tdOpen;
+    html += helper->makeLink( "accept", i18nc( "accept invitation", "Accept" ) );
+    html += tdClose;
+
+    // Tentative
+    html += tdOpen;
+    html += helper->makeLink( "accept_conditionally",
+                              i18nc( "Accept invitation conditionally", "Accept cond." ) );
+    html += tdClose;
+
+    // Counter proposal
+    html += tdOpen;
+    html += helper->makeLink( "counter",
+                              i18nc( "invitation counter proposal", "Counter proposal" ) );
+    html += tdClose;
+
+    // Decline
+    html += tdOpen;
+    html += helper->makeLink( "decline",
+                              i18nc( "decline invitation", "Decline" ) );
+    html += tdClose;
+  }
+
+  if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
+    // Delegate
+    html += tdOpen;
+    html += helper->makeLink( "delegate",
+                              i18nc( "delegate inviation to another", "Delegate" ) );
+    html += tdClose;
+
+    // Forward
+    html += tdOpen;
+    html += helper->makeLink( "forward",
+                              i18nc( "forward request to another", "Forward" ) );
+    html += tdClose;
+
+    // Check calendar
+    if ( inc && inc->type() == "Event" ) {
+      html += tdOpen;
+      html += helper->makeLink( "check_calendar",
+                                i18nc( "look for scheduling conflicts", "Check my calendar" ) );
+      html += tdClose;
+    }
+  }
+  return html;
+}
+
+static QString counterButtons( Incidence *incidence,
+                               InvitationFormatterHelper *helper )
+{
+  QString html;
+  if ( !helper ) {
+    return html;
+  }
+
+  // Accept proposal
+  html += tdOpen;
+  html += helper->makeLink( "accept_counter", i18n("[Accept]") );
+  html += tdClose;
+
+  // Decline proposal
+  html += tdOpen;
+  html += helper->makeLink( "decline_counter", i18n("[Decline]") );
+  html += tdClose;
+
+  // Check calendar
+  if ( incidence && incidence->type() == "Event" ) {
+    html += tdOpen;
+    html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+    html += tdClose;
+  }
+  return html;
+}
+
 Calendar *InvitationFormatterHelper::calendar() const
 {
   return 0;
@@ -2087,12 +2315,31 @@ static QString formatICalInvitationHelper( QString invitation,
   bool rsvpRec = false;
   Attendee *ea = 0;
   if ( !myInc ) {
-    if ( existingIncidence ) {
-      ea = findMyAttendee( existingIncidence );
+    Incidence *rsvpIncidence = existingIncidence;
+    if ( !rsvpIncidence && inc && inc->revision() > 0 ) {
+      rsvpIncidence = inc;
     }
-    if ( ea && ( ea->status() == Attendee::Accepted || ea->status() == Attendee::Declined ) ) {
+    if ( rsvpIncidence ) {
+      ea = findMyAttendee( rsvpIncidence );
+    }
+    if ( ea &&
+         ( ea->status() == Attendee::Accepted ||
+           ea->status() == Attendee::Declined ||
+           ea->status() == Attendee::Tentative ) ) {
       rsvpRec = true;
     }
+  }
+
+  // determine invitation role
+  QString role;
+  bool isDelegated = false;
+  Attendee *a = findMyAttendee( inc );
+  if ( !a && inc ) {
+    a = inc->attendees().first();
+  }
+  if ( a ) {
+    isDelegated = ( a->status() == Attendee::Delegated );
+    role = Attendee::roleName( a->role() );
   }
 
   // Print if RSVP needed, not-needed, or response already recorded
@@ -2100,18 +2347,38 @@ static QString formatICalInvitationHelper( QString invitation,
   if ( !myInc ) {
     html += "<br/>";
     html += "<i><u>";
-    if ( rsvpRec && ( inc && inc->revision() == 0 ) ) {
-      html += i18n( "Your response has already been recorded [%1]",
-                    ea->statusStr() );
+    if ( rsvpRec && inc ) {
+      if ( inc->revision() == 0 ) {
+        html += i18n( "Your <b>%1</b> response has already been recorded", ea->statusStr() );
+      } else {
+        html += i18n( "Your status for this invitation is <b>%1</b>", ea->statusStr() );
+      }
       rsvpReq = false;
     } else if ( msg->method() == iTIPCancel ) {
       html += i18n( "This invitation was declined" );
     } else if ( msg->method() == iTIPAdd ) {
       html += i18n( "This invitation was accepted" );
     } else {
-      html += rsvpRequestedStr( rsvpReq );
+      if ( !isDelegated ) {
+        html += rsvpRequestedStr( rsvpReq, role );
+      } else {
+        html += i18n( "Awaiting delegation response" );
+      }
     }
-    html += "</u></i><br>";
+    html += "</u></i>";
+  }
+
+  // Print if the organizer gave you a preset status
+  if ( !myInc ) {
+    if ( inc && inc->revision() == 0 ) {
+      QString statStr = myStatusStr( inc );
+      if ( !statStr.isEmpty() ) {
+        html += "<br/>";
+        html += "<i>";
+        html += statStr;
+        html += "</i>";
+      }
+    }
   }
 
   // Add groupware links
@@ -2119,8 +2386,6 @@ static QString formatICalInvitationHelper( QString invitation,
   html += "<p>";
   html += "<table border=\"0\" align=\"center\" cellspacing=\"4\"><tr>";
 
-  const QString tdOpen = "<td style=\"border-width:2px;border-style:outset\">";
-  const QString tdClose = "</td>";
   switch ( msg->method() ) {
     case iTIPPublish:
     case iTIPRequest:
@@ -2136,64 +2401,7 @@ static QString formatICalInvitationHelper( QString invitation,
       }
 
       if ( !myInc ) {
-        if ( rsvpReq ) {
-          // Accept
-          html += tdOpen;
-          html += helper->makeLink( "accept",
-                                    i18nc( "accept invitation",
-                                           "Accept" ) );
-          html += tdClose;
-
-          // Accept conditionally
-          html += tdOpen;
-          html += helper->makeLink( "accept_conditionally",
-                                    i18nc( "Accept invitation conditionally",
-                                           "Accept cond." ) );
-          html += tdClose;
-        }
-
-        if ( rsvpReq ) {
-          // Counter proposal
-          html += tdOpen;
-          html += helper->makeLink( "counter",
-                                    i18nc( "invitation counter proposal",
-                                           "Counter proposal" ) );
-          html += tdClose;
-        }
-
-        if ( rsvpReq ) {
-          // Decline
-          html += tdOpen;
-          html += helper->makeLink( "decline",
-                                    i18nc( "decline invitation",
-                                           "Decline" ) );
-          html += tdClose;
-        }
-
-        if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
-          // Delegate
-          html += tdOpen;
-          html += helper->makeLink( "delegate",
-                                    i18nc( "delegate inviation to another",
-                                           "Delegate" ) );
-          html += tdClose;
-
-          // Forward
-          html += tdOpen;
-          html += helper->makeLink( "forward",
-                                    i18nc( "forward request to another",
-                                           "Forward" ) );
-          html += tdClose;
-
-          // Check calendar
-          if ( incBase && incBase->type() == "Event" ) {
-            html += tdOpen;
-            html += helper->makeLink( "check_calendar",
-                                      i18nc( "look for scheduling conflicts",
-                                             "Check my calendar" ) );
-            html += tdClose;
-          }
-        }
+        html += responseButtons( inc, rsvpReq, rsvpRec, helper );
       }
       break;
     }
@@ -2217,6 +2425,27 @@ static QString formatICalInvitationHelper( QString invitation,
       Attendee *a = 0;
       Attendee *ea = 0;
       if ( inc ) {
+        // First, determine if this reply is really a counter in disguise.
+        if ( replyMeansCounter( inc ) ) {
+          html += "<tr>" + counterButtons( inc, helper ) + "</tr>";
+          break;
+        }
+
+        // Next, maybe this is a declined reply that was delegated from me?
+        // find first attendee who is delegated-from me
+        // look a their PARTSTAT response, if the response is declined,
+        // then we need to start over which means putting all the action
+        // buttons and NOT putting on the [Record response..] button
+        a = findDelegatedFromMyAttendee( inc );
+        if ( a ) {
+          if ( a->status() != Attendee::Accepted ||
+               a->status() != Attendee::Tentative ) {
+            html += responseButtons( inc, rsvpReq, rsvpRec, helper );
+            break;
+          }
+        }
+
+        // Finally, simply allow a Record of the reply
         a = inc->attendees().first();
         if ( a && helper->calendar() ) {
           ea = findAttendee( existingIncidence, a->email() );
@@ -2240,17 +2469,7 @@ static QString formatICalInvitationHelper( QString invitation,
 
     case iTIPCounter:
       // Counter proposal
-      html += tdOpen;
-      html += helper->makeLink( "accept_counter", i18n( "Accept" ) );
-      html += tdClose;
-
-      html += tdOpen;
-      html += helper->makeLink( "decline_counter", i18n( "Decline" ) );
-      html += tdClose;
-
-      html += tdOpen;
-      html += helper->makeLink( "check_calendar", i18n( "Check my calendar" ) );
-      html += tdClose;
+      html += counterButtons( inc, helper );
       break;
 
     case iTIPDeclineCounter:
