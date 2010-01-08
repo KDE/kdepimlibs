@@ -42,7 +42,7 @@ static QString removeGMTPrefix( const QString &displayStr )
   return cleanStr.remove( QRegExp( "^\\(GMT.*\\)\\s" ) );
 }
 
-QString TZMaps::winZoneStandardToDisplay( const QString &standardName )
+QString TzMaps::winZoneStandardToDisplay( const QString &standardName )
 {
   static QHash<QString,QString> standardToDisplay;
 
@@ -312,7 +312,7 @@ QString TZMaps::winZoneStandardToDisplay( const QString &standardName )
   return standardToDisplay[standardName];
 }
 
-QString TZMaps::winZoneDisplayToStandard( const QString &displayName )
+QString TzMaps::winZoneDisplayToStandard( const QString &displayName )
 {
   static QHash<QString,QString> displayToStandard;
 
@@ -583,7 +583,7 @@ QString TZMaps::winZoneDisplayToStandard( const QString &displayName )
 }
 
 
-QString TZMaps::winZoneToOlson( const QString &windowsZone )
+QString TzMaps::winZoneToOlson( const QString &windowsZone )
 {
   static QHash<QString,QString> winToOlson;
 
@@ -861,7 +861,7 @@ QString TZMaps::winZoneToOlson( const QString &windowsZone )
   return olsonStr;
 }
 
-QString TZMaps::winZoneToUtcOffset( const QString &windowsZone )
+QString TzMaps::winZoneToUtcOffset( const QString &windowsZone )
 {
   static QHash<QString,QString> winToUtcOffset;
 
@@ -1051,7 +1051,7 @@ QString TZMaps::winZoneToUtcOffset( const QString &windowsZone )
   return utcOffset;
 }
 
-QString TZMaps::utcOffsetToWinZone( const QString &utcOffset )
+QString TzMaps::utcOffsetToWinZone( const QString &utcOffset )
 {
   static QHash<QString,QString> utcOffsetToWin;
 
@@ -1128,7 +1128,7 @@ QString TZMaps::utcOffsetToWinZone( const QString &utcOffset )
   return utcOffsetToWin[utcOffset.toUpper()];
 }
 
-QString TZMaps::olsonToUtcOffset( const QString &olsonZone )
+QString TzMaps::olsonToUtcOffset( const QString &olsonZone )
 {
   static QHash<QString,QString> olsonToUtcOffset;
 
@@ -1565,7 +1565,7 @@ QString TZMaps::olsonToUtcOffset( const QString &olsonZone )
   return olsonToUtcOffset[olsonZone];
 }
 
-QString TZMaps::utcOffsetToOlson( const QString &utcOffset )
+QString TzMaps::utcOffsetToOlson( const QString &utcOffset )
 {
   static QHash<QString,QString> utcOffsetToOlson;
 
@@ -1658,12 +1658,12 @@ QString TZMaps::utcOffsetToOlson( const QString &utcOffset )
   return utcOffsetToOlson[utcOffset.toUpper()];
 }
 
-QString TZMaps::olsonToWinZone( const QString &olsonZone )
+QString TzMaps::olsonToWinZone( const QString &olsonZone )
 {
   return utcOffsetToWinZone( olsonToUtcOffset( olsonZone ) );
 }
 
-QList<QByteArray> TZMaps::utcOffsetToAbbreviation( const QString &utcOffset )
+QList<QByteArray> TzMaps::utcOffsetToAbbreviation( const QString &utcOffset )
 {
   static QHash<QString,QByteArray> utcOffsetToAbbrev;
 
@@ -1762,7 +1762,7 @@ QList<QByteArray> TZMaps::utcOffsetToAbbreviation( const QString &utcOffset )
 }
 
 
-QString TZMaps::timezoneToUtcOffset( const QString &zone )
+QString TzMaps::timezoneToUtcOffset( const QString &zone )
 {
 #if defined(Q_OS_WIN32) //krazy:exclude=cpp
   return winZoneToUtcOffset( zone );
@@ -1772,7 +1772,7 @@ QString TZMaps::timezoneToUtcOffset( const QString &zone )
 }
 
 
-QString TZMaps::utcOffsetToTimeZone( const QString &utcOffset )
+QString TzMaps::utcOffsetToTimeZone( const QString &utcOffset )
 {
 #if defined(Q_OS_WIN32) //krazy:exclude=cpp
   return utcOffsetToWinZone( utcOffset );

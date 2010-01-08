@@ -35,7 +35,7 @@
 
 namespace KCal {
 
-namespace TZMaps
+namespace TzMaps
 {
   /**
     Maps a Windows timezone standard name to a Windows timezone display name.
@@ -59,7 +59,8 @@ namespace TZMaps
 
   /**
     Maps a Windows timezone display or standard name to an Olson zoneinfo name.
-    @param windowsZone is a string containing a valid Windows timezone display name.
+    @param windowsZone is a string containing a valid Windows timezone display
+    or standard name.
     @return a QString containing the corresponding Olson zoneinfo name
     or empty if an invalid Windows timezone display name was provided.
     @since 4.4
@@ -77,7 +78,8 @@ namespace TZMaps
 
   /**
     Maps a Windows timezone display or standard name to a UTC offset string.
-    @param windowsZone is a string containing a valid Windows timezone display name.
+    @param windowsZone is a string containing a valid Windows timezone display
+    or standard name.
     @return a QString containing the corresponding UTC offset
     or empty if an invalid Windows timezone display name was provided.
     A valid return string has the format "UTC(+,-)HH[:MM]"

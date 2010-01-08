@@ -32,147 +32,147 @@ using namespace KCal;
 
 void TZMappingTest::testWinStandardToDisplay()
 {
-  QCOMPARE( TZMaps::winZoneStandardToDisplay( "NO-SUCH-ZONE" ),
+  QCOMPARE( TzMaps::winZoneStandardToDisplay( "NO-SUCH-ZONE" ),
             QString() );
-  QCOMPARE( TZMaps::winZoneStandardToDisplay( "US Mountain Standard Time" ),
+  QCOMPARE( TzMaps::winZoneStandardToDisplay( "US Mountain Standard Time" ),
             QString( "Arizona" ) );
-  QCOMPARE( TZMaps::winZoneStandardToDisplay( "US mountain time" ),
+  QCOMPARE( TzMaps::winZoneStandardToDisplay( "US mountain time" ),
             QString() );
-  QCOMPARE( TZMaps::winZoneStandardToDisplay( "Romance Standard Time" ),
+  QCOMPARE( TzMaps::winZoneStandardToDisplay( "Romance Standard Time" ),
             QString( "Brussels, Copenhagen, Madrid, Paris" ) );
-  QCOMPARE( TZMaps::winZoneStandardToDisplay( QString() ),
+  QCOMPARE( TzMaps::winZoneStandardToDisplay( QString() ),
             QString() );
 }
 
 void TZMappingTest::testWinDisplayToStandard()
 {
-  QCOMPARE( TZMaps::winZoneDisplayToStandard( "NO-SUCH-ZONE" ),
+  QCOMPARE( TzMaps::winZoneDisplayToStandard( "NO-SUCH-ZONE" ),
             QString() );
-  QCOMPARE( TZMaps::winZoneDisplayToStandard( "(GMT-07:00) Arizona" ),
+  QCOMPARE( TzMaps::winZoneDisplayToStandard( "(GMT-07:00) Arizona" ),
             QString( "US Mountain Standard Time" ) );
-  QCOMPARE( TZMaps::winZoneDisplayToStandard( "ariZona" ),
+  QCOMPARE( TzMaps::winZoneDisplayToStandard( "ariZona" ),
             QString() );
-  QCOMPARE( TZMaps::winZoneDisplayToStandard( "Brussels, Copenhagen, Madrid, Paris" ),
+  QCOMPARE( TzMaps::winZoneDisplayToStandard( "Brussels, Copenhagen, Madrid, Paris" ),
             QString( "Romance Standard Time" ) );
-  QCOMPARE( TZMaps::winZoneDisplayToStandard( QString() ),
+  QCOMPARE( TzMaps::winZoneDisplayToStandard( QString() ),
             QString() );
 }
 
 void TZMappingTest::testWinToOlson()
 {
-  QCOMPARE( TZMaps::winZoneToOlson( "NO-SUCH-ZONE" ),
+  QCOMPARE( TzMaps::winZoneToOlson( "NO-SUCH-ZONE" ),
             QString() );
-  QCOMPARE( TZMaps::winZoneToOlson( "Hawaii" ),
+  QCOMPARE( TzMaps::winZoneToOlson( "Hawaii" ),
             QString( "Pacific/Honolulu" ) );
-  QCOMPARE( TZMaps::winZoneToOlson( "(GMT-09:00) Hawaii" ),
+  QCOMPARE( TzMaps::winZoneToOlson( "(GMT-09:00) Hawaii" ),
             QString( "Pacific/Honolulu" ) );
-  QCOMPARE( TZMaps::winZoneToOlson( "hawaii" ),
+  QCOMPARE( TzMaps::winZoneToOlson( "hawaii" ),
             QString() );
-  QCOMPARE( TZMaps::winZoneToOlson( "Moscow, St. Petersburg, Volgograd" ),
+  QCOMPARE( TzMaps::winZoneToOlson( "Moscow, St. Petersburg, Volgograd" ),
             QString( "Europe/Moscow" ) );
-  QCOMPARE( TZMaps::winZoneToOlson( "Central European Standard Time" ),
+  QCOMPARE( TzMaps::winZoneToOlson( "Central European Standard Time" ),
             QString( "Europe/Warsaw" ) );
-  QCOMPARE( TZMaps::winZoneToOlson( QString() ),
+  QCOMPARE( TzMaps::winZoneToOlson( QString() ),
             QString() );
 }
 
 void TZMappingTest::testWinToUtcOffset()
 {
-  QCOMPARE( TZMaps::winZoneToUtcOffset( "NO-SUCH-ZONE" ),
+  QCOMPARE( TzMaps::winZoneToUtcOffset( "NO-SUCH-ZONE" ),
             QString() );
-  QCOMPARE( TZMaps::winZoneToUtcOffset( "Hawaii" ),
+  QCOMPARE( TzMaps::winZoneToUtcOffset( "Hawaii" ),
             QString( "UTC-10" ) );
-  QCOMPARE( TZMaps::winZoneToUtcOffset( "hawaii" ),
+  QCOMPARE( TzMaps::winZoneToUtcOffset( "hawaii" ),
             QString() );
-  QCOMPARE( TZMaps::winZoneToUtcOffset( "Moscow, St. Petersburg, Volgograd" ),
+  QCOMPARE( TzMaps::winZoneToUtcOffset( "Moscow, St. Petersburg, Volgograd" ),
             QString( "UTC+3" ) );
-  QCOMPARE( TZMaps::winZoneToUtcOffset( QString() ),
+  QCOMPARE( TzMaps::winZoneToUtcOffset( QString() ),
             QString() );
 }
 
 void TZMappingTest::testUtcOffsetToWin()
 {
-  QCOMPARE( TZMaps::utcOffsetToWinZone( "UTC+10000" ),
+  QCOMPARE( TzMaps::utcOffsetToWinZone( "UTC+10000" ),
             QString() );
-  QCOMPARE( TZMaps::utcOffsetToWinZone( "UTC-10" ),
+  QCOMPARE( TzMaps::utcOffsetToWinZone( "UTC-10" ),
             QString( "Hawaii" ) );
-  QCOMPARE( TZMaps::utcOffsetToWinZone( "utc-10" ),
+  QCOMPARE( TzMaps::utcOffsetToWinZone( "utc-10" ),
             QString( "Hawaii" ) );
-  QCOMPARE( TZMaps::utcOffsetToWinZone( "UTC+3" ),
+  QCOMPARE( TzMaps::utcOffsetToWinZone( "UTC+3" ),
             QString( "Moscow, St. Petersburg, Volgograd" ) );
-  QCOMPARE( TZMaps::utcOffsetToWinZone( QString() ),
+  QCOMPARE( TzMaps::utcOffsetToWinZone( QString() ),
             QString() );
 }
 
 void TZMappingTest::testUtcToUtc()
 {
-  QCOMPARE( TZMaps::winZoneToUtcOffset( TZMaps::utcOffsetToWinZone( QString() ) ),
+  QCOMPARE( TzMaps::winZoneToUtcOffset( TzMaps::utcOffsetToWinZone( QString() ) ),
             QString() );
-  QCOMPARE( TZMaps::winZoneToUtcOffset( TZMaps::utcOffsetToWinZone( "UTC+1000" ) ),
+  QCOMPARE( TzMaps::winZoneToUtcOffset( TzMaps::utcOffsetToWinZone( "UTC+1000" ) ),
             QString() );
-  QCOMPARE( TZMaps::winZoneToUtcOffset( TZMaps::utcOffsetToWinZone( "utc-10" ) ),
+  QCOMPARE( TzMaps::winZoneToUtcOffset( TzMaps::utcOffsetToWinZone( "utc-10" ) ),
             QString( "UTC-10" ) );
-  QCOMPARE( TZMaps::winZoneToUtcOffset( TZMaps::utcOffsetToWinZone( "UtC" ) ),
+  QCOMPARE( TzMaps::winZoneToUtcOffset( TzMaps::utcOffsetToWinZone( "UtC" ) ),
             QString( "UTC" ) );
 }
 
 void TZMappingTest::testWinToWin()
 {
-  QCOMPARE( TZMaps::utcOffsetToWinZone( TZMaps::winZoneToUtcOffset( QString() ) ),
+  QCOMPARE( TzMaps::utcOffsetToWinZone( TzMaps::winZoneToUtcOffset( QString() ) ),
             QString() );
-  QCOMPARE( TZMaps::utcOffsetToWinZone( TZMaps::winZoneToUtcOffset( "NO-SUCH-ZONE" ) ),
+  QCOMPARE( TzMaps::utcOffsetToWinZone( TzMaps::winZoneToUtcOffset( "NO-SUCH-ZONE" ) ),
             QString() );
-  QCOMPARE( TZMaps::utcOffsetToWinZone( TZMaps::winZoneToUtcOffset( "Hawaii" ) ),
+  QCOMPARE( TzMaps::utcOffsetToWinZone( TzMaps::winZoneToUtcOffset( "Hawaii" ) ),
             QString( "Hawaii" ) );
-  QCOMPARE( TZMaps::utcOffsetToWinZone( TZMaps::winZoneToUtcOffset( "Central America" ) ),
+  QCOMPARE( TzMaps::utcOffsetToWinZone( TzMaps::winZoneToUtcOffset( "Central America" ) ),
             QString( "Central Time (US & Canada)" ) );
 }
 
 void TZMappingTest::testOlsonToWin()
 {
-  QCOMPARE( TZMaps::olsonToWinZone( "America/New_York" ),
+  QCOMPARE( TzMaps::olsonToWinZone( "America/New_York" ),
             QString( "Eastern Time (US & Canada)" ) );
-  QCOMPARE( TZMaps::olsonToWinZone( "Australia/Sydney" ),
+  QCOMPARE( TzMaps::olsonToWinZone( "Australia/Sydney" ),
             QString( "Canberra, Melbourne, Sydney" ) );
-  QCOMPARE( TZMaps::olsonToWinZone( "NO-SUCH-ZONE" ),
+  QCOMPARE( TzMaps::olsonToWinZone( "NO-SUCH-ZONE" ),
             QString() );
-  QCOMPARE( TZMaps::olsonToWinZone( QString() ),
+  QCOMPARE( TzMaps::olsonToWinZone( QString() ),
             QString() );
-  QCOMPARE( TZMaps::olsonToWinZone( "Europe/London" ),
+  QCOMPARE( TzMaps::olsonToWinZone( "Europe/London" ),
             QString( "Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London" ) );
-  QCOMPARE( TZMaps::olsonToWinZone( "Asia/Kolkata" ),
+  QCOMPARE( TzMaps::olsonToWinZone( "Asia/Kolkata" ),
             QString( "Chennai, Kolkata, Mumbai, New Delhi" ) );
-  QCOMPARE( TZMaps::olsonToWinZone( "Pacific/Chatham" ),
+  QCOMPARE( TzMaps::olsonToWinZone( "Pacific/Chatham" ),
             QString() );
 }
 
 void TZMappingTest::testOlsonToUtcOffset()
 {
-  QCOMPARE( TZMaps::olsonToUtcOffset( "NO-SUCH-ZONE" ),
+  QCOMPARE( TzMaps::olsonToUtcOffset( "NO-SUCH-ZONE" ),
             QString() );
-  QCOMPARE( TZMaps::olsonToUtcOffset( "America/Argentina/Catamarca" ),
+  QCOMPARE( TzMaps::olsonToUtcOffset( "America/Argentina/Catamarca" ),
             QString( "UTC-4" ) );
-  QCOMPARE( TZMaps::olsonToUtcOffset( "hawaii" ),
+  QCOMPARE( TzMaps::olsonToUtcOffset( "hawaii" ),
             QString() );
-  QCOMPARE( TZMaps::olsonToUtcOffset( "America/New_York" ),
+  QCOMPARE( TzMaps::olsonToUtcOffset( "America/New_York" ),
             QString( "UTC-5" ) );
-  QCOMPARE( TZMaps::olsonToUtcOffset( QString() ),
+  QCOMPARE( TzMaps::olsonToUtcOffset( QString() ),
             QString() );
 }
 
 void TZMappingTest::testUtcOffsetToOlson()
 {
-  QCOMPARE( TZMaps::utcOffsetToOlson( "UTC+10000" ),
+  QCOMPARE( TzMaps::utcOffsetToOlson( "UTC+10000" ),
             QString() );
-  QCOMPARE( TZMaps::utcOffsetToOlson( "UTC-10" ),
+  QCOMPARE( TzMaps::utcOffsetToOlson( "UTC-10" ),
             QString( "Pacific/Honolulu" ) );
-  QCOMPARE( TZMaps::utcOffsetToOlson( "utc-10" ),
+  QCOMPARE( TzMaps::utcOffsetToOlson( "utc-10" ),
             QString( "Pacific/Honolulu" ) );
-  QCOMPARE( TZMaps::utcOffsetToOlson( "utc-4:30" ),
+  QCOMPARE( TzMaps::utcOffsetToOlson( "utc-4:30" ),
             QString( "America/Caracas" ) );
-  QCOMPARE( TZMaps::utcOffsetToOlson( "UTC+3" ),
+  QCOMPARE( TzMaps::utcOffsetToOlson( "UTC+3" ),
             QString( "Europe/Moscow" ) );
-  QCOMPARE( TZMaps::utcOffsetToOlson( QString() ),
+  QCOMPARE( TzMaps::utcOffsetToOlson( QString() ),
             QString() );
 }
 
@@ -190,21 +190,21 @@ static QString abbrevStr( const QList<QByteArray> &abbrevs )
 
 void TZMappingTest::testAbbrevs()
 {
-  KTimeZone zonep1( TZMaps::utcOffsetToOlson( "UTC+1" ) );
-  KTimeZone zonep2( TZMaps::utcOffsetToOlson( "UTC+2" ) );
-  KTimeZone zonep3( TZMaps::utcOffsetToOlson( "UTC+3" ) );
-  KTimeZone zonep4( TZMaps::utcOffsetToOlson( "UTC+4" ) );
-  KTimeZone zonep5( TZMaps::utcOffsetToOlson( "UTC+5" ) );
+  KTimeZone zonep1( TzMaps::utcOffsetToOlson( "UTC+1" ) );
+  KTimeZone zonep2( TzMaps::utcOffsetToOlson( "UTC+2" ) );
+  KTimeZone zonep3( TzMaps::utcOffsetToOlson( "UTC+3" ) );
+  KTimeZone zonep4( TzMaps::utcOffsetToOlson( "UTC+4" ) );
+  KTimeZone zonep5( TzMaps::utcOffsetToOlson( "UTC+5" ) );
 
-  QCOMPARE( abbrevStr( TZMaps::utcOffsetToAbbreviation( "UTC+1" ) ),
+  QCOMPARE( abbrevStr( TzMaps::utcOffsetToAbbreviation( "UTC+1" ) ),
             QString( "CET,WAT,WEST" ) );
-  QCOMPARE( abbrevStr( TZMaps::utcOffsetToAbbreviation( "UTC+2" ) ),
+  QCOMPARE( abbrevStr( TzMaps::utcOffsetToAbbreviation( "UTC+2" ) ),
             QString( "CAT,CEST,EET,IST,SAST" ) );
-  QCOMPARE( abbrevStr( TZMaps::utcOffsetToAbbreviation( "UTC+3" ) ),
+  QCOMPARE( abbrevStr( TzMaps::utcOffsetToAbbreviation( "UTC+3" ) ),
             QString( "AST,EAT,EEST,MSK" ) );
-  QCOMPARE( abbrevStr( TZMaps::utcOffsetToAbbreviation( "UTC+4" ) ),
+  QCOMPARE( abbrevStr( TzMaps::utcOffsetToAbbreviation( "UTC+4" ) ),
             QString( "AMT,AST,AZT,GET,MUT,RET,SAMT,SCT" ) );
-  QCOMPARE( abbrevStr( TZMaps::utcOffsetToAbbreviation( "UTC+5" ) ),
+  QCOMPARE( abbrevStr( TzMaps::utcOffsetToAbbreviation( "UTC+5" ) ),
             QString( "AMST,HMT,PKT,YEKT" ) );
 }
 
