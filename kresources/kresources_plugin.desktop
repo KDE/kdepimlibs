@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=KResources Plugin
 Name[ca]=Connector pel KResources
+Name[ca@valencia]=Connector pel KResources
 Name[cs]=Modul rámce KResource
 Name[da]=KResources-plugin
 Name[de]=KRessourcen-Modul
@@ -46,6 +47,7 @@ Type=ServiceType
 X-KDE-ServiceType=KResources/Plugin
 Comment=KResources Framework Plugin
 Comment[ca]=Connector del marc de treball pel KResources
+Comment[ca@valencia]=Connector del marc de treball pel KResources
 Comment[cs]=Modul rámce KResource
 Comment[da]=KResource-strukturplugin
 Comment[de]=Modul für KRessourcen-Grundgerüst
