@@ -985,7 +985,7 @@ static Attendee *findDelegatedFromMyAttendee( Incidence *incidence )
     QString delegatorName, delegatorEmail;
     Attendee::List attendees = incidence->attendees();
     Attendee::List::ConstIterator it2;
-    for ( it2 = attendees.begin(); it2 != attendees.end(); ++it2 ) {
+    for ( it2 = attendees.constBegin(); it2 != attendees.constEnd(); ++it2 ) {
       Attendee *a = *it2;
       KPIMUtils::extractEmailAddressAndName( a->delegator(), delegatorEmail, delegatorName );
       if ( settings.getSetting( KEMailSettings::EmailAddress ) == delegatorEmail ) {
