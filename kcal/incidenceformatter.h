@@ -89,7 +89,7 @@ namespace IncidenceFormatter
   /**
     Create a QString representation of an Incidence in a nice format
     suitable for using in a tooltip.
-    @param location where the incidence is from (e.g., resource name)
+    @param sourceName where the incidence is from (e.g., resource name)
     @param incidence is a pointer to the Incidence to be formatted.
     @param date is the QDate for which the toolTip should be computed; used
     mainly for recurring incidences.
@@ -98,7 +98,7 @@ namespace IncidenceFormatter
     will shift the Incidence times to different timezones.
     @since 4.4
   */
-  KCAL_EXPORT QString toolTipStr( const QString &location,
+  KCAL_EXPORT QString toolTipStr( const QString &sourceName,
                                   IncidenceBase *incidence,
                                   const QDate &date=QDate(),
                                   bool richText=true,
@@ -147,7 +147,7 @@ namespace IncidenceFormatter
   /**
     Create a RichText QString representation of an Incidence in a nice format
     suitable for using in a viewer widget.
-    @param location where the incidence is from (e.g., resource name)
+    @param sourceName where the incidence is from (e.g., resource name)
     @param incidence is a pointer to the Incidence to be formatted.
     @param date is the QDate for which the string representation should be computed;
     used mainly for recurring incidences.
@@ -155,7 +155,7 @@ namespace IncidenceFormatter
     will shift the Incidence times to different timezones.
     @since 4.4
   */
-  KCAL_EXPORT QString extensiveDisplayStr( const QString &location,
+  KCAL_EXPORT QString extensiveDisplayStr( const QString &sourceName,
                                            IncidenceBase *incidence,
                                            const QDate &date=QDate(),
                                            KDateTime::Spec spec=KDateTime::Spec() );

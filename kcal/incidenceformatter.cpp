@@ -806,18 +806,18 @@ class KCal::IncidenceFormatter::EventViewerVisitor
               KDateTime::Spec spec=KDateTime::Spec() )
     {
       mCalendar = calendar;
-      mLocation.clear();
+      mSourceName.clear();
       mDate = date;
       mSpec = spec;
       mResult = "";
       return incidence->accept( *this );
     }
 
-    bool act( const QString& location, IncidenceBase *incidence, const QDate &date,
+    bool act( const QString& sourceName, IncidenceBase *incidence, const QDate &date,
               KDateTime::Spec spec=KDateTime::Spec() )
     {
       mCalendar = 0;
-      mLocation = location;
+      mSourceName = sourceName;
       mDate = date;
       mSpec = spec;
       mResult = "";
@@ -829,31 +829,31 @@ class KCal::IncidenceFormatter::EventViewerVisitor
   protected:
     bool visit( Event *event )
     {
-      const QString calStr = mCalendar ? resourceString( mCalendar, event ) : mLocation;
+      const QString calStr = mCalendar ? resourceString( mCalendar, event ) : mSourceName;
       mResult = displayViewFormatEvent( calStr, event, mDate, mSpec );
       return !mResult.isEmpty();
     }
     bool visit( Todo *todo )
     {
-      const QString calStr = mCalendar ? resourceString( mCalendar, todo ) : mLocation;
+      const QString calStr = mCalendar ? resourceString( mCalendar, todo ) : mSourceName;
       mResult = displayViewFormatTodo( calStr, todo, mDate, mSpec );
       return !mResult.isEmpty();
     }
     bool visit( Journal *journal )
     {
-      const QString calStr = mCalendar ? resourceString( mCalendar, journal ) : mLocation;
+      const QString calStr = mCalendar ? resourceString( mCalendar, journal ) : mSourceName;
       mResult = displayViewFormatJournal( calStr, journal, mSpec );
       return !mResult.isEmpty();
     }
     bool visit( FreeBusy *fb )
     {
-      mResult = displayViewFormatFreeBusy( mLocation, fb, mSpec );
+      mResult = displayViewFormatFreeBusy( mSourceName, fb, mSpec );
       return !mResult.isEmpty();
     }
 
   protected:
     Calendar *mCalendar;
-    QString mLocation;
+    QString mSourceName;
     QDate mDate;
     KDateTime::Spec mSpec;
     QString mResult;
@@ -898,7 +898,7 @@ QString IncidenceFormatter::extensiveDisplayStr( Calendar *calendar,
 }
 
 
-QString IncidenceFormatter::extensiveDisplayStr( const QString &location,
+QString IncidenceFormatter::extensiveDisplayStr( const QString &sourceName,
                                                  IncidenceBase *incidence,
                                                  const QDate &date,
                                                  KDateTime::Spec spec )
@@ -908,7 +908,7 @@ QString IncidenceFormatter::extensiveDisplayStr( const QString &location,
   }
 
   EventViewerVisitor v;
-  if ( v.act( location, incidence, date, spec ) ) {
+  if ( v.act( sourceName, incidence, date, spec ) ) {
     return v.result();
   } else {
     return QString();
@@ -2785,13 +2785,13 @@ QString IncidenceFormatter::toolTipStr( Calendar *calendar,
   }
 }
 
-QString IncidenceFormatter::toolTipStr( const QString& location,
+QString IncidenceFormatter::toolTipStr( const QString& sourceName,
                                         IncidenceBase *incidence,
                                         const QDate &date,
                                         bool richText, KDateTime::Spec spec )
 {
   ToolTipVisitor v;
-  if ( v.act( location, incidence, date, richText, spec ) ) {
+  if ( v.act( sourceName, incidence, date, richText, spec ) ) {
     return v.result();
   } else {
     return QString();
