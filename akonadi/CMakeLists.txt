@@ -284,7 +284,7 @@ install( FILES
 )
 
 install( FILES
-   collectionpathresolver_p.h collectionutils_p.h
+   collectionpathresolver_p.h
    DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/private COMPONENT Devel
    )
 
