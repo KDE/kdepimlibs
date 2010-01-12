@@ -33,7 +33,7 @@
 using namespace Akonadi;
 
 DragDropManager::DragDropManager( QAbstractItemView *view )
-    : mAskAction( true ), m_view( view )
+    : mShowDropActionMenu( true ), m_view( view )
 {
 }
 
@@ -155,7 +155,7 @@ bool DragDropManager::processDropEvent( QDropEvent *event )
     return true;
   }
 
-  if ( !mAskAction ) {
+  if ( !mShowDropActionMenu ) {
     if ( moveAllowed )
       defaultAction = Qt::MoveAction;
     else if ( copyAllowed )
@@ -270,13 +270,13 @@ void DragDropManager::startDrag( Qt::DropActions supportedActions )
   drag->exec( supportedActions, defaultAction );
 }
 
-bool DragDropManager::isAskDndActionMenu() const
+bool DragDropManager::showDropActionMenu() const
 {
-  return mAskAction;
+  return mShowDropActionMenu;
 }
 
-void DragDropManager::askDndActionMenu( bool _b)
+void DragDropManager::setShowDropActionMenu( bool _b)
 {
-  mAskAction = _b;
+  mShowDropActionMenu = _b;
 }
 
