@@ -720,6 +720,12 @@ class KMIME_EXPORT Parametrized : public Structured
     QString parameter( const QString &key ) const;
 
     /**
+      @return true if a paramter with the given name exists.
+      @since 4.5
+    */
+    bool hasParameter( const QString &key ) const;
+
+    /**
       Sets the parameter @p key to @p value.
       @param key The parameter name.
       @param value The new value for @p key.

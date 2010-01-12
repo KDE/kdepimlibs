@@ -388,10 +388,14 @@ void HeaderTest::testParametrizedHeader()
   // empty header
   h = new Parametrized();
   QVERIFY( h->isEmpty() );
+  QVERIFY( !h->hasParameter( "foo") );
 
   // add a parameter
   h->setParameter( "filename", "bla.jpg" );
   QVERIFY( !h->isEmpty() );
+  QVERIFY( h->hasParameter( "filename") );
+  QVERIFY( h->hasParameter( "FiLeNaMe") );
+  QVERIFY( !h->hasParameter( "bla.jpg" ) );
   QCOMPARE( h->parameter( "filename" ), QString( "bla.jpg" ) );
   QCOMPARE( h->as7BitString( false ), QByteArray( "filename=\"bla.jpg\"" ) );
 
