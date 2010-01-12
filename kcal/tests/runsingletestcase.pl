@@ -48,7 +48,11 @@ my $outfile = $file;
 $outfile =~ /\/([^\/]*)$/;
 $outfile = "$file.$id.out";
 
-$testcmd = "$app $file $outfile 2> /dev/null";
+if ( $^O == "MSWin32" || $^O == "msys" ) {
+  $testcmd = "$app $file $outfile 2> nul";
+} else {
+  $testcmd = "$app $file $outfile 2> /dev/null";
+}
 
 #print "CMD $testcmd\n";
 
