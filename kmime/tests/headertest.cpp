@@ -256,18 +256,6 @@ void HeaderTest::testAddressListHeader()
   QCOMPARE( h->prettyAddresses().first(), QString("joe@where.test.") );
   delete h;
 
-  // name contains an @ 
-  h = new Headers::Generics::AddressList();
-  h->from7BitString( "nieuwsbrief kde@startpagina.nl <info@service.startpagina.nl>" );
-  QVERIFY( !h->isEmpty() );
-  QCOMPARE( h->addresses().count(), 1 );
-  QCOMPARE( h->addresses().first(), QByteArray("info@service.startpagina.nl") );
-  QCOMPARE( h->displayNames().count(), 1 );
-  QCOMPARE( h->displayNames().first(), QString("nieuwsbrief kde@startpagina.nl") );
-  QCOMPARE( h->prettyAddresses().count(), 1 );
-  QCOMPARE( h->prettyAddresses().first(), QString("nieuwsbrief kde@startpagina.nl <info@service.startpagina.nl>") );
-  delete h;
-
   h = new Headers::Generics::AddressList();
   h->from7BitString( "Mary Smith <mary@x.test>, jdoe@example.org., Who? <one@y.test>" );
   QCOMPARE( h->addresses().count(), 3 );
@@ -400,10 +388,14 @@ void HeaderTest::testParametrizedHeader()
   // empty header
   h = new Parametrized();
   QVERIFY( h->isEmpty() );
+  QVERIFY( !h->hasParameter( "foo") );
 
   // add a parameter
   h->setParameter( "filename", "bla.jpg" );
   QVERIFY( !h->isEmpty() );
+  QVERIFY( h->hasParameter( "filename") );
+  QVERIFY( h->hasParameter( "FiLeNaMe") );
+  QVERIFY( !h->hasParameter( "bla.jpg" ) );
   QCOMPARE( h->parameter( "filename" ), QString( "bla.jpg" ) );
   QCOMPARE( h->as7BitString( false ), QByteArray( "filename=\"bla.jpg\"" ) );
 

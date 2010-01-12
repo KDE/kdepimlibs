@@ -915,13 +915,18 @@ QByteArray Parametrized::as7BitString( bool withHeaderType ) const
 
 QString Parametrized::parameter( const QString &key ) const
 {
-  return d_func()->parameterHash.value( key );
+  return d_func()->parameterHash.value( key.toLower() );
+}
+
+bool Parametrized::hasParameter( const QString &key ) const
+{
+  return d_func()->parameterHash.contains( key.toLower() );
 }
 
 void Parametrized::setParameter( const QString &key, const QString &value )
 {
   Q_D(Parametrized);
-  d->parameterHash.insert( key, value );
+  d->parameterHash.insert( key.toLower(), value );
 }
 
 bool Parametrized::isEmpty() const
