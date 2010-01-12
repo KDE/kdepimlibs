@@ -256,18 +256,6 @@ void HeaderTest::testAddressListHeader()
   QCOMPARE( h->prettyAddresses().first(), QString("joe@where.test.") );
   delete h;
 
-  // name contains an @ 
-  h = new Headers::Generics::AddressList();
-  h->from7BitString( "nieuwsbrief kde@startpagina.nl <info@service.startpagina.nl>" );
-  QVERIFY( !h->isEmpty() );
-  QCOMPARE( h->addresses().count(), 1 );
-  QCOMPARE( h->addresses().first(), QByteArray("info@service.startpagina.nl") );
-  QCOMPARE( h->displayNames().count(), 1 );
-  QCOMPARE( h->displayNames().first(), QString("nieuwsbrief kde@startpagina.nl") );
-  QCOMPARE( h->prettyAddresses().count(), 1 );
-  QCOMPARE( h->prettyAddresses().first(), QString("nieuwsbrief kde@startpagina.nl <info@service.startpagina.nl>") );
-  delete h;
-
   h = new Headers::Generics::AddressList();
   h->from7BitString( "Mary Smith <mary@x.test>, jdoe@example.org., Who? <one@y.test>" );
   QCOMPARE( h->addresses().count(), 3 );
