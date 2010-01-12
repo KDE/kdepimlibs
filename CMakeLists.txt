@@ -59,6 +59,9 @@ if (NOT KDEPIM_ONLY_KLEO)
   find_package(SharedMimeInfo)
   macro_log_feature(SHARED_MIME_INFO_FOUND "SMI" "SharedMimeInfo" "http://freedesktop.org/wiki/Software/shared-mime-info" TRUE "0.30" "SharedMimeInfo is required.")
 
+  find_package(Nepomuk)
+  macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk is required to build the Akonadi libraries.")
+
 endif (NOT KDEPIM_ONLY_KLEO)
 
 
