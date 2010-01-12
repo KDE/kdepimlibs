@@ -42,21 +42,24 @@ ContactSearchJob::~ContactSearchJob()
 
 void ContactSearchJob::setQuery( Criterion criterion, const QString &value )
 {
-  QString query;
+  QString query = QString::fromLatin1(
+            "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>" );
 
   if ( criterion == Name ) {
-    query = QString::fromLatin1( ""
-                                 "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>"
-                                 "SELECT ?r WHERE {"
-                                 "  ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
-                                 "}" );
+    query += QString::fromLatin1( "SELECT ?r WHERE {"
+                                  "  ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
+                                  "}" );
   } else if ( criterion == Email ) {
-    query = QString::fromLatin1( ""
-                                 "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>"
-                                 "SELECT ?person WHERE {"
-                                 "  ?person nco:hasEmailAddress ?email ."
-                                 "  ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
-                                 " }" );
+    query += QString::fromLatin1( "SELECT ?person WHERE {"
+                                  "  ?person nco:hasEmailAddress ?email ."
+                                  "  ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
+                                  " }" );
+  } else if ( criterion == NickName ) {
+    //select ?r { ?r nco:fullname ?v . ?v bif:contains "'hugo maier'" .
+    query += QString::fromLatin1( "SELECT ?r WHERE {"
+                                  "  ?r a nco:PersonContact ."
+                                  "  ?r nco:nickname ?v . ?v bif:contains \"'%1'\" ."
+                                  " }" );
   }
 
   query = query.arg( value );
