@@ -602,17 +602,22 @@ void Content::toStream( QTextStream &ts, bool scrambleFromLines )
 
 Headers::Generic *Content::getNextHeader( QByteArray &head )
 {
-  return nextHeader( head );
+  return d_ptr->nextHeader( head );
 }
 
 Headers::Generic *Content::nextHeader( QByteArray &head )
+{
+  return d_ptr->nextHeader( head );
+}
+
+Headers::Generic *ContentPrivate::nextHeader( QByteArray &head )
 {
   Headers::Base *header = HeaderParsing::extractFirstHeader( head );
   if ( !header ) {
     return 0;
   }
   // Convert it from the real class to Generic.
-  Headers::Generic *ret = new Headers::Generic( header->type(), this );
+  Headers::Generic *ret = new Headers::Generic( header->type(), q_ptr );
   ret->from7BitString( header->as7BitString() );
   return ret;
 }

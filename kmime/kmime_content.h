@@ -243,7 +243,7 @@ class KMIME_EXPORT Content
       Extracts and removes the next header from @p head.
       The caller is responsible for deleting the returned header.
 
-      @deprecated Use nextHeader( QByteArray )
+      @deprecated Use KMime::extractFirstHeader().
       @param head is a QByteArray containing the header data.
     */
     KDE_DEPRECATED Headers::Generic *getNextHeader( QByteArray &head );
