@@ -262,13 +262,12 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   }
   cmd = sendCommand (CommandPtr(new imapCommand ("AUTHENTICATE", firstCommand.toLatin1())));
 
-  while ( true )
-  {
+  int pl = 0;
+  while ( pl != -1 && !cmd->isComplete () ) {
     //read the next line
-    while (parseLoop() == 0) {
+    while ( ( pl = parseLoop() ) == 0) {
       ;
     }
-    if ( cmd->isComplete() ) break;
 
     if (!continuation.isEmpty())
     {
