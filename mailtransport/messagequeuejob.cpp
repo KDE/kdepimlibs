@@ -184,9 +184,9 @@ SentBehaviourAttribute& MessageQueueJob::sentBehaviourAttribute()
 }
 
 void MessageQueueJob::setMessage( Message::Ptr message )
-{                                                                                                             
+{
   d->message = message;
-}     
+}
 
 void MessageQueueJob::start()
 {
