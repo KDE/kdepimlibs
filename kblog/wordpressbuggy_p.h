@@ -39,6 +39,7 @@ namespace KIO
 
 namespace KBlog {
 
+
 class WordpressBuggyPrivate : public MovableTypePrivate
 {
   public:
@@ -48,6 +49,10 @@ class WordpressBuggyPrivate : public MovableTypePrivate
     virtual ~WordpressBuggyPrivate();
     virtual QList<QVariant> defaultArgs( const QString &id = QString() );
 
+    //adding these two lines prevents the symbols from MovableTypePrivate
+    //to be hidden by the symbols below that.
+    using MovableTypePrivate::slotCreatePost;
+    using MovableTypePrivate::slotModifyPost;
     virtual void slotCreatePost( KJob * );
     virtual void slotModifyPost( KJob * );
     Q_DECLARE_PUBLIC( WordpressBuggy )
