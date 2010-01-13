@@ -149,12 +149,6 @@ void SmtpJob::startSmtpJob()
     destination.addQueryItem( QLatin1String( "hostname" ), transport()->localHostname() );
   }
 
-#ifdef __GNUC__
-#warning Argh!
-#endif
-//   if ( !kmkernel->msgSender()->sendQuotedPrintable() )
-//     query += "&body=8bit";
-
   if ( transport()->requiresAuthentication() ) {
     if( ( transport()->userName().isEmpty() || transport()->password().isEmpty() ) &&
         transport()->authenticationType() != Transport::EnumAuthenticationType::GSSAPI ) {
@@ -162,10 +156,6 @@ void SmtpJob::startSmtpJob()
       QString passwd = transport()->password();
       int result;
 
-#ifdef __GNUC__
-#warning yet another KMail specific thing
-#endif
-//       KCursorSaver idle( KBusyPtr::idle() );
       bool keep = transport()->storePassword();
       result = KIO::PasswordDialog::getNameAndPassword(
         user, passwd, &keep,
