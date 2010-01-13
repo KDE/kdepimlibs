@@ -154,18 +154,21 @@ bool QIODeviceDataProvider::isSupported( Operation op ) const {
 }
 
 static qint64 blocking_read( const boost::shared_ptr<QIODevice> & io, char * buffer, qint64 maxSize ) {
-    while ( !io->bytesAvailable() )
-        if ( !io->waitForReadyRead( -1 ) )
-            if ( const QProcess * const p = qobject_cast<QProcess*>( io.get() ) )
+    while ( !io->bytesAvailable() ) {
+        if ( !io->waitForReadyRead( -1 ) ) {
+            if ( const QProcess * const p = qobject_cast<QProcess*>( io.get() ) ) {
                 if ( p->error() == QProcess::UnknownError &&
                      p->exitStatus() == QProcess::NormalExit &&
-                     p->exitCode() == 0 )
+                     p->exitCode() == 0 ) {
                     return 0;
-                else
+                } else {
                     return errno = EIO, -1;
-            else
+                }
+            } else {
                 return 0; // assume EOF (loses error cases :/ )
-
+            }
+        }
+    }
     return io->read( buffer, maxSize );
 }
 
