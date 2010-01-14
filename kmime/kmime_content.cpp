@@ -209,7 +209,6 @@ void Content::parse()
       // This is actual MIME multipart content.
     } else {
       // Parsing failed; treat this content as "text/plain".
-      kDebug() << "Failed to parse multipart. Treating as text/plain.";
       ct->setMimeType( "text/plain" );
       ct->setCharset( "US-ASCII" );
     }
