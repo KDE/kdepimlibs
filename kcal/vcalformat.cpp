@@ -293,10 +293,10 @@ VObject *VCalFormat::eventToVTodo( const Todo *anEvent )
 
   // description BL:
   if ( !anEvent->description().isEmpty() ) {
-    VObject *d = addPropValue( vtodo, VCDescriptionProp,
+    VObject *dObject = addPropValue( vtodo, VCDescriptionProp,
                                anEvent->description().toLocal8Bit() );
     if ( anEvent->description().indexOf( '\n' ) != -1 ) {
-      addPropValue( d, VCEncodingProp, VCQuotedPrintableProp );
+      addPropValue( dObject, VCEncodingProp, VCQuotedPrintableProp );
     }
   }
 
@@ -562,10 +562,10 @@ VObject *VCalFormat::eventToVEvent( const Event *anEvent )
 
   // description
   if ( !anEvent->description().isEmpty() ) {
-    VObject *d = addPropValue( vevent, VCDescriptionProp,
+    VObject *dObject = addPropValue( vevent, VCDescriptionProp,
                                anEvent->description().toLocal8Bit() );
     if ( anEvent->description().indexOf( '\n' ) != -1 ) {
-      addPropValue( d, VCEncodingProp, VCQuotedPrintableProp );
+      addPropValue( dObject, VCEncodingProp, VCQuotedPrintableProp );
     }
   }
 
