@@ -1203,6 +1203,7 @@ VObject* Parse_MIME_FromFileName(const char *fname)
 /****************************************************************************/
 void YYDebug(const char *s)
 {
+  Q_UNUSED(s);
 	Parse_Debug(s);
 }
 
