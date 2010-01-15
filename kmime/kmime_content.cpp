@@ -610,9 +610,9 @@ Headers::Generic *Content::nextHeader( QByteArray &head )
   return d_ptr->nextHeader( head );
 }
 
-Headers::Generic *ContentPrivate::nextHeader( QByteArray &head )
+Headers::Generic *ContentPrivate::nextHeader( QByteArray &_head )
 {
-  Headers::Base *header = HeaderParsing::extractFirstHeader( head );
+  Headers::Base *header = HeaderParsing::extractFirstHeader( _head );
   if ( !header ) {
     return 0;
   }
