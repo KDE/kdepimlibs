@@ -178,7 +178,7 @@ void FilterActionTest::testMassModifyCollection()
 Collection FilterActionTest::createCollection( const QString &name )
 {
   Collection col;
-  col.setParent( res1 );
+  col.setParentCollection( res1 );
   col.setName( name );
   CollectionCreateJob *ccjob = new CollectionCreateJob( col, this );
   Q_ASSERT( ccjob->exec() );
