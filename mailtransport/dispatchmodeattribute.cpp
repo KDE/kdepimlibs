@@ -64,8 +64,7 @@ QByteArray DispatchModeAttribute::serialized() const
     {
       if ( !d->mDueDate.isValid() ) {
         return "immediately";
-      }
-      else {
+      } else {
         return "after" + d->mDueDate.toString( Qt::ISODate ).toLatin1();
       }
     }

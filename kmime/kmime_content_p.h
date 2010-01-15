@@ -43,6 +43,7 @@ class ContentPrivate
     bool parseUuencoded();
     bool parseYenc();
     bool parseMultipart();
+    Headers::Generic *nextHeader( QByteArray &head );
 
     QByteArray head;
     QByteArray body;

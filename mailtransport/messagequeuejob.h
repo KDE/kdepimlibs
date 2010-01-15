@@ -51,12 +51,12 @@ namespace MailTransport {
 
   This job requires some options to be set before being started.  Modify the
   attributes of this job to change these options.
- 
+
   You need to set the transport of the transport attribute, the from address of
   the address attribute and one of the to, cc or bcc addresses of the address
   attribute. Also, you need to call setMessage().
   Optionally, you can change the dispatch mode attribute or the sent behaviour
-  attribute. 
+  attribute.
 
   Example:
   @code

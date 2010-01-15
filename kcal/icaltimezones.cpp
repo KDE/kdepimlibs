@@ -24,8 +24,8 @@
 #include "icalformat_p.h"
 
 extern "C" {
-  #include <ical.h>
-  #include <icaltimezone.h>
+  #include <libical/ical.h>
+  #include <libical/icaltimezone.h>
 }
 #include <ksystemtimezone.h>
 #include <kdatetime.h>

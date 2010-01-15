@@ -351,10 +351,12 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
 
 void EntityTreeModelPrivate::monitoredMimeTypeChanged( const QString & mimeType, bool monitored )
 {
+  beginResetModel();
   if ( monitored )
     m_mimeChecker.addWantedMimeType( mimeType );
   else
     m_mimeChecker.removeWantedMimeType( mimeType );
+  endResetModel();
 }
 
 void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& collection )
@@ -615,7 +617,6 @@ void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collecti
 void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged( Akonadi::Collection::Id id,
                                                                    const Akonadi::CollectionStatistics &statistics )
 {
-  return; // Temporarily disabled
   if ( !m_collections.contains( id ) ) {
     kWarning() << "Got statistics response for non-existing collection:" << id;
   } else {

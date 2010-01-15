@@ -168,7 +168,8 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     enum ShowCondition {
       Always,              ///< Show the transport creation dialog unconditionally
       IfNoTransportExists  ///< Only show the transport creation dialog if no transport currently
-                           ///  exists. Ask the user if he wants to add a transport in the other case.
+                           ///  exists. Ask the user if he wants to add a transport in
+                           ///  the other case.
     };
 
     /**

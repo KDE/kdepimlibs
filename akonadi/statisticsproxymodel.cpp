@@ -139,16 +139,35 @@ class StatisticsProxyModel::Private
       return tip;
     }
 
+    void proxyDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+
     StatisticsProxyModel *mParent;
 
     bool mToolTipEnabled;
     bool mExtraColumnsEnabled;
 };
 
+void StatisticsProxyModel::Private::proxyDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+{
+  if ( mExtraColumnsEnabled )
+  {
+    // Ugly hack.
+    // The proper solution is a KExtraColumnsProxyModel, but this will do for now.
+    QModelIndex parent = topLeft.parent();
+    QModelIndex extraTopLeft = mParent->index( topLeft.row(), mParent->columnCount( parent ) - 1 - 3 , parent );
+    QModelIndex extraBottomRight = mParent->index( bottomRight.row(), mParent->columnCount( parent ) -1, parent );
+    mParent->disconnect( mParent, SIGNAL(dataChanged(QModelIndex,QModelIndex)), mParent, SLOT(proxyDataChanged(QModelIndex,QModelIndex)) );
+    emit mParent->dataChanged( extraTopLeft, extraBottomRight );
+    mParent->connect( mParent, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(proxyDataChanged(QModelIndex,QModelIndex)) );
+  }
+}
+
+
 StatisticsProxyModel::StatisticsProxyModel( QObject *parent )
   : QSortFilterProxyModel( parent ),
     d( new Private( this ) )
 {
+  connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(proxyDataChanged(QModelIndex,QModelIndex)));
 }
 
 StatisticsProxyModel::~StatisticsProxyModel()
@@ -285,7 +304,7 @@ QModelIndexList StatisticsProxyModel::match( const QModelIndex& start, int role,
 
   QModelIndexList list;
   QModelIndex proxyIndex;
-  foreach ( const QModelIndex idx, sourceModel()->match( mapToSource( start ), role, value, hits, flags ) ) {
+  foreach ( const QModelIndex &idx, sourceModel()->match( mapToSource( start ), role, value, hits, flags ) ) {
     proxyIndex = mapFromSource( idx );
     if ( proxyIndex.isValid() )
       list << proxyIndex;

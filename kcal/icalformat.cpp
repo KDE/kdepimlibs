@@ -36,11 +36,11 @@
 #include "icaltimezones.h"
 
 extern "C" {
-  #include <ical.h>
-  #include <icalss.h>
-  #include <icalparser.h>
-  #include <icalrestriction.h>
-  #include <icalmemory.h>
+  #include <libical/ical.h>
+  #include <libical/icalss.h>
+  #include <libical/icalparser.h>
+  #include <libical/icalrestriction.h>
+  #include <libical/icalmemory.h>
 }
 
 #include <QtCore/QString>

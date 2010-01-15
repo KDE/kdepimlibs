@@ -41,9 +41,9 @@
 #include "journal.h"
 
 extern "C" {
-  #include <ical.h>
-  #include <icalparser.h>
-  #include <icalrestriction.h>
+  #include <libical/ical.h>
+  #include <libical/icalparser.h>
+  #include <libical/icalrestriction.h>
 }
 
 #include <QtCore/QString>
