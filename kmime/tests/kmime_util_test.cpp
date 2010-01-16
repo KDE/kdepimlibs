@@ -100,3 +100,4 @@ void KMimeUtilTest::testBalanceBidiState_data()
   QTest::newRow( "" ) << PDF + PDF + PDF + "ComplexOrder3" + PDF + PDF + RLO + PDF + PDF + PDF
                       << "ComplexOrder3" + RLO + PDF;
 }
+
