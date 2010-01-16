@@ -297,6 +297,7 @@ void SmtpJob::dataRequest( KIO::Job *job, QByteArray &data )
   }
 
   Q_UNUSED( job );
+  Q_ASSERT( job );
   if ( buffer()->atEnd() ) {
     data.clear();
   } else {
