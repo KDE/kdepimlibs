@@ -384,11 +384,23 @@ QByteArray unfoldHeader( const QByteArray &header )
     }
     // find the first non-space after the line-break
     while ( foldEnd <= header.length() - 1 ) {
-      if ( !QChar( header[foldEnd] ).isSpace() ) {
+      if ( QChar( header[foldEnd] ).isSpace() ) {
+        ++foldEnd;
+      }
+      else if ( foldEnd > 0 && header[foldEnd - 1] == '\n' &&
+                header[foldEnd] == '=' && foldEnd + 2 < header.length() &&
+                ( ( header[foldEnd + 1] == '0' &&
+                    header[foldEnd + 2] == '9' ) ||
+                  ( header[foldEnd + 1] == '2' &&
+                    header[foldEnd + 2] == '0' ) ) ) {
+        // bug #86302: malformed header continuation starting with =09/=20
+        foldEnd += 3;
+      }
+      else {
         break;
       }
-      ++foldEnd;
     }
+
     result += header.mid( pos, foldBegin - pos );
     if ( foldEnd < header.length() -1 )
       result += ' ';
@@ -396,6 +408,62 @@ QByteArray unfoldHeader( const QByteArray &header )
   }
   result += header.mid( pos, header.length() - pos );
   return result;
+}
+
+int findHeaderLineEnd( const QByteArray &src, int &dataBegin, bool *folded )
+{
+  int end = dataBegin;
+  int len = src.length() - 1;
+
+  if ( folded )
+    *folded = false;
+
+  if ( dataBegin < 0 ) {
+    // Not found
+    return -1;
+  }
+
+  if ( dataBegin > len ) {
+    // No data available
+    return len + 1;
+  }
+
+  // If the first line contains nothing, but the next line starts with a space
+  // or a tab, that means a stupid mail client has made the first header field line
+  // entirely empty, and has folded the rest to the next line(s).
+  if ( src.at(end) == '\n' && end + 1 < len &&
+       ( src[end+1] == ' ' || src[end+1] == '\t' ) ) {
+
+    // Skip \n and first whitespace
+    dataBegin += 2;
+    end += 2;
+  }
+
+  if ( src.at(end) != '\n' ) {  // check if the header is not empty
+    while ( true ) {
+      end = src.indexOf( '\n', end + 1 );
+      if ( end == -1 || end == len ) {
+        // end of string
+        break;
+      }
+      else if ( src[end+1] == ' ' || src[end+1] == '\t' ||
+                ( src[end+1] == '=' && end+3 <= len &&
+                  ( ( src[end+2] == '0' && src[end+3] == '9' ) ||
+                    ( src[end+2] == '2' && src[end+3] == '0' ) ) ) ) {
+        // next line is header continuation or starts with =09/=20 (bug #86302)
+        if ( folded )
+          *folded = true;
+      } else {
+        // end of header (no header continuation)
+        break;
+      }
+    }
+  }
+
+  if ( end < 0 ) {
+    end = len + 1; //take the rest of the string
+  }
+  return end;
 }
 
 int indexOfHeader( const QByteArray &src, const QByteArray &name, int &end, int &dataBegin, bool *folded )
@@ -423,28 +491,7 @@ int indexOfHeader( const QByteArray &src, const QByteArray &name, int &end, int 
     if ( src.at( dataBegin ) == ' ' ) {
       ++dataBegin;
     }
-    end = dataBegin;
-    int len = src.length() - 1;
-    if ( folded )
-      *folded = false;
-
-    if ( src.at(end) != '\n' ) {  // check if the header is not empty
-      while ( true ) {
-        end = src.indexOf( '\n', end + 1 );
-        if ( end == -1 || end == len ||
-             ( src[end+1] != ' ' && src[end+1] != '\t' ) ) {
-          //break if we reach the end of the string, honor folded lines
-          break;
-        } else {
-          if ( folded )
-            *folded = true;
-        }
-      }
-    }
-
-    if ( end < 0 ) {
-      end = len + 1; //take the rest of the string
-    }
+    end = findHeaderLineEnd( src, dataBegin, folded );
     return begin;
 
   } else {

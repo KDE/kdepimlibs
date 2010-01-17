@@ -27,6 +27,14 @@
 namespace KMime {
 
 /**
+  Finds the header end in @p src. Aligns the @p dataBegin if needed.
+  @param dataBegin beginning of the data part of the header
+  @param folded true if the headder is folded into multiple lines
+  @returns the end index of the header, -1 if the @p dataBegin was -1.
+*/
+extern int findHeaderLineEnd( const QByteArray &src, int &dataBegin, bool *folded = 0 );
+
+/**
   Finds the first header of type @p name in @p src.
   @param end The end index of the header.
   @param dataBegin begin of the data part of the header, -1 if not found.

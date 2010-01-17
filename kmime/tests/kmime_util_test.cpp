@@ -41,11 +41,26 @@ void KMimeUtilTest::testUnfoldHeader()
   QCOMPARE( KMime::unfoldHeader( "bla\nbla\nblub" ), QByteArray( "bla bla blub" ) );
   QCOMPARE( KMime::unfoldHeader( "bla  \r\n   bla  \r\n  blub" ), QByteArray( "bla bla blub" ) );
   QCOMPARE( KMime::unfoldHeader( "bla\n" ), QByteArray( "bla" ) );
+  // bug #86302 - malformed header continuation
+  QCOMPARE( KMime::unfoldHeader( "bla\n=20bla" ), QByteArray( "bla bla" ) );
+  QCOMPARE( KMime::unfoldHeader( "bla\n=09bla" ), QByteArray( "bla bla" ) );
+  QCOMPARE( KMime::unfoldHeader( "bla\r\n=20bla" ), QByteArray( "bla bla" ) );
+  QCOMPARE( KMime::unfoldHeader( "bla\r\n=09bla" ), QByteArray( "bla bla" ) );
+  QCOMPARE( KMime::unfoldHeader( "bla \n=20 bla" ), QByteArray( "bla bla" ) );
+  QCOMPARE( KMime::unfoldHeader( "bla \n=09 bla" ), QByteArray( "bla bla" ) );
+  QCOMPARE( KMime::unfoldHeader( "bla \n =20 bla" ), QByteArray( "bla =20 bla" ) );
+  QCOMPARE( KMime::unfoldHeader( "bla \n =09 bla" ), QByteArray( "bla =09 bla" ) );
 }
 
 void KMimeUtilTest::testExtractHeader()
 {
-  QByteArray header( "To: <foo@bla.org>\nSubject: =?UTF-8?Q?_Notification_for_appointment:?=\n =?UTF-8?Q?_Test?=\nMIME-Version: 1.0" );
+  QByteArray header( "To: <foo@bla.org>\n"
+                     "Subject: =?UTF-8?Q?_Notification_for_appointment:?=\n"
+                     " =?UTF-8?Q?_Test?=\n"
+                     "Continuation: =?UTF-8?Q?_TEST\n"
+                     "=20CONT1?= =?UTF-8?Q?_TEST\n"
+                     "=09CONT2?=\n"
+                     "MIME-Version: 1.0" );
 
   // basic tests
   QVERIFY( extractHeader( header, "Foo" ).isEmpty() );
@@ -57,6 +72,10 @@ void KMimeUtilTest::testExtractHeader()
   // extraction of multi-line headers
   QCOMPARE( extractHeader( header, "Subject" ),
             QByteArray("=?UTF-8?Q?_Notification_for_appointment:?= =?UTF-8?Q?_Test?=") );
+
+  // bug #86302 - malformed header continuation
+  QCOMPARE( extractHeader( header, "Continuation" ),
+            QByteArray("=?UTF-8?Q?_TEST CONT1?= =?UTF-8?Q?_TEST CONT2?=") );
 
   // missing space after ':'
   QCOMPARE( extractHeader( "From:<toma@kovoks.nl>", "From" ), QByteArray( "<toma@kovoks.nl>" ) );
