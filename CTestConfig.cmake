@@ -11,13 +11,3 @@ set(CTEST_DROP_METHOD "http")
 set(CTEST_DROP_SITE "my.cdash.org")
 set(CTEST_DROP_LOCATION "/submit.php?project=kdepimlibs")
 set(CTEST_DROP_SITE_CDASH TRUE)
-
-set(CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 1000)
-set(CTEST_CUSTOM_WARNING_EXCEPTION 
-  ${CTEST_CUSTOM_WARNING_EXCEPTION}
-  "kio/connection.h" 
-  "temporary since Dec 2000" 
-  "/kcal/versit/"
-  )
-set(CTEST_CUSTOM_ERROR_EXCEPTION "ICECC")
-set(CTEST_CUSTOM_COVERAGE_EXCLUDE ".moc$" "moc_" "ui_")
