@@ -670,7 +670,7 @@ bool Rfc2047QEncodingEncoder::encode( const char* &scursor,
   }
 
   while ( scursor != send && dcursor != dend ) {
-    uchar value;
+    uchar value = 0;
     switch ( mStepNo ) {
     case 0:
       // read the next char and decide if and how do encode:
@@ -715,7 +715,7 @@ bool Rfc2047QEncodingEncoder::finish( char* &dcursor, const char * const dend )
 
   // write the last bits of mAccu, if any:
   while ( mStepNo != 0 && dcursor != dend ) {
-    uchar value;
+    uchar value = 0;
     switch ( mStepNo ) {
     case 1:
       // extract hi-nibble:

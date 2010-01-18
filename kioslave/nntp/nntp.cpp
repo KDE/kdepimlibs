@@ -27,6 +27,8 @@
 
 #define DBG_AREA 7114
 #define DBG kDebug(DBG_AREA)
+
+#undef ERR
 #define ERR kError(DBG_AREA)
 
 using namespace KIO;

@@ -413,7 +413,7 @@ QByteArray mimeHeader::outputParameter (QHash < QString, QString > &aDict)
 void
 mimeHeader::outputPart (mimeIO & useIO)
 {
-  QListIterator < mimeHeader *> nestedParts = getNestedIterator ();
+  QListIterator < mimeHeader *> nestedPartsIterator = getNestedIterator ();
   QByteArray boundary;
   if (!getTypeParm ("boundary").isEmpty ())
     boundary = getTypeParm ("boundary").toLatin1 ();
@@ -425,9 +425,9 @@ mimeHeader::outputPart (mimeIO & useIO)
     getNestedMessage ()->outputPart (useIO);
 
   mimeHeader *mimeline;
-  while (nestedParts.hasNext())
+  while (nestedPartsIterator.hasNext())
   {
-    mimeline = nestedParts.next();
+    mimeline = nestedPartsIterator.next();
     if (!boundary.isEmpty ())
       useIO.outputMimeLine ("--" + boundary);
     mimeline->outputPart (useIO);

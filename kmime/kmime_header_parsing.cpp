@@ -26,6 +26,7 @@
 #include "kmime_headerfactory_p.h"
 #include "kmime_headers.h"
 #include "kmime_util.h"
+#include "kmime_util_p.h"
 #include "kmime_dateformatter.h"
 #include "kmime_warning.h"
 
@@ -2048,7 +2049,6 @@ bool parseDateTime( const char* &scursor, const char * const send,
 Headers::Base *extractFirstHeader( QByteArray &head )
 {
   int endOfFieldBody = 0;
-  int len = head.length() - 1;
   bool folded = false;
   Headers::Base *header = 0;
 
@@ -2060,37 +2060,7 @@ Headers::Base *extractFirstHeader( QByteArray &head )
     if ( head[startOfFieldBody] == ' ' ) { // skip the space after the ':', if there
       startOfFieldBody++;
     }
-    endOfFieldBody = startOfFieldBody;
-
-    // If the first line contains nothing, but the next line starts with a space
-    // or a tab, that means a stupid mail client has made the first header field line
-    // entirely empty, and has folded the rest to the next line(s).
-    if ( head[endOfFieldBody] == '\n' && endOfFieldBody + 1 < len &&
-         ( head[endOfFieldBody + 1] == ' ' ||
-           head[endOfFieldBody + 1] == '\t' ) ) {
-
-      // Skip \n and first whitespace
-      startOfFieldBody += 2;
-      endOfFieldBody += 2;
-    }
-    
-    if ( head[endOfFieldBody] != '\n' ) {  // check if the header is not empty
-      while ( 1 ) {
-        endOfFieldBody = head.indexOf( '\n', endOfFieldBody + 1 );
-        if ( endOfFieldBody == -1 || endOfFieldBody == len ||
-              ( head[endOfFieldBody+1] != ' ' &&
-                head[endOfFieldBody+1] != '\t' ) ) {
-          //break if we reach the end of the string, honor folded lines
-          break;
-        } else {
-          folded = true;
-        }
-      }
-    }
-
-    if ( endOfFieldBody < 0 ) {
-      endOfFieldBody = len + 1; //take the rest of the string
-    }
+    endOfFieldBody = findHeaderLineEnd( head, startOfFieldBody, &folded );
 
     QByteArray rawType = head.left( endOfFieldHeader );
     QByteArray rawFieldBody = head.mid( startOfFieldBody, endOfFieldBody - startOfFieldBody );

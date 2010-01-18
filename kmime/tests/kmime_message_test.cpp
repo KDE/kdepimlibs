@@ -415,3 +415,4 @@ void MessageTest::testInlineImages()
   QCOMPARE( msg.contents()[1]->contentID()->identifier().data(), "740439759" );
   QCOMPARE( msg.contents()[1]->contentID()->as7BitString( false ).data(), "<740439759>" );
 }
+

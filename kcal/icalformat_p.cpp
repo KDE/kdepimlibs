@@ -881,8 +881,8 @@ icalrecurrencetype ICalFormatImpl::writeRecurrenceRule( RecurrenceRule *recur )
   bys = recur->byMonthDays();
   index = 0;
   for ( it = bys.constBegin(); it != bys.constEnd(); ++it ) {
-    short d = static_cast<short>( ( *it ) * 8 );
-    r.by_month_day[index++] = static_cast<short>( icalrecurrencetype_day_position( d ) );
+    short dShort = static_cast<short>( ( *it ) * 8 );
+    r.by_month_day[index++] = static_cast<short>( icalrecurrencetype_day_position( dShort ) );
   }
 
   bys = recur->byYearDays();
