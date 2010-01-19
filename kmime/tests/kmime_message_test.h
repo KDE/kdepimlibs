@@ -37,6 +37,7 @@ class MessageTest : public QObject
     void testUtf16();
     void testDecodedText();
     void testInlineImages();
+    void testIssue3914();
 };
 
 

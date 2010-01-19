@@ -1,5 +1,7 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
+add_definitions( -DMAIL_DATA_DIR=\\"${CMAKE_CURRENT_SOURCE_DIR}/data/mails\\" )
+
 include_directories(${CMAKE_SOURCE_DIR}/kmime)
 
 # convenience macro to add libkmime qtestlib qtgui unit-tests

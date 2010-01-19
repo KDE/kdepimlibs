@@ -416,3 +416,24 @@ void MessageTest::testInlineImages()
   QCOMPARE( msg.contents()[1]->contentID()->as7BitString( false ).data(), "<740439759>" );
 }
 
+void MessageTest::testIssue3914()
+{
+  // This loads a mail which has a content-disposition of which the filename parameter is empty.
+  // Check that the parser doesn't choke on this.
+  QFile file( MAIL_DATA_DIR"/broken-content-disposition.mbox" );
+  QVERIFY( file.open( QIODevice::ReadOnly ) );
+  const QByteArray data = KMime::CRLFtoLF( file.readAll() );
+  QVERIFY( !data.isEmpty() );
+  KMime::Message msg;
+  msg.setContent( data );
+  msg.parse();
+
+  QCOMPARE( msg.subject()->as7BitString().data(), "Subject: Fwd: test broken mail" );
+  QCOMPARE( msg.contents().size(), 2 );
+  KMime::Content *attachedMail =  msg.contents().at( 1 );
+  QCOMPARE( attachedMail->contentType()->mimeType().data(), "message/rfc822" );
+  QVERIFY( attachedMail->contentDisposition( false ) );
+  QVERIFY( attachedMail->contentDisposition()->hasParameter( "filename") );
+  QVERIFY( attachedMail->contentDisposition()->parameter( "filename" ).isEmpty() );
+}
+
