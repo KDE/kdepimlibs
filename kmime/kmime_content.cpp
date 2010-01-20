@@ -293,10 +293,8 @@ QByteArray Content::encodedContent( bool useCrLf )
   } else if( !d->body.isEmpty() ) {
     // This is a single-part Content.
     Headers::ContentTransferEncoding *enc = contentTransferEncoding();
-    Q_ASSERT( enc->encoding() != Headers::CEuuenc );
-    Q_ASSERT( enc->encoding() != Headers::CEbinary );
 
-    if (enc->needToEncode()) {
+    if ( enc->needToEncode() ) {
       if ( enc->encoding() == Headers::CEquPr ) {
         e += KCodecs::quotedPrintableEncode( d->body, false );
       } else {

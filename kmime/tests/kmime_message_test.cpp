@@ -21,8 +21,6 @@
 #include "kmime_message_test.moc"
 #include <qtest_kde.h>
 
-#include <kmime/kmime_message.h>
-
 using namespace KMime;
 
 QTEST_KDEMAIN( MessageTest, NoGUI )
@@ -420,20 +418,38 @@ void MessageTest::testIssue3914()
 {
   // This loads a mail which has a content-disposition of which the filename parameter is empty.
   // Check that the parser doesn't choke on this.
-  QFile file( MAIL_DATA_DIR"/broken-content-disposition.mbox" );
-  QVERIFY( file.open( QIODevice::ReadOnly ) );
-  const QByteArray data = KMime::CRLFtoLF( file.readAll() );
-  QVERIFY( !data.isEmpty() );
-  KMime::Message msg;
-  msg.setContent( data );
-  msg.parse();
+  KMime::Message::Ptr msg = readAndParseMail( "broken-content-disposition.mbox" );
 
-  QCOMPARE( msg.subject()->as7BitString().data(), "Subject: Fwd: test broken mail" );
-  QCOMPARE( msg.contents().size(), 2 );
-  KMime::Content *attachedMail =  msg.contents().at( 1 );
+  QCOMPARE( msg->subject()->as7BitString().data(), "Subject: Fwd: test broken mail" );
+  QCOMPARE( msg->contents().size(), 2 );
+  KMime::Content *attachedMail =  msg->contents().at( 1 );
   QCOMPARE( attachedMail->contentType()->mimeType().data(), "message/rfc822" );
   QVERIFY( attachedMail->contentDisposition( false ) );
   QVERIFY( attachedMail->contentDisposition()->hasParameter( "filename") );
   QVERIFY( attachedMail->contentDisposition()->parameter( "filename" ).isEmpty() );
 }
 
+void MessageTest::testBug223509()
+{
+  KMime::Message::Ptr msg = readAndParseMail( "encoding-crash.mbox" );
+
+  QCOMPARE( msg->subject()->as7BitString().data(), "Subject: Blub" );
+  QCOMPARE( msg->contents().size(), 0 );
+  QCOMPARE( msg->contentTransferEncoding()->encoding(), KMime::Headers::CEbinary );
+  QCOMPARE( msg->decodedText().toAscii().data(), "Bla Bla Bla\n" );
+
+  // encodedContent() was crashing in this bug because of an invalid assert
+  QVERIFY( !msg->encodedContent().isEmpty() );
+}
+
+KMime::Message::Ptr MessageTest::readAndParseMail( const QString &mailFile ) const
+{
+  QFile file( MAIL_DATA_DIR"/" + mailFile );
+  Q_ASSERT( file.open( QIODevice::ReadOnly ) );
+  const QByteArray data = KMime::CRLFtoLF( file.readAll() );
+  Q_ASSERT( !data.isEmpty() );
+  KMime::Message::Ptr msg( new KMime::Message );
+  msg->setContent( data );
+  msg->parse();
+  return msg;
+}

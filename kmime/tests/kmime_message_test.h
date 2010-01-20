@@ -20,7 +20,9 @@
 #ifndef KMIME_MESSAGE_TEST_H
 #define KMIME_MESSAGE_TEST_H
 
+#include <kmime/kmime_message.h>
 #include <QtCore/QObject>
+#include <boost/shared_ptr.hpp>
 
 class MessageTest : public QObject
 {
@@ -38,6 +40,10 @@ class MessageTest : public QObject
     void testDecodedText();
     void testInlineImages();
     void testIssue3914();
+    void testBug223509();
+
+  private:
+    KMime::Message::Ptr readAndParseMail( const QString &mailFile ) const;
 };
 
 
