@@ -440,6 +440,19 @@ void MessageTest::testBug223509()
 
   // encodedContent() was crashing in this bug because of an invalid assert
   QVERIFY( !msg->encodedContent().isEmpty() );
+
+  // Make sure that the encodedContent() is sane, by parsing it again.
+  KMime::Message msg2;
+  msg2.setContent( msg->encodedContent() );
+  msg2.parse();
+  QCOMPARE( msg2.subject()->as7BitString().data(), "Subject: Blub" );
+  QCOMPARE( msg2.contents().size(), 0 );
+  QCOMPARE( msg2.contentTransferEncoding()->encoding(), KMime::Headers::CEbinary );
+
+  QEXPECT_FAIL( "", "KMime adds an additional newline", Continue );
+  QCOMPARE( msg2.decodedText().toAscii().data(), "Bla Bla Bla\n" );
+  QCOMPARE( msg2.decodedText( true, true /* remove newlines at end */ ).toAscii().data(),
+            "Bla Bla Bla" );
 }
 
 KMime::Message::Ptr MessageTest::readAndParseMail( const QString &mailFile ) const
