@@ -1180,7 +1180,16 @@ static QString invitationsDetailsIncidence( Incidence *incidence, bool noHtmlMod
     // non-empty comments
     foreach ( const QString &c, incidence->comments() ) {
       if ( !c.isEmpty() ) {
-        comments += string2HTML( c );
+        // kcal doesn't know about richtext comments, so we need to guess
+        if ( !Qt::mightBeRichText( c ) ) {
+          comments << string2HTML( c );
+        } else {
+          if ( noHtmlMode ) {
+            comments << cleanHtml( cleanHtml( "<body>" + c + "</body>" ) );
+          } else {
+            comments << c;
+          }
+        }
       }
     }
     if ( !incidence->description().isEmpty() ) {
