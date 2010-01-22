@@ -36,9 +36,9 @@ if ( @ARGV != 3 ) {
   exit 1;
 }
 
-$app = $ARGV[0];
-$id = $ARGV[1];
-$file = $ARGV[2];
+$app = quotemeta $ARGV[0];
+$id = quotemeta $ARGV[1];
+$file = quotemeta $ARGV[2];
 
 $MAXERRLINES=25;
 
