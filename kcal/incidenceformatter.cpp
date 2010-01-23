@@ -400,7 +400,7 @@ static QString displayViewFormatHeader( Incidence *incidence )
   return tmpStr;
 }
 
-static QString displayViewFormatEvent( const QString& calStr, Event *event,
+static QString displayViewFormatEvent( const QString &calStr, Event *event,
                                        const QDate &date, KDateTime::Spec spec )
 {
   if ( !event ) {
@@ -419,7 +419,6 @@ static QString displayViewFormatEvent( const QString& calStr, Event *event,
     tmpStr += "<td>" + calStr + "</td>";
     tmpStr += "</tr>";
   }
-
 
   if ( !event->location().isEmpty() ) {
     tmpStr += "<tr>";
@@ -554,7 +553,7 @@ static QString displayViewFormatEvent( const QString& calStr, Event *event,
   return tmpStr;
 }
 
-static QString displayViewFormatTodo( const QString& calStr, Todo *todo,
+static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
                                       const QDate &date, KDateTime::Spec spec )
 {
   if ( !todo ) {
@@ -680,7 +679,7 @@ static QString displayViewFormatTodo( const QString& calStr, Todo *todo,
   return tmpStr;
 }
 
-static QString displayViewFormatJournal( const QString& calStr, Journal *journal,
+static QString displayViewFormatJournal( const QString &calStr, Journal *journal,
                                          KDateTime::Spec spec )
 {
   if ( !journal ) {
@@ -813,7 +812,7 @@ class KCal::IncidenceFormatter::EventViewerVisitor
       return incidence->accept( *this );
     }
 
-    bool act( const QString& sourceName, IncidenceBase *incidence, const QDate &date,
+    bool act( const QString &sourceName, IncidenceBase *incidence, const QDate &date,
               KDateTime::Spec spec=KDateTime::Spec() )
     {
       mCalendar = 0;
@@ -897,7 +896,6 @@ QString IncidenceFormatter::extensiveDisplayStr( Calendar *calendar,
   }
 }
 
-
 QString IncidenceFormatter::extensiveDisplayStr( const QString &sourceName,
                                                  IncidenceBase *incidence,
                                                  const QDate &date,
@@ -979,7 +977,7 @@ static Attendee *findDelegatedFromMyAttendee( Incidence *incidence )
 
   KEMailSettings settings;
   QStringList profiles = settings.profiles();
-  for( QStringList::Iterator it=profiles.begin(); it!=profiles.end(); ++it ) {
+  for ( QStringList::Iterator it=profiles.begin(); it != profiles.end(); ++it ) {
     settings.setProfile( *it );
 
     QString delegatorName, delegatorEmail;
@@ -1552,7 +1550,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     QString attendeeName = firstAttendeeName( event, i18n( "Sender" ) );
 
     QString delegatorName, dummy;
-    Attendee* attendee = *attendees.begin();
+    Attendee *attendee = *attendees.begin();
     KPIMUtils::extractEmailAddressAndName( attendee->delegator(), dummy, delegatorName );
     if ( delegatorName.isEmpty() ) {
       delegatorName = attendee->delegator();
@@ -2223,18 +2221,18 @@ static QString counterButtons( Incidence *incidence,
 
   // Accept proposal
   html += tdOpen;
-  html += helper->makeLink( "accept_counter", i18n("[Accept]") );
+  html += helper->makeLink( "accept_counter", i18n( "[Accept]" ) );
   html += tdClose;
 
   // Decline proposal
   html += tdOpen;
-  html += helper->makeLink( "decline_counter", i18n("[Decline]") );
+  html += helper->makeLink( "decline_counter", i18n( "[Decline]" ) );
   html += tdClose;
 
   // Check calendar
   if ( incidence && incidence->type() == "Event" ) {
     html += tdOpen;
-    html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+    html += helper->makeLink( "check_calendar", i18n( "[Check my calendar] " ) );
     html += tdClose;
   }
   return html;
@@ -2578,7 +2576,7 @@ class KCal::IncidenceFormatter::ToolTipVisitor
     QString generateToolTip( Incidence *incidence, QString dtRangeText );
 
   protected:
-    Calendar* mCalendar;
+    Calendar *mCalendar;
     QString mLocation;
     QDate mDate;
     bool mRichText;
@@ -2739,10 +2737,12 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
 
   QString tmp = "<qt><b>"+ incidence->richSummary() + "</b>";
   QString calStr = mLocation;
-  if ( mCalendar )
+  if ( mCalendar ) {
     calStr = IncidenceFormatter::resourceString( mCalendar, incidence );
-  if ( !calStr.isEmpty() )
+  }
+  if ( !calStr.isEmpty() ) {
     tmp += "<br>" + i18n( "<i>Calendar:</i> %1", calStr );
+  }
 
   tmp += dtRangeText;
 
@@ -2798,7 +2798,7 @@ QString IncidenceFormatter::toolTipStr( Calendar *calendar,
   }
 }
 
-QString IncidenceFormatter::toolTipStr( const QString& sourceName,
+QString IncidenceFormatter::toolTipStr( const QString &sourceName,
                                         IncidenceBase *incidence,
                                         const QDate &date,
                                         bool richText, KDateTime::Spec spec )
