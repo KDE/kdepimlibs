@@ -395,7 +395,7 @@ QByteArray MailboxList::as7BitString( bool withHeaderType ) const
   if ( withHeaderType ) {
     rv = typeIntro();
   }
-  foreach ( Types::Mailbox mbox, d->mailboxList ) {
+  foreach ( const Types::Mailbox &mbox, d->mailboxList ) {
     rv += mbox.as7BitString( d->encCS );
     rv += ", ";
   }
@@ -445,7 +445,7 @@ void MailboxList::addAddress( const QByteArray &address,
 QList< QByteArray > MailboxList::addresses() const
 {
   QList<QByteArray> rv;
-  foreach ( Types::Mailbox mbox, d_func()->mailboxList ) {
+  foreach ( const Types::Mailbox &mbox, d_func()->mailboxList ) {
     rv.append( mbox.address() );
   }
   return rv;
@@ -454,7 +454,7 @@ QList< QByteArray > MailboxList::addresses() const
 QStringList MailboxList::displayNames() const
 {
   QStringList rv;
-  foreach ( Types::Mailbox mbox, d_func()->mailboxList ) {
+  foreach ( const Types::Mailbox &mbox, d_func()->mailboxList ) {
     rv.append( mbox.name() );
   }
   return rv;
@@ -463,7 +463,7 @@ QStringList MailboxList::displayNames() const
 QStringList MailboxList::prettyAddresses() const
 {
   QStringList rv;
-  foreach ( Types::Mailbox mbox, d_func()->mailboxList ) {
+  foreach ( const Types::Mailbox &mbox, d_func()->mailboxList ) {
     rv.append( mbox.prettyAddress() );
   }
   return rv;
@@ -545,8 +545,8 @@ QByteArray AddressList::as7BitString( bool withHeaderType ) const
   if ( withHeaderType ) {
     rv = typeIntro();
   }
-  foreach ( Types::Address addr, d->addressList ) {
-    foreach ( Types::Mailbox mbox, addr.mailboxList ) {
+  foreach ( const Types::Address &addr, d->addressList ) {
+    foreach ( const Types::Mailbox &mbox, addr.mailboxList ) {
       rv += mbox.as7BitString( d->encCS );
       rv += ", ";
     }
@@ -601,8 +601,8 @@ void AddressList::addAddress( const QByteArray &address,
 QList< QByteArray > AddressList::addresses() const
 {
   QList<QByteArray> rv;
-  foreach ( Types::Address addr, d_func()->addressList ) {
-    foreach ( Types::Mailbox mbox, addr.mailboxList ) {
+  foreach ( const Types::Address &addr, d_func()->addressList ) {
+    foreach ( const Types::Mailbox &mbox, addr.mailboxList ) {
       rv.append( mbox.address() );
     }
   }
@@ -612,8 +612,8 @@ QList< QByteArray > AddressList::addresses() const
 QStringList AddressList::displayNames() const
 {
   QStringList rv;
-  foreach ( Types::Address addr, d_func()->addressList ) {
-    foreach ( Types::Mailbox mbox, addr.mailboxList ) {
+  foreach ( const Types::Address &addr, d_func()->addressList ) {
+    foreach ( const Types::Mailbox &mbox, addr.mailboxList ) {
       rv.append( mbox.name() );
     }
   }
@@ -623,8 +623,8 @@ QStringList AddressList::displayNames() const
 QStringList AddressList::prettyAddresses() const
 {
   QStringList rv;
-  foreach ( Types::Address addr, d_func()->addressList ) {
-    foreach ( Types::Mailbox mbox, addr.mailboxList ) {
+  foreach ( const Types::Address &addr, d_func()->addressList ) {
+    foreach ( const Types::Mailbox &mbox, addr.mailboxList ) {
       rv.append( mbox.prettyAddress() );
     }
   }
@@ -634,8 +634,8 @@ QStringList AddressList::prettyAddresses() const
 Types::Mailbox::List AddressList::mailboxes() const
 {
   Types::Mailbox::List rv;
-  foreach ( Types::Address addr, d_func()->addressList ) {
-    foreach ( Types::Mailbox mbox, addr.mailboxList ) {
+  foreach ( const Types::Address &addr, d_func()->addressList ) {
+    foreach ( const Types::Mailbox &mbox, addr.mailboxList ) {
       rv.append( mbox );
     }
   }
@@ -971,7 +971,7 @@ QByteArray Ident::as7BitString( bool withHeaderType ) const
   if ( withHeaderType ) {
     rv = typeIntro();
   }
-  foreach ( Types::AddrSpec addr, d->msgIdList ) {
+  foreach ( const Types::AddrSpec &addr, d->msgIdList ) {
     rv += '<';
     rv += addr.asString().toLatin1(); // FIXME: change parsing to use QByteArrays
     rv += "> ";
@@ -1037,7 +1037,7 @@ bool Ident::parse( const char* &scursor, const char * const send, bool isCRLF )
 QList<QByteArray> Ident::identifiers() const
 {
   QList<QByteArray> rv;
-  foreach ( Types::AddrSpec addr, d_func()->msgIdList ) {
+  foreach ( const Types::AddrSpec &addr, d_func()->msgIdList ) {
     rv.append( addr.asString().toLatin1() ); // FIXME change parsing to create QByteArrays
   }
   return rv;
