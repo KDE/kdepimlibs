@@ -1,16 +1,10 @@
 if (NOT KDEPIM_ONLY_KLEO)
 
-#add_subdirectory( tests )
+add_subdirectory( tests )
 
 macro(install_headers _dir)
-  file(GLOB_RECURSE _includes ${CMAKE_CURRENT_SOURCE_DIR} ${_dir}/*)
-  foreach(_file_to_install ${_includes})
-    if(NOT _file_to_install MATCHES ".svn")
-      string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" _filename ${_file_to_install})
-      install(FILES ${_file_to_install} DESTINATION ${INCLUDE_INSTALL_DIR}/KDE RENAME ${_filename} COMPONENT Devel)
-    endif(NOT _file_to_install MATCHES ".svn")
-  endforeach(_file_to_install ${_includes})
-endmacro(install_headers)
+  install( DIRECTORY ${_dir} DESTINATION ${INCLUDE_INSTALL_DIR}/KDE PATTERN .svn EXCLUDE )
+endmacro(install_headers _dir)
 
 install_headers( Akonadi )
 install_headers( KHolidays )
