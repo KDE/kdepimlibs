@@ -4,9 +4,11 @@ if (KDE4_BUILD_TESTS)
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/all_includes.h "/* all forwarding includes */\n" )
 
 macro(add_includes _dir)
-  file(GLOB _includes "${CMAKE_CURRENT_SOURCE_DIR}/../${_dir}/[A-Z]*")
+  file(GLOB_RECURSE _includes "${CMAKE_SOURCE_DIR}/includes/${_dir}/[A-Z]*")
   foreach( file ${_includes} )
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/all_includes.h "#include <${file}>\n" )
+    if(NOT file MATCHES ".svn")
+      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/all_includes.h "#include <${file}>\n" )
+    endif(NOT file MATCHES ".svn")
   endforeach(file)
 endmacro(add_includes)
 
