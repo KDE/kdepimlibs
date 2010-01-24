@@ -1,1 +1,1 @@
-#include "../../akonadi/kmime/messagemodel.h"
+#include "../../../akonadi/kmime/messagemodel.h"

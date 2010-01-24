@@ -1,1 +1,1 @@
-#include "../../akonadi/kmime/messagefolderattribute.h"
+#include "../../../akonadi/kmime/messagefolderattribute.h"

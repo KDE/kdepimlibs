@@ -1,1 +1,1 @@
-#include "../../akonadi/contact/recentcontactscollectionrequestjob.h"
+#include "../../../akonadi/contact/recentcontactscollectionrequestjob.h"

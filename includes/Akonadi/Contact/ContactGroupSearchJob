@@ -1,1 +1,1 @@
-#include "../../akonadi/contact/contactgroupsearchjob.h"
+#include "../../../akonadi/contact/contactgroupsearchjob.h"

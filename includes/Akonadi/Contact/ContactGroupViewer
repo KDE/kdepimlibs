@@ -1,1 +1,1 @@
-#include "../../akonadi/contact/contactgroupviewer.h"
+#include "../../../akonadi/contact/contactgroupviewer.h"

@@ -1,1 +1,1 @@
-#include "../../akonadi/contact/contactgroupexpandjob.h"
+#include "../../../akonadi/contact/contactgroupexpandjob.h"
