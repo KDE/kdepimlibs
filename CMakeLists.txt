@@ -24,12 +24,6 @@ include(KDE4Defaults)
 include(MacroLibrary)
 
 
-############### Needed commands before building anything ###############
-
-add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${Boost_INCLUDE_DIR})
-
-
 ############### Load the CTest options ###############
 # CTestCustom.cmake has to be in the CTEST_BINARY_DIR.
 # in the KDE build system, this is the same as CMAKE_BINARY_DIR.
@@ -70,6 +64,12 @@ if (NOT KDEPIM_ONLY_KLEO)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk is required to build the Akonadi libraries.")
 
 endif (NOT KDEPIM_ONLY_KLEO)
+
+
+############### Needed commands before building anything ###############
+
+add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${Boost_INCLUDE_DIR})
 
 
 ############### Now, we add the KDEPIMLibs components ###############
