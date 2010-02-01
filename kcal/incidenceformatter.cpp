@@ -447,7 +447,7 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
   }
   if ( event->allDay() ) {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td><b>" + i18n( "Time:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18nc( "<beginTime> - <endTime>","%1 - %2",
                        dateToString( startDt, false, spec ),
@@ -462,7 +462,7 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
     }
   } else {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td><b>" + i18n( "Time:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18nc( "<beginTime> - <endTime>","%1 - %2",
                        dateToString( startDt, false, spec ),
