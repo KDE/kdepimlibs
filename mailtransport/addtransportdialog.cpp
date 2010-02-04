@@ -102,6 +102,8 @@ AddTransportDialog::AddTransportDialog( QWidget *parent )
       this, SLOT(typeListClicked()) );
   connect( d->ui.typeListView, SIGNAL(itemSelectionChanged()),
       this, SLOT(typeListClicked()) );
+  connect( d->ui.typeListView, SIGNAL(doubleClicked(const QModelIndex &) ),
+           this, SLOT(accept() ) );
 }
 
 AddTransportDialog::~AddTransportDialog()
