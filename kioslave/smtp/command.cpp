@@ -180,7 +180,7 @@ static sasl_callback_t callbacks[] = {
                          i18n("Your SMTP server claims to "
                              "support TLS, but negotiation "
                              "was unsuccessful.\nYou can "
-                             "disable TLS in the SMTP account settings dialog."),
+                             "disable TLS in the POP account settings dialog."),
                          i18n("Connection Failed") );
       return false;
     }
