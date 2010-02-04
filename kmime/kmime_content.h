@@ -280,6 +280,9 @@ class KMIME_EXPORT Content
       Note that the returned header may be empty.
       @param create Whether to create the header if it does not exist.
       @since 4.4.
+
+      KDE5: BIC: FIXME: Why is the default argument false here? That is inconsistent with the
+                        methods in KMime::Message!
     */
     template <typename T> T *header( bool create = false );
 
