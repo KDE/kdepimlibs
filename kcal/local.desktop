@@ -2,6 +2,7 @@
 Name=Calendar in Local File
 Name[be]=Каляндар у мясцовым файлу
 Name[ca]=Calendari en un fitxer local
+Name[ca@valencia]=Calendari en un fitxer local
 Name[cs]=Kalendář v místním souboru
 Name[da]=Kalender i lokal fil
 Name[de]=Kalender in lokaler Datei
@@ -45,6 +46,7 @@ Name[zh_CN]=本地文件中的日历
 Name[zh_TW]=本地端檔案裡的行事曆
 Comment=Provides access to a calendar stored in a single local file
 Comment[ca]=Proporciona l'accés a un calendari emmagatzemat en un fitxer local individual
+Comment[ca@valencia]=Proporciona l'accés a un calendari emmagatzemat en un fitxer local individual
 Comment[cs]=Poskytuje přístup ke kalendáři uloženém v jednom lokálním souboru
 Comment[da]=Giver adgang til en kalender lagret i en enkelt lokal fil
 Comment[de]=Ermöglicht Zugriff auf einen Kalender, der in einer einzigen Datei lokal gespeichert ist
