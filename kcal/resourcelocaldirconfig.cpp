@@ -27,6 +27,7 @@
 #include <kdebug.h>
 #include <kstandarddirs.h>
 #include <kurlrequester.h>
+#include <KMessageBox>
 
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
@@ -85,6 +86,11 @@ void ResourceLocalDirConfig::saveSettings( KRES::Resource *resource )
   ResourceLocalDir *res = static_cast<ResourceLocalDir*>( resource );
   if (res) {
     res->d->mURL = d->mURL->url();
+    if ( d->mURL->url().isEmpty() && !resource->readOnly() ) {
+      KMessageBox::information( this, i18n( "You have specified location, "
+                            "the calendar will be read-only." ),QString(), "ResourceLocalDirUrl");
+      resource->setReadOnly( true );
+    }
   } else {
     kDebug() << "ERROR: no ResourceLocalDir, cast failed";
   }
