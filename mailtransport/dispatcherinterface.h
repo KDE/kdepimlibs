@@ -69,9 +69,11 @@ class MAILTRANSPORT_EXPORT DispatcherInterface
 
     /**
       Looks for messages in the outbox with DispatchMode::Manual and changes the
-      TransportAttribute for them.
+      Transport for them to the one with id @p transportId.
+
+      @since 4.5
     */
-    void dispatchManualTransport( TransportAttribute *transportAttribute );
+    void dispatchManualTransport( int transportId );
 };
 
 } // namespace MailTransport

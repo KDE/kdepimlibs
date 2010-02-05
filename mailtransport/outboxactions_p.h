@@ -111,7 +111,7 @@ class ClearErrorAction : public Akonadi::FilterAction
 class DispatchManualTransportAction : public Akonadi::FilterAction
 {
 public:
-  DispatchManualTransportAction( TransportAttribute *tAttr );
+  DispatchManualTransportAction( int transportId );
 
   virtual ~DispatchManualTransportAction();
 
@@ -128,7 +128,7 @@ private:
   class Private;
   Private *const d;
 
-  TransportAttribute *mTransportAttribute;
+  int mTransportId;
 };
 } // namespace MailTransport
 

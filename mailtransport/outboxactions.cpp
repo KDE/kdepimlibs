@@ -106,9 +106,9 @@ class MailTransport::DispatchManualTransportAction::Private
 {
 };
 
-DispatchManualTransportAction::DispatchManualTransportAction( TransportAttribute *tAttr)
+DispatchManualTransportAction::DispatchManualTransportAction( int transportId )
   : d( new Private )
-  , mTransportAttribute( tAttr )
+  , mTransportId( transportId )
 {
 }
 
@@ -133,15 +133,19 @@ bool DispatchManualTransportAction::itemAccepted( const Item &item ) const
     return false;
   }
 
+  if( !item.hasAttribute<TransportAttribute>() ) {
+    kWarning() << "Item doesn't have TransportAttribute.";
+    return false;
+  }
+
   return item.attribute<DispatchModeAttribute>()->dispatchMode() == DispatchModeAttribute::Manual;
 }
 
 Job *DispatchManualTransportAction::itemAction( const Item &item ) const
 {
   Item cp = item;
-  cp.removeAttribute<TransportAttribute>();
+  cp.attribute<TransportAttribute>()->setTransportId( mTransportId );
   cp.removeAttribute<DispatchModeAttribute>();
-  cp.addAttribute(mTransportAttribute);
   cp.addAttribute( new DispatchModeAttribute ); // defaults to Automatic
   cp.setFlag( "queued" );
   return new ItemModifyJob( cp );

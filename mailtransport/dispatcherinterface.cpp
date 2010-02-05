@@ -85,7 +85,7 @@ void DispatcherInterface::retryDispatching()
   QObject::connect( mjob, SIGNAL(result(KJob*)), sInstance, SLOT(massModifyResult(KJob*)) );
 }
 
-void DispatcherInterface::dispatchManualTransport( TransportAttribute *transportAttribute )
+void DispatcherInterface::dispatchManualTransport( int transportId )
 {
   Collection outbox = SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
   if( !outbox.isValid() ) {
@@ -93,7 +93,7 @@ void DispatcherInterface::dispatchManualTransport( TransportAttribute *transport
     return;
   }
 
-  FilterActionJob *mjob = new FilterActionJob( outbox, new DispatchManualTransportAction( transportAttribute ), sInstance );
+  FilterActionJob *mjob = new FilterActionJob( outbox, new DispatchManualTransportAction( transportId ), sInstance );
   QObject::connect( mjob, SIGNAL(result(KJob*)), sInstance, SLOT(massModifyResult(KJob*)) );
 }
 
