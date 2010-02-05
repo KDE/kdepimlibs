@@ -60,6 +60,16 @@ if (NOT KDEPIM_ONLY_KLEO)
   find_package(SharedMimeInfo)
   macro_log_feature(SHARED_MIME_INFO_FOUND "SMI" "SharedMimeInfo" "http://freedesktop.org/wiki/Software/shared-mime-info" TRUE "0.30" "SharedMimeInfo is required.")
 
+  set(SDO_MIN_VERSION 0.2)
+  set(SOPRANO_MIN_VERSION 2.3.70)
+
+  find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
+  macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE "${SDO_MIN_VERSION}" "Ontologies necessary for the Nepomuk semantic desktop.")
+
+  find_package(Soprano)
+  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "${SOPRANO_MIN_VERSION}" "Soprano is needed for Nepomuk")
+  include(SopranoAddOntology)
+
   find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk is required to build the Akonadi libraries.")
 
