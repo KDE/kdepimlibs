@@ -102,3 +102,47 @@ Job *ClearErrorAction::itemAction( const Item &item ) const
   return new ItemModifyJob( cp );
 }
 
+class MailTransport::DispatchManualTransportAction::Private
+{
+};
+
+DispatchManualTransportAction::DispatchManualTransportAction( TransportAttribute *tAttr)
+  : d( new Private )
+  , mTransportAttribute( tAttr )
+{
+}
+
+DispatchManualTransportAction::~DispatchManualTransportAction()
+{
+  delete d;
+}
+
+ItemFetchScope DispatchManualTransportAction::fetchScope() const
+{
+  ItemFetchScope scope;
+  scope.fetchFullPayload( false );
+  scope.fetchAttribute<TransportAttribute>();
+  scope.fetchAttribute<DispatchModeAttribute>();
+  return scope;
+}
+
+bool DispatchManualTransportAction::itemAccepted( const Item &item ) const
+{
+  if( !item.hasAttribute<DispatchModeAttribute>() ) {
+    kWarning() << "Item doesn't have DispatchModeAttribute.";
+    return false;
+  }
+
+  return item.attribute<DispatchModeAttribute>()->dispatchMode() == DispatchModeAttribute::Manual;
+}
+
+Job *DispatchManualTransportAction::itemAction( const Item &item ) const
+{
+  Item cp = item;
+  cp.removeAttribute<TransportAttribute>();
+  cp.removeAttribute<DispatchModeAttribute>();
+  cp.addAttribute(mTransportAttribute);
+  cp.addAttribute( new DispatchModeAttribute ); // defaults to Automatic
+  cp.setFlag( "queued" );
+  return new ItemModifyJob( cp );
+}

@@ -30,6 +30,7 @@
 #include <akonadi/collection.h>
 #include "filteractionjob.h"
 #include <akonadi/kmime/specialmailcollections.h>
+#include "transportattribute.h"
 
 using namespace Akonadi;
 using namespace MailTransport;
@@ -81,6 +82,18 @@ void DispatcherInterface::retryDispatching()
   }
 
   FilterActionJob *mjob = new FilterActionJob( outbox, new ClearErrorAction, sInstance );
+  QObject::connect( mjob, SIGNAL(result(KJob*)), sInstance, SLOT(massModifyResult(KJob*)) );
+}
+
+void DispatcherInterface::dispatchManualTransport( TransportAttribute *transportAttribute )
+{
+  Collection outbox = SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
+  if( !outbox.isValid() ) {
+    kError() << "Could not access Outbox.";
+    return;
+  }
+
+  FilterActionJob *mjob = new FilterActionJob( outbox, new DispatchManualTransportAction( transportAttribute ), sInstance );
   QObject::connect( mjob, SIGNAL(result(KJob*)), sInstance, SLOT(massModifyResult(KJob*)) );
 }
 

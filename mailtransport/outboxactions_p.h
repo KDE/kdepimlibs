@@ -22,6 +22,7 @@
 
 #include <mailtransport/mailtransport_export.h>
 #include <mailtransport/filteractionjob.h>
+#include <mailtransport/transportattribute.h>
 
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/job.h>
@@ -96,6 +97,39 @@ class ClearErrorAction : public Akonadi::FilterAction
     Private *const d;
 };
 
+/**
+  FilterAction that changes the transport for all messages and
+  sets the "queued" flag.
+
+  This is used to send queued messages using an alternative transport.
+
+  @see FilterActionJob
+
+  @author Torgny Nyblom <kde nyblom org>
+  @since 4.5
+*/
+class DispatchManualTransportAction : public Akonadi::FilterAction
+{
+public:
+  DispatchManualTransportAction( TransportAttribute *tAttr );
+
+  virtual ~DispatchManualTransportAction();
+
+  /* reimpl */
+  virtual Akonadi::ItemFetchScope fetchScope() const;
+
+  /* reimpl */
+  virtual bool itemAccepted( const Akonadi::Item &item ) const;
+
+  /* reimpl */
+  virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const;
+
+private:
+  class Private;
+  Private *const d;
+
+  TransportAttribute *mTransportAttribute;
+};
 } // namespace MailTransport
 
 #endif // MAILTRANSPORT_OUTBOXACTIONS_P_H

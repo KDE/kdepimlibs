@@ -26,6 +26,8 @@
 
 namespace MailTransport {
 
+class TransportAttribute;
+
 /**
   @short An interface for applications to interact with the dispatcher agent.
 
@@ -64,6 +66,12 @@ class MAILTRANSPORT_EXPORT DispatcherInterface
       queues them again for sending.
     */
     void retryDispatching();
+
+    /**
+      Looks for messages in the outbox with DispatchMode::Manual and changes the
+      TransportAttribute for them.
+    */
+    void dispatchManualTransport( TransportAttribute *transportAttribute );
 };
 
 } // namespace MailTransport
