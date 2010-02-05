@@ -298,6 +298,10 @@ void LinkLocatorTest::testHtmlConvert_data()
   // Bug reported by dfaure, the <hostname> would get lost
   QTest::newRow( "" ) << "KUrl url(\"http://strange<hostname>/\");" << (0x08 | 0x02)
                       << "KUrl url(&quot;<a href=\"http://strange<hostname>/\">http://strange&lt;hostname&gt;/</a>&quot;);";
+
+  // Bug: 211128 - plain text emails should not replace ampersand & with &amp;
+  QTest::newRow( "bug211128" ) << "https://green-site/?Ticket=85&Page=next" << 0x01
+    << "<a href=\"https://green-site/?Ticket=85&Page=next\">https://green-site/?Ticket=85&amp;Page=next</a>";
 }
 
 void LinkLocatorTest::testHtmlConvert()

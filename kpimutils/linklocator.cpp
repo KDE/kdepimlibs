@@ -372,7 +372,6 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
             hyperlink = str;
           }
 
-          str = str.replace( '&', "&amp;" );
           result += "<a href=\"" + hyperlink + "\">" + Qt::escape( str ) + "</a>";
           x += locator.mPos - start;
           continue;
