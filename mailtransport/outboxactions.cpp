@@ -107,8 +107,7 @@ class MailTransport::DispatchManualTransportAction::Private
 };
 
 DispatchManualTransportAction::DispatchManualTransportAction( int transportId )
-  : d( new Private )
-  , mTransportId( transportId )
+  : d( new Private ), mTransportId( transportId )
 {
 }
 

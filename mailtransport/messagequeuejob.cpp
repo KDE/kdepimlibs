@@ -100,7 +100,8 @@ bool MessageQueueJob::Private::validate()
     q->setErrorText( i18n( "Message has invalid sent-mail folder." ) );
     q->emitResult();
     return false;
-  } else if( sentBehaviourAttribute.sentBehaviour() == SentBehaviourAttribute::MoveToDefaultSentCollection ) {
+  } else if( sentBehaviourAttribute.sentBehaviour() ==
+             SentBehaviourAttribute::MoveToDefaultSentCollection ) {
     // TODO require SpecialMailCollections::SentMail here?
   }
 
@@ -122,7 +123,8 @@ void MessageQueueJob::Private::outboxRequestResult( KJob *job )
     return;
   }
 
-  SpecialMailCollectionsRequestJob *requestJob = qobject_cast<SpecialMailCollectionsRequestJob*>( job );
+  SpecialMailCollectionsRequestJob *requestJob =
+    qobject_cast<SpecialMailCollectionsRequestJob*>( job );
   if ( !requestJob ) {
     return;
   }
@@ -163,22 +165,22 @@ Message::Ptr MessageQueueJob::message() const
   return d->message;
 }
 
-DispatchModeAttribute& MessageQueueJob::dispatchModeAttribute()
+DispatchModeAttribute &MessageQueueJob::dispatchModeAttribute()
 {
   return d->dispatchModeAttribute;
 }
 
-AddressAttribute& MessageQueueJob::addressAttribute()
+AddressAttribute &MessageQueueJob::addressAttribute()
 {
   return d->addressAttribute;
 }
 
-TransportAttribute& MessageQueueJob::transportAttribute()
+TransportAttribute &MessageQueueJob::transportAttribute()
 {
   return d->transportAttribute;
 }
 
-SentBehaviourAttribute& MessageQueueJob::sentBehaviourAttribute()
+SentBehaviourAttribute &MessageQueueJob::sentBehaviourAttribute()
 {
   return d->sentBehaviourAttribute;
 }

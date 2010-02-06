@@ -107,27 +107,27 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
       Returns a reference to the dispatch mode attribue for this message.
       Modify the returned attribute to change the dispatch mode.
     */
-    DispatchModeAttribute& dispatchModeAttribute();
+    DispatchModeAttribute &dispatchModeAttribute();
 
     /**
       Returns a reference to the address attribue for this message.
       Modify the returned attribute to change the receivers or the from
       address.
     */
-    Akonadi::AddressAttribute& addressAttribute();
+    Akonadi::AddressAttribute &addressAttribute();
 
     /**
       Returns a reference to the transport attribue for this message.
       Modify the returned attribute to change the transport used for
       sending the mail.
     */
-    TransportAttribute& transportAttribute();
+    TransportAttribute &transportAttribute();
 
     /**
       Returns a reference to the sent behaviour attribue for this message.
       Modify the returned attribute to change the sent behaviour.
     */
-    SentBehaviourAttribute& sentBehaviourAttribute();
+    SentBehaviourAttribute &sentBehaviourAttribute();
 
     /**
       Sets the message to be sent.

@@ -110,26 +110,27 @@ class ClearErrorAction : public Akonadi::FilterAction
 */
 class DispatchManualTransportAction : public Akonadi::FilterAction
 {
-public:
-  DispatchManualTransportAction( int transportId );
+  public:
+    DispatchManualTransportAction( int transportId );
 
-  virtual ~DispatchManualTransportAction();
+    virtual ~DispatchManualTransportAction();
 
-  /* reimpl */
-  virtual Akonadi::ItemFetchScope fetchScope() const;
+    /* reimpl */
+    virtual Akonadi::ItemFetchScope fetchScope() const;
 
-  /* reimpl */
-  virtual bool itemAccepted( const Akonadi::Item &item ) const;
+    /* reimpl */
+    virtual bool itemAccepted( const Akonadi::Item &item ) const;
 
-  /* reimpl */
-  virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const;
+    /* reimpl */
+    virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const;
 
-private:
-  class Private;
-  Private *const d;
+  private:
+    class Private;
+    Private *const d;
 
-  int mTransportId;
+    int mTransportId;
 };
+
 } // namespace MailTransport
 
 #endif // MAILTRANSPORT_OUTBOXACTIONS_P_H
