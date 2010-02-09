@@ -309,6 +309,19 @@ void HeaderTest::testSingleMailboxHeader()
   QCOMPARE( h->prettyAddresses().count(), 1 );
   QCOMPARE( h->prettyAddresses().first(), QString("joe_smith@where.test") );
 
+  // parse quoted display name with \ in it
+  h->from7BitString( "\"Lastname\\, Firstname\" <firstname.lastname@example.com>" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first(), QByteArray("firstname.lastname@example.com") );
+  QCOMPARE( h->displayNames().count(), 1 );
+  QCOMPARE( h->displayNames().first(), QString( "Lastname, Firstname" ) );
+  QCOMPARE( h->asUnicodeString().toAscii().data(),
+            "Lastname, Firstname <firstname.lastname@example.com>" );
+  QCOMPARE( h->mailboxes().first().prettyAddress().toAscii().data(),
+            "Lastname, Firstname <firstname.lastname@example.com>" );
+  QCOMPARE( h->mailboxes().first().quotedPrettyAddress().toAscii().data(),
+            "\"Lastname, Firstname\" <firstname.lastname@example.com>" );
   delete h;
 }
 

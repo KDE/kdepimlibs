@@ -119,6 +119,14 @@ class KMIME_EXPORT Mailbox
     QString prettyAddress() const;
 
     /**
+     * Like prettyAddress(), this returns an assembled diplay name / address string.
+     * The difference is that the display name is quoted, which makes this method
+     * more useful for machine-processing the result.
+     * @since 4.5
+     */
+    QString quotedPrettyAddress() const;
+
+    /**
       Parses the given unicode string.
     */
     void fromUnicodeString( const QString &s );

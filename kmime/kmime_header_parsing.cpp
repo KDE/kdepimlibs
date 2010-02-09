@@ -172,6 +172,18 @@ QString Mailbox::prettyAddress() const
   return s;
 }
 
+QString Mailbox::quotedPrettyAddress() const
+{
+  if ( !hasName() ) {
+    return address();
+  }
+  QString s = '"' + name() + '"';
+  if ( hasAddress() ) {
+    s += QLatin1String(" <") + address() + QLatin1Char('>');
+  }
+  return s;
+}
+
 void Mailbox::fromUnicodeString( const QString &s )
 {
   from7BitString( encodeRFC2047String( s, "utf-8", false ) );
