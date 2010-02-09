@@ -439,6 +439,8 @@ void EMailTest::testCheckSplitEmailAddrList_data()
                       << ( QStringList()
                            << "\"Matt, Douhan\" <matt@fruitsalad.org>"
                            << "Foo Bar <foo@bar.com>" );
+  QTest::newRow( "" ) << "\"Lastname\\, Firstname\" <firstname.lastname@example.com>"
+                      << ( QStringList() << "\"Lastname\\, Firstname\" <firstname.lastname@example.com>");
 }
 
 void EMailTest::testNormalizeAddressesAndEncodeIDNs()
