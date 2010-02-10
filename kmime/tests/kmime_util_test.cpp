@@ -120,3 +120,28 @@ void KMimeUtilTest::testBalanceBidiState_data()
                       << "ComplexOrder3" + RLO + PDF;
 }
 
+void KMimeUtilTest::testAddQuotes()
+{
+  QFETCH( QByteArray, input );
+  QFETCH( QByteArray, expResult );
+  QFETCH( bool, forceQuotes );
+
+  addQuotes( input, forceQuotes );
+  QCOMPARE( input.data(), expResult.data() );
+}
+
+void KMimeUtilTest::testAddQuotes_data()
+{
+  QTest::addColumn<QByteArray>( "input" );
+  QTest::addColumn<QByteArray>( "expResult" );
+  QTest::addColumn<bool>( "forceQuotes" );
+
+  QTest::newRow( "" ) << QByteArray( "Test" ) << QByteArray( "Test" ) << false;
+  QTest::newRow( "" ) << QByteArray( "Test" ) << QByteArray( "\"Test\"" ) << true;
+  QTest::newRow( "" ) << QByteArray( "Lastname, Firstname" )
+                      << QByteArray( "\"Lastname, Firstname\"" ) << false;
+  QTest::newRow( "" ) << QByteArray( "John \"the hacker\" Smith" )
+                      << QByteArray( "\"John \\\"the hacker\\\" Smith\"" ) << false;
+}
+
+

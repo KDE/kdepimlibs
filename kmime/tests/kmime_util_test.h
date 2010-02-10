@@ -29,6 +29,8 @@ class KMimeUtilTest : public QObject
     void testExtractHeader();
     void testBalanceBidiState();
     void testBalanceBidiState_data();
+    void testAddQuotes();
+    void testAddQuotes_data();
 };
 
 #endif
