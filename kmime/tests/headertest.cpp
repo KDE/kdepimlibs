@@ -344,7 +344,10 @@ void HeaderTest::testSingleMailboxHeader()
   QCOMPARE( h->displayNames().first().toAscii().data(), "John \"the guru\" Smith" );
   QEXPECT_FAIL( "", "Quotes inside quoted display names are dropped", Continue );
   QCOMPARE( h->mailboxes().first().quotedPrettyAddress().toAscii().data(),
-            "\"John \\\"the guru\\\" Smith\" <john.smith@mail.domain" );
+            "\"John \\\"the guru\\\" Smith\" <john.smith@mail.domain>" );
+  QEXPECT_FAIL( "", "Quotes inside quoted display names are dropped", Continue );
+  QCOMPARE( h->as7BitString( false ).data(),
+            "\"John \\\"the guru\\\" Smith\" <john.smith@mail.domain>" );
   delete h;
 }
 
