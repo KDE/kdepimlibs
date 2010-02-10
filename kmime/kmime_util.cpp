@@ -615,7 +615,7 @@ void addQuotes_impl( StringType &str, bool forceQuotes,
 {
   bool needsQuotes=false;
   for ( int i=0; i < str.length(); i++ ) {
-    char cur = convertFunction( str, i );
+    const char cur = convertFunction( str, i );
     if ( strchr("()<>@,.;:[]=\\\"", cur ) != 0 ) {
       needsQuotes = true;
     }
