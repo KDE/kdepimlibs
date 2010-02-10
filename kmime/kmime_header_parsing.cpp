@@ -177,11 +177,15 @@ QString Mailbox::quotedPrettyAddress() const
   if ( !hasName() ) {
     return address();
   }
-  QString s = '"' + name() + '"';
+
+  QString quotedName = name();
+  addQuotes( quotedName, true );
+
+  QString result = quotedName;
   if ( hasAddress() ) {
-    s += QLatin1String(" <") + address() + QLatin1Char('>');
+    result += QLatin1String( " <" ) + address() + QLatin1Char( '>' );
   }
-  return s;
+  return result;
 }
 
 void Mailbox::fromUnicodeString( const QString &s )

@@ -238,6 +238,7 @@ KMIME_EXPORT extern QByteArray LFtoCRLF( const QByteArray &s );
   @param str the string to work on.
   @see addQuotes
 */
+// TODO: KDE5: BIC: rename to "removeQuotes"
 KMIME_EXPORT extern void removeQuots( QByteArray &str );
 
 /**
@@ -247,6 +248,7 @@ KMIME_EXPORT extern void removeQuots( QByteArray &str );
   @param str the string to work on.
   @see addQuotes
 */
+// TODO: KDE5: BIC: rename to "removeQuotes"
 KMIME_EXPORT extern void removeQuots( QString &str );
 
 /**
@@ -257,6 +259,12 @@ KMIME_EXPORT extern void removeQuots( QString &str );
   @param forceQuotes if @p true, always add quote characters.
 */
 KMIME_EXPORT extern void addQuotes( QByteArray &str, bool forceQuotes );
+
+/**
+ * Overloaded method, behaves same as teh above.
+ * @since 4.5
+ */
+KMIME_EXPORT extern void addQuotes( QString &str, bool forceQuotes );
 
 /**
  * Makes sure that the bidirectional state at the end of the string is the

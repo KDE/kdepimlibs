@@ -142,6 +142,11 @@ void KMimeUtilTest::testAddQuotes_data()
                       << QByteArray( "\"Lastname, Firstname\"" ) << false;
   QTest::newRow( "" ) << QByteArray( "John \"the hacker\" Smith" )
                       << QByteArray( "\"John \\\"the hacker\\\" Smith\"" ) << false;
+
+  // Test the whole thing on strings as well, for one example
+  QString string( QLatin1String( "John \"the hacker\" Smith" ) );
+  addQuotes( string, false );
+  QCOMPARE( string, QString::fromLatin1( "\"John \\\"the hacker\\\" Smith\"" ) );
 }
 
 

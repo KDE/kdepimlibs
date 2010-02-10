@@ -612,6 +612,25 @@ void addQuotes( QByteArray &str, bool forceQuotes )
   }
 }
 
+void addQuotes( QString &str, bool forceQuotes )
+{
+  bool needsQuotes=false;
+  for ( int i=0; i < str.length(); i++ ) {
+    if ( strchr("()<>@,.;:[]=\\\"", str[i].toAscii() ) != 0 ) {
+      needsQuotes = true;
+    }
+    if ( str[i].toAscii() == '\\' || str[i].toAscii() == '\"' ) {
+      str.insert( i, '\\' );
+      i++;
+    }
+  }
+
+  if ( needsQuotes || forceQuotes ) {
+    str.insert( 0, '\"' );
+    str.append( "\"" );
+  }
+}
+
 KMIME_EXPORT QString balanceBidiState( const QString &input )
 {
   const int LRO = 0x202D;
