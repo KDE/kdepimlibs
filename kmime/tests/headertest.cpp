@@ -82,7 +82,7 @@ void HeaderTest::testIdentHeader()
   h = new Headers::Generics::Ident();
   const QByteArray ident = QByteArray( "<O55F3Y9E5MmKFwBN@[127.0.0.1]>" );
   h->appendIdentifier( ident );
-  QEXPECT_FAIL( "", "Parsing strips angle brackets.", Continue );
+  QEXPECT_FAIL( "", "Parsing strips square brackets.", Continue );
   QCOMPARE( h->as7BitString( false ), QByteArray( ident ) );
   delete h;
 }
@@ -309,6 +309,18 @@ void HeaderTest::testSingleMailboxHeader()
   QCOMPARE( h->prettyAddresses().count(), 1 );
   QCOMPARE( h->prettyAddresses().first(), QString("joe_smith@where.test") );
 
+  // parse single simple address with display name
+  h->from7BitString( "John Smith <joe_smith@where.test>" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first(), QByteArray( "joe_smith@where.test" ) );
+  QCOMPARE( h->displayNames().count(), 1 );
+  QCOMPARE( h->displayNames().first(), QString( "John Smith" ) );
+  QCOMPARE( h->prettyAddresses().count(), 1 );
+  QCOMPARE( h->prettyAddresses().first(), QString( "John Smith <joe_smith@where.test>" ) );
+  QCOMPARE( h->mailboxes().first().quotedPrettyAddress(),
+            QString( "\"John Smith\" <joe_smith@where.test>" ) );
+
   // parse quoted display name with \ in it
   h->from7BitString( "\"Lastname\\, Firstname\" <firstname.lastname@example.com>" );
   QVERIFY( !h->isEmpty() );
@@ -322,6 +334,17 @@ void HeaderTest::testSingleMailboxHeader()
             "Lastname, Firstname <firstname.lastname@example.com>" );
   QCOMPARE( h->mailboxes().first().quotedPrettyAddress().toAscii().data(),
             "\"Lastname, Firstname\" <firstname.lastname@example.com>" );
+
+  // parse quoted display name with " in it
+  h->from7BitString( "\"John \"the guru\" Smith\" <john.smith@mail.domain>" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->addresses().first().data(), "john.smith@mail.domain" );
+  QEXPECT_FAIL( "", "Quotes inside quoted display names are dropped", Continue );
+  QCOMPARE( h->displayNames().first().toAscii().data(), "John \"the guru\" Smith" );
+  QEXPECT_FAIL( "", "Quotes inside quoted display names are dropped", Continue );
+  QCOMPARE( h->mailboxes().first().quotedPrettyAddress().toAscii().data(),
+            "\"John \\\"the guru\\\" Smith\" <john.smith@mail.domain" );
   delete h;
 }
 
