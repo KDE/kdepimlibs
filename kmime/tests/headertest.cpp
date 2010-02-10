@@ -336,16 +336,13 @@ void HeaderTest::testSingleMailboxHeader()
             "\"Lastname, Firstname\" <firstname.lastname@example.com>" );
 
   // parse quoted display name with " in it
-  h->from7BitString( "\"John \"the guru\" Smith\" <john.smith@mail.domain>" );
+  h->from7BitString( "\"John \\\"the guru\\\" Smith\" <john.smith@mail.domain>" );
   QVERIFY( !h->isEmpty() );
   QCOMPARE( h->addresses().count(), 1 );
   QCOMPARE( h->addresses().first().data(), "john.smith@mail.domain" );
-  QEXPECT_FAIL( "", "Quotes inside quoted display names are dropped", Continue );
   QCOMPARE( h->displayNames().first().toAscii().data(), "John \"the guru\" Smith" );
-  QEXPECT_FAIL( "", "Quotes inside quoted display names are dropped", Continue );
   QCOMPARE( h->mailboxes().first().quotedPrettyAddress().toAscii().data(),
             "\"John \\\"the guru\\\" Smith\" <john.smith@mail.domain>" );
-  QEXPECT_FAIL( "", "Quotes inside quoted display names are dropped", Continue );
   QCOMPARE( h->as7BitString( false ).data(),
             "\"John \\\"the guru\\\" Smith\" <john.smith@mail.domain>" );
   delete h;
