@@ -225,11 +225,11 @@ QString Query::Private::marshal( const QVariant &arg ) const
         QStringList data = arg.toStringList();
         QStringListIterator dataIterator(data);
         QString markup;
-        markup += "<value><array><data>";
+        markup += "<value><array><data><value>";
         while ( dataIterator.hasNext() ) {
           markup += "<string><![CDATA[" + dataIterator.next() + "]]></string>\r\n";
         }
-        markup += "</data></array></value>";
+        markup += "</value></data></array></value>";
         return markup;
       }
     case QVariant::Int:
