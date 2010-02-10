@@ -593,14 +593,33 @@ void removeQuots( QString &str )
   removeQuotesGeneric( str );
 }
 
-void addQuotes( QByteArray &str, bool forceQuotes )
+//
+// The next two helper function are just functions that return the ASCII char of
+// a string or an array. This is only there to facilitate writing addQuotes_impl()
+// without code duplication
+//
+
+static char getCharFromQByteArray( const QByteArray &array, int index )
+{
+  return array.at( index );
+}
+
+static char getCharFromQString( const QString &string, int index )
+{
+  return string.at( index ).toAscii();
+}
+
+template<class StringType>
+void addQuotes_impl( StringType &str, bool forceQuotes,
+                     char (*convertFunction)( const StringType&, int ) )
 {
   bool needsQuotes=false;
   for ( int i=0; i < str.length(); i++ ) {
-    if ( strchr("()<>@,.;:[]=\\\"", str[i] ) != 0 ) {
+    char cur = convertFunction( str, i );
+    if ( strchr("()<>@,.;:[]=\\\"", cur ) != 0 ) {
       needsQuotes = true;
     }
-    if ( str[i] == '\\' || str[i] == '\"' ) {
+    if ( cur == '\\' || cur == '\"' ) {
       str.insert( i, '\\' );
       i++;
     }
@@ -612,23 +631,14 @@ void addQuotes( QByteArray &str, bool forceQuotes )
   }
 }
 
+void addQuotes( QByteArray &str, bool forceQuotes )
+{
+  addQuotes_impl( str, forceQuotes, &getCharFromQByteArray );
+}
+
 void addQuotes( QString &str, bool forceQuotes )
 {
-  bool needsQuotes=false;
-  for ( int i=0; i < str.length(); i++ ) {
-    if ( strchr("()<>@,.;:[]=\\\"", str[i].toAscii() ) != 0 ) {
-      needsQuotes = true;
-    }
-    if ( str[i].toAscii() == '\\' || str[i].toAscii() == '\"' ) {
-      str.insert( i, '\\' );
-      i++;
-    }
-  }
-
-  if ( needsQuotes || forceQuotes ) {
-    str.insert( 0, '\"' );
-    str.append( "\"" );
-  }
+  addQuotes_impl( str, forceQuotes, &getCharFromQString );
 }
 
 KMIME_EXPORT QString balanceBidiState( const QString &input )
