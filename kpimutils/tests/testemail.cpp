@@ -95,6 +95,9 @@ void EMailTest::testGetNameAndEmail_data()
   QTest::newRow( "@ inside the comment" ) << "\"Matt@Douhan\" <matt@fruitsalad.org>"
                                           << "Matt@Douhan" << "matt@fruitsalad.org" << true;
   QTest::newRow( "No '@'" ) << "foo <distlist>" << "foo" << "distlist" << true;
+  QTest::newRow( "Backslash in display name" ) << "\"Lastname\\, Firstname\" <firstname@lastname.com>"
+                                               << "Lastname, Firstname" << "firstname@lastname.com"
+                                               << true;
 }
 
 void EMailTest::testIsValidEmailAddress()

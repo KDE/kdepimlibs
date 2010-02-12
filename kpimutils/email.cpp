@@ -761,7 +761,7 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
       } else if ( bInQuotesOutsideOfEmail ) {
         if ( cQuotes == c ) {
           bInQuotesOutsideOfEmail = false;
-        } else {
+        } else if ( c != '\\' ) {
           name.prepend( c );
         }
       } else {
@@ -834,7 +834,7 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
       } else if ( bInQuotesOutsideOfEmail ) {
         if ( cQuotes == c ) {
           bInQuotesOutsideOfEmail = false;
-        } else {
+        } else if ( c != '\\' ) {
           name.append( c );
         }
       } else {
