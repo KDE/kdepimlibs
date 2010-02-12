@@ -119,12 +119,26 @@ class KMIME_EXPORT Mailbox
     QString prettyAddress() const;
 
     /**
-     * Like prettyAddress(), this returns an assembled diplay name / address string.
-     * The difference is that the display name is quoted, which makes this method
-     * more useful for machine-processing the result.
+     * Describes how display names should be quoted
      * @since 4.5
      */
-    QString quotedPrettyAddress() const;
+    enum Quoting {
+      None,          ///< Don't quote display names at all. Such an unquoted display name can not
+                     ///  be machine-processed anymore in some cases, for example when it contains
+                     ///  commas, like in "Lastname, Firstname".
+      WhenNecessary, ///< Only quote display names when they contain characters that need to be
+                     ///  quoted, like commas or quote signs.
+      Always         ///< Always quote the display name
+    };
+
+    /**
+     * Overloaded method that gives more control over the quoting of the display name
+     * @param quoting describes how the display name should be quoted
+     * @since 4.5
+     */
+    // TODO: KDE5: BIC: remove other prettyAddress() overload, and make it None the default
+    //                  parameter here
+    QString prettyAddress( Quoting quoting ) const;
 
     /**
       Parses the given unicode string.

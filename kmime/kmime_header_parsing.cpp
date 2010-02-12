@@ -162,30 +162,23 @@ bool Mailbox::hasName() const
 
 QString Mailbox::prettyAddress() const
 {
-  if ( !hasName() ) {
-    return address();
-  }
-  QString s = name();
-  if ( hasAddress() ) {
-    s += QLatin1String(" <") + address() + QLatin1Char('>');
-  }
-  return s;
+  return prettyAddress( None );
 }
 
-QString Mailbox::quotedPrettyAddress() const
+QString Mailbox::prettyAddress( Quoting quoting ) const
 {
   if ( !hasName() ) {
     return address();
   }
-
-  QString quotedName = name();
-  addQuotes( quotedName, true );
-
-  QString result = quotedName;
-  if ( hasAddress() ) {
-    result += QLatin1String( " <" ) + address() + QLatin1Char( '>' );
+  QString s = name();
+  if ( quoting != None ) {
+    addQuotes( s, quoting == Always /*bool force*/ );
   }
-  return result;
+
+  if ( hasAddress() ) {
+    s += QLatin1String(" <") + address() + QLatin1Char('>');
+  }
+  return s;
 }
 
 void Mailbox::fromUnicodeString( const QString &s )
