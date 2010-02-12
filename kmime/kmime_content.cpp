@@ -218,7 +218,7 @@ void Content::parse()
     // This content is something else, like an encapsulated message or a binary attachment
     // or something like that
     if ( bodyIsMessage() ) {
-      d->bodyAsMessage = MessagePtr( new KMime::Message );
+      d->bodyAsMessage = Message::Ptr( new Message );
       d->bodyAsMessage->setContent( d->body );
       d->bodyAsMessage->setFrozen( d->frozen );
       d->bodyAsMessage->parse();
@@ -932,12 +932,12 @@ ContentIndex Content::index() const
   return indexForContent( const_cast<Content*>(this)  );
 }
 
-MessagePtr Content::bodyAsMessage() const
+Message::Ptr Content::bodyAsMessage() const
 {
   if ( bodyIsMessage() && d_ptr->bodyAsMessage ) {
     return d_ptr->bodyAsMessage;
   } else {
-    return MessagePtr();
+    return Message::Ptr();
   }
 }
 

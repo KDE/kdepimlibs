@@ -65,8 +65,6 @@ namespace KMime {
 class ContentPrivate;
 class Message;
 
-typedef boost::shared_ptr<Message> MessagePtr;
-
 /**
   @brief
   A class that encapsulates @ref MIME encoded Content.
@@ -709,7 +707,7 @@ class KMIME_EXPORT Content
      *
      * @since 4.5
      */
-    MessagePtr bodyAsMessage() const;
+    boost::shared_ptr<Message> bodyAsMessage() const;
 
   protected:
     /**
