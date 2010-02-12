@@ -455,6 +455,88 @@ void MessageTest::testBug223509()
             "Bla Bla Bla" );
 }
 
+void MessageTest::testEncapsulatedMessages()
+{
+  //
+  // First, test some basic properties to check that the parsing was correct
+  //
+  KMime::Message::Ptr msg = readAndParseMail( "simple-encapsulated.mbox" );
+  QCOMPARE( msg->contentType()->mimeType().data(), "multipart/mixed" );
+  QCOMPARE( msg->contents().size(), 2 );
+  QVERIFY( msg->isTopLevel() );
+
+  KMime::Content * const textContent = msg->contents().at( 0 );
+  QCOMPARE( textContent->contentType()->mimeType().data(), "text/plain" );
+  QVERIFY( textContent->contents().isEmpty() );
+  QVERIFY( !textContent->bodyIsMessage() );
+  QVERIFY( !textContent->bodyAsMessage() );
+  QVERIFY( !textContent->isTopLevel() );
+  QCOMPARE( textContent->decodedText( true, true ),
+            QString( "Hi Hans!\nLook at this interesting mail I forwarded to you!" ) );
+  QCOMPARE( textContent->index().toString().toAscii().data(), "1" );
+
+  KMime::Content * messageContent = msg->contents().at( 1 );
+  QCOMPARE( messageContent->contentType()->mimeType().data(), "message/rfc822" );
+  QVERIFY( messageContent->body().isEmpty() );
+  QCOMPARE( messageContent->contents().count(), 1 );
+  QVERIFY( messageContent->bodyIsMessage() );
+  QVERIFY( messageContent->bodyAsMessage() );
+  QVERIFY( !messageContent->isTopLevel() );
+  QCOMPARE( messageContent->index().toString().toAscii().data(), "2" );
+
+  KMime::Message::Ptr encapsulated = messageContent->bodyAsMessage();
+  QCOMPARE( encapsulated->contents().size(), 0 );
+  QCOMPARE( encapsulated->contentType()->mimeType().data(), "text/plain" );
+  QVERIFY( !encapsulated->bodyIsMessage() );
+  QVERIFY( !encapsulated->bodyAsMessage() );
+  QCOMPARE( encapsulated->subject()->as7BitString( false ).data(), "Foo" );
+  QCOMPARE( encapsulated->decodedText( false, false ),
+            QString( "This is the encapsulated message body." ) );
+  QCOMPARE( encapsulated.get(), messageContent->bodyAsMessage().get() );
+  QCOMPARE( encapsulated.get(), messageContent->contents().first() );
+  QCOMPARE( encapsulated->parent(), messageContent );
+  QVERIFY( !encapsulated->isTopLevel() );
+  QCOMPARE( encapsulated->topLevel(), msg.get() );
+  QCOMPARE( encapsulated->index().toString().toAscii().data(), "2.1" );
+
+  // Now test some misc functions
+  QCOMPARE( msg->storageSize(), msg->head().size() + textContent->storageSize() +
+                                messageContent->storageSize() );
+  QCOMPARE( messageContent->storageSize(), messageContent->head().size() +
+                                           encapsulated->storageSize() );
+
+  // Now change some properties on the encapsulated message
+  encapsulated->subject()->fromUnicodeString( QString( "New subject" ), "us-ascii" );
+  encapsulated->fromUnicodeString( QString( "New body string." ) );
+
+  // Since we didn't assemble the encapsulated message yet, it should still have the old headers
+  QVERIFY( encapsulated->encodedContent().contains( "Foo" ) );
+  QVERIFY( !encapsulated->encodedContent().contains( "New subject" ) );
+
+  // Now assemble the container message
+  msg->assemble();
+
+  // Assembling the container message should have assembled the encapsulated message as well.
+  QVERIFY( !encapsulated->encodedContent().contains( "Foo" ) );
+  QVERIFY( encapsulated->encodedContent().contains( "New subject" ) );
+  QCOMPARE( encapsulated->body().data(), "New body string." );
+  QVERIFY( msg->encodedContent().contains( encapsulated->body() ) );
+  QCOMPARE( msg->contentType()->mimeType().data(), "multipart/mixed" );
+  QCOMPARE( msg->contents().size(), 2 );
+  messageContent = msg->contents().at( 1 );
+  QCOMPARE( messageContent->contentType()->mimeType().data(), "message/rfc822" );
+  QVERIFY( encapsulated.get() == messageContent->bodyAsMessage().get() );
+
+  // Setting a new body and then parsing it should discard the encapsulated message
+  messageContent->contentType()->setMimeType( "text/plain" );
+  messageContent->assemble();
+  messageContent->setBody( "Some new body" );
+  messageContent->parse();
+  QVERIFY( !messageContent->bodyIsMessage() );
+  QVERIFY( !messageContent->bodyAsMessage() );
+  QCOMPARE( messageContent->contents().size(), 0 );
+}
+
 KMime::Message::Ptr MessageTest::readAndParseMail( const QString &mailFile ) const
 {
   QFile file( MAIL_DATA_DIR"/" + mailFile );
@@ -466,3 +548,4 @@ KMime::Message::Ptr MessageTest::readAndParseMail( const QString &mailFile ) con
   msg->parse();
   return msg;
 }
+

@@ -2,6 +2,7 @@ add_subdirectory( tests )
 add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5320 )
 include(CheckTimezone)
 configure_file (config-kmime.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kmime.h)
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 ########### next target ###############
 

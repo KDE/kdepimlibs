@@ -196,9 +196,6 @@ class KMIME_EXPORT Message : public Content
     */
     virtual KMime::Headers::Sender *sender( bool create = true );
 
-    /* reimpl */
-    virtual bool isTopLevel() const;
-
     /**
       Returns the first main body part of a given type, taking multipart/mixed
       and multipart/alternative nodes into consideration.

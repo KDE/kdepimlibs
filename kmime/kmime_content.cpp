@@ -36,6 +36,7 @@
 
 #include "kmime_content.h"
 #include "kmime_content_p.h"
+#include "kmime_message.h"
 #include "kmime_header_parsing.h"
 #include "kmime_header_parsing_p.h"
 #include "kmime_parsers.h"
@@ -96,7 +97,7 @@ Content::~Content()
 
 bool Content::hasContent() const
 {
-  return !d_ptr->head.isEmpty() || !d_ptr->body.isEmpty() || !d_ptr->contents.isEmpty();
+  return !d_ptr->head.isEmpty() || !d_ptr->body.isEmpty() || !d_ptr->contents().isEmpty();
 }
 
 void Content::setContent( const QList<QByteArray> &l )
@@ -189,8 +190,9 @@ void Content::parse()
   }
 
   // Clean up old sub-Contents and parse them again.
-  qDeleteAll( d->contents );
-  d->contents.clear();
+  qDeleteAll( d->multipartContents );
+  d->multipartContents.clear();
+  d->clearBodyMessage();
   Headers::ContentType *ct = contentType();
   if( ct->isText() ) {
     // This content is either text, or of unknown type.
@@ -213,7 +215,19 @@ void Content::parse()
       ct->setCharset( "US-ASCII" );
     }
   } else {
-    // This content is something else, like an image or something...
+    // This content is something else, like an encapsulated message or a binary attachment
+    // or something like that
+    if ( bodyIsMessage() ) {
+      d->bodyAsMessage = MessagePtr( new KMime::Message );
+      d->bodyAsMessage->setContent( d->body );
+      d->bodyAsMessage->setFrozen( d->frozen );
+      d->bodyAsMessage->parse();
+      d->bodyAsMessage->d_ptr->parent = this;
+
+      // Clear the body, as it is now represented by d->bodyAsMessage. This is the same behavior
+      // as with multipart contents, since parseMultipart() clears the body as well
+      d->body.clear();
+    }
   }
 }
 
@@ -266,9 +280,10 @@ void Content::clearContents( bool del )
 {
   Q_D(Content);
   if( del ) {
-    qDeleteAll( d->contents );
+    qDeleteAll( d->multipartContents );
   }
-  d->contents.clear();
+  d->multipartContents.clear();
+  d->clearBodyMessage();
 }
 
 QByteArray Content::encodedContent( bool useCrLf )
@@ -290,6 +305,11 @@ QByteArray Content::encodedContent( bool useCrLf )
       // Use the body as it was before parsing.
       e += d->frozenBody;
     }
+  } else if( bodyIsMessage() && d->bodyAsMessage ) {
+    // This is an encapsulated message
+    // No encoding needed, as the ContentTransferEncoding can only be 7bit
+    // for encapsulated messages
+    e += d->bodyAsMessage->encodedContent();
   } else if( !d->body.isEmpty() ) {
     // This is a single-part Content.
     Headers::ContentTransferEncoding *enc = contentTransferEncoding();
@@ -304,13 +324,13 @@ QByteArray Content::encodedContent( bool useCrLf )
     } else {
       e += d->body;
     }
-  } else if ( !d->contents.isEmpty() ) {
+  } else if ( !d->multipartContents.isEmpty() ) {
     // This is a multipart Content.
     Headers::ContentType *ct=contentType();
     QByteArray boundary = "\n--" + ct->boundary();
 
     //add all (encoded) contents separated by boundaries
-    foreach ( Content *c, d->contents ) {
+    foreach ( Content *c, d->multipartContents ) {
       e+=boundary + '\n';
       e += c->encodedContent( false );  // don't convert LFs here, we do that later!!!!!
     }
@@ -432,7 +452,7 @@ Content *Content::textContent()
   if ( contentType()->isText() ) {
     ret = this;
   } else {
-    foreach ( Content *c, d_ptr->contents ) {
+    foreach ( Content *c, d_ptr->contents() ) {
       if ( ( ret = c->textContent() ) != 0 ) {
         break;
       }
@@ -444,10 +464,10 @@ Content *Content::textContent()
 Content::List Content::attachments( bool incAlternatives )
 {
   List attachments;
-  if ( d_ptr->contents.isEmpty() ) {
+  if ( d_ptr->contents().isEmpty() ) {
     attachments.append( this );
   } else {
-    foreach ( Content *c, d_ptr->contents ) {
+    foreach ( Content *c, d_ptr->contents() ) {
       if ( !incAlternatives &&
            c->contentType()->category() == Headers::CCalternativePart ) {
         continue;
@@ -468,15 +488,18 @@ Content::List Content::attachments( bool incAlternatives )
 
 Content::List Content::contents() const
 {
-  return d_ptr->contents;
+  return d_ptr->contents();
 }
 
 void Content::addContent( Content *c, bool prepend )
 {
   Q_D( Content );
 
+  // This method makes no sense for encapsulated messages
+  Q_ASSERT( !bodyIsMessage() );
+
   // If this message is single-part; make it multipart first.
-  if( d->contents.isEmpty() && !contentType()->isMultipart() ) {
+  if( d->multipartContents.isEmpty() && !contentType()->isMultipart() ) {
     // The current body will be our first sub-Content.
     Content *main = new Content( this );
 
@@ -503,7 +526,7 @@ void Content::addContent( Content *c, bool prepend )
     d->body.clear();
 
     // Add the subcontent.
-    d->contents.append( main );
+    d->multipartContents.append( main );
 
     // Convert this content to "multipart/mixed".
     Headers::ContentType *ct = contentType();
@@ -515,9 +538,9 @@ void Content::addContent( Content *c, bool prepend )
 
   // Add the new content.
   if( prepend ) {
-    d->contents.prepend( c );
+    d->multipartContents.prepend( c );
   } else {
-    d->contents.append( c );
+    d->multipartContents.append( c );
   }
 
   if( c->parent() != this ) {
@@ -529,9 +552,13 @@ void Content::addContent( Content *c, bool prepend )
 void Content::removeContent( Content *c, bool del )
 {
   Q_D( Content );
-  Q_ASSERT( d->contents.contains( c ) );
+  Q_ASSERT( d->multipartContents.contains( c ) );
 
-  d->contents.removeAll( c );
+  // This method makes no sense for encapsulated messages. Should be covered by the above
+  // assert already, though.
+  Q_ASSERT( !bodyIsMessage() );
+
+  d->multipartContents.removeAll( c );
   if ( del ) {
     delete c;
   } else {
@@ -539,8 +566,8 @@ void Content::removeContent( Content *c, bool del )
   }
 
   // If only one content is left, turn this content into a single-part.
-  if( d->contents.count() == 1 ) {
-    Content *main = d->contents.first();
+  if( d->multipartContents.count() == 1 ) {
+    Content *main = d->multipartContents.first();
 
     // Move all headers from the old subcontent to ourselves.
     // NOTE: This also sets the new Content-Type.
@@ -554,12 +581,16 @@ void Content::removeContent( Content *c, bool del )
 
     // Delete the old subcontent.
     delete main;
-    d->contents.clear();
+    d->multipartContents.clear();
   }
 }
 
 void Content::changeEncoding( Headers::contentEncoding e )
 {
+  // This method makes no sense for encapsulated messages, they are always 7bit
+  // encoded.
+  Q_ASSERT( !bodyIsMessage() );
+
   Headers::ContentTransferEncoding *enc = contentTransferEncoding();
   if( enc->encoding() == e ) {
     // Nothing to do.
@@ -709,10 +740,13 @@ int Content::storageSize() const
   const Q_D(Content);
   int s = d->head.size();
 
-  if ( d->contents.isEmpty() ) {
+  if ( d->contents().isEmpty() ) {
     s += d->body.size();
   } else {
-    foreach ( Content *c, d->contents ) {
+
+    // FIXME: This should take into account the boundary headers that are added in
+    //        encodedContent!
+    foreach ( Content *c, d->contents() ) {
       s += c->storageSize();
     }
   }
@@ -729,7 +763,7 @@ int Content::lineCount() const
   }
   ret += d->body.count( '\n' );
 
-  foreach ( Content *c, d->contents ) {
+  foreach ( Content *c, d->contents() ) {
     ret += c->lineCount();
   }
 
@@ -791,7 +825,7 @@ void Content::setDefaultCharset( const QByteArray &cs )
 {
   d_ptr->defaultCS = KMime::cachedCharset( cs );
 
-  foreach ( Content *c, d_ptr->contents ) {
+  foreach ( Content *c, d_ptr->contents() ) {
     c->setDefaultCharset( cs );
   }
 
@@ -809,7 +843,7 @@ void Content::setForceDefaultCharset( bool b )
 {
   d_ptr->forceDefaultCS = b;
 
-  foreach ( Content *c, d_ptr->contents ) {
+  foreach ( Content *c, d_ptr->contents() ) {
     c->setForceDefaultCharset( b );
   }
 
@@ -825,8 +859,8 @@ Content * KMime::Content::content( const ContentIndex &index ) const
   }
   ContentIndex idx = index;
   unsigned int i = idx.pop() - 1; // one-based -> zero-based index
-  if ( i < (unsigned int)d_ptr->contents.size() ) {
-    return d_ptr->contents[i]->content( idx );
+  if ( i < (unsigned int)d_ptr->contents().size() ) {
+    return d_ptr->contents()[i]->content( idx );
   } else {
     return 0;
   }
@@ -834,15 +868,15 @@ Content * KMime::Content::content( const ContentIndex &index ) const
 
 ContentIndex KMime::Content::indexForContent( Content * content ) const
 {
-  int i = d_ptr->contents.indexOf( content );
+  int i = d_ptr->contents().indexOf( content );
   if ( i >= 0 ) {
     ContentIndex ci;
     ci.push( i + 1 ); // zero-based -> one-based index
     return ci;
   }
   // not found, we need to search recursively
-  for ( int i = 0; i < d_ptr->contents.size(); ++i ) {
-    ContentIndex ci = d_ptr->contents[i]->indexForContent( content );
+  for ( int i = 0; i < d_ptr->contents().size(); ++i ) {
+    ContentIndex ci = d_ptr->contents()[i]->indexForContent( content );
     if ( ci.isValid() ) {
       // found it
       ci.push( i + 1 ); // zero-based -> one-based index
@@ -854,7 +888,7 @@ ContentIndex KMime::Content::indexForContent( Content * content ) const
 
 bool Content::isTopLevel() const
 {
-  return false;
+  return d_ptr->parent == 0;
 }
 
 void Content::setParent( Content* parent )
@@ -898,6 +932,23 @@ ContentIndex Content::index() const
   return indexForContent( const_cast<Content*>(this)  );
 }
 
+MessagePtr Content::bodyAsMessage() const
+{
+  if ( bodyIsMessage() && d_ptr->bodyAsMessage ) {
+    return d_ptr->bodyAsMessage;
+  } else {
+    return MessagePtr();
+  }
+}
+
+bool Content::bodyIsMessage() const
+{
+  // Use const_case here to work around API issue that neither header() nor hasHeader() are
+  // const, even though they should be
+  return const_cast<Content*>( this )->header<Headers::ContentType>( false ) &&
+         const_cast<Content*>( this )->header<Headers::ContentType>( true )
+                 ->mimeType().toLower() == "message/rfc822";
+}
 
 // @cond PRIVATE
 #define kmime_mk_header_accessor( type, method ) \
@@ -916,6 +967,19 @@ kmime_mk_header_accessor( ContentID, contentID )
 // @endcond
 
 
+void ContentPrivate::clearBodyMessage()
+{
+  bodyAsMessage.reset();
+}
+
+Content::List ContentPrivate::contents() const
+{
+  Q_ASSERT( multipartContents.isEmpty() || !bodyAsMessage );
+  if ( bodyAsMessage )
+    return Content::List() << bodyAsMessage.get();
+  else
+    return multipartContents;
+}
 
 bool ContentPrivate::parseUuencoded()
 {
@@ -943,13 +1007,13 @@ bool ContentPrivate::parseUuencoded()
     q->contentTransferEncoding()->clear(); // 7Bit, decoded.
 
     // Add the plain text part first.
-    Q_ASSERT( contents.count() == 0 );
+    Q_ASSERT( multipartContents.count() == 0 );
     {
       Content *c = new Content( q );
       c->contentType()->setMimeType( "text/plain" );
       c->contentTransferEncoding()->setEncoding( Headers::CE7Bit );
       c->setBody( uup.textPart() );
-      contents.append( c );
+      multipartContents.append( c );
     }
 
     // Now add each of the binary parts as sub-Contents.
@@ -963,7 +1027,7 @@ bool ContentPrivate::parseUuencoded()
       c->contentDisposition()->setFilename( uup.filenames().at( i ) );
       c->setBody( uup.binaryParts().at( i ) );
       c->changeEncoding( Headers::CEbase64 ); // Convert to base64.
-      contents.append( c );
+      multipartContents.append( c );
     }
   }
 
@@ -997,13 +1061,13 @@ bool ContentPrivate::parseYenc()
     q->contentTransferEncoding()->clear(); // 7Bit, decoded.
 
     // Add the plain text part first.
-    Q_ASSERT( contents.count() == 0 );
+    Q_ASSERT( multipartContents.count() == 0 );
     {
       Content *c = new Content( q );
       c->contentType()->setMimeType( "text/plain" );
       c->contentTransferEncoding()->setEncoding( Headers::CE7Bit );
       c->setBody( yenc.textPart() );
-      contents.append( c );
+      multipartContents.append( c );
     }
 
     // Now add each of the binary parts as sub-Contents.
@@ -1016,7 +1080,7 @@ bool ContentPrivate::parseYenc()
       c->contentDisposition()->setFilename( yenc.filenames().at( i ) );
       c->setBody( yenc.binaryParts().at( i ) ); // Yenc bodies are binary.
       c->changeEncoding( Headers::CEbase64 ); // Convert to base64.
-      contents.append( c );
+      multipartContents.append( c );
     }
   }
 
@@ -1045,7 +1109,7 @@ bool ContentPrivate::parseMultipart()
   }
 
   // Create a sub-Content for every part.
-  Q_ASSERT( contents.isEmpty() );
+  Q_ASSERT( multipartContents.isEmpty() );
   body.clear();
   QList<QByteArray> parts = mpp.parts();
   foreach( const QByteArray &part, mpp.parts() ) {
@@ -1054,7 +1118,7 @@ bool ContentPrivate::parseMultipart()
     c->setFrozen( frozen );
     c->parse();
     c->contentType()->setCategory( cat );
-    contents.append( c );
+    multipartContents.append( c );
   }
 
   return true; // Parsing successful.

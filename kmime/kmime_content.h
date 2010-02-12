@@ -48,18 +48,24 @@ TODO: possible glossary terms:
 #ifndef __KMIME_CONTENT_H__
 #define __KMIME_CONTENT_H__
 
-#include <QtCore/QTextStream>
-#include <QtCore/QByteArray>
-#include <QtCore/QList>
-
 #include "kmime_export.h"
 #include "kmime_contentindex.h"
 #include "kmime_util.h"
 #include "kmime_headers.h"
 
+#include <QtCore/QTextStream>
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
+
+#include <boost/shared_ptr.hpp>
+
+
 namespace KMime {
 
 class ContentPrivate;
+class Message;
+
+typedef boost::shared_ptr<Message> MessagePtr;
 
 /**
   @brief
@@ -69,14 +75,35 @@ class ContentPrivate;
   - the string representation: This is the content encoded as a string ready
     for transport.  Accessible through the encodedContent() method.
   - the broken-down representation: This is the tree of objects (headers,
-    sub-Contents) that this Content is made of.  Accessible through methods
-    like header() and contents().
+    sub-Contents and (if present) the encapsulated message) that this Content is made of.
+    Accessible through methods like header(), contents() and bodyAsMessage().
+
   The parse() function updates the broken-down representation of the Content
   from its string representation.  Calling it is necessary to access the
-  headers or sub-Contents of this Content.
+  headers, sub-Contents or the encapsulated message of this Content.
+
   The assemble() function updates the string representation of the Content
   from its broken-down representation.  Calling it is necessary for
-  encodedContent() to reflect any changes made to the Content.
+  encodedContent() to reflect any changes made to the broken-down representation of the Content.
+
+  There are two basic types of a Content:
+  - A leaf Content: This is a content that is neither a multipart content nor an encapsulated
+                    message. Because of this, it will not have any children, it has no sub-contents
+                    and is therefore a leaf content.
+                    Only leaf contents have a body that is not empty, i.e. functions that operate
+                    on the body, such as body(), size() and decodedContent(), will work only on
+                    leaf contents.
+  - A non-leaf Content: This is a content that itself doesn't have any body, but that does have
+                        sub-contents.
+                        This is the case for contents that are of mimetype multipart/ or of mimetype
+                        message/rfc822. In case of a multipart content, contents() will return the
+                        multipart child contents. In case of an encapsulated message, the message
+                        can be accessed with bodyAsMessage(), and contents() will have one entry
+                        that is the message as well.
+                        On a non-leaf content, body() will have an empty return value and other
+                        functions working on the body will not work.
+                        A call to parse() is required before the child multipart contents or the
+                        encapsulated message is created.
 */
 /*
   KDE5:
@@ -139,7 +166,8 @@ class KMIME_EXPORT Content
       body separated by two linefeeds.
 
       This method operates on the string representation of the Content. Call
-      parse() if you want to access individual headers or sub-Contents.
+      parse() if you want to access individual headers, sub-Contents or the
+      encapsulated message.
 
       @param l is a line-splitted list of the raw Content data.
     */
@@ -150,18 +178,31 @@ class KMIME_EXPORT Content
       body separated by two linefeeds.
 
       This method operates on the string representation of the Content. Call
-      parse() if you want to access individual headers or sub-Contents.
+      parse() if you want to access individual headers, sub-Contents or the
+      encapsulated message.
 
       @param s is a QByteArray containing the raw Content data.
     */
     void setContent( const QByteArray &s );
 
     /**
-      Parses the Content.
-      This means the broken-down object representation of the Content is
-      updated from the string representation of the Content.
-      Call this if you want to access or change headers or sub-Contents.
-    */
+     * Parses the Content.
+     *
+     * This means the broken-down object representation of the Content is
+     * updated from the string representation of the Content.
+     *
+     * Call this if you want to access or change headers, sub-Contents or the encapsulated
+     * message.
+     *
+     * @note Calling parse() twice will not work for multipart contents or for contents of which
+     *       the body is an encapsulated message. The reason is that the first parse() will delete
+     *       the body, so there is no body to work on for the second call of parse().
+     *
+     * @note Calling this will reset the message returned by bodyAsMessage(), as
+     *       the message is re-parsed as well.
+     *       Also, all old sub-contents will be deleted, so any old Content pointer will become
+     *       invalid.
+     */
     virtual void parse();
 
     /**
@@ -193,6 +234,9 @@ class KMIME_EXPORT Content
       @note assemble() has no effect if the Content isFrozen().  You may want
       to freeze, for instance, signed sub-Contents, to make sure they are kept
       unmodified.
+
+      @note If this content is an encapsulated message, i.e. bodyIsMessage() returns true,
+      then calling assemble() will also assemble the message returned by bodyAsMessage().
 
       @warning assemble() may change the order of the headers, and other
       details such as where folding occurs.  This may break things like
@@ -336,6 +380,7 @@ class KMIME_EXPORT Content
       @param type The type of the header to look for.
     */
     // TODO probably provide hasHeader<T>() too.
+    // TODO: KDE5: make const
     bool hasHeader( const char *type );
 
     /**
@@ -384,6 +429,7 @@ class KMIME_EXPORT Content
     /**
       Returns the size of the Content body after encoding.
       (If the encoding is quoted-printable, this is only an approximate size.)
+      This will return 0 for multipart contents or for encapsulated messages.
     */
     int size();
 
@@ -400,6 +446,9 @@ class KMIME_EXPORT Content
     /**
       Returns the Content body raw data.
 
+      Note that this will be empty for multipart contents or for encapsulated messages,
+      after parse() has been called.
+
       @see setBody().
     */
     QByteArray body() const;
@@ -408,7 +457,7 @@ class KMIME_EXPORT Content
       Sets the Content body raw data.
 
       This method operates on the string representation of the Content. Call
-      parse() if you want to access individual sub-Contents.
+      parse() if you want to access individual sub-Contents or the encapsulated message.
 
       @param body is a QByteArray containing the body data.
 
@@ -420,13 +469,24 @@ class KMIME_EXPORT Content
       Returns a QByteArray containing the encoded Content, including the
       Content header and all sub-Contents.
 
+      If you make changes to the broken-down representation of the message, be
+      sure to first call assemble() before calling encodedContent(), otherwise
+      the result will not be up-to-date.
+
+      If this content is an encapsulated message, i.e. bodyIsMessage() returns true,
+      then encodedContent() will use the message returned by bodyAsMessage() as the
+      body of the result, calling encodedContent() on the message.
+
       @param useCrLf If true, use @ref CRLF instead of @ref LF for linefeeds.
     */
     QByteArray encodedContent( bool useCrLf = false );
 
     /**
-      Returns the decoded Content body.
-    */
+     * Returns the decoded Content body.
+     *
+     * Note that this will be empty for multipart contents or for encapsulated messages,
+     * after parse() has been called.
+     */
     // TODO: KDE5: BIC: Rename this to decodedBody(), since only the body is returned.
     // In contrast, setContent() sets the head and the body!
     // Also, try to make this const.
@@ -452,6 +512,10 @@ class KMIME_EXPORT Content
 
     /**
       Sets the Content body to the given string using the current charset.
+      The content transfer encoding header and the content type header are changed accordingly.
+
+      This method only makes sense for single-part contents, do not try to pass a multipart body
+      or an encapsulated message here, that wouldn't work.
 
       @param s Unicode-encoded string.
     */
@@ -470,8 +534,10 @@ class KMIME_EXPORT Content
     List attachments( bool incAlternatives = false );
 
     /**
-      Returns a list of sub-Contents.
-    */
+     * For multipart contents, this will return a list of all multipart child contents.
+     * For contents that are of mimetype message/rfc822, this will return a list with one entry,
+     * and that entry is the encapsulated message, as it would be returned by bodyAsMessage().
+     */
     List contents() const;
 
     /**
@@ -585,8 +651,9 @@ class KMIME_EXPORT Content
     ContentIndex indexForContent( Content *content ) const;
 
     /**
-      Returns true if this is the top-level node in the MIME tree, i.e. if this
-      is actually a Message or NewsArticle.
+      Returns true if this is the top-level node in the MIME tree. The top-level node is always
+      a Message or NewsArticle. However, a node can be a Message without being a top-level node when
+      it is an encapsulated message.
     */
     virtual bool isTopLevel() const;
 
@@ -615,6 +682,34 @@ class KMIME_EXPORT Content
      * @since 4.3
      */
     ContentIndex index() const;
+
+    /**
+     * @return true if this content is an encapsulated message, i.e. if it has the mimetype
+     *         message/rfc822.
+     *
+     * @since 4.5
+     */
+    bool bodyIsMessage() const;
+
+    /**
+     * If this content is an encapsulated message, in which case bodyIsMessage() will return
+     * true, the message represented by the body of this content will be returned.
+     * The returned message is already fully parsed.
+     * Calling this method is the aquivalent of calling contents().first() and casting the result
+     * to a KMime::Message*. bodyAsMessage() has the advantage that it will return a shared pointer
+     * that will not be destroyed when the container message is destroyed or re-parsed.
+     *
+     * The message that is returned here is created when calling parse(), so make sure to call
+     * parse() first. Since each parse() creates a new message object, a different message object
+     * will be returned each time you call parse().
+     *
+     * If you make changes to the returned message, you need to call assemble() on this content
+     * or on the message if you want that encodedContent() reflects these changes. This also means
+     * that calling assemble() on this content will assemble the returned message.
+     *
+     * @since 4.5
+     */
+    MessagePtr bodyAsMessage() const;
 
   protected:
     /**

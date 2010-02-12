@@ -41,6 +41,7 @@ class MessageTest : public QObject
     void testInlineImages();
     void testIssue3914();
     void testBug223509();
+    void testEncapsulatedMessages();
 
   private:
     KMime::Message::Ptr readAndParseMail( const QString &mailFile ) const;

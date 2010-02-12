@@ -22,6 +22,13 @@
 
 //@cond PRIVATE
 
+#include <boost/shared_ptr.hpp>
+
+namespace KMime {
+  class Message;
+  typedef boost::shared_ptr<Message> MessagePtr;
+}
+
 namespace KMime {
 
 class ContentPrivate
@@ -36,23 +43,31 @@ class ContentPrivate
 
     virtual ~ContentPrivate()
     {
-      qDeleteAll( contents );
-      contents.clear();
+      qDeleteAll( multipartContents );
+      multipartContents.clear();
     }
 
     bool parseUuencoded();
     bool parseYenc();
     bool parseMultipart();
     Headers::Generic *nextHeader( QByteArray &head );
+    void clearBodyMessage();
+
+    // This one returns the normal multipartContents for multipart contents, but returns
+    // a list with just bodyAsMessage in it for contents that are encapsulated messages.
+    // That makes it possible to handle encapsulated messages in a transparent way.
+    Content::List contents() const;
 
     QByteArray head;
     QByteArray body;
     QByteArray frozenBody;
-    Content::List contents;
     QByteArray defaultCS;
     bool forceDefaultCS;
     Content *parent;
     bool frozen;
+
+    Content::List multipartContents;
+    MessagePtr bodyAsMessage;
 
     Content* q_ptr;
     Q_DECLARE_PUBLIC( Content )
