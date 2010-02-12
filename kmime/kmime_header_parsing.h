@@ -123,12 +123,12 @@ class KMIME_EXPORT Mailbox
      * @since 4.5
      */
     enum Quoting {
-      None,          ///< Don't quote display names at all. Such an unquoted display name can not
-                     ///  be machine-processed anymore in some cases, for example when it contains
-                     ///  commas, like in "Lastname, Firstname".
-      WhenNecessary, ///< Only quote display names when they contain characters that need to be
-                     ///  quoted, like commas or quote signs.
-      Always         ///< Always quote the display name
+      QuoteNever,         ///< Don't quote display names at all. Such an unquoted display name can not
+                          ///  be machine-processed anymore in some cases, for example when it contains
+                          ///  commas, like in "Lastname, Firstname".
+      QuoteWhenNecessary, ///< Only quote display names when they contain characters that need to be
+                          ///  quoted, like commas or quote signs.
+      QuoteAlways         ///< Always quote the display name
     };
 
     /**

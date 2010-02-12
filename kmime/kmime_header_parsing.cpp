@@ -162,7 +162,7 @@ bool Mailbox::hasName() const
 
 QString Mailbox::prettyAddress() const
 {
-  return prettyAddress( None );
+  return prettyAddress( QuoteNever );
 }
 
 QString Mailbox::prettyAddress( Quoting quoting ) const
@@ -171,8 +171,8 @@ QString Mailbox::prettyAddress( Quoting quoting ) const
     return address();
   }
   QString s = name();
-  if ( quoting != None ) {
-    addQuotes( s, quoting == Always /*bool force*/ );
+  if ( quoting != QuoteNever ) {
+    addQuotes( s, quoting == QuoteAlways /*bool force*/ );
   }
 
   if ( hasAddress() ) {

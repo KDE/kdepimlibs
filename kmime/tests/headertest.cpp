@@ -318,7 +318,7 @@ void HeaderTest::testSingleMailboxHeader()
   QCOMPARE( h->displayNames().first(), QString( "John Smith" ) );
   QCOMPARE( h->prettyAddresses().count(), 1 );
   QCOMPARE( h->prettyAddresses().first(), QString( "John Smith <joe_smith@where.test>" ) );
-  QCOMPARE( h->mailboxes().first().prettyAddress( Types::Mailbox::Always ),
+  QCOMPARE( h->mailboxes().first().prettyAddress( Types::Mailbox::QuoteAlways ),
             QString( "\"John Smith\" <joe_smith@where.test>" ) );
 
   // parse quoted display name with \ in it
@@ -332,7 +332,7 @@ void HeaderTest::testSingleMailboxHeader()
             "Lastname, Firstname <firstname.lastname@example.com>" );
   QCOMPARE( h->mailboxes().first().prettyAddress().toAscii().data(),
             "Lastname, Firstname <firstname.lastname@example.com>" );
-  QCOMPARE( h->mailboxes().first().prettyAddress( Types::Mailbox::WhenNecessary ).toAscii().data(),
+  QCOMPARE( h->mailboxes().first().prettyAddress( Types::Mailbox::QuoteWhenNecessary ).toAscii().data(),
             "\"Lastname, Firstname\" <firstname.lastname@example.com>" );
 
   // parse quoted display name with " in it
@@ -341,7 +341,7 @@ void HeaderTest::testSingleMailboxHeader()
   QCOMPARE( h->addresses().count(), 1 );
   QCOMPARE( h->addresses().first().data(), "john.smith@mail.domain" );
   QCOMPARE( h->displayNames().first().toAscii().data(), "John \"the guru\" Smith" );
-  QCOMPARE( h->mailboxes().first().prettyAddress( Types::Mailbox::WhenNecessary ).toAscii().data(),
+  QCOMPARE( h->mailboxes().first().prettyAddress( Types::Mailbox::QuoteWhenNecessary ).toAscii().data(),
             "\"John \\\"the guru\\\" Smith\" <john.smith@mail.domain>" );
   QCOMPARE( h->as7BitString( false ).data(),
             "\"John \\\"the guru\\\" Smith\" <john.smith@mail.domain>" );
