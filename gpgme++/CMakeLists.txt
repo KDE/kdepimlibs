@@ -41,7 +41,7 @@ set(gpgme_LIB_SRCS
         gpgagentgetinfoassuantransaction.cpp
 )
 
-set( _gpgmepp_version 2.4.0 )
+set( _gpgmepp_version 2.4.1 )
 set( _gpgmepp_soversion 2 )
 
 set( GPGMEPP_INCLUDE ${INCLUDE_INSTALL_DIR} ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR} )
