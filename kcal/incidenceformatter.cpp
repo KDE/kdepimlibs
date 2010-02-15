@@ -601,7 +601,9 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
     KDateTime dueDt = todo->dtDue();
     if ( todo->recurs() ) {
       if ( date.isValid() ) {
-        dueDt.addDays( todo->dtDue().date().daysTo( date ) );
+        KDateTime kdt( date, QTime( 0, 0, 0 ), KSystemTimeZones::local() );
+        kdt = kdt.addSecs( -1 );
+        dueDt.setDate( todo->recurrence()->getNextDateTime( kdt ).date() );
       }
     }
     tmpStr += "<tr>";
