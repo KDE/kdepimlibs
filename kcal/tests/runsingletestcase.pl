@@ -38,11 +38,11 @@ if ( @ARGV != 3 ) {
 
 $app = quotemeta $ARGV[0];
 $id = quotemeta $ARGV[1];
-$file = quotemeta $ARGV[2];
+$file = $ARGV[2];            # no quotemeta here, as the regexp does what's
+$file =~ /^(.*)\.[^\.]*$/;   # necessary to the filenames
 
 $MAXERRLINES=25;
 
-$file =~ /^(.*)\.[^\.]*$/;
 
 my $outfile = $file;
 $outfile =~ /\/([^\/]*)$/;
