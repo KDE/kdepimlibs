@@ -240,7 +240,7 @@ static QString displayViewFormatAttendees( Incidence *incidence )
 
   // Add "chair" links
   QString chairStr;
-  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
     Attendee *a = *it;
     if ( a->role() != Attendee::Chair ) {
       // skip non-chair
@@ -271,7 +271,7 @@ static QString displayViewFormatAttendees( Incidence *incidence )
 
   // Add participant links
   QString partStr;
-  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
     Attendee *a = *it;
     if ( a->role() != Attendee::ReqParticipant &&
          a->role() != Attendee::OptParticipant ) {
@@ -303,7 +303,7 @@ static QString displayViewFormatAttendees( Incidence *incidence )
 
   // Add observer links
   QString obsStr;
-  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
     Attendee *a = *it;
     if ( a->role() != Attendee::NonParticipant ) {
       // skip participants and chairs
@@ -2843,7 +2843,7 @@ static QString tooltipFormatAttendees( Incidence *incidence )
   // Add "chair" links
   i = 0;
   QString chairStr;
-  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
     Attendee *a = *it;
     if ( a->role() != Attendee::Chair ) {
       // skip non-chair
@@ -2878,7 +2878,7 @@ static QString tooltipFormatAttendees( Incidence *incidence )
   // Add participant links
   i = 0;
   QString partStr;
-  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
     Attendee *a = *it;
     if ( a->role() != Attendee::ReqParticipant &&
          a->role() != Attendee::OptParticipant ) {
@@ -2914,7 +2914,7 @@ static QString tooltipFormatAttendees( Incidence *incidence )
   // Add observer links
   i = 0;
   QString obsStr;
-  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
     Attendee *a = *it;
     if ( a->role() != Attendee::NonParticipant ) {
       // skip participants and chairs
