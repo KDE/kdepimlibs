@@ -591,7 +591,7 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
   }
 
   if ( event->recurs() ) {
-    KDateTime dt = event->recurrence()->getNextDateTime( KDateTime::currentUtcDateTime() );
+    KDateTime dt = event->recurrence()->getNextDateTime( startDt );
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18nc( "next occurrence", "Next:" )+ "</b></td>";
     tmpStr += "<td>" +
@@ -649,11 +649,13 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
     tmpStr += "</tr>";
   }
 
+  KDateTime nextDt;
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
     KDateTime startDt = todo->dtStart();
     if ( todo->recurs() ) {
       if ( date.isValid() ) {
         startDt.setDate( date );
+        nextDt = startDt;
       }
     }
     tmpStr += "<tr>";
@@ -673,6 +675,7 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
         KDateTime kdt( date, QTime( 0, 0, 0 ), KSystemTimeZones::local() );
         kdt = kdt.addSecs( -1 );
         dueDt.setDate( todo->recurrence()->getNextDateTime( kdt ).date() );
+        nextDt = dueDt;
       }
     }
     tmpStr += "<tr>";
@@ -720,7 +723,7 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
   tmpStr += "</tr>";
 
   if ( todo->recurs() ) {
-    KDateTime dt = todo->recurrence()->getNextDateTime( KDateTime::currentUtcDateTime() );
+    KDateTime dt = todo->recurrence()->getNextDateTime( nextDt );
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18nc( "next occurrence", "Next:" ) + "</b></td>";
     tmpStr += ( dt.isValid() ?
