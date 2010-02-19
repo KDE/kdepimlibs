@@ -537,6 +537,21 @@ void MessageTest::testEncapsulatedMessages()
   QCOMPARE( messageContent->contents().size(), 0 );
 }
 
+void MessageTest::testOutlookAttachmentNaming()
+{
+  KMime::Message::Ptr msg = readAndParseMail( "outlook-attachment.mbox" );
+  QVERIFY( msg->attachments().count() == 1 );
+
+  KMime::Content *attachment = msg->contents()[1];
+  QCOMPARE( attachment->contentType( false )->mediaType().data(), "text" );
+  QCOMPARE( attachment->contentType( false )->subType().data(), "x-patch" );
+
+  Headers::ContentDisposition *cd = attachment->contentDisposition( false );
+  QVERIFY( cd );
+  QEXPECT_FAIL( "", "Support for Outlook style attachment naming not yet present.", Continue );
+  QCOMPARE( cd->filename(), QString( "outlook.diff" ) );
+}
+
 KMime::Message::Ptr MessageTest::readAndParseMail( const QString &mailFile ) const
 {
   QFile file( MAIL_DATA_DIR"/" + mailFile );
