@@ -364,12 +364,11 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
         }
 
 	// FIXME find a test server and test that this works
-	// TODO ask the system whether SSL is available
-	if (useTLSIfAvailable && QSslSocket::supportsSsl()) {
+  if (useTLSIfAvailable && m_supportsTLS && QSslSocket::supportsSsl()) {
 		sendData("STARTTLS");
 		if (operationSuccessful()) {
 			ksDebug << "TLS has been accepted. Starting TLS..." << endl
-                                << "WARNING this is untested and may fail.";
+              << "WARNING this is untested and may fail.";
 			if (startSsl()) {
 				ksDebug << "TLS enabled successfully." << endl;
 				// reparse capabilities:
