@@ -351,7 +351,7 @@ bool Recurrence::recursOn( const QDate &qd, const KDateTime::Spec &timeSpec ) co
   }
 
   // Check if it might recur today at all.
-  bool recurs = false;
+  bool recurs = ( startDate() == qd );
   for ( i = 0, end = d->mRDateTimes.count();  i < end && !recurs;  ++i ) {
     recurs = ( d->mRDateTimes[i].toTimeSpec( timeSpec ).date() == qd );
   }
