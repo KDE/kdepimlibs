@@ -16,12 +16,12 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#ifndef KMIME_CONTENT_TEST_H
-#define KMIME_CONTENT_TEST_H
+#ifndef CONTENT_TEST_H
+#define CONTENT_TEST_H
 
 #include <QtCore/QObject>
 
-class KMimeContentTest : public QObject
+class ContentTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:

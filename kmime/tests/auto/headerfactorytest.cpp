@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "kmime_headerfactorytest.h"
+#include "headerfactorytest.h"
 
 //#include <typeinfo>
 
@@ -163,4 +163,4 @@ void HeaderFactoryTest::testErrors()
   QVERIFY( ret == false );
 }
 
-#include "kmime_headerfactorytest.moc"
+#include "headerfactorytest.moc"

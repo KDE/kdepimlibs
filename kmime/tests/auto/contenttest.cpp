@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "kmime_content_test.h"
+#include "contenttest.h"
 
 #include <KDebug>
 #include <qtest_kde.h>
@@ -27,9 +27,9 @@
 #include <kmime_message.h>
 using namespace KMime;
 
-QTEST_KDEMAIN( KMimeContentTest, NoGUI )
+QTEST_KDEMAIN( ContentTest, NoGUI )
 
-void KMimeContentTest::testGetHeaderInstance( )
+void ContentTest::testGetHeaderInstance( )
 {
   // stuff that looks trivial but breaks if you mess with virtual method signatures (see r534381)
   Headers::From *myfrom = new Headers::From();
@@ -45,7 +45,7 @@ void KMimeContentTest::testGetHeaderInstance( )
   delete c;
 }
 
-void KMimeContentTest::testHeaderAddRemove()
+void ContentTest::testHeaderAddRemove()
 {
   // Add a Content-Description header to a content.
   Content *c = new Content;
@@ -85,7 +85,7 @@ void KMimeContentTest::testHeaderAddRemove()
   QVERIFY( !c->contentDescription( false ) );
 }
 
-void KMimeContentTest::testHeaderAppendPrepend()
+void ContentTest::testHeaderAppendPrepend()
 {
   Content *c = new Content;
   QByteArray d1( "Resent-From: test1@example.com" );
@@ -106,7 +106,7 @@ void KMimeContentTest::testHeaderAppendPrepend()
   QCOMPARE( c->head(), head );
 }
 
-void KMimeContentTest::testImplicitMultipartGeneration()
+void ContentTest::testImplicitMultipartGeneration()
 {
   Content *c1 = new Content();
   c1->contentType()->from7BitString( "text/plain" );
@@ -149,7 +149,7 @@ void KMimeContentTest::testImplicitMultipartGeneration()
   delete c2;
 }
 
-void KMimeContentTest::testExplicitMultipartGeneration()
+void ContentTest::testExplicitMultipartGeneration()
 {
   Content *c1 = new Content();
   c1->contentType()->from7BitString( "multipart/mixed" );
@@ -185,7 +185,7 @@ void KMimeContentTest::testExplicitMultipartGeneration()
   delete c3;
 }
 
-void KMimeContentTest::testSetContent()
+void ContentTest::testSetContent()
 {
   Content *c = new Content();
   QVERIFY( !c->hasContent() );
@@ -236,7 +236,7 @@ void KMimeContentTest::testSetContent()
   QVERIFY( c->body().isEmpty() );
 }
 
-void KMimeContentTest::testEncodedContent()
+void ContentTest::testEncodedContent()
 {
   // Example taken from RFC 2046, section 5.1.1.
   // Removed "preamble" and "epilogue", which KMime loses.
@@ -317,7 +317,7 @@ void KMimeContentTest::testEncodedContent()
 
 }
 
-void KMimeContentTest::testMultipleHeaderExtraction()
+void ContentTest::testMultipleHeaderExtraction()
 {
   QByteArray data =
     "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
@@ -332,7 +332,7 @@ void KMimeContentTest::testMultipleHeaderExtraction()
 
   Message *msg = new Message();
   msg->setContent( data );
-    // FAILS identically to KMimeContentTest::testMultipartMixed
+    // FAILS identically to ContentTest::testMultipartMixed
     //  QCOMPARE( msg->encodedContent(), data );
   msg->parse();
 
@@ -343,7 +343,7 @@ void KMimeContentTest::testMultipleHeaderExtraction()
   QCOMPARE( result[2]->asUnicodeString(),  QString("from dev2.kde.org ([192.168.100.3]) by ktown.kde.org ([192.168.100.1])") );
 }
 
-void KMimeContentTest::testMultipartMixed()
+void ContentTest::testMultipartMixed()
 {
   // example taken from RFC 2046, section 5.1.1.
   QByteArray data =
@@ -454,7 +454,7 @@ void KMimeContentTest::testMultipartMixed()
   QCOMPARE( msg->encodedContent(), assembled );
 }
 
-void KMimeContentTest::testParsingUuencoded()
+void ContentTest::testParsingUuencoded()
 {
   const QByteArray body =
       "This is a test message that should appears as a text/plain part\n"
@@ -573,7 +573,7 @@ void KMimeContentTest::testParsingUuencoded()
   delete msg;
 }
 
-void KMimeContentTest::testParent()
+void ContentTest::testParent()
 {
   Content *c1 = new Content();
   c1->contentType()->from7BitString( "multipart/mixed" );
@@ -655,7 +655,7 @@ void KMimeContentTest::testParent()
 
 }
 
-void KMimeContentTest::testFreezing()
+void ContentTest::testFreezing()
 {
   // Example taken from RFC 2046, section 5.1.1.
   QByteArray data =
@@ -704,5 +704,5 @@ void KMimeContentTest::testFreezing()
   QCOMPARE( msg->encodedContent(), data );
 }
 
-#include "kmime_content_test.moc"
+#include "contenttest.moc"
 

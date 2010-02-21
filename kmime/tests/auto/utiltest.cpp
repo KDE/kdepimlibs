@@ -18,16 +18,16 @@
 
 #include <qtest_kde.h>
 
-#include "kmime_util_test.h"
-#include "kmime_util_test.moc"
+#include "utiltest.h"
+#include "utiltest.moc"
 
 #include <kmime_util.h>
 
 using namespace KMime;
 
-QTEST_KDEMAIN( KMimeUtilTest, NoGUI )
+QTEST_KDEMAIN( UtilTest, NoGUI )
 
-void KMimeUtilTest::testUnfoldHeader()
+void UtilTest::testUnfoldHeader()
 {
   // empty header
   QCOMPARE( KMime::unfoldHeader( "" ), QByteArray() );
@@ -52,7 +52,7 @@ void KMimeUtilTest::testUnfoldHeader()
   QCOMPARE( KMime::unfoldHeader( "bla \n =09 bla" ), QByteArray( "bla =09 bla" ) );
 }
 
-void KMimeUtilTest::testExtractHeader()
+void UtilTest::testExtractHeader()
 {
   QByteArray header( "To: <foo@bla.org>\n"
                      "Subject: =?UTF-8?Q?_Notification_for_appointment:?=\n"
@@ -81,7 +81,7 @@ void KMimeUtilTest::testExtractHeader()
   QCOMPARE( extractHeader( "From:<toma@kovoks.nl>", "From" ), QByteArray( "<toma@kovoks.nl>" ) );
 }
 
-void KMimeUtilTest::testBalanceBidiState()
+void UtilTest::testBalanceBidiState()
 {
   QFETCH( QString, input );
   QFETCH( QString, expResult );
@@ -89,7 +89,7 @@ void KMimeUtilTest::testBalanceBidiState()
   QCOMPARE( balanceBidiState( input ), expResult );
 }
 
-void KMimeUtilTest::testBalanceBidiState_data()
+void UtilTest::testBalanceBidiState_data()
 {
   QTest::addColumn<QString>( "input" );
   QTest::addColumn<QString>( "expResult" );
@@ -120,7 +120,7 @@ void KMimeUtilTest::testBalanceBidiState_data()
                       << "ComplexOrder3" + RLO + PDF;
 }
 
-void KMimeUtilTest::testAddQuotes()
+void UtilTest::testAddQuotes()
 {
   QFETCH( QByteArray, input );
   QFETCH( QByteArray, expResult );
@@ -130,7 +130,7 @@ void KMimeUtilTest::testAddQuotes()
   QCOMPARE( input.data(), expResult.data() );
 }
 
-void KMimeUtilTest::testAddQuotes_data()
+void UtilTest::testAddQuotes_data()
 {
   QTest::addColumn<QByteArray>( "input" );
   QTest::addColumn<QByteArray>( "expResult" );

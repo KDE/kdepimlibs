@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef KMIME_HEADERTEST_H
-#define KMIME_HEADERTEST_H
+#ifndef HEADERTEST_H
+#define HEADERTEST_H
 
 #include <QtCore/QObject>
 

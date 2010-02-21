@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "kmime_charfreq_test.h"
+#include "charfreqtest.h"
 #include <qtest_kde.h>
 
 #include <KDebug>
@@ -25,9 +25,9 @@
 #include <kmime_charfreq.h>
 using namespace KMime;
 
-QTEST_KDEMAIN( KMimeCharFreqTest, NoGUI )
+QTEST_KDEMAIN( CharFreqTest, NoGUI )
 
-void KMimeCharFreqTest::test8bitData()
+void CharFreqTest::test8bitData()
 {
   {
     // If it has NUL then it's Binary (equivalent to EightBitData in CharFreq).
@@ -70,7 +70,7 @@ void KMimeCharFreqTest::test8bitData()
   }
 }
 
-void KMimeCharFreqTest::test8bitText()
+void CharFreqTest::test8bitText()
 {
   {
     // If the text only contains newlines and some random accented chars, then it is EightBitText
@@ -87,7 +87,7 @@ void KMimeCharFreqTest::test8bitText()
   }
 }
 
-void KMimeCharFreqTest::test7bitData()
+void CharFreqTest::test7bitData()
 {
   {
     // If it has lines longer than 998, it's SevenBitData.
@@ -121,7 +121,7 @@ void KMimeCharFreqTest::test7bitData()
   }
 }
 
-void KMimeCharFreqTest::test7bitText()
+void CharFreqTest::test7bitText()
 {
   {
     // If the text only contains newlines, then it is SevenBitText
@@ -138,18 +138,18 @@ void KMimeCharFreqTest::test7bitText()
   }
 }
 
-void KMimeCharFreqTest::testTrailingWhitespace()
+void CharFreqTest::testTrailingWhitespace()
 {
   QByteArray data( "test " );
   CharFreq cf( data );
   QVERIFY( cf.hasTrailingWhitespace() );
 }
 
-void KMimeCharFreqTest::testLeadingFrom()
+void CharFreqTest::testLeadingFrom()
 {
   QByteArray data( "From here thither" );
   CharFreq cf( data );
   QVERIFY( cf.hasLeadingFrom() );
 }
 
-#include "kmime_charfreq_test.moc"
+#include "charfreqtest.moc"

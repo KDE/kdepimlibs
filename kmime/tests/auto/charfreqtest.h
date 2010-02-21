@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -16,37 +16,21 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+#ifndef CHARSET_TEST_H
+#define CHARSET_TEST_H
 
-#ifndef KMIME_MESSAGE_TEST_H
-#define KMIME_MESSAGE_TEST_H
-
-#include <kmime/kmime_message.h>
 #include <QtCore/QObject>
-#include <boost/shared_ptr.hpp>
 
-class MessageTest : public QObject
+class CharFreqTest : public QObject
 {
   Q_OBJECT
-  private slots:
-    void testMainBodyPart();
-    void testBrunosMultiAssembleBug();
-    void testWillsAndTillsCrash();
-    void testHeaderFieldWithoutSpace();
-    void testWronglyFoldedHeaders();
-    void missingHeadersTest();
-    void testBug219749();
-    void testBidiSpoofing();
-    void testUtf16();
-    void testDecodedText();
-    void testInlineImages();
-    void testIssue3914();
-    void testBug223509();
-    void testEncapsulatedMessages();
-    void testOutlookAttachmentNaming();
-
-  private:
-    KMime::Message::Ptr readAndParseMail( const QString &mailFile ) const;
+  private Q_SLOTS:
+    void test8bitData();
+    void test8bitText();
+    void test7bitData();
+    void test7bitText();
+    void testTrailingWhitespace();
+    void testLeadingFrom();
 };
-
 
 #endif

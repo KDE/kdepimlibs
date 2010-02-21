@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#include "kmime_message_test.h"
-#include "kmime_message_test.moc"
+#include "messagetest.h"
+#include "messagetest.moc"
 #include <qtest_kde.h>
 
 using namespace KMime;

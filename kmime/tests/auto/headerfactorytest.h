@@ -16,21 +16,22 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#ifndef KMIME_CHARSET_TEST_H
-#define KMIME_CHARSET_TEST_H
+
+#ifndef HEADERFACTORYTEST_H
+#define HEADERFACTORYTEST_H
 
 #include <QtCore/QObject>
 
-class KMimeCharFreqTest : public QObject
+class HeaderFactoryTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
-    void test8bitData();
-    void test8bitText();
-    void test7bitData();
-    void test7bitText();
-    void testTrailingWhitespace();
-    void testLeadingFrom();
+    void initTestCase();
+    void testBuiltInHeaders();
+    void testCustomHeaders();
+    void testErrors();
+
+    // TODO test how unregistered headers are handled by Content.
 };
 
 #endif

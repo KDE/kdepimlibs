@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,21 +17,36 @@
     02110-1301, USA.
 */
 
-#ifndef KMIME_HEADERFACTORYTEST_H
-#define KMIME_HEADERFACTORYTEST_H
+#ifndef MESSAGE_TEST_H
+#define MESSAGE_TEST_H
 
+#include <kmime/kmime_message.h>
 #include <QtCore/QObject>
+#include <boost/shared_ptr.hpp>
 
-class HeaderFactoryTest : public QObject
+class MessageTest : public QObject
 {
   Q_OBJECT
-  private Q_SLOTS:
-    void initTestCase();
-    void testBuiltInHeaders();
-    void testCustomHeaders();
-    void testErrors();
+  private slots:
+    void testMainBodyPart();
+    void testBrunosMultiAssembleBug();
+    void testWillsAndTillsCrash();
+    void testHeaderFieldWithoutSpace();
+    void testWronglyFoldedHeaders();
+    void missingHeadersTest();
+    void testBug219749();
+    void testBidiSpoofing();
+    void testUtf16();
+    void testDecodedText();
+    void testInlineImages();
+    void testIssue3914();
+    void testBug223509();
+    void testEncapsulatedMessages();
+    void testOutlookAttachmentNaming();
 
-    // TODO test how unregistered headers are handled by Content.
+  private:
+    KMime::Message::Ptr readAndParseMail( const QString &mailFile ) const;
 };
+
 
 #endif

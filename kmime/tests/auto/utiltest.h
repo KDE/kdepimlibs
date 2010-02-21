@@ -16,12 +16,12 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KMIME_UTIL_TEST_H
-#define KMIME_UTIL_TEST_H
+#ifndef UTIL_TEST_H
+#define UTIL_TEST_H
 
 #include <QtCore/QObject>
 
-class KMimeUtilTest : public QObject
+class UtilTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:

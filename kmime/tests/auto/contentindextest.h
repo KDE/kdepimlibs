@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef KMIME_CONTENTINDEXTEXT_H
-#define KMIME_CONTENTINDEXTEXT_H
+#ifndef CONTENTINDEXTEXT_H
+#define CONTENTINDEXTEXT_H
 
 #include <QtCore/QObject>
 
