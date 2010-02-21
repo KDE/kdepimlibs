@@ -89,7 +89,7 @@ void ResourceLocalDirConfig::saveSettings( KRES::Resource *resource )
     if ( d->mURL->url().isEmpty() && !resource->readOnly() ) {
       KMessageBox::information(
         this,
-        i18n( "No location specified.  The calendar will be invalid." ),
+        i18nc( "@info",  "No location specified.  The calendar will be invalid." ),
         QString(),
         "ResourceLocalDirUrl");
       resource->setReadOnly( true );
