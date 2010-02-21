@@ -85,7 +85,6 @@ void CodecTest::testCodecs()
   QVERIFY( codec );
 
   QStringList blacklistedTags;
-  blacklistedTags << "x-kmime-rfc2231/nothing-encoded.x-kmime-rfc2231-decode";
   if ( blacklistedTags.contains( tag ) )
     QEXPECT_FAIL( tag.toAscii(), "Codec broken", Continue );
 
