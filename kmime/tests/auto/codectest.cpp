@@ -84,19 +84,18 @@ void CodecTest::testCodecs()
   Codec * codec = Codec::codecForName( codecName );
   QVERIFY( codec );
 
+  QStringList blacklistedTags;
+  blacklistedTags << "x-kmime-rfc2231/nothing-encoded.x-kmime-rfc2231-decode";
+  if ( blacklistedTags.contains( tag ) )
+    QEXPECT_FAIL( tag.toAscii(), "Codec broken", Continue );
+
   QByteArray result;
   if ( mode == Decode )
     result = codec->decode( input, false );
   else
     result = codec->encode( input, false );
 
-  QStringList blacklistedTags;
-  blacklistedTags << "q/nothing-encoded-decode.q"
-                  << "x-kmime-rfc2231/nothing-encoded.x-kmime-rfc2231-decode";
-  if ( blacklistedTags.contains( tag ) )
-    QEXPECT_FAIL( tag.toAscii(), "Codec broken", Continue );
-
-  QCOMPARE( result.data(), expResult.data() );
+  QCOMPARE( result, expResult );
 }
 
 #include "codectest.moc"
