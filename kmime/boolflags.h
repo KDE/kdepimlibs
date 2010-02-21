@@ -24,8 +24,6 @@
 
   @brief
   Defines the BoolFlags class.
-
-  @author see AUTHORS file.
 */
 
 #ifndef __KMIME_BOOLFLAGS_H__
@@ -42,6 +40,7 @@ namespace KMime {
   This class provides functionality similar to QBitArray but requires
   much less memory.  Only 16-bits (or 2-bytes) can be stored.
 */
+// TODO: KDE5: BIC: Remove this class, it is unused.
 class KMIME_EXPORT BoolFlags {
 
   public:
