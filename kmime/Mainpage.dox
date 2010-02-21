@@ -1,46 +1,164 @@
-/*!
- * @mainpage KMIME - an API for MIME handling.
- *
- * @section purpose Purpose
- *
- * The kmime library contains an API for the handling of MIME data.
- *
- * @section desc Description
- *
- * Quoting <a href="http://en.wikipedia.org/wiki/MIME">Wikipedia</a>:
- *
- * "<em><b>Multipurpose Internet Mail Extensions</b> or @acronym MIME is an
- * Internet Standard that extends the format of e-mail to support text in
- * character sets other than US-ASCII, non-text attachments, multi-part message
- * bodies, and header information in non-ASCII character sets. Virtually all
- * human-written Internet e-mail and a fairly large proportion of automated
- * e-mail is transmitted via @acronym SMTP in MIME format. Internet e-mail is
- * so closely associated with the SMTP and MIME standards that it is sometimes
- * called SMTP/MIME e-mail. The content types defined by MIME standards are
- * also of growing importance outside of e-mail, such as in communication
- * protocols like @acronym HTTP for the World Wide Web. MIME is also a
- * fundamental component of communication protocols such as  HTTP, which
- * requires that data be transmitted in the context of e-mail-like messages,
- * even though the data may not actually be e-mail.</em>"
- *
- * MIME is specified in five RFCs starting with
- * <a href="http://tools.ietf.org/html/rfc2045">RFC 2045</a>,
- * <a href="http://tools.ietf.org/html/rfc2046">RFC 2046</a>, and
- * <a href="http://tools.ietf.org/html/rfc2047">RFC 2047</a>.
- *
- * @authors
- * The major authors of this library are:\n
- * Christian Gebauer,\n
- * Volker Krause \<vkrause@kde.org\>,\n
- * Marc Mutz \<mutz@kde.org\>,\n
- * Christian Thurner \<cthurner@freepage.de\>
- *
- * @maintainers
- * Marc Mutz \<mutz@kde.org\>
- *
- * @licenses
- * @lgpl
- */
+/**
+
+\mainpage The KMime Library
+
+\section introduction Introduction
+
+KMime is a library for handling mail messages and newsgroup articles. Both mail messages and
+newsgroup articles are based on the same standard called MIME, which stands for
+<b>Multipurpose Internet Mail Extensions</b>. In this document, the term \c message is used to
+refer to both mail messages and newsgroup articles.
+
+KMime deals solely with the in-memory representation of messages, topics such a transport or storage
+of messages are handled by other libraries, for example by
+<a href="http://api.kde.org/4.x-api/kdepimlibs-apidocs/mailtransport/html/index.html">the mailtransport library</a>
+or by <a href="http://api.kde.org/4.x-api/kdepimlibs-apidocs/kimap/html/index.html">the KIMAP library</a>.
+Similary, this library does not deal with displaying messages or advanced composing, for those there
+are the <a href="http://api.kde.org/4.x-api/kdepim-apidocs/messageviewer/html/index.html">messageviewer</a>
+and the <a href="http://websvn.kde.org:80/trunk/KDE/kdepim/messagecomposer/">messagecomposer</a>
+components in the KDEPIM module.
+
+KMime's main function is to parse, modify and assemble messages in-memory. In a
+\ref string-broken-down "later section", <i>parsing</i> and <i>assembling</i> is actually explained.
+KMime provides high-level classes that make these tasks easy.
+
+MIME is defined by various RFCs, see the \ref rfcs "RFC section" for a list of them.
+
+\section structure Structure of this document
+
+This document will first give an \ref mime-intro "introduction to the MIME specification", as it is
+essential to understand the basics of the structure of MIME messages for using this library.
+The introduction here is aimed at users of the library, it gives a broad overview with examples and
+omits some details. Developers who wish to modifiy KMime should read the
+\ref rfcs "corresponding RFCs" as well, but this is not necessary for library users.
+
+After the introduction to the MIME format, the two ways of representing a message in memory are
+discussed, the \ref string-broken-down "string representation and the broken down representation".
+
+This is followed by a section giving an
+\ref classes-overview "overview of the most important KMime classes".
+
+The last sections give a list of \ref rfcs "relevant RFCs" and provide links for
+\ref links "further reading".
+
+\section mime-intro Structure of MIME messages
+
+\subsection history A brief history of the MIME standard
+
+The MIME standard is quite new (1993), email and usenet existed way before the MIME standard came into
+existence. Because of this, the MIME standard has to keep backwards compatibility. The email
+standard before MIME lacked many capabilities like encodings other than ASCII or attachments. These
+and other things were later added by MIME. The standard for messages before MIME is defined in
+<a href="http://tools.ietf.org/html/rfc5322">RFC 5322</a>. In <a href="http://tools.ietf.org/html/rfc2045">RFC 2045</a>
+to <a href="http://tools.ietf.org/html/rfc2049">RFC 2049</a>, several backward-compatible extensions
+to the basic message format are defined, adding support for attachments, different encodings and many
+others.
+
+Actually, there is an even older standard, defined in <a href="http://tools.ietf.org/html/rfc733">RFC 733</a>
+(<i>Standard for the format of ARPA network text messages</i>, introduced in 1977).
+This standard is now obsoleted by RFC 5322, but backwards compatibilty is in some cases supported, as
+there are still messages in this format around.
+
+Since pre-MIME messages had no way to handle attachments, attachments were sometimes added to the message
+text in an <a href="http://en.wikipedia.org/wiki/Uuencoding">uuencoded</a> form. Although this is also
+obsolete, reading uuencoded attachments is still supported by KMime.
+
+After MIME was introduced, people realized that there is no way to have the filename of attachments
+encoded in anything different than ASCII. Thus, <a href="http://tools.ietf.org/html/rfc2231">RFC 2231</a>
+was introduced to allow abitrary encodings for parameter values, such as the attachment filename.
+
+\subsection examples MIME by examples
+
+In the following sections, MIME message examples are shown, examined and explained, starting with
+a simple message and proceeding to more interesting examples.
+You can get additional examples by simply viewing the source of your own messages in your mail client,
+or by having a look at the examples in the \ref rfcs "various RFCs".
+
+\subsubsection simple-mail A simple message
+
+\verbatim
+Subject: First Mail
+From: John Doe <john.doe@domain.com>
+Date: Sun, 21 Feb 2010 19:16:11 +0100
+MIME-Version: 1.0
+
+Hello World
+\endverbatim
+The above example features a very simple message. The two main parts of this message are the \b header
+and the \b body, which are seperated by an empty line. The body contains the actual message content,
+and the header contains metadata about the message itself. The header consists of several <b>header fields</b>,
+each of them in their own line. Header fields are made up from the <b>header field name</b>, followed by a colon, followed
+by the <b>header field value</b>.
+
+The \b MIME-Version header field is mandatory for MIME messages. \b Subject,
+\b From and \b Date are important header fields, they are usually displayed in the message list of a
+mail client. The \c Subject header field can be anything, it does not have a special structure. It is a
+so-called \b unstructured header field. In contrast, the \c From and the \c Date header fields have
+to follow a special structure, they must be formed in a way that machines can parse. They are \b structured
+header fields. For example, a mail client needs to understand
+the \c Date header field so that it can sort the messages by date in the message list.
+The exact details of how the header field values of structured header fields should be
+formed are specified in an RFC.
+
+In this example, the \c From header contains a single email address. More precisly, a single email address is called
+a \b mailbox, which is made up of the <b>display name</b> (John Doe) and the <b>address specification</b> (john.doe@domain.com),
+which is enclosed in angle brackets. The \c addr-spec consists of the user name, the <b>local part</b>,
+and the \b domain name.
+
+Many header fields can contain multiple email addresses, for example the \c To field for messages with
+multiple recipients can have a comma-seperated list of mailboxes.
+A list of mailboxes, together with a display name for the list, forms a \b group, and multiple groups can form an
+<b>address list</b>. This is however rarely used, you'll most often see a simple list of plain mailboxes.
+
+There are many more possible header fields than shown in this example, and the header can even contain
+abitrary header fields, which usually are prefixed with \c X-, like \c X-Face.
+
+\section string-broken-down The two in-memory representations of messages
+
+\section classes-overview Overview of KMime classes
+
+\section rfcs RFCs
+
+\li <a href="http://tools.ietf.org/html/rfc5322">RFC 5322</a>: Internet Message Format
+\li <a href="http://tools.ietf.org/html/rfc5536">RFC 5536</a>: Netnews Article Format
+\li <a href="http://tools.ietf.org/html/rfc2045">RFC 2045</a>: Multipurpose Internet Mail Extensions (MIME), Part 1: Format of Internet Message Bodies
+\li <a href="http://tools.ietf.org/html/rfc2046">RFC 2046</a>: Multipurpose Internet Mail Extensions (MIME), Part 2: Media Types
+\li <a href="http://tools.ietf.org/html/rfc2047">RFC 2047</a>: Multipurpose Internet Mail Extensions (MIME), Part 3: Message Header Extensions for Non-ASCII Text
+\li <a href="http://tools.ietf.org/html/rfc2048">RFC 2048</a>: Multipurpose Internet Mail Extensions (MIME), Part 4: Registration Procedures
+\li <a href="http://tools.ietf.org/html/rfc2049">RFC 2049</a>: Multipurpose Internet Mail Extensions (MIME), Part 5: Conformance Criteria and Examples
+\li <a href="http://tools.ietf.org/html/rfc2231">RFC 2231</a>: MIME Parameter Value and Encoded Word Extensions: Character Sets, Languages, and Continuations
+\li <a href="http://tools.ietf.org/html/rfc2183">RFC 2183</a>: Communicating Presentation Information in Internet Message: The Content-Disposition Header Field
+\li <a href="http://tools.ietf.org/html/rfc2557">RFC 2557</a>: MIME Encapsulation of Aggregate Documents, such as HTML (MHTML)
+\li <a href="http://tools.ietf.org/html/rfc1847">RFC 1847</a>: Security Multiparts for MIME: Multipart/Signed and Multipart/Encrypted
+\li <a href="http://tools.ietf.org/html/rfc2633">RFC 2633</a>: S/MIME Version 3 Message Specification
+\li <a href="http://tools.ietf.org/html/rfc3156">RFC 3156</a>: MIME Security with OpenPGP
+\li <a href="http://tools.ietf.org/html/rfc2298">RFC 2298</a>: An Extensible Message Format for Message Disposition Notifications
+\li <a href="http://tools.ietf.org/html/rfc2646">RFC 2646</a>: The Text/Plain Format Parameter (not supported by KMime)
+
+\section links Further Reading
+\li <a href="http://en.wikipedia.org/wiki/MIME">Wikipedia article on MIME</a>\n
+\li <a href="http://www.joelonsoftware.com/articles/Unicode.html">The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)</a>
+
+\authors
+
+The major authors of this library are:
+\li Christian Gebauer
+\li Volker Krause \<vkrause@kde.org\>
+\li Marc Mutz \<mutz@kde.org\>
+\li Christian Thurner \<cthurner@freepage.de\>
+\li Tom Albers \<tomalbers@kde.nl\>
+\li Thomas McGuire \<mcguire@kde.org\>
+
+This document was written by:\n
+\li Thomas McGuire \<mcguire@kde.org\>
+
+\maintainers
+\li Volker Krause \<vkrause@kde.org\>
+\li Marc Mutz \<mutz@kde.org\>
+
+\licenses
+\lgpl
+
+*/
 
 // DOXYGEN_PROJECTNAME=KMIME Library
-// DOXYGEN_EXCLUDE =  kmime_headers_obs.h
