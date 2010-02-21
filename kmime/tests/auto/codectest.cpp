@@ -53,18 +53,17 @@ void CodecTest::testCodecs_data()
           QVERIFY( dataFile.open( QIODevice::ReadOnly ) );
           QVERIFY( expectedFile.open( QIODevice::ReadOnly ) );
 
-          Mode mode;
-          if ( file.contains( "encode") )
-            mode = Encode;
-          else
+          Mode mode = Decode;
+          if ( file.contains( "-decode" ) )
             mode = Decode;
+          else if ( file.contains( "-encode") )
+            mode = Encode;
 
           const QByteArray data = dataFile.readAll();
           const QByteArray expected = expectedFile.readAll();
 
           const QString tag = codecName + '/' + dataFileNameBase;
-          if ( tag != "x-uuencode/basic-decode.x-uuencode" ) // this one crashes
-            QTest::newRow( tag.toAscii() ) << data << expected << codecName.toAscii() << tag  << mode;
+          QTest::newRow( tag.toAscii() ) << data << expected << codecName.toAscii() << tag  << mode;
 
           dataFile.close();
           expectedFile.close();
@@ -92,16 +91,8 @@ void CodecTest::testCodecs()
     result = codec->encode( input, false );
 
   QStringList blacklistedTags;
-  blacklistedTags << "x-uuencode/basic-decode.x-uuencode"
-                  << "b/padding0"
-                  << "b/padding1"
-                  << "b/padding2"
-                  << "base64/very_small"
-                  << "q/all-encoded.q"
-                  << "q/nothing-encoded.q"
-                  << "quoted-printable/wrap"
-                  << "x-kmime-rfc2231/all-encoded.x-kmime-rfc2231"
-                  << "x-kmime-rfc2231/nothing-encoded.x-kmime-rfc2231";
+  blacklistedTags << "q/nothing-encoded-decode.q"
+                  << "x-kmime-rfc2231/nothing-encoded.x-kmime-rfc2231-decode";
   if ( blacklistedTags.contains( tag ) )
     QEXPECT_FAIL( tag.toAscii(), "Codec broken", Continue );
 
