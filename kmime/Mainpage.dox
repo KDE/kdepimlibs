@@ -88,7 +88,7 @@ The above example features a very simple message. The two main parts of this mes
 and the \b body, which are seperated by an empty line. The body contains the actual message content,
 and the header contains metadata about the message itself. The header consists of several <b>header fields</b>,
 each of them in their own line. Header fields are made up from the <b>header field name</b>, followed by a colon, followed
-by the <b>header field value</b>.
+by the <b>header field body</b>.
 
 The \b MIME-Version header field is mandatory for MIME messages. \b Subject,
 \b From and \b Date are important header fields, they are usually displayed in the message list of a
@@ -97,7 +97,7 @@ so-called \b unstructured header field. In contrast, the \c From and the \c Date
 to follow a special structure, they must be formed in a way that machines can parse. They are \b structured
 header fields. For example, a mail client needs to understand
 the \c Date header field so that it can sort the messages by date in the message list.
-The exact details of how the header field values of structured header fields should be
+The exact details of how the header field bodies of structured header fields should be
 formed are specified in an RFC.
 
 In this example, the \c From header contains a single email address. More precisly, a single email address is called
