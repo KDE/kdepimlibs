@@ -496,7 +496,6 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
     tmpStr += "</tr>";
   }
 
-  tmpStr += "<tr>";
   KDateTime startDt = event->dtStart();
   KDateTime endDt = event->dtEnd();
   if ( event->recurs() ) {
@@ -514,6 +513,8 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
       }
     }
   }
+
+  tmpStr += "<tr>";
   if ( event->allDay() ) {
     if ( event->isMultiDay() ) {
       tmpStr += "<td><b>" + i18n( "Date:" ) + "</b></td>";
@@ -538,6 +539,13 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
                        dateToString( endDt, false, spec ) ) +
                 "</td>";
     } else {
+      tmpStr += "<td><b>" + i18n( "Date:" ) + "</b></td>";
+      tmpStr += "<td>" +
+                i18nc( "date as string", "%1",
+                       dateToString( startDt, false, spec ) ) +
+                "</td>";
+
+      tmpStr += "</tr><tr>";
       tmpStr += "<td><b>" + i18n( "Time:" ) + "</b></td>";
       if ( event->hasEndDate() && startDt != endDt ) {
         tmpStr += "<td>" +
@@ -550,15 +558,25 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
                   timeToString( startDt, true, spec ) +
                   "</td>";
       }
-      tmpStr += "</tr><tr>";
-      tmpStr += "<td><b>" + i18n( "Date:" ) + "</b></td>";
-      tmpStr += "<td>" +
-                i18nc( "date as string","%1",
-                       dateToString( startDt, false, spec ) ) +
-                "</td>";
     }
   }
   tmpStr += "</tr>";
+
+  tmpStr += "<tr>";
+  tmpStr += "<td><b>" + i18n( "Duration:" ) + "</b></td>";
+  tmpStr += "<td>" +
+            durationString( event ) +
+            "</td>";
+  tmpStr += "</tr>";
+
+  if ( event->recurs() ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td><b>" + i18n( "Recurrence:" ) + "</b></td>";
+    tmpStr += "<td>" +
+              recurrenceString( event ) +
+              "</td>";
+    tmpStr += "</tr>";
+  }
 
   if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
     tmpStr += "<tr>";
@@ -580,6 +598,8 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
     tmpStr += "</tr>";
   }
 
+  // TODO: print comments?
+
   int categoryCount = event->categories().count();
   if ( categoryCount > 0 ) {
     tmpStr += "<tr>";
@@ -587,18 +607,6 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
     tmpStr += i18np( "Category:", "Categories:", categoryCount ) +
               "</b></td>";
     tmpStr += "<td>" + displayViewFormatCategories( event ) + "</td>";
-    tmpStr += "</tr>";
-  }
-
-  if ( event->recurs() ) {
-    KDateTime dt = event->recurrence()->getNextDateTime( startDt );
-    tmpStr += "<tr>";
-    tmpStr += "<td><b>" + i18nc( "next occurrence", "Next:" )+ "</b></td>";
-    tmpStr += "<td>" +
-              ( dt.isValid() ?
-                dateTimeToString( dt, event->allDay(), false, spec ) :
-                i18nc( "no date", "none" ) ) +
-              "</td>";
     tmpStr += "</tr>";
   }
 
@@ -649,13 +657,11 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
     tmpStr += "</tr>";
   }
 
-  KDateTime nextDt;
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
     KDateTime startDt = todo->dtStart();
     if ( todo->recurs() ) {
       if ( date.isValid() ) {
         startDt.setDate( date );
-        nextDt = startDt;
       }
     }
     tmpStr += "<tr>";
@@ -675,7 +681,6 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
         KDateTime kdt( date, QTime( 0, 0, 0 ), KSystemTimeZones::local() );
         kdt = kdt.addSecs( -1 );
         dueDt.setDate( todo->recurrence()->getNextDateTime( kdt ).date() );
-        nextDt = dueDt;
       }
     }
     tmpStr += "<tr>";
@@ -688,12 +693,32 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
     tmpStr += "</tr>";
   }
 
+ if ( todo->hasStartDate() && todo->hasDueDate() ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td><b>" + i18n( "Duration:" ) + "</b></td>";
+    tmpStr += "<td>" +
+              durationString( todo ) +
+              "</td>";
+    tmpStr += "</tr>";
+  }
+
+  if ( todo->recurs() ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td><b>" + i18n( "Recurrence:" ) + "</b></td>";
+    tmpStr += "<td>" +
+              recurrenceString( todo ) +
+              "</td>";
+    tmpStr += "</tr>";
+  }
+
   if ( !todo->description().isEmpty() ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18n( "Description:" ) + "</b></td>";
     tmpStr += "<td>" + todo->richDescription() + "</td>";
     tmpStr += "</tr>";
   }
+
+  // TODO: print comments?
 
   int categoryCount = todo->categories().count();
   if ( categoryCount > 0 ) {
@@ -721,17 +746,6 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
             i18nc( "percent completed", "Completed:" ) + "</b></td>";
   tmpStr += "<td>" + i18n( "%1%", todo->percentComplete() ) + "</td>";
   tmpStr += "</tr>";
-
-  if ( todo->recurs() ) {
-    KDateTime dt = todo->recurrence()->getNextDateTime( nextDt );
-    tmpStr += "<tr>";
-    tmpStr += "<td><b>" + i18nc( "next occurrence", "Next:" ) + "</b></td>";
-    tmpStr += ( dt.isValid() ?
-                dateTimeToString( dt, todo->allDay(), false, spec ) :
-                i18nc( "no date", "none" ) ) +
-              "</td>";
-    tmpStr += "</tr>";
-  }
 
   if ( todo->attendees().count() > 1 ) {
     tmpStr += displayViewFormatAttendees( todo );
@@ -1380,30 +1394,11 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode, KDateTime:
 
   // Invitation Duration Row
   if ( !event->allDay() && event->hasEndDate() && event->dtEnd().isValid() ) {
-    QString tmp;
-    int secs = event->dtStart().secsTo( event->dtEnd() );
-    int days = secs / 86400;
-    if ( days > 0 ) {
-      tmp += i18np( "1 day", "%1 days", days );
-      tmp += ' ';
-      secs -= ( days * 86400 );
-    }
-    int hours = secs / 3600;
-    if ( hours > 0 ) {
-      tmp += i18np( "1 hour", "%1 hours", hours );
-      tmp += ' ';
-      secs -= ( hours * 3600 );
-    }
-    int mins = secs / 60;
-    if ( mins > 0 ) {
-      tmp += i18np( "1 minute", "%1 minutes", mins );
-      tmp += ' ';
-    }
-    html += invitationRow( i18n( "Duration:" ), tmp );
+     html += invitationRow( i18n( "Duration:" ), durationString( event ) );
   }
 
   if ( event->recurs() ) {
-    html += invitationRow( i18n( "Recurrence:" ), IncidenceFormatter::recurrenceString( event ) );
+    html += invitationRow( i18n( "Recurrence:" ), recurrenceString( event ) );
   }
 
   html += "</table></div>\n";
@@ -2970,7 +2965,7 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
 
   QString calStr = mLocation;
   if ( mCalendar ) {
-    calStr = IncidenceFormatter::resourceString( mCalendar, incidence );
+    calStr = resourceString( mCalendar, incidence );
   }
   if ( !calStr.isEmpty() ) {
     tmp += "<i>" + i18n( "Calendar:" ) + "</i>" + "&nbsp;";
@@ -3628,3 +3623,53 @@ QString IncidenceFormatter::resourceString( Calendar *calendar, Incidence *incid
   return QString();
 }
 
+static QString secs2Duration( int secs )
+{
+  QString tmp;
+  int days = secs / 86400;
+  if ( days > 0 ) {
+    tmp += i18np( "1 day", "%1 days", days );
+    tmp += ' ';
+    secs -= ( days * 86400 );
+  }
+  int hours = secs / 3600;
+  if ( hours > 0 ) {
+    tmp += i18np( "1 hour", "%1 hours", hours );
+    tmp += ' ';
+    secs -= ( hours * 3600 );
+  }
+  int mins = secs / 60;
+  if ( mins > 0 ) {
+    tmp += i18np( "1 minute", "%1 minutes", mins );
+  }
+  return tmp;
+}
+
+QString IncidenceFormatter::durationString( Incidence *incidence )
+{
+  QString tmp;
+  if ( incidence->type() == "Event" ) {
+    Event *event = static_cast<Event *>( incidence );
+    if ( event->hasEndDate() ) {
+      if ( !event->allDay() ) {
+        tmp = secs2Duration( event->dtStart().secsTo( event->dtEnd() ) );
+      } else {
+        tmp = i18np( "1 day", "%1 days",
+                     event->dtStart().date().daysTo( event->dtEnd().date() ) + 1 );
+      }
+    } else {
+      tmp = i18n( "forever" );
+    }
+  } else if ( incidence->type() == "Todo" ) {
+    Todo *todo = static_cast<Todo *>( incidence );
+    if ( todo->hasDueDate() ) {
+      if ( todo->hasStartDate() ) {
+        tmp = secs2Duration( todo->dtStart().secsTo( todo->dtDue() ) );
+      } else {
+        tmp = i18np( "1 day", "%1 days",
+                     todo->dtStart().date().daysTo( todo->dtDue().date() ) + 1 );
+      }
+    }
+  }
+  return tmp;
+}

@@ -3,7 +3,7 @@
 
   Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-  Copyright (c) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2009-2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -274,6 +274,14 @@ namespace IncidenceFormatter
     @since 4.4
   */
   KCAL_EXPORT QString resourceString( Calendar *calendar, Incidence *incidence );
+
+  /**
+    Returns a duration string computed for the specified Incidence.
+    Only makes sense for Events and Todos.
+    @param incidence is a pointer to the Incidence.
+    @since 4.5
+  */
+  KCAL_EXPORT QString durationString( Incidence *incidence );
 
   class EventViewerVisitor;
   class ScheduleMessageVisitor;
