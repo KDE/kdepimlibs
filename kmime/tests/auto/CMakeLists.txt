@@ -1,4 +1,5 @@
 add_definitions( -DMAIL_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/../data/mails\\"" )
+add_definitions( -DCODEC_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/../data\\"" )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 macro(add_kmime_test _source)
@@ -15,5 +16,6 @@ add_kmime_test(charfreqtest.cpp)
 add_kmime_test(headertest.cpp)
 add_kmime_test(contenttest.cpp)
 add_kmime_test(messagetest.cpp)
+add_kmime_test(codectest.cpp)
 #add_kmime_test(headerfactorytest.cpp)
 

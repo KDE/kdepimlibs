@@ -35,13 +35,3 @@ set(test_dates_SRCS test_dates.cpp )
 kde4_add_executable(test_dates TEST ${test_dates_SRCS})
 
 target_link_libraries(test_dates  kmime ${KDE4_KDECORE_LIBS} )
-
-########### next target ###############
-if(HAVE_GETOPT_H)
-    set(test_kmime_codec_SRCS test_kmime_codec.cpp )
-
-
-    kde4_add_executable(test_kmime_codec TEST ${test_kmime_codec_SRCS})
-
-    target_link_libraries(test_kmime_codec  kmime ${KDE4_KDECORE_LIBS} )
-endif(HAVE_GETOPT_H)
