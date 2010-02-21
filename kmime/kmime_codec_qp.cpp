@@ -418,8 +418,8 @@ bool QuotedPrintableDecoder::decode( const char* &scursor,
       } else if ( ch == '\r' ) {
         mExpectLF = true;
       } else {
-        kWarning() << "QuotedPrintableDecoder:" << ch <<
-          "illegal character in input stream!";
+        //kWarning() << "QuotedPrintableDecoder:" << ch <<
+        //  "illegal character in input stream!";
         *dcursor++ = char( ch );
       }
     }
