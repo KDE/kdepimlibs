@@ -82,7 +82,7 @@ From: John Doe <john.doe@domain.com>
 Date: Sun, 21 Feb 2010 19:16:11 +0100
 MIME-Version: 1.0
 
-Hello World
+Hello World!
 \endverbatim
 The above example features a very simple message. The two main parts of this message are the \b header
 and the \b body, which are seperated by an empty line. The body contains the actual message content,
@@ -113,6 +113,194 @@ A list of mailboxes, together with a display name for the list, forms a \b group
 There are many more possible header fields than shown in this example, and the header can even contain
 abitrary header fields, which usually are prefixed with \c X-, like \c X-Face.
 
+\subsubsection encodings Encodings and charsets
+
+\verbatim
+From: John Doe <john.doe@domain.com>
+Date: Mon, 22 Feb 2010 00:42:45 +0100
+MIME-Version: 1.0
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+Gr=FCezi Welt!
+\endverbatim
+
+The above shows a message that is using a different \b charset than the standard \b US-ASCII charset. The
+message body contains the string "Grüezi Welt!", which is \b encoded in a special way.
+
+The \b content-type of this message is \b text/plain, which means that the message is simple text. Later,
+other content types will be introduced, such as \b text/html. If there is no \c Content-Type header
+field, it is assumed that the content-type is \c text/plain.
+
+Before MIME was introduced, all messages were limited to the US-ASCII charset. Addtionally, only the
+lower 127 values of the bytes were allowed to be used, the so-called \b 7-bit range. Writing a message in
+another charset or using letters from the upper 127 byte values was not allowed.
+
+\par Charset Encoding
+
+When talking about charsets, it is important to understand how strings of text are converted to
+byte arrays, and the other way around. A message is nothing else than a big array of bytes.
+The bytes that form the body of the message somehow need to be interpreted as a text string. Interpreting
+a byte array as a text string is called \b decoding the text. Converting a text string to a byte array is called
+\b encoding the text. A \b codec (<b>co</b>der-<b>dec</b>oder) is an utility that can encode and decode text.
+In Qt, the class for text strings is QString, and the class for byte arrays is QByteArray. The base class
+of all codecs is QTextCodec.
+
+With the US-ASCII charset, encoding and decoding text is easy, one just has to look at an <a href="http://en.wikipedia.org/wiki/ASCII_table">
+ASCII table</a> to be able to convert text strings to byte arrays and byte arrays to text strings. For
+example, the letter 'A' is represented by a single byte with the value of 65. When encountering a byte
+with the value 84, we can look that up in the table and see that it represents the letter 'T'.
+With the US-ASCII charset, each letter is represented by exactly one byte, which is very convenient.
+Even better, all letters commonly used in English text have byte values below 127, so the 7-bit limit
+of messages is no problem for text encoded with the US-ASCII charset.
+Another example: The string "Hello World!" is represented by the following byte array:<br>
+<code>48 65 6C 6C 6F 20 57 6F 72 6C 64</code><br>
+Note that the byte values are written in hexadecimal form here, not in decimal as earlier.
+
+Now, what if we want to write a message that contains German umlauts or Chinese letters? Those
+are not in the ASCII table, therefore a different charset has to be used. There is a wealth of charsets
+to chose from. Not all charsets can handle all letters, for example the
+<a href="http://en.wikipedia.org/wiki/ISO-8859-1#ISO-8859-1">ISO-8859-1</a> charset can handle
+German umlauts, but can not handle Chinese or Arabic letters. The <a href="http://en.wikipedia.org/wiki/Unicode">
+Unicode standard</a> is an attempt to introduce charsets that can handle all known letters in the
+world, in all languages. Unicode actually has several charsets, for example <a href="http://en.wikipedia.org/wiki/UTF-8">UTF-8</a>
+and <a href="http://en.wikipedia.org/wiki/UTF-16">UTF-16</a>. In an ideal world, everyone would be using
+Unicode charsets, but for historic and legacy reasons, other charsets are still much in use.
+
+Charsets other than US-ASCII don't generally have as nice properties: A single letter can be represented
+by multiple bytes, and generally the byte values are not in the 7-bit range. Pay attention to the UTF-8
+charset: At first glance, it looks exactly like the US-ASCII charset, common latin letters like A - Z
+are encoded with the same byte values as with US-ASCII. However, letters other than A - Z are suddenly
+encoded with two or even more bytes. In general, one letter can be encoded in an abitrary number of bytes, depending
+on the charset. One can \b not rely on the <code>1 letter == 1 byte</code> assumption.
+
+Now, what should be done when the text string "Grüezi Welt!" should be sent in the body of a message?
+The first step is to chose a charset that can represent all letters. This already excludes US-ASCII.
+Once a charset is chosen, the text string is encoded into a byte array.
+"Grüezi Welt!" encoded with the ISO-8859-1 charset produces the following byte array:<br>
+<code>47 72 FC 65 7A 69 20 57 65 6C 74 21</code><br>
+The letter 'ü' here is encoded using a single byte with the value <code>FC</code>.
+The same string encoded with UTF-8 looks slightly different:<br>
+<code>47 72 C3 BC 65 7A 69 20 57 65 6C 74 21</code><br>
+Here, the letter 'ü' is encoded with two bytes, <code>C3 BC</code>. Still, one can see the similarity
+between the two charsets for the other letters.
+
+You can try this out yourself: Open your favorite text editor and enter some text with non-latin
+letters. Then save the file and view it in a hex editor to see how the text was converted to a
+byte array. Make sure to try out setting different charsets in your text editor.
+
+At this point, the text string is sucessfully converted to a byte array, using e.g. the ISO-8859-1
+charset. To indicate which charset was used, a \b Content-Type header field has to be added, with the correct
+\b charset parameter. In our example above, that was done. If the charset parameter of the \c Content-Type,
+or even the complete \c Content-Type header field is left out, the receiver can not know how to interpret
+the byte array! In these cases, the byte array is usually decoded incorrectly, and the text strings contain
+wrong letters or lots of questionmarks. There is even a special term for such wrongly decoded text,
+<a href="http://en.wikipedia.org/wiki/Mojibake">Mojibake</a>. It is important to always know what charset
+your byte array is encoded with, otherwise an attempt at decoding the byte array into a text string will fail and produce
+Mojibake. <b>There is no such thing as plain text!</b> If there is no \c Content-Type header field in
+a message, the message body should be interpreted as US-ASCII.
+
+To learn more about charsets and encodings, read
+<a href="http://www.joelonsoftware.com/articles/Unicode.html">The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)</a>
+and <a href="http://www.cs.tut.fi/~jkorpela/chars.html">A tutorial on character code issues</a>. Especially
+the first article should really be read, as the name indicates.
+
+\par Content Transfer Encoding
+
+Now, we can't use the byte array that was just created in a message. The string encoded with ISO-8859-1
+has the byte value <code>FC</code> for the letter 'ü', which is decimal value 252. However, as said earlier,
+messages are only valid when all bytes are in the 7-bit range, i.e. have byte value below 127.
+So what should we do for byte values that are greater than 127, how can they be added to messages? The solution
+for this is to use a <b>content transfer encoding</b> (CTE). A content transfer encoding takes a byte
+array as input and transforms it. The output is another byte array, but one which only uses byte values
+in the 7-bit range. One such content transfer encoding is <b>quoted-printable</b> (QTP), which is used in the
+above example. Quoted-printable is easy to understand: When encountering a byte that has a value greater
+than 127, it is simply replaced by a '=', followed by the hexadecimal code of the byte value, represented
+as letters and digits encoded with ASCII. This means
+that a byte with the value 252 is replaced with the ASCII string <code>=FC</code>, since <code>FC</code>
+is the hexadecimal value of 252. The ASCII string <code>=FC</code> itself is now three bytes big,
+<code>3D 46 43</code>. Therefore, the quoted-printable encoding replaces each byte outside of the 7-bit
+range with 3 new bytes. Decoding quoted-printable encoding is also easy: Each time a byte with the value
+<code>3D</code>, which is the letter '=' in ASCII, is encountered, the next two following bytes are interpreted
+as the hex value of the resulting byte. The quoted-printable encoding was invented to make reading the
+byte array easy for humans.
+
+The quoted-printable encoding is not a good choice when the input byte array contains lots of bytes
+outside the 7-bit range, as the resulting byte array will be three times as big in the worst case,
+which is a waste of space. Therefore another content transfer encoding was introduced, \b Base64.
+The details of the base64 encoding are to much to write about it here, refer to the
+<a href="http://en.wikipedia.org/wiki/Base64">Wikipedia article</a>
+or the <a href="http://tools.ietf.org/html/rfc2045#section-6.8">RFC</a> for details.
+As an example, the ISO-8859-1 encoded text string "Grüezi Welt!" is, after encoding it with base64,
+represented by the following ASCII string: <code>R3L8ZXppIFdlbHQh</code>.
+To express the same in byte arrays: The byte array <code>47 72 FC 65 7A 69 20 57 65 6C 74 21</code>
+is, after encoding it with base64,
+represented by the byte array <code>52 33 4C 38 5A 58 70 70 49 46 64 6C 62 48 51 68</code>
+
+There are two other content transfer encodings besides quoted printable and base64: \b 7-bit and
+\b 8-bit. 7-bit is just a marker to indicate that no content transfer encoding it used. This is the
+case then the byte array is already completley in the 7-bit range, for example when writing English
+text using the US-ASCII charset. 8-bit is also a marker to indicate that no content transfer encoding
+was used. This time, not because it was not necessary, but because of a special exception, byte values
+outside of the 7-bit range are allowed. For example, some SMTP servers support the
+<a href="http://tools.ietf.org/html/rfc1652">8BITMIME</a> extension, which indicates that they accept
+bytes outside of the 7-bit range. In this case, one can simply use the byte arrays as-is, without using
+any content transfer encoding. Creating messages with 8-bit content transfer encoding is currently not
+supported by KMime. The advantage of 8-bit is that there is no overhead in size, unlike with
+base64 or even quoted-printable.
+
+When using one of the 4 contents transfer encodings, i.e. quoted-printable, base64, 7-bit or 8-bit, this
+has to be indicated in the header field \b Content-Transfer-Encoding. If the header field is left out,
+it is assumed that the content transfer encoding is 7-bit. The example above uses quoted-printable.
+
+\verbatim
+From: John Doe <john.doe@domain.com>
+Date: Mon, 22 Feb 2010 00:42:45 +0100
+MIME-Version: 1.0
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: base64
+
+R3L8ZXppIFdlbHQh
+\endverbatim
+The same example, this time encoded with the base64 content transfer encoding.
+
+\verbatim
+From: John Doe <john.doe@domain.com>
+Date: Mon, 22 Feb 2010 00:42:45 +0100
+MIME-Version: 1.0
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: base64
+
+R3LDvGV6aSBXZWx0IQ==
+\endverbatim
+Again the same example, this time using UTF-8 as the charset.
+
+In the \ref links "further reading" section, you will find links to web applications that demonstrate
+encodings and charsets.
+
+\par Conclusion
+
+When adding a text string to the body of a message, it needs to be encoded twice: First, the encoding of the charset
+needs to be applied, which transforms the text string into a byte array. Afterwards, the content transfer
+encoding has to be applied, which transforms the byte array from the first step into a byte array that
+only has bytes in the 7-bit range.
+
+When decoding, the same has to be done, in reverse: One first has decode the byte array with the content transfer encoding, to get a byte
+array that has all 256 possible byte values. Afterwards, the resulting byte array needs to be decoded
+with the correct charset, to transform it into a text string. For those two decoding steps, one has to
+look at the \c Content-Type and the \c Content-Transfer-Encoding header fields to find the correct
+charset and CTE for decoding.
+
+It is important to always keep the charset and the content transfer encoding in mind. Byte arrays and
+strings are not to be confused. Byte arrays that are encoded with a CTE are not to be confused with
+byte arrays that are \b not encoded with a CTE.
+
+This section showed how to use different charsets in the <i>body</i> of a message. The next section will
+show what to do when another charset is needed in one of the <i>header</i> fields.
+
 \section string-broken-down The two in-memory representations of messages
 
 \section classes-overview Overview of KMime classes
@@ -138,6 +326,11 @@ abitrary header fields, which usually are prefixed with \c X-, like \c X-Face.
 \section links Further Reading
 \li <a href="http://en.wikipedia.org/wiki/MIME">Wikipedia article on MIME</a>\n
 \li <a href="http://www.joelonsoftware.com/articles/Unicode.html">The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)</a>
+\li <a href="http://www.cs.tut.fi/~jkorpela/chars.html">A tutorial on character code issues</a>
+\li <a href="http://www.motobit.com/util/base64-decoder-encoder.asp">Online Base64 encoder and decoder</a>
+\li <a href="http://www.motobit.com/util/quoted-printable-encoder.asp">Online quoted-printable encoder</a>
+\li <a href="http://www.motobit.com/util/quoted-printable-decoder.asp">Online quoted-printable decoder</a>
+\li <a href="http://www.motobit.com/util/charset-codepage-conversion.asp">Online charset converter</a>
 
 \authors
 
