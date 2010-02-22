@@ -278,6 +278,33 @@ R3LDvGV6aSBXZWx0IQ==
 \endverbatim
 Again the same example, this time using UTF-8 as the charset.
 
+\verbatim
+From: John Doe <john.doe@domain.com>
+Date: Mon, 22 Feb 2010 00:42:45 +0100
+MIME-Version: 1.0
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Gr=C3=A5ezi Welt!
+\endverbatim
+The example with a combination of UTF-8 and quoted-printable CTE. As said somewhere above, with the
+UTF-8 encoding, the letter 'ü' is represented by the two bytes <code>C3 BC</code>.
+
+\verbatim
+From: John Doe <john.doe@domain.com>
+Date: Mon, 22 Feb 2010 00:42:45 +0100
+MIME-Version: 1.0
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7-bit
+
+Hello World
+\endverbatim
+A different example, showing 7-bit content transfer encoding. Although the UTF-8 charset has lots
+of letters that are represented by bytes outside of the 7-bit range, the string "Hello World" can
+be fully represented in the 7-bit range here, even with UTF-8.
+
 In the \ref links "further reading" section, you will find links to web applications that demonstrate
 encodings and charsets.
 
