@@ -326,7 +326,84 @@ strings are not to be confused. Byte arrays that are encoded with a CTE are not 
 byte arrays that are \b not encoded with a CTE.
 
 This section showed how to use different charsets in the <i>body</i> of a message. The next section will
-show what to do when another charset is needed in one of the <i>header</i> fields.
+show what to do when another charset is needed in one of the <i>header</i> field bodies.
+
+\subsubsection header-encoding Encoding in Header Fields
+
+In the last section, we discussed how to use different charsets in the body of a message. But what if
+a different charset needs to be added to one of the header fields? For example one might want to write
+a mail to a mailbox with the display name "András Manţia" and with the subject "Grüezi!".
+
+The header fields are limited to characters in the 7-bit range, and are interpreted as US-ASCII.
+That means the header field names, such as "From: ", are all encoded in US-ASCII. The header field
+bodies, such as the "1.0" of \c MIME-Version, are also encoded with US-ASCII. This is mandated by
+<a href="http://tools.ietf.org/html/rfc5322#section-2">the RFC</a>.
+
+The \c Content-Type and the \c Content-Transfer-Encoding header fields only apply to the message body,
+they have no meaning for other header fields.
+
+This means that any letter in a different charset has to be encoded in some way to statisfy the RFC.
+Letters with a different charset are only allowed in some of the header field bodies, the header field
+names always have to be in US-ASCII.
+
+\verbatim
+From: Thomas McGuire <thomas@domain.com>
+Subject: =?iso-8859-1?q?Gr=FCezi!?=
+Date: Mon, 22 Feb 2010 14:34:01 +0100
+MIME-Version: 1.0
+To: =?utf-8?q?Andr=C3=A1s?= =?utf-8?q?_Man=C5=A3ia?= <andras@domain.com>
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+bla bla bla
+\endverbatim
+
+The above example shows how text that is encoded with a different charset than US-ASCII is handled
+in the message header. This can be seen in the bodies of the \c Subject header field and the \c To header field.
+In this example, the body of the message is unimportant, it is just "bla bla bla" in US-ASCII.
+The way the header field bodies are encoded is sometimes referred to as a <b>RFC2047 string</b> or as an <b>encoded word</b>, which has
+the origin in the <a href="http://tools.ietf.org/html/rfc2047">RFC</a> where this encoding scheme is defined.
+RFC2047 strings are only allowed in some of the header fields, like \c Subject and in the display name
+of mailboxes in header fields like \c From and \c To. In other header fields, such as \c Date and
+\c MIME-Version, they are not allowed, but they wouldn't make much sense there anyway, since those are
+structured header fields with a clearly defined structure.
+
+RFC2047 strings start with "=?" and end with "?=". Between those markers, they consists of three parts:
+\li The charset, such as "iso-8859-1"
+\li The encoding, which is "q" or "b"
+\li The encoded text
+
+These three parts are sperated with a '?'. Encoding the third part, the text, is very similar to how
+text strings in the message body are encoded: First, the text string is encoded to a byte array using
+the charset encoding. Afterwards, the second encoding is used on the result, to ensure that all resulting
+bytes are within the 7-bit range.
+
+The <i>second encoding</i> here is almost identical to the content transfer encoding. There are two
+possible encodings, \b b and \b q. The \c b encoding is the same as the base64 encoding of the content
+transfer encoding. The \c q encoding is very similar to the quoted-printable encoding of the content
+transfer encoding, but with some little differences that are described in
+<a href="http://tools.ietf.org/html/rfc2047#section-4.2">the RFC</a>.
+
+Let's examine the subject of the message, <code>=?iso-8859-1?q?Gr=FCezi!?=</code>, in detail:<br>
+The first part of the RFC2027 string is the charset, so it is ISO-8859-1 in this case. The second part
+is the encoding, which is the \c q encoding here. The last part is the encoded text, which is
+<code>Gr=FCezi!</code>. As with the quoted-printable encoding, "=FC" is the encoding for the byte with
+the value <code>FC</code>, which in the ISO-8859-1 charset is the letter 'ü'. The complete decoded
+text is therefore "Grüezi!".
+
+Each RFC2047 string in the header can use a different charset: In this example, the \c Subject uses ISO-8859-1,
+\c To uses UTF-8 and the message body uses US-ASCII.
+
+In the \c To header field, two RFC2047 strings are used. A single, bigger, RFC2047 string for the whole
+display name could also have been used. In this case, the second RFC2047 string starts with an underscore,
+which is decoded as a space in the \c q encoding. The space between the two RFC2047 strings is ignored,
+it is just used to seperate the two encoded words.
+
+There are some restriction on RFC2047 strings: They are not allowed to be longer than 75 characters,
+which means two or more encoded words have to be used for long text strings. Also, there are some
+restrictions on where RFC2047 strings are allowed; most importantly, the address specification must no
+not be encoded, to be backwards compatible. For further details, refer to the RFC.
 
 \section string-broken-down The two in-memory representations of messages
 
