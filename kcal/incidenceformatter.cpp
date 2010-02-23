@@ -562,12 +562,13 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
   }
   tmpStr += "</tr>";
 
-  tmpStr += "<tr>";
-  tmpStr += "<td><b>" + i18n( "Duration:" ) + "</b></td>";
-  tmpStr += "<td>" +
-            durationString( event ) +
-            "</td>";
-  tmpStr += "</tr>";
+  QString durStr = durationString( event );
+  if ( !durStr.isEmpty() ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td><b>" + i18n( "Duration:" ) + "</b></td>";
+    tmpStr += "<td>" + durStr + "</td>";
+    tmpStr += "</tr>";
+  }
 
   if ( event->recurs() ) {
     tmpStr += "<tr>";
@@ -693,12 +694,11 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
     tmpStr += "</tr>";
   }
 
- if ( todo->hasStartDate() && todo->hasDueDate() ) {
+  QString durStr = durationString( todo );
+  if ( !durStr.isEmpty() ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18n( "Duration:" ) + "</b></td>";
-    tmpStr += "<td>" +
-              durationString( todo ) +
-              "</td>";
+    tmpStr += "<td>" + durStr + "</td>";
     tmpStr += "</tr>";
   }
 
@@ -1393,8 +1393,9 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode, KDateTime:
   }
 
   // Invitation Duration Row
-  if ( !event->allDay() && event->hasEndDate() && event->dtEnd().isValid() ) {
-     html += invitationRow( i18n( "Duration:" ), durationString( event ) );
+  QString durStr = durationString( event );
+  if ( !durStr.isEmpty() ) {
+    html += invitationRow( i18n( "Duration:" ), durStr );
   }
 
   if ( event->recurs() ) {
