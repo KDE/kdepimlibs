@@ -2980,6 +2980,19 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
     tmp += incidence->richLocation();
   }
 
+  QString durStr = durationString( incidence );
+  if ( !durStr.isEmpty() ) {
+    tmp += "<br>";
+    tmp += "<i>" + i18n( "Duration:" ) + "</i>" + "&nbsp;";
+    tmp += durStr;
+  }
+
+  if ( incidence->recurs() ) {
+    tmp += "<br>";
+    tmp += "<i>" + i18n( "Recurrence:" ) + "</i>" + "&nbsp;";
+    tmp += recurrenceString( incidence );
+  }
+
   if ( !incidence->description().isEmpty() ) {
     QString desc( incidence->description() );
     if ( !incidence->descriptionIsRich() ) {
