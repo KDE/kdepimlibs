@@ -405,6 +405,12 @@ which means two or more encoded words have to be used for long text strings. Als
 restrictions on where RFC2047 strings are allowed; most importantly, the address specification must no
 not be encoded, to be backwards compatible. For further details, refer to the RFC.
 
+\subsubsection multipart-mixed Messages with attachments
+
+Until now, we only looked at messages that had a single text part as the message body. In this section,
+we'll examine messages with attachments.
+
+
 \section string-broken-down The two in-memory representations of messages
 
 \section classes-overview Overview of KMime classes
