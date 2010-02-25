@@ -1661,12 +1661,12 @@ bool parseParameterList( const char* &scursor, const char * const send,
       // decode if necessary:
       //
       if ( mode & Encoded ) {
-        if( encodingMode == RFC2231 ) {
+        if ( encodingMode == RFC2231 ) {
           decodeRFC2231Value( rfc2231Codec, textcodec,
                               false, /* isn't continuation */
                               value, (*it).qpair );
         }
-        if( encodingMode == RFC2047 ) {
+        else if ( encodingMode == RFC2047 ) {
           value += decodeRFC2047String( (*it).qstring.toLatin1() );
         }
       } else {
