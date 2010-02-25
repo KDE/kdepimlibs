@@ -1641,13 +1641,14 @@ bool parseParameterList( const char* &scursor, const char * const send,
       attribute = it.key();
       int mode = NoMode;
       EncodingMode encodingMode = NoEncoding;
-      // is the value encoded?
+
+      // is the value rfc2331-encoded?
       if ( attribute.endsWith( asterisk ) ) {
         attribute.truncate( attribute.length() - 1 );
         mode |= Encoded;
         encodingMode = RFC2231;
       }
-      // is the value rfc2047 encoded?
+      // is the value rfc2047-encoded?
       if( !(*it).qstring.isNull() && (*it).qstring.startsWith( "=?" ) ) {
         mode |= Encoded;
         encodingMode = RFC2047;
