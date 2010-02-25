@@ -744,34 +744,38 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
 
   bool success = false;
 
-  BlogPost *post = mFetchPostMap[ loader ];
+  BlogPost *post = mFetchPostMap.take( loader );
+  kError() << "Post" << post;
+  post->postId();
 
   if ( status != Syndication::Success ) {
     emit q->errorPost( GData::Atom, i18n( "Could not get posts." ), post );
     return;
   }
+
+  QString postId = post->postId();
   QList<Syndication::ItemPtr> items = feed->items();
   QList<Syndication::ItemPtr>::ConstIterator it = items.constBegin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.constEnd();
   for ( ; it != end; ++it ) {
     QRegExp rx( "post-(\\d+)" );
-    if ( rx.indexIn( ( *it )->id() ) != -1 && rx.cap(1) == post->postId() ){
+    if ( rx.indexIn( ( *it )->id() ) != -1 && rx.cap(1) == postId ){
       kDebug() << "QRegExp rx( 'post-(\\d+)' matches" << rx.cap(1);
       post->setPostId( rx.cap(1) );
       post->setTitle( ( *it )->title() );
       post->setContent( ( *it )->content() );
       post->setStatus( BlogPost::Fetched );
       post->setLink( ( *it )->link() );
-//    FIXME: assuming UTC for now
       post->setCreationDateTime(
         KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
                    KDateTime::Spec::UTC() ).toLocalZone() );
       post->setModificationDateTime(
         KDateTime( QDateTime::fromTime_t( ( *it )->dateUpdated() ),
                    KDateTime::Spec::UTC() ).toLocalZone() );
-      kDebug() << "Emitting fetchedPost( postId=" << post->postId() << ");";
+      kDebug() << "Emitting fetchedPost( postId=" << postId << ");";
       success = true;
       emit q->fetchedPost( post );
+      break;
     }
   }
   if ( !success ) {
@@ -779,7 +783,6 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
         << mFetchPostMap[ loader ]->postId() << ".";
     emit q->errorPost( GData::Other, i18n( "Could not regexp the blog id path." ), post );
   }
-  mFetchPostMap.remove( loader );
 }
 
 void GDataPrivate::slotCreatePost( KJob *job )
