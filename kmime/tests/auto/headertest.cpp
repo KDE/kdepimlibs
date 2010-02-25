@@ -540,7 +540,6 @@ void HeaderTest::testContentTypeHeader()
 
   // bug #197958 (name of Content-Type sent by Mozilla Thunderbird are not parsed -- test case generated with v2.0.0.22)
   h = new ContentType( 0, "text/plain;\n name=\"=?ISO-8859-1?Q?lor=E9m_ipsum=2Etxt?=\"" );
-  QEXPECT_FAIL( "", "Name of attachment send by Mozilla Thunderbird are not parsed.", Continue );
   QCOMPARE( h->name(), QString::fromUtf8( "lorém ipsum.txt" ) );
   delete h;
 }
