@@ -1614,15 +1614,15 @@ bool parseParameterList( const char* &scursor, const char * const send,
   QTextCodec * textcodec = 0;
   QString attribute;
   QString value;
-  enum Modes {
+  enum Mode {
     NoMode = 0x0, Continued = 0x1, Encoded = 0x2
-  } mode;
+  };
 
-  enum EncodingModes {
+  enum EncodingMode {
     NoEncoding =  0x0,
     RFC2047 = 0x1,
     RFC2231 = 0x2
-  } encodingMode;
+  };
 
   QMap<QString,QStringOrQPair>::Iterator it, end = rawParameterList.end();
 
@@ -1639,33 +1639,34 @@ bool parseParameterList( const char* &scursor, const char * const send,
       // and extract the information from the new raw attribute:
       value.clear();
       attribute = it.key();
-      mode = NoMode;
+      int mode = NoMode;
+      EncodingMode encodingMode = NoEncoding;
       // is the value encoded?
       if ( attribute.endsWith( asterisk ) ) {
         attribute.truncate( attribute.length() - 1 );
-        mode = (Modes) ((int) mode | Encoded);
-        encodingMode = (EncodingModes) ((int) encodingMode | RFC2231);
+        mode |= Encoded;
+        encodingMode = RFC2231;
       }
       // is the value rfc2047 encoded?
       if( !(*it).qstring.isNull() && (*it).qstring.startsWith( "=?" ) ) {
-        mode = (Modes) ((int) mode | Encoded);
-        encodingMode = (EncodingModes) ((int) encodingMode | RFC2047);
+        mode |= Encoded;
+        encodingMode = RFC2047;
       }
       // is the value continued?
       if ( attribute.endsWith( asteriskZero ) ) {
         attribute.truncate( attribute.length() - 2 );
-        mode = (Modes) ((int) mode | Continued);
+        mode |= Continued;
       }
       //
       // decode if necessary:
       //
       if ( mode & Encoded ) {
-        if( encodingMode & RFC2231 ) {
+        if( encodingMode == RFC2231 ) {
           decodeRFC2231Value( rfc2231Codec, textcodec,
                               false, /* isn't continuation */
                               value, (*it).qpair );
         }
-        if( encodingMode & RFC2047 ) {
+        if( encodingMode == RFC2047 ) {
           value += decodeRFC2047String( (*it).qstring.toLatin1() );
         }
       } else {
