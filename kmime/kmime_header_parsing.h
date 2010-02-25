@@ -42,6 +42,8 @@ namespace Headers {
 namespace Types {
 
 // for when we can't make up our mind what to use...
+// FIXME: Remove this thing, we should _always_ know wether we are handling a byte array or a string.
+//        In most places where this is used, it should simply be replaced by QByteArray
 struct KMIME_EXPORT QStringOrQPair {
   QStringOrQPair() : qstring(), qpair( 0, 0 ) {}
   QString qstring;

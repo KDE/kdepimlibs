@@ -451,6 +451,8 @@ bool parseAtom( const char * &scursor, const char * const send,
   return success;
 }
 
+// FIXME: Remove this and the other parseToken() method. add a new one where "result" is a
+//        QByteArray.
 bool parseToken( const char * &scursor, const char * const send,
                  QString &result, bool allow8Bit )
 {
@@ -503,6 +505,8 @@ bool parseToken( const char * &scursor, const char * const send,
 //
 // - doesn't handle quoted CRLF
 
+// FIXME: Why is result a QString? This should be a QByteArray, since at this level, we don't
+//        know about encodings yet!
 bool parseGenericQuotedString( const char* &scursor, const char * const send,
                                QString &result, bool isCRLF,
                                const char openChar, const char closeChar )
@@ -1331,6 +1335,9 @@ static QString asterisk = QString::fromLatin1( "*0*", 1 );
 static QString asteriskZero = QString::fromLatin1( "*0*", 2 );
 //static QString asteriskZeroAsterisk = QString::fromLatin1( "*0*", 3 );
 
+// FIXME: Get rid of the very ugly "QStringOrQPair" thing. At this level, we are supposed to work
+//        on byte arrays, not strings! The result parameter should be a simple
+//        QPair<QByteArray,QByteArray>, which is the attribute name and the value.
 bool parseParameter( const char* &scursor, const char * const send,
                      QPair<QString,QStringOrQPair> &result, bool isCRLF )
 {
@@ -1352,6 +1359,7 @@ bool parseParameter( const char* &scursor, const char * const send,
   //
   // parse the parameter name:
   //
+  // FIXME: maybeAttribute should be a QByteArray
   QString maybeAttribute;
   if ( !parseToken( scursor, send, maybeAttribute, false /* no 8bit */ ) ) {
     return false;
@@ -1412,6 +1420,8 @@ bool parseParameter( const char* &scursor, const char * const send,
   return true;
 }
 
+// FIXME: Get rid of QStringOrQPair: Use a simply QMap<QByteArray, QByteArray> for "result"
+//        instead!
 bool parseRawParameterList( const char* &scursor, const char * const send,
                             QMap<QString,QStringOrQPair> &result,
                             bool isCRLF )
