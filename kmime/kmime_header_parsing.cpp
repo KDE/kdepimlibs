@@ -1619,9 +1619,9 @@ bool parseParameterList( const char* &scursor, const char * const send,
   };
 
   enum EncodingMode {
-    NoEncoding =  0x0,
-    RFC2047 = 0x1,
-    RFC2231 = 0x2
+    NoEncoding,
+    RFC2047,
+    RFC2231
   };
 
   QMap<QString,QStringOrQPair>::Iterator it, end = rawParameterList.end();
