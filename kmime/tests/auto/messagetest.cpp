@@ -548,7 +548,6 @@ void MessageTest::testOutlookAttachmentNaming()
 
   Headers::ContentDisposition *cd = attachment->contentDisposition( false );
   QVERIFY( cd );
-  QEXPECT_FAIL( "", "Support for Outlook style attachment naming not yet present.", Continue );
   QCOMPARE( cd->filename(), QString( "outlook.diff" ) );
 }
 

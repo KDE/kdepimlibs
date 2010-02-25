@@ -1608,6 +1608,12 @@ bool parseParameterList( const char* &scursor, const char * const send,
     NoMode = 0x0, Continued = 0x1, Encoded = 0x2
   } mode;
 
+  enum EncodingModes {
+    NoEncoding =  0x0,
+    RFC2047 = 0x1,
+    RFC2231 = 0x2
+  } encodingMode;
+
   QMap<QString,QStringOrQPair>::Iterator it, end = rawParameterList.end();
 
   for ( it = rawParameterList.begin() ; it != end ; ++it ) {
@@ -1628,6 +1634,12 @@ bool parseParameterList( const char* &scursor, const char * const send,
       if ( attribute.endsWith( asterisk ) ) {
         attribute.truncate( attribute.length() - 1 );
         mode = (Modes) ((int) mode | Encoded);
+        encodingMode = (EncodingModes) ((int) encodingMode | RFC2231);
+      }
+      // is the value rfc2047 encoded?
+      if( !(*it).qstring.isNull() && (*it).qstring.startsWith( "=?" ) ) {
+        mode = (Modes) ((int) mode | Encoded);
+        encodingMode = (EncodingModes) ((int) encodingMode | RFC2047);
       }
       // is the value continued?
       if ( attribute.endsWith( asteriskZero ) ) {
@@ -1638,9 +1650,14 @@ bool parseParameterList( const char* &scursor, const char * const send,
       // decode if necessary:
       //
       if ( mode & Encoded ) {
-        decodeRFC2231Value( rfc2231Codec, textcodec,
-                            false, /* isn't continuation */
-                            value, (*it).qpair );
+        if( encodingMode & RFC2231 ) {
+          decodeRFC2231Value( rfc2231Codec, textcodec,
+                              false, /* isn't continuation */
+                              value, (*it).qpair );
+        }
+        if( encodingMode & RFC2047 ) {
+          value += decodeRFC2047String( (*it).qstring.toLatin1() );
+        }
       } else {
         // not encoded.
         if ( (*it).qpair.first ) {
