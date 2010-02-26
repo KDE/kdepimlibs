@@ -3678,10 +3678,12 @@ QString IncidenceFormatter::durationString( Incidence *incidence )
     Todo *todo = static_cast<Todo *>( incidence );
     if ( todo->hasDueDate() ) {
       if ( todo->hasStartDate() ) {
-        tmp = secs2Duration( todo->dtStart().secsTo( todo->dtDue() ) );
-      } else {
-        tmp = i18np( "1 day", "%1 days",
-                     todo->dtStart().date().daysTo( todo->dtDue().date() ) + 1 );
+        if ( !todo->allDay() ) {
+          tmp = secs2Duration( todo->dtStart().secsTo( todo->dtDue() ) );
+        } else {
+          tmp = i18np( "1 day", "%1 days",
+                       todo->dtStart().date().daysTo( todo->dtDue().date() ) + 1 );
+        }
       }
     }
   }
