@@ -302,7 +302,7 @@ static QString displayViewFormatAttendees( Incidence *incidence )
 
   // Add optional participant links
   QString optpartStr;
-  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
     Attendee *a = *it;
     if ( a->role() != Attendee::OptParticipant ) {
       // skip non-optional-participants
@@ -2942,7 +2942,7 @@ static QString tooltipFormatAttendees( Incidence *incidence )
   // Add optional participant links
   i = 0;
   QString optpartStr;
-  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
     Attendee *a = *it;
     if ( a->role() != Attendee::OptParticipant ) {
       // skip non-optional-participants
