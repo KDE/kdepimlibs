@@ -220,11 +220,43 @@ static QString displayViewLinkPerson( const QString &email, QString name,
   return tmpString;
 }
 
-static QString displayViewFormatAttendees( Incidence *incidence )
+static QString displayViewFormatAttendeeRoleList( Incidence *incidence, Attendee::Role role )
 {
   QString tmpStr;
   Attendee::List::ConstIterator it;
   Attendee::List attendees = incidence->attendees();
+  KIconLoader *iconLoader = KIconLoader::global();
+  const QString iconPath = iconLoader->iconPath( "mail-message-new", KIconLoader::Small );
+
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+    Attendee *a = *it;
+    if ( a->role() != role ) {
+      // skip this role
+      continue;
+    }
+    if ( a->email() == incidence->organizer().email() ) {
+      // skip attendee that is also the organizer
+      continue;
+    }
+    tmpStr += displayViewLinkPerson( a->email(), a->name(), a->uid(), iconPath );
+    if ( !a->delegator().isEmpty() ) {
+      tmpStr += i18n( " (delegated by %1)", a->delegator() );
+    }
+    if ( !a->delegate().isEmpty() ) {
+      tmpStr += i18n( " (delegated to %1)", a->delegate() );
+    }
+    tmpStr += "<br>";
+  }
+  if ( tmpStr.endsWith( QLatin1String( "<br>" ) ) ) {
+    tmpStr.chop( 4 );
+  }
+  return tmpStr;
+}
+
+static QString displayViewFormatAttendees( Incidence *incidence )
+{
+  QString tmpStr, str;
+
   KIconLoader *iconLoader = KIconLoader::global();
   const QString iconPath = iconLoader->iconPath( "mail-message-new", KIconLoader::Small );
 
@@ -238,127 +270,39 @@ static QString displayViewFormatAttendees( Incidence *incidence )
             "</td>";
   tmpStr += "</tr>";
 
-  // Add "chair" links
-  QString chairStr;
-  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
-    Attendee *a = *it;
-    if ( a->role() != Attendee::Chair ) {
-      // skip non-chair
-      continue;
-    }
-    if ( a->email() == incidence->organizer().email() ) {
-      // skip attendee that is also the organizer
-      continue;
-    }
-    chairStr += displayViewLinkPerson( a->email(), a->name(), a->uid(), iconPath );
-    if ( !a->delegator().isEmpty() ) {
-      chairStr += i18n( " (delegated by %1)", a->delegator() );
-    }
-    if ( !a->delegate().isEmpty() ) {
-      chairStr += i18n( " (delegated to %1)", a->delegate() );
-    }
-    chairStr += "<br>";
-  }
-  if ( chairStr.endsWith( QLatin1String( "<br>" ) ) ) {
-    chairStr.chop( 4 );
-  }
-  if ( !chairStr.isEmpty() ) {
+  // Add "chair"
+  str = displayViewFormatAttendeeRoleList( incidence, Attendee::Chair );
+  if ( !str.isEmpty() ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18n( "Chair:" ) + "</b></td>";
-    tmpStr += "<td>" + chairStr + "</td>";
+    tmpStr += "<td>" + str + "</td>";
     tmpStr += "</tr>";
   }
 
-  // Add required participant links
-  QString reqpartStr;
-  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
-    Attendee *a = *it;
-    if ( a->role() != Attendee::ReqParticipant ) {
-      // skip non-required-participants
-      continue;
-    }
-    if ( a->email() == incidence->organizer().email() ) {
-      // skip attendee that is also the organizer
-      continue;
-    }
-    reqpartStr += displayViewLinkPerson( a->email(), a->name(), a->uid(), iconPath );
-    if ( !a->delegator().isEmpty() ) {
-      reqpartStr += i18n( " (delegated by %1)", a->delegator() );
-    }
-    if ( !a->delegate().isEmpty() ) {
-      reqpartStr += i18n( " (delegated to %1)", a->delegate() );
-    }
-    reqpartStr += "<br>";
-   }
-   if ( reqpartStr.endsWith( QLatin1String( "<br>" ) ) ) {
-     reqpartStr.chop( 4 );
-   }
-   if ( !reqpartStr.isEmpty() ) {
-     tmpStr += "<tr>";
-     tmpStr += "<td><b>" + i18n( "Required Participants:" ) + "</b></td>";
-     tmpStr += "<td>" + reqpartStr + "</td>";
-     tmpStr += "</tr>";
-   }
+  // Add required participants
+  str = displayViewFormatAttendeeRoleList( incidence, Attendee::ReqParticipant );
+  if ( !str.isEmpty() ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td><b>" + i18n( "Required Participants:" ) + "</b></td>";
+    tmpStr += "<td>" + str + "</td>";
+    tmpStr += "</tr>";
+  }
 
-  // Add optional participant links
-  QString optpartStr;
-  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
-    Attendee *a = *it;
-    if ( a->role() != Attendee::OptParticipant ) {
-      // skip non-optional-participants
-      continue;
-    }
-    if ( a->email() == incidence->organizer().email() ) {
-      // skip attendee that is also the organizer
-      continue;
-    }
-    optpartStr += displayViewLinkPerson( a->email(), a->name(), a->uid(), iconPath );
-    if ( !a->delegator().isEmpty() ) {
-      optpartStr += i18n( " (delegated by %1)", a->delegator() );
-    }
-    if ( !a->delegate().isEmpty() ) {
-      optpartStr += i18n( " (delegated to %1)", a->delegate() );
-    }
-    optpartStr += "<br>";
-  }
-  if ( optpartStr.endsWith( QLatin1String( "<br>" ) ) ) {
-    optpartStr.truncate( optpartStr.length() - 4 );
-  }
-  if ( !optpartStr.isEmpty() ) {
+  // Add optional participants
+  str = displayViewFormatAttendeeRoleList( incidence, Attendee::OptParticipant );
+  if ( !str.isEmpty() ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18n( "Optional Participants:" ) + "</b></td>";
-    tmpStr += "<td>" + optpartStr + "</td>";
+    tmpStr += "<td>" + str + "</td>";
     tmpStr += "</tr>";
   }
 
-  // Add observer links
-  QString obsStr;
-  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
-    Attendee *a = *it;
-    if ( a->role() != Attendee::NonParticipant ) {
-      // skip participants and chairs
-      continue;
-    }
-    if ( a->email() == incidence->organizer().email() ) {
-      // skip attendee that is also the organizer
-      continue;
-    }
-    obsStr += displayViewLinkPerson( a->email(), a->name(), a->uid(), iconPath );
-    if ( !a->delegator().isEmpty() ) {
-      obsStr += i18n( " (delegated by %1)", a->delegator() );
-    }
-    if ( !a->delegate().isEmpty() ) {
-      obsStr += i18n( " (delegated to %1)", a->delegate() );
-    }
-    obsStr += "<br>";
-  }
-  if ( obsStr.endsWith( QLatin1String( "<br>" ) ) ) {
-    obsStr.chop( 4 );
-  }
-  if ( !obsStr.isEmpty() ) {
+  // Add observers
+  str = displayViewFormatAttendeeRoleList( incidence, Attendee::NonParticipant );
+  if ( !str.isEmpty() ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18n( "Observers:" ) + "</b></td>";
-    tmpStr += "<td>" + obsStr + "</td>";
+    tmpStr += "<td>" + str + "</td>";
     tmpStr += "</tr>";
   }
 
@@ -2852,161 +2796,81 @@ static QString tooltipPerson( const QString &email, QString name )
 }
 
 static QString etc = i18nc( "elipsis", "..." );
-static QString tooltipFormatAttendees( Incidence *incidence )
+static QString tooltipFormatAttendeeRoleList( Incidence *incidence, Attendee::Role role )
 {
   int maxNumAtts = 8; // maximum number of people to print per attendee role
   QString sep = i18nc( "separator for lists of people names", ", " );
   int sepLen = sep.length();
 
-  int i;
+  int i = 0;
   QString tmpStr;
   Attendee::List::ConstIterator it;
   Attendee::List attendees = incidence->attendees();
+
+  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+    Attendee *a = *it;
+    if ( a->role() != role ) {
+      // skip not this role
+      continue;
+    }
+    if ( a->email() == incidence->organizer().email() ) {
+      // skip attendee that is also the organizer
+      continue;
+    }
+    if ( i == maxNumAtts ) {
+      tmpStr += etc;
+      break;
+    }
+    tmpStr += tooltipPerson( a->email(), a->name() );
+    if ( !a->delegator().isEmpty() ) {
+      tmpStr += i18n( " (delegated by %1)", a->delegator() );
+    }
+    if ( !a->delegate().isEmpty() ) {
+      tmpStr += i18n( " (delegated to %1)", a->delegate() );
+    }
+    tmpStr += sep;
+    i++;
+  }
+  if ( tmpStr.endsWith( sep ) ) {
+    tmpStr.truncate( tmpStr.length() - sepLen );
+  }
+  return tmpStr;
+}
+
+static QString tooltipFormatAttendees( Incidence *incidence )
+{
+  QString tmpStr, str;
 
   // Add organizer link
   tmpStr += "<i>" + i18n( "Organizer:" ) + "</i>" + "&nbsp;";
   tmpStr += tooltipPerson( incidence->organizer().email(),
                            incidence->organizer().name() );
-  tmpStr += "<br>";
-
-  // Add "chair" links
-  i = 0;
-  QString chairStr;
-  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
-    Attendee *a = *it;
-    if ( a->role() != Attendee::Chair ) {
-      // skip non-chair
-      continue;
-    }
-    if ( a->email() == incidence->organizer().email() ) {
-      // skip attendee that is also the organizer
-      continue;
-    }
-    if ( i == maxNumAtts ) {
-      chairStr += etc;
-      break;
-    }
-    chairStr += tooltipPerson( a->email(), a->name() );
-    if ( !a->delegator().isEmpty() ) {
-      chairStr += i18n( " (delegated by %1)", a->delegator() );
-    }
-    if ( !a->delegate().isEmpty() ) {
-      chairStr += i18n( " (delegated to %1)", a->delegate() );
-    }
-    chairStr += sep;
-    i++;
-  }
-  if ( chairStr.endsWith( sep ) ) {
-    chairStr.truncate( chairStr.length() - sepLen );
-  }
-  if ( !chairStr.isEmpty() ) {
-    tmpStr += "<i>" + i18n( "Chair:" ) + "</i>" + "&nbsp;";
-    tmpStr += chairStr;
+  // Add "chair"
+  str = tooltipFormatAttendeeRoleList( incidence, Attendee::Chair );
+  if ( !str.isEmpty() ) {
+    tmpStr += "<br><i>" + i18n( "Chair:" ) + "</i>" + "&nbsp;";
+    tmpStr += str;
   }
 
-  // Add required participant links
-  i = 0;
-  QString reqpartStr;
-  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
-    Attendee *a = *it;
-    if ( a->role() != Attendee::ReqParticipant ) {
-      // skip non-required-participants
-      continue;
-    }
-    if ( a->email() == incidence->organizer().email() ) {
-      // skip attendee that is also the organizer
-      continue;
-    }
-    if ( i == maxNumAtts ) {
-      reqpartStr += etc;
-      break;
-    }
-    reqpartStr += tooltipPerson( a->email(), a->name() );
-    if ( !a->delegator().isEmpty() ) {
-      reqpartStr += i18n( " (delegated by %1)", a->delegator() );
-    }
-    if ( !a->delegate().isEmpty() ) {
-      reqpartStr += i18n( " (delegated to %1)", a->delegate() );
-    }
-    reqpartStr += sep;
-    i++;
-  }
-  if ( reqpartStr.endsWith( sep ) ) {
-    reqpartStr.truncate( reqpartStr.length() - sepLen );
-  }
-  if ( !reqpartStr.isEmpty() ) {
-    tmpStr += "<i>" + i18n( "Required Participants:" ) + "</i>" + "&nbsp;";
-    tmpStr += reqpartStr;
+  // Add required participants
+  str = tooltipFormatAttendeeRoleList( incidence, Attendee::ReqParticipant );
+  if ( !str.isEmpty() ) {
+    tmpStr += "<br><i>" + i18n( "Required Participants:" ) + "</i>" + "&nbsp;";
+    tmpStr += str;
   }
 
-  // Add optional participant links
-  i = 0;
-  QString optpartStr;
-  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
-    Attendee *a = *it;
-    if ( a->role() != Attendee::OptParticipant ) {
-      // skip non-optional-participants
-      continue;
-    }
-    if ( a->email() == incidence->organizer().email() ) {
-      // skip attendee that is also the organizer
-      continue;
-    }
-    if ( i == maxNumAtts ) {
-      optpartStr += etc;
-      break;
-    }
-    optpartStr += tooltipPerson( a->email(), a->name() );
-    if ( !a->delegator().isEmpty() ) {
-      optpartStr += i18n( " (delegated by %1)", a->delegator() );
-    }
-    if ( !a->delegate().isEmpty() ) {
-      optpartStr += i18n( " (delegated to %1)", a->delegate() );
-    }
-    optpartStr += sep;
-    i++;
-  }
-  if ( optpartStr.endsWith( sep ) ) {
-    optpartStr.truncate( optpartStr.length() - sepLen );
-  }
-  if ( !optpartStr.isEmpty() ) {
-    tmpStr += "<i>" + i18n( "Optional Participants:" ) + "</i>" + "&nbsp;";
-    tmpStr += optpartStr;
+  // Add optional participants
+  str = tooltipFormatAttendeeRoleList( incidence, Attendee::OptParticipant );
+  if ( !str.isEmpty() ) {
+    tmpStr += "<br><i>" + i18n( "Optional Participants:" ) + "</i>" + "&nbsp;";
+    tmpStr += str;
   }
 
-  // Add observer links
-  i = 0;
-  QString obsStr;
-  for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
-    Attendee *a = *it;
-    if ( a->role() != Attendee::NonParticipant ) {
-      // skip participants and chairs
-      continue;
-    }
-    if ( a->email() == incidence->organizer().email() ) {
-      // skip attendee that is also the organizer
-      continue;
-    }
-    if ( i == maxNumAtts ) {
-      obsStr += etc;
-      break;
-    }
-    obsStr += tooltipPerson( a->email(), a->name() );
-    if ( !a->delegator().isEmpty() ) {
-      obsStr += i18n( " (delegated by %1)", a->delegator() );
-    }
-    if ( !a->delegate().isEmpty() ) {
-      obsStr += i18n( " (delegated to %1)", a->delegate() );
-    }
-    obsStr += sep;
-    i++;
-  }
-  if ( obsStr.endsWith( sep ) ) {
-    obsStr.truncate( obsStr.length() - sepLen );
-  }
-  if ( !obsStr.isEmpty() ) {
-    tmpStr += "<i>" + i18n( "Observers:" ) + "</i>" + "&nbsp;";
-    tmpStr += obsStr;
+  // Add observers
+  str = tooltipFormatAttendeeRoleList( incidence, Attendee::NonParticipant );
+  if ( !str.isEmpty() ) {
+    tmpStr += "<br><i>" + i18n( "Observers:" ) + "</i>" + "&nbsp;";
+    tmpStr += str;
   }
 
   return tmpStr;
