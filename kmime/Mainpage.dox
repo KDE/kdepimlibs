@@ -286,7 +286,7 @@ Content-Type: Text/Plain;
   charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-Gr=C3=A5ezi Welt!
+Gr=C3=BCezi Welt!
 \endverbatim
 The example with a combination of UTF-8 and quoted-printable CTE. As said somewhere above, with the
 UTF-8 encoding, the letter 'ü' is represented by the two bytes <code>C3 BC</code>.
