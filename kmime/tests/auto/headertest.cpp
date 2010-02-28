@@ -542,6 +542,13 @@ void HeaderTest::testContentTypeHeader()
   h = new ContentType( 0, "text/plain;\n name=\"=?ISO-8859-1?Q?lor=E9m_ipsum=2Etxt?=\"" );
   QCOMPARE( h->name(), QString::fromUtf8( "lorém ipsum.txt" ) );
   delete h;
+
+  // bug #197958 (name of Content-Type sent by Mozilla Thunderbird are not parsed -- test case generated with v2.0.0.22)
+  // But with unquoted string
+  QEXPECT_FAIL( "", "Unqouted rfc2047 strings are not supported as of now", Continue );
+  h = new ContentType( 0, "text/plain;\n name==?ISO-8859-1?Q?lor=E9m_ipsum=2Etxt?=" );
+  QCOMPARE( h->name(), QString::fromUtf8( "lorém ipsum.txt" ) );
+  delete h;
 }
 
 void HeaderTest::testTokenHeader()
