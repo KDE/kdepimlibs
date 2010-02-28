@@ -410,7 +410,158 @@ not be encoded, to be backwards compatible. For further details, refer to the RF
 Until now, we only looked at messages that had a single text part as the message body. In this section,
 we'll examine messages with attachments.
 
+\verbatim
+From: frank@domain.com
+To: greg@domain.com
+Subject: Nice Photo
+Date: Sun, 28 Feb 2010 19:57:00 +0100
+MIME-Version: 1.0
+Content-Type: Multipart/Mixed;
+  boundary="Boundary-00=_8xriL5W6LSj00Ly"
 
+--Boundary-00=_8xriL5W6LSj00Ly
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Hi Greg,
+
+attached you'll find a nice photo.
+
+--Boundary-00=_8xriL5W6LSj00Ly
+Content-Type: image/jpeg;
+  name="test.jpeg"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+  filename="test.jpeg"
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/4Q3XRXhpZgAASUkqAAgAAAAHAAsAAgAPAAAAYgAAAAABBAAB
+[SNIP 800 lines]
+ze5CdSH2Z8yTatHSV2veW0rKzeq30//Z
+
+--Boundary-00=_8xriL5W6LSj00Ly--
+
+\endverbatim
+<i>Note: Since the image in this message would be really big, most of it is omitted / snipped here.</i>
+
+The above example consists of two parts: A normal text part and an image attachment. Messages that
+consist of multiple parts are called \b multipart messages. The top-level content-type therefore is
+<b>multipart/mixed</b>. \c Mixed simply means that the following parts have no relation to each other,
+it is just a random mixture of parts. Later, we will look at other types, such as \c multipart/alternative
+or \c multipart/related. A \b part is sometimes also called \b node, \b content or <b>MIME part</b>.
+
+Each MIME part of the message is seperated by a \b boundary, and that boundary
+is specified in the top-level content-type header as a parameter. In the message body, the boundary
+is prefixed with \c "--", and the last boundary is suffixed with \c "--", so that the end of the message can
+be detected. When creating a message, care must be taken that the boundary appears nowhere else in the
+message, for example in the text part, as the parser would get confused by this.
+
+A MIME part begins right after the boundary. It consists of a <b>MIME header</b> and a <b>MIME body</b>, which
+are seperated by an empty line. The MIME header should not be confused with the message header: The
+message header contains metadata about the whole message, like subject and date. The MIME header only
+contains metadata about the specific MIME part, like the content type of the MIME part. MIME header
+field names always start with \c "Content-".
+The example above shows the three most important MIME header fields, usually those are the only ones
+used. The top-level header of a message actually mixes the message metadata and the MIME metadata into one header: In this
+example, the header contains the \c Date header field, which is an ordinary header field, and it contains
+the \c Content-Type header field, which is a MIME header field.
+
+MIME parts can be nested, and therefore form a tree. The above example has the following tree:
+\verbatim
+multipart/mixed
+|- text/plain
+\- image/jpeg
+\endverbatim
+The \c text/plain node is therefore a \b child of the \c multipart/mixed mode. The \c multipart/mixed node
+is a \b parent of the other two nodes. The \c image/jpeg node is a \b sibling of the \c text/plain node.
+\c Multipart nodes are the only nodes that have children, other nodes are \b leaf nodes.
+The body of a multipart node consists of all complete child nodes (MIME header and MIME body), seperated
+by the boundary.
+
+Each MIME part can have a different content transfer encoding. In the above example, the text part has
+a \c 7bit CTE, while the image part has a \c base64 CTE. The multipart/mixed node does not specifiy
+a CTE, multipart nodes always have \c 7bit as the CTE. This is because the body of multipart nodes can
+only consist of bytes in the 7 bit range: The boundary is 7 bit, the MIME headers are 7 bit, and the
+MIME bodies are already ancoded with the CTE of the child MIME part, and are therefore also 7 bit. This means
+no CTE for multipart nodes is necessary.
+
+The MIME part for the image does not specify a charset parameter in the content type header field. This
+is because the body of that MIME part will not be interpreted as a text string, therefore the byte array
+does not need to be decoded to a string. Instead, the byte array is interpreted as an image, by an image
+renderer. The message viewer application passes the MIME part body as a byte array to the image renderer.
+The content type consists of a <b>media type</b> and a <b>subtype</b>. For example, the content type
+\c "text/html" has the media type "text" and the subtype "html". Only nodes that have the media type "text"
+need to specify a charset, as those nodes are the only nodes of which the body is interpreted as a text string.
+
+The only header field not yet encountered in previous sections is the \b Content-Disposition header field,
+which is defined in a <a href="http://tools.ietf.org/html/rfc2183">seperate RFC</a>. It describes how
+the message viewer application should display the MIME part. In the case of the image part, is should
+be presented as an attachment. The \b filename parameter tells the message viewer application which filename
+should be used by default when the user saves the attachment to disk.
+
+The content type header field for the image MIME part has a \b name parameter, which is similar to the
+\c filename parameter of the \c Content-Disposition header field. The difference is that \c name refers
+to the name of the complete MIME part, whereas \c filename refers to the name of the attachment. The
+\c name paramter of the \c Content-Type header field in this case is superfluous and only exists for
+backwards compatibility, and can be ignored;
+the \c filename parameter of the \c Content-Disposition header field should be prefered when it is present.
+
+\verbatim
+From: Thomas McGuire <thomas@domain.com>
+To: sebastian@domain.com
+Subject: Help with SPARQL
+Date: Sun, 28 Feb 2010 21:57:51 +0100
+MIME-Version: 1.0
+Content-Type: Multipart/Mixed;
+  boundary="Boundary-00=_PjtiLU2PvHpvp/R"
+
+--Boundary-00=_PjtiLU2PvHpvp/R
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Hi Sebastian,
+
+I have a problem with a SPARQL query, can you help me debug this? Attached is
+the query and a screenshot showing the result.
+
+--Boundary-00=_PjtiLU2PvHpvp/R
+Content-Type: text/plain;
+  charset="UTF-8";
+  name="query.txt"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+  filename="query.txt"
+
+prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>
+
+SELECT ?person
+WHERE {
+  ?person a nco:PersonContact .
+  ?person nco:birthDate ?birthDate .
+}"
+--Boundary-00=_PjtiLU2PvHpvp/R
+Content-Type: image/png;
+  name="screenshot.png"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+  filename="screenshot.png"
+
+AAAAyAAAAAEBBAABAAAAyAAAAA0BAgATAAAAcQAAABIBAwABAAAAAQAAADEBAgAPAAAAhAAAAGmH
+[SNIP]
+YXJlLmpwZWcAZGlnaUthbS0w
+
+--Boundary-00=_PjtiLU2PvHpvp/R--
+\endverbatim
+The above example message consists of three MIME parts: The main text part and two attachments.
+One attachment has the media type \c text, therefore a charset parameter is necessary to correctly
+display it. The MIME tree looks like this:
+\verbatim
+multipart/mixed
+|- text/plain
+|- text/plain
+\- image/jpeg
+\endverbatim
 \section string-broken-down The two in-memory representations of messages
 
 \section classes-overview Overview of KMime classes
