@@ -30,6 +30,7 @@
 #include "event.h"
 #include "journal.h"
 #include "calendar.h"
+#include "exceptions.h"
 
 #include "kresources/resource.h"
 #include "kresources/manager.h"
@@ -56,6 +57,26 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
 
     bool isResolveConflictSet() const;
     void setResolveConflict( bool b );
+
+    /**
+      Clears the exception status.
+      @since 4.5
+    */
+    void clearException();
+
+    /**
+      Set exception for this object. This is used by the functions of this
+      class to report errors.
+      @since 4.5
+    */
+    void setException( ErrorFormat *error );
+
+    /**
+      Returns an exception, if there is any, containing information about the
+      last error that occurred.
+      @since 4.5
+    */
+    ErrorFormat *exception();
 
     virtual void writeConfig( KConfigGroup &group );
 
@@ -538,6 +559,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
   private:
     //@cond PRIVATE
     Q_DISABLE_COPY( ResourceCalendar )
+
     class Private;
     Private *const d;
     //@endcond

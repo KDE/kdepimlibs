@@ -39,7 +39,8 @@ class ResourceCalendar::Private
     Private()
       : mResolveConflict( false ),
         mNoReadOnlyOnLoad( false ),
-        mInhibitSave( false )
+        mInhibitSave( false ),
+        mException( 0 )
     {}
     bool mResolveConflict;
     bool mNoReadOnlyOnLoad;
@@ -47,7 +48,7 @@ class ResourceCalendar::Private
     bool mReceivedLoadError;
     bool mReceivedSaveError;
     QString mLastError;
-
+    ErrorFormat *mException;
 };
 //@endcond
 
@@ -64,7 +65,25 @@ ResourceCalendar::ResourceCalendar( const KConfigGroup &group )
 
 ResourceCalendar::~ResourceCalendar()
 {
+  delete d->mException;
   delete d;
+}
+
+void ResourceCalendar::clearException()
+{
+  delete d->mException;
+  d->mException = 0;
+}
+
+void ResourceCalendar::setException( ErrorFormat *exception )
+{
+  delete d->mException;
+  d->mException = exception;
+}
+
+ErrorFormat *ResourceCalendar::exception()
+{
+  return d->mException;
 }
 
 bool ResourceCalendar::isResolveConflictSet() const
@@ -137,21 +156,21 @@ void ResourceCalendar::setSubresourceActive( const QString &, bool )
 
 bool ResourceCalendar::removeSubresource( const QString &resource )
 {
-    Q_UNUSED( resource )
-    return true;
+  Q_UNUSED( resource )
+  return true;
 }
 
 bool ResourceCalendar::addSubresource( const QString &resource, const QString &parent )
 {
-    Q_UNUSED( resource )
-    Q_UNUSED( parent )
-    return true;
+  Q_UNUSED( resource )
+  Q_UNUSED( parent )
+  return true;
 }
 
 QString ResourceCalendar::subresourceType( const QString &resource )
 {
-    Q_UNUSED( resource )
-    return QString();
+  Q_UNUSED( resource )
+  return QString();
 }
 
 bool ResourceCalendar::load()
