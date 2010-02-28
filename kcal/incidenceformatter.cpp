@@ -704,21 +704,26 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
     tmpStr += "</tr>";
   }
 
-  tmpStr += "<tr>";
-  tmpStr += "<td><b>" + i18n( "Priority:" ) + "</b></td>";
-  tmpStr += "<td>";
   if ( todo->priority() > 0 ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td><b>" + i18n( "Priority:" ) + "</b></td>";
+    tmpStr += "<td>";
     tmpStr += QString::number( todo->priority() );
-  } else {
-    tmpStr += i18n( "Unspecified" );
+    tmpStr += "</td>";
+    tmpStr += "</tr>";
   }
-  tmpStr += "</td>";
-  tmpStr += "</tr>";
 
   tmpStr += "<tr>";
-  tmpStr += "<td><b>" +
-            i18nc( "percent completed", "Completed:" ) + "</b></td>";
-  tmpStr += "<td>" + i18n( "%1%", todo->percentComplete() ) + "</td>";
+  if ( todo->isCompleted() ) {
+    tmpStr += "<td><b>" + i18nc( "Completed: date", "Completed:" ) + "</b></td>";
+    tmpStr += "<td>";
+    tmpStr += todo->completedStr();
+  } else {
+    tmpStr += "<td><b>" + i18n( "Percent Done:" ) + "</b></td>";
+    tmpStr += "<td>";
+    tmpStr += i18n( "%1%", todo->percentComplete() );
+  }
+  tmpStr += "</td>";
   tmpStr += "</tr>";
 
   if ( todo->attendees().count() > 1 ) {
@@ -2711,12 +2716,22 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo, const QDa
            i18n( "<i>Due:</i> %1",
                  dateTimeToString( dueDt, todo->allDay(), false, mSpec ) );
   }
+
+  // Print priority and completed info here, for lack of a better place
+
+  if ( todo->priority() > 0 ) {
+    ret += "<br>";
+    ret += "<i>" + i18n( "Priority:" ) + "</i>" + "&nbsp;";
+    ret += QString::number( todo->priority() );
+  }
+
+  ret += "<br>";
   if ( todo->isCompleted() ) {
-    ret += "<br>" +
-           i18n( "<i>Completed:</i> %1", todo->completedStr() );
+    ret += "<i>" + i18nc( "Completed: date", "Completed:" ) + "</i>" + "&nbsp;";
+    ret += todo->completedStr().replace( ' ', "&nbsp;" );
   } else {
-    ret += "<br>" +
-           i18nc( "percent complete", "%1% completed", todo->percentComplete() );
+    ret += "<i>" + i18n( "Percent Done:" ) + "</i>" + "&nbsp;";
+    ret += i18n( "%1%", todo->percentComplete() );
   }
 
   return ret.replace( ' ', "&nbsp;" );
