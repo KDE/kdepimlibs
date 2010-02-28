@@ -95,6 +95,7 @@ class KCAL_EXPORT ErrorFormat : public Exception
       CalVersion2,       /**< iCalendar v2.0 detected */
       CalVersionUnknown, /**< Unknown calendar format detected */
       Restriction,       /**< Restriction violation */
+      NoWritableFound,   /**< No writable resource is available */
       UserCancel         /**< User canceled the operation */
     };
 
