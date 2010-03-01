@@ -539,6 +539,7 @@ void MessageTest::testEncapsulatedMessages()
 
 void MessageTest::testOutlookAttachmentNaming()
 {
+  // Try and decode
   KMime::Message::Ptr msg = readAndParseMail( "outlook-attachment.mbox" );
   QVERIFY( msg->attachments().count() == 1 );
 
@@ -548,7 +549,14 @@ void MessageTest::testOutlookAttachmentNaming()
 
   Headers::ContentDisposition *cd = attachment->contentDisposition( false );
   QVERIFY( cd );
-  QCOMPARE( cd->filename(), QString( "outlook.diff" ) );
+  QCOMPARE( cd->filename(), QString::fromUtf8( "å.diff" ) );
+
+  // Try and encode
+  attachment->clear();// = new Content();
+  attachment->contentDisposition()->setDisposition( Headers::CDattachment );
+  attachment->contentDisposition()->setFilename( QString::fromUtf8( "å.diff" ) );
+  attachment->assemble();
+  QCOMPARE( attachment->contentDisposition()->as7BitString( false ), QByteArray( "attachment; filename=\"=?ISO-8859-1?Q?=E5=2Ediff?=\"" ) );
 }
 
 KMime::Message::Ptr MessageTest::readAndParseMail( const QString &mailFile ) const
