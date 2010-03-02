@@ -109,9 +109,11 @@ class MailTransport::SMTPConfigWidgetPrivate : public TransportConfigWidgetPriva
         ui.noAuthPossible->setVisible( true );
         ui.kcfg_requiresAuthentication->setChecked( false );
         ui.kcfg_requiresAuthentication->setEnabled( false );
+        ui.kcfg_requiresAuthentication->setVisible( false );
       } else {
         ui.noAuthPossible->setVisible( false );
         ui.kcfg_requiresAuthentication->setEnabled( true );
+        ui.kcfg_requiresAuthentication->setVisible( true );
       }
     }
 };
