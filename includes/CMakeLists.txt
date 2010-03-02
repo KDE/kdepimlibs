@@ -3,7 +3,7 @@ if (NOT KDEPIM_ONLY_KLEO)
 add_subdirectory( tests )
 
 macro(install_headers _dir)
-  install( DIRECTORY ${_dir} DESTINATION ${INCLUDE_INSTALL_DIR}/KDE PATTERN .svn EXCLUDE )
+  install( DIRECTORY ${_dir} DESTINATION ${INCLUDE_INSTALL_DIR}/KDE PATTERN ".svn" EXCLUDE PATTERN ".git" EXCLUDE )
 endmacro(install_headers _dir)
 
 install_headers( Akonadi )
