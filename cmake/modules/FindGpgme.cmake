@@ -193,7 +193,7 @@ else() # not WIN32
 
       exec_program( ${_GPGMECONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE GPGME_VERSION )
 
-      set( _GPGME_MIN_VERSION "1.0.0" )
+      set( _GPGME_MIN_VERSION "1.1.7" )
       macro_ensure_version( ${_GPGME_MIN_VERSION} ${GPGME_VERSION} _GPGME_INSTALLED_VERSION_OK )
 
       if ( NOT _GPGME_INSTALLED_VERSION_OK )
