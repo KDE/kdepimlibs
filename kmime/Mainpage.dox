@@ -675,6 +675,104 @@ eFkXsFgBMG4fJhYlx+iyB3cLpNZwYr/iP7teTwNYa7DZAAAAAElFTkSuQmCC
 
 \endverbatim
 
+\subsubsection multipart-related HTML Messages with Inline Images
+
+HTML has support for showing images, with the \c img tag. Such an image is shown at the place where
+the \c img tag occurs, which is called an <b>inline image</b>. Note that inline images are different
+from images that are just normal attachments: Normal attachments are always shown at the beginning or
+at the end of the message, while inline images are shown in-place. In HTML, the \c img tag points to an
+image file that is either a file on disk or an URL to an image on the Internet. To make inline images
+work with MIME messages, a different mechanism is needed, since the image is not a file on disk or on
+the Internet, but a MIME part somewhere in the same message. As specified in
+<a href="http://tools.ietf.org/html/rfc2557">RFC 2557</a>, the way this can be done is by refering
+to a \b Content-ID in the \c img tag, and marking the MIME part that is the image with that content
+ID as well.
+
+An example will probably be more clear than this explaination:
+\verbatim
+From: Thomas McGuire <thomas@domain.com>
+Subject: Inine Image Test
+Date: Thu, 4 Mar 2010 16:54:53 +0100
+MIME-Version: 1.0
+Content-Type: multipart/related;
+  boundary="Boundary-02=_Nf9jLpJ2aGp5RQK"
+Content-Transfer-Encoding: 7bit
+
+--Boundary-02=_Nf9jLpJ2aGp5RQK
+Content-Type: multipart/alternative;
+  boundary="Boundary-01=_Nf9jLZ6aPhm3WrN"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+--Boundary-01=_Nf9jLZ6aPhm3WrN
+Content-Type: text/plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Text before image
+
+Text after image
+
+--Boundary-01=_Nf9jLZ6aPhm3WrN
+Content-Type: text/html;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+  <head></head>
+  <body>
+    Text before image<br>
+    <img src="cid:547730348@KDE" /><br>
+    Text after image
+  </body>
+</html>
+--Boundary-01=_Nf9jLZ6aPhm3WrN--
+
+--Boundary-02=_Nf9jLpJ2aGp5RQK
+Content-Type: image/png;
+  name="test.png"
+Content-Transfer-Encoding: base64
+Content-Id: <547730348@KDE>
+
+iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAIAAAAiOjnJAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAg
+[SNIP]
+AABJRU5ErkJggg==
+--Boundary-02=_Nf9jLpJ2aGp5RQK--
+\endverbatim
+
+The first thing you'll notice in this example probably is that it has a \b multipart/related node with
+the following structure:
+\verbatim
+multipart/related
+|- multipart/alternative
+|  |- text/plain
+|  \- text/html
+\- image/png
+\endverbatim
+
+When the HTML part has inline image, the HTML part and its image part both have to be children of a
+multipart/related container, like in this example.
+In this case, the \c img tag has the source \c cid:547730348@KDE, which is a placeholder that refers
+to the Content-Id header of another part. The image part contains exactly that value in its \c Content-Id
+header, and therefore a message viewer application can connect both.
+
+The plain text part can not have inline images, therefore it's text might seem a bit confusing.
+
+HTML messages with inline images can of course also have attachments, in which the message structure
+becomes a mix of multipart/related, multipart/alternative and multipart/mixed. The following example
+shows the structure of a message with two inline images and one \c .tar.gz attachment:
+\verbatim
+multipart/mixed
+|- multipart/related
+|  |- multipart/alternative
+|  |  |- text/plain
+|  |  \- text/html
+|  |- image/png
+|  \- image/png
+\- application/x-compressed-tar
+\endverbatim
+
 \section string-broken-down The two in-memory representations of messages
 
 \section classes-overview Overview of KMime classes
