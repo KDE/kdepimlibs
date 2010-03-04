@@ -773,6 +773,66 @@ multipart/mixed
 \- application/x-compressed-tar
 \endverbatim
 
+The structure of MIME messages can get arbitrarily complex, the above is just one relativley simply example.
+The nesting of multipart nodes can get much deeper, there is no restriction on nesting levels.
+
+\subsubsection encapsulated Encapsulated messages
+
+Encapsulated messages are messages which are attachments to another message. The most common example
+is a forwareded mail, like in this example:
+\verbatim
+From: Frank <frank@domain.com>
+To: Bob <bob@domain.com>
+Subject: Fwd: Blub
+MIME-Version: 1.0
+Content-Type: Multipart/Mixed;
+  boundary="Boundary-00=_sX+jLVPkV1bLFdZ"
+
+--Boundary-00=_sX+jLVPkV1bLFdZ
+Content-Type: text/plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Hi Bob,
+
+hereby I forward you an interesting message from Greg.
+
+--Boundary-00=_sX+jLVPkV1bLFdZ
+Content-Type: message/rfc822;
+  name="forwarded message"
+Content-Transfer-Encoding: 7bit
+Content-Description: Forwarded Message
+Content-Disposition: inline
+
+From: Greg <greg@domain.com>
+To: Frank <frank@domain.com>
+Subject: Blub
+MIME-Version: 1.0
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Bla Bla Bla
+
+--Boundary-00=_sX+jLVPkV1bLFdZ--
+\endverbatim
+
+\verbatim
+multipart/mixed
+|- text/plain
+\- message/rfc822
+   \- text/plain
+\endverbatim
+
+The attached message is treated like any other attachment, and therefore the top-level content type
+is multipart/mixed.
+The most interesting part is the \c message/rfc822 MIME part. As usual, it has some MIME headers, like
+\c Content-Type or \c Content-Disposition, followed by the MIME body. The MIME body in this case is
+the attached message. Since it is a message, it consists of a header and a body itself.
+Therefore, the \c message/rfc822 MIME part appears to have two headers; in reality, it is the normal
+MIME header and the message header of the encapsulated message. The message header and the message body
+are both in the MIME body of the \c message/rfc822 MIME part.
+
 \section string-broken-down The two in-memory representations of messages
 
 \section classes-overview Overview of KMime classes
