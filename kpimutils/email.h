@@ -32,6 +32,8 @@
 #ifndef KPIMUTILS_EMAIL_H
 #define KPIMUTILS_EMAIL_H
 
+#include <KUrl>
+
 #include <QtCore/QStringList>
 #include <QtCore/QByteArray>
 
@@ -378,6 +380,25 @@ namespace KPIMUtils {
   */
   KPIMUTILS_EXPORT
   QString quoteNameIfNecessary( const QString &str );
+
+  /**
+    * Creates a valid mailto: URL from the given mailbox.
+    * @param mailbox The mailbox, which means the display name and the address specification, for
+    *                example "Thomas McGuire" <thomas@domain.com>. The display name is optional.
+    * @return a valid mailto: URL for the given mailbox.
+    * @since 4.5
+    */
+  KPIMUTILS_EXPORT
+  KUrl encodeMailtoUrl( const QString &mailbox );
+
+  /**
+    * Extracts the mailbox out of the mailto: URL.
+    * @param mailtoUrl the URL with the mailto protocol, which contains the mailbox to be extracted
+    * @return the mailbox, which means the display name and the address specification.
+    * @since 4.5
+    */
+  KPIMUTILS_EXPORT
+  QString decodeMailtoUrl( const KUrl& mailtoUrl );
 
 } // namespace
 

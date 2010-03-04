@@ -44,6 +44,7 @@ class EMailTest : public QObject
     void testNormalizeAddressesAndDecodeIDNs_data();
     void testQuoteIfNecessary();
     void testQuoteIfNecessary_data();
+    void testMailtoUrls();
 };
 
 #endif

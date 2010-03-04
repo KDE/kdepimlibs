@@ -1063,3 +1063,19 @@ QString KPIMUtils::quoteNameIfNecessary( const QString &str )
 
   return quoted;
 }
+
+KUrl KPIMUtils::encodeMailtoUrl( const QString &mailbox )
+{
+  const QByteArray encodedPath = KMime::encodeRFC2047String( mailbox, "utf-8" );
+  qDebug() << encodedPath.data();
+  KUrl mailtoUrl;
+  mailtoUrl.setProtocol( "mailto" );
+  mailtoUrl.setPath( encodedPath );
+  return mailtoUrl;
+}
+
+QString KPIMUtils::decodeMailtoUrl( const KUrl& mailtoUrl )
+{
+  Q_ASSERT( mailtoUrl.protocol().toLower() == "mailto" );
+  return KMime::decodeRFC2047String( mailtoUrl.path().toLatin1() );
+}
