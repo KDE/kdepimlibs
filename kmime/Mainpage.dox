@@ -562,6 +562,119 @@ multipart/mixed
 |- text/plain
 \- image/jpeg
 \endverbatim
+
+\subsubsection multipart-alternative HTML Messages
+
+\verbatim
+From: Thomas McGuire <thomas@domain.com>
+Subject: HTML test
+Date: Thu, 4 Mar 2010 13:59:18 +0100
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+  boundary="Boundary-01=_m66jLd2/vZrH5oe"
+Content-Transfer-Encoding: 7bit
+
+--Boundary-01=_m66jLd2/vZrH5oe
+Content-Type: text/plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Hello World
+
+--Boundary-01=_m66jLd2/vZrH5oe
+Content-Type: text/html;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+  <head></head>
+  <body>
+    Hello <b>World</b>
+  </body>
+</html>
+--Boundary-01=_m66jLd2/vZrH5oe--
+\endverbatim
+
+The above example is a simple HTML message, it consists of a plain text and a HTML part, which are
+in a \b multipart/alternative container. The message has the following structure:
+\verbatim
+multipart/alternative
+|- text/plain
+\- text/html
+\endverbatim
+The HTML part and the plain text part have the identical content, except that the HTML part contains
+additional markup, in this case for displaying the word \c World in bold. Since those parts are in a
+multipart/alternative container, the message viewer application can freely chose which part it displays.
+Some users might prefer reading the message in HTML format, some might prefer reading the message
+in plain text format.
+
+Of course, a HTML message could also consist only of a single \c text/html, without the multipart/alternative
+container and therefore without an alternative plain text part. However, people prefering the plain
+text version wouldn't like this, especially if their mail client has no HTML engine and they would see
+the HTML source including all tags only. Therefore, HTML messages should always include an alternative plain text part.
+
+HTML messages can of course also contain attachments. In this case, the message contains both a
+multipart/alternative and a multipart/mixed node, for example with the following structure, for a HTML
+message that has an image attachment:
+\verbatim
+multipart/mixed
+|- multipart/alternative
+|  |- text/plain
+|  \- text/html
+\- image/png
+\endverbatim
+
+The message itself would look like this:
+\verbatim
+From: Thomas McGuire <thomas@domain.com>
+Subject: HTML message with an attachment
+Date: Thu, 4 Mar 2010 15:20:26 +0100
+MIME-Version: 1.0
+Content-Type: Multipart/Mixed;
+  boundary="Boundary-00=_qG8jLwWCwkUfJV1"
+
+--Boundary-00=_qG8jLwWCwkUfJV1
+Content-Type: multipart/alternative;
+  boundary="Boundary-01=_qG8jLfs1FRmlOhl"
+Content-Transfer-Encoding: 7bit
+
+--Boundary-01=_qG8jLfs1FRmlOhl
+Content-Type: text/plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Hello World
+
+--Boundary-01=_qG8jLfs1FRmlOhl
+Content-Type: text/html;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+  <head></head>
+  <body>
+    Hello <b>World</b>
+  </body>
+</html>
+--Boundary-01=_qG8jLfs1FRmlOhl--
+
+--Boundary-00=_qG8jLwWCwkUfJV1
+Content-Type: image/png;
+  name="test.png"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+  filename="test.png"
+
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAA8SAAAPEgEhm/IzAAAC
+[SNIP]
+eFkXsFgBMG4fJhYlx+iyB3cLpNZwYr/iP7teTwNYa7DZAAAAAElFTkSuQmCC
+
+--Boundary-00=_qG8jLwWCwkUfJV1--
+
+\endverbatim
+
 \section string-broken-down The two in-memory representations of messages
 
 \section classes-overview Overview of KMime classes
