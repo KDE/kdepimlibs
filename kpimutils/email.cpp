@@ -1067,7 +1067,6 @@ QString KPIMUtils::quoteNameIfNecessary( const QString &str )
 KUrl KPIMUtils::encodeMailtoUrl( const QString &mailbox )
 {
   const QByteArray encodedPath = KMime::encodeRFC2047String( mailbox, "utf-8" );
-  qDebug() << encodedPath.data();
   KUrl mailtoUrl;
   mailtoUrl.setProtocol( "mailto" );
   mailtoUrl.setPath( encodedPath );
