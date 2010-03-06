@@ -250,18 +250,17 @@ Incidence *DndFactory::pasteIncidence( const QDate &newDate, const QTime *newTim
     kDebug() << "Can't parse clipboard";
     return 0;
   }
-  Incidence *ret = 0;
 
   Incidence::List incList = cal->incidences();
-  Incidence *inc = incList.first();
+  Incidence *inc = incList.isEmpty() ? 0 : incList.first();
 
-  if ( !incList.isEmpty() && inc ) {
+  if ( inc ) {
     inc = inc->clone();
-
     inc->recreate();
+  }
 
+  if ( inc && newDate.isValid() ) {
     if ( inc->type() == "Event" ) {
-
       Event *anEvent = static_cast<Event*>( inc );
       // Calculate length of event
       int daysOffset = anEvent->dtStart().date().daysTo(
@@ -302,9 +301,7 @@ Incidence *DndFactory::pasteIncidence( const QDate &newDate, const QTime *newTim
     } else {
       kDebug() << "Trying to paste unknown incidence of type" << inc->type();
     }
-
-    ret = inc;
   }
   delete cal;
-  return ret;
+  return inc;
 }
