@@ -17,7 +17,7 @@ ENDMACRO(KCAL_UNIT_TESTS)
 MACRO(KCAL_EXECUTABLE_TESTS)
   FOREACH(_testname ${ARGN})
     kde4_add_executable(${_testname} NOGUI TEST ${_testname}.cpp)
-    target_link_libraries(${_testname} ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} kcal ${QT_QTTEST_LIBRARY} kresources)
+    target_link_libraries(${_testname} ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} kcal ${QT_QTTEST_LIBRARY})
   ENDFOREACH(_testname)
 ENDMACRO(KCAL_EXECUTABLE_TESTS)
 
@@ -63,10 +63,14 @@ KCAL_EXECUTABLE_TESTS(
   testrecurrence
   testrecurrencetype
   testrecurson
-  testresource
   testtostring
   testvcalexport
 )
+if (NOT KDEPIM_NO_KRESOURCES)
+  KCAL_EXECUTABLE_TESTS(
+    testresource
+  )
+endif (NOT KDEPIM_NO_KRESOURCES)
 
 ########### next target ###############
 set(testfields_SRCS testfields.cpp)

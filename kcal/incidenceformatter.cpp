@@ -178,6 +178,7 @@ static QString displayViewLinkPerson( const QString &email, QString name,
   // Make the search, if there is an email address to search on,
   // and either name or uid is missing
   if ( !email.isEmpty() && ( name.isEmpty() || uid.isEmpty() ) ) {
+#ifndef KDEPIM_NO_KRESOURCES
     KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
     KABC::Addressee::List addressList = add_book->findByEmail( email );
     KABC::Addressee o = ( !addressList.isEmpty() ? addressList.first() : KABC::Addressee() );
@@ -191,6 +192,9 @@ static QString displayViewLinkPerson( const QString &email, QString name,
       // Email not found in the addressbook. Don't make a link
       uid.clear();
     }
+#else
+   uid.clear();
+#endif
   }
 
   // Show the attendee
@@ -1168,6 +1172,7 @@ static QString invitationPerson( const QString &email, QString name, QString uid
   // Make the search, if there is an email address to search on,
   // and either name or uid is missing
   if ( !email.isEmpty() && ( name.isEmpty() || uid.isEmpty() ) ) {
+#ifndef KDEPIM_NO_KRESOURCES
     KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
     KABC::Addressee::List addressList = add_book->findByEmail( email );
     if ( !addressList.isEmpty() ) {
@@ -1183,6 +1188,9 @@ static QString invitationPerson( const QString &email, QString name, QString uid
         uid.clear();
       }
     }
+#else
+    uid.clear();
+#endif
   }
 
   // Show the attendee
@@ -2172,6 +2180,7 @@ QString InvitationFormatterHelper::makeLink( const QString &id, const QString &t
 // a shared calendar (Kolab-specific)
 static bool incidenceOwnedByMe( Calendar *calendar, Incidence *incidence )
 {
+#ifndef KDEPIM_NO_KRESOURCES
   CalendarResources *cal = dynamic_cast<CalendarResources*>( calendar );
   if ( !cal || !incidence ) {
     return true;
@@ -2184,6 +2193,7 @@ static bool incidenceOwnedByMe( Calendar *calendar, Incidence *incidence )
   if ( !subRes.contains( "/.INBOX.directory/" ) ) {
     return false;
   }
+#endif
   return true;
 }
 
@@ -2793,6 +2803,7 @@ static QString tooltipPerson( const QString &email, QString name )
   // Make the search, if there is an email address to search on,
   // and name is missing
   if ( name.isEmpty() && !email.isEmpty() ) {
+#ifndef KDEPIM_NO_KRESOURCES
     KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
     KABC::Addressee::List addressList = add_book->findByEmail( email );
     if ( !addressList.isEmpty() ) {
@@ -2802,6 +2813,7 @@ static QString tooltipPerson( const QString &email, QString name )
         name = o.formattedName();
       }
     }
+#endif
   }
 
   // Show the attendee
@@ -3555,6 +3567,7 @@ QString IncidenceFormatter::dateTimeToString( const KDateTime &date,
 
 QString IncidenceFormatter::resourceString( Calendar *calendar, Incidence *incidence )
 {
+#ifndef KDEPIM_NO_KRESOURCES
   if ( !calendar || !incidence ) {
     return QString();
   }
@@ -3576,7 +3589,7 @@ QString IncidenceFormatter::resourceString( Calendar *calendar, Incidence *incid
     }
     return resourceCalendar->resourceName();
   }
-
+#endif
   return QString();
 }
 

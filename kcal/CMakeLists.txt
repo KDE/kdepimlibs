@@ -64,14 +64,6 @@ set(kcal_LIB_SRCS ${libversit_SRCS}
   calstorage.cpp
   filestorage.cpp
   compat.cpp
-  resourcecalendar.cpp
-  resourcelocal.cpp
-  resourcelocalconfig.cpp
-  resourcelocaldir.cpp
-  resourcelocaldirconfig.cpp
-  resourcecached.cpp
-  resourcecachedconfig.cpp
-  calendarresources.cpp
   qtopiaformat.cpp
   htmlexport.cpp
   calendarnull.cpp
@@ -81,21 +73,39 @@ set(kcal_LIB_SRCS ${libversit_SRCS}
   kresult.cpp
   assignmentvisitor.cpp
   comparisonvisitor.cpp
-  calhelper.cpp
 )
+
+if (NOT KDEPIM_NO_KRESOURCES)
+  set(kcal_LIB_SRCS ${libversit_SRCS} ${kcal_LIB_SRCS}
+    calhelper.cpp
+    resourcecalendar.cpp
+    resourcelocal.cpp
+    resourcelocalconfig.cpp
+    resourcelocaldir.cpp
+    resourcelocaldirconfig.cpp
+    resourcecached.cpp
+    resourcecachedconfig.cpp
+    calendarresources.cpp
+  )
+endif (NOT KDEPIM_NO_KRESOURCES)
 
 kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
 kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 
-target_link_libraries(kcal ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_QTXML_LIBRARY} kresources kabc kpimutils ${LIBICAL_LIBRARIES})
-target_link_libraries(kcal LINK_INTERFACE_LIBRARIES kresources kabc)
+target_link_libraries(kcal ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_QTXML_LIBRARY} kabc kpimutils ${LIBICAL_LIBRARIES})
+target_link_libraries(kcal LINK_INTERFACE_LIBRARIES kabc)
+if (NOT KDEPIM_NO_KRESOURCES)
+  target_link_libraries(kcal kresources)
+  target_link_libraries(kcal LINK_INTERFACE_LIBRARIES kresources)
+endif (NOT KDEPIM_NO_KRESOURCES)
 
 set_target_properties(kcal PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS kcal EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### next target ###############
 
+if (NOT KDEPIM_NO_KRESOURCES)
 set(kcal_local_PART_SRCS resourcelocal_plugin.cpp )
 
 
@@ -118,13 +128,12 @@ kde4_add_plugin(kcal_localdir ${kcal_localdir_PART_SRCS})
 target_link_libraries(kcal_localdir ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} kcal kresources)
 
 install(TARGETS kcal_localdir  DESTINATION ${PLUGIN_INSTALL_DIR})
-
+endif (NOT KDEPIM_NO_KRESOURCES)
 
 add_subdirectory( tests )
 
 ########### install files ###############
 
-install( FILES local.desktop localdir.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
 install( FILES
         alarm.h
         assignmentvisitor.h
@@ -133,7 +142,6 @@ install( FILES
         calendar.h
         calendarlocal.h
         calendarnull.h
-        calendarresources.h
         calfilter.h
         calformat.h
         calstorage.h
@@ -167,6 +175,19 @@ install( FILES
         qtopiaformat.h
         recurrencerule.h
         recurrence.h
+        scheduler.h
+        sortablelist.h
+        todo.h
+        vcaldrag.h
+        vcalformat.h
+        kresult.h
+        DESTINATION ${INCLUDE_INSTALL_DIR}/kcal COMPONENT Devel)
+
+if (NOT KDEPIM_NO_KRESOURCES)
+  install( FILES local.desktop localdir.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
+  install( FILES
+        calendarresources.h
+        calhelper.h
         resourcecached.h
         resourcecachedconfig.h
         resourcecalendar.h
@@ -174,13 +195,6 @@ install( FILES
         resourcelocaldirconfig.h
         resourcelocaldir.h
         resourcelocal.h
-        scheduler.h
-        sortablelist.h
-        todo.h
-        vcaldrag.h
-        vcalformat.h
-        kresult.h
-        calhelper.h
         DESTINATION ${INCLUDE_INSTALL_DIR}/kcal COMPONENT Devel)
-
-install( FILES kcal_manager.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources)
+  install( FILES kcal_manager.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources)
+endif (NOT KDEPIM_NO_KRESOURCES)

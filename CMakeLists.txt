@@ -6,7 +6,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 ############### Build Options ###############
 
 option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
-
+option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." FALSE)
 
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
@@ -81,6 +81,10 @@ endif (NOT KDEPIM_ONLY_KLEO)
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${Boost_INCLUDE_DIR})
 
+if (KDEPIM_NO_KRESOURCES)
+  add_definitions(-DKDEPIM_NO_KRESOURCES)
+endif (KDEPIM_NO_KRESOURCES)
+
 
 ############### Now, we add the KDEPIMLibs components ###############
 # These targets will always be built
@@ -101,7 +105,9 @@ if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(kpimidentities)
   add_subdirectory(kpimutils)
   add_subdirectory(kpimtextedit)
-  add_subdirectory(kresources)
+  if (NOT KDEPIM_NO_KRESOURCES)
+    add_subdirectory(kresources)
+  endif (NOT KDEPIM_NO_KRESOURCES)
   add_subdirectory(ktnef)
   add_subdirectory(kxmlrpcclient)
   add_subdirectory(mailtransport)
