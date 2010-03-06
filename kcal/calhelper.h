@@ -97,12 +97,12 @@ namespace CalHelper {
   /**
     Determines if the Calendar has any writable folders with Events content
     that are owned by me.
-    @param calendar is a pointer to a valid Calendar object.
+    @param family is the resource family name or "calendar" if empty.
 
     @return true if the any such writable folders are found; false otherwise.
     @since 4.5
   */
-  KCAL_EXPORT bool hasMyWritableEventsFolders( Calendar *calendar );
+  KCAL_EXPORT bool hasMyWritableEventsFolders( const QString &family );
 
   /**
     Returns the ResourceCalendar where the Incidence is stored, if any.
@@ -131,7 +131,6 @@ namespace CalHelper {
   */
   QPair<ResourceCalendar *, QString> incSubResourceCalendar( Calendar *calendar,
                                                              Incidence *incidence );
-
 }
 
 }
