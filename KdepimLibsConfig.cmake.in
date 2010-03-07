@@ -49,10 +49,10 @@ set(KDEPIMLIBS_TARGET_PREFIX @KDEPIMLIBS_TARGET_PREFIX@)
 
 # Make sure to load the exported targets only once
 # For the rest of this script it doesn't matter that much
-if(NOT TARGET KDEPIMLibs__kresources)
+if(NOT TARGET KDEPIMLibs__kcal)
    get_filename_component(_currentDir "${CMAKE_CURRENT_LIST_FILE}" PATH)
    include("${_currentDir}/KDEPimLibsLibraryTargetsWithPrefix.cmake")
-endif(NOT TARGET KDEPIMLibs__kresources)
+endif(NOT TARGET KDEPIMLibs__kcal)
 
 macro(_KDEPIMLibs_Set_Lib_Vars _prefix _lib)
   set(KDEPIMLIBS_${_prefix}_LIBRARY ${KDEPIMLIBS_TARGET_PREFIX}${_lib})
@@ -80,7 +80,9 @@ _kdepimlibs_set_lib_vars(KONTACTINTERFACE kontactinterface)
 _kdepimlibs_set_lib_vars(KPIMIDENTITIES kpimidentities)
 _kdepimlibs_set_lib_vars(KPIMTEXTEDIT   kpimtextedit)
 _kdepimlibs_set_lib_vars(KPIMUTILS      kpimutils)
-_kdepimlibs_set_lib_vars(KRESOURCES     kresources)
+if (NOT @KDEPIM_NO_KRESOURCES@)
+  _kdepimlibs_set_lib_vars(KRESOURCES     kresources)
+endif (NOT @KDEPIM_NO_KRESOURCES@)
 _kdepimlibs_set_lib_vars(KTNEF          ktnef)
 _kdepimlibs_set_lib_vars(KXMLRPCCLIENT  kxmlrpcclient)
 _kdepimlibs_set_lib_vars(MAILTRANSPORT  mailtransport)
