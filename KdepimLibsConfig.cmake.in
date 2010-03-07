@@ -47,6 +47,8 @@ set(CMAKE_MODULE_PATH "${KDEPIMLIBS_DATA_DIR}/cmake/modules" "${CMAKE_MODULE_PAT
 # the exports file exports
 set(KDEPIMLIBS_TARGET_PREFIX @KDEPIMLIBS_TARGET_PREFIX@)
 
+set(KDEPIMLIBS_NO_KRESOURCES @KDEPIM_NO_KRESOURCES@)
+
 # Make sure to load the exported targets only once
 # For the rest of this script it doesn't matter that much
 if(NOT TARGET KDEPIMLibs__kcal)
@@ -80,9 +82,9 @@ _kdepimlibs_set_lib_vars(KONTACTINTERFACE kontactinterface)
 _kdepimlibs_set_lib_vars(KPIMIDENTITIES kpimidentities)
 _kdepimlibs_set_lib_vars(KPIMTEXTEDIT   kpimtextedit)
 _kdepimlibs_set_lib_vars(KPIMUTILS      kpimutils)
-if (NOT @KDEPIM_NO_KRESOURCES@)
+if (NOT KDEPIMLIBS_NO_KRESOURCES)
   _kdepimlibs_set_lib_vars(KRESOURCES     kresources)
-endif (NOT @KDEPIM_NO_KRESOURCES@)
+endif (NOT KDEPIMLIBS_NO_KRESOURCES)
 _kdepimlibs_set_lib_vars(KTNEF          ktnef)
 _kdepimlibs_set_lib_vars(KXMLRPCCLIENT  kxmlrpcclient)
 _kdepimlibs_set_lib_vars(MAILTRANSPORT  mailtransport)
