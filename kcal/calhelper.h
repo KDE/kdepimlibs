@@ -76,7 +76,7 @@ namespace CalHelper {
     if and only if the found Incidence is owned by the user.
 
     @param calendar is a pointer to a valid Calendar object.
-    @param Uid is a QString containing an Incidence UID.
+    @param uid is a QString containing an Incidence UID.
 
     @return a pointer to the Incidence found; 0 if the Incidence is not found
     or the Incidence is found but is not owned by the user.
