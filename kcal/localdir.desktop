@@ -82,6 +82,7 @@ Comment[sr@ijekavian]=Пружа приступ календарским ста�
 Comment[sr@ijekavianlatin]=Pruža pristup kalendarskim stavkama, skladištenim u pojedinačnim fajlovima u datoj fascikli.
 Comment[sr@latin]=Pruža pristup kalendarskim stavkama, skladištenim u pojedinačnim fajlovima u datoj fascikli.
 Comment[sv]=Ger tillgång till kalenderobjekt, vart och ett lagrat i en enskild lokal fil, i en given katalog
+Comment[th]=เข้าใช้รายการต่าง ๆ ของปฏิทิน ซึ่งแต่ละรายการถูกจัดเก็บไว้เป็นแฟ้มเดี่ยว ๆ ในไดเรกทอรีที่ให้มา
 Comment[tr]=Belirli bir dizinde, her biri tek bir dosyada depolanmış takvim ögelerine erişim sağlar
 Comment[uk]=Надає доступ до записів календаря, кожен з яких зберігається у окремому файлі у вказаному каталозі
 Comment[x-test]=xxProvides access to calendar items, each stored in a single file, in a given directoryxx
