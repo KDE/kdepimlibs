@@ -4,8 +4,10 @@
 #  LIBICAL_INCLUDE_DIRS - the Libical include directories
 #  LIBICAL_LIBRARIES - The libraries needed to use Libical
 #  LIBICAL_VERSION = The value of ICAL_VERSION defined in ical.h
+#  LIBICAL_MAJOR_VERSION = The library major version number
+#  LIBICAL_MINOR_VERSION = The library minor version number
 
-# Copyright (c) 2008, Allen Winter <winter@kde.org>
+# Copyright (c) 2008,2010 Allen Winter <winter@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -71,6 +73,10 @@ if(LIBICAL_INCLUDE_DIRS AND LIBICAL_LIBRARIES)
   else(COMPILE_RESULT AND RUN_RESULT EQUAL 1)
     message(FATAL_ERROR "Unable to compile or run the libical version detection program.")
   endif(COMPILE_RESULT AND RUN_RESULT EQUAL 1)
+
+  #compute the major and minor version numbers
+  string(REGEX REPLACE "\\..*$" "" LIBICAL_MAJOR_VERSION ${LIBICAL_VERSION})
+  string(REGEX REPLACE "^.*\\." "" LIBICAL_MINOR_VERSION ${LIBICAL_VERSION})
 
 endif(LIBICAL_INCLUDE_DIRS AND LIBICAL_LIBRARIES)
 
