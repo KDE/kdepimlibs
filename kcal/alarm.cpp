@@ -111,6 +111,30 @@ Alarm::~Alarm()
   delete d;
 }
 
+Alarm *Alarm::clone()
+{
+  return new Alarm( *this );
+}
+
+Alarm &Alarm::operator=( const Alarm &a )
+{
+  d->mParent = a.d->mParent;
+  d->mType = a.d->mType;
+  d->mDescription = a.d->mDescription;
+  d->mFile = a.d->mFile;
+  d->mMailAttachFiles = a.d->mMailAttachFiles;
+  d->mMailAddresses = a.d->mMailAddresses;
+  d->mMailSubject = a.d->mMailSubject;
+  d->mAlarmSnoozeTime = a.d->mAlarmSnoozeTime;
+  d->mAlarmRepeatCount = a.d->mAlarmRepeatCount;
+  d->mAlarmTime = a.d->mAlarmTime;
+  d->mOffset = a.d->mOffset;
+  d->mEndOffset = a.d->mEndOffset;
+  d->mHasTime = a.d->mHasTime;
+  d->mAlarmEnabled = a.d->mAlarmEnabled;
+  return *this;
+}
+
 bool Alarm::operator==( const Alarm &rhs ) const
 {
   if ( d->mType != rhs.d->mType ||

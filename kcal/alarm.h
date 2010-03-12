@@ -3,6 +3,7 @@
 
   Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2003 David Jarvie <software@astrojar.org.uk>
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -103,6 +104,18 @@ class KCAL_EXPORT Alarm : public CustomProperties
       Destroys the alarm.
     */
     virtual ~Alarm();
+
+    /**
+      Returns an exact copy of this alarm. The returned object is owned by the caller.
+      @since 4.5
+    */
+    Alarm *clone();
+
+    /**
+      Copy operator.
+      @since 4.5
+    */
+    Alarm &operator=( const Alarm & );
 
     /**
       Compares two alarms for equality.
