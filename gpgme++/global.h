@@ -122,7 +122,7 @@ namespace GpgME {
         SignatureAlgorithmFieldsFeature            = 0x08000000,
 
         FdPointerFeature                           = 0x10000000,
-        // reserved
+        PasswdFeature                              = 0x20000000, // gpgme >= 1.3.0
         // reserved
         // unusable (max value)
 
