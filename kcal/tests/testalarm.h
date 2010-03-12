@@ -29,6 +29,7 @@ class AlarmTest : public QObject
   private Q_SLOTS:
     void testValidity();
     void testCompare();
+    void testAssignment();
 };
 
 #endif
