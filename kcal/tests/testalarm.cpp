@@ -46,3 +46,13 @@ void AlarmTest::testCompare()
   alarm2.setType( Alarm::Display );
   QVERIFY( alarm1 != alarm2 );
 }
+
+void AlarmTest::testAssignment()
+{
+  Alarm alarm1( 0 );
+  alarm1.setType( Alarm::Display );
+  Alarm alarm2 = alarm1;
+  QVERIFY( alarm1 == alarm2 );
+  Alarm *alarm3 = alarm1.clone();
+  QVERIFY( alarm2 == *alarm3 );
+}
