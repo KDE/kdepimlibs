@@ -296,7 +296,9 @@ KDateTime Todo::dtStart( bool first ) const
     return KDateTime();
   }
   if ( recurs() && !first ) {
-    return d->mDtRecurrence.addDays( dtDue( true ).daysTo( IncidenceBase::dtStart() ) );
+    KDateTime dt = d->mDtRecurrence.addDays( dtDue( true ).daysTo( IncidenceBase::dtStart() ) );
+    dt.setTime( IncidenceBase::dtStart().time() );
+    return dt;
   } else {
     return IncidenceBase::dtStart();
   }
