@@ -1024,9 +1024,47 @@ type of \c application/pkcs7-mime.
 As security multiparts are preferred over inline OpenPGP and over opaque S/MIME, I won't go into more
 detail here.
 
+\subsubsection misc Miscellaneous Points about Messages
+
+\par Line Breaks
+
+Each line in a MIME message has to end with a \b CRLF, which is a carriage return followed by a
+newline, which is the escape sequence<code>\\r\\n</code>. CR and LF may not appear in other places in
+a MIME message. Special care needs to be taken with encoded linebreaks in binary data, and with
+distinguishing soft and hard line breaks when converting between different content transfer encodings.
+For more details, have a look at the RFCs.
+
+While the official format is to have a CRLF at the end of each line, KMime only expects a single LF
+for its in-memory storage. Therefore, when loading a message from disk or from a server into KMime, the CRLFs need
+to be converted to LFs first, for example with KMime::CRLFtoLF(). The opposite needs to be done when
+storing a KMime message somewhere.
+
+Lines should not be longer than 78 characters and may not be longer than 998 characters.
+
+\par Header Folding and CFWS
+
+Header fields can span multiple lines, which was already shown in some of the examples above where
+the parameters of the header field value were in the next line. The header field is said to be
+\b folded in this case. In general, header fields can be folded whenever whitespace (\b WS) occurs.
+
+Header field values can contain \b comments; these comments are semantically invisible and have no
+meaning. Comments are surrouned by parentheses.
+\verbatim
+Date: Thu, 13
+      Feb 1969 23:32 -0330 (Newfoundland Time)
+\endverbatim
+
+This example shows a folded header that also has a comment (<i>Newfoundland Time</i>). The date header is a structured header
+field, and therefore it has to obey to a defined syntax; however, adding comments and whitespace is
+allowed almost anywhere, and they are ignored when parsing the message. Comments and whitespace where
+folding is allowed is sometimes referred to as \b CFWS. Any occurence of CFWS is semantically regarded
+as a single space.
+
 \section string-broken-down The two in-memory representations of messages
 
 \section classes-overview Overview of KMime classes
+
+\section pitfalls Pitfalls and Common Mistakes
 
 \section rfcs RFCs
 
