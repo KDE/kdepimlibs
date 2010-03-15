@@ -15,7 +15,7 @@ of messages are handled by other libraries, for example by
 or by <a href="http://api.kde.org/4.x-api/kdepimlibs-apidocs/kimap/html/index.html">the KIMAP library</a>.
 Similary, this library does not deal with displaying messages or advanced composing, for those there
 are the <a href="http://api.kde.org/4.x-api/kdepim-apidocs/messageviewer/html/index.html">messageviewer</a>
-and the <a href="http://websvn.kde.org:80/trunk/KDE/kdepim/messagecomposer/">messagecomposer</a>
+and the <a href="http://websvn.kde.org/trunk/KDE/kdepim/messagecomposer/">messagecomposer</a>
 components in the KDEPIM module.
 
 KMime's main function is to parse, modify and assemble messages in-memory. In a
@@ -833,6 +833,197 @@ Therefore, the \c message/rfc822 MIME part appears to have two headers; in reali
 MIME header and the message header of the encapsulated message. The message header and the message body
 are both in the MIME body of the \c message/rfc822 MIME part.
 
+\subsubsection crypto Signed and Encryped Messages
+
+MIME messages can be cryptographically signed and/or encrypted. The format for those messages is
+defined in <a href="http://tools.ietf.org/html/rfc1847">RFC 1847</a>, which specifies two new
+multipart subtypes, \b multipart/signed and \b multipart/encrypted. The crypto format of these new
+security multiparts is defined in additional RFCs; the most common formats are
+<a href="http://tools.ietf.org/html/rfc3156">OpenPGP</a> and
+<a href="http://tools.ietf.org/html/rfc2633">S/MIME</a>. Both formats use the principle of
+<a href="http://en.wikipedia.org/wiki/Public-key_cryptography">public-key cryptography</a>. OpenPGP
+uses \b keys, and S/MIME uses \b certificates. For easier text flow, only the term \c key will be used
+for both keys and certificates in the text below.
+
+Security multiparts only sign or encrypt a specifc MIME part. The consequence is that the message headers
+can not be signed or encrypted. Also this means that it is possible to sign or encrypt only some of
+the MIME parts of a message, while leaving other MIME parts unsigned or unencrypted. Furthermore, it
+is possible to sign or encrypt different MIME parts with different crypto formats. As you can see,
+security multiparts are very flexible.
+
+Security multiparts are not supported by KMime. However, it is possible for applications to use KMime
+when providing support for crypto messages. For example, the
+<a href="http://api.kde.org/4.x-api/kdepim-apidocs/messageviewer/html/index.html">messageviewer</a>
+component in KDEPIM supports signed and encrypted MIME parts, and the
+<a href="http://websvn.kde.org/trunk/KDE/kdepim/messagecomposer/">messagecomposer</a> library can create
+such messages.
+
+Signed MIME parts are signed with the private key of the sender, everybody who has the
+public key of the sender can verifiy the signature. Encrypted MIME parts are encrypted with the public
+key of the receiver, and only the receiver, who is the sole person possessing the private key, can decrypt
+it. Sending an encrypted message to multiple recipients therefore means that the message has to be sent
+multiple times, once for each receiver, as each message needs to be encrypted with a different key.
+
+\par Signed MIME parts
+
+A multipart/signed MIME part has exactly two children: The first child is the content that is signed,
+and the second child is the signature.
+
+\verbatim
+From: Thomas McGuire <thomas@domain.com>
+Subject: My Subject
+Date: Mon, 15 Mar 2010 12:20:16 +0100
+MIME-Version: 1.0
+Content-Type: multipart/signed;
+  boundary="nextPart2567247.O5e8xBmMpa";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+
+--nextPart2567247.O5e8xBmMpa
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Simple message
+
+--nextPart2567247.O5e8xBmMpa
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.14 (GNU/Linux)
+
+iEYEABECAAYFAkueF/UACgkQKglv3sO8a1MdTACgnBEP6ZUal931Vwu7PyiXT1bn
+Zr0Anj4bAI9JhHEDiwA/iwrWGfSC+Nlz
+=d2ol
+-----END PGP SIGNATURE-----
+--nextPart2567247.O5e8xBmMpa--
+\endverbatim
+
+\verbatim
+multipart/signed
+|- text/plain
+\- application/pgp-signature
+\endverbatim
+The example here uses the OpenPGP format to sign a simply plain text message. Here, the text/plain
+MIME part is signed, and the application/pgp-signature MIME part contains the signature data, which in
+this case is ASCII-armored.
+
+As said above, it is possible to sign only some MIME parts. A message which has a image/jpeg attachment
+that is signed, but a main text part is not signed, has the following MIME structure:
+\verbatim
+multipart/mixed
+|- text/plain
+\- multipart/signed
+   |- image/jpeg
+   \- application/pgp-signature
+\endverbatim
+
+It is possible to sign multipart parts as well. Consider the above example that has a plain text part
+and an image attachment. Those two parts can be signed together, with the following structure:
+\verbatim
+multipart/signed
+|- multipart/mixed
+|  |- text/plain
+|  \- image/jpeg
+\- application/pgp-signature
+\endverbatim
+
+Signed messages in the S/MIME format use a different content type for the signature data, like here:
+\verbatim
+multipart/signed
+|- text/plain
+\- application/x-pkcs7-signature
+\endverbatim
+
+\par Encrypted MIME parts
+
+Multipart/encrypted MIME parts also have exactly two children: The first child contains metadata about
+the encrypted data, such as a version number. The second child then contains the actual encrypted data.
+
+\verbatim
+From: someone@domain.com
+To: Thomas McGuire <thomas@domain.com>
+Subject: Encrypted message
+Date: Mon, 15 Mar 2010 12:50:16 +0100
+MIME-Version: 1.0
+Content-Type: multipart/encrypted;
+  boundary="nextPart2726747.j47xUGTWKg";
+  protocol="application/pgp-encrypted"
+Content-Transfer-Encoding: 7bit
+
+--nextPart2726747.j47xUGTWKg
+Content-Type: application/pgp-encrypted
+Content-Disposition: attachment
+
+Version: 1
+--nextPart2726747.j47xUGTWKg
+Content-Type: application/octet-stream
+Content-Disposition: inline; filename="msg.asc"
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v2.0.14 (GNU/Linux)
+
+hQIOA8p5rdC5CBNfEAf+NZVzVq48C1r5opOOiWV96+FUzIWuMQ6u8fzFgI7YVyCn
+[SNIP]
+=reNr
+--nextPart2726747.j47xUGTWKg--
+-----END PGP MESSAGE-----
+\endverbatim
+
+\verbatim
+multipart/encrypted
+|- application/pgp-encrypted
+\- application/octet-stream
+\endverbatim
+
+The encrypted data is contained in the \c application/octet-stream MIME part. Without decrypting
+the data, it is unknown what the original content type of the encrypted MIME data is! The encrypted
+data could be a simple text/plain MIME part, an image attachment, or a multipart part. The encrypted
+data contains both the MIME header and the MIME body of the original MIME part, as the header is needed
+to know the content type of the data. The data could as well by of content type multipart/signed, in
+which case the message would be both signed and encrypted.
+
+\par Inline cryto formats
+
+Although using the security multiparts \c multipart/signed and \c multipart/encrypted is the recommended
+standard, there are other possibilities to sign or encrypt a message. The most common methods are
+<b>Inline OpenPGP</b> and <b>S/MIME Opaque</b>.
+
+For inline OpenPGP messages, the crypto data is contained inlined in the actual MIME part. For example,
+a message with a signed text/plain part might look like this:
+\verbatim
+From: someone@domain.com
+To: someoneelse@domain.com
+Subject: Inline OpenPGP test
+MIME-Version: 1.0
+Content-Type: text/plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+Inline OpenPGP signed example.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.14 (GNU/Linux)
+
+iEYEARECAAYFAkueJ2EACgkQKglv3sO8a1MS3QCfcsYnJG7uYQxzxz6J5cPF7lHz
+WIoAn3PjVPlWibu02dfdFObwd2eJ1jAW
+=p3uO
+-----END PGP SIGNATURE-----
+
+\endverbatim
+
+Encrypted inline OpenPGP works in a similar way. Opaque S/MIME messages are also similar: For signed
+MIME parts, both the signature and the signed data are contained in a single MIME part with a content
+type of \c application/pkcs7-mime.
+
+As security multiparts are preferred over inline OpenPGP and over opaque S/MIME, I won't go into more
+detail here.
+
 \section string-broken-down The two in-memory representations of messages
 
 \section classes-overview Overview of KMime classes
@@ -850,7 +1041,7 @@ are both in the MIME body of the \c message/rfc822 MIME part.
 \li <a href="http://tools.ietf.org/html/rfc2183">RFC 2183</a>: Communicating Presentation Information in Internet Message: The Content-Disposition Header Field
 \li <a href="http://tools.ietf.org/html/rfc2557">RFC 2557</a>: MIME Encapsulation of Aggregate Documents, such as HTML (MHTML)
 \li <a href="http://tools.ietf.org/html/rfc1847">RFC 1847</a>: Security Multiparts for MIME: Multipart/Signed and Multipart/Encrypted
-\li <a href="http://tools.ietf.org/html/rfc2633">RFC 2633</a>: S/MIME Version 3 Message Specification
+\li <a href="http://tools.ietf.org/html/rfc3851">RFC 3851</a>: S/MIME Version 3 Message Specification
 \li <a href="http://tools.ietf.org/html/rfc3156">RFC 3156</a>: MIME Security with OpenPGP
 \li <a href="http://tools.ietf.org/html/rfc2298">RFC 2298</a>: An Extensible Message Format for Message Disposition Notifications
 \li <a href="http://tools.ietf.org/html/rfc2646">RFC 2646</a>: The Text/Plain Format Parameter (not supported by KMime)
@@ -863,6 +1054,7 @@ are both in the MIME body of the \c message/rfc822 MIME part.
 \li <a href="http://www.motobit.com/util/quoted-printable-encoder.asp">Online quoted-printable encoder</a>
 \li <a href="http://www.motobit.com/util/quoted-printable-decoder.asp">Online quoted-printable decoder</a>
 \li <a href="http://www.motobit.com/util/charset-codepage-conversion.asp">Online charset converter</a>
+\li <a href="http://en.wikipedia.org/wiki/Public-key_cryptography">Wikipedia article on public-key cryptography</a>
 
 \authors
 
