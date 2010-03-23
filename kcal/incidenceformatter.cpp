@@ -341,7 +341,8 @@ static QString displayViewFormatAttachments( Incidence *incidence )
 
 static QString displayViewFormatCategories( Incidence *incidence )
 {
-  return incidence->categoriesStr();
+  // We do not use Incidence::categoriesStr() since it does not have whitespace
+  return incidence->categories().join( ", " );
 }
 
 static QString displayViewFormatCreationDate( Incidence *incidence, KDateTime::Spec spec )
