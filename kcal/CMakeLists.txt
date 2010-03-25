@@ -76,7 +76,7 @@ set(kcal_LIB_SRCS ${libversit_SRCS}
 )
 
 if (NOT KDEPIM_NO_KRESOURCES)
-  set(kcal_LIB_SRCS ${libversit_SRCS} ${kcal_LIB_SRCS}
+  set(kcal_LIB_SRCS ${kcal_LIB_SRCS}
     calhelper.cpp
     resourcecalendar.cpp
     resourcelocal.cpp
