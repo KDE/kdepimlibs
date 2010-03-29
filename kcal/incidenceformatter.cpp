@@ -580,6 +580,20 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
 
   // TODO: print comments?
 
+  int reminderCount = event->alarms().count();
+  if ( reminderCount > 0 ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td><b>" +
+              i18np( "Reminder:", "Reminders:", reminderCount ) +
+              "</b></td>";
+    tmpStr += "<td>" + reminderStringList( event ).join( "<br>" ) + "</td>";
+    tmpStr += "</tr>";
+  }
+
+  if ( event->attendees().count() > 1 ) {
+    tmpStr += displayViewFormatAttendees( event );
+  }
+
   int categoryCount = event->categories().count();
   if ( categoryCount > 0 ) {
     tmpStr += "<tr>";
@@ -588,10 +602,6 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
               "</b></td>";
     tmpStr += "<td>" + displayViewFormatCategories( event ) + "</td>";
     tmpStr += "</tr>";
-  }
-
-  if ( event->attendees().count() > 1 ) {
-    tmpStr += displayViewFormatAttendees( event );
   }
 
   int attachmentCount = event->attachments().count();
@@ -699,6 +709,20 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
 
   // TODO: print comments?
 
+  int reminderCount = todo->alarms().count();
+  if ( reminderCount > 0 ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td><b>" +
+              i18np( "Reminder:", "Reminders:", reminderCount ) +
+              "</b></td>";
+    tmpStr += "<td>" + reminderStringList( todo ).join( "<br>" ) + "</td>";
+    tmpStr += "</tr>";
+  }
+
+  if ( todo->attendees().count() > 1 ) {
+    tmpStr += displayViewFormatAttendees( todo );
+  }
+
   int categoryCount = todo->categories().count();
   if ( categoryCount > 0 ) {
     tmpStr += "<tr>";
@@ -730,10 +754,6 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
   }
   tmpStr += "</td>";
   tmpStr += "</tr>";
-
-  if ( todo->attendees().count() > 1 ) {
-    tmpStr += displayViewFormatAttendees( todo );
-  }
 
   int attachmentCount = todo->attachments().count();
   if ( attachmentCount > 0 ) {
@@ -2963,11 +2983,26 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
     tmp += "<hr>";
     tmp += "<i>" + i18n( "Description:" ) + "</i>" + "<br>";
     tmp += desc;
+    tmp += "<hr>";
+  }
+
+  int reminderCount = incidence->alarms().count();
+  if ( reminderCount > 0 ) {
+    tmp += "<br>";
+    tmp += "<i>" + i18np( "Reminder:", "Reminders:", reminderCount ) + "</i>" + "&nbsp;";
+    tmp += reminderStringList( incidence ).join( ", " );
   }
 
   if ( incidence->attendees().count() > 1 ) {
-    tmp += "<hr>";
+    tmp += "<br>";
     tmp += tooltipFormatAttendees( incidence );
+  }
+
+  int categoryCount = incidence->categories().count();
+  if ( categoryCount > 0 ) {
+    tmp += "<br>";
+    tmp += "<i>" + i18np( "Category:", "Categories:", categoryCount ) + "</i>" + "&nbsp;";
+    tmp += incidence->categories().join( ", " );
   }
 
   tmp += "</qt>";
@@ -3645,4 +3680,81 @@ QString IncidenceFormatter::durationString( Incidence *incidence )
     }
   }
   return tmp;
+}
+
+QStringList IncidenceFormatter::reminderStringList( Incidence *incidence )
+{
+  // offset before/after start/end/due (recurs N times, with a snooze of X)
+
+  QStringList reminderStringList;
+
+  if ( incidence ) {
+    Alarm::List alarms = incidence->alarms();
+    Alarm::List::ConstIterator it;
+    for ( it = alarms.begin(); it != alarms.end(); ++it ) {
+      Alarm *alarm = *it;
+      int offset;
+      QString remStr, atStr, offsetStr;
+      if ( alarm->hasTime() ) {
+        offset = 0;
+        atStr = KGlobal::locale()->formatDateTime( alarm->time() );
+      } else if ( alarm->hasStartOffset() ) {
+        offset = alarm->startOffset().asSeconds();
+        if ( offset < 0 ) {
+          offset = -offset;
+          offsetStr = i18nc( "N days/hours/minutes before the start datetime",
+                             "%1 before the start", secs2Duration( offset ) );
+        } else if ( offset > 0 ) {
+          offsetStr = i18nc( "N days/hours/minutes after the start datetime",
+                             "%1 after the start", secs2Duration( offset ) );
+        } else { //offset is 0
+          atStr = KGlobal::locale()->formatDateTime( incidence->dtStart() );
+        }
+      } else if ( alarm->hasEndOffset() ) {
+        offset = alarm->endOffset().asSeconds();
+        if ( offset < 0 ) {
+          offset = -offset;
+          if ( incidence->type() == "Todo" ) {
+            offsetStr = i18nc( "N days/hours/minutes before the due datetime",
+                               "%1 before the due", secs2Duration( offset ) );
+          } else {
+            offsetStr = i18nc( "N days/hours/minutes before the end datetime",
+                               "%1 before the end", secs2Duration( offset ) );
+          }
+        } else if ( offset > 0 ) {
+          if ( incidence->type() == "Todo" ) {
+            offsetStr = i18nc( "N days/hours/minutes after the due datetime",
+                               "%1 after the due", secs2Duration( offset ) );
+          } else {
+            offsetStr = i18nc( "N days/hours/minutes after the end datetime",
+                               "%1 after the end", secs2Duration( offset ) );
+          }
+        } else { //offset is 0
+          if ( incidence->type() == "Todo" ) {
+            Todo *t = static_cast<Todo *>( incidence );
+            atStr = KGlobal::locale()->formatDateTime( t->dtDue() );
+          } else {
+            Event *e = static_cast<Event *>( incidence );
+            atStr = KGlobal::locale()->formatDateTime( e->dtEnd() );
+          }
+        }
+      }
+      if ( offset == 0 ) {
+        remStr = i18nc( "reminder occurs at datetime", "at %1", atStr );
+      } else {
+        remStr = offsetStr;
+      }
+
+      if ( alarm->repeatCount() > 0 ) {
+        QString repeatStr = i18np( "repeats once", "repeats %1 times", alarm->repeatCount() );
+        repeatStr = i18nc( "repeats X times, every Y time interval", "(%1, every %2)",
+                           repeatStr, secs2Duration( alarm->snoozeTime().asSeconds() ) );
+        remStr = remStr + ' ' + repeatStr;
+
+      }
+      reminderStringList << remStr;
+    }
+  }
+
+  return reminderStringList;
 }

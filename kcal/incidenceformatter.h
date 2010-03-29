@@ -127,7 +127,6 @@ namespace IncidenceFormatter
   */
   KCAL_EXPORT KDE_DEPRECATED QString toolTipString( IncidenceBase *incidence,
                                                     bool richText=true );
-
   /**
     Create a RichText QString representation of an Incidence in a nice format
     suitable for using in a viewer widget.
@@ -191,7 +190,7 @@ namespace IncidenceFormatter
   KCAL_EXPORT QString mailBodyStr( IncidenceBase *incidence,
                                    KDateTime::Spec spec=KDateTime::Spec() );
 
-/**
+  /**
     Create a QString representation of an Incidence in format suitable for
     including inside a mail message.
     @param incidence is a pointer to the Incidence to be formatted.
@@ -230,6 +229,17 @@ namespace IncidenceFormatter
     @since 4.1
   */
   KCAL_EXPORT QString recurrenceString( Incidence *incidence );
+
+  /**
+    Returns a reminder string computed for the specified Incidence.
+    Each item of the returning QStringList corresponds to a string
+    representation of an reminder belonging to this incidence.
+    @param incidence is a pointer to the Incidence.
+    @param shortfmt if false, a short version of each reminder is printed;
+    else a longer version of each reminder is printed.
+    @since 4.5
+  */
+  KCAL_EXPORT QStringList reminderStringList( Incidence *incidence );
 
   /**
     Build a QString time representation of a KDateTime object.
