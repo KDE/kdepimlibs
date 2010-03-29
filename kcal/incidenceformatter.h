@@ -239,7 +239,7 @@ namespace IncidenceFormatter
     else a longer version of each reminder is printed.
     @since 4.5
   */
-  KCAL_EXPORT QStringList reminderStringList( Incidence *incidence );
+  KCAL_EXPORT QStringList reminderStringList( Incidence *incidence, bool shortfmt = true );
 
   /**
     Build a QString time representation of a KDateTime object.
