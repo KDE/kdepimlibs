@@ -581,7 +581,7 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
   // TODO: print comments?
 
   int reminderCount = event->alarms().count();
-  if ( reminderCount > 0 ) {
+  if ( reminderCount > 0 && event->isAlarmEnabled() ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" +
               i18np( "Reminder:", "Reminders:", reminderCount ) +
@@ -710,7 +710,7 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
   // TODO: print comments?
 
   int reminderCount = todo->alarms().count();
-  if ( reminderCount > 0 ) {
+  if ( reminderCount > 0 && todo->isAlarmEnabled() ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" +
               i18np( "Reminder:", "Reminders:", reminderCount ) +
@@ -2987,7 +2987,7 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
   }
 
   int reminderCount = incidence->alarms().count();
-  if ( reminderCount > 0 ) {
+  if ( reminderCount > 0 && incidence->isAlarmEnabled() ) {
     tmp += "<br>";
     tmp += "<i>" + i18np( "Reminder:", "Reminders:", reminderCount ) + "</i>" + "&nbsp;";
     tmp += reminderStringList( incidence ).join( ", " );
@@ -3698,7 +3698,9 @@ QStringList IncidenceFormatter::reminderStringList( Incidence *incidence, bool s
       QString remStr, atStr, offsetStr;
       if ( alarm->hasTime() ) {
         offset = 0;
-        atStr = KGlobal::locale()->formatDateTime( alarm->time() );
+        if ( alarm->time().isValid() ) {
+          atStr = KGlobal::locale()->formatDateTime( alarm->time() );
+        }
       } else if ( alarm->hasStartOffset() ) {
         offset = alarm->startOffset().asSeconds();
         if ( offset < 0 ) {
@@ -3709,7 +3711,9 @@ QStringList IncidenceFormatter::reminderStringList( Incidence *incidence, bool s
           offsetStr = i18nc( "N days/hours/minutes after the start datetime",
                              "%1 after the start", secs2Duration( offset ) );
         } else { //offset is 0
-          atStr = KGlobal::locale()->formatDateTime( incidence->dtStart() );
+          if ( incidence->dtStart().isValid() ) {
+            atStr = KGlobal::locale()->formatDateTime( incidence->dtStart() );
+          }
         }
       } else if ( alarm->hasEndOffset() ) {
         offset = alarm->endOffset().asSeconds();
@@ -3733,15 +3737,21 @@ QStringList IncidenceFormatter::reminderStringList( Incidence *incidence, bool s
         } else { //offset is 0
           if ( incidence->type() == "Todo" ) {
             Todo *t = static_cast<Todo *>( incidence );
-            atStr = KGlobal::locale()->formatDateTime( t->dtDue() );
+            if ( t->dtDue().isValid() ) {
+              atStr = KGlobal::locale()->formatDateTime( t->dtDue() );
+            }
           } else {
             Event *e = static_cast<Event *>( incidence );
-            atStr = KGlobal::locale()->formatDateTime( e->dtEnd() );
+            if ( e->dtEnd().isValid() ) {
+              atStr = KGlobal::locale()->formatDateTime( e->dtEnd() );
+            }
           }
         }
       }
       if ( offset == 0 ) {
-        remStr = i18nc( "reminder occurs at datetime", "at %1", atStr );
+        if ( !atStr.isEmpty() ) {
+          remStr = i18nc( "reminder occurs at datetime", "at %1", atStr );
+        }
       } else {
         remStr = offsetStr;
       }
