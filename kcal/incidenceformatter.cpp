@@ -3694,7 +3694,7 @@ QStringList IncidenceFormatter::reminderStringList( Incidence *incidence, bool s
     Alarm::List::ConstIterator it;
     for ( it = alarms.constBegin(); it != alarms.constEnd(); ++it ) {
       Alarm *alarm = *it;
-      int offset;
+      int offset = 0;
       QString remStr, atStr, offsetStr;
       if ( alarm->hasTime() ) {
         offset = 0;
