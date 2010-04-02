@@ -25,6 +25,9 @@ include(MacroLibrary)
 
 
 ############### Load the CTest options ###############
+# Set a timeout value of 5 minutes per test
+set(DART_TESTING_TIMEOUT 300)
+
 # CTestCustom.cmake has to be in the CTEST_BINARY_DIR.
 # in the KDE build system, this is the same as CMAKE_BINARY_DIR.
 configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake ${CMAKE_BINARY_DIR}/CTestCustom.cmake)
