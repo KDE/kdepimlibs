@@ -107,6 +107,12 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
       Returns a string representation of the authentication type.
     */
     QString authenticationTypeString() const;
+    /**
+      Returns a string representation of the authentication type.
+      Convienence function when there isn't a Transport object
+      instantiated.
+    */
+    static QString authenticationTypeString( int type );
 
     /**
       Returns a deep copy of this Transport object which will no longer be

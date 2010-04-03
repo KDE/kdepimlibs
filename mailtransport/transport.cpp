@@ -136,7 +136,12 @@ bool Transport::isComplete() const
 
 QString Transport::authenticationTypeString() const
 {
-  switch ( authenticationType() ) {
+  return Transport::authenticationTypeString( authenticationType() );
+}
+
+QString Transport::authenticationTypeString( int type )
+{
+  switch ( type ) {
   case EnumAuthenticationType::LOGIN:
     return QLatin1String( "LOGIN" );
   case EnumAuthenticationType::PLAIN:
@@ -149,10 +154,17 @@ QString Transport::authenticationTypeString() const
     return QLatin1String( "NTLM" );
   case EnumAuthenticationType::GSSAPI:
     return QLatin1String( "GSSAPI" );
+  case EnumAuthenticationType::CLEAR:
+    return QLatin1String( "Clear text" );
+  case EnumAuthenticationType::APOP:
+    return QLatin1String( "APOP" );
+  case EnumAuthenticationType::ANONYMOUS:
+    return QLatin1String( "Anonymous" );
   }
   Q_ASSERT( false );
   return QString();
 }
+
 
 void Transport::usrReadConfig()
 {
