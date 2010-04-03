@@ -142,24 +142,24 @@ QString Transport::authenticationTypeString() const
 QString Transport::authenticationTypeString( int type )
 {
   switch ( type ) {
-  case EnumAuthenticationType::LOGIN:
-    return QLatin1String( "LOGIN" );
-  case EnumAuthenticationType::PLAIN:
-    return QLatin1String( "PLAIN" );
-  case EnumAuthenticationType::CRAM_MD5:
-    return QLatin1String( "CRAM-MD5" );
-  case EnumAuthenticationType::DIGEST_MD5:
-    return QLatin1String( "DIGEST-MD5" );
-  case EnumAuthenticationType::NTLM:
-    return QLatin1String( "NTLM" );
-  case EnumAuthenticationType::GSSAPI:
-    return QLatin1String( "GSSAPI" );
-  case EnumAuthenticationType::CLEAR:
-    return QLatin1String( "Clear text" );
-  case EnumAuthenticationType::APOP:
-    return QLatin1String( "APOP" );
-  case EnumAuthenticationType::ANONYMOUS:
-    return QLatin1String( "Anonymous" );
+    case EnumAuthenticationType::LOGIN:
+      return QLatin1String( "LOGIN" );
+    case EnumAuthenticationType::PLAIN:
+      return QLatin1String( "PLAIN" );
+    case EnumAuthenticationType::CRAM_MD5:
+      return QLatin1String( "CRAM-MD5" );
+    case EnumAuthenticationType::DIGEST_MD5:
+      return QLatin1String( "DIGEST-MD5" );
+    case EnumAuthenticationType::NTLM:
+      return QLatin1String( "NTLM" );
+    case EnumAuthenticationType::GSSAPI:
+      return QLatin1String( "GSSAPI" );
+    case EnumAuthenticationType::CLEAR:
+      return QLatin1String( "Clear text" );
+    case EnumAuthenticationType::APOP:
+      return QLatin1String( "APOP" );
+    case EnumAuthenticationType::ANONYMOUS:
+      return QLatin1String( "Anonymous" );
   }
   Q_ASSERT( false );
   return QString();
