@@ -7,12 +7,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>362</width>
-    <height>438</height>
+    <width>380</width>
+    <height>446</height>
    </rect>
   </property>
-  <layout class="QGridLayout">
-   <item row="0" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
     <widget class="KTabWidget" name="tabWidget">
      <property name="currentIndex">
       <number>0</number>
@@ -21,110 +21,114 @@
       <attribute name="title">
        <string comment="general smtp settings">General</string>
       </attribute>
-      <layout class="QFormLayout" name="formLayout">
-       <item row="0" column="0">
-        <widget class="QLabel" name="hostLabel">
-         <property name="text">
-          <string>Outgoing mail &amp;server:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>kcfg_host</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="KLineEdit" name="kcfg_host"/>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="portLabel">
-         <property name="text">
-          <string>&amp;Port:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>kcfg_port</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <layout class="QHBoxLayout">
-         <item>
-          <widget class="KIntNumInput" name="kcfg_port">
-           <property name="value">
-            <number>25</number>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>231</width>
-             <height>23</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="KButtonGroup" name="kcfg_encryption">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QGroupBox" name="groupBox">
          <property name="title">
-          <string>Encryption</string>
+          <string>Account Information</string>
          </property>
-         <layout class="QVBoxLayout">
-          <item>
-           <layout class="QHBoxLayout">
-            <item>
-             <widget class="QRadioButton" name="none">
-              <property name="text">
-               <string>&amp;None</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="ssl">
-              <property name="text">
-               <string>&amp;SSL</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="tls">
-              <property name="text">
-               <string>&amp;TLS</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="KPushButton" name="checkCapabilities">
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="hostLabel">
             <property name="text">
-             <string>Check &amp;What the Server Supports</string>
+             <string>Outgoing mail &amp;server:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="buddy">
+             <cstring>kcfg_host</cstring>
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QProgressBar" name="checkCapabilitiesProgress">
-            <property name="visible">
+          <item row="0" column="1">
+           <widget class="KLineEdit" name="kcfg_host"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="usernameLabel">
+            <property name="enabled">
              <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>&amp;Login:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="buddy">
+             <cstring>kcfg_userName</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="KLineEdit" name="kcfg_userName">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <zorder>kcfg_requiresAuthentication</zorder>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="passwordLabel">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>P&amp;assword:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="buddy">
+             <cstring>password</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="KLineEdit" name="password">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="whatsThis">
+             <string>The password to send to the server for authorization.</string>
+            </property>
+            <property name="echoMode">
+             <enum>QLineEdit::Password</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QCheckBox" name="kcfg_storePassword">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>&amp;Store SMTP password</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="kcfg_requiresAuthentication">
+            <property name="text">
+             <string>Server &amp;requires authentication</string>
             </property>
            </widget>
           </item>
          </layout>
         </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -132,204 +136,214 @@
       <attribute name="title">
        <string comment="advanced smtp settings">Advanced</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="1" column="0" colspan="3">
-        <widget class="QLabel" name="noAuthPossible">
-         <property name="visible">
-          <bool>false</bool>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::Box</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Plain</enum>
-         </property>
-         <property name="lineWidth">
-          <number>0</number>
-         </property>
-         <property name="text">
-          <string>This server does not support authentication</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="usernameLabel">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>&amp;Login:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>kcfg_userName</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1" colspan="2">
-        <widget class="KLineEdit" name="kcfg_userName">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="passwordLabel">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>P&amp;assword:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>password</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1" colspan="2">
-        <widget class="KLineEdit" name="password">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="whatsThis">
-          <string>The password to send to the server for authorization.</string>
-         </property>
-         <property name="echoMode">
-          <enum>QLineEdit::Password</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1" colspan="2">
-        <widget class="QCheckBox" name="kcfg_storePassword">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>&amp;Store SMTP password</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0" colspan="3">
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
         <widget class="KButtonGroup" name="kcfg_authenticationType">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="title">
-          <string>Authentication Method</string>
+          <string>Connection Settings</string>
          </property>
-         <layout class="QGridLayout">
-          <item row="0" column="0">
-           <layout class="QGridLayout">
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QStackedWidget" name="checkCapabilitiesStack">
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <widget class="QWidget" name="page">
+             <layout class="QVBoxLayout" name="verticalLayout_3">
+              <item>
+               <widget class="KPushButton" name="checkCapabilities">
+                <property name="text">
+                 <string>Auto Detect</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="page_2">
+             <layout class="QVBoxLayout" name="verticalLayout_4">
+              <item>
+               <widget class="QProgressBar" name="checkCapabilitiesProgress">
+                <property name="value">
+                 <number>0</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="noAuthPossible">
+            <property name="visible">
+             <bool>false</bool>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Box</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="lineWidth">
+             <number>0</number>
+            </property>
+            <property name="text">
+             <string>This server does not support authentication</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QFormLayout" name="formLayout_2">
+            <property name="fieldGrowthPolicy">
+             <enum>QFormLayout::ExpandingFieldsGrow</enum>
+            </property>
             <item row="0" column="0">
-             <widget class="QRadioButton" name="login">
+             <widget class="QLabel" name="label">
               <property name="text">
-               <string>&amp;LOGIN</string>
+               <string>Encryption:</string>
               </property>
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QRadioButton" name="plain">
-              <property name="text">
-               <string>&amp;PLAIN</string>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="encryptHLayout">
+              <item>
+               <widget class="QRadioButton" name="none">
+                <property name="text">
+                 <string>&amp;None</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="ssl">
+                <property name="text">
+                 <string>&amp;SSL</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="tls">
+                <property name="text">
+                 <string>&amp;TLS</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item row="1" column="0">
-             <widget class="QRadioButton" name="crammd5">
+             <widget class="QLabel" name="portLabel">
               <property name="text">
-               <string>CRAM-MD&amp;5</string>
+               <string>&amp;Port:</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+              <property name="buddy">
+               <cstring>kcfg_port</cstring>
               </property>
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QRadioButton" name="digestmd5">
-              <property name="text">
-               <string>&amp;DIGEST-MD5</string>
+             <widget class="KIntNumInput" name="kcfg_port">
+              <property name="value">
+               <number>25</number>
+              </property>
+              <property name="minimum">
+               <number>1</number>
               </property>
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QRadioButton" name="gssapi">
+             <widget class="QLabel" name="authLabel">
               <property name="text">
-               <string>&amp;GSSAPI</string>
+               <string>Authentication:</string>
               </property>
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QRadioButton" name="ntlm">
-              <property name="text">
-               <string>&amp;NTLM</string>
-              </property>
-             </widget>
+             <widget class="QComboBox" name="authCombo"/>
             </item>
            </layout>
           </item>
          </layout>
         </widget>
        </item>
-       <item row="6" column="0" colspan="3">
-        <widget class="KSeparator" name="kseparator_3"/>
-       </item>
-       <item row="7" column="0" colspan="3">
-        <widget class="QCheckBox" name="kcfg_specifyHostname">
-         <property name="text">
-          <string>Sen&amp;d custom hostname to server</string>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>SMTP Settings</string>
          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <widget class="QCheckBox" name="kcfg_specifyHostname">
+            <property name="text">
+             <string>Sen&amp;d custom hostname to server</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QFormLayout" name="formLayout_4">
+            <item row="0" column="0">
+             <widget class="QLabel" name="hostnameLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Hos&amp;tname:</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+              <property name="buddy">
+               <cstring>kcfg_localHostname</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="KLineEdit" name="kcfg_localHostname">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QFormLayout" name="formLayout_5">
+            <item row="0" column="0">
+             <widget class="QLabel" name="precommandLabel">
+              <property name="text">
+               <string>Precommand:</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="KLineEdit" name="kcfg_precommand"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
        </item>
-       <item row="8" column="0" colspan="2">
-        <widget class="QLabel" name="hostnameLabel">
-         <property name="enabled">
-          <bool>false</bool>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
-         <property name="text">
-          <string>Hos&amp;tname:</string>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>kcfg_localHostname</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="2">
-        <widget class="KLineEdit" name="kcfg_localHostname">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0" colspan="3">
-        <widget class="KSeparator" name="kseparator_2"/>
-       </item>
-       <item row="10" column="0" colspan="2">
-        <widget class="QLabel" name="precommandLabel">
-         <property name="text">
-          <string>Precommand:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="2">
-        <widget class="KLineEdit" name="kcfg_precommand"/>
-       </item>
-       <item row="0" column="0" colspan="3">
-        <widget class="QCheckBox" name="kcfg_requiresAuthentication">
-         <property name="text">
-          <string>Server &amp;requires authentication</string>
-         </property>
-        </widget>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -366,114 +380,9 @@
    <extends>QWidget</extends>
    <header>knuminput.h</header>
   </customwidget>
-  <customwidget>
-   <class>KSeparator</class>
-   <extends>QFrame</extends>
-   <header>kseparator.h</header>
-   <container>1</container>
-  </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>kcfg_host</tabstop>
- </tabstops>
  <resources/>
  <connections>
-  <connection>
-   <sender>kcfg_requiresAuthentication</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>usernameLabel</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>29</x>
-     <y>88</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>112</x>
-     <y>117</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_requiresAuthentication</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>kcfg_userName</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>35</x>
-     <y>85</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>186</x>
-     <y>115</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_requiresAuthentication</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>passwordLabel</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>49</x>
-     <y>88</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>61</x>
-     <y>142</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_requiresAuthentication</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>password</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>43</x>
-     <y>89</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>140</x>
-     <y>142</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_requiresAuthentication</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>kcfg_storePassword</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>75</x>
-     <y>86</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>62</x>
-     <y>176</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_requiresAuthentication</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>kcfg_authenticationType</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>82</x>
-     <y>89</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>78</x>
-     <y>202</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>kcfg_specifyHostname</sender>
    <signal>toggled(bool)</signal>
@@ -503,6 +412,86 @@
     <hint type="destinationlabel">
      <x>179</x>
      <y>360</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_requiresAuthentication</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_userName</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>112</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>253</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_requiresAuthentication</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>usernameLabel</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>112</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>126</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_requiresAuthentication</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>passwordLabel</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>112</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>113</x>
+     <y>180</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_requiresAuthentication</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>password</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>112</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>253</x>
+     <y>180</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_requiresAuthentication</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_storePassword</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>112</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>228</x>
+     <y>229</y>
     </hint>
    </hints>
   </connection>

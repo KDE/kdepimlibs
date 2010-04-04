@@ -66,12 +66,18 @@ class MailTransport::SMTPConfigWidgetPrivate : public TransportConfigWidgetPriva
 
     ServerTest *serverTest;
     QButtonGroup *encryptionGroup;
-    QButtonGroup *authGroup;
 
     // detected authentication capabilities
     QList<int> noEncCapa, sslCapa, tlsCapa;
 
     bool serverTestFailed;
+
+    static void addAuthenticationItem( QComboBox *combo,
+                                   int authenticationType )
+    {
+      combo->addItem( Transport::authenticationTypeString( authenticationType ),
+                  QVariant( authenticationType ) );
+    }
 
     void resetAuthCapabilities()
     {
@@ -83,9 +89,8 @@ class MailTransport::SMTPConfigWidgetPrivate : public TransportConfigWidgetPriva
                 << Transport::EnumAuthenticationType::NTLM
                 << Transport::EnumAuthenticationType::GSSAPI;
       sslCapa = tlsCapa = noEncCapa;
-      if ( authGroup ) {
-        updateAuthCapbilities();
-      }
+      updateAuthCapbilities();
+
     }
 
     void updateAuthCapbilities()
@@ -101,8 +106,9 @@ class MailTransport::SMTPConfigWidgetPrivate : public TransportConfigWidgetPriva
         capa = tlsCapa;
       }
 
-      for ( int i = 0; i < authGroup->buttons().count(); ++i ) {
-        authGroup->buttons().at( i )->setEnabled( capa.contains( i ) );
+      ui.authCombo->clear();
+      foreach( int authType, capa ) {
+        addAuthenticationItem( ui.authCombo, authType );
       }
 
       if ( capa.count() == 0 ) {
@@ -110,10 +116,14 @@ class MailTransport::SMTPConfigWidgetPrivate : public TransportConfigWidgetPriva
         ui.kcfg_requiresAuthentication->setChecked( false );
         ui.kcfg_requiresAuthentication->setEnabled( false );
         ui.kcfg_requiresAuthentication->setVisible( false );
+        ui.authCombo->setEnabled( false );
+        ui.authLabel->setEnabled( false );
       } else {
         ui.noAuthPossible->setVisible( false );
         ui.kcfg_requiresAuthentication->setEnabled( true );
         ui.kcfg_requiresAuthentication->setVisible( true );
+        ui.authCombo->setEnabled( true );
+        ui.authLabel->setEnabled( true );
       }
     }
 };
@@ -131,6 +141,19 @@ SMTPConfigWidget::SMTPConfigWidget( SMTPConfigWidgetPrivate &dd,
   init();
 }
 
+static void checkHighestEnabledButton( QButtonGroup *group )
+{
+  Q_ASSERT( group );
+
+  for ( int i = group->buttons().count() - 1; i >= 0; --i ) {
+    QAbstractButton *b = group->buttons().at( i );
+    if ( b && b->isEnabled() ) {
+      b->animateClick();
+      return;
+    }
+  }
+}
+
 void SMTPConfigWidget::init()
 {
   Q_D( SMTPConfigWidget );
@@ -144,33 +167,27 @@ void SMTPConfigWidget::init()
   d->manager->updateWidgets();
 
   d->encryptionGroup = new QButtonGroup( this );
-  d->encryptionGroup->addButton( d->ui.none );
-  d->encryptionGroup->addButton( d->ui.ssl );
-  d->encryptionGroup->addButton( d->ui.tls );
+  d->encryptionGroup->addButton( d->ui.none, Transport::EnumEncryption::None );
+  d->encryptionGroup->addButton( d->ui.ssl, Transport::EnumEncryption::SSL );
+  d->encryptionGroup->addButton( d->ui.tls, Transport::EnumEncryption::TLS );
 
-  d->authGroup = new QButtonGroup( this );
-  d->authGroup->addButton( d->ui.login );
-  d->authGroup->addButton( d->ui.plain );
-  d->authGroup->addButton( d->ui.crammd5 );
-  d->authGroup->addButton( d->ui.digestmd5 );
-  d->authGroup->addButton( d->ui.gssapi );
-  d->authGroup->addButton( d->ui.ntlm );
   d->resetAuthCapabilities();
 
   if ( KProtocolInfo::capabilities( SMTP_PROTOCOL ).contains( QLatin1String( "SASL" ) ) == 0 ) {
-    d->ui.ntlm->hide();
-    d->ui.gssapi->hide();
+    d->ui.authCombo->removeItem( d->ui.authCombo->findData( Transport::EnumAuthenticationType::NTLM ) );
+    d->ui.authCombo->removeItem( d->ui.authCombo->findData( Transport::EnumAuthenticationType::GSSAPI ) );
   }
 
   connect( d->ui.checkCapabilities, SIGNAL( clicked() ),
            SLOT( checkSmtpCapabilities() ) );
   connect( d->ui.kcfg_host, SIGNAL( textChanged(QString) ),
            SLOT( hostNameChanged(QString) ) );
-  connect( d->ui.kcfg_encryption, SIGNAL( clicked(int) ),
+  connect( d->encryptionGroup, SIGNAL( buttonClicked( int ) ),
            SLOT( encryptionChanged(int) ) );
   connect( d->ui.kcfg_requiresAuthentication, SIGNAL( toggled(bool) ),
            SLOT( ensureValidAuthSelection() ) );
 
+  checkHighestEnabledButton( d->encryptionGroup );
   // load the password
   d->transport->updatePasswordState();
   if ( d->transport->isComplete() ) {
@@ -195,6 +212,7 @@ void SMTPConfigWidget::checkSmtpCapabilities()
     d->serverTest->setFakeHostname( d->ui.kcfg_localHostname->text() );
   }
   d->serverTest->setProgressBar( d->ui.checkCapabilitiesProgress );
+  d->ui.checkCapabilitiesStack->setCurrentIndex( 1 );
   BusyCursorHelper *busyCursorHelper = new BusyCursorHelper( d->serverTest );
 
   connect( d->serverTest, SIGNAL( finished( QList<int> ) ),
@@ -229,23 +247,12 @@ void SMTPConfigWidget::passwordsLoaded()
   }
 }
 
-static void checkHighestEnabledButton( QButtonGroup *group )
-{
-  Q_ASSERT( group );
-
-  for ( int i = group->buttons().count() - 1; i >= 0; --i ) {
-    QAbstractButton *b = group->buttons().at( i );
-    if ( b && b->isEnabled() ) {
-      b->animateClick();
-      return;
-    }
-  }
-}
-
 // TODO rename
 void SMTPConfigWidget::slotFinished( QList<int> results )
 {
   Q_D( SMTPConfigWidget );
+
+  d->ui.checkCapabilitiesStack->setCurrentIndex( 0 );
 
   d->ui.checkCapabilities->setEnabled( true );
   d->serverTest->deleteLater();
@@ -271,7 +278,6 @@ void SMTPConfigWidget::slotFinished( QList<int> results )
   }
   d->sslCapa = d->serverTest->secureProtocols();
   d->updateAuthCapbilities();
-  checkHighestEnabledButton( d->authGroup );
 }
 
 void SMTPConfigWidget::hostNameChanged( const QString &text )
@@ -299,12 +305,6 @@ void SMTPConfigWidget::ensureValidAuthSelection()
 
   // adjust available authentication methods
   d->updateAuthCapbilities();
-  foreach ( QAbstractButton *b, d->authGroup->buttons() ) {
-    if ( b->isChecked() && !b->isEnabled() ) {
-      checkHighestEnabledButton( d->authGroup );
-      break;
-    }
-  }
 }
 
 void SMTPConfigWidget::encryptionChanged( int enc )
