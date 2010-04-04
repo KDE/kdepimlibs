@@ -3721,7 +3721,7 @@ QStringList IncidenceFormatter::reminderStringList( Incidence *incidence, bool s
           offset = -offset;
           if ( incidence->type() == "Todo" ) {
             offsetStr = i18nc( "N days/hours/minutes before the due datetime",
-                               "%1 before the due", secs2Duration( offset ) );
+                               "%1 before the to-do is due", secs2Duration( offset ) );
           } else {
             offsetStr = i18nc( "N days/hours/minutes before the end datetime",
                                "%1 before the end", secs2Duration( offset ) );
@@ -3729,7 +3729,7 @@ QStringList IncidenceFormatter::reminderStringList( Incidence *incidence, bool s
         } else if ( offset > 0 ) {
           if ( incidence->type() == "Todo" ) {
             offsetStr = i18nc( "N days/hours/minutes after the due datetime",
-                               "%1 after the due", secs2Duration( offset ) );
+                               "%1 after the to-do is due", secs2Duration( offset ) );
           } else {
             offsetStr = i18nc( "N days/hours/minutes after the end datetime",
                                "%1 after the end", secs2Duration( offset ) );
@@ -3757,9 +3757,12 @@ QStringList IncidenceFormatter::reminderStringList( Incidence *incidence, bool s
       }
 
       if ( alarm->repeatCount() > 0 ) {
-        QString repeatStr = i18np( "repeats once", "repeats %1 times", alarm->repeatCount() );
-        repeatStr = i18nc( "repeats X times, every Y time interval", "(%1, every %2)",
-                           repeatStr, secs2Duration( alarm->snoozeTime().asSeconds() ) );
+        QString countStr = i18np( "repeats once", "repeats %1 times", alarm->repeatCount() );
+        QString intervalStr = i18nc( "interval is N days/hours/minutes",
+                                     "interval is %1",
+                                     secs2Duration( alarm->snoozeTime().asSeconds() ) );
+        QString repeatStr = i18nc( "(repeat string, interval string)",
+                                   "(%1, %2)", countStr, intervalStr );
         remStr = remStr + ' ' + repeatStr;
 
       }
