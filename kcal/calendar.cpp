@@ -1251,9 +1251,6 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
   Duration endOffset( 0 );
   Duration period( from, to );
 
-  Event *e = static_cast<Event *>( incidence );
-  Todo *t = static_cast<Todo *>( incidence );
-
   Alarm::List alarmlist = incidence->alarms();
   for ( int i = 0, iend = alarmlist.count();  i < iend;  ++i ) {
     Alarm *a = alarmlist[i];
@@ -1274,49 +1271,22 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
         } else if ( a->hasEndOffset() ) {
           offset = a->endOffset();
           if ( !endOffsetValid ) {
-            if ( incidence->type() == "Event" ) {
-              endOffset = Duration( e->dtStart(), e->dtEnd() );
-              endOffsetValid = true;
-            } else if ( incidence->type() == "Todo" &&
-                        t->hasStartDate() && t->hasDueDate() ) {
-              endOffset = Duration( t->dtStart(), t->dtEnd() );
-              endOffsetValid = true;
-            }
+            endOffset = Duration( incidence->dtStart(), incidence->dtEnd() );
+            endOffsetValid = true;
           }
         }
 
         // Find the incidence's earliest alarm
-        KDateTime alarmStart;
-        if ( incidence->type() == "Event" ) {
-          alarmStart =
-            offset.end( a->hasEndOffset() ? e->dtEnd() : e->dtStart() );
-        } else if ( incidence->type() == "Todo" ) {
-          if ( a->hasEndOffset() && t->hasDueDate() ) {
-            alarmStart = offset.end( t->dtDue() );
-          } else {
-            if ( t->hasStartDate() ) {
-              alarmStart = offset.end( t->dtStart() );
-            }
-          }
-        }
-
-        if ( alarmStart.isValid() && alarmStart > to ) {
+        KDateTime alarmStart =
+          offset.end( a->hasEndOffset() ? incidence->dtEnd() : incidence->dtStart() );
+//        KDateTime alarmStart = incidence->dtStart().addSecs( offset );
+        if ( alarmStart > to ) {
           continue;
         }
-
-        KDateTime baseStart;
-        if ( incidence->type() == "Event" ) {
-          baseStart = e->dtStart();
-          if ( alarmStart.isValid() && from > alarmStart ) {
-            alarmStart = from;   // don't look earlier than the earliest alarm
-            baseStart = (-offset).end( (-endOffset).end( alarmStart ) );
-          }
-        } else if ( incidence->type() == "Todo" ) {
-          if ( t->hasStartDate() ) {
-            baseStart = t->dtStart();
-          } else {
-            baseStart = t->dtDue();
-          }
+        KDateTime baseStart = incidence->dtStart();
+        if ( from > alarmStart ) {
+          alarmStart = from;   // don't look earlier than the earliest alarm
+          baseStart = (-offset).end( (-endOffset).end( alarmStart ) );
         }
 
         // Adjust the 'alarmStart' date/time and find the next recurrence at or after it.
