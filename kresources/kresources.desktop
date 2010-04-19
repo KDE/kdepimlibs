@@ -5,7 +5,7 @@ X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kcm_kresources
 X-KDE-FactoryName=kcm_kresources
-X-KDE-System-Settings-Parent-Category=advanced-user-settings
+X-KDE-System-Settings-Parent-Category=personal-information
 X-DocPath=kcontrol/kresources/index.html
 
 Name=KDE Resources
