@@ -2090,7 +2090,7 @@ Headers::Base *extractFirstHeader( QByteArray &head )
   bool folded = false;
   Headers::Base *header = 0;
 
-  int startOfFieldBody = head.indexOf( ":" );
+  int startOfFieldBody = head.indexOf( ':' );
   const int endOfFieldHeader = startOfFieldBody;
 
   if ( startOfFieldBody > -1 ) {    //there is another header
