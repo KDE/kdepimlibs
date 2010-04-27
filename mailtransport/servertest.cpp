@@ -417,6 +417,7 @@ void ServerTestPrivate::slotNormalNotPossible()
   normalSocketFinished = true;
   tlsFinished = true;
   finalResult();
+  emit q->failedToConnectToServer();
 }
 
 void ServerTestPrivate::slotSslPossible()

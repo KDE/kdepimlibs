@@ -194,7 +194,11 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
       * the values from the enum EnumEncryption which are possible.
       */
     void finished( QList< int > );
-
+    /**
+      * This will be emitted when test can not connect to server
+      * @since 4.5
+      */
+    void failedToConnectToServer();
   private:
     Q_DECLARE_PRIVATE( ServerTest )
     ServerTestPrivate *const d;
