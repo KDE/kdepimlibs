@@ -324,7 +324,9 @@ QByteArray Content::encodedContent( bool useCrLf )
     } else {
       e += d->body;
     }
-  } else if ( !d->multipartContents.isEmpty() ) {
+  }
+
+  if ( !d->frozen && !d->multipartContents.isEmpty() ) {
     // This is a multipart Content.
     Headers::ContentType *ct=contentType();
     QByteArray boundary = "\n--" + ct->boundary();
