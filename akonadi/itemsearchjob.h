@@ -20,6 +20,8 @@
 #ifndef AKONADI_ITEMSEARCHJOB_H
 #define AKONADI_ITEMSEARCHJOB_H
 
+#include <QUrl>
+
 #include <akonadi/item.h>
 #include <akonadi/job.h>
 
@@ -112,6 +114,19 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      * Returns the items that matched the search query.
      */
     Item::List items() const;
+
+     /**
+     * Returns an URI that represents a predicate that is always added to the Nepomuk resource
+     * by the Akonadi Nepomuk feeders.
+     *
+     * The statement containing this predicate has the Akonadi Item ID of the resource as string
+     * as the object, and the Nepomuk resource, e.g. a PersonContact, as the subject.
+     *
+     * Always limit your searches to statements that contain this URI as predicate.
+     *
+     * @since 4.4.3
+     */
+    static QUrl akonadiItemIdUri();
 
   Q_SIGNALS:
     /**

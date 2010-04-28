@@ -25,10 +25,17 @@
 
 using namespace Akonadi;
 
+class ContactGroupSearchJob::Private
+{
+  public:
+    int mLimit;
+};
+
 ContactGroupSearchJob::ContactGroupSearchJob( QObject * parent )
-  : ItemSearchJob( QString(), parent ), d( 0 )
+  : ItemSearchJob( QString(), parent ), d( new Private )
 {
   fetchScope().fetchFullPayload();
+  d->mLimit = -1;
 
   // by default search for all contact groups
   ItemSearchJob::setQuery( QLatin1String( ""
@@ -38,19 +45,27 @@ ContactGroupSearchJob::ContactGroupSearchJob( QObject * parent )
 
 ContactGroupSearchJob::~ContactGroupSearchJob()
 {
+  delete d;
 }
 
 void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value )
 {
-  QString query;
+  QString query = QString::fromLatin1(
+            "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>" );
 
   if ( criterion == Name ) {
-    query = QString::fromLatin1( ""
-                                 "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>"
-                                 "SELECT ?group WHERE {"
-                                 "  ?group nco:contactGroupName \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
-                                 "}" );
+    query += QString::fromLatin1(
+        "SELECT DISTINCT ?group "
+        "WHERE { "
+        "  graph ?g { "
+        "    ?group <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+        "    ?group nco:contactGroupName \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
+        "  } "
+        "}" );
   }
+
+  if ( d->mLimit != -1 )
+    query += QString::fromLatin1( " LIMIT %1" ).arg( d->mLimit );
 
   query = query.arg( value );
 
@@ -67,6 +82,11 @@ KABC::ContactGroup::List ContactGroupSearchJob::contactGroups() const
   }
 
   return contactGroups;
+}
+
+void ContactGroupSearchJob::setLimit( int limit )
+{
+  d->mLimit = limit;
 }
 
 #include "contactgroupsearchjob.moc"
