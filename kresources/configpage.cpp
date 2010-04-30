@@ -380,7 +380,7 @@ void ConfigPage::slotAdd()
 
   ConfigDialog dlg( this, d->mFamily, resource );
 
-  if ( dlg.exec() ) {
+  if ( dlg.exec() ) { //krazy:exclude=crashy
     d->mCurrentManager->add( resource );
 
     ConfigViewItem *item = new ConfigViewItem( d->mListView, resource );
@@ -458,7 +458,7 @@ void ConfigPage::slotEdit()
 
   ConfigDialog dlg( this, d->mFamily, resource );
 
-  if ( dlg.exec() ) {
+  if ( dlg.exec() ) { //krazy:exclude=crashy
     configItem->setText( 0, resource->resourceName() );
     configItem->setText( 1, resource->type() );
 
