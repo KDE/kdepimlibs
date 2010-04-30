@@ -32,7 +32,6 @@ namespace MailTransport {
   class MessageQueueJob;
 }
 
-
 /**
   Mostly stolen from transportmgr.{h,cpp}
 */
@@ -57,8 +56,6 @@ class MessageQueuer : public KVBox
     KTextEdit *mMailEdit;
 
     MailTransport::MessageQueueJob *createQueueJob();
-
 };
-
 
 #endif

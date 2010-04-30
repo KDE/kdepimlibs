@@ -37,8 +37,6 @@ class Runner : public QObject
 
   private slots:
     void checkFolders();
-
 };
-
 
 #endif

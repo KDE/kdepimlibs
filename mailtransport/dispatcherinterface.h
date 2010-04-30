@@ -24,6 +24,8 @@
 
 #include <akonadi/agentinstance.h>
 
+//krazy:excludeall=dpointer
+
 namespace MailTransport {
 
 class TransportAttribute;

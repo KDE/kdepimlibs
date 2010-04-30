@@ -22,7 +22,6 @@
 
 #include <QtCore/QObject>
 
-
 /**
   This tests the ability to queue messages (MessageQueueJob class).
   Note that the actual sending of messages is the MDA's job, and is not tested
@@ -41,6 +40,5 @@ class MessageQueueJobTest : public QObject
     void verifyOutboxContents( qlonglong count );
 
 };
-
 
 #endif

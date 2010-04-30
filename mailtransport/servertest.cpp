@@ -178,8 +178,9 @@ void ServerTestPrivate::handleSMTPIMAPResponse( int type, const QString &text )
   authenticationResults[type] = parseAuthenticationList( results );
 
   // if we couldn't parse any authentication modes, default to clear-text
-  if( authenticationResults[type].size() == 0 )
+  if ( authenticationResults[type].size() == 0 ) {
     authenticationResults[type] << Transport::EnumAuthenticationType::CLEAR;
+  }
 
   kDebug() << "For type" << type << ", we have:" << authenticationResults[type];
 }
@@ -208,7 +209,7 @@ void ServerTestPrivate::sendInitialCapabilityQuery( MailTransport::Socket *socke
       hostname = fakeHostname;
     } else {
       hostname = QHostInfo::localHostName();
-      if( hostname.isEmpty() ) {
+      if ( hostname.isEmpty() ) {
         hostname = QLatin1String( "localhost.invalid" );
       } else if ( !hostname.contains( QChar::fromAscii( '.' ) ) ) {
         hostname += QLatin1String( ".localnet" );
@@ -263,7 +264,7 @@ bool ServerTestPrivate::handlePopConversation( MailTransport::Socket *socket, in
   }
 
   // CAPA result
-  else if( stage == 1 ) {
+  else if ( stage == 1 ) {
 //     Example:
 //     CAPA
 //     +OK
@@ -291,7 +292,7 @@ bool ServerTestPrivate::handlePopConversation( MailTransport::Socket *socket, in
   }
 
   // AUTH response
-  else if( stage == 2 ) {
+  else if ( stage == 2 ) {
 //     Example:
 //     C: AUTH
 //     S: +OK List of supported authentication methods follows

@@ -40,5 +40,4 @@ class Runner : public QObject
 
 };
 
-
 #endif

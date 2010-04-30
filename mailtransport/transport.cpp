@@ -165,7 +165,6 @@ QString Transport::authenticationTypeString( int type )
   return QString();
 }
 
-
 void Transport::usrReadConfig()
 {
   TransportBase::usrReadConfig();
@@ -182,9 +181,9 @@ void Transport::usrReadConfig()
     d->transportType = TransportType();
     d->transportType.d->mType = type();
     kDebug() << "type" << type();
-    if( type() == EnumType::Akonadi ) {
+    if ( type() == EnumType::Akonadi ) {
       const AgentInstance instance = AgentManager::self()->instance( host() );
-      if( !instance.isValid() ) {
+      if ( !instance.isValid() ) {
         kWarning() << "Akonadi transport with invalid resource instance.";
       }
       d->transportType.d->mAgentType = instance.type();
@@ -194,7 +193,7 @@ void Transport::usrReadConfig()
     // etc. from TransportManager.
     const TransportType::List &types = TransportManager::self()->types();
     int index = types.indexOf( d->transportType );
-    if( index != -1 ) {
+    if ( index != -1 ) {
       d->transportType = types[ index ];
     } else {
       kWarning() << "Type unknown to manager.";
@@ -336,7 +335,7 @@ Transport *Transport::clone() const
 
 TransportType Transport::transportType() const
 {
-  if( !d->transportType.isValid() ) {
+  if ( !d->transportType.isValid() ) {
     kWarning() << "Invalid transport type.";
   }
   return d->transportType;

@@ -42,7 +42,6 @@
 using namespace KMime;
 using namespace MailTransport;
 
-
 MessageQueuer::MessageQueuer()
 {
   if( !Akonadi::Control::start() ) {
@@ -115,7 +114,7 @@ MessageQueueJob *MessageQueuer::createQueueJob()
   Message::Ptr msg = Message::Ptr( new Message );
   // No headers; need a '\n' to separate headers from body.
   // TODO: use real headers
-  msg->setContent( QByteArray("\n") + mMailEdit->document()->toPlainText().toLatin1() );
+  msg->setContent( QByteArray( "\n" ) + mMailEdit->document()->toPlainText().toLatin1() );
   kDebug() << "msg:" << msg->encodedContent( true );
 
   MessageQueueJob *job = new MessageQueueJob();
@@ -124,9 +123,12 @@ MessageQueueJob *MessageQueuer::createQueueJob()
   // default dispatch mode
   // default sent-mail collection
   job->addressAttribute().setFrom( mSenderEdit->text() );
-  job->addressAttribute().setTo( mToEdit->text().isEmpty() ? QStringList() : mToEdit->text().split( ',' ) );
-  job->addressAttribute().setCc( mCcEdit->text().isEmpty() ? QStringList() : mCcEdit->text().split( ',' ) );
-  job->addressAttribute().setBcc( mBccEdit->text().isEmpty() ? QStringList() : mBccEdit->text().split( ',' ) );
+  job->addressAttribute().setTo( mToEdit->text().isEmpty() ?
+                                 QStringList() : mToEdit->text().split( ',' ) );
+  job->addressAttribute().setCc( mCcEdit->text().isEmpty() ?
+                                 QStringList() : mCcEdit->text().split( ',' ) );
+  job->addressAttribute().setBcc( mBccEdit->text().isEmpty() ?
+                                  QStringList() : mBccEdit->text().split( ',' ) );
 
   connect( job, SIGNAL(result(KJob*)),
            SLOT(jobResult(KJob*)) );
@@ -171,6 +173,5 @@ void MessageQueuer::jobInfoMessage( KJob *job, const QString &info, const QStrin
   kDebug() << info;
   kDebug() << info2;
 }
-
 
 #include "queuer.moc"

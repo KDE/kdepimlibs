@@ -72,7 +72,7 @@ class MailTransport::SMTPConfigWidgetPrivate : public TransportConfigWidgetPriva
 
     bool serverTestFailed;
 
-    static void addAuthenticationItem( QComboBox *combo,
+    static void addAuthenticationItem( KComboBox *combo,
                                    int authenticationType )
     {
       combo->addItem( Transport::authenticationTypeString( authenticationType ),
@@ -107,7 +107,7 @@ class MailTransport::SMTPConfigWidgetPrivate : public TransportConfigWidgetPriva
       }
 
       ui.authCombo->clear();
-      foreach( int authType, capa ) {
+      foreach ( int authType, capa ) {
         addAuthenticationItem( ui.authCombo, authType );
       }
 
@@ -174,8 +174,10 @@ void SMTPConfigWidget::init()
   d->resetAuthCapabilities();
 
   if ( KProtocolInfo::capabilities( SMTP_PROTOCOL ).contains( QLatin1String( "SASL" ) ) == 0 ) {
-    d->ui.authCombo->removeItem( d->ui.authCombo->findData( Transport::EnumAuthenticationType::NTLM ) );
-    d->ui.authCombo->removeItem( d->ui.authCombo->findData( Transport::EnumAuthenticationType::GSSAPI ) );
+    d->ui.authCombo->removeItem( d->ui.authCombo->findData(
+                                 Transport::EnumAuthenticationType::NTLM ) );
+    d->ui.authCombo->removeItem( d->ui.authCombo->findData(
+                                 Transport::EnumAuthenticationType::GSSAPI ) );
   }
 
   connect( d->ui.checkCapabilities, SIGNAL( clicked() ),

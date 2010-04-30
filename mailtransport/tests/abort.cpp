@@ -32,7 +32,6 @@
 using namespace Akonadi;
 using namespace MailTransport;
 
-
 Runner::Runner()
 {
   Control::start();
@@ -63,6 +62,5 @@ int main( int argc, char **argv )
   new Runner();
   return app.exec();
 }
-
 
 #include "abort.moc"

@@ -41,8 +41,6 @@ class FilterActionTest : public QObject
   private:
     Akonadi::Collection createCollection( const QString &name );
     Akonadi::Item createItem( const Akonadi::Collection &col, bool accept );
-
 };
-
 
 #endif

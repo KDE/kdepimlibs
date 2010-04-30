@@ -50,7 +50,7 @@ class MyFunctor : public FilterAction
 
     virtual bool itemAccepted( const Akonadi::Item &item ) const
     {
-      if( !item.hasAttribute<TestAttribute>() ) {
+      if ( !item.hasAttribute<TestAttribute>() ) {
         return false;
       }
       return ( item.attribute<TestAttribute>()->data == acceptable );
@@ -112,7 +112,7 @@ void FilterActionTest::testMassModifyItems()
 
   // Test a bunch of acceptable and unacceptable items.
   Item::List acc, unacc;
-  for( int i = 0; i < 5; i++ ) {
+  for ( int i = 0; i < 5; i++ ) {
     acc.append( createItem( col, true ) );
     unacc.append( createItem( col, false ) );
   }
@@ -124,13 +124,13 @@ void FilterActionTest::testMassModifyItems()
   fjob->fetchScope().fetchAllAttributes();
   AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 10 );
-  foreach( const Item &item, fjob->items() ) {
+  foreach ( const Item &item, fjob->items() ) {
     QVERIFY( item.hasAttribute<TestAttribute>() );
     const QByteArray data = item.attribute<TestAttribute>()->data;
-    if( data == unacceptable ) {
+    if ( data == unacceptable ) {
       QVERIFY( unacc.contains( item ) );
       unacc.removeAll( item );
-    } else if( data == modified ) {
+    } else if ( data == modified ) {
       QVERIFY( acc.contains( item ) );
       acc.removeAll( item );
     } else {
@@ -147,7 +147,7 @@ void FilterActionTest::testMassModifyCollection()
 
   // Test a bunch of acceptable and unacceptable items.
   Item::List acc, unacc;
-  for( int i = 0; i < 5; i++ ) {
+  for ( int i = 0; i < 5; i++ ) {
     acc.append( createItem( col, true ) );
     unacc.append( createItem( col, false ) );
   }
@@ -158,13 +158,13 @@ void FilterActionTest::testMassModifyCollection()
   fjob->fetchScope().fetchAllAttributes();
   AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 10 );
-  foreach( const Item &item, fjob->items() ) {
+  foreach ( const Item &item, fjob->items() ) {
     QVERIFY( item.hasAttribute<TestAttribute>() );
     const QByteArray data = item.attribute<TestAttribute>()->data;
-    if( data == unacceptable ) {
+    if ( data == unacceptable ) {
       QVERIFY( unacc.contains( item ) );
       unacc.removeAll( item );
-    } else if( data == modified ) {
+    } else if ( data == modified ) {
       QVERIFY( acc.contains( item ) );
       acc.removeAll( item );
     } else {
@@ -192,7 +192,7 @@ Item FilterActionTest::createItem( const Collection &col, bool accept )
   Item item;
   item.setMimeType( "text/directory" );
   TestAttribute *attr = new TestAttribute;
-  if( accept ) {
+  if ( accept ) {
     attr->data = acceptable;
   } else {
     attr->data = unacceptable;

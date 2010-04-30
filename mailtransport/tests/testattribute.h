@@ -29,7 +29,12 @@ class TestAttribute : public Akonadi::Attribute
     QByteArray type() const { return "EXTRA"; }
     QByteArray serialized() const { return data; }
     void deserialize( const QByteArray &ba ) { data = ba; }
-    TestAttribute* clone() const { TestAttribute* a = new TestAttribute; a->data = data; return a; }
+    TestAttribute* clone() const
+    {
+      TestAttribute *a = new TestAttribute;
+      a->data = data;
+      return a;
+    }
     QByteArray data;
 };
 
