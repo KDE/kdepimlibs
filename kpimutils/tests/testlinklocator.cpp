@@ -18,11 +18,13 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#include <qtest_kde.h>
-#include <kdebug.h>
 
 #include "testlinklocator.h"
+
 #include "testlinklocator.moc"
+
+#include <qtest_kde.h>
+#include <kdebug.h>
 
 // GUI test, since the smileys use GUI stuff
 QTEST_KDEMAIN( LinkLocatorTest, GUI )
@@ -116,11 +118,12 @@ void LinkLocatorTest::testGetUrl()
   brackets << "\"" << "\"";
   brackets << "<link>" << "</link>";
 
-  for (int i = 0; i < brackets.count(); i += 2)
-    testGetUrl2(brackets[i], brackets[i+1]);
+  for ( int i = 0; i < brackets.count(); i += 2 ) {
+    testGetUrl2( brackets[ i ], brackets[ i + 1 ] );
+  }
 }
 
-void LinkLocatorTest::testGetUrl2(const QString &left, const QString &right)
+void LinkLocatorTest::testGetUrl2( const QString &left, const QString &right )
 {
   QStringList schemas;
   schemas << "http://";
@@ -147,35 +150,38 @@ void LinkLocatorTest::testGetUrl2(const QString &left, const QString &right)
   urls << "user:pass@www.kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla";
   urls << "user:pass@www.kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla]";
   urls << "user:pass@www.kde.org:1234/\nsub/path:with:colon/\nspecial(123)?\na=1#anchor[bla]";
-  urls << "user:pass@www.kde.org:1234/  \n  sub/path:with:colon/  \n\t   \t   special(123)?\n\t  \n\t   a=1#anchor[bla]";
+  urls << "user:pass@www.kde.org:1234/  \n  sub/path:with:colon/  \n\t   \t   special(123)?"
+          "\n\t  \n\t   a=1#anchor[bla]";
 
-  foreach (QString schema, schemas)
-  {
-    foreach (QString url, urls)
-    {
-      // by defintion: if the URL is enclosed in brackets, the URL itself is not allowed
+  foreach ( const QString &schema, schemas ) {
+    foreach ( QString url, urls ) { //krazy:exclude=foreach
+      // by definition: if the URL is enclosed in brackets, the URL itself is not allowed
       // to contain the closing bracket, as this would be detected as the end of the URL
-      if ( ( left.length() == 1 ) && ( url.contains( right[0] ) ) )
+      if ( ( left.length() == 1 ) && ( url.contains( right[ 0 ] ) ) ) {
         continue;
+      }
 
       // if the url contains a whitespace, it must be enclosed with brackets
-      if ( (url.contains('\n') || url.contains('\t') || url.contains(' ')) &&
-           left.isEmpty() )
+      if ( ( url.contains( '\n' ) || url.contains( '\t' ) || url.contains( ' ' ) ) &&
+           left.isEmpty() ) {
         continue;
+      }
 
-      QString test(left + schema + url + right);
-      LinkLocator ll(test, left.length());
+      QString test( left + schema + url + right );
+      LinkLocator ll( test, left.length() );
       QString gotUrl = ll.getUrl();
 
       // we want to have the url without whitespace
-      url.remove(' ');
-      url.remove('\n');
-      url.remove('\t');
+      url.remove( ' ' );
+      url.remove( '\n' );
+      url.remove( '\t' );
 
-      bool ok = ( gotUrl == (schema + url) );
+      bool ok = ( gotUrl == ( schema + url ) );
       //qDebug() << "check:" << (ok ? "OK" : "NOK") << test << "=>" << (schema + url);
-      if ( !ok ) qDebug() << "got:" << gotUrl;
-      QVERIFY2( ok, qPrintable(test) );
+      if ( !ok ) {
+        qDebug() << "got:" << gotUrl;
+      }
+      QVERIFY2( ok, qPrintable( test ) );
     }
   }
 
@@ -189,84 +195,89 @@ void LinkLocatorTest::testGetUrl2(const QString &left, const QString &right)
   urlsWithoutSchema << ".kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla";
   urlsWithoutSchema << ".kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla]";
   urlsWithoutSchema << ".kde.org:1234/\nsub/path:with:colon/\nspecial(123)?\na=1#anchor[bla]";
-  urlsWithoutSchema << ".kde.org:1234/  \n  sub/path:with:colon/  \n\t   \t   special(123)?\n\t  \n\t   a=1#anchor[bla]";
+  urlsWithoutSchema << ".kde.org:1234/  \n  sub/path:with:colon/  \n\t   \t   special(123)?"
+                       "\n\t  \n\t   a=1#anchor[bla]";
 
   QStringList starts;
   starts << "www" << "ftp" << "news:www";
 
-  foreach (QString start, starts)
-  {
-    foreach (QString url, urlsWithoutSchema)
-    {
-      // by defintion: if the URL is enclosed in brackets, the URL itself is not allowed
+  foreach ( const QString &start, starts ) {
+    foreach ( QString url, urlsWithoutSchema ) { //krazy:exclude=foreach
+      // by definition: if the URL is enclosed in brackets, the URL itself is not allowed
       // to contain the closing bracket, as this would be detected as the end of the URL
-      if ( ( left.length() == 1 ) && ( url.contains( right[0] ) ) )
+      if ( ( left.length() == 1 ) && ( url.contains( right[ 0 ] ) ) ) {
         continue;
+      }
 
       // if the url contains a whitespace, it must be enclosed with brackets
-      if ( (url.contains('\n') || url.contains('\t') || url.contains(' ')) &&
-           left.isEmpty() )
+      if ( ( url.contains( '\n' ) || url.contains( '\t' ) || url.contains( ' ' ) ) &&
+           left.isEmpty() ) {
         continue;
+      }
 
-      QString test(left + start + url + right);
-      LinkLocator ll(test, left.length());
+      QString test( left + start + url + right );
+      LinkLocator ll( test, left.length() );
       QString gotUrl = ll.getUrl();
 
       // we want to have the url without whitespace
-      url.remove(' ');
-      url.remove('\n');
-      url.remove('\t');
+      url.remove( ' ' );
+      url.remove( '\n' );
+      url.remove( '\t' );
 
-      bool ok = ( gotUrl == (start + url) );
+      bool ok = ( gotUrl == ( start + url ) );
       //qDebug() << "check:" << (ok ? "OK" : "NOK") << test << "=>" << (start + url);
-      if ( !ok ) qDebug() << "got:" << gotUrl;
-      QVERIFY2( ok, qPrintable(gotUrl) );
+      if ( !ok ) {
+        qDebug() << "got:" << gotUrl;
+      }
+      QVERIFY2( ok, qPrintable( gotUrl ) );
     }
   }
 
   // test max url length
   QString url = "http://www.kde.org/this/is/a_very_loooooong_url/test/test/test";
   {
-    LinkLocator ll(url);
-    ll.setMaxUrlLen(10);
+    LinkLocator ll( url );
+    ll.setMaxUrlLen( 10 );
     QVERIFY( ll.getUrl().isEmpty() );  // url too long
   }
   {
-    LinkLocator ll(url);
-    ll.setMaxUrlLen(url.length() - 1);
+    LinkLocator ll( url );
+    ll.setMaxUrlLen( url.length() - 1 );
     QVERIFY( ll.getUrl().isEmpty() );  // url too long
   }
   {
-    LinkLocator ll(url);
-    ll.setMaxUrlLen(url.length());
+    LinkLocator ll( url );
+    ll.setMaxUrlLen( url.length() );
     QVERIFY( ll.getUrl() == url );
   }
   {
-    LinkLocator ll(url);
-    ll.setMaxUrlLen(url.length() + 1);
+    LinkLocator ll( url );
+    ll.setMaxUrlLen( url.length() + 1 );
     QVERIFY( ll.getUrl() == url );
   }
 
   // mailto
   {
     QString addr = "mailto:test@kde.org";
-    QString test(left + addr + right);
-    LinkLocator ll(test, left.length());
+    QString test( left + addr + right );
+    LinkLocator ll( test, left.length() );
 
     QString gotUrl = ll.getUrl();
 
     bool ok = ( gotUrl == addr );
     //qDebug() << "check:" << (ok ? "OK" : "NOK") << test << "=>" << addr;
-    if ( !ok ) qDebug() << "got:" << gotUrl;
-    QVERIFY2( ok, qPrintable(gotUrl) );
+    if ( !ok ) {
+      qDebug() << "got:" << gotUrl;
+    }
+    QVERIFY2( ok, qPrintable( gotUrl ) );
   }
 }
 
 void LinkLocatorTest::testHtmlConvert_data()
 {
-  QTest::addColumn<QString>("plainText");
-  QTest::addColumn<int>("flags");
-  QTest::addColumn<QString>("htmlText");
+  QTest::addColumn<QString>( "plainText" );
+  QTest::addColumn<int>( "flags" );
+  QTest::addColumn<QString>( "htmlText" );
 
   // Linker error when using PreserveSpaces, therefore the hardcoded 0x01 or 0x09
 
@@ -281,39 +292,52 @@ void LinkLocatorTest::testHtmlConvert_data()
   QTest::newRow( "" ) << "bla bla  bla" << 0x01
                       << "bla bla&nbsp;&nbsp;bla";
   QTest::newRow( "" ) << " bla bla \n bla bla a\n  bla bla " << 0x01
-                      << "&nbsp;bla bla&nbsp;<br />\n&nbsp;bla bla a<br />\n&nbsp;&nbsp;bla bla&nbsp;";
+                      << "&nbsp;bla bla&nbsp;<br />\n&nbsp;bla bla a<br />\n"
+                         "&nbsp;&nbsp;bla bla&nbsp;";
 
   // Test highlighting with *, / and _
-  QTest::newRow( "" ) << "Ce paragraphe _contient_ des mots ou des _groupes de mots_ à mettre en forme…" << 0x09 << "Ce paragraphe <u>contient</u> des mots ou des <u>groupes de mots</u> à mettre en forme…";
-  QTest::newRow( "punctation-bug" ) << "Ce texte *a l'air* de _fonctionner_, à condition d’utiliser le guillemet ASCII." << 0x09 << "Ce texte <b>a l'air</b> de <u>fonctionner</u>, à condition d’utiliser le guillemet ASCII.";
-  QTest::newRow( "punctation-bug" ) << "Un répertoire /est/ un *dossier* où on peut mettre des *fichiers*." << 0x09 << "Un répertoire <i>est</i> un <b>dossier</b> où on peut mettre des <b>fichiers</b>.";
+  QTest::newRow( "" ) << "Ce paragraphe _contient_ des mots ou des _groupes de mots_ à mettre en"
+                         " forme…" << 0x09 << "Ce paragraphe <u>contient</u> des mots ou des"
+                         " <u>groupes de mots</u> à mettre en forme…";
+  QTest::newRow( "punctation-bug" ) << "Ce texte *a l'air* de _fonctionner_, à condition"
+                                       " d’utiliser le guillemet ASCII." << 0x09
+                                       << "Ce texte <b>a l'air</b> de <u>fonctionner</u>, à"
+                                          " condition d’utiliser le guillemet ASCII.";
+  QTest::newRow( "punctation-bug" ) << "Un répertoire /est/ un *dossier* où on peut mettre des"
+                                       " *fichiers*." << 0x09 << "Un répertoire <i>est</i> un"
+                                       " <b>dossier</b> où on peut mettre des <b>fichiers</b>.";
   QTest::newRow( "punctation-bug" ) << "*BLA BLA BLA BLA*." << 0x09 << "<b>BLA BLA BLA BLA</b>.";
-  QTest::newRow( "" ) << "Je vais tenter de repérer des faux positif*" << 0x09 << "Je vais tenter de repérer des faux positif*";
+  QTest::newRow( "" ) << "Je vais tenter de repérer des faux positif*" << 0x09
+                      << "Je vais tenter de repérer des faux positif*";
   QTest::newRow( "" ) << "*Ouais !* *Yes!*" << 0x09 << "<b>Ouais !</b> <b>Yes!</b>";
-  QTest::newRow( "" ) << "the /etc/{rsyslog.d,syslog-ng.d}/package.rpmnew file" << 0x09 << "the /etc/{rsyslog.d,syslog-ng.d}/package.rpmnew file";
+  QTest::newRow( "" ) << "the /etc/{rsyslog.d,syslog-ng.d}/package.rpmnew file" << 0x09
+                      << "the /etc/{rsyslog.d,syslog-ng.d}/package.rpmnew file";
 
   // This test has problems with the encoding, apparently.
-  //QTest::newRow( "" ) << "*Ça fait plaisir de pouvoir utiliser des lettres accentuées dans du texte mis en forme*." << 0x09 << "<b>Ça fait plaisir de pouvoir utiliser des lettres accentuées dans du texte mis en forme</b>.";
+  //QTest::newRow( "" ) << "*Ça fait plaisir de pouvoir utiliser des lettres accentuées dans du"
+  //                       " texte mis en forme*." << 0x09 << "<b>Ça fait plaisir de pouvoir"
+  //                       " utiliser des lettres accentuées dans du texte mis en forme</b>.";
 
   // Bug reported by dfaure, the <hostname> would get lost
-  QTest::newRow( "" ) << "KUrl url(\"http://strange<hostname>/\");" << (0x08 | 0x02)
-                      << "KUrl url(&quot;<a href=\"http://strange<hostname>/\">http://strange&lt;hostname&gt;/</a>&quot;);";
+  QTest::newRow( "" ) << "KUrl url(\"http://strange<hostname>/\");" << ( 0x08 | 0x02 )
+                      << "KUrl url(&quot;<a href=\"http://strange<hostname>/\">"
+                         "http://strange&lt;hostname&gt;/</a>&quot;);";
 
   // Bug: 211128 - plain text emails should not replace ampersand & with &amp;
   QTest::newRow( "bug211128" ) << "https://green-site/?Ticket=85&Page=next" << 0x01
-    << "<a href=\"https://green-site/?Ticket=85&Page=next\">https://green-site/?Ticket=85&amp;Page=next</a>";
+    << "<a href=\"https://green-site/?Ticket=85&Page=next\">"
+       "https://green-site/?Ticket=85&amp;Page=next</a>";
 }
 
 void LinkLocatorTest::testHtmlConvert()
 {
-  QFETCH(QString, plainText);
-  QFETCH(int, flags);
-  QFETCH(QString, htmlText);
+  QFETCH( QString, plainText );
+  QFETCH( int, flags );
+  QFETCH( QString, htmlText );
 
-  QEXPECT_FAIL( "punctation-bug", "Linklocator does not properly detect punctation as boundaries", Continue );
+  QEXPECT_FAIL( "punctation-bug", "Linklocator does not properly detect punctation as boundaries",
+                Continue );
 
   QString actualHtml = LinkLocator::convertToHtml( plainText, flags );
   QCOMPARE( actualHtml, htmlText );
 }
-
-

@@ -34,7 +34,7 @@ class LinkLocatorTest : public QObject
     void testHtmlConvert_data();
 
   private:
-    void testGetUrl2(const QString &left, const QString &right);
+    void testGetUrl2( const QString &left, const QString &right );
 };
 
 #endif

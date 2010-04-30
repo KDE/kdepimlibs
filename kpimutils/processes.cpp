@@ -104,8 +104,8 @@ void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &p
   LONG lRes;
   while ( ( lRes = RegQueryValueExA( HKEY_PERFORMANCE_DATA,
                                      key,
-                                     NULL,
-                                     NULL,
+                                     0,
+                                     0,
                                      (LPBYTE) perfData,
                                      &bufSize ) ) == ERROR_MORE_DATA ) {
     // get a buffer that is big enough
@@ -233,7 +233,7 @@ void KPIMUtils::activateWindowForProcess( const QString &executableName )
   EnumWindowsStruct winStruct;
   winStruct.pid = foundPid;
   EnumWindows( EnumWindowsProc, (LPARAM)&winStruct );
-  if ( winStruct.windowId == NULL ) {
+  if ( winStruct.windowId == 0 ) {
     return;
   }
   SetForegroundWindow( winStruct.windowId );

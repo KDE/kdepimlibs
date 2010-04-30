@@ -32,7 +32,7 @@
 #ifndef KPIMUTILS_EMAIL_H
 #define KPIMUTILS_EMAIL_H
 
-#include <KUrl>
+#include <KDE/KUrl>
 
 #include <QtCore/QStringList>
 #include <QtCore/QByteArray>
@@ -398,7 +398,7 @@ namespace KPIMUtils {
     * @since 4.4.3
     */
   KPIMUTILS_EXPORT
-  QString decodeMailtoUrl( const KUrl& mailtoUrl );
+  QString decodeMailtoUrl( const KUrl &mailtoUrl );
 
 } // namespace
 

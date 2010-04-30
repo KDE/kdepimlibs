@@ -1073,7 +1073,7 @@ KUrl KPIMUtils::encodeMailtoUrl( const QString &mailbox )
   return mailtoUrl;
 }
 
-QString KPIMUtils::decodeMailtoUrl( const KUrl& mailtoUrl )
+QString KPIMUtils::decodeMailtoUrl( const KUrl &mailtoUrl )
 {
   Q_ASSERT( mailtoUrl.protocol().toLower() == "mailto" );
   return KMime::decodeRFC2047String( mailtoUrl.path().toLatin1() );
