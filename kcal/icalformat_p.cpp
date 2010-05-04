@@ -784,7 +784,11 @@ icalproperty *ICalFormatImpl::writeAttachment( Attachment *att )
   if ( att->isUri() ) {
     attach = icalattach_new_from_url( att->uri().toUtf8().data() );
   } else {
+#if ( LIBICAL_MAJOR_VERSION == 0 ) && ( LIBICAL_MINOR_VERSION < 45 )
     attach = icalattach_new_from_data ( ( unsigned char * )att->data(), 0, 0 );
+#else
+    attach = icalattach_new_from_data ( att->data(), 0, 0 );
+#endif
   }
   icalproperty *p = icalproperty_new_attach( attach );
 

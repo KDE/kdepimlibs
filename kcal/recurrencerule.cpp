@@ -1727,7 +1727,7 @@ DateTimeList RecurrenceRule::timesInInterval( const KDateTime &dtStart,
   if ( d->mDuration >= 0 ) {
     KDateTime endRecur = endDt();
     if ( endRecur.isValid() ) {
-      if ( start >= endRecur ) {
+      if ( start > endRecur ) {
         return result;    // beyond end of recurrence
       }
       if ( end > endRecur ) {
@@ -1757,7 +1757,7 @@ DateTimeList RecurrenceRule::timesInInterval( const KDateTime &dtStart,
     if ( !d->mCached ) {
       d->buildCache();
     }
-    if ( d->mCachedDateEnd.isValid() && start >= d->mCachedDateEnd ) {
+    if ( d->mCachedDateEnd.isValid() && start > d->mCachedDateEnd ) {
       return result;    // beyond end of recurrence
     }
     int i = d->mCachedDates.findGE( start );
