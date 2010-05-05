@@ -267,7 +267,6 @@ static QString displayViewFormatAttendees( Incidence *incidence )
   // Add organizer link
   int attendeeCount = incidence->attendees().count();
   if ( attendeeCount > 1 ||
-       ( !incidence->organizer().email().isEmpty() && !iamOrganizer( incidence ) ) ||
        ( attendeeCount == 1 &&
          incidence->organizer().email() != incidence->attendees().first()->email() ) ) {
     tmpStr += "<tr>";
@@ -2894,7 +2893,6 @@ static QString tooltipFormatAttendees( Incidence *incidence )
   // Add organizer link
   int attendeeCount = incidence->attendees().count();
   if ( attendeeCount > 1 ||
-       ( !incidence->organizer().email().isEmpty() && !iamOrganizer( incidence ) ) ||
        ( attendeeCount == 1 &&
          incidence->organizer().email() != incidence->attendees().first()->email() ) ) {
     tmpStr += "<i>" + i18n( "Organizer:" ) + "</i>" + "&nbsp;";
