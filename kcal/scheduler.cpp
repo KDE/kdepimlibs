@@ -373,7 +373,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
                 "one or 'Throw away' to discard this update." ),
          i18nc( "@title", "Discard this update?" ),
          KGuiItem( i18nc( "@option", "Store" ) ),
-         KGuiItem( i18nc( "@option", "Throw away" ) ) ) == KMessageBox::Yes ) {
+         KGuiItem( i18nc( "@option", "Throw away" ) ), "AcceptCantFindIncidence" ) == KMessageBox::Yes ) {
     kDebug() << "Storing new incidence with scheduling uid=" << inc->schedulingID()
              << " and uid=" << inc->uid();
     mCalendar->addIncidence( inc );
