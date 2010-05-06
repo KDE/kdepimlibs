@@ -35,6 +35,7 @@
 #define KCAL_DNDFACTORY_H
 
 #include "kcal_export.h"
+#include "incidence.h"
 
 #include <KDE/KDateTime>
 
@@ -130,6 +131,18 @@ class KCAL_EXPORT DndFactory
       Copy the incidence to clipboard/
     */
     bool copyIncidence( Incidence * );
+
+    /** cuts a list of incidences to the clipboard */
+    bool cutIncidences( const Incidence::List &incidences );
+
+    /** copies a list of incidences to the clipboard */
+    bool copyIncidences( const Incidence::List &incidences );
+
+    /** pastes and returns the incidences from the clipboard
+        If no date and time are given, the incidences will be pasted at
+        their original date/time */
+    Incidence::List pasteIncidences( const QDate &newDate = QDate(),
+                                     const QTime *newTime = 0 );
 
     /**
       Paste the event or todo and return a pointer to the new incidence pasted.

@@ -64,6 +64,64 @@ class KCal::DndFactory::Private
     Private( Calendar *cal )
       : mCalendar ( cal )
     {}
+
+    Incidence * pasteIncidence( Incidence *inc,
+                                const QDate &newDate,
+                                const QTime *newTime = 0 )
+    {
+      if ( inc ) {
+        inc = inc->clone();
+        inc->recreate();
+      }
+
+      if ( inc && newDate.isValid() ) {
+        if ( inc->type() == "Event" ) {
+
+          Event *anEvent = static_cast<Event*>( inc );
+          // Calculate length of event
+          int daysOffset = anEvent->dtStart().date().daysTo(
+            anEvent->dtEnd().date() );
+          // new end date if event starts at the same time on the new day
+          KDateTime endDate( anEvent->dtEnd() );
+          endDate.setDate( newDate.addDays( daysOffset ) );
+
+          KDateTime startDate( anEvent->dtStart() );
+          startDate.setDate( newDate );
+          if ( newTime ) {
+            // additional offset for new time of day
+            int addSecsOffset( anEvent->dtStart().time().secsTo( *newTime ) );
+            endDate=endDate.addSecs( addSecsOffset );
+            startDate.setTime( *newTime );
+          }
+          anEvent->setDtStart( startDate );
+          anEvent->setDtEnd( endDate );
+
+        } else if ( inc->type() == "Todo" ) {
+          Todo *anTodo = static_cast<Todo*>( inc );
+          KDateTime dueDate( anTodo->dtDue() );
+          dueDate.setDate( newDate );
+          if ( newTime ) {
+            dueDate.setTime( *newTime );
+          }
+          anTodo->setDtDue( dueDate );
+        } else if ( inc->type() == "Journal" ) {
+          Journal *anJournal = static_cast<Journal*>( inc );
+          KDateTime startDate( anJournal->dtStart() );
+          startDate.setDate( newDate );
+          if ( newTime ) {
+            startDate.setTime( *newTime );
+          } else {
+            startDate.setTime( QTime( 0, 0, 0 ) );
+          }
+          anJournal->setDtStart( startDate );
+        } else {
+          kDebug() << "Trying to paste unknown incidence of type" << inc->type();
+        }
+      }
+
+      return inc;
+    }
+
     Calendar *mCalendar;
 };
 //@endcond
@@ -215,30 +273,77 @@ Todo *DndFactory::createDropTodo( QDropEvent *de )
 
 void DndFactory::cutIncidence( Incidence *selectedInc )
 {
-  if ( copyIncidence( selectedInc ) ) {
-    d->mCalendar->deleteIncidence( selectedInc );
+  Incidence::List list;
+  list.append( selectedInc );
+  cutIncidences( list );
+}
+
+bool DndFactory::cutIncidences( const Incidence::List &incidences )
+{
+  if ( copyIncidences( incidences ) ) {
+    Incidence::List::ConstIterator it;
+    for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
+      d->mCalendar->deleteIncidence( *it );
+    }
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool DndFactory::copyIncidences( const Incidence::List &incidences )
+{
+  QClipboard *cb = QApplication::clipboard();
+  CalendarLocal cal( d->mCalendar->timeSpec() );
+
+  Incidence::List::ConstIterator it;
+  for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
+    if ( *it ) {
+      cal.addIncidence( ( *it )->clone() );
+    }
+  }
+
+  QMimeData *mimeData = new QMimeData;
+
+  ICalDrag::populateMimeData( mimeData, &cal );
+  VCalDrag::populateMimeData( mimeData, &cal );
+
+  if ( cal.incidences().isEmpty() ) {
+    return false;
+  } else {
+    cb->setMimeData( mimeData );
+    return true;
   }
 }
 
 bool DndFactory::copyIncidence( Incidence *selectedInc )
 {
-  if ( !selectedInc ) {
-    return false;
+  Incidence::List list;
+  list.append( selectedInc );
+  return copyIncidences( list );
+}
+
+Incidence::List DndFactory::pasteIncidences( const QDate &newDate,
+                                             const QTime *newTime )
+{
+  QClipboard *cb = QApplication::clipboard();
+  Calendar *cal = createDropCalendar( cb->mimeData() );
+  Incidence::List list;
+
+  if ( !cal ) {
+    kDebug() << "Can't parse clipboard";
+    return list;
   }
 
-  QClipboard *cb = QApplication::clipboard();
-
-  CalendarLocal cal( d->mCalendar->timeSpec() );
-  Incidence *inc = selectedInc->clone();
-  cal.addIncidence( inc );
-
-  QMimeData *mimeData = new QMimeData;
-  cb->setMimeData( mimeData );
-
-  ICalDrag::populateMimeData( mimeData, &cal );
-  VCalDrag::populateMimeData( mimeData, &cal );
-
-  return true;
+  Incidence::List::ConstIterator it;
+  for ( it = cal->incidences().constBegin();
+        it != cal->incidences().constEnd(); ++it ) {
+    Incidence *inc = d->pasteIncidence( *it, newDate, newTime );
+    if ( inc ) {
+      list.append( inc );
+    }
+  }
+  return list;
 }
 
 Incidence *DndFactory::pasteIncidence( const QDate &newDate, const QTime *newTime )
@@ -254,55 +359,5 @@ Incidence *DndFactory::pasteIncidence( const QDate &newDate, const QTime *newTim
   Incidence::List incList = cal->incidences();
   Incidence *inc = incList.isEmpty() ? 0 : incList.first();
 
-  if ( inc ) {
-    inc = inc->clone();
-    inc->recreate();
-  }
-
-  if ( inc && newDate.isValid() ) {
-    if ( inc->type() == "Event" ) {
-
-      Event *anEvent = static_cast<Event*>( inc );
-      // Calculate length of event
-      int daysOffset = anEvent->dtStart().date().daysTo(
-        anEvent->dtEnd().date() );
-      // new end date if event starts at the same time on the new day
-      KDateTime endDate( anEvent->dtEnd() );
-      endDate.setDate( newDate.addDays( daysOffset ) );
-
-      KDateTime startDate( anEvent->dtStart() );
-      startDate.setDate( newDate );
-      if ( newTime ) {
-        // additional offset for new time of day
-        int addSecsOffset( anEvent->dtStart().time().secsTo( *newTime ) );
-        endDate=endDate.addSecs( addSecsOffset );
-        startDate.setTime( *newTime );
-      }
-      anEvent->setDtStart( startDate );
-      anEvent->setDtEnd( endDate );
-
-    } else if ( inc->type() == "Todo" ) {
-      Todo *anTodo = static_cast<Todo*>( inc );
-      KDateTime dueDate( anTodo->dtDue() );
-      dueDate.setDate( newDate );
-      if ( newTime ) {
-        dueDate.setTime( *newTime );
-      }
-      anTodo->setDtDue( dueDate );
-    } else if ( inc->type() == "Journal" ) {
-      Journal *anJournal = static_cast<Journal*>( inc );
-      KDateTime startDate( anJournal->dtStart() );
-      startDate.setDate( newDate );
-      if ( newTime ) {
-        startDate.setTime( *newTime );
-      } else {
-        startDate.setTime( QTime( 0, 0, 0 ) );
-      }
-      anJournal->setDtStart( startDate );
-    } else {
-      kDebug() << "Trying to paste unknown incidence of type" << inc->type();
-    }
-  }
-  delete cal;
-  return inc;
+  return d->pasteIncidence( inc, newDate, newTime );
 }
