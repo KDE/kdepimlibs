@@ -31,7 +31,7 @@
 
   @author Cornelius Schumacher \<schumacher@kde.org\>
   @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
-  @author Allen Winter \<allen@kdab.net\>
+  @author Allen Winter \<allen@kdab.com\>
 */
 
 #include "incidenceformatter.h"
@@ -143,6 +143,26 @@ static bool iamOrganizer( Incidence *incidence )
     }
   }
   return iam;
+}
+
+static bool senderIsOrganizer( Incidence *incidence, const QString &sender )
+{
+  // Check if the specified sender is the organizer
+
+  if ( !incidence || sender.isEmpty() ) {
+    return true;
+  }
+
+  bool isorg = true;
+  QString senderName, senderEmail;
+  if ( KPIMUtils::extractEmailAddressAndName( sender, senderEmail, senderName ) ) {
+    // for this heuristic, we say the sender is the organizer if either the name or the email match.
+    if ( incidence->organizer().email() != senderEmail &&
+         incidence->organizer().name() != senderName ) {
+      isorg = false;
+    }
+  }
+  return isorg;
 }
 
 static QString firstAttendeeName( Incidence *incidence, const QString &defName )
@@ -1581,7 +1601,7 @@ static bool replyMeansCounter( Incidence */*incidence*/ )
 */
 }
 
-static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
+static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg, const QString &sender )
 {
   if ( !msg || !event ) {
     return QString();
@@ -1597,11 +1617,21 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     if ( iamOrganizer( event ) ) {
       return i18n( "I sent this invitation" );
     } else {
-      if ( !event->organizer().fullName().isEmpty() ) {
-        return i18n( "You received an invitation from %1",
-                     event->organizer().fullName() );
+      if ( senderIsOrganizer( event, sender ) ) {
+        if ( !event->organizer().fullName().isEmpty() ) {
+          return i18n( "You received an invitation from %1",
+                       event->organizer().fullName() );
+        } else {
+          return i18n( "You received an invitation" );
+        }
       } else {
-        return i18n( "You received an invitation" );
+        if ( !event->organizer().fullName().isEmpty() ) {
+          return i18n( "You received an invitation from %1 as a representative of %2",
+                       sender, event->organizer().fullName() );
+        } else {
+          return i18n( "You received an invitation from %1 as the organizer's representative",
+                       sender );
+        }
       }
     }
   case iTIPRefresh:
@@ -1696,7 +1726,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
   return QString();
 }
 
-static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
+static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg, const QString &sender )
 {
   if ( !msg || !todo ) {
     return QString();
@@ -1709,7 +1739,25 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
     if ( todo->revision() > 0 ) {
       return i18n( "This to-do has been updated" );
     } else {
-      return i18n( "You have been assigned this to-do" );
+      if ( iamOrganizer( todo ) ) {
+        return i18n( "This is a task I created" );
+      } else {
+        if ( senderIsOrganizer( todo, sender ) ) {
+          if ( !todo->organizer().fullName().isEmpty() ) {
+            return i18n( "You have been assigned this task by %1", todo->organizer().fullName() );
+          } else {
+            return i18n( "You have been assigned this to-do" );
+          }
+        } else {
+          if ( !todo->organizer().fullName().isEmpty() ) {
+            return i18n( "You have been assigned this task by %1 as a representative of %2",
+                         sender, todo->organizer().fullName() );
+          } else {
+            return i18n( "You have been assigned this task by %1 as the organizer's representative",
+                         sender );
+          }
+        }
+      }
     }
   case iTIPRefresh:
     return i18n( "This to-do was refreshed" );
@@ -1984,9 +2032,10 @@ class KCal::IncidenceFormatter::ScheduleMessageVisitor
 {
   public:
     ScheduleMessageVisitor() : mMessage(0) { mResult = ""; }
-    bool act( IncidenceBase *incidence, ScheduleMessage *msg )
+    bool act( IncidenceBase *incidence, ScheduleMessage *msg, const QString &sender )
     {
       mMessage = msg;
+      mSender = sender;
       return incidence->accept( *this );
     }
     QString result() const { return mResult; }
@@ -1994,6 +2043,7 @@ class KCal::IncidenceFormatter::ScheduleMessageVisitor
   protected:
     QString mResult;
     ScheduleMessage *mMessage;
+    QString mSender;
 };
 
 class KCal::IncidenceFormatter::InvitationHeaderVisitor :
@@ -2002,12 +2052,12 @@ class KCal::IncidenceFormatter::InvitationHeaderVisitor :
   protected:
     bool visit( Event *event )
     {
-      mResult = invitationHeaderEvent( event, mMessage );
+      mResult = invitationHeaderEvent( event, mMessage, mSender );
       return !mResult.isEmpty();
     }
     bool visit( Todo *todo )
     {
-      mResult = invitationHeaderTodo( todo, mMessage );
+      mResult = invitationHeaderTodo( todo, mMessage, mSender );
       return !mResult.isEmpty();
     }
     bool visit( Journal *journal )
@@ -2328,7 +2378,8 @@ static QString formatICalInvitationHelper( QString invitation,
                                            Calendar *mCalendar,
                                            InvitationFormatterHelper *helper,
                                            bool noHtmlMode,
-                                           KDateTime::Spec spec )
+                                           KDateTime::Spec spec,
+                                           const QString &sender )
 {
   if ( invitation.isEmpty() ) {
     return QString();
@@ -2374,13 +2425,13 @@ static QString formatICalInvitationHelper( QString invitation,
 
   IncidenceFormatter::InvitationHeaderVisitor headerVisitor;
   // The InvitationHeaderVisitor returns false if the incidence is somehow invalid, or not handled
-  if ( !headerVisitor.act( incBase, msg ) ) {
+  if ( !headerVisitor.act( incBase, msg, sender ) ) {
     return QString();
   }
   html += htmlAddTag( "h3", headerVisitor.result() );
 
   IncidenceFormatter::InvitationBodyVisitor bodyVisitor( noHtmlMode, spec );
-  if ( !bodyVisitor.act( incBase, msg ) ) {
+  if ( !bodyVisitor.act( incBase, msg, sender ) ) {
     return QString();
   }
   html += bodyVisitor.result();
@@ -2592,7 +2643,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation,
                                                   InvitationFormatterHelper *helper )
 {
   return formatICalInvitationHelper( invitation, calendar, helper, false,
-                                     KSystemTimeZones::local() );
+                                     KSystemTimeZones::local(), QString() );
 }
 
 QString IncidenceFormatter::formatICalInvitationNoHtml( QString invitation,
@@ -2600,7 +2651,16 @@ QString IncidenceFormatter::formatICalInvitationNoHtml( QString invitation,
                                                         InvitationFormatterHelper *helper )
 {
   return formatICalInvitationHelper( invitation, calendar, helper, true,
-                                     KSystemTimeZones::local() );
+                                     KSystemTimeZones::local(), QString() );
+}
+
+QString IncidenceFormatter::formatICalInvitationNoHtml( const QString &invitation,
+                                                        Calendar *calendar,
+                                                        InvitationFormatterHelper *helper,
+                                                        const QString &sender )
+{
+  return formatICalInvitationHelper( invitation, calendar, helper, true,
+                                     KSystemTimeZones::local(), sender );
 }
 
 /*******************************************************************
