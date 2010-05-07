@@ -27,7 +27,7 @@
 
   @author Cornelius Schumacher \<schumacher@kde.org\>
   @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
-  @author Allen Winter \<allen@kdab.net\>
+  @author Allen Winter \<allen@kdab.com\>
 */
 #ifndef KCAL_INCIDENCEFORMATTER_H
 #define KCAL_INCIDENCEFORMATTER_H
@@ -201,16 +201,41 @@ namespace IncidenceFormatter
   /**
     Deliver an HTML formatted string displaying an invitation.
     Use the time zone from mCalendar.
+
+    @param invitation a QString containing a string representation of a calendar Event
+    which will be intrepreted as an invitation.
+    @param calendar is a pointer to the Calendar that owns the invitation.
+    @param helper is a pointer to an InvitationFormatterHelper.
   */
-  KCAL_EXPORT QString formatICalInvitation( QString invitation, Calendar *mCalendar,
+  KCAL_EXPORT QString formatICalInvitation( QString invitation, Calendar *calendar,
                                             InvitationFormatterHelper *helper );
   /**
-    @since 4.2
-  */
-  KCAL_EXPORT QString formatICalInvitationNoHtml( QString invitation, Calendar *mCalendar,
-                                                  InvitationFormatterHelper *helper );
+    Deliver an HTML formatted string displaying an invitation.
+    Differs from formatICalInvitation() in that invitation details (summary, location, etc)
+    have HTML formatting cleaned.
+    Use the time zone from calendar.
 
-  /** 
+    @param invitation a QString containing a string representation of a calendar Event
+    which will be intrepreted as an invitation.
+    @param calendar is a pointer to the Calendar that owns the invitation.
+    @param helper is a pointer to an InvitationFormatterHelper.
+    @deprecated use formatICalInvitationNoHtml(const QString &,Calendar *,
+                                               InvitationFormatterHelper *,const QString &) instead.
+  */
+  KCAL_EXPORT QString KDE_DEPRECATED formatICalInvitationNoHtml(
+    QString invitation, Calendar *calendar, InvitationFormatterHelper *helper );
+
+  /**
+    Deliver an HTML formatted string displaying an invitation.
+    Differs from formatICalInvitation() in that invitation details (summary, location, etc)
+    have HTML formatting cleaned.
+    Use the time zone from calendar.
+
+    @param invitation a QString containing a string representation of a calendar Event
+    which will be intrepreted as an invitation.
+    @param calendar is a pointer to the Calendar that owns the invitation.
+    @param helper is a pointer to an InvitationFormatterHelper.
+    @param sender is a QString containing the email address of the person sending the invitation.
     @since 4.5
   */
   KCAL_EXPORT QString formatICalInvitationNoHtml( const QString &invitation,
