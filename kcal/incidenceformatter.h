@@ -210,6 +210,14 @@ namespace IncidenceFormatter
   KCAL_EXPORT QString formatICalInvitationNoHtml( QString invitation, Calendar *mCalendar,
                                                   InvitationFormatterHelper *helper );
 
+  /** 
+    @since 4.5
+  */
+  KCAL_EXPORT QString formatICalInvitationNoHtml( const QString &invitation,
+                                                  Calendar *calendar,
+                                                  InvitationFormatterHelper *helper,
+                                                  const QString &sender );
+
   /**
     Format a TNEF attachment to an HTML mail
     @since 4.1
