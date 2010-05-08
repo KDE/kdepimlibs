@@ -3,7 +3,6 @@
 
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2007 David Jarvie <software@astrojar.org.uk>
-    Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -29,7 +28,6 @@
   Represents a period of time.
 
   @author Cornelius Schumacher \<schumacher@kde.org\>
-  @author Volker Krause \<volker@kdab.com\>
 */
 
 #include "period.h"
@@ -51,8 +49,6 @@ class KCal::Period::Private
     {}
     KDateTime mStart;    // period starting date/time
     KDateTime mEnd;      // period ending date/time
-    QString mSummary;    // period summary (extended FreeBusy)
-    QString mLocation;   // period location (extended FreeBusy)
     bool mHasDuration;   // does period have a duration?
     bool mDailyDuration; // duration is defined as number of days, not seconds
 };
@@ -135,26 +131,6 @@ Duration Period::duration( Duration::Type type ) const
 bool Period::hasDuration() const
 {
   return d->mHasDuration;
-}
-
-void Period::setSummary( const QString &summary )
-{
-  d->mSummary = summary;
-}
-
-QString Period::summary() const
-{
-  return d->mSummary;
-}
-
-void Period::setLocation( const QString &location )
-{
-  d->mLocation = location;
-}
-
-QString Period::location() const
-{
-  return d->mLocation;
 }
 
 void Period::shiftTimes( const KDateTime::Spec &oldSpec,

@@ -2,7 +2,6 @@
     This file is part of the kcal library.
 
     Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -28,7 +27,6 @@
   Represents a period of time.
 
   @author Cornelius Schumacher \<schumacher@kde.org\>
-  @author Volker Krause \<volker@kdab.com\>
 */
 
 #ifndef KCAL_PERIOD_H
@@ -171,32 +169,6 @@ class KCAL_EXPORT Period
       if it just has a start and an end.
     */
     bool hasDuration() const;
-
-    /**
-      Set a summary for this period (for groupware that supports extended FreeBusy).
-      @param summary is the period summary string.
-      @since 4.5
-    */
-    void setSummary( const QString &summary );
-
-    /**
-      Returns the period summary.
-      @since 4.5
-    */
-    QString summary() const;
-
-    /**
-      Set a location for this period (for groupware that supports extended FreeBusy).
-      @param location is the period location string.
-      @since 4.5
-    */
-    void setLocation( const QString &location );
-
-    /**
-      Returns the period location.
-      @since 4.5
-    */
-    QString location() const;
 
     /**
       Shift the times of the period so that they appear at the same clock
