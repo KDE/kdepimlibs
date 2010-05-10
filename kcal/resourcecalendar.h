@@ -465,6 +465,12 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual bool subresourceActive( const QString &resource ) const;
 
     /**
+      Is this subresource writable or not?
+      @since 4.5
+    */
+    virtual bool subresourceWritable( const QString &subresource ) const;
+
+    /**
       What is the label for this subresource?
      */
     virtual QString labelForSubresource( const QString &resource ) const;
