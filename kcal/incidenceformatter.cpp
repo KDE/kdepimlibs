@@ -1612,10 +1612,11 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg, const 
     return i18n( "This invitation has been published" );
   case iTIPRequest:
     if ( event->revision() > 0 ) {
-      return i18n( "This invitation has been updated" );
+      return i18n( "This invitation has been updated by the organizer %1",
+                   event->organizer().fullName() );
     }
     if ( iamOrganizer( event ) ) {
-      return i18n( "I sent this invitation" );
+      return i18n( "I created this invitation" );
     } else {
       if ( senderIsOrganizer( event, sender ) ) {
         if ( !event->organizer().fullName().isEmpty() ) {
@@ -1669,11 +1670,19 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg, const 
     case Attendee::NeedsAction:
       return i18n( "%1 indicates this invitation still needs some action", attendeeName );
     case Attendee::Accepted:
-      if ( delegatorName.isEmpty() ) {
-        return i18n( "%1 accepts this invitation", attendeeName );
+      if ( event->revision() > 0 ) {
+        if ( !sender.isEmpty() ) {
+          return i18n( "This invitation has been updated by attendee %1", sender );
+        } else {
+          return i18n( "This invitation has been updated by an attendee" );
+        }
       } else {
-        return i18n( "%1 accepts this invitation on behalf of %2",
-                     attendeeName, delegatorName );
+        if ( delegatorName.isEmpty() ) {
+          return i18n( "%1 accepts this invitation", attendeeName );
+        } else {
+          return i18n( "%1 accepts this invitation on behalf of %2",
+                       attendeeName, delegatorName );
+        }
       }
     case Attendee::Tentative:
       if ( delegatorName.isEmpty() ) {
@@ -1737,10 +1746,11 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg, const QSt
     return i18n( "This to-do has been published" );
   case iTIPRequest:
     if ( todo->revision() > 0 ) {
-      return i18n( "This to-do has been updated" );
+      return i18n( "This to-do has been updated by the organizer %1",
+                   todo->organizer().fullName() );
     } else {
       if ( iamOrganizer( todo ) ) {
-        return i18n( "This is a task I created" );
+        return i18n( "I created this to-do" );
       } else {
         if ( senderIsOrganizer( todo, sender ) ) {
           if ( !todo->organizer().fullName().isEmpty() ) {
@@ -1795,11 +1805,19 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg, const QSt
       return i18n( "%1 indicates this to-do assignment still needs some action",
                    attendeeName );
     case Attendee::Accepted:
-      if ( delegatorName.isEmpty() ) {
-        return i18n( "%1 accepts this to-do", attendeeName );
+      if ( todo->revision() > 0 ) {
+        if ( !sender.isEmpty() ) {
+          return i18n( "This to-do has been updated by assignee %1", sender );
+        } else {
+          return i18n( "This to-do has been updated by an assignee" );
+        }
       } else {
-        return i18n( "%1 accepts this to-do on behalf of %2",
-                     attendeeName, delegatorName );
+        if ( delegatorName.isEmpty() ) {
+          return i18n( "%1 accepts this to-do", attendeeName );
+        } else {
+          return i18n( "%1 accepts this to-do on behalf of %2",
+                       attendeeName, delegatorName );
+        }
       }
     case Attendee::Tentative:
       if ( delegatorName.isEmpty() ) {
@@ -2151,6 +2169,7 @@ class IncidenceFormatter::IncidenceCompareVisitor
     }
     bool visit( Todo *todo )
     {
+      compareTodos( todo, dynamic_cast<Todo*>( mExistingIncidence ) );
       compareIncidences( todo, mExistingIncidence );
       return !mChanges.isEmpty();
     }
@@ -2180,6 +2199,39 @@ class IncidenceFormatter::IncidenceCompareVisitor
            oldEvent->allDay() != newEvent->allDay() ) {
         mChanges += i18n( "The invitation ending time has been changed from %1 to %2",
                           eventEndTimeStr( oldEvent ), eventEndTimeStr( newEvent ) );
+      }
+    }
+
+    void compareTodos( Todo *newTodo, Todo *oldTodo )
+    {
+      if ( !oldTodo || !newTodo ) {
+        return;
+      }
+
+      if ( !oldTodo->hasStartDate() && newTodo->hasStartDate() ) {
+        mChanges += i18n( "A to-do starting time has been added" );
+      }
+      if ( oldTodo->hasStartDate() && !newTodo->hasStartDate() ) {
+        mChanges += i18n( "The to-do starting time has been removed" );
+      }
+      if ( oldTodo->hasStartDate() && newTodo->hasStartDate() &&
+           oldTodo->dtStart() != newTodo->dtStart() ) {
+        mChanges += i18n( "The to-do starting time has been changed from %1 to %2",
+                          dateTimeToString( oldTodo->dtStart(), oldTodo->allDay(), false ),
+                          dateTimeToString( newTodo->dtStart(), newTodo->allDay(), false ) );
+      }
+
+      if ( !oldTodo->hasDueDate() && newTodo->hasDueDate() ) {
+        mChanges += i18n( "A to-do due time has been added" );
+      }
+      if ( oldTodo->hasDueDate() && !newTodo->hasDueDate() ) {
+        mChanges += i18n( "The to-do due time has been removed" );
+      }
+      if ( oldTodo->hasDueDate() && newTodo->hasDueDate() &&
+           oldTodo->dtDue() != newTodo->dtDue() ) {
+        mChanges += i18n( "The to-do due time has been changed from %1 to %2",
+                          dateTimeToString( oldTodo->dtDue(), oldTodo->allDay(), false ),
+                          dateTimeToString( newTodo->dtDue(), newTodo->allDay(), false ) );
       }
     }
 
@@ -2436,11 +2488,25 @@ static QString formatICalInvitationHelper( QString invitation,
   }
   html += bodyVisitor.result();
 
-  if ( msg->method() == iTIPRequest ) { // ### Scheduler::Publish/Refresh/Add as well?
+  if ( msg->method() == iTIPRequest ) {
     IncidenceFormatter::IncidenceCompareVisitor compareVisitor;
     if ( compareVisitor.act( incBase, existingIncidence ) ) {
-      html +=
-        i18n( "<p align=\"left\">The following changes have been made by the organizer:</p>" );
+      html += "<p align=\"left\">";
+      html += i18n( "The following changes have been made by the organizer:" );
+      html += "</p>";
+      html += compareVisitor.result();
+    }
+  }
+  if ( msg->method() == iTIPReply ) {
+    IncidenceCompareVisitor compareVisitor;
+    if ( compareVisitor.act( incBase, existingIncidence ) ) {
+      html += "<p align=\"left\">";
+      if ( !sender.isEmpty() ) {
+        html += i18n( "The following changes have been made by %1:", sender );
+      } else {
+        html += i18n( "The following changes have been made by an attendee:" );
+      }
+      html += "</p>";
       html += compareVisitor.result();
     }
   }
