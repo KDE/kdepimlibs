@@ -1247,9 +1247,12 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
                                       const KDateTime &to )
 {
   KDateTime dt;
-  bool endOffsetValid = false;
   Duration endOffset( 0 );
+  bool endOffsetValid = false;
   Duration period( from, to );
+
+  Event *e = static_cast<Event *>( incidence );
+  Todo *t = static_cast<Todo *>( incidence );
 
   Alarm::List alarmlist = incidence->alarms();
   for ( int i = 0, iend = alarmlist.count();  i < iend;  ++i ) {
@@ -1257,7 +1260,7 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
     if ( a->enabled() ) {
       if ( a->hasTime() ) {
         // The alarm time is defined as an absolute date/time
-        dt = a->nextRepetition( from.addSecs(-1) );
+        dt = a->nextRepetition( from.addSecs( -1 ) );
         if ( !dt.isValid() || dt > to ) {
           continue;
         }
@@ -1271,27 +1274,55 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
         } else if ( a->hasEndOffset() ) {
           offset = a->endOffset();
           if ( !endOffsetValid ) {
-            endOffset = Duration( incidence->dtStart(), incidence->dtEnd() );
-            endOffsetValid = true;
+            if ( incidence->type() == "Event" ) {
+              endOffset = Duration( e->dtStart(), e->dtEnd() );
+              endOffsetValid = true;
+            } else if ( incidence->type() == "Todo" &&
+                        t->hasStartDate() && t->hasDueDate() ) {
+              endOffset = Duration( t->dtStart(), t->dtEnd() );
+              endOffsetValid = true;
+            }
           }
         }
 
         // Find the incidence's earliest alarm
-        KDateTime alarmStart =
-          offset.end( a->hasEndOffset() ? incidence->dtEnd() : incidence->dtStart() );
-//        KDateTime alarmStart = incidence->dtStart().addSecs( offset );
-        if ( alarmStart > to ) {
+        KDateTime alarmStart;
+        if ( incidence->type() == "Event" ) {
+          alarmStart =
+            offset.end( a->hasEndOffset() ? e->dtEnd() : e->dtStart() );
+        } else if ( incidence->type() == "Todo" ) {
+          if ( a->hasEndOffset() ) {
+            if ( t->hasDueDate() ) {
+              alarmStart = offset.end( t->dtDue() );
+            } else if ( t->hasStartDate() ) {
+              alarmStart = offset.end( t->dtStart() );
+            }
+          }
+        }
+
+        if ( alarmStart.isValid() && alarmStart > to ) {
           continue;
         }
-        KDateTime baseStart = incidence->dtStart();
-        if ( from > alarmStart ) {
+
+        KDateTime baseStart;
+        if ( incidence->type() == "Event" ) {
+          baseStart = e->dtStart();
+        } else if ( incidence->type() == "Todo" ) {
+          if ( t->hasStartDate() ) {
+            baseStart = t->dtStart();
+          } else if ( t->hasDueDate() ) {
+            baseStart = t->dtDue();
+          }
+        }
+        if ( alarmStart.isValid() && from > alarmStart ) {
           alarmStart = from;   // don't look earlier than the earliest alarm
           baseStart = (-offset).end( (-endOffset).end( alarmStart ) );
         }
 
-        // Adjust the 'alarmStart' date/time and find the next recurrence at or after it.
-        // Treate the two offsets separately in case one is daily and the other not.
-        dt = incidence->recurrence()->getNextDateTime( baseStart.addSecs(-1) );
+        // Adjust the 'alarmStart' date/time and find the next recurrence
+        // at or after it. Treat the two offsets separately in case one
+        // is daily and the other not.
+        dt = incidence->recurrence()->getNextDateTime( baseStart.addSecs( -1 ) );
         if ( !dt.isValid() ||
              ( dt = endOffset.end( offset.end( dt ) ) ) > to ) // adjust 'dt' to get the alarm time
         {
@@ -1300,8 +1331,8 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
             continue;
           }
 
-          // The alarm has repetitions, so check whether repetitions of previous
-          // recurrences fall within the time period.
+          // The alarm has repetitions, so check whether repetitions of
+          // previous recurrences fall within the time period.
           bool found = false;
           Duration alarmDuration = a->duration();
           for ( KDateTime base = baseStart;
@@ -1311,8 +1342,9 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
               break;  // this recurrence's last repetition is too early, so give up
             }
 
-            // The last repetition of this recurrence is at or after 'alarmStart' time.
-            // Check if a repetition occurs between 'alarmStart' and 'to'.
+            // The last repetition of this recurrence is at or after
+            // 'alarmStart' time. Check if a repetition occurs between
+            // 'alarmStart' and 'to'.
             int snooze = a->snoozeTime().value();   // in seconds or days
             if ( a->snoozeTime().isDaily() ) {
               Duration toFromDuration( dt, base );
