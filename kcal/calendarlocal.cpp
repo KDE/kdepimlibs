@@ -346,8 +346,12 @@ Alarm::List CalendarLocal::alarms( const KDateTime &from, const KDateTime &to )
   while ( it.hasNext() ) {
     it.next();
     t = it.value();
-    if (! t->isCompleted() ) {
-      appendAlarms( alarmList, t, from, to );
+    if ( !t->isCompleted() ) {
+      if ( t->recurs() ) {
+        appendRecurringAlarms( alarmList, t, from, to );
+      } else {
+        appendAlarms( alarmList, t, from, to );
+      }
     }
   }
 
