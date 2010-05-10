@@ -235,6 +235,12 @@ bool ResourceCached::addEvent( Event *event )
   return d->mCalendar.addEvent( event );
 }
 
+bool ResourceCached::addEvent( Event *event, const QString &subresource )
+{
+  Q_UNUSED( subresource ); // CalendarLocal does not support subresources
+  return d->mCalendar.addEvent( event );
+}
+
 // probably not really efficient, but...it works for now.
 bool ResourceCached::deleteEvent( Event *event )
 {
@@ -283,6 +289,12 @@ bool ResourceCached::addTodo( Todo *todo )
   return d->mCalendar.addTodo( todo );
 }
 
+bool ResourceCached::addTodo( Todo *todo, const QString &subresource )
+{
+  Q_UNUSED( subresource ); // CalendarLocal does not support subresources
+  return d->mCalendar.addTodo( todo );
+}
+
 bool ResourceCached::deleteTodo( Todo *todo )
 {
   return d->mCalendar.deleteTodo( todo );
@@ -320,8 +332,12 @@ Todo::List ResourceCached::rawTodosForDate( const QDate &date )
 
 bool ResourceCached::addJournal( Journal *journal )
 {
-  kDebug() << "Adding Journal on" << journal->dtStart().toString();
+  return d->mCalendar.addJournal( journal );
+}
 
+bool ResourceCached::addJournal( Journal *journal, const QString &subresource )
+{
+  Q_UNUSED( subresource ); // CalendarLocal does not support subresources
   return d->mCalendar.addJournal( journal );
 }
 

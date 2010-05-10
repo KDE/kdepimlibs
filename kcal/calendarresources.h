@@ -418,12 +418,29 @@ class KCAL_EXPORT CalendarResources
       @param resource is a pointer to the ResourceCalendar to be added to.
 
       @return true if the Incidence was successfully inserted; false otherwise.
+      @deprecated use
+      addIncidence(Incidence *,ResourceCalendar *,const QString &) instead.
     */
-    bool addIncidence( Incidence *incidence, ResourceCalendar *resource );
+    KDE_DEPRECATED bool addIncidence( Incidence *incidence, ResourceCalendar *resource );
 
     /**
-      @copydoc
-      Calendar::beginChange()
+      Insert an Incidence into a Calendar Resource.
+
+      @param incidence is a pointer to the Incidence to insert.
+      @param resource is a pointer to the ResourceCalendar to be added to.
+      @param subresource is the subresource name, which may not be used
+      by some calendar resources.
+
+      @return true if the Incidence was successfully inserted; false otherwise.
+      @since 4.5
+    */
+    bool addIncidence( Incidence *incidence, ResourceCalendar *resource,
+                       const QString &subresource );
+
+    /**
+      Flag that a change to a Calendar Incidence is starting.
+
+      @param incidence is a pointer to the Incidence that will be changing.
     */
     bool beginChange( Incidence *incidence );
 
@@ -449,10 +466,26 @@ class KCAL_EXPORT CalendarResources
 
       @return true if the Event was successfully inserted; false otherwise.
 
-      @note In most cases use
-      addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
+      @deprecated use
+      addIncidence(Incidence *,ResourceCalendar *,const QString&) instead.
     */
-    bool addEvent( Event *event, ResourceCalendar *resource );
+    KDE_DEPRECATED bool addEvent( Event *event, ResourceCalendar *resource );
+
+    /**
+      Insert an Event into a Calendar Resource.
+
+      @param event is a pointer to the Event to insert.
+      @param resource is a pointer to the ResourceCalendar to be added to.
+      @param subresource is the subresource name, which may not be used
+      by some calendar resources.
+
+      @return true if the Event was successfully inserted; false otherwise.
+
+      @note In most cases use
+      addIncidence(Incidence *,ResourceCalendar *,const QString &) instead.
+      @since 4.5
+    */
+    bool addEvent( Event *event, ResourceCalendar *resource, const QString &subresource );
 
     /**
       @copydoc
@@ -526,10 +559,26 @@ class KCAL_EXPORT CalendarResources
 
       @return true if the Todo was successfully inserted; false otherwise.
 
-      @note In most cases use
-      addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
+      @deprecated use
+      addIncidence(Incidence *,ResourceCalendar *,const QString &) instead.
     */
-    bool addTodo( Todo *todo, ResourceCalendar *resource );
+    KDE_DEPRECATED bool addTodo( Todo *todo, ResourceCalendar *resource );
+
+    /**
+      Insert an Todo into a Calendar Resource.
+
+      @param todo is a pointer to the Todo to insert.
+      @param resource is a pointer to the ResourceCalendar to be added to.
+      @param subresource is the subresource name, which may not be used
+      by some calendar resources.
+
+      @return true if the Todo was successfully inserted; false otherwise.
+
+      @note In most cases use
+      addIncidence(Incidence *, ResourceCalendar *,const QString &) instead.
+      @since 4.5
+    */
+    bool addTodo( Todo *todo, ResourceCalendar *resource, const QString &subresource );
 
     /**
       @copydoc
@@ -578,10 +627,26 @@ class KCAL_EXPORT CalendarResources
 
       @return true if the Journal was successfully inserted; false otherwise.
 
-      @note In most cases use
-      addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
+      @deprecated use
+      addIncidence(Incidence *,ResourceCalendar *,const QString &) instead.
     */
-    bool addJournal( Journal *journal, ResourceCalendar *resource );
+    KDE_DEPRECATED bool addJournal( Journal *journal, ResourceCalendar *resource );
+
+    /**
+      Insert a Journal into a Calendar Resource.
+
+      @param journal is a pointer to the Journal to insert.
+      @param resource is a pointer to the ResourceCalendar to be added to.
+      @param subresource is the subresource name, which may not be used
+      by some calendar resources.
+
+      @return true if the Journal was successfully inserted; false otherwise.
+
+      @note In most cases use
+      addIncidence(Incidence *,ResourceCalendar *,const QString &) instead.
+      @since 4.5
+    */
+    bool addJournal( Journal *journal, ResourceCalendar *resource, const QString &subresource );
 
     /**
       @copydoc
