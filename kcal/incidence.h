@@ -602,6 +602,14 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     */
     void clearAttachments();
 
+    /**
+     * Writes the data in the attachment @p attachment to a temporary file
+     * and returns the local name of the temporary file.
+     */
+    QString writeAttachmentToTempFile( Attachment *attachment ) const;
+
+    void clearTempFiles();
+
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%  Secrecy and Status methods
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

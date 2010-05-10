@@ -38,9 +38,13 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <ktemporaryfile.h>
+#include <kde_file.h>
 
 #include <QtCore/QList>
 #include <QtGui/QTextDocument> // for Qt::escape() and Qt::mightBeRichText()
+#include <KPIMUtils/KFileIO>
+#include <KMimeType>
 
 using namespace KCal;
 
@@ -129,6 +133,7 @@ class KCal::Incidence::Private
     float mGeoLatitude;              // Specifies latitude in decimal degrees
     float mGeoLongitude;             // Specifies longitude in decimal degrees
     bool mHasGeo;                    // if incidence has geo data
+    QHash<Attachment *, QString> mTempFiles;   // Temporary files for writing attachments to.
 };
 //@endcond
 
@@ -725,6 +730,39 @@ Attachment::List Incidence::attachments( const QString &mime ) const
 void Incidence::clearAttachments()
 {
   d->mAttachments.clearAll();
+}
+
+QString Incidence::writeAttachmentToTempFile( Attachment* attachment ) const
+{
+  if ( d->mTempFiles.contains( attachment ) ) {
+    return d->mTempFiles.value( attachment );
+  }
+  KTemporaryFile *file = new KTemporaryFile();
+
+  QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
+
+  if ( !patterns.empty() ) {
+    file->setSuffix( QString( patterns.first() ).remove( '*' ) );
+  }
+  file->setAutoRemove( true );
+  file->open();
+  // read-only not to give the idea that it could be written to
+  file->setPermissions( QFile::ReadUser );
+  file->write( QByteArray::fromBase64( attachment->data() ) );
+  d->mTempFiles.insert( attachment, file->fileName() );
+  file->close();
+  return d->mTempFiles.value( attachment );
+}
+
+void Incidence::clearTempFiles()
+{
+  QHash<Attachment*, QString>::const_iterator it = d->mTempFiles.constBegin();
+  const QHash<Attachment*, QString>::const_iterator end = d->mTempFiles.constEnd();
+  for ( ; it != end; ++it )
+  {
+    QFile::remove( it.value() );
+  }
+  d->mTempFiles.clear();
 }
 
 void Incidence::setResources( const QStringList &resources )
