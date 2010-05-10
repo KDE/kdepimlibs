@@ -189,7 +189,10 @@ void SMTPConfigWidget::init()
   connect( d->ui.kcfg_requiresAuthentication, SIGNAL( toggled(bool) ),
            SLOT( ensureValidAuthSelection() ) );
 
-  checkHighestEnabledButton( d->encryptionGroup );
+  if ( !d->transport->isValid() ) {
+    checkHighestEnabledButton( d->encryptionGroup );
+  }
+
   // load the password
   d->transport->updatePasswordState();
   if ( d->transport->isComplete() ) {
