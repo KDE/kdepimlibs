@@ -1601,7 +1601,8 @@ static bool replyMeansCounter( Incidence */*incidence*/ )
 */
 }
 
-static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg, const QString &sender )
+static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence,
+                                      ScheduleMessage *msg, const QString &sender )
 {
   if ( !msg || !event ) {
     return QString();
@@ -1611,7 +1612,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg, const 
   case iTIPPublish:
     return i18n( "This invitation has been published" );
   case iTIPRequest:
-    if ( event->revision() > 0 ) {
+    if ( existingIncidence && event->revision() > 0 ) {
       return i18n( "This invitation has been updated by the organizer %1",
                    event->organizer().fullName() );
     }
@@ -1735,7 +1736,8 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg, const 
   return QString();
 }
 
-static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg, const QString &sender )
+static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
+                                     ScheduleMessage *msg, const QString &sender )
 {
   if ( !msg || !todo ) {
     return QString();
@@ -1745,7 +1747,7 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg, const QSt
   case iTIPPublish:
     return i18n( "This to-do has been published" );
   case iTIPRequest:
-    if ( todo->revision() > 0 ) {
+    if ( existingIncidence && todo->revision() > 0 ) {
       return i18n( "This to-do has been updated by the organizer %1",
                    todo->organizer().fullName() );
     } else {
@@ -2057,9 +2059,11 @@ class KCal::IncidenceFormatter::ScheduleMessageVisitor
   : public IncidenceBase::Visitor
 {
   public:
-    ScheduleMessageVisitor() : mMessage(0) { mResult = ""; }
-    bool act( IncidenceBase *incidence, ScheduleMessage *msg, const QString &sender )
+    ScheduleMessageVisitor() : mExistingIncidence( 0 ), mMessage( 0 ) { mResult = ""; }
+    bool act( IncidenceBase *incidence, Incidence *existingIncidence,
+              ScheduleMessage *msg, const QString &sender )
     {
+      mExistingIncidence = existingIncidence;
       mMessage = msg;
       mSender = sender;
       return incidence->accept( *this );
@@ -2068,6 +2072,7 @@ class KCal::IncidenceFormatter::ScheduleMessageVisitor
 
   protected:
     QString mResult;
+    Incidence *mExistingIncidence;
     ScheduleMessage *mMessage;
     QString mSender;
 };
@@ -2078,12 +2083,12 @@ class KCal::IncidenceFormatter::InvitationHeaderVisitor :
   protected:
     bool visit( Event *event )
     {
-      mResult = invitationHeaderEvent( event, mMessage, mSender );
+      mResult = invitationHeaderEvent( event, mExistingIncidence, mMessage, mSender );
       return !mResult.isEmpty();
     }
     bool visit( Todo *todo )
     {
-      mResult = invitationHeaderTodo( todo, mMessage, mSender );
+      mResult = invitationHeaderTodo( todo, mExistingIncidence, mMessage, mSender );
       return !mResult.isEmpty();
     }
     bool visit( Journal *journal )
@@ -2497,13 +2502,13 @@ static QString formatICalInvitationHelper( QString invitation,
 
   IncidenceFormatter::InvitationHeaderVisitor headerVisitor;
   // The InvitationHeaderVisitor returns false if the incidence is somehow invalid, or not handled
-  if ( !headerVisitor.act( incBase, msg, sender ) ) {
+  if ( !headerVisitor.act( incBase, existingIncidence, msg, sender ) ) {
     return QString();
   }
   html += htmlAddTag( "h3", headerVisitor.result() );
 
   IncidenceFormatter::InvitationBodyVisitor bodyVisitor( noHtmlMode, spec );
-  if ( !bodyVisitor.act( incBase, msg, sender ) ) {
+  if ( !bodyVisitor.act( incBase, existingIncidence, msg, sender ) ) {
     return QString();
   }
   html += bodyVisitor.result();
