@@ -22,6 +22,7 @@
 
 #include "scheduler.h"
 #include "calendar.h"
+#include "calendarresources.h"
 #include "event.h"
 #include "todo.h"
 #include "freebusy.h"
@@ -373,10 +374,49 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
                 "one or 'Throw away' to discard this update." ),
          i18nc( "@title", "Discard this update?" ),
          KGuiItem( i18nc( "@option", "Store" ) ),
-         KGuiItem( i18nc( "@option", "Throw away" ) ), "AcceptCantFindIncidence" ) == KMessageBox::Yes ) {
+         KGuiItem( i18nc( "@option", "Throw away" ) ),
+         "AcceptCantFindIncidence" ) == KMessageBox::Yes ) {
     kDebug() << "Storing new incidence with scheduling uid=" << inc->schedulingID()
              << " and uid=" << inc->uid();
-    mCalendar->addIncidence( inc );
+
+    CalendarResources *stdcal = dynamic_cast<CalendarResources *>( mCalendar );
+    if( stdcal && !stdcal->hasCalendarResources() ) {
+      KMessageBox::sorry(
+        0,
+        i18nc( "@info", "No calendars found, unable to save the invitation." ) );
+      return false;
+    }
+
+    // FIXME: This is a nasty hack, since we need to set a parent for the
+    //        resource selection dialog. However, we don't have any UI methods
+    //        in the calendar, only in the CalendarResources::DestinationPolicy
+    //        So we need to type-cast it and extract it from the CalendarResources
+    QWidget *tmpparent = 0;
+    if ( stdcal ) {
+      tmpparent = stdcal->dialogParentWidget();
+      stdcal->setDialogParentWidget( 0 );
+    }
+
+    bool success = false;
+    if ( stdcal ) {
+      success = stdcal->addIncidence( inc );
+    } else {
+      success = mCalendar->addIncidence( inc );
+    }
+
+    if ( !success ) {
+      // We can have a failure if the user pressed [cancel] in the resource
+      // selectdialog, so check the exception.
+      ErrorFormat *e = stdcal ? stdcal->exception() : 0;
+      if ( !e ||
+           ( e && ( e->errorCode() != KCal::ErrorFormat::UserCancel &&
+                    e->errorCode() != KCal::ErrorFormat::NoWritableFound ) ) ) {
+        QString errMessage = i18nc( "@info", "Unable to save %1 \"%2\".",
+                                   i18n( inc->type() ), inc->summary() );
+        KMessageBox::sorry( 0, errMessage );
+      }
+      return false;
+    }
   }
   deleteTransaction( incidence );
   return true;
