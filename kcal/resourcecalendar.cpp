@@ -356,7 +356,7 @@ bool ResourceCalendar::noReadOnlyOnLoad() const
 bool ResourceCalendar::subresourceWritable( const QString &resource ) const
 {
   if ( resource.isEmpty() ) {
-    return true;
+    return !readOnly();
   } else {
     return false;
   }
