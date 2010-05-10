@@ -1754,17 +1754,17 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg, const QSt
       } else {
         if ( senderIsOrganizer( todo, sender ) ) {
           if ( !todo->organizer().fullName().isEmpty() ) {
-            return i18n( "You have been assigned this task by %1", todo->organizer().fullName() );
+            return i18n( "You have been assigned this to-do by %1", todo->organizer().fullName() );
           } else {
             return i18n( "You have been assigned this to-do" );
           }
         } else {
           if ( !todo->organizer().fullName().isEmpty() ) {
-            return i18n( "You have been assigned this task by %1 as a representative of %2",
+            return i18n( "You have been assigned this to-do by %1 as a representative of %2",
                          sender, todo->organizer().fullName() );
           } else {
-            return i18n( "You have been assigned this task by %1 as the organizer's representative",
-                         sender );
+            return i18n( "You have been assigned this to-do by %1 as the "
+                         "organizer's representative", sender );
           }
         }
       }
@@ -1807,9 +1807,17 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg, const QSt
     case Attendee::Accepted:
       if ( todo->revision() > 0 ) {
         if ( !sender.isEmpty() ) {
-          return i18n( "This to-do has been updated by assignee %1", sender );
+          if ( todo->isCompleted() ) {
+            return i18n( "This to-do has been completed by assignee %1", sender );
+          } else {
+            return i18n( "This to-do has been updated by assignee %1", sender );
+          }
         } else {
-          return i18n( "This to-do has been updated by an assignee" );
+          if ( todo->isCompleted() ) {
+            return i18n( "This to-do has been completed by an assignee" );
+          } else {
+            return i18n( "This to-do has been updated by an assignee" );
+          }
         }
       } else {
         if ( delegatorName.isEmpty() ) {
@@ -2206,6 +2214,18 @@ class IncidenceFormatter::IncidenceCompareVisitor
     {
       if ( !oldTodo || !newTodo ) {
         return;
+      }
+
+      if ( !oldTodo->isCompleted() && newTodo->isCompleted() ) {
+        mChanges += i18n( "The to-do has been completed" );
+      }
+      if ( oldTodo->isCompleted() && !newTodo->isCompleted() ) {
+        mChanges += i18n( "The to-do is no longer completed" );
+      }
+      if ( !oldTodo->isCompleted() && !newTodo->isCompleted() &&
+           oldTodo->percentComplete() != newTodo->percentComplete() ) {
+        mChanges += i18n( "The to-do completed percentage has changed from %1 to %2",
+                          oldTodo->percentComplete(), newTodo->percentComplete() );
       }
 
       if ( !oldTodo->hasStartDate() && newTodo->hasStartDate() ) {
