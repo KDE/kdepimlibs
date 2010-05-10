@@ -397,6 +397,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
       stdcal->setDialogParentWidget( 0 );
     }
 
+  TryAgain:
     bool success = false;
     if ( stdcal ) {
       success = stdcal->addIncidence( inc );
@@ -405,9 +406,34 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
     }
 
     if ( !success ) {
+      ErrorFormat *e = stdcal ? stdcal->exception() : 0;
+
+      if ( e && e->errorCode() == KCal::ErrorFormat::UserCancel &&
+           KMessageBox::warningYesNo(
+             0,
+             i18nc( "@info",
+                    "You canceled the save operation. Therefore, the appointment will not be "
+                    "stored in your calendar even though you accepted the invitation. "
+                    "Are you certain you want to discard this invitation? " ),
+             i18nc( "@title", "Discard this invitation?" ),
+             KGuiItem( i18nc( "@option", "Discard" ) ),
+             KGuiItem( i18nc( "@option", "Go Back to Folder Selection" ) ) ) == KMessageBox::Yes ) {
+        KMessageBox::information(
+          0,
+          i18nc( "@info",
+                 "The invitation \"%1\" was not saved to your calendar "
+                 "but you are still listed as an attendee for that appointment.\n"
+                 "If you mistakenly accepted the invitation or do not plan to attend, please "
+                 "notify the organizer %2 and ask them to remove you from the attendee list.",
+                 inc->summary(), inc->organizer().fullName() ) );
+        deleteTransaction( incidence );
+        return true;
+      } else {
+        goto TryAgain;
+      }
+
       // We can have a failure if the user pressed [cancel] in the resource
       // selectdialog, so check the exception.
-      ErrorFormat *e = stdcal ? stdcal->exception() : 0;
       if ( !e ||
            ( e && ( e->errorCode() != KCal::ErrorFormat::UserCancel &&
                     e->errorCode() != KCal::ErrorFormat::NoWritableFound ) ) ) {
