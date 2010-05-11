@@ -155,6 +155,22 @@ QString LinkLocator::getUrl()
       --mPos;
     }
   }
+
+
+  // HACK: This is actually against the RFC. However, most people don't properly escape the URL in
+  //       their text with "" or <>. That leads to people writing an url, followed immediatley by
+  //       a dot to finish the sentence. That would lead the parser to include the dot in the url,
+  //       even though that is not wanted. So work around that here.
+  //       Most real-life URLs hopefully don't end with dots or commas.
+  if ( url.length() > 1 ) {
+    QList<QChar> wordBoundaries;
+    wordBoundaries << '.' << ',' << ':' << '!' << '?';
+    if ( wordBoundaries.contains( url.at( url.length() - 1 ) ) ) {
+      url.chop( 1 );
+      --mPos;
+    }
+  }
+
   return url;
 }
 

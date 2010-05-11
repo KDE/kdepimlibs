@@ -327,6 +327,18 @@ void LinkLocatorTest::testHtmlConvert_data()
   QTest::newRow( "bug211128" ) << "https://green-site/?Ticket=85&Page=next" << 0x01
     << "<a href=\"https://green-site/?Ticket=85&Page=next\">"
        "https://green-site/?Ticket=85&amp;Page=next</a>";
+
+  QTest::newRow( "dotBeforeEnd" ) << "Look at this file: www.example.com/example.h" << 0x01
+                                  << "Look at this file: <a href=\"http://www.example.com/example.h\">"
+                                     "www.example.com/example.h</a>";
+  QTest::newRow( "dotInMiddle" ) << "Look at this file: www.example.com/.bashrc" << 0x01
+                                 << "Look at this file: <a href=\"http://www.example.com/.bashrc\">"
+                                     "www.example.com/.bashrc</a>";
+
+  // A dot at the end of an URL is explicitly ignored
+  QTest::newRow( "dotAtEnd" ) << "Look at this file: www.example.com/test.cpp." << 0x01
+                              << "Look at this file: <a href=\"http://www.example.com/test.cpp\">"
+                                 "www.example.com/test.cpp</a>.";
 }
 
 void LinkLocatorTest::testHtmlConvert()
