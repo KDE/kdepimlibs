@@ -35,6 +35,8 @@
 #include "incidence.h"
 #include "calformat.h"
 
+#include "kpimutils/kfileio.h"
+
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -43,7 +45,6 @@
 
 #include <QtCore/QList>
 #include <QtGui/QTextDocument> // for Qt::escape() and Qt::mightBeRichText()
-#include <KPIMUtils/KFileIO>
 #include <KMimeType>
 
 using namespace KCal;
