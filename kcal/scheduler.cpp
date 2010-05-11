@@ -379,6 +379,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
     kDebug() << "Storing new incidence with scheduling uid=" << inc->schedulingID()
              << " and uid=" << inc->uid();
 
+#ifndef KDEPIM_NO_KRESOURCES
     CalendarResources *stdcal = dynamic_cast<CalendarResources *>( mCalendar );
     if( stdcal && !stdcal->hasCalendarResources() ) {
       KMessageBox::sorry(
@@ -396,17 +397,23 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
       tmpparent = stdcal->dialogParentWidget();
       stdcal->setDialogParentWidget( 0 );
     }
+#endif
 
   TryAgain:
     bool success = false;
-    if ( stdcal ) {
+#ifndef KDEPIM_NO_KRESOURCES
+    if ( stdcal )
       success = stdcal->addIncidence( inc );
-    } else {
+    else
+#endif
       success = mCalendar->addIncidence( inc );
-    }
 
     if ( !success ) {
+#ifndef KDEPIM_NO_KRESOURCES
       ErrorFormat *e = stdcal ? stdcal->exception() : 0;
+#else
+      ErrorFormat *e = 0;
+#endif
 
       if ( e && e->errorCode() == KCal::ErrorFormat::UserCancel &&
            KMessageBox::warningYesNo(
