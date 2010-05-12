@@ -138,7 +138,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
-        <widget class="KButtonGroup" name="kcfg_authenticationType">
+        <widget class="KButtonGroup" name="kcfg_encryption">
          <property name="enabled">
           <bool>true</bool>
          </property>
