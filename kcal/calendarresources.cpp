@@ -394,8 +394,7 @@ bool CalendarResources::isSaving()
 }
 
 bool CalendarResources::addIncidence( Incidence *incidence,
-                                      ResourceCalendar *resource,
-                                      const QString &subresource )
+                                      ResourceCalendar *resource )
 {
   // FIXME: Use proper locking via begin/endChange!
   bool validRes = false;
@@ -412,7 +411,7 @@ bool CalendarResources::addIncidence( Incidence *incidence,
   }
   d->mResourceMap[incidence] = resource;
   if ( validRes && beginChange( incidence ) &&
-       resource->addIncidence( incidence, subresource ) ) {
+       resource->addIncidence( incidence ) ) {
 //    d->mResourceMap[incidence] = resource;
     incidence->registerObserver( this );
     notifyIncidenceAdded( incidence );
@@ -428,12 +427,6 @@ bool CalendarResources::addIncidence( Incidence *incidence,
   }
 
   return false;
-}
-
-bool CalendarResources::addIncidence( Incidence *incidence,
-                                      ResourceCalendar *resource )
-{
-  return addIncidence( incidence, resource, QString() );
 }
 
 bool CalendarResources::addIncidence( Incidence *incidence )
@@ -478,13 +471,7 @@ bool CalendarResources::addEvent( Event *event )
 
 bool CalendarResources::addEvent( Event *Event, ResourceCalendar *resource )
 {
-  return addIncidence( Event, resource, QString() );
-}
-
-bool CalendarResources::addEvent( Event *Event, ResourceCalendar *resource,
-                                  const QString &subresource )
-{
-  return addIncidence( Event, resource, subresource );
+  return addIncidence( Event, resource );
 }
 
 bool CalendarResources::deleteEvent( Event *event )
@@ -540,13 +527,7 @@ bool CalendarResources::addTodo( Todo *todo )
 
 bool CalendarResources::addTodo( Todo *todo, ResourceCalendar *resource )
 {
-  return addIncidence( todo, resource, QString() );
-}
-
-bool CalendarResources::addTodo( Todo *todo, ResourceCalendar *resource,
-                                 const QString &subresource )
-{
-  return addIncidence( todo, resource, subresource );
+  return addIncidence( todo, resource );
 }
 
 bool CalendarResources::deleteTodo( Todo *todo )
@@ -702,13 +683,7 @@ bool CalendarResources::addJournal( Journal *journal )
 
 bool CalendarResources::addJournal( Journal *journal, ResourceCalendar *resource )
 {
-  return addIncidence( journal, resource, QString() );
-}
-
-bool CalendarResources::addJournal( Journal *journal, ResourceCalendar *resource,
-                                    const QString &subresource )
-{
-  return addIncidence( journal, resource, subresource );
+  return addIncidence( journal, resource );
 }
 
 bool CalendarResources::deleteJournal( Journal *journal )

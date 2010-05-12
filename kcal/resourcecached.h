@@ -199,19 +199,8 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       Add event to calendar.
 
       @param event is a pointer to the Event to insert.
-      @deprecated use addEvent(Event *, const QString &) instead.
     */
-    KDE_DEPRECATED bool addEvent( Event *event );
-
-    /**
-      Add event to calendar.
-
-      @param event is a pointer to the Event to insert.
-      @param subresource is the subresource name, which may not be used
-      by some calendar resources.
-      @since 4.5
-    */
-    bool addEvent( Event *event, const QString &subresource );
+    bool addEvent( Event *event );
 
     /**
       Deletes an event from this calendar.
@@ -276,19 +265,8 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       Add a todo to the todolist.
 
       @param todo is a pointer to the Todo to insert.
-      @deprecated use addTodo(Todo *, const QString &) instead.
     */
-    KDE_DEPRECATED bool addTodo( Todo *todo );
-
-    /**
-      Add a todo to the todolist.
-
-      @param todo is a pointer to the Todo to insert.
-      @param subresource is the subresource name, which may not be used
-      by some calendar resources.
-      @since 4.5
-    */
-    bool addTodo( Todo *todo, const QString &subresource );
+    bool addTodo( Todo *todo );
 
     /**
       Remove a todo from the todolist.
@@ -321,19 +299,8 @@ class KCAL_EXPORT ResourceCached : public ResourceCalendar,
       Add a Journal entry to calendar
 
       @param journal is a pointer to the Journal to insert.
-      @deprecated use addJournal(Journal *, const QString &) instead.
     */
     virtual KDE_DEPRECATED bool addJournal( Journal *journal );
-
-    /**
-      Add a Journal entry to calendar
-
-      @param journal is a pointer to the Journal to insert.
-      @param subresource is the subresource name, which may not be used
-      by some calendar resources.
-      @since 4.5
-    */
-    bool addJournal( Journal *journal, const QString &subresource );
 
     /**
       Remove a Journal from the calendar

@@ -102,40 +102,6 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
     //@endcond
 
     /**
-      This class implements a visitor for adding an Incidence to a resource
-      plus subresource supporting addEvent(), addTodo() and addJournal() calls.
-    */
-    template<class T>
-    class AddSubResourceVisitor : public IncidenceBase::Visitor
-    {
-      public:
-        AddSubResourceVisitor( T *r, const QString &subResource )
-          : mResource( r ), mSubResource( subResource ) {}
-
-      protected:
-        bool visit( Event *e )
-        {
-          return mResource->addEvent( e, mSubResource );
-        }
-        bool visit( Todo *t )
-        {
-          return mResource->addTodo( t, mSubResource );
-        }
-        bool visit( Journal *j )
-        {
-          return mResource->addJournal( j, mSubResource );
-        }
-        bool visit( FreeBusy * )
-        {
-          return false;
-        }
-
-      private:
-        T *mResource;
-        QString mSubResource;
-    };
-
-    /**
       Template for a class that implements a visitor for deleting an Incidence
       from a resource supporting deleteEvent(), deleteTodo() and deleteJournal()
       calls.
