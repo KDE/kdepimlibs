@@ -111,6 +111,15 @@ class MailTransport::SMTPConfigWidgetPrivate : public TransportConfigWidgetPriva
         addAuthenticationItem( ui.authCombo, authType );
       }
 
+
+      if ( transport->isValid() ) {
+        const int idx = ui.authCombo->findData( transport->authenticationType() );
+
+        if ( idx != -1 ) {
+          ui.authCombo->setCurrentIndex( idx );
+        }
+      }
+
       if ( capa.count() == 0 ) {
         ui.noAuthPossible->setVisible( true );
         ui.kcfg_requiresAuthentication->setChecked( false );
@@ -239,9 +248,9 @@ void SMTPConfigWidget::apply()
   d->transport->setPassword( d->ui.password->text() );
 
   KConfigGroup group( d->transport->config(), d->transport->currentGroup() );
-  int index = d->ui.authCombo->currentIndex();
-  if ( index > 0 ) {
-    group.writeEntry( "authtype", index );
+  const int index = d->ui.authCombo->currentIndex();
+  if ( index >= 0 ) {
+    group.writeEntry( "authtype", d->ui.authCombo->itemData( index ).toInt() );
   }
 
   TransportConfigWidget::apply();
