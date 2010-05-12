@@ -162,6 +162,8 @@ void SMTPConfigWidget::init()
   connect( TransportManager::self(), SIGNAL(passwordsChanged()),
            SLOT(passwordsLoaded()) );
 
+  d->serverTestFailed = false;
+
   d->ui.setupUi( this );
   d->manager->addWidget( this ); // otherwise it doesn't find out about these widgets
   d->manager->updateWidgets();
@@ -232,10 +234,15 @@ void SMTPConfigWidget::checkSmtpCapabilities()
 void SMTPConfigWidget::apply()
 {
   Q_D( SMTPConfigWidget );
-
   Q_ASSERT( d->manager );
   d->manager->updateSettings();
   d->transport->setPassword( d->ui.password->text() );
+
+  KConfigGroup group( d->transport->config(), d->transport->currentGroup() );
+  int index = d->ui.authCombo->currentIndex();
+  if ( index > 0 ) {
+    group.writeEntry( "authtype", index );
+  }
 
   TransportConfigWidget::apply();
 }
