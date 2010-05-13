@@ -102,6 +102,7 @@ namespace CalHelper {
     @return true if the any such writable folders are found; false otherwise.
     @since 4.5
   */
+  //AK_REVIEW: remove and port the calling code to Akonadi based classes (tokoe)
   KCAL_EXPORT bool hasMyWritableEventsFolders( const QString &family );
 
   /**
@@ -113,6 +114,7 @@ namespace CalHelper {
     else 0 if none can be found.
     @since 4.5
   */
+  //AK_REVIEW: remove (tokoe)
   ResourceCalendar *incResourceCalendar( Calendar *calendar, Incidence *incidence );
 
   /**
@@ -129,6 +131,7 @@ namespace CalHelper {
     element will be an empty QString in those situations.
     @since 4.5
   */
+  //AK_REVIEW: remove (tokoe)
   QPair<ResourceCalendar *, QString> incSubResourceCalendar( Calendar *calendar,
                                                              Incidence *incidence );
 }

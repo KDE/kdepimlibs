@@ -28,6 +28,8 @@
 #include "kmime_headers.h"
 #include "boolflags.h"
 
+//AK_REVIEW: bring back isTopLevel + comment 'remove on KDE5'
+
 namespace boost {
   template <typename T> class shared_ptr;
 }

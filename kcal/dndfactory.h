@@ -132,21 +132,36 @@ class KCAL_EXPORT DndFactory
     */
     bool copyIncidence( Incidence * );
 
-    /** cuts a list of incidences to the clipboard */
+    /**
+     * Cuts a list of @p incidences to the clipboard.
+     *
+     * @since 4.5
+     */
     bool cutIncidences( const Incidence::List &incidences );
 
-    /** copies a list of incidences to the clipboard */
+    /**
+     * Copies a list of @p incidences to the clipboard.
+     *
+     * @since 4.5
+     */
     bool copyIncidences( const Incidence::List &incidences );
 
-    /** pastes and returns the incidences from the clipboard
-        If no date and time are given, the incidences will be pasted at
-        their original date/time */
+    /**
+     * Pastes and returns the incidences from the clipboard
+     * If no date and time are given, the incidences will be pasted at
+     * their original date/time
+     *
+     * @param newDate The new date where the incidences shall be pasted.
+     * @param newTime The new time where the incidences shall be pasted.
+     *
+     * @since 4.5
+     */
     Incidence::List pasteIncidences( const QDate &newDate = QDate(),
                                      const QTime *newTime = 0 );
 
     /**
-      Paste the event or todo and return a pointer to the new incidence pasted.
-    */
+     * Pastes the event or todo and return a pointer to the new incidence pasted.
+     */
     Incidence *pasteIncidence( const QDate &, const QTime *newTime = 0 );
 
   private:

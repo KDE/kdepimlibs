@@ -109,10 +109,11 @@ class KCAL_EXPORT Alarm : public CustomProperties
       Returns an exact copy of this alarm. The returned object is owned by the caller.
       @since 4.5
     */
+    //AK_REVIEW: check why is it needed, remove if possible
     Alarm *clone();
 
     /**
-      Copy operator.
+      Assignment operator.
       @since 4.5
     */
     Alarm &operator=( const Alarm & );

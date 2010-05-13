@@ -687,6 +687,7 @@ class KMIME_EXPORT Content
      *
      * @since 4.5
      */
+    //AK_REVIEW: move to MessageViewer/ObjectTreeParser
     bool bodyIsMessage() const;
 
     /**
@@ -707,6 +708,7 @@ class KMIME_EXPORT Content
      *
      * @since 4.5
      */
+    //AK_REVIEW: move to MessageViewer/ObjectTreeParser
     boost::shared_ptr<Message> bodyAsMessage() const;
 
   protected:

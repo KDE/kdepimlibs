@@ -124,6 +124,7 @@ class KMIME_EXPORT Mailbox
      * Describes how display names should be quoted
      * @since 4.5
      */
+    //AK_REVIEW: remove this enum
     enum Quoting {
       QuoteNever,         ///< Don't quote display names at all. Such an unquoted display name can not
                           ///  be machine-processed anymore in some cases, for example when it contains
@@ -140,6 +141,7 @@ class KMIME_EXPORT Mailbox
      */
     // TODO: KDE5: BIC: remove other prettyAddress() overload, and make it None the default
     //                  parameter here
+    //AK_REVIEW: replace by 'QString quotedAddress() const'
     QString prettyAddress( Quoting quoting ) const;
 
     /**

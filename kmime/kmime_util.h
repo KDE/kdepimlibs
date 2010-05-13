@@ -238,6 +238,7 @@ KMIME_EXPORT extern QByteArray LFtoCRLF( const QByteArray &s );
   @param str the string to work on.
   @see addQuotes
 */
+//AK_REVIEW: add correctly spelled methods and deprecated the wrongly spelled
 // TODO: KDE5: BIC: rename to "removeQuotes"
 KMIME_EXPORT extern void removeQuots( QByteArray &str );
 
@@ -248,6 +249,7 @@ KMIME_EXPORT extern void removeQuots( QByteArray &str );
   @param str the string to work on.
   @see addQuotes
 */
+//AK_REVIEW: add correctly spelled methods and deprecated the wrongly spelled
 // TODO: KDE5: BIC: rename to "removeQuotes"
 KMIME_EXPORT extern void removeQuots( QString &str );
 
@@ -261,7 +263,7 @@ KMIME_EXPORT extern void removeQuots( QString &str );
 KMIME_EXPORT extern void addQuotes( QByteArray &str, bool forceQuotes );
 
 /**
- * Overloaded method, behaves same as teh above.
+ * Overloaded method, behaves same as the above.
  * @since 4.5
  */
 KMIME_EXPORT extern void addQuotes( QString &str, bool forceQuotes );

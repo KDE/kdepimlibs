@@ -62,6 +62,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       Clears the exception status.
       @since 4.5
     */
+    //AK_REVIEW: check whether it is needed
     void clearException();
 
     /**
@@ -69,6 +70,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       class to report errors.
       @since 4.5
     */
+    //AK_REVIEW: check whether it is needed
     void setException( ErrorFormat *error );
 
     /**
@@ -76,6 +78,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       last error that occurred.
       @since 4.5
     */
+    //AK_REVIEW: check whether it is needed
     ErrorFormat *exception();
 
     virtual void writeConfig( KConfigGroup &group );
@@ -468,6 +471,7 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       Is this subresource writable or not?
       @since 4.5
     */
+    //AK_REVIEW: remove, its BIC
     virtual bool subresourceWritable( const QString &subresource ) const;
 
     /**
