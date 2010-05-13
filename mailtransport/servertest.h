@@ -35,10 +35,10 @@ namespace MailTransport
 class ServerTestPrivate;
 
 /**
-  * @class ServerTest
-  * This class can be used to test certain server to see if they support stuff.
-  * @author Tom Albers <tomalbers@kde.nl>
-  */
+ * @class ServerTest
+ * This class can be used to test certain server to see if they support stuff.
+ * @author Tom Albers <tomalbers@kde.nl>
+ */
 class MAILTRANSPORT_EXPORT ServerTest : public QWidget
 {
     Q_OBJECT
@@ -60,24 +60,25 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     };
 
     /**
-      * Constructor
-      * @param parent Parent Widget
-      */
+     * Creates a new server test.
+     *
+     * @param parent The parent widget.
+     */
     ServerTest( QWidget *parent = 0 );
 
     /**
-      * Destructor
-      */
+     * Destroys the server test.
+     */
     ~ServerTest();
 
     /**
-      * Set the server to test.
-      */
+     * Sets the server to test.
+     */
     void setServer( const QString &server );
 
     /**
-      * Get the server to test.
-      */
+     * Returns the server to test.
+     */
     QString server();
 
     /**
@@ -130,54 +131,54 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     QString fakeHostname();
 
     /**
-      * Makes @p pb the progressbar to use. This class will call show()
-      * and hide() and will count down. It does not take ownership of
-      * the progressbar.
-      */
+     * Makes @p pb the progressbar to use. This class will call show()
+     * and hide() and will count down. It does not take ownership of
+     * the progressbar.
+     */
     void setProgressBar( QProgressBar *pb );
 
     /**
-      * returns the used progressBar
-      */
+     * Returns the used progress bar.
+     */
     QProgressBar *progressBar();
 
     /**
-      * Set @p protocol the protocol to test, currently supported are
-      * "smtp", "pop" and "imap".
-      */
+     * Sets @p protocol the protocol to test, currently supported are
+     * "smtp", "pop" and "imap".
+     */
     void setProtocol( const QString &protocol );
 
     /**
-      * returns the protocol
-      */
+     * Returns the protocol.
+     */
     QString protocol();
 
     /**
-      * Starts the test. Will emit finished() when done.
-      */
+     * Starts the test. Will emit finished() when done.
+     */
     void start();
 
     /**
-      * Get the protocols for the normal connections.. Call this only
-      * after the finished() signals has been sent.
-      * @return an enum of the type Transport::EnumAuthenticationType
-      */
-    QList< int > normalProtocols();
+     * Get the protocols for the normal connections.. Call this only
+     * after the finished() signals has been sent.
+     * @return an enum of the type Transport::EnumAuthenticationType
+     */
+    QList<int> normalProtocols();
 
     /**
-      * Get the protocols for the TLS connections. Call this only
-      * after the finished() signals has been sent.
-      * @return an enum of the type Transport::EnumAuthenticationType
-      * @since 4.1
-      */
-    QList< int > tlsProtocols();
+     * Get the protocols for the TLS connections. Call this only
+     * after the finished() signals has been sent.
+     * @return an enum of the type Transport::EnumAuthenticationType
+     * @since 4.1
+     */
+    QList<int> tlsProtocols();
 
     /**
-      * Get the protocols for the SSL connections. Call this only
-      * after the finished() signals has been sent.
-      * @return an enum of the type Transport::EnumAuthenticationType
-      */
-    QList< int > secureProtocols();
+     * Get the protocols for the SSL connections. Call this only
+     * after the finished() signals has been sent.
+     * @return an enum of the type Transport::EnumAuthenticationType
+     */
+    QList<int> secureProtocols();
 
     /**
      * Get the special capabilities of the server.
@@ -186,19 +187,22 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
      * @return the list of special capabilities of the server.
      * @since 4.1
      */
-    QList< Capability > capabilities() const;
+    QList<Capability> capabilities() const;
 
   Q_SIGNALS:
     /**
-      * This will be emitted when the test is done. It will contain
-      * the values from the enum EnumEncryption which are possible.
-      */
-    void finished( QList< int > );
+     * This will be emitted when the test is done. It will contain
+     * the values from the enum EnumEncryption which are possible.
+     */
+    void finished( QList<int> );
+
     /**
-      * This will be emitted when test can not connect to server
-      * @since 4.5
-      */
+     * This will be emitted when test can not connect to server
+     * @since 4.5
+     */
+    //AK_REVIEW: remove and add accessor that returns if connection is possible
     void failedToConnectToServer();
+
   private:
     Q_DECLARE_PRIVATE( ServerTest )
     ServerTestPrivate *const d;

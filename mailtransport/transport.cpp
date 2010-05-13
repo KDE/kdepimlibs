@@ -155,11 +155,11 @@ QString Transport::authenticationTypeString( int type )
     case EnumAuthenticationType::GSSAPI:
       return QLatin1String( "GSSAPI" );
     case EnumAuthenticationType::CLEAR:
-      return QLatin1String( "Clear text" );
+      return i18nc( "Authentication method", "Clear text" );
     case EnumAuthenticationType::APOP:
       return QLatin1String( "APOP" );
     case EnumAuthenticationType::ANONYMOUS:
-      return QLatin1String( "Anonymous" );
+      return i18nc( "Authentication method", "Anonymous" );
   }
   Q_ASSERT( false );
   return QString();

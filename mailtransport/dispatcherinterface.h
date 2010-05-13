@@ -28,8 +28,6 @@
 
 namespace MailTransport {
 
-class TransportAttribute;
-
 /**
   @short An interface for applications to interact with the dispatcher agent.
 
