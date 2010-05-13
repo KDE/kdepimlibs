@@ -185,6 +185,150 @@ static QString firstAttendeeName( Incidence *incidence, const QString &defName )
   }
   return name;
 }
+
+static QString secs2Duration( int secs )
+{
+  QString tmp;
+  int days = secs / 86400;
+  if ( days > 0 ) {
+    tmp += i18np( "1 day", "%1 days", days );
+    tmp += ' ';
+    secs -= ( days * 86400 );
+  }
+  int hours = secs / 3600;
+  if ( hours > 0 ) {
+    tmp += i18np( "1 hour", "%1 hours", hours );
+    tmp += ' ';
+    secs -= ( hours * 3600 );
+  }
+  int mins = secs / 60;
+  if ( mins > 0 ) {
+    tmp += i18np( "1 minute", "%1 minutes", mins );
+  }
+  return tmp;
+}
+
+static QStringList reminderStringList( Incidence *incidence, bool shortfmt = true )
+{
+  //TODO: implement shortfmt=false
+  Q_UNUSED( shortfmt );
+
+  QStringList list;
+
+  if ( incidence ) {
+    Alarm::List alarms = incidence->alarms();
+    Alarm::List::ConstIterator it;
+    for ( it = alarms.constBegin(); it != alarms.constEnd(); ++it ) {
+      Alarm *alarm = *it;
+      int offset = 0;
+      QString remStr, atStr, offsetStr;
+      if ( alarm->hasTime() ) {
+        offset = 0;
+        if ( alarm->time().isValid() ) {
+          atStr = KGlobal::locale()->formatDateTime( alarm->time() );
+        }
+      } else if ( alarm->hasStartOffset() ) {
+        offset = alarm->startOffset().asSeconds();
+        if ( offset < 0 ) {
+          offset = -offset;
+          offsetStr = i18nc( "N days/hours/minutes before the start datetime",
+                             "%1 before the start", secs2Duration( offset ) );
+        } else if ( offset > 0 ) {
+          offsetStr = i18nc( "N days/hours/minutes after the start datetime",
+                             "%1 after the start", secs2Duration( offset ) );
+        } else { //offset is 0
+          if ( incidence->dtStart().isValid() ) {
+            atStr = KGlobal::locale()->formatDateTime( incidence->dtStart() );
+          }
+        }
+      } else if ( alarm->hasEndOffset() ) {
+        offset = alarm->endOffset().asSeconds();
+        if ( offset < 0 ) {
+          offset = -offset;
+          if ( incidence->type() == "Todo" ) {
+            offsetStr = i18nc( "N days/hours/minutes before the due datetime",
+                               "%1 before the to-do is due", secs2Duration( offset ) );
+          } else {
+            offsetStr = i18nc( "N days/hours/minutes before the end datetime",
+                               "%1 before the end", secs2Duration( offset ) );
+          }
+        } else if ( offset > 0 ) {
+          if ( incidence->type() == "Todo" ) {
+            offsetStr = i18nc( "N days/hours/minutes after the due datetime",
+                               "%1 after the to-do is due", secs2Duration( offset ) );
+          } else {
+            offsetStr = i18nc( "N days/hours/minutes after the end datetime",
+                               "%1 after the end", secs2Duration( offset ) );
+          }
+        } else { //offset is 0
+          if ( incidence->type() == "Todo" ) {
+            Todo *t = static_cast<Todo *>( incidence );
+            if ( t->dtDue().isValid() ) {
+              atStr = KGlobal::locale()->formatDateTime( t->dtDue() );
+            }
+          } else {
+            Event *e = static_cast<Event *>( incidence );
+            if ( e->dtEnd().isValid() ) {
+              atStr = KGlobal::locale()->formatDateTime( e->dtEnd() );
+            }
+          }
+        }
+      }
+      if ( offset == 0 ) {
+        if ( !atStr.isEmpty() ) {
+          remStr = i18nc( "reminder occurs at datetime", "at %1", atStr );
+        }
+      } else {
+        remStr = offsetStr;
+      }
+
+      if ( alarm->repeatCount() > 0 ) {
+        QString countStr = i18np( "repeats once", "repeats %1 times", alarm->repeatCount() );
+        QString intervalStr = i18nc( "interval is N days/hours/minutes",
+                                     "interval is %1",
+                                     secs2Duration( alarm->snoozeTime().asSeconds() ) );
+        QString repeatStr = i18nc( "(repeat string, interval string)",
+                                   "(%1, %2)", countStr, intervalStr );
+        remStr = remStr + ' ' + repeatStr;
+
+      }
+      list << remStr;
+    }
+  }
+
+  return list;
+}
+
+static QString durationString( Incidence *incidence )
+{
+  QString tmp;
+  if ( incidence->type() == "Event" ) {
+    Event *event = static_cast<Event *>( incidence );
+    if ( event->hasEndDate() ) {
+      if ( !event->allDay() ) {
+        tmp = secs2Duration( event->dtStart().secsTo( event->dtEnd() ) );
+      } else {
+        tmp = i18np( "1 day", "%1 days",
+                     event->dtStart().date().daysTo( event->dtEnd().date() ) + 1 );
+      }
+    } else {
+      tmp = i18n( "forever" );
+    }
+  } else if ( incidence->type() == "Todo" ) {
+    Todo *todo = static_cast<Todo *>( incidence );
+    if ( todo->hasDueDate() ) {
+      if ( todo->hasStartDate() ) {
+        if ( !todo->allDay() ) {
+          tmp = secs2Duration( todo->dtStart().secsTo( todo->dtDue() ) );
+        } else {
+          tmp = i18np( "1 day", "%1 days",
+                       todo->dtStart().date().daysTo( todo->dtDue().date() ) + 1 );
+        }
+      }
+    }
+  }
+  return tmp;
+}
 //@endcond
 
 /*******************************************************************
@@ -3785,146 +3929,3 @@ QString IncidenceFormatter::resourceString( Calendar *calendar, Incidence *incid
   return QString();
 }
 
-static QString secs2Duration( int secs )
-{
-  QString tmp;
-  int days = secs / 86400;
-  if ( days > 0 ) {
-    tmp += i18np( "1 day", "%1 days", days );
-    tmp += ' ';
-    secs -= ( days * 86400 );
-  }
-  int hours = secs / 3600;
-  if ( hours > 0 ) {
-    tmp += i18np( "1 hour", "%1 hours", hours );
-    tmp += ' ';
-    secs -= ( hours * 3600 );
-  }
-  int mins = secs / 60;
-  if ( mins > 0 ) {
-    tmp += i18np( "1 minute", "%1 minutes", mins );
-  }
-  return tmp;
-}
-
-QString IncidenceFormatter::durationString( Incidence *incidence )
-{
-  QString tmp;
-  if ( incidence->type() == "Event" ) {
-    Event *event = static_cast<Event *>( incidence );
-    if ( event->hasEndDate() ) {
-      if ( !event->allDay() ) {
-        tmp = secs2Duration( event->dtStart().secsTo( event->dtEnd() ) );
-      } else {
-        tmp = i18np( "1 day", "%1 days",
-                     event->dtStart().date().daysTo( event->dtEnd().date() ) + 1 );
-      }
-    } else {
-      tmp = i18n( "forever" );
-    }
-  } else if ( incidence->type() == "Todo" ) {
-    Todo *todo = static_cast<Todo *>( incidence );
-    if ( todo->hasDueDate() ) {
-      if ( todo->hasStartDate() ) {
-        if ( !todo->allDay() ) {
-          tmp = secs2Duration( todo->dtStart().secsTo( todo->dtDue() ) );
-        } else {
-          tmp = i18np( "1 day", "%1 days",
-                       todo->dtStart().date().daysTo( todo->dtDue().date() ) + 1 );
-        }
-      }
-    }
-  }
-  return tmp;
-}
-
-QStringList IncidenceFormatter::reminderStringList( Incidence *incidence, bool shortfmt )
-{
-  //TODO: implement shortfmt=false
-  Q_UNUSED( shortfmt );
-
-  QStringList reminderStringList;
-
-  if ( incidence ) {
-    Alarm::List alarms = incidence->alarms();
-    Alarm::List::ConstIterator it;
-    for ( it = alarms.constBegin(); it != alarms.constEnd(); ++it ) {
-      Alarm *alarm = *it;
-      int offset = 0;
-      QString remStr, atStr, offsetStr;
-      if ( alarm->hasTime() ) {
-        offset = 0;
-        if ( alarm->time().isValid() ) {
-          atStr = KGlobal::locale()->formatDateTime( alarm->time() );
-        }
-      } else if ( alarm->hasStartOffset() ) {
-        offset = alarm->startOffset().asSeconds();
-        if ( offset < 0 ) {
-          offset = -offset;
-          offsetStr = i18nc( "N days/hours/minutes before the start datetime",
-                             "%1 before the start", secs2Duration( offset ) );
-        } else if ( offset > 0 ) {
-          offsetStr = i18nc( "N days/hours/minutes after the start datetime",
-                             "%1 after the start", secs2Duration( offset ) );
-        } else { //offset is 0
-          if ( incidence->dtStart().isValid() ) {
-            atStr = KGlobal::locale()->formatDateTime( incidence->dtStart() );
-          }
-        }
-      } else if ( alarm->hasEndOffset() ) {
-        offset = alarm->endOffset().asSeconds();
-        if ( offset < 0 ) {
-          offset = -offset;
-          if ( incidence->type() == "Todo" ) {
-            offsetStr = i18nc( "N days/hours/minutes before the due datetime",
-                               "%1 before the to-do is due", secs2Duration( offset ) );
-          } else {
-            offsetStr = i18nc( "N days/hours/minutes before the end datetime",
-                               "%1 before the end", secs2Duration( offset ) );
-          }
-        } else if ( offset > 0 ) {
-          if ( incidence->type() == "Todo" ) {
-            offsetStr = i18nc( "N days/hours/minutes after the due datetime",
-                               "%1 after the to-do is due", secs2Duration( offset ) );
-          } else {
-            offsetStr = i18nc( "N days/hours/minutes after the end datetime",
-                               "%1 after the end", secs2Duration( offset ) );
-          }
-        } else { //offset is 0
-          if ( incidence->type() == "Todo" ) {
-            Todo *t = static_cast<Todo *>( incidence );
-            if ( t->dtDue().isValid() ) {
-              atStr = KGlobal::locale()->formatDateTime( t->dtDue() );
-            }
-          } else {
-            Event *e = static_cast<Event *>( incidence );
-            if ( e->dtEnd().isValid() ) {
-              atStr = KGlobal::locale()->formatDateTime( e->dtEnd() );
-            }
-          }
-        }
-      }
-      if ( offset == 0 ) {
-        if ( !atStr.isEmpty() ) {
-          remStr = i18nc( "reminder occurs at datetime", "at %1", atStr );
-        }
-      } else {
-        remStr = offsetStr;
-      }
-
-      if ( alarm->repeatCount() > 0 ) {
-        QString countStr = i18np( "repeats once", "repeats %1 times", alarm->repeatCount() );
-        QString intervalStr = i18nc( "interval is N days/hours/minutes",
-                                     "interval is %1",
-                                     secs2Duration( alarm->snoozeTime().asSeconds() ) );
-        QString repeatStr = i18nc( "(repeat string, interval string)",
-                                   "(%1, %2)", countStr, intervalStr );
-        remStr = remStr + ' ' + repeatStr;
-
-      }
-      reminderStringList << remStr;
-    }
-  }
-
-  return reminderStringList;
-}
