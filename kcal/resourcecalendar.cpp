@@ -39,8 +39,7 @@ class ResourceCalendar::Private
     Private()
       : mResolveConflict( false ),
         mNoReadOnlyOnLoad( false ),
-        mInhibitSave( false ),
-        mException( 0 )
+        mInhibitSave( false )
     {}
     bool mResolveConflict;
     bool mNoReadOnlyOnLoad;
@@ -48,7 +47,6 @@ class ResourceCalendar::Private
     bool mReceivedLoadError;
     bool mReceivedSaveError;
     QString mLastError;
-    ErrorFormat *mException;
 };
 //@endcond
 
@@ -65,25 +63,7 @@ ResourceCalendar::ResourceCalendar( const KConfigGroup &group )
 
 ResourceCalendar::~ResourceCalendar()
 {
-  delete d->mException;
   delete d;
-}
-
-void ResourceCalendar::clearException()
-{
-  delete d->mException;
-  d->mException = 0;
-}
-
-void ResourceCalendar::setException( ErrorFormat *exception )
-{
-  delete d->mException;
-  d->mException = exception;
-}
-
-ErrorFormat *ResourceCalendar::exception()
-{
-  return d->mException;
 }
 
 bool ResourceCalendar::isResolveConflictSet() const
@@ -352,13 +332,3 @@ bool ResourceCalendar::noReadOnlyOnLoad() const
 {
   return d->mNoReadOnlyOnLoad;
 }
-
-bool ResourceCalendar::subresourceWritable( const QString &resource ) const
-{
-  if ( resource.isEmpty() ) {
-    return !readOnly();
-  } else {
-    return false;
-  }
-}
-

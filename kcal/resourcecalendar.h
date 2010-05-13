@@ -58,29 +58,6 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
     bool isResolveConflictSet() const;
     void setResolveConflict( bool b );
 
-    /**
-      Clears the exception status.
-      @since 4.5
-    */
-    //AK_REVIEW: check whether it is needed
-    void clearException();
-
-    /**
-      Set exception for this object. This is used by the functions of this
-      class to report errors.
-      @since 4.5
-    */
-    //AK_REVIEW: check whether it is needed
-    void setException( ErrorFormat *error );
-
-    /**
-      Returns an exception, if there is any, containing information about the
-      last error that occurred.
-      @since 4.5
-    */
-    //AK_REVIEW: check whether it is needed
-    ErrorFormat *exception();
-
     virtual void writeConfig( KConfigGroup &group );
 
     /**
@@ -466,13 +443,6 @@ class KCAL_EXPORT ResourceCalendar : public KRES::Resource
       Is this subresource active or not?
     */
     virtual bool subresourceActive( const QString &resource ) const;
-
-    /**
-      Is this subresource writable or not?
-      @since 4.5
-    */
-    //AK_REVIEW: remove, its BIC
-    virtual bool subresourceWritable( const QString &subresource ) const;
 
     /**
       What is the label for this subresource?
