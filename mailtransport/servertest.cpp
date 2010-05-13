@@ -71,6 +71,9 @@ class ServerTestPrivate
     int                            secureStage;
     int                            encryptionMode;
 
+    bool                           normalPossible;
+    bool                           securePossible;
+
     void finalResult();
     void handleSMTPIMAPResponse( int type, const QString &text );
     void sendInitialCapabilityQuery( MailTransport::Socket *socket );
@@ -93,7 +96,8 @@ class ServerTestPrivate
 
 ServerTestPrivate::ServerTestPrivate( ServerTest *test )
   : q( test ), testProgress( 0 ), secureSocketFinished( false ),
-    normalSocketFinished( false ), tlsFinished( false )
+    normalSocketFinished( false ), tlsFinished( false ),
+    normalPossible( true ), securePossible( true )
 {
 }
 
@@ -415,10 +419,10 @@ void ServerTestPrivate::slotReadSecure( const QString &text )
 
 void ServerTestPrivate::slotNormalNotPossible()
 {
+  normalPossible = false;
   normalSocketFinished = true;
   tlsFinished = true;
   finalResult();
-  emit q->failedToConnectToServer();
 }
 
 void ServerTestPrivate::slotSslPossible()
@@ -429,6 +433,7 @@ void ServerTestPrivate::slotSslPossible()
 
 void ServerTestPrivate::slotSslNotPossible()
 {
+  securePossible = false;
   secureSocketFinished = true;
   finalResult();
 }
@@ -473,6 +478,8 @@ void ServerTest::start()
   d->normalStage = -1;
   d->secureStage = -1;
   d->encryptionMode = Transport::EnumEncryption::None;
+  d->normalPossible = true;
+  d->securePossible = true;
 
   if ( d->testProgress ) {
     d->testProgress->setMaximum( 20 );
@@ -588,6 +595,11 @@ QList< int > ServerTest::normalProtocols()
   return d->authenticationResults[TransportBase::EnumEncryption::None];
 }
 
+bool ServerTest::isNormalPossible()
+{
+  return d->normalPossible;
+}
+
 QList< int > ServerTest::tlsProtocols()
 {
   return d->authenticationResults[TransportBase::EnumEncryption::TLS];
@@ -596,6 +608,11 @@ QList< int > ServerTest::tlsProtocols()
 QList< int > ServerTest::secureProtocols()
 {
   return d->authenticationResults[Transport::EnumEncryption::SSL];
+}
+
+bool ServerTest::isSecurePossible()
+{
+  return d->securePossible;
 }
 
 QList< ServerTest::Capability > ServerTest::capabilities() const

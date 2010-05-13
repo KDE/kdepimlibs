@@ -166,6 +166,12 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     QList<int> normalProtocols();
 
     /**
+     * tells you if the normal server is available
+     * @since 4.5
+     */
+    bool isNormalPossible();
+
+    /**
      * Get the protocols for the TLS connections. Call this only
      * after the finished() signals has been sent.
      * @return an enum of the type Transport::EnumAuthenticationType
@@ -179,6 +185,12 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
      * @return an enum of the type Transport::EnumAuthenticationType
      */
     QList<int> secureProtocols();
+
+    /**
+     * tells you if the ssl server is available
+     * @since 4.5
+     */
+    bool isSecurePossible();
 
     /**
      * Get the special capabilities of the server.
@@ -195,13 +207,6 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
      * the values from the enum EnumEncryption which are possible.
      */
     void finished( QList<int> );
-
-    /**
-     * This will be emitted when test can not connect to server
-     * @since 4.5
-     */
-    //AK_REVIEW: remove and add accessor that returns if connection is possible
-    void failedToConnectToServer();
 
   private:
     Q_DECLARE_PRIVATE( ServerTest )
