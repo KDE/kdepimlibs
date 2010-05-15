@@ -264,6 +264,17 @@ namespace IncidenceFormatter
   KCAL_EXPORT QString recurrenceString( Incidence *incidence );
 
   /**
+    Returns a reminder string computed for the specified Incidence.
+    Each item of the returning QStringList corresponds to a string
+    representation of an reminder belonging to this incidence.
+    @param incidence is a pointer to the Incidence.
+    @param shortfmt if false, a short version of each reminder is printed;
+    else a longer version of each reminder is printed.
+    @since 4.5
+  */
+  KCAL_EXPORT QStringList reminderStringList( Incidence *incidence, bool shortfmt = true );
+
+  /**
     Build a QString time representation of a KDateTime object.
     @param date The date to be formatted.
     @param shortfmt If true, display info in short format.
@@ -306,6 +317,14 @@ namespace IncidenceFormatter
     @since 4.4
   */
   KCAL_EXPORT QString resourceString( Calendar *calendar, Incidence *incidence );
+
+  /**
+    Returns a duration string computed for the specified Incidence.
+    Only makes sense for Events and Todos.
+    @param incidence is a pointer to the Incidence.
+    @since 4.5
+  */
+  KCAL_EXPORT QString durationString( Incidence *incidence );
 
   class EventViewerVisitor;
   class ScheduleMessageVisitor;
