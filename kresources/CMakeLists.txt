@@ -5,6 +5,7 @@ add_subdirectory( tests )
 include_directories( ${KDE4_KIO_INCLUDES} )
 
 add_definitions(${QDBUS_DEFINITIONS} -DKDE_DEFAULT_DEBUG_AREA=5650)
+add_definitions( -DWANT_DEPRECATED_KRESOURCE_API )
 
 ########### next target ###############
 
