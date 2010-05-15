@@ -40,7 +40,6 @@
 #include <kpimutils/email.h>
 #include <kabc/phonenumber.h>
 #include <kabc/vcardconverter.h>
-#include <kabc/stdaddressbook.h>
 #include <kcal/incidenceformatter.h>
 #include <kcal/calendar.h>
 #include <kcal/calendarlocal.h>
