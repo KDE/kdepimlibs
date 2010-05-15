@@ -3,6 +3,10 @@ if (KDE4_BUILD_TESTS)
 # clear the file initially
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/all_includes.h "/* all forwarding includes */\n" )
 
+add_definitions(-DWANT_DEPRECATED_KCAL_API)
+add_definitions(-DWANT_DEPRECATED_KABC_API)
+add_definitions(-DWANT_DEPRECATED_KRESOURCE_API)
+
 macro(add_includes _dir)
   file(GLOB_RECURSE _includes "${CMAKE_SOURCE_DIR}/includes/${_dir}/[A-Z]*")
   foreach( file ${_includes} )
