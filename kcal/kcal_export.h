@@ -33,6 +33,14 @@
 # endif
 #endif
 
+# ifndef KCAL_EXPORT_DEPRECATED
+#  if !defined( WANT_DEPRECATED_KCAL_API )
+#    define KCAL_EXPORT_DEPRECATED KDE_DEPRECATED KCAL_EXPORT
+#  else
+#    define KCAL_EXPORT_DEPRECATED KCAL_EXPORT
+#  endif
+# endif
+
 #ifdef COMPILING_TESTS
 #ifndef KCAL_TEST_EXPORT
 # if defined(MAKE_KCAL_TEST_LIB)

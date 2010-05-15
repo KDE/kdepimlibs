@@ -5,6 +5,9 @@ find_package(Libical)
 macro_log_feature(LIBICAL_FOUND "libical" "Reference implementation of the iCalendar data type and serialization format" "http://sourceforge.net/projects/freeassociation" TRUE "${LIBICAL_MIN_VERSION}" "Required for the critical PIM kcal library.")
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5800)
+add_definitions(-DWANT_DEPRECATED_KCAL_API)
+add_definitions(-DWANT_DEPRECATED_KABC_API)
+add_definitions(-DWANT_DEPRECATED_KRESOURCE_API)
 
 include (ConfigureChecks.cmake)
 

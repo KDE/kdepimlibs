@@ -33,7 +33,7 @@ class ResourceCached;
 
   @see ResourceCached
 */
-class KCAL_EXPORT ResourceCachedReloadConfig : public QWidget
+class KCAL_EXPORT_DEPRECATED ResourceCachedReloadConfig : public QWidget
 {
   Q_OBJECT
   public:
@@ -59,7 +59,7 @@ class KCAL_EXPORT ResourceCachedReloadConfig : public QWidget
 
   @see ResourceCached
 */
-class KCAL_EXPORT ResourceCachedSaveConfig : public QWidget
+class KCAL_EXPORT_DEPRECATED ResourceCachedSaveConfig : public QWidget
 {
     Q_OBJECT
   public:

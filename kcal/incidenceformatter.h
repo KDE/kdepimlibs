@@ -114,9 +114,9 @@ namespace IncidenceFormatter
     @since 4.2
     @deprecated use toolTipStr( Calendar *, IncidenceBase *, bool, KDateTime::Spec)
   */
-  KCAL_EXPORT KDE_DEPRECATED QString toolTipStr( IncidenceBase *incidence,
-                                                 bool richText=true,
-                                                 KDateTime::Spec spec=KDateTime::Spec() );
+  KCAL_EXPORT_DEPRECATED QString toolTipStr( IncidenceBase *incidence,
+                                              bool richText=true,
+                                              KDateTime::Spec spec=KDateTime::Spec() );
 
   /**
     Create a QString representation of an Incidence in a nice format
@@ -125,8 +125,8 @@ namespace IncidenceFormatter
     @param richText if yes, the QString will be created as RichText.
     @deprecated use toolTipStr( Calendar *, IncidenceBase *, bool, KDateTime::Spec)
   */
-  KCAL_EXPORT KDE_DEPRECATED QString toolTipString( IncidenceBase *incidence,
-                                                    bool richText=true );
+  KCAL_EXPORT_DEPRECATED QString toolTipString( IncidenceBase *incidence,
+                                                bool richText=true );
   /**
     Create a RichText QString representation of an Incidence in a nice format
     suitable for using in a viewer widget.
@@ -168,8 +168,8 @@ namespace IncidenceFormatter
     @since 4.2
     @deprecated use extensiveDisplayStr( Calendar *, IncidenceBase *, KDateTime::Spec )
   */
-  KCAL_EXPORT KDE_DEPRECATED QString extensiveDisplayStr( IncidenceBase *incidence,
-                                                          KDateTime::Spec spec=KDateTime::Spec() );
+  KCAL_EXPORT_DEPRECATED QString extensiveDisplayStr( IncidenceBase *incidence,
+                                                      KDateTime::Spec spec=KDateTime::Spec() );
 
   /**
     Create a RichText QString representation of an Incidence in a nice format
@@ -177,7 +177,7 @@ namespace IncidenceFormatter
     @param incidence is a pointer to the Incidence to be formatted.
     @deprecated use extensiveDisplayStr( Calendar *, IncidenceBase *, KDateTime::Spec )
   */
-  KCAL_EXPORT KDE_DEPRECATED QString extensiveDisplayString( IncidenceBase *incidence );
+  KCAL_EXPORT_DEPRECATED QString extensiveDisplayString( IncidenceBase *incidence );
 
   /**
     Create a QString representation of an Incidence in format suitable for
@@ -196,7 +196,7 @@ namespace IncidenceFormatter
     @param incidence is a pointer to the Incidence to be formatted.
     @deprecated use mailBodyStr( IncidenceBase *, KDateTime::Spec )
   */
-  KCAL_EXPORT KDE_DEPRECATED QString mailBodyString( IncidenceBase *incidence );
+  KCAL_EXPORT_DEPRECATED QString mailBodyString( IncidenceBase *incidence );
 
   /**
     Deliver an HTML formatted string displaying an invitation.
