@@ -104,36 +104,6 @@ namespace CalHelper {
   */
   //AK_REVIEW: remove and port the calling code to Akonadi based classes (tokoe)
   KCAL_EXPORT bool hasMyWritableEventsFolders( const QString &family );
-
-  /**
-    Returns the ResourceCalendar where the Incidence is stored, if any.
-    @param calendar is a pointer to a valid Calendar object.
-    @param incidence is a pointer to an Incidence object.
-
-    @return a pointer to the ResourceCalendar where the Incidence is stored;
-    else 0 if none can be found.
-    @since 4.5
-  */
-  //AK_REVIEW: remove (tokoe)
-  ResourceCalendar *incResourceCalendar( Calendar *calendar, Incidence *incidence );
-
-  /**
-    Returns the (ResourceCalendar, SubResourceCalendar) pair where the
-    Incidence is stored, if any.
-    @param calendar is a pointer to a valid Calendar object.
-    @param incidence is a pointer to an Incidence object.
-
-    @return a QPair containing a pointer to the Incidence's ResourceCalendar
-    in the 'first' element of the QPair and the SubResourceCalendar in the
-    'second' element.
-
-    @note many resource types do not support subresources, so the 'second'
-    element will be an empty QString in those situations.
-    @since 4.5
-  */
-  //AK_REVIEW: remove (tokoe)
-  QPair<ResourceCalendar *, QString> incSubResourceCalendar( Calendar *calendar,
-                                                             Incidence *incidence );
 }
 
 }

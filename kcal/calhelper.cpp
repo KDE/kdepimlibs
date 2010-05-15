@@ -135,33 +135,3 @@ bool CalHelper::hasMyWritableEventsFolders( const QString &family )
   }
   return false;
 }
-
-ResourceCalendar *CalHelper::incResourceCalendar( Calendar *calendar, Incidence *incidence )
-{
-  CalendarResources *cal = dynamic_cast<CalendarResources*>( calendar );
-  if ( !cal || !incidence ) {
-    return 0;
-  }
-
-  return cal->resource( incidence );
-}
-
-QPair<ResourceCalendar *, QString> CalHelper::incSubResourceCalendar( Calendar *calendar,
-                                                                      Incidence *incidence )
-{
-  QPair<ResourceCalendar *, QString> p( 0, QString() );
-
-  CalendarResources *cal = dynamic_cast<CalendarResources*>( calendar );
-  if ( !cal || !incidence ) {
-    return p;
-  }
-
-  ResourceCalendar *res = cal->resource( incidence );
-
-  QString subRes;
-  if ( res && res->canHaveSubresources() ) {
-    subRes = res->subresourceIdentifier( incidence );
-  }
-  p = qMakePair( res, subRes );
-  return p;
-}
