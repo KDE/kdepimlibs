@@ -1478,9 +1478,15 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode, KDateTime::Sp
 
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
     html += invitationRow( i18n( "Start Date:" ), dateToString( todo->dtStart(), false, spec ) );
+    if ( !todo->allDay() ) {
+      html += invitationRow( i18n( "Start Time:" ), timeToString( todo->dtStart(), false, spec ) );
+    }
   }
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
     html += invitationRow( i18n( "Due Date:" ), dateToString( todo->dtDue(), false, spec ) );
+    if ( !todo->allDay() ) {
+      html += invitationRow( i18n( "Due Time:" ), timeToString( todo->dtDue(), false, spec ) );
+    }
   } else {
     html += invitationRow( i18n( "Due Date:" ), i18nc( "no to-do due date", "None" ) );
   }
