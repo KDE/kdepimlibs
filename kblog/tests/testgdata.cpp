@@ -418,7 +418,7 @@ void TestGData::testNetwork()
   c->setCreationDateTime( mCDateTime );
   c->setModificationDateTime( mMDateTime );
 
-  connect( b, SIGNAL( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ),
+  connect( b, SIGNAL( errorPost( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ),
            this, SLOT( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ) );
 
   TestGDataWarnings *warnings = new TestGDataWarnings();
