@@ -82,7 +82,7 @@ InteractiveSMTPServerWindow::~InteractiveSMTPServerWindow()
     if ( mSocket ) {
         mSocket->close();
         if ( mSocket->state() == QAbstractSocket::ClosingState )
-            connect( mSocket, SIGNAL(delayedCloseFinished()),
+            connect( mSocket, SIGNAL(disconnected()),
                      mSocket, SLOT(deleteLater()) );
         else
             mSocket->deleteLater();

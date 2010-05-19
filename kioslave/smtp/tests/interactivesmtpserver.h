@@ -37,7 +37,10 @@
 #include <QtGui/QWidget>
 #include <QtNetwork/QTcpServer>
 
+class QLabel;
+class QLineEdit;
 class QTcpServer;
+class QTextEdit;
 
 class InteractiveSMTPServerWindow : public QWidget
 {
