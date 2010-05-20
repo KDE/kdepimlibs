@@ -1,7 +1,7 @@
 /*
   This file is part of the kcal library.
 
-  Copyright (c) 2002,2006 David Jarvie <software@astrojar.org.uk>
+  Copyright (c) 2002,2006 David Jarvie <djarvie@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -26,7 +26,7 @@
   @brief
   A class to manage custom calendar properties.
 
-  @author David Jarvie \<software@astrojar.org.uk\>
+  @author David Jarvie \<djarvie@kde.org\>
 */
 
 #include "customproperties.h"
@@ -115,6 +115,15 @@ void CustomProperties::removeCustomProperty( const QByteArray &app, const QByteA
 QString CustomProperties::customProperty( const QByteArray &app, const QByteArray &key ) const
 {
   return nonKDECustomProperty( QByteArray( "X-KDE-" + app + '-' + key ) );
+}
+
+QByteArray CustomProperties::customPropertyName( const QByteArray &app, const QByteArray &key )
+{
+  QByteArray property( "X-KDE-" + app + '-' + key );
+  if ( !checkName( property ) ) {
+    return QByteArray();
+  }
+  return property;
 }
 
 void CustomProperties::setNonKDECustomProperty( const QByteArray &name, const QString &value )

@@ -1,7 +1,7 @@
 /*
   This file is part of the kcal library.
 
-  Copyright (c) 2002,2006 David Jarvie <software@astrojar.org.uk>
+  Copyright (c) 2002,2006 David Jarvie <djarvie@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -23,7 +23,7 @@
   This file is part of the API for handling calendar data and
   defines the CustomProperties class.
 
-  @author David Jarvie \<software@astrojar.org.uk\>
+  @author David Jarvie \<djarvie@kde.org\>
 */
 
 #ifndef KCAL_CUSTOMPROPERTIES_H
@@ -107,6 +107,18 @@ class KCAL_EXPORT CustomProperties
       does not exist.
     */
     QString customProperty( const QByteArray &app, const QByteArray &key ) const;
+
+    /**
+      Validate and return the full name of a custom calendar property.
+
+      @param app Application name as it appears in the custom property name.
+      @param key Property identifier specific to the application.
+      @return Full property name, or empty string if it would contain invalid
+              characters
+
+      @since 4.5
+    */
+    static QByteArray customPropertyName( const QByteArray &app, const QByteArray &key );
 
     /**
       Create or modify a non-KDE or non-standard custom calendar property.

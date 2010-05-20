@@ -33,8 +33,11 @@ void CustomPropertiesTest::testValidity()
   QByteArray app( "KORG" );
   QByteArray key( "TEXT" );
 
+  QByteArray name( "X-KDE-KORG-TEXT" );
+  QCOMPARE( cp.customPropertyName( app, key ), name );
   cp.setCustomProperty( app, key, "rich" );
   QCOMPARE( cp.customProperty( app, key ), QString( "rich" ) );
+  QCOMPARE( cp.nonKDECustomProperty( name ), QString( "rich" ) );
 
   cp.removeCustomProperty( app, key );
   cp.setCustomProperty( app, key, "foo" );
