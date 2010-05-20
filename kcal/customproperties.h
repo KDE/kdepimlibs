@@ -1,7 +1,7 @@
 /*
   This file is part of the kcal library.
 
-  Copyright (c) 2002,2006 David Jarvie <djarvie@kde.org>
+  Copyright (c) 2002,2006,2010 David Jarvie <djarvie@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
