@@ -107,9 +107,9 @@ extern "C"
 int
 kdemain (int argc, char **argv)
 {
+  KComponentData instance ("kio_imap4");
   kDebug(7116) <<"IMAP4::kdemain";
 
-  KComponentData instance ("kio_imap4");
   if (argc != 4)
   {
     fprintf(stderr, "Usage: kio_imap4 protocol domain-socket1 domain-socket2\n");
