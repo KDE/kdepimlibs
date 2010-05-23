@@ -197,7 +197,6 @@ void ServerTestPrivate::slotNormalPossible()
 
 void ServerTestPrivate::sendInitialCapabilityQuery( MailTransport::Socket *socket )
 {
-  kDebug();
   if ( testProtocol == IMAP_PROTOCOL ) {
     socket->write( QLatin1String( "1 CAPABILITY" ) );
   }
@@ -227,7 +226,6 @@ void ServerTestPrivate::sendInitialCapabilityQuery( MailTransport::Socket *socke
 
 void ServerTestPrivate::slotTlsDone()
 {
-  kDebug();
 
   // The server will not send a response after starting TLS. Therefore, we have to manually
   // call slotReadNormal(), because this is not triggered by a data received signal this time.
@@ -419,6 +417,7 @@ void ServerTestPrivate::slotReadSecure( const QString &text )
 
 void ServerTestPrivate::slotNormalNotPossible()
 {
+  normalSocketTimer->stop();
   normalPossible = false;
   normalSocketFinished = true;
   tlsFinished = true;
@@ -433,6 +432,7 @@ void ServerTestPrivate::slotSslPossible()
 
 void ServerTestPrivate::slotSslNotPossible()
 {
+  secureSocketTimer->stop();
   securePossible = false;
   secureSocketFinished = true;
   finalResult();
