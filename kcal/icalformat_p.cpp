@@ -1204,6 +1204,7 @@ FreeBusy *ICalFormatImpl::readFreeBusy( icalcomponent *vfreebusy )
   while ( p ) {
     icalproperty_kind kind = icalproperty_isa( p );
     switch ( kind ) {
+
     case ICAL_DTSTART_PROPERTY:  // start date and time (UTC)
       freebusy->setDtStart( readICalUtcDateTimeProperty( p ) );
       break;
@@ -1224,10 +1225,19 @@ FreeBusy *ICalFormatImpl::readFreeBusy( icalcomponent *vfreebusy )
         Duration duration ( readICalDuration( icalperiod.duration ) );
         period = FreeBusyPeriod( period_start, duration );
       }
-      QByteArray param = icalproperty_get_parameter_as_string( p, "X-SUMMARY" );
-      period.setSummary( QString::fromUtf8( KCodecs::base64Decode( param ) ) );
-      param = icalproperty_get_parameter_as_string( p, "X-LOCATION" );
-      period.setLocation( QString::fromUtf8( KCodecs::base64Decode( param ) ) );
+
+      icalparameter *param = icalproperty_get_first_parameter( p, ICAL_X_PARAMETER );
+      while ( param ) {
+        if ( strncmp( icalparameter_get_xname( param ), "X-SUMMARY", 9 ) == 0 ) {
+          period.setSummary( QString::fromUtf8(
+                               KCodecs::base64Decode( icalparameter_get_xvalue( param ) ) ) );
+        }
+        if ( strncmp( icalparameter_get_xname( param ), "X-LOCATION", 10 ) == 0 ) {
+          period.setLocation( QString::fromUtf8(
+                                KCodecs::base64Decode( icalparameter_get_xvalue( param ) ) ) );
+        }
+        param = icalproperty_get_next_parameter( p, ICAL_X_PARAMETER );
+      }
       periods.append( period );
       break;
     }
