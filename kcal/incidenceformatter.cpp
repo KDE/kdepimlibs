@@ -2233,10 +2233,11 @@ class IncidenceFormatter::IncidenceCompareVisitor
       if ( oldTodo->isCompleted() && !newTodo->isCompleted() ) {
         mChanges += i18n( "The to-do is no longer completed" );
       }
-      if ( !oldTodo->isCompleted() && !newTodo->isCompleted() &&
-           oldTodo->percentComplete() != newTodo->percentComplete() ) {
-        mChanges += i18n( "The to-do completed percentage has changed from %1 to %2",
-                          oldTodo->percentComplete(), newTodo->percentComplete() );
+      if ( oldTodo->percentComplete() != newTodo->percentComplete() ) {
+        const QString oldPer = i18n( "%1%", oldTodo->percentComplete() );
+        const QString newPer = i18n( "%1%", newTodo->percentComplete() );
+        mChanges += i18n( "The task completed percentage has changed from %1 to %2",
+                          oldPer, newPer );
       }
 
       if ( !oldTodo->hasStartDate() && newTodo->hasStartDate() ) {
