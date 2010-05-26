@@ -975,6 +975,7 @@ void Calendar::setupRelations( Incidence *forincidence )
 
       // look for hierarchy loops
       if ( isAncestorOf( forincidence, parent ) ) {
+        forincidence->setRelatedToUid( QString() );
         kWarning() << "hierarchy loop beetween " << forincidence->uid() << " and " << parent->uid();
       } else {
         forincidence->setRelatedTo( parent );
