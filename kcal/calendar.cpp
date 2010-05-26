@@ -972,8 +972,15 @@ void Calendar::setupRelations( Incidence *forincidence )
     Incidence *parent = incidence( forincidence->relatedToUid() );
     if ( parent ) {
       // Found it
-      forincidence->setRelatedTo( parent );
-      parent->addRelation( forincidence );
+
+      // look for hierarchy loops
+      if ( isAncestorOf( forincidence, parent ) ) {
+        kWarning() << "hierarchy loop beetween " << forincidence->uid() << " and " << parent->uid();
+      } else {
+        forincidence->setRelatedTo( parent );
+        parent->addRelation( forincidence );
+      }
+
     } else {
       // Not found, put this in the mOrphans list
       // Note that the mOrphans dict might contain multiple entries with the
@@ -1062,6 +1069,17 @@ void Calendar::removeRelations( Incidence *incidence )
   //
   // This crash is tested in CalendarLocalTest::testRelationsCrash().
   incidence->setRelatedTo( 0 );
+}
+
+bool Calendar::isAncestorOf( Incidence *ancestor, Incidence *incidence )
+{
+  if ( !incidence || incidence->relatedToUid().isEmpty() ) {
+    return false;
+  } else if ( incidence->relatedToUid() == ancestor->uid() ) {
+    return true;
+  } else {
+    return isAncestorOf( ancestor, this->incidence( incidence->relatedToUid() ) );
+  }
 }
 
 void Calendar::CalendarObserver::calendarModified( bool modified, Calendar *calendar )

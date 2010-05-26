@@ -912,6 +912,14 @@ class KCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     virtual void removeRelations( Incidence *incidence );
 
+    /**
+      Checks if @p ancestor is an ancestor of @p incidence
+
+      @param ancestor  the incidence we are testing to be an ancestor
+      @param incidence the incidence we are testing to be descended from @p ancestor
+    */
+    bool isAncestorOf( Incidence *ancestor, Incidence *incidence );
+
   // Filter Specific Methods //
 
     /**
