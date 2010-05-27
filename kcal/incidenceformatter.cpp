@@ -2174,15 +2174,17 @@ static QString formatICalInvitationHelper( QString invitation,
 
     case iTIPCancel:
       // Remove invitation
-      html += tdOpen;
-      if ( inc->type() == "Todo" ) {
-        html += helper->makeLink( "cancel",
-                                  i18n( "Remove invitation from my to-do list" ) );
-      } else {
-        html += helper->makeLink( "cancel",
-                                  i18n( "Remove invitation from my calendar" ) );
+      if ( inc ) {
+        html += tdOpen;
+        if ( inc->type() == "Todo" ) {
+          html += helper->makeLink( "cancel",
+                                    i18n( "Remove invitation from my to-do list" ) );
+        } else {
+          html += helper->makeLink( "cancel",
+                                    i18n( "Remove invitation from my calendar" ) );
+        }
+        html += tdClose;
       }
-      html += tdClose;
       break;
 
     case iTIPReply:
