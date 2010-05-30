@@ -28,8 +28,6 @@
 #include "kmime_headers.h"
 #include "boolflags.h"
 
-//AK_REVIEW: bring back isTopLevel + comment 'remove on KDE5'
-
 namespace boost {
   template <typename T> class shared_ptr;
 }
@@ -197,6 +195,9 @@ class KMIME_EXPORT Message : public Content
       @param create If true, create the header if it doesn't exist yet.
     */
     virtual KMime::Headers::Sender *sender( bool create = true );
+
+    /* reimpl */
+    virtual bool isTopLevel() const;
 
     /**
       Returns the first main body part of a given type, taking multipart/mixed

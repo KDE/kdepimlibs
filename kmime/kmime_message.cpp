@@ -93,6 +93,11 @@ bool Message::removeHeader( const char *type )
   return Content::removeHeader( type );
 }
 
+bool Message::isTopLevel() const
+{
+  return true;
+}
+
 Content *Message::mainBodyPart( const QByteArray &type )
 {
   KMime::Content *c = this;
