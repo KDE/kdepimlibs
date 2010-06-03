@@ -558,11 +558,23 @@ QByteArray CRLFtoLF( const QByteArray &s )
   return ret;
 }
 
+QByteArray CRLFtoLF( const char *s )
+{
+  QByteArray ret = s;  
+  return CRLFtoLF( ret );
+}
+
 QByteArray LFtoCRLF( const QByteArray &s )
 {
   QByteArray ret = s;
   ret.replace( '\n', "\r\n" );
   return ret;
+}
+
+QByteArray LFtoCRLF( const char *s )
+{
+  QByteArray ret = s;
+  return LFtoCRLF( ret );
 }
 
 namespace {
