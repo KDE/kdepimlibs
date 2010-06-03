@@ -93,17 +93,6 @@ namespace CalHelper {
     @since 4.4
   */
   KCAL_EXPORT_DEPRECATED bool usingGroupware( Calendar *calendar );
-
-  /**
-    Determines if the Calendar has any writable folders with Events content
-    that are owned by me.
-    @param family is the resource family name or "calendar" if empty.
-
-    @return true if the any such writable folders are found; false otherwise.
-    @since 4.5
-  */
-  //AK_REVIEW: remove and port the calling code to Akonadi based classes (tokoe)
-  KCAL_EXPORT bool hasMyWritableEventsFolders( const QString &family );
 }
 
 }
