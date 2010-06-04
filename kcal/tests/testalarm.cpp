@@ -53,6 +53,6 @@ void AlarmTest::testAssignment()
   alarm1.setType( Alarm::Display );
   Alarm alarm2 = alarm1;
   QVERIFY( alarm1 == alarm2 );
-  Alarm *alarm3 = alarm1.clone();
+  Alarm *alarm3 = new Alarm( alarm1 );
   QVERIFY( alarm2 == *alarm3 );
 }

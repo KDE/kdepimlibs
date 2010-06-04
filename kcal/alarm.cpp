@@ -111,11 +111,6 @@ Alarm::~Alarm()
   delete d;
 }
 
-Alarm *Alarm::clone()
-{
-  return new Alarm( *this );
-}
-
 Alarm &Alarm::operator=( const Alarm &a )
 {
   d->mParent = a.d->mParent;

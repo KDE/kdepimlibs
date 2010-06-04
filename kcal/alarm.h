@@ -106,13 +106,6 @@ class KCAL_EXPORT Alarm : public CustomProperties
     virtual ~Alarm();
 
     /**
-      Returns an exact copy of this alarm. The returned object is owned by the caller.
-      @since 4.5
-    */
-    //AK_REVIEW: check why is it needed, remove if possible
-    Alarm *clone();
-
-    /**
       Assignment operator.
       @since 4.5
     */
