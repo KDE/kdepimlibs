@@ -590,6 +590,13 @@ bool KPIMUtils::isValidSimpleAddress( const QString &aStr )
   int atChar = aStr.lastIndexOf( '@' );
   QString domainPart = aStr.mid( atChar + 1 );
   QString localPart = aStr.left( atChar );
+
+  // Both of these parts must be non empty
+  // after all we cannot have emails like:
+  // @kde.org, or  foo@
+  if( localPart.isEmpty() || domainPart.isEmpty() )
+    return false;
+
   bool tooManyAtsFlag = false;
   bool inQuotedString = false;
   int atCount = localPart.count( '@' );
