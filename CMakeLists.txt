@@ -11,7 +11,7 @@ option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." FALSE)
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 4)
-set(KDEPIMLIBS_VERSION_PATCH 80)
+set(KDEPIMLIBS_VERSION_PATCH 85)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 
@@ -19,7 +19,7 @@ set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.$
 
 set (QT_MIN_VERSION "4.6.0")
 # kdepim depends on the latest released version of KDE 4.4
-find_package(KDE4 4.4.0 REQUIRED)
+find_package(KDE4 4.4.85 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 
