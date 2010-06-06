@@ -19,7 +19,7 @@ set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.$
 
 set (QT_MIN_VERSION "4.6.0")
 # kdepim depends on the latest released version of KDE 4.4
-find_package(KDE4 4.4.85 REQUIRED)
+find_package(KDE4 4.4.0 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 
