@@ -531,7 +531,7 @@ QString KPIMUtils::emailParseResultToString( EmailParseResult errorCode )
                  "change your address." );
   case TooFewAts :
     return i18n( "The email address you entered is not valid because it "
-                 "does not contain a @."
+                 "does not contain a @. "
                  "You will not create valid messages if you do not "
                  "change your address." );
   case AddressEmpty :

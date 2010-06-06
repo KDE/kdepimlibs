@@ -47,28 +47,18 @@
     </entry>
     <entry name="precommand" type="String">
       <label>Command to execute before sending a mail</label>
-      <whatsthis>
-        A command to run locally, prior to sending email.
-        This can be used to set up SSH tunnels, for example.
-        Leave it empty if no command should be run.
-      </whatsthis>
+      <whatsthis>A command to run locally, prior to sending email. This can be used to set up SSH tunnels, for example. Leave it empty if no command should be run.</whatsthis>
     </entry>
     <entry name="requiresAuthentication" type="Bool" key="auth">
       <label>Server requires authentication</label>
-      <whatsthis>
-        Check this option if your SMTP server requires authentication before accepting mail.
-        This is known as 'Authenticated SMTP' or simply ASMTP.
-      </whatsthis>
+      <whatsthis>Check this option if your SMTP server requires authentication before accepting mail. This is known as 'Authenticated SMTP' or simply ASMTP.</whatsthis>
       <default>false</default>
     </entry>
     <entry name="storePassword" type="Bool" key="storepass">
       <label>Store password</label>
-      <whatsthis>
-        Check this option to have your password stored.
-        If KWallet is available the password will be stored there which is considered safe.
-        However, if KWallet is not available, the password will be stored in the configuration file.
-        The password is stored in an obfuscated format, but should not be considered secure from decryption efforts if access to the configuration file is obtained.
-      </whatsthis>
+      <whatsthis>Check this option to have your password stored.
+If KWallet is available the password will be stored there, which is considered safe.
+However, if KWallet is not available, the password will be stored in the configuration file. The password is stored in an obfuscated format, but should not be considered secure from decryption efforts if access to the configuration file is obtained.</whatsthis>
       <default>false</default>
     </entry>
     <entry name="encryption" type="Enum">
