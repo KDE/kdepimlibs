@@ -100,11 +100,20 @@ inline bool isEText( char ch )
   * Set the fallback charset to use when decoding RFC2047-encoded headers.
   *  If decoding according to the RFC fails, then the fallback encoding is
   *  used instead.
+  * 
+  * @param fallbackCharEnc Name of fallback character encoding to use.
+  * 
+  * @since 4.5
   */
 KMIME_EXPORT extern void setFallbackCharEncoding( const QString& fallbackCharEnc );
 
 /**
   * Retreive the set fallback charset if there is one set.
+  *
+  * @return The name of the fallback encoding, if one was set, otherwise
+  *           an empty QString.
+  * 
+  * @since 4.5
   */
 KMIME_EXPORT extern QString fallbackCharEncoding();
 

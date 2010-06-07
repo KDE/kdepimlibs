@@ -232,7 +232,7 @@ QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
   }
   // If there are any chars that couldn't be decoded in UTF-8,
   //  use the fallback charset if it exists
-  QString tryUtf8 = QString::fromUtf8( result );
+  const QString tryUtf8 = QString::fromUtf8( result );
   if ( tryUtf8.contains( 0xFFFD ) && !f_allbackCharEnc.isEmpty() ) {
     QTextCodec* codec = KGlobal::charsets()->codecForName( f_allbackCharEnc );
     return codec->toUnicode( result );
