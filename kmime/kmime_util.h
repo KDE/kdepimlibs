@@ -97,6 +97,18 @@ inline bool isEText( char ch )
 //@endcond
 
 /**
+  * Set the fallback charset to use when decoding RFC2047-encoded headers.
+  *  If decoding according to the RFC fails, then the fallback encoding is
+  *  used instead.
+  */
+KMIME_EXPORT extern void setFallbackCharEncoding( const QString& fallbackCharEnc );
+
+/**
+  * Retreive the set fallback charset if there is one set.
+  */
+KMIME_EXPORT extern QString fallbackCharEncoding();
+
+/**
   Decodes string @p src according to RFC2047,i.e., the construct
    =?charset?[qb]?encoded?=
 

@@ -25,6 +25,7 @@
 #include "kmime_util_p.h"
 #include "kmime_header_parsing.h"
 #include "kmime_charfreq.h"
+#include "kmimesettings_base.h"
 
 #include <config-kmime.h>
 #include <kdefakes.h> // for strcasestr
@@ -42,6 +43,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <boost/concept_check.hpp>
 
 using namespace KMime;
 
@@ -49,6 +51,7 @@ namespace KMime {
 
 QList<QByteArray> c_harsetCache;
 QList<QByteArray> l_anguageCache;
+QString f_allbackCharEnc;
 
 QByteArray cachedCharset( const QByteArray &name )
 {
@@ -173,6 +176,16 @@ const uchar eTextMap[16] = {
   0x7F, 0xFF, 0xFF, 0xE0
 };
 
+void setFallbackCharEncoding(const QString& fallbackCharEnc)
+{
+  f_allbackCharEnc = fallbackCharEnc;
+}
+
+QString fallbackCharEncoding()
+{
+  return f_allbackCharEnc;
+}
+
 QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
                              const QByteArray &defaultCS, bool forceCS )
 {
@@ -218,8 +231,15 @@ QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
       ++scursor;
     }
   }
-
-  return QString::fromUtf8(result);
+  // If there are any chars that couldn't be decoded in UTF-8,
+  //  use the fallback charset if it exists
+  QString tryUtf8 = QString::fromUtf8( result );
+  if ( tryUtf8.contains( 0xFFFD ) && !f_allbackCharEnc.isEmpty() ) {
+    QTextCodec* codec = KGlobal::charsets()->codecForName( f_allbackCharEnc );
+    return codec->toUnicode( result );
+  } else {
+    return tryUtf8;
+  }
 }
 
 QString decodeRFC2047String( const QByteArray &src )
