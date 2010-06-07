@@ -400,6 +400,12 @@ void EMailTest::testIsValidSimpleEmailAddress_data()
   QTest::newRow( "" ) << "\"m@tt\"@fruitsalad.org" << true;
 
   QTest::newRow( "" ) << "matt\"@@\"fruitsalad.org" << false;
+
+
+  // add tests for missing local/domain parts
+  QTest::newRow( "" ) << "@mattfruitsalad.org" << false;
+  QTest::newRow( "" ) << "matt@" << false;
+  QTest::newRow( "" ) << "@" << false;
 }
 
 void EMailTest::testGetEmailAddress()
