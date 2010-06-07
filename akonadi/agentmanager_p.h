@@ -40,7 +40,7 @@ class AgentManagerPrivate
 
   public:
     AgentManagerPrivate( AgentManager *parent )
-      : mParent( parent )
+      : mParent( parent ), mManager( 0 )
     {
     }
 
@@ -59,6 +59,7 @@ class AgentManagerPrivate
     void agentInstanceWarning( const QString&, const QString& );
     void agentInstanceError( const QString&, const QString& );
     void agentInstanceOnlineChanged( const QString&, bool );
+    void serviceOwnerChanged( const QString&, const QString&, const QString& );
 
     /**
      * Reads the information about all known agent types from the serverside
@@ -78,6 +79,8 @@ class AgentManagerPrivate
     AgentType fillAgentType( const QString &identifier ) const;
     AgentInstance fillAgentInstance( const QString &identifier ) const;
     AgentInstance fillAgentInstanceLight( const QString &identifier ) const;
+
+    void createDBusInterface();
 
     static AgentManager *mSelf;
 
