@@ -25,7 +25,6 @@
 #include "kmime_util_p.h"
 #include "kmime_header_parsing.h"
 #include "kmime_charfreq.h"
-#include "kmimesettings_base.h"
 
 #include <config-kmime.h>
 #include <kdefakes.h> // for strcasestr
@@ -580,7 +579,7 @@ QByteArray CRLFtoLF( const QByteArray &s )
 
 QByteArray CRLFtoLF( const char *s )
 {
-  QByteArray ret = s;  
+  QByteArray ret = s;
   return CRLFtoLF( ret );
 }
 
