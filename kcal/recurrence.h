@@ -145,6 +145,13 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      */
     bool operator!=( const Recurrence &r ) const  { return !operator==(r); }
 
+    /**
+     * Assignment operator.
+     *
+     * @param r the recurrence which will be assigned to this.
+     */
+    Recurrence &operator=( const Recurrence &r );
+
     /** Return the start date/time of the recurrence (Time for all-day recurrences will be 0:00).
      @return the current start/time of the recurrence. */
     KDateTime startDateTime() const;

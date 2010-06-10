@@ -150,6 +150,15 @@ bool Recurrence::operator==( const Recurrence &r2 ) const
   return *d == *r2.d;
 }
 
+Recurrence &Recurrence::operator=( const Recurrence &other )
+{
+  if ( &other == this ) // Check for self assignment
+    return *this;
+
+  *d = *other.d;
+  return *this;
+}
+
 void Recurrence::addObserver( RecurrenceObserver *observer )
 {
   if ( !d->mObservers.contains( observer ) ) {
