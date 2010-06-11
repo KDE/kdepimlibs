@@ -149,6 +149,7 @@ class KCAL_EXPORT Recurrence : public RecurrenceRule::RuleObserver
      * Assignment operator.
      *
      * @param r the recurrence which will be assigned to this.
+     & @since 4.5
      */
     Recurrence &operator=( const Recurrence &r );
 
