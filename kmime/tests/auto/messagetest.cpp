@@ -20,6 +20,7 @@
 #include "messagetest.h"
 #include "messagetest.moc"
 #include <qtest_kde.h>
+#include <kdebug.h>
 
 using namespace KMime;
 
@@ -559,7 +560,7 @@ void MessageTest::testOutlookAttachmentNaming()
   attachment->assemble();
   kDebug() << "got:" << attachment->contentDisposition()->as7BitString( false );
   QCOMPARE( attachment->contentDisposition()->as7BitString( false ), QByteArray( "attachment; filename=\"=?ISO-8859-1?Q?=E5=2Ediff?=\"" ) );
-  KMime::setUseOutlookAttachmentEncoding();
+  KMime::setUseOutlookAttachmentEncoding( false );
 }
 
 KMime::Message::Ptr MessageTest::readAndParseMail( const QString &mailFile ) const
