@@ -466,7 +466,7 @@ QString decodeRFC2231String( const QByteArray &str, QByteArray &usedCS, const QB
   if ( !charsetcodec || forceCS )
     charsetcodec = KGlobal::charsets()->codecForName( defaultCS );
 
-  kDebug() << "Got after charset decoded:" << charsetcodec->toUnicode( st );
+  usedCS = charsetcodec->name();
   return charsetcodec->toUnicode( st );
 }
 
