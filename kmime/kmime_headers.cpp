@@ -905,11 +905,13 @@ QByteArray Parametrized::as7BitString( bool withHeaderType ) const
       addQuotes( tmp, true ); // force quoting, eg. for whitespaces in parameter value
       rv += tmp;
     } else {
-      rv += it.key().toLatin1() + "*=";
-      if( useOutlookAttachmentEncoding() )
+      if( useOutlookAttachmentEncoding() ) {
+        rv += it.key().toLatin1() + '=';
         rv += "\"" + encodeRFC2047String( it.value(), d->encCS ) + "\"";
-      else
+      } else {
+        rv += it.key().toLatin1() + "*=";
         rv += encodeRFC2231String( it.value(), d->encCS );
+      }
     }
   }
 
