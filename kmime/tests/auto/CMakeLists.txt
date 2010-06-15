@@ -18,5 +18,5 @@ add_kmime_test(contenttest.cpp)
 add_kmime_test(messagetest.cpp)
 add_kmime_test(codectest.cpp)
 #add_kmime_test(headerfactorytest.cpp)
-#add_kmime_test(rfc2231test.cpp)
+add_kmime_test(rfc2231test.cpp)
 
