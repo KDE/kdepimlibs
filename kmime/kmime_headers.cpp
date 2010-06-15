@@ -899,14 +899,17 @@ QByteArray Parametrized::as7BitString( bool withHeaderType ) const
     } else {
       first = false;
     }
-    rv += it.key().toLatin1() + '=';
     if ( isUsAscii( it.value() ) ) {
+      rv += it.key().toLatin1() + '=';
       QByteArray tmp = it.value().toLatin1();
       addQuotes( tmp, true ); // force quoting, eg. for whitespaces in parameter value
       rv += tmp;
     } else {
-      // FIXME: encoded strings are not allowed inside quotes, OTOH we need to quote whitespaces...
-      rv += "\"" + encodeRFC2047String( it.value(), d->encCS ) + "\"";
+      rv += it.key().toLatin1() + "*=";
+      if( useOutlookAttachmentEncoding() )
+        rv += "\"" + encodeRFC2047String( it.value(), d->encCS ) + "\"";
+      else
+        rv += encodeRFC2231String( it.value(), d->encCS );
     }
   }
 

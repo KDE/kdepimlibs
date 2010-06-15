@@ -118,6 +118,23 @@ KMIME_EXPORT extern void setFallbackCharEncoding( const QString& fallbackCharEnc
 KMIME_EXPORT extern QString fallbackCharEncoding();
 
 /**
+  * Set whether or not to use outlook compatible attachment filename encoding. Outlook
+  *  fails to properly adhere to the RFC2322 standard for parametrized header fields, and
+  *  instead is only able to read and write attachment filenames encoded in RFC2047-style.
+  *  This will create mails that are not standards-compliant!
+  * 
+  * @param violateStandard      Whether or not to use outlook-compatible attachment
+  *                              filename encodings.
+  *
+  * @since 4.5
+  */
+KMIME_EXPORT extern void setUseOutlookAttachmentEncoding( bool violateStandard );
+
+/**
+ * Retrieve whether or not to use outlook compatible encodings for attachments.
+ */
+KMIME_EXPORT extern bool useOutlookAttachmentEncoding();
+/**
   Decodes string @p src according to RFC2047,i.e., the construct
    =?charset?[qb]?encoded?=
 
@@ -155,6 +172,40 @@ KMIME_EXPORT extern QString decodeRFC2047String( const QByteArray &src );
 KMIME_EXPORT extern QByteArray encodeRFC2047String(
   const QString &src, const QByteArray &charset, bool addressHeader=false,
   bool allow8bitHeaders=false );
+
+
+/**
+  Decodes string @p src according to RFC2231
+
+  @param src       source string.
+  @param usedCs    the detected charset is returned here
+  @param defaultCS the charset to use in case the detected
+                   one isn't known to us.
+  @param forceCS   force the use of the default charset.
+
+  @return the decoded string.
+*/
+KMIME_EXPORT extern QString decodeRFC2231String(
+  const QByteArray &src, QByteArray &usedCS, const QByteArray &defaultCS = QByteArray(),
+  bool forceCS = false );
+
+/** Decode string @p src according to RFC2231 (ie. the
+    charset'lang'encoded construct).
+
+    @param src       source string.
+    @return the decoded string.
+*/
+KMIME_EXPORT extern QString decodeRFC2231String( const QByteArray &src );
+
+
+/**
+  Encodes string @p src according to RFC2231 using charset @p charset.
+
+  @param src           source string.
+  @param charset       charset to use.
+  @return the encoded string.
+*/
+KMIME_EXPORT extern QByteArray encodeRFC2231String( const QString &src, const QByteArray &charset );
 
 /**
   Uses current time, pid and random numbers to construct a string

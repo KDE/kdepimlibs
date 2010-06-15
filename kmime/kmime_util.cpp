@@ -25,6 +25,7 @@
 #include "kmime_util_p.h"
 #include "kmime_header_parsing.h"
 #include "kmime_charfreq.h"
+#include "kmime_warning.h"
 
 #include <config-kmime.h>
 #include <kdefakes.h> // for strcasestr
@@ -43,6 +44,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <boost/concept_check.hpp>
+#include "kmime_codecs.h"
 
 using namespace KMime;
 
@@ -51,6 +53,7 @@ namespace KMime {
 QList<QByteArray> c_harsetCache;
 QList<QByteArray> l_anguageCache;
 QString f_allbackCharEnc;
+bool u_seOutlookEncoding = false;
 
 QByteArray cachedCharset( const QByteArray &name )
 {
@@ -184,6 +187,17 @@ QString fallbackCharEncoding()
 {
   return f_allbackCharEnc;
 }
+
+void setUseOutlookAttachmentEncoding( bool violateStandard )
+{
+  u_seOutlookEncoding = violateStandard;
+}
+
+bool useOutlookAttachmentEncoding()
+{
+  return u_seOutlookEncoding;
+}
+
 
 QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
                              const QByteArray &defaultCS, bool forceCS )
@@ -354,6 +368,112 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
   }
 
   return result;
+}
+
+
+//-----------------------------------------------------------------------------
+QByteArray encodeRFC2231String( const QString& str, const QByteArray& charset )
+{
+  if ( str.isEmpty() )
+    return QByteArray();
+
+  
+  const QTextCodec *codec = KGlobal::charsets()->codecForName( charset );
+  QByteArray latin;
+  if ( charset == "us-ascii" )
+    latin = str.toAscii();
+  else if ( codec )
+    latin = codec->fromUnicode( str );
+  else
+    latin = str.toLocal8Bit();
+
+  char *l;
+  for ( l = latin.data(); *l; ++l ) {
+    if ( ( ( *l & 0xE0 ) == 0 ) || ( *l & 0x80 ) )
+      // *l is control character or 8-bit char
+      break;
+  }
+  if ( !*l )
+    return latin;
+
+  QByteArray result = charset + "''";
+  for ( l = latin.data(); *l; ++l ) {
+    bool needsQuoting = ( *l & 0x80 ) || ( *l == '%' );
+    if( !needsQuoting ) {
+      const QByteArray especials = "()<>@,;:\"/[]?.= \033";
+      int len = especials.length();
+      for ( int i = 0; i < len; i++ )
+        if ( *l == especials[i] ) {
+          needsQuoting = true;
+          break;
+        }
+    }
+    if ( needsQuoting ) {
+      result += '%';
+      unsigned char hexcode;
+      hexcode = ( ( *l & 0xF0 ) >> 4 ) + 48;
+      if ( hexcode >= 58 )
+        hexcode += 7;
+      result += hexcode;
+      hexcode = ( *l & 0x0F ) + 48;
+      if ( hexcode >= 58 )
+        hexcode += 7;
+      result += hexcode;
+    } else {
+      result += *l;
+    }
+  }
+  return result;
+}
+
+
+//-----------------------------------------------------------------------------
+QString decodeRFC2231String( const QByteArray &str, QByteArray &usedCS, const QByteArray &defaultCS,
+  bool forceCS )
+{
+  int p = str.indexOf('\'');
+  if (p < 0) return KGlobal::charsets()->codecForName( defaultCS )->toUnicode( str );
+
+  
+  QByteArray charset = str.left(p);
+
+  QByteArray st = str.mid( str.lastIndexOf('\'') + 1 );
+  
+  char ch, ch2;
+  p = 0;
+  while (p < (int)st.length())
+  {
+    if (st.at(p) == 37)
+    {
+      // Only try to decode the percent-encoded character if the percent sign
+      // is really followed by two other characters, see testcase at bug 163024
+      if ( p + 2 < st.length() ) {
+        ch = st.at(p+1) - 48;
+        if (ch > 16)
+          ch -= 7;
+        ch2 = st.at(p+2) - 48;
+        if (ch2 > 16)
+          ch2 -= 7;
+        st[p] = ch * 16 + ch2;
+        st.remove( p+1, 2 );
+      }
+    }
+    p++;
+  }
+  kDebug() << "Got pre-decoded:" << st;
+  QString result;
+  const QTextCodec * charsetcodec = KGlobal::charsets()->codecForName( charset );
+  if ( !charsetcodec || forceCS )
+    charsetcodec = KGlobal::charsets()->codecForName( defaultCS );
+
+  kDebug() << "Got after charset decoded:" << charsetcodec->toUnicode( st );
+  return charsetcodec->toUnicode( st );
+}
+
+QString decodeRFC2231String( const QByteArray &src )
+{
+  QByteArray usedCS;
+  return decodeRFC2231String( src, usedCS, "utf-8", false );
 }
 
 QByteArray uniqueString()
