@@ -907,6 +907,7 @@ QByteArray Parametrized::as7BitString( bool withHeaderType ) const
     } else {
       if( useOutlookAttachmentEncoding() ) {
         rv += it.key().toLatin1() + '=';
+        kDebug() << "doing:" << it.value() << QLatin1String( d->encCS );
         rv += "\"" + encodeRFC2047String( it.value(), d->encCS ) + "\"";
       } else {
         rv += it.key().toLatin1() + "*=";
@@ -950,9 +951,11 @@ bool Parametrized::parse( const char *& scursor, const char * const send,
 {
   Q_D(Parametrized);
   d->parameterHash.clear();
-  if ( !parseParameterList( scursor, send, d->parameterHash, isCRLF ) ) {
+  QByteArray charset;
+  if ( !parseParameterListWithCharset( scursor, send, d->parameterHash, charset, isCRLF ) ) {
     return false;
   }
+  d->encCS = charset;
   return true;
 }
 

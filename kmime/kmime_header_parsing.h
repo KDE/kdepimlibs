@@ -341,6 +341,16 @@ KMIME_EXPORT bool parseRawParameterList( const char* &scursor,
                                          bool isCRLF=false );
 
 /**
+ * Extract the charset embedded in the parameter list if there is one.
+ *
+ * @since 4.5
+ */
+KMIME_EXPORT bool parseParameterListWithCharset( const char* &scursor,
+                                                const char * const send,
+                                                QMap<QString,QString> &result,
+                                                QByteArray& charset, bool isCRLF=false );
+
+/**
   Parses an integer number.
   @param scursor pointer to the first character of the input string
   @param send pointer to end of input buffer

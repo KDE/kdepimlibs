@@ -1490,7 +1490,7 @@ bool parseRawParameterList( const char* &scursor, const char * const send,
 static void decodeRFC2231Value( Codec* &rfc2231Codec,
                                 QTextCodec* &textcodec,
                                 bool isContinuation, QString &value,
-                                QPair<const char*,int> &source )
+                                QPair<const char*,int> &source, QByteArray& charset )
 {
   //
   // parse the raw value into (charset,language,text):
@@ -1519,7 +1519,7 @@ static void decodeRFC2231Value( Codec* &rfc2231Codec,
       return;
     }
 
-    QByteArray charset( decBegin, decCursor - decBegin );
+    charset = QByteArray( decBegin, decCursor - decBegin );
 
     const char * oldDecCursor = ++decCursor;
     // find the second single quote (we ignore the language tag):
@@ -1592,10 +1592,12 @@ static void decodeRFC2231Value( Codec* &rfc2231Codec,
 //  - permutes rfc2231 continuations when the total number of parts
 //    exceeds 10 (other-sections then becomes *xy, ie. two digits)
 
-bool parseParameterList( const char* &scursor, const char * const send,
-                         QMap<QString,QString> &result, bool isCRLF )
+bool parseParameterListWithCharset( const char* &scursor,
+                                                const char * const send,
+                                                QMap<QString,QString> &result,
+                                                QByteArray& charset, bool isCRLF )
 {
-  // parse the list into raw attribute-value pairs:
+// parse the list into raw attribute-value pairs:
   QMap<QString,QStringOrQPair> rawParameterList;
   if (!parseRawParameterList( scursor, send, rawParameterList, isCRLF ) ) {
     return false;
@@ -1665,10 +1667,10 @@ bool parseParameterList( const char* &scursor, const char * const send,
         if ( encodingMode == RFC2231 ) {
           decodeRFC2231Value( rfc2231Codec, textcodec,
                               false, /* isn't continuation */
-                              value, (*it).qpair );
+                              value, (*it).qpair, charset );
         }
         else if ( encodingMode == RFC2047 ) {
-          value += decodeRFC2047String( (*it).qstring.toLatin1() );
+          value += decodeRFC2047String( (*it).qstring.toLatin1(), charset );
         }
       } else {
         // not encoded.
@@ -1699,7 +1701,7 @@ bool parseParameterList( const char* &scursor, const char * const send,
         // encoded
         decodeRFC2231Value( rfc2231Codec, textcodec,
                             true, /* is continuation */
-                            value, (*it).qpair );
+                            value, (*it).qpair, charset );
       } else {
         // not encoded
         if ( (*it).qpair.first ) {
@@ -1717,6 +1719,14 @@ bool parseParameterList( const char* &scursor, const char * const send,
   }
 
   return true;
+}
+
+
+bool parseParameterList( const char* &scursor, const char * const send,
+                         QMap<QString,QString> &result, bool isCRLF )
+{
+  QByteArray charset;
+  return parseParameterListWithCharset( scursor, send, result, charset, isCRLF );
 }
 
 static const char * const stdDayNames[] = {
