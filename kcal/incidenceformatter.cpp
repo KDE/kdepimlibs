@@ -381,7 +381,8 @@ static QString displayViewFormatBirthday( Event *event )
   if ( !event ) {
     return QString();
   }
-  if ( event->customProperty( "KABC", "BIRTHDAY" ) != "YES" ) {
+  if ( event->customProperty( "KABC", "BIRTHDAY" ) != "YES" &&
+       event->customProperty( "KABC", "ANNIVERSARY" ) != "YES" ) {
     return QString();
   }
 
@@ -394,13 +395,6 @@ static QString displayViewFormatBirthday( Event *event )
   //TODO: add a birthday cake icon
   QString tmpStr = displayViewLinkPerson( email_1, name_1, uid_1, iconPath );
 
-  if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-    QString uid_2 = event->customProperty( "KABC", "UID-2" );
-    QString name_2 = event->customProperty( "KABC", "NAME-2" );
-    QString email_2= event->customProperty( "KABC", "EMAIL-2" );
-    tmpStr += "<br>";
-    tmpStr += displayViewLinkPerson( email_2, name_2, uid_2, iconPath );
-  }
 
   return tmpStr;
 }
@@ -430,11 +424,9 @@ static QString displayViewFormatHeader( Incidence *incidence )
   if ( incidence->type() == "Event" ) {
     QString iconPath;
     if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
-      if ( incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-        iconPath = iconLoader->iconPath( "view-calendar-anniversary", KIconLoader::Small );
-      } else {
-        iconPath = iconLoader->iconPath( "view-calendar-birthday", KIconLoader::Small );
-      }
+      iconPath = iconLoader->iconPath( "view-calendar-birthday", KIconLoader::Small );
+    } else if ( incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+      iconPath = iconLoader->iconPath( "view-calendar-wedding-anniversary", KIconLoader::Small );
     } else {
       iconPath = iconLoader->iconPath( "view-calendar-day", KIconLoader::Small );
     }
@@ -583,9 +575,12 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
     tmpStr += "</tr>";
   }
 
-  if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+  const bool isBirthday = event->customProperty( "KABC", "BIRTHDAY" ) == "YES";
+  const bool isAnniversary = event->customProperty( "KABC", "ANNIVERSARY" ) == "YES";
+
+  if ( isBirthday || isAnniversary  ) {
     tmpStr += "<tr>";
-    if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+    if ( isAnniversary ) {
       tmpStr += "<td><b>" + i18n( "Anniversary:" ) + "</b></td>";
     } else {
       tmpStr += "<td><b>" + i18n( "Birthday:" ) + "</b></td>";
