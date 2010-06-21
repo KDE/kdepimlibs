@@ -2889,6 +2889,7 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
                      dayList[rule.pos() + 31],
                      calSys->weekDayName( rule.day(), KCalendarSystem::LongDayName ) );
     }
+    break;
   }
   case Recurrence::rMonthlyDay:
   {
@@ -2914,6 +2915,7 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
                      recur->frequency(),
                      dayList[days + 31] );
     }
+    break;
   }
   case Recurrence::rYearlyMonth:
   {
@@ -2958,6 +2960,7 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
                       dayList[ recur->startDate().day() + 31 ] );
       }
     }
+    break;
   }
   case Recurrence::rYearlyDay:
     if ( !recur->yearDays().isEmpty() ) {
@@ -2982,6 +2985,7 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
                      " on day <numid>%2</numid>",
                      recur->frequency(), recur->yearDays()[0] );
     }
+    break;
   case Recurrence::rYearlyPos:
   {
     if ( !recur->yearMonths().isEmpty() && !recur->yearPositions().isEmpty() ) {
@@ -3014,9 +3018,9 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
                      calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ) );
     }
   }
-  default:
-    return i18n( "Incidence recurs" );
+  break;
   }
+  return i18n( "Incidence recurs" );
 }
 
 QString IncidenceFormatter::timeToString( const KDateTime &date,
