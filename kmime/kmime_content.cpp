@@ -371,7 +371,6 @@ QByteArray Content::decodedContent()
       break;
     case Headers::CEquPr :
       ret = KCodecs::quotedPrintableDecode( d_ptr->body );
-      ret.resize( ret.size() - 1 );  // remove null-char
       removeTrailingNewline = true;
       break;
     case Headers::CEuuenc :
