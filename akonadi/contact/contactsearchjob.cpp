@@ -56,17 +56,20 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value )
   if ( criterion == Name ) {
     query += QString::fromLatin1( "SELECT DISTINCT ?r WHERE {"
                                   "  graph ?g { ?r a nco:PersonContact ."
+                                  "  ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
                                   "  ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
                                   "} } " );
   } else if ( criterion == Email ) {
     query += QString::fromLatin1( "SELECT DISTINCT ?person WHERE {"
                                   "  graph ?g { ?person a nco:PersonContact ;"
+                                  "  ?person <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
                                   "          nco:hasEmailAddress ?email ."
                                   "  ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
                                   " } }" );
   } else if ( criterion == NickName ) {
     query += QString::fromLatin1( "SELECT DISTINCT ?r WHERE {"
                                   "  graph ?g { ?r a nco:PersonContact ."
+                                  "  ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
                                   "  ?r nco:nickname ?v . ?v bif:contains \"'%1'\" ."
                                   " } }" );
   }
