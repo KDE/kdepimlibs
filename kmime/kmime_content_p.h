@@ -62,6 +62,8 @@ class ContentPrivate
     QByteArray body;
     QByteArray frozenBody;
     QByteArray defaultCS;
+    QByteArray preamble;
+    QByteArray epilogue;
     bool forceDefaultCS;
     Content *parent;
     bool frozen;

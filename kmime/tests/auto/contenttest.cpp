@@ -380,6 +380,33 @@ void ContentTest::testMultipartMixed()
     "This is explicitly typed plain US-ASCII text.\n"
     "It DOES end with a linebreak.\n";
 
+  // What we expect KMime to parse the above data into.
+  QByteArray parsedWithPreambleAndEpilogue =
+    "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
+    "To: Ned Freed <ned@innosoft.com>\n"
+    "Date: Sun, 21 Mar 1993 23:56:48 -0800\n"
+    "Subject: Sample message\n"
+    "MIME-Version: 1.0\n"
+    "Content-Type: multipart/mixed; boundary=\"simple boundary\"\n"
+    "\n"
+    "This is the preamble.  It is to be ignored, though it\n"
+    "is a handy place for composition agents to include an\n"
+    "explanatory note to non-MIME conformant readers.\n"
+    "\n"
+    "--simple boundary\n"
+    "\n"
+    "This is implicitly typed plain US-ASCII text.\n"
+    "It does NOT end with a linebreak.\n"
+    "--simple boundary\n"
+    "Content-Type: text/plain; charset=\"us-ascii\"\n"
+    "\n"
+    "This is explicitly typed plain US-ASCII text.\n"
+    "It DOES end with a linebreak.\n"
+    "\n"
+    "--simple boundary--\n"
+    "\n"
+    "This is the epilogue.  It is also to be ignored.\n";
+    
   // What we expect KMime to assemble the above data into.
   QByteArray assembled =
     "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
@@ -401,7 +428,7 @@ void ContentTest::testMultipartMixed()
     "It DOES end with a linebreak.\n"
     "\n"
     "--simple boundary--\n";
-
+    
   // test parsing
   Message *msg = new Message();
   msg->setContent( data );
@@ -418,9 +445,9 @@ void ContentTest::testMultipartMixed()
 
   // assemble again
   msg->assemble();
-  //kDebug() << "expected assembled content" << assembled;
+  //kDebug() << "expected assembled content" << parsedWithPreambleAndEpilogue;
   //kDebug() << "actual new encoded content" << msg->encodedContent();
-  QCOMPARE( msg->encodedContent(), assembled );
+  QCOMPARE( msg->encodedContent(), parsedWithPreambleAndEpilogue );
   delete msg;
 
   // assembling from scratch

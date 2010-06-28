@@ -331,6 +331,9 @@ QByteArray Content::encodedContent( bool useCrLf )
     Headers::ContentType *ct=contentType();
     QByteArray boundary = "\n--" + ct->boundary();
 
+    if ( !d->preamble.isEmpty() )
+      e += d->preamble;
+    
     //add all (encoded) contents separated by boundaries
     foreach ( Content *c, d->multipartContents ) {
       e+=boundary + '\n';
@@ -338,6 +341,9 @@ QByteArray Content::encodedContent( bool useCrLf )
     }
     //finally append the closing boundary
     e += boundary+"--\n";
+
+    if ( !d->epilogue.isEmpty() )
+      e += d->epilogue;
   };
 
   if ( useCrLf ) {
@@ -1100,6 +1106,9 @@ bool ContentPrivate::parseMultipart()
   if( !mpp.parse() ) {
     return false; // Parsing failed.
   }
+
+  preamble = mpp.preamble();
+  epilogue = mpp.epilouge();
    
   // Determine the category of the subparts (used in attachments()).
   Headers::contentCategory cat;

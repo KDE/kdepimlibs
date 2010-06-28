@@ -59,7 +59,7 @@ bool MultiPart::parse()
       // this message is *really* broken
       pos1 = -1; //we give up
     } else if ( ( pos1 - blen ) > 1 ) { //preamble present
-      p_reamble = s_rc.left( pos1 - blen );
+      p_reamble = s_rc.left( pos1 - blen - 1 );
     }
   }
 
