@@ -3,7 +3,7 @@
 
   Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2006-2007 Christian Weilbach <christian_weilbach@web.de>
-  Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007 Mike McQuaid <mike@mikemcquaid.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -36,7 +36,7 @@ class KUrl;
 /**
   This is the main interface for blogging APIs.
   It's methods represent the core functionality of a blogging API.
-  @author Reinhold Kainhofer, Christian Weilbach and Mike Arthur.
+  @author Reinhold Kainhofer, Christian Weilbach and Mike McQuaid.
 */
 
 /**
@@ -45,7 +45,7 @@ class KUrl;
   Blog class.
 
   @author Christian Weilbach \<christian_weilbach\@web.de\>
-  @author Mike Arthur \<reinhold\@kainhofer.com\>
+  @author Mike McQuaid \<mike\@mikemcquaid.com\>
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
 */
 
@@ -64,7 +64,7 @@ class BlogPrivate;
   This is the main interface to the blogging client library.
 
   @author Christian Weilbach \<christian_weilbach\@web.de\>
-  @author Mike Arthur \<reinhold\@kainhofer.com\>
+  @author Mike McQuaid \<mike\@mikemcquaid.com\>
   @author Reinhold Kainhofer \<reinhold\@kainhofer.com\>
 */
 

@@ -2,7 +2,7 @@
   This file is part of the kblog library.
 
   Copyright (c) 2007-2009 Christian Weilbach <christian_weilbach@web.de>
-  Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007 Mike McQuaid <mike@mikemcquaid.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -33,7 +33,7 @@ class KUrl;
   and defines the MovableType class.
 
   @author Christian Weilbach \<christian_weilbach\@web.de\>
-  @author Mike Arthur \<mike\@mikearthur.co.uk\>
+  @author Mike McQuaid \<mike\@mikemcquaid.com\>
 */
 
 namespace KBlog {
@@ -55,7 +55,7 @@ namespace KBlog {
   @endcode
 
   @author Christian Weilbach \<christian_weilbach\@web.de\>
-  @author Mike Arthur \<mike\@mikearthur.co.uk\>
+  @author Mike McQuaid \<mike\@mikemcquaid.com\>
 */
 class KBLOG_EXPORT MovableType : public MetaWeblog
 {

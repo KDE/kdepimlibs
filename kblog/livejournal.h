@@ -1,7 +1,7 @@
 /*
   This file is part of the kblog library.
 
-  Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007 Mike McQuaid <mike@mikemcquaid.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -33,7 +33,7 @@ class KUrl;
   This file is part of the  for accessing Blog Servers
   and defines the LiveJournal class.
 
-  @author Mike Arthur \<mike\@mikearthur.co.uk\>
+  @author Mike McQuaid \<mike\@mikemcquaid.com\>
 */
 namespace KBlog {
 
@@ -52,7 +52,7 @@ class LiveJournalPrivate;
   myblog->createPost( post );
   @endcode
 
-  @author Mike Arthur \<mike\@mikearthur.co.uk\>
+  @author Mike McQuaid \<mike\@mikemcquaid.com\>
 */
 class KBLOG_EXPORT LiveJournal : public Blog
 {
