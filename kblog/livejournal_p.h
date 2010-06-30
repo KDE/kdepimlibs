@@ -1,7 +1,7 @@
 /*
   This file is part of the kblog library.
 
-  Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007 Mike McQuaid <mike@mikemcquaid.com>
   Copyright (c) 2007 Christian Weilbach <christian_weilbach@web.de>
 
   This library is free software; you can redistribute it and/or

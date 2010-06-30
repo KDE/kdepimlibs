@@ -3,7 +3,7 @@
 
   Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2006-2009 Christian Weilbach <christian_weilbach@web.de>
-  Copyright (c) 2007-2008 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007-2008 Mike McQuaid <mike@mikemcquaid.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
