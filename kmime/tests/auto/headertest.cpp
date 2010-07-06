@@ -159,6 +159,13 @@ void HeaderTest::testAddressListHeader()
   QCOMPARE( h->as7BitString( false ), QByteArray("Ingo =?ISO-8859-1?Q?Kl=F6cker?= <kloecker@kde.org>") );
   delete h;
 
+  // a display name with non-latin1 content in both name components
+  h = new Headers::Generics::AddressList();
+  const QString testAddress = QString::fromUtf8( "Ingö Klöcker <kloecker@kde.org>" );
+  h->fromUnicodeString( testAddress, "utf-8" );
+  QCOMPARE( h->asUnicodeString(), testAddress );
+  delete h;
+
   // again, this time legacy style
   h = new Headers::Generics::AddressList();
   h->from7BitString( "kloecker@kde.org (Ingo =?iso-8859-15?q?Kl=F6cker?=)" );
