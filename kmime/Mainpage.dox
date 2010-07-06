@@ -1062,9 +1062,91 @@ as a single space.
 
 \section string-broken-down The two in-memory representations of messages
 
+There are two representations of messages in memory. The first is called <b>string representation</b>
+and the other one is called <b>broken-down representation</b>.
+
+String representation is somehow misnamed,
+a better term would be <c>byte array representation</c>. The string representation is just a big array of
+bytes in memory, and those bytes make up the encoded mail. The string representation is what is stored
+on disk or what is received from an IMAP server, for example.
+
+With the broken-down representation, the mail is <i>broken down</i> into smaller structures. For example,
+instead of having a single byte array for all headers, the broken-down structure has a list of individual headers,
+and each header in that list is again broken down into a structure. While the string representation
+is just an array of 7 bit characters that might be encoded, the broken-down representations contain the
+decoded text strings.
+
+As an example, conside the byte array
+\verbatim
+"Hugo Maier" <hugo.maier@mailer.domain>
+\endverbatim
+
+Although this is just a bunch of 7 bit characters, a human immediatley recognizes the broken-down structure and
+sees that the display name is "Hugo Maier" and that the localpart of the email address is "hugo.maier".
+To illustrate, the broken-down structure could be stored in a structure like this:
+\verbatim
+struct Mailbox
+{
+  QString displayName;
+  QByteArray addressSpec;
+};
+\endverbatim
+The address spec actually could be broken down further into a localpart and a domain.
+The process of converting the string representation to a broken-down representation is called \b parsing, and
+the reverse is called \b assembling.
+Parsing a message is necessary when wanting to access or modify the broken-down structure. For example, when sending a mail,
+the address spec of a mailbox needs to be passed to the SMTP server, which means that the recipient headers need to
+be parsed in order to access that information. Another example is the message list in an mail application, where the
+broken-down structure of a mail is needed
+to display information like subject, sender and date in the list.
+On the other hand, assembling a message is for example done in the composer of a mail application, where the mail information
+is available in a broken-down form in the composer window, and is then assembled into a final MIME message that is then sent with SMTP.
+
+Parsing is often quite tricky, you should always use the methods from KMime instead of writing parsing
+routines yourself. Even the simple mailbox example above is in pratice difficult to parse, as many things like comments
+and escaped characters need to be taken into consideration.
+The same is true for assembling: In the above case, one could be tempted to assemble the mailbox by simply
+writting code like this:
+\verbatim
+QByteArray stringRepresentation = '"' + displayName + "\" <" + addressSpec + ">";
+\endverbatim
+However, just like with parsing, you shouldn't be doing assembling yourself. In the above case, for example,
+the display name might contain non-ASCII characters, and RFC2047 encoding would need to be applied. So use
+KMime for assembling in all cases.
+
+When parsing a message and assembling it afterwards, the result might not be the same as the original byte
+array. For example, comments in header fields are ignored during parsing and not stored in the broken-down
+structure, therefore the assembled message will also not contain comments.
+
+Messages in memory are usually stored in a broken-down structure so that it is easy to to access and
+manipulate the message. On disk and on servers, messages are stored in string representation.
+
 \section classes-overview Overview of KMime classes
 
-\section pitfalls Pitfalls and Common Mistakes
+KMime has basically two sets of classes: Classes for headers and classes for MIME
+parts. A MIME part is represented by \c KMime::Content. A Content can be parsed from a string representation
+and also be assembled from the broken-down representation again. If parsed, it has a list of sub-contents (in case of multipart contents) and a
+list of headers. If the Content is not parsed, it stores the headers and the body in a byte array, which can be accessed
+with head() and body().
+There is also a class \c KMime::Message, which basically is a thin wrapper around Content for the top-level
+MIME part. Message also contains convenience methods to access the message headers.
+
+For headers, there is a class hierachy, with \c KMime::Headers::Base as the base class, and
+\c KMime::Headers::Generics::Structured and \c KMime::Headers::Generics::Unstructured in the next levels. Unstructured is
+for headers that don't have a defined structure, like Subject, whereas Structured headers have a
+specific structure, like Date. The header classes have methods to parse headers, like from7BitString(),
+and to assemble them, like as7BitString(). Once a header is parsed, the classes provide access to the
+broken-down structures, for example the Date header has a method dateTime().
+The parsing in from7BitString() is usually handled by a protected parse() function, which in turn call
+parsing functions for different types, like parseAddressList() or parseAddrSpec() from the \c KMime::HeaderParsing
+namespace.
+
+When modifing messages, the message is first parsed into a broken-down representation. This broken-down
+representation can then be accessed and modified with the appropriate functions. After changing the broken-down
+structure, it needs to be assembled again to get the modified string representation.
+
+KMime also comes with some codes for handling base64 and quoted-printable encoding, with \c KMime::Codec
+as the base class.
 
 \section rfcs RFCs
 
