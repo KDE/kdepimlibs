@@ -36,14 +36,14 @@
 
 #include "incidenceformatter.h"
 #include "attachment.h"
-#include "event.h"
-#include "todo.h"
-#include "journal.h"
 #include "calendar.h"
 #include "calendarlocal.h"
-#include "icalformat.h"
-#include "freebusy.h"
 #include "calendarresources.h"
+#include "event.h"
+#include "freebusy.h"
+#include "icalformat.h"
+#include "journal.h"
+#include "todo.h"
 
 #include "kpimutils/email.h"
 #include "kabc/phonenumber.h"
@@ -395,7 +395,6 @@ static QString displayViewFormatBirthday( Event *event )
   //TODO: add a birthday cake icon
   QString tmpStr = displayViewLinkPerson( email_1, name_1, uid_1, iconPath );
 
-
   return tmpStr;
 }
 
@@ -578,7 +577,7 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
   const bool isBirthday = event->customProperty( "KABC", "BIRTHDAY" ) == "YES";
   const bool isAnniversary = event->customProperty( "KABC", "ANNIVERSARY" ) == "YES";
 
-  if ( isBirthday || isAnniversary  ) {
+  if ( isBirthday || isAnniversary ) {
     tmpStr += "<tr>";
     if ( isAnniversary ) {
       tmpStr += "<td><b>" + i18n( "Anniversary:" ) + "</b></td>";
@@ -2150,7 +2149,7 @@ class IncidenceFormatter::IncidenceCompareVisitor
 {
   public:
     IncidenceCompareVisitor() : mExistingIncidence( 0 ) {}
-    bool act( IncidenceBase *incidence, Incidence *existingIncidence )
+    bool act( IncidenceBase *incidence, Incidence *existingIncidence, iTIPMethod method )
     {
       if ( !existingIncidence ) {
         return false;
@@ -2160,6 +2159,7 @@ class IncidenceFormatter::IncidenceCompareVisitor
         return false;
       }
       mExistingIncidence = existingIncidence;
+      mMethod = method;
       return incidence->accept( *this );
     }
 
@@ -2178,18 +2178,18 @@ class IncidenceFormatter::IncidenceCompareVisitor
     bool visit( Event *event )
     {
       compareEvents( event, dynamic_cast<Event*>( mExistingIncidence ) );
-      compareIncidences( event, mExistingIncidence );
+      compareIncidences( event, mExistingIncidence, mMethod );
       return !mChanges.isEmpty();
     }
     bool visit( Todo *todo )
     {
       compareTodos( todo, dynamic_cast<Todo*>( mExistingIncidence ) );
-      compareIncidences( todo, mExistingIncidence );
+      compareIncidences( todo, mExistingIncidence, mMethod );
       return !mChanges.isEmpty();
     }
     bool visit( Journal *journal )
     {
-      compareIncidences( journal, mExistingIncidence );
+      compareIncidences( journal, mExistingIncidence, mMethod );
       return !mChanges.isEmpty();
     }
     bool visit( FreeBusy *fb )
@@ -2262,7 +2262,7 @@ class IncidenceFormatter::IncidenceCompareVisitor
       }
     }
 
-    void compareIncidences( Incidence *newInc, Incidence *oldInc )
+    void compareIncidences( Incidence *newInc, Incidence *oldInc, iTIPMethod method )
     {
       if ( !oldInc || !newInc ) {
         return;
@@ -2298,17 +2298,22 @@ class IncidenceFormatter::IncidenceCompareVisitor
         }
       }
 
-      for ( Attendee::List::ConstIterator it = oldAttendees.constBegin();
-            it != oldAttendees.constEnd(); ++it ) {
-        Attendee *newAtt = newInc->attendeeByMail( (*it)->email() );
-        if ( !newAtt ) {
-          mChanges += i18n( "Attendee %1 has been removed", (*it)->fullName() );
+      if ( method == iTIPRequest ) {
+        for ( Attendee::List::ConstIterator it = oldAttendees.constBegin();
+              it != oldAttendees.constEnd(); ++it ) {
+          if ( (*it)->email() != oldInc->organizer().email() ) {
+            Attendee *newAtt = newInc->attendeeByMail( (*it)->email() );
+            if ( !newAtt ) {
+              mChanges += i18n( "Attendee %1 has been removed", (*it)->fullName() );
+            }
+          }
         }
       }
     }
 
   private:
     Incidence *mExistingIncidence;
+    iTIPMethod mMethod;
     QStringList mChanges;
 };
 //@endcond
@@ -2517,7 +2522,7 @@ static QString formatICalInvitationHelper( QString invitation,
 
   if ( msg->method() == iTIPRequest ) {
     IncidenceFormatter::IncidenceCompareVisitor compareVisitor;
-    if ( compareVisitor.act( incBase, existingIncidence ) ) {
+    if ( compareVisitor.act( incBase, existingIncidence, msg->method() ) ) {
       html += "<p align=\"left\">";
       html += i18n( "The following changes have been made by the organizer:" );
       html += "</p>";
@@ -2526,7 +2531,7 @@ static QString formatICalInvitationHelper( QString invitation,
   }
   if ( msg->method() == iTIPReply ) {
     IncidenceCompareVisitor compareVisitor;
-    if ( compareVisitor.act( incBase, existingIncidence ) ) {
+    if ( compareVisitor.act( incBase, existingIncidence, msg->method() ) ) {
       html += "<p align=\"left\">";
       if ( !sender.isEmpty() ) {
         html += i18n( "The following changes have been made by %1:", sender );
