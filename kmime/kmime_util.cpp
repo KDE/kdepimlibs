@@ -318,7 +318,7 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
     for ( int x=end; x<encoded8Bit.length(); x++ ) {
       if ( ( (signed char)encoded8Bit[x]<0) || ( encoded8Bit[x] == '\033' ) ||
            ( addressHeader && ( strchr("\"()<>@,.;:\\[]=",encoded8Bit[x]) != 0 ) ) ) {
-        end = encoded8Bit.length();     // we found another non-ascii word
+        end = x;     // we found another non-ascii word
 
         while ( ( end < encoded8Bit.length() ) && ( encoded8Bit[end] != ' ' ) ) {
           // we encode complete words
