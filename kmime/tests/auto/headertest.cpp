@@ -166,6 +166,16 @@ void HeaderTest::testAddressListHeader()
   QCOMPARE( h->asUnicodeString(), testAddress );
   delete h;
 
+  {
+    // a display name with non-latin1 content in both name components
+    h = new Headers::Generics::AddressList();
+    const QString testAddress = QString::fromUtf8( "\"Rüedi-Huser, Thomas\" <test@test.org>" );
+    h->fromUnicodeString( testAddress, "utf-8" );
+    QEXPECT_FAIL( "", "quoted display name is not RFC2047-encoded correctly inside KMime::encodeRFC2047String()", Continue );
+    QCOMPARE( h->asUnicodeString(), testAddress );
+    delete h;
+  }
+
   // again, this time legacy style
   h = new Headers::Generics::AddressList();
   h->from7BitString( "kloecker@kde.org (Ingo =?iso-8859-15?q?Kl=F6cker?=)" );
