@@ -60,7 +60,7 @@ endif (GPGME_FOUND)
 
 if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
-  find_package(Akonadi 1.3.60 QUIET NO_MODULE)
+  find_package(Akonadi 1.4.50 QUIET NO_MODULE)
   macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "1.3.60" "Akonadi is required to build KdepimLibs.")
 
   find_package(Sasl2)
