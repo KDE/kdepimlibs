@@ -95,7 +95,7 @@ bool Message::removeHeader( const char *type )
 
 bool Message::isTopLevel() const
 {
-  return true;
+  return Content::isTopLevel();
 }
 
 Content *Message::mainBodyPart( const QByteArray &type )
