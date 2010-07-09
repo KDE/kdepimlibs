@@ -2115,7 +2115,10 @@ Headers::Base *extractFirstHeader( QByteArray &head )
     if ( folded ) {
       rawFieldBody = unfoldHeader( rawFieldBody );
     }
-    header = HeaderFactory::self()->createHeader( rawType );
+    // We might get an invalid mail without a field name, don't crash on that.
+    if ( !rawType.isEmpty() ) {
+      header = HeaderFactory::self()->createHeader( rawType );
+    }
     if( !header ) {
       //kWarning() << "Returning Generic header of type" << rawType;
       header = new Headers::Generic( rawType );

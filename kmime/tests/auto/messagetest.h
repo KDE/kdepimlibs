@@ -31,6 +31,7 @@ class MessageTest : public QObject
     void testMainBodyPart();
     void testBrunosMultiAssembleBug();
     void testWillsAndTillsCrash();
+    void testDavidsParseCrash();
     void testHeaderFieldWithoutSpace();
     void testWronglyFoldedHeaders();
     void missingHeadersTest();
