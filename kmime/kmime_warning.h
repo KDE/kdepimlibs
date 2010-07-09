@@ -34,7 +34,7 @@
 #  define KMIME_WARN_UNKNOWN_CHARSET(c) KMIME_WARN << "unknown charset \"" \
           << c << "\" in RFC 2047 encoded-word";
 #  define KMIME_WARN_8BIT(ch) KMIME_WARN \
-          << "8Bit character '" << QString(QChar(ch)) << "'"
+          << "8Bit character '" << ch << "'"
 #  define KMIME_WARN_IF_8BIT(ch) if ( (unsigned char)(ch) > 127 ) \
           { KMIME_WARN_8BIT(ch); }
 #  define KMIME_WARN_PREMATURE_END_OF(x) KMIME_WARN \

@@ -68,25 +68,25 @@ static QString addr_spec_as_string( const AddrSpec & as, bool pretty )
   QString result;
   result.reserve( as.localPart.length() + as.domain.length() + 1 );
   for ( int i = 0 ; i < as.localPart.length() ; ++i ) {
-    const char ch = as.localPart[i].toLatin1();
-    if ( ch == '.' || isAText( ch ) ) {
+    const QChar ch = as.localPart[i];
+    if ( ch == QLatin1Char( '.' ) || isAText( ch.toLatin1() ) ) {
       result += ch;
     } else {
       needsQuotes = true;
-      if ( ch == '\\' || ch == '"' ) {
-        result += '\\';
+      if ( ch == QLatin1Char( '\\' ) || ch == QLatin1Char( '"' ) ) {
+        result += QLatin1Char( '\\' );
       }
       result += ch;
     }
   }
   const QString dom = pretty ? QUrl_fromAce_wrapper( as.domain ) : as.domain ;
   if ( needsQuotes ) {
-    result = '"' + result + "\"";
+    result = QLatin1Char( '"' ) + result + QLatin1Char( '\"' );
   }
   if( dom.isEmpty() ) {
     return result;
   } else {
-    return result + '@' + dom;
+    return result + QLatin1Char( '@' ) + dom;
   }
 }
 
@@ -168,7 +168,7 @@ QString Mailbox::prettyAddress() const
 QString Mailbox::prettyAddress( Quoting quoting ) const
 {
   if ( !hasName() ) {
-    return address();
+    return QLatin1String( address() );
   }
   QString s = name();
   if ( quoting != QuoteNever ) {
@@ -176,7 +176,7 @@ QString Mailbox::prettyAddress( Quoting quoting ) const
   }
 
   if ( hasAddress() ) {
-    s += QLatin1String(" <") + address() + QLatin1Char('>');
+    s += QLatin1String(" <") + QLatin1String( address() ) + QLatin1Char('>');
   }
   return s;
 }
@@ -355,12 +355,12 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
   bool matchOK = false;
   QTextCodec *textCodec = 0;
   if ( forceCS || maybeCharset.isEmpty() ) {
-    textCodec = KGlobal::charsets()->codecForName( defaultCS, matchOK );
+    textCodec = KGlobal::charsets()->codecForName( QLatin1String( defaultCS ), matchOK );
     usedCS = cachedCharset( defaultCS );
   } else {
-    textCodec = KGlobal::charsets()->codecForName( maybeCharset, matchOK );
+    textCodec = KGlobal::charsets()->codecForName( QLatin1String( maybeCharset ), matchOK );
     if ( !matchOK ) {  //no suitable codec found => use default charset
-      textCodec = KGlobal::charsets()->codecForName( defaultCS, matchOK );
+      textCodec = KGlobal::charsets()->codecForName( QLatin1String( defaultCS ), matchOK );
       usedCS = cachedCharset( defaultCS );
     } else {
       usedCS = cachedCharset( maybeCharset );
@@ -534,7 +534,7 @@ bool parseGenericQuotedString( const char* &scursor, const char * const send,
       // misses "\" CRLF LWSP-char handling, see rfc822, 3.4.5
       READ_ch_OR_FAIL;
       KMIME_WARN_IF_8BIT( ch );
-      result += QChar( ch );
+      result += QLatin1Char( ch );
       break;
     case '\r':
       // ###
@@ -548,7 +548,7 @@ bool parseGenericQuotedString( const char* &scursor, const char * const send,
       if ( ch != '\n' ) {
         // CR on it's own...
         KMIME_WARN_LONE( CR );
-        result += QChar('\r');
+        result += QLatin1Char('\r');
         scursor--; // points to after the '\r' again
       } else {
         // CRLF encountered.
@@ -558,13 +558,13 @@ bool parseGenericQuotedString( const char* &scursor, const char * const send,
           // correct folding;
           // position cursor behind the CRLF WSP (unfolding)
           // and add the WSP to the result
-          result += QChar( ch );
+          result += QLatin1Char( ch );
         } else {
           // this is the "shouldn't happen"-case. There is a CRLF
           // inside a quoted-string without it being part of FWS.
           // We take it verbatim.
           KMIME_WARN_NON_FOLDING( CRLF );
-          result += "\r\n";
+          result += QLatin1String( "\r\n" );
           // the cursor is decremented again, so's we need not
           // duplicate the whole switch here. "ch" could've been
           // everything (incl. openChar or closeChar).
@@ -584,11 +584,11 @@ bool parseGenericQuotedString( const char* &scursor, const char * const send,
       if ( !isCRLF && ( ch == ' ' || ch == '\t' ) ) {
         // folding
         // correct folding
-        result += QChar( ch );
+        result += QLatin1Char( ch );
       } else {
         // non-folding
         KMIME_WARN_LONE( LF );
-        result += QChar('\n');
+        result += QLatin1Char( '\n' );
         // pos is decremented, so's we need not duplicate the whole
         // switch here. ch could've been everything (incl. <">, "\").
         scursor--;
@@ -596,7 +596,7 @@ bool parseGenericQuotedString( const char* &scursor, const char * const send,
       break;
     default:
       KMIME_WARN_IF_8BIT( ch );
-      result += QChar( ch );
+      result += QLatin1Char( ch );
     }
   }
 
@@ -631,7 +631,7 @@ bool parseComment( const char* &scursor, const char * const send,
           result += cmntPart;
           if ( commentNestingDepth > 1 ) {
             // don't add the outermost ')'...
-            result += QChar(')');
+            result += QLatin1Char( ')' );
           }
           maybeCmnt.clear();
         }
@@ -643,7 +643,7 @@ bool parseComment( const char* &scursor, const char * const send,
           // don't add to "result" yet, because we might find that we
           // are already outside the (broken) comment...
           maybeCmnt += cmntPart;
-          maybeCmnt += QChar('(');
+          maybeCmnt += QLatin1Char( '(' );
         }
         ++commentNestingDepth;
         break;
@@ -690,9 +690,9 @@ bool parsePhrase( const char* &scursor, const char * const send,
         return false;
       } else {
         if ( scursor != send && ( *scursor == ' ' || *scursor == '\t' ) ) {
-          result += ". ";
+          result += QLatin1String( ". " );
         } else {
-          result += '.';
+          result += QLatin1Char( '.' );
         }
         successfullyParsed = scursor;
       }
@@ -711,7 +711,7 @@ bool parsePhrase( const char* &scursor, const char * const send,
         case EncodedWord:
         case QuotedString:
           found = Phrase;
-          result += QChar(' '); // rfc822, 3.4.4
+          result += QLatin1Char(' '); // rfc822, 3.4.4
           break;
         default:
           assert( 0 );
@@ -725,7 +725,7 @@ bool parsePhrase( const char* &scursor, const char * const send,
         if ( found == None ) {
           return false;
         } else {
-          result += QChar(' '); // rfc822, 3.4.4
+          result += QLatin1Char(' '); // rfc822, 3.4.4
           result += tmp;
           return true;
         }
@@ -763,7 +763,7 @@ bool parsePhrase( const char* &scursor, const char * const send,
         case Atom:
         case QuotedString:
           if ( !lastWasEncodedWord ) {
-            result += QChar(' '); // rfc822, 3.4.4
+            result += QLatin1Char(' '); // rfc822, 3.4.4
           }
           found = Phrase;
           break;
@@ -792,7 +792,7 @@ bool parsePhrase( const char* &scursor, const char * const send,
         case EncodedWord:
         case QuotedString:
           found = Phrase;
-          result += QChar(' '); // rfc822, 3.4.4
+          result += QLatin1Char(' '); // rfc822, 3.4.4
           break;
         default:
           assert( 0 );
@@ -814,6 +814,7 @@ bool parsePhrase( const char* &scursor, const char * const send,
   return found != None;
 }
 
+// FIXME: This should probably by QByteArray &result instead?
 bool parseDotAtom( const char* &scursor, const char * const send,
                    QString &result, bool isCRLF )
 {
@@ -852,7 +853,7 @@ bool parseDotAtom( const char* &scursor, const char * const send,
       return true;
     }
 
-    result += QChar('.');
+    result += QLatin1Char('.');
     result += maybeAtom;
     successfullyParsed = scursor;
   }
@@ -926,7 +927,7 @@ bool parseDomain( const char* &scursor, const char * const send,
       // we hit openChar in parseGenericQuotedString.
       // include it in maybeDomainLiteral and keep on parsing:
       if ( *(scursor-1) == '[' ) {
-        maybeDomainLiteral += QChar('[');
+        maybeDomainLiteral += QLatin1Char('[');
         continue;
       }
       // OK, real end of domain-literal:
@@ -940,7 +941,7 @@ bool parseDomain( const char* &scursor, const char * const send,
       result = maybeDotAtom;
       // Domain may end with '.', if so preserve it'
       if ( scursor != send && *scursor == '.' ) {
-        result += QChar('.');
+        result += QLatin1Char('.');
         scursor++;
       }
       return true;
@@ -1028,7 +1029,7 @@ bool parseAddrSpec( const char* &scursor, const char * const send,
     char ch = *scursor++;
     switch ( ch ) {
     case '.': // dot
-      maybeLocalPart += QChar('.');
+      maybeLocalPart += QLatin1Char('.');
       break;
 
     case '@':
@@ -1546,7 +1547,7 @@ static void decodeRFC2231Value( Codec* &rfc2231Codec,
     //
 
     bool matchOK = false;
-    textcodec = KGlobal::charsets()->codecForName( charset, matchOK );
+    textcodec = KGlobal::charsets()->codecForName( QLatin1String( charset ), matchOK );
     if ( !matchOK ) {
       textcodec = 0;
       KMIME_WARN_UNKNOWN( Charset, charset );
@@ -1651,7 +1652,7 @@ bool parseParameterListWithCharset( const char* &scursor,
         encodingMode = RFC2231;
       }
       // is the value rfc2047-encoded?
-      if( !(*it).qstring.isNull() && (*it).qstring.contains( "=?" ) ) {
+      if( !(*it).qstring.isNull() && (*it).qstring.contains( QLatin1String( "=?" ) ) ) {
         mode |= Encoded;
         encodingMode = RFC2047;
       }

@@ -241,7 +241,7 @@ QByteArray dispositionNotificationBodyContent( const QString &r,
 {
   // in Perl: chomp(special)
   QString spec;
-  if ( special.endsWith('\n') ) {
+  if ( special.endsWith( QLatin1Char( '\n' ) ) ) {
     spec = special.left( special.length() - 1 );
   } else {
     spec = special;

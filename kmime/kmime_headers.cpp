@@ -1792,7 +1792,7 @@ bool ContentType::isPartial() const
 
 QByteArray ContentType::charset() const
 {
-  QByteArray ret = parameter( "charset" ).toLatin1();
+  QByteArray ret = parameter( QLatin1String( "charset" ) ).toLatin1();
   if ( ret.isEmpty() || forceDefaultCharset() ) {
     //return the default-charset if necessary
     ret = defaultCharset();
@@ -1802,44 +1802,44 @@ QByteArray ContentType::charset() const
 
 void ContentType::setCharset( const QByteArray &s )
 {
-  setParameter( "charset", QString::fromLatin1( s ) );
+  setParameter( QLatin1String( "charset" ), QString::fromLatin1( s ) );
 }
 
 QByteArray ContentType::boundary() const
 {
-  return parameter( "boundary" ).toLatin1();
+  return parameter( QLatin1String( "boundary" ) ).toLatin1();
 }
 
 void ContentType::setBoundary( const QByteArray &s )
 {
-  setParameter( "boundary", QString::fromLatin1( s ) );
+  setParameter( QLatin1String( "boundary" ), QString::fromLatin1( s ) );
 }
 
 QString ContentType::name() const
 {
-  return parameter( "name" );
+  return parameter( QLatin1String( "name" ) );
 }
 
 void ContentType::setName( const QString &s, const QByteArray &cs )
 {
   Q_D(ContentType);
   d->encCS = cs;
-  setParameter( "name", s );
+  setParameter( QLatin1String( "name" ), s );
 }
 
 QByteArray ContentType::id() const
 {
-  return parameter( "id" ).toLatin1();
+  return parameter( QLatin1String( "id" ) ).toLatin1();
 }
 
 void ContentType::setId( const QByteArray &s )
 {
-  setParameter( "id", s );
+  setParameter( QLatin1String( "id" ), QString::fromLatin1( s ) );
 }
 
 int ContentType::partialNumber() const
 {
-  QByteArray p = parameter( "number" ).toLatin1();
+  QByteArray p = parameter( QLatin1String( "number" ) ).toLatin1();
   if ( !p.isEmpty() ) {
     return p.toInt();
   } else {
@@ -1849,7 +1849,7 @@ int ContentType::partialNumber() const
 
 int ContentType::partialCount() const
 {
-  QByteArray p = parameter( "total" ).toLatin1();
+  QByteArray p = parameter( QLatin1String( "total" ) ).toLatin1();
   if ( !p.isEmpty() ) {
     return p.toInt();
   } else {
@@ -1870,8 +1870,8 @@ void ContentType::setCategory( contentCategory c )
 
 void ContentType::setPartialParams( int total, int number )
 {
-  setParameter( "number", QString::number( number ) );
-  setParameter( "total", QString::number( total ) );
+  setParameter( QLatin1String( "number" ), QString::number( number ) );
+  setParameter( QLatin1String( "total" ), QString::number( total ) );
 }
 
 bool ContentType::parse( const char* &scursor, const char * const send,
@@ -1984,7 +1984,7 @@ bool ContentID::parse( const char* &scursor, const char *const send, bool isCRLF
       }
 
       // Save chars untill '>''
-      QString result = "";
+      QString result;
       if( !parseAtom(scursor, send, result, false) ) {
         return false;
       }
@@ -2165,12 +2165,12 @@ void ContentDisposition::setDisposition( contentDisposition disp )
 
 QString KMime::Headers::ContentDisposition::filename() const
 {
-  return parameter( "filename" );
+  return parameter( QLatin1String( "filename" ) );
 }
 
 void ContentDisposition::setFilename( const QString &filename )
 {
-  setParameter( "filename", filename );
+  setParameter( QLatin1String( "filename" ), filename );
 }
 
 bool ContentDisposition::parse( const char *& scursor, const char * const send,

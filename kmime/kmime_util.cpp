@@ -268,13 +268,14 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
   int start=0, end=0;
   bool nonAscii=false, ok=true, useQEncoding=false;
 
-  const QTextCodec *codec = KGlobal::charsets()->codecForName( charset, ok );
+  // fromLatin1() is safe here, codecForName() uses toLatin1() internally
+  const QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( charset ), ok );
 
   QByteArray usedCS;
   if ( !ok ) {
     //no codec available => try local8Bit and hope the best ;-)
     usedCS = KGlobal::locale()->encoding();
-    codec = KGlobal::charsets()->codecForName( usedCS, ok );
+    codec = KGlobal::charsets()->codecForName( QString::fromLatin1( usedCS ), ok );
   }
   else {
     Q_ASSERT( codec );
@@ -378,7 +379,7 @@ QByteArray encodeRFC2231String( const QString& str, const QByteArray& charset )
     return QByteArray();
 
   
-  const QTextCodec *codec = KGlobal::charsets()->codecForName( charset );
+  const QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( charset ) );
   QByteArray latin;
   if ( charset == "us-ascii" )
     latin = str.toAscii();
@@ -432,7 +433,7 @@ QString decodeRFC2231String( const QByteArray &str, QByteArray &usedCS, const QB
   bool forceCS )
 {
   int p = str.indexOf('\'');
-  if (p < 0) return KGlobal::charsets()->codecForName( defaultCS )->toUnicode( str );
+  if (p < 0) return KGlobal::charsets()->codecForName( QString::fromLatin1( defaultCS  ))->toUnicode( str );
 
   
   QByteArray charset = str.left(p);
@@ -462,9 +463,9 @@ QString decodeRFC2231String( const QByteArray &str, QByteArray &usedCS, const QB
   }
   kDebug() << "Got pre-decoded:" << st;
   QString result;
-  const QTextCodec * charsetcodec = KGlobal::charsets()->codecForName( charset );
+  const QTextCodec * charsetcodec = KGlobal::charsets()->codecForName( QString::fromLatin1( charset ) );
   if ( !charsetcodec || forceCS )
-    charsetcodec = KGlobal::charsets()->codecForName( defaultCS );
+    charsetcodec = KGlobal::charsets()->codecForName( QString::fromLatin1( defaultCS ) );
 
   usedCS = charsetcodec->name();
   return charsetcodec->toUnicode( st );
@@ -516,14 +517,14 @@ QByteArray unfoldHeader( const QByteArray &header )
     foldBegin = foldEnd = foldMid;
     // find the first space before the line-break
     while ( foldBegin > 0 ) {
-      if ( !QChar( header[foldBegin - 1] ).isSpace() ) {
+      if ( !QChar::fromLatin1( header[foldBegin - 1] ).isSpace() ) {
         break;
       }
       --foldBegin;
     }
     // find the first non-space after the line-break
     while ( foldEnd <= header.length() - 1 ) {
-      if ( QChar( header[foldEnd] ).isSpace() ) {
+      if ( QChar::fromLatin1( header[foldEnd] ).isSpace() ) {
         ++foldEnd;
       }
       else if ( foldEnd > 0 && header[foldEnd - 1] == '\n' &&
@@ -717,16 +718,16 @@ QByteArray LFtoCRLF( const char *s )
 }
 
 namespace {
-template < typename T > void removeQuotesGeneric( T & str )
+template < typename StringType, typename CharType > void removeQuotesGeneric( StringType & str )
 {
   bool inQuote = false;
   for ( int i = 0; i < str.length(); ++i ) {
-    if ( str[i] == '"' ) {
+    if ( str[i] == CharType( '"' ) ) {
       str.remove( i, 1 );
       i--;
       inQuote = !inQuote;
     } else {
-      if ( inQuote && ( str[i] == '\\' ) ) {
+      if ( inQuote && ( str[i] == CharType( '\\' ) ) ) {
         str.remove( i, 1 );
       }
     }
@@ -736,60 +737,43 @@ template < typename T > void removeQuotesGeneric( T & str )
 
 void removeQuots( QByteArray &str )
 {
-  removeQuotesGeneric( str );
+  removeQuotesGeneric<QByteArray,char>( str );
 }
 
 void removeQuots( QString &str )
 {
-  removeQuotesGeneric( str );
+  removeQuotesGeneric<QString,QLatin1Char>( str );
 }
 
-//
-// The next two helper function are just functions that return the ASCII char of
-// a string or an array. This is only there to facilitate writing addQuotes_impl()
-// without code duplication
-//
-
-static char getCharFromQByteArray( const QByteArray &array, int index )
-{
-  return array.at( index );
-}
-
-static char getCharFromQString( const QString &string, int index )
-{
-  return string.at( index ).toAscii();
-}
-
-template<class StringType>
-void addQuotes_impl( StringType &str, bool forceQuotes,
-                     char (*convertFunction)( const StringType&, int ) )
+template<class StringType,class CharType,class CharConverterType,class StringConverterType,class ToString>
+void addQuotes_impl( StringType &str, bool forceQuotes )
 {
   bool needsQuotes=false;
   for ( int i=0; i < str.length(); i++ ) {
-    const char cur = convertFunction( str, i );
-    if ( strchr("()<>@,.;:[]=\\\"", cur ) != 0 ) {
+    const CharType cur = str.at( i );
+    if ( QString( ToString( str ) ).contains( QRegExp( QLatin1String( "\"|\\\\|=|\\]|\\[|:|;|,|\\.|,|@|<|>|\\)|\\(" ) ) ) ) {
       needsQuotes = true;
     }
-    if ( cur == '\\' || cur == '\"' ) {
-      str.insert( i, '\\' );
+    if ( cur == CharConverterType( '\\' ) || cur == CharConverterType( '\"' ) ) {
+      str.insert( i, CharConverterType( '\\' ) );
       i++;
     }
   }
 
   if ( needsQuotes || forceQuotes ) {
-    str.insert( 0, '\"' );
-    str.append( "\"" );
+    str.insert( 0, CharConverterType( '\"' ) );
+    str.append( StringConverterType( "\"" ) );
   }
 }
 
 void addQuotes( QByteArray &str, bool forceQuotes )
 {
-  addQuotes_impl( str, forceQuotes, &getCharFromQByteArray );
+  addQuotes_impl<QByteArray,char,char,char*,QLatin1String>( str, forceQuotes );
 }
 
 void addQuotes( QString &str, bool forceQuotes )
 {
-  addQuotes_impl( str, forceQuotes, &getCharFromQString );
+  addQuotes_impl<QString,QChar,QLatin1Char,QLatin1String,QString>( str, forceQuotes );
 }
 
 KMIME_EXPORT QString balanceBidiState( const QString &input )
@@ -829,7 +813,7 @@ KMIME_EXPORT QString balanceBidiState( const QString &input )
     // As a special exception, when encountering quoted strings, place the PDF before
     // the last quote.
     for ( int i = openDirChangers; i > 0; i-- ) {
-      if ( result.endsWith( '"' ) )
+      if ( result.endsWith( QLatin1Char( '"' ) ) )
         result.insert( result.length() - 1, QChar( PDF ) );
       else
         result += QChar( PDF );

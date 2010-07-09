@@ -392,7 +392,7 @@ QString Content::decodedText( bool trimText, bool removeTrailingNewlines )
 
   bool ok = true;
   QTextCodec *codec =
-    KGlobal::charsets()->codecForName( contentType()->charset(), ok );
+    KGlobal::charsets()->codecForName( QLatin1String( contentType()->charset() ), ok );
 
   QString s = codec->toUnicode( d_ptr->body.data(), d_ptr->body.length() );
 
@@ -405,14 +405,14 @@ QString Content::decodedText( bool trimText, bool removeTrailingNewlines )
         }
       }
       else {
-        if ( s[i] != '\n' ) {
+        if ( s[i] != QLatin1Char( '\n' ) ) {
           break;
         }
       }
     }
     s.truncate( i + 1 );
   } else {
-    if ( s.right( 1 ) == "\n" ) {
+    if ( s.right( 1 ) == QLatin1String( "\n" ) ) {
       s.truncate( s.length() - 1 ); // remove trailing new-line
     }
   }
@@ -424,7 +424,7 @@ void Content::fromUnicodeString( const QString &s )
 {
   bool ok = true;
   QTextCodec *codec =
-    KGlobal::charsets()->codecForName( contentType()->charset(), ok );
+    KGlobal::charsets()->codecForName( QLatin1String( contentType()->charset() ), ok );
 
   if ( !ok ) { // no suitable codec found => try local settings and hope the best ;-)
     codec = KGlobal::locale()->codecForEncoding();
@@ -1012,11 +1012,11 @@ bool ContentPrivate::parseUuencoded()
     for( int i = 0; i < uup.binaryParts().count(); ++i ) {
       Content *c = new Content( q );
       c->contentType()->setMimeType( uup.mimeTypes().at( i ) );
-      c->contentType()->setName( uup.filenames().at( i ), QByteArray( /*charset*/ ) );
+      c->contentType()->setName( QLatin1String( uup.filenames().at( i ) ), QByteArray( /*charset*/ ) );
       c->contentTransferEncoding()->setEncoding( Headers::CEuuenc );
       c->contentTransferEncoding()->setDecoded( false );
       c->contentDisposition()->setDisposition( Headers::CDattachment );
-      c->contentDisposition()->setFilename( uup.filenames().at( i ) );
+      c->contentDisposition()->setFilename( QLatin1String( uup.filenames().at( i ) ) );
       c->setBody( uup.binaryParts().at( i ) );
       c->changeEncoding( Headers::CEbase64 ); // Convert to base64.
       multipartContents.append( c );
@@ -1066,10 +1066,10 @@ bool ContentPrivate::parseYenc()
     for ( int i=0; i<yenc.binaryParts().count(); i++ ) {
       Content *c = new Content( q );
       c->contentType()->setMimeType( yenc.mimeTypes().at( i ) );
-      c->contentType()->setName( yenc.filenames().at( i ), QByteArray( /*charset*/ ) );
+      c->contentType()->setName( QLatin1String( yenc.filenames().at( i ) ), QByteArray( /*charset*/ ) );
       c->contentTransferEncoding()->setEncoding( Headers::CEbinary );
       c->contentDisposition()->setDisposition( Headers::CDattachment );
-      c->contentDisposition()->setFilename( yenc.filenames().at( i ) );
+      c->contentDisposition()->setFilename( QLatin1String( yenc.filenames().at( i ) ) );
       c->setBody( yenc.binaryParts().at( i ) ); // Yenc bodies are binary.
       c->changeEncoding( Headers::CEbase64 ); // Convert to base64.
       multipartContents.append( c );

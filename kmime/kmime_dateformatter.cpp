@@ -106,8 +106,8 @@ QString DateFormatter::rfc2822( time_t t ) const
 
   tmp.setTime_t( t );
 
-  ret = tmp.toString( "ddd, dd MMM yyyy hh:mm:ss " ).toLatin1();
-  ret += zone( t );
+  ret = tmp.toString( QLatin1String( "ddd, dd MMM yyyy hh:mm:ss " ) );
+  ret += QLatin1String( zone( t ) );
 
   return ret;
 }
@@ -118,13 +118,13 @@ QString DateFormatter::custom( time_t t ) const
     return QString();
   }
 
-  int z = mCustomFormat.indexOf( 'Z' );
+  int z = mCustomFormat.indexOf( QLatin1Char( 'Z' ) );
   QDateTime d;
   QString ret = mCustomFormat;
 
   d.setTime_t( t );
   if ( z != -1 ) {
-    ret.replace( z, 1, zone( t ) );
+    ret.replace( z, 1, QLatin1String( zone( t ) ) );
   }
 
   ret = d.toString( ret );
@@ -198,7 +198,7 @@ QByteArray DateFormatter::zone( time_t t ) const
   QByteArray ret;
   QTextStream s( &ret, QIODevice::WriteOnly );
   s << ( neg ? '-' : '+' )
-    << qSetFieldWidth( 2 ) << qSetPadChar( '0' ) << right << hours << mins;
+    << qSetFieldWidth( 2 ) << qSetPadChar( QLatin1Char( '0' ) ) << right << hours << mins;
   //old code: ret.sprintf( "%c%.2d%.2d", (neg) ? '-' : '+', hours, mins );
 
   return ret;
@@ -210,8 +210,8 @@ time_t DateFormatter::qdateToTimeT( const QDateTime &dt ) const
   time_t t;
   time( &t );
 
-  QDateTime d1 = QDateTime::fromString( asctime( gmtime( &t ) ) );
-  QDateTime d2 = QDateTime::fromString( asctime( localtime( &t ) ) );
+  QDateTime d1 = QDateTime::fromString( QLatin1String( asctime( gmtime( &t ) ) ) );
+  QDateTime d2 = QDateTime::fromString( QLatin1String( asctime( localtime( &t ) ) ) );
   time_t drf = epoch.secsTo( dt ) - d1.secsTo( d2 );
 
   return drf;
@@ -287,7 +287,7 @@ QString DateFormatter::isoDate( time_t t ) const
 {
   char cstr[64];
   strftime( cstr, 63, "%Y-%m-%d %H:%M:%S", localtime( &t ) );
-  return QString( cstr );
+  return QLatin1String( cstr );
 }
 
 void DateFormatter::reset()

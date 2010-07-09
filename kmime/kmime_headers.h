@@ -713,6 +713,9 @@ class KMIME_EXPORT Parametrized : public Structured
     virtual bool isEmpty() const;
     virtual void clear();
 
+    //FIXME: Shouldn't the parameter keys be QByteArray and not QStrings? Only the values can be
+    //       non-ascii!
+
     /**
       Returns the value of the specified parameter.
       @param key The parameter name.
