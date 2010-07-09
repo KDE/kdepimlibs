@@ -142,6 +142,12 @@ void MessageTest::testWillsAndTillsCrash()
   delete msg;
 }
 
+void MessageTest::testDavidsParseCrash()
+{
+  KMime::Message::Ptr mail = readAndParseMail( QLatin1String( "dfaure-crash.mbox" ) );
+  QCOMPARE( mail->to()->asUnicodeString().toAscii().data(), "frank@domain.com" );
+}
+
 void MessageTest::testHeaderFieldWithoutSpace()
 {
   // Headers without a space, like the CC header here, are allowed according to
