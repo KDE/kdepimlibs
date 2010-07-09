@@ -375,6 +375,20 @@ KMIME_EXPORT bool parseDateTime( const char* &scursor, const char * const send,
  */
 KMIME_EXPORT KMime::Headers::Base *extractFirstHeader( QByteArray &head );
 
+/**
+ * Extract the header header and the body from a complete content.
+ * Internally, it will simply look for the first newline and use that as a seperator between the
+ * header and the body
+ *
+ * @param content the complete mail
+ * @param header return value for the extracted header
+ * @param body return value for the extracted body
+ * @since 4.6
+ */
+KMIME_EXPORT void extractHeaderAndBody( const QByteArray &content,
+                                        QByteArray &header, QByteArray &body );
+
+
 } // namespace HeaderParsing
 
 } // namespace KMime

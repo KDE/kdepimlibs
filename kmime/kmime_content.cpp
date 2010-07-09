@@ -132,22 +132,7 @@ void Content::setContent( const QList<QByteArray> &l )
 void Content::setContent( const QByteArray &s )
 {
   Q_D(Content);
-  d->head.clear();
-  d->body.clear();
-
-  // empty header
-  if ( s.startsWith( '\n' ) ) {
-    d->body = s.right( s.length() - 1 );
-    return;
-  }
-
-  int pos = s.indexOf( "\n\n", 0 );
-  if ( pos > -1 ) {
-    d->head = s.left( ++pos );  //header *must* end with "\n" !!
-    d->body = s.mid( pos + 1, s.length() - pos - 1 );
-  } else {
-    d->head = s;
-  }
+  KMime::HeaderParsing::extractHeaderAndBody( s, d->head, d->body );
 }
 
 QByteArray Content::head() const
