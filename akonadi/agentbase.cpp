@@ -219,7 +219,7 @@ void AgentBasePrivate::init()
            SLOT( collectionChanged( const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( collectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ),
            SLOT( collectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ) );
-  connect( mMonitor, SIGNAL( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+  connect( mMonitor, SIGNAL( collectionChanged( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
            SLOT( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
            SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
