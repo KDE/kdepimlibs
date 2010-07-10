@@ -28,7 +28,6 @@
 #include "kdatetime.h"
 
 Q_DECLARE_METATYPE( QList<KUrl> )
-Q_DECLARE_METATYPE( KDateTime )
 Q_DECLARE_METATYPE( KBlog::BlogPost::Status )
 
 using namespace KBlog;
