@@ -27,10 +27,6 @@ set(ktnef_LIB_SRCS
 
 kde4_add_library(ktnef SHARED ${ktnef_LIB_SRCS})
 
-if(WINCE)
-target_link_libraries(ktnef ${WCECOMPAT_LIBRARIES})
-endif(WINCE)
-
 target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcal)
 
 set_target_properties(ktnef PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})

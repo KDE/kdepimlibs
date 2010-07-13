@@ -19,7 +19,6 @@ set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.$
 
 # cmake would not find kde for xcompile if that is not set 
 if(WINCE)
-    FIND_PACKAGE(WCECOMPAT REQUIRED)
     set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
 endif(WINCE)
 
