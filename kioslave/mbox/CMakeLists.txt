@@ -18,6 +18,10 @@ kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
 
 target_link_libraries(kio_mbox  ${KDE4_KIO_LIBS} )
 
+if(WINCE)
+target_link_libraries(kio_mbox ${WCECOMPAT_LIBRARIES})
+endif(WINCE)
+
 install(TARGETS kio_mbox  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 

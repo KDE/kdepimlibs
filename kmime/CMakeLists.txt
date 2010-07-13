@@ -32,6 +32,10 @@ kde4_add_library(kmime SHARED ${kmime_LIB_SRCS})
 
 target_link_libraries(kmime  ${KDE4_KDECORE_LIBS} )
 
+if(WINCE)
+target_link_libraries(kmime ${WCECOMPAT_LIBRARIES})
+endif(WINCE)
+
 set_target_properties(kmime PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
 install(TARGETS kmime EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

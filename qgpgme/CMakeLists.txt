@@ -44,6 +44,9 @@ if ( _any_gpgme_found )
    kde4_add_library( qgpgme SHARED ${qgpgme_LIB_SRCS} )
 
    target_link_libraries( qgpgme ${QT_QTCORE_LIBRARY} ${_qgpgme_libgpgme} )
+   if(WINCE)
+   target_link_libraries(qgpgme ${WCECOMPAT_LIBRARIES})
+   endif(WINCE)
 
    set_target_properties( qgpgme PROPERTIES
      VERSION ${_qgpgme_version}

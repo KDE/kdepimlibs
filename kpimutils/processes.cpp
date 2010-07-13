@@ -37,6 +37,10 @@ using namespace KPIMUtils;
 #include <signal.h>
 #include <unistd.h>
 
+#ifdef _WIN32_WCE
+#include <Tlhelp32.h>
+#endif
+
 #include <QtCore/QList>
 #include <QtCore/QtDebug>
 
@@ -92,6 +96,7 @@ static QString fromWChar( const wchar_t *string, int size = -1 )
 void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &pids )
 {
   qDebug() << "KPIMUtils::getProcessesIdForName" << processName;
+#ifndef _WIN32_WCE
   PPERF_OBJECT_TYPE perfObject;
   PPERF_INSTANCE_DEFINITION perfInstance;
   PPERF_COUNTER_DEFINITION perfCounter, curCounter;
@@ -153,6 +158,32 @@ void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &p
   }
   free( perfData );
   RegCloseKey( HKEY_PERFORMANCE_DATA );
+#else
+    HANDLE h;
+    PROCESSENTRY32 pe32;
+    
+    h = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (h == INVALID_HANDLE_VALUE)
+    {
+        return;
+    }
+    pe32.dwSize = sizeof(PROCESSENTRY32);
+    if (!Process32First( h, &pe32 ))
+    {
+        return;
+    }
+    pids.clear();
+    do
+    {
+        if (QString::fromWCharArray(pe32.szExeFile) == processName)
+        {
+            pids.append((int)pe32.th32ProcessID);
+            qDebug() << "found PID: " << (int)pe32.th32ProcessID;
+        }
+
+    } while( Process32Next( h, &pe32 ) );
+    CloseToolhelp32Snapshot(h);
+#endif
 }
 
 bool KPIMUtils::otherProcessesExist( const QString &processName )
@@ -180,10 +211,13 @@ bool KPIMUtils::killProcesses( const QString &processName )
   qWarning() << "Killing process \"" << processName << " (pid=" << pids[0] << ")..";
   int overallResult = 0;
   foreach ( int pid, pids ) {
-    int result = kill( pid, SIGTERM );
+    int result;
+#ifndef _WIN32_WCE
+    result = kill( pid, SIGTERM );
     if ( result == 0 ) {
       continue;
     }
+#endif
     result = kill( pid, SIGKILL );
     if ( result != 0 ) {
       overallResult = result;

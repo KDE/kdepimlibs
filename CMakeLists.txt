@@ -17,6 +17,12 @@ set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.$
 
 ############### search packages used by KDE ###############
 
+# cmake would not find kde for xcompile if that is not set 
+if(WINCE)
+    FIND_PACKAGE(WCECOMPAT REQUIRED)
+    set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
+endif(WINCE)
+
 set (QT_MIN_VERSION "4.6.0")
 # kdepim depends on the latest released version of KDE 4.4
 find_package(KDE4 4.4.0 REQUIRED)
@@ -86,7 +92,6 @@ if (NOT KDEPIM_ONLY_KLEO)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk is required to build the Akonadi libraries.")
 
 endif (NOT KDEPIM_ONLY_KLEO)
-
 
 ############### Needed commands before building anything ###############
 

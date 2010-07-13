@@ -31,6 +31,10 @@ set(kio_imap4_PART_SRCS
 
 kde4_add_plugin(kio_imap4 ${kio_imap4_PART_SRCS})
 
+if(WINCE)
+target_link_libraries(kio_imap4 ${WCECOMPAT_LIBRARIES})
+endif(WINCE)
+
 target_link_libraries(kio_imap4 kmime kimap ${KDE4_KIO_LIBS})
 if (SASL2_FOUND)
 	target_link_libraries(kio_imap4 ${SASL2_LIBRARIES} )
