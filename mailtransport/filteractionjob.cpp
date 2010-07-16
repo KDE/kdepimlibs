@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "filteractionjob.h"
+#include "filteractionjob_p.h"
 
 #include <akonadi/collection.h>
 #include <akonadi/itemfetchjob.h>
@@ -72,7 +72,7 @@ void FilterActionJob::Private::traverseItems()
   kDebug() << "Traversing" << items.count() << "items.";
   foreach ( const Item &item, items ) {
     if ( functor->itemAccepted( item ) ) {
-      q->addSubjob( functor->itemAction( item ) );
+      functor->itemAction( item, q );
       kDebug() << "Added subjob for item" << item.id();
     }
   }
@@ -130,4 +130,4 @@ void FilterActionJob::doStart()
   }
 }
 
-#include "filteractionjob.moc"
+#include "filteractionjob_p.moc"

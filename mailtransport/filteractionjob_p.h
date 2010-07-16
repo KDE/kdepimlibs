@@ -31,6 +31,8 @@ class Collection;
 class ItemFetchScope;
 class Job;
 
+class FilterActionJob;
+
 /**
  * @short Base class for a filter/action for FilterActionJob.
  *
@@ -55,11 +57,11 @@ class Job;
  *       return item.hasAttribute<ErrorAttribute>();
  *     }
  *
- *     virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const
+ *     virtual Akonadi::Job *itemAction( const Akonadi::Item &item, Akonadi::FilterActionJob *parent ) const
  *     {
  *       Item cp = item;
  *       cp.removeAttribute<ErrorAttribute>();
- *       return new ItemModifyJob( cp );
+ *       return new ItemModifyJob( cp, parent );
  *     }
  * };
  * @endcode
@@ -98,7 +100,7 @@ class MAILTRANSPORT_EXPORT FilterAction
      * Returns a job to act on the @p item.
      * The FilterActionJob will finish when all such jobs are finished.
      */
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const = 0;
+    virtual Akonadi::Job *itemAction( const Akonadi::Item &item, Akonadi::FilterActionJob *parent ) const = 0;
 };
 
 /**

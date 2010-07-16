@@ -28,7 +28,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/qtest_akonadi.h>
-#include <mailtransport/filteractionjob.h>
+#include <mailtransport/filteractionjob_p.h>
 
 using namespace Akonadi;
 
@@ -56,13 +56,13 @@ class MyFunctor : public FilterAction
       return ( item.attribute<TestAttribute>()->data == acceptable );
     }
 
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const
+    virtual Akonadi::Job *itemAction( const Akonadi::Item &item, FilterActionJob *parent ) const
     {
       Item cp( item );
       TestAttribute *newa = new TestAttribute;
       newa->data = modified;
       cp.addAttribute( newa );
-      return new ItemModifyJob( cp );
+      return new ItemModifyJob( cp, parent );
     }
 };
 

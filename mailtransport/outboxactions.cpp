@@ -59,11 +59,11 @@ bool SendQueuedAction::itemAccepted( const Item &item ) const
   return item.attribute<DispatchModeAttribute>()->dispatchMode() == DispatchModeAttribute::Manual;
 }
 
-Job *SendQueuedAction::itemAction( const Item &item ) const
+Job *SendQueuedAction::itemAction( const Item &item, FilterActionJob *parent ) const
 {
   Item cp = item;
   cp.addAttribute( new DispatchModeAttribute ); // defaults to Automatic
-  return new ItemModifyJob( cp );
+  return new ItemModifyJob( cp, parent );
 }
 
 class MailTransport::ClearErrorAction::Private
@@ -93,13 +93,13 @@ bool ClearErrorAction::itemAccepted( const Item &item ) const
   return item.hasAttribute<ErrorAttribute>();
 }
 
-Job *ClearErrorAction::itemAction( const Item &item ) const
+Job *ClearErrorAction::itemAction( const Item &item, FilterActionJob *parent ) const
 {
   Item cp = item;
   cp.removeAttribute<ErrorAttribute>();
   cp.clearFlag( "error" );
   cp.setFlag( "queued" );
-  return new ItemModifyJob( cp );
+  return new ItemModifyJob( cp, parent );
 }
 
 class MailTransport::DispatchManualTransportAction::Private
@@ -140,12 +140,12 @@ bool DispatchManualTransportAction::itemAccepted( const Item &item ) const
   return item.attribute<DispatchModeAttribute>()->dispatchMode() == DispatchModeAttribute::Manual;
 }
 
-Job *DispatchManualTransportAction::itemAction( const Item &item ) const
+Job *DispatchManualTransportAction::itemAction( const Item &item, FilterActionJob *parent ) const
 {
   Item cp = item;
   cp.attribute<TransportAttribute>()->setTransportId( mTransportId );
   cp.removeAttribute<DispatchModeAttribute>();
   cp.addAttribute( new DispatchModeAttribute ); // defaults to Automatic
   cp.setFlag( "queued" );
-  return new ItemModifyJob( cp );
+  return new ItemModifyJob( cp, parent );
 }

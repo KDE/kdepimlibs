@@ -28,7 +28,6 @@
 
 #include <akonadi/agentmanager.h>
 #include <akonadi/collection.h>
-#include "filteractionjob.h"
 #include <akonadi/kmime/specialmailcollections.h>
 #include "transportattribute.h"
 
