@@ -21,7 +21,7 @@
 #define MAILTRANSPORT_OUTBOXACTIONS_P_H
 
 #include <mailtransport/mailtransport_export.h>
-#include <mailtransport/filteractionjob.h>
+#include <mailtransport/filteractionjob_p.h>
 #include <mailtransport/transportattribute.h>
 
 #include <akonadi/itemfetchscope.h>
@@ -56,7 +56,7 @@ class SendQueuedAction : public Akonadi::FilterAction
     virtual bool itemAccepted( const Akonadi::Item &item ) const;
 
     /* reimpl */
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const;
+    virtual Akonadi::Job *itemAction( const Akonadi::Item &item, Akonadi::FilterActionJob *parent ) const;
 
   private:
     class Private;
@@ -90,7 +90,7 @@ class ClearErrorAction : public Akonadi::FilterAction
     virtual bool itemAccepted( const Akonadi::Item &item ) const;
 
     /* reimpl */
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const;
+    virtual Akonadi::Job *itemAction( const Akonadi::Item &item, Akonadi::FilterActionJob *parent ) const;
 
   private:
     class Private;
@@ -122,7 +122,7 @@ class DispatchManualTransportAction : public Akonadi::FilterAction
     virtual bool itemAccepted( const Akonadi::Item &item ) const;
 
     /* reimpl */
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const;
+    virtual Akonadi::Job *itemAction( const Akonadi::Item &item, Akonadi::FilterActionJob *parent ) const;
 
   private:
     class Private;
