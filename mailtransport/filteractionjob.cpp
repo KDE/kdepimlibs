@@ -77,12 +77,11 @@ void FilterActionJob::Private::traverseItems()
     }
   }
   if ( q->subjobs().isEmpty() ) {
-    kDebug() << "No subjobs; I am done.";
-    q->emitResult();
+    kDebug() << "No subjobs; I am done";
   } else {
-    kDebug() << "Have subjobs; calling commit().";
-    q->commit();
+    kDebug() << "Have subjobs; Done when last of them is";
   }
+  q->commit();
 }
 
 FilterAction::~FilterAction()
