@@ -1,27 +1,22 @@
 akonadi           Volker Krause <vkrause@kde.org>
 gpgme++           Marc Mutz <mutz@kde.org>
-kabc              Cornelius Schumacher <schumacher@kde.org>
+kabc              Tobias Koenig <tokoe@kde.org>
 kblog             Christian Weilbach <christian_weilbach@web.de>
-kcal              Cornelius Schumacher <schumacher@kde.org>
-                  Reinhold Kainhofer <reinhold@kainhofer.com>
-kcal/libical      Allen Winter <winter@kde.org>
-                  Cornelius Schumacher <schumacher@kde.org>
-                  Reinhold Kainhofer <reinhold@kainhofer.com>
+kcalcore          Allen Winter <winter@kde.org>
+                  Sergio Martins <iamsergio@gmail.com>
 kholidays         Allen Winter <winter@kde.org>
                   John Layt <johnlayt@googlemail.com>
-kimap             Allen Winter <winter@kde.org>
-                  Volker Krause <vkrause@kde.org>
+kimap             Volker Krause <vkrause@kde.org>
 kioslave          various
 kldap             Szombathelyi György <gyurco@freemail.hu>
 kmime             Volker Krause <vkrause@kde.org>
                   Marc Mutz <mutz@kde.org>
 kontactinterface  Allen Winter <winter@kde.org>
 kpimidentities    -
-kpimutils         Matt Douhan <matt@fruitsalad.org>
-kresources        Cornelius Schumacher <schumacher@kde.org>
-                  Tobias Koenig <tokoe@kde.org>
+kpimutils         -
+kresources        Tobias Koenig <tokoe@kde.org>
 ktnef             Michael Goffioul <goffioul@imec.be>
-kxmlrpcclient     Narayan Newton <narayannewton@gmail.com>
+kxmlrpcclient     -
 mailtransport     -
 microblog         Tom Albers <tomalbers@kde.nl>
 qgpgme            Marc Mutz <mutz@kde.org>

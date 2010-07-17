@@ -17,6 +17,9 @@
  *   <i>An API for weblogging access.</i>
  *
  * - <a href="kcal/html/index.html"><b>kcal</b></a>.
+ *   <i>(Deprecated, use <a href="kcalcore/html/index.html">kcalcore</a> instead) An API for the iCalendar and vCalendar formats.</i>
+ *
+ * - <a href="kcalcore/html/index.html"><b>kcal</b></a>.
  *   <i>An API for the iCalendar and vCalendar formats.</i>
  *
  * - <a href="kholidays/html/index.html"><b>kholidays</b></a>.

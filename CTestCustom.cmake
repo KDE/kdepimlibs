@@ -11,6 +11,7 @@ set(CTEST_CUSTOM_WARNING_EXCEPTION
   "kio/connection.h"
   "temporary since Dec 2000"
   "/kcal/versit/"
+  "/kcalcore/versit/"
   "invoking macro kDebug argument 1"
   "qlist.h.*increases required alignment of target type"
   "qmap.h.*increases required alignment of target type"
