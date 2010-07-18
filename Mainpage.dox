@@ -17,10 +17,16 @@
  *   <i>An API for weblogging access.</i>
  *
  * - <a href="kcal/html/index.html"><b>kcal</b></a>.
- *   <i>(Deprecated, use <a href="kcalcore/html/index.html">kcalcore</a> instead) An API for the iCalendar and vCalendar formats.</i>
+ *   <i>(Deprecated, use <a href="kcalcore/html/index.html">kcalcore</a> 
+ *   or <a href="kcalutils/html/index.html">kcalutils</a> instead)
+ *   An API for the iCalendar and vCalendar formats.</i>
  *
  * - <a href="kcalcore/html/index.html"><b>kcal</b></a>.
  *   <i>An API for the iCalendar and vCalendar formats.</i>
+ *
+ * - <a href="kcalutils/html/index.html"><b>kcal</b></a>.
+ *   <i>Utility and user interface functions for accessing calendar data
+ *   using the <a href="kcalcore/html/index.html">kcalcore</a> API.
  *
  * - <a href="kholidays/html/index.html"><b>kholidays</b></a>.
  *   <i>A library for calendar holidays.</i>
