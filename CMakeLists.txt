@@ -28,6 +28,10 @@ find_package(KDE4 4.4.0 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 
+set(LIBICAL_MIN_VERSION "0.42")
+find_package(Libical)
+macro_log_feature(LIBICAL_FOUND "libical" "Reference implementation of the iCalendar data type and serialization format" "http://sourceforge.net/projects/freeassociation" TRUE "${LIBICAL_MIN_VERSION}" "Required for the critical PIM kcal and kcalcore libraries.")
+
 ### remove the following when requiring 4.5 ###
 if ( NOT KDE4_KCMUTILS_LIBS )
   set( KDE4_KCMUTILS_LIBS ${KDE4_KUTILS_LIBS} )
