@@ -28,10 +28,6 @@ find_package(KDE4 4.4.0 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 
-set(LIBICAL_MIN_VERSION "0.42")
-find_package(Libical)
-macro_log_feature(LIBICAL_FOUND "libical" "Reference implementation of the iCalendar data type and serialization format" "http://sourceforge.net/projects/freeassociation" TRUE "${LIBICAL_MIN_VERSION}" "Required for the critical PIM kcal and kcalcore libraries.")
-
 ### remove the following when requiring 4.5 ###
 if ( NOT KDE4_KCMUTILS_LIBS )
   set( KDE4_KCMUTILS_LIBS ${KDE4_KUTILS_LIBS} )
@@ -93,6 +89,10 @@ if (NOT KDEPIM_ONLY_KLEO)
 
   find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk is required to build the Akonadi libraries.")
+
+  set(LIBICAL_MIN_VERSION "0.42")
+  find_package(Libical)
+  macro_log_feature(LIBICAL_FOUND "libical" "Reference implementation of the iCalendar data type and serialization format" "http://sourceforge.net/projects/freeassociation" TRUE "${LIBICAL_MIN_VERSION}" "Required for the critical PIM kcal and kcalcore libraries.")
 
 endif (NOT KDEPIM_ONLY_KLEO)
 
