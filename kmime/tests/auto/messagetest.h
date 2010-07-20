@@ -40,6 +40,7 @@ class MessageTest : public QObject
     void testUtf16();
     void testDecodedText();
     void testInlineImages();
+    void testIssue3908();
     void testIssue3914();
     void testBug223509();
     void testEncapsulatedMessages();

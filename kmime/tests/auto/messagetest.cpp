@@ -421,6 +421,23 @@ void MessageTest::testInlineImages()
   QCOMPARE( msg.contents()[1]->contentID()->as7BitString( false ).data(), "<740439759>" );
 }
 
+void MessageTest::testIssue3908()
+{
+  KMime::Message::Ptr msg = readAndParseMail( "issue3908.mbox" );
+  QCOMPARE( msg->contents().size(), 2 );
+  KMime::Content *attachment = msg->contents().at( 1 );
+  QVERIFY( attachment );
+  QVERIFY( attachment->contentDescription( false ) );
+  QCOMPARE( attachment->contentDescription()->asUnicodeString(), QString::fromUtf8(
+   "Kontact oder auch KDE-PIM ist der Groupware-Client aus der KDE Software Compilation 4.Eine der Besonderheiten von Kontact "
+   "gegenüber anderen Groupware-Clients ist, dass die Teil-Programme auch weiterhin unabhängig von Kontact gestartet werden "
+   "können. So spielt es zum Beispiel keine Rolle für das Arbeiten mit KMail, ob es mal allein oder mal im Rahmen von Kontact "
+   "gestartet wird: Die Mails und die persönlichen Einstellungen bleiben stets erhalten.Auch sieht Kontact eine modulare "
+   "Anbindung der Programme vor, wodurch sich auch in Zukunft weitere Module entwickeln und anfügen lassen, ohne Kontact "
+   "dafür zu ändern. Dies bietet die Möglichkeit, auch privat entwickelte Module einzubinden und so die Groupware grundlegend "
+   "eigenen Bedürfnissen anzupassen." ) );
+}
+
 void MessageTest::testIssue3914()
 {
   // This loads a mail which has a content-disposition of which the filename parameter is empty.
