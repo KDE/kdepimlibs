@@ -46,6 +46,7 @@ ItemFetchScope SendQueuedAction::fetchScope() const
   ItemFetchScope scope;
   scope.fetchFullPayload( false );
   scope.fetchAttribute<DispatchModeAttribute>();
+  scope.setCacheOnly( true );
   return scope;
 }
 
@@ -85,6 +86,7 @@ ItemFetchScope ClearErrorAction::fetchScope() const
   ItemFetchScope scope;
   scope.fetchFullPayload( false );
   scope.fetchAttribute<ErrorAttribute>();
+  scope.setCacheOnly( true );
   return scope;
 }
 
@@ -122,6 +124,7 @@ ItemFetchScope DispatchManualTransportAction::fetchScope() const
   scope.fetchFullPayload( false );
   scope.fetchAttribute<TransportAttribute>();
   scope.fetchAttribute<DispatchModeAttribute>();
+  scope.setCacheOnly( true );
   return scope;
 }
 
