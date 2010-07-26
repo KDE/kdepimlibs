@@ -22,7 +22,9 @@
 
 #include "scheduler.h"
 #include "calendar.h"
+#ifndef KDEPIM_NO_KRESOURCES
 #include "calendarresources.h"
+#endif
 #include "event.h"
 #include "todo.h"
 #include "freebusy.h"

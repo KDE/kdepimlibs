@@ -38,7 +38,9 @@
 #include "attachment.h"
 #include "calendar.h"
 #include "calendarlocal.h"
+#ifndef KDEPIM_NO_KRESOURCES
 #include "calendarresources.h"
+#endif
 #include "event.h"
 #include "freebusy.h"
 #include "icalformat.h"
