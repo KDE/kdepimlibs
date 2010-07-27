@@ -594,6 +594,29 @@ bool parseGenericQuotedString( const char* &scursor, const char * const send,
         scursor--;
       }
       break;
+    case '=':
+    {
+      // ### Work around broken clients that send encoded words in quoted-strings
+      //     For example, older KMail versions.
+      if( scursor == send )
+        break;
+      
+      const char *oldscursor = scursor;
+      QString tmp;
+      QByteArray lang, charset;
+      if( *scursor++ == '?' ) {
+        --scursor;
+        if( parseEncodedWord( scursor, send, tmp, lang, charset ) ) {
+          result += tmp;
+          break;
+        } else {
+          scursor = oldscursor;
+        }
+      } else {
+        scursor = oldscursor;
+      }
+      // fall through
+    }
     default:
       KMIME_WARN_IF_8BIT( ch );
       result += QLatin1Char( ch );
@@ -1148,7 +1171,7 @@ bool parseMailbox( const char* &scursor, const char * const send,
         return false;
       }
     }
-    result.setNameFrom7Bit( maybeDisplayName.toLatin1() );
+    result.setName( maybeDisplayName );
     return true;
   }
   scursor = oldscursor;

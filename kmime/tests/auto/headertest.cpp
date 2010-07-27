@@ -251,16 +251,25 @@ void HeaderTest::testAddressListHeader()
   delete h;
 
   // rfc 2047 encoding in quoted name (it is not allowed there as per the RFC, but it happens)
+  // some software == current KMail (v1.12.90) ...
   h = new Headers::Generics::AddressList();
   h->from7BitString( QByteArray( "\"Ingo =?iso-8859-15?q?Kl=F6cker?=\" <kloecker@kde.org>" ) );
   QCOMPARE( h->mailboxes().count(), 1 );
-  QEXPECT_FAIL( "", "RFC2047-encoded words in quoted string are not parsed (conformant with the RFC, but not with some software)", Continue );
-  // some software == current KMail (v1.12.90) ...
-  QCOMPARE( h->asUnicodeString(), QString::fromUtf8( "\"Ingo Klöcker\" <kloecker@kde.org>" ) );
-  // The following test is the "conformant" version of the test (kept to catch regression as long as the previous test doesn't pass).
-  QCOMPARE( h->asUnicodeString(), QString::fromUtf8( "Ingo =?iso-8859-15?q?Kl=F6cker?= <kloecker@kde.org>" ) );
+  QCOMPARE( h->asUnicodeString(), QString::fromUtf8( "Ingo Klöcker <kloecker@kde.org>" ) );
   delete h;
 
+  // corner case of almost-rfc2047 encoded string in quoted string but not
+  h = new Headers::Generics::AddressList( 0, QByteArray("\"Some =Use ?r\" <user@example.com>") );
+  QCOMPARE( h->mailboxes().count(), 1 );
+  QCOMPARE( h->as7BitString( false ), QByteArray("\"Some =Use ?r\" <user@example.com>" ) );
+  delete h;
+
+  // corner case of almost-rfc2047 encoded string in quoted string but not
+  h = new Headers::Generics::AddressList( 0, QByteArray("\"Some ?=U=?se =?r\" <user@example.com>") );
+  QCOMPARE( h->mailboxes().count(), 1 );
+  QCOMPARE( h->as7BitString( false ), QByteArray("\"Some ?=U=?se =?r\" <user@example.com>" ) );
+  delete h;
+  
   // based on bug #139477, trailing '.' in domain name (RFC 3696, section 2 - http://tools.ietf.org/html/rfc3696#page-4)
   h = new Headers::Generics::AddressList();
   h->from7BitString( "joe@where.test." );
