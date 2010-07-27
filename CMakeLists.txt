@@ -24,18 +24,9 @@ endif(WINCE)
 
 set (QT_MIN_VERSION "4.6.0")
 # kdepim depends on the latest released version of KDE 4.4
-find_package(KDE4 4.4.0 REQUIRED)
+find_package(KDE4 4.4.93 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
-
-### remove the following when requiring 4.5 ###
-if ( NOT KDE4_KCMUTILS_LIBS )
-  set( KDE4_KCMUTILS_LIBS ${KDE4_KUTILS_LIBS} )
-endif()
-if ( NOT KDE4_KEMOTICONS_LIBS )
-  set( KDE4_KEMOTICONS_LIBS ${KDE4_KUTILS_LIBS} )
-endif()
-### end of 4.4 compat code ###
 
 ############### Load the CTest options ###############
 # Set a timeout value of 5 minutes per test
