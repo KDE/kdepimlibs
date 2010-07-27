@@ -87,6 +87,8 @@ void RFC2047Test::testRFC2047decode()
   QCOMPARE( decodeRFC2047String( "Subject: =?iso-8859-1?Q?ײִÜצהü?=" ),
             QString::fromLatin1( "Subject: ײִÜצהü" ) );
                                                                
+  QCOMPARE( decodeRFC2047String( "=?iso-8859-1?Q?=22Andre_Woebbeking=22?= <woebbeking@example.com>", encCharset ),
+            QString::fromUtf8( "\"Andre Woebbeking\" <woebbeking@example.com>" ) );
 
   // Small data
   QCOMPARE( decodeRFC2047String( "=?iso-8859-1?Q?c?=", encCharset ), QString::fromUtf8("c") );
