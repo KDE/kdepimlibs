@@ -361,6 +361,23 @@ void HeaderTest::testSingleMailboxHeader()
             "\"John \\\"the guru\\\" Smith\" <john.smith@mail.domain>" );
   QCOMPARE( h->as7BitString( false ).data(),
             "\"John \\\"the guru\\\" Smith\" <john.smith@mail.domain>" );
+
+  // The following tests are for broken clients that by accident add quotes inside of encoded words that enclose the
+  // display name. We strip away those quotes, which is not strictly correct, but much nicer.
+  h->from7BitString( "=?iso-8859-1?Q?=22Andre_Woebbeking=22?= <woebbeking@example.com>" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->mailboxes().first().name().toAscii().data(), "Andre Woebbeking" );
+  h->from7BitString( "=?iso-8859-1?Q?=22Andre_=22Mr._Tall=22_Woebbeking=22?= <woebbeking@example.com>" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->mailboxes().first().name().toAscii().data(), "Andre \"Mr. Tall\" Woebbeking" );
+  h->from7BitString( "=?iso-8859-1?Q?=22Andre_=22?= =?iso-8859-1?Q?Mr._Tall?= =?iso-8859-1?Q?=22_Woebbeking=22?= <woebbeking@example.com>" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->addresses().count(), 1 );
+  QCOMPARE( h->mailboxes().first().name().toAscii().data(), "Andre \"Mr. Tall\" Woebbeking" );
+
+
   delete h;
 }
 
