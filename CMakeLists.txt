@@ -6,7 +6,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 ############### Build Options ###############
 
 option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
-option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." FALSE)
+option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
 
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
