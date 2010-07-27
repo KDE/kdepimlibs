@@ -27,6 +27,7 @@ set (QT_MIN_VERSION "4.6.0")
 find_package(KDE4 4.4.93 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
+include(KDEPlatformProfile)
 
 ############### Load the CTest options ###############
 # Set a timeout value of 5 minutes per test
