@@ -23,7 +23,10 @@
 #include <kdemacros.h>
 
 #ifndef MAILTRANSPORT_EXPORT
-# if defined(MAKE_MAILTRANSPORT_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define MAILTRANSPORT_EXPORT
+# elif defined(MAKE_MAILTRANSPORT_LIB)
    /* We are building this library */
 #  define MAILTRANSPORT_EXPORT KDE_EXPORT
 # else

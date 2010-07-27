@@ -25,7 +25,10 @@
 #include <kdemacros.h>
 
 #ifndef KBLOG_EXPORT
-# if defined(MAKE_KBLOG_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KBLOG_EXPORT
+# elif defined(MAKE_KBLOG_LIB)
    /* We are building this library */
 #  define KBLOG_EXPORT KDE_EXPORT
 # else

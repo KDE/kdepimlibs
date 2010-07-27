@@ -41,7 +41,7 @@ if ( _any_gpgme_found )
         ${_qgpgme_extra_src}
    )
 
-   kde4_add_library( qgpgme SHARED ${qgpgme_LIB_SRCS} )
+   kde4_add_library( qgpgme ${LIBRARY_TYPE} ${qgpgme_LIB_SRCS} )
 
    target_link_libraries( qgpgme ${QT_QTCORE_LIBRARY} ${_qgpgme_libgpgme} )
    if(WINCE)

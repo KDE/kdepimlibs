@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef MICROBLOG_EXPORT
-# if defined(MAKE_MICROBLOG_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define MICROBLOG_EXPORT
+# elif defined(MAKE_MICROBLOG_LIB)
 /* We are building this library */
 #  define MICROBLOG_EXPORT KDE_EXPORT
 # else

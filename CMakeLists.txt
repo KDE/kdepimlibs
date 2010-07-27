@@ -97,6 +97,12 @@ if (KDEPIM_NO_KRESOURCES)
   add_definitions(-DKDEPIM_NO_KRESOURCES)
 endif (KDEPIM_NO_KRESOURCES)
 
+if(WINCE)
+  set(LIBRARY_TYPE STATIC)
+  add_definitions(-DKDEPIM_STATIC_LIBS)
+else(WINCE)
+  set(LIBRARY_TYPE SHARED)
+endif(WINCE)
 
 ############### Now, we add the KDEPIMLibs components ###############
 # These targets will always be built

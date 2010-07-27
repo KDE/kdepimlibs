@@ -13,7 +13,10 @@
 #include <kdemacros.h>
 
 #ifndef KXMLRPCCLIENT_EXPORT
-# if defined(MAKE_KXMLRPCCLIENT_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KXMLRPCCLIENT_EXPORT
+# elif defined(MAKE_KXMLRPCCLIENT_LIB)
    /* We are building this library */
 #  define KXMLRPCCLIENT_EXPORT KDE_EXPORT
 # else

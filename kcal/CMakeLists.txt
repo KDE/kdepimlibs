@@ -91,7 +91,7 @@ endif (NOT KDEPIM_NO_KRESOURCES)
 
 kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
-kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
+kde4_add_library(kcal ${LIBRARY_TYPE} ${kcal_LIB_SRCS})
 
 target_link_libraries(kcal ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_QTXML_LIBRARY} kabc kpimutils ${LIBICAL_LIBRARIES})
 target_link_libraries(kcal LINK_INTERFACE_LIBRARIES kabc)

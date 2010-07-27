@@ -25,7 +25,7 @@ set(ktnef_LIB_SRCS
 )
 
 
-kde4_add_library(ktnef SHARED ${ktnef_LIB_SRCS})
+kde4_add_library(ktnef ${LIBRARY_TYPE} ${ktnef_LIB_SRCS})
 
 target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcal)
 

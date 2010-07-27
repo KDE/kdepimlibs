@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef KRESOURCES_EXPORT
-# if defined(MAKE_KRESOURCES_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KRESOURCES_EXPORT
+# elif defined(MAKE_KRESOURCES_LIB)
    /* We are building this library */
 #  define KRESOURCES_EXPORT KDE_EXPORT
 # else
@@ -34,7 +37,10 @@
 #endif
 
 #ifndef KCM_KRESOURCES_EXPORT
-# if defined(MAKE_KCM_KRESOURCES_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KCM_KRESOURCES_EXPORT
+# elif defined(MAKE_KCM_KRESOURCES_LIB)
    /* We are building this library */
 #  define KCM_KRESOURCES_EXPORT KDE_EXPORT
 # else

@@ -8,7 +8,7 @@ set(kxmlrpcclient_LIB_SRCS
    query.cpp)
 
 
-kde4_add_library(kxmlrpcclient SHARED ${kxmlrpcclient_LIB_SRCS})
+kde4_add_library(kxmlrpcclient ${LIBRARY_TYPE} ${kxmlrpcclient_LIB_SRCS})
 
 target_link_libraries(kxmlrpcclient ${KDE4_KIO_LIBS})
 

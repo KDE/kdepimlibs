@@ -10,7 +10,7 @@ include_directories( ../kmime )
 set(kpimutils_LIB_SRCS
    email.cpp linklocator.cpp spellingfilter.cpp kfileio.cpp processes.cpp)
 
-kde4_add_library(kpimutils SHARED ${kpimutils_LIB_SRCS})
+kde4_add_library(kpimutils ${LIBRARY_TYPE} ${kpimutils_LIB_SRCS})
 
 target_link_libraries(kpimutils ${KDE4_KDEUI_LIBS} ${KDE4_KEMOTICONS_LIBS} kmime)
 

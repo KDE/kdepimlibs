@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef KPIMUTILS_EXPORT
-# if defined(MAKE_KPIMUTILS_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KPIMUTILS_EXPORT
+# elif defined(MAKE_KPIMUTILS_LIB)
    /* We are building this library */
 #  define KPIMUTILS_EXPORT KDE_EXPORT
 # else

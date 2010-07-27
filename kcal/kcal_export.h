@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef KCAL_EXPORT
-# if defined(MAKE_KCAL_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KCAL_EXPORT
+# elif defined(MAKE_KCAL_LIB)
    /* We are building this library */
 #  define KCAL_EXPORT KDE_EXPORT
 # else
@@ -43,7 +46,10 @@
 
 #ifdef COMPILING_TESTS
 #ifndef KCAL_TEST_EXPORT
-# if defined(MAKE_KCAL_TEST_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define KCAL_TEST_EXPORT
+# elif defined(MAKE_KCAL_TEST_LIB)
    /* We are building this library */
 #  define KCAL_TEST_EXPORT KDE_EXPORT
 # else

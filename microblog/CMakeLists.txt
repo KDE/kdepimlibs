@@ -8,7 +8,7 @@ set(microblog_LIB_SRCS
    statusitem.cpp
    )
 
-kde4_add_library(microblog SHARED ${microblog_LIB_SRCS})
+kde4_add_library(microblog ${LIBRARY_TYPE} ${microblog_LIB_SRCS})
 
 target_link_libraries(microblog ${KDE4_KDECORE_LIBS} ${QT_QTXML_LIBRARY} kpimutils )
 

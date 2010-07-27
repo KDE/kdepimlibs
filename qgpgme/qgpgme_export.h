@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef QGPGME_EXPORT
-# if defined(MAKE_QGPGME_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define QGPGME_EXPORT
+# elif defined(MAKE_QGPGME_LIB)
    /* We are building this library */ 
 #  define QGPGME_EXPORT KDE_EXPORT
 # else
