@@ -13,8 +13,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2009-09-24</date>
-<releaseinfo>4.1.3</releaseinfo>
+<date>2010-06-22</date>
+<releaseinfo>&kde; 4.5</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -76,7 +76,7 @@ One of these resources is marked as the standard resource.</para>
 <member> &konversation;</member>
 <member>Contacts &krunner; plugin</member>
 <member>KonsoleKalendar</member></simplelist> </entry>
-<entry><ulink url="help:/kaddressbook/index.html#configure-resources">&kaddressbook; resources</ulink></entry>
+<entry></entry>
 </row>
 </tbody>
 </tgroup>
