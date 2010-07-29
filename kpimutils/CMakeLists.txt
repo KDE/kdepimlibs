@@ -8,7 +8,7 @@ add_subdirectory( tests )
 include_directories( ../kmime )
 
 set(kpimutils_LIB_SRCS
-   email.cpp linklocator.cpp spellingfilter.cpp kfileio.cpp processes.cpp)
+   email.cpp emailvalidator.cpp linklocator.cpp spellingfilter.cpp kfileio.cpp processes.cpp)
 
 kde4_add_library(kpimutils ${LIBRARY_TYPE} ${kpimutils_LIB_SRCS})
 
@@ -26,6 +26,7 @@ install(TARGETS kpimutils EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFA
 install(FILES
   kpimutils_export.h
   email.h
+  emailvalidator.h
   linklocator.h
   spellingfilter.h
   kfileio.h
