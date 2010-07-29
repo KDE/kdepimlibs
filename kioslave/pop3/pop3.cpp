@@ -889,7 +889,8 @@ void POP3Protocol::get(const KUrl & url)
         }
       } else {
         closeConnection();
-        error(ERR_COULD_NOT_READ, m_sError);
+        error( ERR_SLAVE_DEFINED, i18n( "Error during communication with the POP3 server while "
+                                        "trying to list mail: %1", m_sError ) );
         return;
       }
     }
@@ -989,7 +990,8 @@ void POP3Protocol::get(const KUrl & url)
       } else {
         kDebug(7105) << "Could not login. Bad RETR Sorry";
         closeConnection();
-        error(ERR_COULD_NOT_READ, m_sError);
+        error( ERR_SLAVE_DEFINED, i18n( "Error during communication with the POP3 server while "
+                                        "trying to download mail: %1", m_sError ) );
         return;
       }
     }
