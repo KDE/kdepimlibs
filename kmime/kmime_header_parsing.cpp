@@ -1148,6 +1148,15 @@ bool parseAngleAddr( const char* &scursor, const char * const send,
 
 }
 
+static QString stripQuotes( const QString &input )
+{
+  if ( input.startsWith( '"' ) && input.endsWith( '"' ) ) {
+    QString stripped( input.mid( 1, input.size() - 2 ) );
+    return stripped;
+  }
+  else return input;
+}
+
 bool parseMailbox( const char* &scursor, const char * const send,
                    Mailbox &result, bool isCRLF )
 {
@@ -1171,7 +1180,7 @@ bool parseMailbox( const char* &scursor, const char * const send,
         return false;
       }
     }
-    result.setName( maybeDisplayName );
+    result.setName( stripQuotes( maybeDisplayName ) );
     return true;
   }
   scursor = oldscursor;
@@ -1205,7 +1214,7 @@ bool parseMailbox( const char* &scursor, const char * const send,
     }
   }
 
-  result.setName( maybeDisplayName );
+  result.setName( stripQuotes( maybeDisplayName ) );
   result.setAddress( maybeAddrSpec );
   return true;
 }
