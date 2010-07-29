@@ -600,7 +600,7 @@ bool parseGenericQuotedString( const char* &scursor, const char * const send,
       //     For example, older KMail versions.
       if( scursor == send )
         break;
-      
+
       const char *oldscursor = scursor;
       QString tmp;
       QByteArray lang, charset;
@@ -1150,7 +1150,8 @@ bool parseAngleAddr( const char* &scursor, const char * const send,
 
 static QString stripQuotes( const QString &input )
 {
-  if ( input.startsWith( '"' ) && input.endsWith( '"' ) ) {
+  const QLatin1Char quotes( '"' );
+  if ( input.startsWith( quotes ) && input.endsWith( quotes ) ) {
     QString stripped( input.mid( 1, input.size() - 2 ) );
     return stripped;
   }
