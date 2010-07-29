@@ -259,7 +259,7 @@ void LoginJob::handleResponse( const Message &response )
     }
   } else if ( response.content.size() >= 2 ) {
     if ( d->authState == LoginJobPrivate::Authenticate ) {
-      if (!d->answerChallenge(response.content[1].toString())) {
+      if (!d->answerChallenge(QByteArray::fromBase64(response.content[1].toString()))) {
         emitResult(); //error, we're done
       }
     } else if ( response.content[1].toString()=="CAPABILITY" ) {
