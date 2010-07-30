@@ -99,6 +99,7 @@ endif (KDEPIM_NO_KRESOURCES)
 
 if(WINCE)
   set(LIBRARY_TYPE STATIC)
+  add_definitions(-DKDELIBS_STATIC_LIBS)
   add_definitions(-DKDEPIM_STATIC_LIBS)
 else(WINCE)
   set(LIBRARY_TYPE SHARED)
