@@ -26,6 +26,7 @@
 #include <QtCore/QString>
 #include "kmime_export.h"
 #include "kmime_headers.h"
+#include "kmime_content.h"
 
 namespace KMime {
 
@@ -390,6 +391,12 @@ KMIME_EXPORT QString balanceBidiState( const QString &input );
  * Reason: KHTML seems to ignore the PDF character, so adding them doesn't fix things :(
  */
 KMIME_EXPORT QString removeBidiControlChars( const QString &input );
+
+/**
+ * Returns whether or not the given MIME node contains an attachment part. This function will
+ *  recursively parse the MIME tree looking for a suitable attachment and return true if one is found.
+ */
+KMIME_EXPORT bool hasAttachment( Content* content );
 
 } // namespace KMime
 

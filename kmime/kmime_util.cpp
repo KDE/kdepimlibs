@@ -837,4 +837,51 @@ QString removeBidiControlChars( const QString &input )
   return result;
 }
 
+static bool isCryptoPart( Content* content )
+{
+  if( !content->contentType( false ) )
+    return false;
+
+  if( content->contentType()->subType().toLower() == "octet-stream" &&
+      !content->contentDisposition( false ) )
+    return false;
+   
+  return ( content->contentType()->mediaType().toLower() == "application" &&
+         ( content->contentType()->subType().toLower() == "pgp-encrypted" ||
+           content->contentType()->subType().toLower() == "pgp-signature" ||
+           content->contentType()->subType().toLower() == "pkcs7-mime" ||
+           content->contentType()->subType().toLower() == "pkcs7-signature" ||
+           content->contentType()->subType().toLower() == "x-pkcs7-signature" ||
+           ( content->contentType()->subType().toLower() == "octet-stream" &&
+             content->contentDisposition()->filename().toLower() == QLatin1String( "msg.asc" ) ) ) );
+}
+
+bool hasAttachment( Content* content )
+{
+  if( !content )
+    return false;
+
+  bool emptyFilename = true;
+  if( content->contentDisposition( false ) && !content->contentDisposition()->filename().isEmpty() )
+    emptyFilename = false;
+
+  if( emptyFilename && content->contentType( false ) && !content->contentType()->name().isEmpty() )
+    emptyFilename = false;
+
+  // ignore crypto parts
+  if( !emptyFilename && !isCryptoPart( content ) )
+    return true;
+
+  // Ok, content itself is not an attachment. now we deal with multiparts
+  if( content->contentType()->isMultipart() ) {
+    Q_FOREACH( Content* child, content->contents() ) {
+      if( hasAttachment( child ) )
+        return true;
+    }
+  }
+  
+  return false;
+}
+
+
 } // namespace KMime
