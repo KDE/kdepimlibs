@@ -21,10 +21,10 @@
  *   or <a href="kcalutils/html/index.html">kcalutils</a> instead)
  *   An API for the iCalendar and vCalendar formats.</i>
  *
- * - <a href="kcalcore/html/index.html"><b>kcal</b></a>.
+ * - <a href="kcalcore/html/index.html"><b>kcalcore</b></a>.
  *   <i>An API for the iCalendar and vCalendar formats.</i>
  *
- * - <a href="kcalutils/html/index.html"><b>kcal</b></a>.
+ * - <a href="kcalutils/html/index.html"><b>kcalutils</b></a>.
  *   <i>Utility and user interface functions for accessing calendar data
  *   using the <a href="kcalcore/html/index.html">kcalcore</a> API.
  *
@@ -74,7 +74,7 @@
  *   <i>An RSS feed handling library.</i>
  *
  * @b Read about the KDE-PIM architecture by visiting
- * the <a href="http://pim.kde.org/index.php">KDE PIM Home Page</a>.
+ * the <a href="http://techbase.kde.org/Projects/kdepim">KDE PIM Project Page on Techbase</a>.
  *
  * @b Follow the development of these libraries. Please consider joining the
  * <a href="http://mail.kde.org/mailman/listinfo/kde-pim">KDE PIM Mailing List</a> (<a href="http://lists.kde.org/?l=kde-pim">archives</a>).
