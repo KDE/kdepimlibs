@@ -100,6 +100,15 @@ However, if KWallet is not available, the password will be stored in the configu
       <label><!-- TODO --></label>
       <whatsthis>Enter the hostname that should be used when identifying to the server.</whatsthis>
     </entry>
+    <entry name="specifySenderOverwriteAddress" type="Bool">
+      <label><!-- TODO --></label>
+      <whatsthis>Check this option to use a custom sender address when identifying to the mail server. If not checked, the address from the identity is used.</whatsthis>
+      <default>false</default>
+    </entry>
+    <entry name="senderOverwriteAddress" type="String">
+      <label><!-- TODO --></label>
+      <whatsthis>Enter the address that should be used to overwrite the default sender address.</whatsthis>
+    </entry>
   </group>
 
 </kcfg>

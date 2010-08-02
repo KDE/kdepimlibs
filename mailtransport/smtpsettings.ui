@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>380</width>
+    <width>392</width>
     <height>446</height>
    </rect>
   </property>
@@ -65,7 +65,6 @@
             <property name="enabled">
              <bool>false</bool>
             </property>
-            <zorder>kcfg_requiresAuthentication</zorder>
            </widget>
           </item>
           <item row="3" column="0">
@@ -277,57 +276,75 @@
          <property name="title">
           <string>SMTP Settings</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <item>
+         <layout class="QFormLayout" name="formLayout">
+          <item row="0" column="0" colspan="2">
            <widget class="QCheckBox" name="kcfg_specifyHostname">
             <property name="text">
              <string>Sen&amp;d custom hostname to server</string>
             </property>
            </widget>
           </item>
-          <item>
-           <layout class="QFormLayout" name="formLayout_4">
-            <item row="0" column="0">
-             <widget class="QLabel" name="hostnameLabel">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Hos&amp;tname:</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-              </property>
-              <property name="buddy">
-               <cstring>kcfg_localHostname</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="KLineEdit" name="kcfg_localHostname">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
+          <item row="1" column="0">
+           <widget class="QLabel" name="hostnameLabel">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Hos&amp;tname:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="buddy">
+             <cstring>kcfg_localHostname</cstring>
+            </property>
+           </widget>
           </item>
-          <item>
-           <layout class="QFormLayout" name="formLayout_5">
-            <item row="0" column="0">
-             <widget class="QLabel" name="precommandLabel">
-              <property name="text">
-               <string>Precommand:</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="KLineEdit" name="kcfg_precommand"/>
-            </item>
-           </layout>
+          <item row="1" column="1">
+           <widget class="KLineEdit" name="kcfg_localHostname">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QCheckBox" name="kcfg_specifySenderOverwriteAddress">
+            <property name="text">
+             <string>Use custom sender address</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Sender Address:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="KLineEdit" name="kcfg_senderOverwriteAddress">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="precommandLabel">
+            <property name="text">
+             <string>Precommand:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="KLineEdit" name="kcfg_precommand">
+            <zorder>precommandLabel</zorder>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -370,6 +387,11 @@
    <container>1</container>
   </customwidget>
   <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
    <class>KTabWidget</class>
    <extends>QTabWidget</extends>
    <header>ktabwidget.h</header>
@@ -379,11 +401,6 @@
    <class>KIntNumInput</class>
    <extends>QWidget</extends>
    <header>knuminput.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -395,12 +412,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>90</x>
-     <y>334</y>
+     <x>101</x>
+     <y>249</y>
     </hint>
     <hint type="destinationlabel">
-     <x>81</x>
-     <y>357</y>
+     <x>83</x>
+     <y>277</y>
     </hint>
    </hints>
   </connection>
@@ -411,12 +428,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>185</x>
-     <y>327</y>
+     <x>196</x>
+     <y>249</y>
     </hint>
     <hint type="destinationlabel">
-     <x>179</x>
-     <y>360</y>
+     <x>199</x>
+     <y>277</y>
     </hint>
    </hints>
   </connection>
@@ -427,12 +444,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>112</y>
+     <x>372</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>253</x>
-     <y>145</y>
+     <x>372</x>
+     <y>137</y>
     </hint>
    </hints>
   </connection>
@@ -443,12 +460,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>112</y>
+     <x>372</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>126</x>
-     <y>145</y>
+     <x>141</x>
+     <y>137</y>
     </hint>
    </hints>
   </connection>
@@ -459,12 +476,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>112</y>
+     <x>372</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>113</x>
-     <y>180</y>
+     <x>128</x>
+     <y>164</y>
     </hint>
    </hints>
   </connection>
@@ -475,12 +492,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>112</y>
+     <x>372</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>253</x>
-     <y>180</y>
+     <x>372</x>
+     <y>164</y>
     </hint>
    </hints>
   </connection>
@@ -491,12 +508,44 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>112</y>
+     <x>372</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>228</x>
-     <y>229</y>
+     <x>372</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_specifySenderOverwriteAddress</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_2</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>59</x>
+     <y>299</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>78</x>
+     <y>312</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_specifySenderOverwriteAddress</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_senderOverwriteAddress</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>152</x>
+     <y>297</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>169</x>
+     <y>318</y>
     </hint>
    </hints>
   </connection>
