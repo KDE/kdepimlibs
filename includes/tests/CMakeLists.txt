@@ -1,5 +1,7 @@
 if (KDE4_BUILD_TESTS)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
 # clear the file initially
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/all_includes.h "/* all forwarding includes */\n" )
 
@@ -42,7 +44,7 @@ add_includes( KTNEF )
 add_includes( Mailtransport )
 add_includes( Syndication )
 
-add_definitions( -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII -DQT_NO_KEYWORDS )
+add_definitions( -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII -DQT_NO_KEYWORDS -DQT_NO_CAST_FROM_BYTEARRAY )
 kde4_add_executable( headertest header_compile.cpp )
 target_link_libraries( headertest ${QT_QTCORE_LIBRARY} )
 add_dependencies( headertest kabc ) # ensure addressee.h is generated in parallel builds
