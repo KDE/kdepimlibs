@@ -38,6 +38,7 @@
 #include "recurrence.h"
 
 #include <QtCore/QList>
+#include <QtCore/QMetaType>
 
 namespace boost {
   template <typename T> class shared_ptr;
@@ -890,5 +891,8 @@ class KCAL_EXPORT Incidence //krazy:exclude=dpointer since nested class template
 };
 
 }
+
+#define KCAL_INCIDENCE_METATYPE_DEFINED 1
+Q_DECLARE_METATYPE( KCal::Incidence* )
 
 #endif

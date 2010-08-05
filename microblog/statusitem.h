@@ -25,6 +25,7 @@
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QByteArray>
 #include <QtCore/QDateTime>
+#include <QtCore/QMetaType>
 
 namespace Microblog
 {
@@ -99,4 +100,8 @@ private:
 };
 
 }
+
+#define MICROBLOG_STATUSITEM_METATYPE_DEFINED 1
+Q_DECLARE_METATYPE( Microblog::StatusItem )
+
 #endif
