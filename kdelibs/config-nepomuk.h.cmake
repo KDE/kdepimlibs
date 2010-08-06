@@ -1,2 +1,0 @@
-#cmakedefine HAVE_NEPOMUK
-#cmakedefine HAVE_NEPOMUK_WITH_SDO_0_5

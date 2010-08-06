@@ -1,2 +1,0 @@
-#define KDE_DEFAULT_HOME "${KDE_DEFAULT_HOME}"
-
