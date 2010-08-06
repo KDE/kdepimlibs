@@ -1,0 +1,243 @@
+<ui version="4.0" >
+ <class>KNotifyConfigActionsWidgetBase</class>
+ <widget class="QWidget" name="KNotifyConfigActionsWidgetBase" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>433</width>
+    <height>190</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" >
+   <item row="0" column="0" >
+    <widget class="QCheckBox" name="Sound_check" >
+     <property name="text" >
+      <string>Play a &amp;sound</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" >
+    <widget class="QToolButton" name="Sound_play" >
+     <property name="enabled" >
+      <bool>false</bool>
+     </property>
+     <property name="text" >
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2" colspan="2" >
+    <widget class="KUrlRequester" name="Sound_select" >
+     <property name="enabled" >
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip" >
+      <string>Select the sound to play</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="4" >
+    <widget class="QCheckBox" name="Popup_check" >
+     <property name="text" >
+      <string>Show a message in a &amp;popup</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" >
+    <widget class="QCheckBox" name="Logfile_check" >
+     <property name="text" >
+      <string>Log to a file</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="3" >
+    <widget class="KUrlRequester" name="Logfile_select" >
+     <property name="enabled" >
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="4" >
+    <widget class="QCheckBox" name="Taskbar_check" >
+     <property name="text" >
+      <string>Mark &amp;taskbar entry</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" >
+    <widget class="QCheckBox" name="Execute_check" >
+     <property name="text" >
+      <string>Run &amp;command</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="3" >
+    <widget class="KUrlRequester" name="Execute_select" >
+     <property name="enabled" >
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip" >
+      <string>Select the command to run</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" >
+    <widget class="QCheckBox" name="KTTS_check" >
+     <property name="text" >
+      <string>Sp&amp;eech</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1" colspan="2" >
+    <widget class="KComboBox" name="KTTS_combo" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis" >
+      <string>&lt;qt>Specifies how KTTS should speak the event when received.  If you select "Speak custom text", enter the text in the box.  You may use the following substitution strings in the text:&lt;dl>&lt;dt>%e&lt;/dt>&lt;dd>Name of the event&lt;/dd>&lt;dt>%a&lt;/dt>&lt;dd>Application that sent the event&lt;/dd>&lt;dt>%m&lt;/dt>&lt;dd>The message sent by the application&lt;/dd>&lt;/dl>&lt;/qt></string>
+     </property>
+     <item>
+      <property name="text" >
+       <string>Speak Event Message</string>
+      </property>
+     </item>
+     <item>
+      <property name="text" >
+       <string>Speak Event Name</string>
+      </property>
+     </item>
+     <item>
+      <property name="text" >
+       <string>Speak Custom Text</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="5" column="3" >
+    <widget class="KLineEdit" name="KTTS_select" >
+     <property name="whatsThis" >
+      <string>&lt;qt>Specifies how KTTS should speak the event when received.  If you select "Speak custom text", enter the text in the box.  You may use the following substitution strings in the text:&lt;dl>&lt;dt>%e&lt;/dt>&lt;dd>Name of the event&lt;/dd>&lt;dt>%a&lt;/dt>&lt;dd>Application that sent the event&lt;/dd>&lt;dt>%m&lt;/dt>&lt;dd>The message sent by the application&lt;/dd>&lt;/dl>&lt;/qt></string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KUrlRequester</class>
+   <extends>QFrame</extends>
+   <header>kurlrequester.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>Sound_check</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Sound_play</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>59</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>118</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Sound_check</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Sound_select</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>18</x>
+     <y>16</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>254</x>
+     <y>8</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Logfile_check</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Logfile_select</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>48</x>
+     <y>74</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>238</x>
+     <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Execute_check</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Execute_select</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>92</x>
+     <y>138</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>244</x>
+     <y>127</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>KTTS_check</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>KTTS_combo</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>48</x>
+     <y>169</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>131</x>
+     <y>169</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

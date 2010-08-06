@@ -1,0 +1,240 @@
+In this file:
+
+* About kdelibs
+* Licensing
+* Common Mistakes
+* Upgrading
+* Compile Problems
+* More Info
+
+
+About kdelibs
+-------------
+This is version 4.5 of the KDE libraries.
+
+This package includes libraries that are central to the development and
+execution of a KDE program, as well as internationalization files for these
+libraries, misc HTML documentation, theme modules, and regression tests.
+
+Here is an alphabetical list of all individual libraries:
+
+* dnssd
+    Interface to the DNS-SD (Zeroconf) support.
+
+* interfaces
+    kparts interface for text editors, mediaplayer and scripting.
+
+* kate
+    KPart for 'kate', the KDE advanced text editor.
+
+* kde3support
+    This contains libraries that were part of KDE3, but have been replaced for KDE4
+
+* kdecore
+    This is the core collection of KDE stuff. Non GUI classes reside here.
+
+* kdesu
+    Library for password entering and handling
+
+* kdeui
+    The main collection of misc. user interface classes (widgets).
+
+* kdewidgets
+    For developers: KDE's custom widgets for Qt Designer.
+
+* kfile
+    File management widgets and dialogs.
+
+* khtml
+    The next generation HTML rendering widget designed for Konqueror.  This
+    supports HTML 4, CSS, and a variety of other web related standards.
+
+* kimgio
+    An all purpose extension to the qimgio class that supports various
+    image formats.
+
+* kio
+    Classes that fetch and decode URLs are contained here. This library also
+    contains "ksycoca", the system configure cache containing services,
+    applications, servicetypes and mimetypes.
+
+* kjs
+    Implementation of ECMAScript (aka JavaScript).
+
+* kjsembed
+    A binding of the ECMAScript language to interface with KDE code.
+
+* knewstuff
+    Allows applications to easily download data from the Internet to add
+    new information to the program. e.g. wallpapers, translation packs, etc.
+
+* knotify
+    Handles user notifications, including sounds, logging to files, etc.
+
+* kparts
+    KDE component model.
+
+* kpty
+    Abstraction layer for virtual consoles.
+
+* kross
+    Scripting host for KDE applications.
+
+* kutils
+    Utility library for printing, chatting and more.
+
+* nepomuk
+    Semantic information retrieval and tagging.
+
+* plasma
+    Framework for the KDE 4 desktop shell and its widgets.
+
+* security
+    Certificate management and cryptography settings.
+
+* solid
+    Hardware detection.
+
+* sonnet
+    Tools for natural language processing, including spell and grammar check.
+    Includes gui widgets.
+
+* threadweaver
+    Job-based threading library.
+
+And here is an alphabetical list of all further parts of kdelibs:
+
+* cmake
+    Build system used throughout KDE.
+
+* doc
+    Documentation in docbook format.
+
+* includes
+    Qt-style include file wrappers.
+
+* kconf_update
+    Auto-Updater for config files.
+
+* kded
+    The KDE daemon checks for newly installed software, update files
+    or hostname changes and takes according actions.
+
+* kdoctools
+    Contains mostly stuff convert XML docbook files via XSLT into
+    human readable stuff.
+
+* kioslave
+    I/O subprocesses to handle files, ftp, http, gzip and bzip2 streams.
+
+* kinit
+    Process launcher (kdeinit), used for fast KDE startup and to launch kioslaves.
+
+* licenses
+    Contains texts of all used licenses.
+
+* mimetypes
+    Database of mime types.
+
+Licensing
+---------
+The libraries themselves have been covered (since Saturday, June 21st, 1997)
+by the GNU Library General Public License (LGPL). Any other programs (such
+as the examples) are covered by the GNU General Public License (GPL). All
+the gory details for the LGPL reside in COPYING.LIB, and for the GPL reside
+in COPYING.
+
+Various parts are also covered under a BSD style license, detailed in
+licenses/BSD. Currently, code covered under such license is copyrighted by
+Theo de Raadt.
+
+When in doubt, check the individual file, they should all have license
+headings and other identifying marks.
+
+
+Common Mistakes
+---------------
+If cmake claims Qt cannot be found, look at http://qt.nokia.com/
+to get a copy of Qt, version 4.6 or newer. If you have peeked there
+already, grab the SVN module qt-copy from anonsvn.kde.org, or a snapshot
+thereof.  Alternatively the svn module qt-copy from svn.kde.org can also be
+used.
+
+If you know you have the latest Qt 4,  another reason it may not be able to
+'find' QT is because it's finding an older version of QT 4.  Make sure that
+your PATH is set appropriately  to find the qmake from the latest Qt 4, and
+LD_LIBRARY_PATH is set to include $QTDIR/lib.
+
+Debugging
+---------
+You can set the CMAKE_BUILD_TYPE option with the cmake, if you want to have
+debug code in your KDE libs. If you have the space and can stand code that's
+somewhat slower, this is worth it. The extra information really
+helps debugging and thus bugfixing.
+
+Available options as of CMake 2.4.5:
+ Release:        Compile with no debugging information, optimization enabled.
+ Debug:          Minimal optimization, with debugging information.
+ RelWithDebInfo: Normal optimization, with debugging information.
+ MinSizeRel:     No debugging information, with optimization for smallest size.
+
+e.g.: "cmake -DCMAKE_BUILD_TYPE=Debug" when running cmake.
+
+See also the file DEBUG.
+
+
+Upgrading
+---------
+KDE 4 applications will try to migrate settings from your KDE 3 installation
+where possible.
+
+
+Compile Problems
+----------------
+Often, KDE compile failures are not KDE's fault, but the fault of the
+compiler or the distribution used. For that reason, please have a look at
+http://techbase.kde.org/Getting_Started/Build/FAQ for known issues in certain
+OS environments before reporting bugs or going mad :).
+
+KDE 4 requires gcc 3.3 or better as the compiler.
+
+How to report
+-------------
+Reporting bugs is an art. Why?  Because bug reports can help and hinder.
+
+They hinder if the developers are just buried in an avalanche of bug reports.
+They spend hours figuring out which bug reports are valid and which aren't,
+which bug reports are due to bugs or due to installation problems.
+
+They can be of tremendous help to notify developers on problems in areas that
+they normally don't have access (e.g. KDE on AIX) to.
+
+So, here are some tips on bug reporting:
+
+* Make sure your bug is due to KDE ... and not due to a packaging problem of
+  your OS distributor. For example, most "I can not install the XYZ.rpm"
+  problem are due to packaging issues. Refer with such questions to your
+  OS Distributor and his appropriate mailing list or bug reporting tool.
+
+* The chance is high that your bug has already been dealt with ... so look
+  if there is a newer version of kdelibs available. Reporting bugs for
+  older, deprecated versions usually don't get that much attention :-)
+
+* Also the chance is high that another one experienced your problem. The
+  bug report wizard at http://bugs.kde.org/ will help you to find out if your
+  problem has already been reported.
+
+* KDE Applications come with a Report Bug option in the Help menu that will
+  fill out many of the forms on the bug reporter tool at http://bugs.kde.org/
+  for you.
+
+* The best bug report for a project based on voluntary work is of course one
+  that comes with a patch that solves the problem. :-)
+
+
+More info
+---------
+http://www.kde.org/ is a good starting point for info on KDE. If you are a
+developer, you may also point your browser to http://techbase.kde.org/.
+There is a plethora of mailing lists available, you can gain an overview
+quickly by looking at http://lists.kde.org/.

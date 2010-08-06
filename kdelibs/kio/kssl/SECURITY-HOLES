@@ -1,0 +1,17 @@
+List of known security holes in KDE's SSL implementation and HTTPS support in
+Konqueror.
+-----------------------------------------------------------------------------
+
+
+1)  Caching should be done on a per-host basis, not per-certificate.
+
+2)  Autocompletion in form fields in HTTPS mode will result in various fields
+such as pin numbers and possibly credit cards or other sensitive information
+being silently written to disk in some cases.
+
+
+3)  Certificate revocation lists (CRLs) are not implemented.  This should be
+done after 2.2.
+
+
+

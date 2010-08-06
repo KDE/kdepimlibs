@@ -1,0 +1,150 @@
+This file is meant to be a place to track of medium to large-scale API changes
+that we would like to make for the next binary incompatible release.
+
+- Check for forked classes in kde pim and other modules
+  (Danimo)
+
+- Make KSystemTray add its own reference to KApp, so tray apps that adhere to the
+  style guide can safely close their main window without having to worry about
+  the app quitting instead.
+  (Martijn)
+
+- Sort out reference counting of applications and KMainWindows: Add a setRefCountEnabled()
+  function to KApplication; deref()ing the last reference should only quit the application
+  if reference counts are enabled, and the reference count should be disabled by default
+  so apps that don't use a KMainWindow mostly continue to work. Make the KMainWindow
+  constructor call setRefCountEnabled(true), and make each KMainWindow hold its own
+  reference to the application. The KMainWindow should drop its app reference on hide, and
+  regain it on show.
+
+  Make KSysTray also hold a reference to the app. Then apps that use more than one main
+  window and the tray (like KSIrc and Kopete) will quit at the right time without nasty
+  hacks.
+  (Richard Smith)
+
+- Make some long-lasting operations threaded. There are some operations in KDE that
+  take too long on at least ~500MHz hardware to be done using event loops. Examples
+  are the use of KLibLoader to dlopen plugins and KRun to fire up other processes.
+  Konqueror and KMail tend to stall occasionally too, but that's harder to refactor
+  because the bulk of the work there is X11-related.
+  (Martijn)
+
+- Make it possible to use SSL-ed sockets outside KIO. KSSL isn't very suitable for
+  reuse, and the certificate dialogs are not even available in public API at all,
+  leading e.g. to Kopete IRC duplicating a lot of stuff and all KDE Jabber clients
+  based on libpsi (PSI, Light Hawk and Kopete) using homebrewn solutions.  [How
+  does this have to do with changing KIO?  It's just a request to have that
+  code in a different form....]
+  (Martijn)
+
+- Solve need for casting when using bitfield enums (e.g. K3Process::Communication)
+  by the use of Q_DECLARE_FLAGS/Q_DECLARE_OPERATORS_FOR_FLAGS
+  (Simon)
+
+- KParts: remove plugin loading from setInstance, add an explicit loadPlugins() call
+  in all parts that should load plugins (at the end of the derived-part ctor).
+  (David)
+
+- KParts: come up with better names for ReadOnlyPart and ReadWritePart, ReadOnly
+  is a minimum requirement, but this does not become clear until you dig deeper
+  into the class. With QTextEdit and QTextBrowser for instance, the inheritance is
+  the other way around. E.g.: ReaderPart? ViewerPart?
+  (David)
+
+- Change classes that store bool data using strings ("true"/"false") to use bool 
+  calls (readBoolEntry()).  Although not technicaly a binary incompatiblity... 
+  just something to bring up for possible change (for the better)
+
+  Use KConfigXT instead! /FransE
+
+- Is it really necessary to bother people using the KCM APIs with withFallback? I have
+  never heard of it failing and when would you not like to have that fallback? I think
+  a default of 'true' would be fine(and remove the argument in the APIs).
+  (Frans)
+
+- Do we need to have factory arguments in the KCM API? (who would use it anyway?)
+  (Frans)
+
+- The config options in kdeglobals needs to be cleaned up a little. Perhaps I'm being picky..
+	* They should be named properly, for example "enableIcons" instead of "EnableIcons". Or atleast
+		settle on one thing.
+	* AFAICT it would be the right thing if KWin had its own rc file instead of having its "WM" 
+		section in kdeglobals.
+	* Shouldn't Sonnet have its own rc file instead of kdeglobals?
+	* Should we allow spaces in option names?
+	* Some option names are too short for being understandable. fixed->fixedFont; font->systemWideFont
+	* Perhaps an own font section?
+  (Frans)
+
+- Make functions in KHelpMenu virtual so they can be overridden (ex: to provide
+  an alternative help->contents action)
+  (George Staikos)
+
+- Make sure all GUI classes adopt well to palette changes.
+  (Danimo)
+
+- K3ListView lacked a setDnDMode to choose between "dnd to move items" (e.g. keditbookmarks)
+  and "dnd onto items" (e.g. kmail). Check how to do this with QListView/QTreeView...
+  (David)
+
+- Add the concept of a session to KIO, in particular for KHTML so that it can
+  have all of its jobs associated in some way (a unique key of sorts).  Will
+  make SSL much easier to implement and allow removal of many hacks, mostly
+  involving metadata.
+  (George Staikos)
+
+- Make KLibLoader default to RTLD_GLOBAL and make necessary changes to make KDE namespace clean.
+  (Coolo)
+  Maybe just make sure we don't emit multiple copies of per-class data (vtable,RTTI), then
+  RTLD_LOCAL should do as well, and it should(?) be simpler this way.
+  (Lubos)
+
+- Many instances of creating containers on the heap instead of stack, can be replaced? (Caleb Tennis) [where?]
+
+- Add KAssistant - a new KDE standards-compliant wizard, (Jaroslaw Staniek (TODO/KAssistant|Details))
+  Qt4 has no QWizard (only Q3Wizard left). Add a new KDE standards-compliant wizard with 
+  a bit more powerful API and features like "Steps list" pane on the left hand of the wizard
+  (user can click any step if developer allowed such action). Example from OO.org:
+  http://www.openoffice.org/dev_docs/features/2.0/images/mail_merge.jpg
+  We could add more consistency (using themes, guidelines) in this area, 
+  as in KDE3 some apps implement wizard's features like left-hand funky pictures 
+  or help text again and again
+  (see http://www.kolab.org/doc/kde-client-manual-0.9cvs20030801-html/c43.html).
+  Other ideas: 
+  * use nonintrusive "watermark" effect on the 1st or all pages 
+  (http://images.apple.com/macosx/features/setup/images/index_setup20050412.jpg), 
+  * allow to disable steps on the left-side list as an answer to calling setAppropriate().
+  * QWizard's API is mostly ok for the new class, just avoid requiring to pass a pointer 
+  to page widget (as in setAppropriate()) but allow to pass QString names or IDs instead.
+  (Jaroslaw Staniek)
+
+- K3IconView/K3ListView equivalents based on Qt4 interview. As discussed on kde-core-devel,
+  this probably means a custom QItemDelegate instead, to handle single-click/double-click,
+  execute-mode/select-mode (cf K3IconView), number of lines used for wrapping, "held" signal.
+  In short, rewriting k3iconview features to be based on interview.
+  For K3ListView we need to check if QTreeView supports both modes of drag-n-drop (dropping
+  onto items, and dropping between items like in the bookmark editor).
+  (David, Till etc.)
+
+- CMake:
+   * install /share/apps/ksgmltools2/customization/entities/kde-standard-accels.entities
+   * win32: fix path delimiter problem generated *.bat wrapper (using ' ' instead of ';')
+
+- It looks like most of the functions KStringHandler can be removed.  At least, insword, setword, 
+  remrange, and remword could be removed [DONE] .  Those four don't seem to be used anywhere inside of KDE.  Other
+  functions like capitalize and reverse seem to be sparsely used. 
+  (Caleb)
+
+- Prevent re-entering event loop in kded to avoid reentrancy problems like with kwallet in KDE3 (Lubos).
+
+- Customizable KToolTip/KWhatsThis widgets (Jaroslaw Staniek), 
+  now KWhatsThis is a part of KDE GSoC "Implement OpenUsability's Context Sensitive 
+  Help Redesign" project, by Joshua Keel, mentored by Ellen Reitmayr
+  * initial notes: http://wiki.kde.org/tiki-index.php?page=kdelibs4+TODO%2FKToolTip
+  * design page: http://wiki.kde.org/tiki-index.php?page=KWhatsThis
+
+- Additional (automatic) shortcuts for KMessageBox (Jaroslaw Staniek)
+  See http://lists.kde.org/?l=kde-usability&m=109688936328920&w=2
+
+- Add KUndoRedoAction which can display a popup with action lists, and use it in
+  KUndoStack::createRedoAction() and KUndoStack::createUndoAction(). (Jaroslaw Staniek)

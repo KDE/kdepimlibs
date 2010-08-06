@@ -1,0 +1,13 @@
+ClassName=Configuration
+File=kcm_kdnssd.kcfg
+GlobalEnums=false
+#KDE5: inherit KCoreConfigSkeleton
+Inherits=KConfigSkeleton
+ItemAccessors=false
+MemberVariables=private
+Mutators=true
+NameSpace=DNSSD
+SetUserTexts=false
+Singleton=true
+Visibility=KDNSSD_EXPORT
+IncludeFiles=dnssd/dnssd_export.h

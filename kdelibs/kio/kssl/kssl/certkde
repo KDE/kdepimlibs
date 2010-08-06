@@ -1,0 +1,75 @@
+:
+eval 'exec perl -S $0 ${1+"$@"}'
+    if $running_under_some_shell;
+
+##
+##   Generate the KDE CA list KConfig file
+##
+
+%CERT = ();
+open(IDX, "<cert.index") || die;
+while (<IDX>) {
+    if (m|^(\S+):\s+(.+)\s*$|) {
+        $CERT{$2} = $1;
+    }
+}
+close(IDX);
+
+$date = `date`;
+$date =~ s|\n$||;
+open(BDL, ">ksslcalist") || die;
+foreach $cert (sort(keys(%CERT))) {
+    $file = $CERT{$cert};
+	print STDERR "Bundling: $cert ($file)\n";
+    $pem = `openssl x509 -in $file -inform DER -outform PEM`;
+    $pem =~ s|[\n\r]||g;
+    $pem =~ s|-----BEGIN CERTIFICATE-----||;
+    $pem =~ s|-----END CERTIFICATE-----||;
+    $subj = `openssl x509 -in $file -inform DER -noout -subject`;
+    $_ = $subj;
+    # We don't trust this anymore, so we keep our own copy
+    if ( /TrustCenter/ ) {
+        continue;
+    }
+    if ( /[Oo]bject/ || /[Cc]ode/ ) {
+        $codeSubj = 1;
+    } else {
+        $codeSubj = 0;
+    }
+    $subj =~ s|\n$||;
+    $subj =~ s/^subject= //;
+    $purpose = `openssl x509 -in $file -inform DER -noout -purpose`;
+    print BDL "\n";
+    print BDL "[$subj]\n";
+    print BDL "x509=$pem\n";
+    #
+    $_ = $purpose;
+    if ( /server CA : Yes\n/ || /client CA : Yes\n/ || (/Any Purpose CA : Yes\n/ && (/client : Yes\n/ || /server : Yes\n/ ))) {
+       $v_site="true";
+    } else {
+       $v_site="false";
+    }
+    #
+    if ( /MIME signing CA : Yes\n/ || /MIME encryption CA : Yes\n/ ) {
+       $v_email="true";
+    } else {
+       $v_email="false";
+    }
+    #
+    if ( /Any Purpose CA : Yes\n/ && $codeSubj == 1) {
+       $v_code="true";
+    } else {
+       $v_code="false";
+    }
+
+    # are some certificates really broken?
+    if ($v_code == "false" && $v_email == "false") {
+        $v_site = "true";
+    }
+
+    print BDL "site=$v_site\n";
+    print BDL "email=$v_email\n";
+    print BDL "code=$v_code\n";
+}
+close(BDL);
+

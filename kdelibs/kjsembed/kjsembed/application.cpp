@@ -1,0 +1,76 @@
+/* This file is part of the KDE libraries
+    Copyright (C) 2005, 2006 Ian Reinhart Geiser <geiseri@kde.org>
+    Copyright (C) 2005, 2006 Matt Broadstone <mbroadst@gmail.com>
+    Copyright (C) 2005, 2006 Richard J. Moore <rich@kde.org>
+    Copyright (C) 2005, 2006 Erik L. Bunce <kde@bunce.us>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
+*/
+#include "application.h"
+
+#include <QtCore/QDebug>
+#include <QtGui/QApplication>
+#include <QtCore/QStringList>
+using namespace KJSEmbed;
+
+namespace CoreApplicationNS
+{
+START_STATIC_OBJECT_METHOD( callExit )
+    int exitCode = KJSEmbed::extractInt( exec, args, 0 );
+    QCoreApplication::exit(exitCode);
+END_STATIC_OBJECT_METHOD
+}
+
+START_STATIC_METHOD_LUT( CoreApplicationBinding )
+    {"exit", 0, KJS::DontDelete|KJS::ReadOnly, &CoreApplicationNS::callExit}
+END_METHOD_LUT
+
+NO_ENUMS( CoreApplicationBinding )
+NO_METHODS( CoreApplicationBinding )
+
+KJSO_START_BINDING_CTOR( CoreApplicationBinding, QCoreApplication, QObjectBinding )
+    setOwnership(CPPOwned);
+KJSO_END_BINDING_CTOR
+KJSO_QOBJECT_BIND( CoreApplicationBinding, QCoreApplication )
+
+KJSO_START_CTOR( CoreApplicationBinding, QCoreApplication, 0)
+    return new KJSEmbed::CoreApplicationBinding( exec, QCoreApplication::instance () );
+KJSO_END_CTOR
+
+namespace ApplicationNS
+{
+START_STATIC_OBJECT_METHOD( callBeep )
+    QApplication::beep();
+END_STATIC_OBJECT_METHOD
+}
+
+START_STATIC_METHOD_LUT( ApplicationBinding )
+    {"beep", 0, KJS::DontDelete|KJS::ReadOnly, &ApplicationNS::callBeep}
+END_METHOD_LUT
+
+NO_ENUMS( ApplicationBinding )
+NO_METHODS( ApplicationBinding )
+
+KJSO_START_BINDING_CTOR( ApplicationBinding, QApplication, CoreApplicationBinding )
+    setOwnership(CPPOwned);
+KJSO_END_BINDING_CTOR
+KJSO_QOBJECT_BIND( ApplicationBinding, QApplication )
+
+KJSO_START_CTOR( ApplicationBinding, QApplication, 0)
+    return new KJSEmbed::ApplicationBinding( exec, ::qobject_cast<QApplication*>(QCoreApplication::instance() ) );
+KJSO_END_CTOR
+
+//kate: indent-spaces on; indent-width 4; replace-tabs on; indent-mode cstyle;

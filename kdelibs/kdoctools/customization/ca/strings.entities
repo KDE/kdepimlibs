@@ -1,0 +1,23 @@
+<!-- These entities should be translated, but NOT CHANGED, NOR EXTENDED.
+     For language-specific extensions, use user.entities.
+     Translate everything between quotes, except names of general
+     entities (&...;). -->
+
+<!ENTITY kappname "aquesta aplicació">
+<!-- Entities to fill in slots in docbook version of FDL notice.
+     The default values of the parameter entities is IGNORE. -->
+<![%FDLIS;[
+<!ENTITY FDLISTitles "EL SEU LLISTAT DE TÍTOLS"><!-- keep capitals -->
+<!ENTITY FDLInvariantSections "les seccions invariants estan &FDLISTitles;">
+ ]]>
+<!ENTITY FDLInvariantSections "seccions no variants">
+<![%FDLFCT;[
+<!ENTITY FDLFCTTitles "LLISTAT"><!-- keep capitals -->
+<!ENTITY FDLFrontCoverText "el text de la portada està &FDLFCTTitles;">
+ ]]>
+<!ENTITY FDLFrontCoverText "sense text a la portada">
+<![%FDLBCT;[
+<!ENTITY FDLBCTTitles "ELS SEUS TÍTOLS LLISTATS"><!-- keep capitals -->
+<!ENTITY FDLBackCoverText "el text de la contraportada està &FDLBCTTitles;">
+ ]]>
+<!ENTITY FDLBackCoverText "sense text a la contraportada">

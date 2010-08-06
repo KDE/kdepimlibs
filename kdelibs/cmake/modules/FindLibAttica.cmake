@@ -1,0 +1,62 @@
+# Try to find the Attica library
+# Once done this will define
+#
+#   LIBATTICA_FOUND          Indicates that Attica was found
+#   LIBATTICA_LIBRARIES      Libraries needed to use Attica
+#   LIBATTICA_LIBRARY_DIRS   Paths needed for linking against Attica
+#   LIBATTICA_INCLUDE_DIR    Path needed for finding Attica include files
+#
+# Copyright (c) 2009 Frederik Gladhorn <gladhorn@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+
+IF (NOT LIBATTICA_MIN_VERSION)
+  SET(LIBATTICA_MIN_VERSION "0.1.0")
+ENDIF(NOT LIBATTICA_MIN_VERSION)
+
+IF (NOT WIN32)
+   # use pkg-config to get the directories and then use these values
+   # in the FIND_PATH() and FIND_LIBRARY() calls
+   FIND_PACKAGE(PkgConfig)
+   PKG_CHECK_MODULES(PC_LIBATTICA QUIET libattica)
+   SET(LIBATTICA_DEFINITIONS ${PC_ATTICA_CFLAGS_OTHER})
+ENDIF (NOT WIN32)
+
+FIND_PATH(LIBATTICA_INCLUDE_DIR attica/provider.h
+   HINTS
+   ${PC_LIBATTICA_INCLUDEDIR}
+   ${PC_LIBATTICA_INCLUDE_DIRS}
+   PATH_SUFFIXES attica
+   )
+
+SET(LIBATTICA_VERSION_OK TRUE)
+IF(LIBATTICA_INCLUDE_DIR)
+  FILE(READ ${LIBATTICA_INCLUDE_DIR}/attica/version.h LIBATTICA_VERSION_CONTENT)
+  STRING (REGEX MATCH "LIBATTICA_VERSION_STRING \".*\"\n" LIBATTICA_VERSION_MATCH "${LIBATTICA_VERSION_CONTENT}")
+  IF(LIBATTICA_VERSION_MATCH)
+    STRING(REGEX REPLACE "LIBATTICA_VERSION_STRING \"(.*)\"\n" "\\1" LIBATTICA_VERSION ${LIBATTICA_VERSION_MATCH})
+    IF(LIBATTICA_VERSION STRLESS "${LIBATTICA_MIN_VERSION}")
+      SET(LIBATTICA_VERSION_OK FALSE)
+      IF(LibAttica_FIND_REQUIRED)
+        MESSAGE(FATAL_ERROR "LibAttica version ${LIBATTICA_VERSION} is too old. Please install ${LIBATTICA_MIN_VERSION} or newer.")
+      ELSE(LibAttica_FIND_REQUIRED)
+        MESSAGE(STATUS "LibAttica version ${LIBATTICA_VERSION} is too old. Please install ${LIBATTICA_MIN_VERSION} or newer.")
+      ENDIF(LibAttica_FIND_REQUIRED)
+    ENDIF(LIBATTICA_VERSION STRLESS "${LIBATTICA_MIN_VERSION}")
+  ENDIF(LIBATTICA_VERSION_MATCH)
+ENDIF(LIBATTICA_INCLUDE_DIR)
+
+
+FIND_LIBRARY(LIBATTICA_LIBRARIES NAMES attica libattica
+   HINTS
+   ${PC_LIBATTICA_LIBDIR}
+   ${PC_LIBATTICA_LIBRARY_DIRS}
+   )
+
+INCLUDE(FindPackageHandleStandardArgs)
+# handle the QUIETLY and REQUIRED arguments and set LIBATTICA_FOUND to TRUE if
+# all listed variables are TRUE
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(LibAttica  DEFAULT_MSG  LIBATTICA_LIBRARIES LIBATTICA_INCLUDE_DIR LIBATTICA_VERSION_OK)
+
+MARK_AS_ADVANCED(LIBATTICA_INCLUDE_DIR LIBATTICA_LIBRARIES)
+
