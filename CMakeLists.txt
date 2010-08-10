@@ -48,6 +48,14 @@ else (WIN32)
 endif (WIN32)
 macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org" TRUE ${Boost_MINIMUM_VERSION} "The Boost libraries boost and boost-graph are required by several critical KDEPIM apps.")
 
+############### Desktop vs. Mobile options ##############
+
+option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
+if (KDEPIM_MOBILE_UI)
+  macro_log_feature(QT_QTDECLARATIVE_FOUND "QtDeclarative" "Qt Declarative (QML) module" "http://qt.nokia.com" TRUE "4.7" "Required for building mobile UI")
+  add_definitions( -DKDEPIM_MOBILE_UI )
+endif (KDEPIM_MOBILE_UI)
+
 #FindGpgme.cmake already handles the log message but we must ensure it is required.
 find_package(Gpgme REQUIRED)
 # configure macros
