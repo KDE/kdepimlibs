@@ -50,9 +50,14 @@ macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.or
 
 ############### Desktop vs. Mobile options ##############
 
-option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
+if (KDE_PLATFORM_PROFILE STREQUAL "Mobile")
+  set(_default_mobile_ui TRUE)
+else ()
+  set(_default_mobile_ui FALSE)
+endif ()
+
+option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" ${_default_mobile_ui})
 if (KDEPIM_MOBILE_UI)
-  macro_log_feature(QT_QTDECLARATIVE_FOUND "QtDeclarative" "Qt Declarative (QML) module" "http://qt.nokia.com" TRUE "4.7" "Required for building mobile UI")
   add_definitions( -DKDEPIM_MOBILE_UI )
 endif (KDEPIM_MOBILE_UI)
 
