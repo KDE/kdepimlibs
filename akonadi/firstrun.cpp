@@ -38,6 +38,8 @@
 #include <QtCore/QMetaMethod>
 #include <QtCore/QMetaObject>
 
+static char FIRSTRUN_DBUSLOCK[] = "org.kde.Akonadi.Firstrun.lock";
+
 using namespace Akonadi;
 
 Firstrun::Firstrun( QObject *parent )
@@ -46,13 +48,20 @@ Firstrun::Firstrun( QObject *parent )
     mCurrentDefault( 0 ),
     mProcess( 0 )
 {
-  findPendingDefaults();
-  kDebug() << mPendingDefaults;
-  setupNext();
+  kDebug();
+  if ( QDBusConnection::sessionBus().registerService( QLatin1String( FIRSTRUN_DBUSLOCK ) ) ) {
+    findPendingDefaults();
+    kDebug() << mPendingDefaults;
+    setupNext();
+  } else {
+    kDebug() << "D-Bus lock found, so someone else does the work for us already.";
+    deleteLater();
+  }
 }
 
 Firstrun::~Firstrun()
 {
+  QDBusConnection::sessionBus().unregisterService( QLatin1String( FIRSTRUN_DBUSLOCK ) );
   delete mConfig;
   kDebug() << "done";
 }
@@ -77,6 +86,7 @@ void Firstrun::findPendingDefaults()
   }
 }
 
+#ifndef KDEPIM_NO_KRESOURCES
 static QString resourceTypeForMimetype( const QStringList &mimeTypes )
 {
   if ( mimeTypes.contains( QLatin1String( "text/directory" ) ) )
@@ -135,6 +145,7 @@ void Firstrun::migrationFinished( int exitCode )
 
   setupNext();
 }
+#endif
 
 
 void Firstrun::setupNext()
@@ -157,6 +168,7 @@ void Firstrun::setupNext()
     return;
   }
 
+#ifndef KDEPIM_NO_KRESOURCES
   // KDE5: remove me
   // check if there is a kresource setup for this type already
   const QString kresType = resourceTypeForMimetype( type.mimeTypes() );
@@ -183,6 +195,7 @@ void Firstrun::setupNext()
       return;
     }
   }
+#endif
 
   AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( instanceCreated( KJob* ) ) );
