@@ -513,6 +513,7 @@ void Content::addContent( Content *c, bool prepend )
         // Add to new content.
         main->setHeader( *it );
         // Remove from this content.
+        delete (*it);
         it = h_eaders.erase( it );
       } else {
         ++it;
@@ -575,6 +576,7 @@ void Content::removeContent( Content *c, bool del )
     foreach( Headers::Base *h, main->h_eaders ) {
       setHeader( h ); // Will remove the old one if present.
     }
+    qDeleteAll( main->h_eaders );
     main->h_eaders.clear();
 
     // Move the body.
