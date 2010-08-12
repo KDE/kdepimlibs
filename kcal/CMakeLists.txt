@@ -60,7 +60,6 @@ set(kcal_LIB_SRCS ${libversit_SRCS}
   person.cpp
   period.cpp
   duration.cpp
-  dndfactory.cpp
   calstorage.cpp
   filestorage.cpp
   compat.cpp
@@ -68,12 +67,20 @@ set(kcal_LIB_SRCS ${libversit_SRCS}
   htmlexport.cpp
   calendarnull.cpp
   freebusyurlstore.cpp
-  confirmsavedialog.cpp
   icaltimezones.cpp
   kresult.cpp
   assignmentvisitor.cpp
   comparisonvisitor.cpp
 )
+
+if (NOT WINCE)
+  set(kcal_LIB_SRCS ${kcal_LIB_SRCS}
+    dndfactory.cpp
+    #disabled due to no QTreeWidget
+    confirmsavedialog.cpp
+  )
+endif (NOT WINCE)
+
 
 if (NOT KDEPIM_NO_KRESOURCES)
   set(kcal_LIB_SRCS ${kcal_LIB_SRCS}

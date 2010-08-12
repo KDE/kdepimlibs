@@ -17,14 +17,7 @@ set(mailtransport_lib_srcs
   transporttype.cpp
 
   transportcombobox.cpp
-  transportlistview.cpp
-  transportmanagementwidget.cpp
-
-  addtransportdialog.cpp
-  transportconfigdialog.cpp
   transportconfigwidget.cpp
-  sendmailconfigwidget.cpp
-  smtpconfigwidget.cpp
 
   filteractionjob.cpp
   transportjob.cpp
@@ -46,8 +39,19 @@ set(mailtransport_lib_srcs
   errorattribute.cpp
   sentbehaviourattribute.cpp
   transportattribute.cpp
+  transportconfigdialog.cpp
+  sendmailconfigwidget.cpp
+  smtpconfigwidget.cpp
 )
 
+if (NOT WINCE)
+  set(mailtransport_lib_srcs ${mailtransport_lib_srcs}
+    # All disabled due to no QTreeWidget
+    transportlistview.cpp
+    transportmanagementwidget.cpp
+    addtransportdialog.cpp
+  )
+endif (NOT WINCE)
 
 kde4_add_ui_files(mailtransport_lib_srcs
   sendmailsettings.ui
@@ -69,12 +73,16 @@ set_target_properties(mailtransport PROPERTIES VERSION ${GENERIC_LIB_VERSION} SO
 install(TARGETS mailtransport EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES mailtransport.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 
+# disabled until TransportManagementWidget can be used without QTreeWidget
+if (NOT WINCE)
 set(mailtransport_kcm_srcs configmodule.cpp)
 kde4_add_plugin(kcm_mailtransport ${mailtransport_kcm_srcs})
 target_link_libraries(kcm_mailtransport  ${KDE4_KDEUI_LIBS} mailtransport)
 
 install(TARGETS kcm_mailtransport  DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES kcm_mailtransport.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
+endif (NOT WINCE)
+
 install( FILES
         mailtransport_export.h
 

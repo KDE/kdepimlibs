@@ -18,19 +18,21 @@
 */
 
 #include "transportmanager.h"
-#include "addtransportdialog.h"
 #include "resourcesendjob_p.h"
 #include "mailtransport_defs.h"
-#include "sendmailconfigwidget.h"
 #include "sendmailjob.h"
-#include "smtpconfigwidget.h"
 #include "smtpjob.h"
 #include "transport.h"
-#include "transportconfigwidget.h"
 #include "transportjob.h"
 #include "transporttype.h"
 #include "transporttype_p.h"
+#ifndef Q_OS_WINCE
+#include "addtransportdialog.h"
+#endif
 #include "transportconfigdialog.h"
+#include "transportconfigwidget.h"
+#include "sendmailconfigwidget.h"
+#include "smtpconfigwidget.h"
 
 #include <QApplication>
 #include <QtDBus/QDBusConnection>
@@ -269,10 +271,14 @@ bool TransportManager::showTransportCreationDialog( QWidget *parent,
     }
   }
 
+#ifndef Q_OS_WINCE
   QPointer<AddTransportDialog> dialog = new AddTransportDialog( parent );
   const bool accepted = ( dialog->exec() == QDialog::Accepted );
   delete dialog;
   return accepted;
+#else
+  return false;
+#endif
 }
 
 bool TransportManager::configureTransport( Transport *transport, QWidget *parent )
