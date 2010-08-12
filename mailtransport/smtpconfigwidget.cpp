@@ -31,7 +31,11 @@
 #include "servertest.h"
 #include "mailtransport_defs.h"
 
-#include "ui_smtpsettings.h"
+#ifndef KDEPIM_MOBILE_UI
+#include "ui_smtpsettings_desktop.h"
+#else
+#include "ui_smtpsettings_mobile.h"
+#endif
 
 #include <QAbstractButton>
 #include <QButtonGroup>
@@ -215,6 +219,10 @@ void SMTPConfigWidget::init()
   }
 
   hostNameChanged( d->transport->host() );
+
+#ifdef KDEPIM_MOBILE_UI
+  d->ui.smtpSettingsGroupBox->hide();
+#endif
 }
 
 void SMTPConfigWidget::checkSmtpCapabilities()

@@ -51,11 +51,15 @@ set(mailtransport_lib_srcs
 
 kde4_add_ui_files(mailtransport_lib_srcs
   sendmailsettings.ui
-  smtpsettings.ui
-
   addtransportdialog.ui
   transportmanagementwidget.ui
 )
+if (KDEPIM_MOBILE_UI)
+  kde4_add_ui_files(mailtransport_lib_srcs smtpsettings_mobile.ui)
+else ()
+  kde4_add_ui_files(mailtransport_lib_srcs smtpsettings_desktop.ui)
+endif()
+
 kde4_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
 
 kde4_add_library(mailtransport ${LIBRARY_TYPE} ${mailtransport_lib_srcs})
