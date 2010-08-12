@@ -48,6 +48,7 @@ namespace KCalUtils{ class InvitationFormatterHelper; }
 
 namespace KTnef {
 
+#ifndef KDEPIM_NO_KCAL
   /**
     Formats a @acronym TNEF attachment to an HTML mail.
 
@@ -58,6 +59,7 @@ namespace KTnef {
   KTNEF_EXPORT_DEPRECATED QString formatTNEFInvitation( const QByteArray &tnef,
                                                         KCal::Calendar *cal,
                                                         KCal::InvitationFormatterHelper *h );
+#endif
 
   /**
     Formats a @acronym TNEF attachment to an HTML mail.

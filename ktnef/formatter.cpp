@@ -41,10 +41,10 @@
 #include <kabc/phonenumber.h>
 #include <kabc/vcardconverter.h>
 
-// KDAB_TODO ifdef out for mobile
+#ifndef KDEPIM_NO_KCAL
 #include <kcal/incidenceformatter.h>
 #include <kcal/calendar.h>
-// KDAB_TODO ifdef out for mobile
+#endif
 
 #include <kcalcore/calendar.h>
 #include <kcalcore/icalformat.h>
@@ -531,6 +531,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
   return QString::fromUtf8( converter.createVCard( addressee ) );
 }
 
+#ifndef KDEPIM_NO_KCAL
 QString KTnef::formatTNEFInvitation( const QByteArray &tnef,
                                      KCal::Calendar *cal,
                                      KCal::InvitationFormatterHelper *h )
@@ -543,6 +544,7 @@ QString KTnef::formatTNEFInvitation( const QByteArray &tnef,
     return vPart;
   }
 }
+#endif
 
 QString KTnef::formatTNEFInvitation( const QByteArray &tnef,
                                      const MemoryCalendar::Ptr &cal,

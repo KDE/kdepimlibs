@@ -27,10 +27,11 @@ set(ktnef_LIB_SRCS
 
 kde4_add_library(ktnef ${LIBRARY_TYPE} ${ktnef_LIB_SRCS})
 
-target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcal kcalcore kcalutils)
-# KDAB_TODO Split the above line based on mobile build into:
-# target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcal kcalcore kcalutils)
-# target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcalcore kcalutils)
+if (KDEPIM_MOBILE_UI)
+  target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcalcore kcalutils)
+else (KDEPIM_MOBILE_UI)
+  target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcal kcalcore kcalutils)
+endif (KDEPIM_MOBILE_UI)
 
 set_target_properties(ktnef PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS ktnef EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

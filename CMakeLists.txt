@@ -59,6 +59,9 @@ endif ()
 option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" ${_default_mobile_ui})
 if (KDEPIM_MOBILE_UI)
   add_definitions( -DKDEPIM_MOBILE_UI )
+  add_definitions( -DKDEPIM_NO_KCAL )
+  # Note: Should be based on KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED at some point
+  #       it think. (Bertjan)
 endif (KDEPIM_MOBILE_UI)
 
 #FindGpgme.cmake already handles the log message but we must ensure it is required.
