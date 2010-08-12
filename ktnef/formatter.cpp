@@ -45,6 +45,9 @@
 #include <kcal/calendarlocal.h>
 #include <kcal/icalformat.h>
 
+#include <kcalcore/calendar.h>
+#include <kcalutils/incidenceformatter.h>
+
 #include <klocale.h>
 #include <kdatetime.h>
 
@@ -530,6 +533,19 @@ QString KTnef::formatTNEFInvitation( const QByteArray &tnef,
 {
   QString vPart = msTNEFToVPart( tnef );
   QString iCal = IncidenceFormatter::formatICalInvitation( vPart, cal, h );
+  if ( !iCal.isEmpty() ) {
+    return iCal;
+  } else {
+    return vPart;
+  }
+}
+
+QString KTnef::formatTNEFInvitation( const QByteArray &tnef,
+                                     const KCalCore::MemoryCalendar::Ptr &cal,
+                                     KCalUtils::InvitationFormatterHelper *h )
+{
+  const QString vPart = msTNEFToVPart( tnef );
+  QString iCal = KCalUtils::IncidenceFormatter::formatICalInvitation( vPart, cal, h );
   if ( !iCal.isEmpty() ) {
     return iCal;
   } else {
