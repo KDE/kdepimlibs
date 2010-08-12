@@ -318,7 +318,7 @@ QByteArray Content::encodedContent( bool useCrLf )
 
     if ( !d->preamble.isEmpty() )
       e += d->preamble;
-    
+
     //add all (encoded) contents separated by boundaries
     foreach ( Content *c, d->multipartContents ) {
       e+=boundary + '\n';
@@ -504,6 +504,7 @@ void Content::addContent( Content *c, bool prepend )
         // Add to new content.
         main->setHeader( *it );
         // Remove from this content.
+        delete (*it);
         it = h_eaders.erase( it );
       } else {
         ++it;
@@ -566,6 +567,7 @@ void Content::removeContent( Content *c, bool del )
     foreach( Headers::Base *h, main->h_eaders ) {
       setHeader( h ); // Will remove the old one if present.
     }
+    qDeleteAll( main->h_eaders );
     main->h_eaders.clear();
 
     // Move the body.
@@ -1094,7 +1096,7 @@ bool ContentPrivate::parseMultipart()
 
   preamble = mpp.preamble();
   epilogue = mpp.epilouge();
-   
+
   // Determine the category of the subparts (used in attachments()).
   Headers::contentCategory cat;
   if( ct->isSubtype( "alternative" ) ) {
