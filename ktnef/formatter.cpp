@@ -40,12 +40,14 @@
 #include <kpimutils/email.h>
 #include <kabc/phonenumber.h>
 #include <kabc/vcardconverter.h>
+
+// KDAB_TODO ifdef out for mobile
 #include <kcal/incidenceformatter.h>
 #include <kcal/calendar.h>
-#include <kcal/calendarlocal.h>
-#include <kcal/icalformat.h>
+// KDAB_TODO ifdef out for mobile
 
 #include <kcalcore/calendar.h>
+#include <kcalcore/icalformat.h>
 #include <kcalutils/incidenceformatter.h>
 
 #include <klocale.h>
@@ -55,7 +57,7 @@
 
 #include <time.h>
 
-using namespace KCal;
+using namespace KCalCore;
 using namespace KTnef;
 
 /*******************************************************************
@@ -198,10 +200,10 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
   KTNEFParser parser;
   QByteArray b( tnef );
   QBuffer buf( &b );
-  CalendarLocal cal ( KDateTime::UTC );
+  MemoryCalendar::Ptr cal( new MemoryCalendar( KDateTime::UTC ) );
   KABC::Addressee addressee;
   ICalFormat calFormat;
-  Event *event = new Event();
+  Event::Ptr event( new Event() );
 
   if ( parser.openDevice( &buf ) ) {
     KTNEFMessage *tnefMsg = parser.message();
@@ -295,7 +297,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
             if ( (*it).indexOf( '@' ) == -1 ) {
               s = (*it).trimmed();
 
-              Attendee *attendee = new Attendee( s, s, true );
+              Attendee::Ptr attendee( new Attendee( s, s, true ) );
               if ( bIsReply ) {
                 if ( bCompatMethodAccepted ) {
                   attendee->setStatus( Attendee::Accepted );
@@ -318,7 +320,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           // This must be old style, let us use the PR_SENDER_SEARCH_KEY.
           s = sSenderSearchKeyEmail;
           if ( !s.isEmpty() ) {
-            Attendee *attendee = new Attendee( QString(), QString(), true );
+            Attendee::Ptr attendee( new Attendee( QString(), QString(), true ) );
             if ( bIsReply ) {
               if ( bCompatMethodAccepted ) {
                 attendee->setStatus( Attendee::Accepted );
@@ -383,7 +385,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
 
         // is reminder flag set ?
         if ( !tnefMsg->findProp( 0x8503 ).isEmpty() ) {
-          Alarm *alarm = new Alarm( event );
+          Alarm::Ptr alarm( new Alarm( event.data() ) ); // KDAB_TODO, fix when KCalCore::Alarm is fixed
           KDateTime highNoonTime =
             pureISOToLocalQDateTime( tnefMsg->findProp( 0x8502 ).
                                      remove( QChar( '-' ) ).remove( QChar( ':' ) ) );
@@ -404,7 +406,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           //        so we always set 'DISPLAY' (no sounds, no images...)
           event->addAlarm( alarm );
         }
-        cal.addEvent( event );
+        cal->addEvent( event );
         bOk = true;
         // we finished composing a vCal
       } else if ( bCompatClassNote || "IPM.CONTACT" == msgClass ) {
@@ -516,7 +518,9 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
   }
 
   // Compose return string
-  QString iCal = calFormat.toString( &cal );
+  // KDAB_TODO: Interesting, without the explicit QString the toString call is
+  //            reported to be ambigious with toString( const Incidence::Ptr & ).
+  const QString iCal = calFormat.toString( cal, QString() );
   if ( !iCal.isEmpty() ) {
     // This was an iCal
     return iCal;
@@ -532,7 +536,7 @@ QString KTnef::formatTNEFInvitation( const QByteArray &tnef,
                                      KCal::InvitationFormatterHelper *h )
 {
   QString vPart = msTNEFToVPart( tnef );
-  QString iCal = IncidenceFormatter::formatICalInvitation( vPart, cal, h );
+  QString iCal = KCal::IncidenceFormatter::formatICalInvitation( vPart, cal, h );
   if ( !iCal.isEmpty() ) {
     return iCal;
   } else {
@@ -541,7 +545,7 @@ QString KTnef::formatTNEFInvitation( const QByteArray &tnef,
 }
 
 QString KTnef::formatTNEFInvitation( const QByteArray &tnef,
-                                     const KCalCore::MemoryCalendar::Ptr &cal,
+                                     const MemoryCalendar::Ptr &cal,
                                      KCalUtils::InvitationFormatterHelper *h )
 {
   const QString vPart = msTNEFToVPart( tnef );
