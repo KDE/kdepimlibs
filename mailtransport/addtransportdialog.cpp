@@ -84,6 +84,11 @@ AddTransportDialog::AddTransportDialog( QWidget *parent )
     setButtons( Ok|Cancel );
     enableButtonOk( false );
     setButtonText( Ok, i18nc( "create and configure a mail transport", "Create and Configure" ) );
+
+#ifdef KDEPIM_MOBILE_UI
+    d->ui.descLabel->hide();
+    d->ui.setDefault->hide();
+#endif
   }
 
   // Populate type list.
