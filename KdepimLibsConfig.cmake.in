@@ -67,6 +67,7 @@ endmacro(_KDEPIMLibs_Set_Lib_Vars)
 
 _kdepimlibs_set_lib_vars(AKONADI        akonadi-kde)
 _kdepimlibs_set_lib_vars(AKONADI_CONTACT  akonadi-contact)
+_kdepimlibs_set_lib_vars(AKONADI_CALENDAR  akonadi-calendar)
 _kdepimlibs_set_lib_vars(AKONADI_KMIME  akonadi-kmime)
 _kdepimlibs_set_lib_vars(AKONADI_KABC   akonadi-kabc)
 _kdepimlibs_set_lib_vars(AKONADI_KCAL   akonadi-kcal)
