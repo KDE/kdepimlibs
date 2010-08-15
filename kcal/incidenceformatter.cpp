@@ -351,7 +351,11 @@ static QString displayViewFormatAttachments( Incidence *incidence )
       if ( (*it)->uri().startsWith( QLatin1String( "kmail:" ) ) ) {
         name = i18n( "Show mail" );
       } else {
-        name = (*it)->label();
+        if ( (*it)->label().isEmpty() ) {
+          name = (*it)->uri();
+        } else {
+          name = (*it)->label();
+        }
       }
       tmpStr += htmlAddLink( (*it)->uri(), name );
     } else {
@@ -394,7 +398,6 @@ static QString displayViewFormatBirthday( Event *event )
   const QString iconPath = iconLoader->iconPath( "mail-message-new", KIconLoader::Small );
   //TODO: add a birthday cake icon
   QString tmpStr = displayViewLinkPerson( email_1, name_1, uid_1, iconPath );
-
 
   return tmpStr;
 }
@@ -578,7 +581,7 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
   const bool isBirthday = event->customProperty( "KABC", "BIRTHDAY" ) == "YES";
   const bool isAnniversary = event->customProperty( "KABC", "ANNIVERSARY" ) == "YES";
 
-  if ( isBirthday || isAnniversary  ) {
+  if ( isBirthday || isAnniversary ) {
     tmpStr += "<tr>";
     if ( isAnniversary ) {
       tmpStr += "<td><b>" + i18n( "Anniversary:" ) + "</b></td>";
