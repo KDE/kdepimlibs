@@ -163,6 +163,7 @@ void Content::parse()
 
   // Clean up old headers and parse them again.
   qDeleteAll( h_eaders );
+  h_eaders.clear();
   h_eaders = HeaderParsing::parseHeaders( d->head );
   foreach( Headers::Base *h, h_eaders ) {
     h->setParent( this );
