@@ -113,27 +113,31 @@ if ( WIN32 )
         ${CMAKE_INSTALL_PREFIX}/lib
     )
 
-    find_library( _gpg_error_library     NAMES gpg-error libgpg-error gpg-error-0 libgpg-error-0
-      PATHS 
-        ${CMAKE_LIBRARY_PATH}
-        ${CMAKE_INSTALL_PREFIX}/lib
-    )
+    if ( WINCE )
+        set( _gpg_error_library )
+    else()
+        find_library( _gpg_error_library     NAMES gpg-error libgpg-error gpg-error-0 libgpg-error-0
+           PATHS 
+                ${CMAKE_LIBRARY_PATH}
+                ${CMAKE_INSTALL_PREFIX}/lib
+        )
+    endif()
 
     set( GPGME_INCLUDES ${GPGME_INCLUDES} )
 
-    if ( _gpgme_vanilla_library AND _gpg_error_library )
+    if ( _gpgme_vanilla_library AND ( _gpg_error_library OR WINCE ) )
       set( GPGME_VANILLA_LIBRARIES ${_gpgme_vanilla_library} ${_gpg_error_library} )
       set( GPGME_VANILLA_FOUND     true )
       set( GPGME_FOUND             true )
     endif()
 
-    if ( _gpgme_glib_library AND _gpg_error_library )
+    if ( _gpgme_glib_library AND ( _gpg_error_library OR WINCE ) )
       set( GPGME_GLIB_LIBRARIES    ${_gpgme_glib_library}    ${_gpg_error_library} )
       set( GPGME_GLIB_FOUND        true )
       set( GPGME_FOUND             true )
     endif()
 
-    if ( _gpgme_qt_library AND _gpg_error_library )
+    if ( _gpgme_qt_library AND ( _gpg_error_library OR WINCE ) )
       set( GPGME_QT_LIBRARIES      ${_gpgme_qt_library}      ${_gpg_error_library} )
       set( GPGME_QT_FOUND          true )
       set( GPGME_FOUND             true )

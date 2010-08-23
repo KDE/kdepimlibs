@@ -22,15 +22,17 @@
 
 #include <qgpgme/dataprovider.h>
 
+#include <gpgme++/error.h>
+
 #include <QIODevice>
 #include <QProcess>
 
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include <assert.h>
+#include <cstdio>
+#include <cstring>
+#include <cassert>
 
 using namespace QGpgME;
+using namespace GpgME;
 
 //
 //
@@ -62,7 +64,7 @@ ssize_t QByteArrayDataProvider::read( void * buffer, size_t bufSize ) {
   if ( bufSize == 0 )
     return 0;
   if ( !buffer ) {
-    errno = EINVAL;
+    Error::setSystemError( GPG_ERR_EINVAL );
     return -1;
   }
   if ( mOff >= mArray.size() )
@@ -81,13 +83,13 @@ ssize_t QByteArrayDataProvider::write( const void * buffer, size_t bufSize ) {
   if ( bufSize == 0 )
     return 0;
   if ( !buffer ) {
-    errno = EINVAL;
+    Error::setSystemError( GPG_ERR_EINVAL );
     return -1;
   }
   if ( mOff >= mArray.size() )
     resizeAndInit( mArray, mOff + bufSize );
   if ( mOff >= mArray.size() ) {
-    errno = EIO;
+    Error::setSystemError( GPG_ERR_EIO );
     return -1;
   }
   assert( bufSize <= static_cast<size_t>(mArray.size()) - mOff );
@@ -112,7 +114,7 @@ off_t QByteArrayDataProvider::seek( off_t offset, int whence ) {
     newOffset = mArray.size() + offset;
     break;
   default:
-    errno = EINVAL;
+    Error::setSystemError( GPG_ERR_EINVAL );
     return (off_t)-1;
   }
   return mOff = newOffset;
@@ -162,7 +164,8 @@ static qint64 blocking_read( const boost::shared_ptr<QIODevice> & io, char * buf
                      p->exitCode() == 0 ) {
                     return 0;
                 } else {
-                    return errno = EIO, -1;
+                    Error::setSystemError( GPG_ERR_EIO );
+                    return -1;
                 }
             } else {
                 return 0; // assume EOF (loses error cases :/ )
@@ -179,7 +182,7 @@ ssize_t QIODeviceDataProvider::read( void * buffer, size_t bufSize ) {
   if ( bufSize == 0 )
     return 0;
   if ( !buffer ) {
-    errno = EINVAL;
+    Error::setSystemError( GPG_ERR_EINVAL );
     return -1;
   }
   const qint64 numRead = mHaveQProcess
@@ -190,9 +193,9 @@ ssize_t QIODeviceDataProvider::read( void * buffer, size_t bufSize ) {
   //errno is set, gpgme doesn't detect the error and loops forever. So return 0 on the very first -1 in case errno is 0
 
   ssize_t rc = numRead;
-  if ( numRead < 0 && errno == 0 ) {
+  if ( numRead < 0 && !Error::hasSystemError() ) {
       if ( mErrorOccurred )
-          errno = EIO;
+          Error::setSystemError( GPG_ERR_EIO );
       else
           rc = 0;
   }
@@ -208,7 +211,7 @@ ssize_t QIODeviceDataProvider::write( const void * buffer, size_t bufSize ) {
   if ( bufSize == 0 )
     return 0;
   if ( !buffer ) {
-     errno = EINVAL;
+     Error::setSystemError( GPG_ERR_EINVAL );
      return -1;
   }
 
@@ -220,7 +223,7 @@ off_t QIODeviceDataProvider::seek( off_t offset, int whence ) {
   //qDebug( "QIODeviceDataProvider::seek( %d, %d )", int(offset), whence );
 #endif
   if ( mIO->isSequential() ) {
-    errno = ESPIPE;
+    Error::setSystemError( GPG_ERR_ESPIPE );
     return (off_t)-1;
   }
   qint64 newOffset = mIO->pos();
@@ -235,11 +238,11 @@ off_t QIODeviceDataProvider::seek( off_t offset, int whence ) {
     newOffset = mIO->size() + offset;
     break;
   default:
-    errno = EINVAL;
+    Error::setSystemError( GPG_ERR_EINVAL );
     return (off_t)-1;
   }
   if ( !mIO->seek( newOffset ) ) {
-    errno = EINVAL;
+    Error::setSystemError( GPG_ERR_EINVAL );
     return (off_t)-1;
   }
   return newOffset;
