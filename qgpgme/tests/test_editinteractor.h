@@ -106,10 +106,10 @@ static int test_editinteractor( std::auto_ptr<GpgME::EditInteractor> ei, const c
 
     KeyResolveJob job( proto );
     if ( const GpgME::Error err = job.start( keyid ) )
-        throw std::runtime_error( std::string( "startKeyListing: " ) + gpg_strerror( err.encodedError() ) );
+        throw std::runtime_error( std::string( "startKeyListing: " ) + err.asString() );
 
     if ( const GpgME::Error err = job.waitForDone() )
-        throw std::runtime_error( std::string( "nextKey: " ) + gpg_strerror( err.encodedError() ) );
+        throw std::runtime_error( std::string( "nextKey: " ) + err.asString() );
 
     const Key key = job.keys().front();
 
@@ -124,7 +124,7 @@ static int test_editinteractor( std::auto_ptr<GpgME::EditInteractor> ei, const c
                       QCoreApplication::instance(), SLOT(quit()) );
 
     if ( Error err = ctx->startEditing( key, ei, data ) )
-        throw std::runtime_error( std::string( "startEditing: " ) + gpg_strerror( err.encodedError() ) );
+        throw std::runtime_error( std::string( "startEditing: " ) + err.asString() );
     // ei released in passing to startEditing
 
     return QCoreApplication::instance()->exec();
