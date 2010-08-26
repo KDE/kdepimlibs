@@ -3006,7 +3006,6 @@ static QString tooltipPerson( const QString &email, QString name )
   return tmpString;
 }
 
-static QString etc = i18nc( "elipsis", "..." );
 static QString tooltipFormatAttendeeRoleList( Incidence *incidence, Attendee::Role role )
 {
   int maxNumAtts = 8; // maximum number of people to print per attendee role
@@ -3029,6 +3028,7 @@ static QString tooltipFormatAttendeeRoleList( Incidence *incidence, Attendee::Ro
       continue;
     }
     if ( i == maxNumAtts ) {
+      static QString etc = i18nc( "elipsis", "..." );
       tmpStr += etc;
       break;
     }
@@ -3143,6 +3143,7 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
     QString desc( incidence->description() );
     if ( !incidence->descriptionIsRich() ) {
       if ( desc.length() > maxDescLen ) {
+        static QString etc = i18nc( "elipsis", "..." );
         desc = desc.left( maxDescLen ) + etc;
       }
       desc = Qt::escape( desc ).replace( '\n', "<br>" );
