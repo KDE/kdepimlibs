@@ -27,8 +27,10 @@ include_directories(
 
 add_includes( Akonadi )
 add_includes( KABC )
-add_includes( KBlog )
-add_includes( KCal )
+if (NOT KDEPIM_NO_KCAL)
+  add_includes( KBlog )
+  add_includes( KCal )
+endif (NOT KDEPIM_NO_KCAL)
 add_includes( KHolidays )
 add_includes( KIMAP )
 add_includes( KLDAP )

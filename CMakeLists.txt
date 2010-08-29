@@ -7,6 +7,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
 option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
+option(KDEPIM_NO_KCAL "Build without legacy KCal." KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
 
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
@@ -59,9 +60,6 @@ endif ()
 option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" ${_default_mobile_ui})
 if (KDEPIM_MOBILE_UI)
   add_definitions( -DKDEPIM_MOBILE_UI )
-  add_definitions( -DKDEPIM_NO_KCAL )
-  # Note: Should be based on KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED at some point
-  #       it think. (Bertjan)
 endif (KDEPIM_MOBILE_UI)
 
 #FindGpgme.cmake already handles the log message but we must ensure it is required.
@@ -112,6 +110,9 @@ include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${
 if (KDEPIM_NO_KRESOURCES)
   add_definitions(-DKDEPIM_NO_KRESOURCES)
 endif (KDEPIM_NO_KRESOURCES)
+if (KDEPIM_NO_KCAL)
+  add_definitions(-DKDEPIM_NO_KCAL)
+endif (KDEPIM_NO_KCAL)
 
 if(WINCE)
   set(LIBRARY_TYPE STATIC)
@@ -130,10 +131,10 @@ add_subdirectory(qgpgme)
 
 if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(kabc)
-  if (NOT WINCE)
+  if (NOT KDEPIM_NO_KCAL)
     add_subdirectory(kblog)
-  endif(NOT WINCE)
-  add_subdirectory(kcal)
+    add_subdirectory(kcal)
+  endif (NOT KDEPIM_NO_KCAL)
   add_subdirectory(kcalcore)
   add_subdirectory(kcalutils)
   add_subdirectory(akonadi) # depends on kabc is build
