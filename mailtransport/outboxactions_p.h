@@ -56,7 +56,8 @@ class SendQueuedAction : public Akonadi::FilterAction
     virtual bool itemAccepted( const Akonadi::Item &item ) const;
 
     /* reimpl */
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item, Akonadi::FilterActionJob *parent ) const;
+    virtual Akonadi::Job *itemAction( const Akonadi::Item &item,
+                                      Akonadi::FilterActionJob *parent ) const;
 
   private:
     class Private;
@@ -90,7 +91,8 @@ class ClearErrorAction : public Akonadi::FilterAction
     virtual bool itemAccepted( const Akonadi::Item &item ) const;
 
     /* reimpl */
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item, Akonadi::FilterActionJob *parent ) const;
+    virtual Akonadi::Job *itemAction( const Akonadi::Item &item,
+                                      Akonadi::FilterActionJob *parent ) const;
 
   private:
     class Private;
@@ -122,7 +124,8 @@ class DispatchManualTransportAction : public Akonadi::FilterAction
     virtual bool itemAccepted( const Akonadi::Item &item ) const;
 
     /* reimpl */
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item, Akonadi::FilterActionJob *parent ) const;
+    virtual Akonadi::Job *itemAction( const Akonadi::Item &item,
+                                      Akonadi::FilterActionJob *parent ) const;
 
   private:
     class Private;

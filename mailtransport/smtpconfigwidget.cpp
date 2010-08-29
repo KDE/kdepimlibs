@@ -119,7 +119,6 @@ class MailTransport::SMTPConfigWidgetPrivate : public TransportConfigWidgetPriva
         addAuthenticationItem( ui.authCombo, authType );
       }
 
-
       if ( transport->isValid() ) {
         const int idx = ui.authCombo->findData( transport->authenticationType() );
 

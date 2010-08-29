@@ -44,7 +44,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>
-#include <kemailsettings.h>
+#include <KEMailSettings>
 #include <KLocale>
 #include <KMessageBox>
 #include <KRandom>

@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_FILTERACTIONJOB_H
-#define AKONADI_FILTERACTIONJOB_H
+#ifndef MAILTRANSPORT_FILTERACTIONJOB_P_H
+#define MAILTRANSPORT_FILTERACTIONJOB_P_H
 
 #include <mailtransport/mailtransport_export.h>
 
@@ -57,7 +57,8 @@ class FilterActionJob;
  *       return item.hasAttribute<ErrorAttribute>();
  *     }
  *
- *     virtual Akonadi::Job *itemAction( const Akonadi::Item &item, Akonadi::FilterActionJob *parent ) const
+ *     virtual Akonadi::Job *itemAction( const Akonadi::Item &item,
+ *                                       Akonadi::FilterActionJob *parent ) const
  *     {
  *       Item cp = item;
  *       cp.removeAttribute<ErrorAttribute>();
@@ -100,7 +101,8 @@ class MAILTRANSPORT_EXPORT FilterAction
      * Returns a job to act on the @p item.
      * The FilterActionJob will finish when all such jobs are finished.
      */
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item, Akonadi::FilterActionJob *parent ) const = 0;
+    virtual Akonadi::Job *itemAction( const Akonadi::Item &item,
+                                      Akonadi::FilterActionJob *parent ) const = 0;
 };
 
 /**
