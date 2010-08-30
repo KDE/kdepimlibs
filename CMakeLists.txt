@@ -3,9 +3,6 @@ project(kdepimlibs)
 # where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
-############### Build Options ###############
-
-option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
 
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
@@ -28,8 +25,23 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(KDEPlatformProfile)
 
+
+############### Desktop vs. Mobile options ##############
+
+if (KDE_PLATFORM_PROFILE STREQUAL "Mobile")
+  set(_default_mobile_ui TRUE)
+else ()
+  set(_default_mobile_ui FALSE)
+endif ()
+
+
+############### Build Options ###############
+
+option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
 option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." ${KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED})
 option(KDEPIM_NO_KCAL "Build without legacy KCal." ${KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED})
+option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" ${_default_mobile_ui})
+
 
 ############### Load the CTest options ###############
 # Set a timeout value of 5 minutes per test
@@ -50,18 +62,7 @@ else (WIN32)
 endif (WIN32)
 macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org" TRUE ${Boost_MINIMUM_VERSION} "The Boost libraries boost and boost-graph are required by several critical KDEPIM apps.")
 
-############### Desktop vs. Mobile options ##############
 
-if (KDE_PLATFORM_PROFILE STREQUAL "Mobile")
-  set(_default_mobile_ui TRUE)
-else ()
-  set(_default_mobile_ui FALSE)
-endif ()
-
-option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" ${_default_mobile_ui})
-if (KDEPIM_MOBILE_UI)
-  add_definitions( -DKDEPIM_MOBILE_UI )
-endif (KDEPIM_MOBILE_UI)
 
 #FindGpgme.cmake already handles the log message but we must ensure it is required.
 find_package(Gpgme REQUIRED)
@@ -106,6 +107,11 @@ endif (NOT KDEPIM_ONLY_KLEO)
 ############### Needed commands before building anything ###############
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+
+if (KDEPIM_MOBILE_UI)
+  add_definitions( -DKDEPIM_MOBILE_UI )
+endif (KDEPIM_MOBILE_UI)
+
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${Boost_INCLUDE_DIR})
 
 if (KDEPIM_NO_KRESOURCES)
