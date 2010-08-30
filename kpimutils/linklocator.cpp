@@ -26,21 +26,16 @@
 
   @author Dave Corrie \<kde@davecorrie.com\>
 */
-
 #include "linklocator.h"
 
-#include <kglobal.h>
-#include <kstandarddirs.h>
-#include <kcodecs.h>
-#include <kdebug.h>
-#include <kemoticons.h>
+#include <KEmoticons>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 #include <QtCore/QRegExp>
 #include <QtGui/QTextDocument>
 
-#include <limits.h>
+#include <climits>
 
 using namespace KPIMUtils;
 
@@ -155,7 +150,6 @@ QString LinkLocator::getUrl()
       --mPos;
     }
   }
-
 
   // HACK: This is actually against the RFC. However, most people don't properly escape the URL in
   //       their text with "" or <>. That leads to people writing an url, followed immediatley by

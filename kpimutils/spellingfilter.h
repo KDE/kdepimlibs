@@ -33,7 +33,7 @@
 #define KPIMUTILS_SPELLINGFILTER_H
 
 #include "kpimutils_export.h"
-#include "kpimutils/linklocator.h"
+#include "linklocator.h"
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>

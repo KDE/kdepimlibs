@@ -21,11 +21,11 @@
 #include "kfileio.h"
 #include "kpimutils_export.h"
 
-#include <kdebug.h>
-#include <kde_file.h>
-#include <klocale.h>
-#include <kmessagebox.h>
+#include <KDebug>
+#include <KLocale>
+#include <KMessageBox>
 #include <KStandardGuiItem>
+#include <kde_file.h> //krazy:exclude=camelcase
 
 #include <QDir>
 #include <QByteArray>

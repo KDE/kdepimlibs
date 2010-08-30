@@ -23,14 +23,14 @@
   static methods for email address validation.
 
   @author Matt Douhan \<matt@fruitsalad.org\>
- */
-
+*/
 #include "email.h"
 
-#include <kdebug.h>
-#include <klocale.h>
-#include <kurl.h>
-#include <kmime_util.h>
+#include <kmime/kmime_util.h>
+
+#include <KDebug>
+#include <KLocale>
+#include <KUrl>
 
 #include <QtCore/QRegExp>
 #include <QtCore/QByteArray>
@@ -594,8 +594,9 @@ bool KPIMUtils::isValidSimpleAddress( const QString &aStr )
   // Both of these parts must be non empty
   // after all we cannot have emails like:
   // @kde.org, or  foo@
-  if( localPart.isEmpty() || domainPart.isEmpty() )
+  if ( localPart.isEmpty() || domainPart.isEmpty() ) {
     return false;
+  }
 
   bool tooManyAtsFlag = false;
   bool inQuotedString = false;

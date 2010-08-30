@@ -159,30 +159,27 @@ void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &p
   free( perfData );
   RegCloseKey( HKEY_PERFORMANCE_DATA );
 #else
-    HANDLE h;
-    PROCESSENTRY32 pe32;
-    
-    h = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    if (h == INVALID_HANDLE_VALUE)
-    {
-        return;
-    }
-    pe32.dwSize = sizeof(PROCESSENTRY32);
-    if (!Process32First( h, &pe32 ))
-    {
-        return;
-    }
-    pids.clear();
-    do
-    {
-        if (QString::fromWCharArray(pe32.szExeFile) == processName)
-        {
-            pids.append((int)pe32.th32ProcessID);
-            qDebug() << "found PID: " << (int)pe32.th32ProcessID;
-        }
+  HANDLE h;
+  PROCESSENTRY32 pe32;
 
-    } while( Process32Next( h, &pe32 ) );
-    CloseToolhelp32Snapshot(h);
+  h = CreateToolhelp32Snapshot( TH32CS_SNAPPROCESS, 0 );
+  if ( h == INVALID_HANDLE_VALUE ) {
+    return;
+  }
+  pe32.dwSize = sizeof(PROCESSENTRY32);
+  if ( !Process32First( h, &pe32 ) ) {
+    return;
+  }
+  pids.clear();
+  do
+  {
+    if ( QString::fromWCharArray( pe32.szExeFile ) == processName ) {
+      pids.append( (int)pe32.th32ProcessID );
+      qDebug() << "found PID: " << (int)pe32.th32ProcessID;
+    }
+
+  } while( Process32Next( h, &pe32 ) );
+  CloseToolhelp32Snapshot(h);
 #endif
 }
 
