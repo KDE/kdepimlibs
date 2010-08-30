@@ -6,8 +6,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 ############### Build Options ###############
 
 option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
-option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
-option(KDEPIM_NO_KCAL "Build without legacy KCal." KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
 
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
@@ -29,6 +27,9 @@ find_package(KDE4 4.4.93 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(KDEPlatformProfile)
+
+option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
+option(KDEPIM_NO_KCAL "Build without legacy KCal." KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
 
 ############### Load the CTest options ###############
 # Set a timeout value of 5 minutes per test
