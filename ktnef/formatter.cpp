@@ -551,7 +551,7 @@ QString KTnef::formatTNEFInvitation( const QByteArray &tnef,
                                      KCalUtils::InvitationFormatterHelper *h )
 {
   const QString vPart = msTNEFToVPart( tnef );
-  QString iCal = KCalUtils::IncidenceFormatter::formatICalInvitation( vPart, cal, h );
+  QString iCal = KCalUtils::IncidenceFormatter::formatICalInvitation( vPart, cal, h, true );
   if ( !iCal.isEmpty() ) {
     return iCal;
   } else {
