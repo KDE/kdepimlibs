@@ -6,6 +6,7 @@
 ]>
 	
 <article lang="&language;">
+<title>&kde; Resources</title>
 <articleinfo>
 
 <authorgroup>
@@ -26,8 +27,6 @@
 <keyword>notes</keyword>
 </keywordset>
 </articleinfo>
-<sect1 id="kde-resources">
-<title>&kde; Resources</title>
 
 <para>This module is a configuration tool for managing the resources used by different &kde; applications.
 It allows you to add, deleted or modify the resources for <guilabel>Alarms</guilabel>, 
@@ -89,7 +88,5 @@ saved if no other resource is specified. If you want to change the standard reso
 both read and write access to the new standard resource, otherwise you
 will not be able to select it.
 </para>
-
-</sect1>
 
 </article>
