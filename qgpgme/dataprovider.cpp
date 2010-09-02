@@ -183,6 +183,8 @@ ssize_t QIODeviceDataProvider::read( void * buffer, size_t bufSize ) {
       ? blocking_read( mIO, static_cast<char*>(buffer), bufSize )
       : mIO->read( static_cast<char*>(buffer), bufSize ) ;
 
+  // (marc): I had to disable this for QProcess' error reporting to work correctly
+#if 0
   //workaround: some QIODevices (known example: QProcess) might not return 0 (EOF), but immediately -1 when finished. If no
   //errno is set, gpgme doesn't detect the error and loops forever. So return 0 on the very first -1 in case errno is 0
 
@@ -196,6 +198,11 @@ ssize_t QIODeviceDataProvider::read( void * buffer, size_t bufSize ) {
   if ( numRead < 0 )
       mErrorOccurred = true;
   return rc;
+#endif
+  // Returning -1 while not setting errno makes gpgme loop forever. So make sure errno is set:
+  if ( numRead < 0 && errno == 0 )
+      errno = EIO;
+  return numRead;
 }
 
 ssize_t QIODeviceDataProvider::write( const void * buffer, size_t bufSize ) {
