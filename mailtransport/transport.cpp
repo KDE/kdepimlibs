@@ -79,8 +79,7 @@ QString Transport::password()
 {
   if ( !d->passwordLoaded && requiresAuthentication() && storePassword() &&
        d->password.isEmpty() ) {
-    TransportManager::self()->loadPasswords();
-    d->password = TransportManager::self()->transportById( id(), false )->password();
+    readPassword();
   }
   return d->password;
 }
