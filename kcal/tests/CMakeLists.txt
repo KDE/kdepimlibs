@@ -5,7 +5,7 @@ include_directories(
  ${LIBICAL_INCLUDE_DIRS}
 )
 
-add_definitions( -DICALTESTDATADIR="\\"${CMAKE_SOURCE_DIR}/kcal/tests/data/\\"" )
+add_definitions( -DICALTESTDATADIR="\\"${CMAKE_BINARY_DIR}/kcal/tests/data/\\"" )
 
 MACRO(KCAL_UNIT_TESTS)
   FOREACH(_testname ${ARGN})
@@ -97,13 +97,14 @@ endif (WIN32)
 
 macro(kcal_run_single_test _prefix _file _test _testarg)
   get_filename_component( _fn ${_file} NAME)
+  string(REGEX REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}" _outFile ${_file})
   set(_runner ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl)
   if (UNIX)
     set(_test_path ${EXECUTABLE_OUTPUT_PATH}/${_test}.shell)
   endif (UNIX)
   if (WIN32)
     set(_test_path ${EXECUTABLE_OUTPUT_PATH}/${_test}.exe.bat)
-    set(_runner ${PERL_EXECUTABLE} ${_runner}) 
+    set(_runner ${PERL_EXECUTABLE} ${_runner})
   endif (WIN32)
 
   add_test( ${_prefix}-${_fn} ${_runner} ${_test_path} ${_testarg} ${_file} )
