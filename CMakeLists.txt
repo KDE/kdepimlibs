@@ -44,8 +44,15 @@ option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" ${
 
 
 ############### Load the CTest options ###############
-# Set a timeout value of 5 minutes per test
-set(DART_TESTING_TIMEOUT 300)
+# Setting DART_TESTING_TIMEOUT has no effect on the tests timeout,
+# the timeout value must be changed directly in DartConfiguration.tcl
+set(_DartConfigFile "${CMAKE_BINARY_DIR}/DartConfiguration.tcl")
+if(EXISTS ${_DartConfigFile})
+  set(DartTestingTimeout "120")
+  file(READ ${_DartConfigFile} _DartConfigFile_content)
+  string(REGEX REPLACE "TimeOut: 1500" "TimeOut: ${DartTestingTimeout}" _DartConfigFile_content ${_DartConfigFile_content})
+  file(WRITE ${_DartConfigFile} ${_DartConfigFile_content})
+endif()
 
 # CTestCustom.cmake has to be in the CTEST_BINARY_DIR.
 # in the KDE build system, this is the same as CMAKE_BINARY_DIR.
