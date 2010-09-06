@@ -107,7 +107,7 @@ macro(kcal_run_single_test _prefix _file _test _testarg)
     set(_runner ${PERL_EXECUTABLE} ${_runner})
   endif (WIN32)
 
-  add_test( ${_prefix}-${_fn} ${_runner} ${_test_path} ${_testarg} ${_file} )
+  add_test( ${_prefix}-${_fn} ${_runner} ${_test_path} ${_testarg} ${_file} ${_outFile})
 endmacro(kcal_run_single_test)
 
 FILE(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/FAILED.log)
