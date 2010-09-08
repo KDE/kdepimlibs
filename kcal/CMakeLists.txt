@@ -6,6 +6,11 @@ add_definitions(-DWANT_DEPRECATED_KCAL_API)
 add_definitions(-DWANT_DEPRECATED_KABC_API)
 add_definitions(-DWANT_DEPRECATED_KRESOURCE_API)
 
+# Workaround a SIC change in libical 0.46
+if(USE_ICAL_0_46)
+  add_definitions(-DUSE_ICAL_0_46)
+endif()
+
 include (ConfigureChecks.cmake)
 
 if(KDE4_BUILD_TESTS)
