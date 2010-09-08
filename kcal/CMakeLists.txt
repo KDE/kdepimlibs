@@ -6,6 +6,11 @@ macro_log_feature(LIBICAL_FOUND "libical" "Reference implementation of the iCale
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5800)
 
+# Workaround a SIC change in libical 0.46
+if(USE_ICAL_0_46)
+  add_definitions(-DUSE_ICAL_0_46)
+endif()
+
 include (ConfigureChecks.cmake)
 
 if(KDE4_BUILD_TESTS)
