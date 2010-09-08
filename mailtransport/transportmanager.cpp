@@ -628,10 +628,11 @@ void TransportManager::loadPasswords()
   }
 
   // flush the wallet queue
-  foreach ( TransportJob *job, d->walletQueue ) {
+  const QList<TransportJob*> copy = d->walletQueue;
+  d->walletQueue.clear();
+  foreach ( TransportJob *job, copy ) {
     job->start();
   }
-  d->walletQueue.clear();
 
   emit passwordsChanged();
 }
