@@ -280,7 +280,19 @@ QByteArray Content::encodedContent( bool useCrLf )
   // Head.
   e = d->head;
   e += '\n';
+  e += encodedBody();
 
+  if ( useCrLf ) {
+    return LFtoCRLF( e );
+  } else {
+    return e;
+  }
+}
+
+QByteArray Content::encodedBody()
+{
+  Q_D( Content );
+  QByteArray e;
   // Body.
   if( d->frozen ) {
     // This Content is frozen.
@@ -331,12 +343,7 @@ QByteArray Content::encodedContent( bool useCrLf )
     if ( !d->epilogue.isEmpty() )
       e += d->epilogue;
   };
-
-  if ( useCrLf ) {
-    return LFtoCRLF( e );
-  } else {
-    return e;
-  }
+  return e;
 }
 
 QByteArray Content::decodedContent()

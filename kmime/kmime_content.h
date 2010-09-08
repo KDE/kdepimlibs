@@ -480,6 +480,14 @@ class KMIME_EXPORT Content
     QByteArray encodedContent( bool useCrLf = false );
 
     /**
+     * Like encodedContent(), with the difference that only the body will be returned, i.e. the
+     * headers are excluded.
+     *
+     * @since 4.6
+     */
+    QByteArray encodedBody();
+
+    /**
      * Returns the decoded Content body.
      *
      * Note that this will be empty for multipart contents or for encapsulated messages,
