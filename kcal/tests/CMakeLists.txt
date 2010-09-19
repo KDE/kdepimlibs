@@ -47,7 +47,7 @@ KCAL_UNIT_TESTS(
   testtimesininterval
 )
 # this test cannot work with msvc because libical should not be altered
-# and therefore we can't add KCAL_EXPORT there
+# and therefore we can't add KCAL_EXPORT_DEPRECATED there
 # it should work fine with mingw because of the auto-import feature
 if(NOT MSVC)
   KCAL_UNIT_TESTS(testicaltimezones)

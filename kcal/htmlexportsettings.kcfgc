@@ -8,4 +8,4 @@ MemberVariables=public
 GlobalEnums=true
 ItemAccessors=true
 SetUserTexts=true
-Visibility=KCAL_EXPORT_DEPRECATED
+Visibility=KCAL_EXPORT
