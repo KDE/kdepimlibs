@@ -54,7 +54,7 @@ namespace KCal {
   - remove inactive To-dos
   - remove To-dos without a matching attendee (see setEmailList())
 */
-class KCAL_EXPORT CalFilter
+class KCAL_EXPORT_DEPRECATED CalFilter
 {
   public:
     /**

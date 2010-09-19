@@ -18,29 +18,29 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-#ifndef KCAL_EXPORT_H
-#define KCAL_EXPORT_H
+#ifndef KCAL_EXPORT_DEPRECATED_H
+#define KCAL_EXPORT_DEPRECATED_H
 
 #include <kdemacros.h>
 
-#ifndef KCAL_EXPORT
+#ifndef KCAL_EXPORT_DEPRECATED
 # if defined(KDEPIM_STATIC_LIBS)
    /* No export/import for static libraries */
-#  define KCAL_EXPORT
+#  define KCAL_EXPORT_DEPRECATED
 # elif defined(MAKE_KCAL_LIB)
    /* We are building this library */
-#  define KCAL_EXPORT KDE_EXPORT
+#  define KCAL_EXPORT_DEPRECATED KDE_EXPORT
 # else
    /* We are using this library */
-#  define KCAL_EXPORT KDE_IMPORT
+#  define KCAL_EXPORT_DEPRECATED KDE_IMPORT
 # endif
 #endif
 
-# ifndef KCAL_EXPORT_DEPRECATED
+# ifndef KCAL_EXPORT_DEPRECATED_DEPRECATED
 #  if !defined( WANT_DEPRECATED_KCAL_API )
-#    define KCAL_EXPORT_DEPRECATED KDE_DEPRECATED KCAL_EXPORT
+#    define KCAL_EXPORT_DEPRECATED_DEPRECATED KDE_DEPRECATED KCAL_EXPORT_DEPRECATED
 #  else
-#    define KCAL_EXPORT_DEPRECATED KCAL_EXPORT
+#    define KCAL_EXPORT_DEPRECATED_DEPRECATED KCAL_EXPORT_DEPRECATED
 #  endif
 # endif
 

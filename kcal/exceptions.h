@@ -79,7 +79,7 @@ class Exception
 /**
   Calendar format related error class.
 */
-class KCAL_EXPORT ErrorFormat : public Exception
+class KCAL_EXPORT_DEPRECATED ErrorFormat : public Exception
 {
   public:
     /**

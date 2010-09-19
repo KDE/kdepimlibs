@@ -34,7 +34,7 @@
 
 namespace KCal {
 
-class KCAL_EXPORT FreeBusyUrlStore
+class KCAL_EXPORT_DEPRECATED FreeBusyUrlStore
 {
   public:
     static FreeBusyUrlStore *self();

@@ -54,7 +54,7 @@ namespace KCal {
      - birthdays and anniversaries contained in an addressbook
 
 */
-class KCAL_EXPORT_DEPRECATED CalendarResources
+class KCAL_EXPORT_DEPRECATED_DEPRECATED CalendarResources
   : public Calendar, public KRES::ManagerObserver<ResourceCalendar>
 {
   Q_OBJECT

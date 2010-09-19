@@ -48,7 +48,7 @@ class Calendar;
   This is the base class for calendar formats. It provides an interface for the
   generation/interpretation of a textual representation of a calendar.
 */
-class KCAL_EXPORT CalFormat
+class KCAL_EXPORT_DEPRECATED CalFormat
 {
   public:
     /**

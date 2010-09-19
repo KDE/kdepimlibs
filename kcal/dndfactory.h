@@ -60,7 +60,7 @@ class Calendar;
   This class implements functions to create Drag and Drop objects used for
   Drag-and-Drop and Copy-and-Paste.
 */
-class KCAL_EXPORT DndFactory
+class KCAL_EXPORT_DEPRECATED DndFactory
 {
   public:
     explicit DndFactory( Calendar * );

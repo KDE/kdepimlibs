@@ -63,7 +63,7 @@ class Incidence;
 
   Alarms always belong to a parent Incidence.
 */
-class KCAL_EXPORT Alarm : public CustomProperties
+class KCAL_EXPORT_DEPRECATED Alarm : public CustomProperties
 {
   public:
     /**

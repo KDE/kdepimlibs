@@ -55,7 +55,7 @@ class FreeBusyCache;
   This class provides an encapsulation of a scheduling message.
   It associates an incidence with an iTIPMethod and status information.
 */
-class KCAL_EXPORT ScheduleMessage
+class KCAL_EXPORT_DEPRECATED ScheduleMessage
 {
   public:
     /**
@@ -117,7 +117,7 @@ class KCAL_EXPORT ScheduleMessage
   It is an abstract base class for inheritance by implementations of the
   iTIP scheme like iMIP or iRIP.
 */
-class KCAL_EXPORT Scheduler
+class KCAL_EXPORT_DEPRECATED Scheduler
 {
   public:
     /**

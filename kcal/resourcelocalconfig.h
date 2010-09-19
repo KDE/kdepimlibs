@@ -38,7 +38,7 @@ namespace KCal {
 
   @see ResourceLocal
 */
-class KCAL_EXPORT_DEPRECATED ResourceLocalConfig : public KRES::ConfigWidget
+class KCAL_EXPORT_DEPRECATED_DEPRECATED ResourceLocalConfig : public KRES::ConfigWidget
 {
   Q_OBJECT
   public:
