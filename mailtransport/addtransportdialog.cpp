@@ -131,7 +131,7 @@ void AddTransportDialog::accept()
     }
     transport->setHost( cjob->instance().identifier() );
   }
-  transport->setName( d->ui.name->text() );
+  transport->setName( d->ui.name->text().trimmed() );
   transport->forceUniqueName();
   if( TransportManager::self()->configureTransport( transport, this ) ) {
     // The user clicked OK and the transport settings were saved.
