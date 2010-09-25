@@ -204,6 +204,7 @@ class ResourceScheduler : public QObject
     // * then ItemFetch tasks, because they are made by blocking DBus calls
     // * then everything else.
     enum QueueType {
+      PrependTaskQueue,
       ChangeReplayQueue, // one task at most
       AfterChangeReplayQueue, // also one task at most, currently
       ItemFetchQueue,
@@ -218,6 +219,7 @@ class ResourceScheduler : public QObject
     TaskList mTaskList[ NQueueCount ];
 
     Task mCurrentTask;
+    int mCurrentTasksQueue; // queue mCurrentTask came from
     bool mOnline;
 };
 
