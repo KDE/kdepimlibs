@@ -126,26 +126,51 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessage & msg ) const
 
 bool MonitorPrivate::acceptNotification( const NotificationMessage & msg )
 {
-  if ( isSessionIgnored( msg.sessionId() ) )
+  // session is ignored
+  if ( sessions.contains( msg.sessionId() ) )
     return false;
 
+  // corresponding signal is not connected
   if ( isLazilyIgnored( msg ) )
     return false;
+
+  // user requested everything
+  if ( monitorAll )
+    return true;
 
   switch ( msg.type() ) {
     case NotificationMessage::InvalidType:
       kWarning() << "Received invalid change notification!";
       return false;
+
     case NotificationMessage::Item:
-      return isItemMonitored( msg.uid(), msg.parentCollection(), msg.parentDestCollection(), msg.mimeType(), msg.resource() )
-          || isCollectionMonitored( msg.parentCollection(), msg.resource() )
-          || isCollectionMonitored( msg.parentDestCollection(), msg.resource() )
-          || isMoveDestinationResourceMonitored( msg );
+      // we have a resource or mimetype filter
+      if ( !resources.isEmpty() || !mimetypes.isEmpty() ) {
+        if ( isMimeTypeMonitored( msg.mimeType() ) || resources.contains( msg.resource() ) || isMoveDestinationResourceMonitored( msg ) )
+          return true;
+        return false;
+      }
+
+      // we explicitly monitor that item or the collections it's in
+      return items.contains( msg.uid() )
+          || isCollectionMonitored( msg.parentCollection() )
+          || isCollectionMonitored( msg.parentDestCollection() );
+
     case NotificationMessage::Collection:
-      return isCollectionMonitored( msg.uid(), msg.resource() )
-          || isCollectionMonitored( msg.parentCollection(), msg.resource() )
-          || isCollectionMonitored( msg.parentDestCollection(), msg.resource() )
-          || isMoveDestinationResourceMonitored( msg );
+      // we have a resource filter
+      if ( !resources.isEmpty() ) {
+        const bool resourceMatches = resources.contains( msg.resource() ) || isMoveDestinationResourceMonitored( msg );
+        // a bit hacky, but match the behaviour from the item case,
+        // if resource is the only thing we are filtering on, stop here, and if the resource filter matched, of course
+        if ( mimetypes.isEmpty() || resourceMatches )
+          return resourceMatches;
+        // else continue
+      }
+
+      // we explicitly monitor that colleciton, or all of them
+      return isCollectionMonitored( msg.uid() )
+          || isCollectionMonitored( msg.parentCollection() )
+          || isCollectionMonitored( msg.parentDestCollection() );
   }
   Q_ASSERT( false );
   return false;
