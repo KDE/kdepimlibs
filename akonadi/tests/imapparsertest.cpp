@@ -280,6 +280,12 @@ void ImapParserTest::testQuote_data()
   binaryEncoded += '\000';
   binaryEncoded += '"';
   QTest::newRow( "binary" ) << binaryNonEncoded << binaryEncoded;
+
+  QTest::newRow( "LF" ) << QByteArray( "\n" ) << QByteArray( "\"\\n\"" );
+  QTest::newRow( "CR" ) << QByteArray( "\r" ) << QByteArray( "\"\\r\"" );
+  QTest::newRow( "double quote" ) << QByteArray( "\"" ) << QByteArray( "\"\\\"\"" );
+  QTest::newRow( "mixed 1" ) << QByteArray( "a\nb\\c" ) << QByteArray( "\"a\\nb\\\\c\"" );
+  QTest::newRow( "mixed 2" ) << QByteArray( "\"a\rb\"" ) << QByteArray( "\"\\\"a\\rb\\\"\"" );
 }
 
 void ImapParserTest::testQuote()
@@ -546,6 +552,23 @@ void ImapParserTest::testBulkParser()
   }
 
   delete parser;
+}
+
+void ImapParserTest::testJoin_data()
+{
+  QTest::addColumn<QList<QByteArray> >( "list" );
+  QTest::addColumn<QByteArray>( "joined" );
+  QTest::newRow( "empty" ) << QList<QByteArray>() << QByteArray();
+  QTest::newRow( "one" ) << (QList<QByteArray>() << "abab") << QByteArray( "abab" );
+  QTest::newRow( "two" ) << (QList<QByteArray>() << "abab" << "cdcd") << QByteArray( "abab cdcd" );
+  QTest::newRow( "three" ) << (QList<QByteArray>() << "abab" << "cdcd" << "efef") << QByteArray( "abab cdcd efef" );
+}
+
+void ImapParserTest::testJoin()
+{
+  QFETCH( QList<QByteArray>, list );
+  QFETCH( QByteArray, joined );
+  QCOMPARE( ImapParser::join( list, " " ), joined );
 }
 
 #include "imapparsertest.moc"
