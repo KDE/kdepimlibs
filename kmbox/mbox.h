@@ -43,6 +43,12 @@ typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 class MBoxPrivate;
 
+/**
+ * @short A class to access mail storages in MBox format.
+ *
+ * @author Bertjan Broeksema <broeksema@kde.org>
+ * @since 4.6
+ */
 class KMBOX_EXPORT MBox
 {
   public:
@@ -56,11 +62,15 @@ class KMBOX_EXPORT MBox
       None
     };
 
-  public:
+    /**
+     * Creates a new mbox object.
+     */
     MBox();
 
     /**
-     * Unlocks the file if it is still open.
+     * Destroys the mbox object.
+     *
+     * The file will be unlocked if it is still open.
      */
     ~MBox();
 
@@ -79,7 +89,7 @@ class KMBOX_EXPORT MBox
     qint64 appendEntry( const MessagePtr &entry );
 
     /**
-     * Retrieve MsgInfo objects for all emails from the file except the
+     * Retrieve MsgEntryInfo objects for all emails from the file except the
      * @p deleteItems. The @p deletedItems should be a list of file
      * offsets of messages which are deleted.
      *
