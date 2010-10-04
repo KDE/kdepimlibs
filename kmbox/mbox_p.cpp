@@ -25,7 +25,8 @@
 using namespace KMBox;
 
 MBoxPrivate::MBoxPrivate( MBox *mbox )
-  : mInitialMboxFileSize( 0 ), mMBox( mbox )
+  : mInitialMboxFileSize( 0 ), mMBox( mbox ),
+    mSeparatorMatcher( QLatin1String( "^From .*[0-9][0-9]:[0-9][0-9]" ) )
 {
   connect( &mUnlockTimer, SIGNAL( timeout() ), SLOT( unlockMBox() ) );
 }
@@ -186,6 +187,14 @@ void MBoxPrivate::unescapeFrom( char* str, size_t strLen )
 
   if ( d < s ) // only NUL-terminate if it's shorter
     *d = 0;
+}
+
+bool MBoxPrivate::isMBoxSeparator( const QByteArray &line ) const
+{
+  if ( !line.startsWith( "From " ) )
+    return false;
+
+  return mSeparatorMatcher.indexIn( QString::fromLatin1( line ) ) >= 0;
 }
 
 #undef STRDIM

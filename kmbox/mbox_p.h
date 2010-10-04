@@ -45,6 +45,8 @@ class MBoxPrivate : public QObject
 
     bool startTimerIfNeeded();
 
+    bool isMBoxSeparator( const QByteArray &line ) const;
+
   public Q_SLOTS:
     void unlockMBox();
 
@@ -59,6 +61,7 @@ class MBoxPrivate : public QObject
     QFile           mMboxFile;
     bool            mReadOnly;
     QTimer          mUnlockTimer;
+    QRegExp         mSeparatorMatcher;
 
   public: /// Static helper methods
     static QByteArray escapeFrom( const QByteArray &msg );

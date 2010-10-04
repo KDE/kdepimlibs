@@ -41,17 +41,6 @@
 
 using namespace KMBox;
 
-static QString sMBoxSeperatorRegExp( QLatin1String( "^From .*[0-9][0-9]:[0-9][0-9]" ) );
-
-/// private static methods.
-static bool isMBoxSeparator( QRegExp &matcher, const QByteArray &line )
-{
-  if ( !line.startsWith( "From " ) )
-    return false;
-
-  return matcher.indexIn( QString::fromLatin1( line ) ) >= 0;
-}
-
 /// public methods.
 
 MBox::MBox()
@@ -164,7 +153,6 @@ bool MBox::load( const QString &fileName )
     return false;
   }
 
-  QRegExp regexp( sMBoxSeperatorRegExp );
   QByteArray line;
   QByteArray prevSeparator;
   quint64 offs = 0; // The offset of the next message to read.
@@ -176,7 +164,7 @@ bool MBox::load( const QString &fileName )
 
     // if atEnd, use mail only if there was a separator line at all,
     // otherwise it's not a valid mbox
-    if ( isMBoxSeparator( regexp, line ) ||
+    if ( d->isMBoxSeparator( line ) ||
          ( d->mMboxFile.atEnd() && ( prevSeparator.size() != 0 ) ) ) {
 
       // Found the separator or at end of file, the message starts at offs
@@ -205,7 +193,7 @@ bool MBox::load( const QString &fileName )
         d->mEntries << entry;
       }
 
-      if ( isMBoxSeparator( regexp, line ) )
+      if ( d->isMBoxSeparator( line ) )
         prevSeparator = line;
 
       offs += msgSize; // Mark the beginning of the next message.
@@ -332,9 +320,8 @@ bool MBox::purge( const MBoxEntry::List &deletedEntries, QList<MBoxEntry::Pair> 
   foreach ( const MBoxEntry &entry, deletedEntries ) {
     d->mMboxFile.seek( entry.messageOffset() );
     const QByteArray line = d->mMboxFile.readLine();
-    QRegExp regexp( sMBoxSeperatorRegExp );
 
-    if ( !isMBoxSeparator( regexp, line ) ) {
+    if ( !d->isMBoxSeparator( line ) ) {
       qDebug() << "Found invalid separator at:" << entry.messageOffset();
       unlock();
       return false; // The file is messed up or the index is incorrect.
@@ -444,9 +431,8 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
     d->mMboxFile.seek( offset );
 
     QByteArray line = d->mMboxFile.readLine();
-    QRegExp regexp( sMBoxSeperatorRegExp );
 
-    if ( !isMBoxSeparator( regexp, line ) ) {
+    if ( !d->isMBoxSeparator( line ) ) {
       kDebug() << "[MBox::readEntry] Invalid entry at:" << offset;
       if ( !wasLocked )
         unlock();
@@ -454,7 +440,7 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
     }
 
     line = d->mMboxFile.readLine();
-    while ( !isMBoxSeparator( regexp, line ) && !d->mMboxFile.atEnd() ) {
+    while ( !d->isMBoxSeparator( line ) && !d->mMboxFile.atEnd() ) {
       message += line;
       line = d->mMboxFile.readLine();
     }
@@ -471,9 +457,8 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
     buffer.seek( offset );
 
     QByteArray line = buffer.readLine();
-    QRegExp regexp( sMBoxSeperatorRegExp );
 
-    if ( !isMBoxSeparator( regexp, line ) ) {
+    if ( !d->isMBoxSeparator( line ) ) {
       kDebug() << "[MBox::readEntry] Invalid appended entry at:" << offset;
       if ( !wasLocked )
         unlock();
@@ -481,7 +466,7 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
     }
 
     line = buffer.readLine();
-    while ( !isMBoxSeparator( regexp, line ) && !buffer.atEnd() ) {
+    while ( !d->isMBoxSeparator( line ) && !buffer.atEnd() ) {
       message += line;
       line = buffer.readLine();
     }
