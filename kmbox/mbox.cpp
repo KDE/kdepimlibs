@@ -26,6 +26,7 @@
 
 #include "mbox.h"
 #include "mbox_p.h"
+#include "mboxentry_p.h"
 
 #include <kdebug.h>
 #include <klocalizedstring.h>
@@ -45,22 +46,23 @@ static QString sMBoxSeperatorRegExp( QLatin1String( "^From .*[0-9][0-9]:[0-9][0-
 /// private static methods.
 static bool isMBoxSeparator( QRegExp &matcher, const QByteArray &line )
 {
-  if ( !line.startsWith( "From " ) ) {
+  if ( !line.startsWith( "From " ) )
     return false;
-  }
+
   return matcher.indexIn( QString::fromLatin1( line ) ) >= 0;
 }
 
 /// public methods.
 
-MBox::MBox() : d( new MBoxPrivate(this) )
+MBox::MBox()
+  : d( new MBoxPrivate( this ) )
 {
   // Set some sane defaults
   d->mFileLocked = false;
-  d->mLockType = None; //
+  d->mLockType = None;
 
-  d->mUnlockTimer.setInterval(0);
-  d->mUnlockTimer.setSingleShot(true);
+  d->mUnlockTimer.setInterval( 0 );
+  d->mUnlockTimer.setSingleShot( true );
 }
 
 MBox::~MBox()
@@ -77,7 +79,7 @@ MBox::~MBox()
 // d->mInitialMboxFileSize is set to the file size at that moment. New entries
 // are stored in memory (d->mAppendedEntries). The initial file size and the size
 // of the buffer determine the offset for the next message to append.
-qint64 MBox::appendEntry( const MessagePtr &entry )
+MBoxEntry MBox::appendMessage( const MessagePtr &entry )
 {
   // It doesn't make sense to add entries when we don't have an reference file.
   Q_ASSERT( !d->mMboxFile.fileName().isEmpty() );
@@ -87,7 +89,7 @@ qint64 MBox::appendEntry( const MessagePtr &entry )
   if ( rawEntry.size() <= 0 ) {
     kDebug() << "Message added to folder `" << d->mMboxFile.fileName()
              << "' contains no data. Ignoring it.";
-    return -1;
+    return MBoxEntry();
   }
 
   int nextOffset = d->mAppendedEntries.size(); // Offset of the appended message
@@ -95,7 +97,7 @@ qint64 MBox::appendEntry( const MessagePtr &entry )
   // Make sure the byte array is large enough to check for an end character.
   // Then check if the required newlines are there.
   if ( nextOffset < 1 && d->mMboxFile.size() > 0 ) { // Empty, add one empty line
-    d->mAppendedEntries.append( "\n");
+    d->mAppendedEntries.append( "\n" );
     ++nextOffset;
   } else if ( nextOffset == 1 && d->mAppendedEntries.at( 0 ) != '\n' ) {
     // This should actually not happen, but catch it anyway.
@@ -124,22 +126,22 @@ qint64 MBox::appendEntry( const MessagePtr &entry )
     d->mAppendedEntries.append( "\n" );
   }
 
-  MsgEntryInfo info;
-  info.offset = d->mInitialMboxFileSize + nextOffset;
-  info.separatorSize = separator.size();
-  info.entrySize = rawEntry.size();
-  d->mEntries << info;
+  MBoxEntry resultEntry;
+  resultEntry.d->mOffset = d->mInitialMboxFileSize + nextOffset;
+  resultEntry.d->mMessageSize = rawEntry.size();
+  resultEntry.d->mSeparatorSize = separator.size();
+  d->mEntries << resultEntry;
 
-  return d->mInitialMboxFileSize + nextOffset;
+  return resultEntry;
 }
 
-QList<MsgEntryInfo> MBox::entryList(const QSet<quint64> &deletedItems) const
+MBoxEntry::List MBox::entries( const MBoxEntry::List &deletedEntries ) const
 {
-  QList<MsgEntryInfo> result;
+  MBoxEntry::List result;
 
-  foreach ( const MsgEntryInfo &info, d->mEntries ) {
-    if ( !deletedItems.contains( info.offset ) )
-      result << info;
+  foreach ( const MBoxEntry &entry, d->mEntries ) {
+    if ( !deletedEntries.contains( entry ) )
+      result << entry;
   }
 
   return result;
@@ -183,9 +185,9 @@ bool MBox::load( const QString &fileName )
       if( pos > 0 ) {
         // This is not the separator of the first mail in the file. If pos == 0
         // than we matched the separator of the first mail in the file.
-        MsgEntryInfo info;
-        info.offset = offs;
-        info.separatorSize = prevSeparator.size();
+        MBoxEntry entry;
+        entry.d->mOffset = offs;
+        entry.d->mSeparatorSize = prevSeparator.size();
 
         // There is always a blank line and a separator line between two emails.
         // Sometimes there are two '\n' characters added to the email (i.e. when
@@ -193,14 +195,14 @@ bool MBox::load( const QString &fileName )
         // achieve this. When reading the file it is not possible to see which
         // was the case.
         if ( d->mMboxFile.atEnd() )
-          info.entrySize = msgSize; // We use readLine so there's no additional '\n'
+          entry.d->mMessageSize = msgSize; // We use readLine so there's no additional '\n'
         else
-          info.entrySize = msgSize - 1;
+          entry.d->mMessageSize = msgSize - 1;
 
         // Don't add the separator size and the newline up to the message size.
-        info.entrySize -= prevSeparator.size() + 1;
+        entry.d->mMessageSize -= prevSeparator.size() + 1;
 
-        d->mEntries << info;
+        d->mEntries << entry;
       }
 
       if ( isMBoxSeparator( regexp, line ) )
@@ -311,36 +313,36 @@ bool MBox::locked() const
   return d->mFileLocked;
 }
 
-static bool lessThanByOffset( const MsgEntryInfo &left, const MsgEntryInfo &right )
+static bool lessThanByOffset( const MBoxEntry &left, const MBoxEntry &right )
 {
-  return left.offset < right.offset;
+  return left.messageOffset() < right.messageOffset();
 }
 
-bool MBox::purge( const QSet<quint64> &deletedItems, QList<MsgInfo> *movedItems )
+bool MBox::purge( const MBoxEntry::List &deletedEntries, QList<MBoxEntry::Pair> *movedEntries )
 {
   if ( d->mMboxFile.fileName().isEmpty() )
     return false; // No file loaded yet.
 
-  if ( deletedItems.isEmpty() )
+  if ( deletedEntries.isEmpty() )
     return true; // Nothing to do.
 
   if ( !lock() )
     return false;
 
-  foreach ( quint64 offset, deletedItems ) {
-    d->mMboxFile.seek( offset );
-    QByteArray line = d->mMboxFile.readLine();
+  foreach ( const MBoxEntry &entry, deletedEntries ) {
+    d->mMboxFile.seek( entry.messageOffset() );
+    const QByteArray line = d->mMboxFile.readLine();
     QRegExp regexp( sMBoxSeperatorRegExp );
 
     if ( !isMBoxSeparator( regexp, line ) ) {
-      qDebug() << "Found invalid separator at:" << offset;
+      qDebug() << "Found invalid separator at:" << entry.messageOffset();
       unlock();
       return false; // The file is messed up or the index is incorrect.
     }
   }
 
   // All entries are deleted, so just resize the file to a size of 0.
-  if ( deletedItems.size() == d->mEntries.size() ) {
+  if ( deletedEntries.size() == d->mEntries.size() ) {
     d->mEntries.clear();
     d->mMboxFile.resize( 0 );
     kDebug() << "Purge comleted successfully, unlocking the file.";
@@ -350,29 +352,29 @@ bool MBox::purge( const QSet<quint64> &deletedItems, QList<MsgInfo> *movedItems 
   qSort( d->mEntries.begin(), d->mEntries.end(), lessThanByOffset );
   quint64 writeOffset = 0;
   bool writeOffSetInitialized = false;
-  QList<MsgEntryInfo> resultingEntryList;
-  QList<MsgInfo> movedEntries;
+  MBoxEntry::List resultingEntryList;
+  QList<MBoxEntry::Pair> tmpMovedEntries;
 
   quint64 origFileSize = d->mMboxFile.size();
 
-  QListIterator<MsgEntryInfo> i( d->mEntries );
+  QListIterator<MBoxEntry> i( d->mEntries );
   while ( i.hasNext() ) {
-    MsgEntryInfo entry = i.next();
+    MBoxEntry entry = i.next();
 
-    if ( deletedItems.contains( entry.offset ) && !writeOffSetInitialized ) {
-      writeOffset = entry.offset;
+    if ( deletedEntries.contains( entry ) && !writeOffSetInitialized ) {
+      writeOffset = entry.messageOffset();
       writeOffSetInitialized = true;
     } else if ( writeOffSetInitialized
-                && writeOffset < entry.offset
-                && !deletedItems.contains( entry.offset ) ) {
+                && writeOffset < entry.messageOffset()
+                && !deletedEntries.contains( entry ) ) {
       // The current message doesn't have to be deleted, but must be moved.
       // First determine the size of the entry that must be moved.
       quint64 entrySize = 0;
       if ( i.hasNext() ) {
-        entrySize = i.next().offset - entry.offset;
+        entrySize = i.next().messageOffset() - entry.messageOffset();
         i.previous(); // Go back to make sure that we also handle the next entry.
       } else {
-        entrySize = origFileSize - entry.offset;
+        entrySize = origFileSize - entry.messageOffset();
       }
 
       Q_ASSERT( entrySize > 0 ); // MBox entries really cannot have a size <= 0;
@@ -381,26 +383,26 @@ bool MBox::purge( const QSet<quint64> &deletedItems, QList<MsgInfo> *movedItems 
       // message that have to be moved into memory. This includes eventually the
       // messages that are the deleted between the first deleted message
       // encountered and the message that has to be moved.
-      quint64 mapSize = entry.offset + entrySize - writeOffset;
+      quint64 mapSize = entry.messageOffset() + entrySize - writeOffset;
 
       // Now map writeOffSet + mapSize into mem.
       uchar *memArea = d->mMboxFile.map( writeOffset, mapSize );
 
       // Now read the entry that must be moved to writeOffset.
-      quint64 startOffset = entry.offset - writeOffset;
+      quint64 startOffset = entry.messageOffset() - writeOffset;
       memmove( memArea, memArea + startOffset, entrySize );
 
       d->mMboxFile.unmap( memArea );
 
-      MsgEntryInfo resultEntry;
-      resultEntry.offset = writeOffset;
-      resultEntry.separatorSize = entry.separatorSize;
-      resultEntry.entrySize = entry.entrySize;
+      MBoxEntry resultEntry;
+      resultEntry.d->mOffset = writeOffset;
+      resultEntry.d->mSeparatorSize = entry.separatorSize();
+      resultEntry.d->mMessageSize = entry.messageSize();
 
       resultingEntryList << resultEntry;
-      movedEntries << MsgInfo( entry.offset, resultEntry.offset );
+      tmpMovedEntries << MBoxEntry::Pair( MBoxEntry( entry.messageOffset() ), MBoxEntry( resultEntry.messageOffset() ) );
       writeOffset += entrySize;
-    } else if ( !deletedItems.contains( entry.offset ) ) {
+    } else if ( !deletedEntries.contains( entry ) ) {
       // Unmoved and not deleted entry, can only ocure before the first deleted
       // entry.
       Q_ASSERT( !writeOffSetInitialized );
@@ -413,22 +415,24 @@ bool MBox::purge( const QSet<quint64> &deletedItems, QList<MsgInfo> *movedItems 
   d->mEntries = resultingEntryList;
 
   kDebug() << "Purge comleted successfully, unlocking the file.";
-  if ( movedItems ) {
-    *movedItems = movedEntries;
+  if ( movedEntries ) {
+    *movedEntries = tmpMovedEntries;
   }
   return unlock(); // FIXME: What if this fails? It will return false but the
                    // file has changed.
 }
 
-QByteArray MBox::readRawEntry(quint64 offset)
+QByteArray MBox::readRawMessage( const MBoxEntry &entry )
 {
-  bool wasLocked = locked();
-  if ( ! wasLocked ) {
-    if ( ! lock() )
+  const bool wasLocked = locked();
+  if ( !wasLocked ) {
+    if ( !lock() )
       return QByteArray();
   }
 
   // TODO: Add error handling in case locking failed.
+
+  quint64 offset = entry.messageOffset();
 
   Q_ASSERT( d->mFileLocked );
   Q_ASSERT( d->mMboxFile.isOpen() );
@@ -437,7 +441,7 @@ QByteArray MBox::readRawEntry(quint64 offset)
   QByteArray message;
 
   if ( offset < d->mInitialMboxFileSize ) {
-    d->mMboxFile.seek(offset);
+    d->mMboxFile.seek( offset );
 
     QByteArray line = d->mMboxFile.readLine();
     QRegExp regexp( sMBoxSeperatorRegExp );
@@ -489,7 +493,7 @@ QByteArray MBox::readRawEntry(quint64 offset)
 
   MBoxPrivate::unescapeFrom( message.data(), message.size() );
 
-  if ( ! wasLocked ) {
+  if ( !wasLocked ) {
     if ( !d->startTimerIfNeeded() ) {
       const bool unlocked = unlock();
       Q_ASSERT( unlocked );
@@ -500,9 +504,9 @@ QByteArray MBox::readRawEntry(quint64 offset)
   return message;
 }
 
-KMime::Message *MBox::readEntry(quint64 offset)
+KMime::Message *MBox::readMessage( const MBoxEntry &entry )
 {
-  const QByteArray message = readRawEntry( offset );
+  const QByteArray message = readRawMessage( entry );
   if ( message.isEmpty() )
     return 0;
 
@@ -513,11 +517,13 @@ KMime::Message *MBox::readEntry(quint64 offset)
   return mail;
 }
 
-QByteArray MBox::readEntryHeaders( quint64 offset )
+QByteArray MBox::readMessageHeaders( const MBoxEntry &entry )
 {
-  bool wasLocked = d->mFileLocked;
-  if ( ! wasLocked )
+  const bool wasLocked = d->mFileLocked;
+  if ( !wasLocked )
     lock();
+
+  const quint64 offset = entry.messageOffset();
 
   Q_ASSERT( d->mFileLocked );
   Q_ASSERT( d->mMboxFile.isOpen() );
@@ -544,7 +550,7 @@ QByteArray MBox::readEntryHeaders( quint64 offset )
     }
   }
 
-  if ( ! wasLocked )
+  if ( !wasLocked )
     unlock();
 
   return headers;
@@ -588,9 +594,9 @@ bool MBox::save( const QString &fileName )
   return unlock();
 }
 
-bool MBox::setLockType(LockType ltype)
+bool MBox::setLockType( LockType ltype )
 {
-  if (d->mFileLocked) {
+  if ( d->mFileLocked ) {
     kDebug() << "File is currently locked.";
     return false; // Don't change the method if the file is currently locked.
   }
@@ -624,7 +630,7 @@ void MBox::setLockFile( const QString &lockFile )
 
 void MBox::setUnlockTimeout( int msec )
 {
-  d->mUnlockTimer.setInterval(msec);
+  d->mUnlockTimer.setInterval( msec );
 }
 
 bool MBox::unlock()
@@ -638,8 +644,7 @@ bool MBox::unlock()
   int rc = 0;
   QStringList args;
 
-  switch( d->mLockType )
-  {
+  switch( d->mLockType ) {
     case ProcmailLockfile:
       // QFile::remove returns true on succes so negate the result.
       if ( !d->mLockFileName.isEmpty() )

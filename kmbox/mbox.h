@@ -22,23 +22,16 @@
 
 #include "kmbox_export.h"
 
+#include "mboxentry.h"
+
 #include <kmime/kmime_message.h>
 
-#include <QtCore/QSet>
 #include <QtCore/QString>
 
 #include <boost/shared_ptr.hpp>
 
 namespace KMBox {
 
-struct MsgEntryInfo
-{
-  quint64 offset;
-  quint64 separatorSize;
-  quint64 entrySize;
-};
-
-typedef QPair<quint64, quint64> MsgInfo; // QPair<offset, size>
 typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 class MBoxPrivate;
@@ -75,33 +68,27 @@ class KMBOX_EXPORT MBox
     ~MBox();
 
     /**
-     * Appends @p entry to the MBox. Returns the offset in the file
-     * where the added message starts or -1 if the entry was not added (e.g.
-     * when it doesn't contain data). You must load a mbox file by makeing a call
-     * to load( const QString& ) before appending entries. The returned offset
-     * is <em>only</em> valid for
-     * that particular file.
+     * Appends @p message to the MBox and returns the corresponding mbox entry for it.
+     * You must load a mbox file by making a call to load( const QString& ) before appending entries.
+     * The returned mbox entry is <em>only</em> valid for that particular file.
      *
-     * @param entry The message to append to the mbox.
-     * @return the offset of the entry in the file or -1 if the entry was not
-     *         added.
+     * @param message The message to append to the mbox.
+     * @return the corresponding mbox entry for the message in the file or an invalid mbox entry
+     *         if the message was not added.
      */
-    qint64 appendEntry( const MessagePtr &entry );
+    MBoxEntry appendMessage( const MessagePtr &message );
 
     /**
-     * Retrieve MsgEntryInfo objects for all emails from the file except the
-     * @p deleteItems. The @p deletedItems should be a list of file
-     * offsets of messages which are deleted.
-     *
-     * Each MsgEntryInfo object contains the entry offset, the offset of the actual mail
-     * content and the size of the entry in the file which are not marked as deleted.
+     * Retrieve the mbox entry objects for all emails from the file except the
+     * @p deleteEntries.
+     * The @p deletedEntries should be a list of mbox entries with offsets of deleted messages.
      *
      * Note: One <em>must</em> call load() before calling this method.
      */
-    QList<MsgEntryInfo> entryList( const QSet<quint64> &deletedItems = QSet<quint64>() ) const;
+    MBoxEntry::List entries( const MBoxEntry::List &deletedEntries = MBoxEntry::List() ) const;
 
     /**
-     * Returns the file name that was passed to the last call to load.
+     * Returns the file name that was passed to the last call to load().
      */
     QString fileName() const;
 
@@ -121,7 +108,7 @@ class KMBOX_EXPORT MBox
 
     /**
      * Locks the mbox file using the configured lock method. This can be used
-     * for consecutive calls to readEntry and readEntryHeaders. Calling lock()
+     * for consecutive calls to readMessage and readMessageHeaders. Calling lock()
      * before these calls prevents the mbox file being locked for every call.
      *
      * NOTE: Even when the lock method is None the mbox is internally marked as
@@ -139,66 +126,65 @@ class KMBOX_EXPORT MBox
     bool locked() const;
 
     /**
-     * Removes all messages at given offsets from the current reference file
+     * Removes all messages for the given mbox entries from the current reference file
      * (i.e. the file that is loaded with load( const QString & ) or the file
      * from the last save( const QString & ) call if that was not the same file).
      * This method will first check if all lines at the offsets are actually
-     * separator lines if this is not the no message will be deleted to prevent
+     * separator lines if this is not then no message will be deleted to prevent
      * corruption.
      *
-     * @param deletedItems Offsets of the messages that should be removed from
-     *                     the file.
-     * @param movedItems Optional list for storing offset pairs into which describe
-     *                   entries that got moved within the file due to the deletions.
-     *                   The @c first member of the pair is the original offsets the
-     *                   @c second member is the new (current) offset
+     * @param deletedEntries The mbox entries of the messages that should be removed from
+     *                       the file.
+     * @param movedEntries Optional list for storing pairs of mbox entries that got moved
+     *                     within the file due to the deletions.
+     *                     The @c first member of the pair is the entry with the original offsets the
+     *                     @c second member is the entry with the new (current) offset
      *
      * @return true if all offsets refer to a mbox separator line and a file was
      *         loaded, false otherewhise. In the latter the physical file has
      *         not changed.
      */
-    bool purge( const QSet<quint64> &deletedItems, QList<MsgInfo> *movedItems = 0 );
+    bool purge( const MBoxEntry::List &deletedEntries, QList<MBoxEntry::Pair> *movedEntries = 0 );
 
     /**
-     * Reads the entire message from the file at given @p offset. If the
+     * Reads the entire message from the file for the given mbox @p entry. If the
      * mbox file is not locked this method will lock the file before reading and
      * unlock it after reading. If the file already is locked, it will not
      * unlock the file after reading the entry.
      *
-     * @param offset The start position of the entry in the mbox file.
-     * @return Message at given offset or 0 if the the file could not be locked
-     *         or the offset > fileSize.
+     * @param entry The entry in the mbox file.
+     * @return Message for the given entry or 0 if the the file could not be locked
+     *         or the entry offset > fileSize.
      *
      * @see lock(), unlock()
      */
-    KMime::Message *readEntry( quint64 offset );
+    KMime::Message *readMessage( const MBoxEntry &entry );
 
     /**
-     * Reads the headers of the message at given @p offset. If the
+     * Reads the headers of the message for the given mbox @p entry. If the
      * mbox file is not locked this method will lock the file before reading and
      * unlock it after reading. If the file already is locked, it will not
      * unlock the file after reading the entry.
      *
-     * @param offset The start position of the entry in the mbox file.
-     * @return QByteArray containing the raw Entry data.
+     * @param entry The entry in the mbox file.
+     * @return QByteArray containing the raw message header data.
      *
      * @see lock(), unlock()
      */
-    QByteArray readEntryHeaders( quint64 offset );
+    QByteArray readMessageHeaders( const MBoxEntry &entry );
 
     /**
-     * Reads the entire message from the file at given @p offset. If the
+     * Reads the entire message from the file for the given mbox @p entry. If the
      * mbox file is not locked this method will lock the file before reading and
      * unlock it after reading. If the file already is locked, it will not
      * unlock the file after reading the entry.
      *
-     * @param offset The start position of the entry in the mbox file.
-     * @return Message at given offset or QByteArray() if the the file could not be locked
-     *         or the offset > fileSize.
+     * @param entry The entry in the mbox file.
+     * @return QByteArray containing the raw message data.
      *
      * @see lock(), unlock()
      */
-    QByteArray readRawEntry( quint64 offset );
+    QByteArray readRawMessage( const MBoxEntry &entry );
 
     /**
      * Writes the mbox to disk. If the fileName is empty only appended messages

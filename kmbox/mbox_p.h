@@ -49,16 +49,16 @@ class MBoxPrivate : public QObject
     void unlockMBox();
 
   public:
-    QByteArray     mAppendedEntries;
-    QList<MsgEntryInfo> mEntries;
-    bool           mFileLocked;
-    quint64        mInitialMboxFileSize;
-    QString        mLockFileName;
-    MBox::LockType mLockType;
-    MBox          *mMBox;
-    QFile          mMboxFile;
-    bool           mReadOnly;
-    QTimer         mUnlockTimer;
+    QByteArray      mAppendedEntries;
+    MBoxEntry::List mEntries;
+    bool            mFileLocked;
+    quint64         mInitialMboxFileSize;
+    QString         mLockFileName;
+    MBox::LockType  mLockType;
+    MBox            *mMBox;
+    QFile           mMboxFile;
+    bool            mReadOnly;
+    QTimer          mUnlockTimer;
 
   public: /// Static helper methods
     static QByteArray escapeFrom( const QByteArray &msg );

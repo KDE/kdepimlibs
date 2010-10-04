@@ -1,6 +1,7 @@
 project(kmbox)
 
 set(kmbox_LIB_SRCS
+    mboxentry.cpp
     mbox_p.cpp
     mbox.cpp
 )
@@ -21,6 +22,7 @@ install(TARGETS kmbox ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   kmbox_export.h
   mbox.h
+  mboxentry.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/kmbox
   COMPONENT Devel
 )

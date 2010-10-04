@@ -60,7 +60,7 @@ void MBoxBenchmark::testNoLockPerformance()
   mbox.load(fileName());
 
   for (int i = 0; i < 1000; ++i)
-    mbox.appendEntry(mMail1);
+    mbox.appendMessage(mMail1);
 
   mbox.save(fileName());
 
@@ -70,8 +70,8 @@ void MBoxBenchmark::testNoLockPerformance()
     mbox2.setLockType(MBox::None);
     mbox2.setUnlockTimeout(5000);
     mbox2.load(fileName());
-    foreach (MsgEntryInfo const &info, mbox2.entryList()) {
-      mbox2.readEntry(info.offset);
+    foreach (const MBoxEntry &entry, mbox2.entries()) {
+      mbox2.readMessage(entry);
     }
   }
 }
@@ -86,7 +86,7 @@ void MBoxBenchmark::testProcfileLockPerformance()
   mbox.setLockType(MBox::ProcmailLockfile);
   mbox.load(fileName());
   for (int i = 0; i < 1000; ++i)
-    mbox.appendEntry(mMail1);
+    mbox.appendMessage(mMail1);
 
   mbox.save(fileName());
 
@@ -96,8 +96,8 @@ void MBoxBenchmark::testProcfileLockPerformance()
     mbox2.load(fileName());
     mbox2.setUnlockTimeout(5000); // Keep the mbox locked for five seconds.
 
-    foreach (MsgEntryInfo const &info, mbox2.entryList())
-      mbox2.readEntry(info.offset);
+    foreach (const MBoxEntry &entry, mbox2.entries())
+      mbox2.readMessage(entry);
   }
 }
 
@@ -108,7 +108,7 @@ void MBoxBenchmark::voidTestMD5Performance()
   mbox.load(fileName());
 
   for (int i = 0; i < 1000; ++i)
-    mbox.appendEntry(mMail1);
+    mbox.appendMessage(mMail1);
 
   mbox.save(fileName());
 
