@@ -24,18 +24,21 @@
           Bertjan Broeksema, april 2009
 */
 
+#include "mbox.h"
 #include "mbox_p.h"
-
-#include <fcntl.h>
-
-#include <QtCore/QBuffer>
-#include <QtCore/QProcess>
 
 #include <kdebug.h>
 #include <klocalizedstring.h>
 #include <kshell.h>
 #include <kstandarddirs.h>
 #include <kurl.h>
+
+#include <QtCore/QBuffer>
+#include <QtCore/QProcess>
+
+#include <fcntl.h>
+
+using namespace KMBox;
 
 static QString sMBoxSeperatorRegExp( QLatin1String( "^From .*[0-9][0-9]:[0-9][0-9]" ) );
 

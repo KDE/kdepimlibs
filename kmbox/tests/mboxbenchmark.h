@@ -41,7 +41,7 @@ class MBoxBenchmark : public QObject
 
   private:
     KTempDir *mTempDir;
-    MessagePtr mMail1;
+    KMBox::MessagePtr mMail1;
 };
 
 #endif // MBOXBENCHMARK_H

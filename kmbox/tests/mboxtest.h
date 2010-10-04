@@ -50,8 +50,8 @@ class MboxTest : public QObject
 
   private:
     KTempDir *mTempDir;
-    MessagePtr mMail1;
-    MessagePtr mMail2;
+    KMBox::MessagePtr mMail1;
+    KMBox::MessagePtr mMail2;
 };
 
 #endif // MBOXTEST_H

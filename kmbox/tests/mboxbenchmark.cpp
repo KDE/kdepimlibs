@@ -30,6 +30,8 @@ QTEST_KDEMAIN( MBoxBenchmark, NoGUI )
 
 #include "test-entries.h"
 
+using namespace KMBox;
+
 static const char * testDir = "libmbox-unit-test";
 static const char * testFile = "test-mbox-file";
 

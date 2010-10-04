@@ -17,17 +17,19 @@
     02110-1301, USA.
 */
 
-#ifndef MBOX_H
-#define MBOX_H
+#ifndef KMBOX_MBOX_H
+#define KMBOX_MBOX_H
 
-#include <boost/shared_ptr.hpp>
+#include "kmbox_export.h"
+
+#include <kmime/kmime_message.h>
 
 #include <QtCore/QSet>
 #include <QtCore/QString>
 
-#include <kmime/kmime_message.h>
+#include <boost/shared_ptr.hpp>
 
-#include "mbox_export.h"
+namespace KMBox {
 
 struct MsgEntryInfo
 {
@@ -41,9 +43,12 @@ typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 class MBoxPrivate;
 
-class MBOX_EXPORT MBox
+class KMBOX_EXPORT MBox
 {
   public:
+    /**
+     * Describes the type of locking that will be used.
+     */
     enum LockType {
       ProcmailLockfile,
       MuttDotlock,
@@ -235,8 +240,12 @@ class MBOX_EXPORT MBox
     bool unlock();
 
   private:
+    //@cond PRIVATE
     friend class MBoxPrivate;
     MBoxPrivate * const d;
+    //@endcond
 };
 
-#endif // MBOX_H
+}
+
+#endif // KMBOX_MBOX_H

@@ -17,15 +17,16 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef MBOX_P_H
-#define MBOX_P_H
+#ifndef KMBOX_MBOX_P_H
+#define KMBOX_MBOX_P_H
 
 #include "mbox.h"
 
-#include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
+
+namespace KMBox {
 
 class MBoxPrivate : public QObject
 {
@@ -38,7 +39,7 @@ class MBoxPrivate : public QObject
 
     void close();
 
-    void initLoad( QString const &fileName );
+    void initLoad( const QString &fileName );
 
     bool open();
 
@@ -73,4 +74,6 @@ class MBoxPrivate : public QObject
     static void unescapeFrom( char *msg, size_t size );
 };
 
-#endif // MBOX_P_H
+}
+
+#endif // KMBOX_MBOX_P_H

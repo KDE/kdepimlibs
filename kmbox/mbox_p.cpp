@@ -22,9 +22,12 @@
 #include <kdebug.h>
 #include <kurl.h>
 
-MBoxPrivate::MBoxPrivate(MBox *mbox) : mInitialMboxFileSize( 0 ), mMBox(mbox)
+using namespace KMBox;
+
+MBoxPrivate::MBoxPrivate( MBox *mbox )
+  : mInitialMboxFileSize( 0 ), mMBox( mbox )
 {
-  connect(&mUnlockTimer, SIGNAL(timeout()), SLOT(unlockMBox()));
+  connect( &mUnlockTimer, SIGNAL( timeout() ), SLOT( unlockMBox() ) );
 }
 
 MBoxPrivate::~MBoxPrivate()
@@ -32,6 +35,7 @@ MBoxPrivate::~MBoxPrivate()
   if ( mMboxFile.isOpen() )
     mMboxFile.close();
 }
+
 bool MBoxPrivate::open()
 {
   if ( mMboxFile.isOpen() )
@@ -54,7 +58,7 @@ void MBoxPrivate::close()
   mFileLocked = false;
 }
 
-void MBoxPrivate::initLoad( QString const &fileName )
+void MBoxPrivate::initLoad( const QString &fileName )
 {
   mMboxFile.setFileName( KUrl( fileName ).toLocalFile() );
   mInitialMboxFileSize = mMboxFile.size();
@@ -64,7 +68,7 @@ void MBoxPrivate::initLoad( QString const &fileName )
 
 bool MBoxPrivate::startTimerIfNeeded()
 {
-  if (mUnlockTimer.interval() > 0) {
+  if ( mUnlockTimer.interval() > 0 ) {
     mUnlockTimer.start();
     return true;
   }
@@ -94,11 +98,11 @@ QByteArray MBoxPrivate::mboxMessageSeparator( const QByteArray &msg )
   else
     separator += from->addresses().first() + ' ';
 
-  KMime::Headers::Date *date = mail.date(false);
-  if (!date || date->isEmpty())
+  KMime::Headers::Date *date = mail.date( false );
+  if ( !date || date->isEmpty() )
     separator += QDateTime::currentDateTime().toString( Qt::TextDate ).toUtf8() + '\n';
   else
-    separator += date->as7BitString(false) + '\n';
+    separator += date->as7BitString( false ) + '\n';
 
   return separator;
 }
@@ -112,34 +116,36 @@ QByteArray MBoxPrivate::escapeFrom( const QByteArray &str )
     return str;
 
   // worst case: \nFrom_\nFrom_\nFrom_... => grows to 7/6
-  QByteArray result( int( strLen + 5 ) / 6 * 7 + 1, '\0');
+  QByteArray result( int( strLen + 5 ) / 6 * 7 + 1, '\0' );
 
   const char * s = str.data();
-  const char * const e = s + strLen - STRDIM( "From ");
+  const char * const e = s + strLen - STRDIM( "From " );
   char * d = result.data();
 
   bool onlyAnglesAfterLF = false; // dont' match ^From_
   while ( s < e ) {
     switch ( *s ) {
-    case '\n':
-      onlyAnglesAfterLF = true;
-      break;
-    case '>':
-      break;
-    case 'F':
-      if ( onlyAnglesAfterLF && qstrncmp( s+1, "rom ", STRDIM("rom ") ) == 0 )
-        *d++ = '>';
-      // fall through
-    default:
-      onlyAnglesAfterLF = false;
-      break;
+      case '\n':
+        onlyAnglesAfterLF = true;
+        break;
+      case '>':
+        break;
+      case 'F':
+        if ( onlyAnglesAfterLF && qstrncmp( s+1, "rom ", STRDIM("rom ") ) == 0 )
+          *d++ = '>';
+        // fall through
+      default:
+        onlyAnglesAfterLF = false;
+        break;
     }
     *d++ = *s++;
   }
+
   while ( s < str.data() + strLen )
     *d++ = *s++;
 
   result.truncate( d - result.data() );
+
   return result;
 }
 
@@ -148,7 +154,8 @@ void MBoxPrivate::unescapeFrom( char* str, size_t strLen )
 {
   if ( !str )
     return;
-  if ( strLen <= STRDIM(">From ") )
+
+  if ( strLen <= STRDIM( ">From " ) )
     return;
 
   // yes, *d++ = *s++ is a no-op as long as d == s (until after the
@@ -157,24 +164,28 @@ void MBoxPrivate::unescapeFrom( char* str, size_t strLen )
   // might even be slower...
   const char * s = str;
   char * d = str;
-  const char * const e = str + strLen - STRDIM( ">From ");
+  const char * const e = str + strLen - STRDIM( ">From " );
 
   while ( s < e ) {
     if ( *s == '\n' && *(s+1) == '>' ) { // we can do the lookahead, since e is 6 chars from the end!
       *d++ = *s++;  // == '\n'
       *d++ = *s++;  // == '>'
+
       while ( s < e && *s == '>' )
         *d++ = *s++;
+
       if ( qstrncmp( s, "From ", STRDIM( "From ") ) == 0 )
         --d;
     }
+
     *d++ = *s++; // yes, s might be e here, but e is not the end :-)
   }
   // copy the rest:
   while ( s < str + strLen )
     *d++ = *s++;
+
   if ( d < s ) // only NUL-terminate if it's shorter
     *d = 0;
 }
-#undef STRDIM
 
+#undef STRDIM

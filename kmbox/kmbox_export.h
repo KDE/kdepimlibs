@@ -17,27 +17,27 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef MBOX_EXPORT_H
-#define MBOX_EXPORT_H
+#ifndef KMBOX_EXPORT_H
+#define KMBOX_EXPORT_H
 
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#ifndef MBOX_EXPORT
+#ifndef KMBOX_EXPORT
 # if defined(KDEPIM_STATIC_LIBS)
    /* No export/import for static libraries */
-#  define MBOX_EXPORT
-# elif defined(MAKE_MBOX_LIB)
+#  define KMBOX_EXPORT
+# elif defined(MAKE_KMBOX_LIB)
    /* We are building this library */
-#  define MBOX_EXPORT KDE_EXPORT
+#  define KMBOX_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define MBOX_EXPORT KDE_IMPORT
+#  define KMBOX_EXPORT KDE_IMPORT
 # endif
 #endif
 
-# ifndef MBOX_EXPORT_DEPRECATED
-#  define MBOX_EXPORT_DEPRECATED KDE_DEPRECATED MBOX_EXPORT
+# ifndef KMBOX_EXPORT_DEPRECATED
+#  define KMBOX_EXPORT_DEPRECATED KDE_DEPRECATED KMBOX_EXPORT
 # endif
 
 #endif
