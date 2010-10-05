@@ -28,11 +28,7 @@
 
 #include <QtCore/QString>
 
-#include <boost/shared_ptr.hpp>
-
 namespace KMBox {
-
-typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 class MBoxPrivate;
 
@@ -76,7 +72,7 @@ class KMBOX_EXPORT MBox
      * @return the corresponding mbox entry for the message in the file or an invalid mbox entry
      *         if the message was not added.
      */
-    MBoxEntry appendMessage( const MessagePtr &message );
+    MBoxEntry appendMessage( const KMime::Message::Ptr &message );
 
     /**
      * Retrieve the mbox entry objects for all emails from the file except the

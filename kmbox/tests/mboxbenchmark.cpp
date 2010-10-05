@@ -43,7 +43,7 @@ QString MBoxBenchmark::fileName()
 void MBoxBenchmark::initTestCase()
 {
   mTempDir = new KTempDir( KStandardDirs::locateLocal( "tmp", QLatin1String( testDir ) ) );
-  mMail1 = MessagePtr( new KMime::Message );
+  mMail1 = KMime::Message::Ptr( new KMime::Message );
   mMail1->setContent( KMime::CRLFtoLF( sEntry1 ) );
   mMail1->parse();
 }
@@ -78,7 +78,7 @@ void MBoxBenchmark::testNoLockPerformance()
 
 void MBoxBenchmark::testProcfileLockPerformance()
 {
-  mMail1 = MessagePtr( new KMime::Message );
+  mMail1 = KMime::Message::Ptr( new KMime::Message );
   mMail1->setContent( KMime::CRLFtoLF( sEntry1 ) );
   mMail1->parse();
 
