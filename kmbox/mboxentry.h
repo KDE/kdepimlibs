@@ -23,6 +23,7 @@
 #include "kmbox_export.h"
 
 #include <QtCore/QList>
+#include <QtCore/QMetaType>
 #include <QtCore/QPair>
 #include <QtCore/QSharedDataPointer>
 
@@ -117,5 +118,7 @@ class KMBOX_EXPORT MBoxEntry
 };
 
 }
+
+Q_DECLARE_TYPEINFO( KMBox::MBoxEntry, Q_MOVABLE_TYPE );
 
 #endif // KMBOX_MBOXENTRY_H
