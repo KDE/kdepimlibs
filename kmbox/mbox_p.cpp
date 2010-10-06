@@ -33,14 +33,16 @@ MBoxPrivate::MBoxPrivate( MBox *mbox )
 
 MBoxPrivate::~MBoxPrivate()
 {
-  if ( mMboxFile.isOpen() )
+  if ( mMboxFile.isOpen() ) {
     mMboxFile.close();
+  }
 }
 
 bool MBoxPrivate::open()
 {
-  if ( mMboxFile.isOpen() )
+  if ( mMboxFile.isOpen() ) {
     return true;  // already open
+  }
 
   if ( !mMboxFile.open( QIODevice::ReadWrite ) ) { // messages file
     kDebug() << "Cannot open mbox file `" << mMboxFile.fileName() << "' FileError:"
@@ -53,8 +55,9 @@ bool MBoxPrivate::open()
 
 void MBoxPrivate::close()
 {
-  if ( mMboxFile.isOpen() )
+  if ( mMboxFile.isOpen() ) {
     mMboxFile.close();
+  }
 
   mFileLocked = false;
 }
@@ -94,16 +97,18 @@ QByteArray MBoxPrivate::mboxMessageSeparator( const QByteArray &msg )
   QByteArray separator = "From ";
 
   KMime::Headers::From *from = mail.from( false );
-  if ( !from || from->addresses().isEmpty() )
+  if ( !from || from->addresses().isEmpty() ) {
     separator += "unknown@unknown.invalid";
-  else
+  } else {
     separator += from->addresses().first() + ' ';
+  }
 
   KMime::Headers::Date *date = mail.date( false );
-  if ( !date || date->isEmpty() )
+  if ( !date || date->isEmpty() ) {
     separator += QDateTime::currentDateTime().toString( Qt::TextDate ).toUtf8() + '\n';
-  else
+  } else {
     separator += date->as7BitString( false ) + '\n';
+  }
 
   return separator;
 }
@@ -113,15 +118,16 @@ QByteArray MBoxPrivate::mboxMessageSeparator( const QByteArray &msg )
 QByteArray MBoxPrivate::escapeFrom( const QByteArray &str )
 {
   const unsigned int strLen = str.length();
-  if ( strLen <= STRDIM( "From " ) )
+  if ( strLen <= STRDIM( "From " ) ) {
     return str;
+  }
 
   // worst case: \nFrom_\nFrom_\nFrom_... => grows to 7/6
   QByteArray result( int( strLen + 5 ) / 6 * 7 + 1, '\0' );
 
-  const char * s = str.data();
-  const char * const e = s + strLen - STRDIM( "From " );
-  char * d = result.data();
+  const char *s = str.data();
+  const char *const e = s + strLen - STRDIM( "From " );
+  char *d = result.data();
 
   bool onlyAnglesAfterLF = false; // dont' match ^From_
   while ( s < e ) {
@@ -132,8 +138,9 @@ QByteArray MBoxPrivate::escapeFrom( const QByteArray &str )
       case '>':
         break;
       case 'F':
-        if ( onlyAnglesAfterLF && qstrncmp( s+1, "rom ", STRDIM("rom ") ) == 0 )
+        if ( onlyAnglesAfterLF && qstrncmp( s+1, "rom ", STRDIM( "rom " ) ) == 0 ) {
           *d++ = '>';
+        }
         // fall through
       default:
         onlyAnglesAfterLF = false;
@@ -142,8 +149,9 @@ QByteArray MBoxPrivate::escapeFrom( const QByteArray &str )
     *d++ = *s++;
   }
 
-  while ( s < str.data() + strLen )
+  while ( s < str.data() + strLen ) {
     *d++ = *s++;
+  }
 
   result.truncate( d - result.data() );
 
@@ -151,48 +159,56 @@ QByteArray MBoxPrivate::escapeFrom( const QByteArray &str )
 }
 
 // performs (\n|^)>{n}From_ -> \1>{n-1}From_ conversion
-void MBoxPrivate::unescapeFrom( char* str, size_t strLen )
+void MBoxPrivate::unescapeFrom( char *str, size_t strLen )
 {
-  if ( !str )
+  if ( !str ) {
     return;
+  }
 
-  if ( strLen <= STRDIM( ">From " ) )
+  if ( strLen <= STRDIM( ">From " ) ) {
     return;
+  }
 
   // yes, *d++ = *s++ is a no-op as long as d == s (until after the
   // first >From_), but writes are cheap compared to reads and the
   // data is already in the cache from the read, so special-casing
   // might even be slower...
-  const char * s = str;
-  char * d = str;
-  const char * const e = str + strLen - STRDIM( ">From " );
+  const char *s = str;
+  char *d = str;
+  const char *const e = str + strLen - STRDIM( ">From " );
 
   while ( s < e ) {
-    if ( *s == '\n' && *(s+1) == '>' ) { // we can do the lookahead, since e is 6 chars from the end!
+    if ( *s == '\n' && *( s + 1 ) == '>' ) { // we can do the lookahead,
+                                             // since e is 6 chars from the end!
       *d++ = *s++;  // == '\n'
       *d++ = *s++;  // == '>'
 
-      while ( s < e && *s == '>' )
+      while ( s < e && *s == '>' ) {
         *d++ = *s++;
+      }
 
-      if ( qstrncmp( s, "From ", STRDIM( "From ") ) == 0 )
+      if ( qstrncmp( s, "From ", STRDIM( "From " ) ) == 0 ) {
         --d;
+      }
     }
 
     *d++ = *s++; // yes, s might be e here, but e is not the end :-)
   }
   // copy the rest:
-  while ( s < str + strLen )
+  while ( s < str + strLen ) {
     *d++ = *s++;
+  }
 
-  if ( d < s ) // only NUL-terminate if it's shorter
+  if ( d < s ) { // only NUL-terminate if it's shorter
     *d = 0;
+  }
 }
 
 bool MBoxPrivate::isMBoxSeparator( const QByteArray &line ) const
 {
-  if ( !line.startsWith( "From " ) )  //krazy:exclude=strings
+  if ( !line.startsWith( "From " ) ) {  //krazy:exclude=strings
     return false;
+  }
 
   return mSeparatorMatcher.indexIn( QString::fromLatin1( line ) ) >= 0;
 }

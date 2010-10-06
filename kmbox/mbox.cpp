@@ -52,8 +52,9 @@ MBox::MBox()
 
 MBox::~MBox()
 {
-  if ( d->mFileLocked )
+  if ( d->mFileLocked ) {
     unlock();
+  }
 
   d->close();
 
@@ -125,8 +126,9 @@ MBoxEntry::List MBox::entries( const MBoxEntry::List &deletedEntries ) const
   MBoxEntry::List result;
 
   foreach ( const MBoxEntry &entry, d->mEntries ) {
-    if ( !deletedEntries.contains( entry ) )
+    if ( !deletedEntries.contains( entry ) ) {
       result << entry;
+    }
   }
 
   return result;
@@ -139,8 +141,9 @@ QString MBox::fileName() const
 
 bool MBox::load( const QString &fileName )
 {
-  if ( d->mFileLocked )
+  if ( d->mFileLocked ) {
     return false;
+  }
 
   d->initLoad( fileName );
 
@@ -178,10 +181,11 @@ bool MBox::load( const QString &fileName )
         // the mail self did not end with a '\n' char) and sometimes only one to
         // achieve this. When reading the file it is not possible to see which
         // was the case.
-        if ( d->mMboxFile.atEnd() )
+        if ( d->mMboxFile.atEnd() ) {
           entry.d->mMessageSize = msgSize; // We use readLine so there's no additional '\n'
-        else
+        } else {
           entry.d->mMessageSize = msgSize - 1;
+        }
 
         // Don't add the separator size and the newline up to the message size.
         entry.d->mMessageSize -= prevSeparator.size() + 1;
@@ -189,8 +193,9 @@ bool MBox::load( const QString &fileName )
         d->mEntries << entry;
       }
 
-      if ( d->isMBoxSeparator( line ) )
+      if ( d->isMBoxSeparator( line ) ) {
         prevSeparator = line;
+      }
 
       offs += msgSize; // Mark the beginning of the next message.
     }
@@ -203,13 +208,15 @@ bool MBox::load( const QString &fileName )
 
 bool MBox::lock()
 {
-  if ( d->mMboxFile.fileName().isEmpty() )
+  if ( d->mMboxFile.fileName().isEmpty() ) {
     return false; // We cannot lock if there is no file loaded.
+  }
 
   // We can't load another file when the mbox currently is locked so if d->mFileLocked
   // is true atm just return true.
-  if ( locked() )
+  if ( locked() ) {
     return true;
+  }
 
   if ( d->mLockType == None ) {
     d->mFileLocked = true;
@@ -225,59 +232,60 @@ bool MBox::lock()
   QStringList args;
   int rc = 0;
 
-  switch(d->mLockType)
-  {
-    case ProcmailLockfile:
-      args << QLatin1String( "-l20" ) << QLatin1String( "-r5" );
-      if ( !d->mLockFileName.isEmpty() )
-        args << QString::fromLocal8Bit( QFile::encodeName( d->mLockFileName ) );
-      else
-        args << QString::fromLocal8Bit( QFile::encodeName( d->mMboxFile.fileName() + QLatin1String( ".lock" ) ) );
+  switch( d->mLockType ) {
+  case ProcmailLockfile:
+    args << QLatin1String( "-l20" ) << QLatin1String( "-r5" );
+    if ( !d->mLockFileName.isEmpty() ) {
+      args << QString::fromLocal8Bit( QFile::encodeName( d->mLockFileName ) );
+    } else {
+      args << QString::fromLocal8Bit( QFile::encodeName( d->mMboxFile.fileName() +
+                                                         QLatin1String( ".lock" ) ) );
+    }
 
-      rc = QProcess::execute( QLatin1String( "lockfile" ), args);
-      if( rc != 0 ) {
-        kDebug() << "lockfile -l20 -r5 " << d->mMboxFile.fileName()
-                 << ": Failed ("<< rc << ") switching to read only mode";
-        d->mReadOnly = true; // In case the MBox object was created read/write we
-                             // set it to read only when locking failed.
-      } else {
-        d->mFileLocked = true;
-      }
-      break;
-
-    case MuttDotlock:
-      args << QString::fromLocal8Bit( QFile::encodeName( d->mMboxFile.fileName() ) );
-      rc = QProcess::execute( QLatin1String( "mutt_dotlock" ), args );
-
-      if( rc != 0 ) {
-        kDebug() << "mutt_dotlock " << d->mMboxFile.fileName()
-                 << ": Failed (" << rc << ") switching to read only mode";
-        d->mReadOnly = true; // In case the MBox object was created read/write we
-                          // set it to read only when locking failed.
-      } else {
-        d->mFileLocked = true;
-      }
-      break;
-
-    case MuttDotlockPrivileged:
-      args << QLatin1String( "-p" )
-           << QString::fromLocal8Bit( QFile::encodeName( d->mMboxFile.fileName() ) );
-      rc = QProcess::execute( QLatin1String( "mutt_dotlock" ), args );
-
-      if( rc != 0 ) {
-        kDebug() << "mutt_dotlock -p " << d->mMboxFile.fileName() << ":"
-                 << ": Failed (" << rc << ") switching to read only mode";
-        d->mReadOnly = true;
-      } else {
-        d->mFileLocked = true;
-      }
-      break;
-
-    case None:
+    rc = QProcess::execute( QLatin1String( "lockfile" ), args );
+    if ( rc != 0 ) {
+      kDebug() << "lockfile -l20 -r5 " << d->mMboxFile.fileName()
+               << ": Failed ("<< rc << ") switching to read only mode";
+      d->mReadOnly = true; // In case the MBox object was created read/write we
+      // set it to read only when locking failed.
+    } else {
       d->mFileLocked = true;
-      break;
-    default:
-      break;
+    }
+    break;
+
+  case MuttDotlock:
+    args << QString::fromLocal8Bit( QFile::encodeName( d->mMboxFile.fileName() ) );
+    rc = QProcess::execute( QLatin1String( "mutt_dotlock" ), args );
+
+    if ( rc != 0 ) {
+      kDebug() << "mutt_dotlock " << d->mMboxFile.fileName()
+               << ": Failed (" << rc << ") switching to read only mode";
+      d->mReadOnly = true; // In case the MBox object was created read/write we
+      // set it to read only when locking failed.
+    } else {
+      d->mFileLocked = true;
+    }
+    break;
+
+  case MuttDotlockPrivileged:
+    args << QLatin1String( "-p" )
+         << QString::fromLocal8Bit( QFile::encodeName( d->mMboxFile.fileName() ) );
+    rc = QProcess::execute( QLatin1String( "mutt_dotlock" ), args );
+
+    if ( rc != 0 ) {
+      kDebug() << "mutt_dotlock -p " << d->mMboxFile.fileName() << ":"
+               << ": Failed (" << rc << ") switching to read only mode";
+      d->mReadOnly = true;
+    } else {
+      d->mFileLocked = true;
+    }
+    break;
+
+  case None:
+    d->mFileLocked = true;
+    break;
+  default:
+    break;
   }
 
   if ( d->mFileLocked ) {
@@ -304,14 +312,17 @@ static bool lessThanByOffset( const MBoxEntry &left, const MBoxEntry &right )
 
 bool MBox::purge( const MBoxEntry::List &deletedEntries, QList<MBoxEntry::Pair> *movedEntries )
 {
-  if ( d->mMboxFile.fileName().isEmpty() )
+  if ( d->mMboxFile.fileName().isEmpty() ) {
     return false; // No file loaded yet.
+  }
 
-  if ( deletedEntries.isEmpty() )
+  if ( deletedEntries.isEmpty() ) {
     return true; // Nothing to do.
+  }
 
-  if ( !lock() )
+  if ( !lock() ) {
     return false;
+  }
 
   foreach ( const MBoxEntry &entry, deletedEntries ) {
     d->mMboxFile.seek( entry.messageOffset() );
@@ -347,9 +358,9 @@ bool MBox::purge( const MBoxEntry::List &deletedEntries, QList<MBoxEntry::Pair> 
     if ( deletedEntries.contains( entry ) && !writeOffSetInitialized ) {
       writeOffset = entry.messageOffset();
       writeOffSetInitialized = true;
-    } else if ( writeOffSetInitialized
-                && writeOffset < entry.messageOffset()
-                && !deletedEntries.contains( entry ) ) {
+    } else if ( writeOffSetInitialized &&
+                writeOffset < entry.messageOffset() &&
+                !deletedEntries.contains( entry ) ) {
       // The current message doesn't have to be deleted, but must be moved.
       // First determine the size of the entry that must be moved.
       quint64 entrySize = 0;
@@ -383,7 +394,8 @@ bool MBox::purge( const MBoxEntry::List &deletedEntries, QList<MBoxEntry::Pair> 
       resultEntry.d->mMessageSize = entry.messageSize();
 
       resultingEntryList << resultEntry;
-      tmpMovedEntries << MBoxEntry::Pair( MBoxEntry( entry.messageOffset() ), MBoxEntry( resultEntry.messageOffset() ) );
+      tmpMovedEntries << MBoxEntry::Pair( MBoxEntry( entry.messageOffset() ),
+                                          MBoxEntry( resultEntry.messageOffset() ) );
       writeOffset += entrySize;
     } else if ( !deletedEntries.contains( entry ) ) {
       // Unmoved and not deleted entry, can only ocure before the first deleted
@@ -409,8 +421,9 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
 {
   const bool wasLocked = locked();
   if ( !wasLocked ) {
-    if ( !lock() )
+    if ( !lock() ) {
       return QByteArray();
+    }
   }
 
   // TODO: Add error handling in case locking failed.
@@ -430,8 +443,9 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
 
     if ( !d->isMBoxSeparator( line ) ) {
       kDebug() << "[MBox::readEntry] Invalid entry at:" << offset;
-      if ( !wasLocked )
+      if ( !wasLocked ) {
         unlock();
+      }
       return QByteArray(); // The file is messed up or the index is incorrect.
     }
 
@@ -443,8 +457,9 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
   } else {
     offset -= d->mInitialMboxFileSize;
     if ( offset > static_cast<quint64>( d->mAppendedEntries.size() ) ) {
-      if ( !wasLocked )
+      if ( !wasLocked ) {
         unlock();
+      }
       return QByteArray();
     }
 
@@ -456,8 +471,9 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
 
     if ( !d->isMBoxSeparator( line ) ) {
       kDebug() << "[MBox::readEntry] Invalid appended entry at:" << offset;
-      if ( !wasLocked )
+      if ( !wasLocked ) {
         unlock();
+      }
       return QByteArray(); // The file is messed up or the index is incorrect.
     }
 
@@ -469,8 +485,9 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
   }
 
   // Remove te last '\n' added by writeEntry.
-  if ( message.endsWith( '\n' ) )
-    message.chop(1);
+  if ( message.endsWith( '\n' ) ) {
+    message.chop( 1 );
+  }
 
   MBoxPrivate::unescapeFrom( message.data(), message.size() );
 
@@ -488,8 +505,9 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
 KMime::Message *MBox::readMessage( const MBoxEntry &entry )
 {
   const QByteArray message = readRawMessage( entry );
-  if ( message.isEmpty() )
+  if ( message.isEmpty() ) {
     return 0;
+  }
 
   KMime::Message *mail = new KMime::Message();
   mail->setContent( KMime::CRLFtoLF( message ) );
@@ -501,8 +519,9 @@ KMime::Message *MBox::readMessage( const MBoxEntry &entry )
 QByteArray MBox::readMessageHeaders( const MBoxEntry &entry )
 {
   const bool wasLocked = d->mFileLocked;
-  if ( !wasLocked )
+  if ( !wasLocked ) {
     lock();
+  }
 
   const quint64 offset = entry.messageOffset();
 
@@ -516,8 +535,8 @@ QByteArray MBox::readMessageHeaders( const MBoxEntry &entry )
     QByteArray line = d->mMboxFile.readLine();
 
     while ( line[0] != '\n' && !d->mMboxFile.atEnd() ) {
-        headers += line;
-        line = d->mMboxFile.readLine();
+      headers += line;
+      line = d->mMboxFile.readLine();
     }
   } else {
     QBuffer buffer( &(d->mAppendedEntries) );
@@ -526,13 +545,14 @@ QByteArray MBox::readMessageHeaders( const MBoxEntry &entry )
     QByteArray line = buffer.readLine();
 
     while ( line[0] != '\n' && !buffer.atEnd() ) {
-        headers += line;
-        line = buffer.readLine();
+      headers += line;
+      line = buffer.readLine();
     }
   }
 
-  if ( !wasLocked )
+  if ( !wasLocked ) {
     unlock();
+  }
 
   return headers;
 }
@@ -540,16 +560,19 @@ QByteArray MBox::readMessageHeaders( const MBoxEntry &entry )
 bool MBox::save( const QString &fileName )
 {
   if ( !fileName.isEmpty() && KUrl( fileName ).toLocalFile() != d->mMboxFile.fileName() ) {
-    if ( !d->mMboxFile.copy( fileName ) )
+    if ( !d->mMboxFile.copy( fileName ) ) {
       return false;
+    }
 
-    if ( d->mAppendedEntries.size() == 0 )
+    if ( d->mAppendedEntries.size() == 0 ) {
       return true; // Nothing to do
+    }
 
     QFile otherFile( fileName );
     Q_ASSERT( otherFile.exists() );
-    if ( !otherFile.open( QIODevice::ReadWrite ) )
+    if ( !otherFile.open( QIODevice::ReadWrite ) ) {
       return false;
+    }
 
     otherFile.seek( d->mMboxFile.size() );
     otherFile.write( d->mAppendedEntries );
@@ -559,11 +582,13 @@ bool MBox::save( const QString &fileName )
     return true;
   }
 
-  if ( d->mAppendedEntries.size() == 0 )
+  if ( d->mAppendedEntries.size() == 0 ) {
     return true; // Nothing to do.
+  }
 
-  if ( !lock() )
+  if ( !lock() ) {
     return false;
+  }
 
   Q_ASSERT( d->mMboxFile.isOpen() );
 
@@ -628,10 +653,11 @@ bool MBox::unlock()
   switch( d->mLockType ) {
     case ProcmailLockfile:
       // QFile::remove returns true on succes so negate the result.
-      if ( !d->mLockFileName.isEmpty() )
+      if ( !d->mLockFileName.isEmpty() ) {
         rc = !QFile( d->mLockFileName ).remove();
-      else
+      } else {
         rc = !QFile( d->mMboxFile.fileName() + QLatin1String( ".lock" ) ).remove();
+      }
       break;
 
     case MuttDotlock:
@@ -651,8 +677,9 @@ bool MBox::unlock()
       break;
   }
 
-  if ( rc == 0 ) // Unlocking succeeded
+  if ( rc == 0 ) { // Unlocking succeeded
     d->mFileLocked = false;
+  }
 
   d->mMboxFile.close();
 

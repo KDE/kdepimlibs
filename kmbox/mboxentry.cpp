@@ -43,27 +43,28 @@ MBoxEntry::~MBoxEntry()
 {
 }
 
-MBoxEntry& MBoxEntry::operator=( const MBoxEntry &other )
+MBoxEntry &MBoxEntry::operator=( const MBoxEntry &other )
 {
-  if ( this != &other )
+  if ( this != &other ) {
     d = other.d;
+  }
 
   return *this;
 }
 
 bool MBoxEntry::operator==( const MBoxEntry &other ) const
 {
-  return (d->mOffset == other.d->mOffset);
+  return ( d->mOffset == other.d->mOffset );
 }
 
 bool MBoxEntry::operator!=( const MBoxEntry &other ) const
 {
-  return !(other == *this);
+  return !( other == *this );
 }
 
 bool MBoxEntry::isValid() const
 {
-  return ((d->mOffset != 0) && (d->mMessageSize != 0));
+  return ( ( d->mOffset != 0 ) && ( d->mMessageSize != 0 ) );
 }
 
 quint64 MBoxEntry::messageOffset() const

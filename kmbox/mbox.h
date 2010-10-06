@@ -62,7 +62,8 @@ class KMBOX_EXPORT MBox
 
     /**
      * Appends @p message to the MBox and returns the corresponding mbox entry for it.
-     * You must load a mbox file by making a call to load( const QString& ) before appending entries.
+     * You must load a mbox file by making a call to load( const QString& ) before
+     * appending entries.
      * The returned mbox entry is <em>only</em> valid for that particular file.
      *
      * @param message The message to append to the mbox.
@@ -130,8 +131,8 @@ class KMBOX_EXPORT MBox
      *                       the file.
      * @param movedEntries Optional list for storing pairs of mbox entries that got moved
      *                     within the file due to the deletions.
-     *                     The @c first member of the pair is the entry with the original offsets the
-     *                     @c second member is the entry with the new (current) offset
+     *                     The @c first member of the pair is the entry with the original offsets
+     *                     the @c second member is the entry with the new (current) offset
      *
      * @return true if all offsets refer to a mbox separator line and a file was
      *         loaded, false otherewhise. In the latter the physical file has

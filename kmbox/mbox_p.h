@@ -33,7 +33,7 @@ class MBoxPrivate : public QObject
   Q_OBJECT
 
   public:
-    MBoxPrivate(MBox *mbox);
+    MBoxPrivate( MBox *mbox );
 
     virtual ~MBoxPrivate();
 

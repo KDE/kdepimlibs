@@ -73,7 +73,7 @@ class KMBOX_EXPORT MBoxEntry
     /**
      * Replaces this mbox entry object with an @p other object.
      */
-    MBoxEntry& operator=( const MBoxEntry &other );
+    MBoxEntry &operator=( const MBoxEntry &other );
 
     /**
      * Returns whether this mbox entry object is equal to an @p other.
