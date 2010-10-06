@@ -28,16 +28,12 @@
 #include "mbox_p.h"
 #include "mboxentry_p.h"
 
-#include <kdebug.h>
-#include <klocalizedstring.h>
-#include <kshell.h>
-#include <kstandarddirs.h>
-#include <kurl.h>
+#include <KDebug>
+#include <KStandardDirs>
+#include <KUrl>
 
 #include <QtCore/QBuffer>
 #include <QtCore/QProcess>
-
-#include <fcntl.h>
 
 using namespace KMBox;
 

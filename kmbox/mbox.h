@@ -21,12 +21,9 @@
 #define KMBOX_MBOX_H
 
 #include "kmbox_export.h"
-
 #include "mboxentry.h"
 
-#include <kmime/kmime_message.h>
-
-#include <QtCore/QString>
+#include <KMime/KMimeMessage>
 
 namespace KMBox {
 
