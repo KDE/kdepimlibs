@@ -23,7 +23,7 @@
 #include "kmbox_export.h"
 #include "mboxentry.h"
 
-#include <KMime/KMimeMessage>
+#include <kmime/kmime_message.h>
 
 namespace KMBox {
 
