@@ -19,8 +19,8 @@
 
 #include "mbox_p.h"
 
-#include <kdebug.h>
-#include <kurl.h>
+#include <KDebug>
+#include <KUrl>
 
 using namespace KMBox;
 
@@ -44,7 +44,7 @@ bool MBoxPrivate::open()
 
   if ( !mMboxFile.open( QIODevice::ReadWrite ) ) { // messages file
     kDebug() << "Cannot open mbox file `" << mMboxFile.fileName() << "' FileError:"
-             << mMboxFile.error();
+             << mMboxFile.errorString();
     return false;
   }
 
@@ -191,7 +191,7 @@ void MBoxPrivate::unescapeFrom( char* str, size_t strLen )
 
 bool MBoxPrivate::isMBoxSeparator( const QByteArray &line ) const
 {
-  if ( !line.startsWith( "From " ) )
+  if ( !line.startsWith( "From " ) )  //krazy:exclude=strings
     return false;
 
   return mSeparatorMatcher.indexIn( QString::fromLatin1( line ) ) >= 0;
