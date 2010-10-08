@@ -41,7 +41,7 @@ option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
 option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." ${KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED})
 option(KDEPIM_NO_KCAL "Build without legacy KCal." ${KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED})
 option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" ${_default_mobile_ui})
-
+option(STATIC_LIBRARY "Build kdepimlibs as static libraries." FALSE)
 
 ############### Load the CTest options ###############
 # Setting DART_TESTING_TIMEOUT has no effect on the tests timeout,
@@ -129,12 +129,18 @@ if (KDEPIM_NO_KCAL)
 endif (KDEPIM_NO_KCAL)
 
 if(WINCE)
-  set(LIBRARY_TYPE STATIC)
+  set(STATIC_LIBRARY ON)
   add_definitions(-DKDELIBS_STATIC_LIBS)
-  add_definitions(-DKDEPIM_STATIC_LIBS)
-else(WINCE)
-  set(LIBRARY_TYPE SHARED)
 endif(WINCE)
+
+if(STATIC_LIBRARY)
+  set(LIBRARY_TYPE STATIC)
+  add_definitions(-DKDEPIM_STATIC_LIBS)
+  message(STATUS "Building kdepimlibs as static libraries")
+else(STATIC_LIBRARY)
+  set(LIBRARY_TYPE SHARED)
+endif(STATIC_LIBRARY)
+
 
 ############### Now, we add the KDEPIMLibs components ###############
 # These targets will always be built
