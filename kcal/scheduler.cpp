@@ -258,8 +258,8 @@ bool Scheduler::acceptPublish( IncidenceBase *newIncBase,
           if ( !visitor.assign( calInc, newInc ) ) {
             kError() << "assigning different incidence types";
           } else {
-            calInc->setUid( oldUid );
             calInc->setSchedulingID( newInc->uid() );
+            calInc->setUid( oldUid );
             res = true;
           }
         }
