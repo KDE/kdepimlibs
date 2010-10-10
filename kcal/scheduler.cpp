@@ -255,8 +255,8 @@ bool Scheduler::acceptPublish( IncidenceBase *newIncBase,
           if ( !visitor.assign( calInc, newInc ) ) {
             kError() << "assigning different incidence types";
           } else {
-            calInc->setUid( oldUid );
             calInc->setSchedulingID( newInc->uid() );
+            calInc->setUid( oldUid );
             res = true;
           }
         }
@@ -344,8 +344,8 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
           kError() << "assigning different incidence types";
           res = false;
         } else {
-          i->setUid( oldUid );
           i->setSchedulingID( inc->uid() );
+          i->setUid( oldUid );
         }
         deleteTransaction( incidence );
         return res;
