@@ -17,7 +17,7 @@ target_link_libraries(kmbox
 )
 
 set_target_properties(kmbox PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
-install(TARGETS kmbox ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kmbox EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
   kmbox_export.h
