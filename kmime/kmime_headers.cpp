@@ -1715,7 +1715,13 @@ QByteArray ContentType::as7BitString( bool withHeaderType ) const
 
 QByteArray ContentType::mimeType() const
 {
-  return d_func()->mimeType + '/' + d_func()->mimeSubType;
+  Q_D(const ContentType);
+  QByteArray mt;
+  mt.reserve( d->mimeType.size() + d->mimeSubType.size() + 1 );
+  mt.append( d->mimeType );
+  mt.append( '/' );
+  mt.append( d->mimeSubType );
+  return mt;
 }
 
 QByteArray ContentType::mediaType() const
