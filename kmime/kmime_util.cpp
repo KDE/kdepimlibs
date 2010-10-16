@@ -845,14 +845,16 @@ static bool isCryptoPart( Content* content )
   if( content->contentType()->subType().toLower() == "octet-stream" &&
       !content->contentDisposition( false ) )
     return false;
-   
-  return ( content->contentType()->mediaType().toLower() == "application" &&
-         ( content->contentType()->subType().toLower() == "pgp-encrypted" ||
-           content->contentType()->subType().toLower() == "pgp-signature" ||
-           content->contentType()->subType().toLower() == "pkcs7-mime" ||
-           content->contentType()->subType().toLower() == "pkcs7-signature" ||
-           content->contentType()->subType().toLower() == "x-pkcs7-signature" ||
-           ( content->contentType()->subType().toLower() == "octet-stream" &&
+
+  const Headers::ContentType *contentType = content->contentType();
+  const QByteArray lowerSubType = contentType->subType().toLower();
+  return ( contentType->mediaType().toLower() == "application" &&
+         ( lowerSubType == "pgp-encrypted" ||
+           lowerSubType == "pgp-signature" ||
+           lowerSubType == "pkcs7-mime" ||
+           lowerSubType == "pkcs7-signature" ||
+           lowerSubType == "x-pkcs7-signature" ||
+           ( lowerSubType == "octet-stream" &&
              content->contentDisposition()->filename().toLower() == QLatin1String( "msg.asc" ) ) ) );
 }
 
