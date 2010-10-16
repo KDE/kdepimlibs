@@ -22,7 +22,6 @@
 */
 #include "kmime_parsers.h"
 
-#include <QtCore/QRegExp>
 #include <QtCore/QByteArray>
 
 using namespace KMime::Parser;
@@ -164,7 +163,7 @@ QByteArray NonMimeParser::guessMimeType( const QByteArray &fileName )
 //==============================================================================
 
 UUEncoded::UUEncoded( const QByteArray &src, const QByteArray &subject ) :
-  NonMimeParser( src ), s_ubject( subject )
+  NonMimeParser( src ), s_ubject( subject ), m_beginRegExp( "begin [0-9][0-9][0-9]" ), m_numberRegExp( "[0-9]+/[0-9]+" )
 {}
 
 bool UUEncoded::parse()
@@ -178,7 +177,7 @@ bool UUEncoded::parse()
     QByteArray tmp, fileName;
 
     if ( ( beginPos = QString( s_rc ).
-           indexOf( QRegExp( "begin [0-9][0-9][0-9]" ), currentPos ) ) > -1 &&
+           indexOf( m_beginRegExp, currentPos ) ) > -1 &&
          ( beginPos == 0 || s_rc.at( beginPos - 1 ) == '\n') ) {
       containsBegin = true;
       uuStart = s_rc.indexOf( '\n', beginPos );
@@ -223,9 +222,8 @@ bool UUEncoded::parse()
 
       if ( ( !containsBegin || !containsEnd ) && !s_ubject.isNull() ) {
         // message may be split up => parse subject
-        QRegExp rx("[0-9]+/[0-9]+");
-        pos = rx.indexIn( QString( s_ubject ), 0 );
-        len = rx.matchedLength();
+        pos = m_numberRegExp.indexIn( QString( s_ubject ), 0 );
+        len = m_numberRegExp.matchedLength();
         if ( pos != -1 ) {
           tmp = s_ubject.mid( pos, len );
           pos = tmp.indexOf( '/' );

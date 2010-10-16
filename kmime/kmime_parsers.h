@@ -23,8 +23,9 @@
 #ifndef __KMIME_PARSERS__
 #define __KMIME_PARSERS__
 
-#include<QByteArray>
-#include<QList>
+#include<QtCore/QByteArray>
+#include<QtCore/QList>
+#include<QtCore/QRegExp>
 
 namespace KMime {
 
@@ -103,6 +104,10 @@ class UUEncoded : public NonMimeParser
 
   protected:
     QByteArray s_ubject;
+
+  private:
+    QRegExp m_beginRegExp;
+    QRegExp m_numberRegExp;
 };
 
 /** Helper-class: tries to extract the data from a possibly
