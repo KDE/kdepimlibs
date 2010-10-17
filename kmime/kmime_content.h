@@ -770,8 +770,7 @@ template <class T> T *Content::headerInstance( T *ptr, bool create )
 
 template <typename T> T *Content::header( bool create )
 {
-  T dummy;
-  Headers::Base *h = headerByType( dummy.type() );
+  Headers::Base *h = headerByType( T::staticType() );
   if( h ) {
     // Make sure the header is actually of the right type.
     Q_ASSERT( dynamic_cast<T*>( h ) );

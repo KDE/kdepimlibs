@@ -109,7 +109,8 @@ static const QByteArray Latin1( "ISO-8859-1" );
 
 #define kmime_mk_trivial_ctor_with_name( subclass )     \
   kmime_mk_trivial_ctor( subclass )                     \
-    const char *type() const;
+    const char *type() const;                           \
+    static const char *staticType();
 //@endcond
 
 //
