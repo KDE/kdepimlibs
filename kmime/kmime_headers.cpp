@@ -124,12 +124,14 @@ kmime_mk_trivial_ctor( subclass, baseclass )                          \
                                                                       \
 const char *subclass::type() const                                    \
 {                                                                     \
-  return #name;                                                       \
-}
+  return staticType();                                                \
+}                                                                     \
+const char *subclass::staticType() { return #name; }
 
 #define kmime_mk_trivial_ctor_with_name_and_dptr( subclass, baseclass, name ) \
 kmime_mk_trivial_ctor_with_dptr( subclass, baseclass ) \
-const char *subclass::type() const { return #name; }
+const char *subclass::type() const { return staticType(); } \
+const char *subclass::staticType() { return #name; }
 
 #define kmime_mk_dptr_ctor( subclass, baseclass ) \
 subclass::subclass( subclass##Private *d, KMime::Content *parent ) : baseclass( d, parent ) {}
