@@ -547,7 +547,7 @@ static sasl_callback_t callbacks[] = {
       return dotstuff_lf2crlf( ba, mLastChar );
     } else {
       mLastChar = ba[ ba.size() - 1 ];
-      return QByteArray( ba.data(), ba.size() + 1 );
+      return ba;
     }
   }
 
