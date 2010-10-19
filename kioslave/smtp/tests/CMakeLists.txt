@@ -20,15 +20,13 @@ target_link_libraries(test_headergeneration  ${KDE4_KDECORE_LIBS} )
 
 
 ########### next target ###############
-if(DOES_NOT_COMPILE_KDE4_BUILD_TESTS)
 set(test_commands_SRCS test_commands.cpp )
 
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${SASL2_INCLUDE_DIR})
+kde4_add_unit_test(test_commands TEST ${test_commands_SRCS})
 
-kde4_add_executable(test_commands TEST ${test_commands_SRCS})
+target_link_libraries(test_commands  ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBRARY} ${SASL2_LIBRARIES})
 
-target_link_libraries(test_commands  ${KDE4_KDECORE_LIBS} )
-
-endif(DOES_NOT_COMPILE_KDE4_BUILD_TESTS)
 
 ########### next target ###############
 set(interactivesmtpserver_SRCS interactivesmtpserver.cpp )
