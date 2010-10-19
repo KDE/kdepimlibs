@@ -43,39 +43,39 @@ namespace KioSMTP {
   Request Request::fromURL( const KUrl & url ) {
     Request request;
 
-    const QStringList query = url.query().mid(1).split( '&');
+    const QStringList query = url.query().mid(1).split( QLatin1Char('&') );
 #ifndef NDEBUG
-    kDebug(7112) << "Parsing request from query:\n" + query.join("\n" );
+    kDebug(7112) << "Parsing request from query:\n" << query.join( QLatin1String("\n") );
 #endif
     for ( QStringList::const_iterator it = query.begin() ; it != query.end() ; ++it ) {
-      int equalsPos = (*it).indexOf( '=' );
+      int equalsPos = (*it).indexOf( QLatin1Char('=') );
       if ( equalsPos <= 0 )
         continue;
 
       const QString key = (*it).left( equalsPos ).toLower();
       const QString value = QUrl::fromPercentEncoding( (*it).mid( equalsPos + 1 ).toLatin1() ); //krazy:exclude=qclasses
 
-      if ( key == "to" )
+      if ( key == QLatin1String("to") )
         request.addTo( value );
-      else if ( key == "cc" )
+      else if ( key == QLatin1String("cc") )
         request.addCc( value );
-      else if ( key == "bcc" )
+      else if ( key == QLatin1String("bcc") )
         request.addBcc( value );
-      else if ( key == "headers" ) {
-        request.setEmitHeaders( value == "0" );
+      else if ( key == QLatin1String("headers") ) {
+        request.setEmitHeaders( value == QLatin1String("0") );
         request.setEmitHeaders( false ); // ### ???
       }
-      else if ( key == "subject" )
+      else if ( key == QLatin1String("subject") )
         request.setSubject( value );
-      else if ( key == "from" )
+      else if ( key == QLatin1String("from") )
         request.setFromAddress( value );
-      else if ( key == "profile" )
+      else if ( key == QLatin1String("profile") )
         request.setProfileName( value );
-      else if ( key == "hostname" )
+      else if ( key == QLatin1String("hostname") )
         request.setHeloHostname( value );
-      else if ( key == "body" )
-        request.set8BitBody( value.toUpper() == "8BIT" );
-      else if ( key == "size" )
+      else if ( key == QLatin1String("body") )
+        request.set8BitBody( value.toUpper() == QLatin1String("8BIT") );
+      else if ( key == QLatin1String("size") )
         request.setSize( value.toUInt() );
       else
         kWarning(7112) << "while parsing query: unknown query item \""
@@ -157,7 +157,7 @@ namespace KioSMTP {
 
   static QByteArray formatSubject( QString s ) {
     if ( isUsAscii( s ) )
-      return s.remove( '\n' ).toLatin1(); // don't break header folding,
+      return s.remove( QLatin1Char('\n') ).toLatin1(); // don't break header folding,
                                           // so remove any line break
                                           // that happen to be around
     else
@@ -178,9 +178,9 @@ namespace KioSMTP {
     if ( !subject().isEmpty() )
       result += "Subject: " + formatSubject( subject() ) + "\r\n";
     if ( !to().empty() )
-      result += QByteArray( "To: " ) + to().join( ",\r\n\t" /* line folding */ ).toLatin1() + "\r\n";
+      result += QByteArray( "To: " ) + to().join( QLatin1String(",\r\n\t") /* line folding */ ).toLatin1() + "\r\n";
     if ( !cc().empty() )
-      result += QByteArray( "Cc: " ) + cc().join( ",\r\n\t" /* line folding */ ).toLatin1() + "\r\n";
+      result += QByteArray( "Cc: " ) + cc().join( QLatin1String(",\r\n\t") /* line folding */ ).toLatin1() + "\r\n";
     return result;
   }
 

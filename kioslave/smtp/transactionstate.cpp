@@ -94,9 +94,9 @@ namespace KioSMTP {
       QStringList recip;
       for ( RejectedRecipientList::const_iterator it = mRejectedRecipients.begin() ;
             it != mRejectedRecipients.end() ; ++it )
-        recip.push_back( (*it).recipient + " (" + (*it).reason + ')' );
+        recip.push_back( (*it).recipient + QLatin1String(" (") + (*it).reason + QLatin1Char(')') );
       return i18n("Message sending failed since the following recipients were rejected by the server:\n"
-                  "%1", recip.join("\n"));
+                  "%1", recip.join( QLatin1String("\n") ));
     }
 
     if ( !dataCommandSucceeded() )

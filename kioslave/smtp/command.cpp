@@ -304,11 +304,11 @@ static sasl_callback_t callbacks[] = {
       cmd = mUngetSASLResponse;
       mUngetSASLResponse = 0;
     } else if ( mFirstTime ) {
-      QString firstCommand = "AUTH " + QString::fromLatin1( mMechusing );
+      QString firstCommand = QLatin1String("AUTH ") + QString::fromLatin1( mMechusing );
 
       challenge = QByteArray::fromRawData( mOut, mOutlen ).toBase64();
       if ( !challenge.isEmpty() ) {
-        firstCommand += ' ';
+        firstCommand += QLatin1Char(' ');
         firstCommand += QString::fromLatin1( challenge.data(), challenge.size() );
       }
       cmd = firstCommand.toLatin1();
@@ -350,7 +350,7 @@ static sasl_callback_t callbacks[] = {
           mSMTP->error( KIO::ERR_COULD_NOT_LOGIN,
               ( mMechusing ? i18n("Your SMTP server does not support %1.", QString::fromLatin1( mMechusing ) )
               : i18n("Your SMTP server does not support (unspecified method).") )
-                        + '\n' + chooseADifferentMsg + '\n' + r.errorMessage() );
+                        + QLatin1Char('\n') + chooseADifferentMsg + QLatin1Char('\n') + r.errorMessage() );
         }
         else
           mSMTP->error( KIO::ERR_COULD_NOT_LOGIN,
@@ -391,7 +391,7 @@ static sasl_callback_t callbacks[] = {
     if ( r.code() == 250 )
       return true;
 
-    ts->setMailFromFailed( mAddr, r );
+    ts->setMailFromFailed( QString::fromLatin1(mAddr), r );
     return false;
   }
 
@@ -414,7 +414,7 @@ static sasl_callback_t callbacks[] = {
       return true;
     }
 
-    ts->addRejectedRecipient( mAddr, r.errorMessage() );
+    ts->addRejectedRecipient( QString::fromLatin1(mAddr), r.errorMessage() );
     return false;
   }
 
@@ -542,7 +542,7 @@ static sasl_callback_t callbacks[] = {
   QByteArray TransferCommand::prepare( const QByteArray & ba ) {
     if ( ba.isEmpty() )
       return 0;
-    if ( mSMTP->metaData("lf2crlf+dotstuff") == "slave" ) {
+    if ( mSMTP->metaData( QLatin1String("lf2crlf+dotstuff") ) == QLatin1String("slave") ) {
       kDebug(7112) << "performing dotstuffing and LF->CRLF transformation";
       return dotstuff_lf2crlf( ba, mLastChar );
     } else {

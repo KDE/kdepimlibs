@@ -53,7 +53,7 @@ namespace KioSMTP {
     bool have( const QString & cap ) const {
       return mCapabilities.find( cap.toUpper() ) != mCapabilities.end();
     }
-    bool have( const QByteArray & cap ) const { return have( QString( cap.data() ) ); }
+    bool have( const QByteArray & cap ) const { return have( QString::fromLatin1( cap ) ); }
     bool have( const char * cap ) const { return have( QString::fromLatin1( cap ) ); }
 
     QString asMetaDataString() const;

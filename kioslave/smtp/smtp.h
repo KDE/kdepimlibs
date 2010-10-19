@@ -109,7 +109,7 @@ protected:
 
   /** @return true is pipelining is available and allowed by metadata */
   bool canPipelineCommands() const {
-    return haveCapability("PIPELINING") && metaData("pipelining") != "off" ;
+    return haveCapability("PIPELINING") && metaData( QLatin1String("pipelining") ) != QLatin1String("off") ;
   }
 
   /** This is a pure convenience wrapper around

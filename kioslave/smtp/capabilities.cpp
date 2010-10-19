@@ -46,13 +46,13 @@ namespace KioSMTP {
     QCStringList l = ehlo.lines();
 
     for ( QCStringList::const_iterator it = ++l.constBegin() ; it != l.constEnd() ; ++it )
-      c.add( *it );
+      c.add( QString::fromLatin1(*it) );
 
     return c;
   }
 
   void Capabilities::add( const QString & cap, bool replace ) {
-    QStringList tokens = cap.toUpper().split( ' ');
+    QStringList tokens = cap.toUpper().split( QLatin1Char(' ') );
     if ( tokens.empty() )
       return;
     QString name = tokens.front(); tokens.pop_front();
@@ -69,32 +69,32 @@ namespace KioSMTP {
   QString Capabilities::createSpecialResponse( bool tls ) const {
     QStringList result;
     if ( tls )
-      result.push_back( "STARTTLS" );
+      result.push_back( QLatin1String("STARTTLS") );
     result += saslMethodsQSL();
     if ( have( "PIPELINING" ) )
-      result.push_back( "PIPELINING" );
+      result.push_back( QLatin1String("PIPELINING") );
     if ( have( "8BITMIME" ) )
-      result.push_back( "8BITMIME" );
+      result.push_back( QLatin1String("8BITMIME") );
     if ( have( "SIZE" ) ) {
       bool ok = false;
       unsigned int size = 0;
-      if ( !mCapabilities["SIZE"].isEmpty() )
-        mCapabilities["SIZE"].front().toUInt( &ok );
+      if ( !mCapabilities[ QLatin1String("SIZE") ].isEmpty() )
+        mCapabilities[ QLatin1String("SIZE") ].front().toUInt( &ok );
       if ( ok && !size )
-        result.push_back( "SIZE=*" ); // any size
+        result.push_back( QLatin1String("SIZE=*") ); // any size
       else if ( ok )
-        result.push_back( "SIZE=" + QString::number( size ) ); // fixed max
+        result.push_back( QString::fromLatin1("SIZE=%1").arg( size ) ); // fixed max
       else
-        result.push_back( "SIZE" ); // indetermined
+        result.push_back( QLatin1String("SIZE") ); // indetermined
     }
-    return result.join( " " );
+    return result.join( QLatin1String(" ") );
   }
 
   QStringList Capabilities::saslMethodsQSL() const {
     QStringList result;
     for ( QMap<QString,QStringList>::const_iterator it = mCapabilities.begin();
           it != mCapabilities.end(); ++it ) {
-      if ( it.key() == "AUTH" ) {
+      if ( it.key() == QLatin1String("AUTH") ) {
         result += it.value();
       } else if ( it.key().startsWith( QLatin1String( "AUTH=" ) ) ) {
         result.push_back( it.key().mid( qstrlen("AUTH=") ) );

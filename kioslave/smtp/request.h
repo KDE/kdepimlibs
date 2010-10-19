@@ -43,7 +43,7 @@ namespace KioSMTP {
   class Request {
   public:
     Request()
-      : mSubject( "missing subject" ), mEmitHeaders( true ),
+      : mSubject( QLatin1String("missing subject") ), mEmitHeaders( true ),
         m8Bit( false ), mSize( 0 ) {}
 
     static Request fromURL( const KUrl & url );

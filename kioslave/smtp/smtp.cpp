@@ -206,7 +206,7 @@ void SMTPProtocol::put(const KUrl & url, int /*permissions */ ,
   }
 
   if ( request.is8BitBody()
-       && !haveCapability("8BITMIME") && metaData("8bitmime") != "on" ) {
+       && !haveCapability("8BITMIME") && metaData( QLatin1String("8bitmime") ) != QLatin1String("on") ) {
     error( KIO::ERR_SERVICE_NOT_AVAILABLE,
            i18n("Your server (%1) does not support sending of 8-bit messages.\n"
                 "Please use base64 or quoted-printable encoding.", m_sServer) );
@@ -484,7 +484,7 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
     return true;
 
   smtp_close();
-  if (!connectToHost(isAutoSsl() ? "smtps" : "smtp", m_sServer, m_port))
+  if (!connectToHost(isAutoSsl() ? QLatin1String("smtps") : QLatin1String("smtp"), m_sServer, m_port))
     return false;             // connectToHost has already send an error message.
   m_opened = true;
 
@@ -507,10 +507,10 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
    // FIXME: We need a way to find the FQDN again. Also change in servertest then.
     m_hostname = QHostInfo::localHostName();
     if( m_hostname.isEmpty() ) {
-      m_hostname = "localhost.invalid";
+      m_hostname = QLatin1String("localhost.invalid");
     }
-    else if ( !m_hostname.contains( '.' ) ) {
-      m_hostname += ".localnet";
+    else if ( !m_hostname.contains( QLatin1Char('.') ) ) {
+      m_hostname += QLatin1String(".localnet");
     }
   }
 
@@ -520,8 +520,8 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
     return false;
   }
 
-  if ( ( haveCapability("STARTTLS") /*### && canUseTLS()*/ && metaData("tls") != "off" )
-       || metaData("tls") == "on" ) {
+  if ( ( haveCapability("STARTTLS") /*### && canUseTLS()*/ && metaData( QLatin1String("tls") ) != QLatin1String("off") )
+       || metaData( QLatin1String("tls") ) == QLatin1String("on") ) {
     // For now we're gonna force it on.
 
     if ( execute( Command::STARTTLS ) ) {
@@ -554,7 +554,7 @@ bool SMTPProtocol::authenticate()
   // return with success if the server doesn't support SMTP-AUTH or an user
   // name is not specified and metadata doesn't tell us to force it.
   if ( (m_sUser.isEmpty() || !haveCapability( "AUTH" )) &&
-    metaData( "sasl" ).isEmpty() ) return true;
+    metaData( QLatin1String("sasl") ).isEmpty() ) return true;
 
   KIO::AuthInfo authInfo;
   authInfo.username = m_sUser;
@@ -563,12 +563,12 @@ bool SMTPProtocol::authenticate()
 
   QStringList strList;
 
-  if (!metaData("sasl").isEmpty())
-    strList.append(metaData("sasl").toLatin1());
+  if (!metaData( QLatin1String("sasl") ).isEmpty())
+    strList.append( metaData( QLatin1String("sasl") ) );
   else
     strList = mCapabilities.saslMethodsQSL();
 
-  AuthCommand authCmd( this, strList.join(" ").toLatin1(), m_sServer, authInfo );
+  AuthCommand authCmd( this, strList.join( QLatin1String(" ") ).toLatin1(), m_sServer, authInfo );
   bool ret = execute( &authCmd );
   m_sUser = authInfo.username;
   m_sPass = authInfo.password;
@@ -581,12 +581,12 @@ void SMTPProtocol::parseFeatures( const Response & ehloResponse ) {
   QString category;
   if (isUsingSsl()) {
     if (isAutoSsl()) {
-      category = "SSL";
+      category = QLatin1String("SSL");
     } else {
-      category = "TLS";
+      category = QLatin1String("TLS");
     }
   } else {
-    category = "PLAIN";
+    category = QLatin1String("PLAIN");
   }
 }
 
