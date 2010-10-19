@@ -33,8 +33,6 @@
 #define __KIOSMTP_COMMAND_H__
 
 
-#include "smtp-config.h"
-
 extern "C" {
 #include <sasl/sasl.h>
 }

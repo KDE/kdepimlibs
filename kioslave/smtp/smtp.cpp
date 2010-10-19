@@ -29,7 +29,6 @@
  */
 
 #include "smtp.h"
-#include "smtp-config.h"
 
 extern "C" {
 #include <sasl/sasl.h>
