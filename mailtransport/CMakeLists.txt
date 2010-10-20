@@ -59,16 +59,11 @@ set(mailtransport_lib_srcs
   transportconfigdialog.cpp
   sendmailconfigwidget.cpp
   smtpconfigwidget.cpp
+  
+  transportlistview.cpp
+  transportmanagementwidget.cpp
+  addtransportdialog.cpp
 )
-
-if (NOT WINCE)
-  set(mailtransport_lib_srcs ${mailtransport_lib_srcs}
-    # All disabled due to no QTreeWidget
-    transportlistview.cpp
-    transportmanagementwidget.cpp
-    addtransportdialog.cpp
-  )
-endif (NOT WINCE)
 
 kde4_add_ui_files(mailtransport_lib_srcs
   sendmailsettings.ui
