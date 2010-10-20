@@ -23,6 +23,7 @@
 #include "smtpsessioninterface.h"
 
 #include <QStringList>
+#include <kio/slavebase.h>
 
 namespace KioSMTP {
 
@@ -37,7 +38,6 @@ class FakeSession : public SMTPSessionInterface {
     bool usesTLS; // ### unused below, most likely something wrong in the tests...
     int lastErrorCode;
     QString lastErrorMessage;
-    int lastMessageBoxCode;
     QString lastMessageBoxText;
     QByteArray nextData;
     int nextDataReturnCode;
@@ -51,7 +51,7 @@ class FakeSession : public SMTPSessionInterface {
     void clear() {
       startTLSReturnCode = true;
       usesTLS = false;
-      lastErrorCode = lastMessageBoxCode = 0;
+      lastErrorCode = 0;
       lastErrorMessage.clear();
       lastMessageBoxText.clear();
       nextData.resize( 0 );
@@ -74,9 +74,8 @@ class FakeSession : public SMTPSessionInterface {
       lastErrorMessage = msg;
       qWarning() << id << msg;
     }
-    void messageBox(KIO::SlaveBase::MessageBoxType id, const QString& msg, const QString& caption) {
+    void informationMessageBox(const QString& msg, const QString& caption) {
       Q_UNUSED( caption );
-      lastMessageBoxCode = id;
       lastMessageBoxText = msg;
     }
     bool openPasswordDialog( KIO::AuthInfo & ) { return true; }

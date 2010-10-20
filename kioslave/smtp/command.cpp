@@ -168,7 +168,7 @@ static sasl_callback_t callbacks[] = {
       return true;
     } else {
       //kDebug(7112) << "TLS negotiation failed!";
-      mSMTP->messageBox( KIO::SlaveBase::Information,
+      mSMTP->informationMessageBox(
                          i18n("Your SMTP server claims to "
                              "support TLS, but negotiation "
                              "was unsuccessful.\nYou can "

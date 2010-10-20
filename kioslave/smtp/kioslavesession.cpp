@@ -30,9 +30,9 @@ void KioSMTP::KioSlaveSession::error(int id, const QString& msg)
   m_protocol->error( id, msg );
 }
 
-void KioSMTP::KioSlaveSession::messageBox(KIO::SlaveBase::MessageBoxType id, const QString& msg, const QString& caption )
+void KioSlaveSession::informationMessageBox(const QString& msg, const QString& caption)
 {
-  m_protocol->messageBox( id, msg, caption );
+  m_protocol->messageBox( KIO::SlaveBase::Information, msg, caption );
 }
 
 bool KioSMTP::KioSlaveSession::openPasswordDialog(KIO::AuthInfo& authInfo)

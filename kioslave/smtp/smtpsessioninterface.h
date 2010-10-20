@@ -20,8 +20,6 @@
 #ifndef KIOSMTP_SMTPSESSIONINTERFACE_H
 #define KIOSMTP_SMTPSESSIONINTERFACE_H
 
-#include <kio/slavebase.h>
-
 #include "capabilities.h"
 
 class QByteArray;
@@ -70,7 +68,8 @@ class SMTPSessionInterface
     bool canPipelineCommands() const;
 
     virtual void error( int id, const QString & msg ) = 0;
-    virtual void messageBox( KIO::SlaveBase::MessageBoxType id, const QString & msg, const QString &caption ) = 0;
+    /** Show information message box with message @p msg and caption @p caption. */
+    virtual void informationMessageBox( const QString & msg, const QString &caption ) = 0;
     virtual bool openPasswordDialog( KIO::AuthInfo &authInfo ) = 0;
     virtual void dataReq() = 0;
     virtual int readData( QByteArray & ba ) = 0;
