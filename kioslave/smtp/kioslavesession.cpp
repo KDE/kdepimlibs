@@ -77,7 +77,7 @@ bool KioSlaveSession::lf2crlfAndDotStuffingRequested() const
 
 bool KioSlaveSession::pipeliningRequested() const
 {
-  m_protocol->metaData( QLatin1String("pipelining") ) != QLatin1String("off");
+  return m_protocol->metaData( QLatin1String("pipelining") ) != QLatin1String("off");
 }
 
 QString KioSlaveSession::requestedSaslMethod() const
