@@ -4,6 +4,8 @@ include_directories(
     ${Boost_INCLUDE_DIR}
 )
 
+option(MAILTRANSPORT_INPROCESS_SMTP "false" "Use in-process SMTP instead of KIO slaves (note that this changes the mailtransport license from LGPL to GPL!)")
+
 add_subdirectory( kconf_update )
 add_subdirectory( tests )
 
@@ -11,7 +13,22 @@ add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5324 )
 add_definitions( -DUSES_DEPRECATED_MAILTRANSPORT_API ) # for transportmanager
 
+if (MAILTRANSPORT_INPROCESS_SMTP)
+  add_definitions( "-DMAILTRANSPORT_INPROCESS_SMTP" )
+  include_directories(${SASL2_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/kioslave)
+  set( mailtransport_lib_srcs
+       ../kioslave/smtp/command.cpp
+       ../kioslave/smtp/capabilities.cpp
+       ../kioslave/smtp/request.cpp
+       ../kioslave/smtp/response.cpp
+       ../kioslave/smtp/transactionstate.cpp
+       ../kioslave/smtp/smtpsessioninterface.cpp
+       smtp/smtpsession.cpp
+     )
+endif ()
+
 set(mailtransport_lib_srcs
+  ${mailtransport_lib_srcs}
   transport.cpp
   transportmanager.cpp
   transporttype.cpp
@@ -68,6 +85,10 @@ kde4_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
 
 kde4_add_library(mailtransport ${LIBRARY_TYPE} ${mailtransport_lib_srcs})
 target_link_libraries(mailtransport ${KDE4_KIO_LIBS} akonadi-kde akonadi-kmime kmime )
+if(MAILTRANSPORT_INPROCESS_SMTP)
+  target_link_libraries(mailtransport ${SASL2_LIBRARIES})
+endif ()
+
 set_target_properties(mailtransport PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
 install(TARGETS mailtransport EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
