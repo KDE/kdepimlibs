@@ -2,77 +2,8 @@
 #include <kio/authinfo.h>
 #include <kdebug.h>
 
-
-
-//#include <iostream>
-//using std::cout;
-//using std::endl;
-
-namespace KioSMTP {
-  class Response;
-};
-
-// fake
-class SMTPProtocol {
-public:
-  SMTPProtocol() { clear(); }
-
-  //
-  // public members to control the API emulation below:
-  //
-  bool startTLSReturnCode;
-  bool usesSSL;
-  bool usesTLS;
-  int lastErrorCode;
-  QString lastErrorMessage;
-  int lastMessageBoxCode;
-  QString lastMessageBoxText;
-  QByteArray nextData;
-  int nextDataReturnCode;
-  QStringList caps;
-  KIO::MetaData metadata;
-
-  void clear() {
-    startTLSReturnCode = true;
-    usesSSL = usesTLS = false;
-    lastErrorCode = lastMessageBoxCode = 0;
-    lastErrorMessage.clear();
-    lastMessageBoxText.clear();
-    nextData.resize( 0 );
-    nextDataReturnCode = -1;
-    caps.clear();
-    metadata.clear();
-  }
-
-  //
-  // emulated API:
-  //
-  void parseFeatures( const KioSMTP::Response & ) { /* noop */ }
-  bool startSsl() {
-    return startTLSReturnCode;
-  }
-  bool isUsingSsl() const { return usesSSL; }
-  bool isAutoSsl() const { return usesTLS; }
-  bool haveCapability( const char * cap ) const { return caps.contains( cap ); }
-  void error( int id, const QString & msg ) {
-    lastErrorCode = id;
-    lastErrorMessage = msg;
-    qWarning() << id << msg;
-  }
-  void messageBox( int id, const QString & msg, const QString & ) {
-    lastMessageBoxCode = id;
-    lastMessageBoxText = msg;
-  }
-  bool openPasswordDialog( KIO::AuthInfo & ) { return true; }
-  void dataReq() { /* noop */ }
-  int readData( QByteArray & ba ) { ba = nextData; return nextDataReturnCode; }
-  QString metaData( const QString & key ) const { return metadata[key]; }
-
-};
-
-#define _SMTP_H
-
 #define KIOSMTP_COMPARATORS // for TransactionState::operator==
+#include "fakesession.h"
 #include "command.h"
 #include "response.h"
 #include "transactionstate.h"
@@ -97,7 +28,7 @@ static void checkSuccessfulTransferCommand( bool, bool, bool, bool, bool );
 
 int main( int, char** ) {
 
-  SMTPProtocol smtp;
+  FakeSession smtp;
   Response r;
   TransactionState ts, ts2;
 
@@ -654,7 +585,7 @@ void checkSuccessfulTransferCommand( bool error, bool preload, bool ungetLast,
            << slaveDotStuff << ", "
            << mailEndsInNewline << " ) =====" << endl;
 
-  SMTPProtocol smtp;
+  FakeSession smtp;
   if ( slaveDotStuff )
     smtp.metadata["lf2crlf+dotstuff"] = "slave";
 

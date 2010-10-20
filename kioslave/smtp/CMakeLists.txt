@@ -23,7 +23,10 @@ set(kio_smtp_PART_SRCS
    response.cpp
    capabilities.cpp
    command.cpp
-   transactionstate.cpp )
+   transactionstate.cpp
+   smtpsessioninterface.cpp
+   kioslavesession.cpp
+)
 
 
 kde4_add_plugin(kio_smtp ${kio_smtp_PART_SRCS})

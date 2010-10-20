@@ -39,12 +39,11 @@ extern "C" {
 
 #include <kio/authinfo.h>
 
-class SMTPProtocol;
-
 namespace KioSMTP {
 
   class Response;
   class TransactionState;
+  class SMTPSessionInterface;
 
   /**
    * @short Represents an SMTP command
@@ -86,14 +85,14 @@ namespace KioSMTP {
       CloseConnectionOnError = 4
     };
 
-    explicit Command( SMTPProtocol * smtp, int flags=0 );
+    explicit Command( SMTPSessionInterface * smtp, int flags=0 );
     virtual ~Command();
 
     enum Type {
       STARTTLS, DATA, NOOP, RSET, QUIT
     };
 
-    static Command * createSimpleCommand( int which, SMTPProtocol * smtp );
+    static Command * createSimpleCommand( int which, SMTPSessionInterface * smtp );
 
     virtual QByteArray nextCommandLine( TransactionState * ts=0 ) = 0;
     /* Reimplement this if your @ref #nextCommandLine() implementation
@@ -135,7 +134,7 @@ namespace KioSMTP {
     }
 
   protected:
-    SMTPProtocol * mSMTP;
+    SMTPSessionInterface * mSMTP;
     bool mComplete;
     bool mNeedResponse;
     const int mFlags;
@@ -152,7 +151,7 @@ namespace KioSMTP {
 
   class EHLOCommand : public Command {
   public:
-    EHLOCommand( SMTPProtocol * smtp, const QString & hostname )
+    EHLOCommand( SMTPSessionInterface * smtp, const QString & hostname )
       : Command( smtp, CloseConnectionOnError|OnlyLastInPipeline ),
         mEHLONotSupported( false ),
         mHostname( hostname.trimmed() ) {}
@@ -166,7 +165,7 @@ namespace KioSMTP {
 
   class StartTLSCommand : public Command {
   public:
-    StartTLSCommand( SMTPProtocol * smtp )
+    StartTLSCommand( SMTPSessionInterface * smtp )
       : Command( smtp, CloseConnectionOnError|OnlyLastInPipeline ) {}
 
     QByteArray nextCommandLine( TransactionState * );
@@ -175,7 +174,7 @@ namespace KioSMTP {
 
   class AuthCommand : public Command {
   public:
-    AuthCommand( SMTPProtocol * smtp, const char *mechanisms,
+    AuthCommand( SMTPSessionInterface * smtp, const char *mechanisms,
       const QString &aFQDN, KIO::AuthInfo &ai );
     ~AuthCommand();
     bool doNotExecute( const TransactionState * ts ) const;
@@ -200,7 +199,7 @@ namespace KioSMTP {
 
   class MailFromCommand : public Command {
   public:
-    MailFromCommand( SMTPProtocol * smtp, const QByteArray & addr,
+    MailFromCommand( SMTPSessionInterface* smtp, const QByteArray & addr,
                      bool eightBit=false, unsigned int size=0  )
       : Command( smtp ), mAddr( addr ), m8Bit( eightBit ), mSize( size ) {}
 
@@ -214,7 +213,7 @@ namespace KioSMTP {
 
   class RcptToCommand : public Command {
   public:
-    RcptToCommand( SMTPProtocol * smtp, const QByteArray & addr )
+    RcptToCommand( SMTPSessionInterface * smtp, const QByteArray & addr )
       : Command( smtp ), mAddr( addr ) {}
 
     QByteArray nextCommandLine( TransactionState * );
@@ -227,7 +226,7 @@ namespace KioSMTP {
       the point where the mail contents need to be sent */
   class DataCommand : public Command {
   public:
-    DataCommand( SMTPProtocol * smtp )
+    DataCommand( SMTPSessionInterface * smtp )
       : Command( smtp, OnlyLastInPipeline ) {}
 
     QByteArray nextCommandLine( TransactionState * );
@@ -238,7 +237,7 @@ namespace KioSMTP {
   /** Handles the data transfer following a successful DATA command */
   class TransferCommand : public Command {
   public:
-    TransferCommand( SMTPProtocol * smtp, const QByteArray & initialBuffer )
+    TransferCommand( SMTPSessionInterface * smtp, const QByteArray & initialBuffer )
       : Command( smtp, OnlyFirstInPipeline ),
         mUngetBuffer( initialBuffer ), mLastChar( '\n' ), mWasComplete( false ) {}
 
@@ -255,7 +254,7 @@ namespace KioSMTP {
 
   class NoopCommand : public Command {
   public:
-    NoopCommand( SMTPProtocol * smtp )
+    NoopCommand( SMTPSessionInterface * smtp )
       : Command( smtp, OnlyLastInPipeline ) {}
 
     QByteArray nextCommandLine( TransactionState * );
@@ -263,7 +262,7 @@ namespace KioSMTP {
 
   class RsetCommand : public Command {
   public:
-    RsetCommand( SMTPProtocol * smtp )
+    RsetCommand( SMTPSessionInterface * smtp )
       : Command( smtp, CloseConnectionOnError ) {}
 
     QByteArray nextCommandLine( TransactionState * );
@@ -271,7 +270,7 @@ namespace KioSMTP {
 
   class QuitCommand : public Command {
   public:
-    QuitCommand( SMTPProtocol * smtp )
+    QuitCommand( SMTPSessionInterface * smtp )
       : Command( smtp, CloseConnectionOnError|OnlyLastInPipeline ) {}
 
     QByteArray nextCommandLine( TransactionState * );

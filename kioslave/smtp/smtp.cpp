@@ -39,6 +39,7 @@ extern "C" {
 #include "response.h"
 #include "transactionstate.h"
 #include "command.h"
+#include "kioslavesession.h"
 using KioSMTP::Capabilities;
 using KioSMTP::Command;
 using KioSMTP::EHLOCommand;
@@ -96,7 +97,8 @@ SMTPProtocol::SMTPProtocol(const QByteArray & pool, const QByteArray & app,
                            bool useSSL)
 :  TCPSlaveBase(useSSL ? "smtps" : "smtp", pool, app, useSSL),
    m_sOldPort( 0 ),
-   m_opened(false)
+   m_opened(false),
+   m_sessionIface( new KioSMTP::KioSlaveSession( this ) )
 {
   //kDebug(7112) << "SMTPProtocol::SMTPProtocol";
 }
@@ -104,6 +106,7 @@ SMTPProtocol::SMTPProtocol(const QByteArray & pool, const QByteArray & app,
 SMTPProtocol::~SMTPProtocol() {
   //kDebug(7112) << "SMTPProtocol::~SMTPProtocol";
   smtp_close();
+  delete m_sessionIface;
 }
 
 void SMTPProtocol::openConnection() {
@@ -212,17 +215,17 @@ void SMTPProtocol::put(const KUrl & url, int /*permissions */ ,
     return;
   }
 
-  queueCommand( new MailFromCommand( this, request.fromAddress().toLatin1(),
+  queueCommand( new MailFromCommand( m_sessionIface, request.fromAddress().toLatin1(),
                                      request.is8BitBody(), request.size() ) );
 
   // Loop through our To and CC recipients, and send the proper
   // SMTP commands, for the benefit of the server.
   const QStringList recipients = request.recipients();
   for ( QStringList::const_iterator it = recipients.begin() ; it != recipients.end() ; ++it )
-    queueCommand( new RcptToCommand( this, (*it).toLatin1() ) );
+    queueCommand( new RcptToCommand( m_sessionIface, (*it).toLatin1() ) );
 
   queueCommand( Command::DATA );
-  queueCommand( new TransferCommand( this, request.headerFields( mset.getSetting( KEMailSettings::RealName ) ) ) );
+  queueCommand( new TransferCommand( m_sessionIface, request.headerFields( mset.getSetting( KEMailSettings::RealName ) ) ) );
 
   TransactionState ts;
   if ( !executeQueuedCommands( &ts ) ) {
@@ -415,11 +418,11 @@ bool SMTPProtocol::batchProcessResponses( TransactionState * ts ) {
 }
 
 void SMTPProtocol::queueCommand( int type ) {
-  queueCommand( Command::createSimpleCommand( type, this ) );
+  queueCommand( Command::createSimpleCommand( type, m_sessionIface ) );
 }
 
 bool SMTPProtocol::execute( int type, TransactionState * ts ) {
-  auto_ptr<Command> cmd( Command::createSimpleCommand( type, this ) );
+  auto_ptr<Command> cmd( Command::createSimpleCommand( type, m_sessionIface ) );
   kFatal( !cmd.get(), 7112 ) << "Command::createSimpleCommand( " << type << " ) returned null!" ;
   return execute( cmd.get(), ts );
 }
@@ -513,7 +516,7 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
     }
   }
 
-  EHLOCommand ehloCmdPreTLS( this, m_hostname );
+  EHLOCommand ehloCmdPreTLS( m_sessionIface, m_hostname );
   if ( !execute( &ehloCmdPreTLS ) ) {
     smtp_close();
     return false;
@@ -527,7 +530,7 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
 
       // re-issue EHLO to refresh the capability list (could be have
       // been faked before TLS was enabled):
-      EHLOCommand ehloCmdPostTLS( this, m_hostname );
+      EHLOCommand ehloCmdPostTLS( m_sessionIface, m_hostname );
       if ( !execute( &ehloCmdPostTLS ) ) {
         smtp_close();
         return false;
@@ -567,7 +570,7 @@ bool SMTPProtocol::authenticate()
   else
     strList = mCapabilities.saslMethodsQSL();
 
-  AuthCommand authCmd( this, strList.join( QLatin1String(" ") ).toLatin1(), m_sServer, authInfo );
+  AuthCommand authCmd( m_sessionIface, strList.join( QLatin1String(" ") ).toLatin1(), m_sServer, authInfo );
   bool ret = execute( &authCmd );
   m_sUser = authInfo.username;
   m_sPass = authInfo.password;

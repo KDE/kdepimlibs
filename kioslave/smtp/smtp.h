@@ -43,10 +43,12 @@ namespace KioSMTP {
   class Response;
   class TransactionState;
   class Command;
+  class SMTPSessionInterface;
+  class KioSlaveSession;
 }
 
 class SMTPProtocol : public KIO::TCPSlaveBase {
-  friend class KioSMTP::Command;
+  friend class KioSMTP::KioSlaveSession;
 public:
   SMTPProtocol(const QByteArray & pool, const QByteArray & app, bool useSSL);
   virtual ~ SMTPProtocol();
@@ -137,6 +139,7 @@ protected:
   typedef QQueue<KioSMTP::Command*> CommandQueue;
   CommandQueue mPendingCommandQueue;
   CommandQueue mSentCommandQueue;
+  KioSMTP::SMTPSessionInterface *m_sessionIface;
 };
 
 #endif // _SMTP_H

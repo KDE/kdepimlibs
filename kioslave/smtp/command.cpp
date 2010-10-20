@@ -31,7 +31,7 @@
 
 #include "command.h"
 
-#include "smtp.h"
+#include "smtpsessioninterface.h"
 #include "response.h"
 #include "transactionstate.h"
 
@@ -61,7 +61,7 @@ static sasl_callback_t callbacks[] = {
   // Command (base class)
   //
 
-  Command::Command( SMTPProtocol * smtp, int flags )
+  Command::Command( SMTPSessionInterface * smtp, int flags )
     : mSMTP( smtp ),
       mComplete( false ), mNeedResponse( false ), mFlags( flags )
   {
@@ -80,7 +80,7 @@ static sasl_callback_t callbacks[] = {
     mComplete = false;
   }
 
-  Command * Command::createSimpleCommand( int which, SMTPProtocol * smtp ) {
+  Command * Command::createSimpleCommand( int which, SMTPSessionInterface * smtp ) {
     switch ( which ) {
     case STARTTLS: return new StartTLSCommand( smtp );
     case DATA:     return new DataCommand( smtp );
@@ -194,7 +194,7 @@ static sasl_callback_t callbacks[] = {
   //
   // AUTH - rfc 2554
   //
-  AuthCommand::AuthCommand( SMTPProtocol * smtp,
+  AuthCommand::AuthCommand( SMTPSessionInterface * smtp,
                             const char *mechanisms,
                             const QString &aFQDN,
                             KIO::AuthInfo &ai )
