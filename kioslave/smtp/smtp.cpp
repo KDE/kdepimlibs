@@ -579,17 +579,6 @@ bool SMTPProtocol::authenticate()
 
 void SMTPProtocol::parseFeatures( const Response & ehloResponse ) {
   mCapabilities = Capabilities::fromResponse( ehloResponse );
-
-  QString category;
-  if (isUsingSsl()) {
-    if (isAutoSsl()) {
-      category = QLatin1String("SSL");
-    } else {
-      category = QLatin1String("TLS");
-    }
-  } else {
-    category = QLatin1String("PLAIN");
-  }
 }
 
 void SMTPProtocol::smtp_close( bool nice ) {
