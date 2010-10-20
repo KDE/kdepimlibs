@@ -169,7 +169,7 @@ int main( int, char** ) {
   smtp.clear();
   QStringList mechs;
   mechs.append( "PLAIN" );
-  smtp.metadata["sasl"] = "PLAIN";
+  smtp.saslMethod = "PLAIN";
   KIO::AuthInfo authInfo;
   authInfo.username = "user";
   AuthCommand auth( &smtp, "PLAIN", "mail.example.com", authInfo );
@@ -196,7 +196,7 @@ int main( int, char** ) {
 
   // dynamics 2: No TLS, so AUTH should not include initial-response:
   smtp.clear();
-  smtp.metadata["sasl"] = "PLAIN";
+  smtp.saslMethod = "PLAIN";
   smtp.usesTLS = false;
   authInfo = KIO::AuthInfo();
   authInfo.username = "user";
@@ -215,7 +215,7 @@ int main( int, char** ) {
 
   // dynamics 3: LOGIN
   smtp.clear();
-  smtp.metadata["sasl"] = "LOGIN";
+  smtp.saslMethod = "LOGIN";
   mechs.clear();
   mechs.append( "LOGIN" );
   authInfo = KIO::AuthInfo();
@@ -587,7 +587,7 @@ void checkSuccessfulTransferCommand( bool error, bool preload, bool ungetLast,
 
   FakeSession smtp;
   if ( slaveDotStuff )
-    smtp.metadata["lf2crlf+dotstuff"] = "slave";
+    smtp.lf2crlfAndDotStuff = true;
 
   Response r;
 

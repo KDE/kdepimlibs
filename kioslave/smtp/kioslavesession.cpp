@@ -19,6 +19,8 @@
 
 #include "kioslavesession.h"
 
+using namespace KioSMTP;
+
 KioSMTP::KioSlaveSession::KioSlaveSession(SMTPProtocol* protocol): m_protocol( protocol )
 {
 }
@@ -48,11 +50,6 @@ bool KioSMTP::KioSlaveSession::openPasswordDialog(KIO::AuthInfo& authInfo)
   return m_protocol->openPasswordDialog( authInfo );
 }
 
-QString KioSMTP::KioSlaveSession::metaData(const QString& key) const
-{
-  return m_protocol->metaData( key );
-}
-
 void KioSMTP::KioSlaveSession::dataReq()
 {
   m_protocol->dataReq();
@@ -68,5 +65,31 @@ bool KioSMTP::KioSlaveSession::startSsl()
   return m_protocol->startSsl();
 }
 
+bool KioSlaveSession::eightBitMimeRequested() const
+{
+  return m_protocol->metaData( QLatin1String("8bitmime") ) == QLatin1String("on");
+}
 
+bool KioSlaveSession::lf2crlfAndDotStuffingRequested() const
+{
+  return m_protocol->metaData( QLatin1String("lf2crlf+dotstuff") ) == QLatin1String("slave");
+}
 
+bool KioSlaveSession::pipeliningRequested() const
+{
+  m_protocol->metaData( QLatin1String("pipelining") ) != QLatin1String("off");
+}
+
+QString KioSlaveSession::requestedSaslMethod() const
+{
+  return m_protocol->metaData( QLatin1String("sasl") );
+}
+
+KioSMTP::SMTPSessionInterface::TLSRequestState KioSMTP::KioSlaveSession::tlsRequested() const
+{
+  if ( m_protocol->metaData( QLatin1String("tls") ) == QLatin1String("off") )
+    return ForceNoTLS;
+  if ( m_protocol->metaData( QLatin1String("tls") ) == QLatin1String("on") )
+    return ForceTLS;
+  return UseTLSIfAvailable;
+}

@@ -47,7 +47,7 @@ bool SMTPSessionInterface::haveCapability(const char* cap) const
 
 bool SMTPSessionInterface::canPipelineCommands() const
 {
-  return haveCapability("PIPELINING") && metaData( QLatin1String("pipelining") ) != QLatin1String("off") ;
+  return haveCapability("PIPELINING") && pipeliningRequested();
 }
 
 QString SMTPSessionInterface::createSpecialResponse() const

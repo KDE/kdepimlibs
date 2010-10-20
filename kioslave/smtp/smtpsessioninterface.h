@@ -42,6 +42,13 @@ class Response;
 class SMTPSessionInterface
 {
   public:
+    /** TLS request state. */
+    enum TLSRequestState {
+      UseTLSIfAvailable,
+      ForceTLS,
+      ForceNoTLS
+    };
+
     virtual ~SMTPSessionInterface();
     virtual bool startSsl() = 0;
     virtual bool isUsingSsl() const = 0;
@@ -74,7 +81,17 @@ class SMTPSessionInterface
     virtual bool openPasswordDialog( KIO::AuthInfo &authInfo ) = 0;
     virtual void dataReq() = 0;
     virtual int readData( QByteArray & ba ) = 0;
-    virtual QString metaData( const QString & key ) const = 0;
+
+    /** SASL method requested for authentication. */
+    virtual QString requestedSaslMethod() const = 0;
+    /** TLS requested for encryption. */
+    virtual TLSRequestState tlsRequested() const = 0;
+    /** LF2CRLF and dot stuffing requested. */
+    virtual bool lf2crlfAndDotStuffingRequested() const = 0;
+    /** 8bit MIME support requested. */
+    virtual bool eightBitMimeRequested() const = 0;
+    /** Pipelining has been requested. */
+    virtual bool pipeliningRequested() const = 0;
 
   private :
     KioSMTP::Capabilities m_capabilities;

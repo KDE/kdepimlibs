@@ -23,7 +23,6 @@
 #include "smtpsessioninterface.h"
 
 #include <QStringList>
-#include <KIO/MetaData>
 
 namespace KioSMTP {
 
@@ -44,7 +43,11 @@ class FakeSession : public SMTPSessionInterface {
     QByteArray nextData;
     int nextDataReturnCode;
     QStringList caps;
-    KIO::MetaData metadata;
+
+    bool eightBitMime;
+    bool lf2crlfAndDotStuff;
+    bool pipelining;
+    QString saslMethod;
 
     void clear() {
       startTLSReturnCode = true;
@@ -55,7 +58,11 @@ class FakeSession : public SMTPSessionInterface {
       nextData.resize( 0 );
       nextDataReturnCode = -1;
       caps.clear();
-      metadata.clear();
+
+      eightBitMime = false;
+      lf2crlfAndDotStuff = false;
+      pipelining = true;
+      saslMethod.clear();
     }
 
     //
@@ -80,7 +87,12 @@ class FakeSession : public SMTPSessionInterface {
     bool openPasswordDialog( KIO::AuthInfo & ) { return true; }
     void dataReq() { /* noop */ }
     int readData( QByteArray & ba ) { ba = nextData; return nextDataReturnCode; }
-    QString metaData( const QString & key ) const { return metadata[key]; }
+
+    bool eightBitMimeRequested() const { return eightBitMime; }
+    bool lf2crlfAndDotStuffingRequested() const { return lf2crlfAndDotStuff; }
+    bool pipeliningRequested() const { return pipelining; }
+    QString requestedSaslMethod() const { return saslMethod; }
+    TLSRequestState tlsRequested() const { return SMTPSessionInterface::UseTLSIfAvailable; }
 };
 
 }

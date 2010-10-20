@@ -542,7 +542,7 @@ static sasl_callback_t callbacks[] = {
   QByteArray TransferCommand::prepare( const QByteArray & ba ) {
     if ( ba.isEmpty() )
       return 0;
-    if ( mSMTP->metaData( QLatin1String("lf2crlf+dotstuff") ) == QLatin1String("slave") ) {
+    if ( mSMTP->lf2crlfAndDotStuffingRequested() ) {
       kDebug(7112) << "performing dotstuffing and LF->CRLF transformation";
       return dotstuff_lf2crlf( ba, mLastChar );
     } else {

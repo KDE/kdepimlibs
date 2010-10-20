@@ -34,10 +34,15 @@ class KioSlaveSession : public SMTPSessionInterface
     virtual bool isUsingSsl() const;
     virtual void messageBox(KIO::SlaveBase::MessageBoxType , const QString& msg, const QString& caption);
     virtual bool openPasswordDialog(KIO::AuthInfo& authInfo);
-    virtual QString metaData(const QString& key) const;
     virtual void dataReq();
     virtual int readData(QByteArray& ba);
     virtual bool startSsl();
+
+    virtual QString requestedSaslMethod() const;
+    virtual bool eightBitMimeRequested() const;
+    virtual bool lf2crlfAndDotStuffingRequested() const;
+    virtual bool pipeliningRequested() const;
+    virtual TLSRequestState tlsRequested() const;
 
   private:
     SMTPProtocol* m_protocol;

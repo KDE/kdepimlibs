@@ -51,6 +51,7 @@ using KioSMTP::TransferCommand;
 using KioSMTP::Request;
 using KioSMTP::Response;
 using KioSMTP::TransactionState;
+using KioSMTP::SMTPSessionInterface;
 
 #include <kemailsettings.h>
 
@@ -208,7 +209,7 @@ void SMTPProtocol::put(const KUrl & url, int /*permissions */ ,
   }
 
   if ( request.is8BitBody()
-       && !m_sessionIface->haveCapability("8BITMIME") && metaData( QLatin1String("8bitmime") ) != QLatin1String("on") ) {
+       && !m_sessionIface->haveCapability("8BITMIME") && !m_sessionIface->eightBitMimeRequested() ) {
     error( KIO::ERR_SERVICE_NOT_AVAILABLE,
            i18n("Your server (%1) does not support sending of 8-bit messages.\n"
                 "Please use base64 or quoted-printable encoding.", m_sServer) );
@@ -522,8 +523,8 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
     return false;
   }
 
-  if ( ( m_sessionIface->haveCapability("STARTTLS") /*### && canUseTLS()*/ && metaData( QLatin1String("tls") ) != QLatin1String("off") )
-       || metaData( QLatin1String("tls") ) == QLatin1String("on") ) {
+  if ( ( m_sessionIface->haveCapability("STARTTLS") /*### && canUseTLS()*/ && m_sessionIface->tlsRequested() != SMTPSessionInterface::ForceNoTLS )
+       || m_sessionIface->tlsRequested() == SMTPSessionInterface::ForceTLS ) {
     // For now we're gonna force it on.
 
     if ( execute( Command::STARTTLS ) ) {
@@ -556,7 +557,7 @@ bool SMTPProtocol::authenticate()
   // return with success if the server doesn't support SMTP-AUTH or an user
   // name is not specified and metadata doesn't tell us to force it.
   if ( (m_sUser.isEmpty() || !m_sessionIface->haveCapability( "AUTH" )) &&
-    metaData( QLatin1String("sasl") ).isEmpty() ) return true;
+    m_sessionIface->requestedSaslMethod().isEmpty() ) return true;
 
   KIO::AuthInfo authInfo;
   authInfo.username = m_sUser;
@@ -565,8 +566,8 @@ bool SMTPProtocol::authenticate()
 
   QStringList strList;
 
-  if (!metaData( QLatin1String("sasl") ).isEmpty())
-    strList.append( metaData( QLatin1String("sasl") ) );
+  if (!m_sessionIface->requestedSaslMethod().isEmpty())
+    strList.append( m_sessionIface->requestedSaslMethod() );
   else
     strList = m_sessionIface->capabilities().saslMethodsQSL();
 
