@@ -1,6 +1,6 @@
 #include "../request.h"
 
-//#include <iostream>
+#include <iostream>
 
 //using std::cout;
 //using std::endl;
@@ -68,16 +68,19 @@ int main( int , char ** ) {
   result += request.headerFields() + '\n';
   result += request.headerFields( "Marc Mutz" ) + '\n';
   result += request.headerFields( "Mutz, Marc" ) + '\n';
-  result += request.headerFields( "Marc Mötz" ) + '\n';
+  result += request.headerFields( QString::fromUtf8("Marc Mötz") ) + '\n';
 
-  request.setSubject( "Blödes Subject" );
+  request.setSubject( QString::fromUtf8("Blödes Subject") );
 
   result += request.headerFields() + '\n';
   result += request.headerFields( "Marc Mutz" ) + '\n';
   result += request.headerFields( "Mutz, Marc" ) + '\n';
-  result += request.headerFields( "Marc Mötz" ) + '\n';
+  result += request.headerFields( QString::fromUtf8("Marc Mötz") ) + '\n';
 
-  //cout << "Result:\n" << result.data() << endl;
+  if ( result != expected ) {
+    std::cout << "Result:\n" << result.data() << std::endl;
+    std::cout << "Expected:\n" << expected.data() << std::endl;
+  }
 
   return result == expected ? 0 : 1 ;
 }

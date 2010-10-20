@@ -5,7 +5,7 @@ set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 set(test_responseparser_SRCS test_responseparser.cpp )
 
 
-kde4_add_unit_test(test_responseparser ${test_responseparser_SRCS})
+kde4_add_unit_test(test_responseparser TESTNAME smtp-responseparser ${test_responseparser_SRCS})
 
 target_link_libraries(test_responseparser  ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
 
@@ -14,7 +14,7 @@ target_link_libraries(test_responseparser  ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBR
 set(test_headergeneration_SRCS test_headergeneration.cpp )
 
 
-kde4_add_executable(test_headergeneration TEST ${test_headergeneration_SRCS})
+kde4_add_unit_test(test_headergeneration TESTNAME smtp-headergeneration ${test_headergeneration_SRCS})
 
 target_link_libraries(test_headergeneration  ${KDE4_KDECORE_LIBS} )
 
@@ -23,7 +23,7 @@ target_link_libraries(test_headergeneration  ${KDE4_KDECORE_LIBS} )
 set(test_commands_SRCS test_commands.cpp )
 
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${SASL2_INCLUDE_DIR})
-kde4_add_unit_test(test_commands TEST ${test_commands_SRCS})
+kde4_add_unit_test(test_commands TESTNAME smtp-commands ${test_commands_SRCS})
 
 target_link_libraries(test_commands  ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBRARY} ${SASL2_LIBRARIES})
 
