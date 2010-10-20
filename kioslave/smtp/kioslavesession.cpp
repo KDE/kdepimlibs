@@ -50,7 +50,7 @@ void KioSMTP::KioSlaveSession::messageBox(KIO::SlaveBase::MessageBoxType id, con
 
 bool KioSMTP::KioSlaveSession::openPasswordDialog(KIO::AuthInfo& authInfo)
 {
-  m_protocol->openPasswordDialog( authInfo );
+  return m_protocol->openPasswordDialog( authInfo );
 }
 
 QString KioSMTP::KioSlaveSession::metaData(const QString& key) const
