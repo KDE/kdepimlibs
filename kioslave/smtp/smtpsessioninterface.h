@@ -71,11 +71,6 @@ class SMTPSessionInterface
     /** @return true is pipelining is available and allowed by metadata */
     bool canPipelineCommands() const;
 
-    /** This is a pure convenience wrapper around
-     *  @ref KioSMTP::Capabilities::createSpecialResponse
-     */
-    QString createSpecialResponse() const;
-
     virtual void error( int id, const QString & msg ) = 0;
     virtual void messageBox( KIO::SlaveBase::MessageBoxType id, const QString & msg, const QString &caption ) = 0;
     virtual bool openPasswordDialog( KIO::AuthInfo &authInfo ) = 0;

@@ -128,7 +128,11 @@ void SMTPProtocol::special( const QByteArray & aData ) {
   int what;
   s >> what;
   if ( what == 'c' ) {
-    infoMessage( m_sessionIface->createSpecialResponse() );
+    const QString response = m_sessionIface->capabilities().createSpecialResponse(
+      ( isUsingSsl() && !isAutoSsl() )
+      || m_sessionIface->haveCapability( "STARTTLS" )
+    );
+    infoMessage( response );
   } else if ( what == 'N' ) {
     if ( !execute( Command::NOOP ) )
       return;

@@ -50,11 +50,6 @@ bool SMTPSessionInterface::canPipelineCommands() const
   return haveCapability("PIPELINING") && pipeliningRequested();
 }
 
-QString SMTPSessionInterface::createSpecialResponse() const
-{
-  return m_capabilities.createSpecialResponse( ( isUsingSsl() && !isAutoSsl() ) || haveCapability( "STARTTLS" ) );
-}
-
 bool KioSMTP::SMTPSessionInterface::eightBitMimeRequested() const
 {
   return false;
