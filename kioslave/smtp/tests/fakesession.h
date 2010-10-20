@@ -61,7 +61,6 @@ class FakeSession : public SMTPSessionInterface {
     //
     // emulated API:
     //
-    void parseFeatures( const KioSMTP::Response & ) { /* noop */ }
     bool startSsl() {
       return startTLSReturnCode;
     }
@@ -87,5 +86,6 @@ class FakeSession : public SMTPSessionInterface {
 }
 
 #include "smtpsessioninterface.cpp"
+#include "capabilities.cpp"
 
 #endif

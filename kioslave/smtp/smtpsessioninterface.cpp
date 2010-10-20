@@ -19,6 +19,38 @@
 
 #include "smtpsessioninterface.h"
 
-KioSMTP::SMTPSessionInterface::~SMTPSessionInterface()
+using namespace KioSMTP;
+
+SMTPSessionInterface::~SMTPSessionInterface()
 {
+}
+
+void SMTPSessionInterface::parseFeatures(const KioSMTP::Response &ehloResponse )
+{
+  m_capabilities = Capabilities::fromResponse( ehloResponse );
+}
+
+const Capabilities& KioSMTP::SMTPSessionInterface::capabilities() const
+{
+  return m_capabilities;
+}
+
+void SMTPSessionInterface::clearCapabilities()
+{
+  m_capabilities.clear();
+}
+
+bool SMTPSessionInterface::haveCapability(const char* cap) const
+{
+  return m_capabilities.have( cap );
+}
+
+bool SMTPSessionInterface::canPipelineCommands() const
+{
+  return haveCapability("PIPELINING") && metaData( QLatin1String("pipelining") ) != QLatin1String("off") ;
+}
+
+QString SMTPSessionInterface::createSpecialResponse() const
+{
+  return m_capabilities.createSpecialResponse( ( isUsingSsl() && !isAutoSsl() ) || haveCapability( "STARTTLS" ) );
 }

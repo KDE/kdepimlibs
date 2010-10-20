@@ -97,29 +97,10 @@ protected:
   KioSMTP::Response getResponse( bool * ok );
 
   bool authenticate();
-  void parseFeatures( const KioSMTP::Response & ehloResponse );
 
   bool sendCommandLine( const QByteArray & cmd );
   QByteArray collectPipelineCommands( KioSMTP::TransactionState * ts );
   bool batchProcessResponses( KioSMTP::TransactionState * ts );
-
-  /** This is a pure convenience wrapper around
-      @ref KioSMTP::Capabilities::have() */
-  bool haveCapability( const char * cap ) const {
-    return mCapabilities.have( cap );
-  }
-
-  /** @return true is pipelining is available and allowed by metadata */
-  bool canPipelineCommands() const {
-    return haveCapability("PIPELINING") && metaData( QLatin1String("pipelining") ) != QLatin1String("off") ;
-  }
-
-  /** This is a pure convenience wrapper around
-      @ref KioSMTP::Capabilities::createSpecialResponse */
-  QString createSpecialResponse() const {
-    return mCapabilities.createSpecialResponse( ( isUsingSsl() && !isAutoSsl() ) ||
-                                                haveCapability( "STARTTLS" ) );
-  }
 
   void queueCommand( KioSMTP::Command * command ) {
     mPendingCommandQueue.enqueue( command );
@@ -133,8 +114,6 @@ protected:
   QString m_sUser, m_sOldUser;
   QString m_sPass, m_sOldPass;
   QString m_hostname;
-
-  KioSMTP::Capabilities mCapabilities;
 
   typedef QQueue<KioSMTP::Command*> CommandQueue;
   CommandQueue mPendingCommandQueue;

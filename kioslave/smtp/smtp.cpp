@@ -127,7 +127,7 @@ void SMTPProtocol::special( const QByteArray & aData ) {
   int what;
   s >> what;
   if ( what == 'c' ) {
-    infoMessage( createSpecialResponse() );
+    infoMessage( m_sessionIface->createSpecialResponse() );
   } else if ( what == 'N' ) {
     if ( !execute( Command::NOOP ) )
       return;
@@ -208,7 +208,7 @@ void SMTPProtocol::put(const KUrl & url, int /*permissions */ ,
   }
 
   if ( request.is8BitBody()
-       && !haveCapability("8BITMIME") && metaData( QLatin1String("8bitmime") ) != QLatin1String("on") ) {
+       && !m_sessionIface->haveCapability("8BITMIME") && metaData( QLatin1String("8bitmime") ) != QLatin1String("on") ) {
     error( KIO::ERR_SERVICE_NOT_AVAILABLE,
            i18n("Your server (%1) does not support sending of 8-bit messages.\n"
                 "Please use base64 or quoted-printable encoding.", m_sServer) );
@@ -307,7 +307,7 @@ Response SMTPProtocol::getResponse( bool * ok ) {
 bool SMTPProtocol::executeQueuedCommands( TransactionState * ts ) {
   assert( ts );
 
-  kDebug( canPipelineCommands(), 7112 ) << "using pipelining";
+  kDebug( m_sessionIface->canPipelineCommands(), 7112 ) << "using pipelining";
 
   while( !mPendingCommandQueue.isEmpty() ) {
     QByteArray cmdline = collectPipelineCommands( ts );
@@ -356,7 +356,7 @@ QByteArray SMTPProtocol::collectPipelineCommands( TransactionState * ts ) {
     if ( cmdLine_len && cmd->mustBeFirstInPipeline() )
       break;
 
-    if ( cmdLine_len && !canPipelineCommands() )
+    if ( cmdLine_len && !m_sessionIface->canPipelineCommands() )
       break;
 
     while ( !cmd->isComplete() && !cmd->needsResponse() ) {
@@ -522,7 +522,7 @@ bool SMTPProtocol::smtp_open(const QString& fakeHostname)
     return false;
   }
 
-  if ( ( haveCapability("STARTTLS") /*### && canUseTLS()*/ && metaData( QLatin1String("tls") ) != QLatin1String("off") )
+  if ( ( m_sessionIface->haveCapability("STARTTLS") /*### && canUseTLS()*/ && metaData( QLatin1String("tls") ) != QLatin1String("off") )
        || metaData( QLatin1String("tls") ) == QLatin1String("on") ) {
     // For now we're gonna force it on.
 
@@ -555,7 +555,7 @@ bool SMTPProtocol::authenticate()
 {
   // return with success if the server doesn't support SMTP-AUTH or an user
   // name is not specified and metadata doesn't tell us to force it.
-  if ( (m_sUser.isEmpty() || !haveCapability( "AUTH" )) &&
+  if ( (m_sUser.isEmpty() || !m_sessionIface->haveCapability( "AUTH" )) &&
     metaData( QLatin1String("sasl") ).isEmpty() ) return true;
 
   KIO::AuthInfo authInfo;
@@ -568,17 +568,13 @@ bool SMTPProtocol::authenticate()
   if (!metaData( QLatin1String("sasl") ).isEmpty())
     strList.append( metaData( QLatin1String("sasl") ) );
   else
-    strList = mCapabilities.saslMethodsQSL();
+    strList = m_sessionIface->capabilities().saslMethodsQSL();
 
   AuthCommand authCmd( m_sessionIface, strList.join( QLatin1String(" ") ).toLatin1(), m_sServer, authInfo );
   bool ret = execute( &authCmd );
   m_sUser = authInfo.username;
   m_sPass = authInfo.password;
   return ret;
-}
-
-void SMTPProtocol::parseFeatures( const Response & ehloResponse ) {
-  mCapabilities = Capabilities::fromResponse( ehloResponse );
 }
 
 void SMTPProtocol::smtp_close( bool nice ) {
@@ -593,7 +589,7 @@ void SMTPProtocol::smtp_close( bool nice ) {
   m_sOldUser.clear();
   m_sOldPass.clear();
 
-  mCapabilities.clear();
+  m_sessionIface->clearCapabilities();
   qDeleteAll( mPendingCommandQueue );
   mPendingCommandQueue.clear();
   qDeleteAll( mSentCommandQueue );

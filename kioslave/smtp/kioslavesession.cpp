@@ -28,11 +28,6 @@ void KioSMTP::KioSlaveSession::error(int id, const QString& msg)
   m_protocol->error( id, msg );
 }
 
-bool KioSMTP::KioSlaveSession::haveCapability(const char* cap) const
-{
-  return m_protocol->haveCapability( cap );
-}
-
 bool KioSMTP::KioSlaveSession::isAutoSsl() const
 {
   return m_protocol->isAutoSsl();
@@ -56,11 +51,6 @@ bool KioSMTP::KioSlaveSession::openPasswordDialog(KIO::AuthInfo& authInfo)
 QString KioSMTP::KioSlaveSession::metaData(const QString& key) const
 {
   return m_protocol->metaData( key );
-}
-
-void KioSMTP::KioSlaveSession::parseFeatures(const KioSMTP::Response &response )
-{
-  return m_protocol->parseFeatures( response );
 }
 
 void KioSMTP::KioSlaveSession::dataReq()

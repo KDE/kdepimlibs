@@ -19,7 +19,10 @@
 
 #ifndef KIOSMTP_SMTPSESSIONINTERFACE_H
 #define KIOSMTP_SMTPSESSIONINTERFACE_H
+
 #include <kio/slavebase.h>
+
+#include "capabilities.h"
 
 class QByteArray;
 class QString;
@@ -40,17 +43,41 @@ class SMTPSessionInterface
 {
   public:
     virtual ~SMTPSessionInterface();
-    virtual void parseFeatures( const KioSMTP::Response & ) = 0;
     virtual bool startSsl() = 0;
     virtual bool isUsingSsl() const = 0;
     virtual bool isAutoSsl() const = 0;
-    virtual bool haveCapability( const char * cap ) const = 0;
+
+    /** Parse capability response from the server. */
+    void parseFeatures( const KioSMTP::Response & );
+
+    /** Returns the server reported capabilities. */
+    const Capabilities& capabilities() const;
+
+    /** Clear the capabilities reported by the server (e.g. when reconnecting the session) */
+    void clearCapabilities();
+
+    /** This is a pure convenience wrapper around
+     *  @ref KioSMTP::Capabilities::have()
+     */
+    virtual bool haveCapability( const char * cap ) const;
+
+    /** @return true is pipelining is available and allowed by metadata */
+    bool canPipelineCommands() const;
+
+    /** This is a pure convenience wrapper around
+     *  @ref KioSMTP::Capabilities::createSpecialResponse
+     */
+    QString createSpecialResponse() const;
+
     virtual void error( int id, const QString & msg ) = 0;
     virtual void messageBox( KIO::SlaveBase::MessageBoxType id, const QString & msg, const QString &caption ) = 0;
     virtual bool openPasswordDialog( KIO::AuthInfo &authInfo ) = 0;
     virtual void dataReq() = 0;
     virtual int readData( QByteArray & ba ) = 0;
     virtual QString metaData( const QString & key ) const = 0;
+
+  private :
+    KioSMTP::Capabilities m_capabilities;
 };
 
 }
