@@ -51,8 +51,6 @@ class SMTPSessionInterface
 
     virtual ~SMTPSessionInterface();
     virtual bool startSsl() = 0;
-    virtual bool isUsingSsl() const = 0;
-    virtual bool isAutoSsl() const = 0;
 
     /** Parse capability response from the server. */
     void parseFeatures( const KioSMTP::Response & );

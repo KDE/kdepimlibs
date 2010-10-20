@@ -30,16 +30,6 @@ void KioSMTP::KioSlaveSession::error(int id, const QString& msg)
   m_protocol->error( id, msg );
 }
 
-bool KioSMTP::KioSlaveSession::isAutoSsl() const
-{
-  return m_protocol->isAutoSsl();
-}
-
-bool KioSMTP::KioSlaveSession::isUsingSsl() const
-{
-  return m_protocol->isUsingSsl();
-}
-
 void KioSMTP::KioSlaveSession::messageBox(KIO::SlaveBase::MessageBoxType id, const QString& msg, const QString& caption )
 {
   m_protocol->messageBox( id, msg, caption );

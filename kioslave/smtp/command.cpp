@@ -103,14 +103,6 @@ static sasl_callback_t callbacks[] = {
     return mSMTP->startSsl();
   }
 
-  bool Command::isUsingSsl() const {
-    return mSMTP->isUsingSsl();
-  }
-
-  bool Command::isAutoSsl() const {
-    return mSMTP->isAutoSsl();
-  }
-
   bool Command::haveCapability( const char * cap ) const {
     return mSMTP->haveCapability( cap );
   }

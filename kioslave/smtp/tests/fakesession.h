@@ -34,8 +34,7 @@ class FakeSession : public SMTPSessionInterface {
     // public members to control the API emulation below:
     //
     bool startTLSReturnCode;
-    bool usesSSL;
-    bool usesTLS;
+    bool usesTLS; // ### unused below, most likely something wrong in the tests...
     int lastErrorCode;
     QString lastErrorMessage;
     int lastMessageBoxCode;
@@ -51,7 +50,7 @@ class FakeSession : public SMTPSessionInterface {
 
     void clear() {
       startTLSReturnCode = true;
-      usesSSL = usesTLS = false;
+      usesTLS = false;
       lastErrorCode = lastMessageBoxCode = 0;
       lastErrorMessage.clear();
       lastMessageBoxText.clear();
@@ -69,8 +68,6 @@ class FakeSession : public SMTPSessionInterface {
     bool startSsl() {
       return startTLSReturnCode;
     }
-    bool isUsingSsl() const { return usesSSL; }
-    bool isAutoSsl() const { return usesTLS; }
     bool haveCapability( const char * cap ) const { return caps.contains( cap ); }
     void error( int id, const QString & msg ) {
       lastErrorCode = id;

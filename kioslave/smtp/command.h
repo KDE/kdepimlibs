@@ -144,8 +144,6 @@ namespace KioSMTP {
     // for subclasses of Command:
     void parseFeatures( const Response & r );
     int startSsl();
-    bool isUsingSsl() const;
-    bool isAutoSsl() const;
     bool haveCapability( const char * cap ) const;
   };
 
