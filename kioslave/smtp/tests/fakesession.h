@@ -59,9 +59,7 @@ class FakeSession : public SMTPSessionInterface {
       nextDataReturnCode = -1;
       caps.clear();
 
-      eightBitMime = false;
       lf2crlfAndDotStuff = false;
-      pipelining = true;
       saslMethod.clear();
     }
 
@@ -88,9 +86,7 @@ class FakeSession : public SMTPSessionInterface {
     void dataReq() { /* noop */ }
     int readData( QByteArray & ba ) { ba = nextData; return nextDataReturnCode; }
 
-    bool eightBitMimeRequested() const { return eightBitMime; }
     bool lf2crlfAndDotStuffingRequested() const { return lf2crlfAndDotStuff; }
-    bool pipeliningRequested() const { return pipelining; }
     QString requestedSaslMethod() const { return saslMethod; }
     TLSRequestState tlsRequested() const { return SMTPSessionInterface::UseTLSIfAvailable; }
 };

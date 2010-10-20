@@ -89,9 +89,9 @@ class SMTPSessionInterface
     /** LF2CRLF and dot stuffing requested. */
     virtual bool lf2crlfAndDotStuffingRequested() const = 0;
     /** 8bit MIME support requested. */
-    virtual bool eightBitMimeRequested() const = 0;
+    virtual bool eightBitMimeRequested() const;
     /** Pipelining has been requested. */
-    virtual bool pipeliningRequested() const = 0;
+    virtual bool pipeliningRequested() const;
 
   private :
     KioSMTP::Capabilities m_capabilities;

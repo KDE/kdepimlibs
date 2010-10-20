@@ -28,7 +28,7 @@ namespace KioSMTP {
 class KioSlaveSession : public SMTPSessionInterface
 {
   public:
-    KioSlaveSession( SMTPProtocol *protocol );
+    explicit KioSlaveSession( SMTPProtocol *protocol );
     virtual void error(int id, const QString& msg);
     virtual bool isAutoSsl() const;
     virtual bool isUsingSsl() const;

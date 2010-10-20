@@ -54,3 +54,13 @@ QString SMTPSessionInterface::createSpecialResponse() const
 {
   return m_capabilities.createSpecialResponse( ( isUsingSsl() && !isAutoSsl() ) || haveCapability( "STARTTLS" ) );
 }
+
+bool KioSMTP::SMTPSessionInterface::eightBitMimeRequested() const
+{
+  return false;
+}
+
+bool KioSMTP::SMTPSessionInterface::pipeliningRequested() const
+{
+  return true;
+}
