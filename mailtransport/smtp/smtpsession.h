@@ -21,6 +21,9 @@
 #define MAILTRANSPORT_SMTPSESSION_H
 #include <qobject.h>
 
+class QIODevice;
+class KUrl;
+
 namespace MailTransport {
 
 class SmtpSessionPrivate;
@@ -32,11 +35,17 @@ class SmtpSession : public QObject
   public:
     explicit SmtpSession( QObject *parent = 0 );
 
+    /** Open connection to host. */
+    void connectToHost( const KUrl &url );
+
     /** Sets the SASL method used for authentication. */
     void setSaslMethod( const QString &method );
 
     /**  Enable TLS encryption. */
     void setUseTLS( bool useTLS );
+
+    /** Send a message. */
+    void sendMessage( const KUrl& destination, QIODevice* data );
 
   private:
     SmtpSessionPrivate * const d;

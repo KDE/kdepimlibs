@@ -24,6 +24,7 @@
 #include "transport.h"
 #include "mailtransport_defs.h"
 #include "precommandjob.h"
+#include "smtp/smtpsession.h"
 
 #include <QBuffer>
 #include <QHash>
@@ -186,6 +187,7 @@ void SmtpJob::startSmtpJob()
 
   destination.setPath( QLatin1String( "/send" ) );
 
+#ifndef MAILTRANSPORT_INPROCESS_SMTP
   d->slave = s_slavePool->slaves.value( transport()->id() );
   if ( !d->slave ) {
     KIO::MetaData slaveConfig;
@@ -216,6 +218,13 @@ void SmtpJob::startSmtpJob()
 
   addSubjob( job );
   KIO::Scheduler::assignJobToSlave( d->slave, job );
+#else
+  SmtpSession *session = new SmtpSession( this );
+  session->setUseTLS( transport()->encryption() == Transport::EnumEncryption::TLS );
+  if ( transport()->requiresAuthentication() )
+    session->setSaslMethod( transport()->authenticationTypeString() );
+  session->sendMessage( destination, buffer() );
+#endif
 
   setTotalAmount( KJob::Bytes, data().length() );
 }

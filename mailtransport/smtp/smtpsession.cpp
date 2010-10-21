@@ -22,6 +22,10 @@
 #include "smtp/smtpsessioninterface.h"
 #include <ktcpsocket.h>
 #include <KMessageBox>
+#include <KIO/PasswordDialog>
+#include <kio/authinfo.h>
+#include <kio/global.h>
+#include <KLocalizedString>
 
 using namespace MailTransport;
 
@@ -34,18 +38,41 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
       q( session )
      {}
 
-    // TODO implement these
-    void dataReq() {};
-    int readData(QByteArray& ba) { return 0; }
-    void error(int id, const QString& msg) { }
+    void dataReq() { /* noop */ };
+    int readData(QByteArray& ba)
+    {
+      if ( data->atEnd() ) {
+        ba.clear();
+        return 0;
+      } else {
+        Q_ASSERT( data->isOpen() );
+        ba = data->read( 32 * 1024 );
+        return ba.size();
+      }
+    }
+
+    void error(int id, const QString& msg)
+    {
+      KMessageBox::error( 0, KIO::buildErrorString( id, msg ), i18n( "Mail Sending Failed" ) );
+    }
 
     void informationMessageBox(const QString& msg, const QString& caption)
     {
       KMessageBox::information( 0, msg, caption );
     }
 
-    // TODO
-    bool openPasswordDialog(KIO::AuthInfo& authInfo) { return true; }
+    bool openPasswordDialog(KIO::AuthInfo& authInfo) {
+      return KIO::PasswordDialog::getNameAndPassword(
+        authInfo.username,
+        authInfo.password,
+        &(authInfo.keepPassword),
+        authInfo.prompt,
+        authInfo.readOnly,
+        authInfo.caption,
+        authInfo.comment,
+        authInfo.commentLabel
+      ) == KIO::PasswordDialog::Accepted;
+    }
 
     bool startSsl()
     {
@@ -65,6 +92,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     bool useTLS;
 
     KTcpSocket *socket;
+    QIODevice *data;
 
   private:
     SmtpSession *q;
@@ -74,12 +102,39 @@ SmtpSession::SmtpSession(QObject* parent) :
   QObject(parent),
   d( new SmtpSessionPrivate( this ) )
 {
+  d->socket = new KTcpSocket( this );
 }
 
 void SmtpSession::setSaslMethod(const QString& method)
 {
   d->saslMethod = method;
 }
+
+void SmtpSession::setUseTLS(bool useTLS)
+{
+  d->useTLS = useTLS;
+}
+
+void SmtpSession::connectToHost(const KUrl& url)
+{
+  if ( url.protocol() == QLatin1String( "smtps" ) )
+    d->socket->connectToHostEncrypted( url.host(), url.port() );
+  else if ( url.protocol() == QLatin1String( "smtp" ) )
+    d->socket->connectToHost( url.host(), url.port() );
+  else
+    Q_ASSERT( !"Unsupported protocol!" );
+}
+
+void SmtpSession::sendMessage(const KUrl& destination, QIODevice* data)
+{
+  if ( d->socket->state() != KTcpSocket::ConnectedState && d->socket->state() != KTcpSocket::ConnectingState ) {
+    connectToHost( destination );
+  }
+
+  d->data = data;
+}
+
+
 
 
 #include "smtpsession.h"
