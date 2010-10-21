@@ -19,6 +19,7 @@
 
 #include "smtpsession.h"
 
+#include "common.h"
 #include "smtp/smtpsessioninterface.h"
 #include "smtp/response.h"
 #include "smtp/command.h"
@@ -85,11 +86,12 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
     bool startSsl()
     {
+      kDebug();
       Q_ASSERT( socket );
       socket->setAdvertisedSslVersion( KTcpSocket::TlsV1 );
       socket->ignoreSslErrors();
       socket->startClientEncryption();
-      const bool encrypted = socket->waitForEncrypted( -1 );
+      const bool encrypted = socket->waitForEncrypted( 5000 );
 
       const KSslCipher cipher = socket->sessionCipher();
       if ( !encrypted || socket->sslErrors().count() > 0 || socket->encryptionMode() != KTcpSocket::SslClientMode
@@ -114,6 +116,16 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     void socketConnected()
     {
       kDebug();
+    }
+
+    void socketDisconnected()
+    {
+      kDebug();
+    }
+
+    void socketError( KTcpSocket::Error err )
+    {
+      kDebug() << err;
     }
 
     bool sendCommandLine( const QByteArray &cmdline )
@@ -233,6 +245,15 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     void handleCommand( Command *cmd )
     {
       switch ( state ) {
+        case StartTLS:
+        {
+          // re-issue EHLO to refresh the capability list (could be have
+          // been faked before TLS was enabled):
+          state = EHLOPostTls;
+          EHLOCommand *ehloCmdPostTLS = new EHLOCommand( this, destination.host() );
+          run( ehloCmdPostTLS );
+          break;
+        }
         case EHLOPreTls:
         {
           if ( ( haveCapability("STARTTLS") && tlsRequested() != SMTPSessionInterface::ForceNoTLS )
@@ -246,27 +267,35 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
         // fall through
         case EHLOPostTls:
         {
-          authenticate();
-          break;
+          // return with success if the server doesn't support SMTP-AUTH or an user
+          // name is not specified and metadata doesn't tell us to force it.
+          if ( !destination.user().isEmpty() || haveCapability( "AUTH" ) || !requestedSaslMethod().isEmpty() )
+          {
+            authInfo.username = destination.user();
+            authInfo.password = destination.password();
+            authInfo.prompt = i18n("Username and password for your SMTP account:");
+
+            QStringList strList;
+            if ( !requestedSaslMethod().isEmpty() )
+              strList.append( requestedSaslMethod() );
+            else
+              strList = capabilities().saslMethodsQSL();
+
+            state = Authenticated;
+            AuthCommand *authCmd = new AuthCommand( this, strList.join( QLatin1String(" ") ).toLatin1(), destination.host(), authInfo );
+            run( authCmd );
+            break;
+          }
         }
-        case StartTLS:
+        // fall through
+        case Authenticated:
         {
-          // re-issue EHLO to refresh the capability list (could be have
-          // been faked before TLS was enabled):
-          state = EHLOPostTls;
-          EHLOCommand *ehloCmdPostTLS = new EHLOCommand( this, destination.host() );
-          run( ehloCmdPostTLS );
           break;
         }
         default: Q_ASSERT( !"Unhandled command" );
       }
 
       delete cmd;
-    }
-
-    void authenticate()
-    {
-      kDebug();
     }
 
   public:
@@ -279,18 +308,25 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     KioSMTP::Response currentResponse;
     KioSMTP::Command * currentCommand;
     KioSMTP::TransactionState *currentTransactionState;
+    KIO::AuthInfo authInfo;
 
     enum State {
       Initial,
       EHLOPreTls,
       StartTLS,
-      EHLOPostTls
+      EHLOPostTls,
+      Authenticated
     };
     State state;
+
+    static bool saslInitialized;
 
   private:
     SmtpSession *q;
 };
+
+bool SmtpSessionPrivate::saslInitialized = false;
+
 
 SmtpSession::SmtpSession(QObject* parent) :
   QObject(parent),
@@ -299,7 +335,15 @@ SmtpSession::SmtpSession(QObject* parent) :
   kDebug();
   d->socket = new KTcpSocket( this );
   connect( d->socket, SIGNAL(connected()), SLOT(socketConnected()) );
+  connect( d->socket, SIGNAL(disconnected()), SLOT(socketDisconnected()) );
+  connect( d->socket, SIGNAL(error(KTcpSocket::Error)), SLOT(slocketError(KTcpSocket::Error)) );
   connect( d->socket, SIGNAL(readyRead()), SLOT(receivedNewData()) );
+
+  if ( !d->saslInitialized ) {
+    if (!initSASL())
+      exit(-1);
+    d->saslInitialized = true;
+  }
 }
 
 SmtpSession::~SmtpSession()

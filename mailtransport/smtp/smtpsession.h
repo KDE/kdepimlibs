@@ -20,6 +20,7 @@
 #ifndef MAILTRANSPORT_SMTPSESSION_H
 #define MAILTRANSPORT_SMTPSESSION_H
 #include <qobject.h>
+#include <ktcpsocket.h>
 
 class QIODevice;
 class KUrl;
@@ -52,6 +53,8 @@ class SmtpSession : public QObject
     SmtpSessionPrivate * const d;
     Q_PRIVATE_SLOT( d, void socketConnected() )
     Q_PRIVATE_SLOT( d, void receivedNewData() )
+    Q_PRIVATE_SLOT( d, void socketError(KTcpSocket::Error) )
+    Q_PRIVATE_SLOT( d, void socketDisconnected() )
 };
 
 }
