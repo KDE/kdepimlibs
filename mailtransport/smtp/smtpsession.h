@@ -34,6 +34,7 @@ class SmtpSession : public QObject
   Q_OBJECT
   public:
     explicit SmtpSession( QObject *parent = 0 );
+    ~SmtpSession();
 
     /** Open connection to host. */
     void connectToHost( const KUrl &url );

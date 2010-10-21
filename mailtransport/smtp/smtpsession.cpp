@@ -26,6 +26,7 @@
 #include <kio/authinfo.h>
 #include <kio/global.h>
 #include <KLocalizedString>
+#include <KDebug>
 
 using namespace MailTransport;
 
@@ -76,11 +77,26 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
     bool startSsl()
     {
-      // TODO looking at TCPSlaveBase this is far from complete...
       Q_ASSERT( socket );
+      socket->setAdvertisedSslVersion( KTcpSocket::TlsV1 );
+      socket->ignoreSslErrors();
       socket->startClientEncryption();
       const bool encrypted = socket->waitForEncrypted( -1 );
-      return encrypted;
+
+      const KSslCipher cipher = socket->sessionCipher();
+      if ( !encrypted || socket->sslErrors().count() > 0 || socket->encryptionMode() != KTcpSocket::SslClientMode
+           || cipher.isNull() || cipher.usedBits() == 0 )
+      {
+        kDebug() << "Initial SSL handshake failed. cipher.isNull() is" << cipher.isNull()
+                 << ", cipher.usedBits() is" << cipher.usedBits()
+                 << ", the socket says:" <<  socket->errorString()
+                 << "and the list of SSL errors contains"
+                 << socket->sslErrors().count() << "items.";
+        return false;
+      } else {
+        kDebug() << "TLS negotiation done.";
+        return true;
+      }
     }
 
     bool lf2crlfAndDotStuffingRequested() const { return true; }
@@ -102,7 +118,14 @@ SmtpSession::SmtpSession(QObject* parent) :
   QObject(parent),
   d( new SmtpSessionPrivate( this ) )
 {
+  kDebug();
   d->socket = new KTcpSocket( this );
+}
+
+SmtpSession::~SmtpSession()
+{
+  kDebug();
+  delete d;
 }
 
 void SmtpSession::setSaslMethod(const QString& method)
@@ -117,6 +140,7 @@ void SmtpSession::setUseTLS(bool useTLS)
 
 void SmtpSession::connectToHost(const KUrl& url)
 {
+  kDebug() << url;
   if ( url.protocol() == QLatin1String( "smtps" ) )
     d->socket->connectToHostEncrypted( url.host(), url.port() );
   else if ( url.protocol() == QLatin1String( "smtp" ) )
