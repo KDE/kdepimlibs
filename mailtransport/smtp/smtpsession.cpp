@@ -20,6 +20,10 @@
 #include "smtpsession.h"
 
 #include "smtp/smtpsessioninterface.h"
+#include "smtp/response.h"
+#include "smtp/command.h"
+#include "smtp/transactionstate.h"
+
 #include <ktcpsocket.h>
 #include <KMessageBox>
 #include <KIO/PasswordDialog>
@@ -29,6 +33,7 @@
 #include <KDebug>
 
 using namespace MailTransport;
+using namespace KioSMTP;
 
 class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 {
@@ -36,6 +41,9 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     explicit SmtpSessionPrivate( SmtpSession *session ) :
       useTLS( true ),
       socket( 0 ),
+      currentCommand( 0 ),
+      currentTransactionState( 0 ),
+      state( Initial ),
       q( session )
      {}
 
@@ -103,12 +111,182 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     QString requestedSaslMethod() const { return saslMethod; }
     TLSRequestState tlsRequested() const { return useTLS ? ForceTLS : ForceNoTLS; }
 
+    void socketConnected()
+    {
+      kDebug();
+    }
+
+    bool sendCommandLine( const QByteArray &cmdline )
+    {
+      if ( cmdline.length() < 4096 )
+        kDebug(7112) << "C: >>" << cmdline.trimmed().data() << "<<";
+      else
+        kDebug(7112) << "C: <" << cmdline.length() << " bytes>";
+      ssize_t numWritten, cmdline_len = cmdline.length();
+      if ( (numWritten = socket->write( cmdline ) ) != cmdline_len ) {
+        kDebug(7112) << "Tried to write " << cmdline_len << " bytes, but only "
+                    << numWritten << " were written!" << endl;
+        error( KIO::ERR_SLAVE_DEFINED, i18n ("Writing to socket failed.") );
+        return false;
+      }
+      return true;
+    }
+
+    bool run( int type, TransactionState * ts = 0 )
+    {
+      return run( Command::createSimpleCommand( type, this ), ts );
+    }
+
+    bool run( Command * cmd, TransactionState * ts = 0 )
+    {
+      Q_ASSERT( cmd );
+      Q_ASSERT( !currentCommand );
+      Q_ASSERT( !currentTransactionState );
+
+      // ### WTF?
+      if ( cmd->doNotExecute( ts ) )
+        return true;
+
+      currentCommand = cmd;
+      currentTransactionState = ts;
+
+      while ( !cmd->isComplete() && !cmd->needsResponse() ) {
+        const QByteArray cmdLine = cmd->nextCommandLine( ts );
+        if ( ts && ts->failedFatally() ) {
+          // TODO error
+          return false;
+        }
+        if ( cmdLine.isEmpty() )
+          continue;
+        if ( !sendCommandLine( cmdLine ) ) {
+          // TODO error
+          return false;
+        }
+      }
+      return true;
+    }
+
+    void receivedNewData()
+    {
+      kDebug();
+      while ( socket->canReadLine() ) {
+        const QByteArray buffer = socket->readLine();
+        kDebug() << "S: >>" << buffer << "<<";
+        currentResponse.parseLine( buffer, buffer.size() );
+        // ...until the response is complete or the parser is so confused
+        // that it doesn't think a RSET would help anymore:
+        if ( currentResponse.isComplete() ) {
+          handleResponse( currentResponse );
+          currentResponse = Response();
+        } else if ( !currentResponse.isWellFormed() ) {
+          // TODO error we can't recover from
+        }
+      }
+    }
+
+    void handleResponse( const KioSMTP::Response &response )
+    {
+      if ( currentCommand ) {
+        if ( !currentCommand->processResponse( response, currentTransactionState ) ) {
+          // TODO: error
+        }
+        while ( !currentCommand->isComplete() && !currentCommand->needsResponse() ) {
+          const QByteArray cmdLine = currentCommand->nextCommandLine( currentTransactionState );
+          if ( currentTransactionState && currentTransactionState->failedFatally() ) {
+          // TODO error
+          }
+          if ( cmdLine.isEmpty() )
+            continue;
+          if ( !sendCommandLine( cmdLine ) ) {
+          // TODO error
+          }
+        }
+        if ( currentCommand->isComplete() ) {
+          Command *cmd = currentCommand;
+          currentCommand = 0;
+          currentTransactionState = 0;
+          handleCommand( cmd );
+        }
+        return;
+      }
+
+      // command-less responses
+      switch ( state ) {
+        case Initial: // server greeting
+        {
+          if ( !response.isOk() ) {
+            error( KIO::ERR_COULD_NOT_LOGIN,
+                  i18n("The server (%1) did not accept the connection.\n"
+                        "%2", destination.host(), response.errorMessage() ) );
+            // TODO error
+          }
+          state = EHLOPreTls;
+          // TODO fake hostname handling
+          EHLOCommand *ehloCmdPreTLS = new EHLOCommand( this, destination.host() );
+          run( ehloCmdPreTLS );
+          break;
+        }
+        default: Q_ASSERT( !"Unhandled command-less response." );
+      }
+    }
+
+    void handleCommand( Command *cmd )
+    {
+      switch ( state ) {
+        case EHLOPreTls:
+        {
+          if ( ( haveCapability("STARTTLS") && tlsRequested() != SMTPSessionInterface::ForceNoTLS )
+              || tlsRequested() == SMTPSessionInterface::ForceTLS )
+          {
+            state = StartTLS;
+            run( Command::STARTTLS );
+            break;
+          }
+        }
+        // fall through
+        case EHLOPostTls:
+        {
+          authenticate();
+          break;
+        }
+        case StartTLS:
+        {
+          // re-issue EHLO to refresh the capability list (could be have
+          // been faked before TLS was enabled):
+          state = EHLOPostTls;
+          EHLOCommand *ehloCmdPostTLS = new EHLOCommand( this, destination.host() );
+          run( ehloCmdPostTLS );
+          break;
+        }
+        default: Q_ASSERT( !"Unhandled command" );
+      }
+
+      delete cmd;
+    }
+
+    void authenticate()
+    {
+      kDebug();
+    }
+
   public:
     QString saslMethod;
     bool useTLS;
 
+    KUrl destination;
     KTcpSocket *socket;
     QIODevice *data;
+    KioSMTP::Response currentResponse;
+    KioSMTP::Command * currentCommand;
+    KioSMTP::TransactionState *currentTransactionState;
+
+    enum State {
+      Initial,
+      EHLOPreTls,
+      StartTLS,
+      EHLOPostTls
+    };
+    State state;
 
   private:
     SmtpSession *q;
@@ -120,6 +298,8 @@ SmtpSession::SmtpSession(QObject* parent) :
 {
   kDebug();
   d->socket = new KTcpSocket( this );
+  connect( d->socket, SIGNAL(connected()), SLOT(socketConnected()) );
+  connect( d->socket, SIGNAL(readyRead()), SLOT(receivedNewData()) );
 }
 
 SmtpSession::~SmtpSession()
@@ -151,6 +331,7 @@ void SmtpSession::connectToHost(const KUrl& url)
 
 void SmtpSession::sendMessage(const KUrl& destination, QIODevice* data)
 {
+  d->destination = destination;
   if ( d->socket->state() != KTcpSocket::ConnectedState && d->socket->state() != KTcpSocket::ConnectingState ) {
     connectToHost( destination );
   }
@@ -158,7 +339,4 @@ void SmtpSession::sendMessage(const KUrl& destination, QIODevice* data)
   d->data = data;
 }
 
-
-
-
-#include "smtpsession.h"
+#include "smtpsession.moc"

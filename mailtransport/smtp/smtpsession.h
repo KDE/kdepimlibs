@@ -50,6 +50,8 @@ class SmtpSession : public QObject
 
   private:
     SmtpSessionPrivate * const d;
+    Q_PRIVATE_SLOT( d, void socketConnected() )
+    Q_PRIVATE_SLOT( d, void receivedNewData() )
 };
 
 }
