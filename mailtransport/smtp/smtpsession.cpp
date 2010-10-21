@@ -21,6 +21,7 @@
 
 #include "common.h"
 #include "smtp/smtpsessioninterface.h"
+#include "smtp/request.h"
 #include "smtp/response.h"
 #include "smtp/command.h"
 #include "smtp/transactionstate.h"
@@ -32,6 +33,7 @@
 #include <kio/global.h>
 #include <KLocalizedString>
 #include <KDebug>
+#include <QtCore/QQueue>
 
 using namespace MailTransport;
 using namespace KioSMTP;
@@ -178,6 +180,113 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
       return true;
     }
 
+    void queueCommand( int type )
+    {
+      queueCommand( Command::createSimpleCommand( type, this ) );
+    }
+
+    void queueCommand( KioSMTP::Command * command )
+    {
+      mPendingCommandQueue.enqueue( command );
+    }
+
+    bool runQueuedCommands( TransactionState *ts )
+    {
+      Q_ASSERT( ts );
+      Q_ASSERT( !currentTransactionState || ts == currentTransactionState );
+      currentTransactionState = ts;
+      kDebug( canPipelineCommands(), 7112 ) << "using pipelining";
+
+      while( !mPendingCommandQueue.isEmpty() ) {
+        QByteArray cmdline = collectPipelineCommands( ts );
+        if ( ts->failedFatally() ) {
+          // TODO error
+          return false;
+        }
+        if ( ts->failed() )
+          break;
+        if ( cmdline.isEmpty() )
+          continue;
+        if ( !sendCommandLine( cmdline ) || ts->failedFatally() ) {
+          // TODO error
+          return false;
+        }
+        if ( !mSentCommandQueue.isEmpty() )
+          return true; // wait for responses
+      }
+
+      if ( ts->failed() ) {
+        if ( !run( Command::RSET ) )
+          // TODO error
+          ;
+        return false;
+      }
+
+      delete currentTransactionState;
+      currentTransactionState = 0;
+      return true;
+    }
+
+    QByteArray collectPipelineCommands( TransactionState * ts )
+    {
+      Q_ASSERT( ts );
+      QByteArray cmdLine;
+      unsigned int cmdLine_len = 0;
+
+      while ( !mPendingCommandQueue.isEmpty() ) {
+
+        Command * cmd = mPendingCommandQueue.head();
+
+        if ( cmd->doNotExecute( ts ) ) {
+          delete mPendingCommandQueue.dequeue();
+          if ( cmdLine_len )
+            break;
+          else
+            continue;
+        }
+
+        if ( cmdLine_len && cmd->mustBeFirstInPipeline() )
+          break;
+
+        if ( cmdLine_len && !canPipelineCommands() )
+          break;
+
+        while ( !cmd->isComplete() && !cmd->needsResponse() ) {
+          const QByteArray currentCmdLine = cmd->nextCommandLine( ts );
+          if ( ts->failedFatally() )
+            return cmdLine;
+          const unsigned int currentCmdLine_len = currentCmdLine.length();
+
+          cmdLine_len += currentCmdLine_len;
+          cmdLine += currentCmdLine;
+
+          // If we are executing the transfer command, don't collect the whole
+          // command line (which may be several MBs) before sending it, but instead
+          // send the data each time we have collected 32 KB of the command line.
+          //
+          // This way, the progress information in clients like KMail works correctly,
+          // because otherwise, the TransferCommand would read the whole data from the
+          // job at once, then sending it. The progress update on the client however
+          // happens when sending data to the job, not when this slave writes the data
+          // to the socket. Therefore that progress update is incorrect.
+          //
+          // 32 KB seems to be a sensible limit. Additionally, a job can only transfer
+          // 32 KB at once anyway.
+          if ( dynamic_cast<TransferCommand *>( cmd ) != 0 &&
+              cmdLine_len >= 32 * 1024 ) {
+            return cmdLine;
+          }
+        }
+
+        mSentCommandQueue.enqueue( mPendingCommandQueue.dequeue() );
+
+        if ( cmd->mustBeLastInPipeline() )
+          break;
+      }
+
+      return cmdLine;
+    }
+
     void receivedNewData()
     {
       kDebug();
@@ -198,6 +307,21 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
     void handleResponse( const KioSMTP::Response &response )
     {
+      if ( !mSentCommandQueue.isEmpty() ) {
+        Command * cmd = mSentCommandQueue.head();
+        Q_ASSERT( cmd->isComplete() );
+        cmd->processResponse( response, currentTransactionState );
+        if ( currentTransactionState->failedFatally() )
+          // TODO error
+          ;
+        delete mSentCommandQueue.dequeue();
+
+        if ( mSentCommandQueue.isEmpty() && !mPendingCommandQueue.isEmpty() )
+          runQueuedCommands( currentTransactionState );
+        return;
+      }
+
+
       if ( currentCommand ) {
         if ( !currentCommand->processResponse( response, currentTransactionState ) ) {
           // TODO: error
@@ -290,6 +414,21 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
         // fall through
         case Authenticated:
         {
+          queueCommand( new MailFromCommand( this, request.fromAddress().toLatin1(), request.is8BitBody(), request.size() ) );
+          // Loop through our To and CC recipients, and send the proper
+          // SMTP commands, for the benefit of the server.
+          const QStringList recipients = request.recipients();
+          for ( QStringList::const_iterator it = recipients.begin() ; it != recipients.end() ; ++it )
+            queueCommand( new RcptToCommand( this, (*it).toLatin1() ) );
+
+          queueCommand( Command::DATA );
+          queueCommand( new TransferCommand( this, QByteArray() ) );
+
+          TransactionState *ts = new TransactionState;
+          if ( !runQueuedCommands( ts ) ) {
+            if ( ts->errorCode() )
+              error( ts->errorCode(), ts->errorMessage() );
+          }
           break;
         }
         default: Q_ASSERT( !"Unhandled command" );
@@ -309,6 +448,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     KioSMTP::Command * currentCommand;
     KioSMTP::TransactionState *currentTransactionState;
     KIO::AuthInfo authInfo;
+    KioSMTP::Request request;
 
     enum State {
       Initial,
@@ -318,6 +458,10 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
       Authenticated
     };
     State state;
+
+    typedef QQueue<KioSMTP::Command*> CommandQueue;
+    CommandQueue mPendingCommandQueue;
+    CommandQueue mSentCommandQueue;
 
     static bool saslInitialized;
 
@@ -381,6 +525,7 @@ void SmtpSession::sendMessage(const KUrl& destination, QIODevice* data)
   }
 
   d->data = data;
+  d->request = Request::fromURL( destination ); // parse settings from URL's query
 }
 
 #include "smtpsession.moc"
