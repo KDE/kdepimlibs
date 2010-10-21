@@ -33,8 +33,8 @@ extern "C" {
 inline bool initSASL()
 {
 #ifdef Q_OS_WIN32  //krazy:exclude=cpp
-  QByteArray libInstallPath( QFile::encodeName(QDir::toNativeSeparators(KGlobal::dirs()->installPath("lib")+"sasl2")) );
-  QByteArray configPath( QFile::encodeName(QDir::toNativeSeparators(KGlobal::dirs()->installPath("config")+"sasl2")) );
+  QByteArray libInstallPath( QFile::encodeName(QDir::toNativeSeparators(KGlobal::dirs()->installPath("lib")+QLatin1String("sasl2"))) );
+  QByteArray configPath( QFile::encodeName(QDir::toNativeSeparators(KGlobal::dirs()->installPath("config")+QLatin1String("sasl2"))) );
   if ( sasl_set_path(SASL_PATH_TYPE_PLUGIN, libInstallPath.data()) != SASL_OK
     || sasl_set_path(SASL_PATH_TYPE_CONFIG, configPath.data()) != SASL_OK )
   {
