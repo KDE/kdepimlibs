@@ -234,6 +234,7 @@ void SmtpJob::startSmtpJob()
   KIO::Scheduler::assignJobToSlave( d->slave, job );
 #else
   SmtpSession *session = new SmtpSession( this );
+  connect( session, SIGNAL(result(MailTransport::SmtpSession*)), SLOT(smtpSessionResult(MailTransport::SmtpSession*)) );
   session->setUseTLS( transport()->encryption() == Transport::EnumEncryption::TLS );
   if ( transport()->requiresAuthentication() )
     session->setSaslMethod( transport()->authenticationTypeString() );
