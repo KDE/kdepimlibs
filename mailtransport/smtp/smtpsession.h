@@ -40,6 +40,9 @@ class SmtpSession : public QObject
     /** Open connection to host. */
     void connectToHost( const KUrl &url );
 
+    /** Close the connection to the SMTP server. */
+    void disconnectFromHost( bool nice = true );
+
     /** Sets the SASL method used for authentication. */
     void setSaslMethod( const QString &method );
 
@@ -49,7 +52,15 @@ class SmtpSession : public QObject
     /** Send a message. */
     void sendMessage( const KUrl& destination, QIODevice* data );
 
+    /** Returns the error nmeesage, if any.  */
+    QString errorMessage() const;
+
+  signals:
+    /** Emitted when an email transfer has been completed. */
+    void result( MailTransport::SmtpSession *session );
+
   private:
+    friend class SmtpSessionPrivate;
     SmtpSessionPrivate * const d;
     Q_PRIVATE_SLOT( d, void socketConnected() )
     Q_PRIVATE_SLOT( d, void receivedNewData() )

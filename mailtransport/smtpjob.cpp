@@ -66,6 +66,20 @@ K_GLOBAL_STATIC( SlavePool, s_slavePool )
 class SmtpJobPrivate
 {
   public:
+    SmtpJobPrivate( SmtpJob *parent ) : q( parent ) {}
+
+#ifdef MAILTRANSPORT_INPROCESS_SMTP
+    void smtpSessionResult( SmtpSession * session )
+    {
+      if ( !session->errorMessage().isEmpty() ) {
+        q->setError( KJob::UserDefinedError );
+        q->setErrorText( session->errorMessage() );
+      }
+      q->emitResult();
+    }
+#endif
+
+    SmtpJob *q;
     KIO::Slave *slave;
     enum State {
       Idle, Precommand, Smtp
@@ -74,7 +88,7 @@ class SmtpJobPrivate
 };
 
 SmtpJob::SmtpJob( Transport *transport, QObject *parent )
-  : TransportJob( transport, parent ), d( new SmtpJobPrivate )
+  : TransportJob( transport, parent ), d( new SmtpJobPrivate( this ) )
 {
   d->currentState = SmtpJobPrivate::Idle;
   d->slave = 0;

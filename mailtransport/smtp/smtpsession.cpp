@@ -65,7 +65,9 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
     void error(int id, const QString& msg)
     {
-      KMessageBox::error( 0, KIO::buildErrorString( id, msg ), i18n( "Mail Sending Failed" ) );
+      if ( !errorMessage.isEmpty() )
+        errorMessage =  KIO::buildErrorString( id, msg );
+      q->disconnectFromHost();
     }
 
     void informationMessageBox(const QString& msg, const QString& caption)
@@ -123,11 +125,14 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     void socketDisconnected()
     {
       kDebug();
+      emit q->result( q );
+      q->deleteLater();
     }
 
     void socketError( KTcpSocket::Error err )
     {
       kDebug() << err;
+      error( KIO::ERR_CONNECTION_BROKEN, i18n( "Socket error." ) );
     }
 
     bool sendCommandLine( const QByteArray &cmdline )
@@ -449,6 +454,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     KioSMTP::TransactionState *currentTransactionState;
     KIO::AuthInfo authInfo;
     KioSMTP::Request request;
+    QString errorMessage;
 
     enum State {
       Initial,
@@ -517,6 +523,23 @@ void SmtpSession::connectToHost(const KUrl& url)
     Q_ASSERT( !"Unsupported protocol!" );
 }
 
+void SmtpSession::disconnectFromHost(bool nice)
+{
+  if ( d->socket->state() == KTcpSocket::ConnectedState ) {
+    if ( nice ) {
+      d->run( Command::QUIT );
+    }
+
+    d->socket->disconnectFromHost();
+
+    d->clearCapabilities();
+    qDeleteAll( d->mPendingCommandQueue );
+    d->mPendingCommandQueue.clear();
+    qDeleteAll( d->mSentCommandQueue );
+    d->mSentCommandQueue.clear();
+  }
+}
+
 void SmtpSession::sendMessage(const KUrl& destination, QIODevice* data)
 {
   d->destination = destination;
@@ -527,5 +550,11 @@ void SmtpSession::sendMessage(const KUrl& destination, QIODevice* data)
   d->data = data;
   d->request = Request::fromURL( destination ); // parse settings from URL's query
 }
+
+QString SmtpSession::errorMessage() const
+{
+  return d->errorMessage;
+}
+
 
 #include "smtpsession.moc"

@@ -34,6 +34,8 @@ class SmtpJobPrivate;
 
 namespace MailTransport {
 
+class SmtpSession;
+
 /**
   Mail transport job for SMTP.
   Internally, all jobs for a specific transport are queued to use the same
@@ -77,7 +79,9 @@ class MAILTRANSPORT_EXPORT_DEPRECATED SmtpJob : public TransportJob
     void dataRequest( KIO::Job *job, QByteArray &data );
 
   private:
+    friend class ::SmtpJobPrivate;
     SmtpJobPrivate *const d;
+    Q_PRIVATE_SLOT( d, void smtpSessionResult( MailTransport::SmtpSession* ) )
 };
 
 } // namespace MailTransport
