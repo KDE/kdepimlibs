@@ -319,8 +319,15 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
           q->disconnectFromHost( false );
         delete mSentCommandQueue.dequeue();
 
-        if ( mSentCommandQueue.isEmpty() && !mPendingCommandQueue.isEmpty() )
-          runQueuedCommands( currentTransactionState );
+        if ( mSentCommandQueue.isEmpty() ) {
+          if ( !mPendingCommandQueue.isEmpty() )
+            runQueuedCommands( currentTransactionState );
+          else if ( state == Sending ) {
+            delete currentTransactionState;
+            currentTransactionState = 0;
+            q->disconnectFromHost(); // we are done
+          }
+        }
         return;
       }
 
@@ -417,6 +424,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
         // fall through
         case Authenticated:
         {
+          state = Sending;
           queueCommand( new MailFromCommand( this, request.fromAddress().toLatin1(), request.is8BitBody(), request.size() ) );
           // Loop through our To and CC recipients, and send the proper
           // SMTP commands, for the benefit of the server.
@@ -460,7 +468,8 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
       EHLOPreTls,
       StartTLS,
       EHLOPostTls,
-      Authenticated
+      Authenticated,
+      Sending
     };
     State state;
 
