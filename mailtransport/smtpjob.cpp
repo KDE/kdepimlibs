@@ -68,16 +68,16 @@ class SmtpJobPrivate
   public:
     SmtpJobPrivate( SmtpJob *parent ) : q( parent ) {}
 
-#ifdef MAILTRANSPORT_INPROCESS_SMTP
     void smtpSessionResult( SmtpSession * session )
     {
+#ifdef MAILTRANSPORT_INPROCESS_SMTP
       if ( !session->errorMessage().isEmpty() ) {
         q->setError( KJob::UserDefinedError );
         q->setErrorText( session->errorMessage() );
       }
       q->emitResult();
-    }
 #endif
+    }
 
     SmtpJob *q;
     KIO::Slave *slave;

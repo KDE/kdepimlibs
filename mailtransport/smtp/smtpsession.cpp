@@ -133,7 +133,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     void socketError( KTcpSocket::Error err )
     {
       kDebug() << err;
-      error( KIO::ERR_CONNECTION_BROKEN, i18n( "Socket error." ) );
+      error( KIO::ERR_CONNECTION_BROKEN, socket->errorString() );
     }
 
     bool sendCommandLine( const QByteArray &cmdline )
