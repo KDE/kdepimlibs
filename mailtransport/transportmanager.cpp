@@ -26,9 +26,7 @@
 #include "transportjob.h"
 #include "transporttype.h"
 #include "transporttype_p.h"
-#ifndef Q_OS_WINCE
 #include "addtransportdialog.h"
-#endif
 #include "transportconfigdialog.h"
 #include "transportconfigwidget.h"
 #include "sendmailconfigwidget.h"
@@ -272,14 +270,10 @@ bool TransportManager::showTransportCreationDialog( QWidget *parent,
     }
   }
 
-#ifndef Q_OS_WINCE
   QPointer<AddTransportDialog> dialog = new AddTransportDialog( parent );
   const bool accepted = ( dialog->exec() == QDialog::Accepted );
   delete dialog;
   return accepted;
-#else
-  return false;
-#endif
 }
 
 bool TransportManager::configureTransport( Transport *transport, QWidget *parent )
