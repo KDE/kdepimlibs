@@ -172,13 +172,13 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
       while ( !cmd->isComplete() && !cmd->needsResponse() ) {
         const QByteArray cmdLine = cmd->nextCommandLine( ts );
         if ( ts && ts->failedFatally() ) {
-          // TODO error
+          q->disconnectFromHost( false );
           return false;
         }
         if ( cmdLine.isEmpty() )
           continue;
         if ( !sendCommandLine( cmdLine ) ) {
-          // TODO error
+          q->disconnectFromHost( false );
           return false;
         }
       }
@@ -205,7 +205,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
       while( !mPendingCommandQueue.isEmpty() ) {
         QByteArray cmdline = collectPipelineCommands( ts );
         if ( ts->failedFatally() ) {
-          // TODO error
+          q->disconnectFromHost( false );
           return false;
         }
         if ( ts->failed() )
@@ -213,7 +213,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
         if ( cmdline.isEmpty() )
           continue;
         if ( !sendCommandLine( cmdline ) || ts->failedFatally() ) {
-          // TODO error
+          q->disconnectFromHost( false );
           return false;
         }
         if ( !mSentCommandQueue.isEmpty() )
@@ -222,8 +222,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
       if ( ts->failed() ) {
         if ( !run( Command::RSET ) )
-          // TODO error
-          ;
+          q->disconnectFromHost( false );
         return false;
       }
 
@@ -305,7 +304,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
           handleResponse( currentResponse );
           currentResponse = Response();
         } else if ( !currentResponse.isWellFormed() ) {
-          // TODO error we can't recover from
+          error( KIO::ERR_NO_CONTENT, i18n("Invalid SMTP response (%1) received.", currentResponse.code()) );
         }
       }
     }
@@ -317,8 +316,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
         Q_ASSERT( cmd->isComplete() );
         cmd->processResponse( response, currentTransactionState );
         if ( currentTransactionState->failedFatally() )
-          // TODO error
-          ;
+          q->disconnectFromHost( false );
         delete mSentCommandQueue.dequeue();
 
         if ( mSentCommandQueue.isEmpty() && !mPendingCommandQueue.isEmpty() )
@@ -329,17 +327,17 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
       if ( currentCommand ) {
         if ( !currentCommand->processResponse( response, currentTransactionState ) ) {
-          // TODO: error
+          q->disconnectFromHost( false );
         }
         while ( !currentCommand->isComplete() && !currentCommand->needsResponse() ) {
           const QByteArray cmdLine = currentCommand->nextCommandLine( currentTransactionState );
           if ( currentTransactionState && currentTransactionState->failedFatally() ) {
-          // TODO error
+            q->disconnectFromHost( false );
           }
           if ( cmdLine.isEmpty() )
             continue;
           if ( !sendCommandLine( cmdLine ) ) {
-          // TODO error
+            q->disconnectFromHost( false );
           }
         }
         if ( currentCommand->isComplete() ) {
@@ -359,7 +357,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
             error( KIO::ERR_COULD_NOT_LOGIN,
                   i18n("The server (%1) did not accept the connection.\n"
                         "%2", destination.host(), response.errorMessage() ) );
-            // TODO error
+            break;
           }
           state = EHLOPreTls;
           // TODO fake hostname handling
@@ -367,7 +365,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
           run( ehloCmdPreTLS );
           break;
         }
-        default: Q_ASSERT( !"Unhandled command-less response." );
+        default: error( KIO::ERR_SLAVE_DEFINED, i18n( "Unhandled response" ) );
       }
     }
 
@@ -436,7 +434,8 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
           }
           break;
         }
-        default: Q_ASSERT( !"Unhandled command" );
+        default:
+          error( KIO::ERR_SLAVE_DEFINED, i18n( "Unhandled command response." ) );
       }
 
       delete cmd;
@@ -520,7 +519,7 @@ void SmtpSession::connectToHost(const KUrl& url)
   else if ( url.protocol() == QLatin1String( "smtp" ) )
     d->socket->connectToHost( url.host(), url.port() );
   else
-    Q_ASSERT( !"Unsupported protocol!" );
+    d->error( KIO::ERR_UNSUPPORTED_PROTOCOL, i18n( "Unsupported protocol: %1", url.protocol() ) );
 }
 
 void SmtpSession::disconnectFromHost(bool nice)
