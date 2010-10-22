@@ -34,6 +34,7 @@
 #include <KLocalizedString>
 #include <KDebug>
 #include <QtCore/QQueue>
+#include <QtNetwork/QHostInfo>
 
 using namespace MailTransport;
 using namespace KioSMTP;
@@ -367,8 +368,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
             break;
           }
           state = EHLOPreTls;
-          // TODO fake hostname handling
-          EHLOCommand *ehloCmdPreTLS = new EHLOCommand( this, destination.host() );
+          EHLOCommand *ehloCmdPreTLS = new EHLOCommand( this, myHostname );
           run( ehloCmdPreTLS );
           break;
         }
@@ -384,7 +384,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
           // re-issue EHLO to refresh the capability list (could be have
           // been faked before TLS was enabled):
           state = EHLOPostTls;
-          EHLOCommand *ehloCmdPostTLS = new EHLOCommand( this, destination.host() );
+          EHLOCommand *ehloCmdPostTLS = new EHLOCommand( this, myHostname );
           run( ehloCmdPostTLS );
           break;
         }
@@ -462,6 +462,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     KIO::AuthInfo authInfo;
     KioSMTP::Request request;
     QString errorMessage;
+    QString myHostname;
 
     enum State {
       Initial,
@@ -557,6 +558,17 @@ void SmtpSession::sendMessage(const KUrl& destination, QIODevice* data)
 
   d->data = data;
   d->request = Request::fromURL( destination ); // parse settings from URL's query
+
+  if ( !d->request.heloHostname().isEmpty() ) {
+    d->myHostname = d->request.heloHostname();
+  } else {
+    d->myHostname = QHostInfo::localHostName();
+    if( d->myHostname.isEmpty() ) {
+      d->myHostname = QLatin1String("localhost.invalid");
+    } else if ( !d->myHostname.contains( QLatin1Char('.') ) ) {
+      d->myHostname += QLatin1String(".localnet");
+    }
+  }
 }
 
 QString SmtpSession::errorMessage() const
