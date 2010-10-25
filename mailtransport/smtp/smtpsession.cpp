@@ -96,7 +96,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
       socket->setAdvertisedSslVersion( KTcpSocket::TlsV1 );
       socket->ignoreSslErrors();
       socket->startClientEncryption();
-      const bool encrypted = socket->waitForEncrypted( 5000 );
+      const bool encrypted = socket->waitForEncrypted( 60 * 1000 );
 
       const KSslCipher cipher = socket->sessionCipher();
       if ( !encrypted || socket->sslErrors().count() > 0 || socket->encryptionMode() != KTcpSocket::SslClientMode
