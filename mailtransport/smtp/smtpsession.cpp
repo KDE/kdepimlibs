@@ -496,7 +496,7 @@ SmtpSession::SmtpSession(QObject* parent) :
   connect( d->socket, SIGNAL(connected()), SLOT(socketConnected()) );
   connect( d->socket, SIGNAL(disconnected()), SLOT(socketDisconnected()) );
   connect( d->socket, SIGNAL(error(KTcpSocket::Error)), SLOT(slocketError(KTcpSocket::Error)) );
-  connect( d->socket, SIGNAL(readyRead()), SLOT(receivedNewData()) );
+  connect( d->socket, SIGNAL(readyRead()), SLOT(receivedNewData()), Qt::QueuedConnection );
 
   if ( !d->saslInitialized ) {
     if (!initSASL())
