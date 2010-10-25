@@ -24,6 +24,8 @@
 
 #include <akonadi/attributefactory.h>
 
+
+#ifndef KDELIBS_STATIC_LIBS
 namespace {
 
 // Anonymous namespace; function is invisible outside this file.
@@ -42,3 +44,18 @@ bool dummy()
 const bool registered = dummy();
 
 } // namespace
+
+#else
+
+extern bool ___MailTransport____INIT()
+{
+  using namespace Akonadi;
+  using namespace MailTransport;
+  AttributeFactory::registerAttribute<DispatchModeAttribute>();
+  AttributeFactory::registerAttribute<ErrorAttribute>();
+  AttributeFactory::registerAttribute<SentBehaviourAttribute>();
+  AttributeFactory::registerAttribute<TransportAttribute>();
+  return true;
+}
+
+#endif
