@@ -31,6 +31,7 @@
 #include <KIO/PasswordDialog>
 #include <kio/authinfo.h>
 #include <kio/global.h>
+#include <kio/sslui.h>
 #include <KLocalizedString>
 #include <KDebug>
 #include <QtCore/QQueue>
@@ -107,7 +108,12 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
                  << ", the socket says:" <<  socket->errorString()
                  << "and the list of SSL errors contains"
                  << socket->sslErrors().count() << "items.";
-        return false;
+
+        if ( KIO::SslUi::askIgnoreSslErrors( socket ) ) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
         kDebug() << "TLS negotiation done.";
         return true;
