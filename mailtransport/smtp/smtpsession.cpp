@@ -67,6 +67,10 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
     void error(int id, const QString& msg)
     {
+      // clear state so further replies don't end up in failed commands etc.
+      currentCommand = 0;
+      currentTransactionState = 0;
+
       if ( !errorMessage.isEmpty() )
         errorMessage =  KIO::buildErrorString( id, msg );
       q->disconnectFromHost();
@@ -127,6 +131,11 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     void socketConnected()
     {
       kDebug();
+      if ( destination.protocol() == QLatin1String("smtps") ) {
+        if ( !startSsl() ) {
+          error( KIO::ERR_SLAVE_DEFINED, i18n( "SSL negotiation failed." ) );
+        }
+      }
     }
 
     void socketDisconnected()
@@ -167,7 +176,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     {
       Q_ASSERT( cmd );
       Q_ASSERT( !currentCommand );
-      Q_ASSERT( !currentTransactionState );
+      Q_ASSERT( !currentTransactionState || currentTransactionState == ts );
 
       // ### WTF?
       if ( cmd->doNotExecute( ts ) )
@@ -228,7 +237,8 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
       }
 
       if ( ts->failed() ) {
-        if ( !run( Command::RSET ) )
+        kDebug() << "transaction state failed: " << ts->errorCode() << ts->errorMessage();
+        if ( !run( Command::RSET, currentTransactionState ) )
           q->disconnectFromHost( false );
         return false;
       }
@@ -530,12 +540,7 @@ void SmtpSession::setUseTLS(bool useTLS)
 void SmtpSession::connectToHost(const KUrl& url)
 {
   kDebug() << url;
-  if ( url.protocol() == QLatin1String( "smtps" ) )
-    d->socket->connectToHostEncrypted( url.host(), url.port() );
-  else if ( url.protocol() == QLatin1String( "smtp" ) )
-    d->socket->connectToHost( url.host(), url.port() );
-  else
-    d->error( KIO::ERR_UNSUPPORTED_PROTOCOL, i18n( "Unsupported protocol: %1", url.protocol() ) );
+  d->socket->connectToHost( url.host(), url.port() );
 }
 
 void SmtpSession::disconnectFromHost(bool nice)
