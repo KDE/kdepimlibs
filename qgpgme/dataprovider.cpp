@@ -146,8 +146,14 @@ QIODeviceDataProvider::QIODeviceDataProvider( const boost::shared_ptr<QIODevice>
 QIODeviceDataProvider::~QIODeviceDataProvider() {}
 
 bool QIODeviceDataProvider::isSupported( Operation op ) const {
+    const QProcess* const proc = qobject_cast<QProcess*>( mIO.get() );
+    bool canRead = true;
+    if ( proc ) {
+        canRead = proc->readChannel() == QProcess::StandardOutput;
+    }
+
     switch ( op ) {
-    case Read:    return mIO->isReadable();
+    case Read:    return mIO->isReadable() && canRead;
     case Write:   return mIO->isWritable();
     case Seek:    return !mIO->isSequential();
     case Release: return true;
