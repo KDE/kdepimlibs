@@ -95,11 +95,19 @@ if ( WIN32 )
       ${CMAKE_INSTALL_PREFIX}/include
     )
 
+    if (NOT WINCE)
     find_library( _gpgme_vanilla_library NAMES gpgme libgpgme gpgme-11 libgpgme-11
       PATHS 
         ${CMAKE_LIBRARY_PATH}
         ${CMAKE_INSTALL_PREFIX}/lib
     )
+    else (NOT WINCE)
+      find_library( _gpgme_vanilla_library NAMES libgpgme-11-msc
+        PATHS 
+          ${CMAKE_LIBRARY_PATH}
+          ${CMAKE_INSTALL_PREFIX}/lib
+      )
+    endif (NOT WINCE)
 
     find_library( _gpgme_glib_library    NAMES gpgme-glib libgpgme-glib gpgme-glib-11 libgpgme-glib-11
       PATHS 
