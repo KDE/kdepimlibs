@@ -172,19 +172,24 @@ void SmtpJob::startSmtpJob()
       int result;
 
       bool keep = transport()->storePassword();
-      result = KIO::PasswordDialog::getNameAndPassword(
-        user, passwd, &keep,
-        i18n( "You need to supply a username and a password to use this SMTP server." ),
-        false, QString(), transport()->name(), QString() );
+
+      KPasswordDialog dlg( 0, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword );
+      dlg.setPrompt( i18n( "You need to supply a username and a password to use this SMTP server." ) );
+      dlg.setKeepPassword( keep );
+      dlg.addCommentLine( QString(), transport()->name() );
+      dlg.setUsername( user );
+      dlg.setPassword( passwd );
+
+      result = dlg.exec();
 
       if ( result != QDialog::Accepted ) {
         setError( KilledJobError );
         emitResult();
         return;
       }
-      transport()->setUserName( user );
-      transport()->setPassword( passwd );
-      transport()->setStorePassword( keep );
+      transport()->setUserName( dlg.username() );
+      transport()->setPassword( dlg.password() );
+      transport()->setStorePassword( dlg.keepPassword() );
       transport()->writeConfig();
     }
     destination.setUser( transport()->userName() );
