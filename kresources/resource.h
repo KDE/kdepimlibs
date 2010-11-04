@@ -24,7 +24,7 @@
 
 #include "kresources_export.h"
 
-#include <klibloader.h>
+#include <kpluginfactory.h>
 
 #include <QtCore/QMutex>
 #include <QtGui/QWidget>
