@@ -23,6 +23,7 @@
 #include "errorattribute.h"
 
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/kmime/messageflags.h>
 
 using namespace Akonadi;
 using namespace MailTransport;
@@ -99,8 +100,8 @@ Job *ClearErrorAction::itemAction( const Item &item, FilterActionJob *parent ) c
 {
   Item cp = item;
   cp.removeAttribute<ErrorAttribute>();
-  cp.clearFlag( "error" );
-  cp.setFlag( "queued" );
+  cp.clearFlag( Akonadi::MessageFlags::HasError );
+  cp.setFlag( Akonadi::MessageFlags::Queued );
   return new ItemModifyJob( cp, parent );
 }
 
@@ -149,6 +150,6 @@ Job *DispatchManualTransportAction::itemAction( const Item &item, FilterActionJo
   cp.attribute<TransportAttribute>()->setTransportId( mTransportId );
   cp.removeAttribute<DispatchModeAttribute>();
   cp.addAttribute( new DispatchModeAttribute ); // defaults to Automatic
-  cp.setFlag( "queued" );
+  cp.setFlag( Akonadi::MessageFlags::Queued );
   return new ItemModifyJob( cp, parent );
 }

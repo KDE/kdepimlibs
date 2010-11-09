@@ -30,6 +30,7 @@
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/kmime/addressattribute.h>
+#include <akonadi/kmime/messageflags.h>
 #include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/kmime/specialmailcollectionsrequestjob.h>
 
@@ -143,7 +144,7 @@ void MessageQueueJob::Private::outboxRequestResult( KJob *job )
   item.addAttribute( transportAttribute.clone() );
 
   // Set flags.
-  item.setFlag( "queued" );
+  item.setFlag( Akonadi::MessageFlags::Queued );
 
   // Store the item in the outbox.
   const Collection collection = requestJob->collection();

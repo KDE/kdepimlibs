@@ -31,9 +31,10 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/qtest_akonadi.h>
+#include <akonadi/kmime/addressattribute.h>
+#include <akonadi/kmime/messageflags.h>
 #include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/kmime/specialmailcollectionsrequestjob.h>
-#include <akonadi/kmime/addressattribute.h>
 
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
@@ -118,7 +119,7 @@ void MessageQueueJobTest::testValidMessages()
   ErrorAttribute *eA = item.attribute<ErrorAttribute>();
   QVERIFY( !eA ); // no error
   QCOMPARE( item.flags().count(), 1 );
-  QVERIFY( item.flags().contains( "queued" ) );
+  QVERIFY( item.flags().contains( Akonadi::MessageFlags::Queued ) );
 
   // delete message, for further tests
   ItemDeleteJob *djob = new ItemDeleteJob( item );

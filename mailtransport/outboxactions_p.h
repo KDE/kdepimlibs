@@ -66,7 +66,7 @@ class SendQueuedAction : public Akonadi::FilterAction
 
 /**
   FilterAction that finds all messages with an ErrorAttribute,
-  removes the attribute, and sets the "queued" flag.
+  removes the attribute, and sets the "$QUEUED" flag.
 
   This is used to retry sending messages that failed.
 
@@ -101,7 +101,7 @@ class ClearErrorAction : public Akonadi::FilterAction
 
 /**
   FilterAction that changes the transport for all messages and
-  sets the "queued" flag.
+  sets the "$QUEUED" flag.
 
   This is used to send queued messages using an alternative transport.
 
