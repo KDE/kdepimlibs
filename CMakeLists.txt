@@ -131,8 +131,11 @@ endif (KDEPIM_NO_KCAL)
 if(WINCE)
   set(STATIC_LIBRARY ON)
   add_definitions(-DKDELIBS_STATIC_LIBS)
-  add_definitions(-DBOOST_ALL_NO_LIB)
 endif(WINCE)
+
+if(MSVC)
+  add_definitions(-DBOOST_ALL_NO_LIB)
+endif(MSVC)
 
 if(STATIC_LIBRARY)
   set(LIBRARY_TYPE STATIC)
