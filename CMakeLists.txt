@@ -91,6 +91,9 @@ endif (NOT KDEPIM_ONLY_KLEO)
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${Boost_INCLUDE_DIR})
+if (MSVC)
+   add_definitions(-DBOOST_ALL_NO_LIB)
+endif(MSVC)
 
 if (KDEPIM_NO_KRESOURCES)
   add_definitions(-DKDEPIM_NO_KRESOURCES)
