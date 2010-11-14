@@ -106,6 +106,7 @@ install( FILES
         sendmailjob.h
         smtpjob.h
         precommandjob.h
+        socket.h
 
         ${CMAKE_CURRENT_BINARY_DIR}/transportbase.h
         transport.h
