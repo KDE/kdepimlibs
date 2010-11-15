@@ -1488,6 +1488,10 @@ class KMIME_EXPORT UserAgent : public Generics::Unstructured
   kmime_mk_trivial_ctor_with_name( UserAgent )
 };
 
+/** Creates a header based on @param type. If @param type is a known header type,
+ * the right object type will be created, otherwise a null pointer is returned. */
+KMIME_EXPORT Base *createHeader( const QByteArray& type );
+
 }  //namespace Headers
 
 }  //namespace KMime

@@ -2233,6 +2233,12 @@ bool Subject::isReply() const
   return asUnicodeString().indexOf( QLatin1String( "Re:" ), 0, Qt::CaseInsensitive ) == 0;
 }
 
+Base* createHeader( const QByteArray& type )
+{
+  return HeaderFactory::self()->createHeader( type );
+}
+
+
 //@cond PRIVATE
 kmime_mk_trivial_ctor_with_name( ContentDescription,
                                  Generics::Unstructured, Content-Description )
