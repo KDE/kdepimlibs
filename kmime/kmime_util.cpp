@@ -23,8 +23,11 @@
 
 #include "kmime_util.h"
 #include "kmime_util_p.h"
-#include "kmime_header_parsing.h"
+
 #include "kmime_charfreq.h"
+#include "kmime_codecs.h"
+#include "kmime_header_parsing.h"
+#include "kmime_message.h"
 #include "kmime_warning.h"
 
 #include <config-kmime.h>
@@ -44,7 +47,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <boost/concept_check.hpp>
-#include "kmime_codecs.h"
 
 using namespace KMime;
 
@@ -885,5 +887,55 @@ bool hasAttachment( Content* content )
   return false;
 }
 
+bool isSigned( Message *message )
+{
+  if ( !message )
+    return false;
+
+  const KMime::Headers::ContentType* const contentType = message->contentType();
+  if ( contentType->isSubtype( "signed" ) ||
+       contentType->isSubtype( "pgp-signature" ) ||
+       contentType->isSubtype( "pkcs7-signature" ) ||
+       contentType->isSubtype( "x-pkcs7-signature" ) ||
+       message->mainBodyPart( "multipart/signed" ) ||
+       message->mainBodyPart( "application/pgp-signature" ) ||
+       message->mainBodyPart( "application/pkcs7-signature" ) ||
+       message->mainBodyPart( "application/x-pkcs7-signature" ) ) {
+    return true;
+  }
+
+  return false;
+}
+
+bool isEncrypted( Message *message )
+{
+  if ( !message )
+    return false;
+
+  const KMime::Headers::ContentType* const contentType = message->contentType();
+  if ( contentType->isSubtype( "encrypted" ) ||
+       contentType->isSubtype( "pgp-encrypted" ) ||
+       contentType->isSubtype( "pkcs7-mime" ) || 
+       message->mainBodyPart( "multipart/encrypted" ) ||
+       message->mainBodyPart( "application/pgp-encrypted" ) ||
+       message->mainBodyPart( "application/pkcs7-mime" ) ) {
+    return true;
+  }
+
+  return false;
+}
+
+bool isInvitation( Content *content )
+{
+  if ( !content )
+    return false;
+
+  const KMime::Headers::ContentType* const contentType = content->contentType( false );
+
+  if ( contentType && contentType->isMediatype( "text" ) && contentType->isSubtype( "calendar" ) )
+    return true;
+
+  return false;
+}
 
 } // namespace KMime

@@ -30,6 +30,8 @@
 
 namespace KMime {
 
+class Message;
+
 /**
   Consult the charset cache. Only used for reducing mem usage by
   keeping strings in a common repository.
@@ -397,6 +399,28 @@ KMIME_EXPORT QString removeBidiControlChars( const QString &input );
  *  recursively parse the MIME tree looking for a suitable attachment and return true if one is found.
  */
 KMIME_EXPORT bool hasAttachment( Content* content );
+
+/**
+ * Returns whether or not the given @p message is partly or fully signed.
+ *
+ * @since 4.6
+ */
+KMIME_EXPORT bool isSigned( Message* message );
+
+/**
+ * Returns whether or not the given @p message is partly or fully encrypted.
+ *
+ * @since 4.6
+ */
+KMIME_EXPORT bool isEncrypted( Message* message );
+
+/**
+ * Returns whether or not the given MIME @p content is an invitation
+ * message of the iTIP protocol.
+ *
+ * @since 4.6
+ */
+KMIME_EXPORT bool isInvitation( Content* content );
 
 } // namespace KMime
 
