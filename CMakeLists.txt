@@ -100,10 +100,16 @@ if (NOT KDEPIM_ONLY_KLEO)
 
   find_package(Soprano)
   macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "${SOPRANO_MIN_VERSION}" "Soprano is needed for Nepomuk")
+  if (SopranoFOUND)
   include(SopranoAddOntology)
+  endif (SopranoFOUND)
 
   find_package(Nepomuk)
-  macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk is required to build the Akonadi libraries.")
+  if (WINCE)
+    macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" FALSE "" "Nepomuk is required to build the Akonadi libraries.")
+  else(WINCE)
+    macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk is required to build the Akonadi libraries.")
+  endif (WINCE)
 
   set(LIBICAL_MIN_VERSION "0.42")
   find_package(Libical)
