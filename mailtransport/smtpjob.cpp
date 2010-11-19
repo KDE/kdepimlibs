@@ -33,7 +33,7 @@
 #include <KUrl>
 #include <KIO/Job>
 #include <KIO/Scheduler>
-#include <KIO/PasswordDialog>
+#include <KPasswordDialog>
 
 using namespace MailTransport;
 
