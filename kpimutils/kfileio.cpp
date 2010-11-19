@@ -314,7 +314,7 @@ bool checkAndCorrectPermissionsIfPossibleWithErrorHandling( QWidget *parent,
                                 i18n( "Some files or folders do not have the "
                                       "necessary permissions, please correct "
                                       "them manually." ),
-                                error, i18n( "Permissions Check" ), false );
+                                error, i18n( "Permissions Check" ), 0 );
     return false;
   } else {
     return true;
