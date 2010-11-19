@@ -67,7 +67,7 @@ if (WIN32)
 else (WIN32)
   find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS graph)
 endif (WIN32)
-macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org" TRUE ${Boost_MINIMUM_VERSION} "The Boost libraries boost and boost-graph are required by several critical KDEPIM apps.")
+macro_log_feature(Boost_FOUND "Boost C++ Libraries" "Required by core components" "http://www.boost.org" TRUE ${Boost_MINIMUM_VERSION} "Boost must include the boost-graph library")
 
 
 
@@ -82,27 +82,27 @@ if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
   set(Akonadi_MIN_VERSION "1.4.52")
   find_package(Akonadi ${Akonadi_MIN_VERSION} QUIET NO_MODULE)
-  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "${Akonadi_MIN_VERSION}" "Akonadi is required to build KdepimLibs.")
+  macro_log_feature(Akonadi_FOUND "Akonadi server libraries" "Access to PIM storage and services" "http://pim.kde.org/akonadi" TRUE "${Akonadi_MIN_VERSION}" "")
 
   find_package(Sasl2)
-  macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" TRUE "" "Required to support authentication of logins in the IMAP and Sieve kioslaves.")
+  macro_log_feature(SASL2_FOUND "cyrus-sasl" "Login authentication for IMAP and Sieve" "http://asg.web.cmu.edu/sasl/sasl-library.html" TRUE "" "")
   include (ConfigureChecks.cmake)
 
   set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
   find_package(SharedMimeInfo)
-  macro_log_feature(SHARED_MIME_INFO_FOUND "SMI" "SharedMimeInfo" "http://freedesktop.org/wiki/Software/shared-mime-info" TRUE "0.30" "SharedMimeInfo is required.")
+  macro_log_feature(SHARED_MIME_INFO_FOUND "shared-mime-info" "Information about filetypes" "http://freedesktop.org/wiki/Software/shared-mime-info" TRUE "0.30" "")
 
   set(SDO_MIN_VERSION 0.2)
   set(SOPRANO_MIN_VERSION 2.3.70)
 
   find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
-  macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE "${SDO_MIN_VERSION}" "Ontologies necessary for the Nepomuk semantic desktop.")
+  macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Ontology information for use with Nepomuk" "http://oscaf.sourceforge.net" TRUE "${SDO_MIN_VERSION}" "")
 
   find_package(Soprano)
   if (NOT WINCE)
-    macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "${SOPRANO_MIN_VERSION}" "Soprano is needed for Nepomuk")
+    macro_log_feature(Soprano_FOUND "Soprano" "Storage of semantic data" "http://soprano.sourceforge.net" TRUE "${SOPRANO_MIN_VERSION}" "")
   else(NOT WINCE)
-    macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" FALSE "${SOPRANO_MIN_VERSION}" "Soprano is needed for Nepomuk")
+    macro_log_feature(Soprano_FOUND "Soprano" "Storage of semantic data" "http://soprano.sourceforge.net" FALSE "${SOPRANO_MIN_VERSION}" "")
   endif (NOT WINCE)
   if (SopranoFOUND)
   include(SopranoAddOntology)
@@ -110,14 +110,14 @@ if (NOT KDEPIM_ONLY_KLEO)
 
   find_package(Nepomuk)
   if (WINCE)
-    macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" FALSE "" "Nepomuk is required to build the Akonadi libraries.")
+    macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" FALSE "" "")
   else(WINCE)
-    macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk is required to build the Akonadi libraries.")
+    macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" TRUE "" "")
   endif (WINCE)
 
   set(LIBICAL_MIN_VERSION "0.42")
   find_package(Libical)
-  macro_log_feature(LIBICAL_FOUND "libical" "Reference implementation of the iCalendar data type and serialization format" "http://sourceforge.net/projects/freeassociation" TRUE "${LIBICAL_MIN_VERSION}" "Required for the critical PIM kcal and kcalcore libraries.")
+  macro_log_feature(LIBICAL_FOUND "libical" "Calendar support" "http://sourceforge.net/projects/freeassociation" TRUE "${LIBICAL_MIN_VERSION}" "Needed by the kcal and kcalcore libraries")
 
 endif (NOT KDEPIM_ONLY_KLEO)
 

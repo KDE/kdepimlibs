@@ -387,11 +387,11 @@ if ( NOT Gpgme_FIND_QUIETLY )
   macro_log_feature(
     GPGME_FOUND
     "gpgme"
-    "GnuPG Made Easy Development Libraries"
+    "GNU Privacy Guard (GPG/PGP) support"
     ${_gpgme_homepage}
     ${_req}
     "${_GPGME_MIN_VERSION} or greater"
-    "Needed to provide GNU Privacy Guard support in KDE PIM applications. Necessary to compile many PIM application, including KMail."
+    "Necessary to compile many PIM applications, including KMail"
   )
 
 else()
