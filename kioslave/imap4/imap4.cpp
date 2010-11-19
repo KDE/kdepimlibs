@@ -82,7 +82,6 @@ extern "C" {
 #include <kdebug.h>
 #include <kio/connection.h>
 #include <kio/slaveinterface.h>
-#include <kio/passworddialog.h>
 #include <klocale.h>
 #include <kmimetype.h>
 #include <kcodecs.h>
