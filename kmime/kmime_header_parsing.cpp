@@ -64,12 +64,14 @@ static QString addr_spec_as_string( const AddrSpec & as, bool pretty )
     return QString();
   }
 
+  static QChar dotChar = QLatin1Char( '.' );
+
   bool needsQuotes = false;
   QString result;
   result.reserve( as.localPart.length() + as.domain.length() + 1 );
   for ( int i = 0 ; i < as.localPart.length() ; ++i ) {
-    const QChar ch = as.localPart[i];
-    if ( ch == QLatin1Char( '.' ) || isAText( ch.toLatin1() ) ) {
+    const QChar ch = as.localPart.at( i );
+    if ( ch == dotChar || isAText( ch.toLatin1() ) ) {
       result += ch;
     } else {
       needsQuotes = true;
@@ -81,12 +83,14 @@ static QString addr_spec_as_string( const AddrSpec & as, bool pretty )
   }
   const QString dom = pretty ? QUrl_fromAce_wrapper( as.domain ) : as.domain ;
   if ( needsQuotes ) {
-    result = QLatin1Char( '"' ) + result + QLatin1Char( '\"' );
+    result = QLatin1Char( '"' ) + result + QLatin1Char( '"' );
   }
   if( dom.isEmpty() ) {
     return result;
   } else {
-    return result + QLatin1Char( '@' ) + dom;
+    result += QLatin1Char( '@' );
+    result += dom;
+    return result;
   }
 }
 

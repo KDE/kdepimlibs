@@ -1086,7 +1086,8 @@ QByteArray SingleIdent::identifier() const
   if ( d_func()->msgIdList.isEmpty() ) {
     return QByteArray();
   }
-  return identifiers().first();
+  const Types::AddrSpec &addr = d_func()->msgIdList.first();
+  return addr.asString().toLatin1(); // FIXME change parsing to create QByteArrays
 }
 
 void SingleIdent::setIdentifier( const QByteArray &id )
