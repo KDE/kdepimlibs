@@ -69,12 +69,13 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
     void error(int id, const QString& msg)
     {
+      kDebug() << id << msg;
       // clear state so further replies don't end up in failed commands etc.
       currentCommand = 0;
       currentTransactionState = 0;
 
-      if ( !errorMessage.isEmpty() )
-        errorMessage =  KIO::buildErrorString( id, msg );
+      if ( errorMessage.isEmpty() )
+        errorMessage = KIO::buildErrorString( id, msg );
       q->disconnectFromHost();
     }
 
@@ -240,6 +241,9 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
       if ( ts->failed() ) {
         kDebug() << "transaction state failed: " << ts->errorCode() << ts->errorMessage();
+        if ( errorMessage.isEmpty() )
+          errorMessage = ts->errorMessage();
+        state = SmtpSessionPrivate::Reset;
         if ( !run( Command::RSET, currentTransactionState ) )
           q->disconnectFromHost( false );
         return false;
@@ -460,6 +464,9 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
           }
           break;
         }
+        case Reset:
+          q->disconnectFromHost( true );
+          break;
         default:
           error( KIO::ERR_SLAVE_DEFINED, i18n( "Unhandled command response." ) );
       }
@@ -488,7 +495,8 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
       StartTLS,
       EHLOPostTls,
       Authenticated,
-      Sending
+      Sending,
+      Reset
     };
     State state;
 
