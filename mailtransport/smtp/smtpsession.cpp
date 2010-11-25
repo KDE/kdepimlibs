@@ -33,7 +33,9 @@
 #include <kio/global.h>
 #include <kio/sslui.h>
 #include <KLocalizedString>
+#include <kpimutils/networkaccesshelper.h>
 #include <KDebug>
+
 #include <QtCore/QQueue>
 #include <QtNetwork/QHostInfo>
 
@@ -513,6 +515,9 @@ SmtpSession::SmtpSession(QObject* parent) :
   connect( d->socket, SIGNAL(disconnected()), SLOT(socketDisconnected()) );
   connect( d->socket, SIGNAL(error(KTcpSocket::Error)), SLOT(slocketError(KTcpSocket::Error)) );
   connect( d->socket, SIGNAL(readyRead()), SLOT(receivedNewData()), Qt::QueuedConnection );
+
+  // hold connection for the lifetime of this session
+  new KPIMUtils::NetworkAccessHelper(this);
 
   if ( !d->saslInitialized ) {
     if (!initSASL())
