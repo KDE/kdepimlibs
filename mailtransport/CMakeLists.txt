@@ -81,7 +81,7 @@ kde4_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
 kde4_add_library(mailtransport ${LIBRARY_TYPE} ${mailtransport_lib_srcs})
 target_link_libraries(mailtransport ${KDE4_KIO_LIBS} akonadi-kde akonadi-kmime kmime )
 if(MAILTRANSPORT_INPROCESS_SMTP)
-  target_link_libraries(mailtransport ${SASL2_LIBRARIES})
+  target_link_libraries(mailtransport ${SASL2_LIBRARIES} kpimutils)
 endif ()
 
 set_target_properties(mailtransport PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
