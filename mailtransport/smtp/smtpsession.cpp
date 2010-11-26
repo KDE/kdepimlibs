@@ -525,7 +525,8 @@ SmtpSession::SmtpSession(QObject* parent) :
   connect( d->socket, SIGNAL(readyRead()), SLOT(receivedNewData()), Qt::QueuedConnection );
 
   // hold connection for the lifetime of this session
-  new KPIMUtils::NetworkAccessHelper(this);
+  KPIMUtils::NetworkAccessHelper* networkHelper = new KPIMUtils::NetworkAccessHelper(this);
+  networkHelper->establishConnection();
 
   if ( !d->saslInitialized ) {
     if (!initSASL())
