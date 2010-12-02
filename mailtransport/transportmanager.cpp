@@ -35,6 +35,7 @@
 #include <QApplication>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
+#include <QtDBus/QDBusServiceWatcher>
 #include <QPointer>
 #include <QRegExp>
 #include <QStringList>
@@ -97,9 +98,7 @@ class TransportManagerPrivate
     // Slots
     void slotTransportsChanged();
     void slotWalletOpened( bool success );
-    void dbusServiceOwnerChanged( const QString &service,
-                                  const QString &oldOwner,
-                                  const QString &newOwner );
+    void dbusServiceUnregistered();
     void agentTypeAdded( const Akonadi::AgentType &atype );
     void agentTypeRemoved( const Akonadi::AgentType &atype );
     void jobResult( KJob *job );
@@ -134,18 +133,18 @@ TransportManager::TransportManager()
   d->config = new KConfig( QLatin1String( "mailtransports" ) );
 
   QDBusConnection::sessionBus().registerObject( DBUS_OBJECT_PATH, this,
-      QDBusConnection::ExportScriptableSlots |
-              QDBusConnection::ExportScriptableSignals );
+                                                QDBusConnection::ExportScriptableSlots |
+                                                QDBusConnection::ExportScriptableSignals );
+
+  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( DBUS_SERVICE_NAME, QDBusConnection::sessionBus(),
+                                                          QDBusServiceWatcher::WatchForUnregistration, this );
+  connect( watcher, SIGNAL( serviceUnregistered( const QString& ) ), SLOT( dbusServiceUnregistered() ) );
 
   QDBusConnection::sessionBus().connect( QString(), QString(),
                               DBUS_INTERFACE_NAME, DBUS_CHANGE_SIGNAL,
                               this, SLOT(slotTransportsChanged()) );
 
-  d->isMainInstance =
-          QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
-  connect( QDBusConnection::sessionBus().interface(),
-           SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-           SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
+  d->isMainInstance = QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
 
   d->fillTypes();
 }
@@ -754,14 +753,9 @@ void TransportManagerPrivate::migrateToWallet()
   }
 }
 
-void TransportManagerPrivate::dbusServiceOwnerChanged( const QString &service,
-                                                         const QString &oldOwner,
-                                                         const QString &newOwner )
+void TransportManagerPrivate::dbusServiceUnregistered()
 {
-  Q_UNUSED( oldOwner );
-  if ( service == DBUS_SERVICE_NAME && newOwner.isEmpty() ) {
-    QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
-  }
+  QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
 }
 
 void TransportManagerPrivate::agentTypeAdded( const Akonadi::AgentType &atype )

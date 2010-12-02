@@ -293,9 +293,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
 
     Q_PRIVATE_SLOT( d, void slotTransportsChanged() )
     Q_PRIVATE_SLOT( d, void slotWalletOpened( bool success ) )
-    Q_PRIVATE_SLOT( d, void dbusServiceOwnerChanged( const QString &service,
-                                                     const QString &oldOwner,
-                                                     const QString &newOwner ) )
+    Q_PRIVATE_SLOT( d, void dbusServiceUnregistered() )
     Q_PRIVATE_SLOT( d, void agentTypeAdded( const Akonadi::AgentType &atype ) )
     Q_PRIVATE_SLOT( d, void agentTypeRemoved( const Akonadi::AgentType &atype ) )
     Q_PRIVATE_SLOT( d, void jobResult( KJob *job ) )
