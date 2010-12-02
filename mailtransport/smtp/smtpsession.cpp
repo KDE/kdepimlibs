@@ -521,7 +521,7 @@ SmtpSession::SmtpSession(QObject* parent) :
   d->socket = new KTcpSocket( this );
   connect( d->socket, SIGNAL(connected()), SLOT(socketConnected()) );
   connect( d->socket, SIGNAL(disconnected()), SLOT(socketDisconnected()) );
-  connect( d->socket, SIGNAL(error(KTcpSocket::Error)), SLOT(slocketError(KTcpSocket::Error)) );
+  connect( d->socket, SIGNAL(error(KTcpSocket::Error)), SLOT(socketError(KTcpSocket::Error)) );
   connect( d->socket, SIGNAL(readyRead()), SLOT(receivedNewData()), Qt::QueuedConnection );
 
   // hold connection for the lifetime of this session
