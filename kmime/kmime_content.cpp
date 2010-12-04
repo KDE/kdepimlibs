@@ -348,39 +348,35 @@ QByteArray Content::encodedBody()
 
 QByteArray Content::decodedContent()
 {
-  QByteArray temp, ret;
+  QByteArray ret;
   Headers::ContentTransferEncoding *ec=contentTransferEncoding();
   bool removeTrailingNewline=false;
-  int size = d_ptr->body.length();
 
-  if ( size == 0 ) {
+  if ( d_ptr->body.length() == 0 ) {
     return ret;
   }
 
-  temp.resize( size );
-  memcpy( temp.data(), d_ptr->body.data(), size );
-
   if ( ec->decoded() ) {
-    ret = temp;
+    ret = d_ptr->body;
     removeTrailingNewline = true;
   } else {
     switch( ec->encoding() ) {
     case Headers::CEbase64 :
-      KCodecs::base64Decode( temp, ret );
+      KCodecs::base64Decode( d_ptr->body, ret );
       break;
     case Headers::CEquPr :
       ret = KCodecs::quotedPrintableDecode( d_ptr->body );
       removeTrailingNewline = true;
       break;
     case Headers::CEuuenc :
-      KCodecs::uudecode( temp, ret );
+      KCodecs::uudecode( d_ptr->body, ret );
       break;
     case Headers::CEbinary :
-      ret = temp;
+      ret = d_ptr->body;
       removeTrailingNewline = false;
       break;
     default :
-      ret = temp;
+      ret = d_ptr->body;
       removeTrailingNewline = true;
     }
   }
