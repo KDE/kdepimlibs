@@ -1,6 +1,10 @@
 if (KDE4_BUILD_TESTS)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+check_cxx_compiler_flag(-pedantic HAVE_PEDANTIC)
+if (HAVE_PEDANTIC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
+endif ()
 
 # clear the file initially
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/all_includes.h "/* all forwarding includes */\n" )
@@ -21,12 +25,15 @@ endmacro(add_includes)
 include_directories(
   ${CMAKE_SOURCE_DIR}/kabc
   ${CMAKE_BINARY_DIR}/kabc
+  ${CMAKE_SOURCE_DIR}/kcalutils
   ${CMAKE_BINARY_DIR}/kcal
   ${Boost_INCLUDE_DIR}
 )
 
 add_includes( Akonadi )
 add_includes( KABC )
+add_includes( KCalCore )
+add_includes( KCalUtils )
 if (NOT KDEPIM_NO_KCAL)
   add_includes( KBlog )
   add_includes( KCal )
@@ -46,7 +53,7 @@ add_includes( KTNEF )
 add_includes( Mailtransport )
 add_includes( Syndication )
 
-add_definitions( -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII -DQT_NO_KEYWORDS -DQT_NO_CAST_FROM_BYTEARRAY )
+add_definitions( -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII -DQT_NO_KEYWORDS -DQT_NO_CAST_FROM_BYTEARRAY -DQT_STRICT_ITERATORS )
 kde4_add_executable( headertest header_compile.cpp )
 target_link_libraries( headertest ${QT_QTCORE_LIBRARY} )
 add_dependencies( headertest kabc ) # ensure addressee.h is generated in parallel builds
