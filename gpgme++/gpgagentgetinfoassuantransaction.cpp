@@ -25,6 +25,7 @@
 #include "gpgagentgetinfoassuantransaction.h"
 #include "error.h"
 #include "data.h"
+#include "util.h"
 
 #include <boost/static_assert.hpp>
 
@@ -43,15 +44,6 @@ GpgAgentGetInfoAssuanTransaction::GpgAgentGetInfoAssuanTransaction( InfoItem ite
 }
 
 GpgAgentGetInfoAssuanTransaction::~GpgAgentGetInfoAssuanTransaction() {}
-
-static unsigned long to_pid( const std::string & s ) {
-    std::stringstream ss( s );
-    unsigned int result;
-    if ( ss >> result )
-        return result;
-    else
-        return 0U;
-}
 
 std::string GpgAgentGetInfoAssuanTransaction::version() const {
     if ( m_item == Version )
@@ -81,20 +73,20 @@ std::string GpgAgentGetInfoAssuanTransaction::sshSocketName() const {
         return std::string();
 }
 
-static const char * tokens[] = {
+static const char * gpgagent_getinfo_tokens[] = {
     "version",
     "pid",
     "socket_name",
     "ssh_socket_name",
     "scd_running",
 };
-BOOST_STATIC_ASSERT(( sizeof tokens / sizeof *tokens == GpgAgentGetInfoAssuanTransaction::LastInfoItem ));
+BOOST_STATIC_ASSERT(( sizeof gpgagent_getinfo_tokens / sizeof *gpgagent_getinfo_tokens == GpgAgentGetInfoAssuanTransaction::LastInfoItem ));
 
 void GpgAgentGetInfoAssuanTransaction::makeCommand() const {
     assert( m_item >= 0 );
     assert( m_item < LastInfoItem );
     m_command = "GETINFO ";
-    m_command += tokens[m_item];
+    m_command += gpgagent_getinfo_tokens[m_item];
 }
 
 const char * GpgAgentGetInfoAssuanTransaction::command() const {
