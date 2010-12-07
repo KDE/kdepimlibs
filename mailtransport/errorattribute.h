@@ -31,8 +31,7 @@ namespace MailTransport {
 /**
  * @short An Attribute to mark messages that failed to be sent.
  *
- * This attributeContains the error
- * message encountered.
+ * This attribute contains the error message encountered.
  *
  * @author Constantin Berzan <exit3219@gmail.com>
  * @since 4.4
