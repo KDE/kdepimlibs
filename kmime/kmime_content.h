@@ -179,6 +179,9 @@ class KMIME_EXPORT Content
       parse() if you want to access individual headers, sub-Contents or the
       encapsulated message.
 
+      @note The passed data must not contain any CRLF sequences, only LF.
+            Use CRLFtoLF for conversion before passing in the data.
+
       @param s is a QByteArray containing the raw Content data.
     */
     void setContent( const QByteArray &s );
