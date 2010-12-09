@@ -19,6 +19,7 @@
 
 #include "dispatchmodeattribute.h"
 #include "errorattribute.h"
+#include "sentactionattribute.h"
 #include "sentbehaviourattribute.h"
 #include "transportattribute.h"
 
@@ -35,6 +36,7 @@ bool dummy()
   using namespace MailTransport;
   AttributeFactory::registerAttribute<DispatchModeAttribute>();
   AttributeFactory::registerAttribute<ErrorAttribute>();
+  AttributeFactory::registerAttribute<SentActionAttribute>();
   AttributeFactory::registerAttribute<SentBehaviourAttribute>();
   AttributeFactory::registerAttribute<TransportAttribute>();
   return true;
@@ -53,6 +55,7 @@ extern bool ___MailTransport____INIT()
   using namespace MailTransport;
   AttributeFactory::registerAttribute<DispatchModeAttribute>();
   AttributeFactory::registerAttribute<ErrorAttribute>();
+  AttributeFactory::registerAttribute<SentActionAttribute>();
   AttributeFactory::registerAttribute<SentBehaviourAttribute>();
   AttributeFactory::registerAttribute<TransportAttribute>();
   return true;

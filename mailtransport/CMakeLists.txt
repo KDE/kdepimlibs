@@ -54,12 +54,13 @@ set(mailtransport_lib_srcs
   attributeregistrar.cpp
   dispatchmodeattribute.cpp
   errorattribute.cpp
+  sentactionattribute.cpp
   sentbehaviourattribute.cpp
   transportattribute.cpp
   transportconfigdialog.cpp
   sendmailconfigwidget.cpp
   smtpconfigwidget.cpp
-  
+
   transportlistview.cpp
   transportmanagementwidget.cpp
   addtransportdialog.cpp
@@ -123,6 +124,7 @@ install( FILES
 
         dispatchmodeattribute.h
         errorattribute.h
+        sentactionattribute.h
         sentbehaviourattribute.h
         transportattribute.h
 

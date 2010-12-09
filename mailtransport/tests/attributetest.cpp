@@ -25,6 +25,7 @@
 
 #include <mailtransport/dispatchmodeattribute.h>
 #include <mailtransport/errorattribute.h>
+#include <mailtransport/sentactionattribute.h>
 #include <mailtransport/sentbehaviourattribute.h>
 #include <mailtransport/transportattribute.h>
 
@@ -51,6 +52,11 @@ void AttributeTest::testRegistrar()
   {
     Attribute *a = AttributeFactory::createAttribute( "ErrorAttribute" );
     QVERIFY( dynamic_cast<ErrorAttribute*>( a ) );
+  }
+
+  {
+    Attribute *a = AttributeFactory::createAttribute( "SentActionAttribute" );
+    QVERIFY( dynamic_cast<SentActionAttribute*>( a ) );
   }
 
   {
@@ -110,6 +116,28 @@ void AttributeTest::testSerialization()
     a = new ErrorAttribute;
     a->deserialize( data );
     QCOMPARE( msg, a->message() );
+  }
+
+  {
+    SentActionAttribute *a = new SentActionAttribute();
+    const qlonglong id = 123456789012345ll;
+
+    a->addAction( SentActionAttribute::Action::MarkAsReplied, QVariant( id ) );
+    a->addAction( SentActionAttribute::Action::MarkAsForwarded, QVariant( id ) );
+
+    QByteArray data = a->serialized();
+    delete a;
+    a = new SentActionAttribute;
+    a->deserialize( data );
+
+    const SentActionAttribute::Action::List actions = a->actions();
+    QCOMPARE( actions.count(), 2 );
+
+    QCOMPARE( SentActionAttribute::Action::MarkAsReplied, actions[0].type() );
+    QCOMPARE( id, actions[0].value().toLongLong() );
+
+    QCOMPARE( SentActionAttribute::Action::MarkAsForwarded, actions[1].type() );
+    QCOMPARE( id, actions[1].value().toLongLong() );
   }
 
   {

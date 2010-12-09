@@ -23,6 +23,7 @@
 #include <mailtransport/mailtransport_export.h>
 
 #include "dispatchmodeattribute.h"
+#include "sentactionattribute.h"
 #include "sentbehaviourattribute.h"
 #include "transportattribute.h"
 
@@ -74,6 +75,7 @@ namespace MailTransport {
   @endcode
 
   @see DispatchModeAttribute
+  @see SentActionAttribute
   @see SentBehaviourAttribute
   @see TransportAttribute
   @see AddressAttribute
@@ -128,6 +130,12 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
       Modify the returned attribute to change the sent behaviour.
     */
     SentBehaviourAttribute &sentBehaviourAttribute();
+
+    /**
+      Returns a reference to the sent action attribue for this message.
+      Modify the returned attribute to change the sent actions.
+    */
+    SentActionAttribute &sentActionAttribute();
 
     /**
       Sets the message to be sent.

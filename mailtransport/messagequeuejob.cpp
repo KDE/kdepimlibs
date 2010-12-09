@@ -56,6 +56,7 @@ class MailTransport::MessageQueueJob::Private
     TransportAttribute transportAttribute;
     DispatchModeAttribute dispatchModeAttribute;
     SentBehaviourAttribute sentBehaviourAttribute;
+    SentActionAttribute sentActionAttribute;
     AddressAttribute addressAttribute;
     bool started;
 
@@ -141,6 +142,7 @@ void MessageQueueJob::Private::outboxRequestResult( KJob *job )
   item.addAttribute( addressAttribute.clone() );
   item.addAttribute( dispatchModeAttribute.clone() );
   item.addAttribute( sentBehaviourAttribute.clone() );
+  item.addAttribute( sentActionAttribute.clone() );
   item.addAttribute( transportAttribute.clone() );
 
   // Set flags.
@@ -186,6 +188,11 @@ TransportAttribute &MessageQueueJob::transportAttribute()
 SentBehaviourAttribute &MessageQueueJob::sentBehaviourAttribute()
 {
   return d->sentBehaviourAttribute;
+}
+
+SentActionAttribute &MessageQueueJob::sentActionAttribute()
+{
+  return d->sentActionAttribute;
 }
 
 void MessageQueueJob::setMessage( Message::Ptr message )
