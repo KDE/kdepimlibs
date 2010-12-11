@@ -110,9 +110,9 @@ if (NOT KDEPIM_ONLY_KLEO)
 
   find_package(Nepomuk)
   if (WINCE)
-    macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" FALSE "" "")
+    macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" FALSE "" "Nepomuk is part of kdelibs")
   else(WINCE)
-    macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" TRUE "" "")
+    macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" TRUE "" "Nepomuk is part of kdelibs")
   endif (WINCE)
 
   set(LIBICAL_MIN_VERSION "0.42")
