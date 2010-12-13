@@ -191,6 +191,10 @@ class KMIME_EXPORT Base
 
     /**
       Returns the decoded content of the header without the header-type.
+
+      @note The return value of this method should only be used when showing an address
+            to the user. It is not guaranteed that fromUnicodeString( asUnicodeString(), ... )
+            will return the original string.
     */
     virtual QString asUnicodeString() const = 0;
 
