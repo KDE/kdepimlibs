@@ -31,6 +31,8 @@ class UtilTest : public QObject
     void testBalanceBidiState_data();
     void testAddQuotes();
     void testAddQuotes_data();
+    void testIsSigned_data();
+    void testIsSigned();
 };
 
 #endif

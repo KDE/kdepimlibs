@@ -22,6 +22,7 @@
 #include "utiltest.moc"
 
 #include <kmime_util.h>
+#include <kmime_message.h>
 
 using namespace KMime;
 
@@ -149,4 +150,46 @@ void UtilTest::testAddQuotes_data()
   QCOMPARE( string, QString::fromLatin1( "\"John \\\"the hacker\\\" Smith\"" ) );
 }
 
+void UtilTest::testIsSigned_data()
+{
+  QTest::addColumn<QByteArray>( "input" );
+  QTest::addColumn<bool>( "hasSignature" );
 
+  QTest::newRow( "pgp" ) << QByteArray(
+    "From: xxx xxx <xxx@xxx.xxx>\n"
+    "To: xxx xxx <xxx@xxx.xxx>\n"
+    "Subject: Re: xxx\n"
+    "Date: Mon, 13 Dec 2010 12:22:03 +0100\n"
+    "MIME-Version: 1.0\n"
+    "Content-Type: multipart/signed;\n"
+    "  boundary=\"nextPart1571960.gHxU0aGA9V\";\n"
+    "  protocol=\"application/pgp-signature\";\n"
+    "  micalg=pgp-sha1\n"
+    "Content-Transfer-Encoding: 7bit\n\n"
+    "--nextPart1571960.gHxU0aGA9V\n"
+    "Content-Type: text/plain;\n"
+    "  charset=\"iso-8859-15\"\n"
+    "Content-Transfer-Encoding: quoted-printable\n"
+    "Content-Disposition: inline\n\n"
+    "Hi there...\n\n"
+    "--nextPart1571960.gHxU0aGA9V\n"
+    "Content-Type: application/pgp-signature; name=signature.asc\n"
+    "Content-Description: This is a digitally signed message part.\n\n"
+    "-----BEGIN PGP SIGNATURE-----\n"
+    "Version: GnuPG v2.0.15 (GNU/Linux)\n"
+    "...\n"
+    "-----END PGP SIGNATURE-----\n\n"
+    "--nextPart1571960.gHxU0aGA9V--\n"    
+  ) << true;
+}
+
+void UtilTest::testIsSigned()
+{
+  QFETCH( QByteArray, input );
+  QFETCH( bool, hasSignature );
+
+  KMime::Message::Ptr msg( new KMime::Message );
+  msg->setContent( input );
+  msg->parse();
+  QCOMPARE( isSigned( msg.get() ), hasSignature );
+}
