@@ -69,6 +69,7 @@ class IdentPrivate : public AddressPrivate
 {
   public:
     QList<Types::AddrSpec> msgIdList;
+    mutable QByteArray cachedIdentifier;
 };
 
 kmime_mk_empty_private( SingleIdent, Ident )

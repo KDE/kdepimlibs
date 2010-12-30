@@ -995,6 +995,7 @@ void Ident::clear()
 {
   Q_D(Ident);
   d->msgIdList.clear();
+  d->cachedIdentifier.clear();
 }
 
 bool Ident::isEmpty() const
@@ -1013,6 +1014,7 @@ bool Ident::parse( const char* &scursor, const char * const send, bool isCRLF )
   // msg-id   := angle-addr
 
   d->msgIdList.clear();
+  d->cachedIdentifier.clear();
 
   while ( scursor != send ) {
     eatCFWS( scursor, send, isCRLF );
@@ -1087,14 +1089,20 @@ QByteArray SingleIdent::identifier() const
   if ( d_func()->msgIdList.isEmpty() ) {
     return QByteArray();
   }
-  const Types::AddrSpec &addr = d_func()->msgIdList.first();
-  return addr.asString().toLatin1(); // FIXME change parsing to create QByteArrays
+
+  if ( d_func()->cachedIdentifier.isEmpty() ) {
+    const Types::AddrSpec &addr = d_func()->msgIdList.first();
+    d_func()->cachedIdentifier = addr.asString().toLatin1(); // FIXME change parsing to create QByteArrays
+  }
+
+  return d_func()->cachedIdentifier;
 }
 
 void SingleIdent::setIdentifier( const QByteArray &id )
 {
   Q_D(SingleIdent);
   d->msgIdList.clear();
+  d->cachedIdentifier.clear();
   appendIdentifier( id );
 }
 
@@ -1963,6 +1971,7 @@ bool ContentID::parse( const char* &scursor, const char *const send, bool isCRLF
   {
     scursor = origscursor;
     d->msgIdList.clear();
+    d->cachedIdentifier.clear();
 
     while ( scursor != send )
     {
