@@ -65,6 +65,8 @@ static QString addr_spec_as_string( const AddrSpec & as, bool pretty )
   }
 
   static QChar dotChar = QLatin1Char( '.' );
+  static QChar backslashChar = QLatin1Char( '\\' );
+  static QChar quoteChar = QLatin1Char( '"' );
 
   bool needsQuotes = false;
   QString result;
@@ -75,15 +77,15 @@ static QString addr_spec_as_string( const AddrSpec & as, bool pretty )
       result += ch;
     } else {
       needsQuotes = true;
-      if ( ch == QLatin1Char( '\\' ) || ch == QLatin1Char( '"' ) ) {
-        result += QLatin1Char( '\\' );
+      if ( ch == backslashChar || ch == quoteChar ) {
+        result += backslashChar;
       }
       result += ch;
     }
   }
   const QString dom = pretty ? QUrl_fromAce_wrapper( as.domain ) : as.domain ;
   if ( needsQuotes ) {
-    result = QLatin1Char( '"' ) + result + QLatin1Char( '"' );
+    result = quoteChar + result + quoteChar;
   }
   if( dom.isEmpty() ) {
     return result;
