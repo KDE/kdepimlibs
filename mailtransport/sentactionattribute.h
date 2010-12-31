@@ -46,7 +46,7 @@ class MAILTRANSPORT_EXPORT SentActionAttribute : public Akonadi::Attribute
     /**
      * @short A sent action.
      */
-    class Action
+    class MAILTRANSPORT_EXPORT Action
     {
       public:
         /**
