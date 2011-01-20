@@ -196,7 +196,7 @@ install( FILES
         DESTINATION ${INCLUDE_INSTALL_DIR}/kcal COMPONENT Devel)
 
 if (NOT KDEPIM_NO_KRESOURCES)
-  install( FILES local.desktop localdir.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
+  install( FILES localdir.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
   install( FILES
         calendarresources.h
         calhelper.h
