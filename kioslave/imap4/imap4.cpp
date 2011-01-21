@@ -2577,7 +2577,7 @@ ssize_t IMAP4Protocol::myRead(void *data, ssize_t len)
     ssize_t copyLen = (len < readBufferLen) ? len : readBufferLen;
     memcpy(data, readBuffer, copyLen);
     readBufferLen -= copyLen;
-    if (readBufferLen) memcpy(readBuffer, &readBuffer[copyLen], readBufferLen);
+    if (readBufferLen) memmove(readBuffer, &readBuffer[copyLen], readBufferLen);
     return copyLen;
   }
   if (!isConnected()) return 0;
