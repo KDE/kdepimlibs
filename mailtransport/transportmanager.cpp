@@ -23,6 +23,7 @@
 #include "sendmailjob.h"
 #include "smtpjob.h"
 #include "transport.h"
+#include "transport_p.h"
 #include "transportjob.h"
 #include "transporttype.h"
 #include "transporttype_p.h"
@@ -449,6 +450,7 @@ void TransportManagerPrivate::readConfig()
       if ( old->currentGroup() == QLatin1String( "Transport " ) + re.cap( 1 ) ) {
         kDebug() << "reloading existing transport:" << s;
         t = old;
+        t->d->passwordNeedsUpdateFromWallet = true;
         t->readConfig();
         oldTransports.removeAll( old );
         break;
