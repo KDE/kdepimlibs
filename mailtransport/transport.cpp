@@ -18,6 +18,7 @@
 */
 
 #include "transport.h"
+#include "transport_p.h"
 #include "legacydecrypt.h"
 #include "mailtransport_defs.h"
 #include "transportmanager.h"
@@ -38,22 +39,6 @@
 using namespace MailTransport;
 using namespace KWallet;
 
-/**
- * Private class that helps to provide binary compatibility between releases.
- * @internal
- */
-class TransportPrivate
-{
-  public:
-    TransportType transportType;
-    QString password;
-    bool passwordLoaded;
-    bool passwordDirty;
-    bool storePasswordInFile;
-    bool needsWalletMigration;
-    QString oldName;
-};
-
 Transport::Transport( const QString &cfgGroup ) :
     TransportBase( cfgGroup ), d( new TransportPrivate )
 {
@@ -62,6 +47,7 @@ Transport::Transport( const QString &cfgGroup ) :
   d->passwordDirty = false;
   d->storePasswordInFile = false;
   d->needsWalletMigration = false;
+  d->passwordNeedsUpdateFromWallet = false;
   readConfig();
 }
 
@@ -201,7 +187,25 @@ void Transport::usrReadConfig()
   }
 
   // we have everything we need
-  if ( !storePassword() || d->passwordLoaded ) {
+  if ( !storePassword() ) {
+    return;
+  }
+
+  if ( d->passwordLoaded ) {
+    if ( d->passwordNeedsUpdateFromWallet ) {
+      d->passwordNeedsUpdateFromWallet = false;
+      // read password if wallet is open, defer otherwise
+      if ( Wallet::isOpen( Wallet::NetworkWallet() ) ) {
+        // Don't read the password right away because this can lead
+        // to reentrancy problems in KDBusServiceStarter when an application
+        // run in Kontact creates the transports (due to a QEventLoop in the
+        // synchronous KWallet openWallet call).
+        QTimer::singleShot( 0, this, SLOT(readPassword()) );
+      } else {
+        d->passwordLoaded = false;
+      }
+    }
+
     return;
   }
 
