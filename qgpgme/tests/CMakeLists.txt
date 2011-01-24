@@ -34,6 +34,10 @@ foreach( _qgpgme_test ${qgpgme_TESTS} )
   endif(WIN32)
 endforeach( _qgpgme_test )
 
+if (ONLY_KLEO)
+   install( TARGETS ${qgpgme_TESTS} DESTINATION ${BIN_INSTALL_DIR} )
+endif (ONLY_KLEO)
+
 ########### next target ###############
 
 # PORT ME AWAY FROM EVENT LOOPS
