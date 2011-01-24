@@ -62,6 +62,8 @@
 
 #include <QDebug>
 #include <QCoreApplication>
+#include <QFile>
+#include <QTextStream>
 
 #include <boost/shared_ptr.hpp>
 
@@ -269,12 +271,22 @@ static void run() {
 
 }
 
+static void msgHandler( QtMsgType, const char * msg ) {
+    QFile file( "gpgagentmonitoreventcounterstest.log" );
+    if ( !file.open( QFile::Append|QFile::WriteOnly|QFile::Text ) )
+        return;
+    QTextStream ts( &file );
+    ts << msg << endl;
+}
+
 int main( int argc, char * argv[] ) {
 
     if ( GpgME::initializeLibrary(0) )
         return 1;
 
     QCoreApplication app( argc, argv );
+
+    qInstallMsgHandler( &msgHandler );
 
     run();
 
