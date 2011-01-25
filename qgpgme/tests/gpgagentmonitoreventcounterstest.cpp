@@ -64,6 +64,8 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QTextStream>
+#include <QTimer>
+#include <QEventLoop>
 
 #include <boost/shared_ptr.hpp>
 
@@ -247,7 +249,10 @@ static void run() {
             gpgAgent = c;
         }
 
-        sleep( 2 );
+        // sleep 2 seconds:
+        QEventLoop loop;
+        QTimer::singleShot( 2000, &loop, SLOT(quit()) );
+        loop.exec();
 
         if ( !check_event_counter_changed( gpgAgent, eventCounter ) )
             continue; // early out
