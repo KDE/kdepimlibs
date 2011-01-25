@@ -34,10 +34,7 @@ if ( _any_gpgme_found )
 
    include_directories( ${GPGME_INCLUDES} ${CMAKE_SOURCE_DIR}/gpgme++ ${Boost_INCLUDE_DIR} )
 
-   if(NOT WIN32)
-     #currently not all the tests build on Windows
-     add_subdirectory( tests )
-   endif(NOT WIN32)
+   add_subdirectory( tests )
 
    set( qgpgme_LIB_SRCS
         dataprovider.cpp
