@@ -143,7 +143,7 @@ QByteArray SentActionAttribute::serialized() const
 
   QByteArray data;
   QDataStream stream( &data, QIODevice::WriteOnly );
-  stream.setVersion( QDataStream::Qt_4_7 );
+  stream.setVersion( QDataStream::Qt_4_6 );
   stream << list;
 
   return data;
@@ -154,7 +154,7 @@ void SentActionAttribute::deserialize( const QByteArray &data )
   d->mActions.clear();
 
   QDataStream stream( data );
-  stream.setVersion( QDataStream::Qt_4_7 );
+  stream.setVersion( QDataStream::Qt_4_6 );
 
   QVariantList list;
   stream >> list;
