@@ -1280,7 +1280,7 @@ void Generic::setType( const char *type )
 //-----<MessageID>-----------------------------
 
 //@cond PRIVATE
-kmime_mk_trivial_ctor_with_name( MessageID, Generics::SingleIdent, Message-Id )
+kmime_mk_trivial_ctor_with_name( MessageID, Generics::SingleIdent, Message-ID )
 //@endcond
 
 void MessageID::generate( const QByteArray &fqdn )
