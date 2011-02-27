@@ -250,7 +250,9 @@ void ConfigPage::load()
     if ( !family.isEmpty() ) {
       compatFamilyNames.removeAll( family );
       d->mFamilyMap.append( family );
+      kDebug() << "Loading manager for family " << family;
       d->loadManager( family, this );
+      kDebug() << "Manager for family " << family << " loaded.";
     }
   }
 
