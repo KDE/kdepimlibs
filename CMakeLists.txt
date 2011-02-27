@@ -80,7 +80,7 @@ endif (GPGME_FOUND)
 
 if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
-  set(Akonadi_MIN_VERSION "1.4.91")
+  set(Akonadi_MIN_VERSION "1.5.51")
   find_package(Akonadi ${Akonadi_MIN_VERSION} QUIET NO_MODULE)
   macro_log_feature(Akonadi_FOUND "Akonadi server libraries" "Access to PIM storage and services" "http://pim.kde.org/akonadi" TRUE "${Akonadi_MIN_VERSION}" "")
 
