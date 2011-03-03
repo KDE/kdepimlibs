@@ -152,6 +152,12 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     {
       kDebug() << err;
       error( KIO::ERR_CONNECTION_BROKEN, socket->errorString() );
+
+      if ( socket->state() != KTcpSocket::ConnectedState ) {
+        // we have been disconnected by the error condition already, so just signal error result
+        emit q->result( q );
+        q->deleteLater();
+      }
     }
 
     bool sendCommandLine( const QByteArray &cmdline )
