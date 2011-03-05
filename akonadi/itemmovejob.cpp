@@ -61,16 +61,4 @@ void ItemMoveJob::doStart()
   d->sendCommand( "MOVE" );
 }
 
-Collection ItemMoveJob::destinationCollection() const
-{
-  Q_D( const ItemMoveJob );
-  return d->destination;
-}
-
-QList<Item> ItemMoveJob::items() const
-{
-  Q_D( const ItemMoveJob );
-  return d->objectsToMove;
-}
-
 #include "itemmovejob.moc"
