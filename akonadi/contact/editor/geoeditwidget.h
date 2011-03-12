@@ -22,6 +22,8 @@
 #ifndef GEOEDITWIDGET_H
 #define GEOEDITWIDGET_H
 
+#include "config-akonadi-contact.h"
+
 #include <kabc/geo.h>
 #include <kdialog.h>
 
@@ -30,6 +32,11 @@
 namespace KABC
 {
 class Addressee;
+}
+
+namespace Marble
+{
+  class MarbleWidget;
 }
 
 class QDoubleSpinBox;
@@ -60,7 +67,11 @@ class GeoEditWidget : public QWidget
   private:
     void updateView();
 
+#ifndef HAVE_MARBLE
     GeoMapWidget *mMap;
+#else
+    Marble::MarbleWidget *mMap;
+#endif
     QLabel *mLatitudeLabel;
     QLabel *mLongitudeLabel;
     QPushButton *mChangeButton;

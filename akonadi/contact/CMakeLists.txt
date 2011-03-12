@@ -19,6 +19,14 @@ else (WINCE)
   set( AKONADI_SEND_SMS_DEFAULT  "UseSkypeSms" )
 endif (WINCE)
 
+find_package(MarbleWidget)
+macro_log_feature(MARBLEWIDGET_FOUND "Marble" "Marble Desktop Globe" "http://edu.kde.org" FALSE "" "")
+if (MARBLEWIDGET_FOUND)
+  include_directories(${LIBMARBLEWIDGET_INCLUDE_DIR})
+  set(HAVE_MARBLE true)
+endif()
+configure_file(config-akonadi-contact.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-akonadi-contact.h)
+
 add_subdirectory(tests)
 #We dont have kcms under wince so dont build them
 if(NOT WINCE)
@@ -160,6 +168,10 @@ target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
                                       ${KDE4_KIO_LIBS}
                                       ${NEPOMUK_LIBRARIES})
 
+if (MARBLEWIDGET_FOUND)
+  target_link_libraries(akonadi-contact ${LIBMARBLEWIDGET_LIBRARY})
+endif()
+
 if (NOT WINCE)
 target_link_libraries(akonadi-contact ${KDE4_PHONON_LIBS})
 target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES ${KDE4_PHONON_LIBS})
@@ -168,7 +180,9 @@ endif (NOT WINCE)
 set_target_properties(akonadi-contact PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
 install(TARGETS akonadi-contact EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+if (NOT MARBLEWIDGET_FOUND)
 install(FILES editor/pics/world.jpg DESTINATION ${DATA_INSTALL_DIR}/akonadi/contact/pics)
+endif ()
 install(FILES editor/data/zone.tab DESTINATION ${DATA_INSTALL_DIR}/akonadi/contact/data)
 install(FILES recentcontactscollections.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 

@@ -29,6 +29,8 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 
+#include <marble/MarbleWidget.h>
+
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QtGui/QDoubleSpinBox>
@@ -39,6 +41,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QSpinBox>
 
+#ifndef HAVE_MARBLE
 class GeoMapWidget : public QWidget
 {
   public:
@@ -88,6 +91,7 @@ class GeoMapWidget : public QWidget
     QPixmap mWorld;
     KABC::Geo mCoordinates;
 };
+#endif
 
 
 GeoEditWidget::GeoEditWidget( QWidget *parent )
@@ -96,9 +100,19 @@ GeoEditWidget::GeoEditWidget( QWidget *parent )
   QGridLayout *layout = new QGridLayout( this );
   layout->setMargin( 0 );
 
+#ifndef HAVE_MARBLE
   mMap = new GeoMapWidget;
+#else
+  mMap = new Marble::MarbleWidget;
+  mMap->setFixedSize( 400, 200 );
+  mMap->setMapThemeId( QLatin1String("earth/openstreetmap/openstreetmap.dgml") );
+  mMap->setShowOverviewMap( false );
+  mMap->setShowCompass( false );
+  mMap->setShowCrosshairs( true );
+#endif
   layout->addWidget( mMap, 0, 0, 1, 4, Qt::AlignCenter|Qt::AlignVCenter );
 
+#ifndef HAVE_MARBLE
   QLabel *label = new QLabel( i18nc( "@label", "Latitude:" ) );
   label->setAlignment( Qt::AlignRight );
   layout->addWidget( label, 1, 0 );
@@ -112,6 +126,7 @@ GeoEditWidget::GeoEditWidget( QWidget *parent )
 
   mLongitudeLabel = new QLabel;
   layout->addWidget( mLongitudeLabel, 1, 3 );
+#endif
 
   mChangeButton = new QPushButton( i18nc( "@label Change the coordinates", "Change..." ) );
   layout->addWidget( mChangeButton, 2, 0, 1, 4, Qt::AlignRight );
@@ -135,7 +150,12 @@ void GeoEditWidget::loadContact( const KABC::Addressee &contact )
 
 void GeoEditWidget::storeContact( KABC::Addressee &contact ) const
 {
+#ifndef HAVE_MARBLE
   contact.setGeo( mCoordinates );
+#else
+  KABC::Geo coord( mMap->centerLatitude(), mMap->centerLongitude() );
+  contact.setGeo( coord );
+#endif
 }
 
 void GeoEditWidget::setReadOnly( bool readOnly )
@@ -145,6 +165,7 @@ void GeoEditWidget::setReadOnly( bool readOnly )
 
 void GeoEditWidget::updateView()
 {
+#ifndef HAVE_MARBLE
   if ( !mCoordinates.isValid() ) {
     mLatitudeLabel->setText( i18nc( "@label Coordinates are not available", "n/a" ) );
     mLongitudeLabel->setText( i18nc( "@label Coordinates are not available", "n/a" ) );
@@ -153,6 +174,9 @@ void GeoEditWidget::updateView()
     mLongitudeLabel->setText( i18nc( "@label The formatted coordinates", "%1 %2", mCoordinates.longitude(), QChar( 176 ) ) );
   }
   mMap->setCoordinates( mCoordinates );
+#else
+  mMap->centerOn( mCoordinates.longitude(), mCoordinates.latitude() );
+#endif
 }
 
 void GeoEditWidget::changeClicked()
