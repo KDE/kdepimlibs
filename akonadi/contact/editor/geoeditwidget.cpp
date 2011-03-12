@@ -102,15 +102,15 @@ GeoEditWidget::GeoEditWidget( QWidget *parent )
 
 #ifndef HAVE_MARBLE
   mMap = new GeoMapWidget;
+  layout->addWidget( mMap, 0, 0, 1, 4, Qt::AlignCenter|Qt::AlignVCenter );
 #else
   mMap = new Marble::MarbleWidget;
-  mMap->setFixedSize( 400, 200 );
   mMap->setMapThemeId( QLatin1String("earth/openstreetmap/openstreetmap.dgml") );
   mMap->setShowOverviewMap( false );
   mMap->setShowCompass( false );
   mMap->setShowCrosshairs( true );
+  layout->addWidget( mMap, 0, 0, 1, 4 );
 #endif
-  layout->addWidget( mMap, 0, 0, 1, 4, Qt::AlignCenter|Qt::AlignVCenter );
 
 #ifndef HAVE_MARBLE
   QLabel *label = new QLabel( i18nc( "@label", "Latitude:" ) );
