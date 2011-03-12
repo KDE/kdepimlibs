@@ -28,8 +28,14 @@
 #include <kcombobox.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
+#include <kdebug.h>
 
+#include <marble/MarbleMap.h>
+#include <marble/MarbleModel.h>
 #include <marble/MarbleWidget.h>
+#include "MarbleRunnerManager.h" // FIXME: not installed by Marble, but exported in the lib...
+#include <marble/GeoDataCoordinates.h>
+#include <marble/GeoDataPlacemark.h>
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
@@ -95,7 +101,8 @@ class GeoMapWidget : public QWidget
 
 
 GeoEditWidget::GeoEditWidget( QWidget *parent )
-  : QWidget( parent )
+  : QWidget( parent ),
+  mRunnerManager( 0 )
 {
   QGridLayout *layout = new QGridLayout( this );
   layout->setMargin( 0 );
@@ -126,10 +133,14 @@ GeoEditWidget::GeoEditWidget( QWidget *parent )
 
   mLongitudeLabel = new QLabel;
   layout->addWidget( mLongitudeLabel, 1, 3 );
+#else
+  QPushButton *button = new QPushButton( i18n( "<<" ) );
+  layout->addWidget( button, 2, 0 );
+  connect( button, SIGNAL(clicked()), SLOT(copyAddressClicked()) );
 #endif
 
   mChangeButton = new QPushButton( i18nc( "@label Change the coordinates", "Change..." ) );
-  layout->addWidget( mChangeButton, 2, 0, 1, 4, Qt::AlignRight );
+  layout->addWidget( mChangeButton, 2, 1, 1, 3, Qt::AlignRight );
 
   layout->setRowStretch( 3, 1 );
 
@@ -550,5 +561,27 @@ int GeoDialog::nearestCity( double x, double y ) const
 
   return -1;
 }
+
+#ifdef HAVE_MARBLE
+void GeoEditWidget::copyAddressClicked()
+{
+  if ( !mRunnerManager ) {
+    mRunnerManager = new Marble::MarbleRunnerManager( mMap->map()->model()->pluginManager(), this );
+    connect( mRunnerManager, SIGNAL(reverseGeocodingFinished(GeoDataCoordinates,GeoDataPlacemark)),
+             this, SLOT(reverseGeocodingFinished(GeoDataCoordinates,GeoDataPlacemark)) );
+  }
+
+  Marble::GeoDataCoordinates coordinates;
+  coordinates.setLatitude( mMap->centerLatitude() );
+  coordinates.setLongitude( mMap->centerLongitude() );
+  mRunnerManager->reverseGeocoding( coordinates );
+}
+
+void GeoEditWidget::reverseGeocodingFinished(const Marble::GeoDataCoordinates& coord, const Marble::GeoDataPlacemark& placemark)
+{
+  // TODO
+  kDebug() << placemark.address();
+}
+#endif
 
 #include "geoeditwidget.moc"

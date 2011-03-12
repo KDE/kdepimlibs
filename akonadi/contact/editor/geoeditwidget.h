@@ -36,8 +36,13 @@ class Addressee;
 
 namespace Marble
 {
+  class GeoDataCoordinates;
+  class GeoDataPlacemark;
+  class MarbleRunnerManager;
   class MarbleWidget;
 }
+using Marble::GeoDataCoordinates; // FIXME: marble doesn't use fully qualified type names in its signals...
+using Marble::GeoDataPlacemark;
 
 class QDoubleSpinBox;
 class QLabel;
@@ -63,6 +68,10 @@ class GeoEditWidget : public QWidget
 
   private Q_SLOTS:
     void changeClicked();
+#ifdef HAVE_MARBLE
+    void copyAddressClicked();
+    void reverseGeocodingFinished( const GeoDataCoordinates &coord, const GeoDataPlacemark &placemark );
+#endif
 
   private:
     void updateView();
@@ -71,6 +80,7 @@ class GeoEditWidget : public QWidget
     GeoMapWidget *mMap;
 #else
     Marble::MarbleWidget *mMap;
+    Marble::MarbleRunnerManager *mRunnerManager;
 #endif
     QLabel *mLatitudeLabel;
     QLabel *mLongitudeLabel;
