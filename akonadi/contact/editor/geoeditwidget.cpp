@@ -154,6 +154,9 @@ GeoEditWidget::GeoEditWidget( QWidget *parent )
 
 GeoEditWidget::~GeoEditWidget()
 {
+#ifdef HAVE_MARBLE
+  delete mRunnerManager;
+#endif
 }
 
 void GeoEditWidget::loadContact( const KABC::Addressee &contact )
