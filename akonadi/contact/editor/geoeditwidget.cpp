@@ -30,12 +30,14 @@
 #include <kstandarddirs.h>
 #include <kdebug.h>
 
+#ifdef HAVE_MARBLE
 #include <marble/MarbleMap.h>
 #include <marble/MarbleModel.h>
 #include <marble/MarbleWidget.h>
 #include <marble/MarbleRunnerManager.h>
 #include <marble/GeoDataCoordinates.h>
 #include <marble/GeoDataPlacemark.h>
+#endif
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
