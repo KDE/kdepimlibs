@@ -33,7 +33,7 @@
 #include <marble/MarbleMap.h>
 #include <marble/MarbleModel.h>
 #include <marble/MarbleWidget.h>
-#include "MarbleRunnerManager.h" // FIXME: not installed by Marble, but exported in the lib...
+#include <marble/MarbleRunnerManager.h>
 #include <marble/GeoDataCoordinates.h>
 #include <marble/GeoDataPlacemark.h>
 
