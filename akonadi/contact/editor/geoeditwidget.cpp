@@ -572,8 +572,8 @@ void GeoEditWidget::copyAddressClicked()
   }
 
   Marble::GeoDataCoordinates coordinates;
-  coordinates.setLatitude( mMap->centerLatitude() );
-  coordinates.setLongitude( mMap->centerLongitude() );
+  coordinates.setLatitude( mMap->centerLatitude(), Marble::GeoDataCoordinates::Degree );
+  coordinates.setLongitude( mMap->centerLongitude(), Marble::GeoDataCoordinates::Degree );
   mRunnerManager->reverseGeocoding( coordinates );
 }
 
