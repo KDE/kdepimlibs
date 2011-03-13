@@ -149,11 +149,15 @@ class AddressEditWidget : public QWidget
   public Q_SLOTS:
     void updateName( const QString &name );
 
+  Q_SIGNALS:
+    void centerOnAddress( const KABC::Address &addr );
+
   private Q_SLOTS:
     void updateAddressView();
     void createAddress();
     void editAddress();
     void deleteAddress();
+    void addressToMap();
 
   private:
     void updateButtons();

@@ -23,6 +23,7 @@
 
 #include "autoqpointer_p.h"
 
+#include <kabc/address.h>
 #include <kabc/addressee.h>
 #include <kabc/geo.h>
 #include <kcombobox.h>
@@ -571,12 +572,7 @@ int GeoDialog::nearestCity( double x, double y ) const
 #ifdef HAVE_MARBLE
 void GeoEditWidget::copyAddressClicked()
 {
-  if ( !mRunnerManager ) {
-    mRunnerManager = new Marble::MarbleRunnerManager( mMap->map()->model()->pluginManager(), this );
-    connect( mRunnerManager, SIGNAL(reverseGeocodingFinished(GeoDataCoordinates,GeoDataPlacemark)),
-             this, SLOT(reverseGeocodingFinished(GeoDataCoordinates,GeoDataPlacemark)) );
-  }
-
+  setupRunnerManager();
   Marble::GeoDataCoordinates coordinates;
   coordinates.setLatitude( mMap->centerLatitude(), Marble::GeoDataCoordinates::Degree );
   coordinates.setLongitude( mMap->centerLongitude(), Marble::GeoDataCoordinates::Degree );
@@ -588,6 +584,36 @@ void GeoEditWidget::reverseGeocodingFinished(const Marble::GeoDataCoordinates& c
   // TODO
   kDebug() << placemark.address();
 }
+
+void GeoEditWidget::centerOnAddress(const KABC::Address& addr)
+{
+  setupRunnerManager();
+  QStringList fragments = QStringList() << addr.street() << addr.locality() << addr.region() << addr.country();
+  fragments.removeAll( QString() );
+  mRunnerManager->findPlacemarks( fragments.join( QLatin1String( ", " ) ) );
+}
+
+void GeoEditWidget::setupRunnerManager()
+{
+  if ( !mRunnerManager ) {
+    mRunnerManager = new Marble::MarbleRunnerManager( mMap->map()->model()->pluginManager(), this );
+    connect( mRunnerManager, SIGNAL(reverseGeocodingFinished(GeoDataCoordinates,GeoDataPlacemark)),
+             this, SLOT(reverseGeocodingFinished(GeoDataCoordinates,GeoDataPlacemark)) );
+    connect( mRunnerManager, SIGNAL(searchResultChanged(QAbstractItemModel*)),
+             this, SLOT(searchResultChanged(QAbstractItemModel*)) );
+  }
+}
+
+void GeoEditWidget::searchResultChanged(QAbstractItemModel* model)
+{
+  if ( model->rowCount() == 0 )
+    return;
+  const QModelIndex idx = model->index( 0, 0 );
+  // FIXME: Marble doesn't install the needed header right now
+  Marble::GeoDataCoordinates coord = idx.data( /*Marble::MarblePlacemarkModel::CoordinateRole*/ Qt::UserRole + 3 ).value<Marble::GeoDataCoordinates>();
+  mMap->centerOn( coord );
+}
+
 #endif
 
 #include "geoeditwidget.moc"

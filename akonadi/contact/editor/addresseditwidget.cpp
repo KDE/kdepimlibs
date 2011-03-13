@@ -19,6 +19,7 @@
     02110-1301, USA.
 */
 
+#include "config-akonadi-contact.h"
 #include "addresseditwidget.h"
 
 #include "autoqpointer_p.h"
@@ -235,7 +236,13 @@ AddressEditWidget::AddressEditWidget( QWidget *parent )
   mAddressSelectionWidget = new AddressSelectionWidget( this );
   connect( mAddressSelectionWidget, SIGNAL( selectionChanged( const KABC::Address& ) ),
            SLOT( updateAddressView() ) );
-  layout->addWidget( mAddressSelectionWidget, 0, 0, 1, 3 );
+  layout->addWidget( mAddressSelectionWidget, 0, 0, 1,
+#ifdef HAVE_MARBLE
+                     4
+#else
+                     3
+#endif
+                   );
 
   mAddressView = new QLabel( this );
   mAddressView->setFrameStyle( QFrame::Panel | QFrame::Sunken );
@@ -243,7 +250,13 @@ AddressEditWidget::AddressEditWidget( QWidget *parent )
   mAddressView->setAlignment( Qt::AlignTop );
   mAddressView->setTextFormat( Qt::PlainText );
   mAddressView->setTextInteractionFlags( Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse );
-  layout->addWidget( mAddressView, 1, 0, 1, 3 );
+  layout->addWidget( mAddressView, 1, 0, 1,
+#ifdef HAVE_MARBLE
+                     4
+#else
+                     3
+#endif
+                   );
 
   mCreateButton = new QPushButton( i18nc( "street/postal", "New..." ), this );
   connect( mCreateButton, SIGNAL( clicked() ), this, SLOT( createAddress() ) );
@@ -251,10 +264,17 @@ AddressEditWidget::AddressEditWidget( QWidget *parent )
   connect( mEditButton, SIGNAL( clicked() ), this, SLOT( editAddress() ) );
   mDeleteButton = new QPushButton( i18nc( "street/postal", "Delete" ), this );
   connect( mDeleteButton, SIGNAL( clicked() ), this, SLOT( deleteAddress() ) );
+#ifdef HAVE_MARBLE
+  QPushButton *button = new QPushButton( i18n( ">>" ), this );
+  connect( button, SIGNAL(clicked()), SLOT(addressToMap()) );
+#endif
 
   layout->addWidget( mCreateButton, 2, 0 );
   layout->addWidget( mEditButton, 2, 1 );
   layout->addWidget( mDeleteButton, 2, 2 );
+#ifdef HAVE_MARBLE
+  layout->addWidget( button, 2, 3 );
+#endif
 
   updateButtons();
 }
@@ -379,6 +399,16 @@ void AddressEditWidget::storeContact( KABC::Addressee &contact ) const
     if ( !address.isEmpty() )
       contact.insertAddress( address );
   }
+}
+
+void AddressEditWidget::addressToMap()
+{
+#ifdef HAVE_MARBLE
+  KABC::Address addr = mAddressSelectionWidget->currentAddress();
+  if ( addr.isEmpty() )
+    return;
+  emit centerOnAddress( addr );
+#endif
 }
 
 

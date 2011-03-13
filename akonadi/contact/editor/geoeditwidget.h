@@ -32,6 +32,7 @@
 namespace KABC
 {
 class Addressee;
+class Address;
 }
 
 namespace Marble
@@ -44,6 +45,7 @@ namespace Marble
 using Marble::GeoDataCoordinates; // FIXME: marble doesn't use fully qualified type names in its signals...
 using Marble::GeoDataPlacemark;
 
+class QAbstractItemModel;
 class QDoubleSpinBox;
 class QLabel;
 class QPushButton;
@@ -66,15 +68,24 @@ class GeoEditWidget : public QWidget
 
     void setReadOnly( bool readOnly );
 
+  public Q_SLOTS:
+#ifdef HAVE_MARBLE
+    void centerOnAddress( const KABC::Address &addr );
+#endif
+
   private Q_SLOTS:
     void changeClicked();
 #ifdef HAVE_MARBLE
     void copyAddressClicked();
     void reverseGeocodingFinished( const GeoDataCoordinates &coord, const GeoDataPlacemark &placemark );
+    void searchResultChanged( QAbstractItemModel *model );
 #endif
 
   private:
     void updateView();
+#ifdef HAVE_MARBLE
+    void setupRunnerManager();
+#endif
 
 #ifndef HAVE_MARBLE
     GeoMapWidget *mMap;

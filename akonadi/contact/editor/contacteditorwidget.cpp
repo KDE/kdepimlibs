@@ -19,6 +19,7 @@
     02110-1301, USA.
 */
 
+#include "config-akonadi-contact.h"
 #include "contacteditorwidget.h"
 
 #include "addresseditwidget.h"
@@ -290,6 +291,10 @@ void ContactEditorWidget::Private::initGuiLocationTab()
   mCoordinatesWidget = new GeoEditWidget;
   coordinatesLayout->addWidget( mCoordinatesWidget, 0, 0 );
   coordinatesLayout->setRowStretch( 1, 1 );
+
+#ifdef HAVE_MARBLE
+  connect(mAddressesWidget, SIGNAL(centerOnAddress(KABC::Address)), mCoordinatesWidget, SLOT(centerOnAddress(KABC::Address)) );
+#endif
 }
 
 void ContactEditorWidget::Private::initGuiBusinessTab()
