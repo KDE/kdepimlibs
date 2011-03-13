@@ -116,6 +116,7 @@ GeoEditWidget::GeoEditWidget( QWidget *parent )
   mMap->setShowOverviewMap( false );
   mMap->setShowCompass( false );
   mMap->setShowCrosshairs( true );
+  mMap->setProjection( Marble::Mercator );
   layout->addWidget( mMap, 0, 0, 1, 4 );
 #endif
 
