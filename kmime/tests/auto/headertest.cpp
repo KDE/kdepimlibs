@@ -909,7 +909,8 @@ void HeaderTest::testInvalidQEncoding()
   using namespace HeaderParsing;
   QFETCH( QString,encodedWord );
 
-  const char *data = encodedWord.toAscii().data();
+  QByteArray tmp = encodedWord.toAscii();
+  const char *data = tmp.data();
   const char *start = data + 1;
   const char *end = data + strlen( data );
   QString result;
