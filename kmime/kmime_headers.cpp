@@ -1277,7 +1277,7 @@ kmime_mk_trivial_ctor_with_name( MessageID, Generics::SingleIdent, Message-ID )
 
 void MessageID::generate( const QByteArray &fqdn )
 {
-  setIdentifier( uniqueString() + '@' + fqdn + '>' );
+  setIdentifier( '<' + uniqueString() + '@' + fqdn + '>' );
 }
 
 //-----</MessageID>----------------------------
