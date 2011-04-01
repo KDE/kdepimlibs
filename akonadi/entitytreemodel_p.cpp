@@ -1261,7 +1261,7 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched( const Akonadi::Collecti
   }
 }
 
-Collection::List EntityTreeModelPrivate::getParentCollections( const Item &item ) const
+Akonadi::Collection::List EntityTreeModelPrivate::getParentCollections( const Item &item ) const
 {
   Collection::List list;
   QHashIterator<Collection::Id, QList<Node*> > iter( m_childEntities );
@@ -1276,7 +1276,7 @@ Collection::List EntityTreeModelPrivate::getParentCollections( const Item &item 
   return list;
 }
 
-Collection EntityTreeModelPrivate::getParentCollection( const Collection &collection ) const
+Akonadi::Collection EntityTreeModelPrivate::getParentCollection( const Collection &collection ) const
 {
   return m_collections.value( collection.parentCollection().id() );
 }

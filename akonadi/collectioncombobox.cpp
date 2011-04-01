@@ -142,7 +142,7 @@ void CollectionComboBox::setAccessRightsFilter( Collection::Rights rights )
   d->mRightsFilterModel->setAccessRights( rights );
 }
 
-Collection::Rights CollectionComboBox::accessRightsFilter() const
+Akonadi::Collection::Rights CollectionComboBox::accessRightsFilter() const
 {
   return d->mRightsFilterModel->accessRights();
 }

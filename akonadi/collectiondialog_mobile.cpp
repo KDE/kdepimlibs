@@ -204,7 +204,7 @@ void CollectionDialog::setAccessRightsFilter( Collection::Rights rights )
   d->mCollectionComboBox->setAccessRightsFilter( rights );
 }
 
-Collection::Rights CollectionDialog::accessRightsFilter() const
+Akonadi::Collection::Rights CollectionDialog::accessRightsFilter() const
 {
   return d->mCollectionComboBox->accessRightsFilter();
 }
