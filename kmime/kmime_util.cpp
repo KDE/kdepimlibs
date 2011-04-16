@@ -287,6 +287,11 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
       usedCS = charset;
   }
 
+  if ( !codec->canEncode( src ) ) {
+    usedCS = "utf-8";
+    codec = QTextCodec::codecForName( usedCS );
+  }
+
   if ( usedCS.contains( "8859-" ) ) { // use "B"-Encoding for non iso-8859-x charsets
     useQEncoding = true;
   }

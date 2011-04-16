@@ -165,7 +165,7 @@ KMIME_EXPORT extern QString decodeRFC2047String( const QByteArray &src );
   Encodes string @p src according to RFC2047 using charset @p charset.
 
   @param src           source string.
-  @param charset       charset to use.
+  @param charset       charset to use. If it can't encode the string, UTF-8 will be used instead.
   @param addressHeader if this flag is true, all special chars
                        like <,>,[,],... will be encoded, too.
   @param allow8bitHeaders if this flag is true, 8Bit headers are allowed.
