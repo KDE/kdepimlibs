@@ -608,8 +608,9 @@ class KMIME_EXPORT Content
     // have this Content as a parent.
 
     /**
-      Returns the charset that is used for all headers and the body
-      if the charset is not declared explictly.
+      Returns the charset that is used to decode RFC2047 strings in all headers and to decode
+      the body if the charset is not declared explictly.
+      It is also used as the charset when encoding RFC2047 strings in headers.
 
       @see setDefaultCharset()
     */
