@@ -614,6 +614,8 @@ class KMIME_EXPORT Content
 
       @see setDefaultCharset()
     */
+    // TODO: Split this up into a charset for encoding and one for decoding, and make the one for
+    //       encoding UTF-8 by default.
     QByteArray defaultCharset() const;
 
     /**
