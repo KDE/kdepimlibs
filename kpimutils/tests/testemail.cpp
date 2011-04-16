@@ -554,14 +554,21 @@ void EMailTest::testQuoteIfNecessary_data()
 
 void EMailTest::testMailtoUrls()
 {
-  KUrl u1 = encodeMailtoUrl( "tokoe@domain.com" );
-  QCOMPARE( u1.protocol().toAscii().data(), "mailto" );
-  QCOMPARE( u1.path().toAscii().data(), "tokoe@domain.com" );
-  const QString someMailbox = QString::fromLatin1( "\"Tobias König\" <tokoe@domain.com>" );
-  QCOMPARE( decodeMailtoUrl( encodeMailtoUrl( someMailbox ) ), someMailbox );
-
-  // Not sure if this is entirely correct, it is a bit strange that the leading quotation mark is
-  // not encoded, but the closing quotation mark is...
-  QCOMPARE( encodeMailtoUrl( someMailbox ).path().toAscii().data(),
-            "\"Tobias =?utf-8?B?S8ODwrZuaWci?= <tokoe@domain.com>" );
+  QFETCH( QString, input );
+  const KUrl url = encodeMailtoUrl( input );
+  qDebug() << url;
+  QCOMPARE( url.protocol().toAscii().data(), "mailto" );
+  QCOMPARE( decodeMailtoUrl( url ), input );
+  qDebug() << decodeMailtoUrl( url );
 }
+
+void EMailTest::testMailtoUrls_data()
+{
+  QTest::addColumn<QString>( "input" );
+
+  QTest::newRow( "" ) << "tokoe@domain.com";
+  QTest::newRow( "" ) << QString::fromUtf8( "\"Tobias König\" <tokoe@domain.com>" );
+  QTest::newRow( "" ) << QString::fromUtf8( "\"Alberto Simões\" <alberto@example.com" );
+  QTest::newRow( "" ) << QString::fromUtf8( "Alberto Simões <alberto@example.com" );
+}
+

@@ -45,6 +45,7 @@ class EMailTest : public QObject
     void testQuoteIfNecessary();
     void testQuoteIfNecessary_data();
     void testMailtoUrls();
+    void testMailtoUrls_data();
 };
 
 #endif
