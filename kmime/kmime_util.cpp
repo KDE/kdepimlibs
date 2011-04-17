@@ -266,7 +266,7 @@ QString decodeRFC2047String( const QByteArray &src )
 QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
                                 bool addressHeader, bool allow8BitHeaders )
 {
-  QByteArray encoded8Bit, result;
+  QByteArray result;
   int start=0, end=0;
   bool nonAscii=false, ok=true, useQEncoding=false;
 
@@ -287,16 +287,17 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
       usedCS = charset;
   }
 
-  if ( !codec->canEncode( src ) ) {
+  QTextCodec::ConverterState converterState( QTextCodec::IgnoreHeader );
+  QByteArray encoded8Bit = codec->fromUnicode( src.constData(), src.length(), &converterState );
+  if ( converterState.invalidChars > 0 ) {
     usedCS = "utf-8";
     codec = QTextCodec::codecForName( usedCS );
+    encoded8Bit = codec->fromUnicode( src );
   }
 
   if ( usedCS.contains( "8859-" ) ) { // use "B"-Encoding for non iso-8859-x charsets
     useQEncoding = true;
   }
-
-  encoded8Bit = codec->fromUnicode( src );
 
   if ( allow8BitHeaders ) {
     return encoded8Bit;
