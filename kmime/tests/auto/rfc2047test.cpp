@@ -114,4 +114,10 @@ void RFC2047Test::testRFC2047encode()
   QEXPECT_FAIL( "", "libkmime will chose 'B' instead of 'Q' encoding", Continue );
   QCOMPARE( KMime::encodeRFC2047String( QString::fromUtf8( "Ingo Klöcker <kloecker@kde.org>" ), "utf-8" ).constData(),
             "=?utf-8?q?Ingo=20Kl=C3=B6cker?= <kloecker@kde.org>" );
+
+  // Fallback to UTF-8 for encoding since the given charset can't encode the string
+  const QString input = QString::fromUtf8( "æſðđŋħł" );
+  const QByteArray result = KMime::encodeRFC2047String( input, "latin1" );
+  QCOMPARE( decodeRFC2047String( result ), input );
+  QVERIFY( result.contains( "utf-8" ) );
 }
