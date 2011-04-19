@@ -171,7 +171,7 @@ void HeaderTest::testAddressListHeader()
     h = new Headers::Generics::AddressList();
     const QString testAddress = QString::fromUtf8( "\"Rüedi-Huser, Thomas\" <test@test.org>" );
     h->fromUnicodeString( testAddress, "utf-8" );
-    QEXPECT_FAIL( "", "quoted display name is not RFC2047-encoded correctly inside KMime::encodeRFC2047String()", Continue );
+    QEXPECT_FAIL( "", "AddressList::prettyAddresses() does not quote the mailbox correctly", Continue );
     QCOMPARE( h->asUnicodeString(), testAddress );
     delete h;
   }
