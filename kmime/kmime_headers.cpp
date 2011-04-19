@@ -41,6 +41,7 @@
 #include "kmime_headers_p.h"
 
 #include "kmime_util.h"
+#include "kmime_util_p.h"
 #include "kmime_content.h"
 #include "kmime_codecs.h"
 #include "kmime_header_parsing.h"
@@ -409,7 +410,7 @@ void MailboxList::fromUnicodeString( const QString &s, const QByteArray &b )
 {
   Q_D(MailboxList);
   d->encCS = cachedCharset( b );
-  from7BitString( encodeRFC2047String( s, b, false ) );
+  from7BitString( encodeRFC2047Sentence( s, b ) );
 }
 
 QString MailboxList::asUnicodeString() const
@@ -561,7 +562,7 @@ void AddressList::fromUnicodeString( const QString &s, const QByteArray &b )
 {
   Q_D(AddressList);
   d->encCS = cachedCharset( b );
-  from7BitString( encodeRFC2047String( s, b, false ) );
+  from7BitString( encodeRFC2047Sentence( s, b ) );
 }
 
 QString AddressList::asUnicodeString() const
