@@ -295,6 +295,8 @@ EmailParseResult KPIMUtils::splitAddress( const QString &address,
                                           QString &comment )
 {
   QByteArray d, a, c;
+  // FIXME: toUtf8() is probably not safe here, what if the second byte of a multi-byte character
+  //        has the same code as one of the ASCII characters that splitAddress uses as delimiters?
   EmailParseResult result = splitAddress( address.toUtf8(), d, a, c );
 
   if ( result == AddressOk ) {
