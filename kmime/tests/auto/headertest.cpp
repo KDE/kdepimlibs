@@ -918,4 +918,53 @@ void HeaderTest::testInvalidQEncoding()
   QVERIFY( !parseEncodedWord( start, end, result, language, usedCS ) );
 }
 
+void HeaderTest::testBug271192()
+{
+  QFETCH( QString, displayName );
+  QFETCH( bool, quote );
+
+  const QString addrSpec = QLatin1String( "example@example.com" );
+  const QString mailbox = (quote ? QLatin1String("\"") : QString()) + displayName +
+                          (quote ? QLatin1String("\"") : QString()) +
+                          QLatin1String(" <") + addrSpec + QLatin1String(">");
+
+  Headers::Generics::SingleMailbox *h = new Headers::Generics::SingleMailbox();
+  h->fromUnicodeString( mailbox, "utf-8" );
+  QCOMPARE( h->displayNames().size(), 1 );
+  QCOMPARE( h->displayNames().first().toUtf8(), displayName.remove( QLatin1String("\\") ).toUtf8() );
+  delete h;
+  h = 0;
+
+  Headers::Generics::MailboxList *h2 = new Headers::Generics::MailboxList();
+  h2->fromUnicodeString( mailbox + QLatin1String(",") + mailbox, "utf-8" );
+  QCOMPARE( h2->displayNames().size(), 2 );
+  QCOMPARE( h2->displayNames()[0].toUtf8(), displayName.remove( QLatin1String("\\") ).toUtf8() );
+  QCOMPARE( h2->displayNames()[1].toUtf8(), displayName.remove( QLatin1String("\\") ).toUtf8() );
+  delete h2;
+  h2 = 0;
+}
+
+void HeaderTest::testBug271192_data()
+{
+  QTest::addColumn<QString>("displayName");
+  QTest::addColumn<bool>("quote");
+
+  QTest::newRow("Plain") << QString::fromUtf8( "John Doe" ) << false;
+  QTest::newRow("Firstname 1") << QString::fromUtf8( "Marc-André Lastname" ) << false;
+  QTest::newRow("Firstname 2") << QString::fromUtf8( "Интернет-компания Lastname" ) << false;
+  QTest::newRow("Lastname") << QString::fromUtf8( "Tobias König" ) << false;
+  QTest::newRow("Firstname + Lastname") << QString::fromUtf8( "Интернет-компания König" ) << false;
+  QTest::newRow("Quotemarks") << QString::fromUtf8( "John \\\"Rocky\\\" Doe" ) << true;
+  QTest::newRow("Quotemarks") << QString::fromUtf8( "Jöhn \\\"Röcky\\\" Döe" ) << true;
+
+  QTest::newRow("Plain") << QString::fromUtf8( "John Doe" ) << true;
+  QTest::newRow("Firstname 1") << QString::fromUtf8( "Marc-André Lastname" ) << true;
+  QTest::newRow("Firstname 2") << QString::fromUtf8( "Интернет-компания Lastname" ) << true;
+  QTest::newRow("Lastname") << QString::fromUtf8( "Tobias König" ) << true;
+  QTest::newRow("Firstname + Lastname") << QString::fromUtf8( "Интернет-компания König" ) << true;
+  QTest::newRow("LastName, Firstname") << QString::fromUtf8( "König, Интернет-компания" ) << true;
+}
+
+
+
 #include "headertest.moc"
