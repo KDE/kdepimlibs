@@ -189,7 +189,7 @@ QString Mailbox::prettyAddress( Quoting quoting ) const
 
 void Mailbox::fromUnicodeString( const QString &s )
 {
-  from7BitString( encodeRFC2047String( s, "utf-8", false ) );
+  from7BitString( encodeRFC2047Sentence( s, "utf-8" ) );
 }
 
 void Mailbox::from7BitString( const QByteArray &s )
