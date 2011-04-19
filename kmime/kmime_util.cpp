@@ -263,6 +263,8 @@ QString decodeRFC2047String( const QByteArray &src )
   return decodeRFC2047String( src, usedCS, "utf-8", false );
 }
 
+static const char *reservedCharacters = "\"()<>@,.;:\\[]=";
+
 QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
                                 bool addressHeader, bool allow8BitHeaders )
 {
@@ -326,7 +328,7 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
 
     for ( int x=end; x<encoded8Bit.length(); x++ ) {
       if ( ( (signed char)encoded8Bit[x]<0) || ( encoded8Bit[x] == '\033' ) ||
-           ( addressHeader && ( strchr("\"()<>@,.;:\\[]=",encoded8Bit[x]) != 0 ) ) ) {
+           ( addressHeader && ( strchr(reservedCharacters, encoded8Bit[x]) != 0 ) ) ) {
         end = x;     // we found another non-ascii word
 
         while ( ( end < encoded8Bit.length() ) && ( encoded8Bit[end] != ' ' ) ) {
@@ -378,6 +380,48 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
 
   return result;
 }
+
+QByteArray encodeRFC2047Sentence(const QString& src, const QByteArray& charset )
+{
+  QByteArray result;
+  QList<QChar> splitChars;
+  splitChars << QLatin1Char(',') << QLatin1Char('\"') << QLatin1Char(';') << QLatin1Char('\\');
+  const QChar *ch = src.constData();
+  const int length = src.length();
+  int pos = 0;
+  int wordStart = 0;
+
+  //qDebug() << "Input:" << src;
+  // Loop over all characters of the string.
+  // When encountering a split character, RFC-2047-encode the word before it, and add it to the result.
+  while (pos < length) {
+    //qDebug() << "Pos:" << pos << "Result:" << result << "Char:" << ch->toAscii();
+    const bool isAscii = ch->unicode() < 127;
+    const bool isReserved = (strchr( reservedCharacters, ch->toAscii() ) != 0);
+    if ( isAscii && isReserved ) {
+      const int wordSize = pos - wordStart;
+      if (wordSize > 0) {
+        const QString word = src.mid( wordStart, wordSize );
+        result += encodeRFC2047String( word, charset );
+      }
+
+      result += ch->toAscii();
+      wordStart = pos + 1;
+    }
+    ch++;
+    pos++;
+  }
+
+  // Encode the last word
+  const int wordSize = pos - wordStart;
+  if (wordSize > 0) {
+    const QString word = src.mid( wordStart, pos - wordStart );
+    result += encodeRFC2047String( word, charset );
+  }
+
+  return result;
+}
+
 
 
 //-----------------------------------------------------------------------------

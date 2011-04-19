@@ -49,6 +49,13 @@ extern int indexOfHeader( const QByteArray &src, const QByteArray &name, int &en
 // This is used in zero places at the moment.
 extern void removeHeader( QByteArray &head, const QByteArray &name );
 
+/**
+ * Same as encodeRFC2047String(), but with a crucial difference: Instead of encoding the complete
+ * string as a single encoded word, the string will be split up at control characters, and only parts of
+ * the sentence that really need to be encoded will be encoded.
+ */
+extern QByteArray encodeRFC2047Sentence( const QString &src, const QByteArray &charset );
+
 }
 
 // @endcond
