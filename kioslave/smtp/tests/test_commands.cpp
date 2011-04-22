@@ -661,7 +661,7 @@ void checkSuccessfulTransferCommand( bool error, bool preload, bool ungetLast,
     assert( !ts.failed() );
     assert( smtp.lastErrorCode == 0 );
   }
-};
+}
 
 #define NDEBUG
 

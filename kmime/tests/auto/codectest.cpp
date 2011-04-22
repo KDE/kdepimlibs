@@ -29,7 +29,7 @@ using namespace KMime;
 QTEST_KDEMAIN( CodecTest, NoGUI )
 
 enum Mode { Decode, Encode };
-Q_DECLARE_METATYPE( Mode );
+Q_DECLARE_METATYPE( Mode )
 
 void CodecTest::testCodecs_data()
 {
