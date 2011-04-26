@@ -384,10 +384,8 @@ bool KTNEFParser::ParserPrivate::parseDevice()
   quint8  c;
 
   message_->clearAttachments();
-  if ( current_ ) {
-    delete current_;
-    current_ = 0;
-  }
+  delete current_;
+  current_ = 0;
 
   if ( !device_->open( QIODevice::ReadOnly ) ) {
     kDebug() << "Couldn't open device";

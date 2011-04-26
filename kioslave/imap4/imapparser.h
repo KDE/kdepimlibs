@@ -105,7 +105,7 @@ public:
 
   ~imapCache ()
   {
-    if (myHeader) delete myHeader;
+    delete myHeader;
   }
 
   mailHeader *getHeader ()
@@ -154,7 +154,7 @@ public:
   }
   void clear()
   {
-    if (myHeader) delete myHeader;
+    delete myHeader;
     myHeader = NULL;
     mySize = 0;
     myFlags = 0;
