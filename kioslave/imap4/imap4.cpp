@@ -1230,7 +1230,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     KUrl src;
     KUrl dest;
     stream >> src >> dest;
-    copy(src, dest, 0, false);
+    copy(src, dest, 0, KIO::DefaultFlags);
     break;
   }
   case 'c':
