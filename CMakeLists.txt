@@ -143,10 +143,6 @@ if(WINCE)
   add_definitions(-DKDELIBS_STATIC_LIBS)
 endif(WINCE)
 
-if(MSVC)
-  add_definitions(-DBOOST_ALL_NO_LIB)
-endif(MSVC)
-
 if(STATIC_LIBRARY)
   set(LIBRARY_TYPE STATIC)
   add_definitions(-DKDEPIM_STATIC_LIBS)
