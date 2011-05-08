@@ -19,8 +19,8 @@ if(WINCE)
 endif(WINCE)
 
 set (QT_MIN_VERSION "4.6.0")
-# kdepim depends on the latest released version of KDE 4.4
-find_package(KDE4 4.5.0 REQUIRED)
+# kdepim depends on the latest released version of kdelibs, ie. 4.x kdepim depends on 4.x-1 kdelibs
+find_package(KDE4 4.6.0 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(KDEPlatformProfile)
