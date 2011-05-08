@@ -18,7 +18,7 @@ if(WINCE)
     set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
 endif(WINCE)
 
-set (QT_MIN_VERSION "4.6.0")
+set (QT_MIN_VERSION "4.7.0")
 # kdepim depends on the latest released version of kdelibs, ie. 4.x kdepim depends on 4.x-1 kdelibs
 find_package(KDE4 4.6.0 REQUIRED)
 include(KDE4Defaults)
