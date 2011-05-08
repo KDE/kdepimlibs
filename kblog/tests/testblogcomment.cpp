@@ -26,13 +26,8 @@
 #include "kblog/blogcomment.h"
 #include "kurl.h"
 #include "kdatetime.h"
-#include "kdeversion.h"
 
 Q_DECLARE_METATYPE( KBlog::BlogComment::Status )
-
-#if !KDE_IS_VERSION(4,4,92)
-Q_DECLARE_METATYPE( KDateTime )
-#endif
 
 using namespace KBlog;
 

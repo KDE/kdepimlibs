@@ -23,17 +23,12 @@
 #include <QtCore>
 
 #include <qtest_kde.h>
-#include <kdeversion.h>
 #include "kblog/blogpost.h"
 #include "kurl.h"
 #include "kdatetime.h"
 
 Q_DECLARE_METATYPE( QList<KUrl> )
 Q_DECLARE_METATYPE( KBlog::BlogPost::Status )
-
-#if !KDE_IS_VERSION(4,4,92)
-Q_DECLARE_METATYPE( KDateTime )
-#endif
 
 using namespace KBlog;
 
