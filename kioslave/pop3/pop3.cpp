@@ -900,9 +900,9 @@ void POP3Protocol::get(const KUrl & url)
     bool firstCommand = true;
     while (it != waitingCommands.end() || activeCommands > 0) {
       while (activeCommands < maxCommands && it != waitingCommands.end()) {
-        sendCommand(((cmd ==
-                      "headers") ? "TOP " + *it + " 0" : "RETR " +
-                     *it).toLatin1());
+        sendCommand(QString((cmd ==
+                      "headers") ? QString("TOP " + *it + " 0") : QString("RETR " +
+                     *it)).toLatin1());
         activeCommands++;
         it++;
       }

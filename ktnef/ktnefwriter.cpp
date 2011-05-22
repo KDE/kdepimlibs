@@ -223,7 +223,7 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag ) cons
     assert( list.count() == 2 );
 
     cs = list[0].toString().toLocal8Bit();                           // Name
-    cs2 = ( QString( "smtp:" ) + list[1].toString() ).toLocal8Bit(); // Email address
+    cs2 = QString( QLatin1String( "smtp:" ) + list[1].toString() ).toLocal8Bit(); // Email address
     i = 18 + cs.length() + cs2.length(); // 2 * sizof(TRP) + strings + 2x'\0'
 
     stream << (quint8)LVL_MESSAGE;
