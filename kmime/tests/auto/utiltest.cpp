@@ -16,6 +16,10 @@
     Boston, MA 02110-1301, USA.
 */
 
+#undef QT_USE_FAST_CONCATENATION
+#undef QT_USE_FAST_OPERATOR_PLUS
+
+
 #include <qtest_kde.h>
 
 #include "utiltest.h"
