@@ -64,7 +64,7 @@ HeaderFactoryPrivate::HeaderFactoryPrivate()
 
 HeaderFactoryPrivate::~HeaderFactoryPrivate()
 {
-  qDeleteAll( headerMakers.values() );
+  qDeleteAll( headerMakers );
   delete instance;
 }
 
