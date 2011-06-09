@@ -33,8 +33,11 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <kglobal.h>
 
 #include <QtCore/QStringList>
+
+static const KCatalogLoader loader("libkcal");
 
 using namespace KCal;
 
