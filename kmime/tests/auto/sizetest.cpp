@@ -38,7 +38,7 @@ class SizeTest : public QObject
       qDebug() << sizeof(Content);
       QVERIFY( sizeof(Content) <= 24 );
       qDebug() << sizeof(ContentPrivate);
-      QVERIFY( sizeof(ContentPrivate) <= 112 );
+      QVERIFY( sizeof(ContentPrivate) <= 104 );
       qDebug() << sizeof(Message);
       QCOMPARE( sizeof(Message), sizeof(Content) );
       qDebug() << sizeof(MessagePrivate);

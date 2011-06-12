@@ -34,9 +34,11 @@ namespace KMime {
 class ContentPrivate
 {
   public:
-    ContentPrivate( Content *q )
-      : forceDefaultCS( false ), parent( 0 ), frozen( false )
-      , q_ptr( q )
+    ContentPrivate( Content *q ) :
+      parent( 0 ),
+      q_ptr( q ),
+      forceDefaultCS( false ),
+      frozen( false )
     {
       defaultCS = KMime::cachedCharset( "ISO-8859-1" );
     }
@@ -64,15 +66,16 @@ class ContentPrivate
     QByteArray defaultCS;
     QByteArray preamble;
     QByteArray epilogue;
-    bool forceDefaultCS;
     Content *parent;
-    bool frozen;
 
     Content::List multipartContents;
     MessagePtr bodyAsMessage;
 
     Content* q_ptr;
     Q_DECLARE_PUBLIC( Content )
+
+    bool forceDefaultCS : 1;
+    bool frozen : 1;
 };
 
 }
