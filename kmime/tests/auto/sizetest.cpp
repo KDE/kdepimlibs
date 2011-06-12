@@ -75,9 +75,35 @@ class SizeTest : public QObject
       QCOMPARE( sizeof(Lines), sizeof(Base) );
     }
 
+#define VERIFYSIZE( class, limit ) \
+  qDebug() << #class << sizeof(class); \
+  QVERIFY( sizeof(class) <= limit );
+
     void testHeadersPrivate()
     {
-      qDebug() << sizeof(BasePrivate);
+      VERIFYSIZE( BasePrivate, 24 );
+      VERIFYSIZE( UnstructuredPrivate, 32 );
+      VERIFYSIZE( StructuredPrivate, sizeof(BasePrivate) ); // empty
+      VERIFYSIZE( AddressPrivate, sizeof(StructuredPrivate) );
+      VERIFYSIZE( MailboxListPrivate, 32 );
+      VERIFYSIZE( SingleMailboxPrivate, sizeof(MailboxListPrivate) );
+      VERIFYSIZE( AddressListPrivate, 32 );
+      VERIFYSIZE( IdentPrivate, 48 );
+      VERIFYSIZE( SingleIdentPrivate, sizeof(IdentPrivate) );
+      VERIFYSIZE( TokenPrivate, 32 );
+      VERIFYSIZE( PhraseListPrivate, 32 );
+      VERIFYSIZE( DotAtomPrivate, 32 );
+      VERIFYSIZE( ParametrizedPrivate, 32 );
+      VERIFYSIZE( ReturnPathPrivate, 48 );
+      VERIFYSIZE( MailCopiesToPrivate, 40 );
+      VERIFYSIZE( ContentTransferEncodingPrivate, 40 );
+      VERIFYSIZE( ContentIDPrivate, 40 );
+      VERIFYSIZE( ContentTypePrivate, 56 );
+      VERIFYSIZE( GenericPrivate, 40 );
+      VERIFYSIZE( ControlPrivate, 40 );
+      VERIFYSIZE( DatePrivate, 32 );
+      VERIFYSIZE( NewsgroupsPrivate, 32 );
+      VERIFYSIZE( LinesPrivate, 32 );
     }
 };
 
