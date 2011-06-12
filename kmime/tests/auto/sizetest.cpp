@@ -98,7 +98,7 @@ class SizeTest : public QObject
       VERIFYSIZE( MailCopiesToPrivate, 40 );
       VERIFYSIZE( ContentTransferEncodingPrivate, 40 );
       VERIFYSIZE( ContentIDPrivate, 40 );
-      VERIFYSIZE( ContentTypePrivate, 56 );
+      VERIFYSIZE( ContentTypePrivate, 48 );
       VERIFYSIZE( GenericPrivate, 40 );
       VERIFYSIZE( ControlPrivate, 40 );
       VERIFYSIZE( DatePrivate, 32 );

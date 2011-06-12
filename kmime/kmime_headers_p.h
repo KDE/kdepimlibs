@@ -123,9 +123,8 @@ class ContentTransferEncodingPrivate : public Generics::TokenPrivate
 class ContentTypePrivate : public Generics::ParametrizedPrivate
 {
   public:
-    contentCategory category;
     QByteArray mimeType;
-    QByteArray mimeSubType;
+    contentCategory category;
 };
 
 class ContentDispositionPrivate : public Generics::ParametrizedPrivate

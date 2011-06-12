@@ -1702,7 +1702,6 @@ void ContentType::clear()
   Q_D(ContentType);
   d->category = CCsingle;
   d->mimeType.clear();
-  d->mimeSubType.clear();
   Parametrized::clear();
 }
 
@@ -1728,35 +1727,33 @@ QByteArray ContentType::as7BitString( bool withHeaderType ) const
 QByteArray ContentType::mimeType() const
 {
   Q_D(const ContentType);
-  QByteArray mt;
-  mt.reserve( d->mimeType.size() + d->mimeSubType.size() + 1 );
-  mt.append( d->mimeType );
-  mt.append( '/' );
-  mt.append( d->mimeSubType );
-  return mt;
+  return d->mimeType;
 }
 
 QByteArray ContentType::mediaType() const
 {
-  return d_func()->mimeType;
+  Q_D(const ContentType);
+  const int pos = d->mimeType.indexOf( '/' );
+  if ( pos < 0 )
+    return d->mimeType;
+  else
+    return d->mimeType.left( pos );
 }
 
 QByteArray ContentType::subType() const
 {
-  return d_func()->mimeSubType;
+  Q_D(const ContentType);
+  const int pos = d->mimeType.indexOf( '/' );
+  if ( pos < 0 )
+    return QByteArray();
+  else
+    return d->mimeType.mid( pos + 1);
 }
 
 void ContentType::setMimeType( const QByteArray &mimeType )
 {
   Q_D(ContentType);
-  int pos = mimeType.indexOf( '/' );
-  if ( pos < 0 ) {
-    d->mimeType = mimeType;
-    d->mimeSubType.clear();
-  } else {
-    d->mimeType = mimeType.left( pos );
-    d->mimeSubType = mimeType.mid( pos + 1 );
-  }
+  d->mimeType = mimeType;
   Parametrized::clear();
 
   if ( isMultipart() ) {
@@ -1768,44 +1765,49 @@ void ContentType::setMimeType( const QByteArray &mimeType )
 
 bool ContentType::isMediatype( const char *mediatype ) const
 {
-  return strncasecmp( mediaType().constData(), mediatype, strlen( mediatype ) ) == 0;
+  Q_D(const ContentType);
+  const int len = strlen( mediatype );
+  return strncasecmp( d->mimeType.constData(), mediatype, len ) == 0 && (d->mimeType.at(len) == '/' || d->mimeType.size() == len);
 }
 
 bool ContentType::isSubtype( const char *subtype ) const
 {
-  return strncasecmp( subType().constData(), subtype, strlen( subtype ) ) == 0;
+  Q_D(const ContentType);
+  const int pos = d->mimeType.indexOf( '/' );
+  if ( pos < 0 )
+    return false;
+  const int len = strlen( subtype );
+  return strncasecmp( d->mimeType.constData() + pos + 1, subtype, len ) == 0 && d->mimeType.size() == pos + len + 1;
 }
 
 bool ContentType::isText() const
 {
-  return ( strncasecmp( mediaType().constData(), "text", 4 ) == 0
-          || isEmpty() );
+  return ( isMediatype( "text" ) || isEmpty() );
 }
 
 bool ContentType::isPlainText() const
 {
-  return ( strcasecmp( mimeType().constData(), "text/plain" ) == 0
-          || isEmpty() );
+  return ( strcasecmp( d_func()->mimeType.constData(), "text/plain" ) == 0 || isEmpty() );
 }
 
 bool ContentType::isHTMLText() const
 {
-  return strcasecmp( mimeType().constData(), "text/html" ) == 0;
+  return strcasecmp( d_func()->mimeType.constData(), "text/html" ) == 0;
 }
 
 bool ContentType::isImage() const
 {
-  return strncasecmp( mediaType().constData(), "image", 5 ) == 0;
+  return isMediatype( "image" );
 }
 
 bool ContentType::isMultipart() const
 {
-  return strncasecmp( mediaType().constData(), "multipart", 9 ) == 0;
+  return isMediatype( "multipart" );
 }
 
 bool ContentType::isPartial() const
 {
-  return strcasecmp( mimeType().constData(), "message/partial" ) == 0;
+  return strcasecmp( d_func()->mimeType.constData(), "message/partial" ) == 0;
 }
 
 QByteArray ContentType::charset() const
@@ -1909,7 +1911,6 @@ bool ContentType::parse( const char* &scursor, const char * const send,
   if ( !parseToken( scursor, send, maybeMimeType, false /* no 8Bit */ ) ) {
     return false;
   }
-  d->mimeType = QByteArray( maybeMimeType.first, maybeMimeType.second ).toLower();
 
   // subtype
   eatCFWS( scursor, send, isCRLF );
@@ -1926,7 +1927,10 @@ bool ContentType::parse( const char* &scursor, const char * const send,
   if ( !parseToken( scursor, send, maybeSubType, false /* no 8bit */ ) ) {
     return false;
   }
-  d->mimeSubType = QByteArray( maybeSubType.first, maybeSubType.second ).toLower();
+
+  d->mimeType.reserve( maybeMimeType.second + maybeSubType.second + 1 );
+  d->mimeType = QByteArray( maybeMimeType.first, maybeMimeType.second ).toLower()
+                + '/' + QByteArray( maybeSubType.first, maybeSubType.second ).toLower();
 
   // parameter list
   eatCFWS( scursor, send, isCRLF );
