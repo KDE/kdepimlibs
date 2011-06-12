@@ -24,7 +24,9 @@
 #include <qtest_kde.h>
 #include <QObject>
 
-using namespace KMime; 
+using namespace KMime;
+using namespace KMime::Headers;
+using namespace KMime::Headers::Generics;
 
 // this is to ensure we don't accidentally increase the size of memory hotspots
 // and to help with optimizing memory use of these structures
@@ -43,6 +45,39 @@ class SizeTest : public QObject
       QCOMPARE( sizeof(Message), sizeof(Content) );
       qDebug() << sizeof(MessagePrivate);
       QCOMPARE( sizeof(MessagePrivate), sizeof(ContentPrivate) );
+    }
+
+    void testHeaders()
+    {
+      qDebug() << sizeof(Headers::Base);
+      QVERIFY( sizeof(Base) <= 16 );
+      QCOMPARE( sizeof(Unstructured), sizeof(Base) );
+      QCOMPARE( sizeof(Structured), sizeof(Base) );
+      QCOMPARE( sizeof(Address), sizeof(Base) );
+      QCOMPARE( sizeof(MailboxList), sizeof(Base) );
+      QCOMPARE( sizeof(SingleMailbox), sizeof(Base) );
+      QCOMPARE( sizeof(AddressList), sizeof(Base) );
+      QCOMPARE( sizeof(Ident), sizeof(Base) );
+      QCOMPARE( sizeof(SingleIdent), sizeof(Base) );
+      QCOMPARE( sizeof(Token), sizeof(Base) );
+      QCOMPARE( sizeof(PhraseList), sizeof(Base) );
+      QCOMPARE( sizeof(DotAtom), sizeof(Base) );
+      QCOMPARE( sizeof(Parametrized), sizeof(Base) );
+      QCOMPARE( sizeof(ReturnPath), sizeof(Base) );
+      QCOMPARE( sizeof(MailCopiesTo), sizeof(Base) );
+      QCOMPARE( sizeof(ContentTransferEncoding), sizeof(Base) );
+      QCOMPARE( sizeof(ContentID), sizeof(Base) );
+      QCOMPARE( sizeof(ContentType), sizeof(Base) );
+      QCOMPARE( sizeof(Generic), sizeof(Base) );
+      QCOMPARE( sizeof(Control), sizeof(Base) );
+      QCOMPARE( sizeof(Date), sizeof(Base) );
+      QCOMPARE( sizeof(Newsgroups), sizeof(Base) );
+      QCOMPARE( sizeof(Lines), sizeof(Base) );
+    }
+
+    void testHeadersPrivate()
+    {
+      qDebug() << sizeof(BasePrivate);
     }
 };
 
