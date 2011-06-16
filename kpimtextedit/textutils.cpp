@@ -112,11 +112,13 @@ bool TextUtils::containsFormatting( const QTextDocument *document )
 QString TextUtils::flowText( QString &wrappedText, const QString& indent, int maxLength )
 {
   if ( wrappedText.isEmpty() ) {
-    return indent + QLatin1String( "\n" );
+    return indent;
   }
 
-  if ( maxLength < indent.length() )
+  if ( maxLength <= indent.length() ) {
+    kWarning() << "indent was set to a string that is longer or the same length as maxLength, setting maxLength to indent.length() + 1";
     maxLength = indent.length() + 1;
+  }
 
   maxLength -= indent.length(); // take into account indent
   QString result;
@@ -124,7 +126,7 @@ QString TextUtils::flowText( QString &wrappedText, const QString& indent, int ma
   {
     // first check for the next newline. if it's before maxLength, break there, and continue
     int newLine = wrappedText.indexOf( QLatin1Char( '\n' ) );
-    if( newLine > 0 && newLine < maxLength ) {
+    if( newLine > 0 && newLine <= maxLength ) {
       result += indent + wrappedText.left( newLine + 1  );
       wrappedText = wrappedText.mid( newLine + 1 );
       continue;
@@ -159,5 +161,5 @@ QString TextUtils::flowText( QString &wrappedText, const QString& indent, int ma
       result += indent + line + QLatin1Char( '\n' );
   }
 
-  return result;
+  return result.left( result.length() - 1 );
 }
