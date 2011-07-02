@@ -133,7 +133,7 @@ The \b content-type of this message is \b text/plain, which means that the messa
 other content types will be introduced, such as \b text/html. If there is no \c Content-Type header
 field, it is assumed that the content-type is \c text/plain.
 
-Before MIME was introduced, all messages were limited to the US-ASCII charset. Addtionally, only the
+Before MIME was introduced, all messages were limited to the US-ASCII charset. Only the
 lower 127 values of the bytes were allowed to be used, the so-called \b 7-bit range. Writing a message in
 another charset or using letters from the upper 127 byte values was not allowed.
 
@@ -143,7 +143,7 @@ When talking about charsets, it is important to understand how strings of text a
 byte arrays, and the other way around. A message is nothing else than a big array of bytes.
 The bytes that form the body of the message somehow need to be interpreted as a text string. Interpreting
 a byte array as a text string is called \b decoding the text. Converting a text string to a byte array is called
-\b encoding the text. A \b codec (<b>co</b>der-<b>dec</b>oder) is an utility that can encode and decode text.
+\b encoding the text. A \b codec (<b>co</b>der-<b>dec</b>oder) is a utility that can encode and decode text.
 In Qt, the class for text strings is QString, and the class for byte arrays is QByteArray. The base class
 of all codecs is QTextCodec.
 
@@ -229,7 +229,7 @@ byte array easy for humans.
 The quoted-printable encoding is not a good choice when the input byte array contains lots of bytes
 outside the 7-bit range, as the resulting byte array will be three times as big in the worst case,
 which is a waste of space. Therefore another content transfer encoding was introduced, \b Base64.
-The details of the base64 encoding are to much to write about it here, refer to the
+The details of the base64 encoding are too much to write about here; refer to the
 <a href="http://en.wikipedia.org/wiki/Base64">Wikipedia article</a>
 or the <a href="http://tools.ietf.org/html/rfc2045#section-6.8">RFC</a> for details.
 As an example, the ISO-8859-1 encoded text string "Grüezi Welt!" is, after encoding it with base64,
@@ -239,8 +239,8 @@ is, after encoding it with base64,
 represented by the byte array <code>52 33 4C 38 5A 58 70 70 49 46 64 6C 62 48 51 68</code>
 
 There are two other content transfer encodings besides quoted printable and base64: \b 7-bit and
-\b 8-bit. 7-bit is just a marker to indicate that no content transfer encoding it used. This is the
-case then the byte array is already completley in the 7-bit range, for example when writing English
+\b 8-bit. 7-bit is just a marker to indicate that no content transfer encoding is used. This is the
+case when the byte array is already completley in the 7-bit range, for example when writing English
 text using the US-ASCII charset. 8-bit is also a marker to indicate that no content transfer encoding
 was used. This time, not because it was not necessary, but because of a special exception, byte values
 outside of the 7-bit range are allowed. For example, some SMTP servers support the
@@ -757,7 +757,7 @@ In this case, the \c img tag has the source \c cid:547730348@KDE, which is a pla
 to the Content-Id header of another part. The image part contains exactly that value in its \c Content-Id
 header, and therefore a message viewer application can connect both.
 
-The plain text part can not have inline images, therefore it's text might seem a bit confusing.
+The plain text part can not have inline images, therefore its text might seem a bit confusing.
 
 HTML messages with inline images can of course also have attachments, in which the message structure
 becomes a mix of multipart/related, multipart/alternative and multipart/mixed. The following example

@@ -520,8 +520,15 @@ class KMIME_EXPORT Content
                          bool removeTrailingNewlines = false );
 
     /**
-      Sets the Content body to the given string using the current charset.
-      The content transfer encoding header and the content type header are changed accordingly.
+      Sets the Content body to the given string using charset of the content type.
+
+      If the charset can not be found, the system charset is taken and the content type header is
+      changed to that charset.
+      The charset of the content type header should be set to a charset that can encode the given
+      string before calling this method.
+
+      This method does not set the content transfer encoding automatically, it needs to be set
+      to a suitable value that can encode the given string before calling this method.
 
       This method only makes sense for single-part contents, do not try to pass a multipart body
       or an encapsulated message here, that wouldn't work.
