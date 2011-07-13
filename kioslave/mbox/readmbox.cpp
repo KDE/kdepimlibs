@@ -190,6 +190,9 @@ void ReadMBox::close()
 	delete m_file; m_file = 0;
 
 	if( m_prev_time )
+	{
 		utime( QFile::encodeName( m_info->filename() ), m_prev_time );
+		delete m_prev_time;
+	}
 }
 
