@@ -403,6 +403,24 @@
    <header>knuminput.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>kcfg_host</tabstop>
+  <tabstop>kcfg_requiresAuthentication</tabstop>
+  <tabstop>kcfg_userName</tabstop>
+  <tabstop>password</tabstop>
+  <tabstop>kcfg_storePassword</tabstop>
+  <tabstop>checkCapabilities</tabstop>
+  <tabstop>none</tabstop>
+  <tabstop>ssl</tabstop>
+  <tabstop>tls</tabstop>
+  <tabstop>authCombo</tabstop>
+  <tabstop>kcfg_specifyHostname</tabstop>
+  <tabstop>kcfg_localHostname</tabstop>
+  <tabstop>kcfg_specifySenderOverwriteAddress</tabstop>
+  <tabstop>kcfg_senderOverwriteAddress</tabstop>
+  <tabstop>kcfg_precommand</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
